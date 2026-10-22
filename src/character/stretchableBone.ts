@@ -629,22 +629,42 @@ function isMetadata(value: unknown): value is StretchableBoneRuntimeMetadata {
   );
 }
 
-export function resolveStretchableBone(
-  root: THREE.Object3D,
-): ResolvedStretchableBoneParts | null {
+interface StretchableBoneSearch {
+  root: THREE.Group;
+  metadata: StretchableBoneRuntimeMetadata;
+  shaft: THREE.Object3D | null;
+  proximalKnob: THREE.Object3D | null;
+  distalKnob: THREE.Object3D | null;
+  proximalSocket: THREE.Object3D | null;
+  distalSocket: THREE.Object3D | null;
+}
+
+function findStretchableBoneParts(node: THREE.Object3D, parts: StretchableBoneSearch, remaining: number): number {
+  const name = node.name, metadata = parts.metadata;
+  if (!parts.shaft && name === metadata.shaftName) { parts.shaft = node; remaining--; }
+  if (!parts.proximalSocket && name === metadata.proximalSocketName) { parts.proximalSocket = node; remaining--; }
+  if (!parts.distalSocket && name === metadata.distalSocketName) { parts.distalSocket = node; remaining--; }
+  if (!parts.proximalKnob && metadata.proximalKnobName && name === metadata.proximalKnobName) {
+    parts.proximalKnob = node; remaining--;
+  }
+  if (!parts.distalKnob && metadata.distalKnobName && name === metadata.distalKnobName) {
+    parts.distalKnob = node; remaining--;
+  }
+  for (let i = 0; remaining > 0 && i < node.children.length; i++)
+    remaining = findStretchableBoneParts(node.children[i], parts, remaining);
+  return remaining;
+}
+
+export function resolveStretchableBone(root: THREE.Object3D): ResolvedStretchableBoneParts | null {
   const metadata = root.userData.stretchableBoneRuntime;
   if (!isMetadata(metadata) || !(root instanceof THREE.Group)) return null;
-  const shaft = root.getObjectByName(metadata.shaftName);
-  const proximalKnob = metadata.proximalKnobName
-    ? root.getObjectByName(metadata.proximalKnobName) ?? null
-    : null;
-  const distalKnob = metadata.distalKnobName
-    ? root.getObjectByName(metadata.distalKnobName) ?? null
-    : null;
-  const proximalSocket = root.getObjectByName(metadata.proximalSocketName);
-  const distalSocket = root.getObjectByName(metadata.distalSocketName);
-  if (!shaft || !proximalSocket || !distalSocket) return null;
-  return { root, metadata, shaft, proximalKnob, distalKnob, proximalSocket, distalSocket };
+  const parts: StretchableBoneSearch = { root, metadata, shaft:null, proximalKnob:null,
+    distalKnob:null, proximalSocket:null, distalSocket:null };
+  // The five targets share one depth-first walk. Stop once all are found;
+  // retain fresh result records and live lookup semantics across replacements.
+  findStretchableBoneParts(root, parts, 3 + (metadata.proximalKnobName ? 1 : 0) + (metadata.distalKnobName ? 1 : 0));
+  if (!parts.shaft || !parts.proximalSocket || !parts.distalSocket) return null;
+  return parts as ResolvedStretchableBoneParts;
 }
 
 export function directStretchableBones(anchor: THREE.Object3D): ResolvedStretchableBoneParts[] {

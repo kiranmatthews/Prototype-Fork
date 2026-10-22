@@ -201,27 +201,43 @@ function parseDeformation(value: unknown): IndependentSegmentDeformation | null 
   };
 }
 
-function resolveRigJointNodes(
-  root: THREE.Group,
-  declaredJoints: Record<string, unknown>,
-): Map<string, THREE.Object3D> {
-  const jointEntries = Object.entries(declaredJoints);
-  const requestedNames = new Set(jointEntries.map(([, name]) => name).filter((name): name is string => typeof name === 'string'));
-  const nodesByName = new Map<string, THREE.Object3D>();
-  // Match getObjectByName's first depth-first result, while walking the live
-  // hierarchy once instead of once per joint. Rebuild on every resolution so
-  // late-loaded parts, editor renames/reparenting and metadata edits stay live.
-  root.traverse((node) => {
-    if (requestedNames.has(node.name) && !nodesByName.has(node.name))
-      nodesByName.set(node.name, node);
-  });
-  const liveById = new Map<string, THREE.Object3D>();
-  for (const [id, declaredName] of jointEntries) {
-    if (typeof declaredName !== 'string') continue;
-    const node = nodesByName.get(declaredName);
-    if (node) liveById.set(id, node);
+class RigNodeLookup {
+  readonly byName = new Map<string, THREE.Object3D>();
+  readonly byId = new Map<string, THREE.Object3D>();
+  private readonly requested = new Set<string>();
+  private readonly collect = (node: THREE.Object3D): void => {
+    if (this.requested.has(node.name) && !this.byName.has(node.name))
+      this.byName.set(node.name, node);
+  };
+
+  clear(): void {
+    this.byName.clear(); this.byId.clear(); this.requested.clear();
   }
-  return liveById;
+
+  resolve(root: THREE.Group, declaredJoints: Record<string, unknown>): Map<string, THREE.Object3D> {
+    this.clear();
+    const ids = Object.keys(declaredJoints);
+    for (const id of ids) {
+      const name = declaredJoints[id];
+      if (typeof name === 'string') this.requested.add(name);
+    }
+    // Resolve the torso surface in the same live pass as its semantic bones.
+    // Reuse storage, never old answers: edits, late parts and duplicate-name
+    // depth-first ordering must still be visible on every deformation pass.
+    this.requested.add('meshy-torso-surface');
+    root.traverse(this.collect);
+    for (const id of ids) {
+      const name = declaredJoints[id];
+      if (typeof name !== 'string') continue;
+      const node = this.byName.get(name);
+      if (node) this.byId.set(id, node);
+    }
+    return this.byId;
+  }
+}
+
+function resolveRigJointNodes(root: THREE.Group, declaredJoints: Record<string, unknown>): Map<string, THREE.Object3D> {
+  return new RigNodeLookup().resolve(root, declaredJoints);
 }
 
 function resolveRigDeformations(
@@ -342,6 +358,7 @@ export class PlayerAnimationBridge {
   private readonly endpointDeformationCache = new WeakMap<THREE.Object3D, AppliedDeformationState>();
   private readonly deformationAxis = new THREE.Vector3();
   private readonly deformationOffset = new THREE.Vector3();
+  private readonly deformationLookup = new RigNodeLookup();
   private deformationValues: Readonly<Record<string, number>> = {};
 
   constructor(
@@ -444,7 +461,7 @@ export class PlayerAnimationBridge {
     // authoring snapshot (rest tuples, mirror links and semantic parents).
     // Resolve afresh so editor changes and late-loaded parts remain visible.
     const runtime = (this.rigRoot.userData.sculptRuntime ?? {}) as SculptRuntimeMetadata;
-    const joints = resolveRigJointNodes(this.rigRoot, isRecord(runtime.joints) ? runtime.joints : {});
+    const joints = this.deformationLookup.resolve(this.rigRoot, isRecord(runtime.joints) ? runtime.joints : {});
     const deformations = resolveRigDeformations(runtime.deformations, joints);
     const visualStates = this.visualDeformations, endpointStates = this.endpointDeformations;
     const axis = this.deformationAxis, offset = this.deformationOffset;
@@ -608,7 +625,7 @@ export class PlayerAnimationBridge {
     // semantic bones provide its longitudinal deformation. Apply only the
     // matching cross-section correction here; scaling Y would double-stretch
     // the skin and scaling a joint would contaminate every descendant.
-    const torso = this.rigRoot.getObjectByName('meshy-torso-surface');
+    const torso = this.deformationLookup.byName.get('meshy-torso-surface');
     const torsoPolicy = deformations.find(
       (policy) => policy.controlId === 'deform.torso.length',
     );
@@ -678,5 +695,6 @@ export class PlayerAnimationBridge {
     }
     this.deformationStates.length = 0;
     this.visualDeformations.clear(); this.endpointDeformations.clear();
+    this.deformationLookup.clear();
   }
 }
