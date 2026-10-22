@@ -1,0 +1,198 @@
+{
+  "reports": [
+    {
+      "mode": "full",
+      "patrol": {
+        "dt": 0.016666666666666666,
+        "state": "patrol",
+        "stateTime": 0.7500000000000007,
+        "pos": [
+          2.7847429584667984,
+          -1.4866767724100782,
+          -266
+        ],
+        "speed": 1.100000000000012,
+        "feet": {
+          "frontLeft": true,
+          "frontRight": true,
+          "hindLeft": true,
+          "hindRight": false
+        },
+        "gait": 0.511634551739711,
+        "player": [
+          1.9597429584667898,
+          -1.4566767724100782,
+          -258
+        ],
+        "playerState": "ride",
+        "lives": 4,
+        "alive": true
+      },
+      "windup": {
+        "dt": 0.016666666666666666,
+        "state": "telegraph",
+        "stateTime": 0.5333333333333333,
+        "pos": [
+          2.803076291800132,
+          -1.4866767724100782,
+          -266
+        ],
+        "speed": 0,
+        "feet": {
+          "frontLeft": true,
+          "frontRight": true,
+          "hindLeft": true,
+          "hindRight": true
+        },
+        "gait": 0,
+        "player": [
+          7.784742958466799,
+          -1.4566767724100782,
+          -266
+        ],
+        "playerState": "ride",
+        "lives": 4,
+        "alive": true
+      },
+      "trigger": {
+        "dt": 0.016666666666666666,
+        "state": "dash",
+        "stateTime": 0,
+        "pos": [
+          2.803076291800132,
+          -1.4866767724100782,
+          -266
+        ],
+        "speed": 0,
+        "feet": {
+          "frontLeft": true,
+          "frontRight": true,
+          "hindLeft": true,
+          "hindRight": true
+        },
+        "gait": 0,
+        "player": [
+          7.784742958466799,
+          -1.4566767724100782,
+          -266
+        ],
+        "playerState": "ride",
+        "lives": 4,
+        "alive": true
+      },
+      "dash": {
+        "dt": 0.016666666666666666,
+        "state": "dash",
+        "stateTime": 0.05,
+        "pos": [
+          3.551076291800132,
+          -1.4866767724100782,
+          -266
+        ],
+        "speed": 14.960000000000004,
+        "feet": {
+          "frontLeft": false,
+          "frontRight": true,
+          "hindLeft": false,
+          "hindRight": true
+        },
+        "gait": 2.8,
+        "player": [
+          7.784742958466799,
+          -1.4566767724100782,
+          -266
+        ],
+        "playerState": "ride",
+        "lives": 4,
+        "alive": true
+      },
+      "recovery": {
+        "dt": 0.016666666666666666,
+        "state": "recover",
+        "stateTime": 0,
+        "pos": [
+          5.75974295846679,
+          -1.4866767724100782,
+          -266
+        ],
+        "speed": 12.839999999999439,
+        "feet": {
+          "frontLeft": true,
+          "frontRight": false,
+          "hindLeft": true,
+          "hindRight": false
+        },
+        "gait": 1.75,
+        "player": [
+          7.784742958466799,
+          -1.4566767724100782,
+          -266
+        ],
+        "playerState": "ride",
+        "lives": 4,
+        "alive": true
+      },
+      "native": {
+        "dt": 0.016666666666666666,
+        "state": "patrol",
+        "stateTime": 1.0000000000000013,
+        "pos": [
+          3.0597429584668014,
+          -1.4866767724100782,
+          -266
+        ],
+        "speed": 1.100000000000012,
+        "feet": {
+          "frontLeft": true,
+          "frontRight": false,
+          "hindLeft": true,
+          "hindRight": false
+        },
+        "gait": 0.511634551739711,
+        "player": [
+          1.9597429584667898,
+          0.4738251391847985,
+          -259
+        ],
+        "playerState": "ride",
+        "lives": 4,
+        "alive": true
+      },
+      "actual": {
+        "artworkScale": [
+          3.6,
+          3.6,
+          3.6
+        ],
+        "rootScale": [
+          1,
+          1,
+          1
+        ],
+        "box": [
+          2.6100000000000003,
+          1.9800000000000002,
+          2.6100000000000136
+        ],
+        "triangles": 7609,
+        "width": 3840,
+        "height": 2160,
+        "native": true,
+        "glError": 0
+      }
+    }
+  ],
+  "errors": [],
+  "fixtureNotes": "The isolated browser positions a stationary player to exercise the authored Treehouse Trail bull encounter, then restores native player physics on sampled ground. Close-up inspection temporarily changes the camera only. The final capture uses the ordinary gameplay camera. No player saves or level data are changed.",
+  "buildVersion": "a723892bf3c162b904f9",
+  "checks": [
+    "enemy gameplay with real assets",
+    "enemy runtime with real assets",
+    "enemy motion/audio polish",
+    "all eight actual enemy asset validations",
+    "TypeScript noEmit",
+    "Vite production build",
+    "lite encounter patrol/windup/charge/recovery",
+    "full native 3840x2160 encounter and supported player camera"
+  ]
+}

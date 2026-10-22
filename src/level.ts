@@ -48,6 +48,7 @@ import { SpinBridge } from './spinBridge';
 import * as THREE from "three";
 import { attachTrialClockModel, type TrialClockVisual } from "./trialClockModel";
 import { createEnemyVisual } from "./enemies/runtime";
+import { BULL } from "./enemies/bull";
 import { TempleFireTiki } from "./templeFireTiki";
 import { SentryFireball, SENTRY_FIREBALL_SPEED } from "./enemies/fireball";
 import {playEnemySound,resetEnemySounds,updateEnemySounds} from "./enemies/sounds";
@@ -18621,6 +18622,11 @@ export class Level {
         case "charger":
           this.chargerStep(e, dt);
           boxW = 1.45;
+          if (!e.group.userData.ghostSkin) {
+            boxW *= BULL.sizeMultiplier;
+            boxH *= BULL.sizeMultiplier;
+            cy *= BULL.sizeMultiplier;
+          }
           break;
         case "hopper":
           this.hopperStep(e, dt);
@@ -18679,16 +18685,17 @@ export class Level {
     updateEnemySounds(e, dt, speed, this.playerPos);
   }
 
-  // BULL: amble → spot you in its lane → rear back (telegraph) → DASH (invincible,
+  // BULL: stalk → spot you in its lane → lower horns and brace → DASH (invincible,
   // touch-kill) → overshoot into a dizzy recover (safe to hit) → amble again.
   private chargerStep(e: Enemy, dt: number): void {
     e.stateT += dt;
+    const bull = !e.group.userData.ghostSkin;
     const along = this.enemyAlong(e);
     const pAlong = this.playerAlong(e);
     const gap = pAlong - along; // +/- ahead along the lane
     const inLane = Math.abs(this.playerCross(e) - e.cross) < 3.6;
     if (e.state === "patrol") {
-      this.patrolStep(e, dt, 0.5);
+      this.patrolStep(e, dt, bull ? BULL.patrolSpeedMultiplier : 0.5);
       if (inLane && Math.abs(gap) > 2.5 && Math.abs(gap) < 26) {
         e.dir = Math.sign(gap) || 1;
         this.faceDir(e, e.dir);
@@ -18696,8 +18703,8 @@ export class Level {
         e.stateT = 0;
       }
     } else if (e.state === "telegraph") {
-      // rear back and shudder
-      if (e.stateT > 0.55) {
+      // A deliberate planted windup makes the unchanged fast charge readable.
+      if (e.stateT > (bull ? BULL.windupSeconds : 0.55)) {
         e.state = "dash";
         e.stateT = 0;
       }

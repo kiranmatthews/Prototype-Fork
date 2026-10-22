@@ -56,6 +56,12 @@ try{
   actor.group.position.x=50;playEnemySound(actor,'defeat',player);assert.equal(events.length,1,'distant encounters stay silent');
   actor.group.position.x=0;actor.alive=false;updateEnemySounds(actor,10,3,player);assert.equal(events.length,1,'dead enemies are quiet');
   actor.kind='moa';playEnemySound(actor,'defeat',player);updateEnemySounds(actor,10,3,player);assert.equal(events.length,1,'moa bank is untouched');
+  actor.kind='charger';playEnemySound(actor,'windup',player);
+  near(events.at(-1)[2],.84,'larger bull has a deeper snort');
+  actor.group.userData.ghostSkin='ghostknight';playEnemySound(actor,'windup',player);
+  near(events.at(-1)[2],1,'ghost pitch is unchanged');delete actor.group.userData.ghostSkin;
+  actor.visual.diagnostics.appearance='nightworks';playEnemySound(actor,'windup',player);
+  near(events.at(-1)[2],1,'goblin pitch is unchanged');
   near(enemySoundGain(0),1,'near gain');near(enemySoundGain(28),0,'cull range');
   assert.ok(enemySoundGain(5)>enemySoundGain(15));
 

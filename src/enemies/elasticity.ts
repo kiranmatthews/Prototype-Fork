@@ -2,6 +2,7 @@ import { characterElasticityAmplitudes } from '../animation/elasticity';
 import { sampleFrogHop } from './frogHop';
 import { ENEMY_LEGS, type EnemyAnimationFrame, type EnemyKind, type EnemyLeg } from './types';
 import { ENEMY_MOTION } from './motion';
+import { BULL } from './bull';
 
 export interface EnemyElasticityProfile {
   idle: number;
@@ -86,7 +87,7 @@ export function sampleEnemyElasticity(kind:EnemyKind,frame:EnemyAnimationFrame,
   }else if(kind==='moa'&&frame.state==='squawk'){
     transient=enemyElasticPulse(frame.stateTime,1.65)*profile.rebound;
   }else if(kind==='charger'&&frame.state==='telegraph'){
-    transient=-smooth(frame.stateTime/.55)*profile.anticipation;
+    transient=-smooth(frame.stateTime/BULL.windupSeconds)*profile.anticipation;
   }else if(kind==='charger'&&frame.state==='recover'){
     transient=enemyElasticPulse(frame.stateTime,.75)*profile.rebound;
   }else if(kind==='hopper'){

@@ -169,7 +169,8 @@ try {
   fadeSource.gltf.animations[0].tracks.push(
     new THREE.NumberKeyframeTrack('frontLowerLeft.rotation[x]', [0, .5, 1], [0, -.4, 0]));
   requests.get('fixture://walk-fade')[0](fadeSource.gltf); await fadeVisual.ready;
-  const movingFrame = { ...frame, state: 'patrol', stateTime: 0, time: 0 };
+  // Keep the fade fixture at its original gait phase after the bull's 1.8x size increase.
+  const movingFrame = { ...frame, speed: frame.speed * 1.8, state: 'patrol', stateTime: 0, time: 0 };
   const poseAngles = () => ['headBone', 'frontLowerLeft'].map(name => fadeVisual.group.getObjectByName(name).rotation.x);
   for (const state of ['patrol', 'telegraph']) {
     fadeVisual.reset(); fadeVisual.update(.3, movingFrame);

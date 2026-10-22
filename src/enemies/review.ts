@@ -4,6 +4,7 @@ import { createEnemyVisual } from './runtime';
 import { ENEMY_KINDS, type EnemyKind, type EnemyAnimationFrame, type EnemyVisual } from './types';
 import {ENEMY_NAMES} from './catalog';
 import {resetEnemySounds,updateEnemySounds} from './sounds';
+import {BULL} from './bull';
 
 const required=<T extends HTMLElement>(id:string):T=>{
   const element=document.getElementById(id);if(!element)throw new Error(`Enemy review element missing: ${id}`);
@@ -24,7 +25,7 @@ interface Segment {state:string;frames:number;speed:number;}
 const CYCLES:Record<EnemyKind,readonly Segment[]>={
   grunt:[{state:'patrol',frames:180,speed:2.4}],spiker:[{state:'patrol',frames:180,speed:2.2}],
   turtle:[{state:'patrol',frames:180,speed:1.5}],
-  charger:[{state:'patrol',frames:96,speed:1.7},{state:'telegraph',frames:33,speed:0},{state:'dash',frames:60,speed:8},{state:'recover',frames:66,speed:0}],
+  charger:[{state:'patrol',frames:96,speed:1.1},{state:'telegraph',frames:Math.round(BULL.windupSeconds*60),speed:0},{state:'dash',frames:60,speed:8},{state:'recover',frames:66,speed:0}],
   hopper:[{state:'crouch',frames:27,speed:0},{state:'leap',frames:43,speed:3.4}],
   floater:[{state:'hover',frames:156,speed:3.2},{state:'swoop',frames:48,speed:3.2}],
   sentry:[{state:'track',frames:78,speed:0},{state:'charge',frames:33,speed:0},{state:'fire',frames:9,speed:0},{state:'cooldown',frames:42,speed:0}],
@@ -111,7 +112,7 @@ function layoutActor(actor:Actor):void {
   if(frame.flung){visual.group.position.y+=.65;visual.group.rotation.x=frame.stateTime*9;visual.group.rotation.y=frame.stateTime*5;}
   if(kind==='sentry')visual.body.rotation.y=review.trackTarget?Math.sin(frame.time*1.1)*.75:0;
   let width=1.3,height=1.1,cy=.55;
-  if(kind==='turtle'){height=.9;cy=.42;}else if(kind==='charger')width=1.45;
+  if(kind==='turtle'){height=.9;cy=.42;}else if(kind==='charger'){width=1.45*BULL.sizeMultiplier;height*=BULL.sizeMultiplier;cy*=BULL.sizeMultiplier;}
   else if(kind==='floater')cy=.05;else if(kind==='sentry'){width=1.05;height=1.15;cy=.6;}
   else if(kind==='spinner')width=frame.state==='out'?2.1:.8;
   else if(kind==='moa'){width=1.65;height=2.95;cy=1.475;}
@@ -168,12 +169,12 @@ function setCamera(view:Exclude<View,'orbit'>):void {
   review.camera=view;
   const solo=review.kind!=='all',jumpingHopper=review.kind==='hopper'&&(review.motion==='cycle'||review.motion==='leap');
   const swoopingFloater=review.kind==='floater'&&(review.motion==='cycle'||review.motion==='swoop');
-  const targetY=appearance?1.4:review.kind==='moa'?2.05:swoopingFloater?1.45:review.kind==='floater'?2.0:jumpingHopper?1.65:review.kind==='charger'?1.3:1.05;
+  const targetY=appearance?1.4:review.kind==='moa'?2.05:swoopingFloater?1.45:review.kind==='floater'?2.0:jumpingHopper?1.65:review.kind==='charger'?1.3*BULL.sizeMultiplier:1.05;
   const target=new THREE.Vector3(0,solo?targetY:.85,jumpingHopper?(view==='side'?-1.8:view==='quarter'?-1.1:0):0);
   const direction=view==='front'?new THREE.Vector3(0,solo?.045:.9,1):view==='side'?new THREE.Vector3(1,solo?.045:.9,0)
     :view==='back'?new THREE.Vector3(0,solo?.045:.9,-1):new THREE.Vector3(.643,solo?.18:.8,.766);
-  const halfWidth=appearance?2.6:solo?(jumpingHopper?(view==='front'||view==='back'?2.1:3.4):review.kind==='moa'||review.kind==='spinner'?3:2):10,
-    halfHeight=appearance?1.95:solo?(review.kind==='moa'?3.1:jumpingHopper?2.65:swoopingFloater||review.kind==='charger'?1.8:1.5):6;
+  const halfWidth=appearance?2.6:solo?(jumpingHopper?(view==='front'||view==='back'?2.1:3.4):review.kind==='charger'?2*BULL.sizeMultiplier:review.kind==='moa'||review.kind==='spinner'?3:2):10,
+    halfHeight=appearance?1.95:solo?(review.kind==='moa'?3.1:jumpingHopper?2.65:review.kind==='charger'?1.8*BULL.sizeMultiplier:swoopingFloater?1.8:1.5):6;
   const distance=Math.max(halfHeight,halfWidth/Math.max(.4,camera.aspect))/Math.tan(THREE.MathUtils.degToRad(camera.fov/2));
   controls.target.copy(target);camera.position.copy(target).addScaledVector(direction.normalize(),distance);controls.update();
   document.querySelectorAll<HTMLButtonElement>('[data-camera]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.camera===view)));

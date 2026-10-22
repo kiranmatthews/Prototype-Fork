@@ -4,6 +4,7 @@ import { sampleFrogHop } from './frogHop';
 import { createFrogKick } from './frogRig';
 import { createGoblinStumble } from './goblinStumble';
 import { GOBLIN } from './nightworksGoblin';
+import { BULL } from './bull';
 import { createMoaVisual } from './moa';
 import { GLTFLoader, type GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { clone as cloneSkeleton } from 'three/examples/jsm/utils/SkeletonUtils.js';
@@ -191,10 +192,11 @@ function inPlaceClip(clip:THREE.AnimationClip,model:THREE.Object3D,nodes:BoundNo
 export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):EnemyVisual {
   if(kind==='moa')return createMoaVisual(options.url);
   const motionKind=kind;
+  const bull=kind==='charger'&&options.appearance!=='nightworks';
   const startState=kind==='hopper'?'crouch':kind==='floater'?'hover':kind==='sentry'?'track':kind==='spinner'?'out':'patrol';
   const group=new THREE.Group();group.name=`Enemy_${kind}`;
   // Static artwork sizing stays outside animation bindings and gameplay resets.
-  const artwork=new THREE.Group();artwork.name=`Enemy_${kind}_Artwork`;artwork.scale.setScalar(options.appearance==='nightworks'?GOBLIN.artworkScale:2);group.add(artwork);
+  const artwork=new THREE.Group();artwork.name=`Enemy_${kind}_Artwork`;artwork.scale.setScalar(options.appearance==='nightworks'?GOBLIN.artworkScale:2*(bull?BULL.sizeMultiplier:1));group.add(artwork);
   const body=new THREE.Group();body.name=`Enemy_${kind}_Aim`;artwork.add(body);
   const modelMount=new THREE.Group();modelMount.name=`Enemy_${kind}_ModelMount`;body.add(modelMount);
   const url=options.url??`${import.meta.env.BASE_URL}enemies/${options.appearance==='nightworks'?'nightworks-snot-goblin':kind}.glb`;
@@ -403,8 +405,8 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
     const organic=kind!=='sentry'&&kind!=='spinner'&&kind!=='floater';
     if(organic){
       rotate(nodes.head,breath*.018*(moving?.4:1),'z');
-      rotate(nodes.head,enemyGlance(frame.time)*profile.head*(moving?.35:1),'y');
-      rotate(nodes.tail,(Math.sin(frame.time*1.45)*.55+gait*(moving?.45:0))*profile.tail,'y');
+      rotate(nodes.head,enemyGlance(frame.time)*profile.head*(moving?.35:1)*(bull?1-alert*.85:1),'y');
+      rotate(nodes.tail,(Math.sin(frame.time*1.45)*.55+gait*(moving?.45:0))*profile.tail*(bull?.5:1),'y');
     }
     if(kind==='grunt'){
       rotate(nodes.torso,(moving?gait*.018:0),'z');
@@ -424,12 +426,15 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
       rotate(nodes.head,-breath*.025+alert*.08);
       rotate(nodes.torso,moving?gait*.016:0,'z');
     }else if(kind==='charger'){
-      if(frame.state==='telegraph'){
-        const gather=ease(t/.48);
-        rotate(nodes.torso,-.14*gather);rotate(nodes.head,-.28*gather);
-        rotate(nodes.jaw,(.035+Math.sin(t*11)*.02)*gather);
-        rotate(nodes.tail,-.14*gather,'z');
-        for(const leg of ['frontLeft','frontRight'] as const){const [upper,lower]=legRoles(leg);rotate(nodes[upper],-.18*gather);rotate(nodes[lower],.22*gather);}
+      if(frame.state==='patrol'){
+        // Watch the approaching player under lowered horns; keep the walk's
+        // authored foot contacts and let world speed determine its cadence.
+        rotate(nodes.head,.12*alert);rotate(nodes.torso,.025*alert);
+      }else if(frame.state==='telegraph'){
+        const gather=ease(t/(BULL.windupSeconds*.85));
+        rotate(nodes.torso,.065*gather);rotate(nodes.head,.34*gather);
+        rotate(nodes.jaw,.025*gather);rotate(nodes.tail,-.12*gather,'z');
+        for(const leg of ['frontLeft','frontRight'] as const){const [upper,lower]=legRoles(leg);rotate(nodes[upper],-.16*gather);rotate(nodes[lower],.20*gather);}
       }else if(frame.state==='dash'){
         rotate(nodes.head,.26);rotate(nodes.torso,.08);rotate(nodes.tail,-.15,'x');
       }

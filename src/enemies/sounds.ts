@@ -43,7 +43,9 @@ export function playEnemySound(actor:SoundActor,cue:Cue,listener:Point):void {
   if(!clip)return;
   const p=actor.group.position,d=Math.hypot(p.x-listener.x,p.y-listener.y,p.z-listener.z);
   const gain=enemySoundGain(d,cue==='step'?13:cue==='idle'?17:28);
-  if(gain>.006)sfx.play(clip.name,clip.volume*gain,clip.rate,.035);
+  // The larger living bull has heavier footfalls and a deeper warning snort.
+  const pitch=actor.kind==='charger'&&!ghost&&!goblin?.84:1;
+  if(gain>.006)sfx.play(clip.name,clip.volume*gain,(clip.rate??1)*pitch,.035);
 }
 
 /** One-shots are keyed to actual FSM transitions and source foot contacts.

@@ -82,7 +82,8 @@ try {
   near(byKind.grunt.group.position.x, .4, 'grunt patrol');
   near(byKind.spiker.group.position.x, .4, 'spiker patrol');
   near(byKind.turtle.group.position.x, .28, 'turtle slower patrol');
-  near(byKind.charger.group.position.x, .2, 'charger amble');
+  near(byKind.charger.group.position.x, .1, 'bull patrol is half its previous speed');
+  assert.deepEqual(byKind.charger.group.getObjectByName('Enemy_charger_Artwork').scale.toArray(),[3.6,3.6,3.6], 'bull artwork is 80% larger without scaling its gameplay root');
   near(byKind.floater.group.position.x, .4, 'floater patrol');
   near(byKind.sentry.group.position.x, 0, 'sentry stationary');
   near(byKind.spinner.group.position.x, 0, 'spinner stationary');
@@ -96,7 +97,7 @@ try {
     assert.equal(enemy.dir, -1, 'patrol reverses at endpoint');
   }
   const expectedBoxes = { grunt: [1.3, 1.1], spiker: [1.3, 1.1], turtle: [1.3, .9],
-    charger: [1.45, 1.1], hopper: [1.3, 1.1], floater: [1.3, 1.1],
+    charger: [2.61, 1.98], hopper: [1.3, 1.1], floater: [1.3, 1.1],
     sentry: [1.05, 1.15], spinner: [2.1, 1.1] };
   for (const [kind, [width, height]] of Object.entries(expectedBoxes)) {
     const size = byKind[kind].box.getSize(new THREE.Vector3());
@@ -108,7 +109,8 @@ try {
   const charger = byKind.charger;
   level.playerPos.copy(charger.group.position).add(new THREE.Vector3(10, 0, 0));
   tick(.01); assert.equal(charger.state, 'telegraph');
-  tick(.56); assert.equal(charger.state, 'dash');
+  tick(.56); assert.equal(charger.state, 'telegraph', 'bull holds its grounded warning');
+  tick(.15); assert.equal(charger.state, 'dash');
   const chargeStart = charger.group.position.x;
   tick(.1); near(charger.group.position.x - chargeStart, 1.36, 'charger dash speed');
   assert.deepEqual(flags(charger), [false, false, false, true, false], 'dash rejects all attacks');
@@ -117,6 +119,13 @@ try {
   level.playerPos.set(1000, 0, 1000); tick(1.11); assert.equal(charger.state, 'patrol');
 
   reset();
+  charger.group.userData.ghostSkin='ghostknight';
+  tick(.1);near(charger.group.position.x,.2,'ghost charger retains patrol speed');
+  level.playerPos.copy(charger.group.position).add(new THREE.Vector3(10,0,0));
+  tick(.01);tick(.56);assert.equal(charger.state,'dash','ghost charger retains windup');
+  delete charger.group.userData.ghostSkin;
+  reset();
+  near(charger.box.min.y,charger.baseY,'enlarged bull collision remains on the floor');
   const hopper = byKind.hopper;
   tick(.46); assert.equal(hopper.state, 'leap'); near(hopper.vy, 8.6, 'hopper launch');
   tick(.1); assert.ok(hopper.group.position.y > hopper.baseY + .5); assert.equal(hopper.stompKill, false);
