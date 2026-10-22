@@ -45,6 +45,7 @@ try {
   const results = [];
   const appearanceProfile = process.argv.includes('--appearance-profile');
   const boundsProfile = process.argv.includes('--bounds-profile');
+  const jointLimitProfile = process.argv.includes('--joint-limit-profile');
   const poseChecksums = process.argv.includes('--pose-checksum');
   const traceImpacts = process.argv.includes('--impact-trace');
   const poseNodes = [];
@@ -73,6 +74,24 @@ try {
     const frames = [], incidents = [], triggers = [], durations = []; let fullScans = 0, count = false;
     const supportTimes = []; let supportSamples = 0;
     const appearanceTimes = []; let appearanceCalls = 0, nameSearches = 0, transformClones = 0;
+    const jointLimits = new Map(), applyJoint = p.bailMotion.apply.bind(p.bailMotion);
+    if (jointLimitProfile) p.bailMotion.apply = (joint, node, weight) => {
+      const angle = node?.rotation.x, intended = angle + p.bailMotion.angles[joint * 3] * weight;
+      applyJoint(joint, node, weight);
+      if (count && node && [3, 6, 9, 12].includes(joint) && weight > .05) {
+        let stats = jointLimits.get(joint);
+        if (!stats) jointLimits.set(joint, stats = { joint, samples:0, clamped:0, maxHiddenAngle:0,
+          run:0, longestRun:0, atStop:0, stopRun:0, longestStopRun:0 });
+        stats.samples++; const hidden = Math.abs(intended - node.rotation.x);
+        if (hidden > 1e-8) { stats.clamped++; stats.run++; stats.longestRun = Math.max(stats.longestRun, stats.run); }
+        else stats.run = 0;
+        stats.maxHiddenAngle = Math.max(stats.maxHiddenAngle, hidden);
+        const elbow = joint === 3 || joint === 6, x = node.rotation.x;
+        if (Math.abs(x - (elbow ? -2.35 : .03)) < 1e-8 || Math.abs(x - (elbow ? -.05 : 2.45)) < 1e-8) {
+          stats.atStop++; stats.stopRun++; stats.longestStopRun = Math.max(stats.longestStopRun, stats.stopRun);
+        } else stats.stopRun = 0;
+      }
+    };
     let boundsCalls = 0, boundsRecords = 0, boundsBoxes = 0;
     const localBounds = p.interactionMeasure.localBounds.bind(p.interactionMeasure);
     if (boundsProfile) p.interactionMeasure.localBounds = mesh => {
@@ -124,6 +143,7 @@ try {
       let seed = 0x48631 + trial;
       Math.random = () => ((seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0) / 4294967296);
       p.respawn(level, true, true); p.invulnTimer = 0; p.step(CONST.fixedStep, input, level);
+      for (const stats of jointLimits.values()) stats.run = stats.stopRun = 0;
       p.speed = cause === 'balance' ? 10 : 24; p.freeSkate = true;
       const t = performance.now();
       if (cause === 'pvp') p.beginPvpKnockdown(5, 1);
@@ -160,6 +180,7 @@ try {
     p.interactionMeasure.skinnedBounds = native;
     p.interactionMeasure.sampledPlaneDistance = support;
     p.interactionMeasure.localBounds = localBounds;
+    p.bailMotion.apply = applyJoint;
     p.characterProportionLayer.apply = appearance; p.bodyGroup.getObjectByName = lookup;
     p.kickRagdollContact = kickContact;
     THREE.Vector3.prototype.clone = vectorClone; THREE.Quaternion.prototype.clone = quaternionClone;
@@ -167,6 +188,7 @@ try {
       support: supportTimes.length ? { cpuMs: stats(supportTimes), samples: supportSamples } : undefined,
       appearance: appearanceTimes.length ? { cpuMs: stats(appearanceTimes), calls: appearanceCalls, nameSearches, transformClones } : undefined,
       bounds: boundsProfile ? { calls:boundsCalls, newRecords:boundsRecords, newBoxes:boundsBoxes } : undefined,
+      jointLimits: jointLimitProfile ? [...jointLimits.values()] : undefined,
       poseChecksum: poseHash?.digest('hex'), gameplayChecksum:gameplayHash?.digest('hex'), impacts: traceImpacts ? impacts : undefined });
   }
   console.log(JSON.stringify({ source: snapshot ? 'initial working tree snapshot' : 'current working tree', warmupsPerCase: 8, measuredIncidentsPerCase: 24,

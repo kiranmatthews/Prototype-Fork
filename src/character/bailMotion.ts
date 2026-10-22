@@ -49,6 +49,8 @@ export class BailMotion {
   private readonly bias = new Float64Array(JOINTS * 3);
   private readonly stiffness = new Float64Array(JOINTS);
   private readonly damping = new Float64Array(JOINTS);
+  private readonly lower = Float64Array.from({length:JOINTS}, (_, joint) => -LIMITS[joint * 3]);
+  private readonly upper = Float64Array.from({length:JOINTS}, (_, joint) => LIMITS[joint * 3]);
   private readonly gravity = new THREE.Vector3();
   private readonly inverse = new THREE.Quaternion();
   private readonly previousSpin = new THREE.Vector3();
@@ -84,6 +86,9 @@ export class BailMotion {
   reset(): void {
     this.live = false;
     this.angles.fill(0); this.velocity.fill(0);
+    for (let joint = 0; joint < JOINTS; joint++) {
+      this.lower[joint] = -LIMITS[joint * 3]; this.upper[joint] = LIMITS[joint * 3];
+    }
     this.impactDelay.fill(0); this.impactWave.fill(0); this.loosen = 0;
     this.strain.fill(0); this.strainVelocity.fill(0);
     this.strainDelay.fill(0); this.strainWave.fill(0); this.kick = 0;
@@ -183,6 +188,22 @@ export class BailMotion {
     this.bias[36] = .15 + (1 - tuck) * .65;
   }
 
+  /** The editable/base pose is already composed. Put its anatomical stops
+   * into spring space before integration: a visually straight knee must not
+   * keep simulating an invisible backwards bend and take ages to release. */
+  prepareHinge(joint: number, node: THREE.Object3D | null, weight: number): void {
+    const limit = LIMITS[joint * 3];
+    this.lower[joint] = -limit; this.upper[joint] = limit;
+    if (!node || weight <= 1e-5) return;
+    const elbow = joint === 3 || joint === 6;
+    if (!elbow && joint !== 9 && joint !== 12) return;
+    const lo = Math.max(-limit, ((elbow ? -2.35 : .03) - node.rotation.x) / weight);
+    const hi = Math.min(limit, ((elbow ? -.05 : 2.45) - node.rotation.x) / weight);
+    // An edited base entirely outside the reachable interval retains the
+    // existing final safety clamp. Never create an inverted spring interval.
+    if (lo <= hi) { this.lower[joint] = lo; this.upper[joint] = hi; }
+  }
+
   step(dt: number, orientation: THREE.Quaternion, spin: THREE.Vector3,
     grounded: boolean, recovery: number, kick: number, weight: number, travel?: THREE.Vector3): boolean {
     if (!this.live || dt <= 0) return false;
@@ -237,19 +258,32 @@ export class BailMotion {
         const inertia = joint <= 1 ? this.torsoForce : this.limbForce;
         for (let axis = 0; axis < 3; axis++) {
           const i = joint * 3 + axis, limit = LIMITS[i];
+          const lo = axis === 0 ? this.lower[joint] : -limit;
+          const hi = axis === 0 ? this.upper[joint] : limit;
+          const hinge = axis === 0 && (joint === 3 || joint === 6 || joint === 9 || joint === 12);
           if (this.impactDelay[joint] === 0 && this.impactWave[i] !== 0) {
             this.velocity[i] += this.impactWave[i]; this.impactWave[i] = 0;
           }
           const chain = parent >= 0 ? this.velocity[parent * 3 + axis] * .7 : 0;
-          const target = clamp(this.bias[i] + this.frameTarget[axis] * limit, limit);
+          const target = Math.max(lo, Math.min(hi, clamp(this.bias[i] + this.frameTarget[axis] * limit, limit) * recover));
           // Hanging limbs carry through a braking torso; upward spine/head
           // respond oppositely. No clip clock or pose needs to restart.
-          const force = stiffness * (target * recover - this.angles[i]) + chain + inertia[axis] * limit;
+          const force = stiffness * (target - this.angles[i]) + chain + inertia[axis] * limit;
           this.velocity[i] = clamp((this.velocity[i] + force * h) * damping, 22);
+          if (hinge) {
+            // A small compliant stop slows only motion into the boundary.
+            // Inward motion is free immediately; there is no dead interval
+            // hidden behind a rendering clamp after a later bounce.
+            const margin = Math.min(.18, (hi - lo) * .2);
+            const gap = this.velocity[i] < 0 ? this.angles[i] - lo : hi - this.angles[i];
+            const load = margin > 0 ? Math.max(0, 1 - Math.max(0, gap) / margin) : 1;
+            this.velocity[i] /= 1 + load * load * 24 * h;
+          }
           this.angles[i] += this.velocity[i] * h;
-          if (Math.abs(this.angles[i]) > limit) {
-            this.angles[i] = clamp(this.angles[i], limit);
-            this.velocity[i] *= -.18;
+          if (this.angles[i] < lo || this.angles[i] > hi) {
+            const outward = this.angles[i] < lo ? this.velocity[i] < 0 : this.velocity[i] > 0;
+            this.angles[i] = Math.max(lo, Math.min(hi, this.angles[i]));
+            if (outward) this.velocity[i] *= hinge ? -.08 : -.18;
           }
         }
       }

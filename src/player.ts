@@ -18350,6 +18350,10 @@ export class Player {
     if (this.isBailing && this.state !== 'dead' && !this.playerAnimationBridge.previewActive) {
       const weight = Math.min(2, Math.max(0, TUNING.ragFlail)) * this.ragBlend *
         (1 - THREE.MathUtils.smoothstep(this.bailRecoveryPose, 0, .32));
+      this.bailMotion.prepareHinge(3, this.elbowL, weight);
+      this.bailMotion.prepareHinge(6, this.elbowR, weight);
+      this.bailMotion.prepareHinge(9, this.kneeL, weight);
+      this.bailMotion.prepareHinge(12, this.kneeR, weight);
       if (this.bailMotion.step(dt, this.ragQ, this.ragdollWorldSpin(Player.RAG_WORLD_SPIN), this.grounded,
         this.bailRecoveryPose, this.ragFlailKickT, TUNING.ragFlail * this.ragBlend,
         BAIL_V.set(this.axisF.x * this.speed, this.vVel, this.axisF.z * this.speed))) {

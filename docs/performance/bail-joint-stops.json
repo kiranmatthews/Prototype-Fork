@@ -1,0 +1,969 @@
+{
+  "date": "2026-10-22",
+  "pass": "Fidelity: yielding anatomical stops during later bounces",
+  "parent": "eff3ff0b3a397a202d242660071553904113d736",
+  "sourceSha256": {
+    "src/character/bailMotion.ts": "e8dd79e5419646c38b650d1465e6bbac76b7807795b0b1162212890429c1e27c",
+    "src/player.ts": "b9f7443e56d48d64a46dea3801a5527196127bba87b3dd62c5b49be5609d64e2",
+    "tools/profile-intact-bail.mjs": "f9c568bc63b0037690c0a9b0e4237a74a0f173a4c260c9e3d0001214666e3498",
+    "tools/test-bail-joint-stops.mjs": "fef42f8489c76609214337ff5e483662829721ccdd6f90f4c05fdfb72787d942"
+  },
+  "changes": [
+    "Prepare elbow/knee angular intervals from the current authored pose and actual additive blend before integrating the springs.",
+    "Constrain targets and simulated angles to those intervals; add a short compliant braking region only when moving into a stop. Reflect only outward velocity and retain inward release.",
+    "Retain the final anatomical safety clamp for invalid edited bases; reset intervals between bails. Preserve the cosmetic random stream, segment elasticity, gameplay translation and recovery ownership."
+  ],
+  "audit": {
+    "incidents": 120,
+    "frames": 8160,
+    "jointUpdates": 20640,
+    "hiddenOverrunsBefore": 2036,
+    "hiddenOverrunsAfter": 0,
+    "maximumHiddenRadiansBefore": 0.7200327423413645,
+    "maximumHiddenRadiansAfter": 1.3877787807814457e-17,
+    "atStopUpdatesBefore": 2036,
+    "atStopUpdatesAfter": 233,
+    "atStopReductionPercent": 88.55599214145383,
+    "tripLongestStopFramesBefore": 30,
+    "tripLongestStopFramesAfter": 13,
+    "rows": [
+      {
+        "cause": "balance",
+        "frames": 1056,
+        "gameplayChecksum": "b51b8f1c626815da67e7d14a481a0c496acf127731c67c72c19db5918bfbf8ba",
+        "gameplayMatches": true,
+        "durationSeconds": 0.7333333333333333,
+        "fullSkinScans": 0,
+        "jointLimitsBefore": [
+          {
+            "joint": 3,
+            "samples": 456,
+            "clamped": 196,
+            "maxHiddenAngle": 0.6293937381523765,
+            "run": 0,
+            "longestRun": 16,
+            "atStop": 196,
+            "stopRun": 0,
+            "longestStopRun": 16
+          },
+          {
+            "joint": 6,
+            "samples": 456,
+            "clamped": 109,
+            "maxHiddenAngle": 0.6586600057269902,
+            "run": 0,
+            "longestRun": 15,
+            "atStop": 109,
+            "stopRun": 0,
+            "longestStopRun": 15
+          },
+          {
+            "joint": 9,
+            "samples": 456,
+            "clamped": 29,
+            "maxHiddenAngle": 0.10743460043834346,
+            "run": 0,
+            "longestRun": 9,
+            "atStop": 29,
+            "stopRun": 0,
+            "longestStopRun": 9
+          },
+          {
+            "joint": 12,
+            "samples": 456,
+            "clamped": 43,
+            "maxHiddenAngle": 0.2937140445458565,
+            "run": 0,
+            "longestRun": 11,
+            "atStop": 43,
+            "stopRun": 0,
+            "longestStopRun": 11
+          }
+        ],
+        "jointLimitsAfter": [
+          {
+            "joint": 3,
+            "samples": 456,
+            "clamped": 0,
+            "maxHiddenAngle": 0,
+            "run": 0,
+            "longestRun": 0,
+            "atStop": 3,
+            "stopRun": 0,
+            "longestStopRun": 1
+          },
+          {
+            "joint": 6,
+            "samples": 456,
+            "clamped": 0,
+            "maxHiddenAngle": 0,
+            "run": 0,
+            "longestRun": 0,
+            "atStop": 0,
+            "stopRun": 0,
+            "longestStopRun": 0
+          },
+          {
+            "joint": 9,
+            "samples": 456,
+            "clamped": 0,
+            "maxHiddenAngle": 0,
+            "run": 0,
+            "longestRun": 0,
+            "atStop": 3,
+            "stopRun": 0,
+            "longestStopRun": 3
+          },
+          {
+            "joint": 12,
+            "samples": 456,
+            "clamped": 0,
+            "maxHiddenAngle": 0,
+            "run": 0,
+            "longestRun": 0,
+            "atStop": 4,
+            "stopRun": 0,
+            "longestStopRun": 1
+          }
+        ],
+        "plainStepBeforeMs": 0.48979200000030687,
+        "plainStepAfterMs": 0.49041699999997945,
+        "addedStepMs": 0.0006249999996725819
+      },
+      {
+        "cause": "wall",
+        "frames": 1824,
+        "gameplayChecksum": "40a25e75bfd1a576aa9a3d76d39e4a8f144ce954769f01800218e2721ba66d1f",
+        "gameplayMatches": true,
+        "durationSeconds": 1.2666666666666666,
+        "fullSkinScans": 0,
+        "jointLimitsBefore": [
+          {
+            "joint": 3,
+            "samples": 1224,
+            "clamped": 0,
+            "maxHiddenAngle": 0,
+            "run": 0,
+            "longestRun": 0,
+            "atStop": 0,
+            "stopRun": 0,
+            "longestStopRun": 0
+          },
+          {
+            "joint": 6,
+            "samples": 1224,
+            "clamped": 3,
+            "maxHiddenAngle": 0.008860466740015907,
+            "run": 0,
+            "longestRun": 3,
+            "atStop": 3,
+            "stopRun": 0,
+            "longestStopRun": 3
+          },
+          {
+            "joint": 9,
+            "samples": 1224,
+            "clamped": 128,
+            "maxHiddenAngle": 0.6957316546864163,
+            "run": 0,
+            "longestRun": 16,
+            "atStop": 128,
+            "stopRun": 0,
+            "longestStopRun": 16
+          },
+          {
+            "joint": 12,
+            "samples": 1224,
+            "clamped": 118,
+            "maxHiddenAngle": 0.4167987084513035,
+            "run": 0,
+            "longestRun": 12,
+            "atStop": 118,
+            "stopRun": 0,
+            "longestStopRun": 12
+          }
+        ],
+        "jointLimitsAfter": [
+          {
+            "joint": 3,
+            "samples": 1224,
+            "clamped": 0,
+            "maxHiddenAngle": 0,
+            "run": 0,
+            "longestRun": 0,
+            "atStop": 0,
+            "stopRun": 0,
+            "longestStopRun": 0
+          },
+          {
+            "joint": 6,
+            "samples": 1224,
+            "clamped": 0,
+            "maxHiddenAngle": 0,
+            "run": 0,
+            "longestRun": 0,
+            "atStop": 0,
+            "stopRun": 0,
+            "longestStopRun": 0
+          },
+          {
+            "joint": 9,
+            "samples": 1224,
+            "clamped": 0,
+            "maxHiddenAngle": 0,
+            "run": 0,
+            "longestRun": 0,
+            "atStop": 20,
+            "stopRun": 0,
+            "longestStopRun": 5
+          },
+          {
+            "joint": 12,
+            "samples": 1224,
+            "clamped": 0,
+            "maxHiddenAngle": 0,
+            "run": 0,
+            "longestRun": 0,
+            "atStop": 11,
+            "stopRun": 0,
+            "longestStopRun": 3
+          }
+        ],
+        "plainStepBeforeMs": 0.484375,
+        "plainStepAfterMs": 0.49070800000026793,
+        "addedStepMs": 0.00633300000026793
+      },
+      {
+        "cause": "trip",
+        "frames": 2112,
+        "gameplayChecksum": "6ce599704bd3f33f977d7db5bf0e448b0c3625f46bcd33e0fa879c26ca4c3207",
+        "gameplayMatches": true,
+        "durationSeconds": 1.4666666666666666,
+        "fullSkinScans": 0,
+        "jointLimitsBefore": [
+          {
+            "joint": 3,
+            "samples": 1512,
+            "clamped": 223,
+            "maxHiddenAngle": 0.5482606821567786,
+            "run": 0,
+            "longestRun": 26,
+            "atStop": 223,
+            "stopRun": 0,
+            "longestStopRun": 26
+          },
+          {
+            "joint": 6,
+            "samples": 1512,
+            "clamped": 242,
+            "maxHiddenAngle": 0.46582633816523533,
+            "run": 0,
+            "longestRun": 30,
+            "atStop": 242,
+            "stopRun": 0,
+            "longestStopRun": 30
+          },
+          {
+            "joint": 9,
+            "samples": 1512,
+            "clamped": 115,
+            "maxHiddenAngle": 0.515098868160003,
+            "run": 0,
+            "longestRun": 15,
+            "atStop": 115,
+            "stopRun": 0,
+            "longestStopRun": 15
+          },
+          {
+            "joint": 12,
+            "samples": 1512,
+            "clamped": 119,
+            "maxHiddenAngle": 0.7200327423413645,
+            "run": 0,
+            "longestRun": 17,
+            "atStop": 119,
+            "stopRun": 0,
+            "longestStopRun": 17
+          }
+        ],
+        "jointLimitsAfter": [
+          {
+            "joint": 3,
+            "samples": 1512,
+            "clamped": 0,
+            "maxHiddenAngle": 1.3877787807814457e-17,
+            "run": 0,
+            "longestRun": 0,
+            "atStop": 69,
+            "stopRun": 0,
+            "longestStopRun": 11
+          },
+          {
+            "joint": 6,
+            "samples": 1512,
+            "clamped": 0,
+            "maxHiddenAngle": 0,
+            "run": 0,
+            "longestRun": 0,
+            "atStop": 50,
+            "stopRun": 0,
+            "longestStopRun": 13
+          },
+          {
+            "joint": 9,
+            "samples": 1512,
+            "clamped": 0,
+            "maxHiddenAngle": 0,
+            "run": 0,
+            "longestRun": 0,
+            "atStop": 2,
+            "stopRun": 0,
+            "longestStopRun": 1
+          },
+          {
+            "joint": 12,
+            "samples": 1512,
+            "clamped": 0,
+            "maxHiddenAngle": 0,
+            "run": 0,
+            "longestRun": 0,
+            "atStop": 5,
+            "stopRun": 0,
+            "longestStopRun": 1
+          }
+        ],
+        "plainStepBeforeMs": 0.4522919999999431,
+        "plainStepAfterMs": 0.45808300000135205,
+        "addedStepMs": 0.005791000001408975
+      },
+      {
+        "cause": "landing",
+        "frames": 1464,
+        "gameplayChecksum": "3560e96f96bdf2aa9d46365dd5500dd2b8ed8131a0eba5586732f6a06c844be8",
+        "gameplayMatches": true,
+        "durationSeconds": 1.0166666666666666,
+        "fullSkinScans": 0,
+        "jointLimitsBefore": [
+          {
+            "joint": 3,
+            "samples": 864,
+            "clamped": 193,
+            "maxHiddenAngle": 0.5879939780534648,
+            "run": 0,
+            "longestRun": 21,
+            "atStop": 193,
+            "stopRun": 0,
+            "longestStopRun": 21
+          },
+          {
+            "joint": 6,
+            "samples": 864,
+            "clamped": 134,
+            "maxHiddenAngle": 0.6148164528602742,
+            "run": 0,
+            "longestRun": 22,
+            "atStop": 134,
+            "stopRun": 0,
+            "longestStopRun": 22
+          },
+          {
+            "joint": 9,
+            "samples": 864,
+            "clamped": 90,
+            "maxHiddenAngle": 0.2975274077640513,
+            "run": 0,
+            "longestRun": 25,
+            "atStop": 90,
+            "stopRun": 0,
+            "longestStopRun": 25
+          },
+          {
+            "joint": 12,
+            "samples": 864,
+            "clamped": 92,
+            "maxHiddenAngle": 0.4564629748274641,
+            "run": 0,
+            "longestRun": 27,
+            "atStop": 92,
+            "stopRun": 0,
+            "longestStopRun": 27
+          }
+        ],
+        "jointLimitsAfter": [
+          {
+            "joint": 3,
+            "samples": 864,
+            "clamped": 0,
+            "maxHiddenAngle": 0,
+            "run": 0,
+            "longestRun": 0,
+            "atStop": 3,
+            "stopRun": 0,
+            "longestStopRun": 1
+          },
+          {
+            "joint": 6,
+            "samples": 864,
+            "clamped": 0,
+            "maxHiddenAngle": 0,
+            "run": 0,
+            "longestRun": 0,
+            "atStop": 1,
+            "stopRun": 0,
+            "longestStopRun": 1
+          },
+          {
+            "joint": 9,
+            "samples": 864,
+            "clamped": 0,
+            "maxHiddenAngle": 0,
+            "run": 0,
+            "longestRun": 0,
+            "atStop": 24,
+            "stopRun": 0,
+            "longestStopRun": 21
+          },
+          {
+            "joint": 12,
+            "samples": 864,
+            "clamped": 0,
+            "maxHiddenAngle": 0,
+            "run": 0,
+            "longestRun": 0,
+            "atStop": 31,
+            "stopRun": 0,
+            "longestStopRun": 21
+          }
+        ],
+        "plainStepBeforeMs": 0.44829199999912817,
+        "plainStepAfterMs": 0.4539999999997235,
+        "addedStepMs": 0.005708000000595348
+      },
+      {
+        "cause": "pvp",
+        "frames": 1704,
+        "gameplayChecksum": "1b2f0441720760e1b936c6314ee87724dfa5f6353614b2b0ce935dca7944685f",
+        "gameplayMatches": true,
+        "durationSeconds": 1.1833333333333333,
+        "fullSkinScans": 0,
+        "jointLimitsBefore": [
+          {
+            "joint": 3,
+            "samples": 1104,
+            "clamped": 116,
+            "maxHiddenAngle": 0.47196982912132807,
+            "run": 0,
+            "longestRun": 16,
+            "atStop": 116,
+            "stopRun": 0,
+            "longestStopRun": 16
+          },
+          {
+            "joint": 6,
+            "samples": 1104,
+            "clamped": 82,
+            "maxHiddenAngle": 0.3244840383766058,
+            "run": 0,
+            "longestRun": 15,
+            "atStop": 82,
+            "stopRun": 0,
+            "longestStopRun": 15
+          },
+          {
+            "joint": 9,
+            "samples": 1104,
+            "clamped": 2,
+            "maxHiddenAngle": 0.009822923407044926,
+            "run": 0,
+            "longestRun": 1,
+            "atStop": 2,
+            "stopRun": 0,
+            "longestStopRun": 1
+          },
+          {
+            "joint": 12,
+            "samples": 1104,
+            "clamped": 2,
+            "maxHiddenAngle": 0.009525690163238114,
+            "run": 0,
+            "longestRun": 1,
+            "atStop": 2,
+            "stopRun": 0,
+            "longestStopRun": 1
+          }
+        ],
+        "jointLimitsAfter": [
+          {
+            "joint": 3,
+            "samples": 1104,
+            "clamped": 0,
+            "maxHiddenAngle": 0,
+            "run": 0,
+            "longestRun": 0,
+            "atStop": 5,
+            "stopRun": 0,
+            "longestStopRun": 1
+          },
+          {
+            "joint": 6,
+            "samples": 1104,
+            "clamped": 0,
+            "maxHiddenAngle": 0,
+            "run": 0,
+            "longestRun": 0,
+            "atStop": 2,
+            "stopRun": 0,
+            "longestStopRun": 1
+          },
+          {
+            "joint": 9,
+            "samples": 1104,
+            "clamped": 0,
+            "maxHiddenAngle": 0,
+            "run": 0,
+            "longestRun": 0,
+            "atStop": 0,
+            "stopRun": 0,
+            "longestStopRun": 0
+          },
+          {
+            "joint": 12,
+            "samples": 1104,
+            "clamped": 0,
+            "maxHiddenAngle": 0,
+            "run": 0,
+            "longestRun": 0,
+            "atStop": 0,
+            "stopRun": 0,
+            "longestStopRun": 0
+          }
+        ],
+        "plainStepBeforeMs": 0.45437500000116415,
+        "plainStepAfterMs": 0.4608330000010028,
+        "addedStepMs": 0.006457999999838648
+      }
+    ]
+  },
+  "hingeRegression": {
+    "passed": true,
+    "poses": 240,
+    "frames": 43200,
+    "maxHiddenAngle": 2.7755575615628914e-17,
+    "maxVelocity": 11.45331394485721,
+    "releaseSeconds": 0.016666666666666666,
+    "unpreparedReleaseSeconds": 0.13333333333333333,
+    "subdivisionError": 0,
+    "changingBaseAndBlend": true,
+    "resetAndEditedBase": true
+  },
+  "support": {
+    "passed": true,
+    "cases": 30,
+    "supportHintCases": 120,
+    "fullScans": 0,
+    "supportCalls": 1925,
+    "maxSamples": 2686,
+    "gameplayUnchanged": true
+  },
+  "surfaceClearanceMeters": {
+    "minimum": 0.007052797695566992,
+    "maximum": 0.02500002264145973
+  },
+  "recovery": {
+    "orientationCases": 240,
+    "runtimeCases": 30,
+    "maximumFrameTurnDegrees": 20.672072648851266,
+    "passed": true
+  },
+  "cpu": {
+    "scope": "Production fixed-step CPU in Node with the animation runtime and procedural fallback assets. Includes first active frame; excludes render/GPU/browser costs. Timings are descriptive, scan counts are deterministic.",
+    "plainMedianAddedMsRange": [
+      0.0006249999996725819,
+      0.006457999999838648
+    ],
+    "springBeforeMs": 0.001211958333333333,
+    "springAfterMs": 0.001433444333333341,
+    "springScope": "Production BailMotion.step plus orientation and periodic impact; CPU only, 9 x 3000 warm samples. No render, GPU or player collision.",
+    "addedNumericStateBytes": 224,
+    "productionPerFrameAllocation": false,
+    "interpretation": "Fidelity cost: about 0.22 microseconds more in the isolated spring update; whole-player medians add 0.0006-0.0065 ms in one pair. No CPU improvement or game-FPS claim. The next performance pass can specialize the four hinge constraints."
+  },
+  "focusedChecks": [
+    {
+      "check": "test-bail-joint-stops",
+      "exitCode": 0
+    },
+    {
+      "check": "test-bail-contact-waves",
+      "exitCode": 0
+    },
+    {
+      "check": "test-bail-inertia",
+      "exitCode": 0
+    },
+    {
+      "check": "test-bail-motion",
+      "exitCode": 0
+    },
+    {
+      "check": "test-bail-support-continuity",
+      "exitCode": 0
+    },
+    {
+      "check": "test-bail-recovery-motion",
+      "exitCode": 0
+    },
+    {
+      "check": "test-trip-clearance",
+      "exitCode": 0
+    },
+    {
+      "check": "test-bail-impacts",
+      "exitCode": 0
+    },
+    {
+      "check": "test-ragdoll-recovery",
+      "exitCode": 0
+    },
+    {
+      "check": "test-break-apart",
+      "exitCode": 0
+    }
+  ],
+  "browser": {
+    "lite": {
+      "passed": true,
+      "cases": 14,
+      "rows": [
+        {
+          "kind": "Head hit",
+          "recovered": true,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "seconds": 3.367,
+          "maxSkinScans": 0
+        },
+        {
+          "kind": "Low trip",
+          "recovered": true,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "seconds": 3.367,
+          "maxSkinScans": 0
+        },
+        {
+          "kind": "Mid trip",
+          "recovered": true,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "seconds": 3.367,
+          "maxSkinScans": 0
+        },
+        {
+          "kind": "Side bail",
+          "recovered": true,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "seconds": 3.367,
+          "maxSkinScans": 0
+        },
+        {
+          "kind": "Balance bail",
+          "recovered": true,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "seconds": 3.367,
+          "maxSkinScans": 0
+        },
+        {
+          "kind": "Bank tumble",
+          "recovered": true,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "seconds": 3.367,
+          "maxSkinScans": 0
+        },
+        {
+          "kind": "Pit edge",
+          "recovered": true,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 1,
+          "seconds": 3.367,
+          "maxSkinScans": 0
+        },
+        {
+          "kind": "Angled edge",
+          "recovered": true,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 1,
+          "seconds": 3.367,
+          "maxSkinScans": 0
+        },
+        {
+          "kind": "Bailing into edge",
+          "recovered": true,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 1,
+          "seconds": 3.367,
+          "maxSkinScans": 0
+        },
+        {
+          "kind": "Held-mask wall",
+          "recovered": true,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "seconds": 3.367,
+          "maxSkinScans": 0
+        },
+        {
+          "kind": "Masked bail",
+          "recovered": true,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "seconds": 3.367,
+          "maxSkinScans": 0
+        },
+        {
+          "kind": "Blast",
+          "recovered": false,
+          "parts": 9,
+          "lives": 3,
+          "wallImpacts": 0,
+          "seconds": 3.367,
+          "maxSkinScans": 0
+        },
+        {
+          "kind": "Crusher",
+          "recovered": false,
+          "parts": 9,
+          "lives": 3,
+          "wallImpacts": 0,
+          "seconds": 3.367,
+          "maxSkinScans": 0
+        },
+        {
+          "kind": "Pit fall",
+          "recovered": false,
+          "parts": 0,
+          "lives": 3,
+          "wallImpacts": 0,
+          "seconds": 3.367,
+          "maxSkinScans": 0
+        }
+      ]
+    },
+    "full": {
+      "passed": true,
+      "cases": 14,
+      "rows": [
+        {
+          "kind": "Head hit",
+          "recovered": true,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "seconds": 3.367,
+          "maxSkinScans": 0
+        },
+        {
+          "kind": "Low trip",
+          "recovered": true,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "seconds": 3.367,
+          "maxSkinScans": 0
+        },
+        {
+          "kind": "Mid trip",
+          "recovered": true,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "seconds": 3.367,
+          "maxSkinScans": 0
+        },
+        {
+          "kind": "Side bail",
+          "recovered": true,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "seconds": 3.367,
+          "maxSkinScans": 0
+        },
+        {
+          "kind": "Balance bail",
+          "recovered": true,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "seconds": 3.367,
+          "maxSkinScans": 0
+        },
+        {
+          "kind": "Bank tumble",
+          "recovered": true,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "seconds": 3.367,
+          "maxSkinScans": 0
+        },
+        {
+          "kind": "Pit edge",
+          "recovered": true,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 1,
+          "seconds": 3.367,
+          "maxSkinScans": 0
+        },
+        {
+          "kind": "Angled edge",
+          "recovered": true,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 1,
+          "seconds": 3.367,
+          "maxSkinScans": 0
+        },
+        {
+          "kind": "Bailing into edge",
+          "recovered": true,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 1,
+          "seconds": 3.367,
+          "maxSkinScans": 0
+        },
+        {
+          "kind": "Held-mask wall",
+          "recovered": true,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "seconds": 3.367,
+          "maxSkinScans": 0
+        },
+        {
+          "kind": "Masked bail",
+          "recovered": true,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "seconds": 3.367,
+          "maxSkinScans": 0
+        },
+        {
+          "kind": "Blast",
+          "recovered": false,
+          "parts": 9,
+          "lives": 3,
+          "wallImpacts": 0,
+          "seconds": 3.367,
+          "maxSkinScans": 0
+        },
+        {
+          "kind": "Crusher",
+          "recovered": false,
+          "parts": 9,
+          "lives": 3,
+          "wallImpacts": 0,
+          "seconds": 3.367,
+          "maxSkinScans": 0
+        },
+        {
+          "kind": "Pit fall",
+          "recovered": false,
+          "parts": 0,
+          "lives": 3,
+          "wallImpacts": 0,
+          "seconds": 3.367,
+          "maxSkinScans": 0
+        }
+      ]
+    },
+    "boards": {
+      "passed": true,
+      "cases": 5,
+      "rows": [
+        {
+          "kind": "Board toss",
+          "settledAt": 3.516666666666659,
+          "observedSeconds": 12.000000000000176,
+          "activeAfter": 0,
+          "soundsAfterRest": 0
+        },
+        {
+          "kind": "Board roll",
+          "settledAt": 6.049999999999984,
+          "observedSeconds": 12.000000000000176,
+          "activeAfter": 0,
+          "soundsAfterRest": 0
+        },
+        {
+          "kind": "Board skid",
+          "settledAt": 0.9333333333333346,
+          "observedSeconds": 12.000000000000176,
+          "activeAfter": 0,
+          "soundsAfterRest": 0
+        },
+        {
+          "kind": "Board wall",
+          "settledAt": 1.100000000000001,
+          "observedSeconds": 12.000000000000176,
+          "activeAfter": 0,
+          "soundsAfterRest": 0
+        },
+        {
+          "kind": "Board pile",
+          "settledAt": 2.199999999999997,
+          "observedSeconds": 12.000000000000176,
+          "activeAfter": 0,
+          "soundsAfterRest": 0
+        }
+      ]
+    }
+  },
+  "consoleErrors": [],
+  "manualTrip": {
+    "first": {
+      "mode": "Mid trip",
+      "frozen": true,
+      "incidentAge": 0.55,
+      "floorImpacts": 1
+    },
+    "second": {
+      "mode": "Mid trip",
+      "frozen": true,
+      "incidentAge": 0.8666666666666677,
+      "floorImpacts": 2,
+      "supportClearance": 0.025000000000001577
+    },
+    "reboundFramesReviewed": 6,
+    "screenshots": [
+      "/private/tmp/bail-joint-release/second-impact.png",
+      "/private/tmp/bail-joint-release/rebound-release.png"
+    ]
+  },
+  "build": {
+    "typeScriptNoEmit": "passed",
+    "viteProduction": "passed",
+    "version": "b5ccc950f98d68cb32f6",
+    "runtime": "Bundled Node; same build stages, npm unavailable",
+    "fullSuiteRun": false
+  },
+  "delivery": "Local task-only follow-up on codex/fluid-intact-bails. Preserve shared checkout/index and unrelated pending work. No push, upload or deployment. Goal remains active for the next performance/stability pass."
+}
