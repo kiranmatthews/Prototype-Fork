@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import {mkdir,writeFile} from 'node:fs/promises';
 const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
 const base=process.argv.find(a=>a.startsWith('http'))||'http://127.0.0.1:5277';
-const full=process.argv.includes('--full'),out='/private/tmp/warehouse-reconstruction';
+const full=process.argv.includes('--full'),out=process.env.WAREHOUSE_OUTPUT||'/private/tmp/warehouse-reconstruction';
 await mkdir(out,{recursive:true});
 const browser=await chromium.launch({headless:true,channel:'chrome'});
 const page=await browser.newPage({viewport:{width:1440,height:1000},serviceWorkers:'block'}),errors=[];
@@ -28,7 +28,7 @@ try{
     axes:len?[x/len*raw,-y/len*raw,0,0]:[0,0,0,0],buttons:Array.from({length:18},(_,i)=>({pressed:!!held[i],touched:!!held[i],value:held[i]?1:0}))};
   };
   window.startWarehouseCase=name=>{
-   c=api.warehouseCases(p).find(q=>q.name===name);if(!c)throw Error(name);
+   c=api.warehouseCases(p,source).find(q=>q.name===name);if(!c)throw Error(name);
    const position=p.pos.clone().fromArray(source.warehousePoint(...c.at));position.y+=.12;
    p.respawn(l,true,true,{position,heading:p.axisF.clone().fromArray(c.h)});
    p.axisF.fromArray(c.h).normalize();p.axisL.set(p.axisF.z,0,-p.axisF.x);p.freeSkate=true;p.speed=c.speed;
@@ -39,19 +39,19 @@ try{
   p.step=(dt,input,level)=>{
    if(!r)return realStep(dt,input,level);if(r.done||r.paused)return;
    try{
-    sample=c.sample(r.frames,r,api.warehouseUV(p));realUpdate();
-    const old=p.pos.clone(),wasVert=p.vertAir;realStep(dt,input,level);api.observeWarehouse(p,r,wasVert,old);
-    const uv=api.warehouseUV(p);r.end={p:p.pos.toArray(),uv,grounded:p.grounded,state:p.state,speed:p.speed};
+    sample=c.sample(r.frames,r,api.warehouseUV(p,source));realUpdate();
+    const old=p.pos.clone(),wasVert=p.vertAir;realStep(dt,input,level);api.observeWarehouse(p,r,wasVert,old,source);
+    const uv=api.warehouseUV(p,source);r.end={p:p.pos.toArray(),uv,grounded:p.grounded,state:p.state,speed:p.speed};
     if(r.frames%20===0)r.trace.push({...r.end,f:r.frames});
     if(p.isBailing||['dead','gameover'].includes(p.state))throw Error('Bail/death during '+r.name);
     if(c.stop(r.frames-1,r,uv,r.airFrames>0)){r.ok=true;r.done=true;}
     else if(r.frames>=c.max)throw Error('Line did not complete');
-    const interesting=r.name.startsWith('roll-in')?uv[0]>255:r.name.startsWith('secret')?r.roomFrames>10:r.name==='Big Rail kink'?r.railFrames>45:r.name==='high rail'?r.highRailFrames>25:r.name==='kicker gap'?r.gapAirFrames>4:r.name==='taxi transfer'?uv[0]>525:r.peak>5&&p.vVel<0&&!p.grounded;
+    const interesting=r.name.startsWith('opening halfpipe')?uv[0]>390&&uv[0]<433:r.name.startsWith('roll-in')?uv[0]>255:r.name.startsWith('secret')?r.roomFrames>10:r.name==='Big Rail kink'?r.railFrames>45:r.name==='high rail'?r.highRailFrames>25:r.name==='kicker gap'?r.gapAirFrames>4:r.name==='taxi transfer'?uv[0]>525:r.peak>5&&p.vVel<0&&!p.grounded;
     if(interesting&&!r.shot){r.shot=true;r.paused=true;}
    }catch(e){r.failed=String(e);r.done=true;}
   };
  });
- const routes=process.argv.includes('--views-only')?[]:['roll-in 268','halfpipe repeated airs','over the pipe','secret room 15/330','Big Rail kink','high rail','kicker gap','taxi transfer','loading bay transition','left channel gap','right channel gap'];
+ const routes=process.argv.includes('--views-only')?[]:['roll-in 268','halfpipe repeated airs','opening halfpipe gap 334','over the pipe','outside bank roll-in','outside bank coping grind','secret room 20/332','Big Rail kink','high rail','kicker gap','taxi transfer','loading bay transition','left channel gap','right channel gap'];
  for(const name of routes){
   await page.evaluate(name=>window.startWarehouseCase(name),name);
   let state,deadline=Date.now()+90000;
@@ -69,12 +69,12 @@ try{
  const rendering=await page.evaluate(async()=>{const g=window.__game,ms=[];let last;for(let i=0;i<61;i++){const now=await new Promise(requestAnimationFrame);if(last!==undefined)ms.push(now-last);last=now;}ms.sort((a,b)=>a-b);return{calls:g.getRenderFrameStats(),memory:g.renderer.info.memory,frameMs:{median:ms[30],p95:ms[57]},limiter:g.getRenderFrameLimiterStats()};});
  await page.evaluate(async()=>{
   const g=window.__game,THREE=await import('/node_modules/three/build/three.module.js');
-  g.scene.fog=null;g.getLevel().root.traverse(n=>{if(n.name.startsWith('Warehouse roof')||n.userData.component?.nm?.startsWith('Warehouse roof'))n.visible=false;});const shot=new THREE.PerspectiveCamera(45,1440/1000,.1,500);shot.position.set(-70,100,-66);shot.lookAt(0,0,-10);shot.updateMatrixWorld();
+  const {WAREHOUSE_SIZE:size}=await import('/src/levels/codex-lab.ts');g.scene.fog=null;g.getLevel().root.traverse(n=>{if(n.name.startsWith('Warehouse roof')||n.userData.component?.nm?.startsWith('Warehouse roof'))n.visible=false;});const shot=new THREE.PerspectiveCamera(45,1440/1000,.1,500);shot.position.set(-70*size,100*size,-66*size);shot.lookAt(0,0,-10*size);shot.updateMatrixWorld();
   const render=g.renderer.render.bind(g.renderer);g.renderer.render=(s,c)=>{if(c===g.camera){const fog=s.fog;s.fog=null;render(s,shot);s.fog=fog;}else render(s,c);};
-  window.warehouseShot=shot;
+  window.warehouseShot=shot;window.warehouseSize=size;
  });
  await page.waitForTimeout(600);await page.screenshot({path:`${out}/isometric-${full?'full':'lite'}.png`});
- await page.evaluate(()=>{const c=window.warehouseShot;c.position.set(-.01,115,-10);c.up.set(-1,0,0);c.lookAt(0,0,-10);c.updateMatrixWorld();});
+ await page.evaluate(()=>{const c=window.warehouseShot;c.position.set(-.01,115*window.warehouseSize,-10*window.warehouseSize);c.up.set(-1,0,0);c.lookAt(0,0,-10*window.warehouseSize);c.updateMatrixWorld();});
  await page.waitForTimeout(300);await page.screenshot({path:`${out}/plan-${full?'full':'lite'}.png`});
  await writeFile(`${out}/browser-${full?'full':'lite'}.json`,JSON.stringify({info,reports,rendering,errors},null,2));
  assert.deepEqual(errors,[]);assert.equal(info.grounded,true);assert.match(info.stamp,/Codex\/sol fork/);console.log(JSON.stringify({info,rendering,errors}));

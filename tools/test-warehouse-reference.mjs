@@ -1,16 +1,17 @@
 import assert from 'node:assert/strict';
 import {writeFile} from 'node:fs/promises';
 import {withSkateRuntime,makeInput} from './jungle-cup-harness.mjs';
-import {warehouseCases,warehouseResult,observeWarehouse} from './warehouse-reference-cases.mjs';
+import {warehouseCases,warehouseResult,observeWarehouse,warehouseUV} from './warehouse-reference-cases.mjs';
 await withSkateRuntime(async({THREE,server,scene,Level,player:p,CONST,TUNING})=>{
- const {WAREHOUSE_REFERENCE_LEVEL:data,warehousePoint:point}=await server.ssrLoadModule('/src/levels/codex-lab.ts');
+ const geometry=await server.ssrLoadModule('/src/levels/codex-lab.ts');
+ const {WAREHOUSE_REFERENCE_LEVEL:data,warehousePoint:point,WAREHOUSE_SIZE:size}=geometry;
  const {parseCustomLevelJson}=await server.ssrLoadModule('/src/level.ts');
  assert.ok(parseCustomLevelJson(JSON.stringify(data)),'Warehouse must survive the editor contract');
  const level=new Level(scene,{id:'warehouse-reference',name:data.name,data});scene.updateMatrixWorld(true);
  const savedTuning=JSON.stringify(TUNING),results=[]; let bailCause; const bail=p.bail.bind(p); p.bail=(...args)=>{bailCause=args;return bail(...args);};
- const uv=()=>[253-p.pos.z/.14,208+p.pos.x/.14];
+ const uv=()=>warehouseUV(p,geometry);
  const place=(u,v,y=0,h=[0,0,-1],speed=16)=>{
-  p.respawn(level,true,true,{position:new THREE.Vector3(...point(u,v,y+.12)),heading:new THREE.Vector3(...h)});
+  p.respawn(level,true,true,{position:new THREE.Vector3(...point(u,v,y)).add(new THREE.Vector3(0,.12,0)),heading:new THREE.Vector3(...h)});
   p.axisF.set(...h).normalize();p.axisL.set(p.axisF.z,0,-p.axisF.x);p.freeSkate=true;p.speed=speed;
   p.groundHit=p.queryGround(level);if(p.groundHit)p.rideNormal.copy(p.groundHit.normal);
  };
@@ -23,18 +24,18 @@ await withSkateRuntime(async({THREE,server,scene,Level,player:p,CONST,TUNING})=>
    input.jumpReleased=!q.jumpHeld&&!!last.jumpHeld;last=q;
    const old=p.pos.clone(),wasVert=p.vertAir;
    p.step(CONST.fixedStep,input,level);level.update(CONST.fixedStep);input.consumeEdges();
-   observeWarehouse(p,r,wasVert,old);jumped||=!p.grounded;
+   observeWarehouse(p,r,wasVert,old,geometry);jumped||=!p.grounded;
    if(f%12===0)r.trace.push({f,p:p.pos.toArray(),speed:p.speed,grounded:p.grounded,vert:p.vertAir,state:p.state});
    if(p.isBailing||['dead','gameover'].includes(p.state)){r.failure={f,at:p.pos.toArray(),uv:uv(),state:p.state,bailCause};break;}
    if(stop(f,r,uv(),jumped)){r.ok=true;break;}
   }
   r.end={p:p.pos.toArray(),uv:uv(),speed:p.speed,grounded:p.grounded,state:p.state};results.push(r);return r;
  };
- for(const c of warehouseCases(p))run(c.name,c.at,c.h,c.sample,c.stop,c.max,c.speed);
+ for(const c of warehouseCases(p,geometry))run(c.name,c.at,c.h,c.sample,c.stop,c.max,c.speed);
  const ground=[];const ray=new THREE.Raycaster();
  for(const [u,v,y]of [[114,287,6.3],[469,389,2.66],[566,159,2.66],[345,22,2.66],[219,80,1.68]]){
   ray.set(new THREE.Vector3(...point(u,v,y+.05)),new THREE.Vector3(0,-1,0));ray.far=15;
-  const hits=ray.intersectObjects(level.groundMeshes,false);ground.push({u,v,y,support:hits[0]?.point.y,mesh:hits[0]?.object.name});
+  const hits=ray.intersectObjects(level.groundMeshes,false);ground.push({u,v,y:y*size,support:hits[0]?.point.y,mesh:hits[0]?.object.name});
  }
  const cpLine=run('floor checkpoint',[284,289,0],[0,0,-1],()=>({jumpHeld:true,moveY:1}),()=>level.checkpoints[0].active,150,20);
  assert.ok(cpLine.ok,'The floor checkpoint must bank from a normal skating pass');

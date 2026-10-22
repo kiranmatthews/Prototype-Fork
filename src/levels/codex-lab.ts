@@ -342,17 +342,25 @@ export const CODEX_LAB_LEVEL:CustomLevelData={
 };
 
 // Warehouse · 1999 reference study. u runs away from the start on the supplied
-// overhead plan; v runs to the rider's right. One uniform skater-relative scale.
-export const WAREHOUSE_SCALE=.14;
-export const warehousePoint=(u:number,v:number,y=0):Point=>[(v-208)*WAREHOUSE_SCALE,y,(253-u)*WAREHOUSE_SCALE];
+// overhead plan; v runs to the rider's right. Keep the surveyed proportions,
+// then enlarge the whole environment relative to the unchanged native skater.
+const WAREHOUSE_PLAN_SCALE=.14;
+export const WAREHOUSE_SIZE=1.5;
+export const WAREHOUSE_SCALE=WAREHOUSE_PLAN_SCALE*WAREHOUSE_SIZE;
+const warehouseAuthoredPoint=(u:number,v:number,y=0):Point=>[(v-208)*WAREHOUSE_PLAN_SCALE,y,(253-u)*WAREHOUSE_PLAN_SCALE];
+export const warehousePoint=(u:number,v:number,y=0):Point=>warehouseAuthoredPoint(u,v,y).map(n=>n*WAREHOUSE_SIZE) as Point;
+const WAREHOUSE_HALFPIPE={u:388,v0:208,v1:405,radius:2.8,flatHalf:3.5,height:2.8,bankRun:5,deck:.65};
 export const WAREHOUSE_LANDMARKS={
  spawn:warehousePoint(79,268,6.42),
- halfpipe:{u:388,v0:208,v1:405,radius:2.8,flatHalf:3.5,height:2.8},
+ halfpipe:{...WAREHOUSE_HALFPIPE,radius:2.8*WAREHOUSE_SIZE,flatHalf:3.5*WAREHOUSE_SIZE,height:2.8*WAREHOUSE_SIZE,bankRun:5*WAREHOUSE_SIZE,deck:.65*WAREHOUSE_SIZE},
  bigRail:[[330,148,.78],[442,148,.78],[469,170,.78]],
- kickerGap:{left:441,right:472,centreV:69,width:3.36,height:1.05},
+ kickerGap:{left:441,right:472,centreV:69,width:3.36*WAREHOUSE_SIZE,height:1.05*WAREHOUSE_SIZE},
  taxi:warehousePoint(520,279),secret:warehousePoint(388,372,6.35),
 } as const;
 export const WAREHOUSE_REFERENCE_LEVEL:CustomLevelData=(()=>{
+ // All construction below uses the original survey units. Transform both
+ // collision and visuals once at the end; never scale the player or physics.
+ const warehousePoint=warehouseAuthoredPoint,WAREHOUSE_SCALE=WAREHOUSE_PLAN_SCALE;
  const components:CustomComponent[]=[],groups:CustomGroup[]=[
   {id:500,nm:'Warehouse · floor and roll-in',editorOnly:true},
   {id:501,nm:'Halfpipe · banks · secret room',editorOnly:true},
@@ -415,16 +423,18 @@ export const WAREHOUSE_REFERENCE_LEVEL:CustomLevelData=(()=>{
  transition('Kicker wall quarterpipe',[[350,31],[420,31]],2.66,0,.56);
  rect('Kicker wall box shelf',330,8,365,31,2.66,wood,502);
  profile('Box shelf return bank',350,31,54,[[0,2.66],[18,0]],wood,502);
- const hp=WAREHOUSE_LANDMARKS.halfpipe;
+ const hp=WAREHOUSE_HALFPIPE,bankLip=hp.flatHalf+hp.radius+hp.deck,bankOuter=bankLip+hp.bankRun;
  add({t:'vertramp',nm:'Main halfpipe · bank-to-bank profile',p:warehousePoint(hp.u,(hp.v0+hp.v1)/2),
   len:(hp.v1-hp.v0)*WAREHOUSE_SCALE,yaw:90,vkind:'half',w:hp.flatHalf,rise:hp.radius,
-  arc:90,arcSteps:40,deck:.14,tex:'wood',color:wood,edgeGrinding:false,grp:501});
+  arc:90,arcSteps:40,deck:hp.deck,tex:'wood',color:wood,edgeGrinding:false,grp:501});
  // Exterior kickers are ordinary banks. Sharing the vert flag with the U
  // would turn their forward transfers into a wall air back toward the start.
+ // A 7.5 m run / 4.2 m rise at final scale gives a 31 degree upper face.
+ // The eased toe keeps the wheels down before the predictable straight takeoff.
  for(const side of [-1,1]){
   const verts:Point[]=[],indices:number[]=[],zc=warehousePoint(hp.u,0)[2];
   for(let i=0;i<=24;i++){
-   const t=i/24,e=.14,f=t<e?t*t/(2*e):t-e/2,y=hp.radius*f/(1-e/2),lat=8.24-1.8*t;
+   const t=i/24,e=.14,f=t<e?t*t/(2*e):t-e/2,y=hp.radius*f/(1-e/2),lat=bankOuter-hp.bankRun*t;
    verts.push([0,y,zc+side*lat],[(hp.v1-hp.v0)*WAREHOUSE_SCALE,y,zc+side*lat]);
    if(i){const a=(i-1)*2;indices.push(...(side>0?[a,a+1,a+3,a,a+3,a+2]:[a,a+3,a+1,a,a+2,a+3]));}
   }
@@ -432,8 +442,8 @@ export const WAREHOUSE_REFERENCE_LEVEL:CustomLevelData=(()=>{
  }
  // Only the ends of the outside banks taper; the U's floor remains open.
  for(const side of [-1,1]){
-  const zc=warehousePoint(hp.u,0)[2],lip=zc+side*6.3,outer=zc+side*8.24,inner=zc+side*3.5;
-  mesh('Halfpipe bank end apron',[[0,0,outer],[0,2.8,lip],[0,0,inner],[-2.8,0,lip]],
+  const zc=warehousePoint(hp.u,0)[2],lip=zc+side*bankLip,outer=zc+side*bankOuter,inner=zc+side*hp.flatHalf;
+  mesh('Halfpipe bank end apron',[[0,0,outer],[0,hp.height,lip],[0,0,inner],[-hp.radius,0,lip]],
    side<0?[0,1,3,1,2,3]:[0,3,1,1,3,2],wood,501,true,'wood');
  }
  // The suspended secret room is open along the bank-to-bank flight corridor.
@@ -443,7 +453,7 @@ export const WAREHOUSE_REFERENCE_LEVEL:CustomLevelData=(()=>{
  for(const u of [374,402])for(const v of [351,405])box('Secret room steel frame',u,v,8.55,.18,4.4,.18,'#303936','metal',501);
  for(const v of [351,405])for(const u of [381,388,395])box('Secret room window upright',u,v,8.7,.16,4.1,.08,steel,'metal',504);
  line('Big Rail · straight to kink',WAREHOUSE_LANDMARKS.bigRail.map(q=>[...q]));
- // Opposed kickers, 4.34 m clear gap, with solid back faces.
+ // Opposed kickers, 6.51 m clear gap at final scale, with solid back faces.
  profile('Kicker gap · launch',417,57,81,[[0,0],[24,1.05],[24.15,0]],wood,503);
  profile('Kicker gap · receiver',472,57,81,[[0,0],[.15,1.05],[26,0]],wood,503);
  profile('Taxi transfer · hood roof boot',502,269,288,[[0,0],[7,.65],[11,1.18],[24,1.18],[28,.65],[36,0]],'#b29b3f',503);
@@ -471,7 +481,7 @@ export const WAREHOUSE_REFERENCE_LEVEL:CustomLevelData=(()=>{
  line('High Rail · wall above the far quarterpipe',[[629,238,5.25],[629,337,5.25],[623,362,5.25]],502);
  for(const [i,u,v,y]of [[1,114,287,6.3],[2,469,389,2.66],[3,566,159,2.66],[4,345,22,2.66],[5,219,80,1.68]]){
   for(const [du,dv,dy]of [[0,0,0],[7,0,0],[0,7,0],[7,7,0],[3.5,3.5,.96]])
-   add({t:'crate',kind:'wood',p:warehousePoint(u+du,v+dv,y+dy),grp:505,nm:`Source Box ${i}`});
+   add({t:'crate',kind:'wood',p:warehousePoint(u+du/WAREHOUSE_SIZE,v+dv/WAREHOUSE_SIZE,y+dy/WAREHOUSE_SIZE),grp:505,nm:`Source Box ${i}`});
  }
  const perimeter=[[9,157],[138,157],[138,58],[330,58],[330,8],[584,8],[584,157],[634,157],[634,407],[253,407],[253,306],[9,306]];
  const wallP=warehousePoint(9,157,-3);
@@ -496,7 +506,7 @@ export const WAREHOUSE_REFERENCE_LEVEL:CustomLevelData=(()=>{
  // Solid vertical faces also answer the native 'is there a wall behind
  // this lip?' probe, preventing Up from transferring through masonry.
  for(let i=0;i<perimeter.length;i++){
-  const a=perimeter[i],b=perimeter[(i+1)%perimeter.length],k=.42/WAREHOUSE_SCALE/Math.hypot(b[0]-a[0],b[1]-a[1]);
+  const a=perimeter[i],b=perimeter[(i+1)%perimeter.length],k=.5/WAREHOUSE_SCALE/Math.hypot(b[0]-a[0],b[1]-a[1]);
   const du=-(b[1]-a[1])*k,dv=(b[0]-a[0])*k;
   mesh('Masonry contact face', [warehousePoint(a[0]+du,a[1]+dv,-3),warehousePoint(b[0]+du,b[1]+dv,-3),warehousePoint(b[0]+du,b[1]+dv,45),warehousePoint(a[0]+du,a[1]+dv,45)],
    [0,1,2,0,2,3],concrete,504,true,'solid');
@@ -544,10 +554,10 @@ export const WAREHOUSE_REFERENCE_LEVEL:CustomLevelData=(()=>{
   mesh('Warehouse roof · steel truss',vertices,indices,'#655b45',506,false,'metal');components[components.length-1].doubleSided=true;
  }
  for(let u=280;u<625;u+=20){
-  const v1=u>=329&&u<=447?207:403;
+  const v1=Math.abs(u-hp.u)<=bankOuter/WAREHOUSE_SCALE?207:403;
   quad('Concrete joint',warehousePoint(u,60,.008),warehousePoint(u+.15,60,.008),warehousePoint(u+.15,v1,.008),warehousePoint(u,v1,.008),'#747b74');
  }
- for(let v=65;v<402;v+=20)for(const [u0,u1]of (v>=208?[[275,329],[447,629]]:[[275,629]]))
+ for(let v=65;v<402;v+=20)for(const [u0,u1]of (v>=208?[[275,hp.u-bankOuter/WAREHOUSE_SCALE],[hp.u+bankOuter/WAREHOUSE_SCALE,629]]:[[275,629]]))
   quad('Concrete joint',warehousePoint(u0,v,.009),warehousePoint(u1,v,.009),warehousePoint(u1,v+.15,.009),warehousePoint(u0,v+.15,.009),'#747b74');
  for(const [u,v]of [[398,149],[520,279],[481,369]])for(let i=0;i<13;i++){
   const du=Math.sin(i*2.4)*23,dv=Math.cos(i*1.9)*17;
@@ -558,10 +568,19 @@ export const WAREHOUSE_REFERENCE_LEVEL:CustomLevelData=(()=>{
  add({t:'checkpoint',nm:'Warehouse floor recovery',p:warehousePoint(296,289,.02),grp:505});
  add({t:'zone',nm:'Warehouse arrival heading',p:warehousePoint(80,235,6.3),s:[25,1,19],dir:'S',grp:500});
  add({t:'pit',nm:'Outside shell recovery',p:warehousePoint(320,208,-7),s:[160,1,160],invisible:true,grp:505});
+ // Mesh s is a multiplier; platform s and path fields are metre dimensions.
+ // Native breakable crates keep their stock size and stacked spacing.
+ for(const c of components){
+  c.p=c.p.map(n=>n*WAREHOUSE_SIZE) as Point;
+  if(c.s)c.s=c.s.map(n=>n*WAREHOUSE_SIZE) as Point;
+  else if(c.t==='mesh')c.s=[WAREHOUSE_SIZE,WAREHOUSE_SIZE,WAREHOUSE_SIZE];
+  if(c.pts)c.pts=c.pts.map(q=>q.map((n,i)=>i<4?n*WAREHOUSE_SIZE:n) as typeof q);
+  for(const key of ['len','rise','w','deck'] as const)if(c[key]!==undefined)c[key]!*=WAREHOUSE_SIZE;
+ }
  return {v:1,name:'Warehouse · Reference',spawn:[...WAREHOUSE_LANDMARKS.spawn],startWarpPad:false,
-  skatepark:true,killY:-12,sky:'day',keepPlayFog:true,
-  atmosphere:{backdrop:'fog',fogEnabled:true,fogNear:85,fogFar:175,fogColor:'#454d48',
+  skatepark:true,killY:-12*WAREHOUSE_SIZE,sky:'day',keepPlayFog:true,
+  atmosphere:{backdrop:'fog',fogEnabled:true,fogNear:85*WAREHOUSE_SIZE,fogFar:175*WAREHOUSE_SIZE,fogColor:'#454d48',
    ambientSky:'#d5dfd2',ambientGround:'#776b54',ambientIntensity:1.25,
-   sunColor:'#ffedc4',sunIntensity:1.55,fillColor:'#a7bcc2',fillIntensity:.42,drawDistance:210,shadowStrength:.65},
+   sunColor:'#ffedc4',sunIntensity:1.55,fillColor:'#a7bcc2',fillIntensity:.42,drawDistance:210*WAREHOUSE_SIZE,shadowStrength:.65},
   components,groups};
 })();

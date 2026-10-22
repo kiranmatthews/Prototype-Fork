@@ -1,6 +1,7 @@
 // Ordinary controls shared by the physics and real-browser checks. Placement
 // is only the fixture setup; each line then uses the production controller.
-export function warehouseCases(p) {
+export function warehouseCases(p, geometry) {
+  const size = geometry.WAREHOUSE_SIZE;
   const cases = [];
   const add = (name, at, h, sample, stop, max = 400, speed = 16) =>
     cases.push({ name, at, h, sample, stop, max, speed });
@@ -19,20 +20,34 @@ export function warehouseCases(p) {
   add('halfpipe repeated airs', [388, 292, 0], forward, () => ({ jumpHeld: true }),
     (_f, r) => r.vertAirs >= 4 && p.grounded && p.rideNormal.y > .97, 1500);
   for (const [name, u, h, release, finish] of [
-    ['over the pipe', 290, forward, 337, 448],
-    ['over the pipe reverse', 486, [0, 0, 1], 439, 328],
+    ['over the pipe', 280, forward, 332, 476],
+    ['over the pipe reverse', 496, [0, 0, 1], 444, 300],
   ]) {
     let released = false;
     add(name, [u, 277, 0], h, (_f, _r, [u]) => {
       if (h[2] < 0 ? u > release : u < release) released = true;
       return { jumpHeld: !released, moveY: p.grounded ? 1 : 0 };
-    }, (_f, r, [u]) => r.airFrames > 8 && (h[2] < 0 ? u > finish : u < finish) && p.grounded, 400, 23);
+    }, (_f, r, [u]) => r.nearLipClear && r.farLipClear && (h[2] < 0 ? u > finish : u < finish) && p.grounded, 400, 23);
   }
-  // Quick ollies at ordinary pace pass through the room and roll out. A
-  // full bank pop can also clear its roof; it is a distinct, higher line.
-  for (const speed of [14, 15]) for (const release of [329, 330, 331])
-    add(`secret room ${speed}/${release}`, [315, 365, 0], forward,
-      (_f, _r, [u]) => ({ jumpHeld: u > release - 5 && u < release, moveY: p.grounded ? 1 : 0 }),
+  // From the actual balcony, build speed with the native controls and pop
+  // across both lips. Five release positions cover a useful input window.
+  for (const release of [320, 324, 328, 332, 334]) {
+    let released = false;
+    add(`opening halfpipe gap ${release}`, [79, 268, 6.3], forward, (_f, _r, [u]) => {
+      if (u > release) released = true;
+      return { jumpHeld: !released, moveY: p.grounded ? 1 : 0 };
+    }, (_f, r, [u]) => r.nearLipClear && r.farLipClear && u > 474 && p.grounded, 700, 0);
+  }
+  add('outside bank roll-in', [280, 277, 0], forward, () => ({jumpHeld:true,moveY:1}),
+    (_f, _r, [u]) => u > 370 && p.grounded && p.rideNormal.y > .97, 400, 0);
+  add('outside bank coping grind', [280, 250, 0], [.6,0,-.8], (_f, _r, [u]) =>
+    ({jumpHeld:true,grindHeld:u>335,moveY:p.grounded?1:0,moveX:balance()}),
+    (_f, r) => r.railFrames > 30, 400, 18);
+  // Charge on the floor, then use the bank's upward momentum to enter the
+  // enlarged room at ordinary skating speed and land on its supported floor.
+  for (const speed of [18, 20]) for (const release of [330, 332, 334])
+    add(`secret room ${speed}/${release}`, [280, 365, 0], forward,
+      (_f, _r, [u]) => ({ jumpHeld: u < release, moveY: p.grounded ? 1 : 0 }),
       (_f, r, [u]) => r.roomFrames > 2 && u > 448 && p.grounded, 180, speed);
   add('taxi transfer', [485, 279, 0], forward,
     (_f, _r, [u]) => ({ jumpHeld: u < 525, moveY: p.grounded ? 1 : 0 }),
@@ -49,21 +64,29 @@ export function warehouseCases(p) {
     add(name,[262,v,1.73],[1,0,0],(_f,_r,[_u,v])=>({jumpHeld:v>release-4&&v<release,grindHeld:v<release-6||v>end-18,moveX:balance()}),
       (_f,r,[_u,v])=>r.airFrames>8&&v>end&&(p.state==='grind'||p.grounded),300,12);
   add('high rail', [558, 245, 0], forward,
-    () => ({ jumpHeld: true, grindHeld: p.pos.y > 4.6 || p.state === 'grind', moveX: balance() }),
+    () => ({ jumpHeld: true, grindHeld: p.pos.y > 4.6 * size || p.state === 'grind', moveX: balance() }),
     (_f, r) => r.highRailFrames > 50, 300, 20);
   return cases;
 }
 
-export function warehouseUV(p) { return [253 - p.pos.z / .14, 208 + p.pos.x / .14]; }
-export function observeWarehouse(p, r, wasVert, old) {
-  const [u, v] = warehouseUV(p);
+export function warehouseUV(p, geometry) { return [253 - p.pos.z / geometry.WAREHOUSE_SCALE, 208 + p.pos.x / geometry.WAREHOUSE_SCALE]; }
+export function observeWarehouse(p, r, wasVert, old, geometry) {
+  const [u, v] = warehouseUV(p, geometry), size = geometry.WAREHOUSE_SIZE;
+  const oldU = 253 - old.z / geometry.WAREHOUSE_SCALE;
+  for (const [lip, key] of [[343, "nearLipClear"], [433, "farLipClear"]]) {
+    if ((oldU < lip && u >= lip) || (oldU > lip && u <= lip)) {
+      const y = old.y + (p.pos.y - old.y) * (lip - oldU) / (u - oldU);
+      if (v > 208 && v < 351 && !p.grounded && y >= 2.8 * size + .1) r[key] = true;
+      r.lipCrossings.push({lip, y, airborne:!p.grounded});
+    }
+  }
   r.frames++;
-  if (u > 374 && u < 402 && v > 351 && v < 405 && p.pos.y >= 6.3 && p.pos.y < 8.6) r.roomFrames++;
+  if (u > 374 && u < 402 && v > 351 && v < 405 && p.pos.y >= 6.3 * size && p.pos.y < 8.6 * size) r.roomFrames++;
   if (u > 441 && u < 472 && v > 57 && v < 81 && !p.grounded && p.pos.y > .15) r.gapAirFrames++;
   r.airFrames += !p.grounded; r.vertAirs += p.vertAir && !wasVert;
-  r.railFrames += p.state === 'grind'; r.highRailFrames += p.state === 'grind' && p.pos.y > 5;
+  r.railFrames += p.state === 'grind'; r.highRailFrames += p.state === 'grind' && p.pos.y > 5 * size;
   r.bails += p.isBailing; r.peak = Math.max(r.peak, p.pos.y);
   r.maxStep = Math.max(r.maxStep, old.distanceTo(p.pos)); r.minSpeed = Math.min(r.minSpeed, p.speed);
 }
 export const warehouseResult = name => ({ name, ok: false, frames: 0, airFrames: 0, vertAirs: 0,
-  railFrames: 0, highRailFrames: 0, roomFrames: 0, gapAirFrames: 0, bails: 0, peak: 0, maxStep: 0, minSpeed: Infinity, trace: [] });
+  nearLipClear: false, farLipClear: false, lipCrossings: [], railFrames: 0, highRailFrames: 0, roomFrames: 0, gapAirFrames: 0, bails: 0, peak: 0, maxStep: 0, minSpeed: Infinity, trace: [] });
