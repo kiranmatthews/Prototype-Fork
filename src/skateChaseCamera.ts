@@ -220,10 +220,18 @@ export class SkateChaseCamera {
       // ordinary fall. A rising ollie clears this latch immediately.
       this.ledgeDropActive=!!below&&below.object.userData.vert!==true&&rider.up.y>.98&&below.point.y<rider.position.y-3.5;
       if(this.ledgeDropActive){
+        // Grinding also counts as supported for camera framing. A rail
+        // suspended above the yard is not a walk-off ledge: require a real
+        // surface beneath the rider before anticipating the drop ahead.
+        this.ceilingProbe.copy(rider.position);this.ceilingProbe.y+=.15;
+        this.ray.set(this.ceilingProbe,this.down);this.ray.near=.01;this.ray.far=.65;
+        this.ledgeDropActive=!!this.ray.intersectObjects(surfaces,false)[0];
+      }
+      if(this.ledgeDropActive){
         // A small opening with more roof beyond it uses the skylight shot.
         // A genuine run-off stays lower on the far side of this second probe.
-        this.ceilingProbe.addScaledVector(this.ceilingSweepDirection,5);
-        this.ray.set(this.ceilingProbe,this.down);
+        this.ceilingProbe.copy(rider.position).addScaledVector(this.ceilingSweepDirection,10);this.ceilingProbe.y+=12;
+        this.ray.set(this.ceilingProbe,this.down);this.ray.near=.05;this.ray.far=24;
         const farSide=this.ray.intersectObjects(surfaces,false)[0];
         this.ledgeDropActive=!!farSide&&farSide.point.y<rider.position.y-3.5;
       }

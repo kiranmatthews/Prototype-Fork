@@ -1367,6 +1367,174 @@
       }
     },
     {
+      "name": "Scaled Funbox to perimeter rail",
+      "passed": true,
+      "frames": 138,
+      "maxStep": 0.5765488958949769,
+      "maxCameraStep": 0.9053386580815316,
+      "maxCrop": 0.7712263826854455,
+      "worstCamera": {
+        "frame": 89,
+        "pos": [
+          -46.54057089119113,
+          -7.3,
+          -137.6170667934143
+        ],
+        "eye": [
+          -45.37479356726831,
+          -2.1729279825927286,
+          -142.71866055560406
+        ],
+        "previousEye": [
+          -45.132600315939264,
+          -2.198656722525746,
+          -143.590623024274
+        ],
+        "state": "grind"
+      },
+      "end": [
+        -47.72319565624434,
+        -10,
+        -124.04670343388324
+      ],
+      "result": {
+        "transfer": {
+          "frames": 138,
+          "air": true,
+          "takeoffY": -8.510105141962253,
+          "receivingGrindFrames": 12,
+          "minGrindSpeed": 16.898781770034958,
+          "landed": true
+        }
+      }
+    },
+    {
+      "name": "Scaled Funbox to Table",
+      "passed": true,
+      "frames": 112,
+      "maxStep": 0.7529656965028677,
+      "maxCameraStep": 0.7639263058800957,
+      "maxCrop": 0.7712263826854411,
+      "worstCamera": {
+        "frame": 68,
+        "pos": [
+          -33.57838827744705,
+          -7.8831934246805,
+          -133.71180555973618
+        ],
+        "eye": [
+          -29.198257719226728,
+          -2.723113115023617,
+          -138.31719850136676
+        ],
+        "previousEye": [
+          -29.392523713571777,
+          -2.509098933662623,
+          -139.0243350189029
+        ],
+        "state": "grind"
+      },
+      "end": [
+        -44.39546147453582,
+        -10,
+        -126.1935289304454
+      ],
+      "result": {
+        "transfer": {
+          "frames": 112,
+          "air": true,
+          "takeoffY": -7.699999809265137,
+          "receivingGrindFrames": 22,
+          "minGrindSpeed": 17.86764590964503,
+          "landed": true
+        }
+      }
+    },
+    {
+      "name": "Scaled Funbox to Playground Rail",
+      "passed": true,
+      "frames": 141,
+      "maxStep": 0.7154518086609116,
+      "maxCameraStep": 0.6985325267151274,
+      "maxCrop": 0.7712263826854424,
+      "worstCamera": {
+        "frame": 24,
+        "pos": [
+          42.45633646488176,
+          -7.479519799800736,
+          -139.32603975359484
+        ],
+        "eye": [
+          48.34609512588077,
+          -4.439674591949513,
+          -138.10609981002222
+        ],
+        "previousEye": [
+          48.739271724087374,
+          -5.01322698269525,
+          -138.03978609672282
+        ],
+        "state": "air"
+      },
+      "end": [
+        3.488357361850092,
+        -10,
+        -141.75163488916922
+      ],
+      "result": {
+        "transfer": {
+          "frames": 141,
+          "air": true,
+          "takeoffY": -7.946027993798795,
+          "receivingGrindFrames": 12,
+          "minGrindSpeed": 19.966867468248033,
+          "landed": true
+        }
+      }
+    },
+    {
+      "name": "Scaled West wedge to Long Ass Rail",
+      "passed": true,
+      "frames": 165,
+      "maxStep": 0.495243907412785,
+      "maxCameraStep": 0.869343849565317,
+      "maxCrop": 0.7716605681429899,
+      "worstCamera": {
+        "frame": 75,
+        "pos": [
+          -49.053769058290925,
+          -8.800796446307219,
+          -59.45137564036207
+        ],
+        "eye": [
+          -43.937791554885806,
+          -3.662527103275214,
+          -56.77752619145503
+        ],
+        "previousEye": [
+          -44.08624238981292,
+          -3.545751712636862,
+          -55.92894821240552
+        ],
+        "state": "grind"
+      },
+      "end": [
+        -63.10181373435811,
+        -10,
+        -53.78001646853275
+      ],
+      "result": {
+        "transfer": {
+          "frames": 165,
+          "air": true,
+          "takeoffY": -8.79161515533444,
+          "receivingGrindFrames": 73,
+          "minGrindSpeed": 10.398218496684457,
+          "landed": true
+        }
+      }
+    },
+    {
       "name": "Scaled continuous campus circuit",
       "passed": true,
       "frames": 5212,

@@ -1,6 +1,7 @@
 import { SCHOOL_WORLD_SCALE, schoolWorldPoint, SCHOOL_KICKER, SCHOOL_POOLS, SCHOOL_ROOF_ACCESS, SCHOOL_ROOF_AC, SCHOOL_ROOF_FLAT_RAILS, SCHOOL_MAIN_RAIL, SCHOOL_CHECKPOINTS, SCHOOL_DITCH, SCHOOL_DITCH_SLAP, SCHOOL_DITCH_KICKER, SCHOOL_BRIDGES } from '../src/levels/school-miami';
 import { createBalancedGrind } from './school-grind-lines';
 import { createSchoolCircuit } from './school-circuit';
+import { schoolStreetTrials, createStreetTransfer } from './school-street-transfers';
 type Point=[number,number,number];
 type Place=(q:Point,h:Point,speed:number)=>void;
 export type SchoolScaleTrial={name:string;limit:number;init:()=>void;sample:(n:number)=>any;observe:(n:number)=>boolean;result:any;allowDeath?:boolean};
@@ -93,6 +94,13 @@ export function schoolScaleTrials(p:any,l:any,place:Place,dt:number,S=SCHOOL_WOR
       sample:n=>{const release=!popped&&(k.p[0]*S-p.pos.x)*h[0]+(k.p[2]*S-p.pos.z)*h[2]<-k.run*S/2+.8;if(release)popped=true;return{jumpHeld:!popped,jumpPressed:n===0,jumpReleased:release};},
       observe:()=>{air||=p.state==='air';const past=(p.pos.x-b.p[0]*S)*h[0]+(p.pos.z-b.p[2]*S)*h[2];if(Math.abs(past)<.5&&p.state==='air'&&p.pos.y>-4.58*S)over=true;
         if(!air||!p.grounded||past<=b.width*S/2)return false;result.firstLanding=p.pos.toArray();result.overBridge=over;if(!over)throw Error('Footbridge jump missed the bridge');return true;}});
+  }
+  for(const route of schoolStreetTrials(l,p,S)){
+    let line:ReturnType<typeof createStreetTransfer>;const result:any={};
+    cases.push({name:`Scaled ${route.name}`,limit:650,result,init:()=>{
+      const h=p.axisF.clone().set(...route.heading).normalize(),q=p.pos.clone().set(...route.centre).addScaledVector(h,-route.approach);q.y=-5*S+.1;
+      place(q.toArray(),h.toArray(),route.speed);line=createStreetTransfer(p,route,dt);result.transfer=line.report;
+    },sample:()=>line.sample(),observe:()=>line.observe()});
   }
   {let line:ReturnType<typeof createSchoolCircuit>;const result:any={};cases.push({name:'Scaled continuous campus circuit',limit:7000,result,
     init:()=>{p.respawn(l,true);line=createSchoolCircuit(p,S);result.circuit=line.report;},sample:()=>line.sample(),observe:()=>line.observe()});}

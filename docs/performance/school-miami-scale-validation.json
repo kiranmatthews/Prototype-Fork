@@ -5,12 +5,12 @@
   "supportProbes": 18,
   "railClearanceSamples": 97,
   "ditchApproachSamples": 8,
-  "nativeCases": 31,
-  "nativeSteps": 10149,
-  "browserLiteSteps": 10149,
-  "browserFullSteps": 10149,
+  "nativeCases": 35,
+  "nativeSteps": 10705,
+  "browserLiteSteps": 10705,
+  "browserFullSteps": 10705,
   "maxCameraStep": 0.9268067270831046,
-  "maxBodySpanCrop": 0.7712899594242415,
+  "maxBodySpanCrop": 0.7716605681429899,
   "tuningUnchanged": true,
   "circuit": {
     "frames": 5212,
@@ -26,23 +26,73 @@
     "worldScale": 1,
     "supports": 94,
     "cases": 80,
-    "runtime": "Iteration-18 player/level snapshots; see school-miami-scale-authoring-regressions.json"
+    "runtime": "Iteration-18 player/level snapshots; see school-miami-scale-authoring-regressions.json",
+    "historical": true
   },
   "checks": [
     "test-school-scale.mjs with the fingerprinted runtime snapshot",
-    "test-school-details.mjs with iteration-18 player/level snapshots",
-    "test-school-camera.mjs with iteration-18 player/level snapshots",
     "test-park-camera-framing.mjs with the fingerprinted runtime snapshot",
     "test-jungle-cup-grind-camera.mjs with the fingerprinted runtime snapshot",
     "npm run check:levels",
     "npm run build"
   ],
-  "build": "b94c05b098c1c428fe60",
+  "build": "1c11b37fd27871828d71",
   "delivery": "Local only; no push, upload or deployment.",
   "limitations": [
     "Strict original 1:1 dimensions remain unverified; the user-directed 2x scale is calibrated for this skater.",
-    "The older 1x monolithic physics pilot still reports a wrong-rail catch on West wedge to Long Ass Rail. That suite is not claimed passing, nor are all earlier authoring-scale routes certified at 2x.",
+    "The historical 1x monolithic physics pilot overshoots Long Ass Rail and catches the farther rail. It is not claimed passing. The current 2x West wedge transfer now passes with the intended catch, 73 grind frames and a supported landing. Earlier authoring-scale routes beyond the current 35 cases remain historical.",
     "Concurrent level work changed the shared controller. Browser and headless validation use a single read-only runtime snapshot; revalidate when integrating different runtime versions.",
-    "An inherited preview-tab MutationObserver error at 21:24:27 UTC predates the final reload. No warning/error has been recorded since that reload; the historical startup issue is not claimed fixed."
-  ]
+    "The earlier preview-tab MutationObserver startup error is retained as historical evidence. Both current browser modes have empty warning/error logs; this iteration does not claim to repair that historical error."
+  ],
+  "streetTransfers": [
+    {
+      "name": "Scaled Funbox to perimeter rail",
+      "frames": 138,
+      "maxCameraStep": 0.9053386580815316,
+      "maxCrop": 0.7712263826854455,
+      "air": true,
+      "takeoffY": -8.510105141962253,
+      "receivingGrindFrames": 12,
+      "minGrindSpeed": 16.898781770034958,
+      "landed": true
+    },
+    {
+      "name": "Scaled Funbox to Table",
+      "frames": 112,
+      "maxCameraStep": 0.7639263058800957,
+      "maxCrop": 0.7712263826854411,
+      "air": true,
+      "takeoffY": -7.699999809265137,
+      "receivingGrindFrames": 22,
+      "minGrindSpeed": 17.86764590964503,
+      "landed": true
+    },
+    {
+      "name": "Scaled Funbox to Playground Rail",
+      "frames": 141,
+      "maxCameraStep": 0.6985325267151274,
+      "maxCrop": 0.7712263826854424,
+      "air": true,
+      "takeoffY": -7.946027993798795,
+      "receivingGrindFrames": 12,
+      "minGrindSpeed": 19.966867468248033,
+      "landed": true
+    },
+    {
+      "name": "Scaled West wedge to Long Ass Rail",
+      "frames": 165,
+      "maxCameraStep": 0.869343849565317,
+      "maxCrop": 0.7716605681429899,
+      "air": true,
+      "takeoffY": -8.79161515533444,
+      "receivingGrindFrames": 73,
+      "minGrindSpeed": 10.398218496684457,
+      "landed": true
+    }
+  ],
+  "playgroundCamera": {
+    "beforeMaxStep": 1.0755560304160658,
+    "afterMaxStep": 0.6985325267151274,
+    "fix": "Require actual ground beneath the rider before anticipating an open ledge. An elevated grind is supported for framing but is not a ground run-off."
+  }
 }
