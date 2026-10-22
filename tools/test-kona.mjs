@@ -22,7 +22,7 @@ await withBlockworksRuntime(async r=>{
 
  const normalized=normalizeCustomLevelData(source);
  assert.equal(normalized.components.filter(c=>c.coping===true).length,source.components.filter(c=>c.coping===true).length,'save/load must preserve authored coping');
- assert.ok(l.groundMeshes.filter(mesh=>['Spinal grooves','Tombstone','Over the roll-in / timber vert'].includes(mesh.name)).every(mesh=>mesh.userData.authoredVertMesh===true),'custom vert meshes need native contact and landing support');
+ assert.ok(l.groundMeshes.filter(mesh=>mesh.userData.vert===true&&['Spinal grooves','Tombstone','Over the roll-in / timber vert'].includes(mesh.name)).every(mesh=>mesh.userData.authoredVertMesh===true),'custom vert meshes need native contact and landing support');
  for(const cp of m.KONA_CHECKPOINTS){const hit=support(cp.p);assert.ok(hit&&Math.abs(hit.point.y-cp.p[1])<.15,`${cp.name} checkpoint needs supported ground`);}
  const {Rail}=await server.ssrLoadModule('/src/rails.ts');
  const originalRails=l.rails,bar=new Rail([new THREE.Vector3(.5,1.2,-3),new THREE.Vector3(.5,1.2,3)]);

@@ -1,0 +1,972 @@
+{
+  "scale": 0.025,
+  "scaleMultiplier": 2,
+  "components": 1096,
+  "meshVertices": 31246,
+  "meshTriangles": 36170,
+  "nativeWalls": 2640,
+  "rails": 97,
+  "wallApproaches": [
+    {
+      "source": 1,
+      "mid": [
+        -31.872249999999998,
+        6.072236,
+        -100.9945
+      ],
+      "normal": [
+        0.2364468595288464,
+        0,
+        0.97164442190492
+      ],
+      "start": [
+        -31.16290942141346,
+        6.066649029584305,
+        -98.07956673428524
+      ],
+      "closest": 0.6940456407168812,
+      "penetrated": false,
+      "bails": 0
+    },
+    {
+      "source": 1,
+      "mid": [
+        48.16100000000001,
+        6.055611,
+        -100.794375
+      ],
+      "normal": [
+        -0.2975821863166634,
+        0,
+        0.9546962042382877
+      ],
+      "start": [
+        47.26825344105002,
+        6.055611,
+        -97.93028638728514
+      ],
+      "closest": 0.7161391952774747,
+      "penetrated": false,
+      "bails": 0
+    },
+    {
+      "source": 1,
+      "mid": [
+        37.84437500000001,
+        6.055611,
+        -103.216625
+      ],
+      "normal": [
+        -0.14027024370863736,
+        0,
+        0.990113255506621
+      ],
+      "start": [
+        37.423564268874095,
+        6.055611,
+        -100.24628523348014
+      ],
+      "closest": 0.6551917496076236,
+      "penetrated": false,
+      "bails": 0
+    },
+    {
+      "source": 88,
+      "mid": [
+        -22.444499999999998,
+        0.00011099999999970579,
+        121.2
+      ],
+      "normal": [
+        1,
+        0,
+        0
+      ],
+      "start": [
+        -19.444499999999998,
+        0.00011099999999970579,
+        121.2
+      ],
+      "closest": 0.5899999999999999,
+      "penetrated": false,
+      "bails": 0
+    },
+    {
+      "source": 88,
+      "mid": [
+        -60,
+        0.00011099999999970579,
+        111.7555
+      ],
+      "normal": [
+        -1,
+        0,
+        0
+      ],
+      "start": [
+        -63,
+        0.00011099999999970579,
+        111.7555
+      ],
+      "closest": 0.5900000000000034,
+      "penetrated": false,
+      "bails": 0
+    },
+    {
+      "source": 88,
+      "mid": [
+        -22.444499999999998,
+        0.00011099999999970579,
+        111.7555
+      ],
+      "normal": [
+        1,
+        0,
+        0
+      ],
+      "start": [
+        -19.444499999999998,
+        0.0001109999999997058,
+        111.7555
+      ],
+      "closest": 0.5899999999999999,
+      "penetrated": false,
+      "bails": 0
+    },
+    {
+      "source": 130,
+      "mid": [
+        -13.599999999999998,
+        0.00011099999999970579,
+        117.422125
+      ],
+      "normal": [
+        -1,
+        0,
+        0
+      ],
+      "start": [
+        -16.599999999999998,
+        0.00011099999999970579,
+        117.422125
+      ],
+      "closest": 0.5899999999999999,
+      "penetrated": false,
+      "bails": 0
+    },
+    {
+      "source": 130,
+      "mid": [
+        -13.599999999999998,
+        0.00011099999999970579,
+        117.422125
+      ],
+      "normal": [
+        1,
+        0,
+        0
+      ],
+      "start": [
+        -10.599999999999998,
+        1.6703276578565007,
+        117.422125
+      ],
+      "closest": 2.997222225260037,
+      "penetrated": false,
+      "bails": 0
+    },
+    {
+      "source": 130,
+      "mid": [
+        -13.599999999999998,
+        0.00011099999999970579,
+        104.2
+      ],
+      "normal": [
+        1,
+        0,
+        0
+      ],
+      "start": [
+        -10.599999999999998,
+        1.670327657856501,
+        104.2
+      ],
+      "closest": 2.997222225260037,
+      "penetrated": false,
+      "bails": 0
+    },
+    {
+      "source": 3,
+      "mid": [
+        -57.7055,
+        7.622236,
+        0.7055000000000007
+      ],
+      "normal": [
+        -0.9927589162225192,
+        0,
+        -0.12012382886292468
+      ],
+      "start": [
+        -60.683776748667555,
+        7.62709043275289,
+        0.34512851341122663
+      ],
+      "closest": 0.6464413725427263,
+      "penetrated": false,
+      "bails": 0
+    },
+    {
+      "source": 3,
+      "mid": [
+        -57.7055,
+        7.622236,
+        0.7055000000000007
+      ],
+      "normal": [
+        0.9927589162225192,
+        0,
+        0.12012382886292468
+      ],
+      "start": [
+        -54.72722325133245,
+        9.066610999999998,
+        1.0658714865887746
+      ],
+      "closest": 0.6464413725427236,
+      "penetrated": false,
+      "bails": 0
+    },
+    {
+      "source": 6,
+      "mid": [
+        116.411125,
+        1.0556109999999996,
+        57.300000000000004
+      ],
+      "normal": [
+        -0.9674353991932833,
+        0,
+        0.25311805227547973
+      ],
+      "start": [
+        113.50881880242015,
+        1.1140109426719398,
+        58.059354156826444
+      ],
+      "closest": 0.7002767257343803,
+      "penetrated": false,
+      "bails": 0
+    },
+    {
+      "source": 6,
+      "mid": [
+        118.22225,
+        4.544360999999999,
+        129.533375
+      ],
+      "normal": [
+        -1,
+        0,
+        0
+      ],
+      "start": [
+        115.22225,
+        4.544360999999999,
+        129.533375
+      ],
+      "closest": 0.5900000000000034,
+      "penetrated": false,
+      "bails": 0
+    },
+    {
+      "source": 6,
+      "mid": [
+        118.22225,
+        2.7888610000000003,
+        143.077875
+      ],
+      "normal": [
+        -1,
+        0,
+        0
+      ],
+      "start": [
+        115.22225,
+        2.7888610000000007,
+        143.077875
+      ],
+      "closest": 0.5900000000000034,
+      "penetrated": false,
+      "bails": 0
+    },
+    {
+      "source": 14,
+      "mid": [
+        -27.911125,
+        5.855611,
+        -4.92775
+      ],
+      "normal": [
+        0.8845637141240977,
+        0,
+        -0.46641937744371353
+      ],
+      "start": [
+        -25.257433857627706,
+        5.855611,
+        -6.32700813233114
+      ],
+      "closest": 0.7654915457839029,
+      "penetrated": false,
+      "bails": 0
+    },
+    {
+      "source": 15,
+      "mid": [
+        62.633250000000004,
+        6.055611,
+        -84.03325
+      ],
+      "normal": [
+        -1,
+        0,
+        0
+      ],
+      "start": [
+        59.633250000000004,
+        6.055611000000001,
+        -84.03325
+      ],
+      "closest": 0.5900000000000034,
+      "penetrated": false,
+      "bails": 0
+    },
+    {
+      "source": 15,
+      "mid": [
+        62.633250000000004,
+        6.055611,
+        -73.811125
+      ],
+      "normal": [
+        -1,
+        0,
+        0
+      ],
+      "start": [
+        59.633250000000004,
+        6.055610999999999,
+        -73.811125
+      ],
+      "closest": 0.5900000000000034,
+      "penetrated": false,
+      "bails": 0
+    },
+    {
+      "source": 15,
+      "mid": [
+        67.46112500000001,
+        6.055611,
+        -89.23325
+      ],
+      "normal": [
+        0,
+        0,
+        -1
+      ],
+      "start": [
+        67.46112500000001,
+        6.055610999999999,
+        -92.23325
+      ],
+      "closest": 0.5900000000000034,
+      "penetrated": false,
+      "bails": 0
+    },
+    {
+      "source": 20,
+      "mid": [
+        -46.56675,
+        6.055611,
+        -34.866625
+      ],
+      "normal": [
+        0.9569344947579917,
+        0,
+        -0.2903039316686343
+      ],
+      "start": [
+        -43.69594651572602,
+        6.055610999999999,
+        -35.7375367950059
+      ],
+      "closest": 0.7136192132133085,
+      "penetrated": false,
+      "bails": 0
+    },
+    {
+      "source": 20,
+      "mid": [
+        -34.6555,
+        5.955610999999999,
+        -15.411125
+      ],
+      "normal": [
+        0.7812558982275469,
+        0,
+        -0.6242108790181962
+      ],
+      "start": [
+        -32.31173230531736,
+        5.983142707141379,
+        -17.28375763705459
+      ],
+      "closest": 0.7927333886228776,
+      "penetrated": false,
+      "bails": 0
+    },
+    {
+      "source": 20,
+      "mid": [
+        -41.5,
+        6.055611,
+        -24.411125
+      ],
+      "normal": [
+        0.8106136388807831,
+        0,
+        -0.5855813593860849
+      ],
+      "start": [
+        -39.06815908335765,
+        6.055611,
+        -26.167869078158255
+      ],
+      "closest": 0.7880974991334346,
+      "penetrated": false,
+      "bails": 0
+    },
+    {
+      "source": 22,
+      "mid": [
+        85.82775000000001,
+        6.044361,
+        -25.177750000000003
+      ],
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "start": [
+        85.82775000000001,
+        6.044361,
+        -22.177750000000003
+      ],
+      "closest": 0.5899999999999999,
+      "penetrated": false,
+      "bails": 0
+    },
+    {
+      "source": 24,
+      "mid": [
+        48.12225000000001,
+        6.055611,
+        6.844375
+      ],
+      "normal": [
+        1,
+        0,
+        0
+      ],
+      "start": [
+        51.12225000000001,
+        6.055611000000001,
+        6.844375
+      ],
+      "closest": 0.5900000000000034,
+      "penetrated": false,
+      "bails": 0
+    },
+    {
+      "source": 24,
+      "mid": [
+        39.094500000000004,
+        6.055611,
+        12.83325
+      ],
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "start": [
+        39.094500000000004,
+        6.012941646445995,
+        15.83325
+      ],
+      "closest": 0.5899999999999999,
+      "penetrated": false,
+      "bails": 0
+    },
+    {
+      "source": 24,
+      "mid": [
+        46.277750000000005,
+        6.055611,
+        12.83325
+      ],
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "start": [
+        46.277750000000005,
+        6.009612998415051,
+        15.83325
+      ],
+      "closest": 0.5858840411163175,
+      "penetrated": false,
+      "bails": 0
+    }
+  ],
+  "pipeApproaches": [
+    {
+      "pipe": 0,
+      "side": -1,
+      "angle": 0,
+      "climbed": 4.10876954772917,
+      "transitionFrames": 143,
+      "worstPenetration": 3.0158159769477777e-07,
+      "bailed": false,
+      "airFrames": 38,
+      "returned": true
+    },
+    {
+      "pipe": 0,
+      "side": -1,
+      "angle": 0.25,
+      "climbed": 3.8311515608843436,
+      "transitionFrames": 147,
+      "worstPenetration": 2.9859649353092266e-07,
+      "bailed": false,
+      "airFrames": 35,
+      "returned": true
+    },
+    {
+      "pipe": 0,
+      "side": 1,
+      "angle": 0,
+      "climbed": 4.1194772228226935,
+      "transitionFrames": 143,
+      "worstPenetration": 1.501957780369878e-06,
+      "bailed": false,
+      "airFrames": 38,
+      "returned": true
+    },
+    {
+      "pipe": 0,
+      "side": 1,
+      "angle": 0.25,
+      "climbed": 3.833534154577613,
+      "transitionFrames": 147,
+      "worstPenetration": 1.6747643565295789e-06,
+      "bailed": false,
+      "airFrames": 35,
+      "returned": true
+    },
+    {
+      "pipe": 1,
+      "side": -1,
+      "angle": 0,
+      "climbed": 4.117290296589508,
+      "transitionFrames": 148,
+      "worstPenetration": 4.934267715306362e-06,
+      "bailed": false,
+      "airFrames": 38,
+      "returned": true
+    },
+    {
+      "pipe": 1,
+      "side": -1,
+      "angle": 0.25,
+      "climbed": 4.0561960218072635,
+      "transitionFrames": 153,
+      "worstPenetration": 4.900924040374122e-06,
+      "bailed": false,
+      "airFrames": 38,
+      "returned": true
+    },
+    {
+      "pipe": 1,
+      "side": 1,
+      "angle": 0,
+      "climbed": 1.983036856400238,
+      "transitionFrames": 103,
+      "worstPenetration": 1.7172784099184213e-06,
+      "bailed": false,
+      "airFrames": 0,
+      "returned": true
+    },
+    {
+      "pipe": 1,
+      "side": 1,
+      "angle": 0.25,
+      "climbed": 3.6144443385700655,
+      "transitionFrames": 143,
+      "worstPenetration": 2.971430033138489e-06,
+      "bailed": false,
+      "airFrames": 30,
+      "returned": true
+    },
+    {
+      "pipe": 2,
+      "side": -1,
+      "angle": 0,
+      "climbed": 5.469744221175233,
+      "transitionFrames": 206,
+      "worstPenetration": 2.000184943007355e-06,
+      "bailed": false,
+      "airFrames": 0,
+      "returned": true
+    },
+    {
+      "pipe": 2,
+      "side": -1,
+      "angle": 0.25,
+      "climbed": 5.783364298199128,
+      "transitionFrames": 206,
+      "worstPenetration": 2.4611210598379785e-06,
+      "bailed": false,
+      "airFrames": 0,
+      "returned": true
+    },
+    {
+      "pipe": 2,
+      "side": 1,
+      "angle": 0,
+      "climbed": 5.46995769283893,
+      "transitionFrames": 206,
+      "worstPenetration": 1.713200574293694e-06,
+      "bailed": false,
+      "airFrames": 0,
+      "returned": true
+    },
+    {
+      "pipe": 2,
+      "side": 1,
+      "angle": 0.25,
+      "climbed": 5.773095246572879,
+      "transitionFrames": 206,
+      "worstPenetration": 3.5574401868743166e-06,
+      "bailed": false,
+      "airFrames": 0,
+      "returned": true
+    }
+  ],
+  "pilotRoutes": [
+    {
+      "name": "Snake downhill",
+      "index": 396,
+      "total": 402,
+      "maxError": 4.060333946071707,
+      "air": 0,
+      "stalls": 0,
+      "end": {
+        "frame": 1213,
+        "position": [
+          -35.37388325797671,
+          7.232949245207221,
+          -0.9226015729218584
+        ],
+        "state": "ride",
+        "grounded": true,
+        "bailing": false,
+        "deaths": 0
+      }
+    },
+    {
+      "name": "Snake uphill",
+      "index": 396,
+      "total": 402,
+      "maxError": 1.0337178877871356,
+      "air": 0,
+      "stalls": 0,
+      "end": {
+        "frame": 912,
+        "position": [
+          67.71351468300429,
+          0.27184320734517753,
+          -2.866920571467538
+        ],
+        "state": "ride",
+        "grounded": true,
+        "bailing": false,
+        "deaths": 0
+      }
+    },
+    {
+      "name": "Spinal grooves / west mini",
+      "airs": [
+        {
+          "frame": 83,
+          "peak": 5.90978067930549,
+          "landed": 152
+        },
+        {
+          "frame": 212,
+          "peak": 13.735966434644613,
+          "landed": 321
+        },
+        {
+          "frame": 369,
+          "peak": 15.034377295912387,
+          "landed": 483
+        },
+        {
+          "frame": 530,
+          "peak": 14.965474491008639,
+          "landed": 644
+        }
+      ],
+      "maxY": 15.034377295912387,
+      "end": {
+        "frame": 678,
+        "position": [
+          -10.065214852433048,
+          0.859507442325846,
+          110.77747159810363
+        ],
+        "state": "ride",
+        "grounded": true,
+        "bailing": false,
+        "deaths": 0
+      }
+    },
+    {
+      "name": "Spinal grooves / east mini",
+      "airs": [
+        {
+          "frame": 81,
+          "peak": 5.688864357437753,
+          "landed": 149
+        },
+        {
+          "frame": 210,
+          "peak": 14.122295513675049,
+          "landed": 320
+        },
+        {
+          "frame": 369,
+          "peak": 15.038888488337056,
+          "landed": 483
+        },
+        {
+          "frame": 532,
+          "peak": 15.041717974660019,
+          "landed": 646
+        }
+      ],
+      "maxY": 15.041717974660019,
+      "end": {
+        "frame": 680,
+        "position": [
+          9.346524320481365,
+          1.0348035883477014,
+          110.8102317227575
+        ],
+        "state": "ride",
+        "grounded": true,
+        "bailing": false,
+        "deaths": 0
+      }
+    },
+    {
+      "name": "Over the roll-in / timber vert",
+      "airs": [
+        {
+          "frame": 96,
+          "peak": 7.050776629727929,
+          "landed": 170
+        },
+        {
+          "frame": 241,
+          "peak": 15.415693339558565,
+          "landed": 355
+        },
+        {
+          "frame": 417,
+          "peak": 15.437553063889977,
+          "landed": 531
+        },
+        {
+          "frame": 593,
+          "peak": 15.414732782885386,
+          "landed": 707
+        }
+      ],
+      "maxY": 15.437553063889977,
+      "end": {
+        "frame": 741,
+        "position": [
+          -51.61262334048092,
+          1.3204752272936653,
+          111.9365508903713
+        ],
+        "state": "ride",
+        "grounded": true,
+        "bailing": false,
+        "deaths": 0
+      }
+    }
+  ],
+  "isolatedValidation": {
+    "base": "34adebe38b283da0cd8959a1a17b6c01d6e1941e",
+    "typecheck": true,
+    "structuralTest": true,
+    "wallApproaches": 25,
+    "wallContacts": 23,
+    "wallPenetrations": 0,
+    "pipeApproaches": 12,
+    "maxPipePenetration": 4.934267715306362e-06
+  },
+  "localChecks": {
+    "levelChecks": true,
+    "typescript": true,
+    "productionBuild": true,
+    "fullSuiteRun": false
+  },
+  "browser": {
+    "status": "passed",
+    "rendering": "full",
+    "liteCasesVerified": [
+      "vert",
+      "transfer",
+      "rail",
+      "snake",
+      "recovery"
+    ],
+    "completed": [
+      {
+        "kind": "vert",
+        "frames": 652,
+        "airs": 4,
+        "grounded": true,
+        "ground": "Spinal grooves",
+        "position": [
+          -10.065200654088056,
+          0.8594913879232112,
+          110.81099999999999
+        ],
+        "bails": 0,
+        "deaths": 0,
+        "grindFrames": 0,
+        "transferred": false,
+        "takeoffFrom": "Spinal grooves",
+        "pass": true
+      },
+      {
+        "kind": "transfer",
+        "frames": 161,
+        "airs": 1,
+        "grounded": true,
+        "ground": "Spinal grooves",
+        "position": [
+          14.063683905234528,
+          0.00011100000119768083,
+          110.81099999999999
+        ],
+        "bails": 0,
+        "deaths": 0,
+        "grindFrames": 0,
+        "transferred": true,
+        "takeoffFrom": "Spinal grooves",
+        "pass": true
+      },
+      {
+        "kind": "jump",
+        "frames": 156,
+        "grounded": true,
+        "ground": "Street / south catcher",
+        "position": [
+          72.25,
+          1.8888609409332275,
+          124.34913395509358
+        ],
+        "bails": 0,
+        "deaths": 0,
+        "grindFrames": 0,
+        "takeoffFrom": "Street / north kicker",
+        "landedOn": "Street / south catcher",
+        "lateral": 0,
+        "pass": true
+      },
+      {
+        "kind": "rail",
+        "frames": 188,
+        "grounded": true,
+        "ground": "Kona / concrete and architecture",
+        "position": [
+          86.82940973392462,
+          0.00011100000119768083,
+          155.211
+        ],
+        "bails": 0,
+        "deaths": 0,
+        "grindFrames": 103,
+        "takeoffFrom": "Kona / concrete and architecture",
+        "pass": true
+      },
+      {
+        "kind": "snake",
+        "frames": 1194,
+        "grounded": true,
+        "ground": "Snake run",
+        "position": [
+          -35.35467809688007,
+          7.225251938253523,
+          -0.894221265134854
+        ],
+        "bails": 0,
+        "deaths": 0,
+        "grindFrames": 0,
+        "pass": true
+      },
+      {
+        "kind": "recovery",
+        "frames": 226,
+        "grounded": true,
+        "ground": "Kona / concrete and architecture",
+        "position": [
+          -72.5,
+          9.186611,
+          -55
+        ],
+        "bails": 133,
+        "deaths": 0,
+        "grindFrames": 0,
+        "pass": true
+      },
+      {
+        "kind": "finish",
+        "frames": 75,
+        "grounded": true,
+        "ground": "warp plinth rim",
+        "position": [
+          -46.25,
+          6.7822776691501945,
+          -46.01093735623889
+        ],
+        "bails": 0,
+        "deaths": 0,
+        "grindFrames": 0,
+        "pass": true
+      }
+    ],
+    "errors": [],
+    "consoleErrors": []
+  }
+}

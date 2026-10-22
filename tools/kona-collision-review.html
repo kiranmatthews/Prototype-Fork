@@ -1,0 +1,44 @@
+<!doctype html><meta charset="utf-8"><title>Kona gameplay verification</title>
+<style>
+body{margin:0;background:#161c24;color:#edf2f6;font:14px system-ui}header{height:90px;padding:10px 18px;box-sizing:border-box;display:flex;gap:16px;align-items:center}h1{font-size:18px;margin:0 0 6px}p{margin:0;color:#b6c5d4}button,a{background:#314459;color:white;border:0;border-radius:6px;padding:9px 12px;text-decoration:none;cursor:pointer}button:disabled{opacity:.5}iframe{display:block;border:0;width:100%;height:calc(100vh - 240px)}pre{margin:0;height:150px;overflow:auto;padding:12px 18px;box-sizing:border-box;font:12px ui-monospace,monospace;background:#0c1117}
+</style>
+<header><div><h1>Kona · scale and collision review</h1><p id="status">Loading the production game…</p></div><button id="run" disabled>Run gameplay checks</button><button id="vert" disabled>Repeat pipe airs</button><select id="case" aria-label="Individual check"><option>transfer</option><option>jump</option><option>rail</option><option>snake</option><option>recovery</option><option>finish</option></select><button id="selected" disabled>Run selected check</button><a id="render">Switch rendering</a></header>
+<iframe id="game" title="Kona gameplay"></iframe><pre id="results" aria-label="Gameplay results"></pre>
+<script type="module">
+import {installKonaReview} from './kona-review-controller.mjs';
+const full=new URLSearchParams(location.search).has('full'),frame=document.querySelector('#game'),status=document.querySelector('#status'),results=document.querySelector('#results');
+frame.src='/?playtest&level=kona'+(full?'':'&lite');
+document.querySelector('#render').href=full?'?':'?full';
+document.querySelector('#render').textContent=full?'Use lite rendering':'Use full rendering';
+let ready=false,queue=[],active=null,completed=[],errors=[];
+frame.addEventListener('load',()=>{frame.contentWindow.addEventListener('error',e=>errors.push(e.message));frame.contentWindow.addEventListener('unhandledrejection',e=>errors.push(String(e.reason)));});
+function begin(cases){queue=cases;active=null;completed=[];errors=[];for(const id of ['run','vert','selected'])document.querySelector('#'+id).disabled=true;next();}
+function next(){
+ active=queue.shift();
+ if(active){frame.contentWindow.startKonaReview(active);status.textContent=`Running ${active} · ${full?'full':'lite'} rendering`;}
+ else {status.textContent=completed.every(x=>x.pass)&&!errors.length?'PASS · all gameplay checks completed':'FAIL · inspect the results';for(const id of ['run','vert','selected'])document.querySelector('#'+id).disabled=false;}
+}
+document.querySelector('#run').onclick=()=>begin(['vert','transfer','jump','rail','snake','recovery','finish']);
+document.querySelector('#vert').onclick=()=>begin(['vert']);
+document.querySelector('#selected').onclick=()=>begin([document.querySelector('#case').value]);
+const timer=setInterval(async()=>{
+ const host=frame.contentWindow,g=host?.__game;
+ if(!ready&&g&&!g.gameFlow.blocksGameplay){
+  ready=true;await installKonaReview(host);status.textContent=`Ready · 2× park scale · ${g.getLevel().walls.length} native wall colliders · ${full?'full':'lite'} rendering`;
+  for(const id of ['run','vert','selected'])document.querySelector('#'+id).disabled=false;
+ }
+ if(!ready||!active)return;
+ const r=host.konaReview;
+ if(!r)return;
+ const summary={kind:r.kind,frames:r.frames,airs:r.airs,grounded:r.grounded,ground:g.player.groundHit?.name,position:r.position,bails:r.bails,deaths:r.deaths,grindFrames:r.grindFrames,transferred:r.transferred,takeoffFrom:r.takeoffFrom,landedOn:r.landedOn,lateral:r.lateral};
+ results.textContent=JSON.stringify({completed,current:summary,errors},null,2);
+ if(!r.done)return;
+ const pass=!r.failed&&(r.kind==='recovery'?r.lives===r.livesBefore-1:r.deaths===0&&r.bails===0)&&
+  (r.kind!=='jump'||/kicker/.test(r.takeoffFrom)&&/catcher/.test(r.landedOn)&&r.lateral<2)&&
+  (r.kind!=='rail'||r.grindFrames>15);
+ completed.push({...summary,pass});results.textContent=JSON.stringify({completed,errors},null,2);
+ if(!pass)queue=[];
+ next();
+},150);
+window.addEventListener('pagehide',()=>clearInterval(timer));
+</script>
