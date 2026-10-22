@@ -41,6 +41,16 @@ await withSkateRuntime(async ({ THREE, server, Player, Level, CONST }) => {
   stepBailGroundSpin(spin, travel, normal, left, 10, 14, 1);
   stepBailGroundSpin(other, travel, normal, left, 1 / 15, 14, 1);
   assert.ok(spin.equals(other), 'a debugger pause escaped the fixed work budget');
+  // A slipping support tips toward its lever rather than holding the torso
+  // upright. Gravity loads are covariant too and retain the angular cap.
+  spin.set(0, 0, 0); other.set(0, 0, 0);
+  for (let i = 0; i < 60; i++) {
+    stepBailGroundSpin(spin, new THREE.Vector3(), normal, left, 1 / 60, 0, 1, 9.8);
+    stepBailGroundSpin(other, new THREE.Vector3(), rotatedNormal, rotatedContact, 1 / 60, 0, 1, 9.8);
+    assert.ok(spin.clone().applyQuaternion(rotation).distanceTo(other) < 1e-10, 'toppling load ignored support orientation');
+    assert.ok(spin.length() <= 16.000001, 'toppling load escaped the angular cap');
+  }
+  assert.ok(spin.dot(left.clone().cross(normal)) > .1, 'support load did not topple the body');
   const zero = new THREE.Vector3(); let maximumRestGain = 0;
   for (let seed = 0; seed < 36; seed++) {
     spin.set(Math.sin(seed * .7) * 15, Math.cos(seed) * 9, Math.sin(seed) * 7);

@@ -27,7 +27,7 @@ export function resolveBailGroundVelocity(velocity: Vector3, normal: Vector3, re
  * shoulder can redirect an existing roll instead of snapping to a roll clip.
  * All inputs are world-space; normal is unit length and contact is waist-relative. */
 export function stepBailGroundSpin(spin: Vector3, travel: Vector3,
-  normal: Vector3, contact: Vector3, dt: number, friction: number, strength: number): void {
+  normal: Vector3, contact: Vector3, dt: number, friction: number, strength: number, topplingGravity = 0): void {
   const elapsed = Math.min(Math.max(0, dt), 1 / 15);
   if (elapsed === 0) return;
   const steps = Math.ceil(elapsed * 120), h = elapsed / steps;
@@ -41,6 +41,13 @@ export function stepBailGroundSpin(spin: Vector3, travel: Vector3,
   // Keep substeps in scalars and publish once. This is the same contact
   // impulse calculation without temporary vectors or repeated normalizations.
   for (let step = 0; step < steps; step++) {
+    // Before the first full fall, support acts at the foot/hand while weight
+    // acts at the waist. This torque lets an off-balance body actually tip;
+    // friction alone could arrest it upright and hand it straight to kneeling.
+    const load = Math.max(0, topplingGravity) * inverseInertia * h;
+    wx += (ry * nz - rz * ny) * load;
+    wy += (rz * nx - rx * nz) * load;
+    wz += (rx * ny - ry * nx) * load;
     let sx = wy * rz - wz * ry + vx, sy = wz * rx - wx * rz + vy, sz = wx * ry - wy * rx + vz;
     const normalSpeed = sx * nx + sy * ny + sz * nz;
     sx -= nx * normalSpeed; sy -= ny * normalSpeed; sz -= nz * normalSpeed;

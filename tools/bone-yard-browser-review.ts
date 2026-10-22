@@ -30,6 +30,7 @@ let armed = false, freezeRecall = false, incidentAge = -1, maxProbes = 0, peakPa
 let freezeAfterBounce = false, firstBounceAge = -1;
 let bouncePauseDelay = .1;
 let recoveryPause: number | null = null;
+let risePause: number | null = null;
 let nextImpactCount: number | null = null;
 const wallTrace: any[] = [];
 const impactTrace: any[] = [];
@@ -102,6 +103,9 @@ p.step = (dt: number, input: any, liveLevel: any) => {
   if (recoveryPause !== null && p.bailRecoverT >= recoveryPause) {
     frozen = true; armed = false; recoveryPause = null;
   }
+  if (risePause !== null && !p.isBailing && p.bailRiseAge >= risePause) {
+    frozen = true; armed = false; risePause = null;
+  }
   if (nextImpactCount !== null && (p.ragdollImpactCount + p.ragdollWallImpactCount >= nextImpactCount ||
     incidentAge >= 0 && !p.isBailing)) {
     frozen = true; armed = false; nextImpactCount = null;
@@ -116,9 +120,12 @@ function start(kind: string, pause = REVIEW_SECONDS, head: 'skull' | 'alternate'
   const trip = kind === 'Low trip' || kind === 'Mid trip';
   const edge = kind === 'Pit edge' || kind === 'Angled edge' || kind === 'Bailing into edge';
   const bank = kind === 'Bank tumble';
+  const manualKind = kind === 'Manual back' ? 1 : kind === 'Nose manual forward' ? -1 : 0;
+  const balanceCase = kind === 'Balance bail' || kind === 'Balance left' || manualKind !== 0;
   const x = bank ? 85 : edge ? 25 : wall ? -7 : trip ? 7 : kind === 'Pit fall' ? 3 : 0;
   const z = edge ? -27 : /blast|Blast/.test(kind) ? -40 : kind === 'Mid trip' ? -38 : kind === 'Crusher' ? -46 : kind === 'Pit fall' ? -78 : -20;
   p.respawn(level, true, true, { position: new THREE.Vector3(x, bank ? 4.04 : .04, z), heading: new THREE.Vector3(0, 0, -1) });
+  level.discardedBoards.clear(); // each review shows only this incident's deck
   p.masks = kind.startsWith('Masked') || kind === 'Held-mask wall' ? 1 : 0;
   p.lives = 4;
   p.invulnTimer = 0; p.uberTimer = 0;
@@ -126,11 +133,16 @@ function start(kind: string, pause = REVIEW_SECONDS, head: 'skull' | 'alternate'
   reviewCrusher.phase = -level.time; nativeUpdate(0);
   native(1 / 60, neutral, level);
   p.setCharacterHeadStyle(head);
-  p.freeSkate = wall || trip || kind === 'Balance bail';
-  p.speed = kind === 'Slow bump' ? 8 : wall || trip ? 24 : kind === 'Balance bail' ? 10 : 0;
+  p.freeSkate = wall || trip || balanceCase;
+  p.speed = kind === 'Slow bump' ? 8 : wall || trip ? 24 : balanceCase ? 10 : 0;
   if (kind === 'Contact death') p.die('contact');
   if (kind === 'Side bail') p.beginPvpKnockdown(5, 1);
-  if (kind === 'Balance bail') p.bail(false, 10, 'balance');
+  if (manualKind) {
+    p.enterManual(manualKind);
+    for (let i = 0; i < 12; i++) { p.balance = manualKind * .8; native(1 / 60, neutral, level); }
+    p.balance = manualKind; p.balanceVel = manualKind * 5; p.balanceCritT = 10;
+    native(1 / 60, neutral, level); // real meter failure path, before it clears the needle
+  } else if (balanceCase) { p.balance = kind === 'Balance left' ? -1 : 1; p.bail(false, 10, 'balance'); }
   if (bank) { p.speed = 12; p.bail(false, 12, 'balance', 12); }
   if (kind === 'Masked bail') p.bail(true, 24, 'landing', 30);
   if (kind === 'Blast' || kind === 'Masked blast') level.detonate(reviewTnt);
@@ -146,7 +158,7 @@ function start(kind: string, pause = REVIEW_SECONDS, head: 'skull' | 'alternate'
   mode = kind; manual = false; frozen = false; armed = true; freezeAt = pause; timings.reset();
   freezeRecall = false; incidentAge = -1; maxProbes = peakParts = 0; effectTimes.reset();
   freezeAfterBounce = false; firstBounceAge = -1; bouncePauseDelay = .1;
-  recoveryPause = null; nextImpactCount = null; impactTrace.length = 0;
+  recoveryPause = null; risePause = null; nextImpactCount = null; impactTrace.length = 0;
   wallTrace.length = previousWallImpacts = 0;
 }
 const render = g.renderer.render.bind(g.renderer), target = new THREE.Vector3(), eye = new THREE.Vector3();
@@ -160,7 +172,7 @@ g.renderer.render = (...args: any[]) => {
       else target.copy(boardReview.boards[0].root.position);
     }
     target.y += .8;
-    const distance = boardReview ? boardReview.boards.length > 1 ? 11 : 7 : 10;
+    const distance = boardReview ? boardReview.boards.length > 1 ? 11 : 7 : /manual/i.test(mode) ? 12 : 10;
     eye.set(Math.sin(angle) * distance, boardReview ? 3.6 : 4.8, Math.cos(angle) * distance).add(target);
     g.camera.position.copy(eye); g.camera.fov = 45; g.camera.lookAt(target); g.camera.updateProjectionMatrix(); g.camera.updateMatrixWorld(true);
   }
@@ -176,10 +188,12 @@ const diagnostics = document.createElement('details'), summary = document.create
 summary.textContent = 'Motion diagnostics'; diagnostics.append(summary, status);
 panel.append(controls, diagnostics); document.body.append(panel);
 function add(label: string, fn: () => void) { const b = document.createElement('button'); b.textContent = label; b.onclick = fn; b.style.cssText = 'padding:7px;margin:2px'; controls.append(b); }
-for (const name of ['Head hit', 'Low trip', 'Mid trip', 'Side bail', 'Balance bail', 'Bank tumble', 'Pit edge', 'Angled edge', 'Bailing into edge', 'Slow bump', 'Held-mask wall', 'Masked bail', 'Masked blast', 'Contact death', 'Blast', 'Crusher', 'Pit fall']) add(name, () => start(name));
+for (const name of ['Head hit', 'Low trip', 'Mid trip', 'Side bail', 'Balance bail', 'Balance left', 'Manual back', 'Nose manual forward', 'Bank tumble', 'Pit edge', 'Angled edge', 'Bailing into edge', 'Slow bump', 'Held-mask wall', 'Masked bail', 'Masked blast', 'Contact death', 'Blast', 'Crusher', 'Pit fall']) add(name, () => start(name));
 add('Verify bails', verifyBails);
 for (const name of ['Board toss', 'Board roll', 'Board skid', 'Board wall', 'Board pile']) add(name, () => startBoard(name));
 add('Verify boards', verifyBoards);
+add('Fall', () => start(mode === 'Ready' ? 'Manual back' : mode, .22));
+add('Rise rebound', () => { start(mode === 'Ready' ? 'Manual back' : mode); risePause = .3; });
 add('Trip catch', () => start(mode === 'Mid trip' ? 'Mid trip' : 'Low trip', .1));
 add('First bounce', () => { start(mode === 'Ready' ? 'Mid trip' : mode); freezeAfterBounce = true; });
 add('Floor contact', () => { start(mode === 'Ready' ? 'Mid trip' : mode); freezeAfterBounce = true; bouncePauseDelay = 0; });
@@ -187,18 +201,18 @@ add('Next impact', () => {
   if (boardReview || mode === 'Ready') start('Mid trip');
   else if (!p.isBailing) start(mode);
   nextImpactCount = p.ragdollImpactCount + p.ragdollWallImpactCount + 1;
-  freezeAfterBounce = false; recoveryPause = null; frozen = false; armed = true;
+  freezeAfterBounce = false; recoveryPause = risePause = null; frozen = false; armed = true;
   freezeAt = Math.max(REVIEW_SECONDS, incidentAge + REVIEW_SECONDS);
 });
 add('Get-up', () => { start(mode === 'Ready' ? 'Side bail' : mode); recoveryPause = .1; });
-add('Resume', () => { frozen = false; armed = false; freezeAfterBounce = false; recoveryPause = null; nextImpactCount = null; }); add('Freeze', () => frozen = true);
+add('Resume', () => { frozen = false; armed = false; freezeAfterBounce = false; recoveryPause = risePause = null; nextImpactCount = null; }); add('Freeze', () => frozen = true);
 add('Step 6 frames', () => {
-  armed = false; freezeAfterBounce = false; recoveryPause = null; nextImpactCount = null; frozen = false;
+  armed = false; freezeAfterBounce = false; recoveryPause = risePause = null; nextImpactCount = null; frozen = false;
   for (let i = 0; i < 6; i++) { p.step(1 / 60, neutral, level); level.update(1 / 60); }
   frozen = true; p.commitRenderStep(level);
 });
 add('Side', () => angle = Math.PI / 2); add('Quarter', () => angle = 1.12); add('Front', () => angle = Math.PI);
-add('Play course', () => { boardReview = null; p.respawn(level, true); manual = true; frozen = false; armed = false; freezeAfterBounce = false; recoveryPause = null; nextImpactCount = null; });
+add('Play course', () => { boardReview = null; p.respawn(level, true); manual = true; frozen = false; armed = false; freezeAfterBounce = false; recoveryPause = risePause = null; nextImpactCount = null; });
 
 function startBoard(kind: string) {
   start(kind, 1000); armed = false;
@@ -244,9 +258,15 @@ async function verifyBails() {
   verifying = true;
   const rows: any[] = [];
   const failures: string[] = [];
-  for (const kind of ['Head hit', 'Low trip', 'Mid trip', 'Side bail', 'Balance bail', 'Bank tumble', 'Pit edge', 'Angled edge', 'Bailing into edge', 'Held-mask wall', 'Masked bail', 'Blast', 'Crusher', 'Pit fall']) {
+  for (const kind of ['Head hit', 'Low trip', 'Mid trip', 'Side bail', 'Balance bail', 'Balance left', 'Manual back', 'Nose manual forward', 'Bank tumble', 'Pit edge', 'Angled edge', 'Bailing into edge', 'Held-mask wall', 'Masked bail', 'Blast', 'Crusher', 'Pit fall']) {
     start(kind, 1000);
     const fatal = ['Blast', 'Crusher', 'Pit fall'].includes(kind);
+    const balanceCase = ['Balance bail', 'Balance left', 'Manual back', 'Nose manual forward'].includes(kind);
+    const fallDirection = new THREE.Vector3(kind === 'Balance bail' ? 1 : kind === 'Balance left' ? -1 : 0, 0,
+      kind === 'Manual back' ? 1 : kind === 'Nose manual forward' ? -1 : 0);
+    const manualCase = kind === 'Manual back' || kind === 'Nose manual forward';
+    const boardSeparation = manualCase && p.looseBoard ? p.looseBoard.velocity.dot(fallDirection) : null;
+    let fallBeforeRecovery = false, recoveryAge: number | null = null, peakFallDirection = 0, freeRiseFrames = 0;
     let entered = false, recovered = false, maxSkinScans = 0, maxStep = 0, minimumBodyLead = Infinity;
     let bankContactFrames = 0, bankRollAngle = 0;
     let supportFrames = 0, minimumClearance = Infinity, maximumClearance = -Infinity, lastFloorImpacts = 0;
@@ -272,6 +292,10 @@ async function verifyBails() {
           recoveryFrames++; maxRecoveryTurn = Math.max(maxRecoveryTurn, recoveryPrevious.angleTo(recoveryCurrent));
           remainingRoll ??= p.bailRecoveryMotion.destination - p.bailRecoveryMotion.pitch;
         }
+        if (balanceCase && p.isBailing && p.bailRecoverT < 0)
+          peakFallDirection = Math.max(peakFallDirection, verificationSpin.set(0, 1, 0).applyQuaternion(recoveryCurrent).dot(fallDirection));
+        if (p.bailRecoverT >= 0 && recoveryAge === null) { recoveryAge = p.bailFallAge; fallBeforeRecovery = p.bailHasFallen; }
+        if (!p.isBailing && p.bailRiseAge >= 0) freeRiseFrames++;
         recoveryPrevious.copy(recoveryCurrent);
         if (kind === 'Bank tumble' && p.isBailing && p.grounded && p.onTransition && p.groundHit?.normal.y < .97) {
           bankContactFrames++; p.ragdollWorldSpin(verificationSpin);
@@ -292,6 +316,11 @@ async function verifyBails() {
         if (incidentAge >= REVIEW_SECONDS && (recovered || fatal)) break;
       }
       if (!entered || !fatal && !recovered) failures.push(`${kind}: did not finish expected path`);
+      if (balanceCase && (!fallBeforeRecovery || (recoveryAge ?? 0) < .45 || peakFallDirection < .35))
+        failures.push(`${kind}: did not fully fall toward lost balance before getting up`);
+      if (manualCase && (boardSeparation === null || boardSeparation > -8))
+        failures.push(`${kind}: board did not slip opposite the body fall`);
+      if (!fatal && freeRiseFrames < 15) failures.push(`${kind}: rise follow-through ended at control handoff`);
       if (kind === 'Bank tumble' && (bankContactFrames < 3 || bankRollAngle < .1))
         failures.push(`${kind}: did not exercise the supported bank roll`);
       if ((kind === 'Low trip' && p.pos.z >= -29.8) || (kind === 'Mid trip' && p.pos.z >= -46.9))
@@ -304,7 +333,7 @@ async function verifyBails() {
       rows.push({ kind, entered, recovered, maxSkinScans, minimumBodyLead: Number.isFinite(minimumBodyLead) ? minimumBodyLead : null, parts: p.breakApartDiagnostics?.active ? p.breakApartDiagnostics.parts : 0,
         lives: p.lives, wallImpacts: p.ragdollWallImpactCount, bankContactFrames, bankRollAngle,
         supportFrames, minimumClearance: supportFrames ? minimumClearance : null, maximumClearance: supportFrames ? maximumClearance : null,
-        recoveryFrames, maxRecoveryTurn, remainingRoll, impactTrace:[...impactTrace],
+        recoveryFrames, maxRecoveryTurn, remainingRoll, fallBeforeRecovery, recoveryAge, peakFallDirection, boardSeparation, freeRiseFrames, impactTrace:[...impactTrace],
         position: p.pos.toArray(), seconds: +incidentAge.toFixed(3), meanStepMs: timings.mean, maxStep });
     } finally { measure.skinnedBounds = skin; }
     frozen = true;
@@ -334,6 +363,8 @@ function snapshot() {
   return { mode, frozen, state: p.state, bailing: p.isBailing, ragActive: p.ragActive, masks: p.masks, lives: p.lives,
     position: p.pos.toArray(), speed: p.speed, bodyLead: bodyLead(), grounded: p.grounded, supportClearance: supportClearance(),
     recoveryTime: p.bailRecoverT, recoveryProgress: p.bailRecoveryPose,
+    fallAge: p.bailFallAge, fullyFallen: p.bailHasFallen, riseAge: p.bailRiseAge,
+    looseBoardVelocity: p.looseBoard?.velocity.toArray() ?? null,
     incidentAge, firstBounceAge, floorImpacts: p.ragdollImpactCount, wallImpacts: p.ragdollWallImpactCount, wallTrace, impactTrace, maxProbes, peakParts, active: false, ...p.breakApartDiagnostics,
     boards: { ...level.discardedBoards.diagnostics,
       age: boardReview?.age, settledAt: boardReview?.settledAt, sounds: boardReview?.sounds,

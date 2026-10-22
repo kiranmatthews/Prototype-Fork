@@ -110,7 +110,9 @@ await withSkateRuntime(async ({ THREE, server, Player, Level, CONST }) => {
       }
       assert.ok(!p.isBailing && p.grounded && p.state !== 'dead', `${cause} did not recover`);
       assert.ok(frames < 150 && peak > .1, `${cause} stalled or did not articulate`);
-      if (cause === 'balance') assert.ok(frames <= 41, `neutral grounded bail took ${frames} frames`);
+      // A low-speed spill now earns a full fall before its get-up. Keep it
+      // brisk, but do not regress to the old sub-second knee-only recovery.
+      if (cause === 'balance') assert.ok(frames >= 54 && frames <= 72, `neutral grounded fall/get-up took ${frames} frames`);
       scenarios.push({ cause, seconds: frames / 60, impact, peak });
     }
     assert.equal(supportedShadowQueries, 0, 'supported bail repeated its world shadow query');

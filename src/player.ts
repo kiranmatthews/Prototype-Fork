@@ -128,6 +128,7 @@ import {
   sampleBailRecovery,
 } from './bailRecovery';
 import { BailRecoveryMotion } from './character/bailRecoveryMotion';
+import { BailRiseMotion, BAIL_RISE_SETTLE_SECONDS } from './character/bailRiseMotion';
 import {
   beginVertBoardRelease,
   createVertBoardReleaseState,
@@ -884,6 +885,12 @@ export class Player {
   private bailRecoverT = -1; // <0 physical tumble/settle; >=0 procedural roll-up
   private bailRecoverDuration = BAIL_RECOVER_TIME;
   private bailRecoveryPose = 0; // 0..1 fixed-step roll/kneel/rise phase
+  private bailFallAge = 0;
+  private bailHasFallen = false;
+  private bailMinimumFallTime = .32;
+  private bailBalanceFall = false;
+  private bailRiseAge = -1;
+  private readonly bailRiseMotion = new BailRiseMotion();
   private bailRecoveryBlend = 0; // outgoing tumble ownership at supported handoff
   private readonly bailRecoveryMotion = new BailRecoveryMotion();
   private readonly bailRecoveryOrientation = new THREE.Quaternion();
@@ -3611,6 +3618,8 @@ export class Player {
     this.bailDownT = 0;
     this.tripObstacle = null;
     this.bailRecoverT = -1;
+    this.bailRiseAge = -1;
+    this.bailFallAge = 0; this.bailHasFallen = false; this.bailBalanceFall = false;
     this.bailRecoveryPose = 0;
     this.bailGroundT = 0;
     this.bailExitSpeed = 0;
@@ -4339,6 +4348,10 @@ export class Player {
     this.slamFlatT = Math.max(0, this.slamFlatT - dt);
     this.ragFlailKickT = Math.max(0, this.ragFlailKickT - dt);
     this.invulnTimer = Math.max(0, this.invulnTimer - dt);
+    if (this.bailRiseAge >= 0) {
+      this.bailRiseAge += dt;
+      if (this.bailRiseAge >= BAIL_RISE_SETTLE_SECONDS || !this.grounded || this.state !== 'ride') this.bailRiseAge = -1;
+    }
     const bailWas = this.bailDownT;
     // TUMBLE -> STABLE CONTACT -> PROCEDURAL ROLL-UP. The old single timer
     // counted down in the air, then left a full 1.1s belly-down pause after
@@ -4346,6 +4359,11 @@ export class Player {
     // until there is stable ground; once the slide is slow (or the impact clock
     // reaches that window), hand the body to a mashable forward roll instead.
     if (this.bailDownT > 0 && this.state !== 'dead' && this.state !== 'gameover') {
+      this.bailFallAge += dt;
+      if (this.ragActive && this.groundHit) {
+        Player.RAG_AXIS.set(0, 1, 0).applyQuaternion(this.ragQ);
+        this.bailHasFallen ||= Player.RAG_AXIS.dot(this.groundHit.normal) < .4;
+      }
       // Some bails begin already supported (a lost manual or a tumble-zone
       // spill) instead of crossing the ground through stepAir. That grounded
       // frame is still the first real body impact; launched trips remain
@@ -4401,9 +4419,13 @@ export class Player {
         this.ragBlend = 1;
         this.startRagdoll('air', 0, this.riderG ?? this.bodyGroup);
       }
+      // Low speed alone must not turn a fresh spill into an upright kneel.
+      // Reserve time for the fall without letting cosmetic pose/randomness
+      // change the controller clock or hold a wedged body indefinitely.
       const canStartRecovery =
         this.bailRecoverT < 0 &&
         this.bailGroundT >= BAIL_STABLE_TIME &&
+        this.bailFallAge >= this.bailMinimumFallTime &&
         (this.bailDownT <= recoverDuration + 1e-6 ||
           Math.abs(this.speed) <= BAIL_RECOVER_START_SPEED);
       if (canStartRecovery) {
@@ -4446,6 +4468,8 @@ export class Player {
           1,
         );
         this.bailRecoveryPose = u * u * (3 - 2 * u);
+        if (u >= .66 && this.bailRiseAge < 0)
+          this.bailRiseAge = (this.bailRecoverT - recoverDuration * .66) / this.bailRush;
       } else {
         this.bailDownT = Math.max(
           recoverDuration,
@@ -6942,23 +6966,9 @@ export class Player {
           if (Math.sign(this.balanceVel) === this.balance) this.balanceVel = 0;
           this.balanceCritT += dt;
           if (this.balanceCritT > TUNING.bailGrace) {
-            this.endManual();
-            const spd = Math.abs(this.speed);
-            const dir = Math.sign(this.speed || 1);
+            // bail() captures the live needle and manual type before cancelling
+            // actions. Its body fall and deck slip must be opposite directions.
             this.bail();
-            this.startRagdoll('forward'); // a lost manual digs the nose in
-            // THE BOARD SQUIRTS OUT from under you — low, fast, ahead of the
-            // body, spinning flat like a plate. bail() already threw it with
-            // the generic arc, which flew WITH the body and read as nothing;
-            // a manual bail is specifically the deck leaving without you.
-            if (this.flyBoard && this.flyBoard.visible) {
-              this.flyBoardVel.set(
-                this.axisF.x * dir * (9 + spd * 0.6),
-                2.1,
-                this.axisF.z * dir * (9 + spd * 0.6),
-              );
-              this.flyBoardAng.set((Math.random() - 0.5) * 6, dir * 24, (Math.random() - 0.5) * 6);
-            }
             return;
           }
         } else {
@@ -10266,6 +10276,8 @@ export class Player {
     if (!this.isBailing) this.onWipeout();
     this.bailSupportOffset = 0;
     this.bailRecoveryCaptured = this.bailRecoveryMotionReady = false;
+    this.bailFallAge = 0; this.bailHasFallen = false; this.bailMinimumFallTime = .32; this.bailBalanceFall = false;
+    this.bailRiseAge = -1;
     // On-foot inertia, sideways slide-jumps, exact slides, and vert hang carry
     // live in world-vector channels rather than the course speed projection.
     const vectorOwned = this.captureWipeoutVelocity(BAIL_V);
@@ -10336,6 +10348,12 @@ export class Player {
     // capture BEFORE the flags change hands: a bail out of skating throws the
     // deck; the same crash on foot has no deck to throw
     const hadBoard = this.freeSkate || this.airFromSkate;
+    const manualFailure = cause === 'balance' && this.manualing !== 0;
+    const balanceSign = cause === 'balance' ? Math.sign(this.balance || this.manualing) || (Math.random() < .5 ? -1 : 1) : 1;
+    const travelSign = Math.sign(this.speed || 1);
+    const travelX = this.axisF.x * travelSign, travelZ = this.axisF.z * travelSign;
+    const fallX = manualFailure ? -balanceSign * travelX : -travelZ * balanceSign;
+    const fallZ = manualFailure ? -balanceSign * travelZ : travelX * balanceSign;
     if (masked) {
       this.masks--;
       sfx.play('maskLoss', 0.9);
@@ -10371,14 +10389,32 @@ export class Player {
     }
     sfx.play('takeDamage', 0.8);
     this.emitSparks(8, 0xffb545, 2);
-    // Default tumble: chaotic, no preferred direction. Callers that know WHAT
-    // went wrong re-seed right after with the flavor that sells it (a trip is
-    // head-over-heels forward, a wall hit is backward, a rail bail rolls).
-    this.startRagdoll(cause === 'wall' ? 'back' : cause === 'trip' || cause === 'rail' ? 'forward' : 'air');
+    if (cause === 'balance') {
+      this.bailBalanceFall = true;
+      const kind = manualFailure ? balanceSign > 0 ? 'back' : 'forward' : 'side';
+      if (manualFailure) {
+        // The feet lose the deck in the opposite direction. A modest away
+        // drift keeps the backward spill readable while the deck shoots out.
+        this.redirectBailVelocity(BAIL_V.set(fallX, 0, fallZ).multiplyScalar(2.2 + Math.min(24, entryPlanar) * .06));
+      }
+      this.bailMotion.reset();
+      const rate = (7.3 + Math.random() * 1.4 + Math.min(24, entryPlanar) * .035) * TUNING.ragSpin;
+      // World-space fall direction is independent of control-axis handedness,
+      // reversed travel, stance and the rider's side-on skate yaw.
+      this.startRagdoll(kind, balanceSign, this.riderG ?? this.bodyGroup, false,
+        Player.RAG_WORLD_SPIN.set(fallZ * rate, (Math.random() - .5) * .8, -fallX * rate));
+      this.ragForwardTrip = false; // a slipping deck is not a caught-foot trip
+      this.bailMinimumFallTime = .46;
+    } else this.startRagdoll(cause === 'wall' ? 'back' : cause === 'trip' || cause === 'rail' ? 'forward' : 'air');
     this.bailMotion.impact(Math.max(Math.abs(impactSpeed), impact) * .65);
     // A MASKED crash keeps the deck with you — the quick get-up rides on.
     if (hadBoard && !masked) {
       this.throwBoard();
+      if (manualFailure && this.looseBoard) {
+        const slipSpeed = 9 + entryPlanar * .6;
+        this.flyBoardVel.set(-fallX * slipSpeed, 1.6, -fallZ * slipSpeed);
+        this.flyBoardAng.set((Math.random() - .5) * 4, -balanceSign * 18, (Math.random() - .5) * 4);
+      }
       // The deck is over THERE. You get up on your feet and walk (or hold X
       // to call it back under you) — no silent auto-remount after a wreck.
       this.freeSkate = false;
@@ -10395,6 +10431,7 @@ export class Player {
     sideSign = 0,
     poseSource: THREE.Object3D = this.bodyGroup,
     preserveTranslation = false,
+    worldSpin?: THREE.Vector3,
   ): void {
     this.ragActive = true;
     this.ragForwardTrip = kind === 'forward' && this.state !== 'dead';
@@ -10433,6 +10470,7 @@ export class Player {
         jit(3),
       );
     this.ragTripAirDrag = this.ragForwardTrip ? this.ragAngVel.length() / (1.9 + Math.random() * .3) : 0;
+    if (worldSpin) { this.ragForwardTrip = false; this.setRagdollWorldSpin(worldSpin); }
     if (this.state !== 'dead') this.bailMotion.begin(kind, this.ragdollWorldSpin(Player.RAG_WORLD_SPIN),
       Math.floor(Math.random() * 0x100000000), poseSource !== this.bodyGroup,
       BAIL_V.set(this.axisF.x * this.speed, this.vVel, this.axisF.z * this.speed));
@@ -13241,6 +13279,8 @@ export class Player {
     this.bailDownT = 0;
     this.bailRecoverT = -1;
     this.bailRecoverDuration = BAIL_RECOVER_TIME;
+    this.bailRiseAge = -1;
+    this.bailFallAge = 0; this.bailHasFallen = false; this.bailBalanceFall = false;
     this.bailRecoveryPose = 0;
     this.bailSupportOffset = 0;
     this.bailGroundT = 0;
@@ -16802,7 +16842,7 @@ export class Player {
   private bailSupportHeight(): number {
     const support = this.groundHit;
     const rolling = this.animationClipHint === ROLL_LANDING_CLIP_ID;
-    if ((!this.isBailing && !rolling) || this.state === 'dead' || this.breakApart?.active ||
+    if ((!this.isBailing && !rolling && this.bailRiseAge < 0) || this.state === 'dead' || this.breakApart?.active ||
       !support || support.normal.y < .3) return Infinity;
     if (this.grounded) return 0;
     if (!this.isBailing || !this.ragActive || this.state !== 'air') return Infinity;
@@ -16827,7 +16867,8 @@ export class Player {
     const distance = this.interactionMeasure.sampledPlaneDistance(this.riderG, support.normal,
       REACH_C.set(this.pos.x, support.y, this.pos.z), undefined, undefined, measured);
     if (!Number.isFinite(distance)) return;
-    const rollWeight = rolling ? 1 - THREE.MathUtils.smoothstep(this.rollLandingT / this.rollLandingDuration, .72, .96) : 1;
+    const rollWeight = rolling ? 1 - THREE.MathUtils.smoothstep(this.rollLandingT / this.rollLandingDuration, .72, .96) :
+      !this.isBailing && this.bailRiseAge >= 0 ? 1 - THREE.MathUtils.smoothstep(this.bailRiseAge, .65, BAIL_RISE_SETTLE_SECONDS) : 1;
     const contactWeight = 1 - THREE.MathUtils.smoothstep(height, 0, .8);
     // A support-loss handoff already carries the departing roll's waist.
     // Let that anchor release while rising; a later actual impact owns full
@@ -18076,7 +18117,7 @@ export class Player {
     const recoveringBail = this.bailRecoverT >= 0 && this.bailRecoveryPose > 0;
     const dropTarget = Math.max(
       slamDropping ? 1 : 0,
-      this.bailDownT > 0 && !recoveringBail ? 1 : 0,
+      this.bailDownT > 0 && !recoveringBail && !this.bailBalanceFall ? 1 : 0,
     );
     this.hangPose += ((hanging ? 1 : 0) - this.hangPose) * Math.min(1, 16 * dt);
     // The get-up eases at the SAME rush the mash is applying to the clock — the
@@ -18198,7 +18239,13 @@ export class Player {
           const contact = this.sampleRagdollContact(normal);
           BAIL_V.copy(this.axisF).multiplyScalar(this.speed).projectOnPlane(normal);
           if (BAIL_V.lengthSq() > 1e-8) BAIL_V.setLength(Math.abs(this.speed));
-          stepBailGroundSpin(spin, BAIL_V, normal, contact, dt, TUNING.bailFriction, TUNING.ragSpin);
+          // A lost balance means the feet no longer hold a stable platform.
+          // Let the torso fall before a moving ankle can friction-lock it in
+          // a half-squat; full contact friction returns once it falls over.
+          const fallingOffFeet = !this.bailHasFallen && this.bailFallAge < this.bailMinimumFallTime;
+          stepBailGroundSpin(spin, BAIL_V, normal, contact, dt,
+            TUNING.bailFriction * (fallingOffFeet ? .12 : 1), TUNING.ragSpin,
+            !this.bailHasFallen && this.bailFallAge < .95 ? 9.8 : 0);
           this.setRagdollWorldSpin(spin);
           if (slopeTumble) {
             const twist = spin.dot(normal);
@@ -18317,14 +18364,18 @@ export class Player {
       Player.RAG_PIVOT_BASE.set(0, waistH, 0).multiply(rider.scale);
       Player.RAG_AXIS.copy(Player.RAG_PIVOT_BASE).applyQuaternion(rider.quaternion);
       rider.position.copy(Player.RAG_PIVOT_BASE).lerp(this.bailRecoveryAnchorLocal, anchorWeight).sub(Player.RAG_AXIS);
+      // Once the torso is upright, release the two-knee tuck. Only the
+      // pushing leg bends deeply; the other is already finding its next step.
+      const upright = 1 - 2 * (rider.quaternion.x ** 2 + rider.quaternion.z ** 2);
+      const tuck = recovery.tuck * (1 - .8 * THREE.MathUtils.smoothstep(upright, .3, .85));
       if (this.legR && this.legL) {
         const plantR = side > 0;
         this.legR.rotation.x +=
-          1.05 * recovery.tuck +
+          1.05 * tuck +
           (plantR ? -0.34 : 0.5) * recovery.plant -
           0.36 * recovery.stride;
         this.legL.rotation.x +=
-          1.05 * recovery.tuck +
+          1.05 * tuck +
           (plantR ? 0.5 : -0.34) * recovery.plant +
           0.36 * recovery.stride;
         this.legR.rotation.z -= side * 0.12 * recovery.shoulder;
@@ -18333,9 +18384,9 @@ export class Player {
       if (this.kneeR && this.kneeL) {
         const plantR = side > 0;
         this.kneeR.rotation.x +=
-          1.45 * recovery.tuck + (plantR ? 1.3 : 0.68) * recovery.plant;
+          1.1 * tuck + (plantR ? .65 : .18) * recovery.plant;
         this.kneeL.rotation.x +=
-          1.45 * recovery.tuck + (plantR ? 0.68 : 1.3) * recovery.plant;
+          1.1 * tuck + (plantR ? .18 : .65) * recovery.plant;
       }
       const plantArm = side > 0 ? this.armR : this.armL;
       const freeArm = side > 0 ? this.armL : this.armR;
@@ -18398,6 +18449,21 @@ export class Player {
         this.bailMotion.apply(13, this.ankleR, weight);
         this.playerAnimationBridge.modulateDeformations(this.bailMotion.deformations);
       }
+    }
+    if (this.bailRiseAge >= 0 && this.grounded && this.state === 'ride' && !this.playerAnimationBridge.previewActive) {
+      const rise = this.bailRiseMotion;
+      rise.sample(this.bailRiseAge, this.bailExitSpeed / BAIL_EXIT_MAX, this.bailRecoverSide);
+      if (this.spineG) { this.spineG.rotation.x += rise.pitch; this.spineG.rotation.z += rise.roll; }
+      if (this.headM) this.headM.rotation.x += rise.head;
+      if (this.armL) this.armL.rotation.z += rise.arm;
+      if (this.armR) this.armR.rotation.z -= rise.arm * .8;
+      if (this.legL) this.legL.rotation.x -= rise.knee * .45;
+      if (this.legR) this.legR.rotation.x -= rise.knee * .45;
+      if (this.kneeL) this.kneeL.rotation.x += rise.knee;
+      if (this.kneeR) this.kneeR.rotation.x += rise.knee;
+      if (this.ankleL) this.ankleL.rotation.x -= rise.knee * .55;
+      if (this.ankleR) this.ankleR.rotation.x -= rise.knee * .55;
+      this.playerAnimationBridge.modulateDeformations(rise.deformations);
     }
     if (this.teeterPose > 0 && teeterAllowed) {
       // Convert the drop direction to the model's local frame, so a side/back
