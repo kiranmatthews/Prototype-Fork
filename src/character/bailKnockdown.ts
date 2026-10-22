@@ -24,13 +24,6 @@ export class BailKnockdown {
     return this.strength === 0 || this.restTime >= .28 + .2 * this.strength || this.supportTime >= 1.6;
   }
 
-  get restingFace(): number { return this.face; }
-
-  poseWeight(recoveryPhase: number): number {
-    return THREE.MathUtils.smoothstep(this.supportTime, .08, .38) *
-      (1 - THREE.MathUtils.smoothstep(recoveryPhase, 0, .4));
-  }
-
   step(dt: number, supported: boolean, orientation: THREE.Quaternion, spin: THREE.Vector3, normal: THREE.Vector3): void {
     if (this.strength === 0) return;
     if (!supported) { this.supportTime = this.restTime = this.face = 0; return; }

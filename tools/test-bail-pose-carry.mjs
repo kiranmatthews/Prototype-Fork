@@ -9,7 +9,7 @@ try {
   let cases = 0, maxVelocityError = 0;
   for (const axis of [new THREE.Vector3(1,0,0),new THREE.Vector3(0,0,1),new THREE.Vector3(.4,.3,-.6).normalize()])
     for (const speed of [-6, 0, 8]) {
-      const carry = new BailPoseCarry(), nodes = Array.from({length:14},()=>new THREE.Object3D());
+      const carry = new BailPoseCarry(), nodes = Array.from({length:16},()=>new THREE.Object3D());
       const values = Object.fromEntries(ELASTIC_LENGTH_CONTROLS.map(([id])=>[id,1]));
       const bridge = {deformationValue:id=>values[id],modulateDeformations:f=>{for(const id in f) values[id]*=f[id];}};
       const world = new THREE.Matrix4(), rootQ = new THREE.Quaternion(), waist = new THREE.Vector3(), spin = new THREE.Vector3(), drift = new THREE.Vector3();

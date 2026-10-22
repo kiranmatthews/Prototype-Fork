@@ -1,0 +1,381 @@
+{
+  "date": "2026-10-23",
+  "objective": "Make intact nonfatal falls as coordinated as the contact-death reference, with articulated recovery and severe-impact rest.",
+  "reference": {
+    "asset": "public/animations/quaternius-death",
+    "license": "CC0",
+    "channels": 16,
+    "sourceFrames": 73,
+    "sourceSeconds": 2.4,
+    "normalPlaybackRate": "2.4 + 0.2*sin(incident seed)",
+    "root": "Physics-owned translation and orientation. Supported balance/manual falls use the source pelvis timing as torque along their actual fall axis.",
+    "pose": "Actual local source quaternions, mirrored by fall side, plus reduced existing secondary springs. Independent spine/chest/neck; no whole-skeleton scaling.",
+    "recovery": "Continue source motion while fading over the first 60% of the get-up; let impact pose complete before recovery can start. Ordinary get-up 0.72 s; severe impacts retain up to 0.4 s extra."
+  },
+  "checks": {
+    "sourceSamples": {
+      "passed": true,
+      "cases": 12,
+      "joints": 16,
+      "maxSourceError": 5.960464477539063e-08,
+      "sharedSource": "Quaternius Death01",
+      "physicsRootUnchanged": true,
+      "finiteRelease": true
+    },
+    "humanMotion": {
+      "cases": 28,
+      "minimumClearance": 0.02499693236138112,
+      "maxWaistCurlRadians": 0.7777605947077532,
+      "heavyCases": 8,
+      "maxRestSeconds": 0.4833333333333333,
+      "maxFullScansWhileBailing": 0
+    },
+    "continuity": {
+      "cases": 42,
+      "maxEntryHeadVelocityChange": 0.10686131175371956,
+      "maxEarlyHeadVelocityChange": 0.1609960043086406,
+      "maxControlHandoffVelocityChange": 0.035540305261371564,
+      "maxFullRecoveryVelocityChange": 0.2728649164546505
+    },
+    "interruption": {
+      "cases": 120,
+      "maxEarlyHeadVelocityChange": 0.11455587192970644,
+      "maxFreeCarryHeadVelocityChange": 0.11455587192970644,
+      "maxSpinError": 1.831026719408895e-15
+    },
+    "matrixOracle": {
+      "passed": true,
+      "realHandTriangles": 25152,
+      "cases": 14,
+      "framesCompared": 1855,
+      "maxPoseError": 0,
+      "immediatePublicSync": true
+    },
+    "directionalFalls": {
+      "cases": 72,
+      "passed": true
+    },
+    "poseCarry": {
+      "cases": 9,
+      "passed": true
+    },
+    "impacts": {
+      "cases": 7,
+      "passed": true
+    },
+    "support": {
+      "cases": 30,
+      "passed": true
+    },
+    "tripClearance": {
+      "cases": 25,
+      "passed": true
+    },
+    "rollThrough": {
+      "cases": 192,
+      "passed": true
+    },
+    "boards": {
+      "passed": true
+    },
+    "ragdollRecovery": {
+      "passed": true
+    }
+  },
+  "resources": {
+    "before": {
+      "incidents": 30,
+      "frames": 3600,
+      "bodyMatrixPasses": 3600,
+      "deformationPasses": 3600,
+      "newDeformationRecords": 0,
+      "newDeformationTransformObjects": 0,
+      "supportProbeSamples": 2745916,
+      "skinGeometryUploads": 0,
+      "skinWorkspaceBytes": 2424832,
+      "perCause": [
+        {
+          "cause": "balance",
+          "duration": {
+            "samples": 6,
+            "mean": 1.866666666666667,
+            "median": 1.8666666666666667,
+            "p95": 1.8666666666666667
+          },
+          "skin": {
+            "calls": 1692,
+            "copiedBytes": 2429712,
+            "geometryUploads": 0,
+            "residentHits": 1692,
+            "residentResets": 0,
+            "workspaceBytes": 2424832,
+            "exactSkinVertices": 6616566
+          },
+          "poseChecksum": "da2f24ff914a4c77639dabb65af1ac8413456f45531e480b0c62fd059b6973e4",
+          "gameplayChecksum": "5c569e62fbcae063d77a224ffa91c61f816779e9acc3a9016e39b80ab35f749b"
+        },
+        {
+          "cause": "wall",
+          "duration": {
+            "samples": 6,
+            "mean": 2.0500000000000003,
+            "median": 2.05,
+            "p95": 2.05
+          },
+          "skin": {
+            "calls": 1692,
+            "copiedBytes": 2429712,
+            "geometryUploads": 0,
+            "residentHits": 1692,
+            "residentResets": 0,
+            "workspaceBytes": 2424832,
+            "exactSkinVertices": 6616566
+          },
+          "poseChecksum": "0d48e5576bb1e6153ab983d9c4ba3739bf38a62926bfe451673ee6c87e58277a",
+          "gameplayChecksum": "c6735bc8a377b0aff34ac19cc1797659083d4706c64232ade3e2dc0a95e7a268"
+        },
+        {
+          "cause": "trip",
+          "duration": {
+            "samples": 6,
+            "mean": 2.1666666666666665,
+            "median": 2.1666666666666665,
+            "p95": 2.1666666666666665
+          },
+          "skin": {
+            "calls": 1692,
+            "copiedBytes": 2429712,
+            "geometryUploads": 0,
+            "residentHits": 1692,
+            "residentResets": 0,
+            "workspaceBytes": 2424832,
+            "exactSkinVertices": 6616566
+          },
+          "poseChecksum": "ed6f4f02c6085ad2f7c53a7962d38cd34b8cb47f2a6f184b20d37717462216da",
+          "gameplayChecksum": "6b89db8cac1c32f0775e6cc4593b2b5a6fdcf13f8bf6e566d469ee1af22f6d76"
+        },
+        {
+          "cause": "landing",
+          "duration": {
+            "samples": 6,
+            "mean": 2.0833333333333335,
+            "median": 2.0833333333333335,
+            "p95": 2.0833333333333335
+          },
+          "skin": {
+            "calls": 1692,
+            "copiedBytes": 2429712,
+            "geometryUploads": 0,
+            "residentHits": 1692,
+            "residentResets": 0,
+            "workspaceBytes": 2424832,
+            "exactSkinVertices": 6616566
+          },
+          "poseChecksum": "886f79fc2e9ab4fd8107dfaedac3dd3247c01cf875343565cb01fcd6e2deb8b1",
+          "gameplayChecksum": "0138e00e3c7e28cc74a683e502d5f8d992cba6dbcfe77374d0930f59eac00f7c"
+        },
+        {
+          "cause": "pvp",
+          "duration": {
+            "samples": 6,
+            "mean": 1.8333333333333333,
+            "median": 1.8333333333333333,
+            "p95": 1.8333333333333333
+          },
+          "skin": {
+            "calls": 1692,
+            "copiedBytes": 2429712,
+            "geometryUploads": 0,
+            "residentHits": 1692,
+            "residentResets": 0,
+            "workspaceBytes": 2424832,
+            "exactSkinVertices": 6616566
+          },
+          "poseChecksum": "8632244b11d3d3ec566e318168f8c9fb09ce1d13ffc2374d1c64240933da7429",
+          "gameplayChecksum": "a21e86e75338ad583705e1ba79d75cbf4c255378573a1e168a46e2922416cbd6"
+        }
+      ]
+    },
+    "after": {
+      "incidents": 30,
+      "frames": 3952,
+      "bodyMatrixPasses": 3952,
+      "deformationPasses": 3952,
+      "newDeformationRecords": 0,
+      "newDeformationTransformObjects": 0,
+      "supportProbeSamples": 3231725,
+      "skinGeometryUploads": 0,
+      "skinWorkspaceBytes": 2424832,
+      "perCause": [
+        {
+          "cause": "balance",
+          "duration": {
+            "samples": 6,
+            "mean": 2.1888888888888887,
+            "median": 2.183333333333333,
+            "p95": 2.25
+          },
+          "skin": {
+            "calls": 1656,
+            "copiedBytes": 2378016,
+            "geometryUploads": 0,
+            "residentHits": 1656,
+            "residentResets": 0,
+            "workspaceBytes": 2424832,
+            "exactSkinVertices": 6475788
+          },
+          "poseChecksum": "06fb8fa8412f3cf7293fe07c7b308d8c347252ec8d54ebb1493637cff806f808",
+          "gameplayChecksum": "725942444377394ed12b8f21eb6d607acdf31a9cc9a3af21f3181def004fec3d"
+        },
+        {
+          "cause": "wall",
+          "duration": {
+            "samples": 6,
+            "mean": 2.1805555555555554,
+            "median": 2.2,
+            "p95": 2.2333333333333334
+          },
+          "skin": {
+            "calls": 1656,
+            "copiedBytes": 2378016,
+            "geometryUploads": 0,
+            "residentHits": 1656,
+            "residentResets": 0,
+            "workspaceBytes": 2424832,
+            "exactSkinVertices": 6475788
+          },
+          "poseChecksum": "159fdb422ca23dff107f13f6ea11fdabb4fca6495fdfbb673da6bbcf842d006a",
+          "gameplayChecksum": "41f27968b468a4fe8a17b19eae00f0d735383a5a195e7202dcd5efc17a1abf64"
+        },
+        {
+          "cause": "trip",
+          "duration": {
+            "samples": 6,
+            "mean": 2.236111111111111,
+            "median": 2.2333333333333334,
+            "p95": 2.25
+          },
+          "skin": {
+            "calls": 1656,
+            "copiedBytes": 2378016,
+            "geometryUploads": 0,
+            "residentHits": 1656,
+            "residentResets": 0,
+            "workspaceBytes": 2424832,
+            "exactSkinVertices": 6475788
+          },
+          "poseChecksum": "bc3aa7dac2efe7cd06228d5a683c7218f1fcfdb5b40f91b40db2bf8e7e8d3a58",
+          "gameplayChecksum": "aa880a212911fb2607dbb2a809d6a4f95e5a7bc2b4eed59a70d4e2f25016bff2"
+        },
+        {
+          "cause": "landing",
+          "duration": {
+            "samples": 6,
+            "mean": 2.2388888888888894,
+            "median": 2.25,
+            "p95": 2.25
+          },
+          "skin": {
+            "calls": 1656,
+            "copiedBytes": 2378016,
+            "geometryUploads": 0,
+            "residentHits": 1656,
+            "residentResets": 0,
+            "workspaceBytes": 2424832,
+            "exactSkinVertices": 6475788
+          },
+          "poseChecksum": "23530ff077c8ef3bce161b1a7b34b32cd31f455ec179928fd8560a70ca005454",
+          "gameplayChecksum": "73992757aec7122306e7b78dd8309af6b28b179ee80fd884760b8303e1173c1b"
+        },
+        {
+          "cause": "pvp",
+          "duration": {
+            "samples": 6,
+            "mean": 2.1333333333333333,
+            "median": 2.1333333333333333,
+            "p95": 2.1333333333333333
+          },
+          "skin": {
+            "calls": 1656,
+            "copiedBytes": 2378016,
+            "geometryUploads": 0,
+            "residentHits": 1656,
+            "residentResets": 0,
+            "workspaceBytes": 2424832,
+            "exactSkinVertices": 6475788
+          },
+          "poseChecksum": "0c1c8d5a9b356e43b0d94db9a9dc8d7e2d6be5843565f5b2576a4dc6f5bf4f2d",
+          "gameplayChecksum": "fac14059e8815e667262fd09e20d5c0a632372583edcbdec3e39092e39363b1c"
+        }
+      ]
+    },
+    "additionalTypedStoragePerPlayerBytes": 816,
+    "sharedPelvisTimingTableBytes": 584,
+    "physicsBodiesAdded": 0,
+    "timingClaim": "None. This is a fidelity pass with longer motion and more frames/probes per incident. Instrumented Node timings exclude browser/render/GPU and ran in a busy shared workspace.",
+    "fullSkinScanNote": "Profile phase counters include the exit step after the bail ends; the runtime human-motion check confirms zero full scans while actually bailing."
+  },
+  "browser": {
+    "status": "passed current working source in lite and full render; temporary School-isolated preview was not used for final acceptance",
+    "browser-lite-bails.json": {
+      "passed": true,
+      "cases": 20,
+      "renderedFrames": 2642,
+      "failures": []
+    },
+    "browser-lite-boards.json": {
+      "passed": true,
+      "cases": 5,
+      "renderedFrames": 5821,
+      "failures": []
+    },
+    "browser-full-bails.json": {
+      "passed": true,
+      "cases": 20,
+      "renderedFrames": 1217,
+      "failures": []
+    },
+    "browser-full-boards.json": {
+      "passed": true,
+      "cases": 5,
+      "renderedFrames": 2499,
+      "failures": []
+    },
+    "visualReview": [
+      "Contact-death reference",
+      "Manual knee-yield and backward fall",
+      "Side roll and curled get-up",
+      "Flat-back heavy-wall rest",
+      "Heavy-slam seated gather"
+    ],
+    "screenshots": [
+      "contact-reference-full.png",
+      "manual-collapse-full.png",
+      "side-getup-full.png",
+      "heavy-rest-final.png",
+      "recovery-final.png"
+    ],
+    "console": {
+      "lite": [],
+      "fullAfterFinalReload": [],
+      "stableReview": [],
+      "note": "Earlier incomplete School module errors preceded final validation; retained separately in the raw console evidence."
+    },
+    "stableReviewUrl": "http://127.0.0.1:5398/bone-yard-review.html?playtest&level=bone-yard",
+    "stableReview": "Same current working source, full rendering, HMR/watch disabled to avoid unrelated level edits resetting a frozen pose. Original shared preview remains on port 5387."
+  },
+  "build": {
+    "passed": true,
+    "typecheck": true,
+    "version": "ac3f335b888e2eb5eac6",
+    "commands": [
+      "node node_modules/typescript/bin/tsc --noEmit",
+      "node node_modules/vite/bin/vite.js build"
+    ],
+    "fullSuiteRun": false,
+    "warning": "Existing bundle-size warning remains."
+  },
+  "evidenceRoot": "/private/tmp/bail-contact-collapse-20261022",
+  "workflow": "Local only; preserve shared checkout/index and unrelated work.",
+  "elapsedMinutesFromSnapshot": 37.9
+}

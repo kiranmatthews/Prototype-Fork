@@ -36,6 +36,7 @@ replaced.add('src/character/skinBoundsSimdKernelBytes.ts');
 replaced.add('src/character/bailContactPose.ts');
 replaced.add('src/character/bailPoseCarry.ts');
 replaced.add('src/character/bailGetUpPose.ts');
+replaced.add('src/character/bailFallPose.ts');
 replaced.add('src/character/bailKnockdown.ts');
 replaced.add('src/character/compactSkinBounds.ts');
 const server = await createServer({ appType: 'custom', logLevel: 'silent', server: { middlewareMode: true },

@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { ELASTIC_LENGTH_CONTROLS } from '../animation/elasticity';
 import type { PlayerAnimationBridge } from '../animation/bridge';
 
-const JOINTS = 14;
+const JOINTS = 16;
 export const BAIL_POSE_CARRY_SECONDS = .24;
 
 /** A lost foothold releases the pose that was actually pushing upright.

@@ -130,6 +130,7 @@ import {
 import { BailRecoveryMotion } from './character/bailRecoveryMotion';
 import { BailPoseCarry, BAIL_POSE_CARRY_SECONDS } from './character/bailPoseCarry';
 import { BailGetUpPose, recoveryStrideMagnitude } from './character/bailGetUpPose';
+import { BailFallPose } from './character/bailFallPose';
 import { BailKnockdown } from './character/bailKnockdown';
 import { BailRiseMotion, BAIL_RISE_SETTLE_SECONDS } from './character/bailRiseMotion';
 import {
@@ -536,7 +537,7 @@ const CRATE_CONTACT_SHIFT = new THREE.Vector3();
 const NO_CRATE_CONTACTS: ReadonlySet<Crate> = new Set();
 // Procedural bail recovery: the physical ragdoll owns the impact/bounces, then
 // stable ground hands the final beat to a shoulder-roll and moving stand-up.
-const BAIL_RECOVER_TIME = 0.64;
+const BAIL_RECOVER_TIME = 0.72;
 const BAIL_STABLE_TIME = 0.08;
 const BAIL_RECOVER_START_SPEED = 2.8;
 const BAIL_MOVE_START = 0.18;
@@ -899,6 +900,7 @@ export class Player {
   private readonly bailRecoveryMotion = new BailRecoveryMotion();
   private readonly bailPoseCarry = new BailPoseCarry();
   private readonly bailGetUpPose = new BailGetUpPose();
+  private readonly bailFallPose = new BailFallPose();
   private readonly bailKnockdown = new BailKnockdown();
   private readonly bailRecoveryOrientation = new THREE.Quaternion();
   private readonly bailRecoverySpin = new THREE.Vector3();
@@ -925,7 +927,7 @@ export class Player {
   // lifetime: ragActive can only be true inside it.
   private ragActive = false;
   private readonly bailMotion = new BailMotion();
-  private readonly ragImpactPose = { joints: new Array<THREE.Object3D | null>(14).fill(null),
+  private readonly ragImpactPose = { joints: new Array<THREE.Object3D | null>(16).fill(null),
     point: new THREE.Vector3(), impulse: new THREE.Vector3() };
   private airRose = false; // this air had an upward phase (a jump, a bounce) — see railLandSmack
   private ragAngVel = new THREE.Vector3(); // tumble rates: x pitch (over axisL), y yaw, z roll (over axisF)
@@ -4431,6 +4433,7 @@ export class Player {
         this.bailRecoverT < 0 &&
         this.bailGroundT >= BAIL_STABLE_TIME &&
         this.bailFallAge >= this.bailMinimumFallTime &&
+        this.bailFallPose.readyForRecovery(this.bailFallAge) &&
         this.bailKnockdown.ready &&
         (this.bailDownT <= recoverDuration + 1e-6 ||
           Math.abs(this.speed) <= BAIL_RECOVER_START_SPEED);
@@ -8796,6 +8799,7 @@ export class Player {
     joints[5] = this.armR; joints[6] = this.elbowR; joints[7] = this.wristR;
     joints[8] = this.legL; joints[9] = this.kneeL; joints[10] = this.ankleL;
     joints[11] = this.legR; joints[12] = this.kneeR; joints[13] = this.ankleR;
+    joints[14] = this.headM?.parent?.parent ?? null; joints[15] = this.headM?.parent ?? null;
     return joints;
   }
 
@@ -10531,6 +10535,10 @@ export class Player {
           ? this.ragAngVel.z
           : Math.sin(this.ragSeedA);
     this.bailRecoverSide = (shoulder >= 0 ? 1 : -1) as -1 | 1;
+    this.bailFallPose.begin(this.ragSeedA, this.bailRecoverSide,
+      this.bailBalanceFall ? this.ragQ : undefined,
+      this.bailBalanceFall ? this.ragdollWorldSpin(Player.RAG_WORLD_SPIN) : undefined,
+      this.bailBalanceFall ? this.groundHit?.normal ?? THREE.Object3D.DEFAULT_UP : undefined);
   }
 
   private captureRagdollPose(poseSource: THREE.Object3D, preserveTranslation: boolean): void {
@@ -17110,6 +17118,7 @@ export class Player {
     this.clearCharacterAppearance();
     this.bailPoseCarry.restore();
     this.bailMotion.restore();
+    this.bailFallPose.restore();
     // A runtime authored overlay wrote after the previous legacy pose. Undo it
     // before any legacy formula reads or accumulates from local transforms.
     this.playerAnimationBridge.prepareLegacyPose();
@@ -18351,6 +18360,7 @@ export class Player {
           stepBailGroundSpin(spin, BAIL_V, normal, contact, dt,
             TUNING.bailFriction * (fallingOffFeet ? .12 : 1), TUNING.ragSpin,
             !this.bailHasFallen && this.bailFallAge < .95 ? 9.8 : 0);
+          this.bailFallPose.steerSupported(spin, this.ragQ, this.bailFallAge, dt);
           this.bailKnockdown.settleSpin(spin, this.ragQ, normal, dt);
           this.setRagdollWorldSpin(spin);
           if (slopeTumble) {
@@ -18394,7 +18404,7 @@ export class Player {
             anchorW = this.ragPoseAnchorW = 1 - u * u * (3 - 2 * u);
             carryTravel = this.ragPoseReleaseT * (1 - u + u * u / 3);
             if (this.ragPoseDriftBrake > 0)
-              carryTravel = -Math.expm1(-this.ragPoseDriftBrake * this.ragPoseReleaseT) / this.ragPoseDriftBrake;
+              carryTravel = (1 - Math.exp(-this.ragPoseDriftBrake * this.ragPoseReleaseT)) / this.ragPoseDriftBrake;
           }
           this.bodyGroup.position.x = THREE.MathUtils.lerp(
             this.bodyGroup.position.x,
@@ -18505,12 +18515,15 @@ export class Player {
     const batchBailDeformations = (this.isBailing || this.bailRiseAge >= 0) && !this.playerAnimationBridge.previewActive;
     this.playerAnimationBridge.applyOverlay(dt, batchBailDeformations);
     if (batchBailDeformations) this.playerAnimationBridge.beginDeformationBatch();
+    if (this.isBailing && this.state !== 'dead' && !this.playerAnimationBridge.previewActive)
+      this.bailFallPose.apply(this.ragdollPoseJoints(), this.bailFallAge,
+        this.bailRecoverT < 0 ? -1 : this.bailRecoverT / Math.max(.05, this.bailRecoverDuration));
     // An intact spring rig owns secondary motion AFTER editable clips, so a
     // saved Bail clip cannot erase its wrists/elbows/head follow-through. It
     // fades before the planted recovery contacts take the body's weight.
     if (this.isBailing && this.state !== 'dead' && !this.playerAnimationBridge.previewActive) {
       const weight = Math.min(2, Math.max(0, TUNING.ragFlail)) * this.ragBlend *
-        (1 - THREE.MathUtils.smoothstep(this.bailRecoveryPose, 0, .32));
+        (1 - THREE.MathUtils.smoothstep(this.bailRecoveryPose, 0, .32)) * (1 - .62 * this.bailFallPose.weight);
       this.bailMotion.prepareHinge(3, this.elbowL, weight);
       this.bailMotion.prepareHinge(6, this.elbowR, weight);
       this.bailMotion.prepareHinge(9, this.kneeL, weight);
@@ -18535,25 +18548,6 @@ export class Player {
         this.playerAnimationBridge.modulateDeformations(this.bailMotion.deformations);
       }
     }
-    if (this.isBailing && this.bailKnockdown.strength > 0 && !this.playerAnimationBridge.previewActive) {
-      const phase = Math.max(0, this.bailRecoverT / Math.max(.05, this.bailRecoverDuration));
-      const weight = this.bailKnockdown.poseWeight(phase), face = this.bailKnockdown.restingFace;
-      // Let the limbs come down with the supported body instead of holding
-      // the mid-flight flail during its dazed beat. Fade this same pose into
-      // the gathering roll so the get-up begins from what was actually shown.
-      if (weight > 0) {
-        if (this.spineG) this.spineG.rotation.x += (.22 * face - this.spineG.rotation.x) * weight;
-        if (this.headM) this.headM.rotation.x += (-.12 * face - this.headM.rotation.x) * weight;
-        if (this.legL) this.legL.rotation.x += (.22 * face - this.legL.rotation.x) * weight;
-        if (this.legR) this.legR.rotation.x += (.16 * face - this.legR.rotation.x) * weight;
-        if (this.kneeL) this.kneeL.rotation.x += (.35 - this.kneeL.rotation.x) * weight;
-        if (this.kneeR) this.kneeR.rotation.x += (.28 - this.kneeR.rotation.x) * weight;
-        if (this.armL) { this.armL.rotation.x *= 1 - weight; this.armL.rotation.z += (.42 - this.armL.rotation.z) * weight; }
-        if (this.armR) { this.armR.rotation.x *= 1 - weight; this.armR.rotation.z += (-.5 - this.armR.rotation.z) * weight; }
-        if (this.elbowL) this.elbowL.rotation.x += (-.3 - this.elbowL.rotation.x) * weight;
-        if (this.elbowR) this.elbowR.rotation.x += (-.4 - this.elbowR.rotation.x) * weight;
-      }
-    }
     if (recover > 0 && !this.playerAnimationBridge.previewActive) {
       const pose = this.bailGetUpPose, side = this.bailRecoverSide;
       pose.sample(this.bailRecoverT / Math.max(.05, this.bailRecoverDuration), side, this.bailRecoveryMotion.sideRoll);
@@ -18561,10 +18555,13 @@ export class Player {
       // twists independently. One foot gathers under the bent torso; the
       // trailing leg and free hand counterbalance instead of rising as a plank.
       if (this.spineG) {
-        this.spineG.rotation.x += pose.curl;
+        this.spineG.rotation.x += .7 * pose.curl;
         this.spineG.rotation.y += pose.twist;
         this.spineG.rotation.z += pose.sideBend;
       }
+      const neck = this.headM?.parent, chest = neck?.parent;
+      if (chest) chest.rotation.x += .3 * pose.curl;
+      if (neck) neck.rotation.x -= .1 * pose.curl;
       const leadHip = side > 0 ? this.legR : this.legL;
       const trailHip = side > 0 ? this.legL : this.legR;
       const leadKnee = side > 0 ? this.kneeR : this.kneeL;

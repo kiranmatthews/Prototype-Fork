@@ -741,7 +741,7 @@ try {
   rebound.player.bailGroundT = 0.12;
   // This fixture starts at the supported recovery boundary, after the body
   // has fallen. The directional-fall regression exercises earning that state.
-  rebound.player.bailFallAge = .6;
+  rebound.player.bailFallAge = 1;
   rebound.player.ragQ.setFromAxisAngle(new THREE.Vector3(1, 0, 0), 1.35);
   rebound.player.step(CONST.fixedStep, makeInput(), rebound.level);
   assert.ok(rebound.player.bailRecoveryK > 0, "rebound did not start recovery");
