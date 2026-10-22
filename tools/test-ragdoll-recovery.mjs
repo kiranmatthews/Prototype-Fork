@@ -382,8 +382,8 @@ try {
   assert.equal(contactPlayer.resolveRagdollGroundBounce({...contactPlayer.groundHit,
     normal: new THREE.Vector3(.6, .8, 0)}), false, "separating bank contact bounced again");
   contactPlayer.axisF.set(0, 0, -1);contactPlayer.speed = 8;contactPlayer.vVel = -20;contactPlayer.ragBounces = 3;
-  assert.equal(contactPlayer.resolveRagdollGroundBounce(contactPlayer.groundHit), false,
-    "three-impact bounce budget was exceeded");
+  assert.equal(contactPlayer.resolveRagdollGroundBounce(contactPlayer.groundHit), true,
+    "earlier contacts swallowed a fresh heavy impact");
 
   // Rotating about the combined angular velocity has no sequential-axis
   // bias. One long advance and 12 subdivisions must describe the same arc.

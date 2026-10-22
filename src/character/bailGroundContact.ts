@@ -1,5 +1,26 @@
 import type { Vector3 } from 'three';
 
+/** Resolve travel once for both the tumble impulse and the controller. Small
+ * impacts progressively lose their rebound; a fresh hard hit keeps its bounce
+ * regardless of how many earlier contacts the incident had. Unit normal. */
+export function resolveBailGroundVelocity(velocity: Vector3, normal: Vector3, restitution: number,
+  settleSpeed = 1.5): number {
+  const into = -velocity.dot(normal);
+  if (into <= 0) return 0;
+  // Fade over 3 m/s above the settling speed. The controller raises the zero
+  // end above one step of gravity at extreme tuning, preventing contact chatter.
+  const u = Math.max(0, Math.min(1, (into - Math.max(1.5, settleSpeed)) / 3));
+  const out = into * Math.max(0, Math.min(.8, restitution)) * u * u * (3 - 2 * u);
+  velocity.addScaledVector(normal, into);
+  const tangentSpeed = velocity.length();
+  // Preserve the authored hard-hit carry, but do not scrub 28% of a fast
+  // sideways skid when the normal contact barely grazes the floor.
+  const friction = Math.min(tangentSpeed * .28, (into + out) * .45);
+  if (tangentSpeed > 1e-8) velocity.multiplyScalar(1 - friction / tangentSpeed);
+  velocity.addScaledVector(normal, out);
+  return out;
+}
+
 /** Presentation-only rolling contact. The authored controller owns travel and
  * its friction; cosmetic tumble randomness must never feed gameplay velocity.
  * Friction opposes v + omega x r at the actual posed contact, so a hand, hip or

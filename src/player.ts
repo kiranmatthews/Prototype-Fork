@@ -142,7 +142,7 @@ import { withSpinArmPose, SPIN_ELBOW_BEND_DEGREES } from './spin-effects/armPose
 import { SPIN_SMEAR_POSE_REVISION } from './spin-effects/storageKeys';
 import { CharacterBreakApart } from './character/breakApart';
 import { BailMotion } from './character/bailMotion';
-import { stepBailGroundSpin } from './character/bailGroundContact';
+import { resolveBailGroundVelocity, stepBailGroundSpin } from './character/bailGroundContact';
 import { resolveBailImpactSpin } from './character/bailImpactSpin';
 import { selectWipeoutStyle, type WipeoutCause } from './character/wipeoutPolicy';
 import { ROLL_LANDING_CLIP_ID, ROLL_LANDING_DURATION, ROLL_LANDING_CONTROL_SECONDS } from './animation/rollLanding';
@@ -921,7 +921,7 @@ export class Player {
   private ragBlend = 0; // how much of the pose the tumble owns (eases in/out)
   private ragPoseAnchor = new THREE.Vector3(); // parent-local waist point preserved across roll interruption
   private ragPoseAnchorW = 0;
-  private ragBounces = 0; // ground hits so far this wipeout (capped)
+  private ragBounces = 0; // airborne rebounds so far this wipeout
   private ragImpacts = 0; // every actual ground contact, including a final non-rebound settle
   private ragJumpAttemptImpact = 0; // one unreliable X roll per impact
   private ragSteerAttemptImpact = 0; // one unreliable direction roll per impact
@@ -4541,8 +4541,12 @@ export class Player {
     // speed from the previous step, so clamp it too or the skate-entry gate
     // reads it and takes over anyway.
     if (this.slideFromWalk && this.slideTimer <= 0 && this.state === 'ride' && this.grounded) {
-      this.speed = THREE.MathUtils.clamp(this.speed, -TUNING.walkSpeed, TUNING.walkSpeed);
-      this.lastPlanar = Math.min(this.lastPlanar, TUNING.walkSpeed);
+      // A thrown board also leaves this tag. The bail already owns control
+      // and friction; do not replace its skid with a walking-speed cutoff.
+      if (!this.isBailing) {
+        this.speed = THREE.MathUtils.clamp(this.speed, -TUNING.walkSpeed, TUNING.walkSpeed);
+        this.lastPlanar = Math.min(this.lastPlanar, TUNING.walkSpeed);
+      }
       this.slideFromWalk = false;
     }
 
@@ -8038,8 +8042,12 @@ export class Player {
         const nearApex = 1 - Math.min(1, Math.abs(this.vVel) / TUNING.boardApexBand);
         flatG *= 1 - TUNING.boardApexFloat * nearApex;
       }
-      const g =
-        this.vertAir || this.pipeHang
+      // Once the body has hit, ascent and descent share gravity. The jump's
+      // light rise/heavy fall otherwise adds energy on every bounce (enough
+      // to amplify high restitution). Preserve the authored initial trip arc.
+      const g = this.isBailing && this.ragImpacts > 0
+        ? Math.sqrt(TUNING.riseGravity * TUNING.fallGravity)
+        : this.vertAir || this.pipeHang
           ? TUNING.pipeAirGravity
           : this.vertGravT > 0 && TUNING.vertGravityBlend > 0
             ? THREE.MathUtils.lerp(
@@ -8324,13 +8332,13 @@ export class Player {
       // faces — a drop onto the LOW part of a transition (35 degrees) must
       // still become down-the-wall roll, or you park dead mid-face. Near-flat
       // ground makes it a natural no-op, so the only gate is "some slope".
-      if (this.parkControls && this.airFromSkate) {
+      if (!this.isBailing && this.parkControls && this.airFromSkate) {
         this.parkVelocity.set(incomingPlanarX, this.vVel, incomingPlanarZ);
         this.parkVelocity.addScaledVector(hit.normal, -this.parkVelocity.dot(hit.normal));
         this.speed = this.parkVelocity.length();
         if (this.speed > 0.0254) skateSurfaceHeading(this.axisF, this.parkVelocity, hit.normal);
         this.axisL.set(this.axisF.z, 0, -this.axisF.x);
-      } else if (this.airFromSkate && hit.normal.y < 0.97) {
+      } else if (!this.isBailing && this.airFromSkate && hit.normal.y < 0.97) {
         const n = hit.normal;
         const vvx = this.speed * this.axisF.x;
         const vvz = this.speed * this.axisF.z;
@@ -8386,7 +8394,9 @@ export class Player {
       // The latch also caps NEXT frame's measured planar: the landing step
       // itself moved at air speed, and without it the skate gate reads that
       // measurement and takes over anyway (board out + cruise assist).
-      if (this.slideFromWalk && this.slideTimer <= 0) {
+      if (this.isBailing) {
+        this.slideFromWalk = false; // the bail's resolved skid owns this landing and the next tick
+      } else if (this.slideFromWalk && this.slideTimer <= 0) {
         this.speed = THREE.MathUtils.clamp(this.speed, -TUNING.walkSpeed, TUNING.walkSpeed);
         this.lastPlanar = Math.min(this.lastPlanar, TUNING.walkSpeed);
         this.slideFromWalk = false;
@@ -8789,14 +8799,12 @@ export class Player {
   // priority from the bail.
   private resolveRagdollGroundBounce(hit: GroundHit): boolean {
     if (!this.isBailing || !this.ragActive) return false;
-    // An impact is input-eligible even when it is too soft/steep to rebound or
-    // the natural three-bounce budget is already spent. The body has hit the
-    // floor; a lucky X press during the brief settle may still fish-flop it.
+    // Soft/steep contacts still count for the player's fish-flop opportunity.
     // Resolve the whole incident velocity against the contacted plane. A
     // vertical-only rebound injected motion into an uphill bank and could
     // leave a downhill crash travelling through its support after the bounce.
-    // Tangential drag and normal restitution both remove energy; flat ground
-    // retains the existing 72% carry and authored bounce tuning.
+    // Tangential drag and normal restitution both remove energy. Near rest,
+    // their continuous fade hands the remaining skid to supported friction.
     const n = Player.RAG_NORMAL.copy(hit.normal);
     if (n.lengthSq() < 1e-8) return false;
     n.normalize();
@@ -8804,26 +8812,30 @@ export class Player {
     const into = -BAIL_V.dot(n);
     if (into <= 0) return false;
     this.noteRagdollGroundImpact();
-    const rebound = this.ragBounces < 3 && into > 3.2 && n.y > .6;
-    const restitution = rebound ? THREE.MathUtils.clamp(TUNING.ragBounce, 0, 0.8) : 0;
     Player.RAG_IMPULSE.copy(BAIL_V).multiplyScalar(-1);
-    BAIL_V.addScaledVector(n, into).multiplyScalar(.72).addScaledVector(n, into * restitution);
+    const settleSpeed = Math.sqrt(TUNING.riseGravity * TUNING.fallGravity) * CONST.fixedStep + .01;
+    const rebound = resolveBailGroundVelocity(BAIL_V, n, n.y > .6 ? TUNING.ragBounce : 0, settleSpeed) > 0;
     Player.RAG_IMPULSE.add(BAIL_V);
     this.kickRagdollContact(n, Player.RAG_IMPULSE, into);
-    if (!rebound) return false;
-
-    this.pos.y = hit.y;
-    puffs.burst('dustLand', this.pos.x, this.pos.y + 0.04, this.pos.z, {
-      dir: n,
-      surface: surfaceFromName(hit.name),
-      groundY: this.pos.y,
-      strength: Math.min(2.2, 0.3 + (into - 3.2) / 9),
-    });
+    // Apply the same outgoing travel on a settle. Previously only rebounds
+    // applied the friction that the body's angular impulse had already used.
     this.redirectBailVelocity(BAIL_V);
-    this.ragBounces++;
-    sfx.play('crunch', 0.45, 1.1 + Math.random() * 0.35);
-    this.emitSparks(3, 0xffb545, 1.2);
-    return true;
+    this.pos.y = hit.y;
+    if (rebound) this.ragBounces++;
+    // Tiny settling hops stay silent. Harder landings have a heavier, lower
+    // thud; their volume falls with the impact instead of repeating at full tilt.
+    if (into > 3.2) {
+      puffs.burst('dustLand', this.pos.x, this.pos.y + 0.04, this.pos.z, {
+        dir: n,
+        surface: surfaceFromName(hit.name),
+        groundY: this.pos.y,
+        strength: Math.min(2.2, 0.3 + (into - 3.2) / 9),
+      });
+      sfx.play('crunch', Math.min(.55, into / 32),
+        THREE.MathUtils.clamp(1.3 - into * .02, .78, 1.28) * (.94 + Math.random() * .12));
+      this.emitSparks(3, 0xffb545, 1.2);
+    }
+    return rebound;
   }
 
   // Slam touchdown: pancake squash and a small shockwave that breaks crates
