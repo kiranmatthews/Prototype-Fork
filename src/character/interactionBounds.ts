@@ -50,6 +50,7 @@ export class CharacterInteractionBounds {
   private readonly skinPalettes = new WeakMap<THREE.Skeleton,THREE.Matrix4[]>();
   private readonly skinVertices = new WeakMap<THREE.SkinnedMesh,CachedSkinVertices>();
   private readonly skinBase = new THREE.Vector3();
+  private readonly skinPoint = new THREE.Vector3();
   meshCount = 0;
   supportSamples = 0;
   private readonly supportCache = new WeakMap<THREE.BufferGeometry, Uint32Array>();
@@ -200,8 +201,40 @@ export class CharacterInteractionBounds {
               }
               continue;
             }
+            // A sparse contact hull still used Three's full bone world ×
+            // inverse multiplication for every weight of every sample. These
+            // matrices are constant within this query. Reuse the existing
+            // exact-bounds palette storage, refreshing from the live bones.
+            const skin = node instanceof THREE.SkinnedMesh &&
+              node.getVertexPosition === THREE.SkinnedMesh.prototype.getVertexPosition &&
+              node.applyBoneTransform === THREE.SkinnedMesh.prototype.applyBoneTransform &&
+              indices.length >= node.skeleton.bones.length ? node : null;
+            let palette: THREE.Matrix4[] | null = null;
+            if (skin) {
+              const skeleton = skin.skeleton;
+              palette = this.skinPalettes.get(skeleton) ?? null;
+              if (!palette) { palette = []; this.skinPalettes.set(skeleton, palette); }
+              palette.length = skeleton.bones.length;
+              for (let bone = 0; bone < skeleton.bones.length; bone++) {
+                // Preserve native behavior for unusual/incomplete skeletons,
+                // including unused absent bones that a sparse hull skips.
+                if (!skeleton.bones[bone]?.matrixWorld || !skeleton.boneInverses[bone]) { palette = null; break; }
+                (palette[bone] ??= new THREE.Matrix4()).multiplyMatrices(skeleton.bones[bone].matrixWorld, skeleton.boneInverses[bone]);
+              }
+            }
             for(const i of indices){
-              node.getVertexPosition(i,this.point).applyMatrix4(this.world);this.supportSamples++;bounds?.expandByPoint(this.point);
+              if (skin && palette) {
+                THREE.Mesh.prototype.getVertexPosition.call(skin, i, this.skinBase).applyMatrix4(skin.bindMatrix);
+                this.point.set(0, 0, 0);
+                const weights = skin.geometry.attributes.skinWeight, bones = skin.geometry.attributes.skinIndex;
+                for (let channel = 0; channel < 4; channel++) {
+                  const weight = weights.getComponent(i, channel);
+                  if (weight !== 0) this.point.addScaledVector(this.skinPoint.copy(this.skinBase)
+                    .applyMatrix4(palette[bones.getComponent(i, channel)]), weight);
+                }
+                this.point.applyMatrix4(skin.bindMatrixInverse);
+              } else node.getVertexPosition(i, this.point);
+              this.point.applyMatrix4(this.world);this.supportSamples++;bounds?.expandByPoint(this.point);
               const distance=normal.x*(this.point.x-point.x)+normal.y*(this.point.y-point.y)+normal.z*(this.point.z-point.z);
               if(distance<minimum){minimum=distance;nearest=node;contact?.copy(this.point);}
             }

@@ -15,6 +15,7 @@ const allCauses = ['balance', 'wall', 'trip', 'landing', 'pvp'];
 const completeIncident = process.argv.includes('--complete-incident');
 const realHands = process.argv.includes('--real-hands');
 const skinUploadProfile = process.argv.includes('--skin-upload-profile');
+const supportSkinProfile = process.argv.includes('--support-skin-profile');
 const selectedCause = process.argv.find(a => a.startsWith('--case='))?.slice(7);
 if (selectedCause && !allCauses.includes(selectedCause)) throw new Error(`Unknown bail case: ${selectedCause}`);
 const countOption = (name, fallback) => {
@@ -112,6 +113,8 @@ try {
   const keyOrderProfile = process.argv.includes('--key-order-profile');
   const poseNodes = [];
   p.bodyGroup.traverse(node => poseNodes.push(node));
+  const boneWorlds = new Set(poseNodes.flatMap(node => node.isSkinnedMesh
+    ? node.skeleton.bones.map(bone => bone.matrixWorld) : node.isBone ? [node.matrixWorld] : []));
   const poseValues = new Float64Array(poseNodes.reduce((n, node) => n + 10 + (node.morphTargetInfluences?.length ?? 0), 0));
   let contact = null;
   if (process.argv.includes('--contact-only') && typeof p.kickRagdollContact === 'function') {
@@ -285,9 +288,25 @@ try {
       THREE.Quaternion.prototype.clone = function () { if (inAppearance) transformClones++; return quaternionClone.call(this); };
     }
     const support = p.interactionMeasure.sampledPlaneDistance.bind(p.interactionMeasure);
-    if (process.argv.includes('--support-profile')) p.interactionMeasure.sampledPlaneDistance = (...args) => {
-      const start = performance.now(), result = support(...args);
+    const supportSkin = { queries:0, boneMatrixProducts:0, nativeVertexSkins:0 };
+    let inSupport = false;
+    const matrixMultiply = THREE.Matrix4.prototype.multiplyMatrices, skinTransform = THREE.SkinnedMesh.prototype.applyBoneTransform;
+    if (supportSkinProfile) {
+      THREE.Matrix4.prototype.multiplyMatrices = function(a,b) {
+        if (inSupport && boneWorlds.has(a)) supportSkin.boneMatrixProducts++;
+        return matrixMultiply.call(this,a,b);
+      };
+      THREE.SkinnedMesh.prototype.applyBoneTransform = function(i,v) {
+        if (inSupport) supportSkin.nativeVertexSkins++;
+        return skinTransform.call(this,i,v);
+      };
+    }
+    if (process.argv.includes('--support-profile') || supportSkinProfile) p.interactionMeasure.sampledPlaneDistance = (...args) => {
+      const start = performance.now(); inSupport = recording();
+      let result;
+      try { result = support(...args); } finally { inSupport = false; }
       if (recording()) {
+        supportSkin.queries++;
         const ms = performance.now() - start, samples = p.interactionMeasure.supportSamples;
         supportTimes.push(ms); supportSamples += samples;
         phaseWork[phase].supportTimes.push(ms); phaseWork[phase].supportSamples += samples;
@@ -364,6 +383,8 @@ try {
     Array.prototype.sort = originalSort;
     p.bodyGroup.updateMatrixWorld = bodyMatrices;
     p.interactionMeasure.sampledPlaneDistance = support;
+    THREE.Matrix4.prototype.multiplyMatrices = matrixMultiply;
+    THREE.SkinnedMesh.prototype.applyBoneTransform = skinTransform;
     p.interactionMeasure.localBounds = localBounds;
     p.bailMotion.apply = applyJoint;
     bridge.applyDeformations = deform;
@@ -399,6 +420,7 @@ try {
         newRecords:deformationRecords, newTransformObjects:deformationTransforms, newMorphRecords:deformationMorphs } : undefined,
       keyOrdering: keyOrderProfile ? { sorts:keySorts, copiedKeyReferences:sortedKeyReferences } : undefined,
       skinUploads: skinUploadProfile ? skinUploads : undefined,
+      supportSkin: supportSkinProfile ? supportSkin : undefined,
       poseChecksum: poseHash?.digest('hex'), gameplayChecksum:gameplayHash?.digest('hex'), impacts: traceImpacts ? impacts : undefined });
   }
   console.log(JSON.stringify({ source: snapshot ? 'initial working tree snapshot' : 'current working tree', warmupsPerCase: warmups, measuredIncidentsPerCase: measured,
