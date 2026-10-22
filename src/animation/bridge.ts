@@ -97,10 +97,11 @@ interface AppliedDeformationState {
   readonly deformedPosition: THREE.Vector3;
   readonly deformedScale: THREE.Vector3;
   readonly movesPosition: boolean;
-  readonly movesScale: boolean;
+  movesScale: boolean;
+  morphCount: number;
   readonly morphs: Array<{
-    readonly index: number;
-    readonly base: number;
+    index: number;
+    base: number;
     deformed: number;
   }>;
 }
@@ -307,7 +308,9 @@ export function resolvePlayerAnimationRig(root: THREE.Group): PlayerAnimationRig
 function captureDeformedMorphs(state: AppliedDeformationState): void {
   const influences = (state.object as THREE.Mesh).morphTargetInfluences;
   if (!influences) return;
-  for (const morph of state.morphs) morph.deformed = influences[morph.index];
+  for (let i = 0; i < state.morphCount; i++) {
+    const morph = state.morphs[i]; morph.deformed = influences[morph.index];
+  }
 }
 
 function renderableDirectChildren(node: THREE.Object3D): THREE.Object3D[] {
@@ -332,7 +335,13 @@ export class PlayerAnimationBridge {
   private readonly overlayBaseline: MutableTransformSnapshot[] = [];
   private overlayBaselineApplied = false;
   private overlay: PlayerAnimationOverlay | null = null;
-  private deformationStates: AppliedDeformationState[] = [];
+  private readonly deformationStates: AppliedDeformationState[] = [];
+  private readonly visualDeformations = new Map<THREE.Object3D, AppliedDeformationState>();
+  private readonly endpointDeformations = new Map<THREE.Object3D, AppliedDeformationState>();
+  private readonly visualDeformationCache = new WeakMap<THREE.Object3D, AppliedDeformationState>();
+  private readonly endpointDeformationCache = new WeakMap<THREE.Object3D, AppliedDeformationState>();
+  private readonly deformationAxis = new THREE.Vector3();
+  private readonly deformationOffset = new THREE.Vector3();
   private deformationValues: Readonly<Record<string, number>> = {};
 
   constructor(
@@ -437,10 +446,8 @@ export class PlayerAnimationBridge {
     const runtime = (this.rigRoot.userData.sculptRuntime ?? {}) as SculptRuntimeMetadata;
     const joints = resolveRigJointNodes(this.rigRoot, isRecord(runtime.joints) ? runtime.joints : {});
     const deformations = resolveRigDeformations(runtime.deformations, joints);
-    const visualStates = new Map<THREE.Object3D, AppliedDeformationState>();
-    const endpointStates = new Map<THREE.Object3D, AppliedDeformationState>();
-    const axis = new THREE.Vector3();
-    const offset = new THREE.Vector3();
+    const visualStates = this.visualDeformations, endpointStates = this.endpointDeformations;
+    const axis = this.deformationAxis, offset = this.deformationOffset;
     const stateFor = (
       map: Map<THREE.Object3D, AppliedDeformationState>,
       object: THREE.Object3D,
@@ -449,23 +456,32 @@ export class PlayerAnimationBridge {
     ): AppliedDeformationState => {
       let state = map.get(object);
       if (!state) {
-        state = {
-          object,
-          basePosition: object.position.clone(),
-          baseScale: object.scale.clone(),
-          deformedPosition: object.position.clone(),
-          deformedScale: object.scale.clone(),
-          movesPosition: true,
-          movesScale,
-          morphs: [],
-        };
+        // Keep storage with the live node, not a traversal slot or old name.
+        // Visuals/endpoints have separate baselines even if a node fills both
+        // roles. Refresh every value after restoring the preceding layer.
+        const cache = map === visualStates ? this.visualDeformationCache : this.endpointDeformationCache;
+        state = cache.get(object);
+        if (!state) {
+          state = { object, basePosition:new THREE.Vector3(), baseScale:new THREE.Vector3(),
+            deformedPosition:new THREE.Vector3(), deformedScale:new THREE.Vector3(),
+            movesPosition:true, movesScale, morphs:[], morphCount:0 };
+          cache.set(object, state);
+        }
+        state.basePosition.copy(object.position); state.baseScale.copy(object.scale);
+        // Each caller captures the result after writing its transform; the
+        // previous result is unused until then, so do not copy it twice.
+        state.movesScale = movesScale; state.morphCount = 0;
         map.set(object, state);
       }
       const influences = (object as THREE.Mesh).morphTargetInfluences;
       for (const index of morphIndices) {
         if (!influences || index < 0 || index >= influences.length) continue;
-        if (state.morphs.some((morph) => morph.index === index)) continue;
-        state.morphs.push({ index, base: influences[index], deformed: influences[index] });
+        let existing = false;
+        for (let i = 0; i < state.morphCount; i++) if (state.morphs[i].index === index) { existing = true; break; }
+        if (existing) continue;
+        let morph = state.morphs[state.morphCount++];
+        if (!morph) state.morphs.push(morph = { index, base:0, deformed:0 });
+        morph.index = index; morph.base = morph.deformed = influences[index];
       }
       return state;
     };
@@ -618,7 +634,8 @@ export class PlayerAnimationBridge {
         captureDeformedMorphs(state);
       }
     }
-    this.deformationStates = [...visualStates.values(), ...endpointStates.values()];
+    for (const state of visualStates.values()) this.deformationStates.push(state);
+    for (const state of endpointStates.values()) this.deformationStates.push(state);
   }
 
   /** Compose a procedural length layer over any authored scalar pose, instead
@@ -651,13 +668,15 @@ export class PlayerAnimationBridge {
       ) state.object.scale.copy(state.baseScale);
       const influences = (state.object as THREE.Mesh).morphTargetInfluences;
       if (influences) {
-        for (const morph of state.morphs) {
+        for (let i = 0; i < state.morphCount; i++) {
+          const morph = state.morphs[i];
           if (force || Math.abs(influences[morph.index] - morph.deformed) <= 1e-10) {
             influences[morph.index] = morph.base;
           }
         }
       }
     }
-    this.deformationStates = [];
+    this.deformationStates.length = 0;
+    this.visualDeformations.clear(); this.endpointDeformations.clear();
   }
 }

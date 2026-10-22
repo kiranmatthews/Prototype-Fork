@@ -48,6 +48,7 @@ try {
   const jointLimitProfile = process.argv.includes('--joint-limit-profile');
   const rigProfile = process.argv.includes('--rig-profile');
   const recoveryProfile = process.argv.includes('--recovery-profile');
+  const deformationProfile = process.argv.includes('--deformation-profile');
   const poseChecksums = process.argv.includes('--pose-checksum');
   const traceImpacts = process.argv.includes('--impact-trace');
   const poseNodes = [];
@@ -90,6 +91,24 @@ try {
     const appearanceTimes = []; let appearanceCalls = 0, nameSearches = 0, transformClones = 0;
     let rigSnapshots = 0, rigJointRecords = 0, rigRestTuples = 0;
     const bridge = p.playerAnimationBridge;
+    const deform = bridge.applyDeformations.bind(bridge), deformationTimes = [];
+    const seenStates = new WeakSet(), seenTransforms = new WeakSet(), seenMorphs = new WeakSet();
+    let deformationCalls = 0, deformationRecords = 0, deformationTransforms = 0, deformationMorphs = 0;
+    if (deformationProfile) bridge.applyDeformations = values => {
+      const start = performance.now(), result = deform(values), ms = performance.now() - start;
+      const record = count && p.isBailing;
+      if (record) { deformationCalls++; deformationTimes.push(ms); }
+      for (const state of bridge.deformationStates) {
+        if (!seenStates.has(state)) { if (record) deformationRecords++; seenStates.add(state); }
+        for (const value of [state.basePosition,state.baseScale,state.deformedPosition,state.deformedScale])
+          if (!seenTransforms.has(value)) { if (record) deformationTransforms++; seenTransforms.add(value); }
+        for (let i = 0; i < (state.morphCount ?? state.morphs.length); i++) {
+          const morph = state.morphs[i];
+          if (!seenMorphs.has(morph)) { if (record) deformationMorphs++; seenMorphs.add(morph); }
+        }
+      }
+      return result;
+    };
     const resolveRig = Object.getOwnPropertyDescriptor(Object.getPrototypeOf(bridge), 'rig').get;
     if (rigProfile) Object.defineProperty(bridge, 'rig', { configurable:true, get() {
       const rig = resolveRig.call(this);
@@ -213,6 +232,7 @@ try {
     p.interactionMeasure.sampledPlaneDistance = support;
     p.interactionMeasure.localBounds = localBounds;
     p.bailMotion.apply = applyJoint;
+    bridge.applyDeformations = deform;
     p.bailRecoveryMotion.begin = beginRecovery;
     if (rigProfile) delete bridge.rig;
     p.characterProportionLayer.apply = appearance; p.bodyGroup.getObjectByName = lookup;
@@ -225,6 +245,8 @@ try {
       jointLimits: jointLimitProfile ? [...jointLimits.values()] : undefined,
       rig: rigProfile ? { snapshots:rigSnapshots, jointRecords:rigJointRecords, restTuples:rigRestTuples } : undefined,
       recoveries: recoveryProfile ? recoveries : undefined,
+      deformations: deformationProfile ? { calls:deformationCalls, cpuMs:stats(deformationTimes),
+        newRecords:deformationRecords, newTransformObjects:deformationTransforms, newMorphRecords:deformationMorphs } : undefined,
       poseChecksum: poseHash?.digest('hex'), gameplayChecksum:gameplayHash?.digest('hex'), impacts: traceImpacts ? impacts : undefined });
   }
   console.log(JSON.stringify({ source: snapshot ? 'initial working tree snapshot' : 'current working tree', warmupsPerCase: 8, measuredIncidentsPerCase: 24,

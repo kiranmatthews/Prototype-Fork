@@ -8,6 +8,7 @@ interface CachedMeshBounds {
   versions: number[];
   morphs: number[];
   relative: boolean;
+  vertexReader: THREE.Mesh['getVertexPosition'];
   box: THREE.Box3;
 }
 interface CachedSupportPoints {
@@ -353,8 +354,10 @@ export class CharacterInteractionBounds {
     }
     const morphs=mesh.morphTargetInfluences??NO_MORPHS;
     const targets=geometry.morphAttributes.position;
+    const nativeVertex=mesh.getVertexPosition===THREE.Mesh.prototype.getVertexPosition;
     let cached=this.cache.get(mesh);
-    let stale=!cached||cached.geometry!==geometry||cached.relative!==geometry.morphTargetsRelative||
+    let stale=!nativeVertex||!cached||cached.vertexReader!==mesh.getVertexPosition||
+      cached.geometry!==geometry||cached.relative!==geometry.morphTargetsRelative||
       cached.attributes.length!==1+(targets?.length??0)||cached.morphs.length!==morphs.length;
     if(cached&&!stale){
       for(let i=0;i<cached.attributes.length;i++){
@@ -365,17 +368,44 @@ export class CharacterInteractionBounds {
     }
     if(stale){
       if(!cached){
-        cached={geometry,attributes:[],versions:[],morphs:[],relative:geometry.morphTargetsRelative,box:new THREE.Box3()};
+        cached={geometry,attributes:[],versions:[],morphs:[],relative:geometry.morphTargetsRelative,
+          vertexReader:mesh.getVertexPosition,box:new THREE.Box3()};
         this.cache.set(mesh,cached);
       }
       const box=cached.box;box.makeEmpty();
       // BufferGeometry.computeBoundingBox unions every morph target, even
       // inactive ones. Read only the currently applied shape instead.
-      for(let i=0;i<positions.count;i++)box.expandByPoint(mesh.getVertexPosition(i,this.point));
+      if(nativeVertex){
+        // Match Mesh.getVertexPosition's arithmetic, including normalized and
+        // interleaved attribute getters, but keep the vertex and extrema in
+        // scalars. Animated shafts need this full measurement every pose;
+        // publishing two vectors once avoids mutating scratch vectors for
+        // every vertex and every morph contribution.
+        let minX=Infinity,minY=Infinity,minZ=Infinity,maxX=-Infinity,maxY=-Infinity,maxZ=-Infinity;
+        const relative=geometry.morphTargetsRelative,blend=targets&&mesh.morphTargetInfluences;
+        for(let i=0;i<positions.count;i++){
+          const px=positions.getX(i),py=positions.getY(i),pz=positions.getZ(i);
+          let x=px,y=py,z=pz;
+          if(blend){
+            let dx=0,dy=0,dz=0;
+            for(let m=0;m<targets!.length;m++){
+              const influence=blend[m];if(influence===0)continue;
+              const target=targets![m],tx=target.getX(i),ty=target.getY(i),tz=target.getZ(i);
+              dx+=(relative?tx:tx-px)*influence;
+              dy+=(relative?ty:ty-py)*influence;
+              dz+=(relative?tz:tz-pz)*influence;
+            }
+            x+=dx;y+=dy;z+=dz;
+          }
+          minX=Math.min(minX,x);minY=Math.min(minY,y);minZ=Math.min(minZ,z);
+          maxX=Math.max(maxX,x);maxY=Math.max(maxY,y);maxZ=Math.max(maxZ,z);
+        }
+        box.min.set(minX,minY,minZ);box.max.set(maxX,maxY,maxZ);
+      }else for(let i=0;i<positions.count;i++)box.expandByPoint(mesh.getVertexPosition(i,this.point));
       // Fresh bounds are also used to reject support work. Attribute swaps,
       // morph edits and relative/absolute target changes must invalidate them,
       // even when the new attribute has the same version as the old one.
-      cached.geometry=geometry;cached.relative=geometry.morphTargetsRelative;
+      cached.geometry=geometry;cached.relative=geometry.morphTargetsRelative;cached.vertexReader=mesh.getVertexPosition;
       cached.attributes.length=cached.versions.length=1+(targets?.length??0);
       for(let i=0;i<cached.attributes.length;i++){
         const attribute=i===0?positions:targets![i-1];
