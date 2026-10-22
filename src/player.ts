@@ -10,6 +10,7 @@ import { ICE_WALK_CLIP_ID } from './animation/iceWalk';
 // as fake boost/slowdown numbers derived from the surface normal.
 
 import * as THREE from 'three';
+import { meshContactNormal } from './meshContactNormal';
 import { SwimEffects } from './swimEffects';
 import { SWIMMING, stepSwimVelocity, stepSwimBuoyancy } from './swimming';
 import { CharacterInteractionBounds } from './character/interactionBounds';
@@ -1035,6 +1036,7 @@ export class Player {
   private parkAutoTurnTarget = 0;
   private parkSpinHold = 0;
   private parkBreakHold = 0;
+  private parkBreakArmed = false;
   private readonly parkCameraForward = new THREE.Vector3();
   // Deliberate dismount (pull-back brake bled to walking pace): drop the
   // skate persistence THIS frame so the feet take the stick immediately.
@@ -6865,13 +6867,19 @@ export class Player {
       VERT_RAY_D.copy(this.rideNormal).negate();
       this.raycaster.set(VERT_RAY_O, VERT_RAY_D);
       this.raycaster.far = 1.5;
-      const contact = this.raycaster.intersectObject(mesh, false).find(h => h.face &&
-        h.face.normal.clone().transformDirection(mesh.matrixWorld).dot(this.rideNormal) > 0.25);
+      const compatible = (h: THREE.Intersection): boolean => !!h.face &&
+        h.object.userData.vert === true && meshContactNormal(h).dot(this.rideNormal) > 0.25;
+      // Editor mesh chunks are one physical surface. At their shared edges
+      // continue the normal feeler into the next chunk before trying world-down.
+      const contact = (mesh.userData.authoredVertMesh
+        ? this.raycaster.intersectObjects(level.groundMeshes, false)
+        : this.raycaster.intersectObject(mesh, false)).find(compatible);
       if (contact?.face) {
-        const normal = contact.face.normal.clone().transformDirection(mesh.matrixWorld);
+        const normal = meshContactNormal(contact);
         if (normal.y >= 0 && contact.point.distanceTo(this.pos) < 0.7) {
           this.pos.copy(contact.point);
-          hit = { y: contact.point.y, normal, name: mesh.name, vert: mesh.userData.vert, gravityTrack:mesh.userData.gravityTrack===true, skateCamera:mesh.userData.skateCamera===true, mesh };
+          const support = contact.object;
+          hit = { y: contact.point.y, normal, name: support.name, vert: support.userData.vert, gravityTrack:support.userData.gravityTrack===true, skateCamera:support.userData.skateCamera===true, mesh: support };
           this.rideNormal.copy(normal);
         }
       }
@@ -6909,7 +6917,13 @@ export class Player {
       previousGroundHit?.vert === true && previousRideNormal.y < 0.2 &&
       this.parkVelocity.y > 0.1 &&
       (!hit || hit.normal.y > 0.5 || hit.y < this.pos.y - 0.4);
-    if (parkLipExit) {
+    // Reach the near-vertical tangent before a down-ray can skip the lip or
+    // a raised deck's end cap catches the body. Preserve earned climb speed.
+    const parkCrest = this.parkControls && this.freeSkate && !this.isBailing &&
+      hit?.vert === true && hit.mesh?.userData.smoothCollision === true &&
+      hit.normal.y < 0.18 && previousRideNormal.y < 0.3 &&
+      this.parkVelocity.y > 0.1;
+    if (parkLipExit || parkCrest) {
       this.rideNormal.copy(previousRideNormal);
       this.groundHit = previousGroundHit;
       const pop = input.jumpReleased && this.charging
@@ -7244,6 +7258,7 @@ export class Player {
     this.vertLossT = 0;
     this.parkFlightGravity = vert ? SKATE_PARK.vertGravity : SKATE_PARK.airGravity;
     this.parkAutoTurn = this.parkAutoTurnTarget = this.parkSpinHold = this.parkBreakHold = 0;
+    this.parkBreakArmed = this.rawInput.moveY <= 0.5;
     this.grabSpinAngle = 0;
     if (vert) {
       this.vertLatVel = velocity.x * -this.vertNormal.z + velocity.z * this.vertNormal.x;
@@ -7280,11 +7295,13 @@ export class Player {
       this.parkAutoTurn += THREE.MathUtils.clamp(this.parkAutoTurnTarget - this.parkAutoTurn,
         -SKATE_PARK.autoTurnRate * dt, SKATE_PARK.autoTurnRate * dt);
     }
-    const pushOver = this.rawInput.moveY > 0.5 && Math.abs(this.rawInput.moveX) < 0.1 &&
+    if (this.rawInput.moveY <= 0.5) this.parkBreakArmed = true;
+    const pushOver = this.parkBreakArmed && this.rawInput.moveY > 0.5 && Math.abs(this.rawInput.moveX) < 0.1 &&
       !input.spinHeld && !input.grabHeld;
     this.parkBreakHold = pushOver ? this.parkBreakHold + dt : 0;
-    // Up deliberately transfers over the coping. Neutral/X preserves the air.
-    if (this.parkBreakHold > 0.13 && this.airborneT <= SKATE_PARK.breakWindow &&
+    // Carrying the approach input through takeoff must preserve the hang.
+    // A fresh Up after release, or the explicit transfer button, exits it.
+    if ((this.parkBreakHold > 0.13 || input.transferHeld) && this.airborneT <= SKATE_PARK.breakWindow &&
         this.vertTracked && this.vVel > 0) {
       VERT_RAY_O.copy(this.pos).addScaledVector(this.vertNormal, 0.0254);
       VERT_RAY_D.copy(this.vertNormal).negate();
@@ -7306,7 +7323,7 @@ export class Player {
     }
   }
 
-  private trackParkVert(level: Level): void {
+  private trackParkVert(level: Level, dt: number): void {
     const oldNormal = this.vertNormal.clone();
     const steps = [SKATE_PARK.trackUp, SKATE_PARK.trackUp / 2, SKATE_PARK.trackUp / 4, 0];
     for (let i = 1; i <= 10; i++) steps.push(-SKATE_PARK.trackDownStep * i);
@@ -7319,9 +7336,16 @@ export class Player {
       const contact = this.raycaster.intersectObjects(level.groundMeshes, false).find(h =>
         h.face && h.object.userData.vert === true);
       if (!contact?.face) continue;
-      const normal = contact.face.normal.clone().transformDirection(contact.object.matrixWorld);
+      const normal = meshContactNormal(contact);
       if (normal.y > 0.5 || normal.dot(oldNormal) < 0.5) continue;
       const nextNormal = normal.clone().setY(0).normalize();
+      const nextX = contact.point.x + nextNormal.x * SKATE_PARK.vertClearance;
+      const nextZ = contact.point.z + nextNormal.z * SKATE_PARK.vertClearance;
+      // An inset roll-in is a break in the coping, not a curve to teleport
+      // across. Let the earned air continue when the next plane is too far
+      // away to follow continuously; the normal landing sweep catches it.
+      if (contact.object.userData.smoothCollision === true &&
+          Math.hypot(nextX - this.pos.x, nextZ - this.pos.z) > 0.12 + Math.abs(this.vertLatVel) * dt) continue;
       const direction = skateSurfaceDirection(new THREE.Vector3(), this.axisF, oldNormal);
       redirectSkateVelocity(direction, nextNormal, VERT_UP);
       skateSurfaceHeading(this.axisF, direction, nextNormal);
@@ -7332,8 +7356,8 @@ export class Player {
       this.vVel = this.parkVelocity.y;
       this.vertNormal.copy(nextNormal);
       this.vertAnchor.copy(contact.point);
-      this.pos.x = contact.point.x + nextNormal.x * SKATE_PARK.vertClearance;
-      this.pos.z = contact.point.z + nextNormal.z * SKATE_PARK.vertClearance;
+      this.pos.x = nextX;
+      this.pos.z = nextZ;
       return;
     }
     // Losing the feeler ends curve tracking, not gravity or the current air.
@@ -7840,7 +7864,7 @@ export class Player {
     if (this.slideAirLat !== 0) this.pos.addScaledVector(this.axisL, this.slideAirLat * dt); // slide-jump cross-heading launch
     this.pos.y += this.vVel * dt + parkGravityCorrection;
     if (this.parkControls && this.vertAir && !this.isBailing) this.stepParkVertInput(dt, input, level);
-    if (this.parkControls && this.vertAir && this.vertTracked) this.trackParkVert(level);
+    if (this.parkControls && this.vertAir && this.vertTracked) this.trackParkVert(level, dt);
     const incomingPlanarX = (this.pos.x - this.prevPos.x) / Math.max(dt, 1e-6);
     const incomingPlanarZ = (this.pos.z - this.prevPos.z) / Math.max(dt, 1e-6);
     this.airPeakY = Math.max(this.airPeakY, this.pos.y);
@@ -13816,10 +13840,36 @@ export class Player {
     containment = false,
   ): boolean | null {
     const segment = level.wallPathSegmentForBox(box);
-    const contact = level.closestWallPath(path, this.pos.x, this.pos.z, segment);
+    let contact = level.closestWallPath(path, this.pos.x, this.pos.z, segment);
+    // On vert the rider leans into the pipe. An upright body test hits raised
+    // deck end caps while the board is still below them, shoving it off the
+    // transition. Use the same support normal as the riding pose here.
+    const onVert = this.freeSkate && !this.isBailing && (this.vertAir ||
+      this.grounded && this.groundHit?.vert === true && this.rideNormal.y < 0.9);
+    const bodyNormal = this.vertAir ? this.vertNormal : this.rideNormal;
+    const bodyRadius = Math.min(this.hitboxHalf.y, Math.max(CONST.playerHalf.x, CONST.playerHalf.z));
+    let bodyOffset = 0;
+    if (onVert) {
+      let nearest: typeof contact | null = null;
+      for (const offset of [bodyRadius, this.hitboxHalf.y, this.hitboxHalf.y * 2 - bodyRadius]) {
+        const sample = level.closestWallPath(path, this.pos.x + bodyNormal.x * offset,
+          this.pos.z + bodyNormal.z * offset, segment);
+        const y = this.pos.y + bodyNormal.y * offset;
+        if (y + bodyRadius < sample.y || y - bodyRadius > sample.y + path.height) continue;
+        if (sample.cap && sample.crossDistance >= path.halfThickness + bodyRadius) continue;
+        if (!nearest || sample.distance < nearest.distance) { nearest = sample; bodyOffset = offset; }
+      }
+      if (!nearest) return null;
+      contact = nearest;
+    }
+    // A wall slab's artificial end is not a second obstacle when it lies
+    // behind the same smooth transition the board is already supporting on.
+    // The perpendicular side of a raised roll-in remains a solid wall.
+    if (onVert && contact.cap && this.groundHit?.mesh?.userData.smoothCollision === true &&
+        contact.nx * bodyNormal.x + contact.nz * bodyNormal.z > 0.9) return null;
     if (
       this.pos.y > contact.y + path.height ||
-      this.pos.y + this.hitboxHalf.y * 2 < contact.y
+      !onVert && this.pos.y + this.hitboxHalf.y * 2 < contact.y
     )
       return null;
     const insideCapWidth = (sample: ReturnType<Level['closestWallPath']>): boolean => {
@@ -13832,7 +13882,7 @@ export class Player {
       return sample.crossDistance < lateralRadius;
     };
     if (!insideCapWidth(contact)) return null;
-    const radius =
+    const radius = onVert ? (contact.cap ? 0 : path.halfThickness) + bodyRadius + 0.02 :
       (contact.cap ? 0 : path.halfThickness) +
       Math.abs(contact.nx) * CONST.playerHalf.x +
       Math.abs(contact.nz) * CONST.playerHalf.z +
@@ -13840,8 +13890,8 @@ export class Player {
     if (contact.distance >= radius) return null;
     const before = level.closestWallPath(
       path,
-      this.prevPos.x,
-      this.prevPos.z,
+      this.prevPos.x + bodyNormal.x * bodyOffset,
+      this.prevPos.z + bodyNormal.z * bodyOffset,
       segment,
     );
     const beforeRadius =
@@ -15397,7 +15447,7 @@ export class Player {
     this.raycaster.far = distance + 0.015;
     for (const hit of this.raycaster.intersectObjects(level.groundMeshes, false)) {
       if (!hit.face || (!hit.object.userData.vertRampMesh && !hit.object.userData.authoredVertMesh) || hit.object.userData.vert !== true) continue;
-      const normal = hit.face.normal.clone().transformDirection(hit.object.matrixWorld);
+      const normal = meshContactNormal(hit);
       if (normal.y < 0 || normal.dot(VERT_RAY_D) >= -1e-4) continue;
       this.pos.copy(hit.point);
       return { y: hit.point.y, normal, name: hit.object.name,
@@ -15516,7 +15566,7 @@ export class Player {
     // the faceted triangle normal — no seams, no wrong-way winding.
     const normal = hp
       ? hp.normalAt(hp.pointToU(hit.point.x, hit.point.z), new THREE.Vector3())
-      : hit.face!.normal.clone().transformDirection(hit.object.matrixWorld);
+      : meshContactNormal(hit);
     const structuralName =
       (hit.object.userData.surfaceName as string | undefined) ??
       hit.object.name;

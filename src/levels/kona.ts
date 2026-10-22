@@ -1,4 +1,4 @@
-import { CatmullRomCurve3, Vector3 } from 'three';
+import { CatmullRomCurve3, Triangle, Vector3 } from 'three';
 import survey from './kona-survey.json';
 import type { CustomComponent, CustomLevelData } from '../level';
 
@@ -38,32 +38,83 @@ export const konaGrade=(x:number,z:number)=>konaSupport(x,z);
 // Refine the curved concrete while retaining every measured vertex and hard
 // edge. Cubic tangent midpoints take the original low-poly transition facets
 // down to small skateable intervals; architectural corners stay sharp.
-function refine(vertices:number[],indices:number[],passes=2,cylindrical=false):{vertices:number[];indices:number[]} {
+type RefinedSurface={vertices:number[];indices:number[];normals?:number[]};
+type CrossCurve={a:Vector3;b:Vector3;ta:Vector3;tb:Vector3};
+function sampleCrossCurve(c:CrossCurve,t:number){
+ const length=c.a.distanceTo(c.b),t2=t*t,t3=t2*t;
+ const p=c.a.clone().multiplyScalar(2*t3-3*t2+1).addScaledVector(c.ta,(t3-2*t2+t)*length).addScaledVector(c.b,-2*t3+3*t2).addScaledVector(c.tb,(t3-t2)*length);
+ const tangent=c.a.clone().multiplyScalar(6*t2-6*t).addScaledVector(c.ta,(3*t2-4*t+1)*length).addScaledVector(c.b,-6*t2+6*t).addScaledVector(c.tb,(3*t2-2*t)*length).normalize();
+ const side=Math.sign(c.b.x-c.a.x),normal=new Vector3(-side*tangent.y,side*tangent.x,0).normalize();
+ return {p,normal};
+}
+function refineCrossSection(vertices:number[],indices:number[]):RefinedSurface {
+ const points=Array.from({length:vertices.length/3},(_,i)=>position(vertices,i));
+ const key=(p:Vector3)=>`${p.x.toFixed(5)}:${p.y.toFixed(5)}`;
+ const curves=new Map<string,CrossCurve>();
+ const tangents=new Map<string,Vector3>(),flats=new Set<string>();
+ const faceCurve:(string|null)[]=[];
+ for(let i=0;i<indices.length;i+=3){
+  const ps=indices.slice(i,i+3).map(j=>points[j]),n=ps[1].clone().sub(ps[0]).cross(ps[2].clone().sub(ps[0])).normalize();
+  if(n.y>.995)ps.forEach(p=>flats.add(key(p)));
+  const cross=[...new Map(ps.map(p=>[key(p),p])).values()].sort((a,b)=>a.y-b.y);
+  if(cross.length!==2||n.y<0||n.y>.995||Math.abs(n.z)>.001){faceCurve.push(null);continue;}
+  const [a,b]=cross.map(p=>new Vector3(p.x,p.y,0)),id=`${key(a)}|${key(b)}`;faceCurve.push(id);
+  if(curves.has(id))continue;
+  const t=b.clone().sub(a).normalize();curves.set(id,{a,b,ta:t.clone(),tb:t.clone()});
+  for(const p of [a,b]){const k=key(p);if(!tangents.has(k))tangents.set(k,new Vector3());tangents.get(k)!.add(t);}
+ }
+ for(const c of curves.values()){
+  c.ta.copy(tangents.get(key(c.a))!).normalize();c.tb.copy(tangents.get(key(c.b))!).normalize();
+  if(flats.has(key(c.a)))c.ta.set(Math.sign(c.b.x-c.a.x),0,0);
+  if(flats.has(key(c.b))){
+   const chord=c.b.clone().sub(c.a).normalize();
+   // A steep transition ends vertically; the inset timber roll-in is a
+   // deliberate bank and must retain its drive-over exit onto the deck.
+   if(Math.abs(chord.x)<.35)c.tb.set(0,1,0);else c.tb.copy(chord);
+  }
+ }
+ const v:number[]=[],ix:number[]=[],normals:number[]=[];
+ for(let i=0;i<indices.length;i+=3){
+  const ps=indices.slice(i,i+3).map(j=>points[j]),c=curves.get(faceCurve[i/3]??'');
+  const faceNormal=ps[1].clone().sub(ps[0]).cross(ps[2].clone().sub(ps[0])).normalize();
+  const edges=ps.map((a,j)=>{const k=(j+1)%3,b=ps[k],low=a.y<=b.y?a:b,high=a.y<=b.y?b:a;return {j,k,curve:curves.get(`${key(low)}|${key(high)}`),reverse:a!==low};});
+  const stitched=!c&&faceNormal.y>0&&faceNormal.y<.995&&edges.some(e=>e.curve);
+  const vertexNormals=ps.map(()=>new Vector3());
+  if(stitched)for(const e of edges)if(e.curve){vertexNormals[e.j].add(sampleCrossCurve(e.curve,e.reverse?1:0).normal);vertexNormals[e.k].add(sampleCrossCurve(e.curve,e.reverse?0:1).normal);}
+  vertexNormals.forEach(n=>n.lengthSq()?n.normalize():n.copy(faceNormal));
+  let tris=[ps];
+  if(c||stitched)for(let pass=0;pass<3;pass++)tris=tris.flatMap(([a,b,d])=>{
+   const ab=a.clone().add(b).multiplyScalar(.5),bd=b.clone().add(d).multiplyScalar(.5),da=d.clone().add(a).multiplyScalar(.5);
+   return [[a,ab,da],[ab,b,bd],[da,bd,d],[ab,bd,da]];
+  });
+  for(const tri of tris)for(const q of tri){
+   const p=q.clone(),normal=faceNormal.clone();
+   if(c){const delta=c.b.clone().sub(c.a),t=Math.max(0,Math.min(1,new Vector3(q.x-c.a.x,q.y-c.a.y,0).dot(delta)/delta.lengthSq())),sample=sampleCrossCurve(c,t);
+    p.copy(sample.p);p.z=q.z;normal.copy(sample.normal);
+   }else if(stitched){
+    // Variable-height lips have three distinct cross-section points. Blend
+    // the same edge curves used by their neighbours into the triangle, so
+    // refinement cannot leave a straight edge beside a curved one.
+    const weights=Triangle.getBarycoord(q,ps[0],ps[1],ps[2],new Vector3())!.toArray();
+    normal.set(0,0,0);vertexNormals.forEach((n,j)=>normal.addScaledVector(n,weights[j]));
+    for(const e of edges)if(e.curve){const weight=weights[e.j]+weights[e.k];if(weight<1e-8)continue;
+     const t=weights[e.k]/weight,sample=sampleCrossCurve(e.curve,e.reverse?1-t:t),linear=ps[e.j].clone().lerp(ps[e.k],t);sample.p.z=linear.z;
+     p.addScaledVector(sample.p.sub(linear),weight*weight);
+     const linearNormal=vertexNormals[e.j].clone().lerp(vertexNormals[e.k],t);normal.addScaledVector(sample.normal.sub(linearNormal),weight*weight);
+    }
+    normal.normalize();
+   }
+   ix.push(v.length/3);v.push(p.x,p.y,p.z);normals.push(normal.x,normal.y,normal.z);
+  }
+ }
+ return {vertices:v,indices:ix,normals};
+}
+function refine(vertices:number[],indices:number[],passes=2,cylindrical=false):RefinedSurface {
+ if(cylindrical)return refineCrossSection(vertices,indices);
  for(let pass=0;pass<passes;pass++){
   const points=Array.from({length:vertices.length/3},(_,i)=>position(vertices,i)),normals=points.map(()=>new Vector3()),faces:Vector3[]=[],edges=new Map<string,{a:number;b:number;faces:number[]}>();
   for(let i=0;i<indices.length;i+=3){const ids=indices.slice(i,i+3),n=new Vector3().subVectors(points[ids[1]],points[ids[0]]).cross(new Vector3().subVectors(points[ids[2]],points[ids[0]])).normalize();faces.push(n);for(const id of ids)normals[id].add(n);
    for(let j=0;j<3;j++){const a=Math.min(ids[j],ids[(j+1)%3]),b=Math.max(ids[j],ids[(j+1)%3]),key=`${a}:${b}`;if(!edges.has(key))edges.set(key,{a,b,faces:[]});edges.get(key)!.faces.push(i/3);}
-  }
-  if(cylindrical){
-   const crossNormals=new Map<string,{normal:Vector3;minY:number;maxY:number}>(),flats=new Set<string>();
-   for(let i=0;i<indices.length;i+=3){const ids=indices.slice(i,i+3),n=faces[i/3];if(n.y<.0001)continue;
-    for(const id of ids){const p=points[id],key=`${p.x.toFixed(5)}:${p.y.toFixed(5)}`;
-     if(n.y>.98){flats.add(key);continue;}
-     if(!crossNormals.has(key))crossNormals.set(key,{normal:new Vector3(),minY:p.y,maxY:p.y});
-     const entry=crossNormals.get(key)!;entry.normal.add(new Vector3(n.x,n.y,0));
-     for(const j of ids){entry.minY=Math.min(entry.minY,points[j].y);entry.maxY=Math.max(entry.maxY,points[j].y);}
-    }
-   }
-   for(let i=0;i<points.length;i++){const p=points[i],key=`${p.x.toFixed(5)}:${p.y.toFixed(5)}`,entry=crossNormals.get(key);
-    normals[i].copy(entry?.normal??new Vector3(0,1,0));
-    // A deck must not flatten the curve's lip tangent. That average turned
-    // the last few centimetres back into a bank, so a rider drove over it
-    // instead of launching/returning. The toe is horizontal, the lip vertical.
-    if(entry&&flats.has(key)){
-     if(entry.minY<p.y-1e-5&&entry.maxY<=p.y+1e-5)normals[i].y=0;
-     if(entry.maxY>p.y+1e-5&&entry.minY>=p.y-1e-5)normals[i].set(0,1,0);
-    }
-   }
   }
   normals.forEach(n=>n.normalize());const mid=new Map<string,number>();
   for(const [key,e] of edges){const a=points[e.a],b=points[e.b],p=a.clone().add(b).multiplyScalar(.5),delta=b.clone().sub(a);
@@ -76,17 +127,17 @@ function refine(vertices:number[],indices:number[],passes=2,cylindrical=false):{
 }
 function surface(s:typeof survey.meshes[number],indices:number[],rideable:boolean) {
  if(!indices.length)return;
- let vertices:number[]=[];for(let i=0;i<s.vertices.length;i+=3)vertices.push(...konaPoint(...s.vertices.slice(i,i+3) as P));
- if(curved.has(s.id)&&rideable)({vertices,indices}=refine(vertices,indices,2,[78,88,130].includes(s.id)));
+ let vertices:number[]=[],normals:number[]|undefined;for(let i=0;i<s.vertices.length;i+=3)vertices.push(...konaPoint(...s.vertices.slice(i,i+3) as P));
+ if(curved.has(s.id)&&rideable)({vertices,indices,normals}=refine(vertices,indices,2,[78,88,130].includes(s.id)));
  else {vertices=indices.flatMap(i=>vertices.slice(i*3,i*3+3));indices=vertices.map((_,i)=>i).filter(i=>i<vertices.length/3);}
  // Checkpoints and route probes use the actual refined collision surface.
  if(!railsOnly.has(s.id)&&!poles.has(s.id))for(let i=0;i<indices.length;i+=3){const p=indices.slice(i,i+3).map(j=>vertices.slice(j*3,j*3+3) as P);triangles.push({a:p[0],b:p[1],c:p[2],id:s.id});}
  let color=colors.concrete;if(grass.has(s.id))color=colors.grass;if(roofs.has(s.id))color=colors.roof;if(s.id===33||s.id===76)color=colors.blue;if(s.id===23)color='#ffffff';if(s.id===88)color=colors.wood;if(s.id===130)color=colors.cream;if(railsOnly.has(s.id))color=colors.rail;
- for(let start=0;start<indices.length;start+=3600){const ids=indices.slice(start,start+3600),map=new Map<number,number>(),v:number[]=[],ix:number[]=[],cs:number[]=[];
-  for(const id of ids){if(!map.has(id)){map.set(id,map.size);v.push(...vertices.slice(id*3,id*3+3));}ix.push(map.get(id)!);}
+ for(let start=0;start<indices.length;start+=3600){const ids=indices.slice(start,start+3600),map=new Map<number,number>(),v:number[]=[],ix:number[]=[],cs:number[]=[],ns:number[]=[];
+  for(const id of ids){if(!map.has(id)){map.set(id,map.size);v.push(...vertices.slice(id*3,id*3+3));if(normals)ns.push(...normals.slice(id*3,id*3+3));}ix.push(map.get(id)!);}
   // A worn concrete bottom remains visible within the red pro bowl.
   if(s.id===23)for(let i=0;i<v.length;i+=3){const worn=v[i+1]<1.3;cs.push(...(worn?[.65,.70,.64]:[.67,.36,.38]));}
-  add({t:'mesh',p:[0,0,0],vertices:v,indices:ix,...(cs.length?{colors:cs}:{}),color,tex:'solid',nm:names[s.id]??(roofs.has(s.id)?'Clubhouse roofs':grass.has(s.id)?'Grass terrace':railsOnly.has(s.id)?'Rail and fence structure':poles.has(s.id)?'Park light mast':'Kona / concrete and architecture'),grp:s.id+1,edgeGrinding:false,vert:rideable&&vert.has(s.id),...(rideable&&curved.has(s.id)?{skateCamera:vert.has(s.id),gravityTrack:s.id===33}:{}),...(railsOnly.has(s.id)||poles.has(s.id)?{solid:false}:{}),doubleSided:true});
+  add({t:'mesh',p:[0,0,0],vertices:v,indices:ix,...(ns.length?{normals:ns,smoothCollision:true}:{}),...(cs.length?{colors:cs}:{}),color,tex:'solid',nm:names[s.id]??(roofs.has(s.id)?'Clubhouse roofs':grass.has(s.id)?'Grass terrace':railsOnly.has(s.id)?'Rail and fence structure':poles.has(s.id)?'Park light mast':'Kona / concrete and architecture'),grp:s.id+1,edgeGrinding:false,vert:rideable&&vert.has(s.id),...(rideable&&curved.has(s.id)?{skateCamera:vert.has(s.id),gravityTrack:s.id===33}:{}),...(railsOnly.has(s.id)||poles.has(s.id)?{solid:false}:{}),doubleSided:true});
  }
 }
 
@@ -105,7 +156,17 @@ for(const s of survey.meshes){
   if(!wall||railsOnly.has(s.id)||poles.has(s.id))continue;
   const columns=new Map<string,P[]>();
   for(const p of points){const key=`${p[0].toFixed(4)},${p[2].toFixed(4)}`;if(!columns.has(key))columns.set(key,[]);columns.get(key)!.push(p);}
-  if(columns.size!==2)continue;
+  if(columns.size!==2){
+   // Raised roll-ins have triangular end caps with three distinct columns.
+   // Their vertical footprint is still a straight wall. Close the footprint
+   // down into the solid ramp body; the measured riding mesh owns its top.
+   // Dropping these faces let an angled rider cross the step sideways.
+   if(!curved.has(s.id)||Math.abs(normal.y)>.01)continue;
+   const pairs=[[points[0],points[1]],[points[1],points[2]],[points[2],points[0]]].sort((u,v)=>Math.hypot(v[1][0]-v[0][0],v[1][2]-v[0][2])-Math.hypot(u[1][0]-u[0][0],u[1][2]-u[0][2]));
+   const [a,b]=pairs[0],bottom=Math.min(...points.map(p=>p[1])),top=Math.max(...points.map(p=>p[1]));
+   columns.clear();
+   for(const p of [a,b])columns.set(`${p[0].toFixed(4)},${p[2].toFixed(4)}`,[[p[0],bottom,p[2]],[p[0],top,p[2]]]);
+  }
   const keys=[...columns.keys()].sort(),key=keys.join('|');
   if(!walls.has(key))walls.set(key,{ends:[[],[]]});
   const ends=walls.get(key)!.ends;keys.forEach((key,j)=>ends[j].push(...columns.get(key)!));

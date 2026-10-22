@@ -2,7 +2,7 @@
 <style>
 body{margin:0;background:#161c24;color:#edf2f6;font:14px system-ui}header{height:90px;padding:10px 18px;box-sizing:border-box;display:flex;gap:16px;align-items:center}h1{font-size:18px;margin:0 0 6px}p{margin:0;color:#b6c5d4}button,a{background:#314459;color:white;border:0;border-radius:6px;padding:9px 12px;text-decoration:none;cursor:pointer}button:disabled{opacity:.5}iframe{display:block;border:0;width:100%;height:calc(100vh - 240px)}pre{margin:0;height:150px;overflow:auto;padding:12px 18px;box-sizing:border-box;font:12px ui-monospace,monospace;background:#0c1117}
 </style>
-<header><div><h1>Kona · scale and collision review</h1><p id="status">Loading the production game…</p></div><button id="run" disabled>Run gameplay checks</button><button id="vert" disabled>Repeat pipe airs</button><select id="case" aria-label="Individual check"><option>transfer</option><option>jump</option><option>rail</option><option>snake</option><option>recovery</option><option>finish</option></select><button id="selected" disabled>Run selected check</button><a id="render">Switch rendering</a></header>
+<header><div><h1>Kona · flow and collision review</h1><p id="status">Loading the production game…</p></div><button id="run" disabled>Run gameplay checks</button><button id="vert" disabled>Check held-input hangs</button><select id="case" aria-label="Individual check"><option>flow0</option><option>flow1</option><option>flow2</option><option>wall</option><option>transfer</option><option>jump</option><option>rail</option><option>snake</option><option>recovery</option><option>finish</option></select><button id="selected" disabled>Run selected check</button><a id="render">Switch rendering</a></header>
 <iframe id="game" title="Kona gameplay"></iframe><pre id="results" aria-label="Gameplay results"></pre>
 <script type="module">
 import {installKonaReview} from './kona-review-controller.mjs';
@@ -18,8 +18,8 @@ function next(){
  if(active){frame.contentWindow.startKonaReview(active);status.textContent=`Running ${active} · ${full?'full':'lite'} rendering`;}
  else {status.textContent=completed.every(x=>x.pass)&&!errors.length?'PASS · all gameplay checks completed':'FAIL · inspect the results';for(const id of ['run','vert','selected'])document.querySelector('#'+id).disabled=false;}
 }
-document.querySelector('#run').onclick=()=>begin(['vert','transfer','jump','rail','snake','recovery','finish']);
-document.querySelector('#vert').onclick=()=>begin(['vert']);
+document.querySelector('#run').onclick=()=>begin(['flow0','flow1','flow2','wall','transfer','jump','rail','snake','recovery','finish']);
+document.querySelector('#vert').onclick=()=>begin(['flow0','flow1','flow2']);
 document.querySelector('#selected').onclick=()=>begin([document.querySelector('#case').value]);
 const timer=setInterval(async()=>{
  const host=frame.contentWindow,g=host?.__game;
@@ -30,12 +30,12 @@ const timer=setInterval(async()=>{
  if(!ready||!active)return;
  const r=host.konaReview;
  if(!r)return;
- const summary={kind:r.kind,frames:r.frames,airs:r.airs,grounded:r.grounded,ground:g.player.groundHit?.name,position:r.position,bails:r.bails,deaths:r.deaths,grindFrames:r.grindFrames,transferred:r.transferred,takeoffFrom:r.takeoffFrom,landedOn:r.landedOn,lateral:r.lateral};
+ const summary={kind:r.kind,frames:r.frames,airs:r.airs,grounded:r.grounded,ground:g.player.groundHit?.name,position:r.position,bails:r.bails,deaths:r.deaths,grindFrames:r.grindFrames,transferred:r.transferred,takeoffFrom:r.takeoffFrom,landedOn:r.landedOn,lateral:r.lateral,hangSeconds:r.hangSeconds,returned:r.returned,maxStep:r.maxStep,closest:r.closest};
  results.textContent=JSON.stringify({completed,current:summary,errors},null,2);
  if(!r.done)return;
  const pass=!r.failed&&(r.kind==='recovery'?r.lives===r.livesBefore-1:r.deaths===0&&r.bails===0)&&
   (r.kind!=='jump'||/kicker/.test(r.takeoffFrom)&&/catcher/.test(r.landedOn)&&r.lateral<2)&&
-  (r.kind!=='rail'||r.grindFrames>15);
+  (r.kind!=='rail'||r.grindFrames>15)&&(!r.kind.startsWith('flow')||r.returned&&r.hangSeconds>.4&&r.maxStep<.55)&&(r.kind!=='wall'||r.closest>.1&&r.closest<1);
  completed.push({...summary,pass});results.textContent=JSON.stringify({completed,errors},null,2);
  if(!pass)queue=[];
  next();

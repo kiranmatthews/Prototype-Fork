@@ -15,6 +15,11 @@ export async function installKonaReview(host=window){
     s.path=m.KONA_SNAKE.points.slice(4,-5);s.index=0;s.maxError=0;const a=s.path[0],b=s.path[3];place([a[0],a[1]+.04,a[2]],[b[0]-a[0],0,b[2]-a[2]]);
    }else if(kind==='vert'||kind==='transfer'){
     s.pipe=m.KONA_PIPES[0];const c=s.pipe.centre;place([c[0],c[1]+.04,c[2]],[1,0,0]);s.side=1;s.airs=0;s.released=false;s.transferred=false;
+   }else if(kind.startsWith('flow')){
+    s.pipe=m.KONA_PIPES[Number(kind.at(-1))];s.hangSeconds=0;s.maxStep=0;s.returned=false;const c=s.pipe.centre;place([c[0]-s.pipe.flat+.5,c[1]+.06,c[2]-2],[1,0,0]);
+   }else if(kind==='wall'){
+    const candidates=m.KONA_WALLS.filter(w=>w.source===1&&w.height>2).map(w=>{const dx=w.b[0]-w.a[0],dz=w.b[2]-w.a[2],len=Math.hypot(dx,dz),mid=w.a.map((x,i)=>(x+w.b[i])/2);return{...w,len,mid,n:[dz/len,0,-dx/len]};}).sort((a,b)=>b.len-a.len);
+    for(const w of candidates){for(const sign of [-1,1]){const n=w.n.map(x=>x*sign),q=[w.mid[0]+n[0]*3,0,w.mid[2]+n[2]*3];q[1]=m.konaSupport(q[0],q[2]);if(Number.isFinite(q[1])&&q[1]>w.mid[1]-.1&&q[1]<w.mid[1]+w.height-1){s.wall=w;s.wallNormal=n;s.closest=3;place([q[0],q[1]+.06,q[2]],n.map(x=>-x));break;}}if(s.wall)break;}
    }else if(kind==='jump'){
     const a=m.KONA_JUMP.a,b=m.KONA_JUMP.b,d=Math.hypot(b[0]-a[0],b[2]-a[2]);s.dir=[(b[0]-a[0])/d,0,(b[2]-a[2])/d];s.mid=[(a[0]+b[0])/2,0,(a[2]+b[2])/2];s.end=b;s.streetPhase=0;s.streetDeckY=a[1];place([a[0],a[1]+.06,a[2]],s.dir);
    }else if(kind==='rail'){
@@ -30,16 +35,19 @@ export async function installKonaReview(host=window){
    const s=pilot;if(!s||s.done){sample={};update();original(dt,input,level);return;}
    sample={};s.frames++;
    if(!s.aligned){const a=wrap(Math.atan2(s.heading[0],s.heading[2])-Math.atan2(p.axisF.x,p.axisF.z));sample={moveX:Math.max(-1,Math.min(1,-a*4)),grabHeld:true};update();original(dt,input,level);if(p.grounded&&(Math.abs(a)<.015||s.frames>150)&&s.frames>6)s.aligned=true;return;}
-   const wasGrounded=p.grounded,previousSurface=p.groundHit?.name;
+   const wasGrounded=p.grounded,previousSurface=p.groundHit?.name,before=p.pos.clone();
    if(s.kind==='snake'){
     let d=Infinity,at=s.index;for(let i=Math.max(0,s.index-3);i<Math.min(s.path.length,s.index+25);i++){const q=s.path[i],dd=Math.hypot(p.pos.x-q[0],p.pos.z-q[2]);if(dd<d){d=dd;at=i;}}
     s.index=Math.max(s.index,at);s.maxError=Math.max(s.maxError,d);const target=s.path[Math.min(s.path.length-1,s.index+8)],angle=Math.abs(wrap(Math.atan2(target[0]-p.pos.x,target[2]-p.pos.z)-Math.atan2(p.axisF.x,p.axisF.z)));
     sample={moveX:turn(target),moveY:1,grabHeld:angle>.42&&p.speed>7.5};if(s.index>=s.path.length-6)s.done=true;
    }else if(s.kind==='vert'||s.kind==='transfer'){
     if(p.grounded&&p.speed<5&&Math.abs(p.pos.x-s.pipe.centre[0])>s.pipe.flat+.7)s.side=-Math.sign(p.pos.x-s.pipe.centre[0]);
-    const popHeight=s.kind==='transfer'?s.pipe.radius-.25:.65;
+    const popHeight=s.kind==='transfer'?s.pipe.radius*.65:.65;
     const pop=p.grounded&&!s.released&&p.pos.y>s.pipe.centre[1]+popHeight&&p.groundHit?.normal.y<.8&&p.axisF.dot(p.groundHit.normal)<-.2;if(pop)s.released=true;
-    sample=s.inAir?{...(s.kind==='transfer'?{moveY:1}:{})}:{moveX:turn([s.pipe.centre[0]+s.side*20,0,s.pipe.centre[2]]),moveY:1,jumpHeld:!s.released};if(pop)sample.jumpHeld=false;
+    sample=s.inAir?{...(s.kind==='transfer'?{moveY:1,transferHeld:true}:{})}:{moveX:turn([s.pipe.centre[0]+s.side*20,0,s.pipe.centre[2]]),moveY:1,jumpHeld:!s.released};if(pop)sample.jumpHeld=false;
+   }else if(s.kind.startsWith('flow')){
+    sample={moveY:1,jumpHeld:true};
+   }else if(s.kind==='wall'){sample={moveY:1};
    }else if(s.kind==='jump'){
     const along=(p.pos.x-s.mid[0])*s.dir[0]+(p.pos.z-s.mid[2])*s.dir[2];
     // At the corrected scale the first raised lip is an ollie-on, followed
@@ -66,6 +74,8 @@ export async function installKonaReview(host=window){
     if(s.kind==='vert'&&s.airs>=4)s.done=true;
     if(s.kind==='transfer'&&s.airFrames>5&&p.grounded&&p.pos.x>s.pipe.centre[0]+s.pipe.flat+s.pipe.radius+.2&&p.pos.x<m.KONA_PIPES[1].centre[0]+m.KONA_PIPES[1].flat&&p.groundHit?.name==='Spinal grooves'){s.transferred=true;s.done=true;}
    }
+   if(s.kind.startsWith('flow')){s.maxStep=Math.max(s.maxStep,p.pos.distanceTo(before));if(p.vertAir)s.hangSeconds+=dt;if(s.hangSeconds>.2&&p.grounded&&p.pos.y<s.pipe.centre[1]+.25){s.returned=true;s.done=true;}}
+   if(s.kind==='wall'){s.closest=Math.min(s.closest,(p.pos.x-s.wall.mid[0])*s.wallNormal[0]+(p.pos.z-s.wall.mid[2])*s.wallNormal[2]);if(s.frames>270)s.done=true;}
    if(s.kind==='recovery'){if(p.state==='dead')s.died=true;if(s.died&&p.grounded&&p.state==='ride'&&p.pos.distanceTo(new T.Vector3(...s.returnPoint))<1.5)s.done=true;}
    if(s.kind==='finish'&&p.state==='finished')s.done=true;
    if(s.frames%6===0)s.trace.push({frame:s.frames,p:p.pos.toArray(),speed:p.speed,state:p.state,ground:p.groundHit?.name});

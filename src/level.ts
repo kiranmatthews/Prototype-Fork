@@ -695,6 +695,7 @@ export interface CustomComponent {
   vertices?: number[];
   indices?: number[];
   normals?: number[];
+  smoothCollision?: boolean; // mesh: interpolate authored ride normals across triangle seams
   uvs?: number[];
   colors?: number[];
   doubleSided?: boolean;
@@ -2501,7 +2502,7 @@ const COMPONENT_DATA_KEYS = new Set([
   "baySpacing", "supportDepth", "supportBaseY", "terrainSupports", "structureStyle",
   "plankPalette", "polePalette", "shoreProfile", "shoreSeaLevel", "shorePhase",
   "trick", "exitYaw", "airOnly", "coverage", "radius", "color", "tex", "dir",
-  "layer", "grp", "lk", "nm", "trafficRoad", "materialStyle", "castShadow", "emissive", "opacity", "fog", "vertices", "indices", "normals", "uvs", "colors", "doubleSided", "beachSand", "loopRadius", "loopOffset", "loopRequired", "gravityTrack", "lethal", "skateCamera", "outOfBounds",
+  "layer", "grp", "lk", "nm", "trafficRoad", "materialStyle", "castShadow", "emissive", "opacity", "fog", "vertices", "indices", "normals", "smoothCollision", "uvs", "colors", "doubleSided", "beachSand", "loopRadius", "loopOffset", "loopRequired", "gravityTrack", "lethal", "skateCamera", "outOfBounds",
 ]);
 const hasOnlyKeys = (value: object, keys: ReadonlySet<string>): boolean =>
   Object.keys(value).every((key) => keys.has(key));
@@ -2860,7 +2861,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
     "fog",
     "slip", "closed", "vert", "lit", "berms", "outline", "invisible", "containment",
     "scaffold", "supports", "rails", "terrainSupports", "airOnly", "solid", "lk",
-    "shoreProfile", "cameraView", "cameraCutaway", "edgeGrinding", "trafficRoad", "doubleSided", "castShadow", "beachSand", "loopRequired", "gravityTrack", "lethal", "skateCamera", "outOfBounds",
+    "shoreProfile", "cameraView", "cameraCutaway", "edgeGrinding", "trafficRoad", "doubleSided", "smoothCollision", "castShadow", "beachSand", "loopRequired", "gravityTrack", "lethal", "skateCamera", "outOfBounds",
   ];
   let aggregateNodes = source.ocean?.shore?.length ?? 0;
   let aggregateSamples = source.ocean
@@ -2979,6 +2980,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
     if (component.gravityTrack !== undefined && (!['mesh','vertramp'].includes(component.t) || component.solid === false || component.loopRadius !== undefined)) return null;
     if (component.coping !== undefined && (component.t !== 'rail' || typeof component.coping !== 'boolean')) return null;
     if (component.skateCamera !== undefined && (!['mesh','vertramp'].includes(component.t) || component.solid === false)) return null;
+    if (component.smoothCollision !== undefined && (component.t !== 'mesh' || !component.normals)) return null;
     if (component.outOfBounds !== undefined && (component.t !== 'mesh' || component.solid === false || component.lethal === true)) return null;
     if (component.lethal !== undefined && (component.t !== 'mesh' || component.solid === false)) return null;
     if (component.loopRadius !== undefined || component.loopOffset !== undefined || component.loopRequired !== undefined) {
@@ -5508,6 +5510,7 @@ export class Level {
         ...(m.userData.gravityTrack ? { gravityTrack: true } : {}),
         ...(m.userData.lethal ? { lethal: true } : {}),
         ...(m.userData.skateCamera ? { skateCamera: true } : {}),
+        ...(m.userData.smoothCollision ? { smoothCollision: true } : {}),
         ...(m.userData.outOfBounds ? { outOfBounds: true } : {}),
       };
       remap = new Map();
@@ -5669,6 +5672,7 @@ export class Level {
     if(jungleStream){mesh.userData.castShadow=false;mesh.userData.receiveShadow=true;}
     if (c.vert !== undefined) mesh.userData.vert = c.vert;
     if (c.vert === true) mesh.userData.authoredVertMesh = true;
+    if (c.smoothCollision && c.normals) mesh.userData.smoothCollision = true;
     if (c.gravityTrack) mesh.userData.gravityTrack = true;
     if (c.lethal) mesh.userData.lethal = true;
     if (c.skateCamera) mesh.userData.skateCamera = true;

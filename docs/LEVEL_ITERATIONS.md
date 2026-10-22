@@ -622,3 +622,14 @@
 - Browser checks use the production game and native controller input after initial placement. The enlarged street line uses two ollies with grind held while descending across coping; the shorter-scale one-hop fixture is no longer the route. Evidence and final browser results: docs/performance/kona-collision.json. Focused level checks and production build pass; no full-suite run.
 - Final full-render browser pass: four mini airs, adjacent-pipe transfer, street jump line, 103-frame street grind, continuous snake run, saved-spawn fall recovery and finish gate all pass; zero console errors. Lite checks also cover the core pipe, transfer, rail, snake and recovery cases. Elapsed correction-to-validated-playable time: 38.6 minutes (20:19:29 UTC → 20:58:07 UTC).
 - Delivery: task-owned local commit on codex/kona-ps1. Preserve shared main HEAD, normal index and unrelated changes. No push, upload or deployment.
+
+
+## 2026-10-23 — Kona held-input hang and transition continuity
+
+- Brief: fix the jerky/jagged pipes, missing sustained hang time and wall clipping after the 2× scale correction.
+- Timing: 21:24:12–22:15:02 UTC on 2026-10-22; approximately 51 minutes from feedback to the final verified full-render preview, including isolated validation.
+- Geometry: eight Hermite intervals per source pipe segment, shared curved edges for variable-height timber triangles, continuous authored contact normals, and 2709 native wall segments including the omitted triangular roll-in caps.
+- Runtime: follow a transition across mesh chunks; preserve hang when approach Up stays held; retain deliberate transfer; prevent discontinuous tracking across the roll-in inset; use the leaning rider's body for vert wall contact. Movement tuning and the 2× level scale stay unchanged.
+- Validation: 22 held-input straight/angled approaches return without bails, with 0.63–0.93 s hangs; 41 wall approaches have no crossings; all 12 slower transitions return with less than 0.000005 m measured feet penetration. Structural check, check:levels and production build pass on the isolated task-only candidate. Lite and full browser runs pass ten gameplay checks; the final full pass has zero console errors and the normal playable tab is loaded.
+- Evidence: `docs/performance/kona-flow.json`, browser result JSON files, and `docs/art-reviews/kona-flow.png`. A legacy charge-speed assertion reproduces on the unchanged parent; unrelated shared-workspace codex-lab build errors are preserved. No check:all.
+- Delivery: validated changes committed locally on `codex/kona-ps1`; shared HEAD/index and unrelated edits preserved. No network transfer, push or deployment.

@@ -29,8 +29,8 @@ await withBlockworksRuntime(async r=>{
   if(selected.length>=24)break;
  }
  assert.ok(selected.length>=12,'Need broad wall-approach coverage');
- for(const c of process.env.KONA_APPROACH_ONLY?[]:selected){
-  const heading=new THREE.Vector3(-c.normal[0],0,-c.normal[2]);
+ for(const c of process.env.KONA_APPROACH_ONLY?[]:selected)for(const glance of (c.len>10?[0,.65]:[0])){
+  const heading=new THREE.Vector3(-c.normal[0]-c.normal[2]*glance,0,-c.normal[2]+c.normal[0]*glance).normalize();
   p.respawn(l,true,false,{position:new THREE.Vector3(c.start[0],c.start[1]+.06,c.start[2]),heading});
   // Initial facing is fixture setup; after this every movement is real input.
   p.axisF.copy(heading);p.axisL.set(-heading.z,0,heading.x);
@@ -39,14 +39,15 @@ await withBlockworksRuntime(async r=>{
    r.tick({moveY:1});
    const distance=(p.pos.x-c.mid[0])*c.normal[0]+(p.pos.z-c.mid[2])*c.normal[2];
    closest=Math.min(closest,distance);bails+=Number(p.isBailing);
-   if(p.pos.y<c.mid[1]+c.wall.height-.1&&p.pos.y+1>c.mid[1]+.1&&distance<-.15)penetrated=true;
+   const along=((p.pos.x-c.mid[0])*(c.wall.b[0]-c.wall.a[0])+(p.pos.z-c.mid[2])*(c.wall.b[2]-c.wall.a[2]))/c.len;
+   if(Math.abs(along)<c.len/2&&p.pos.y<c.mid[1]+c.wall.height-.1&&p.pos.y+1>c.mid[1]+.1&&distance<-.15)penetrated=true;
    if(p.state==='dead'||p.state==='gameover')break;
   }
-  report.walls.push({source:c.wall.source,mid:c.mid,normal:c.normal,start:c.start,closest,penetrated,bails,end:r.snapshot()});
+  report.walls.push({source:c.wall.source,glance,mid:c.mid,normal:c.normal,start:c.start,closest,penetrated,bails,end:r.snapshot()});
  }
  // Ordinary uncharged, angled and charged approaches from the flat floor.
  // Also measure feet clearance against the actual refined surface each step.
- for(const [i,pipe] of m.KONA_PIPES.entries())for(const side of [-1,1])for(const angle of [0,.25]){
+ for(const [i,pipe] of (process.env.KONA_WALL_ONLY?[]:m.KONA_PIPES).entries())for(const side of [-1,1])for(const angle of [0,.25]){
   if(process.env.KONA_APPROACH_ONLY&&process.env.KONA_APPROACH_ONLY!==`${i}:${side}:${angle}`)continue;
   const heading=new THREE.Vector3(side,0,angle).normalize();
   const samples=[];
@@ -54,8 +55,7 @@ await withBlockworksRuntime(async r=>{
   p.axisF.copy(heading);p.axisL.set(-heading.z,0,heading.x);
   let worstPenetration=0,climbed=0,transitionFrames=0,bailed=false,airFrames=0,returned=false;
   for(let frame=0;frame<260;frame++){
-   // Up in the air explicitly requests a spine transfer in the native park
-   // controller. Release direction once airborne to test an ordinary return.
+   // Neutral-air coverage complements test-kona-flow, which keeps Up held.
    r.tick(p.grounded?{moveY:1,jumpHeld:angle!==0}:{});
    climbed=Math.max(climbed,p.pos.y-pipe.centre[1]);
    if(frame%3===0)samples.push({frame,p:p.pos.toArray(),normal:p.groundHit?.normal.toArray(),ride:p.rideNormal.toArray(),heading:p.axisF.toArray(),state:p.state,vertAir:p.vertAir});

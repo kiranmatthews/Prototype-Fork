@@ -1,0 +1,175 @@
+{
+  "completed": [
+    {
+      "kind": "flow0",
+      "frames": 186,
+      "grounded": true,
+      "ground": "Spinal grooves",
+      "position": [
+        6.110868578689264,
+        0.1604287536664495,
+        108.81099999999999
+      ],
+      "bails": 0,
+      "deaths": 0,
+      "grindFrames": 0,
+      "takeoffFrom": "Spinal grooves",
+      "hangSeconds": 0.9000000000000011,
+      "returned": true,
+      "maxStep": 0.3379302660288355,
+      "pass": true
+    },
+    {
+      "kind": "flow1",
+      "frames": 181,
+      "grounded": true,
+      "ground": "Spinal grooves",
+      "position": [
+        26.282701730869924,
+        0.1786915476898695,
+        108.81099999999999
+      ],
+      "bails": 0,
+      "deaths": 0,
+      "grindFrames": 0,
+      "takeoffFrom": "Spinal grooves",
+      "hangSeconds": 0.8666666666666677,
+      "returned": true,
+      "maxStep": 0.3319256890050148,
+      "pass": true
+    },
+    {
+      "kind": "flow2",
+      "frames": 220,
+      "grounded": true,
+      "ground": "Over the roll-in / timber vert",
+      "position": [
+        -31.457420759674378,
+        0.19961341642874908,
+        109.75
+      ],
+      "bails": 0,
+      "deaths": 0,
+      "grindFrames": 0,
+      "takeoffFrom": "Over the roll-in / timber vert",
+      "hangSeconds": 0.733333333333334,
+      "returned": true,
+      "maxStep": 0.3971204693412434,
+      "pass": true
+    },
+    {
+      "kind": "wall",
+      "frames": 271,
+      "grounded": true,
+      "ground": "Kona / concrete and architecture",
+      "position": [
+        3.8257661041271804,
+        6.022802288684438,
+        -103.0729689040546
+      ],
+      "bails": 0,
+      "deaths": 0,
+      "grindFrames": 0,
+      "closest": 0.6940456407168851,
+      "pass": true
+    },
+    {
+      "kind": "transfer",
+      "frames": 153,
+      "airs": 1,
+      "grounded": true,
+      "ground": "Spinal grooves",
+      "position": [
+        16.845644902125997,
+        0.00011100000119768083,
+        110.81099999999999
+      ],
+      "bails": 0,
+      "deaths": 0,
+      "grindFrames": 0,
+      "transferred": true,
+      "takeoffFrom": "Spinal grooves",
+      "pass": true
+    },
+    {
+      "kind": "jump",
+      "frames": 156,
+      "grounded": true,
+      "ground": "Street / south catcher",
+      "position": [
+        72.25,
+        1.8888609409332275,
+        124.34913395509358
+      ],
+      "bails": 0,
+      "deaths": 0,
+      "grindFrames": 0,
+      "takeoffFrom": "Street / north kicker",
+      "landedOn": "Street / south catcher",
+      "lateral": 0,
+      "pass": true
+    },
+    {
+      "kind": "rail",
+      "frames": 188,
+      "grounded": true,
+      "ground": "Kona / concrete and architecture",
+      "position": [
+        86.82940973392462,
+        0.00011100000119768083,
+        155.211
+      ],
+      "bails": 0,
+      "deaths": 0,
+      "grindFrames": 103,
+      "takeoffFrom": "Kona / concrete and architecture",
+      "pass": true
+    },
+    {
+      "kind": "snake",
+      "frames": 1194,
+      "grounded": true,
+      "ground": "Snake run",
+      "position": [
+        -35.35467809688007,
+        7.225251938253523,
+        -0.894221265134854
+      ],
+      "bails": 0,
+      "deaths": 0,
+      "grindFrames": 0,
+      "pass": true
+    },
+    {
+      "kind": "recovery",
+      "frames": 226,
+      "grounded": true,
+      "ground": "Kona / concrete and architecture",
+      "position": [
+        -72.5,
+        9.186611,
+        -55
+      ],
+      "bails": 133,
+      "deaths": 0,
+      "grindFrames": 0,
+      "pass": true
+    },
+    {
+      "kind": "finish",
+      "frames": 75,
+      "grounded": true,
+      "ground": "warp plinth rim",
+      "position": [
+        -46.25,
+        6.7822776691501945,
+        -46.01093735623889
+      ],
+      "bails": 0,
+      "deaths": 0,
+      "grindFrames": 0,
+      "pass": true
+    }
+  ],
+  "errors": []
+}
