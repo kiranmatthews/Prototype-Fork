@@ -535,5 +535,43 @@
       "restoredTrailing": 5.05000001949289,
       "bails": 0
     }
+  ],
+  "roofRails": [
+    {
+      "name": "Roof short rail 1/-1",
+      "frames": 44,
+      "maxStep": 0.3509796384403992,
+      "minTrailing": 5.050000000000001,
+      "maxCrop": 0.7712263826854453,
+      "restoredTrailing": 5.050000019109689,
+      "bails": 0
+    },
+    {
+      "name": "Roof short rail 1/1",
+      "frames": 44,
+      "maxStep": 0.3509796384403992,
+      "minTrailing": 5.050000000000001,
+      "maxCrop": 0.771226382685446,
+      "restoredTrailing": 5.050000019109689,
+      "bails": 0
+    },
+    {
+      "name": "Roof short rail 2/-1",
+      "frames": 47,
+      "maxStep": 0.3509796384403943,
+      "minTrailing": 5.049999999999998,
+      "maxCrop": 0.7712263826854454,
+      "restoredTrailing": 5.050000019109226,
+      "bails": 0
+    },
+    {
+      "name": "Roof short rail 2/1",
+      "frames": 47,
+      "maxStep": 0.350979638440401,
+      "minTrailing": 5.049999999999998,
+      "maxCrop": 0.7712263826854466,
+      "restoredTrailing": 5.050000019109219,
+      "bails": 0
+    }
   ]
 }

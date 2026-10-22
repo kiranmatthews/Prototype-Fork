@@ -112,6 +112,28 @@
     "joinedVentCentre": [
       481,
       429
+    ],
+    "shortRoofRails": [
+      [
+        [
+          371.9,
+          396.7
+        ],
+        [
+          392.4,
+          389.1
+        ]
+      ],
+      [
+        [
+          351.1,
+          418.7
+        ],
+        [
+          373.7,
+          424.0
+        ]
+      ]
     ]
   },
   "applied": {
@@ -183,12 +205,39 @@
       ]
     ],
     "plankCornerTrim": 1.3,
-    "plankLength": 15.77497309004
+    "plankLength": 15.77497309004,
+    "shortRoofRails": [
+      [
+        [
+          37.7,
+          7.65,
+          36.9
+        ],
+        [
+          41,
+          7.65,
+          33.4
+        ]
+      ],
+      [
+        [
+          36.4,
+          7.65,
+          44.7
+        ],
+        [
+          41.8,
+          7.65,
+          45
+        ]
+      ]
+    ]
   },
   "validationNotes": [
     "The east kicker clears the enlarged unit with the first landing on roof at approach speed 18; the accepted case cannot land on the unit and roll off.",
     "Additional native-input probes at both z=23.7 and z=26 clear the unit at approach speeds 14, 16 and 18. At 12 they land on its supported top without bailing; a full gap is not claimed at that speed.",
     "The shortened plank uses the same rounded path for visible support and grind collision. A sharp compound bend ejected the native grind; the 1.3m corner trim completes all 15.775m and lands on the awning.",
-    "Roof 2 Roof, skylight drops, all vent/hip crossings and camera clearance are rechecked after the common placement change."
+    "Roof 2 Roof, skylight drops, all vent/hip crossings and camera clearance are rechecked after the common placement change.",
+    "Sixteenth iteration: the close source roof crop and original 2:07 footage place short freestanding rails on the open west roof. Removed the invented AC-kicker rail, which sat up to 0.487m below the riding surface. The two source rails pass grounded approaches, complete grinds and roof rollouts in both directions, with an inferred 0.65m bar height."
   ]
 }

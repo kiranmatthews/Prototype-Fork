@@ -1,4 +1,4 @@
-import {SCHOOL_REAR_BANK,SCHOOL_SKYLIGHT,SCHOOL_GYM_RAILS,SCHOOL_GYM_BANKS,SCHOOL_GYM_BANK,SCHOOL_WEST_ANNEX,SCHOOL_ROOF_PARAPET,schoolGymBankHeight} from '../src/levels/school-miami';
+import {SCHOOL_REAR_BANK,SCHOOL_SKYLIGHT,SCHOOL_GYM_RAILS,SCHOOL_GYM_BANKS,SCHOOL_GYM_BANK,SCHOOL_WEST_ANNEX,SCHOOL_ROOF_PARAPET,SCHOOL_ROOF_FLAT_RAILS,schoolGymBankHeight} from '../src/levels/school-miami';
 import {createBalancedGrind} from './school-grind-lines';
 
 type Point=[number,number,number];
@@ -134,6 +134,21 @@ export function schoolDetailTrials(p:any,l:any,place:Place,dt:number):DetailTria
     });
   }
   const vector=(q:number[])=>p.pos.clone().set(...q),bank=SCHOOL_REAR_BANK;
+  for(const [i,points] of SCHOOL_ROOF_FLAT_RAILS.entries())for(const direction of [-1,1]){
+    const rail=l.rails.find((r:any)=>r.points[0].distanceTo(vector(points[0]))<.1);
+    if(!rail)throw Error('Roof short rail missing');
+    const h=rail.tangentAt(.1).setY(0).normalize().multiplyScalar(direction);
+    const q=(direction===1?rail.points[0]:rail.points.at(-1)).clone().addScaledVector(h,-1.5);q.y=7.1;
+    const result:any={direction};let line:ReturnType<typeof createBalancedGrind>;
+    trials.push({name:`Roof short rail ${i+1}/${direction}`,kind:'grind',result,limit:160,
+      init:()=>{place(q.toArray(),h.toArray(),12);if(p.balanceBoostT||p.uberTimer)throw Error('Roof short grind has an assist');line=createBalancedGrind(p,rail,dt);result.grind=line.report;},
+      sample:()=>line.sample(),observe:()=>{
+        if(!line.observe())return false;
+        if(line.report.grindFrames<15||Math.abs(p.pos.y-7)>.06)throw Error('Roof short rail missed its supported roof rollout');
+        return true;
+      },
+    });
+  }
   for(const t of [.27,.72])for(const direction of [-1,1]){
     const toe=vector(bank.toe[0]).lerp(vector(bank.toe[1]),t),lip=vector(bank.lip[0]).lerp(vector(bank.lip[1]),t);
     const h=lip.clone().sub(toe).setY(0).normalize().multiplyScalar(direction);

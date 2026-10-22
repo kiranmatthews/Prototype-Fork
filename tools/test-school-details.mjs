@@ -27,6 +27,11 @@ await withSkateRuntime(async({THREE,server,Level,Player,scene,CONST,TUNING})=>{
     near('Clear lane north of air conditioner',[54.7,0,18.8],7,9);
     near('Roof 2 Roof approach between unit and kicker',[61.3,0,23],7,9);
     near('Air conditioner west landing clear roof',[43,0,23.7],7,9);
+    for(const [i,points] of m.SCHOOL_ROOF_FLAT_RAILS.entries())for(const t of [-.3,0,.5,1,1.3]){
+      const q=new THREE.Vector3(...points[0]).lerp(new THREE.Vector3(...points[1]),t);
+      near(`Roof short rail ${i+1} supported approach/bar/rollout ${t}`,q.toArray(),7,9);
+      assert.ok(q.y-7>.6,'Roof short rail is buried in its support');
+    }
     near('West roof hip flat top',[45.5,0,26.5],8.25,10);
     for(const z of [21.5,31.5])near(`West roof hip rollout ${z}`,[45.5,0,z],7,10);
     for(const x of [30,40,50,60,67])near(`Flat south roof lane ${x}`,[x,0,46.8],7,10);

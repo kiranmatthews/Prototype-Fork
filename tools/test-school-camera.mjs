@@ -8,7 +8,7 @@ await withSkateRuntime(async ({ THREE, server, Level, Player, scene, TUNING, CON
   const level = new Level(scene, { id: 'school-miami', name: SCHOOL_MIAMI_LEVEL.name, data: SCHOOL_MIAMI_LEVEL });
   scene.updateMatrixWorld(true);
   const framing = { camDist:TUNING.parkCamDist, camHeight:TUNING.parkCamHeight, camPitch:TUNING.parkCamPitch, camFov:TUNING.parkCamFov };
-  const ray = new THREE.Raycaster(), report = { views:[], motion:[], recovery:[], drops:[], entrances:[], roofJumps:[], roofVents:[], roofEdges:[] };
+  const ray = new THREE.Raycaster(), report = { views:[], motion:[], recovery:[], drops:[], entrances:[], roofJumps:[], roofVents:[], roofEdges:[], roofRails:[] };
   try {
     for (const [x,y,z] of [[44,0,-5],[42,-1,-15],[40,-2.5,-21],[38,-4.4,-30],[37,-5,-36],[45,3.4,4],[48.5,0,32]]) {
       ray.set(new THREE.Vector3(x,y+.3,z),new THREE.Vector3(0,-1,0));ray.far=2;
@@ -71,7 +71,7 @@ await withSkateRuntime(async ({ THREE, server, Level, Player, scene, TUNING, CON
       player.axisF.set(...h);player.axisL.set(h[2],0,-h[0]);player.freeSkate=true;player.speed=speed;
       player.groundHit=player.queryGround(level);player.pos.y=player.groundHit.y;player.prevPos.copy(player.pos);player.grounded=true;player.rideNormal.copy(player.groundHit.normal);
     };
-    for(const trial of schoolDetailTrials(player,level,place,CONST.fixedStep).filter(c=>c.name.startsWith('Skylight')||c.name.startsWith('Gym doorway')||c.name.startsWith('West pavilion')||c.name.startsWith('Roof joined vent')||c.name.startsWith('Roof west hip')||c.name.startsWith('Roof south'))){
+    for(const trial of schoolDetailTrials(player,level,place,CONST.fixedStep).filter(c=>c.name.startsWith('Skylight')||c.name.startsWith('Gym doorway')||c.name.startsWith('West pavilion')||c.name.startsWith('Roof joined vent')||c.name.startsWith('Roof west hip')||c.name.startsWith('Roof south')||c.name.startsWith('Roof short rail'))){
       trial.init();const rig=new SkateChaseCamera(),camera=new THREE.PerspectiveCamera(49,16/9,.1,400),previous=new THREE.Vector3();
       const subject=()=>({position:player.pos,heading:player.skateCameraHeading,up:player.skateCameraUp,vertAir:player.vertAir,vertNormal:player.vertNormal,verticalSpeed:player.vVel,speed:player.cameraSkateSpeed,grounded:player.skateCameraSupported,bailing:player.skateCameraBailing});
       let frames=0,maxStep=0,minTrailing=Infinity,maxCrop=0,complete=false;
@@ -91,7 +91,7 @@ await withSkateRuntime(async ({ THREE, server, Level, Player, scene, TUNING, CON
       for(let frame=0;frame<60;frame++)rig.update(camera,subject(),CONST.fixedStep,false,level.groundMeshes,framing);
       const restoredTrailing=Math.hypot(camera.position.x-player.pos.x,camera.position.z-player.pos.z);
       assert.ok(Math.abs(restoredTrailing-framing.camDist)<.02,`${trial.name}: shot did not restore`);
-      (trial.name.startsWith('Skylight')?report.drops:trial.name.startsWith('Gym doorway')?report.entrances:trial.name.startsWith('West pavilion')?report.roofJumps:trial.name.startsWith('Roof joined vent')?report.roofVents:report.roofEdges).push({name:trial.name,frames,maxStep,minTrailing,maxCrop,restoredTrailing,bails:0});
+      (trial.name.startsWith('Skylight')?report.drops:trial.name.startsWith('Gym doorway')?report.entrances:trial.name.startsWith('West pavilion')?report.roofJumps:trial.name.startsWith('Roof joined vent')?report.roofVents:trial.name.startsWith('Roof short rail')?report.roofRails:report.roofEdges).push({name:trial.name,frames,maxStep,minTrailing,maxCrop,restoredTrailing,bails:0});
     }
     await writeFile('docs/performance/school-miami-camera.json',JSON.stringify(report,null,2)+'\n');
     console.log(`PASS ${report.views.length} School camera views and ceiling recovery at 30/60/120 Hz.`);

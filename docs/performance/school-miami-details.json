@@ -169,6 +169,86 @@
       ]
     },
     {
+      "name": "Roof short rail 1 supported approach/bar/rollout -0.3",
+      "point": [
+        36.71,
+        6.999999994039536,
+        37.949999999999996
+      ]
+    },
+    {
+      "name": "Roof short rail 1 supported approach/bar/rollout 0",
+      "point": [
+        37.7,
+        6.999999994039536,
+        36.9
+      ]
+    },
+    {
+      "name": "Roof short rail 1 supported approach/bar/rollout 0.5",
+      "point": [
+        39.35,
+        6.999999994039536,
+        35.15
+      ]
+    },
+    {
+      "name": "Roof short rail 1 supported approach/bar/rollout 1",
+      "point": [
+        41,
+        6.999999994039536,
+        33.4
+      ]
+    },
+    {
+      "name": "Roof short rail 1 supported approach/bar/rollout 1.3",
+      "point": [
+        41.99,
+        6.999999994039536,
+        32.35
+      ]
+    },
+    {
+      "name": "Roof short rail 2 supported approach/bar/rollout -0.3",
+      "point": [
+        34.78,
+        6.999999994039536,
+        44.61000000000001
+      ]
+    },
+    {
+      "name": "Roof short rail 2 supported approach/bar/rollout 0",
+      "point": [
+        36.4,
+        6.999999994039536,
+        44.7
+      ]
+    },
+    {
+      "name": "Roof short rail 2 supported approach/bar/rollout 0.5",
+      "point": [
+        39.099999999999994,
+        6.999999994039536,
+        44.85
+      ]
+    },
+    {
+      "name": "Roof short rail 2 supported approach/bar/rollout 1",
+      "point": [
+        41.8,
+        6.999999994039536,
+        45
+      ]
+    },
+    {
+      "name": "Roof short rail 2 supported approach/bar/rollout 1.3",
+      "point": [
+        43.419999999999995,
+        6.999999994039536,
+        45.089999999999996
+      ]
+    },
+    {
       "name": "West roof hip flat top",
       "point": [
         45.5,
@@ -1242,6 +1322,94 @@
         45,
         3.4000000953674316,
         3.616031559176138
+      ]
+    },
+    {
+      "name": "Roof short rail 1/-1",
+      "kind": "grind",
+      "direction": -1,
+      "grind": {
+        "frames": 44,
+        "grindFrames": 25,
+        "maxT": 4.810405388322275,
+        "minT": 0,
+        "progress": 4.810405388322275,
+        "direction": -1,
+        "maxBalance": 0.1,
+        "caught": true,
+        "landed": true
+      },
+      "bails": 0,
+      "end": [
+        35.23035367271956,
+        6.999999994039536,
+        39.51932186226711
+      ]
+    },
+    {
+      "name": "Roof short rail 1/1",
+      "kind": "grind",
+      "direction": 1,
+      "grind": {
+        "frames": 44,
+        "grindFrames": 25,
+        "maxT": 4.810405388322275,
+        "minT": 0,
+        "progress": 4.810405388322275,
+        "direction": 1,
+        "maxBalance": 0.1,
+        "caught": true,
+        "landed": true
+      },
+      "bails": 0,
+      "end": [
+        43.469646327280444,
+        6.999999994039536,
+        30.780678137732885
+      ]
+    },
+    {
+      "name": "Roof short rail 2/-1",
+      "kind": "grind",
+      "direction": -1,
+      "grind": {
+        "frames": 47,
+        "grindFrames": 28,
+        "maxT": 5.408326913195983,
+        "minT": 0,
+        "progress": 5.408326913195983,
+        "direction": -1,
+        "maxBalance": 0.1,
+        "caught": true,
+        "landed": true
+      },
+      "bails": 0,
+      "end": [
+        32.80554272846047,
+        6.999999994039536,
+        44.50030792935891
+      ]
+    },
+    {
+      "name": "Roof short rail 2/1",
+      "kind": "grind",
+      "direction": 1,
+      "grind": {
+        "frames": 47,
+        "grindFrames": 28,
+        "maxT": 5.408326913195983,
+        "minT": 0,
+        "progress": 5.408326913195983,
+        "direction": 1,
+        "maxBalance": 0.1,
+        "caught": true,
+        "landed": true
+      },
+      "bails": 0,
+      "end": [
+        45.39445727153952,
+        6.999999994039536,
+        45.19969207064109
       ]
     },
     {

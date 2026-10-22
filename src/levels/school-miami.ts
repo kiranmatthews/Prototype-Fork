@@ -586,7 +586,14 @@ export const SCHOOL_WEST_ROOF_HIP={x:45.5,z:26.5,rise:1.25,outline:[
   surface('Roof west faceted hip',vertices,indices,'#887b59',9,{tex:'wood'});
   floor('West roof hip · flat top',inner,roofY+s.rise,'#887b59',9).tex='wood';
 }
-rail('Air-conditioner approach green rail',[[71,7.8,23.7],[66,7.8,23.7],[59.9,9.25,23.7]],9,'#527667');
+// Two short freestanding rails occupy the open west roof in the source.
+// Neither climbs the AC kicker. Their endpoints use the same local roof
+// fit as the hips/skylight; the 0.65 m bar height is skater-calibrated.
+export const SCHOOL_ROOF_FLAT_RAILS:Point[][]=[
+  [[37.7,7.65,36.9],[41,7.65,33.4]],
+  [[36.4,7.65,44.7],[41.8,7.65,45]],
+];
+for(const [i,points] of SCHOOL_ROOF_FLAT_RAILS.entries())rail(`Roof short freestanding rail ${i+1}`,points,9,'#676f64');
 // Clear the north roof edge before descending to the awning. A direct
 // diagonal to the low canopy would run through the solid gym roof.
 export const SCHOOL_ROOF_PLANK:Point[]=(()=>{

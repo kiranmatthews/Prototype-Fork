@@ -8,8 +8,8 @@
     -39
   ],
   "speed": 0,
-  "components": 268,
-  "rails": 67,
+  "components": 269,
+  "rails": 68,
   "camera": {
     "eye": [
       26,
@@ -19,14 +19,14 @@
     "trailing": 5.049999999999997,
     "bodyBounds": {
       "min": [
-        25.501569411126678,
-        -4.775423943964215,
-        -39.97934948701605
+        25.50116517343149,
+        -4.775256415215999,
+        -39.98367509402575
       ],
       "max": [
-        26.68663287030424,
-        -2.0112825929989726,
-        -38.18311105117469
+        26.69038962461484,
+        -1.9710521372754926,
+        -38.17987301004406
       ]
     }
   },
@@ -360,6 +360,22 @@
         "frames": 98
       },
       {
+        "name": "Roof short rail 1/-1",
+        "frames": 44
+      },
+      {
+        "name": "Roof short rail 1/1",
+        "frames": 44
+      },
+      {
+        "name": "Roof short rail 2/-1",
+        "frames": 47
+      },
+      {
+        "name": "Roof short rail 2/1",
+        "frames": 47
+      },
+      {
         "name": "Rear bank 0.27/-1",
         "frames": 21
       },
@@ -433,7 +449,7 @@
       }
     ],
     "failure": null,
-    "frames": 13024,
+    "frames": 13206,
     "longGrinds": [
       {
         "name": "Roof-to-awning plank",
@@ -1202,6 +1218,78 @@
         }
       },
       {
+        "name": "Roof short rail 1/-1",
+        "kind": "grind",
+        "result": {
+          "direction": -1,
+          "grind": {
+            "frames": 44,
+            "grindFrames": 25,
+            "maxT": 4.810405388322275,
+            "minT": 0,
+            "progress": 4.810405388322275,
+            "direction": -1,
+            "maxBalance": 0.1,
+            "caught": true,
+            "landed": true
+          }
+        }
+      },
+      {
+        "name": "Roof short rail 1/1",
+        "kind": "grind",
+        "result": {
+          "direction": 1,
+          "grind": {
+            "frames": 44,
+            "grindFrames": 25,
+            "maxT": 4.810405388322275,
+            "minT": 0,
+            "progress": 4.810405388322275,
+            "direction": 1,
+            "maxBalance": 0.1,
+            "caught": true,
+            "landed": true
+          }
+        }
+      },
+      {
+        "name": "Roof short rail 2/-1",
+        "kind": "grind",
+        "result": {
+          "direction": -1,
+          "grind": {
+            "frames": 47,
+            "grindFrames": 28,
+            "maxT": 5.408326913195983,
+            "minT": 0,
+            "progress": 5.408326913195983,
+            "direction": -1,
+            "maxBalance": 0.1,
+            "caught": true,
+            "landed": true
+          }
+        }
+      },
+      {
+        "name": "Roof short rail 2/1",
+        "kind": "grind",
+        "result": {
+          "direction": 1,
+          "grind": {
+            "frames": 47,
+            "grindFrames": 28,
+            "maxT": 5.408326913195983,
+            "minT": 0,
+            "progress": 5.408326913195983,
+            "direction": 1,
+            "maxBalance": 0.1,
+            "caught": true,
+            "landed": true
+          }
+        }
+      },
+      {
         "name": "Rear bank 0.27/-1",
         "kind": "ride",
         "result": {
@@ -1470,7 +1558,7 @@
       "frames": 2404,
       "waypoints": 51,
       "totalWaypoints": 51,
-      "distance": 389.91235823324416,
+      "distance": 389.912358011115,
       "gimmeGrindFrames": 21,
       "returnGrindFrames": 555,
       "kickerAir": true,

@@ -8,8 +8,8 @@
     -39
   ],
   "speed": 0,
-  "components": 268,
-  "rails": 67,
+  "components": 269,
+  "rails": 68,
   "camera": {
     "eye": [
       26,
@@ -19,14 +19,14 @@
     "trailing": 5.049999999999997,
     "bodyBounds": {
       "min": [
-        25.501531622645576,
-        -4.775399827736827,
-        -39.98396474443665
+        25.501622010171292,
+        -4.775390343948225,
+        -39.974835591537534
       ],
       "max": [
-        26.68893452766407,
-        -1.988281990219701,
-        -38.17984350029021
+        26.685676651412592,
+        -2.01947280384988,
+        -38.186417909231174
       ]
     }
   },
@@ -360,6 +360,22 @@
         "frames": 98
       },
       {
+        "name": "Roof short rail 1/-1",
+        "frames": 44
+      },
+      {
+        "name": "Roof short rail 1/1",
+        "frames": 44
+      },
+      {
+        "name": "Roof short rail 2/-1",
+        "frames": 47
+      },
+      {
+        "name": "Roof short rail 2/1",
+        "frames": 47
+      },
+      {
         "name": "Rear bank 0.27/-1",
         "frames": 21
       },
@@ -433,7 +449,7 @@
       }
     ],
     "failure": null,
-    "frames": 13024,
+    "frames": 13206,
     "longGrinds": [
       {
         "name": "Roof-to-awning plank",
@@ -1199,6 +1215,78 @@
           "air": true,
           "landed": true,
           "maxY": 13.069455351370927
+        }
+      },
+      {
+        "name": "Roof short rail 1/-1",
+        "kind": "grind",
+        "result": {
+          "direction": -1,
+          "grind": {
+            "frames": 44,
+            "grindFrames": 25,
+            "maxT": 4.810405388322275,
+            "minT": 0,
+            "progress": 4.810405388322275,
+            "direction": -1,
+            "maxBalance": 0.1,
+            "caught": true,
+            "landed": true
+          }
+        }
+      },
+      {
+        "name": "Roof short rail 1/1",
+        "kind": "grind",
+        "result": {
+          "direction": 1,
+          "grind": {
+            "frames": 44,
+            "grindFrames": 25,
+            "maxT": 4.810405388322275,
+            "minT": 0,
+            "progress": 4.810405388322275,
+            "direction": 1,
+            "maxBalance": 0.1,
+            "caught": true,
+            "landed": true
+          }
+        }
+      },
+      {
+        "name": "Roof short rail 2/-1",
+        "kind": "grind",
+        "result": {
+          "direction": -1,
+          "grind": {
+            "frames": 47,
+            "grindFrames": 28,
+            "maxT": 5.408326913195983,
+            "minT": 0,
+            "progress": 5.408326913195983,
+            "direction": -1,
+            "maxBalance": 0.1,
+            "caught": true,
+            "landed": true
+          }
+        }
+      },
+      {
+        "name": "Roof short rail 2/1",
+        "kind": "grind",
+        "result": {
+          "direction": 1,
+          "grind": {
+            "frames": 47,
+            "grindFrames": 28,
+            "maxT": 5.408326913195983,
+            "minT": 0,
+            "progress": 5.408326913195983,
+            "direction": 1,
+            "maxBalance": 0.1,
+            "caught": true,
+            "landed": true
+          }
         }
       },
       {
