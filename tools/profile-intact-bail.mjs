@@ -31,6 +31,7 @@ new Function('noop', dom.getText(ast) + '; installHeadlessDom();')(() => {});
 const replaced = new Set(['src/player.ts', 'src/bailRecovery.ts', 'src/characterAnimationRuntime.ts', 'src/animation/bridge.ts', 'src/animation/rigBinding.ts', 'src/animation/sampling.ts', 'src/character/bailMotion.ts', 'src/character/bailContactPose.ts', 'src/character/bailGroundContact.ts', 'src/character/bailImpactSpin.ts', 'src/character/bailRecoveryMotion.ts', 'src/character/bailRiseMotion.ts', 'src/character/interactionBounds.ts', 'src/character/proportionLayer.ts', 'src/character/wipeoutPolicy.ts', 'src/character/stretchableBone.ts']);
 replaced.add('src/character/skinBoundsKernel.ts');
 replaced.add('src/character/bailContactPose.ts');
+replaced.add('src/character/compactSkinBounds.ts');
 const server = await createServer({ appType: 'custom', logLevel: 'silent', server: { middlewareMode: true },
   plugins: snapshot ? [{ name: 'bail-source-snapshot', enforce: 'pre', async load(id) {
     const rel = path.relative(process.cwd(), id.split('?')[0]);
@@ -76,6 +77,27 @@ try {
   const stats = values => { const sorted = [...values].sort((a, b) => a - b); return {
     samples: values.length, mean: values.reduce((a, b) => a + b, 0) / values.length,
     median: sorted[Math.floor(sorted.length / 2)], p95: sorted[Math.floor(sorted.length * .95)] }; };
+  let skinPreparation;
+  if (process.argv.includes('--skin-preparation-profile')) {
+    const { CharacterInteractionBounds } = await server.ssrLoadModule('/src/character/interactionBounds.ts');
+    const meshes = []; p.bodyGroup.updateWorldMatrix(true, true);
+    p.bodyGroup.traverse(mesh => { if (mesh.isSkinnedMesh && mesh.geometry.attributes.position.count >= 2048) meshes.push(mesh); });
+    skinPreparation = [];
+    for (const mesh of meshes) {
+      const times = []; let retainedVertices = 0, retainedBytes = 0;
+      for (let i = -5; i < 20; i++) {
+        const bounds = new CharacterInteractionBounds(), start = performance.now();
+        bounds.skinnedBounds(mesh); const ms = performance.now() - start;
+        if (i >= 0) times.push(ms);
+        const input = bounds.skinVertices.get(mesh);
+        retainedVertices = input.positions.length / 3;
+        retainedBytes = input.positions.byteLength + input.indices.byteLength + input.weights.byteLength +
+          input.morphDeltas.reduce((n, a) => n + a.byteLength, 0);
+      }
+      skinPreparation.push({ name:mesh.name, sourceVertices:mesh.geometry.attributes.position.count,
+        retainedVertices, retainedBytes, coldMeasurementMs:stats(times) });
+    }
+  }
   const results = [];
   const appearanceProfile = process.argv.includes('--appearance-profile');
   const boundsProfile = process.argv.includes('--bounds-profile');
@@ -109,10 +131,10 @@ try {
     contact = { warmupContacts: 500, cpuMs: stats(samples), supportCalls, supportSamples,
       scope: 'Isolated production contact torque and secondary-motion impulse, warm posed rig; excludes locomotion/render.' };
   }
-  if (!process.argv.includes('--contact-only'))
+  if (!process.argv.includes('--contact-only') && !skinPreparation)
   for (const cause of selectedCause ? [selectedCause] : allCauses) {
     const frames = [], incidents = [], triggers = [], durations = []; let fullScans = 0, count = false;
-    const skinUploads = { calls:0, copiedBytes:0, geometryUploads:0, residentHits:0, residentResets:0, workspaceBytes:0 };
+    const skinUploads = { calls:0, copiedBytes:0, geometryUploads:0, residentHits:0, residentResets:0, workspaceBytes:0, exactSkinVertices:0 };
     const phaseWork = Object.fromEntries(['bail','rise'].map(phase => [phase, { frames:[], fullSkinScans:0, bodyMatrixPasses:0, supportTimes:[], supportSamples:0, deformationPasses:0, deformationRequests:0 }]));
     let phase = 'bail';
     const recording = () => count && (completeIncident || p.isBailing);
@@ -272,7 +294,13 @@ try {
       return result;
     };
     const native = p.interactionMeasure.skinnedBounds.bind(p.interactionMeasure);
-    p.interactionMeasure.skinnedBounds = mesh => { if (recording()) { fullScans++; phaseWork[phase].fullSkinScans++; } return native(mesh); };
+    p.interactionMeasure.skinnedBounds = mesh => {
+      if (recording()) { fullScans++; phaseWork[phase].fullSkinScans++; }
+      const result = native(mesh);
+      if (recording() && skinUploadProfile)
+        skinUploads.exactSkinVertices += p.interactionMeasure.skinVertices.get(mesh)?.positions.length / 3 || 0;
+      return result;
+    };
     for (let trial = -warmups; trial < measured; trial++) {
       let seed = 0x48631 + trial;
       Math.random = () => ((seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0) / 4294967296);
@@ -373,6 +401,6 @@ try {
       poseChecksum: poseHash?.digest('hex'), gameplayChecksum:gameplayHash?.digest('hex'), impacts: traceImpacts ? impacts : undefined });
   }
   console.log(JSON.stringify({ source: snapshot ? 'initial working tree snapshot' : 'current working tree', warmupsPerCase: warmups, measuredIncidentsPerCase: measured,
-    completeIncident, realHandTriangles:handTriangles,
+    completeIncident, realHandTriangles:handTriangles, skinPreparation,
     scope: `Production fixed-step CPU in Node with animation runtime and ${realHands ? 'actual artist-hand meshes, warm exact skin kernel and other procedural fallback assets' : 'procedural fallback assets'}. ${completeIncident ? 'Includes the complete bail and finite post-control rise rebound' : 'Ends when bail control returns'}; excludes render/GPU/browser costs. Timings are descriptive, work counts are deterministic.`, contact, results }, null, 2));
 } finally { Array.prototype.sort = nativeSort; Math.random = random; console.warn = warn; console.error = error; runtime?.dispose(); level?.dispose(); await server.close(); }

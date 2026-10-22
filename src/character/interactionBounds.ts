@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { BoneEnvelopeBounds } from './boneEnvelopeBounds';
 import { sharedSkinBoundsKernel, SkinBoundsKernel, type SkinBoundsVertices } from './skinBoundsKernel';
+import { compactSkinBoundsVertices } from './compactSkinBounds';
 
 interface CachedMeshBounds {
   geometry: THREE.BufferGeometry;
@@ -487,6 +488,7 @@ export class CharacterInteractionBounds {
           if(cached.weights[offset]!==0)cached.highestWeightedIndex=Math.max(cached.highestWeightedIndex,cached.indices[offset]);
         }
       }
+      compactSkinBoundsVertices(cached);
       this.skinVertices.set(mesh,cached);
     }
     const box=mesh.boundingBox??=new THREE.Box3();box.makeEmpty();
@@ -496,7 +498,7 @@ export class CharacterInteractionBounds {
     // Derived arrays are immutable: every source/version/bind edit above
     // replaces the entire bundle, including its native residency identity.
     if(this.boundsKernel?.measure(cached,morphs,palette,inv,box,linearBind&&constantSkin&&constantInverse,true))return box;
-    for(let i=0;i<positions.count;i++){
+    for(let i=0;i<base.length/3;i++){
       let x=base[i*3],y=base[i*3+1],z=base[i*3+2],sx=0,sy=0,sz=0;
       for(let m=0;m<cached.morphDeltas.length;m++){
         const influence=morphs[m]??0;if(influence===0)continue;
