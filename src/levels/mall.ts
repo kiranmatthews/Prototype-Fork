@@ -155,12 +155,13 @@ function ribbon(name: string, a: number, b: number, left: number | ((s:number)=>
 }
 function rail(name: string, points: P[], grp: number, posts = false, floor = (s:number)=>mallHeight(s), start = 0, end = 0) {
   const p = points[0];
-  add({t:'rail',p,pts:points.map(q=>[q[0]-p[0],q[2]-p[2],0,q[1]-p[1]]),color:'#b8c6c6',grp,nm:name});
+  const component=add({t:'rail',p,pts:points.map(q=>[q[0]-p[0],q[2]-p[2],0,q[1]-p[1]]),color:'#b8c6c6',grp,nm:name});
   if(posts) for(let i=0;i<points.length;i+=4){const q=points[i],y=floor(mix(start,end,i/(points.length-1)));box([q[0],(y+q[1])/2,q[2]],[.09,q[1]-y,.09],dark,grp);}
+  return component;
 }
 function railAlong(name: string, a: number,b: number,offset: number | ((s:number)=>number),y:(s:number)=>number,grp:number,posts=true){
   const n=Math.ceil((b-a)/1.2),points=Array.from({length:n+1},(_,i)=>{const s=mix(a,b,i/n);return mallPoint(s,typeof offset==='function'?offset(s):offset,y(s));});
-  rail(name,points,grp,posts,mallHeight,a,b);
+  return rail(name,points,grp,posts,mallHeight,a,b);
 }
 function planter(s:number,offset:number,w:number,d:number,y=mallHeight(s),grp=9){
   const q=mallPoint(s,offset,y+.37),yaw=mallYaw(s);
@@ -474,14 +475,36 @@ for(const [side,h,name]of [[-1,1.02,'Crossrail left to right'],[1,.72,'Crossrail
 for(const u of [-7.5,7.5])railAlong('Arcade side ledge',263,297,u,s=>mallHeight(s)+.48,6,false);
 sign('GARDEN COURT',316,0,5.8,9);
 
-// Raised side ledges and their low awnings flank the open-air blue banks.
-for(const u of [-10.5,10.5]){
- ribbon('Outdoor ledge bevel',328,331,u-1,u+1,s=>.62*ease(328,331,s),7,'#aaa58f');
- ribbon('Outdoor raised ledge',331,373,u-1,u+1,()=>.62,7,'#aaa58f');
- railAlong('Whole Atrium grind',328,374,u,()=>.72,7,false);
- for(const s of [336,365])planter(s,u,2.2,5,.62,7);
+// Original PS1 footage at 6:15–6:17 shows continuous curved wall bases
+// behind the four planter areas. Their copings follow the widening court;
+// the ledges leave a clear strip at the toe instead of covering the curve.
+const outdoorLedgeHeight=(s:number)=>.62*ease(328,331,s)*(1-ease(370,373,s));
+export const MALL_COURTYARD = { start:330, end:374, radius:2.6, arc:85, deck:.9,
+ toe:(s:number)=>plan(s).width/2-3.65 };
+for(const side of [-1,1]){
+ const stations=Array.from({length:45},(_,i)=>330+i);
+ if(side>0)stations.reverse();
+ const p=mallPoint(stations[0],side*MALL_COURTYARD.toe(stations[0]),outdoorLedgeHeight(stations[0]));
+ const pts=stations.map(s=>{const q=mallPoint(s,side*MALL_COURTYARD.toe(s),outdoorLedgeHeight(s));return[q[0]-p[0],q[2]-p[2],0,q[1]-p[1]] as [number,number,number,number];});
+ add({t:'vertramp',p,pts,vkind:'quarter',w:0,rise:MALL_COURTYARD.radius,arc:MALL_COURTYARD.arc,
+  arcSteps:24,deck:MALL_COURTYARD.deck,rails:true,tex:'pavement',color:'#b6ada1',grp:7,nm:`Courtyard ${side<0?'left':'right'} wall transition`});
 }
-for(const s of [331,370])for(const side of [-1,1])rail('Atrium end return',[mallPoint(s,side*9.5,.72),mallPoint(s,side*11.5,.72)],7);
+// Grind the inside edge of each ledge, alongside the planters. Both ends
+// taper to the floor, and the collision body closes the raised slab.
+for(const side of [-1,1]){
+ ribbon('Outdoor raised ledge',328,373,side<0?s=>-MALL_COURTYARD.toe(Math.max(330,s)):8,
+  side<0?-8:s=>MALL_COURTYARD.toe(Math.max(330,s)),outdoorLedgeHeight,7,'#aaa58f',true,'pavement',()=>-.08);
+ railAlong('Whole Atrium grind',328,373,side*8.05,s=>outdoorLedgeHeight(s)+.08,7,false).coping=true;
+ for(const s of [336,365])planter(s,side*8.85,1.3,5,.62,7);
+ const innerVertices:number[]=[],innerIndices:number[]=[];
+ for(let i=0;i<=45;i++){
+  const s=328+i;
+  innerVertices.push(...mallPoint(s,side*6.8,0),...mallPoint(s,side*8,outdoorLedgeHeight(s)));
+  if(i<45){const j=i*2;innerIndices.push(...(side>0?[j,j+1,j+3,j,j+3,j+2]:[j,j+3,j+1,j,j+2,j+3]));}
+ }
+ add({t:'mesh',p:[0,0,0],vertices:innerVertices,indices:innerIndices,color:'#aaa58f',tex:'pavement',vert:true,solid:true,doubleSided:true,edgeGrinding:false,grp:7,nm:'Courtyard ledge inner bank'});
+}
+for(const s of [331,370])for(const side of [-1,1])rail('Atrium end return',[mallPoint(s,side*8.05,.7),mallPoint(s,side*9.45,.7)],7).coping=true;
 // The blue feature is a rideable angular trough, not a solid sculpture.
 // One mesh joins its flat bottom, paired banks and sloping outside returns.
 {
@@ -506,9 +529,9 @@ for(const side of [-1,1])for(const [a,b]of [[334,346],[357,368]]){
 // Both banks share the stair floor's sampled height, without a toe seam.
 treads(375,391,-2.2,2.2,32,8);
 for(const u of [-2.35,2.35])railAlong('Thirty-two stair handrail',373,394,u,s=>mallHeight(s)+.86,8);
-ribbon('Mezzanine approach',355,370,-8.7,-4.4,s=>3.8*clamp((s-355)/15),8,trim,true,'pavement',()=>-.12);
-ribbon('Mezzanine takeoff',370,377,-8.7,-4.4,()=>3.8,8,stone,true,'pavement',()=>3.25);
-railAlong('Step Off a Mezzanine lip',369,377,-8.6,()=>4.65,8,false);
+ribbon('Mezzanine approach',355,370,-7.8,-4.4,s=>3.8*clamp((s-355)/15),8,trim,true,'pavement',()=>-.12);
+ribbon('Mezzanine takeoff',370,377,-7.8,-4.4,()=>3.8,8,stone,true,'pavement',()=>3.25);
+railAlong('Step Off a Mezzanine lip',369,377,-7.7,()=>4.65,8,false);
 box(mallPoint(380,0,3.6),[22,.4,8],stone,8,0,true,'Raised exit passage');
 // The original stair transitions grow into the passage walls. There is no
 // lower aisle behind their backs. Masonry wings support the upper passage

@@ -27,7 +27,9 @@ await withBlockworksRuntime(async r=>{
   assert.ok(Math.abs(c.spawnPos.y-m.MALL_CHECKPOINTS[i].p[1]-.1)<.05,`Checkpoint ${i} snapped to an unrelated storey`);
   report.checkpoints.push({index:i,position:c.spawnPos.toArray(),surface:hits[0].point.y});
  }
- for(const c of source.components.filter(c=>c.t==='vertramp'))for(const side of c.vkind==='half'?[-1,1]:[1]){
+ // The path-authored courtyard walls have their own transverse run-ups,
+ // charged returns and coping checks in test-mall-courtyard.mjs.
+ for(const c of source.components.filter(c=>c.t==='vertramp'&&!c.nm?.startsWith('Courtyard ')))for(const side of c.vkind==='half'?[-1,1]:[1]){
   const half=c.vkind==='half',base=half?m.mallPoint(384):c.p;
   const a=(c.yaw??0)*Math.PI/180,d=new THREE.Vector3(Math.cos(a)*side,0,-Math.sin(a)*side),origin=new THREE.Vector3(...base).addScaledVector(d,half?0:-6);if(c.nm==='Entry gold quarter pipe'){origin.x=1.8;origin.y=m.mallEntryUpperHeight(22);}
   if(c.nm==='Entry blue quarter pipe')origin.x=2.2;
