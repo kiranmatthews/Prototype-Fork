@@ -55,4 +55,18 @@ Run `node tools/test-mall.mjs --route=<name>` for the ten routes above; use `upp
 
 The final source audit identified a concrete mismatch in the crossrail arcade. Original footage at 5:59–6:04 shows a recessed approach between raised side aisles, a curved launch, a pointed central directory island and broad pale beams with curved end connections. The current thin rails and offset directory do not recreate that arrangement and are the next geometry correction.
 
-Exact metric dimensions, architectural proportions, storefronts and materials remain inferred. Directories and glass still use pass-through visuals. The goal remains active; working route tests do not establish a completed 1:1 recreation. The user has authorized original PS1 extraction research. Public PSX/TRG parsers and a community Mall conversion are being investigated as possible measurement sources; their geometry has not yet been verified against the supplied reference.
+Exact metric dimensions, architectural proportions, storefronts and materials remain inferred. Directories and glass still use pass-through visuals. The goal remains active; working route tests do not establish a completed 1:1 recreation. The user has authorized original PS1 extraction research. A converted PS1 collision survey is now available below; its scale, conversion changes and playable integration still need validation.
+
+## Original geometry survey
+
+After pass 13, a [public Mall conversion by letmynutzgo](https://thpsx.com/creation-details/?obj=958) supplied a stronger measurement source. Its readme credits PS1 extraction through THUG Tools and conversion scripting by TylerLasagna. The extracted floor plan matches the reference's section order and plan: first concourse/fountain, angled atrium, lower arcade, courtyard and exit. This is a converted mesh reference, not a byte-for-byte verification against a retail PS1 disc.
+
+[source-survey.json](mall/source-survey.json) preserves 60 collision objects, 8,872 vertex records and 10,110 triangles in source coordinates, plus 773 conversion rail nodes and 649 directed links. The raw bounds are X −15,830.285…16,359.346, Y −2,324.922…1,927.495, Z −2,751.972…7,034.135. No scale has been applied. The conversion's single-player restart is at (−14,573.575, 1,120.475, 532.113), facing +X. Static collision vertices are world positions; movable objects use separate placements.
+
+![Extracted upward-facing surfaces and conversion rail lines](mall/source-floor-plan.png)
+
+The rail network and collision flags were authored or adapted during conversion and need comparison with the original gameplay. The package also changes cereal-box appearance and includes multiplayer nodes. These are explicit limitations, not evidence of original features. The saved survey contains geometry, flags and placements; original texture art, audio, render meshes and executable scripts are omitted. It is not yet used by the playable level.
+
+`python3 tools/mall-reference-survey.py <THPS1Mallv2.0.zip> <output.json>` reproduces the survey without executing game scripts. The reader checks archive bounds, collision counts/indices/vertex bounds, literal node-array structure and rail-link targets. It uses the same documented COL v10 layout as the [THPS Blender importer](https://github.com/denetii/io_thps_scene/blob/main/import_thug2.py); archive and member hashes are recorded in the survey. Small public PSX/TRG readers in [TonyWasAProSkater](https://github.com/LANCommander/TonyWasAProSkater) and the [Neversoft Multitool](https://github.com/slfx77/neversoft-multitool) provide another route if retail data becomes available.
+
+The next pass will fit one uniform scale to the existing skater, replace inferred geometry with measured surfaces, and validate the source rail/vert/jump connections. Existing movement tuning remains the baseline. All files and commits stay local.
