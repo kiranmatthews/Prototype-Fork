@@ -1,0 +1,386 @@
+{
+  "pass": "Articulated human get-ups and supported heavy knockdowns",
+  "date": "2026-10-22",
+  "type": "fidelity",
+  "baselineTaskCommit": "3a5a851c0b6168fa72e7f54cc27507fb1f002188",
+  "changes": [
+    "Curl and twist the spine independently of the incoming root roll; gather knees toward the chest with negative hip pitch, stagger the supporting hand and lead foot, and unfold the chest last. Reuse editable segment elasticity and the finite rise rebound.",
+    "Use a 0.64-second ordinary get-up (previously 0.56); severe impacts add up to 0.4 seconds. Round the gait half-wave at the loaded passing step, fading to the unchanged ordinary gait after recovery.",
+    "Hard wall or floor contacts settle onto a broad back or belly surface with relaxed limbs. Hold approximately 0.3\u20130.5 seconds once flat and quiet, then recover. Airborne travel remains physical; a bounded 1.6-second supported fallback prevents a wedged incident from holding forever.",
+    "Preserve interrupted pose/spin for 0.24 seconds. On upward hops, brake the support-relative waist drift while preserving its initial derivative, preventing the curled chest from driving the waist back through the floor.",
+    "Add Heavy wall, High fall and Knocked flat controls to the local review lab."
+  ],
+  "humanMotion": {
+    "passed": true,
+    "cases": 28,
+    "realHandTriangles": 25152,
+    "peakWaistCurlDegrees": [
+      63.178532961650845,
+      63.395903289328835
+    ],
+    "minimumSupportedClearanceMetres": 0.024999976752254793,
+    "maxEntryHeadChange": 0.025286053784373125,
+    "maxEarlyHeadChange": 0.1264337780928562,
+    "heavyImpactRows": [
+      {
+        "cause": "heavy-wall",
+        "seed": 42,
+        "entered": true,
+        "completed": true,
+        "recoveryFrame": 90,
+        "entryHeadChange": 0.00577064788038677,
+        "maxEarlyHeadChange": 0.017121665204410528,
+        "maxCurl": 1.1064672446746915,
+        "maxGather": 1.6356062925079535,
+        "maxAsymmetry": 2.532809625402201,
+        "minClearance": 0.024999994138253434,
+        "peakSeverity": 0.03506474241969918,
+        "maxRest": 0.3,
+        "restFrames": 18,
+        "faceUpFrames": 0,
+        "maxScans": 0
+      },
+      {
+        "cause": "high-fall",
+        "seed": 42,
+        "entered": true,
+        "completed": true,
+        "recoveryFrame": 189,
+        "entryHeadChange": 0.0020551413510565496,
+        "maxEarlyHeadChange": 0.01429023018273005,
+        "maxCurl": 1.1057550375296579,
+        "maxGather": 1.7008041332391677,
+        "maxAsymmetry": 2.7507284074843064,
+        "minClearance": 0.024999999999999578,
+        "peakSeverity": 1,
+        "maxRest": 0.4833333333333333,
+        "restFrames": 28,
+        "faceUpFrames": 28,
+        "maxScans": 0
+      },
+      {
+        "cause": "heavy-wall",
+        "seed": 829,
+        "entered": true,
+        "completed": true,
+        "recoveryFrame": 88,
+        "entryHeadChange": 0.0067530974176554185,
+        "maxEarlyHeadChange": 0.03457890217103482,
+        "maxCurl": 1.1064672446746915,
+        "maxGather": 1.6356062923723853,
+        "maxAsymmetry": 1.575327610587822,
+        "minClearance": 0.024999999999999578,
+        "peakSeverity": 0.03506474241969918,
+        "maxRest": 0.3,
+        "restFrames": 20,
+        "faceUpFrames": 20,
+        "maxScans": 0
+      },
+      {
+        "cause": "high-fall",
+        "seed": 829,
+        "entered": true,
+        "completed": true,
+        "recoveryFrame": 164,
+        "entryHeadChange": 0.00122173537313799,
+        "maxEarlyHeadChange": 0.0048083067766235155,
+        "maxCurl": 1.1057550375296579,
+        "maxGather": 1.7577143370437092,
+        "maxAsymmetry": 1.9005457230432712,
+        "minClearance": 0.024999999999995304,
+        "peakSeverity": 1,
+        "maxRest": 0.4833333333333333,
+        "restFrames": 28,
+        "faceUpFrames": 0,
+        "maxScans": 0
+      },
+      {
+        "cause": "heavy-wall",
+        "seed": 1229,
+        "entered": true,
+        "completed": true,
+        "recoveryFrame": 91,
+        "entryHeadChange": 0.006116459017425087,
+        "maxEarlyHeadChange": 0.025222794010901738,
+        "maxCurl": 1.1064672446746915,
+        "maxGather": 1.6356062925580999,
+        "maxAsymmetry": 1.4418449866808665,
+        "minClearance": 0.024999999999999356,
+        "peakSeverity": 0.03506474241969918,
+        "maxRest": 0.3,
+        "restFrames": 17,
+        "faceUpFrames": 0,
+        "maxScans": 0
+      },
+      {
+        "cause": "high-fall",
+        "seed": 1229,
+        "entered": true,
+        "completed": true,
+        "recoveryFrame": 183,
+        "entryHeadChange": 0.022282961453318744,
+        "maxEarlyHeadChange": 0.1264337780928562,
+        "maxCurl": 1.1057550375296579,
+        "maxGather": 1.6347477667604242,
+        "maxAsymmetry": 1.1007005860868413,
+        "minClearance": 0.024999999999997302,
+        "peakSeverity": 1,
+        "maxRest": 0.4833333333333333,
+        "restFrames": 28,
+        "faceUpFrames": 28,
+        "maxScans": 0
+      },
+      {
+        "cause": "heavy-wall",
+        "seed": 3167,
+        "entered": true,
+        "completed": true,
+        "recoveryFrame": 89,
+        "entryHeadChange": 0.009632061436881308,
+        "maxEarlyHeadChange": 0.027951858143940703,
+        "maxCurl": 1.1064672446746915,
+        "maxGather": 1.658797095267495,
+        "maxAsymmetry": 2.210967270800625,
+        "minClearance": 0.024999995542051567,
+        "peakSeverity": 0.03506474241969918,
+        "maxRest": 0.3,
+        "restFrames": 17,
+        "faceUpFrames": 17,
+        "maxScans": 0
+      },
+      {
+        "cause": "high-fall",
+        "seed": 3167,
+        "entered": true,
+        "completed": true,
+        "recoveryFrame": 170,
+        "entryHeadChange": 0.0014652435705403753,
+        "maxEarlyHeadChange": 0.017704229574765674,
+        "maxCurl": 1.1057550375296579,
+        "maxGather": 1.6347477667604242,
+        "maxAsymmetry": 1.5300309477250154,
+        "minClearance": 0.02499999999999969,
+        "peakSeverity": 1,
+        "maxRest": 0.4833333333333333,
+        "restFrames": 28,
+        "faceUpFrames": 28,
+        "maxScans": 0
+      }
+    ],
+    "ordinaryCasesWithHeavyPause": 0,
+    "fullSkinScansWhileBailing": 0
+  },
+  "continuity": {
+    "passed": true,
+    "cases": 42,
+    "metric": "Length of the change between successive root-relative head displacements at 60 Hz, in metres per frame; not a frame-rate measurement.",
+    "maxEntryHeadChange": 0.08449417815849838,
+    "maxControlHandoffHeadChange": 0.04500396177839029,
+    "maxEarlyRecoveryHeadChange": 0.22660146160651376,
+    "maxReboundHeadChange": 0.0476903065158588
+  },
+  "interruption": {
+    "passed": true,
+    "cases": 120,
+    "windowSeconds": 0.24,
+    "causes": [
+      "trip",
+      "pvp",
+      "manual",
+      "nose-manual",
+      "heavy-wall"
+    ],
+    "recoveryFractions": [
+      0.06,
+      0.28,
+      0.7
+    ],
+    "supportLoss": [
+      "removed platform",
+      "upward hop"
+    ],
+    "maxFirstFourFrameHeadChange": 0.10570188387602544,
+    "maxFreeCarryHeadChange": 0.10570188387602544,
+    "maxCarryIncludingSubsequentImpacts": 0.6163913256584818,
+    "maxSpinErrorRadiansPerSecond": 3.972054645195637e-15,
+    "allFinishSupported": true
+  },
+  "resources": {
+    "method": "Saved-source versus final runtime with 25,152 artist-hand triangles, three warm-up incidents and six measured complete incidents per cause, including post-control rebound. Use deterministic work counts; concurrent browser/build/test load makes these timing runs unsuitable for a CPU speedup claim.",
+    "bodyHierarchyPassesPerFixedStep": 1,
+    "deformationPassesPerFixedStep": 1,
+    "newDeformationCacheRecords": 0,
+    "newDeformationTransformObjects": 0,
+    "newDeformationMorphRecords": 0,
+    "newSkinGeometryUploads": 0,
+    "helperStorage": "Two new reusable helpers, nine deformation factors and two vector scratch objects; no new physics bodies, skin buffers or hierarchy passes.",
+    "cost": "Ordinary incidents gain five fixed steps (0.0833 seconds). Deeper articulation changes which support probes are near the ground and increases support sampling. This is a motion-quality pass with additional incident work, not a measured CPU improvement. Full skin scan counts and skin workspace remain unchanged; the profiler includes the control-handoff frame in its bail bucket.",
+    "workCounts": [
+      {
+        "cause": "balance",
+        "measuredIncidents": 6,
+        "before": {
+          "fixedSteps": 642,
+          "durationSeconds": 1.7833333333333334,
+          "supportSamples": 388202,
+          "fullSkinScans": 1692,
+          "skinWorkspaceBytes": 2424832
+        },
+        "after": {
+          "fixedSteps": 672,
+          "durationSeconds": 1.866666666666667,
+          "supportSamples": 545397,
+          "fullSkinScans": 1692,
+          "skinWorkspaceBytes": 2424832
+        }
+      },
+      {
+        "cause": "wall",
+        "measuredIncidents": 6,
+        "before": {
+          "fixedSteps": 708,
+          "durationSeconds": 1.9666666666666666,
+          "supportSamples": 339647,
+          "fullSkinScans": 1692,
+          "skinWorkspaceBytes": 2424832
+        },
+        "after": {
+          "fixedSteps": 738,
+          "durationSeconds": 2.0500000000000003,
+          "supportSamples": 347389,
+          "fullSkinScans": 1692,
+          "skinWorkspaceBytes": 2424832
+        }
+      },
+      {
+        "cause": "trip",
+        "measuredIncidents": 6,
+        "before": {
+          "fixedSteps": 750,
+          "durationSeconds": 2.0833333333333335,
+          "supportSamples": 713868,
+          "fullSkinScans": 1692,
+          "skinWorkspaceBytes": 2424832
+        },
+        "after": {
+          "fixedSteps": 780,
+          "durationSeconds": 2.1666666666666665,
+          "supportSamples": 874679,
+          "fullSkinScans": 1692,
+          "skinWorkspaceBytes": 2424832
+        }
+      },
+      {
+        "cause": "landing",
+        "measuredIncidents": 6,
+        "before": {
+          "fixedSteps": 720,
+          "durationSeconds": 2,
+          "supportSamples": 246659,
+          "fullSkinScans": 1692,
+          "skinWorkspaceBytes": 2424832
+        },
+        "after": {
+          "fixedSteps": 750,
+          "durationSeconds": 2.0833333333333335,
+          "supportSamples": 299700,
+          "fullSkinScans": 1692,
+          "skinWorkspaceBytes": 2424832
+        }
+      },
+      {
+        "cause": "pvp",
+        "measuredIncidents": 6,
+        "before": {
+          "fixedSteps": 630,
+          "durationSeconds": 1.75,
+          "supportSamples": 480349,
+          "fullSkinScans": 1692,
+          "skinWorkspaceBytes": 2424832
+        },
+        "after": {
+          "fixedSteps": 660,
+          "durationSeconds": 1.8333333333333333,
+          "supportSamples": 678751,
+          "fullSkinScans": 1692,
+          "skinWorkspaceBytes": 2424832
+        }
+      }
+    ]
+  },
+  "validation": {
+    "focusedChecks": [
+      {
+        "test": "bail-human-getup",
+        "cases": 28
+      },
+      {
+        "test": "bail-recovery-continuity",
+        "cases": 42
+      },
+      {
+        "test": "bail-recovery-interruption",
+        "cases": 120
+      },
+      {
+        "test": "bail-pose-carry",
+        "cases": 9
+      },
+      {
+        "test": "bail-matrix-pass",
+        "cases": 14,
+        "framesCompared": 1648,
+        "maxPoseError": 0
+      },
+      {
+        "test": "bail-support-continuity",
+        "cases": 30,
+        "supportHintCases": 120
+      },
+      {
+        "test": "bail-recovery-rollthrough",
+        "cases": 192
+      },
+      {
+        "test": "bail-directional-falls",
+        "cases": 72
+      },
+      {
+        "test": "bail-impacts",
+        "cases": 7
+      },
+      {
+        "test": "ragdoll-recovery",
+        "passed": true
+      },
+      {
+        "test": "character-elasticity",
+        "clips": 32
+      }
+    ],
+    "typescript": "passed",
+    "productionBuild": "passed; existing large-chunk notice",
+    "browser": {
+      "lite": {
+        "bails": 20,
+        "boards": 5,
+        "bailFailures": [],
+        "boardFailures": [],
+        "warningsAndErrors": []
+      },
+      "full": {
+        "bails": 20,
+        "boards": 5,
+        "bailFailures": [],
+        "boardFailures": [],
+        "warningsAndErrors": []
+      }
+    }
+  },
+  "limitations": [
+    "Hard subsequent impacts remain sharper than free carry; the interruption report separately records those contacts.",
+    "The lab and seeded checks cover the reviewed rigs and scenarios; this is not an exhaustive assertion about every custom proportion or surface."
+  ],
+  "evidenceRoot": "/private/tmp/bail-human-getup-20261022",
+  "delivery": "Local only. Preserve unrelated staged/working changes and the shared index; do not publish."
+}

@@ -3,7 +3,7 @@ import { ELASTIC_LENGTH_CONTROLS } from '../animation/elasticity';
 import type { PlayerAnimationBridge } from '../animation/bridge';
 
 const JOINTS = 14;
-export const BAIL_POSE_CARRY_SECONDS = .2;
+export const BAIL_POSE_CARRY_SECONDS = .24;
 
 /** A lost foothold releases the pose that was actually pushing upright.
  * Keep its joint/segment velocities for a short, finite transition into the

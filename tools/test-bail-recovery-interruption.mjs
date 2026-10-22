@@ -9,6 +9,8 @@ const gltf = await new Promise((resolve, reject) => new GLTFLoader().parse(
   bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength), '', resolve, reject));
 
 await withSkateRuntime(async ({ THREE, server, Player, Level, CONST, TUNING }) => {
+  const { BAIL_POSE_CARRY_SECONDS } = await server.ssrLoadModule('/src/character/bailPoseCarry.ts');
+  const carryFrames = Math.ceil(BAIL_POSE_CARRY_SECONDS / CONST.fixedStep);
   const { RigBinding } = await server.ssrLoadModule('/src/animation/rigBinding.ts');
   const { createPlayerStarterAnimationSuite } = await server.ssrLoadModule('/src/animation/playerCatalog.ts');
   const { createCharacterAnimationRuntime } = await server.ssrLoadModule('/src/characterAnimationRuntime.ts');
@@ -41,7 +43,7 @@ await withSkateRuntime(async ({ THREE, server, Player, Level, CONST, TUNING }) =
   };
   try {
     for (const seed0 of [42, 829]) for (const heading of [0, 1.11]) for (const phase of [.06, .28, .7])
-      for (const cause of ['trip', 'pvp', 'manual', 'nose-manual']) for (const interruption of ['platform', 'hop']) {
+      for (const cause of ['trip', 'pvp', 'manual', 'nose-manual', 'heavy-wall']) for (const interruption of ['platform', 'hop']) {
         let seed = seed0; Math.random = () => ((seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0) / 4294967296);
         level.groundMeshes = [...grounds]; level.walls = [...walls];
         p.respawn(level, true, true, { position: new THREE.Vector3(0, .04, 0), heading: new THREE.Vector3(Math.sin(heading), 0, -Math.cos(heading)) });
@@ -51,10 +53,15 @@ await withSkateRuntime(async ({ THREE, server, Player, Level, CONST, TUNING }) =
           for (let i = 0; i < 12; i++) { p.balance = sign * .8; p.step(CONST.fixedStep, input, level); }
           p.balance = sign; p.balanceVel = sign * 5; p.balanceCritT = TUNING.bailGrace + .05; p.step(CONST.fixedStep, input, level);
         } else if (cause === 'pvp') p.beginPvpKnockdown(5, seed0 % 2 ? -1 : 1);
-        else { p.bail(false, 24, 'trip', 30); p.startRagdoll('forward'); p.vVel = 7; p.state = 'air'; p.grounded = false; p.airFromSkate = false; p.airMomentum = true; }
+        else {
+          const heavy = cause === 'heavy-wall';
+          p.bail(false, heavy ? 40 : 24, heavy ? 'wall' : 'trip', heavy ? 40 : 30);
+          p.startRagdoll(heavy ? 'back' : 'forward'); p.vVel = heavy ? 3.6 : 7;
+          p.state = 'air'; p.grounded = false; p.airFromSkate = false; p.airMomentum = true;
+        }
         previous.set(0, 0, 0); lastDelta.set(0, 0, 0); body.identity();
         let frames = 0;
-        while (p.bailRecoverT / p.bailRecoverDuration < phase && frames++ < 140) { p.step(CONST.fixedStep, input, level); observe(); }
+        while (p.bailRecoverT / p.bailRecoverDuration < phase && frames++ < 200) { p.step(CONST.fixedStep, input, level); observe(); }
         assert.ok(p.bailRecoverT > 0 && p.isBailing, 'fixture never entered recovery');
         if (interruption === 'platform') {
           // Real geometry removal, exactly like a phase pad disappearing.
@@ -77,7 +84,7 @@ await withSkateRuntime(async ({ THREE, server, Player, Level, CONST, TUNING }) =
             entryImpacts = p.ragImpacts + p.ragWallImpacts;
           }
           if (f < 4) maxEarlyVelocityChange = Math.max(maxEarlyVelocityChange, velocityChange);
-          if (entry && f < entry.frame + 12 && !p.grounded) {
+          if (entry && f < entry.frame + carryFrames && !p.grounded) {
             maxCarryVelocityChange = Math.max(maxCarryVelocityChange, velocityChange);
             if (p.ragImpacts + p.ragWallImpacts === entryImpacts) maxFreeCarryVelocityChange = Math.max(maxFreeCarryVelocityChange, velocityChange);
           }

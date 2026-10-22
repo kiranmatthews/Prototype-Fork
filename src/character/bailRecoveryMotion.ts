@@ -27,6 +27,8 @@ export class BailRecoveryMotion {
   private readonly axis = new THREE.Vector3();
   private readonly cross = new THREE.Vector3();
 
+  get sideRoll(): number { return this.axisZ; }
+
   begin(orientation: THREE.Quaternion, spin: THREE.Vector3, duration: number, momentum?: THREE.Vector3): void {
     duration = Math.max(.05, duration);
     const tumbleRate = Math.hypot(spin.x, spin.z);
