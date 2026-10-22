@@ -5,7 +5,10 @@ const server=await createServer({logLevel:'silent',server:{middlewareMode:true},
 try {
  const {CharacterInteractionBounds}=await server.ssrLoadModule('/src/character/interactionBounds.ts');
  const {SkinBoundsKernel}=await server.ssrLoadModule('/src/character/skinBoundsKernel.ts');
- const kernel=new SkinBoundsKernel();assert.equal(await kernel.warm(),true);
+ const forceScalar=process.argv.includes('--scalar');
+ const kernel=new SkinBoundsKernel(forceScalar?bytes=>WebAssembly.instantiate(bytes):undefined);assert.equal(await kernel.warm(),true);
+ const {SKIN_BOUNDS_SIMD_WASM_BYTES}=await server.ssrLoadModule('/src/character/skinBoundsSimdKernelBytes.ts');
+ assert.equal(kernel.diagnostics().variant,!forceScalar&&WebAssembly.validate(SKIN_BOUNDS_SIMD_WASM_BYTES)?'simd':'scalar');
  for(const [mode,accelerator] of [['JavaScript',null],['WebAssembly',kernel]]){
  const measure=new CharacterInteractionBounds(accelerator),scalar=new CharacterInteractionBounds(null),root=new THREE.Group(),geometry=new THREE.BufferGeometry();
  const positions=[],indices=[],weights=[],morph=[];let seed=123;
@@ -190,6 +193,21 @@ try {
    if(failure==='growth')assert.equal(broken.diagnostics().copiedBytes,0,'growth failure stops before copying');
  }
  const native=globalThis.WebAssembly;
+ // A browser without SIMD must still compile the scalar module and produce
+ // exact bounds. Feature detection happens once, never inside measure().
+ const validate=native.validate;let validations=0;
+ try{
+   native.validate=()=>{validations++;return false;};
+   const scalarFallback=new SkinBoundsKernel();assert.equal(await scalarFallback.warm(),true);
+   assert.equal(scalarFallback.diagnostics().variant,'scalar');
+   const expected=new THREE.Box3();assert.equal(kernel.measure(vertices,[],palette,inverse,expected,true),true);
+   for(let i=0;i<3;i++){
+     assert.equal(await scalarFallback.warm(),true);
+     assert.equal(scalarFallback.measure(vertices,[],palette,inverse,box,true),true);
+     assert.deepEqual(box,expected);
+   }
+   assert.equal(validations,1,'SIMD capability is checked only during initial warm-up');
+ }finally{native.validate=validate;}
  try{globalThis.WebAssembly=undefined;const unsupported=new SkinBoundsKernel();assert.equal(await unsupported.warm(),false);assert.equal(unsupported.measure(vertices,[],palette,inverse,box,true),false);}finally{globalThis.WebAssembly=native;}
- console.log('PASS exact f64 edge cases, module/runtime/growth failures, overflow fallback, pre-copy ABI validation, workspace reuse and enforced 8 MiB memory bound.');
+ console.log(`PASS ${kernel.diagnostics().variant}: exact f64 edge cases, scalar/JS fallbacks, module/runtime/growth failures, overflow fallback, pre-copy ABI validation, workspace reuse and enforced 8 MiB memory bound.`);
 }finally{await server.close();}

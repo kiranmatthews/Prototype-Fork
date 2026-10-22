@@ -1,5 +1,6 @@
 import type * as THREE from 'three';
 import { SKIN_BOUNDS_WASM_BYTES } from './skinBoundsKernelBytes';
+import { SKIN_BOUNDS_SIMD_WASM_BYTES } from './skinBoundsSimdKernelBytes';
 
 export interface SkinBoundsVertices {
   positions: Float64Array;
@@ -17,8 +18,9 @@ type Instantiate = (bytes:typeof SKIN_BOUNDS_WASM_BYTES)=>Promise<WebAssembly.We
 interface ResidentVertices { generation:number; base:number; }
 const MAX_WORKSPACE_BYTES=8*1024*1024, PAGE_BYTES=65536;
 
-/** Optional exact scalar accelerator. WebAssembly is compiled asynchronously
- * once; unsupported browsers or CSP simply continue using the original JS.
+/** Optional exact f64 accelerator. SIMD pairs independent X/Y calculations;
+ * unsupported browsers use scalar WebAssembly, then the original JS if needed.
+ * Only the selected module is compiled, asynchronously, once.
  * The one bounded workspace is reused synchronously by every character/mesh.
  * Mutable inputs are copied on each measurement. Owners of immutable derived
  * vertex bundles may reuse their upload; a weak identity map retains only
@@ -26,6 +28,7 @@ const MAX_WORKSPACE_BYTES=8*1024*1024, PAGE_BYTES=65536;
 export class SkinBoundsKernel {
   private status:'cold'|'loading'|'ready'|'unavailable'='cold';
   private pending:Promise<boolean>|null=null;
+  private variant:'scalar'|'simd'|null=null;
   private exports:KernelExports|null=null;
   private floats:Float64Array|null=null;
   private integers:Uint32Array|null=null;
@@ -49,7 +52,11 @@ export class SkinBoundsKernel {
     this.pending=(async()=>{
       try{
         if(typeof WebAssembly==='undefined'||new Uint8Array(new Uint16Array([1]).buffer)[0]!==1)throw new Error('WebAssembly workspace unavailable');
-        const result=await (this.instantiate??(bytes=>WebAssembly.instantiate(bytes)))(SKIN_BOUNDS_WASM_BYTES);
+        // Custom instantiators keep the scalar ABI. Unsupported SIMD runtimes
+        // use that same fallback; neither variant relaxes f64 operation order.
+        this.variant=!this.instantiate&&WebAssembly.validate(SKIN_BOUNDS_SIMD_WASM_BYTES)?'simd':'scalar';
+        const bytes=this.variant==='simd'?SKIN_BOUNDS_SIMD_WASM_BYTES:SKIN_BOUNDS_WASM_BYTES;
+        const result=await (this.instantiate??(data=>WebAssembly.instantiate(data)))(bytes);
         this.exports=result.instance.exports as KernelExports;
         this.refreshViews();this.status='ready';return true;
       }catch{this.status='unavailable';this.exports=null;return false;}
@@ -58,7 +65,7 @@ export class SkinBoundsKernel {
   }
 
   diagnostics() {
-    return {status:this.status,calls:this.calls,copiedBytes:this.copiedBytes,
+    return {status:this.status,variant:this.variant,calls:this.calls,copiedBytes:this.copiedBytes,
       geometryUploads:this.geometryUploads,residentHits:this.residentHits,residentResets:this.residentResets,
       workspaceBytes:this.exports?.memory.buffer.byteLength??0,maxWorkspaceBytes:MAX_WORKSPACE_BYTES,
       fallbacks:{...this.fallbacks}};

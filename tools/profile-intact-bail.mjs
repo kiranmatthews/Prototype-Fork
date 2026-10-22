@@ -31,6 +31,8 @@ const dom = ast.statements.find(n => ts.isFunctionDeclaration(n) && n.name?.text
 new Function('noop', dom.getText(ast) + '; installHeadlessDom();')(() => {});
 const replaced = new Set(['src/player.ts', 'src/bailRecovery.ts', 'src/characterAnimationRuntime.ts', 'src/animation/bridge.ts', 'src/animation/rigBinding.ts', 'src/animation/sampling.ts', 'src/character/bailMotion.ts', 'src/character/bailContactPose.ts', 'src/character/bailGroundContact.ts', 'src/character/bailImpactSpin.ts', 'src/character/bailRecoveryMotion.ts', 'src/character/bailRiseMotion.ts', 'src/character/interactionBounds.ts', 'src/character/proportionLayer.ts', 'src/character/wipeoutPolicy.ts', 'src/character/stretchableBone.ts']);
 replaced.add('src/character/skinBoundsKernel.ts');
+replaced.add('src/character/skinBoundsKernelBytes.ts');
+replaced.add('src/character/skinBoundsSimdKernelBytes.ts');
 replaced.add('src/character/bailContactPose.ts');
 replaced.add('src/character/compactSkinBounds.ts');
 const server = await createServer({ appType: 'custom', logLevel: 'silent', server: { middlewareMode: true },
