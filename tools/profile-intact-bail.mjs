@@ -34,6 +34,7 @@ replaced.add('src/character/skinBoundsKernel.ts');
 replaced.add('src/character/skinBoundsKernelBytes.ts');
 replaced.add('src/character/skinBoundsSimdKernelBytes.ts');
 replaced.add('src/character/bailContactPose.ts');
+replaced.add('src/character/bailPoseCarry.ts');
 replaced.add('src/character/compactSkinBounds.ts');
 const server = await createServer({ appType: 'custom', logLevel: 'silent', server: { middlewareMode: true },
   plugins: snapshot ? [{ name: 'bail-source-snapshot', enforce: 'pre', async load(id) {

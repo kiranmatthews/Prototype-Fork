@@ -21,6 +21,12 @@ level.wall(55, -48, 12, .6, 0, 2);
 level.stepBlock(85, -27, 24, 36, -1, 0);
 level.ramp('bail-roll-bank', -16, 6, -28, 0, 12, new THREE.MeshLambertMaterial({color:0xb5a16b}), 85);
 level.groundMeshes.at(-1)!.userData.vert = true;
+// A real disappearing support exercises the same-frame get-up interruption.
+// Restore it for each run; this isolated lane never edits the authored level.
+level.stepBlock(115, -27, 24, 36, -5, -4);
+level.stepBlock(115, -27, 24, 36, -1, 0);
+const recoveryDeck = level.groundMeshes.at(-1)!, recoveryDeckWall = level.walls.at(-1)!;
+let removeRecoveryDeck = false, recoveryDeckRemovedAt = -1;
 const neutral = { moveX: 0, moveY: 0, jumpHeld: false, jumpPressed: false, jumpReleased: false,
   spinHeld: false, spinPressed: false, grindHeld: false, grindPressed: false,
   grabHeld: false, grabPressed: false, transferHeld: false, transferPressed: false, inventoryHeld: true };
@@ -86,6 +92,11 @@ p.step = (dt: number, input: any, liveLevel: any) => {
   if (frozen) return;
   effectMs = 0;
   const t = performance.now(); native(dt, manual ? input : neutral, liveLevel); timings.add(performance.now() - t);
+  if (removeRecoveryDeck && p.bailRecoverT >= .2) {
+    level.groundMeshes.splice(level.groundMeshes.indexOf(recoveryDeck), 1);
+    level.walls.splice(level.walls.indexOf(recoveryDeckWall), 1);
+    recoveryDeck.visible = false; removeRecoveryDeck = false; recoveryDeckRemovedAt = incidentAge;
+  }
   effectTimes.add(effectMs);
   const d = p.breakApartDiagnostics;
   maxProbes = Math.max(maxProbes, d?.probesThisStep ?? 0); peakParts = Math.max(peakParts, d?.active ? d.parts : 0);
@@ -116,13 +127,16 @@ p.step = (dt: number, input: any, liveLevel: any) => {
 };
 function start(kind: string, pause = REVIEW_SECONDS, head: 'skull' | 'alternate' = 'skull') {
   boardReview = null;
+  if (!level.groundMeshes.includes(recoveryDeck)) level.groundMeshes.push(recoveryDeck);
+  if (!level.walls.includes(recoveryDeckWall)) level.walls.push(recoveryDeckWall);
+  recoveryDeck.visible = true; recoveryDeckRemovedAt = -1; removeRecoveryDeck = kind === 'Vanishing floor';
   const wall = kind === 'Head hit' || kind === 'Slow bump' || kind === 'Held-mask wall';
   const trip = kind === 'Low trip' || kind === 'Mid trip';
   const edge = kind === 'Pit edge' || kind === 'Angled edge' || kind === 'Bailing into edge';
   const bank = kind === 'Bank tumble';
   const manualKind = kind === 'Manual back' ? 1 : kind === 'Nose manual forward' ? -1 : 0;
   const balanceCase = kind === 'Balance bail' || kind === 'Balance left' || manualKind !== 0;
-  const x = bank ? 85 : edge ? 25 : wall ? -7 : trip ? 7 : kind === 'Pit fall' ? 3 : 0;
+  const x = kind === 'Vanishing floor' ? 115 : bank ? 85 : edge ? 25 : wall ? -7 : trip ? 7 : kind === 'Pit fall' ? 3 : 0;
   const z = edge ? -27 : /blast|Blast/.test(kind) ? -40 : kind === 'Mid trip' ? -38 : kind === 'Crusher' ? -46 : kind === 'Pit fall' ? -78 : -20;
   p.respawn(level, true, true, { position: new THREE.Vector3(x, bank ? 4.04 : .04, z), heading: new THREE.Vector3(0, 0, -1) });
   level.discardedBoards.clear(); // each review shows only this incident's deck
@@ -136,7 +150,7 @@ function start(kind: string, pause = REVIEW_SECONDS, head: 'skull' | 'alternate'
   p.freeSkate = wall || trip || balanceCase;
   p.speed = kind === 'Slow bump' ? 8 : wall || trip ? 24 : balanceCase ? 10 : 0;
   if (kind === 'Contact death') p.die('contact');
-  if (kind === 'Side bail') p.beginPvpKnockdown(5, 1);
+  if (kind === 'Side bail' || kind === 'Vanishing floor') p.beginPvpKnockdown(5, 1);
   if (manualKind) {
     p.enterManual(manualKind);
     for (let i = 0; i < 12; i++) { p.balance = manualKind * .8; native(1 / 60, neutral, level); }
@@ -191,7 +205,7 @@ const diagnostics = document.createElement('details'), summary = document.create
 summary.textContent = 'Motion diagnostics'; diagnostics.append(summary, status);
 panel.append(testControls, diagnostics); document.body.append(panel);
 function add(label: string, fn: () => void) { const b = document.createElement('button'); b.textContent = label; b.onclick = fn; b.style.cssText = 'padding:7px;margin:2px'; controls.append(b); }
-for (const name of ['Head hit', 'Low trip', 'Mid trip', 'Side bail', 'Balance bail', 'Balance left', 'Manual back', 'Nose manual forward', 'Bank tumble', 'Pit edge', 'Angled edge', 'Bailing into edge', 'Slow bump', 'Held-mask wall', 'Masked bail', 'Masked blast', 'Contact death', 'Blast', 'Crusher', 'Pit fall']) add(name, () => start(name));
+for (const name of ['Head hit', 'Low trip', 'Mid trip', 'Side bail', 'Balance bail', 'Balance left', 'Manual back', 'Nose manual forward', 'Bank tumble', 'Pit edge', 'Angled edge', 'Bailing into edge', 'Vanishing floor', 'Slow bump', 'Held-mask wall', 'Masked bail', 'Masked blast', 'Contact death', 'Blast', 'Crusher', 'Pit fall']) add(name, () => start(name));
 add('Verify bails', verifyBails);
 for (const name of ['Board toss', 'Board roll', 'Board skid', 'Board wall', 'Board pile']) add(name, () => startBoard(name));
 add('Verify boards', verifyBoards);
@@ -261,7 +275,7 @@ async function verifyBails() {
   verifying = true;
   const rows: any[] = [];
   const failures: string[] = [];
-  for (const kind of ['Head hit', 'Low trip', 'Mid trip', 'Side bail', 'Balance bail', 'Balance left', 'Manual back', 'Nose manual forward', 'Bank tumble', 'Pit edge', 'Angled edge', 'Bailing into edge', 'Held-mask wall', 'Masked bail', 'Blast', 'Crusher', 'Pit fall']) {
+  for (const kind of ['Head hit', 'Low trip', 'Mid trip', 'Side bail', 'Balance bail', 'Balance left', 'Manual back', 'Nose manual forward', 'Bank tumble', 'Pit edge', 'Angled edge', 'Bailing into edge', 'Vanishing floor', 'Held-mask wall', 'Masked bail', 'Blast', 'Crusher', 'Pit fall']) {
     start(kind, 1000);
     const fatal = ['Blast', 'Crusher', 'Pit fall'].includes(kind);
     const balanceCase = ['Balance bail', 'Balance left', 'Manual back', 'Nose manual forward'].includes(kind);
@@ -384,6 +398,7 @@ function snapshot() {
       remaining:p.bailRecoveryMotion.destination - p.bailRecoveryMotion.pitch,
       spin:p.bailRecoverySpin.toArray(), momentum:p.bailRecoveryMomentum.toArray() } : null,
     fallAge: p.bailFallAge, fullyFallen: p.bailHasFallen, riseAge: p.bailRiseAge,
+    recoveryInterruption: { supportRemovedAt: recoveryDeckRemovedAt, carryingPose: p.bailPoseCarry.active },
     looseBoardVelocity: p.looseBoard?.velocity.toArray() ?? null,
     incidentAge, firstBounceAge, floorImpacts: p.ragdollImpactCount, wallImpacts: p.ragdollWallImpactCount, wallTrace, impactTrace, maxProbes, peakParts, active: false, ...p.breakApartDiagnostics,
     boards: { ...level.discardedBoards.diagnostics,

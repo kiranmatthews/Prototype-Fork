@@ -128,6 +128,7 @@ import {
   sampleBailRecovery,
 } from './bailRecovery';
 import { BailRecoveryMotion } from './character/bailRecoveryMotion';
+import { BailPoseCarry, BAIL_POSE_CARRY_SECONDS } from './character/bailPoseCarry';
 import { BailRiseMotion, BAIL_RISE_SETTLE_SECONDS } from './character/bailRiseMotion';
 import {
   beginVertBoardRelease,
@@ -894,6 +895,7 @@ export class Player {
   private bailRecoveryBlend = 0; // outgoing tumble ownership at supported handoff
   private bailRecoverySprawl = 0; // captured limb spread, released on the same recovery clock
   private readonly bailRecoveryMotion = new BailRecoveryMotion();
+  private readonly bailPoseCarry = new BailPoseCarry();
   private readonly bailRecoveryOrientation = new THREE.Quaternion();
   private readonly bailRecoverySpin = new THREE.Vector3();
   private readonly bailRecoveryMomentum = new THREE.Vector3();
@@ -932,6 +934,9 @@ export class Player {
   private ragBlend = 0; // how much of the pose the tumble owns (eases in/out)
   private ragPoseAnchor = new THREE.Vector3(); // parent-local waist point preserved across roll interruption
   private ragPoseAnchorW = 0;
+  private readonly ragPoseAnchorVelocity = new THREE.Vector3();
+  private ragPoseReleaseT = -1;
+  private ragPoseReleaseImpact = 0;
   private ragBounces = 0; // airborne rebounds so far this wipeout
   private ragImpacts = 0; // every actual ground contact, including a final non-rebound settle
   private ragJumpAttemptImpact = 0; // one unreliable X roll per impact
@@ -4409,18 +4414,7 @@ export class Player {
       // If the support really disappears (a ledge, collapsing platform, or a
       // new impact), return control to the ragdoll and earn a fresh stable
       // contact before trying again.
-      if (this.bailRecoverT >= 0 && !stableGround) {
-        this.bailRecoverT = -1;
-        this.bailRecoveryPose = 0;
-        this.bailGroundT = 0;
-        this.bailDownT = Math.max(this.bailDownT, recoverDuration);
-        this.bailVelocity.copy(this.axisF).multiplyScalar(this.speed);
-        // Preserve the outgoing roll pose on the rare mid-rise fall. The new
-        // rag quaternion is captured from that exact pose; a strong blend
-        // prevents one frame of flat base pose showing through underneath it.
-        this.ragBlend = 1;
-        this.startRagdoll('air', 0, this.riderG ?? this.bodyGroup);
-      }
+      if (this.bailRecoverT >= 0 && !stableGround) this.interruptBailRecovery();
       // Low speed alone must not turn a fresh spill into an upright kneel.
       // Reserve time for the fall without letting cosmetic pose/randomness
       // change the controller clock or hold a wedged body indefinitely.
@@ -8777,14 +8771,19 @@ export class Player {
     Player.RAG_QT.copy(this.ragQ).invert();
     Player.RAG_LOCAL_NORMAL.copy(normal).applyQuaternion(Player.RAG_QT);
     contact.applyQuaternion(Player.RAG_QT);
+    this.ragdollPoseJoints();
+    this.ragImpactPose.impulse.copy(impulse);
+    this.bailMotion.impact(impact, Player.RAG_LOCAL_NORMAL, contact, this.ragContactJoint, this.ragImpactPose);
+  }
+
+  private ragdollPoseJoints(): readonly (THREE.Object3D | null)[] {
     const joints = this.ragImpactPose.joints;
     joints[0] = this.spineG; joints[1] = this.headM;
     joints[2] = this.armL; joints[3] = this.elbowL; joints[4] = this.wristL;
     joints[5] = this.armR; joints[6] = this.elbowR; joints[7] = this.wristR;
     joints[8] = this.legL; joints[9] = this.kneeL; joints[10] = this.ankleL;
     joints[11] = this.legR; joints[12] = this.kneeR; joints[13] = this.ankleR;
-    this.ragImpactPose.impulse.copy(impulse);
-    this.bailMotion.impact(impact, Player.RAG_LOCAL_NORMAL, contact, this.ragContactJoint, this.ragImpactPose);
+    return joints;
   }
 
   private considerRagdollContact(node: THREE.Object3D | null, radius: number, joint: number, normal: THREE.Vector3, center: THREE.Vector3): void {
@@ -10281,10 +10280,37 @@ export class Player {
     this.clearSpecialMoves();
   }
 
+  private interruptBailRecovery(): void {
+    this.bailRecoverT = -1;
+    this.bailRecoveryPose = 0;
+    this.bailGroundT = 0;
+    this.bailDownT = Math.max(this.bailDownT, Math.max(.05, this.bailRecoverDuration));
+    this.bailVelocity.copy(this.axisF).multiplyScalar(this.speed);
+    // Release the actual pushing pose and its measured world spin. A
+    // missing foothold must not roll new random tumble axes or kicks.
+    if (!this.bailPoseCarry.begin(Player.RAG_WORLD_SPIN, this.ragPoseAnchorVelocity)) this.ragdollWorldSpin(Player.RAG_WORLD_SPIN);
+    this.ragActive = true;
+    this.ragForwardTrip = false;
+    this.ragBlend = 1;
+    this.captureRagdollPose(this.riderG ?? this.bodyGroup, true);
+    this.ragPoseReleaseT = 0;
+    this.ragPoseReleaseImpact = this.ragImpacts + this.ragWallImpacts;
+    if (this.bodyGroup.parent) {
+      _plantInv.copy(this.bodyGroup.parent.matrixWorld).invert();
+      _plantO.set(0, 0, 0).applyMatrix4(_plantInv);
+      this.ragPoseAnchorVelocity.applyMatrix4(_plantInv).sub(_plantO);
+    }
+    this.setRagdollWorldSpin(Player.RAG_WORLD_SPIN);
+    this.bailMotion.resume(Player.RAG_WORLD_SPIN,
+      BAIL_V.set(this.axisF.x * this.speed, this.vVel, this.axisF.z * this.speed));
+    this.bailRiseAge = -1;
+  }
+
   private armBailRecovery(duration: number): void {
     if (!this.isBailing) this.onWipeout();
     this.bailSupportOffset = 0;
     this.bailRecoveryCaptured = this.bailRecoveryMotionReady = false;
+    this.bailPoseCarry.reset();
     this.bailRecoveryMomentum.set(0, 0, 0);
     this.bailFallAge = 0; this.bailHasFallen = false; this.bailMinimumFallTime = .32; this.bailBalanceFall = false;
     this.bailRiseAge = -1;
@@ -10449,19 +10475,7 @@ export class Player {
     this.ragRollAcc = 0;
     this.ragSeedA = Math.random() * Math.PI * 2;
     this.ragSeedB = Math.random() * Math.PI * 2;
-    // start the tumble exactly where the pose left the body — no snap
-    poseSource.getWorldQuaternion(this.ragQ);
-    if ((poseSource !== this.bodyGroup || preserveTranslation) && this.bodyGroup.parent) {
-      poseSource.updateWorldMatrix(true, false);
-      this.bodyGroup.parent.updateWorldMatrix(true, false);
-      Player.RAG_AXIS.set(0, this.characterWaistLocal(0.82), 0)
-        .applyMatrix4(poseSource.matrixWorld);
-      this.ragPoseAnchor.copy(Player.RAG_AXIS);
-      this.bodyGroup.parent.worldToLocal(this.ragPoseAnchor);
-      this.ragPoseAnchorW = 1;
-    } else {
-      this.ragPoseAnchorW = 0;
-    }
+    this.captureRagdollPose(poseSource, preserveTranslation);
     const s = TUNING.ragSpin;
     // faster crash = faster tumble, saturating so a hyper-speed wreck stays readable
     const spd = 0.55 + Math.min(1.05, Math.abs(this.speed) * 0.045);
@@ -10494,6 +10508,19 @@ export class Player {
           ? this.ragAngVel.z
           : Math.sin(this.ragSeedA);
     this.bailRecoverSide = (shoulder >= 0 ? 1 : -1) as -1 | 1;
+  }
+
+  private captureRagdollPose(poseSource: THREE.Object3D, preserveTranslation: boolean): void {
+    this.ragPoseReleaseT = -1;
+    poseSource.getWorldQuaternion(this.ragQ);
+    if ((poseSource !== this.bodyGroup || preserveTranslation) && this.bodyGroup.parent) {
+      poseSource.updateWorldMatrix(true, false);
+      this.bodyGroup.parent.updateWorldMatrix(true, false);
+      Player.RAG_AXIS.set(0, this.characterWaistLocal(.82), 0).applyMatrix4(poseSource.matrixWorld);
+      this.ragPoseAnchor.copy(Player.RAG_AXIS);
+      this.bodyGroup.parent.worldToLocal(this.ragPoseAnchor);
+      this.ragPoseAnchorW = 1;
+    } else this.ragPoseAnchorW = 0;
   }
 
   // The deck leaves her feet and goes bouncing off on its own — the single
@@ -16802,6 +16829,12 @@ export class Player {
       this.group.updateMatrixWorld(true);
       return;
     }
+    // Movement can discover a vanished floor AFTER the recovery clock ran.
+    // Release before posing that same frame, or losing the seating correction
+    // exposes a one-frame drop and pollutes the measured outgoing velocity.
+    if (this.bailRecoverT >= 0 && this.isBailing && !this.playerAnimationBridge.previewActive &&
+      (!this.grounded || this.state !== 'ride' || !this.groundHit || this.slipping ||
+        this.rideNormal.y < TUNING.footGrip - .03)) this.interruptBailRecovery();
     this.updateSurfaceAlignment(dt);
     this.racePresentationElapsed += dt;
     const racePose=[this.state,this.grounded,this.isBailing,this.freeSkate,this.wallriding,this.slamActive,this.flipT>0,this.spinning,this.crawling].join(':');
@@ -16851,6 +16884,11 @@ export class Player {
     }
     this.meshyBoolieRooHead?.blink?.update(dt,
       this.characterHeadStyleValue === 'alternate' && this.group.visible);
+    if (this.isBailing && this.bailRecoverT >= 0 && this.riderG && !this.playerAnimationBridge.previewActive) {
+      this.riderG.localToWorld(Player.RAG_CENTER.set(0, this.characterWaistLocal(.82), 0)).sub(this.pos);
+      this.bailPoseCarry.record(this.ragdollPoseJoints(), this.bodyGroup.matrixWorld, Player.RAG_CENTER, this.playerAnimationBridge, poseSeconds);
+    }
+    else if (!this.isBailing || this.playerAnimationBridge.previewActive) this.bailPoseCarry.reset();
   }
 
   /** Distance of the gameplay root above a reachable support plane. Blend
@@ -16890,7 +16928,10 @@ export class Player {
     // A support-loss handoff already carries the departing roll's waist.
     // Let that anchor release while rising; a later actual impact owns full
     // floor contact again. Otherwise a small hop snaps the roll down early.
-    const anchorRelease = !this.grounded && this.vVel > 0 && this.ragBounces === 0 ? 1 - this.ragPoseAnchorW : 1;
+    const releasedRecovery = this.ragPoseReleaseT >= 0 &&
+      this.ragImpacts + this.ragWallImpacts === this.ragPoseReleaseImpact;
+    const anchorRelease = !this.grounded && (releasedRecovery || this.vVel > 0 && this.ragBounces === 0)
+      ? 1 - this.ragPoseAnchorW : 1;
     const target = (.025 + height - distance) / support.normal.y * contactWeight * anchorRelease;
     // Follow both directions of the rotating surface without a delayed drop:
     // that delay made a grounded roll hover by half a metre. Near the floor,
@@ -17042,6 +17083,7 @@ export class Player {
 
   private syncVisual(input: Input, dt: number): void {
     this.clearCharacterAppearance();
+    this.bailPoseCarry.restore();
     this.bailMotion.restore();
     // A runtime authored overlay wrote after the previous legacy pose. Undo it
     // before any legacy formula reads or accumulates from local transforms.
@@ -18313,23 +18355,29 @@ export class Player {
             .set(0, this.characterWaistHeight(0.82), 0)
             .multiply(this.bodyGroup.scale)
             .applyQuaternion(this.bodyGroup.quaternion);
-          const anchorW = this.ragPoseAnchorW;
+          let anchorW = this.ragPoseAnchorW, carryTravel = 0;
+          if (this.ragPoseReleaseT >= 0) {
+            this.ragPoseReleaseT = Math.min(BAIL_POSE_CARRY_SECONDS, this.ragPoseReleaseT + dt);
+            const u = this.ragPoseReleaseT / BAIL_POSE_CARRY_SECONDS;
+            anchorW = this.ragPoseAnchorW = 1 - u * u * (3 - 2 * u);
+            carryTravel = this.ragPoseReleaseT * (1 - u + u * u / 3);
+          }
           this.bodyGroup.position.x = THREE.MathUtils.lerp(
             this.bodyGroup.position.x,
-            this.ragPoseAnchor.x - Player.RAG_PIVOT_BASE.x,
+            this.ragPoseAnchor.x + this.ragPoseAnchorVelocity.x * carryTravel - Player.RAG_PIVOT_BASE.x,
             anchorW,
           );
           this.bodyGroup.position.y = THREE.MathUtils.lerp(
             this.bodyGroup.position.y,
-            this.ragPoseAnchor.y - Player.RAG_PIVOT_BASE.y,
+            this.ragPoseAnchor.y + this.ragPoseAnchorVelocity.y * carryTravel - Player.RAG_PIVOT_BASE.y,
             anchorW,
           );
           this.bodyGroup.position.z = THREE.MathUtils.lerp(
             this.bodyGroup.position.z,
-            this.ragPoseAnchor.z - Player.RAG_PIVOT_BASE.z,
+            this.ragPoseAnchor.z + this.ragPoseAnchorVelocity.z * carryTravel - Player.RAG_PIVOT_BASE.z,
             anchorW,
           );
-          this.ragPoseAnchorW *= Math.exp(-8 * dt);
+          if (this.ragPoseReleaseT < 0) this.ragPoseAnchorW *= Math.exp(-8 * dt);
         }
       }
       // LIMB FLAIL: arms windmill, legs kick, the head whips — sinusoids on
@@ -18509,6 +18557,8 @@ export class Player {
       if (this.ankleR) this.ankleR.rotation.x -= rise.knee * .55;
       this.playerAnimationBridge.modulateDeformations(rise.deformations);
     }
+    if (this.isBailing && this.state !== 'dead' && !this.playerAnimationBridge.previewActive && this.bailPoseCarry.active)
+      this.bailPoseCarry.apply(this.ragdollPoseJoints(), this.playerAnimationBridge, dt);
     this.playerAnimationBridge.finishDeformationBatch();
     if (this.teeterPose > 0 && teeterAllowed) {
       // Convert the drop direction to the model's local frame, so a side/back

@@ -155,6 +155,14 @@ export class BailMotion {
     for (let segment = 0; segment < SEGMENTS; segment++) this.strainVelocity[segment] -= 3;
   }
 
+  /** Losing support is a continuation, not another collision or random kick. */
+  resume(spin: THREE.Vector3, travel: THREE.Vector3): void {
+    this.live = true;
+    this.previousSpin.copy(spin);
+    this.previousTravel.copy(travel); this.hasTravel = true;
+    this.linearChange.set(0, 0, 0);
+  }
+
   impact(speed: number, normal?: THREE.Vector3, contact?: THREE.Vector3, contactJoint?: number,
     pose?: BailContactPose): void {
     if (!this.live) return;
@@ -274,7 +282,7 @@ export class BailMotion {
     grounded: boolean, recovery: number, kick: number, weight: number, travel?: THREE.Vector3): boolean {
     if (!this.live || dt <= 0) return false;
     // The planted recovery has fully taken over. Stop integrating invisible
-    // springs; a later lost-support event calls begin() with its captured pose.
+    // springs; a later lost-support event resumes beneath the carried pose.
     if (recovery >= .32) { this.reset(); return false; }
     // Bounded work even after a debugger pause. Gameplay advances at 60 Hz;
     // two cheap spring substeps prevent stiff wrist/knee limits from jittering.

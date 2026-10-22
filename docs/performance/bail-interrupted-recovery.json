@@ -1,0 +1,347 @@
+{
+  "pass": "Preserve momentum and elastic pose when a get-up loses support",
+  "date": "2026-10-22",
+  "type": "fidelity",
+  "baselineTaskCommit": "25cfb1847be64fcfccd2b3bab644e81e9b1edb84",
+  "method": "Compare the saved working source with the final runtime using the same real artist-hand meshes and fixed seeded incidents. Existing unrelated working changes remain constant. A real upper platform is removed, or the player hops from the recovery floor; both paths finish on supported ground.",
+  "changes": [
+    "Capture two compact recovery samples of fourteen joint rotations, nine editable segment lengths, body world orientation, and waist offset. Differentiate only if support is lost.",
+    "Continue measured spin, local pose velocity, waist drift and segment stretch into the ongoing spring rig for a finite 0.2 seconds. Resume existing springs without rerolling random kicks or resetting impact counters.",
+    "Detect support loss discovered by movement before presenting that same frame. Release the seating anchor smoothly through a hop apex until a real new contact.",
+    "Add a Vanishing floor lab lane that removes actual support during a side get-up, then catches the continuing fall four metres below."
+  ],
+  "interruption": {
+    "passed": true,
+    "cases": 96,
+    "realHandTriangles": 25152,
+    "seeds": [
+      42,
+      829
+    ],
+    "headingsRadians": [
+      0,
+      1.11
+    ],
+    "recoveryFractions": [
+      0.06,
+      0.28,
+      0.7
+    ],
+    "metric": "Length of the change between successive root-relative visible head displacements, measured at 60 Hz, in metres per frame. This is a finite-difference continuity measure, not frame rate.",
+    "maxEntryVelocityChangeBefore": 0.810910101972838,
+    "maxEntryVelocityChangeAfter": 0.057476217742359066,
+    "peakEntryReductionPercent": 92.91213445207713,
+    "maxFirstFourFrameVelocityChangeBefore": 0.810910101972838,
+    "maxFirstFourFrameVelocityChangeAfter": 0.10098901235337243,
+    "maxFreeCarryVelocityChangeAfter": 0.17100931031014896,
+    "maxCarryIncludingSubsequentImpactsAfter": 0.41954588932473263,
+    "maxEntrySpinErrorBeforeRadiansPerSecond": 22.128960359166484,
+    "maxEntrySpinErrorAfterRadiansPerSecond": 3.972054645195637e-15,
+    "minimumSupportedClearanceMetres": 0.024999977575979937,
+    "allBodiesIntact": true,
+    "allRecoverAndFinishRebound": true,
+    "rows": [
+      {
+        "cause": "trip",
+        "interruption": "platform",
+        "cases": 12,
+        "maxEntryVelocityChangeBefore": 0.6648948715716794,
+        "maxEntryVelocityChangeAfter": 0.05227063788961369,
+        "maxFirstFourFrameVelocityChangeAfter": 0.0796537810601047,
+        "maxFreeCarryVelocityChangeAfter": 0.0796537810601047
+      },
+      {
+        "cause": "trip",
+        "interruption": "hop",
+        "cases": 12,
+        "maxEntryVelocityChangeBefore": 0.3178175884627179,
+        "maxEntryVelocityChangeAfter": 0.05114783749066205,
+        "maxFirstFourFrameVelocityChangeAfter": 0.09219403009992883,
+        "maxFreeCarryVelocityChangeAfter": 0.09219403009992883
+      },
+      {
+        "cause": "pvp",
+        "interruption": "platform",
+        "cases": 12,
+        "maxEntryVelocityChangeBefore": 0.810910101972838,
+        "maxEntryVelocityChangeAfter": 0.053710326135095715,
+        "maxFirstFourFrameVelocityChangeAfter": 0.07110412227879764,
+        "maxFreeCarryVelocityChangeAfter": 0.07110412227879764
+      },
+      {
+        "cause": "pvp",
+        "interruption": "hop",
+        "cases": 12,
+        "maxEntryVelocityChangeBefore": 0.6815383105463979,
+        "maxEntryVelocityChangeAfter": 0.057476217742359066,
+        "maxFirstFourFrameVelocityChangeAfter": 0.10098901235337243,
+        "maxFreeCarryVelocityChangeAfter": 0.17100931031014896
+      },
+      {
+        "cause": "manual",
+        "interruption": "platform",
+        "cases": 12,
+        "maxEntryVelocityChangeBefore": 0.8102834311208039,
+        "maxEntryVelocityChangeAfter": 0.05067904100693406,
+        "maxFirstFourFrameVelocityChangeAfter": 0.07176986799676392,
+        "maxFreeCarryVelocityChangeAfter": 0.07176986799676392
+      },
+      {
+        "cause": "manual",
+        "interruption": "hop",
+        "cases": 12,
+        "maxEntryVelocityChangeBefore": 0.392251366568251,
+        "maxEntryVelocityChangeAfter": 0.055847463807318,
+        "maxFirstFourFrameVelocityChangeAfter": 0.09748258771782525,
+        "maxFreeCarryVelocityChangeAfter": 0.1383492989137776
+      },
+      {
+        "cause": "nose-manual",
+        "interruption": "platform",
+        "cases": 12,
+        "maxEntryVelocityChangeBefore": 0.5574792027999945,
+        "maxEntryVelocityChangeAfter": 0.05619984347676793,
+        "maxFirstFourFrameVelocityChangeAfter": 0.08444793340662493,
+        "maxFreeCarryVelocityChangeAfter": 0.08444793340662493
+      },
+      {
+        "cause": "nose-manual",
+        "interruption": "hop",
+        "cases": 12,
+        "maxEntryVelocityChangeBefore": 0.40110732071655664,
+        "maxEntryVelocityChangeAfter": 0.052341742401398425,
+        "maxFirstFourFrameVelocityChangeAfter": 0.07486584797947424,
+        "maxFreeCarryVelocityChangeAfter": 0.07863900165222888
+      }
+    ]
+  },
+  "poseCarryUnit": {
+    "passed": true,
+    "cases": 9,
+    "maxVelocityError": 0.00011000027865648576,
+    "finiteReleaseSeconds": 0.2,
+    "keepsSegmentStretch": true,
+    "resumeAddsNoImpulse": true
+  },
+  "ordinaryIncidents": {
+    "incidents": 30,
+    "frames": 3450,
+    "realHandTriangles": 25152,
+    "allPoseGameplayAndDeterministicWorkEqual": true,
+    "rows": [
+      {
+        "cause": "balance",
+        "frames": 642,
+        "poseChecksum": "e37cd184573abdb705a4b1822fb3105f64130c9fc79678c16e75ebbf9ab4735e",
+        "gameplayChecksum": "c4400b85bc629ddc1a97f272dcb3c1f5a504045c8a0e43db7552090db2bf658a",
+        "hierarchyPasses": 642,
+        "deformationPasses": 642,
+        "newDeformationRecords": 0,
+        "newDeformationTransforms": 0,
+        "supportSamples": 388202,
+        "skinUploads": {
+          "calls": 1692,
+          "copiedBytes": 2429712,
+          "geometryUploads": 0,
+          "residentHits": 1692,
+          "residentResets": 0,
+          "workspaceBytes": 2424832,
+          "exactSkinVertices": 6616566
+        }
+      },
+      {
+        "cause": "wall",
+        "frames": 708,
+        "poseChecksum": "58aabbc42d7cc63f97c10e37d0cfc3a7f2cfee66e076eeff291e7404cb083015",
+        "gameplayChecksum": "c7b7d13c2747e6efb5f430041b3a66e355d9e16cf257f6f20c7461b57d0b4256",
+        "hierarchyPasses": 708,
+        "deformationPasses": 708,
+        "newDeformationRecords": 0,
+        "newDeformationTransforms": 0,
+        "supportSamples": 340389,
+        "skinUploads": {
+          "calls": 1692,
+          "copiedBytes": 2429712,
+          "geometryUploads": 0,
+          "residentHits": 1692,
+          "residentResets": 0,
+          "workspaceBytes": 2424832,
+          "exactSkinVertices": 6616566
+        }
+      },
+      {
+        "cause": "trip",
+        "frames": 750,
+        "poseChecksum": "ff662c93a8a563c6a53b7ad3b48adc8a9eae7f015ac4f8b258903c905e952619",
+        "gameplayChecksum": "b151e394e8ef0dac71234e93e4b5052098e4025c832c8811d164f187d152fc55",
+        "hierarchyPasses": 750,
+        "deformationPasses": 750,
+        "newDeformationRecords": 0,
+        "newDeformationTransforms": 0,
+        "supportSamples": 703720,
+        "skinUploads": {
+          "calls": 1692,
+          "copiedBytes": 2429712,
+          "geometryUploads": 0,
+          "residentHits": 1692,
+          "residentResets": 0,
+          "workspaceBytes": 2424832,
+          "exactSkinVertices": 6616566
+        }
+      },
+      {
+        "cause": "landing",
+        "frames": 720,
+        "poseChecksum": "ec5c64f63d934c648a0b79ecc2f687ded948eeb58ec2bdaa7f4d97aafb987911",
+        "gameplayChecksum": "d96fcaf136c510ae85e32a92f3531fe1ca2ad4da278e1fd1f992b4b851c68bf3",
+        "hierarchyPasses": 720,
+        "deformationPasses": 720,
+        "newDeformationRecords": 0,
+        "newDeformationTransforms": 0,
+        "supportSamples": 246659,
+        "skinUploads": {
+          "calls": 1692,
+          "copiedBytes": 2429712,
+          "geometryUploads": 0,
+          "residentHits": 1692,
+          "residentResets": 0,
+          "workspaceBytes": 2424832,
+          "exactSkinVertices": 6616566
+        }
+      },
+      {
+        "cause": "pvp",
+        "frames": 630,
+        "poseChecksum": "0ce8ffd3bbdd33c4cfc53d251d1ac5ebeb8624a6cb40db4c01d3668ea911c068",
+        "gameplayChecksum": "c6781319911e2f55d1ade98616fa44ddd3dbbe49f8f59dba3e2584913b847291",
+        "hierarchyPasses": 630,
+        "deformationPasses": 630,
+        "newDeformationRecords": 0,
+        "newDeformationTransforms": 0,
+        "supportSamples": 475719,
+        "skinUploads": {
+          "calls": 1692,
+          "copiedBytes": 2429712,
+          "geometryUploads": 0,
+          "residentHits": 1692,
+          "residentResets": 0,
+          "workspaceBytes": 2424832,
+          "exactSkinVertices": 6616566
+        }
+      }
+    ]
+  },
+  "resources": {
+    "newPoseHistoryTypedBytesPerPlayer": 2416,
+    "newFixedJointReferencesPerPlayer": 42,
+    "otherState": "Four reusable quaternions and six vectors, fixed segment factors and scalar clocks/counters. No new physics bodies or constraints.",
+    "ordinaryRecoveryCost": "Copy two compact samples and refresh the waist parent chain. No per-joint velocity trigonometry until an interruption. Existing full hierarchy/deformation/support work counts stay identical.",
+    "activeCarryCost": "Fourteen short quaternion extrapolations and nine length blends for at most 0.2 seconds. Shared deformation modulation uses its existing temporary objects and one batched resolve; this is not a zero-allocation claim.",
+    "cpuSpeedupClaim": false,
+    "timingNote": "Concurrent instrumented profiles establish equal poses and work, not CPU/FPS improvement. The earlier paired exact-skin optimization remains unchanged."
+  },
+  "checks": {
+    "passed": [
+      "test-bail-pose-carry",
+      "test-bail-recovery-interruption",
+      "test-bail-recovery-continuity",
+      "test-bail-recovery-rollthrough",
+      "test-bail-support-continuity",
+      "test-bail-matrix-pass",
+      "test-bail-impacts",
+      "test-character-elasticity",
+      "test-ragdoll-recovery"
+    ],
+    "typecheck": true,
+    "productionBuild": true,
+    "offlineVersion": "898716a327efd9a9dffa",
+    "fullSuite": false
+  },
+  "browser": {
+    "lite": {
+      "bails": {
+        "passed": true,
+        "cases": 18,
+        "maximumSeconds": 3.367,
+        "presentation": {
+          "blocked": false,
+          "loading": {
+            "phase": null,
+            "pending": [],
+            "failed": [],
+            "revision": 112
+          },
+          "renderedFrames": 7263
+        }
+      },
+      "boards": {
+        "passed": true,
+        "cases": 5,
+        "maximumSeconds": 12.000000000000176,
+        "presentation": {
+          "blocked": false,
+          "loading": {
+            "phase": null,
+            "pending": [],
+            "failed": [],
+            "revision": 112
+          },
+          "renderedFrames": 13726
+        }
+      },
+      "consoleWarningsOrErrors": 0
+    },
+    "full": {
+      "bails": {
+        "passed": true,
+        "cases": 18,
+        "maximumSeconds": 3.367,
+        "presentation": {
+          "blocked": false,
+          "loading": {
+            "phase": null,
+            "pending": [],
+            "failed": [],
+            "revision": 124
+          },
+          "renderedFrames": 3676
+        }
+      },
+      "boards": {
+        "passed": true,
+        "cases": 5,
+        "maximumSeconds": 12.000000000000176,
+        "presentation": {
+          "blocked": false,
+          "loading": {
+            "phase": null,
+            "pending": [],
+            "failed": [],
+            "revision": 112
+          },
+          "renderedFrames": 1762
+        }
+      },
+      "consoleWarningsOrErrors": 0
+    }
+  },
+  "visualReview": {
+    "views": [
+      "side release at 0.733s",
+      "quarter roll at 0.833s",
+      "new lower-floor impact at 1.000s",
+      "finite post-control rise at 0.314s"
+    ],
+    "actualSupportRemovedAtSeconds": 0.6166666666666669,
+    "poseCarryObserved": true,
+    "nextImpactClearanceMetres": 0.02500000000000055
+  },
+  "limitations": [
+    "Later real contacts still produce sharper head motion; the maximum within the carry window including new impacts is 0.4195 m/frame. The improvement quantified here is the interrupted get-up handoff.",
+    "This fidelity pass adds bounded pose history work; no CPU-speedup claim. Profile this cost in the next performance/stability pass.",
+    "The original intermittent graphics-startup fence issue is unchanged. Successful lite/full starts do not establish a fix."
+  ],
+  "elapsedMinutesSinceSavedBaseline": 131.7,
+  "delivery": "Local task-only commit on codex/fluid-intact-bails. No push, publish, upload or deployment.",
+  "evidenceDirectory": "/private/tmp/bail-interrupted-roll-20261022"
+}
