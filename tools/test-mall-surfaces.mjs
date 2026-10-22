@@ -19,7 +19,7 @@ await withBlockworksRuntime(async r=>{
   const ordinary=new r.Level(new THREE.Scene(),{id:'mall-default-gate-test',name:spec.name,data:spec});
   assert.ok(ordinary.finishGlow.getSize(new THREE.Vector3()).x<5,'Ordinary warp gate must retain its original narrow trigger');ordinary.dispose();
  }
- const report={components:source.components.length,rails:l.rails.length,checkpoints:[],verts:[],blueBanks:[],spawn:null,recovery:null};
+ const report={components:source.components.length,rails:l.rails.length,checkpoints:[],verts:[],poolCrossings:[],spawn:null,recovery:null};
  r.stepFor(5);report.spawn={position:p.pos.toArray(),grounded:p.grounded};assert.ok(p.grounded);
  for(const [i,c]of l.checkpoints.entries()){
   const ray=new THREE.Raycaster(c.spawnPos.clone().add(new THREE.Vector3(0,.3,0)),new THREE.Vector3(0,-1,0),0,1);
@@ -52,16 +52,16 @@ await withBlockworksRuntime(async r=>{
   report.verts.push({name:c.nm,side,position:base,peak,transition,air,landed,bail,end:p.pos.toArray()});
  }
  for(const side of [-1,1]){
-  const origin=new THREE.Vector3(...m.mallPoint(330,side*3.8,.1)),d=new THREE.Vector3(0,0,-1);
+  const origin=new THREE.Vector3(...m.mallPoint(350.5,-side*6.5,.1)),d=new THREE.Vector3(side,0,0);
   p.respawn(l,true,false,{position:origin,heading:d});p.axisF.copy(d);p.axisL.set(-d.z,0,d.x);
-  let peak=0,bankFrames=0,landed=false,bail=false;
+  let minimumFeetY=0,poolFrames=0,landed=false,bail=false;
   for(let i=0;i<180;i++){
-   r.tick({moveY:p.grounded?1:0,jumpHeld:true});peak=Math.max(peak,p.pos.y);bail||=p.isBailing;
-   if(p.groundHit?.name==='Blue plaza bank trough')bankFrames++;
-   if(bankFrames&&p.grounded&&p.pos.z<m.mallPoint(359)[2]&&p.pos.y<.3){landed=true;break;}
+   r.tick({moveY:p.grounded?1:0,jumpHeld:true});minimumFeetY=Math.min(minimumFeetY,p.pos.y);bail||=p.isBailing;
+   if(p.grounded&&p.groundHit?.name==='Courtyard blue pool')poolFrames++;
+   if(poolFrames&&p.grounded&&(p.pos.x-108)*side>5.5&&p.pos.y<.3){landed=true;break;}
    if(bail||p.state==='dead')break;
   }
-  report.blueBanks.push({side,peak,bankFrames,landed,bail,end:p.pos.toArray()});
+  report.poolCrossings.push({side,minimumFeetY,poolFrames,landed,bail,end:p.pos.toArray()});
  }
  // Controlled below-world fixture after banking a real checkpoint. This
  // verifies recovery independently of the continuous no-death route pilots.
@@ -75,6 +75,6 @@ await withBlockworksRuntime(async r=>{
  report.recovery={died,returned,deaths:p.totalDeaths-before,checkpoint:l.checkpoints.indexOf(l.activeCheckpoint),position:p.pos.toArray(),distance:p.pos.distanceTo(cp.spawnPos)};
  await writeFile('/private/tmp/mall-recreation/surfaces.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));
  assert.ok(report.verts.every(v=>v.transition>0&&v.peak>v.position[1]+1.5&&!v.bail&&v.landed),'Every vert must climb and return to supported ground without a bail');
- assert.ok(report.blueBanks.every(v=>v.bankFrames>0&&v.peak>1.7&&!v.bail&&v.landed),'Both blue banks must carry the skater to their supported outside landings');
+ assert.ok(report.poolCrossings.every(v=>v.poolFrames>0&&v.minimumFeetY<-.65&&!v.bail&&v.landed),'The recessed pool must support skating across its floor and up either side bank');
  assert.ok(died&&returned);assert.equal(p.totalDeaths-before,1);assert.equal(l.activeCheckpoint,cp);assert.ok(p.pos.distanceTo(cp.spawnPos)<.5);
 },{modulePath:'/src/levels/mall.ts',source:m=>m.MALL_LEVEL,levelId:'mall',endlessDeaths:true,maxFrames:8000,controlFrame:r=>r.p.axisF});

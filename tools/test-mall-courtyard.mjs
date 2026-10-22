@@ -53,11 +53,12 @@ await withBlockworksRuntime(async r=>{
   const heading=rail.tangentAt(2);
   p.respawn(l,true,false,{position:origin,heading});p.axisF.copy(heading);p.axisL.set(-heading.z,0,heading.x);
   let caught=0,travel=0,last=null,popped=false,landed=false,bailed=false;
+  const traceStart=r.trace.length;
   for(let i=0;i<600;i++){
    let moveX=0,moveY=p.grounded?1:0,jumpHeld=true,grindHeld=!popped;
    if(p.state==='grind'){
     moveX=Math.max(-1,Math.min(1,-p.balance*8-p.balanceVel*1.8));moveY=0;
-    if(travel>18.85){const f=p.camDir,n=Math.hypot(f.x,f.z)||1;moveX=-side*.65*-f.z/n;moveY=-side*.65*f.x/n;}
+    if(travel>18.85){const f=p.camDir,n=Math.hypot(f.x,f.z)||1;moveX=-side*.35*-f.z/n;moveY=-side*.35*f.x/n;}
     if(travel>19){jumpHeld=false;grindHeld=false;popped=true;}
    }
    r.tick({moveX,moveY,jumpHeld,grindHeld});bailed||=p.isBailing;
@@ -65,7 +66,8 @@ await withBlockworksRuntime(async r=>{
    if(popped&&p.grounded){landed=true;break;}
    if(bailed||p.state==='dead')break;
   }
-  report.copings.push({side,length:rail.totalLength,caught,travel,popped,landed,bailed,end:p.pos.toArray()});
+  report.copings.push({side,length:rail.totalLength,caught,travel,popped,landed,bailed,end:p.pos.toArray(),landingSurface:p.groundHit?.name});
+  await writeFile(`/private/tmp/mall-recreation/courtyard-coping-${side}-trace.json`,JSON.stringify(r.trace.slice(traceStart)));
  }
  report.tuningUnchanged=before===JSON.stringify(r.TUNING);
  await writeFile('/private/tmp/mall-recreation/courtyard.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));

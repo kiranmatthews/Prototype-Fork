@@ -2,7 +2,7 @@
 export function createMallPilot(m,{route='main',charge=true,secretOllie=true,fountainEntry=route==='upper-fast'?68:68.5}={}){
  const entry=createMallEntryPilot(m);
  let progress=entry.progress,frame=0,active=null,jumped=new Set(),lastAdvance=0,lastS=5,secretPop=false,secretPopFrame=-Infinity,secretRail=null;
- const evidence={route,entry:entry.evidence,sections:[],jumps:[],grinds:[],railNames:[],checkpoints:[],upperTransfer:null,fountainLandingFrames:0,fountainBrakingFrames:0,peakSpeed:0,minimumMovingSpeed:Infinity,bails:0,airFrames:0,crystal:false};
+ const evidence={route,entry:entry.evidence,sections:[],jumps:[],grinds:[],railNames:[],checkpoints:[],upperTransfer:null,fountainLandingFrames:0,fountainBrakingFrames:0,peakSpeed:0,minimumMovingSpeed:Infinity,bails:0,airFrames:0,crystal:false,pool:null};
  const smooth=t=>{t=Math.max(0,Math.min(1,t));return t*t*(3-2*t);};
  const interpolate=(s,knots)=>{for(let i=1;i<knots.length;i++)if(s<=knots[i][0])return knots[i-1][1]+(knots[i][1]-knots[i-1][1])*smooth((s-knots[i-1][0])/(knots[i][0]-knots[i-1][0]));return knots.at(-1)[1];};
  const fountainRoute=['upper','upper-fast'].includes(route),upperRoute=fountainRoute||['car','escalator'].includes(route);
@@ -14,8 +14,9 @@ export function createMallPilot(m,{route='main',charge=true,secretOllie=true,fou
   route==='coffee'?[[0,0],[28,-2.6],[38,-5.5],[53,-11.2],[83,-9.8],[103,-6.2],[132,-10],[180,-10],[199,0],[217,0],[319,0],[336,6.5],[362,6.5],[373,0],[396,0]]:
   route==='underpass'?[[0,0],[43,4.7],[65,4.7],[83,5],[96,3.8],[132,13.5],[162,13.5],[180,10.5],[190,10.5],[217,0],[319,0],[336,6.5],[362,6.5],[373,0],[396,0]]:
   route==='mezzanine'?[[0,0],[43,7.2],[65,7.8],[83,5],[96,3.8],[132,13.5],[162,13.5],[180,10.5],[190,10.5],[217,0],[319,0],[338,-6.5],[377,-6.5],[397,0]]:
+  route==='pool'?[[0,0],[43,7.2],[65,7.8],[83,5],[96,3.8],[132,13.5],[162,13.5],[180,10.5],[190,10.5],[217,0],[319,0],[408.5,0]]:
   [[0,0],[43,7.2],[65,7.8],[83,5],[96,3.8],[132,13.5],[162,13.5],[180,10.5],[190,10.5],[217,0],[319,0],[336,6.5],[362,6.5],[373,0],[396,0]];
- const launches=[...(route==='escalator'?[{s:128,end:187,name:'Flying Leap',grind:true}]:route==='car'?[{s:86.5,end:100,name:'Car display jump'},{s:125,end:187,name:'Flying Leap',grind:true}]:fountainRoute?[...(route==='upper-fast'?[{s:fountainEntry,end:84,name:'Fountain through jump'}]:[{s:fountainEntry,end:74,name:'Fountain entry'},{s:77.8,end:84,name:'Fountain exit'}]),{s:128,end:187,name:'Flying Leap',grind:true}]:route==='coffee'?[{s:55,end:104,name:'Coffee Grind',grind:true},{s:136,end:185,name:'Lower light beam',grind:true}]:[]),{s:276.2,end:300,name:'Crossrail transfer',grind:true},...(route==='mezzanine'?[{s:375.5,end:395,name:'Mezzanine'}]:[])];
+ const launches=[...(route==='escalator'?[{s:128,end:187,name:'Flying Leap',grind:true}]:route==='car'?[{s:86.5,end:100,name:'Car display jump'},{s:125,end:187,name:'Flying Leap',grind:true}]:fountainRoute?[...(route==='upper-fast'?[{s:fountainEntry,end:84,name:'Fountain through jump'}]:[{s:fountainEntry,end:74,name:'Fountain entry'},{s:77.8,end:84,name:'Fountain exit'}]),{s:128,end:187,name:'Flying Leap',grind:true}]:route==='coffee'?[{s:55,end:104,name:'Coffee Grind',grind:true},{s:136,end:185,name:'Lower light beam',grind:true}]:[]),{s:276.2,end:300,name:'Crossrail transfer',grind:true},...(route==='pool'?[{s:344.5,end:364,name:'Pool jump'}]:[]),...(route==='mezzanine'?[{s:375.5,end:395,name:'Mezzanine'}]:[])];
  return {evidence,get progress(){return progress;},
  sample(p,l){
   if(!entry.done)return entry.sample(p,l);
@@ -44,7 +45,8 @@ export function createMallPilot(m,{route='main',charge=true,secretOllie=true,fou
   // Braking doubles the native turn rate. Reduce the stick angle while
   // slowing so the controlled line still follows the outside of the bench.
   if(fountainRoute&&progress>48&&progress<69)moveX=Math.max(-1,Math.min(1,moveX*3*(route==='upper'?p.speed/23:1)*(brake?.5:1)));
-  if(route==='mezzanine'&&progress>319&&progress<375)moveX=Math.max(-1,Math.min(1,moveX*2));
+  if(route==='mezzanine'&&progress>319&&progress<375)moveX=Math.max(-1,Math.min(1,moveX*3));
+  if(route!=='mezzanine'&&route!=='pool'&&progress>319&&progress<343)moveX=Math.max(-1,Math.min(1,moveX*2));
   // A brief grounded countersteer aligns the second ollie with the aperture.
   if(route==='upper'&&p.grounded&&progress>74&&progress<78.5){moveX=-Math.max(-1,Math.min(1,p.axisF.x*8));moveY=0;}
   // Skate air keeps launch momentum; lateral input spins the board. Align
@@ -85,6 +87,15 @@ export function createMallPilot(m,{route='main',charge=true,secretOllie=true,fou
   if(progress>=34&&p.grounded&&progress<390)evidence.minimumMovingSpeed=Math.min(evidence.minimumMovingSpeed,p.speed);
   if(!p.grounded)evidence.airFrames++;
   if(p.grounded&&p.groundHit?.name==='Fountain passage floor')evidence.fountainLandingFrames++;
+  if(route==='pool'&&progress>=339&&progress<374){
+   const e=evidence.pool??={takeoff:null,landing:null,airFrames:0,peakFeetY:0,collected:false,launchFrames:0};
+   if(p.grounded&&p.groundHit?.name==='Courtyard pool launch wedge')e.launchFrames++;
+   if(e.launchFrames&&!p.grounded){e.takeoff??={s:progress,position:p.pos.toArray(),speed:p.speed};e.airFrames++;}
+   if(e.takeoff&&p.grounded)e.landing??={s:progress,position:p.pos.toArray(),speed:p.speed,surface:p.groundHit?.name};
+   e.peakFeetY=Math.max(e.peakFeetY,p.pos.y);
+   const q=m.mallPoint(m.MALL_POOL.rewardS,0,m.MALL_POOL.rewardY),pickup=l.pickups.find(v=>v.mesh.position.distanceToSquared({x:q[0],y:q[1],z:q[2]})<1);
+   e.collected||=!!pickup&&!pickup.alive;
+  }
   for(let i=0;i<m.MALL_KNOTS.length;i++)if(progress>=m.MALL_KNOTS[i].s&&!evidence.sections.includes(i))evidence.sections.push(i);
   if(p.state==='grind'){
    const i=l.rails.indexOf(p.grindRail);if(!evidence.grinds.includes(i))evidence.grinds.push(i);

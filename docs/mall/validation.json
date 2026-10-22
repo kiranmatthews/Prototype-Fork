@@ -1,15 +1,15 @@
 {
-  "schema": 10,
-  "verifiedAt": "2026-10-22T17:52:18.864310+00:00",
+  "schema": 11,
+  "verifiedAt": "2026-10-22T18:35:30.757943+00:00",
   "reference": "Original 1999 THPS Mall: supplied VGCartography cutaway and original PS1 gameplay",
-  "sourceSHA256": "9bb2af1567b53d175e0b7c0ed1e3ad7c65ca36119574b630aa652309c7736651",
-  "build": "9a799a4e10bba42ceaab",
-  "scope": "Adds the source courtyard wall transitions and connects their raised approaches, low bank copings and planter-side grinds. Eight complete native-input routes and focused courtyard airs, returns and grinds pass. Geometry uses the existing skater and component toolkit. Absolute original dimensions, the blue-bank contours and upper exit passage remain under comparison.",
+  "sourceSHA256": "a1a8fc834dc3fb166e9210cce2dd5858b7dfa004df3f6fa3151e6bbfc192d527",
+  "build": "42159cc7d598f5582719",
+  "scope": "Corrects the former raised blue trough to the original recessed pool, tan wedges and two solid curved canopy roofs. Nine complete native-input routes, pool jump/reward negative control, canopy grinds and courtyard returns pass. Exact original metric dimensions, planter banks, facade heights and exit structure remain under review.",
   "runtimeSHA256": {
     "src/player.ts": "51a93fc9cb8f3613fedf0a16625e7b22e09859f3aa45898d3892677412b42e3b",
+    "src/level.ts": "898a6d458627d11c31f9a5fd02b12dbd3bf9984278da23c4526b2d7e62448917",
     "src/rails.ts": "ac13ba8494b81ebc85f3926963ddb8c2d98d1694082a2f87f63582b86de51a4d",
     "src/tuning.ts": "dc7b43eedbb160b2ddfc16cdfdca42f1419245a76214fdccd49cf872905038c0",
-    "src/level.ts": "898a6d458627d11c31f9a5fd02b12dbd3bf9984278da23c4526b2d7e62448917",
     "src/skateChaseCamera.ts": "91481102b4f31f009f483f2d125e8f2b7bf96368e963d72005b076036d05e984"
   },
   "headlessRoutes": {
@@ -19,11 +19,11 @@
       "state": "finished",
       "deaths": 0,
       "position": [
-        107.40312978552777,
+        107.35862688556556,
         -6.263333333556851,
-        -303.40532382639776
+        -303.3347308814705
       ],
-      "progress": 407.5,
+      "progress": 407.25,
       "evidence": {
         "route": "main",
         "entry": {
@@ -119,19 +119,20 @@
         "minimumMovingSpeed": 22.56473602292569,
         "bails": 0,
         "airFrames": 104,
-        "crystal": false
+        "crystal": false,
+        "pool": null
       },
       "error": null
     },
     "upper": {
       "route": "upper",
-      "seconds": 25.483333333333334,
+      "seconds": 25.466666666666665,
       "state": "finished",
       "deaths": 0,
       "position": [
-        107.81950019580721,
-        -6.263333333556851,
-        -303.18270794360666
+        107.33821350874743,
+        -6.273333330849806,
+        -303.15026148009036
       ],
       "progress": 407.25,
       "evidence": {
@@ -274,19 +275,20 @@
         "minimumMovingSpeed": 13.106389144471745,
         "bails": 0,
         "airFrames": 416,
-        "crystal": true
+        "crystal": true,
+        "pool": null
       },
       "error": null
     },
     "upper-fast": {
       "route": "upper-fast",
-      "seconds": 24.383333333333333,
+      "seconds": 24.366666666666667,
       "state": "finished",
       "deaths": 0,
       "position": [
-        107.81950019580721,
-        -6.263333333556851,
-        -303.18270794360666
+        107.33821350874743,
+        -6.273333330849806,
+        -303.15026148009036
       ],
       "progress": 407.25,
       "evidence": {
@@ -421,19 +423,20 @@
         "minimumMovingSpeed": 22.776862089899346,
         "bails": 0,
         "airFrames": 384,
-        "crystal": true
+        "crystal": true,
+        "pool": null
       },
       "error": null
     },
     "car": {
       "route": "car",
-      "seconds": 24.53333333333333,
+      "seconds": 24.516666666666666,
       "state": "finished",
       "deaths": 0,
       "position": [
-        107.81888149355552,
-        -6.263333333556851,
-        -303.17990232630126
+        107.33753539140423,
+        -6.273333330849806,
+        -303.1474682696614
       ],
       "progress": 407.25,
       "evidence": {
@@ -569,21 +572,22 @@
         "minimumMovingSpeed": 16.505467952939178,
         "bails": 0,
         "airFrames": 408,
-        "crystal": true
+        "crystal": true,
+        "pool": null
       },
       "error": null
     },
     "coffee": {
       "route": "coffee",
-      "seconds": 24.4,
+      "seconds": 24.416666666666668,
       "state": "finished",
       "deaths": 0,
       "position": [
-        107.40567310454418,
-        -6.273333330849806,
-        -303.103849518038
+        107.35878814408198,
+        -6.263333333556851,
+        -303.32448397739716
       ],
-      "progress": 407,
+      "progress": 407.25,
       "evidence": {
         "route": "coffee",
         "entry": {
@@ -701,19 +705,20 @@
         "minimumMovingSpeed": 21.00011698947406,
         "bails": 0,
         "airFrames": 393,
-        "crystal": false
+        "crystal": false,
+        "pool": null
       },
       "error": null
     },
     "escalator": {
       "route": "escalator",
-      "seconds": 24.383333333333333,
+      "seconds": 24.366666666666667,
       "state": "finished",
       "deaths": 0,
       "position": [
-        107.81950019580721,
-        -6.263333333556851,
-        -303.18270794360666
+        107.33821350874743,
+        -6.273333330849806,
+        -303.15026148009036
       ],
       "progress": 407.25,
       "evidence": {
@@ -837,24 +842,25 @@
         "fountainLandingFrames": 0,
         "fountainBrakingFrames": 0,
         "peakSpeed": 30.500000000000423,
-        "minimumMovingSpeed": 22.965686254018994,
+        "minimumMovingSpeed": 22.968741472098596,
         "bails": 0,
         "airFrames": 343,
-        "crystal": true
+        "crystal": true,
+        "pool": null
       },
       "error": null
     },
     "mezzanine": {
       "route": "mezzanine",
-      "seconds": 23.75,
+      "seconds": 23.733333333333334,
       "state": "finished",
       "deaths": 0,
       "position": [
-        106.78994959868716,
+        107.81493062625937,
         -6.263333333556851,
-        -303.72331491431146
+        -303.21936518326
       ],
-      "progress": 407.75,
+      "progress": 407.25,
       "evidence": {
         "route": "mezzanine",
         "entry": {
@@ -957,7 +963,8 @@
         "minimumMovingSpeed": 22.56473602292569,
         "bails": 0,
         "airFrames": 175,
-        "crystal": false
+        "crystal": false,
+        "pool": null
       },
       "error": null
     },
@@ -967,9 +974,9 @@
       "state": "finished",
       "deaths": 0,
       "position": [
-        107.4065234149696,
+        107.34383558273085,
         -6.263333333556851,
-        -303.33088658038514
+        -303.2165780283592
       ],
       "progress": 407.25,
       "evidence": {
@@ -1063,10 +1070,153 @@
         "fountainLandingFrames": 0,
         "fountainBrakingFrames": 0,
         "peakSpeed": 26.1239,
-        "minimumMovingSpeed": 22.965537600099818,
+        "minimumMovingSpeed": 22.96553760009982,
         "bails": 0,
         "airFrames": 105,
-        "crystal": false
+        "crystal": false,
+        "pool": null
+      },
+      "error": null
+    },
+    "pool": {
+      "route": "pool",
+      "seconds": 23.583333333333332,
+      "state": "finished",
+      "deaths": 0,
+      "position": [
+        107.78268271283811,
+        -6.263333333556851,
+        -303.2145155435445
+      ],
+      "progress": 407.25,
+      "evidence": {
+        "route": "pool",
+        "entry": {
+          "pop": false,
+          "turns": [
+            {
+              "name": "Gold quarter return",
+              "frame": 214,
+              "position": [
+                -2.7318561640263432,
+                26.44101991072893,
+                -21.107124352163698
+              ]
+            },
+            {
+              "name": "Blue quarter return",
+              "frame": 388,
+              "position": [
+                2.180957173000626,
+                20.455379580362646,
+                12.110665948580953
+              ]
+            }
+          ],
+          "transitionFrames": [
+            97,
+            100
+          ],
+          "airFrames": [
+            84,
+            88
+          ],
+          "peakFeetY": [
+            34.32194016246263,
+            29.095814063422416
+          ],
+          "returnedSpeeds": [
+            23.85247915203797,
+            24.949406537259144
+          ],
+          "bails": 0
+        },
+        "sections": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22
+        ],
+        "jumps": [
+          {
+            "s": 276.2,
+            "end": 300,
+            "name": "Crossrail transfer",
+            "grind": true,
+            "frame": 1073,
+            "air": true,
+            "landing": 316
+          },
+          {
+            "s": 344.5,
+            "end": 364,
+            "name": "Pool jump",
+            "frame": 1254,
+            "air": true,
+            "landing": 366.25
+          }
+        ],
+        "grinds": [
+          29
+        ],
+        "railNames": [
+          "Crossrail left to right"
+        ],
+        "checkpoints": [
+          0
+        ],
+        "upperTransfer": null,
+        "fountainLandingFrames": 0,
+        "fountainBrakingFrames": 0,
+        "peakSpeed": 26.1239,
+        "minimumMovingSpeed": 22.538722203085726,
+        "bails": 0,
+        "airFrames": 161,
+        "crystal": false,
+        "pool": {
+          "takeoff": {
+            "s": 345,
+            "position": [
+              107.70230313234397,
+              1.1009885494184002,
+              -240.93576521009007
+            ],
+            "speed": 22.53872220308619
+          },
+          "landing": {
+            "s": 366.25,
+            "position": [
+              105.4802015973662,
+              0,
+              -262.2319350173043
+            ],
+            "speed": 22.538722203085726,
+            "surface": "Continuous mall floor"
+          },
+          "airFrames": 57,
+          "peakFeetY": 4.43824250594041,
+          "collected": true,
+          "launchFrames": 15
+        }
       },
       "error": null
     }
@@ -1158,8 +1308,8 @@
     }
   ],
   "surfaces": {
-    "components": 623,
-    "rails": 47,
+    "components": 636,
+    "rails": 51,
     "checkpoints": [
       {
         "index": 0,
@@ -1323,29 +1473,29 @@
         ]
       }
     ],
-    "blueBanks": [
+    "poolCrossings": [
       {
         "side": -1,
-        "peak": 2.214004514224904,
-        "bankFrames": 63,
+        "minimumFeetY": -0.8000000119209292,
+        "poolFrames": 57,
         "landed": true,
         "bail": false,
         "end": [
-          104.05946180356973,
+          102.4247008742903,
           0,
-          -255.1184221857233
+          -246.49999999999997
         ]
       },
       {
         "side": 1,
-        "peak": 2.214999913452424,
-        "bankFrames": 66,
+        "minimumFeetY": -0.8000000119209292,
+        "poolFrames": 57,
         "landed": true,
         "bail": false,
         "end": [
-          112.36396140060732,
+          113.5752991257097,
           0,
-          -255.20230765781653
+          -246.49999999999997
         ]
       }
     ],
@@ -1381,13 +1531,13 @@
         "state": "ride",
         "grounded": true,
         "skatepark": true,
-        "components": 623
+        "components": 636
       },
       "report": {
         "done": true,
         "error": null,
         "frames": 1416,
-        "progress": 407.5,
+        "progress": 407.25,
         "evidence": {
           "route": "main",
           "entry": {
@@ -1483,22 +1633,28 @@
           "minimumMovingSpeed": 22.56473602292569,
           "bails": 0,
           "airFrames": 104,
-          "crystal": false
+          "crystal": false,
+          "pool": null
         },
         "sourceMatches": true,
         "fountainCamera": [],
         "entryCamera": {
           "samples": 68,
-          "minimumDistance": 3.59009364237118
+          "minimumDistance": 3.5156017724482473
         },
         "entryObstructions": [],
+        "courtyardCamera": {
+          "samples": 81,
+          "minimumDistance": 6.639046626660113
+        },
+        "courtyardObstructions": [],
         "fountainViewSamples": 0,
         "fountainObstructions": [],
         "fountainCapBottom": 20.3,
         "position": [
-          107.40312978552777,
+          107.35862688556556,
           -6.263333333556851,
-          -303.40532382639776
+          -303.3347308814705
         ],
         "state": "finished",
         "grounded": true,
@@ -1506,7 +1662,7 @@
         "tuningUnchanged": true
       },
       "errors": [],
-      "build": "9a799a4e10bba42ceaab"
+      "build": "42159cc7d598f5582719"
     },
     "full-upper-fast": {
       "initial": {
@@ -1518,12 +1674,12 @@
         "state": "ride",
         "grounded": true,
         "skatepark": true,
-        "components": 623
+        "components": 636
       },
       "report": {
         "done": true,
         "error": null,
-        "frames": 1463,
+        "frames": 1462,
         "progress": 407.25,
         "evidence": {
           "route": "upper-fast",
@@ -1645,9 +1801,9 @@
             "toRail": 18,
             "frame": 858,
             "position": [
-              34.2717386349243,
+              34.271736736818944,
               15.763003779995497,
-              -141.28202086425767
+              -141.2820264468017
             ],
             "frames": 20
           },
@@ -1657,26 +1813,32 @@
           "minimumMovingSpeed": 22.776862089899346,
           "bails": 0,
           "airFrames": 384,
-          "crystal": true
+          "crystal": true,
+          "pool": null
         },
         "sourceMatches": true,
         "fountainCamera": {
           "samples": 15,
-          "minimumDistance": 7.656065208046068,
-          "maximumHeadY": 19.82261470863583
+          "minimumDistance": 7.163226380051331,
+          "maximumHeadY": 19.83569709162034
         },
         "entryCamera": {
-          "samples": 68,
-          "minimumDistance": 3.859083734335667
+          "samples": 67,
+          "minimumDistance": 3.4868501303196493
         },
         "entryObstructions": [],
+        "courtyardCamera": {
+          "samples": 82,
+          "minimumDistance": 6.664434717514484
+        },
+        "courtyardObstructions": [],
         "fountainViewSamples": 65,
         "fountainObstructions": [],
         "fountainCapBottom": 20.3,
         "position": [
-          107.81950019580721,
-          -6.263333333556851,
-          -303.18270794360666
+          107.33821350874743,
+          -6.273333330849806,
+          -303.15026148009036
         ],
         "state": "finished",
         "grounded": true,
@@ -1684,7 +1846,199 @@
         "tuningUnchanged": true
       },
       "errors": [],
-      "build": "9a799a4e10bba42ceaab"
+      "build": "42159cc7d598f5582719"
+    },
+    "full-upper": {
+      "initial": {
+        "position": [
+          2.2,
+          30,
+          5
+        ],
+        "state": "ride",
+        "grounded": true,
+        "skatepark": true,
+        "components": 636
+      },
+      "report": {
+        "done": true,
+        "error": null,
+        "frames": 1528,
+        "progress": 407.25,
+        "evidence": {
+          "route": "upper",
+          "entry": {
+            "pop": false,
+            "turns": [
+              {
+                "name": "Gold quarter return",
+                "frame": 214,
+                "position": [
+                  -2.7318561640263432,
+                  26.44101991072893,
+                  -21.107124352163698
+                ]
+              },
+              {
+                "name": "Blue quarter return",
+                "frame": 388,
+                "position": [
+                  2.180957173000626,
+                  20.455379580362646,
+                  12.110665948580953
+                ]
+              }
+            ],
+            "transitionFrames": [
+              97,
+              100
+            ],
+            "airFrames": [
+              84,
+              88
+            ],
+            "peakFeetY": [
+              34.32194016246263,
+              29.095814063422416
+            ],
+            "returnedSpeeds": [
+              23.85247915203797,
+              24.949406537259144
+            ],
+            "bails": 0
+          },
+          "sections": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22
+          ],
+          "jumps": [
+            {
+              "s": 68.5,
+              "end": 74,
+              "name": "Fountain entry",
+              "frame": 582,
+              "air": true,
+              "landing": 77
+            },
+            {
+              "s": 77.8,
+              "end": 84,
+              "name": "Fountain exit",
+              "frame": 625,
+              "air": true,
+              "landing": 87
+            },
+            {
+              "name": "Hidden rail reward ollie",
+              "frame": 890,
+              "progress": 163.5,
+              "fromRail": 17
+            },
+            {
+              "s": 128,
+              "end": 187,
+              "name": "Flying Leap",
+              "grind": true,
+              "frame": 797,
+              "air": true,
+              "landing": 226.25
+            },
+            {
+              "s": 276.2,
+              "end": 300,
+              "name": "Crossrail transfer",
+              "grind": true,
+              "frame": 1185,
+              "air": true,
+              "landing": 316
+            }
+          ],
+          "grinds": [
+            17,
+            18,
+            26,
+            29
+          ],
+          "railNames": [
+            "Suspended upper light rail",
+            "Lower escalator handrail",
+            "Crossrail left to right"
+          ],
+          "checkpoints": [
+            4
+          ],
+          "upperTransfer": {
+            "fromRail": 17,
+            "toRail": 18,
+            "frame": 926,
+            "position": [
+              34.37411734352565,
+              15.758289442964568,
+              -141.31683501058785
+            ],
+            "frames": 19
+          },
+          "fountainLandingFrames": 6,
+          "fountainBrakingFrames": 34,
+          "peakSpeed": 30.500000000000423,
+          "minimumMovingSpeed": 13.106389144471745,
+          "bails": 0,
+          "airFrames": 416,
+          "crystal": true,
+          "pool": null
+        },
+        "sourceMatches": true,
+        "fountainCamera": {
+          "samples": 26,
+          "minimumDistance": 7.16322638005133,
+          "maximumHeadY": 19.297066307267986
+        },
+        "entryCamera": {
+          "samples": 65,
+          "minimumDistance": 3.5478185985960304
+        },
+        "entryObstructions": [],
+        "courtyardCamera": {
+          "samples": 82,
+          "minimumDistance": 6.664182254085457
+        },
+        "courtyardObstructions": [],
+        "fountainViewSamples": 111,
+        "fountainObstructions": [],
+        "fountainCapBottom": 20.3,
+        "position": [
+          107.33821350874743,
+          -6.273333330849806,
+          -303.15026148009036
+        ],
+        "state": "finished",
+        "grounded": true,
+        "deaths": 0,
+        "tuningUnchanged": true
+      },
+      "errors": [],
+      "build": "42159cc7d598f5582719"
     },
     "full-mezzanine": {
       "initial": {
@@ -1696,13 +2050,13 @@
         "state": "ride",
         "grounded": true,
         "skatepark": true,
-        "components": 623
+        "components": 636
       },
       "report": {
         "done": true,
         "error": null,
-        "frames": 1425,
-        "progress": 407.75,
+        "frames": 1424,
+        "progress": 407.25,
         "evidence": {
           "route": "mezzanine",
           "entry": {
@@ -1805,22 +2159,28 @@
           "minimumMovingSpeed": 22.56473602292569,
           "bails": 0,
           "airFrames": 175,
-          "crystal": false
+          "crystal": false,
+          "pool": null
         },
         "sourceMatches": true,
         "fountainCamera": [],
         "entryCamera": {
           "samples": 68,
-          "minimumDistance": 3.7749045521713613
+          "minimumDistance": 3.504441623351216
         },
         "entryObstructions": [],
+        "courtyardCamera": {
+          "samples": 83,
+          "minimumDistance": 6.390851704924428
+        },
+        "courtyardObstructions": [],
         "fountainViewSamples": 0,
         "fountainObstructions": [],
         "fountainCapBottom": 20.3,
         "position": [
-          106.78994959868716,
+          107.81493062625937,
           -6.263333333556851,
-          -303.72331491431146
+          -303.21936518326
         ],
         "state": "finished",
         "grounded": true,
@@ -1828,14 +2188,188 @@
         "tuningUnchanged": true
       },
       "errors": [],
-      "build": "9a799a4e10bba42ceaab"
+      "build": "42159cc7d598f5582719"
+    },
+    "full-pool": {
+      "initial": {
+        "position": [
+          2.2,
+          30,
+          5
+        ],
+        "state": "ride",
+        "grounded": true,
+        "skatepark": true,
+        "components": 636
+      },
+      "report": {
+        "done": true,
+        "error": null,
+        "frames": 1415,
+        "progress": 407.25,
+        "evidence": {
+          "route": "pool",
+          "entry": {
+            "pop": false,
+            "turns": [
+              {
+                "name": "Gold quarter return",
+                "frame": 214,
+                "position": [
+                  -2.7318561640263432,
+                  26.44101991072893,
+                  -21.107124352163698
+                ]
+              },
+              {
+                "name": "Blue quarter return",
+                "frame": 388,
+                "position": [
+                  2.180957173000626,
+                  20.455379580362646,
+                  12.110665948580953
+                ]
+              }
+            ],
+            "transitionFrames": [
+              97,
+              100
+            ],
+            "airFrames": [
+              84,
+              88
+            ],
+            "peakFeetY": [
+              34.32194016246263,
+              29.095814063422416
+            ],
+            "returnedSpeeds": [
+              23.85247915203797,
+              24.949406537259144
+            ],
+            "bails": 0
+          },
+          "sections": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22
+          ],
+          "jumps": [
+            {
+              "s": 276.2,
+              "end": 300,
+              "name": "Crossrail transfer",
+              "grind": true,
+              "frame": 1073,
+              "air": true,
+              "landing": 316
+            },
+            {
+              "s": 344.5,
+              "end": 364,
+              "name": "Pool jump",
+              "frame": 1254,
+              "air": true,
+              "landing": 366.25
+            }
+          ],
+          "grinds": [
+            29
+          ],
+          "railNames": [
+            "Crossrail left to right"
+          ],
+          "checkpoints": [
+            0
+          ],
+          "upperTransfer": null,
+          "fountainLandingFrames": 0,
+          "fountainBrakingFrames": 0,
+          "peakSpeed": 26.1239,
+          "minimumMovingSpeed": 22.538722203085726,
+          "bails": 0,
+          "airFrames": 161,
+          "crystal": false,
+          "pool": {
+            "takeoff": {
+              "s": 345,
+              "position": [
+                107.70230313234397,
+                1.1009885494184002,
+                -240.93576521009007
+              ],
+              "speed": 22.53872220308619
+            },
+            "landing": {
+              "s": 366.25,
+              "position": [
+                105.4802015973662,
+                0,
+                -262.2319350173043
+              ],
+              "speed": 22.538722203085726,
+              "surface": "Continuous mall floor"
+            },
+            "airFrames": 57,
+            "peakFeetY": 4.43824250594041,
+            "collected": true,
+            "launchFrames": 15
+          }
+        },
+        "sourceMatches": true,
+        "fountainCamera": [],
+        "entryCamera": {
+          "samples": 68,
+          "minimumDistance": 3.6201273525134274
+        },
+        "entryObstructions": [],
+        "courtyardCamera": {
+          "samples": 83,
+          "minimumDistance": 7.9518047599865405
+        },
+        "courtyardObstructions": [],
+        "fountainViewSamples": 0,
+        "fountainObstructions": [],
+        "fountainCapBottom": 20.3,
+        "position": [
+          107.78268271283811,
+          -6.263333333556851,
+          -303.2145155435445
+        ],
+        "state": "finished",
+        "grounded": true,
+        "deaths": 0,
+        "tuningUnchanged": true
+      },
+      "errors": [],
+      "build": "42159cc7d598f5582719"
     }
   },
   "smoke": {
     "start": {
       "deaths": 0,
       "lives": 4,
-      "stamp": "Codex/sol fork \u00b7 build 10-22 17:46 UTC"
+      "stamp": "Codex/sol fork \u00b7 build 10-22 18:31 UTC"
     },
     "checkpoints": [
       {
@@ -1869,10 +2403,10 @@
         "index": 3,
         "position": [
           108,
-          0.1,
+          0,
           -217
         ],
-        "distance": 0
+        "distance": 0.1
       },
       {
         "index": 4,
@@ -1902,7 +2436,7 @@
     "closedRailSeams": "passed forward/reverse and fast spawn approach",
     "openRailAndSharpClosingCorner": "passed",
     "existingRailAirTransfer": {
-      "status": "Pre-existing failure documented in pass 4; Player/Level/rail/tuning files unchanged in passes 5\u201310",
+      "status": "Pre-existing failure documented in pass 4; Player/Level/rail/tuning files unchanged in passes 5\u201311",
       "message": "Boardslide 1 -1 torso faced opposite input",
       "baseline": "Same failure reproduced with pre-pass player.ts, rails.ts and level.ts through an isolated Vite source transform; no shared files were reverted."
     },
@@ -1915,15 +2449,18 @@
     "fountainPresentation": "Passed: no sightline obstruction from s=67 through 92; useful camera distance; rendered fast and controlled poses clear cap at Y=20.3",
     "foldedEntrance": "Both native returns repeated in all continuous routes. Charged-pop and high-air wall fixtures retained from pass 8; entrance geometry and runtime unchanged.",
     "highAirContainment": "Passed: native wall colliders present at Y=40 on both entry sides",
-    "entryCamera": "Passed in all three current continuous browser runs: 68 samples each, clear sightlines and minimum distance 3.59 m.",
+    "entryCamera": "Passed in five current continuous browser runs, with clear sightlines and minimum distance 3.49 m.",
     "benchLoops": "Passed: 2.10 laps and two seams in each low-speed direction; 2.12 laps at 20.38 m/s peak from the actual level spawn; full-render browser confirmation.",
-    "courtyard": "Passed: four native airs return to the inner aisle at 22.86\u201323.45 m/s; four complete 45.10 m ledge grinds; both wall copings grind 19.02 m and ollie into supported landings."
+    "courtyard": "Four native airs return at 23.14\u201323.70 m/s; four 45.10 m ledge grinds; both wall copings grind 19.02 m and make modest inward ollies onto their quarter faces. Four full-render section replays match the native end poses exactly.",
+    "pool": "Moderate-speed charged takeoffs at s=344 and 344.8 clear the pool and collect the reward. Rolling through its floor leaves the reward. Full rendering confirms both outcomes. The continuous jump retains 22.54 m/s at landing.",
+    "canopies": "Both closed canopy meshes have consistent top/underside normals, support skating and roll-offs, and all four edge grinds run 14.96\u201315.03 m to supported landings. Grind is released before runoff to avoid auto-catching the adjacent wall coping."
   },
   "fidelityRemaining": [
-    "Exact source metric dimensions of the entrance, concourse, gallery, beams and courtyard",
-    "Blue courtyard bank curvature, flared ends and exact planter/ledge arrangement",
-    "Original upper exit passage and parking corridor structure",
-    "Storefront massing, materials, awnings and remaining architectural silhouette"
+    "Original metric dimensions of the folded entry, concourse, gallery, beams and courtyard",
+    "Four broad tan planter banks with trees and their exact ledge arrangement",
+    "Courtyard facade height/window band and precise canopy and pool contours",
+    "Original upper exit passage, final stair profile and parking corridor",
+    "Storefront massing, materials and remaining architectural silhouette"
   ],
   "structures": {
     "escalatorSide": {
@@ -2516,67 +3053,67 @@
     },
     "measurementStatus": "Calibrated visually to the reference and existing skater; not an original metric survey."
   },
-  "sharedWorkspaceNote": "This task did not edit shared movement, rail, level or camera runtime in pass 10. A concurrent camera edit was present before the final build; the tested camera hash is recorded above.",
+  "sharedWorkspaceNote": "Pass 11 changes Mall level data, its validation tools and documentation only. Shared movement, rail, collision, tuning and camera runtime hashes are unchanged from the pass-10 tested runtime.",
   "courtyard": {
     "returns": [
       {
         "side": -1,
         "pop": false,
         "contacts": 26,
-        "air": 56,
-        "peak": 6.165171118323547,
+        "air": 57,
+        "peak": 6.31817986378793,
         "returned": true,
         "bailed": false,
-        "speed": 22.858424945641026,
+        "speed": 23.138773718327133,
         "end": [
-          101.17402702342063,
-          0.013417828717634639,
-          -236.32157994844792
+          101.20212056257857,
+          0,
+          -240.09798249087316
         ]
       },
       {
         "side": -1,
         "pop": true,
-        "contacts": 22,
-        "air": 83,
-        "peak": 9.826474629366038,
+        "contacts": 21,
+        "air": 84,
+        "peak": 9.9057257568907,
         "returned": true,
         "bailed": false,
-        "speed": 23.447382754540175,
+        "speed": 23.7013515700199,
         "end": [
-          101.07453065814096,
-          0.06482441524120719,
-          -236.39205888402313
+          101.04975815132481,
+          0.07762357641127071,
+          -241.01274290058694
         ]
       },
       {
         "side": 1,
         "pop": false,
         "contacts": 26,
-        "air": 56,
-        "peak": 6.165173256560832,
+        "air": 57,
+        "peak": 6.327257613107267,
         "returned": true,
         "bailed": false,
-        "speed": 22.858417427985007,
+        "speed": 23.145938179032985,
         "end": [
-          114.82597406586004,
-          0.013418391514083639,
-          -236.32152178692996
+          114.76687499535717,
+          0,
+          -239.50914577992677
         ]
       },
       {
         "side": 1,
         "pop": true,
-        "contacts": 22,
-        "air": 83,
-        "peak": 9.82647695135534,
+        "contacts": 21,
+        "air": 84,
+        "peak": 9.913831592086938,
         "returned": true,
         "bailed": false,
-        "speed": 23.447355165533402,
+        "speed": 23.6795078487938,
         "end": [
-          114.92547863054608,
-          0.06482921440841816,
-          -236.39204762566922
+          114.93526713296082,
+          0.06988662022324388,
+          -240.30280889092535
         ]
       }
     ],
@@ -2606,7 +3143,7 @@
         "landed": true,
         "bailed": false,
         "end": [
-          99.95,
+          99.73,
           -0.028972170836878863,
           -270.38262439001437
         ]
@@ -2652,10 +3189,11 @@
         "landed": true,
         "bailed": false,
         "end": [
-          98.59689543068912,
-          0.6200000047683716,
-          -249.8331391384373
-        ]
+          97.27278977574173,
+          0.8680850532264861,
+          -249.75775036774863
+        ],
+        "landingSurface": "vertramp"
       },
       {
         "side": 1,
@@ -2666,10 +3204,11 @@
         "landed": true,
         "bailed": false,
         "end": [
-          117.35740219855865,
-          0.6200000047683716,
-          -245.811330512238
-        ]
+          118.6828790871001,
+          0.8680850416037358,
+          -245.85661038824733
+        ],
+        "landingSurface": "vertramp"
       }
     ],
     "tuningUnchanged": true
@@ -2684,195 +3223,9 @@
       "fountain",
       "upperRewardNegativeControl"
     ],
-    "reason": "These entrance, fountain and concourse structures were unchanged in pass 10. Their saved focused results remain historical; the complete routes and surface/recovery tests were repeated on the current source."
+    "reason": "Entrance, concourse and fountain structures remain unchanged through passes 10 and 11. Their focused results retain their original build provenance; all complete routes and surface/recovery checks are repeated on the current source."
   },
   "historicalBrowserEvidence": {
-    "full-upper": {
-      "initial": {
-        "position": [
-          2.2,
-          30,
-          5
-        ],
-        "state": "ride",
-        "grounded": true,
-        "skatepark": true,
-        "components": 503
-      },
-      "report": {
-        "done": true,
-        "error": null,
-        "frames": 1529,
-        "progress": 407.25,
-        "evidence": {
-          "route": "upper",
-          "entry": {
-            "pop": false,
-            "turns": [
-              {
-                "name": "Gold quarter return",
-                "frame": 214,
-                "position": [
-                  -2.7318561640263432,
-                  26.44101991072893,
-                  -21.107124352163698
-                ]
-              },
-              {
-                "name": "Blue quarter return",
-                "frame": 388,
-                "position": [
-                  2.180957173000626,
-                  20.455379580362646,
-                  12.110665948580953
-                ]
-              }
-            ],
-            "transitionFrames": [
-              97,
-              100
-            ],
-            "airFrames": [
-              84,
-              88
-            ],
-            "peakFeetY": [
-              34.32194016246263,
-              29.095814063422416
-            ],
-            "returnedSpeeds": [
-              23.85247915203797,
-              24.949406537259144
-            ],
-            "bails": 0
-          },
-          "sections": [
-            0,
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14,
-            15,
-            16,
-            17,
-            18,
-            19,
-            20,
-            21,
-            22
-          ],
-          "jumps": [
-            {
-              "s": 68.5,
-              "end": 74,
-              "name": "Fountain entry",
-              "frame": 582,
-              "air": true,
-              "landing": 77
-            },
-            {
-              "s": 77.8,
-              "end": 84,
-              "name": "Fountain exit",
-              "frame": 625,
-              "air": true,
-              "landing": 87
-            },
-            {
-              "name": "Hidden rail reward ollie",
-              "frame": 890,
-              "progress": 163.5,
-              "fromRail": 17
-            },
-            {
-              "s": 128,
-              "end": 187,
-              "name": "Flying Leap",
-              "grind": true,
-              "frame": 797,
-              "air": true,
-              "landing": 226.25
-            },
-            {
-              "s": 276.2,
-              "end": 300,
-              "name": "Crossrail transfer",
-              "grind": true,
-              "frame": 1185,
-              "air": true,
-              "landing": 316
-            }
-          ],
-          "grinds": [
-            17,
-            18,
-            26,
-            29
-          ],
-          "railNames": [
-            "Suspended upper light rail",
-            "Lower escalator handrail",
-            "Crossrail left to right"
-          ],
-          "checkpoints": [
-            4
-          ],
-          "upperTransfer": {
-            "fromRail": 17,
-            "toRail": 18,
-            "frame": 926,
-            "position": [
-              34.37411908402478,
-              15.758289442964568,
-              -141.3168298915827
-            ],
-            "frames": 19
-          },
-          "fountainLandingFrames": 6,
-          "fountainBrakingFrames": 34,
-          "peakSpeed": 30.500000000000423,
-          "minimumMovingSpeed": 13.106389144471745,
-          "bails": 0,
-          "airFrames": 416,
-          "crystal": true
-        },
-        "sourceMatches": true,
-        "fountainCamera": {
-          "samples": 25,
-          "minimumDistance": 7.656065208046067,
-          "maximumHeadY": 19.260901846950755
-        },
-        "entryCamera": {
-          "samples": 68,
-          "minimumDistance": 3.5173081718949795
-        },
-        "entryObstructions": [],
-        "fountainViewSamples": 111,
-        "fountainObstructions": [],
-        "fountainCapBottom": 20.3,
-        "position": [
-          107.77804359912207,
-          -6.263333333556851,
-          -303.14216327141
-        ],
-        "state": "finished",
-        "grounded": true,
-        "deaths": 0,
-        "tuningUnchanged": true
-      },
-      "errors": [],
-      "build": "89cb8423f81900b6a8ce"
-    },
     "full-planter": {
       "initial": {
         "position": [
@@ -2936,59 +3289,129 @@
         "tag": "full-courtyard-left-roll",
         "ready": true,
         "done": true,
-        "frames": 201,
+        "frames": 205,
         "contacts": 26,
-        "air": 56,
-        "peak": 6.165171118323547,
+        "air": 57,
+        "peak": 6.31817986378793,
         "bailed": false,
+        "poolFrames": 0,
+        "poolCollected": false,
         "obstructions": [],
         "sourceMatches": true,
+        "s": 344.09798249087316,
         "position": [
-          101.17402702342063,
-          0.013417828717634639,
-          -236.32157994844792
+          101.20212056257857,
+          0,
+          -240.09798249087316
         ],
         "state": "ride",
         "grounded": true,
-        "speed": 22.858424945641026,
+        "speed": 23.138773718327133,
         "verticalSpeed": 0,
         "deaths": 0,
         "cameraSummary": {
-          "samples": 89,
-          "minimumDistance": 5.1535125980072145
+          "samples": 90,
+          "minimumDistance": 5.365633692288333
         },
         "tuningUnchanged": true,
         "endError": 0,
-        "build": "9a799a4e10bba42ceaab"
+        "build": "42159cc7d598f5582719"
       },
       {
         "tag": "full-courtyard-right-pop",
         "ready": true,
         "done": true,
-        "frames": 223,
-        "contacts": 22,
-        "air": 83,
-        "peak": 9.82647695135534,
+        "frames": 226,
+        "contacts": 21,
+        "air": 84,
+        "peak": 9.913831592086938,
         "bailed": false,
+        "poolFrames": 0,
+        "poolCollected": false,
         "obstructions": [],
         "sourceMatches": true,
+        "s": 344.30280889092535,
         "position": [
-          114.92547863054608,
-          0.06482921440841816,
-          -236.39204762566922
+          114.93526713296082,
+          0.06988662022324388,
+          -240.30280889092535
         ],
         "state": "ride",
         "grounded": true,
-        "speed": 23.447355165533402,
+        "speed": 23.6795078487938,
         "verticalSpeed": 0,
         "deaths": 0,
         "cameraSummary": {
           "samples": 111,
-          "minimumDistance": 5.128141133535931
+          "minimumDistance": 4.741703604936914
         },
         "tuningUnchanged": true,
         "endError": 0,
-        "build": "9a799a4e10bba42ceaab"
+        "build": "42159cc7d598f5582719"
+      },
+      {
+        "tag": "full-pool-roll",
+        "ready": true,
+        "done": true,
+        "frames": 189,
+        "contacts": 33,
+        "air": 0,
+        "peak": 1.1336801492108206,
+        "bailed": false,
+        "poolFrames": 22,
+        "poolCollected": false,
+        "obstructions": [],
+        "sourceMatches": true,
+        "s": 370.1623968081943,
+        "position": [
+          108,
+          0,
+          -266.1623968081943
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 23.483590635262445,
+        "verticalSpeed": 0,
+        "deaths": 0,
+        "cameraSummary": {
+          "samples": 100,
+          "minimumDistance": 5.528479751259816
+        },
+        "tuningUnchanged": true,
+        "endError": 0,
+        "build": "42159cc7d598f5582719"
+      },
+      {
+        "tag": "full-pool-section-jump",
+        "ready": true,
+        "done": true,
+        "frames": 225,
+        "contacts": 26,
+        "air": 52,
+        "peak": 3.879042958377528,
+        "bailed": false,
+        "poolFrames": 0,
+        "poolCollected": true,
+        "obstructions": [],
+        "sourceMatches": true,
+        "s": 370.2304471645976,
+        "position": [
+          108,
+          0,
+          -266.2304471645976
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 14.236744194342743,
+        "verticalSpeed": 0,
+        "deaths": 0,
+        "cameraSummary": {
+          "samples": 136,
+          "minimumDistance": 4.511928944318804
+        },
+        "tuningUnchanged": true,
+        "endError": 0,
+        "build": "42159cc7d598f5582719"
       }
     ],
     "errors": []
@@ -3006,5 +3429,410 @@
       "deckBehindLip": 0.9
     },
     "measurementStatus": "Profile, raised approach and clearance are inferred and calibrated for the existing skater; they are not original metric measurements."
+  },
+  "validationRuns": {
+    "native": {
+      "before": {
+        "src/levels/mall.ts": "a1a8fc834dc3fb166e9210cce2dd5858b7dfa004df3f6fa3151e6bbfc192d527",
+        "tools/mall-pilot.mjs": "c743e22e02319e9bb2f14b1f1c76fde36b55f98c14bc97031aba73b56bf689f7",
+        "src/player.ts": "51a93fc9cb8f3613fedf0a16625e7b22e09859f3aa45898d3892677412b42e3b",
+        "src/level.ts": "898a6d458627d11c31f9a5fd02b12dbd3bf9984278da23c4526b2d7e62448917",
+        "src/rails.ts": "ac13ba8494b81ebc85f3926963ddb8c2d98d1694082a2f87f63582b86de51a4d",
+        "src/tuning.ts": "dc7b43eedbb160b2ddfc16cdfdca42f1419245a76214fdccd49cf872905038c0",
+        "src/skateChaseCamera.ts": "91481102b4f31f009f483f2d125e8f2b7bf96368e963d72005b076036d05e984"
+      },
+      "after": {
+        "src/levels/mall.ts": "a1a8fc834dc3fb166e9210cce2dd5858b7dfa004df3f6fa3151e6bbfc192d527",
+        "tools/mall-pilot.mjs": "c743e22e02319e9bb2f14b1f1c76fde36b55f98c14bc97031aba73b56bf689f7",
+        "src/player.ts": "51a93fc9cb8f3613fedf0a16625e7b22e09859f3aa45898d3892677412b42e3b",
+        "src/level.ts": "898a6d458627d11c31f9a5fd02b12dbd3bf9984278da23c4526b2d7e62448917",
+        "src/rails.ts": "ac13ba8494b81ebc85f3926963ddb8c2d98d1694082a2f87f63582b86de51a4d",
+        "src/tuning.ts": "dc7b43eedbb160b2ddfc16cdfdca42f1419245a76214fdccd49cf872905038c0",
+        "src/skateChaseCamera.ts": "91481102b4f31f009f483f2d125e8f2b7bf96368e963d72005b076036d05e984"
+      },
+      "unchanged": true,
+      "results": [
+        {
+          "route": "main",
+          "exitCode": 0,
+          "wallSeconds": 47.98
+        },
+        {
+          "route": "upper",
+          "exitCode": 0,
+          "wallSeconds": 49.35
+        },
+        {
+          "route": "upper-fast",
+          "exitCode": 0,
+          "wallSeconds": 26.2
+        },
+        {
+          "route": "car",
+          "exitCode": 0,
+          "wallSeconds": 26.24
+        },
+        {
+          "route": "coffee",
+          "exitCode": 0,
+          "wallSeconds": 31.58
+        },
+        {
+          "route": "escalator",
+          "exitCode": 0,
+          "wallSeconds": 31.65
+        },
+        {
+          "route": "mezzanine",
+          "exitCode": 0,
+          "wallSeconds": 20.54
+        },
+        {
+          "route": "underpass",
+          "exitCode": 0,
+          "wallSeconds": 20.25
+        },
+        {
+          "route": "pool",
+          "exitCode": 0,
+          "wallSeconds": 13.85
+        },
+        {
+          "route": "pool-surfaces",
+          "exitCode": 0,
+          "wallSeconds": 14.01
+        },
+        {
+          "route": "courtyard",
+          "exitCode": 0,
+          "wallSeconds": 25.33
+        },
+        {
+          "route": "surfaces",
+          "exitCode": 0,
+          "wallSeconds": 14.03
+        }
+      ]
+    },
+    "browser": {
+      "before": {
+        "src/levels/mall.ts": "a1a8fc834dc3fb166e9210cce2dd5858b7dfa004df3f6fa3151e6bbfc192d527",
+        "src/player.ts": "51a93fc9cb8f3613fedf0a16625e7b22e09859f3aa45898d3892677412b42e3b",
+        "src/level.ts": "898a6d458627d11c31f9a5fd02b12dbd3bf9984278da23c4526b2d7e62448917",
+        "src/rails.ts": "ac13ba8494b81ebc85f3926963ddb8c2d98d1694082a2f87f63582b86de51a4d",
+        "src/tuning.ts": "dc7b43eedbb160b2ddfc16cdfdca42f1419245a76214fdccd49cf872905038c0",
+        "src/skateChaseCamera.ts": "91481102b4f31f009f483f2d125e8f2b7bf96368e963d72005b076036d05e984"
+      },
+      "after": {
+        "src/levels/mall.ts": "a1a8fc834dc3fb166e9210cce2dd5858b7dfa004df3f6fa3151e6bbfc192d527",
+        "src/player.ts": "51a93fc9cb8f3613fedf0a16625e7b22e09859f3aa45898d3892677412b42e3b",
+        "src/level.ts": "898a6d458627d11c31f9a5fd02b12dbd3bf9984278da23c4526b2d7e62448917",
+        "src/rails.ts": "ac13ba8494b81ebc85f3926963ddb8c2d98d1694082a2f87f63582b86de51a4d",
+        "src/tuning.ts": "dc7b43eedbb160b2ddfc16cdfdca42f1419245a76214fdccd49cf872905038c0",
+        "src/skateChaseCamera.ts": "91481102b4f31f009f483f2d125e8f2b7bf96368e963d72005b076036d05e984"
+      },
+      "unchanged": true,
+      "results": [
+        {
+          "tag": "lite-main",
+          "exitCode": 0,
+          "wallSeconds": 39.49
+        },
+        {
+          "tag": "full-upper-fast",
+          "exitCode": 0,
+          "wallSeconds": 40.11
+        },
+        {
+          "tag": "full-upper",
+          "exitCode": 0,
+          "wallSeconds": 38.44
+        },
+        {
+          "tag": "full-mezzanine",
+          "exitCode": 0,
+          "wallSeconds": 36.15
+        },
+        {
+          "tag": "full-pool",
+          "exitCode": 0,
+          "wallSeconds": 35.84
+        },
+        {
+          "tag": "courtyard",
+          "exitCode": 0,
+          "wallSeconds": 54.42
+        },
+        {
+          "tag": "smoke",
+          "exitCode": 0,
+          "wallSeconds": 15.79
+        },
+        {
+          "tag": "overview-plaza",
+          "exitCode": 0,
+          "wallSeconds": 14.48
+        },
+        {
+          "tag": "overview-all",
+          "exitCode": 0,
+          "wallSeconds": 13.18
+        }
+      ]
+    }
+  },
+  "pool": {
+    "surfaces": [
+      {
+        "s": 350.5,
+        "u": 0,
+        "direction": -1,
+        "name": "Courtyard blue pool",
+        "y": -0.800000011920929,
+        "normal": [
+          0,
+          0.9999999999999999,
+          0
+        ]
+      },
+      {
+        "s": 350.5,
+        "u": -7,
+        "direction": -1,
+        "name": "Courtyard left blue canopy",
+        "y": 3.0899538380595883,
+        "normal": [
+          0.18098074479800533,
+          0.9834861454313704,
+          0.0009857773098913831
+        ]
+      },
+      {
+        "s": 350.5,
+        "u": 7,
+        "direction": -1,
+        "name": "Courtyard right blue canopy",
+        "y": 3.0899538380595883,
+        "normal": [
+          -0.18098074479800533,
+          0.9834861454313704,
+          0.0009857773098913831
+        ]
+      },
+      {
+        "s": 350.5,
+        "u": -7,
+        "direction": 1,
+        "name": "Courtyard left blue canopy",
+        "y": 2.9299537522289,
+        "normal": [
+          -0.18098074488165153,
+          -0.9834861458859209,
+          -0.0009853083476080561
+        ]
+      },
+      {
+        "s": 350.5,
+        "u": 7,
+        "direction": 1,
+        "name": "Courtyard right blue canopy",
+        "y": 2.9299537522289,
+        "normal": [
+          0.18098074488165153,
+          -0.9834861458859209,
+          -0.0009853083476080561
+        ]
+      }
+    ],
+    "jumps": [
+      {
+        "release": null,
+        "popped": false,
+        "launchFrames": 33,
+        "poolFrames": 22,
+        "minimumFeetY": -0.800000011920929,
+        "takeoff": null,
+        "landing": null,
+        "airFrames": 0,
+        "peakFeetY": 1.1336801492108206,
+        "bailed": false,
+        "collected": false,
+        "end": [
+          108,
+          0,
+          -266.1623968081943
+        ]
+      },
+      {
+        "release": 344,
+        "popped": true,
+        "launchFrames": 23,
+        "poolFrames": 0,
+        "minimumFeetY": 0,
+        "takeoff": {
+          "s": 344.36443932760676,
+          "speed": 14.610760860810004
+        },
+        "landing": {
+          "s": 357.0270987403087,
+          "speed": 11.213047622852821,
+          "surface": "Courtyard rear wedge"
+        },
+        "airFrames": 52,
+        "peakFeetY": 3.724979439675462,
+        "bailed": false,
+        "collected": true,
+        "end": [
+          108,
+          0,
+          -266.01431810172977
+        ]
+      },
+      {
+        "release": 344.8,
+        "popped": true,
+        "launchFrames": 26,
+        "poolFrames": 0,
+        "minimumFeetY": 0,
+        "takeoff": {
+          "s": 345.10953551929543,
+          "speed": 14.824558845492147
+        },
+        "landing": {
+          "s": 357.9574865187224,
+          "speed": 11.430473663956079,
+          "surface": "Courtyard rear wedge"
+        },
+        "airFrames": 52,
+        "peakFeetY": 3.879042958377528,
+        "bailed": false,
+        "collected": true,
+        "end": [
+          108,
+          0,
+          -266.2304471645976
+        ]
+      }
+    ],
+    "canopies": [
+      {
+        "side": -1,
+        "contacts": 106,
+        "landed": true,
+        "bailed": false,
+        "minimumSpeed": 0.14999997047244093,
+        "landingSpeed": 15.054474783963364,
+        "end": [
+          101.04469418055946,
+          1.3570174104436141,
+          -259.9995333346
+        ],
+        "landingSurface": "Mezzanine approach"
+      },
+      {
+        "side": 1,
+        "contacts": 106,
+        "landed": true,
+        "bailed": false,
+        "minimumSpeed": 0.14999997047244093,
+        "landingSpeed": 20.048521494270542,
+        "end": [
+          114.94643335626557,
+          0.0756558503136465,
+          -261.5411825630514
+        ],
+        "landingSurface": "Courtyard ledge inner bank"
+      }
+    ],
+    "canopyGrinds": [
+      {
+        "origin": [
+          102.75481628997984,
+          3.1930734840080643,
+          -238.99360039213943
+        ],
+        "caught": 206,
+        "travel": 15.03209861405274,
+        "landed": true,
+        "bailed": false,
+        "end": [
+          102.46040001574713,
+          0.20077625600391036,
+          -255.7396987802411
+        ],
+        "landingSurface": "Mezzanine approach"
+      },
+      {
+        "origin": [
+          97.8,
+          4.392848784854043,
+          -238.99911025645258
+        ],
+        "caught": 205,
+        "travel": 14.964838952034164,
+        "landed": true,
+        "bailed": false,
+        "end": [
+          97.8,
+          0.6712942579650921,
+          -255.92148346807735
+        ],
+        "landingSurface": "vertramp"
+      },
+      {
+        "origin": [
+          113.24518371002016,
+          3.1930734840080643,
+          -238.99360039213943
+        ],
+        "caught": 206,
+        "travel": 15.03209861405274,
+        "landed": true,
+        "bailed": false,
+        "end": [
+          113.54591998372797,
+          0,
+          -255.79768873958247
+        ],
+        "landingSurface": "Continuous mall floor"
+      },
+      {
+        "origin": [
+          118.2,
+          4.392848784854043,
+          -238.99911025645258
+        ],
+        "caught": 205,
+        "travel": 14.964838952034164,
+        "landed": true,
+        "bailed": false,
+        "end": [
+          118.2,
+          0.6712943799589048,
+          -255.92148344378097
+        ],
+        "landingSurface": "vertramp"
+      }
+    ]
+  },
+  "poolReference": {
+    "game": "Original 1999 THPS Mall, PS1",
+    "video": "https://www.youtube.com/watch?v=n0kosmzFb0A",
+    "time": "6:12\u20136:13",
+    "guide": "https://planettonyhawk.gamespy.com/Viewf1e2.html?id=5&view=thps_faqs_guides.Detail",
+    "observed": "A recessed blue pool sits between two elevated blue roofs. A tan launch wedge leads to the pool, with another wedge beyond. The guide places E above the pool and instructs a jump from the preceding wedge.",
+    "inferredMetres": {
+      "poolLength": 7,
+      "poolWidth": 10.4,
+      "poolDepth": 0.8,
+      "poolBankRun": 1.2,
+      "wedgeHeight": 1.15,
+      "canopyLength": 16,
+      "canopyInnerHeight": 2.9,
+      "canopyOuterHeight": 4.1,
+      "roofThickness": 0.16,
+      "rewardHeight": 5.2
+    },
+    "measurementStatus": "Dimensions remain inferred and are checked against the existing skater. The reward height accounts for its native pickup reach without changing that mechanic."
   }
 }

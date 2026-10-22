@@ -52,6 +52,12 @@ await withBlockworksRuntime(async r=>{
   assert.ok(firstLanding&&m.mallProject(firstLanding.position[0],firstLanding.position[2],390)>391,
    'The mezzanine jump must clear all 32 stairs before its first landing');
  }
+ if(route==='pool'){
+  const e=pilot.evidence.pool;
+  assert.ok(e?.launchFrames>=4&&e.takeoff.s<347,'The pool jump must take off from the approach wedge');
+  assert.ok(e.airFrames>=20&&e.landing?.s>354,'The first landing must clear the pool');
+  assert.ok(e.landing.speed>18&&e.collected,'The jump must collect the pool reward and retain speed on landing');
+ }
  if(route==='underpass'){
   const inside=r.trace.filter(v=>v.position[2]<m.mallPoint(59)[2]&&v.position[2]>m.mallPoint(67)[2]);
   assert.ok(inside.length>12&&inside.every(v=>v.position[1]<12.2),
