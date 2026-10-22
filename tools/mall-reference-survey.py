@@ -189,7 +189,7 @@ def main(archive, output):
         archive='THPS1Mallv2.0.zip', archiveSHA256=hashlib.sha256(raw).hexdigest(),
         collisionSHA256=hashlib.sha256(col).hexdigest(), nodesSHA256=hashlib.sha256(qb).hexdigest(),
         credit='PS1 Mall by Neversoft; ripped and noded by letmynutzgo; conversion scripting by TylerLasagna.',
-        status='Measurement reference only; not integrated into the playable recreation yet.',
+        status='Source-coordinate survey used by the measured playable recreation; not retail-disc-verified.',
         limitations=['The conversion includes author-created rail nodes and gameplay changes; these are not original TRG rails.',
                      'Cereal-box appearance and multiplayer nodes are conversion changes; validate movable-object placement independently.',
                      'Coordinates retain source units and Y-up orientation; skater scale remains to be calibrated.',

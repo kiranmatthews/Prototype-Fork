@@ -1,3 +1,4 @@
+import { MALL_TEXTURE_KINDS, mallArt } from './mallArt';
 import { CARLISLE_COAST_LEVEL } from "./levels/carlisle-coast";
 import { CUSTARD_CREEK_LEVEL } from "./levels/custard-creek";
 import { isOriginalTestCourse } from "./levels/carlisleLegacy";
@@ -910,6 +911,7 @@ export const DECOR_LABELS: Record<DecorKind, string> = {
 // Every paintable surface kind the texture system offers. The editor's
 // texture dropdown is built from this list; 'checker' is the classic default.
 export const TEX_KINDS = [
+  ...MALL_TEXTURE_KINDS,
   ...CASTLE_TEXTURE_KINDS,
   "checker",
   "grass",
@@ -4251,6 +4253,14 @@ export class Level {
     if (kind === "checker") return this.checkerTexture();
     const cached = this.surfTexCache.get(kind);
     if (cached) return cached;
+    const mall = mallArt(kind);
+    if (mall) {
+      const texture = Level.finishTex(this.surfaceImage(mall.file), true);
+      texture.wrapS = mall.wrap[0] === 0 ? THREE.RepeatWrapping : THREE.ClampToEdgeWrapping;
+      texture.wrapT = mall.wrap[1] === 0 ? THREE.RepeatWrapping : THREE.ClampToEdgeWrapping;
+      this.surfTexCache.set(kind, texture);
+      return texture;
+    }
     if(kind==='coast-timber')return this.surfaceTexture('wood');
     if(kind==='coast-terrain')return this.surfaceTexture('coast-bedrock');
     if(kind==='coast-turf'||kind==='coast-bedrock'){
@@ -5587,7 +5597,7 @@ export class Level {
     if (c.colors) geometry.setAttribute("color", new THREE.Float32BufferAttribute(c.colors, 3));
     geometry.computeBoundingBox();
     geometry.computeBoundingSphere();
-    let material: THREE.MeshLambertMaterial | THREE.MeshStandardMaterial;
+    let material: THREE.MeshLambertMaterial | THREE.MeshStandardMaterial | THREE.MeshBasicMaterial;
     const standingWater=isStandingWater(c);
     const jungleStream=c.materialStyle==='jungle-stream';
     if(jungleStream){
@@ -5629,6 +5639,14 @@ export class Level {
         this.meshSandMaterials.set(key, sand);
         material = sand;
       }
+    } else if (mallArt(c.tex)) {
+      const art = mallArt(c.tex)!;
+      material = new THREE.MeshBasicMaterial({
+        map: this.surfaceTexture(c.tex!), color: c.color ?? '#ffffff', vertexColors: !!c.colors,
+        side: c.doubleSided ? THREE.DoubleSide : THREE.FrontSide, alphaTest: art.cutoff,
+        transparent: art.transparent || (c.opacity ?? 1) < 1,
+        opacity: c.opacity ?? 1, depthWrite: !art.transparent, fog: c.fog !== false,
+      });
     } else if(isCastleTexture(c.tex))material=createCastleMaterial(c);
     else material = new THREE.MeshLambertMaterial({
       color: c.color ?? "#ffffff", vertexColors: !!c.colors,
