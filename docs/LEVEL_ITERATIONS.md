@@ -651,3 +651,12 @@
 - Lite and full rendering each pass all 25 cases / 4,718 fixed steps. Each retains the known ResizeObserver layout notification; no new console error appeared. The old review-tab MutationObserver entry is still retained, with its prior clean standalone comparison.
 - `check:levels` and `build` pass. Refreshed the focused physics pass after concurrent shared player/level edits; updated the tested runtime fingerprints without incorporating those unrelated edits.
 - Validated at 2026-10-22 13:31 UTC, 159.9 minutes from the original prompt across all refinement passes. All changes remain local. Hall Pass, the rail-to-rail planter relationships, Funbox transfers, Park Gap and the planter chain remain under active review.
+
+### 2026-10-23 — School Miami: traced halfpipe and street transfers
+
+- Replaced the oversized halfpipe sweep with directly traced outer/inner coping lines; added a supported pool-end connection. Corrected the rear table axis and reduced the rear classroom depth to clear the riding lane.
+- Proved Funbox to Huge Rail, Funbox to Table, Funbox to Playground Rail, the west wedge to Long Ass Rail, and Park Gap. Each uses normal input, the exact receiving rail for at least eight frames, and a supported rollout. No balance boost or special meter is used.
+- The native-spawn circuit now has 48 waypoints: 381.8 m, 21 Gimme Gap grind frames and 525 uphill Long Ass Rail grind frames. A normal side ollie exits onto the upper court; no position or velocity corrections occur during the lap.
+- Physics: 212 components / 57 rails, 20 support checks, 13 routes, 23 air cases, 7 grind cases and one continuous circuit. Both lite and full rendering pass all 30 live cases / 5,777 fixed steps; zero bails in accepted skating cases.
+- `check:levels` and `build` pass. Existing headless asset fallback messages and the build chunk-size warning remain. Each live sequence records one ResizeObserver layout notification; no new console errors appeared beyond the previously recorded MutationObserver entry. Movement/input/level runtime fingerprints are unchanged from the previous validation.
+- Validated at 2026-10-22 14:18 UTC, 206.1 minutes from the original prompt across all passes. All changes remain local. Hall Pass and its elevation relationship, rail-to-rail planters, the upper planter chain and remaining boundary/detail differences remain under active review.

@@ -9,12 +9,22 @@ function meterControl(p:any,dt:number){
   let previous=0;
   return()=>{const value=p.balanceMeter?.bal??0,axis=clamp(-value*6-(value-previous)/dt*.65);previous=value;return axis;};
 }
-export function createBalancedGrind(p:any,rail:any,dt:number){
-  const balance=meterControl(p,dt),report={frames:0,grindFrames:0,maxT:0,maxBalance:0,caught:false,landed:false};
-  return {report,sample:()=>quantize({grindHeld:true,grindPressed:report.frames===0,moveX:p.state==='grind'?balance():0}),observe:()=>{
+export function createBalancedGrind(p:any,rail:any,dt:number,sideExit=false){
+  const direction=p.axisF.dot(rail.tangentAt(rail.closest(p.pos).t))<0?-1:1;
+  const balance=meterControl(p,dt),report={frames:0,grindFrames:0,maxT:0,minT:rail.totalLength,progress:0,direction,maxBalance:0,caught:false,landed:false};
+  let exitPopped=false,held=false;
+  return {report,sample:()=>{
+    const nearEnd=sideExit&&report.progress>rail.totalLength-1.5,release=nearEnd&&!exitPopped&&report.progress>rail.totalLength-.6;
+    if(release)exitPopped=true;
+    const charge=nearEnd&&!exitPopped,press=charge&&!held;held=charge;
+    let moveX=p.state==='grind'?balance():0,moveY=0;
+    if(nearEnd){const h=rail.tangentAt(p.grindT).multiplyScalar(direction),camLen=Math.hypot(p.camDir.x,p.camDir.z)||1,wx=-h.z*.55,wz=h.x*.55;moveX=(-p.camDir.z*wx+p.camDir.x*wz)/camLen;moveY=(p.camDir.x*wx+p.camDir.z*wz)/camLen;}
+    return quantize({grindHeld:!exitPopped,grindPressed:report.frames===0,moveX,moveY,jumpHeld:charge,jumpPressed:press,jumpReleased:release});
+  },observe:()=>{
     report.frames++;
-    if(p.state==='grind'&&p.grindRail===rail){report.caught=true;report.grindFrames++;report.maxT=Math.max(report.maxT,p.grindT);report.maxBalance=Math.max(report.maxBalance,Math.abs(p.balanceMeter?.bal??0));}
-    if(report.caught&&p.grounded){if(report.maxT<rail.totalLength-.3)throw Error('Long grind left its rail before the end');report.landed=true;return true;}
+    if(p.state==='grind'&&p.grindRail===rail){report.caught=true;report.grindFrames++;report.maxT=Math.max(report.maxT,p.grindT);report.minT=Math.min(report.minT,p.grindT);report.progress=Math.max(report.progress,direction>0?p.grindT:rail.totalLength-p.grindT);report.maxBalance=Math.max(report.maxBalance,Math.abs(p.balanceMeter?.bal??0));}
+    if(exitPopped&&p.state==='air'){report.minT=Math.min(report.minT,p.grindT);report.progress=Math.max(report.progress,direction>0?p.grindT:rail.totalLength-p.grindT);}
+    if(report.caught&&p.grounded){if(report.progress<rail.totalLength-.3)throw Error('Long grind left its rail before the end');report.landed=true;return true;}
     return false;
   }};
 }

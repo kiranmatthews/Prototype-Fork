@@ -199,9 +199,9 @@ await withSkateRuntime(async ({ THREE, server, Level, Player, scene, CONST, TUNI
     // Tap an ollie over the Mini Gap with a pre-held right transfer input.
     // The bend's receiving coping is angled. Release grind during the air
     // and press it again on arrival, then verify a clean ground rollout.
-    const miniCentre=new THREE.Vector3(...m.SCHOOL_MINI_GAP.before).add(new THREE.Vector3(6.1,3.05,0));
-    const miniRails=level.rails.filter(r=>r.points.some(q=>q.distanceTo(miniCentre)<4));
-    const miniTakeoff=miniRails.find(r=>r.totalLength>20),miniReceiver=miniRails.find(r=>r.totalLength<10);
+    const miniCentre=new THREE.Vector3(...m.SCHOOL_MINI_GAP.takeoffCoping).add(new THREE.Vector3(0,.05,0));
+    const miniTakeoff=level.rails.find(r=>r.points[0].distanceTo(miniCentre)<.3);
+    const miniReceiver=level.rails.find(r=>r.points.at(-1).distanceTo(new THREE.Vector3(...m.SCHOOL_MINI_GAP.receiverCoping).add(new THREE.Vector3(0,.05,0)))<.3);
     assert.ok(miniTakeoff&&miniReceiver,'Mini Gap needs two separated coping runs');
     const mq=miniTakeoff.pointAt(4).add(new THREE.Vector3(0,.3,0)),mh=miniTakeoff.tangentAt(4).multiplyScalar(-1).setY(0).normalize();
     place(mq.toArray(),mh.toArray(),6);p.pos.copy(mq);p.prevPos.copy(mq);p.state='air';p.grounded=false;p.vVel=0;p.airFromSkate=true;p.airGrav='board';p.balanceBoostT=10;
@@ -245,11 +245,11 @@ await withSkateRuntime(async ({ THREE, server, Level, Player, scene, CONST, TUNI
     const sign=m.schoolMapPoint(352,78);sign[1]=-2.45;
     const playground=level.rails.find(r=>r.points[0].distanceTo(new THREE.Vector3(...sign))<.1);
     for(const [name,r] of [['Long Ass Rail',longRail],['Huge Rail',miniTakeoff],['Playground Rail',playground]]){
-      assert.ok(r,`${name} missing`);const h=r.tangentAt(.4).setY(0).normalize(),q=r.pointAt(.4);
+      assert.ok(r,`${name} missing`);const reverse=name==='Huge Rail',t=reverse?r.totalLength-.4:.4,h=r.tangentAt(t).multiplyScalar(reverse?-1:1).setY(0).normalize(),q=r.pointAt(t);
       if(name==='Long Ass Rail'){const a=r.points[0].clone().addScaledVector(h,-1.5);place([a.x,.1,a.z],h.toArray(),14);}
       else{q.y+=.3;place(q.toArray(),h.toArray(),14);p.pos.copy(q);p.prevPos.copy(q);p.grounded=false;p.state='air';p.vVel=0;p.airFromSkate=true;p.airGrav='board';}
       assert.equal(p.balanceBoostT,0,'long grinds must use normal balance');assert.equal(p.uberTimer,0);
-      const line=createBalancedGrind(p,r,CONST.fixedStep);let complete=false;
+      const line=createBalancedGrind(p,r,CONST.fixedStep,reverse);let complete=false;
       for(let i=0;i<900;i++){step(makeInput(line.sample()));assert.ok(!p.isBailing,`${name} bailed`);if(line.observe()){complete=true;break;}}
       assert.ok(complete,`${name} never completed`);report.grinds.push({name,...line.report,bails:0,end:p.pos.toArray()});
     }
@@ -260,6 +260,20 @@ await withSkateRuntime(async ({ THREE, server, Level, Player, scene, CONST, TUNI
     const roofMini=createRoofMiniGap(p,roofA,roofB,CONST.fixedStep);let roofMiniComplete=false;
     for(let i=0;i<300;i++){step(makeInput(roofMini.sample()));assert.ok(!p.isBailing,'Roof Mini Gap bailed');if(roofMini.observe()){roofMiniComplete=true;break;}}
     assert.ok(roofMiniComplete,'Roof Mini Gap did not land back on the roof');report.airs.push({name:'Roof Mini Gap',...roofMini.report,bails:0,end:p.pos.toArray()});
+    const street=await server.ssrLoadModule('/tools/school-street-transfers.ts');
+    for(const c of street.schoolStreetTrials(level,p)){
+      const heading=new THREE.Vector3(...c.heading).normalize(),q=new THREE.Vector3(...c.centre).addScaledVector(heading,-5.5);q.y=-4.9;
+      place(q.toArray(),heading.toArray(),c.speed);assert.equal(p.balanceBoostT,0);
+      const controller=street.createStreetTransfer(p,c,CONST.fixedStep);let done=false;
+      for(let n=0;n<450;n++){step(makeInput(controller.sample()));assert.ok(!p.isBailing,`${c.name}: bail`);if(controller.observe()){done=true;break;}}
+      assert.ok(done,`${c.name}: no supported rollout`);report.airs.push({name:c.name,...controller.report,bails:0,end:p.pos.toArray()});
+    }
+    const {takeoff:parkA,receiver:parkB}=street.parkGapRails(level,p);assert.ok(parkA&&parkB);
+    const parkQ=parkA.pointAt(parkA.totalLength-4).add(new THREE.Vector3(0,.3,0)),parkH=parkA.tangentAt(parkA.totalLength-4).setY(0).normalize();
+    place(parkQ.toArray(),parkH.toArray(),12);p.pos.copy(parkQ);p.prevPos.copy(parkQ);p.state='air';p.grounded=false;p.vVel=0;p.airFromSkate=true;p.airGrav='board';assert.equal(p.balanceBoostT,0);
+    const park=street.createParkGap(p,parkA,parkB,CONST.fixedStep);let parkDone=false;
+    for(let n=0;n<350;n++){step(makeInput(park.sample()));assert.ok(!p.isBailing,'Park Gap bailed');if(park.observe()){parkDone=true;break;}}
+    assert.ok(parkDone,'Park Gap missed its yard rollout');report.airs.push({name:'Park Gap',...park.report,bails:0,end:p.pos.toArray()});
     // Complete the opening grind, downhill gap, rear corridor, pool deck,
     // and uphill return in one native-spawn run with no intermediate reset.
     const {createSchoolCircuit}=await server.ssrLoadModule('/tools/school-circuit.ts');

@@ -236,30 +236,43 @@ for(let i=0;i<classroomPlan.length;i++){
 // Long opposing transitions behind the classroom wings, including the bend
 // into the rear playground. Source order matters: pools -> Huge Rail -> back
 // funboxes -> Park Gap -> stair/kicker landing.
-const longPipeMap:Plan[]=[[62,107],[86,106],[124,92],[164,81],[181,82],[235,93],[266,101],[286,97],[300,80],[308,61],[320,45],[337,38]];
-const longPipe=longPipeMap.map(([u,v])=>schoolMapPoint(u,v,lowerY));
+// Trace the actual coping lines, rather than treating an image-space lip
+// as a floor spine and adding the full transition width to it again.
+export const SCHOOL_CORRIDOR={rise:1.25,deck:.65};
+const corridor=SCHOOL_CORRIDOR,lipY=lowerY+corridor.rise;
+const longOuterMap:Plan[]=[[50,87],[62,90],[86,94],[100,91],[124,80],[164,67],[181,68],[235,78],[266,85],[284,82],[296,68],[305,48],[319,29],[337,24]];
+const longInnerMap:Plan[]=[[50,97],[62,100],[86,104],[100,101],[124,90],[164,78],[181,79],[235,89],[266,96],[286,92],[302,77],[309,62],[319,45],[337,38]];
+const backOuterMap:Plan[]=[[337,24],[363,28],[413,39],[470,54],[491,58],[507,64],[517,74],[519,86],[517,96],[511,108],[507,120]];
+const outerLips=[...longOuterMap,...backOuterMap.slice(1)].map(([u,v])=>schoolMapPoint(u,v,lipY));
+const innerLips=longInnerMap.map(([u,v])=>schoolMapPoint(u,v,lipY));
+const longPipe=longOuterMap.map(([u,v],i):Point=>{const a=schoolMapPoint(u,v,lipY),b=innerLips[i];return[(a[0]+b[0])/2,lowerY,(a[2]+b[2])/2];});
 export const SCHOOL_LONG_HALFPIPE=longPipe;
-const backPipeMap:Plan[]=[[337,38],[363,42],[413,51],[470,61],[493,69],[502,82],[501,99],[493,115]];
-const backPipe=backPipeMap.map(([u,v])=>schoolMapPoint(u,v,lowerY));
-const perimeterPipe=[...longPipe,...backPipe.slice(1)];
-// The flat lane stays continuous when the inner transition is split for
-// the Mini Gap. Sampling the same outer spline prevents a floor seam at
-// the bend from opening between independently swept quarterpipe sections.
-const laneCurve=new CatmullRomCurve3(perimeterPipe.map(p=>new Vector3(...p)),false,'centripetal',.5);
-const laneSteps=Math.max(8,Math.round(laneCurve.getLength()/1.6));
-ribbon('Winding corridor · continuous flat lane',laneCurve.getSpacedPoints(laneSteps).map(p=>p.toArray() as Point),6.2,asphalt,6,{depthBias:-1});
-quarter('Long winding perimeter · continuous outer vert',perimeterPipe,3,6,{w:3.1,deck:1.1,curve:'spline',color:'#aba58d'});
-// The inner transition has the source's small transfer opening at the
-// playground bend. The outer perimeter remains continuous across it.
-const miniGapAt=longPipe[9],miniBefore=pointAt(miniGapAt,longPipe[8],1.3/Math.hypot(longPipe[8][0]-miniGapAt[0],longPipe[8][2]-miniGapAt[2]));
-const miniAfter=pointAt(miniGapAt,longPipe[10],1.3/Math.hypot(longPipe[10][0]-miniGapAt[0],longPipe[10][2]-miniGapAt[2]));
-export const SCHOOL_MINI_GAP={before:miniBefore,after:miniAfter,width:2.6};
-quarter('Long winding halfpipe · Huge Rail inner wall',[...longPipe.slice(0,9),miniBefore].reverse(),3,6,{w:3.1,deck:1.1,curve:'spline',color:'#aba58d'});
-quarter('Mini Gap · playground inner quarter',[miniAfter,...longPipe.slice(10)].reverse(),3,6,{w:3.1,deck:1.1,curve:'spline',color:'#aba58d'});
-// Perimeter quarter curves back into the open courtyard, with a genuine gap
-// before the short return section at the right edge of the reference.
-const parkReturn=[[493,133],[494,146],[505,154]].map(([u,v])=>schoolMapPoint(u,v,lowerY));
-quarter('Park Gap return quarter',parkReturn,3,6,{w:3.1,deck:1.1,curve:'spline',color:'#b7af95'});
+// Dense toe samples preserve the traced lip through the existing swept
+// quarterpipe builder. The normal is evaluated on the same sampled curve.
+function toeFromCoping(lips:Point[]):Point[]{
+  const curve=new CatmullRomCurve3(lips.map(p=>new Vector3(...p)),false,'centripetal',.5);
+  const samples=curve.getSpacedPoints(Math.max(4,Math.ceil(curve.getLength()/1.3)));
+  return samples.map((p,i):Point=>{const a=samples[Math.max(0,i-1)],b=samples[Math.min(samples.length-1,i+1)],l=Math.hypot(b.x-a.x,b.z-a.z)||1;return[p.x-(b.z-a.z)/l*corridor.rise,lowerY,p.z+(b.x-a.x)/l*corridor.rise];});
+}
+const outerToe=toeFromCoping(outerLips);
+quarter('Long winding perimeter · continuous outer vert',outerToe,corridor.rise,6,{deck:corridor.deck,color:'#aba58d'});
+const innerAMap:Plan[]=[...longInnerMap.slice(0,11),[305.5,64]],innerBMap:Plan[]=[[313,54],[319,45],[337,38]];
+const innerA=innerAMap.map(([u,v])=>schoolMapPoint(u,v,lipY)),innerB=innerBMap.map(([u,v])=>schoolMapPoint(u,v,lipY));
+const innerAToe=toeFromCoping([...innerA].reverse()),innerBToe=toeFromCoping([...innerB].reverse());
+export const SCHOOL_MINI_GAP={before:innerAToe[0],after:innerBToe[innerBToe.length-1],width:new Vector3(...innerA[innerA.length-1]).distanceTo(new Vector3(...innerB[0])),takeoffCoping:innerA[innerA.length-1],receiverCoping:innerB[0]};
+quarter('Long winding halfpipe · Huge Rail inner wall',innerAToe,corridor.rise,6,{deck:corridor.deck,color:'#aba58d'});
+quarter('Mini Gap · playground inner quarter',innerBToe,corridor.rise,6,{deck:corridor.deck,color:'#aba58d'});
+// Continuous support under the flat channel and at its entrance. It stays
+// beneath both curved walls, so their actual slopes still own contact.
+const laneCurve=new CatmullRomCurve3(longPipe.map(p=>new Vector3(...p)),false,'centripetal',.5),lane=laneCurve.getSpacedPoints(Math.ceil(laneCurve.getLength()/1.2));
+const first=lane[0].clone().addScaledVector(laneCurve.getTangent(0),-2.2),last=lane[lane.length-1].clone().addScaledVector(laneCurve.getTangent(1),2.2);
+ribbon('Winding corridor · continuous flat lane',[first,...lane,last].map(p=>p.toArray() as Point),2.1,asphalt,6,{depthBias:-1});
+export const SCHOOL_CORRIDOR_EXIT:Point[]=[longPipe[0],[longPipe[0][0]-1,lowerY,longPipe[0][2]+3],[longPipe[0][0]+3,lowerY,longPipe[0][2]+7]];
+ribbon('Halfpipe entrance · pool-deck connection',[longPipe[1],...SCHOOL_CORRIDOR_EXIT],3.2,concrete,6);
+const parkLips:Point[]=[[502,132],[501,139],[505,148],[514,153],[522,156]].map(([u,v])=>schoolMapPoint(u,v,lipY));
+const parkReturn=toeFromCoping(parkLips);
+quarter('Park Gap return quarter',parkReturn,corridor.rise,6,{deck:corridor.deck,color:'#b7af95'});
+export const SCHOOL_PARK_GAP={takeoff:outerLips[outerLips.length-1],receiver:parkLips[0]};
 // Physical fences are outside the transition decks, not in the riding line.
 function fenceAlong(points:Point[], offset:number, grp:number, elevation=3) {
   const outside=points.map((p,i):Point=>{
@@ -269,9 +282,9 @@ function fenceAlong(points:Point[], offset:number, grp:number, elevation=3) {
   const p=outside[0];
   add({t:'wallpath',nm:'School perimeter fence',p,pts:outside.map(q=>[q[0]-p[0],q[2]-p[2],0,q[1]-p[1]]),w:.28,rise:3.2,curve:'spline',color:'#837d70',tex:'wood',containment:true,collisionHeight:6,grp});
 }
-fenceAlong(perimeterPipe,7.4,6);fenceAlong(parkReturn,7.4,6);
+fenceAlong(outerToe,corridor.rise+corridor.deck+.35,6,corridor.rise);fenceAlong(parkReturn,corridor.rise+corridor.deck+.35,6,corridor.rise);
 {
-  const pts=mapped([[28,115],[17,150],[10,187]],lowerY),p:Point=[pts[0][0],lowerY,pts[0][1]];
+  const pts=mapped([[44,88],[34,109],[28,115],[17,150],[10,187]],lowerY),p:Point=[pts[0][0],lowerY,pts[0][1]];
   add({t:'wallpath',nm:'Pool-side boundary and billboard wall',p,pts:pts.map(q=>[q[0]-p[0],q[1]-p[2]]),w:.32,rise:3.2,color:'#8c8771',tex:'wood',grp:5});
 }
 
@@ -293,7 +306,7 @@ const startTable=schoolMapPoint(343,300,.76);startTable[1]=0;
 table('Table 1 · below the starting canopy',startTable,90);
 table('Table 2 · stair landing',schoolMapPoint(450,216),70);
 table('Table 3 · footbridge court',schoolMapPoint(329,186),90);
-table('Table 4 · back playground',schoolMapPoint(310,92),65);
+table('Table 4 · back playground',schoolMapPoint(310,92),125);
 table('Table 5 · square-pool corner',schoolMapPoint(219,184),65);
 
 // Four planters run between the canopy and the classroom, with four more
@@ -427,9 +440,9 @@ quarter('Gym rear alley quarter',[[26,0,52.5],[71,0,52.5]],2.2,10,{color:'#92978
 
 // Rear classroom forms the far skyline beyond the playground sign.
 const rearCentre=schoolMapPoint(414,50,-1.8);
-slab('Rear classroom facade',rearCentre[0],rearCentre[2],30,5,-1.8,lowerY,brick,3);
-slab('Rear blue classroom roof',rearCentre[0],rearCentre[2],30.3,5.3,-1.65,-1.85,blue,3);
-for(let i=-13;i<=13;i+=2.6)paintBox(rearCentre[0]+i,-3.8,rearCentre[2]+2.53,1.2,1.4,.05,'#465b60',3);
+slab('Rear classroom facade',rearCentre[0],rearCentre[2],30,3.2,-1.8,lowerY,brick,3);
+slab('Rear blue classroom roof',rearCentre[0],rearCentre[2],30.3,3.5,-1.65,-1.85,blue,3);
+for(let i=-13;i<=13;i+=2.6)paintBox(rearCentre[0]+i,-3.8,rearCentre[2]+1.63,1.2,1.4,.05,'#465b60',3);
 
 // Recovery is available at each session without forcing a linear course.
 // Native free-skate has no finish trigger: crossing the original skating
