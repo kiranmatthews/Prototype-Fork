@@ -895,6 +895,7 @@ export class Player {
   private readonly bailRecoveryMotion = new BailRecoveryMotion();
   private readonly bailRecoveryOrientation = new THREE.Quaternion();
   private readonly bailRecoverySpin = new THREE.Vector3();
+  private readonly bailRecoveryMomentum = new THREE.Vector3();
   private readonly bailRecoveryAnchor = new THREE.Vector3();
   private readonly bailRecoveryAnchorLocal = new THREE.Vector3();
   private bailRecoveryCaptured = false;
@@ -4357,7 +4358,7 @@ export class Player {
     // counted down in the air, then left a full 1.1s belly-down pause after
     // friction had already stopped the body. Reserve the final recovery window
     // until there is stable ground; once the slide is slow (or the impact clock
-    // reaches that window), hand the body to a mashable forward roll instead.
+    // reaches that window), hand the body to a mashable momentum-carrying roll instead.
     if (this.bailDownT > 0 && this.state !== 'dead' && this.state !== 'gameover') {
       this.bailFallAge += dt;
       if (this.ragActive && this.groundHit) {
@@ -4403,7 +4404,7 @@ export class Player {
         ? Math.min(BAIL_STABLE_TIME, this.bailGroundT + dt)
         : 0;
       const recoverDuration = Math.max(0.05, this.bailRecoverDuration);
-      // A recovery is a supported forward roll, never a mid-air animation.
+      // A recovery is a supported roll, never a mid-air animation.
       // If the support really disappears (a ledge, collapsing platform, or a
       // new impact), return control to the ragdoll and earn a fresh stable
       // contact before trying again.
@@ -8801,6 +8802,12 @@ export class Player {
     const forwardTrip = this.ragForwardTrip && this.state !== 'dead' && this.state !== 'gameover';
     const angularSpeed = Player.RAG_AXIS.length();
     if (angularSpeed <= 1e-6) return;
+    if (this.ragActive && this.isBailing && this.state !== 'dead') {
+      const yaw = this.grounded && this.groundHit ? Player.RAG_AXIS.dot(this.groundHit.normal) : Player.RAG_AXIS.y;
+      // Keep the last clear ground roll when contact friction ends with a
+      // tiny counter-rock. A meaningful new rebound replaces this direction.
+      if (angularSpeed * angularSpeed - yaw * yaw >= .64) this.bailRecoveryMomentum.copy(Player.RAG_AXIS);
+    }
     // The caught feet start a forward fold. Opening the body arrests that
     // first rotation before it becomes a feet-first somersault; actual floor
     // impacts then own the loose rebound/tumble. Integrate the drag exactly
@@ -10276,6 +10283,7 @@ export class Player {
     if (!this.isBailing) this.onWipeout();
     this.bailSupportOffset = 0;
     this.bailRecoveryCaptured = this.bailRecoveryMotionReady = false;
+    this.bailRecoveryMomentum.set(0, 0, 0);
     this.bailFallAge = 0; this.bailHasFallen = false; this.bailMinimumFallTime = .32; this.bailBalanceFall = false;
     this.bailRiseAge = -1;
     // On-foot inertia, sideways slide-jumps, exact slides, and vert hang carry
@@ -10471,9 +10479,12 @@ export class Player {
       );
     this.ragTripAirDrag = this.ragForwardTrip ? this.ragAngVel.length() / (1.9 + Math.random() * .3) : 0;
     if (worldSpin) { this.ragForwardTrip = false; this.setRagdollWorldSpin(worldSpin); }
-    if (this.state !== 'dead') this.bailMotion.begin(kind, this.ragdollWorldSpin(Player.RAG_WORLD_SPIN),
-      Math.floor(Math.random() * 0x100000000), poseSource !== this.bodyGroup,
-      BAIL_V.set(this.axisF.x * this.speed, this.vVel, this.axisF.z * this.speed));
+    if (this.state !== 'dead') {
+      this.ragdollWorldSpin(this.bailRecoveryMomentum);
+      this.bailMotion.begin(kind, this.bailRecoveryMomentum,
+        Math.floor(Math.random() * 0x100000000), poseSource !== this.bodyGroup,
+        BAIL_V.set(this.axisF.x * this.speed, this.vVel, this.axisF.z * this.speed));
+    }
     const shoulder =
       kind === 'side' && sideSign !== 0
         ? sideSign
@@ -18355,15 +18366,17 @@ export class Player {
         if (this.bailRecoveryCaptured) {
           Player.RAG_QT.copy(Player.RAG_QP).multiply(this.bailRecoveryOrientation);
           this.bailRecoverySpin.applyQuaternion(Player.RAG_QP);
+          this.bailRecoveryMomentum.applyQuaternion(Player.RAG_QP);
           this.bailRecoveryAnchorLocal.copy(this.bailRecoveryAnchor).add(this.pos);
           this.bodyGroup.worldToLocal(this.bailRecoveryAnchorLocal);
         } else {
           Player.RAG_QT.setFromAxisAngle(BAIL_PITCH_AXIS, BAIL_RECOVERY_SPRAWL_PITCH);
           this.bailRecoverySpin.set(0, 0, 0);
+          this.bailRecoveryMomentum.set(0, 0, 0);
           this.bailRecoveryAnchorLocal.set(0, waistH, 0);
         }
         this.bailRecoveryMotion.begin(Player.RAG_QT, this.bailRecoverySpin,
-          this.bailRecoverDuration / Math.max(1, this.bailRush));
+          this.bailRecoverDuration / Math.max(1, this.bailRush), this.bailRecoveryMomentum);
         this.bailRecoveryMotionReady = true;
       }
       this.bailRecoveryMotion.sample(phase, rider.quaternion);

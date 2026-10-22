@@ -155,11 +155,12 @@ try {
     const supportTimes = []; let supportSamples = 0;
     const recoveries = [], recoveryPrevious = new THREE.Quaternion(), recoveryCurrent = new THREE.Quaternion(); let activeRecovery = null;
     const beginRecovery = p.bailRecoveryMotion.begin.bind(p.bailRecoveryMotion);
-    if (recoveryProfile) p.bailRecoveryMotion.begin = (orientation, spin, duration) => {
-      beginRecovery(orientation, spin, duration);
+    if (recoveryProfile) p.bailRecoveryMotion.begin = (orientation, spin, duration, momentum) => {
+      beginRecovery(orientation, spin, duration, momentum);
       if (count) {
         const motion = p.bailRecoveryMotion;
-        activeRecovery = { orientation:orientation.toArray(), spin:spin.toArray(), duration,
+        activeRecovery = { orientation:orientation.toArray(), spin:spin.toArray(), momentum:momentum?.toArray(), duration,
+          axis:[motion.axisX ?? 1, 0, motion.axisZ ?? 0],
           pitch:motion.pitch, destination:motion.destination, travel:motion.destination-motion.pitch,
           frames:0, angularTravel:0, peakFrameTurn:0 };
         recoveries.push(activeRecovery);

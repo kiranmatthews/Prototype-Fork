@@ -182,11 +182,14 @@ const panel = document.createElement('div');
 panel.dataset.testid = 'bone-review-controls';
 panel.style.cssText = 'position:fixed;bottom:8px;left:8px;z-index:999999;background:#142434ed;color:white;padding:10px;font:12px monospace;max-width:680px';
 const controls = document.createElement('div'), status = document.createElement('pre');
+const testControls = document.createElement('details'), controlsSummary = document.createElement('summary');
+controlsSummary.textContent = 'Test controls'; testControls.open = true;
+testControls.append(controlsSummary, controls);
 status.dataset.testid = 'bone-yard-status';
 status.style.cssText = 'max-height:40vh;overflow:auto;white-space:pre-wrap';
 const diagnostics = document.createElement('details'), summary = document.createElement('summary');
 summary.textContent = 'Motion diagnostics'; diagnostics.append(summary, status);
-panel.append(controls, diagnostics); document.body.append(panel);
+panel.append(testControls, diagnostics); document.body.append(panel);
 function add(label: string, fn: () => void) { const b = document.createElement('button'); b.textContent = label; b.onclick = fn; b.style.cssText = 'padding:7px;margin:2px'; controls.append(b); }
 for (const name of ['Head hit', 'Low trip', 'Mid trip', 'Side bail', 'Balance bail', 'Balance left', 'Manual back', 'Nose manual forward', 'Bank tumble', 'Pit edge', 'Angled edge', 'Bailing into edge', 'Slow bump', 'Held-mask wall', 'Masked bail', 'Masked blast', 'Contact death', 'Blast', 'Crusher', 'Pit fall']) add(name, () => start(name));
 add('Verify bails', verifyBails);
@@ -377,6 +380,9 @@ function snapshot() {
     state: p.state, bailing: p.isBailing, ragActive: p.ragActive, masks: p.masks, lives: p.lives,
     position: p.pos.toArray(), speed: p.speed, bodyLead: bodyLead(), grounded: p.grounded, supportClearance: supportClearance(),
     recoveryTime: p.bailRecoverT, recoveryProgress: p.bailRecoveryPose,
+    recoveryRoll: p.bailRecoveryMotionReady ? { axis:[p.bailRecoveryMotion.axisX, 0, p.bailRecoveryMotion.axisZ],
+      remaining:p.bailRecoveryMotion.destination - p.bailRecoveryMotion.pitch,
+      spin:p.bailRecoverySpin.toArray(), momentum:p.bailRecoveryMomentum.toArray() } : null,
     fallAge: p.bailFallAge, fullyFallen: p.bailHasFallen, riseAge: p.bailRiseAge,
     looseBoardVelocity: p.looseBoard?.velocity.toArray() ?? null,
     incidentAge, firstBounceAge, floorImpacts: p.ragdollImpactCount, wallImpacts: p.ragdollWallImpactCount, wallTrace, impactTrace, maxProbes, peakParts, active: false, ...p.breakApartDiagnostics,
