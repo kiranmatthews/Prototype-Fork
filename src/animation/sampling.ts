@@ -51,7 +51,17 @@ export function clipTimeAt(
 }
 
 function sortedKeys<T extends { time: number; id: string }>(keys: T[]): T[] {
-  return [...keys].sort((a, b) => a.time - b.time || a.id.localeCompare(b.id));
+  // Runtime clips normally arrive in timeline order. Read the live sequence
+  // instead of copying/sorting it for every joint, every sample. Recheck each
+  // time so in-place editor moves, insertions and duplicate-time IDs remain
+  // visible; unusual/non-finite times retain the original sort semantics.
+  for (let i = 0; i < keys.length; i++) {
+    const key = keys[i];
+    if (!key || !Number.isFinite(key.time) || i > 0 && (keys[i - 1].time > key.time ||
+      keys[i - 1].time === key.time && keys[i - 1].id.localeCompare(key.id) > 0))
+      return [...keys].sort((a, b) => a.time - b.time || a.id.localeCompare(b.id));
+  }
+  return keys;
 }
 
 interface KeySegment<T extends { time: number; id: string }> {

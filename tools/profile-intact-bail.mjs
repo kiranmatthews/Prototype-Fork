@@ -37,7 +37,7 @@ const server = await createServer({ appType: 'custom', logLevel: 'silent', serve
     }
   } }] : [],
 });
-const warn = console.warn, error = console.error, random = Math.random;
+const warn = console.warn, error = console.error, random = Math.random, nativeSort = Array.prototype.sort;
 console.warn = (...a) => { if (!/failed|GLB|procedural skateboard/i.test(String(a[0]))) warn(...a); };
 console.error = (...a) => { if (!/failed|GLB/i.test(String(a[0]))) error(...a); };
 let level, runtime;
@@ -83,6 +83,7 @@ try {
   const overlayProfile = process.argv.includes('--overlay-profile');
   const poseChecksums = process.argv.includes('--pose-checksum');
   const traceImpacts = process.argv.includes('--impact-trace');
+  const keyOrderProfile = process.argv.includes('--key-order-profile');
   const poseNodes = [];
   p.bodyGroup.traverse(node => poseNodes.push(node));
   const poseValues = new Float64Array(poseNodes.reduce((n, node) => n + 10 + (node.morphTargetInfluences?.length ?? 0), 0));
@@ -110,6 +111,14 @@ try {
     const phaseWork = Object.fromEntries(['bail','rise'].map(phase => [phase, { frames:[], fullSkinScans:0, bodyMatrixPasses:0, supportTimes:[], supportSamples:0, deformationPasses:0, deformationRequests:0 }]));
     let phase = 'bail';
     const recording = () => count && (completeIncident || p.isBailing);
+    const originalSort = Array.prototype.sort;
+    let keySorts = 0, sortedKeyReferences = 0;
+    if (keyOrderProfile) Array.prototype.sort = function (...args) {
+      if (recording() && this.length && typeof this[0]?.time === 'number' && typeof this[0]?.id === 'string') {
+        keySorts++; sortedKeyReferences += this.length;
+      }
+      return originalSort.apply(this, args);
+    };
     let bodyMatrixPasses = 0;
     const bodyMatrices = p.bodyGroup.updateMatrixWorld;
     if (hierarchyProfile) p.bodyGroup.updateMatrixWorld = function(force) {
@@ -298,6 +307,7 @@ try {
       if (trial >= 0) { incidents.push(total); durations.push(n / 60); }
     }
     p.interactionMeasure.skinnedBounds = native;
+    Array.prototype.sort = originalSort;
     p.bodyGroup.updateMatrixWorld = bodyMatrices;
     p.interactionMeasure.sampledPlaneDistance = support;
     p.interactionMeasure.localBounds = localBounds;
@@ -333,9 +343,10 @@ try {
       recoveries: recoveryProfile ? recoveries : undefined,
       deformations: deformationProfile ? { calls:deformationCalls, requests:deformationRequests, cpuMs:stats(deformationTimes),
         newRecords:deformationRecords, newTransformObjects:deformationTransforms, newMorphRecords:deformationMorphs } : undefined,
+      keyOrdering: keyOrderProfile ? { sorts:keySorts, copiedKeyReferences:sortedKeyReferences } : undefined,
       poseChecksum: poseHash?.digest('hex'), gameplayChecksum:gameplayHash?.digest('hex'), impacts: traceImpacts ? impacts : undefined });
   }
   console.log(JSON.stringify({ source: snapshot ? 'initial working tree snapshot' : 'current working tree', warmupsPerCase: warmups, measuredIncidentsPerCase: measured,
     completeIncident, realHandTriangles:handTriangles,
     scope: `Production fixed-step CPU in Node with animation runtime and ${realHands ? 'actual artist-hand meshes, warm exact skin kernel and other procedural fallback assets' : 'procedural fallback assets'}. ${completeIncident ? 'Includes the complete bail and finite post-control rise rebound' : 'Ends when bail control returns'}; excludes render/GPU/browser costs. Timings are descriptive, work counts are deterministic.`, contact, results }, null, 2));
-} finally { Math.random = random; console.warn = warn; console.error = error; runtime?.dispose(); level?.dispose(); await server.close(); }
+} finally { Array.prototype.sort = nativeSort; Math.random = random; console.warn = warn; console.error = error; runtime?.dispose(); level?.dispose(); await server.close(); }
