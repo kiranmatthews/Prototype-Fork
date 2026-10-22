@@ -46,6 +46,15 @@ try{
  const report=await page.evaluate(()=>window.mallReview);await page.screenshot({path:`${out}/${tag}-finish.png`});
  await writeFile(`${out}/${tag}-browser.json`,JSON.stringify({initial,report,errors},null,2));console.log(JSON.stringify({report:{...report,initialTuning:undefined,finalTuning:undefined},errors},null,2));
  assert.equal(report.error,null);assert.equal(report.state,'finished');assert.equal(report.deaths,0);assert.equal(report.sourceMatches,true);assert.equal(report.initialTuning,report.finalTuning);
+ if(route==='upper'||route==='car'){
+  assert.ok(report.evidence.railNames.includes('Suspended upper light rail'));
+  assert.ok(report.evidence.crystal);
+  assert.ok(report.evidence.jumps.some(j=>j.name==='Hidden rail reward ollie'));
+ }
+ if(route==='coffee'){
+  assert.ok(report.evidence.railNames.includes('Coffee Grind'));
+  assert.ok(report.evidence.railNames.includes('Suspended lower light rail'));
+ }
  }
  assert.deepEqual(errors,[]);
 }finally{await browser.close();}

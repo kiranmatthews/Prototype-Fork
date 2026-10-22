@@ -26,9 +26,9 @@ export const MALL_KNOTS: Knot[] = [
   { s: 44, x: 0, z: -34, y: 12, width: 25 },
   { s: 100, x: 0, z: -90, y: 12, width: 28 },
   { s: 116, x: 0, z: -106, y: 8, width: 23 },
-  { s: 130, x: 0, z: -120, y: 8, width: 25 },
-  { s: 146, x: 5, z: -135, y: 8, width: 25 },
-  { s: 162, x: 18, z: -144, y: 8, width: 25 },
+  { s: 130, x: 0, z: -120, y: 8, width: 30 },
+  { s: 146, x: 5, z: -135, y: 8, width: 32 },
+  { s: 162, x: 18, z: -144, y: 8, width: 30 },
   { s: 180, x: 36, z: -145, y: 8, width: 26 },
   { s: 196, x: 52, z: -145, y: 8, width: 26 },
   { s: 214, x: 70, z: -145, y: 3.5, width: 20 },
@@ -172,13 +172,18 @@ for(const side of [-1,1]){
 }
 // Enclosure and transom lights. The plaza (319..374) is open to the sky.
 for(let s=5;s<318;s+=8){
- const q=plan(s),yaw=mallYaw(s),h=mallHeight(s)+10.2+6.2*ease(114,134,s)*(1-ease(188,204,s));
+ // The entry, raised fountain gallery and light well share a high ceiling.
+ // Following each lower floor here clips the chase camera above the gallery.
+ const q=plan(s),yaw=mallYaw(s),h=mix(28.2,mallHeight(s)+10.2,ease(188,218,s));
  const extra=9*ease(124,133,s)*(1-ease(153,163,s));
  box(mallPoint(s,-extra/2,h),[q.width+extra+1,.3,8.2],'#343e42',11,yaw);
  box(mallPoint(s,-extra/2,h-.24),[q.width+extra,.28,.22],'#9a9b8e',11,yaw);
  for(const u of [-q.width*.29,q.width*.29])box(mallPoint(s,u,h-.3),[1.1,.08,3.5],'#e2e3cb',11,yaw);
 }
-box(mallPoint(0,0,22.5),[9,9,.5],dark,9,0,true,'Entry back wall');
+box([0,28.2,11.8],[9.6,.3,6],'#343e42',11);
+box([0,22.5,14.5],[9,9,.5],dark,9,0,true,'Entry back wall');
+box([0,17.75,12.1],[9,.5,4.2],stone,1,0,true,'Entry quarter pipe apron');
+for(const x of [-4.5,4.5])box([x,22.5,12.2],[.5,9,4.6],dark,9,0,true,'Entry quarter pipe side wall');
 box(mallPoint(412,0,-2.5),[15,9,.5],dark,9,0,true,'Exit back wall');
 for(let s=46;s<309;s+=11){
  if(s>99&&s<119||s>195&&s<219||s>258&&s<277)continue;
@@ -206,10 +211,10 @@ for(const u of [-2.1,2.1])railAlong('Entry descending handrail',12,33,u,s=>mallH
 // Paired escalators climb to the fountain's upper concourse; the floor at
 // either side remains a broad bypass, as in the source.
 const upperY=(s:number)=> s<59?12+5*clamp((s-44)/15):17;
-ribbon('Up escalator',44,59,-9.3,-5.3,upperY,2,'#7d8c8d');
-for(const u of [-9.35,-5.25])railAlong('Upper escalator handrail',44,59,u,s=>upperY(s)+.85,2);
-for(let s=45;s<59;s+=.65)box(mallPoint(s,-7.3,upperY(s)-.04),[4,.08,.18],'#3e5356',2,mallYaw(s));
-ribbon('Upper fountain concourse',59,69,-10.2,-2.7,()=>17,2,'#c6c1b0');
+ribbon('Up escalator',44,59,-3.4,.6,upperY,2,'#7d8c8d');
+for(const u of [-3.45,.65])railAlong('Upper escalator handrail',44,59,u,s=>upperY(s)+.85,2);
+for(let s=45;s<59;s+=.65)box(mallPoint(s,-1.4,upperY(s)-.04),[4,.08,.18],'#3e5356',2,mallYaw(s));
+ribbon('Upper fountain concourse',59,69,-4.5,3.5,()=>17,2,'#c6c1b0');
 // Main fountain: a low blue octagon, raised centre and passable side aisles.
 const fountain=mallPoint(76,0,12);
 add({t:'platform',p:[fountain[0],12.22,fountain[2]],s:[9,.44,13],pts:[[-4,-5],[-2,-6.5],[2,-6.5],[4,-5],[4,5],[2,6.5],[-2,6.5],[-4,5]],color:trim,tex:'solid',edgeGrinding:false,grp:2,nm:'Fountain octagonal basin'});
@@ -225,10 +230,10 @@ for(let i=0;i<8;i++){
 box(mallPoint(76,0,16.2),[.45,2.4,.45],brass,2,24);
 for(const u of [-4.8,4.8])sign('SALE',76,u,15.0,2.8);
 // Fountain-gap launch and the car-display bank on the opposite side.
-ribbon('Fountain upper launch',64,69,-7.8,-2.7,s=>17+.45*clamp((s-64)/5),3,trim);
-ribbon('Fountain upper landing',81,100,-8.8,-2.7,()=>17,3,'#c2baa4');
-ribbon('Upper landing gallery',100,123,-8.8,s=>s<112?-2.7:mix(-2.7,5,clamp((s-112)/5)),()=>17,3,'#c2baa4');
-ribbon('Gallery access bank',111,130,3.5,9,s=>mix(17,8,clamp((s-111)/19)),3,trim);
+ribbon('Fountain upper launch',64,69,-3.8,2.7,s=>17+.45*clamp((s-64)/5),3,trim);
+ribbon('Fountain upper landing',81,100,-4.5,3.5,()=>17,3,'#c2baa4');
+ribbon('Upper landing gallery',100,123,-8.8,s=>s<112?3.5:mix(3.5,5,clamp((s-112)/5)),()=>17,3,'#c2baa4');
+ribbon('Car route upper access bank',96,123,5.3,10.1,s=>mix(12,17,ease(96,119,s)),3,trim);
 ribbon('Car display kicker',81,88,6,10,s=>12+1.8*clamp((s-81)/7),2,trim);
 box(mallPoint(91,8,13.0),[3.4,1.5,6.4],'#b9c1ba',2,0,true,'Car display');
 box(mallPoint(91,8,14.05),[2.5,.65,3.2],'#52737b',2);
@@ -240,17 +245,35 @@ treads(101,115,-7,7,16,3);
 railAlong('Sixteen stair centre rail',100,117,0,s=>mallHeight(s)+.82,3);
 // Flying Leap departure and stacked, suspended rails. Their long lower
 // line is catchable from the stairs, while the upper line needs the gallery.
-ribbon('Flying Leap launch',123,130,-8.8,5,s=>17+1.1*clamp((s-123)/7),3,trim);
+ribbon('Flying Leap launch',123,130,-8.8,10.1,s=>17+1.1*clamp((s-123)/7),3,trim);
 railAlong('Flying Leap departure ledge',101,129,-7.8,s=>s<123?17.82:17.82+1.1*(s-123)/7,3,false);
-for(const u of [-5.9,-3.3])railAlong('Suspended upper light rail',139,185,u,s=>mix(16.6,13.1,(s-139)/46),4,false);
-for(const u of [-1,2])railAlong('Suspended lower light rail',133,182,u,s=>mix(12.9,10.3,(s-133)/49),4,false);
-for(const s of [142,157,173])for(const u of [-5.9,-3.3]){
- const y=mix(16.6,13.1,(s-139)/46),q=mallPoint(s,u,(y+18.1)/2);box(q,[.07,18.1-y,.07],dark,4);
+// Original PS1 footage shows straight light beams. Keep them in a world
+// frame rather than bending each beam around the corridor's walking route.
+export function mallBeamPoint(t:number,offset=0,y=mix(16.6,13.1,t)):P {
+ const a=mallPoint(139,-4.6),b=mallPoint(185,0),dx=b[0]-a[0],dz=b[2]-a[2],n=Math.hypot(dx,dz);
+ return [mix(a[0],b[0],t)-dz/n*offset,y,mix(a[2],b[2],t)+dx/n*offset];
 }
-// Long recessed turquoise channel and side planters below the hanging rails.
-ribbon('Atrium blue fountain',136,177,-4.8,1.4,()=>8.035,4,'#43888c',false,'solid');
-for(const u of [-5.15,1.75])railAlong('Atrium fountain ledge',136,177,u,()=>8.45,4,false);
-for(const s of [146,172])planter(s,7.2,3.2,9,8,4);
+function lightHousing(a:P,b:P) {
+ const dx=b[0]-a[0],dz=b[2]-a[2],n=Math.hypot(dx,dz),nx=-dz/n*.28,nz=dx/n*.28;
+ const p=(q:P,side:number,drop=0):P=>[q[0]+nx*side,q[1]-drop,q[2]+nz*side];
+ face([p(a,-1),p(b,-1),p(b,1),p(a,1)],'#d5d6c2',4);
+ for(const side of [-1,1])face([p(a,side),p(b,side),p(b,side,.28),p(a,side,.28)],'#aeb8ae',4);
+ face([p(a,-1,.28),p(b,-1,.28),p(b,1,.28),p(a,1,.28)],'#e3ead7',4,'#a2b0a2');
+}
+for(const u of [-1.3,1.3])rail('Suspended upper light rail',[mallBeamPoint(0,u),mallBeamPoint(1,u)],4);
+for(const u of [-1.3,1.3])rail('Suspended lower light rail',[mallBeamPoint(-.08,u,9.25),mallBeamPoint(.94,u,9.25)],4);
+for(const u of [-1.3,1.3]){
+ lightHousing(mallBeamPoint(0,u),mallBeamPoint(1,u));
+ lightHousing(mallBeamPoint(-.08,u,9.25),mallBeamPoint(.94,u,9.25));
+}
+for(const t of [.08,.42,.77])for(const u of [-1.3,1.3]){
+ const q=mallBeamPoint(t,u),top=28.05;box([q[0],(q[1]+top)/2,q[2]],[.07,top-q[1],.07],dark,4);
+}
+// The water channel and its low grinding rims share the beams' straight axis.
+const channel=[mallBeamPoint(-.08,-3.1,8.035),mallBeamPoint(.94,-3.1,8.035),mallBeamPoint(.94,3.1,8.035),mallBeamPoint(-.08,3.1,8.035)];
+add({t:'mesh',p:[0,0,0],vertices:channel.flat(),indices:[0,1,2,0,2,3],color:'#43888c',tex:'solid',solid:false,doubleSided:true,edgeGrinding:false,grp:4,nm:'Atrium blue fountain'});
+for(const u of [-3.45,3.45])rail('Atrium fountain ledge',[mallBeamPoint(-.08,u,8.45),mallBeamPoint(.94,u,8.45)],4);
+planter(164,6.4,2.6,5,8,4);planter(177,3.5,2.6,5,8,4);
 // Elevator recess is the only deep side bay, with a genuine quarter pipe
 // at each end and a clear flat route between the two.
 ribbon('Elevator side bay',124,163,s=>boundary(-1,s),s=>-plan(s).width/2+.03,()=>8,4,'#9c9989');
@@ -266,13 +289,14 @@ planter(229,7.7,2.8,9,3.5,5);
 // different heights. The centreline remains rideable without a jump.
 railAlong('Crossrail left to right',268,299,s=>mix(-6.5,6.5,ease(268,299,s)),s=>mallHeight(s)+1.02,6);
 railAlong('Crossrail right to left',268,299,s=>mix(6.5,-6.5,ease(268,299,s)),s=>mallHeight(s)+.72,6);
-for(const u of [-7.5,7.5])railAlong('Arcade side ledge',263,305,u,s=>mallHeight(s)+.48,6,false);
+for(const u of [-7.5,7.5])railAlong('Arcade side ledge',263,297,u,s=>mallHeight(s)+.48,6,false);
 sign('GARDEN COURT',316,0,5.8,9);
 
 // The outdoor plaza is a shallow rectangular bowl with a blue angular
 // sculpture. Raised side ledges create the complete-around-atrium grind.
 for(const u of [-10.5,10.5]){
- ribbon('Outdoor raised ledge',330,373,u-1,u+1,()=>.62,7,'#aaa58f');
+ ribbon('Outdoor ledge bevel',328,331,u-1,u+1,s=>.62*ease(328,331,s),7,'#aaa58f');
+ ribbon('Outdoor raised ledge',331,373,u-1,u+1,()=>.62,7,'#aaa58f');
  railAlong('Whole Atrium grind',328,374,u,()=>.72,7,false);
  for(const s of [336,365])planter(s,u,2.2,5,.62,7);
 }
@@ -289,6 +313,7 @@ ribbon('Mezzanine approach',355,370,-8.7,-4.4,s=>3.8*clamp((s-355)/15),8,trim);
 ribbon('Mezzanine takeoff',370,377,-8.7,-4.4,()=>3.8,8,stone);
 railAlong('Step Off a Mezzanine lip',369,377,-8.6,()=>4.65,8,false);
 add({t:'vertramp',p:mallPoint(401,3.7,-7),vkind:'quarter',yaw:0,len:12,w:0,rise:2.7,arc:85,arcSteps:24,deck:1,tex:'pavement',color:trim,rails:true,grp:8,nm:'Exit return quarter pipe'});
+add({t:'vertramp',p:[0,18,9],vkind:'quarter',yaw:-90,len:8,w:0,rise:3.2,arc:85,arcSteps:24,deck:.65,tex:'pavement',color:trim,rails:true,grp:1,nm:'Entry return quarter pipe'});
 // Native completion pad stays on the safe exit apron, beside the return vert.
 add({t:'gate',p:mallPoint(408.5,0,-7),yaw:mallYaw(408.5),w:13.8,invisible:true,grp:8,nm:'Mall exit doorway'});
 for(const u of [-7,-3.5,0,3.5,7])box(mallPoint(408.5,u,-4.3),[.13,5.4,.22],'#8bacae',8);
@@ -310,7 +335,7 @@ for(const [i,s]of [48,105,188,263,370].entries()){
 // reward without adding a second scoring or input system.
 for(const [s,u,y]of [[8,0,19.2],[78,9.3,13.4],[159,-.7,14.7],[285,0,2.3],[352,0,4.4]])
  add({t:'wumpa',p:mallPoint(s,u,y),grp:10,nm:'Reference letter location'});
-add({t:'crystal',p:mallPoint(174,-4.6,14.15),grp:4,nm:'Hidden tape line reward'});
+add({t:'crystal',p:mallBeamPoint(.76,0,17.19),grp:4,nm:'Hidden tape line reward'});
 add({t:'pit',p:[55,-12,-150],s:[200,1,390],invisible:true,grp:9,nm:'Below-mall recovery volume'});
 for(const b of batches.values())add({t:'mesh',p:[0,0,0],vertices:b.vertices,indices:b.indices,color:b.color,emissive:b.emissive,tex:'solid',solid:false,doubleSided:true,edgeGrinding:false,castShadow:false,grp:b.grp,nm:'Batched mall architecture'});
 
