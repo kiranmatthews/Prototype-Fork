@@ -24,12 +24,12 @@ const key=(p:P)=>mallSourcePoint(...p).map(sourceKey).join(',');
 const columnKey=(p:P)=>{const q=mallSourcePoint(...p);return `${sourceKey(q[0])},${sourceKey(q[2])}`;};
 const normal=(a:P,b:P,c:P)=>new Vector3(...b).sub(new Vector3(...a)).cross(new Vector3(...c).sub(new Vector3(...a))).normalize();
 const floor:Triangle[]=[];
-export function mallSupport(x:number,z:number,ceiling=Infinity):number {
+export function mallSupport(x:number,z:number,ceiling=Infinity,tolerance=.00001):number {
  let y=-Infinity;
  for(const t of floor){const {a,b,c,d}=t;
   if(x<Math.min(a[0],b[0],c[0])-.00001||x>Math.max(a[0],b[0],c[0])+.00001||z<Math.min(a[2],b[2],c[2])-.00001||z>Math.max(a[2],b[2],c[2])+.00001)continue;
   const u=((b[2]-c[2])*(x-c[0])+(c[0]-b[0])*(z-c[2]))/d,v=((c[2]-a[2])*(x-c[0])+(a[0]-c[0])*(z-c[2]))/d;
-  if(u<-.00001||v<-.00001||u+v>1.00001)continue;
+  if(u< -tolerance||v< -tolerance||u+v>1+tolerance)continue;
   const h=u*a[1]+v*b[1]+(1-u-v)*c[1];if(h<=ceiling&&h>y)y=h;
  }return y;
 }
@@ -190,13 +190,53 @@ for(const [cell,ix] of cells){
  if(indices.length>12288||vertices.length>12288)throw Error(`Mall transition cell ${cell} exceeds the native mesh bounds`);
  add({t:'mesh',p:[0,0,0],vertices,indices,uvs,solid:true,vert:true,skateCamera:true,color:'#b6b8a8',tex:'stone',doubleSided:true,edgeGrinding:false,grp:63,nm:'Mall continuous transition'});
 }
+// Architectural front faces can continue below a ramp's top landing. Their
+// source triangles are harmless there, but an upright native wall proxy catches
+// the board before its wheels reach the seam. Split only at measured floor
+// edges and omit spans with continuous supported ground on BOTH sides of the
+// wall top. Exposed deck sides and real curbs keep their collision.
+const wallFloors=floor.map(f=>({...f,minX:Math.min(f.a[0],f.b[0],f.c[0]),maxX:Math.max(f.a[0],f.b[0],f.c[0]),minZ:Math.min(f.a[2],f.b[2],f.c[2]),maxZ:Math.max(f.a[2],f.b[2],f.c[2])}));
+export const MALL_WALL_SEAMS:{a:P;b:P;source:number}[]=[];
+function exposedWallSpans(a:P,b:P,height:number,source:number):[P,P][] {
+ const dx=b[0]-a[0],dz=b[2]-a[2],len=Math.hypot(dx,dz),nx=-dz/len,nz=dx/len;
+ const minX=Math.min(a[0],b[0])-.02,maxX=Math.max(a[0],b[0])+.02,minZ=Math.min(a[2],b[2])-.02,maxZ=Math.max(a[2],b[2])+.02;
+ const cuts=[0,1],epsilon=.02,at=(t:number):P=>a.map((v,i)=>v+(b[i]-v)*t) as P;
+ const vertex=(p:P)=>{
+  const t=((p[0]-a[0])*dx+(p[2]-a[2])*dz)/(len*len);
+  if(t>0&&t<1&&Math.abs(p[1]-a[1]-(b[1]-a[1])*t-height)<.003)cuts.push(t);
+ };
+ for(const f of wallFloors){
+  if(f.maxX<minX||f.minX>maxX||f.maxZ<minZ||f.minZ>maxZ)continue;
+  const ps=[f.a,f.b,f.c];
+  for(let i=0;i<3;i++){
+   const p=ps[i],q=ps[(i+1)%3],u=(p[0]-a[0])*nx+(p[2]-a[2])*nz,v=(q[0]-a[0])*nx+(q[2]-a[2])*nz;
+   if(Math.abs(u)<.0001)vertex(p);
+   if(u*v<0){const t=u/(u-v);vertex(p.map((x,j)=>x+(q[j]-x)*t) as P);}
+  }
+ }
+ const ordered=[...new Set(cuts.map(t=>Math.round(t*1e7)/1e7))].sort((x,y)=>x-y),spans:[P,P][]=[];
+ let start:number|null=null;
+ for(let i=1;i<ordered.length;i++){
+  const lo=ordered[i-1],hi=ordered[i],p=at((lo+hi)/2),top=p[1]+height;
+  const continuous=[-1,1].every(side=>mallSupport(p[0]+nx*epsilon*side,p[2]+nz*epsilon*side,top+.003,1e-9)>=top-.02);
+  if(continuous){
+   if(start!==null){spans.push([at(start),at(lo)]);start=null;}
+   MALL_WALL_SEAMS.push({a:at(lo),b:at(hi),source});
+  }else if(start===null)start=lo;
+ }
+ if(start!==null)spans.push([at(start),at(1)]);
+ return spans;
+}
 // Native two-sided wall contacts complement the mesh's vertical raycasts.
 // Only coincident source columns merge; a door's lintel cannot seal its gap.
 for(const {ends,source} of [...allWalls.values()].flat()){
  const a=ends[0].reduce((p,q)=>p[1]<q[1]?p:q),b=ends[1].reduce((p,q)=>p[1]<q[1]?p:q);
  const height=Math.min(Math.max(...ends[0].map(p=>p[1]-a[1])),Math.max(...ends[1].map(p=>p[1]-b[1])));
  if(height<.24||Math.hypot(a[0]-b[0],a[2]-b[2])<.08)continue;
- MALL_WALLS.push({a,b,height,source});add({t:'wallpath',p:a,pts:[[0,0,0,0],[b[0]-a[0],b[2]-a[2],0,b[1]-a[1]]],w:.1,rise:height,invisible:true,edgeGrinding:false,curve:'corner',grp:source+1,nm:`${sourceName(source)} / wall`});
+ for(const [start,end] of exposedWallSpans(a,b,height,source)){
+  if(Math.hypot(end[0]-start[0],end[2]-start[2])<.001)continue;
+  MALL_WALLS.push({a:start,b:end,height,source});add({t:'wallpath',p:start,pts:[[0,0,0,0],[end[0]-start[0],end[2]-start[2],0,end[1]-start[1]]],w:.1,rise:height,invisible:true,edgeGrinding:false,curve:'corner',grp:source+1,nm:`${sourceName(source)} / wall`});
+ }
 }
 MALL_SURVEY_STATS.wallSegments=MALL_WALLS.length;
 

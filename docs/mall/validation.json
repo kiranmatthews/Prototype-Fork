@@ -1,7 +1,7 @@
 {
-  "schema": 15,
-  "verifiedAt": "2026-10-22T22:34:25.965617+00:00",
-  "status": "Measured integration validated; full 1:1 goal remains active.",
+  "schema": 16,
+  "verifiedAt": "2026-10-22T23:05:08.097215+00:00",
+  "status": "Escalator landing correction and actual handrail validated; full 1:1 goal remains active.",
   "previousImageBasedEvidenceCommit": "2508077121b87c2b606c515ac025556bd05f44af",
   "reference": {
     "page": "https://thpsx.com/creation-details/?obj=958",
@@ -16,12 +16,12 @@
       "Movable cereal boxes and multiplayer nodes are conversion additions; exclude them from original-level reconstruction.",
       "Coordinates retain source units and Y-up orientation; skater scale remains to be calibrated.",
       "Static collision vertices are already world positions. Movable objects need separate placement.",
-      "No render meshes, texture artwork, audio, original scripts or executable data are emitted."
+      "The collision/node survey contains no art; static render data and textures are extracted independently by mall-reference-art.py. No original audio or executable is included."
     ]
   },
   "sourceSHA256": {
     "src/levels/mall.ts": "ad3747d8facab080fed74989bfa657370f801098511a93df66fd7ccdf6a80072",
-    "src/levels/mall-measured.ts": "7b6b93d530009c4719733f36c7c9926dbcd8873cc3d3795d507af36bd5242b80",
+    "src/levels/mall-measured.ts": "4de4dda98cbb34c8d0d8902c69763d2d49873b6007061a342712db6c86f5ffb5",
     "src/levels/mall-art.ts": "aef33f1d664a63144543a9027276ce0c91f8862fab4f6af597b4851ca3920264",
     "src/levels/mall-art.json": "94941a1026c7cfbc009d86b64c21654744043c0a7699ea4e4e0ed96d40c7c720",
     "src/levels/mall-art-textures.json": "56a3beccfc75921c4ba698e2d419f86f4e2f104f240b962d502b302e9d658a3a",
@@ -33,16 +33,18 @@
     "tools/test-mall-measured.mjs": "1e029af7dd84b9421f88dd3549c5b3d55a6f990caa88d94afac12e3992e02ead",
     "tools/test-mall-measured-surfaces.mjs": "7f8acc7238a29d05c86576a005f60eacb3257ff9516600977001f6ef66964852",
     "tools/test-mall-measured-verts.mjs": "deb7f9e3adbf7e60b323cf278c22fce74faa40ebc63aae4ff443d6c57be7066a",
-    "tools/test-mall-measured-rails.mjs": "631962e071123db6971cd5e0c8622141cb4f2d80c754bd4c7f22748e91ef9180",
+    "tools/test-mall-measured-rails.mjs": "f31d90f6c9ebc73149214c35d1df5b74e649cd77d390b5d09eb81052c0198bbb",
     "tools/test-mall-measured-topology.mjs": "6c6045acd35aa70bbe4b62dc5834f95c86bf81a8e80c7d1adb80a3abbbc5df10",
     "tools/mall-measured-browser.mjs": "98d3077f028f6cea123214499225009f9de19f40b58e0226f1f76018a793d312",
-    "tools/mall-smoke.mjs": "0df5ba8671e6db912b94844e192a70613a202c555240534705cf3b1b754ee9e9"
+    "tools/mall-smoke.mjs": "0df5ba8671e6db912b94844e192a70613a202c555240534705cf3b1b754ee9e9",
+    "tools/test-mall-measured-upper.mjs": "5f1e1bd970444b151f82552ca2ddfb7469d0daa0fd0c7bfb6fe80cdcb831b229",
+    "tools/mall-measured-upper-browser.mjs": "bdf68178cab4543eb2e3639a1243f1d0fe291083334ad248424da92527330eb0"
   },
   "build": {
-    "version": "98fb38960f88ecb3a3b2",
-    "snapshot": "/private/tmp/mall-recreation/snapshot-15",
-    "output": "/private/tmp/mall-recreation/dist-15",
-    "preview": "http://127.0.0.1:5287/?playtest&level=mall",
+    "version": "4e73d849aaac896482cf",
+    "snapshot": "/private/tmp/mall-recreation/snapshot-16",
+    "output": "/private/tmp/mall-recreation/dist-16",
+    "preview": "http://127.0.0.1:5288/?playtest&level=mall",
     "published": false
   },
   "runtimeManifest": "measured-runtime.json",
@@ -50,8 +52,8 @@
   "scale": {
     "metresPerSourceUnit": 0.045,
     "riderStandingHeight": 3.016705279790415,
-    "minimumRenderedArcadeHeadClearance": 0.36474830634184485,
-    "status": "Calibrated clearance for the existing rider; original metric convention and alternate upper routes remain unverified.",
+    "minimumRenderedArcadeHeadClearance": 0.36999670788151207,
+    "status": "Provisional visible-rider clearance fit. Both escalators and an actual escalator rail are validated; Flying Leap and original scale convention remain unverified.",
     "topologyAcrossScales": [
       {
         "scale": 0.025,
@@ -59,13 +61,13 @@
         "solidTriangles": 8678,
         "vertTriangles": 379,
         "visualTriangles": 1148,
-        "wallSegments": 1520,
+        "wallSegments": 1516,
         "railEdges": 637,
         "railPaths": 127,
-        "components": 2327,
+        "components": 2323,
         "vertices": 71137,
         "triangles": 84817,
-        "bytes": 8134164
+        "bytes": 8133104
       },
       {
         "scale": 0.035,
@@ -73,13 +75,13 @@
         "solidTriangles": 8678,
         "vertTriangles": 379,
         "visualTriangles": 1148,
-        "wallSegments": 1526,
+        "wallSegments": 1519,
         "railEdges": 637,
         "railPaths": 127,
-        "components": 2299,
+        "components": 2292,
         "vertices": 64091,
         "triangles": 73790,
-        "bytes": 7339361
+        "bytes": 7337464
       },
       {
         "scale": 0.045,
@@ -87,13 +89,13 @@
         "solidTriangles": 8678,
         "vertTriangles": 379,
         "visualTriangles": 1148,
-        "wallSegments": 1548,
+        "wallSegments": 1541,
         "railEdges": 637,
         "railPaths": 127,
-        "components": 2316,
+        "components": 2309,
         "vertices": 60615,
         "triangles": 68091,
-        "bytes": 6934446
+        "bytes": 6932561
       }
     ]
   },
@@ -116,7 +118,7 @@
       "solidTriangles": 8678,
       "vertTriangles": 379,
       "visualTriangles": 1148,
-      "wallSegments": 1548,
+      "wallSegments": 1541,
       "railEdges": 637,
       "railPaths": 127
     },
@@ -522,13 +524,13 @@
   },
   "surfaces": {
     "controls": 8650,
-    "components": 2316,
+    "components": 2309,
     "stats": {
       "sourceTriangles": 9826,
       "solidTriangles": 8678,
       "vertTriangles": 379,
       "visualTriangles": 1148,
-      "wallSegments": 1548,
+      "wallSegments": 1541,
       "railEdges": 637,
       "railPaths": 127
     },
@@ -970,6 +972,27 @@
         ]
       },
       {
+        "name": "Up-escalator inside handrail",
+        "start": [
+          -23.495070190429686,
+          118.85195360448563,
+          -57.3108837890625
+        ],
+        "targetRail": 115,
+        "grindFrames": 24,
+        "grindDistance": 4.495694350122708,
+        "rails": [
+          115
+        ],
+        "bail": false,
+        "landed": true,
+        "end": [
+          -12988.643864490221,
+          364.9808492792654,
+          54.55136574568189
+        ]
+      },
+      {
         "name": "Crossrail low arch",
         "start": [
           236.1549298095703,
@@ -993,7 +1016,7 @@
     ]
   },
   "browsers": {
-    "fullDevelopment": {
+    "fullProduction": {
       "frames": 5014,
       "done": true,
       "error": null,
@@ -1404,7 +1427,7 @@
             218.07870149470938
           ],
           "name": "PS1 Mall scenery 18:59",
-          "distance": 0.47576139248283106
+          "distance": 0.47642555864163266
         },
         {
           "frame": 780,
@@ -1414,7 +1437,7 @@
             222.15852574512667
           ],
           "name": "PS1 Mall scenery 18:59",
-          "distance": 0.3937068065020367
+          "distance": 0.4180504999258882
         },
         {
           "frame": 781,
@@ -1424,7 +1447,7 @@
             226.2564123855924
           ],
           "name": "PS1 Mall scenery 18:59",
-          "distance": 0.29836217480114835
+          "distance": 0.3217394530610081
         },
         {
           "frame": 1061,
@@ -1434,7 +1457,7 @@
             584.3270303074696
           ],
           "name": "PS1 Mall scenery 19:1",
-          "distance": 0.4400012491975642
+          "distance": 0.3288491219779452
         },
         {
           "frame": 1062,
@@ -1444,7 +1467,7 @@
             587.6391375829044
           ],
           "name": "PS1 Mall scenery 19:1",
-          "distance": 0.8682361077441741
+          "distance": 0.7520452894069891
         },
         {
           "frame": 1063,
@@ -1454,7 +1477,7 @@
             591.0240867492413
           ],
           "name": "PS1 Mall scenery 19:1",
-          "distance": 1.2914406046273403
+          "distance": 1.2166437412765374
         },
         {
           "frame": 1064,
@@ -1464,7 +1487,7 @@
             594.4792493838178
           ],
           "name": "PS1 Mall scenery 19:1",
-          "distance": 1.7200445163255529
+          "distance": 1.6401927060808137
         },
         {
           "frame": 1065,
@@ -1474,7 +1497,7 @@
             597.9996922008644
           ],
           "name": "PS1 Mall scenery 19:1",
-          "distance": 2.1516191448507564
+          "distance": 2.0796350096429452
         },
         {
           "frame": 1066,
@@ -1484,7 +1507,7 @@
             601.5828483864315
           ],
           "name": "PS1 Mall scenery 19:1",
-          "distance": 2.5758760700278778
+          "distance": 2.506572140118585
         },
         {
           "frame": 1067,
@@ -1494,7 +1517,7 @@
             605.2261732525506
           ],
           "name": "PS1 Mall scenery 19:1",
-          "distance": 3.0085179920505136
+          "distance": 2.8976133929909453
         },
         {
           "frame": 1068,
@@ -1504,7 +1527,7 @@
             608.9271436286343
           ],
           "name": "PS1 Mall scenery 19:1",
-          "distance": 3.436595841207856
+          "distance": 3.3309945824187968
         },
         {
           "frame": 1069,
@@ -1514,7 +1537,7 @@
             612.6809640867068
           ],
           "name": "PS1 Mall scenery 19:1",
-          "distance": 3.868066808634369
+          "distance": 3.7520224705990937
         },
         {
           "frame": 1070,
@@ -1524,7 +1547,7 @@
             616.4851695991161
           ],
           "name": "PS1 Mall scenery 19:1",
-          "distance": 4.300391767482326
+          "distance": 4.18175577870355
         },
         {
           "frame": 1071,
@@ -1534,7 +1557,7 @@
             620.3373153837357
           ],
           "name": "PS1 Mall scenery 19:1",
-          "distance": 4.73628440985509
+          "distance": 4.6441129869625
         },
         {
           "frame": 1072,
@@ -1544,7 +1567,7 @@
             624.2349764547643
           ],
           "name": "PS1 Mall scenery 19:1",
-          "distance": 5.162561197081963
+          "distance": 5.073010874713524
         },
         {
           "frame": 1073,
@@ -1554,7 +1577,7 @@
             628.1734813605074
           ],
           "name": "PS1 Mall scenery 19:1",
-          "distance": 5.600535561990998
+          "distance": 5.532252993262309
         },
         {
           "frame": 1074,
@@ -1564,7 +1587,7 @@
             632.1504555660339
           ],
           "name": "PS1 Mall scenery 19:1",
-          "distance": 6.02893120627747
+          "distance": 5.971247063986195
         },
         {
           "frame": 1075,
@@ -1574,7 +1597,7 @@
             636.163541696541
           ],
           "name": "PS1 Mall scenery 19:1",
-          "distance": 6.474573426823307
+          "distance": 6.360540758443285
         },
         {
           "frame": 1076,
@@ -1584,7 +1607,7 @@
             640.2103987987641
           ],
           "name": "PS1 Mall scenery 19:1",
-          "distance": 6.905231310018508
+          "distance": 6.8128018426936805
         },
         {
           "frame": 2629,
@@ -1594,7 +1617,7 @@
             2383.0522982682646
           ],
           "name": "PS1 Mall scenery 28:0",
-          "distance": 0.3246531723152672
+          "distance": 0.21714481342237987
         },
         {
           "frame": 2630,
@@ -1604,7 +1627,7 @@
             2391.570403996371
           ],
           "name": "PS1 Mall scenery 28:0",
-          "distance": 0.41686216922474956
+          "distance": 0.30968494616646963
         },
         {
           "frame": 2631,
@@ -1614,7 +1637,7 @@
             2400.0884824242403
           ],
           "name": "PS1 Mall scenery 28:0",
-          "distance": 0.8784872095774223
+          "distance": 0.7800331637680195
         },
         {
           "frame": 2632,
@@ -1624,7 +1647,7 @@
             2408.6052775977373
           ],
           "name": "PS1 Mall scenery 28:0",
-          "distance": 1.3708278802614022
+          "distance": 1.2310191835065365
         },
         {
           "frame": 2633,
@@ -1634,7 +1657,7 @@
             2417.119640798788
           ],
           "name": "PS1 Mall scenery 28:0",
-          "distance": 1.796799678601469
+          "distance": 1.6906905707367812
         },
         {
           "frame": 2634,
@@ -1644,7 +1667,7 @@
             2425.630619341581
           ],
           "name": "PS1 Mall scenery 28:0",
-          "distance": 2.2870487073057046
+          "distance": 2.1618972448584293
         },
         {
           "frame": 2635,
@@ -1654,7 +1677,7 @@
             2434.1372982009416
           ],
           "name": "PS1 Mall scenery 28:0",
-          "distance": 2.7225944960701467
+          "distance": 2.63367061583047
         },
         {
           "frame": 2636,
@@ -1664,7 +1687,7 @@
             2442.6390051817434
           ],
           "name": "PS1 Mall scenery 28:0",
-          "distance": 3.159153694972431
+          "distance": 3.0566913192297327
         },
         {
           "frame": 2637,
@@ -1674,7 +1697,7 @@
             2451.1350406402175
           ],
           "name": "PS1 Mall scenery 28:0",
-          "distance": 3.6298536445643816
+          "distance": 3.5056567156049345
         },
         {
           "frame": 2638,
@@ -1684,7 +1707,7 @@
             2459.6249897738053
           ],
           "name": "PS1 Mall scenery 28:0",
-          "distance": 4.093421232148509
+          "distance": 3.9695898226681825
         },
         {
           "frame": 2639,
@@ -1694,7 +1717,7 @@
             2468.1085804792474
           ],
           "name": "PS1 Mall scenery 28:0",
-          "distance": 4.5391412044374
+          "distance": 4.4211318932431505
         },
         {
           "frame": 2640,
@@ -1704,7 +1727,7 @@
             2476.585422719403
           ],
           "name": "PS1 Mall scenery 28:0",
-          "distance": 4.986499701252435
+          "distance": 4.841398938581624
         },
         {
           "frame": 2641,
@@ -1714,7 +1737,7 @@
             2485.0554629529524
           ],
           "name": "PS1 Mall scenery 28:0",
-          "distance": 5.432915900656621
+          "distance": 5.323911495552143
         },
         {
           "frame": 2642,
@@ -1724,7 +1747,7 @@
             2493.518476824156
           ],
           "name": "PS1 Mall scenery 28:0",
-          "distance": 5.845696785985145
+          "distance": 5.728651515565045
         },
         {
           "frame": 2643,
@@ -1734,7 +1757,7 @@
             2501.9746059916747
           ],
           "name": "PS1 Mall scenery 28:0",
-          "distance": 6.329380067138323
+          "distance": 6.212488086184249
         },
         {
           "frame": 2644,
@@ -1744,1309 +1767,7 @@
             2510.4237730667537
           ],
           "name": "PS1 Mall scenery 28:0",
-          "distance": 6.7326970647723785
-        },
-        {
-          "frame": 3574,
-          "source": [
-            3153.782734842971,
-            -1466.0663217293486,
-            5800.172543295554
-          ],
-          "name": "PS1 Mall scenery 29:0",
-          "distance": 0.17274065692174514
-        },
-        {
-          "frame": 3575,
-          "source": [
-            3163.3140905148866,
-            -1467.5272115071614,
-            5800.165772375716
-          ],
-          "name": "PS1 Mall scenery 29:0",
-          "distance": 0.31600041563595344
-        },
-        {
-          "frame": 3576,
-          "source": [
-            3172.973021144913,
-            -1467.5272115071614,
-            5800.158910828706
-          ],
-          "name": "PS1 Mall scenery 29:0",
-          "distance": 0.8107103982395754
-        },
-        {
-          "frame": 3577,
-          "source": [
-            3182.615423139505,
-            -1467.5272115071614,
-            5800.15206102337
-          ],
-          "name": "PS1 Mall scenery 29:0",
-          "distance": 1.3107615508003463
-        },
-        {
-          "frame": 3578,
-          "source": [
-            3192.2413530187987,
-            -1467.5272115071614,
-            5800.145222919556
-          ],
-          "name": "PS1 Mall scenery 29:0",
-          "distance": 1.8089217026870217
-        },
-        {
-          "frame": 3579,
-          "source": [
-            3201.8508670133488,
-            -1467.5272115071614,
-            5800.138396477319
-          ],
-          "name": "PS1 Mall scenery 29:0",
-          "distance": 2.3109344276831596
-        },
-        {
-          "frame": 3580,
-          "source": [
-            3211.4440210661196,
-            -1467.5272115071614,
-            5800.131581656919
-          ],
-          "name": "PS1 Mall scenery 29:0",
-          "distance": 2.8104763016693646
-        },
-        {
-          "frame": 3581,
-          "source": [
-            3221.020870834418,
-            -1467.5272115071614,
-            5800.124778418816
-          ],
-          "name": "PS1 Mall scenery 29:0",
-          "distance": 3.3134364619528434
-        },
-        {
-          "frame": 3582,
-          "source": [
-            3230.5814716918576,
-            -1467.5272115071614,
-            5800.117986723675
-          ],
-          "name": "PS1 Mall scenery 29:0",
-          "distance": 3.8165937249329547
-        },
-        {
-          "frame": 3583,
-          "source": [
-            3240.125878730276,
-            -1467.5272115071614,
-            5800.11120653236
-          ],
-          "name": "PS1 Mall scenery 29:0",
-          "distance": 4.31672868084362
-        },
-        {
-          "frame": 3584,
-          "source": [
-            3249.654146761637,
-            -1467.5272115071614,
-            5800.104437805931
-          ],
-          "name": "PS1 Mall scenery 29:0",
-          "distance": 4.819846216924452
-        },
-        {
-          "frame": 3585,
-          "source": [
-            3259.166330319942,
-            -1467.5272115071614,
-            5800.097680505652
-          ],
-          "name": "PS1 Mall scenery 29:0",
-          "distance": 5.322751185666287
-        },
-        {
-          "frame": 3586,
-          "source": [
-            3268.6624836630945,
-            -1467.5272115071614,
-            5800.090934592975
-          ],
-          "name": "PS1 Mall scenery 29:0",
-          "distance": 5.822258991715624
-        },
-        {
-          "frame": 3587,
-          "source": [
-            3278.142660774756,
-            -1467.5272115071614,
-            5800.084200029553
-          ],
-          "name": "PS1 Mall scenery 29:0",
-          "distance": 6.336789779506446
-        },
-        {
-          "frame": 3588,
-          "source": [
-            3287.6069153662065,
-            -1467.5272115071614,
-            5800.07747677723
-          ],
-          "name": "PS1 Mall scenery 29:0",
-          "distance": 6.826086078248073
-        },
-        {
-          "frame": 4453,
-          "source": [
-            10651.280370909499,
-            -1512.5272454155815,
-            5799.779185561146
-          ],
-          "name": "PS1 Mall scenery 30:0",
-          "distance": 0.35541444213080686
-        },
-        {
-          "frame": 4454,
-          "source": [
-            10659.798393501143,
-            -1512.5272454155815,
-            5799.715401779111
-          ],
-          "name": "PS1 Mall scenery 30:0",
-          "distance": 0.44299505619797747
-        },
-        {
-          "frame": 4455,
-          "source": [
-            10668.316396574348,
-            -1512.5272454155815,
-            5799.6490625932065
-          ],
-          "name": "PS1 Mall scenery 30:0",
-          "distance": 0.8951029544566693
-        },
-        {
-          "frame": 4456,
-          "source": [
-            10676.83437936248,
-            -1512.5272454155815,
-            5799.580168009404
-          ],
-          "name": "PS1 Mall scenery 30:0",
-          "distance": 1.344491255328107
-        },
-        {
-          "frame": 4457,
-          "source": [
-            10685.352341098933,
-            -1512.5272454155815,
-            5799.508718033903
-          ],
-          "name": "PS1 Mall scenery 30:0",
-          "distance": 1.7993327375945662
-        },
-        {
-          "frame": 4458,
-          "source": [
-            10693.87028101708,
-            -1512.5272454155815,
-            5799.434712673135
-          ],
-          "name": "PS1 Mall scenery 30:0",
-          "distance": 2.2487131066753405
-        },
-        {
-          "frame": 4459,
-          "source": [
-            10702.388198350312,
-            -1512.5272454155815,
-            5799.35815193376
-          ],
-          "name": "PS1 Mall scenery 30:0",
-          "distance": 2.700829807707827
-        },
-        {
-          "frame": 4460,
-          "source": [
-            10710.906092332021,
-            -1512.5272454155815,
-            5799.279035822669
-          ],
-          "name": "PS1 Mall scenery 30:0",
-          "distance": 3.1529469293717884
-        },
-        {
-          "frame": 4461,
-          "source": [
-            10719.42396219559,
-            -1512.5272454155815,
-            5799.197364346982
-          ],
-          "name": "PS1 Mall scenery 30:0",
-          "distance": 3.6023148459938925
-        },
-        {
-          "frame": 4462,
-          "source": [
-            10727.941807174411,
-            -1512.5272454155815,
-            5799.11313751405
-          ],
-          "name": "PS1 Mall scenery 30:0",
-          "distance": 4.0571932399429285
-        },
-        {
-          "frame": 4463,
-          "source": [
-            10736.45962650188,
-            -1512.5272454155815,
-            5799.026355331453
-          ],
-          "name": "PS1 Mall scenery 30:0",
-          "distance": 4.503788939839946
-        },
-        {
-          "frame": 4464,
-          "source": [
-            10744.977419411396,
-            -1512.5272454155815,
-            5798.937017807
-          ],
-          "name": "PS1 Mall scenery 30:0",
-          "distance": 4.958687263173705
-        },
-        {
-          "frame": 4465,
-          "source": [
-            10753.495185136355,
-            -1512.5272454155815,
-            5798.845124948733
-          ],
-          "name": "PS1 Mall scenery 30:0",
-          "distance": 5.408036572729964
-        },
-        {
-          "frame": 4466,
-          "source": [
-            10762.012922910151,
-            -1512.5272454155815,
-            5798.750676764923
-          ],
-          "name": "PS1 Mall scenery 30:0",
-          "distance": 5.8573917283442
-        },
-        {
-          "frame": 4467,
-          "source": [
-            10770.530631966198,
-            -1512.5272454155815,
-            5798.653673264068
-          ],
-          "name": "PS1 Mall scenery 30:0",
-          "distance": 6.3123145523504185
-        },
-        {
-          "frame": 4468,
-          "source": [
-            10779.0483115379,
-            -1512.5272454155815,
-            5798.554114454901
-          ],
-          "name": "PS1 Mall scenery 30:0",
-          "distance": 6.761650896852392
-        },
-        {
-          "frame": 4776,
-          "source": [
-            13548.242284177923,
-            -1910.6883494059243,
-            5779.664074448509
-          ],
-          "name": "PS1 Mall scenery 33:21",
-          "distance": 2.0636353066941973
-        },
-        {
-          "frame": 4804,
-          "source": [
-            13849.574140794328,
-            -2061.3552220662436,
-            5779.770703251077
-          ],
-          "name": "PS1 Mall scenery 33:21",
-          "distance": 2.0601258332794785
-        },
-        {
-          "frame": 4833,
-          "source": [
-            14152.009982638887,
-            -2212.021967569987,
-            5794.8568695153035
-          ],
-          "name": "PS1 Mall scenery 33:21",
-          "distance": 2.1801674179323
-        }
-      ],
-      "startedAt": 10637.700000047684,
-      "arcadeHeadroom": [
-        {
-          "frame": 3666,
-          "source": [
-            3981.727596785553,
-            -1467.5272115071614,
-            5799.707893032765
-          ],
-          "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.516090446058975,
-          "roofY": 42.47911630103651,
-          "margin": 0.9630258549775377
-        },
-        {
-          "frame": 3669,
-          "source": [
-            4007.282380823508,
-            -1467.5272115071614,
-            5799.705072203847
-          ],
-          "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.50965767181387,
-          "roofY": 42.398671521255025,
-          "margin": 0.8890138494411559
-        },
-        {
-          "frame": 3672,
-          "source": [
-            4032.8371648614593,
-            -1467.5272115071614,
-            5799.702251374928
-          ],
-          "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.50244180395845,
-          "roofY": 42.31822448482463,
-          "margin": 0.8157826808661852
-        },
-        {
-          "frame": 3675,
-          "source": [
-            4058.3919488994106,
-            -1467.5272115071614,
-            5799.699430546009
-          ],
-          "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.494963278731326,
-          "roofY": 42.23777628643565,
-          "margin": 0.7428130077043207
-        },
-        {
-          "frame": 3678,
-          "source": [
-            4083.9467329373656,
-            -1467.5272115071614,
-            5799.696609717091
-          ],
-          "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.487760019969144,
-          "roofY": 42.15732810239908,
-          "margin": 0.669568082429933
-        },
-        {
-          "frame": 3681,
-          "source": [
-            4109.501516975317,
-            -1467.5272115071614,
-            5799.693788888172
-          ],
-          "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.48134872022686,
-          "roofY": 42.07688110767114,
-          "margin": 0.5955323874442797
-        },
-        {
-          "frame": 3684,
-          "source": [
-            4135.056301013268,
-            -1467.5272115071614,
-            5799.690968059254
-          ],
-          "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.47618772659038,
-          "roofY": 41.9964363534723,
-          "margin": 0.5202486268819158
-        },
-        {
-          "frame": 3687,
-          "source": [
-            4160.611085051223,
-            -1467.5272115071614,
-            5799.688147230336
-          ],
-          "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.4726442020201,
-          "roofY": 41.915994797147775,
-          "margin": 0.4433505951276757
-        },
-        {
-          "frame": 3690,
-          "source": [
-            4186.1658690891745,
-            -1467.5272115071614,
-            5799.685326401417
-          ],
-          "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.470969715979024,
-          "roofY": 41.83571802232087,
-          "margin": 0.36474830634184485
-        },
-        {
-          "frame": 3693,
-          "source": [
-            4211.720653127126,
-            -1467.5272115071614,
-            5799.6825055724985
-          ],
-          "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.47127364595952,
-          "roofY": 47.45001630657677,
-          "margin": 5.97874266061725
-        },
-        {
-          "frame": 3696,
-          "source": [
-            4237.275437165081,
-            -1467.5272115071614,
-            5799.67968474358
-          ],
-          "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.47352716110671,
-          "roofY": 47.52041223963003,
-          "margin": 6.046885078523324
-        },
-        {
-          "frame": 3699,
-          "source": [
-            4262.830221203032,
-            -1467.5272115071614,
-            5799.676863914661
-          ],
-          "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.477568552459196,
-          "roofY": 47.4597312187154,
-          "margin": 5.982162666256201
-        },
-        {
-          "frame": 3702,
-          "source": [
-            4288.385005240983,
-            -1467.5272115071614,
-            5799.6740430857435
-          ],
-          "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.48311156139021,
-          "roofY": 47.37211659143374,
-          "margin": 5.889005030043528
-        },
-        {
-          "frame": 3705,
-          "source": [
-            4313.939789278938,
-            -1467.5272115071614,
-            5799.671222256825
-          ],
-          "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.48975946074237,
-          "roofY": 47.28432708570632,
-          "margin": 5.794567624963953
-        },
-        {
-          "frame": 3708,
-          "source": [
-            4339.49457331689,
-            -1467.5272115071614,
-            5799.668401427906
-          ],
-          "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.49695934147375,
-          "roofY": 47.19723709856821,
-          "margin": 5.700277757094462
-        },
-        {
-          "frame": 3711,
-          "source": [
-            4365.049357354841,
-            -1467.5272115071614,
-            5799.665580598988
-          ],
-          "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.50425933570171,
-          "roofY": 47.10997223229022,
-          "margin": 5.605712896588507
-        },
-        {
-          "frame": 3714,
-          "source": [
-            4390.604141392796,
-            -1467.5272115071614,
-            5799.662759770069
-          ],
-          "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.51113685235193,
-          "roofY": 47.02253248638279,
-          "margin": 5.511395634030855
-        }
-      ],
-      "state": "finished",
-      "source": [
-        15733.227206276297,
-        -2308.1489167439718,
-        5806.575172461139
-      ],
-      "stage": 2,
-      "tuningUnchanged": true,
-      "wallSeconds": 83.47279999995231,
-      "errors": []
-    },
-    "liteProduction": {
-      "frames": 5014,
-      "done": true,
-      "error": null,
-      "evidence": {
-        "turns": [
-          {
-            "stage": 0,
-            "frame": 346,
-            "source": [
-              -13422.826158311633,
-              1522.1718794443827,
-              124.79375550105141
-            ]
-          },
-          {
-            "stage": 1,
-            "frame": 730,
-            "source": [
-              -15830.285163031684,
-              1115.92079066118,
-              144.39331630655607
-            ]
-          }
-        ],
-        "sections": [
-          {
-            "waypoint": 0,
-            "frame": 840,
-            "source": [
-              -15408.359825196789,
-              709.7070604514747,
-              477.6778782835362
-            ]
-          },
-          {
-            "waypoint": 1,
-            "frame": 1041,
-            "source": [
-              -13577.78307704966,
-              313.55333116319434,
-              537.6978117406335
-            ]
-          },
-          {
-            "waypoint": 2,
-            "frame": 1094,
-            "source": [
-              -13162.4958384673,
-              314.54084630752413,
-              709.7149011482768
-            ]
-          },
-          {
-            "waypoint": 3,
-            "frame": 1363,
-            "source": [
-              -10878.250406008765,
-              314.75860595703125,
-              783.2792232906636
-            ]
-          },
-          {
-            "waypoint": 4,
-            "frame": 1460,
-            "source": [
-              -10075.538467876851,
-              314.75860595703125,
-              974.7573453376771
-            ]
-          },
-          {
-            "waypoint": 5,
-            "frame": 1730,
-            "source": [
-              -7779.0758900533865,
-              314.75860595703125,
-              997.8977815004168
-            ]
-          },
-          {
-            "waypoint": 6,
-            "frame": 1831,
-            "source": [
-              -6923.562822816606,
-              314.75860595703125,
-              909.0723554426777
-            ]
-          },
-          {
-            "waypoint": 7,
-            "frame": 1866,
-            "source": [
-              -6628.26714651773,
-              314.75877549913184,
-              869.6964981783485
-            ]
-          },
-          {
-            "waypoint": 8,
-            "frame": 1908,
-            "source": [
-              -6307.298972893184,
-              314.75877549913184,
-              714.920355319367
-            ]
-          },
-          {
-            "waypoint": 9,
-            "frame": 1992,
-            "source": [
-              -5571.075121644351,
-              155.8822191415661,
-              561.4301279750285
-            ]
-          },
-          {
-            "waypoint": 10,
-            "frame": 2150,
-            "source": [
-              -4079.2667974374435,
-              -176.23277619087776,
-              547.9782061693846
-            ]
-          },
-          {
-            "waypoint": 11,
-            "frame": 2204,
-            "source": [
-              -3571.727026634102,
-              -270.6316121419268,
-              494.5808148225954
-            ]
-          },
-          {
-            "waypoint": 12,
-            "frame": 2247,
-            "source": [
-              -3179.470409895701,
-              -270.6316121419268,
-              517.8706004983941
-            ]
-          },
-          {
-            "waypoint": 13,
-            "frame": 2298,
-            "source": [
-              -2768.614374152743,
-              -275.41834142383914,
-              666.7589648459984
-            ]
-          },
-          {
-            "waypoint": 14,
-            "frame": 2352,
-            "source": [
-              -2368.3240574103274,
-              -298.0679348240867,
-              889.0623048048919
-            ]
-          },
-          {
-            "waypoint": 15,
-            "frame": 2419,
-            "source": [
-              -1957.8358840740166,
-              -254.9483517789199,
-              1247.7558177245905
-            ]
-          },
-          {
-            "waypoint": 16,
-            "frame": 2491,
-            "source": [
-              -1547.4678232405622,
-              -270.6316121419268,
-              1419.3997684708697
-            ]
-          },
-          {
-            "waypoint": 17,
-            "frame": 2559,
-            "source": [
-              -1159.4065812268072,
-              -270.6316121419268,
-              1848.4794106793215
-            ]
-          },
-          {
-            "waypoint": 18,
-            "frame": 2611,
-            "source": [
-              -941.7730679359411,
-              -270.6316121419268,
-              2231.876938211437
-            ]
-          },
-          {
-            "waypoint": 19,
-            "frame": 2682,
-            "source": [
-              -1000.6206890818885,
-              -270.6316121419268,
-              2824.6342373429093
-            ]
-          },
-          {
-            "waypoint": 20,
-            "frame": 2717,
-            "source": [
-              -1217.4114677490634,
-              -270.6316121419268,
-              3020.431271201101
-            ]
-          },
-          {
-            "waypoint": 21,
-            "frame": 2768,
-            "source": [
-              -1546.7073399584406,
-              -288.0631048561754,
-              3294.8331409418897
-            ]
-          },
-          {
-            "waypoint": 22,
-            "frame": 2872,
-            "source": [
-              -1603.7233986938827,
-              -582.3547200537243,
-              4227.60566515455
-            ]
-          },
-          {
-            "waypoint": 23,
-            "frame": 2939,
-            "source": [
-              -1728.5733339722483,
-              -777.7198969179542,
-              4832.224250443058
-            ]
-          },
-          {
-            "waypoint": 24,
-            "frame": 2998,
-            "source": [
-              -1701.3054211981707,
-              -915.4849921332466,
-              5376.587938920418
-            ]
-          },
-          {
-            "waypoint": 25,
-            "frame": 3041,
-            "source": [
-              -1538.9905288059726,
-              -915.4847378200955,
-              5731.5428860851625
-            ]
-          },
-          {
-            "waypoint": 26,
-            "frame": 3087,
-            "source": [
-              -1251.8767639828638,
-              -915.4847378200955,
-              5999.938308746703
-            ]
-          },
-          {
-            "waypoint": 27,
-            "frame": 3169,
-            "source": [
-              -576.552552456098,
-              -915.4847378200955,
-              6160.760072207681
-            ]
-          },
-          {
-            "waypoint": 28,
-            "frame": 3217,
-            "source": [
-              -171.84063506862367,
-              -935.7108631430592,
-              6116.014962495669
-            ]
-          },
-          {
-            "waypoint": 29,
-            "frame": 3263,
-            "source": [
-              223.8562108074475,
-              -1003.2568911808291,
-              6020.689395959254
-            ]
-          },
-          {
-            "waypoint": 30,
-            "frame": 3424,
-            "source": [
-              1724.4600551351814,
-              -1261.5800289008362,
-              5812.075611082703
-            ]
-          },
-          {
-            "waypoint": 31,
-            "frame": 3603,
-            "source": [
-              3427.6957428455607,
-              -1467.5272115071614,
-              5799.977959955739
-            ]
-          },
-          {
-            "waypoint": 32,
-            "frame": 3824,
-            "source": [
-              5327.61287892242,
-              -1467.5272115071614,
-              5799.825099130775
-            ]
-          },
-          {
-            "waypoint": 33,
-            "frame": 3953,
-            "source": [
-              6428.163178033577,
-              -1512.5272454155815,
-              5799.88281686017
-            ]
-          },
-          {
-            "waypoint": 34,
-            "frame": 4082,
-            "source": [
-              7527.017380290894,
-              -1512.5272454155815,
-              5800.237928921663
-            ]
-          },
-          {
-            "waypoint": 35,
-            "frame": 4318,
-            "source": [
-              9527.437385656125,
-              -1375.7633732020436,
-              5800.317632495
-            ]
-          },
-          {
-            "waypoint": 36,
-            "frame": 4450,
-            "source": [
-              10625.726160019596,
-              -1512.5272454155815,
-              5799.950093581931
-            ]
-          },
-          {
-            "waypoint": 37,
-            "frame": 4589,
-            "source": [
-              11823.282438332426,
-              -1714.794544917992,
-              5781.126423123479
-            ]
-          },
-          {
-            "waypoint": 38,
-            "frame": 4812,
-            "source": [
-              13926.211154513887,
-              -2099.122314453125,
-              5791.745701414607
-            ]
-          },
-          {
-            "waypoint": 39,
-            "frame": 4930,
-            "source": [
-              15023.744969383744,
-              -2324.5197754022147,
-              5853.2628147480555
-            ]
-          },
-          {
-            "waypoint": 40,
-            "frame": 4989,
-            "source": [
-              15525.971216177848,
-              -2324.519287099441,
-              5854.014941382185
-            ]
-          }
-        ],
-        "minSpeed": 16.2006670314567,
-        "maxSpeed": 30.455687958756346,
-        "airFrames": 219,
-        "grinds": []
-      },
-      "sourceMatches": true,
-      "obstructions": [
-        {
-          "frame": 779,
-          "source": [
-            -15830.21979671446,
-            917.7681944593182,
-            218.07870149470938
-          ],
-          "name": "PS1 Mall scenery 18:59",
-          "distance": 0.4783337015766217
-        },
-        {
-          "frame": 780,
-          "source": [
-            -15829.110040153473,
-            909.9079216847967,
-            222.15852574512667
-          ],
-          "name": "PS1 Mall scenery 18:59",
-          "distance": 0.44871275439873326
-        },
-        {
-          "frame": 781,
-          "source": [
-            -15827.992893811026,
-            901.9172077929093,
-            226.2564123855924
-          ],
-          "name": "PS1 Mall scenery 18:59",
-          "distance": 0.352794529813299
-        },
-        {
-          "frame": 1061,
-          "source": [
-            -13413.897241075676,
-            313.58383130987477,
-            584.3270303074696
-          ],
-          "name": "PS1 Mall scenery 19:1",
-          "distance": 0.19561153157505667
-        },
-        {
-          "frame": 1062,
-          "source": [
-            -13406.049311087827,
-            313.61061832979885,
-            587.6391375829044
-          ],
-          "name": "PS1 Mall scenery 19:1",
-          "distance": 0.62162625212436
-        },
-        {
-          "frame": 1063,
-          "source": [
-            -13398.232522455479,
-            313.63729905620175,
-            591.0240867492413
-          ],
-          "name": "PS1 Mall scenery 19:1",
-          "distance": 1.055469047291903
-        },
-        {
-          "frame": 1064,
-          "source": [
-            -13390.446514354706,
-            313.6638747206698,
-            594.4792493838178
-          ],
-          "name": "PS1 Mall scenery 19:1",
-          "distance": 1.468887610735325
-        },
-        {
-          "frame": 1065,
-          "source": [
-            -13382.689803798437,
-            313.6921580192238,
-            597.9996922008644
-          ],
-          "name": "PS1 Mall scenery 19:1",
-          "distance": 1.908466463938168
-        },
-        {
-          "frame": 1066,
-          "source": [
-            -13374.961874935007,
-            313.7218981304936,
-            601.5828483864315
-          ],
-          "name": "PS1 Mall scenery 19:1",
-          "distance": 2.3355494949884226
-        },
-        {
-          "frame": 1067,
-          "source": [
-            -13367.262129319515,
-            313.75153964289257,
-            605.2261732525506
-          ],
-          "name": "PS1 Mall scenery 19:1",
-          "distance": 2.760567817277654
-        },
-        {
-          "frame": 1068,
-          "source": [
-            -13359.589924772537,
-            313.78108464793695,
-            608.9271436286343
-          ],
-          "name": "PS1 Mall scenery 19:1",
-          "distance": 3.2071031982422125
-        },
-        {
-          "frame": 1069,
-          "source": [
-            -13351.943439198834,
-            313.8105393982978,
-            612.6809640867068
-          ],
-          "name": "PS1 Mall scenery 19:1",
-          "distance": 3.625584183532793
-        },
-        {
-          "frame": 1070,
-          "source": [
-            -13344.321895048533,
-            313.8399065058279,
-            616.4851695991161
-          ],
-          "name": "PS1 Mall scenery 19:1",
-          "distance": 4.050117169327814
-        },
-        {
-          "frame": 1071,
-          "source": [
-            -13336.724468336402,
-            313.8691887609107,
-            620.3373153837357
-          ],
-          "name": "PS1 Mall scenery 19:1",
-          "distance": 4.480802277156292
-        },
-        {
-          "frame": 1072,
-          "source": [
-            -13329.150290971378,
-            313.8983891235762,
-            624.2349764547643
-          ],
-          "name": "PS1 Mall scenery 19:1",
-          "distance": 4.912439684098319
-        },
-        {
-          "frame": 1073,
-          "source": [
-            -13321.59727117529,
-            313.9275148841971,
-            628.1734813605074
-          ],
-          "name": "PS1 Mall scenery 19:1",
-          "distance": 5.355719824826646
-        },
-        {
-          "frame": 1074,
-          "source": [
-            -13314.06443576982,
-            313.956569407454,
-            632.1504555660339
-          ],
-          "name": "PS1 Mall scenery 19:1",
-          "distance": 5.792088205656377
-        },
-        {
-          "frame": 1075,
-          "source": [
-            -13306.55077642713,
-            313.9855561934128,
-            636.163541696541
-          ],
-          "name": "PS1 Mall scenery 19:1",
-          "distance": 6.229586980668509
-        },
-        {
-          "frame": 1076,
-          "source": [
-            -13299.055251874728,
-            314.0144788690768,
-            640.2103987987641
-          ],
-          "name": "PS1 Mall scenery 19:1",
-          "distance": 6.6601770747326
-        },
-        {
-          "frame": 2630,
-          "source": [
-            -919.3310888024716,
-            -270.6316121419268,
-            2391.570403996371
-          ],
-          "name": "PS1 Mall scenery 28:0",
-          "distance": 0.17823424706472318
-        },
-        {
-          "frame": 2631,
-          "source": [
-            -919.3869201494454,
-            -270.6316121419268,
-            2400.0884824242403
-          ],
-          "name": "PS1 Mall scenery 28:0",
-          "distance": 0.6155768694810161
-        },
-        {
-          "frame": 2632,
-          "source": [
-            -919.5449619645569,
-            -270.6316121419268,
-            2408.6052775977373
-          ],
-          "name": "PS1 Mall scenery 28:0",
-          "distance": 1.075442534708315
-        },
-        {
-          "frame": 2633,
-          "source": [
-            -919.8026371927281,
-            -270.6316121419268,
-            2417.119640798788
-          ],
-          "name": "PS1 Mall scenery 28:0",
-          "distance": 1.5356090291557294
-        },
-        {
-          "frame": 2634,
-          "source": [
-            -920.1548040377729,
-            -270.6316121419268,
-            2425.630619341581
-          ],
-          "name": "PS1 Mall scenery 28:0",
-          "distance": 1.9879512348462036
-        },
-        {
-          "frame": 2635,
-          "source": [
-            -920.5988671260238,
-            -270.6316121419268,
-            2434.1372982009416
-          ],
-          "name": "PS1 Mall scenery 28:0",
-          "distance": 2.4437336799120866
-        },
-        {
-          "frame": 2636,
-          "source": [
-            -921.1296737341254,
-            -270.6316121419268,
-            2442.6390051817434
-          ],
-          "name": "PS1 Mall scenery 28:0",
-          "distance": 2.89759498433442
-        },
-        {
-          "frame": 2637,
-          "source": [
-            -921.7446198545131,
-            -270.6316121419268,
-            2451.1350406402175
-          ],
-          "name": "PS1 Mall scenery 28:0",
-          "distance": 3.349724324276249
-        },
-        {
-          "frame": 2638,
-          "source": [
-            -922.438551372541,
-            -270.6316121419268,
-            2459.6249897738053
-          ],
-          "name": "PS1 Mall scenery 28:0",
-          "distance": 3.8003072557549564
-        },
-        {
-          "frame": 2639,
-          "source": [
-            -923.206318254588,
-            -270.6316121419268,
-            2468.1085804792474
-          ],
-          "name": "PS1 Mall scenery 28:0",
-          "distance": 4.246796564799502
-        },
-        {
-          "frame": 2640,
-          "source": [
-            -924.0453193738613,
-            -270.6316121419268,
-            2476.585422719403
-          ],
-          "name": "PS1 Mall scenery 28:0",
-          "distance": 4.722294333666757
-        },
-        {
-          "frame": 2641,
-          "source": [
-            -924.9504136698761,
-            -270.6316121419268,
-            2485.0554629529524
-          ],
-          "name": "PS1 Mall scenery 28:0",
-          "distance": 5.1391090303176785
-        },
-        {
-          "frame": 2642,
-          "source": [
-            -925.9190072164347,
-            -270.6316121419268,
-            2493.518476824156
-          ],
-          "name": "PS1 Mall scenery 28:0",
-          "distance": 5.612795609468877
-        },
-        {
-          "frame": 2643,
-          "source": [
-            -926.9459720380692,
-            -270.6316121419268,
-            2501.9746059916747
-          ],
-          "name": "PS1 Mall scenery 28:0",
-          "distance": 6.030812992157799
-        },
-        {
-          "frame": 2644,
-          "source": [
-            -928.0287245398104,
-            -270.6316121419268,
-            2510.4237730667537
-          ],
-          "name": "PS1 Mall scenery 28:0",
-          "distance": 6.473102538772894
+          "distance": 6.629650377780251
         },
         {
           "frame": 2645,
@@ -3056,7 +1777,7 @@
             2518.86629158125
           ],
           "name": "PS1 Mall scenery 28:0",
-          "distance": 6.947996226702549
+          "distance": 7.060309233576113
         },
         {
           "frame": 3575,
@@ -3066,7 +1787,7 @@
             5800.165772375716
           ],
           "name": "PS1 Mall scenery 29:0",
-          "distance": 0.3840637337909427
+          "distance": 0.20030060465797742
         },
         {
           "frame": 3576,
@@ -3076,7 +1797,7 @@
             5800.158910828706
           ],
           "name": "PS1 Mall scenery 29:0",
-          "distance": 0.5265317743669854
+          "distance": 0.7024968097884765
         },
         {
           "frame": 3577,
@@ -3086,7 +1807,7 @@
             5800.15206102337
           ],
           "name": "PS1 Mall scenery 29:0",
-          "distance": 1.0234084004049546
+          "distance": 1.1934230493911167
         },
         {
           "frame": 3578,
@@ -3096,7 +1817,7 @@
             5800.145222919556
           ],
           "name": "PS1 Mall scenery 29:0",
-          "distance": 1.52442624500902
+          "distance": 1.706626827261798
         },
         {
           "frame": 3579,
@@ -3106,7 +1827,7 @@
             5800.138396477319
           ],
           "name": "PS1 Mall scenery 29:0",
-          "distance": 2.023317341728183
+          "distance": 2.193438468824593
         },
         {
           "frame": 3580,
@@ -3116,7 +1837,7 @@
             5800.131581656919
           ],
           "name": "PS1 Mall scenery 29:0",
-          "distance": 2.5289092612116746
+          "distance": 2.696007416960528
         },
         {
           "frame": 3581,
@@ -3126,7 +1847,7 @@
             5800.124778418816
           ],
           "name": "PS1 Mall scenery 29:0",
-          "distance": 3.0288267422156334
+          "distance": 3.1989671152712105
         },
         {
           "frame": 3582,
@@ -3136,7 +1857,7 @@
             5800.117986723675
           ],
           "name": "PS1 Mall scenery 29:0",
-          "distance": 3.5320277461029743
+          "distance": 3.7174374463791087
         },
         {
           "frame": 3583,
@@ -3146,7 +1867,7 @@
             5800.11120653236
           ],
           "name": "PS1 Mall scenery 29:0",
-          "distance": 4.035306099966603
+          "distance": 4.202260699238945
         },
         {
           "frame": 3584,
@@ -3156,7 +1877,7 @@
             5800.104437805931
           ],
           "name": "PS1 Mall scenery 29:0",
-          "distance": 4.538523610748576
+          "distance": 4.733076805246434
         },
         {
           "frame": 3585,
@@ -3166,7 +1887,7 @@
             5800.097680505652
           ],
           "name": "PS1 Mall scenery 29:0",
-          "distance": 5.0384876692994816
+          "distance": 5.205239310674355
         },
         {
           "frame": 3586,
@@ -3176,7 +1897,7 @@
             5800.090934592975
           ],
           "name": "PS1 Mall scenery 29:0",
-          "distance": 5.541243902645828
+          "distance": 5.72024235200327
         },
         {
           "frame": 3587,
@@ -3186,7 +1907,7 @@
             5800.084200029553
           ],
           "name": "PS1 Mall scenery 29:0",
-          "distance": 6.040537063641615
+          "distance": 6.21014663581026
         },
         {
           "frame": 3588,
@@ -3196,17 +1917,17 @@
             5800.07747677723
           ],
           "name": "PS1 Mall scenery 29:0",
-          "distance": 6.542458492644147
+          "distance": 6.715043455791654
         },
         {
-          "frame": 3589,
+          "frame": 4453,
           "source": [
-            3297.055300878168,
-            -1467.5272115071614,
-            5800.070764798043
+            10651.280370909499,
+            -1512.5272454155815,
+            5799.779185561146
           ],
-          "name": "PS1 Mall scenery 29:0",
-          "distance": 7.040759146844504
+          "name": "PS1 Mall scenery 30:0",
+          "distance": 0.2516428671343596
         },
         {
           "frame": 4454,
@@ -3216,7 +1937,7 @@
             5799.715401779111
           ],
           "name": "PS1 Mall scenery 30:0",
-          "distance": 0.18761935554777595
+          "distance": 0.33922443445612366
         },
         {
           "frame": 4455,
@@ -3226,7 +1947,7 @@
             5799.6490625932065
           ],
           "name": "PS1 Mall scenery 30:0",
-          "distance": 0.6397314220091709
+          "distance": 0.7940524295963353
         },
         {
           "frame": 4456,
@@ -3236,7 +1957,7 @@
             5799.580168009404
           ],
           "name": "PS1 Mall scenery 30:0",
-          "distance": 1.0864045675594214
+          "distance": 1.229839284866979
         },
         {
           "frame": 4457,
@@ -3246,7 +1967,7 @@
             5799.508718033903
           ],
           "name": "PS1 Mall scenery 30:0",
-          "distance": 1.5385162349585242
+          "distance": 1.6819505644880497
         },
         {
           "frame": 4458,
@@ -3256,7 +1977,7 @@
             5799.434712673135
           ],
           "name": "PS1 Mall scenery 30:0",
-          "distance": 1.9906304431691102
+          "distance": 2.1313355489570434
         },
         {
           "frame": 4459,
@@ -3266,7 +1987,7 @@
             5799.35815193376
           ],
           "name": "PS1 Mall scenery 30:0",
-          "distance": 2.442745992369166
+          "distance": 2.5807205047860804
         },
         {
           "frame": 4460,
@@ -3276,7 +1997,7 @@
             5799.279035822669
           ],
           "name": "PS1 Mall scenery 30:0",
-          "distance": 2.892121218123719
+          "distance": 3.0355910112034756
         },
         {
           "frame": 4461,
@@ -3286,7 +2007,7 @@
             5799.197364346982
           ],
           "name": "PS1 Mall scenery 30:0",
-          "distance": 3.3469886242530986
+          "distance": 3.48496607827704
         },
         {
           "frame": 4462,
@@ -3296,7 +2017,7 @@
             5799.11313751405
           ],
           "name": "PS1 Mall scenery 30:0",
-          "distance": 3.7963519221818043
+          "distance": 3.950867990834375
         },
         {
           "frame": 4463,
@@ -3306,7 +2027,7 @@
             5799.026355331453
           ],
           "name": "PS1 Mall scenery 30:0",
-          "distance": 4.248473725738236
+          "distance": 4.413995274427915
         },
         {
           "frame": 4464,
@@ -3316,7 +2037,7 @@
             5798.937017807
           ],
           "name": "PS1 Mall scenery 30:0",
-          "distance": 4.697832778180171
+          "distance": 4.841200935091978
         },
         {
           "frame": 4465,
@@ -3326,7 +2047,7 @@
             5798.845124948733
           ],
           "name": "PS1 Mall scenery 30:0",
-          "distance": 5.149962722941305
+          "distance": 5.290582691342877
         },
         {
           "frame": 4466,
@@ -3336,7 +2057,7 @@
             5798.750676764923
           ],
           "name": "PS1 Mall scenery 30:0",
-          "distance": 5.60209051098131
+          "distance": 5.756621530103131
         },
         {
           "frame": 4467,
@@ -3346,7 +2067,7 @@
             5798.653673264068
           ],
           "name": "PS1 Mall scenery 30:0",
-          "distance": 6.051438694745001
+          "distance": 6.192041310148379
         },
         {
           "frame": 4468,
@@ -3356,7 +2077,7 @@
             5798.554114454901
           ],
           "name": "PS1 Mall scenery 30:0",
-          "distance": 6.500793714631557
+          "distance": 6.64421314950991
         },
         {
           "frame": 4469,
@@ -3366,60 +2087,10 @@
             5798.459506139182
           ],
           "name": "PS1 Mall scenery 30:0",
-          "distance": 6.947043549898922
-        },
-        {
-          "frame": 4755,
-          "source": [
-            13322.443456052923,
-            -1797.7886962890625,
-            5779.670350061665
-          ],
-          "name": "PS1 Mall scenery 33:21",
-          "distance": 1.5660258981964144
-        },
-        {
-          "frame": 4769,
-          "source": [
-            13473.111424802923,
-            -1872.9214901394314,
-            5779.666166319561
-          ],
-          "name": "PS1 Mall scenery 33:21",
-          "distance": 1.5599215789486713
-        },
-        {
-          "frame": 4836,
-          "source": [
-            14188.658857419621,
-            -2230.905026329888,
-            5795.7885149417
-          ],
-          "name": "PS1 Mall scenery 33:21",
-          "distance": 1.5274963891535276
-        },
-        {
-          "frame": 4843,
-          "source": [
-            14264.176261799348,
-            -2268.6723624335395,
-            5798.56830862178
-          ],
-          "name": "PS1 Mall scenery 33:21",
-          "distance": 1.5176784647988635
-        },
-        {
-          "frame": 4850,
-          "source": [
-            14339.288797500154,
-            -2306.4396972126433,
-            5802.134070444672
-          ],
-          "name": "PS1 Mall scenery 33:21",
-          "distance": 1.5656069097444933
+          "distance": 7.0820983050053465
         }
       ],
-      "startedAt": 11074.399999976158,
+      "startedAt": 10930.300000011921,
       "arcadeHeadroom": [
         {
           "frame": 3666,
@@ -3429,9 +2100,9 @@
             5799.707893032765
           ],
           "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.51898795319608,
-          "roofY": 42.49445760549816,
-          "margin": 0.9754696523020812
+          "headTop": 41.512348162264736,
+          "roofY": 42.484470821248145,
+          "margin": 0.9721226589834089
         },
         {
           "frame": 3669,
@@ -3441,9 +2112,9 @@
             5799.705072203847
           ],
           "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.513169833191625,
-          "roofY": 42.414175283873284,
-          "margin": 0.9010054506816587
+          "headTop": 41.50551856066872,
+          "roofY": 42.405472619309,
+          "margin": 0.899954058640283
         },
         {
           "frame": 3672,
@@ -3453,9 +2124,9 @@
             5799.702251374928
           ],
           "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.50630412479155,
-          "roofY": 42.33372930638541,
-          "margin": 0.8274251815938598
+          "headTop": 41.497907142641225,
+          "roofY": 42.323094013944164,
+          "margin": 0.8251868713029396
         },
         {
           "frame": 3675,
@@ -3465,9 +2136,9 @@
             5799.699430546009
           ],
           "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.49726198766089,
-          "roofY": 42.23574384926444,
-          "margin": 0.738481861603546
+          "headTop": 41.49069216455555,
+          "roofY": 42.244415547723406,
+          "margin": 0.7537233831678591
         },
         {
           "frame": 3678,
@@ -3477,9 +2148,9 @@
             5799.696609717091
           ],
           "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.4900450405144,
-          "roofY": 42.156743597919096,
-          "margin": 0.6666985574046933
+          "headTop": 41.48389396138546,
+          "roofY": 42.163967924816205,
+          "margin": 0.6800739634307433
         },
         {
           "frame": 3681,
@@ -3489,9 +2160,9 @@
             5799.693788888172
           ],
           "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.483092213535805,
-          "roofY": 42.07339999961214,
-          "margin": 0.5903077860763375
+          "headTop": 41.47818463667153,
+          "roofY": 42.0838439210842,
+          "margin": 0.605659284412674
         },
         {
           "frame": 3684,
@@ -3501,9 +2172,9 @@
             5799.690968059254
           ],
           "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.478702909525225,
-          "roofY": 42.011617624409375,
-          "margin": 0.53291471488415
+          "headTop": 41.473891156122676,
+          "roofY": 42.00259652360856,
+          "margin": 0.5287053674858839
         },
         {
           "frame": 3687,
@@ -3513,9 +2184,9 @@
             5799.688147230336
           ],
           "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.47428994222333,
-          "roofY": 41.93149605629023,
-          "margin": 0.45720611406689926
+          "headTop": 41.47144376523834,
+          "roofY": 41.92296158236326,
+          "margin": 0.4515178171249161
         },
         {
           "frame": 3690,
@@ -3525,9 +2196,9 @@
             5799.685326401417
           ],
           "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.471605215781615,
-          "roofY": 41.850895407014754,
-          "margin": 0.3792901912331388
+          "headTop": 41.47092104943938,
+          "roofY": 41.840917757320895,
+          "margin": 0.36999670788151207
         },
         {
           "frame": 3693,
@@ -3537,9 +2208,9 @@
             5799.6825055724985
           ],
           "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.470865764690366,
-          "roofY": 47.43642617621454,
-          "margin": 5.965560411524173
+          "headTop": 41.47236798898478,
+          "roofY": 47.444044172816,
+          "margin": 5.971676183831221
         },
         {
           "frame": 3696,
@@ -3549,9 +2220,9 @@
             5799.67968474358
           ],
           "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.4726646187343,
-          "roofY": 47.523327769595895,
-          "margin": 6.050663150861595
+          "headTop": 41.47568602246703,
+          "roofY": 47.51444010520415,
+          "margin": 6.038754082737121
         },
         {
           "frame": 3699,
@@ -3561,9 +2232,9 @@
             5799.676863914661
           ],
           "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.47609443298288,
-          "roofY": 47.458565354479006,
-          "margin": 5.982470921496123
+          "headTop": 41.48063595694769,
+          "roofY": 47.46713445309116,
+          "margin": 5.986498496143476
         },
         {
           "frame": 3702,
@@ -3573,9 +2244,9 @@
             5799.6740430857435
           ],
           "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.48127863933561,
-          "roofY": 47.36972657048395,
-          "margin": 5.888447931148335
+          "headTop": 41.48685211468076,
+          "roofY": 47.3796947059508,
+          "margin": 5.892842591270039
         },
         {
           "frame": 3705,
@@ -3585,9 +2256,9 @@
             5799.671222256825
           ],
           "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.48615553126537,
-          "roofY": 47.3013486881911,
-          "margin": 5.81519315692573
+          "headTop": 41.49394209812111,
+          "roofY": 47.29155544158066,
+          "margin": 5.7976133434595525
         },
         {
           "frame": 3708,
@@ -3597,9 +2268,9 @@
             5799.668401427906
           ],
           "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.4931274292979,
-          "roofY": 47.21390894178559,
-          "margin": 5.72078151248769
+          "headTop": 41.501223835704806,
+          "roofY": 47.20481521372265,
+          "margin": 5.70359137801784
         },
         {
           "frame": 3711,
@@ -3609,9 +2280,9 @@
             5799.665580598988
           ],
           "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.500461955693744,
-          "roofY": 47.1264691958688,
-          "margin": 5.626007240175056
+          "headTop": 41.508426442107485,
+          "roofY": 47.116326190908254,
+          "margin": 5.607899748800769
         },
         {
           "frame": 3714,
@@ -3621,9 +2292,9 @@
             5799.662759770069
           ],
           "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.5076179013634,
-          "roofY": 47.03920432959333,
-          "margin": 5.531586428229929
+          "headTop": 41.514735189015774,
+          "roofY": 47.029935721758655,
+          "margin": 5.515200532742881
         }
       ],
       "state": "finished",
@@ -3634,7 +2305,120 @@
       ],
       "stage": 2,
       "tuningUnchanged": true,
-      "wallSeconds": 83.46939999997616,
+      "wallSeconds": 83.47039999997615,
+      "errors": []
+    },
+    "upperFullProduction": {
+      "fixtures": [
+        {
+          "name": "First escalator up",
+          "image": "escalator-up",
+          "start": [
+            -13450,
+            315,
+            180
+          ],
+          "end": -11800,
+          "heading": -1,
+          "seam": -12160.4473,
+          "frames": 351,
+          "done": true,
+          "bail": false,
+          "airFrames": 0,
+          "minSeamSpeed": 13.605476396265349,
+          "seamSamples": 32,
+          "startedAt": 8892.800000011921,
+          "source": [
+            -11795.07126463056,
+            716.5365939670141,
+            180.00009070762235
+          ],
+          "reached": true,
+          "tuningUnchanged": true,
+          "wallSeconds": 5.830199999988079
+        },
+        {
+          "name": "First escalator down",
+          "image": "escalator-down",
+          "start": [
+            -11800,
+            717,
+            180
+          ],
+          "end": -13200,
+          "heading": 1,
+          "seam": -12160.4473,
+          "frames": 236,
+          "done": true,
+          "bail": false,
+          "airFrames": 0,
+          "minSeamSpeed": 14.99001714177466,
+          "seamSamples": 26,
+          "startedAt": 14748.200000047684,
+          "source": [
+            -13206.661836340281,
+            314.3544884029152,
+            180
+          ],
+          "reached": true,
+          "tuningUnchanged": true,
+          "wallSeconds": 3.925099999964237
+        },
+        {
+          "name": "Gallery escalator up",
+          "image": "gallery-up",
+          "start": [
+            -6300,
+            315,
+            185
+          ],
+          "end": -4350,
+          "heading": -1,
+          "seam": -4541.5342,
+          "frames": 320,
+          "done": true,
+          "bail": false,
+          "airFrames": 0,
+          "minSeamSpeed": 20.999643440324824,
+          "seamSamples": 21,
+          "startedAt": 18695.80000001192,
+          "source": [
+            -4348.725883072899,
+            685.599568684896,
+            185.00000413367252
+          ],
+          "reached": true,
+          "tuningUnchanged": true,
+          "wallSeconds": 5.327
+        },
+        {
+          "name": "Gallery escalator down",
+          "image": "gallery-down",
+          "start": [
+            -4350,
+            686,
+            185
+          ],
+          "end": -5500,
+          "heading": 1,
+          "seam": -4541.5342,
+          "frames": 202,
+          "done": true,
+          "bail": false,
+          "airFrames": 0,
+          "minSeamSpeed": 9.447480776287469,
+          "seamSamples": 36,
+          "startedAt": 24036.200000047684,
+          "source": [
+            -5500.868588370113,
+            314.75860595703125,
+            185.0000016429683
+          ],
+          "reached": true,
+          "tuningUnchanged": true,
+          "wallSeconds": 3.353199999988079
+        }
+      ],
       "errors": []
     }
   },
@@ -3642,7 +2426,7 @@
     "start": {
       "deaths": 0,
       "lives": 4,
-      "stamp": "Codex/sol fork \u00b7 build 10-22 22:03 UTC"
+      "stamp": "Codex/sol fork \u00b7 build 10-22 22:59 UTC"
     },
     "checkpoints": [
       {
@@ -3658,10 +2442,10 @@
         "index": 1,
         "position": [
           12.054929809570313,
-          118.78562927246094,
+          118.88562927246093,
           -361.0608837890625
         ],
-        "distance": 0.09999999999999432
+        "distance": 0
       },
       {
         "index": 2,
@@ -3705,17 +2489,390 @@
     "check:levels": "passed, exact frozen package script",
     "typescript": "passed",
     "productionBuild": "passed",
-    "check:all": "not run"
+    "check:all": "not run",
+    "browser": "Full-production main and four upper routes, plus lite MENU/K/L/recovery; no console errors."
   },
   "fidelityRemaining": [
-    "Flying Leap/gallery, up-escalator handrails and alternate upper routes need full input-only traversal at this scale.",
+    "Flying Leap/gallery transfer and remaining alternate upper routes are unverified; the current probe bails on the outer gallery rail during descent.",
+    "The 0.045 scale clears the rider on the main route but final gameplay scale remains provisional.",
     "Converted rail nodes are not retail TRG verification.",
     "Directories and glass remain pass-through; original breakable behavior, box stacks, collectibles, sky and animated water are incomplete."
   ],
   "elapsed": {
-    "integrationStartedUTC": "2026-10-22T20:31:00Z",
-    "firstMeasuredNativeFinishUTC": "2026-10-22T21:33:51Z",
-    "promptToFirstMeasuredPlayableSeconds": 3771,
-    "finalValidationUTC": "2026-10-22T22:34:25.965617+00:00"
+    "continuationStartedUTC": "2026-10-22T22:38:34Z",
+    "firstCorrectedEscalatorPlayableUTC": "2026-10-22T22:51:50.587029+00:00",
+    "finalValidationUTC": "2026-10-22T23:05:08.097215+00:00",
+    "timingNote": "Continuation start uses the first recorded goal-state timestamp in this pass; original goal began in the earlier iteration."
+  },
+  "previousValidationCommit": "3109d845f1bc86c29e062255ac55a028f4154314",
+  "upperRoutes": {
+    "scale": 0.045,
+    "stats": {
+      "sourceTriangles": 9826,
+      "solidTriangles": 8678,
+      "vertTriangles": 379,
+      "visualTriangles": 1148,
+      "wallSegments": 1541,
+      "railEdges": 637,
+      "railPaths": 127
+    },
+    "seams": [
+      {
+        "a": [
+          243.5398077392578,
+          35.87073486328125,
+          -869.198203125
+        ],
+        "b": [
+          241.6596514892578,
+          35.87073486328125,
+          -869.885244140625
+        ],
+        "source": 18
+      },
+      {
+        "a": [
+          -24.351563458810546,
+          118.78562438964843,
+          -108.5907568359375
+        ],
+        "b": [
+          -8.206101336111328,
+          118.78562438964843,
+          -108.5907568359375
+        ],
+        "source": 18
+      },
+      {
+        "a": [
+          -3.0893719482421873,
+          120.23202255249024,
+          -73.62404296875
+        ],
+        "b": [
+          -7.301973529709473,
+          120.23202255249024,
+          -67.0610926220581
+        ],
+        "source": 18
+      },
+      {
+        "a": [
+          1.1052081298828125,
+          120.23202255249024,
+          -94.3980029296875
+        ],
+        "b": [
+          1.1052081298828125,
+          120.23202255249024,
+          -80.18723187980859
+        ],
+        "source": 18
+      },
+      {
+        "a": [
+          1.1052081298828125,
+          120.23202255249024,
+          -80.18723187980859
+        ],
+        "b": [
+          1.1052081298828125,
+          120.23202255249024,
+          -80.1870556640625
+        ],
+        "source": 18
+      },
+      {
+        "a": [
+          1.1052081298828125,
+          120.23202255249024,
+          -80.1870556640625
+        ],
+        "b": [
+          -3.0893719482421877,
+          120.23202255249024,
+          -73.62404296875
+        ],
+        "source": 18
+      },
+      {
+        "a": [
+          8.734949340820313,
+          135.47346405029296,
+          -370.8954931269485
+        ],
+        "b": [
+          8.734949340820313,
+          135.47346405029296,
+          -370.89533935546876
+        ],
+        "source": 18
+      },
+      {
+        "a": [
+          8.734905395507813,
+          135.47346405029296,
+          -464.53166015625
+        ],
+        "b": [
+          8.734905395507813,
+          135.47346405029296,
+          -464.5316379033413
+        ],
+        "source": 18
+      },
+      {
+        "a": [
+          8.734906111359372,
+          135.47346405029296,
+          -464.5316381835937
+        ],
+        "b": [
+          8.734907668051758,
+          135.47346405029296,
+          -464.5316381835937
+        ],
+        "source": 18
+      },
+      {
+        "a": [
+          8.734907668051758,
+          135.47346405029296,
+          -464.5316381835937
+        ],
+        "b": [
+          8.734993286132813,
+          135.47346405029296,
+          -464.5316381835937
+        ],
+        "source": 18
+      },
+      {
+        "a": [
+          -7.301881713867187,
+          152.88451721191404,
+          -33.739365234375
+        ],
+        "b": [
+          -7.301881713867187,
+          152.88447494085204,
+          -33.73923880094238
+        ],
+        "source": 18
+      },
+      {
+        "a": [
+          233.3788604736328,
+          35.50915283203125,
+          -863.71998046875
+        ],
+        "b": [
+          235.3858428955078,
+          35.50915283203125,
+          -863.71998046875
+        ],
+        "source": 43
+      },
+      {
+        "a": [
+          101.10562316894531,
+          104.35778366088867,
+          -641.73375
+        ],
+        "b": [
+          101.10562316894531,
+          104.35778366088867,
+          -641.7337264948828
+        ],
+        "source": 43
+      },
+      {
+        "a": [
+          101.10566711425781,
+          92.44306411743163,
+          -641.73375
+        ],
+        "b": [
+          101.10566361034863,
+          92.44306411743108,
+          -641.733748123289
+        ],
+        "source": 43
+      },
+      {
+        "a": [
+          101.10566361034863,
+          92.44306411743108,
+          -641.733748123289
+        ],
+        "b": [
+          101.1056338271206,
+          92.44306411742642,
+          -641.7337321712461
+        ],
+        "source": 43
+      },
+      {
+        "a": [
+          101.1056338271206,
+          92.44306411742642,
+          -641.7337321712461
+        ],
+        "b": [
+          101.10562331539306,
+          92.44306411742477,
+          -641.7337265411132
+        ],
+        "source": 43
+      },
+      {
+        "a": [
+          231.9506378173828,
+          35.8707568359375,
+          -806.6232861328125
+        ],
+        "b": [
+          230.0702618408203,
+          35.8707568359375,
+          -807.3103271484375
+        ],
+        "source": 43
+      },
+      {
+        "a": [
+          243.8833721923828,
+          35.50915283203125,
+          -800.96431640625
+        ],
+        "b": [
+          245.8903546142578,
+          35.50915283203125,
+          -800.96431640625
+        ],
+        "source": 43
+      },
+      {
+        "a": [
+          261.9273175048828,
+          40.82466247558594,
+          -1127.5071240234374
+        ],
+        "b": [
+          257.891975296875,
+          40.82466247558594,
+          -1138.0429252476563
+        ],
+        "source": 43
+      },
+      {
+        "a": [
+          257.891975296875,
+          40.82466247558594,
+          -1138.0429252476563
+        ],
+        "b": [
+          257.60617492675783,
+          40.82466247558594,
+          -1138.7891162109374
+        ],
+        "source": 43
+      }
+    ],
+    "tuningUnchanged": true,
+    "fixtures": [
+      {
+        "name": "First escalator up",
+        "frames": 351,
+        "bail": false,
+        "airFrames": 0,
+        "minSeamSpeed": 13.605476396265349,
+        "seamSamples": 32,
+        "end": [
+          -11795.07126463056,
+          716.5365939670141,
+          180.00009070762235
+        ],
+        "reached": true
+      },
+      {
+        "name": "First escalator down",
+        "frames": 236,
+        "bail": false,
+        "airFrames": 0,
+        "minSeamSpeed": 14.99001714177466,
+        "seamSamples": 26,
+        "end": [
+          -13206.661836340281,
+          314.3544884029152,
+          180
+        ],
+        "reached": true
+      },
+      {
+        "name": "Gallery escalator up",
+        "frames": 320,
+        "bail": false,
+        "airFrames": 0,
+        "minSeamSpeed": 20.999643440324824,
+        "seamSamples": 21,
+        "end": [
+          -4348.725883072899,
+          685.599568684896,
+          185.00000413367252
+        ],
+        "reached": true
+      },
+      {
+        "name": "Gallery escalator down",
+        "frames": 202,
+        "bail": false,
+        "airFrames": 0,
+        "minSeamSpeed": 9.447480776287469,
+        "seamSamples": 36,
+        "end": [
+          -5500.868588370113,
+          314.75860595703125,
+          185.0000016429683
+        ],
+        "reached": true
+      }
+    ]
+  },
+  "failedFlyingLeapProbe": {
+    "name": "flying-leap-runup",
+    "bail": true,
+    "grinds": [],
+    "maxX": -4234.362147509724,
+    "launches": [
+      {
+        "frame": 290,
+        "q": [
+          -4591.47228052607,
+          664.3794268048773,
+          263.4275458356208
+        ],
+        "speed": 19.639098201551278,
+        "vy": 18.852090493771264
+      }
+    ],
+    "cause": {
+      "args": [
+        false,
+        19.639098201551278,
+        "rail",
+        19.639098201551278
+      ],
+      "source": [
+        -4234.362147509724,
+        742.8910997178818,
+        388.06172130265696
+      ],
+      "stack": "Error\n    at p.bail (file:///private/tmp/mall-recreation/snapshot-16/tools/mall-flying-probe.mjs:16:110)\n    at Player.railLandSmack (/private/tmp/mall-recreation/snapshot-16/src/player.ts:11356:12)\n    at Player.stepAir (/private/tmp/mall-recreation/snapshot-16/src/player.ts:6535:14)\n    at Player.stepSimulation (/private/tmp/mall-recreation/snapshot-16/src/player.ts:4114:16)\n    at Player.step (/private/tmp/mall-recreation/snapshot-16/src/player.ts:3514:10)\n    at Object.tick (file:///private/tmp/mall-recreation/snapshot-16/tools/blockworks-runner.mjs:101:9)\n    at withBlockworksRuntime.modulePath (file:///private/tmp/mall-recreation/snapshot-16/tools/mall-flying-probe.mjs:20:6)\n    at async withBlockworksRuntime (file:///private/tmp/mall-recreation/snapshot-16/tools/blockworks-runner.mjs:221:12)\n    at async file:///private/tmp/mall-recreation/snapshot-16/tools/mall-flying-probe.mjs:3:1"
+    },
+    "end": [
+      -4234.362147509724,
+      742.8910997178818,
+      388.06172130265696
+    ]
   }
 }

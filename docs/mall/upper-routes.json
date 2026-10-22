@@ -1,0 +1,5327 @@
+{
+  "native": {
+    "scale": 0.045,
+    "stats": {
+      "sourceTriangles": 9826,
+      "solidTriangles": 8678,
+      "vertTriangles": 379,
+      "visualTriangles": 1148,
+      "wallSegments": 1541,
+      "railEdges": 637,
+      "railPaths": 127
+    },
+    "seams": [
+      {
+        "a": [
+          243.5398077392578,
+          35.87073486328125,
+          -869.198203125
+        ],
+        "b": [
+          241.6596514892578,
+          35.87073486328125,
+          -869.885244140625
+        ],
+        "source": 18
+      },
+      {
+        "a": [
+          -24.351563458810546,
+          118.78562438964843,
+          -108.5907568359375
+        ],
+        "b": [
+          -8.206101336111328,
+          118.78562438964843,
+          -108.5907568359375
+        ],
+        "source": 18
+      },
+      {
+        "a": [
+          -3.0893719482421873,
+          120.23202255249024,
+          -73.62404296875
+        ],
+        "b": [
+          -7.301973529709473,
+          120.23202255249024,
+          -67.0610926220581
+        ],
+        "source": 18
+      },
+      {
+        "a": [
+          1.1052081298828125,
+          120.23202255249024,
+          -94.3980029296875
+        ],
+        "b": [
+          1.1052081298828125,
+          120.23202255249024,
+          -80.18723187980859
+        ],
+        "source": 18
+      },
+      {
+        "a": [
+          1.1052081298828125,
+          120.23202255249024,
+          -80.18723187980859
+        ],
+        "b": [
+          1.1052081298828125,
+          120.23202255249024,
+          -80.1870556640625
+        ],
+        "source": 18
+      },
+      {
+        "a": [
+          1.1052081298828125,
+          120.23202255249024,
+          -80.1870556640625
+        ],
+        "b": [
+          -3.0893719482421877,
+          120.23202255249024,
+          -73.62404296875
+        ],
+        "source": 18
+      },
+      {
+        "a": [
+          8.734949340820313,
+          135.47346405029296,
+          -370.8954931269485
+        ],
+        "b": [
+          8.734949340820313,
+          135.47346405029296,
+          -370.89533935546876
+        ],
+        "source": 18
+      },
+      {
+        "a": [
+          8.734905395507813,
+          135.47346405029296,
+          -464.53166015625
+        ],
+        "b": [
+          8.734905395507813,
+          135.47346405029296,
+          -464.5316379033413
+        ],
+        "source": 18
+      },
+      {
+        "a": [
+          8.734906111359372,
+          135.47346405029296,
+          -464.5316381835937
+        ],
+        "b": [
+          8.734907668051758,
+          135.47346405029296,
+          -464.5316381835937
+        ],
+        "source": 18
+      },
+      {
+        "a": [
+          8.734907668051758,
+          135.47346405029296,
+          -464.5316381835937
+        ],
+        "b": [
+          8.734993286132813,
+          135.47346405029296,
+          -464.5316381835937
+        ],
+        "source": 18
+      },
+      {
+        "a": [
+          -7.301881713867187,
+          152.88451721191404,
+          -33.739365234375
+        ],
+        "b": [
+          -7.301881713867187,
+          152.88447494085204,
+          -33.73923880094238
+        ],
+        "source": 18
+      },
+      {
+        "a": [
+          233.3788604736328,
+          35.50915283203125,
+          -863.71998046875
+        ],
+        "b": [
+          235.3858428955078,
+          35.50915283203125,
+          -863.71998046875
+        ],
+        "source": 43
+      },
+      {
+        "a": [
+          101.10562316894531,
+          104.35778366088867,
+          -641.73375
+        ],
+        "b": [
+          101.10562316894531,
+          104.35778366088867,
+          -641.7337264948828
+        ],
+        "source": 43
+      },
+      {
+        "a": [
+          101.10566711425781,
+          92.44306411743163,
+          -641.73375
+        ],
+        "b": [
+          101.10566361034863,
+          92.44306411743108,
+          -641.733748123289
+        ],
+        "source": 43
+      },
+      {
+        "a": [
+          101.10566361034863,
+          92.44306411743108,
+          -641.733748123289
+        ],
+        "b": [
+          101.1056338271206,
+          92.44306411742642,
+          -641.7337321712461
+        ],
+        "source": 43
+      },
+      {
+        "a": [
+          101.1056338271206,
+          92.44306411742642,
+          -641.7337321712461
+        ],
+        "b": [
+          101.10562331539306,
+          92.44306411742477,
+          -641.7337265411132
+        ],
+        "source": 43
+      },
+      {
+        "a": [
+          231.9506378173828,
+          35.8707568359375,
+          -806.6232861328125
+        ],
+        "b": [
+          230.0702618408203,
+          35.8707568359375,
+          -807.3103271484375
+        ],
+        "source": 43
+      },
+      {
+        "a": [
+          243.8833721923828,
+          35.50915283203125,
+          -800.96431640625
+        ],
+        "b": [
+          245.8903546142578,
+          35.50915283203125,
+          -800.96431640625
+        ],
+        "source": 43
+      },
+      {
+        "a": [
+          261.9273175048828,
+          40.82466247558594,
+          -1127.5071240234374
+        ],
+        "b": [
+          257.891975296875,
+          40.82466247558594,
+          -1138.0429252476563
+        ],
+        "source": 43
+      },
+      {
+        "a": [
+          257.891975296875,
+          40.82466247558594,
+          -1138.0429252476563
+        ],
+        "b": [
+          257.60617492675783,
+          40.82466247558594,
+          -1138.7891162109374
+        ],
+        "source": 43
+      }
+    ],
+    "tuningUnchanged": true,
+    "fixtures": [
+      {
+        "name": "First escalator up",
+        "frames": 351,
+        "bail": false,
+        "airFrames": 0,
+        "minSeamSpeed": 13.605476396265349,
+        "seamSamples": 32,
+        "trace": [
+          {
+            "frame": 0,
+            "source": [
+              -13449.944444455381,
+              313.55333116319434,
+              180
+            ],
+            "speed": 0.14999997047244093,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 6,
+            "source": [
+              -13448.444448118977,
+              313.55333116319434,
+              180
+            ],
+            "speed": 1.049995866155566,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 12,
+            "source": [
+              -13444.944479275728,
+              313.55333116319434,
+              180
+            ],
+            "speed": 1.9499758172285089,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 18,
+            "source": [
+              -13439.444589892304,
+              313.55333116319434,
+              180
+            ],
+            "speed": 2.8499270689043708,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 24,
+            "source": [
+              -13431.944860277426,
+              313.55333116319434,
+              180
+            ],
+            "speed": 3.7498368679780105,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 30,
+            "source": [
+              -13422.445399077413,
+              313.55465423017904,
+              180
+            ],
+            "speed": 4.649692463548899,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 36,
+            "source": [
+              -13410.957648187985,
+              313.5938649026025,
+              180
+            ],
+            "speed": 5.5408119014653625,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 42,
+            "source": [
+              -13397.48974330837,
+              313.63983435402497,
+              180
+            ],
+            "speed": 6.431852543511235,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 48,
+            "source": [
+              -13382.041875737868,
+              313.69256193149204,
+              180
+            ],
+            "speed": 7.322801894374972,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 54,
+            "source": [
+              -13364.61462648019,
+              313.75545661212664,
+              180.0000004485858
+            ],
+            "speed": 8.213175038176953,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 60,
+            "source": [
+              -13345.209818961863,
+              313.8289090779999,
+              180.00000141999755
+            ],
+            "speed": 9.102959591959436,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 66,
+            "source": [
+              -13323.827891044415,
+              313.90984548147435,
+              180.00000249038482
+            ],
+            "speed": 9.992615559302276,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 72,
+            "source": [
+              -13300.469144606213,
+              313.9982646798594,
+              180.00000365973227
+            ],
+            "speed": 10.882130495878458,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 78,
+            "source": [
+              -13275.133909169434,
+              314.0941654258236,
+              180.00000492802354
+            ],
+            "speed": 11.77149196521255,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 84,
+            "source": [
+              -13247.822541881713,
+              314.19754636746666,
+              180.0000062952406
+            ],
+            "speed": 12.660687539376468,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 90,
+            "source": [
+              -13218.535427496248,
+              314.3084060483925,
+              180.00000776136443
+            ],
+            "speed": 13.549704799683884,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 96,
+            "source": [
+              -13187.273425663827,
+              314.4331339895566,
+              180.00000932635294
+            ],
+            "speed": 14.438072416164337,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 102,
+            "source": [
+              -13154.038028984844,
+              314.56794737435075,
+              180.000010990131
+            ],
+            "speed": 15.326007590232408,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 108,
+            "source": [
+              -13118.8297361586,
+              314.71076345608935,
+              180.00001275267306
+            ],
+            "speed": 16.21372744054705,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 114,
+            "source": [
+              -13084.192273728531,
+              324.44869052111426,
+              180.00001468671553
+            ],
+            "speed": 16.446877733001006,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 120,
+            "source": [
+              -13050.658062616394,
+              338.6740866262071,
+              180.0000166641389
+            ],
+            "speed": 16.352838502570364,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 126,
+            "source": [
+              -13017.316204712253,
+              352.8178854464659,
+              180.0000186302198
+            ],
+            "speed": 16.25882347591929,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 132,
+            "source": [
+              -12984.166650674408,
+              366.88010791290844,
+              180.00002058496102
+            ],
+            "speed": 16.164832507650868,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 138,
+            "source": [
+              -12951.20935145844,
+              380.86077483044755,
+              180.0000225283655
+            ],
+            "speed": 16.0708654525123,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 144,
+            "source": [
+              -12918.444258316908,
+              394.7599068780137,
+              180.00002446043612
+            ],
+            "speed": 15.976922165393958,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 150,
+            "source": [
+              -12885.871322799063,
+              408.57752460868005,
+              180.0000263811757
+            ],
+            "speed": 15.883002501328473,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 156,
+            "source": [
+              -12853.490496750559,
+              422.31364844978543,
+              180.00002829058712
+            ],
+            "speed": 15.789106315489793,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 162,
+            "source": [
+              -12821.301732313157,
+              435.968298703056,
+              180.00003018867318
+            ],
+            "speed": 15.695233463192274,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 168,
+            "source": [
+              -12789.304981924448,
+              449.5431979696309,
+              180.0000320754366
+            ],
+            "speed": 15.601383799889781,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 174,
+            "source": [
+              -12757.51025904679,
+              463.05386886648785,
+              180.00003395077908
+            ],
+            "speed": 15.506113489454219,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 180,
+            "source": [
+              -12725.91035792424,
+              476.4817533013602,
+              180.0000358146304
+            ],
+            "speed": 15.4108664293529,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 186,
+            "source": [
+              -12694.50523118177,
+              489.8268714055266,
+              180.00003766699336
+            ],
+            "speed": 15.315642471071525,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 192,
+            "source": [
+              -12663.294831747928,
+              503.0892431812654,
+              180.00003950787084
+            ],
+            "speed": 15.220441466235807,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 198,
+            "source": [
+              -12632.279112854556,
+              516.2688885019743,
+              180.00004133726543
+            ],
+            "speed": 15.125263266610526,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 204,
+            "source": [
+              -12601.458028036508,
+              529.3658271122922,
+              180.00004315517998
+            ],
+            "speed": 15.030107724098565,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 210,
+            "source": [
+              -12570.831531131364,
+              542.3800786282181,
+              180.00004496161716
+            ],
+            "speed": 14.934974690739992,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 216,
+            "source": [
+              -12540.399576279155,
+              555.3116625372295,
+              180.0000467565797
+            ],
+            "speed": 14.839864018711092,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 222,
+            "source": [
+              -12510.162117922078,
+              568.1605981984021,
+              180.00004854007028
+            ],
+            "speed": 14.744775560323426,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 228,
+            "source": [
+              -12480.119110804237,
+              580.9269048425253,
+              180.00005031209162
+            ],
+            "speed": 14.649709168022923,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 234,
+            "source": [
+              -12450.262748517718,
+              593.5952275597283,
+              180.0000520727193
+            ],
+            "speed": 14.555869579666961,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 240,
+            "source": [
+              -12420.596531302228,
+              606.179767564643,
+              180.0000538220574
+            ],
+            "speed": 14.462292438155105,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 246,
+            "source": [
+              -12391.121725510131,
+              618.6831100007003,
+              180.00005556010854
+            ],
+            "speed": 14.368736595982671,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 252,
+            "source": [
+              -12361.838287738246,
+              631.1052732797211,
+              180.00005728687518
+            ],
+            "speed": 14.275201910487366,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 258,
+            "source": [
+              -12332.7461748751,
+              643.4462756897829,
+              180.00005900235988
+            ],
+            "speed": 14.181688239132697,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 264,
+            "source": [
+              -12303.84534410066,
+              655.7061353953309,
+              180.0000607065652
+            ],
+            "speed": 14.088195439507077,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 270,
+            "source": [
+              -12275.13575288609,
+              667.8848704372849,
+              180.00006239949357
+            ],
+            "speed": 13.994723369322958,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 276,
+            "source": [
+              -12246.617358993492,
+              679.9824987331472,
+              180.00006408114757
+            ],
+            "speed": 13.90127188641595,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 282,
+            "source": [
+              -12218.29012047566,
+              691.9990380771078,
+              180.00006575152963
+            ],
+            "speed": 13.807840848743899,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 288,
+            "source": [
+              -12190.153995675824,
+              703.9345061401518,
+              180.0000674106422
+            ],
+            "speed": 13.714430114386055,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 294,
+            "source": [
+              -12162.208943227412,
+              715.7889204701619,
+              180.00006905848784
+            ],
+            "speed": 13.621039541542144,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 300,
+            "source": [
+              -12131.542768182282,
+              716.5365939670141,
+              180.00007086679074
+            ],
+            "speed": 14.354179893670835,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 306,
+            "source": [
+              -12098.480146272774,
+              716.5365939670141,
+              180.0000728164058
+            ],
+            "speed": 15.25243631684684,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 312,
+            "source": [
+              -12063.421677735341,
+              716.5365939670141,
+              180.00007488371068
+            ],
+            "speed": 16.150475941766494,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 318,
+            "source": [
+              -12026.367860738694,
+              716.5365939670141,
+              180.00007706867592
+            ],
+            "speed": 17.048286122755297,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 324,
+            "source": [
+              -11987.319221536414,
+              716.5365939670141,
+              180.00007937127054
+            ],
+            "speed": 17.94585422705741,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 330,
+            "source": [
+              -11946.276314437344,
+              716.5365939670141,
+              180.00008179146187
+            ],
+            "speed": 18.843167635544045,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 336,
+            "source": [
+              -11903.239721774375,
+              716.5365939670141,
+              180.0000843292155
+            ],
+            "speed": 19.740213743420338,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 342,
+            "source": [
+              -11858.210053871691,
+              716.5365939670141,
+              180.0000869844955
+            ],
+            "speed": 20.636979960930386,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 348,
+            "source": [
+              -11811.18794901043,
+              716.5365939670141,
+              180.00008975726422
+            ],
+            "speed": 21.533453714060567,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          }
+        ],
+        "end": [
+          -11795.07126463056,
+          716.5365939670141,
+          180.00009070762235
+        ],
+        "reached": true
+      },
+      {
+        "name": "First escalator down",
+        "frames": 236,
+        "bail": false,
+        "airFrames": 0,
+        "minSeamSpeed": 14.99001714177466,
+        "seamSamples": 26,
+        "trace": [
+          {
+            "frame": 0,
+            "source": [
+              -11800.055555544619,
+              716.5365939670141,
+              180
+            ],
+            "speed": 0.14999997047244093,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 6,
+            "source": [
+              -11801.555551881023,
+              716.5365939670141,
+              180
+            ],
+            "speed": 1.049995866155566,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 12,
+            "source": [
+              -11805.055520724272,
+              716.5365939670141,
+              180
+            ],
+            "speed": 1.9499758172285089,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 18,
+            "source": [
+              -11810.555410107696,
+              716.5365939670141,
+              180
+            ],
+            "speed": 2.8499270689043708,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 24,
+            "source": [
+              -11818.055139722574,
+              716.5365939670141,
+              180
+            ],
+            "speed": 3.7498368679780105,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 30,
+            "source": [
+              -11827.554600922587,
+              716.5365939670141,
+              180
+            ],
+            "speed": 4.649692463548899,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 36,
+            "source": [
+              -11839.053656729875,
+              716.5365939670141,
+              180
+            ],
+            "speed": 5.549481107743686,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 42,
+            "source": [
+              -11852.552141842703,
+              716.5365939670141,
+              180
+            ],
+            "speed": 6.449190056438418,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 48,
+            "source": [
+              -11868.049862644726,
+              716.5365939670141,
+              180
+            ],
+            "speed": 7.348806569980307,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 54,
+            "source": [
+              -11885.546597215856,
+              716.5365939670141,
+              180
+            ],
+            "speed": 8.248317913908965,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 60,
+            "source": [
+              -11905.042095344748,
+              716.5365939670141,
+              180
+            ],
+            "speed": 9.147711359677004,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 66,
+            "source": [
+              -11926.536078542857,
+              716.5365939670141,
+              180
+            ],
+            "speed": 10.046974185369953,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 72,
+            "source": [
+              -11950.028240060119,
+              716.5365939670141,
+              180
+            ],
+            "speed": 10.946093676425367,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 78,
+            "source": [
+              -11975.518244902225,
+              716.5365939670141,
+              180
+            ],
+            "speed": 11.845057126351044,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 84,
+            "source": [
+              -12003.00572984947,
+              716.5365939670141,
+              180
+            ],
+            "speed": 12.743851837442305,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 90,
+            "source": [
+              -12032.490303477229,
+              716.5365939670141,
+              180
+            ],
+            "speed": 13.642465121498196,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 96,
+            "source": [
+              -12063.971546177982,
+              716.5365939670141,
+              180
+            ],
+            "speed": 14.540884300536565,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 102,
+            "source": [
+              -12097.449010184966,
+              716.5365939670141,
+              180
+            ],
+            "speed": 15.439096707507908,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 108,
+            "source": [
+              -12132.922219597385,
+              716.5365939670141,
+              180
+            ],
+            "speed": 16.33708968700791,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 114,
+            "source": [
+              -12169.940167328636,
+              712.5093011549629,
+              180
+            ],
+            "speed": 17.400163292976085,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 120,
+            "source": [
+              -12207.79143742622,
+              696.4526256671566,
+              180
+            ],
+            "speed": 19.289386614600367,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 126,
+            "source": [
+              -12249.506933868279,
+              678.7567283443977,
+              180
+            ],
+            "speed": 21.178031425790426,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 132,
+            "source": [
+              -12295.062651984694,
+              659.4317920734766,
+              180
+            ],
+            "speed": 22.999305774278216,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 138,
+            "source": [
+              -12343.040700034635,
+              639.0792927758266,
+              180
+            ],
+            "speed": 23.773997900249352,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 144,
+            "source": [
+              -12392.58637585677,
+              618.0617988727399,
+              180
+            ],
+            "speed": 24.534241272270318,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 150,
+            "source": [
+              -12443.669902043806,
+              596.3919420715429,
+              180
+            ],
+            "speed": 25.279856779784286,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 156,
+            "source": [
+              -12496.256768906507,
+              574.0694590800726,
+              180
+            ],
+            "speed": 26.011174115046384,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 162,
+            "source": [
+              -12549.686103963513,
+              551.3654976405987,
+              180
+            ],
+            "speed": 26.1239,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 168,
+            "source": [
+              -12603.11543902052,
+              528.6615362011248,
+              180
+            ],
+            "speed": 26.1239,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 174,
+            "source": [
+              -12656.544774077527,
+              505.9575747616509,
+              180
+            ],
+            "speed": 26.1239,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 180,
+            "source": [
+              -12709.974109134533,
+              483.253613322177,
+              180
+            ],
+            "speed": 26.1239,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 186,
+            "source": [
+              -12763.40344419154,
+              460.5496518827031,
+              180
+            ],
+            "speed": 26.1239,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 192,
+            "source": [
+              -12816.837449670824,
+              437.86207186205274,
+              180
+            ],
+            "speed": 26.1239,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 198,
+            "source": [
+              -12870.28079599466,
+              415.19111150768504,
+              180
+            ],
+            "speed": 26.1239,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 204,
+            "source": [
+              -12923.724142318499,
+              392.5201511533178,
+              180
+            ],
+            "speed": 26.1239,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 210,
+            "source": [
+              -12977.167488642335,
+              369.8491907989501,
+              180
+            ],
+            "speed": 26.1239,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 216,
+            "source": [
+              -13030.610834966172,
+              347.1782304445828,
+              180
+            ],
+            "speed": 26.1239,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 222,
+            "source": [
+              -13084.05418129001,
+              324.50727009021557,
+              180
+            ],
+            "speed": 26.1239,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 228,
+            "source": [
+              -13139.706680428822,
+              314.62607990173274,
+              180
+            ],
+            "speed": 25.995133551512772,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 234,
+            "source": [
+              -13197.143486355839,
+              314.3930978707499,
+              180
+            ],
+            "speed": 25.741524425268437,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          }
+        ],
+        "end": [
+          -13206.661836340281,
+          314.3544884029152,
+          180
+        ],
+        "reached": true
+      },
+      {
+        "name": "Gallery escalator up",
+        "frames": 320,
+        "bail": false,
+        "airFrames": 0,
+        "minSeamSpeed": 20.999643440324824,
+        "seamSamples": 21,
+        "trace": [
+          {
+            "frame": 0,
+            "source": [
+              -6299.944444455381,
+              314.75860595703125,
+              185
+            ],
+            "speed": 0.14999997047244093,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 6,
+            "source": [
+              -6298.4444481189785,
+              314.75860595703125,
+              185
+            ],
+            "speed": 1.049995866155566,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 12,
+            "source": [
+              -6294.944479275728,
+              314.75860595703125,
+              185
+            ],
+            "speed": 1.9499758172285089,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 18,
+            "source": [
+              -6289.444589892306,
+              314.75860595703125,
+              185
+            ],
+            "speed": 2.8499270689043708,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 24,
+            "source": [
+              -6281.944860277428,
+              314.75860595703125,
+              185
+            ],
+            "speed": 3.7498368679780105,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 30,
+            "source": [
+              -6272.445399077416,
+              314.75860595703125,
+              185
+            ],
+            "speed": 4.649692463548899,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 36,
+            "source": [
+              -6260.946343270127,
+              314.75860595703125,
+              185
+            ],
+            "speed": 5.549481107743686,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 42,
+            "source": [
+              -6247.4478581573,
+              314.75860595703125,
+              185
+            ],
+            "speed": 6.449190056438418,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 48,
+            "source": [
+              -6231.950137355278,
+              314.75860595703125,
+              185
+            ],
+            "speed": 7.348806569980307,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 54,
+            "source": [
+              -6214.4534027841455,
+              314.75860595703125,
+              185
+            ],
+            "speed": 8.248317913908965,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 60,
+            "source": [
+              -6194.957904655255,
+              314.75860595703125,
+              185
+            ],
+            "speed": 9.147711359677004,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 66,
+            "source": [
+              -6173.463921457147,
+              314.75860595703125,
+              185
+            ],
+            "speed": 10.046974185369953,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 72,
+            "source": [
+              -6149.971759939886,
+              314.75860595703125,
+              185
+            ],
+            "speed": 10.946093676425367,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 78,
+            "source": [
+              -6124.481755097782,
+              314.75860595703125,
+              185
+            ],
+            "speed": 11.845057126351044,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 84,
+            "source": [
+              -6096.994270150533,
+              314.75860595703125,
+              185
+            ],
+            "speed": 12.743851837442305,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 90,
+            "source": [
+              -6067.509696522777,
+              314.75860595703125,
+              185
+            ],
+            "speed": 13.642465121498196,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 96,
+            "source": [
+              -6036.028453822022,
+              314.75860595703125,
+              185
+            ],
+            "speed": 14.540884300536565,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 102,
+            "source": [
+              -6002.550989815039,
+              314.75860595703125,
+              185
+            ],
+            "speed": 15.439096707507908,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 108,
+            "source": [
+              -5967.07778040262,
+              314.75860595703125,
+              185
+            ],
+            "speed": 16.33708968700791,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 114,
+            "source": [
+              -5929.609329592797,
+              314.75860595703125,
+              185
+            ],
+            "speed": 17.23485059598859,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 120,
+            "source": [
+              -5890.146169472448,
+              314.75860595703125,
+              185
+            ],
+            "speed": 18.132366804468003,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 126,
+            "source": [
+              -5848.68886017735,
+              314.75860595703125,
+              185
+            ],
+            "speed": 19.02962569623829,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 132,
+            "source": [
+              -5805.237989860658,
+              314.75860595703125,
+              185
+            ],
+            "speed": 19.926614669572185,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 138,
+            "source": [
+              -5759.794174659806,
+              314.75860595703125,
+              185
+            ],
+            "speed": 20.82332113792772,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 144,
+            "source": [
+              -5712.358058661846,
+              314.75860595703125,
+              185
+            ],
+            "speed": 21.71973253065115,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 150,
+            "source": [
+              -5662.930313867244,
+              314.75860595703125,
+              185
+            ],
+            "speed": 22.61583629367798,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 156,
+            "source": [
+              -5611.938889331139,
+              314.75860595703125,
+              185
+            ],
+            "speed": 22.999305774278216,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 162,
+            "source": [
+              -5560.829320943854,
+              314.75860595703125,
+              185
+            ],
+            "speed": 22.999305774278216,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 168,
+            "source": [
+              -5509.719752556568,
+              314.75860595703125,
+              185
+            ],
+            "speed": 22.999305774278216,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 174,
+            "source": [
+              -5458.610184169282,
+              314.75860595703125,
+              185
+            ],
+            "speed": 22.999305774278216,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 180,
+            "source": [
+              -5407.500615781997,
+              314.75860595703125,
+              185
+            ],
+            "speed": 22.999305774278216,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 186,
+            "source": [
+              -5360.07596024868,
+              335.12643478705286,
+              185
+            ],
+            "speed": 22.896406981118318,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 192,
+            "source": [
+              -5313.61862810602,
+              355.4813951919614,
+              185
+            ],
+            "speed": 22.772969207101184,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 198,
+            "source": [
+              -5267.4124982293615,
+              375.726311382733,
+              184.9999999999934
+            ],
+            "speed": 22.649574971124174,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 204,
+            "source": [
+              -5221.457482971031,
+              395.86121830888214,
+              184.99999999998016
+            ],
+            "speed": 22.526224017989843,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 210,
+            "source": [
+              -5175.753487194061,
+              415.88614259515043,
+              184.99999999996714
+            ],
+            "speed": 22.402916797707977,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 216,
+            "source": [
+              -5130.104274500794,
+              435.34715445628444,
+              185.00000019195505
+            ],
+            "speed": 22.30039596642194,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 222,
+            "source": [
+              -5084.621089086288,
+              454.6991950924762,
+              185.00000042141318
+            ],
+            "speed": 22.20205897646758,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 228,
+            "source": [
+              -5039.338944949381,
+              473.9656973272081,
+              185.00000064985704
+            ],
+            "speed": 22.103756352249594,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 234,
+            "source": [
+              -4994.257775100919,
+              493.1466988490806,
+              185.00000087728705
+            ],
+            "speed": 22.00548757504613,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 240,
+            "source": [
+              -4949.3775143110615,
+              512.2422331648813,
+              185.00000110370354
+            ],
+            "speed": 21.907252126596003,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 246,
+            "source": [
+              -4904.698087711233,
+              531.2523170822224,
+              185.0000013291068
+            ],
+            "speed": 21.809050552444525,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 252,
+            "source": [
+              -4860.219426229378,
+              550.1769799896974,
+              185.0000015534972
+            ],
+            "speed": 21.710882689083125,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 258,
+            "source": [
+              -4815.933398966357,
+              568.9973863033028,
+              185.00000177687974
+            ],
+            "speed": 21.613636632405726,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 264,
+            "source": [
+              -4771.844424933177,
+              587.7324961386562,
+              185.00000199926114
+            ],
+            "speed": 21.516601281112628,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 270,
+            "source": [
+              -4727.953848609384,
+              606.3832512383933,
+              185.0000022206661
+            ],
+            "speed": 21.41960121055687,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 276,
+            "source": [
+              -4684.261620286588,
+              624.9497208194398,
+              185.00000244107054
+            ],
+            "speed": 21.322633843717377,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 282,
+            "source": [
+              -4640.767673268108,
+              643.431933223721,
+              185.0000026604747
+            ],
+            "speed": 21.22569902153183,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 288,
+            "source": [
+              -4597.471941182335,
+              661.8299166550269,
+              185.000002878879
+            ],
+            "speed": 21.12879658514039,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 294,
+            "source": [
+              -4554.374357982333,
+              680.1436991791829,
+              185.00000309628376
+            ],
+            "speed": 21.031926375884613,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 300,
+            "source": [
+              -4508.388585276589,
+              685.599568684896,
+              185.000003328258
+            ],
+            "speed": 21.597245197349178,
+            "state": "ride",
+            "ground": "Mall detail 46 / surface"
+          },
+          {
+            "frame": 306,
+            "source": [
+              -4459.232979407374,
+              685.599568684896,
+              185.0000035762223
+            ],
+            "speed": 22.49339174157794,
+            "state": "ride",
+            "ground": "Mall detail 46 / surface"
+          },
+          {
+            "frame": 312,
+            "source": [
+              -4408.353712858065,
+              685.599568684896,
+              185.00000383288142
+            ],
+            "speed": 22.999305774278216,
+            "state": "ride",
+            "ground": "Mall detail 46 / surface"
+          },
+          {
+            "frame": 318,
+            "source": [
+              -4357.24414447078,
+              685.599568684896,
+              185.00000409070236
+            ],
+            "speed": 22.999305774278216,
+            "state": "ride",
+            "ground": "Mall detail 46 / surface"
+          }
+        ],
+        "end": [
+          -4348.725883072899,
+          685.599568684896,
+          185.00000413367252
+        ],
+        "reached": true
+      },
+      {
+        "name": "Gallery escalator down",
+        "frames": 202,
+        "bail": false,
+        "airFrames": 0,
+        "minSeamSpeed": 9.447480776287469,
+        "seamSamples": 36,
+        "trace": [
+          {
+            "frame": 0,
+            "source": [
+              -4350.055555544619,
+              685.599568684896,
+              185
+            ],
+            "speed": 0.14999997047244093,
+            "state": "ride",
+            "ground": "Mall detail 46 / surface"
+          },
+          {
+            "frame": 6,
+            "source": [
+              -4351.555551881023,
+              685.599568684896,
+              185
+            ],
+            "speed": 1.049995866155566,
+            "state": "ride",
+            "ground": "Mall detail 46 / surface"
+          },
+          {
+            "frame": 12,
+            "source": [
+              -4355.055520724272,
+              685.599568684896,
+              185
+            ],
+            "speed": 1.9499758172285089,
+            "state": "ride",
+            "ground": "Mall detail 46 / surface"
+          },
+          {
+            "frame": 18,
+            "source": [
+              -4360.555410107694,
+              685.599568684896,
+              185
+            ],
+            "speed": 2.8499270689043708,
+            "state": "ride",
+            "ground": "Mall detail 46 / surface"
+          },
+          {
+            "frame": 24,
+            "source": [
+              -4368.055139722572,
+              685.599568684896,
+              185
+            ],
+            "speed": 3.7498368679780105,
+            "state": "ride",
+            "ground": "Mall detail 46 / surface"
+          },
+          {
+            "frame": 30,
+            "source": [
+              -4377.554600922584,
+              685.599568684896,
+              185
+            ],
+            "speed": 4.649692463548899,
+            "state": "ride",
+            "ground": "Mall detail 46 / surface"
+          },
+          {
+            "frame": 36,
+            "source": [
+              -4389.053656729873,
+              685.599568684896,
+              185
+            ],
+            "speed": 5.549481107743686,
+            "state": "ride",
+            "ground": "Mall detail 46 / surface"
+          },
+          {
+            "frame": 42,
+            "source": [
+              -4402.5521418427,
+              685.599568684896,
+              185
+            ],
+            "speed": 6.449190056438418,
+            "state": "ride",
+            "ground": "Mall detail 46 / surface"
+          },
+          {
+            "frame": 48,
+            "source": [
+              -4418.049862644722,
+              685.599568684896,
+              185
+            ],
+            "speed": 7.348806569980307,
+            "state": "ride",
+            "ground": "Mall detail 46 / surface"
+          },
+          {
+            "frame": 54,
+            "source": [
+              -4435.5465972158545,
+              685.599568684896,
+              185
+            ],
+            "speed": 8.248317913908965,
+            "state": "ride",
+            "ground": "Mall detail 46 / surface"
+          },
+          {
+            "frame": 60,
+            "source": [
+              -4455.042095344745,
+              685.599568684896,
+              185
+            ],
+            "speed": 9.147711359677004,
+            "state": "ride",
+            "ground": "Mall detail 46 / surface"
+          },
+          {
+            "frame": 66,
+            "source": [
+              -4476.536078542853,
+              685.599568684896,
+              185
+            ],
+            "speed": 10.046974185369953,
+            "state": "ride",
+            "ground": "Mall detail 46 / surface"
+          },
+          {
+            "frame": 72,
+            "source": [
+              -4500.028240060115,
+              685.599568684896,
+              185
+            ],
+            "speed": 10.946093676425367,
+            "state": "ride",
+            "ground": "Mall detail 46 / surface"
+          },
+          {
+            "frame": 78,
+            "source": [
+              -4525.5182449022195,
+              685.599568684896,
+              185
+            ],
+            "speed": 11.845057126351044,
+            "state": "ride",
+            "ground": "Mall detail 46 / surface"
+          },
+          {
+            "frame": 84,
+            "source": [
+              -4552.4275756485295,
+              680.9709601445516,
+              185.00000000000125
+            ],
+            "speed": 13.0749594504706,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 90,
+            "source": [
+              -4581.425884736562,
+              668.6484889808676,
+              185.00000000000927
+            ],
+            "speed": 14.966747809812205,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 96,
+            "source": [
+              -4614.292799933677,
+              654.6821017157977,
+              185.0000000000183
+            ],
+            "speed": 16.858085622532105,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 102,
+            "source": [
+              -4651.027332693797,
+              639.072218419713,
+              185.00000000002842
+            ],
+            "speed": 18.748916673698403,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 108,
+            "source": [
+              -4691.6283795690015,
+              621.8193079890984,
+              185.00000000003962
+            ],
+            "speed": 20.63918480829302,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 114,
+            "source": [
+              -4736.094722339996,
+              602.9238880911098,
+              185.00000000005184
+            ],
+            "speed": 22.528833937869763,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 120,
+            "source": [
+              -4783.481469940498,
+              582.7874699691747,
+              185.00000000006486
+            ],
+            "speed": 23.49385448905244,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 126,
+            "source": [
+              -4832.449109371257,
+              561.9792201997288,
+              185.00000000007833
+            ],
+            "speed": 24.260814843978824,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 132,
+            "source": [
+              -4882.9633984942975,
+              540.4999349988948,
+              185.0000000000922
+            ],
+            "speed": 25.013710325527104,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 138,
+            "source": [
+              -4934.995678330621,
+              518.3613785899634,
+              185.00000000010658
+            ],
+            "speed": 25.752363400416655,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 144,
+            "source": [
+              -4988.282916614835,
+              495.68886578940374,
+              185.0000000001212
+            ],
+            "speed": 26.1239,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 150,
+            "source": [
+              -5041.701811255722,
+              472.9603525088646,
+              185.00000000013017
+            ],
+            "speed": 26.1239,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 156,
+            "source": [
+              -5095.120711069121,
+              450.23184942561693,
+              185.00000000013353
+            ],
+            "speed": 26.1239,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 162,
+            "source": [
+              -5148.539610882521,
+              427.50334634236924,
+              185.00000000013682
+            ],
+            "speed": 26.1239,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 168,
+            "source": [
+              -5201.835662894464,
+              404.45839793644564,
+              185.0000001342744
+            ],
+            "speed": 26.1239,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 174,
+            "source": [
+              -5255.008867104954,
+              381.1608859733906,
+              185.00000040254622
+            ],
+            "speed": 26.1239,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 180,
+            "source": [
+              -5308.182073669399,
+              357.86338410937833,
+              185.000000670818
+            ],
+            "speed": 26.1239,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 186,
+            "source": [
+              -5361.3552920036145,
+              334.56590438172407,
+              185.00000093908983
+            ],
+            "speed": 26.1239,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 192,
+            "source": [
+              -5414.52851033783,
+              314.75860595703125,
+              185.0000012073616
+            ],
+            "speed": 26.1239,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 198,
+            "source": [
+              -5472.235305218075,
+              314.75860595703125,
+              185.00000149850644
+            ],
+            "speed": 25.857500898832246,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          }
+        ],
+        "end": [
+          -5500.868588370113,
+          314.75860595703125,
+          185.0000016429683
+        ],
+        "reached": true
+      }
+    ]
+  },
+  "fullBrowser": {
+    "fixtures": [
+      {
+        "name": "First escalator up",
+        "image": "escalator-up",
+        "start": [
+          -13450,
+          315,
+          180
+        ],
+        "end": -11800,
+        "heading": -1,
+        "seam": -12160.4473,
+        "frames": 351,
+        "done": true,
+        "bail": false,
+        "airFrames": 0,
+        "minSeamSpeed": 13.605476396265349,
+        "seamSamples": 32,
+        "trace": [
+          {
+            "frame": 6,
+            "source": [
+              -13448.833335476811,
+              313.55333116319434,
+              180
+            ],
+            "speed": 0.8999973129985546,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 12,
+            "source": [
+              -13445.666692541368,
+              313.55333116319434,
+              180
+            ],
+            "speed": 1.7999808072877594,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 18,
+            "source": [
+              -13440.500118436343,
+              313.55333116319434,
+              180
+            ],
+            "speed": 2.69993772788738,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 24,
+            "source": [
+              -13433.333688747047,
+              313.55333116319434,
+              180
+            ],
+            "speed": 3.5998553212784445,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 30,
+            "source": [
+              -13424.167507397246,
+              313.55333116319434,
+              180
+            ],
+            "speed": 4.4997208361261345,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 36,
+            "source": [
+              -13413.00978879005,
+              313.5868604146317,
+              180
+            ],
+            "speed": 5.392297129563058,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 42,
+            "source": [
+              -13399.87189704067,
+              313.631703445672,
+              180
+            ],
+            "speed": 6.283351772110917,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 48,
+            "source": [
+              -13384.754008789048,
+              313.6833047181649,
+              180
+            ],
+            "speed": 7.174317205694767,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 54,
+            "source": [
+              -13367.656521368513,
+              313.74394221394186,
+              180.0000002963074
+            ],
+            "speed": 8.06486598528276,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 60,
+            "source": [
+              -13348.581261324005,
+              313.81614725313693,
+              180.00000125122193
+            ],
+            "speed": 8.954670759760843,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 66,
+            "source": [
+              -13327.528833256109,
+              313.89583641020454,
+              180.00000230511426
+            ],
+            "speed": 9.84434902256818,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 72,
+            "source": [
+              -13304.499534434215,
+              313.98300855989964,
+              180.0000034579695
+            ],
+            "speed": 10.733888328136928,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 78,
+            "source": [
+              -13279.493689774434,
+              314.07766247232667,
+              180.0000047097713
+            ],
+            "speed": 11.623276238634693,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 84,
+            "source": [
+              -13252.511651821493,
+              314.17979681300676,
+              180.00000606050207
+            ],
+            "speed": 12.512500324660586,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 90,
+            "source": [
+              -13223.553800729116,
+              314.2894101429565,
+              180.00000751014284
+            ],
+            "speed": 13.401548165939813,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 96,
+            "source": [
+              -13192.620815899967,
+              314.4114432667252,
+              180.00000905866034
+            ],
+            "speed": 14.290063154467624,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 102,
+            "source": [
+              -13159.714281394776,
+              314.544922681499,
+              180.0000107059754
+            ],
+            "speed": 15.178033013735945,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 108,
+            "source": [
+              -13124.834770993439,
+              314.6864051167049,
+              180.00001245205846
+            ],
+            "speed": 16.065789609703806,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 114,
+            "source": [
+              -13089.800013401338,
+              322.0698566241972,
+              180.00001435604196
+            ],
+            "speed": 16.462553301435264,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 120,
+            "source": [
+              -13056.233738603203,
+              336.3088543205845,
+              180.00001633535607
+            ],
+            "speed": 16.368510022895382,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 126,
+            "source": [
+              -13022.859825265601,
+              350.4662512313648,
+              180.00001830332718
+            ],
+            "speed": 16.274490972381958,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 132,
+            "source": [
+              -12989.67822399726,
+              364.54206830858766,
+              180.00002025995815
+            ],
+            "speed": 16.180496004473977,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 138,
+            "source": [
+              -12956.688885704234,
+              378.5363263781728,
+              180.00002220525192
+            ],
+            "speed": 16.08652497389468,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 144,
+            "source": [
+              -12923.891761589608,
+              392.44904614004054,
+              180.0000241392113
+            ],
+            "speed": 15.992577735510642,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 150,
+            "source": [
+              -12891.286803153202,
+              406.2802481682306,
+              180.0000260618392
+            ],
+            "speed": 15.89865414433085,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 156,
+            "source": [
+              -12858.87396219129,
+              420.02995291103025,
+              180.00002797313846
+            ],
+            "speed": 15.804754055505764,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 162,
+            "source": [
+              -12826.653190796302,
+              433.69818069109124,
+              180.00002987311183
+            ],
+            "speed": 15.710877324326399,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 168,
+            "source": [
+              -12794.624441356544,
+              447.28495170555607,
+              180.00003176176222
+            ],
+            "speed": 15.617023806223436,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 174,
+            "source": [
+              -12762.795848953989,
+              460.80783998909556,
+              180.0000336390201
+            ],
+            "speed": 15.52199025590741,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 180,
+            "source": [
+              -12731.163480837056,
+              474.2495207661409,
+              180.0000355047864
+            ],
+            "speed": 15.426739331067672,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 186,
+            "source": [
+              -12699.725894974952,
+              487.6084318662288,
+              180.00003735906387
+            ],
+            "speed": 15.331511532790513,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 192,
+            "source": [
+              -12668.483044245648,
+              500.88459331312924,
+              180.00003920185543
+            ],
+            "speed": 15.236306712678372,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 198,
+            "source": [
+              -12637.434881830457,
+              514.0780250017119,
+              180.0000410331636
+            ],
+            "speed": 15.141124722472926,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 204,
+            "source": [
+              -12606.58136121375,
+              527.1887466980666,
+              180.00004285299133
+            ],
+            "speed": 15.0459654140541,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 210,
+            "source": [
+              -12575.922436182675,
+              540.2167780396244,
+              180.00004466134124
+            ],
+            "speed": 14.950828639439163,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 216,
+            "source": [
+              -12545.458060826868,
+              553.162138535276,
+              180.00004645821605
+            ],
+            "speed": 14.855714250781768,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 222,
+            "source": [
+              -12515.188189538192,
+              566.0248475654871,
+              180.00004824361838
+            ],
+            "speed": 14.760622100370991,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 228,
+            "source": [
+              -12485.112777010443,
+              578.8049243824212,
+              180.00005001755108
+            ],
+            "speed": 14.665552040630432,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 234,
+            "source": [
+              -12455.2257305614,
+              591.4899087178032,
+              180.0000517800654
+            ],
+            "speed": 14.571467850712267,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 240,
+            "source": [
+              -12425.527607201762,
+              604.087983449594,
+              180.00005353128495
+            ],
+            "speed": 14.477887145431675,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 246,
+            "source": [
+              -12396.020902527758,
+              616.6048575318523,
+              180.00005527121704
+            ],
+            "speed": 14.384327763279854,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 252,
+            "source": [
+              -12366.705573087565,
+              629.0405493970334,
+              180.00005699986423
+            ],
+            "speed": 14.290789561573451,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 258,
+            "source": [
+              -12337.58157572111,
+              641.3950773538313,
+              180.00005871722908
+            ],
+            "speed": 14.19727239775506,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 264,
+            "source": [
+              -12308.648867559803,
+              653.6684595872885,
+              180.00006042331415
+            ],
+            "speed": 14.103776129392351,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 270,
+            "source": [
+              -12279.907406026297,
+              665.8607141589055,
+              180.0000621181219
+            ],
+            "speed": 14.01030061417716,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 276,
+            "source": [
+              -12251.357148834219,
+              677.9718590067464,
+              180.0000638016548
+            ],
+            "speed": 13.916845709924626,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 282,
+            "source": [
+              -12222.99805398793,
+              690.0019119455465,
+              180.0000654739153
+            ],
+            "speed": 13.82341127457229,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 288,
+            "source": [
+              -12194.830079782276,
+              701.9508906668166,
+              180.00006713490598
+            ],
+            "speed": 13.72999716617923,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 294,
+            "source": [
+              -12166.853184802329,
+              713.8188127389508,
+              180.0000687846292
+            ],
+            "speed": 13.636603242925151,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 300,
+            "source": [
+              -12136.859131105863,
+              716.5365939670141,
+              180.00007055329894
+            ],
+            "speed": 14.204450300814456,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 306,
+            "source": [
+              -12104.129196760496,
+              716.5365939670141,
+              180.00007248329632
+            ],
+            "speed": 15.102741626724965,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 312,
+            "source": [
+              -12069.403335491552,
+              716.5365939670141,
+              180.00007453098817
+            ],
+            "speed": 16.00081826319769,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 318,
+            "source": [
+              -12032.682040784159,
+              716.5365939670141,
+              180.0000766963455
+            ],
+            "speed": 16.898667562474007,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 324,
+            "source": [
+              -11993.965834213102,
+              716.5365939670141,
+              180.00007897933745
+            ],
+            "speed": 17.796276889595728,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 330,
+            "source": [
+              -11953.25526541347,
+              716.5365939670141,
+              180.00008137993166
+            ],
+            "speed": 18.69363362311376,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 336,
+            "source": [
+              -11910.550912049715,
+              716.5365939670141,
+              180.00008389809403
+            ],
+            "speed": 19.590725155795244,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 342,
+            "source": [
+              -11865.853379783148,
+              716.5365939670141,
+              180.00008653378887
+            ],
+            "speed": 20.487538895328886,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 348,
+            "source": [
+              -11819.16330223786,
+              716.5365939670141,
+              180.00008928697878
+            ],
+            "speed": 21.384062265028593,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          }
+        ],
+        "startedAt": 8892.800000011921,
+        "source": [
+          -11795.07126463056,
+          716.5365939670141,
+          180.00009070762235
+        ],
+        "reached": true,
+        "tuningUnchanged": true,
+        "wallSeconds": 5.830199999988079
+      },
+      {
+        "name": "First escalator down",
+        "image": "escalator-down",
+        "start": [
+          -11800,
+          717,
+          180
+        ],
+        "end": -13200,
+        "heading": 1,
+        "seam": -12160.4473,
+        "frames": 236,
+        "done": true,
+        "bail": false,
+        "airFrames": 0,
+        "minSeamSpeed": 14.99001714177466,
+        "seamSamples": 26,
+        "trace": [
+          {
+            "frame": 6,
+            "source": [
+              -11801.166664523189,
+              716.5365939670141,
+              180
+            ],
+            "speed": 0.8999973129985546,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 12,
+            "source": [
+              -11804.333307458632,
+              716.5365939670141,
+              180
+            ],
+            "speed": 1.7999808072877594,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 18,
+            "source": [
+              -11809.499881563657,
+              716.5365939670141,
+              180
+            ],
+            "speed": 2.69993772788738,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 24,
+            "source": [
+              -11816.666311252951,
+              716.5365939670141,
+              180
+            ],
+            "speed": 3.5998553212784445,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 30,
+            "source": [
+              -11825.832492602753,
+              716.5365939670141,
+              180
+            ],
+            "speed": 4.4997208361261345,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 36,
+            "source": [
+              -11836.998293356637,
+              716.5365939670141,
+              180
+            ],
+            "speed": 5.399521524002407,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 42,
+            "source": [
+              -11850.163552932912,
+              716.5365939670141,
+              180
+            ],
+            "speed": 6.299244640108271,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 48,
+            "source": [
+              -11865.328082433622,
+              716.5365939670141,
+              180
+            ],
+            "speed": 7.198877443995644,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 54,
+            "source": [
+              -11882.49166465515,
+              716.5365939670141,
+              180
+            ],
+            "speed": 8.098407200288678,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 60,
+            "source": [
+              -11901.654054100423,
+              716.5365939670141,
+              180
+            ],
+            "speed": 8.997821179404472,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 66,
+            "source": [
+              -11922.814976992719,
+              716.5365939670141,
+              180
+            ],
+            "speed": 9.897106658273106,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 72,
+            "source": [
+              -11945.974131291072,
+              716.5365939670141,
+              180
+            ],
+            "speed": 10.796250921056897,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 78,
+            "source": [
+              -11971.13118670728,
+              716.5365939670141,
+              180
+            ],
+            "speed": 11.695241259868766,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 84,
+            "source": [
+              -11998.285784724492,
+              716.5365939670141,
+              180
+            ],
+            "speed": 12.59406497548968,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 90,
+            "source": [
+              -12027.437538617414,
+              716.5365939670141,
+              180
+            ],
+            "speed": 13.49270937808504,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 96,
+            "source": [
+              -12058.58603347408,
+              716.5365939670141,
+              180
+            ],
+            "speed": 14.391161787919954,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 102,
+            "source": [
+              -12091.730826219224,
+              716.5365939670141,
+              180
+            ],
+            "speed": 15.289409536073292,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 108,
+            "source": [
+              -12126.871445639234,
+              716.5365939670141,
+              180
+            ],
+            "speed": 16.18743996515045,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 114,
+            "source": [
+              -12164.007392408694,
+              715.0260104063591,
+              180
+            ],
+            "speed": 17.085240429994734,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 120,
+            "source": [
+              -12201.214511267466,
+              699.242586711162,
+              180
+            ],
+            "speed": 18.974554722438345,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 126,
+            "source": [
+              -12242.286053720138,
+              681.8198575069364,
+              180
+            ],
+            "speed": 20.863299841597414,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 132,
+            "source": [
+              -12287.220788539149,
+              662.7583450858378,
+              180
+            ],
+            "speed": 22.751419793674224,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 138,
+            "source": [
+              -12334.934696883141,
+              642.5178950148293,
+              180
+            ],
+            "speed": 23.64588066041407,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 144,
+            "source": [
+              -12384.221159459135,
+              621.6103605124367,
+              180
+            ],
+            "speed": 24.408545396210826,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 150,
+            "source": [
+              -12435.050459929525,
+              600.0483473799545,
+              180
+            ],
+            "speed": 25.15661006922584,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 156,
+            "source": [
+              -12487.390304755423,
+              577.8371245390549,
+              180
+            ],
+            "speed": 25.890160183533386,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 162,
+            "source": [
+              -12540.781214787345,
+              555.1494912138442,
+              180
+            ],
+            "speed": 26.1239,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 168,
+            "source": [
+              -12594.210549844352,
+              532.4455297743707,
+              180
+            ],
+            "speed": 26.1239,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 174,
+            "source": [
+              -12647.639884901359,
+              509.74156833489633,
+              180
+            ],
+            "speed": 26.1239,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 180,
+            "source": [
+              -12701.069219958366,
+              487.0376068954224,
+              180
+            ],
+            "speed": 26.1239,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 186,
+            "source": [
+              -12754.498555015372,
+              464.3336454559485,
+              180
+            ],
+            "speed": 26.1239,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 192,
+            "source": [
+              -12807.930225283517,
+              441.6405652544472,
+              180
+            ],
+            "speed": 26.1239,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 198,
+            "source": [
+              -12861.373571607355,
+              418.9696049000795,
+              180
+            ],
+            "speed": 26.1239,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 204,
+            "source": [
+              -12914.816917931192,
+              396.29864454571225,
+              180
+            ],
+            "speed": 26.1239,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 210,
+            "source": [
+              -12968.26026425503,
+              373.62768419134454,
+              180
+            ],
+            "speed": 26.1239,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 216,
+            "source": [
+              -13021.703610578867,
+              350.9567238369773,
+              180
+            ],
+            "speed": 26.1239,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 222,
+            "source": [
+              -13075.146956902703,
+              328.28576348261004,
+              180
+            ],
+            "speed": 26.1239,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 228,
+            "source": [
+              -13130.078932393364,
+              314.66513312300594,
+              180
+            ],
+            "speed": 26.037908655029963,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          },
+          {
+            "frame": 234,
+            "source": [
+              -13187.609666853665,
+              314.4317700878901,
+              180
+            ],
+            "speed": 25.783434168974004,
+            "state": "ride",
+            "ground": "Entrance / first concourse / surface"
+          }
+        ],
+        "startedAt": 14748.200000047684,
+        "source": [
+          -13206.661836340281,
+          314.3544884029152,
+          180
+        ],
+        "reached": true,
+        "tuningUnchanged": true,
+        "wallSeconds": 3.925099999964237
+      },
+      {
+        "name": "Gallery escalator up",
+        "image": "gallery-up",
+        "start": [
+          -6300,
+          315,
+          185
+        ],
+        "end": -4350,
+        "heading": -1,
+        "seam": -4541.5342,
+        "frames": 320,
+        "done": true,
+        "bail": false,
+        "airFrames": 0,
+        "minSeamSpeed": 20.999643440324824,
+        "seamSamples": 21,
+        "trace": [
+          {
+            "frame": 6,
+            "source": [
+              -6298.833335476813,
+              314.75860595703125,
+              185
+            ],
+            "speed": 0.8999973129985546,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 12,
+            "source": [
+              -6295.666692541368,
+              314.75860595703125,
+              185
+            ],
+            "speed": 1.7999808072877594,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 18,
+            "source": [
+              -6290.500118436345,
+              314.75860595703125,
+              185
+            ],
+            "speed": 2.69993772788738,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 24,
+            "source": [
+              -6283.3336887470505,
+              314.75860595703125,
+              185
+            ],
+            "speed": 3.5998553212784445,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 30,
+            "source": [
+              -6274.167507397249,
+              314.75860595703125,
+              185
+            ],
+            "speed": 4.4997208361261345,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 36,
+            "source": [
+              -6263.001706643365,
+              314.75860595703125,
+              185
+            ],
+            "speed": 5.399521524002407,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 42,
+            "source": [
+              -6249.836447067093,
+              314.75860595703125,
+              185
+            ],
+            "speed": 6.299244640108271,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 48,
+            "source": [
+              -6234.671917566382,
+              314.75860595703125,
+              185
+            ],
+            "speed": 7.198877443995644,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 54,
+            "source": [
+              -6217.508335344854,
+              314.75860595703125,
+              185
+            ],
+            "speed": 8.098407200288678,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 60,
+            "source": [
+              -6198.34594589958,
+              314.75860595703125,
+              185
+            ],
+            "speed": 8.997821179404472,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 66,
+            "source": [
+              -6177.185023007283,
+              314.75860595703125,
+              185
+            ],
+            "speed": 9.897106658273106,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 72,
+            "source": [
+              -6154.025868708932,
+              314.75860595703125,
+              185
+            ],
+            "speed": 10.796250921056897,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 78,
+            "source": [
+              -6128.868813292727,
+              314.75860595703125,
+              185
+            ],
+            "speed": 11.695241259868766,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 84,
+            "source": [
+              -6101.714215275513,
+              314.75860595703125,
+              185
+            ],
+            "speed": 12.59406497548968,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 90,
+            "source": [
+              -6072.562461382589,
+              314.75860595703125,
+              185
+            ],
+            "speed": 13.49270937808504,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 96,
+            "source": [
+              -6041.4139665259245,
+              314.75860595703125,
+              185
+            ],
+            "speed": 14.391161787919954,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 102,
+            "source": [
+              -6008.269173780784,
+              314.75860595703125,
+              185
+            ],
+            "speed": 15.289409536073292,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 108,
+            "source": [
+              -5973.128554360772,
+              314.75860595703125,
+              185
+            ],
+            "speed": 16.18743996515045,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 114,
+            "source": [
+              -5935.992607591312,
+              314.75860595703125,
+              185
+            ],
+            "speed": 17.085240429994734,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 120,
+            "source": [
+              -5896.86186088151,
+              314.75860595703125,
+              185
+            ],
+            "speed": 17.98279829839731,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 126,
+            "source": [
+              -5855.736869694476,
+              314.75860595703125,
+              185
+            ],
+            "speed": 18.88010095180553,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 132,
+            "source": [
+              -5812.618217516056,
+              314.75860595703125,
+              185
+            ],
+            "speed": 19.777135786029714,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 138,
+            "source": [
+              -5767.506515822002,
+              314.75860595703125,
+              185
+            ],
+            "speed": 20.67389021194814,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 144,
+            "source": [
+              -5720.402404043569,
+              314.75860595703125,
+              185
+            ],
+            "speed": 21.5703516562103,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 150,
+            "source": [
+              -5671.3065495315695,
+              314.75860595703125,
+              185
+            ],
+            "speed": 22.466507561938215,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 156,
+            "source": [
+              -5620.45715072902,
+              314.75860595703125,
+              185
+            ],
+            "speed": 22.999305774278216,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 162,
+            "source": [
+              -5569.347582341734,
+              314.75860595703125,
+              185
+            ],
+            "speed": 22.999305774278216,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 168,
+            "source": [
+              -5518.238013954449,
+              314.75860595703125,
+              185
+            ],
+            "speed": 22.999305774278216,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 174,
+            "source": [
+              -5467.128445567163,
+              314.75860595703125,
+              185
+            ],
+            "speed": 22.999305774278216,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 180,
+            "source": [
+              -5416.018877179877,
+              314.75860595703125,
+              185
+            ],
+            "speed": 22.999305774278216,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 186,
+            "source": [
+              -5367.843277070162,
+              331.723238368711,
+              185
+            ],
+            "speed": 22.91698426283703,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 192,
+            "source": [
+              -5321.344070222038,
+              352.09654588767853,
+              185
+            ],
+            "speed": 22.79353909008894,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 198,
+            "source": [
+              -5275.09607836875,
+              372.35979806320665,
+              184.99999999999557
+            ],
+            "speed": 22.67013773303454,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 204,
+            "source": [
+              -5229.099217868958,
+              392.51303922420266,
+              184.99999999998232
+            ],
+            "speed": 22.54677946628674,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 210,
+            "source": [
+              -5183.35339168634,
+              412.5562912450973,
+              184.9999999999693
+            ],
+            "speed": 22.423464974905798,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 216,
+            "source": [
+              -5137.704356022117,
+              432.1134960152881,
+              185.00000015361337
+            ],
+            "speed": 22.316788817398926,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 222,
+            "source": [
+              -5092.187656891472,
+              451.47979596051164,
+              185.0000003832406
+            ],
+            "speed": 22.21844608384761,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 228,
+            "source": [
+              -5046.872010750432,
+              470.7605525210888,
+              185.00000061185347
+            ],
+            "speed": 22.120137743412027,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 234,
+            "source": [
+              -5001.757348980707,
+              489.95580004735757,
+              185.00000083945247
+            ],
+            "speed": 22.0218634546152,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 240,
+            "source": [
+              -4956.843609087022,
+              509.06557896345066,
+              185.00000106603784
+            ],
+            "speed": 21.92362234453698,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 246,
+            "source": [
+              -4912.130714927887,
+              528.0899025691524,
+              185.00000129160992
+            ],
+            "speed": 21.82541513602958,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 252,
+            "source": [
+              -4867.6185973755255,
+              547.0288002767657,
+              185.0000015161691
+            ],
+            "speed": 21.727241665548892,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 258,
+            "source": [
+              -4823.300856851132,
+              565.866667616137,
+              185.00000173971887
+            ],
+            "speed": 21.629812397241242,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 264,
+            "source": [
+              -4779.178806298894,
+              584.6158386789834,
+              185.0000019622671
+            ],
+            "speed": 21.532771553148734,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 270,
+            "source": [
+              -4735.255168690634,
+              603.2806459835533,
+              185.00000218383474
+            ],
+            "speed": 21.435765613592782,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 276,
+            "source": [
+              -4691.52988700817,
+              621.8611611791262,
+              185.0000024044059
+            ],
+            "speed": 21.338792807185396,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 282,
+            "source": [
+              -4648.002897723549,
+              640.3574144838767,
+              185.0000026239768
+            ],
+            "speed": 21.241852571928245,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 288,
+            "source": [
+              -4604.674134411016,
+              658.7694341246047,
+              185.0000028425477
+            ],
+            "speed": 21.144944748927823,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 294,
+            "source": [
+              -4561.543530969546,
+              677.0972481901204,
+              185.00000306011907
+            ],
+            "speed": 21.048069179492202,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 300,
+            "source": [
+              -4516.387564979312,
+              685.599568684896,
+              185.0000032879073
+            ],
+            "speed": 21.44785735934723,
+            "state": "ride",
+            "ground": "Mall detail 46 / surface"
+          },
+          {
+            "frame": 306,
+            "source": [
+              -4467.563865237587,
+              685.599568684896,
+              185.00000353419728
+            ],
+            "speed": 22.344055760665295,
+            "state": "ride",
+            "ground": "Mall detail 46 / surface"
+          },
+          {
+            "frame": 312,
+            "source": [
+              -4416.871974255946,
+              685.599568684896,
+              185.00000378991132
+            ],
+            "speed": 22.999305774278216,
+            "state": "ride",
+            "ground": "Mall detail 46 / surface"
+          },
+          {
+            "frame": 318,
+            "source": [
+              -4365.76240586866,
+              685.599568684896,
+              185.0000040477322
+            ],
+            "speed": 22.999305774278216,
+            "state": "ride",
+            "ground": "Mall detail 46 / surface"
+          }
+        ],
+        "startedAt": 18695.80000001192,
+        "source": [
+          -4348.725883072899,
+          685.599568684896,
+          185.00000413367252
+        ],
+        "reached": true,
+        "tuningUnchanged": true,
+        "wallSeconds": 5.327
+      },
+      {
+        "name": "Gallery escalator down",
+        "image": "gallery-down",
+        "start": [
+          -4350,
+          686,
+          185
+        ],
+        "end": -5500,
+        "heading": 1,
+        "seam": -4541.5342,
+        "frames": 202,
+        "done": true,
+        "bail": false,
+        "airFrames": 0,
+        "minSeamSpeed": 9.447480776287469,
+        "seamSamples": 36,
+        "trace": [
+          {
+            "frame": 6,
+            "source": [
+              -4351.166664523187,
+              685.599568684896,
+              185
+            ],
+            "speed": 0.8999973129985546,
+            "state": "ride",
+            "ground": "Mall detail 46 / surface"
+          },
+          {
+            "frame": 12,
+            "source": [
+              -4354.333307458632,
+              685.599568684896,
+              185
+            ],
+            "speed": 1.7999808072877594,
+            "state": "ride",
+            "ground": "Mall detail 46 / surface"
+          },
+          {
+            "frame": 18,
+            "source": [
+              -4359.499881563655,
+              685.599568684896,
+              185
+            ],
+            "speed": 2.69993772788738,
+            "state": "ride",
+            "ground": "Mall detail 46 / surface"
+          },
+          {
+            "frame": 24,
+            "source": [
+              -4366.666311252951,
+              685.599568684896,
+              185
+            ],
+            "speed": 3.5998553212784445,
+            "state": "ride",
+            "ground": "Mall detail 46 / surface"
+          },
+          {
+            "frame": 30,
+            "source": [
+              -4375.832492602751,
+              685.599568684896,
+              185
+            ],
+            "speed": 4.4997208361261345,
+            "state": "ride",
+            "ground": "Mall detail 46 / surface"
+          },
+          {
+            "frame": 36,
+            "source": [
+              -4386.998293356635,
+              685.599568684896,
+              185
+            ],
+            "speed": 5.399521524002407,
+            "state": "ride",
+            "ground": "Mall detail 46 / surface"
+          },
+          {
+            "frame": 42,
+            "source": [
+              -4400.163552932909,
+              685.599568684896,
+              185
+            ],
+            "speed": 6.299244640108271,
+            "state": "ride",
+            "ground": "Mall detail 46 / surface"
+          },
+          {
+            "frame": 48,
+            "source": [
+              -4415.328082433618,
+              685.599568684896,
+              185
+            ],
+            "speed": 7.198877443995644,
+            "state": "ride",
+            "ground": "Mall detail 46 / surface"
+          },
+          {
+            "frame": 54,
+            "source": [
+              -4432.491664655146,
+              685.599568684896,
+              185
+            ],
+            "speed": 8.098407200288678,
+            "state": "ride",
+            "ground": "Mall detail 46 / surface"
+          },
+          {
+            "frame": 60,
+            "source": [
+              -4451.65405410042,
+              685.599568684896,
+              185
+            ],
+            "speed": 8.997821179404472,
+            "state": "ride",
+            "ground": "Mall detail 46 / surface"
+          },
+          {
+            "frame": 66,
+            "source": [
+              -4472.814976992717,
+              685.599568684896,
+              185
+            ],
+            "speed": 9.897106658273106,
+            "state": "ride",
+            "ground": "Mall detail 46 / surface"
+          },
+          {
+            "frame": 72,
+            "source": [
+              -4495.974131291068,
+              685.599568684896,
+              185
+            ],
+            "speed": 10.796250921056897,
+            "state": "ride",
+            "ground": "Mall detail 46 / surface"
+          },
+          {
+            "frame": 78,
+            "source": [
+              -4521.1311867072745,
+              685.599568684896,
+              185
+            ],
+            "speed": 11.695241259868766,
+            "state": "ride",
+            "ground": "Mall detail 46 / surface"
+          },
+          {
+            "frame": 84,
+            "source": [
+              -4547.970701635853,
+              682.8648533827622,
+              185
+            ],
+            "speed": 12.759621537648433,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 90,
+            "source": [
+              -4576.32415500497,
+              670.8164056449605,
+              185.00000000000784
+            ],
+            "speed": 14.651479518916954,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 96,
+            "source": [
+              -4608.546368061428,
+              657.123976544598,
+              185.0000000000167
+            ],
+            "speed": 16.54289632807569,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 102,
+            "source": [
+              -4644.636371421191,
+              641.7879780093781,
+              185.00000000002666
+            ],
+            "speed": 18.433815740855493,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 108,
+            "source": [
+              -4684.593080777953,
+              624.8088708017931,
+              185.0000000000377
+            ],
+            "speed": 20.324181591789863,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 114,
+            "source": [
+              -4728.415297031341,
+              606.1871644646485,
+              185.00000000004974
+            ],
+            "speed": 22.21393778087561,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 120,
+            "source": [
+              -4775.4730971477165,
+              586.1905369647466,
+              185.00000000006264
+            ],
+            "speed": 23.364622243857582,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 126,
+            "source": [
+              -4824.1793056980805,
+              565.4933806202866,
+              185.00000000007606
+            ],
+            "speed": 24.133996829000647,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 132,
+            "source": [
+              -4874.438608123073,
+              544.1270401940042,
+              185.00000000008987
+            ],
+            "speed": 24.889160788504334,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 138,
+            "source": [
+              -4926.21915151012,
+              522.0955919417775,
+              185.00000000010414
+            ],
+            "speed": 25.630286759955908,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 144,
+            "source": [
+              -4979.379768370107,
+              499.47695368893574,
+              185.00000000011875
+            ],
+            "speed": 26.1239,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 150,
+            "source": [
+              -5032.798661286823,
+              476.7484363560725,
+              185.00000000012966
+            ],
+            "speed": 26.1239,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 156,
+            "source": [
+              -5086.21756110022,
+              454.0199332728248,
+              185.00000000013296
+            ],
+            "speed": 26.1239,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 162,
+            "source": [
+              -5139.63646091362,
+              431.2914301895771,
+              185.00000000013625
+            ],
+            "speed": 26.1239,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 168,
+            "source": [
+              -5192.973462192716,
+              408.34131659695504,
+              185.00000008956243
+            ],
+            "speed": 26.1239,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 174,
+            "source": [
+              -5246.146666403207,
+              385.0438046339,
+              185.0000003578342
+            ],
+            "speed": 26.1239,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 180,
+            "source": [
+              -5299.3198706136955,
+              361.74629739732063,
+              185.00000062610604
+            ],
+            "speed": 26.1239,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 186,
+            "source": [
+              -5352.493088947911,
+              338.44881766966637,
+              185.00000089437782
+            ],
+            "speed": 26.1239,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 192,
+            "source": [
+              -5405.666307282127,
+              315.1513379420121,
+              185.00000116264965
+            ],
+            "speed": 26.1239,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          },
+          {
+            "frame": 198,
+            "source": [
+              -5462.658453033322,
+              314.75860595703125,
+              185.0000014501889
+            ],
+            "speed": 25.90152247801065,
+            "state": "ride",
+            "ground": "Atrium / crossrail arcade / surface"
+          }
+        ],
+        "startedAt": 24036.200000047684,
+        "source": [
+          -5500.868588370113,
+          314.75860595703125,
+          185.0000016429683
+        ],
+        "reached": true,
+        "tuningUnchanged": true,
+        "wallSeconds": 3.353199999988079
+      }
+    ],
+    "errors": []
+  },
+  "failedFlyingLeap": {
+    "name": "flying-leap-runup",
+    "trace": [
+      {
+        "frame": 0,
+        "q": [
+          -6299.944444455381,
+          314.75860595703125,
+          185
+        ],
+        "state": "ride",
+        "speed": 0.14999997047244093,
+        "vy": 0,
+        "ground": "Atrium / crossrail arcade / surface",
+        "rail": null
+      },
+      {
+        "frame": 6,
+        "q": [
+          -6298.4444481189785,
+          314.75860595703125,
+          185
+        ],
+        "state": "ride",
+        "speed": 1.049995866155566,
+        "vy": 0,
+        "ground": "Atrium / crossrail arcade / surface",
+        "rail": null
+      },
+      {
+        "frame": 12,
+        "q": [
+          -6294.944479275728,
+          314.75860595703125,
+          185
+        ],
+        "state": "ride",
+        "speed": 1.9499758172285089,
+        "vy": 0,
+        "ground": "Atrium / crossrail arcade / surface",
+        "rail": null
+      },
+      {
+        "frame": 18,
+        "q": [
+          -6289.444589892306,
+          314.75860595703125,
+          185
+        ],
+        "state": "ride",
+        "speed": 2.8499270689043708,
+        "vy": 0,
+        "ground": "Atrium / crossrail arcade / surface",
+        "rail": null
+      },
+      {
+        "frame": 24,
+        "q": [
+          -6281.944860277428,
+          314.75860595703125,
+          185
+        ],
+        "state": "ride",
+        "speed": 3.7498368679780105,
+        "vy": 0,
+        "ground": "Atrium / crossrail arcade / surface",
+        "rail": null
+      },
+      {
+        "frame": 30,
+        "q": [
+          -6272.445399077416,
+          314.75860595703125,
+          185
+        ],
+        "state": "ride",
+        "speed": 4.649692463548899,
+        "vy": 0,
+        "ground": "Atrium / crossrail arcade / surface",
+        "rail": null
+      },
+      {
+        "frame": 36,
+        "q": [
+          -6260.946343270127,
+          314.75860595703125,
+          185
+        ],
+        "state": "ride",
+        "speed": 5.549481107743686,
+        "vy": 0,
+        "ground": "Atrium / crossrail arcade / surface",
+        "rail": null
+      },
+      {
+        "frame": 42,
+        "q": [
+          -6247.4478581573,
+          314.75860595703125,
+          185
+        ],
+        "state": "ride",
+        "speed": 6.449190056438418,
+        "vy": 0,
+        "ground": "Atrium / crossrail arcade / surface",
+        "rail": null
+      },
+      {
+        "frame": 48,
+        "q": [
+          -6231.950137355278,
+          314.75860595703125,
+          185
+        ],
+        "state": "ride",
+        "speed": 7.348806569980307,
+        "vy": 0,
+        "ground": "Atrium / crossrail arcade / surface",
+        "rail": null
+      },
+      {
+        "frame": 54,
+        "q": [
+          -6214.4534027841455,
+          314.75860595703125,
+          185
+        ],
+        "state": "ride",
+        "speed": 8.248317913908965,
+        "vy": 0,
+        "ground": "Atrium / crossrail arcade / surface",
+        "rail": null
+      },
+      {
+        "frame": 60,
+        "q": [
+          -6194.957904655255,
+          314.75860595703125,
+          185
+        ],
+        "state": "ride",
+        "speed": 9.147711359677004,
+        "vy": 0,
+        "ground": "Atrium / crossrail arcade / surface",
+        "rail": null
+      },
+      {
+        "frame": 66,
+        "q": [
+          -6173.463921457147,
+          314.75860595703125,
+          185
+        ],
+        "state": "ride",
+        "speed": 10.046974185369953,
+        "vy": 0,
+        "ground": "Atrium / crossrail arcade / surface",
+        "rail": null
+      },
+      {
+        "frame": 72,
+        "q": [
+          -6149.971759939886,
+          314.75860595703125,
+          185
+        ],
+        "state": "ride",
+        "speed": 10.946093676425367,
+        "vy": 0,
+        "ground": "Atrium / crossrail arcade / surface",
+        "rail": null
+      },
+      {
+        "frame": 78,
+        "q": [
+          -6124.481755097782,
+          314.75860595703125,
+          185
+        ],
+        "state": "ride",
+        "speed": 11.845057126351044,
+        "vy": 0,
+        "ground": "Atrium / crossrail arcade / surface",
+        "rail": null
+      },
+      {
+        "frame": 84,
+        "q": [
+          -6096.994270150533,
+          314.75860595703125,
+          185
+        ],
+        "state": "ride",
+        "speed": 12.743851837442305,
+        "vy": 0,
+        "ground": "Atrium / crossrail arcade / surface",
+        "rail": null
+      },
+      {
+        "frame": 90,
+        "q": [
+          -6067.509696522777,
+          314.75860595703125,
+          185
+        ],
+        "state": "ride",
+        "speed": 13.642465121498196,
+        "vy": 0,
+        "ground": "Atrium / crossrail arcade / surface",
+        "rail": null
+      },
+      {
+        "frame": 96,
+        "q": [
+          -6036.028453822022,
+          314.75860595703125,
+          185
+        ],
+        "state": "ride",
+        "speed": 14.540884300536565,
+        "vy": 0,
+        "ground": "Atrium / crossrail arcade / surface",
+        "rail": null
+      },
+      {
+        "frame": 102,
+        "q": [
+          -6002.550989815039,
+          314.75860595703125,
+          185
+        ],
+        "state": "ride",
+        "speed": 15.439096707507908,
+        "vy": 0,
+        "ground": "Atrium / crossrail arcade / surface",
+        "rail": null
+      },
+      {
+        "frame": 108,
+        "q": [
+          -5967.07778040262,
+          314.75860595703125,
+          185
+        ],
+        "state": "ride",
+        "speed": 16.33708968700791,
+        "vy": 0,
+        "ground": "Atrium / crossrail arcade / surface",
+        "rail": null
+      },
+      {
+        "frame": 114,
+        "q": [
+          -5929.609329592797,
+          314.75860595703125,
+          185
+        ],
+        "state": "ride",
+        "speed": 17.23485059598859,
+        "vy": 0,
+        "ground": "Atrium / crossrail arcade / surface",
+        "rail": null
+      },
+      {
+        "frame": 120,
+        "q": [
+          -5890.146169472448,
+          314.75860595703125,
+          185
+        ],
+        "state": "ride",
+        "speed": 18.132366804468003,
+        "vy": 0,
+        "ground": "Atrium / crossrail arcade / surface",
+        "rail": null
+      },
+      {
+        "frame": 126,
+        "q": [
+          -5848.68886017735,
+          314.75860595703125,
+          185
+        ],
+        "state": "ride",
+        "speed": 19.02962569623829,
+        "vy": 0,
+        "ground": "Atrium / crossrail arcade / surface",
+        "rail": null
+      },
+      {
+        "frame": 132,
+        "q": [
+          -5805.237989860658,
+          314.75860595703125,
+          185
+        ],
+        "state": "ride",
+        "speed": 19.926614669572185,
+        "vy": 0,
+        "ground": "Atrium / crossrail arcade / surface",
+        "rail": null
+      },
+      {
+        "frame": 138,
+        "q": [
+          -5759.794174659806,
+          314.75860595703125,
+          185
+        ],
+        "state": "ride",
+        "speed": 20.82332113792772,
+        "vy": 0,
+        "ground": "Atrium / crossrail arcade / surface",
+        "rail": null
+      },
+      {
+        "frame": 144,
+        "q": [
+          -5712.358058661846,
+          314.75860595703125,
+          185
+        ],
+        "state": "ride",
+        "speed": 21.71973253065115,
+        "vy": 0,
+        "ground": "Atrium / crossrail arcade / surface",
+        "rail": null
+      },
+      {
+        "frame": 150,
+        "q": [
+          -5662.930313867244,
+          314.75860595703125,
+          185
+        ],
+        "state": "ride",
+        "speed": 22.61583629367798,
+        "vy": 0,
+        "ground": "Atrium / crossrail arcade / surface",
+        "rail": null
+      },
+      {
+        "frame": 156,
+        "q": [
+          -5611.938889331139,
+          314.75860595703125,
+          185
+        ],
+        "state": "ride",
+        "speed": 22.999305774278216,
+        "vy": 0,
+        "ground": "Atrium / crossrail arcade / surface",
+        "rail": null
+      },
+      {
+        "frame": 162,
+        "q": [
+          -5560.829320943854,
+          314.75860595703125,
+          185
+        ],
+        "state": "ride",
+        "speed": 22.999305774278216,
+        "vy": 0,
+        "ground": "Atrium / crossrail arcade / surface",
+        "rail": null
+      },
+      {
+        "frame": 168,
+        "q": [
+          -5509.719752556568,
+          314.75860595703125,
+          185
+        ],
+        "state": "ride",
+        "speed": 22.999305774278216,
+        "vy": 0,
+        "ground": "Atrium / crossrail arcade / surface",
+        "rail": null
+      },
+      {
+        "frame": 174,
+        "q": [
+          -5458.610184169282,
+          314.75860595703125,
+          185
+        ],
+        "state": "ride",
+        "speed": 22.999305774278216,
+        "vy": 0,
+        "ground": "Atrium / crossrail arcade / surface",
+        "rail": null
+      },
+      {
+        "frame": 180,
+        "q": [
+          -5407.500615781997,
+          314.75860595703125,
+          185
+        ],
+        "state": "ride",
+        "speed": 22.999305774278216,
+        "vy": 0,
+        "ground": "Atrium / crossrail arcade / surface",
+        "rail": null
+      },
+      {
+        "frame": 186,
+        "q": [
+          -5360.07596024868,
+          335.12643478705286,
+          185
+        ],
+        "state": "ride",
+        "speed": 22.896406981118318,
+        "vy": 0,
+        "ground": "Atrium / crossrail arcade / surface",
+        "rail": null
+      },
+      {
+        "frame": 192,
+        "q": [
+          -5313.61862810602,
+          355.4813951919614,
+          185
+        ],
+        "state": "ride",
+        "speed": 22.772969207101184,
+        "vy": 0,
+        "ground": "Atrium / crossrail arcade / surface",
+        "rail": null
+      },
+      {
+        "frame": 198,
+        "q": [
+          -5267.4124982293615,
+          375.726311382733,
+          184.9999999999934
+        ],
+        "state": "ride",
+        "speed": 22.649574971124174,
+        "vy": 0,
+        "ground": "Atrium / crossrail arcade / surface",
+        "rail": null
+      },
+      {
+        "frame": 204,
+        "q": [
+          -5221.457482971031,
+          395.86121830888214,
+          184.99999999998016
+        ],
+        "state": "ride",
+        "speed": 22.526224017989843,
+        "vy": 0,
+        "ground": "Atrium / crossrail arcade / surface",
+        "rail": null
+      },
+      {
+        "frame": 210,
+        "q": [
+          -5175.753487194061,
+          415.88614259515043,
+          184.99999999996714
+        ],
+        "state": "ride",
+        "speed": 22.402916797707977,
+        "vy": 0,
+        "ground": "Atrium / crossrail arcade / surface",
+        "rail": null
+      },
+      {
+        "frame": 216,
+        "q": [
+          -5130.104274500794,
+          435.34715445628444,
+          185.00000019195505
+        ],
+        "state": "ride",
+        "speed": 22.30039596642194,
+        "vy": 0,
+        "ground": "Atrium / crossrail arcade / surface",
+        "rail": null
+      },
+      {
+        "frame": 222,
+        "q": [
+          -5084.621089086288,
+          454.6991950924762,
+          185.00000042141318
+        ],
+        "state": "ride",
+        "speed": 22.20205897646758,
+        "vy": 0,
+        "ground": "Atrium / crossrail arcade / surface",
+        "rail": null
+      },
+      {
+        "frame": 228,
+        "q": [
+          -5039.338944949381,
+          473.9656973272081,
+          185.00000064985704
+        ],
+        "state": "ride",
+        "speed": 22.103756352249594,
+        "vy": 0,
+        "ground": "Atrium / crossrail arcade / surface",
+        "rail": null
+      },
+      {
+        "frame": 234,
+        "q": [
+          -4994.257775100919,
+          493.1466988490806,
+          185.00000087728705
+        ],
+        "state": "ride",
+        "speed": 22.00548757504613,
+        "vy": 0,
+        "ground": "Atrium / crossrail arcade / surface",
+        "rail": null
+      },
+      {
+        "frame": 240,
+        "q": [
+          -4949.3775143110615,
+          512.2422331648813,
+          185.00000110370354
+        ],
+        "state": "ride",
+        "speed": 21.907252126596003,
+        "vy": 0,
+        "ground": "Atrium / crossrail arcade / surface",
+        "rail": null
+      },
+      {
+        "frame": 246,
+        "q": [
+          -4904.698087711233,
+          531.2523170822224,
+          185.0000013291068
+        ],
+        "state": "ride",
+        "speed": 21.809050552444525,
+        "vy": 0,
+        "ground": "Atrium / crossrail arcade / surface",
+        "rail": null
+      },
+      {
+        "frame": 252,
+        "q": [
+          -4860.2947961984155,
+          550.1449117751904,
+          187.35961755130785
+        ],
+        "state": "ride",
+        "speed": 21.71260833138351,
+        "vy": 0,
+        "ground": "Atrium / crossrail arcade / surface",
+        "rail": null
+      },
+      {
+        "frame": 258,
+        "q": [
+          -4816.487655999414,
+          568.7618609866977,
+          194.4355549591765
+        ],
+        "state": "ride",
+        "speed": 21.626520285724805,
+        "vy": 0,
+        "ground": "Atrium / crossrail arcade / surface",
+        "rail": null
+      },
+      {
+        "frame": 264,
+        "q": [
+          -4773.371544778171,
+          587.0835694008324,
+          204.68479220055053
+        ],
+        "state": "ride",
+        "speed": 21.552723376951445,
+        "vy": 0,
+        "ground": "Atrium / crossrail arcade / surface",
+        "rail": null
+      },
+      {
+        "frame": 270,
+        "q": [
+          -4730.829868040586,
+          605.1611396495232,
+          216.89422243729211
+        ],
+        "state": "ride",
+        "speed": 21.48894008252776,
+        "vy": 0,
+        "ground": "Atrium / crossrail arcade / surface",
+        "rail": null
+      },
+      {
+        "frame": 276,
+        "q": [
+          -4688.709114832825,
+          623.0598375860218,
+          230.26008827260569
+        ],
+        "state": "ride",
+        "speed": 21.432093929156245,
+        "vy": 0,
+        "ground": "Atrium / crossrail arcade / surface",
+        "rail": null
+      },
+      {
+        "frame": 282,
+        "q": [
+          -4646.882335981272,
+          640.8336151201465,
+          244.27343697403182
+        ],
+        "state": "ride",
+        "speed": 21.37955762475187,
+        "vy": 0,
+        "ground": "Atrium / crossrail arcade / surface",
+        "rail": null
+      },
+      {
+        "frame": 288,
+        "q": [
+          -4605.260709281454,
+          658.5202136484913,
+          258.62025492707664
+        ],
+        "state": "ride",
+        "speed": 21.32945612510852,
+        "vy": 0,
+        "ground": "Atrium / crossrail arcade / surface",
+        "rail": null
+      },
+      {
+        "frame": 294,
+        "q": [
+          -4564.002270294042,
+          690.6151164252788,
+          273.0147901023159
+        ],
+        "state": "air",
+        "speed": 19.639098201551278,
+        "vy": 16.566090493771263,
+        "ground": "Atrium / crossrail arcade / surface",
+        "rail": null
+      },
+      {
+        "frame": 300,
+        "q": [
+          -4522.797254946003,
+          723.6186508558817,
+          287.3956565023585
+        ],
+        "state": "air",
+        "speed": 19.639098201551278,
+        "vy": 13.137090493771261,
+        "ground": "Mall detail 46 / surface",
+        "rail": null
+      },
+      {
+        "frame": 306,
+        "q": [
+          -4481.592239597963,
+          749.0021852864843,
+          301.7765229024012
+        ],
+        "state": "air",
+        "speed": 19.639098201551278,
+        "vy": 9.708090493771259,
+        "ground": "Mall detail 46 / surface",
+        "rail": null
+      },
+      {
+        "frame": 312,
+        "q": [
+          -4440.387224249924,
+          766.7657197170865,
+          316.1573893024439
+        ],
+        "state": "air",
+        "speed": 19.639098201551278,
+        "vy": 6.279090493771257,
+        "ground": "Mall detail 46 / surface",
+        "rail": null
+      },
+      {
+        "frame": 318,
+        "q": [
+          -4399.182208901884,
+          776.9092541476894,
+          330.5382557024866
+        ],
+        "state": "air",
+        "speed": 19.639098201551278,
+        "vy": 2.850090493771256,
+        "ground": "Mall detail 46 / surface",
+        "rail": null
+      },
+      {
+        "frame": 324,
+        "q": [
+          -4357.977193553845,
+          779.4327885782923,
+          344.91912210252923
+        ],
+        "state": "air",
+        "speed": 19.639098201551278,
+        "vy": -0.5789095062287436,
+        "ground": "Mall detail 46 / surface",
+        "rail": null
+      },
+      {
+        "frame": 330,
+        "q": [
+          -4316.772178205803,
+          774.3363230088949,
+          359.29998850257186
+        ],
+        "state": "air",
+        "speed": 19.639098201551278,
+        "vy": -4.007909506228743,
+        "ground": "Mall detail 46 / surface",
+        "rail": null
+      },
+      {
+        "frame": 336,
+        "q": [
+          -4275.567162857764,
+          761.6198574394971,
+          373.68085490261444
+        ],
+        "state": "air",
+        "speed": 19.639098201551278,
+        "vy": -7.436909506228745,
+        "ground": "Mall detail 46 / surface",
+        "rail": null
+      },
+      {
+        "frame": 342,
+        "q": [
+          -4234.362147509724,
+          742.8910997178818,
+          388.06172130265696
+        ],
+        "state": "air",
+        "speed": 11.669960665350372,
+        "vy": 7.638593771043549,
+        "ground": "Entrance / first concourse / surface",
+        "rail": null
+      }
+    ],
+    "bail": true,
+    "grinds": [],
+    "maxX": -4234.362147509724,
+    "launches": [
+      {
+        "frame": 290,
+        "q": [
+          -4591.47228052607,
+          664.3794268048773,
+          263.4275458356208
+        ],
+        "speed": 19.639098201551278,
+        "vy": 18.852090493771264
+      }
+    ],
+    "cause": {
+      "args": [
+        false,
+        19.639098201551278,
+        "rail",
+        19.639098201551278
+      ],
+      "source": [
+        -4234.362147509724,
+        742.8910997178818,
+        388.06172130265696
+      ],
+      "stack": "Error\n    at p.bail (file:///private/tmp/mall-recreation/snapshot-16/tools/mall-flying-probe.mjs:16:110)\n    at Player.railLandSmack (/private/tmp/mall-recreation/snapshot-16/src/player.ts:11356:12)\n    at Player.stepAir (/private/tmp/mall-recreation/snapshot-16/src/player.ts:6535:14)\n    at Player.stepSimulation (/private/tmp/mall-recreation/snapshot-16/src/player.ts:4114:16)\n    at Player.step (/private/tmp/mall-recreation/snapshot-16/src/player.ts:3514:10)\n    at Object.tick (file:///private/tmp/mall-recreation/snapshot-16/tools/blockworks-runner.mjs:101:9)\n    at withBlockworksRuntime.modulePath (file:///private/tmp/mall-recreation/snapshot-16/tools/mall-flying-probe.mjs:20:6)\n    at async withBlockworksRuntime (file:///private/tmp/mall-recreation/snapshot-16/tools/blockworks-runner.mjs:221:12)\n    at async file:///private/tmp/mall-recreation/snapshot-16/tools/mall-flying-probe.mjs:3:1"
+    },
+    "end": [
+      -4234.362147509724,
+      742.8910997178818,
+      388.06172130265696
+    ]
+  }
+}

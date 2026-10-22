@@ -1,6 +1,6 @@
 {
-  "snapshot": "/private/tmp/mall-recreation/snapshot-15",
-  "createdAt": "2026-10-22T22:34:25.965617+00:00",
+  "snapshot": "/private/tmp/mall-recreation/snapshot-16",
+  "createdAt": "2026-10-22T23:05:08.097215+00:00",
   "files": {
     "src/animation/bridge.ts": "a5477582012e00b75bb83322f0b9aaecee04392d299cbe6c8d9bb560ac1f6686",
     "src/animation/crouch.ts": "473640f543d2e6e6a5890d16f6e198f753edc32b2a385dc1c0215860e9732d5e",
@@ -276,7 +276,8 @@
     "src/levels/mall-art-textures.json": "56a3beccfc75921c4ba698e2d419f86f4e2f104f240b962d502b302e9d658a3a",
     "src/levels/mall-art.json": "94941a1026c7cfbc009d86b64c21654744043c0a7699ea4e4e0ed96d40c7c720",
     "src/levels/mall-art.ts": "aef33f1d664a63144543a9027276ce0c91f8862fab4f6af597b4851ca3920264",
-    "src/levels/mall-measured.ts": "7b6b93d530009c4719733f36c7c9926dbcd8873cc3d3795d507af36bd5242b80",
+    "src/levels/mall-measured-scale.ts": "bb491644d457c49cd8539de166219183a0bac76147d08a43d8b2ec37679d9e9a",
+    "src/levels/mall-measured.ts": "4de4dda98cbb34c8d0d8902c69763d2d49873b6007061a342712db6c86f5ffb5",
     "src/levels/mall.ts": "ad3747d8facab080fed74989bfa657370f801098511a93df66fd7ccdf6a80072",
     "src/levels/meshylook-thorns.ts": "4b9901c963ce817d3bae30c8a289145d87544c4245b80532d2473258b9f140b1",
     "src/levels/nightworks-after-hours.ts": "a0fe3455bb9b808aa0b27fc587bfbbf6766c3fdb773ffb6453534ee2b11b924d",
@@ -497,5 +498,6 @@
     "tools/blockworks-runner.mjs": "41d9d43e20129421029aaa31b0be4f91e96fce7019346a072b36be5d4dae0716",
     "tools/test-crouch-jump-slam.mjs": "ad44c2c780eb00723a91c1c181a5fbf689299e5ffccabc9ee6d87920cd081aa9",
     "tools/jungle-cup-harness.mjs": "dccf6f2f222c75551d2277df66903e40a192fcbe700b88750ae010e13d606cf5"
-  }
+  },
+  "unusedResearchModule": "src/levels/mall-measured-scale.ts is an unimported 0.025 scale probe retained only in the local frozen research snapshot."
 }
