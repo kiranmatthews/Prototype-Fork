@@ -2657,7 +2657,7 @@ export class Player {
     this.authoredCrawlPalmWeight = THREE.MathUtils.clamp(Number.isFinite(weight) ? weight : 0, 0, 1);
   }
 
-  syncCharacterAppearance(options: { upperArmRestAngleWeight?: number; crawlPalmWeight?: number } = {}): void {
+  syncCharacterAppearance(options: { upperArmRestAngleWeight?: number; crawlPalmWeight?: number; deferWorldMatrices?: boolean } = {}): void {
     const upperArmRestAngleWeight = Number.isFinite(options.upperArmRestAngleWeight)
       ? THREE.MathUtils.clamp(options.upperArmRestAngleWeight as number, 0, 1)
       : this.characterUpperArmRestAngleWeight;
@@ -2672,7 +2672,10 @@ export class Player {
     );
     this.syncCharacterTailVisibility();
     this.syncCharacterHeadStyle();
-    this.bodyGroup.updateMatrixWorld(true);
+    // Runtime bails finish with a complete pose/support measurement. Hand
+    // retargeting updates its own ancestors and descendants, so it does not
+    // need a second full-body pass here. Public/editor calls stay immediate.
+    if (!options.deferWorldMatrices) this.bodyGroup.updateMatrixWorld(true);
     this.syncRiggedCartoonHands();
   }
 
@@ -18477,7 +18480,8 @@ export class Player {
       if (this.armR) this.armR.rotation.z -= 0.19 * hit.brace;
     }
     this.applyResultsPose();
-    this.syncCharacterAppearance({ upperArmRestAngleWeight: this.resultsPose ? 0 : undefined });
+    this.syncCharacterAppearance({ upperArmRestAngleWeight: this.resultsPose ? 0 : undefined,
+      deferWorldMatrices: this.isBailing });
     if (this.authoredCrawlContactPhase !== null) {
       this.alignCrawlHandsToGround(
         crawlMove * this.authoredCrawlContactWeight,

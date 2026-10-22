@@ -86,6 +86,7 @@ await withSkateRuntime(async ({ THREE, server }) => {
     }
   }
   assert.ok(maxAngle <= 1.8 && maxVelocity <= 22, 'repeated impacts escaped joint bounds');
+  assert.ok(retainedBytes < 10 * 1024, 'contact storage exceeded the fixed per-rig numeric budget');
   console.log(JSON.stringify({ passed: true, overlapCases: rows.length, angularError, strainError,
     stress: { rates: [60, 120, 144, 240, 15], maxAngle, maxVelocity, minLength, maxLength, maxSettle,
       retainedTypedArrayBytes: retainedBytes, buffersReused: true } }, null, 2));

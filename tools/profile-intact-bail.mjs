@@ -49,6 +49,7 @@ try {
   const rigProfile = process.argv.includes('--rig-profile');
   const recoveryProfile = process.argv.includes('--recovery-profile');
   const deformationProfile = process.argv.includes('--deformation-profile');
+  const hierarchyProfile = process.argv.includes('--hierarchy-profile');
   const poseChecksums = process.argv.includes('--pose-checksum');
   const traceImpacts = process.argv.includes('--impact-trace');
   const poseNodes = [];
@@ -75,6 +76,12 @@ try {
   if (!process.argv.includes('--contact-only'))
   for (const cause of ['balance', 'wall', 'trip', 'landing', 'pvp']) {
     const frames = [], incidents = [], triggers = [], durations = []; let fullScans = 0, count = false;
+    let bodyMatrixPasses = 0;
+    const bodyMatrices = p.bodyGroup.updateMatrixWorld;
+    if (hierarchyProfile) p.bodyGroup.updateMatrixWorld = function(force) {
+      if (count && p.isBailing) bodyMatrixPasses++;
+      return bodyMatrices.call(this, force);
+    };
     const supportTimes = []; let supportSamples = 0;
     const recoveries = [], recoveryPrevious = new THREE.Quaternion(), recoveryCurrent = new THREE.Quaternion(); let activeRecovery = null;
     const beginRecovery = p.bailRecoveryMotion.begin.bind(p.bailRecoveryMotion);
@@ -229,6 +236,7 @@ try {
       if (trial >= 0) { incidents.push(total); durations.push(n / 60); }
     }
     p.interactionMeasure.skinnedBounds = native;
+    p.bodyGroup.updateMatrixWorld = bodyMatrices;
     p.interactionMeasure.sampledPlaneDistance = support;
     p.interactionMeasure.localBounds = localBounds;
     p.bailMotion.apply = applyJoint;
@@ -242,6 +250,7 @@ try {
       support: supportTimes.length ? { cpuMs: stats(supportTimes), samples: supportSamples } : undefined,
       appearance: appearanceTimes.length ? { cpuMs: stats(appearanceTimes), calls: appearanceCalls, nameSearches, transformClones } : undefined,
       bounds: boundsProfile ? { calls:boundsCalls, newRecords:boundsRecords, newBoxes:boundsBoxes } : undefined,
+      hierarchy: hierarchyProfile ? { bodyMatrixPasses } : undefined,
       jointLimits: jointLimitProfile ? [...jointLimits.values()] : undefined,
       rig: rigProfile ? { snapshots:rigSnapshots, jointRecords:rigJointRecords, restTuples:rigRestTuples } : undefined,
       recoveries: recoveryProfile ? recoveries : undefined,

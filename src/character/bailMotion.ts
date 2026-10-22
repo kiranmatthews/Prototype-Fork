@@ -22,10 +22,7 @@ const ELASTIC_CHANNELS = ELASTIC_LENGTH_CONTROLS.map(([id, part]) => ({ id, part
   joint: part === 0 ? 0 : part <= 2 ? (id.includes('left') ? 5 : 2) + part - 1 :
     (id.includes('left') ? 11 : 8) + part - 3 }));
 const SEGMENTS = ELASTIC_CHANNELS.length;
-// A short, fixed delay line keeps overlapping contact waves independent.
-// The longest anatomical path takes <.18s; 32 bins cover .267s at the spring
-// rate. Empty bins cost one bit check, and contacts never allocate records.
-const WAVE_HZ = 120, WAVE_SLOTS = 32, WAVE_STRIDE = JOINTS * 3 + SEGMENTS;
+const WAVE_HZ = 120, WAVE_STRIDE = JOINTS * 3 + SEGMENTS;
 const STRAIN_STIFFNESS = [260, 230, 310, 220, 300];
 const STRAIN_DAMPING = [12, 10, 8.5, 11, 9.5];
 // The virtual pelvis connects both hips to the spine. Distances are tiny,
@@ -43,6 +40,11 @@ const SEGMENT_DISTANCE = Uint8Array.from({ length: JOINTS * SEGMENTS }, (_, i) =
   const origin = Math.floor(i / SEGMENTS) * JOINTS, {joint} = ELASTIC_CHANNELS[i % SEGMENTS];
   return Math.min(CONTACT_DISTANCE[origin + joint], CONTACT_DISTANCE[origin + joint + 1]);
 });
+// Include the immediate bin and every possible anatomical arrival, including
+// a contact between spring ticks. The current rig needs 17 bins, not 32.
+// Empty bins still cost one bit check; contacts never allocate records.
+const WAVE_SLOTS = 1 + Math.ceil(WAVE_HZ * Math.max(.083,
+  Math.max(...CONTACT_DISTANCE) * .018, Math.max(...SEGMENT_DISTANCE) * .022));
 
 /** Inertial secondary motion for an INTACT bail. The existing controller owns
  * translation/contact/recovery. This tiny spring rig responds to those events,
@@ -194,7 +196,7 @@ export class BailMotion {
 
   private contactWaveOffset(delay: number): number {
     const tick = Math.max(this.waveTick, Math.ceil((this.waveTime + delay) * WAVE_HZ - 1e-8));
-    const slot = tick & (WAVE_SLOTS - 1);
+    const slot = tick % WAVE_SLOTS;
     this.waveMask |= 1 << slot;
     return slot * WAVE_STRIDE;
   }
@@ -203,7 +205,7 @@ export class BailMotion {
     this.waveTime += dt;
     const through = Math.floor(this.waveTime * WAVE_HZ + 1e-8);
     for (let tick = this.waveTick; this.waveMask !== 0 && tick <= through; tick++) {
-      const slot = tick & (WAVE_SLOTS - 1), bit = 1 << slot;
+      const slot = tick % WAVE_SLOTS, bit = 1 << slot;
       if (!(this.waveMask & bit)) continue;
       const offset = slot * WAVE_STRIDE;
       for (let i = 0; i < JOINTS * 3; i++) this.velocity[i] += this.contactWaves[offset + i];
