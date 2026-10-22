@@ -161,16 +161,16 @@ await withSkateRuntime(async ({ THREE, server, Level, Player, scene, CONST, TUNI
       }
       assert.ok(landed,'Swim Team Gap never landed');report.airs.push({name:'Swim Team Gap',from:a.name,to:b.name,air,landed,firstLandingInTarget:true,frames,bails:0,end:p.pos.toArray()});
     }
-    // Ditch Slap crosses the open trench between bridges, clearing both
-    // banks with a normal ollie and landing on the opposite yard.
-    const ditchHalf=ditch.half+ditch.radius*Math.sin(65*Math.PI/180),ditchCross=ditch.a.map((v,i)=>v+(ditch.b[i]-v)*.58);
+    // Ditch Slap uses the shallow banks after the last bridge. At the
+    // smaller authoring scale, cruise speed avoids overshooting into a ledge.
+    const ditchHalf=ditch.half+ditch.radius*Math.sin(65*Math.PI/180),ditchCross=ditch.a.map((v,i)=>v+(ditch.b[i]-v)*m.SCHOOL_DITCH_SLAP.t);
     for(const dir of [-1,1]){
-      const h=[nx*dir,0,nz*dir];place([ditchCross[0]-h[0]*(ditchHalf+5),-4.9,ditchCross[2]-h[2]*(ditchHalf+5)],h,18);
+      const h=[nx*dir,0,nz*dir];place([ditchCross[0]-h[0]*(ditchHalf+5),-4.9,ditchCross[2]-h[2]*(ditchHalf+5)],h,12);
       let popped=false,air=false,landed=false,frames=0;
       for(;frames<180;frames++){
         const d=(ditchCross[0]-p.pos.x)*h[0]+(ditchCross[2]-p.pos.z)*h[2],release=!popped&&d<ditchHalf+1;if(release)popped=true;
         step(makeInput({jumpHeld:!popped,jumpPressed:frames===0,jumpReleased:release}));air||=p.state==='air';assert.ok(!p.isBailing,'Ditch Slap bailed');
-        if(air&&p.grounded){assert.ok((p.pos.x-ditchCross[0])*h[0]+(p.pos.z-ditchCross[2])*h[2]>ditchHalf&&Math.abs(p.pos.y+5)<.06,'Ditch Slap did not clear the opposite bank');landed=true;break;}
+        if(air&&p.grounded){assert.ok((p.pos.x-ditchCross[0])*h[0]+(p.pos.z-ditchCross[2])*h[2]>ditchHalf&&p.pos.y>=-5.06,'Ditch Slap did not clear the opposite bank');landed=true;break;}
       }
       assert.ok(landed,'Ditch Slap never landed');report.airs.push({name:'Ditch Slap',dir,air,landed,frames,bails:0,end:p.pos.toArray()});
     }

@@ -9,7 +9,7 @@
     -78
   ],
   "speed": 0,
-  "components": 270,
+  "components": 272,
   "rails": 69,
   "camera": {
     "eye": [
@@ -20,14 +20,14 @@
     "trailing": 5.049999999999997,
     "bodyBounds": {
       "min": [
-        51.501315098638166,
-        -9.775272287728914,
-        -78.9807220715736
+        51.50172749499492,
+        -9.775511759049818,
+        -78.97476698314144
       ],
       "max": [
-        52.68956884603933,
-        -6.979331651118969,
-        -77.1819706037613
+        52.68572981675581,
+        -7.02163351844351,
+        -77.18645990462565
       ]
     }
   },
@@ -184,12 +184,12 @@
       },
       {
         "name": "Scaled Roof 2 Roof",
-        "frames": 149,
+        "frames": 148,
         "result": {
           "firstLanding": [
             131,
             14,
-            8.392164564819915
+            8.938559858178184
           ]
         }
       },
@@ -310,6 +310,78 @@
         }
       },
       {
+        "name": "Scaled Swim Team 1",
+        "frames": 151,
+        "result": {
+          "firstLanding": [
+            -97.34401741212905,
+            -15.600000381469727,
+            -70.39823235434118
+          ]
+        }
+      },
+      {
+        "name": "Scaled Swim Team 2",
+        "frames": 175,
+        "result": {
+          "firstLanding": [
+            -130.56421638554664,
+            -16.399999618530273,
+            -63.043380281690126
+          ]
+        }
+      },
+      {
+        "name": "Scaled Ditch Slap -1",
+        "frames": 77,
+        "result": {
+          "firstLanding": [
+            5.7191841037065245,
+            -10,
+            -54.44297864915292
+          ]
+        }
+      },
+      {
+        "name": "Scaled Ditch Slap 1",
+        "frames": 77,
+        "result": {
+          "firstLanding": [
+            29.550675051223052,
+            -10,
+            -72.19273966070614
+          ]
+        }
+      },
+      {
+        "name": "Scaled Over a Footbridge",
+        "frames": 109,
+        "result": {
+          "firstLanding": [
+            21.344874002512434,
+            -10,
+            -58.336749441747386
+          ],
+          "overBridge": true
+        }
+      },
+      {
+        "name": "Scaled continuous campus circuit",
+        "frames": 5212,
+        "result": {
+          "circuit": {
+            "frames": 5212,
+            "waypoints": 48,
+            "totalWaypoints": 48,
+            "distance": 756.3055026881519,
+            "gimmeGrindFrames": 41,
+            "returnGrindFrames": 1213,
+            "kickerAir": true,
+            "kickerLanded": true
+          }
+        }
+      },
+      {
         "name": "Scaled checkpoint and fall recovery",
         "frames": 184,
         "result": {
@@ -319,7 +391,7 @@
       }
     ],
     "failure": null,
-    "frames": 4349,
+    "frames": 10149,
     "tuningUnchanged": true
   }
 }

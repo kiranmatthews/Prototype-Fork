@@ -71,6 +71,10 @@ export class SkateChaseCamera {
   private opposedVertActive = false;
   private opposedVertBlend = 0;
   private landingLedgeLift = 0;
+  private dropInBlend = 0;
+  private dropInEyeY = 0;
+  private ledgeDropActive = false;
+  private readonly lastRiderPosition = new THREE.Vector3();
   private readonly down = new THREE.Vector3(0,-1,0);
   /** Final presentation weight; never feeds steering or the vert frame. */
   groundFramingWeight = 0;
@@ -78,6 +82,8 @@ export class SkateChaseCamera {
   update(camera: THREE.PerspectiveCamera, rider: SkateCameraSubject, dt: number,
     snap: boolean, surfaces: THREE.Object3D[], framing?: SkateGroundFraming): void {
     const step = Math.max(0, Math.min(dt, 0.1));
+    const moving = snap ? rider.speed > .1 : rider.position.distanceToSquared(this.lastRiderPosition) > 1e-6;
+    this.lastRiderPosition.copy(rider.position);
     const vert = rider.vertAir && !rider.grounded;
     if (rider.grounded && !this.wasGrounded) this.landingBlendTime = 10 / 60;
     this.wasGrounded = rider.grounded;
@@ -100,8 +106,15 @@ export class SkateChaseCamera {
       this.orientation.copy(this.targetOrientation);
       this.pivot.copy(rider.position);
     } else {
-      if (!rider.bailing) this.orientation.slerp(this.targetOrientation,
-        frameBlend(this.landingBlendTime > 0 ? 0.375 : 0.04, step));
+      if (!rider.bailing) {
+        let turn=frameBlend(this.landingBlendTime > 0 ? 0.375 : 0.04, step);
+        // A sideways rail exit can meet flat ground with a large residual
+        // heading change. Keep the landing catch responsive, but bound its
+        // angular speed so the trailing eye does not whip around in one tick.
+        if(this.landingBlendTime>0&&rider.up.y>.9)
+          turn=Math.min(turn,step*8/Math.max(1e-6,this.orientation.angleTo(this.targetOrientation)));
+        this.orientation.slerp(this.targetOrientation,turn);
+      }
       this.pivot.x += (rider.position.x - this.pivot.x) * frameBlend(vert ? 1 : 0.25, step);
       this.pivot.y += (rider.position.y - this.pivot.y) * frameBlend(vert ? 1 : 0.75, step);
       this.pivot.z += (rider.position.z - this.pivot.z) * frameBlend(vert ? 1 : 0.25, step);
@@ -187,6 +200,53 @@ export class SkateChaseCamera {
       this.desiredEye.lerp(this.openingEye,this.openingBlend);this.aim.lerp(this.openingAim,this.openingBlend);
       this.up.lerp(this.worldUp,this.openingBlend).normalize();
     }
+    // Anticipate a pool drop-in from the next few metres of actual support.
+    // A trailing eye otherwise crosses the coping before the slow surface
+    // frame has pitched downward, collapsing the collision arm into the body.
+    let dropIn = false;
+    if(snap||vert||rider.grounded||rider.verticalSpeed>.1||this.openingActive)this.ledgeDropActive=false;
+    if(framing&&rider.grounded&&!vert&&moving){
+      this.ceilingSweepDirection.set(rider.heading.x,0,rider.heading.z).normalize();
+      this.ceilingProbe.copy(rider.position).addScaledVector(this.ceilingSweepDirection,5);
+      this.ceilingProbe.y+=12;
+      this.ray.set(this.ceilingProbe,this.down);this.ray.near=.05;this.ray.far=24;
+      const below=this.ray.intersectObjects(surfaces,false)[0];
+      if(below?.face&&below.object.userData.vert===true&&rider.up.y>.9&&this.landingBlendTime===0){
+        this.contactNormal.copy(below.face.normal).transformDirection(below.object.matrixWorld);
+        dropIn=below.point.y<rider.position.y-.35&&this.contactNormal.dot(this.ceilingSweepDirection)>.1;
+      }
+      // A canopy run-off has the same clearance problem at its rear rim.
+      // Look ahead before leaving, and retain the close shot through the
+      // ordinary fall. A rising ollie clears this latch immediately.
+      this.ledgeDropActive=!!below&&below.object.userData.vert!==true&&rider.up.y>.98&&below.point.y<rider.position.y-3.5;
+      if(this.ledgeDropActive){
+        // A small opening with more roof beyond it uses the skylight shot.
+        // A genuine run-off stays lower on the far side of this second probe.
+        this.ceilingProbe.addScaledVector(this.ceilingSweepDirection,5);
+        this.ray.set(this.ceilingProbe,this.down);
+        const farSide=this.ray.intersectObjects(surfaces,false)[0];
+        this.ledgeDropActive=!!farSide&&farSide.point.y<rider.position.y-3.5;
+      }
+      // Continue a drop that began at the deck. A return from vert air
+      // lands on the same descending normal, but already has its wall shot.
+      if(rider.heading.y<-.2&&this.dropInBlend>.01&&this.landingBlendTime===0){
+        this.ceilingProbe.copy(rider.position).addScaledVector(rider.up,.2);
+        this.direction.copy(rider.up).negate();
+        this.ray.set(this.ceilingProbe,this.direction);this.ray.near=.01;this.ray.far=.5;
+        dropIn ||= this.ray.intersectObjects(surfaces,false)[0]?.object.userData.vert===true;
+      }
+    }
+    dropIn ||= this.ledgeDropActive;
+    this.dropInBlend=snap?Number(dropIn):this.dropInBlend+(Number(dropIn)-this.dropInBlend)*frameBlend(.12,step);
+    const dropEyeY=rider.position.y+(framing?.camHeight??SKATE_CAMERA.above);
+    this.dropInEyeY=snap?dropEyeY:this.dropInEyeY+(dropEyeY-this.dropInEyeY)*frameBlend(.25,step);
+    if(framing&&this.dropInBlend>.001){
+      this.ceilingSweepDirection.set(rider.heading.x,0,rider.heading.z).normalize();
+      this.openingEye.copy(rider.position).addScaledVector(this.ceilingSweepDirection,-.6);this.openingEye.y=this.dropInEyeY;
+      this.openingAim.copy(rider.position).addScaledVector(rider.up,1.5);
+      this.desiredEye.lerp(this.openingEye,this.dropInBlend);this.aim.lerp(this.openingAim,this.dropInBlend);
+      this.up.lerp(this.worldUp,this.dropInBlend).normalize();
+    }
     // Local collision correction: never rotate or displace the skater to
     // satisfy the lens. The smoothed frame naturally restores the full view.
     // A low roof needs a lower trailing shot, not an arm collapsed into the
@@ -194,7 +254,7 @@ export class SkateChaseCamera {
     // This changes only collision presentation; the calibrated vert frame
     // and unobstructed park camera remain untouched.
     let eyeDrop = 0, aimDrop = 0, hardEyeDrop = 0, hardAimDrop = 0;
-    if (this.openingBlend < .01 && this.groundFramingWeight > .5 && this.desiredEye.y > this.aim.y) {
+    if (this.openingBlend < .01 && !this.ledgeDropActive && this.groundFramingWeight > .5 && this.desiredEye.y > this.aim.y) {
       const targetY = rider.position.y + SKATE_CAMERA.above;
       let ceilingY = Infinity, hardCeilingY = Infinity;
       // Thin doorway lintels can fall between the spaced vertical probes.

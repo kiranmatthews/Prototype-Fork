@@ -154,6 +154,16 @@ for (const [i,t] of [.22,.42,.78].entries()) {
   for(const side of [-1,1])rail(`Footbridge ${i+1} coping ${side}`,points.map(q=>[q[0]-dn[1]*side*width/2,q[1]+.12,q[2]+dn[0]*side*width/2]),4);
   SCHOOL_BRIDGES.push({p,halfSpan,width});
 }
+// The PS1 Ditch Slap clip (HGW, 0:27–0:30) uses a shallow bank at the
+// trench lip, just beyond the closest footbridge. These face across the
+// open span after bridge 3, with the classroom behind the far landing;
+// the separate wedge down in the bed serves Over a Footbridge.
+export const SCHOOL_DITCH_SLAP={t:.92,run:2.2,rise:.55,width:5.8};
+for(const side of [-1,1]){
+  const b=SCHOOL_DITCH_SLAP,cross=pointAt(ditch.a,ditch.b,b.t),h=[dn[0]*side,0,dn[1]*side];
+  add({t:'ramp',nm:`Ditch Slap · bank ${side}`,p:[cross[0]-h[0]*(ditchWidth+b.run/2),lowerY,cross[2]-h[2]*(ditchWidth+b.run/2)],
+    len:b.run,rise:b.rise,w:b.width,yaw:Math.atan2(-h[0],-h[2])*180/Math.PI,tex:'pavement',color:concrete,edgeGrinding:false,grp:4});
+}
 // Broad banks at the trench ends make it escapable at any speed.
 for (const [p,sign] of [[ditch.a,1],[ditch.b,-1]] as const) {
   const tx=(ditch.b[0]-ditch.a[0])/dl*sign,tz=(ditch.b[2]-ditch.a[2])/dl*sign;
@@ -283,7 +293,13 @@ void admin;
 polygonBlock('Main classroom roof',[[4.9,-6.4],[37.8,-6.4],[36.4,-18.6],[4.9,-18.6]],5.12,4.85,concrete,3);
 for(const y of [1.5,3.5])for(let x=6;x<36.8;x+=2.4){paintBox(x,y,-6.475,1.65,.85,.05,'#41565b',3);paintBox(x,y,-6.43,.09,.85,.04,'#c2bca6',3);}
 for(const y of [-3,-.8,1.5,3.5])for(let x=6;x<35.4;x+=2.4){paintBox(x,y,-18.525,1.65,.85,.05,'#41565b',3);paintBox(x,y,-18.57,.09,.85,.04,'#c2bca6',3);}
-const classroomPlan=mapped([[126,121],[174,103],[236,115],[236,142],[272,148],[272,172],[306,178],[306,192],[292,190],[292,181],[280,179],[278,200],[312,205],[329,194],[324,231],[291,211],[224,198],[224,157],[209,153],[209,141],[151,140]],0);
+// Follow the roof edge around the Hall Pass recess, rather than the window
+// and planter edges inside it. The two front wall-base landmarks use their
+// lower-yard elevation so the facade stays behind the Long Ass Rail.
+const classroomImage:Point[]=[[126,121,0],[174,103,0],[236,115,0],[236,142,0],[272,148,0],
+  [349,181,0],[324,231,lowerY],[305,199,0],[314,179,0],[289,174,0],[281,194,0],
+  [224,198,lowerY],[224,157,0],[209,153,0],[209,141,0],[151,140,0]];
+const classroomPlan=classroomImage.map(([u,v,y])=>plan(schoolMapPoint(u,v,y)));
 polygonBlock('Zigzag classroom wings and Hall Pass alcove',classroomPlan,0,lowerY,brick,3);
 floor('Classroom flat roofs',classroomPlan,.035,concrete,3);
 for(let i=0;i<classroomPlan.length;i++){

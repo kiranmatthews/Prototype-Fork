@@ -31,5 +31,19 @@
     "source": "https://hiddenpalace.org/Tony_Hawk%27s_Pro_Skater_(Apr_9,_1999_prototype)",
     "finding": "Prototype comparison says the side passage could be accessed from inside the gym in the early build, unlike the final game.",
     "reconstruction": "Traced visible pavilion and glazed passage with solid boundaries and supported roofs. No invented portal or hidden cross-hall."
+  },
+  "ditchSlapEvidence": {
+    "source": "https://www.youtube.com/watch?v=UC1iKl9Va8g",
+    "title": "Tony Hawk\u2019s Pro Skater (PS1) - School Miami All Gaps",
+    "time": "0:28 takeoff; 0:30 Ditch Slap award",
+    "finding": "Visible shallow takeoff bank beside the trench, with a bridge to the right and the classroom beyond the far landing. The original walkthrough also specifies jumping the ditch using ramps.",
+    "placement": "Banks placed after the third bridge; this is a layout inference from the footage and clearance, not an extracted coordinate. Run 2.2, rise 0.55 and width 5.8 are authoring units before the 2x transform.",
+    "guide": "https://www.supercheats.com/playstation/walkthroughs/tonyhawksproskater-walkthrough01.txt"
+  },
+  "classroomFootprintEvidence": {
+    "source": "Supplied VGCartography image, original 588x522 coordinate frame",
+    "finding": "Hall Pass roof perimeter distinguished from window/planter features inside its recess. Front wall-base landmarks use lower-yard elevation in the inverse projection.",
+    "verification": "Simple editor-valid polygon; independent ray clearance along all 97 authored Long Ass Rail samples.",
+    "dimensions": "Inferred from the image; original source coordinates remain unverified."
   }
 }

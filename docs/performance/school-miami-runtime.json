@@ -1,18 +1,22 @@
 {
-  "validationContext": "Shared local working tree. School commits intentionally exclude unrelated runtime edits.",
+  "validationContext": "Read-only local snapshot captured 2026-10-22 21:46 UTC so the headless and browser runs use the same runtime while other level chats edit the shared checkout. School commits exclude those unrelated runtime edits.",
   "head": "79cdcdc0bf23f1696b0e5930e21ed99dbbfde82d",
   "files": {
-    "src/player.ts": "51a93fc9cb8f3613fedf0a16625e7b22e09859f3aa45898d3892677412b42e3b",
+    "src/player.ts": "f7c9156e9e61d973cde90e9321dd185d727a20c73544211323b6b41da1eb62ea",
     "src/tuning.ts": "dc7b43eedbb160b2ddfc16cdfdca42f1419245a76214fdccd49cf872905038c0",
-    "src/level.ts": "898a6d458627d11c31f9a5fd02b12dbd3bf9984278da23c4526b2d7e62448917",
+    "src/level.ts": "4e49b9e2a189189e516f8c95418c14a762c2f4206024491a79c134543a4e7dbe",
     "src/input.ts": "53cd0f5d183777461c3af7514af6ebc22abe44513a7986287f4c592f00d2a433",
     "src/skateParkPhysics.ts": "3cf5ce4c8bd9037539ffd21ff8559f78a0b9c2fd7a27f702a68bbe6aa2536f99",
     "src/skateParkTuning.ts": "bc609a6765ffd91c0d3bc062b33ee25c03cd7386a9159b24c1f643f38bca0234",
     "src/skateSteering.ts": "62b9d234f6feebaadd2f5c3b58cd6305d042c99ee46ea7d75d8fff7dbe953f68",
     "src/vertBoardRelease.ts": "7ce3ba915f646ac97890d0a2b9f25635ccedddb8068e4c2217c2812808866e67",
-    "src/vertSkateMotion.ts": "944c8fa4293fe58b8baca9987c7573b78428774e77b93bccb2b889d893a7ac96"
+    "src/vertSkateMotion.ts": "944c8fa4293fe58b8baca9987c7573b78428774e77b93bccb2b889d893a7ac96",
+    "src/meshContactNormal.ts": "3fee5417da3a27bb63b1e7428af1532078b3a6f4d802e753d9635fd2260da224"
   },
   "taskOwnedRuntimeFiles": {
-    "src/skateChaseCamera.ts": "8145727361a4c6456423b52640cc9418eee252d96efd4533398145aa2a8dd768"
-  }
+    "src/skateChaseCamera.ts": "2557ec040523b58eec0e902c4633a2a38ae0ba3e2d801b21e3eebf8626c82032"
+  },
+  "workingTreeDifferencesAtHandoff": [
+    "src/player.ts"
+  ]
 }
