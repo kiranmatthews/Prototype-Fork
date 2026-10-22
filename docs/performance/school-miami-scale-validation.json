@@ -1,16 +1,16 @@
 {
   "worldScale": 2,
-  "components": 272,
+  "components": 273,
   "rails": 69,
   "supportProbes": 18,
   "railClearanceSamples": 97,
   "ditchApproachSamples": 8,
-  "nativeCases": 35,
-  "nativeSteps": 10705,
-  "browserLiteSteps": 10705,
-  "browserFullSteps": 10705,
-  "maxCameraStep": 0.9268067270831046,
-  "maxBodySpanCrop": 0.7716605681429899,
+  "nativeCases": 58,
+  "nativeSteps": 17814,
+  "browserLiteSteps": 17814,
+  "browserFullSteps": 17814,
+  "maxCameraStep": 0.974224329681765,
+  "maxBodySpanCrop": 0.8948922152520872,
   "tuningUnchanged": true,
   "circuit": {
     "frames": 5212,
@@ -36,13 +36,15 @@
     "npm run check:levels",
     "npm run build"
   ],
-  "build": "1c11b37fd27871828d71",
+  "build": "ec17b1518354dfe7ecd0",
   "delivery": "Local only; no push, upload or deployment.",
   "limitations": [
     "Strict original 1:1 dimensions remain unverified; the user-directed 2x scale is calibrated for this skater.",
-    "The historical 1x monolithic physics pilot overshoots Long Ass Rail and catches the farther rail. It is not claimed passing. The current 2x West wedge transfer now passes with the intended catch, 73 grind frames and a supported landing. Earlier authoring-scale routes beyond the current 35 cases remain historical.",
+    "The historical 1x monolithic physics pilot overshoots Long Ass Rail and catches the farther rail. It is not claimed passing. The current 2x West wedge transfer now passes with the intended catch, 73 grind frames and a supported landing. Earlier authoring-scale routes beyond the current 58 cases remain historical.",
     "Concurrent level work changed the shared controller. Browser and headless validation use a single read-only runtime snapshot; revalidate when integrating different runtime versions.",
-    "The earlier preview-tab MutationObserver startup error is retained as historical evidence. Both current browser modes have empty warning/error logs; this iteration does not claim to repair that historical error."
+    "Straight ground entries to the complete 6.8 m gym-rail climb slow to the unchanged 3.5 m/s grind minimum. Four bank-ollie entries catch higher, retain at least 12.05 m/s, complete the remaining rail and land cleanly. The full-length slow entries are retained as separate coverage.",
+    "The rear-shed wall inset is a clearance correction beneath the traced roof. Its exact eave depth remains inferred from the map, not measured from original geometry.",
+    "One intermittent MutationObserver startup exception recurred in the full-render browser at 22:52:23 UTC. No source URL or stack was exposed. All 58 full/lite gameplay cases and both game error reports pass; the lite console is empty. The startup exception is retained in school-miami-scale-startup-console.json and is not claimed fixed. A later reload logged it again. Script-free and instrumented isolated previews did not reproduce it; no fix or source attribution is claimed."
   ],
   "streetTransfers": [
     {
@@ -94,5 +96,374 @@
     "beforeMaxStep": 1.0755560304160658,
     "afterMaxStep": 0.6985325267151274,
     "fix": "Require actual ground beneath the rider before anticipating an open ledge. An elevated grind is supported for framing but is not a ground run-off."
-  }
+  },
+  "featureCases": [
+    {
+      "name": "Scaled Perimeter Mini Gap",
+      "frames": 536,
+      "maxCameraStep": 0.5612174291789682,
+      "maxCrop": 0.7712263826854473,
+      "result": {
+        "gap": {
+          "frames": 536,
+          "takeoffGrindFrames": 18,
+          "receivingGrindFrames": 440,
+          "air": true,
+          "landed": true
+        }
+      }
+    },
+    {
+      "name": "Scaled Roof Mini Gap",
+      "frames": 144,
+      "maxCameraStep": 0.974224329681765,
+      "maxCrop": 0.7712263826854473,
+      "result": {
+        "gap": {
+          "frames": 144,
+          "takeoffGrindFrames": 18,
+          "receivingGrindFrames": 34,
+          "air": true,
+          "landed": true
+        }
+      }
+    },
+    {
+      "name": "Scaled Park Gap",
+      "frames": 116,
+      "maxCameraStep": 0.9329131707436362,
+      "maxCrop": 0.6368594156051419,
+      "result": {
+        "gap": {
+          "frames": 116,
+          "takeoffGrindFrames": 25,
+          "receivingGrindFrames": 12,
+          "air": true,
+          "landed": true
+        }
+      }
+    },
+    {
+      "name": "Scaled gym hoop return 12",
+      "frames": 156,
+      "maxCameraStep": 0.4771311413679541,
+      "maxCrop": 0.7712263826854479,
+      "result": {
+        "air": true,
+        "returned": true,
+        "maxY": 8.603964084224277
+      }
+    },
+    {
+      "name": "Scaled gym hoop return 20",
+      "frames": 148,
+      "maxCameraStep": 0.5087394488665211,
+      "maxCrop": 0.8948922152520872,
+      "result": {
+        "air": true,
+        "returned": true,
+        "maxY": 10.22916015471693
+      }
+    },
+    {
+      "name": "Scaled gym west bank -1",
+      "frames": 62,
+      "maxCameraStep": 0.44943104075563284,
+      "maxCrop": 0.7708294951251293,
+      "result": {
+        "maxStep": 0.3890379670798912,
+        "minSpeed": 16.169281708513978,
+        "arrived": true
+      }
+    },
+    {
+      "name": "Scaled gym west bank 1",
+      "frames": 96,
+      "maxCameraStep": 0.36409820636263296,
+      "maxCrop": 0.7712263826854462,
+      "result": {
+        "maxStep": 0.2671583241489939,
+        "minSpeed": 11.75199213817558,
+        "arrived": true
+      }
+    },
+    {
+      "name": "Scaled gym east bank -1",
+      "frames": 62,
+      "maxCameraStep": 0.4494379155926561,
+      "maxCrop": 0.770829488646273,
+      "result": {
+        "maxStep": 0.38903818857235023,
+        "minSpeed": 16.169284437332617,
+        "arrived": true
+      }
+    },
+    {
+      "name": "Scaled gym east bank 1",
+      "frames": 96,
+      "maxCameraStep": 0.36409820636263296,
+      "maxCrop": 0.7712263826854497,
+      "result": {
+        "maxStep": 0.2671583241489939,
+        "minSpeed": 11.751978519108853,
+        "arrived": true
+      }
+    },
+    {
+      "name": "Scaled gym complete rail 1/-1",
+      "frames": 972,
+      "maxCameraStep": 0.5850118490189216,
+      "maxCrop": 0.7712263826854439,
+      "result": {
+        "direction": -1,
+        "minGrindSpeed": 3.5,
+        "maxApproachSpeed": 21.736911744733337,
+        "grind": {
+          "frames": 972,
+          "grindFrames": 930,
+          "maxT": 84.56279632221316,
+          "minT": 0,
+          "progress": 84.56279632221316,
+          "direction": -1,
+          "maxBalance": 0.1266257161780434,
+          "caught": true,
+          "landed": true
+        }
+      }
+    },
+    {
+      "name": "Scaled gym bank air to rail 1/-1",
+      "frames": 389,
+      "maxCameraStep": 0.7186686679096921,
+      "maxCrop": 0.7712263826854439,
+      "result": {
+        "direction": -1,
+        "minGrindSpeed": 12.050970535737553,
+        "maxApproachSpeed": 22.999305774278216,
+        "grind": {
+          "frames": 389,
+          "grindFrames": 318,
+          "maxT": 73.7396045940305,
+          "minT": 0,
+          "progress": 84.56279632221316,
+          "direction": -1,
+          "maxBalance": 0.1,
+          "caught": true,
+          "landed": true
+        },
+        "takeoffY": 2.4527731073266166
+      }
+    },
+    {
+      "name": "Scaled gym complete rail 1/1",
+      "frames": 972,
+      "maxCameraStep": 0.5850118490189208,
+      "maxCrop": 0.7712263826854473,
+      "result": {
+        "direction": 1,
+        "minGrindSpeed": 3.5,
+        "maxApproachSpeed": 21.736911744733337,
+        "grind": {
+          "frames": 972,
+          "grindFrames": 930,
+          "maxT": 84.56279632221316,
+          "minT": 0,
+          "progress": 84.56279632221316,
+          "direction": 1,
+          "maxBalance": 0.12662571617812404,
+          "caught": true,
+          "landed": true
+        }
+      }
+    },
+    {
+      "name": "Scaled gym bank air to rail 1/1",
+      "frames": 389,
+      "maxCameraStep": 0.7186686679096929,
+      "maxCrop": 0.7712263826854451,
+      "result": {
+        "direction": 1,
+        "minGrindSpeed": 12.050970535737495,
+        "maxApproachSpeed": 22.999305774278216,
+        "grind": {
+          "frames": 389,
+          "grindFrames": 318,
+          "maxT": 84.56279632221316,
+          "minT": 10.823191728182668,
+          "progress": 84.56279632221316,
+          "direction": 1,
+          "maxBalance": 0.1,
+          "caught": true,
+          "landed": true
+        },
+        "takeoffY": 2.452773107326604
+      }
+    },
+    {
+      "name": "Scaled gym complete rail 2/-1",
+      "frames": 972,
+      "maxCameraStep": 0.5850118490189237,
+      "maxCrop": 0.7712263826854435,
+      "result": {
+        "direction": -1,
+        "minGrindSpeed": 3.5,
+        "maxApproachSpeed": 21.736911744733337,
+        "grind": {
+          "frames": 972,
+          "grindFrames": 930,
+          "maxT": 84.5627963222132,
+          "minT": 0,
+          "progress": 84.5627963222132,
+          "direction": -1,
+          "maxBalance": 0.12662571617810778,
+          "caught": true,
+          "landed": true
+        }
+      }
+    },
+    {
+      "name": "Scaled gym bank air to rail 2/-1",
+      "frames": 389,
+      "maxCameraStep": 0.7186700852655761,
+      "maxCrop": 0.7712263826854435,
+      "result": {
+        "direction": -1,
+        "minGrindSpeed": 12.050903100277937,
+        "maxApproachSpeed": 22.999305774278216,
+        "grind": {
+          "frames": 389,
+          "grindFrames": 318,
+          "maxT": 73.73960892090697,
+          "minT": 0,
+          "progress": 84.5627963222132,
+          "direction": -1,
+          "maxBalance": 0.1,
+          "caught": true,
+          "landed": true
+        },
+        "takeoffY": 2.4527756015214273
+      }
+    },
+    {
+      "name": "Scaled gym complete rail 2/1",
+      "frames": 972,
+      "maxCameraStep": 0.5850118490189216,
+      "maxCrop": 0.7712263826854457,
+      "result": {
+        "direction": 1,
+        "minGrindSpeed": 3.5,
+        "maxApproachSpeed": 21.736911744733337,
+        "grind": {
+          "frames": 972,
+          "grindFrames": 930,
+          "maxT": 84.5627963222132,
+          "minT": 0,
+          "progress": 84.5627963222132,
+          "direction": 1,
+          "maxBalance": 0.12662571617814433,
+          "caught": true,
+          "landed": true
+        }
+      }
+    },
+    {
+      "name": "Scaled gym bank air to rail 2/1",
+      "frames": 389,
+      "maxCameraStep": 0.7186700852655767,
+      "maxCrop": 0.7712263826854482,
+      "result": {
+        "direction": 1,
+        "minGrindSpeed": 12.050903100277697,
+        "maxApproachSpeed": 22.999305774278216,
+        "grind": {
+          "frames": 389,
+          "grindFrames": 318,
+          "maxT": 84.5627963222132,
+          "minT": 10.823187401306225,
+          "progress": 84.5627963222132,
+          "direction": 1,
+          "maxBalance": 0.1,
+          "caught": true,
+          "landed": true
+        },
+        "takeoffY": 2.4527756015214144
+      }
+    },
+    {
+      "name": "Scaled skylight drop -1",
+      "frames": 66,
+      "maxCameraStep": 0.9671605699063247,
+      "maxCrop": 0.7712263826854451,
+      "result": {
+        "entered": true,
+        "landed": true,
+        "firstLanding": [
+          102.51498713920981,
+          0,
+          78.4
+        ]
+      }
+    },
+    {
+      "name": "Scaled skylight drop 1",
+      "frames": 63,
+      "maxCameraStep": 0.8733862483786077,
+      "maxCrop": 0.7712263826854473,
+      "result": {
+        "entered": true,
+        "landed": true,
+        "firstLanding": [
+          113.25607823203758,
+          0,
+          78.4
+        ]
+      }
+    },
+    {
+      "name": "Scaled rear shed collision 1",
+      "frames": 30,
+      "maxCameraStep": 0.4800859263014604,
+      "maxCrop": 0.7712263826854435,
+      "result": {
+        "blocked": true,
+        "closest": 0.6726566710320181
+      }
+    },
+    {
+      "name": "Scaled rear shed collision 2",
+      "frames": 30,
+      "maxCameraStep": 0.4801493819061033,
+      "maxCrop": 0.7712263826854444,
+      "result": {
+        "blocked": true,
+        "closest": 0.6715547600195608
+      }
+    },
+    {
+      "name": "Scaled rear shed collision 3",
+      "frames": 30,
+      "maxCameraStep": 0.9554953655438505,
+      "maxCrop": 0.7712263826854457,
+      "result": {
+        "blocked": true,
+        "closest": 0.6726566710320279
+      }
+    },
+    {
+      "name": "Scaled rear shed collision 4",
+      "frames": 30,
+      "maxCameraStep": 0.48014938190608347,
+      "maxCrop": 0.7712263826854471,
+      "result": {
+        "blocked": true,
+        "closest": 0.6715547600195547
+      }
+    }
+  ],
+  "featureFixes": [
+    "Closed gym banks use their outward faces; their backsides no longer register as false ceilings.",
+    "Skylight floor/rim probes cover the enlarged opening.",
+    "Rear shed walls are inset beneath the existing roof eave and use a native closed wall path for side collision.",
+    "The chase-camera aim is clipped to the rider side of upright walls before testing the camera arm."
+  ]
 }

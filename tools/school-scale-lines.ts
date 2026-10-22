@@ -2,6 +2,7 @@ import { SCHOOL_WORLD_SCALE, schoolWorldPoint, SCHOOL_KICKER, SCHOOL_POOLS, SCHO
 import { createBalancedGrind } from './school-grind-lines';
 import { createSchoolCircuit } from './school-circuit';
 import { schoolStreetTrials, createStreetTransfer } from './school-street-transfers';
+import { schoolScaleFeatureTrials } from './school-scale-features';
 type Point=[number,number,number];
 type Place=(q:Point,h:Point,speed:number)=>void;
 export type SchoolScaleTrial={name:string;limit:number;init:()=>void;sample:(n:number)=>any;observe:(n:number)=>boolean;result:any;allowDeath?:boolean};
@@ -102,6 +103,7 @@ export function schoolScaleTrials(p:any,l:any,place:Place,dt:number,S=SCHOOL_WOR
       place(q.toArray(),h.toArray(),route.speed);line=createStreetTransfer(p,route,dt);result.transfer=line.report;
     },sample:()=>line.sample(),observe:()=>line.observe()});
   }
+  cases.push(...schoolScaleFeatureTrials(p,l,place,dt,S));
   {let line:ReturnType<typeof createSchoolCircuit>;const result:any={};cases.push({name:'Scaled continuous campus circuit',limit:7000,result,
     init:()=>{p.respawn(l,true);line=createSchoolCircuit(p,S);result.circuit=line.report;},sample:()=>line.sample(),observe:()=>line.observe()});}
   {let banked=false,dead=false;const result:any={};cases.push({name:'Scaled checkpoint and fall recovery',limit:900,allowDeath:true,result,

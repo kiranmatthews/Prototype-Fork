@@ -9,7 +9,7 @@
     -78
   ],
   "speed": 0,
-  "components": 272,
+  "components": 273,
   "rails": 69,
   "camera": {
     "eye": [
@@ -20,14 +20,14 @@
     "trailing": 5.049999999999997,
     "bodyBounds": {
       "min": [
-        51.50118141511361,
-        -9.775301659593723,
-        -78.9844018368523
+        51.50167919442846,
+        -9.775461460941528,
+        -78.97896646789135
       ],
       "max": [
-        52.6904385617522,
-        -6.971205158374901,
-        -77.17937459249563
+        52.68640414762122,
+        -7.013561008536431,
+        -77.18352469706304
       ]
     }
   },
@@ -422,6 +422,321 @@
         }
       },
       {
+        "name": "Scaled Perimeter Mini Gap",
+        "frames": 536,
+        "result": {
+          "gap": {
+            "frames": 536,
+            "takeoffGrindFrames": 18,
+            "receivingGrindFrames": 440,
+            "air": true,
+            "landed": true
+          }
+        }
+      },
+      {
+        "name": "Scaled Roof Mini Gap",
+        "frames": 144,
+        "result": {
+          "gap": {
+            "frames": 144,
+            "takeoffGrindFrames": 18,
+            "receivingGrindFrames": 34,
+            "air": true,
+            "landed": true
+          }
+        }
+      },
+      {
+        "name": "Scaled Park Gap",
+        "frames": 116,
+        "result": {
+          "gap": {
+            "frames": 116,
+            "takeoffGrindFrames": 25,
+            "receivingGrindFrames": 12,
+            "air": true,
+            "landed": true
+          }
+        }
+      },
+      {
+        "name": "Scaled gym hoop return 12",
+        "frames": 156,
+        "result": {
+          "air": true,
+          "returned": true,
+          "maxY": 8.603964084224277
+        }
+      },
+      {
+        "name": "Scaled gym hoop return 20",
+        "frames": 148,
+        "result": {
+          "air": true,
+          "returned": true,
+          "maxY": 10.22916015471693
+        }
+      },
+      {
+        "name": "Scaled gym west bank -1",
+        "frames": 62,
+        "result": {
+          "maxStep": 0.3890379670798912,
+          "minSpeed": 16.169281708513978,
+          "arrived": true
+        }
+      },
+      {
+        "name": "Scaled gym west bank 1",
+        "frames": 96,
+        "result": {
+          "maxStep": 0.2671583241489939,
+          "minSpeed": 11.75199213817558,
+          "arrived": true
+        }
+      },
+      {
+        "name": "Scaled gym east bank -1",
+        "frames": 62,
+        "result": {
+          "maxStep": 0.38903818857235023,
+          "minSpeed": 16.169284437332617,
+          "arrived": true
+        }
+      },
+      {
+        "name": "Scaled gym east bank 1",
+        "frames": 96,
+        "result": {
+          "maxStep": 0.2671583241489939,
+          "minSpeed": 11.751978519108853,
+          "arrived": true
+        }
+      },
+      {
+        "name": "Scaled gym complete rail 1/-1",
+        "frames": 972,
+        "result": {
+          "direction": -1,
+          "minGrindSpeed": 3.5,
+          "maxApproachSpeed": 21.736911744733337,
+          "grind": {
+            "frames": 972,
+            "grindFrames": 930,
+            "maxT": 84.56279632221316,
+            "minT": 0,
+            "progress": 84.56279632221316,
+            "direction": -1,
+            "maxBalance": 0.1266257161780434,
+            "caught": true,
+            "landed": true
+          }
+        }
+      },
+      {
+        "name": "Scaled gym bank air to rail 1/-1",
+        "frames": 389,
+        "result": {
+          "direction": -1,
+          "minGrindSpeed": 12.050970535737553,
+          "maxApproachSpeed": 22.999305774278216,
+          "grind": {
+            "frames": 389,
+            "grindFrames": 318,
+            "maxT": 73.7396045940305,
+            "minT": 0,
+            "progress": 84.56279632221316,
+            "direction": -1,
+            "maxBalance": 0.1,
+            "caught": true,
+            "landed": true
+          },
+          "takeoffY": 2.4527731073266166
+        }
+      },
+      {
+        "name": "Scaled gym complete rail 1/1",
+        "frames": 972,
+        "result": {
+          "direction": 1,
+          "minGrindSpeed": 3.5,
+          "maxApproachSpeed": 21.736911744733337,
+          "grind": {
+            "frames": 972,
+            "grindFrames": 930,
+            "maxT": 84.56279632221316,
+            "minT": 0,
+            "progress": 84.56279632221316,
+            "direction": 1,
+            "maxBalance": 0.12662571617812407,
+            "caught": true,
+            "landed": true
+          }
+        }
+      },
+      {
+        "name": "Scaled gym bank air to rail 1/1",
+        "frames": 389,
+        "result": {
+          "direction": 1,
+          "minGrindSpeed": 12.050970535737495,
+          "maxApproachSpeed": 22.999305774278216,
+          "grind": {
+            "frames": 389,
+            "grindFrames": 318,
+            "maxT": 84.56279632221316,
+            "minT": 10.823191728182668,
+            "progress": 84.56279632221316,
+            "direction": 1,
+            "maxBalance": 0.1,
+            "caught": true,
+            "landed": true
+          },
+          "takeoffY": 2.452773107326604
+        }
+      },
+      {
+        "name": "Scaled gym complete rail 2/-1",
+        "frames": 972,
+        "result": {
+          "direction": -1,
+          "minGrindSpeed": 3.5,
+          "maxApproachSpeed": 21.736911744733337,
+          "grind": {
+            "frames": 972,
+            "grindFrames": 930,
+            "maxT": 84.5627963222132,
+            "minT": 0,
+            "progress": 84.5627963222132,
+            "direction": -1,
+            "maxBalance": 0.12662571617810778,
+            "caught": true,
+            "landed": true
+          }
+        }
+      },
+      {
+        "name": "Scaled gym bank air to rail 2/-1",
+        "frames": 389,
+        "result": {
+          "direction": -1,
+          "minGrindSpeed": 12.050903100277937,
+          "maxApproachSpeed": 22.999305774278216,
+          "grind": {
+            "frames": 389,
+            "grindFrames": 318,
+            "maxT": 73.73960892090697,
+            "minT": 0,
+            "progress": 84.5627963222132,
+            "direction": -1,
+            "maxBalance": 0.1,
+            "caught": true,
+            "landed": true
+          },
+          "takeoffY": 2.4527756015214273
+        }
+      },
+      {
+        "name": "Scaled gym complete rail 2/1",
+        "frames": 972,
+        "result": {
+          "direction": 1,
+          "minGrindSpeed": 3.5,
+          "maxApproachSpeed": 21.736911744733337,
+          "grind": {
+            "frames": 972,
+            "grindFrames": 930,
+            "maxT": 84.5627963222132,
+            "minT": 0,
+            "progress": 84.5627963222132,
+            "direction": 1,
+            "maxBalance": 0.12662571617814436,
+            "caught": true,
+            "landed": true
+          }
+        }
+      },
+      {
+        "name": "Scaled gym bank air to rail 2/1",
+        "frames": 389,
+        "result": {
+          "direction": 1,
+          "minGrindSpeed": 12.050903100277697,
+          "maxApproachSpeed": 22.999305774278216,
+          "grind": {
+            "frames": 389,
+            "grindFrames": 318,
+            "maxT": 84.5627963222132,
+            "minT": 10.823187401306225,
+            "progress": 84.5627963222132,
+            "direction": 1,
+            "maxBalance": 0.1,
+            "caught": true,
+            "landed": true
+          },
+          "takeoffY": 2.4527756015214144
+        }
+      },
+      {
+        "name": "Scaled skylight drop -1",
+        "frames": 66,
+        "result": {
+          "entered": true,
+          "landed": true,
+          "firstLanding": [
+            102.51498713920981,
+            0,
+            78.4
+          ]
+        }
+      },
+      {
+        "name": "Scaled skylight drop 1",
+        "frames": 63,
+        "result": {
+          "entered": true,
+          "landed": true,
+          "firstLanding": [
+            113.25607823203758,
+            0,
+            78.4
+          ]
+        }
+      },
+      {
+        "name": "Scaled rear shed collision 1",
+        "frames": 30,
+        "result": {
+          "blocked": true,
+          "closest": 0.6726566710320181
+        }
+      },
+      {
+        "name": "Scaled rear shed collision 2",
+        "frames": 30,
+        "result": {
+          "blocked": true,
+          "closest": 0.6715547600195608
+        }
+      },
+      {
+        "name": "Scaled rear shed collision 3",
+        "frames": 30,
+        "result": {
+          "blocked": true,
+          "closest": 0.6726566710320279
+        }
+      },
+      {
+        "name": "Scaled rear shed collision 4",
+        "frames": 30,
+        "result": {
+          "blocked": true,
+          "closest": 0.6715547600195547
+        }
+      },
+      {
         "name": "Scaled continuous campus circuit",
         "frames": 5212,
         "result": {
@@ -429,7 +744,7 @@
             "frames": 5212,
             "waypoints": 48,
             "totalWaypoints": 48,
-            "distance": 756.3055053331544,
+            "distance": 756.3055079178554,
             "gimmeGrindFrames": 41,
             "returnGrindFrames": 1213,
             "kickerAir": true,
@@ -447,7 +762,7 @@
       }
     ],
     "failure": null,
-    "frames": 10705,
+    "frames": 17814,
     "tuningUnchanged": true
   }
 }

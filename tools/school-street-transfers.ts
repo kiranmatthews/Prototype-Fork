@@ -47,11 +47,11 @@ export function createStreetTransfer(p:any,c:ReturnType<typeof schoolStreetTrial
     return false;
   }};
 }
-export function parkGapRails(l:any,p:any){
-  const a=p.pos.clone().set(...SCHOOL_PARK_GAP.takeoff).add(p.pos.clone().set(0,.05,0)),b=p.pos.clone().set(...SCHOOL_PARK_GAP.receiver).add(p.pos.clone().set(0,.05,0));
+export function parkGapRails(l:any,p:any,scale=1){
+  const a=p.pos.clone().set(...SCHOOL_PARK_GAP.takeoff).add(p.pos.clone().set(0,.05,0)).multiplyScalar(scale),b=p.pos.clone().set(...SCHOOL_PARK_GAP.receiver).add(p.pos.clone().set(0,.05,0)).multiplyScalar(scale);
   return {takeoff:l.rails.find((r:any)=>r.points.at(-1).distanceTo(a)<.3),receiver:l.rails.find((r:any)=>r.points[0].distanceTo(b)<.3)};
 }
-export function createParkGap(p:any,a:any,b:any,dt:number,exit:[number,number]=[-.55,0],exitFrames=12){
+export function createParkGap(p:any,a:any,b:any,dt:number,exit:[number,number]=[-.55,0],exitFrames=12,scale=1){
   if(!a||!b)throw Error('Park Gap coping missing');
   let popped=false,armed=false,previous=0,held=false,exitPopped=false;
   const end=a.points.at(-1),start=b.points[0],h=start.clone().sub(end).setY(0).normalize(),gap=start.distanceTo(end);
@@ -68,12 +68,12 @@ export function createParkGap(p:any,a:any,b:any,dt:number,exit:[number,number]=[
     report.frames++;report.air||=popped&&p.state==='air';
     if(p.state==='grind'&&p.grindRail===a)report.takeoffGrindFrames++;
     if(p.state==='grind'&&p.grindRail===b)report.receivingGrindFrames++;
-    if(report.air&&p.grounded){if(report.receivingGrindFrames<8||Math.abs(p.pos.y+5)>.08)throw Error('Park Gap missed its receiving quarter or yard rollout');report.landed=true;return true;}
+    if(report.air&&p.grounded){if(report.receivingGrindFrames<8||Math.abs(p.pos.y+5*scale)>.08)throw Error('Park Gap missed its receiving quarter or yard rollout');report.landed=true;return true;}
     return false;
   }};
 }
 
-export function miniGapRails(l:any,p:any){
-  const a=p.pos.clone().set(...SCHOOL_MINI_GAP.takeoffCoping).add(p.pos.clone().set(0,.05,0)),b=p.pos.clone().set(...SCHOOL_MINI_GAP.receiverCoping).add(p.pos.clone().set(0,.05,0));
+export function miniGapRails(l:any,p:any,scale=1){
+  const a=p.pos.clone().set(...SCHOOL_MINI_GAP.takeoffCoping).add(p.pos.clone().set(0,.05,0)).multiplyScalar(scale),b=p.pos.clone().set(...SCHOOL_MINI_GAP.receiverCoping).add(p.pos.clone().set(0,.05,0)).multiplyScalar(scale);
   return {takeoff:l.rails.find((r:any)=>r.points.at(-1).distanceTo(a)<.3),receiver:l.rails.find((r:any)=>r.points[0].distanceTo(b)<.3)};
 }

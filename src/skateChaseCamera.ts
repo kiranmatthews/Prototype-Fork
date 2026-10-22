@@ -177,18 +177,21 @@ export class SkateChaseCamera {
     if(rider.grounded||vert||!framing)this.openingActive=false;
     else if(!this.openingActive&&rider.verticalSpeed<-.1&&this.groundFramingWeight>.5){
       this.ceilingProbe.copy(rider.position);this.ceilingProbe.y+=.05;
-      this.ray.set(this.ceilingProbe,this.down);this.ray.near=.1;this.ray.far=14;
+      this.ray.set(this.ceilingProbe,this.down);this.ray.near=.1;this.ray.far=Math.max(14,framing.camDist*6);
       const floor=this.ray.intersectObjects(surfaces,false)[0];
       if(floor&&rider.position.y-floor.point.y>3){
         const ceilings:number[]=[];
-        for(const along of [-framing.camDist,6]){
+        // Wider openings can leave the first forward sample inside the
+        // hole. Find a nearby roof on each side before the rim reaches the
+        // normal trailing eye; the first valid underside wins on each side.
+        for(const distances of [[-framing.camDist,-framing.camDist-4,-framing.camDist-8],[6,10,14]])for(const along of distances){
           this.ceilingProbe.copy(rider.position).addScaledVector(this.flatForward,along);
           this.ceilingProbe.y=floor.point.y+.4;
           this.ray.set(this.ceilingProbe,this.worldUp);this.ray.near=.05;this.ray.far=rider.position.y-floor.point.y+2;
           const roof=this.ray.intersectObjects(surfaces,false)[0];
           if(!roof?.face)continue;
           this.contactNormal.copy(roof.face.normal).transformDirection(roof.object.matrixWorld);
-          if(this.contactNormal.y<-.5&&roof.point.y>floor.point.y+3&&roof.point.y>rider.position.y-1.6)ceilings.push(roof.point.y);
+          if(this.contactNormal.y<-.5&&roof.point.y>floor.point.y+3&&roof.point.y>rider.position.y-1.6){ceilings.push(roof.point.y);break;}
         }
         this.openingActive=ceilings.length===2&&Math.abs(ceilings[0]-ceilings[1])<1.5;
       }
@@ -373,6 +376,19 @@ export class SkateChaseCamera {
     this.landingLedgeLift=snap?ledgeLift:Math.max(ledgeLift,
       this.landingLedgeLift+(ledgeLift-this.landingLedgeLift)*frameBlend(.12,step));
     this.desiredEye.y+=this.landingLedgeLift;
+    // A downhill surface frame can aim ahead of the rider, through a nearby
+    // upright wall. Keep that aim on the rider's side before casting the arm:
+    // an inside-out arm otherwise puts the lens through the wall as well.
+    this.ceilingProbe.copy(rider.position);this.ceilingProbe.y+=1.5;
+    this.direction.subVectors(this.aim,this.ceilingProbe);
+    const aimSpan=this.direction.length();this.direction.divideScalar(Math.max(aimSpan,1e-6));
+    this.ray.set(this.ceilingProbe,this.direction);this.ray.near=.01;this.ray.far=aimSpan;
+    for(const hit of this.ray.intersectObjects(surfaces,false)){
+      if(!hit.face||hit.object.userData.vert===true)continue;
+      this.contactNormal.copy(hit.face.normal).transformDirection(hit.object.matrixWorld);
+      if(Math.abs(this.contactNormal.y)>.25)continue;
+      this.aim.copy(this.ceilingProbe).addScaledVector(this.direction,Math.max(0,hit.distance-.2));break;
+    }
     this.direction.subVectors(this.desiredEye, this.aim);
     const distance = this.direction.length();
     this.direction.divideScalar(Math.max(distance, 1e-6));

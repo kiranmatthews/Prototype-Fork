@@ -1,6 +1,6 @@
 {
   "worldScale": 2,
-  "components": 272,
+  "components": 273,
   "rails": 69,
   "support": [
     {
@@ -1532,6 +1532,965 @@
           "minGrindSpeed": 10.398218496684457,
           "landed": true
         }
+      }
+    },
+    {
+      "name": "Scaled Perimeter Mini Gap",
+      "passed": true,
+      "frames": 536,
+      "maxStep": 0.5895161078716875,
+      "maxCameraStep": 0.5612174291789682,
+      "maxCrop": 0.7712263826854473,
+      "worstCamera": {
+        "frame": 535,
+        "pos": [
+          56.91231430504731,
+          -10,
+          -131.57151379076146
+        ],
+        "eye": [
+          57.1837230432053,
+          -4.841593981481486,
+          -137.52304038609697
+        ],
+        "previousEye": [
+          56.733372451456134,
+          -4.666375925925939,
+          -137.8084313115532
+        ],
+        "state": "ride"
+      },
+      "end": [
+        56.91231430504731,
+        -10,
+        -131.57151379076146
+      ],
+      "result": {
+        "gap": {
+          "frames": 536,
+          "takeoffGrindFrames": 18,
+          "receivingGrindFrames": 440,
+          "air": true,
+          "landed": true
+        }
+      }
+    },
+    {
+      "name": "Scaled Roof Mini Gap",
+      "passed": true,
+      "frames": 144,
+      "maxStep": 0.7770701917205443,
+      "maxCameraStep": 0.974224329681765,
+      "maxCrop": 0.7712263826854473,
+      "worstCamera": {
+        "frame": 9,
+        "pos": [
+          62.42879791325371,
+          17.8,
+          32.030927865744985
+        ],
+        "eye": [
+          57.06758237438647,
+          22.902785933123695,
+          31.7146846259973
+        ],
+        "previousEye": [
+          56.0949770355679,
+          22.900527026918198,
+          31.658588308932288
+        ],
+        "state": "grind"
+      },
+      "end": [
+        109.98782000373036,
+        14.052839231909863,
+        36.99816029215304
+      ],
+      "result": {
+        "gap": {
+          "frames": 144,
+          "takeoffGrindFrames": 18,
+          "receivingGrindFrames": 34,
+          "air": true,
+          "landed": true
+        }
+      }
+    },
+    {
+      "name": "Scaled Park Gap",
+      "passed": true,
+      "frames": 116,
+      "maxStep": 0.5833403874867561,
+      "maxCameraStep": 0.9329131707436362,
+      "maxCrop": 0.6368594156051419,
+      "worstCamera": {
+        "frame": 67,
+        "pos": [
+          61.62006284283127,
+          -7.3,
+          -121.16086920967001
+        ],
+        "eye": [
+          59.82620568956203,
+          -2.173660884492723,
+          -126.13305542773334
+        ],
+        "previousEye": [
+          59.531632924537114,
+          -2.1983472440891427,
+          -127.01789691291721
+        ],
+        "state": "grind"
+      },
+      "end": [
+        65.3316927889074,
+        -10,
+        -107.17069243606821
+      ],
+      "result": {
+        "gap": {
+          "frames": 116,
+          "takeoffGrindFrames": 25,
+          "receivingGrindFrames": 12,
+          "air": true,
+          "landed": true
+        }
+      }
+    },
+    {
+      "name": "Scaled gym hoop return 12",
+      "passed": true,
+      "frames": 156,
+      "maxStep": 0.40764554718151547,
+      "maxCameraStep": 0.4771311413679541,
+      "maxCrop": 0.7712263826854479,
+      "worstCamera": {
+        "frame": 58,
+        "pos": [
+          97,
+          0.2685588579922593,
+          88.1729322965525
+        ],
+        "eye": [
+          97,
+          4.834274652569952,
+          82.1803902760973
+        ],
+        "previousEye": [
+          97,
+          5.139717449202351,
+          81.81384038311073
+        ],
+        "state": "ride"
+      },
+      "end": [
+        97,
+        0,
+        85.81069602286865
+      ],
+      "result": {
+        "air": true,
+        "returned": true,
+        "maxY": 8.603964084224277
+      }
+    },
+    {
+      "name": "Scaled gym hoop return 20",
+      "passed": true,
+      "frames": 148,
+      "maxStep": 0.4367413244754601,
+      "maxCameraStep": 0.5087394488665211,
+      "maxCrop": 0.8948922152520872,
+      "worstCamera": {
+        "frame": 43,
+        "pos": [
+          97,
+          0.35304724860054726,
+          88.33320472191649
+        ],
+        "eye": [
+          97,
+          4.764902501735963,
+          82.22255535328631
+        ],
+        "previousEye": [
+          97,
+          5.080361847699882,
+          81.82342977420495
+        ],
+        "state": "ride"
+      },
+      "end": [
+        97,
+        0,
+        85.86241654145479
+      ],
+      "result": {
+        "air": true,
+        "returned": true,
+        "maxY": 10.22916015471693
+      }
+    },
+    {
+      "name": "Scaled gym west bank -1",
+      "passed": true,
+      "frames": 62,
+      "maxStep": 0.3890379670798912,
+      "maxCameraStep": 0.44943104075563284,
+      "maxCrop": 0.7708294951251293,
+      "worstCamera": {
+        "frame": 5,
+        "pos": [
+          57.31784274718009,
+          5.246667371384968,
+          64
+        ],
+        "eye": [
+          51.979903623510054,
+          9.605399847237349,
+          63.99999999999999
+        ],
+        "previousEye": [
+          51.68274937456047,
+          9.942575784584458,
+          63.99999999999999
+        ],
+        "state": "ride"
+      },
+      "end": [
+        76.0143260042085,
+        0,
+        64
+      ],
+      "result": {
+        "maxStep": 0.3890379670798912,
+        "minSpeed": 16.169281708513978,
+        "arrived": true
+      }
+    },
+    {
+      "name": "Scaled gym west bank 1",
+      "passed": true,
+      "frames": 96,
+      "maxStep": 0.2671583241489939,
+      "maxCameraStep": 0.36409820636263296,
+      "maxCrop": 0.7712263826854462,
+      "worstCamera": {
+        "frame": 27,
+        "pos": [
+          68.58217678387608,
+          0.27783215238788816,
+          64
+        ],
+        "eye": [
+          74.35679006709853,
+          4.768500226515225,
+          64
+        ],
+        "previousEye": [
+          74.63365257122787,
+          5.004963030532511,
+          64
+        ],
+        "state": "ride"
+      },
+      "end": [
+        55.6808064259843,
+        5.969513373329982,
+        64
+      ],
+      "result": {
+        "maxStep": 0.2671583241489939,
+        "minSpeed": 11.75199213817558,
+        "arrived": true
+      }
+    },
+    {
+      "name": "Scaled gym east bank -1",
+      "passed": true,
+      "frames": 62,
+      "maxStep": 0.38903818857235023,
+      "maxCameraStep": 0.4494379155926561,
+      "maxCrop": 0.770829488646273,
+      "worstCamera": {
+        "frame": 5,
+        "pos": [
+          134.6821577707781,
+          5.246664923176745,
+          64
+        ],
+        "eye": [
+          140.0200942643687,
+          9.605393137822686,
+          64
+        ],
+        "previousEye": [
+          140.31725102374068,
+          9.942576026374017,
+          64
+        ],
+        "state": "ride"
+      },
+      "end": [
+        115.98566924501523,
+        0,
+        64
+      ],
+      "result": {
+        "maxStep": 0.38903818857235023,
+        "minSpeed": 16.169284437332617,
+        "arrived": true
+      }
+    },
+    {
+      "name": "Scaled gym east bank 1",
+      "passed": true,
+      "frames": 96,
+      "maxStep": 0.2671583241489939,
+      "maxCameraStep": 0.36409820636263296,
+      "maxCrop": 0.7712263826854497,
+      "worstCamera": {
+        "frame": 27,
+        "pos": [
+          123.41782321612392,
+          0.27783215238788816,
+          64
+        ],
+        "eye": [
+          117.64320993290147,
+          4.768500226515225,
+          64
+        ],
+        "previousEye": [
+          117.36634742877213,
+          5.004963030532511,
+          64
+        ],
+        "state": "ride"
+      },
+      "end": [
+        136.31918765168564,
+        5.969513446533078,
+        64
+      ],
+      "result": {
+        "maxStep": 0.2671583241489939,
+        "minSpeed": 11.751978519108853,
+        "arrived": true
+      }
+    },
+    {
+      "name": "Scaled gym complete rail 1/-1",
+      "passed": true,
+      "frames": 972,
+      "maxStep": 0.8364258934774056,
+      "maxCameraStep": 0.5850118490189216,
+      "maxCrop": 0.7712263826854439,
+      "worstCamera": {
+        "frame": 29,
+        "pos": [
+          68.93824584929585,
+          0.9596350205773925,
+          90
+        ],
+        "eye": [
+          75.59872475495838,
+          5.982134923735652,
+          90
+        ],
+        "previousEye": [
+          76.1355510568459,
+          5.749634633210432,
+          90
+        ],
+        "state": "grind"
+      },
+      "end": [
+        76.70703989392132,
+        0,
+        38
+      ],
+      "result": {
+        "direction": -1,
+        "minGrindSpeed": 3.5,
+        "maxApproachSpeed": 21.736911744733337,
+        "grind": {
+          "frames": 972,
+          "grindFrames": 930,
+          "maxT": 84.56279632221316,
+          "minT": 0,
+          "progress": 84.56279632221316,
+          "direction": -1,
+          "maxBalance": 0.1266257161780434,
+          "caught": true,
+          "landed": true
+        }
+      }
+    },
+    {
+      "name": "Scaled gym bank air to rail 1/-1",
+      "passed": true,
+      "frames": 389,
+      "maxStep": 0.47601174385901185,
+      "maxCameraStep": 0.7186686679096921,
+      "maxCrop": 0.7712263826854439,
+      "worstCamera": {
+        "frame": 45,
+        "pos": [
+          62.95866620990213,
+          2.9340310263575526,
+          89.5
+        ],
+        "eye": [
+          69.00793299916312,
+          5.841893010928403,
+          89.5
+        ],
+        "previousEye": [
+          69.42050492220547,
+          5.253446698549586,
+          89.5
+        ],
+        "state": "air"
+      },
+      "end": [
+        77.37285440753271,
+        0,
+        38
+      ],
+      "result": {
+        "direction": -1,
+        "minGrindSpeed": 12.050970535737553,
+        "maxApproachSpeed": 22.999305774278216,
+        "grind": {
+          "frames": 389,
+          "grindFrames": 318,
+          "maxT": 73.7396045940305,
+          "minT": 0,
+          "progress": 84.56279632221316,
+          "direction": -1,
+          "maxBalance": 0.1,
+          "caught": true,
+          "landed": true
+        },
+        "takeoffY": 2.4527731073266166
+      }
+    },
+    {
+      "name": "Scaled gym complete rail 1/1",
+      "passed": true,
+      "frames": 972,
+      "maxStep": 0.8364258934773919,
+      "maxCameraStep": 0.5850118490189208,
+      "maxCrop": 0.7712263826854473,
+      "worstCamera": {
+        "frame": 29,
+        "pos": [
+          68.93824584929587,
+          0.9596350205773809,
+          38
+        ],
+        "eye": [
+          75.59872475495844,
+          5.982134923735641,
+          37.99999999999999
+        ],
+        "previousEye": [
+          76.13555105684596,
+          5.749634633210423,
+          38
+        ],
+        "state": "grind"
+      },
+      "end": [
+        76.70703989392129,
+        0,
+        90
+      ],
+      "result": {
+        "direction": 1,
+        "minGrindSpeed": 3.5,
+        "maxApproachSpeed": 21.736911744733337,
+        "grind": {
+          "frames": 972,
+          "grindFrames": 930,
+          "maxT": 84.56279632221316,
+          "minT": 0,
+          "progress": 84.56279632221316,
+          "direction": 1,
+          "maxBalance": 0.12662571617812404,
+          "caught": true,
+          "landed": true
+        }
+      }
+    },
+    {
+      "name": "Scaled gym bank air to rail 1/1",
+      "passed": true,
+      "frames": 389,
+      "maxStep": 0.47601174385901185,
+      "maxCameraStep": 0.7186686679096929,
+      "maxCrop": 0.7712263826854451,
+      "worstCamera": {
+        "frame": 45,
+        "pos": [
+          62.958666209902155,
+          2.9340310263575398,
+          38.5
+        ],
+        "eye": [
+          69.00793299916315,
+          5.84189301092839,
+          38.5
+        ],
+        "previousEye": [
+          69.4205049222055,
+          5.253446698549572,
+          38.5
+        ],
+        "state": "air"
+      },
+      "end": [
+        77.37285440753269,
+        0,
+        90
+      ],
+      "result": {
+        "direction": 1,
+        "minGrindSpeed": 12.050970535737495,
+        "maxApproachSpeed": 22.999305774278216,
+        "grind": {
+          "frames": 389,
+          "grindFrames": 318,
+          "maxT": 84.56279632221316,
+          "minT": 10.823191728182668,
+          "progress": 84.56279632221316,
+          "direction": 1,
+          "maxBalance": 0.1,
+          "caught": true,
+          "landed": true
+        },
+        "takeoffY": 2.452773107326604
+      }
+    },
+    {
+      "name": "Scaled gym complete rail 2/-1",
+      "passed": true,
+      "frames": 972,
+      "maxStep": 0.8364258934774056,
+      "maxCameraStep": 0.5850118490189237,
+      "maxCrop": 0.7712263826854435,
+      "worstCamera": {
+        "frame": 29,
+        "pos": [
+          123.06175415070416,
+          0.9596350205773947,
+          90
+        ],
+        "eye": [
+          116.40127524504162,
+          5.982134923735653,
+          90
+        ],
+        "previousEye": [
+          115.8644489431541,
+          5.749634633210428,
+          90
+        ],
+        "state": "grind"
+      },
+      "end": [
+        115.29296010607868,
+        0,
+        38
+      ],
+      "result": {
+        "direction": -1,
+        "minGrindSpeed": 3.5,
+        "maxApproachSpeed": 21.736911744733337,
+        "grind": {
+          "frames": 972,
+          "grindFrames": 930,
+          "maxT": 84.5627963222132,
+          "minT": 0,
+          "progress": 84.5627963222132,
+          "direction": -1,
+          "maxBalance": 0.12662571617810778,
+          "caught": true,
+          "landed": true
+        }
+      }
+    },
+    {
+      "name": "Scaled gym bank air to rail 2/-1",
+      "passed": true,
+      "frames": 389,
+      "maxStep": 0.4760106558435955,
+      "maxCameraStep": 0.7186700852655761,
+      "maxCrop": 0.7712263826854435,
+      "worstCamera": {
+        "frame": 45,
+        "pos": [
+          129.0413303683827,
+          2.9340298635670785,
+          89.5
+        ],
+        "eye": [
+          122.9920641163456,
+          5.841881587195179,
+          89.5
+        ],
+        "previousEye": [
+          122.57949196725893,
+          5.253433702286382,
+          89.5
+        ],
+        "state": "air"
+      },
+      "end": [
+        114.62716357525665,
+        0,
+        38
+      ],
+      "result": {
+        "direction": -1,
+        "minGrindSpeed": 12.050903100277937,
+        "maxApproachSpeed": 22.999305774278216,
+        "grind": {
+          "frames": 389,
+          "grindFrames": 318,
+          "maxT": 73.73960892090697,
+          "minT": 0,
+          "progress": 84.5627963222132,
+          "direction": -1,
+          "maxBalance": 0.1,
+          "caught": true,
+          "landed": true
+        },
+        "takeoffY": 2.4527756015214273
+      }
+    },
+    {
+      "name": "Scaled gym complete rail 2/1",
+      "passed": true,
+      "frames": 972,
+      "maxStep": 0.8364258934773919,
+      "maxCameraStep": 0.5850118490189216,
+      "maxCrop": 0.7712263826854457,
+      "worstCamera": {
+        "frame": 29,
+        "pos": [
+          123.06175415070413,
+          0.9596350205773825,
+          38
+        ],
+        "eye": [
+          116.40127524504156,
+          5.982134923735642,
+          38
+        ],
+        "previousEye": [
+          115.86444894315404,
+          5.749634633210422,
+          38
+        ],
+        "state": "grind"
+      },
+      "end": [
+        115.29296010607871,
+        0,
+        90
+      ],
+      "result": {
+        "direction": 1,
+        "minGrindSpeed": 3.5,
+        "maxApproachSpeed": 21.736911744733337,
+        "grind": {
+          "frames": 972,
+          "grindFrames": 930,
+          "maxT": 84.5627963222132,
+          "minT": 0,
+          "progress": 84.5627963222132,
+          "direction": 1,
+          "maxBalance": 0.12662571617814433,
+          "caught": true,
+          "landed": true
+        }
+      }
+    },
+    {
+      "name": "Scaled gym bank air to rail 2/1",
+      "passed": true,
+      "frames": 389,
+      "maxStep": 0.4760106558435955,
+      "maxCameraStep": 0.7186700852655767,
+      "maxCrop": 0.7712263826854482,
+      "worstCamera": {
+        "frame": 45,
+        "pos": [
+          129.04133036838266,
+          2.9340298635670656,
+          38.5
+        ],
+        "eye": [
+          122.99206411634557,
+          5.841881587195166,
+          38.5
+        ],
+        "previousEye": [
+          122.5794919672589,
+          5.253433702286369,
+          38.5
+        ],
+        "state": "air"
+      },
+      "end": [
+        114.62716357525667,
+        0,
+        90
+      ],
+      "result": {
+        "direction": 1,
+        "minGrindSpeed": 12.050903100277697,
+        "maxApproachSpeed": 22.999305774278216,
+        "grind": {
+          "frames": 389,
+          "grindFrames": 318,
+          "maxT": 84.5627963222132,
+          "minT": 10.823187401306225,
+          "progress": 84.5627963222132,
+          "direction": 1,
+          "maxBalance": 0.1,
+          "caught": true,
+          "landed": true
+        },
+        "takeoffY": 2.4527756015214144
+      }
+    },
+    {
+      "name": "Scaled skylight drop -1",
+      "passed": true,
+      "frames": 66,
+      "maxStep": 0.9997240397883244,
+      "maxCameraStep": 0.9671605699063247,
+      "maxCrop": 0.7712263826854451,
+      "worstCamera": {
+        "frame": 13,
+        "pos": [
+          110.85538315002688,
+          13.957137488079072,
+          78.4
+        ],
+        "eye": [
+          115.56865241721498,
+          17.83762358731159,
+          78.4
+        ],
+        "previousEye": [
+          116.41522296422022,
+          17.36995075623759,
+          78.4
+        ],
+        "state": "air"
+      },
+      "end": [
+        102.51498713920981,
+        0,
+        78.4
+      ],
+      "result": {
+        "entered": true,
+        "landed": true,
+        "firstLanding": [
+          102.51498713920981,
+          0,
+          78.4
+        ]
+      }
+    },
+    {
+      "name": "Scaled skylight drop 1",
+      "passed": true,
+      "frames": 63,
+      "maxStep": 1.0195625362231382,
+      "maxCameraStep": 0.8733862483786077,
+      "maxCrop": 0.7712263826854473,
+      "worstCamera": {
+        "frame": 8,
+        "pos": [
+          102.53223850488361,
+          13.995237488079072,
+          78.4
+        ],
+        "eye": [
+          97.63845413599823,
+          19.112053113237394,
+          78.4
+        ],
+        "previousEye": [
+          96.76652601303644,
+          19.16249998871237,
+          78.4
+        ],
+        "state": "air"
+      },
+      "end": [
+        113.25607823203758,
+        0,
+        78.4
+      ],
+      "result": {
+        "entered": true,
+        "landed": true,
+        "firstLanding": [
+          113.25607823203758,
+          0,
+          78.4
+        ]
+      }
+    },
+    {
+      "name": "Scaled rear shed collision 1",
+      "passed": true,
+      "frames": 30,
+      "maxStep": 0.09986833333334061,
+      "maxCameraStep": 0.4800859263014604,
+      "maxCrop": 0.7712263826854435,
+      "worstCamera": {
+        "frame": 23,
+        "pos": [
+          3.9054152193282716,
+          -7.699999809265137,
+          -161.90130694274313
+        ],
+        "eye": [
+          3.193089305296362,
+          -2.599999809265137,
+          -156.63394651419517
+        ],
+        "previousEye": [
+          3.6546687840963554,
+          -2.599999809265137,
+          -156.50193560031508
+        ],
+        "state": "ride"
+      },
+      "end": [
+        4.089129198432878,
+        -7.699999809265137,
+        -161.71521586007708
+      ],
+      "result": {
+        "blocked": true,
+        "closest": 0.6726566710320181
+      }
+    },
+    {
+      "name": "Scaled rear shed collision 2",
+      "passed": true,
+      "frames": 30,
+      "maxStep": 0.09986833333333478,
+      "maxCameraStep": 0.4801493819061033,
+      "maxCrop": 0.7712263826854444,
+      "worstCamera": {
+        "frame": 23,
+        "pos": [
+          33.2821695704064,
+          -10,
+          -163.69213840989897
+        ],
+        "eye": [
+          38.55198754724607,
+          -4.9,
+          -164.3923274952085
+        ],
+        "previousEye": [
+          38.68320674102675,
+          -4.9,
+          -163.93045635286643
+        ],
+        "state": "ride"
+      },
+      "end": [
+        33.46783564600974,
+        -10,
+        -163.5079949181967
+      ],
+      "result": {
+        "blocked": true,
+        "closest": 0.6715547600195608
+      }
+    },
+    {
+      "name": "Scaled rear shed collision 3",
+      "passed": true,
+      "frames": 30,
+      "maxStep": 0.666416458900206,
+      "maxCameraStep": 0.9554953655438505,
+      "maxCrop": 0.7712263826854457,
+      "worstCamera": {
+        "frame": 6,
+        "pos": [
+          3.8294029827475233,
+          -8.159010027796022,
+          -169.72627475361205
+        ],
+        "eye": [
+          4.040457076934531,
+          -3.3249395904991372,
+          -174.86038787797423
+        ],
+        "previousEye": [
+          4.078819212782303,
+          -2.4000000000000004,
+          -175.09700253102062
+        ],
+        "state": "ride"
+      },
+      "end": [
+        3.36290232960044,
+        -9.767044015081702,
+        -168.40556906769126
+      ],
+      "result": {
+        "blocked": true,
+        "closest": 0.6726566710320279
+      }
+    },
+    {
+      "name": "Scaled rear shed collision 4",
+      "passed": true,
+      "frames": 30,
+      "maxStep": 0.09986833333333478,
+      "maxCameraStep": 0.48014938190608347,
+      "maxCrop": 0.7712263826854471,
+      "worstCamera": {
+        "frame": 23,
+        "pos": [
+          -25.623014640828917,
+          -10,
+          -166.3061714492559
+        ],
+        "eye": [
+          -30.93402302636975,
+          -4.9,
+          -166.53948710008973
+        ],
+        "previousEye": [
+          -31.02405181144925,
+          -4.9,
+          -166.06785350628846
+        ],
+        "state": "ride"
+      },
+      "end": [
+        -25.791740255912128,
+        -10,
+        -166.10639060938124
+      ],
+      "result": {
+        "blocked": true,
+        "closest": 0.6715547600195547
       }
     },
     {

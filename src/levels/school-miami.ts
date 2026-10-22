@@ -519,7 +519,9 @@ for(const [i,b] of SCHOOL_GYM_BANKS.entries()){
   }
   const x=b.toeX+b.side*(s.run+s.deck),k=vertices.length/3;
   vertices.push(x,0,s.minZ,x,s.rise,s.minZ,x,s.rise,s.maxZ,x,0,s.maxZ);indices.push(...(b.side<0?[k,k+2,k+1,k,k+3,k+2]:[k,k+1,k+2,k,k+2,k+3]));
-  surface(`Gym ${i?'dark':'wooden'} flat bank`,vertices,indices,i?'#626966':'#c4a77c',g,{tex:'wood',doubleSided:true});
+  // Closed bank faces point outward. Treating their backsides as ceilings
+  // makes the chase camera dive through the bank during a downhill ride.
+  surface(`Gym ${i?'dark':'wooden'} flat bank`,vertices,indices,i?'#626966':'#c4a77c',g,{tex:'wood',doubleSided:false});
 }
 export const SCHOOL_GYM_RAILS:Point[][]=[];
 for(const {toeX:x,side} of SCHOOL_GYM_BANKS){
@@ -721,6 +723,7 @@ export const SCHOOL_REAR_BANK={
   toe:[[362,65],[449,83]].map(([u,v])=>schoolMapPoint(u,v,lowerY)),
   rails:[[[369,49],[387,53]],[[438,66],[454,69]]].map(line=>line.map(([u,v])=>schoolMapPoint(u,v,-3.4))),
 };
+export const SCHOOL_REAR_SHED:Point[]=[];
 {
   const b=SCHOOL_REAR_BANK,[a,d]=b.back,[f,e]=b.lip,[h,j]=b.toe;
   floor('Rear classroom · raised bank deck',[plan(a),plan(d),plan(e),plan(f)],b.y,concrete,3);
@@ -732,9 +735,18 @@ export const SCHOOL_REAR_BANK={
   for(const [i,line] of b.rails.entries())rail(`Rear bank · short rail ${i+1}`,line,3);
   const front=[schoolMapPoint(356,32,-1.35),schoolMapPoint(472,57,-1.35)];
   const back=[schoolMapPoint(360,15,.9),schoolMapPoint(476,40,.9)];
-  const corners=[front[0],front[1],back[1],back[0]],base=corners.map(p=>[p[0],lowerY,p[2]] as Point);
+  const corners=[front[0],front[1],back[1],back[0]];
   surface('Rear blue classroom · pitched roof',corners.flat(),[0,1,2,0,2,3],blue,3,{tex:'wood'});
-  surface('Rear classroom · enclosed shed walls',[...corners,...base].flat(),[0,4,5,0,5,1,1,5,6,1,6,2,2,6,7,2,7,3,3,7,4,3,4,0],brick,3,{doubleSided:true});
+  // The rear eave overhangs the perimeter transition. Keep the wall under
+  // that eave, clear of the coping and rider, while retaining the traced roof.
+  SCHOOL_REAR_SHED.push(front[0],front[1],pointAt(back[1],front[1],.2),pointAt(back[0],front[0],.2));
+  const base=SCHOOL_REAR_SHED.map(p=>[p[0],lowerY,p[2]] as Point);
+  surface('Rear classroom · enclosed shed walls',[...SCHOOL_REAR_SHED,...base].flat(),[0,4,5,0,5,1,1,5,6,1,6,2,2,6,7,2,7,3,3,7,4,3,4,0],brick,3,{doubleSided:true});
+  // A triangle surface supplies support/camera rays, but native horizontal
+  // collision uses wall paths. Vary the path base to follow the pitched roof;
+  // its lower edge stays below the yard at every point.
+  const wallHeight=Math.max(...SCHOOL_REAR_SHED.map(p=>p[1]))-lowerY,p=SCHOOL_REAR_SHED[0];
+  add({t:'wallpath',nm:'Rear classroom · solid shed perimeter',p:[p[0],p[1]-wallHeight,p[2]],pts:SCHOOL_REAR_SHED.map(q=>[q[0]-p[0],q[2]-p[2],0,q[1]-p[1]]),w:.12,rise:wallHeight,closed:true,invisible:true,edgeGrinding:false,grp:3});
   for(let i=0;i<12;i++){
     const t=(i+.5)/12,p=pointAt(a,d,t);p[2]+=.035;
     paintBox(p[0],b.y+.72,p[2],.9,1.44,.04,'#465b60',3);

@@ -30,14 +30,17 @@ export function createBalancedGrind(p:any,rail:any,dt:number,sideExit=false){
     return false;
   }};
 }
-export function createRoofMiniGap(p:any,takeoff:any,receiver:any,dt:number){
+export function createRoofMiniGap(p:any,takeoff:any,receiver:any,dt:number,scale=1){
   const balance=meterControl(p,dt),report={frames:0,takeoffGrindFrames:0,receivingGrindFrames:0,air:false,landed:false};
+  const exitAt=scale>1.5?34:14;
   let caught=false,popped=false,repress=false,exitPopped=false;
   return {report,sample:()=>{
-    const release=caught&&!popped&&p.pos.x>32.6;if(release)popped=true;
-    const press=popped&&!repress&&p.pos.x>38.2;if(press)repress=true;
-    const exitRelease=report.receivingGrindFrames>=14&&!exitPopped;if(exitRelease)exitPopped=true;
-    const side=report.receivingGrindFrames>=10?.55:0,camLen=Math.hypot(p.camDir.x,p.camDir.z)||1,correction=balance();
+    const release=caught&&!popped&&p.pos.x>32.6*scale;if(release)popped=true;
+    const press=popped&&!repress&&p.pos.x>38.2*scale;if(press)repress=true;
+    const exitRelease=report.receivingGrindFrames>=exitAt&&!exitPopped;if(exitRelease)exitPopped=true;
+    // Side intent must precede the release edge. Stop it once airborne so
+    // the deliberate launch does not become an unrelated air-turn command.
+    const side=scale>1.5?(p.state==='grind'&&report.receivingGrindFrames>=exitAt-2?1:0):(report.receivingGrindFrames>=10?.55:0),camLen=Math.hypot(p.camDir.x,p.camDir.z)||1,correction=balance();
     return quantize({grindHeld:!popped||repress&&!exitPopped,grindPressed:report.frames===0||press,
       jumpHeld:caught&&!popped||report.receivingGrindFrames>=10&&!exitPopped,jumpPressed:report.takeoffGrindFrames===1||report.receivingGrindFrames===10,jumpReleased:release||exitRelease,
       moveX:side?p.camDir.x/camLen*side:p.state==='grind'?correction:0,moveY:side?p.camDir.z/camLen*side:0});
@@ -45,27 +48,30 @@ export function createRoofMiniGap(p:any,takeoff:any,receiver:any,dt:number){
     report.frames++;report.air||=p.state==='air';
     if(p.state==='grind'&&p.grindRail===takeoff){caught=true;report.takeoffGrindFrames++;}
     if(p.state==='grind'&&p.grindRail===receiver)report.receivingGrindFrames++;
-    if(exitPopped&&p.grounded){if(report.receivingGrindFrames<14||Math.abs(p.pos.y-7)>.08||p.pos.z<17.5)throw Error('Roof Mini Gap missed its roof rollout');report.landed=true;return true;}
+    if(exitPopped&&p.grounded){if(report.receivingGrindFrames<exitAt||Math.abs(p.pos.y-7*scale)>.08||p.pos.z<17.5*scale)throw Error('Roof Mini Gap missed its roof rollout');report.landed=true;return true;}
     return false;
   }};
 }
 
-export function createPerimeterMiniGap(p:any,a:any,b:any,dt:number){
+export function createPerimeterMiniGap(p:any,a:any,b:any,dt:number,scale=1){
   const balance=meterControl(p,dt),report={frames:0,takeoffGrindFrames:0,receivingGrindFrames:0,air:false,landed:false};
+  // At the enlarged scale, continue round the rear corner before exiting
+  // inward; popping along the straight aims across the classroom frontage.
+  const exitAt=scale>1.5?440:60;
   let popped=false,armed=false,exitPopped=false,held=false;
   const end=a.points.at(-1),start=b.points[0],h=start.clone().sub(end).setY(0).normalize(),gap=start.distanceTo(end);
   return{report,sample:()=>{
-    const release=!popped&&report.takeoffGrindFrames>0&&a.totalLength-p.grindT<.85;if(release)popped=true;
+    const release=!popped&&report.takeoffGrindFrames>0&&a.totalLength-p.grindT<(scale>1.5?3:.85);if(release)popped=true;
     const repress=popped&&!armed&&p.pos.clone().sub(end).dot(h)>gap-1.3;if(repress)armed=true;
-    const exitCharge=report.receivingGrindFrames>=52&&!exitPopped,exitRelease=report.receivingGrindFrames>=60&&!exitPopped;if(exitRelease)exitPopped=true;
+    const exitCharge=report.receivingGrindFrames>=exitAt-8&&!exitPopped,exitRelease=report.receivingGrindFrames>=exitAt&&!exitPopped;if(exitRelease)exitPopped=true;
     const charge=!popped&&report.takeoffGrindFrames>0||exitCharge&&!exitRelease,press=charge&&!held;held=charge;
     let moveX=p.state==='grind'?balance():0,moveY=0;
-    if(exitCharge||exitRelease){const t=b.tangentAt(p.grindT),n=Math.hypot(p.camDir.x,p.camDir.z)||1,wx=-t.z*.8,wz=t.x*.8;moveX=(-p.camDir.z*wx+p.camDir.x*wz)/n;moveY=(p.camDir.x*wx+p.camDir.z*wz)/n;}
+    if(scale>1.5?p.state==='grind'&&report.receivingGrindFrames>=exitAt-2:exitCharge||exitRelease){const t=b.tangentAt(p.grindT),n=Math.hypot(p.camDir.x,p.camDir.z)||1,side=scale>1.5?1:.8,wx=-t.z*side,wz=t.x*side;moveX=(-p.camDir.z*wx+p.camDir.x*wz)/n;moveY=(p.camDir.x*wx+p.camDir.z*wz)/n;}
     return quantize({moveX,moveY,grindHeld:(!popped||armed)&&!exitPopped,grindPressed:report.frames===0||repress,jumpHeld:charge,jumpPressed:press,jumpReleased:release||exitRelease});
   },observe:()=>{
     report.frames++;report.air||=popped&&p.state==='air';
     if(p.state==='grind'){if(p.grindRail===a)report.takeoffGrindFrames++;else if(p.grindRail===b)report.receivingGrindFrames++;else throw Error('Mini Gap caught a different rail');}
-    if(report.air&&p.grounded){if(report.receivingGrindFrames<60||Math.abs(p.pos.y+5)>.08)throw Error('Mini Gap missed its receiving quarter or yard rollout');report.landed=true;return true;}
+    if(report.air&&p.grounded){if(report.receivingGrindFrames<exitAt||Math.abs(p.pos.y+5*scale)>.08)throw Error('Mini Gap missed its receiving quarter or yard rollout');report.landed=true;return true;}
     return false;
   }};
 }
