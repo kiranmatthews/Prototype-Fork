@@ -11728,6 +11728,7 @@ export class Player {
     let crateBoardSmashTax = false;
     this.refreshCharacterBounds();
     this.refreshCrateBounds();
+    level.breakableScenery.touch(this.crateBodyBox, this.prevPos, this.pos);
     level.pressCartonTops(this.pos, CONST.playerHalf, this.vVel);
     const {
       ordered: crateContacts,

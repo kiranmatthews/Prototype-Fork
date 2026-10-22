@@ -34,11 +34,19 @@ The gallery jump exposed a runtime mismatch. A correctly aligned landing from th
 
 Two normal-input Flying Leap releases now clear the front guard and roll away without a bail. The separate tape-route test catches source rail 60, transfers to suspended beam 54, grinds **135.18 m over 381 frames**, runs off the far end and rolls away. Native and full-production browser fixtures agree. The beam transfer requires a late charged ollie with lateral input; its timing tolerance still needs broader comparison with the original game before the scale is considered final.
 
+## Original glass and directories
+
+The two intact glass barriers and all five directory signs now break on body contact. Render sectors are linked to their collision objects by checksum: collision directories 33–37 are render sectors 27–31. Collision helper 38 has no intact render counterpart and does not create an extra door. The entrance glass has two visual meshes that break together.
+
+Contact sweeps the existing body bounds across each fixed step, including thin panes at speed. It changes no movement, score, tuning or collision surfaces. Native tests compare identical controller inputs with breaking enabled and disabled; every recorded position, state and speed agrees. Broken objects stay absent after a fall and return on a new run. Fragments retain the source textures, shrink promptly to keep the rider visible, expire after 0.9 seconds, and use one draw per source mesh with bounded work. The breakup motion is procedural and the sound reuses an existing local effect; those are not recovered PS1 effects.
+
+All seven objects pass full-production browser approaches, including the transverse atrium sign. Tests also check grouped visibility, diagonal near misses, reset behavior, resource disposal, editor round-trip and invalid imports. The count is retained for later directory-goal integration; no goal completion reward is implemented yet.
+
 ## Validation
 
 Current evidence is saved in [validation.json](mall/validation.json), including hashes of the frozen runtime used while other chats edited the shared checkout.
 
-The complete full-render route uses normal controller input from the source restart to the parking finish: **83.57 simulation seconds, no bail or death, at least 16.20 m/s after the entrance**. The pass-16 full-route browser capture completed in 83.47 wall-clock seconds at approximately 60 simulation steps per second; pass 17 repeats the native full route and checks both new gaps in the full renderer. Source equality, unchanged tuning and zero console errors are checked. The main route uses the courtyard’s sloped takeoff before clearing its raised lip.
+The complete full-render route uses normal controller input from the source restart to the parking finish: **83.57 simulation seconds, no bail or death, at least 16.20 m/s after the entrance**. Pass 18 repeats the complete native and full-render browser route with breakable scenery enabled. The separate pass-17 Flying Leap and suspended-beam evidence remains identified with its original build. Source equality, unchanged tuning and zero console errors are checked. The main route uses the courtyard’s sloped takeoff before clearing its raised lip.
 
 Focused native checks cover source control-point retention, 58 measured surface probes, supported spawn and five checkpoints, editor save/load, curved garden-skirt collision, both courtyard wall airs, and the atrium wall return. A separate data test checks three scales: transition and rail connectivity remain identical, and each version stays below the existing mesh and file-size caps. Rail section tests require the intended source path, a sustained grind and a clean exit, using ordinary controller samples after an initial supported placement.
 
@@ -57,6 +65,9 @@ The production build and required level checks are run locally. MENU selection, 
 - `node tools/test-mall-measured-upper.mjs`
 - `node tools/test-mall-measured-gaps.mjs`
 - `node tools/test-mall-landing-policy.mjs`
+- `node tools/test-breakable-scenery.mjs`
+- `node tools/test-mall-breakables.mjs`
+- `node tools/mall-breakables-browser.mjs <local-url>`
 - `node tools/test-mall-measured.mjs`
 - `node tools/mall-measured-browser.mjs <local-url> --full`
 - `node tools/mall-measured-upper-browser.mjs <local-url>`
@@ -67,4 +78,4 @@ Set `PLAYWRIGHT_MODULE` when Playwright is installed outside this repository. Us
 
 ## Remaining fidelity work
 
-The goal remains active. The Flying Leap and complete suspended-beam route now pass input-only checks, alongside both escalators and the actual first-escalator handrail. Remaining alternate upper routes and the tape transfer’s input tolerance still need comparison with original gameplay. Head clearance and one successful transfer do not settle the final scale. The conversion’s rail graph needs further comparison with original PS1 gameplay. Original destructible directories, glass, box stacks, collectibles, sky and animated water are not fully reproduced; directories and glass are currently pass-through scenery. These limitations prevent calling the recreation a completed literal 1:1 match.
+The goal remains active. The Flying Leap and complete suspended-beam route now pass input-only checks, alongside both escalators and the actual first-escalator handrail. Remaining alternate upper routes and the tape transfer’s input tolerance still need comparison with original gameplay. Head clearance and one successful transfer do not settle the final scale. The conversion’s rail graph needs further comparison with original PS1 gameplay. The source directories and glass now break, but the directory-goal reward, original box stacks, collectibles, sky and animated water remain incomplete. Breakup motion and sound are local approximations. These limitations prevent calling the recreation a completed literal 1:1 match.

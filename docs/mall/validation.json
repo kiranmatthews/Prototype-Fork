@@ -1,7 +1,7 @@
 {
-  "schema": 17,
-  "verifiedAt": "2026-10-22T23:30:03.812701+00:00",
-  "status": "Flying Leap and complete suspended tape-beam route validated; full 1:1 goal remains active.",
+  "schema": 18,
+  "verifiedAt": "2026-10-22T23:54:41.100782+00:00",
+  "status": "Two source glass barriers and five directories break during native and full-browser skating; full 1:1 goal remains active.",
   "previousImageBasedEvidenceCommit": "2508077121b87c2b606c515ac025556bd05f44af",
   "reference": {
     "page": "https://thpsx.com/creation-details/?obj=958",
@@ -22,7 +22,7 @@
   "sourceSHA256": {
     "src/levels/mall.ts": "ad3747d8facab080fed74989bfa657370f801098511a93df66fd7ccdf6a80072",
     "src/levels/mall-measured.ts": "3a4532876c4a1d8881450539cd771bcdf129180f76e3ce4ac5831117bb8f1cea",
-    "src/levels/mall-art.ts": "aef33f1d664a63144543a9027276ce0c91f8862fab4f6af597b4851ca3920264",
+    "src/levels/mall-art.ts": "c567277c468e232c9fcd73f4537fe05bfd307491f143a245ca77512bd29c32cc",
     "src/levels/mall-art.json": "94941a1026c7cfbc009d86b64c21654744043c0a7699ea4e4e0ed96d40c7c720",
     "src/levels/mall-art-textures.json": "56a3beccfc75921c4ba698e2d419f86f4e2f104f240b962d502b302e9d658a3a",
     "src/mallArt.ts": "37bdb905bb223c64ced50f92771483a29304bbf24254b75bb8ef9be469f9f750",
@@ -42,17 +42,22 @@
     "tools/mall-measured-gap-pilot.mjs": "b8b4a0bd25457ba973bc10e95b560f7fe8065cb2a649bb5039a3c1089f72818a",
     "tools/test-mall-measured-gaps.mjs": "73350a12ac056c49689d58ea47df5157df5336951589833e037b0ecb07ee4e48",
     "tools/test-mall-landing-policy.mjs": "7b0c0673f7a35632906f5172c17d7b49648d31e16d7c7e162171fee28dce2fe5",
-    "tools/mall-measured-gaps-browser.mjs": "18fc4fc08bb0ba83de8b01820c9943ffc18b96241c9d2ea397220545d68cbc7d"
+    "tools/mall-measured-gaps-browser.mjs": "18fc4fc08bb0ba83de8b01820c9943ffc18b96241c9d2ea397220545d68cbc7d",
+    "src/breakableScenery.ts": "6355be635eeb283d8a2a816fb36f4e381640d6f6491186e83d1bafceac067fd8",
+    "tools/test-breakable-scenery.mjs": "bd3e2ec906383cc365807d16f520643ff5f8184851e7cbfad0c773c6ee9f263c",
+    "tools/mall-breakable-fixtures.mjs": "c38f6756f1c26618defc67a347f6d38f8d709168a6cb77d7ab8364b6c19192b2",
+    "tools/test-mall-breakables.mjs": "c7b9a65f9154e1e6f6aef892ee34d1872bbb161bbfc2535a0c64ce77c7581e8a",
+    "tools/mall-breakables-browser.mjs": "13f6d9230d29cde8d52166a7aae15faff07beaeba6d65f05f273fed9331b3aa4"
   },
   "build": {
-    "version": "24630cb74a2cabd250e7",
-    "snapshot": "/private/tmp/mall-recreation/snapshot-17",
-    "output": "/private/tmp/mall-recreation/dist-17",
-    "preview": "http://127.0.0.1:5289/?playtest&level=mall",
+    "version": "6b21d6701b64413eecca",
+    "snapshot": "/private/tmp/mall-recreation/snapshot-18",
+    "output": "/private/tmp/mall-recreation/dist-18",
+    "preview": "http://127.0.0.1:5290/?playtest&level=mall",
     "published": false
   },
   "runtimeManifest": "measured-runtime.json",
-  "sharedWorkspaceNote": "Validated against frozen snapshot-17. The Mall commit contains task-owned files, existing Mall material hooks, and the scoped hugeDropBail option/call-site guards. Other chats\u2019 movement, camera, tuning and rail changes remain excluded.",
+  "sharedWorkspaceNote": "Validated against frozen snapshot-18. The Mall commit includes source object mapping and scoped generic breakable-mesh support. Other chats\u2019 unrelated movement, camera, tuning and rail edits remain excluded.",
   "scale": {
     "metresPerSourceUnit": 0.045,
     "riderStandingHeight": 3.016705279790415,
@@ -1020,14 +1025,260 @@
     ]
   },
   "browsers": {
-    "pass16Main": {
+    "pass16Upper": {
+      "fixtures": [
+        {
+          "name": "First escalator up",
+          "image": "escalator-up",
+          "start": [
+            -13450,
+            315,
+            180
+          ],
+          "end": -11800,
+          "heading": -1,
+          "seam": -12160.4473,
+          "frames": 351,
+          "done": true,
+          "bail": false,
+          "airFrames": 0,
+          "minSeamSpeed": 13.605476396265349,
+          "seamSamples": 32,
+          "startedAt": 8892.800000011921,
+          "source": [
+            -11795.07126463056,
+            716.5365939670141,
+            180.00009070762235
+          ],
+          "reached": true,
+          "tuningUnchanged": true,
+          "wallSeconds": 5.830199999988079
+        },
+        {
+          "name": "First escalator down",
+          "image": "escalator-down",
+          "start": [
+            -11800,
+            717,
+            180
+          ],
+          "end": -13200,
+          "heading": 1,
+          "seam": -12160.4473,
+          "frames": 236,
+          "done": true,
+          "bail": false,
+          "airFrames": 0,
+          "minSeamSpeed": 14.99001714177466,
+          "seamSamples": 26,
+          "startedAt": 14748.200000047684,
+          "source": [
+            -13206.661836340281,
+            314.3544884029152,
+            180
+          ],
+          "reached": true,
+          "tuningUnchanged": true,
+          "wallSeconds": 3.925099999964237
+        },
+        {
+          "name": "Gallery escalator up",
+          "image": "gallery-up",
+          "start": [
+            -6300,
+            315,
+            185
+          ],
+          "end": -4350,
+          "heading": -1,
+          "seam": -4541.5342,
+          "frames": 320,
+          "done": true,
+          "bail": false,
+          "airFrames": 0,
+          "minSeamSpeed": 20.999643440324824,
+          "seamSamples": 21,
+          "startedAt": 18695.80000001192,
+          "source": [
+            -4348.725883072899,
+            685.599568684896,
+            185.00000413367252
+          ],
+          "reached": true,
+          "tuningUnchanged": true,
+          "wallSeconds": 5.327
+        },
+        {
+          "name": "Gallery escalator down",
+          "image": "gallery-down",
+          "start": [
+            -4350,
+            686,
+            185
+          ],
+          "end": -5500,
+          "heading": 1,
+          "seam": -4541.5342,
+          "frames": 202,
+          "done": true,
+          "bail": false,
+          "airFrames": 0,
+          "minSeamSpeed": 9.447480776287469,
+          "seamSamples": 36,
+          "startedAt": 24036.200000047684,
+          "source": [
+            -5500.868588370113,
+            314.75860595703125,
+            185.0000016429683
+          ],
+          "reached": true,
+          "tuningUnchanged": true,
+          "wallSeconds": 3.353199999988079
+        }
+      ],
+      "errors": []
+    },
+    "pass17Gaps": {
       "build": {
-        "version": "4e73d849aaac896482cf",
-        "snapshot": "/private/tmp/mall-recreation/snapshot-16",
-        "output": "/private/tmp/mall-recreation/dist-16",
-        "preview": "http://127.0.0.1:5288/?playtest&level=mall",
+        "version": "24630cb74a2cabd250e7",
+        "snapshot": "/private/tmp/mall-recreation/snapshot-17",
+        "output": "/private/tmp/mall-recreation/dist-17",
+        "preview": "http://127.0.0.1:5289/?playtest&level=mall",
         "published": false
       },
+      "errors": [],
+      "fixtures": [
+        {
+          "name": "Flying Leap, earlier release",
+          "kind": "drop",
+          "frames": 456,
+          "done": true,
+          "reached": true,
+          "bail": false,
+          "rails": [],
+          "launches": [
+            {
+              "frame": 293,
+              "source": [
+                -4568.7701171097615,
+                674.0264001950059,
+                185.0000030236647
+              ],
+              "speed": 19.24632353820363,
+              "verticalSpeed": 19.15128606573812
+            }
+          ],
+          "beamFrames": 0,
+          "beamDistance": 0,
+          "approachFrames": 0,
+          "startedAt": 9636.600000023842,
+          "source": [
+            -3407.2531101719724,
+            -270.6316121419268,
+            185.00000888291265
+          ],
+          "speed": 19.17608499232608,
+          "state": "ride",
+          "phase": "approach",
+          "tuningUnchanged": true,
+          "wallSeconds": 7.5773999999761585
+        },
+        {
+          "name": "Flying Leap, later release",
+          "kind": "drop",
+          "frames": 460,
+          "done": true,
+          "reached": true,
+          "bail": false,
+          "rails": [],
+          "launches": [
+            {
+              "frame": 296,
+              "source": [
+                -4547.262594230218,
+                683.1657548270596,
+                185.0000031321589
+              ],
+              "speed": 19.201762130704637,
+              "verticalSpeed": 19.13235024926508
+            }
+          ],
+          "beamFrames": 0,
+          "beamDistance": 0,
+          "approachFrames": 0,
+          "startedAt": 17233.30000001192,
+          "source": [
+            -3381.32220735796,
+            -270.6316121419268,
+            185.00000901372096
+          ],
+          "speed": 19.1318478873376,
+          "state": "ride",
+          "phase": "approach",
+          "tuningUnchanged": true,
+          "wallSeconds": 7.663699999988079
+        },
+        {
+          "name": "Right handrail to suspended tape beam",
+          "kind": "tape",
+          "frames": 948,
+          "done": true,
+          "reached": true,
+          "bail": false,
+          "rails": [
+            60,
+            54
+          ],
+          "launches": [
+            {
+              "frame": 214,
+              "source": [
+                -5626.457950813143,
+                314.75877549913184,
+                818.2645795081303
+              ],
+              "speed": 22.99583485520933,
+              "verticalSpeed": 10.9728
+            },
+            {
+              "frame": 395,
+              "source": [
+                -4093.4262076738687,
+                382.1711324055991,
+                791.3115234375
+              ],
+              "speed": 22.995512937664973,
+              "verticalSpeed": 12.5
+            },
+            {
+              "frame": 857,
+              "source": [
+                -1075.802734375,
+                74.00755818684911,
+                2539.4443359375
+              ],
+              "speed": 21.05015882167726,
+              "verticalSpeed": 2.5
+            }
+          ],
+          "beamFrames": 381,
+          "beamDistance": 135.17998691809137,
+          "approachFrames": 172,
+          "startedAt": 24911.700000047684,
+          "source": [
+            -510.2197363774867,
+            -270.6316121419268,
+            3002.05123466513
+          ],
+          "speed": 22.999305774278216,
+          "state": "ride",
+          "phase": "rollout",
+          "tuningUnchanged": true,
+          "wallSeconds": 15.785299999952317
+        }
+      ]
+    },
+    "fullProduction": {
       "frames": 5014,
       "done": true,
       "error": null,
@@ -1431,16 +1682,6 @@
       "sourceMatches": true,
       "obstructions": [
         {
-          "frame": 779,
-          "source": [
-            -15830.21979671446,
-            917.7681944593182,
-            218.07870149470938
-          ],
-          "name": "PS1 Mall scenery 18:59",
-          "distance": 0.47642555864163266
-        },
-        {
           "frame": 780,
           "source": [
             -15829.110040153473,
@@ -1448,7 +1689,7 @@
             222.15852574512667
           ],
           "name": "PS1 Mall scenery 18:59",
-          "distance": 0.4180504999258882
+          "distance": 0.4640788870974762
         },
         {
           "frame": 781,
@@ -1458,650 +1699,10 @@
             226.2564123855924
           ],
           "name": "PS1 Mall scenery 18:59",
-          "distance": 0.3217394530610081
-        },
-        {
-          "frame": 1061,
-          "source": [
-            -13413.897241075676,
-            313.58383130987477,
-            584.3270303074696
-          ],
-          "name": "PS1 Mall scenery 19:1",
-          "distance": 0.3288491219779452
-        },
-        {
-          "frame": 1062,
-          "source": [
-            -13406.049311087827,
-            313.61061832979885,
-            587.6391375829044
-          ],
-          "name": "PS1 Mall scenery 19:1",
-          "distance": 0.7520452894069891
-        },
-        {
-          "frame": 1063,
-          "source": [
-            -13398.232522455479,
-            313.63729905620175,
-            591.0240867492413
-          ],
-          "name": "PS1 Mall scenery 19:1",
-          "distance": 1.2166437412765374
-        },
-        {
-          "frame": 1064,
-          "source": [
-            -13390.446514354706,
-            313.6638747206698,
-            594.4792493838178
-          ],
-          "name": "PS1 Mall scenery 19:1",
-          "distance": 1.6401927060808137
-        },
-        {
-          "frame": 1065,
-          "source": [
-            -13382.689803798437,
-            313.6921580192238,
-            597.9996922008644
-          ],
-          "name": "PS1 Mall scenery 19:1",
-          "distance": 2.0796350096429452
-        },
-        {
-          "frame": 1066,
-          "source": [
-            -13374.961874935007,
-            313.7218981304936,
-            601.5828483864315
-          ],
-          "name": "PS1 Mall scenery 19:1",
-          "distance": 2.506572140118585
-        },
-        {
-          "frame": 1067,
-          "source": [
-            -13367.262129319515,
-            313.75153964289257,
-            605.2261732525506
-          ],
-          "name": "PS1 Mall scenery 19:1",
-          "distance": 2.8976133929909453
-        },
-        {
-          "frame": 1068,
-          "source": [
-            -13359.589924772537,
-            313.78108464793695,
-            608.9271436286343
-          ],
-          "name": "PS1 Mall scenery 19:1",
-          "distance": 3.3309945824187968
-        },
-        {
-          "frame": 1069,
-          "source": [
-            -13351.943439198834,
-            313.8105393982978,
-            612.6809640867068
-          ],
-          "name": "PS1 Mall scenery 19:1",
-          "distance": 3.7520224705990937
-        },
-        {
-          "frame": 1070,
-          "source": [
-            -13344.321895048533,
-            313.8399065058279,
-            616.4851695991161
-          ],
-          "name": "PS1 Mall scenery 19:1",
-          "distance": 4.18175577870355
-        },
-        {
-          "frame": 1071,
-          "source": [
-            -13336.724468336402,
-            313.8691887609107,
-            620.3373153837357
-          ],
-          "name": "PS1 Mall scenery 19:1",
-          "distance": 4.6441129869625
-        },
-        {
-          "frame": 1072,
-          "source": [
-            -13329.150290971378,
-            313.8983891235762,
-            624.2349764547643
-          ],
-          "name": "PS1 Mall scenery 19:1",
-          "distance": 5.073010874713524
-        },
-        {
-          "frame": 1073,
-          "source": [
-            -13321.59727117529,
-            313.9275148841971,
-            628.1734813605074
-          ],
-          "name": "PS1 Mall scenery 19:1",
-          "distance": 5.532252993262309
-        },
-        {
-          "frame": 1074,
-          "source": [
-            -13314.06443576982,
-            313.956569407454,
-            632.1504555660339
-          ],
-          "name": "PS1 Mall scenery 19:1",
-          "distance": 5.971247063986195
-        },
-        {
-          "frame": 1075,
-          "source": [
-            -13306.55077642713,
-            313.9855561934128,
-            636.163541696541
-          ],
-          "name": "PS1 Mall scenery 19:1",
-          "distance": 6.360540758443285
-        },
-        {
-          "frame": 1076,
-          "source": [
-            -13299.055251874728,
-            314.0144788690768,
-            640.2103987987641
-          ],
-          "name": "PS1 Mall scenery 19:1",
-          "distance": 6.8128018426936805
-        },
-        {
-          "frame": 2629,
-          "source": [
-            -919.3825868356525,
-            -270.6316121419268,
-            2383.0522982682646
-          ],
-          "name": "PS1 Mall scenery 28:0",
-          "distance": 0.21714481342237987
-        },
-        {
-          "frame": 2630,
-          "source": [
-            -919.3310888024716,
-            -270.6316121419268,
-            2391.570403996371
-          ],
-          "name": "PS1 Mall scenery 28:0",
-          "distance": 0.30968494616646963
-        },
-        {
-          "frame": 2631,
-          "source": [
-            -919.3869201494454,
-            -270.6316121419268,
-            2400.0884824242403
-          ],
-          "name": "PS1 Mall scenery 28:0",
-          "distance": 0.7800331637680195
-        },
-        {
-          "frame": 2632,
-          "source": [
-            -919.5449619645569,
-            -270.6316121419268,
-            2408.6052775977373
-          ],
-          "name": "PS1 Mall scenery 28:0",
-          "distance": 1.2310191835065365
-        },
-        {
-          "frame": 2633,
-          "source": [
-            -919.8026371927281,
-            -270.6316121419268,
-            2417.119640798788
-          ],
-          "name": "PS1 Mall scenery 28:0",
-          "distance": 1.6906905707367812
-        },
-        {
-          "frame": 2634,
-          "source": [
-            -920.1548040377729,
-            -270.6316121419268,
-            2425.630619341581
-          ],
-          "name": "PS1 Mall scenery 28:0",
-          "distance": 2.1618972448584293
-        },
-        {
-          "frame": 2635,
-          "source": [
-            -920.5988671260238,
-            -270.6316121419268,
-            2434.1372982009416
-          ],
-          "name": "PS1 Mall scenery 28:0",
-          "distance": 2.63367061583047
-        },
-        {
-          "frame": 2636,
-          "source": [
-            -921.1296737341254,
-            -270.6316121419268,
-            2442.6390051817434
-          ],
-          "name": "PS1 Mall scenery 28:0",
-          "distance": 3.0566913192297327
-        },
-        {
-          "frame": 2637,
-          "source": [
-            -921.7446198545131,
-            -270.6316121419268,
-            2451.1350406402175
-          ],
-          "name": "PS1 Mall scenery 28:0",
-          "distance": 3.5056567156049345
-        },
-        {
-          "frame": 2638,
-          "source": [
-            -922.438551372541,
-            -270.6316121419268,
-            2459.6249897738053
-          ],
-          "name": "PS1 Mall scenery 28:0",
-          "distance": 3.9695898226681825
-        },
-        {
-          "frame": 2639,
-          "source": [
-            -923.206318254588,
-            -270.6316121419268,
-            2468.1085804792474
-          ],
-          "name": "PS1 Mall scenery 28:0",
-          "distance": 4.4211318932431505
-        },
-        {
-          "frame": 2640,
-          "source": [
-            -924.0453193738613,
-            -270.6316121419268,
-            2476.585422719403
-          ],
-          "name": "PS1 Mall scenery 28:0",
-          "distance": 4.841398938581624
-        },
-        {
-          "frame": 2641,
-          "source": [
-            -924.9504136698761,
-            -270.6316121419268,
-            2485.0554629529524
-          ],
-          "name": "PS1 Mall scenery 28:0",
-          "distance": 5.323911495552143
-        },
-        {
-          "frame": 2642,
-          "source": [
-            -925.9190072164347,
-            -270.6316121419268,
-            2493.518476824156
-          ],
-          "name": "PS1 Mall scenery 28:0",
-          "distance": 5.728651515565045
-        },
-        {
-          "frame": 2643,
-          "source": [
-            -926.9459720380692,
-            -270.6316121419268,
-            2501.9746059916747
-          ],
-          "name": "PS1 Mall scenery 28:0",
-          "distance": 6.212488086184249
-        },
-        {
-          "frame": 2644,
-          "source": [
-            -928.0287245398104,
-            -270.6316121419268,
-            2510.4237730667537
-          ],
-          "name": "PS1 Mall scenery 28:0",
-          "distance": 6.629650377780251
-        },
-        {
-          "frame": 2645,
-          "source": [
-            -929.1621522503465,
-            -270.6316121419268,
-            2518.86629158125
-          ],
-          "name": "PS1 Mall scenery 28:0",
-          "distance": 7.060309233576113
-        },
-        {
-          "frame": 3575,
-          "source": [
-            3163.3140905148866,
-            -1467.5272115071614,
-            5800.165772375716
-          ],
-          "name": "PS1 Mall scenery 29:0",
-          "distance": 0.20030060465797742
-        },
-        {
-          "frame": 3576,
-          "source": [
-            3172.973021144913,
-            -1467.5272115071614,
-            5800.158910828706
-          ],
-          "name": "PS1 Mall scenery 29:0",
-          "distance": 0.7024968097884765
-        },
-        {
-          "frame": 3577,
-          "source": [
-            3182.615423139505,
-            -1467.5272115071614,
-            5800.15206102337
-          ],
-          "name": "PS1 Mall scenery 29:0",
-          "distance": 1.1934230493911167
-        },
-        {
-          "frame": 3578,
-          "source": [
-            3192.2413530187987,
-            -1467.5272115071614,
-            5800.145222919556
-          ],
-          "name": "PS1 Mall scenery 29:0",
-          "distance": 1.706626827261798
-        },
-        {
-          "frame": 3579,
-          "source": [
-            3201.8508670133488,
-            -1467.5272115071614,
-            5800.138396477319
-          ],
-          "name": "PS1 Mall scenery 29:0",
-          "distance": 2.193438468824593
-        },
-        {
-          "frame": 3580,
-          "source": [
-            3211.4440210661196,
-            -1467.5272115071614,
-            5800.131581656919
-          ],
-          "name": "PS1 Mall scenery 29:0",
-          "distance": 2.696007416960528
-        },
-        {
-          "frame": 3581,
-          "source": [
-            3221.020870834418,
-            -1467.5272115071614,
-            5800.124778418816
-          ],
-          "name": "PS1 Mall scenery 29:0",
-          "distance": 3.1989671152712105
-        },
-        {
-          "frame": 3582,
-          "source": [
-            3230.5814716918576,
-            -1467.5272115071614,
-            5800.117986723675
-          ],
-          "name": "PS1 Mall scenery 29:0",
-          "distance": 3.7174374463791087
-        },
-        {
-          "frame": 3583,
-          "source": [
-            3240.125878730276,
-            -1467.5272115071614,
-            5800.11120653236
-          ],
-          "name": "PS1 Mall scenery 29:0",
-          "distance": 4.202260699238945
-        },
-        {
-          "frame": 3584,
-          "source": [
-            3249.654146761637,
-            -1467.5272115071614,
-            5800.104437805931
-          ],
-          "name": "PS1 Mall scenery 29:0",
-          "distance": 4.733076805246434
-        },
-        {
-          "frame": 3585,
-          "source": [
-            3259.166330319942,
-            -1467.5272115071614,
-            5800.097680505652
-          ],
-          "name": "PS1 Mall scenery 29:0",
-          "distance": 5.205239310674355
-        },
-        {
-          "frame": 3586,
-          "source": [
-            3268.6624836630945,
-            -1467.5272115071614,
-            5800.090934592975
-          ],
-          "name": "PS1 Mall scenery 29:0",
-          "distance": 5.72024235200327
-        },
-        {
-          "frame": 3587,
-          "source": [
-            3278.142660774756,
-            -1467.5272115071614,
-            5800.084200029553
-          ],
-          "name": "PS1 Mall scenery 29:0",
-          "distance": 6.21014663581026
-        },
-        {
-          "frame": 3588,
-          "source": [
-            3287.6069153662065,
-            -1467.5272115071614,
-            5800.07747677723
-          ],
-          "name": "PS1 Mall scenery 29:0",
-          "distance": 6.715043455791654
-        },
-        {
-          "frame": 4453,
-          "source": [
-            10651.280370909499,
-            -1512.5272454155815,
-            5799.779185561146
-          ],
-          "name": "PS1 Mall scenery 30:0",
-          "distance": 0.2516428671343596
-        },
-        {
-          "frame": 4454,
-          "source": [
-            10659.798393501143,
-            -1512.5272454155815,
-            5799.715401779111
-          ],
-          "name": "PS1 Mall scenery 30:0",
-          "distance": 0.33922443445612366
-        },
-        {
-          "frame": 4455,
-          "source": [
-            10668.316396574348,
-            -1512.5272454155815,
-            5799.6490625932065
-          ],
-          "name": "PS1 Mall scenery 30:0",
-          "distance": 0.7940524295963353
-        },
-        {
-          "frame": 4456,
-          "source": [
-            10676.83437936248,
-            -1512.5272454155815,
-            5799.580168009404
-          ],
-          "name": "PS1 Mall scenery 30:0",
-          "distance": 1.229839284866979
-        },
-        {
-          "frame": 4457,
-          "source": [
-            10685.352341098933,
-            -1512.5272454155815,
-            5799.508718033903
-          ],
-          "name": "PS1 Mall scenery 30:0",
-          "distance": 1.6819505644880497
-        },
-        {
-          "frame": 4458,
-          "source": [
-            10693.87028101708,
-            -1512.5272454155815,
-            5799.434712673135
-          ],
-          "name": "PS1 Mall scenery 30:0",
-          "distance": 2.1313355489570434
-        },
-        {
-          "frame": 4459,
-          "source": [
-            10702.388198350312,
-            -1512.5272454155815,
-            5799.35815193376
-          ],
-          "name": "PS1 Mall scenery 30:0",
-          "distance": 2.5807205047860804
-        },
-        {
-          "frame": 4460,
-          "source": [
-            10710.906092332021,
-            -1512.5272454155815,
-            5799.279035822669
-          ],
-          "name": "PS1 Mall scenery 30:0",
-          "distance": 3.0355910112034756
-        },
-        {
-          "frame": 4461,
-          "source": [
-            10719.42396219559,
-            -1512.5272454155815,
-            5799.197364346982
-          ],
-          "name": "PS1 Mall scenery 30:0",
-          "distance": 3.48496607827704
-        },
-        {
-          "frame": 4462,
-          "source": [
-            10727.941807174411,
-            -1512.5272454155815,
-            5799.11313751405
-          ],
-          "name": "PS1 Mall scenery 30:0",
-          "distance": 3.950867990834375
-        },
-        {
-          "frame": 4463,
-          "source": [
-            10736.45962650188,
-            -1512.5272454155815,
-            5799.026355331453
-          ],
-          "name": "PS1 Mall scenery 30:0",
-          "distance": 4.413995274427915
-        },
-        {
-          "frame": 4464,
-          "source": [
-            10744.977419411396,
-            -1512.5272454155815,
-            5798.937017807
-          ],
-          "name": "PS1 Mall scenery 30:0",
-          "distance": 4.841200935091978
-        },
-        {
-          "frame": 4465,
-          "source": [
-            10753.495185136355,
-            -1512.5272454155815,
-            5798.845124948733
-          ],
-          "name": "PS1 Mall scenery 30:0",
-          "distance": 5.290582691342877
-        },
-        {
-          "frame": 4466,
-          "source": [
-            10762.012922910151,
-            -1512.5272454155815,
-            5798.750676764923
-          ],
-          "name": "PS1 Mall scenery 30:0",
-          "distance": 5.756621530103131
-        },
-        {
-          "frame": 4467,
-          "source": [
-            10770.530631966198,
-            -1512.5272454155815,
-            5798.653673264068
-          ],
-          "name": "PS1 Mall scenery 30:0",
-          "distance": 6.192041310148379
-        },
-        {
-          "frame": 4468,
-          "source": [
-            10779.0483115379,
-            -1512.5272454155815,
-            5798.554114454901
-          ],
-          "name": "PS1 Mall scenery 30:0",
-          "distance": 6.64421314950991
-        },
-        {
-          "frame": 4469,
-          "source": [
-            10786.939879782425,
-            -1512.5272454155815,
-            5798.459506139182
-          ],
-          "name": "PS1 Mall scenery 30:0",
-          "distance": 7.0820983050053465
+          "distance": 0.37217732765770356
         }
       ],
-      "startedAt": 10930.300000011921,
+      "startedAt": 11156,
       "arcadeHeadroom": [
         {
           "frame": 3666,
@@ -2111,21 +1712,21 @@
             5799.707893032765
           ],
           "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.512348162264736,
-          "roofY": 42.484470821248145,
-          "margin": 0.9721226589834089
+          "headTop": 41.513613294328195,
+          "roofY": 42.50007715259718,
+          "margin": 0.9864638582689835
         },
         {
-          "frame": 3669,
+          "frame": 3666,
           "source": [
-            4007.282380823508,
+            3981.727596785553,
             -1467.5272115071614,
-            5799.705072203847
+            5799.707893032765
           ],
           "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.50551856066872,
-          "roofY": 42.405472619309,
-          "margin": 0.899954058640283
+          "headTop": 41.51165690452491,
+          "roofY": 42.47594365033308,
+          "margin": 0.9642867458081668
         },
         {
           "frame": 3672,
@@ -2135,9 +1736,9 @@
             5799.702251374928
           ],
           "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.497907142641225,
-          "roofY": 42.323094013944164,
-          "margin": 0.8251868713029396
+          "headTop": 41.497156964980846,
+          "roofY": 42.31504918489905,
+          "margin": 0.8178922199182068
         },
         {
           "frame": 3675,
@@ -2147,9 +1748,9 @@
             5799.699430546009
           ],
           "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.49069216455555,
-          "roofY": 42.244415547723406,
-          "margin": 0.7537233831678591
+          "headTop": 41.48969990922788,
+          "roofY": 42.23331369663372,
+          "margin": 0.7436137874058417
         },
         {
           "frame": 3678,
@@ -2159,9 +1760,9 @@
             5799.696609717091
           ],
           "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.48389396138546,
-          "roofY": 42.163967924816205,
-          "margin": 0.6800739634307433
+          "headTop": 41.48301585707648,
+          "roofY": 42.152866248862075,
+          "margin": 0.6698503917855945
         },
         {
           "frame": 3681,
@@ -2171,9 +1772,9 @@
             5799.693788888172
           ],
           "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.47818463667153,
-          "roofY": 42.0838439210842,
-          "margin": 0.605659284412674
+          "headTop": 41.477493605860175,
+          "roofY": 42.072903459156855,
+          "margin": 0.5954098532966796
         },
         {
           "frame": 3684,
@@ -2183,9 +1784,9 @@
             5799.690968059254
           ],
           "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.473891156122676,
-          "roofY": 42.00259652360856,
-          "margin": 0.5287053674858839
+          "headTop": 41.47347174303141,
+          "roofY": 41.99278267890489,
+          "margin": 0.5193109358734773
         },
         {
           "frame": 3687,
@@ -2195,9 +1796,9 @@
             5799.688147230336
           ],
           "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.47144376523834,
-          "roofY": 41.92296158236326,
-          "margin": 0.4515178171249161
+          "headTop": 41.4717138844998,
+          "roofY": 41.936957688020044,
+          "margin": 0.4652438035202451
         },
         {
           "frame": 3690,
@@ -2207,21 +1808,21 @@
             5799.685326401417
           ],
           "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.47092104943938,
-          "roofY": 41.840917757320895,
-          "margin": 0.36999670788151207
+          "headTop": 41.47083592851055,
+          "roofY": 41.856521763898364,
+          "margin": 0.385685835387811
         },
         {
-          "frame": 3693,
+          "frame": 3690,
           "source": [
-            4211.720653127126,
+            4186.1658690891745,
             -1467.5272115071614,
-            5799.6825055724985
+            5799.685326401417
           ],
           "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.47236798898478,
-          "roofY": 47.444044172816,
-          "margin": 5.971676183831221
+          "headTop": 41.47097106895557,
+          "roofY": 41.83174839239084,
+          "margin": 0.360777323435272
         },
         {
           "frame": 3696,
@@ -2231,9 +1832,9 @@
             5799.67968474358
           ],
           "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.47568602246703,
-          "roofY": 47.51444010520415,
-          "margin": 6.038754082737121
+          "headTop": 41.47630280569671,
+          "roofY": 47.52487958221136,
+          "margin": 6.0485767765146505
         },
         {
           "frame": 3699,
@@ -2243,9 +1844,9 @@
             5799.676863914661
           ],
           "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.48063595694769,
-          "roofY": 47.46713445309116,
-          "margin": 5.986498496143476
+          "headTop": 41.48142521602278,
+          "roofY": 47.454892888314845,
+          "margin": 5.973467672292067
         },
         {
           "frame": 3702,
@@ -2255,9 +1856,9 @@
             5799.6740430857435
           ],
           "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.48685211468076,
-          "roofY": 47.3796947059508,
-          "margin": 5.892842591270039
+          "headTop": 41.487789823144254,
+          "roofY": 47.367453141309475,
+          "margin": 5.879663318165221
         },
         {
           "frame": 3705,
@@ -2267,9 +1868,9 @@
             5799.671222256825
           ],
           "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.49394209812111,
-          "roofY": 47.29155544158066,
-          "margin": 5.7976133434595525
+          "headTop": 41.49481495758837,
+          "roofY": 47.281062671949854,
+          "margin": 5.786247714361487
         },
         {
           "frame": 3708,
@@ -2279,9 +1880,21 @@
             5799.668401427906
           ],
           "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.501223835704806,
-          "roofY": 47.20481521372265,
-          "margin": 5.70359137801784
+          "headTop": 41.49993450029972,
+          "roofY": 47.22020460879364,
+          "margin": 5.720270108493914
+        },
+        {
+          "frame": 3708,
+          "source": [
+            4339.49457331689,
+            -1467.5272115071614,
+            5799.668401427906
+          ],
+          "roof": "PS1 Mall scenery 34:3",
+          "headTop": 41.502161534206635,
+          "roofY": 47.19362292609507,
+          "margin": 5.691461391888431
         },
         {
           "frame": 3711,
@@ -2291,9 +1904,9 @@
             5799.665580598988
           ],
           "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.508426442107485,
-          "roofY": 47.116326190908254,
-          "margin": 5.607899748800769
+          "headTop": 41.50938572774798,
+          "roofY": 47.10408462637658,
+          "margin": 5.5946988986286
         },
         {
           "frame": 3714,
@@ -2303,9 +1916,9 @@
             5799.662759770069
           ],
           "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.514735189015774,
-          "roofY": 47.029935721758655,
-          "margin": 5.515200532742881
+          "headTop": 41.51559493969111,
+          "roofY": 47.01716951865706,
+          "margin": 5.5015745789659505
         }
       ],
       "state": "finished",
@@ -2316,261 +1929,15 @@
       ],
       "stage": 2,
       "tuningUnchanged": true,
-      "wallSeconds": 83.47039999997615,
+      "wallSeconds": 83.4835,
       "errors": []
-    },
-    "pass16Upper": {
-      "fixtures": [
-        {
-          "name": "First escalator up",
-          "image": "escalator-up",
-          "start": [
-            -13450,
-            315,
-            180
-          ],
-          "end": -11800,
-          "heading": -1,
-          "seam": -12160.4473,
-          "frames": 351,
-          "done": true,
-          "bail": false,
-          "airFrames": 0,
-          "minSeamSpeed": 13.605476396265349,
-          "seamSamples": 32,
-          "startedAt": 8892.800000011921,
-          "source": [
-            -11795.07126463056,
-            716.5365939670141,
-            180.00009070762235
-          ],
-          "reached": true,
-          "tuningUnchanged": true,
-          "wallSeconds": 5.830199999988079
-        },
-        {
-          "name": "First escalator down",
-          "image": "escalator-down",
-          "start": [
-            -11800,
-            717,
-            180
-          ],
-          "end": -13200,
-          "heading": 1,
-          "seam": -12160.4473,
-          "frames": 236,
-          "done": true,
-          "bail": false,
-          "airFrames": 0,
-          "minSeamSpeed": 14.99001714177466,
-          "seamSamples": 26,
-          "startedAt": 14748.200000047684,
-          "source": [
-            -13206.661836340281,
-            314.3544884029152,
-            180
-          ],
-          "reached": true,
-          "tuningUnchanged": true,
-          "wallSeconds": 3.925099999964237
-        },
-        {
-          "name": "Gallery escalator up",
-          "image": "gallery-up",
-          "start": [
-            -6300,
-            315,
-            185
-          ],
-          "end": -4350,
-          "heading": -1,
-          "seam": -4541.5342,
-          "frames": 320,
-          "done": true,
-          "bail": false,
-          "airFrames": 0,
-          "minSeamSpeed": 20.999643440324824,
-          "seamSamples": 21,
-          "startedAt": 18695.80000001192,
-          "source": [
-            -4348.725883072899,
-            685.599568684896,
-            185.00000413367252
-          ],
-          "reached": true,
-          "tuningUnchanged": true,
-          "wallSeconds": 5.327
-        },
-        {
-          "name": "Gallery escalator down",
-          "image": "gallery-down",
-          "start": [
-            -4350,
-            686,
-            185
-          ],
-          "end": -5500,
-          "heading": 1,
-          "seam": -4541.5342,
-          "frames": 202,
-          "done": true,
-          "bail": false,
-          "airFrames": 0,
-          "minSeamSpeed": 9.447480776287469,
-          "seamSamples": 36,
-          "startedAt": 24036.200000047684,
-          "source": [
-            -5500.868588370113,
-            314.75860595703125,
-            185.0000016429683
-          ],
-          "reached": true,
-          "tuningUnchanged": true,
-          "wallSeconds": 3.353199999988079
-        }
-      ],
-      "errors": []
-    },
-    "currentGapFullProduction": {
-      "errors": [],
-      "fixtures": [
-        {
-          "name": "Flying Leap, earlier release",
-          "kind": "drop",
-          "frames": 456,
-          "done": true,
-          "reached": true,
-          "bail": false,
-          "rails": [],
-          "launches": [
-            {
-              "frame": 293,
-              "source": [
-                -4568.7701171097615,
-                674.0264001950059,
-                185.0000030236647
-              ],
-              "speed": 19.24632353820363,
-              "verticalSpeed": 19.15128606573812
-            }
-          ],
-          "beamFrames": 0,
-          "beamDistance": 0,
-          "approachFrames": 0,
-          "startedAt": 9636.600000023842,
-          "source": [
-            -3407.2531101719724,
-            -270.6316121419268,
-            185.00000888291265
-          ],
-          "speed": 19.17608499232608,
-          "state": "ride",
-          "phase": "approach",
-          "tuningUnchanged": true,
-          "wallSeconds": 7.5773999999761585
-        },
-        {
-          "name": "Flying Leap, later release",
-          "kind": "drop",
-          "frames": 460,
-          "done": true,
-          "reached": true,
-          "bail": false,
-          "rails": [],
-          "launches": [
-            {
-              "frame": 296,
-              "source": [
-                -4547.262594230218,
-                683.1657548270596,
-                185.0000031321589
-              ],
-              "speed": 19.201762130704637,
-              "verticalSpeed": 19.13235024926508
-            }
-          ],
-          "beamFrames": 0,
-          "beamDistance": 0,
-          "approachFrames": 0,
-          "startedAt": 17233.30000001192,
-          "source": [
-            -3381.32220735796,
-            -270.6316121419268,
-            185.00000901372096
-          ],
-          "speed": 19.1318478873376,
-          "state": "ride",
-          "phase": "approach",
-          "tuningUnchanged": true,
-          "wallSeconds": 7.663699999988079
-        },
-        {
-          "name": "Right handrail to suspended tape beam",
-          "kind": "tape",
-          "frames": 948,
-          "done": true,
-          "reached": true,
-          "bail": false,
-          "rails": [
-            60,
-            54
-          ],
-          "launches": [
-            {
-              "frame": 214,
-              "source": [
-                -5626.457950813143,
-                314.75877549913184,
-                818.2645795081303
-              ],
-              "speed": 22.99583485520933,
-              "verticalSpeed": 10.9728
-            },
-            {
-              "frame": 395,
-              "source": [
-                -4093.4262076738687,
-                382.1711324055991,
-                791.3115234375
-              ],
-              "speed": 22.995512937664973,
-              "verticalSpeed": 12.5
-            },
-            {
-              "frame": 857,
-              "source": [
-                -1075.802734375,
-                74.00755818684911,
-                2539.4443359375
-              ],
-              "speed": 21.05015882167726,
-              "verticalSpeed": 2.5
-            }
-          ],
-          "beamFrames": 381,
-          "beamDistance": 135.17998691809137,
-          "approachFrames": 172,
-          "startedAt": 24911.700000047684,
-          "source": [
-            -510.2197363774867,
-            -270.6316121419268,
-            3002.05123466513
-          ],
-          "speed": 22.999305774278216,
-          "state": "ride",
-          "phase": "rollout",
-          "tuningUnchanged": true,
-          "wallSeconds": 15.785299999952317
-        }
-      ]
     }
   },
   "smoke": {
     "start": {
       "deaths": 0,
       "lives": 4,
-      "stamp": "Codex/sol fork \u00b7 build 10-22 23:25 UTC"
+      "stamp": "Codex/sol fork \u00b7 build 10-22 23:52 UTC"
     },
     "checkpoints": [
       {
@@ -2613,10 +1980,10 @@
         "index": 4,
         "position": [
           237.0549298095703,
-          36.55775833129883,
+          36.65775833129883,
           -1141.8108837890625
         ],
-        "distance": 0.10000000000000142
+        "distance": 0
       }
     ],
     "recovery": {
@@ -2634,22 +2001,25 @@
     "typescript": "passed",
     "productionBuild": "passed",
     "check:all": "not run",
-    "browser": "Three new full-production gap fixtures plus lite MENU/K/L/pit recovery; no console errors. Main native route repeated; prior full-route browser proof retained with its pass-16 build identity.",
-    "landingPolicy": "Default/true 40 m drops still bail; false follows the identical trajectory and rolls away. Invalid types rejected, editor capture/import retained. Existing huge-drop boundary, aligned-transition and saved-settings regression suite passes."
+    "browser": "Seven full-production breakable approaches, complete full-render source-spawn-to-finish route, lite MENU/K/L/pit recovery; no console errors.",
+    "landingPolicy": "Default/true 40 m drops still bail; false follows the identical trajectory and rolls away. Invalid types rejected, editor capture/import retained. Existing huge-drop boundary, aligned-transition and saved-settings regression suite passes.",
+    "breakables": "Seven identical native enabled/disabled movement traces; grouped visibility, thin swept contact, diagonal miss, finite fragment disposal, 20 reset cycles, editor round-trip and invalid import rejection pass."
   },
   "fidelityRemaining": [
     "Remaining upper alternate routes and tape-transfer timing tolerance need comparison with original gameplay.",
-    "The 0.045 scale clears the rider and both tested gaps are reachable, but original scale convention remains provisional.",
+    "The 0.045 scale clears the rider and tested gaps are reachable, but original scale convention remains provisional.",
     "Converted rail nodes are not retail TRG verification.",
-    "Directories and glass remain pass-through; original breakable behavior, box stacks, collectibles, sky and animated water are incomplete."
+    "Directory-goal rewards, original box stacks, collectibles, sky and animated water remain incomplete.",
+    "Glass/sign breakup animation and sound are local approximations, not recovered source effects."
   ],
   "elapsed": {
-    "continuationStartedUTC": "2026-10-22T23:07:35+00:00",
-    "firstAllGapsPlayableUTC": "2026-10-22T23:23:04.659676+00:00",
-    "finalValidationUTC": "2026-10-22T23:30:03.812701+00:00",
-    "promptToPlayableSeconds": 929.659676
+    "continuationStartedUTC": "2026-10-22T23:32:29+00:00",
+    "allSevenPlayableConfirmedUTC": "2026-10-22T23:46:23+00:00",
+    "finalValidationUTC": "2026-10-22T23:54:41.100782+00:00",
+    "promptToPlayableSeconds": 834.0,
+    "note": "Conservative first clock confirmation after all seven native approaches passed; visual debris then refined and rechecked."
   },
-  "previousValidationCommit": "02d3ec11f7e4c661b6132c7297a85714923aed8b",
+  "previousValidationCommit": "039a04ee803400799aed0cd52811780ed9ec9125",
   "upperRoutes": {
     "scale": 0.045,
     "stats": {
@@ -3205,8 +2575,443 @@
     "interpretation": "Published decompilation checks orientation/trick judgement at ground contact without the fork\u2019s automatic height threshold. This is code research, not a local retail executable comparison."
   },
   "taskSharedFileSHA256": {
-    "src/level.ts": "7689f946998750f5017517a6f0552cef5fa142de4cf404f5299d386067d07a62",
-    "src/player.ts": "7fa1b1922b22a88c7c4427fe3b088340296d1b33dd4e99f509255756ce116f31"
+    "src/level.ts": "224c3b669e7fb9179cdc94cb7e5111385d6ce3dce0f9e15948e3bac78225edb4",
+    "src/player.ts": "6f4364819d12d25874843e63162d1cd20cfb2f20b87311dd6164d6beb7349b4b"
   },
-  "taskSharedFileNote": "Hashes describe the task branch versions after the scoped patches, excluding concurrent uncommitted edits; measured-runtime.json describes the actual frozen tested runtime."
+  "taskSharedFileNote": "Task-branch file hashes exclude concurrent shared edits; measured-runtime.json pins the actual frozen tested runtime.",
+  "breakables": {
+    "mapping": [
+      {
+        "collisionSector": 19,
+        "renderSector": 19,
+        "checksum": "0x85005f69",
+        "meshCount": 2,
+        "sourceBounds": [
+          -13427.25390625,
+          313.5533142089844,
+          44.4052734375,
+          -13422.8330078125,
+          541.361328125,
+          695.6865234375
+        ]
+      },
+      {
+        "collisionSector": 20,
+        "renderSector": 20,
+        "checksum": "0x6b0e3e45",
+        "meshCount": 1,
+        "sourceBounds": [
+          15025.443359375,
+          -2324.519287109375,
+          5640.3642578125,
+          15025.443359375,
+          -2197.959228515625,
+          5920.00390625
+        ]
+      },
+      {
+        "collisionSector": 33,
+        "renderSector": 27,
+        "checksum": "0x7578cb1d",
+        "meshCount": 1,
+        "sourceBounds": [
+          -11616.4384765625,
+          716.5364379882812,
+          62.0810546875,
+          -11609.6083984375,
+          874.8368530273438,
+          291.49609375
+        ]
+      },
+      {
+        "collisionSector": 34,
+        "renderSector": 28,
+        "checksum": "0xe5c7d68c",
+        "meshCount": 1,
+        "sourceBounds": [
+          -1068.9716796875,
+          -270.6315612792969,
+          2375.5205078125,
+          -839.5556640625,
+          -112.33108520507812,
+          2382.3515625
+        ]
+      },
+      {
+        "collisionSector": 35,
+        "renderSector": 29,
+        "checksum": "0x92c0e61a",
+        "meshCount": 1,
+        "sourceBounds": [
+          3148.4892578125,
+          -1467.52783203125,
+          5704.248046875,
+          3155.3212890625,
+          -1309.629150390625,
+          5934.0654296875
+        ]
+      },
+      {
+        "collisionSector": 36,
+        "renderSector": 30,
+        "checksum": "0xc0310d7d",
+        "meshCount": 1,
+        "sourceBounds": [
+          10642.849609375,
+          -1512.526611328125,
+          5666.8837890625,
+          10649.681640625,
+          -1354.2261962890625,
+          5896.701171875
+        ]
+      },
+      {
+        "collisionSector": 37,
+        "renderSector": 31,
+        "checksum": "0xb7363deb",
+        "meshCount": 1,
+        "sourceBounds": [
+          -6094.0029296875,
+          685.5995483398438,
+          265.3837890625,
+          -6087.17333984375,
+          843.4981689453125,
+          494.798828125
+        ]
+      }
+    ],
+    "native": {
+      "fixtures": [
+        {
+          "id": 19,
+          "label": "Entrance glass",
+          "contact": {
+            "frame": 76,
+            "speedBefore": 11.395595700350322,
+            "speedAfter": 11.545420764943398,
+            "sourcePosition": [
+              -13453.200384129708,
+              313.55333116319434,
+              370
+            ],
+            "fragments": 128
+          },
+          "brokenIds": [
+            19
+          ],
+          "movementIdentical": true
+        },
+        {
+          "id": 20,
+          "label": "Parking glass",
+          "contact": {
+            "frame": 84,
+            "speedBefore": 12.59406497548968,
+            "speedAfter": 12.743851837442305,
+            "sourcePosition": [
+              15003.005729849458,
+              -2324.5197754022147,
+              5780
+            ],
+            "fragments": 64
+          },
+          "brokenIds": [
+            20
+          ],
+          "movementIdentical": true
+        },
+        {
+          "id": 33,
+          "label": "First upper directory",
+          "contact": {
+            "frame": 74,
+            "speedBefore": 11.095932097298233,
+            "speedAfter": 11.24576612487207,
+            "sourcePosition": [
+              -11641.69705689463,
+              716.5365939670141,
+              176
+            ],
+            "fragments": 64
+          },
+          "brokenIds": [
+            33
+          ],
+          "movementIdentical": true
+        },
+        {
+          "id": 34,
+          "label": "Atrium directory",
+          "contact": {
+            "frame": 64,
+            "speedBefore": 9.597359894873753,
+            "speedAfter": 9.747235208489343,
+            "sourcePosition": [
+              -955,
+              -270.6316121419268,
+              2349.149381934099
+            ],
+            "fragments": 64
+          },
+          "brokenIds": [
+            34
+          ],
+          "movementIdentical": true
+        },
+        {
+          "id": 35,
+          "label": "Arcade directory",
+          "contact": {
+            "frame": 63,
+            "speedBefore": 13.958422828708986,
+            "speedAfter": 14.1809636642165,
+            "sourcePosition": [
+              3117.350962612327,
+              -1459.7060298365886,
+              5819
+            ],
+            "fragments": 64
+          },
+          "brokenIds": [
+            35
+          ],
+          "movementIdentical": true
+        },
+        {
+          "id": 36,
+          "label": "Court directory",
+          "contact": {
+            "frame": 76,
+            "speedBefore": 11.395595700350322,
+            "speedAfter": 11.545420764943398,
+            "sourcePosition": [
+              10616.79961587028,
+              -1512.5272454155815,
+              5781
+            ],
+            "fragments": 64
+          },
+          "brokenIds": [
+            36
+          ],
+          "movementIdentical": true
+        },
+        {
+          "id": 37,
+          "label": "Gallery directory",
+          "contact": {
+            "frame": 67,
+            "speedBefore": 10.046974185369953,
+            "speedAfter": 10.196837730930929,
+            "sourcePosition": [
+              -6119.687314890136,
+              685.599568684896,
+              380
+            ],
+            "fragments": 64
+          },
+          "brokenIds": [
+            37
+          ],
+          "movementIdentical": true
+        }
+      ],
+      "tuningUnchanged": true,
+      "softResetKeepsProgress": true,
+      "hardResetRestoresAll": true
+    },
+    "fullBrowser": {
+      "stamp": "Codex/sol fork \u00b7 build 10-22 23:52 UTC",
+      "fullRenderer": true,
+      "errors": [],
+      "fixtures": [
+        {
+          "id": 19,
+          "label": "Entrance glass",
+          "frames": 110,
+          "bail": false,
+          "done": true,
+          "contact": {
+            "frame": 77,
+            "speedBefore": 11.545420764943398,
+            "speedAfter": 11.695241259868766,
+            "sourcePosition": [
+              -13448.86881329272,
+              313.55333116319434,
+              370
+            ],
+            "fragments": 128
+          },
+          "tuningUnchanged": true,
+          "brokenIds": [
+            19
+          ],
+          "allMembersHidden": true,
+          "softResetPreserved": true,
+          "hardResetRestored": true
+        },
+        {
+          "id": 20,
+          "label": "Parking glass",
+          "frames": 110,
+          "bail": false,
+          "done": true,
+          "contact": {
+            "frame": 84,
+            "speedBefore": 12.59406497548968,
+            "speedAfter": 12.743851837442305,
+            "sourcePosition": [
+              15003.005729849458,
+              -2324.5197754022147,
+              5780
+            ],
+            "fragments": 64
+          },
+          "tuningUnchanged": true,
+          "brokenIds": [
+            20
+          ],
+          "allMembersHidden": true,
+          "softResetPreserved": true,
+          "hardResetRestored": true
+        },
+        {
+          "id": 33,
+          "label": "First upper directory",
+          "frames": 110,
+          "bail": false,
+          "done": true,
+          "contact": {
+            "frame": 75,
+            "speedBefore": 11.24576612487207,
+            "speedAfter": 11.395595700350322,
+            "sourcePosition": [
+              -11637.4764658945,
+              716.5365939670141,
+              176
+            ],
+            "fragments": 64
+          },
+          "tuningUnchanged": true,
+          "brokenIds": [
+            33
+          ],
+          "allMembersHidden": true,
+          "softResetPreserved": true,
+          "hardResetRestored": true
+        },
+        {
+          "id": 34,
+          "label": "Atrium directory",
+          "frames": 110,
+          "bail": false,
+          "done": true,
+          "contact": {
+            "frame": 65,
+            "speedBefore": 9.747235208489343,
+            "speedAfter": 9.897106658273106,
+            "sourcePosition": [
+              -955,
+              -270.6316121419268,
+              2352.8149769927186
+            ],
+            "fragments": 64
+          },
+          "tuningUnchanged": true,
+          "brokenIds": [
+            34
+          ],
+          "allMembersHidden": true,
+          "softResetPreserved": true,
+          "hardResetRestored": true
+        },
+        {
+          "id": 35,
+          "label": "Arcade directory",
+          "frames": 110,
+          "bail": false,
+          "done": true,
+          "contact": {
+            "frame": 64,
+            "speedBefore": 14.1809636642165,
+            "speedAfter": 14.403496151523367,
+            "sourcePosition": [
+              3122.6061074549725,
+              -1460.6234777972954,
+              5819
+            ],
+            "fragments": 64
+          },
+          "tuningUnchanged": true,
+          "brokenIds": [
+            35
+          ],
+          "allMembersHidden": true,
+          "softResetPreserved": true,
+          "hardResetRestored": true
+        },
+        {
+          "id": 36,
+          "label": "Court directory",
+          "frames": 110,
+          "bail": false,
+          "done": true,
+          "contact": {
+            "frame": 77,
+            "speedBefore": 11.545420764943398,
+            "speedAfter": 11.695241259868766,
+            "sourcePosition": [
+              10621.131186707273,
+              -1512.5272454155815,
+              5781
+            ],
+            "fragments": 64
+          },
+          "tuningUnchanged": true,
+          "brokenIds": [
+            36
+          ],
+          "allMembersHidden": true,
+          "softResetPreserved": true,
+          "hardResetRestored": true
+        },
+        {
+          "id": 37,
+          "label": "Gallery directory",
+          "frames": 110,
+          "bail": false,
+          "done": true,
+          "contact": {
+            "frame": 68,
+            "speedBefore": 10.196837730930929,
+            "speedAfter": 10.346697236113304,
+            "sourcePosition": [
+              -6115.855204802687,
+              685.599568684896,
+              380
+            ],
+            "fragments": 64
+          },
+          "tuningUnchanged": true,
+          "brokenIds": [
+            37
+          ],
+          "allMembersHidden": true,
+          "softResetPreserved": true,
+          "hardResetRestored": true
+        }
+      ]
+    },
+    "ownerChecks": {
+      "sweptThinPanel": true,
+      "diagonalMiss": true,
+      "groupedContact": true,
+      "oneShot": true,
+      "borrowedResourcesRetained": true,
+      "fragmentLifetime": true,
+      "resetCycles": 20,
+      "editorRoundTrip": true,
+      "invalidDataRejected": true
+    }
+  }
 }

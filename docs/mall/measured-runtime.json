@@ -1,6 +1,6 @@
 {
-  "snapshot": "/private/tmp/mall-recreation/snapshot-17",
-  "createdAt": "2026-10-22T23:30:03.812701+00:00",
+  "snapshot": "/private/tmp/mall-recreation/snapshot-18",
+  "createdAt": "2026-10-22T23:54:41.100782+00:00",
   "files": {
     "src/animation/bridge.ts": "a5477582012e00b75bb83322f0b9aaecee04392d299cbe6c8d9bb560ac1f6686",
     "src/animation/crouch.ts": "473640f543d2e6e6a5890d16f6e198f753edc32b2a385dc1c0215860e9732d5e",
@@ -69,6 +69,7 @@
     "src/boss/presentation.ts": "378bfd14f9679c6e7e8baf59afc41242872f94d5f0da3b3a784daee38f314767",
     "src/boss/reefGeometry.ts": "e89983b45bcf264aa19773ee5606e3459ee1fbcd1aa2b380cdd8a3d99ca5dc41",
     "src/boss/reefScenery.ts": "7fa9edbfd3a4de232b3dc1e965e31fa940cfa7f4fb567b78eb2ead1aba18b0c2",
+    "src/breakableScenery.ts": "6355be635eeb283d8a2a816fb36f4e381640d6f6491186e83d1bafceac067fd8",
     "src/cameraHeroFraming.ts": "631c3080f26b8e05bd1e28fb2081955541706033971e9a1c974de44f343074fc",
     "src/cameraLook.ts": "cefcb4c68d1e81202a513592101c4f37a9cd33b68b5a06fd19986999878a7223",
     "src/cameraRig.ts": "07e2e8e081941bb89aa9879b8f77a65ee5ec982c01499e972fc10ebbc2f70ace",
@@ -231,7 +232,7 @@
     "src/jungleStream.ts": "709944d3e0b613038f8c62eaaec86b7ad77144c4f9236da7076c5012c12912c8",
     "src/ledgeTraversal.ts": "d57ea4554c6d930bb600d9681e88a71f5261e470ef257d447d609e006ac5fd8e",
     "src/legRig.ts": "28140d49d6151920eb97fad835af1425aac686fdbc904702f10a48db9b081547",
-    "src/level.ts": "ec76e19fc74b7164b8a6534d9b987ae3d32b5a989ac0a6ce25b1f446c852de3e",
+    "src/level.ts": "14a16860fb8851c24b686e7e2cdb5c5467916c7c6ad66e2d9ea3d922bc69084d",
     "src/levelAtmosphere.ts": "071794fec0403a8c5c9c0d1055328c457be2393bd191bb377f9dc14aad7e0d68",
     "src/levels/astra-chimeworks.ts": "2861b19c180110af5dce2582e7ae0c6cf9e1ed821fbde36633d3f52fe0f1447b",
     "src/levels/backport-lab.ts": "012552dd7c15df225b165d9a6bad123895548bf7d45e45d2097046cd76d3d18a",
@@ -275,7 +276,7 @@
     "src/levels/kona.ts": "f11cc616aced9e3a4f89496ec1df4c339ed29854d870c5719bd671c349169415",
     "src/levels/mall-art-textures.json": "56a3beccfc75921c4ba698e2d419f86f4e2f104f240b962d502b302e9d658a3a",
     "src/levels/mall-art.json": "94941a1026c7cfbc009d86b64c21654744043c0a7699ea4e4e0ed96d40c7c720",
-    "src/levels/mall-art.ts": "aef33f1d664a63144543a9027276ce0c91f8862fab4f6af597b4851ca3920264",
+    "src/levels/mall-art.ts": "c567277c468e232c9fcd73f4537fe05bfd307491f143a245ca77512bd29c32cc",
     "src/levels/mall-measured-scale.ts": "bb491644d457c49cd8539de166219183a0bac76147d08a43d8b2ec37679d9e9a",
     "src/levels/mall-measured.ts": "3a4532876c4a1d8881450539cd771bcdf129180f76e3ce4ac5831117bb8f1cea",
     "src/levels/mall.ts": "ad3747d8facab080fed74989bfa657370f801098511a93df66fd7ccdf6a80072",
@@ -352,7 +353,7 @@
     "src/oceanTuning.ts": "0a5aef9ffb9124717da316c8f8710cfba2b0a0c8a27b1688eddd04c94ac89b2f",
     "src/offline-worker.js": "68e53f008747714be035980835dd0aa9f9db9e0fe251cf0d2f535599552d7376",
     "src/offline.ts": "9c230653f84c7a673bd9097d98cb6d24e17694f171977971cc9768a1faef9266",
-    "src/player.ts": "86a5cb08b34237e601477ffdcd1b05fc2c9b712b5971d850d3f82423ca225280",
+    "src/player.ts": "674a7bae907d0f0d622337f74a914be986a61990ebfb6d314bea29d87b0fa948",
     "src/presentationCssViewport.ts": "69b925b053bcf1a6bf1122ec3fba543f361d3163ac7c17395d05e8e1e14dfb08",
     "src/presentationLoading.ts": "f23a904cd2cf8a3ac334c5123819a00965d2ab308155e4b9f3cd44e534eb3b62",
     "src/proceduralThorns.ts": "432730dc00ab803724114bacf9a9a6fc82341dc35f8beaa6823055b7b1b678b2",
@@ -499,5 +500,5 @@
     "tools/test-crouch-jump-slam.mjs": "ad44c2c780eb00723a91c1c181a5fbf689299e5ffccabc9ee6d87920cd081aa9",
     "tools/jungle-cup-harness.mjs": "dccf6f2f222c75551d2277df66903e40a192fcbe700b88750ae010e13d606cf5"
   },
-  "unusedResearchModule": "src/levels/mall-measured-scale.ts is an unimported 0.025 scale probe inherited from the previous local frozen research snapshot."
+  "unusedResearchModule": "src/levels/mall-measured-scale.ts is an unimported 0.025 scale probe inherited from the earlier frozen research snapshot."
 }
