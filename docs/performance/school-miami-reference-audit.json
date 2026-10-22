@@ -1,0 +1,24 @@
+{
+  "dateUTC": "2026-10-22T17:06:44.815925+00:00",
+  "source": "https://dl.thugpro.com/update/beta/0.7.0.0/data/pre/sccol_thugpro.prx",
+  "manifest": "https://dl.thugpro.com/update/beta/0.7.0.0/update.json",
+  "bytes": 173244,
+  "sha256": "2c659becf5481b7e891ee6370c3f6feccda4eded007e9d52b133f75f47a74b4a",
+  "variant": "Later School port in THUG Pro; not the original PS1 source",
+  "parsed": {
+    "entry": "levels/SC/SC.col.xbx",
+    "version": 10,
+    "objects": 570,
+    "vertices": 18198,
+    "largeFaces": 14438
+  },
+  "use": "Read-only topology reference for gym doorway, roof opening and ramp-end rail arrangement. Not used as exact original dimensions.",
+  "originalSourceDimensionVerification": false,
+  "downloadedAssetsCommitted": false,
+  "outstanding": [
+    "Original gym entrance annex and doorway arrangement",
+    "Original gym main ramp profile",
+    "Roof feature registration and spacing",
+    "Original dimensions and traversal timing"
+  ]
+}

@@ -420,8 +420,16 @@ for(const z of [-4,5]){
 // Gym: an actual interior under its skating roof. Open doors at the north
 // connect to the upper court without a portal, scene switch or loading seam.
 export const SCHOOL_GYM={minX:22.6,maxX:74.5,minZ:14.4,maxZ:49.1,roofY,doorX:31,court:{x:48.5,z:31.75,width:15,length:28}};
+// Five glass panes surround one open pane. Keep the roof slab open below
+// that pane too: the court must be a real landing, not a painted recess.
+export const SCHOOL_SKYLIGHT={x:49,z:39.5,width:9.6,depth:11.8,lipY:7.5,bank:.5,
+  hole:{minX:49.07,maxX:53.73,minZ:37.6,maxZ:41.4}};
 const g=8;
-slab('Gym roof deck',48.55,31.75,51.9,34.7,roofY,roofY-.45,concrete,g);
+{
+  const b=SCHOOL_GYM,h=SCHOOL_SKYLIGHT.hole;
+  for(const [a,d,c,e] of [[b.minX,h.minX,b.minZ,b.maxZ],[h.maxX,b.maxX,b.minZ,b.maxZ],[h.minX,h.maxX,b.minZ,h.minZ],[h.minX,h.maxX,h.maxZ,b.maxZ]])
+    slab('Gym roof deck · open skylight',(a+d)/2,(c+e)/2,d-a,e-c,roofY,roofY-.45,concrete,g);
+}
 slab('Gym south wall',48.55,48.9,51.9,.45,6.55,0,brick,g);
 slab('Gym west wall',22.8,31.75,.45,34.3,6.55,0,brick,g);
 slab('Gym east wall',74.3,31.75,.45,34.3,6.55,0,brick,g);
@@ -442,8 +450,18 @@ for(const z of [18.4,45.1]){
   }
 }
 for(let i=0;i<48;i++){const a=i/48*Math.PI*2,b=(i+1)/48*Math.PI*2;stripe([48.5+Math.cos(a)*1.8,.04,31.75+Math.sin(a)*1.8],[48.5+Math.cos(b)*1.8,.04,31.75+Math.sin(b)*1.8],.08,'#e0d9bd',g);}
-quarter('Gym west wooden quarterpipe',[[30,0,45],[30,0,19]],3.4,g,{deck:1.5,color:'#c4a77c',tex:'wood'});
-quarter('Gym east dark quarterpipe',[[66,0,19],[66,0,45]],3.4,g,{deck:1.5,color:'#626966',tex:'wood'});
+quarter('Gym west wooden quarterpipe',[[30,0,45],[30,0,19]],3.4,g,{deck:1.5,color:'#c4a77c',tex:'wood',rails:false});
+quarter('Gym east dark quarterpipe',[[66,0,19],[66,0,45]],3.4,g,{deck:1.5,color:'#626966',tex:'wood',rails:false});
+export const SCHOOL_GYM_RAILS:Point[][]=[];
+for(const [x,side] of [[30,-1],[66,1]]){
+  // Round the two changes from rising end rail to level coping. A literal
+  // 90-degree tangent break ejects the native grinder at the upper corner.
+  const arc=(z:number,inward:number)=>Array.from({length:9},(_,i):Point=>{const a=i/8*Math.PI/2;return[x+side*3.4*Math.sin(a),.35+3.4*(1-Math.cos(a)),z+inward*1.5*smooth((i/8-.5)*2)];});
+  const guide=[...arc(19,1),[x+side*3.4,3.75,26] as Point,[x+side*3.4,3.75,38] as Point,...arc(45,-1).reverse()];
+  const points=new CatmullRomCurve3(guide.map(p=>new Vector3(...p)),false,'centripetal').getSpacedPoints(144).map(p=>p.toArray() as Point);
+  rail(`Gym ${side<0?'wooden':'dark'} quarter · complete end-to-end rail`,points,g,'#587464');
+  SCHOOL_GYM_RAILS.push(points);
+}
 export const SCHOOL_HOOP_QUARTER={x:48.5,toeZ:43.5,width:10,radius:1.35};
 quarter('Gym hoop quarterpipe',[[53.5,0,43.5],[43.5,0,43.5]],SCHOOL_HOOP_QUARTER.radius,g,{deck:.5,color:'#879287',tex:'wood'});
 // Tall windows keep the interior readable without adding lights/physics.
@@ -491,10 +509,30 @@ rail('Air-conditioner approach green rail',[[69,7.8,27.5],[63,7.8,27.5],[59.7,9.
 export const SCHOOL_ROOF_PLANK:Point[]=[[51,9.12,24.5],[45,9.02,15.3],[45,3.4,7.6]];
 ribbon('Roof to Awning · wooden connecting plank',SCHOOL_ROOF_PLANK,1.2,'#a48a62',9,{tex:'wood'});
 rail('Roof to Awning · plank grind',SCHOOL_ROOF_PLANK.map(p=>[p[0],p[1]+.06,p[2]]),9,coping,true);
-// Four-sided skylight: each glass slope is rideable, and the panes are only paint.
-hip('Gym skylight hip',49,roofY,39.5,4.8,5.2,1.45,1.5,9,'#4e6970');
-for(const x of [46.6,49,51.4])paintBox(x,8.47,39.5,.1,.045,5.1,'#b9b4a0',9);
-for(const z of [37,39.5,42])paintBox(49,8.47,z,4.8,.045,.1,'#b9b4a0',9);
+{
+  const s=SCHOOL_SKYLIGHT,x0=s.x-s.width/2,x1=s.x+s.width/2,z0=s.z-s.depth/2,z1=s.z+s.depth/2,y=s.lipY;
+  const inside:Point[]=[[x0,y,z0],[x1,y,z0],[x1,y,z1],[x0,y,z1]];
+  const outside:Point[]=[[x0-s.bank,roofY,z0-s.bank],[x1+s.bank,roofY,z0-s.bank],[x1+s.bank,roofY,z1+s.bank],[x0-s.bank,roofY,z1+s.bank]];
+  for(let i=0;i<4;i++){
+    const j=(i+1)%4,vertices:number[]=[],indices:number[]=[];
+    for(let k=0;k<=12;k++){
+      const t=k/12;
+      for(const c of [i,j]){const p=pointAt(outside[c],inside[c],t);p[1]=mix(roofY,y,smooth(t));vertices.push(...p);}
+      if(k){const a=(k-1)*2;indices.push(a,a+3,a+1,a,a+2,a+3);}
+    }
+    surface('Skylight · eased low frame',vertices,indices,'#a08a70',9,{doubleSided:true});
+  }
+  for(let row=0;row<3;row++)for(let col=0;col<2;col++){
+    if(row===1&&col===1)continue;
+    const xa=x0+col*s.width/2,xb=xa+s.width/2,za=z0+row*s.depth/3,zb=za+s.depth/3;
+    slab('Skylight · intact glass pane',(xa+xb)/2,(za+zb)/2,xb-xa,zb-za,y,y-.08,'#6c929d',9);
+    // Pane subdivisions stay visual, so the small muntins cannot snag a board.
+    for(const t of [.23,.5,.77])stripe([mix(xa,xb,t),y+.015,za],[mix(xa,xb,t),y+.015,zb],.055,'#354b50',9);
+    for(const t of [.25,.75])stripe([xa,y+.015,mix(za,zb,t)],[xb,y+.015,mix(za,zb,t)],.055,'#354b50',9);
+  }
+  for(const x of [x0,s.x,x1])paintBox(x,y+.025,s.z,.12,.05,s.depth+.12,'#454b45',9);
+  for(let row=0;row<=3;row++)paintBox(s.x,y+.025,z0+row*s.depth/3,s.width+.12,.05,.12,'#454b45',9);
+}
 for(const [i,x,z,h] of [[0,32,30,.85],[1,32,35,.8],[2,65,40,.7]])hip(`Roof low vent hip ${i+1}`,x,roofY,z,1.4,2,h,1.3,9,'#7d7c66');
 // Low garbage rails in the back service alley, below the roof line.
 hip('West dumpster approach',18,0,34,2.3,3,1,2,10,'#6b796d');

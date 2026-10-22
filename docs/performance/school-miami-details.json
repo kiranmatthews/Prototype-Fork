@@ -17,6 +17,86 @@
       ]
     },
     {
+      "name": "Open skylight reaches the court",
+      "point": [
+        51.4,
+        0,
+        39.5
+      ]
+    },
+    {
+      "name": "Skylight frame X -1",
+      "point": [
+        43.95,
+        7.24999886622504,
+        39.5
+      ]
+    },
+    {
+      "name": "Skylight frame Z -1",
+      "point": [
+        49,
+        7.250002267549931,
+        33.35
+      ]
+    },
+    {
+      "name": "Skylight frame X 1",
+      "point": [
+        54.05,
+        7.24999886622504,
+        39.5
+      ]
+    },
+    {
+      "name": "Skylight frame Z 1",
+      "point": [
+        49,
+        7.250002267549931,
+        45.65
+      ]
+    },
+    {
+      "name": "Intact skylight pane 0/0",
+      "point": [
+        46.6,
+        7.49999999910593,
+        35.56666666666666
+      ]
+    },
+    {
+      "name": "Intact skylight pane 0/1",
+      "point": [
+        51.4,
+        7.49999999910593,
+        35.56666666666666
+      ]
+    },
+    {
+      "name": "Intact skylight pane 1/0",
+      "point": [
+        46.6,
+        7.49999999910593,
+        39.5
+      ]
+    },
+    {
+      "name": "Intact skylight pane 2/0",
+      "point": [
+        46.6,
+        7.49999999910593,
+        43.43333333333334
+      ]
+    },
+    {
+      "name": "Intact skylight pane 2/1",
+      "point": [
+        51.4,
+        7.49999999910593,
+        43.43333333333334
+      ]
+    },
+    {
       "name": "Rear bank deck 0.1",
       "point": [
         -7.348028169014082,
@@ -62,48 +142,48 @@
       "name": "Gym hoop quarter at 12",
       "kind": "air",
       "speed": 12,
-      "frames": 101,
+      "frames": 110,
       "air": true,
       "returned": true,
       "flatRollout": true,
-      "maxY": 5.064135704325143,
+      "maxY": 5.445228219796689,
       "bails": 0,
       "end": [
         48.5,
         0,
-        42.237124618475534
+        42.48268404966955
       ]
     },
     {
       "name": "Gym hoop quarter at 16",
       "kind": "air",
       "speed": 16,
-      "frames": 86,
+      "frames": 90,
       "air": true,
       "returned": true,
       "flatRollout": true,
-      "maxY": 5.064135704325143,
+      "maxY": 5.564135709391538,
       "bails": 0,
       "end": [
         48.5,
         0,
-        42.23745981054922
+        42.453784918992355
       ]
     },
     {
       "name": "Gym hoop quarter at 20",
       "kind": "air",
       "speed": 20,
-      "frames": 78,
+      "frames": 81,
       "air": true,
       "returned": true,
       "flatRollout": true,
-      "maxY": 5.064135704325143,
+      "maxY": 5.564135709391538,
       "bails": 0,
       "end": [
         48.5,
         0,
-        42.23662413346042
+        42.452992841408786
       ]
     },
     {
@@ -382,6 +462,182 @@
         17.277033430960188,
         -4.601644477730195,
         -78.07331981909965
+      ]
+    },
+    {
+      "name": "Gym complete rail 1/-1",
+      "kind": "grind",
+      "direction": -1,
+      "grind": {
+        "frames": 379,
+        "grindFrames": 365,
+        "maxT": 34.65180991728801,
+        "minT": 0,
+        "progress": 34.65180991728801,
+        "direction": -1,
+        "maxBalance": 0.1,
+        "caught": true,
+        "landed": true
+      },
+      "bails": 0,
+      "end": [
+        33.984084138661004,
+        0,
+        19
+      ]
+    },
+    {
+      "name": "Gym complete rail 1/1",
+      "kind": "grind",
+      "direction": 1,
+      "grind": {
+        "frames": 379,
+        "grindFrames": 365,
+        "maxT": 34.65180991728801,
+        "minT": 0,
+        "progress": 34.65180991728801,
+        "direction": 1,
+        "maxBalance": 0.1,
+        "caught": true,
+        "landed": true
+      },
+      "bails": 0,
+      "end": [
+        33.984084138660975,
+        0,
+        45
+      ]
+    },
+    {
+      "name": "Gym complete rail 2/-1",
+      "kind": "grind",
+      "direction": -1,
+      "grind": {
+        "frames": 379,
+        "grindFrames": 365,
+        "maxT": 34.651809917288034,
+        "minT": 0,
+        "progress": 34.651809917288034,
+        "direction": -1,
+        "maxBalance": 0.1,
+        "caught": true,
+        "landed": true
+      },
+      "bails": 0,
+      "end": [
+        62.015915861338975,
+        0,
+        19
+      ]
+    },
+    {
+      "name": "Gym complete rail 2/1",
+      "kind": "grind",
+      "direction": 1,
+      "grind": {
+        "frames": 379,
+        "grindFrames": 365,
+        "maxT": 34.651809917288034,
+        "minT": 0,
+        "progress": 34.651809917288034,
+        "direction": 1,
+        "maxBalance": 0.1,
+        "caught": true,
+        "landed": true
+      },
+      "bails": 0,
+      "end": [
+        62.01591586133896,
+        0,
+        45
+      ]
+    },
+    {
+      "name": "Skylight drop -1/6",
+      "kind": "air",
+      "speed": 6,
+      "direction": -1,
+      "frames": 122,
+      "entered": true,
+      "landed": true,
+      "rollout": true,
+      "maxLateral": 0,
+      "firstLanding": [
+        51.43699197623739,
+        0,
+        39.5
+      ],
+      "bails": 0,
+      "end": [
+        47.708548937373536,
+        0,
+        39.5
+      ]
+    },
+    {
+      "name": "Skylight drop 1/6",
+      "kind": "air",
+      "speed": 6,
+      "direction": 1,
+      "frames": 68,
+      "entered": true,
+      "landed": true,
+      "rollout": true,
+      "maxLateral": 0,
+      "firstLanding": [
+        53.024226274183995,
+        0,
+        39.5
+      ],
+      "bails": 0,
+      "end": [
+        55.07184649115729,
+        0,
+        39.5
+      ]
+    },
+    {
+      "name": "Skylight drop -1/8",
+      "kind": "air",
+      "speed": 8,
+      "direction": -1,
+      "frames": 69,
+      "entered": true,
+      "landed": true,
+      "rollout": true,
+      "maxLateral": 0,
+      "firstLanding": [
+        49.44812859002134,
+        0,
+        39.5
+      ],
+      "bails": 0,
+      "end": [
+        47.68345384270395,
+        0,
+        39.5
+      ]
+    },
+    {
+      "name": "Skylight drop 1/8",
+      "kind": "air",
+      "speed": 8,
+      "direction": 1,
+      "frames": 51,
+      "entered": true,
+      "landed": true,
+      "rollout": true,
+      "maxLateral": 0,
+      "firstLanding": [
+        54.33348545875388,
+        0,
+        39.5
+      ],
+      "bails": 0,
+      "end": [
+        55.12532978435795,
+        0,
+        39.5
       ]
     }
   ],

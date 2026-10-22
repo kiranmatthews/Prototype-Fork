@@ -12,8 +12,18 @@ await withSkateRuntime(async({THREE,server,Level,Player,scene,CONST,TUNING})=>{
     p.groundHit=p.queryGround(l);assert.ok(p.groundHit,'Detail approach has no ground');p.pos.y=p.groundHit.y;p.prevPos.copy(p.pos);p.grounded=true;p.rideNormal.copy(p.groundHit.normal);
   };
   try{
-    const ray=new THREE.Raycaster(),near=(name,q,y,from=y+1)=>{ray.set(new THREE.Vector3(q[0],from,q[2]),new THREE.Vector3(0,-1,0));ray.far=15;const hit=ray.intersectObjects(l.groundMeshes,false)[0];assert.ok(hit&&Math.abs(hit.point.y-y)<.06,`${name}: ${hit?.point.y} expected ${y}`);report.support.push({name,point:hit.point.toArray()});};
+    const ray=new THREE.Raycaster(),near=(name,q,y,from=y+1)=>{ray.set(new THREE.Vector3(q[0],from,q[2]),new THREE.Vector3(0,-1,0));ray.far=15;const hit=ray.intersectObjects(l.groundMeshes,false)[0];assert.ok(hit&&Math.abs(hit.point.y-y)<.06,`${name}: ${hit?.point.y} expected ${y}`);assert.ok(hit.face.normal.y>.1,`${name}: support faces down`);report.support.push({name,point:hit.point.toArray()});};
     near('Hoop quarter flat approach',[48.5,0,43.4],0);near('Hoop quarter deck',[48.5,0,45.1],1.35,4);
+    const skylight=m.SCHOOL_SKYLIGHT;
+    near('Open skylight reaches the court',[(skylight.hole.minX+skylight.hole.maxX)/2,0,skylight.z],0,9);
+    for(const side of [-1,1]){
+      near(`Skylight frame X ${side}`,[skylight.x+side*(skylight.width/2+skylight.bank/2),0,skylight.z],7.25,9);
+      near(`Skylight frame Z ${side}`,[skylight.x,0,skylight.z+side*(skylight.depth/2+skylight.bank/2)],7.25,9);
+    }
+    for(let row=0;row<3;row++)for(let col=0;col<2;col++){
+      if(row===1&&col===1)continue;
+      near(`Intact skylight pane ${row}/${col}`,[skylight.x+(col-.5)*skylight.width/2,0,skylight.z+(row-1)*skylight.depth/3],skylight.lipY,9);
+    }
     const bank=m.SCHOOL_REAR_BANK;
     for(const t of [.1,.3,.5,.7,.9]){
       const at=pts=>new THREE.Vector3(...pts[0]).lerp(new THREE.Vector3(...pts[1]),t);
@@ -26,7 +36,7 @@ await withSkateRuntime(async({THREE,server,Level,Player,scene,CONST,TUNING})=>{
         const input=makeInput(c.sample(frame)),n=Math.max(1,Math.hypot(input.moveX,input.moveY));input.moveX=Math.round(input.moveX/n*100)/100;input.moveY=Math.round(input.moveY/n*100)/100;
         p.step(CONST.fixedStep,input,l);l.update(CONST.fixedStep);input.consumeEdges();
         assert.ok(!p.isBailing,`${c.name}: bail`);assert.ok(p.pos.toArray().every(Number.isFinite),`${c.name}: non-finite position`);
-        if(c.observe()){completed=true;break;}
+        try{if(c.observe()){completed=true;break;}}catch(error){throw Error(`${c.name}: ${error.message}; ${JSON.stringify({result:c.result,pos:p.pos.toArray(),state:p.state})}`);}
       }
       assert.ok(completed,`${c.name}: timeout`);report.trials.push({name:c.name,kind:c.kind,...c.result,bails:0,end:p.pos.toArray()});
     }

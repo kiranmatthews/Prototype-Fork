@@ -255,5 +255,43 @@
         0.04999999999999982
       ]
     }
+  ],
+  "drops": [
+    {
+      "name": "Skylight drop -1/6",
+      "frames": 122,
+      "maxStep": 0.9916741927562508,
+      "minTrailing": 1.372663240950395,
+      "maxCrop": 0.7712263826854444,
+      "restoredTrailing": 5.050000004563174,
+      "bails": 0
+    },
+    {
+      "name": "Skylight drop 1/6",
+      "frames": 68,
+      "maxStep": 0.7826721490032996,
+      "minTrailing": 1.498886167152257,
+      "maxCrop": 0.7712263826854435,
+      "restoredTrailing": 5.050000009241089,
+      "bails": 0
+    },
+    {
+      "name": "Skylight drop -1/8",
+      "frames": 69,
+      "maxStep": 0.7969263779115964,
+      "minTrailing": 1.4992260296822124,
+      "maxCrop": 0.7712263826854444,
+      "restoredTrailing": 5.049999963870469,
+      "bails": 0
+    },
+    {
+      "name": "Skylight drop 1/8",
+      "frames": 51,
+      "maxStep": 0.8024695202230104,
+      "minTrailing": 1.5994644546027246,
+      "maxCrop": 0.7712263826854454,
+      "restoredTrailing": 5.050000012626107,
+      "bails": 0
+    }
   ]
 }

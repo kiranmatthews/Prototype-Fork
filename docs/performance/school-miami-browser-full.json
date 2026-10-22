@@ -8,7 +8,7 @@
     -39
   ],
   "speed": 0,
-  "components": 247,
+  "components": 261,
   "rails": 67,
   "camera": {
     "eye": [
@@ -19,14 +19,14 @@
     "trailing": 5.049999999999997,
     "bodyBounds": {
       "min": [
-        25.50173142091416,
-        -4.775461767689352,
-        -39.975353793910934
+        25.501736705314254,
+        -4.775491919238466,
+        -39.97468269668645
       ],
       "max": [
-        26.686763161330443,
-        -2.0111333848252406,
-        -38.185934003081286
+        26.685851882061446,
+        -2.020572406110049,
+        -38.18650539701479
       ]
     }
   },
@@ -189,15 +189,15 @@
       },
       {
         "name": "Gym hoop quarter at 12",
-        "frames": 101
+        "frames": 110
       },
       {
         "name": "Gym hoop quarter at 16",
-        "frames": 86
+        "frames": 90
       },
       {
         "name": "Gym hoop quarter at 20",
-        "frames": 78
+        "frames": 81
       },
       {
         "name": "Gym west quarter at 12",
@@ -264,6 +264,38 @@
         "frames": 43
       },
       {
+        "name": "Gym complete rail 1/-1",
+        "frames": 379
+      },
+      {
+        "name": "Gym complete rail 1/1",
+        "frames": 379
+      },
+      {
+        "name": "Gym complete rail 2/-1",
+        "frames": 379
+      },
+      {
+        "name": "Gym complete rail 2/1",
+        "frames": 379
+      },
+      {
+        "name": "Skylight drop -1/6",
+        "frames": 122
+      },
+      {
+        "name": "Skylight drop 1/6",
+        "frames": 68
+      },
+      {
+        "name": "Skylight drop -1/8",
+        "frames": 69
+      },
+      {
+        "name": "Skylight drop 1/8",
+        "frames": 51
+      },
+      {
         "name": "Continuous campus circuit",
         "frames": 2404
       },
@@ -273,7 +305,7 @@
       }
     ],
     "failure": null,
-    "frames": 8928,
+    "frames": 10770,
     "longGrinds": [
       {
         "name": "Roof-to-awning plank",
@@ -504,11 +536,11 @@
         "kind": "air",
         "result": {
           "speed": 12,
-          "frames": 101,
+          "frames": 110,
           "air": true,
           "returned": true,
           "flatRollout": true,
-          "maxY": 5.064135704325143
+          "maxY": 5.445228219796689
         }
       },
       {
@@ -516,11 +548,11 @@
         "kind": "air",
         "result": {
           "speed": 16,
-          "frames": 86,
+          "frames": 90,
           "air": true,
           "returned": true,
           "flatRollout": true,
-          "maxY": 5.064135704325143
+          "maxY": 5.564135709391538
         }
       },
       {
@@ -528,11 +560,11 @@
         "kind": "air",
         "result": {
           "speed": 20,
-          "frames": 78,
+          "frames": 81,
           "air": true,
           "returned": true,
           "flatRollout": true,
-          "maxY": 5.064135704325143
+          "maxY": 5.564135709391538
         }
       },
       {
@@ -748,13 +780,157 @@
             "landed": true
           }
         }
+      },
+      {
+        "name": "Gym complete rail 1/-1",
+        "kind": "grind",
+        "result": {
+          "direction": -1,
+          "grind": {
+            "frames": 379,
+            "grindFrames": 365,
+            "maxT": 34.65180991728801,
+            "minT": 0,
+            "progress": 34.65180991728801,
+            "direction": -1,
+            "maxBalance": 0.1,
+            "caught": true,
+            "landed": true
+          }
+        }
+      },
+      {
+        "name": "Gym complete rail 1/1",
+        "kind": "grind",
+        "result": {
+          "direction": 1,
+          "grind": {
+            "frames": 379,
+            "grindFrames": 365,
+            "maxT": 34.65180991728801,
+            "minT": 0,
+            "progress": 34.65180991728801,
+            "direction": 1,
+            "maxBalance": 0.1,
+            "caught": true,
+            "landed": true
+          }
+        }
+      },
+      {
+        "name": "Gym complete rail 2/-1",
+        "kind": "grind",
+        "result": {
+          "direction": -1,
+          "grind": {
+            "frames": 379,
+            "grindFrames": 365,
+            "maxT": 34.651809917288034,
+            "minT": 0,
+            "progress": 34.651809917288034,
+            "direction": -1,
+            "maxBalance": 0.1,
+            "caught": true,
+            "landed": true
+          }
+        }
+      },
+      {
+        "name": "Gym complete rail 2/1",
+        "kind": "grind",
+        "result": {
+          "direction": 1,
+          "grind": {
+            "frames": 379,
+            "grindFrames": 365,
+            "maxT": 34.651809917288034,
+            "minT": 0,
+            "progress": 34.651809917288034,
+            "direction": 1,
+            "maxBalance": 0.1,
+            "caught": true,
+            "landed": true
+          }
+        }
+      },
+      {
+        "name": "Skylight drop -1/6",
+        "kind": "air",
+        "result": {
+          "speed": 6,
+          "direction": -1,
+          "frames": 122,
+          "entered": true,
+          "landed": true,
+          "rollout": true,
+          "maxLateral": 0,
+          "firstLanding": [
+            51.43699197623739,
+            0,
+            39.5
+          ]
+        }
+      },
+      {
+        "name": "Skylight drop 1/6",
+        "kind": "air",
+        "result": {
+          "speed": 6,
+          "direction": 1,
+          "frames": 68,
+          "entered": true,
+          "landed": true,
+          "rollout": true,
+          "maxLateral": 0,
+          "firstLanding": [
+            53.024226274183995,
+            0,
+            39.5
+          ]
+        }
+      },
+      {
+        "name": "Skylight drop -1/8",
+        "kind": "air",
+        "result": {
+          "speed": 8,
+          "direction": -1,
+          "frames": 69,
+          "entered": true,
+          "landed": true,
+          "rollout": true,
+          "maxLateral": 0,
+          "firstLanding": [
+            49.44812859002134,
+            0,
+            39.5
+          ]
+        }
+      },
+      {
+        "name": "Skylight drop 1/8",
+        "kind": "air",
+        "result": {
+          "speed": 8,
+          "direction": 1,
+          "frames": 51,
+          "entered": true,
+          "landed": true,
+          "rollout": true,
+          "maxLateral": 0,
+          "firstLanding": [
+            54.33348545875388,
+            0,
+            39.5
+          ]
+        }
       }
     ],
     "circuit": {
       "frames": 2404,
       "waypoints": 51,
       "totalWaypoints": 51,
-      "distance": 389.91235880695785,
+      "distance": 389.912358011115,
       "gimmeGrindFrames": 21,
       "returnGrindFrames": 555,
       "kickerAir": true,

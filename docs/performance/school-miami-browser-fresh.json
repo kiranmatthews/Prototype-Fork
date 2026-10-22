@@ -1,8 +1,6 @@
 {
   "url": "http://127.0.0.1:5308/?playtest&level=school-miami",
-  "render": "full",
-  "revision": "ninth, hoop quarter and rear bank",
-  "input": "Native W held 1.8 seconds",
-  "console": [],
-  "checkpointRecovery": "Native banking and fall recovery passed in both 59-case live checks."
+  "capturedAt": "2026-10-22T17:29:51.914Z",
+  "input": "Native W held 1.8 seconds from supported spawn in fresh full-render game",
+  "console": []
 }

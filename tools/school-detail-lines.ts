@@ -1,4 +1,4 @@
-import {SCHOOL_REAR_BANK} from '../src/levels/school-miami';
+import {SCHOOL_REAR_BANK,SCHOOL_SKYLIGHT,SCHOOL_GYM_RAILS} from '../src/levels/school-miami';
 import {createBalancedGrind} from './school-grind-lines';
 
 type Point=[number,number,number];
@@ -62,6 +62,31 @@ export function schoolDetailTrials(p:any,l:any,place:Place,dt:number):DetailTria
     trials.push({name:`Rear short rail ${i+1}/${direction}`,kind:'grind',result,limit:160,
       init:()=>{place(q.toArray(),h.toArray(),12);if(p.balanceBoostT||p.uberTimer)throw Error('Rear bank grind has an assist');line=createBalancedGrind(p,rail,dt);result.grind=line.report;},
       sample:()=>line.sample(),observe:()=>line.observe(),
+    });
+  }
+  for(const [i,points] of SCHOOL_GYM_RAILS.entries())for(const direction of [-1,1]){
+    const rail=l.rails.find((r:any)=>r.points[0].distanceTo(vector(points[0]))<.1);
+    if(!rail)throw Error('Gym end-to-end rail missing');
+    const t=direction===1?.1:rail.totalLength-.1,h=rail.tangentAt(t).setY(0).normalize().multiplyScalar(direction);
+    const q=(direction===1?rail.points[0]:rail.points.at(-1)).clone().addScaledVector(h,-1.5);q.y=.1;
+    const result:any={direction};let line:ReturnType<typeof createBalancedGrind>;
+    trials.push({name:`Gym complete rail ${i+1}/${direction}`,kind:'grind',result,limit:700,
+      init:()=>{place(q.toArray(),h.toArray(),14);line=createBalancedGrind(p,rail,dt);result.grind=line.report;},
+      sample:()=>line.sample(),observe:()=>line.observe(),
+    });
+  }
+  const s=SCHOOL_SKYLIGHT,open=s.hole;
+  for(const speed of [6,8])for(const direction of [-1,1]){
+    const q:Point=[direction===1?open.minX-.7:open.maxX+.7,s.lipY+.1,s.z];
+    const result={speed,direction,frames:0,entered:false,landed:false,rollout:false,maxLateral:0,firstLanding:null as number[]|null};
+    trials.push({name:`Skylight drop ${direction}/${speed}`,kind:'air',result,limit:200,
+      init:()=>place(q,[direction,0,0],speed),sample:()=>({}),
+      observe:()=>{result.frames++;result.entered||=!p.grounded&&p.pos.y<6.4;
+        if(!result.landed){result.maxLateral=Math.max(result.maxLateral,Math.abs(p.pos.z-s.z));if(result.maxLateral>.15)throw Error('Skylight frame deflected the straight entry');}
+        if(!result.entered)return false;
+        if(p.grounded){if(Math.abs(p.pos.y)>.06)throw Error('Skylight drop missed the gym floor');if(!result.landed)result.firstLanding=p.pos.toArray();result.landed=true;}
+        result.rollout=result.landed&&p.grounded&&Math.abs(p.pos.x-(direction===1?open.minX:open.maxX))>6;
+        return result.rollout;},
     });
   }
   return trials;

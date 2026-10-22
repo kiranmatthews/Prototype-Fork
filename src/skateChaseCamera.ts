@@ -63,6 +63,11 @@ export class SkateChaseCamera {
   private readonly contactNormal = new THREE.Vector3();
   private ceilingEyeDrop = 0;
   private ceilingAimDrop = 0;
+  private openingActive = false;
+  private openingBlend = 0;
+  private readonly openingEye = new THREE.Vector3();
+  private readonly openingAim = new THREE.Vector3();
+  private readonly down = new THREE.Vector3(0,-1,0);
   /** Final presentation weight; never feeds steering or the vert frame. */
   groundFramingWeight = 0;
 
@@ -130,6 +135,37 @@ export class SkateChaseCamera {
       const fov=THREE.MathUtils.lerp(SKATE_CAMERA.verticalFov,framing.camFov,blend);
       if(camera.fov!==fov){camera.fov=fov;camera.updateProjectionMatrix();}
     } else this.groundBlend = 0;
+    // A fall through a small roof opening needs a steeper view before the
+    // ordinary collision arm meets the rim. Detect real air beneath a roof
+    // on both sides of the hole; open ledges and ordinary jumps keep their
+    // established shot. Hold the close overhead view until the landing.
+    if(snap){this.openingActive=false;this.openingBlend=0;}
+    if(rider.grounded||vert||!framing)this.openingActive=false;
+    else if(!this.openingActive&&rider.verticalSpeed<-.1&&this.groundFramingWeight>.5){
+      this.ceilingProbe.copy(rider.position);this.ceilingProbe.y+=.05;
+      this.ray.set(this.ceilingProbe,this.down);this.ray.near=.1;this.ray.far=14;
+      const floor=this.ray.intersectObjects(surfaces,false)[0];
+      if(floor&&rider.position.y-floor.point.y>3){
+        const ceilings:number[]=[];
+        for(const along of [-framing.camDist,6]){
+          this.ceilingProbe.copy(rider.position).addScaledVector(this.flatForward,along);
+          this.ceilingProbe.y=floor.point.y+.4;
+          this.ray.set(this.ceilingProbe,this.worldUp);this.ray.near=.05;this.ray.far=rider.position.y-floor.point.y+2;
+          const roof=this.ray.intersectObjects(surfaces,false)[0];
+          if(!roof?.face)continue;
+          this.contactNormal.copy(roof.face.normal).transformDirection(roof.object.matrixWorld);
+          if(this.contactNormal.y<-.5&&roof.point.y>floor.point.y+3&&roof.point.y>rider.position.y-1.6)ceilings.push(roof.point.y);
+        }
+        this.openingActive=ceilings.length===2&&Math.abs(ceilings[0]-ceilings[1])<1.5;
+      }
+    }
+    this.openingBlend+=(Number(this.openingActive)-this.openingBlend)*frameBlend(this.openingActive ? .18 : .12,step);
+    if(framing&&this.openingBlend>.001){
+      this.openingEye.copy(this.pivot).addScaledVector(this.flatForward,-1.2);this.openingEye.y+=framing.camHeight;
+      this.openingAim.copy(rider.position).addScaledVector(this.worldUp,1.6);
+      this.desiredEye.lerp(this.openingEye,this.openingBlend);this.aim.lerp(this.openingAim,this.openingBlend);
+      this.up.lerp(this.worldUp,this.openingBlend).normalize();
+    }
     // Local collision correction: never rotate or displace the skater to
     // satisfy the lens. The smoothed frame naturally restores the full view.
     // A low roof needs a lower trailing shot, not an arm collapsed into the
@@ -137,7 +173,7 @@ export class SkateChaseCamera {
     // This changes only collision presentation; the calibrated vert frame
     // and unobstructed park camera remain untouched.
     let eyeDrop = 0, aimDrop = 0, hardEyeDrop = 0, hardAimDrop = 0;
-    if (this.groundFramingWeight > .5 && this.desiredEye.y > this.aim.y) {
+    if (this.openingBlend < .01 && this.groundFramingWeight > .5 && this.desiredEye.y > this.aim.y) {
       const targetY = rider.position.y + SKATE_CAMERA.above;
       let ceilingY = Infinity, hardCeilingY = Infinity;
       for (const [along, side] of CEILING_PROBES) {
