@@ -1,5 +1,5 @@
 {
-  "components": 200,
+  "components": 212,
   "rails": 58,
   "support": [
     {
@@ -446,6 +446,75 @@
       ]
     },
     {
+      "name": "Swim Team Gap",
+      "from": "Deep oval pool",
+      "to": "Square swimming pool",
+      "air": true,
+      "landed": true,
+      "firstLandingInTarget": true,
+      "frames": 98,
+      "bails": 0,
+      "end": [
+        -44.486240017247646,
+        -7.800000190734863,
+        -33.372190185400996
+      ]
+    },
+    {
+      "name": "Swim Team Gap",
+      "from": "Square swimming pool",
+      "to": "Deep oval pool",
+      "air": true,
+      "landed": true,
+      "firstLandingInTarget": true,
+      "frames": 107,
+      "bails": 0,
+      "end": [
+        -70.63602626631332,
+        -7.139370038075017,
+        -31.521690140845063
+      ]
+    },
+    {
+      "name": "Ditch Slap",
+      "dir": -1,
+      "air": true,
+      "landed": true,
+      "frames": 52,
+      "bails": 0,
+      "end": [
+        -4.890586492585754,
+        -5,
+        -35.73869105761297
+      ]
+    },
+    {
+      "name": "Ditch Slap",
+      "dir": 1,
+      "air": true,
+      "landed": true,
+      "frames": 52,
+      "bails": 0,
+      "end": [
+        8.834530154557587,
+        -5,
+        -45.96119626633069
+      ]
+    },
+    {
+      "name": "Garbage Ollie",
+      "air": true,
+      "landed": true,
+      "overGarbage": true,
+      "frames": 34,
+      "bails": 0,
+      "end": [
+        25.366344381501982,
+        0,
+        52.2
+      ]
+    },
+    {
       "name": "Mini Gap",
       "air": true,
       "landed": true,
@@ -460,6 +529,20 @@
     }
   ],
   "grinds": [
+    {
+      "name": "Dumpster Rail Gap",
+      "caught": true,
+      "landed": true,
+      "takeoffFrames": 33,
+      "receivingFrames": 25,
+      "frames": 109,
+      "bails": 0,
+      "end": [
+        17.93,
+        0,
+        50.49086526304841
+      ]
+    },
     {
       "name": "Roof to Awning",
       "caught": true,

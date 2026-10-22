@@ -33,6 +33,7 @@ document.querySelector('#roof')!.addEventListener('click',()=>place([63,7.1,38],
 document.querySelector('#bonus')!.addEventListener('click',()=>place([63,7.1,23],[0,0,-1]));
 document.querySelector('#hill')!.addEventListener('click',()=>place([80,.1,53],[0,0,-1]));
 document.querySelector('#ditch')!.addEventListener('click',()=>{const k=SCHOOL_DITCH_KICKER,h=k.direction;place([k.p[0]-h[0]*3.8,-6.4,k.p[2]-h[2]*3.8],h);});
+document.querySelector('#alley')!.addEventListener('click',()=>place([18.2,.1,52.2],[1,0,0]));
 document.querySelector('#rail')!.addEventListener('click',()=>place([44,.1,-5],[-.15,0,-1]));
 document.querySelector('#full')!.addEventListener('click',()=>{full=!full;game=null;checks=null;errors.length=0;frame.src='/?playtest&level=school-miami'+(full?'':'&lite');document.querySelector('#full')!.textContent=full?'Lite render':'Full render';});
 document.querySelector('#checks')!.addEventListener('click',()=>{if(!game||checks?.running)return;overview=false;checks=runSchoolBrowserChecks(game);});

@@ -414,6 +414,12 @@ hip('West dumpster approach',18,0,34,2.3,3,1,2,10,'#6b796d');
 hip('West dumpster landing',18,0,42,2.3,3,1,2,10,'#6b796d');
 rail('Dumpster Rail Gap · takeoff',[[18,.55,28],[18,1.1,32],[18,1.1,35.5]],10);
 rail('Dumpster Rail Gap · landing',[[18,1.1,40.5],[18,1.1,43],[18,.55,47]],10);
+export const SCHOOL_GARBAGE_ROW:Plan[]=[[18.8,47.9],[18.8,48.6],[18.8,49.3],[18.9,50],[19.2,50.7],[19.6,51.3],[20.2,51.8],[20.9,52.1],[21.6,52.2],[23.3,52.2]];
+for(const [i,[x,z]] of SCHOOL_GARBAGE_ROW.entries()){
+  slab(`Garbage Ollie · low crate ${i+1}`,x,z,.68,.64,.48,0,'#657451',10);
+  paintBox(x,.49,z,.72,.025,.68,'#87956c',10);
+  for(const side of [-1,1])paintBox(x+side*.3,.25,z,.045,.4,.67,'#485a43',10);
+}
 quarter('Gym rear alley quarter',[[26,0,52.5],[71,0,52.5]],2.2,10,{color:'#929782',deck:.8});
 
 // Rear classroom forms the far skyline beyond the playground sign.

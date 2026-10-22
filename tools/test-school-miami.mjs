@@ -139,6 +139,63 @@ await withSkateRuntime(async ({ THREE, server, Level, Player, scene, CONST, TUNI
       assert.ok(landed&&overBridge,'ditch jump did not clear and land beyond bridge 3');
       report.airs.push({name:'Over a Footbridge',speed,air,landed,overBridge,frames,bails:0,end:p.pos.toArray()});
     }
+    // A pool transfer must land in the other basin on its FIRST landing.
+    // Rolling across the shared deck and dropping in does not count.
+    for(const from of [0,1]){
+      const a=m.SCHOOL_POOLS[from],b=m.SCHOOL_POOLS[1-from],dir=from===0?1:-1;
+      place([a.centre[0],a.bottom+.1,a.centre[2]],[dir,0,0],18);
+      let popped=false,air=false,exited=false,landed=false,frames=0;
+      for(;frames<220;frames++){
+        const release=!popped&&p.grounded&&p.rideNormal.y<.12;if(release)popped=true;
+        step(makeInput({moveY:1,jumpHeld:!popped,jumpPressed:frames===0,jumpReleased:release}));
+        assert.ok(!p.isBailing,'Swim Team Gap bailed');air||=p.vertAir;exited||=air&&!p.vertAir;
+        if(exited&&p.grounded){
+          assert.ok(p.pos.y<-5.3&&p.pos.y>=b.bottom-.06&&Math.abs(p.pos.x-b.centre[0])<8&&Math.abs(p.pos.z-b.centre[2])<10,'Swim Team first landing missed the other basin');
+          landed=true;break;
+        }
+      }
+      assert.ok(landed,'Swim Team Gap never landed');report.airs.push({name:'Swim Team Gap',from:a.name,to:b.name,air,landed,firstLandingInTarget:true,frames,bails:0,end:p.pos.toArray()});
+    }
+    // Ditch Slap crosses the open trench between bridges, clearing both
+    // banks with a normal ollie and landing on the opposite yard.
+    const ditchHalf=ditch.half+ditch.radius*Math.sin(65*Math.PI/180),ditchCross=ditch.a.map((v,i)=>v+(ditch.b[i]-v)*.58);
+    for(const dir of [-1,1]){
+      const h=[nx*dir,0,nz*dir];place([ditchCross[0]-h[0]*(ditchHalf+5),-4.9,ditchCross[2]-h[2]*(ditchHalf+5)],h,18);
+      let popped=false,air=false,landed=false,frames=0;
+      for(;frames<180;frames++){
+        const d=(ditchCross[0]-p.pos.x)*h[0]+(ditchCross[2]-p.pos.z)*h[2],release=!popped&&d<ditchHalf+1;if(release)popped=true;
+        step(makeInput({jumpHeld:!popped,jumpPressed:frames===0,jumpReleased:release}));air||=p.state==='air';assert.ok(!p.isBailing,'Ditch Slap bailed');
+        if(air&&p.grounded){assert.ok((p.pos.x-ditchCross[0])*h[0]+(p.pos.z-ditchCross[2])*h[2]>ditchHalf&&Math.abs(p.pos.y+5)<.06,'Ditch Slap did not clear the opposite bank');landed=true;break;}
+      }
+      assert.ok(landed,'Ditch Slap never landed');report.airs.push({name:'Ditch Slap',dir,air,landed,frames,bails:0,end:p.pos.toArray()});
+    }
+    // Low garbage is a real obstacle. Require the feet to pass over the
+    // isolated last crate, then touch down beyond it on the rear apron.
+    place([18.2,.1,52.2],[1,0,0],12);
+    let garbagePopped=false,garbageAir=false,overGarbage=false,garbageLanded=false,garbageFrames=0;
+    for(;garbageFrames<140;garbageFrames++){
+      const release=!garbagePopped&&p.pos.x>18.6;if(release)garbagePopped=true;
+      step(makeInput({jumpHeld:!garbagePopped,jumpPressed:garbageFrames===0,jumpReleased:release}));garbageAir||=p.state==='air';assert.ok(!p.isBailing,'Garbage Ollie bailed');
+      if(Math.abs(p.pos.x-23.3)<.4&&Math.abs(p.pos.z-52.2)<.3&&p.pos.y>.48)overGarbage=true;
+      if(garbageAir&&p.grounded){assert.ok(overGarbage&&p.pos.x>23.64&&Math.abs(p.pos.y)<.06,'Garbage Ollie missed the actual crate');garbageLanded=true;break;}
+    }
+    assert.ok(garbageLanded,'Garbage Ollie never landed');report.airs.push({name:'Garbage Ollie',air:garbageAir,landed:garbageLanded,overGarbage,frames:garbageFrames,bails:0,end:p.pos.toArray()});
+    // Start on the alley, catch the first dumpster rail, pop the gap,
+    // freshly press grind to catch the second rail, and roll off onto land.
+    const dumpsterA=level.rails.find(r=>r.points[0].distanceTo(new THREE.Vector3(18,.55,28))<.1),dumpsterB=level.rails.find(r=>r.points[0].distanceTo(new THREE.Vector3(18,1.1,40.5))<.1);
+    assert.ok(dumpsterA&&dumpsterB);place([18,.1,26],[0,0,1],14);
+    let dumpsterCaught=false,dumpsterPopped=false,dumpsterRepress=false,dumpsterLanded=false,dumpsterFrames=0,dumpsterAFrames=0,dumpsterBFrames=0;
+    for(;dumpsterFrames<220;dumpsterFrames++){
+      const release=dumpsterCaught&&!dumpsterPopped&&p.pos.z>34.6;if(release)dumpsterPopped=true;
+      const press=dumpsterPopped&&!dumpsterRepress&&p.pos.z>41.8;if(press)dumpsterRepress=true;
+      step(makeInput({grindHeld:!dumpsterPopped||dumpsterRepress,grindPressed:dumpsterFrames===0||press,jumpHeld:dumpsterCaught&&!dumpsterPopped,jumpPressed:dumpsterAFrames===1,jumpReleased:release}));
+      assert.ok(!p.isBailing,'Dumpster Rail Gap bailed');dumpsterCaught||=p.state==='grind'&&p.grindRail===dumpsterA;
+      if(p.state==='grind'&&p.grindRail===dumpsterA)dumpsterAFrames++;
+      if(dumpsterPopped&&p.state==='grind'&&p.grindRail===dumpsterB)dumpsterBFrames++;
+      if(dumpsterBFrames>=8&&p.grounded){assert.ok(p.pos.z>47&&Math.abs(p.pos.y)<.06,'Dumpster rollout missed alley');dumpsterLanded=true;break;}
+    }
+    assert.ok(dumpsterLanded&&dumpsterAFrames>=20,'Dumpster transfer did not grind both rails and roll out');
+    report.grinds.push({name:'Dumpster Rail Gap',caught:dumpsterCaught,landed:dumpsterLanded,takeoffFrames:dumpsterAFrames,receivingFrames:dumpsterBFrames,frames:dumpsterFrames,bails:0,end:p.pos.toArray()});
     // Tap an ollie over the Mini Gap with a pre-held right transfer input.
     // The bend's receiving coping is angled. Release grind during the air
     // and press it again on arrival, then verify a clean ground rollout.

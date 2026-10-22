@@ -8,7 +8,7 @@
     -39
   ],
   "speed": 0,
-  "components": 200,
+  "components": 212,
   "rails": 58,
   "errors": [
     "ResizeObserver loop completed with undelivered notifications."
@@ -70,6 +70,30 @@
         "frames": 45
       },
       {
+        "name": "Swim Team 1",
+        "frames": 99
+      },
+      {
+        "name": "Swim Team 2",
+        "frames": 108
+      },
+      {
+        "name": "Ditch Slap -1",
+        "frames": 53
+      },
+      {
+        "name": "Ditch Slap 1",
+        "frames": 53
+      },
+      {
+        "name": "Dumpster Rail Gap and rollout",
+        "frames": 110
+      },
+      {
+        "name": "Garbage Ollie",
+        "frames": 35
+      },
+      {
         "name": "Continuous campus circuit",
         "frames": 1747
       },
@@ -79,7 +103,7 @@
       }
     ],
     "failure": null,
-    "frames": 3505,
+    "frames": 3963,
     "circuit": {
       "frames": 1747,
       "waypoints": 44,

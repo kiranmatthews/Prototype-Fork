@@ -632,3 +632,13 @@
 - Lite and full browser rendering each pass all 15 cases / 3,505 fixed steps, including checkpoint recovery. Each sequence retains one ResizeObserver layout notification; no skating case fails. New full-render overview, roof and ditch captures are saved locally.
 - `check:levels` and `build` pass; build reports the existing large-chunk warning. Validation completed at 2026-10-22 12:51 UTC, 119.3 minutes from the original prompt across the successive refinement passes.
 - Goal remains active: audit the remaining named transfers (Hall Pass, rail-to-rail, Funbox, roof Mini Gap, Park Gap, Swim Team, Ditch Slap, garbage/dumpsters) and remaining reference differences. Source collision dimensions are still inferred.
+
+### 2026-10-23 — School Miami: direct pool, ditch and alley transfers
+
+- Continued the local recreation goal. Added the source's curved low garbage row and its separated final crate behind the gym; retained the original movement model.
+- Proved Swim Team in both directions using a charged lip release. The first landing must be inside the other basin; rolling across the intervening deck is explicitly rejected.
+- Proved Ditch Slap in both directions, a Garbage Ollie that crosses above the actual crate, and Dumpster Rail Gap from a grounded approach through both intended rails to a grounded rollout. The dumpster test requires a fresh receiving grind press and at least eight receiving-rail frames, so a transient catch cannot pass.
+- Physics: 212 components / 58 rails, 20 supports, 13 route cases, 17 air cases, 4 grind cases and the unchanged 375.2 m continuous circuit; all accepted cases have zero bails.
+- Lite and full browser passes each complete all 21 cases / 3,963 fixed steps, including checkpoint recovery. Each has one retained ResizeObserver layout notification. The review console also recorded one MutationObserver error during reload; a fresh standalone full-render session with normal input had a clean console. Exact origin of the reload error remains unisolated; no unrelated runtime code was edited.
+- `check:levels` and `build` pass (existing large-chunk warning only). Runtime fingerprints are unchanged from the prior pass. Validation completed at 2026-10-22 13:10 UTC, 138.3 minutes from the original prompt across the refinement passes.
+- Keep local. Remaining source work: Hall Pass and rail-to-rail planters, Funbox transfers, the roof Mini Gap placement, Park Gap, Playground/Huge/Long Ass grinds and the planter chain.
