@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { characterElasticityAmplitudes, ELASTIC_LENGTH_CONTROLS } from '../animation/elasticity';
-import { sampleBailJointTorque, type BailContactPose } from './bailContactPose';
+import { sampleBailJointTorque, sampleBailSegmentLoad, type BailContactPose } from './bailContactPose';
 
 export type BailTumbleKind = 'forward' | 'back' | 'side' | 'air';
 
@@ -178,7 +178,18 @@ export class BailMotion {
       const distance = SEGMENT_DISTANCE[origin * SEGMENTS + segment];
       const delay = distance * .022;
       const wave = this.contactWaveOffset(delay) + JOINTS * 3 + segment;
-      this.contactWaves[wave] = Math.max(-20, this.contactWaves[wave] - strength * 12 / (1 + distance * .55));
+      let load = -1;
+      if (pose) {
+        const {joint} = ELASTIC_CHANNELS[segment], row = origin * JOINTS;
+        const fromEnd = CONTACT_DISTANCE[row + joint + 1] < CONTACT_DISTANCE[row + joint];
+        const axial = sampleBailSegmentLoad(pose.joints[joint], pose.joints[joint + 1], pose.impulse, fromEnd);
+        // A braced limb crushes then rebounds; a trailing limb can be pulled
+        // long before recoiling. Glancing hits mostly bend, with a small soft
+        // squash. Re-evaluate the posed direction at each subsequent bounce
+        // instead of repeating the same whole-body shrinking pulse.
+        if (axial !== null) load = -.25 + 1.4 * axial;
+      }
+      this.contactWaves[wave] = clamp(this.contactWaves[wave] + strength * 12 * load / (1 + distance * .55), 20);
     }
     this.loosen = Math.max(this.loosen, strength);
     for (let joint = 0; joint < JOINTS; joint++) {

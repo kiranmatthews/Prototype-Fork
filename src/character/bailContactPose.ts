@@ -11,6 +11,21 @@ const lever = new Vector3(), force = new Vector3(), torque = new Vector3(), axis
 const rotation = new Quaternion(), turn = new Quaternion();
 const axes = [new Vector3(1, 0, 0), new Vector3(0, 1, 0), new Vector3(0, 0, 1)];
 
+/** Signed axial loading at the end nearest the strike: negative compresses,
+ * positive pulls the segment longer. Use the actual posed endpoints, including
+ * scale/mirroring, without walking or updating the hierarchy. The result is a
+ * direction cosine; collision strength still belongs to the impact response. */
+export function sampleBailSegmentLoad(start:Object3D|null, end:Object3D|null,
+  impulse:Vector3, fromEnd:boolean):number|null {
+  if(!start||!end)return null;
+  const a=start.matrixWorld.elements,b=end.matrixWorld.elements;
+  const x=b[12]-a[12],y=b[13]-a[13],z=b[14]-a[14];
+  const divisor=Math.sqrt((x*x+y*y+z*z)*impulse.lengthSq());
+  if(!Number.isFinite(divisor)||divisor<1e-10)return null;
+  const load=(x*impulse.x+y*impulse.y+z*impulse.z)/divisor*(fromEnd?1:-1);
+  return Math.max(-1,Math.min(1,load));
+}
+
 /** Generalized impact torque in the joint's actual Euler coordinates. Read
  * the already-posed matrices; never update the hierarchy or reskin a mesh.
  * Inverse-transform the lever and transpose-transform the force so their

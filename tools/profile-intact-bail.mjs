@@ -30,6 +30,7 @@ const dom = ast.statements.find(n => ts.isFunctionDeclaration(n) && n.name?.text
 new Function('noop', dom.getText(ast) + '; installHeadlessDom();')(() => {});
 const replaced = new Set(['src/player.ts', 'src/bailRecovery.ts', 'src/characterAnimationRuntime.ts', 'src/animation/bridge.ts', 'src/animation/rigBinding.ts', 'src/animation/sampling.ts', 'src/character/bailMotion.ts', 'src/character/bailContactPose.ts', 'src/character/bailGroundContact.ts', 'src/character/bailImpactSpin.ts', 'src/character/bailRecoveryMotion.ts', 'src/character/bailRiseMotion.ts', 'src/character/interactionBounds.ts', 'src/character/proportionLayer.ts', 'src/character/wipeoutPolicy.ts', 'src/character/stretchableBone.ts']);
 replaced.add('src/character/skinBoundsKernel.ts');
+replaced.add('src/character/bailContactPose.ts');
 const server = await createServer({ appType: 'custom', logLevel: 'silent', server: { middlewareMode: true },
   plugins: snapshot ? [{ name: 'bail-source-snapshot', enforce: 'pre', async load(id) {
     const rel = path.relative(process.cwd(), id.split('?')[0]);
@@ -225,14 +226,24 @@ try {
     const poseHash = poseChecksums ? createHash('sha256') : null;
     const gameplayHash = poseChecksums ? createHash('sha256') : null;
     const impacts = [], kickContact = p.kickRagdollContact.bind(p);
+    const strainKeys = traceImpacts ? Object.keys(p.bailMotion.deformations) : [];
+    const queuedStrain = () => {
+      const values = new Array(strainKeys.length).fill(0), start = p.bailMotion.angles.length;
+      const waves = p.bailMotion.contactWaves, stride = start + values.length;
+      for (let slot = 0; slot < waves.length; slot += stride)
+        for (let i = 0; i < values.length; i++) values[i] += waves[slot + start + i];
+      return values;
+    };
     if (traceImpacts) p.kickRagdollContact = (normal, impulse, impact, incoming) => {
       const beforeSpin = p.ragdollWorldSpin(new THREE.Vector3()).toArray();
       const contact = p.sampleRagdollContact(normal).toArray();
       const orientation = p.ragQ.toArray(), joint = p.ragContactJoint;
       const travel = incoming?.toArray() ?? [p.axisF.x * p.speed, p.vVel, p.axisF.z * p.speed];
+      const strainBefore = count ? queuedStrain() : null;
       kickContact(normal, impulse, impact, incoming);
       if (count) impacts.push({ beforeSpin, afterSpin:p.ragdollWorldSpin(new THREE.Vector3()).toArray(),
         normal:normal.toArray(), impulse:impulse.toArray(), impact, contact, orientation, joint, travel,
+        strainImpulses:Object.fromEntries(queuedStrain().map((value, i) => [strainKeys[i], value - strainBefore[i]])),
         bounces:p.ragBounces, floorImpacts:p.ragImpacts });
     };
     const appearance = p.characterProportionLayer.apply.bind(p.characterProportionLayer);
