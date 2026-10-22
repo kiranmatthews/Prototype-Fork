@@ -75,6 +75,7 @@ import { JUNGLE_CUP_LEVEL } from "./levels/jungle-cup";
 import { JUNGLE_TERRACES_LEVEL, JUNGLE_SKYLINE_LEVEL } from "./levels/jungle-sequels";
 import { PIRATE_WRECK_LEVEL } from './levels/pirate-wreck';
 import { CODEX_LAB_LEVEL } from "./levels/codex-lab";
+import { MALL_LEVEL } from './levels/mall';
 import { PUZZLE_LEVELS } from './levels/puzzle-trilogy';
 import { CRAB_CHIEF_LEVEL } from './levels/crab-chief';
 import { CrabChiefEncounter } from './boss/crabChief';
@@ -2394,6 +2395,7 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
     name: CODEX_LAB_LEVEL.name,
     data: CODEX_LAB_LEVEL,
   }, // source-owned long course for fast, isolated geometry iterations
+  { id: 'mall', name: MALL_LEVEL.name, data: MALL_LEVEL },
   { id: "jungle-cup", name: JUNGLE_CUP_LEVEL.name, data: JUNGLE_CUP_LEVEL },
   { id: "bone-yard", name: BONE_YARD_LEVEL.name, data: BONE_YARD_LEVEL },
   { id: "waterpark", name: WATERPARK_LEVEL.name, data: WATERPARK_LEVEL },
@@ -7272,6 +7274,15 @@ export class Level {
             // finish gate: crossing its plane ends the run (and the time trial)
             this.finishZ = c.p[2];
             this.finishGate(c.p[1], c.p[2], c.p[0], c.yaw ?? 0);
+            // An authored doorway can finish across its full opening. The
+            // ordinary warp pad keeps its existing contact-only behaviour.
+            if (c.invisible && c.w !== undefined) {
+              const a = THREE.MathUtils.degToRad(c.yaw ?? 0), width = Math.max(1, c.w);
+              this.finishGlow.setFromCenterAndSize(
+                new THREE.Vector3(c.p[0], c.p[1] + 2, c.p[2]),
+                new THREE.Vector3(Math.abs(Math.cos(a))*width + Math.abs(Math.sin(a))*.8, 4,
+                  Math.abs(Math.sin(a))*width + Math.abs(Math.cos(a))*.8));
+            }
             if(c.invisible){const pad=this.warpPads[this.warpPads.length-1];if(pad){pad.group.visible=false;pad.group.userData.editorGhost=true;}}
           } else if (c.t === "bonusplatform") {
             this.buildBonusPlatform(c);

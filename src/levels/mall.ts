@@ -1,0 +1,322 @@
+import type { CustomComponent, CustomGroup, CustomLevelData } from '../level';
+
+// Original 1999 Mall, reconstructed from the supplied VGCartography cutaway.
+// Metres, Y up. The mall bends east through the atrium and north again at
+// the lower escalator. All collision, coping and scenery remain editor data.
+type P = [number, number, number];
+type Knot = { s: number; x: number; z: number; y: number; width: number };
+const C: CustomComponent[] = [];
+const groups: CustomGroup[] = [
+  'Entry descent', 'Fountain court', 'Upper gallery and Flying Leap',
+  'Suspended atrium', 'Lower escalator', 'Crossrail arcade', 'Outdoor plaza',
+  'Mezzanine and exit', 'Mall architecture', 'Storefront details', 'Ceiling and lights',
+].map((nm, i) => ({ id: i + 1, nm, editorOnly: true }));
+const stone = '#bcb6aa', trim = '#557c78', dark = '#333d42', brass = '#ae9570';
+const clamp = (x: number, a = 0, b = 1) => Math.max(a, Math.min(b, x));
+const mix = (a: number, b: number, t: number) => a + (b - a) * t;
+const ease = (a:number,b:number,s:number) => {const t=clamp((s-a)/(b-a));return t*t*(3-2*t);};
+const add = (c: CustomComponent) => { C.push(c); return c; };
+
+// Plan landmarks are independent of elevation: the two descending connectors
+// have tangent easements, so neither their top nor their toe trips the board.
+export const MALL_KNOTS: Knot[] = [
+  { s: 0, x: 0, z: 10, y: 18, width: 9 },
+  { s: 12, x: 0, z: -2, y: 18, width: 9 },
+  { s: 32, x: 0, z: -22, y: 12, width: 25 },
+  { s: 44, x: 0, z: -34, y: 12, width: 25 },
+  { s: 100, x: 0, z: -90, y: 12, width: 28 },
+  { s: 116, x: 0, z: -106, y: 8, width: 23 },
+  { s: 130, x: 0, z: -120, y: 8, width: 25 },
+  { s: 146, x: 5, z: -135, y: 8, width: 25 },
+  { s: 162, x: 18, z: -144, y: 8, width: 25 },
+  { s: 180, x: 36, z: -145, y: 8, width: 26 },
+  { s: 196, x: 52, z: -145, y: 8, width: 26 },
+  { s: 214, x: 70, z: -145, y: 3.5, width: 20 },
+  { s: 230, x: 85, z: -141, y: 3.5, width: 23 },
+  { s: 245, x: 99, z: -144, y: 3.5, width: 23 },
+  { s: 260, x: 108, z: -156, y: 3.5, width: 18 },
+  { s: 276, x: 108, z: -172, y: 0, width: 18 },
+  { s: 306, x: 108, z: -202, y: 0, width: 18 },
+  { s: 319, x: 108, z: -215, y: 0, width: 12 },
+  { s: 330, x: 108, z: -226, y: 0, width: 26 },
+  { s: 374, x: 108, z: -270, y: 0, width: 27 },
+  { s: 392, x: 108, z: -288, y: -7, width: 15 },
+  { s: 412, x: 108, z: -308, y: -7, width: 15 },
+];
+export const MALL_LENGTH = 412;
+const segment = (s: number) => Math.min(MALL_KNOTS.length - 2,
+  Math.max(0, MALL_KNOTS.findIndex(k => k.s > s) - 1));
+function plan(s: number): { x: number; z: number; dx: number; dz: number; width: number } {
+  s = clamp(s, 0, MALL_LENGTH - .0001);
+  const i = segment(s), a = MALL_KNOTS[i], b = MALL_KNOTS[i + 1];
+  const t = clamp((s - a.s) / (b.s - a.s)), h = b.s - a.s;
+  const tangent = (j: number, axis: 'x' | 'z') => {
+    const before = MALL_KNOTS[Math.max(0, j - 1)], after = MALL_KNOTS[Math.min(MALL_KNOTS.length - 1, j + 1)];
+    return (after[axis] - before[axis]) / (after.s - before.s);
+  };
+  const value = (axis: 'x' | 'z') => (2*t*t*t - 3*t*t + 1)*a[axis]
+    + (t*t*t - 2*t*t + t)*h*tangent(i, axis)
+    + (-2*t*t*t + 3*t*t)*b[axis] + (t*t*t - t*t)*h*tangent(i + 1, axis);
+  const derivative = (axis: 'x' | 'z') => ((6*t*t - 6*t)*a[axis]
+    + (3*t*t - 4*t + 1)*h*tangent(i, axis)
+    + (-6*t*t + 6*t)*b[axis] + (3*t*t - 2*t)*h*tangent(i + 1, axis)) / h;
+  return { x: value('x'), z: value('z'), dx: derivative('x'), dz: derivative('z'), width: mix(a.width, b.width, t) };
+}
+export function mallHeight(s: number): number {
+  const i = segment(clamp(s, 0, MALL_LENGTH - .0001)), a = MALL_KNOTS[i], b = MALL_KNOTS[i + 1];
+  let t = clamp((s - a.s) / (b.s - a.s));
+  // Two-metre parabolic easements around a constant pitch, matching a real
+  // escalator's flat landing. Shared endpoints have exactly the same Y.
+  const e = Math.min(.14, 2 / (b.s - a.s));
+  t = t < e ? t*t/(2*e*(1-e)) : t > 1-e ? 1-(1-t)*(1-t)/(2*e*(1-e)) : (t-e/2)/(1-e);
+  return mix(a.y, b.y, t);
+}
+export function mallPoint(s: number, offset = 0, y = mallHeight(s)): P {
+  const q = plan(s), n = Math.hypot(q.dx, q.dz);
+  return [q.x - q.dz/n*offset, y, q.z + q.dx/n*offset];
+}
+export function mallYaw(s: number): number { const q = plan(s); return Math.atan2(-q.dx, -q.dz)*180/Math.PI; }
+export function mallProject(x: number, z: number, hint = 0): number {
+  let best = clamp(hint, 0, MALL_LENGTH), distance = Infinity;
+  for (let s = Math.max(0, hint-24); s <= Math.min(MALL_LENGTH, hint+40); s += .25) {
+    const q = plan(s), d = (q.x-x)**2 + (q.z-z)**2;
+    if (d < distance) { distance = d; best = s; }
+  }
+  return best;
+}
+
+// Mesh scenery is collected by material in bounded batches. Collider meshes
+// are authored separately, with no decorative edge rails or coplanar faces.
+const batches = new Map<string, { vertices: number[]; indices: number[]; color: string; grp: number; emissive?: string }>();
+function face(points: P[], color: string, grp = 9, emissive?: string) {
+  const baseKey = `${grp}:${color}:${emissive??''}`;
+  let key = baseKey, n = 0;
+  while ((batches.get(key)?.vertices.length ?? 0) + points.length*3 > 12000) key = `${baseKey}:${++n}`;
+  let b = batches.get(key);
+  if (!b) { b = { vertices: [], indices: [], color, grp, emissive }; batches.set(key, b); }
+  const at = b.vertices.length / 3; b.vertices.push(...points.flat());
+  for (let j = 1; j < points.length-1; j++) b.indices.push(at, at+j, at+j+1);
+}
+function box(p: P, size: P, color: string, grp = 9, yaw = 0, solid = false, name = 'Mall detail') {
+  if (solid) return add({ t: 'platform', p, s: size, yaw, color, tex: 'solid', edgeGrinding: false, grp, nm: name });
+  const a = yaw*Math.PI/180, cs = Math.cos(a), sn = Math.sin(a);
+  const v = (x: number,y: number,z: number): P => [p[0]+x*cs+z*sn,p[1]+y,p[2]-x*sn+z*cs];
+  const [w,h,d] = size.map(v=>v/2);
+  const q = [v(-w,-h,-d),v(w,-h,-d),v(w,h,-d),v(-w,h,-d),v(-w,-h,d),v(w,-h,d),v(w,h,d),v(-w,h,d)];
+  for (const f of [[0,3,2,1],[4,5,6,7],[0,4,7,3],[1,2,6,5],[3,7,6,2],[0,1,5,4]]) face(f.map(i=>q[i]),color,grp);
+}
+function ribbon(name: string, a: number, b: number, left: number | ((s:number)=>number), right: number | ((s:number)=>number),
+  y: (s:number)=>number, grp: number, color = stone, solid = true, tex = 'pavement') {
+  const n = Math.ceil((b-a)/.7), vertices: number[] = [], indices: number[] = [], uvs: number[] = [];
+  for (let i=0;i<=n;i++) {
+    const s=mix(a,b,i/n), l=typeof left==='function'?left(s):left, r=typeof right==='function'?right(s):right;
+    vertices.push(...mallPoint(s,l,y(s)),...mallPoint(s,r,y(s)));uvs.push(l/3,s/3,r/3,s/3);
+    if(i<n){const j=i*2;indices.push(j,j+1,j+3,j,j+3,j+2);}
+  }
+  return add({t:'mesh',p:[0,0,0],vertices,indices,uvs,tex,color,solid,doubleSided:true,edgeGrinding:false,castShadow:solid,grp,nm:name});
+}
+function rail(name: string, points: P[], grp: number, posts = false, floor = (s:number)=>mallHeight(s), start = 0, end = 0) {
+  const p = points[0];
+  add({t:'rail',p,pts:points.map(q=>[q[0]-p[0],q[2]-p[2],0,q[1]-p[1]]),color:'#b8c6c6',grp,nm:name});
+  if(posts) for(let i=0;i<points.length;i+=4){const q=points[i],y=floor(mix(start,end,i/(points.length-1)));box([q[0],(y+q[1])/2,q[2]],[.09,q[1]-y,.09],dark,grp);}
+}
+function railAlong(name: string, a: number,b: number,offset: number | ((s:number)=>number),y:(s:number)=>number,grp:number,posts=true){
+  const n=Math.ceil((b-a)/1.2),points=Array.from({length:n+1},(_,i)=>{const s=mix(a,b,i/n);return mallPoint(s,typeof offset==='function'?offset(s):offset,y(s));});
+  rail(name,points,grp,posts,mallHeight,a,b);
+}
+function planter(s:number,offset:number,w:number,d:number,y=mallHeight(s),grp=9){
+  const q=mallPoint(s,offset,y+.37),yaw=mallYaw(s);
+  box(q,[w,.74,d],brass,grp,yaw,true,'Raised stone planter');
+  box(mallPoint(s,offset,y+.76),[w-.3,.08,d-.3],'#333c30',grp,yaw);
+  for(let i=0;i<Math.max(2,Math.floor(d/1.2));i++){
+    const t=s-d/2+.65+i*1.15;
+    const centre=mallPoint(t,offset,y+.83);
+    for(let leaf=0;leaf<9;leaf++){
+      const a=leaf*Math.PI*2/9+i*.7,dx=Math.cos(a),dz=Math.sin(a),len=w*.44;
+      const tip:P=[centre[0]+dx*len,centre[1]+.28,centre[2]+dz*len];
+      const peak:P=[centre[0]+dx*len*.55,centre[1]+.65,centre[2]+dz*len*.55];
+      face([centre,[peak[0]-dz*.18,peak[1],peak[2]+dx*.18],tip,[peak[0]+dz*.18,peak[1],peak[2]-dx*.18]],leaf%2?'#567d4c':'#79965c',grp);
+    }
+  }
+}
+// Small physical signs use a single batch of letter faces, avoiding textures,
+// canvas dependencies and network assets. Their text is world scenery only.
+const FONT:Record<string,string>={
+ A:'01110100011000111111100011000110001',B:'11110100011000111110100011000111110',C:'01111100001000010000100001000001111',D:'11110100011000110001100011000111110',E:'11111100001000011110100001000011111',F:'11111100001000011110100001000010000',G:'01111100001000010111100011000101111',H:'10001100011000111111100011000110001',I:'11111001000010000100001000010011111',J:'00111000100001000010100101001001100',K:'10001100101010011000101001001010001',L:'10000100001000010000100001000011111',M:'10001110111010110101100011000110001',N:'10001110011010110011100011000110001',O:'01110100011000110001100011000101110',P:'11110100011000111110100001000010000',Q:'01110100011000110001101011001001101',R:'11110100011000111110101001001010001',S:'01111100001000001110000010000111110',T:'11111001000010000100001000010000100',U:'10001100011000110001100011000101110',V:'10001100011000110001100010101000100',W:'10001100011000110101101011101110001',X:'10001100010101000100010101000110001',Y:'10001100010101000100001000010000100',Z:'11111000010001000100010001000011111',
+};
+function sign(text:string,s:number,u:number,y:number,width:number,yaw=mallYaw(s),color='#d8d4bc'){
+ const q=mallPoint(s,u,y),a=yaw*Math.PI/180,unit=width/(text.length*6),v=(x:number,h:number,z=0):P=>[q[0]+x*Math.cos(a)+z*Math.sin(a),q[1]+h,q[2]-x*Math.sin(a)+z*Math.cos(a)];
+ box(q,[width+.45,unit*9,.18],dark,10,yaw);
+ for(let i=0;i<text.length;i++){const glyph=FONT[text[i]];if(!glyph)continue;for(let k=0;k<35;k++)if(glyph[k]==='1'){
+  const x=(i*6+k%5)*unit-width/2,h=(3-Math.floor(k/5))*unit;
+  face([v(x,h,.1),v(x+unit*.85,h,.1),v(x+unit*.85,h+unit*.85,.1),v(x,h+unit*.85,.1)],color,10,color);
+ }}
+}
+
+// The continuous lower route is split only at semantic landmarks. The floor
+// remains watertight across every section and follows the same sampled plan.
+for (let i=0;i<MALL_KNOTS.length-1;i++) {
+ const a=MALL_KNOTS[i].s,b=MALL_KNOTS[i+1].s;
+ ribbon('Continuous mall floor',a,b,s=>-plan(s).width/2,s=>plan(s).width/2,mallHeight,1,stone);
+}
+// Containment follows the visible wall; the wall itself has thickness and no
+// auto-grind edges. Low retail windows allow the chase camera to see turns.
+const boundary=(side:number,s:number)=>side*plan(s).width/2-(side<0?9*ease(124,133,s)*(1-ease(153,163,s)):0);
+for(const side of [-1,1]){
+ const points:Array<[number,number,number,number]>=[];
+ for(let s=0;s<=412;s+=2){const q=mallPoint(s,boundary(side,s)+side*.25);points.push([q[0],q[2],0,q[1]]);}
+ add({t:'wallpath',p:[0,0,0],pts:points,w:.55,rise:16.8,color:'#696b69',tex:'metal',edgeGrinding:false,grp:9,nm:'Continuous mall perimeter'});
+ // Cornice and black kickboards form unbroken outlines through both bends.
+ for(const [h,w,color]of [[.16,.12,dark],[4.8,.18,trim],[8.5,.2,dark]] as [number,number,string][])
+  ribbon('Perimeter trim',0,412,s=>boundary(side,s)-w,s=>boundary(side,s)+w,s=>mallHeight(s)+h,9,color,false,'solid');
+}
+// Enclosure and transom lights. The plaza (319..374) is open to the sky.
+for(let s=5;s<318;s+=8){
+ const q=plan(s),yaw=mallYaw(s),h=mallHeight(s)+10.2+6.2*ease(114,134,s)*(1-ease(188,204,s));
+ const extra=9*ease(124,133,s)*(1-ease(153,163,s));
+ box(mallPoint(s,-extra/2,h),[q.width+extra+1,.3,8.2],'#343e42',11,yaw);
+ box(mallPoint(s,-extra/2,h-.24),[q.width+extra,.28,.22],'#9a9b8e',11,yaw);
+ for(const u of [-q.width*.29,q.width*.29])box(mallPoint(s,u,h-.3),[1.1,.08,3.5],'#e2e3cb',11,yaw);
+}
+box(mallPoint(0,0,22.5),[9,9,.5],dark,9,0,true,'Entry back wall');
+box(mallPoint(412,0,-2.5),[15,9,.5],dark,9,0,true,'Exit back wall');
+for(let s=46;s<309;s+=11){
+ if(s>99&&s<119||s>195&&s<219||s>258&&s<277)continue;
+ for(const side of [-1,1]){
+  const u=side*(plan(s).width/2-.05),y=mallHeight(s),yaw=mallYaw(s)+90;
+  if(side<0&&s>122&&s<166)continue;
+  box(mallPoint(s,u,y+2.5),[9,4.8,.12],s%3?'#465c61':'#3c444c',10,yaw);
+  for(const d of [-4.5,0,4.5])box(mallPoint(s+d,u,y+2.5),[.14,5,.2],brass,10,yaw);
+  sign(['RECORDS','SPORTS','BOUTIQUE','CAFE','ARCADE'][Math.floor(s/11)%5],s,u,y+5.65,7,yaw);
+ }
+}
+sign('NEW YORK MALL',33,0,17.7,8);sign('PARKING',405,0,-2.2,9);
+
+// Entry: a recessed descending ramp and two staircase shoulders.
+function treads(a:number,b:number,left:number,right:number,count:number,grp:number){
+ for(let i=0;i<count;i++){
+  const s=mix(a,b,(i+.5)/count),q=mallPoint(s,(left+right)/2,mallHeight(s)-.06);
+  // Visual nosings sit just below the smooth skate collision envelope.
+  box(q,[right-left,.12,(b-a)/count*.45],'#777d79',grp,mallYaw(s));
+ }
+}
+treads(14,30,-4.5,-2.1,16,1);treads(14,30,2.1,4.5,16,1);
+for(const u of [-2.1,2.1])railAlong('Entry descending handrail',12,33,u,s=>mallHeight(s)+.85,1);
+
+// Paired escalators climb to the fountain's upper concourse; the floor at
+// either side remains a broad bypass, as in the source.
+const upperY=(s:number)=> s<59?12+5*clamp((s-44)/15):17;
+ribbon('Up escalator',44,59,-9.3,-5.3,upperY,2,'#7d8c8d');
+for(const u of [-9.35,-5.25])railAlong('Upper escalator handrail',44,59,u,s=>upperY(s)+.85,2);
+for(let s=45;s<59;s+=.65)box(mallPoint(s,-7.3,upperY(s)-.04),[4,.08,.18],'#3e5356',2,mallYaw(s));
+ribbon('Upper fountain concourse',59,69,-10.2,-2.7,()=>17,2,'#c6c1b0');
+// Main fountain: a low blue octagon, raised centre and passable side aisles.
+const fountain=mallPoint(76,0,12);
+add({t:'platform',p:[fountain[0],12.22,fountain[2]],s:[9,.44,13],pts:[[-4,-5],[-2,-6.5],[2,-6.5],[4,-5],[4,5],[2,6.5],[-2,6.5],[-4,5]],color:trim,tex:'solid',edgeGrinding:false,grp:2,nm:'Fountain octagonal basin'});
+box(mallPoint(76,0,12.47),[6.9,.05,10.5],'#428e99',2);
+box(mallPoint(76,0,13.2),[2,1.5,2],'#89775c',2,0,true,'Fountain sculpture plinth');
+for(let i=0;i<8;i++){
+ const a=i*Math.PI/4,b=(i+1)*Math.PI/4,centre=mallPoint(76,0,12.5);
+ const point=(angle:number,r:number,h:number):P=>[centre[0]+Math.cos(angle)*r,centre[1]+h,centre[2]+Math.sin(angle)*r];
+ face([point(a,1.6,0),point(b,1.6,0),point(b,.65,2.7),point(a,.65,2.7)],i%2?'#b09b64':'#8f7947',2);
+ face([point(a,2.1,2.8),point(b,2.1,2.8),point(b,1.45,2.8),point(a,1.45,2.8)],'#b6a373',2);
+ face([point(a,1.45,2.8),point(b,1.45,2.8),point(b,1.45,3.2),point(a,1.45,3.2)],'#8d7d54',2);
+}
+box(mallPoint(76,0,16.2),[.45,2.4,.45],brass,2,24);
+for(const u of [-4.8,4.8])sign('SALE',76,u,15.0,2.8);
+// Fountain-gap launch and the car-display bank on the opposite side.
+ribbon('Fountain upper launch',64,69,-7.8,-2.7,s=>17+.45*clamp((s-64)/5),3,trim);
+ribbon('Fountain upper landing',81,100,-8.8,-2.7,()=>17,3,'#c2baa4');
+ribbon('Upper landing gallery',100,123,-8.8,s=>s<112?-2.7:mix(-2.7,5,clamp((s-112)/5)),()=>17,3,'#c2baa4');
+ribbon('Gallery access bank',111,130,3.5,9,s=>mix(17,8,clamp((s-111)/19)),3,trim);
+ribbon('Car display kicker',81,88,6,10,s=>12+1.8*clamp((s-81)/7),2,trim);
+box(mallPoint(91,8,13.0),[3.4,1.5,6.4],'#b9c1ba',2,0,true,'Car display');
+box(mallPoint(91,8,14.05),[2.5,.65,3.2],'#52737b',2);
+// Long kinked coffee grind occupies the left-hand lower aisle.
+railAlong('Coffee Grind',56,103,s=>s<68?-11.4: s<83?mix(-11.4,-9.8,(s-68)/15):mix(-9.8,-6.2,(s-83)/20),s=>mallHeight(s)+.85,2);
+for(let s=61;s<=94;s+=7)planter(s,11.3,1.6,3.2,12,2);
+sign('COFFEE',69,-12.6,16.1,6,90);
+treads(101,115,-7,7,16,3);
+railAlong('Sixteen stair centre rail',100,117,0,s=>mallHeight(s)+.82,3);
+// Flying Leap departure and stacked, suspended rails. Their long lower
+// line is catchable from the stairs, while the upper line needs the gallery.
+ribbon('Flying Leap launch',123,130,-8.8,5,s=>17+1.1*clamp((s-123)/7),3,trim);
+railAlong('Flying Leap departure ledge',101,129,-7.8,s=>s<123?17.82:17.82+1.1*(s-123)/7,3,false);
+for(const u of [-5.9,-3.3])railAlong('Suspended upper light rail',139,185,u,s=>mix(16.6,13.1,(s-139)/46),4,false);
+for(const u of [-1,2])railAlong('Suspended lower light rail',133,182,u,s=>mix(12.9,10.3,(s-133)/49),4,false);
+for(const s of [142,157,173])for(const u of [-5.9,-3.3]){
+ const y=mix(16.6,13.1,(s-139)/46),q=mallPoint(s,u,(y+18.1)/2);box(q,[.07,18.1-y,.07],dark,4);
+}
+// Long recessed turquoise channel and side planters below the hanging rails.
+ribbon('Atrium blue fountain',136,177,-4.8,1.4,()=>8.035,4,'#43888c',false,'solid');
+for(const u of [-5.15,1.75])railAlong('Atrium fountain ledge',136,177,u,()=>8.45,4,false);
+for(const s of [146,172])planter(s,7.2,3.2,9,8,4);
+// Elevator recess is the only deep side bay, with a genuine quarter pipe
+// at each end and a clear flat route between the two.
+ribbon('Elevator side bay',124,163,s=>boundary(-1,s),s=>-plan(s).width/2+.03,()=>8,4,'#9c9989');
+for(const [s,yaw]of [[132,-90],[151,90]] as [number,number][]){
+ add({t:'vertramp',p:mallPoint(s,-16,8),vkind:'quarter',yaw:mallYaw(s)+yaw,len:7,w:0,rise:3.0,arc:90,arcSteps:24,deck:1.2,rails:true,tex:'pavement',color:trim,grp:4,nm:'Elevator quarter pipe'});
+}
+// Lower escalator is broad, with two black moving-belt lines and a centre
+// stair lane. The visible treads never become wheel-sized collision bumps.
+treads(198,212,-8,8,18,5);
+for(const u of [-8.2,-3,3,8.2])railAlong('Lower escalator handrail',195,216,u,s=>mallHeight(s)+.85,5);
+planter(229,7.7,2.8,9,3.5,5);
+// Crossrails sit on a shallow split landing, then cross one another at
+// different heights. The centreline remains rideable without a jump.
+railAlong('Crossrail left to right',268,299,s=>mix(-6.5,6.5,ease(268,299,s)),s=>mallHeight(s)+1.02,6);
+railAlong('Crossrail right to left',268,299,s=>mix(6.5,-6.5,ease(268,299,s)),s=>mallHeight(s)+.72,6);
+for(const u of [-7.5,7.5])railAlong('Arcade side ledge',263,305,u,s=>mallHeight(s)+.48,6,false);
+sign('GARDEN COURT',316,0,5.8,9);
+
+// The outdoor plaza is a shallow rectangular bowl with a blue angular
+// sculpture. Raised side ledges create the complete-around-atrium grind.
+for(const u of [-10.5,10.5]){
+ ribbon('Outdoor raised ledge',330,373,u-1,u+1,()=>.62,7,'#aaa58f');
+ railAlong('Whole Atrium grind',328,374,u,()=>.72,7,false);
+ for(const s of [336,365])planter(s,u,2.2,5,.62,7);
+}
+for(const s of [331,370])for(const side of [-1,1])rail('Atrium end return',[mallPoint(s,side*9.5,.72),mallPoint(s,side*11.5,.72)],7);
+// Three long clean aisles pass around the plaza's sunken blue feature.
+box(mallPoint(350,0,.25),[8,.5,15],trim,7,0,true,'Plaza fountain kerb');
+box(mallPoint(350,0,.53),[7.1,.07,14.1],'#438c99',7);
+ribbon('Blue sculpture left bank',343,352,-3.4,0,s=>.6+2.6*clamp((s-343)/9),7,'#4c9bb2');
+ribbon('Blue sculpture right bank',352,359,0,3.4,s=>3.2-2.6*clamp((s-352)/7),7,'#43899b');
+// Final 32 stairs and the upper mezzanine option share a long landing apron.
+treads(375,391,-7.2,7.2,32,8);
+for(const u of [-7,0,7])railAlong('Thirty-two stair handrail',373,394,u,s=>mallHeight(s)+.86,8);
+ribbon('Mezzanine approach',355,370,-8.7,-4.4,s=>3.8*clamp((s-355)/15),8,trim);
+ribbon('Mezzanine takeoff',370,377,-8.7,-4.4,()=>3.8,8,stone);
+railAlong('Step Off a Mezzanine lip',369,377,-8.6,()=>4.65,8,false);
+add({t:'vertramp',p:mallPoint(401,3.7,-7),vkind:'quarter',yaw:0,len:12,w:0,rise:2.7,arc:85,arcSteps:24,deck:1,tex:'pavement',color:trim,rails:true,grp:8,nm:'Exit return quarter pipe'});
+// Native completion pad stays on the safe exit apron, beside the return vert.
+add({t:'gate',p:mallPoint(408.5,0,-7),yaw:mallYaw(408.5),w:13.8,invisible:true,grp:8,nm:'Mall exit doorway'});
+for(const u of [-7,-3.5,0,3.5,7])box(mallPoint(408.5,u,-4.3),[.13,5.4,.22],'#8bacae',8);
+box(mallPoint(408.5,0,-1.6),[14.1,.18,.24],'#8bacae',8);
+const doors=[mallPoint(408.5,-7,-7),mallPoint(408.5,7,-7),mallPoint(408.5,7,-1.7),mallPoint(408.5,-7,-1.7)];
+add({t:'mesh',p:[0,0,0],vertices:doors.flat(),indices:[0,1,2,0,2,3],tex:'solid',color:'#9fc2c4',opacity:.2,solid:false,doubleSided:true,edgeGrinding:false,castShadow:false,grp:8,nm:'Exit glass doors'});
+
+export const MALL_CHECKPOINTS = [42,135,260,321,395].map((s,i)=>({s,p:mallPoint(s,[7.2,3.8,0,0,0][i])}));
+for(const [i,c]of MALL_CHECKPOINTS.entries())add({t:'checkpoint',p:c.p,grp:Math.min(8,i*2+1),nm:`Mall checkpoint ${i+1}`});
+// Ordered nodes keep checkpoints and route inspection in the same frame;
+// native skatepark mode supplies rider-relative controls and its chase rig.
+for(const k of MALL_KNOTS)add({t:'camnode',p:mallPoint(k.s),radius:8,grp:9,nm:'Mall route camera'});
+for(const [i,s]of [48,105,188,263,370].entries()){
+ const u=i===1?-6.7:i===0?3.4:5.8,y=i===1?17:mallHeight(s);
+ sign('DIRECTORY',s,u,y+1.9,1.9);
+ box(mallPoint(s,u,y+.65),[.25,1.3,.25],dark,10);
+}
+// Native collectibles mark the five letter locations and the hidden rail
+// reward without adding a second scoring or input system.
+for(const [s,u,y]of [[8,0,19.2],[78,9.3,13.4],[159,-.7,14.7],[285,0,2.3],[352,0,4.4]])
+ add({t:'wumpa',p:mallPoint(s,u,y),grp:10,nm:'Reference letter location'});
+add({t:'crystal',p:mallPoint(174,-4.6,14.15),grp:4,nm:'Hidden tape line reward'});
+add({t:'pit',p:[55,-12,-150],s:[200,1,390],invisible:true,grp:9,nm:'Below-mall recovery volume'});
+for(const b of batches.values())add({t:'mesh',p:[0,0,0],vertices:b.vertices,indices:b.indices,color:b.color,emissive:b.emissive,tex:'solid',solid:false,doubleSided:true,edgeGrinding:false,castShadow:false,grp:b.grp,nm:'Batched mall architecture'});
+
+export const MALL_LEVEL:CustomLevelData = {
+ v:1,name:'Mall · New York',spawn:mallPoint(5,0,18.12),killY:-16,startWarpPad:false,
+ skatepark:true,sky:'night',keepPlayFog:true,jungleDepthFade:false,
+ atmosphere:{fogEnabled:true,fogNear:50,fogFar:175,fogColor:'#333e43',ambientSky:'#c8d4d0',ambientGround:'#858378',ambientIntensity:1.45,sunColor:'#f4ebcf',sunIntensity:1.1,fillColor:'#a9c5cd',fillIntensity:.55,shadowStrength:.25,backdrop:'fog',drawDistance:240},
+ components:C,groups,
+};
