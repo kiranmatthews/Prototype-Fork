@@ -1,4 +1,4 @@
-import {SCHOOL_MINI_GAP,SCHOOL_PARK_GAP,SCHOOL_TABLES,SCHOOL_WEST_DESCENT,SCHOOL_WEST_WEDGE,schoolMapPoint} from '../src/levels/school-miami';
+import {SCHOOL_MINI_GAP,SCHOOL_PARK_GAP,SCHOOL_TABLES,SCHOOL_LONG_ASS_RAIL,SCHOOL_WEST_WEDGE,schoolMapPoint} from '../src/levels/school-miami';
 type Point=[number,number,number];
 const quantize=(sample:any)=>{const n=Math.max(1,Math.hypot(sample.moveX||0,sample.moveY||0));return {...sample,moveX:Math.round((sample.moveX||0)/n*100)/100,moveY:Math.round((sample.moveY||0)/n*100)/100};};
 const cameraAxis=(p:any,wx:number,wz:number)=>{const n=Math.hypot(p.camDir.x,p.camDir.z)||1;return{moveX:(-p.camDir.z*wx+p.camDir.x*wz)/n,moveY:(p.camDir.x*wx+p.camDir.z*wz)/n};};
@@ -8,12 +8,12 @@ export function schoolStreetTrials(l:any,p:any){
   const sign=schoolMapPoint(352,78);sign[1]=-2.45;
   const table=SCHOOL_TABLES[3],rad=table.yaw*Math.PI/180;
   const tableRails=[-1,1].map(side=>nearStart(l,p,[table.p[0]+side*.48*Math.cos(rad)-1.6*Math.sin(rad),table.p[1]+.79,table.p[2]-side*.48*Math.sin(rad)-1.6*Math.cos(rad)]));
-  const long=nearStart(l,p,[SCHOOL_WEST_DESCENT[0][0]-3.9,.45,SCHOOL_WEST_DESCENT[0][2]+1.2]);
+  const long=nearStart(l,p,SCHOOL_LONG_ASS_RAIL[0]);
   return [
     {name:'Funbox to Huge Rail',centre:schoolMapPoint(331,74),heading:[-.92,0,.392] as Point,speed:14,release:.7,rails:[huge],exit:[.55,0] as [number,number]},
     {name:'Funbox to Table',centre:schoolMapPoint(331,74),heading:[-.18,0,.984] as Point,speed:12,release:1.1,rails:tableRails,armZ:-68.2},
     {name:'Funbox to Playground Rail',centre:schoolMapPoint(471,106),heading:[-.98,0,-.199] as Point,speed:14,release:.4,rails:[nearStart(l,p,sign)],exit:[0,.55] as [number,number]},
-    {name:'West wedge to Long Ass Rail',centre:SCHOOL_WEST_WEDGE.p,heading:[-1,0,0] as Point,speed:14,release:1.7,rails:[long]},
+    {name:'West wedge to Long Ass Rail',centre:SCHOOL_WEST_WEDGE.p,heading:[-.4,0,-.9165] as Point,speed:14,release:1.7,approach:3,rails:[long]},
   ];
 }
 /** One grounded approach, a real charged ollie, the intended rail and a

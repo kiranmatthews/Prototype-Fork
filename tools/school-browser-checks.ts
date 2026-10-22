@@ -1,8 +1,9 @@
-import {SCHOOL_KICKER,SCHOOL_POOLS,SCHOOL_ROOF_ACCESS,SCHOOL_MAIN_RAIL,SCHOOL_CHECKPOINTS,SCHOOL_LONG_HALFPIPE,SCHOOL_ROOF_PLANK,SCHOOL_BONUS_ROOF,SCHOOL_DITCH_KICKER,SCHOOL_BRIDGES,SCHOOL_DITCH,SCHOOL_WEST_DESCENT,SCHOOL_MINI_GAP,SCHOOL_ROOF_MINI_GAP,schoolMapPoint} from '../src/levels/school-miami';
+import {SCHOOL_KICKER,SCHOOL_POOLS,SCHOOL_ROOF_ACCESS,SCHOOL_MAIN_RAIL,SCHOOL_CHECKPOINTS,SCHOOL_LONG_HALFPIPE,SCHOOL_ROOF_PLANK,SCHOOL_BONUS_ROOF,SCHOOL_DITCH_KICKER,SCHOOL_BRIDGES,SCHOOL_DITCH,SCHOOL_WEST_DESCENT,SCHOOL_LONG_ASS_RAIL,SCHOOL_MINI_GAP,SCHOOL_ROOF_MINI_GAP,schoolMapPoint} from '../src/levels/school-miami';
 import {createSchoolCircuit} from './school-circuit';
 import {createBalancedGrind,createRoofMiniGap} from './school-grind-lines';
 import {CONST} from '../src/tuning';
 import {schoolStreetTrials,createStreetTransfer,parkGapRails,createParkGap} from './school-street-transfers';
+import {hallPassRails,lawnTransferRails,upperPlanterRails,createHallPass,createUpperPlanterChain,createLawnTransfer} from './school-planter-lines';
 type Point=[number,number,number];
 type Trial={name:string;init:()=>void;input:(n:number)=>any;done:(n:number)=>boolean;limit?:number;allowDeath?:boolean};
 
@@ -21,14 +22,15 @@ export function runSchoolBrowserChecks(g:any){
   };
   const steer=(q:Point)=>{const a=Math.atan2(q[0]-p.pos.x,-(q[2]-p.pos.z)),b=Math.atan2(p.axisF.x,-p.axisF.z),d=Math.atan2(Math.sin(a-b),Math.cos(a-b));return Math.max(-1,Math.min(1,d*3));};
   const near=(q:Point,d=2.2)=>Math.hypot(q[0]-p.pos.x,q[2]-p.pos.z)<d;
-  const pathTrial=(name:string,pts:Point[],charge=false,fullTurn=false,hillBrake=false):Trial=>({name,init:()=>{waypoint=1;place([pts[0][0],pts[0][1]+.1,pts[0][2]],[pts[1][0]-pts[0][0],0,pts[1][2]-pts[0][2]],charge?18:12);},
-    input:()=>{while(waypoint<pts.length-1&&near(pts[waypoint],hillBrake?2:3))waypoint++;const turn=steer(pts[waypoint]);return {moveX:turn,moveY:fullTurn?Math.sqrt(1-turn*turn):1,jumpHeld:charge,grabHeld:hillBrake&&p.pos.z<39&&p.speed>12};},done:()=>waypoint===pts.length-1&&near(pts.at(-1)!)});
+  const pathTrial=(name:string,pts:Point[],charge=false,fullTurn=false,hillBrake=false,cruise=12):Trial=>({name,init:()=>{waypoint=1;place([pts[0][0],pts[0][1]+.1,pts[0][2]],[pts[1][0]-pts[0][0],0,pts[1][2]-pts[0][2]],charge?18:cruise);},
+    input:()=>{while(waypoint<pts.length-1&&near(pts[waypoint],hillBrake?2:3))waypoint++;const turn=steer(pts[waypoint]);return {moveX:turn,moveY:fullTurn?Math.sqrt(1-turn*turn):1,jumpHeld:charge,grabHeld:hillBrake&&p.pos.z<39&&p.speed>cruise};},done:()=>waypoint===pts.length-1&&near(pts.at(-1)!)});
   const k=SCHOOL_KICKER,h=k.direction,run=k.gap/2+k.run+7;
   const dk=SCHOOL_DITCH_KICKER,dh=dk.direction,db=SCHOOL_BRIDGES[2];let overBridge=false;
   const ditch=SCHOOL_DITCH,dl=Math.hypot(ditch.b[0]-ditch.a[0],ditch.b[2]-ditch.a[2]),dn=[(ditch.b[2]-ditch.a[2])/dl,0,-(ditch.b[0]-ditch.a[0])/dl],ditchHalf=ditch.half+ditch.radius*Math.sin(65*Math.PI/180),ditchCross=ditch.a.map((v,i)=>v+(ditch.b[i]-v)*.58);
   let exited=false,overGarbage=false,dumpsterCaught=false,dumpsterRepress=false,dumpsterAFrames=0,dumpsterBFrames=0,dumpsterA:any,dumpsterB:any;
   let streetLine:ReturnType<typeof createStreetTransfer>,parkLine:ReturnType<typeof createParkGap>;
   let grindLine:ReturnType<typeof createBalancedGrind>,roofMini:ReturnType<typeof createRoofMiniGap>;
+  let planterLine:ReturnType<typeof createHallPass>|ReturnType<typeof createUpperPlanterChain>|ReturnType<typeof createLawnTransfer>;
   const balancedTrial=(name:string,select:()=>any,ground=false,reverse=false):Trial=>({name,limit:900,init:()=>{
     const r=select();if(!r)throw Error(`${name}: missing rail`);const t=reverse?r.totalLength-.4:.4,h=r.tangentAt(t).multiplyScalar(reverse?-1:1).setY(0).normalize(),q=r.pointAt(t);
     if(ground){const a=r.points[0].clone().addScaledVector(h,-1.5);place([a.x,.1,a.z],h.toArray(),14);}
@@ -42,6 +44,7 @@ export function runSchoolBrowserChecks(g:any){
     ...SCHOOL_POOLS.map((pool):Trial=>({name:`${pool.name} vert return`,init:()=>{air=false;place([pool.centre[0],pool.bottom+.1,pool.centre[2]],[1,0,0],16);},input:()=>({jumpHeld:true}),done:()=>{air||=p.vertAir;return air&&p.grounded;}})),
     pathTrial('Roof service hill',SCHOOL_ROOF_ACCESS.filter((_,i,a)=>i%7===0||i===a.length-1),true,true,true),
     pathTrial('Winding halfpipe',SCHOOL_LONG_HALFPIPE,false,true),
+    pathTrial('West descent to pools',SCHOOL_WEST_DESCENT,false,true,true,9),
     pathTrial('Gym doorway',[[31,0,9],[31,0,19],[38,0,25],[48.5,0,32],[48.5,0,42]]),
     {name:'Air-conditioner roof gap',init:()=>{air=false;popped=false;place([70,7.1,27.5],[-1,0,0],18);},input:()=>{if(p.pos.x<61)popped=true;return{jumpHeld:!popped};},done:()=>{air||=p.state==='air';return air&&p.grounded&&p.pos.x<49.7;}},
     {name:'Roof 2 Roof',init:()=>{air=false;place([63,7.1,23],[0,0,-1],18);},input:()=>({moveY:1,jumpHeld:true}),done:()=>{air||=p.state==='air';if(!air||!p.grounded||p.pos.z>=SCHOOL_BONUS_ROOF.maxZ)return false;if(p.pos.z<1||Math.abs(p.pos.y-7)>.06)throw Error('Missed bonus roof');return true;}},
@@ -52,7 +55,7 @@ export function runSchoolBrowserChecks(g:any){
     ...[-1,1].map((dir):Trial=>{const h=dn.map(v=>v*dir) as Point;return{name:`Ditch Slap ${dir}`,init:()=>{air=false;popped=false;place([ditchCross[0]-h[0]*(ditchHalf+5),-4.9,ditchCross[2]-h[2]*(ditchHalf+5)],h,18);},input:()=>{if((ditchCross[0]-p.pos.x)*h[0]+(ditchCross[2]-p.pos.z)*h[2]<ditchHalf+1)popped=true;return {jumpHeld:!popped};},done:()=>{air||=p.state==='air';if(!air||!p.grounded)return false;if((p.pos.x-ditchCross[0])*h[0]+(p.pos.z-ditchCross[2])*h[2]<=ditchHalf||Math.abs(p.pos.y+5)>.06)throw Error('Ditch Slap missed opposite bank');return true;}};}),
     {name:'Dumpster Rail Gap and rollout',init:()=>{dumpsterA=l.rails.find((r:any)=>r.points[0].distanceTo(p.pos.clone().set(18,.55,28))<.1);dumpsterB=l.rails.find((r:any)=>r.points[0].distanceTo(p.pos.clone().set(18,1.1,40.5))<.1);if(!dumpsterA||!dumpsterB)throw Error('Missing dumpster rails');dumpsterCaught=false;dumpsterRepress=false;popped=false;dumpsterAFrames=0;dumpsterBFrames=0;place([18,.1,26],[0,0,1],14);},input:()=>{if(dumpsterCaught&&p.pos.z>34.6)popped=true;if(popped&&p.pos.z>41.8)dumpsterRepress=true;return{grindHeld:!popped||dumpsterRepress,jumpHeld:dumpsterCaught&&!popped};},done:()=>{dumpsterCaught||=p.state==='grind'&&p.grindRail===dumpsterA;if(p.state==='grind'&&p.grindRail===dumpsterA)dumpsterAFrames++;if(popped&&p.state==='grind'&&p.grindRail===dumpsterB)dumpsterBFrames++;if(dumpsterBFrames<8||!p.grounded)return false;if(dumpsterAFrames<20||p.pos.z<=47||Math.abs(p.pos.y)>.06)throw Error('Dumpster transfer missed rollout');return true;}},
     {name:'Garbage Ollie',init:()=>{air=false;popped=false;overGarbage=false;place([18.2,.1,52.2],[1,0,0],12);},input:()=>{if(p.pos.x>18.6)popped=true;return {jumpHeld:!popped};},done:()=>{air||=p.state==='air';if(Math.abs(p.pos.x-23.3)<.4&&Math.abs(p.pos.z-52.2)<.3&&p.pos.y>.48)overGarbage=true;if(!air||!p.grounded)return false;if(!overGarbage||p.pos.x<=23.64||Math.abs(p.pos.y)>.06)throw Error('Garbage Ollie missed actual crate');return true;}},
-    balancedTrial('Long Ass Rail full grind',()=>{const q=p.pos.clone().set(...SCHOOL_WEST_DESCENT[0]).add(p.pos.clone().set(-3.9,.45,1.2));return l.rails.find((r:any)=>r.points[0].distanceTo(q)<.1);},true),
+    balancedTrial('Long Ass Rail full grind',()=>{const q=p.pos.clone().set(...SCHOOL_LONG_ASS_RAIL[0]);return l.rails.find((r:any)=>r.points[0].distanceTo(q)<.1);},true),
     balancedTrial('Huge Rail full grind',()=>{const q=p.pos.clone().set(...SCHOOL_MINI_GAP.takeoffCoping).add(p.pos.clone().set(0,.05,0));return l.rails.find((r:any)=>r.points[0].distanceTo(q)<.3);},false,true),
     balancedTrial('Playground Rail full grind',()=>{const q=p.pos.clone().set(...schoolMapPoint(352,78));q.y=-2.45;return l.rails.find((r:any)=>r.points[0].distanceTo(q)<.1);}),
     {name:'Roof Mini Gap and rollout',init:()=>{
@@ -62,13 +65,24 @@ export function runSchoolBrowserChecks(g:any){
       roofMini=createRoofMiniGap(p,ra,rb,CONST.fixedStep);report.roofMini=roofMini.report;
     },input:()=>roofMini.sample(),done:()=>roofMini.observe()},
     ...schoolStreetTrials(l,p).map((c):Trial=>({name:c.name,limit:450,init:()=>{
-      const h=p.axisF.clone().set(...c.heading).normalize(),q=p.pos.clone().set(...c.centre).addScaledVector(h,-5.5);q.y=-4.9;place(q.toArray(),h.toArray(),c.speed);
+      const h=p.axisF.clone().set(...c.heading).normalize(),q=p.pos.clone().set(...c.centre).addScaledVector(h,-(c.approach??5.5));q.y=-4.9;place(q.toArray(),h.toArray(),c.speed);
       if(p.balanceBoostT)throw Error('Street transfer has a balance assist');streetLine=createStreetTransfer(p,c,CONST.fixedStep);(report.streetTransfers??=[]).push({name:c.name,result:streetLine.report});
     },input:()=>streetLine.sample(),done:()=>streetLine.observe()})),
     {name:'Park Gap and rollout',limit:350,init:()=>{
       const {takeoff:a,receiver:b}=parkGapRails(l,p);if(!a||!b)throw Error('Park Gap coping missing');const q=a.pointAt(a.totalLength-4).add(p.pos.clone().set(0,.3,0)),h=a.tangentAt(a.totalLength-4).setY(0).normalize();place(q.toArray(),h.toArray(),12);p.pos.copy(q);p.prevPos.copy(q);p.state='air';p.grounded=false;p.vVel=0;p.airFromSkate=true;p.airGrav='board';
       if(p.balanceBoostT)throw Error('Park Gap has a balance assist');parkLine=createParkGap(p,a,b,CONST.fixedStep);report.parkGap=parkLine.report;
     },input:()=>parkLine.sample(),done:()=>parkLine.observe()},
+    ...['Hall Pass','Upper planter chain','Lawn rail-to-rail'].map((name):Trial=>({name,limit:500,init:()=>{
+      if(name==='Hall Pass'){
+        const {takeoff:a,receiver:b}=hallPassRails(l,p),h=a.tangentAt(.4).setY(0).normalize(),q=a.points[0].clone().addScaledVector(h,-4);q.y=.1;
+        place(q.toArray(),h.toArray(),12);planterLine=createHallPass(p,a,b,CONST.fixedStep);
+      }else if(name==='Upper planter chain'){
+        const rails=upperPlanterRails(l,p),q=rails[0].points[0].clone().add(p.pos.clone().set(-3,-.5,0));place(q.toArray(),[1,0,0],12);planterLine=createUpperPlanterChain(p,rails,CONST.fixedStep);
+      }else{
+        const {takeoff:a,receiver:b}=lawnTransferRails(l,p),q=a.pointAt(a.totalLength-10).add(p.pos.clone().set(0,.3,0)),h=a.tangentAt(a.totalLength-10).setY(0).normalize();place(q.toArray(),h.toArray(),18);p.pos.copy(q);p.prevPos.copy(q);p.state='air';p.grounded=false;p.vVel=0;p.airFromSkate=true;p.airGrav='board';planterLine=createLawnTransfer(p,a,b,CONST.fixedStep);
+      }
+      if(p.balanceBoostT||p.uberTimer)throw Error('Planter transfer has a balance assist');(report.planterLines??=[]).push({name,result:planterLine.report});
+    },input:()=>planterLine.sample(),done:()=>planterLine.observe()})),
     {name:'Continuous campus circuit',limit:2400,init:()=>{p.respawn(l,true);circuit=createSchoolCircuit(p);report.circuit=circuit.report;},input:()=>circuit.sample(),done:()=>circuit.observe()},
     {name:'Checkpoint and fall recovery',allowDeath:true,limit:900,init:()=>{banked=false;dead=false;const q=SCHOOL_CHECKPOINTS[1];place([q[0]-3,q[1]+.1,q[2]],[1,0,0],18);},input:()=>({moveY:banked?0:1,jumpHeld:!banked}),done:()=>{
       if(!banked&&l.activeCheckpoint===l.checkpoints[1]){banked=true;report.checkpointBanked=true;p.pos.set(110,-10,0);p.prevPos.copy(p.pos);p.state='air';p.grounded=false;p.vVel=-10;p.airFromSkate=true;p.airGrav='board';}

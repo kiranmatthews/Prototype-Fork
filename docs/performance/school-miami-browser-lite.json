@@ -8,8 +8,8 @@
     -39
   ],
   "speed": 0,
-  "components": 212,
-  "rails": 57,
+  "components": 224,
+  "rails": 61,
   "errors": [
     "ResizeObserver loop completed with undelivered notifications."
   ],
@@ -44,6 +44,10 @@
       {
         "name": "Winding halfpipe",
         "frames": 375
+      },
+      {
+        "name": "West descent to pools",
+        "frames": 271
       },
       {
         "name": "Gym doorway",
@@ -95,7 +99,7 @@
       },
       {
         "name": "Long Ass Rail full grind",
-        "frames": 176
+        "frames": 169
       },
       {
         "name": "Huge Rail full grind",
@@ -123,15 +127,27 @@
       },
       {
         "name": "West wedge to Long Ass Rail",
-        "frames": 118
+        "frames": 87
       },
       {
         "name": "Park Gap and rollout",
         "frames": 92
       },
       {
+        "name": "Hall Pass",
+        "frames": 214
+      },
+      {
+        "name": "Upper planter chain",
+        "frames": 176
+      },
+      {
+        "name": "Lawn rail-to-rail",
+        "frames": 158
+      },
+      {
         "name": "Continuous campus circuit",
-        "frames": 2316
+        "frames": 2373
       },
       {
         "name": "Checkpoint and fall recovery",
@@ -139,16 +155,16 @@
       }
     ],
     "failure": null,
-    "frames": 5777,
+    "frames": 6615,
     "longGrinds": [
       {
         "name": "Long Ass Rail full grind",
         "result": {
-          "frames": 176,
-          "grindFrames": 148,
-          "maxT": 47.85746907856143,
+          "frames": 169,
+          "grindFrames": 152,
+          "maxT": 51.58168337897551,
           "minT": 0,
-          "progress": 47.85746907856143,
+          "progress": 51.58168337897551,
           "direction": 1,
           "maxBalance": 0.1,
           "caught": true,
@@ -174,9 +190,9 @@
         "result": {
           "frames": 121,
           "grindFrames": 95,
-          "maxT": 22.333333333333332,
+          "maxT": 22.422580508128924,
           "minT": 0.39999999999999947,
-          "progress": 22.333333333333332,
+          "progress": 22.422580508128924,
           "direction": 1,
           "maxBalance": 0.1,
           "caught": true,
@@ -225,10 +241,10 @@
       {
         "name": "West wedge to Long Ass Rail",
         "result": {
-          "frames": 118,
+          "frames": 87,
           "air": true,
-          "takeoffY": -3.8499999046325684,
-          "receivingGrindFrames": 66,
+          "takeoffY": -4.332498430038665,
+          "receivingGrindFrames": 37,
           "landed": true
         }
       }
@@ -240,13 +256,49 @@
       "air": true,
       "landed": true
     },
+    "planterLines": [
+      {
+        "name": "Hall Pass",
+        "result": {
+          "frames": 214,
+          "takeoffGrindFrames": 104,
+          "receivingGrindFrames": 14,
+          "air": true,
+          "landed": true
+        }
+      },
+      {
+        "name": "Upper planter chain",
+        "result": {
+          "frames": 176,
+          "grindFrames": [
+            18,
+            18,
+            18,
+            21
+          ],
+          "transfers": 3,
+          "landed": true
+        }
+      },
+      {
+        "name": "Lawn rail-to-rail",
+        "result": {
+          "frames": 158,
+          "takeoffGrindFrames": 31,
+          "receivingGrindFrames": 48,
+          "air": true,
+          "landed": true
+        }
+      }
+    ],
     "circuit": {
-      "frames": 2316,
-      "waypoints": 48,
-      "totalWaypoints": 48,
-      "distance": 381.7566099420657,
+      "frames": 2373,
+      "waypoints": 51,
+      "totalWaypoints": 51,
+      "distance": 394.01433000119476,
       "gimmeGrindFrames": 21,
-      "returnGrindFrames": 525,
+      "returnGrindFrames": 555,
       "kickerAir": true,
       "kickerLanded": true
     },

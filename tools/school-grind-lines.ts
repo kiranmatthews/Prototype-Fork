@@ -23,7 +23,9 @@ export function createBalancedGrind(p:any,rail:any,dt:number,sideExit=false){
   },observe:()=>{
     report.frames++;
     if(p.state==='grind'&&p.grindRail===rail){report.caught=true;report.grindFrames++;report.maxT=Math.max(report.maxT,p.grindT);report.minT=Math.min(report.minT,p.grindT);report.progress=Math.max(report.progress,direction>0?p.grindT:rail.totalLength-p.grindT);report.maxBalance=Math.max(report.maxBalance,Math.abs(p.balanceMeter?.bal??0));}
-    if(exitPopped&&p.state==='air'){report.minT=Math.min(report.minT,p.grindT);report.progress=Math.max(report.progress,direction>0?p.grindT:rail.totalLength-p.grindT);}
+    // Natural run-off advances grindT to the exact endpoint before changing
+    // state. Include that last step, not only samples still marked grind.
+    if(p.state==='air'&&(exitPopped||report.caught&&p.lastRail===rail)){report.maxT=Math.max(report.maxT,p.grindT);report.minT=Math.min(report.minT,p.grindT);report.progress=Math.max(report.progress,direction>0?p.grindT:rail.totalLength-p.grindT);}
     if(report.caught&&p.grounded){if(report.progress<rail.totalLength-.3)throw Error('Long grind left its rail before the end');report.landed=true;return true;}
     return false;
   }};

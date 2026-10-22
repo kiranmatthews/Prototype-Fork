@@ -1,4 +1,4 @@
-import { SCHOOL_KICKER, SCHOOL_CORRIDOR_EXIT, SCHOOL_LONG_HALFPIPE, SCHOOL_PLANTERS, SCHOOL_START_CANOPY, SCHOOL_WEST_DESCENT, schoolMapPoint } from '../src/levels/school-miami';
+import { SCHOOL_KICKER, SCHOOL_CORRIDOR_EXIT, SCHOOL_LONG_HALFPIPE, SCHOOL_PLANTERS, SCHOOL_START_CANOPY, SCHOOL_LONG_ASS_RAIL, schoolMapPoint } from '../src/levels/school-miami';
 
 type Point=[number,number,number];
 
@@ -12,7 +12,7 @@ export function createSchoolCircuit(p:any){
     [12,-5,-83.1],[0,-5,-83.1],[-12,-5,-83.1],[-17.3,-5,-82.6],
     ...SCHOOL_LONG_HALFPIPE.slice(0,-1).reverse(),...SCHOOL_CORRIDOR_EXIT.slice(1),[-76,-5,-27],
     ...[[42,196],[61,205],[95,211],[131,215],[166,213]].map(([u,v])=>schoolMapPoint(u,v)),
-    [-33.5,-5,-26],[-28,-4.4,-27.6],...SCHOOL_WEST_DESCENT.slice(0,5).reverse().map(([x,y,z]):Point=>[x-3.9,y+.45,z+1.2]),[4,0,1],
+    [-33.5,-5,-26],...SCHOOL_LONG_ASS_RAIL.filter((_,i,a)=>i%12===0||i===a.length-1).reverse(),[4,0,1],
   ];
   let index=0,popped=false,heldBefore=false,previousBalance=0,returnPopped=false;
   const last=p.pos.clone();
@@ -34,17 +34,20 @@ export function createSchoolCircuit(p:any){
       let sideX=0,sideY=0;
       if(nearReturn){const t=p.grindRail.tangentAt(p.grindT).multiplyScalar(p.grindDir),n=Math.hypot(p.camDir.x,p.camDir.z)||1,wx=t.z*.8,wz=-t.x*.8;sideX=(-p.camDir.z*wx+p.camDir.x*wz)/n;sideY=(p.camDir.x*wx+p.camDir.z*wz)/n;}
       const input={moveX:+(nearReturn?sideX:returnGrind?balance:turn).toFixed(2),moveY:nearReturn?+sideY.toFixed(2):returnGrind?0:+Math.sqrt(1-turn*turn).toFixed(2),
-        grindHeld:index<=3||index>=41&&p.pos.x>-32&&!returnPopped,grindPressed:report.frames===0,
+        grindHeld:index<=3||index>=41&&p.pos.x>-33&&!returnPopped,grindPressed:report.frames===0,
         jumpHeld:held,jumpPressed:held&&!heldBefore,jumpReleased:!held&&heldBefore,
         // Return to cruising speed before the narrow perimeter bends.
-        grabHeld:index>=10&&p.grounded&&(index>=30&&index<=33?(p.speed>4.5||Math.abs(delta)>.35):p.speed>12.5)};
+        grabHeld:index>=10&&p.grounded&&((index>=30&&index<=33||index===points.length-1)?(p.speed>4.5||Math.abs(delta)>.35):p.speed>12.5)};
+      // Release the directional ollie input during flight; air steering is
+      // a spin command, so resume road steering only after the wheels land.
+      if(returnPopped&&p.state==='air'){input.moveX=0;input.moveY=0;}
       heldBefore=held;return input;
     },
     observe(){
       report.frames++;report.distance+=last.distanceTo(p.pos);last.copy(p.pos);
       const planter=SCHOOL_PLANTERS[7];
       if(p.state==='grind'&&p.grindRail?.points.some((q:any)=>Math.abs(q.x-(planter.p[0]-2))<.03&&Math.abs(q.y-.6)<.02))report.gimmeGrindFrames++;
-      if(index>=41&&p.state==='grind'&&p.grindRail?.points.some((q:any)=>Math.abs(q.x+3.9)<.02&&Math.abs(q.y-.45)<.02))report.returnGrindFrames++;
+      if(index>=41&&p.state==='grind'&&p.grindRail?.points.some((q:any)=>Math.abs(q.x-SCHOOL_LONG_ASS_RAIL[0][0])<.02&&Math.abs(q.y-SCHOOL_LONG_ASS_RAIL[0][1])<.02))report.returnGrindFrames++;
       if(index>=8&&index<=10&&p.state==='air')report.kickerAir=true;
       if(report.kickerAir&&index>=10&&p.grounded)report.kickerLanded=true;
       if(index<points.length)return false;

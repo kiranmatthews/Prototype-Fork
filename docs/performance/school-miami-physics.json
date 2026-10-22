@@ -1,6 +1,6 @@
 {
-  "components": 212,
-  "rails": 57,
+  "components": 224,
+  "rails": 61,
   "support": [
     {
       "label": "start canopy",
@@ -164,19 +164,19 @@
     },
     {
       "label": "west descent to pools",
-      "frames": 176,
+      "frames": 275,
       "bails": 0,
-      "maxStep": 0.3315004713396652,
-      "minSpeed": 10.165988444152811,
+      "maxStep": 0.18172541212385335,
+      "minSpeed": 7.886316267414254,
       "end": [
-        -34.135717207512606,
-        -5,
-        -31.4813080382581
+        -26.100716662239584,
+        -4.693417498966229,
+        -24.84285693451288
       ],
       "target": [
-        -36,
+        -28.03661971830986,
         -5,
-        -31
+        -23.96676056338028
       ]
     },
     {
@@ -585,16 +585,16 @@
     },
     {
       "name": "West wedge to Long Ass Rail",
-      "frames": 118,
+      "frames": 87,
       "air": true,
-      "takeoffY": -3.8499999046325684,
-      "receivingGrindFrames": 66,
+      "takeoffY": -4.332498430038665,
+      "receivingGrindFrames": 37,
       "landed": true,
       "bails": 0,
       "end": [
-        -49.52515582737925,
-        -7.741865341193501,
-        -29.8
+        -32.54245487343939,
+        -5,
+        -26.38528459326166
       ]
     },
     {
@@ -609,6 +609,52 @@
         32.517953589292944,
         -5,
         -52.25817383444846
+      ]
+    },
+    {
+      "name": "Hall Pass",
+      "frames": 214,
+      "takeoffGrindFrames": 104,
+      "receivingGrindFrames": 14,
+      "air": true,
+      "landed": true,
+      "bails": 0,
+      "end": [
+        -9.959485893219377,
+        0.03500000014901161,
+        -33.59748366368853
+      ]
+    },
+    {
+      "name": "Upper planter chain",
+      "frames": 176,
+      "grindFrames": [
+        18,
+        18,
+        18,
+        21
+      ],
+      "transfers": 3,
+      "landed": true,
+      "bails": 0,
+      "end": [
+        40.06510389516173,
+        0,
+        -2.909647887323943
+      ]
+    },
+    {
+      "name": "Lawn rail-to-rail",
+      "frames": 158,
+      "takeoffGrindFrames": 31,
+      "receivingGrindFrames": 48,
+      "air": true,
+      "landed": true,
+      "bails": 0,
+      "end": [
+        54.564866666666546,
+        0.11999994277954107,
+        -7.114213562373059
       ]
     }
   ],
@@ -659,20 +705,20 @@
     },
     {
       "name": "Long Ass Rail",
-      "frames": 176,
-      "grindFrames": 148,
-      "maxT": 47.85746907856143,
+      "frames": 169,
+      "grindFrames": 152,
+      "maxT": 51.58168337897551,
       "minT": 0,
-      "progress": 47.85746907856143,
+      "progress": 51.58168337897551,
       "direction": 1,
       "maxBalance": 0.1,
       "caught": true,
       "landed": true,
       "bails": 0,
       "end": [
-        -51.21201991331828,
-        -6.662142577688438,
-        -29.8
+        -36.04834807388578,
+        -5,
+        -24.600694064179052
       ]
     },
     {
@@ -697,9 +743,9 @@
       "name": "Playground Rail",
       "frames": 121,
       "grindFrames": 95,
-      "maxT": 22.333333333333332,
+      "maxT": 22.422580508128924,
       "minT": 0.39999999999999947,
-      "progress": 22.333333333333332,
+      "progress": 22.422580508128924,
       "direction": 1,
       "maxBalance": 0.1,
       "caught": true,
@@ -714,12 +760,12 @@
   ],
   "circuits": [
     {
-      "frames": 2320,
-      "waypoints": 48,
-      "totalWaypoints": 48,
-      "distance": 381.8020757822424,
+      "frames": 2373,
+      "waypoints": 51,
+      "totalWaypoints": 51,
+      "distance": 394.01141713434833,
       "gimmeGrindFrames": 21,
-      "returnGrindFrames": 525,
+      "returnGrindFrames": 555,
       "kickerAir": true,
       "kickerLanded": true
     }

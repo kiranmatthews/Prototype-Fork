@@ -60,7 +60,7 @@ await withSkateRuntime(async ({ THREE, server, Level, Player, scene, CONST, TUNI
     ride('handicap downhill',[[st.a[0]+2,0,-4],[st.a[0]+2,0,-8],[41,-2,-22],[39,-5,-36],[37,-5,-39]],{speed:12,charge:false});
     ride('gym doorway and court',[[31,0,9],[31,0,19],[38,0,25],[48.5,0,32],[48.5,0,42]],{speed:8,charge:false});
     ride('gym service-hill ascent',m.SCHOOL_ROOF_ACCESS.filter((_,i,a)=>i%7===0||i===a.length-1),{speed:18,fullTurn:true,arrival:2,brake:()=>p.pos.z<39&&p.speed>12});
-    ride('west descent to pools',m.SCHOOL_WEST_DESCENT,{speed:10,charge:false});
+    ride('west descent to pools',m.SCHOOL_WEST_DESCENT,{speed:10,charge:false,fullTurn:true,arrival:1.5,brake:()=>p.speed>9});
     ride('Huge Rail halfpipe corridor',m.SCHOOL_LONG_HALFPIPE,{speed:12,charge:false,fullTurn:true});
     // Footbridges are crossed at street speed, in either direction. These
     // tests include their actual ground joins rather than starting on top.
@@ -241,7 +241,7 @@ await withSkateRuntime(async ({ THREE, server, Level, Player, scene, CONST, TUNI
       report.grinds.push({dir,frames,end:p.pos.toArray()});assert.ok(frames>=35,'downhill rail prematurely interrupted');
     }
     const {createBalancedGrind,createRoofMiniGap}=await server.ssrLoadModule('/tools/school-grind-lines.ts');
-    const longStart=m.SCHOOL_WEST_DESCENT[0].map((v,i)=>v+[-3.9,.45,1.2][i]),longRail=level.rails.find(r=>r.points[0].distanceTo(new THREE.Vector3(...longStart))<.1);
+    const longStart=m.SCHOOL_LONG_ASS_RAIL[0],longRail=level.rails.find(r=>r.points[0].distanceTo(new THREE.Vector3(...longStart))<.1);
     const sign=m.schoolMapPoint(352,78);sign[1]=-2.45;
     const playground=level.rails.find(r=>r.points[0].distanceTo(new THREE.Vector3(...sign))<.1);
     for(const [name,r] of [['Long Ass Rail',longRail],['Huge Rail',miniTakeoff],['Playground Rail',playground]]){
@@ -262,7 +262,7 @@ await withSkateRuntime(async ({ THREE, server, Level, Player, scene, CONST, TUNI
     assert.ok(roofMiniComplete,'Roof Mini Gap did not land back on the roof');report.airs.push({name:'Roof Mini Gap',...roofMini.report,bails:0,end:p.pos.toArray()});
     const street=await server.ssrLoadModule('/tools/school-street-transfers.ts');
     for(const c of street.schoolStreetTrials(level,p)){
-      const heading=new THREE.Vector3(...c.heading).normalize(),q=new THREE.Vector3(...c.centre).addScaledVector(heading,-5.5);q.y=-4.9;
+      const heading=new THREE.Vector3(...c.heading).normalize(),q=new THREE.Vector3(...c.centre).addScaledVector(heading,-(c.approach??5.5));q.y=-4.9;
       place(q.toArray(),heading.toArray(),c.speed);assert.equal(p.balanceBoostT,0);
       const controller=street.createStreetTransfer(p,c,CONST.fixedStep);let done=false;
       for(let n=0;n<450;n++){step(makeInput(controller.sample()));assert.ok(!p.isBailing,`${c.name}: bail`);if(controller.observe()){done=true;break;}}
@@ -274,6 +274,23 @@ await withSkateRuntime(async ({ THREE, server, Level, Player, scene, CONST, TUNI
     const park=street.createParkGap(p,parkA,parkB,CONST.fixedStep);let parkDone=false;
     for(let n=0;n<350;n++){step(makeInput(park.sample()));assert.ok(!p.isBailing,'Park Gap bailed');if(park.observe()){parkDone=true;break;}}
     assert.ok(parkDone,'Park Gap missed its yard rollout');report.airs.push({name:'Park Gap',...park.report,bails:0,end:p.pos.toArray()});
+    const planters=await server.ssrLoadModule('/tools/school-planter-lines.ts');
+    for(const name of ['Hall Pass','Upper planter chain','Lawn rail-to-rail']){
+      let controller;
+      if(name==='Hall Pass'){
+        const {takeoff:a,receiver:b}=planters.hallPassRails(level,p),h=a.tangentAt(.4).setY(0).normalize(),q=a.points[0].clone().addScaledVector(h,-4);q.y=.1;
+        place(q.toArray(),h.toArray(),12);controller=planters.createHallPass(p,a,b,CONST.fixedStep);
+      }else if(name==='Upper planter chain'){
+        const rails=planters.upperPlanterRails(level,p),q=rails[0].points[0].clone().add(new THREE.Vector3(-3,-.5,0));
+        place(q.toArray(),[1,0,0],12);controller=planters.createUpperPlanterChain(p,rails,CONST.fixedStep);
+      }else{
+        const {takeoff:a,receiver:b}=planters.lawnTransferRails(level,p),q=a.pointAt(a.totalLength-10).add(new THREE.Vector3(0,.3,0)),h=a.tangentAt(a.totalLength-10).setY(0).normalize();
+        place(q.toArray(),h.toArray(),18);p.pos.copy(q);p.prevPos.copy(q);p.state='air';p.grounded=false;p.vVel=0;p.airFromSkate=true;p.airGrav='board';controller=planters.createLawnTransfer(p,a,b,CONST.fixedStep);
+      }
+      assert.equal(p.balanceBoostT,0);assert.equal(p.uberTimer,0);let complete=false;
+      for(let n=0;n<500;n++){step(makeInput(controller.sample()));assert.ok(!p.isBailing,`${name}: bail`);if(controller.observe()){complete=true;break;}}
+      assert.ok(complete,`${name}: no supported rollout`);report.airs.push({name,...controller.report,bails:0,end:p.pos.toArray()});
+    }
     // Complete the opening grind, downhill gap, rear corridor, pool deck,
     // and uphill return in one native-spawn run with no intermediate reset.
     const {createSchoolCircuit}=await server.ssrLoadModule('/tools/school-circuit.ts');

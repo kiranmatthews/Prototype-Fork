@@ -187,19 +187,57 @@ for(let i=3;i<62;i+=2){const a=stairLine[i],b=stairLine[i+1];stripe([a[0]-4.3,a[
 export const SCHOOL_MAIN_RAIL=stairLine.filter((_,i)=>i%4===0).map(p=>[p[0]+stairs.railOffset,p[1]+.8,p[2]] as Point);
 rail('Handicap Ramp Rail · green downhill handrail',SCHOOL_MAIN_RAIL,2,'#527667');
 
-export const SCHOOL_WEST_DESCENT:Point[]=[[0,0,-4],[-3,0,-9],[-7,-.7,-15],[-13,-2.6,-21],[-20,-4.3,-27],[-29,-5,-31],[-36,-5,-31]];
+export const SCHOOL_WEST_DESCENT:Point[]=[[289,282,0],[294,270,0],[288,254,-.7],[298,236,-2.6],[282,226,-4.3],[268,223,-5],[242,219,-5],[220,215,-5],[205,218,-5]]
+  .map(([u,v,y])=>schoolMapPoint(u,v,y));
 const westDescent=SCHOOL_WEST_DESCENT;
-ribbon('West descent · long planter road',westDescent,9,asphalt,2);
-rail('Long Ass Rail · outside planter lip',westDescent.map(p=>[p[0]-3.9,p[1]+.45,p[2]+1.2]),2,'#bead8c');
-rail('Hall Pass · inside planter transfer',[[1,.5,-6],[-3,.5,-12],[-8,-.3,-17],[-13,-2,-22]],2);
+const westCurve=new CatmullRomCurve3(westDescent.map(p=>new Vector3(...p)),false,'centripetal');
+const westRoad=westCurve.getSpacedPoints(96).map((p):Point=>[p.x,Math.max(lowerY,Math.min(0,p.y)),p.z]);
+ribbon('West descent · long planter road',westRoad,9,asphalt,2);
+const roadEdge=(side:number)=>{
+  const guide=westDescent.map((p,i)=>{const a=westDescent[Math.max(0,i-1)],b=westDescent[Math.min(westDescent.length-1,i+1)],n=Math.hypot(b[0]-a[0],b[2]-a[2]);return new Vector3(p[0]-(b[2]-a[2])/n*4.2*side,p[1]+.45,p[2]+(b[0]-a[0])/n*4.2*side);});
+  return new CatmullRomCurve3(guide,false,'centripetal').getSpacedPoints(96).map((p):Point=>[p.x,Math.max(lowerY+.45,Math.min(.45,p.y)),p.z]);
+};
+export const SCHOOL_LONG_ASS_RAIL=roadEdge(1);
+rail('Long Ass Rail · classroom-side planter lip',SCHOOL_LONG_ASS_RAIL,2,'#bead8c');
+const oppositeBank=roadEdge(-1);
+rail('Long Ass Rail · opposite grass-bank lip',oppositeBank,2,'#bead8c');
+for(const edge of [SCHOOL_LONG_ASS_RAIL,oppositeBank])ribbon('West descent · concrete planter cap',edge.map(p=>[p[0],p[1]-.05,p[2]]),.4,cream,2);
+// Hall Pass is the high rail across the road, not a second downhill rail.
+// Its grass-bank takeoff rises over the classroom face; the ollie drops
+// onto the lower planter in the roof alcove (visible around the 500 bonus).
+export const SCHOOL_HALL_PASS={
+  takeoff:[schoolMapPoint(269,236,-.7),schoolMapPoint(284,198,1.4)],
+  receiver:[[288,193],[288,184],[291,179],[304,182]].map(([u,v])=>schoolMapPoint(u,v,.45)),
+};
+rail('Hall Pass · high crossing rail',SCHOOL_HALL_PASS.takeoff,2,'#9e9b7b');
+rail('Hall Pass · alcove planter lip',SCHOOL_HALL_PASS.receiver,3);
+{
+  const a=SCHOOL_HALL_PASS.takeoff[0],b=SCHOOL_HALL_PASS.takeoff[1],h=new Vector3(b[0]-a[0],0,b[2]-a[2]).normalize();
+  const bank:Point[]=[[-6,0,4],[-7.5,0,-7],[a[0]-h.x*6,-1.4,a[2]-h.z*6],[a[0]-h.x*3,-1.4,a[2]-h.z*3],[a[0],-.8,a[2]]];
+  ribbon('Hall Pass · grass approach bank',bank,2.2,'#65835b',2);
+  add({t:'ramp',nm:'Hall Pass · small takeoff wedge',p:[a[0]-h.x*1.5,-1.4,a[2]-h.z*1.5],w:1.1,len:3,rise:.6,yaw:Math.atan2(-h.x,-h.z)*180/Math.PI,tex:'pavement',color:cream,edgeGrinding:false,grp:2});
+  // The alcove has a real low deck and planted ledge, rather than an
+  // invisible rail over a five-metre hole in the classroom polygon.
+  ribbon('Hall Pass · alcove deck',SCHOOL_HALL_PASS.receiver.map(p=>[p[0],-.12,p[2]]),2.8,concrete,3);
+  ribbon('Hall Pass · planted receiver',SCHOOL_HALL_PASS.receiver.map(p=>[p[0]-.48,.25,p[2]]),.8,'#65734c',3);
+}
 export const SCHOOL_WEST_WEDGE={p:schoolMapPoint(233,214,-3.85),width:5.6,depth:1.1,rise:1.15,bank:2.1};
 {
   const k=SCHOOL_WEST_WEDGE;
   hip('Funbox to Rail · west-descent wedge',k.p[0],lowerY,k.p[2],k.width,k.depth,k.rise,k.bank,7,'#ad977a');
 }
 // Upper grass terraces stop short of the bank and the landing lanes.
-polygonBlock('Admin lawn',[[2,-25],[34,-25],[37,-7],[2,-7]],.15,-5,'#65835b',2);
+polygonBlock('Admin lawn',[[4.6,-25],[34,-25],[37,-7],[4.6,-7]],.15,-5,'#65835b',2);
 slab('East approach lawn',51,-10,10,27,.12,-5,'#6c8459',2);
+export const SCHOOL_LAWN_TRANSFER={
+  takeoff:[[4.6,.45,-25],[34,.45,-25]] as Point[],
+  receiver:[[46,.42,-23.5],[55,.42,-23.5],[56,.42,-22.5],[56,.42,3.5]] as Point[],
+};
+rail('Rail to Rail · classroom lawn edge',SCHOOL_LAWN_TRANSFER.takeoff,2);
+rail('Rail to Rail · opposite lawn edge',SCHOOL_LAWN_TRANSFER.receiver,2);
+for(const points of [SCHOOL_LAWN_TRANSFER.takeoff,SCHOOL_LAWN_TRANSFER.receiver]){
+  ribbon('Lawn planter concrete cap',points.map(p=>[p[0],p[1]-.05,p[2]]),.35,cream,2);
+}
 
 // Original start: a narrow blue canopy across the front of the classrooms.
 export const SCHOOL_START_CANOPY:Point[]=[[257,284],[290,291],[327,299],[353,310],[372,311]].map(([u,v])=>schoolMapPoint(u,v,canopyY));

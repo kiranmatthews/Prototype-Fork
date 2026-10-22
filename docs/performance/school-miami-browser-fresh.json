@@ -1,6 +1,7 @@
 {
   "url": "http://127.0.0.1:5308/?playtest&level=school-miami",
-  "mode": "full",
-  "input": "Up held for 1,200 ms from the native spawn",
+  "render": "full",
+  "revision": "seventh, Hall Pass and planter lines",
+  "input": "Native W held 1.8 seconds",
   "console": []
 }
