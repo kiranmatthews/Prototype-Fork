@@ -66,6 +66,11 @@ const SEGMENT_FACTORS: Readonly<
   'deform.leg.lower.right.length': 'shinLength',
 });
 
+const PRESENTATION_NAMES = ['procedural-rider', 'meshy-torso-surface', 'meshy-shorts-surface',
+  'hips', 'head', 'head-presentation', ...['left', 'right'].flatMap(side =>
+    ['clavicle', 'shoulder', 'hip', 'wrist', 'hand-rest-orientation', 'artist-hand-dorsal-x',
+      'glove-stitch-a', 'glove-stitch-b', 'ankle', 'elbow', 'knee'].map(part => `${part}-${side}`))];
+
 function isRenderable(object: THREE.Object3D): boolean {
   const candidate = object as THREE.Object3D & {
     isMesh?: boolean;
@@ -99,8 +104,9 @@ export class CharacterProportionLayer {
   private readonly states = new Map<THREE.Object3D, TransformState>();
   private readonly reusableStates = new WeakMap<THREE.Object3D, TransformState>();
   private readonly namedNodes = new Map<string, THREE.Object3D>();
+  private readonly requestedNames = new Set<string>();
   private readonly collectNamedNode = (node: THREE.Object3D): void => {
-    if (!this.namedNodes.has(node.name)) this.namedNodes.set(node.name, node);
+    if (this.requestedNames.has(node.name) && !this.namedNodes.has(node.name)) this.namedNodes.set(node.name, node);
   };
 
   constructor(private readonly root: THREE.Object3D) {}
@@ -139,6 +145,7 @@ export class CharacterProportionLayer {
       }
     }
     this.states.clear();
+    this.namedNodes.clear(); this.requestedNames.clear();
   }
 
   apply(
@@ -146,11 +153,23 @@ export class CharacterProportionLayer {
     options: { upperArmRestAngleWeight?: number; crawlPalmWeight?: number } = {},
   ): void {
     this.clear();
-    // Proportions are composed after every authored/bail pose. Resolve names
-    // once per pass instead of searching the entire rig for each limb/socket.
+    // Proportions need only their presentation parts and current deformation
+    // anchors/endpoints. Avoid indexing every decorative mesh and finger bone.
     // Rebuild from the live tree so late-loaded parts, renames, removals and
     // duplicate-name depth-first order retain getObjectByName semantics.
-    this.namedNodes.clear();
+    const policies = runtimeDeformations(this.root);
+    const runtime = this.root.userData.sculptRuntime as { joints?: Record<string, string> } | undefined;
+    for (const name of PRESENTATION_NAMES) this.requestedNames.add(name);
+    for (const policy of policies) {
+      const jointId = typeof policy.jointId === 'string' ? policy.jointId : '';
+      const anchorName = runtime?.joints?.[jointId];
+      if (anchorName) this.requestedNames.add(anchorName);
+      if (Array.isArray(policy.downstreamJointIds)) for (const id of policy.downstreamJointIds) {
+        if (typeof id !== 'string') continue;
+        const name = runtime?.joints?.[id];
+        if (name) this.requestedNames.add(name);
+      }
+    }
     this.root.traverse(this.collectNamedNode);
 
     const rider = this.namedNodes.get('procedural-rider');
@@ -161,13 +180,12 @@ export class CharacterProportionLayer {
       value.overallScale * value.bodyDepth,
     );
 
-    for (const policy of runtimeDeformations(this.root)) {
+    for (const policy of policies) {
       const controlId = typeof policy.controlId === 'string' ? policy.controlId : '';
       const factorKey = SEGMENT_FACTORS[controlId];
       const axis = finiteAxis(policy.lengthAxis);
       const jointId = typeof policy.jointId === 'string' ? policy.jointId : '';
-      const runtime = this.root.userData.sculptRuntime as { joints?: Record<string, string> };
-      const jointName = runtime.joints?.[jointId];
+      const jointName = runtime?.joints?.[jointId];
       const anchor = jointName ? this.namedNodes.get(jointName) : null;
       if (!factorKey || !axis || !anchor) continue;
       const factor = value[factorKey];
@@ -188,7 +206,7 @@ export class CharacterProportionLayer {
         ? policy.downstreamJointIds.filter((id): id is string => typeof id === 'string')
         : [];
       for (const endpointId of endpointIds) {
-        const endpointName = runtime.joints?.[endpointId];
+        const endpointName = runtime?.joints?.[endpointId];
         const endpoint = endpointName ? this.namedNodes.get(endpointName) : null;
         if (endpoint?.parent === anchor) this.scalePositionAlong(endpoint, axis, factor);
       }

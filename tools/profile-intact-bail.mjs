@@ -9,6 +9,16 @@ import * as THREE from 'three';
 import { createServer } from 'vite';
 import { makeInput } from './jungle-cup-harness.mjs';
 const snapshot = process.argv.find(a => a.startsWith('--source-snapshot='))?.split('=').slice(1).join('=');
+const allCauses = ['balance', 'wall', 'trip', 'landing', 'pvp'];
+const selectedCause = process.argv.find(a => a.startsWith('--case='))?.slice(7);
+if (selectedCause && !allCauses.includes(selectedCause)) throw new Error(`Unknown bail case: ${selectedCause}`);
+const countOption = (name, fallback) => {
+  const arg = process.argv.find(a => a.startsWith(`--${name}=`));
+  const value = arg ? Number(arg.slice(name.length + 3)) : fallback;
+  if (!Number.isInteger(value) || value < 1 || value > 1000) throw new Error(`${name} must be an integer from 1 to 1000`);
+  return value;
+};
+const warmups = countOption('warmups', 8), measured = countOption('incidents', 24);
 const source = await readFile(new URL('./test-campaign-death-flow.mjs', import.meta.url), 'utf8');
 const ast = ts.createSourceFile('fixture.mjs', source, ts.ScriptTarget.Latest, true);
 const dom = ast.statements.find(n => ts.isFunctionDeclaration(n) && n.name?.text === 'installHeadlessDom');
@@ -50,6 +60,7 @@ try {
   const recoveryProfile = process.argv.includes('--recovery-profile');
   const deformationProfile = process.argv.includes('--deformation-profile');
   const hierarchyProfile = process.argv.includes('--hierarchy-profile');
+  const overlayProfile = process.argv.includes('--overlay-profile');
   const poseChecksums = process.argv.includes('--pose-checksum');
   const traceImpacts = process.argv.includes('--impact-trace');
   const poseNodes = [];
@@ -74,7 +85,7 @@ try {
       scope: 'Isolated production contact torque and secondary-motion impulse, warm posed rig; excludes locomotion/render.' };
   }
   if (!process.argv.includes('--contact-only'))
-  for (const cause of ['balance', 'wall', 'trip', 'landing', 'pvp']) {
+  for (const cause of selectedCause ? [selectedCause] : allCauses) {
     const frames = [], incidents = [], triggers = [], durations = []; let fullScans = 0, count = false;
     let bodyMatrixPasses = 0;
     const bodyMatrices = p.bodyGroup.updateMatrixWorld;
@@ -98,6 +109,24 @@ try {
     const appearanceTimes = []; let appearanceCalls = 0, nameSearches = 0, transformClones = 0;
     let rigSnapshots = 0, rigJointRecords = 0, rigRestTuples = 0;
     const bridge = p.playerAnimationBridge;
+    const prepareLegacy = bridge.prepareLegacyPose.bind(bridge);
+    const quaternionSet = THREE.Quaternion.prototype.set, quaternionCopy = THREE.Quaternion.prototype.copy;
+    let inOverlayRestore = false, overlayRestores = 0, restoredQuaternionWrites = 0;
+    if (overlayProfile) {
+      bridge.prepareLegacyPose = () => {
+        inOverlayRestore = count && p.isBailing;
+        if (inOverlayRestore) overlayRestores++;
+        try { return prepareLegacy(); } finally { inOverlayRestore = false; }
+      };
+      THREE.Quaternion.prototype.set = function (...args) {
+        if (inOverlayRestore) restoredQuaternionWrites++;
+        return quaternionSet.apply(this, args);
+      };
+      THREE.Quaternion.prototype.copy = function (...args) {
+        if (inOverlayRestore) restoredQuaternionWrites++;
+        return quaternionCopy.apply(this, args);
+      };
+    }
     const deform = bridge.applyDeformations.bind(bridge), deformationTimes = [];
     const seenStates = new WeakSet(), seenTransforms = new WeakSet(), seenMorphs = new WeakSet();
     let deformationCalls = 0, deformationRecords = 0, deformationTransforms = 0, deformationMorphs = 0;
@@ -189,7 +218,7 @@ try {
     };
     const native = p.interactionMeasure.skinnedBounds.bind(p.interactionMeasure);
     p.interactionMeasure.skinnedBounds = mesh => { if (count && p.isBailing) fullScans++; return native(mesh); };
-    for (let trial = -8; trial < 24; trial++) {
+    for (let trial = -warmups; trial < measured; trial++) {
       let seed = 0x48631 + trial;
       Math.random = () => ((seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0) / 4294967296);
       p.respawn(level, true, true); p.invulnTimer = 0; p.step(CONST.fixedStep, input, level);
@@ -242,15 +271,23 @@ try {
     p.bailMotion.apply = applyJoint;
     bridge.applyDeformations = deform;
     p.bailRecoveryMotion.begin = beginRecovery;
+    bridge.prepareLegacyPose = prepareLegacy;
+    THREE.Quaternion.prototype.set = quaternionSet;
+    THREE.Quaternion.prototype.copy = quaternionCopy;
     if (rigProfile) delete bridge.rig;
     p.characterProportionLayer.apply = appearance; p.bodyGroup.getObjectByName = lookup;
     p.kickRagdollContact = kickContact;
     THREE.Vector3.prototype.clone = vectorClone; THREE.Quaternion.prototype.clone = quaternionClone;
     results.push({ cause, stepMs: stats(frames), incidentCpuMs: stats(incidents), triggerMs: stats(triggers), durationSeconds: stats(durations), fullSkinScans: fullScans,
       support: supportTimes.length ? { cpuMs: stats(supportTimes), samples: supportSamples } : undefined,
-      appearance: appearanceTimes.length ? { cpuMs: stats(appearanceTimes), calls: appearanceCalls, nameSearches, transformClones } : undefined,
+      appearance: appearanceTimes.length ? { cpuMs: stats(appearanceTimes), calls: appearanceCalls, nameSearches, transformClones,
+        retainedNameEntries:p.characterProportionLayer.namedNodes.size } : undefined,
       bounds: boundsProfile ? { calls:boundsCalls, newRecords:boundsRecords, newBoxes:boundsBoxes } : undefined,
       hierarchy: hierarchyProfile ? { bodyMatrixPasses } : undefined,
+      overlay: overlayProfile ? { restores:overlayRestores, quaternionWrites:restoredQuaternionWrites,
+        retainedRecords:bridge.overlayBaseline.length,
+        retainedTransformObjects:bridge.overlayBaseline.reduce((n, record) => n +
+          ['position','quaternion','scale'].filter(key => record[key]?.isVector3 || record[key]?.isQuaternion).length, 0) } : undefined,
       jointLimits: jointLimitProfile ? [...jointLimits.values()] : undefined,
       rig: rigProfile ? { snapshots:rigSnapshots, jointRecords:rigJointRecords, restTuples:rigRestTuples } : undefined,
       recoveries: recoveryProfile ? recoveries : undefined,
@@ -258,6 +295,6 @@ try {
         newRecords:deformationRecords, newTransformObjects:deformationTransforms, newMorphRecords:deformationMorphs } : undefined,
       poseChecksum: poseHash?.digest('hex'), gameplayChecksum:gameplayHash?.digest('hex'), impacts: traceImpacts ? impacts : undefined });
   }
-  console.log(JSON.stringify({ source: snapshot ? 'initial working tree snapshot' : 'current working tree', warmupsPerCase: 8, measuredIncidentsPerCase: 24,
+  console.log(JSON.stringify({ source: snapshot ? 'initial working tree snapshot' : 'current working tree', warmupsPerCase: warmups, measuredIncidentsPerCase: measured,
     scope: 'Production fixed-step CPU in Node with the animation runtime and procedural fallback assets. Includes first active frame; excludes render/GPU/browser costs. Timings are descriptive, scan counts are deterministic.', contact, results }, null, 2));
 } finally { Math.random = random; console.warn = warn; console.error = error; runtime?.dispose(); level?.dispose(); await server.close(); }

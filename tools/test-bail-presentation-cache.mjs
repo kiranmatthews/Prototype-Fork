@@ -15,8 +15,21 @@ try {
   const { CharacterProportionLayer } = await server.ssrLoadModule('/src/character/proportionLayer.ts');
   const { DEFAULT_CHARACTER_PROPORTIONS } = await server.ssrLoadModule('/src/character/settings.ts');
   const cached = fixture(), fresh = fixture();
+  for (const scene of [cached, fresh]) for (let i = 0; i < 80; i++) {
+    const decoration = new THREE.Group(); decoration.name = 'unused-decoration-' + i;
+    scene.root.add(decoration);
+  }
   const layer = new CharacterProportionLayer(cached.root);
-  let reference = new CharacterProportionLayer(fresh.root);
+  const unfilteredReference = () => {
+    const result = new CharacterProportionLayer(fresh.root);
+    // Original lookup oracle: index every live node without requested-name
+    // filtering. An omitted presentation part must change the comparison.
+    result.collectNamedNode = node => {
+      if (!result.namedNodes.has(node.name)) result.namedNodes.set(node.name, node);
+    };
+    return result;
+  };
+  let reference = unfilteredReference(), filteredEntries = 0, unfilteredEntries = 0;
   const snapshot = root => {
     const values = [];
     root.traverse(node => values.push([node.name, ...node.position.toArray(), ...node.quaternion.toArray(),
@@ -25,7 +38,7 @@ try {
   };
   const edits = [];
   for (let frame = 0; frame < 180; frame++) {
-    layer.clear(); reference.clear(); reference = new CharacterProportionLayer(fresh.root);
+    layer.clear(); reference.clear(); reference = unfilteredReference();
     for (const scene of [cached, fresh]) {
       // New authored motion must become the next baseline, including morphs.
       scene.nodes.get('head').rotation.set(Math.sin(frame * .17), .3, -.15);
@@ -70,6 +83,8 @@ try {
       wristRestPitch: frame % 50, gloveXAcross: .02 };
     const options = { crawlPalmWeight: frame % 3 === 0 ? .7 : 0, upperArmRestAngleWeight: .4 };
     layer.apply(value, options); reference.apply(value, options);
+    filteredEntries += layer.namedNodes.size; unfilteredEntries += reference.namedNodes.size;
+    assert.equal(layer.namedNodes.has('unused-decoration-0'), false, 'unused nodes retained lookup entries');
     assert.deepEqual(snapshot(cached.root), snapshot(fresh.root), `cached presentation changed at frame ${frame}`);
     // Name lookup oracle uses the actual Three.js search, not our index.
     for (const name of ['head-presentation', 'renamed-elbow', 'artist-hand-dorsal-x-left', 'missing'])
@@ -77,6 +92,8 @@ try {
     assert.ok(snapshot(cached.root).every(row => row.slice(1).every(Number.isFinite)));
   }
   layer.clear(); reference.clear();
+  assert.equal(layer.namedNodes.size, 0); assert.equal(layer.requestedNames.size, 0);
+  assert.ok(filteredEntries < unfilteredEntries / 2, 'lookup retained most unrelated hierarchy entries');
   assert.deepEqual(snapshot(cached.root), snapshot(fresh.root), 'clear did not restore authored transforms');
 
   // Warm bails reuse their records rather than allocating six transform
@@ -97,7 +114,8 @@ try {
     cached.root.getObjectByName = lookup; layer.clear();
   }
   const result = { passed: true, authoredFrames: 180, hierarchyEditsAtFrames: edits, warmFrames: 240,
-    transformClones, nameSearches, restoredExactly: true };
+    transformClones, nameSearches, filteredEntries, unfilteredEntries, restoredExactly: true,
+    activeLookupReferencesCleared: true };
   const output = process.argv.find(a => a.startsWith('--output='))?.slice(9);
   if (output) await writeFile(output, JSON.stringify(result, null, 2) + '\n');
   console.log(JSON.stringify(result, null, 2));

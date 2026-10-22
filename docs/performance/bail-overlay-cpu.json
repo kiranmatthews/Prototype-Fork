@@ -1,0 +1,2574 @@
+{
+  "date": "2026-10-22",
+  "pass": "performance/stability",
+  "parentTaskCommit": "b35bd7508fdb91bd8346f7e107974ebd9fe5bce0",
+  "change": [
+    "Store overlay snapshots in reused scalar records; restore quaternion only when the captured value or its canonical Euler result/order differs. Preserve exact signed-zero, winding, preview and live-hierarchy semantics.",
+    "Index only current presentation names and deformation anchors/endpoints in the proportion layer; rebuild from the live hierarchy each apply and release lookup references on clear."
+  ],
+  "deterministicResources": {
+    "overlay": [
+      {
+        "cause": "balance",
+        "before": {
+          "restores": 1032,
+          "quaternionWrites": 247680,
+          "retainedRecords": 240,
+          "retainedTransformObjects": 720
+        },
+        "after": {
+          "restores": 1032,
+          "quaternionWrites": 53866,
+          "retainedRecords": 240,
+          "retainedTransformObjects": 0
+        },
+        "quaternionWriteReductionPercent": 78.25177648578811
+      },
+      {
+        "cause": "wall",
+        "before": {
+          "restores": 1704,
+          "quaternionWrites": 408960,
+          "retainedRecords": 240,
+          "retainedTransformObjects": 720
+        },
+        "after": {
+          "restores": 1704,
+          "quaternionWrites": 85855,
+          "retainedRecords": 240,
+          "retainedTransformObjects": 0
+        },
+        "quaternionWriteReductionPercent": 79.00650430359937
+      },
+      {
+        "cause": "trip",
+        "before": {
+          "restores": 1872,
+          "quaternionWrites": 449280,
+          "retainedRecords": 240,
+          "retainedTransformObjects": 720
+        },
+        "after": {
+          "restores": 1872,
+          "quaternionWrites": 94138,
+          "retainedRecords": 240,
+          "retainedTransformObjects": 0
+        },
+        "quaternionWriteReductionPercent": 79.04691951566952
+      },
+      {
+        "cause": "landing",
+        "before": {
+          "restores": 1752,
+          "quaternionWrites": 420480,
+          "retainedRecords": 240,
+          "retainedTransformObjects": 720
+        },
+        "after": {
+          "restores": 1752,
+          "quaternionWrites": 87788,
+          "retainedRecords": 240,
+          "retainedTransformObjects": 0
+        },
+        "quaternionWriteReductionPercent": 79.12195585996956
+      },
+      {
+        "cause": "pvp",
+        "before": {
+          "restores": 1392,
+          "quaternionWrites": 334080,
+          "retainedRecords": 240,
+          "retainedTransformObjects": 720
+        },
+        "after": {
+          "restores": 1392,
+          "quaternionWrites": 73304,
+          "retainedRecords": 240,
+          "retainedTransformObjects": 0
+        },
+        "quaternionWriteReductionPercent": 78.05795019157088
+      }
+    ],
+    "proportionLookup": [
+      {
+        "cause": "balance",
+        "beforeEntries": 218,
+        "afterEntries": 29
+      },
+      {
+        "cause": "wall",
+        "beforeEntries": 218,
+        "afterEntries": 29
+      },
+      {
+        "cause": "trip",
+        "beforeEntries": 218,
+        "afterEntries": 29
+      },
+      {
+        "cause": "landing",
+        "beforeEntries": 218,
+        "afterEntries": 29
+      },
+      {
+        "cause": "pvp",
+        "beforeEntries": 218,
+        "afterEntries": 29
+      }
+    ],
+    "scope": "Per-player retained transform-object and lookup-entry counts, not total heap-byte measurements. Scalar records replace the transform objects; snapshot count remains 240."
+  },
+  "equivalence": {
+    "incidents": 120,
+    "frames": 7872,
+    "rows": [
+      {
+        "cause": "balance",
+        "poseChecksum": "96589ccf9a9d27ec4c1d7c73b7d5465fde42ba464f02eb0b73319d2922e68eb8",
+        "gameplayChecksum": "b51b8f1c626815da67e7d14a481a0c496acf127731c67c72c19db5918bfbf8ba",
+        "durationSeconds": {
+          "samples": 24,
+          "mean": 0.7333333333333331,
+          "median": 0.7333333333333333,
+          "p95": 0.7333333333333333
+        },
+        "fullSkinScans": 0,
+        "frames": 1056,
+        "matchesBefore": true
+      },
+      {
+        "cause": "wall",
+        "poseChecksum": "97b2a47a2889cbceb97f8804ec71379dc98d7bdb8f3ab89b142440a943515f1b",
+        "gameplayChecksum": "e66b545c1104f32836cf3bb11678ad8c78ff6e6a9960a56a4164fb96047d2de8",
+        "durationSeconds": {
+          "samples": 24,
+          "mean": 1.1999999999999995,
+          "median": 1.2,
+          "p95": 1.2
+        },
+        "fullSkinScans": 0,
+        "frames": 1728,
+        "matchesBefore": true
+      },
+      {
+        "cause": "trip",
+        "poseChecksum": "08980ea443f6131ab376f505301b8e2b0c61084a0bde9875184ed2f16174e610",
+        "gameplayChecksum": "6c7349ad2d406a26392f0286efc3a35fe600d6ecb6b69d2a42519126a8d8d91c",
+        "durationSeconds": {
+          "samples": 24,
+          "mean": 1.3166666666666667,
+          "median": 1.3166666666666667,
+          "p95": 1.3166666666666667
+        },
+        "fullSkinScans": 0,
+        "frames": 1896,
+        "matchesBefore": true
+      },
+      {
+        "cause": "landing",
+        "poseChecksum": "9df5c4872a2dd1e9c99d3cd1e98f8bb14793a3cb9627b13b02bbcb6ad5b45fc5",
+        "gameplayChecksum": "8cf6dccb510d13af4dc0e138caaac9ce5e87a570e441676e05534a8eb617578f",
+        "durationSeconds": {
+          "samples": 24,
+          "mean": 1.233333333333334,
+          "median": 1.2333333333333334,
+          "p95": 1.2333333333333334
+        },
+        "fullSkinScans": 0,
+        "frames": 1776,
+        "matchesBefore": true
+      },
+      {
+        "cause": "pvp",
+        "poseChecksum": "99a45b3ab25910f5e53bd458d6de24d14bd940365b8fd0fb9b2ab79b56bb1602",
+        "gameplayChecksum": "b3979cfb70fb1876d953c2ab218fe92b54548ad2b7dd86fb640f31dfc4475d66",
+        "durationSeconds": {
+          "samples": 24,
+          "mean": 0.9833333333333334,
+          "median": 0.9833333333333333,
+          "p95": 0.9833333333333333
+        },
+        "fullSkinScans": 0,
+        "frames": 1416,
+        "matchesBefore": true
+      }
+    ],
+    "overlayOracle": {
+      "passed": true,
+      "frames": 180,
+      "comparedNodes": 23658,
+      "referenceRestoreWrites": 11220,
+      "actualRestoreWrites": 585,
+      "warm": {
+        "nodes": 65,
+        "frames": 240,
+        "quaternionWrites": 0,
+        "transformClones": 0,
+        "recordsReusedAcrossVisibilityChanges": true
+      },
+      "exactEulerOrders": [
+        "XYZ",
+        "XZY",
+        "YXZ",
+        "YZX",
+        "ZXY",
+        "ZYX"
+      ],
+      "liveEdits": [
+        "rotations",
+        "winding",
+        "signed zeros",
+        "order",
+        "visibility",
+        "scale",
+        "position",
+        "reordering",
+        "removal",
+        "reparenting",
+        "late nodes"
+      ],
+      "previewAndExceptions": true
+    },
+    "presentationOracle": {
+      "passed": true,
+      "authoredFrames": 180,
+      "hierarchyEditsAtFrames": [
+        20,
+        40,
+        60,
+        80,
+        100,
+        120,
+        140,
+        160
+      ],
+      "warmFrames": 240,
+      "transformClones": 0,
+      "nameSearches": 0,
+      "filteredEntries": 5240,
+      "unfilteredEntries": 25760,
+      "restoredExactly": true,
+      "activeLookupReferencesCleared": true
+    },
+    "actualHandMatrices": {
+      "passed": true,
+      "realHandTriangles": 25152,
+      "cases": 10,
+      "framesCompared": 656,
+      "maxPoseError": 0,
+      "immediatePublicSync": true,
+      "rows": [
+        {
+          "cause": "balance",
+          "seed": 42,
+          "frames": 44,
+          "eagerPasses": 87,
+          "deferredPasses": 44
+        },
+        {
+          "cause": "wall",
+          "seed": 42,
+          "frames": 72,
+          "eagerPasses": 143,
+          "deferredPasses": 72
+        },
+        {
+          "cause": "trip",
+          "seed": 42,
+          "frames": 79,
+          "eagerPasses": 157,
+          "deferredPasses": 79
+        },
+        {
+          "cause": "landing",
+          "seed": 42,
+          "frames": 74,
+          "eagerPasses": 147,
+          "deferredPasses": 74
+        },
+        {
+          "cause": "pvp",
+          "seed": 42,
+          "frames": 59,
+          "eagerPasses": 117,
+          "deferredPasses": 59
+        },
+        {
+          "cause": "balance",
+          "seed": 1229,
+          "frames": 44,
+          "eagerPasses": 87,
+          "deferredPasses": 44
+        },
+        {
+          "cause": "wall",
+          "seed": 1229,
+          "frames": 72,
+          "eagerPasses": 143,
+          "deferredPasses": 72
+        },
+        {
+          "cause": "trip",
+          "seed": 1229,
+          "frames": 79,
+          "eagerPasses": 157,
+          "deferredPasses": 79
+        },
+        {
+          "cause": "landing",
+          "seed": 1229,
+          "frames": 74,
+          "eagerPasses": 147,
+          "deferredPasses": 74
+        },
+        {
+          "cause": "pvp",
+          "seed": 1229,
+          "frames": 59,
+          "eagerPasses": 117,
+          "deferredPasses": 59
+        }
+      ]
+    }
+  },
+  "cpu": {
+    "scope": "Production fixed-step CPU in Node with the animation runtime and procedural fallback assets. Includes first active frame; excludes render/GPU/browser costs. Timings are descriptive, scan counts are deterministic.",
+    "plainRuns": {
+      "final-before1": {
+        "source": "initial working tree snapshot",
+        "warmupsPerCase": 8,
+        "measuredIncidentsPerCase": 24,
+        "scope": "Production fixed-step CPU in Node with the animation runtime and procedural fallback assets. Includes first active frame; excludes render/GPU/browser costs. Timings are descriptive, scan counts are deterministic.",
+        "contact": null,
+        "results": [
+          {
+            "cause": "balance",
+            "stepMs": {
+              "samples": 1056,
+              "mean": 0.3863967320075739,
+              "median": 0.3406670000003942,
+              "p95": 0.7027910000006159
+            },
+            "incidentCpuMs": {
+              "samples": 24,
+              "mean": 17.001456208333252,
+              "median": 16.499041000002762,
+              "p95": 21.880871000006664
+            },
+            "triggerMs": {
+              "samples": 24,
+              "mean": 0.2721057916666041,
+              "median": 0.2590829999999187,
+              "p95": 0.3440419999997175
+            },
+            "durationSeconds": {
+              "samples": 24,
+              "mean": 0.7333333333333331,
+              "median": 0.7333333333333333,
+              "p95": 0.7333333333333333
+            },
+            "fullSkinScans": 0
+          },
+          {
+            "cause": "wall",
+            "stepMs": {
+              "samples": 1728,
+              "mean": 0.3664922228009357,
+              "median": 0.32283300000017334,
+              "p95": 0.6612499999991996
+            },
+            "incidentCpuMs": {
+              "samples": 24,
+              "mean": 26.38744004166737,
+              "median": 26.386997000005067,
+              "p95": 29.297707000000628
+            },
+            "triggerMs": {
+              "samples": 24,
+              "mean": 0.2333022500001031,
+              "median": 0.22983399999975518,
+              "p95": 0.30037500000071304
+            },
+            "durationSeconds": {
+              "samples": 24,
+              "mean": 1.1999999999999995,
+              "median": 1.2,
+              "p95": 1.2
+            },
+            "fullSkinScans": 0
+          },
+          {
+            "cause": "trip",
+            "stepMs": {
+              "samples": 1896,
+              "mean": 0.33268889504216065,
+              "median": 0.2835419999992155,
+              "p95": 0.5973340000000462
+            },
+            "incidentCpuMs": {
+              "samples": 24,
+              "mean": 26.28242270833069,
+              "median": 25.22479199999998,
+              "p95": 30.572999999989406
+            },
+            "triggerMs": {
+              "samples": 24,
+              "mean": 0.21916304166666123,
+              "median": 0.2007499999999709,
+              "p95": 0.29337500000110595
+            },
+            "durationSeconds": {
+              "samples": 24,
+              "mean": 1.3166666666666667,
+              "median": 1.3166666666666667,
+              "p95": 1.3166666666666667
+            },
+            "fullSkinScans": 0
+          },
+          {
+            "cause": "landing",
+            "stepMs": {
+              "samples": 1776,
+              "mean": 0.3163905343468514,
+              "median": 0.2804579999992711,
+              "p95": 0.5506249999998545
+            },
+            "incidentCpuMs": {
+              "samples": 24,
+              "mean": 23.412899541667002,
+              "median": 22.974750999996104,
+              "p95": 26.110543000002508
+            },
+            "triggerMs": {
+              "samples": 24,
+              "mean": 0.23395820833328193,
+              "median": 0.1915000000008149,
+              "p95": 0.36612500000046566
+            },
+            "durationSeconds": {
+              "samples": 24,
+              "mean": 1.233333333333334,
+              "median": 1.2333333333333334,
+              "p95": 1.2333333333333334
+            },
+            "fullSkinScans": 0
+          },
+          {
+            "cause": "pvp",
+            "stepMs": {
+              "samples": 1416,
+              "mean": 0.32047973799434515,
+              "median": 0.28533299999980954,
+              "p95": 0.5432500000006257
+            },
+            "incidentCpuMs": {
+              "samples": 24,
+              "mean": 18.908304541666364,
+              "median": 18.784081999998307,
+              "p95": 21.855666999997993
+            },
+            "triggerMs": {
+              "samples": 24,
+              "mean": 0.024654374999954598,
+              "median": 0.02375000000029104,
+              "p95": 0.03375000000050932
+            },
+            "durationSeconds": {
+              "samples": 24,
+              "mean": 0.9833333333333334,
+              "median": 0.9833333333333333,
+              "p95": 0.9833333333333333
+            },
+            "fullSkinScans": 0
+          }
+        ]
+      },
+      "final-after1": {
+        "source": "current working tree",
+        "warmupsPerCase": 8,
+        "measuredIncidentsPerCase": 24,
+        "scope": "Production fixed-step CPU in Node with the animation runtime and procedural fallback assets. Includes first active frame; excludes render/GPU/browser costs. Timings are descriptive, scan counts are deterministic.",
+        "contact": null,
+        "results": [
+          {
+            "cause": "balance",
+            "stepMs": {
+              "samples": 1056,
+              "mean": 0.7624596174242447,
+              "median": 0.3660829999998896,
+              "p95": 1.319416000000274
+            },
+            "incidentCpuMs": {
+              "samples": 24,
+              "mean": 33.548223166666766,
+              "median": 18.38912099999743,
+              "p95": 105.68562599999677
+            },
+            "triggerMs": {
+              "samples": 24,
+              "mean": 0.4288317083333671,
+              "median": 0.29174999999941065,
+              "p95": 1.1510000000007494
+            },
+            "durationSeconds": {
+              "samples": 24,
+              "mean": 0.7333333333333331,
+              "median": 0.7333333333333333,
+              "p95": 0.7333333333333333
+            },
+            "fullSkinScans": 0
+          },
+          {
+            "cause": "wall",
+            "stepMs": {
+              "samples": 1728,
+              "mean": 0.4014221770833436,
+              "median": 0.32687499999974534,
+              "p95": 0.7499579999994239
+            },
+            "incidentCpuMs": {
+              "samples": 24,
+              "mean": 28.902396750000737,
+              "median": 27.42124700000204,
+              "p95": 34.40395600000102
+            },
+            "triggerMs": {
+              "samples": 24,
+              "mean": 0.2724027500000072,
+              "median": 0.24604200000067067,
+              "p95": 0.5588340000003882
+            },
+            "durationSeconds": {
+              "samples": 24,
+              "mean": 1.1999999999999995,
+              "median": 1.2,
+              "p95": 1.2
+            },
+            "fullSkinScans": 0
+          },
+          {
+            "cause": "trip",
+            "stepMs": {
+              "samples": 1896,
+              "mean": 0.3030619572784944,
+              "median": 0.2694160000010015,
+              "p95": 0.5600840000006428
+            },
+            "incidentCpuMs": {
+              "samples": 24,
+              "mean": 23.941894625001055,
+              "median": 23.385830000005626,
+              "p95": 27.25924400000258
+            },
+            "triggerMs": {
+              "samples": 24,
+              "mean": 0.21681408333343674,
+              "median": 0.20245800000066083,
+              "p95": 0.31199999999989814
+            },
+            "durationSeconds": {
+              "samples": 24,
+              "mean": 1.3166666666666667,
+              "median": 1.3166666666666667,
+              "p95": 1.3166666666666667
+            },
+            "fullSkinScans": 0
+          },
+          {
+            "cause": "landing",
+            "stepMs": {
+              "samples": 1776,
+              "mean": 0.3135269262387264,
+              "median": 0.27375000000029104,
+              "p95": 0.5664170000000013
+            },
+            "incidentCpuMs": {
+              "samples": 24,
+              "mean": 23.200992541665755,
+              "median": 23.63858099999925,
+              "p95": 25.257327999992413
+            },
+            "triggerMs": {
+              "samples": 24,
+              "mean": 0.20776737499962414,
+              "median": 0.2052079999994021,
+              "p95": 0.25737499999922875
+            },
+            "durationSeconds": {
+              "samples": 24,
+              "mean": 1.233333333333334,
+              "median": 1.2333333333333334,
+              "p95": 1.2333333333333334
+            },
+            "fullSkinScans": 0
+          },
+          {
+            "cause": "pvp",
+            "stepMs": {
+              "samples": 1416,
+              "mean": 0.30524217514125074,
+              "median": 0.27195799999935844,
+              "p95": 0.5309589999997115
+            },
+            "incidentCpuMs": {
+              "samples": 24,
+              "mean": 18.009288333333796,
+              "median": 17.86799800000881,
+              "p95": 20.01308099999551
+            },
+            "triggerMs": {
+              "samples": 24,
+              "mean": 0.024533083333381,
+              "median": 0.022791999999753898,
+              "p95": 0.029999999998835847
+            },
+            "durationSeconds": {
+              "samples": 24,
+              "mean": 0.9833333333333334,
+              "median": 0.9833333333333333,
+              "p95": 0.9833333333333333
+            },
+            "fullSkinScans": 0
+          }
+        ]
+      },
+      "final-after2": {
+        "source": "current working tree",
+        "warmupsPerCase": 8,
+        "measuredIncidentsPerCase": 24,
+        "scope": "Production fixed-step CPU in Node with the animation runtime and procedural fallback assets. Includes first active frame; excludes render/GPU/browser costs. Timings are descriptive, scan counts are deterministic.",
+        "contact": null,
+        "results": [
+          {
+            "cause": "balance",
+            "stepMs": {
+              "samples": 1056,
+              "mean": 0.36197682859849084,
+              "median": 0.32108400000015536,
+              "p95": 0.6396249999997963
+            },
+            "incidentCpuMs": {
+              "samples": 24,
+              "mean": 15.926980458333597,
+              "median": 15.256333999998787,
+              "p95": 19.521581000004517
+            },
+            "triggerMs": {
+              "samples": 24,
+              "mean": 0.2785279583334083,
+              "median": 0.28120900000067195,
+              "p95": 0.3531669999993028
+            },
+            "durationSeconds": {
+              "samples": 24,
+              "mean": 0.7333333333333331,
+              "median": 0.7333333333333333,
+              "p95": 0.7333333333333333
+            },
+            "fullSkinScans": 0
+          },
+          {
+            "cause": "wall",
+            "stepMs": {
+              "samples": 1728,
+              "mean": 0.3415355364583182,
+              "median": 0.3043330000000424,
+              "p95": 0.6165420000006634
+            },
+            "incidentCpuMs": {
+              "samples": 24,
+              "mean": 24.59055862499891,
+              "median": 24.09383799999705,
+              "p95": 29.307208999999602
+            },
+            "triggerMs": {
+              "samples": 24,
+              "mean": 0.2504147916666473,
+              "median": 0.24362500000006548,
+              "p95": 0.30958300000020245
+            },
+            "durationSeconds": {
+              "samples": 24,
+              "mean": 1.1999999999999995,
+              "median": 1.2,
+              "p95": 1.2
+            },
+            "fullSkinScans": 0
+          },
+          {
+            "cause": "trip",
+            "stepMs": {
+              "samples": 1896,
+              "mean": 0.3130061455695999,
+              "median": 0.27762499999971624,
+              "p95": 0.5632089999999152
+            },
+            "incidentCpuMs": {
+              "samples": 24,
+              "mean": 24.72748549999839,
+              "median": 24.70682799999031,
+              "p95": 28.138961999996354
+            },
+            "triggerMs": {
+              "samples": 24,
+              "mean": 0.21178283333328332,
+              "median": 0.2084999999997308,
+              "p95": 0.24395800000002055
+            },
+            "durationSeconds": {
+              "samples": 24,
+              "mean": 1.3166666666666667,
+              "median": 1.3166666666666667,
+              "p95": 1.3166666666666667
+            },
+            "fullSkinScans": 0
+          },
+          {
+            "cause": "landing",
+            "stepMs": {
+              "samples": 1776,
+              "mean": 0.3065142528153277,
+              "median": 0.27162500000122236,
+              "p95": 0.5464589999992313
+            },
+            "incidentCpuMs": {
+              "samples": 24,
+              "mean": 22.68205470833425,
+              "median": 22.379041999999572,
+              "p95": 24.82882900000186
+            },
+            "triggerMs": {
+              "samples": 24,
+              "mean": 0.20184725000016593,
+              "median": 0.1955419999994774,
+              "p95": 0.24949999999989814
+            },
+            "durationSeconds": {
+              "samples": 24,
+              "mean": 1.233333333333334,
+              "median": 1.2333333333333334,
+              "p95": 1.2333333333333334
+            },
+            "fullSkinScans": 0
+          },
+          {
+            "cause": "pvp",
+            "stepMs": {
+              "samples": 1416,
+              "mean": 0.31177542443505946,
+              "median": 0.279540999999881,
+              "p95": 0.5476660000003903
+            },
+            "incidentCpuMs": {
+              "samples": 24,
+              "mean": 18.394750041668505,
+              "median": 18.174541000003956,
+              "p95": 20.646294000000125
+            },
+            "triggerMs": {
+              "samples": 24,
+              "mean": 0.026255166666715013,
+              "median": 0.025291999998444226,
+              "p95": 0.040415999999822816
+            },
+            "durationSeconds": {
+              "samples": 24,
+              "mean": 0.9833333333333334,
+              "median": 0.9833333333333333,
+              "p95": 0.9833333333333333
+            },
+            "fullSkinScans": 0
+          }
+        ]
+      },
+      "final-before2": {
+        "source": "initial working tree snapshot",
+        "warmupsPerCase": 8,
+        "measuredIncidentsPerCase": 24,
+        "scope": "Production fixed-step CPU in Node with the animation runtime and procedural fallback assets. Includes first active frame; excludes render/GPU/browser costs. Timings are descriptive, scan counts are deterministic.",
+        "contact": null,
+        "results": [
+          {
+            "cause": "balance",
+            "stepMs": {
+              "samples": 1056,
+              "mean": 0.3806897964015031,
+              "median": 0.3420830000004571,
+              "p95": 0.6881249999996726
+            },
+            "incidentCpuMs": {
+              "samples": 24,
+              "mean": 16.750351041666136,
+              "median": 16.084834000001138,
+              "p95": 21.295252999996592
+            },
+            "triggerMs": {
+              "samples": 24,
+              "mean": 0.27026554166661754,
+              "median": 0.2658339999998134,
+              "p95": 0.3645830000004935
+            },
+            "durationSeconds": {
+              "samples": 24,
+              "mean": 0.7333333333333331,
+              "median": 0.7333333333333333,
+              "p95": 0.7333333333333333
+            },
+            "fullSkinScans": 0
+          },
+          {
+            "cause": "wall",
+            "stepMs": {
+              "samples": 1728,
+              "mean": 0.36075439583333313,
+              "median": 0.31641599999966274,
+              "p95": 0.6560839999992822
+            },
+            "incidentCpuMs": {
+              "samples": 24,
+              "mean": 25.974316499999986,
+              "median": 25.39908400000877,
+              "p95": 29.923080999999
+            },
+            "triggerMs": {
+              "samples": 24,
+              "mean": 0.24543579166667465,
+              "median": 0.23458300000038435,
+              "p95": 0.3292089999995369
+            },
+            "durationSeconds": {
+              "samples": 24,
+              "mean": 1.1999999999999995,
+              "median": 1.2,
+              "p95": 1.2
+            },
+            "fullSkinScans": 0
+          },
+          {
+            "cause": "trip",
+            "stepMs": {
+              "samples": 1896,
+              "mean": 0.3313389235232052,
+              "median": 0.29354199999943376,
+              "p95": 0.5988750000005894
+            },
+            "incidentCpuMs": {
+              "samples": 24,
+              "mean": 26.17577495833321,
+              "median": 25.436374999998407,
+              "p95": 28.829084000001785
+            },
+            "triggerMs": {
+              "samples": 24,
+              "mean": 0.211395916666523,
+              "median": 0.20983299999988958,
+              "p95": 0.23374999999941792
+            },
+            "durationSeconds": {
+              "samples": 24,
+              "mean": 1.3166666666666667,
+              "median": 1.3166666666666667,
+              "p95": 1.3166666666666667
+            },
+            "fullSkinScans": 0
+          },
+          {
+            "cause": "landing",
+            "stepMs": {
+              "samples": 1776,
+              "mean": 0.3322236734233908,
+              "median": 0.2936250000002474,
+              "p95": 0.5840410000000702
+            },
+            "incidentCpuMs": {
+              "samples": 24,
+              "mean": 24.58455183333092,
+              "median": 24.30579200000102,
+              "p95": 27.077170999998998
+            },
+            "triggerMs": {
+              "samples": 24,
+              "mean": 0.2044305833335708,
+              "median": 0.198207999999795,
+              "p95": 0.23679100000117614
+            },
+            "durationSeconds": {
+              "samples": 24,
+              "mean": 1.233333333333334,
+              "median": 1.2333333333333334,
+              "p95": 1.2333333333333334
+            },
+            "fullSkinScans": 0
+          },
+          {
+            "cause": "pvp",
+            "stepMs": {
+              "samples": 1416,
+              "mean": 0.33322787358762035,
+              "median": 0.2964169999995647,
+              "p95": 0.5661250000011933
+            },
+            "incidentCpuMs": {
+              "samples": 24,
+              "mean": 19.6604445416696,
+              "median": 19.41483199999857,
+              "p95": 22.89416300000994
+            },
+            "triggerMs": {
+              "samples": 24,
+              "mean": 0.027232625000124244,
+              "median": 0.02691700000104902,
+              "p95": 0.03591699999924458
+            },
+            "durationSeconds": {
+              "samples": 24,
+              "mean": 0.9833333333333334,
+              "median": 0.9833333333333333,
+              "p95": 0.9833333333333333
+            },
+            "fullSkinScans": 0
+          }
+        ]
+      }
+    },
+    "twoPairAggregate": [
+      {
+        "cause": "balance",
+        "mean": {
+          "beforeMs": 0.3835432642045385,
+          "afterMs": 0.5622182230113678,
+          "percentChange": 46.58534655207616
+        },
+        "median": {
+          "beforeMs": 0.34137500000042564,
+          "afterMs": 0.34358350000002247,
+          "percentChange": 0.6469425117815009
+        },
+        "p95": {
+          "beforeMs": 0.6954580000001442,
+          "afterMs": 0.9795205000000351,
+          "percentChange": 40.845385343159755
+        }
+      },
+      {
+        "cause": "wall",
+        "mean": {
+          "beforeMs": 0.3636233093171344,
+          "afterMs": 0.3714788567708309,
+          "percentChange": 2.160353105099033
+        },
+        "median": {
+          "beforeMs": 0.31962449999991804,
+          "afterMs": 0.31560399999989386,
+          "percentChange": -1.2578822962649006
+        },
+        "p95": {
+          "beforeMs": 0.6586669999992409,
+          "afterMs": 0.6832500000000437,
+          "percentChange": 3.7322349534485655
+        }
+      },
+      {
+        "cause": "trip",
+        "mean": {
+          "beforeMs": 0.33201390928268293,
+          "afterMs": 0.30803405142404716,
+          "percentChange": -7.2225461609257025
+        },
+        "median": {
+          "beforeMs": 0.2885419999993246,
+          "afterMs": 0.2735205000003589,
+          "percentChange": -5.2060012057173255
+        },
+        "p95": {
+          "beforeMs": 0.5981045000003178,
+          "afterMs": 0.561646500000279,
+          "percentChange": -6.095590319086275
+        }
+      },
+      {
+        "cause": "landing",
+        "mean": {
+          "beforeMs": 0.3243071038851211,
+          "afterMs": 0.31002058952702705,
+          "percentChange": -4.405242496061613
+        },
+        "median": {
+          "beforeMs": 0.28704149999975925,
+          "afterMs": 0.2726875000007567,
+          "percentChange": -5.000670634390703
+        },
+        "p95": {
+          "beforeMs": 0.5673329999999623,
+          "afterMs": 0.5564379999996163,
+          "percentChange": -1.9203889074576597
+        }
+      },
+      {
+        "cause": "pvp",
+        "mean": {
+          "beforeMs": 0.3268538057909828,
+          "afterMs": 0.3085087997881551,
+          "percentChange": -5.6126028450037335
+        },
+        "median": {
+          "beforeMs": 0.29087499999968713,
+          "afterMs": 0.27574949999961973,
+          "percentChange": -5.200000000028771
+        },
+        "p95": {
+          "beforeMs": 0.5546875000009095,
+          "afterMs": 0.5393125000000509,
+          "percentChange": -2.7718309860657264
+        }
+      }
+    ],
+    "balanceFollowupSeparateProcesses": {
+      "before": {
+        "source": "initial working tree snapshot",
+        "warmupsPerCase": 24,
+        "measuredIncidentsPerCase": 96,
+        "scope": "Production fixed-step CPU in Node with the animation runtime and procedural fallback assets. Includes first active frame; excludes render/GPU/browser costs. Timings are descriptive, scan counts are deterministic.",
+        "contact": null,
+        "results": [
+          {
+            "cause": "balance",
+            "stepMs": {
+              "samples": 4224,
+              "mean": 0.33031289275568404,
+              "median": 0.28733400000055553,
+              "p95": 0.5903330000001006
+            },
+            "incidentCpuMs": {
+              "samples": 96,
+              "mean": 14.533767281250098,
+              "median": 14.293541000002733,
+              "p95": 16.751873000003798
+            },
+            "triggerMs": {
+              "samples": 96,
+              "mean": 0.22413417708329084,
+              "median": 0.20345799999995506,
+              "p95": 0.3042089999999007
+            },
+            "durationSeconds": {
+              "samples": 96,
+              "mean": 0.733333333333334,
+              "median": 0.7333333333333333,
+              "p95": 0.7333333333333333
+            },
+            "fullSkinScans": 0
+          }
+        ]
+      },
+      "after": {
+        "source": "current working tree",
+        "warmupsPerCase": 24,
+        "measuredIncidentsPerCase": 96,
+        "scope": "Production fixed-step CPU in Node with the animation runtime and procedural fallback assets. Includes first active frame; excludes render/GPU/browser costs. Timings are descriptive, scan counts are deterministic.",
+        "contact": null,
+        "results": [
+          {
+            "cause": "balance",
+            "stepMs": {
+              "samples": 4224,
+              "mean": 0.5756108477746111,
+              "median": 0.33162500000071304,
+              "p95": 1.0252500000005966
+            },
+            "incidentCpuMs": {
+              "samples": 96,
+              "mean": 25.32687730208289,
+              "median": 17.963501000003816,
+              "p95": 61.745543000002726
+            },
+            "triggerMs": {
+              "samples": 96,
+              "mean": 0.30274311458335507,
+              "median": 0.2580000000016298,
+              "p95": 0.5114589999993768
+            },
+            "durationSeconds": {
+              "samples": 96,
+              "mean": 0.733333333333334,
+              "median": 0.7333333333333333,
+              "p95": 0.7333333333333333
+            },
+            "fullSkinScans": 0
+          }
+        ]
+      }
+    },
+    "balanceFollowupSampled": {
+      "before": {
+        "stepMs": {
+          "samples": 4224,
+          "mean": 0.4242737684659185,
+          "median": 0.37387499999931606,
+          "p95": 0.7715419999994992
+        },
+        "visualMs": {
+          "syncVisual": 1541.5319999999974,
+          "applyOverlay": 631.1219999999996,
+          "restoreHierarchy": 123.70499999999998,
+          "captureHierarchy": 14.080000000000002,
+          "syncCharacterAppearance": 381.6689999999998,
+          "collectNamedNode": 89.92100000000002,
+          "setFromRotationMatrix": 77.871,
+          "clear": 17.586
+        }
+      },
+      "after": {
+        "stepMs": {
+          "samples": 4224,
+          "mean": 0.3999450246212106,
+          "median": 0.34041699999943376,
+          "p95": 0.7934170000007725
+        },
+        "visualMs": {
+          "syncVisual": 1445.582999999998,
+          "applyOverlay": 621.5889999999999,
+          "restoreHierarchy": 62.71,
+          "captureHierarchy": 10.166,
+          "syncCharacterAppearance": 322.4929999999999,
+          "collectNamedNode": 35.332,
+          "setFromRotationMatrix": 34.124,
+          "clear": 23.622999999999998
+        }
+      }
+    },
+    "balanceFollowupAlternatingSameProcess": {
+      "scope": "Two production Players and separate Vite module graphs in one process. Same seeds; alternating before/after order per incident; 24 warmups then 96 measured balance incidents per side. Timed Player.step only; no rendering.",
+      "warmups": 24,
+      "measured": 96,
+      "results": [
+        {
+          "source": "before",
+          "stepMs": {
+            "samples": 4224,
+            "mean": 0.5200645419034309,
+            "median": 0.42770799999925657,
+            "p95": 0.9870420000006561
+          },
+          "incidentMs": {
+            "samples": 96,
+            "mean": 22.882839843750958,
+            "median": 21.680542000009154,
+            "p95": 27.25975400000607
+          },
+          "frameCounts": [
+            44
+          ]
+        },
+        {
+          "source": "after",
+          "stepMs": {
+            "samples": 4224,
+            "mean": 0.4380157294034246,
+            "median": 0.355916000000434,
+            "p95": 0.8901249999980791
+          },
+          "incidentMs": {
+            "samples": 96,
+            "mean": 19.27269209375068,
+            "median": 18.72571100001005,
+            "p95": 22.774627999995573
+          },
+          "frameCounts": [
+            44
+          ]
+        }
+      ],
+      "pairedIncidentPercent": {
+        "samples": 96,
+        "mean": -15.026857054261178,
+        "median": -15.864026916615526,
+        "p95": -2.120271904899851
+      },
+      "pairs": [
+        {
+          "before": 25.878204000007827,
+          "after": 20.540915999994468
+        },
+        {
+          "before": 27.004167000013695,
+          "after": 20.54733400000623
+        },
+        {
+          "before": 26.06799699999101,
+          "after": 20.176579999999376
+        },
+        {
+          "before": 68.8717540000107,
+          "after": 50.320919999998296
+        },
+        {
+          "before": 25.978125999994518,
+          "after": 24.448373000013817
+        },
+        {
+          "before": 27.007124000003387,
+          "after": 20.148334999990766
+        },
+        {
+          "before": 23.027207000010094,
+          "after": 22.436413000003085
+        },
+        {
+          "before": 23.824959000012313,
+          "after": 21.643083000017214
+        },
+        {
+          "before": 23.650457999992796,
+          "after": 18.834461999995256
+        },
+        {
+          "before": 24.107208000001265,
+          "after": 20.046665999998368
+        },
+        {
+          "before": 21.60012600000482,
+          "after": 22.774627999995573
+        },
+        {
+          "before": 22.214710999993258,
+          "after": 18.91795899999488
+        },
+        {
+          "before": 21.540125999999873,
+          "after": 18.803414999994857
+        },
+        {
+          "before": 21.966706000010163,
+          "after": 18.17283500000849
+        },
+        {
+          "before": 26.936961000003066,
+          "after": 20.368544000004476
+        },
+        {
+          "before": 27.028831000017817,
+          "after": 22.265752000002976
+        },
+        {
+          "before": 22.190040000004956,
+          "after": 18.976580999984435
+        },
+        {
+          "before": 21.865163999991637,
+          "after": 24.992998999994597
+        },
+        {
+          "before": 25.940789999993285,
+          "after": 19.182999999997264
+        },
+        {
+          "before": 21.160295999987284,
+          "after": 20.165333000004466
+        },
+        {
+          "before": 22.18687599999248,
+          "after": 17.153748999997333
+        },
+        {
+          "before": 20.75316600000224,
+          "after": 19.909959000000526
+        },
+        {
+          "before": 22.69850099999894,
+          "after": 21.16674899999998
+        },
+        {
+          "before": 20.959538999995857,
+          "after": 20.077422000002116
+        },
+        {
+          "before": 22.4650819999988,
+          "after": 18.82087500000125
+        },
+        {
+          "before": 23.86754199999632,
+          "after": 19.541754999998375
+        },
+        {
+          "before": 20.612913999993907,
+          "after": 19.423462000002473
+        },
+        {
+          "before": 22.03521300000284,
+          "after": 18.83104200001253
+        },
+        {
+          "before": 21.719662999996217,
+          "after": 18.095121999987896
+        },
+        {
+          "before": 21.659456999990653,
+          "after": 18.587461000024632
+        },
+        {
+          "before": 20.29333300000144,
+          "after": 17.617045000013604
+        },
+        {
+          "before": 25.723163999999088,
+          "after": 19.60317000001305
+        },
+        {
+          "before": 23.419997999997577,
+          "after": 18.426745999997365
+        },
+        {
+          "before": 20.4126309999956,
+          "after": 18.36462300000494
+        },
+        {
+          "before": 21.38516599999639,
+          "after": 20.398993999995582
+        },
+        {
+          "before": 20.712081000005128,
+          "after": 15.957373000001098
+        },
+        {
+          "before": 24.09625200001028,
+          "after": 15.942834999987099
+        },
+        {
+          "before": 26.340999999967607,
+          "after": 21.32162899998002
+        },
+        {
+          "before": 22.527540999992198,
+          "after": 18.799207000010938
+        },
+        {
+          "before": 19.54137400001855,
+          "after": 22.155752999977267
+        },
+        {
+          "before": 29.36158500000238,
+          "after": 21.426041999999143
+        },
+        {
+          "before": 23.51062500001717,
+          "after": 19.68320899999526
+        },
+        {
+          "before": 28.73262500000419,
+          "after": 24.486000000015338
+        },
+        {
+          "before": 26.624581000000035,
+          "after": 20.815415000004577
+        },
+        {
+          "before": 22.56700200000705,
+          "after": 19.344332999986364
+        },
+        {
+          "before": 21.310502000011184,
+          "after": 19.14949999999226
+        },
+        {
+          "before": 20.426830999982485,
+          "after": 17.333583999992697
+        },
+        {
+          "before": 22.102086000009876,
+          "after": 18.257204999979876
+        },
+        {
+          "before": 20.911751999985427,
+          "after": 17.336959999996907
+        },
+        {
+          "before": 20.950081000002683,
+          "after": 18.31175400000575
+        },
+        {
+          "before": 22.87900100000479,
+          "after": 18.52158199999758
+        },
+        {
+          "before": 21.294828999994934,
+          "after": 17.677006000008987
+        },
+        {
+          "before": 20.829876999992848,
+          "after": 17.550962000019354
+        },
+        {
+          "before": 21.589164999997593,
+          "after": 21.131416000000172
+        },
+        {
+          "before": 22.562787000002572,
+          "after": 20.779293000003236
+        },
+        {
+          "before": 19.449541000019963,
+          "after": 17.147708000007697
+        },
+        {
+          "before": 19.66575200000443,
+          "after": 17.995790000011766
+        },
+        {
+          "before": 20.333377000009932,
+          "after": 18.72571100001005
+        },
+        {
+          "before": 18.95241599999281,
+          "after": 15.871579999991809
+        },
+        {
+          "before": 19.12687600000936,
+          "after": 17.220122000017
+        },
+        {
+          "before": 22.113585000002786,
+          "after": 17.7805449999978
+        },
+        {
+          "before": 21.390791999983776,
+          "after": 19.425624000014068
+        },
+        {
+          "before": 20.44470999998157,
+          "after": 18.19591299998865
+        },
+        {
+          "before": 22.73791799999526,
+          "after": 18.449044999997568
+        },
+        {
+          "before": 22.31966500000999,
+          "after": 17.996249000007083
+        },
+        {
+          "before": 19.77929700000459,
+          "after": 16.641504000006535
+        },
+        {
+          "before": 24.038914999990084,
+          "after": 19.075875000027736
+        },
+        {
+          "before": 20.472460000000865,
+          "after": 18.968166000002384
+        },
+        {
+          "before": 21.55399999999281,
+          "after": 17.73616900001798
+        },
+        {
+          "before": 19.165124999995896,
+          "after": 16.078250000005937
+        },
+        {
+          "before": 21.99104099999022,
+          "after": 17.266171000010218
+        },
+        {
+          "before": 19.592789000005723,
+          "after": 20.55312299999423
+        },
+        {
+          "before": 20.802961000001233,
+          "after": 15.979250000011234
+        },
+        {
+          "before": 19.80912600001102,
+          "after": 18.193370999983017
+        },
+        {
+          "before": 21.080376999998407,
+          "after": 17.79166500000065
+        },
+        {
+          "before": 20.041964000018197,
+          "after": 18.28062200002023
+        },
+        {
+          "before": 21.458749999990687,
+          "after": 17.691712000003463
+        },
+        {
+          "before": 20.334668999992573,
+          "after": 17.26879399999234
+        },
+        {
+          "before": 24.64399700001377,
+          "after": 16.889205999992555
+        },
+        {
+          "before": 33.109200999977475,
+          "after": 21.43287400000554
+        },
+        {
+          "before": 21.031454000007216,
+          "after": 16.87774800000625
+        },
+        {
+          "before": 21.680542000009154,
+          "after": 18.392547000017657
+        },
+        {
+          "before": 20.86666599999444,
+          "after": 17.48279000002003
+        },
+        {
+          "before": 22.430213000006916,
+          "after": 16.456794999980048
+        },
+        {
+          "before": 21.7591670000038,
+          "after": 17.62016799999401
+        },
+        {
+          "before": 21.319876000008662,
+          "after": 18.978959999989456
+        },
+        {
+          "before": 21.633458000018436,
+          "after": 18.883789999996225
+        },
+        {
+          "before": 27.25975400000607,
+          "after": 20.251749999981257
+        },
+        {
+          "before": 19.993339000011474,
+          "after": 17.059165000020585
+        },
+        {
+          "before": 20.513374000009208,
+          "after": 17.85616799998752
+        },
+        {
+          "before": 20.945998999995936,
+          "after": 17.51433199998428
+        },
+        {
+          "before": 25.01158199998099,
+          "after": 18.673165999982302
+        },
+        {
+          "before": 19.150122000010015,
+          "after": 17.769416999995883
+        },
+        {
+          "before": 20.519664000006742,
+          "after": 18.061121999991883
+        },
+        {
+          "before": 20.855749999998807,
+          "after": 16.367205999998987
+        },
+        {
+          "before": 20.44758400001956,
+          "after": 17.514917999997124
+        }
+      ]
+    },
+    "snapshotKernelAlternatingSameProcess": {
+      "old": {
+        "mean": 0.04394441629999995,
+        "median": 0.03274040999999897,
+        "p95": 0.12244249999999851
+      },
+      "current": {
+        "mean": 0.0409543712,
+        "median": 0.02391499999999951,
+        "p95": 0.08377666999999973
+      },
+      "scope": "Alternating batches in one process; 240 nodes, 48 overlaid per frame; snapshot capture/restore only"
+    },
+    "interpretation": "Separate-process measurements are variable: final-after1 balance has a large mean/p95 spike; the longer separate balance pair also regresses (mean +74.3%, median +15.4%). Do not discard these or attribute them to GC/OS without evidence. Follow-up sampling shows less restore/name-collection work. Alternating two production Players with separate module graphs in one process gives mean paired balance-incident CPU -15.0%, median paired -15.9%; step means -15.8%. This paired experiment helps control run-to-run conditions but has different memory/module-graph conditions. No browser FPS, total-heap or universal CPU-speedup claim.",
+    "reproduction": {
+      "plain": "node tools/profile-intact-bail.mjs [--source-snapshot=PATH]",
+      "counts": "node tools/profile-intact-bail.mjs --overlay-profile; node tools/profile-intact-bail.mjs --appearance-profile",
+      "balance": "node tools/profile-intact-bail.mjs --case=balance --warmups=24 --incidents=96 [--source-snapshot=PATH]",
+      "pairedScript": "/private/tmp/bail-contact-cpu-20261022/paired-balance.mjs",
+      "kernelScript": "/private/tmp/bail-contact-cpu-20261022/compare-snapshot-kernel.mjs"
+    }
+  },
+  "validation": {
+    "focusedPassed": [
+      "test-animation-overlay-snapshots",
+      "test-bail-presentation-cache",
+      "test-animation-rig-resolution",
+      "test-animation-deformation-cache",
+      "test-character-animation-runtime",
+      "test-character-elasticity",
+      "test-grind-head-stability",
+      "test-bail-contact-pose",
+      "test-bail-contact-waves",
+      "test-bail-motion",
+      "test-bail-support-continuity",
+      "test-bail-recovery-motion",
+      "test-trip-clearance",
+      "test-bail-impacts",
+      "test-ragdoll-recovery",
+      "test-bail-matrix-pass",
+      "test-break-apart"
+    ],
+    "knownBaselineFailure": {
+      "test": "tools/test-animation-suite.mjs:325",
+      "message": "$.clips[13].tracks[24].target: unknown joint \"tail\"",
+      "reproducedWithSavedPreChangeBridge": true,
+      "unrelatedFixtureLeftUnchanged": true
+    },
+    "build": {
+      "typescriptNoEmit": true,
+      "viteBuild": true,
+      "seconds": 12.18,
+      "files": 969,
+      "mib": 431.2,
+      "version": "a199d07ece3b21ce1340"
+    },
+    "fullSuiteRun": false,
+    "browser": {
+      "lite": {
+        "bails": {
+          "passed": true,
+          "cases": 14,
+          "failures": [],
+          "rows": [
+            {
+              "kind": "Head hit",
+              "entered": true,
+              "recovered": true,
+              "maxSkinScans": 0,
+              "minimumBodyLead": null,
+              "parts": 0,
+              "lives": 4,
+              "wallImpacts": 0,
+              "bankContactFrames": 0,
+              "bankRollAngle": 0,
+              "supportFrames": 45,
+              "minimumClearance": 0.024999999999998856,
+              "maximumClearance": 0.02500000119583412,
+              "recoveryFrames": 33,
+              "maxRecoveryTurn": 0.2361921669267096,
+              "remainingRoll": 3.8405971571229216,
+              "seconds": 3.367,
+              "meanStepMs": 1.148,
+              "maxStep": 14.300000011920929
+            },
+            {
+              "kind": "Low trip",
+              "entered": true,
+              "recovered": true,
+              "maxSkinScans": 0,
+              "minimumBodyLead": 0.7977703993561533,
+              "parts": 0,
+              "lives": 4,
+              "wallImpacts": 0,
+              "bankContactFrames": 0,
+              "bankRollAngle": 0,
+              "supportFrames": 40,
+              "minimumClearance": 0.0249999999999983,
+              "maximumClearance": 0.0250000247852539,
+              "recoveryFrames": 33,
+              "maxRecoveryTurn": 0.22240449372518722,
+              "remainingRoll": 3.251526097340374,
+              "seconds": 3.367,
+              "meanStepMs": 1.077,
+              "maxStep": 4.899999976158142
+            },
+            {
+              "kind": "Mid trip",
+              "entered": true,
+              "recovered": true,
+              "maxSkinScans": 0,
+              "minimumBodyLead": 0.6307254509445315,
+              "parts": 0,
+              "lives": 4,
+              "wallImpacts": 0,
+              "bankContactFrames": 0,
+              "bankRollAngle": 0,
+              "supportFrames": 40,
+              "minimumClearance": 0.024999991612178973,
+              "maximumClearance": 0.025000000000005018,
+              "recoveryFrames": 33,
+              "maxRecoveryTurn": 0.22964109872654553,
+              "remainingRoll": 1.6483777401470352,
+              "seconds": 3.367,
+              "meanStepMs": 0.968,
+              "maxStep": 3.399999976158142
+            },
+            {
+              "kind": "Side bail",
+              "entered": true,
+              "recovered": true,
+              "maxSkinScans": 0,
+              "minimumBodyLead": null,
+              "parts": 0,
+              "lives": 4,
+              "wallImpacts": 0,
+              "bankContactFrames": 0,
+              "bankRollAngle": 0,
+              "supportFrames": 39,
+              "minimumClearance": 0.02499999999999941,
+              "maximumClearance": 0.025000000000001132,
+              "recoveryFrames": 33,
+              "maxRecoveryTurn": 0.0764823941670593,
+              "remainingRoll": 0.0027938282040329554,
+              "seconds": 3.367,
+              "meanStepMs": 0.974,
+              "maxStep": 2.099999964237213
+            },
+            {
+              "kind": "Balance bail",
+              "entered": true,
+              "recovered": true,
+              "maxSkinScans": 0,
+              "minimumBodyLead": null,
+              "parts": 0,
+              "lives": 4,
+              "wallImpacts": 0,
+              "bankContactFrames": 0,
+              "bankRollAngle": 0,
+              "supportFrames": 43,
+              "minimumClearance": 0.02499999999999858,
+              "maximumClearance": 0.025000000000001132,
+              "recoveryFrames": 33,
+              "maxRecoveryTurn": 0.047569122487427846,
+              "remainingRoll": 0.6330484012067252,
+              "seconds": 3.367,
+              "meanStepMs": 0.961,
+              "maxStep": 3.800000011920929
+            },
+            {
+              "kind": "Bank tumble",
+              "entered": true,
+              "recovered": true,
+              "maxSkinScans": 0,
+              "minimumBodyLead": null,
+              "parts": 0,
+              "lives": 4,
+              "wallImpacts": 0,
+              "bankContactFrames": 50,
+              "bankRollAngle": 1.007572291280817,
+              "supportFrames": 50,
+              "minimumClearance": 0.0249999999999993,
+              "maximumClearance": 0.025000000000003304,
+              "recoveryFrames": 33,
+              "maxRecoveryTurn": 0.03628841107668077,
+              "remainingRoll": 0.38388757884091174,
+              "seconds": 3.367,
+              "meanStepMs": 0.994,
+              "maxStep": 3.199999988079071
+            },
+            {
+              "kind": "Pit edge",
+              "entered": true,
+              "recovered": true,
+              "maxSkinScans": 0,
+              "minimumBodyLead": null,
+              "parts": 0,
+              "lives": 4,
+              "wallImpacts": 1,
+              "bankContactFrames": 0,
+              "bankRollAngle": 0,
+              "supportFrames": 41,
+              "minimumClearance": 0.024999999999996803,
+              "maximumClearance": 0.025000011563936386,
+              "recoveryFrames": 33,
+              "maxRecoveryTurn": 0.2000126145500046,
+              "remainingRoll": -2.9896480084515584,
+              "seconds": 3.367,
+              "meanStepMs": 1.001,
+              "maxStep": 2.899999976158142
+            },
+            {
+              "kind": "Angled edge",
+              "entered": true,
+              "recovered": true,
+              "maxSkinScans": 0,
+              "minimumBodyLead": null,
+              "parts": 0,
+              "lives": 4,
+              "wallImpacts": 1,
+              "bankContactFrames": 0,
+              "bankRollAngle": 0,
+              "supportFrames": 51,
+              "minimumClearance": 0.02499999999999636,
+              "maximumClearance": 0.025000000000000716,
+              "recoveryFrames": 33,
+              "maxRecoveryTurn": 0.08697128125608995,
+              "remainingRoll": 0.8510744748538253,
+              "seconds": 3.367,
+              "meanStepMs": 0.906,
+              "maxStep": 2.800000011920929
+            },
+            {
+              "kind": "Bailing into edge",
+              "entered": true,
+              "recovered": true,
+              "maxSkinScans": 0,
+              "minimumBodyLead": null,
+              "parts": 0,
+              "lives": 4,
+              "wallImpacts": 1,
+              "bankContactFrames": 0,
+              "bankRollAngle": 0,
+              "supportFrames": 41,
+              "minimumClearance": 0.024999999999999092,
+              "maximumClearance": 0.025000000000000466,
+              "recoveryFrames": 33,
+              "maxRecoveryTurn": 0.14549483108400726,
+              "remainingRoll": 2.064360208483194,
+              "seconds": 3.367,
+              "meanStepMs": 0.928,
+              "maxStep": 4.800000011920929
+            },
+            {
+              "kind": "Held-mask wall",
+              "entered": true,
+              "recovered": true,
+              "maxSkinScans": 0,
+              "minimumBodyLead": null,
+              "parts": 0,
+              "lives": 4,
+              "wallImpacts": 0,
+              "bankContactFrames": 0,
+              "bankRollAngle": 0,
+              "supportFrames": 45,
+              "minimumClearance": 0.024999999999998135,
+              "maximumClearance": 0.02500000028500743,
+              "recoveryFrames": 33,
+              "maxRecoveryTurn": 0.2510643743272047,
+              "remainingRoll": 3.792573459965414,
+              "seconds": 3.367,
+              "meanStepMs": 0.951,
+              "maxStep": 3.600000023841858
+            },
+            {
+              "kind": "Masked bail",
+              "entered": true,
+              "recovered": true,
+              "maxSkinScans": 0,
+              "minimumBodyLead": null,
+              "parts": 0,
+              "lives": 4,
+              "wallImpacts": 0,
+              "bankContactFrames": 0,
+              "bankRollAngle": 0,
+              "supportFrames": 37,
+              "minimumClearance": 0.024999999999999772,
+              "maximumClearance": 0.02500000000000019,
+              "recoveryFrames": 33,
+              "maxRecoveryTurn": 0.02390569500264223,
+              "remainingRoll": -0.14473663486029054,
+              "seconds": 3.367,
+              "meanStepMs": 1.033,
+              "maxStep": 3.599999964237213
+            },
+            {
+              "kind": "Blast",
+              "entered": true,
+              "recovered": false,
+              "maxSkinScans": 0,
+              "minimumBodyLead": null,
+              "parts": 9,
+              "lives": 3,
+              "wallImpacts": 0,
+              "bankContactFrames": 0,
+              "bankRollAngle": 0,
+              "supportFrames": 0,
+              "minimumClearance": null,
+              "maximumClearance": null,
+              "recoveryFrames": 0,
+              "maxRecoveryTurn": 0,
+              "remainingRoll": null,
+              "seconds": 3.367,
+              "meanStepMs": 1.138,
+              "maxStep": 9.300000011920929
+            },
+            {
+              "kind": "Crusher",
+              "entered": true,
+              "recovered": false,
+              "maxSkinScans": 0,
+              "minimumBodyLead": null,
+              "parts": 9,
+              "lives": 3,
+              "wallImpacts": 0,
+              "bankContactFrames": 0,
+              "bankRollAngle": 0,
+              "supportFrames": 0,
+              "minimumClearance": null,
+              "maximumClearance": null,
+              "recoveryFrames": 0,
+              "maxRecoveryTurn": 0,
+              "remainingRoll": null,
+              "seconds": 3.367,
+              "meanStepMs": 1.102,
+              "maxStep": 7.400000035762787
+            },
+            {
+              "kind": "Pit fall",
+              "entered": true,
+              "recovered": false,
+              "maxSkinScans": 0,
+              "minimumBodyLead": null,
+              "parts": 0,
+              "lives": 3,
+              "wallImpacts": 0,
+              "bankContactFrames": 0,
+              "bankRollAngle": 0,
+              "supportFrames": 0,
+              "minimumClearance": null,
+              "maximumClearance": null,
+              "recoveryFrames": 0,
+              "maxRecoveryTurn": 0,
+              "remainingRoll": null,
+              "seconds": 3.367,
+              "meanStepMs": 0.478,
+              "maxStep": 7.400000035762787
+            }
+          ]
+        },
+        "boards": {
+          "passed": true,
+          "rows": [
+            {
+              "kind": "Board toss",
+              "thrown": 1,
+              "snapped": 0,
+              "folded": 0,
+              "active": 0,
+              "settledPieces": 1,
+              "batches": 3,
+              "lost": 0,
+              "poofed": 0,
+              "seconds": 12.000000000000176,
+              "settledAt": 3.516666666666659,
+              "sounds": [
+                {
+                  "age": 0.5333333333333333,
+                  "speed": 12.71115741228191,
+                  "broken": false
+                }
+              ],
+              "position": [
+                55.232310702451755,
+                0.0049213645175174014,
+                -30.773916702475987
+              ]
+            },
+            {
+              "kind": "Board roll",
+              "thrown": 1,
+              "snapped": 0,
+              "folded": 0,
+              "active": 0,
+              "settledPieces": 1,
+              "batches": 3,
+              "lost": 0,
+              "poofed": 0,
+              "seconds": 12.000000000000176,
+              "settledAt": 6.049999999999984,
+              "sounds": [],
+              "position": [
+                54.5,
+                0.004921351969242149,
+                -46.151342535628984
+              ]
+            },
+            {
+              "kind": "Board skid",
+              "thrown": 1,
+              "snapped": 0,
+              "folded": 0,
+              "active": 0,
+              "settledPieces": 1,
+              "batches": 3,
+              "lost": 0,
+              "poofed": 0,
+              "seconds": 12.000000000000176,
+              "settledAt": 0.9333333333333346,
+              "sounds": [],
+              "position": [
+                57.476111111111116,
+                0.004921351969242149,
+                -12
+              ]
+            },
+            {
+              "kind": "Board wall",
+              "thrown": 1,
+              "snapped": 0,
+              "folded": 0,
+              "active": 0,
+              "settledPieces": 1,
+              "batches": 3,
+              "lost": 0,
+              "poofed": 0,
+              "seconds": 12.000000000000176,
+              "settledAt": 1.100000000000001,
+              "sounds": [
+                {
+                  "age": 0.19999999999999998,
+                  "speed": 24,
+                  "broken": false
+                }
+              ],
+              "position": [
+                54.214669123366086,
+                0.27700524695980655,
+                -44.39230190501321
+              ]
+            },
+            {
+              "kind": "Board pile",
+              "thrown": 12,
+              "snapped": 2,
+              "folded": 1,
+              "active": 0,
+              "settledPieces": 14,
+              "batches": 8,
+              "lost": 0,
+              "poofed": 0,
+              "seconds": 12.000000000000176,
+              "settledAt": 2.199999999999997,
+              "sounds": [
+                {
+                  "age": 0.4666666666666666,
+                  "speed": 16.37500226697357,
+                  "broken": false
+                },
+                {
+                  "age": 0.5333333333333333,
+                  "speed": 12.711157412281914,
+                  "broken": true
+                },
+                {
+                  "age": 0.6000000000000002,
+                  "speed": 4.957695009612789,
+                  "broken": false
+                },
+                {
+                  "age": 0.6666666666666671,
+                  "speed": 6.269997106969263,
+                  "broken": false
+                },
+                {
+                  "age": 0.7833333333333341,
+                  "speed": 3.0061319054033375,
+                  "broken": false
+                },
+                {
+                  "age": 0.850000000000001,
+                  "speed": 7.872545812373369,
+                  "broken": false
+                },
+                {
+                  "age": 0.9833333333333347,
+                  "speed": 8.522948729772986,
+                  "broken": false
+                },
+                {
+                  "age": 1.2000000000000006,
+                  "speed": 3.6976045640630852,
+                  "broken": false
+                },
+                {
+                  "age": 1.4166666666666665,
+                  "speed": 6.736302050544138,
+                  "broken": false
+                }
+              ],
+              "position": [
+                52.77878743260538,
+                -0.18510428712305138,
+                -23.96734028548215
+              ]
+            }
+          ],
+          "failures": []
+        }
+      },
+      "full": {
+        "bails": {
+          "passed": true,
+          "cases": 14,
+          "failures": [],
+          "rows": [
+            {
+              "kind": "Head hit",
+              "entered": true,
+              "recovered": true,
+              "maxSkinScans": 0,
+              "minimumBodyLead": null,
+              "parts": 0,
+              "lives": 4,
+              "wallImpacts": 0,
+              "bankContactFrames": 0,
+              "bankRollAngle": 0,
+              "supportFrames": 45,
+              "minimumClearance": 0.02499999999999908,
+              "maximumClearance": 0.025000000844412035,
+              "recoveryFrames": 33,
+              "maxRecoveryTurn": 0.2600813435765799,
+              "remainingRoll": 4.175455538117426,
+              "seconds": 3.367,
+              "meanStepMs": 1.112,
+              "maxStep": 73.30000001192093
+            },
+            {
+              "kind": "Low trip",
+              "entered": true,
+              "recovered": true,
+              "maxSkinScans": 0,
+              "minimumBodyLead": 0.686207921597493,
+              "parts": 0,
+              "lives": 4,
+              "wallImpacts": 0,
+              "bankContactFrames": 0,
+              "bankRollAngle": 0,
+              "supportFrames": 40,
+              "minimumClearance": 0.024999984873377734,
+              "maximumClearance": 0.025000011036094227,
+              "recoveryFrames": 33,
+              "maxRecoveryTurn": 0.20137908006761268,
+              "remainingRoll": -2.155684604364877,
+              "seconds": 3.367,
+              "meanStepMs": 1.093,
+              "maxStep": 4.699999988079071
+            },
+            {
+              "kind": "Mid trip",
+              "entered": true,
+              "recovered": true,
+              "maxSkinScans": 0,
+              "minimumBodyLead": 0.8186690076877099,
+              "parts": 0,
+              "lives": 4,
+              "wallImpacts": 0,
+              "bankContactFrames": 0,
+              "bankRollAngle": 0,
+              "supportFrames": 40,
+              "minimumClearance": 0.024999993633011725,
+              "maximumClearance": 0.025000013183432035,
+              "recoveryFrames": 33,
+              "maxRecoveryTurn": 0.1390632700122509,
+              "remainingRoll": -1.7065681066852392,
+              "seconds": 3.367,
+              "meanStepMs": 0.998,
+              "maxStep": 4.399999976158142
+            },
+            {
+              "kind": "Side bail",
+              "entered": true,
+              "recovered": true,
+              "maxSkinScans": 0,
+              "minimumBodyLead": null,
+              "parts": 0,
+              "lives": 4,
+              "wallImpacts": 0,
+              "bankContactFrames": 0,
+              "bankRollAngle": 0,
+              "supportFrames": 39,
+              "minimumClearance": 0.024999988114740135,
+              "maximumClearance": 0.02500000748517106,
+              "recoveryFrames": 33,
+              "maxRecoveryTurn": 0.1334159697234114,
+              "remainingRoll": 0.033244346444600836,
+              "seconds": 3.367,
+              "meanStepMs": 1.01,
+              "maxStep": 6.199999988079071
+            },
+            {
+              "kind": "Balance bail",
+              "entered": true,
+              "recovered": true,
+              "maxSkinScans": 0,
+              "minimumBodyLead": null,
+              "parts": 0,
+              "lives": 4,
+              "wallImpacts": 0,
+              "bankContactFrames": 0,
+              "bankRollAngle": 0,
+              "supportFrames": 43,
+              "minimumClearance": 0.024999999999999675,
+              "maximumClearance": 0.025000000000000355,
+              "recoveryFrames": 33,
+              "maxRecoveryTurn": 0.015516081655524481,
+              "remainingRoll": 0.2212793527865049,
+              "seconds": 3.367,
+              "meanStepMs": 0.922,
+              "maxStep": 2.899999976158142
+            },
+            {
+              "kind": "Bank tumble",
+              "entered": true,
+              "recovered": true,
+              "maxSkinScans": 0,
+              "minimumBodyLead": null,
+              "parts": 0,
+              "lives": 4,
+              "wallImpacts": 0,
+              "bankContactFrames": 50,
+              "bankRollAngle": 1.7742281640261865,
+              "supportFrames": 50,
+              "minimumClearance": 0.024999999999999037,
+              "maximumClearance": 0.025000009023414774,
+              "recoveryFrames": 33,
+              "maxRecoveryTurn": 0.07014536498045508,
+              "remainingRoll": -0.9411113299570637,
+              "seconds": 3.367,
+              "meanStepMs": 1.005,
+              "maxStep": 5.800000011920929
+            },
+            {
+              "kind": "Pit edge",
+              "entered": true,
+              "recovered": true,
+              "maxSkinScans": 0,
+              "minimumBodyLead": null,
+              "parts": 0,
+              "lives": 4,
+              "wallImpacts": 1,
+              "bankContactFrames": 0,
+              "bankRollAngle": 0,
+              "supportFrames": 41,
+              "minimumClearance": 0.024999999999999245,
+              "maximumClearance": 0.02500000000000524,
+              "recoveryFrames": 33,
+              "maxRecoveryTurn": 0.37879082127156727,
+              "remainingRoll": 4.747805478109109,
+              "seconds": 3.367,
+              "meanStepMs": 0.962,
+              "maxStep": 4.100000023841858
+            },
+            {
+              "kind": "Angled edge",
+              "entered": true,
+              "recovered": true,
+              "maxSkinScans": 0,
+              "minimumBodyLead": null,
+              "parts": 0,
+              "lives": 4,
+              "wallImpacts": 1,
+              "bankContactFrames": 0,
+              "bankRollAngle": 0,
+              "supportFrames": 51,
+              "minimumClearance": 0.02499999999999769,
+              "maximumClearance": 0.0250000000000008,
+              "recoveryFrames": 33,
+              "maxRecoveryTurn": 0.10145449147625175,
+              "remainingRoll": 0.2948028529893607,
+              "seconds": 3.367,
+              "meanStepMs": 0.939,
+              "maxStep": 4.699999988079071
+            },
+            {
+              "kind": "Bailing into edge",
+              "entered": true,
+              "recovered": true,
+              "maxSkinScans": 0,
+              "minimumBodyLead": null,
+              "parts": 0,
+              "lives": 4,
+              "wallImpacts": 1,
+              "bankContactFrames": 0,
+              "bankRollAngle": 0,
+              "supportFrames": 41,
+              "minimumClearance": 0.024999999999999217,
+              "maximumClearance": 0.025000000000000466,
+              "recoveryFrames": 33,
+              "maxRecoveryTurn": 0.2921501500956403,
+              "remainingRoll": 3.278867695954487,
+              "seconds": 3.367,
+              "meanStepMs": 0.916,
+              "maxStep": 5.600000023841858
+            },
+            {
+              "kind": "Held-mask wall",
+              "entered": true,
+              "recovered": true,
+              "maxSkinScans": 0,
+              "minimumBodyLead": null,
+              "parts": 0,
+              "lives": 4,
+              "wallImpacts": 0,
+              "bankContactFrames": 0,
+              "bankRollAngle": 0,
+              "supportFrames": 45,
+              "minimumClearance": 0.024999999999997358,
+              "maximumClearance": 0.02500000312339523,
+              "recoveryFrames": 33,
+              "maxRecoveryTurn": 0.2440096435251028,
+              "remainingRoll": 3.7771769859996347,
+              "seconds": 3.367,
+              "meanStepMs": 1.102,
+              "maxStep": 5.399999976158142
+            },
+            {
+              "kind": "Masked bail",
+              "entered": true,
+              "recovered": true,
+              "maxSkinScans": 0,
+              "minimumBodyLead": null,
+              "parts": 0,
+              "lives": 4,
+              "wallImpacts": 0,
+              "bankContactFrames": 0,
+              "bankRollAngle": 0,
+              "supportFrames": 37,
+              "minimumClearance": 0.02499998862081626,
+              "maximumClearance": 0.02500000000000352,
+              "recoveryFrames": 33,
+              "maxRecoveryTurn": 0.04282198331009742,
+              "remainingRoll": -0.4547157738787675,
+              "seconds": 3.367,
+              "meanStepMs": 0.946,
+              "maxStep": 2.899999976158142
+            },
+            {
+              "kind": "Blast",
+              "entered": true,
+              "recovered": false,
+              "maxSkinScans": 0,
+              "minimumBodyLead": null,
+              "parts": 9,
+              "lives": 3,
+              "wallImpacts": 0,
+              "bankContactFrames": 0,
+              "bankRollAngle": 0,
+              "supportFrames": 0,
+              "minimumClearance": null,
+              "maximumClearance": null,
+              "recoveryFrames": 0,
+              "maxRecoveryTurn": 0,
+              "remainingRoll": null,
+              "seconds": 3.367,
+              "meanStepMs": 1.023,
+              "maxStep": 8.800000011920929
+            },
+            {
+              "kind": "Crusher",
+              "entered": true,
+              "recovered": false,
+              "maxSkinScans": 0,
+              "minimumBodyLead": null,
+              "parts": 9,
+              "lives": 3,
+              "wallImpacts": 0,
+              "bankContactFrames": 0,
+              "bankRollAngle": 0,
+              "supportFrames": 0,
+              "minimumClearance": null,
+              "maximumClearance": null,
+              "recoveryFrames": 0,
+              "maxRecoveryTurn": 0,
+              "remainingRoll": null,
+              "seconds": 3.367,
+              "meanStepMs": 0.904,
+              "maxStep": 4
+            },
+            {
+              "kind": "Pit fall",
+              "entered": true,
+              "recovered": false,
+              "maxSkinScans": 0,
+              "minimumBodyLead": null,
+              "parts": 0,
+              "lives": 3,
+              "wallImpacts": 0,
+              "bankContactFrames": 0,
+              "bankRollAngle": 0,
+              "supportFrames": 0,
+              "minimumClearance": null,
+              "maximumClearance": null,
+              "recoveryFrames": 0,
+              "maxRecoveryTurn": 0,
+              "remainingRoll": null,
+              "seconds": 3.367,
+              "meanStepMs": 0.316,
+              "maxStep": 1.5
+            }
+          ]
+        },
+        "boards": {
+          "passed": true,
+          "rows": [
+            {
+              "kind": "Board toss",
+              "thrown": 1,
+              "snapped": 0,
+              "folded": 0,
+              "active": 0,
+              "settledPieces": 1,
+              "batches": 3,
+              "lost": 0,
+              "poofed": 0,
+              "seconds": 12.000000000000176,
+              "settledAt": 3.516666666666659,
+              "sounds": [
+                {
+                  "age": 0.5333333333333333,
+                  "speed": 12.71115741228191,
+                  "broken": false
+                }
+              ],
+              "position": [
+                55.232310702451755,
+                0.0049213645175174014,
+                -30.773916702475987
+              ]
+            },
+            {
+              "kind": "Board roll",
+              "thrown": 1,
+              "snapped": 0,
+              "folded": 0,
+              "active": 0,
+              "settledPieces": 1,
+              "batches": 3,
+              "lost": 0,
+              "poofed": 0,
+              "seconds": 12.000000000000176,
+              "settledAt": 6.049999999999984,
+              "sounds": [],
+              "position": [
+                54.5,
+                0.004921351969242149,
+                -46.151342535628984
+              ]
+            },
+            {
+              "kind": "Board skid",
+              "thrown": 1,
+              "snapped": 0,
+              "folded": 0,
+              "active": 0,
+              "settledPieces": 1,
+              "batches": 3,
+              "lost": 0,
+              "poofed": 0,
+              "seconds": 12.000000000000176,
+              "settledAt": 0.9333333333333346,
+              "sounds": [],
+              "position": [
+                57.476111111111116,
+                0.004921351969242149,
+                -12
+              ]
+            },
+            {
+              "kind": "Board wall",
+              "thrown": 1,
+              "snapped": 0,
+              "folded": 0,
+              "active": 0,
+              "settledPieces": 1,
+              "batches": 3,
+              "lost": 0,
+              "poofed": 0,
+              "seconds": 12.000000000000176,
+              "settledAt": 1.100000000000001,
+              "sounds": [
+                {
+                  "age": 0.19999999999999998,
+                  "speed": 24,
+                  "broken": false
+                }
+              ],
+              "position": [
+                54.214669123366086,
+                0.27700524695980655,
+                -44.39230190501321
+              ]
+            },
+            {
+              "kind": "Board pile",
+              "thrown": 12,
+              "snapped": 2,
+              "folded": 1,
+              "active": 0,
+              "settledPieces": 14,
+              "batches": 8,
+              "lost": 0,
+              "poofed": 0,
+              "seconds": 12.000000000000176,
+              "settledAt": 2.199999999999997,
+              "sounds": [
+                {
+                  "age": 0.4666666666666666,
+                  "speed": 16.37500226697357,
+                  "broken": false
+                },
+                {
+                  "age": 0.5333333333333333,
+                  "speed": 12.711157412281914,
+                  "broken": true
+                },
+                {
+                  "age": 0.6000000000000002,
+                  "speed": 4.957695009612789,
+                  "broken": false
+                },
+                {
+                  "age": 0.6666666666666671,
+                  "speed": 6.269997106969263,
+                  "broken": false
+                },
+                {
+                  "age": 0.7833333333333341,
+                  "speed": 3.0061319054033375,
+                  "broken": false
+                },
+                {
+                  "age": 0.850000000000001,
+                  "speed": 7.872545812373369,
+                  "broken": false
+                },
+                {
+                  "age": 0.9833333333333347,
+                  "speed": 8.522948729772986,
+                  "broken": false
+                },
+                {
+                  "age": 1.2000000000000006,
+                  "speed": 3.6976045640630852,
+                  "broken": false
+                },
+                {
+                  "age": 1.4166666666666665,
+                  "speed": 6.736302050544138,
+                  "broken": false
+                }
+              ],
+              "position": [
+                52.77878743260538,
+                -0.18510428712305138,
+                -23.96734028548215
+              ]
+            }
+          ],
+          "failures": []
+        }
+      }
+    },
+    "browserConsoleErrors": [],
+    "visualReview": [
+      "body-first low-trip catch",
+      "later pit-edge floor rebound"
+    ],
+    "screenshots": [
+      "/private/tmp/bail-contact-cpu-20261022/full-trip.png",
+      "/private/tmp/bail-contact-cpu-20261022/full-edge.png"
+    ]
+  },
+  "nextFidelity": {
+    "userSteering": "Make knee-only landings/recoveries substantially rarer. Balance/manual bails may fully fall over and take an extra beat. Carry rebound/steadying motion through the return to standing/running instead of perfectly extinguishing momentum.",
+    "when": "Next fidelity pass after current CPU/stability pass is validated and committed.",
+    "balanceDirection": "Balance bails must follow the direction of lost balance. Backward manual failure sends the board slipping/pinging forward while skater falls backward. Nose-manual failure reverses this: skater falls forward and board slips/pings backward."
+  },
+  "delivery": "Task-only local follow-up on codex/fluid-intact-bails. Preserve shared checkout/index and unrelated work. No remote transfer; goal remains active."
+}

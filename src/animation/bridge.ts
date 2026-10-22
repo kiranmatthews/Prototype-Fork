@@ -84,10 +84,13 @@ interface SculptRuntimeMetadata {
 
 interface MutableTransformSnapshot {
   readonly object: THREE.Object3D;
-  readonly position: THREE.Vector3;
-  readonly quaternion: THREE.Quaternion;
-  readonly scale: THREE.Vector3;
-  readonly visible: boolean;
+  px: number; py: number; pz: number;
+  qx: number; qy: number; qz: number; qw: number;
+  sx: number; sy: number; sz: number;
+  visible: boolean;
+  quaternionRestored: boolean;
+  rx: number; ry: number; rz: number;
+  restoredOrder: THREE.EulerOrder;
 }
 
 interface AppliedDeformationState {
@@ -136,28 +139,26 @@ function captureHierarchy(
 ): MutableTransformSnapshot[] {
   let index = 0;
   root.traverse((object) => {
-    const existing = reusable[index];
-    if (existing?.object === object) {
-      existing.position.copy(object.position);
-      existing.quaternion.copy(object.quaternion);
-      existing.scale.copy(object.scale);
-      // Visibility is readonly on the snapshot's shape so callers cannot
-      // rewrite it accidentally; replace this one cheap record on an edge.
-      if (existing.visible !== object.visible) {
-        reusable[index] = { ...existing, visible: object.visible };
-      }
-    } else {
+    let snapshot = reusable[index];
+    const p = object.position, q = object.quaternion, s = object.scale;
+    if (snapshot?.object !== object) {
       // Hierarchy replacement (for example a procedural rebuild) makes
       // every later traversal slot suspect. Rebuild only from this point.
       reusable.length = index;
-      reusable.push({
-        object,
-        position: object.position.clone(),
-        quaternion: object.quaternion.clone(),
-        scale: object.scale.clone(),
-        visible: object.visible,
-      });
+      snapshot = { object, px: 0, py: 0, pz: 0, qx: 0, qy: 0, qz: 0, qw: 1,
+        sx: 1, sy: 1, sz: 1, visible: true, quaternionRestored: false,
+        rx: 0, ry: 0, rz: 0, restoredOrder: object.rotation.order };
+      reusable.push(snapshot);
+    } else if (snapshot.quaternionRestored) {
+      // A cached Euler result is valid only for this exact captured quaternion.
+      // Object.is also preserves signed zero when a live edit changes it.
+      snapshot.quaternionRestored = Object.is(snapshot.qx, q.x) && Object.is(snapshot.qy, q.y) &&
+        Object.is(snapshot.qz, q.z) && Object.is(snapshot.qw, q.w);
     }
+    snapshot.px = p.x; snapshot.py = p.y; snapshot.pz = p.z;
+    snapshot.qx = q.x; snapshot.qy = q.y; snapshot.qz = q.z; snapshot.qw = q.w;
+    snapshot.sx = s.x; snapshot.sy = s.y; snapshot.sz = s.z;
+    snapshot.visible = object.visible;
     index++;
   });
   reusable.length = index;
@@ -166,10 +167,22 @@ function captureHierarchy(
 
 function restoreHierarchy(snapshots: readonly MutableTransformSnapshot[]): void {
   for (const snapshot of snapshots) {
-    snapshot.object.position.copy(snapshot.position);
-    snapshot.object.quaternion.copy(snapshot.quaternion);
-    snapshot.object.scale.copy(snapshot.scale);
-    snapshot.object.visible = snapshot.visible;
+    const object = snapshot.object, q = object.quaternion, r = object.rotation;
+    object.position.set(snapshot.px, snapshot.py, snapshot.pz);
+    // Quaternion writes invoke Three.js's matrix-to-Euler conversion. Most
+    // descendants were never posed by the overlay. Reuse a previously observed
+    // canonical result only when quaternion, Euler values AND order still match;
+    // equivalent rotations with a different Euler winding must still restore.
+    if (!snapshot.quaternionRestored || !Object.is(q.x, snapshot.qx) || !Object.is(q.y, snapshot.qy) ||
+      !Object.is(q.z, snapshot.qz) || !Object.is(q.w, snapshot.qw) ||
+      !Object.is(r.x, snapshot.rx) || !Object.is(r.y, snapshot.ry) || !Object.is(r.z, snapshot.rz) ||
+      r.order !== snapshot.restoredOrder) {
+      q.set(snapshot.qx, snapshot.qy, snapshot.qz, snapshot.qw);
+      snapshot.rx = r.x; snapshot.ry = r.y; snapshot.rz = r.z;
+      snapshot.restoredOrder = r.order; snapshot.quaternionRestored = true;
+    }
+    object.scale.set(snapshot.sx, snapshot.sy, snapshot.sz);
+    object.visible = snapshot.visible;
   }
 }
 
