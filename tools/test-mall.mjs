@@ -4,10 +4,11 @@ import {withBlockworksRuntime} from './blockworks-runner.mjs';
 import {createMallPilot} from './mall-pilot.mjs';
 const route=process.argv.find(a=>a.startsWith('--route='))?.split('=')[1]??'main';
 const mezzanineEntry=Number(process.argv.find(a=>a.startsWith('--mezzanine-entry='))?.split('=')[1]??360.7);
-const secretOllie=!process.argv.includes('--no-secret-ollie'),tag=route+(secretOllie?'':'-no-ollie')+(mezzanineEntry===360.7?'':`-${mezzanineEntry}`);
+const wallrideEntry=Number(process.argv.find(a=>a.startsWith('--wallride-entry='))?.split('=')[1]??370);
+const secretOllie=!process.argv.includes('--no-secret-ollie'),tag=route+(secretOllie?'':'-no-ollie')+(mezzanineEntry===360.7?'':`-${mezzanineEntry}`)+(wallrideEntry===370?'':`-wall-${wallrideEntry}`);
 await mkdir('/private/tmp/mall-recreation',{recursive:true});
 await withBlockworksRuntime(async r=>{
- const {sourceModule:m,p,l}=r,before=JSON.stringify(r.TUNING),pilot=createMallPilot(m,{route,secretOllie,mezzanineEntry});
+ const {sourceModule:m,p,l}=r,before=JSON.stringify(r.TUNING),pilot=createMallPilot(m,{route,secretOllie,mezzanineEntry,wallrideEntry});
  assert.equal(r.source.components.filter(c=>c.t==='gate').length,1);
  assert.equal(r.source.components.filter(c=>c.t==='checkpoint').length,5);
  let error=null;
@@ -20,7 +21,7 @@ await withBlockworksRuntime(async r=>{
  assert.ok(pilot.evidence.railNames.some(name=>name.startsWith('Crossrail ')),'The crossrail jump must catch a diagonal rail, not a side ledge');
  // Uphill approaches lose speed naturally. The two-jump fountain line also
  // uses the normal brake to land inside its passage; the fast line does not.
- assert.ok(pilot.evidence.minimumMovingSpeed>(route==='upper'?12:['car','escalator'].includes(route)?15:18),'The authored line must carry continuous skating speed');
+ assert.ok(pilot.evidence.minimumMovingSpeed>(route==='upper'?12:['car','escalator','wallride'].includes(route)?15:18),'The authored line must carry continuous skating speed');
  if(['upper','upper-fast','car','escalator'].includes(route)){
   assert.ok(pilot.evidence.railNames.includes('Suspended upper light rail'),'Flying Leap must catch an upper suspended rail');
   assert.equal(p.hasCrystal,secretOllie,'The elevated reward requires an ollie from the upper rail');
@@ -46,13 +47,18 @@ await withBlockworksRuntime(async r=>{
   assert.ok(pilot.evidence.railNames.includes('Coffee Grind'),'The route must use the coffee rail');
   assert.ok(pilot.evidence.railNames.includes('Suspended lower light rail'),'The lower light beam must be reachable from the stairs');
  }
- if(route==='mezzanine'){
+ if(['mezzanine','wallride'].includes(route)){
   assert.ok(pilot.evidence.mezzanineDeckFrames>20,'The mezzanine access must land and ride on the raised passage');
+  assert.equal(pilot.evidence.mezzanineBoxes?.total,6,'The mezzanine has the original three-tier box stack');
+  assert.ok(pilot.evidence.mezzanineBoxes.broken>=2,'The upper route must skate through the native breakable boxes');
   const jump=pilot.evidence.jumps.find(j=>j.name==='Mezzanine');
   assert.ok(jump,'The upper approach must launch the mezzanine gap');
   const firstLanding=r.trace.find(v=>v.frame>jump.frame+2&&v.grounded);
   assert.ok(firstLanding&&m.mallProject(firstLanding.position[0],firstLanding.position[2],430)>m.MALL_EXIT.stairEnd,
    'The mezzanine jump must clear all 32 stairs before its first landing');
+ }
+ if(route==='wallride'){
+  assert.ok(pilot.evidence.wallride.frames>=5&&pilot.evidence.wallride.kickAt&&pilot.evidence.wallride.landing,'The wallride route must catch the perimeter, wallie and land on the upper passage');
  }
  if(route==='pool'){
   const e=pilot.evidence.pool;
@@ -60,6 +66,7 @@ await withBlockworksRuntime(async r=>{
   assert.ok(e.airFrames>=20&&e.landing?.s>354,'The first landing must clear the pool');
   assert.ok(e.landing.speed>18&&e.collected,'The jump must collect the pool reward and retain speed on landing');
  }
+ if(route==='main')assert.equal(pilot.evidence.mezzanineBoxes?.broken,0,'Lower passage travel must leave the upper box stack intact');
  if(route==='underpass'){
   const inside=r.trace.filter(v=>v.position[2]<m.mallPoint(59)[2]&&v.position[2]>m.mallPoint(67)[2]);
   assert.ok(inside.length>12&&inside.every(v=>v.position[1]<12.2),

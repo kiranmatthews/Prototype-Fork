@@ -220,7 +220,7 @@ const boundary=(side:number,s:number)=>side*plan(s).width/2-(side<0?
  +9*ease(124,133,s)*(1-ease(153,163,s)):0);
 const roofHeight=(s:number)=>mix(28.2,mallHeight(s)+10.2,ease(188,218,s))+15.8*(1-ease(32,42,s));
 for(const side of [-1,1]){
- for(const [a,b,rise]of [[0,319,16.8],[319,374,5.8],[374,410,9],[410,438,11],[438,MALL_LENGTH,4.8]]){
+ for(const [a,b,rise]of [[0,319,16.8],[319,374,5.8],[374,410,11.4],[410,438,11],[438,MALL_LENGTH,4.8]]){
   const n=Math.ceil((b-a)/2),points:Array<[number,number,number,number]>=[];
   for(let i=0;i<=n;i++){const q=mallPoint(mix(a,b,i/n),boundary(side,mix(a,b,i/n))+side*.25);points.push([q[0],q[2],0,q[1]]);}
   add({t:'wallpath',p:[0,0,0],pts:points,w:.55,rise,color:'#696b69',tex:'metal',edgeGrinding:false,grp:9,nm:a===319?'Courtyard low facade':'Continuous mall perimeter'});
@@ -624,7 +624,10 @@ for(const side of [-1,1]){
  // There is no added approach ramp beneath its front edge in the source.
  railAlong('Step Off a Mezzanine lip',MALL_EXIT.deckStart,MALL_EXIT.deckEnd,side*5.4,()=>MALL_EXIT.deckY+.06,8,false).coping=true;
 }
-for(const [s,u]of [[393,-3.7],[400,3.5]])box(mallPoint(s,u,3.25),[1.4,.9,1.5],'#8f8164',8,0,true,'Mezzanine box');
+// The original upper passage ends in a three-tier breakable box stack.
+// Native empty crates preserve the ordinary skate-through smash and settling.
+for(let tier=0;tier<3;tier++)for(let i=0;i<3-tier;i++)
+ add({t:'crate',p:mallPoint(401,(i-(2-tier)/2)*.96,MALL_EXIT.deckY+tier*.96),kind:'empty',grp:8,nm:'Mezzanine breakable box'});
 treads(MALL_EXIT.stairStart,MALL_EXIT.stairEnd,-1.6,1.6,32,8);
 for(const u of [-1.75,1.75])railAlong('Thirty-two stair handrail',412,434,u,s=>mallHeight(s)+.86,8).color='#45494a';
 {
@@ -634,10 +637,24 @@ for(const u of [-1.75,1.75])railAlong('Thirty-two stair handrail',412,434,u,s=>m
  add({t:'vertramp',p,pts,vkind:'half',w:3,rise:.65,arc:80,arcSteps:24,deck:.1,vert:false,tex:'pavement',color:'#8b9693',rails:false,grp:8,nm:'Exit stair wall fillets'});
 }
 // High ceiling over the mezzanine and stair flight, then a low parking room.
-ribbon('Exit corridor ceiling',377,414,s=>-plan(s).width/2-.4,s=>plan(s).width/2+.4,()=>8,11,'#343e42',false,'solid',()=>7.7);
-ribbon('Exit stair ceiling',414,438,-4.25,4.25,s=>mix(8,-5.2,ease(422,438,s)),11,'#343e42',false,'solid',s=>mix(8,-5.2,ease(422,438,s))-.3);
+ribbon('Exit corridor ceiling',377,414,s=>-plan(s).width/2-.4,s=>plan(s).width/2+.4,()=>8.4,11,'#343e42',false,'solid',()=>8.1);
+ribbon('Exit stair ceiling',414,438,-4.25,4.25,s=>mix(8.4,-5.2,ease(422,438,s)),11,'#343e42',false,'solid',s=>mix(8.4,-5.2,ease(422,438,s))-.3);
 ribbon('Parking ceiling',438,MALL_LENGTH,-6,6,()=>-5.2,11,'#343e42',false,'solid',()=>-5.5);
-for(let s=381;s<438;s+=7){const y=s<414?7.65:mix(8,-5.2,ease(422,438,s))-.35;box(mallPoint(s,0,y),[1.2,.08,2.8],'#e2e3cb',11);}
+// Close the wedge above the descending stair walls. Their fixed-height
+// wall paths fall before the ceiling does, otherwise exposing a strip of sky.
+for(const side of [-1,1]){
+ const vertices:number[]=[],indices:number[]=[];
+ for(let a=410;a<438;a+=.5){
+  const b=a+.5,roof=(s:number)=>s<=422?8.4:mix(8.4,-5.2,ease(422,438,s));
+  const lo=(s:number)=>Math.min(roof(s)+.05,mallHeight(s)+10.98);
+  if(roof(a)+.05<=lo(a)&&roof(b)+.05<=lo(b))continue;
+  const k=vertices.length/3,u=(s:number)=>boundary(side,s)+side*.25;
+  vertices.push(...mallPoint(a,u(a),lo(a)),...mallPoint(b,u(b),lo(b)),...mallPoint(b,u(b),roof(b)+.05),...mallPoint(a,u(a),roof(a)+.05));
+  indices.push(k,k+1,k+2,k,k+2,k+3);
+ }
+ add({t:'mesh',p:[0,0,0],vertices,indices,color:'#696b69',tex:'metal',solid:true,doubleSided:true,edgeGrinding:false,grp:9,nm:'Exit wall to ceiling closure'});
+}
+for(let s=381;s<438;s+=7){const y=s<414?8.05:mix(8.4,-5.2,ease(422,438,s))-.35;box(mallPoint(s,0,y),[1.2,.08,2.8],'#e2e3cb',11);}
 for(let s=444;s<464;s+=5.8)for(const side of [-1,1]){
  box(mallPoint(s,side*3.4,-7.75),[.26,4.5,.3],'#586467',8,0,true,'Parking support column');
  box(mallPoint(s,side*1.6,-5.56),[.65,.08,2.5],'#b6c3bd',11);
@@ -666,10 +683,11 @@ add({t:'camnode',p:mallPoint(83.75,0,17.5),s:[8,9,28.5],yaw:0,radius:2,cameraVie
  cameraPosition:[0,.3,7],cameraTarget:[0,0,0],cameraFollowDistance:7,
  cameraFollowTargetHeight:1.25,cameraFov:49,grp:9,nm:'Fountain passage camera'});
 // At the low part of a wall return, the default transverse camera arm runs
-// into the canopy. Look along each side aisle until the rider clears it;
+// into the canopy. A short follow arm also clears its thin inner columns.
+// Look along each side aisle until the rider clears it;
 // the feather restores the usual vert view above the roofs and in mid-court.
-for(const side of [-1,1])add({t:'camnode',p:mallPoint(350,side*10,2),s:[8,10,32],yaw:0,radius:2,cameraView:true,
- cameraPosition:[0,.4,7],cameraTarget:[0,0,0],cameraFollowDistance:7.5,
+for(const side of [-1,1])add({t:'camnode',p:mallPoint(350,side*10,2),s:[10,10,32],yaw:0,radius:2,cameraView:true,
+ cameraPosition:[-side*2.3,.4,7],cameraTarget:[0,0,0],cameraFollowDistance:6,
  cameraFollowTargetHeight:1.25,cameraFov:49,grp:9,nm:'Courtyard canopy return camera'});
 // The low passage and parking roof need a low chase arm. This follows the
 // player through both mezzanine routes without changing movement or camera tuning.

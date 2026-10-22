@@ -1,8 +1,8 @@
 // Controller samples only: production movement, collision, rails and camera.
-export function createMallPilot(m,{route='main',charge=true,secretOllie=true,mezzanineEntry=360.7,fountainEntry=route==='upper-fast'?68:68.5}={}){
+export function createMallPilot(m,{route='main',charge=true,secretOllie=true,mezzanineEntry=360.7,wallrideEntry=370,fountainEntry=route==='upper-fast'?68:68.5}={}){
  const entry=createMallEntryPilot(m);
- let progress=entry.progress,frame=0,active=null,jumped=new Set(),lastAdvance=0,lastS=5,secretPop=false,secretPopFrame=-Infinity,secretRail=null;
- const evidence={route,entry:entry.evidence,sections:[],jumps:[],grinds:[],railNames:[],checkpoints:[],upperTransfer:null,fountainLandingFrames:0,fountainBrakingFrames:0,peakSpeed:0,minimumMovingSpeed:Infinity,bails:0,airFrames:0,crystal:false,pool:null,mezzanineDeckFrames:0};
+ let progress=entry.progress,frame=0,active=null,jumped=new Set(),lastAdvance=0,lastS=5,secretPop=false,secretPopFrame=-Infinity,secretRail=null,wallFrames=0,wallKicked=false,wallLaunched=false;
+ const evidence={route,entry:entry.evidence,sections:[],jumps:[],grinds:[],railNames:[],checkpoints:[],upperTransfer:null,fountainLandingFrames:0,fountainBrakingFrames:0,peakSpeed:0,minimumMovingSpeed:Infinity,bails:0,airFrames:0,crystal:false,pool:null,mezzanineDeckFrames:0,mezzanineBoxes:null,wallride:{frames:0,caughtAt:null,kickAt:null,landing:null}};
  const smooth=t=>{t=Math.max(0,Math.min(1,t));return t*t*(3-2*t);};
  const interpolate=(s,knots)=>{for(let i=1;i<knots.length;i++)if(s<=knots[i][0])return knots[i-1][1]+(knots[i][1]-knots[i-1][1])*smooth((s-knots[i-1][0])/(knots[i][0]-knots[i-1][0]));return knots.at(-1)[1];};
  const fountainRoute=['upper','upper-fast'].includes(route),upperRoute=fountainRoute||['car','escalator'].includes(route);
@@ -13,10 +13,11 @@ export function createMallPilot(m,{route='main',charge=true,secretOllie=true,mez
   fountainRoute?[[0,0],[34,-2.6],[49,-2.8],[55,-3.8],[59,-3.8],[63,-2.7],[68.5,fountainAim],[77,fountainAim],[84,0],[97,-1.4],[115,-6.1],[128,-6.1],[183,-6.1],[199,0],[319,0],[329,3.7],[340,3.7],[348,6.9],[354,6.9],[363,3.7],[373,0],[463,0]]:
   route==='coffee'?[[0,0],[28,-2.6],[38,-5.5],[53,-11.2],[83,-9.8],[103,-6.2],[132,-10],[180,-10],[199,0],[217,0],[319,0],[329,3.7],[340,3.7],[348,6.9],[354,6.9],[363,3.7],[373,0],[463,0]]:
   route==='underpass'?[[0,0],[43,4.7],[65,4.7],[83,5],[96,3.8],[132,13.5],[162,13.5],[180,10.5],[190,10.5],[217,0],[319,0],[329,3.7],[340,3.7],[348,6.9],[354,6.9],[363,3.7],[373,0],[463,0]]:
+  route==='wallride'?[[0,0],[43,7.2],[65,7.8],[83,5],[96,3.8],[132,13.5],[162,13.5],[180,10.5],[190,10.5],[217,0],[319,0],[329,3.7],[340,3.7],[348,6.9],[352,8],[359,9.9],[369,9.9],[374,12],[386,0],[463,0]]:
   route==='mezzanine'?[[0,0],[43,7.2],[65,7.8],[83,5],[96,3.8],[132,13.5],[162,13.5],[180,10.5],[190,10.5],[217,0],[319,0],[463,0]]:
   route==='pool'?[[0,0],[43,7.2],[65,7.8],[83,5],[96,3.8],[132,13.5],[162,13.5],[180,10.5],[190,10.5],[217,0],[319,0],[463,0]]:
   [[0,0],[43,7.2],[65,7.8],[83,5],[96,3.8],[132,13.5],[162,13.5],[180,10.5],[190,10.5],[217,0],[319,0],[329,3.7],[340,3.7],[348,6.9],[354,6.9],[363,3.7],[373,0],[463,0]];
- const launches=[...(route==='escalator'?[{s:128,end:187,name:'Flying Leap',grind:true}]:route==='car'?[{s:86.5,end:100,name:'Car display jump'},{s:125,end:187,name:'Flying Leap',grind:true}]:fountainRoute?[...(route==='upper-fast'?[{s:fountainEntry,end:84,name:'Fountain through jump'}]:[{s:fountainEntry,end:74,name:'Fountain entry'},{s:77.8,end:84,name:'Fountain exit'}]),{s:128,end:187,name:'Flying Leap',grind:true}]:route==='coffee'?[{s:55,end:104,name:'Coffee Grind',grind:true},{s:136,end:185,name:'Lower light beam',grind:true}]:[]),{s:276.2,end:300,name:'Crossrail transfer',grind:true},...(route==='pool'?[{s:344.5,end:364,name:'Pool jump'}]:[]),...(route==='mezzanine'?[{s:mezzanineEntry,end:390,name:'Mezzanine access'},{s:406.5,end:435,name:'Mezzanine'}]:[])];
+ const launches=[...(route==='escalator'?[{s:128,end:187,name:'Flying Leap',grind:true}]:route==='car'?[{s:86.5,end:100,name:'Car display jump'},{s:125,end:187,name:'Flying Leap',grind:true}]:fountainRoute?[...(route==='upper-fast'?[{s:fountainEntry,end:84,name:'Fountain through jump'}]:[{s:fountainEntry,end:74,name:'Fountain entry'},{s:77.8,end:84,name:'Fountain exit'}]),{s:128,end:187,name:'Flying Leap',grind:true}]:route==='coffee'?[{s:55,end:104,name:'Coffee Grind',grind:true},{s:136,end:185,name:'Lower light beam',grind:true}]:[]),{s:276.2,end:300,name:'Crossrail transfer',grind:true},...(route==='pool'?[{s:344.5,end:364,name:'Pool jump'}]:[]),...(route==='mezzanine'?[{s:mezzanineEntry,end:390,name:'Mezzanine access'},{s:406.5,end:435,name:'Mezzanine'}]:route==='wallride'?[{s:406.5,end:435,name:'Mezzanine'}]:[])];
  return {evidence,get progress(){return progress;},
  sample(p,l){
   if(!entry.done)return entry.sample(p,l);
@@ -38,6 +39,7 @@ export function createMallPilot(m,{route='main',charge=true,secretOllie=true,mez
   }
   if(upperRoute&&progress>(route==='escalator'?119:114)&&progress<145)q=m.mallBeamPoint(.55,-1.3);
   if(route==='coffee'&&progress>115&&progress<146)q=m.mallBeamPoint(.55,-1.3,9.25);
+  if(route==='wallride'&&progress>=367&&progress<408)q=m.mallPoint(progress+(wallKicked?14:4),wallKicked?0:12);
   const dx=q[0]-p.pos.x,dz=q[2]-p.pos.z,n=Math.hypot(dx,dz)||1;
   const f=l.skatepark?p.axisF:(p.courseInputDirection(l)??p.camDir);
   let moveX=(dx*-f.z+dz*f.x)/n,moveY=(dx*f.x+dz*f.z)/n;
@@ -45,8 +47,9 @@ export function createMallPilot(m,{route='main',charge=true,secretOllie=true,mez
   // Braking doubles the native turn rate. Reduce the stick angle while
   // slowing so the controlled line still follows the outside of the bench.
   if(fountainRoute&&progress>48&&progress<69)moveX=Math.max(-1,Math.min(1,moveX*3*(route==='upper'?p.speed/23:1)*(brake?.5:1)));
-  if(route==='mezzanine'&&progress>319&&progress<391)moveX=Math.max(-1,Math.min(1,moveX*3));
-  if(route!=='mezzanine'&&route!=='pool'&&progress>319&&progress<374)moveX=Math.max(-1,Math.min(1,moveX*2));
+  if(['mezzanine','wallride'].includes(route)&&progress>319&&progress<391)moveX=Math.max(-1,Math.min(1,moveX*3));
+  if(route==='wallride'&&wallKicked&&progress<408)moveX=Math.max(-1,Math.min(1,moveX*4));
+  if(!['mezzanine','wallride','pool'].includes(route)&&progress>319&&progress<374)moveX=Math.max(-1,Math.min(1,moveX*2));
   // A brief grounded countersteer aligns the second ollie with the aperture.
   if(route==='upper'&&p.grounded&&progress>74&&progress<78.5){moveX=-Math.max(-1,Math.min(1,p.axisF.x*8));moveY=0;}
   // Skate air keeps launch momentum; lateral input spins the board. Align
@@ -77,6 +80,12 @@ export function createMallPilot(m,{route='main',charge=true,secretOllie=true,mez
   }
   // A controlled two-jump line checks the actual landing inside the short
   // fountain passage. The unbraked upper-fast line independently checks flow.
+  if(route==='wallride'&&progress>358&&progress<402){
+   if(progress>=wallrideEntry&&p.grounded&&!wallKicked)wallLaunched=true;
+   if(wallLaunched&&!wallKicked){jump=false;grind=true;}
+   if(p.wallriding){wallFrames++;evidence.wallride.frames++;evidence.wallride.caughtAt??={s:progress,position:p.pos.toArray()};jump=wallFrames<=8;if(!jump){wallKicked=true;grind=false;evidence.wallride.kickAt={s:progress,position:p.pos.toArray()};}}
+   else if(wallKicked){jump=charge;grind=false;if(p.grounded&&p.groundHit?.name==='Raised exit passage')evidence.wallride.landing??={s:progress,position:p.pos.toArray(),speed:p.speed};}
+  }
   if(brake)evidence.fountainBrakingFrames++;
   return{moveX,moveY,jumpHeld:jump,grindHeld:grind,grabHeld:brake,spinHeld:p.grounded&&l.checkpoints.some(c=>!c.active&&c.spawnPos.distanceTo(p.pos)<2.7)};
  },
@@ -87,6 +96,7 @@ export function createMallPilot(m,{route='main',charge=true,secretOllie=true,mez
   if(progress>=34&&p.grounded&&p.state!=='finished'&&progress<m.MALL_EXIT.finish-1)evidence.minimumMovingSpeed=Math.min(evidence.minimumMovingSpeed,p.speed);
   if(!p.grounded)evidence.airFrames++;
   if(p.grounded&&p.groundHit?.name==='Raised exit passage')evidence.mezzanineDeckFrames++;
+  if(progress>408){const boxes=l.crates.filter(c=>m.MALL_LEVEL.components[c.mesh.userData.editorIdx]?.nm==='Mezzanine breakable box');evidence.mezzanineBoxes={total:boxes.length,broken:boxes.filter(c=>!c.alive).length};}
   if(p.grounded&&p.groundHit?.name==='Fountain passage floor')evidence.fountainLandingFrames++;
   if(route==='pool'&&progress>=339&&progress<374){
    const e=evidence.pool??={takeoff:null,landing:null,airFrames:0,peakFeetY:0,collected:false,launchFrames:0};

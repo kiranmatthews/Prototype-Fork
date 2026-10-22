@@ -22,7 +22,7 @@ try{
   const r=window.mallReview={done:false,error:null,frames:0,progress:pilot.progress,evidence:pilot.evidence,initialTuning:JSON.stringify(g.TUNING),sourceMatches:expected===actual};
   if(!r.sourceMatches){const i=Array.from(expected).findIndex((v,i)=>actual[i]!==v);r.sourceMismatch={index:i,expected:expected.slice(i-90,i+150),actual:actual.slice(i-90,i+150)};throw Error('Browser loaded a stale Mall snapshot: '+JSON.stringify(r.sourceMismatch));}
   let sample={};const update=g.input.update.bind(g.input),step=p.step.bind(p);
-  const render=g.renderer.render.bind(g.renderer);r.fountainCamera=[];r.entryCamera=[];r.entryObstructions=[];r.courtyardCamera=[];r.courtyardObstructions=[];r.courtyardHeadContacts=[];
+  const render=g.renderer.render.bind(g.renderer);r.fountainCamera=[];r.entryCamera=[];r.entryObstructions=[];r.courtyardCamera=[];r.courtyardObstructions=[];r.courtyardColumnCrossings=[];r.courtyardHeadContacts=[];
   const sightRay=new Raycaster(),focus=new Vector3(),eyeDirection=new Vector3();r.fountainViewSamples=0;r.fountainObstructions=[];r.exitCamera=[];r.exitObstructions=[];r.exitHeadContacts=[];
   const exitCeilings=[];l.root.traverse(o=>{if(o.isMesh&&['Exit corridor ceiling','Exit stair ceiling','Parking ceiling'].includes(o.name))exitCeilings.push(o);});
   const eyeOccluders=[...l.groundMeshes,...exitCeilings],up=new Vector3(0,1,0);
@@ -43,7 +43,14 @@ try{
     focus.copy(p.renderPosition);focus.y+=1.25;eyeDirection.subVectors(camera.position,focus);
     sightRay.set(focus,eyeDirection.clone().normalize());sightRay.near=.15;sightRay.far=eyeDirection.length()-.2;
     const hit=sightRay.intersectObjects(l.groundMeshes,false)[0];
-    if(hit)r.courtyardObstructions.push({s:r.progress,name:hit.object.name,distance:hit.distance});
+    if(hit){
+     const c=source.MALL_LEVEL.components[hit.object.userData.editorIdx],v={frame:r.frames,s:r.progress,name:c?.nm??hit.object.name,distance:hit.distance};
+     // A narrow post can cross the centre ray without hiding the rider.
+     // Preserve these contacts separately and reject any sustained crossing;
+     // broad surfaces and canopy/head intersections still fail immediately.
+     if(c?.nm==='Courtyard canopy column'&&Math.max(c.s?.[0]??1,c.s?.[2]??1)<=.2)r.courtyardColumnCrossings.push(v);
+     else r.courtyardObstructions.push(v);
+    }
     focus.copy(p.renderPosition);focus.y+=.1;sightRay.set(focus,up);sightRay.near=0;sightRay.far=Math.max(0,(p.cameraPoseBounds?.max.y??focus.y)-focus.y);
     const headHit=sightRay.intersectObjects(l.groundMeshes,false).find(h=>h.face?.normal.y<-.5);
     if(headHit)r.courtyardHeadContacts.push({s:r.progress,name:headHit.object.name,headY:p.cameraPoseBounds?.max.y,y:headHit.point.y});
@@ -107,7 +114,13 @@ try{
  assert.ok(report.entryCamera.samples>=30&&report.entryCamera.minimumDistance>3&&report.entryObstructions.length===0,'The lower entrance must retain a clear camera view');
  if(route!=='planter')assert.ok(report.exitCamera.samples>30&&report.exitCamera.minimumDistance>3&&report.exitObstructions.length===0&&report.exitHeadContacts.length===0,'The full exit must retain camera and character clearance');
  assert.equal(report.error,null);assert.equal(report.state,route==='planter'?'grind':'finished');assert.equal(report.deaths,0);assert.equal(report.sourceMatches,true);assert.equal(report.initialTuning,report.finalTuning);
+ let longestColumnCrossing=0,firstColumnFrame=-Infinity,lastColumnFrame=-Infinity;
+ for(const hit of report.courtyardColumnCrossings){if(hit.frame-lastColumnFrame>3)firstColumnFrame=hit.frame;lastColumnFrame=hit.frame;longestColumnCrossing=Math.max(longestColumnCrossing,lastColumnFrame-firstColumnFrame+1);}
+ assert.ok(longestColumnCrossing<=3,'A canopy post must not obscure the rider for more than 50 ms of simulation');
  if(route!=='planter')assert.ok(report.courtyardCamera.samples>=30&&report.courtyardCamera.minimumDistance>3&&report.courtyardObstructions.length===0&&report.courtyardHeadContacts.length===0,'The courtyard roofs and pool must retain a clear camera view');
+ if(['mezzanine','wallride'].includes(route))assert.ok(report.evidence.mezzanineBoxes?.total===6&&report.evidence.mezzanineBoxes.broken>=2,'The upper route must break through its box stack');
+ if(route==='main')assert.equal(report.evidence.mezzanineBoxes?.broken,0,'The lower route must leave the upper boxes intact');
+ if(route==='wallride')assert.ok(report.evidence.wallride.frames>=5&&report.evidence.wallride.landing&&report.evidence.mezzanineDeckFrames>20,'The full-render run must wallride and land on the mezzanine');
  if(route==='pool')assert.ok(report.evidence.pool?.collected&&report.evidence.pool.landing?.s>354,'The full-render route must clear the pool and collect its reward');
  if(route==='planter'){assert.ok(report.evidence.laps>2&&report.evidence.seams>=2&&!report.evidence.bailed&&report.evidence.peakSpeed>20);}
  else assert.ok(report.evidence.railNames.some(name=>name.startsWith('Crossrail ')));

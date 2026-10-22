@@ -4,7 +4,11 @@ import {withBlockworksRuntime} from './blockworks-runner.mjs';
 
 // Explicit section placements followed solely by ordinary controller input.
 await withBlockworksRuntime(async r=>{
- const {p,l,THREE,sourceModule:m,source}=r,report={surfaces:[],grinds:[]};
+ const {p,l,THREE,sourceModule:m,source}=r,report={surfaces:[],grinds:[],boxes:[]};
+ const boxes=l.crates.filter(c=>source.components[c.mesh.userData.editorIdx]?.nm==='Mezzanine breakable box');
+ report.boxes=boxes.map(c=>({position:c.mesh.position.toArray(),base:c.box.min.y,top:c.box.max.y,empty:c.empty}));
+ assert.equal(boxes.length,6);assert.ok(boxes.every(c=>c.empty&&c.alive));
+ assert.deepEqual(report.boxes.map(c=>Math.round((c.base-m.MALL_EXIT.deckY)/.96)+0).sort(),[0,0,0,1,1,2],'The stack must keep three supported tiers');
  const start=(s,u)=>{const d=new THREE.Vector3(0,0,-1);p.respawn(l,true,false,{position:new THREE.Vector3(...m.mallPoint(s,u,m.mallHeight(s)+.1)),heading:d});p.axisF.copy(d);p.axisL.set(1,0,0);};
  for(const [s,y,d,expected,h]of [[384,0,1,'Raised exit passage',2.6],[394,4,-1,'Raised exit passage',2.8],[400,-2,-1,'Continuous mall floor',-3],[435,-8,-1,'Continuous mall floor',-10],[448,-8,-1,'Continuous mall floor',-10]]){
   const ray=new THREE.Raycaster(new THREE.Vector3(...m.mallPoint(s,0,y)),new THREE.Vector3(0,d,0),0,5),hit=ray.intersectObjects(l.groundMeshes,false)[0];
