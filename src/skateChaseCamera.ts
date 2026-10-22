@@ -30,6 +30,13 @@ export const SKATE_CAMERA = Object.freeze({
   verticalFov: THREE.MathUtils.radToDeg(2 * Math.atan(Math.tan(THREE.MathUtils.degToRad(72) / 2) * 3 / 4)),
 });
 
+// The centre samples enforce clearance. Padded samples anticipate a roof
+// edge so the shot can lower smoothly before the camera passes beneath it.
+const CEILING_PROBES: readonly (readonly [number, number])[] = [
+  [0,0],[.25,0],[.5,0],[.75,0],[1,0],
+  [0,-1.5],[.5,-1.5],[1,-1.5],[0,1.5],[.5,1.5],[1,1.5],[-.5,0],[1.5,0],
+];
+
 /** A three-dimensional chase frame: transition normal is screen-up, and
  * vert air looks down the wall. Tricks do not rotate the camera. */
 export class SkateChaseCamera {
@@ -52,6 +59,10 @@ export class SkateChaseCamera {
   private readonly flatEye = new THREE.Vector3();
   private readonly flatAim = new THREE.Vector3();
   private readonly worldUp = new THREE.Vector3(0,1,0);
+  private readonly ceilingProbe = new THREE.Vector3();
+  private readonly contactNormal = new THREE.Vector3();
+  private ceilingEyeDrop = 0;
+  private ceilingAimDrop = 0;
   /** Final presentation weight; never feeds steering or the vert frame. */
   groundFramingWeight = 0;
 
@@ -121,12 +132,52 @@ export class SkateChaseCamera {
     } else this.groundBlend = 0;
     // Local collision correction: never rotate or displace the skater to
     // satisfy the lens. The smoothed frame naturally restores the full view.
+    // A low roof needs a lower trailing shot, not an arm collapsed into the
+    // rider's head. Sample the space beneath it before the usual wall clamp.
+    // This changes only collision presentation; the calibrated vert frame
+    // and unobstructed park camera remain untouched.
+    let eyeDrop = 0, aimDrop = 0, hardEyeDrop = 0, hardAimDrop = 0;
+    if (this.groundFramingWeight > .5 && this.desiredEye.y > this.aim.y) {
+      const targetY = rider.position.y + SKATE_CAMERA.above;
+      let ceilingY = Infinity, hardCeilingY = Infinity;
+      for (const [along, side] of CEILING_PROBES) {
+        this.ceilingProbe.lerpVectors(rider.position, this.desiredEye, along);
+        this.ceilingProbe.x += this.flatForward.z * side;
+        this.ceilingProbe.z -= this.flatForward.x * side;
+        this.ceilingProbe.y = targetY;
+        this.ray.set(this.ceilingProbe, this.worldUp);
+        this.ray.near = .05;
+        this.ray.far = Math.max(.1, this.desiredEye.y - targetY + .5);
+        const roof = this.ray.intersectObjects(surfaces, false)[0];
+        if (!roof?.face) continue;
+        this.contactNormal.copy(roof.face.normal).transformDirection(roof.object.matrixWorld);
+        if (Math.abs(this.contactNormal.y) <= .5) continue;
+        ceilingY = Math.min(ceilingY, roof.point.y);
+        if (side === 0 && along >= 0 && along <= 1) hardCeilingY = Math.min(hardCeilingY, roof.point.y);
+      }
+      eyeDrop = Math.max(0, this.desiredEye.y - (ceilingY - .35));
+      hardEyeDrop = Math.max(0, this.desiredEye.y - (hardCeilingY - .35));
+      if (eyeDrop > 0) aimDrop = Math.max(0, this.aim.y - Math.min(targetY, ceilingY - .7));
+      if (hardEyeDrop > 0) hardAimDrop = Math.max(0, this.aim.y - Math.min(targetY, hardCeilingY - .7));
+    }
+    if (snap || this.groundFramingWeight <= .5) {
+      this.ceilingEyeDrop = eyeDrop;
+      this.ceilingAimDrop = aimDrop;
+    } else {
+      const restore = frameBlend(.12, step);
+      this.ceilingEyeDrop = Math.max(hardEyeDrop, this.ceilingEyeDrop + (eyeDrop - this.ceilingEyeDrop) * restore);
+      this.ceilingAimDrop = Math.max(hardAimDrop, this.ceilingAimDrop + (aimDrop - this.ceilingAimDrop) * restore);
+    }
+    if (this.ceilingEyeDrop > 1e-6 || this.ceilingAimDrop > 1e-6) {
+      this.desiredEye.y -= this.ceilingEyeDrop;
+      this.aim.y -= this.ceilingAimDrop;
+    }
     this.direction.subVectors(this.desiredEye, this.aim);
     const distance = this.direction.length();
     this.direction.divideScalar(Math.max(distance, 1e-6));
     this.ray.set(this.aim, this.direction);
-    this.ray.near = 0.1;
-    this.ray.far = distance + 0.2;
+    this.ray.near = .1;
+    this.ray.far = distance + .2;
     const contact = this.ray.intersectObjects(surfaces, false)[0];
     camera.position.copy(this.desiredEye);
     if (contact) camera.position.copy(this.aim)

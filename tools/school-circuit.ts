@@ -9,7 +9,7 @@ export function createSchoolCircuit(p:any){
     ...SCHOOL_START_CANOPY.slice(2),[36,0,SCHOOL_PLANTERS[7].p[2]+.825],
     [41,0,-2],[43,0,-8],[41,-2,-22],[39,-5,-36],[34,-5,-40],[27,-5,-49],
     [18,-5,-58],[18,-5,-64],[26,-5,-69],[27,-5,-76],[22,-5,-83],
-    [12,-5,-83.1],[0,-5,-83.1],[-12,-5,-83.1],[-17.3,-5,-82.6],
+    [12,-5,-83.1],[0,-5,-83.1],[-12,-5,-83.1],SCHOOL_LONG_HALFPIPE[SCHOOL_LONG_HALFPIPE.length-1],
     ...SCHOOL_LONG_HALFPIPE.slice(0,-1).reverse(),...SCHOOL_CORRIDOR_EXIT.slice(1),[-76,-5,-27],
     ...[[42,196],[61,205],[95,211],[131,215],[166,213]].map(([u,v])=>schoolMapPoint(u,v)),
     [-33.5,-5,-26],...SCHOOL_LONG_ASS_RAIL.filter((_,i,a)=>i%12===0||i===a.length-1).reverse(),[4,0,1],

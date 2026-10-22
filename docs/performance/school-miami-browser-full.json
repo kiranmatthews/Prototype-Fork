@@ -8,11 +8,29 @@
     -39
   ],
   "speed": 0,
-  "components": 224,
-  "rails": 61,
-  "errors": [
-    "ResizeObserver loop completed with undelivered notifications."
-  ],
+  "components": 238,
+  "rails": 64,
+  "camera": {
+    "eye": [
+      26,
+      0.09999999999999964,
+      -33.95
+    ],
+    "trailing": 5.049999999999997,
+    "bodyBounds": {
+      "min": [
+        25.501183059729392,
+        -4.775294946410002,
+        -39.983764308434424
+      ],
+      "max": [
+        26.69040185347062,
+        -1.9714303439414151,
+        -38.179811087188746
+      ]
+    }
+  },
+  "errors": [],
   "checks": {
     "running": false,
     "stage": "Checkpoint and fall recovery",
@@ -43,7 +61,11 @@
       },
       {
         "name": "Winding halfpipe",
-        "frames": 375
+        "frames": 338
+      },
+      {
+        "name": "Perimeter lane width",
+        "frames": 24
       },
       {
         "name": "West descent to pools",
@@ -70,8 +92,12 @@
         "frames": 83
       },
       {
-        "name": "Green downhill grind",
-        "frames": 45
+        "name": "Green downhill full grind",
+        "frames": 110
+      },
+      {
+        "name": "Green uphill full grind",
+        "frames": 423
       },
       {
         "name": "Swim Team 1",
@@ -98,28 +124,40 @@
         "frames": 35
       },
       {
+        "name": "Stair-side curb 1 full grind",
+        "frames": 87
+      },
+      {
+        "name": "Stair-side curb 2 full grind",
+        "frames": 128
+      },
+      {
         "name": "Long Ass Rail full grind",
         "frames": 169
       },
       {
         "name": "Huge Rail full grind",
-        "frames": 327
+        "frames": 141
       },
       {
         "name": "Playground Rail full grind",
         "frames": 121
       },
       {
+        "name": "Perimeter Mini Gap and rollout",
+        "frames": 140
+      },
+      {
         "name": "Roof Mini Gap and rollout",
         "frames": 102
       },
       {
-        "name": "Funbox to Huge Rail",
-        "frames": 98
+        "name": "Funbox to perimeter rail",
+        "frames": 108
       },
       {
         "name": "Funbox to Table",
-        "frames": 82
+        "frames": 86
       },
       {
         "name": "Funbox to Playground Rail",
@@ -143,11 +181,15 @@
       },
       {
         "name": "Lawn rail-to-rail",
-        "frames": 158
+        "frames": 151
+      },
+      {
+        "name": "Classroom planter to Huge Rail",
+        "frames": 209
       },
       {
         "name": "Continuous campus circuit",
-        "frames": 2373
+        "frames": 2404
       },
       {
         "name": "Checkpoint and fall recovery",
@@ -155,8 +197,78 @@
       }
     ],
     "failure": null,
-    "frames": 6615,
+    "frames": 7506,
     "longGrinds": [
+      {
+        "name": "Roof-to-awning plank",
+        "result": {
+          "frames": 83,
+          "grindFrames": 73,
+          "maxT": 20.516885900164336,
+          "minT": 0.3972687742922718,
+          "progress": 20.516885900164336,
+          "direction": 1,
+          "maxBalance": 0.1,
+          "caught": true,
+          "landed": true
+        }
+      },
+      {
+        "name": "Green downhill full grind",
+        "result": {
+          "frames": 110,
+          "grindFrames": 101,
+          "maxT": 32.8452971091869,
+          "minT": 0.3916813212322587,
+          "progress": 32.8452971091869,
+          "direction": 1,
+          "maxBalance": 0.1,
+          "caught": true,
+          "landed": true
+        }
+      },
+      {
+        "name": "Green uphill full grind",
+        "result": {
+          "frames": 423,
+          "grindFrames": 403,
+          "maxT": 32.43697843041917,
+          "minT": 0,
+          "progress": 32.8452971091869,
+          "direction": -1,
+          "maxBalance": 0.1,
+          "caught": true,
+          "landed": true
+        }
+      },
+      {
+        "name": "Stair-side curb 1 full grind",
+        "result": {
+          "frames": 87,
+          "grindFrames": 63,
+          "maxT": 18.57874357708274,
+          "minT": 0.38167408642498885,
+          "progress": 18.57874357708274,
+          "direction": 1,
+          "maxBalance": 0.1,
+          "caught": true,
+          "landed": true
+        }
+      },
+      {
+        "name": "Stair-side curb 2 full grind",
+        "result": {
+          "frames": 128,
+          "grindFrames": 102,
+          "maxT": 27.298508986271912,
+          "minT": 0.3999999999999999,
+          "progress": 27.298508986271912,
+          "direction": 1,
+          "maxBalance": 0.1,
+          "caught": true,
+          "landed": true
+        }
+      },
       {
         "name": "Long Ass Rail full grind",
         "result": {
@@ -174,12 +286,12 @@
       {
         "name": "Huge Rail full grind",
         "result": {
-          "frames": 327,
-          "grindFrames": 285,
-          "maxT": 66.662754159632,
-          "minT": 0.16275415963182216,
-          "progress": 66.90000000000019,
-          "direction": -1,
+          "frames": 141,
+          "grindFrames": 117,
+          "maxT": 27.481667540755346,
+          "minT": 0.4000000000000021,
+          "progress": 27.481667540755346,
+          "direction": 1,
           "maxBalance": 0.1,
           "caught": true,
           "landed": true
@@ -200,6 +312,13 @@
         }
       }
     ],
+    "perimeterMini": {
+      "frames": 140,
+      "takeoffGrindFrames": 17,
+      "receivingGrindFrames": 60,
+      "air": true,
+      "landed": true
+    },
     "roofMini": {
       "frames": 102,
       "takeoffGrindFrames": 16,
@@ -209,9 +328,9 @@
     },
     "streetTransfers": [
       {
-        "name": "Funbox to Huge Rail",
+        "name": "Funbox to perimeter rail",
         "result": {
-          "frames": 98,
+          "frames": 108,
           "air": true,
           "takeoffY": -3.8499999046325684,
           "receivingGrindFrames": 12,
@@ -221,7 +340,7 @@
       {
         "name": "Funbox to Table",
         "result": {
-          "frames": 82,
+          "frames": 86,
           "air": true,
           "takeoffY": -3.8499999046325684,
           "receivingGrindFrames": 17,
@@ -284,19 +403,30 @@
       {
         "name": "Lawn rail-to-rail",
         "result": {
-          "frames": 158,
+          "frames": 151,
           "takeoffGrindFrames": 31,
-          "receivingGrindFrames": 48,
+          "receivingGrindFrames": 50,
+          "air": true,
+          "landed": true
+        }
+      },
+      {
+        "name": "Classroom planter to Huge Rail",
+        "result": {
+          "frames": 209,
+          "takeoffGrindFrames": 45,
+          "receivingGrindFrames": 117,
+          "receivingProgress": 27.481667540755346,
           "air": true,
           "landed": true
         }
       }
     ],
     "circuit": {
-      "frames": 2373,
+      "frames": 2404,
       "waypoints": 51,
       "totalWaypoints": 51,
-      "distance": 394.01432969594646,
+      "distance": 389.91235880695785,
       "gimmeGrindFrames": 21,
       "returnGrindFrames": 555,
       "kickerAir": true,

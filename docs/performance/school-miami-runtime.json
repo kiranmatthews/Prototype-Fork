@@ -11,5 +11,8 @@
     "src/skateSteering.ts": "62b9d234f6feebaadd2f5c3b58cd6305d042c99ee46ea7d75d8fff7dbe953f68",
     "src/vertBoardRelease.ts": "7ce3ba915f646ac97890d0a2b9f25635ccedddb8068e4c2217c2812808866e67",
     "src/vertSkateMotion.ts": "944c8fa4293fe58b8baca9987c7573b78428774e77b93bccb2b889d893a7ac96"
+  },
+  "taskOwnedRuntimeFiles": {
+    "src/skateChaseCamera.ts": "21bf5eaec450d6e1738343ea3e2122a691ad2fbcf1206949ea57b9cf689d2831"
   }
 }

@@ -1,6 +1,6 @@
 {
-  "components": 224,
-  "rails": 61,
+  "components": 238,
+  "rails": 64,
   "support": [
     {
       "label": "start canopy",
@@ -21,6 +21,34 @@
     {
       "label": "gym north doorway",
       "y": 0
+    },
+    {
+      "label": "perimeter lane width",
+      "y": -5
+    },
+    {
+      "label": "perimeter lane width",
+      "y": -5
+    },
+    {
+      "label": "perimeter lane width",
+      "y": -5
+    },
+    {
+      "label": "perimeter lane width",
+      "y": -5
+    },
+    {
+      "label": "perimeter lane width",
+      "y": -5
+    },
+    {
+      "label": "graded classroom lawn",
+      "y": -2.8161639637417295
+    },
+    {
+      "label": "graded east lawn",
+      "y": -1.0399468519069544
     },
     {
       "label": "separate bonus roof",
@@ -180,20 +208,37 @@
       ]
     },
     {
-      "label": "Huge Rail halfpipe corridor",
-      "frames": 374,
+      "label": "perimeter lane width",
+      "frames": 22,
       "bails": 0,
-      "maxStep": 0.4637286084479027,
-      "minSpeed": 11.999055118110237,
+      "maxStep": 0.19696795955239566,
+      "minSpeed": 8.166229039078448,
       "end": [
-        -19.294807431639708,
+        -60,
         -5,
-        -82.32148900342085
+        -55.83064940957695
       ],
       "target": [
-        -17.621126760563378,
+        -60,
         -5,
-        -83.49774647887324
+        -58
+      ]
+    },
+    {
+      "label": "Huge Rail halfpipe corridor",
+      "frames": 337,
+      "bails": 0,
+      "maxStep": 0.19998425196851055,
+      "minSpeed": 11.999055118110237,
+      "end": [
+        -17.08617955002026,
+        -5,
+        -78.52571717055933
+      ],
+      "target": [
+        -14.923943661971832,
+        -5,
+        -78.79211267605633
       ]
     },
     {
@@ -516,15 +561,16 @@
     },
     {
       "name": "Mini Gap",
+      "frames": 140,
+      "takeoffGrindFrames": 17,
+      "receivingGrindFrames": 60,
       "air": true,
       "landed": true,
       "bails": 0,
-      "frames": 153,
-      "receivingGrindFrames": 70,
       "end": [
-        -14.96720377859446,
-        -5,
-        -82.99116984618863
+        -8.65000063023978,
+        -4.953815667924893,
+        -84.6677752357427
       ]
     },
     {
@@ -542,31 +588,31 @@
       ]
     },
     {
-      "name": "Funbox to Huge Rail",
-      "frames": 98,
+      "name": "Funbox to perimeter rail",
+      "frames": 108,
       "air": true,
       "takeoffY": -3.8499999046325684,
       "receivingGrindFrames": 12,
       "landed": true,
       "bails": 0,
       "end": [
-        -21.960346052681906,
+        -30.584403783353668,
         -5,
-        -58.06379237431382
+        -59.173896855688724
       ]
     },
     {
       "name": "Funbox to Table",
-      "frames": 82,
+      "frames": 86,
       "air": true,
       "takeoffY": -3.8499999046325684,
       "receivingGrindFrames": 17,
       "landed": true,
       "bails": 0,
       "end": [
-        -21.584317247330663,
-        -4.403634548867197,
-        -63.526281214916246
+        -22.376859607637204,
+        -5,
+        -62.97133707987908
       ]
     },
     {
@@ -606,9 +652,9 @@
       "landed": true,
       "bails": 0,
       "end": [
-        32.517953589292944,
+        32.51795314231009,
         -5,
-        -52.25817383444846
+        -52.25817499284531
       ]
     },
     {
@@ -645,16 +691,31 @@
     },
     {
       "name": "Lawn rail-to-rail",
-      "frames": 158,
+      "frames": 151,
       "takeoffGrindFrames": 31,
-      "receivingGrindFrames": 48,
+      "receivingGrindFrames": 50,
       "air": true,
       "landed": true,
       "bails": 0,
       "end": [
-        54.564866666666546,
-        0.11999994277954107,
-        -7.114213562373059
+        54.8941333333333,
+        -0.3992772585243167,
+        -11.38548846450322
+      ]
+    },
+    {
+      "name": "Classroom planter to Huge Rail",
+      "frames": 209,
+      "takeoffGrindFrames": 45,
+      "receivingGrindFrames": 117,
+      "receivingProgress": 27.481667540755346,
+      "air": true,
+      "landed": true,
+      "bails": 0,
+      "end": [
+        -59.13198898586656,
+        -5,
+        -42.80083926749386
       ]
     }
   ],
@@ -675,9 +736,15 @@
     },
     {
       "name": "Roof to Awning",
+      "frames": 83,
+      "grindFrames": 73,
+      "maxT": 20.516885900164336,
+      "minT": 0.3972687742922718,
+      "progress": 20.516885900164336,
+      "direction": 1,
+      "maxBalance": 0.1,
       "caught": true,
       "landed": true,
-      "frames": 73,
       "bails": 0,
       "end": [
         45,
@@ -686,21 +753,39 @@
       ]
     },
     {
-      "dir": -1,
-      "frames": 50,
+      "name": "Handicap Rail downhill",
+      "frames": 110,
+      "grindFrames": 101,
+      "maxT": 32.8452971091869,
+      "minT": 0.3916813212322587,
+      "progress": 32.8452971091869,
+      "direction": 1,
+      "maxBalance": 0.1,
+      "caught": true,
+      "landed": true,
+      "bails": 0,
       "end": [
-        37.50631758685226,
-        -1.8390104758688934,
-        -22.239567444145536
+        34.67707700060528,
+        -4.132220110880928,
+        -40.346707196126374
       ]
     },
     {
-      "dir": 1,
-      "frames": 50,
+      "name": "Handicap Rail uphill",
+      "frames": 423,
+      "grindFrames": 403,
+      "maxT": 32.43697843041917,
+      "minT": 0,
+      "progress": 32.8452971091869,
+      "direction": -1,
+      "maxBalance": 0.1,
+      "caught": true,
+      "landed": true,
+      "bails": 0,
       "end": [
-        37.03410838117807,
-        -2.523236328564013,
-        -25.261706360460344
+        40.371101042303216,
+        0,
+        -3.904953329259203
       ]
     },
     {
@@ -723,20 +808,20 @@
     },
     {
       "name": "Huge Rail",
-      "frames": 327,
-      "grindFrames": 285,
-      "maxT": 66.662754159632,
-      "minT": 0.16275415963182216,
-      "progress": 66.90000000000019,
-      "direction": -1,
+      "frames": 141,
+      "grindFrames": 117,
+      "maxT": 27.481667540755346,
+      "minT": 0.4000000000000021,
+      "progress": 27.481667540755346,
+      "direction": 1,
       "maxBalance": 0.1,
       "caught": true,
       "landed": true,
       "bails": 0,
       "end": [
-        -21.685159332259857,
-        -4.887566663428771,
-        -81.7728334099354
+        -59.17308457934047,
+        -5,
+        -42.753300908379856
       ]
     },
     {
@@ -756,14 +841,50 @@
         -4.251395017886823,
         -71.89961259338916
       ]
+    },
+    {
+      "name": "Stair-side curb 1",
+      "frames": 87,
+      "grindFrames": 63,
+      "maxT": 18.57874357708274,
+      "minT": 0.38167408642498885,
+      "progress": 18.57874357708274,
+      "direction": 1,
+      "maxBalance": 0.1,
+      "caught": true,
+      "landed": true,
+      "bails": 0,
+      "end": [
+        32.59323809311717,
+        -4.890947867656789,
+        -33.440571441296804
+      ]
+    },
+    {
+      "name": "Stair-side curb 2",
+      "frames": 128,
+      "grindFrames": 102,
+      "maxT": 27.298508986271912,
+      "minT": 0.3999999999999999,
+      "progress": 27.298508986271912,
+      "direction": 1,
+      "maxBalance": 0.1,
+      "caught": true,
+      "landed": true,
+      "bails": 0,
+      "end": [
+        46,
+        -5,
+        -32.56964665462553
+      ]
     }
   ],
   "circuits": [
     {
-      "frames": 2373,
+      "frames": 2404,
       "waypoints": 51,
       "totalWaypoints": 51,
-      "distance": 394.01141713434833,
+      "distance": 389.9094462453598,
       "gimmeGrindFrames": 21,
       "returnGrindFrames": 555,
       "kickerAir": true,

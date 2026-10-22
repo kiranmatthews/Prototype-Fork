@@ -20,9 +20,9 @@ function bind(){
   const original=w.console.error.bind(w.console);w.console.error=(...args:any[])=>{errors.push(args.map(String).join(' '));original(...args);};
 }
 frame.addEventListener('load',bind);bind();
-function place(p:number[],h:number[]){if(!game)return;overview=false;const player=game.player,level=game.getLevel();
+function place(p:number[],h:number[],speed=0){if(!game)return;overview=false;const player=game.player,level=game.getLevel();
   const position=player.pos.clone().set(...p),heading=player.axisF.clone().set(...h).normalize();
-  player.respawn(level,true,true,{position,heading});player.speed=0;player.axisF.copy(heading);player.axisL.set(heading.z,0,-heading.x);player.freeSkate=true;frame.contentWindow?.focus();}
+  player.respawn(level,true,true,{position,heading});player.speed=speed;player.axisF.copy(heading);player.axisL.set(heading.z,0,-heading.x);player.freeSkate=true;frame.contentWindow?.focus();}
 document.querySelector('#overview')!.addEventListener('click',()=>{overview=true;});
 document.querySelector('#play')!.addEventListener('click',()=>{overview=false;frame.contentWindow?.focus();});
 document.querySelector('#start')!.addEventListener('click',()=>place(SCHOOL_MIAMI_LEVEL.spawn,[1,0,0]));
@@ -39,6 +39,8 @@ document.querySelector('#hill')!.addEventListener('click',()=>place([80,.1,53],[
 document.querySelector('#ditch')!.addEventListener('click',()=>{const k=SCHOOL_DITCH_KICKER,h=k.direction;place([k.p[0]-h[0]*3.8,-6.4,k.p[2]-h[2]*3.8],h);});
 document.querySelector('#alley')!.addEventListener('click',()=>place([18.2,.1,52.2],[1,0,0]));
 document.querySelector('#rail')!.addEventListener('click',()=>place([44,.1,-5],[-.15,0,-1]));
+document.querySelector('#stairs')!.addEventListener('click',()=>place([49,0,-15],[-.6,0,-.8]));
+document.querySelector('#under-awning')!.addEventListener('click',()=>place([42,-1,-15],[.15,0,1],12));
 document.querySelector('#full')!.addEventListener('click',()=>{full=!full;game=null;checks=null;errors.length=0;frame.src='/?playtest&level=school-miami'+(full?'':'&lite');document.querySelector('#full')!.textContent=full?'Lite render':'Full render';});
 document.querySelector('#checks')!.addEventListener('click',()=>{if(!game||checks?.running)return;overview=false;checks=runSchoolBrowserChecks(game);});
-setInterval(()=>{if(!game)return;const p=game.player,l=game.getLevel();status.textContent=JSON.stringify({level:game.getCurrentLevel().id,grounded:p.grounded,state:p.state,pos:p.pos.toArray().map((n:number)=>+n.toFixed(2)),speed:+p.speed.toFixed(2),components:SCHOOL_MIAMI_LEVEL.components.length,rails:l.rails.length,errors,checks:checks?{...checks,tuningBefore:undefined}:undefined},null,0);},300);
+setInterval(()=>{if(!game)return;const p=game.player,l=game.getLevel(),bounds=p.cameraPoseBounds;status.textContent=JSON.stringify({level:game.getCurrentLevel().id,grounded:p.grounded,state:p.state,pos:p.pos.toArray().map((n:number)=>+n.toFixed(2)),speed:+p.speed.toFixed(2),components:SCHOOL_MIAMI_LEVEL.components.length,rails:l.rails.length,camera:{eye:game.camera.position.toArray(),trailing:Math.hypot(game.camera.position.x-p.pos.x,game.camera.position.z-p.pos.z),bodyBounds:bounds?{min:bounds.min.toArray(),max:bounds.max.toArray()}:null},errors,checks:checks?{...checks,tuningBefore:undefined}:undefined},null,0);},300);

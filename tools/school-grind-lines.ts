@@ -49,3 +49,23 @@ export function createRoofMiniGap(p:any,takeoff:any,receiver:any,dt:number){
     return false;
   }};
 }
+
+export function createPerimeterMiniGap(p:any,a:any,b:any,dt:number){
+  const balance=meterControl(p,dt),report={frames:0,takeoffGrindFrames:0,receivingGrindFrames:0,air:false,landed:false};
+  let popped=false,armed=false,exitPopped=false,held=false;
+  const end=a.points.at(-1),start=b.points[0],h=start.clone().sub(end).setY(0).normalize(),gap=start.distanceTo(end);
+  return{report,sample:()=>{
+    const release=!popped&&report.takeoffGrindFrames>0&&a.totalLength-p.grindT<.85;if(release)popped=true;
+    const repress=popped&&!armed&&p.pos.clone().sub(end).dot(h)>gap-1.3;if(repress)armed=true;
+    const exitCharge=report.receivingGrindFrames>=52&&!exitPopped,exitRelease=report.receivingGrindFrames>=60&&!exitPopped;if(exitRelease)exitPopped=true;
+    const charge=!popped&&report.takeoffGrindFrames>0||exitCharge&&!exitRelease,press=charge&&!held;held=charge;
+    let moveX=p.state==='grind'?balance():0,moveY=0;
+    if(exitCharge||exitRelease){const t=b.tangentAt(p.grindT),n=Math.hypot(p.camDir.x,p.camDir.z)||1,wx=-t.z*.8,wz=t.x*.8;moveX=(-p.camDir.z*wx+p.camDir.x*wz)/n;moveY=(p.camDir.x*wx+p.camDir.z*wz)/n;}
+    return quantize({moveX,moveY,grindHeld:(!popped||armed)&&!exitPopped,grindPressed:report.frames===0||repress,jumpHeld:charge,jumpPressed:press,jumpReleased:release||exitRelease});
+  },observe:()=>{
+    report.frames++;report.air||=popped&&p.state==='air';
+    if(p.state==='grind'){if(p.grindRail===a)report.takeoffGrindFrames++;else if(p.grindRail===b)report.receivingGrindFrames++;else throw Error('Mini Gap caught a different rail');}
+    if(report.air&&p.grounded){if(report.receivingGrindFrames<60||Math.abs(p.pos.y+5)>.08)throw Error('Mini Gap missed its receiving quarter or yard rollout');report.landed=true;return true;}
+    return false;
+  }};
+}

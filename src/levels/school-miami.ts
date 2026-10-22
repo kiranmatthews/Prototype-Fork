@@ -41,9 +41,9 @@ function slab(nm: string, x: number, z: number, w: number, d: number, top: numbe
 function polygonBlock(nm: string, outline: Plan[], top: number, base: number, color: string, grp: number) {
   return add({ t: 'platform', nm, p: [0, (top + base) / 2, 0], s: [1, top - base, 1], pts: outline, tex: 'pavement', color, edgeGrinding: false, grp });
 }
-function rail(nm: string, points: Point[], grp: number, color = coping) {
+function rail(nm: string, points: Point[], grp: number, color = coping, ledge = false) {
   const p = points[0];
-  return add({ t: 'rail', nm, p, pts: points.map(q => [q[0] - p[0], q[2] - p[2], 0, q[1] - p[1]]), color, grp });
+  return add({ t: 'rail', nm, p, pts: points.map(q => [q[0] - p[0], q[2] - p[2], 0, q[1] - p[1]]), color, coping:ledge, invisible:ledge, grp });
 }
 
 // Visual details share a handful of meshes. None of the window muntins,
@@ -198,9 +198,9 @@ const roadEdge=(side:number)=>{
   return new CatmullRomCurve3(guide,false,'centripetal').getSpacedPoints(96).map((p):Point=>[p.x,Math.max(lowerY+.45,Math.min(.45,p.y)),p.z]);
 };
 export const SCHOOL_LONG_ASS_RAIL=roadEdge(1);
-rail('Long Ass Rail · classroom-side planter lip',SCHOOL_LONG_ASS_RAIL,2,'#bead8c');
+rail('Long Ass Rail · classroom-side planter lip',SCHOOL_LONG_ASS_RAIL,2,'#bead8c',true);
 const oppositeBank=roadEdge(-1);
-rail('Long Ass Rail · opposite grass-bank lip',oppositeBank,2,'#bead8c');
+rail('Long Ass Rail · opposite grass-bank lip',oppositeBank,2,'#bead8c',true);
 for(const edge of [SCHOOL_LONG_ASS_RAIL,oppositeBank])ribbon('West descent · concrete planter cap',edge.map(p=>[p[0],p[1]-.05,p[2]]),.4,cream,2);
 // Hall Pass is the high rail across the road, not a second downhill rail.
 // Its grass-bank takeoff rises over the classroom face; the ollie drops
@@ -210,15 +210,18 @@ export const SCHOOL_HALL_PASS={
   receiver:[[288,193],[288,184],[291,179],[304,182]].map(([u,v])=>schoolMapPoint(u,v,.45)),
 };
 rail('Hall Pass · high crossing rail',SCHOOL_HALL_PASS.takeoff,2,'#9e9b7b');
-rail('Hall Pass · alcove planter lip',SCHOOL_HALL_PASS.receiver,3);
+rail('Hall Pass · alcove planter lip',SCHOOL_HALL_PASS.receiver,3,coping,true);
 {
   const a=SCHOOL_HALL_PASS.takeoff[0],b=SCHOOL_HALL_PASS.takeoff[1],h=new Vector3(b[0]-a[0],0,b[2]-a[2]).normalize();
   const bank:Point[]=[[-6,0,4],[-7.5,0,-7],[a[0]-h.x*6,-1.4,a[2]-h.z*6],[a[0]-h.x*3,-1.4,a[2]-h.z*3],[a[0],-.8,a[2]]];
   ribbon('Hall Pass · grass approach bank',bank,2.2,'#65835b',2);
+  const fence=bank.map(p=>[p[0]-1.4,p[1],p[2]] as Point),fp=fence[0];
+  add({t:'wallpath',nm:'Hall Pass · grass-bank boundary fence',p:fp,pts:fence.map(q=>[q[0]-fp[0],q[2]-fp[2],0,q[1]-fp[1]]),w:.22,rise:3,tex:'wood',color:'#837d70',containment:true,grp:2});
   add({t:'ramp',nm:'Hall Pass · small takeoff wedge',p:[a[0]-h.x*1.5,-1.4,a[2]-h.z*1.5],w:1.1,len:3,rise:.6,yaw:Math.atan2(-h.x,-h.z)*180/Math.PI,tex:'pavement',color:cream,edgeGrinding:false,grp:2});
   // The alcove has a real low deck and planted ledge, rather than an
   // invisible rail over a five-metre hole in the classroom polygon.
   ribbon('Hall Pass · alcove deck',SCHOOL_HALL_PASS.receiver.map(p=>[p[0],-.12,p[2]]),2.8,concrete,3);
+  ribbon('Hall Pass · alcove concrete cap',SCHOOL_HALL_PASS.receiver.map(p=>[p[0],.4,p[2]]),.35,cream,3);
   ribbon('Hall Pass · planted receiver',SCHOOL_HALL_PASS.receiver.map(p=>[p[0]-.48,.25,p[2]]),.8,'#65734c',3);
 }
 export const SCHOOL_WEST_WEDGE={p:schoolMapPoint(233,214,-3.85),width:5.6,depth:1.1,rise:1.15,bank:2.1};
@@ -226,16 +229,34 @@ export const SCHOOL_WEST_WEDGE={p:schoolMapPoint(233,214,-3.85),width:5.6,depth:
   const k=SCHOOL_WEST_WEDGE;
   hip('Funbox to Rail · west-descent wedge',k.p[0],lowerY,k.p[2],k.width,k.depth,k.rise,k.bank,7,'#ad977a');
 }
-// Upper grass terraces stop short of the bank and the landing lanes.
-polygonBlock('Admin lawn',[[4.6,-25],[34,-25],[37,-7],[4.6,-7]],.15,-5,'#65835b',2);
-slab('East approach lawn',51,-10,10,27,.12,-5,'#6c8459',2);
+// The lawn edges descend beside the stairs. They are low curbs above the
+// road, not flat upper-court slabs hanging metres above its lower section.
+export function schoolLawnHeight(z:number,offset=.15){return lowerY*smooth((stairs.a[2]-z)/(stairs.a[2]-stairs.b[2]))+offset;}
+function lawnTerrace(nm:string,z0:number,z1:number,left:number,right0:number,right1:number,offset:number,color:string){
+  const rows=Array.from({length:33},(_,i)=>{const t=i/32,z=mix(z0,z1,t);return{z,y:schoolLawnHeight(z,offset),left,right:mix(right0,right1,t)};});
+  const vertices=rows.flatMap(r=>[r.left,r.y,r.z,r.right,r.y,r.z]),indices:number[]=[];
+  for(let i=0;i<32;i++){const j=i*2;indices.push(j,j+2,j+3,j,j+3,j+1);}
+  surface(nm,vertices,indices,color,2,{doubleSided:true});
+  const boundary:Point[]=[...rows.map(r=>[r.left,r.y,r.z] as Point),...rows.slice().reverse().map(r=>[r.right,r.y,r.z] as Point)];
+  for(let i=0;i<boundary.length;i++){const a=boundary[i],b=boundary[(i+1)%boundary.length];quad([[a[0],lowerY,a[2]],[b[0],lowerY,b[2]],b,a],color,2);}
+  // A solid footing closes the undercroft below the lowest lawn edge.
+  polygonBlock(`${nm} footing`,[[left,z0],[right0,z0],[right1,z1],[left,z1]],Math.min(rows[0].y,rows[32].y),lowerY,color,2);
+}
+lawnTerrace('Admin lawn · graded beside the stairs',-25,-7,4.6,34,37,.15,'#65835b');
+lawnTerrace('East lawn · graded beside the stairs',-23.5,3.5,46,56,56,.12,'#6c8459');
+const lawnPath=(pts:Plan[],offset:number):Point[]=>pts.map(([x,z])=>[x,schoolLawnHeight(z,offset),z]);
 export const SCHOOL_LAWN_TRANSFER={
-  takeoff:[[4.6,.45,-25],[34,.45,-25]] as Point[],
-  receiver:[[46,.42,-23.5],[55,.42,-23.5],[56,.42,-22.5],[56,.42,3.5]] as Point[],
+  takeoff:lawnPath([[4.6,-25],[34,-25]],.45),
+  receiver:lawnPath([[46,-23.5],[55,-23.5],[56,-22.5],...Array.from({length:17},(_,i):Plan=>[56,mix(-21.5,3.5,i/16)])],.42),
 };
-rail('Rail to Rail · classroom lawn edge',SCHOOL_LAWN_TRANSFER.takeoff,2);
-rail('Rail to Rail · opposite lawn edge',SCHOOL_LAWN_TRANSFER.receiver,2);
-for(const points of [SCHOOL_LAWN_TRANSFER.takeoff,SCHOOL_LAWN_TRANSFER.receiver]){
+export const SCHOOL_LAWN_SIDE_RAILS=[
+  Array.from({length:33},(_,i):Point=>{const t=i/32,z=mix(-7,-25,t);return[mix(37,34,t),schoolLawnHeight(z,.45),z];}),
+  Array.from({length:33},(_,i):Point=>{const z=mix(3.5,-23.5,i/32);return[46,schoolLawnHeight(z,.42),z];}),
+];
+rail('Rail to Rail · classroom lawn edge',SCHOOL_LAWN_TRANSFER.takeoff,2,coping,true);
+rail('Rail to Rail · opposite lawn edge',SCHOOL_LAWN_TRANSFER.receiver,2,coping,true);
+for(const [i,points] of SCHOOL_LAWN_SIDE_RAILS.entries())rail(`Stair-side lawn curb ${i+1}`,points,2,coping,true);
+for(const points of [SCHOOL_LAWN_TRANSFER.takeoff,SCHOOL_LAWN_TRANSFER.receiver,...SCHOOL_LAWN_SIDE_RAILS]){
   ribbon('Lawn planter concrete cap',points.map(p=>[p[0],p[1]-.05,p[2]]),.35,cream,2);
 }
 
@@ -254,10 +275,11 @@ for(let k=0;k<SCHOOL_LONG_CANOPY.length-1;k++)for(let i=0;i<10;i++){
 for(const [i,p] of SCHOOL_LONG_CANOPY.entries()){const base=i<2?0:i===2?-.3:i===3?-2.5:-5;paintBox(p[0]+1.5,(p[1]+base)/2,p[2],.16,p[1]-base,.16,'#657a79',2);}
 
 // Buildings are solid at ground level, with deliberately accessible roofs.
-const admin=slab('Main classroom block',22,-12.5,34,12,5,0,brick,3);
+const admin=slab('Main classroom block',22,-12.5,34,12,5,lowerY,brick,3);
 void admin;
 slab('Main classroom roof',22,-12.5,34.2,12.2,5.12,4.85,concrete,3);
 for(const y of [1.5,3.5])for(let x=6;x<39;x+=2.4){paintBox(x,y,-6.475,1.65,.85,.05,'#41565b',3);paintBox(x,y,-6.43,.09,.85,.04,'#c2bca6',3);}
+for(const y of [-3,-.8,1.5,3.5])for(let x=6;x<39;x+=2.4){paintBox(x,y,-18.525,1.65,.85,.05,'#41565b',3);paintBox(x,y,-18.57,.09,.85,.04,'#c2bca6',3);}
 const classroomPlan=mapped([[126,121],[174,103],[236,115],[236,142],[272,148],[272,172],[306,178],[306,192],[292,190],[292,181],[280,179],[278,200],[312,205],[329,194],[324,231],[291,211],[224,198],[224,157],[209,153],[209,141],[151,140]],0);
 polygonBlock('Zigzag classroom wings and Hall Pass alcove',classroomPlan,0,lowerY,brick,3);
 floor('Classroom flat roofs',classroomPlan,.035,concrete,3);
@@ -271,41 +293,47 @@ for(let i=0;i<classroomPlan.length;i++){
   }
 }
 
-// Long opposing transitions behind the classroom wings, including the bend
-// into the rear playground. Source order matters: pools -> Huge Rail -> back
-// funboxes -> Park Gap -> stair/kicker landing.
-// Trace the actual coping lines, rather than treating an image-space lip
-// as a floor spine and adding the full transition width to it again.
+// The striped line below the perimeter coping is the transition toe,
+// not a second quarterpipe. The facing quarter wraps the classroom wing.
+// Mini Gap splits the OUTER quarter beside the rear playground.
 export const SCHOOL_CORRIDOR={rise:1.25,deck:.65};
 const corridor=SCHOOL_CORRIDOR,lipY=lowerY+corridor.rise;
-const longOuterMap:Plan[]=[[50,87],[62,90],[86,94],[100,91],[124,80],[164,67],[181,68],[235,78],[266,85],[284,82],[296,68],[305,48],[319,29],[337,24]];
-const longInnerMap:Plan[]=[[50,97],[62,100],[86,104],[100,101],[124,90],[164,78],[181,79],[235,89],[266,96],[286,92],[302,77],[309,62],[319,45],[337,38]];
-const backOuterMap:Plan[]=[[337,24],[363,28],[413,39],[470,54],[491,58],[507,64],[517,74],[519,86],[517,96],[511,108],[507,120]];
-const outerLips=[...longOuterMap,...backOuterMap.slice(1)].map(([u,v])=>schoolMapPoint(u,v,lipY));
-const innerLips=longInnerMap.map(([u,v])=>schoolMapPoint(u,v,lipY));
-const longPipe=longOuterMap.map(([u,v],i):Point=>{const a=schoolMapPoint(u,v,lipY),b=innerLips[i];return[(a[0]+b[0])/2,lowerY,(a[2]+b[2])/2];});
-export const SCHOOL_LONG_HALFPIPE=longPipe;
-// Dense toe samples preserve the traced lip through the existing swept
-// quarterpipe builder. The normal is evaluated on the same sampled curve.
+const longOuterMap:Plan[]=[[50,87],[62,90],[86,94],[100,91],[124,80],[164,67],[181,68],[235,78],[266,85],[284,82],[296,68],[303,59]];
+const backOuterMap:Plan[]=[[307,51],[319,29],[337,24],[363,28],[413,39],[470,54],[491,58],[507,64],[517,74],[519,86],[517,96],[511,108],[507,120]];
+const outerA=longOuterMap.map(([u,v])=>schoolMapPoint(u,v,lipY)),outerB=backOuterMap.map(([u,v])=>schoolMapPoint(u,v,lipY));
+const outerLips=[...outerA,...outerB];
+export const SCHOOL_HUGE_RAIL=[[236,115],[221,109],[205,105],[181,102],[164,104],[142,113],[126,121]].map(([u,v])=>schoolMapPoint(u,v,lipY));
+export const SCHOOL_LONG_HALFPIPE:Point[]=[[80,114],[90,115],[108,109],[125,100],[165,87],[181,88],[235,99],[266,107],[284,102],[299,86],[311,67],[319,56],[329,52],[341,52]].map(([u,v])=>schoolMapPoint(u,v,lowerY));
+const longPipe=SCHOOL_LONG_HALFPIPE;
 function toeFromCoping(lips:Point[]):Point[]{
   const curve=new CatmullRomCurve3(lips.map(p=>new Vector3(...p)),false,'centripetal',.5);
   const samples=curve.getSpacedPoints(Math.max(4,Math.ceil(curve.getLength()/1.3)));
   return samples.map((p,i):Point=>{const a=samples[Math.max(0,i-1)],b=samples[Math.min(samples.length-1,i+1)],l=Math.hypot(b.x-a.x,b.z-a.z)||1;return[p.x-(b.z-a.z)/l*corridor.rise,lowerY,p.z+(b.x-a.x)/l*corridor.rise];});
 }
-const outerToe=toeFromCoping(outerLips);
-quarter('Long winding perimeter · continuous outer vert',outerToe,corridor.rise,6,{deck:corridor.deck,color:'#aba58d'});
-const innerAMap:Plan[]=[...longInnerMap.slice(0,11),[305.5,64]],innerBMap:Plan[]=[[313,54],[319,45],[337,38]];
-const innerA=innerAMap.map(([u,v])=>schoolMapPoint(u,v,lipY)),innerB=innerBMap.map(([u,v])=>schoolMapPoint(u,v,lipY));
-const innerAToe=toeFromCoping([...innerA].reverse()),innerBToe=toeFromCoping([...innerB].reverse());
-export const SCHOOL_MINI_GAP={before:innerAToe[0],after:innerBToe[innerBToe.length-1],width:new Vector3(...innerA[innerA.length-1]).distanceTo(new Vector3(...innerB[0])),takeoffCoping:innerA[innerA.length-1],receiverCoping:innerB[0]};
-quarter('Long winding halfpipe · Huge Rail inner wall',innerAToe,corridor.rise,6,{deck:corridor.deck,color:'#aba58d'});
-quarter('Mini Gap · playground inner quarter',innerBToe,corridor.rise,6,{deck:corridor.deck,color:'#aba58d'});
-// Continuous support under the flat channel and at its entrance. It stays
-// beneath both curved walls, so their actual slopes still own contact.
+const outerToe=toeFromCoping(outerLips),outerAToe=toeFromCoping(outerA),outerBToe=toeFromCoping(outerB);
+const perimeterFloor=outerToe.map((p,i):Point=>{const a=outerToe[Math.max(0,i-1)],b=outerToe[Math.min(outerToe.length-1,i+1)],n=Math.hypot(b[0]-a[0],b[2]-a[2])||1;return[p[0]-(b[2]-a[2])/n*3,lowerY,p[2]+(b[0]-a[0])/n*3];});
+ribbon('Perimeter quarter · full-width yard join',perimeterFloor,6.5,concrete,6,{depthBias:2});
+
+quarter('Pool corridor · outer quarter to Mini Gap',outerAToe,corridor.rise,6,{deck:corridor.deck,color:'#aba58d'});
+quarter('Mini Gap · rear perimeter quarter',outerBToe,corridor.rise,6,{deck:corridor.deck,color:'#aba58d'});
+quarter('Huge Rail · classroom-facing quarter',toeFromCoping(SCHOOL_HUGE_RAIL),corridor.rise,6,{deck:corridor.deck,color:'#aba58d'});
+// The low planter beside the classroom feeds the facing quarter. Its cap
+// is visible geometry; the hidden grind path adds no freestanding tube.
+export const SCHOOL_CLASSROOM_PLANTER=[[295,126],[250,118]].map(([u,v])=>schoolMapPoint(u,v,lowerY+.6));
+rail('Rail to Rail · classroom planter into Huge Rail',SCHOOL_CLASSROOM_PLANTER,6,coping,true);
+ribbon('Classroom planter · concrete cap',SCHOOL_CLASSROOM_PLANTER.map(p=>[p[0],p[1]-.05,p[2]]),.4,cream,6);
+{
+  const a=SCHOOL_CLASSROOM_PLANTER[0],b=SCHOOL_CLASSROOM_PLANTER[1],n=Math.hypot(b[0]-a[0],b[2]-a[2]),dx=(b[2]-a[2])/n,dz=-(b[0]-a[0])/n;
+  polygonBlock('Classroom planter · low planted terrace',[[a[0],a[2]],[b[0],b[2]],[b[0]+dx*2.2,b[2]+dz*2.2],[a[0]+dx*2.2,a[2]+dz*2.2]],lowerY+.5,lowerY,'#66774f',6);
+}
+
+export const SCHOOL_MINI_GAP={before:outerAToe[outerAToe.length-1],after:outerBToe[0],width:new Vector3(...outerA[outerA.length-1]).distanceTo(new Vector3(...outerB[0])),takeoffCoping:outerA[outerA.length-1],receiverCoping:outerB[0]};
+// The broad lane between the opposing quarters connects both ends to the
+// existing yard. No duplicated transition narrows its riding space.
 const laneCurve=new CatmullRomCurve3(longPipe.map(p=>new Vector3(...p)),false,'centripetal',.5),lane=laneCurve.getSpacedPoints(Math.ceil(laneCurve.getLength()/1.2));
 const first=lane[0].clone().addScaledVector(laneCurve.getTangent(0),-2.2),last=lane[lane.length-1].clone().addScaledVector(laneCurve.getTangent(1),2.2);
-ribbon('Winding corridor · continuous flat lane',[first,...lane,last].map(p=>p.toArray() as Point),2.1,asphalt,6,{depthBias:-1});
-export const SCHOOL_CORRIDOR_EXIT:Point[]=[longPipe[0],[longPipe[0][0]-1,lowerY,longPipe[0][2]+3],[longPipe[0][0]+3,lowerY,longPipe[0][2]+7]];
+ribbon('Winding corridor · continuous flat lane',[first,...lane,last].map(p=>p.toArray() as Point),3.2,asphalt,6,{depthBias:-1});
+export const SCHOOL_CORRIDOR_EXIT:Point[]=[longPipe[0],[-75,lowerY,-49],[-78,lowerY,-40]];
 ribbon('Halfpipe entrance · pool-deck connection',[longPipe[1],...SCHOOL_CORRIDOR_EXIT],3.2,concrete,6);
 const parkLips:Point[]=[[502,132],[501,139],[505,148],[514,153],[522,156]].map(([u,v])=>schoolMapPoint(u,v,lipY));
 const parkReturn=toeFromCoping(parkLips);
@@ -335,7 +363,7 @@ function table(nm:string,p:Point,yaw=0) {
   add({t:'platform',nm,p:at(0,.69,0),s:[1.05,.14,length],yaw,tex:'wood',color:'#966b55',edgeGrinding:false,grp:g});
   for(const s of [-1,1]) {
     add({t:'platform',nm:`${nm} bench`,p:at(s*.91,.39,0),s:[.4,.12,length],yaw,tex:'wood',color:'#a67e63',edgeGrinding:false,grp:g});
-    rail(`${nm} tabletop edge ${s}`,[at(s*.48,.79,-length/2),at(s*.48,.79,length/2)],g,'#bb9b78');
+    rail(`${nm} tabletop edge ${s}`,[at(s*.48,.79,-length/2),at(s*.48,.79,length/2)],g,'#bb9b78',true);
     for(const z of [-1,1]){const q=at(s*.4,.3,z);paintBox(q[0],q[1],q[2],.09,.6,.09,'#4b5a54',g);}
   }
   SCHOOL_TABLES.push({name:nm,p,length,yaw});
@@ -356,7 +384,7 @@ for(const [i,[u,v,vertical]] of [[328,287,0],[362,294,0],[396,302,0],[431,310,0]
   SCHOOL_PLANTERS.push({p,width:w,depth:d});
   slab(`Gimme Gap planter ${i+1}`,x,z,w,d,.55,0,cream,7);
   slab(`Planter ${i+1} soil`,x,z,w-.38,d-.38,.565,.5,'#5e6f4b',7);
-  for(const side of [-1,1])rail(`Planter Gap ledge ${i+1}/${side}`,vertical?[[x+side*w/2,.6,z-d/2],[x+side*w/2,.6,z+d/2]]:[[x-w/2,.6,z+side*d/2],[x+w/2,.6,z+side*d/2]],7);
+  for(const side of [-1,1])rail(`Planter Gap ledge ${i+1}/${side}`,vertical?[[x+side*w/2,.6,z-d/2],[x+side*w/2,.6,z+d/2]]:[[x-w/2,.6,z+side*d/2],[x+w/2,.6,z+side*d/2]],7,coping,true);
 }
 // Three pyramids around the rear playground, one beside the ditch.
 for(const [i,u,v] of [[0,331,74],[1,411,69],[2,471,106],[3,398,151],[4,305,137]]){
@@ -364,7 +392,7 @@ for(const [i,u,v] of [[0,331,74],[1,411,69],[2,471,106],[3,398,151],[4,305,137]]
 }
 const signA=schoolMapPoint(352,78),signB=schoolMapPoint(444,94);
 add({t:'wallpath',nm:'Playground Rail · long freestanding mural',p:signA,pts:[[0,0],[signB[0]-signA[0],signB[2]-signA[2]]],w:.45,rise:2.5,color:'#75837c',tex:'pavement',grp:7});
-rail('Playground Rail coping',[[signA[0],-2.45,signA[2]],[signB[0],-2.45,signB[2]]],7);
+rail('Playground Rail coping',[[signA[0],-2.45,signA[2]],[signB[0],-2.45,signB[2]]],7,coping,true);
 const signLen=Math.hypot(signB[0]-signA[0],signB[2]-signA[2]);
 for(let i=0;i<12;i++){
   const a=pointAt(signA,signB,i/12),b=pointAt(signA,signB,(i+.82)/12);
@@ -457,7 +485,7 @@ rail('Air-conditioner approach green rail',[[69,7.8,27.5],[63,7.8,27.5],[59.7,9.
 // diagonal to the low canopy would run through the solid gym roof.
 export const SCHOOL_ROOF_PLANK:Point[]=[[51,9.12,24.5],[45,9.02,15.3],[45,3.4,7.6]];
 ribbon('Roof to Awning · wooden connecting plank',SCHOOL_ROOF_PLANK,1.2,'#a48a62',9,{tex:'wood'});
-rail('Roof to Awning · plank grind',SCHOOL_ROOF_PLANK.map(p=>[p[0],p[1]+.06,p[2]]),9);
+rail('Roof to Awning · plank grind',SCHOOL_ROOF_PLANK.map(p=>[p[0],p[1]+.06,p[2]]),9,coping,true);
 // Four-sided skylight: each glass slope is rideable, and the panes are only paint.
 hip('Gym skylight hip',49,roofY,39.5,4.8,5.2,1.45,1.5,9,'#4e6970');
 for(const x of [46.6,49,51.4])paintBox(x,8.47,39.5,.1,.045,5.1,'#b9b4a0',9);

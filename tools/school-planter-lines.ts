@@ -1,4 +1,4 @@
-import {SCHOOL_HALL_PASS,SCHOOL_LAWN_TRANSFER,SCHOOL_PLANTERS} from '../src/levels/school-miami';
+import {SCHOOL_HALL_PASS,SCHOOL_LAWN_TRANSFER,SCHOOL_PLANTERS,SCHOOL_CLASSROOM_PLANTER,SCHOOL_HUGE_RAIL,schoolLawnHeight} from '../src/levels/school-miami';
 const clamp=(n:number)=>Math.max(-1,Math.min(1,n));
 const quantize=(s:any)=>{const n=Math.max(1,Math.hypot(s.moveX||0,s.moveY||0));return {...s,moveX:Math.round((s.moveX||0)/n*100)/100,moveY:Math.round((s.moveY||0)/n*100)/100};};
 const cameraAxis=(p:any,x:number,z:number)=>{const n=Math.hypot(p.camDir.x,p.camDir.z)||1;return{moveX:(-p.camDir.z*x+p.camDir.x*z)/n,moveY:(p.camDir.x*x+p.camDir.z*z)/n};};
@@ -57,7 +57,26 @@ export function createLawnTransfer(p:any,a:any,b:any,dt:number){
   },observe:()=>{
     report.frames++;report.air||=popped&&p.state==='air';
     if(p.state==='grind'){if(p.grindRail===a)report.takeoffGrindFrames++;else if(p.grindRail===b)report.receivingGrindFrames++;else throw Error('Lawn transfer caught a different rail');}
-    if(report.air&&p.grounded){if(report.receivingGrindFrames<8||p.pos.x<46||p.pos.x>56||p.pos.z< -23.5||p.pos.z>3.5||Math.abs(p.pos.y-.12)>.08)throw Error('Lawn transfer missed its receiving planter rollout');report.landed=true;return true;}
+    if(report.air&&p.grounded){if(report.receivingGrindFrames<8||p.pos.x<46||p.pos.x>56||p.pos.z< -23.5||p.pos.z>3.5||Math.abs(p.pos.y-schoolLawnHeight(p.pos.z,.12))>.08)throw Error('Lawn transfer missed its receiving planter rollout');report.landed=true;return true;}
+    return false;
+  }};
+}
+
+export function classroomTransferRails(l:any,p:any){return {takeoff:railAt(l,p,SCHOOL_CLASSROOM_PLANTER[0]),receiver:railAt(l,p,[SCHOOL_HUGE_RAIL[0][0],SCHOOL_HUGE_RAIL[0][1]+.05,SCHOOL_HUGE_RAIL[0][2]])};}
+export function createClassroomTransfer(p:any,a:any,b:any,dt:number){
+  const balance=balanceControl(p,dt),end=a.points.at(-1),start=b.points[0],h=start.clone().sub(end).setY(0).normalize(),gap=start.clone().sub(end).setY(0).length();
+  let popped=false,armed=false,held=false;
+  const report={frames:0,takeoffGrindFrames:0,receivingGrindFrames:0,receivingProgress:0,air:false,landed:false};
+  return{report,sample:()=>{
+    const release=report.takeoffGrindFrames>0&&!popped&&a.totalLength-p.grindT<.8;if(release)popped=true;
+    const repress=popped&&!armed&&p.pos.clone().sub(end).dot(h)>gap-1.3;if(repress)armed=true;
+    const charge=report.takeoffGrindFrames>0&&!popped,press=charge&&!held;held=charge;
+    return quantize({moveX:p.state==='grind'?balance():0,moveY:0,grindHeld:!popped||armed,grindPressed:report.frames===0||repress,jumpHeld:charge,jumpPressed:press,jumpReleased:release});
+  },observe:()=>{
+    report.frames++;report.air||=popped&&p.state==='air';
+    if(p.state==='grind'){if(p.grindRail===a)report.takeoffGrindFrames++;else if(p.grindRail===b){report.receivingGrindFrames++;report.receivingProgress=Math.max(report.receivingProgress,p.grindT);}else throw Error('Classroom transfer caught a different rail');}
+    if(p.state==='air'&&p.lastRail===b)report.receivingProgress=Math.max(report.receivingProgress,p.grindT);
+    if(report.air&&p.grounded){if(report.receivingGrindFrames<8||report.receivingProgress<b.totalLength-.3||Math.abs(p.pos.y+5)>.08)throw Error('Classroom transfer missed its full quarter grind or yard rollout');report.landed=true;return true;}
     return false;
   }};
 }
