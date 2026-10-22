@@ -22,9 +22,9 @@ export function schoolDetailTrials(p:any,l:any,place:Place,dt:number):DetailTria
     });
   }
   const roofLines=[
-    ...[12,16].map(speed=>({name:'Roof joined vent',axis:'x',speed,start:[55.5,7.1,38.7],end:[68,7.1,38.7],crest:7.65})),
-    ...[59.8,64.3].map(x=>({name:'Roof joined vent',axis:'z',speed:16,start:[x,7.1,34],end:[x,7.1,43.2],crest:7.65})),
-    ...[12,16].map(speed=>({name:'Roof receiving hip',axis:'z',speed,start:[45,7.1,22.5],end:[45,7.1,32.5],crest:8.2})),
+    ...[12,16].map(speed=>({name:'Roof joined vent',axis:'x',speed,start:[58.3,7.1,40.5],end:[70.4,7.1,40.5],crest:7.65})),
+    ...[62.6,67.1].map(x=>({name:'Roof joined vent',axis:'z',speed:16,start:[x,7.1,35.8],end:[x,7.1,45],crest:7.65})),
+    ...[12,16].map(speed=>({name:'Roof west hip',axis:'z',speed,start:[45.5,7.1,21.5],end:[45.5,7.1,31.5],crest:8.2})),
     {name:'Roof south lane',axis:'x',speed:16,start:[30,7.1,46.8],end:[67,7.1,46.8],crest:7},
   ];
   for(const [i,c] of roofLines.entries())for(const direction of [-1,1]){

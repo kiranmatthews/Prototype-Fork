@@ -71,7 +71,7 @@ await withSkateRuntime(async ({ THREE, server, Level, Player, scene, TUNING, CON
       player.axisF.set(...h);player.axisL.set(h[2],0,-h[0]);player.freeSkate=true;player.speed=speed;
       player.groundHit=player.queryGround(level);player.pos.y=player.groundHit.y;player.prevPos.copy(player.pos);player.grounded=true;player.rideNormal.copy(player.groundHit.normal);
     };
-    for(const trial of schoolDetailTrials(player,level,place,CONST.fixedStep).filter(c=>c.name.startsWith('Skylight')||c.name.startsWith('Gym doorway')||c.name.startsWith('West pavilion')||c.name.startsWith('Roof joined vent')||c.name.startsWith('Roof receiving hip')||c.name.startsWith('Roof south'))){
+    for(const trial of schoolDetailTrials(player,level,place,CONST.fixedStep).filter(c=>c.name.startsWith('Skylight')||c.name.startsWith('Gym doorway')||c.name.startsWith('West pavilion')||c.name.startsWith('Roof joined vent')||c.name.startsWith('Roof west hip')||c.name.startsWith('Roof south'))){
       trial.init();const rig=new SkateChaseCamera(),camera=new THREE.PerspectiveCamera(49,16/9,.1,400),previous=new THREE.Vector3();
       const subject=()=>({position:player.pos,heading:player.skateCameraHeading,up:player.skateCameraUp,vertAir:player.vertAir,vertNormal:player.vertNormal,verticalSpeed:player.vVel,speed:player.cameraSkateSpeed,grounded:player.skateCameraSupported,bailing:player.skateCameraBailing});
       let frames=0,maxStep=0,minTrailing=Infinity,maxCrop=0,complete=false;

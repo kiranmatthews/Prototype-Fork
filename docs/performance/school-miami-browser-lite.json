@@ -19,14 +19,14 @@
     "trailing": 5.049999999999997,
     "bodyBounds": {
       "min": [
-        25.501608864783233,
-        -4.775367507377584,
-        -39.976833722289136
+        25.501569411126678,
+        -4.775423943964215,
+        -39.97934948701605
       ],
       "max": [
-        26.685740291055424,
-        -2.0183858573829454,
-        -38.18504745591353
+        26.68663287030424,
+        -2.0112825929989726,
+        -38.18311105117469
       ]
     }
   },
@@ -57,7 +57,7 @@
       },
       {
         "name": "Roof service hill",
-        "frames": 146
+        "frames": 136
       },
       {
         "name": "Winding halfpipe",
@@ -77,7 +77,7 @@
       },
       {
         "name": "Air-conditioner roof gap",
-        "frames": 98
+        "frames": 96
       },
       {
         "name": "Roof 2 Roof",
@@ -89,7 +89,7 @@
       },
       {
         "name": "Roof-to-awning plank",
-        "frames": 83
+        "frames": 63
       },
       {
         "name": "Green downhill full grind",
@@ -205,19 +205,19 @@
       },
       {
         "name": "Roof joined vent 1/-1",
-        "frames": 64
+        "frames": 62
       },
       {
         "name": "Roof joined vent 1/1",
-        "frames": 64
+        "frames": 62
       },
       {
         "name": "Roof joined vent 2/-1",
-        "frames": 51
+        "frames": 50
       },
       {
         "name": "Roof joined vent 2/1",
-        "frames": 51
+        "frames": 50
       },
       {
         "name": "Roof joined vent 3/-1",
@@ -236,19 +236,19 @@
         "frames": 37
       },
       {
-        "name": "Roof receiving hip 5/-1",
+        "name": "Roof west hip 5/-1",
         "frames": 52
       },
       {
-        "name": "Roof receiving hip 5/1",
+        "name": "Roof west hip 5/1",
         "frames": 51
       },
       {
-        "name": "Roof receiving hip 6/-1",
+        "name": "Roof west hip 6/-1",
         "frames": 43
       },
       {
-        "name": "Roof receiving hip 6/1",
+        "name": "Roof west hip 6/1",
         "frames": 43
       },
       {
@@ -433,16 +433,16 @@
       }
     ],
     "failure": null,
-    "frames": 13062,
+    "frames": 13024,
     "longGrinds": [
       {
         "name": "Roof-to-awning plank",
         "result": {
-          "frames": 83,
-          "grindFrames": 73,
-          "maxT": 20.516885900164336,
-          "minT": 0.3972687742922718,
-          "progress": 20.516885900164336,
+          "frames": 63,
+          "grindFrames": 53,
+          "maxT": 15.774973090040955,
+          "minT": 0.39533860176445024,
+          "progress": 15.774973090040955,
           "direction": 1,
           "maxBalance": 0.1,
           "caught": true,
@@ -717,11 +717,11 @@
         "result": {
           "direction": -1,
           "speed": 12,
-          "frames": 64,
+          "frames": 62,
           "maxY": 7.699999809265137,
-          "maxStep": 0.22240098555440468,
-          "maxLateral": 0.047625102023189925,
-          "minSpeed": 11.540659501268653,
+          "maxStep": 0.22240070995237773,
+          "maxLateral": 0.0476218109531672,
+          "minSpeed": 11.540686524426212,
           "arrived": true
         }
       },
@@ -731,11 +731,11 @@
         "result": {
           "direction": 1,
           "speed": 12,
-          "frames": 64,
+          "frames": 62,
           "maxY": 7.699999809265137,
-          "maxStep": 0.22530552943231244,
-          "maxLateral": 0.04410087903785609,
-          "minSpeed": 11.564507060516704,
+          "maxStep": 0.2253102435183743,
+          "maxLateral": 0.0440978797239282,
+          "minSpeed": 11.56450693255463,
           "arrived": true
         }
       },
@@ -745,11 +745,11 @@
         "result": {
           "direction": -1,
           "speed": 16,
-          "frames": 51,
+          "frames": 50,
           "maxY": 7.699999809265137,
-          "maxStep": 0.28378477385968826,
-          "maxLateral": 0.05449030119241627,
-          "minSpeed": 14.707698512005788,
+          "maxStep": 0.2837334529364264,
+          "maxLateral": 0.06597719524428669,
+          "minSpeed": 14.763670300634729,
           "arrived": true
         }
       },
@@ -759,11 +759,11 @@
         "result": {
           "direction": 1,
           "speed": 16,
-          "frames": 51,
+          "frames": 50,
           "maxY": 7.699999809265137,
-          "maxStep": 0.282701624133476,
-          "maxLateral": 0.0702003512996896,
-          "minSpeed": 14.802643110909429,
+          "maxStep": 0.2827004214665486,
+          "maxLateral": 0.07021613249559522,
+          "minSpeed": 14.802629694035428,
           "arrived": true
         }
       },
@@ -775,9 +775,9 @@
           "speed": 16,
           "frames": 37,
           "maxY": 7.699999809265137,
-          "maxStep": 0.27551076460391016,
-          "maxLateral": 0.06950869908695267,
-          "minSpeed": 14.775509323746078,
+          "maxStep": 0.27551084655003116,
+          "maxLateral": 0.06950612680824264,
+          "minSpeed": 14.775516008708172,
           "arrived": true
         }
       },
@@ -789,9 +789,9 @@
           "speed": 16,
           "frames": 37,
           "maxY": 7.699999809265137,
-          "maxStep": 0.27178667436445153,
-          "maxLateral": 0.0690856834021858,
-          "minSpeed": 14.808678173744005,
+          "maxStep": 0.2717867188897317,
+          "maxLateral": 0.06908786857227511,
+          "minSpeed": 14.808678690564575,
           "arrived": true
         }
       },
@@ -803,9 +803,9 @@
           "speed": 16,
           "frames": 37,
           "maxY": 7.699999809265137,
-          "maxStep": 0.27785788422154284,
-          "maxLateral": 0.15503599286606118,
-          "minSpeed": 14.80715983896354,
+          "maxStep": 0.27785759763363915,
+          "maxLateral": 0.15504279156075995,
+          "minSpeed": 14.807149289122238,
           "arrived": true
         }
       },
@@ -817,14 +817,14 @@
           "speed": 16,
           "frames": 37,
           "maxY": 7.699999809265137,
-          "maxStep": 0.275925767795834,
-          "maxLateral": 0.1513224310967587,
-          "minSpeed": 14.867556674507297,
+          "maxStep": 0.27592599566952364,
+          "maxLateral": 0.15131874864411543,
+          "minSpeed": 14.867555649541899,
           "arrived": true
         }
       },
       {
-        "name": "Roof receiving hip 5/-1",
+        "name": "Roof west hip 5/-1",
         "kind": "ride",
         "result": {
           "direction": -1,
@@ -838,7 +838,7 @@
         }
       },
       {
-        "name": "Roof receiving hip 5/1",
+        "name": "Roof west hip 5/1",
         "kind": "ride",
         "result": {
           "direction": 1,
@@ -852,7 +852,7 @@
         }
       },
       {
-        "name": "Roof receiving hip 6/-1",
+        "name": "Roof west hip 6/-1",
         "kind": "ride",
         "result": {
           "direction": -1,
@@ -866,7 +866,7 @@
         }
       },
       {
-        "name": "Roof receiving hip 6/1",
+        "name": "Roof west hip 6/1",
         "kind": "ride",
         "result": {
           "direction": 1,
@@ -1405,9 +1405,9 @@
           "rollout": true,
           "maxLateral": 0,
           "firstLanding": [
-            51.43699197623739,
+            53.43699197623739,
             0,
-            39.5
+            39.2
           ]
         }
       },
@@ -1423,9 +1423,9 @@
           "rollout": true,
           "maxLateral": 0,
           "firstLanding": [
-            53.024226274183995,
+            55.024226274183995,
             0,
-            39.5
+            39.2
           ]
         }
       },
@@ -1441,9 +1441,9 @@
           "rollout": true,
           "maxLateral": 0,
           "firstLanding": [
-            49.44812859002134,
+            51.44812859002134,
             0,
-            39.5
+            39.2
           ]
         }
       },
@@ -1459,9 +1459,9 @@
           "rollout": true,
           "maxLateral": 0,
           "firstLanding": [
-            54.33348545875388,
+            56.33348545875388,
             0,
-            39.5
+            39.2
           ]
         }
       }
@@ -1470,7 +1470,7 @@
       "frames": 2404,
       "waypoints": 51,
       "totalWaypoints": 51,
-      "distance": 389.9123584399275,
+      "distance": 389.91235823324416,
       "gimmeGrindFrames": 21,
       "returnGrindFrames": 555,
       "kickerAir": true,

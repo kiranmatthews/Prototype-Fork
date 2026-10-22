@@ -100,20 +100,21 @@ await withSkateRuntime(async ({ THREE, server, Level, Player, scene, CONST, TUNI
     }
     // The rooftop kicker must clear the air conditioner, then land beyond
     // its west face. This exercises the actual solid box, not a gap marker.
-    place([70,7.08,27.5],[-1,0,0],18);
+    const ac=m.SCHOOL_ROOF_AC;
+    place([72,7.08,ac.z],[-1,0,0],18);
     let acAir=false,acLanded=false,acPopped=false,acBails=0;
     for(let i=0;i<240;i++){
-      const release=!acPopped&&p.pos.x<61;if(release)acPopped=true;
+      const release=!acPopped&&p.pos.x<ac.kickerX-ac.kickerRun/2+1;if(release)acPopped=true;
       step(makeInput({jumpHeld:!acPopped,jumpPressed:i===0,jumpReleased:release}));
       acAir||=p.state==='air';if(p.isBailing)acBails++;
-      if(acAir&&p.grounded&&p.pos.x<49.7){acLanded=true;break;}
+      if(acAir&&p.grounded){assert.ok(p.pos.x<ac.x-ac.width/2-.1,'AC jump first landing hit the unit');assert.ok(Math.abs(p.pos.y-7)<.06,'AC jump missed its clear roof landing');acLanded=true;break;}
     }
     report.airs.push({name:'Over the Air Conditioner',air:acAir,landed:acLanded,bails:acBails,end:p.pos.toArray()});
     assert.ok(acLanded,'AC roof jump did not reach the far side');assert.equal(acBails,0,'AC roof collision');
     // Forward held through a charged native vert air exits the gym coping
     // and reaches the distinct bonus roof. No launch impulse is injected.
     for(const speed of [16,18]){
-      place([63,7.1,23],[0,0,-1],speed);let air=false,landed=false,frames=0,maxY=7;
+      place([61.3,7.1,23],[0,0,-1],speed);let air=false,landed=false,frames=0,maxY=7;
       for(;frames<180;frames++){
         step(makeInput({moveY:1,jumpHeld:true,jumpPressed:frames===0}));air||=p.state==='air';maxY=Math.max(maxY,p.pos.y);
         assert.ok(!p.isBailing,'Roof 2 Roof transfer bailed');

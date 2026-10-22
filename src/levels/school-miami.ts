@@ -446,8 +446,8 @@ export const SCHOOL_WEST_PASSAGE={y:3.45,outline:mapped([[290,332],[345,343],[34
 }
 // Five glass panes surround one open pane. Keep the roof slab open below
 // that pane too: the court must be a real landing, not a painted recess.
-export const SCHOOL_SKYLIGHT={x:49,z:39.5,width:9.6,depth:11.8,lipY:7.5,bank:.5,
-  hole:{minX:49.07,maxX:53.73,minZ:37.6,maxZ:41.4}};
+export const SCHOOL_SKYLIGHT={x:51,z:39.2,width:9.6,depth:11.8,lipY:7.5,bank:.5,
+  hole:{minX:51.07,maxX:55.73,minZ:37.3,maxZ:41.1}};
 const g=8;
 {
   const b=SCHOOL_GYM,h=SCHOOL_SKYLIGHT.hole;
@@ -553,21 +553,27 @@ export const SCHOOL_BONUS_ROOF={minX:55.8,maxX:70.25,minZ:-2.5,maxZ:9.9,y:roofY}
 export const SCHOOL_ROOF_ACCESS:Point[]=[];
 for(let i=0;i<=40;i++){const t=i/40;SCHOOL_ROOF_ACCESS.push([80,7*smooth(t),mix(53,34,t)]);}
 for(let i=1;i<=32;i++){const a=i/32*Math.PI/2;SCHOOL_ROOF_ACCESS.push([72+8*Math.cos(a),7,34-8*Math.sin(a)]);}
-SCHOOL_ROOF_ACCESS.push([68,7,26]);
+SCHOOL_ROOF_ACCESS.push([70,7,26]);
 ribbon('Gym service hill · ground-to-roof return',SCHOOL_ROOF_ACCESS,7.6,asphalt,9);
 rail('Service hill outside rail',SCHOOL_ROOF_ACCESS.slice(0,40).filter((_,i)=>i%4===0).map(p=>[p[0]+3.65,p[1]+.5,p[2]]),9);
-slab('Gym roof air conditioner',54,27.5,8.5,6.2,9.1,roofY,'#566f68',9);
-for(let z=25;z<31;z+=.6)paintBox(54,9.12,z,7.6,.04,.13,'#394f4d',9);
-add({t:'ramp',nm:'Over the Air Conditioner · east kicker',p:[63,roofY,27.5],len:5.8,rise:2.1,w:6.2,yaw:90,color:'#ad9579',tex:'wood',edgeGrinding:false,grp:9});
-// The receiving feature is the faceted hip shown west of the unit, not a
-// second rectangular launch wedge. Its outline is registered around the
-// existing landing line while original roof dimensions remain uncertain.
-export const SCHOOL_ROOF_RECEIVER={x:45,z:27.5,rise:1.25,outline:[
-  [41.453,29.027],[42.995,25.243],[46.946,24.041],
-  [48.692,26.148],[46.488,29.457],[43.425,31.084],
+// Fit roof landmarks relative to the roof corners, rather than treating
+// the global image projection as an exact survey. The unit sits close to
+// the north transition; its separate west hip is offset to the south.
+export const SCHOOL_ROOF_AC={x:54.7,z:23.7,width:10.5,depth:8.5,top:9.1,kickerX:65.5,kickerRun:5.8};
+{
+  const a=SCHOOL_ROOF_AC;
+  slab('Gym roof air conditioner',a.x,a.z,a.width,a.depth,a.top,roofY,'#566f68',9);
+  for(let z=a.z-a.depth/2+.4;z<a.z+a.depth/2-.2;z+=.6)paintBox(a.x,a.top+.02,z,a.width-.8,.04,.13,'#394f4d',9);
+  add({t:'ramp',nm:'Over the Air Conditioner · east kicker',p:[a.kickerX,roofY,a.z],len:a.kickerRun,rise:a.top-roofY,w:a.depth,yaw:90,color:'#ad9579',tex:'wood',edgeGrinding:false,grp:9});
+}
+// The faceted hip sits southwest of the unit, beside the westward landing
+// line. Its outline is traced while original roof dimensions remain uncertain.
+export const SCHOOL_WEST_ROOF_HIP={x:45.5,z:26.5,rise:1.25,outline:[
+  [41.953,28.027],[43.495,24.243],[47.446,23.041],
+  [49.192,25.148],[46.988,28.457],[43.925,30.084],
 ] as Plan[]};
 {
-  const s=SCHOOL_ROOF_RECEIVER,outer=[...s.outline].reverse(),n=outer.length;
+  const s=SCHOOL_WEST_ROOF_HIP,outer=[...s.outline].reverse(),n=outer.length;
   const inner=outer.map(([x,z]):Plan=>[mix(s.x,x,.15),mix(s.z,z,.15)]),vertices:number[]=[],indices:number[]=[];
   for(let ring=0;ring<=16;ring++){
     const t=ring/16;
@@ -577,13 +583,22 @@ export const SCHOOL_ROOF_RECEIVER={x:45,z:27.5,rise:1.25,outline:[
       indices.push(a,b,c,a,c,d);
     }
   }
-  surface('Over the Air Conditioner · faceted receiving hip',vertices,indices,'#887b59',9,{tex:'wood'});
-  floor('Air-conditioner receiving hip · flat top',inner,roofY+s.rise,'#887b59',9).tex='wood';
+  surface('Roof west faceted hip',vertices,indices,'#887b59',9,{tex:'wood'});
+  floor('West roof hip · flat top',inner,roofY+s.rise,'#887b59',9).tex='wood';
 }
-rail('Air-conditioner approach green rail',[[69,7.8,27.5],[63,7.8,27.5],[59.7,9.25,27.5]],9,'#527667');
+rail('Air-conditioner approach green rail',[[71,7.8,23.7],[66,7.8,23.7],[59.9,9.25,23.7]],9,'#527667');
 // Clear the north roof edge before descending to the awning. A direct
 // diagonal to the low canopy would run through the solid gym roof.
-export const SCHOOL_ROOF_PLANK:Point[]=[[51,9.12,24.5],[45,9.02,15.3],[45,3.4,7.6]];
+export const SCHOOL_ROOF_PLANK:Point[]=(()=>{
+  const a:Point=[49.6,9.12,19.8],b:Point=[45,9.02,15.3],c:Point=[45,3.4,7.6];
+  // Round the change of direction before descending. The shorter top span
+  // otherwise creates a sharp compound corner that ejects a native grind.
+  const trim=1.3,length=(p:Point,q:Point)=>Math.hypot(p[0]-q[0],p[1]-q[1],p[2]-q[2]);
+  const before=pointAt(b,a,trim/length(a,b)),after=pointAt(b,c,trim/length(b,c));
+  return[a,...Array.from({length:17},(_,i):Point=>{
+    const t=i/16,u=1-t;return before.map((v,j)=>u*u*v+2*u*t*b[j]+t*t*after[j]) as Point;
+  }),c];
+})();
 ribbon('Roof to Awning · wooden connecting plank',SCHOOL_ROOF_PLANK,1.2,'#a48a62',9,{tex:'wood'});
 rail('Roof to Awning · plank grind',SCHOOL_ROOF_PLANK.map(p=>[p[0],p[1]+.06,p[2]]),9,coping,true);
 {
@@ -610,20 +625,20 @@ rail('Roof to Awning · plank grind',SCHOOL_ROOF_PLANK.map(p=>[p[0],p[1]+.06,p[2
   for(const x of [x0,s.x,x1])paintBox(x,y+.025,s.z,.12,.05,s.depth+.12,'#454b45',9);
   for(let row=0;row<=3;row++)paintBox(s.x,y+.025,z0+row*s.depth/3,s.width+.12,.05,.12,'#454b45',9);
 }
-for(const [i,x,z,h] of [[0,32,30,.85],[1,32,35,.8]])hip(`Roof low vent hip ${i+1}`,x,roofY,z,1.4,2,h,1.3,9,'#7d7c66');
+for(const [i,x,z,h] of [[0,30.4,31.8,.85],[1,31.4,37.9,.8]])hip(`Roof low vent hip ${i+1}`,x,roofY,z,1.4,2,h,1.3,9,'#7d7c66');
 // The right roof vent has two joined lobes, rather than a third small box.
 // Its traced silhouette is fitted to the current roof footprint. One
 // continuous bank/top avoids overlapping ramps and a snag at the waist.
 export const SCHOOL_ROOF_DOUBLE_VENT={y:roofY,rise:.7,outline:[
-  [57.83,36.21],[60.9,36.33],[62.05,37.3],[63,36.5],[65.89,37.28],
-  [65.5,40.63],[63,40.12],[62.15,39.65],[61.07,41.47],[57.96,40.51],
+  [60.63,38.01],[63.7,38.13],[64.85,39.1],[65.8,38.3],[68.69,39.08],
+  [68.3,42.43],[65.8,41.92],[64.95,41.45],[63.87,43.27],[60.76,42.31],
 ] as Plan[]};
 {
   const s=SCHOOL_ROOF_DOUBLE_VENT,outer=[...s.outline].reverse(),n=outer.length;
   // Keep a plateau over each lobe. Shrinking the entire outline around one
   // centre would turn the far lobe into a sideways-sloping shoulder.
   const inner=s.outline.map(([x,z],i):Plan=>{
-    const centre=i===2||i===7?[61.9,38.45]:i<2||i>7?[59.4,38.7]:[64.25,38.8];
+    const centre=i===2||i===7?[64.7,40.25]:i<2||i>7?[62.2,40.5]:[67.05,40.6];
     return[mix(centre[0],x,.2),mix(centre[1],z,.2)];
   }).reverse(),vertices:number[]=[],indices:number[]=[];
   for(let ring=0;ring<=12;ring++){

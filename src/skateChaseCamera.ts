@@ -206,6 +206,11 @@ export class SkateChaseCamera {
         if (!roof?.face) continue;
         this.contactNormal.copy(roof.face.normal).transformDirection(roof.object.matrixWorld);
         if (Math.abs(this.contactNormal.y) <= .5) continue;
+        // A double-sided quarter pipe is rideable ground on its front
+        // face, not a low cover. Probes behind the rider can sit below its
+        // elevated deck even while the actual camera has clear air above
+        // it. Keep thin awnings eligible, but ignore upward vert faces.
+        if (roof.object.userData.vert === true && this.contactNormal.y > .5) continue;
         ceilingY = Math.min(ceilingY, roof.point.y);
         if (side === 0 && along >= 0 && along <= 1) hardCeilingY = Math.min(hardCeilingY, roof.point.y);
       }

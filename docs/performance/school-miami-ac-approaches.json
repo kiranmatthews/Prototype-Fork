@@ -1,0 +1,109 @@
+{
+  "input": "Ordinary forward/charged ollie, no movement tuning changes",
+  "approaches": [
+    {
+      "z": 23.7,
+      "speed": 12,
+      "frames": 93,
+      "air": true,
+      "bails": 0,
+      "end": [
+        50.6699743484347,
+        9.099999952316285,
+        23.7
+      ],
+      "clear": false
+    },
+    {
+      "z": 23.7,
+      "speed": 14,
+      "frames": 98,
+      "air": true,
+      "bails": 0,
+      "end": [
+        46.84056533711468,
+        7.124746414161921,
+        23.7
+      ],
+      "clear": true
+    },
+    {
+      "z": 23.7,
+      "speed": 16,
+      "frames": 96,
+      "air": true,
+      "bails": 0,
+      "end": [
+        44.72712254876221,
+        6.999999994039536,
+        23.7
+      ],
+      "clear": true
+    },
+    {
+      "z": 23.7,
+      "speed": 18,
+      "frames": 95,
+      "air": true,
+      "bails": 0,
+      "end": [
+        42.210413935563096,
+        6.999999994039536,
+        23.7
+      ],
+      "clear": true
+    },
+    {
+      "z": 26,
+      "speed": 12,
+      "frames": 93,
+      "air": true,
+      "bails": 0,
+      "end": [
+        50.6699743484347,
+        9.099999952316285,
+        26
+      ],
+      "clear": false
+    },
+    {
+      "z": 26,
+      "speed": 14,
+      "frames": 96,
+      "air": true,
+      "bails": 0,
+      "end": [
+        47.34845603543576,
+        7.695495204879927,
+        26
+      ],
+      "clear": true
+    },
+    {
+      "z": 26,
+      "speed": 16,
+      "frames": 92,
+      "air": true,
+      "bails": 0,
+      "end": [
+        45.84864347481759,
+        8.247741991594914,
+        26
+      ],
+      "clear": true
+    },
+    {
+      "z": 26,
+      "speed": 18,
+      "frames": 95,
+      "air": true,
+      "bails": 0,
+      "end": [
+        42.210413935563096,
+        6.999999994039536,
+        26
+      ],
+      "clear": true
+    }
+  ]
+}

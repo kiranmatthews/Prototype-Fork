@@ -19,11 +19,16 @@ await withSkateRuntime(async({THREE,server,Level,Player,scene,CONST,TUNING})=>{
     place([0,.1,6],[0,0,1],8);let maxZ=6;
     for(let frame=0;frame<80;frame++){p.step(CONST.fixedStep,makeInput({moveY:1}),l);l.update(CONST.fixedStep);maxZ=Math.max(maxZ,p.pos.z);assert.ok(p.pos.z<9.65,'Closed pavilion boundary was penetrated');if(p.isBailing)break;}
     assert.ok(maxZ>8,'Boundary probe did not reach the pavilion');
-    for(const [x,z] of [[59.4,38.7],[61.9,38.45],[64.25,38.8]])near(`Joined roof vent top ${x}`,[x,0,z],7.7,9);
-    for(const x of [55.5,68])near(`Joined roof vent rollout ${x}`,[x,0,38.7],7,9);
+    for(const [x,z] of [[62.2,40.5],[64.7,40.25],[67.05,40.6]])near(`Joined roof vent top ${x}`,[x,0,z],7.7,9);
+    for(const x of [58.3,70.4])near(`Joined roof vent rollout ${x}`,[x,0,40.5],7,9);
     near('Roof checkpoint clear of joined vent',m.SCHOOL_CHECKPOINTS[3],7,9);
-    near('Receiving hip flat top',[45,0,27.5],8.25,10);
-    for(const z of [22.5,32.5])near(`Receiving hip rollout ${z}`,[45,0,z],7,10);
+    const ac=m.SCHOOL_ROOF_AC;
+    for(const [dx,dz] of [[0,0],[-4,-3],[-4,3],[4,-3],[4,3]])near(`Registered AC top ${dx}/${dz}`,[ac.x+dx,0,ac.z+dz],ac.top,11);
+    near('Clear lane north of air conditioner',[54.7,0,18.8],7,9);
+    near('Roof 2 Roof approach between unit and kicker',[61.3,0,23],7,9);
+    near('Air conditioner west landing clear roof',[43,0,23.7],7,9);
+    near('West roof hip flat top',[45.5,0,26.5],8.25,10);
+    for(const z of [21.5,31.5])near(`West roof hip rollout ${z}`,[45.5,0,z],7,10);
     for(const x of [30,40,50,60,67])near(`Flat south roof lane ${x}`,[x,0,46.8],7,10);
     for(const x of [30,48,67])near(`Low south parapet ${x}`,[x,0,m.SCHOOL_ROOF_PARAPET.z],7.3,10);
     near('Hoop quarter flat approach',[48.5,0,43.4],0);near('Hoop quarter deck',[48.5,0,45.1],1.35,4);
