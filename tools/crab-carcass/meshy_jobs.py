@@ -2,6 +2,7 @@
 from pathlib import Path
 import importlib.util
 import os
+import sys
 
 ROOT = Path(__file__).resolve().parents[2]
 HERE = Path(__file__).resolve().parent
@@ -27,9 +28,24 @@ def create(args):
         'image_url':str(image), 'model_type':'smart-topology', 'ai_model':'meshy-t2',
         'target_polycount':args.triangles, 'should_texture':True, 'enable_pbr':True,
         'texture_resolution':'2k', 'target_formats':['glb'],
-        'texture_prompt':'Preserve the reference character: defeated flattened red-orange cartoon crab with orange speckled shell, cream belly, limp red claws and four splayed legs. Both large ivory eyes have bold DARK BROWN X marks replacing pupils. Keep both X eyes crisp, readable and painted on the eyes. Matte hand-painted detailed cartoon game character. No extra objects, no base, no shadow baked into texture.',
+        'texture_prompt':('Defeated stomp-flattened red-orange cartoon crab, speckled shell, cream underside, limp claws and splayed legs. Exactly two bold DARK BROWN X marks painted directly on the smooth continuous red-orange face, matching the reference. The X marks ARE the eyes. No eyeballs, eye whites, pupils, round eye pads, sockets, eyelids, eyebrows, brow ridges or eye stalks. Keep both Xs crisp and visible from above. Preserve the detailed hand-painted cartoon materials. No extra objects or base.' if args.name == 'crab-stomped-x-only' else 'Preserve the reference character: defeated flattened red-orange cartoon crab with orange speckled shell, cream belly, limp red claws and four splayed legs. Both large ivory eyes have bold DARK BROWN X marks replacing pupils. Keep both X eyes crisp, readable and painted on the eyes. Matte hand-painted detailed cartoon game character. No extra objects, no base, no shadow baked into texture.'),
     }, 15, args.dry_run)
 
 adapter.create = create
 if __name__ == '__main__':
-    adapter.main()
+    if sys.argv[1:] == ['repair-x-only']:
+        source = adapter.ledger()['tasks']['crab-stomped-x-only']
+        assert source['state'] == 'SUCCEEDED'
+        adapter.submit('crab-stomped-x-only-repaired', 'repair-printability',
+            {'input_task_id':source['id']}, 10)
+    elif sys.argv[1:] == ['texture-x-only']:
+        source = adapter.ledger()['tasks']['crab-stomped-x-only-repaired']
+        assert source['state'] == 'SUCCEEDED'
+        adapter.submit('crab-stomped-x-only-final', 'retexture', {
+            'input_task_id':source['id'],
+            'image_style_url':str(HERE/'references/crab-stomped-x-only.png'),
+            'enable_original_uv':False, 'enable_pbr':True,
+            'texture_resolution':'2k', 'remove_lighting':True, 'target_formats':['glb'],
+        }, 10)
+    else:
+        adapter.main()

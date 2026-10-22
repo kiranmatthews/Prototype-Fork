@@ -1,30 +1,34 @@
 # Stomped Coral Crab
 
-The normal Coral Crab (`grunt`) uses a new Meshy carcass after a top-face stomp. The live rig compresses briefly, then the flattened model settles on the floor with bold X eyes. It remains harmless until a fresh spin or rope spin flings it through the existing enemy-debris simulation. The kill scores once, respawn restores the live model, and direct spin kills retain their original presentation. Ghost and Nightworks variants are excluded.
+Normal Coral Crabs (`grunt`) leave a flattened Meshy carcass after a descending stomp. The face has two dark X marks directly on a continuous surface, with no eyeballs, eye whites, eye stalks or eyebrows. A fresh spin or rope spin flings the harmless carcass through the existing debris simulation. The kill scores once, reset restores the living crab, and direct side-spin kills retain their original presentation. Ghost and Nightworks variants are excluded.
 
-## Asset and generation
+## Meshy asset
 
 - Runtime model: [`public/enemies/crab-stomped.glb`](../../public/enemies/crab-stomped.glb).
-- Source and final hashes, measured bounds and preparation details: [`crab-stomped.provenance.json`](../../public/enemies/crab-stomped.provenance.json).
-- Reference: [`references/crab-stomped.png`](references/crab-stomped.png), edited from the existing living crab with **built-in ImageGen**. No fallback image service was used. The exact prompt is in [`reference-prompt.txt`](reference-prompt.txt).
-- Meshy job: `01a16053-fa22-7291-b055-38ac86610b69`, T2 Smart Topology, **15 credits consumed**. [`tasks.json`](tasks.json) records the request and result. The wrapper composes the existing official Meshy CLI adapter.
-- Meshy delivered **15,620 triangles** and three embedded **2048 × 2048** PBR maps. Preparation adds eight triangles to cap three measured pinholes, for **15,628 triangles**. Every original vertex, normal, UV, index, material and texture remains intact; no decimation, LOD or texture resizing.
-- A uniform parent transform grounds and fits the model to a 2.8 m footprint with 0.871 m height. No movement tuning changes.
+- Exact source, binary and packed hashes: [`crab-stomped.provenance.json`](../../public/enemies/crab-stomped.provenance.json).
+- Reference: [`references/crab-stomped-x-only.png`](references/crab-stomped-x-only.png), made with built-in ImageGen; exact prompt: [`reference-x-only-prompt.txt`](reference-x-only-prompt.txt). This is generation reference material, not a hand-authored runtime texture.
+- Meshy image-to-3D, Meshy surface repair, then Meshy retexture: **35 new credits** (15 + 10 + 10). The generation ledger retains the original 15-credit superseded model separately. No credit purchases.
+- Final Meshy delivery: **16,160 triangles** and three embedded **2048 × 2048** PBR maps. Every byte of the delivered binary is preserved. No locally authored geometry, texture edits, runtime eye paint, decimation, LOD or texture resizing.
+- A uniform parent transform grounds and sizes the artwork to **2.8 × 0.797 × 2.726 m**. It does not change movement tuning.
 
-The downloaded source remains in the ignored authoring folder `.img2threejs/crab-carcass/crab-stomped.glb`. After retrieving that exact source, reproduce the packed asset with:
+The exact final source is stored in the ignored authoring folder `.img2threejs/crab-carcass/crab-stomped-x-only-final/downloads/model.glb`. After restoring that downloaded source, reproduce the packed asset with:
 
 ```sh
 python3 tools/crab-carcass/prepare.py
 ```
 
-`prepare.py` validates the reviewed source SHA-256 and preserves its original binary data. The Meshy wrapper accepts the existing adapter's commands; set `ENEMY_MESHY_CLI` to the installed official CLI entry point when running it on another machine. Do not resubmit the completed generation to reproduce the packed asset.
+`prepare.py` validates the recorded download hash, adds only a uniform fit/grounding parent and provenance, and preserves the complete Meshy binary. `meshy_jobs.py` composes the existing official Meshy CLI adapter. `tasks.json` records all three successful jobs and their costs. Do not resubmit completed generation jobs to reproduce the packed asset.
 
-## Verification
+## Contact and verification
 
-`node tools/test-crab-carcass.mjs` covers native stomp/bounce, persistence, harmless contact, fresh spin ownership, launch/crate collision, lifetime, one-time scoring, reset, variant isolation and actual GLB metadata. Existing enemy-runtime, enemy-assets, enemy-gameplay and turtle-shell tests pass. `npm run build` passes TypeScript and Vite.
+Crab stomps use a swept descending sole crossing with 25 cm of edge overlap, so a fast fall cannot skip the small combat box. A genuine landing takes precedence over a simultaneous spin or invincibility contact. Rising contacts, clear misses and side spins keep their existing behavior. The initial bounce starts above the new carcass box.
 
-Real Chrome checks pass on the production preview in lite and full rendering. A declared test fixture aligns the airborne player over the crab; native input, movement, gravity and contact then perform the stomp. Real F input flings the carcass. Reset and direct-spin death are also checked. Native full rendering is **3840 × 2160** with fixed rendering disabled, all 15,628 triangles and all original 2K maps present, and no page, console or WebGL errors. The user's saves are untouched.
+`node tools/test-crab-carcass.mjs` passes edge/fast contacts, a moving patrol, simultaneous attacks, negative side/rising cases, bounce, persistence, harmless contact, fresh spin and rope-spin ownership, fling/crate collisions, lifetime, scoring, resets, variant isolation and actual asset provenance. TypeScript and the Vite production build pass. The packed and production GLBs are byte-identical.
 
-Evidence: [`docs/performance/crab-carcass.json`](../../docs/performance/crab-carcass.json). Final native-resolution image: [`docs/art-reviews/crab-stomped-native.png`](../../docs/art-reviews/crab-stomped-native.png). Additional local views are in `/private/tmp/crab-carcass-browser/`.
+Real in-app browser checks pass stomp and fresh-spin fling in both lite and full rendering. The existing QA page's declared fixture places an airborne player above the enemy; native gravity and combat contact complete the stomp. Its F action performs the spin. Both captures retain four lives, zero deaths and one 100-point kill. The generic probe label does not detect corpse-to-flung transitions; the visible before/after engine state explicitly changes from `crab-carcass` to `crab-carcass-flung`.
 
-The combined offline preview on port 6265 was rebuilt as `3f798b077012c5f305dd`. No push, publication or deployment was performed. The requested Meshy generation was the only new model purchase.
+Review front, quarter, side and top at original **3840 × 2160** resolution. The full-game check has a native **3510 × 2010** game viewport inside that review page, with fixed rendering disabled. No browser warnings or errors. The production model is also checked on port 6265.
+
+Evidence: [`docs/performance/crab-stomp-x-only.json`](../../docs/performance/crab-stomp-x-only.json). Final production image: [`docs/art-reviews/crab-x-only-native.jpg`](../../docs/art-reviews/crab-x-only-native.jpg). Full-render gameplay: [`docs/art-reviews/crab-x-only-gameplay-native.jpg`](../../docs/art-reviews/crab-x-only-gameplay-native.jpg).
+
+The combined offline preview at port 6265 was rebuilt as `af9c699be6e5df487610`. No push, publication or deployment.

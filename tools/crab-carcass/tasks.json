@@ -3,8 +3,8 @@
   "provider": "Meshy",
   "model": "meshy-t2",
   "modelType": "smart-topology",
-  "budgetCredits": 15,
-  "authorization": "User requested one new Meshy crab stomp carcass",
+  "budgetCredits": 50,
+  "authorization": "User requested the original Meshy crab carcass, then explicitly required a Meshy-only replacement with X marks and no eyeballs/eyebrows on 2026-10-22. Local cap: original 15 + replacement 15 + Meshy surface repair 10 + Meshy retexture 10. No credit purchases.",
   "tasks": {
     "crab-stomped": {
       "resource": "image-to-3d",
@@ -39,6 +39,93 @@
           "path": ".img2threejs/crab-carcass/crab-stomped/downloads/model.glb",
           "bytes": 6616076,
           "sha256": "73002db11b76bb0cb89a9280d7c82316cac0eb760ca9576d0383ff90e63459db"
+        }
+      ]
+    },
+    "crab-stomped-x-only": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "0514bf53-b76b-4702-bc54-df800948a78c",
+      "createdAt": "2026-10-22T04:48:14.555244+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/.codex/worktrees/six-island-campaign/Prototype Fork/tools/crab-carcass/references/crab-stomped-x-only.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 15000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ],
+        "texture_prompt": "Defeated stomp-flattened red-orange cartoon crab, speckled shell, cream underside, limp claws and splayed legs. Exactly two bold DARK BROWN X marks painted directly on the smooth continuous red-orange face, matching the reference. The X marks ARE the eyes. No eyeballs, eye whites, pupils, round eye pads, sockets, eyelids, eyebrows, brow ridges or eye stalks. Keep both Xs crisp and visible from above. Preserve the detailed hand-painted cartoon materials. No extra objects or base."
+      },
+      "balanceBefore": 751,
+      "reference": "tools/crab-carcass/references/crab-stomped-x-only.png",
+      "referenceSha256": "8a8418088ff4af0b3f87de53b49c6a1d92e14ccf6a55050439b926f984e72be8",
+      "id": "01a161f0-3e9f-7076-9299-896d4d88963d",
+      "checkedAt": "2026-10-22T04:52:54.868634+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1792644539273,
+      "expiresAt": 1792903739273,
+      "downloads": [
+        {
+          "path": ".img2threejs/crab-carcass/crab-stomped-x-only/downloads/model.glb",
+          "bytes": 6702084,
+          "sha256": "a67c3b4ad686393612dded3c465061e912f1414ade8b38c63a7bec4647c5ce61"
+        }
+      ]
+    },
+    "crab-stomped-x-only-repaired": {
+      "resource": "repair-printability",
+      "state": "SUCCEEDED",
+      "operationId": "dea2aa42-7c69-4871-8e48-d687d4a499fe",
+      "createdAt": "2026-10-22T04:59:55.062850+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "input_task_id": "01a161f0-3e9f-7076-9299-896d4d88963d"
+      },
+      "balanceBefore": 736,
+      "id": "01a161fa-eebb-74bf-a718-b375576e8111",
+      "checkedAt": "2026-10-22T05:01:20.213820+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1792645200308,
+      "expiresAt": 1792904400308
+    },
+    "crab-stomped-x-only-final": {
+      "resource": "retexture",
+      "state": "SUCCEEDED",
+      "operationId": "5dff12f4-a136-45f7-aee6-f9154a05a83b",
+      "createdAt": "2026-10-22T05:02:47.325315+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "input_task_id": "01a161fa-eebb-74bf-a718-b375576e8111",
+        "image_style_url": "/Users/kiki/.codex/worktrees/six-island-campaign/Prototype Fork/tools/crab-carcass/references/crab-stomped-x-only.png",
+        "enable_original_uv": false,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 726,
+      "reference": "tools/crab-carcass/references/crab-stomped-x-only.png",
+      "referenceSha256": "8a8418088ff4af0b3f87de53b49c6a1d92e14ccf6a55050439b926f984e72be8",
+      "id": "01a161fd-9e47-7057-a0bf-9898f5d6bf0d",
+      "checkedAt": "2026-10-22T05:05:24.625947+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1792645418866,
+      "expiresAt": 1792904618866,
+      "downloads": [
+        {
+          "path": ".img2threejs/crab-carcass/crab-stomped-x-only-final/downloads/model.glb",
+          "bytes": 7276576,
+          "sha256": "beca077f22b121acf508fafe9e1f425cf41784e1f427ae679ac7f83303b5de23"
         }
       ]
     }

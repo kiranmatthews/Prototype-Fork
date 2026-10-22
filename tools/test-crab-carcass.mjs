@@ -9,18 +9,24 @@ const base=new URL('../',import.meta.url),hash=b=>createHash('sha256').update(b)
 const bytes=await readFile(new URL('public/enemies/crab-stomped.glb',base));
 const provenance=JSON.parse(await readFile(new URL('public/enemies/crab-stomped.provenance.json',base)));
 assert.equal(hash(bytes),provenance.sha256);
-assert.equal(provenance.triangles,15628);assert.equal(provenance.binaryPreserved,true);
-const doc=JSON.parse(bytes.subarray(20,20+bytes.readUInt32LE(12)).toString());
-assert.equal(provenance.sourceTriangles,15620);assert.equal(provenance.pinholeCaps.length,3);
+assert.equal(provenance.binaryPreserved,true);
+const jsonLength=bytes.readUInt32LE(12);
+const doc=JSON.parse(bytes.subarray(20,20+jsonLength).toString());
+const binLength=bytes.readUInt32LE(20+jsonLength),bin=bytes.subarray(28+jsonLength,28+jsonLength+binLength);
+assert.equal(hash(bin),provenance.sourceBinarySha256,'use the complete final Meshy binary without surface/texture edits');
+assert.ok(provenance.triangles>=15000,'keep full-detail generated artwork');
+assert.equal(provenance.triangles,provenance.sourceTriangles);
 assert.equal(doc.skins,undefined,'carcass uses a static delivered pose');
-assert.equal(doc.meshes.reduce((n,m)=>n+m.primitives.reduce((n,p)=>n+doc.accessors[p.indices].count/3,0),0),15628);
+assert.equal(doc.meshes.reduce((n,m)=>n+m.primitives.reduce((n,p)=>n+doc.accessors[p.indices].count/3,0),0),provenance.triangles);
 assert.equal(doc.extensionsUsed?.includes('MSFT_lod')??false,false);
 assert.equal(doc.images.length,3);
 assert.deepEqual(provenance.textureResolution,[2048,2048]);
 const reference=await readFile(new URL(provenance.reference,base));assert.equal(hash(reference),provenance.referenceSha256);
 const ledger=JSON.parse(await readFile(new URL('tools/crab-carcass/tasks.json',base)));
-assert.equal(ledger.tasks['crab-stomped'].id,provenance.generationTaskId);
-assert.equal(ledger.tasks['crab-stomped'].state,'SUCCEEDED');assert.equal(provenance.consumedCredits,15);
+assert.equal(ledger.tasks['crab-stomped-x-only'].id,provenance.generationTaskId);
+assert.equal(ledger.tasks[provenance.assetJob].id,provenance.assetTaskId);
+for(const stage of provenance.meshyPipeline)assert.equal(Object.values(ledger.tasks).find(t=>t.id===stage.id)?.state,'SUCCEEDED');
+assert.equal(provenance.consumedCredits,35);
 
 // Real meshes and gameplay; headless parsing omits texture upload. Native
 // browser review checks the actual three 2K maps and X-eye appearance.
@@ -51,13 +57,32 @@ try{
    assert.equal(p.vVel,TUNING.crateBounce);assert.equal(p.airJumpUsed,false);
    assert.equal(e.touchHurt,false);assert.equal(e.box.isEmpty(),true);
   };
+  // A sole overlapping the shell edge, including fast descent, is still a
+  // landing. A simultaneous spin/uber cannot substitute a normal-eyed kill.
+  const contact = ({x=0,z=0,from=1.5,to=1.0,vy=-12,spin=false,uber=false}={}) => {
+   reset();p.pos.set(x,to,z);p.prevPos.set(x,from,z);p.state='air';p.grounded=false;p.vVel=vy;
+   p.airJumpUsed=true;p.spinTimer=spin?.3:0;p.uberTimer=uber?1:0;
+   p.collide(level);level.update(.2);
+  };
+  for(const sample of [{x:.85},{z:-.85},{from:2.2,to:.25,vy:-80},{spin:true},{uber:true}]){
+   contact(sample);assert.ok(e.crabCarcass,`descending contact must make the carcass: ${JSON.stringify(sample)}`);
+   assert.equal(p.vVel,TUNING.crateBounce);assert.equal(p.airJumpUsed,false);
+   assert.equal(e.body.visible,false);assert.ok(e.group.getObjectByName('CoralCrab_Stomped'));
+  }
+  for(const sample of [{x:1.2},{from:.8,to:1,vy:12},{from:.8,to:.6}]){
+   contact(sample);assert.equal(e.crabCarcass,undefined,`side/rising/clear miss is not a stomp: ${JSON.stringify(sample)}`);
+  }
+  reports.push('edge/fast descending contacts, stomp priority over simultaneous spin/uber, side/rising rejection');
+
+  reset();e.x0=-1;e.x1=1;e.speed=3;stomp();assert.ok(e.crabCarcass);
+  e.x0=e.x1=e.speed=0;reports.push('native falling stomp onto a moving 3 m/s patrol');
   reset();stomp();const killPoints=p.points+p.comboPoints*Math.max(1,p.comboMult),lives=p.lives;wait(180);
   assert.ok(e.crabCarcass&&e.group.visible);assert.equal(p.points,killPoints);assert.equal(p.lives,lives);
   assert.equal(p.isBailing,false);assert.equal(p.grounded,true,'carcass cannot become a second bounce box');
   const body=e.group.getObjectByName('Enemy_grunt_Aim'),carcass=e.group.getObjectByName('CoralCrab_Stomped');
   assert.ok(carcass);assert.equal(body.visible,false);assert.deepEqual(e.group.scale.toArray(),[1,1,1]);
   const bounds=new THREE.Box3().setFromObject(carcass,true);
-  assert.ok(Math.abs(bounds.min.y-e.group.position.y)<1e-5);assert.ok(Math.abs(bounds.max.y-e.group.position.y-.8707804)<1e-5);
+  assert.ok(Math.abs(bounds.min.y-e.group.position.y)<1e-5);assert.ok(Math.abs(bounds.max.y-e.group.position.y-provenance.worldSize[1])<1e-5);
   assert.equal(carcass.position.y,0,'finite settle must end');
   const stable=carcass.matrix.clone();wait(60);assert.ok(carcass.matrix.equals(stable));
   reports.push('real falling stomp, bounce, persistent harmless X-eye model, finite settle');

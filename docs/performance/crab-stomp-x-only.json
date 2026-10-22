@@ -1,0 +1,166 @@
+{
+  "date": "2026-10-22",
+  "buildVersion": "af9c699be6e5df487610",
+  "preview": "http://127.0.0.1:6265/",
+  "asset": {
+    "file": "public/enemies/crab-stomped.glb",
+    "provider": "Meshy",
+    "newCredits": 35,
+    "triangles": 16160,
+    "textureCount": 3,
+    "textureResolution": [
+      2048,
+      2048
+    ],
+    "sha256": "ae351242f672788e7ba14e9febcb3e42f61c504c4af2fc9385c6ba1ccdcd619f",
+    "sourceBinarySha256": "b747ec536852dd46351d1a14745f0163870754009411495bdd945661d0442815",
+    "sourceBinaryPreserved": true,
+    "productionByteIdentical": true,
+    "preparation": "Uniform fit/grounding parent and metadata only; no surface or texture edits"
+  },
+  "checks": {
+    "focusedCarcassRegression": "pass",
+    "typescriptNoEmit": "pass",
+    "viteProductionBuild": "pass",
+    "diffCheck": "pass",
+    "fullSuiteRun": false
+  },
+  "browser": {
+    "surface": "Codex in-app browser",
+    "captureResolution": [
+      3840,
+      2160
+    ],
+    "fullGameViewport": [
+      3510,
+      2010
+    ],
+    "fixedRendering": false,
+    "reviewAngles": [
+      "front",
+      "quarter",
+      "side",
+      "top"
+    ],
+    "productionReview": "pass",
+    "consoleErrors": [],
+    "consoleWarnings": [],
+    "fixture": "Existing gameplay-review UI places an airborne player above the crab. Native physics/contact performs the stomp; the UI F action performs the fresh spin.",
+    "probeLabelLimitation": "The generic probe predicate ignores corpse-to-flung transitions. Visible before/after engine state verifies the actual transition.",
+    "probes": [
+      {
+        "renderMode": "lite",
+        "action": "stomp",
+        "probeLabel": "observed",
+        "enemyBefore": "patrol",
+        "enemyAfter": "crab-carcass",
+        "playerAfter": {
+          "state": "ride",
+          "position": [
+            -3.709,
+            -0.763,
+            -64
+          ],
+          "grounded": true,
+          "surface": "corridor A",
+          "speed": 0,
+          "verticalVelocity": 0,
+          "lives": 4,
+          "deaths": 0,
+          "points": 0,
+          "masks": 0,
+          "spinning": false
+        }
+      },
+      {
+        "renderMode": "lite",
+        "action": "fling",
+        "probeLabel": "not-observed",
+        "enemyBefore": "crab-carcass",
+        "enemyAfter": "crab-carcass-flung",
+        "playerAfter": {
+          "state": "ride",
+          "position": [
+            -3.709,
+            -0.763,
+            -64
+          ],
+          "grounded": true,
+          "surface": "corridor A",
+          "speed": 0,
+          "verticalVelocity": 0,
+          "lives": 4,
+          "deaths": 0,
+          "points": 100,
+          "masks": 0,
+          "spinning": false
+        }
+      },
+      {
+        "renderMode": "full",
+        "action": "stomp",
+        "probeLabel": "observed",
+        "enemyBefore": "patrol",
+        "enemyAfter": "crab-carcass",
+        "playerAfter": {
+          "state": "ride",
+          "position": [
+            -1.359,
+            -0.871,
+            -64
+          ],
+          "grounded": true,
+          "surface": "corridor A",
+          "speed": 0,
+          "verticalVelocity": 0,
+          "lives": 4,
+          "deaths": 0,
+          "points": 0,
+          "masks": 0,
+          "spinning": false
+        }
+      },
+      {
+        "renderMode": "full",
+        "action": "fling",
+        "probeLabel": "not-observed",
+        "enemyBefore": "crab-carcass",
+        "enemyAfter": "crab-carcass-flung",
+        "playerAfter": {
+          "state": "ride",
+          "position": [
+            -1.316,
+            -0.848,
+            -62.824
+          ],
+          "grounded": true,
+          "surface": "corridor A",
+          "speed": 0,
+          "verticalVelocity": 0,
+          "lives": 4,
+          "deaths": 0,
+          "points": 100,
+          "masks": 0,
+          "spinning": false
+        }
+      }
+    ]
+  },
+  "captures": [
+    "docs/art-reviews/crab-x-only-native.jpg",
+    "docs/art-reviews/crab-x-only-gameplay-native.jpg"
+  ],
+  "replayAudit": {
+    "file": "replay-JungleRuins-2026-10-22T03-06-27.json",
+    "limitation": "Headless audit contained grounded collisions/deaths and no successful stomp; it did not reproduce the later flattened-model visual report."
+  },
+  "timing": {
+    "firstRecordedInspectionUtc": "2026-10-22T03:14:42Z",
+    "meshyCorrectionStartUtc": "2026-10-22T04:43:28Z",
+    "finalProductionImageReviewUtc": "2026-10-22T05:30:33Z",
+    "totalRecordedMinutes": 135.9,
+    "meshyCorrectionMinutes": 47.1,
+    "exactPromptTimeKnown": false
+  },
+  "delivery": "Local commit only. No push, publication or deployment."
+}

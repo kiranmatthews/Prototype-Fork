@@ -36,11 +36,11 @@ if(appearance){
   const cycle=[{state:'shamble',frames:336,speed:.3},{state:'windup',frames:24,speed:0},{state:'lurch',frames:30,speed:5.4},{state:'recover',frames:45,speed:.18},{state:'stagger',frames:66,speed:1.7}];
   CYCLES.grunt=cycle;CYCLES.hopper=cycle;
 }
-type View='front'|'quarter'|'side'|'back'|'orbit';
+type View='front'|'quarter'|'side'|'back'|'top'|'orbit';
 const initialKind=query.get('kind');
 const review={kind:ROSTER.includes(initialKind as EnemyKind)?initialKind as EnemyKind:'all' as EnemyKind|'all',
   motion:query.get('state')??'cycle',frame:0,playing:query.get('paused')!=='1',speed:1,
-  camera:(['front','quarter','side','back'].includes(query.get('view')??'')?query.get('view'):'quarter') as View,
+  camera:(['front','quarter','side','back','top'].includes(query.get('view')??'')?query.get('view'):'quarter') as View,
   showBounds:false,showSkeleton:false,trackTarget:true,sound:false};
 const renderer=new THREE.WebGLRenderer({antialias:true});
 renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
@@ -86,7 +86,7 @@ function durationFrames():number {
   return CYCLES[review.kind].find(part=>part.state===review.motion)?.frames??180;
 }
 function selectedSegment(kind:EnemyKind,frame:number):{state:string;speed:number;time:number} {
-  if(review.motion==='idle'||review.motion==='defeat'||review.motion==='flung')return {state:review.motion,speed:0,time:frame/FPS};
+  if(review.motion==='idle'||review.motion==='defeat'||review.motion==='flung'||review.motion==='crab-carcass'||review.motion==='crab-carcass-flung')return {state:review.motion,speed:0,time:frame/FPS};
   if(review.motion!=='cycle'){
     const part=CYCLES[kind].find(value=>value.state===review.motion)??CYCLES[kind][0];
     return {state:part.state,speed:part.speed,time:frame/FPS};
@@ -97,10 +97,11 @@ function selectedSegment(kind:EnemyKind,frame:number):{state:string;speed:number
 }
 function sampleActor(actor:Actor,frame:number):EnemyAnimationFrame {
   const part=selectedSegment(actor.kind,frame),time=frame/FPS;
-  const alive=review.motion!=='defeat'&&review.motion!=='flung';
+  const flung=review.motion==='flung'||review.motion==='crab-carcass-flung';
+  const alive=review.motion!=='defeat'&&review.motion!=='crab-carcass'&&!flung;
   const leap=actor.kind==='hopper'&&part.state==='leap';
   return {kind:actor.kind,state:part.state,stateTime:part.time,time,speed:part.speed,inPlace:appearance==='nightworks',
-    verticalVelocity:leap?8.6-24*part.time:0,grounded:actor.kind!=='floater'&&!leap,alive,flung:review.motion==='flung'};
+    verticalVelocity:leap?8.6-24*part.time:0,grounded:actor.kind!=='floater'&&!leap,alive,flung};
 }
 function layoutActor(actor:Actor):void {
   const {visual,kind,frame}=actor,solo=review.kind!=='all',shown=!solo||review.kind===kind;
@@ -146,7 +147,8 @@ function seekFrame(frame:number):void {
 }
 function refreshStateOptions():void {
   const states=review.kind==='all'?[]:CYCLES[review.kind].map(part=>part.state);
-  const options=[['cycle','Combat cycle'],['idle','Idle / settle'],...states.map(value=>[value,value[0].toUpperCase()+value.slice(1)]),['defeat','Defeat · compression'],['flung','Defeat · airborne tumble']];
+  const carcass=review.kind==='grunt'&&!appearance?[["crab-carcass","Stomped crab · X eyes"],["crab-carcass-flung","Stomped crab · flung"]]:[];
+  const options=[['cycle','Combat cycle'],['idle','Idle / settle'],...states.map(value=>[value,value[0].toUpperCase()+value.slice(1)]),['defeat','Defeat · compression'],['flung','Defeat · airborne tumble'],...carcass];
   if(!options.some(([value])=>value===review.motion))review.motion='cycle';
   stateInput.replaceChildren(...options.map(([value,label])=>{const option=document.createElement('option');option.value=value;option.textContent=label;return option;}));
   stateInput.value=review.motion;
@@ -169,10 +171,11 @@ function setCamera(view:Exclude<View,'orbit'>):void {
   review.camera=view;
   const solo=review.kind!=='all',jumpingHopper=review.kind==='hopper'&&(review.motion==='cycle'||review.motion==='leap');
   const swoopingFloater=review.kind==='floater'&&(review.motion==='cycle'||review.motion==='swoop');
-  const targetY=appearance?1.4:review.kind==='moa'?2.05:swoopingFloater?1.45:review.kind==='floater'?2.0:jumpingHopper?1.65:review.kind==='charger'?1.3*BULL.sizeMultiplier:1.05;
+  const stompedCrab=!appearance&&review.kind==='grunt'&&review.motion.startsWith('crab-carcass');
+  const targetY=stompedCrab?.43:appearance?1.4:review.kind==='moa'?2.05:swoopingFloater?1.45:review.kind==='floater'?2.0:jumpingHopper?1.65:review.kind==='charger'?1.3*BULL.sizeMultiplier:1.05;
   const target=new THREE.Vector3(0,solo?targetY:.85,jumpingHopper?(view==='side'?-1.8:view==='quarter'?-1.1:0):0);
   const direction=view==='front'?new THREE.Vector3(0,solo?.045:.9,1):view==='side'?new THREE.Vector3(1,solo?.045:.9,0)
-    :view==='back'?new THREE.Vector3(0,solo?.045:.9,-1):new THREE.Vector3(.643,solo?.18:.8,.766);
+    :view==='back'?new THREE.Vector3(0,solo?.045:.9,-1):view==='top'?new THREE.Vector3(0,1,.001):new THREE.Vector3(.643,stompedCrab?.55:solo?.18:.8,.766);
   const halfWidth=appearance?2.6:solo?(jumpingHopper?(view==='front'||view==='back'?2.1:3.4):review.kind==='charger'?2*BULL.sizeMultiplier:review.kind==='moa'||review.kind==='spinner'?3:2):10,
     halfHeight=appearance?1.95:solo?(review.kind==='moa'?3.1:jumpingHopper?2.65:review.kind==='charger'?1.8*BULL.sizeMultiplier:swoopingFloater?1.8:1.5):6;
   const distance=Math.max(halfHeight,halfWidth/Math.max(.4,camera.aspect))/Math.tan(THREE.MathUtils.degToRad(camera.fov/2));

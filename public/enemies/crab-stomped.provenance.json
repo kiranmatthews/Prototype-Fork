@@ -1,65 +1,53 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "provider": "Meshy",
-  "generationTaskId": "01a16053-fa22-7291-b055-38ac86610b69",
-  "consumedCredits": 15,
-  "sourceSha256": "73002db11b76bb0cb89a9280d7c82316cac0eb760ca9576d0383ff90e63459db",
-  "reference": "tools/crab-carcass/references/crab-stomped.png",
-  "referenceSha256": "1eef18d936630fed7bad56b710f73369436690caeaa0704573a138a4440bcac1",
-  "sourceTriangles": 15620,
-  "triangles": 15628,
-  "pinholeCaps": [
+  "generationTaskId": "01a161f0-3e9f-7076-9299-896d4d88963d",
+  "assetTaskId": "01a161fd-9e47-7057-a0bf-9898f5d6bf0d",
+  "assetJob": "crab-stomped-x-only-final",
+  "meshyPipeline": [
     {
-      "boundaryVertices": 5,
-      "triangles": 3,
-      "center": [
-        -0.10611779987812042,
-        -0.008533600089140236,
-        0.3426155984401703
-      ],
-      "sourceExtent": 0.016279000439681113
+      "id": "01a161f0-3e9f-7076-9299-896d4d88963d",
+      "resource": "image-to-3d",
+      "consumedCredits": 15
     },
     {
-      "boundaryVertices": 5,
-      "triangles": 3,
-      "center": [
-        0.1469895988702774,
-        -0.057531599700450894,
-        0.39925919771194457
-      ],
-      "sourceExtent": 0.03016500174999237
+      "id": "01a161fa-eebb-74bf-a718-b375576e8111",
+      "resource": "repair-printability",
+      "consumedCredits": 10
     },
     {
-      "boundaryVertices": 4,
-      "triangles": 2,
-      "center": [
-        0.3752700015902519,
-        -0.09878724999725819,
-        0.13624349981546402
-      ],
-      "sourceExtent": 0.017451003193855286
+      "id": "01a161fd-9e47-7057-a0bf-9898f5d6bf0d",
+      "resource": "retexture",
+      "consumedCredits": 10
     }
   ],
+  "consumedCredits": 35,
+  "sourceSha256": "beca077f22b121acf508fafe9e1f425cf41784e1f427ae679ac7f83303b5de23",
+  "sourceBinarySha256": "b747ec536852dd46351d1a14745f0163870754009411495bdd945661d0442815",
+  "reference": "tools/crab-carcass/references/crab-stomped-x-only.png",
+  "referenceSha256": "8a8418088ff4af0b3f87de53b49c6a1d92e14ccf6a55050439b926f984e72be8",
+  "sourceTriangles": 16160,
+  "triangles": 16160,
   "textureResolution": [
     2048,
     2048
   ],
-  "reviewedSource": ".img2threejs/enemies/review/crab-stomped: front, quarter, side, back, top",
-  "preparation": "Uniform fit and ground-contact parent; eight added triangles cap three reviewed pinholes. All original vertices, normals, UVs, indices, materials and 2K embedded textures retained byte-for-byte. No LOD or triangle reduction.",
+  "design": "Two X marks directly on a smooth flattened face; no eyeballs, eyebrows or runtime paint.",
+  "preparation": "Uniform fit and ground-contact parent only. Complete original Meshy binary retained byte-for-byte: all vertices, normals, UVs, indices, materials and 2K embedded textures. No surface edits, caps, decimation, LOD or texture resizing.",
   "artworkScale": 2,
   "worldSize": [
     2.8,
-    0.8707804024219512,
-    2.8
+    0.7971683621406555,
+    2.7261388301849365
   ],
-  "fitScale": 1.4,
+  "fitScale": 0.7,
   "fitTranslation": [
     -0.0,
-    0.21725340783596037,
+    0.19929209053516386,
     -0.0
   ],
   "file": "crab-stomped.glb",
-  "bytes": 6617860,
-  "sha256": "f37b8217dfb418cf2f08329846c5642a4b3b8750bdbcbbb80460ad0525fab887",
+  "bytes": 7278108,
+  "sha256": "ae351242f672788e7ba14e9febcb3e42f61c504c4af2fc9385c6ba1ccdcd619f",
   "binaryPreserved": true
 }

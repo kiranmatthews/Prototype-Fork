@@ -12910,7 +12910,11 @@ export class Player {
         }
         continue;
       }
-      if (this.spinning && this.spinBox.intersectsBox(e.box)) {
+      const crabStomp = e.kind === 'grunt' && e.visual.diagnostics.appearance !== 'nightworks' &&
+        !e.group.userData.ghostSkin && e.stompKill && this.isCrabStomping(e.box);
+      // A feet-first landing owns the stomped model even when a spin overlaps
+      // on this tick. Side spins retain the ordinary pinball fling.
+      if (!crabStomp && this.spinning && this.spinBox.intersectsBox(e.box)) {
         if (e.spinKill) {
           // Spin PINGS the enemy away — it can smash crates it happens to hit.
           const fling = e.group.position.clone().sub(this.pos).setY(0);
@@ -12934,8 +12938,8 @@ export class Player {
         // fall through and take the hit below.
       }
       const bodyContact = this.playerBox.intersectsBox(e.box);
-      if (bodyContact || e.attackBox?.intersectsBox(this.playerBox)) {
-        const validStomp = bodyContact && this.isStomping(e.box) && e.stompKill;
+      if (crabStomp || bodyContact || e.attackBox?.intersectsBox(this.playerBox)) {
+        const validStomp = crabStomp || (bodyContact && this.isStomping(e.box) && e.stompKill);
         const rescueStomp =
           validStomp &&
           (this.isBailing || this.emergencyEjectLandingPending);
@@ -12954,7 +12958,7 @@ export class Player {
           sfx.play('crateBounce', 0.7);
           continue;
         }
-        if ((this.uberTimer > 0 || this.sliding) && e.meleeKill) {
+        if (!crabStomp && (this.uberTimer > 0 || this.sliding) && e.meleeKill) {
           // Uber plows through; Crash 3 rules: the slide takes out enemies too.
           if (level.killEnemy(e, undefined, this.debrisSpinToken))
             this.score(CONST.ptsEnemy, 'Takedown');
@@ -12967,6 +12971,7 @@ export class Player {
             // The overturned turtle is taller than its live combat box. Start
             // above its new belly so the rising bounce cannot side-eject.
             if (e.shell) this.pos.y = e.shell.box.max.y + .02;
+            else if (e.crabCarcass) this.pos.y = e.crabCarcass.box.max.y + .02;
             this.vVel = TUNING.crateBounce;
             sfx.play('crateBounce', 0.7);
             this.state = 'air';
@@ -14337,6 +14342,20 @@ export class Player {
       renderer.setViewport(FRUIT_PREV);
     }
     renderer.autoClear = true;
+  }
+
+  /** Crab landings use a swept sole crossing with 25 cm of edge overlap.
+   * Keep the smaller damage box unchanged; rising/side contacts remain unsafe.
+   * The sweep also catches a fast descent that skips the final body overlap. */
+  private isCrabStomping(box: THREE.Box3): boolean {
+    const top = box.max.y;
+    if (this.state !== 'air' || this.vVel >= 0 || this.pos.y > top + .05 ||
+        this.prevPos.y < top - .05 || this.pos.y >= this.prevPos.y) return false;
+    const t = THREE.MathUtils.clamp((this.prevPos.y - top) / (this.prevPos.y - this.pos.y), 0, 1);
+    const x = THREE.MathUtils.lerp(this.prevPos.x, this.pos.x, t);
+    const z = THREE.MathUtils.lerp(this.prevPos.z, this.pos.z, t);
+    return x >= box.min.x - .25 && x <= box.max.x + .25 &&
+      z >= box.min.z - .25 && z <= box.max.z + .25;
   }
 
   // Falling and our feet are near the target's top face = a stomp. The window
