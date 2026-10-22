@@ -68,6 +68,9 @@ export class SkateChaseCamera {
   private openingBlend = 0;
   private readonly openingEye = new THREE.Vector3();
   private readonly openingAim = new THREE.Vector3();
+  private opposedVertActive = false;
+  private opposedVertBlend = 0;
+  private landingLedgeLift = 0;
   private readonly down = new THREE.Vector3(0,-1,0);
   /** Final presentation weight; never feeds steering or the vert frame. */
   groundFramingWeight = 0;
@@ -114,8 +117,12 @@ export class SkateChaseCamera {
     const previousGroundWeight = this.groundFramingWeight;
     this.groundFramingWeight = 0;
     if (framing) {
-      const flatness = vert ? 0 : THREE.MathUtils.smoothstep(rider.up.y,
-        Math.cos(35*Math.PI/180), Math.cos(5*Math.PI/180));
+      // Blend linearly in pitch angle, rather than its cosine. On a compact quarter,
+      // cosine concentrates most of the camera-height change in the final
+      // few degrees before the protected steep frame and creates a snap.
+      const pitch = Math.acos(THREE.MathUtils.clamp(rider.up.y,-1,1));
+      const flatness = vert ? 0 : THREE.MathUtils.clamp(
+        (35*Math.PI/180-pitch)/(30*Math.PI/180),0,1);
       this.groundBlend = snap ? flatness : this.groundBlend +
         (flatness-this.groundBlend)*frameBlend(.12,step);
       // The spatial envelope reaches exactly zero on steep transitions.
@@ -126,7 +133,13 @@ export class SkateChaseCamera {
       // normal change by a still-high groundBlend.
       const recoveryLimit = snap ? 1 : previousGroundWeight +
         (1-previousGroundWeight)*frameBlend(.12,step);
-      const blend = this.groundFramingWeight = Math.min(this.groundBlend*flatness,recoveryLimit);
+      let blend = Math.min(this.groundBlend*flatness,recoveryLimit);
+      // After a forward vert exit, the body can briefly pitch back toward
+      // its old wall normal while settling on flat ground. Ease that short
+      // landing dip; an actual steep/vert frame still has exactly zero weight.
+      if(this.landingBlendTime>0&&flatness>0)
+        blend=Math.max(blend,previousGroundWeight*(1-frameBlend(.12,step)));
+      this.groundFramingWeight=blend;
       if (blend > 0) {
         this.flatForward.set(-this.back.x,0,-this.back.z);
         if(this.flatForward.lengthSq()<1e-8)this.flatForward.set(rider.heading.x,0,rider.heading.z);
@@ -242,6 +255,56 @@ export class SkateChaseCamera {
       this.desiredEye.y -= this.ceilingEyeDrop;
       this.aim.y -= this.ceilingAimDrop;
     }
+    // In a narrow channel between facing quarters, a slow wall rollback
+    // leaves the normal trailing eye inside the opposite transition. Find
+    // that opposing face early, then raise only the collision presentation
+    // while retaining the original steering and surface-frame evolution.
+    if(snap){this.opposedVertActive=false;this.opposedVertBlend=0;}
+    if(!framing||!rider.grounded||rider.up.y>Math.cos(5*Math.PI/180))this.opposedVertActive=false;
+    else if(!this.opposedVertActive){
+      this.ceilingProbe.copy(rider.position);this.ceilingProbe.y+=.35;
+      this.ceilingSweepDirection.subVectors(this.desiredEye,rider.position).setY(0);
+      const span=this.ceilingSweepDirection.length();this.ceilingSweepDirection.normalize();
+      this.ray.set(this.ceilingProbe,this.ceilingSweepDirection);this.ray.near=.2;this.ray.far=Math.min(6,span);
+      for(const hit of this.ray.intersectObjects(surfaces,false)){
+        if(hit.object.userData.vert!==true||!hit.face)continue;
+        this.contactNormal.copy(hit.face.normal).transformDirection(hit.object.matrixWorld).setY(0).normalize();
+        this.direction.copy(rider.up).setY(0).normalize();
+        if(this.contactNormal.dot(this.direction)<-.5){this.opposedVertActive=true;break;}
+      }
+    }
+    this.opposedVertBlend+=(Number(this.opposedVertActive)-this.opposedVertBlend)*frameBlend(this.opposedVertActive?.18:.12,step);
+    if(framing&&this.opposedVertBlend>.001){
+      this.desiredEye.y=THREE.MathUtils.lerp(this.desiredEye.y,Math.max(this.desiredEye.y,rider.position.y+framing.camHeight),this.opposedVertBlend);
+      this.up.lerp(this.worldUp,this.opposedVertBlend).normalize();
+    }
+    // A descending rider can clear a tall quarter while the trailing sight
+    // line still crosses its coping. Lift over that lip before shortening the
+    // arm into the rider. Only a clear alternative ray is accepted; walls
+    // and ceilings continue through the normal collision clamp below.
+    let ledgeLift = 0;
+    if(framing&&!vert&&rider.up.y>.9&&(rider.grounded||rider.verticalSpeed<0)){
+      this.direction.subVectors(this.desiredEye,this.aim);
+      const span=this.direction.length();this.direction.divideScalar(Math.max(span,1e-6));
+      this.ray.set(this.aim,this.direction);this.ray.near=.1;this.ray.far=span+.2;
+      const lip=this.ray.intersectObjects(surfaces,false)[0];
+      if(lip?.face&&lip.object.userData.vert===true){
+        this.contactNormal.copy(lip.face.normal).transformDirection(lip.object.matrixWorld);
+        if(this.contactNormal.y<.5&&this.contactNormal.dot(rider.heading)>.25){
+          const baseY=this.desiredEye.y;
+          for(let lift=.25;lift<=3;lift+=.25){
+            this.desiredEye.y=baseY+lift;this.direction.subVectors(this.desiredEye,this.aim);
+            const length=this.direction.length();this.direction.divideScalar(Math.max(length,1e-6));
+            this.ray.set(this.aim,this.direction);this.ray.far=length+.2;
+            if(!this.ray.intersectObjects(surfaces,false).length){ledgeLift=lift;break;}
+          }
+          this.desiredEye.y=baseY;
+        }
+      }
+    }
+    this.landingLedgeLift=snap?ledgeLift:Math.max(ledgeLift,
+      this.landingLedgeLift+(ledgeLift-this.landingLedgeLift)*frameBlend(.12,step));
+    this.desiredEye.y+=this.landingLedgeLift;
     this.direction.subVectors(this.desiredEye, this.aim);
     const distance = this.direction.length();
     this.direction.divideScalar(Math.max(distance, 1e-6));

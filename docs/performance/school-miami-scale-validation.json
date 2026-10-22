@@ -1,0 +1,33 @@
+{
+  "worldScale": 2,
+  "components": 270,
+  "rails": 69,
+  "supportProbes": 18,
+  "nativeCases": 25,
+  "nativeSteps": 4349,
+  "browserLiteSteps": 4349,
+  "browserFullSteps": 4349,
+  "maxCameraStep": 0.8029440143619258,
+  "maxBodySpanCrop": 0.7712899594242415,
+  "tuningUnchanged": true,
+  "authoringRegression": {
+    "worldScale": 1,
+    "supports": 94,
+    "cases": 80
+  },
+  "checks": [
+    "test-school-scale.mjs",
+    "test-school-details.mjs (authoring scale)",
+    "test-park-camera-framing.mjs",
+    "test-jungle-cup-grind-camera.mjs",
+    "npm run check:levels",
+    "npm run build"
+  ],
+  "build": "f97216cd13398d10be45",
+  "delivery": "Local only; no push, upload or deployment.",
+  "limitations": [
+    "All 120 earlier authoring-scale routes have not been revalidated at 2x; the 25 current routes cover the primary scaled features.",
+    "Strict original 1:1 dimensions remain unverified; the user-directed scale is calibrated for this skater.",
+    "An inherited preview tab logged an unattributed MutationObserver error at 20:17:00 UTC. Fresh final full/lite sessions are clean; the historical startup issue is not claimed fixed."
+  ]
+}

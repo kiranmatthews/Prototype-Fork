@@ -1,9 +1,10 @@
+// Original-coordinate authoring regression. Run test-school-scale.mjs for the playable scaled campus.
 import assert from 'node:assert/strict';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { withSkateRuntime, makeInput } from './jungle-cup-harness.mjs';
 
 await withSkateRuntime(async ({ THREE, server, Level, Player, scene, CONST, TUNING }) => {
-  const m=await server.ssrLoadModule('/src/levels/school-miami.ts');
+  const source=await server.ssrLoadModule('/src/levels/school-miami.ts'); const m={...source,SCHOOL_MIAMI_LEVEL:source.createSchoolMiamiLevel(1)};
   const {parseCustomLevelJson}=await server.ssrLoadModule('/src/level.ts');
   const data=m.SCHOOL_MIAMI_LEVEL,originalTuning=JSON.stringify(TUNING);
   const level=new Level(scene,{id:'school-miami',name:data.name,data});scene.updateMatrixWorld(true);

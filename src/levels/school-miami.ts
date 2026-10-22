@@ -275,11 +275,14 @@ for(let k=0;k<SCHOOL_LONG_CANOPY.length-1;k++)for(let i=0;i<10;i++){
 for(const [i,p] of SCHOOL_LONG_CANOPY.entries()){const base=i<2?0:i===2?-.3:i===3?-2.5:-5;paintBox(p[0]+1.5,(p[1]+base)/2,p[2],.16,p[1]-base,.16,'#657a79',2);}
 
 // Buildings are solid at ground level, with deliberately accessible roofs.
-const admin=slab('Main classroom block',22,-12.5,34,12,5,lowerY,brick,3);
+// The east facade follows the stair-side setback. A rectangular mass here
+// crossed the downhill rail near the back corner and trapped the chase view.
+const adminOutline:Plan[]=[[5,-6.5],[37.7,-6.5],[36.3,-18.5],[5,-18.5]];
+const admin=polygonBlock('Main classroom block',adminOutline,5,lowerY,brick,3);
 void admin;
-slab('Main classroom roof',22,-12.5,34.2,12.2,5.12,4.85,concrete,3);
-for(const y of [1.5,3.5])for(let x=6;x<39;x+=2.4){paintBox(x,y,-6.475,1.65,.85,.05,'#41565b',3);paintBox(x,y,-6.43,.09,.85,.04,'#c2bca6',3);}
-for(const y of [-3,-.8,1.5,3.5])for(let x=6;x<39;x+=2.4){paintBox(x,y,-18.525,1.65,.85,.05,'#41565b',3);paintBox(x,y,-18.57,.09,.85,.04,'#c2bca6',3);}
+polygonBlock('Main classroom roof',[[4.9,-6.4],[37.8,-6.4],[36.4,-18.6],[4.9,-18.6]],5.12,4.85,concrete,3);
+for(const y of [1.5,3.5])for(let x=6;x<36.8;x+=2.4){paintBox(x,y,-6.475,1.65,.85,.05,'#41565b',3);paintBox(x,y,-6.43,.09,.85,.04,'#c2bca6',3);}
+for(const y of [-3,-.8,1.5,3.5])for(let x=6;x<35.4;x+=2.4){paintBox(x,y,-18.525,1.65,.85,.05,'#41565b',3);paintBox(x,y,-18.57,.09,.85,.04,'#c2bca6',3);}
 const classroomPlan=mapped([[126,121],[174,103],[236,115],[236,142],[272,148],[272,172],[306,178],[306,192],[292,190],[292,181],[280,179],[278,200],[312,205],[329,194],[324,231],[291,211],[224,198],[224,157],[209,153],[209,141],[151,140]],0);
 polygonBlock('Zigzag classroom wings and Hall Pass alcove',classroomPlan,0,lowerY,brick,3);
 floor('Classroom flat roofs',classroomPlan,.035,concrete,3);
@@ -559,10 +562,30 @@ rail('Service hill outside rail',SCHOOL_ROOF_ACCESS.slice(0,40).filter((_,i)=>i%
 // Fit roof landmarks relative to the roof corners, rather than treating
 // the global image projection as an exact survey. The unit sits close to
 // the north transition; its separate west hip is offset to the south.
-export const SCHOOL_ROOF_AC={x:54.7,z:23.7,width:10.5,depth:8.5,top:9.1,kickerX:62.1,kickerRun:2.8};
+export const SCHOOL_ROOF_AC={x:54.7,z:23.7,width:10.5,depth:8.5,top:9.1,kickerX:61.7,kickerRun:2.8,transition:1.2,corner:.18};
 {
-  const a=SCHOOL_ROOF_AC;
-  slab('Gym roof air conditioner',a.x,a.z,a.width,a.depth,a.top,roofY,'#566f68',9);
+  const a=SCHOOL_ROOF_AC,xw=a.x-a.width/2,xe=a.x+a.width/2,zn=a.z-a.depth/2,zs=a.z+a.depth/2;
+  // The lower curved sides continue vertically to the real top coping.
+  // A rounded toe sweeps around the west corners; the small inner radius
+  // keeps the coping continuous without folding the profile onto itself.
+  const toe:Point[]=[],body:Plan[]=[[xe,zn+.02]],outer=a.transition+a.corner;
+  const line=(x:number,z:number)=>{
+    const from=toe[toe.length-1],steps=from?Math.max(1,Math.ceil(Math.hypot(x-from[0],z-from[2])/.1)):1;
+    for(let i=1;i<=steps;i++)toe.push(from?[mix(from[0],x,i/steps),roofY,mix(from[2],z,i/steps)]:[x,roofY,z]);
+  };
+  line(xe,zn-a.transition);line(xw+a.corner,zn-a.transition);
+  for(const [z,start] of [[zn+a.corner,-Math.PI/2],[zs-a.corner,-Math.PI]]){
+    if(start===-Math.PI)line(xw-a.transition,z);
+    for(let i=0;i<=32;i++){
+      const angle=start-i/32*Math.PI/2,cx=xw+a.corner;
+      if(i)toe.push([cx+outer*Math.cos(angle),roofY,z+outer*Math.sin(angle)]);
+      body.push([cx+(a.corner-.02)*Math.cos(angle),z+(a.corner-.02)*Math.sin(angle)]);
+    }
+  }
+  line(xe,zs+a.transition);body.push([xe,zs-.02]);
+  polygonBlock('Gym roof air conditioner',body,a.top,roofY,'#566f68',9);
+  quarter('Air conditioner · three-sided transition and top coping',toe,a.transition,9,
+    {deck:.05,lipRise:a.top-roofY-a.transition,color:'#7d8c7e',tex:'wood'});
   for(let z=a.z-a.depth/2+.4;z<a.z+a.depth/2-.2;z+=.6)paintBox(a.x,a.top+.02,z,a.width-.8,.04,.13,'#394f4d',9);
   add({t:'ramp',nm:'Over the Air Conditioner · east kicker',p:[a.kickerX,roofY,a.z],len:a.kickerRun,rise:a.top-roofY,w:a.depth,yaw:90,color:'#ad9579',tex:'wood',edgeGrinding:false,grp:9});
 }
@@ -717,10 +740,43 @@ add({t:'zone',nm:'Starting canopy · face the Gimme Gap',p:[10,canopyY,0],s:[29,
 for(const p of [[-3,canopyY,0],[16,canopyY,1],[39,0,-5],[37,-5,-38],[10,-5,-52],[-35,-5,-58],[-61,-5,-32]] as Point[])add({t:'camnode',p,grp:11});
 
 for(const batch of paint.values())surface('School architectural detail',batch.vertices,batch.indices,batch.color,batch.grp,{solid:false,tex:'solid',doubleSided:true,castShadow:false});
-export const SCHOOL_MIAMI_LEVEL:CustomLevelData={
+const SCHOOL_AUTHORING_LEVEL:CustomLevelData={
   v:1,name:'School · Miami',spawn:[.5,canopyY+.08,0],killY:-18,sky:'day',skatepark:true,
   keepPlayFog:true,
   atmosphere:{fogEnabled:true,fogNear:160,fogFar:340,fogColor:'#b3c1bc',backdrop:'fog',ambientSky:'#e0eced',ambientGround:'#7b8071',ambientIntensity:1.15,sunColor:'#fff0d1',sunIntensity:1.35,fillColor:'#a6c8d0',fillIntensity:.4,drawDistance:430,shadowStrength:.65},
   components:C,
   groups:['Campus foundation','Start and downhill routes','Classrooms','Drainage ditch and footbridges','Swimming pools','Long halfpipe and perimeter','Tables and street obstacles','Gym interior','Gym roof and secret-tape route','Service alley','Session recovery'].map((nm,i)=>({id:i+1,nm,editorOnly:true})),
 };
+
+// The source-image fit stays in its original authoring coordinates. The
+// playable campus is enlarged to suit our skater, at the user's request.
+// Scale data before building so visuals, collision, rail paths, camera lanes
+// and recovery points all use the same transform. Player tuning is untouched.
+export const SCHOOL_WORLD_SCALE = 2;
+export function schoolWorldPoint(p: readonly number[], scale = SCHOOL_WORLD_SCALE): Point {
+  return [p[0] * scale, p[1] * scale, p[2] * scale];
+}
+export function createSchoolMiamiLevel(scale = SCHOOL_WORLD_SCALE): CustomLevelData {
+  if (!Number.isFinite(scale) || scale <= 0) throw new Error('School scale must be positive');
+  const data = structuredClone(SCHOOL_AUTHORING_LEVEL);
+  data.spawn = schoolWorldPoint(data.spawn, scale);
+  data.killY *= scale;
+  for (const c of data.components) {
+    c.p = schoolWorldPoint(c.p, scale);
+    if (c.vertices) c.vertices = c.vertices.map(v => v * scale);
+    // A mesh's s is a dimensionless multiplier; other primitives use metres.
+    if (c.s && c.t !== 'mesh') c.s = schoolWorldPoint(c.s, scale);
+    if (c.pts) c.pts = c.pts.map(p => p.map((v, i) => i < 4 ? v * scale : v) as typeof p);
+    for (const key of ['len', 'rise', 'w', 'lipRise', 'deck', 'outerBank', 'radius', 'collisionHeight', 'range'] as const) {
+      if (c[key] !== undefined) c[key] *= scale;
+    }
+    if (c.to) c.to = schoolWorldPoint(c.to, scale);
+    if (c.cameraPosition) c.cameraPosition = schoolWorldPoint(c.cameraPosition, scale);
+    if (c.cameraTarget) c.cameraTarget = schoolWorldPoint(c.cameraTarget, scale);
+  }
+  if (data.atmosphere) for (const key of ['fogNear', 'fogFar', 'drawDistance'] as const) {
+    if (data.atmosphere[key] !== undefined) data.atmosphere[key] *= scale;
+  }
+  return data;
+}
+export const SCHOOL_MIAMI_LEVEL = createSchoolMiamiLevel();

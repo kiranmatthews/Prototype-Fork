@@ -1,14 +1,16 @@
+// Original-coordinate camera regression. Playable-scale camera samples live in test-school-scale.mjs.
 import assert from 'node:assert/strict';
 import { writeFile } from 'node:fs/promises';
 import { withSkateRuntime, makeInput } from './jungle-cup-harness.mjs';
 
 await withSkateRuntime(async ({ THREE, server, Level, Player, scene, TUNING, CONST }) => {
-  const { SCHOOL_MIAMI_LEVEL, SCHOOL_ROOF_AC } = await server.ssrLoadModule('/src/levels/school-miami.ts');
+  const { createSchoolMiamiLevel, SCHOOL_ROOF_AC } = await server.ssrLoadModule('/src/levels/school-miami.ts');
+  const SCHOOL_MIAMI_LEVEL=createSchoolMiamiLevel(1);
   const { SkateChaseCamera, SKATE_CAMERA } = await server.ssrLoadModule('/src/skateChaseCamera.ts');
   const level = new Level(scene, { id: 'school-miami', name: SCHOOL_MIAMI_LEVEL.name, data: SCHOOL_MIAMI_LEVEL });
   scene.updateMatrixWorld(true);
   const framing = { camDist:TUNING.parkCamDist, camHeight:TUNING.parkCamHeight, camPitch:TUNING.parkCamPitch, camFov:TUNING.parkCamFov };
-  const ray = new THREE.Raycaster(), report = { views:[], motion:[], recovery:[], drops:[], entrances:[], roofJumps:[], roofVents:[], roofEdges:[], roofRails:[], acJumps:[] };
+  const ray = new THREE.Raycaster(), report = { views:[], motion:[], recovery:[], drops:[], entrances:[], roofJumps:[], roofVents:[], roofEdges:[], roofRails:[], acJumps:[], acTransitions:[] };
   try {
     for (const [x,y,z] of [[44,0,-5],[42,-1,-15],[40,-2.5,-21],[38,-4.4,-30],[37,-5,-36],[45,3.4,4],[48.5,0,32]]) {
       ray.set(new THREE.Vector3(x,y+.3,z),new THREE.Vector3(0,-1,0));ray.far=2;
@@ -71,7 +73,7 @@ await withSkateRuntime(async ({ THREE, server, Level, Player, scene, TUNING, CON
       player.axisF.set(...h);player.axisL.set(h[2],0,-h[0]);player.freeSkate=true;player.speed=speed;
       player.groundHit=player.queryGround(level);player.pos.y=player.groundHit.y;player.prevPos.copy(player.pos);player.grounded=true;player.rideNormal.copy(player.groundHit.normal);
     };
-    const cameraTrials=schoolDetailTrials(player,level,place,CONST.fixedStep).filter(c=>c.name.startsWith('Skylight')||c.name.startsWith('Gym doorway')||c.name.startsWith('West pavilion')||c.name.startsWith('Roof joined vent')||c.name.startsWith('Roof west hip')||c.name.startsWith('Roof south')||c.name.startsWith('Roof short rail')||c.name.startsWith('Hill to AC'));
+    const cameraTrials=schoolDetailTrials(player,level,place,CONST.fixedStep).filter(c=>c.name.startsWith('Skylight')||c.name.startsWith('Gym doorway')||c.name.startsWith('West pavilion')||c.name.startsWith('Roof joined vent')||c.name.startsWith('Roof west hip')||c.name.startsWith('Roof south')||c.name.startsWith('Roof short rail')||c.name.startsWith('Hill to AC')||c.name.startsWith('AC transition'));
     for(const z of [SCHOOL_ROOF_AC.z,26]){
       let popped=false,air=false;
       cameraTrials.push({name:`AC roof air ${z}`,kind:'air',result:{},limit:240,
@@ -90,7 +92,10 @@ await withSkateRuntime(async ({ THREE, server, Level, Player, scene, TUNING, CON
         rig.update(camera,subject(),CONST.fixedStep,frame===0,level.groundMeshes,framing);camera.updateMatrixWorld(true);frames++;
         if(frame)maxStep=Math.max(maxStep,camera.position.distanceTo(previous));previous.copy(camera.position);
         minTrailing=Math.min(minTrailing,Math.hypot(camera.position.x-player.pos.x,camera.position.z-player.pos.z));
-        for(const h of [.1,1.5,3]){const point=player.pos.clone().add(new THREE.Vector3(0,h,0)).project(camera);maxCrop=Math.max(maxCrop,Math.abs(point.x),Math.abs(point.y));}
+        // On a quarter the body follows its surface normal. A world-up
+        // column would test empty space above the board during a wall ride.
+        const bodyUp=trial.name.startsWith('AC transition')?player.skateCameraUp:new THREE.Vector3(0,1,0);
+        for(const h of [.1,1.5,3]){const point=player.pos.clone().addScaledVector(bodyUp,h).project(camera);maxCrop=Math.max(maxCrop,Math.abs(point.x),Math.abs(point.y));}
         if(trial.observe()){complete=true;break;}
       }
       console.log(JSON.stringify({name:trial.name,frames,maxStep,minTrailing,maxCrop}));
@@ -99,8 +104,12 @@ await withSkateRuntime(async ({ THREE, server, Level, Player, scene, TUNING, CON
       // Hold the landed subject still to measure presentation recovery alone.
       for(let frame=0;frame<60;frame++)rig.update(camera,subject(),CONST.fixedStep,false,level.groundMeshes,framing);
       const restoredTrailing=Math.hypot(camera.position.x-player.pos.x,camera.position.z-player.pos.z);
-      assert.ok(Math.abs(restoredTrailing-framing.camDist)<.02,`${trial.name}: shot did not restore`);
-      (trial.name.startsWith('Skylight')?report.drops:trial.name.startsWith('Gym doorway')?report.entrances:trial.name.startsWith('West pavilion')?report.roofJumps:trial.name.startsWith('Roof joined vent')?report.roofVents:trial.name.startsWith('Roof short rail')?report.roofRails:(trial.name.startsWith('AC roof air')||trial.name.startsWith('Hill to AC'))?report.acJumps:report.roofEdges).push({name:trial.name,frames,maxStep,minTrailing,maxCrop,restoredTrailing,bails:0});
+      // A return into the narrow lane can finish while the body is still
+      // pitched from the wall. Its stationary shot is not the flat-ground
+      // preset; the following perimeter quarter begins immediately ahead.
+      if(!trial.name.startsWith('AC transition')||player.skateCameraUp.y>Math.cos(5*Math.PI/180))
+        assert.ok(Math.abs(restoredTrailing-framing.camDist)<.02,`${trial.name}: shot did not restore`);
+      (trial.name.startsWith('AC transition')?report.acTransitions:trial.name.startsWith('Skylight')?report.drops:trial.name.startsWith('Gym doorway')?report.entrances:trial.name.startsWith('West pavilion')?report.roofJumps:trial.name.startsWith('Roof joined vent')?report.roofVents:trial.name.startsWith('Roof short rail')?report.roofRails:(trial.name.startsWith('AC roof air')||trial.name.startsWith('Hill to AC'))?report.acJumps:report.roofEdges).push({name:trial.name,frames,maxStep,minTrailing,maxCrop,restoredTrailing,bails:0});
     }
     await writeFile('docs/performance/school-miami-camera.json',JSON.stringify(report,null,2)+'\n');
     console.log(`PASS ${report.views.length} School camera views and ceiling recovery at 30/60/120 Hz.`);

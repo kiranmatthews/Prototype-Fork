@@ -1,0 +1,325 @@
+{
+  "level": "school-miami",
+  "worldScale": 2,
+  "grounded": true,
+  "state": "ride",
+  "pos": [
+    52,
+    -10,
+    -78
+  ],
+  "speed": 0,
+  "components": 270,
+  "rails": 69,
+  "camera": {
+    "eye": [
+      52,
+      -4.9,
+      -72.95
+    ],
+    "trailing": 5.049999999999997,
+    "bodyBounds": {
+      "min": [
+        51.50117357969618,
+        -9.775285554905299,
+        -78.98425508189892
+      ],
+      "max": [
+        52.690440415465496,
+        -6.971049034024287,
+        -77.17947393256992
+      ]
+    }
+  },
+  "errors": [],
+  "checks": {
+    "worldScale": 2,
+    "running": false,
+    "stage": "Scaled checkpoint and fall recovery",
+    "passed": [
+      {
+        "name": "Native scaled canopy spawn",
+        "frames": 120,
+        "result": {}
+      },
+      {
+        "name": "Scaled downhill under awning",
+        "frames": 241,
+        "result": {
+          "waypoints": 5
+        }
+      },
+      {
+        "name": "Scaled gym doorway",
+        "frames": 298,
+        "result": {
+          "waypoints": 4
+        }
+      },
+      {
+        "name": "Scaled gym doorway return",
+        "frames": 298,
+        "result": {
+          "waypoints": 4
+        }
+      },
+      {
+        "name": "Scaled roof service hill",
+        "frames": 216,
+        "result": {
+          "waypoints": 12
+        }
+      },
+      {
+        "name": "Scaled roof vent crossing -1",
+        "frames": 111,
+        "result": {
+          "waypoints": 2
+        }
+      },
+      {
+        "name": "Scaled roof hip crossing -1",
+        "frames": 90,
+        "result": {
+          "waypoints": 2
+        }
+      },
+      {
+        "name": "Scaled Kicker Gap -1",
+        "frames": 142,
+        "result": {
+          "firstLanding": [
+            77.41987529701102,
+            -9.642990478726778,
+            -67.1068329370779
+          ]
+        }
+      },
+      {
+        "name": "Scaled roof vent crossing 1",
+        "frames": 112,
+        "result": {
+          "waypoints": 2
+        }
+      },
+      {
+        "name": "Scaled roof hip crossing 1",
+        "frames": 90,
+        "result": {
+          "waypoints": 2
+        }
+      },
+      {
+        "name": "Scaled Kicker Gap 1",
+        "frames": 142,
+        "result": {
+          "firstLanding": [
+            52.75226031905296,
+            -10,
+            -99.87968206182649
+          ]
+        }
+      },
+      {
+        "name": "Scaled Deep oval pool vert return",
+        "frames": 109,
+        "result": {
+          "landing": [
+            -123.01514465662379,
+            -10.982560003960796,
+            -66.53303872891827
+          ]
+        }
+      },
+      {
+        "name": "Scaled Square swimming pool vert return",
+        "frames": 129,
+        "result": {
+          "landing": [
+            -74.39491606848802,
+            -10.918782067700679,
+            -63.043380281690126
+          ]
+        }
+      },
+      {
+        "name": "Scaled AC roof air 23.7",
+        "frames": 159,
+        "result": {
+          "takeoff": {
+            "pos": [
+              121.18818199766702,
+              17.75886350174975,
+              47.4
+            ],
+            "speed": 16.85449810371877,
+            "vVel": 23.61367357778909
+          },
+          "firstLanding": [
+            95.34461823863177,
+            14.047977856915672,
+            47.4
+          ]
+        }
+      },
+      {
+        "name": "Scaled AC roof air 26",
+        "frames": 159,
+        "result": {
+          "takeoff": {
+            "pos": [
+              121.18818199766702,
+              17.75886350174975,
+              52
+            ],
+            "speed": 16.85449810371877,
+            "vVel": 23.61367357778909
+          },
+          "firstLanding": [
+            95.34461823863177,
+            13.999999988079072,
+            52
+          ]
+        }
+      },
+      {
+        "name": "Scaled Roof 2 Roof",
+        "frames": 149,
+        "result": {
+          "firstLanding": [
+            131,
+            14,
+            8.392164564819915
+          ]
+        }
+      },
+      {
+        "name": "Scaled AC transition west return",
+        "frames": 124,
+        "result": {
+          "air": true
+        }
+      },
+      {
+        "name": "Scaled AC transition south return",
+        "frames": 128,
+        "result": {
+          "air": true
+        }
+      },
+      {
+        "name": "Scaled short roof rail 1/-1",
+        "frames": 86,
+        "result": {
+          "grind": {
+            "frames": 86,
+            "grindFrames": 35,
+            "maxT": 9.62081077664455,
+            "minT": 0,
+            "progress": 9.62081077664455,
+            "direction": -1,
+            "maxBalance": 0.1,
+            "caught": true,
+            "landed": true
+          }
+        }
+      },
+      {
+        "name": "Scaled short roof rail 1/1",
+        "frames": 86,
+        "result": {
+          "grind": {
+            "frames": 86,
+            "grindFrames": 35,
+            "maxT": 9.62081077664455,
+            "minT": 0,
+            "progress": 9.62081077664455,
+            "direction": 1,
+            "maxBalance": 0.1,
+            "caught": true,
+            "landed": true
+          }
+        }
+      },
+      {
+        "name": "Scaled short roof rail 2/-1",
+        "frames": 86,
+        "result": {
+          "grind": {
+            "frames": 86,
+            "grindFrames": 36,
+            "maxT": 10.816653826391965,
+            "minT": 0,
+            "progress": 10.816653826391965,
+            "direction": -1,
+            "maxBalance": 0.1,
+            "caught": true,
+            "landed": true
+          }
+        }
+      },
+      {
+        "name": "Scaled short roof rail 2/1",
+        "frames": 90,
+        "result": {
+          "grind": {
+            "frames": 90,
+            "grindFrames": 39,
+            "maxT": 10.816653826391965,
+            "minT": 0,
+            "progress": 10.816653826391965,
+            "direction": 1,
+            "maxBalance": 0.1,
+            "caught": true,
+            "landed": true
+          }
+        }
+      },
+      {
+        "name": "Scaled complete downhill rail -1",
+        "frames": 831,
+        "result": {
+          "grind": {
+            "frames": 831,
+            "grindFrames": 806,
+            "maxT": 65.28227553960605,
+            "minT": 0,
+            "progress": 65.6905942183738,
+            "direction": -1,
+            "maxBalance": 0.12765551721599983,
+            "caught": true,
+            "landed": true
+          }
+        }
+      },
+      {
+        "name": "Scaled complete downhill rail 1",
+        "frames": 169,
+        "result": {
+          "grind": {
+            "frames": 169,
+            "grindFrames": 156,
+            "maxT": 65.6905942183738,
+            "minT": 0.3916813212322607,
+            "progress": 65.6905942183738,
+            "direction": 1,
+            "maxBalance": 0.1,
+            "caught": true,
+            "landed": true
+          }
+        }
+      },
+      {
+        "name": "Scaled checkpoint and fall recovery",
+        "frames": 184,
+        "result": {
+          "fallObserved": true,
+          "banked": true
+        }
+      }
+    ],
+    "failure": null,
+    "frames": 4349,
+    "tuningUnchanged": true
+  }
+}

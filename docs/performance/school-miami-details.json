@@ -108,7 +108,7 @@
       "name": "Registered AC top 0/0",
       "point": [
         54.7,
-        9.099999952316285,
+        9.099999904632568,
         23.7
       ]
     },
@@ -116,7 +116,7 @@
       "name": "Registered AC top -4/-3",
       "point": [
         50.7,
-        9.099999952316285,
+        9.099999904632568,
         20.7
       ]
     },
@@ -124,7 +124,7 @@
       "name": "Registered AC top -4/3",
       "point": [
         50.7,
-        9.099999952316285,
+        9.099999904632568,
         26.7
       ]
     },
@@ -132,7 +132,7 @@
       "name": "Registered AC top 4/-3",
       "point": [
         58.7,
-        9.099999952316285,
+        9.099999904632568,
         20.7
       ]
     },
@@ -140,16 +140,160 @@
       "name": "Registered AC top 4/3",
       "point": [
         58.7,
-        9.099999952316285,
+        9.099999904632568,
         26.7
       ]
     },
     {
-      "name": "Clear lane north of air conditioner",
+      "name": "Narrow flat lane north of air conditioner",
       "point": [
         54.7,
         6.999999994039536,
-        18.8
+        18.12
+      ]
+    },
+    {
+      "name": "AC north curved profile 0",
+      "point": [
+        54.7,
+        7,
+        18.25
+      ]
+    },
+    {
+      "name": "AC north curved profile 30",
+      "point": [
+        54.7,
+        7.161139277370449,
+        18.85
+      ]
+    },
+    {
+      "name": "AC north curved profile 60",
+      "point": [
+        54.7,
+        7.600651942468431,
+        19.289230484541328
+      ]
+    },
+    {
+      "name": "AC north curved profile 75",
+      "point": [
+        54.7,
+        7.890620796355206,
+        19.409110991546882
+      ]
+    },
+    {
+      "name": "AC west curved profile 0",
+      "point": [
+        48.25,
+        7,
+        21.3
+      ]
+    },
+    {
+      "name": "AC west curved profile 30",
+      "point": [
+        48.85,
+        7.16113819685546,
+        21.3
+      ]
+    },
+    {
+      "name": "AC west curved profile 60",
+      "point": [
+        49.28923048454133,
+        7.600653097229628,
+        21.3
+      ]
+    },
+    {
+      "name": "AC west curved profile 75",
+      "point": [
+        49.40911099154688,
+        7.890627688724844,
+        21.3
+      ]
+    },
+    {
+      "name": "AC south curved profile 0",
+      "point": [
+        57.5,
+        6.999999994039536,
+        29.15
+      ]
+    },
+    {
+      "name": "AC south curved profile 30",
+      "point": [
+        57.5,
+        7.161139061267452,
+        28.549999999999997
+      ]
+    },
+    {
+      "name": "AC south curved profile 60",
+      "point": [
+        57.5,
+        7.600651269088278,
+        28.11076951545867
+      ]
+    },
+    {
+      "name": "AC south curved profile 75",
+      "point": [
+        57.5,
+        7.890619417881284,
+        27.990889008453117
+      ]
+    },
+    {
+      "name": "AC rounded corner -1/10",
+      "point": [
+        48.80153800672534,
+        7.018592732930572,
+        18.80153800672533
+      ]
+    },
+    {
+      "name": "AC rounded corner -1/45",
+      "point": [
+        49.25419264196257,
+        7.35147233120854,
+        19.254192641962565
+      ]
+    },
+    {
+      "name": "AC rounded corner -1/75",
+      "point": [
+        49.47380788423323,
+        7.8906241170082865,
+        19.473807884233228
+      ]
+    },
+    {
+      "name": "AC rounded corner 1/10",
+      "point": [
+        48.80153800672534,
+        7.018592684978257,
+        28.598461993274668
+      ]
+    },
+    {
+      "name": "AC rounded corner 1/45",
+      "point": [
+        49.25419264196257,
+        7.351472040937098,
+        28.145807358037434
+      ]
+    },
+    {
+      "name": "AC rounded corner 1/75",
+      "point": [
+        49.47380788423323,
+        7.890623118261782,
+        27.92619211576677
       ]
     },
     {
@@ -681,20 +825,305 @@
     {
       "name": "Hill to AC continuous air and roof rollout",
       "kind": "air",
-      "frames": 282,
+      "frames": 271,
       "hillCleared": true,
       "air": true,
       "firstLanding": [
-        45.88753908628252,
-        8.241759721082463,
-        25.915464436929895
+        44.88298559890382,
+        8.155896412690543,
+        25.925137773911874
       ],
       "rollout": true,
       "bails": 0,
       "end": [
-        39.90378168873549,
+        39.874641322043125,
         6.999999994039536,
-        26.0549916581107
+        25.799853214506356
+      ]
+    },
+    {
+      "name": "AC transition north return 12",
+      "kind": "air",
+      "speed": 12,
+      "frames": 66,
+      "air": true,
+      "returned": true,
+      "rollout": true,
+      "maxY": 10.655772660629653,
+      "maxStep": 0.2823726363504728,
+      "bails": 0,
+      "end": [
+        54.7,
+        6.999999994039536,
+        18.072421975258866
+      ]
+    },
+    {
+      "name": "AC transition north return 16",
+      "kind": "air",
+      "speed": 16,
+      "frames": 78,
+      "air": true,
+      "returned": true,
+      "rollout": true,
+      "maxY": 12.52444906143914,
+      "maxStep": 0.34062979973439306,
+      "bails": 0,
+      "end": [
+        54.7,
+        6.999999994039536,
+        18.03517071264334
+      ]
+    },
+    {
+      "name": "AC transition west return 8",
+      "kind": "air",
+      "speed": 8,
+      "frames": 83,
+      "air": true,
+      "returned": true,
+      "rollout": true,
+      "maxY": 10.227520348132582,
+      "maxStep": 0.27001298093429,
+      "bails": 0,
+      "end": [
+        48.14758425947658,
+        6.999999994039536,
+        21.3
+      ]
+    },
+    {
+      "name": "AC transition west return 12",
+      "kind": "air",
+      "speed": 12,
+      "frames": 86,
+      "air": true,
+      "returned": true,
+      "rollout": true,
+      "maxY": 11.612945843199745,
+      "maxStep": 0.31066833929773396,
+      "bails": 0,
+      "end": [
+        48.19456475695391,
+        6.999999994039536,
+        21.3
+      ]
+    },
+    {
+      "name": "AC transition west return 16",
+      "kind": "air",
+      "speed": 16,
+      "frames": 94,
+      "air": true,
+      "returned": true,
+      "rollout": true,
+      "maxY": 13.465291325593157,
+      "maxStep": 0.3599717157447946,
+      "bails": 0,
+      "end": [
+        47.9371410378985,
+        6.999999994039536,
+        21.3
+      ]
+    },
+    {
+      "name": "AC transition west hip return 12",
+      "kind": "air",
+      "speed": 12,
+      "frames": 97,
+      "air": true,
+      "returned": true,
+      "rollout": true,
+      "maxY": 12.615221079365583,
+      "maxStep": 0.34750099211084773,
+      "bails": 0,
+      "end": [
+        48.012541061662255,
+        7.052666386243249,
+        26.47935917358637
+      ]
+    },
+    {
+      "name": "AC transition west hip return 16",
+      "kind": "air",
+      "speed": 16,
+      "frames": 102,
+      "air": true,
+      "returned": true,
+      "rollout": true,
+      "maxY": 14.36463076636857,
+      "maxStep": 0.38425787475282636,
+      "bails": 0,
+      "end": [
+        48.19443982204789,
+        7.006288451771201,
+        26.54596078982237
+      ]
+    },
+    {
+      "name": "AC transition south return 8",
+      "kind": "air",
+      "speed": 8,
+      "frames": 88,
+      "air": true,
+      "returned": true,
+      "rollout": true,
+      "maxY": 10.446384481739363,
+      "maxStep": 0.27842949750138746,
+      "bails": 0,
+      "end": [
+        57.5,
+        6.999999994039536,
+        29.307841028794968
+      ]
+    },
+    {
+      "name": "AC transition south return 12",
+      "kind": "air",
+      "speed": 12,
+      "frames": 90,
+      "air": true,
+      "returned": true,
+      "rollout": true,
+      "maxY": 11.777256088965476,
+      "maxStep": 0.3208141008708862,
+      "bails": 0,
+      "end": [
+        57.5,
+        6.999999994039536,
+        29.25422899215541
+      ]
+    },
+    {
+      "name": "AC transition south return 16",
+      "kind": "air",
+      "speed": 16,
+      "frames": 97,
+      "air": true,
+      "returned": true,
+      "rollout": true,
+      "maxY": 13.524946254028041,
+      "maxStep": 0.36896248898002076,
+      "bails": 0,
+      "end": [
+        57.5,
+        6.999999994039536,
+        29.504766524474753
+      ]
+    },
+    {
+      "name": "AC transition north low-speed rollback",
+      "kind": "ride",
+      "frames": 77,
+      "maxY": 8.89140203417133,
+      "rollout": true,
+      "maxLateral": 1.944833174956706,
+      "bails": 0,
+      "end": [
+        52.7551668250433,
+        7.006008808513875,
+        18.369489313700875
+      ]
+    },
+    {
+      "name": "AC transition north forward to top",
+      "kind": "air",
+      "speed": 12,
+      "frames": 65,
+      "air": true,
+      "firstLanding": [
+        54.7,
+        9.099999904632568,
+        26.02801775106286
+      ],
+      "rollout": true,
+      "bails": 0,
+      "end": [
+        54.7,
+        9.099999904632568,
+        26.88100602586624
+      ]
+    },
+    {
+      "name": "AC transition west forward to top",
+      "kind": "air",
+      "speed": 8,
+      "frames": 84,
+      "air": true,
+      "firstLanding": [
+        55.733351886066174,
+        9.099999904632568,
+        21.3
+      ],
+      "rollout": true,
+      "bails": 0,
+      "end": [
+        56.56980070501725,
+        9.099999904632568,
+        21.3
+      ]
+    },
+    {
+      "name": "AC transition south forward to top",
+      "kind": "air",
+      "speed": 8,
+      "frames": 88,
+      "air": true,
+      "firstLanding": [
+        57.5,
+        9.099999904632568,
+        21.274677899582308
+      ],
+      "rollout": true,
+      "bails": 0,
+      "end": [
+        57.5,
+        9.099999904632568,
+        20.40982781771912
+      ]
+    },
+    {
+      "name": "AC transition complete coping -1",
+      "kind": "grind",
+      "side": -1,
+      "grind": {
+        "frames": 196,
+        "grindFrames": 155,
+        "maxT": 29.34542668961408,
+        "minT": 0,
+        "progress": 29.34542668961408,
+        "direction": 1,
+        "maxBalance": 0.1,
+        "caught": true,
+        "landed": true
+      },
+      "bails": 0,
+      "end": [
+        65.06890057968374,
+        6.999999994039536,
+        27.95
+      ]
+    },
+    {
+      "name": "AC transition complete coping 1",
+      "kind": "grind",
+      "side": 1,
+      "grind": {
+        "frames": 221,
+        "grindFrames": 182,
+        "maxT": 29.34542668961408,
+        "minT": 0,
+        "progress": 29.34542668961408,
+        "direction": -1,
+        "maxBalance": 0.1,
+        "caught": true,
+        "landed": true
+      },
+      "bails": 0,
+      "end": [
+        64.30870565584453,
+        6.999999994039536,
+        19.45
       ]
     },
     {
@@ -1760,5 +2189,7 @@
       ]
     }
   ],
-  "tuningUnchanged": true
+  "tuningUnchanged": true,
+  "worldScale": 1,
+  "validationContext": "Original authoring coordinates; current playable-scale checks are in school-miami-scale.json."
 }

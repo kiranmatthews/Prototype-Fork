@@ -1,9 +1,10 @@
+// Original-coordinate authoring regression. Run test-school-scale.mjs for the playable scaled campus.
 import assert from 'node:assert/strict';
 import {writeFile} from 'node:fs/promises';
 import {withSkateRuntime,makeInput} from './jungle-cup-harness.mjs';
 
 await withSkateRuntime(async({THREE,server,Level,Player,scene,CONST,TUNING})=>{
-  const m=await server.ssrLoadModule('/src/levels/school-miami.ts'),before=JSON.stringify(TUNING);
+  const source=await server.ssrLoadModule('/src/levels/school-miami.ts'),m={...source,SCHOOL_MIAMI_LEVEL:source.createSchoolMiamiLevel(1)},before=JSON.stringify(TUNING);
   const l=new Level(scene,{id:'school-miami',name:m.SCHOOL_MIAMI_LEVEL.name,data:m.SCHOOL_MIAMI_LEVEL});scene.updateMatrixWorld(true);
   const p=new Player(scene);p.endlessDeaths=true;const report={support:[],trials:[],tuningUnchanged:false};
   const place=(q,h,speed)=>{
@@ -12,7 +13,7 @@ await withSkateRuntime(async({THREE,server,Level,Player,scene,CONST,TUNING})=>{
     p.groundHit=p.queryGround(l);assert.ok(p.groundHit,'Detail approach has no ground');p.pos.y=p.groundHit.y;p.prevPos.copy(p.pos);p.grounded=true;p.rideNormal.copy(p.groundHit.normal);
   };
   try{
-    const ray=new THREE.Raycaster(),near=(name,q,y,from=y+1)=>{ray.set(new THREE.Vector3(q[0],from,q[2]),new THREE.Vector3(0,-1,0));ray.far=15;const hit=ray.intersectObjects(l.groundMeshes,false)[0];assert.ok(hit&&Math.abs(hit.point.y-y)<.06,`${name}: ${hit?.point.y} expected ${y}`);assert.ok(hit.face.normal.y>.1,`${name}: support faces down`);report.support.push({name,point:hit.point.toArray()});};
+    const ray=new THREE.Raycaster(),near=(name,q,y,from=y+1,meshes=l.groundMeshes)=>{ray.set(new THREE.Vector3(q[0],from,q[2]),new THREE.Vector3(0,-1,0));ray.far=15;const hit=ray.intersectObjects(meshes,false)[0];assert.ok(hit&&Math.abs(hit.point.y-y)<.06,`${name}: ${hit?.point.y} expected ${y}`);assert.ok(hit.face.normal.y>.1,`${name}: support faces down`);report.support.push({name,point:hit.point.toArray()});};
     for(const x of [-3,0,4])near(`West pavilion supported roof ${x}`,[x,0,12.5],m.SCHOOL_WEST_ANNEX.y,5);
     for(const x of [8,13,19])near(`Closed passage supported roof ${x}`,[x,0,14],m.SCHOOL_WEST_PASSAGE.y,5);
     near('Upper court checkpoint clear of pavilion',[6,0,9],0,3.1);
@@ -24,7 +25,22 @@ await withSkateRuntime(async({THREE,server,Level,Player,scene,CONST,TUNING})=>{
     near('Roof checkpoint clear of joined vent',m.SCHOOL_CHECKPOINTS[3],7,9);
     const ac=m.SCHOOL_ROOF_AC;
     for(const [dx,dz] of [[0,0],[-4,-3],[-4,3],[4,-3],[4,3]])near(`Registered AC top ${dx}/${dz}`,[ac.x+dx,0,ac.z+dz],ac.top,11);
-    near('Clear lane north of air conditioner',[54.7,0,18.8],7,9);
+    near('Narrow flat lane north of air conditioner',[54.7,0,18.12],7,9);
+    for(const [name,toe,h] of [
+      ['north',[54.7,7,18.25],[0,0,1]],['west',[48.25,7,21.3],[1,0,0]],['south',[57.5,7,29.15],[0,0,-1]],
+    ])for(const angle of [0,30,60,75]){
+      const rad=angle*Math.PI/180,d=ac.transition*Math.sin(rad),y=7+ac.transition*(1-Math.cos(rad));
+      near(`AC ${name} curved profile ${angle}`,[toe[0]+h[0]*d,0,toe[2]+h[2]*d],y,11);
+    }
+    for(const side of [-1,1])for(const angle of [10,45,75]){
+      const theta=side===-1?-3*Math.PI/4:-5*Math.PI/4,phi=angle*Math.PI/180;
+      const radius=ac.corner+ac.transition*(1-Math.sin(phi));
+      near(`AC rounded corner ${side}/${angle}`,[ac.x-ac.width/2+ac.corner+radius*Math.cos(theta),0,
+        ac.z+side*(ac.depth/2-ac.corner)+radius*Math.sin(theta)],7+ac.transition*(1-Math.cos(phi)),11,
+        l.groundMeshes.filter(o=>o.userData.vertComp?.nm==='Air conditioner · three-sided transition and top coping'));
+    }
+    const acCoping=l.rails.find(r=>r.points[0].distanceTo(new THREE.Vector3(ac.x+ac.width/2,ac.top+.05,ac.z-ac.depth/2))<.1);
+    assert.ok(acCoping&&acCoping.points.every(q=>Math.abs(q.y-ac.top-.05)<.001),'AC coping must follow the unit top, not the lower curve join');
     near('Roof 2 Roof approach east of kicker',[65.5,0,23],7,9);
     near('Air conditioner west landing clear roof',[43,0,23.7],7,9);
     for(const [i,points] of m.SCHOOL_ROOF_FLAT_RAILS.entries())for(const t of [-.3,0,.5,1,1.3]){

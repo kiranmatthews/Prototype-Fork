@@ -1,6 +1,6 @@
 {
-  "components": 269,
-  "rails": 68,
+  "components": 270,
+  "rails": 69,
   "support": [
     {
       "label": "start canopy",
@@ -890,5 +890,7 @@
       "kickerAir": true,
       "kickerLanded": true
     }
-  ]
+  ],
+  "worldScale": 1,
+  "validationContext": "Authoring-coordinate evidence collected before the user-requested world enlargement. Current playable-scale evidence is school-miami-scale.json."
 }

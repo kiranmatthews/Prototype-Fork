@@ -3,6 +3,8 @@ import {createSchoolCircuit} from './school-circuit';
 import {createBalancedGrind,createRoofMiniGap,createPerimeterMiniGap} from './school-grind-lines';
 import {CONST} from '../src/tuning';
 import {schoolDetailTrials} from './school-detail-lines';
+import {SCHOOL_WORLD_SCALE} from '../src/levels/school-miami';
+import {runSchoolScaleBrowserChecks} from './school-scale-lines';
 import {schoolStreetTrials,createStreetTransfer,parkGapRails,createParkGap,miniGapRails} from './school-street-transfers';
 import {hallPassRails,lawnTransferRails,upperPlanterRails,createHallPass,createUpperPlanterChain,createLawnTransfer,classroomTransferRails,createClassroomTransfer} from './school-planter-lines';
 type Point=[number,number,number];
@@ -10,7 +12,8 @@ type Trial={name:string;init:()=>void;input:(n:number)=>any;done:(n:number)=>boo
 
 /** Drives the real frame loop with ordinary controller samples. Placements
  * isolate each feature; motion within a case never edits position/velocity. */
-export function runSchoolBrowserChecks(g:any){
+export function runSchoolBrowserChecks(g:any,prefix=''){
+  if(Number(SCHOOL_WORLD_SCALE)!==1)return runSchoolScaleBrowserChecks(g,prefix);
   const p=g.player,l=g.getLevel(),input=g.input,oldStep=p.step,oldPoll=input.pollGamepad,update=input.update.bind(input);
   const report:any={running:true,stage:'',passed:[],failure:null,frames:0,tuningBefore:JSON.stringify(g.TUNING)};
   let sample:any={},frame=0,trialIndex=0,air=false,popped=false,waypoint=1,dead=false,banked=false;
@@ -100,6 +103,7 @@ export function runSchoolBrowserChecks(g:any){
       dead||=p.state==='dead';report.fallObserved=dead;return dead&&p.state==='ride'&&p.grounded&&p.pos.distanceTo(l.checkpoints[1].spawnPos)<2;
     }},
   ];
+  if(prefix)trials.splice(0,trials.length,...trials.filter(c=>c.name.startsWith(prefix)));
   const stop=(failure:string|null)=>{p.step=oldStep;input.pollGamepad=oldPoll;report.running=false;report.failure=failure;report.tuningUnchanged=report.tuningBefore===JSON.stringify(g.TUNING);delete report.tuningBefore;p.speed=0;};
   const next=()=>{frame=0;sample={};if(trialIndex>=trials.length){stop(null);return;}report.stage=trials[trialIndex].name;trials[trialIndex].init();};
   input.pollGamepad=()=>{

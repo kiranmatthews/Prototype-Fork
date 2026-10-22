@@ -47,6 +47,68 @@ export function schoolDetailTrials(p:any,l:any,place:Place,dt:number):DetailTria
       },
     });
   }
+  const ac=SCHOOL_ROOF_AC,acSides=[
+    {name:'north',q:[54.7,7.1,18.12],h:[0,0,1],toe:[54.7,7,18.25]},
+    {name:'west',q:[45,7.1,21.3],h:[1,0,0],toe:[48.25,7,21.3]},
+    {name:'west hip',q:[44.5,8.5,26],h:[1,0,0],toe:[48.25,7,26]},
+    {name:'south',q:[57.5,7.1,33],h:[0,0,-1],toe:[57.5,7,29.15]},
+  ];
+  for(const c of acSides)for(const speed of c.name==='west'||c.name==='south'?[8,12,16]:[12,16]){
+    const result={speed,frames:0,air:false,returned:false,rollout:false,maxY:7,maxStep:0};let previous=p.pos.clone();
+    trials.push({name:`AC transition ${c.name} return ${speed}`,kind:'air',result,limit:220,
+      init:()=>{place(c.q as Point,c.h as Point,speed);previous.copy(p.pos);},
+      sample:frame=>({jumpHeld:true,jumpPressed:frame===0}),
+      observe:()=>{result.frames++;result.maxY=Math.max(result.maxY,p.pos.y);result.maxStep=Math.max(result.maxStep,previous.distanceTo(p.pos));previous.copy(p.pos);
+        if(p.vertAir&&!result.air){
+          if(p.vertNormal.x*c.h[0]+p.vertNormal.z*c.h[2]>-.95)throw Error('AC return launched from another quarter');
+          result.air=true;
+        }
+        result.returned||=result.air&&p.grounded;
+        const depth=(p.pos.x-c.toe[0])*c.h[0]+(p.pos.z-c.toe[2])*c.h[2];
+        result.rollout=result.returned&&p.grounded&&depth<-.05&&p.pos.y<8.3&&p.speed>3;
+        if(result.maxStep>.8)throw Error('AC return snapped the skater');
+        return result.rollout;
+      },
+    });
+  }
+  {
+    const c=acSides[0],result={frames:0,maxY:7,rollout:false,maxLateral:0};
+    trials.push({name:'AC transition north low-speed rollback',kind:'ride',result,limit:110,
+      init:()=>place(c.q as Point,c.h as Point,8),sample:frame=>({jumpHeld:true,jumpPressed:frame===0}),
+      observe:()=>{result.frames++;result.maxY=Math.max(result.maxY,p.pos.y);result.maxLateral=Math.max(result.maxLateral,Math.abs(p.pos.x-c.q[0]));
+        if(!p.grounded||result.maxLateral>3)throw Error('AC low-speed rollback left its curved side');
+        result.rollout=result.maxY>8.2&&p.pos.y<7.06&&p.pos.z<18.4;return result.rollout;
+      },
+    });
+  }
+  for(const [index,speed] of [[0,12],[1,8],[3,8]]){
+    const c=acSides[index],result={speed,frames:0,air:false,firstLanding:null as number[]|null,rollout:false};let popped=false;
+    trials.push({name:`AC transition ${c.name} forward to top`,kind:'air',result,limit:160,
+      init:()=>place(c.q as Point,c.h as Point,speed),
+      sample:frame=>{const release=!popped&&p.grounded&&p.rideNormal.y<.15;if(release)popped=true;return{moveY:1,jumpHeld:!popped,jumpPressed:frame===0,jumpReleased:release};},
+      observe:()=>{result.frames++;result.air||=p.vertAir;
+        if(!result.air||!p.grounded)return false;
+        if(Math.abs(p.pos.y-ac.top)>.06)throw Error('AC forward exit missed the unit top');
+        result.firstLanding??=p.pos.toArray();
+        result.rollout=(p.pos.x-result.firstLanding![0])*c.h[0]+(p.pos.z-result.firstLanding![2])*c.h[2]>.7;
+        return result.rollout;
+      },
+    });
+  }
+  for(const side of [-1,1]){
+    const rail=l.rails.find((r:any)=>r.points[0].distanceTo(p.pos.clone().set(ac.x+ac.width/2,ac.top+.05,ac.z-ac.depth/2))<.1);
+    if(!rail)throw Error('AC continuous top coping missing');
+    const result:any={side};let line:ReturnType<typeof createBalancedGrind>;
+    trials.push({name:`AC transition complete coping ${side}`,kind:'grind',result,limit:350,
+      init:()=>{place([63.3,7.5,ac.z+side*ac.depth/2],[-1,0,0],12);if(p.balanceBoostT||p.uberTimer)throw Error('AC coping has an assist');line=createBalancedGrind(p,rail,dt);result.grind=line.report;},
+      sample:()=>line.sample(),observe:()=>{
+        if(p.state==='grind'&&p.grindRail!==rail)throw Error('AC coping approach caught another rail');
+        if(!line.observe())return false;
+        if(line.report.minT>.1||line.report.maxT<rail.totalLength-.1||Math.abs(p.pos.y-7)>.06||p.pos.x<63.5)throw Error('AC coping missed its complete path or east roof rollout');
+        return true;
+      },
+    });
+  }
   const roofLines=[
     ...[12,16].map(speed=>({name:'Roof joined vent',axis:'x',speed,start:[58.3,7.1,40.5],end:[70.4,7.1,40.5],crest:7.65})),
     ...[62.6,67.1].map(x=>({name:'Roof joined vent',axis:'z',speed:16,start:[x,7.1,35.8],end:[x,7.1,45],crest:7.65})),

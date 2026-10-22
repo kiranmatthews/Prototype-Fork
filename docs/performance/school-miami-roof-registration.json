@@ -164,7 +164,10 @@
         23.7
       ],
       "width": 10.5,
-      "depth": 8.5
+      "depth": 8.5,
+      "transitionRadius": 1.2,
+      "verticalExtension": 0.9,
+      "westCornerRadius": 0.18
     },
     "eastKicker": {
       "centre": [
@@ -260,6 +263,13 @@
     "The shortened plank uses the same rounded path for visible support and grind collision. A sharp compound bend ejected the native grind; the 1.3m corner trim completes all 15.775m and lands on the awning.",
     "Roof 2 Roof, skylight drops, all vent/hip crossings and camera clearance are rechecked after the common placement change.",
     "Sixteenth iteration: the close source roof crop and original 2:07 footage place short freestanding rails on the open west roof. Removed the invented AC-kicker rail, which sat up to 0.487m below the riding surface. The two source rails pass grounded approaches, complete grinds and roof rollouts in both directions, with an inferred 0.65m bar height.",
-    "Seventeenth iteration: the original supplied image grid resolves a compact east kicker next to the unit. Its inferred run is 2.8m with a 0.75m gap, replacing the earlier 5.8m run / 2.65m gap. The Roof 2 Roof approach now uses clear roof east of the kicker at X=65.5. A continuous native hill/turn/AC/hip/roof route completes in 282 frames without resets, injected motion or bails. The supplied low-resolution pixel landmarks are approximate; original world dimensions remain unverified."
-  ]
+    "Seventeenth iteration: the original supplied image grid resolves a compact east kicker next to the unit. Its inferred run is 2.8m with a 0.75m gap, replacing the earlier 5.8m run / 2.65m gap. The Roof 2 Roof approach now uses clear roof east of the kicker at X=65.5. A continuous native hill/turn/AC/hip/roof route completes in 282 frames without resets, injected motion or bails. The supplied low-resolution pixel landmarks are approximate; original world dimensions remain unverified.",
+    "Eighteenth iteration: add the visible curved lower north/west/south sides continuing vertically to the unit top. Radius 1.2m, vertical extension 0.9m and small 0.18m west corners are inferred. One 29.345m top coping follows the three sides. Native air returns, low-speed rollback, forward landings and complete grinds are tested without changing skater movement. The later port supports this topology only."
+  ],
+  "userScaleIteration": {
+    "worldScale": 2,
+    "kickerXAuthoring": 61.7,
+    "kickerToUnitWorldGap": 0.7,
+    "note": "Gameplay adjustment after user requested 2\u20133x enlargement; source dimensions remain inferred."
+  }
 }
