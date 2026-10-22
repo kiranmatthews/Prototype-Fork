@@ -53,6 +53,7 @@ export interface PlayerAnimationRig {
 }
 
 export interface PlayerAnimationOverlayContext {
+  /** Resolved on first access and retained for this callback. */
   readonly rig: PlayerAnimationRig;
   readonly deltaSeconds: number;
   /**
@@ -199,6 +200,41 @@ function parseDeformation(value: unknown): IndependentSegmentDeformation | null 
   };
 }
 
+function resolveRigJointNodes(
+  root: THREE.Group,
+  declaredJoints: Record<string, unknown>,
+): Map<string, THREE.Object3D> {
+  const jointEntries = Object.entries(declaredJoints);
+  const requestedNames = new Set(jointEntries.map(([, name]) => name).filter((name): name is string => typeof name === 'string'));
+  const nodesByName = new Map<string, THREE.Object3D>();
+  // Match getObjectByName's first depth-first result, while walking the live
+  // hierarchy once instead of once per joint. Rebuild on every resolution so
+  // late-loaded parts, editor renames/reparenting and metadata edits stay live.
+  root.traverse((node) => {
+    if (requestedNames.has(node.name) && !nodesByName.has(node.name))
+      nodesByName.set(node.name, node);
+  });
+  const liveById = new Map<string, THREE.Object3D>();
+  for (const [id, declaredName] of jointEntries) {
+    if (typeof declaredName !== 'string') continue;
+    const node = nodesByName.get(declaredName);
+    if (node) liveById.set(id, node);
+  }
+  return liveById;
+}
+
+function resolveRigDeformations(
+  value: unknown,
+  joints: ReadonlyMap<string, THREE.Object3D>,
+): IndependentSegmentDeformation[] {
+  return (Array.isArray(value)
+    ? value.map(parseDeformation).filter((item): item is IndependentSegmentDeformation => item !== null)
+    : []
+  ).filter(
+    (policy) => joints.has(policy.jointId) && policy.downstreamJointIds.every((id) => joints.has(id)),
+  );
+}
+
 /** Resolve serializable sculpt metadata into live, semantically addressed nodes. */
 export function resolvePlayerAnimationRig(root: THREE.Group): PlayerAnimationRig {
   const runtime = (root.userData.sculptRuntime ?? {}) as SculptRuntimeMetadata;
@@ -218,23 +254,7 @@ export function resolvePlayerAnimationRig(root: THREE.Group): PlayerAnimationRig
       }
     }
   }
-
-  const jointEntries = Object.entries(declaredJoints);
-  const requestedNames = new Set(jointEntries.map(([, name]) => name).filter((name): name is string => typeof name === 'string'));
-  const nodesByName = new Map<string, THREE.Object3D>();
-  // Match getObjectByName's first depth-first result, while walking the live
-  // hierarchy once instead of once per joint. Rebuild on every resolution so
-  // late-loaded parts, editor renames/reparenting and metadata edits stay live.
-  root.traverse((node) => {
-    if (requestedNames.has(node.name) && !nodesByName.has(node.name))
-      nodesByName.set(node.name, node);
-  });
-  const liveById = new Map<string, THREE.Object3D>();
-  for (const [id, declaredName] of jointEntries) {
-    if (typeof declaredName !== 'string') continue;
-    const node = nodesByName.get(declaredName);
-    if (node) liveById.set(id, node);
-  }
+  const liveById = resolveRigJointNodes(root, declaredJoints);
   const idByNode = new Map<THREE.Object3D, string>();
   for (const [id, node] of liveById) idByNode.set(node, id);
 
@@ -272,14 +292,7 @@ export function resolvePlayerAnimationRig(root: THREE.Group): PlayerAnimationRig
     });
   }
   const jointsById = new Map(joints.map((joint) => [joint.id, joint]));
-  const deformations = (Array.isArray(runtime.deformations)
-    ? runtime.deformations.map(parseDeformation).filter((item): item is IndependentSegmentDeformation => item !== null)
-    : []
-  ).filter(
-    (policy) =>
-      jointsById.has(policy.jointId) &&
-      policy.downstreamJointIds.every((id) => jointsById.has(id)),
-  );
+  const deformations = resolveRigDeformations(runtime.deformations, liveById);
   return {
     schemaVersion: Number.isFinite(runtime.schemaVersion) ? Number(runtime.schemaVersion) : 1,
     rigId: typeof runtime.rigId === 'string' ? runtime.rigId : 'player.procedural',
@@ -392,8 +405,12 @@ export class PlayerAnimationBridge {
     captureHierarchy(this.playerRoot, this.overlayBaseline);
     this.overlayBaselineApplied = true;
     try {
+      const bridge = this;
+      let rig: PlayerAnimationRig | undefined;
       this.overlay({
-        rig: this.rig,
+        // Most runtime samplers already own their binding. Build the public
+        // snapshot only if an overlay requests it, once for that callback.
+        get rig() { return rig ??= bridge.rig; },
         deltaSeconds,
         applyDeformations: (values) => this.applyDeformations(values),
       });
@@ -414,7 +431,12 @@ export class PlayerAnimationBridge {
     this.restoreDeformationStates();
     this.deformationValues = { ...values };
 
-    const rig = this.rig;
+    // Elastic modifiers need live nodes and length policies, not the full
+    // authoring snapshot (rest tuples, mirror links and semantic parents).
+    // Resolve afresh so editor changes and late-loaded parts remain visible.
+    const runtime = (this.rigRoot.userData.sculptRuntime ?? {}) as SculptRuntimeMetadata;
+    const joints = resolveRigJointNodes(this.rigRoot, isRecord(runtime.joints) ? runtime.joints : {});
+    const deformations = resolveRigDeformations(runtime.deformations, joints);
     const visualStates = new Map<THREE.Object3D, AppliedDeformationState>();
     const endpointStates = new Map<THREE.Object3D, AppliedDeformationState>();
     const axis = new THREE.Vector3();
@@ -448,7 +470,7 @@ export class PlayerAnimationBridge {
       return state;
     };
 
-    for (const policy of rig.deformations) {
+    for (const policy of deformations) {
       const raw = values[policy.controlId] ?? 1;
       const lengthScale = THREE.MathUtils.clamp(
         Number.isFinite(raw) ? raw : 1,
@@ -461,7 +483,7 @@ export class PlayerAnimationBridge {
         policy.volume === 'preserve-cross-section-area'
           ? 1 / Math.sqrt(lengthScale)
           : 1;
-      const anchor = rig.jointsById.get(policy.jointId)?.node;
+      const anchor = joints.get(policy.jointId);
       if (!anchor) continue;
 
       // A stretchable cartoon bone is one semantic visual component nested
@@ -553,7 +575,7 @@ export class PlayerAnimationBridge {
       }
 
       for (const endpointId of policy.downstreamJointIds) {
-        const endpoint = rig.jointsById.get(endpointId)?.node;
+        const endpoint = joints.get(endpointId);
         if (!endpoint || endpoint.parent !== anchor) continue;
         const state = stateFor(endpointStates, endpoint, false);
         offset.copy(state.basePosition);
@@ -570,8 +592,8 @@ export class PlayerAnimationBridge {
     // semantic bones provide its longitudinal deformation. Apply only the
     // matching cross-section correction here; scaling Y would double-stretch
     // the skin and scaling a joint would contaminate every descendant.
-    const torso = rig.root.getObjectByName('meshy-torso-surface');
-    const torsoPolicy = rig.deformations.find(
+    const torso = this.rigRoot.getObjectByName('meshy-torso-surface');
+    const torsoPolicy = deformations.find(
       (policy) => policy.controlId === 'deform.torso.length',
     );
     if (torso && torsoPolicy) {

@@ -13,7 +13,7 @@ const source = await readFile(new URL('./test-campaign-death-flow.mjs', import.m
 const ast = ts.createSourceFile('fixture.mjs', source, ts.ScriptTarget.Latest, true);
 const dom = ast.statements.find(n => ts.isFunctionDeclaration(n) && n.name?.text === 'installHeadlessDom');
 new Function('noop', dom.getText(ast) + '; installHeadlessDom();')(() => {});
-const replaced = new Set(['src/player.ts', 'src/character/bailMotion.ts', 'src/character/bailGroundContact.ts', 'src/character/bailImpactSpin.ts', 'src/character/bailRecoveryMotion.ts', 'src/character/interactionBounds.ts', 'src/character/proportionLayer.ts', 'src/character/wipeoutPolicy.ts']);
+const replaced = new Set(['src/player.ts', 'src/animation/bridge.ts', 'src/character/bailMotion.ts', 'src/character/bailGroundContact.ts', 'src/character/bailImpactSpin.ts', 'src/character/bailRecoveryMotion.ts', 'src/character/interactionBounds.ts', 'src/character/proportionLayer.ts', 'src/character/wipeoutPolicy.ts']);
 const server = await createServer({ appType: 'custom', logLevel: 'silent', server: { middlewareMode: true },
   plugins: snapshot ? [{ name: 'bail-source-snapshot', enforce: 'pre', async load(id) {
     const rel = path.relative(process.cwd(), id.split('?')[0]);
@@ -46,6 +46,7 @@ try {
   const appearanceProfile = process.argv.includes('--appearance-profile');
   const boundsProfile = process.argv.includes('--bounds-profile');
   const jointLimitProfile = process.argv.includes('--joint-limit-profile');
+  const rigProfile = process.argv.includes('--rig-profile');
   const poseChecksums = process.argv.includes('--pose-checksum');
   const traceImpacts = process.argv.includes('--impact-trace');
   const poseNodes = [];
@@ -74,6 +75,16 @@ try {
     const frames = [], incidents = [], triggers = [], durations = []; let fullScans = 0, count = false;
     const supportTimes = []; let supportSamples = 0;
     const appearanceTimes = []; let appearanceCalls = 0, nameSearches = 0, transformClones = 0;
+    let rigSnapshots = 0, rigJointRecords = 0, rigRestTuples = 0;
+    const bridge = p.playerAnimationBridge;
+    const resolveRig = Object.getOwnPropertyDescriptor(Object.getPrototypeOf(bridge), 'rig').get;
+    if (rigProfile) Object.defineProperty(bridge, 'rig', { configurable:true, get() {
+      const rig = resolveRig.call(this);
+      if (count && p.isBailing) {
+        rigSnapshots++; rigJointRecords += rig.joints.length; rigRestTuples += rig.joints.length * 3;
+      }
+      return rig;
+    } });
     const jointLimits = new Map(), applyJoint = p.bailMotion.apply.bind(p.bailMotion);
     if (jointLimitProfile) p.bailMotion.apply = (joint, node, weight) => {
       const angle = node?.rotation.x, intended = angle + p.bailMotion.angles[joint * 3] * weight;
@@ -181,6 +192,7 @@ try {
     p.interactionMeasure.sampledPlaneDistance = support;
     p.interactionMeasure.localBounds = localBounds;
     p.bailMotion.apply = applyJoint;
+    if (rigProfile) delete bridge.rig;
     p.characterProportionLayer.apply = appearance; p.bodyGroup.getObjectByName = lookup;
     p.kickRagdollContact = kickContact;
     THREE.Vector3.prototype.clone = vectorClone; THREE.Quaternion.prototype.clone = quaternionClone;
@@ -189,6 +201,7 @@ try {
       appearance: appearanceTimes.length ? { cpuMs: stats(appearanceTimes), calls: appearanceCalls, nameSearches, transformClones } : undefined,
       bounds: boundsProfile ? { calls:boundsCalls, newRecords:boundsRecords, newBoxes:boundsBoxes } : undefined,
       jointLimits: jointLimitProfile ? [...jointLimits.values()] : undefined,
+      rig: rigProfile ? { snapshots:rigSnapshots, jointRecords:rigJointRecords, restTuples:rigRestTuples } : undefined,
       poseChecksum: poseHash?.digest('hex'), gameplayChecksum:gameplayHash?.digest('hex'), impacts: traceImpacts ? impacts : undefined });
   }
   console.log(JSON.stringify({ source: snapshot ? 'initial working tree snapshot' : 'current working tree', warmupsPerCase: 8, measuredIncidentsPerCase: 24,

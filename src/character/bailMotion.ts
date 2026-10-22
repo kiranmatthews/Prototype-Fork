@@ -261,30 +261,32 @@ export class BailMotion {
           const lo = axis === 0 ? this.lower[joint] : -limit;
           const hi = axis === 0 ? this.upper[joint] : limit;
           const hinge = axis === 0 && (joint === 3 || joint === 6 || joint === 9 || joint === 12);
+          let angle = this.angles[i], velocity = this.velocity[i];
           if (this.impactDelay[joint] === 0 && this.impactWave[i] !== 0) {
-            this.velocity[i] += this.impactWave[i]; this.impactWave[i] = 0;
+            velocity += this.impactWave[i]; this.impactWave[i] = 0;
           }
           const chain = parent >= 0 ? this.velocity[parent * 3 + axis] * .7 : 0;
           const target = Math.max(lo, Math.min(hi, clamp(this.bias[i] + this.frameTarget[axis] * limit, limit) * recover));
           // Hanging limbs carry through a braking torso; upward spine/head
           // respond oppositely. No clip clock or pose needs to restart.
-          const force = stiffness * (target - this.angles[i]) + chain + inertia[axis] * limit;
-          this.velocity[i] = clamp((this.velocity[i] + force * h) * damping, 22);
+          const force = stiffness * (target - angle) + chain + inertia[axis] * limit;
+          velocity = clamp((velocity + force * h) * damping, 22);
           if (hinge) {
             // A small compliant stop slows only motion into the boundary.
             // Inward motion is free immediately; there is no dead interval
             // hidden behind a rendering clamp after a later bounce.
             const margin = Math.min(.18, (hi - lo) * .2);
-            const gap = this.velocity[i] < 0 ? this.angles[i] - lo : hi - this.angles[i];
+            const gap = velocity < 0 ? angle - lo : hi - angle;
             const load = margin > 0 ? Math.max(0, 1 - Math.max(0, gap) / margin) : 1;
-            this.velocity[i] /= 1 + load * load * 24 * h;
+            velocity /= 1 + load * load * 24 * h;
           }
-          this.angles[i] += this.velocity[i] * h;
-          if (this.angles[i] < lo || this.angles[i] > hi) {
-            const outward = this.angles[i] < lo ? this.velocity[i] < 0 : this.velocity[i] > 0;
-            this.angles[i] = Math.max(lo, Math.min(hi, this.angles[i]));
-            if (outward) this.velocity[i] *= hinge ? -.08 : -.18;
+          angle += velocity * h;
+          if (angle < lo || angle > hi) {
+            const outward = angle < lo ? velocity < 0 : velocity > 0;
+            angle = Math.max(lo, Math.min(hi, angle));
+            if (outward) velocity *= hinge ? -.08 : -.18;
           }
+          this.angles[i] = angle; this.velocity[i] = velocity;
         }
       }
       for (let segment = 0; segment < SEGMENTS; segment++) {
