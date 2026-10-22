@@ -522,6 +522,18 @@ for(const [i,b] of SCHOOL_GYM_BANKS.entries()){
   // Closed bank faces point outward. Treating their backsides as ceilings
   // makes the chase camera dive through the bank during a downhill ride.
   surface(`Gym ${i?'dark':'wooden'} flat bank`,vertices,indices,i?'#626966':'#c4a77c',g,{tex:'wood',doubleSided:false});
+  // Mesh faces provide riding support, but upright sides need native wall
+  // collision. Follow only the two closed ends and back, with the wall top
+  // following the same profile. Its lower edge stays below the gym floor;
+  // the open toe and riding face remain unobstructed.
+  const perimeter:Point[]=[
+    ...profile.map(q=>[b.toeX+b.side*q.d,q.y,s.minZ] as Point),
+    ...profile.slice().reverse().map(q=>[b.toeX+b.side*q.d,q.y,s.maxZ] as Point),
+  ];
+  const start=perimeter[0];
+  add({t:'wallpath',nm:`Gym ${i?'dark':'wooden'} bank · solid ends and back`,
+    p:[start[0],-s.rise,start[2]],pts:perimeter.map(q=>[q[0]-start[0],q[2]-start[2],0,q[1]]),
+    w:.05,rise:s.rise,invisible:true,edgeGrinding:false,grp:g});
 }
 export const SCHOOL_GYM_RAILS:Point[][]=[];
 for(const {toeX:x,side} of SCHOOL_GYM_BANKS){

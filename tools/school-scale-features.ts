@@ -51,6 +51,19 @@ export function schoolScaleFeatureTrials(p:any,l:any,place:Place,dt:number,S:num
       result.arrived=true;return true;
     }});
   }
+  for(const [i,b] of SCHOOL_GYM_BANKS.entries())for(const face of ['near','far','back'] as const){
+    const s=SCHOOL_GYM_BANK,d=face==='back'?s.run+s.deck:s.run/2;
+    const mid=vector([b.toeX+b.side*d,0,face==='near'?s.minZ:face==='far'?s.maxZ:32]);
+    const out=p.pos.clone().set(face==='back'?b.side:0,0,face==='near'?-1:face==='far'?1:0);
+    const result={blocked:false,closest:Infinity};
+    trials.push({name:`Scaled gym bank ${i+1} ${face} collision`,limit:120,result,init:()=>{
+      const q=mid.clone().addScaledVector(out,3);q.y=.1;place(q.toArray(),out.clone().negate().toArray(),6);
+    },sample:()=>({}),observe:n=>{
+      const distance=p.pos.clone().sub(mid).dot(out);result.closest=Math.min(result.closest,distance);
+      if(distance<.3)throw Error('Rider passed through a closed gym bank face');
+      if(n<40||result.closest>1)return false;result.blocked=true;return true;
+    }});
+  }
   for(const [i,points] of SCHOOL_GYM_RAILS.entries())for(const direction of [-1,1])for(const airEntry of [false,true]){
     let line:ReturnType<typeof createBalancedGrind>,entry:any,popped=false;const result:any={direction,minGrindSpeed:null,maxApproachSpeed:0};
     trials.push({name:`Scaled gym ${airEntry?'bank air to rail':'complete rail'} ${i+1}/${direction}`,limit:1400,result,init:()=>{

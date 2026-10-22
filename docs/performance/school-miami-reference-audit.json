@@ -45,5 +45,40 @@
     "finding": "Hall Pass roof perimeter distinguished from window/planter features inside its recess. Front wall-base landmarks use lower-yard elevation in the inverse projection.",
     "verification": "Simple editor-valid polygon; independent ray clearance along all 97 authored Long Ass Rail samples.",
     "dimensions": "Inferred from the image; original source coordinates remain unverified."
+  },
+  "betaComparison": {
+    "reviewedUTC": "2026-10-22T23:23:10.753490+00:00",
+    "source": "https://thpsx.com/creation-details/?obj=1524",
+    "title": "THPS1 Beta School",
+    "archiveSHA256": "6b6e1ba1a03c7f6f30543ad12144c393684ae7e190c93a4d47da75a4327f2a6a",
+    "parsed": {
+      "objects": 363,
+      "vertices": 46109,
+      "triangles": 15387
+    },
+    "excludedFromCampusPlot": [
+      {
+        "id": 0,
+        "reason": "unit cube at origin"
+      },
+      {
+        "id": 341,
+        "reason": "sky sphere spanning the whole campus"
+      }
+    ],
+    "gymBanks": {
+      "meshIds": [
+        146,
+        355
+      ],
+      "floorY": 710.6666870117188,
+      "bankTopY": 1085.3333740234375,
+      "bankToeY": 773.7777709960938,
+      "lengthSourceUnits": 2640.4443359375,
+      "finding": "Broad flat banks have closed upright ends and backs; the conversion also has a raised toe and different surrounding layout."
+    },
+    "application": "Topology cross-check only. Retain the original-image footprint and smooth floor joins; no conversion vertices or dimensions were copied. Add native collision to the already-authored closed gym-bank faces.",
+    "retailOriginalDimensionsVerified": false,
+    "downloadedAssetsCommitted": false
   }
 }

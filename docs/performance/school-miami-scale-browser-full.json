@@ -9,7 +9,7 @@
     -78
   ],
   "speed": 0,
-  "components": 273,
+  "components": 275,
   "rails": 69,
   "camera": {
     "eye": [
@@ -20,14 +20,14 @@
     "trailing": 5.049999999999997,
     "bodyBounds": {
       "min": [
-        51.501608525409225,
-        -9.775355587053376,
-        -78.97823098404365
+        51.50151466922798,
+        -9.775401130106859,
+        -78.98421021756397
       ],
       "max": [
-        52.686145473173525,
-        -7.014290075136257,
-        -77.18405330424899
+        52.689120883171135,
+        -6.986845120525683,
+        -77.17965578793746
       ]
     }
   },
@@ -515,6 +515,54 @@
         }
       },
       {
+        "name": "Scaled gym bank 1 near collision",
+        "frames": 40,
+        "result": {
+          "blocked": true,
+          "closest": 0.5799999999999983
+        }
+      },
+      {
+        "name": "Scaled gym bank 1 far collision",
+        "frames": 40,
+        "result": {
+          "blocked": true,
+          "closest": 0.5799999999999983
+        }
+      },
+      {
+        "name": "Scaled gym bank 1 back collision",
+        "frames": 40,
+        "result": {
+          "blocked": true,
+          "closest": 0.5799999999999983
+        }
+      },
+      {
+        "name": "Scaled gym bank 2 near collision",
+        "frames": 40,
+        "result": {
+          "blocked": true,
+          "closest": 0.5799999999999983
+        }
+      },
+      {
+        "name": "Scaled gym bank 2 far collision",
+        "frames": 40,
+        "result": {
+          "blocked": true,
+          "closest": 0.5799999999999983
+        }
+      },
+      {
+        "name": "Scaled gym bank 2 back collision",
+        "frames": 40,
+        "result": {
+          "blocked": true,
+          "closest": 0.5800000000000125
+        }
+      },
+      {
         "name": "Scaled gym complete rail 1/-1",
         "frames": 972,
         "result": {
@@ -744,7 +792,7 @@
             "frames": 5212,
             "waypoints": 48,
             "totalWaypoints": 48,
-            "distance": 756.3054999828487,
+            "distance": 756.3055053331544,
             "gimmeGrindFrames": 41,
             "returnGrindFrames": 1213,
             "kickerAir": true,
@@ -762,7 +810,7 @@
       }
     ],
     "failure": null,
-    "frames": 17814,
+    "frames": 18054,
     "tuningUnchanged": true
   }
 }

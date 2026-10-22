@@ -71,6 +71,7 @@ export class SkateChaseCamera {
   private opposedVertActive = false;
   private opposedVertBlend = 0;
   private landingLedgeLift = 0;
+  private closeWallAim = 0;
   private dropInBlend = 0;
   private dropInEyeY = 0;
   private ledgeDropActive = false;
@@ -399,6 +400,18 @@ export class SkateChaseCamera {
     camera.position.copy(this.desiredEye);
     if (contact) camera.position.copy(this.aim)
       .addScaledVector(this.direction, Math.max(0.35, contact.distance - 0.25));
+    // A wall behind a flat rider can shorten the arm while the normal high
+    // aim stays unchanged, cropping the board. Ease the aim toward the body
+    // centre as the wall closes in. The lens and collision-safe eye stay put.
+    let wallAim = 0;
+    if(contact?.face&&rider.grounded&&this.groundFramingWeight>.5&&contact.object.userData.vert!==true){
+      this.contactNormal.copy(contact.face.normal).transformDirection(contact.object.matrixWorld);
+      if(Math.abs(this.contactNormal.y)<.25)
+        wallAim=THREE.MathUtils.clamp((distance-contact.distance)/2,0,1)*this.groundFramingWeight;
+    }
+    this.closeWallAim=snap?wallAim:this.closeWallAim+(wallAim-this.closeWallAim)*frameBlend(.18,step);
+    if(this.groundFramingWeight>.5)
+      this.aim.y=THREE.MathUtils.lerp(this.aim.y,rider.position.y+1.5,this.closeWallAim);
     camera.up.copy(this.up);
     camera.lookAt(this.aim);
     // Only used by optional look controls; park steering never reads it.

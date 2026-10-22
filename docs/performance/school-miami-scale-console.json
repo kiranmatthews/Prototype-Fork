@@ -1,22 +1,5 @@
 {
-  "full": [
-    {
-      "level": "error",
-      "message": "Uncaught TypeError: Failed to execute 'observe' on 'MutationObserver': parameter 1 is not of type 'Node'.",
-      "timestamp": "2026-10-22T22:52:23.767Z"
-    }
-  ],
+  "full": [],
   "lite": [],
-  "freshFullPreview": [
-    {
-      "level": "error",
-      "message": "Uncaught TypeError: Failed to execute 'observe' on 'MutationObserver': parameter 1 is not of type 'Node'.",
-      "timestamp": "2026-10-22T22:52:23.767Z"
-    },
-    {
-      "level": "error",
-      "message": "Uncaught TypeError: Failed to execute 'observe' on 'MutationObserver': parameter 1 is not of type 'Node'.",
-      "timestamp": "2026-10-22T23:00:13.607Z"
-    }
-  ]
+  "note": "Iteration 22: both 64-case runs completed with empty game error reports. Earlier intermittent startup errors remain in school-miami-scale-startup-console.json."
 }

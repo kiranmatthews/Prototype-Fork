@@ -1,5 +1,5 @@
 {
-  "note": "Intermittent review-tab startup exception, observed before gameplay checks. Browser logs supply no source URL or stack. The final full-render 58-case run and game error report pass; the startup exception is not claimed repaired.",
+  "note": "Historical intermittent review-tab startup exception, before gameplay checks. Browser logs supplied no source URL or stack. Iteration 21 passed its 58-case runs despite the exception. The exception is not claimed repaired.",
   "logs": [
     {
       "level": "error",
@@ -24,5 +24,12 @@
     },
     "instrumentedFullPreview": [],
     "note": "Neither isolated diagnostic reproduced the exception; no source attribution or fix is claimed."
+  },
+  "iteration22": {
+    "nativeCases": 64,
+    "framesPerMode": 18054,
+    "fullConsole": [],
+    "liteConsole": [],
+    "conclusion": "Did not recur in these two sessions; historical issue remains unresolved."
   }
 }

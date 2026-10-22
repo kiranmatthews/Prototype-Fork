@@ -1,0 +1,263 @@
+{
+  "worldScale": 2,
+  "nativeInput": "Six 6 m/s ground approaches, three metres from each face; no teleport or trajectory change after initial placement.",
+  "before": {
+    "failed": 6,
+    "cases": [
+      {
+        "name": "Scaled gym bank 1 near collision",
+        "firstOverlapAtFrame": 27,
+        "distanceFromWall": 0.25331393670475677
+      },
+      {
+        "name": "Scaled gym bank 1 far collision",
+        "firstOverlapAtFrame": 27,
+        "distanceFromWall": 0.253313936704771
+      },
+      {
+        "name": "Scaled gym bank 1 back collision",
+        "firstOverlapAtFrame": 27,
+        "distanceFromWall": 0.25331393670475677
+      },
+      {
+        "name": "Scaled gym bank 2 near collision",
+        "firstOverlapAtFrame": 27,
+        "distanceFromWall": 0.25331393670475677
+      },
+      {
+        "name": "Scaled gym bank 2 far collision",
+        "firstOverlapAtFrame": 27,
+        "distanceFromWall": 0.253313936704771
+      },
+      {
+        "name": "Scaled gym bank 2 back collision",
+        "firstOverlapAtFrame": 27,
+        "distanceFromWall": 0.25331393670475677
+      }
+    ]
+  },
+  "after": [
+    {
+      "name": "Scaled gym bank 1 near collision",
+      "passed": true,
+      "frames": 40,
+      "maxStep": 0.09986833333333323,
+      "maxCameraStep": 0.4798310387982168,
+      "maxCrop": 0.7712263826854454,
+      "worstCamera": {
+        "frame": 24,
+        "pos": [
+          61.6,
+          0,
+          37.42
+        ],
+        "eye": [
+          61.132793476562284,
+          5.1,
+          32.128605089241255
+        ],
+        "previousEye": [
+          61.6,
+          5.1,
+          32.01926209563207
+        ],
+        "state": "ride"
+      },
+      "end": [
+        62.079723923540655,
+        0,
+        36.9771779167317
+      ],
+      "result": {
+        "blocked": true,
+        "closest": 0.5799999999999983
+      }
+    },
+    {
+      "name": "Scaled gym bank 1 far collision",
+      "passed": true,
+      "frames": 40,
+      "maxStep": 0.09986833333333323,
+      "maxCameraStep": 0.4798310387982217,
+      "maxCrop": 0.7665451672407253,
+      "worstCamera": {
+        "frame": 24,
+        "pos": [
+          61.6,
+          0,
+          90.58
+        ],
+        "eye": [
+          62.06720652343772,
+          5.1,
+          95.87139491075875
+        ],
+        "previousEye": [
+          61.6,
+          5.1,
+          95.98073790436796
+        ],
+        "state": "ride"
+      },
+      "end": [
+        61.12027607645935,
+        0,
+        91.0228220832682
+      ],
+      "result": {
+        "blocked": true,
+        "closest": 0.5799999999999983
+      }
+    },
+    {
+      "name": "Scaled gym bank 1 back collision",
+      "passed": true,
+      "frames": 40,
+      "maxStep": 0.09986833333333323,
+      "maxCameraStep": 0.43807058818934264,
+      "maxCrop": 0.9534143679011351,
+      "worstCamera": {
+        "frame": 24,
+        "pos": [
+          51.22,
+          0,
+          64
+        ],
+        "eye": [
+          46.27495834387902,
+          4.935202843301537,
+          64.4350252365175
+        ],
+        "previousEye": [
+          46.27592730442132,
+          4.8836475822226335,
+          64
+        ],
+        "state": "ride"
+      },
+      "end": [
+        50.777177916731695,
+        0,
+        63.520276076459346
+      ],
+      "result": {
+        "blocked": true,
+        "closest": 0.5799999999999983
+      }
+    },
+    {
+      "name": "Scaled gym bank 2 near collision",
+      "passed": true,
+      "frames": 40,
+      "maxStep": 0.09986833333333323,
+      "maxCameraStep": 0.4798310387982099,
+      "maxCrop": 0.7712263826854454,
+      "worstCamera": {
+        "frame": 24,
+        "pos": [
+          130.4,
+          0,
+          37.42
+        ],
+        "eye": [
+          129.9327934765623,
+          5.1,
+          32.128605089241255
+        ],
+        "previousEye": [
+          130.4,
+          5.1,
+          32.01926209563207
+        ],
+        "state": "ride"
+      },
+      "end": [
+        130.87972392354055,
+        0,
+        36.9771779167317
+      ],
+      "result": {
+        "blocked": true,
+        "closest": 0.5799999999999983
+      }
+    },
+    {
+      "name": "Scaled gym bank 2 far collision",
+      "passed": true,
+      "frames": 40,
+      "maxStep": 0.09986833333333323,
+      "maxCameraStep": 0.47983103879821476,
+      "maxCrop": 0.7665451672407341,
+      "worstCamera": {
+        "frame": 24,
+        "pos": [
+          130.4,
+          0,
+          90.58
+        ],
+        "eye": [
+          130.86720652343772,
+          5.1,
+          95.87139491075875
+        ],
+        "previousEye": [
+          130.4,
+          5.1,
+          95.98073790436796
+        ],
+        "state": "ride"
+      },
+      "end": [
+        129.92027607645946,
+        0,
+        91.0228220832682
+      ],
+      "result": {
+        "blocked": true,
+        "closest": 0.5799999999999983
+      }
+    },
+    {
+      "name": "Scaled gym bank 2 back collision",
+      "passed": true,
+      "frames": 40,
+      "maxStep": 0.09986833333334744,
+      "maxCameraStep": 0.4798310387982217,
+      "maxCrop": 0.8010792515213404,
+      "worstCamera": {
+        "frame": 24,
+        "pos": [
+          140.78,
+          0,
+          64
+        ],
+        "eye": [
+          146.07139491075876,
+          5.1,
+          63.53279347656228
+        ],
+        "previousEye": [
+          146.18073790436796,
+          5.1,
+          64
+        ],
+        "state": "ride"
+      },
+      "end": [
+        141.2228220832682,
+        0,
+        64.47972392354055
+      ],
+      "result": {
+        "blocked": true,
+        "closest": 0.5800000000000125
+      }
+    }
+  ],
+  "camera": {
+    "beforeMaxProjection": 1.286263304964369,
+    "afterMaxProjection": 0.9534143679011351,
+    "fix": "When an upright wall shortens the arm on flat ground, ease the vertical aim toward body centre. Eye collision position, FOV and movement tuning are unchanged."
+  },
+  "edgeDiagnostic": "A probe 0.3 m inside the bank end struck the existing curved end rail, including with the new colliders removed. It is not counted as a successful bank crossing. Existing native complete grinds and bank-ollie catches verify the intended end-rail route."
+}
