@@ -34,7 +34,7 @@ try{
  for(let i=0;i<900;i++){
   await page.waitForTimeout(250);
   const r=await page.evaluate(()=>({progress:window.mallReview.progress,done:window.mallReview.done}));
-  for(const [s,name]of [[62,'fountain'],[109,'second-escalator'],[120,'gallery'],[165,'atrium'],[215,'escalator'],[285,'crossrails'],[345,'plaza'],[353,'blue-banks'],[377,'exit-overpass'],[384,'exit-throat'],[391,'stairs']])
+  for(const [s,name]of [[50,'entrance-trough'],[62,'fountain'],[109,'second-escalator'],[120,'gallery'],[165,'atrium'],[215,'escalator'],[285,'crossrails'],[345,'plaza'],[353,'blue-banks'],[377,'exit-overpass'],[384,'exit-throat'],[391,'stairs']])
    if(r.progress>=s&&!shots.has(name)){
     shots.add(name);
     if(pauses){await page.evaluate(()=>{window.mallReview.paused=true;});await page.waitForTimeout(900);}

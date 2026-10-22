@@ -19,7 +19,7 @@ await withBlockworksRuntime(async r=>{
  let crossed=false,bail=false;
  for(let i=0;i<100;i++){r.tick({moveY:1,jumpHeld:true});bail||=p.isBailing;if(p.pos.x<0){crossed=true;break;}}
  report.galleryUnderpass={crossed,bail,end:p.pos.toArray(),grounded:p.grounded};
- start(49,3.2,12.1,[0,0,-1]);
+ start(49,4.7,12.1,[0,0,-1]);
  let lowerPeak=12,firstPassage=false,firstBail=false;
  for(let i=0;i<180;i++){
   r.tick({moveY:1,jumpHeld:true});lowerPeak=Math.max(lowerPeak,p.pos.y);firstBail||=p.isBailing;

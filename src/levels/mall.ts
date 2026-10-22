@@ -267,8 +267,23 @@ const upperY=(s:number)=> s<59?12+5*clamp((s-44)/15):17;
 ribbon('Up escalator',44,59,-3.4,.6,upperY,2,'#7d8c8d',true,'pavement',s=>mallHeight(s)-.12);
 for(const u of [-3.45,.65])railAlong('Upper escalator handrail',44,59,u,s=>upperY(s)+.85,2);
 for(let s=45;s<59;s+=.65)box(mallPoint(s,-1.4,upperY(s)-.04),[4,.08,.18],'#3e5356',2,mallYaw(s));
+// Original entry footage shows a shallow, chamfered water trough against
+// the right-hand masonry of the first escalator, below the concourse.
+{
+ const outline:Array<[number,number]>=[[44,.65],[44,2.6],[45.2,3.55],[57.8,3.55],[59,.65]];
+ const centre=mallPoint(51.5,2.1,12.3),points=outline.map(([s,u])=>mallPoint(s,u,12.6));
+ const polygon=points.map(q=>[q[0]-centre[0],q[2]-centre[2]] as [number,number]);
+ add({t:'platform',p:centre,s:[3,.6,15],pts:polygon,tex:'stone',color:'#917d67',edgeGrinding:false,grp:2,nm:'Entrance water trough'});
+ const water:Array<[number,number]>=[[44.23,.88],[44.23,2.5],[45.3,3.3],[57.65,3.3],[58.64,.88]];
+ face(water.map(([s,u])=>mallPoint(s,u,12.615)),'#426d71',2);
+ add({t:'wallpath',p:[centre[0],12,centre[2]],pts:polygon,w:.25,rise:.34,
+  invisible:true,edgeGrinding:false,grp:2,nm:'Entrance trough masonry'});
+ const rim=mallPoint(44,.65,12.65);
+ add({t:'rail',p:rim,pts:points.map((q,i)=>[q[0]-rim[0],q[2]-rim[2],i>0&&i<points.length-1?.4:0,0]),
+  invisible:true,grp:2,nm:'Entrance water trough rim'});
+}
 ribbon('Upper fountain concourse',59,69,-6.5,6.5,()=>17,2,'#c6c1b0',true,'pavement',()=>16.35);
-for(const u of [-5.7,5.7])box(mallPoint(59.7,u,14.175),[.4,4.35,.55],dark,2,0,true,'First concourse support');
+for(const u of [-6.1,6.1])box(mallPoint(59.7,u,14.175),[.4,4.35,.55],dark,2,0,true,'First concourse support');
 // The low round planter occupies the first directory island. Its rim is a
 // continuous grind loop; the fountain jump still has clear lanes either side.
 const roundPlanter=mallPoint(61.5,1.2,17),planterRadius=2.1;
@@ -424,10 +439,16 @@ ribbon('Mezzanine approach',355,370,-8.7,-4.4,s=>3.8*clamp((s-355)/15),8,trim,tr
 ribbon('Mezzanine takeoff',370,377,-8.7,-4.4,()=>3.8,8,stone,true,'pavement',()=>3.25);
 railAlong('Step Off a Mezzanine lip',369,377,-8.6,()=>4.65,8,false);
 box(mallPoint(380,0,3.6),[22,.4,8],stone,8,0,true,'Raised exit passage');
-for(const u of [-9.6,9.6]){
- const base=mallHeight(381)-.12;
- box(mallPoint(381,u,(base+3.4)/2),[.7,3.4-base,.8],'#8b7768',8,0,true,'Exit passage support');
+// The original stair transitions grow into the passage walls. There is no
+// lower aisle behind their backs. Masonry wings support the upper passage
+// and meet the quarter's outer deck; the central 32-stair route stays open.
+for(const side of [-1,1]){
+ ribbon('Exit stair masonry wing',375,392,
+  side<0?s=>boundary(-1,s):5.5,
+  side<0?-5.5:s=>boundary(1,s),()=>3.4,8,'#8b8981',true,'stone',s=>mallHeight(s)-.12);
 }
+ribbon('Exit stair ceiling',375,393,-5.95,5.95,
+ s=>mix(13.4,3.2,ease(384,393,s))+.15,11,'#343e42',false,'solid',s=>mix(13.4,3.2,ease(384,393,s))-.15);
 {
  const p=mallPoint(375),pts=Array.from({length:35},(_,i)=>{
   const q=mallPoint(375+i*.5);return [q[0]-p[0],q[2]-p[2],0,q[1]-p[1]] as [number,number,number,number];

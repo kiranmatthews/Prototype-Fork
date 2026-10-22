@@ -652,3 +652,12 @@
 - Real Chrome lite/full upper routes match at 1,125 frames, preserve tuning, load the exact source and report no console errors. Full-render planter laps repeat 290 frames. MENU/K/L/pit smoke passes. Final local build: `1699536471361e61c273`.
 - Source frame review at 1:12–1:15 confirms the offset first escalator and lower aisle; 5:15 shows the second gallery's open masonry support arrangement. The water trough beside the first escalator, side-access contours, exact bank/deck dimensions, storefront/fountain massing and absolute scale remain to refine. The outside of the final bank briefly obstructs the camera; the central stair route is now checked separately and has a clear view.
 - Saved updated screenshots and `docs/mall/validation.json`. All work stays local under the slow-network workflow; no push, upload or deployment. Unrelated shared work is preserved. The goal remains active.
+
+
+## 2026-10-23 — THPS Mall recreation, trough and exit enclosure (pass 6)
+
+- Brief: continue the original 1999 Mall recreation, prioritising source routes and smooth play at the existing skater scale.
+- Elapsed: approximately 21 minutes from this continuation at 14:18 UTC to the validated playable build at 14:39 UTC; about 33 minutes including browser review and evidence packaging.
+- Added the first-escalator water trough, its chamfered grind rim and masonry; moved the first deck supports outward to preserve the adjacent lower aisle. Added source-derived masonry wings and a ceiling around the exit stair chamber, closing the unintended route behind its banks. No movement or runtime edits.
+- Validation: seven continuous input-only routes finish without bails/deaths; the new underpass stays below the first deck. The mezzanine jump first lands after all 32 stairs. Trough rim grind/ollie, exit-wall contact, verts, blue banks, loop/side combos, structural clearance and roof probes pass. `check:levels`, TypeScript and production build pass. Lite/full underpass, full mezzanine, MENU/K/L and pit recovery pass in Chrome, with matching source and unchanged tuning, no console errors. Build `68310faa353ad9b20a95`.
+- Delivery: local-only commit on `codex/mall-recreation`; no push or deployment. Original fountain intermediate landing, upper exit passage and exact source dimensions still require comparison. Goal remains active.

@@ -38,4 +38,16 @@ await withBlockworksRuntime(async r=>{
   assert.ok(pilot.evidence.railNames.includes('Coffee Grind'),'The route must use the coffee rail');
   assert.ok(pilot.evidence.railNames.includes('Suspended lower light rail'),'The lower light beam must be reachable from the stairs');
  }
+ if(route==='mezzanine'){
+  const jump=pilot.evidence.jumps.find(j=>j.name==='Mezzanine');
+  assert.ok(jump,'The upper approach must launch the mezzanine gap');
+  const firstLanding=r.trace.find(v=>v.frame>jump.frame+2&&v.grounded);
+  assert.ok(firstLanding&&m.mallProject(firstLanding.position[0],firstLanding.position[2],390)>391,
+   'The mezzanine jump must clear all 32 stairs before its first landing');
+ }
+ if(route==='underpass'){
+  const inside=r.trace.filter(v=>v.position[2]<m.mallPoint(59)[2]&&v.position[2]>m.mallPoint(67)[2]);
+  assert.ok(inside.length>12&&inside.every(v=>v.position[1]<12.2),
+   'The entrance aisle must stay below the first island throughout the underpass');
+ }
 },{modulePath:'/src/levels/mall.ts',source:m=>m.MALL_LEVEL,levelId:'mall',endlessDeaths:true,maxFrames:15000,controlFrame:r=>r.p.axisF});
