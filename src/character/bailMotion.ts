@@ -9,6 +9,10 @@ export type BailTumbleKind = 'forward' | 'back' | 'side' | 'air';
 // constraints, mesh clones, per-frame random draws or world queries are needed.
 const JOINTS = 14;
 const PARENTS = [-1, 0, 0, 2, 3, 0, 5, 6, -1, 8, 9, -1, 11, 12];
+// Relative angular momentum retained when the torso changes spin. The neck,
+// wrists and ankles trail more freely than the spine/hips; each chain then
+// catches up through its existing spring, without a repeated flail animation.
+const SPIN_INERTIA = [.12, .4, .32, .48, .64, .32, .48, .64, .26, .42, .56, .26, .42, .56];
 const LIMITS = [
   .48, .35, .4, .55, .5, .42,
   1.8, .7, 1.05, 1.05, .22, .25, .7, .4, .55,
@@ -70,7 +74,7 @@ export class BailMotion {
   private readonly torsoForce = new Float64Array(3);
   private readonly limbForce = new Float64Array(3);
   private readonly frameDamping = new Float64Array(JOINTS);
-  private readonly acceleration = new THREE.Vector3();
+  private readonly angularChange = new THREE.Vector3();
   private readonly contactWaves = new Float64Array(WAVE_SLOTS * WAVE_STRIDE);
   private readonly contactTorque = new Float64Array(JOINTS * 3);
   private waveMask = 0;
@@ -272,7 +276,7 @@ export class BailMotion {
     // bases must not change the response of the same posed body. Differentiate
     // there first, then bring forces and spin into the body's local frame.
     const inverseDt = 1 / Math.max(dt, 1 / 240);
-    this.acceleration.copy(spin).sub(this.previousSpin).multiplyScalar(inverseDt).applyQuaternion(this.inverse);
+    this.angularChange.copy(spin).sub(this.previousSpin).applyQuaternion(this.inverse).clampLength(0, 24);
     this.previousSpin.copy(spin);
     this.localSpin.copy(spin).applyQuaternion(this.inverse);
     this.linearAcceleration.set(0, 0, 0);
@@ -291,13 +295,23 @@ export class BailMotion {
     for (let axis = 0; axis < 3; axis++) {
       const gravity = axis === 0 ? this.gravity.z : axis === 2 ? -this.gravity.x : 0;
       const angular = this.localSpin.getComponent(axis);
-      const accel = clamp(this.acceleration.getComponent(axis), 60);
       const linear = axis === 0 ? this.linearAcceleration.z : axis === 2 ? -this.linearAcceleration.x : 0;
       this.frameTarget[axis] = gravity * .42 - angular * .025;
-      this.torsoForce[axis] = -accel * .1 - linear * .24;
-      this.limbForce[axis] = -accel * .1 + linear * .38;
+      this.torsoForce[axis] = -linear * .24;
+      this.limbForce[axis] = linear * .38;
     }
-    for (let joint = 0; joint < JOINTS; joint++) this.frameDamping[joint] = 1 / (1 + this.damping[joint] * settle * h);
+    for (let joint = 0; joint < JOINTS; joint++) {
+      this.frameDamping[joint] = 1 / (1 + this.damping[joint] * settle * h);
+      for (let axis = 0; axis < 3; axis++) {
+        const i = joint * 3 + axis;
+        // A collision changes angular velocity instantaneously. Clipping its
+        // acceleration to 60 rad/s² discarded almost all of a hard rebound,
+        // and made the reaction depend on frame duration. Transfer the bounded
+        // velocity change once; integration and compliant stops absorb it.
+        this.velocity[i] = clamp(this.velocity[i] - this.angularChange.getComponent(axis) *
+          SPIN_INERTIA[joint] * LIMITS[i], 22);
+      }
+    }
     for (let step = 0; step < steps; step++) {
       this.advanceContactWaves(h);
       this.loosen *= looseDecay;
