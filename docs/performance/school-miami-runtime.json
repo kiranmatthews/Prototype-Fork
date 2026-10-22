@@ -1,0 +1,15 @@
+{
+  "validationContext": "Shared local working tree. School commits intentionally exclude unrelated runtime edits.",
+  "head": "79cdcdc0bf23f1696b0e5930e21ed99dbbfde82d",
+  "files": {
+    "src/player.ts": "02bd62c8c1bce5c37d2066e0701830324c6a202ef65ba5f677a6ff0e9d100140",
+    "src/tuning.ts": "dc7b43eedbb160b2ddfc16cdfdca42f1419245a76214fdccd49cf872905038c0",
+    "src/level.ts": "ed0d5b3b88b3a7c042113df2e7031ef82e92f86298b4787af728efdad8b16ee5",
+    "src/input.ts": "53cd0f5d183777461c3af7514af6ebc22abe44513a7986287f4c592f00d2a433",
+    "src/skateParkPhysics.ts": "3cf5ce4c8bd9037539ffd21ff8559f78a0b9c2fd7a27f702a68bbe6aa2536f99",
+    "src/skateParkTuning.ts": "bc609a6765ffd91c0d3bc062b33ee25c03cd7386a9159b24c1f643f38bca0234",
+    "src/skateSteering.ts": "62b9d234f6feebaadd2f5c3b58cd6305d042c99ee46ea7d75d8fff7dbe953f68",
+    "src/vertBoardRelease.ts": "7ce3ba915f646ac97890d0a2b9f25635ccedddb8068e4c2217c2812808866e67",
+    "src/vertSkateMotion.ts": "944c8fa4293fe58b8baca9987c7573b78428774e77b93bccb2b889d893a7ac96"
+  }
+}

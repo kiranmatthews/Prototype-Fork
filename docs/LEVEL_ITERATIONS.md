@@ -622,3 +622,13 @@
 - Validation: focused School test passes 13 routes, eight air/vert cases, three standalone grinds and the full circuit. `check:levels` and `build` pass. Lite/full browser passes each complete 13 cases / 3,348 steps, with checkpoint/fall recovery and unchanged tuning. One existing ResizeObserver layout notification appears in each automated browser sequence and is retained in the evidence.
 - Elapsed prompt-to-playable: approximately 96 minutes cumulative from the original goal; approximately 23 minutes for this additional reference/connection pass. The first playable reconstruction was approximately 17 minutes into the original brief.
 - Keep local. The goal remains active: the separate roof-to-roof area, smaller west-descent and ditch transfer ramps, remaining named transfers, and independent original-dimension verification are still pending. The old noclip School renderer/data lead is unavailable; it supplied no dimensional evidence.
+
+### 2026-10-23 — School Miami: roof and ditch transfers
+
+- Continued the active image recreation goal; local delivery only. Original PS1 all-gaps footage supplements the supplied overhead map and existing guides.
+- Added the separate fenced bonus roof, its small wedge and curved north/east quarter; the gym-to-bonus transfer crosses an actual open roof-edge gap. Added the west-descent wedge and the ditch-bed launch for Over a Footbridge.
+- Corrected the east service hill to climb from the rear alley toward the front of the gym and turn left through split east coping toward the air-conditioner kicker. Its top turn uses ordinary grab/brake input to reach cruising speed; movement tuning and the controller are unchanged.
+- Physics validation: 200 components, 58 rails, 20 support/clearance probes, 13 route cases, 12 air cases, 3 grind cases, and the 44-waypoint continuous circuit. Roof 2 Roof and Over a Footbridge pass at two approach speeds with zero bails. The 375.2 m circuit still completes in 1,747 fixed steps without intermediate placement or velocity correction.
+- Lite and full browser rendering each pass all 15 cases / 3,505 fixed steps, including checkpoint recovery. Each sequence retains one ResizeObserver layout notification; no skating case fails. New full-render overview, roof and ditch captures are saved locally.
+- `check:levels` and `build` pass; build reports the existing large-chunk warning. Validation completed at 2026-10-22 12:51 UTC, 119.3 minutes from the original prompt across the successive refinement passes.
+- Goal remains active: audit the remaining named transfers (Hall Pass, rail-to-rail, Funbox, roof Mini Gap, Park Gap, Swim Team, Ditch Slap, garbage/dumpsters) and remaining reference differences. Source collision dimensions are still inferred.

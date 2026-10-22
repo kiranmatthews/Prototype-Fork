@@ -159,6 +159,13 @@ for (const [p,sign] of [[ditch.a,1],[ditch.b,-1]] as const) {
   const tx=(ditch.b[0]-ditch.a[0])/dl*sign,tz=(ditch.b[2]-ditch.a[2])/dl*sign;
   ribbon('Ditch end roll-out',Array.from({length:17},(_,i)=>[p[0]+tx*i/16*4,lowerY-ditch.depth*smooth(i/16),p[2]+tz*i/16*4] as Point),ditch.half*2,asphalt,4);
 }
+// The long space between the second and third bridges contains the
+// original launch wedge: approach along the bed and ollie over bridge 3.
+export const SCHOOL_DITCH_KICKER={p:pointAt(ditch.a,ditch.b,.64),run:4.2,rise:1.2,direction:[(ditch.b[0]-ditch.a[0])/dl,0,(ditch.b[2]-ditch.a[2])/dl] as Point};
+{
+  const k=SCHOOL_DITCH_KICKER,h=k.direction;
+  add({t:'ramp',nm:'Over a Footbridge · ditch launch wedge',p:[k.p[0],lowerY-ditch.depth,k.p[2]],len:k.run,rise:k.rise,w:2.8,yaw:Math.atan2(-h[0],-h[2])*180/Math.PI,tex:'wood',color:'#a28e6b',edgeGrinding:false,grp:4});
+}
 
 const yardOutline=mapped([[28,107],[53,100],[84,109],[163,83],[186,84],[269,108],[300,90],[320,46],[342,32],[485,57],[516,77],[513,110],[496,132],[512,164],[536,176],[575,195],[558,252],[502,266],[473,256],[447,278],[302,281],[273,263],[246,235],[225,216],[199,213],[168,227],[89,224],[9,189],[16,143]],lowerY);
 floor('Lower campus · cut-out pool and ditch foundation',yardOutline,lowerY,concrete,1,[kidneyHole,squareHole,ditchHole]).depthBias=2;
@@ -185,6 +192,11 @@ const westDescent=SCHOOL_WEST_DESCENT;
 ribbon('West descent · long planter road',westDescent,9,asphalt,2);
 rail('Long Ass Rail · outside planter lip',westDescent.map(p=>[p[0]-3.9,p[1]+.45,p[2]+1.2]),2,'#bead8c');
 rail('Hall Pass · inside planter transfer',[[1,.5,-6],[-3,.5,-12],[-8,-.3,-17],[-13,-2,-22]],2);
+export const SCHOOL_WEST_WEDGE={p:schoolMapPoint(233,214,-3.85),width:5.6,depth:1.1,rise:1.15,bank:2.1};
+{
+  const k=SCHOOL_WEST_WEDGE;
+  hip('Funbox to Rail · west-descent wedge',k.p[0],lowerY,k.p[2],k.width,k.depth,k.rise,k.bank,7,'#ad977a');
+}
 // Upper grass terraces stop short of the bank and the landing lanes.
 polygonBlock('Admin lawn',[[2,-25],[34,-25],[37,-7],[2,-7]],.15,-5,'#65835b',2);
 slab('East approach lawn',51,-10,10,27,.12,-5,'#6c8459',2);
@@ -249,10 +261,10 @@ quarter('Mini Gap · playground inner quarter',[miniAfter,...longPipe.slice(10)]
 const parkReturn=[[493,133],[494,146],[505,154]].map(([u,v])=>schoolMapPoint(u,v,lowerY));
 quarter('Park Gap return quarter',parkReturn,3,6,{w:3.1,deck:1.1,curve:'spline',color:'#b7af95'});
 // Physical fences are outside the transition decks, not in the riding line.
-function fenceAlong(points:Point[], offset:number, grp:number) {
+function fenceAlong(points:Point[], offset:number, grp:number, elevation=3) {
   const outside=points.map((p,i):Point=>{
     const a=points[Math.max(0,i-1)],b=points[Math.min(points.length-1,i+1)],l=Math.hypot(b[0]-a[0],b[2]-a[2])||1;
-    return[p[0]+(b[2]-a[2])/l*offset,p[1]+3,p[2]-(b[0]-a[0])/l*offset];
+    return[p[0]+(b[2]-a[2])/l*offset,p[1]+elevation,p[2]-(b[0]-a[0])/l*offset];
   });
   const p=outside[0];
   add({t:'wallpath',nm:'School perimeter fence',p,pts:outside.map(q=>[q[0]-p[0],q[2]-p[2],0,q[1]-p[1]]),w:.28,rise:3.2,curve:'spline',color:'#837d70',tex:'wood',containment:true,collisionHeight:6,grp});
@@ -358,14 +370,28 @@ quarter('Gym roof west quarter',[[26,roofY,45],[26,roofY,21]],1.8,9,{color:'#969
 quarter('Gym roof north left quarter',[[27,roofY,18],[40,roofY,18]],1.8,9,{color:'#969d96',deck:.7});
 quarter('Gym roof north right quarter',[[48,roofY,18],[71,roofY,18]],1.8,9,{color:'#969d96',deck:.7});
 quarter('Gym roof south quarter',[[71,roofY,46],[27,roofY,46]],1.8,9,{color:'#969d96',deck:.7});
-quarter('Gym roof east quarter',[[71,roofY,20],[71,roofY,34]],1.8,9,{color:'#969d96',deck:.7});
-// The right-hand service hill returns from ground to roof with eased ends.
-// Its broad turn accepts full-speed diagonal steering after controller
-// normalization (keyboard forward + left is 0.71, not a full 1.0 turn).
+quarter('Gym roof east upper quarter',[[71,roofY,20],[71,roofY,23]],1.8,9,{color:'#969d96',deck:.7});
+quarter('Gym roof east lower quarter',[[71,roofY,34],[71,roofY,45]],1.8,9,{color:'#969d96',deck:.7});
+// A distinct small roof sits across the north coping, east of the long
+// awning. Its south edge is open for Roof 2 Roof; the other two sides have
+// transitions and a fence. It is not a continuation of the access hill.
+export const SCHOOL_BONUS_ROOF={minX:55.8,maxX:70.25,minZ:-2.5,maxZ:9.9,y:roofY};
+{
+  const b=SCHOOL_BONUS_ROOF;
+  slab('Roof 2 Roof · separate bonus roof',(b.minX+b.maxX)/2,(b.minZ+b.maxZ)/2,b.maxX-b.minX,b.maxZ-b.minZ,b.y,0,brick,9);
+  floor('Bonus roof skating surface',[[b.minX,b.minZ],[b.maxX,b.minZ],[b.maxX,b.maxZ],[b.minX,b.maxZ]],b.y+.015,concrete,9,[],false);
+  const rim:Point[]=[[57.6,b.y,.2],[65.4,b.y,.2],[67.5,b.y,1.5],[67.8,b.y,4],[67.8,b.y,9.2]];
+  quarter('Bonus roof · north and east quarter',rim,1.8,9,{curve:'spline',color:'#969d96',deck:.65});
+  fenceAlong(rim,2.7,9,1.8);
+  add({t:'ramp',nm:'Bonus roof · small return wedge',p:[57.7,b.y,4.5],len:4.8,rise:1.4,w:3.4,yaw:0,tex:'wood',color:'#ad9579',edgeGrinding:false,grp:9});
+}
+// The east service hill climbs from the rear alley toward the front of the
+// gym. Its top turns left through the opening in the roof's east coping,
+// lining up the air-conditioner kicker. Brake for the turn as in free skate.
 export const SCHOOL_ROOF_ACCESS:Point[]=[];
-for(let i=0;i<=40;i++){const t=i/40;SCHOOL_ROOF_ACCESS.push([81,7*smooth(t),mix(6,22,t)]);}
-for(let i=1;i<=32;i++){const a=i/32*Math.PI/2;SCHOOL_ROOF_ACCESS.push([61+20*Math.cos(a),7,22+20*Math.sin(a)]);}
-SCHOOL_ROOF_ACCESS.push([58,7,42]);
+for(let i=0;i<=40;i++){const t=i/40;SCHOOL_ROOF_ACCESS.push([80,7*smooth(t),mix(53,34,t)]);}
+for(let i=1;i<=32;i++){const a=i/32*Math.PI/2;SCHOOL_ROOF_ACCESS.push([72+8*Math.cos(a),7,34-8*Math.sin(a)]);}
+SCHOOL_ROOF_ACCESS.push([68,7,26]);
 ribbon('Gym service hill · ground-to-roof return',SCHOOL_ROOF_ACCESS,7.6,asphalt,9);
 rail('Service hill outside rail',SCHOOL_ROOF_ACCESS.slice(0,40).filter((_,i)=>i%4===0).map(p=>[p[0]+3.65,p[1]+.5,p[2]]),9);
 slab('Gym roof air conditioner',54,27.5,8.5,6.2,9.1,roofY,'#566f68',9);

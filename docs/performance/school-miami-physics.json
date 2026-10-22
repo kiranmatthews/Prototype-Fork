@@ -1,6 +1,6 @@
 {
-  "components": 192,
-  "rails": 56,
+  "components": 200,
+  "rails": 58,
   "support": [
     {
       "label": "start canopy",
@@ -21,6 +21,14 @@
     {
       "label": "gym north doorway",
       "y": 0
+    },
+    {
+      "label": "separate bonus roof",
+      "y": 7
+    },
+    {
+      "label": "west-descent wedge",
+      "y": -3.8499999046325684
     },
     {
       "label": "Deep oval pool",
@@ -139,31 +147,31 @@
     },
     {
       "label": "gym service-hill ascent",
-      "frames": 151,
+      "frames": 145,
       "bails": 0,
-      "maxStep": 0.39452422532391346,
-      "minSpeed": 16.3113361530088,
+      "maxStep": 0.3192179882299203,
+      "minSpeed": 11.594231413006504,
       "end": [
-        60.034454327328596,
+        70.1112519491603,
         7,
-        42.17632830875696
+        25.887689659758603
       ],
       "target": [
-        58,
+        68,
         7,
-        42
+        26
       ]
     },
     {
       "label": "west descent to pools",
       "frames": 176,
       "bails": 0,
-      "maxStep": 0.3288065412723443,
+      "maxStep": 0.3315004713396652,
       "minSpeed": 10.165988444152811,
       "end": [
-        -34.13977175114627,
+        -34.135717207512606,
         -5,
-        -31.500585413277758
+        -31.4813080382581
       ],
       "target": [
         -36,
@@ -382,6 +390,62 @@
       ]
     },
     {
+      "name": "Roof 2 Roof",
+      "speed": 16,
+      "air": true,
+      "landed": true,
+      "frames": 86,
+      "maxY": 12.485927478146113,
+      "bails": 0,
+      "end": [
+        63,
+        7,
+        7.592756339439489
+      ]
+    },
+    {
+      "name": "Roof 2 Roof",
+      "speed": 18,
+      "air": true,
+      "landed": true,
+      "frames": 87,
+      "maxY": 13.06945535137093,
+      "bails": 0,
+      "end": [
+        63,
+        7,
+        5.534336771056532
+      ]
+    },
+    {
+      "name": "Over a Footbridge",
+      "speed": 12,
+      "air": true,
+      "landed": true,
+      "overBridge": true,
+      "frames": 75,
+      "bails": 0,
+      "end": [
+        10.855675656827865,
+        -5,
+        -28.922351669709926
+      ]
+    },
+    {
+      "name": "Over a Footbridge",
+      "speed": 18,
+      "air": true,
+      "landed": true,
+      "overBridge": true,
+      "frames": 74,
+      "bails": 0,
+      "end": [
+        14.668274728171044,
+        -5,
+        -23.803414000854396
+      ]
+    },
+    {
       "name": "Mini Gap",
       "air": true,
       "landed": true,
@@ -432,7 +496,7 @@
       "frames": 1747,
       "waypoints": 44,
       "totalWaypoints": 44,
-      "distance": 375.2570515128298,
+      "distance": 375.2397432160357,
       "gimmeGrindFrames": 21,
       "kickerAir": true,
       "kickerLanded": true

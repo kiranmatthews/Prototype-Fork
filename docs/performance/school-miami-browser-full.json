@@ -8,8 +8,8 @@
     -39
   ],
   "speed": 0,
-  "components": 192,
-  "rails": 56,
+  "components": 200,
+  "rails": 58,
   "errors": [
     "ResizeObserver loop completed with undelivered notifications."
   ],
@@ -39,7 +39,7 @@
       },
       {
         "name": "Roof service hill",
-        "frames": 152
+        "frames": 146
       },
       {
         "name": "Winding halfpipe",
@@ -52,6 +52,14 @@
       {
         "name": "Air-conditioner roof gap",
         "frames": 98
+      },
+      {
+        "name": "Roof 2 Roof",
+        "frames": 88
+      },
+      {
+        "name": "Over a Footbridge",
+        "frames": 75
       },
       {
         "name": "Roof-to-awning plank",
@@ -71,12 +79,12 @@
       }
     ],
     "failure": null,
-    "frames": 3348,
+    "frames": 3505,
     "circuit": {
       "frames": 1747,
       "waypoints": 44,
       "totalWaypoints": 44,
-      "distance": 375.2570515128298,
+      "distance": 375.2397432160357,
       "gimmeGrindFrames": 21,
       "kickerAir": true,
       "kickerLanded": true

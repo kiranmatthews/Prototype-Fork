@@ -22,6 +22,7 @@ await withSkateRuntime(async ({ THREE, server, Level, Player, scene, CONST, TUNI
     assert.equal(data.skatepark,true);assert.equal(m.SCHOOL_TABLES.length,5);assert.equal(m.SCHOOL_POOLS.length,2);assert.equal(m.SCHOOL_PLANTERS.length,8);
     near('start canopy',.5,0,3.4);near('upper court',8,11,0);near('gym floor under roof',48.5,31.75,0,4);
     near('gym roof',61,36,7);near('gym north doorway',31,14.6,0,3.8);
+    near('separate bonus roof',63,7.5,7);near('west-descent wedge',m.SCHOOL_WEST_WEDGE.p[0],m.SCHOOL_WEST_WEDGE.p[2],-3.85);
     for(const b of m.SCHOOL_POOLS)near(b.name,b.centre[0],b.centre[2],b.bottom);
     for(const [i,b] of m.SCHOOL_BRIDGES.entries())near(`footbridge ${i+1}`,b.p[0],b.p[2],-4.58);
     // Terrain sampling checks the actual collision triangles, including the
@@ -38,14 +39,14 @@ await withSkateRuntime(async ({ THREE, server, Level, Player, scene, CONST, TUNI
       const angle=Math.atan2(target[0]-p.pos.x,-(target[2]-p.pos.z)),heading=Math.atan2(p.axisF.x,-p.axisF.z);
       const delta=Math.atan2(Math.sin(angle-heading),Math.cos(angle-heading));return Math.max(-1,Math.min(1,delta*3));
     };
-    const ride=(label,points,{speed=12,charge=true,fullTurn=false}={})=>{
+    const ride=(label,points,{speed=12,charge=true,fullTurn=false,arrival=3,brake=()=>false}={})=>{
       const a=points[0],b=points[1];place([a[0],a[1]+.08,a[2]],[b[0]-a[0],0,b[2]-a[2]],speed);
       let index=1,frames=0,maxStep=0,minSpeed=100,bails=0,lastBail=false;
       for(;frames<1200;frames++){
-        while(index<points.length-1&&Math.hypot(p.pos.x-points[index][0],p.pos.z-points[index][2])<3)index++;
+        while(index<points.length-1&&Math.hypot(p.pos.x-points[index][0],p.pos.z-points[index][2])<arrival)index++;
         const target=points[index],before=p.pos.clone();
         const turn=steer(target);
-        step(makeInput({moveX:turn,moveY:fullTurn?Math.sqrt(1-turn*turn):1,jumpHeld:charge,jumpPressed:frames===0&&charge}));
+        step(makeInput({moveX:turn,moveY:fullTurn?Math.sqrt(1-turn*turn):1,jumpHeld:charge,jumpPressed:frames===0&&charge,grabHeld:brake()}));
         maxStep=Math.max(maxStep,before.distanceTo(p.pos));minSpeed=Math.min(minSpeed,p.speed);
         if(p.isBailing&&!lastBail){bails++;console.log('BAIL',label,p.pos.toArray(),index);}lastBail=p.isBailing;
         assert.ok(p.pos.toArray().every(Number.isFinite),`${label}: non-finite`);
@@ -58,7 +59,7 @@ await withSkateRuntime(async ({ THREE, server, Level, Player, scene, CONST, TUNI
     const st=m.SCHOOL_STAIRS;
     ride('handicap downhill',[[st.a[0]+2,0,-4],[st.a[0]+2,0,-8],[41,-2,-22],[39,-5,-36],[37,-5,-39]],{speed:12,charge:false});
     ride('gym doorway and court',[[31,0,9],[31,0,19],[38,0,25],[48.5,0,32],[48.5,0,42]],{speed:8,charge:false});
-    ride('gym service-hill ascent',m.SCHOOL_ROOF_ACCESS.filter((_,i,a)=>i%7===0||i===a.length-1),{speed:18});
+    ride('gym service-hill ascent',m.SCHOOL_ROOF_ACCESS.filter((_,i,a)=>i%7===0||i===a.length-1),{speed:18,fullTurn:true,arrival:2,brake:()=>p.pos.z<39&&p.speed>12});
     ride('west descent to pools',m.SCHOOL_WEST_DESCENT,{speed:10,charge:false});
     ride('Huge Rail halfpipe corridor',m.SCHOOL_LONG_HALFPIPE,{speed:12,charge:false,fullTurn:true});
     // Footbridges are crossed at street speed, in either direction. These
@@ -106,6 +107,38 @@ await withSkateRuntime(async ({ THREE, server, Level, Player, scene, CONST, TUNI
     }
     report.airs.push({name:'Over the Air Conditioner',air:acAir,landed:acLanded,bails:acBails,end:p.pos.toArray()});
     assert.ok(acLanded,'AC roof jump did not reach the far side');assert.equal(acBails,0,'AC roof collision');
+    // Forward held through a charged native vert air exits the gym coping
+    // and reaches the distinct bonus roof. No launch impulse is injected.
+    for(const speed of [16,18]){
+      place([63,7.1,23],[0,0,-1],speed);let air=false,landed=false,frames=0,maxY=7;
+      for(;frames<180;frames++){
+        step(makeInput({moveY:1,jumpHeld:true,jumpPressed:frames===0}));air||=p.state==='air';maxY=Math.max(maxY,p.pos.y);
+        assert.ok(!p.isBailing,'Roof 2 Roof transfer bailed');
+        if(air&&p.grounded&&p.pos.z<m.SCHOOL_BONUS_ROOF.maxZ){
+          assert.ok(p.pos.z>1&&Math.abs(p.pos.y-7)<.06,'roof transfer landed outside the bonus roof');landed=true;break;
+        }
+      }
+      assert.ok(landed,'Roof 2 Roof did not reach the separate roof');
+      report.airs.push({name:'Roof 2 Roof',speed,air,landed,frames,maxY,bails:0,end:p.pos.toArray()});
+    }
+    // Start on the ditch bed between bridges 2 and 3, ride the launch
+    // wedge, clear the entire third bridge, then roll onto the yard.
+    for(const speed of [12,18]){
+      const k=m.SCHOOL_DITCH_KICKER,h=k.direction,b=m.SCHOOL_BRIDGES[2];
+      place([k.p[0]-h[0]*3.8,-6.4,k.p[2]-h[2]*3.8],h,speed);
+      assert.ok(Math.abs(p.pos.y+6.5)<.06,'ditch approach must begin on its bed');
+      let popped=false,air=false,landed=false,frames=0,overBridge=false;
+      for(;frames<180;frames++){
+        const d=(k.p[0]-p.pos.x)*h[0]+(k.p[2]-p.pos.z)*h[2],release=!popped&&d< -k.run/2+.6;if(release)popped=true;
+        step(makeInput({jumpHeld:!popped,jumpPressed:frames===0,jumpReleased:release}));air||=p.state==='air';
+        assert.ok(!p.isBailing,'Over a Footbridge bailed');
+        const past=(p.pos.x-b.p[0])*h[0]+(p.pos.z-b.p[2])*h[2];
+        if(Math.abs(past)<.5&&p.state==='air'&&p.pos.y>-4.58)overBridge=true;
+        if(air&&p.grounded&&past>b.width/2){landed=true;break;}
+      }
+      assert.ok(landed&&overBridge,'ditch jump did not clear and land beyond bridge 3');
+      report.airs.push({name:'Over a Footbridge',speed,air,landed,overBridge,frames,bails:0,end:p.pos.toArray()});
+    }
     // Tap an ollie over the Mini Gap with a pre-held right transfer input.
     // The bend's receiving coping is angled. Release grind during the air
     // and press it again on arrival, then verify a clean ground rollout.

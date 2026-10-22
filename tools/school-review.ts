@@ -1,4 +1,4 @@
-import { SCHOOL_MIAMI_LEVEL, SCHOOL_POOLS } from '../src/levels/school-miami';
+import { SCHOOL_MIAMI_LEVEL, SCHOOL_POOLS, SCHOOL_DITCH_KICKER } from '../src/levels/school-miami';
 import { OrthographicCamera } from 'three';
 import { runSchoolBrowserChecks } from './school-browser-checks';
 const frame=document.querySelector<HTMLIFrameElement>('#game')!,status=document.querySelector<HTMLDivElement>('#status')!;
@@ -30,6 +30,9 @@ document.querySelector('#yard')!.addEventListener('click',()=>place([25,-4.9,-46
 document.querySelector('#pools')!.addEventListener('click',()=>{const p=SCHOOL_POOLS[0];place([p.centre[0],p.bottom+.1,p.centre[2]],[1,0,0]);});
 document.querySelector('#gym')!.addEventListener('click',()=>place([48.5,.1,23],[0,0,1]));
 document.querySelector('#roof')!.addEventListener('click',()=>place([63,7.1,38],[-1,0,-.3]));
+document.querySelector('#bonus')!.addEventListener('click',()=>place([63,7.1,23],[0,0,-1]));
+document.querySelector('#hill')!.addEventListener('click',()=>place([80,.1,53],[0,0,-1]));
+document.querySelector('#ditch')!.addEventListener('click',()=>{const k=SCHOOL_DITCH_KICKER,h=k.direction;place([k.p[0]-h[0]*3.8,-6.4,k.p[2]-h[2]*3.8],h);});
 document.querySelector('#rail')!.addEventListener('click',()=>place([44,.1,-5],[-.15,0,-1]));
 document.querySelector('#full')!.addEventListener('click',()=>{full=!full;game=null;checks=null;errors.length=0;frame.src='/?playtest&level=school-miami'+(full?'':'&lite');document.querySelector('#full')!.textContent=full?'Lite render':'Full render';});
 document.querySelector('#checks')!.addEventListener('click',()=>{if(!game||checks?.running)return;overview=false;checks=runSchoolBrowserChecks(game);});
