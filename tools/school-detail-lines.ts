@@ -1,4 +1,4 @@
-import {SCHOOL_REAR_BANK,SCHOOL_SKYLIGHT,SCHOOL_GYM_RAILS,SCHOOL_GYM_BANKS,SCHOOL_GYM_BANK,schoolGymBankHeight} from '../src/levels/school-miami';
+import {SCHOOL_REAR_BANK,SCHOOL_SKYLIGHT,SCHOOL_GYM_RAILS,SCHOOL_GYM_BANKS,SCHOOL_GYM_BANK,SCHOOL_WEST_ANNEX,schoolGymBankHeight} from '../src/levels/school-miami';
 import {createBalancedGrind} from './school-grind-lines';
 
 type Point=[number,number,number];
@@ -9,6 +9,18 @@ type DetailTrial={name:string;kind:'air'|'ride'|'grind';result:any;limit:number;
  * are normal buttons/axes, with no trajectory correction or balance boost. */
 export function schoolDetailTrials(p:any,l:any,place:Place,dt:number):DetailTrial[]{
   const trials:DetailTrial[]=[];
+  for(const direction of [-1,1])for(const speed of [12,14]){
+    const result={direction,speed,frames:0,air:false,landed:false,maxY:0,maxLateral:0};
+    trials.push({name:`West pavilion roof jump ${direction}/${speed}`,kind:'air',result,limit:120,
+      init:()=>place([0,direction===1?3.5:SCHOOL_WEST_ANNEX.y+.1,direction===1?.5:12.5],[0,0,direction],speed),
+      sample:frame=>({moveY:1,jumpPressed:frame===0,jumpHeld:frame<12,jumpReleased:frame===12}),
+      observe:()=>{result.frames++;result.air||=p.state==='air';result.maxY=Math.max(result.maxY,p.pos.y);result.maxLateral=Math.max(result.maxLateral,Math.abs(p.pos.x));
+        if(!result.air||!p.grounded)return false;
+        const y=direction===1?SCHOOL_WEST_ANNEX.y:3.4,within=direction===1?p.pos.z>9.7&&p.pos.z<16:p.pos.z> -1.2&&p.pos.z<2.1;
+        if(Math.abs(p.pos.y-y)>.06||!within||result.maxLateral>.15)throw Error('West pavilion jump missed its first roof landing');
+        result.landed=true;return true;},
+    });
+  }
   const gym=[
     {name:'Gym hoop quarter',position:[48.5,.1,36],heading:[0,0,1],toe:[48.5,0,43.5]},
   ];

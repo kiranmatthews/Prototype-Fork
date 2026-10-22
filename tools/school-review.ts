@@ -2,8 +2,12 @@ import { SCHOOL_MIAMI_LEVEL, SCHOOL_POOLS, SCHOOL_DITCH_KICKER, SCHOOL_LONG_HALF
 import { OrthographicCamera } from 'three';
 import { runSchoolBrowserChecks } from './school-browser-checks';
 const frame=document.querySelector<HTMLIFrameElement>('#game')!,status=document.querySelector<HTMLDivElement>('#status')!;
-let overview=false,game:any,reviewCamera:any,full=false,checks:any=null;
+let overview=false,game:any,reviewCamera:any,full=new URLSearchParams(location.search).has('full'),checks:any=null;
 const errors:string[]=[];
+// Load one iframe document initially. A direct full-render review avoids
+// replacing a still-starting lite game just to select the renderer.
+frame.src='/?playtest&level=school-miami'+(full?'':'&lite');
+document.querySelector('#full')!.textContent=full?'Lite render':'Full render';
 function bind(){
   const w=frame.contentWindow as any;if(!w?.__game){setTimeout(bind,250);return;}
   if(game===w.__game)return;
@@ -32,6 +36,7 @@ document.querySelector('#street')!.addEventListener('click',()=>place([-9.7937,-
 document.querySelector('#hall')!.addEventListener('click',()=>{const a=SCHOOL_HALL_PASS.takeoff[0],b=SCHOOL_HALL_PASS.takeoff[1],n=Math.hypot(b[0]-a[0],b[2]-a[2]),h=[(b[0]-a[0])/n,0,(b[2]-a[2])/n];place([a[0]-h[0]*4,.1,a[2]-h[2]*4],h);});
 document.querySelector('#planters')!.addEventListener('click',()=>{const q=SCHOOL_PLANTERS[0];place([q.p[0]-q.width/2-3,.1,q.p[2]+q.depth/2],[1,0,0]);});
 document.querySelector('#pools')!.addEventListener('click',()=>{const p=SCHOOL_POOLS[0];place([p.centre[0],p.bottom+.1,p.centre[2]],[1,0,0]);});
+document.querySelector('#annex')!.addEventListener('click',()=>place([12,.1,9],[0,0,1]));
 document.querySelector('#gym')!.addEventListener('click',()=>place([48.5,.1,23],[0,0,1]));
 document.querySelector('#gym-bank')!.addEventListener('click',()=>place([45,.1,32],[-1,0,0]));
 document.querySelector('#gym-door')!.addEventListener('click',()=>place([48.5,.1,9],[0,0,1],12));

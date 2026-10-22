@@ -420,6 +420,30 @@ for(const z of [-4,5]){
 // Gym: an actual interior under its skating roof. Open doors at the north
 // connect to the upper court without a portal, scene switch or loading seam.
 export const SCHOOL_GYM={minX:22.6,maxX:74.5,minZ:14.4,maxZ:49.1,roofY,doorX:48.5,doorWidth:5.4,court:{x:48.5,z:31.75,width:15,length:28}};
+// The small west pavilion and glazed passage are visible behind the start.
+// The passage was closed in the final original game (unlike its early
+// prototype), so it is a solid boundary with a genuinely supported roof.
+export const SCHOOL_WEST_ANNEX={y:3.8,outline:mapped([[248,313],[295,323],[285,346],[238,336]],3.8)};
+export const SCHOOL_WEST_PASSAGE={y:3.45,outline:mapped([[290,332],[345,343],[341,352],[286,341]],3.45)};
+{
+  const a=SCHOOL_WEST_ANNEX,c=SCHOOL_WEST_PASSAGE;
+  // The far end continues under the main gym's overlapping roof/wall.
+  c.outline[1][0]=c.outline[2][0]=SCHOOL_GYM.minX+.35;
+  add({t:'wall',nm:'West entrance pavilion',p:[0,lowerY,0],s:[1,a.y-lowerY,1],pts:a.outline,tex:'pavement',color:brick,edgeGrinding:false,grp:8});
+  floor('West pavilion flat roof',a.outline,a.y+.012,concrete,8,[],false);
+  add({t:'wall',nm:'Closed glazed west passage',p:[0,0,0],s:[1,c.y,1],pts:c.outline,tex:'pavement',color:'#697979',edgeGrinding:false,grp:8});
+  floor('West passage flat roof',c.outline,c.y+.012,concrete,8,[],false);
+  for(const [first,last] of [[0,1],[3,2]]){
+    const p=c.outline[first],q=c.outline[last],n=Math.ceil(Math.hypot(q[0]-p[0],q[1]-p[1])/1.1);
+    const outward=first===0?-.015:.015;
+    for(let i=0;i<n;i++){
+      const x0=mix(p[0],q[0],(i+.08)/n),x1=mix(p[0],q[0],(i+.92)/n);
+      const z0=mix(p[1],q[1],(i+.08)/n)+outward,z1=mix(p[1],q[1],(i+.92)/n)+outward;
+      quad([[x0,.65,z0],[x1,.65,z1],[x1,3.15,z1],[x0,3.15,z0]],'#87a4aa',8);
+      quad([[x0,2.09,z0+outward],[x1,2.09,z1+outward],[x1,2.15,z1+outward],[x0,2.15,z0+outward]],'#394d52',8);
+    }
+  }
+}
 // Five glass panes surround one open pane. Keep the roof slab open below
 // that pane too: the court must be a real landing, not a painted recess.
 export const SCHOOL_SKYLIGHT={x:49,z:39.5,width:9.6,depth:11.8,lipY:7.5,bank:.5,

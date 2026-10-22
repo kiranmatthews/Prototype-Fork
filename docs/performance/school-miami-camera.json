@@ -349,5 +349,43 @@
       "restoredTrailing": 5.0500000191334316,
       "bails": 0
     }
+  ],
+  "roofJumps": [
+    {
+      "name": "West pavilion roof jump -1/12",
+      "frames": 54,
+      "maxStep": 0.29839470838029447,
+      "minTrailing": 5.050000000000001,
+      "maxCrop": 0.7712263826854455,
+      "restoredTrailing": 5.050000021998944,
+      "bails": 0
+    },
+    {
+      "name": "West pavilion roof jump -1/14",
+      "frames": 46,
+      "maxStep": 0.3233802497064334,
+      "minTrailing": 5.049999999999999,
+      "maxCrop": 0.7712263826854457,
+      "restoredTrailing": 5.050000025188606,
+      "bails": 0
+    },
+    {
+      "name": "West pavilion roof jump 1/12",
+      "frames": 43,
+      "maxStep": 0.2567382470909023,
+      "minTrailing": 5.05,
+      "maxCrop": 0.7712263826854453,
+      "restoredTrailing": 5.050000021284407,
+      "bails": 0
+    },
+    {
+      "name": "West pavilion roof jump 1/14",
+      "frames": 43,
+      "maxStep": 0.2844259004904051,
+      "minTrailing": 5.050000000000001,
+      "maxCrop": 0.7712263826854454,
+      "restoredTrailing": 5.050000024233829,
+      "bails": 0
+    }
   ]
 }

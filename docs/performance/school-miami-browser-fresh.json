@@ -1,8 +1,8 @@
 {
   "url": "http://127.0.0.1:5308/?playtest&level=school-miami",
-  "capturedAt": "2026-10-22T17:50:09.028Z",
-  "input": "Native restart, W acceleration for 0.45 seconds and Q braking for 1.2 seconds in a fresh full-render game",
-  "additionalReview": "Native E held 0.9 seconds caught the ascending wooden gym-bank rail; rendered grind screenshot saved",
+  "capturedAt": "2026-10-22T18:17:35.447Z",
+  "input": "Fresh full-render W acceleration for 0.45 seconds and Q braking for 1.2 seconds",
+  "reviewUrl": "http://127.0.0.1:5308/tools/school-review.html?full",
   "console": [],
   "reviewConsole": []
 }

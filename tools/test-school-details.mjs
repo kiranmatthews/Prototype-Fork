@@ -13,6 +13,12 @@ await withSkateRuntime(async({THREE,server,Level,Player,scene,CONST,TUNING})=>{
   };
   try{
     const ray=new THREE.Raycaster(),near=(name,q,y,from=y+1)=>{ray.set(new THREE.Vector3(q[0],from,q[2]),new THREE.Vector3(0,-1,0));ray.far=15;const hit=ray.intersectObjects(l.groundMeshes,false)[0];assert.ok(hit&&Math.abs(hit.point.y-y)<.06,`${name}: ${hit?.point.y} expected ${y}`);assert.ok(hit.face.normal.y>.1,`${name}: support faces down`);report.support.push({name,point:hit.point.toArray()});};
+    for(const x of [-3,0,4])near(`West pavilion supported roof ${x}`,[x,0,12.5],m.SCHOOL_WEST_ANNEX.y,5);
+    for(const x of [8,13,19])near(`Closed passage supported roof ${x}`,[x,0,14],m.SCHOOL_WEST_PASSAGE.y,5);
+    near('Upper court checkpoint clear of pavilion',[6,0,9],0,3.1);
+    place([0,.1,6],[0,0,1],8);let maxZ=6;
+    for(let frame=0;frame<80;frame++){p.step(CONST.fixedStep,makeInput({moveY:1}),l);l.update(CONST.fixedStep);maxZ=Math.max(maxZ,p.pos.z);assert.ok(p.pos.z<9.65,'Closed pavilion boundary was penetrated');if(p.isBailing)break;}
+    assert.ok(maxZ>8,'Boundary probe did not reach the pavilion');
     near('Hoop quarter flat approach',[48.5,0,43.4],0);near('Hoop quarter deck',[48.5,0,45.1],1.35,4);
     for(const [i,b] of m.SCHOOL_GYM_BANKS.entries())for(const d of [0,.4,2,4,6,8,8.7]){
       near(`Gym bank ${i} profile ${d}`,[b.toeX+b.side*d,0,32],m.schoolGymBankHeight(d),5);

@@ -1,6 +1,62 @@
 {
   "support": [
     {
+      "name": "West pavilion supported roof -3",
+      "point": [
+        -3,
+        3.8000001907348633,
+        12.5
+      ]
+    },
+    {
+      "name": "West pavilion supported roof 0",
+      "point": [
+        0,
+        3.8000001907348633,
+        12.5
+      ]
+    },
+    {
+      "name": "West pavilion supported roof 4",
+      "point": [
+        4,
+        3.8000001907348633,
+        12.5
+      ]
+    },
+    {
+      "name": "Closed passage supported roof 8",
+      "point": [
+        8,
+        3.450000047683716,
+        14
+      ]
+    },
+    {
+      "name": "Closed passage supported roof 13",
+      "point": [
+        13,
+        3.450000047683716,
+        14
+      ]
+    },
+    {
+      "name": "Closed passage supported roof 19",
+      "point": [
+        19,
+        3.450000047683716,
+        14
+      ]
+    },
+    {
+      "name": "Upper court checkpoint clear of pavilion",
+      "point": [
+        6,
+        0,
+        9
+      ]
+    },
+    {
       "name": "Hoop quarter flat approach",
       "point": [
         48.5,
@@ -274,6 +330,74 @@
     }
   ],
   "trials": [
+    {
+      "name": "West pavilion roof jump -1/12",
+      "kind": "air",
+      "direction": -1,
+      "speed": 12,
+      "frames": 54,
+      "air": true,
+      "landed": true,
+      "maxY": 5.555457690734861,
+      "maxLateral": 0,
+      "bails": 0,
+      "end": [
+        0,
+        3.4000000953674316,
+        0.24800829935579172
+      ]
+    },
+    {
+      "name": "West pavilion roof jump -1/14",
+      "kind": "air",
+      "direction": -1,
+      "speed": 14,
+      "frames": 46,
+      "air": true,
+      "landed": true,
+      "maxY": 4.997751301845979,
+      "maxLateral": 0,
+      "bails": 0,
+      "end": [
+        0,
+        3.4000000953674316,
+        0.554038756202845
+      ]
+    },
+    {
+      "name": "West pavilion roof jump 1/12",
+      "kind": "air",
+      "direction": 1,
+      "speed": 12,
+      "frames": 43,
+      "air": true,
+      "landed": true,
+      "maxY": 4.696317317589656,
+      "maxLateral": 0,
+      "bails": 0,
+      "end": [
+        0,
+        3.8000001907348633,
+        9.9762560054106
+      ]
+    },
+    {
+      "name": "West pavilion roof jump 1/14",
+      "kind": "air",
+      "direction": 1,
+      "speed": 14,
+      "frames": 43,
+      "air": true,
+      "landed": true,
+      "maxY": 4.712157039811873,
+      "maxLateral": 0,
+      "bails": 0,
+      "end": [
+        0,
+        3.8000001907348633,
+        11.321848291314103
+      ]
+    },
     {
       "name": "Gym hoop quarter at 12",
       "kind": "air",

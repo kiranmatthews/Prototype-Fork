@@ -8,7 +8,7 @@
     -39
   ],
   "speed": 0,
-  "components": 259,
+  "components": 265,
   "rails": 67,
   "camera": {
     "eye": [
@@ -19,14 +19,14 @@
     "trailing": 5.049999999999997,
     "bodyBounds": {
       "min": [
-        25.50167667101616,
-        -4.77546437371922,
-        -39.97856910432513
+        25.50165216450413,
+        -4.775416702297971,
+        -39.97977461196465
       ],
       "max": [
-        26.68626099136603,
-        -2.0147844147291964,
-        -38.183810488650515
+        26.686718693540897,
+        -2.009474468843514,
+        -38.1829401966253
       ]
     }
   },
@@ -186,6 +186,22 @@
       {
         "name": "Classroom planter to Huge Rail",
         "frames": 209
+      },
+      {
+        "name": "West pavilion roof jump -1/12",
+        "frames": 54
+      },
+      {
+        "name": "West pavilion roof jump -1/14",
+        "frames": 46
+      },
+      {
+        "name": "West pavilion roof jump 1/12",
+        "frames": 43
+      },
+      {
+        "name": "West pavilion roof jump 1/14",
+        "frames": 43
       },
       {
         "name": "Gym hoop quarter at 12",
@@ -353,7 +369,7 @@
       }
     ],
     "failure": null,
-    "frames": 11575,
+    "frames": 11761,
     "longGrinds": [
       {
         "name": "Roof-to-awning plank",
@@ -579,6 +595,58 @@
       }
     ],
     "details": [
+      {
+        "name": "West pavilion roof jump -1/12",
+        "kind": "air",
+        "result": {
+          "direction": -1,
+          "speed": 12,
+          "frames": 54,
+          "air": true,
+          "landed": true,
+          "maxY": 5.555457690734861,
+          "maxLateral": 0
+        }
+      },
+      {
+        "name": "West pavilion roof jump -1/14",
+        "kind": "air",
+        "result": {
+          "direction": -1,
+          "speed": 14,
+          "frames": 46,
+          "air": true,
+          "landed": true,
+          "maxY": 4.997751301845979,
+          "maxLateral": 0
+        }
+      },
+      {
+        "name": "West pavilion roof jump 1/12",
+        "kind": "air",
+        "result": {
+          "direction": 1,
+          "speed": 12,
+          "frames": 43,
+          "air": true,
+          "landed": true,
+          "maxY": 4.696317317589656,
+          "maxLateral": 0
+        }
+      },
+      {
+        "name": "West pavilion roof jump 1/14",
+        "kind": "air",
+        "result": {
+          "direction": 1,
+          "speed": 14,
+          "frames": 43,
+          "air": true,
+          "landed": true,
+          "maxY": 4.712157039811873,
+          "maxLateral": 0
+        }
+      },
       {
         "name": "Gym hoop quarter at 12",
         "kind": "air",
@@ -1116,7 +1184,7 @@
       "frames": 2404,
       "waypoints": 51,
       "totalWaypoints": 51,
-      "distance": 389.9123596050296,
+      "distance": 389.91235880695785,
       "gimmeGrindFrames": 21,
       "returnGrindFrames": 555,
       "kickerAir": true,
