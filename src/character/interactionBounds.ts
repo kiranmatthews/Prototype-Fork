@@ -493,7 +493,9 @@ export class CharacterInteractionBounds {
     const base=cached.positions,skinIndices=cached.indices,skinWeights=cached.weights,inv=mesh.bindMatrixInverse.elements;
     const affineInverse=inv[3]===0&&inv[7]===0&&inv[11]===0&&inv[15]===1;
     const constantInverse=inv[3]===0&&inv[7]===0&&inv[11]===0&&inv[15]!==0;
-    if(this.boundsKernel?.measure(cached,morphs,palette,inv,box,linearBind&&constantSkin&&constantInverse))return box;
+    // Derived arrays are immutable: every source/version/bind edit above
+    // replaces the entire bundle, including its native residency identity.
+    if(this.boundsKernel?.measure(cached,morphs,palette,inv,box,linearBind&&constantSkin&&constantInverse,true))return box;
     for(let i=0;i<positions.count;i++){
       let x=base[i*3],y=base[i*3+1],z=base[i*3+2],sx=0,sy=0,sz=0;
       for(let m=0;m<cached.morphDeltas.length;m++){

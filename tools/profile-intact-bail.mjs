@@ -14,6 +14,7 @@ const snapshot = process.argv.find(a => a.startsWith('--source-snapshot='))?.spl
 const allCauses = ['balance', 'wall', 'trip', 'landing', 'pvp'];
 const completeIncident = process.argv.includes('--complete-incident');
 const realHands = process.argv.includes('--real-hands');
+const skinUploadProfile = process.argv.includes('--skin-upload-profile');
 const selectedCause = process.argv.find(a => a.startsWith('--case='))?.slice(7);
 if (selectedCause && !allCauses.includes(selectedCause)) throw new Error(`Unknown bail case: ${selectedCause}`);
 const countOption = (name, fallback) => {
@@ -28,6 +29,7 @@ const ast = ts.createSourceFile('fixture.mjs', source, ts.ScriptTarget.Latest, t
 const dom = ast.statements.find(n => ts.isFunctionDeclaration(n) && n.name?.text === 'installHeadlessDom');
 new Function('noop', dom.getText(ast) + '; installHeadlessDom();')(() => {});
 const replaced = new Set(['src/player.ts', 'src/bailRecovery.ts', 'src/characterAnimationRuntime.ts', 'src/animation/bridge.ts', 'src/animation/rigBinding.ts', 'src/animation/sampling.ts', 'src/character/bailMotion.ts', 'src/character/bailContactPose.ts', 'src/character/bailGroundContact.ts', 'src/character/bailImpactSpin.ts', 'src/character/bailRecoveryMotion.ts', 'src/character/bailRiseMotion.ts', 'src/character/interactionBounds.ts', 'src/character/proportionLayer.ts', 'src/character/wipeoutPolicy.ts', 'src/character/stretchableBone.ts']);
+replaced.add('src/character/skinBoundsKernel.ts');
 const server = await createServer({ appType: 'custom', logLevel: 'silent', server: { middlewareMode: true },
   plugins: snapshot ? [{ name: 'bail-source-snapshot', enforce: 'pre', async load(id) {
     const rel = path.relative(process.cwd(), id.split('?')[0]);
@@ -48,6 +50,7 @@ try {
   const { RigBinding } = await server.ssrLoadModule('/src/animation/rigBinding.ts');
   const { createPlayerStarterAnimationSuite } = await server.ssrLoadModule('/src/animation/playerCatalog.ts');
   const { createCharacterAnimationRuntime } = await server.ssrLoadModule('/src/characterAnimationRuntime.ts');
+  const { skinBoundsKernelDiagnostics } = await server.ssrLoadModule('/src/character/skinBoundsKernel.ts');
   const scene = new THREE.Scene();
   level = new Level(scene, { id: 'bail-profile', name: 'Bail profile', data: { v: 1, name: 'Bail profile', spawn: [0, .05, 0], killY: -100,
     components: [{ t: 'platform', p: [0, -.5, 0], s: [200, 1, 200], edgeGrinding: false }, { t: 'gate', p: [70, 0, -70] }] } });
@@ -108,6 +111,7 @@ try {
   if (!process.argv.includes('--contact-only'))
   for (const cause of selectedCause ? [selectedCause] : allCauses) {
     const frames = [], incidents = [], triggers = [], durations = []; let fullScans = 0, count = false;
+    const skinUploads = { calls:0, copiedBytes:0, geometryUploads:0, residentHits:0, residentResets:0, workspaceBytes:0 };
     const phaseWork = Object.fromEntries(['bail','rise'].map(phase => [phase, { frames:[], fullSkinScans:0, bodyMatrixPasses:0, supportTimes:[], supportSamples:0, deformationPasses:0, deformationRequests:0 }]));
     let phase = 'bail';
     const recording = () => count && (completeIncident || p.isBailing);
@@ -277,6 +281,7 @@ try {
       if (trial >= 0) triggers.push(performance.now() - t);
       count = trial >= 0;
       activeRecovery = null;
+      const skinBefore = skinUploadProfile && count ? skinBoundsKernelDiagnostics() : null;
       let total = 0, n = 0;
       for (; n < 300 && (p.isBailing || completeIncident && p.bailRiseAge >= 0); n++) {
         phase = p.isBailing ? 'bail' : 'rise';
@@ -304,6 +309,15 @@ try {
       }
       if (n === 300 && (p.isBailing || completeIncident && p.bailRiseAge >= 0)) throw new Error(`${cause}: incident never settled`);
       count = false;
+      if (skinBefore) {
+        const after = skinBoundsKernelDiagnostics();
+        for (const key of ['calls','copiedBytes','geometryUploads','residentHits','residentResets']) {
+          // Older snapshots upload all geometry on every successful call.
+          const fallback = value => key === 'geometryUploads' ? value.calls : 0;
+          skinUploads[key] += (after[key] ?? fallback(after)) - (skinBefore[key] ?? fallback(skinBefore));
+        }
+        skinUploads.workspaceBytes = Math.max(skinUploads.workspaceBytes, after.workspaceBytes);
+      }
       if (trial >= 0) { incidents.push(total); durations.push(n / 60); }
     }
     p.interactionMeasure.skinnedBounds = native;
@@ -344,6 +358,7 @@ try {
       deformations: deformationProfile ? { calls:deformationCalls, requests:deformationRequests, cpuMs:stats(deformationTimes),
         newRecords:deformationRecords, newTransformObjects:deformationTransforms, newMorphRecords:deformationMorphs } : undefined,
       keyOrdering: keyOrderProfile ? { sorts:keySorts, copiedKeyReferences:sortedKeyReferences } : undefined,
+      skinUploads: skinUploadProfile ? skinUploads : undefined,
       poseChecksum: poseHash?.digest('hex'), gameplayChecksum:gameplayHash?.digest('hex'), impacts: traceImpacts ? impacts : undefined });
   }
   console.log(JSON.stringify({ source: snapshot ? 'initial working tree snapshot' : 'current working tree', warmupsPerCase: warmups, measuredIncidentsPerCase: measured,
