@@ -372,7 +372,9 @@ function bodyLead() {
   return reviewHead.sub(reviewFeet.add(reviewFoot).multiplyScalar(.5)).dot(p.axisF) * Math.sign(p.speed || 1);
 }
 function snapshot() {
-  return { mode, frozen, state: p.state, bailing: p.isBailing, ragActive: p.ragActive, masks: p.masks, lives: p.lives,
+  return { mode, frozen, presentation: { blocked: g.gameFlow.blocksGameplay,
+    loading: g.getLoadingDiagnostics(), renderedFrames: g.frameStats.frame },
+    state: p.state, bailing: p.isBailing, ragActive: p.ragActive, masks: p.masks, lives: p.lives,
     position: p.pos.toArray(), speed: p.speed, bodyLead: bodyLead(), grounded: p.grounded, supportClearance: supportClearance(),
     recoveryTime: p.bailRecoverT, recoveryProgress: p.bailRecoveryPose,
     fallAge: p.bailFallAge, fullyFallen: p.bailHasFallen, riseAge: p.bailRiseAge,

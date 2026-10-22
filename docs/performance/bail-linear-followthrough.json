@@ -1,0 +1,334 @@
+{
+  "date": "2026-10-22",
+  "pass": "Fidelity: carry linear momentum through hard braking and rebounds",
+  "baselineParent": "9e6fc98cad738a28e24b14dbb98108d89c6b39ad",
+  "motionChange": "Transfer bounded world-space travel-velocity change into local joint momentum once per update. Retain the existing opposite upper-body/hanging-limb response, seeded springs, compliant stops and shared segment elasticity. Remove the acceleration cap that made hard and mild impulses identical and changed the result with frame subdivision.",
+  "bounds": {
+    "maximumTravelVelocityChange": 12,
+    "maximumJointVelocity": 22,
+    "newActorBuffers": 0,
+    "newWorldQueries": 0,
+    "newSceneBodies": 0
+  },
+  "isolatedImpulse": {
+    "before": {
+      "source": "before",
+      "rows": [
+        {
+          "axis": 0,
+          "speed": 2,
+          "firstVelocity": -0.09242176139561438,
+          "peak": 0.009320071054671336
+        },
+        {
+          "axis": 0,
+          "speed": 8,
+          "firstVelocity": -0.09242176139561438,
+          "peak": 0.009320071054671336
+        },
+        {
+          "axis": 0,
+          "speed": -8,
+          "firstVelocity": 0.09242176139561437,
+          "peak": 0.009320071054671364
+        },
+        {
+          "axis": 2,
+          "speed": 2,
+          "firstVelocity": 0.11831862855478657,
+          "peak": 0.012532043970258755
+        },
+        {
+          "axis": 2,
+          "speed": 8,
+          "firstVelocity": 0.11831862855478657,
+          "peak": 0.012532043970258755
+        },
+        {
+          "axis": 2,
+          "speed": -8,
+          "firstVelocity": -0.11831862855478657,
+          "peak": 0.012532043970258769
+        }
+      ],
+      "subdivisionError": 0.04730673066421294,
+      "maxVelocity": 0.9678719891666951,
+      "minLength": 1,
+      "maxLength": 1.0019482330872531,
+      "settledVelocity": 3.263447299910216e-15,
+      "capturedTravelPreserved": true,
+      "headingError": 2.220446049250313e-16,
+      "tiltedFloorRebound": {
+        "neckResponse": 0.054822784475450526,
+        "wristResponse": -0.11132813187619606
+      }
+    },
+    "after": {
+      "source": "after",
+      "rows": [
+        {
+          "axis": 0,
+          "speed": 2,
+          "firstVelocity": -0.4032949588172264,
+          "peak": 0.04066940096583868
+        },
+        {
+          "axis": 0,
+          "speed": 8,
+          "firstVelocity": -1.6131798352689055,
+          "peak": 0.16267760386335478
+        },
+        {
+          "axis": 0,
+          "speed": -8,
+          "firstVelocity": 1.6131798352689055,
+          "peak": 0.16267760386335478
+        },
+        {
+          "axis": 2,
+          "speed": 2,
+          "firstVelocity": 0.5162994700572505,
+          "peak": 0.05468528277931098
+        },
+        {
+          "axis": 2,
+          "speed": 8,
+          "firstVelocity": 2.065197880229002,
+          "peak": 0.21874113111724397
+        },
+        {
+          "axis": 2,
+          "speed": -8,
+          "firstVelocity": -2.0651978802290016,
+          "peak": 0.2186431744438566
+        }
+      ],
+      "subdivisionError": 0,
+      "maxVelocity": 12.612795675320077,
+      "minLength": 1,
+      "maxLength": 1.0202500000000008,
+      "settledVelocity": 1.5443317220518693e-14,
+      "capturedTravelPreserved": true,
+      "headingError": 2.220446049250313e-16,
+      "tiltedFloorRebound": {
+        "neckResponse": 1.4353601753572445,
+        "wristResponse": -2.9147729073040414
+      }
+    }
+  },
+  "production": {
+    "incidents": 30,
+    "frames": 3450,
+    "realHandTriangles": 25152,
+    "rows": [
+      {
+        "cause": "balance",
+        "frames": 642,
+        "durationSame": true,
+        "gameplaySame": true,
+        "visiblePoseChanged": true,
+        "deformationPasses": 642,
+        "newRecords": 0,
+        "newTransforms": 0,
+        "fullSkinScansBefore": 1692,
+        "fullSkinScansAfter": 1692
+      },
+      {
+        "cause": "wall",
+        "frames": 708,
+        "durationSame": true,
+        "gameplaySame": true,
+        "visiblePoseChanged": true,
+        "deformationPasses": 708,
+        "newRecords": 0,
+        "newTransforms": 0,
+        "fullSkinScansBefore": 1692,
+        "fullSkinScansAfter": 1692
+      },
+      {
+        "cause": "trip",
+        "frames": 750,
+        "durationSame": true,
+        "gameplaySame": true,
+        "visiblePoseChanged": true,
+        "deformationPasses": 750,
+        "newRecords": 0,
+        "newTransforms": 0,
+        "fullSkinScansBefore": 1692,
+        "fullSkinScansAfter": 1692
+      },
+      {
+        "cause": "landing",
+        "frames": 720,
+        "durationSame": true,
+        "gameplaySame": true,
+        "visiblePoseChanged": true,
+        "deformationPasses": 720,
+        "newRecords": 0,
+        "newTransforms": 0,
+        "fullSkinScansBefore": 1692,
+        "fullSkinScansAfter": 1692
+      },
+      {
+        "cause": "pvp",
+        "frames": 630,
+        "durationSame": true,
+        "gameplaySame": true,
+        "visiblePoseChanged": true,
+        "deformationPasses": 630,
+        "newRecords": 0,
+        "newTransforms": 0,
+        "fullSkinScansBefore": 1692,
+        "fullSkinScansAfter": 1692
+      }
+    ],
+    "timingClaim": null
+  },
+  "matrixOracle": {
+    "passed": true,
+    "realHandTriangles": 25152,
+    "cases": 14,
+    "framesCompared": 1578,
+    "maxPoseError": 0,
+    "immediatePublicSync": true
+  },
+  "headContinuity": {
+    "passed": true,
+    "cases": 42,
+    "torsoLengthRange": [
+      0.9035369912963482,
+      1.0467192424148666
+    ]
+  },
+  "startupInvestigation": {
+    "observedBefore": "Destination assets were complete, graphics context healthy, and the fence kept returning TIMEOUT_EXPIRED over thousands of polls. Standalone flush and finish probes did not release the wait.",
+    "experiment": "Explicit flush flags, task-based polling and periodic fence-status refresh allowed some full/lite starts and rendered motion reviews, but failed repeated cold-start validation. All GPU runtime changes and temporary probes were reverted. No startup fix is claimed.",
+    "diagnostics": "Expose loading phase, readiness and rendered-frame count in the existing Bone Yard diagnostics, so direct simulation checks cannot be confused with a visible rendering review.",
+    "resolved": false,
+    "verification": {
+      "successfulFullReview": true,
+      "successfulLiteReview": true,
+      "freshFullRetryReady": false,
+      "fullRetryRenderedFrames": 0,
+      "finalBaselineLoading": {
+        "blocked": true,
+        "loading": {
+          "phase": "prepare-destination",
+          "pending": [],
+          "failed": [],
+          "revision": 112
+        },
+        "renderedFrames": 0
+      }
+    },
+    "references": [
+      "node_modules/three/src/utils.js:probeAsync",
+      "https://registry.khronos.org/webgl/specs/latest/2.0/#CLIENT_WAIT_SYNC"
+    ]
+  },
+  "checks": [
+    {
+      "name": "bail-linear-followthrough",
+      "exitCode": 0,
+      "seconds": 0.46
+    },
+    {
+      "name": "bail-spin-followthrough",
+      "exitCode": 0,
+      "seconds": 0.44
+    },
+    {
+      "name": "bail-motion",
+      "exitCode": 0,
+      "seconds": 9.64
+    },
+    {
+      "name": "bail-recovery-continuity",
+      "exitCode": 0,
+      "seconds": 16.93
+    },
+    {
+      "name": "bail-directional-falls",
+      "exitCode": 0,
+      "seconds": 25.61
+    },
+    {
+      "name": "bail-ground-contact",
+      "exitCode": 0,
+      "seconds": 7.4
+    },
+    {
+      "name": "bail-impacts",
+      "exitCode": 0,
+      "seconds": 10.1
+    },
+    {
+      "name": "trip-clearance",
+      "exitCode": 0,
+      "seconds": 17.3
+    },
+    {
+      "name": "bail-matrix-pass",
+      "exitCode": 0,
+      "seconds": 19.12
+    },
+    {
+      "name": "character-elasticity",
+      "exitCode": 0,
+      "seconds": 7.45
+    },
+    {
+      "name": "board-dynamics",
+      "exitCode": 0,
+      "seconds": 1.75
+    }
+  ],
+  "build": {
+    "passed": true,
+    "offlineVersion": "0f392e9fe47112390dac",
+    "command": "The package build script (tsc --noEmit && vite build) executed through the installed Node runtime; npm executable is unavailable.",
+    "fullSuiteRun": false
+  },
+  "browser": {
+    "fullBailCases": 17,
+    "liteBailCases": 17,
+    "boardCases": 5,
+    "boardObservedSeconds": 12,
+    "boardSettles": [
+      {
+        "kind": "Board toss",
+        "seconds": 3.516666666666659
+      },
+      {
+        "kind": "Board roll",
+        "seconds": 6.049999999999984
+      },
+      {
+        "kind": "Board skid",
+        "seconds": 0.9333333333333346
+      },
+      {
+        "kind": "Board wall",
+        "seconds": 1.100000000000001
+      },
+      {
+        "kind": "Board pile",
+        "seconds": 2.199999999999997
+      }
+    ],
+    "visualReview": [
+      "pit-edge first bounce",
+      "six later follow-through frames",
+      "manual free-rise rebound",
+      "six later steadying frames"
+    ],
+    "scope": "Rendered motion was reviewed during a successful full startup with the temporary GPU-polling experiment. Physics and animation sources match the final change. Cold-start reliability remains unresolved; the GPU experiment was reverted.",
+    "consoleErrors": []
+  },
+  "sourceSha256": {
+    "src/character/bailMotion.ts": "2439774541058af8b3101233491fadce276ff4d64ffa9cb647ea948c38850923",
+    "src/presentationLoading.ts": "f23a904cd2cf8a3ac334c5123819a00965d2ab308155e4b9f3cd44e534eb3b62",
+    "tools/bone-yard-browser-review.ts": "a2a1bd99cbaa5197cee11eac1c749a95086418333eb537b301a09136c461c2f4"
+  },
+  "delivery": "Local-only task-owned commit. Shared checkout HEAD/index and unrelated edits preserved. Goal remains active; performance/stability next."
+}

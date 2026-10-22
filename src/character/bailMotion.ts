@@ -68,11 +68,11 @@ export class BailMotion {
   private readonly previousSpin = new THREE.Vector3();
   private readonly localSpin = new THREE.Vector3();
   private readonly previousTravel = new THREE.Vector3();
-  private readonly linearAcceleration = new THREE.Vector3();
+  private readonly linearChange = new THREE.Vector3();
   private hasTravel = false;
   private readonly frameTarget = new Float64Array(3);
-  private readonly torsoForce = new Float64Array(3);
-  private readonly limbForce = new Float64Array(3);
+  private readonly torsoImpulse = new Float64Array(3);
+  private readonly limbImpulse = new Float64Array(3);
   private readonly frameDamping = new Float64Array(JOINTS);
   private readonly angularChange = new THREE.Vector3();
   private readonly contactWaves = new Float64Array(WAVE_SLOTS * WAVE_STRIDE);
@@ -107,7 +107,7 @@ export class BailMotion {
     this.strain.fill(0); this.strainVelocity.fill(0);
     this.kick = 0;
     this.previousSpin.set(0, 0, 0);
-    this.previousTravel.set(0, 0, 0); this.linearAcceleration.set(0, 0, 0); this.hasTravel = false;
+    this.previousTravel.set(0, 0, 0); this.linearChange.set(0, 0, 0); this.hasTravel = false;
   }
 
   /** Also supports the legacy rig when the editable animation bridge is off. */
@@ -125,7 +125,7 @@ export class BailMotion {
     this.previousSpin.copy(spin);
     this.hasTravel = !!travel;
     if (travel) this.previousTravel.copy(travel);
-    this.linearAcceleration.set(0, 0, 0);
+    this.linearChange.set(0, 0, 0);
     // A different loose/tucked side on each incident, with independently soft
     // wrists, elbows and knees. The random stream is cosmetic and isolated.
     const curl = this.random() * 1.8 - .5;
@@ -275,14 +275,13 @@ export class BailMotion {
     // Both velocity streams arrive in world space. Different travel/control
     // bases must not change the response of the same posed body. Differentiate
     // there first, then bring forces and spin into the body's local frame.
-    const inverseDt = 1 / Math.max(dt, 1 / 240);
     this.angularChange.copy(spin).sub(this.previousSpin).applyQuaternion(this.inverse).clampLength(0, 24);
     this.previousSpin.copy(spin);
     this.localSpin.copy(spin).applyQuaternion(this.inverse);
-    this.linearAcceleration.set(0, 0, 0);
+    this.linearChange.set(0, 0, 0);
     if (travel) {
-      if (this.hasTravel) this.linearAcceleration.copy(travel).sub(this.previousTravel)
-        .multiplyScalar(inverseDt).clampLength(0, 55).applyQuaternion(this.inverse);
+      if (this.hasTravel) this.linearChange.copy(travel).sub(this.previousTravel)
+        .clampLength(0, 12).applyQuaternion(this.inverse);
       this.previousTravel.copy(travel); this.hasTravel = true;
     } else this.hasTravel = false;
     const outward = Math.min(.35, this.localSpin.lengthSq() * .0018);
@@ -295,10 +294,10 @@ export class BailMotion {
     for (let axis = 0; axis < 3; axis++) {
       const gravity = axis === 0 ? this.gravity.z : axis === 2 ? -this.gravity.x : 0;
       const angular = this.localSpin.getComponent(axis);
-      const linear = axis === 0 ? this.linearAcceleration.z : axis === 2 ? -this.linearAcceleration.x : 0;
+      const linear = axis === 0 ? this.linearChange.z : axis === 2 ? -this.linearChange.x : 0;
       this.frameTarget[axis] = gravity * .42 - angular * .025;
-      this.torsoForce[axis] = -linear * .24;
-      this.limbForce[axis] = linear * .38;
+      this.torsoImpulse[axis] = -linear * .24;
+      this.limbImpulse[axis] = linear * .38;
     }
     for (let joint = 0; joint < JOINTS; joint++) {
       this.frameDamping[joint] = 1 / (1 + this.damping[joint] * settle * h);
@@ -308,8 +307,13 @@ export class BailMotion {
         // acceleration to 60 rad/s² discarded almost all of a hard rebound,
         // and made the reaction depend on frame duration. Transfer the bounded
         // velocity change once; integration and compliant stops absorb it.
-        this.velocity[i] = clamp(this.velocity[i] - this.angularChange.getComponent(axis) *
-          SPIN_INERTIA[joint] * LIMITS[i], 22);
+        // Travel has the same instantaneous character at a rebound. The old
+        // acceleration cap made a 2 m/s and an 8 m/s hit indistinguishable and
+        // lost more momentum at higher update rates. Let hanging limbs lag a
+        // braking torso, with the upper body counterbalancing above the waist.
+        const linearImpulse = (joint <= 1 ? this.torsoImpulse : this.limbImpulse)[axis];
+        this.velocity[i] = clamp(this.velocity[i] + (linearImpulse - this.angularChange.getComponent(axis) *
+          SPIN_INERTIA[joint]) * LIMITS[i], 22);
       }
     }
     for (let step = 0; step < steps; step++) {
@@ -320,7 +324,6 @@ export class BailMotion {
         const parent = PARENTS[joint];
         const stiffness = this.stiffness[joint] * softness;
         const damping = this.frameDamping[joint];
-        const inertia = joint <= 1 ? this.torsoForce : this.limbForce;
         for (let axis = 0; axis < 3; axis++) {
           const i = joint * 3 + axis, limit = LIMITS[i];
           const lo = axis === 0 ? this.lower[joint] : -limit;
@@ -331,7 +334,7 @@ export class BailMotion {
           const target = Math.max(lo, Math.min(hi, clamp(this.bias[i] + this.frameTarget[axis] * limit, limit) * recover));
           // Hanging limbs carry through a braking torso; upward spine/head
           // respond oppositely. No clip clock or pose needs to restart.
-          const force = stiffness * (target - angle) + chain + inertia[axis] * limit;
+          const force = stiffness * (target - angle) + chain;
           velocity = clamp((velocity + force * h) * damping, 22);
           if (hinge) {
             // A small compliant stop slows only motion into the boundary.
