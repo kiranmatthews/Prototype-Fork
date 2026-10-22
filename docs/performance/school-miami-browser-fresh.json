@@ -1,8 +1,8 @@
 {
   "url": "http://127.0.0.1:5308/?playtest&level=school-miami",
   "render": "full",
-  "revision": "eighth, corrected quarters, graded curbs and covered camera",
-  "input": "Native W held 1.8 seconds; L and K checkpoint shortcuts",
+  "revision": "ninth, hoop quarter and rear bank",
+  "input": "Native W held 1.8 seconds",
   "console": [],
-  "checkpointShortcuts": "K/L produced no relocation with developer controls hidden. Native checkpoint banking and fall recovery passed in the 40-case live checks."
+  "checkpointRecovery": "Native banking and fall recovery passed in both 59-case live checks."
 }

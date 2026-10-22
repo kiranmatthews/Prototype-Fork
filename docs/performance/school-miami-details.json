@@ -1,0 +1,389 @@
+{
+  "support": [
+    {
+      "name": "Hoop quarter flat approach",
+      "point": [
+        48.5,
+        0,
+        43.4
+      ]
+    },
+    {
+      "name": "Hoop quarter deck",
+      "point": [
+        48.5,
+        1.350000023841858,
+        45.1
+      ]
+    },
+    {
+      "name": "Rear bank deck 0.1",
+      "point": [
+        -7.348028169014082,
+        -3.8499999046325684,
+        -80.17794366197182
+      ]
+    },
+    {
+      "name": "Rear bank deck 0.3",
+      "point": [
+        -2.5060563380281664,
+        -3.8499999046325684,
+        -79.92988732394366
+      ]
+    },
+    {
+      "name": "Rear bank deck 0.5",
+      "point": [
+        2.33591549295775,
+        -3.8499999046325684,
+        -79.68183098591548
+      ]
+    },
+    {
+      "name": "Rear bank deck 0.7",
+      "point": [
+        7.177887323943664,
+        -3.8499999046325684,
+        -79.43377464788732
+      ]
+    },
+    {
+      "name": "Rear bank deck 0.9",
+      "point": [
+        12.019859154929582,
+        -3.8499999046325684,
+        -79.18571830985914
+      ]
+    }
+  ],
+  "trials": [
+    {
+      "name": "Gym hoop quarter at 12",
+      "kind": "air",
+      "speed": 12,
+      "frames": 101,
+      "air": true,
+      "returned": true,
+      "flatRollout": true,
+      "maxY": 5.064135704325143,
+      "bails": 0,
+      "end": [
+        48.5,
+        0,
+        42.237124618475534
+      ]
+    },
+    {
+      "name": "Gym hoop quarter at 16",
+      "kind": "air",
+      "speed": 16,
+      "frames": 86,
+      "air": true,
+      "returned": true,
+      "flatRollout": true,
+      "maxY": 5.064135704325143,
+      "bails": 0,
+      "end": [
+        48.5,
+        0,
+        42.23745981054922
+      ]
+    },
+    {
+      "name": "Gym hoop quarter at 20",
+      "kind": "air",
+      "speed": 20,
+      "frames": 78,
+      "air": true,
+      "returned": true,
+      "flatRollout": true,
+      "maxY": 5.064135704325143,
+      "bails": 0,
+      "end": [
+        48.5,
+        0,
+        42.23662413346042
+      ]
+    },
+    {
+      "name": "Gym west quarter at 12",
+      "kind": "air",
+      "speed": 12,
+      "frames": 129,
+      "air": true,
+      "returned": true,
+      "flatRollout": true,
+      "maxY": 5.207136118225949,
+      "bails": 0,
+      "end": [
+        31.000191282622048,
+        0,
+        32
+      ]
+    },
+    {
+      "name": "Gym west quarter at 16",
+      "kind": "air",
+      "speed": 16,
+      "frames": 118,
+      "air": true,
+      "returned": true,
+      "flatRollout": true,
+      "maxY": 5.207162825425159,
+      "bails": 0,
+      "end": [
+        31.355466027202766,
+        0,
+        32
+      ]
+    },
+    {
+      "name": "Gym west quarter at 20",
+      "kind": "air",
+      "speed": 20,
+      "frames": 112,
+      "air": true,
+      "returned": true,
+      "flatRollout": true,
+      "maxY": 5.206969803654947,
+      "bails": 0,
+      "end": [
+        31.0026365851163,
+        0,
+        32
+      ]
+    },
+    {
+      "name": "Gym east quarter at 12",
+      "kind": "air",
+      "speed": 12,
+      "frames": 126,
+      "air": true,
+      "returned": true,
+      "flatRollout": true,
+      "maxY": 5.064135704325143,
+      "bails": 0,
+      "end": [
+        64.99775534570969,
+        0,
+        32
+      ]
+    },
+    {
+      "name": "Gym east quarter at 16",
+      "kind": "air",
+      "speed": 16,
+      "frames": 114,
+      "air": true,
+      "returned": true,
+      "flatRollout": true,
+      "maxY": 5.064135704325143,
+      "bails": 0,
+      "end": [
+        64.99724594395754,
+        0,
+        32
+      ]
+    },
+    {
+      "name": "Gym east quarter at 20",
+      "kind": "air",
+      "speed": 20,
+      "frames": 110,
+      "air": true,
+      "returned": true,
+      "flatRollout": true,
+      "maxY": 5.064135704325143,
+      "bails": 0,
+      "end": [
+        64.64460110865318,
+        0,
+        32
+      ]
+    },
+    {
+      "name": "Direct Roof 2 Awning at 16",
+      "kind": "air",
+      "speed": 16,
+      "frames": 97,
+      "air": true,
+      "landed": true,
+      "maxY": 12.485927478146111,
+      "bails": 0,
+      "end": [
+        45,
+        3.4000000953674316,
+        5.922684324743053
+      ]
+    },
+    {
+      "name": "Direct Roof 2 Awning at 18",
+      "kind": "air",
+      "speed": 18,
+      "frames": 98,
+      "air": true,
+      "landed": true,
+      "maxY": 13.069455351370927,
+      "bails": 0,
+      "end": [
+        45,
+        3.4000000953674316,
+        3.616031559176138
+      ]
+    },
+    {
+      "name": "Rear bank 0.27/-1",
+      "kind": "ride",
+      "t": 0.27,
+      "direction": -1,
+      "frames": 21,
+      "maxStep": 0.22787373124968777,
+      "minSpeed": 10.165988444152813,
+      "arrived": true,
+      "bails": 0,
+      "end": [
+        -3.193195010585317,
+        -5,
+        -75.5460652292176
+      ]
+    },
+    {
+      "name": "Rear bank 0.27/1",
+      "kind": "ride",
+      "t": 0.27,
+      "direction": 1,
+      "frames": 24,
+      "maxStep": 0.18894916345704965,
+      "minSpeed": 10.165988444152813,
+      "arrived": true,
+      "bails": 0,
+      "end": [
+        -2.088430561597444,
+        -3.8499999046325684,
+        -79.2958590793831
+      ]
+    },
+    {
+      "name": "Rear bank 0.72/-1",
+      "kind": "ride",
+      "t": 0.72,
+      "direction": -1,
+      "frames": 20,
+      "maxStep": 0.22794499737495233,
+      "minSpeed": 10.165988444152815,
+      "arrived": true,
+      "bails": 0,
+      "end": [
+        6.521415695148594,
+        -5,
+        -75.20007198036778
+      ]
+    },
+    {
+      "name": "Rear bank 0.72/1",
+      "kind": "ride",
+      "t": 0.72,
+      "direction": 1,
+      "frames": 23,
+      "maxStep": 0.18578825737424653,
+      "minSpeed": 10.165988444152815,
+      "arrived": true,
+      "bails": 0,
+      "end": [
+        7.396200884473975,
+        -3.8499999046325684,
+        -78.7537504792228
+      ]
+    },
+    {
+      "name": "Rear short rail 1/-1",
+      "kind": "grind",
+      "direction": -1,
+      "grind": {
+        "frames": 44,
+        "grindFrames": 23,
+        "maxT": 4.4854199651136115,
+        "minT": 0,
+        "progress": 4.4854199651136115,
+        "direction": -1,
+        "maxBalance": 0.1,
+        "caught": true,
+        "landed": true
+      },
+      "bails": 0,
+      "end": [
+        -12.384302617454816,
+        -4.351799946742048,
+        -79.81575473276784
+      ]
+    },
+    {
+      "name": "Rear short rail 1/1",
+      "kind": "grind",
+      "direction": 1,
+      "grind": {
+        "frames": 40,
+        "grindFrames": 23,
+        "maxT": 4.4854199651136115,
+        "minT": 0,
+        "progress": 4.4854199651136115,
+        "direction": 1,
+        "maxBalance": 0.1,
+        "caught": true,
+        "landed": true
+      },
+      "bails": 0,
+      "end": [
+        -0.715938187726292,
+        -3.8499999046325684,
+        -79.18463565040544
+      ]
+    },
+    {
+      "name": "Rear short rail 2/-1",
+      "kind": "grind",
+      "direction": -1,
+      "grind": {
+        "frames": 38,
+        "grindFrames": 20,
+        "maxT": 3.922919798073198,
+        "minT": 0,
+        "progress": 3.922919798073198,
+        "direction": -1,
+        "maxBalance": 0.1,
+        "caught": true,
+        "landed": true
+      },
+      "bails": 0,
+      "end": [
+        5.5552628993796676,
+        -3.938039106237523,
+        -78.23746669548444
+      ]
+    },
+    {
+      "name": "Rear short rail 2/1",
+      "kind": "grind",
+      "direction": 1,
+      "grind": {
+        "frames": 43,
+        "grindFrames": 20,
+        "maxT": 3.922919798073198,
+        "minT": 0,
+        "progress": 3.922919798073198,
+        "direction": 1,
+        "maxBalance": 0.1,
+        "caught": true,
+        "landed": true
+      },
+      "bails": 0,
+      "end": [
+        17.277033430960188,
+        -4.601644477730195,
+        -78.07331981909965
+      ]
+    }
+  ],
+  "tuningUnchanged": true
+}

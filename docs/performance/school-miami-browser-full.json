@@ -8,8 +8,8 @@
     -39
   ],
   "speed": 0,
-  "components": 238,
-  "rails": 64,
+  "components": 247,
+  "rails": 67,
   "camera": {
     "eye": [
       26,
@@ -19,14 +19,14 @@
     "trailing": 5.049999999999997,
     "bodyBounds": {
       "min": [
-        25.501183059729392,
-        -4.775294946410002,
-        -39.983764308434424
+        25.50173142091416,
+        -4.775461767689352,
+        -39.975353793910934
       ],
       "max": [
-        26.69040185347062,
-        -1.9714303439414151,
-        -38.179811087188746
+        26.686763161330443,
+        -2.0111333848252406,
+        -38.185934003081286
       ]
     }
   },
@@ -188,6 +188,82 @@
         "frames": 209
       },
       {
+        "name": "Gym hoop quarter at 12",
+        "frames": 101
+      },
+      {
+        "name": "Gym hoop quarter at 16",
+        "frames": 86
+      },
+      {
+        "name": "Gym hoop quarter at 20",
+        "frames": 78
+      },
+      {
+        "name": "Gym west quarter at 12",
+        "frames": 129
+      },
+      {
+        "name": "Gym west quarter at 16",
+        "frames": 118
+      },
+      {
+        "name": "Gym west quarter at 20",
+        "frames": 112
+      },
+      {
+        "name": "Gym east quarter at 12",
+        "frames": 126
+      },
+      {
+        "name": "Gym east quarter at 16",
+        "frames": 114
+      },
+      {
+        "name": "Gym east quarter at 20",
+        "frames": 110
+      },
+      {
+        "name": "Direct Roof 2 Awning at 16",
+        "frames": 97
+      },
+      {
+        "name": "Direct Roof 2 Awning at 18",
+        "frames": 98
+      },
+      {
+        "name": "Rear bank 0.27/-1",
+        "frames": 21
+      },
+      {
+        "name": "Rear bank 0.27/1",
+        "frames": 24
+      },
+      {
+        "name": "Rear bank 0.72/-1",
+        "frames": 20
+      },
+      {
+        "name": "Rear bank 0.72/1",
+        "frames": 23
+      },
+      {
+        "name": "Rear short rail 1/-1",
+        "frames": 44
+      },
+      {
+        "name": "Rear short rail 1/1",
+        "frames": 40
+      },
+      {
+        "name": "Rear short rail 2/-1",
+        "frames": 38
+      },
+      {
+        "name": "Rear short rail 2/1",
+        "frames": 43
+      },
+      {
         "name": "Continuous campus circuit",
         "frames": 2404
       },
@@ -197,7 +273,7 @@
       }
     ],
     "failure": null,
-    "frames": 7506,
+    "frames": 8928,
     "longGrinds": [
       {
         "name": "Roof-to-awning plank",
@@ -419,6 +495,258 @@
           "receivingProgress": 27.481667540755346,
           "air": true,
           "landed": true
+        }
+      }
+    ],
+    "details": [
+      {
+        "name": "Gym hoop quarter at 12",
+        "kind": "air",
+        "result": {
+          "speed": 12,
+          "frames": 101,
+          "air": true,
+          "returned": true,
+          "flatRollout": true,
+          "maxY": 5.064135704325143
+        }
+      },
+      {
+        "name": "Gym hoop quarter at 16",
+        "kind": "air",
+        "result": {
+          "speed": 16,
+          "frames": 86,
+          "air": true,
+          "returned": true,
+          "flatRollout": true,
+          "maxY": 5.064135704325143
+        }
+      },
+      {
+        "name": "Gym hoop quarter at 20",
+        "kind": "air",
+        "result": {
+          "speed": 20,
+          "frames": 78,
+          "air": true,
+          "returned": true,
+          "flatRollout": true,
+          "maxY": 5.064135704325143
+        }
+      },
+      {
+        "name": "Gym west quarter at 12",
+        "kind": "air",
+        "result": {
+          "speed": 12,
+          "frames": 129,
+          "air": true,
+          "returned": true,
+          "flatRollout": true,
+          "maxY": 5.207136118225949
+        }
+      },
+      {
+        "name": "Gym west quarter at 16",
+        "kind": "air",
+        "result": {
+          "speed": 16,
+          "frames": 118,
+          "air": true,
+          "returned": true,
+          "flatRollout": true,
+          "maxY": 5.207162825425159
+        }
+      },
+      {
+        "name": "Gym west quarter at 20",
+        "kind": "air",
+        "result": {
+          "speed": 20,
+          "frames": 112,
+          "air": true,
+          "returned": true,
+          "flatRollout": true,
+          "maxY": 5.206969803654947
+        }
+      },
+      {
+        "name": "Gym east quarter at 12",
+        "kind": "air",
+        "result": {
+          "speed": 12,
+          "frames": 126,
+          "air": true,
+          "returned": true,
+          "flatRollout": true,
+          "maxY": 5.064135704325143
+        }
+      },
+      {
+        "name": "Gym east quarter at 16",
+        "kind": "air",
+        "result": {
+          "speed": 16,
+          "frames": 114,
+          "air": true,
+          "returned": true,
+          "flatRollout": true,
+          "maxY": 5.064135704325143
+        }
+      },
+      {
+        "name": "Gym east quarter at 20",
+        "kind": "air",
+        "result": {
+          "speed": 20,
+          "frames": 110,
+          "air": true,
+          "returned": true,
+          "flatRollout": true,
+          "maxY": 5.064135704325143
+        }
+      },
+      {
+        "name": "Direct Roof 2 Awning at 16",
+        "kind": "air",
+        "result": {
+          "speed": 16,
+          "frames": 97,
+          "air": true,
+          "landed": true,
+          "maxY": 12.485927478146111
+        }
+      },
+      {
+        "name": "Direct Roof 2 Awning at 18",
+        "kind": "air",
+        "result": {
+          "speed": 18,
+          "frames": 98,
+          "air": true,
+          "landed": true,
+          "maxY": 13.069455351370927
+        }
+      },
+      {
+        "name": "Rear bank 0.27/-1",
+        "kind": "ride",
+        "result": {
+          "t": 0.27,
+          "direction": -1,
+          "frames": 21,
+          "maxStep": 0.22787373124968777,
+          "minSpeed": 10.165988444152813,
+          "arrived": true
+        }
+      },
+      {
+        "name": "Rear bank 0.27/1",
+        "kind": "ride",
+        "result": {
+          "t": 0.27,
+          "direction": 1,
+          "frames": 24,
+          "maxStep": 0.18894916345704965,
+          "minSpeed": 10.165988444152813,
+          "arrived": true
+        }
+      },
+      {
+        "name": "Rear bank 0.72/-1",
+        "kind": "ride",
+        "result": {
+          "t": 0.72,
+          "direction": -1,
+          "frames": 20,
+          "maxStep": 0.22794499737495233,
+          "minSpeed": 10.165988444152815,
+          "arrived": true
+        }
+      },
+      {
+        "name": "Rear bank 0.72/1",
+        "kind": "ride",
+        "result": {
+          "t": 0.72,
+          "direction": 1,
+          "frames": 23,
+          "maxStep": 0.18578825737424653,
+          "minSpeed": 10.165988444152815,
+          "arrived": true
+        }
+      },
+      {
+        "name": "Rear short rail 1/-1",
+        "kind": "grind",
+        "result": {
+          "direction": -1,
+          "grind": {
+            "frames": 44,
+            "grindFrames": 23,
+            "maxT": 4.4854199651136115,
+            "minT": 0,
+            "progress": 4.4854199651136115,
+            "direction": -1,
+            "maxBalance": 0.1,
+            "caught": true,
+            "landed": true
+          }
+        }
+      },
+      {
+        "name": "Rear short rail 1/1",
+        "kind": "grind",
+        "result": {
+          "direction": 1,
+          "grind": {
+            "frames": 40,
+            "grindFrames": 23,
+            "maxT": 4.4854199651136115,
+            "minT": 0,
+            "progress": 4.4854199651136115,
+            "direction": 1,
+            "maxBalance": 0.1,
+            "caught": true,
+            "landed": true
+          }
+        }
+      },
+      {
+        "name": "Rear short rail 2/-1",
+        "kind": "grind",
+        "result": {
+          "direction": -1,
+          "grind": {
+            "frames": 38,
+            "grindFrames": 20,
+            "maxT": 3.922919798073198,
+            "minT": 0,
+            "progress": 3.922919798073198,
+            "direction": -1,
+            "maxBalance": 0.1,
+            "caught": true,
+            "landed": true
+          }
+        }
+      },
+      {
+        "name": "Rear short rail 2/1",
+        "kind": "grind",
+        "result": {
+          "direction": 1,
+          "grind": {
+            "frames": 43,
+            "grindFrames": 20,
+            "maxT": 3.922919798073198,
+            "minT": 0,
+            "progress": 3.922919798073198,
+            "direction": 1,
+            "maxBalance": 0.1,
+            "caught": true,
+            "landed": true
+          }
         }
       }
     ],

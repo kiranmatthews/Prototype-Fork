@@ -2,6 +2,7 @@ import {SCHOOL_KICKER,SCHOOL_POOLS,SCHOOL_ROOF_ACCESS,SCHOOL_MAIN_RAIL,SCHOOL_CH
 import {createSchoolCircuit} from './school-circuit';
 import {createBalancedGrind,createRoofMiniGap,createPerimeterMiniGap} from './school-grind-lines';
 import {CONST} from '../src/tuning';
+import {schoolDetailTrials} from './school-detail-lines';
 import {schoolStreetTrials,createStreetTransfer,parkGapRails,createParkGap,miniGapRails} from './school-street-transfers';
 import {hallPassRails,lawnTransferRails,upperPlanterRails,createHallPass,createUpperPlanterChain,createLawnTransfer,classroomTransferRails,createClassroomTransfer} from './school-planter-lines';
 type Point=[number,number,number];
@@ -92,6 +93,7 @@ export function runSchoolBrowserChecks(g:any){
       }
       if(p.balanceBoostT||p.uberTimer)throw Error('Planter transfer has a balance assist');(report.planterLines??=[]).push({name,result:planterLine.report});
     },input:()=>planterLine.sample(),done:()=>planterLine.observe()})),
+    ...schoolDetailTrials(p,l,place,CONST.fixedStep).map((c):Trial=>({name:c.name,limit:c.limit,init:()=>{c.init();(report.details??=[]).push({name:c.name,kind:c.kind,result:c.result});},input:n=>c.sample(n),done:()=>c.observe()})),
     {name:'Continuous campus circuit',limit:2600,init:()=>{p.respawn(l,true);circuit=createSchoolCircuit(p);report.circuit=circuit.report;},input:()=>circuit.sample(),done:()=>circuit.observe()},
     {name:'Checkpoint and fall recovery',allowDeath:true,limit:900,init:()=>{banked=false;dead=false;const q=SCHOOL_CHECKPOINTS[1];place([q[0]-3,q[1]+.1,q[2]],[1,0,0],18);},input:()=>({moveY:banked?0:1,jumpHeld:!banked}),done:()=>{
       if(!banked&&l.activeCheckpoint===l.checkpoints[1]){banked=true;report.checkpointBanked=true;p.pos.set(110,-10,0);p.prevPos.copy(p.pos);p.state='air';p.grounded=false;p.vVel=-10;p.airFromSkate=true;p.airGrav='board';}

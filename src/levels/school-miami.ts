@@ -435,12 +435,17 @@ for(const z of [18.4,45.1]){
   const toward=z<30?1:-1;
   stripe([45.7,.04,z],[45.7,.04,z+toward*5.8],.09,'#e0d9bd',g);stripe([51.3,.04,z],[51.3,.04,z+toward*5.8],.09,'#e0d9bd',g);
   stripe([45.7,.04,z+toward*5.8],[51.3,.04,z+toward*5.8],.09,'#e0d9bd',g);
-  paintBox(48.5,3.3,z,1.8,1.05,.15,'#d5d2ba',g);paintBox(48.5,1.7,z-.4*toward,.12,3.4,.12,'#405b52',g);
-  paintBox(48.5,2.95,z+.35*toward,.58,.06,.52,'#b97148',g);
+  // The original inset has one hoop above the small south quarter.
+  if(z>30){
+    paintBox(48.5,3.3,z,1.8,1.05,.15,'#d5d2ba',g);paintBox(48.5,1.7,z-.4*toward,.12,3.4,.12,'#405b52',g);
+    paintBox(48.5,2.95,z+.35*toward,.58,.06,.52,'#b97148',g);
+  }
 }
 for(let i=0;i<48;i++){const a=i/48*Math.PI*2,b=(i+1)/48*Math.PI*2;stripe([48.5+Math.cos(a)*1.8,.04,31.75+Math.sin(a)*1.8],[48.5+Math.cos(b)*1.8,.04,31.75+Math.sin(b)*1.8],.08,'#e0d9bd',g);}
 quarter('Gym west wooden quarterpipe',[[30,0,45],[30,0,19]],3.4,g,{deck:1.5,color:'#c4a77c',tex:'wood'});
 quarter('Gym east dark quarterpipe',[[66,0,19],[66,0,45]],3.4,g,{deck:1.5,color:'#626966',tex:'wood'});
+export const SCHOOL_HOOP_QUARTER={x:48.5,toeZ:43.5,width:10,radius:1.35};
+quarter('Gym hoop quarterpipe',[[53.5,0,43.5],[43.5,0,43.5]],SCHOOL_HOOP_QUARTER.radius,g,{deck:.5,color:'#879287',tex:'wood'});
 // Tall windows keep the interior readable without adding lights/physics.
 for(let x=25;x<74;x+=6){paintBox(x,5.25,48.65,3,1.15,.08,'#86a7ad',g);paintBox(x,5.25,14.86,3,1.15,.08,'#86a7ad',g);}
 
@@ -504,11 +509,39 @@ for(const [i,[x,z]] of SCHOOL_GARBAGE_ROW.entries()){
 }
 quarter('Gym rear alley quarter',[[26,0,52.5],[71,0,52.5]],2.2,10,{color:'#929782',deck:.8});
 
-// Rear classroom forms the far skyline beyond the playground sign.
-const rearCentre=schoolMapPoint(414,50,-1.8);
-slab('Rear classroom facade',rearCentre[0],rearCentre[2],30,3.2,-1.8,lowerY,brick,3);
-slab('Rear blue classroom roof',rearCentre[0],rearCentre[2],30.3,3.5,-1.65,-1.85,blue,3);
-for(let i=-13;i<=13;i+=2.6)paintBox(rearCentre[0]+i,-3.8,rearCentre[2]+1.63,1.2,1.4,.05,'#465b60',3);
+// Trace the rear shed and the separate bank in front of it. The two short
+// grind rails belong to this bank; the blue roof's dark seam is just paint.
+// All four roof corners include their elevation before undoing projection.
+export const SCHOOL_REAR_BANK={
+  y:-3.85,
+  back:[[356,40],[472,65]].map(([u,v])=>schoolMapPoint(u,v,-3.85)),
+  lip:[[370,52],[455,71]].map(([u,v])=>schoolMapPoint(u,v,-3.85)),
+  toe:[[362,65],[449,83]].map(([u,v])=>schoolMapPoint(u,v,lowerY)),
+  rails:[[[369,49],[387,53]],[[438,66],[454,69]]].map(line=>line.map(([u,v])=>schoolMapPoint(u,v,-3.4))),
+};
+{
+  const b=SCHOOL_REAR_BANK,[a,d]=b.back,[f,e]=b.lip,[h,j]=b.toe;
+  floor('Rear classroom · raised bank deck',[plan(a),plan(d),plan(e),plan(f)],b.y,concrete,3);
+  surface('Rear classroom · broad approach bank',[f,e,j,h].flat(),[0,2,1,0,3,2],'#858e87',3);
+  // Taper both ends down onto the yard rather than exposing a vertical
+  // slab edge across the perimeter quarter's through-route.
+  const left=schoolMapPoint(348,59,lowerY),right=schoolMapPoint(476,82,lowerY);
+  surface('Rear classroom · bank side rollouts',[a,f,h,left,d,e,j,right].flat(),[0,1,2,0,2,3,4,6,5,4,7,6],concrete,3,{doubleSided:true});
+  for(const [i,line] of b.rails.entries())rail(`Rear bank · short rail ${i+1}`,line,3);
+  const front=[schoolMapPoint(356,32,-1.35),schoolMapPoint(472,57,-1.35)];
+  const back=[schoolMapPoint(360,15,.9),schoolMapPoint(476,40,.9)];
+  const corners=[front[0],front[1],back[1],back[0]],base=corners.map(p=>[p[0],lowerY,p[2]] as Point);
+  surface('Rear blue classroom · pitched roof',corners.flat(),[0,1,2,0,2,3],blue,3,{tex:'wood'});
+  surface('Rear classroom · enclosed shed walls',[...corners,...base].flat(),[0,4,5,0,5,1,1,5,6,1,6,2,2,6,7,2,7,3,3,7,4,3,4,0],brick,3,{doubleSided:true});
+  for(let i=0;i<12;i++){
+    const t=(i+.5)/12,p=pointAt(a,d,t);p[2]+=.035;
+    paintBox(p[0],b.y+.72,p[2],.9,1.44,.04,'#465b60',3);
+    const rib=pointAt(a,d,i/12);paintBox(rib[0],b.y+1.25,rib[2]+.04,.11,2.5,.05,'#b3b4a1',3);
+  }
+  const seam=front.map((p,i)=>{const q=pointAt(p,back[i],.5);q[1]+=.015;return q;});
+  stripe(seam[0],seam[1],.05,'#324b50',3);
+  for(let i=0;i<=28;i++)stripe(pointAt(front[0],front[1],i/28).map((v,k)=>v+(k===1?.015:0)) as Point,pointAt(back[0],back[1],i/28).map((v,k)=>v+(k===1?.015:0)) as Point,.025,'#5a8088',3);
+}
 
 // Recovery is available at each session without forcing a linear course.
 // Native free-skate has no finish trigger: crossing the original skating
