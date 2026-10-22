@@ -47,7 +47,7 @@ export function runSchoolBrowserChecks(g:any){
     pathTrial('Winding halfpipe',SCHOOL_LONG_HALFPIPE,false,true),
     {name:'Perimeter lane width',init:()=>place([-60,-4.9,-52],[0,0,-1],8),input:()=>({moveY:1}),done:()=>{if(p.pos.z>-56)return false;if(!p.grounded||Math.abs(p.pos.y+5)>.06)throw Error('Gap in perimeter quarter floor join');return true;}},
     pathTrial('West descent to pools',SCHOOL_WEST_DESCENT,false,true,true,9),
-    pathTrial('Gym doorway',[[31,0,9],[31,0,19],[38,0,25],[48.5,0,32],[48.5,0,42]]),
+    pathTrial('Gym doorway',[[48.5,0,9],[48.5,0,19],[48.5,0,32],[48.5,0,42]]),
     {name:'Air-conditioner roof gap',init:()=>{air=false;popped=false;place([70,7.1,27.5],[-1,0,0],18);},input:()=>{if(p.pos.x<61)popped=true;return{jumpHeld:!popped};},done:()=>{air||=p.state==='air';return air&&p.grounded&&p.pos.x<49.7;}},
     {name:'Roof 2 Roof',init:()=>{air=false;place([63,7.1,23],[0,0,-1],18);},input:()=>({moveY:1,jumpHeld:true}),done:()=>{air||=p.state==='air';if(!air||!p.grounded||p.pos.z>=SCHOOL_BONUS_ROOF.maxZ)return false;if(p.pos.z<1||Math.abs(p.pos.y-7)>.06)throw Error('Missed bonus roof');return true;}},
     {name:'Over a Footbridge',init:()=>{air=false;popped=false;overBridge=false;place([dk.p[0]-dh[0]*3.8,-6.4,dk.p[2]-dh[2]*3.8],dh,18);if(Math.abs(p.pos.y+6.5)>.06)throw Error('Ditch start missed bed');},input:()=>{if((dk.p[0]-p.pos.x)*dh[0]+(dk.p[2]-p.pos.z)*dh[2]< -dk.run/2+.6)popped=true;return {jumpHeld:!popped};},done:()=>{air||=p.state==='air';const past=(p.pos.x-db.p[0])*dh[0]+(p.pos.z-db.p[2])*dh[2];if(Math.abs(past)<.5&&p.state==='air'&&p.pos.y>-4.58)overBridge=true;if(!air||!p.grounded||past<=db.width/2)return false;if(!overBridge)throw Error('Ditch jump missed bridge');return true;}},

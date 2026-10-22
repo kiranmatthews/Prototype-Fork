@@ -1,5 +1,5 @@
 {
-  "components": 261,
+  "components": 259,
   "rails": 67,
   "support": [
     {
@@ -158,14 +158,14 @@
     },
     {
       "label": "gym doorway and court",
-      "frames": 207,
+      "frames": 157,
       "bails": 0,
-      "maxStep": 0.19998425196850772,
+      "maxStep": 0.19998425196850533,
       "minSpeed": 8.166229039078448,
       "end": [
-        50.293647277587645,
+        48.5,
         0,
-        40.764396282474706
+        39.828269202671095
       ],
       "target": [
         48.5,

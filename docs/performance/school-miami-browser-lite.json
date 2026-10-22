@@ -8,7 +8,7 @@
     -39
   ],
   "speed": 0,
-  "components": 261,
+  "components": 259,
   "rails": 67,
   "camera": {
     "eye": [
@@ -19,14 +19,14 @@
     "trailing": 5.049999999999997,
     "bodyBounds": {
       "min": [
-        25.501292384729577,
-        -4.775339696983872,
-        -39.98490025449079
+        25.50167667101616,
+        -4.77546437371922,
+        -39.97856910432513
       ],
       "max": [
-        26.69036973370287,
-        -1.9743281869528655,
-        -38.179051260592104
+        26.68626099136603,
+        -2.0147844147291964,
+        -38.183810488650515
       ]
     }
   },
@@ -73,7 +73,7 @@
       },
       {
         "name": "Gym doorway",
-        "frames": 205
+        "frames": 155
       },
       {
         "name": "Air-conditioner roof gap",
@@ -200,28 +200,76 @@
         "frames": 81
       },
       {
-        "name": "Gym west quarter at 12",
-        "frames": 129
+        "name": "Gym west bank -1/12",
+        "frames": 42
       },
       {
-        "name": "Gym west quarter at 16",
-        "frames": 118
+        "name": "Gym west bank -1/16",
+        "frames": 35
       },
       {
-        "name": "Gym west quarter at 20",
-        "frames": 112
+        "name": "Gym west bank -1/20",
+        "frames": 29
       },
       {
-        "name": "Gym east quarter at 12",
-        "frames": 126
+        "name": "Gym west bank 1/12",
+        "frames": 54
       },
       {
-        "name": "Gym east quarter at 16",
-        "frames": 114
+        "name": "Gym west bank 1/16",
+        "frames": 46
       },
       {
-        "name": "Gym east quarter at 20",
-        "frames": 110
+        "name": "Gym west bank 1/20",
+        "frames": 35
+      },
+      {
+        "name": "Gym east bank -1/12",
+        "frames": 42
+      },
+      {
+        "name": "Gym east bank -1/16",
+        "frames": 35
+      },
+      {
+        "name": "Gym east bank -1/20",
+        "frames": 29
+      },
+      {
+        "name": "Gym east bank 1/12",
+        "frames": 54
+      },
+      {
+        "name": "Gym east bank 1/16",
+        "frames": 46
+      },
+      {
+        "name": "Gym east bank 1/20",
+        "frames": 35
+      },
+      {
+        "name": "Gym doorway 46.5/-1",
+        "frames": 71
+      },
+      {
+        "name": "Gym doorway 46.5/1",
+        "frames": 71
+      },
+      {
+        "name": "Gym doorway 48.5/-1",
+        "frames": 71
+      },
+      {
+        "name": "Gym doorway 48.5/1",
+        "frames": 71
+      },
+      {
+        "name": "Gym doorway 50.5/-1",
+        "frames": 71
+      },
+      {
+        "name": "Gym doorway 50.5/1",
+        "frames": 71
       },
       {
         "name": "Direct Roof 2 Awning at 16",
@@ -265,19 +313,19 @@
       },
       {
         "name": "Gym complete rail 1/-1",
-        "frames": 379
+        "frames": 543
       },
       {
         "name": "Gym complete rail 1/1",
-        "frames": 379
+        "frames": 543
       },
       {
         "name": "Gym complete rail 2/-1",
-        "frames": 379
+        "frames": 543
       },
       {
         "name": "Gym complete rail 2/1",
-        "frames": 379
+        "frames": 543
       },
       {
         "name": "Skylight drop -1/6",
@@ -305,7 +353,7 @@
       }
     ],
     "failure": null,
-    "frames": 10770,
+    "frames": 11575,
     "longGrinds": [
       {
         "name": "Roof-to-awning plank",
@@ -568,75 +616,213 @@
         }
       },
       {
-        "name": "Gym west quarter at 12",
-        "kind": "air",
+        "name": "Gym west bank -1/12",
+        "kind": "ride",
         "result": {
           "speed": 12,
-          "frames": 129,
-          "air": true,
-          "returned": true,
-          "flatRollout": true,
-          "maxY": 5.207136118225949
+          "direction": -1,
+          "frames": 42,
+          "maxStep": 0.2865081843796844,
+          "minSpeed": 12.170025592902192,
+          "arrived": true
         }
       },
       {
-        "name": "Gym west quarter at 16",
-        "kind": "air",
+        "name": "Gym west bank -1/16",
+        "kind": "ride",
         "result": {
           "speed": 16,
-          "frames": 118,
-          "air": true,
-          "returned": true,
-          "flatRollout": true,
-          "maxY": 5.207162825425159
+          "direction": -1,
+          "frames": 35,
+          "maxStep": 0.33619927101741354,
+          "minSpeed": 16.169281708513978,
+          "arrived": true
         }
       },
       {
-        "name": "Gym west quarter at 20",
-        "kind": "air",
+        "name": "Gym west bank -1/20",
+        "kind": "ride",
         "result": {
           "speed": 20,
-          "frames": 112,
-          "air": true,
-          "returned": true,
-          "flatRollout": true,
-          "maxY": 5.206969803654947
+          "direction": -1,
+          "frames": 29,
+          "maxStep": 0.3882732274667641,
+          "minSpeed": 20.168327850372492,
+          "arrived": true
         }
       },
       {
-        "name": "Gym east quarter at 12",
-        "kind": "air",
+        "name": "Gym west bank 1/12",
+        "kind": "ride",
         "result": {
           "speed": 12,
-          "frames": 126,
-          "air": true,
-          "returned": true,
-          "flatRollout": true,
-          "maxY": 5.064135704325143
+          "direction": 1,
+          "frames": 54,
+          "maxStep": 0.2048794201679794,
+          "minSpeed": 11.820143054379033,
+          "arrived": true
         }
       },
       {
-        "name": "Gym east quarter at 16",
-        "kind": "air",
+        "name": "Gym west bank 1/16",
+        "kind": "ride",
         "result": {
           "speed": 16,
-          "frames": 114,
-          "air": true,
-          "returned": true,
-          "flatRollout": true,
-          "maxY": 5.064135704325143
+          "direction": 1,
+          "frames": 46,
+          "maxStep": 0.26941391669107156,
+          "minSpeed": 11.951604689121769,
+          "arrived": true
         }
       },
       {
-        "name": "Gym east quarter at 20",
-        "kind": "air",
+        "name": "Gym west bank 1/20",
+        "kind": "ride",
         "result": {
           "speed": 20,
-          "frames": 110,
-          "air": true,
-          "returned": true,
-          "flatRollout": true,
-          "maxY": 5.064135704325143
+          "direction": 1,
+          "frames": 35,
+          "maxStep": 0.33738795784790215,
+          "minSpeed": 15.765107464427185,
+          "arrived": true
+        }
+      },
+      {
+        "name": "Gym east bank -1/12",
+        "kind": "ride",
+        "result": {
+          "speed": 12,
+          "direction": -1,
+          "frames": 42,
+          "maxStep": 0.2865081845444166,
+          "minSpeed": 12.170028321864107,
+          "arrived": true
+        }
+      },
+      {
+        "name": "Gym east bank -1/16",
+        "kind": "ride",
+        "result": {
+          "speed": 16,
+          "direction": -1,
+          "frames": 35,
+          "maxStep": 0.3361995424071722,
+          "minSpeed": 16.169284437332617,
+          "arrived": true
+        }
+      },
+      {
+        "name": "Gym east bank -1/20",
+        "kind": "ride",
+        "result": {
+          "speed": 20,
+          "direction": -1,
+          "frames": 29,
+          "maxStep": 0.3882729141214504,
+          "minSpeed": 20.168330579047847,
+          "arrived": true
+        }
+      },
+      {
+        "name": "Gym east bank 1/12",
+        "kind": "ride",
+        "result": {
+          "speed": 12,
+          "direction": 1,
+          "frames": 54,
+          "maxStep": 0.2048794201679794,
+          "minSpeed": 11.82015123088299,
+          "arrived": true
+        }
+      },
+      {
+        "name": "Gym east bank 1/16",
+        "kind": "ride",
+        "result": {
+          "speed": 16,
+          "direction": 1,
+          "frames": 46,
+          "maxStep": 0.26941391669107156,
+          "minSpeed": 11.951607409005966,
+          "arrived": true
+        }
+      },
+      {
+        "name": "Gym east bank 1/20",
+        "kind": "ride",
+        "result": {
+          "speed": 20,
+          "direction": 1,
+          "frames": 35,
+          "maxStep": 0.33738795784790215,
+          "minSpeed": 15.765080195597976,
+          "arrived": true
+        }
+      },
+      {
+        "name": "Gym doorway 46.5/-1",
+        "kind": "ride",
+        "result": {
+          "x": 46.5,
+          "direction": -1,
+          "frames": 71,
+          "minSpeed": 11.999055118110237,
+          "arrived": true
+        }
+      },
+      {
+        "name": "Gym doorway 46.5/1",
+        "kind": "ride",
+        "result": {
+          "x": 46.5,
+          "direction": 1,
+          "frames": 71,
+          "minSpeed": 11.999055118110237,
+          "arrived": true
+        }
+      },
+      {
+        "name": "Gym doorway 48.5/-1",
+        "kind": "ride",
+        "result": {
+          "x": 48.5,
+          "direction": -1,
+          "frames": 71,
+          "minSpeed": 11.999055118110237,
+          "arrived": true
+        }
+      },
+      {
+        "name": "Gym doorway 48.5/1",
+        "kind": "ride",
+        "result": {
+          "x": 48.5,
+          "direction": 1,
+          "frames": 71,
+          "minSpeed": 11.999055118110237,
+          "arrived": true
+        }
+      },
+      {
+        "name": "Gym doorway 50.5/-1",
+        "kind": "ride",
+        "result": {
+          "x": 50.5,
+          "direction": -1,
+          "frames": 71,
+          "minSpeed": 11.999055118110237,
+          "arrived": true
+        }
+      },
+      {
+        "name": "Gym doorway 50.5/1",
+        "kind": "ride",
+        "result": {
+          "x": 50.5,
+          "direction": 1,
+          "frames": 71,
+          "minSpeed": 11.999055118110237,
+          "arrived": true
         }
       },
       {
@@ -787,13 +973,13 @@
         "result": {
           "direction": -1,
           "grind": {
-            "frames": 379,
-            "grindFrames": 365,
-            "maxT": 34.65180991728801,
+            "frames": 543,
+            "grindFrames": 530,
+            "maxT": 42.28139816110658,
             "minT": 0,
-            "progress": 34.65180991728801,
+            "progress": 42.28139816110658,
             "direction": -1,
-            "maxBalance": 0.1,
+            "maxBalance": 0.10229613026846184,
             "caught": true,
             "landed": true
           }
@@ -805,13 +991,13 @@
         "result": {
           "direction": 1,
           "grind": {
-            "frames": 379,
-            "grindFrames": 365,
-            "maxT": 34.65180991728801,
+            "frames": 543,
+            "grindFrames": 530,
+            "maxT": 42.28139816110658,
             "minT": 0,
-            "progress": 34.65180991728801,
+            "progress": 42.28139816110658,
             "direction": 1,
-            "maxBalance": 0.1,
+            "maxBalance": 0.10229613026847945,
             "caught": true,
             "landed": true
           }
@@ -823,13 +1009,13 @@
         "result": {
           "direction": -1,
           "grind": {
-            "frames": 379,
-            "grindFrames": 365,
-            "maxT": 34.651809917288034,
+            "frames": 543,
+            "grindFrames": 530,
+            "maxT": 42.2813981611066,
             "minT": 0,
-            "progress": 34.651809917288034,
+            "progress": 42.2813981611066,
             "direction": -1,
-            "maxBalance": 0.1,
+            "maxBalance": 0.10229613026846703,
             "caught": true,
             "landed": true
           }
@@ -841,13 +1027,13 @@
         "result": {
           "direction": 1,
           "grind": {
-            "frames": 379,
-            "grindFrames": 365,
-            "maxT": 34.651809917288034,
+            "frames": 543,
+            "grindFrames": 530,
+            "maxT": 42.2813981611066,
             "minT": 0,
-            "progress": 34.651809917288034,
+            "progress": 42.2813981611066,
             "direction": 1,
-            "maxBalance": 0.1,
+            "maxBalance": 0.1022961302684801,
             "caught": true,
             "landed": true
           }
@@ -930,7 +1116,7 @@
       "frames": 2404,
       "waypoints": 51,
       "totalWaypoints": 51,
-      "distance": 389.91235823324416,
+      "distance": 389.9123596050296,
       "gimmeGrindFrames": 21,
       "returnGrindFrames": 555,
       "kickerAir": true,

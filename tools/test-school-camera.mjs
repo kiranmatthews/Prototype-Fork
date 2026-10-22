@@ -8,7 +8,7 @@ await withSkateRuntime(async ({ THREE, server, Level, Player, scene, TUNING, CON
   const level = new Level(scene, { id: 'school-miami', name: SCHOOL_MIAMI_LEVEL.name, data: SCHOOL_MIAMI_LEVEL });
   scene.updateMatrixWorld(true);
   const framing = { camDist:TUNING.parkCamDist, camHeight:TUNING.parkCamHeight, camPitch:TUNING.parkCamPitch, camFov:TUNING.parkCamFov };
-  const ray = new THREE.Raycaster(), report = { views:[], motion:[], recovery:[], drops:[] };
+  const ray = new THREE.Raycaster(), report = { views:[], motion:[], recovery:[], drops:[], entrances:[] };
   try {
     for (const [x,y,z] of [[44,0,-5],[42,-1,-15],[40,-2.5,-21],[38,-4.4,-30],[37,-5,-36],[45,3.4,4],[48.5,0,32]]) {
       ray.set(new THREE.Vector3(x,y+.3,z),new THREE.Vector3(0,-1,0));ray.far=2;
@@ -63,32 +63,34 @@ await withSkateRuntime(async ({ THREE, server, Level, Player, scene, TUNING, CON
       assert.ok(maxStep<.6,'Ceiling exit snapped');
       assert.ok(Math.abs(camera.position.y-framing.camHeight)<.005,'Ceiling shot did not restore');
     }
-    // The real player's four roof-opening entries used to collapse the arm
-    // into the rider and jump the camera by up to six metres in one frame.
+    // Native roof-opening and doorway routes exercise narrow overhead
+    // geometry. Check both rider framing and continuity of the moving shot.
     const player=new Player(scene),{schoolDetailTrials}=await server.ssrLoadModule('/tools/school-detail-lines.ts');
     const place=(q,h,speed)=>{
       player.rawInput=makeInput();player.respawn(level,true,true,{position:new THREE.Vector3(...q),heading:new THREE.Vector3(...h)});
       player.axisF.set(...h);player.axisL.set(h[2],0,-h[0]);player.freeSkate=true;player.speed=speed;
       player.groundHit=player.queryGround(level);player.pos.y=player.groundHit.y;player.prevPos.copy(player.pos);player.grounded=true;player.rideNormal.copy(player.groundHit.normal);
     };
-    for(const trial of schoolDetailTrials(player,level,place,CONST.fixedStep).filter(c=>c.name.startsWith('Skylight'))){
+    for(const trial of schoolDetailTrials(player,level,place,CONST.fixedStep).filter(c=>c.name.startsWith('Skylight')||c.name.startsWith('Gym doorway'))){
       trial.init();const rig=new SkateChaseCamera(),camera=new THREE.PerspectiveCamera(49,16/9,.1,400),previous=new THREE.Vector3();
       const subject=()=>({position:player.pos,heading:player.skateCameraHeading,up:player.skateCameraUp,vertAir:player.vertAir,vertNormal:player.vertNormal,verticalSpeed:player.vVel,speed:player.cameraSkateSpeed,grounded:player.skateCameraSupported,bailing:player.skateCameraBailing});
       let frames=0,maxStep=0,minTrailing=Infinity,maxCrop=0,complete=false;
       for(let frame=0;frame<trial.limit;frame++){
-        player.step(CONST.fixedStep,makeInput(trial.sample(frame)),level);level.update(CONST.fixedStep);assert.ok(!player.isBailing,'Camera drop bailed');
+        player.step(CONST.fixedStep,makeInput(trial.sample(frame)),level);level.update(CONST.fixedStep);assert.ok(!player.isBailing,`${trial.name}: camera route bailed`);
         rig.update(camera,subject(),CONST.fixedStep,frame===0,level.groundMeshes,framing);camera.updateMatrixWorld(true);frames++;
         if(frame)maxStep=Math.max(maxStep,camera.position.distanceTo(previous));previous.copy(camera.position);
         minTrailing=Math.min(minTrailing,Math.hypot(camera.position.x-player.pos.x,camera.position.z-player.pos.z));
         for(const h of [.1,1.5,3]){const point=player.pos.clone().add(new THREE.Vector3(0,h,0)).project(camera);maxCrop=Math.max(maxCrop,Math.abs(point.x),Math.abs(point.y));}
         if(trial.observe()){complete=true;break;}
       }
-      assert.ok(complete,'Camera drop missed its court rollout');assert.ok(maxCrop<.98,'Roof-opening camera cropped the rider');assert.ok(maxStep<1.05,'Roof-opening camera snapped');
+      console.log(JSON.stringify({name:trial.name,frames,maxStep,minTrailing,maxCrop}));
+      assert.ok(complete,`${trial.name}: camera route missed its rollout`);assert.ok(maxCrop<.98,`${trial.name}: camera cropped the rider`);assert.ok(maxStep<1.05,`${trial.name}: camera snapped ${maxStep}m`);
+      if(trial.name.startsWith('Gym doorway')){assert.ok(maxStep<.6,'Doorway camera snapped');assert.ok(minTrailing>4.9,'Doorway camera collapsed');}
       // Hold the landed subject still to measure presentation recovery alone.
       for(let frame=0;frame<60;frame++)rig.update(camera,subject(),CONST.fixedStep,false,level.groundMeshes,framing);
       const restoredTrailing=Math.hypot(camera.position.x-player.pos.x,camera.position.z-player.pos.z);
-      assert.ok(Math.abs(restoredTrailing-framing.camDist)<.02,'Roof-opening shot did not restore');
-      report.drops.push({name:trial.name,frames,maxStep,minTrailing,maxCrop,restoredTrailing,bails:0});
+      assert.ok(Math.abs(restoredTrailing-framing.camDist)<.02,`${trial.name}: shot did not restore`);
+      (trial.name.startsWith('Skylight')?report.drops:report.entrances).push({name:trial.name,frames,maxStep,minTrailing,maxCrop,restoredTrailing,bails:0});
     }
     await writeFile('docs/performance/school-miami-camera.json',JSON.stringify(report,null,2)+'\n');
     console.log(`PASS ${report.views.length} School camera views and ceiling recovery at 30/60/120 Hz.`);

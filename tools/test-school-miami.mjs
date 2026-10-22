@@ -21,7 +21,7 @@ await withSkateRuntime(async ({ THREE, server, Level, Player, scene, CONST, TUNI
     assert.ok(parseCustomLevelJson(JSON.stringify(data)),'source must survive editor validation');
     assert.equal(data.skatepark,true);assert.equal(m.SCHOOL_TABLES.length,5);assert.equal(m.SCHOOL_POOLS.length,2);assert.equal(m.SCHOOL_PLANTERS.length,8);
     near('start canopy',.5,0,3.4);near('upper court',8,11,0);near('gym floor under roof',48.5,31.75,0,4);
-    near('gym roof',61,36,7);near('gym north doorway',31,14.6,0,3.8);
+    near('gym roof',61,36,7);near('gym north doorway',48.5,14.6,0,3.8);
     for(const z of [-52,-53,-54,-55,-56])near('perimeter lane width',-60,z,-5,-4.8);
     near('graded classroom lawn',30,-23,m.schoolLawnHeight(-23));near('graded east lawn',52,-15,m.schoolLawnHeight(-15,.12));
     near('separate bonus roof',63,7.5,7);near('west-descent wedge',m.SCHOOL_WEST_WEDGE.p[0],m.SCHOOL_WEST_WEDGE.p[2],-3.85);
@@ -60,7 +60,7 @@ await withSkateRuntime(async ({ THREE, server, Level, Player, scene, CONST, TUNI
     ride('canopy drop to upper court',[...m.SCHOOL_START_CANOPY.slice(1,4),[30,0,11]],{speed:8,charge:false});
     const st=m.SCHOOL_STAIRS;
     ride('handicap downhill',[[st.a[0]+2,0,-4],[st.a[0]+2,0,-8],[41,-2,-22],[39,-5,-36],[37,-5,-39]],{speed:12,charge:false});
-    ride('gym doorway and court',[[31,0,9],[31,0,19],[38,0,25],[48.5,0,32],[48.5,0,42]],{speed:8,charge:false});
+    ride('gym doorway and court',[[48.5,0,9],[48.5,0,19],[48.5,0,32],[48.5,0,42]],{speed:8,charge:false});
     ride('gym service-hill ascent',m.SCHOOL_ROOF_ACCESS.filter((_,i,a)=>i%7===0||i===a.length-1),{speed:18,fullTurn:true,arrival:2,brake:()=>p.pos.z<39&&p.speed>12});
     ride('west descent to pools',m.SCHOOL_WEST_DESCENT,{speed:10,charge:false,fullTurn:true,arrival:1.5,brake:()=>p.speed>9});
     ride('perimeter lane width',[[-60,-5,-52],[-60,-5,-58]],{speed:8,charge:false});

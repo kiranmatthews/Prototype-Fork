@@ -293,5 +293,61 @@
       "restoredTrailing": 5.050000012626107,
       "bails": 0
     }
+  ],
+  "entrances": [
+    {
+      "name": "Gym doorway 46.5/-1",
+      "frames": 71,
+      "maxStep": 0.36162110540850484,
+      "minTrailing": 5.050000000000001,
+      "maxCrop": 0.7712263826854454,
+      "restoredTrailing": 5.0500000191334316,
+      "bails": 0
+    },
+    {
+      "name": "Gym doorway 46.5/1",
+      "frames": 71,
+      "maxStep": 0.19998425160973668,
+      "minTrailing": 5.05,
+      "maxCrop": 0.5925199373370236,
+      "restoredTrailing": 5.0500000191334316,
+      "bails": 0
+    },
+    {
+      "name": "Gym doorway 48.5/-1",
+      "frames": 71,
+      "maxStep": 0.32057074305539074,
+      "minTrailing": 5.050000000000001,
+      "maxCrop": 0.7712263826854454,
+      "restoredTrailing": 5.0500000191334316,
+      "bails": 0
+    },
+    {
+      "name": "Gym doorway 48.5/1",
+      "frames": 71,
+      "maxStep": 0.3205015958498018,
+      "minTrailing": 5.05,
+      "maxCrop": 0.7712263826854454,
+      "restoredTrailing": 5.0500000191334316,
+      "bails": 0
+    },
+    {
+      "name": "Gym doorway 50.5/-1",
+      "frames": 71,
+      "maxStep": 0.32057074305539074,
+      "minTrailing": 5.050000000000001,
+      "maxCrop": 0.7712263826854454,
+      "restoredTrailing": 5.0500000191334316,
+      "bails": 0
+    },
+    {
+      "name": "Gym doorway 50.5/1",
+      "frames": 71,
+      "maxStep": 0.3205015958498018,
+      "minTrailing": 5.05,
+      "maxCrop": 0.7712263826854454,
+      "restoredTrailing": 5.0500000191334316,
+      "bails": 0
+    }
   ]
 }

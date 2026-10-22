@@ -16,9 +16,16 @@
   "originalSourceDimensionVerification": false,
   "downloadedAssetsCommitted": false,
   "outstanding": [
-    "Original gym entrance annex and doorway arrangement",
-    "Original gym main ramp profile",
+    "Original entrance annex and connection to the central gym doorway",
     "Roof feature registration and spacing",
-    "Original dimensions and traversal timing"
-  ]
+    "Original dimensions, skater-relative scale and traversal timing"
+  ],
+  "originalGymProfileEvidence": {
+    "source": "https://www.cheatcodes.com/guide/faq-walkthrough-tony-hawks-pro-skater-playstation-15891/",
+    "author": "Tom Hayes",
+    "version": "8.0, 2001",
+    "section": "Things to try / School / Expert",
+    "finding": "Two broad flat wooden banks; rails ascend an end, cross the top and descend the other end. Original map inset corroborates flat faces and a central door.",
+    "dimensions": "Inferred from the map and native-skater clearance; not extracted original dimensions."
+  }
 }

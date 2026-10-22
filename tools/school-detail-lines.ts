@@ -1,4 +1,4 @@
-import {SCHOOL_REAR_BANK,SCHOOL_SKYLIGHT,SCHOOL_GYM_RAILS} from '../src/levels/school-miami';
+import {SCHOOL_REAR_BANK,SCHOOL_SKYLIGHT,SCHOOL_GYM_RAILS,SCHOOL_GYM_BANKS,SCHOOL_GYM_BANK,schoolGymBankHeight} from '../src/levels/school-miami';
 import {createBalancedGrind} from './school-grind-lines';
 
 type Point=[number,number,number];
@@ -11,8 +11,6 @@ export function schoolDetailTrials(p:any,l:any,place:Place,dt:number):DetailTria
   const trials:DetailTrial[]=[];
   const gym=[
     {name:'Gym hoop quarter',position:[48.5,.1,36],heading:[0,0,1],toe:[48.5,0,43.5]},
-    {name:'Gym west quarter',position:[48.5,.1,32],heading:[-1,0,0],toe:[30,0,32]},
-    {name:'Gym east quarter',position:[48.5,.1,32],heading:[1,0,0],toe:[66,0,32]},
   ];
   for(const c of gym)for(const speed of [12,16,20]){
     const result={speed,frames:0,air:false,returned:false,flatRollout:false,maxY:0};
@@ -24,6 +22,33 @@ export function schoolDetailTrials(p:any,l:any,place:Place,dt:number):DetailTria
         const returnedDistance=(p.pos.x-c.toe[0])*c.heading[0]+(p.pos.z-c.toe[2])*c.heading[2];
         result.flatRollout=result.returned&&p.grounded&&Math.abs(p.pos.y)<.06&&p.speed>3&&returnedDistance< -1;
         return result.flatRollout;},
+    });
+  }
+  for(const [i,b] of SCHOOL_GYM_BANKS.entries())for(const direction of [-1,1])for(const speed of [12,16,20]){
+    const s=SCHOOL_GYM_BANK,h:Point=[b.side*direction,0,0];
+    // The raised top bar is a real rail. Start/finish on its court side;
+    // crossing that bar requires an ollie or grind, just as in the source.
+    const q:Point=direction===1?[b.toeX-b.side*3,.1,32]:[b.toeX+b.side*(s.run-1.3),schoolGymBankHeight(s.run-1.3)+.1,32];
+    const result={speed,direction,frames:0,maxStep:0,minSpeed:100,arrived:false};let previous=p.pos.clone();
+    trials.push({name:`Gym ${i?'east':'west'} bank ${direction}/${speed}`,kind:'ride',result,limit:180,
+      init:()=>{place(q,h,speed);previous.copy(p.pos);},sample:()=>({moveY:1}),
+      observe:()=>{result.frames++;result.maxStep=Math.max(result.maxStep,previous.distanceTo(p.pos));previous.copy(p.pos);result.minSpeed=Math.min(result.minSpeed,p.speed);
+        if(!p.grounded)throw Error('Gym bank join interrupted ground contact');
+        if(result.maxStep>.5||p.speed<3)throw Error('Gym bank join interrupted momentum');
+        const d=(p.pos.x-b.toeX)*b.side;
+        if(direction===1?d<s.run-1.3:d> -3)return false;
+        if(Math.abs(p.pos.y-(direction===1?schoolGymBankHeight(d):0))>.06)throw Error('Gym bank missed its receiving surface');
+        result.arrived=true;return true;},
+    });
+  }
+  for(const x of [46.5,48.5,50.5])for(const direction of [-1,1]){
+    const result={x,direction,frames:0,minSpeed:100,arrived:false};
+    trials.push({name:`Gym doorway ${x}/${direction}`,kind:'ride',result,limit:150,
+      init:()=>place([x,.1,direction===1?9:23],[0,0,direction],12),sample:()=>({moveY:1}),
+      observe:()=>{result.frames++;result.minSpeed=Math.min(result.minSpeed,p.speed);
+        if(!p.grounded||Math.abs(p.pos.y)>.06||Math.abs(p.pos.x-x)>.1)throw Error('Gym doorway deflected the skater');
+        if(p.speed<8)throw Error('Gym doorway interrupted momentum');
+        result.arrived=direction===1?p.pos.z>23:p.pos.z<9;return result.arrived;},
     });
   }
   for(const speed of [16,18]){

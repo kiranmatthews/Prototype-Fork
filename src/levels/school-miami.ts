@@ -419,7 +419,7 @@ for(const z of [-4,5]){
 
 // Gym: an actual interior under its skating roof. Open doors at the north
 // connect to the upper court without a portal, scene switch or loading seam.
-export const SCHOOL_GYM={minX:22.6,maxX:74.5,minZ:14.4,maxZ:49.1,roofY,doorX:31,court:{x:48.5,z:31.75,width:15,length:28}};
+export const SCHOOL_GYM={minX:22.6,maxX:74.5,minZ:14.4,maxZ:49.1,roofY,doorX:48.5,doorWidth:5.4,court:{x:48.5,z:31.75,width:15,length:28}};
 // Five glass panes surround one open pane. Keep the roof slab open below
 // that pane too: the court must be a real landing, not a painted recess.
 export const SCHOOL_SKYLIGHT={x:49,z:39.5,width:9.6,depth:11.8,lipY:7.5,bank:.5,
@@ -433,8 +433,8 @@ const g=8;
 slab('Gym south wall',48.55,48.9,51.9,.45,6.55,0,brick,g);
 slab('Gym west wall',22.8,31.75,.45,34.3,6.55,0,brick,g);
 slab('Gym east wall',74.3,31.75,.45,34.3,6.55,0,brick,g);
-for(const [a,b] of [[22.6,26],[36,63],[71,74.5]])slab('Gym entrance wall',(a+b)/2,14.6,b-a,.45,6.55,0,brick,g);
-for(const [a,b] of [[26,36],[63,71]])slab('Gym door lintel',(a+b)/2,14.6,b-a,.45,6.55,4.2,brick,g);
+for(const [a,b] of [[22.6,45.8],[51.2,74.5]])slab('Gym entrance wall',(a+b)/2,14.6,b-a,.45,6.55,0,brick,g);
+slab('Gym central door lintel',48.5,14.6,5.4,.45,6.55,4.2,brick,g);
 floor('Gym maple basketball court',[[41,17.75],[56,17.75],[56,45.75],[41,45.75]],.012,'#e6c999',g,[],false).tex='wood';
 for(const x of [40.4,56.6])paintBox(x,.027,31.75,1.1,.014,29.4,'#87464a',g);
 for(const z of [17.2,46.3])paintBox(48.5,.027,z,17.3,.014,1.1,'#87464a',g);
@@ -450,16 +450,42 @@ for(const z of [18.4,45.1]){
   }
 }
 for(let i=0;i<48;i++){const a=i/48*Math.PI*2,b=(i+1)/48*Math.PI*2;stripe([48.5+Math.cos(a)*1.8,.04,31.75+Math.sin(a)*1.8],[48.5+Math.cos(b)*1.8,.04,31.75+Math.sin(b)*1.8],.08,'#e0d9bd',g);}
-quarter('Gym west wooden quarterpipe',[[30,0,45],[30,0,19]],3.4,g,{deck:1.5,color:'#c4a77c',tex:'wood',rails:false});
-quarter('Gym east dark quarterpipe',[[66,0,19],[66,0,45]],3.4,g,{deck:1.5,color:'#626966',tex:'wood',rails:false});
+// The original inset and Tom Hayes's 2001 guide show broad flat banks,
+// not vertical quarters. Ease only the floor/deck joins; the middle face
+// retains its straight 23.8-degree profile and uses ordinary ramp physics.
+export const SCHOOL_GYM_BANKS=[{toeX:35,side:-1},{toeX:61,side:1}];
+export const SCHOOL_GYM_BANK={run:8.4,rise:3.4,deck:.7,minZ:19,maxZ:45};
+export function schoolGymBankHeight(distance:number){
+  const b=SCHOOL_GYM_BANK,d=Math.max(0,Math.min(b.run,distance)),m=b.rise/(b.run-.4-.3);
+  if(d<.8)return m*d*d/1.6;
+  if(d>b.run-.6){const r=b.run-d;return b.rise-m*r*r/1.2;}
+  return m*(d-.4);
+}
+for(const [i,b] of SCHOOL_GYM_BANKS.entries()){
+  const s=SCHOOL_GYM_BANK,profile=Array.from({length:85},(_,j)=>({d:j/10,y:schoolGymBankHeight(j/10)}));
+  profile.push({d:s.run+s.deck,y:s.rise});
+  const vertices=profile.flatMap(q=>[b.toeX+b.side*q.d,q.y,s.minZ,b.toeX+b.side*q.d,q.y,s.maxZ]),indices:number[]=[];
+  for(let j=0;j<profile.length-1;j++){
+    const a=j*2,tri=b.side<0?[a,a+2,a+3,a,a+3,a+1]:[a,a+3,a+2,a,a+1,a+3];indices.push(...tri);
+  }
+  // Close the two ends and back to the floor, using the same exact profile.
+  for(const end of [0,1])for(let j=0;j<profile.length-1;j++){
+    const a=profile[j],c=profile[j+1],z=end?s.maxZ:s.minZ,k=vertices.length/3;
+    vertices.push(b.toeX+b.side*a.d,a.y,z,b.toeX+b.side*c.d,c.y,z,b.toeX+b.side*c.d,0,z,b.toeX+b.side*a.d,0,z);
+    indices.push(...((end===0)===(b.side<0)?[k,k+2,k+1,k,k+3,k+2]:[k,k+1,k+2,k,k+2,k+3]));
+  }
+  const x=b.toeX+b.side*(s.run+s.deck),k=vertices.length/3;
+  vertices.push(x,0,s.minZ,x,s.rise,s.minZ,x,s.rise,s.maxZ,x,0,s.maxZ);indices.push(...(b.side<0?[k,k+2,k+1,k,k+3,k+2]:[k,k+1,k+2,k,k+2,k+3]));
+  surface(`Gym ${i?'dark':'wooden'} flat bank`,vertices,indices,i?'#626966':'#c4a77c',g,{tex:'wood',doubleSided:true});
+}
 export const SCHOOL_GYM_RAILS:Point[][]=[];
-for(const [x,side] of [[30,-1],[66,1]]){
+for(const {toeX:x,side} of SCHOOL_GYM_BANKS){
   // Round the two changes from rising end rail to level coping. A literal
   // 90-degree tangent break ejects the native grinder at the upper corner.
-  const arc=(z:number,inward:number)=>Array.from({length:9},(_,i):Point=>{const a=i/8*Math.PI/2;return[x+side*3.4*Math.sin(a),.35+3.4*(1-Math.cos(a)),z+inward*1.5*smooth((i/8-.5)*2)];});
-  const guide=[...arc(19,1),[x+side*3.4,3.75,26] as Point,[x+side*3.4,3.75,38] as Point,...arc(45,-1).reverse()];
+  const arc=(z:number,inward:number)=>Array.from({length:17},(_,i):Point=>{const d=i/16*8.4;return[x+side*d,.35+schoolGymBankHeight(d),z+inward*1.5*smooth((d-6.4)/2)];});
+  const guide=[...arc(19,1),[x+side*8.4,3.75,26] as Point,[x+side*8.4,3.75,38] as Point,...arc(45,-1).reverse()];
   const points=new CatmullRomCurve3(guide.map(p=>new Vector3(...p)),false,'centripetal').getSpacedPoints(144).map(p=>p.toArray() as Point);
-  rail(`Gym ${side<0?'wooden':'dark'} quarter · complete end-to-end rail`,points,g,'#587464');
+  rail(`Gym ${side<0?'wooden':'dark'} bank · complete end-to-end rail`,points,g,'#587464');
   SCHOOL_GYM_RAILS.push(points);
 }
 export const SCHOOL_HOOP_QUARTER={x:48.5,toeZ:43.5,width:10,radius:1.35};

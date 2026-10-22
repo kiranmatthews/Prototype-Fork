@@ -17,6 +17,142 @@
       ]
     },
     {
+      "name": "Gym bank 0 profile 0",
+      "point": [
+        35,
+        0,
+        32
+      ]
+    },
+    {
+      "name": "Gym bank 0 profile 0.4",
+      "point": [
+        34.6,
+        0.044155548790609345,
+        32
+      ]
+    },
+    {
+      "name": "Gym bank 0 profile 2",
+      "point": [
+        33,
+        0.7064934968948364,
+        32
+      ]
+    },
+    {
+      "name": "Gym bank 0 profile 4",
+      "point": [
+        31,
+        1.5896103382110596,
+        32
+      ]
+    },
+    {
+      "name": "Gym bank 0 profile 6",
+      "point": [
+        29,
+        2.4727272987365723,
+        32
+      ]
+    },
+    {
+      "name": "Gym bank 0 profile 8",
+      "point": [
+        27,
+        3.34112548828125,
+        32
+      ]
+    },
+    {
+      "name": "Gym bank 0 profile 8.7",
+      "point": [
+        26.3,
+        3.4000000953674316,
+        32
+      ]
+    },
+    {
+      "name": "Gym bank 1 profile 0",
+      "point": [
+        61,
+        0,
+        32
+      ]
+    },
+    {
+      "name": "Gym bank 1 profile 0.4",
+      "point": [
+        61.4,
+        0.044155548790609345,
+        32
+      ]
+    },
+    {
+      "name": "Gym bank 1 profile 2",
+      "point": [
+        63,
+        0.7064934968948364,
+        32
+      ]
+    },
+    {
+      "name": "Gym bank 1 profile 4",
+      "point": [
+        65,
+        1.5896103382110596,
+        32
+      ]
+    },
+    {
+      "name": "Gym bank 1 profile 6",
+      "point": [
+        67,
+        2.4727272987365723,
+        32
+      ]
+    },
+    {
+      "name": "Gym bank 1 profile 8",
+      "point": [
+        69,
+        3.34112548828125,
+        32
+      ]
+    },
+    {
+      "name": "Gym bank 1 profile 8.7",
+      "point": [
+        69.7,
+        3.4000000953674316,
+        32
+      ]
+    },
+    {
+      "name": "Central gym doorway 46.5",
+      "point": [
+        46.5,
+        0,
+        14.6
+      ]
+    },
+    {
+      "name": "Central gym doorway 48.5",
+      "point": [
+        48.5,
+        0,
+        14.6
+      ]
+    },
+    {
+      "name": "Central gym doorway 50.5",
+      "point": [
+        50.5,
+        0,
+        14.6
+      ]
+    },
+    {
       "name": "Open skylight reaches the court",
       "point": [
         51.4,
@@ -187,99 +323,285 @@
       ]
     },
     {
-      "name": "Gym west quarter at 12",
-      "kind": "air",
+      "name": "Gym west bank -1/12",
+      "kind": "ride",
       "speed": 12,
-      "frames": 129,
-      "air": true,
-      "returned": true,
-      "flatRollout": true,
-      "maxY": 5.207136118225949,
+      "direction": -1,
+      "frames": 42,
+      "maxStep": 0.2865081843796844,
+      "minSpeed": 12.170025592902192,
+      "arrived": true,
       "bails": 0,
       "end": [
-        31.000191282622048,
+        38.02594758992678,
         0,
         32
       ]
     },
     {
-      "name": "Gym west quarter at 16",
-      "kind": "air",
+      "name": "Gym west bank -1/16",
+      "kind": "ride",
       "speed": 16,
-      "frames": 118,
-      "air": true,
-      "returned": true,
-      "flatRollout": true,
-      "maxY": 5.207162825425159,
+      "direction": -1,
+      "frames": 35,
+      "maxStep": 0.33619927101741354,
+      "minSpeed": 16.169281708513978,
+      "arrived": true,
       "bails": 0,
       "end": [
-        31.355466027202766,
+        38.21562009014986,
         0,
         32
       ]
     },
     {
-      "name": "Gym west quarter at 20",
-      "kind": "air",
+      "name": "Gym west bank -1/20",
+      "kind": "ride",
       "speed": 20,
-      "frames": 112,
-      "air": true,
-      "returned": true,
-      "flatRollout": true,
-      "maxY": 5.206969803654947,
+      "direction": -1,
+      "frames": 29,
+      "maxStep": 0.3882732274667641,
+      "minSpeed": 20.168327850372492,
+      "arrived": true,
       "bails": 0,
       "end": [
-        31.0026365851163,
+        38.00168995535291,
         0,
         32
       ]
     },
     {
-      "name": "Gym east quarter at 12",
-      "kind": "air",
+      "name": "Gym west bank 1/12",
+      "kind": "ride",
       "speed": 12,
-      "frames": 126,
-      "air": true,
-      "returned": true,
-      "flatRollout": true,
-      "maxY": 5.064135704325143,
+      "direction": 1,
+      "frames": 54,
+      "maxStep": 0.2048794201679794,
+      "minSpeed": 11.820143054379033,
+      "arrived": true,
       "bails": 0,
       "end": [
-        64.99775534570969,
-        0,
+        27.856162372718885,
+        2.9777981244692824,
         32
       ]
     },
     {
-      "name": "Gym east quarter at 16",
-      "kind": "air",
+      "name": "Gym west bank 1/16",
+      "kind": "ride",
       "speed": 16,
-      "frames": 114,
-      "air": true,
-      "returned": true,
-      "flatRollout": true,
-      "maxY": 5.064135704325143,
+      "direction": 1,
+      "frames": 46,
+      "maxStep": 0.26941391669107156,
+      "minSpeed": 11.951604689121769,
+      "arrived": true,
       "bails": 0,
       "end": [
-        64.99724594395754,
+        27.801871196941608,
+        3.001770755616832,
+        32
+      ]
+    },
+    {
+      "name": "Gym west bank 1/20",
+      "kind": "ride",
+      "speed": 20,
+      "direction": 1,
+      "frames": 35,
+      "maxStep": 0.33738795784790215,
+      "minSpeed": 15.765107464427185,
+      "arrived": true,
+      "bails": 0,
+      "end": [
+        27.83856475985754,
+        2.9855684679212833,
+        32
+      ]
+    },
+    {
+      "name": "Gym east bank -1/12",
+      "kind": "ride",
+      "speed": 12,
+      "direction": -1,
+      "frames": 42,
+      "maxStep": 0.2865081845444166,
+      "minSpeed": 12.170028321864107,
+      "arrived": true,
+      "bails": 0,
+      "end": [
+        57.97405315138909,
         0,
         32
       ]
     },
     {
-      "name": "Gym east quarter at 20",
-      "kind": "air",
-      "speed": 20,
-      "frames": 110,
-      "air": true,
-      "returned": true,
-      "flatRollout": true,
-      "maxY": 5.064135704325143,
+      "name": "Gym east bank -1/16",
+      "kind": "ride",
+      "speed": 16,
+      "direction": -1,
+      "frames": 35,
+      "maxStep": 0.3361995424071722,
+      "minSpeed": 16.169284437332617,
+      "arrived": true,
       "bails": 0,
       "end": [
-        64.64460110865318,
+        57.7843765509613,
         0,
         32
+      ]
+    },
+    {
+      "name": "Gym east bank -1/20",
+      "kind": "ride",
+      "speed": 20,
+      "direction": -1,
+      "frames": 29,
+      "maxStep": 0.3882729141214504,
+      "minSpeed": 20.168330579047847,
+      "arrived": true,
+      "bails": 0,
+      "end": [
+        57.998308867665315,
+        0,
+        32
+      ]
+    },
+    {
+      "name": "Gym east bank 1/12",
+      "kind": "ride",
+      "speed": 12,
+      "direction": 1,
+      "frames": 54,
+      "maxStep": 0.2048794201679794,
+      "minSpeed": 11.82015123088299,
+      "arrived": true,
+      "bails": 0,
+      "end": [
+        68.14384022788781,
+        2.977800484229045,
+        32
+      ]
+    },
+    {
+      "name": "Gym east bank 1/16",
+      "kind": "ride",
+      "speed": 16,
+      "direction": 1,
+      "frames": 46,
+      "maxStep": 0.26941391669107156,
+      "minSpeed": 11.951607409005966,
+      "arrived": true,
+      "bails": 0,
+      "end": [
+        68.19813001707159,
+        3.0017729603539314,
+        32
+      ]
+    },
+    {
+      "name": "Gym east bank 1/20",
+      "kind": "ride",
+      "speed": 20,
+      "direction": 1,
+      "frames": 35,
+      "maxStep": 0.33738795784790215,
+      "minSpeed": 15.765080195597976,
+      "arrived": true,
+      "bails": 0,
+      "end": [
+        68.16142560077466,
+        2.9855655711453024,
+        32
+      ]
+    },
+    {
+      "name": "Gym doorway 46.5/-1",
+      "kind": "ride",
+      "x": 46.5,
+      "direction": -1,
+      "frames": 71,
+      "minSpeed": 11.999055118110237,
+      "arrived": true,
+      "bails": 0,
+      "end": [
+        46.5,
+        0,
+        8.801118110236185
+      ]
+    },
+    {
+      "name": "Gym doorway 46.5/1",
+      "kind": "ride",
+      "x": 46.5,
+      "direction": 1,
+      "frames": 71,
+      "minSpeed": 11.999055118110237,
+      "arrived": true,
+      "bails": 0,
+      "end": [
+        46.5,
+        0,
+        23.198881889763815
+      ]
+    },
+    {
+      "name": "Gym doorway 48.5/-1",
+      "kind": "ride",
+      "x": 48.5,
+      "direction": -1,
+      "frames": 71,
+      "minSpeed": 11.999055118110237,
+      "arrived": true,
+      "bails": 0,
+      "end": [
+        48.5,
+        0,
+        8.801118110236185
+      ]
+    },
+    {
+      "name": "Gym doorway 48.5/1",
+      "kind": "ride",
+      "x": 48.5,
+      "direction": 1,
+      "frames": 71,
+      "minSpeed": 11.999055118110237,
+      "arrived": true,
+      "bails": 0,
+      "end": [
+        48.5,
+        0,
+        23.198881889763815
+      ]
+    },
+    {
+      "name": "Gym doorway 50.5/-1",
+      "kind": "ride",
+      "x": 50.5,
+      "direction": -1,
+      "frames": 71,
+      "minSpeed": 11.999055118110237,
+      "arrived": true,
+      "bails": 0,
+      "end": [
+        50.5,
+        0,
+        8.801118110236185
+      ]
+    },
+    {
+      "name": "Gym doorway 50.5/1",
+      "kind": "ride",
+      "x": 50.5,
+      "direction": 1,
+      "frames": 71,
+      "minSpeed": 11.999055118110237,
+      "arrived": true,
+      "bails": 0,
+      "end": [
+        50.5,
+        0,
+        23.198881889763815
       ]
     },
     {
@@ -469,19 +791,19 @@
       "kind": "grind",
       "direction": -1,
       "grind": {
-        "frames": 379,
-        "grindFrames": 365,
-        "maxT": 34.65180991728801,
+        "frames": 543,
+        "grindFrames": 530,
+        "maxT": 42.28139816110658,
         "minT": 0,
-        "progress": 34.65180991728801,
+        "progress": 42.28139816110658,
         "direction": -1,
-        "maxBalance": 0.1,
+        "maxBalance": 0.10229613026846184,
         "caught": true,
         "landed": true
       },
       "bails": 0,
       "end": [
-        33.984084138661004,
+        38.603839985506625,
         0,
         19
       ]
@@ -491,19 +813,19 @@
       "kind": "grind",
       "direction": 1,
       "grind": {
-        "frames": 379,
-        "grindFrames": 365,
-        "maxT": 34.65180991728801,
+        "frames": 543,
+        "grindFrames": 530,
+        "maxT": 42.28139816110658,
         "minT": 0,
-        "progress": 34.65180991728801,
+        "progress": 42.28139816110658,
         "direction": 1,
-        "maxBalance": 0.1,
+        "maxBalance": 0.10229613026847945,
         "caught": true,
         "landed": true
       },
       "bails": 0,
       "end": [
-        33.984084138660975,
+        38.603839985506525,
         0,
         45
       ]
@@ -513,19 +835,19 @@
       "kind": "grind",
       "direction": -1,
       "grind": {
-        "frames": 379,
-        "grindFrames": 365,
-        "maxT": 34.651809917288034,
+        "frames": 543,
+        "grindFrames": 530,
+        "maxT": 42.2813981611066,
         "minT": 0,
-        "progress": 34.651809917288034,
+        "progress": 42.2813981611066,
         "direction": -1,
-        "maxBalance": 0.1,
+        "maxBalance": 0.10229613026846703,
         "caught": true,
         "landed": true
       },
       "bails": 0,
       "end": [
-        62.015915861338975,
+        57.396160014493375,
         0,
         19
       ]
@@ -535,19 +857,19 @@
       "kind": "grind",
       "direction": 1,
       "grind": {
-        "frames": 379,
-        "grindFrames": 365,
-        "maxT": 34.651809917288034,
+        "frames": 543,
+        "grindFrames": 530,
+        "maxT": 42.2813981611066,
         "minT": 0,
-        "progress": 34.651809917288034,
+        "progress": 42.2813981611066,
         "direction": 1,
-        "maxBalance": 0.1,
+        "maxBalance": 0.1022961302684801,
         "caught": true,
         "landed": true
       },
       "bails": 0,
       "end": [
-        62.01591586133896,
+        57.396160014493475,
         0,
         45
       ]

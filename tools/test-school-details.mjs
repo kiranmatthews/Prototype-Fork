@@ -14,6 +14,10 @@ await withSkateRuntime(async({THREE,server,Level,Player,scene,CONST,TUNING})=>{
   try{
     const ray=new THREE.Raycaster(),near=(name,q,y,from=y+1)=>{ray.set(new THREE.Vector3(q[0],from,q[2]),new THREE.Vector3(0,-1,0));ray.far=15;const hit=ray.intersectObjects(l.groundMeshes,false)[0];assert.ok(hit&&Math.abs(hit.point.y-y)<.06,`${name}: ${hit?.point.y} expected ${y}`);assert.ok(hit.face.normal.y>.1,`${name}: support faces down`);report.support.push({name,point:hit.point.toArray()});};
     near('Hoop quarter flat approach',[48.5,0,43.4],0);near('Hoop quarter deck',[48.5,0,45.1],1.35,4);
+    for(const [i,b] of m.SCHOOL_GYM_BANKS.entries())for(const d of [0,.4,2,4,6,8,8.7]){
+      near(`Gym bank ${i} profile ${d}`,[b.toeX+b.side*d,0,32],m.schoolGymBankHeight(d),5);
+    }
+    for(const x of [46.5,48.5,50.5])near(`Central gym doorway ${x}`,[x,0,14.6],0,3.1);
     const skylight=m.SCHOOL_SKYLIGHT;
     near('Open skylight reaches the court',[(skylight.hole.minX+skylight.hole.maxX)/2,0,skylight.z],0,9);
     for(const side of [-1,1]){

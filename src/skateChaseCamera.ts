@@ -60,6 +60,7 @@ export class SkateChaseCamera {
   private readonly flatAim = new THREE.Vector3();
   private readonly worldUp = new THREE.Vector3(0,1,0);
   private readonly ceilingProbe = new THREE.Vector3();
+  private readonly ceilingSweepDirection = new THREE.Vector3();
   private readonly contactNormal = new THREE.Vector3();
   private ceilingEyeDrop = 0;
   private ceilingAimDrop = 0;
@@ -176,6 +177,23 @@ export class SkateChaseCamera {
     if (this.openingBlend < .01 && this.groundFramingWeight > .5 && this.desiredEye.y > this.aim.y) {
       const targetY = rider.position.y + SKATE_CAMERA.above;
       let ceilingY = Infinity, hardCeilingY = Infinity;
+      // Thin doorway lintels can fall between the spaced vertical probes.
+      // Sweep the anticipated camera span, then verify an actual underside
+      // beneath each hit. Ordinary full-height walls still use the arm clamp.
+      const sweepLength=Math.max(1,framing?.camDist??SKATE_CAMERA.behind);
+      this.ceilingProbe.copy(rider.position).addScaledVector(this.flatForward,sweepLength*.5);
+      this.ceilingProbe.y=this.desiredEye.y;
+      this.ceilingSweepDirection.copy(this.flatForward).negate();
+      this.ray.set(this.ceilingProbe,this.ceilingSweepDirection);this.ray.near=.05;this.ray.far=sweepLength*2;
+      const edges=this.ray.intersectObjects(surfaces,false);
+      for(const edge of edges){
+        this.ceilingProbe.copy(edge.point).addScaledVector(this.ceilingSweepDirection,.08);this.ceilingProbe.y=targetY;
+        this.ray.set(this.ceilingProbe,this.worldUp);this.ray.near=.05;this.ray.far=Math.max(.1,this.desiredEye.y-targetY+.5);
+        const roof=this.ray.intersectObject(edge.object,false)[0];
+        if(!roof?.face)continue;
+        this.contactNormal.copy(roof.face.normal).transformDirection(roof.object.matrixWorld);
+        if(this.contactNormal.y<-.5)ceilingY=Math.min(ceilingY,roof.point.y);
+      }
       for (const [along, side] of CEILING_PROBES) {
         this.ceilingProbe.lerpVectors(rider.position, this.desiredEye, along);
         this.ceilingProbe.x += this.flatForward.z * side;
