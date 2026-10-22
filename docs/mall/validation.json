@@ -1,10 +1,10 @@
 {
-  "schema": 6,
-  "verifiedAt": "2026-10-22T14:47:04.320768+00:00",
+  "schema": 7,
+  "verifiedAt": "2026-10-22T15:39:13.639558+00:00",
   "reference": "Original 1999 THPS Mall: supplied VGCartography cutaway and original PS1 gameplay",
-  "sourceSHA256": "bfaf185d26abe5936c2dde823d0340d3f24d9e6bbf47602a6e23c00d8902204e",
-  "build": "68310faa353ad9b20a95",
-  "scope": "Reference-derived geometry validated against the shared working-tree Player/Level. This pass adds the first-escalator trough and rim, lower-aisle support clearance, exit masonry wings and stair ceiling. No runtime or tuning edits. Exact source dimensions, fountain intermediate landing and upper exit passage remain open.",
+  "sourceSHA256": "2e6299fe5cb1465f9b6538e713fcc4a0f81f4fa12c87c2482d38366bf819732a",
+  "build": "ebce5f1de0bce0fa2d96",
+  "scope": "Reference-derived geometry validated against the shared working-tree Player/Level. This pass restores the fountain through-opening and intermediate landing, descending launch, smooth receiver and local camera volume. Both a controlled two-jump line and an unbraked through-jump work. No shared runtime or tuning edits. Exact source dimensions and upper exit passage remain open.",
   "runtimeSHA256": {
     "src/player.ts": "51a93fc9cb8f3613fedf0a16625e7b22e09859f3aa45898d3892677412b42e3b",
     "src/rails.ts": "ac13ba8494b81ebc85f3926963ddb8c2d98d1694082a2f87f63582b86de51a4d",
@@ -71,6 +71,8 @@
           4
         ],
         "upperTransfer": null,
+        "fountainLandingFrames": 0,
+        "fountainBrakingFrames": 0,
         "peakSpeed": 26.1239,
         "minimumMovingSpeed": 22.969412748066073,
         "bails": 0,
@@ -81,7 +83,7 @@
     },
     "upper": {
       "route": "upper",
-      "seconds": 18.75,
+      "seconds": 19.78333333333333,
       "state": "finished",
       "deaths": 0,
       "position": [
@@ -118,17 +120,25 @@
         ],
         "jumps": [
           {
-            "s": 68,
-            "end": 87,
-            "name": "Fountain Gap",
-            "frame": 235,
+            "s": 68.5,
+            "end": 74,
+            "name": "Fountain entry",
+            "frame": 249,
             "air": true,
-            "landing": 87.25
+            "landing": 77.5
+          },
+          {
+            "s": 77.8,
+            "end": 84,
+            "name": "Fountain exit",
+            "frame": 289,
+            "air": true,
+            "landing": 86.25
           },
           {
             "name": "Hidden rail reward ollie",
-            "frame": 484,
-            "progress": 163.5,
+            "frame": 546,
+            "progress": 163.25,
             "fromRail": 16
           },
           {
@@ -136,7 +146,7 @@
             "end": 187,
             "name": "Flying Leap",
             "grind": true,
-            "frame": 394,
+            "frame": 453,
             "air": true,
             "landing": 226.25
           },
@@ -145,7 +155,7 @@
             "end": 300,
             "name": "Crossrail transfer",
             "grind": true,
-            "frame": 781,
+            "frame": 843,
             "air": true,
             "landing": 316
           }
@@ -167,18 +177,126 @@
         "upperTransfer": {
           "fromRail": 16,
           "toRail": 17,
-          "frame": 520,
+          "frame": 582,
           "position": [
-            34.2791666619302,
-            15.763659820376123,
-            -141.28455252154754
+            34.214327712234095,
+            15.769782972870146,
+            -141.2625068083587
           ],
           "frames": 20
         },
+        "fountainLandingFrames": 3,
+        "fountainBrakingFrames": 33,
         "peakSpeed": 30.500000000000423,
-        "minimumMovingSpeed": 22.86210325568348,
+        "minimumMovingSpeed": 14.066382001705376,
         "bails": 0,
-        "airFrames": 391,
+        "airFrames": 416,
+        "crystal": true
+      },
+      "error": null
+    },
+    "upper-fast": {
+      "route": "upper-fast",
+      "seconds": 18.766666666666666,
+      "state": "finished",
+      "deaths": 0,
+      "position": [
+        107.77804359912207,
+        -6.263333333556851,
+        -303.14216327141
+      ],
+      "progress": 407.25,
+      "evidence": {
+        "route": "upper-fast",
+        "sections": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21
+        ],
+        "jumps": [
+          {
+            "s": 68.5,
+            "end": 84,
+            "name": "Fountain through jump",
+            "frame": 237,
+            "air": true,
+            "landing": 84.25
+          },
+          {
+            "name": "Hidden rail reward ollie",
+            "frame": 485,
+            "progress": 163.25,
+            "fromRail": 16
+          },
+          {
+            "s": 128,
+            "end": 187,
+            "name": "Flying Leap",
+            "grind": true,
+            "frame": 394,
+            "air": true,
+            "landing": 226.25
+          },
+          {
+            "s": 276.2,
+            "end": 300,
+            "name": "Crossrail transfer",
+            "grind": true,
+            "frame": 782,
+            "air": true,
+            "landing": 316
+          }
+        ],
+        "grinds": [
+          16,
+          17,
+          25,
+          28
+        ],
+        "railNames": [
+          "Suspended upper light rail",
+          "Lower escalator handrail",
+          "Crossrail left to right"
+        ],
+        "checkpoints": [
+          4
+        ],
+        "upperTransfer": {
+          "fromRail": 16,
+          "toRail": 17,
+          "frame": 521,
+          "position": [
+            34.17121590655382,
+            15.77194441665694,
+            -141.2478484817273
+          ],
+          "frames": 20
+        },
+        "fountainLandingFrames": 0,
+        "fountainBrakingFrames": 0,
+        "peakSpeed": 30.500000000000423,
+        "minimumMovingSpeed": 22.948676581192693,
+        "bails": 0,
+        "airFrames": 381,
         "crystal": true
       },
       "error": null
@@ -280,6 +398,8 @@
           ],
           "frames": 28
         },
+        "fountainLandingFrames": 0,
+        "fountainBrakingFrames": 0,
         "peakSpeed": 29.484785544268703,
         "minimumMovingSpeed": 16.5057041139109,
         "bails": 0,
@@ -369,6 +489,8 @@
           4
         ],
         "upperTransfer": null,
+        "fountainLandingFrames": 0,
+        "fountainBrakingFrames": 0,
         "peakSpeed": 26.1239,
         "minimumMovingSpeed": 21.050827319545387,
         "bails": 0,
@@ -465,6 +587,8 @@
           ],
           "frames": 18
         },
+        "fountainLandingFrames": 0,
+        "fountainBrakingFrames": 0,
         "peakSpeed": 30.500000000000423,
         "minimumMovingSpeed": 22.96898454685624,
         "bails": 0,
@@ -539,6 +663,8 @@
           0
         ],
         "upperTransfer": null,
+        "fountainLandingFrames": 0,
+        "fountainBrakingFrames": 0,
         "peakSpeed": 25.928260619128046,
         "minimumMovingSpeed": 22.969412748066073,
         "bails": 0,
@@ -605,6 +731,8 @@
           4
         ],
         "upperTransfer": null,
+        "fountainLandingFrames": 0,
+        "fountainBrakingFrames": 0,
         "peakSpeed": 26.1239,
         "minimumMovingSpeed": 22.96649957320981,
         "bails": 0,
@@ -690,18 +818,18 @@
       "caught": true,
       "steps": 76,
       "seams": 2,
-      "laps": 2.116870891968109,
+      "laps": 2.1107393012384854,
       "bailed": false,
-      "peakSpeed": 22.336190074121454,
+      "peakSpeed": 22.271492516744175,
       "end": [
-        -0.7762676689046331,
+        -0.8035126071792527,
         17.669999999999998,
-        -52.2026847522327
+        -52.126540250757074
       ]
     }
   ],
   "surfaces": {
-    "components": 402,
+    "components": 465,
     "rails": 44,
     "checkpoints": [
       {
@@ -895,7 +1023,7 @@
     }
   },
   "browsers": {
-    "lite-underpass": {
+    "lite-upper": {
       "initial": {
         "position": [
           0,
@@ -905,15 +1033,15 @@
         "state": "ride",
         "grounded": true,
         "skatepark": true,
-        "components": 402
+        "components": 465
       },
       "report": {
         "done": true,
         "error": null,
-        "frames": 1085,
+        "frames": 1187,
         "progress": 407.25,
         "evidence": {
-          "route": "underpass",
+          "route": "upper",
           "sections": [
             0,
             1,
@@ -940,210 +1068,362 @@
           ],
           "jumps": [
             {
-              "s": 276.2,
-              "end": 300,
-              "name": "Crossrail transfer",
-              "grind": true,
-              "frame": 741,
+              "s": 68.5,
+              "end": 74,
+              "name": "Fountain entry",
+              "frame": 249,
               "air": true,
-              "landing": 316
-            }
-          ],
-          "grinds": [
-            28
-          ],
-          "railNames": [
-            "Crossrail left to right"
-          ],
-          "checkpoints": [
-            4
-          ],
-          "upperTransfer": null,
-          "peakSpeed": 26.1239,
-          "minimumMovingSpeed": 22.96649957320981,
-          "bails": 0,
-          "airFrames": 105,
-          "crystal": false
-        },
-        "sourceMatches": true,
-        "position": [
-          107.4078448420284,
-          -6.263333333556851,
-          -303.33180658143823
-        ],
-        "state": "finished",
-        "grounded": true,
-        "deaths": 0,
-        "tuningUnchanged": true
-      },
-      "errors": []
-    },
-    "full-underpass": {
-      "initial": {
-        "position": [
-          0,
-          18,
-          5
-        ],
-        "state": "ride",
-        "grounded": true,
-        "skatepark": true,
-        "components": 402
-      },
-      "report": {
-        "done": true,
-        "error": null,
-        "frames": 1085,
-        "progress": 407.25,
-        "evidence": {
-          "route": "underpass",
-          "sections": [
-            0,
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14,
-            15,
-            16,
-            17,
-            18,
-            19,
-            20,
-            21
-          ],
-          "jumps": [
-            {
-              "s": 276.2,
-              "end": 300,
-              "name": "Crossrail transfer",
-              "grind": true,
-              "frame": 741,
-              "air": true,
-              "landing": 316
-            }
-          ],
-          "grinds": [
-            28
-          ],
-          "railNames": [
-            "Crossrail left to right"
-          ],
-          "checkpoints": [
-            4
-          ],
-          "upperTransfer": null,
-          "peakSpeed": 26.1239,
-          "minimumMovingSpeed": 22.96649957320981,
-          "bails": 0,
-          "airFrames": 105,
-          "crystal": false
-        },
-        "sourceMatches": true,
-        "position": [
-          107.4078448420284,
-          -6.263333333556851,
-          -303.33180658143823
-        ],
-        "state": "finished",
-        "grounded": true,
-        "deaths": 0,
-        "tuningUnchanged": true
-      },
-      "errors": []
-    },
-    "full-mezzanine": {
-      "initial": {
-        "position": [
-          0,
-          18,
-          5
-        ],
-        "state": "ride",
-        "grounded": true,
-        "skatepark": true,
-        "components": 402
-      },
-      "report": {
-        "done": true,
-        "error": null,
-        "frames": 1098,
-        "progress": 408,
-        "evidence": {
-          "route": "mezzanine",
-          "sections": [
-            0,
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14,
-            15,
-            16,
-            17,
-            18,
-            19,
-            20,
-            21
-          ],
-          "jumps": [
-            {
-              "s": 276.2,
-              "end": 300,
-              "name": "Crossrail transfer",
-              "grind": true,
-              "frame": 744,
-              "air": true,
-              "landing": 316
+              "landing": 77.5
             },
             {
-              "s": 375.5,
-              "end": 395,
-              "name": "Mezzanine",
-              "frame": 1012,
+              "s": 77.8,
+              "end": 84,
+              "name": "Fountain exit",
+              "frame": 289,
               "air": true,
-              "landing": 402.75
+              "landing": 86.25
+            },
+            {
+              "name": "Hidden rail reward ollie",
+              "frame": 546,
+              "progress": 163.25,
+              "fromRail": 16
+            },
+            {
+              "s": 128,
+              "end": 187,
+              "name": "Flying Leap",
+              "grind": true,
+              "frame": 453,
+              "air": true,
+              "landing": 226.25
+            },
+            {
+              "s": 276.2,
+              "end": 300,
+              "name": "Crossrail transfer",
+              "grind": true,
+              "frame": 843,
+              "air": true,
+              "landing": 316
             }
           ],
           "grinds": [
+            16,
+            17,
+            25,
             28
           ],
           "railNames": [
+            "Suspended upper light rail",
+            "Lower escalator handrail",
             "Crossrail left to right"
           ],
           "checkpoints": [
-            0
+            4
           ],
-          "upperTransfer": null,
-          "peakSpeed": 25.928260619128046,
-          "minimumMovingSpeed": 22.969412748066073,
+          "upperTransfer": {
+            "fromRail": 16,
+            "toRail": 17,
+            "frame": 582,
+            "position": [
+              34.21432766539559,
+              15.769782972870146,
+              -141.262506946116
+            ],
+            "frames": 20
+          },
+          "fountainLandingFrames": 3,
+          "fountainBrakingFrames": 33,
+          "peakSpeed": 30.500000000000423,
+          "minimumMovingSpeed": 14.066382001705376,
           "bails": 0,
-          "airFrames": 175,
-          "crystal": false
+          "airFrames": 416,
+          "crystal": true
         },
         "sourceMatches": true,
+        "fountainCamera": {
+          "samples": 25,
+          "minimumDistance": 7.656065208046067,
+          "maximumHeadY": 19.269650324783274
+        },
+        "fountainViewSamples": 106,
+        "fountainObstructions": [],
+        "fountainCapBottom": 20.3,
         "position": [
-          106.67633270762057,
-          -6.273333330849806,
-          -303.9413307538994
+          107.77804359912207,
+          -6.263333333556851,
+          -303.14216327141
+        ],
+        "state": "finished",
+        "grounded": true,
+        "deaths": 0,
+        "tuningUnchanged": true
+      },
+      "errors": []
+    },
+    "full-upper": {
+      "initial": {
+        "position": [
+          0,
+          18,
+          5
+        ],
+        "state": "ride",
+        "grounded": true,
+        "skatepark": true,
+        "components": 465
+      },
+      "report": {
+        "done": true,
+        "error": null,
+        "frames": 1187,
+        "progress": 407.25,
+        "evidence": {
+          "route": "upper",
+          "sections": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21
+          ],
+          "jumps": [
+            {
+              "s": 68.5,
+              "end": 74,
+              "name": "Fountain entry",
+              "frame": 249,
+              "air": true,
+              "landing": 77.5
+            },
+            {
+              "s": 77.8,
+              "end": 84,
+              "name": "Fountain exit",
+              "frame": 289,
+              "air": true,
+              "landing": 86.25
+            },
+            {
+              "name": "Hidden rail reward ollie",
+              "frame": 546,
+              "progress": 163.25,
+              "fromRail": 16
+            },
+            {
+              "s": 128,
+              "end": 187,
+              "name": "Flying Leap",
+              "grind": true,
+              "frame": 453,
+              "air": true,
+              "landing": 226.25
+            },
+            {
+              "s": 276.2,
+              "end": 300,
+              "name": "Crossrail transfer",
+              "grind": true,
+              "frame": 843,
+              "air": true,
+              "landing": 316
+            }
+          ],
+          "grinds": [
+            16,
+            17,
+            25,
+            28
+          ],
+          "railNames": [
+            "Suspended upper light rail",
+            "Lower escalator handrail",
+            "Crossrail left to right"
+          ],
+          "checkpoints": [
+            4
+          ],
+          "upperTransfer": {
+            "fromRail": 16,
+            "toRail": 17,
+            "frame": 582,
+            "position": [
+              34.21432973062201,
+              15.769782972870146,
+              -141.26250087204988
+            ],
+            "frames": 20
+          },
+          "fountainLandingFrames": 3,
+          "fountainBrakingFrames": 33,
+          "peakSpeed": 30.500000000000423,
+          "minimumMovingSpeed": 14.066382001705376,
+          "bails": 0,
+          "airFrames": 416,
+          "crystal": true
+        },
+        "sourceMatches": true,
+        "fountainCamera": {
+          "samples": 24,
+          "minimumDistance": 7.656065208046067,
+          "maximumHeadY": 19.24883012002478
+        },
+        "fountainViewSamples": 105,
+        "fountainObstructions": [],
+        "fountainCapBottom": 20.3,
+        "position": [
+          107.77804359912207,
+          -6.263333333556851,
+          -303.14216327141
+        ],
+        "state": "finished",
+        "grounded": true,
+        "deaths": 0,
+        "tuningUnchanged": true
+      },
+      "errors": []
+    },
+    "full-upper-fast": {
+      "initial": {
+        "position": [
+          0,
+          18,
+          5
+        ],
+        "state": "ride",
+        "grounded": true,
+        "skatepark": true,
+        "components": 465
+      },
+      "report": {
+        "done": true,
+        "error": null,
+        "frames": 1126,
+        "progress": 407.25,
+        "evidence": {
+          "route": "upper-fast",
+          "sections": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21
+          ],
+          "jumps": [
+            {
+              "s": 68.5,
+              "end": 84,
+              "name": "Fountain through jump",
+              "frame": 237,
+              "air": true,
+              "landing": 84.25
+            },
+            {
+              "name": "Hidden rail reward ollie",
+              "frame": 485,
+              "progress": 163.25,
+              "fromRail": 16
+            },
+            {
+              "s": 128,
+              "end": 187,
+              "name": "Flying Leap",
+              "grind": true,
+              "frame": 394,
+              "air": true,
+              "landing": 226.25
+            },
+            {
+              "s": 276.2,
+              "end": 300,
+              "name": "Crossrail transfer",
+              "grind": true,
+              "frame": 782,
+              "air": true,
+              "landing": 316
+            }
+          ],
+          "grinds": [
+            16,
+            17,
+            25,
+            28
+          ],
+          "railNames": [
+            "Suspended upper light rail",
+            "Lower escalator handrail",
+            "Crossrail left to right"
+          ],
+          "checkpoints": [
+            4
+          ],
+          "upperTransfer": {
+            "fromRail": 16,
+            "toRail": 17,
+            "frame": 521,
+            "position": [
+              34.17121585971531,
+              15.77194441665694,
+              -141.24784861948459
+            ],
+            "frames": 20
+          },
+          "fountainLandingFrames": 0,
+          "fountainBrakingFrames": 0,
+          "peakSpeed": 30.500000000000423,
+          "minimumMovingSpeed": 22.948676581192693,
+          "bails": 0,
+          "airFrames": 381,
+          "crystal": true
+        },
+        "sourceMatches": true,
+        "fountainCamera": {
+          "samples": 14,
+          "minimumDistance": 7.656065208046068,
+          "maximumHeadY": 19.701674159443296
+        },
+        "fountainViewSamples": 65,
+        "fountainObstructions": [],
+        "fountainCapBottom": 20.3,
+        "position": [
+          107.77804359912207,
+          -6.263333333556851,
+          -303.14216327141
         ],
         "state": "finished",
         "grounded": true,
@@ -1157,7 +1437,7 @@
     "start": {
       "deaths": 0,
       "lives": 4,
-      "stamp": "Codex/sol fork \u00b7 build 10-22 14:39 UTC"
+      "stamp": "Codex/sol fork \u00b7 build 10-22 15:35 UTC"
     },
     "checkpoints": [
       {
@@ -1173,10 +1453,10 @@
         "index": 1,
         "position": [
           4.658198371080175,
-          8,
+          8.1,
           -124.13075748788123
         ],
-        "distance": 0.09999999999999964
+        "distance": 0
       },
       {
         "index": 2,
@@ -1191,19 +1471,19 @@
         "index": 3,
         "position": [
           108,
-          0.1,
+          0,
           -217
         ],
-        "distance": 0
+        "distance": 0.1
       },
       {
         "index": 4,
         "position": [
           108,
-          -7,
+          -6.9,
           -291
         ],
-        "distance": 0.09999999999999964
+        "distance": 0
       }
     ],
     "recovery": {
@@ -1224,20 +1504,23 @@
     "closedRailSeams": "passed forward/reverse and fast spawn approach",
     "openRailAndSharpClosingCorner": "passed",
     "existingRailAirTransfer": {
-      "status": "Pre-existing failure documented in pass 4; runtime unchanged in passes 5 and 6",
+      "status": "Pre-existing failure documented in pass 4; shared runtime unchanged in passes 5\u20137",
       "message": "Boardslide 1 -1 torso faced opposite input",
       "baseline": "Same failure reproduced with pre-pass player.ts, rails.ts and level.ts through an isolated Vite source transform; no shared files were reverted."
     },
     "structures": "passed: physical escalator side, two underpasses, underside ray, lower-floor jump and 477 roof probes",
     "entranceTrough": "Passed: 32-frame rim grind, charged ollie into aisle and supported landing",
     "exitMasonry": "Passed: side route blocked before final banks, top support ray at Y=3.4",
-    "mezzanineStairClearance": "Passed: first post-jump ground contact after s=402, final stair at s=391"
+    "mezzanineStairClearance": "Passed: first post-jump ground contact after s=402, final stair at s=391",
+    "fountainTiming": "Passed from level spawn at takeoffs s=66.5, 67.5 and 68.5, each with two distinct flights and actual passage-floor contact",
+    "fountainBody": "Passed: both lower-floor approaches reach the intended upright and stop before its front face",
+    "fountainPresentation": "Passed: no sightline obstruction from s=67 through 92; useful camera distance; rendered fast and controlled poses clear cap at Y=20.3"
   },
   "fidelityRemaining": [
-    "First-concourse proportions and side-access contours",
-    "Exact receiver-bank, deck and support dimensions",
-    "Original fountain intermediate landing and upper exit passage",
-    "Fountain sculpture and storefront massing",
+    "First-concourse oval planter proportions and side-access contours",
+    "Exact fountain, receiver-bank, deck and support dimensions",
+    "Original upper exit passage",
+    "Fountain materials, storefront massing and concourse silhouette",
     "Absolute lengths, widths, heights and transition radii inferred from image/video rather than measured source geometry"
   ],
   "structures": {
@@ -1276,8 +1559,8 @@
       "landed": true,
       "end": [
         0,
-        10.501351639009547,
-        -96.24527294985639
+        9.387384814559683,
+        -100.14415266583192
       ],
       "surface": {
         "name": "Fountain upper landing",
@@ -1294,7 +1577,7 @@
   },
   "upperRewardNegativeControl": {
     "route": "upper",
-    "seconds": 18.666666666666668,
+    "seconds": 19.7,
     "state": "finished",
     "deaths": 0,
     "position": [
@@ -1331,19 +1614,27 @@
       ],
       "jumps": [
         {
-          "s": 68,
-          "end": 87,
-          "name": "Fountain Gap",
-          "frame": 235,
+          "s": 68.5,
+          "end": 74,
+          "name": "Fountain entry",
+          "frame": 249,
           "air": true,
-          "landing": 87.25
+          "landing": 77.5
+        },
+        {
+          "s": 77.8,
+          "end": 84,
+          "name": "Fountain exit",
+          "frame": 289,
+          "air": true,
+          "landing": 86.25
         },
         {
           "s": 128,
           "end": 187,
           "name": "Flying Leap",
           "grind": true,
-          "frame": 394,
+          "frame": 453,
           "air": true,
           "landing": 226
         },
@@ -1352,7 +1643,7 @@
           "end": 300,
           "name": "Crossrail transfer",
           "grind": true,
-          "frame": 777,
+          "frame": 839,
           "air": true,
           "landing": 316
         }
@@ -1371,10 +1662,12 @@
         4
       ],
       "upperTransfer": null,
+      "fountainLandingFrames": 3,
+      "fountainBrakingFrames": 33,
       "peakSpeed": 30.500000000000014,
-      "minimumMovingSpeed": 22.86210325568348,
+      "minimumMovingSpeed": 14.066382001705376,
       "bails": 0,
-      "airFrames": 389,
+      "airFrames": 414,
       "crystal": false
     },
     "error": null
@@ -1483,24 +1776,142 @@
       "caught": true,
       "steps": 76,
       "seams": 2,
-      "laps": 2.116870891968109,
+      "laps": 2.1107393012384854,
       "bailed": false,
-      "peakSpeed": 22.336190074121454,
+      "peakSpeed": 22.271492516744175,
       "end": [
-        -0.7762676689046331,
+        -0.8035126071792527,
         17.669999999999998,
-        -52.2026847522327
+        -52.126540250757074
       ]
     }
   ],
   "priorBrowserChecks": {
-    "build": "1699536471361e61c273",
-    "sourceComponents": 347,
+    "build": "68310faa353ad9b20a95",
+    "sourceComponents": 402,
     "checks": [
-      "lite-upper",
-      "full-upper",
-      "full-planter"
+      "lite-underpass",
+      "full-underpass",
+      "full-mezzanine"
     ],
-    "result": "Passed; preserved in parent commit b048fc54. Current build checks listed below."
+    "result": "Passed in parent commit ff6e6e4. Current fountain browser checks are listed in browsers."
+  },
+  "fountain": {
+    "runs": [
+      {
+        "fountainEntry": 66.5,
+        "progress": 100,
+        "state": "ride",
+        "deaths": 0,
+        "bails": 0,
+        "minimumMovingSpeed": 12.97586514120669,
+        "contacts": 9,
+        "jumps": [
+          {
+            "s": 66.5,
+            "end": 74,
+            "name": "Fountain entry",
+            "frame": 240,
+            "air": true,
+            "landing": 76
+          },
+          {
+            "s": 77.8,
+            "end": 84,
+            "name": "Fountain exit",
+            "frame": 288,
+            "air": true,
+            "landing": 87.5
+          }
+        ]
+      },
+      {
+        "fountainEntry": 67.5,
+        "progress": 100,
+        "state": "ride",
+        "deaths": 0,
+        "bails": 0,
+        "minimumMovingSpeed": 13.565238251870424,
+        "contacts": 7,
+        "jumps": [
+          {
+            "s": 67.5,
+            "end": 74,
+            "name": "Fountain entry",
+            "frame": 244,
+            "air": true,
+            "landing": 76.5
+          },
+          {
+            "s": 77.8,
+            "end": 84,
+            "name": "Fountain exit",
+            "frame": 289,
+            "air": true,
+            "landing": 87
+          }
+        ]
+      },
+      {
+        "fountainEntry": 68.5,
+        "progress": 100,
+        "state": "ride",
+        "deaths": 0,
+        "bails": 0,
+        "minimumMovingSpeed": 14.066382001705376,
+        "contacts": 3,
+        "jumps": [
+          {
+            "s": 68.5,
+            "end": 74,
+            "name": "Fountain entry",
+            "frame": 249,
+            "air": true,
+            "landing": 77.5
+          },
+          {
+            "s": 77.8,
+            "end": 84,
+            "name": "Fountain exit",
+            "frame": 289,
+            "air": true,
+            "landing": 86.25
+          }
+        ]
+      }
+    ],
+    "uprights": [
+      {
+        "u": -2.05,
+        "furthest": 72.75,
+        "closest": [
+          -2.05,
+          12.439999997615814,
+          -62.67
+        ],
+        "end": [
+          -6.457675003683996,
+          12,
+          -58.60137691967631
+        ],
+        "state": "ride"
+      },
+      {
+        "u": 2.05,
+        "furthest": 72.75,
+        "closest": [
+          2.05,
+          12.439999997615814,
+          -62.67
+        ],
+        "end": [
+          -2.3492346262630828,
+          12,
+          -59.7321106170502
+        ],
+        "state": "ride"
+      }
+    ],
+    "tuningUnchanged": true
   }
 }

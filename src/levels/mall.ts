@@ -282,7 +282,9 @@ for(let s=45;s<59;s+=.65)box(mallPoint(s,-1.4,upperY(s)-.04),[4,.08,.18],'#3e535
  add({t:'rail',p:rim,pts:points.map((q,i)=>[q[0]-rim[0],q[2]-rim[2],i>0&&i<points.length-1?.4:0,0]),
   invisible:true,grp:2,nm:'Entrance water trough rim'});
 }
-ribbon('Upper fountain concourse',59,69,-6.5,6.5,()=>17,2,'#c6c1b0',true,'pavement',()=>16.35);
+ribbon('Upper fountain concourse',59,64,-6.5,6.5,()=>17,2,'#c6c1b0',true,'pavement',()=>16.35);
+for(const [left,right]of [[-6.5,-3.8],[2.7,6.5]])
+ ribbon('Concourse side deck',64,69,left,right,()=>17,2,'#c6c1b0',true,'pavement',()=>16.35);
 for(const u of [-6.1,6.1])box(mallPoint(59.7,u,14.175),[.4,4.35,.55],dark,2,0,true,'First concourse support');
 // The low round planter occupies the first directory island. Its rim is a
 // continuous grind loop; the fountain jump still has clear lanes either side.
@@ -304,27 +306,52 @@ for(let i=0;i<64;i++){
 // Grind on the left and the row of three planter rims on the right.
 for(const side of [-1,1])rail(side<0?'Rail Combo to Coffee':'Rail Combo to Planters',
  [mallPoint(63,side*5.65,17.85),mallPoint(69,side*7,17.85)],2);
-// Main fountain: a low blue octagon, raised centre and passable side aisles.
+// Main fountain: the original monument has a hexagonal water passage
+// through its centre, aligned with the two raised fountain jumps. The
+// aperture is a rideable intermediate landing, not a decorative solid pole.
 const fountain=mallPoint(76,0,12);
 add({t:'platform',p:[fountain[0],12.22,fountain[2]],s:[9,.44,13],pts:[[-4,-5],[-2,-6.5],[2,-6.5],[4,-5],[4,5],[2,6.5],[-2,6.5],[-4,5]],color:trim,tex:'solid',edgeGrinding:false,grp:2,nm:'Fountain octagonal basin'});
 box(mallPoint(76,0,12.47),[6.9,.05,10.5],'#428e99',2);
-box(mallPoint(76,0,13.2),[2,1.5,2],'#89775c',2,0,true,'Fountain sculpture plinth');
-for(let i=0;i<8;i++){
- const a=i*Math.PI/4,b=(i+1)*Math.PI/4,centre=mallPoint(76,0,12.5);
- const point=(angle:number,r:number,h:number):P=>[centre[0]+Math.cos(angle)*r,centre[1]+h,centre[2]+Math.sin(angle)*r];
- face([point(a,1.6,0),point(b,1.6,0),point(b,.65,2.7),point(a,.65,2.7)],i%2?'#b09b64':'#8f7947',2);
- face([point(a,2.1,2.8),point(b,2.1,2.8),point(b,1.45,2.8),point(a,1.45,2.8)],'#b6a373',2);
- face([point(a,1.45,2.8),point(b,1.45,2.8),point(b,1.45,3.2),point(a,1.45,3.2)],'#8d7d54',2);
+{
+ const a=73.2,b=78.8,base=12.45,deck=15.2,capBottom=20.3,bevelY=19.5,stoneColor='#89937d';
+ ribbon('Fountain passage floor',a,b,-1.2,1.2,()=>deck,2,'#6b9ca0',true,'solid',()=>base);
+ // Solid uprights surround an open central channel. Their sloping inner
+ // skirts widen the middle of the aperture while retaining its flat bed.
+ for(const side of [-1,1]){
+  box(mallPoint(76,side*2.05,(base+capBottom+.1)/2),[.8,capBottom+.1-base,b-a],stoneColor,2,0,true,'Fountain monument upright');
+  const profile=[[1.2,base],[1.2,deck],[1.65,16.1],[1.65,bevelY],[.95,capBottom]];
+  for(const s of [a,b])for(let i=1;i<profile.length;i++){
+   const [u0,y0]=profile[i-1],[u1,y1]=profile[i];
+   face([mallPoint(s,side*u0,y0),mallPoint(s,side*u1,y1),
+    mallPoint(s,side*2.45,y1),mallPoint(s,side*2.45,y0)],stoneColor,2);
+  }
+  const vertices=[mallPoint(a,side*1.2,deck),mallPoint(b,side*1.2,deck),
+   mallPoint(b,side*1.65,16.1),mallPoint(a,side*1.65,16.1)];
+  add({t:'mesh',p:[0,0,0],vertices:vertices.flat(),indices:[0,1,2,0,2,3],
+   color:'#7b9b92',tex:'solid',solid:true,doubleSided:true,edgeGrinding:false,grp:2,nm:'Fountain passage bevel'});
+  face([mallPoint(a,side*1.65,bevelY),mallPoint(b,side*1.65,bevelY),
+   mallPoint(b,side*.95,capBottom),mallPoint(a,side*.95,capBottom)],'#69765e',2);
+ }
+ // The fast airborne pose is taller than the grounded/crouched pose.
+ box(mallPoint(76,0,capBottom+.9),[5.8,1.8,b-a+.3],'#918060',2,0,true,'Fountain monument cap');
+ // Falling sheets on the outer sides remain scenery; the water-coloured
+ // passage itself uses ordinary dry support so traversal keeps its momentum.
+ for(const side of [-1,1])face([mallPoint(a+.65,side*2.46,bevelY),mallPoint(b-.65,side*2.46,bevelY),
+  mallPoint(b-.4,side*2.46,12.5),mallPoint(a+.4,side*2.46,12.5)],'#6da4b3',2);
 }
-box(mallPoint(76,0,16.2),[.45,2.4,.45],brass,2,24);
 for(const u of [-4.8,4.8])sign('SALE',76,u,15.0,2.8);
 // Fountain-gap launch and the car-display bank on the opposite side.
-ribbon('Fountain upper launch',64,69,-3.8,2.7,s=>17+.45*clamp((s-64)/5),3,trim,true,'pavement',()=>16.98);
+const fountainLaunchY=(s:number)=>{
+ if(s>=66.5)return 15.4-.2*(s-66.5);
+ const t=clamp((s-64)/2.5);
+ return mix(17,15.4,t*t*(3-2*t))+.5*t*t*(1-t);
+};
+ribbon('Fountain upper launch',64,69,-3.8,2.7,fountainLaunchY,3,trim,true,'pavement',()=>11.88,.15);
 // The opposite island receives the fountain jump on its sloping face;
 // the directory sits on the flat upper deck behind that bank.
-const fountainLandingY=(s:number)=>mix(12,17,ease(83,86.5,s));
-ribbon('Fountain landing bank',83,86.5,-4.5,3.5,fountainLandingY,3,trim,true,'pavement',()=>11.88,.2);
-ribbon('Fountain upper landing',86.5,100,-4.5,3.5,()=>17,3,'#c2baa4',true,'pavement',()=>16.35);
+const fountainLandingY=(s:number)=>mix(15.15,17,ease(86.5,93,s));
+ribbon('Fountain landing bank',83,93,-4.5,3.5,fountainLandingY,3,trim,true,'pavement',()=>11.88,.2);
+ribbon('Fountain upper landing',93,100,-4.5,3.5,()=>17,3,'#c2baa4',true,'pavement',()=>16.35);
 ribbon('Upper landing gallery',100,123,-8.8,s=>s<112?3.5:mix(3.5,5,clamp((s-112)/5)),()=>17,3,'#c2baa4',true,'pavement',()=>16.35);
 // Masonry abutments leave the 16-stair aisle open beneath the upper gallery.
 for(const u of [-8.2,3.0]){
@@ -468,6 +495,12 @@ for(const [i,c]of MALL_CHECKPOINTS.entries())add({t:'checkpoint',p:c.p,grp:Math.
 // Ordered nodes keep checkpoints and route inspection in the same frame;
 // native skatepark mode supplies rider-relative controls and its chase rig.
 for(const k of MALL_KNOTS)add({t:'camnode',p:mallPoint(k.s),radius:8,grp:9,nm:'Mall route camera'});
+// A low, feathered follow shot looks through the aperture. The tall default
+// park shot otherwise strikes its cap and collapses into the skater's head.
+// The lower aisle is outside this volume; movement and vert tuning are intact.
+add({t:'camnode',p:mallPoint(83.75,0,17.5),s:[8,9,28.5],yaw:0,radius:2,cameraView:true,
+ cameraPosition:[0,.3,7],cameraTarget:[0,0,0],cameraFollowDistance:7.5,
+ cameraFollowTargetHeight:1.25,cameraFov:49,grp:9,nm:'Fountain passage camera'});
 for(const [i,s]of [61,105,188,263,370].entries()){
  const u=i===1?-6.7:i===0?-4.3:5.8,y=i<=1?17:mallHeight(s);
  sign('DIRECTORY',s,u,y+1.9,1.9);

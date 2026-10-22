@@ -1,18 +1,18 @@
 // Controller samples only: production movement, collision, rails and camera.
-export function createMallPilot(m,{route='main',charge=true,secretOllie=true}={}){
+export function createMallPilot(m,{route='main',charge=true,secretOllie=true,fountainEntry=68.5}={}){
  let progress=5,frame=0,active=null,jumped=new Set(),lastAdvance=0,lastS=5,secretPop=false,secretPopFrame=-Infinity,secretRail=null;
- const evidence={route,sections:[],jumps:[],grinds:[],railNames:[],checkpoints:[],upperTransfer:null,peakSpeed:0,minimumMovingSpeed:Infinity,bails:0,airFrames:0,crystal:false};
+ const evidence={route,sections:[],jumps:[],grinds:[],railNames:[],checkpoints:[],upperTransfer:null,fountainLandingFrames:0,fountainBrakingFrames:0,peakSpeed:0,minimumMovingSpeed:Infinity,bails:0,airFrames:0,crystal:false};
  const smooth=t=>{t=Math.max(0,Math.min(1,t));return t*t*(3-2*t);};
  const interpolate=(s,knots)=>{for(let i=1;i<knots.length;i++)if(s<=knots[i][0])return knots[i-1][1]+(knots[i][1]-knots[i-1][1])*smooth((s-knots[i-1][0])/(knots[i][0]-knots[i-1][0]));return knots.at(-1)[1];};
- const upperRoute=['upper','car','escalator'].includes(route);
+ const fountainRoute=['upper','upper-fast'].includes(route),upperRoute=fountainRoute||['car','escalator'].includes(route);
  const offsets=route==='escalator'?[[0,0],[25,0],[43,-12.2],[85,-12.2],[96,-10.4],[117,-10.4],[128,-6.1],[183,-6.1],[199,0],[319,0],[336,6.5],[362,6.5],[373,0],[396,0]]:
   route==='car'?[[0,0],[43,7.8],[113,7.8],[129,5],[183,-6.1],[199,0],[319,0],[336,6.5],[362,6.5],[373,0],[396,0]]:
-  route==='upper'?[[0,0],[34,-2],[62,-2],[97,-1.4],[115,-6.1],[128,-6.1],[183,-6.1],[199,0],[319,0],[336,6.5],[362,6.5],[373,0],[396,0]]:
+  fountainRoute?[[0,0],[34,-2],[63,-2],[69,0],[84,0],[97,-1.4],[115,-6.1],[128,-6.1],[183,-6.1],[199,0],[319,0],[336,6.5],[362,6.5],[373,0],[396,0]]:
   route==='coffee'?[[0,0],[16,0],[43,-11.2],[83,-9.8],[103,-6.2],[132,-10],[180,-10],[199,0],[217,0],[319,0],[336,6.5],[362,6.5],[373,0],[396,0]]:
   route==='underpass'?[[0,0],[43,4.7],[65,4.7],[83,5],[96,3.8],[132,13.5],[162,13.5],[180,10.5],[190,10.5],[217,0],[319,0],[336,6.5],[362,6.5],[373,0],[396,0]]:
   route==='mezzanine'?[[0,0],[43,7.2],[65,7.8],[83,5],[96,3.8],[132,13.5],[162,13.5],[180,10.5],[190,10.5],[217,0],[319,0],[338,-6.5],[377,-6.5],[397,0]]:
   [[0,0],[43,7.2],[65,7.8],[83,5],[96,3.8],[132,13.5],[162,13.5],[180,10.5],[190,10.5],[217,0],[319,0],[336,6.5],[362,6.5],[373,0],[396,0]];
- const launches=[...(route==='escalator'?[{s:128,end:187,name:'Flying Leap',grind:true}]:route==='car'?[{s:86.5,end:100,name:'Car display jump'},{s:125,end:187,name:'Flying Leap',grind:true}]:route==='upper'?[{s:68,end:87,name:'Fountain Gap'},{s:128,end:187,name:'Flying Leap',grind:true}]:route==='coffee'?[{s:55,end:104,name:'Coffee Grind',grind:true},{s:136,end:185,name:'Lower light beam',grind:true}]:[]),{s:276.2,end:300,name:'Crossrail transfer',grind:true},...(route==='mezzanine'?[{s:375.5,end:395,name:'Mezzanine'}]:[])];
+ const launches=[...(route==='escalator'?[{s:128,end:187,name:'Flying Leap',grind:true}]:route==='car'?[{s:86.5,end:100,name:'Car display jump'},{s:125,end:187,name:'Flying Leap',grind:true}]:fountainRoute?[...(route==='upper-fast'?[{s:fountainEntry,end:84,name:'Fountain through jump'}]:[{s:fountainEntry,end:74,name:'Fountain entry'},{s:77.8,end:84,name:'Fountain exit'}]),{s:128,end:187,name:'Flying Leap',grind:true}]:route==='coffee'?[{s:55,end:104,name:'Coffee Grind',grind:true},{s:136,end:185,name:'Lower light beam',grind:true}]:[]),{s:276.2,end:300,name:'Crossrail transfer',grind:true},...(route==='mezzanine'?[{s:375.5,end:395,name:'Mezzanine'}]:[])];
  return {evidence,get progress(){return progress;},
  sample(p,l){
   progress=m.mallProject(p.pos.x,p.pos.z,progress);
@@ -22,8 +22,10 @@ export function createMallPilot(m,{route='main',charge=true,secretOllie=true}={}
   let jump=charge,grind=false;
   if(!active&&launch&&progress>=launch.s&&p.grounded){active={...launch,frame,air:false};jumped.add(launch.name);jump=false;}
   if(active){jump=false;grind=!!active.grind;if(!p.grounded)active.air=true;if(progress>active.end&&p.grounded){evidence.jumps.push({...active,landing:progress});active=null;jump=charge;}}
-  const look=Math.max(5,p.speed*.65);
+  const look=fountainRoute&&progress>54&&progress<86?4:Math.max(5,p.speed*.65);
   let q=m.mallPoint(Math.min(408.5,progress+look),interpolate(progress+look,offsets));
+  if(fountainRoute&&progress>62&&progress<73)q=m.mallPoint(77,0);
+  if(fountainRoute&&progress>=73&&progress<80)q=m.mallPoint(87,0);
   if(progress>225&&progress<310){
    const s=progress+Math.max(5,p.speed*.3),u=s<268?3.3*smooth((s-232)/28):s<299?6.5-13*(s-268)/31:-6.5*(1-smooth((s-299)/20));
    q=m.mallPoint(s,u);
@@ -59,12 +61,17 @@ export function createMallPilot(m,{route='main',charge=true,secretOllie=true}={}
     if(!jump){secretPop=true;secretPopFrame=frame;secretRail=l.rails.indexOf(p.grindRail);evidence.jumps.push({name:'Hidden rail reward ollie',frame,progress,fromRail:secretRail});}
    }
   }
-  return{moveX,moveY,jumpHeld:jump,grindHeld:grind,spinHeld:p.grounded&&l.checkpoints.some(c=>!c.active&&c.spawnPos.distanceTo(p.pos)<2.7)};
+  // A controlled two-jump line checks the actual landing inside the short
+  // fountain passage. The unbraked upper-fast line independently checks flow.
+  const brake=route==='upper'&&progress>58&&progress<fountainEntry&&p.grounded&&p.speed>14.3;
+  if(brake)evidence.fountainBrakingFrames++;
+  return{moveX,moveY,jumpHeld:jump,grindHeld:grind,grabHeld:brake,spinHeld:p.grounded&&l.checkpoints.some(c=>!c.active&&c.spawnPos.distanceTo(p.pos)<2.7)};
  },
  observe(p,l){
   frame++;progress=m.mallProject(p.pos.x,p.pos.z,progress);evidence.peakSpeed=Math.max(evidence.peakSpeed,p.speed);evidence.crystal=p.hasCrystal;
   if(frame>180&&p.grounded&&progress<390)evidence.minimumMovingSpeed=Math.min(evidence.minimumMovingSpeed,p.speed);
   if(!p.grounded)evidence.airFrames++;
+  if(p.grounded&&p.groundHit?.name==='Fountain passage floor')evidence.fountainLandingFrames++;
   for(let i=0;i<m.MALL_KNOTS.length;i++)if(progress>=m.MALL_KNOTS[i].s&&!evidence.sections.includes(i))evidence.sections.push(i);
   if(p.state==='grind'){
    const i=l.rails.indexOf(p.grindRail);if(!evidence.grinds.includes(i))evidence.grinds.push(i);
@@ -83,7 +90,7 @@ export function createMallPilot(m,{route='main',charge=true,secretOllie=true}={}
 // Focused loop review. The fast case approaches from the actual level spawn;
 // the low-speed cases use explicit initial placements in the surface harness.
 export function createMallPlanterPilot(m,{direction=1,fromSpawn=false}={}){
- const approach=fromSpawn?createMallPilot(m,{route:'upper'}):null;
+ const approach=fromSpawn?createMallPilot(m,{route:'upper-fast'}):null;
  const evidence={name:'Round planter grind',direction,fromSpawn,caught:false,steps:0,seams:0,laps:0,bailed:false,peakSpeed:0,end:null};
  let frame=0,progress=5,lastT=null,travel=0,done=false;
  return{evidence,get done(){return done;},get progress(){return progress;},

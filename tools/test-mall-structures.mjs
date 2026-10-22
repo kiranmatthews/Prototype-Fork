@@ -26,14 +26,14 @@ await withBlockworksRuntime(async r=>{
   if(p.pos.z<m.mallPoint(67)[2]){firstPassage=true;break;}
  }
  report.firstUnderpass={passed:firstPassage,peak:lowerPeak,bail:firstBail,end:p.pos.toArray(),grounded:p.grounded};
- start(92,0,12.1,[0,0,-1]);
+ start(95,0,12.1,[0,0,-1]);
  let peak=12,landed=false,air=false;
  for(let i=0;i<240;i++){
   r.tick({jumpHeld:i<60});peak=Math.max(peak,p.pos.y);air||=!p.grounded;
   if(air&&i>60&&p.grounded){landed=true;break;}
  }
  report.soffit={peak,landed,end:p.pos.toArray()};
- const ray=new THREE.Raycaster(new THREE.Vector3(...m.mallPoint(92,0,13)),new THREE.Vector3(0,1,0),0,5);
+ const ray=new THREE.Raycaster(new THREE.Vector3(...m.mallPoint(95,0,13)),new THREE.Vector3(0,1,0),0,5);
  const underside=ray.intersectObjects(l.groundMeshes,false)[0];
  report.soffit.surface=underside?{name:underside.object.name,y:underside.point.y,normal:underside.face.normal.toArray()}:null;
  const roof= r.source.components.filter(c=>c.nm==='Continuous mall ceiling');

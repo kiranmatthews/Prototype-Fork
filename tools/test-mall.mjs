@@ -17,10 +17,10 @@ await withBlockworksRuntime(async r=>{
  console.log(JSON.stringify({...report,tail:undefined},null,2));
  assert.equal(error,null);assert.equal(p.state,'finished');assert.equal(p.totalDeaths,0);assert.equal(JSON.stringify(r.TUNING),before);
  assert.ok(pilot.evidence.railNames.some(name=>name.startsWith('Crossrail ')),'The crossrail jump must catch a diagonal rail, not a side ledge');
- // The car approach climbs five metres after its landing. Natural gravity
- // slows that uphill line; it must still carry enough speed into the leap.
- assert.ok(pilot.evidence.minimumMovingSpeed>(['car','escalator'].includes(route)?15:18),'The authored line must carry continuous skating speed');
- if(['upper','car','escalator'].includes(route)){
+ // Uphill approaches lose speed naturally. The two-jump fountain line also
+ // uses the normal brake to land inside its passage; the fast line does not.
+ assert.ok(pilot.evidence.minimumMovingSpeed>(route==='upper'?12:['car','escalator'].includes(route)?15:18),'The authored line must carry continuous skating speed');
+ if(['upper','upper-fast','car','escalator'].includes(route)){
   assert.ok(pilot.evidence.railNames.includes('Suspended upper light rail'),'Flying Leap must catch an upper suspended rail');
   assert.equal(p.hasCrystal,secretOllie,'The elevated reward requires an ollie from the upper rail');
   assert.equal(!!pilot.evidence.upperTransfer,secretOllie,'The reward line must transfer between the two distinct upper rails');
@@ -31,8 +31,15 @@ await withBlockworksRuntime(async r=>{
   assert.ok(climb.some(v=>v.position[0]<-8.4&&v.position[1]>16),'The second escalator must be climbed on its own left-hand surface');
  }
  if(route==='upper'){
-  const fountain=r.trace.reduce((a,b)=>Math.abs(a.position[2]+66)<Math.abs(b.position[2]+66)?a:b);
-  assert.ok(Math.abs(fountain.position[0])<2.5&&fountain.position[1]>17,'The fountain gap must cross the fountain itself');
+  assert.ok(pilot.evidence.fountainLandingFrames>=2,'The two-jump line must land inside the fountain passage');
+  for(const name of ['Fountain entry','Fountain exit'])assert.ok(pilot.evidence.jumps.some(j=>j.name===name&&j.air),name+' must include its own flight');
+  const entry=pilot.evidence.jumps.find(j=>j.name==='Fountain entry');
+  assert.ok(entry.landing>=73.2&&entry.landing<=78.8,'The first landing must be within the fountain itself');
+ }
+ if(route==='upper-fast'){
+  const passage=r.trace.filter(v=>v.position[2]<m.mallPoint(73.2)[2]&&v.position[2]>m.mallPoint(78.8)[2]);
+  assert.ok(passage.length>=10&&passage.every(v=>Math.abs(v.position[0])<1.2&&v.position[1]>15.2&&v.position[1]<18.6),'The fast line must pass through the actual aperture');
+  assert.equal(pilot.evidence.fountainBrakingFrames,0);
  }
  if(route==='coffee'){
   assert.ok(pilot.evidence.railNames.includes('Coffee Grind'),'The route must use the coffee rail');
