@@ -642,3 +642,12 @@
 - Lite and full browser passes each complete all 21 cases / 3,963 fixed steps, including checkpoint recovery. Each has one retained ResizeObserver layout notification. The review console also recorded one MutationObserver error during reload; a fresh standalone full-render session with normal input had a clean console. Exact origin of the reload error remains unisolated; no unrelated runtime code was edited.
 - `check:levels` and `build` pass (existing large-chunk warning only). Runtime fingerprints are unchanged from the prior pass. Validation completed at 2026-10-22 13:10 UTC, 138.3 minutes from the original prompt across the refinement passes.
 - Keep local. Remaining source work: Hall Pass and rail-to-rail planters, Funbox transfers, the roof Mini Gap placement, Park Gap, Playground/Huge/Long Ass grinds and the planter chain.
+
+### 2026-10-23 — School Miami: roof Mini Gap and complete long grinds
+
+- Repositioned and narrowed the rooftop Mini Gap to the north-west corner from the source map; joined its takeoff quarter around the west corner. Raised the connecting plank above the now-continuous north coping before its descent onto the awning.
+- Added shared ordinary-input review controllers for complete Long Ass, Huge and Playground grinds, plus the roof Mini Gap. No balance boost or special meter is used for these four cases. Each long grind reaches its rail end and a supported rollout; Mini Gap catches both intended copings, then ollies back onto the roof.
+- Physics: 211 components / 57 rails, 20 supports, 13 routes, 18 air cases, 7 grind cases and the 44-waypoint continuous campus circuit; zero bails in accepted cases.
+- Lite and full rendering each pass all 25 cases / 4,718 fixed steps. Each retains the known ResizeObserver layout notification; no new console error appeared. The old review-tab MutationObserver entry is still retained, with its prior clean standalone comparison.
+- `check:levels` and `build` pass. Refreshed the focused physics pass after concurrent shared player/level edits; updated the tested runtime fingerprints without incorporating those unrelated edits.
+- Validated at 2026-10-22 13:31 UTC, 159.9 minutes from the original prompt across all refinement passes. All changes remain local. Hall Pass, the rail-to-rail planter relationships, Funbox transfers, Park Gap and the planter chain remain under active review.

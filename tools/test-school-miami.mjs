@@ -240,6 +240,26 @@ await withSkateRuntime(async ({ THREE, server, Level, Player, scene, CONST, TUNI
       let frames=1;for(;frames<50&&p.state==='grind';frames++)step(makeInput({grindHeld:true}));
       report.grinds.push({dir,frames,end:p.pos.toArray()});assert.ok(frames>=35,'downhill rail prematurely interrupted');
     }
+    const {createBalancedGrind,createRoofMiniGap}=await server.ssrLoadModule('/tools/school-grind-lines.ts');
+    const longStart=m.SCHOOL_WEST_DESCENT[0].map((v,i)=>v+[-3.9,.45,1.2][i]),longRail=level.rails.find(r=>r.points[0].distanceTo(new THREE.Vector3(...longStart))<.1);
+    const sign=m.schoolMapPoint(352,78);sign[1]=-2.45;
+    const playground=level.rails.find(r=>r.points[0].distanceTo(new THREE.Vector3(...sign))<.1);
+    for(const [name,r] of [['Long Ass Rail',longRail],['Huge Rail',miniTakeoff],['Playground Rail',playground]]){
+      assert.ok(r,`${name} missing`);const h=r.tangentAt(.4).setY(0).normalize(),q=r.pointAt(.4);
+      if(name==='Long Ass Rail'){const a=r.points[0].clone().addScaledVector(h,-1.5);place([a.x,.1,a.z],h.toArray(),14);}
+      else{q.y+=.3;place(q.toArray(),h.toArray(),14);p.pos.copy(q);p.prevPos.copy(q);p.grounded=false;p.state='air';p.vVel=0;p.airFromSkate=true;p.airGrav='board';}
+      assert.equal(p.balanceBoostT,0,'long grinds must use normal balance');assert.equal(p.uberTimer,0);
+      const line=createBalancedGrind(p,r,CONST.fixedStep);let complete=false;
+      for(let i=0;i<900;i++){step(makeInput(line.sample()));assert.ok(!p.isBailing,`${name} bailed`);if(line.observe()){complete=true;break;}}
+      assert.ok(complete,`${name} never completed`);report.grinds.push({name,...line.report,bails:0,end:p.pos.toArray()});
+    }
+    const roofA=level.rails.find(r=>r.points.at(-1).distanceTo(new THREE.Vector3(...m.SCHOOL_ROOF_MINI_GAP.left).add(new THREE.Vector3(0,1.85,-1.8)))<.6&&r.totalLength>25);
+    const roofB=level.rails.find(r=>r.points[0].distanceTo(new THREE.Vector3(...m.SCHOOL_ROOF_MINI_GAP.right).add(new THREE.Vector3(0,1.85,-1.8)))<.1);
+    assert.ok(roofA&&roofB);const rq=roofA.pointAt(roofA.totalLength-4).add(new THREE.Vector3(0,.3,0)),rh=roofA.tangentAt(roofA.totalLength-4).setY(0).normalize();
+    place(rq.toArray(),rh.toArray(),12);p.pos.copy(rq);p.prevPos.copy(rq);p.state='air';p.grounded=false;p.vVel=0;p.airFromSkate=true;p.airGrav='board';assert.equal(p.balanceBoostT,0);
+    const roofMini=createRoofMiniGap(p,roofA,roofB,CONST.fixedStep);let roofMiniComplete=false;
+    for(let i=0;i<300;i++){step(makeInput(roofMini.sample()));assert.ok(!p.isBailing,'Roof Mini Gap bailed');if(roofMini.observe()){roofMiniComplete=true;break;}}
+    assert.ok(roofMiniComplete,'Roof Mini Gap did not land back on the roof');report.airs.push({name:'Roof Mini Gap',...roofMini.report,bails:0,end:p.pos.toArray()});
     // Complete the opening grind, downhill gap, rear corridor, pool deck,
     // and uphill return in one native-spawn run with no intermediate reset.
     const {createSchoolCircuit}=await server.ssrLoadModule('/tools/school-circuit.ts');

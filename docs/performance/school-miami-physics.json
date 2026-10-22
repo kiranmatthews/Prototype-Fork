@@ -1,6 +1,6 @@
 {
-  "components": 212,
-  "rails": 58,
+  "components": 211,
+  "rails": 57,
   "support": [
     {
       "label": "start canopy",
@@ -395,7 +395,7 @@
       "air": true,
       "landed": true,
       "frames": 86,
-      "maxY": 12.485927478146113,
+      "maxY": 12.485927478146111,
       "bails": 0,
       "end": [
         63,
@@ -409,12 +409,12 @@
       "air": true,
       "landed": true,
       "frames": 87,
-      "maxY": 13.06945535137093,
+      "maxY": 13.069455351370927,
       "bails": 0,
       "end": [
         63,
         7,
-        5.534336771056532
+        5.534336771056536
       ]
     },
     {
@@ -526,6 +526,20 @@
         -5,
         -80.4773231003449
       ]
+    },
+    {
+      "name": "Roof Mini Gap",
+      "frames": 102,
+      "takeoffGrindFrames": 16,
+      "receivingGrindFrames": 14,
+      "air": true,
+      "landed": true,
+      "bails": 0,
+      "end": [
+        50.390568514736536,
+        7.014452257503031,
+        17.776666666666607
+      ]
     }
   ],
   "grinds": [
@@ -547,12 +561,12 @@
       "name": "Roof to Awning",
       "caught": true,
       "landed": true,
-      "frames": 62,
+      "frames": 73,
       "bails": 0,
       "end": [
         45,
         3.4000000953674316,
-        3.641694459431349
+        3.596874269793925
       ]
     },
     {
@@ -571,6 +585,51 @@
         37.03410838117807,
         -2.523236328564013,
         -25.261706360460344
+      ]
+    },
+    {
+      "name": "Long Ass Rail",
+      "frames": 176,
+      "grindFrames": 148,
+      "maxT": 47.85746907856143,
+      "maxBalance": 0.1,
+      "caught": true,
+      "landed": true,
+      "bails": 0,
+      "end": [
+        -51.21201991331828,
+        -6.662142577688438,
+        -29.8
+      ]
+    },
+    {
+      "name": "Huge Rail",
+      "frames": 345,
+      "grindFrames": 313,
+      "maxT": 73.2000000000002,
+      "maxBalance": 0.1,
+      "caught": true,
+      "landed": true,
+      "bails": 0,
+      "end": [
+        -77.65935927644341,
+        -5,
+        -41.19112604638609
+      ]
+    },
+    {
+      "name": "Playground Rail",
+      "frames": 121,
+      "grindFrames": 95,
+      "maxT": 22.333333333333332,
+      "maxBalance": 0.1,
+      "caught": true,
+      "landed": true,
+      "bails": 0,
+      "end": [
+        18.557265211126666,
+        -4.251395017886823,
+        -71.89961259338916
       ]
     }
   ],

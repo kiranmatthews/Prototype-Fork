@@ -1,5 +1,7 @@
-import {SCHOOL_KICKER,SCHOOL_POOLS,SCHOOL_ROOF_ACCESS,SCHOOL_MAIN_RAIL,SCHOOL_CHECKPOINTS,SCHOOL_LONG_HALFPIPE,SCHOOL_ROOF_PLANK,SCHOOL_BONUS_ROOF,SCHOOL_DITCH_KICKER,SCHOOL_BRIDGES,SCHOOL_DITCH} from '../src/levels/school-miami';
+import {SCHOOL_KICKER,SCHOOL_POOLS,SCHOOL_ROOF_ACCESS,SCHOOL_MAIN_RAIL,SCHOOL_CHECKPOINTS,SCHOOL_LONG_HALFPIPE,SCHOOL_ROOF_PLANK,SCHOOL_BONUS_ROOF,SCHOOL_DITCH_KICKER,SCHOOL_BRIDGES,SCHOOL_DITCH,SCHOOL_WEST_DESCENT,SCHOOL_MINI_GAP,SCHOOL_ROOF_MINI_GAP,schoolMapPoint} from '../src/levels/school-miami';
 import {createSchoolCircuit} from './school-circuit';
+import {createBalancedGrind,createRoofMiniGap} from './school-grind-lines';
+import {CONST} from '../src/tuning';
 type Point=[number,number,number];
 type Trial={name:string;init:()=>void;input:(n:number)=>any;done:(n:number)=>boolean;limit?:number;allowDeath?:boolean};
 
@@ -24,6 +26,13 @@ export function runSchoolBrowserChecks(g:any){
   const dk=SCHOOL_DITCH_KICKER,dh=dk.direction,db=SCHOOL_BRIDGES[2];let overBridge=false;
   const ditch=SCHOOL_DITCH,dl=Math.hypot(ditch.b[0]-ditch.a[0],ditch.b[2]-ditch.a[2]),dn=[(ditch.b[2]-ditch.a[2])/dl,0,-(ditch.b[0]-ditch.a[0])/dl],ditchHalf=ditch.half+ditch.radius*Math.sin(65*Math.PI/180),ditchCross=ditch.a.map((v,i)=>v+(ditch.b[i]-v)*.58);
   let exited=false,overGarbage=false,dumpsterCaught=false,dumpsterRepress=false,dumpsterAFrames=0,dumpsterBFrames=0,dumpsterA:any,dumpsterB:any;
+  let grindLine:ReturnType<typeof createBalancedGrind>,roofMini:ReturnType<typeof createRoofMiniGap>;
+  const balancedTrial=(name:string,select:()=>any,ground=false):Trial=>({name,limit:900,init:()=>{
+    const r=select();if(!r)throw Error(`${name}: missing rail`);const h=r.tangentAt(.4).setY(0).normalize(),q=r.pointAt(.4);
+    if(ground){const a=r.points[0].clone().addScaledVector(h,-1.5);place([a.x,.1,a.z],h.toArray(),14);}
+    else{q.y+=.3;place(q.toArray(),h.toArray(),14);p.pos.copy(q);p.prevPos.copy(q);p.grounded=false;p.state='air';p.vVel=0;p.airFromSkate=true;p.airGrav='board';}
+    if(p.balanceBoostT||p.uberTimer)throw Error('Long grind has a balance assist');grindLine=createBalancedGrind(p,r,CONST.fixedStep);(report.longGrinds??=[]).push({name,result:grindLine.report});
+  },input:()=>grindLine.sample(),done:()=>grindLine.observe()});
   const trials:Trial[]=[
     {name:'Native canopy start',init:()=>{p.respawn(l,true);if(p.axisF.x<.99)throw Error('Native spawn faces off canopy');},input:()=>({moveY:1}),done:n=>{if(n<90)return false;if(p.pos.x<9||Math.abs(p.pos.z)>.1||Math.abs(p.pos.y-3.4)>.06)throw Error('Native start left canopy');return true;}},
     pathTrial('Downhill approach',[[44,0,-4],[43,0,-8],[41,-2,-22],[39,-5,-36],[37,-5,-39]]),
@@ -41,6 +50,15 @@ export function runSchoolBrowserChecks(g:any){
     ...[-1,1].map((dir):Trial=>{const h=dn.map(v=>v*dir) as Point;return{name:`Ditch Slap ${dir}`,init:()=>{air=false;popped=false;place([ditchCross[0]-h[0]*(ditchHalf+5),-4.9,ditchCross[2]-h[2]*(ditchHalf+5)],h,18);},input:()=>{if((ditchCross[0]-p.pos.x)*h[0]+(ditchCross[2]-p.pos.z)*h[2]<ditchHalf+1)popped=true;return {jumpHeld:!popped};},done:()=>{air||=p.state==='air';if(!air||!p.grounded)return false;if((p.pos.x-ditchCross[0])*h[0]+(p.pos.z-ditchCross[2])*h[2]<=ditchHalf||Math.abs(p.pos.y+5)>.06)throw Error('Ditch Slap missed opposite bank');return true;}};}),
     {name:'Dumpster Rail Gap and rollout',init:()=>{dumpsterA=l.rails.find((r:any)=>r.points[0].distanceTo(p.pos.clone().set(18,.55,28))<.1);dumpsterB=l.rails.find((r:any)=>r.points[0].distanceTo(p.pos.clone().set(18,1.1,40.5))<.1);if(!dumpsterA||!dumpsterB)throw Error('Missing dumpster rails');dumpsterCaught=false;dumpsterRepress=false;popped=false;dumpsterAFrames=0;dumpsterBFrames=0;place([18,.1,26],[0,0,1],14);},input:()=>{if(dumpsterCaught&&p.pos.z>34.6)popped=true;if(popped&&p.pos.z>41.8)dumpsterRepress=true;return{grindHeld:!popped||dumpsterRepress,jumpHeld:dumpsterCaught&&!popped};},done:()=>{dumpsterCaught||=p.state==='grind'&&p.grindRail===dumpsterA;if(p.state==='grind'&&p.grindRail===dumpsterA)dumpsterAFrames++;if(popped&&p.state==='grind'&&p.grindRail===dumpsterB)dumpsterBFrames++;if(dumpsterBFrames<8||!p.grounded)return false;if(dumpsterAFrames<20||p.pos.z<=47||Math.abs(p.pos.y)>.06)throw Error('Dumpster transfer missed rollout');return true;}},
     {name:'Garbage Ollie',init:()=>{air=false;popped=false;overGarbage=false;place([18.2,.1,52.2],[1,0,0],12);},input:()=>{if(p.pos.x>18.6)popped=true;return {jumpHeld:!popped};},done:()=>{air||=p.state==='air';if(Math.abs(p.pos.x-23.3)<.4&&Math.abs(p.pos.z-52.2)<.3&&p.pos.y>.48)overGarbage=true;if(!air||!p.grounded)return false;if(!overGarbage||p.pos.x<=23.64||Math.abs(p.pos.y)>.06)throw Error('Garbage Ollie missed actual crate');return true;}},
+    balancedTrial('Long Ass Rail full grind',()=>{const q=p.pos.clone().set(...SCHOOL_WEST_DESCENT[0]).add(p.pos.clone().set(-3.9,.45,1.2));return l.rails.find((r:any)=>r.points[0].distanceTo(q)<.1);},true),
+    balancedTrial('Huge Rail full grind',()=>{const q=p.pos.clone().set(...SCHOOL_MINI_GAP.before).add(p.pos.clone().set(6.1,3.05,0));return l.rails.find((r:any)=>r.totalLength>20&&r.totalLength<100&&r.points.some((v:any)=>v.distanceTo(q)<4));}),
+    balancedTrial('Playground Rail full grind',()=>{const q=p.pos.clone().set(...schoolMapPoint(352,78));q.y=-2.45;return l.rails.find((r:any)=>r.points[0].distanceTo(q)<.1);}),
+    {name:'Roof Mini Gap and rollout',init:()=>{
+      const a=p.pos.clone().set(...SCHOOL_ROOF_MINI_GAP.left).add(p.pos.clone().set(0,1.85,-1.8)),b=p.pos.clone().set(...SCHOOL_ROOF_MINI_GAP.right).add(p.pos.clone().set(0,1.85,-1.8));
+      const ra=l.rails.find((r:any)=>r.points.at(-1).distanceTo(a)<.6&&r.totalLength>25),rb=l.rails.find((r:any)=>r.points[0].distanceTo(b)<.1);if(!ra||!rb)throw Error('Roof Mini Gap coping missing');
+      const q=ra.pointAt(ra.totalLength-4).add(p.pos.clone().set(0,.3,0)),h=ra.tangentAt(ra.totalLength-4).setY(0).normalize();place(q.toArray(),h.toArray(),12);p.pos.copy(q);p.prevPos.copy(q);p.state='air';p.grounded=false;p.vVel=0;p.airFromSkate=true;p.airGrav='board';if(p.balanceBoostT)throw Error('Roof Mini Gap has a balance assist');
+      roofMini=createRoofMiniGap(p,ra,rb,CONST.fixedStep);report.roofMini=roofMini.report;
+    },input:()=>roofMini.sample(),done:()=>roofMini.observe()},
     {name:'Continuous campus circuit',limit:2400,init:()=>{p.respawn(l,true);circuit=createSchoolCircuit(p);report.circuit=circuit.report;},input:()=>circuit.sample(),done:()=>circuit.observe()},
     {name:'Checkpoint and fall recovery',allowDeath:true,limit:900,init:()=>{banked=false;dead=false;const q=SCHOOL_CHECKPOINTS[1];place([q[0]-3,q[1]+.1,q[2]],[1,0,0],18);},input:()=>({moveY:banked?0:1,jumpHeld:!banked}),done:()=>{
       if(!banked&&l.activeCheckpoint===l.checkpoints[1]){banked=true;report.checkpointBanked=true;p.pos.set(110,-10,0);p.prevPos.copy(p.pos);p.state='air';p.grounded=false;p.vVel=-10;p.airFromSkate=true;p.airGrav='board';}

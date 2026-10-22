@@ -366,9 +366,12 @@ quarter('Gym east dark quarterpipe',[[66,0,19],[66,0,45]],3.4,g,{deck:1.5,color:
 for(let x=25;x<74;x+=6){paintBox(x,5.25,48.65,3,1.15,.08,'#86a7ad',g);paintBox(x,5.25,14.86,3,1.15,.08,'#86a7ad',g);}
 
 // Roof perimeter transitions leave the east access lane genuinely open.
-quarter('Gym roof west quarter',[[26,roofY,45],[26,roofY,21]],1.8,9,{color:'#969d96',deck:.7});
-quarter('Gym roof north left quarter',[[27,roofY,18],[40,roofY,18]],1.8,9,{color:'#969d96',deck:.7});
-quarter('Gym roof north right quarter',[[48,roofY,18],[71,roofY,18]],1.8,9,{color:'#969d96',deck:.7});
+// The small north-west section curves around the corner before ending at
+// Mini Gap. The long north coping resumes nearer the west end of the roof,
+// leaving the air-conditioner/plank line east of the gap.
+export const SCHOOL_ROOF_MINI_GAP={left:[33.5,roofY,18] as Point,right:[39,roofY,18] as Point};
+quarter('Gym roof west return · Mini Gap takeoff',[[27.8,roofY,45],[27.1,roofY,20],[27.7,roofY,17.8],[29,roofY,17.7],SCHOOL_ROOF_MINI_GAP.left],1.8,9,{color:'#969d96',deck:.7,curve:'spline'});
+quarter('Gym roof north quarter · Mini Gap receiving coping',[SCHOOL_ROOF_MINI_GAP.right,[71,roofY,18]],1.8,9,{color:'#969d96',deck:.7});
 quarter('Gym roof south quarter',[[71,roofY,46],[27,roofY,46]],1.8,9,{color:'#969d96',deck:.7});
 quarter('Gym roof east upper quarter',[[71,roofY,20],[71,roofY,23]],1.8,9,{color:'#969d96',deck:.7});
 quarter('Gym roof east lower quarter',[[71,roofY,34],[71,roofY,45]],1.8,9,{color:'#969d96',deck:.7});
@@ -401,7 +404,7 @@ add({t:'ramp',nm:'Over the Air Conditioner · west receiver',p:[45,roofY,27.5],l
 rail('Air-conditioner approach green rail',[[69,7.8,27.5],[63,7.8,27.5],[59.7,9.25,27.5]],9,'#527667');
 // Clear the north roof edge before descending to the awning. A direct
 // diagonal to the low canopy would run through the solid gym roof.
-export const SCHOOL_ROOF_PLANK:Point[]=[[51,9.12,24.5],[45,7.06,14.1],[45,3.4,7.6]];
+export const SCHOOL_ROOF_PLANK:Point[]=[[51,9.12,24.5],[45,9.02,15.3],[45,3.4,7.6]];
 ribbon('Roof to Awning · wooden connecting plank',SCHOOL_ROOF_PLANK,1.2,'#a48a62',9,{tex:'wood'});
 rail('Roof to Awning · plank grind',SCHOOL_ROOF_PLANK.map(p=>[p[0],p[1]+.06,p[2]]),9);
 // Four-sided skylight: each glass slope is rideable, and the panes are only paint.
