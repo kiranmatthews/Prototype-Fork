@@ -74,7 +74,7 @@ import { SLIPSTREAM_2_LEVEL } from "./levels/slipstream-2";
 import { JUNGLE_CUP_LEVEL } from "./levels/jungle-cup";
 import { JUNGLE_TERRACES_LEVEL, JUNGLE_SKYLINE_LEVEL } from "./levels/jungle-sequels";
 import { PIRATE_WRECK_LEVEL } from './levels/pirate-wreck';
-import { CODEX_LAB_LEVEL } from "./levels/codex-lab";
+import { CODEX_LAB_LEVEL, WAREHOUSE_REFERENCE_LEVEL } from "./levels/codex-lab";
 import { PUZZLE_LEVELS } from './levels/puzzle-trilogy';
 import { CRAB_CHIEF_LEVEL } from './levels/crab-chief';
 import { CrabChiefEncounter } from './boss/crabChief';
@@ -2394,6 +2394,7 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
     name: CODEX_LAB_LEVEL.name,
     data: CODEX_LAB_LEVEL,
   }, // source-owned long course for fast, isolated geometry iterations
+  { id: "warehouse-reference", name: WAREHOUSE_REFERENCE_LEVEL.name, data: WAREHOUSE_REFERENCE_LEVEL },
   { id: "jungle-cup", name: JUNGLE_CUP_LEVEL.name, data: JUNGLE_CUP_LEVEL },
   { id: "bone-yard", name: BONE_YARD_LEVEL.name, data: BONE_YARD_LEVEL },
   { id: "waterpark", name: WATERPARK_LEVEL.name, data: WATERPARK_LEVEL },

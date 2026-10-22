@@ -1,0 +1,1045 @@
+{
+  "tuning": {
+    "cruise": 12,
+    "charged": 23
+  },
+  "ground": [
+    {
+      "u": 114,
+      "v": 287,
+      "y": 6.3,
+      "support": 6.3,
+      "mesh": "platform"
+    },
+    {
+      "u": 469,
+      "v": 389,
+      "y": 2.66,
+      "support": 2.66,
+      "mesh": "platform"
+    },
+    {
+      "u": 566,
+      "v": 159,
+      "y": 2.66,
+      "support": 2.6600000858306885,
+      "mesh": "vertramp"
+    },
+    {
+      "u": 345,
+      "v": 22,
+      "y": 2.66,
+      "support": 2.66,
+      "mesh": "platform"
+    },
+    {
+      "u": 219,
+      "v": 80,
+      "y": 1.68,
+      "support": 1.68,
+      "mesh": "Raised loading bay deck"
+    }
+  ],
+  "results": [
+    {
+      "name": "supported start",
+      "ok": true,
+      "frames": 91,
+      "airFrames": 0,
+      "vertAirs": 0,
+      "railFrames": 0,
+      "highRailFrames": 0,
+      "roomFrames": 0,
+      "gapAirFrames": 0,
+      "bails": 0,
+      "peak": 6.42,
+      "maxStep": 0.1200000000000001,
+      "minSpeed": 0,
+      "end": {
+        "p": [
+          8.4,
+          6.3,
+          24.360000000000003
+        ],
+        "uv": [
+          79,
+          268
+        ],
+        "speed": 0,
+        "grounded": true,
+        "state": "ride"
+      }
+    },
+    {
+      "name": "roll-in 182",
+      "ok": true,
+      "frames": 148,
+      "airFrames": 0,
+      "vertAirs": 0,
+      "railFrames": 0,
+      "highRailFrames": 0,
+      "roomFrames": 0,
+      "gapAirFrames": 0,
+      "bails": 0,
+      "peak": 6.42,
+      "maxStep": 0.4155253670706551,
+      "minSpeed": 0.14999997047244093,
+      "end": {
+        "p": [
+          -3.6400000000000006,
+          0,
+          -5.226458366711682
+        ],
+        "uv": [
+          290.331845476512,
+          182
+        ],
+        "speed": 24.71857372702011,
+        "grounded": true,
+        "state": "ride"
+      }
+    },
+    {
+      "name": "roll-in 268",
+      "ok": true,
+      "frames": 148,
+      "airFrames": 0,
+      "vertAirs": 0,
+      "railFrames": 0,
+      "highRailFrames": 0,
+      "roomFrames": 0,
+      "gapAirFrames": 0,
+      "bails": 0,
+      "peak": 6.42,
+      "maxStep": 0.4155253670706552,
+      "minSpeed": 0.14999997047244093,
+      "end": {
+        "p": [
+          8.4,
+          0,
+          -5.226458366711689
+        ],
+        "uv": [
+          290.33184547651206,
+          268
+        ],
+        "speed": 24.718573727020107,
+        "grounded": true,
+        "state": "ride"
+      }
+    },
+    {
+      "name": "halfpipe near",
+      "ok": true,
+      "frames": 102,
+      "airFrames": 65,
+      "vertAirs": 1,
+      "railFrames": 0,
+      "highRailFrames": 0,
+      "roomFrames": 0,
+      "gapAirFrames": 0,
+      "bails": 0,
+      "peak": 7.090764068047271,
+      "maxStep": 0.3867190646725137,
+      "minSpeed": 0,
+      "end": {
+        "p": [
+          11.760000000000002,
+          0.03531739835369807,
+          -14.957253239386949
+        ],
+        "uv": [
+          359.8375231384782,
+          292
+        ],
+        "speed": 23.1534294341208,
+        "grounded": true,
+        "state": "ride"
+      }
+    },
+    {
+      "name": "halfpipe far",
+      "ok": true,
+      "frames": 102,
+      "airFrames": 65,
+      "vertAirs": 1,
+      "railFrames": 0,
+      "highRailFrames": 0,
+      "roomFrames": 0,
+      "gapAirFrames": 0,
+      "bails": 0,
+      "peak": 7.090762805712528,
+      "maxStep": 0.3867190299189574,
+      "minSpeed": 0,
+      "end": {
+        "p": [
+          11.760000000000002,
+          0.03531902464046355,
+          -22.842756058245122
+        ],
+        "uv": [
+          416.16254327317944,
+          292
+        ],
+        "speed": 23.153427324766533,
+        "grounded": true,
+        "state": "ride"
+      }
+    },
+    {
+      "name": "far wall",
+      "ok": true,
+      "frames": 120,
+      "airFrames": 73,
+      "vertAirs": 1,
+      "railFrames": 0,
+      "highRailFrames": 0,
+      "roomFrames": 0,
+      "gapAirFrames": 0,
+      "bails": 0,
+      "peak": 8.230545436122688,
+      "maxStep": 0.4015201151638261,
+      "minSpeed": 0,
+      "end": {
+        "p": [
+          5.880014336530255,
+          0.03437206632502121,
+          -50.26246886544848
+        ],
+        "uv": [
+          612.0176347532034,
+          250.00010240378754
+        ],
+        "speed": 24.00686384489809,
+        "grounded": true,
+        "state": "ride"
+      }
+    },
+    {
+      "name": "near wall",
+      "ok": true,
+      "frames": 106,
+      "airFrames": 68,
+      "vertAirs": 1,
+      "railFrames": 0,
+      "highRailFrames": 0,
+      "roomFrames": 0,
+      "gapAirFrames": 0,
+      "bails": 0,
+      "peak": 7.248199654807338,
+      "maxStep": 0.38627878148966355,
+      "minSpeed": 0,
+      "end": {
+        "p": [
+          19.180000000000003,
+          0.0323160569099622,
+          -2.541188072456841
+        ],
+        "uv": [
+          271.1513433746917,
+          345
+        ],
+        "speed": 23.09698663125185,
+        "grounded": true,
+        "state": "ride"
+      }
+    },
+    {
+      "name": "kicker wall",
+      "ok": true,
+      "frames": 120,
+      "airFrames": 73,
+      "vertAirs": 1,
+      "railFrames": 0,
+      "highRailFrames": 0,
+      "roomFrames": 0,
+      "gapAirFrames": 0,
+      "bails": 0,
+      "peak": 8.230542601469246,
+      "maxStep": 0.4015199766162702,
+      "minSpeed": 0,
+      "end": {
+        "p": [
+          -25.202485250783877,
+          0.03437456858404886,
+          -17.78
+        ],
+        "uv": [
+          380,
+          27.9822482086866
+        ],
+        "speed": 24.006864496583972,
+        "grounded": true,
+        "state": "ride"
+      }
+    },
+    {
+      "name": "start quarterpipe",
+      "ok": true,
+      "frames": 115,
+      "airFrames": 72,
+      "vertAirs": 1,
+      "railFrames": 0,
+      "highRailFrames": 0,
+      "roomFrames": 0,
+      "gapAirFrames": 0,
+      "bails": 0,
+      "peak": 14.086580838673433,
+      "maxStep": 0.39539967166843537,
+      "minSpeed": 0,
+      "end": {
+        "p": [
+          3.08,
+          6.315006964360366,
+          31.770294188993084
+        ],
+        "uv": [
+          26.069327221478005,
+          230
+        ],
+        "speed": 23.64173378005715,
+        "grounded": true,
+        "state": "ride"
+      }
+    },
+    {
+      "name": "loading bay transition",
+      "ok": true,
+      "frames": 101,
+      "airFrames": 70,
+      "vertAirs": 1,
+      "railFrames": 0,
+      "highRailFrames": 0,
+      "roomFrames": 0,
+      "gapAirFrames": 0,
+      "bails": 0,
+      "peak": 6.752368491343804,
+      "maxStep": 0.37116536221612106,
+      "minSpeed": 0,
+      "end": {
+        "p": [
+          -14.420000000000002,
+          0.033574438111024785,
+          -2.6064870407994594
+        ],
+        "uv": [
+          271.617764577139,
+          105
+        ],
+        "speed": 22.14561087286474,
+        "grounded": true,
+        "state": "ride"
+      }
+    },
+    {
+      "name": "halfpipe repeated airs",
+      "ok": true,
+      "frames": 477,
+      "airFrames": 328,
+      "vertAirs": 4,
+      "railFrames": 0,
+      "highRailFrames": 0,
+      "roomFrames": 0,
+      "gapAirFrames": 0,
+      "bails": 0,
+      "peak": 11.0034762835627,
+      "maxStep": 0.43726787445156057,
+      "minSpeed": 0,
+      "end": {
+        "p": [
+          11.760000000000002,
+          0.011358827835559748,
+          -15.152622789458583
+        ],
+        "uv": [
+          361.23301992470414,
+          292
+        ],
+        "speed": 26.1239,
+        "grounded": true,
+        "state": "ride"
+      }
+    },
+    {
+      "name": "over the pipe",
+      "ok": true,
+      "frames": 129,
+      "airFrames": 108,
+      "vertAirs": 0,
+      "railFrames": 0,
+      "highRailFrames": 0,
+      "roomFrames": 0,
+      "gapAirFrames": 0,
+      "bails": 0,
+      "peak": 14.826176580050085,
+      "maxStep": 0.5546105575949553,
+      "minSpeed": 11.065798626231825,
+      "end": {
+        "p": [
+          9.66,
+          0,
+          -31.991614994067405
+        ],
+        "uv": [
+          481.51153567191,
+          277
+        ],
+        "speed": 11.065798626231853,
+        "grounded": true,
+        "state": "ride"
+      }
+    },
+    {
+      "name": "over the pipe reverse",
+      "ok": true,
+      "frames": 129,
+      "airFrames": 108,
+      "vertAirs": 0,
+      "railFrames": 0,
+      "highRailFrames": 0,
+      "roomFrames": 0,
+      "gapAirFrames": 0,
+      "bails": 0,
+      "peak": 14.82617658005004,
+      "maxStep": 0.554610557594955,
+      "minSpeed": 11.0657986262318,
+      "end": {
+        "p": [
+          9.66,
+          0,
+          -5.808385005932635
+        ],
+        "uv": [
+          294.48846432809023,
+          277
+        ],
+        "speed": 11.0657986262318,
+        "grounded": true,
+        "state": "ride"
+      }
+    },
+    {
+      "name": "secret room 14/329",
+      "ok": true,
+      "frames": 121,
+      "airFrames": 87,
+      "vertAirs": 0,
+      "railFrames": 0,
+      "highRailFrames": 0,
+      "roomFrames": 25,
+      "gapAirFrames": 0,
+      "bails": 0,
+      "peak": 7.125437827989485,
+      "maxStep": 0.42294934706405557,
+      "minSpeed": 7.27989195260534,
+      "end": {
+        "p": [
+          21.98,
+          0.13695136601917524,
+          -27.673804103930333
+        ],
+        "uv": [
+          450.67002931378806,
+          365
+        ],
+        "speed": 12.983453861138313,
+        "grounded": true,
+        "state": "ride"
+      }
+    },
+    {
+      "name": "secret room 14/330",
+      "ok": true,
+      "frames": 121,
+      "airFrames": 86,
+      "vertAirs": 0,
+      "railFrames": 0,
+      "highRailFrames": 0,
+      "roomFrames": 25,
+      "gapAirFrames": 0,
+      "bails": 0,
+      "peak": 6.91988788904437,
+      "maxStep": 0.42360675063488806,
+      "minSpeed": 7.202416175837172,
+      "end": {
+        "p": [
+          21.98,
+          0.13695137464193463,
+          -27.68978033645022
+        ],
+        "uv": [
+          450.7841452603587,
+          365
+        ],
+        "speed": 13.060382855232879,
+        "grounded": true,
+        "state": "ride"
+      }
+    },
+    {
+      "name": "secret room 14/331",
+      "ok": true,
+      "frames": 122,
+      "airFrames": 86,
+      "vertAirs": 0,
+      "railFrames": 0,
+      "highRailFrames": 0,
+      "roomFrames": 25,
+      "gapAirFrames": 0,
+      "bails": 0,
+      "peak": 7.114982045761118,
+      "maxStep": 0.42279641472924634,
+      "minSpeed": 7.09282125495406,
+      "end": {
+        "p": [
+          21.98,
+          0.1369513302484333,
+          -27.607528135921335
+        ],
+        "uv": [
+          450.1966295422952,
+          365
+        ],
+        "speed": 12.965506014981095,
+        "grounded": true,
+        "state": "ride"
+      }
+    },
+    {
+      "name": "secret room 15/329",
+      "ok": true,
+      "frames": 117,
+      "airFrames": 90,
+      "vertAirs": 0,
+      "railFrames": 0,
+      "highRailFrames": 0,
+      "roomFrames": 26,
+      "gapAirFrames": 0,
+      "bails": 0,
+      "peak": 7.434660374165184,
+      "maxStep": 0.42023663243098414,
+      "minSpeed": 7.905005363717166,
+      "end": {
+        "p": [
+          21.98,
+          0.13695123353953198,
+          -27.428346055586502
+        ],
+        "uv": [
+          448.91675753990353,
+          365
+        ],
+        "speed": 12.662359871121016,
+        "grounded": true,
+        "state": "ride"
+      }
+    },
+    {
+      "name": "secret room 15/330",
+      "ok": true,
+      "frames": 120,
+      "airFrames": 92,
+      "vertAirs": 0,
+      "railFrames": 0,
+      "highRailFrames": 0,
+      "roomFrames": 28,
+      "gapAirFrames": 0,
+      "bails": 0,
+      "peak": 7.69381007757296,
+      "maxStep": 0.4186641404603282,
+      "minSpeed": 7.684333833668613,
+      "end": {
+        "p": [
+          21.98,
+          0.13695122903862922,
+          -27.420006790481672
+        ],
+        "uv": [
+          448.85719136058333,
+          365
+        ],
+        "speed": 12.47342601720116,
+        "grounded": true,
+        "state": "ride"
+      }
+    },
+    {
+      "name": "secret room 15/331",
+      "ok": true,
+      "frames": 120,
+      "airFrames": 90,
+      "vertAirs": 0,
+      "railFrames": 0,
+      "highRailFrames": 0,
+      "roomFrames": 27,
+      "gapAirFrames": 0,
+      "bails": 0,
+      "peak": 7.482668207124125,
+      "maxStep": 0.4204833164598705,
+      "minSpeed": 7.606781498169113,
+      "end": {
+        "p": [
+          21.98,
+          0.13695131333593036,
+          -27.57619268014043
+        ],
+        "uv": [
+          449.9728048581459,
+          365
+        ],
+        "speed": 12.691815726049382,
+        "grounded": true,
+        "state": "ride"
+      }
+    },
+    {
+      "name": "taxi transfer",
+      "ok": true,
+      "frames": 66,
+      "airFrames": 43,
+      "vertAirs": 0,
+      "railFrames": 0,
+      "highRailFrames": 0,
+      "roomFrames": 0,
+      "gapAirFrames": 0,
+      "bails": 0,
+      "peak": 2.691601317197483,
+      "maxStep": 0.3048899231222488,
+      "minSpeed": 12.907478757108208,
+      "end": {
+        "p": [
+          9.940000000000001,
+          0,
+          -47.72801907584264
+        ],
+        "uv": [
+          593.9144219703046,
+          279
+        ],
+        "speed": 12.907478757108208,
+        "grounded": true,
+        "state": "ride"
+      }
+    },
+    {
+      "name": "kicker gap",
+      "ok": true,
+      "frames": 87,
+      "airFrames": 61,
+      "vertAirs": 0,
+      "railFrames": 0,
+      "highRailFrames": 0,
+      "roomFrames": 0,
+      "gapAirFrames": 15,
+      "bails": 0,
+      "peak": 4.9647683215875995,
+      "maxStep": 0.4143038642786599,
+      "minSpeed": 10.978677710976552,
+      "end": {
+        "p": [
+          -19.46,
+          0.1497247114702542,
+          -43.99865786661763
+        ],
+        "uv": [
+          567.2761276186973,
+          69
+        ],
+        "speed": 10.978677710976552,
+        "grounded": true,
+        "state": "ride"
+      }
+    },
+    {
+      "name": "kicker reverse",
+      "ok": true,
+      "frames": 82,
+      "airFrames": 60,
+      "vertAirs": 0,
+      "railFrames": 0,
+      "highRailFrames": 0,
+      "roomFrames": 0,
+      "gapAirFrames": 15,
+      "bails": 0,
+      "peak": 4.663162817390814,
+      "maxStep": 0.4080663196115283,
+      "minSpeed": 16.14965771325459,
+      "end": {
+        "p": [
+          -19.46,
+          0,
+          -13.868717391866156
+        ],
+        "uv": [
+          352.0622670847582,
+          69
+        ],
+        "speed": 17.135417302610385,
+        "grounded": true,
+        "state": "ride"
+      }
+    },
+    {
+      "name": "Big Rail kink",
+      "ok": true,
+      "frames": 106,
+      "airFrames": 102,
+      "vertAirs": 0,
+      "railFrames": 98,
+      "highRailFrames": 0,
+      "roomFrames": 0,
+      "gapAirFrames": 0,
+      "bails": 0,
+      "peak": 0.9669041666666667,
+      "maxStep": 0.47528453943181953,
+      "minSpeed": 12.14980626968504,
+      "end": {
+        "p": [
+          -5.187368110473853,
+          0.9669041666666667,
+          -30.40277550078209
+        ],
+        "uv": [
+          470.1626821484435,
+          170.94737063947247
+        ],
+        "speed": 12.59815440399463,
+        "grounded": false,
+        "state": "air"
+      }
+    },
+    {
+      "name": "left channel gap",
+      "ok": true,
+      "frames": 55,
+      "airFrames": 55,
+      "vertAirs": 0,
+      "railFrames": 25,
+      "highRailFrames": 0,
+      "roomFrames": 0,
+      "gapAirFrames": 0,
+      "bails": 0,
+      "peak": 3.1775958333333314,
+      "maxStep": 0.7017948786826546,
+      "minSpeed": 12,
+      "end": {
+        "p": [
+          0.8244753086419767,
+          1.9319287776491763,
+          -1.1330709876543212
+        ],
+        "uv": [
+          261.0933641975309,
+          213.88910934744268
+        ],
+        "speed": 12,
+        "grounded": false,
+        "state": "grind"
+      }
+    },
+    {
+      "name": "right channel gap",
+      "ok": true,
+      "frames": 57,
+      "airFrames": 57,
+      "vertAirs": 0,
+      "railFrames": 28,
+      "highRailFrames": 0,
+      "roomFrames": 0,
+      "gapAirFrames": 0,
+      "bails": 0,
+      "peak": 3.1385777777777757,
+      "maxStep": 0.6822453696664416,
+      "minSpeed": 12,
+      "end": {
+        "p": [
+          14.555679012345674,
+          2.6978083676268856,
+          -0.4853549382716053
+        ],
+        "uv": [
+          256.46682098765433,
+          311.9691358024691
+        ],
+        "speed": 12,
+        "grounded": false,
+        "state": "grind"
+      }
+    },
+    {
+      "name": "high rail",
+      "ok": true,
+      "frames": 90,
+      "airFrames": 60,
+      "vertAirs": 1,
+      "railFrames": 53,
+      "highRailFrames": 51,
+      "roomFrames": 0,
+      "gapAirFrames": 0,
+      "bails": 0,
+      "peak": 5.4,
+      "maxStep": 0.3841652435538196,
+      "minSpeed": 0,
+      "end": {
+        "p": [
+          8.21333515333321,
+          5.4,
+          -52.64000000000001
+        ],
+        "uv": [
+          629,
+          266.6666796666658
+        ],
+        "speed": 3.5,
+        "grounded": false,
+        "state": "grind"
+      }
+    },
+    {
+      "name": "floor checkpoint",
+      "ok": true,
+      "frames": 3,
+      "airFrames": 0,
+      "vertAirs": 0,
+      "railFrames": 0,
+      "highRailFrames": 0,
+      "roomFrames": 0,
+      "gapAirFrames": 0,
+      "bails": 0,
+      "peak": 0.12,
+      "maxStep": 0.3566203345745684,
+      "minSpeed": 18.812507415353068,
+      "end": {
+        "p": [
+          11.340000000000002,
+          0,
+          -5.354946186289925
+        ],
+        "uv": [
+          291.2496156163566,
+          289
+        ],
+        "speed": 18.812507415353068,
+        "grounded": true,
+        "state": "ride"
+      }
+    }
+  ],
+  "recovery": {
+    "checkpoint": [
+      11.340000000000002,
+      0.1,
+      -6.0200000000000005
+    ],
+    "pitContact": {
+      "p": [
+        3.08,
+        -6.941666666666669,
+        38.220000000000006
+      ],
+      "pit": 0
+    },
+    "recovered": true,
+    "frames": 153,
+    "deaths": 1,
+    "end": [
+      11.340000000000002,
+      0.1,
+      -6.0200000000000005
+    ]
+  },
+  "level": "warehouse-reference",
+  "scaleMetresPerPlanPixel": 0.14,
+  "geometrySource": "User-supplied original Warehouse overhead map and VGCartography isometric map",
+  "measurements": "Horizontal positions traced from the supplied plan. Vertical dimensions are skater-calibrated estimates; no original engine metre survey was available.",
+  "browser": {
+    "lite": {
+      "info": {
+        "level": "Warehouse \u00b7 Reference",
+        "spawn": [
+          8.4,
+          6.3,
+          24.360000000000003
+        ],
+        "grounded": true,
+        "freeSkate": true,
+        "stamp": "Codex/sol fork \u00b7 build 10-22 10:56 UTC",
+        "meshes": 54,
+        "rails": 11
+      },
+      "lines": [
+        {
+          "name": "roll-in 268",
+          "ok": true,
+          "frames": 148,
+          "bails": 0
+        },
+        {
+          "name": "halfpipe repeated airs",
+          "ok": true,
+          "frames": 477,
+          "bails": 0
+        },
+        {
+          "name": "over the pipe",
+          "ok": true,
+          "frames": 129,
+          "bails": 0
+        },
+        {
+          "name": "secret room 15/330",
+          "ok": true,
+          "frames": 120,
+          "bails": 0
+        },
+        {
+          "name": "Big Rail kink",
+          "ok": true,
+          "frames": 106,
+          "bails": 0
+        },
+        {
+          "name": "high rail",
+          "ok": true,
+          "frames": 90,
+          "bails": 0
+        },
+        {
+          "name": "kicker gap",
+          "ok": true,
+          "frames": 87,
+          "bails": 0
+        },
+        {
+          "name": "taxi transfer",
+          "ok": true,
+          "frames": 66,
+          "bails": 0
+        },
+        {
+          "name": "loading bay transition",
+          "ok": true,
+          "frames": 101,
+          "bails": 0
+        }
+      ],
+      "errors": []
+    },
+    "full": {
+      "info": {
+        "level": "Warehouse \u00b7 Reference",
+        "spawn": [
+          8.4,
+          6.3,
+          24.360000000000003
+        ],
+        "grounded": true,
+        "freeSkate": true,
+        "stamp": "Codex/sol fork \u00b7 build 10-22 11:53 UTC",
+        "meshes": 54,
+        "rails": 11
+      },
+      "lines": [
+        {
+          "name": "roll-in 268",
+          "ok": true,
+          "frames": 148,
+          "bails": 0
+        },
+        {
+          "name": "halfpipe repeated airs",
+          "ok": true,
+          "frames": 477,
+          "bails": 0
+        },
+        {
+          "name": "over the pipe",
+          "ok": true,
+          "frames": 129,
+          "bails": 0
+        },
+        {
+          "name": "secret room 15/330",
+          "ok": true,
+          "frames": 120,
+          "bails": 0
+        },
+        {
+          "name": "Big Rail kink",
+          "ok": true,
+          "frames": 106,
+          "bails": 0
+        },
+        {
+          "name": "high rail",
+          "ok": true,
+          "frames": 90,
+          "bails": 0
+        },
+        {
+          "name": "kicker gap",
+          "ok": true,
+          "frames": 87,
+          "bails": 0
+        },
+        {
+          "name": "taxi transfer",
+          "ok": true,
+          "frames": 66,
+          "bails": 0
+        },
+        {
+          "name": "loading bay transition",
+          "ok": true,
+          "frames": 101,
+          "bails": 0
+        },
+        {
+          "name": "left channel gap",
+          "ok": true,
+          "frames": 55,
+          "bails": 0
+        },
+        {
+          "name": "right channel gap",
+          "ok": true,
+          "frames": 57,
+          "bails": 0
+        }
+      ],
+      "errors": []
+    }
+  },
+  "rendering": {
+    "calls": {
+      "frame": 2219,
+      "calls": 495,
+      "triangles": 193183,
+      "points": 0,
+      "lines": 0
+    },
+    "memory": {
+      "geometries": 232,
+      "textures": 33
+    },
+    "frameMs": {
+      "median": 16.69999999999891,
+      "p95": 16.80000000000109
+    },
+    "limiter": {
+      "acceptedFrames": 458,
+      "skippedFrames": 0,
+      "targetFps": 60,
+      "lastTimestampMs": 11971.5,
+      "budgetMs": -0.20000000000013785
+    }
+  },
+  "renderNote": "60 requestAnimationFrame intervals at supported spawn in full-render Chrome, 1440x1000, on this machine. This is not a worst-case or cross-device FPS guarantee.",
+  "validation": {
+    "checkLevels": "pass",
+    "build": "pass; existing large-bundle warning",
+    "fullSuite": "not run"
+  },
+  "geometrySha256": "89882ccf8c9182a6d4094c0e1789d3863e9b5b440f9dca8c29a95b66fc1d089a",
+  "hashScope": "Warehouse block in src/levels/codex-lab.ts, beginning at the Warehouse reference study comment"
+}
