@@ -524,7 +524,14 @@ for(let x=25;x<74;x+=6){paintBox(x,5.25,48.65,3,1.15,.08,'#86a7ad',g);paintBox(x
 export const SCHOOL_ROOF_MINI_GAP={left:[33.5,roofY,18] as Point,right:[39,roofY,18] as Point};
 quarter('Gym roof west return · Mini Gap takeoff',[[27.8,roofY,45],[27.1,roofY,20],[27.7,roofY,17.8],[29,roofY,17.7],SCHOOL_ROOF_MINI_GAP.left],1.8,9,{color:'#969d96',deck:.7,curve:'spline'});
 quarter('Gym roof north quarter · Mini Gap receiving coping',[SCHOOL_ROOF_MINI_GAP.right,[71,roofY,18]],1.8,9,{color:'#969d96',deck:.7});
-quarter('Gym roof south quarter',[[71,roofY,46],[27,roofY,46]],1.8,9,{color:'#969d96',deck:.7});
+// The near/south roof edge is a low parapet in the source, with flat roof
+// right up to it. The tall transitions belong to the other three sides.
+export const SCHOOL_ROOF_PARAPET={minX:25.2,maxX:72.1,z:48.65,width:.4,rise:.3};
+{
+  const b=SCHOOL_ROOF_PARAPET;
+  slab('Gym roof south parapet',(b.minX+b.maxX)/2,b.z,b.maxX-b.minX,b.width,roofY+b.rise,roofY,brick,9);
+  rail('Gym roof south parapet coping',[[b.minX,roofY+b.rise+.05,b.z],[b.maxX,roofY+b.rise+.05,b.z]],9,coping,true);
+}
 quarter('Gym roof east upper quarter',[[71,roofY,20],[71,roofY,23]],1.8,9,{color:'#969d96',deck:.7});
 quarter('Gym roof east lower quarter',[[71,roofY,34],[71,roofY,45]],1.8,9,{color:'#969d96',deck:.7});
 // A distinct small roof sits across the north coping, east of the long
@@ -552,7 +559,27 @@ rail('Service hill outside rail',SCHOOL_ROOF_ACCESS.slice(0,40).filter((_,i)=>i%
 slab('Gym roof air conditioner',54,27.5,8.5,6.2,9.1,roofY,'#566f68',9);
 for(let z=25;z<31;z+=.6)paintBox(54,9.12,z,7.6,.04,.13,'#394f4d',9);
 add({t:'ramp',nm:'Over the Air Conditioner · east kicker',p:[63,roofY,27.5],len:5.8,rise:2.1,w:6.2,yaw:90,color:'#ad9579',tex:'wood',edgeGrinding:false,grp:9});
-add({t:'ramp',nm:'Over the Air Conditioner · west receiver',p:[45,roofY,27.5],len:5.8,rise:2.1,w:6.2,yaw:270,color:'#ad9579',tex:'wood',edgeGrinding:false,grp:9});
+// The receiving feature is the faceted hip shown west of the unit, not a
+// second rectangular launch wedge. Its outline is registered around the
+// existing landing line while original roof dimensions remain uncertain.
+export const SCHOOL_ROOF_RECEIVER={x:45,z:27.5,rise:1.25,outline:[
+  [41.453,29.027],[42.995,25.243],[46.946,24.041],
+  [48.692,26.148],[46.488,29.457],[43.425,31.084],
+] as Plan[]};
+{
+  const s=SCHOOL_ROOF_RECEIVER,outer=[...s.outline].reverse(),n=outer.length;
+  const inner=outer.map(([x,z]):Plan=>[mix(s.x,x,.15),mix(s.z,z,.15)]),vertices:number[]=[],indices:number[]=[];
+  for(let ring=0;ring<=16;ring++){
+    const t=ring/16;
+    for(let i=0;i<n;i++)vertices.push(mix(outer[i][0],inner[i][0],t),roofY+s.rise*smooth(t),mix(outer[i][1],inner[i][1],t));
+    if(ring)for(let i=0;i<n;i++){
+      const j=(i+1)%n,a=(ring-1)*n+i,b=(ring-1)*n+j,c=ring*n+j,d=ring*n+i;
+      indices.push(a,b,c,a,c,d);
+    }
+  }
+  surface('Over the Air Conditioner · faceted receiving hip',vertices,indices,'#887b59',9,{tex:'wood'});
+  floor('Air-conditioner receiving hip · flat top',inner,roofY+s.rise,'#887b59',9).tex='wood';
+}
 rail('Air-conditioner approach green rail',[[69,7.8,27.5],[63,7.8,27.5],[59.7,9.25,27.5]],9,'#527667');
 // Clear the north roof edge before descending to the awning. A direct
 // diagonal to the low canopy would run through the solid gym roof.

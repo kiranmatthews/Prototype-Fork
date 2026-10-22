@@ -1,23 +1,25 @@
 import { SCHOOL_MIAMI_LEVEL, SCHOOL_POOLS, SCHOOL_DITCH_KICKER, SCHOOL_LONG_HALFPIPE, SCHOOL_HALL_PASS, SCHOOL_PLANTERS, SCHOOL_REAR_BANK, SCHOOL_SKYLIGHT } from '../src/levels/school-miami';
 import { OrthographicCamera } from 'three';
 import { runSchoolBrowserChecks } from './school-browser-checks';
-const frame=document.querySelector<HTMLIFrameElement>('#game')!,status=document.querySelector<HTMLDivElement>('#status')!;
+const frame=document.createElement('iframe'),status=document.querySelector<HTMLDivElement>('#status')!;
 let overview=false,game:any,reviewCamera:any,full=new URLSearchParams(location.search).has('full'),checks:any=null;
 const errors:string[]=[];
-// Load one iframe document initially. A direct full-render review avoids
-// replacing a still-starting lite game just to select the renderer.
+// Assign the URL before attaching the frame, so the review does not expose
+// an initial blank document before its actual game document starts.
+frame.id='game';frame.title='School Miami game';
 frame.src='/?playtest&level=school-miami'+(full?'':'&lite');
+document.querySelector('#game-host')!.replaceWith(frame);
 document.querySelector('#full')!.textContent=full?'Lite render':'Full render';
 function bind(){
   const w=frame.contentWindow as any;if(!w?.__game){setTimeout(bind,250);return;}
   if(game===w.__game)return;
-  game=w.__game;const render=game.renderer.render.bind(game.renderer);reviewCamera=new OrthographicCamera(-100,100,90,-90,.1,700);
+  game=w.__game;const render=game.renderer.render.bind(game.renderer);reviewCamera=new OrthographicCamera(-100,100,65,-65,.1,700);
   // Match the supplied oblique map: world X runs gently down to the right,
   // world Z down-left; the same camera captures the whole connected campus.
   reviewCamera.position.set(70,205,225);reviewCamera.lookAt(0,-2,-20);reviewCamera.updateProjectionMatrix();
   game.renderer.render=(scene:any,camera:any)=>{
     if(!overview||scene!==game.scene)return render(scene,camera);
-    const fog=scene.fog;scene.fog=null;reviewCamera.left=-90*camera.aspect;reviewCamera.right=90*camera.aspect;reviewCamera.updateProjectionMatrix();
+    const fog=scene.fog;scene.fog=null;reviewCamera.left=-65*camera.aspect;reviewCamera.right=65*camera.aspect;reviewCamera.updateProjectionMatrix();
     try{return render(scene,reviewCamera);}finally{scene.fog=fog;}
   };
   w.addEventListener('error',(e:any)=>errors.push(e.message));
@@ -45,6 +47,7 @@ document.querySelector('#skylight')!.addEventListener('click',()=>place([SCHOOL_
 document.querySelector('#gym-rail')!.addEventListener('click',()=>place([37,.1,19],[-1,0,0],14));
 document.querySelector('#rear-bank')!.addEventListener('click',()=>{const a=SCHOOL_REAR_BANK.toe[0];place([a[0]-2,-4.9,a[2]+6],[.3,0,-1]);});
 document.querySelector('#roof')!.addEventListener('click',()=>place([61,7.1,44],[0,0,-1]));
+document.querySelector('#roof-edge')!.addEventListener('click',()=>place([48,7.1,46.8],[1,0,0]));
 document.querySelector('#bonus')!.addEventListener('click',()=>place([63,7.1,23],[0,0,-1]));
 document.querySelector('#hill')!.addEventListener('click',()=>place([80,.1,53],[0,0,-1]));
 document.querySelector('#ditch')!.addEventListener('click',()=>{const k=SCHOOL_DITCH_KICKER,h=k.direction;place([k.p[0]-h[0]*3.8,-6.4,k.p[2]-h[2]*3.8],h);});

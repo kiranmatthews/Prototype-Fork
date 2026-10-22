@@ -22,6 +22,10 @@ await withSkateRuntime(async({THREE,server,Level,Player,scene,CONST,TUNING})=>{
     for(const [x,z] of [[59.4,38.7],[61.9,38.45],[64.25,38.8]])near(`Joined roof vent top ${x}`,[x,0,z],7.7,9);
     for(const x of [55.5,68])near(`Joined roof vent rollout ${x}`,[x,0,38.7],7,9);
     near('Roof checkpoint clear of joined vent',m.SCHOOL_CHECKPOINTS[3],7,9);
+    near('Receiving hip flat top',[45,0,27.5],8.25,10);
+    for(const z of [22.5,32.5])near(`Receiving hip rollout ${z}`,[45,0,z],7,10);
+    for(const x of [30,40,50,60,67])near(`Flat south roof lane ${x}`,[x,0,46.8],7,10);
+    for(const x of [30,48,67])near(`Low south parapet ${x}`,[x,0,m.SCHOOL_ROOF_PARAPET.z],7.3,10);
     near('Hoop quarter flat approach',[48.5,0,43.4],0);near('Hoop quarter deck',[48.5,0,45.1],1.35,4);
     for(const [i,b] of m.SCHOOL_GYM_BANKS.entries())for(const d of [0,.4,2,4,6,8,8.7]){
       near(`Gym bank ${i} profile ${d}`,[b.toeX+b.side*d,0,32],m.schoolGymBankHeight(d),5);

@@ -8,7 +8,7 @@
     -39
   ],
   "speed": 0,
-  "components": 266,
+  "components": 268,
   "rails": 67,
   "camera": {
     "eye": [
@@ -19,14 +19,14 @@
     "trailing": 5.049999999999997,
     "bodyBounds": {
       "min": [
-        25.50145976114195,
-        -4.775326134606117,
-        -39.983898781188095
+        25.501173919314592,
+        -4.7752855549053175,
+        -39.984255052040865
       ],
       "max": [
-        26.688886842199135,
-        -1.986728477713414,
-        -38.17989371924555
+        26.69044041546551,
+        -1.9710490340242899,
+        -38.17947376087505
       ]
     }
   },
@@ -236,6 +236,38 @@
         "frames": 37
       },
       {
+        "name": "Roof receiving hip 5/-1",
+        "frames": 52
+      },
+      {
+        "name": "Roof receiving hip 5/1",
+        "frames": 51
+      },
+      {
+        "name": "Roof receiving hip 6/-1",
+        "frames": 43
+      },
+      {
+        "name": "Roof receiving hip 6/1",
+        "frames": 43
+      },
+      {
+        "name": "Roof south lane 7/-1",
+        "frames": 140
+      },
+      {
+        "name": "Roof south lane 7/1",
+        "frames": 140
+      },
+      {
+        "name": "Roof south parapet grind -1",
+        "frames": 227
+      },
+      {
+        "name": "Roof south parapet grind 1",
+        "frames": 227
+      },
+      {
         "name": "Gym hoop quarter at 12",
         "frames": 110
       },
@@ -401,7 +433,7 @@
       }
     ],
     "failure": null,
-    "frames": 12139,
+    "frames": 13062,
     "longGrinds": [
       {
         "name": "Roof-to-awning plank",
@@ -789,6 +821,116 @@
           "maxLateral": 0.1513224310967587,
           "minSpeed": 14.867556674507297,
           "arrived": true
+        }
+      },
+      {
+        "name": "Roof receiving hip 5/-1",
+        "kind": "ride",
+        "result": {
+          "direction": -1,
+          "speed": 12,
+          "frames": 52,
+          "maxY": 8.25,
+          "maxStep": 0.2403281115275763,
+          "maxLateral": 0.22695187640156433,
+          "minSpeed": 11.364890442044873,
+          "arrived": true
+        }
+      },
+      {
+        "name": "Roof receiving hip 5/1",
+        "kind": "ride",
+        "result": {
+          "direction": 1,
+          "speed": 12,
+          "frames": 51,
+          "maxY": 8.25,
+          "maxStep": 0.24013837391341628,
+          "maxLateral": 0.2586704846306631,
+          "minSpeed": 11.353613799436292,
+          "arrived": true
+        }
+      },
+      {
+        "name": "Roof receiving hip 6/-1",
+        "kind": "ride",
+        "result": {
+          "direction": -1,
+          "speed": 16,
+          "frames": 43,
+          "maxY": 8.25,
+          "maxStep": 0.2740616917879477,
+          "maxLateral": 0.25360824454912745,
+          "minSpeed": 13.798432624165999,
+          "arrived": true
+        }
+      },
+      {
+        "name": "Roof receiving hip 6/1",
+        "kind": "ride",
+        "result": {
+          "direction": 1,
+          "speed": 16,
+          "frames": 43,
+          "maxY": 8.25,
+          "maxStep": 0.2768796942117594,
+          "maxLateral": 0.2912390816005157,
+          "minSpeed": 13.896322300937511,
+          "arrived": true
+        }
+      },
+      {
+        "name": "Roof south lane 7/-1",
+        "kind": "ride",
+        "result": {
+          "direction": -1,
+          "speed": 16,
+          "frames": 140,
+          "maxY": 7,
+          "maxStep": 0.26663867016623044,
+          "maxLateral": 0,
+          "minSpeed": 15.768212093863804,
+          "arrived": true
+        }
+      },
+      {
+        "name": "Roof south lane 7/1",
+        "kind": "ride",
+        "result": {
+          "direction": 1,
+          "speed": 16,
+          "frames": 140,
+          "maxY": 7,
+          "maxStep": 0.26663867016623044,
+          "maxLateral": 0,
+          "minSpeed": 15.768212093863804,
+          "arrived": true
+        }
+      },
+      {
+        "name": "Roof south parapet grind -1",
+        "kind": "grind",
+        "result": {
+          "direction": -1,
+          "frames": 227,
+          "grindFrames": 186,
+          "progress": 37.00000000000013,
+          "maxBalance": 0.16490516855364779,
+          "air": true,
+          "landed": true
+        }
+      },
+      {
+        "name": "Roof south parapet grind 1",
+        "kind": "grind",
+        "result": {
+          "direction": 1,
+          "frames": 227,
+          "grindFrames": 186,
+          "progress": 36.999999999999986,
+          "maxBalance": 0.3504288185854255,
+          "air": true,
+          "landed": true
         }
       },
       {
@@ -1328,7 +1470,7 @@
       "frames": 2404,
       "waypoints": 51,
       "totalWaypoints": 51,
-      "distance": 389.91235880695785,
+      "distance": 389.9123586311655,
       "gimmeGrindFrames": 21,
       "returnGrindFrames": 555,
       "kickerAir": true,

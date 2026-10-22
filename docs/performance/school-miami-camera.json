@@ -392,73 +392,147 @@
     {
       "name": "Roof joined vent 1/-1",
       "frames": 64,
-      "maxStep": 0.8558781695339602,
+      "maxStep": 0.855261390840516,
       "minTrailing": 4.714921708812241,
       "maxCrop": 0.9051827709653245,
-      "restoredTrailing": 5.049989334851831,
+      "restoredTrailing": 5.049989343475622,
       "bails": 0
     },
     {
       "name": "Roof joined vent 1/1",
       "frames": 64,
-      "maxStep": 0.8137412187903161,
-      "minTrailing": 4.837433756152076,
+      "maxStep": 0.8137431211430123,
+      "minTrailing": 4.837434606544227,
       "maxCrop": 0.7712263826854473,
-      "restoredTrailing": 5.049985416732759,
+      "restoredTrailing": 5.049985416778867,
       "bails": 0
     },
     {
       "name": "Roof joined vent 2/-1",
       "frames": 51,
-      "maxStep": 0.7362088651530744,
+      "maxStep": 0.7362077905193889,
       "minTrailing": 5.049999999999997,
       "maxCrop": 0.7712263826854451,
-      "restoredTrailing": 5.049991250027763,
+      "restoredTrailing": 5.049991250029634,
       "bails": 0
     },
     {
       "name": "Roof joined vent 2/1",
       "frames": 51,
-      "maxStep": 0.7847540217029867,
+      "maxStep": 0.7847573358686255,
       "minTrailing": 5.049999999999997,
       "maxCrop": 0.7712263826854444,
-      "restoredTrailing": 5.0499890376432965,
+      "restoredTrailing": 5.049989037627352,
       "bails": 0
     },
     {
       "name": "Roof joined vent 3/-1",
       "frames": 37,
-      "maxStep": 0.47587271819632687,
-      "minTrailing": 4.579471407633484,
-      "maxCrop": 0.9327447683968889,
-      "restoredTrailing": 5.049994677087506,
+      "maxStep": 0.39195687216306946,
+      "minTrailing": 5.049999999999997,
+      "maxCrop": 0.7712263826854444,
+      "restoredTrailing": 5.049994677087919,
       "bails": 0
     },
     {
       "name": "Roof joined vent 3/1",
       "frames": 37,
-      "maxStep": 0.47780134148087944,
+      "maxStep": 0.4778054451238349,
       "minTrailing": 5.050000000000001,
       "maxCrop": 0.7712263826854454,
-      "restoredTrailing": 5.049992942662507,
+      "restoredTrailing": 5.049992942647064,
       "bails": 0
     },
     {
       "name": "Roof joined vent 4/-1",
       "frames": 37,
-      "maxStep": 0.5369110440007555,
-      "minTrailing": 4.579471407633484,
-      "maxCrop": 0.9327447683968889,
-      "restoredTrailing": 5.049994570106003,
+      "maxStep": 0.45768481241423054,
+      "minTrailing": 5.049999999999997,
+      "maxCrop": 0.7712263826854444,
+      "restoredTrailing": 5.049994570130186,
       "bails": 0
     },
     {
       "name": "Roof joined vent 4/1",
       "frames": 37,
-      "maxStep": 0.5465359760341829,
+      "maxStep": 0.5465382313698822,
       "minTrailing": 5.050000000000001,
       "maxCrop": 0.7712263826854454,
-      "restoredTrailing": 5.049994307019886,
+      "restoredTrailing": 5.049994307014675,
+      "bails": 0
+    }
+  ],
+  "roofEdges": [
+    {
+      "name": "Roof receiving hip 5/-1",
+      "frames": 52,
+      "maxStep": 0.7437560863419793,
+      "minTrailing": 4.470214184594985,
+      "maxCrop": 0.7712263826854452,
+      "restoredTrailing": 5.049956388208325,
+      "bails": 0
+    },
+    {
+      "name": "Roof receiving hip 5/1",
+      "frames": 51,
+      "maxStep": 0.8867468391774186,
+      "minTrailing": 4.362835326533635,
+      "maxCrop": 0.799961378481873,
+      "restoredTrailing": 5.049940141328916,
+      "bails": 0
+    },
+    {
+      "name": "Roof receiving hip 6/-1",
+      "frames": 43,
+      "maxStep": 0.770534109418753,
+      "minTrailing": 4.714678521939825,
+      "maxCrop": 0.7712263826854459,
+      "restoredTrailing": 5.049960367251406,
+      "bails": 0
+    },
+    {
+      "name": "Roof receiving hip 6/1",
+      "frames": 43,
+      "maxStep": 0.9228871743160687,
+      "minTrailing": 4.52631702635106,
+      "maxCrop": 0.7784567196961943,
+      "restoredTrailing": 5.049948099577003,
+      "bails": 0
+    },
+    {
+      "name": "Roof south lane 7/-1",
+      "frames": 140,
+      "maxStep": 0.26585601936211845,
+      "minTrailing": 5.049999999999997,
+      "maxCrop": 0.771226382685446,
+      "restoredTrailing": 5.050000025151455,
+      "bails": 0
+    },
+    {
+      "name": "Roof south lane 7/1",
+      "frames": 140,
+      "maxStep": 0.26585601936212555,
+      "minTrailing": 5.050000000000001,
+      "maxCrop": 0.7712263826854454,
+      "restoredTrailing": 5.050000025151448,
+      "bails": 0
+    },
+    {
+      "name": "Roof south parapet grind -1",
+      "frames": 227,
+      "maxStep": 0.39787895262024536,
+      "minTrailing": 5.049999999999997,
+      "maxCrop": 0.7712263826854451,
+      "restoredTrailing": 5.0500000194929004,
+      "bails": 0
+    },
+    {
+      "name": "Roof south parapet grind 1",
+      "frames": 227,
+      "maxStep": 0.39787895262024336,
+      "minTrailing": 5.050000000000001,
+      "maxCrop": 0.771226382685444,
+      "restoredTrailing": 5.05000001949289,
       "bails": 0
     }
   ]

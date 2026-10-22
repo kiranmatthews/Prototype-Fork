@@ -1,4 +1,4 @@
-import {SCHOOL_REAR_BANK,SCHOOL_SKYLIGHT,SCHOOL_GYM_RAILS,SCHOOL_GYM_BANKS,SCHOOL_GYM_BANK,SCHOOL_WEST_ANNEX,schoolGymBankHeight} from '../src/levels/school-miami';
+import {SCHOOL_REAR_BANK,SCHOOL_SKYLIGHT,SCHOOL_GYM_RAILS,SCHOOL_GYM_BANKS,SCHOOL_GYM_BANK,SCHOOL_WEST_ANNEX,SCHOOL_ROOF_PARAPET,schoolGymBankHeight} from '../src/levels/school-miami';
 import {createBalancedGrind} from './school-grind-lines';
 
 type Point=[number,number,number];
@@ -21,15 +21,17 @@ export function schoolDetailTrials(p:any,l:any,place:Place,dt:number):DetailTria
         result.landed=true;return true;},
     });
   }
-  const ventLines=[
-    ...[12,16].map(speed=>({axis:'x',speed,start:[55.5,7.1,38.7],end:[68,7.1,38.7]})),
-    ...[59.8,64.3].map(x=>({axis:'z',speed:16,start:[x,7.1,34],end:[x,7.1,43.2]})),
+  const roofLines=[
+    ...[12,16].map(speed=>({name:'Roof joined vent',axis:'x',speed,start:[55.5,7.1,38.7],end:[68,7.1,38.7],crest:7.65})),
+    ...[59.8,64.3].map(x=>({name:'Roof joined vent',axis:'z',speed:16,start:[x,7.1,34],end:[x,7.1,43.2],crest:7.65})),
+    ...[12,16].map(speed=>({name:'Roof receiving hip',axis:'z',speed,start:[45,7.1,22.5],end:[45,7.1,32.5],crest:8.2})),
+    {name:'Roof south lane',axis:'x',speed:16,start:[30,7.1,46.8],end:[67,7.1,46.8],crest:7},
   ];
-  for(const [i,c] of ventLines.entries())for(const direction of [-1,1]){
+  for(const [i,c] of roofLines.entries())for(const direction of [-1,1]){
     const start=(direction===1?c.start:c.end) as Point,end=(direction===1?c.end:c.start) as Point;
     const h:Point=c.axis==='x'?[direction,0,0]:[0,0,direction],lateral=c.axis==='x'?2:0;
     const result={direction,speed:c.speed,frames:0,maxY:7,maxStep:0,maxLateral:0,minSpeed:100,arrived:false};let previous=p.pos.clone();
-    trials.push({name:`Roof joined vent ${i+1}/${direction}`,kind:'ride',result,limit:140,
+    trials.push({name:`${c.name} ${i+1}/${direction}`,kind:'ride',result,limit:180,
       init:()=>{place(start,h,c.speed);previous.copy(p.pos);},
       sample:()=>{
         const goal=p.pos.clone().addScaledVector(p.pos.clone().set(...h),3);goal.setComponent(lateral,start[lateral]);
@@ -40,12 +42,45 @@ export function schoolDetailTrials(p:any,l:any,place:Place,dt:number):DetailTria
       observe:()=>{result.frames++;result.maxY=Math.max(result.maxY,p.pos.y);result.minSpeed=Math.min(result.minSpeed,p.speed);
         result.maxStep=Math.max(result.maxStep,previous.distanceTo(p.pos));previous.copy(p.pos);
         const drift=Math.abs(p.pos.getComponent(lateral)-start[lateral]);result.maxLateral=Math.max(result.maxLateral,drift);
-        if(!p.grounded||result.maxStep>.4||p.speed<10||drift>.9)throw Error('Joined roof vent interrupted its riding line');
+        if(!p.grounded||result.maxStep>.4||p.speed<10||drift>.9)throw Error('Roof feature interrupted its riding line');
+        if(c.crest===7&&Math.abs(p.pos.y-7)>.06)throw Error('South roof lane is not flat');
         if((p.pos.x-end[0])*h[0]+(p.pos.z-end[2])*h[2]<0)return false;
-        if(Math.abs(p.pos.y-7)>.06||result.maxY<7.65||drift>.5)throw Error('Joined roof vent missed its supported rollout');
+        if(Math.abs(p.pos.y-7)>.06||result.maxY<c.crest||drift>.5)throw Error('Roof feature missed its supported rollout');
         result.arrived=true;return true;},
     });
   }
+  for(const direction of [-1,1]){
+    const b=SCHOOL_ROOF_PARAPET,q=p.pos.clone().set(b.minX,7+b.rise+.05,b.z);
+    const rail=l.rails.find((r:any)=>r.points[0].distanceTo(q)<.1);
+    if(!rail)throw Error('South roof parapet coping missing');
+    const h=p.pos.clone().set(direction,0,0),start=(direction===1?rail.points[0]:rail.points.at(-1)).clone().addScaledVector(h,-1.3);start.y=7.1;
+    const result={direction,frames:0,grindFrames:0,progress:0,maxBalance:0,air:false,landed:false};
+    let previousBalance=0,held=false,popped=false;
+    trials.push({name:`Roof south parapet grind ${direction}`,kind:'grind',result,limit:400,
+      init:()=>{place(start.toArray(),h.toArray(),12);if(p.balanceBoostT||p.uberTimer)throw Error('Parapet grind has an assist');},
+      sample:()=>{
+        const value=p.balanceMeter?.bal??0,correction=Math.max(-1,Math.min(1,-value*6-(value-previousBalance)/dt*.65));previousBalance=value;
+        // Leave enough forward travel for an ordinary inward ollie to land
+        // on the roof. Natural run-off carries momentum beyond the building.
+        const prepare=result.progress>rail.totalLength-12,release=prepare&&!popped&&result.progress>rail.totalLength-10;
+        if(release)popped=true;
+        const charge=prepare&&!popped,press=charge&&!held;held=charge;
+        let moveX=p.state==='grind'?correction:0,moveY=0;
+        if(prepare){const n=Math.hypot(p.camDir.x,p.camDir.z)||1;moveX=-p.camDir.x/n*.55;moveY=-p.camDir.z/n*.55;}
+        return{moveX,moveY,grindHeld:!popped,grindPressed:result.frames===0,jumpHeld:charge,jumpPressed:press,jumpReleased:release};
+      },
+      observe:()=>{result.frames++;
+        if(p.state==='grind'){
+          if(p.grindRail!==rail)throw Error('Parapet route caught another rail');
+          result.grindFrames++;result.progress=Math.max(result.progress,direction===1?p.grindT:rail.totalLength-p.grindT);result.maxBalance=Math.max(result.maxBalance,Math.abs(p.balanceMeter?.bal??0));
+        }
+        result.air||=popped&&p.state==='air';
+        if(!result.air||!p.grounded)return false;
+        if(result.progress<rail.totalLength-10.2||result.grindFrames<150||Math.abs(p.pos.y-7)>.06||p.pos.z>48.1)throw Error('Parapet grind missed its inward roof rollout');
+        result.landed=true;return true;},
+    });
+  }
+
   const gym=[
     {name:'Gym hoop quarter',position:[48.5,.1,36],heading:[0,0,1],toe:[48.5,0,43.5]},
   ];

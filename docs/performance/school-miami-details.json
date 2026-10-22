@@ -105,6 +105,94 @@
       ]
     },
     {
+      "name": "Receiving hip flat top",
+      "point": [
+        45,
+        8.25,
+        27.5
+      ]
+    },
+    {
+      "name": "Receiving hip rollout 22.5",
+      "point": [
+        45,
+        6.999999994039536,
+        22.5
+      ]
+    },
+    {
+      "name": "Receiving hip rollout 32.5",
+      "point": [
+        45,
+        6.999999994039536,
+        32.5
+      ]
+    },
+    {
+      "name": "Flat south roof lane 30",
+      "point": [
+        30,
+        6.999999994039536,
+        46.8
+      ]
+    },
+    {
+      "name": "Flat south roof lane 40",
+      "point": [
+        40,
+        6.999999994039536,
+        46.8
+      ]
+    },
+    {
+      "name": "Flat south roof lane 50",
+      "point": [
+        50,
+        6.999999994039536,
+        46.8
+      ]
+    },
+    {
+      "name": "Flat south roof lane 60",
+      "point": [
+        60,
+        6.999999994039536,
+        46.8
+      ]
+    },
+    {
+      "name": "Flat south roof lane 67",
+      "point": [
+        67,
+        6.999999994039536,
+        46.8
+      ]
+    },
+    {
+      "name": "Low south parapet 30",
+      "point": [
+        30,
+        7.300000005960465,
+        48.65
+      ]
+    },
+    {
+      "name": "Low south parapet 48",
+      "point": [
+        48,
+        7.300000005960465,
+        48.65
+      ]
+    },
+    {
+      "name": "Low south parapet 67",
+      "point": [
+        67,
+        7.300000005960465,
+        48.65
+      ]
+    },
+    {
       "name": "Hoop quarter flat approach",
       "point": [
         48.5,
@@ -588,6 +676,148 @@
         64.42831153206782,
         6.999999994039536,
         43.321989505204876
+      ]
+    },
+    {
+      "name": "Roof receiving hip 5/-1",
+      "kind": "ride",
+      "direction": -1,
+      "speed": 12,
+      "frames": 52,
+      "maxY": 8.25,
+      "maxStep": 0.2403281115275763,
+      "maxLateral": 0.22695187640156433,
+      "minSpeed": 11.364890442044873,
+      "arrived": true,
+      "bails": 0,
+      "end": [
+        45.11140692474806,
+        6.999999994039536,
+        22.270294457245292
+      ]
+    },
+    {
+      "name": "Roof receiving hip 5/1",
+      "kind": "ride",
+      "direction": 1,
+      "speed": 12,
+      "frames": 51,
+      "maxY": 8.25,
+      "maxStep": 0.24013837391341628,
+      "maxLateral": 0.2586704846306631,
+      "minSpeed": 11.353613799436292,
+      "arrived": true,
+      "bails": 0,
+      "end": [
+        44.82192803291838,
+        6.999999994039536,
+        32.50403468881906
+      ]
+    },
+    {
+      "name": "Roof receiving hip 6/-1",
+      "kind": "ride",
+      "direction": -1,
+      "speed": 16,
+      "frames": 43,
+      "maxY": 8.25,
+      "maxStep": 0.2740616917879477,
+      "maxLateral": 0.25360824454912745,
+      "minSpeed": 13.798432624165999,
+      "arrived": true,
+      "bails": 0,
+      "end": [
+        45.13882265771559,
+        6.999999994039536,
+        22.3059245264774
+      ]
+    },
+    {
+      "name": "Roof receiving hip 6/1",
+      "kind": "ride",
+      "direction": 1,
+      "speed": 16,
+      "frames": 43,
+      "maxY": 8.25,
+      "maxStep": 0.2768796942117594,
+      "maxLateral": 0.2912390816005157,
+      "minSpeed": 13.896322300937511,
+      "arrived": true,
+      "bails": 0,
+      "end": [
+        44.78999895457315,
+        6.999999994039536,
+        32.73982583850984
+      ]
+    },
+    {
+      "name": "Roof south lane 7/-1",
+      "kind": "ride",
+      "direction": -1,
+      "speed": 16,
+      "frames": 140,
+      "maxY": 7,
+      "maxStep": 0.26663867016623044,
+      "maxLateral": 0,
+      "minSpeed": 15.768212093863804,
+      "arrived": true,
+      "bails": 0,
+      "end": [
+        29.940332830827074,
+        6.999999994039536,
+        46.8
+      ]
+    },
+    {
+      "name": "Roof south lane 7/1",
+      "kind": "ride",
+      "direction": 1,
+      "speed": 16,
+      "frames": 140,
+      "maxY": 7,
+      "maxStep": 0.26663867016623044,
+      "maxLateral": 0,
+      "minSpeed": 15.768212093863804,
+      "arrived": true,
+      "bails": 0,
+      "end": [
+        67.05966716917291,
+        6.999999994039536,
+        46.8
+      ]
+    },
+    {
+      "name": "Roof south parapet grind -1",
+      "kind": "grind",
+      "direction": -1,
+      "frames": 227,
+      "grindFrames": 186,
+      "progress": 37.00000000000013,
+      "maxBalance": 0.1198146210117603,
+      "air": true,
+      "landed": true,
+      "bails": 0,
+      "end": [
+        26.899999999999842,
+        6.999999994039536,
+        47.09533333333345
+      ]
+    },
+    {
+      "name": "Roof south parapet grind 1",
+      "kind": "grind",
+      "direction": 1,
+      "frames": 227,
+      "grindFrames": 186,
+      "progress": 36.999999999999986,
+      "maxBalance": 0.1198146210117603,
+      "air": true,
+      "landed": true,
+      "bails": 0,
+      "end": [
+        70.4000000000001,
+        6.999999994039536,
+        47.09533333333345
       ]
     },
     {

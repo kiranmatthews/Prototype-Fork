@@ -214,10 +214,14 @@ export class SkateChaseCamera {
       if (eyeDrop > 0) aimDrop = Math.max(0, this.aim.y - Math.min(targetY, ceilingY - .7));
       if (hardEyeDrop > 0) hardAimDrop = Math.max(0, this.aim.y - Math.min(targetY, hardCeilingY - .7));
     }
-    if (snap || this.groundFramingWeight <= .5) {
+    if (snap) {
       this.ceilingEyeDrop = eyeDrop;
       this.ceilingAimDrop = aimDrop;
     } else {
+      // A bank can cross the flat-framing threshold while the camera is
+      // still lowered for a nearby roof or plank. Restore that clearance
+      // gradually too; discarding it at the threshold creates a one-frame
+      // vertical jump even though the rider never leaves the ground.
       const restore = frameBlend(.12, step);
       this.ceilingEyeDrop = Math.max(hardEyeDrop, this.ceilingEyeDrop + (eyeDrop - this.ceilingEyeDrop) * restore);
       this.ceilingAimDrop = Math.max(hardAimDrop, this.ceilingAimDrop + (aimDrop - this.ceilingAimDrop) * restore);
