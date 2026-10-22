@@ -4,12 +4,14 @@ export function createMallPilot(m,{route='main',charge=true,secretOllie=true}={}
  const evidence={route,sections:[],jumps:[],grinds:[],railNames:[],checkpoints:[],peakSpeed:0,minimumMovingSpeed:Infinity,bails:0,airFrames:0,crystal:false};
  const smooth=t=>{t=Math.max(0,Math.min(1,t));return t*t*(3-2*t);};
  const interpolate=(s,knots)=>{for(let i=1;i<knots.length;i++)if(s<=knots[i][0])return knots[i-1][1]+(knots[i][1]-knots[i-1][1])*smooth((s-knots[i-1][0])/(knots[i][0]-knots[i-1][0]));return knots.at(-1)[1];};
- const offsets=route==='car'?[[0,0],[43,7.8],[113,7.8],[129,5],[183,-6.1],[199,0],[319,0],[336,6.5],[371,6.5],[396,0]]:
+ const upperRoute=['upper','car','escalator'].includes(route);
+ const offsets=route==='escalator'?[[0,0],[25,0],[43,-12.2],[85,-12.2],[96,-10.4],[117,-10.4],[128,-6.1],[183,-6.1],[199,0],[319,0],[336,6.5],[371,6.5],[396,0]]:
+  route==='car'?[[0,0],[43,7.8],[113,7.8],[129,5],[183,-6.1],[199,0],[319,0],[336,6.5],[371,6.5],[396,0]]:
   route==='upper'?[[0,0],[34,-1.4],[97,-1.4],[115,-6.1],[128,-6.1],[183,-6.1],[199,0],[319,0],[336,6.5],[371,6.5],[396,0]]:
   route==='coffee'?[[0,0],[16,0],[43,-11.2],[83,-9.8],[103,-6.2],[132,-10],[180,-10],[199,0],[217,0],[319,0],[336,6.5],[371,6.5],[396,0]]:
   route==='mezzanine'?[[0,0],[43,7.2],[65,5],[83,5],[96,3.8],[132,13.5],[162,13.5],[180,10.5],[190,10.5],[217,0],[319,0],[338,-6.5],[377,-6.5],[397,0]]:
   [[0,0],[43,7.2],[65,5],[83,5],[96,3.8],[132,13.5],[162,13.5],[180,10.5],[190,10.5],[217,0],[319,0],[336,6.5],[371,6.5],[396,0]];
- const launches=[...(route==='car'?[{s:86.5,end:100,name:'Car display jump'},{s:125,end:187,name:'Flying Leap',grind:true}]:route==='upper'?[{s:67.5,end:83,name:'Fountain Gap'},{s:128,end:187,name:'Flying Leap',grind:true}]:route==='coffee'?[{s:55,end:104,name:'Coffee Grind',grind:true},{s:136,end:185,name:'Lower light beam',grind:true}]:[]),{s:276.2,end:300,name:'Crossrail transfer',grind:true},...(route==='mezzanine'?[{s:375.5,end:395,name:'Mezzanine'}]:[])];
+ const launches=[...(route==='escalator'?[{s:128,end:187,name:'Flying Leap',grind:true}]:route==='car'?[{s:86.5,end:100,name:'Car display jump'},{s:125,end:187,name:'Flying Leap',grind:true}]:route==='upper'?[{s:67.5,end:83,name:'Fountain Gap'},{s:128,end:187,name:'Flying Leap',grind:true}]:route==='coffee'?[{s:55,end:104,name:'Coffee Grind',grind:true},{s:136,end:185,name:'Lower light beam',grind:true}]:[]),{s:276.2,end:300,name:'Crossrail transfer',grind:true},...(route==='mezzanine'?[{s:375.5,end:395,name:'Mezzanine'}]:[])];
  return {evidence,get progress(){return progress;},
  sample(p,l){
   progress=m.mallProject(p.pos.x,p.pos.z,progress);
@@ -21,7 +23,11 @@ export function createMallPilot(m,{route='main',charge=true,secretOllie=true}={}
   if(active){jump=false;grind=!!active.grind;if(!p.grounded)active.air=true;if(progress>active.end&&p.grounded){evidence.jumps.push({...active,landing:progress});active=null;jump=charge;}}
   const look=Math.max(5,p.speed*.65);
   let q=m.mallPoint(Math.min(408.5,progress+look),interpolate(progress+look,offsets));
-  if((route==='upper'||route==='car')&&progress>114&&progress<145)q=m.mallBeamPoint(.55,-1.3);
+  if(progress>225&&progress<310){
+   const s=progress+Math.max(5,p.speed*.3),u=s<268?3.3*smooth((s-232)/28):s<299?6.5-13*(s-268)/31:-6.5*(1-smooth((s-299)/20));
+   q=m.mallPoint(s,u);
+  }
+  if(upperRoute&&progress>(route==='escalator'?119:114)&&progress<145)q=m.mallBeamPoint(.55,-1.3);
   if(route==='coffee'&&progress>115&&progress<146)q=m.mallBeamPoint(.55,-1.3,9.25);
   const dx=q[0]-p.pos.x,dz=q[2]-p.pos.z,n=Math.hypot(dx,dz)||1;
   const f=l.skatepark?p.axisF:(p.courseInputDirection(l)??p.camDir);
@@ -31,6 +37,7 @@ export function createMallPilot(m,{route='main',charge=true,secretOllie=true}={}
   if(p.state==='air'&&p.airFromSkate){moveX=0;moveY=0;}
   if(active?.name==='Flying Leap'&&progress<133)grind=false;
   if(active?.name==='Lower light beam'&&progress<150)grind=false;
+  if(active?.name==='Crossrail transfer'&&progress<280)grind=false;
   if(secretPop&&frame-secretPopFrame<10)grind=false;
   if(p.state==='grind'){
    moveX=Math.max(-1,Math.min(1,-p.balance*5-p.balanceVel*.7));moveY=1;grind=true;

@@ -34,7 +34,7 @@ try{
  for(let i=0;i<900;i++){
   await page.waitForTimeout(250);
   const r=await page.evaluate(()=>({progress:window.mallReview.progress,done:window.mallReview.done}));
-  for(const [s,name]of [[62,'fountain'],[120,'gallery'],[165,'atrium'],[215,'escalator'],[285,'crossrails'],[345,'plaza'],[391,'stairs']])
+  for(const [s,name]of [[62,'fountain'],[109,'second-escalator'],[120,'gallery'],[165,'atrium'],[215,'escalator'],[285,'crossrails'],[345,'plaza'],[353,'blue-banks'],[377,'exit-overpass'],[384,'exit-throat'],[391,'stairs']])
    if(r.progress>=s&&!shots.has(name)){
     shots.add(name);
     if(pauses){await page.evaluate(()=>{window.mallReview.paused=true;});await page.waitForTimeout(900);}
@@ -46,7 +46,8 @@ try{
  const report=await page.evaluate(()=>window.mallReview);await page.screenshot({path:`${out}/${tag}-finish.png`});
  await writeFile(`${out}/${tag}-browser.json`,JSON.stringify({initial,report,errors},null,2));console.log(JSON.stringify({report:{...report,initialTuning:undefined,finalTuning:undefined},errors},null,2));
  assert.equal(report.error,null);assert.equal(report.state,'finished');assert.equal(report.deaths,0);assert.equal(report.sourceMatches,true);assert.equal(report.initialTuning,report.finalTuning);
- if(route==='upper'||route==='car'){
+ assert.ok(report.evidence.railNames.some(name=>name.startsWith('Crossrail ')));
+ if(['upper','car','escalator'].includes(route)){
   assert.ok(report.evidence.railNames.includes('Suspended upper light rail'));
   assert.ok(report.evidence.crystal);
   assert.ok(report.evidence.jumps.some(j=>j.name==='Hidden rail reward ollie'));

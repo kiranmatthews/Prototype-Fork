@@ -16,12 +16,17 @@ await withBlockworksRuntime(async r=>{
  await writeFile(`/private/tmp/mall-recreation/${tag}-trace.json`,JSON.stringify(r.trace));
  console.log(JSON.stringify({...report,tail:undefined},null,2));
  assert.equal(error,null);assert.equal(p.state,'finished');assert.equal(p.totalDeaths,0);assert.equal(JSON.stringify(r.TUNING),before);
+ assert.ok(pilot.evidence.railNames.some(name=>name.startsWith('Crossrail ')),'The crossrail jump must catch a diagonal rail, not a side ledge');
  // The car approach climbs five metres after its landing. Natural gravity
  // slows that uphill line; it must still carry enough speed into the leap.
- assert.ok(pilot.evidence.minimumMovingSpeed>(route==='car'?15:18),'The authored line must carry continuous skating speed');
- if(route==='upper'||route==='car'){
+ assert.ok(pilot.evidence.minimumMovingSpeed>(['car','escalator'].includes(route)?15:18),'The authored line must carry continuous skating speed');
+ if(['upper','car','escalator'].includes(route)){
   assert.ok(pilot.evidence.railNames.includes('Suspended upper light rail'),'Flying Leap must catch an upper suspended rail');
   assert.equal(p.hasCrystal,secretOllie,'The elevated reward requires an ollie from the upper rail');
+ }
+ if(route==='escalator'){
+  const climb=r.trace.filter(v=>v.grounded&&v.position[2]<-90&&v.position[2]>-106);
+  assert.ok(climb.some(v=>v.position[0]<-8.4&&v.position[1]>16),'The second escalator must be climbed on its own left-hand surface');
  }
  if(route==='upper'){
   const fountain=r.trace.reduce((a,b)=>Math.abs(a.position[2]+66)<Math.abs(b.position[2]+66)?a:b);

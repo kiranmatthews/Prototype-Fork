@@ -1,16 +1,21 @@
 {
-  "schema": 2,
-  "verifiedAt": "2026-10-22T12:37:06.336006+00:00",
+  "schema": 3,
+  "verifiedAt": "2026-10-22T13:07:50.477920+00:00",
   "reference": "Original 1999 THPS Mall: supplied VGCartography cutaway and original PS1 gameplay",
-  "sourceSHA256": "22414daa459345c9834e7ad6b6fb9dff738e6b679d9d3721b17e123cf14bb30e",
-  "build": "c434b4b497a1b9a0b3ee",
+  "sourceSHA256": "1fa483ec14e68b07545f3761deb3508d6e9dc86cb68ec8ecc55e32dafaab168a",
+  "build": "e85e64eca9e9bdc8513c",
   "scope": "Reference-derived geometry tested against the shared working-tree Player/Level. Original absolute dimensions remain unverified. No tuning or player edits belong to this task.",
+  "runtimeSHA256": {
+    "src/player.ts": "02bd62c8c1bce5c37d2066e0701830324c6a202ef65ba5f677a6ff0e9d100140",
+    "src/tuning.ts": "dc7b43eedbb160b2ddfc16cdfdca42f1419245a76214fdccd49cf872905038c0",
+    "src/level.ts": "ed0d5b3b88b3a7c042113df2e7031ef82e92f86298b4787af728efdad8b16ee5"
+  },
   "headlessRoutes": {
     "main": {
-      "seconds": 17.933333333333334,
+      "seconds": 18.066666666666666,
       "state": "finished",
       "deaths": 0,
-      "progress": 407.25,
+      "progress": 407,
       "evidence": {
         "route": "main",
         "sections": [
@@ -34,7 +39,8 @@
           17,
           18,
           19,
-          20
+          20,
+          21
         ],
         "jumps": [
           {
@@ -42,33 +48,33 @@
             "end": 300,
             "name": "Crossrail transfer",
             "grind": true,
-            "frame": 726,
+            "frame": 743,
             "air": true,
-            "landing": 306.75
+            "landing": 316
           }
         ],
         "grinds": [
-          20
+          24
         ],
         "railNames": [
-          "Crossrail right to left"
+          "Crossrail left to right"
         ],
         "checkpoints": [
           0
         ],
         "peakSpeed": 26.1239,
-        "minimumMovingSpeed": 22.969565703286765,
+        "minimumMovingSpeed": 22.96683680419178,
         "bails": 0,
-        "airFrames": 83,
+        "airFrames": 104,
         "crystal": false
       },
       "error": null
     },
     "upper": {
-      "seconds": 18.816666666666666,
+      "seconds": 19,
       "state": "finished",
       "deaths": 0,
-      "progress": 407.25,
+      "progress": 407,
       "evidence": {
         "route": "upper",
         "sections": [
@@ -92,7 +98,8 @@
           17,
           18,
           19,
-          20
+          20,
+          21
         ],
         "jumps": [
           {
@@ -106,7 +113,7 @@
           {
             "name": "Hidden rail reward ollie",
             "frame": 484,
-            "progress": 163
+            "progress": 163.25
           },
           {
             "s": 128,
@@ -122,33 +129,33 @@
             "end": 300,
             "name": "Crossrail transfer",
             "grind": true,
-            "frame": 780,
+            "frame": 799,
             "air": true,
-            "landing": 306.75
+            "landing": 316
           }
         ],
         "grinds": [
-          7,
-          20
+          12,
+          24
         ],
         "railNames": [
           "Suspended upper light rail",
-          "Crossrail right to left"
+          "Crossrail left to right"
         ],
         "checkpoints": [],
-        "peakSpeed": 28.605353938107758,
+        "peakSpeed": 28.632464629339196,
         "minimumMovingSpeed": 22.865493620751614,
         "bails": 0,
-        "airFrames": 313,
+        "airFrames": 333,
         "crystal": true
       },
       "error": null
     },
     "car": {
-      "seconds": 18.8,
+      "seconds": 19.03333333333333,
       "state": "finished",
       "deaths": 0,
-      "progress": 407,
+      "progress": 407.5,
       "evidence": {
         "route": "car",
         "sections": [
@@ -172,7 +179,8 @@
           17,
           18,
           19,
-          20
+          20,
+          21
         ],
         "jumps": [
           {
@@ -202,37 +210,37 @@
             "end": 300,
             "name": "Crossrail transfer",
             "grind": true,
-            "frame": 779,
+            "frame": 799,
             "air": true,
-            "landing": 306.75
+            "landing": 316
           }
         ],
         "grinds": [
-          8,
-          16,
-          20
+          13,
+          21,
+          24
         ],
         "railNames": [
           "Suspended upper light rail",
           "Lower escalator handrail",
-          "Crossrail right to left"
+          "Crossrail left to right"
         ],
         "checkpoints": [
           0
         ],
-        "peakSpeed": 28.862184451839653,
+        "peakSpeed": 28.865527612769174,
         "minimumMovingSpeed": 16.5057041139109,
         "bails": 0,
-        "airFrames": 387,
+        "airFrames": 418,
         "crystal": true
       },
       "error": null
     },
     "coffee": {
-      "seconds": 18.7,
+      "seconds": 18.883333333333333,
       "state": "finished",
       "deaths": 0,
-      "progress": 407.25,
+      "progress": 407.5,
       "evidence": {
         "route": "coffee",
         "sections": [
@@ -256,7 +264,8 @@
           17,
           18,
           19,
-          20
+          20,
+          21
         ],
         "jumps": [
           {
@@ -282,37 +291,110 @@
             "end": 300,
             "name": "Crossrail transfer",
             "grind": true,
-            "frame": 774,
+            "frame": 791,
             "air": true,
-            "landing": 306.75
+            "landing": 316
           }
         ],
         "grinds": [
-          4,
-          10,
-          20
+          6,
+          15,
+          24
         ],
         "railNames": [
           "Coffee Grind",
           "Suspended lower light rail",
-          "Crossrail right to left"
+          "Crossrail left to right"
         ],
         "checkpoints": [
           1
         ],
-        "peakSpeed": 26.1239,
+        "peakSpeed": 26.723698515542942,
         "minimumMovingSpeed": 21.050827319545387,
         "bails": 0,
-        "airFrames": 372,
+        "airFrames": 402,
         "crystal": false
       },
       "error": null
     },
-    "mezzanine": {
-      "seconds": 17.916666666666668,
+    "escalator": {
+      "seconds": 19.15,
       "state": "finished",
       "deaths": 0,
-      "progress": 407.75,
+      "progress": 407.5,
+      "evidence": {
+        "route": "escalator",
+        "sections": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21
+        ],
+        "jumps": [
+          {
+            "name": "Hidden rail reward ollie",
+            "frame": 493,
+            "progress": 163.25
+          },
+          {
+            "s": 128,
+            "end": 187,
+            "name": "Flying Leap",
+            "grind": true,
+            "frame": 400,
+            "air": true,
+            "landing": 199.5
+          },
+          {
+            "s": 276.2,
+            "end": 300,
+            "name": "Crossrail transfer",
+            "grind": true,
+            "frame": 806,
+            "air": true,
+            "landing": 316
+          }
+        ],
+        "grinds": [
+          12,
+          24
+        ],
+        "railNames": [
+          "Suspended upper light rail",
+          "Crossrail left to right"
+        ],
+        "checkpoints": [],
+        "peakSpeed": 28.853461724661287,
+        "minimumMovingSpeed": 22.96898454685624,
+        "bails": 0,
+        "airFrames": 299,
+        "crystal": true
+      },
+      "error": null
+    },
+    "mezzanine": {
+      "seconds": 18.28333333333333,
+      "state": "finished",
+      "deaths": 0,
+      "progress": 408,
       "evidence": {
         "route": "mezzanine",
         "sections": [
@@ -336,7 +418,8 @@
           17,
           18,
           19,
-          20
+          20,
+          21
         ],
         "jumps": [
           {
@@ -344,24 +427,24 @@
             "end": 300,
             "name": "Crossrail transfer",
             "grind": true,
-            "frame": 726,
+            "frame": 743,
             "air": true,
-            "landing": 306.75
+            "landing": 316
           },
           {
             "s": 375.5,
             "end": 395,
             "name": "Mezzanine",
-            "frame": 990,
+            "frame": 1011,
             "air": true,
             "landing": 402.75
           }
         ],
         "grinds": [
-          20
+          24
         ],
         "railNames": [
-          "Crossrail right to left"
+          "Crossrail left to right"
         ],
         "checkpoints": [
           0
@@ -369,14 +452,14 @@
         "peakSpeed": 25.9933742532932,
         "minimumMovingSpeed": 22.969565703286765,
         "bails": 0,
-        "airFrames": 154,
+        "airFrames": 175,
         "crystal": false
       },
       "error": null
     }
   },
   "browserRoutes": {
-    "full-upper": {
+    "lite-escalator": {
       "initial": {
         "position": [
           0,
@@ -386,14 +469,14 @@
         "state": "ride",
         "grounded": true,
         "skatepark": true,
-        "components": 187
+        "components": 194
       },
-      "frames": 1129,
-      "simulationSeconds": 18.816666666666666,
+      "frames": 1149,
+      "simulationSeconds": 19.15,
       "state": "finished",
       "deaths": 0,
       "evidence": {
-        "route": "upper",
+        "route": "escalator",
         "sections": [
           0,
           1,
@@ -415,62 +498,56 @@
           17,
           18,
           19,
-          20
+          20,
+          21
         ],
         "jumps": [
           {
-            "s": 67.5,
-            "end": 83,
-            "name": "Fountain Gap",
-            "frame": 233,
-            "air": true,
-            "landing": 85.75
-          },
-          {
             "name": "Hidden rail reward ollie",
-            "frame": 484,
-            "progress": 163
+            "frame": 493,
+            "progress": 163.25
           },
           {
             "s": 128,
             "end": 187,
             "name": "Flying Leap",
             "grind": true,
-            "frame": 394,
+            "frame": 400,
             "air": true,
-            "landing": 198.75
+            "landing": 199.5
           },
           {
             "s": 276.2,
             "end": 300,
             "name": "Crossrail transfer",
             "grind": true,
-            "frame": 780,
+            "frame": 806,
             "air": true,
-            "landing": 306.75
+            "landing": 316
           }
         ],
         "grinds": [
-          7,
-          20
+          12,
+          24
         ],
         "railNames": [
           "Suspended upper light rail",
-          "Crossrail right to left"
+          "Crossrail left to right"
         ],
         "checkpoints": [],
-        "peakSpeed": 28.605353938107758,
-        "minimumMovingSpeed": 22.865493620751614,
+        "peakSpeed": 28.853461724661287,
+        "minimumMovingSpeed": 22.96898454685624,
         "bails": 0,
-        "airFrames": 313,
+        "airFrames": 299,
         "crystal": true
       },
       "sourceMatches": true,
       "tuningUnchanged": true,
-      "errors": [],
-      "build": "c434b4b497a1b9a0b3ee"
+      "error": null,
+      "consoleErrors": [],
+      "build": "e85e64eca9e9bdc8513c"
     },
-    "lite-car": {
+    "full-escalator": {
       "initial": {
         "position": [
           0,
@@ -480,14 +557,14 @@
         "state": "ride",
         "grounded": true,
         "skatepark": true,
-        "components": 187
+        "components": 194
       },
-      "frames": 1128,
-      "simulationSeconds": 18.8,
+      "frames": 1149,
+      "simulationSeconds": 19.15,
       "state": "finished",
       "deaths": 0,
       "evidence": {
-        "route": "car",
+        "route": "escalator",
         "sections": [
           0,
           1,
@@ -509,161 +586,58 @@
           17,
           18,
           19,
-          20
+          20,
+          21
         ],
         "jumps": [
           {
-            "s": 86.5,
-            "end": 100,
-            "name": "Car display jump",
-            "frame": 284,
-            "air": true,
-            "landing": 107.25
-          },
-          {
             "name": "Hidden rail reward ollie",
-            "frame": 484,
-            "progress": 163.75
+            "frame": 493,
+            "progress": 163.25
           },
           {
-            "s": 125,
+            "s": 128,
             "end": 187,
             "name": "Flying Leap",
             "grind": true,
-            "frame": 401,
+            "frame": 400,
             "air": true,
-            "landing": 225.5
+            "landing": 199.5
           },
           {
             "s": 276.2,
             "end": 300,
             "name": "Crossrail transfer",
             "grind": true,
-            "frame": 779,
+            "frame": 806,
             "air": true,
-            "landing": 306.75
+            "landing": 316
           }
         ],
         "grinds": [
-          8,
-          16,
-          20
+          12,
+          24
         ],
         "railNames": [
           "Suspended upper light rail",
-          "Lower escalator handrail",
-          "Crossrail right to left"
+          "Crossrail left to right"
         ],
-        "checkpoints": [
-          0
-        ],
-        "peakSpeed": 28.862184451839653,
-        "minimumMovingSpeed": 16.5057041139109,
+        "checkpoints": [],
+        "peakSpeed": 28.853461724661287,
+        "minimumMovingSpeed": 22.96898454685624,
         "bails": 0,
-        "airFrames": 387,
+        "airFrames": 299,
         "crystal": true
       },
       "sourceMatches": true,
       "tuningUnchanged": true,
-      "errors": [],
-      "build": "4a2d4235724ac1c9905e"
-    },
-    "lite-coffee": {
-      "initial": {
-        "position": [
-          0,
-          18,
-          5
-        ],
-        "state": "ride",
-        "grounded": true,
-        "skatepark": true,
-        "components": 187
-      },
-      "frames": 1122,
-      "simulationSeconds": 18.7,
-      "state": "finished",
-      "deaths": 0,
-      "evidence": {
-        "route": "coffee",
-        "sections": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7,
-          8,
-          9,
-          10,
-          11,
-          12,
-          13,
-          14,
-          15,
-          16,
-          17,
-          18,
-          19,
-          20
-        ],
-        "jumps": [
-          {
-            "s": 55,
-            "end": 104,
-            "name": "Coffee Grind",
-            "grind": true,
-            "frame": 203,
-            "air": true,
-            "landing": 116
-          },
-          {
-            "s": 136,
-            "end": 185,
-            "name": "Lower light beam",
-            "grind": true,
-            "frame": 415,
-            "air": true,
-            "landing": 190
-          },
-          {
-            "s": 276.2,
-            "end": 300,
-            "name": "Crossrail transfer",
-            "grind": true,
-            "frame": 774,
-            "air": true,
-            "landing": 306.75
-          }
-        ],
-        "grinds": [
-          4,
-          10,
-          20
-        ],
-        "railNames": [
-          "Coffee Grind",
-          "Suspended lower light rail",
-          "Crossrail right to left"
-        ],
-        "checkpoints": [
-          1
-        ],
-        "peakSpeed": 26.1239,
-        "minimumMovingSpeed": 21.050827319545387,
-        "bails": 0,
-        "airFrames": 372,
-        "crystal": false
-      },
-      "sourceMatches": true,
-      "tuningUnchanged": true,
-      "errors": [],
-      "build": "4a2d4235724ac1c9905e"
+      "error": null,
+      "consoleErrors": [],
+      "build": "e85e64eca9e9bdc8513c"
     }
   },
   "noOllieControl": {
+    "seconds": 18.65,
     "state": "finished",
     "deaths": 0,
     "evidence": {
@@ -689,7 +663,8 @@
         17,
         18,
         19,
-        20
+        20,
+        21
       ],
       "jumps": [
         {
@@ -714,33 +689,33 @@
           "end": 300,
           "name": "Crossrail transfer",
           "grind": true,
-          "frame": 751,
+          "frame": 777,
           "air": true,
-          "landing": 304.25
+          "landing": 316
         }
       ],
       "grinds": [
-        7,
-        15,
-        22
+        12,
+        20,
+        24
       ],
       "railNames": [
         "Suspended upper light rail",
         "Lower escalator handrail",
-        "Arcade side ledge"
+        "Crossrail left to right"
       ],
       "checkpoints": [],
       "peakSpeed": 30.500000000000014,
       "minimumMovingSpeed": 22.865493620751614,
       "bails": 0,
-      "airFrames": 351,
+      "airFrames": 397,
       "crystal": false
     },
     "error": null
   },
   "surfaces": {
-    "components": 187,
-    "rails": 35,
+    "components": 194,
+    "rails": 40,
     "checkpoints": [
       {
         "index": 0,
@@ -783,7 +758,7 @@
         "position": [
           108,
           -6.9,
-          -291.00000000000006
+          -291
         ],
         "surface": -7
       }
@@ -791,6 +766,7 @@
     "verts": [
       {
         "name": "Elevator quarter pipe",
+        "side": 1,
         "position": [
           -15.390180165838041,
           8,
@@ -809,6 +785,7 @@
       },
       {
         "name": "Elevator quarter pipe",
+        "side": 1,
         "position": [
           -2.0539639926141167,
           8,
@@ -826,25 +803,46 @@
         ]
       },
       {
-        "name": "Exit return quarter pipe",
+        "name": "Exit stair side transitions",
+        "side": -1,
         "position": [
-          111.7,
-          -7,
-          -296.99999999999994
+          108,
+          -3.9375,
+          -280
         ],
-        "peak": -1.1559032624815602,
-        "transition": 89,
-        "air": 61,
+        "peak": -2.1820394799612672,
+        "transition": 60,
+        "air": 21,
         "landed": true,
         "bail": false,
         "end": [
-          112.70346616338256,
-          -6.805847256471784,
-          -296.99999999999994
+          106.37871040591807,
+          -6.916385346078659,
+          -287.15701544276516
+        ]
+      },
+      {
+        "name": "Exit stair side transitions",
+        "side": 1,
+        "position": [
+          108,
+          -3.9375,
+          -280
+        ],
+        "peak": -2.1820394799612672,
+        "transition": 60,
+        "air": 21,
+        "landed": true,
+        "bail": false,
+        "end": [
+          109.62128960961932,
+          -6.916385337190863,
+          -287.1570153885919
         ]
       },
       {
         "name": "Entry return quarter pipe",
+        "side": 1,
         "position": [
           0,
           18,
@@ -859,6 +857,32 @@
           9.839838350858438e-16,
           18.211637636548744,
           10.143015435919162
+        ]
+      }
+    ],
+    "blueBanks": [
+      {
+        "side": -1,
+        "peak": 2.214004514224904,
+        "bankFrames": 63,
+        "landed": true,
+        "bail": false,
+        "end": [
+          103.77101688550536,
+          0,
+          -255.11778975021682
+        ]
+      },
+      {
+        "side": 1,
+        "peak": 2.214999913452424,
+        "bankFrames": 66,
+        "landed": true,
+        "bail": false,
+        "end": [
+          112.36396140060732,
+          0,
+          -255.20230765781653
         ]
       }
     ],
@@ -887,7 +911,7 @@
     "start": {
       "deaths": 0,
       "lives": 4,
-      "stamp": "Codex/sol fork \u00b7 build 10-22 12:26 UTC"
+      "stamp": "Codex/sol fork \u00b7 build 10-22 13:01 UTC"
     },
     "checkpoints": [
       {
@@ -903,10 +927,10 @@
         "index": 1,
         "position": [
           4.658198371080175,
-          8,
+          8.1,
           -124.13075748788123
         ],
-        "distance": 0.09999999999999964
+        "distance": 0
       },
       {
         "index": 2,
@@ -921,17 +945,17 @@
         "index": 3,
         "position": [
           108,
-          0.1,
+          0,
           -217
         ],
-        "distance": 0
+        "distance": 0.1
       },
       {
         "index": 4,
         "position": [
           108,
           -6.9,
-          -291.00000000000006
+          -291
         ],
         "distance": 0
       }
@@ -953,8 +977,13 @@
     "check:all": "not requested; not run"
   },
   "visualReview": {
-    "fountainRoofObstruction": "Raised shared ceiling; full-render recapture confirms a clear upper approach.",
-    "cutaway": "Inspection camera only; hides roof and foreground wall. No simulation or movement changes.",
-    "lastChange": "Final build extends non-colliding light hangers to the raised ceiling; full upper route rerun passes. The prior lite build has identical skating collision."
+    "normalCamera": "Lite and full-render escalator route, including gallery, crossrails, blue banks and passage over the exit stairs. No console errors.",
+    "inspectionViews": "Cutaway and plaza detail use an inspection camera with roof, foreground wall and fog hidden.",
+    "retainedImage": "fountain.png is from the preceding pass; its geometry is unchanged.",
+    "remainingFidelity": [
+      "First concourse oval planter and Rail Combo poles",
+      "True beam-to-beam transfer for the elevated reward",
+      "Original dimensional and hidden-surface measurements"
+    ]
   }
 }

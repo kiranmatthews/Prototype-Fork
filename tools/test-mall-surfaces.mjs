@@ -19,7 +19,7 @@ await withBlockworksRuntime(async r=>{
   const ordinary=new r.Level(new THREE.Scene(),{id:'mall-default-gate-test',name:spec.name,data:spec});
   assert.ok(ordinary.finishGlow.getSize(new THREE.Vector3()).x<5,'Ordinary warp gate must retain its original narrow trigger');ordinary.dispose();
  }
- const report={components:source.components.length,rails:l.rails.length,checkpoints:[],verts:[],spawn:null,recovery:null};
+ const report={components:source.components.length,rails:l.rails.length,checkpoints:[],verts:[],blueBanks:[],spawn:null,recovery:null};
  r.stepFor(5);report.spawn={position:p.pos.toArray(),grounded:p.grounded};assert.ok(p.grounded);
  for(const [i,c]of l.checkpoints.entries()){
   const ray=new THREE.Raycaster(c.spawnPos.clone().add(new THREE.Vector3(0,.3,0)),new THREE.Vector3(0,-1,0),0,1);
@@ -27,22 +27,37 @@ await withBlockworksRuntime(async r=>{
   assert.ok(Math.abs(c.spawnPos.y-m.MALL_CHECKPOINTS[i].p[1]-.1)<.05,`Checkpoint ${i} snapped to an unrelated storey`);
   report.checkpoints.push({index:i,position:c.spawnPos.toArray(),surface:hits[0].point.y});
  }
- for(const c of source.components.filter(c=>c.t==='vertramp')){
-  const a=c.yaw*Math.PI/180,d=new THREE.Vector3(Math.cos(a),0,-Math.sin(a)),origin=new THREE.Vector3(...c.p).addScaledVector(d,-6);origin.y+=.1;
+ for(const c of source.components.filter(c=>c.t==='vertramp'))for(const side of c.vkind==='half'?[-1,1]:[1]){
+  const half=c.vkind==='half',base=half?m.mallPoint(384):c.p;
+  const a=(c.yaw??0)*Math.PI/180,d=new THREE.Vector3(Math.cos(a)*side,0,-Math.sin(a)*side),origin=new THREE.Vector3(...base).addScaledVector(d,half?0:-6);origin.y+=.1;
   p.respawn(l,true,false,{position:origin,heading:d});
   // Initial fixture heading, before input starts. Respawn's optional facing
   // is presentation-only; all subsequent motion belongs to normal input.
   p.axisF.copy(d);p.axisL.set(-d.z,0,d.x);
-  let peak=c.p[1],transition=0,air=0,landed=false,entered=false,bail=false,popped=false;
+  let peak=base[1],transition=0,air=0,landed=false,entered=false,bail=false,popped=false,railJump=false;
   for(let i=0;i<400;i++){
    if(p.grounded&&p.groundHit?.vert&&p.rideNormal.y<.5)popped=true;
-   r.tick({moveY:p.grounded?1:0,jumpHeld:!popped});peak=Math.max(peak,p.pos.y);bail||=p.isBailing;
+   let jumpHeld=!popped;
+   if(half&&!railJump&&(p.pos.x-base[0])*side>1){jumpHeld=false;railJump=true;}
+   r.tick({moveY:p.grounded?1:0,jumpHeld});peak=Math.max(peak,p.pos.y);bail||=p.isBailing;
    if(p.groundHit?.vert){transition++;entered=true;}
    if(entered&&!p.grounded)air++;
-   if(entered&&i>100&&p.grounded&&p.pos.y<c.p[1]+.3){landed=true;break;}
+   if(entered&&i>100&&p.grounded&&p.pos.y<base[1]+.3){landed=true;break;}
    if(p.isBailing||p.state==='dead')break;
   }
-  report.verts.push({name:c.nm,position:c.p,peak,transition,air,landed,bail,end:p.pos.toArray()});
+  report.verts.push({name:c.nm,side,position:base,peak,transition,air,landed,bail,end:p.pos.toArray()});
+ }
+ for(const side of [-1,1]){
+  const origin=new THREE.Vector3(...m.mallPoint(330,side*3.8,.1)),d=new THREE.Vector3(0,0,-1);
+  p.respawn(l,true,false,{position:origin,heading:d});p.axisF.copy(d);p.axisL.set(-d.z,0,d.x);
+  let peak=0,bankFrames=0,landed=false,bail=false;
+  for(let i=0;i<180;i++){
+   r.tick({moveY:p.grounded?1:0,jumpHeld:true});peak=Math.max(peak,p.pos.y);bail||=p.isBailing;
+   if(p.groundHit?.name==='Blue plaza bank trough')bankFrames++;
+   if(bankFrames&&p.grounded&&p.pos.z<m.mallPoint(359)[2]&&p.pos.y<.3){landed=true;break;}
+   if(bail||p.state==='dead')break;
+  }
+  report.blueBanks.push({side,peak,bankFrames,landed,bail,end:p.pos.toArray()});
  }
  // Controlled below-world fixture after banking a real checkpoint. This
  // verifies recovery independently of the continuous no-death route pilots.
@@ -56,5 +71,6 @@ await withBlockworksRuntime(async r=>{
  report.recovery={died,returned,deaths:p.totalDeaths-before,checkpoint:l.checkpoints.indexOf(l.activeCheckpoint),position:p.pos.toArray(),distance:p.pos.distanceTo(cp.spawnPos)};
  await writeFile('/private/tmp/mall-recreation/surfaces.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));
  assert.ok(report.verts.every(v=>v.transition>0&&v.peak>v.position[1]+1.5&&!v.bail&&v.landed),'Every vert must climb and return to supported ground without a bail');
+ assert.ok(report.blueBanks.every(v=>v.bankFrames>0&&v.peak>1.7&&!v.bail&&v.landed),'Both blue banks must carry the skater to their supported outside landings');
  assert.ok(died&&returned);assert.equal(p.totalDeaths-before,1);assert.equal(l.activeCheckpoint,cp);assert.ok(p.pos.distanceTo(cp.spawnPos)<.5);
 },{modulePath:'/src/levels/mall.ts',source:m=>m.MALL_LEVEL,levelId:'mall',endlessDeaths:true,maxFrames:8000,controlFrame:r=>r.p.axisF});

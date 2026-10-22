@@ -40,8 +40,9 @@ export const MALL_KNOTS: Knot[] = [
   { s: 319, x: 108, z: -215, y: 0, width: 12 },
   { s: 330, x: 108, z: -226, y: 0, width: 26 },
   { s: 374, x: 108, z: -270, y: 0, width: 27 },
-  { s: 392, x: 108, z: -288, y: -7, width: 15 },
-  { s: 412, x: 108, z: -308, y: -7, width: 15 },
+  { s: 392, x: 108, z: -288, y: -7, width: 11.4 },
+  { s: 398, x: 108, z: -294, y: -7, width: 7 },
+  { s: 412, x: 108, z: -308, y: -7, width: 7 },
 ];
 export const MALL_LENGTH = 412;
 const segment = (s: number) => Math.min(MALL_KNOTS.length - 2,
@@ -161,7 +162,9 @@ for (let i=0;i<MALL_KNOTS.length-1;i++) {
 }
 // Containment follows the visible wall; the wall itself has thickness and no
 // auto-grind edges. Low retail windows allow the chase camera to see turns.
-const boundary=(side:number,s:number)=>side*plan(s).width/2-(side<0?9*ease(124,133,s)*(1-ease(153,163,s)):0);
+const boundary=(side:number,s:number)=>side*plan(s).width/2-(side<0?
+ Math.max(0,13-plan(s).width/2)*ease(92,100,s)*(1-ease(123,130,s))
+ +9*ease(124,133,s)*(1-ease(153,163,s)):0);
 for(const side of [-1,1]){
  const points:Array<[number,number,number,number]>=[];
  for(let s=0;s<=412;s+=2){const q=mallPoint(s,boundary(side,s)+side*.25);points.push([q[0],q[2],0,q[1]]);}
@@ -175,7 +178,7 @@ for(let s=5;s<318;s+=8){
  // The entry, raised fountain gallery and light well share a high ceiling.
  // Following each lower floor here clips the chase camera above the gallery.
  const q=plan(s),yaw=mallYaw(s),h=mix(28.2,mallHeight(s)+10.2,ease(188,218,s));
- const extra=9*ease(124,133,s)*(1-ease(153,163,s));
+ const extra=-boundary(-1,s)-q.width/2;
  box(mallPoint(s,-extra/2,h),[q.width+extra+1,.3,8.2],'#343e42',11,yaw);
  box(mallPoint(s,-extra/2,h-.24),[q.width+extra,.28,.22],'#9a9b8e',11,yaw);
  for(const u of [-q.width*.29,q.width*.29])box(mallPoint(s,u,h-.3),[1.1,.08,3.5],'#e2e3cb',11,yaw);
@@ -184,18 +187,19 @@ box([0,28.2,11.8],[9.6,.3,6],'#343e42',11);
 box([0,22.5,14.5],[9,9,.5],dark,9,0,true,'Entry back wall');
 box([0,17.75,12.1],[9,.5,4.2],stone,1,0,true,'Entry quarter pipe apron');
 for(const x of [-4.5,4.5])box([x,22.5,12.2],[.5,9,4.6],dark,9,0,true,'Entry quarter pipe side wall');
-box(mallPoint(412,0,-2.5),[15,9,.5],dark,9,0,true,'Exit back wall');
+box(mallPoint(412,0,-2.5),[7,9,.5],dark,9,0,true,'Exit back wall');
+for(let s=393;s<413;s+=6)box(mallPoint(s,0,3.2),[plan(s).width+1,.3,6.2],'#343e42',11);
 for(let s=46;s<309;s+=11){
  if(s>99&&s<119||s>195&&s<219||s>258&&s<277)continue;
  for(const side of [-1,1]){
-  const u=side*(plan(s).width/2-.05),y=mallHeight(s),yaw=mallYaw(s)+90;
+  const u=boundary(side,s)-side*.05,y=mallHeight(s),yaw=mallYaw(s)+90;
   if(side<0&&s>122&&s<166)continue;
   box(mallPoint(s,u,y+2.5),[9,4.8,.12],s%3?'#465c61':'#3c444c',10,yaw);
   for(const d of [-4.5,0,4.5])box(mallPoint(s+d,u,y+2.5),[.14,5,.2],brass,10,yaw);
   sign(['RECORDS','SPORTS','BOUTIQUE','CAFE','ARCADE'][Math.floor(s/11)%5],s,u,y+5.65,7,yaw);
  }
 }
-sign('NEW YORK MALL',33,0,17.7,8);sign('PARKING',405,0,-2.2,9);
+sign('NEW YORK MALL',33,0,17.7,8);sign('PARKING',408.5,0,-2.85,5.8);
 
 // Entry: a recessed descending ramp and two staircase shoulders.
 function treads(a:number,b:number,left:number,right:number,count:number,grp:number){
@@ -233,19 +237,29 @@ for(const u of [-4.8,4.8])sign('SALE',76,u,15.0,2.8);
 ribbon('Fountain upper launch',64,69,-3.8,2.7,s=>17+.45*clamp((s-64)/5),3,trim);
 ribbon('Fountain upper landing',81,100,-4.5,3.5,()=>17,3,'#c2baa4');
 ribbon('Upper landing gallery',100,123,-8.8,s=>s<112?3.5:mix(3.5,5,clamp((s-112)/5)),()=>17,3,'#c2baa4');
+// The second escalator is a separate left approach. It climbs beside the
+// second fountain island and joins the Flying Leap deck above the 16 stairs.
+const secondEscY=(s:number)=>mix(12,17,ease(94,117,s));
+ribbon('Second up escalator',94,117,-12.4,-8.4,secondEscY,3,'#7d8c8d');
+ribbon('Second escalator landing',117,123,-12.4,-8.4,()=>17,3,'#c2baa4');
+for(const u of [-12.45,-8.35])railAlong('Second escalator handrail',94,118,u,s=>secondEscY(s)+.85,3);
+for(let s=95;s<117;s+=.65)box(mallPoint(s,-10.4,secondEscY(s)-.04),[4,.08,.18],'#3e5356',3,mallYaw(s));
 ribbon('Car route upper access bank',96,123,5.3,10.1,s=>mix(12,17,ease(96,119,s)),3,trim);
 ribbon('Car display kicker',81,88,6,10,s=>12+1.8*clamp((s-81)/7),2,trim);
 box(mallPoint(91,8,13.0),[3.4,1.5,6.4],'#b9c1ba',2,0,true,'Car display');
 box(mallPoint(91,8,14.05),[2.5,.65,3.2],'#52737b',2);
 // Long kinked coffee grind occupies the left-hand lower aisle.
 railAlong('Coffee Grind',56,103,s=>s<68?-11.4: s<83?mix(-11.4,-9.8,(s-68)/15):mix(-9.8,-6.2,(s-83)/20),s=>mallHeight(s)+.85,2);
-for(let s=61;s<=94;s+=7)planter(s,11.3,1.6,3.2,12,2);
+for(const s of [65,78,91]){
+ planter(s,11.3,1.6,9,12,2);
+ railAlong('Planter Gap rim',s-4.5,s+4.5,10.55,()=>12.82,2,false);
+}
 sign('COFFEE',69,-12.6,16.1,6,90);
 treads(101,115,-7,7,16,3);
 railAlong('Sixteen stair centre rail',100,117,0,s=>mallHeight(s)+.82,3);
 // Flying Leap departure and stacked, suspended rails. Their long lower
 // line is catchable from the stairs, while the upper line needs the gallery.
-ribbon('Flying Leap launch',123,130,-8.8,10.1,s=>17+1.1*clamp((s-123)/7),3,trim);
+ribbon('Flying Leap launch',123,130,-12.4,10.1,s=>17+1.1*clamp((s-123)/7),3,trim);
 railAlong('Flying Leap departure ledge',101,129,-7.8,s=>s<123?17.82:17.82+1.1*(s-123)/7,3,false);
 // Original PS1 footage shows straight light beams. Keep them in a world
 // frame rather than bending each beam around the corridor's walking route.
@@ -285,15 +299,17 @@ for(const [s,yaw]of [[132,-90],[151,90]] as [number,number][]){
 treads(198,212,-8,8,18,5);
 for(const u of [-8.2,-3,3,8.2])railAlong('Lower escalator handrail',195,216,u,s=>mallHeight(s)+.85,5);
 planter(229,7.7,2.8,9,3.5,5);
-// Crossrails sit on a shallow split landing, then cross one another at
-// different heights. The centreline remains rideable without a jump.
-railAlong('Crossrail left to right',268,299,s=>mix(-6.5,6.5,ease(268,299,s)),s=>mallHeight(s)+1.02,6);
-railAlong('Crossrail right to left',268,299,s=>mix(6.5,-6.5,ease(268,299,s)),s=>mallHeight(s)+.72,6);
+// The reference's two diagonal rails are straight in world space. Their
+// separated crossing heights keep each intended grind line unambiguous.
+for(const [side,h,name]of [[-1,1.02,'Crossrail left to right'],[1,.72,'Crossrail right to left']] as [number,number,string][]){
+ const a=mallPoint(268,side*6.5,mallHeight(268)+h),b=mallPoint(299,-side*6.5,h);
+ const points=Array.from({length:17},(_,i)=>a.map((v,k)=>mix(v,b[k],i/16)) as P);
+ rail(name,points,6,true,mallHeight,268,299);
+}
 for(const u of [-7.5,7.5])railAlong('Arcade side ledge',263,297,u,s=>mallHeight(s)+.48,6,false);
 sign('GARDEN COURT',316,0,5.8,9);
 
-// The outdoor plaza is a shallow rectangular bowl with a blue angular
-// sculpture. Raised side ledges create the complete-around-atrium grind.
+// Raised side ledges and their low awnings flank the open-air blue banks.
 for(const u of [-10.5,10.5]){
  ribbon('Outdoor ledge bevel',328,331,u-1,u+1,s=>.62*ease(328,331,s),7,'#aaa58f');
  ribbon('Outdoor raised ledge',331,373,u-1,u+1,()=>.62,7,'#aaa58f');
@@ -301,24 +317,46 @@ for(const u of [-10.5,10.5]){
  for(const s of [336,365])planter(s,u,2.2,5,.62,7);
 }
 for(const s of [331,370])for(const side of [-1,1])rail('Atrium end return',[mallPoint(s,side*9.5,.72),mallPoint(s,side*11.5,.72)],7);
-// Three long clean aisles pass around the plaza's sunken blue feature.
-box(mallPoint(350,0,.25),[8,.5,15],trim,7,0,true,'Plaza fountain kerb');
-box(mallPoint(350,0,.53),[7.1,.07,14.1],'#438c99',7);
-ribbon('Blue sculpture left bank',343,352,-3.4,0,s=>.6+2.6*clamp((s-343)/9),7,'#4c9bb2');
-ribbon('Blue sculpture right bank',352,359,0,3.4,s=>3.2-2.6*clamp((s-352)/7),7,'#43899b');
-// Final 32 stairs and the upper mezzanine option share a long landing apron.
-treads(375,391,-7.2,7.2,32,8);
-for(const u of [-7,0,7])railAlong('Thirty-two stair handrail',373,394,u,s=>mallHeight(s)+.86,8);
+// The blue feature is a rideable angular trough, not a solid sculpture.
+// One mesh joins its flat bottom, paired banks and sloping outside returns.
+{
+ const profile=[[-5.2,0],[-4.2,2.2],[-1.5,.04],[1.5,.04],[4.2,2.2],[5.2,0]];
+ const vertices:number[]=[],indices:number[]=[],uvs:number[]=[];
+ const rows=Array.from({length:35},(_,i)=>342+i*.5);
+ for(const [i,s]of rows.entries()){
+  const h=Math.min(clamp((s-342)/4),clamp((359-s)/4));
+  for(const [u,y]of profile){vertices.push(...mallPoint(s,u,y*h+.015));uvs.push(u/3,s/3);}
+  if(i<rows.length-1)for(let j=0;j<profile.length-1;j++){
+   const a=i*profile.length+j,b=a+profile.length;indices.push(a,a+1,b+1,a,b+1,b);
+  }
+ }
+ add({t:'mesh',p:[0,0,0],vertices,indices,uvs,color:'#4c9bb2',tex:'pavement',solid:true,doubleSided:true,edgeGrinding:false,grp:7,nm:'Blue plaza bank trough'});
+}
+for(const side of [-1,1])for(const [a,b]of [[334,346],[357,368]]){
+ const inner=side*7.9,outer=side*12.0;
+ face([mallPoint(a,inner,3.1),mallPoint(b,inner,3.1),mallPoint(b,outer,4.3),mallPoint(a,outer,4.3)],'#789496',7);
+ for(const s of [a+.3,b-.3])box(mallPoint(s,inner,1.85),[.13,2.5,.13],dark,7);
+}
+// The exit stairs descend through a banked throat under the raised passage.
+// Both banks share the stair floor's sampled height, without a toe seam.
+treads(375,391,-2.2,2.2,32,8);
+for(const u of [-2.35,2.35])railAlong('Thirty-two stair handrail',373,394,u,s=>mallHeight(s)+.86,8);
 ribbon('Mezzanine approach',355,370,-8.7,-4.4,s=>3.8*clamp((s-355)/15),8,trim);
 ribbon('Mezzanine takeoff',370,377,-8.7,-4.4,()=>3.8,8,stone);
 railAlong('Step Off a Mezzanine lip',369,377,-8.6,()=>4.65,8,false);
-add({t:'vertramp',p:mallPoint(401,3.7,-7),vkind:'quarter',yaw:0,len:12,w:0,rise:2.7,arc:85,arcSteps:24,deck:1,tex:'pavement',color:trim,rails:true,grp:8,nm:'Exit return quarter pipe'});
+box(mallPoint(380,0,3.6),[13,.4,8],stone,8,0,true,'Raised exit passage');
+{
+ const p=mallPoint(375),pts=Array.from({length:35},(_,i)=>{
+  const q=mallPoint(375+i*.5);return [q[0]-p[0],q[2]-p[2],0,q[1]-p[1]] as [number,number,number,number];
+ });
+ add({t:'vertramp',p,pts,vkind:'half',w:2.2,rise:3,arc:85,arcSteps:24,deck:.25,tex:'pavement',color:'#8b9693',rails:true,grp:8,nm:'Exit stair side transitions'});
+}
 add({t:'vertramp',p:[0,18,9],vkind:'quarter',yaw:-90,len:8,w:0,rise:3.2,arc:85,arcSteps:24,deck:.65,tex:'pavement',color:trim,rails:true,grp:1,nm:'Entry return quarter pipe'});
-// Native completion pad stays on the safe exit apron, beside the return vert.
-add({t:'gate',p:mallPoint(408.5,0,-7),yaw:mallYaw(408.5),w:13.8,invisible:true,grp:8,nm:'Mall exit doorway'});
-for(const u of [-7,-3.5,0,3.5,7])box(mallPoint(408.5,u,-4.3),[.13,5.4,.22],'#8bacae',8);
-box(mallPoint(408.5,0,-1.6),[14.1,.18,.24],'#8bacae',8);
-const doors=[mallPoint(408.5,-7,-7),mallPoint(408.5,7,-7),mallPoint(408.5,7,-1.7),mallPoint(408.5,-7,-1.7)];
+// The narrow parking doorway completes the run at the end of the throat.
+add({t:'gate',p:mallPoint(408.5,0,-7),yaw:mallYaw(408.5),w:6.4,invisible:true,grp:8,nm:'Mall exit doorway'});
+for(const u of [-3.2,-1.6,0,1.6,3.2])box(mallPoint(408.5,u,-5.2),[.13,3.6,.22],'#8bacae',8);
+box(mallPoint(408.5,0,-3.4),[6.5,.18,.24],'#8bacae',8);
+const doors=[mallPoint(408.5,-3.2,-7),mallPoint(408.5,3.2,-7),mallPoint(408.5,3.2,-3.5),mallPoint(408.5,-3.2,-3.5)];
 add({t:'mesh',p:[0,0,0],vertices:doors.flat(),indices:[0,1,2,0,2,3],tex:'solid',color:'#9fc2c4',opacity:.2,solid:false,doubleSided:true,edgeGrinding:false,castShadow:false,grp:8,nm:'Exit glass doors'});
 
 export const MALL_CHECKPOINTS = [42,135,260,321,395].map((s,i)=>({s,p:mallPoint(s,[7.2,3.8,0,0,0][i])}));
@@ -333,8 +371,9 @@ for(const [i,s]of [48,105,188,263,370].entries()){
 }
 // Native collectibles mark the five letter locations and the hidden rail
 // reward without adding a second scoring or input system.
-for(const [s,u,y]of [[8,0,19.2],[78,9.3,13.4],[159,-.7,14.7],[285,0,2.3],[352,0,4.4]])
+for(const [s,u,y]of [[8,0,19.2],[78,9.3,13.4],[285,0,2.3],[352,-4.2,3.4]])
  add({t:'wumpa',p:mallPoint(s,u,y),grp:10,nm:'Reference letter location'});
+add({t:'wumpa',p:mallBeamPoint(.55,-1.3,10.5),grp:4,nm:'Lower beam letter location'});
 add({t:'crystal',p:mallBeamPoint(.76,0,17.19),grp:4,nm:'Hidden tape line reward'});
 add({t:'pit',p:[55,-12,-150],s:[200,1,390],invisible:true,grp:9,nm:'Below-mall recovery volume'});
 for(const b of batches.values())add({t:'mesh',p:[0,0,0],vertices:b.vertices,indices:b.indices,color:b.color,emissive:b.emissive,tex:'solid',solid:false,doubleSided:true,edgeGrinding:false,castShadow:false,grp:b.grp,nm:'Batched mall architecture'});
