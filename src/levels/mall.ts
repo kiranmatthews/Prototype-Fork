@@ -22,7 +22,8 @@ const add = (c: CustomComponent) => { C.push(c); return c; };
 export const MALL_KNOTS: Knot[] = [
   { s: 0, x: 0, z: 10, y: 18, width: 9 },
   { s: 12, x: 0, z: -2, y: 18, width: 9 },
-  { s: 32, x: 0, z: -22, y: 12, width: 25 },
+  { s: 32, x: 0, z: -22, y: 12, width: 9 },
+  { s: 42, x: 0, z: -32, y: 12, width: 25 },
   { s: 44, x: 0, z: -34, y: 12, width: 25 },
   { s: 100, x: 0, z: -90, y: 12, width: 28 },
   { s: 116, x: 0, z: -106, y: 8, width: 23 },
@@ -139,10 +140,12 @@ function ribbon(name: string, a: number, b: number, left: number | ((s:number)=>
         if(same(rows[end]))while(end<n&&same(rows[end+1]))end++;
         const a=rows[i],b=rows[end],slope=Math.abs(b.top-a.top)/(b.s-a.s);
         const bottom=Math.max(a.bottom,b.bottom),top=Math.min(a.top,b.top)-.26-slope*.52;
-        if(top-bottom>.02){
-          const q=[p(i),p(i,true),p(end),p(end,true)],xs=q.map(v=>v[0]),zs=q.map(v=>v[2]);
-          const x0=Math.min(...xs)+.06,x1=Math.max(...xs)-.06,z0=Math.min(...zs),z1=Math.max(...zs);
-          add({t:'wall',p:[(x0+x1)/2,bottom,(z0+z1)/2],s:[x1-x0,top-bottom,z1-z0],invisible:true,edgeGrinding:false,grp,nm:`${name} body`});
+        if(top-bottom>=.2){
+          // A world AABB extends a broad curved slab ahead of its visible
+          // slope and can snag an angled approach. Use the actual footprint;
+          // skip cores thinner than the wall primitive's 0.2 m minimum.
+          const q=[mallPoint(a.s,a.l+.06),mallPoint(a.s,a.r-.06),mallPoint(b.s,b.r-.06),mallPoint(b.s,b.l+.06)];
+          add({t:'wall',p:[0,bottom,0],s:[1,top-bottom,1],pts:q.map(v=>[v[0],v[2]]),invisible:true,edgeGrinding:false,grp,nm:`${name} body`});
         }
         i=end-1;
       }
@@ -199,7 +202,7 @@ for (let i=0;i<MALL_KNOTS.length-1;i++) {
 const boundary=(side:number,s:number)=>side*plan(s).width/2-(side<0?
  Math.max(0,13-plan(s).width/2)*ease(92,100,s)*(1-ease(123,130,s))
  +9*ease(124,133,s)*(1-ease(153,163,s)):0);
-const roofHeight=(s:number)=>mix(28.2,mallHeight(s)+10.2,ease(188,218,s));
+const roofHeight=(s:number)=>mix(28.2,mallHeight(s)+10.2,ease(188,218,s))+15.8*(1-ease(32,42,s));
 for(const side of [-1,1]){
  const points:Array<[number,number,number,number]>=[];
  for(let s=0;s<=412;s+=2){const q=mallPoint(s,boundary(side,s)+side*.25);points.push([q[0],q[2],0,q[1]]);}
@@ -232,10 +235,10 @@ for(let s=5;s<318;s+=8){
  box(mallPoint(s,-extra/2,h-.24),[q.width+extra,.28,.22],'#9a9b8e',11,yaw);
  for(const u of [-q.width*.29,q.width*.29])box(mallPoint(s,u,h-.3),[1.1,.08,3.5],'#e2e3cb',11,yaw);
 }
-box([0,28.2,11.8],[9.6,.3,6],'#343e42',11);
-box([0,22.5,14.5],[9,9,.5],dark,9,0,true,'Entry back wall');
+box([0,44,11.8],[9.6,.3,6],'#343e42',11);
+box([0,31,14.5],[9,26,.5],dark,9,0,true,'Entry back wall');
 box([0,17.75,12.1],[9,.5,4.2],stone,1,0,true,'Entry quarter pipe apron');
-for(const x of [-4.5,4.5])box([x,22.5,12.2],[.5,9,4.6],dark,9,0,true,'Entry quarter pipe side wall');
+for(const x of [-4.5,4.5])box([x,31,12.2],[.5,26,4.6],dark,9,0,true,'Entry quarter pipe side wall');
 box(mallPoint(412,0,-2.5),[7,9,.5],dark,9,0,true,'Exit back wall');
 for(let s=393;s<413;s+=6)box(mallPoint(s,0,3.2),[plan(s).width+1,.3,6.2],'#343e42',11);
 for(let s=46;s<309;s+=11){
@@ -250,7 +253,40 @@ for(let s=46;s<309;s+=11){
 }
 sign('NEW YORK MALL',33,0,17.7,8);sign('PARKING',408.5,0,-2.85,5.8);
 
-// Entry: a recessed descending ramp and two staircase shoulders.
+// The original entrance folds back twice inside one narrow enclosure. Its
+// raised starting lane descends to the gold quarter, the left return lane
+// drops to the blue quarter, and the final lane passes beneath the start.
+// Keep these storeys separate: a single downhill ramp skips both turns.
+export const MALL_ENTRY = { startS:5, startU:2.2, upperToeS:28, lowerToeS:1 };
+const entryGrade=(s:number,a:number,b:number)=>{
+ const t=clamp((s-a)/(b-a)),e=.09;
+ return t<e?t*t/(2*e*(1-e)):t>1-e?1-(1-t)*(1-t)/(2*e*(1-e)):(t-e/2)/(1-e);
+};
+export const mallEntryUpperHeight=(s:number)=>30-6*entryGrade(s,6,25);
+export const mallEntryReturnHeight=(s:number)=>18+6*entryGrade(s,3,25);
+ribbon('Entry upper starting ramp',2,28,0,4.22,mallEntryUpperHeight,1,'#8c9b9b',true,'pavement',s=>mallEntryUpperHeight(s)-.5,.35);
+ribbon('Entry middle return ramp',1,28,-4.22,0,mallEntryReturnHeight,1,'#b9a976',true,'pavement',s=>mallEntryReturnHeight(s)-.5,.35);
+// The wedge between lanes is solid; its exposed side cannot be crossed
+// from below. Its two tops and the final floor remain independent surfaces.
+for(let s=2;s<26;s+=.5){
+ const top=Math.min(mallEntryUpperHeight(s),mallEntryUpperHeight(s+.5))-.3;
+ const base=Math.max(mallEntryReturnHeight(s),mallEntryReturnHeight(s+.5))-.45;
+ if(top>base)box(mallPoint(s+.25,.05,(base+top)/2),[.1,top-base,.51],dark,1,0,true,'Entry separating wedge');
+}
+add({t:'vertramp',p:mallPoint(28,0,24),vkind:'quarter',yaw:90,len:8.44,w:0,rise:3.2,arc:85,arcSteps:24,deck:.65,tex:'pavement',color:'#b9a976',rails:true,grp:1,nm:'Entry gold quarter pipe'});
+box(mallPoint(32.2,0,34),[9,20,.5],dark,9,0,true,'Entry gold quarter back wall');
+// The visible ceiling-closure meshes do not provide horizontal wall contact.
+// Native solid walls must also contain the taller charged quarter-pipe airs.
+for(const x of [-4.75,4.75])add({t:'wall',p:[x,12,-6],s:[.55,32,33],invisible:true,
+ edgeGrinding:false,grp:1,nm:'Entry tall side wall core'});
+// The glass marks the doorway at the bottom of the third lane. Decorative
+// panes preserve the source's break-through route without adding a new system.
+const entryDoors=[mallPoint(31.7,-4.3,12),mallPoint(31.7,4.3,12),mallPoint(31.7,4.3,17),mallPoint(31.7,-4.3,17)];
+add({t:'mesh',p:[0,0,0],vertices:entryDoors.flat(),indices:[0,1,2,0,2,3],tex:'solid',color:'#91a8a3',opacity:.16,solid:false,doubleSided:true,edgeGrinding:false,castShadow:false,grp:1,nm:'Entry glass doors'});
+for(const u of [-4.3,-1.43,1.43,4.3])box(mallPoint(31.7,u,14.5),[.12,5,.12],dark,1);
+for(const u of [-2.85,0,2.85])sign('CLOSED',31.65,u,14.8,1.8);
+
+// Final descent: a recessed ramp and two staircase shoulders.
 function treads(a:number,b:number,left:number,right:number,count:number,grp:number){
  for(let i=0;i<count;i++){
   const s=mix(a,b,(i+.5)/count),q=mallPoint(s,(left+right)/2,mallHeight(s)-.06);
@@ -482,7 +518,7 @@ ribbon('Exit stair ceiling',375,393,-5.95,5.95,
  });
  add({t:'vertramp',p,pts,vkind:'half',w:2.2,rise:3,arc:85,arcSteps:24,deck:.25,tex:'pavement',color:'#8b9693',rails:true,grp:8,nm:'Exit stair side transitions'});
 }
-add({t:'vertramp',p:[0,18,9],vkind:'quarter',yaw:-90,len:8,w:0,rise:3.2,arc:85,arcSteps:24,deck:.65,tex:'pavement',color:trim,rails:true,grp:1,nm:'Entry return quarter pipe'});
+add({t:'vertramp',p:[0,18,9],vkind:'quarter',yaw:-90,len:8,w:0,rise:3.2,arc:85,arcSteps:24,deck:.65,tex:'pavement',color:trim,rails:true,grp:1,nm:'Entry blue quarter pipe'});
 // The narrow parking doorway completes the run at the end of the throat.
 add({t:'gate',p:mallPoint(408.5,0,-7),yaw:mallYaw(408.5),w:6.4,invisible:true,grp:8,nm:'Mall exit doorway'});
 for(const u of [-3.2,-1.6,0,1.6,3.2])box(mallPoint(408.5,u,-5.2),[.13,3.6,.22],'#8bacae',8);
@@ -490,10 +526,11 @@ box(mallPoint(408.5,0,-3.4),[6.5,.18,.24],'#8bacae',8);
 const doors=[mallPoint(408.5,-3.2,-7),mallPoint(408.5,3.2,-7),mallPoint(408.5,3.2,-3.5),mallPoint(408.5,-3.2,-3.5)];
 add({t:'mesh',p:[0,0,0],vertices:doors.flat(),indices:[0,1,2,0,2,3],tex:'solid',color:'#9fc2c4',opacity:.2,solid:false,doubleSided:true,edgeGrinding:false,castShadow:false,grp:8,nm:'Exit glass doors'});
 
-export const MALL_CHECKPOINTS = [42,135,260,321,395].map((s,i)=>({s,p:mallPoint(s,[7.2,3.8,0,0,0][i])}));
+export const MALL_CHECKPOINTS = [48,135,260,321,395].map((s,i)=>({s,p:mallPoint(s,[7.2,3.8,0,0,0][i])}));
 for(const [i,c]of MALL_CHECKPOINTS.entries())add({t:'checkpoint',p:c.p,grp:Math.min(8,i*2+1),nm:`Mall checkpoint ${i+1}`});
 // Ordered nodes keep checkpoints and route inspection in the same frame;
 // native skatepark mode supplies rider-relative controls and its chase rig.
+for(const p of [mallPoint(2,2.2,30),mallPoint(25,2.2,24),mallPoint(28,-2.2,24),mallPoint(3,-2.2,18)])add({t:'camnode',p,radius:3,grp:1,nm:'Folded entry route camera'});
 for(const k of MALL_KNOTS)add({t:'camnode',p:mallPoint(k.s),radius:8,grp:9,nm:'Mall route camera'});
 // A low, feathered follow shot looks through the aperture. The tall default
 // park shot otherwise strikes its cap and collapses into the skater's head.
@@ -508,7 +545,7 @@ for(const [i,s]of [61,105,188,263,370].entries()){
 }
 // Native collectibles mark the five letter locations and the hidden rail
 // reward without adding a second scoring or input system.
-for(const [s,u,y]of [[8,0,19.2],[78,9.3,13.4],[285,0,2.3],[352,-4.2,3.4]])
+for(const [s,u,y]of [[20,-2.1,mallHeight(20)+1.8],[78,9.3,13.4],[285,0,2.3],[352,-4.2,3.4]])
  add({t:'wumpa',p:mallPoint(s,u,y),grp:10,nm:'Reference letter location'});
 add({t:'wumpa',p:mallBeamPoint(.55,-1.3,10.5),grp:4,nm:'Lower beam letter location'});
 add({t:'crystal',p:mallBeamPoint(.76,0,17.19),grp:4,nm:'Hidden tape line reward'});
@@ -516,7 +553,7 @@ add({t:'pit',p:[55,-12,-150],s:[200,1,390],invisible:true,grp:9,nm:'Below-mall r
 for(const b of batches.values())add({t:'mesh',p:[0,0,0],vertices:b.vertices,indices:b.indices,color:b.color,emissive:b.emissive,tex:'solid',solid:false,doubleSided:true,edgeGrinding:false,castShadow:false,grp:b.grp,nm:'Batched mall architecture'});
 
 export const MALL_LEVEL:CustomLevelData = {
- v:1,name:'Mall · New York',spawn:mallPoint(5,0,18.12),killY:-16,startWarpPad:false,
+ v:1,name:'Mall · New York',spawn:mallPoint(MALL_ENTRY.startS,MALL_ENTRY.startU,mallEntryUpperHeight(MALL_ENTRY.startS)+.12),killY:-16,startWarpPad:false,
  skatepark:true,sky:'night',keepPlayFog:true,jungleDepthFade:false,
  atmosphere:{fogEnabled:true,fogNear:50,fogFar:175,fogColor:'#333e43',ambientSky:'#c8d4d0',ambientGround:'#858378',ambientIntensity:1.45,sunColor:'#f4ebcf',sunIntensity:1.1,fillColor:'#a9c5cd',fillIntensity:.55,shadowStrength:.25,backdrop:'fog',drawDistance:240},
  components:C,groups,

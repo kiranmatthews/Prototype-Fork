@@ -1,7 +1,8 @@
 // Controller samples only: production movement, collision, rails and camera.
 export function createMallPilot(m,{route='main',charge=true,secretOllie=true,fountainEntry=68.5}={}){
- let progress=5,frame=0,active=null,jumped=new Set(),lastAdvance=0,lastS=5,secretPop=false,secretPopFrame=-Infinity,secretRail=null;
- const evidence={route,sections:[],jumps:[],grinds:[],railNames:[],checkpoints:[],upperTransfer:null,fountainLandingFrames:0,fountainBrakingFrames:0,peakSpeed:0,minimumMovingSpeed:Infinity,bails:0,airFrames:0,crystal:false};
+ const entry=createMallEntryPilot(m);
+ let progress=entry.progress,frame=0,active=null,jumped=new Set(),lastAdvance=0,lastS=5,secretPop=false,secretPopFrame=-Infinity,secretRail=null;
+ const evidence={route,entry:entry.evidence,sections:[],jumps:[],grinds:[],railNames:[],checkpoints:[],upperTransfer:null,fountainLandingFrames:0,fountainBrakingFrames:0,peakSpeed:0,minimumMovingSpeed:Infinity,bails:0,airFrames:0,crystal:false};
  const smooth=t=>{t=Math.max(0,Math.min(1,t));return t*t*(3-2*t);};
  const interpolate=(s,knots)=>{for(let i=1;i<knots.length;i++)if(s<=knots[i][0])return knots[i-1][1]+(knots[i][1]-knots[i-1][1])*smooth((s-knots[i-1][0])/(knots[i][0]-knots[i-1][0]));return knots.at(-1)[1];};
  const fountainRoute=['upper','upper-fast'].includes(route),upperRoute=fountainRoute||['car','escalator'].includes(route);
@@ -15,6 +16,7 @@ export function createMallPilot(m,{route='main',charge=true,secretOllie=true,fou
  const launches=[...(route==='escalator'?[{s:128,end:187,name:'Flying Leap',grind:true}]:route==='car'?[{s:86.5,end:100,name:'Car display jump'},{s:125,end:187,name:'Flying Leap',grind:true}]:fountainRoute?[...(route==='upper-fast'?[{s:fountainEntry,end:84,name:'Fountain through jump'}]:[{s:fountainEntry,end:74,name:'Fountain entry'},{s:77.8,end:84,name:'Fountain exit'}]),{s:128,end:187,name:'Flying Leap',grind:true}]:route==='coffee'?[{s:55,end:104,name:'Coffee Grind',grind:true},{s:136,end:185,name:'Lower light beam',grind:true}]:[]),{s:276.2,end:300,name:'Crossrail transfer',grind:true},...(route==='mezzanine'?[{s:375.5,end:395,name:'Mezzanine'}]:[])];
  return {evidence,get progress(){return progress;},
  sample(p,l){
+  if(!entry.done)return entry.sample(p,l);
   progress=m.mallProject(p.pos.x,p.pos.z,progress);
   if(p.isBailing||['dead','gameover'].includes(p.state))throw Error(`Mall run lost: ${JSON.stringify({progress,position:p.pos.toArray(),state:p.state,bailing:p.isBailing,active})}`);
   if(progress>lastS+1){lastS=progress;lastAdvance=frame;}else if(frame-lastAdvance>480)throw Error(`Mall stalled: ${JSON.stringify({progress,position:p.pos.toArray(),speed:p.speed,state:p.state,active})}`);
@@ -22,9 +24,10 @@ export function createMallPilot(m,{route='main',charge=true,secretOllie=true,fou
   let jump=charge,grind=false;
   if(!active&&launch&&progress>=launch.s&&p.grounded){active={...launch,frame,air:false};jumped.add(launch.name);jump=false;}
   if(active){jump=false;grind=!!active.grind;if(!p.grounded)active.air=true;if(progress>active.end&&p.grounded){evidence.jumps.push({...active,landing:progress});active=null;jump=charge;}}
-  const look=fountainRoute&&progress>54&&progress<86?4:Math.max(5,p.speed*.65);
+  const look=fountainRoute&&progress>54&&progress<86?4:!fountainRoute&&progress<65?5:Math.max(5,p.speed*.65);
   let q=m.mallPoint(Math.min(408.5,progress+look),interpolate(progress+look,offsets));
-  if(fountainRoute&&progress>62&&progress<73)q=m.mallPoint(77,0);
+  if(progress<(fountainRoute?16:28))q=m.mallPoint(34,2.2);
+  if(fountainRoute&&progress>62&&progress<73)q=m.mallPoint(route==='upper-fast'?70.5:77,0);
   if(fountainRoute&&progress>=73&&progress<80)q=m.mallPoint(87,0);
   if(progress>225&&progress<310){
    const s=progress+Math.max(5,p.speed*.3),u=s<268?3.3*smooth((s-232)/28):s<299?6.5-13*(s-268)/31:-6.5*(1-smooth((s-299)/20));
@@ -68,8 +71,10 @@ export function createMallPilot(m,{route='main',charge=true,secretOllie=true,fou
   return{moveX,moveY,jumpHeld:jump,grindHeld:grind,grabHeld:brake,spinHeld:p.grounded&&l.checkpoints.some(c=>!c.active&&c.spawnPos.distanceTo(p.pos)<2.7)};
  },
  observe(p,l){
-  frame++;progress=m.mallProject(p.pos.x,p.pos.z,progress);evidence.peakSpeed=Math.max(evidence.peakSpeed,p.speed);evidence.crystal=p.hasCrystal;
-  if(frame>180&&p.grounded&&progress<390)evidence.minimumMovingSpeed=Math.min(evidence.minimumMovingSpeed,p.speed);
+  frame++;
+  if(!entry.done){entry.observe(p,l);progress=entry.progress;lastAdvance=frame;lastS=progress;return;}
+  progress=m.mallProject(p.pos.x,p.pos.z,progress);evidence.peakSpeed=Math.max(evidence.peakSpeed,p.speed);evidence.crystal=p.hasCrystal;
+  if(progress>=34&&p.grounded&&progress<390)evidence.minimumMovingSpeed=Math.min(evidence.minimumMovingSpeed,p.speed);
   if(!p.grounded)evidence.airFrames++;
   if(p.grounded&&p.groundHit?.name==='Fountain passage floor')evidence.fountainLandingFrames++;
   for(let i=0;i<m.MALL_KNOTS.length;i++)if(progress>=m.MALL_KNOTS[i].s&&!evidence.sections.includes(i))evidence.sections.push(i);
@@ -92,16 +97,16 @@ export function createMallPilot(m,{route='main',charge=true,secretOllie=true,fou
 export function createMallPlanterPilot(m,{direction=1,fromSpawn=false}={}){
  const approach=fromSpawn?createMallPilot(m,{route:'upper-fast'}):null;
  const evidence={name:'Round planter grind',direction,fromSpawn,caught:false,steps:0,seams:0,laps:0,bailed:false,peakSpeed:0,end:null};
- let frame=0,progress=5,lastT=null,travel=0,done=false;
+ let frame=0,progress=approach?.progress??5,lastT=null,travel=0,done=false;
  return{evidence,get done(){return done;},get progress(){return progress;},
   sample(p,l){
-   progress=m.mallProject(p.pos.x,p.pos.z,progress);
+   progress=fromSpawn?approach.progress:m.mallProject(p.pos.x,p.pos.z,progress);
    if(fromSpawn&&progress<60&&!evidence.caught)return approach.sample(p,l);
    const grinding=p.state==='grind';
    return{moveY:grinding||p.grounded?1:0,moveX:grinding?Math.max(-1,Math.min(1,-p.balance*5-p.balanceVel*.7)):0,jumpHeld:!fromSpawn&&frame<4,grindHeld:fromSpawn||frame>=4};
   },
   observe(p,l){
-   frame++;approach?.observe(p,l);progress=m.mallProject(p.pos.x,p.pos.z,progress);
+   frame++;approach?.observe(p,l);progress=fromSpawn?approach.progress:m.mallProject(p.pos.x,p.pos.z,progress);
    evidence.bailed||=p.isBailing;evidence.end=p.pos.toArray();
    const rail=p.grindRail;
    if(p.state==='grind'&&m.MALL_LEVEL.components[rail.object.userData.editorIdx]?.nm==='Round planter grind'){
@@ -110,6 +115,38 @@ export function createMallPlanterPilot(m,{direction=1,fromSpawn=false}={}){
     lastT=p.grindT;evidence.laps=travel/rail.totalLength;
    }else if(evidence.caught)done=true;
    done||=evidence.laps>2.1||evidence.bailed||p.state==='dead';
+  },
+ };
+}
+
+// The folded entrance is a genuine pair of native quarter-pipe returns.
+// Stage changes observe contact and direction; they never teleport, reverse
+// velocity or supply a scripted transition. The optional pop uses Space release.
+export function createMallEntryPilot(m,{pop=false}={}){
+ let stage=0,entered=false,air=false,popped=false,frame=0,done=false,progress=-78;
+ const evidence={pop,turns:[],transitionFrames:[0,0],airFrames:[0,0],peakFeetY:[30,18],returnedSpeeds:[],bails:0};
+ return{evidence,get done(){return done;},get progress(){return progress;},
+  sample(p){
+   const quarter=stage===0||stage===2;
+   if(quarter&&p.grounded&&p.groundHit?.vert&&p.rideNormal.y<.5)popped=true;
+   const q=stage===0?[pop?-.2:-1,0,-34]:stage===1?[-2.1,0,18]:stage===2?[pop?-.5:0,0,22]:[2.2,0,-35];
+   const dx=q[0]-p.pos.x,dz=q[2]-p.pos.z,n=Math.hypot(dx,dz)||1,f=p.axisF;
+   return{moveX:p.grounded?(dx*-f.z+dz*f.x)/n:0,moveY:p.grounded?(dx*f.x+dz*f.z)/n:0,jumpHeld:!(pop&&popped)};
+  },
+  observe(p){
+   frame++;const s=10-p.pos.z,quarter=stage===0||stage===2,index=stage===2?1:0;
+   if(p.isBailing||['dead','gameover'].includes(p.state)){evidence.bails++;throw Error('Mall entrance lost: '+JSON.stringify({stage,position:p.pos.toArray(),state:p.state}));}
+   if(quarter){
+    if(p.groundHit?.vert){entered=true;evidence.transitionFrames[index]++;}
+    if(entered&&!p.grounded){air=true;evidence.airFrames[index]++;}
+    evidence.peakFeetY[index]=Math.max(evidence.peakFeetY[index],p.pos.y);
+   }
+   const returned=quarter&&entered&&air&&p.grounded&&(stage===0?p.axisF.z>0:p.axisF.z<0);
+   if(returned){evidence.turns.push({name:stage===0?'Gold quarter return':'Blue quarter return',frame,position:p.pos.toArray()});evidence.returnedSpeeds.push(p.speed);stage++;entered=false;air=false;popped=false;}
+   if(stage===1&&p.grounded&&p.pos.z>5){stage=2;entered=false;air=false;popped=false;}
+   if(stage===3&&s>=6&&p.grounded)done=true;
+   progress=stage===0?-78+Math.min(30,s)-5:stage===1?-50+28-s:stage===2?-20:s;
+   if(frame>900)throw Error('Mall entrance stalled: '+JSON.stringify({stage,position:p.pos.toArray()}));
   },
  };
 }

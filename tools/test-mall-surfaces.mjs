@@ -29,7 +29,9 @@ await withBlockworksRuntime(async r=>{
  }
  for(const c of source.components.filter(c=>c.t==='vertramp'))for(const side of c.vkind==='half'?[-1,1]:[1]){
   const half=c.vkind==='half',base=half?m.mallPoint(384):c.p;
-  const a=(c.yaw??0)*Math.PI/180,d=new THREE.Vector3(Math.cos(a)*side,0,-Math.sin(a)*side),origin=new THREE.Vector3(...base).addScaledVector(d,half?0:-6);origin.y+=.1;
+  const a=(c.yaw??0)*Math.PI/180,d=new THREE.Vector3(Math.cos(a)*side,0,-Math.sin(a)*side),origin=new THREE.Vector3(...base).addScaledVector(d,half?0:-6);if(c.nm==='Entry gold quarter pipe'){origin.x=1.8;origin.y=m.mallEntryUpperHeight(22);}
+  if(c.nm==='Entry blue quarter pipe')origin.x=2.2;
+  origin.y+=.1;
   p.respawn(l,true,false,{position:origin,heading:d});
   // Initial fixture heading, before input starts. Respawn's optional facing
   // is presentation-only; all subsequent motion belongs to normal input.
@@ -62,7 +64,7 @@ await withBlockworksRuntime(async r=>{
  // Controlled below-world fixture after banking a real checkpoint. This
  // verifies recovery independently of the continuous no-death route pilots.
  p.respawn(l,true);const pilot=createMallPilot(m),cp=l.checkpoints[0];
- for(let i=0;i<300&&!cp.active;i++){r.tick(pilot.sample(p,l));pilot.observe(p,l);}
+ for(let i=0;i<900&&!cp.active;i++){r.tick(pilot.sample(p,l));pilot.observe(p,l);}
  await writeFile('/private/tmp/mall-recreation/surfaces.json',JSON.stringify(report,null,2));
  assert.ok(cp.active,`Checkpoint was not activated by normal skating/spin input: ${JSON.stringify({position:p.pos.toArray(),state:p.state})}`);
  p.pos.set(0,-11.6,-150);p.grounded=false;p.state='air';p.vVel=-4;

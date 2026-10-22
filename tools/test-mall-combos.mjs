@@ -67,7 +67,7 @@ await withBlockworksRuntime(async r=>{
   await writeFile(`/private/tmp/mall-recreation/rail-combo-${side}.json`,JSON.stringify(r.trace.slice(traceStart)));
  }
  p.respawn(l,true);const fast=createMallPlanterPilot(m,{fromSpawn:true}),fastStart=r.trace.length;
- for(let i=0;i<600&&!fast.done;i++){r.tick(fast.sample(p,l));fast.observe(p,l);}
+ for(let i=0;i<1100&&!fast.done;i++){r.tick(fast.sample(p,l));fast.observe(p,l);}
  reports.push(fast.evidence);
  await writeFile('/private/tmp/mall-recreation/round-planter-fast.json',JSON.stringify(r.trace.slice(fastStart)));
  assert.ok(fast.evidence.laps>2&&fast.evidence.peakSpeed>20&&!fast.evidence.bailed,'The normal entrance approach must support repeated fast laps');
@@ -79,4 +79,4 @@ await withBlockworksRuntime(async r=>{
   assert.ok((report.grindFrames[target]??0)>=10,'Each upper pole must sustain a grind on its source lower combo line');
   assert.ok(!report.bailed&&report.landed);
  }
-},{modulePath:'/src/levels/mall.ts',source:m=>m.MALL_LEVEL,levelId:'mall',endlessDeaths:true,maxFrames:2600,controlFrame:r=>r.p.axisF});
+},{modulePath:'/src/levels/mall.ts',source:m=>m.MALL_LEVEL,levelId:'mall',endlessDeaths:true,maxFrames:3300,controlFrame:r=>r.p.axisF});
