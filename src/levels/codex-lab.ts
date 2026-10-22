@@ -1,3 +1,4 @@
+export { KONA_LEVEL } from './kona';
 import {addSkateWedge,addSkateLid,addWedgeBetween,type SkateBlock,type SkateWedge} from './blockworks-ramps';
 import type { CustomComponent, CustomGroup, CustomLevelData } from '../level';
 import { BLOCKWORKS_GROUND, ROUTE_END, emitPit, emitRibbon, routePoint, routeYaw, type Point } from './blockworks-geometry';

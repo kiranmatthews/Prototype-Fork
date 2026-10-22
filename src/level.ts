@@ -75,6 +75,7 @@ import { JUNGLE_CUP_LEVEL } from "./levels/jungle-cup";
 import { JUNGLE_TERRACES_LEVEL, JUNGLE_SKYLINE_LEVEL } from "./levels/jungle-sequels";
 import { PIRATE_WRECK_LEVEL } from './levels/pirate-wreck';
 import { CODEX_LAB_LEVEL } from "./levels/codex-lab";
+import { KONA_LEVEL } from "./levels/kona";
 import { PUZZLE_LEVELS } from './levels/puzzle-trilogy';
 import { CRAB_CHIEF_LEVEL } from './levels/crab-chief';
 import { CrabChiefEncounter } from './boss/crabChief';
@@ -777,6 +778,7 @@ export interface CustomComponent {
   scaffold?: boolean; // woodpath: bamboo posts/braces/handrails beneath and beside the deck
   supports?: boolean; // woodpath: generate terrain-reaching/fixed-depth support posts (default follows scaffold)
   rails?: boolean; // woodpath: handrails; vertramp: automatic coping rails (default true)
+  coping?: boolean; // rail: flush transition lip, grindable without acting as a street barrier
   spacing?: number; // woodpath: decorative plank spacing
   baySpacing?: number; // woodpath: distance between bamboo support/X-brace bays
   supportDepth?: number; // woodpath: fixed post depth below the deck
@@ -2394,6 +2396,7 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
     name: CODEX_LAB_LEVEL.name,
     data: CODEX_LAB_LEVEL,
   }, // source-owned long course for fast, isolated geometry iterations
+  { id: "kona", name: KONA_LEVEL.name, data: KONA_LEVEL },
   { id: "jungle-cup", name: JUNGLE_CUP_LEVEL.name, data: JUNGLE_CUP_LEVEL },
   { id: "bone-yard", name: BONE_YARD_LEVEL.name, data: BONE_YARD_LEVEL },
   { id: "waterpark", name: WATERPARK_LEVEL.name, data: WATERPARK_LEVEL },
@@ -2494,7 +2497,7 @@ const COMPONENT_DATA_KEYS = new Set([
   "edgeGrinding", "cameraView", "cameraPosition", "cameraTarget", "cameraFov", "cameraAspect", "cameraFollowDistance", "cameraFollowTargetHeight", "cameraIntroDistance", "cameraCutaway", "len", "rise", "w", "yaw", "axis", "travelSign", "travelPhase", "vkind", "arc", "arcSteps", "deck",
   "closed", "bank", "curve", "vert", "lipRise", "outerBank", "depthBias", "shake", "kind", "dkind", "vr", "tn",
   "lit", "berms", "n", "outline", "range", "speed", "foe", "invisible", "solid",
-  "cycle", "phase", "amp", "seed", "scaffold", "supports", "rails", "spacing",
+  "cycle", "phase", "amp", "seed", "scaffold", "supports", "rails", "coping", "spacing",
   "baySpacing", "supportDepth", "supportBaseY", "terrainSupports", "structureStyle",
   "plankPalette", "polePalette", "shoreProfile", "shoreSeaLevel", "shorePhase",
   "trick", "exitYaw", "airOnly", "coverage", "radius", "color", "tex", "dir",
@@ -2974,6 +2977,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
     )
       return null;
     if (component.gravityTrack !== undefined && (!['mesh','vertramp'].includes(component.t) || component.solid === false || component.loopRadius !== undefined)) return null;
+    if (component.coping !== undefined && (component.t !== 'rail' || typeof component.coping !== 'boolean')) return null;
     if (component.skateCamera !== undefined && (!['mesh','vertramp'].includes(component.t) || component.solid === false)) return null;
     if (component.outOfBounds !== undefined && (component.t !== 'mesh' || component.solid === false || component.lethal === true)) return null;
     if (component.lethal !== undefined && (component.t !== 'mesh' || component.solid === false)) return null;
@@ -5664,6 +5668,7 @@ export class Level {
     if(standingWater||jungleStream)mesh.userData.noWaterShore=true;
     if(jungleStream){mesh.userData.castShadow=false;mesh.userData.receiveShadow=true;}
     if (c.vert !== undefined) mesh.userData.vert = c.vert;
+    if (c.vert === true) mesh.userData.authoredVertMesh = true;
     if (c.gravityTrack) mesh.userData.gravityTrack = true;
     if (c.lethal) mesh.userData.lethal = true;
     if (c.skateCamera) mesh.userData.skateCamera = true;
@@ -6018,6 +6023,7 @@ export class Level {
             ] as [number, number, number, number]) }
           : {}),
         invisible: mr.rail.object.children.length === 0 ? true : undefined,
+        ...(mr.rail.coping ? { coping: true } : {}),
       });
     }
     for (const rail of this.rails) {
@@ -6044,6 +6050,7 @@ export class Level {
             ],
         ),
         invisible: rail.object.children.length === 0 ? true : undefined,
+        ...(rail.coping ? { coping: true } : {}),
         grp: rail.object.userData.captureGroup as number | undefined,
       });
     }
@@ -7239,6 +7246,7 @@ export class Level {
               this.rails.push(rail);
               this.root.add(rail.object);
             }
+            this.rails[this.rails.length-1].coping = c.coping === true;
             if(c.dkind === "citydeck" || c.dkind === "cityutilitypole"){const rail=this.rails[this.rails.length-1];rail.object.traverse(o=>{const mesh=o as THREE.Mesh;if(mesh.isMesh){mesh.geometry.dispose();}});rail.object.clear();rail.object.userData.cityRail=true;rail.object.add(cityRailVisual(rail.points,c.dkind === "cityutilitypole"));}
             if (c.dkind === "nightrockridge") {
               const rail = this.rails[this.rails.length-1];

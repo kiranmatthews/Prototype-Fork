@@ -3730,7 +3730,7 @@ export class Player {
       // in a pipe must still let a HELD X pump the transition. Keep the release
       // edge consumed while restoring the continuous motor/crouch immediately.
       const pumpHeld = input.jumpHeld && this.state==='ride' && this.grounded &&
-        this.freeSkate && (!!this.groundHit?.halfpipe || this.charging&&this.chargeTimer>0) && !this.isBailing;
+        this.freeSkate && (!!this.groundHit?.halfpipe || this.groundHit?.mesh?.userData.authoredVertMesh === true || this.charging&&this.chargeTimer>0) && !this.isBailing;
       if(!pumpHeld){this.charging=false;this.chargeTimer=0;}
       // A full, newly earned ground load is now an intentional next ollie.
       // Only an immediate landing release remains owned by the preceding air.
@@ -6857,7 +6857,7 @@ export class Player {
         this.rideNormal.copy(floor.normal);
       }
     }
-    if (!hit && this.freeSkate && this.groundHit?.vert === true && this.groundHit.mesh?.userData.vertRampMesh) {
+    if (!hit && this.freeSkate && this.groundHit?.vert === true && (this.groundHit.mesh?.userData.vertRampMesh || this.groundHit.mesh?.userData.authoredVertMesh)) {
       const mesh = this.groundHit.mesh;
       // Follow the face along its normal. A world-down feeler becomes
       // parallel to vert and was sampling the foundation THROUGH the ramp.
@@ -10842,7 +10842,7 @@ export class Player {
     for (const contact of this.raycaster.intersectObjects(level.groundMeshes, false)) {
       const mesh = contact.object;
       const hp = mesh.userData.halfpipe as Halfpipe | undefined;
-      if (!contact.face || mesh.userData.vert !== true || (!hp && !mesh.userData.vertRampMesh)) continue;
+      if (!contact.face || mesh.userData.vert !== true || (!hp && !mesh.userData.vertRampMesh && !mesh.userData.authoredVertMesh)) continue;
       const normal = contact.face.normal.clone().transformDirection(mesh.matrixWorld);
       const point = contact.point.clone();
       if (hp) {
@@ -15035,7 +15035,7 @@ export class Player {
       // passes under/over freely; the rail is a grind target, not a barrier.
       if (this.vertLandGraceT > 0) continue;
       if (this.parkControls && rail.coping &&
-          Math.abs(s.point.y - this.pos.y) <= 0.2) continue;
+          (this.groundHit?.vert === true || Math.abs(s.point.y - this.pos.y) <= 0.2)) continue;
       if (this.groundHit && this.groundHit.normal.y < TUNING.steepStand) continue;
       // Vertical overlap: the rail line must sit within the body column (from a
       // shade below the feet up to a shade over the head) to count — a rail well
@@ -15396,7 +15396,7 @@ export class Player {
     this.raycaster.set(VERT_RAY_O, VERT_RAY_D);
     this.raycaster.far = distance + 0.015;
     for (const hit of this.raycaster.intersectObjects(level.groundMeshes, false)) {
-      if (!hit.face || !hit.object.userData.vertRampMesh || hit.object.userData.vert !== true) continue;
+      if (!hit.face || (!hit.object.userData.vertRampMesh && !hit.object.userData.authoredVertMesh) || hit.object.userData.vert !== true) continue;
       const normal = hit.face.normal.clone().transformDirection(hit.object.matrixWorld);
       if (normal.y < 0 || normal.dot(VERT_RAY_D) >= -1e-4) continue;
       this.pos.copy(hit.point);
