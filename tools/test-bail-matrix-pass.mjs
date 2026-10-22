@@ -1,5 +1,6 @@
 // Compare the optimized fixed-step path with the former eager appearance
-// update, including the actual local artist-hand asset and render matrices.
+// update and sequential deformation layers, including the actual local
+// artist-hand asset and render matrices.
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
@@ -34,9 +35,15 @@ await withSkateRuntime(async ({ THREE, server, Player, Level, CONST, TUNING }) =
     p.rebuildCharacterRenderBatches(); p.syncCharacterAppearance();
     const runtime = createCharacterAnimationRuntime(p, createPlayerStarterAnimationSuite(RigBinding.fromSculptRuntime(p.animationRig.root).definition));
     const nodes = []; p.riderG.traverse(node => nodes.push(node));
-    const actor = { p, level, pair, runtime, nodes, count: false, passes: 0 };
+    const actor = { p, level, pair, runtime, nodes, count: false, passes: 0, deformationPasses: 0 };
+    const bridge = p.playerAnimationBridge, nativeDeform = bridge.applyDeformations.bind(bridge);
+    bridge.applyDeformations = values => {
+      if (actor.count && !bridge.deformationBatch) actor.deformationPasses++;
+      return nativeDeform(values);
+    };
     const nativeAppearance = p.syncCharacterAppearance.bind(p), nativeMatrices = p.bodyGroup.updateMatrixWorld;
     if (eager) {
+      bridge.beginDeformationBatch = bridge.finishDeformationBatch = () => {};
       p.syncCharacterAppearance = options => nativeAppearance({ ...options, deferWorldMatrices: false });
       const nativeMeasure = p.interactionMeasure.measure.bind(p.interactionMeasure);
       p.interactionMeasure.measure = (root, box, ready, intact) => nativeMeasure(root, box, ready, intact, intact);
@@ -72,7 +79,7 @@ await withSkateRuntime(async ({ THREE, server, Player, Level, CONST, TUNING }) =
         p.state = 'air'; p.grounded = false; p.airFromSkate = false; p.airMomentum = true;
       }
     }
-    actor.passes = 0;
+    actor.passes = actor.deformationPasses = 0;
   }
   const rows = []; let framesCompared = 0, maxPoseError = 0;
   try {
@@ -107,7 +114,11 @@ await withSkateRuntime(async ({ THREE, server, Player, Level, CONST, TUNING }) =
       assert.ok(!optimized.p.isBailing && optimized.p.grounded && optimized.p.bailRiseAge < 0);
       assert.ok(riseFrames >= 40 && deferredRisePasses < eagerRisePasses, 'post-control rebound did not remove its duplicate matrix pass');
       assert.ok(optimized.passes < reference.passes, 'no full-body work was removed');
-      rows.push({ cause, seed, frames, eagerPasses: reference.passes, deferredPasses: optimized.passes, riseFrames, eagerRisePasses, deferredRisePasses });
+      assert.equal(optimized.deformationPasses, frames, 'bail/rebound repeated segment deformation in one frame');
+      assert.ok(optimized.deformationPasses < reference.deformationPasses, 'deformation batching removed no surface work');
+      rows.push({ cause, seed, frames, eagerPasses: reference.passes, deferredPasses: optimized.passes,
+        eagerDeformationPasses: reference.deformationPasses, batchedDeformationPasses: optimized.deformationPasses,
+        riseFrames, eagerRisePasses, deferredRisePasses });
     }
     // Paused/editor calls must still publish the complete hierarchy now.
     const p = optimized.p; p.bodyGroup.rotation.z += .3;

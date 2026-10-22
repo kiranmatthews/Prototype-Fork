@@ -59,8 +59,10 @@ export interface PlayerAnimationOverlayContext {
   /**
    * Apply all independent length controls in one absolute pass. Missing controls
    * resolve to 1, which also clears a deformation authored on the prior frame.
+   * A final write may opt into deferral until Player finishes secondary joint
+   * posing. Ordinary callbacks retain immediate endpoint updates by default.
    */
-  applyDeformations(values: Readonly<Record<string, number>>): void;
+  applyDeformations(values: Readonly<Record<string, number>>, deferUntilSecondaryPose?: boolean): void;
 }
 
 export type PlayerAnimationOverlay = (context: PlayerAnimationOverlayContext) => void;
@@ -373,6 +375,8 @@ export class PlayerAnimationBridge {
   private readonly deformationOffset = new THREE.Vector3();
   private readonly deformationLookup = new RigNodeLookup();
   private deformationValues: Readonly<Record<string, number>> = {};
+  private deformationBatch = false;
+  private deformationPending = false;
 
   constructor(
     private readonly playerRoot: THREE.Group,
@@ -439,7 +443,7 @@ export class PlayerAnimationBridge {
   }
 
   /** Run exactly once after all current syncVisual pose writes. */
-  applyOverlay(deltaSeconds: number): void {
+  applyOverlay(deltaSeconds: number, allowDeferredDeformations = false): void {
     if (!this.overlay || this.previewActive) return;
     captureHierarchy(this.playerRoot, this.overlayBaseline);
     this.overlayBaselineApplied = true;
@@ -451,7 +455,10 @@ export class PlayerAnimationBridge {
         // snapshot only if an overlay requests it, once for that callback.
         get rig() { return rig ??= bridge.rig; },
         deltaSeconds,
-        applyDeformations: (values) => this.applyDeformations(values),
+        applyDeformations: (values, deferUntilSecondaryPose) => {
+          if (allowDeferredDeformations && deferUntilSecondaryPose) this.beginDeformationBatch();
+          this.applyDeformations(values);
+        },
       });
     } catch (error) {
       this.restoreOverlayBaseline();
@@ -464,11 +471,21 @@ export class PlayerAnimationBridge {
    * anchor, endpoint joints translate, and no joint inherits non-uniform scale.
    */
   applyDeformations(values: Readonly<Record<string, number>>): void {
+    if (this.deformationBatch) {
+      // Batch only a pose section that does not read deformed endpoints.
+      // Keep absolute replacement semantics; later multiplicative layers
+      // compose onto these values without reskinning each intermediate pose.
+      if (values !== this.deformationValues) this.deformationValues = { ...values };
+      this.deformationPending = true;
+      return;
+    }
     // If the animation sampler has not rewritten an endpoint since the last
     // pass, undo our prior endpoint translation. If it has, that new pose is
     // the baseline and must not be replaced with stale data.
     this.restoreDeformationStates();
-    this.deformationValues = { ...values };
+    // A completed batch or modulation already owns its values. Public input
+    // still gets a defensive copy; internal composition need not copy twice.
+    if (values !== this.deformationValues) this.deformationValues = { ...values };
 
     // Elastic modifiers need live nodes and length policies, not the full
     // authoring snapshot (rest tuples, mirror links and semantic parents).
@@ -674,12 +691,31 @@ export class PlayerAnimationBridge {
     const values = { ...this.deformationValues };
     for (const [control, factor] of Object.entries(factors))
       values[control] = (values[control] ?? 1) * factor;
+    this.deformationValues = values;
     this.applyDeformations(values);
+  }
+
+  /** Combine adjacent authored/secondary length layers. Joint posing may
+   * continue, but callers must finish before reading endpoint positions or
+   * solving contacts. Repeated begin calls join the current pose batch. */
+  beginDeformationBatch(): void {
+    this.deformationBatch = true;
+  }
+
+  finishDeformationBatch(): void {
+    if (!this.deformationBatch) return;
+    this.deformationBatch = false;
+    if (!this.deformationPending) return;
+    this.deformationPending = false;
+    this.applyDeformations(this.deformationValues);
   }
 
   deformationValue(control: string): number { return this.deformationValues[control] ?? 1; }
 
   private restoreOverlayBaseline(): void {
+    // Preview entry, overlay replacement and exception recovery also cancel
+    // an unfinished batch; no queued deformation can leak into the next pose.
+    this.deformationBatch = this.deformationPending = false;
     this.restoreDeformationStates(true);
     this.deformationValues = {};
     if (this.overlayBaselineApplied) restoreHierarchy(this.overlayBaseline);

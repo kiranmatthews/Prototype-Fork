@@ -442,7 +442,7 @@ export class CharacterAnimationRuntime {
 
   private applyFrame(
     deltaSeconds: number,
-    applyDeformations: (values: Readonly<Record<string, number>>) => void,
+    applyDeformations: (values: Readonly<Record<string, number>>, deferUntilSecondaryPose?: boolean) => void,
   ): void {
     if (this.disposed) return;
     const dt = Number.isFinite(deltaSeconds) ? Math.max(0, deltaSeconds) : 0;
@@ -812,7 +812,7 @@ export class CharacterAnimationRuntime {
     this.binding.applyPose(pose, { resetUnspecified: false, strict: false });
     // Controls/deformation are intentionally last: endpoint translation starts
     // from the fully composed joint pose, and limbs never inherit parent scale.
-    applyDeformations(pose.scalars);
+    applyDeformations(pose.scalars, true);
     this.poseApplied = true;
     this.compositionOrder = clip.proceduralOrder;
     this.proceduralDriverCount = clip.proceduralDrivers.filter((driver) => driver.enabled !== false).length;

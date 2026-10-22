@@ -18430,7 +18430,11 @@ export class Player {
     // Compose authored clips onto the legacy base before elastic modifiers
     // and contacts. The bridge restores that base on the next fixed step,
     // so pose and deformation writes cannot accumulate into gameplay.
-    this.playerAnimationBridge.applyOverlay(dt);
+    // These layers only write joint angles and length factors. Resolve their
+    // combined segment strain once, before later pose/contact solvers read it.
+    const batchBailDeformations = (this.isBailing || this.bailRiseAge >= 0) && !this.playerAnimationBridge.previewActive;
+    this.playerAnimationBridge.applyOverlay(dt, batchBailDeformations);
+    if (batchBailDeformations) this.playerAnimationBridge.beginDeformationBatch();
     // An intact spring rig owns secondary motion AFTER editable clips, so a
     // saved Bail clip cannot erase its wrists/elbows/head follow-through. It
     // fades before the planted recovery contacts take the body's weight.
@@ -18476,6 +18480,7 @@ export class Player {
       if (this.ankleR) this.ankleR.rotation.x -= rise.knee * .55;
       this.playerAnimationBridge.modulateDeformations(rise.deformations);
     }
+    this.playerAnimationBridge.finishDeformationBatch();
     if (this.teeterPose > 0 && teeterAllowed) {
       // Convert the drop direction to the model's local frame, so a side/back
       // edge gets the same readable counterbalance without moving the soles.

@@ -1,0 +1,629 @@
+{
+  "date": "2026-10-22",
+  "pass": "Performance and stability after smooth cartoon recovery",
+  "parentCommit": "2d05207772496168f178d243e785afaf25d29700",
+  "change": "Compose the authored clip and secondary bail/rise segment lengths once per fixed step, before any endpoint/contact solve. Overlay callbacks must explicitly opt their final deformation write into a Player-supported batch; public writes stay immediate. Internal composition avoids duplicate scalar copies.",
+  "scope": "Production fixed-step CPU in Node with animation runtime and actual artist-hand meshes, warm exact skin kernel and other procedural fallback assets. Includes the complete bail and finite post-control rise rebound; excludes render/GPU/browser costs. Timings are descriptive, work counts are deterministic.",
+  "deterministic": {
+    "incidents": 60,
+    "frames": 6900,
+    "beforeDeformationPasses": 13080,
+    "afterDeformationPasses": 6900,
+    "reductionPercent": 47.247706422018354,
+    "poseMorphAndGameplayIdentical": true,
+    "durationsSkinScansMatricesSupportSamplesUnchanged": true,
+    "rows": [
+      {
+        "cause": "balance",
+        "frames": 1284,
+        "poseAndGameplayIdentical": true,
+        "beforeDeformationPasses": 2424,
+        "afterDeformationPasses": 1284,
+        "matrixPasses": 1284,
+        "supportSamples": 777314,
+        "newDeformationRecords": 0,
+        "poseChecksum": "1647ac6f3d7df9a2c2ff497a757c9860afa53abd54306d8c61f95870a10296ee",
+        "gameplayChecksum": "8b5cb58289306af1e1c8b73e32caf257275f34e782ada71b925c50c81da59b75"
+      },
+      {
+        "cause": "wall",
+        "frames": 1416,
+        "poseAndGameplayIdentical": true,
+        "beforeDeformationPasses": 2688,
+        "afterDeformationPasses": 1416,
+        "matrixPasses": 1416,
+        "supportSamples": 715548,
+        "newDeformationRecords": 0,
+        "poseChecksum": "68136575f2015de1a71443f57c05c3133a5b9eed4c10aef07dfd835d681909d3",
+        "gameplayChecksum": "01c978c976643054d36c9b5f596936c1e6957a68ec328c1e7132aa2ebc370e00"
+      },
+      {
+        "cause": "trip",
+        "frames": 1500,
+        "poseAndGameplayIdentical": true,
+        "beforeDeformationPasses": 2856,
+        "afterDeformationPasses": 1500,
+        "matrixPasses": 1500,
+        "supportSamples": 1402951,
+        "newDeformationRecords": 0,
+        "poseChecksum": "030de61b15ee828288b2be5327ab402feada81a69cb43ab36400c2c4ede50cc3",
+        "gameplayChecksum": "65b270ae3dd26bd155e0026ff7c4641e4d3f0cf37aae1fe7a46e99df989b5d7f"
+      },
+      {
+        "cause": "landing",
+        "frames": 1440,
+        "poseAndGameplayIdentical": true,
+        "beforeDeformationPasses": 2736,
+        "afterDeformationPasses": 1440,
+        "matrixPasses": 1440,
+        "supportSamples": 419857,
+        "newDeformationRecords": 0,
+        "poseChecksum": "53fa4a1e17246885e72cb1abcb9ec46e5a87ae8af0eee19ffd363bf0c13a2a9b",
+        "gameplayChecksum": "f65707e7f110728a5d1447ff5d384714443388406fd939b39011279762632521"
+      },
+      {
+        "cause": "pvp",
+        "frames": 1260,
+        "poseAndGameplayIdentical": true,
+        "beforeDeformationPasses": 2376,
+        "afterDeformationPasses": 1260,
+        "matrixPasses": 1260,
+        "supportSamples": 1067680,
+        "newDeformationRecords": 0,
+        "poseChecksum": "9da94c8e3767d19c123ab2e7b9c27b25275c4d9f3737cd8936c38f1c6d3bbf1a",
+        "gameplayChecksum": "7ba72f5aeb27dd6116ecd774eaeb1d71688c40f2782bb0e035ef3e0e07787f8b"
+      }
+    ]
+  },
+  "pairedTiming": {
+    "order": [
+      "before-1",
+      "after-1",
+      "after-2",
+      "before-2"
+    ],
+    "scope": "Production fixed-step CPU in Node with animation runtime and actual artist-hand meshes, warm exact skin kernel and other procedural fallback assets. Includes the complete bail and finite post-control rise rebound; excludes render/GPU/browser costs. Timings are descriptive, work counts are deterministic.",
+    "rows": [
+      {
+        "cause": "balance",
+        "all": {
+          "beforeMedianMeanMs": 0.8442295000004378,
+          "afterMedianMeanMs": 0.8196254999998018,
+          "reductionPercent": 2.9143734020930623,
+          "pairReductions": [
+            1.4290289582176707,
+            4.373775196313423
+          ]
+        },
+        "bail": {
+          "beforeMedianMeanMs": 0.389625000000251,
+          "afterMedianMeanMs": 0.353729000000385,
+          "reductionPercent": 9.21296118058208,
+          "pairReductions": [
+            5.238879736391033,
+            12.983307283467893
+          ]
+        },
+        "rise": {
+          "beforeMedianMeanMs": 0.9205204999993839,
+          "afterMedianMeanMs": 0.8847710000000006,
+          "reductionPercent": 3.8836180182198254,
+          "pairReductions": [
+            1.816014607331795,
+            5.898281745567457
+          ]
+        }
+      },
+      {
+        "cause": "wall",
+        "all": {
+          "beforeMedianMeanMs": 0.7395620000006602,
+          "afterMedianMeanMs": 0.700249999999869,
+          "reductionPercent": 5.315578680456278,
+          "pairReductions": [
+            -3.2645092853496704,
+            13.093410566411102
+          ]
+        },
+        "bail": {
+          "beforeMedianMeanMs": 0.3804169999993974,
+          "afterMedianMeanMs": 0.3524374999997235,
+          "reductionPercent": 7.354955220118498,
+          "pairReductions": [
+            6.437662951058898,
+            8.285606102667941
+          ]
+        },
+        "rise": {
+          "beforeMedianMeanMs": 0.9236880000007659,
+          "afterMedianMeanMs": 0.8881250000004002,
+          "reductionPercent": 3.8501095608404867,
+          "pairReductions": [
+            3.4273812188211794,
+            4.27419381072458
+          ]
+        }
+      },
+      {
+        "cause": "trip",
+        "all": {
+          "beforeMedianMeanMs": 0.8663329999999405,
+          "afterMedianMeanMs": 0.8290420000002996,
+          "reductionPercent": 4.304464911257389,
+          "pairReductions": [
+            3.463584931580055,
+            5.135694390152046
+          ]
+        },
+        "bail": {
+          "beforeMedianMeanMs": 0.4397500000004584,
+          "afterMedianMeanMs": 0.4188544999997248,
+          "reductionPercent": 4.751677089417128,
+          "pairReductions": [
+            0.5001083098380099,
+            8.722009182412748
+          ]
+        },
+        "rise": {
+          "beforeMedianMeanMs": 0.9266880000004676,
+          "afterMedianMeanMs": 0.8746664999998757,
+          "reductionPercent": 5.613701699014739,
+          "pairReductions": [
+            3.848016178258906,
+            7.327370813902013
+          ]
+        }
+      },
+      {
+        "cause": "landing",
+        "all": {
+          "beforeMedianMeanMs": 0.4678334999989602,
+          "afterMedianMeanMs": 0.4375415000004068,
+          "reductionPercent": 6.474953161460373,
+          "pairReductions": [
+            -3.585434174422142,
+            15.648005688453637
+          ]
+        },
+        "bail": {
+          "beforeMedianMeanMs": 0.3492705000007845,
+          "afterMedianMeanMs": 0.32283300000017334,
+          "reductionPercent": 7.569348112867191,
+          "pairReductions": [
+            4.397461295241523,
+            10.696517413125706
+          ]
+        },
+        "rise": {
+          "beforeMedianMeanMs": 0.9034795000015947,
+          "afterMedianMeanMs": 0.8780624999999418,
+          "reductionPercent": 2.813234832844358,
+          "pairReductions": [
+            -0.05133568047632764,
+            5.606957647592104
+          ]
+        }
+      },
+      {
+        "cause": "pvp",
+        "all": {
+          "beforeMedianMeanMs": 0.847229500001049,
+          "afterMedianMeanMs": 0.8286879999996017,
+          "reductionPercent": 2.18848611874638,
+          "pairReductions": [
+            1.051332260031701,
+            3.3174485945142385
+          ]
+        },
+        "bail": {
+          "beforeMedianMeanMs": 0.4070414999987406,
+          "afterMedianMeanMs": 0.37318749999940337,
+          "reductionPercent": 8.317088060908285,
+          "pairReductions": [
+            1.7870706113670587,
+            14.511048560576235
+          ]
+        },
+        "rise": {
+          "beforeMedianMeanMs": 0.8877704999995331,
+          "afterMedianMeanMs": 0.8666664999982459,
+          "reductionPercent": 2.3771909520870937,
+          "pairReductions": [
+            1.0462818535347251,
+            3.697089487485561
+          ]
+        }
+      }
+    ]
+  },
+  "timingCaveat": "The 2.2\u20136.5% reduction is the mean of two whole-step medians per cause, not a guarantee for every run or browser FPS. Individual wall/landing pairs regressed by 3.3/3.6%. No renderer, GPU or total-heap improvement claim.",
+  "independentEagerOracle": {
+    "cases": 14,
+    "frames": 1578,
+    "handTriangles": 25152,
+    "maxPoseError": 0,
+    "eagerDeformationPasses": 2988,
+    "batchedDeformationPasses": 1578,
+    "immediatePublicSync": true
+  },
+  "batchRegressions": {
+    "passed": true,
+    "frames": 240,
+    "comparisons": 241,
+    "actualPasses": 240,
+    "referencePasses": 742,
+    "liveMetadata": true,
+    "interruptedBatchesCleared": true,
+    "publicWritesImmediate": true
+  },
+  "validation": {
+    "passedChecks": [
+      "animation-deformation-batch",
+      "animation-deformation-cache",
+      "animation-overlay-snapshots",
+      "character-animation-runtime",
+      "character-elasticity",
+      "bail-recovery-continuity",
+      "bail-matrix-pass",
+      "bail-directional-falls",
+      "bail-support-continuity",
+      "board-dynamics",
+      "break-apart"
+    ],
+    "build": "TypeScript noEmit and Vite production build passed; offline version 3f171bea24344518a457",
+    "fullSuiteRun": false,
+    "preexistingFailure": {
+      "test": "tools/test-character-lab.mjs:648",
+      "assertion": "spinBox\\.min\\.y \\+ BASE_CHARACTER_HITBOX_HEIGHT",
+      "baselineMatches": false,
+      "currentMatches": false,
+      "message": "Static spin hitbox assertion fails on both pre-pass baseline and current source."
+    },
+    "browser": {
+      "browser-lite-bails": {
+        "passed": true,
+        "cases": 17,
+        "rows": [
+          {
+            "kind": "Head hit",
+            "parts": 0,
+            "headHandoff": {
+              "shift": 0.016502529411686367,
+              "velocityChange": 0.01988571882008842
+            },
+            "seconds": 3.367
+          },
+          {
+            "kind": "Low trip",
+            "parts": 0,
+            "headHandoff": {
+              "shift": 0.03020649760606224,
+              "velocityChange": 0.010758521480100015
+            },
+            "seconds": 3.367
+          },
+          {
+            "kind": "Mid trip",
+            "parts": 0,
+            "headHandoff": {
+              "shift": 0.011657311360579244,
+              "velocityChange": 0.02085235346860547
+            },
+            "seconds": 3.367
+          },
+          {
+            "kind": "Side bail",
+            "parts": 0,
+            "headHandoff": {
+              "shift": 0.015404089879597155,
+              "velocityChange": 0.01874474195731587
+            },
+            "seconds": 3.367
+          },
+          {
+            "kind": "Balance bail",
+            "parts": 0,
+            "headHandoff": {
+              "shift": 0.06225519736043361,
+              "velocityChange": 0.012532202508868462
+            },
+            "seconds": 3.367
+          },
+          {
+            "kind": "Balance left",
+            "parts": 0,
+            "headHandoff": {
+              "shift": 0.024047262080002373,
+              "velocityChange": 0.020398046251863637
+            },
+            "seconds": 3.367
+          },
+          {
+            "kind": "Manual back",
+            "parts": 0,
+            "headHandoff": {
+              "shift": 0.02794366251164623,
+              "velocityChange": 0.011616978822307373
+            },
+            "seconds": 3.367
+          },
+          {
+            "kind": "Nose manual forward",
+            "parts": 0,
+            "headHandoff": {
+              "shift": 0.022162336125900753,
+              "velocityChange": 0.02265964288524458
+            },
+            "seconds": 3.367
+          },
+          {
+            "kind": "Bank tumble",
+            "parts": 0,
+            "headHandoff": {
+              "shift": 0.015791129967258063,
+              "velocityChange": 0.016740842762341373
+            },
+            "seconds": 3.367
+          },
+          {
+            "kind": "Pit edge",
+            "parts": 0,
+            "headHandoff": {
+              "shift": 0.06983482457310651,
+              "velocityChange": 0.0110300598350986
+            },
+            "seconds": 3.367
+          },
+          {
+            "kind": "Angled edge",
+            "parts": 0,
+            "headHandoff": {
+              "shift": 0.0720426895670789,
+              "velocityChange": 0.011139631423371158
+            },
+            "seconds": 3.367
+          },
+          {
+            "kind": "Bailing into edge",
+            "parts": 0,
+            "headHandoff": {
+              "shift": 0.07380256559279365,
+              "velocityChange": 0.011297067793262618
+            },
+            "seconds": 3.367
+          },
+          {
+            "kind": "Held-mask wall",
+            "parts": 0,
+            "headHandoff": {
+              "shift": 0.059710486682145014,
+              "velocityChange": 0.015177841968483981
+            },
+            "seconds": 3.367
+          },
+          {
+            "kind": "Masked bail",
+            "parts": 0,
+            "headHandoff": {
+              "shift": 0.008850327960462335,
+              "velocityChange": 0.021022140536552276
+            },
+            "seconds": 3.367
+          },
+          {
+            "kind": "Blast",
+            "parts": 9,
+            "headHandoff": null,
+            "seconds": 3.367
+          },
+          {
+            "kind": "Crusher",
+            "parts": 9,
+            "headHandoff": null,
+            "seconds": 3.367
+          },
+          {
+            "kind": "Pit fall",
+            "parts": 0,
+            "headHandoff": null,
+            "seconds": 3.367
+          }
+        ]
+      },
+      "browser-full-bails": {
+        "passed": true,
+        "cases": 17,
+        "rows": [
+          {
+            "kind": "Head hit",
+            "parts": 0,
+            "headHandoff": {
+              "shift": 0.017739537635103324,
+              "velocityChange": 0.020240446838227295
+            },
+            "seconds": 3.367
+          },
+          {
+            "kind": "Low trip",
+            "parts": 0,
+            "headHandoff": {
+              "shift": 0.03086391774115415,
+              "velocityChange": 0.011351133901827975
+            },
+            "seconds": 3.367
+          },
+          {
+            "kind": "Mid trip",
+            "parts": 0,
+            "headHandoff": {
+              "shift": 0.011743777877173013,
+              "velocityChange": 0.020780048777953454
+            },
+            "seconds": 3.367
+          },
+          {
+            "kind": "Side bail",
+            "parts": 0,
+            "headHandoff": {
+              "shift": 0.015651936149160838,
+              "velocityChange": 0.01879624630493538
+            },
+            "seconds": 3.367
+          },
+          {
+            "kind": "Balance bail",
+            "parts": 0,
+            "headHandoff": {
+              "shift": 0.06244709987483067,
+              "velocityChange": 0.012533259970534665
+            },
+            "seconds": 3.367
+          },
+          {
+            "kind": "Balance left",
+            "parts": 0,
+            "headHandoff": {
+              "shift": 0.024323715936943817,
+              "velocityChange": 0.020371551821857032
+            },
+            "seconds": 3.367
+          },
+          {
+            "kind": "Manual back",
+            "parts": 0,
+            "headHandoff": {
+              "shift": 0.027628655416155647,
+              "velocityChange": 0.011239118708248405
+            },
+            "seconds": 3.367
+          },
+          {
+            "kind": "Nose manual forward",
+            "parts": 0,
+            "headHandoff": {
+              "shift": 0.02246847792892858,
+              "velocityChange": 0.022654579740340536
+            },
+            "seconds": 3.367
+          },
+          {
+            "kind": "Bank tumble",
+            "parts": 0,
+            "headHandoff": {
+              "shift": 0.01629425067197065,
+              "velocityChange": 0.016796682704319665
+            },
+            "seconds": 3.367
+          },
+          {
+            "kind": "Pit edge",
+            "parts": 0,
+            "headHandoff": {
+              "shift": 0.06988621688553728,
+              "velocityChange": 0.0104231059611139
+            },
+            "seconds": 3.367
+          },
+          {
+            "kind": "Angled edge",
+            "parts": 0,
+            "headHandoff": {
+              "shift": 0.07231173042495564,
+              "velocityChange": 0.01119918565254697
+            },
+            "seconds": 3.367
+          },
+          {
+            "kind": "Bailing into edge",
+            "parts": 0,
+            "headHandoff": {
+              "shift": 0.07432092116723034,
+              "velocityChange": 0.011993371071355043
+            },
+            "seconds": 3.367
+          },
+          {
+            "kind": "Held-mask wall",
+            "parts": 0,
+            "headHandoff": {
+              "shift": 0.05972591303414328,
+              "velocityChange": 0.014734490932188288
+            },
+            "seconds": 3.367
+          },
+          {
+            "kind": "Masked bail",
+            "parts": 0,
+            "headHandoff": {
+              "shift": 0.009205409505240599,
+              "velocityChange": 0.020991744974423868
+            },
+            "seconds": 3.367
+          },
+          {
+            "kind": "Blast",
+            "parts": 9,
+            "headHandoff": null,
+            "seconds": 3.367
+          },
+          {
+            "kind": "Crusher",
+            "parts": 9,
+            "headHandoff": null,
+            "seconds": 3.367
+          },
+          {
+            "kind": "Pit fall",
+            "parts": 0,
+            "headHandoff": null,
+            "seconds": 3.367
+          }
+        ]
+      },
+      "browser-full-boards": {
+        "passed": true,
+        "cases": 5,
+        "rows": [
+          {
+            "kind": "Board toss",
+            "settledAt": 3.516666666666659,
+            "seconds": 12.000000000000176
+          },
+          {
+            "kind": "Board roll",
+            "settledAt": 6.049999999999984,
+            "seconds": 12.000000000000176
+          },
+          {
+            "kind": "Board skid",
+            "settledAt": 0.9333333333333346,
+            "seconds": 12.000000000000176
+          },
+          {
+            "kind": "Board wall",
+            "settledAt": 1.100000000000001,
+            "seconds": 12.000000000000176
+          },
+          {
+            "kind": "Board pile",
+            "settledAt": 2.199999999999997,
+            "seconds": 12.000000000000176
+          }
+        ],
+        "silentAfterRest": true
+      }
+    },
+    "browserConsoleErrors": [],
+    "visualReview": [
+      "Full-render manual push-off",
+      "Finite rebound paused at age 0.3137 seconds",
+      "Following six frames of steadying"
+    ]
+  },
+  "sourceSha256": {
+    "src/animation/bridge.ts": "a5477582012e00b75bb83322f0b9aaecee04392d299cbe6c8d9bb560ac1f6686",
+    "src/characterAnimationRuntime.ts": "5ca52b240871baa86791cfe2e84c96d34454e101a208bafc7dc847588cc29638",
+    "src/player.ts": "424a2d0a2ecc86d4e96bd60a55c96860c9d84e4abe5135ccace6c6a35c60c442",
+    "tools/test-animation-deformation-batch.mjs": "d187b340241a4b31cf72cee093cc7e5ec16eceb4390bbac0453e9f6d52c6f697"
+  }
+}

@@ -27,7 +27,7 @@ const source = await readFile(new URL('./test-campaign-death-flow.mjs', import.m
 const ast = ts.createSourceFile('fixture.mjs', source, ts.ScriptTarget.Latest, true);
 const dom = ast.statements.find(n => ts.isFunctionDeclaration(n) && n.name?.text === 'installHeadlessDom');
 new Function('noop', dom.getText(ast) + '; installHeadlessDom();')(() => {});
-const replaced = new Set(['src/player.ts', 'src/animation/bridge.ts', 'src/character/bailMotion.ts', 'src/character/bailContactPose.ts', 'src/character/bailGroundContact.ts', 'src/character/bailImpactSpin.ts', 'src/character/bailRecoveryMotion.ts', 'src/character/bailRiseMotion.ts', 'src/character/interactionBounds.ts', 'src/character/proportionLayer.ts', 'src/character/wipeoutPolicy.ts', 'src/character/stretchableBone.ts']);
+const replaced = new Set(['src/player.ts', 'src/bailRecovery.ts', 'src/characterAnimationRuntime.ts', 'src/animation/bridge.ts', 'src/animation/rigBinding.ts', 'src/animation/sampling.ts', 'src/character/bailMotion.ts', 'src/character/bailContactPose.ts', 'src/character/bailGroundContact.ts', 'src/character/bailImpactSpin.ts', 'src/character/bailRecoveryMotion.ts', 'src/character/bailRiseMotion.ts', 'src/character/interactionBounds.ts', 'src/character/proportionLayer.ts', 'src/character/wipeoutPolicy.ts', 'src/character/stretchableBone.ts']);
 const server = await createServer({ appType: 'custom', logLevel: 'silent', server: { middlewareMode: true },
   plugins: snapshot ? [{ name: 'bail-source-snapshot', enforce: 'pre', async load(id) {
     const rel = path.relative(process.cwd(), id.split('?')[0]);
@@ -107,7 +107,7 @@ try {
   if (!process.argv.includes('--contact-only'))
   for (const cause of selectedCause ? [selectedCause] : allCauses) {
     const frames = [], incidents = [], triggers = [], durations = []; let fullScans = 0, count = false;
-    const phaseWork = Object.fromEntries(['bail','rise'].map(phase => [phase, { frames:[], fullSkinScans:0, bodyMatrixPasses:0, supportTimes:[], supportSamples:0 }]));
+    const phaseWork = Object.fromEntries(['bail','rise'].map(phase => [phase, { frames:[], fullSkinScans:0, bodyMatrixPasses:0, supportTimes:[], supportSamples:0, deformationPasses:0, deformationRequests:0 }]));
     let phase = 'bail';
     const recording = () => count && (completeIncident || p.isBailing);
     let bodyMatrixPasses = 0;
@@ -152,11 +152,15 @@ try {
     }
     const deform = bridge.applyDeformations.bind(bridge), deformationTimes = [];
     const seenStates = new WeakSet(), seenTransforms = new WeakSet(), seenMorphs = new WeakSet();
-    let deformationCalls = 0, deformationRecords = 0, deformationTransforms = 0, deformationMorphs = 0;
+    let deformationCalls = 0, deformationRequests = 0, deformationRecords = 0, deformationTransforms = 0, deformationMorphs = 0;
     if (deformationProfile) bridge.applyDeformations = values => {
+      const queued = bridge.deformationBatch === true;
       const start = performance.now(), result = deform(values), ms = performance.now() - start;
       const record = recording();
-      if (record) { deformationCalls++; deformationTimes.push(ms); }
+      if (record) {
+        deformationRequests++; phaseWork[phase].deformationRequests++;
+        if (!queued) { deformationCalls++; deformationTimes.push(ms); phaseWork[phase].deformationPasses++; }
+      }
       for (const state of bridge.deformationStates) {
         if (!seenStates.has(state)) { if (record) deformationRecords++; seenStates.add(state); }
         for (const value of [state.basePosition,state.baseScale,state.deformedPosition,state.deformedScale])
@@ -311,6 +315,8 @@ try {
       phases: completeIncident ? Object.fromEntries(Object.entries(phaseWork).map(([name, value]) => [name, {
         stepMs: value.frames.length ? stats(value.frames) : null, fullSkinScans:value.fullSkinScans,
         bodyMatrixPasses:hierarchyProfile ? value.bodyMatrixPasses : undefined,
+        deformationPasses:deformationProfile ? value.deformationPasses : undefined,
+        deformationRequests:deformationProfile ? value.deformationRequests : undefined,
         support: value.supportTimes.length ? { cpuMs:stats(value.supportTimes), samples:value.supportSamples } : undefined,
       }])) : undefined,
       support: supportTimes.length ? { cpuMs: stats(supportTimes), samples: supportSamples } : undefined,
@@ -325,7 +331,7 @@ try {
       jointLimits: jointLimitProfile ? [...jointLimits.values()] : undefined,
       rig: rigProfile ? { snapshots:rigSnapshots, jointRecords:rigJointRecords, restTuples:rigRestTuples } : undefined,
       recoveries: recoveryProfile ? recoveries : undefined,
-      deformations: deformationProfile ? { calls:deformationCalls, cpuMs:stats(deformationTimes),
+      deformations: deformationProfile ? { calls:deformationCalls, requests:deformationRequests, cpuMs:stats(deformationTimes),
         newRecords:deformationRecords, newTransformObjects:deformationTransforms, newMorphRecords:deformationMorphs } : undefined,
       poseChecksum: poseHash?.digest('hex'), gameplayChecksum:gameplayHash?.digest('hex'), impacts: traceImpacts ? impacts : undefined });
   }
