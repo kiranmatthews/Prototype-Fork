@@ -1,0 +1,11 @@
+{
+  "logs": [
+    {
+      "level": "error",
+      "message": "Uncaught TypeError: Failed to execute 'observe' on 'MutationObserver': parameter 1 is not of type 'Node'.",
+      "timestamp": "2026-10-23T01:24:45.912Z"
+    }
+  ],
+  "gameErrors": [],
+  "note": "Known intermittent MutationObserver startup error at 01:24:45 UTC during an earlier reload. No additional occurrence appeared in the final lite/full validation sequence; this does not establish a repair."
+}

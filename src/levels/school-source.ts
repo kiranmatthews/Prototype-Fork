@@ -88,7 +88,7 @@ export function schoolMeasuredSupport(x: number, z: number, ceiling = Infinity, 
 }
 const C: CustomComponent[] = [];
 const add = (c: CustomComponent) => C.push(c);
-export const SCHOOL_SOURCE_STATS = { sourceObjects: source.meshes.length, sourceFaces: faces.length, sourceRailNodes: source.railNodes.length, transitionFaces: transitions.size, wallSegments: 0, railEdges: 0, railPaths: 0 };
+export const SCHOOL_SOURCE_STATS = { sourceObjects: source.meshes.length, sourceFaces: faces.length, sourceRailNodes: source.railNodes.length, activeRailNodes: source.railActivation.activeNodes, transitionFaces: transitions.size, wallSegments: 0, railEdges: 0, railSegments: 0, railPaths: 0 };
 type Batch = { vertices: number[]; indices: number[]; normals: number[]; solid: boolean; vert: boolean; hidden: boolean; color: string; tex: string };
 const batches = new Map<string, Batch>();
 for (const [i, f] of faces.entries()) {
@@ -176,17 +176,10 @@ for (const plane of wallPlanes.values()) {
 }
 SCHOOL_SOURCE_STATS.wallSegments = SCHOOL_SOURCE_WALLS.length;
 
-// Preserve the original TRG graph, including its intentional gaps. Degree-two
-// chains become native paths; junctions and loops retain their source nodes.
+// Each original normal-start pulse constructs one directed rail chain. Keep
+// those boundaries and their intentional overlaps; do not join a raw graph
+// through an endpoint or activate the alternate-mode-only rail 189 -> 190.
 const nodeById = new Map(source.railNodes.map(n => [n.id, n]));
-const neighbours = new Map(source.railNodes.map(n => [n.id, new Set<number>()]));
-const railEdges = new Set<string>(), usedEdges = new Set<string>();
-const railEdgeKey = (a: number, b: number) => [Math.min(a, b), Math.max(a, b)].join(':');
-for (const n of source.railNodes) for (const link of n.links) {
-  if (!nodeById.has(link) || n.id === link) continue;
-  const k = railEdgeKey(n.id, link); if (railEdges.has(k)) continue; railEdges.add(k);
-  neighbours.get(n.id)!.add(link); neighbours.get(link)!.add(n.id);
-}
 export const SCHOOL_SOURCE_RAILS: { ids: number[]; points: P[]; closed: boolean; coping: boolean }[] = [];
 // TRG knots can sit just outside a polygon edge, and short end caps can hang
 // beyond the bank. Measure the neighbouring riding surface along the span:
@@ -209,24 +202,17 @@ function measuredCoping(points: P[], closed: boolean): boolean {
   }
   return totalLength > 0 && supportedLength / totalLength >= .9;
 }
-function rail(a: number, b: number) {
-  const ids = [a]; let previous = a, current = b; usedEdges.add(railEdgeKey(a, b));
-  for (let guard = 0; guard < source.railNodes.length; guard++) {
-    ids.push(current); if (current === a || neighbours.get(current)!.size !== 2) break;
-    const next = [...neighbours.get(current)!].find(i => i !== previous)!;
-    if (usedEdges.has(railEdgeKey(current, next))) break;
-    usedEdges.add(railEdgeKey(current, next)); previous = current; current = next;
-  }
-  const closed = ids.length > 2 && ids[ids.length - 1] === a; if (closed) ids.pop();
+for (const ids of source.railActivation.paths) {
+  const closed = false;
   const points = ids.map(i => schoolSourcePoint(...nodeById.get(i)!.position as P));
-  if (points.every(p => new Vector3(...p).distanceTo(new Vector3(...points[0])) < .01)) return;
+  if (points.every(p => new Vector3(...p).distanceTo(new Vector3(...points[0])) < .01)) throw Error('Degenerate activated School rail');
   const coping = measuredCoping(points, closed);
   const p = points[0]; SCHOOL_SOURCE_RAILS.push({ ids, points, closed, coping });
   add({ t: 'rail', p, pts: points.map(q => [q[0] - p[0], q[2] - p[2], 0, q[1] - p[1]]), closed, coping, curve: 'corner', invisible: true, edgeGrinding: false, grp: 3, nm: `School original rail ${ids[0]}–${ids[ids.length - 1]}` });
 }
-for (const [a, ns] of neighbours) if (ns.size !== 2) for (const b of ns) if (!usedEdges.has(railEdgeKey(a, b))) rail(a, b);
-for (const e of railEdges) if (!usedEdges.has(e)) { const [a, b] = e.split(':').map(Number); rail(a, b); }
-SCHOOL_SOURCE_STATS.railEdges = railEdges.size; SCHOOL_SOURCE_STATS.railPaths = SCHOOL_SOURCE_RAILS.length;
+SCHOOL_SOURCE_STATS.railEdges = source.railActivation.activeUniqueEdges;
+SCHOOL_SOURCE_STATS.railSegments = source.railActivation.activeSegments;
+SCHOOL_SOURCE_STATS.railPaths = SCHOOL_SOURCE_RAILS.length;
 
 export const SCHOOL_SOURCE_PLACES: { name: string; source: P; heading: P }[] = [
   { name: 'Start', source: [-6149, 2792, 6391], heading: [1, 0, 0] },

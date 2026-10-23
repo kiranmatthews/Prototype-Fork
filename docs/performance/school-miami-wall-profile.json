@@ -165,10 +165,11 @@
     }
   },
   "railActivationAudit": {
-    "status": "pending",
+    "status": "resolved-in-iteration-25",
     "restart": 393,
     "name": "Re_Start_School",
-    "boundedProbe": "Stopped at unsupported restart command 0x9b; no filtering applied.",
-    "preview": "All 271 decoded links, not a verified active-at-start subset."
+    "historicalPreview": "Iteration 24 tested all 271 decoded links, before filtering. Its validation counts above remain historical.",
+    "currentEvidence": "school-miami-source-activation.json",
+    "currentPreview": "128 normally activated chains, 331 segments including overlap, 270 unique edges."
   }
 }

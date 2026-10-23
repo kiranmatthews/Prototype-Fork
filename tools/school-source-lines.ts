@@ -1,9 +1,11 @@
-import { schoolSourcePoint, SCHOOL_SOURCE_SCALE } from '../src/levels/school-source';
+import { schoolSourcePoint, SCHOOL_SOURCE_SCALE, SCHOOL_SOURCE_RAILS } from '../src/levels/school-source';
+import { CONST } from '../src/tuning';
+import { createBalancedGrind } from './school-grind-lines';
 
 type Point = [number, number, number];
 type Place = (original: Point, heading: Point, speed?: number) => void;
 export type SourceTrial = {
-  name: string; limit: number; result: { air: number; verts: number; grinds: number; peak: number };
+  name: string; limit: number; result: { air: number; verts: number; grinds: number; peak: number; grind?: ReturnType<typeof createBalancedGrind>['report'] };
   init: () => void; sample: (frame: number) => any; observe: (frame: number) => boolean;
 };
 
@@ -12,13 +14,14 @@ export type SourceTrial = {
 export function schoolSourceTrials(p: any, level: any, place: Place): SourceTrial[] {
   const trials: SourceTrial[] = [];
   function add(name: string, init: () => void, sample: (n: number) => any, done: (frame: number, r: SourceTrial['result']) => boolean, limit = 480) {
-    const result = { air: 0, verts: 0, grinds: 0, peak: -Infinity };
+    const result: SourceTrial['result'] = { air: 0, verts: 0, grinds: 0, peak: -Infinity };
     trials.push({ name, limit, result, init: () => { result.air = result.verts = result.grinds = 0; result.peak = -Infinity; init(); }, sample,
       observe: frame => {
         result.air += p.state === 'air' ? 1 : 0; result.verts += p.vertAir ? 1 : 0; result.grinds += p.state === 'grind' ? 1 : 0;
         result.peak = Math.max(result.peak, p.pos.y); return done(frame, result);
       },
     });
+    return result;
   }
   add('Original canopy start', () => p.respawn(level, true), () => ({ moveY: 1 }), frame => frame >= 121 && p.grounded && p.pos.x > 15 && Math.abs(p.pos.z) < .2);
   for (const [name, x, heading] of [['west', -16800, [1, 0, 0]], ['east', -13500, [-1, 0, 0]]] as [string, number, Point][]) {
@@ -39,6 +42,26 @@ export function schoolSourceTrials(p: any, level: any, place: Place): SourceTria
   for (const [name, original, heading] of [['rectangular pool', [4200, -390, -1700], [1, 0, 0]], ['oval pool', [9400, -470, -2200], [-1, 0, 0]]] as [string, Point, Point][])
     add(`Original ${name} vert return`, () => place(original, heading, 18), n => ({ jumpHeld: true, jumpPressed: n === 0 }), (_frame, r) => r.verts > 0 && p.grounded && p.rideNormal.y > .98 && p.pos.y < -26.8, 900);
   add('Existing charged flat ollie height', () => place([-15000, 1630, 13000], [0, 0, -1], 0), n => ({ jumpHeld: n < 30, jumpPressed: n === 0, jumpReleased: n === 30 }), (_frame, r) => r.air > 0 && p.grounded);
+  // Catch-and-traverse cases start 30 cm above the rail at 18 m/s. These
+  // validate original chains and natural run-offs; approach ollies are a
+  // separate coverage item. The controller uses ordinary balance inputs.
+  for (const [root, direction] of [[163, 1], [163, -1], [784, 1], [784, -1], [206, 1], [206, -1], [797, 1], [283, -1]]) {
+    let line: ReturnType<typeof createBalancedGrind>;
+    const result = add(`Original rail ${root} catch, traverse and land ${direction}`, () => {
+      const authored = SCHOOL_SOURCE_RAILS.find(r => r.ids[0] === root)!;
+      const start = p.pos.clone().set(...authored.points[0]);
+      const length = authored.points.slice(1).reduce((sum, q, i) => sum + p.pos.clone().set(...q).distanceTo(p.pos.clone().set(...authored.points[i])), 0);
+      const rail = level.rails.find((r: any) => r.points[0].distanceTo(start) < .001 && Math.abs(r.totalLength - length) < .001);
+      if (!rail) throw Error(`Missing activated rail ${root}`);
+      const t = direction > 0 ? .4 : rail.totalLength - .4;
+      const heading = rail.tangentAt(t).multiplyScalar(direction).setY(0).normalize();
+      const position = rail.pointAt(t).add(p.pos.clone().set(0, .3, 0));
+      p.respawn(level, true, true, { position, heading }); p.axisF.copy(heading); p.axisL.set(heading.z, 0, -heading.x);
+      p.freeSkate = true; p.speed = 18; p.pos.copy(position); p.prevPos.copy(position);
+      p.grounded = false; p.state = 'air'; p.vVel = 0; p.airFromSkate = true; p.airGrav = 'board';
+      line = createBalancedGrind(p, rail, CONST.fixedStep); result.grind = line.report;
+    }, () => line.sample(), () => line.observe(), root === 784 && direction < 0 ? 2800 : 1800);
+  }
   return trials;
 }
 

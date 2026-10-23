@@ -1,0 +1,787 @@
+{
+  "purpose": "Exploratory coverage including failures; these are not all passing regression cases.",
+  "initialTaskRuntimeProbe": [
+    {
+      "root": 163,
+      "direction": 1,
+      "frames": 369,
+      "done": true,
+      "error": null,
+      "length": 101.54522490746415,
+      "grindFrames": 338,
+      "maxT": 101.54522490746415,
+      "minT": 0.4000399573784483,
+      "progress": 101.54522490746415,
+      "maxBalance": 0.1,
+      "caught": true,
+      "landed": true,
+      "end": [
+        -9.595097188129538,
+        -0.3843450713232319,
+        -34.4480135249366
+      ],
+      "events": [
+        {
+          "frame": 0,
+          "state": "grind",
+          "root": [
+            100.95012679628064,
+            2.4615384615384612,
+            -34.4480135249366
+          ],
+          "pos": [
+            100.55012679982862,
+            2.76159173804305,
+            -34.4480135249366
+          ]
+        },
+        {
+          "frame": 338,
+          "state": "air",
+          "pos": [
+            -0.5950972104818248,
+            2.625063398140321,
+            -34.4480135249366
+          ]
+        },
+        {
+          "frame": 368,
+          "state": "ride",
+          "pos": [
+            -9.595097188129538,
+            -0.3843450713232319,
+            -34.4480135249366
+          ]
+        }
+      ]
+    },
+    {
+      "root": 163,
+      "direction": -1,
+      "frames": 399,
+      "done": true,
+      "error": null,
+      "length": 101.54522490746415,
+      "grindFrames": 338,
+      "maxT": 101.1452648648426,
+      "minT": 0,
+      "progress": 101.54522490746415,
+      "maxBalance": 0.1,
+      "caught": true,
+      "landed": true,
+      "end": [
+        119.32096008490936,
+        -0.9602705240249636,
+        -35.0480135249366
+      ],
+      "events": [
+        {
+          "frame": 0,
+          "state": "grind",
+          "root": [
+            100.95012679628064,
+            2.4615384615384612,
+            -34.4480135249366
+          ],
+          "pos": [
+            -0.19509721402980063,
+            2.775010121635732,
+            -34.4480135249366
+          ]
+        },
+        {
+          "frame": 338,
+          "state": "air",
+          "pos": [
+            100.95012679628064,
+            2.611538461538461,
+            -34.4480135249366
+          ]
+        },
+        {
+          "frame": 398,
+          "state": "ride",
+          "pos": [
+            119.32096008490936,
+            -0.9602705240249636,
+            -35.0480135249366
+          ]
+        }
+      ]
+    },
+    {
+      "root": 784,
+      "direction": 1,
+      "frames": 463,
+      "done": true,
+      "error": null,
+      "length": 169.97673119671038,
+      "grindFrames": 440,
+      "maxT": 169.97673119671038,
+      "minT": 0.39999999999999897,
+      "progress": 169.97673119671038,
+      "maxBalance": 0.1,
+      "caught": true,
+      "landed": true,
+      "end": [
+        -97.4183291067908,
+        -20.27283491285279,
+        -85.43702451394759
+      ],
+      "events": [
+        {
+          "frame": 0,
+          "state": "grind",
+          "root": [
+            -16.040574809805577,
+            2.475063398140321,
+            30.972104818258664
+          ],
+          "pos": [
+            -16.267186338960403,
+            2.775063398140321,
+            30.64248804857892
+          ]
+        },
+        {
+          "frame": 440,
+          "state": "air",
+          "pos": [
+            -86.23499577345731,
+            -18.920160608622147,
+            -85.43702451394759
+          ]
+        },
+        {
+          "frame": 462,
+          "state": "ride",
+          "pos": [
+            -97.4183291067908,
+            -20.27283491285279,
+            -85.43702451394759
+          ]
+        }
+      ]
+    },
+    {
+      "root": 784,
+      "direction": -1,
+      "frames": 2200,
+      "done": false,
+      "error": null,
+      "length": 169.97673119671038,
+      "grindFrames": 2200,
+      "maxT": 169.57673119671037,
+      "minT": 11.57483286587944,
+      "progress": 158.40189833083093,
+      "maxBalance": 0.1277610495988193,
+      "caught": true,
+      "landed": false,
+      "end": [
+        -17.16314454775993,
+        2.625063398140321,
+        19.559544449001713
+      ],
+      "events": [
+        {
+          "frame": 0,
+          "state": "grind",
+          "root": [
+            -16.040574809805577,
+            2.475063398140321,
+            30.972104818258664
+          ],
+          "pos": [
+            -85.83499577345732,
+            -18.770160608622145,
+            -85.43702451394759
+          ]
+        }
+      ]
+    },
+    {
+      "root": 206,
+      "direction": 1,
+      "frames": 248,
+      "done": true,
+      "error": null,
+      "length": 108.72649982801795,
+      "grindFrames": 227,
+      "maxT": 108.72649982801795,
+      "minT": 0.32241951485602666,
+      "progress": 108.72649982801795,
+      "maxBalance": 0.1,
+      "caught": true,
+      "landed": true,
+      "end": [
+        -70.33910960834045,
+        -18.163990020751953,
+        -101.6669484361792
+      ],
+      "events": [
+        {
+          "frame": 0,
+          "state": "grind",
+          "root": [
+            -3.3677092138630598,
+            2.475063398140321,
+            -34.4480135249366
+          ],
+          "pos": [
+            -3.3677092138630598,
+            2.6716227512816935,
+            -34.834407148819636
+          ]
+        },
+        {
+          "frame": 227,
+          "state": "air",
+          "pos": [
+            -60.17244294167371,
+            -17.08076923076923,
+            -101.6669484361792
+          ]
+        },
+        {
+          "frame": 247,
+          "state": "ride",
+          "pos": [
+            -70.33910960834045,
+            -18.163990020751953,
+            -101.6669484361792
+          ]
+        }
+      ]
+    },
+    {
+      "root": 206,
+      "direction": -1,
+      "frames": 1416,
+      "done": true,
+      "error": null,
+      "length": 108.72649982801795,
+      "grindFrames": 1386,
+      "maxT": 108.32649982801794,
+      "minT": 0,
+      "progress": 108.72649982801795,
+      "maxBalance": 0.12779719604565015,
+      "caught": true,
+      "landed": true,
+      "end": [
+        -3.3677092138630598,
+        0,
+        -32.75634685827003
+      ],
+      "events": [
+        {
+          "frame": 0,
+          "state": "grind",
+          "root": [
+            -3.3677092138630598,
+            2.475063398140321,
+            -34.4480135249366
+          ],
+          "pos": [
+            -59.7724429416737,
+            -16.93076923076923,
+            -101.6669484361792
+          ]
+        },
+        {
+          "frame": 1386,
+          "state": "air",
+          "pos": [
+            -3.3677092138630598,
+            2.625063398140321,
+            -34.4480135249366
+          ]
+        },
+        {
+          "frame": 1415,
+          "state": "ride",
+          "pos": [
+            -3.3677092138630598,
+            0,
+            -32.75634685827003
+          ]
+        }
+      ]
+    },
+    {
+      "root": 797,
+      "direction": 1,
+      "frames": 724,
+      "done": true,
+      "error": null,
+      "length": 206.03969667029318,
+      "grindFrames": 686,
+      "maxT": 206.03969667029318,
+      "minT": 0.40000000000000874,
+      "progress": 206.03969667029318,
+      "maxBalance": 0.1,
+      "caught": true,
+      "landed": true,
+      "end": [
+        -71.42519019442096,
+        -20.94466433526418,
+        -266.38317836010185
+      ],
+      "events": [
+        {
+          "frame": 0,
+          "state": "grind",
+          "root": [
+            -236.45646661031276,
+            -16.081149619611157,
+            -176.64919695688926
+          ],
+          "pos": [
+            -236.09399335431465,
+            -15.781149619611156,
+            -176.81835114302172
+          ]
+        },
+        {
+          "frame": 686,
+          "state": "air",
+          "pos": [
+            -71.42519019442096,
+            -15.931149619611157,
+            -255.28317836010143
+          ]
+        },
+        {
+          "frame": 723,
+          "state": "ride",
+          "pos": [
+            -71.42519019442096,
+            -20.94466433526418,
+            -266.38317836010185
+          ]
+        }
+      ]
+    },
+    {
+      "root": 797,
+      "direction": -1,
+      "frames": 765,
+      "done": false,
+      "error": "Error: bail",
+      "length": 206.03969667029318,
+      "grindFrames": 686,
+      "maxT": 205.63969667029318,
+      "minT": 0,
+      "progress": 206.03969667029318,
+      "maxBalance": 0.1,
+      "caught": true,
+      "landed": false,
+      "end": [
+        -258.11535902690133,
+        -42.36224545294452,
+        -166.0175613904498
+      ],
+      "events": [
+        {
+          "frame": 0,
+          "state": "grind",
+          "root": [
+            -236.45646661031276,
+            -16.081149619611157,
+            -176.64919695688926
+          ],
+          "pos": [
+            -71.42519019442096,
+            -15.781149619611156,
+            -254.88317836010143
+          ]
+        },
+        {
+          "frame": 686,
+          "state": "air",
+          "pos": [
+            -236.45646661031276,
+            -15.931149619611157,
+            -176.64919695688926
+          ]
+        },
+        {
+          "frame": 765,
+          "state": "dead",
+          "pos": [
+            -258.11535902690133,
+            -42.36224545294452,
+            -166.0175613904498
+          ]
+        }
+      ]
+    },
+    {
+      "root": 264,
+      "direction": 1,
+      "frames": 541,
+      "done": false,
+      "error": "Error: Long grind left its rail before the end",
+      "length": 223.76567291558544,
+      "grindFrames": 529,
+      "maxT": 158.94836167820915,
+      "minT": 0.4000000000000074,
+      "progress": 158.94836167820915,
+      "maxBalance": 0.1,
+      "caught": true,
+      "landed": false,
+      "end": [
+        194.39310783674688,
+        22.45139503479004,
+        126.02345650996868
+      ],
+      "events": [
+        {
+          "frame": 0,
+          "state": "grind",
+          "root": [
+            36.260355029585796,
+            22.437869822485204,
+            122.71174978867286
+          ],
+          "pos": [
+            36.40626864919593,
+            22.737869822485205,
+            123.08418664991551
+          ]
+        },
+        {
+          "frame": 529,
+          "state": "air",
+          "pos": [
+            191.20193203819335,
+            22.587869822485203,
+            126.8639307943615
+          ]
+        },
+        {
+          "frame": 540,
+          "state": "ride",
+          "pos": [
+            194.39310783674688,
+            22.45139503479004,
+            126.02345650996868
+          ]
+        }
+      ]
+    },
+    {
+      "root": 264,
+      "direction": -1,
+      "frames": 227,
+      "done": false,
+      "error": "Error: Long grind left its rail before the end",
+      "length": 223.76567291558544,
+      "grindFrames": 215,
+      "maxT": 223.36567291558544,
+      "minT": 158.94856167820916,
+      "progress": 64.81711123737628,
+      "maxBalance": 0.1,
+      "caught": true,
+      "landed": false,
+      "end": [
+        190.4293581111794,
+        22.45139503479004,
+        130.07206992667608
+      ],
+      "events": [
+        {
+          "frame": 0,
+          "state": "grind",
+          "root": [
+            36.260355029585796,
+            22.437869822485204,
+            122.71174978867286
+          ],
+          "pos": [
+            193.50126948720538,
+            22.737869822485205,
+            62.721278923805976
+          ]
+        },
+        {
+          "frame": 215,
+          "state": "air",
+          "pos": [
+            191.20205215546133,
+            22.587869822485203,
+            126.86380810538859
+          ]
+        },
+        {
+          "frame": 226,
+          "state": "ride",
+          "pos": [
+            190.4293581111794,
+            22.45139503479004,
+            130.07206992667608
+          ]
+        }
+      ]
+    },
+    {
+      "root": 283,
+      "direction": 1,
+      "frames": 486,
+      "done": true,
+      "error": null,
+      "length": 123.52665895766333,
+      "grindFrames": 411,
+      "maxT": 123.52665895766333,
+      "minT": 0.4000000000000057,
+      "progress": 123.52665895766333,
+      "maxBalance": 0.1,
+      "caught": true,
+      "landed": true,
+      "end": [
+        217.1985291631445,
+        0,
+        41.29202281734432
+      ],
+      "events": [
+        {
+          "frame": 0,
+          "state": "grind",
+          "root": [
+            87.19526627218934,
+            22.437869822485204,
+            22.32967032967033
+          ],
+          "pos": [
+            87.59526627218935,
+            22.737869822485205,
+            22.32967032967033
+          ]
+        },
+        {
+          "frame": 411,
+          "state": "air",
+          "pos": [
+            208.06762468300929,
+            22.587869822485203,
+            29.092138630600168
+          ]
+        },
+        {
+          "frame": 485,
+          "state": "ride",
+          "pos": [
+            217.1985291631445,
+            0,
+            41.29202281734432
+          ]
+        }
+      ]
+    },
+    {
+      "root": 283,
+      "direction": -1,
+      "frames": 447,
+      "done": true,
+      "error": null,
+      "length": 123.52665895766333,
+      "grindFrames": 411,
+      "maxT": 123.12665895766332,
+      "minT": 0,
+      "progress": 123.52665895766333,
+      "maxBalance": 0.1,
+      "caught": true,
+      "landed": true,
+      "end": [
+        76.69526627218944,
+        18.39391326904297,
+        22.32967032967033
+      ],
+      "events": [
+        {
+          "frame": 0,
+          "state": "grind",
+          "root": [
+            87.19526627218934,
+            22.437869822485204,
+            22.32967032967033
+          ],
+          "pos": [
+            207.82623263902713,
+            22.737869822485205,
+            28.773187410031696
+          ]
+        },
+        {
+          "frame": 411,
+          "state": "air",
+          "pos": [
+            87.19526627218934,
+            22.587869822485203,
+            22.32967032967033
+          ]
+        },
+        {
+          "frame": 446,
+          "state": "ride",
+          "pos": [
+            76.69526627218944,
+            18.39391326904297,
+            22.32967032967033
+          ]
+        }
+      ]
+    }
+  ],
+  "extendedUphillProbe": {
+    "root": 784,
+    "direction": -1,
+    "frames": 2428,
+    "done": true,
+    "error": null,
+    "length": 169.97673119671038,
+    "grindFrames": 2398,
+    "maxT": 169.57673119671037,
+    "minT": 0,
+    "progress": 169.97673119671038,
+    "maxBalance": 0.1277610495988193,
+    "caught": true,
+    "landed": true,
+    "end": [
+      -15.082196884421613,
+      0,
+      32.36610907336258
+    ],
+    "events": [
+      {
+        "frame": 0,
+        "state": "grind",
+        "root": [
+          -16.040574809805577,
+          2.475063398140321,
+          30.972104818258664
+        ],
+        "pos": [
+          -85.83499577345732,
+          -18.770160608622145,
+          -85.43702451394759
+        ]
+      },
+      {
+        "frame": 2398,
+        "state": "air",
+        "pos": [
+          -16.040574809805577,
+          2.625063398140321,
+          30.972104818258664
+        ]
+      },
+      {
+        "frame": 2427,
+        "state": "ride",
+        "pos": [
+          -15.082196884421613,
+          0,
+          32.36610907336258
+        ]
+      }
+    ]
+  },
+  "workingRuntimeRoofRunoff": {
+    "bailCalls": [
+      {
+        "name": "armBailRecovery",
+        "pos": [
+          217.1985291631445,
+          12.325607322485165,
+          41.29202281734432
+        ],
+        "result": null
+      },
+      {
+        "name": "bail",
+        "pos": [
+          217.1985291631445,
+          12.325607322485165,
+          41.29202281734432
+        ],
+        "result": null
+      },
+      {
+        "name": "redirectBailVelocity",
+        "pos": [
+          217.1985291631445,
+          12.325607322485165,
+          41.29202281734432
+        ],
+        "result": null
+      },
+      {
+        "name": "resolveBailWallImpact",
+        "pos": [
+          217.1985291631445,
+          12.325607322485165,
+          41.29202281734432
+        ],
+        "result": true
+      }
+    ],
+    "root": 283,
+    "direction": 1,
+    "frames": 462,
+    "done": false,
+    "error": "Error: bail",
+    "length": 123.52665895766333,
+    "grindFrames": 411,
+    "maxT": 123.52665895766333,
+    "minT": 0.4000000000000057,
+    "progress": 123.52665895766333,
+    "maxBalance": 0.1,
+    "caught": true,
+    "landed": false,
+    "end": [
+      217.1985291631445,
+      12.325607322485165,
+      41.29202281734432
+    ],
+    "events": [
+      {
+        "frame": 0,
+        "state": "grind",
+        "root": [
+          87.19526627218934,
+          22.437869822485204,
+          22.32967032967033
+        ],
+        "pos": [
+          87.59526627218935,
+          22.737869822485205,
+          22.32967032967033
+        ]
+      },
+      {
+        "frame": 411,
+        "state": "air",
+        "pos": [
+          208.06762468300929,
+          22.587869822485203,
+          29.092138630600168
+        ]
+      }
+    ]
+  },
+  "findings": [
+    "Chain 784 reverse succeeds at 2428 steps; the initial 2200-step budget was too short.",
+    "Chain 264 releases at its 61.7-degree horizontal turn at node 268. Original physics also releases above approximately 50 degrees. Preserve this source corner; continuous full-chain grinding is not a valid expectation here.",
+    "Chain 797 reverse reaches its full endpoint but a straight run-off leaves the supported campus. A controlled inward exit remains unverified.",
+    "Chain 283 forward traverses completely, but its straight run-off collides with a side wall in the working runtime at frame 462. resolveBailWallImpact returns true. The older task runtime lands after 486 frames; this is not a shared passing route.",
+    "Catch tests initialize 0.3 m above the chain at 18 m/s, then use only normal controls. Ground-to-rail approaches and remaining transfers still need coverage."
+  ],
+  "sourceCornerRule": {
+    "reference": "https://github.com/LANCommander/TonyWasAProSkater/blob/d9319c8d5b42c431de02bec0f02f0cf955f2fbae/game/src/physics.cpp",
+    "function": "CBruce grind segment traversal, both direction branches",
+    "dotThreshold": 2633,
+    "normalizedFixedPointOne": 4096,
+    "angleDegrees": 49.9974078831624,
+    "finding": "The original also releases at node 268's 61.7-degree turn. Requiring a continuous full-chain grind here was an over-strict exploratory test, not evidence that this corner needs smoothing. The native global corner threshold is not retuned."
+  }
+}
