@@ -1,0 +1,1332 @@
+{
+  "parentTaskCommit": "50354c7469f39fb1582741033fcf898f9b7956d5",
+  "acceptedMainScale": 2,
+  "mainLevelUnchanged": true,
+  "sourceLevelUnchanged": true,
+  "skaterChanged": false,
+  "dependencies": {
+    "sourceRailMotion": "fac37fb2e4abced57d85f8588fcb406d85adcb0e",
+    "authoredDefaultTransfers": "86943599",
+    "source": "https://github.com/LANCommander/TonyWasAProSkater/blob/d9319c8d5b42c431de02bec0f02f0cf955f2fbae/game/src/physics.cpp"
+  },
+  "selectedStats": {
+    "label": "Tony after first STAT UPGRADE",
+    "base": {
+      "ollie": 3,
+      "speed": 7,
+      "air": 7,
+      "balance": 4
+    },
+    "profile": {
+      "kind": "thps1",
+      "metresPerUnit": 0.013929750825577904,
+      "stats": {
+        "ollie": 4,
+        "speed": 8,
+        "air": 8
+      }
+    },
+    "correction": "The starting board has zero bonuses; the prior first-board label was inaccurate."
+  },
+  "sourceRailMotion": {
+    "metresPerUnit": 0.013929750825577904,
+    "entryBoost": 5.432602821975383,
+    "gravity": 39.78957145001501,
+    "finalVectorLimit": 38.9534803268538,
+    "directionalOllieDegrees": 17.578125,
+    "riderRelativeInput": true,
+    "extraForkStrafe": false,
+    "jumpBeforeTraversal": true,
+    "runoffAddedPop": 0
+  },
+  "runtimeSnapshots": {
+    "working": {
+      "skateParkTuning": "bc609a6765ffd91c0d3bc062b33ee25c03cd7386a9159b24c1f643f38bca0234",
+      "vertSkateMotion": "944c8fa4293fe58b8baca9987c7573b78428774e77b93bccb2b889d893a7ac96",
+      "skateSteering": "62b9d234f6feebaadd2f5c3b58cd6305d042c99ee46ea7d75d8fff7dbe953f68",
+      "tuning": "dc7b43eedbb160b2ddfc16cdfdca42f1419245a76214fdccd49cf872905038c0",
+      "input": "53cd0f5d183777461c3af7514af6ebc22abe44513a7986287f4c592f00d2a433",
+      "level": "77484671f00e7a24b1de632903db97663b6b0e5a362ffbdb898fc5e27b7841e0",
+      "meshContactNormal": "3fee5417da3a27bb63b1e7428af1532078b3a6f4d802e753d9635fd2260da224",
+      "player": "fa7f74d34cbe264b45f653f070a890e7e20ec3c139fb6ba50e694489432682ff",
+      "vertBoardRelease": "7ce3ba915f646ac97890d0a2b9f25635ccedddb8068e4c2217c2812808866e67",
+      "skateParkPhysics": "3cf5ce4c8bd9037539ffd21ff8559f78a0b9c2fd7a27f702a68bbe6aa2536f99",
+      "skateChaseCamera": "b8d670861fb3d53f081a98d74628c28176e78d87c5cebe47cb826f34f89fc145",
+      "skateReferencePhysics": "a78d1590533a35b00f212d3fa174d6640dffa2768b936590ec493917c2878d23"
+    },
+    "task": {
+      "skateParkTuning": "bc609a6765ffd91c0d3bc062b33ee25c03cd7386a9159b24c1f643f38bca0234",
+      "vertSkateMotion": "944c8fa4293fe58b8baca9987c7573b78428774e77b93bccb2b889d893a7ac96",
+      "skateSteering": "62b9d234f6feebaadd2f5c3b58cd6305d042c99ee46ea7d75d8fff7dbe953f68",
+      "tuning": "2b19f1ef4f08d3cc2b33d857c09da03bbc8ad59497a9210cf5e0d11c342cd9c7",
+      "input": "e927301959f455734fea461cfca35001c2410d720b274e559d5d7ba7121e5dec",
+      "level": "096ccab6e811641eb8f7bf51ff273e1d9ab1a165434994ca3d91d33ce4059ad5",
+      "meshContactNormal": "3fee5417da3a27bb63b1e7428af1532078b3a6f4d802e753d9635fd2260da224",
+      "player": "999a1fda1d8ddf257ef31c26287bc3eb90f5776b68cad0ed3920188c24cd471b",
+      "vertBoardRelease": "7ce3ba915f646ac97890d0a2b9f25635ccedddb8068e4c2217c2812808866e67",
+      "skateParkPhysics": "3cf5ce4c8bd9037539ffd21ff8559f78a0b9c2fd7a27f702a68bbe6aa2536f99",
+      "skateChaseCamera": "b8d670861fb3d53f081a98d74628c28176e78d87c5cebe47cb826f34f89fc145",
+      "skateReferencePhysics": "a78d1590533a35b00f212d3fa174d6640dffa2768b936590ec493917c2878d23"
+    }
+  },
+  "sourceFiles": {
+    "tools/school-grind-lines.ts": "57c87c61e2fca53b091150684a9e9dac91ccd61d3faeb669c464a93cac3cbd3f",
+    "tools/school-source-lines.ts": "dee600e9f2fbd1223ca0fbb8a6ddf290d713dbb9fd8a193dc96be38a1ad6a77c",
+    "tools/test-school-source.mjs": "85df268ee1bea1117ca11649b281240cf2c9738b09a32a2efd85725d3c674b0c",
+    "tools/test-school-source-physics.mjs": "4fb4be499c058d488bdae27f463228bc6377ab158b173d4beb9eea11d43e87cf",
+    "tools/test-school-source-rails.mjs": "c3c41a65ec008c2f9d7375f7c82571ed121aa2785eea22bfe813d474c476f55c",
+    "tools/test-school-default-transfers.mjs": "8f9d6f8d805b2c01b8fc6850df07269f3864f6bcb1ce51a936cc28ea6bff7244",
+    "tools/school-source-review.ts": "c2205292068d95712afb8df0fb81fe27305537f93c9a4bb3b1dc3799b08909b1",
+    "tools/school-source-review.html": "d798ce1f3624d59f0aebfcc480be9552591b77324d3d1a4ff7fb9885ad5385d6"
+  },
+  "native": {
+    "cases": 19,
+    "steps": 11047,
+    "taskWorkingExact": true,
+    "route": {
+      "frames": 6293,
+      "waypoints": 35,
+      "totalWaypoints": 35,
+      "distance": 980.9310510586971,
+      "airFrames": 78,
+      "tableOllie": {
+        "released": true,
+        "landed": true,
+        "returned": true,
+        "release": [
+          37.69686442343699,
+          0,
+          -15.998535445630699
+        ]
+      },
+      "visits": [
+        {
+          "index": 0,
+          "frame": 194,
+          "source": [
+            -8324.57909072082,
+            2473.7886233705713,
+            6391
+          ],
+          "grounded": true
+        },
+        {
+          "index": 1,
+          "frame": 296,
+          "source": [
+            -9239.77813398152,
+            1608.039236452223,
+            5661.889023557696
+          ],
+          "grounded": false
+        },
+        {
+          "index": 2,
+          "frame": 331,
+          "source": [
+            -9312.863115339263,
+            1599,
+            5422.977342476107
+          ],
+          "grounded": true
+        },
+        {
+          "index": 3,
+          "frame": 546,
+          "source": [
+            -7174.695119237971,
+            1598.5205399001175,
+            5474.501121286103
+          ],
+          "grounded": true
+        },
+        {
+          "index": 4,
+          "frame": 682,
+          "source": [
+            -5676.393954061024,
+            1598.2014308113999,
+            5276.678514814076
+          ],
+          "grounded": true
+        },
+        {
+          "index": 5,
+          "frame": 782,
+          "source": [
+            -5347.801310107888,
+            1598.7531619400452,
+            4567.407359926351
+          ],
+          "grounded": true
+        },
+        {
+          "index": 6,
+          "frame": 863,
+          "source": [
+            -5074.952661169994,
+            1577.765975157513,
+            3959.085944897926
+          ],
+          "grounded": true
+        },
+        {
+          "index": 7,
+          "frame": 948,
+          "source": [
+            -4605.913623527509,
+            1444.7154165910147,
+            3339.3341754152734
+          ],
+          "grounded": true
+        },
+        {
+          "index": 8,
+          "frame": 1065,
+          "source": [
+            -4067.0627852064417,
+            1155.7413189911663,
+            2166.402939518335
+          ],
+          "grounded": true
+        },
+        {
+          "index": 9,
+          "frame": 1184,
+          "source": [
+            -4003.4847108322656,
+            773.7637016580376,
+            875.593130099599
+          ],
+          "grounded": true
+        },
+        {
+          "index": 10,
+          "frame": 1378,
+          "source": [
+            -2512.3719330912727,
+            92.04242947255761,
+            -868.6285274520706
+          ],
+          "grounded": true
+        },
+        {
+          "index": 11,
+          "frame": 1581,
+          "source": [
+            -177.26104685669543,
+            121.47339601727867,
+            -997.8274148964574
+          ],
+          "grounded": true
+        },
+        {
+          "index": 12,
+          "frame": 1899,
+          "source": [
+            2352.4779307578046,
+            3.999988407924093,
+            -1910.2930488318834
+          ],
+          "grounded": true
+        },
+        {
+          "index": 13,
+          "frame": 2293,
+          "source": [
+            2657.128213766904,
+            173.6175757463027,
+            714.8145675077649
+          ],
+          "grounded": true
+        },
+        {
+          "index": 14,
+          "frame": 2597,
+          "source": [
+            5822.9678702480705,
+            171.45300287501482,
+            1006.2517304710746
+          ],
+          "grounded": true
+        },
+        {
+          "index": 15,
+          "frame": 2797,
+          "source": [
+            8327.989957160205,
+            -3.83196206712455e-05,
+            1278.2778310889025
+          ],
+          "grounded": true
+        },
+        {
+          "index": 16,
+          "frame": 2933,
+          "source": [
+            9830.524184829794,
+            -3.83196206712455e-05,
+            853.4410967354725
+          ],
+          "grounded": true
+        },
+        {
+          "index": 17,
+          "frame": 3054,
+          "source": [
+            10859.44727444919,
+            -3.83196206712455e-05,
+            108.37227636641728
+          ],
+          "grounded": true
+        },
+        {
+          "index": 18,
+          "frame": 3230,
+          "source": [
+            11268.501045611909,
+            0.21410809713711387,
+            -1825.410107788659
+          ],
+          "grounded": true
+        },
+        {
+          "index": 19,
+          "frame": 3482,
+          "source": [
+            11015.683961700812,
+            0.3620260631439578,
+            -5025.220785312591
+          ],
+          "grounded": true
+        },
+        {
+          "index": 20,
+          "frame": 3638,
+          "source": [
+            9644.830424358577,
+            1.7417392095051127,
+            -6099.530029171932
+          ],
+          "grounded": true
+        },
+        {
+          "index": 21,
+          "frame": 3792,
+          "source": [
+            8144.958507543886,
+            6.006008512568087,
+            -7194.970382876623
+          ],
+          "grounded": true
+        },
+        {
+          "index": 22,
+          "frame": 3939,
+          "source": [
+            6653.589935649763,
+            2.0000435072799974,
+            -8107.602606608632
+          ],
+          "grounded": true
+        },
+        {
+          "index": 23,
+          "frame": 4111,
+          "source": [
+            4677.117490676224,
+            2.0000435072799974,
+            -8287.637235790527
+          ],
+          "grounded": true
+        },
+        {
+          "index": 24,
+          "frame": 4313,
+          "source": [
+            2175.0719069351035,
+            3.744183976563818,
+            -8299.227345204132
+          ],
+          "grounded": true
+        },
+        {
+          "index": 25,
+          "frame": 4487,
+          "source": [
+            167.88042725325704,
+            0.0618007008092718,
+            -8943.089500333788
+          ],
+          "grounded": true
+        },
+        {
+          "index": 26,
+          "frame": 4717,
+          "source": [
+            -2828.8095866736403,
+            -280.3097219490103,
+            -9041.65363681036
+          ],
+          "grounded": true
+        },
+        {
+          "index": 27,
+          "frame": 5032,
+          "source": [
+            -6820.791405064433,
+            0.9942252808168632,
+            -9001.110984273118
+          ],
+          "grounded": true
+        },
+        {
+          "index": 28,
+          "frame": 5192,
+          "source": [
+            -7900.368892654012,
+            144.3201570794106,
+            -7643.968110091635
+          ],
+          "grounded": true
+        },
+        {
+          "index": 29,
+          "frame": 5392,
+          "source": [
+            -9856.776255120805,
+            0.4482398272696173,
+            -6106.769196090303
+          ],
+          "grounded": true
+        },
+        {
+          "index": 30,
+          "frame": 5593,
+          "source": [
+            -11860.641057675,
+            -0.7069169688286365,
+            -4605.327478649302
+          ],
+          "grounded": true
+        },
+        {
+          "index": 31,
+          "frame": 5701,
+          "source": [
+            -11998.274857077526,
+            -1.999983220264994,
+            -3474.342309150137
+          ],
+          "grounded": true
+        },
+        {
+          "index": 32,
+          "frame": 5920,
+          "source": [
+            -13822.620186229266,
+            -1.999983220264994,
+            -3312.0384364883466
+          ],
+          "grounded": true
+        },
+        {
+          "index": 33,
+          "frame": 6155,
+          "source": [
+            -14349.085279110406,
+            5.333984678279194,
+            -2388.886668189467
+          ],
+          "grounded": true
+        },
+        {
+          "index": 34,
+          "frame": 6292,
+          "source": [
+            -14496.923209518192,
+            188.59499324823537,
+            -1279.2876040286592
+          ],
+          "grounded": true
+        }
+      ]
+    },
+    "routeMaximumStep": 0.808990276076102,
+    "courtyardApproaches": [
+      {
+        "name": "Original courtyard ollie onto rail 163 and rollout (planter)",
+        "passed": true,
+        "frames": 346,
+        "air": 30,
+        "verts": 0,
+        "grinds": 306,
+        "peak": 2.943106601594458,
+        "maxStep": 0.5986431223047899,
+        "end": [
+          -2.113776228625455,
+          2.5595768377727506,
+          -35.479075352746925
+        ],
+        "sourceEnd": [
+          -5997.25455565622,
+          1782.7489320392465,
+          3843.9999999999995
+        ],
+        "error": null,
+        "grind": {
+          "frames": 346,
+          "grindFrames": 306,
+          "maxT": 104.58457012609946,
+          "minT": 12.904669452704049,
+          "progress": 104.58457012609946,
+          "direction": 1,
+          "maxBalance": 0.1,
+          "caught": true,
+          "landed": true
+        }
+      },
+      {
+        "name": "Original courtyard ollie onto rail 163 and rollout (ground)",
+        "passed": true,
+        "frames": 276,
+        "air": 16,
+        "verts": 0,
+        "grinds": 238,
+        "peak": 2.699144401080756,
+        "maxStep": 0.6380663730824848,
+        "end": [
+          -2.2488641507009834,
+          2.559548400369729,
+          -35.479075352746925
+        ],
+        "sourceEnd": [
+          -5987.556756767565,
+          1782.7468905524045,
+          3843.9999999999995
+        ],
+        "error": null,
+        "grind": {
+          "frames": 276,
+          "grindFrames": 238,
+          "maxT": 104.58457012609946,
+          "minT": 26.991283709920534,
+          "progress": 104.58457012609946,
+          "direction": 1,
+          "maxBalance": 0.1,
+          "caught": true,
+          "landed": true
+        }
+      }
+    ],
+    "reversals": [
+      {
+        "name": "Original rail 784 uphill reversal and return",
+        "passed": true,
+        "frames": 330,
+        "air": 18,
+        "verts": 0,
+        "grinds": 311,
+        "peak": -12.642878410053827,
+        "maxStep": 0.4345899724784233,
+        "end": [
+          -95.91663017846425,
+          -21.244134777686995,
+          -87.99423596517562
+        ],
+        "sourceEnd": [
+          736.7391190617327,
+          73.90920378285819,
+          74
+        ],
+        "error": null,
+        "grind": {
+          "frames": 330,
+          "grindFrames": 311,
+          "maxT": 175.06429652253195,
+          "minT": 127.60233985671437,
+          "progress": 47.46195666581758,
+          "direction": -1,
+          "maxBalance": 0.1,
+          "caught": true,
+          "landed": true,
+          "reversed": true,
+          "turnT": 127.60233985671437
+        }
+      },
+      {
+        "name": "Original rail 206 uphill reversal and return",
+        "passed": true,
+        "frames": 443,
+        "air": 37,
+        "verts": 0,
+        "grinds": 405,
+        "peak": -10.868141733996277,
+        "maxStep": 0.7373294461150769,
+        "end": [
+          -76.44353659792445,
+          -18.907822595455652,
+          -104.10993695586912
+        ],
+        "sourceEnd": [
+          -661.210767075725,
+          241.63023565812978,
+          -1082.926724137932
+        ],
+        "error": null,
+        "grind": {
+          "frames": 443,
+          "grindFrames": 405,
+          "maxT": 111.98078743920179,
+          "minT": 59.84176279887709,
+          "progress": 52.1390246403247,
+          "direction": -1,
+          "maxBalance": 0.1,
+          "caught": true,
+          "landed": true,
+          "reversed": true,
+          "turnT": 59.84460019126536
+        }
+      }
+    ]
+  },
+  "railFixtures": {
+    "scale": 0.013929750825577904,
+    "cadence": [
+      {
+        "initial": 0,
+        "slope": 0,
+        "hz": 30,
+        "speed": 7.079374737784363,
+        "distance": 17.917411912023304
+      },
+      {
+        "initial": 0,
+        "slope": 0,
+        "hz": 60,
+        "speed": 7.079374737784363,
+        "distance": 17.91741191202368
+      },
+      {
+        "initial": 0,
+        "slope": 0,
+        "hz": 120,
+        "speed": 7.079374737784363,
+        "distance": 17.917411912023724
+      },
+      {
+        "initial": 2,
+        "slope": 0,
+        "hz": 30,
+        "speed": 7.62939453125,
+        "distance": 22.300537109374446
+      },
+      {
+        "initial": 2,
+        "slope": 0,
+        "hz": 60,
+        "speed": 7.62939453125,
+        "distance": 22.300537109374748
+      },
+      {
+        "initial": 2,
+        "slope": 0,
+        "hz": 120,
+        "speed": 7.62939453125,
+        "distance": 22.30053710937498
+      },
+      {
+        "initial": -2,
+        "slope": 0,
+        "hz": 30,
+        "speed": -7.62939453125,
+        "distance": -22.300537109374446
+      },
+      {
+        "initial": -2,
+        "slope": 0,
+        "hz": 60,
+        "speed": -7.62939453125,
+        "distance": -22.300537109374748
+      },
+      {
+        "initial": -2,
+        "slope": 0,
+        "hz": 120,
+        "speed": -7.62939453125,
+        "distance": -22.30053710937498
+      },
+      {
+        "initial": 6,
+        "slope": 0.4,
+        "hz": 30,
+        "speed": -45.21632017412083,
+        "distance": -63.10270939657447
+      },
+      {
+        "initial": 6,
+        "slope": 0.4,
+        "hz": 60,
+        "speed": -45.21632017412144,
+        "distance": -63.10270939657661
+      },
+      {
+        "initial": 6,
+        "slope": 0.4,
+        "hz": 120,
+        "speed": -45.216320174121414,
+        "distance": -63.10270939657685
+      },
+      {
+        "initial": -6,
+        "slope": -0.4,
+        "hz": 30,
+        "speed": 45.21632017412083,
+        "distance": 63.10270939657447
+      },
+      {
+        "initial": -6,
+        "slope": -0.4,
+        "hz": 60,
+        "speed": 45.21632017412144,
+        "distance": 63.10270939657661
+      },
+      {
+        "initial": -6,
+        "slope": -0.4,
+        "hz": 120,
+        "speed": 45.216320174121414,
+        "distance": 63.10270939657685
+      },
+      {
+        "initial": 18,
+        "slope": 0.4,
+        "hz": 30,
+        "speed": -33.21632017412079,
+        "distance": -24.44326966376228
+      },
+      {
+        "initial": 18,
+        "slope": 0.4,
+        "hz": 60,
+        "speed": -33.21632017412157,
+        "distance": -24.443269663763953
+      },
+      {
+        "initial": 18,
+        "slope": 0.4,
+        "hz": 120,
+        "speed": -33.21632017412156,
+        "distance": -24.44326966376426
+      },
+      {
+        "initial": 18,
+        "slope": -0.4,
+        "hz": 30,
+        "speed": 65.74748574001688,
+        "distance": 125.62122861002233
+      },
+      {
+        "initial": 18,
+        "slope": -0.4,
+        "hz": 60,
+        "speed": 65.74748574001732,
+        "distance": 125.62122861002514
+      },
+      {
+        "initial": 18,
+        "slope": -0.4,
+        "hz": 120,
+        "speed": 65.74748574001758,
+        "distance": 125.62122861002594
+      }
+    ],
+    "entry": [
+      {
+        "slope": 0,
+        "velocity": [
+          0,
+          0,
+          -18
+        ],
+        "along": 18,
+        "speed": 23.432602821975383,
+        "direction": 1
+      },
+      {
+        "slope": 0,
+        "velocity": [
+          30,
+          0,
+          -4
+        ],
+        "along": 4,
+        "speed": 9.432602821975383,
+        "direction": 1
+      },
+      {
+        "slope": 0.4,
+        "velocity": [
+          0,
+          -12,
+          -18
+        ],
+        "along": 11.697272501841024,
+        "speed": 17.129875323816407,
+        "direction": 1
+      },
+      {
+        "slope": 0.4,
+        "velocity": [
+          0,
+          12,
+          18
+        ],
+        "along": -11.697272501841024,
+        "speed": 17.129875323816407,
+        "direction": -1
+      }
+    ],
+    "exits": [
+      {
+        "slope": 0,
+        "direction": 1,
+        "speed": 23.432602821975383,
+        "vertical": 0,
+        "addedPop": 0
+      },
+      {
+        "slope": 0,
+        "direction": -1,
+        "speed": 23.432602821975383,
+        "vertical": 0,
+        "addedPop": 0
+      },
+      {
+        "slope": 0.4,
+        "direction": 1,
+        "speed": 21.23321693492154,
+        "vertical": 9.266935604923447,
+        "addedPop": 0
+      },
+      {
+        "slope": 0.4,
+        "direction": -1,
+        "speed": 21.719453529693666,
+        "vertical": -9.47914665265686,
+        "addedPop": 0
+      },
+      {
+        "slope": -0.4,
+        "direction": 1,
+        "speed": 21.719453529693666,
+        "vertical": -9.47914665265686,
+        "addedPop": 0
+      },
+      {
+        "slope": -0.4,
+        "direction": -1,
+        "speed": 21.23321693492154,
+        "vertical": 9.266935604923447,
+        "addedPop": 0
+      }
+    ],
+    "endpointRelease": {
+      "vertical": 12.500455006004202,
+      "height": 70.2138672461348
+    },
+    "transfers": [
+      {
+        "slope": 0,
+        "direction": 1,
+        "side": -1,
+        "velocity": [
+          7.076785460271099,
+          13.163614530171118,
+          -22.33844181140986
+        ]
+      },
+      {
+        "slope": 0,
+        "direction": 1,
+        "side": 1,
+        "velocity": [
+          -7.076785460271099,
+          13.163614530171118,
+          -22.33844181140986
+        ]
+      },
+      {
+        "slope": 0,
+        "direction": -1,
+        "side": -1,
+        "velocity": [
+          -7.076785460271099,
+          13.163614530171118,
+          22.33844181140986
+        ]
+      },
+      {
+        "slope": 0,
+        "direction": -1,
+        "side": 1,
+        "velocity": [
+          7.076785460271099,
+          13.163614530171118,
+          22.33844181140986
+        ]
+      },
+      {
+        "slope": 0.4,
+        "direction": 1,
+        "side": -1,
+        "velocity": [
+          7.076785460271099,
+          22.09899125473506,
+          -20.473520101630427
+        ]
+      },
+      {
+        "slope": 0.4,
+        "direction": 1,
+        "side": 1,
+        "velocity": [
+          -7.076785460271099,
+          22.09899125473506,
+          -20.473520101630427
+        ]
+      },
+      {
+        "slope": 0.4,
+        "direction": -1,
+        "side": -1,
+        "velocity": [
+          -7.076785460271099,
+          4.228237805607174,
+          20.473520101630427
+        ]
+      },
+      {
+        "slope": 0.4,
+        "direction": -1,
+        "side": 1,
+        "velocity": [
+          7.076785460271099,
+          4.228237805607174,
+          20.473520101630427
+        ]
+      },
+      {
+        "slope": -0.4,
+        "direction": 1,
+        "side": -1,
+        "velocity": [
+          7.076785460271099,
+          4.228237805607174,
+          -20.473520101630427
+        ]
+      },
+      {
+        "slope": -0.4,
+        "direction": 1,
+        "side": 1,
+        "velocity": [
+          -7.076785460271099,
+          4.228237805607174,
+          -20.473520101630427
+        ]
+      },
+      {
+        "slope": -0.4,
+        "direction": -1,
+        "side": -1,
+        "velocity": [
+          -7.076785460271099,
+          22.09899125473506,
+          20.473520101630427
+        ]
+      },
+      {
+        "slope": -0.4,
+        "direction": -1,
+        "side": 1,
+        "velocity": [
+          7.076785460271099,
+          22.09899125473506,
+          20.473520101630427
+        ]
+      }
+    ],
+    "inputTransfers": [
+      {
+        "direction": 1,
+        "right": -1,
+        "cameraYaw": 0,
+        "velocity": [
+          -5.474560487102161,
+          20.07597051839351,
+          -15.838197273255203
+        ],
+        "lateral": 0
+      },
+      {
+        "direction": 1,
+        "right": -1,
+        "cameraYaw": 1.5707963267948966,
+        "velocity": [
+          -5.474560487102161,
+          20.07597051839351,
+          -15.838197273255203
+        ],
+        "lateral": 0
+      },
+      {
+        "direction": 1,
+        "right": -1,
+        "cameraYaw": 3.141592653589793,
+        "velocity": [
+          -5.474560487102161,
+          20.07597051839351,
+          -15.838197273255203
+        ],
+        "lateral": 0
+      },
+      {
+        "direction": 1,
+        "right": -1,
+        "cameraYaw": 4.71238898038469,
+        "velocity": [
+          -5.474560487102161,
+          20.07597051839351,
+          -15.838197273255203
+        ],
+        "lateral": 0
+      },
+      {
+        "direction": 1,
+        "right": 1,
+        "cameraYaw": 0,
+        "velocity": [
+          5.474560487102161,
+          20.07597051839351,
+          -15.838197273255203
+        ],
+        "lateral": 0
+      },
+      {
+        "direction": 1,
+        "right": 1,
+        "cameraYaw": 1.5707963267948966,
+        "velocity": [
+          5.474560487102161,
+          20.07597051839351,
+          -15.838197273255203
+        ],
+        "lateral": 0
+      },
+      {
+        "direction": 1,
+        "right": 1,
+        "cameraYaw": 3.141592653589793,
+        "velocity": [
+          5.474560487102161,
+          20.07597051839351,
+          -15.838197273255203
+        ],
+        "lateral": 0
+      },
+      {
+        "direction": 1,
+        "right": 1,
+        "cameraYaw": 4.71238898038469,
+        "velocity": [
+          5.474560487102161,
+          20.07597051839351,
+          -15.838197273255203
+        ],
+        "lateral": 0
+      },
+      {
+        "direction": -1,
+        "right": -1,
+        "cameraYaw": 0,
+        "velocity": [
+          8.679010433440036,
+          2.2052170692656237,
+          25.108842930005657
+        ],
+        "lateral": 0
+      },
+      {
+        "direction": -1,
+        "right": -1,
+        "cameraYaw": 1.5707963267948966,
+        "velocity": [
+          8.679010433440036,
+          2.2052170692656237,
+          25.108842930005657
+        ],
+        "lateral": 0
+      },
+      {
+        "direction": -1,
+        "right": -1,
+        "cameraYaw": 3.141592653589793,
+        "velocity": [
+          8.679010433440036,
+          2.2052170692656237,
+          25.108842930005657
+        ],
+        "lateral": 0
+      },
+      {
+        "direction": -1,
+        "right": -1,
+        "cameraYaw": 4.71238898038469,
+        "velocity": [
+          8.679010433440036,
+          2.2052170692656237,
+          25.108842930005657
+        ],
+        "lateral": 0
+      },
+      {
+        "direction": -1,
+        "right": 1,
+        "cameraYaw": 0,
+        "velocity": [
+          -8.679010433440036,
+          2.2052170692656237,
+          25.108842930005657
+        ],
+        "lateral": 0
+      },
+      {
+        "direction": -1,
+        "right": 1,
+        "cameraYaw": 1.5707963267948966,
+        "velocity": [
+          -8.679010433440036,
+          2.2052170692656237,
+          25.108842930005657
+        ],
+        "lateral": 0
+      },
+      {
+        "direction": -1,
+        "right": 1,
+        "cameraYaw": 3.141592653589793,
+        "velocity": [
+          -8.679010433440036,
+          2.2052170692656237,
+          25.108842930005657
+        ],
+        "lateral": 0
+      },
+      {
+        "direction": -1,
+        "right": 1,
+        "cameraYaw": 4.71238898038469,
+        "velocity": [
+          -8.679010433440036,
+          2.2052170692656237,
+          25.108842930005657
+        ],
+        "lateral": 0
+      }
+    ],
+    "fall": {
+      "horizontal": 17.267675737129945,
+      "vertical": -34.91705892843668,
+      "magnitude": 38.9534803268538
+    },
+    "tuningUnchanged": true
+  },
+  "railPopFixtures": {
+    "cases": 6,
+    "taskWorkingExact": true
+  },
+  "browser": {
+    "cases": 19,
+    "steps": 11047,
+    "liteFullExact": true,
+    "nativeExact": true,
+    "routeFrames": 6293,
+    "routeMetres": 980.9310510586971,
+    "pageErrors": [],
+    "startupErrors": {
+      "preview": [],
+      "game": []
+    },
+    "reviewUnlimitedRespawns": true,
+    "reviewNote": "An idle Game Over blocked the first full-run attempt at zero frames. The local review enables unlimited respawns without changing saved play mode; the fresh full run completes."
+  },
+  "mainRegression": {
+    "workingCases": 64,
+    "workingSteps": 18054,
+    "workingReportUnchanged": true,
+    "taskCases": 64,
+    "taskSteps": 18058,
+    "taskFailures": [],
+    "taskWorkingDifferences": [
+      {
+        "name": "Scaled Swim Team 1",
+        "taskFrames": 153,
+        "workingFrames": 151,
+        "taskEnd": [
+          -98.48779317984406,
+          -15.565106926065965,
+          -70.33986010528399
+        ],
+        "workingEnd": [
+          -97.34401741212905,
+          -15.600000381469727,
+          -70.39823235434118
+        ]
+      },
+      {
+        "name": "Scaled Swim Team 2",
+        "taskFrames": 177,
+        "workingFrames": 175,
+        "taskEnd": [
+          -128.54514246562223,
+          -16.36070200394362,
+          -63.043380281690126
+        ],
+        "workingEnd": [
+          -130.56421638554664,
+          -16.399999618530273,
+          -63.043380281690126
+        ]
+      }
+    ],
+    "priorTaskFailures": [
+      {
+        "name": "Scaled Funbox to perimeter rail",
+        "error": "AssertionError [ERR_ASSERTION]: Scaled Funbox to perimeter rail: bail",
+        "end": [
+          -49.33631438336374,
+          -10,
+          -124.39114727346339
+        ],
+        "result": {
+          "transfer": {
+            "frames": 137,
+            "air": true,
+            "takeoffY": -8.510105141962253,
+            "receivingGrindFrames": 12,
+            "minGrindSpeed": 16.898781770034958,
+            "landed": false
+          }
+        }
+      },
+      {
+        "name": "Scaled Funbox to Playground Rail",
+        "error": "AssertionError [ERR_ASSERTION]: Scaled Funbox to Playground Rail: bail",
+        "end": [
+          9.807206070322087,
+          -4.880000000000001,
+          -143.74433609260316
+        ],
+        "result": {
+          "transfer": {
+            "frames": 121,
+            "air": true,
+            "takeoffY": -7.946027993798795,
+            "receivingGrindFrames": 12,
+            "minGrindSpeed": 19.966867468248033,
+            "landed": false
+          }
+        }
+      },
+      {
+        "name": "Scaled Perimeter Mini Gap",
+        "error": "AssertionError [ERR_ASSERTION]: Scaled Perimeter Mini Gap: bail",
+        "end": [
+          60.10017985981563,
+          -7.5,
+          -135.05971503246818
+        ],
+        "result": {
+          "gap": {
+            "frames": 524,
+            "takeoffGrindFrames": 18,
+            "receivingGrindFrames": 440,
+            "air": true,
+            "landed": false
+          }
+        }
+      },
+      {
+        "name": "Scaled Roof Mini Gap",
+        "error": "AssertionError [ERR_ASSERTION]: Scaled Roof Mini Gap: bail",
+        "end": [
+          105.524438398199,
+          17.600000381469727,
+          32.4
+        ],
+        "result": {
+          "gap": {
+            "frames": 130,
+            "takeoffGrindFrames": 18,
+            "receivingGrindFrames": 34,
+            "air": true,
+            "landed": false
+          }
+        }
+      },
+      {
+        "name": "Scaled Park Gap",
+        "error": "AssertionError [ERR_ASSERTION]: Scaled Park Gap: bail",
+        "end": [
+          66.79977579521149,
+          -10,
+          -107.73717187720769
+        ],
+        "result": {
+          "gap": {
+            "frames": 115,
+            "takeoffGrindFrames": 25,
+            "receivingGrindFrames": 12,
+            "air": true,
+            "landed": false
+          }
+        }
+      }
+    ],
+    "sourceOnlyPortChangedPriorResults": false,
+    "defaultTransferIntegrationResolvedPriorFailures": true,
+    "authoredTransferCases": 68,
+    "authoredTransferFrames": 4516,
+    "authoredTransferMetresPerSecond": 4.8,
+    "existingTuningValuesChanged": false,
+    "sharedLiveTuningEdited": false,
+    "supportCount": 18,
+    "railClearanceSamples": 97,
+    "ditchApproaches": 8
+  },
+  "defaultTrace": {
+    "frames": 960,
+    "sha256": "c355c28f30e0c6a248e396cfe83234e24b95fdaa5c907f8ec9fc97faa29c2fe2"
+  },
+  "checks": {
+    "build": "pass",
+    "buildStamp": "d78512c0c900232fe9fd",
+    "buildSeconds": 13.69,
+    "isolatedTaskTypeScript": "pass",
+    "sourceToolsTypeScript": "pass",
+    "levelDataChanged": false,
+    "fullSuiteRun": false
+  },
+  "limitations": [
+    "Source balance recurrence, soft-corner projection, complete state boundaries, steering/braking, catch eligibility, landing-height policy, fixed-point rounding and other source mechanics remain incomplete.",
+    "Original visual materials are not recreated.",
+    "Retained THPS2 PC School data is not independently hash-matched to THPS1 media.",
+    "Campus route ends below Hall Pass stairs; it is not a closed loop.",
+    "Unattributed MutationObserver errors remain in DevTools during reloads; early-page and game error capture is empty."
+  ],
+  "continuationStartedAt": "2026-10-23T03:33:22+00:00",
+  "verifiedFullRenderAt": "2026-10-23T04:15:17.322344+00:00",
+  "minutesToVerifiedPlayable": 41.9,
+  "delivery": "Local only; no push, upload, publication or deployment."
+}

@@ -1,0 +1,19 @@
+{
+  "iteration": 31,
+  "console": {
+    "source": [
+      {
+        "level": "error",
+        "message": "Uncaught TypeError: Failed to execute 'observe' on 'MutationObserver': parameter 1 is not of type 'Node'.",
+        "timestamp": "2026-10-23T05:02:39.841Z"
+      }
+    ],
+    "scaled": []
+  },
+  "pageErrors": [],
+  "startupErrors": {
+    "game": [],
+    "preview": []
+  },
+  "assessment": "One unattributed MutationObserver error during reload, without URL/stack; current page/game startup and check captures are empty. Not declared fixed."
+}

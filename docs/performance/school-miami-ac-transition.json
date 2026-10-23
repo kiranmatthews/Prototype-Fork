@@ -1,0 +1,458 @@
+{
+  "reference": "Original supplied map and original PS1 gameplay footage; later THUG Pro collision used only as topology evidence.",
+  "sourceUrls": [
+    "https://www.deviantart.com/vgcartography/art/Tony-Hawk-s-Pro-Skater-School-Map-947728299",
+    "https://www.youtube.com/watch?v=UC1iKl9Va8g",
+    "https://dl.thugpro.com/update/beta/0.7.0.0/data/pre/sccol_thugpro.prx"
+  ],
+  "dimensions": "Inferred for the current skater; original extracted dimensions remain unavailable.",
+  "shape": {
+    "roofY": 7,
+    "radius": 1.2,
+    "lipRise": 0.9,
+    "topY": 9.1,
+    "cornerRadius": 0.18,
+    "copingY": 9.15,
+    "copingLength": 29.34542668961408,
+    "openSide": "east"
+  },
+  "validation": {
+    "supportProbes": "18 new curved-profile and corner samples; corner rays isolate the collar because the plank passes overhead at the northwest corner. The continuous top coping is checked at Y=9.15.",
+    "nativeCases": [
+      {
+        "name": "AC transition north return 12",
+        "kind": "air",
+        "speed": 12,
+        "frames": 66,
+        "air": true,
+        "returned": true,
+        "rollout": true,
+        "maxY": 10.655772660629653,
+        "maxStep": 0.2823726363504728,
+        "bails": 0,
+        "end": [
+          54.7,
+          6.999999994039536,
+          18.072421975258866
+        ]
+      },
+      {
+        "name": "AC transition north return 16",
+        "kind": "air",
+        "speed": 16,
+        "frames": 78,
+        "air": true,
+        "returned": true,
+        "rollout": true,
+        "maxY": 12.52444906143914,
+        "maxStep": 0.34062979973439306,
+        "bails": 0,
+        "end": [
+          54.7,
+          6.999999994039536,
+          18.03517071264334
+        ]
+      },
+      {
+        "name": "AC transition west return 8",
+        "kind": "air",
+        "speed": 8,
+        "frames": 83,
+        "air": true,
+        "returned": true,
+        "rollout": true,
+        "maxY": 10.227520348132582,
+        "maxStep": 0.27001298093429,
+        "bails": 0,
+        "end": [
+          48.14758425947658,
+          6.999999994039536,
+          21.3
+        ]
+      },
+      {
+        "name": "AC transition west return 12",
+        "kind": "air",
+        "speed": 12,
+        "frames": 86,
+        "air": true,
+        "returned": true,
+        "rollout": true,
+        "maxY": 11.612945843199745,
+        "maxStep": 0.31066833929773396,
+        "bails": 0,
+        "end": [
+          48.19456475695391,
+          6.999999994039536,
+          21.3
+        ]
+      },
+      {
+        "name": "AC transition west return 16",
+        "kind": "air",
+        "speed": 16,
+        "frames": 94,
+        "air": true,
+        "returned": true,
+        "rollout": true,
+        "maxY": 13.465291325593157,
+        "maxStep": 0.3599717157447946,
+        "bails": 0,
+        "end": [
+          47.9371410378985,
+          6.999999994039536,
+          21.3
+        ]
+      },
+      {
+        "name": "AC transition west hip return 12",
+        "kind": "air",
+        "speed": 12,
+        "frames": 97,
+        "air": true,
+        "returned": true,
+        "rollout": true,
+        "maxY": 12.615221079365583,
+        "maxStep": 0.34750099211084773,
+        "bails": 0,
+        "end": [
+          48.012541061662255,
+          7.052666386243249,
+          26.47935917358637
+        ]
+      },
+      {
+        "name": "AC transition west hip return 16",
+        "kind": "air",
+        "speed": 16,
+        "frames": 102,
+        "air": true,
+        "returned": true,
+        "rollout": true,
+        "maxY": 14.36463076636857,
+        "maxStep": 0.38425787475282636,
+        "bails": 0,
+        "end": [
+          48.19443982204789,
+          7.006288451771201,
+          26.54596078982237
+        ]
+      },
+      {
+        "name": "AC transition south return 8",
+        "kind": "air",
+        "speed": 8,
+        "frames": 88,
+        "air": true,
+        "returned": true,
+        "rollout": true,
+        "maxY": 10.446384481739363,
+        "maxStep": 0.27842949750138746,
+        "bails": 0,
+        "end": [
+          57.5,
+          6.999999994039536,
+          29.307841028794968
+        ]
+      },
+      {
+        "name": "AC transition south return 12",
+        "kind": "air",
+        "speed": 12,
+        "frames": 90,
+        "air": true,
+        "returned": true,
+        "rollout": true,
+        "maxY": 11.777256088965476,
+        "maxStep": 0.3208141008708862,
+        "bails": 0,
+        "end": [
+          57.5,
+          6.999999994039536,
+          29.25422899215541
+        ]
+      },
+      {
+        "name": "AC transition south return 16",
+        "kind": "air",
+        "speed": 16,
+        "frames": 97,
+        "air": true,
+        "returned": true,
+        "rollout": true,
+        "maxY": 13.524946254028041,
+        "maxStep": 0.36896248898002076,
+        "bails": 0,
+        "end": [
+          57.5,
+          6.999999994039536,
+          29.504766524474753
+        ]
+      },
+      {
+        "name": "AC transition north low-speed rollback",
+        "kind": "ride",
+        "frames": 77,
+        "maxY": 8.89140203417133,
+        "rollout": true,
+        "maxLateral": 1.944833174956706,
+        "bails": 0,
+        "end": [
+          52.7551668250433,
+          7.006008808513875,
+          18.369489313700875
+        ]
+      },
+      {
+        "name": "AC transition north forward to top",
+        "kind": "air",
+        "speed": 12,
+        "frames": 65,
+        "air": true,
+        "firstLanding": [
+          54.7,
+          9.099999904632568,
+          26.02801775106286
+        ],
+        "rollout": true,
+        "bails": 0,
+        "end": [
+          54.7,
+          9.099999904632568,
+          26.88100602586624
+        ]
+      },
+      {
+        "name": "AC transition west forward to top",
+        "kind": "air",
+        "speed": 8,
+        "frames": 84,
+        "air": true,
+        "firstLanding": [
+          55.733351886066174,
+          9.099999904632568,
+          21.3
+        ],
+        "rollout": true,
+        "bails": 0,
+        "end": [
+          56.56980070501725,
+          9.099999904632568,
+          21.3
+        ]
+      },
+      {
+        "name": "AC transition south forward to top",
+        "kind": "air",
+        "speed": 8,
+        "frames": 88,
+        "air": true,
+        "firstLanding": [
+          57.5,
+          9.099999904632568,
+          21.274677899582308
+        ],
+        "rollout": true,
+        "bails": 0,
+        "end": [
+          57.5,
+          9.099999904632568,
+          20.40982781771912
+        ]
+      },
+      {
+        "name": "AC transition complete coping -1",
+        "kind": "grind",
+        "side": -1,
+        "grind": {
+          "frames": 201,
+          "grindFrames": 162,
+          "maxT": 29.34542668961408,
+          "minT": 0,
+          "progress": 29.34542668961408,
+          "direction": 1,
+          "maxBalance": 0.1,
+          "caught": true,
+          "landed": true
+        },
+        "bails": 0,
+        "end": [
+          64.85881159439053,
+          6.999999994039536,
+          27.95
+        ]
+      },
+      {
+        "name": "AC transition complete coping 1",
+        "kind": "grind",
+        "side": 1,
+        "grind": {
+          "frames": 231,
+          "grindFrames": 192,
+          "maxT": 29.34542668961408,
+          "minT": 0,
+          "progress": 29.34542668961408,
+          "direction": -1,
+          "maxBalance": 0.1,
+          "caught": true,
+          "landed": true
+        },
+        "bails": 0,
+        "end": [
+          64.08911702010121,
+          6.999999994039536,
+          19.45
+        ]
+      }
+    ],
+    "cameraCases": [
+      {
+        "name": "AC transition north return 12",
+        "frames": 66,
+        "maxStep": 0.7408968794027035,
+        "minTrailing": 0.25643294600730937,
+        "maxCrop": 0.7712983526576712,
+        "restoredTrailing": 2.130531563620875,
+        "bails": 0
+      },
+      {
+        "name": "AC transition north return 16",
+        "frames": 78,
+        "maxStep": 0.5989572178518839,
+        "minTrailing": 0.3487783075584667,
+        "maxCrop": 0.7713463537641376,
+        "restoredTrailing": 1.7938053239830756,
+        "bails": 0
+      },
+      {
+        "name": "AC transition west return 8",
+        "frames": 83,
+        "maxStep": 0.9193979195536305,
+        "minTrailing": 0.24651258046666408,
+        "maxCrop": 0.7712263826854466,
+        "restoredTrailing": 2.0520120270604543,
+        "bails": 0
+      },
+      {
+        "name": "AC transition west return 12",
+        "frames": 86,
+        "maxStep": 0.8113330584864796,
+        "minTrailing": 0.4242965641429374,
+        "maxCrop": 0.7712263826854445,
+        "restoredTrailing": 1.6489315069833617,
+        "bails": 0
+      },
+      {
+        "name": "AC transition west return 16",
+        "frames": 94,
+        "maxStep": 0.859805275805937,
+        "minTrailing": 0.23528401540242,
+        "maxCrop": 0.7712263826854445,
+        "restoredTrailing": 1.9268631705674502,
+        "bails": 0
+      },
+      {
+        "name": "AC transition west hip return 12",
+        "frames": 97,
+        "maxStep": 0.7584151089800737,
+        "minTrailing": 0.394596453138817,
+        "maxCrop": 0.7716804232390201,
+        "restoredTrailing": 1.990974298100158,
+        "bails": 0
+      },
+      {
+        "name": "AC transition west hip return 16",
+        "frames": 102,
+        "maxStep": 0.8612366979786571,
+        "minTrailing": 0.21156315633218306,
+        "maxCrop": 0.7716804095413138,
+        "restoredTrailing": 1.3087516071805323,
+        "bails": 0
+      },
+      {
+        "name": "AC transition south return 8",
+        "frames": 88,
+        "maxStep": 0.8617102467324734,
+        "minTrailing": 0.2506008568101639,
+        "maxCrop": 0.7712263826854465,
+        "restoredTrailing": 2.079347932809823,
+        "bails": 0
+      },
+      {
+        "name": "AC transition south return 12",
+        "frames": 90,
+        "maxStep": 0.6888451306106776,
+        "minTrailing": 0.46145553019526664,
+        "maxCrop": 0.7712263826854454,
+        "restoredTrailing": 1.6810898208889937,
+        "bails": 0
+      },
+      {
+        "name": "AC transition south return 16",
+        "frames": 97,
+        "maxStep": 0.7352966173383796,
+        "minTrailing": 0.21751296906009202,
+        "maxCrop": 0.7712263826854454,
+        "restoredTrailing": 1.9268420127508366,
+        "bails": 0
+      },
+      {
+        "name": "AC transition north low-speed rollback",
+        "frames": 77,
+        "maxStep": 0.23207232352989413,
+        "minTrailing": 4.1903904274287225,
+        "maxCrop": 0.7712503536607043,
+        "restoredTrailing": 2.491384101302903,
+        "bails": 0
+      },
+      {
+        "name": "AC transition north forward to top",
+        "frames": 65,
+        "maxStep": 0.5922688746839626,
+        "minTrailing": 5.050000000000001,
+        "maxCrop": 0.7712983526576712,
+        "restoredTrailing": 5.063535024703277,
+        "bails": 0
+      },
+      {
+        "name": "AC transition west forward to top",
+        "frames": 84,
+        "maxStep": 0.7687171438515633,
+        "minTrailing": 5.049999999999997,
+        "maxCrop": 0.7712263826854466,
+        "restoredTrailing": 5.063449429595282,
+        "bails": 0
+      },
+      {
+        "name": "AC transition south forward to top",
+        "frames": 88,
+        "maxStep": 0.6438479318412573,
+        "minTrailing": 5.049999999999997,
+        "maxCrop": 0.7712263826854465,
+        "restoredTrailing": 5.063454008848015,
+        "bails": 0
+      },
+      {
+        "name": "AC transition complete coping -1",
+        "frames": 201,
+        "maxStep": 0.7697585958225082,
+        "minTrailing": 5.050000000000004,
+        "maxCrop": 0.771226382685442,
+        "restoredTrailing": 5.050000017393311,
+        "bails": 0
+      },
+      {
+        "name": "AC transition complete coping 1",
+        "frames": 231,
+        "maxStep": 0.6465236875767083,
+        "minTrailing": 5.050000000000004,
+        "maxCrop": 0.7718412081792762,
+        "restoredTrailing": 5.027757303390592,
+        "bails": 0
+      }
+    ]
+  },
+  "sourceAvailability": "The user confirmed they do not have original game files locally and authorized decompilation if useful. No original game image was obtained or decompiled for this iteration.",
+  "worldScale": 1,
+  "validationContext": "Authoring-coordinate evidence collected before the user-requested world enlargement. Current playable-scale evidence is school-miami-scale.json."
+}

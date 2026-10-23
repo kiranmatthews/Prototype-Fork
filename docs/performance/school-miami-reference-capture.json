@@ -1,0 +1,798 @@
+{
+  "parentTaskCommit": "bdf4498448cc878455ca5a8055adf6d7902e95ca",
+  "dependency": "3851223f21cf10435d14b239ee426d5319bf83c2",
+  "sourceRevision": "d9319c8d5b42c431de02bec0f02f0cf955f2fbae",
+  "sourceFiles": {
+    "src/levels/school-source.ts": "13213d61ec3a7430ae39d246cebfdfc01cea442fb8367906857f0a2b14dd6a5a",
+    "tools/test-school-source.mjs": "115cb8c73b2789362512f85e833478f44c77af66701c03409bb31b509827a291",
+    "tools/serve-school-source.mjs": "b2e3f1e606733a88bccfe64d2e776f5a59f6e6ce192af4dfda47fcc9217af27e",
+    "tools/test-school-source-capture.mjs": "ec3e556982328bec54a56c37f67f86c412c84c4842d045a233d1ef58134a1a01",
+    "tools/test-school-source-capture-math.mjs": "da43a7d2c87a159b7bb9146ac70aa89b33d42d32db5e8f667151e69e1b56dea5",
+    "tools/test-school-source-catch-routes.mjs": "0698eeb99e4a1973c4d1be8e77afc1789ec07cbb93458a6b5f3deba52127b06f"
+  },
+  "geometryFileSha256": "ed33512389703218a79971f064badd7b5b829974af00d6457786a6ac7d11ef3e",
+  "runtimeSnapshots": {
+    "working": {
+      "skateParkTuning": "bc609a6765ffd91c0d3bc062b33ee25c03cd7386a9159b24c1f643f38bca0234",
+      "vertSkateMotion": "944c8fa4293fe58b8baca9987c7573b78428774e77b93bccb2b889d893a7ac96",
+      "skateSteering": "62b9d234f6feebaadd2f5c3b58cd6305d042c99ee46ea7d75d8fff7dbe953f68",
+      "tuning": "dc7b43eedbb160b2ddfc16cdfdca42f1419245a76214fdccd49cf872905038c0",
+      "input": "53cd0f5d183777461c3af7514af6ebc22abe44513a7986287f4c592f00d2a433",
+      "level": "77484671f00e7a24b1de632903db97663b6b0e5a362ffbdb898fc5e27b7841e0",
+      "meshContactNormal": "3fee5417da3a27bb63b1e7428af1532078b3a6f4d802e753d9635fd2260da224",
+      "player": "dd5d49e1794f5c33b13483e45fc9f6ba8f31a0e16b62ce2c1526a82c18fb0b24",
+      "referenceRailCapture": "65e122e0d679e64727fd273c841229570138ee7730066018cb92d252e9792d94",
+      "vertBoardRelease": "7ce3ba915f646ac97890d0a2b9f25635ccedddb8068e4c2217c2812808866e67",
+      "skateParkPhysics": "3cf5ce4c8bd9037539ffd21ff8559f78a0b9c2fd7a27f702a68bbe6aa2536f99",
+      "skateChaseCamera": "b8d670861fb3d53f081a98d74628c28176e78d87c5cebe47cb826f34f89fc145",
+      "skateReferencePhysics": "c753e64473cea0d7f08c7cc0efbd80a2833f98f1f57dcf6996e23de73c0113ff"
+    },
+    "task": {
+      "skateParkTuning": "bc609a6765ffd91c0d3bc062b33ee25c03cd7386a9159b24c1f643f38bca0234",
+      "vertSkateMotion": "944c8fa4293fe58b8baca9987c7573b78428774e77b93bccb2b889d893a7ac96",
+      "skateSteering": "62b9d234f6feebaadd2f5c3b58cd6305d042c99ee46ea7d75d8fff7dbe953f68",
+      "tuning": "2b19f1ef4f08d3cc2b33d857c09da03bbc8ad59497a9210cf5e0d11c342cd9c7",
+      "input": "e927301959f455734fea461cfca35001c2410d720b274e559d5d7ba7121e5dec",
+      "level": "e3501d7bbe2229a319c41d9bfb5937a943f4ffeb1155d46e9ddaf0ef8d960f5a",
+      "meshContactNormal": "3fee5417da3a27bb63b1e7428af1532078b3a6f4d802e753d9635fd2260da224",
+      "player": "5442a09ef395719adebd3857c3134e63879022091795edf55acd98d62e5836c7",
+      "referenceRailCapture": "65e122e0d679e64727fd273c841229570138ee7730066018cb92d252e9792d94",
+      "vertBoardRelease": "7ce3ba915f646ac97890d0a2b9f25635ccedddb8068e4c2217c2812808866e67",
+      "skateParkPhysics": "3cf5ce4c8bd9037539ffd21ff8559f78a0b9c2fd7a27f702a68bbe6aa2536f99",
+      "skateChaseCamera": "b8d670861fb3d53f081a98d74628c28176e78d87c5cebe47cb826f34f89fc145",
+      "skateReferencePhysics": "c753e64473cea0d7f08c7cc0efbd80a2833f98f1f57dcf6996e23de73c0113ff"
+    }
+  },
+  "acceptedMainScale": 2,
+  "mainLevelUnchanged": true,
+  "sourceGeometryUnchanged": true,
+  "sourceScaleUnchanged": true,
+  "skaterChanged": false,
+  "tuningChanged": false,
+  "profile": {
+    "kind": "thps1",
+    "metresPerUnit": 0.013929750825577904,
+    "railCapture": {
+      "origin": [
+        -85.65403782647853,
+        -22.27367157009907,
+        -89.02503752626839
+      ],
+      "axes": [
+        -1,
+        -2,
+        3
+      ]
+    },
+    "stats": {
+      "ollie": 4,
+      "speed": 8,
+      "air": 8,
+      "balance": 5
+    }
+  },
+  "sourceCatchDistanceMetres": 1.3929750825577905,
+  "sourceMotionOriginAboveContactUnits": 30,
+  "native": {
+    "cases": 20,
+    "steps": 12081,
+    "taskWorkingExact": true,
+    "route": {
+      "frames": 6293,
+      "waypoints": 35,
+      "totalWaypoints": 35,
+      "distance": 980.9310510586971,
+      "airFrames": 78,
+      "tableOllie": {
+        "released": true,
+        "landed": true,
+        "returned": true,
+        "release": [
+          37.69686442343699,
+          0,
+          -15.998535445630699
+        ]
+      },
+      "visits": [
+        {
+          "index": 0,
+          "frame": 194,
+          "source": [
+            -8324.57909072082,
+            2473.7886233705713,
+            6391
+          ],
+          "grounded": true
+        },
+        {
+          "index": 1,
+          "frame": 296,
+          "source": [
+            -9239.77813398152,
+            1608.039236452223,
+            5661.889023557696
+          ],
+          "grounded": false
+        },
+        {
+          "index": 2,
+          "frame": 331,
+          "source": [
+            -9312.863115339263,
+            1599,
+            5422.977342476107
+          ],
+          "grounded": true
+        },
+        {
+          "index": 3,
+          "frame": 546,
+          "source": [
+            -7174.695119237971,
+            1598.5205399001175,
+            5474.501121286103
+          ],
+          "grounded": true
+        },
+        {
+          "index": 4,
+          "frame": 682,
+          "source": [
+            -5676.393954061024,
+            1598.2014308113999,
+            5276.678514814076
+          ],
+          "grounded": true
+        },
+        {
+          "index": 5,
+          "frame": 782,
+          "source": [
+            -5347.801310107888,
+            1598.7531619400452,
+            4567.407359926351
+          ],
+          "grounded": true
+        },
+        {
+          "index": 6,
+          "frame": 863,
+          "source": [
+            -5074.952661169994,
+            1577.765975157513,
+            3959.085944897926
+          ],
+          "grounded": true
+        },
+        {
+          "index": 7,
+          "frame": 948,
+          "source": [
+            -4605.913623527509,
+            1444.7154165910147,
+            3339.3341754152734
+          ],
+          "grounded": true
+        },
+        {
+          "index": 8,
+          "frame": 1065,
+          "source": [
+            -4067.0627852064417,
+            1155.7413189911663,
+            2166.402939518335
+          ],
+          "grounded": true
+        },
+        {
+          "index": 9,
+          "frame": 1184,
+          "source": [
+            -4003.4847108322656,
+            773.7637016580376,
+            875.593130099599
+          ],
+          "grounded": true
+        },
+        {
+          "index": 10,
+          "frame": 1378,
+          "source": [
+            -2512.3719330912727,
+            92.04242947255761,
+            -868.6285274520706
+          ],
+          "grounded": true
+        },
+        {
+          "index": 11,
+          "frame": 1581,
+          "source": [
+            -177.26104685669543,
+            121.47339601727867,
+            -997.8274148964574
+          ],
+          "grounded": true
+        },
+        {
+          "index": 12,
+          "frame": 1899,
+          "source": [
+            2352.4779307578046,
+            3.999988407924093,
+            -1910.2930488318834
+          ],
+          "grounded": true
+        },
+        {
+          "index": 13,
+          "frame": 2293,
+          "source": [
+            2657.128213766904,
+            173.6175757463027,
+            714.8145675077649
+          ],
+          "grounded": true
+        },
+        {
+          "index": 14,
+          "frame": 2597,
+          "source": [
+            5822.9678702480705,
+            171.45300287501482,
+            1006.2517304710746
+          ],
+          "grounded": true
+        },
+        {
+          "index": 15,
+          "frame": 2797,
+          "source": [
+            8327.989957160205,
+            -3.83196206712455e-05,
+            1278.2778310889025
+          ],
+          "grounded": true
+        },
+        {
+          "index": 16,
+          "frame": 2933,
+          "source": [
+            9830.524184829794,
+            -3.83196206712455e-05,
+            853.4410967354725
+          ],
+          "grounded": true
+        },
+        {
+          "index": 17,
+          "frame": 3054,
+          "source": [
+            10859.44727444919,
+            -3.83196206712455e-05,
+            108.37227636641728
+          ],
+          "grounded": true
+        },
+        {
+          "index": 18,
+          "frame": 3230,
+          "source": [
+            11268.501045611909,
+            0.21410809713711387,
+            -1825.410107788659
+          ],
+          "grounded": true
+        },
+        {
+          "index": 19,
+          "frame": 3482,
+          "source": [
+            11015.683961700812,
+            0.3620260631439578,
+            -5025.220785312591
+          ],
+          "grounded": true
+        },
+        {
+          "index": 20,
+          "frame": 3638,
+          "source": [
+            9644.830424358577,
+            1.7417392095051127,
+            -6099.530029171932
+          ],
+          "grounded": true
+        },
+        {
+          "index": 21,
+          "frame": 3792,
+          "source": [
+            8144.958507543886,
+            6.006008512568087,
+            -7194.970382876623
+          ],
+          "grounded": true
+        },
+        {
+          "index": 22,
+          "frame": 3939,
+          "source": [
+            6653.589935649763,
+            2.0000435072799974,
+            -8107.602606608632
+          ],
+          "grounded": true
+        },
+        {
+          "index": 23,
+          "frame": 4111,
+          "source": [
+            4677.117490676224,
+            2.0000435072799974,
+            -8287.637235790527
+          ],
+          "grounded": true
+        },
+        {
+          "index": 24,
+          "frame": 4313,
+          "source": [
+            2175.0719069351035,
+            3.744183976563818,
+            -8299.227345204132
+          ],
+          "grounded": true
+        },
+        {
+          "index": 25,
+          "frame": 4487,
+          "source": [
+            167.88042725325704,
+            0.0618007008092718,
+            -8943.089500333788
+          ],
+          "grounded": true
+        },
+        {
+          "index": 26,
+          "frame": 4717,
+          "source": [
+            -2828.8095866736403,
+            -280.3097219490103,
+            -9041.65363681036
+          ],
+          "grounded": true
+        },
+        {
+          "index": 27,
+          "frame": 5032,
+          "source": [
+            -6820.791405064433,
+            0.9942252808168632,
+            -9001.110984273118
+          ],
+          "grounded": true
+        },
+        {
+          "index": 28,
+          "frame": 5192,
+          "source": [
+            -7900.368892654012,
+            144.3201570794106,
+            -7643.968110091635
+          ],
+          "grounded": true
+        },
+        {
+          "index": 29,
+          "frame": 5392,
+          "source": [
+            -9856.776255120805,
+            0.4482398272696173,
+            -6106.769196090303
+          ],
+          "grounded": true
+        },
+        {
+          "index": 30,
+          "frame": 5593,
+          "source": [
+            -11860.641057675,
+            -0.7069169688286365,
+            -4605.327478649302
+          ],
+          "grounded": true
+        },
+        {
+          "index": 31,
+          "frame": 5701,
+          "source": [
+            -11998.274857077526,
+            -1.999983220264994,
+            -3474.342309150137
+          ],
+          "grounded": true
+        },
+        {
+          "index": 32,
+          "frame": 5920,
+          "source": [
+            -13822.620186229266,
+            -1.999983220264994,
+            -3312.0384364883466
+          ],
+          "grounded": true
+        },
+        {
+          "index": 33,
+          "frame": 6155,
+          "source": [
+            -14349.085279110406,
+            5.333984678279194,
+            -2388.886668189467
+          ],
+          "grounded": true
+        },
+        {
+          "index": 34,
+          "frame": 6292,
+          "source": [
+            -14496.923209518192,
+            188.59499324823537,
+            -1279.2876040286592
+          ],
+          "grounded": true
+        }
+      ]
+    }
+  },
+  "mathOracle": {
+    "sourceRevision": "d9319c8d5b42c431de02bec0f02f0cf955f2fbae",
+    "sourceSHA256": "899454604e51f99923bb726f173faeff78b96c5485e4c8901716954769f26f57",
+    "cppOracle": "Unmodified source Dot0/Lerp/LineLineClosestPoints, original pc_geom.h and SquareRoot0 implementation/table; only CVector storage/operators and IO are harness stubs.",
+    "linePairCases": 10007,
+    "squareRootTableEntries": 3072,
+    "fixtureResults": [
+      {
+        "distance": 0,
+        "t1": 2048,
+        "t2": 2048,
+        "point1": [
+          0,
+          0,
+          0
+        ],
+        "point2": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "distance": 500,
+        "t1": 4096,
+        "t2": 4096,
+        "point1": [
+          122880,
+          0,
+          -409600
+        ],
+        "point2": [
+          0,
+          0,
+          -2457600
+        ]
+      },
+      {
+        "distance": 500,
+        "t1": 4096,
+        "t2": 4096,
+        "point1": [
+          122880,
+          0,
+          -409600
+        ],
+        "point2": [
+          0,
+          0,
+          -2457600
+        ]
+      },
+      {
+        "distance": 99,
+        "t1": 2048,
+        "t2": 2048,
+        "point1": [
+          0,
+          405504,
+          0
+        ],
+        "point2": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "distance": 100,
+        "t1": 2048,
+        "t2": 2048,
+        "point1": [
+          0,
+          409600,
+          0
+        ],
+        "point2": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "distance": 101,
+        "t1": 2048,
+        "t2": 2048,
+        "point1": [
+          0,
+          413696,
+          0
+        ],
+        "point2": [
+          0,
+          0,
+          0
+        ]
+      }
+    ],
+    "strict100UnitLimit": true,
+    "outwardEndpointRejected": true,
+    "groundCannotReachUpward": true,
+    "productionModule": "src/referenceRailCapture.ts",
+    "integration": "Opt-in source coordinate frame; line-pair oracle does not prove full state-machine equivalence."
+  },
+  "captureIntegration": {
+    "scale": 0.013929750825577904,
+    "frame": {
+      "origin": [
+        -85.65403782647853,
+        -22.27367157009907,
+        -89.02503752626839
+      ],
+      "axes": [
+        -1,
+        -2,
+        3
+      ],
+      "unit": 0.013929750825577904
+    },
+    "mappedOriginalNodes": 393,
+    "quantizedCrossingOffset": [
+      0,
+      0,
+      -0.027859501651164464
+    ],
+    "activationOrder": "Newest activated chain first",
+    "queryMilliseconds": {
+      "samples": 1000,
+      "median": 0.04816599999958271,
+      "p95": 0.09233299999959854,
+      "max": 2.1869159999996555
+    },
+    "sweptCrossing": true,
+    "outsideRadiusRejected": true,
+    "groundSideRejected": true,
+    "outwardEndpointRejected": true,
+    "alternateEligibleChain": true,
+    "inwardEndpointAccepted": true,
+    "disabledRailRejected": true,
+    "sourceFrameMapping": true,
+    "editorRoundTrip": true,
+    "invalidFramesRejected": true,
+    "legacyProfilesOptOut": true,
+    "productionCapture": true,
+    "heldInputRequired": true,
+    "sourceDepartureCooldownSeconds": 0.16666666666666666
+  },
+  "workingQueryMilliseconds": {
+    "samples": 1000,
+    "median": 0.047292000001107226,
+    "p95": 0.08587500000066939,
+    "max": 1.9907920000005106
+  },
+  "originalGraphRouteAudit": {
+    "cases": 10,
+    "queries": 279,
+    "compiledSourceCatchCases": 12,
+    "ordinaryInputAfterInitialization": true,
+    "productionSweepExact": true,
+    "originalGraphCandidateExact": true,
+    "followOnCatches": [
+      {
+        "case": "Original rail 163 catch, traverse and land -1",
+        "catches": [
+          {
+            "frame": 1,
+            "chain": 163,
+            "rail": 71,
+            "segment": 0,
+            "sourceDistance": 59,
+            "direction": -1,
+            "sourceRailPoint": [
+              -6105,
+              -1782,
+              3844
+            ],
+            "speed": 23.43260266231617
+          },
+          {
+            "frame": 285,
+            "chain": 536,
+            "rail": 67,
+            "segment": 0,
+            "sourceDistance": 98,
+            "direction": 1,
+            "sourceRailPoint": [
+              -14128,
+              -1703,
+              3843
+            ],
+            "speed": 7.904140397503456
+          }
+        ]
+      },
+      {
+        "case": "Original rail 283 catch, traverse and land -1",
+        "catches": [
+          {
+            "frame": 1,
+            "chain": 283,
+            "rail": 94,
+            "segment": 2,
+            "sourceDistance": 59,
+            "direction": -1,
+            "sourceRailPoint": [
+              -21533,
+              -3258,
+              8542
+            ],
+            "speed": 23.432602821975383
+          },
+          {
+            "frame": 455,
+            "chain": 125,
+            "rail": 107,
+            "segment": 0,
+            "sourceDistance": 85,
+            "direction": 1,
+            "sourceRailPoint": [
+              -12195,
+              -3071,
+              8042
+            ],
+            "speed": 5.432602821975383
+          }
+        ]
+      }
+    ]
+  },
+  "browser": {
+    "cases": 20,
+    "steps": 12081,
+    "liteFullExact": true,
+    "nativeExact": true,
+    "errors": [],
+    "startupErrors": {
+      "preview": [],
+      "game": []
+    },
+    "courtyardApproaches": {
+      "running": false,
+      "stage": "Original courtyard ollie onto rail 163 and rollout (ground)",
+      "passed": [
+        {
+          "name": "Original courtyard ollie onto rail 163 and rollout (planter)",
+          "frames": 347,
+          "result": {
+            "air": 37,
+            "verts": 0,
+            "grinds": 300,
+            "peak": 3.251382824638088,
+            "grind": {
+              "frames": 347,
+              "grindFrames": 300,
+              "maxT": 104.58457012609946,
+              "minT": 14.751607848761992,
+              "progress": 104.58457012609946,
+              "direction": 1,
+              "maxBalance": 0.0715,
+              "caught": true,
+              "landed": true
+            }
+          },
+          "end": [
+            -2.113768868037722,
+            2.55957683932223,
+            -35.479075352746925
+          ]
+        },
+        {
+          "name": "Original courtyard ollie onto rail 163 and rollout (ground)",
+          "frames": 274,
+          "result": {
+            "air": 20,
+            "verts": 0,
+            "grinds": 232,
+            "peak": 2.699144401080756,
+            "grind": {
+              "frames": 274,
+              "grindFrames": 232,
+              "maxT": 104.58457012609946,
+              "minT": 28.695288301485622,
+              "progress": 104.58457012609946,
+              "direction": 1,
+              "maxBalance": 0.05125,
+              "caught": true,
+              "landed": true
+            }
+          },
+          "end": [
+            -2.248878871876451,
+            2.5595483972707695,
+            -35.479075352746925
+          ]
+        }
+      ],
+      "failure": null,
+      "frames": 621,
+      "tuningUnchanged": true
+    },
+    "console": {
+      "source": [
+        {
+          "level": "error",
+          "message": "Uncaught TypeError: Failed to execute 'observe' on 'MutationObserver': parameter 1 is not of type 'Node'.",
+          "timestamp": "2026-10-23T05:02:39.841Z"
+        }
+      ],
+      "scaled": []
+    },
+    "consoleAssessment": "One unattributed MutationObserver error during reload, without URL/stack; current page/game startup and check captures are empty. Not declared fixed."
+  },
+  "mainRegression": {
+    "cases": 64,
+    "steps": 18058,
+    "previousTaskReportExact": true,
+    "supportCount": 18,
+    "railClearanceSamples": 97,
+    "ditchApproaches": 8
+  },
+  "defaultTrace": {
+    "frames": 960,
+    "sha256": "c355c28f30e0c6a248e396cfe83234e24b95fdaa5c907f8ec9fc97faa29c2fe2"
+  },
+  "checks": {
+    "checkLevels": "pass",
+    "build": "pass",
+    "buildStamp": "07b3fa8ebf1165ad57a4",
+    "buildSeconds": 13.11,
+    "isolatedTaskTypeScript": "pass",
+    "sourceToolsTypeScript": "pass",
+    "fullSuiteRun": false,
+    "scriptRunner": "Exact package.json script bodies through bundled Node and existing local binaries; no dependency installation.",
+    "buildScope": "Shared working tree production build; task runtime separately type-checked and executed with the isolated frozen harness."
+  },
+  "limitations": [
+    "Original Game_Logic offers rails after skater logic at 30 Hz; this adaptation queries the preceding 60 Hz movement step before ride/air updates.",
+    "Complete source trick/handplant rules, snap state, cooldown scheduling, RNG, steering/braking/contact tracking and fixed-point movement are not identical.",
+    "Retained THPS2 PC School files are not independently hash-matched against THPS1 media.",
+    "Original materials are not recreated.",
+    "The campus route ends below Hall Pass stairs; it is not a closed loop.",
+    "Historical unattributed MutationObserver reload errors are not declared fixed."
+  ],
+  "continuationStartedAt": "2026-10-23T04:52:48+00:00",
+  "verifiedFullSuiteAt": "2026-10-23T05:10:28.473861+00:00",
+  "verifiedFinalFeatureAt": "2026-10-23T05:11:10.685650+00:00",
+  "minutesToVerifiedPlayable": 18.4,
+  "delivery": "Local only; no push, upload, publication or deployment. Shared HEAD/index preserved."
+}

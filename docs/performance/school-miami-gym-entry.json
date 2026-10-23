@@ -1,0 +1,132 @@
+{
+  "parentTaskCommit": "e0d77bba9d8befb9b834956a444dd91e001c326a",
+  "sourceFiles": {
+    "src/levels/school-source.ts": "927a7c4809f7dc3e85516e55f91823bacdb0d47bbfa14027b349e88de1f92610",
+    "tools/school-source-lines.ts": "306387c7e764a3572612a586b39bd199a0073c6455f28f338ce4ba4411d6c91e",
+    "tools/school-source-review.ts": "e658f1753279161bdff3b09795c6e5601973fcc3b10a708d4b1a481c99e91bf5",
+    "tools/school-source-review.html": "354b03cc492a24f035835493bf64d8d1c0cbe1401283fdd2b4bec57ddb11555c",
+    "tools/test-school-gym-entry.mjs": "553c96d031b8e8c005005881597b48d22901ab1115db5779e8d252146af358af"
+  },
+  "geometryFileSha256": "ed33512389703218a79971f064badd7b5b829974af00d6457786a6ac7d11ef3e",
+  "userDecision": "Smooth the step; keep movement unchanged. Wrap up the playable matching geometry and stop.",
+  "geometryException": {
+    "banks": 2,
+    "riseMetres": 1.9780246172320624,
+    "runMetres": 6.268387871510057,
+    "segmentsPerStrip": 12,
+    "newFaces": 144,
+    "removedHiddenRiserFaces": [
+      "662:18",
+      "662:19",
+      "719:17",
+      "719:18"
+    ],
+    "join": "Flat floor tangent to original upper-bank grade; matching lower floor/end-cap stations moved to new feet."
+  },
+  "stats": {
+    "sourceObjects": 889,
+    "sourceFaces": 7593,
+    "playableFaces": 7721,
+    "softenedEntryFaces": 144,
+    "sourceRailNodes": 393,
+    "activeRailNodes": 390,
+    "transitionFaces": 1262,
+    "wallSegments": 1329,
+    "railEdges": 270,
+    "railSegments": 331,
+    "railPaths": 128
+  },
+  "components": 2112,
+  "scale": 0.013929750825577904,
+  "runtimeSnapshots": {
+    "task": {
+      "skateParkTuning": "bc609a6765ffd91c0d3bc062b33ee25c03cd7386a9159b24c1f643f38bca0234",
+      "vertSkateMotion": "944c8fa4293fe58b8baca9987c7573b78428774e77b93bccb2b889d893a7ac96",
+      "skateSteering": "62b9d234f6feebaadd2f5c3b58cd6305d042c99ee46ea7d75d8fff7dbe953f68",
+      "tuning": "2b19f1ef4f08d3cc2b33d857c09da03bbc8ad59497a9210cf5e0d11c342cd9c7",
+      "input": "e927301959f455734fea461cfca35001c2410d720b274e559d5d7ba7121e5dec",
+      "level": "e3501d7bbe2229a319c41d9bfb5937a943f4ffeb1155d46e9ddaf0ef8d960f5a",
+      "meshContactNormal": "3fee5417da3a27bb63b1e7428af1532078b3a6f4d802e753d9635fd2260da224",
+      "player": "5442a09ef395719adebd3857c3134e63879022091795edf55acd98d62e5836c7",
+      "referenceRailCapture": "65e122e0d679e64727fd273c841229570138ee7730066018cb92d252e9792d94",
+      "vertBoardRelease": "7ce3ba915f646ac97890d0a2b9f25635ccedddb8068e4c2217c2812808866e67",
+      "skateParkPhysics": "3cf5ce4c8bd9037539ffd21ff8559f78a0b9c2fd7a27f702a68bbe6aa2536f99",
+      "skateChaseCamera": "b8d670861fb3d53f081a98d74628c28176e78d87c5cebe47cb826f34f89fc145",
+      "skateReferencePhysics": "c753e64473cea0d7f08c7cc0efbd80a2833f98f1f57dcf6996e23de73c0113ff"
+    },
+    "working": {
+      "skateParkTuning": "bc609a6765ffd91c0d3bc062b33ee25c03cd7386a9159b24c1f643f38bca0234",
+      "vertSkateMotion": "944c8fa4293fe58b8baca9987c7573b78428774e77b93bccb2b889d893a7ac96",
+      "skateSteering": "62b9d234f6feebaadd2f5c3b58cd6305d042c99ee46ea7d75d8fff7dbe953f68",
+      "tuning": "dc7b43eedbb160b2ddfc16cdfdca42f1419245a76214fdccd49cf872905038c0",
+      "input": "53cd0f5d183777461c3af7514af6ebc22abe44513a7986287f4c592f00d2a433",
+      "level": "77484671f00e7a24b1de632903db97663b6b0e5a362ffbdb898fc5e27b7841e0",
+      "meshContactNormal": "3fee5417da3a27bb63b1e7428af1532078b3a6f4d802e753d9635fd2260da224",
+      "player": "dd5d49e1794f5c33b13483e45fc9f6ba8f31a0e16b62ce2c1526a82c18fb0b24",
+      "referenceRailCapture": "65e122e0d679e64727fd273c841229570138ee7730066018cb92d252e9792d94",
+      "vertBoardRelease": "7ce3ba915f646ac97890d0a2b9f25635ccedddb8068e4c2217c2812808866e67",
+      "skateParkPhysics": "3cf5ce4c8bd9037539ffd21ff8559f78a0b9c2fd7a27f702a68bbe6aa2536f99",
+      "skateChaseCamera": "b8d670861fb3d53f081a98d74628c28176e78d87c5cebe47cb826f34f89fc145",
+      "skateReferencePhysics": "c753e64473cea0d7f08c7cc0efbd80a2833f98f1f57dcf6996e23de73c0113ff"
+    }
+  },
+  "movementModulesUnchanged": true,
+  "sourceProfileUnchanged": true,
+  "skaterChanged": false,
+  "tuningChanged": false,
+  "originalRailCoordinatesUnchanged": true,
+  "sourceJsonUnchanged": true,
+  "accepted2xMapUnchanged": true,
+  "native": {
+    "cases": 20,
+    "steps": 12301,
+    "taskWorkingExact": true,
+    "allNonGymCasesExactToPrevious": true
+  },
+  "defaultController": {
+    "cases": 12,
+    "steps": 384,
+    "directions": [
+      "up",
+      "down"
+    ],
+    "sourceZStations": [
+      9500,
+      11000,
+      14000
+    ],
+    "noAirOrBails": true,
+    "noSourceProfile": true
+  },
+  "browser": {
+    "cases": 20,
+    "steps": 12301,
+    "liteFullExact": true,
+    "nativeExact": true,
+    "errors": [],
+    "startupErrors": {
+      "preview": [],
+      "game": []
+    }
+  },
+  "checks": {
+    "checkLevels": "pass",
+    "build": "pass",
+    "buildStamp": "331e101604eb5de0a810",
+    "buildSeconds": 14.5,
+    "isolatedTaskTypeScript": "pass",
+    "sourceToolsTypeScript": "pass",
+    "fullSuiteRun": false
+  },
+  "limitations": [
+    "Gym entries are an explicit user-approved exception to literal source geometry.",
+    "Original procedural materials and the previously recorded partial movement adaptation remain; this is not complete 1:1 game parity.",
+    "Retained THPS2 PC School files are not independently hash-matched against THPS1 media.",
+    "The continuous route ends below Hall Pass stairs.",
+    "Historical unattributed reload MutationObserver errors are not declared fixed."
+  ],
+  "startedAt": "2026-10-23T05:16:41+00:00",
+  "verifiedFullAt": "2026-10-23T05:44:01.323013+00:00",
+  "minutesToVerifiedPlayable": 27.3,
+  "delivery": "Local only; no push, upload, publication or deployment. Stop further reconstruction at the user-requested playable checkpoint."
+}

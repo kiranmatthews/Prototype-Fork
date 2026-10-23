@@ -1,0 +1,152 @@
+{
+  "chain": [
+    797,
+    347,
+    346,
+    344,
+    343,
+    342,
+    341,
+    340,
+    345,
+    339,
+    338,
+    337,
+    336,
+    335,
+    334,
+    333
+  ],
+  "frames": 754,
+  "grind": {
+    "frames": 754,
+    "grindFrames": 720,
+    "maxT": 212.20666087264325,
+    "minT": 0.4000000000000088,
+    "progress": 212.20666087264325,
+    "direction": 1,
+    "maxBalance": 0.14375,
+    "caught": true,
+    "landed": true
+  },
+  "corners": [
+    {
+      "sourceNode": 347,
+      "frame": 1,
+      "angleDegrees": 25.016893478100034,
+      "entrySpeed": 23.432602821975383,
+      "exitSpeed": 21.234229603479644,
+      "expectedProjectedSpeed": 21.23422960347957
+    },
+    {
+      "sourceNode": 346,
+      "frame": 62,
+      "angleDegrees": 11.266885314942526,
+      "entrySpeed": 21.234229603479644,
+      "exitSpeed": 20.824998091378703,
+      "expectedProjectedSpeed": 20.824998091378692
+    },
+    {
+      "sourceNode": 344,
+      "frame": 83,
+      "angleDegrees": 22.484070370383186,
+      "entrySpeed": 20.824998091378703,
+      "exitSpeed": 19.242004440847825,
+      "expectedProjectedSpeed": 19.242004440847843
+    },
+    {
+      "sourceNode": 343,
+      "frame": 106,
+      "angleDegrees": 11.249044314674327,
+      "entrySpeed": 19.242004440847825,
+      "exitSpeed": 18.872337333402662,
+      "expectedProjectedSpeed": 18.872337333402662
+    },
+    {
+      "sourceNode": 342,
+      "frame": 245,
+      "angleDegrees": 5.725966300402337,
+      "entrySpeed": 18.872337333402662,
+      "exitSpeed": 18.778172981945048,
+      "expectedProjectedSpeed": 18.778172981945048
+    },
+    {
+      "sourceNode": 341,
+      "frame": 269,
+      "angleDegrees": 11.143646265195146,
+      "entrySpeed": 18.778172981945048,
+      "exitSpeed": 18.424124081250245,
+      "expectedProjectedSpeed": 18.424124081250238
+    },
+    {
+      "sourceNode": 340,
+      "frame": 293,
+      "angleDegrees": 11.284660518611418,
+      "entrySpeed": 18.424124081250245,
+      "exitSpeed": 18.067932019172588,
+      "expectedProjectedSpeed": 18.0679320191726
+    },
+    {
+      "sourceNode": 345,
+      "frame": 317,
+      "angleDegrees": 11.14602237175853,
+      "entrySpeed": 18.067932019172588,
+      "exitSpeed": 17.72712936860652,
+      "expectedProjectedSpeed": 17.727129368606512
+    },
+    {
+      "sourceNode": 339,
+      "frame": 341,
+      "angleDegrees": 5.699704544032643,
+      "entrySpeed": 17.72712936860652,
+      "exitSpeed": 17.639487896549152,
+      "expectedProjectedSpeed": 17.639487896549152
+    },
+    {
+      "sourceNode": 338,
+      "frame": 541,
+      "angleDegrees": 11.288368387905138,
+      "entrySpeed": 17.639487896549152,
+      "exitSpeed": 17.29824172557798,
+      "expectedProjectedSpeed": 17.29824172557799
+    },
+    {
+      "sourceNode": 337,
+      "frame": 566,
+      "angleDegrees": 22.46258729742057,
+      "entrySpeed": 17.29824172557798,
+      "exitSpeed": 15.985810601872549,
+      "expectedProjectedSpeed": 15.985810601872538
+    },
+    {
+      "sourceNode": 336,
+      "frame": 593,
+      "angleDegrees": 22.406918282866783,
+      "entrySpeed": 15.985810601872549,
+      "exitSpeed": 14.778882122650716,
+      "expectedProjectedSpeed": 14.778882122650709
+    },
+    {
+      "sourceNode": 335,
+      "frame": 622,
+      "angleDegrees": 22.575240716865075,
+      "entrySpeed": 14.778882122650716,
+      "exitSpeed": 13.646467967890704,
+      "expectedProjectedSpeed": 13.646467967890718
+    },
+    {
+      "sourceNode": 334,
+      "frame": 654,
+      "angleDegrees": 11.266885314942494,
+      "entrySpeed": 13.646467967890704,
+      "exitSpeed": 13.3834697416484,
+      "expectedProjectedSpeed": 13.383469741648394
+    }
+  ],
+  "allProjectionErrorsBelow": 1e-07,
+  "end": [
+    -73.56301410987692,
+    -22.245811462402344,
+    -270.28495519068986
+  ]
+}

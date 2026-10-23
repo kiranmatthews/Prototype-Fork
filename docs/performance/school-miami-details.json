@@ -1,0 +1,2195 @@
+{
+  "support": [
+    {
+      "name": "West pavilion supported roof -3",
+      "point": [
+        -3,
+        3.8000001907348633,
+        12.5
+      ]
+    },
+    {
+      "name": "West pavilion supported roof 0",
+      "point": [
+        0,
+        3.8000001907348633,
+        12.5
+      ]
+    },
+    {
+      "name": "West pavilion supported roof 4",
+      "point": [
+        4,
+        3.8000001907348633,
+        12.5
+      ]
+    },
+    {
+      "name": "Closed passage supported roof 8",
+      "point": [
+        8,
+        3.450000047683716,
+        14
+      ]
+    },
+    {
+      "name": "Closed passage supported roof 13",
+      "point": [
+        13,
+        3.450000047683716,
+        14
+      ]
+    },
+    {
+      "name": "Closed passage supported roof 19",
+      "point": [
+        19,
+        3.450000047683716,
+        14
+      ]
+    },
+    {
+      "name": "Upper court checkpoint clear of pavilion",
+      "point": [
+        6,
+        0,
+        9
+      ]
+    },
+    {
+      "name": "Joined roof vent top 62.2",
+      "point": [
+        62.2,
+        7.699999809265137,
+        40.5
+      ]
+    },
+    {
+      "name": "Joined roof vent top 64.7",
+      "point": [
+        64.7,
+        7.699999809265137,
+        40.25
+      ]
+    },
+    {
+      "name": "Joined roof vent top 67.05",
+      "point": [
+        67.05,
+        7.699999809265137,
+        40.6
+      ]
+    },
+    {
+      "name": "Joined roof vent rollout 58.3",
+      "point": [
+        58.3,
+        6.999999994039536,
+        40.5
+      ]
+    },
+    {
+      "name": "Joined roof vent rollout 70.4",
+      "point": [
+        70.4,
+        6.999999994039536,
+        40.5
+      ]
+    },
+    {
+      "name": "Roof checkpoint clear of joined vent",
+      "point": [
+        61,
+        6.999999994039536,
+        44
+      ]
+    },
+    {
+      "name": "Registered AC top 0/0",
+      "point": [
+        54.7,
+        9.099999904632568,
+        23.7
+      ]
+    },
+    {
+      "name": "Registered AC top -4/-3",
+      "point": [
+        50.7,
+        9.099999904632568,
+        20.7
+      ]
+    },
+    {
+      "name": "Registered AC top -4/3",
+      "point": [
+        50.7,
+        9.099999904632568,
+        26.7
+      ]
+    },
+    {
+      "name": "Registered AC top 4/-3",
+      "point": [
+        58.7,
+        9.099999904632568,
+        20.7
+      ]
+    },
+    {
+      "name": "Registered AC top 4/3",
+      "point": [
+        58.7,
+        9.099999904632568,
+        26.7
+      ]
+    },
+    {
+      "name": "Narrow flat lane north of air conditioner",
+      "point": [
+        54.7,
+        6.999999994039536,
+        18.12
+      ]
+    },
+    {
+      "name": "AC north curved profile 0",
+      "point": [
+        54.7,
+        7,
+        18.25
+      ]
+    },
+    {
+      "name": "AC north curved profile 30",
+      "point": [
+        54.7,
+        7.161139277370449,
+        18.85
+      ]
+    },
+    {
+      "name": "AC north curved profile 60",
+      "point": [
+        54.7,
+        7.600651942468431,
+        19.289230484541328
+      ]
+    },
+    {
+      "name": "AC north curved profile 75",
+      "point": [
+        54.7,
+        7.890620796355206,
+        19.409110991546882
+      ]
+    },
+    {
+      "name": "AC west curved profile 0",
+      "point": [
+        48.25,
+        7,
+        21.3
+      ]
+    },
+    {
+      "name": "AC west curved profile 30",
+      "point": [
+        48.85,
+        7.16113819685546,
+        21.3
+      ]
+    },
+    {
+      "name": "AC west curved profile 60",
+      "point": [
+        49.28923048454133,
+        7.600653097229628,
+        21.3
+      ]
+    },
+    {
+      "name": "AC west curved profile 75",
+      "point": [
+        49.40911099154688,
+        7.890627688724844,
+        21.3
+      ]
+    },
+    {
+      "name": "AC south curved profile 0",
+      "point": [
+        57.5,
+        6.999999994039536,
+        29.15
+      ]
+    },
+    {
+      "name": "AC south curved profile 30",
+      "point": [
+        57.5,
+        7.161139061267452,
+        28.549999999999997
+      ]
+    },
+    {
+      "name": "AC south curved profile 60",
+      "point": [
+        57.5,
+        7.600651269088278,
+        28.11076951545867
+      ]
+    },
+    {
+      "name": "AC south curved profile 75",
+      "point": [
+        57.5,
+        7.890619417881284,
+        27.990889008453117
+      ]
+    },
+    {
+      "name": "AC rounded corner -1/10",
+      "point": [
+        48.80153800672534,
+        7.018592732930572,
+        18.80153800672533
+      ]
+    },
+    {
+      "name": "AC rounded corner -1/45",
+      "point": [
+        49.25419264196257,
+        7.35147233120854,
+        19.254192641962565
+      ]
+    },
+    {
+      "name": "AC rounded corner -1/75",
+      "point": [
+        49.47380788423323,
+        7.8906241170082865,
+        19.473807884233228
+      ]
+    },
+    {
+      "name": "AC rounded corner 1/10",
+      "point": [
+        48.80153800672534,
+        7.018592684978257,
+        28.598461993274668
+      ]
+    },
+    {
+      "name": "AC rounded corner 1/45",
+      "point": [
+        49.25419264196257,
+        7.351472040937098,
+        28.145807358037434
+      ]
+    },
+    {
+      "name": "AC rounded corner 1/75",
+      "point": [
+        49.47380788423323,
+        7.890623118261782,
+        27.92619211576677
+      ]
+    },
+    {
+      "name": "Roof 2 Roof approach east of kicker",
+      "point": [
+        65.5,
+        6.999999994039536,
+        23
+      ]
+    },
+    {
+      "name": "Air conditioner west landing clear roof",
+      "point": [
+        43,
+        6.999999994039536,
+        23.7
+      ]
+    },
+    {
+      "name": "Roof short rail 1 supported approach/bar/rollout -0.3",
+      "point": [
+        36.71,
+        6.999999994039536,
+        37.949999999999996
+      ]
+    },
+    {
+      "name": "Roof short rail 1 supported approach/bar/rollout 0",
+      "point": [
+        37.7,
+        6.999999994039536,
+        36.9
+      ]
+    },
+    {
+      "name": "Roof short rail 1 supported approach/bar/rollout 0.5",
+      "point": [
+        39.35,
+        6.999999994039536,
+        35.15
+      ]
+    },
+    {
+      "name": "Roof short rail 1 supported approach/bar/rollout 1",
+      "point": [
+        41,
+        6.999999994039536,
+        33.4
+      ]
+    },
+    {
+      "name": "Roof short rail 1 supported approach/bar/rollout 1.3",
+      "point": [
+        41.99,
+        6.999999994039536,
+        32.35
+      ]
+    },
+    {
+      "name": "Roof short rail 2 supported approach/bar/rollout -0.3",
+      "point": [
+        34.78,
+        6.999999994039536,
+        44.61000000000001
+      ]
+    },
+    {
+      "name": "Roof short rail 2 supported approach/bar/rollout 0",
+      "point": [
+        36.4,
+        6.999999994039536,
+        44.7
+      ]
+    },
+    {
+      "name": "Roof short rail 2 supported approach/bar/rollout 0.5",
+      "point": [
+        39.099999999999994,
+        6.999999994039536,
+        44.85
+      ]
+    },
+    {
+      "name": "Roof short rail 2 supported approach/bar/rollout 1",
+      "point": [
+        41.8,
+        6.999999994039536,
+        45
+      ]
+    },
+    {
+      "name": "Roof short rail 2 supported approach/bar/rollout 1.3",
+      "point": [
+        43.419999999999995,
+        6.999999994039536,
+        45.089999999999996
+      ]
+    },
+    {
+      "name": "West roof hip flat top",
+      "point": [
+        45.5,
+        8.25,
+        26.5
+      ]
+    },
+    {
+      "name": "West roof hip rollout 21.5",
+      "point": [
+        45.5,
+        6.999999994039536,
+        21.5
+      ]
+    },
+    {
+      "name": "West roof hip rollout 31.5",
+      "point": [
+        45.5,
+        6.999999994039536,
+        31.5
+      ]
+    },
+    {
+      "name": "Flat south roof lane 30",
+      "point": [
+        30,
+        6.999999994039536,
+        46.8
+      ]
+    },
+    {
+      "name": "Flat south roof lane 40",
+      "point": [
+        40,
+        6.999999994039536,
+        46.8
+      ]
+    },
+    {
+      "name": "Flat south roof lane 50",
+      "point": [
+        50,
+        6.999999994039536,
+        46.8
+      ]
+    },
+    {
+      "name": "Flat south roof lane 60",
+      "point": [
+        60,
+        6.999999994039536,
+        46.8
+      ]
+    },
+    {
+      "name": "Flat south roof lane 67",
+      "point": [
+        67,
+        6.999999994039536,
+        46.8
+      ]
+    },
+    {
+      "name": "Low south parapet 30",
+      "point": [
+        30,
+        7.300000005960465,
+        48.65
+      ]
+    },
+    {
+      "name": "Low south parapet 48",
+      "point": [
+        48,
+        7.300000005960465,
+        48.65
+      ]
+    },
+    {
+      "name": "Low south parapet 67",
+      "point": [
+        67,
+        7.300000005960465,
+        48.65
+      ]
+    },
+    {
+      "name": "Hoop quarter flat approach",
+      "point": [
+        48.5,
+        0,
+        43.4
+      ]
+    },
+    {
+      "name": "Hoop quarter deck",
+      "point": [
+        48.5,
+        1.350000023841858,
+        45.1
+      ]
+    },
+    {
+      "name": "Gym bank 0 profile 0",
+      "point": [
+        35,
+        0,
+        32
+      ]
+    },
+    {
+      "name": "Gym bank 0 profile 0.4",
+      "point": [
+        34.6,
+        0.044155548790609345,
+        32
+      ]
+    },
+    {
+      "name": "Gym bank 0 profile 2",
+      "point": [
+        33,
+        0.7064934968948364,
+        32
+      ]
+    },
+    {
+      "name": "Gym bank 0 profile 4",
+      "point": [
+        31,
+        1.5896103382110596,
+        32
+      ]
+    },
+    {
+      "name": "Gym bank 0 profile 6",
+      "point": [
+        29,
+        2.4727272987365723,
+        32
+      ]
+    },
+    {
+      "name": "Gym bank 0 profile 8",
+      "point": [
+        27,
+        3.34112548828125,
+        32
+      ]
+    },
+    {
+      "name": "Gym bank 0 profile 8.7",
+      "point": [
+        26.3,
+        3.4000000953674316,
+        32
+      ]
+    },
+    {
+      "name": "Gym bank 1 profile 0",
+      "point": [
+        61,
+        0,
+        32
+      ]
+    },
+    {
+      "name": "Gym bank 1 profile 0.4",
+      "point": [
+        61.4,
+        0.044155548790609345,
+        32
+      ]
+    },
+    {
+      "name": "Gym bank 1 profile 2",
+      "point": [
+        63,
+        0.7064934968948364,
+        32
+      ]
+    },
+    {
+      "name": "Gym bank 1 profile 4",
+      "point": [
+        65,
+        1.5896103382110596,
+        32
+      ]
+    },
+    {
+      "name": "Gym bank 1 profile 6",
+      "point": [
+        67,
+        2.4727272987365723,
+        32
+      ]
+    },
+    {
+      "name": "Gym bank 1 profile 8",
+      "point": [
+        69,
+        3.34112548828125,
+        32
+      ]
+    },
+    {
+      "name": "Gym bank 1 profile 8.7",
+      "point": [
+        69.7,
+        3.4000000953674316,
+        32
+      ]
+    },
+    {
+      "name": "Central gym doorway 46.5",
+      "point": [
+        46.5,
+        0,
+        14.6
+      ]
+    },
+    {
+      "name": "Central gym doorway 48.5",
+      "point": [
+        48.5,
+        0,
+        14.6
+      ]
+    },
+    {
+      "name": "Central gym doorway 50.5",
+      "point": [
+        50.5,
+        0,
+        14.6
+      ]
+    },
+    {
+      "name": "Open skylight reaches the court",
+      "point": [
+        53.4,
+        0,
+        39.2
+      ]
+    },
+    {
+      "name": "Skylight frame X -1",
+      "point": [
+        45.95,
+        7.24999886622504,
+        39.2
+      ]
+    },
+    {
+      "name": "Skylight frame Z -1",
+      "point": [
+        51,
+        7.250001133774971,
+        33.050000000000004
+      ]
+    },
+    {
+      "name": "Skylight frame X 1",
+      "point": [
+        56.05,
+        7.24999886622504,
+        39.2
+      ]
+    },
+    {
+      "name": "Skylight frame Z 1",
+      "point": [
+        51,
+        7.249997732450069,
+        45.35
+      ]
+    },
+    {
+      "name": "Intact skylight pane 0/0",
+      "point": [
+        48.6,
+        7.49999999910593,
+        35.266666666666666
+      ]
+    },
+    {
+      "name": "Intact skylight pane 0/1",
+      "point": [
+        53.4,
+        7.49999999910593,
+        35.266666666666666
+      ]
+    },
+    {
+      "name": "Intact skylight pane 1/0",
+      "point": [
+        48.6,
+        7.49999999910593,
+        39.2
+      ]
+    },
+    {
+      "name": "Intact skylight pane 2/0",
+      "point": [
+        48.6,
+        7.49999999910593,
+        43.13333333333334
+      ]
+    },
+    {
+      "name": "Intact skylight pane 2/1",
+      "point": [
+        53.4,
+        7.49999999910593,
+        43.13333333333334
+      ]
+    },
+    {
+      "name": "Rear bank deck 0.1",
+      "point": [
+        -7.348028169014082,
+        -3.8499999046325684,
+        -80.17794366197182
+      ]
+    },
+    {
+      "name": "Rear bank deck 0.3",
+      "point": [
+        -2.5060563380281664,
+        -3.8499999046325684,
+        -79.92988732394366
+      ]
+    },
+    {
+      "name": "Rear bank deck 0.5",
+      "point": [
+        2.33591549295775,
+        -3.8499999046325684,
+        -79.68183098591548
+      ]
+    },
+    {
+      "name": "Rear bank deck 0.7",
+      "point": [
+        7.177887323943664,
+        -3.8499999046325684,
+        -79.43377464788732
+      ]
+    },
+    {
+      "name": "Rear bank deck 0.9",
+      "point": [
+        12.019859154929582,
+        -3.8499999046325684,
+        -79.18571830985914
+      ]
+    }
+  ],
+  "trials": [
+    {
+      "name": "West pavilion roof jump -1/12",
+      "kind": "air",
+      "direction": -1,
+      "speed": 12,
+      "frames": 54,
+      "air": true,
+      "landed": true,
+      "maxY": 5.555457690734861,
+      "maxLateral": 0,
+      "bails": 0,
+      "end": [
+        0,
+        3.4000000953674316,
+        0.24800829935579172
+      ]
+    },
+    {
+      "name": "West pavilion roof jump -1/14",
+      "kind": "air",
+      "direction": -1,
+      "speed": 14,
+      "frames": 46,
+      "air": true,
+      "landed": true,
+      "maxY": 4.997751301845979,
+      "maxLateral": 0,
+      "bails": 0,
+      "end": [
+        0,
+        3.4000000953674316,
+        0.554038756202845
+      ]
+    },
+    {
+      "name": "West pavilion roof jump 1/12",
+      "kind": "air",
+      "direction": 1,
+      "speed": 12,
+      "frames": 43,
+      "air": true,
+      "landed": true,
+      "maxY": 4.696317317589656,
+      "maxLateral": 0,
+      "bails": 0,
+      "end": [
+        0,
+        3.8000001907348633,
+        9.9762560054106
+      ]
+    },
+    {
+      "name": "West pavilion roof jump 1/14",
+      "kind": "air",
+      "direction": 1,
+      "speed": 14,
+      "frames": 43,
+      "air": true,
+      "landed": true,
+      "maxY": 4.712157039811873,
+      "maxLateral": 0,
+      "bails": 0,
+      "end": [
+        0,
+        3.8000001907348633,
+        11.321848291314103
+      ]
+    },
+    {
+      "name": "Hill to AC continuous air and roof rollout",
+      "kind": "air",
+      "frames": 271,
+      "hillCleared": true,
+      "air": true,
+      "firstLanding": [
+        44.88298559890382,
+        8.155896412690543,
+        25.925137773911874
+      ],
+      "rollout": true,
+      "bails": 0,
+      "end": [
+        39.874641322043125,
+        6.999999994039536,
+        25.799853214506356
+      ]
+    },
+    {
+      "name": "AC transition north return 12",
+      "kind": "air",
+      "speed": 12,
+      "frames": 66,
+      "air": true,
+      "returned": true,
+      "rollout": true,
+      "maxY": 10.655772660629653,
+      "maxStep": 0.2823726363504728,
+      "bails": 0,
+      "end": [
+        54.7,
+        6.999999994039536,
+        18.072421975258866
+      ]
+    },
+    {
+      "name": "AC transition north return 16",
+      "kind": "air",
+      "speed": 16,
+      "frames": 78,
+      "air": true,
+      "returned": true,
+      "rollout": true,
+      "maxY": 12.52444906143914,
+      "maxStep": 0.34062979973439306,
+      "bails": 0,
+      "end": [
+        54.7,
+        6.999999994039536,
+        18.03517071264334
+      ]
+    },
+    {
+      "name": "AC transition west return 8",
+      "kind": "air",
+      "speed": 8,
+      "frames": 83,
+      "air": true,
+      "returned": true,
+      "rollout": true,
+      "maxY": 10.227520348132582,
+      "maxStep": 0.27001298093429,
+      "bails": 0,
+      "end": [
+        48.14758425947658,
+        6.999999994039536,
+        21.3
+      ]
+    },
+    {
+      "name": "AC transition west return 12",
+      "kind": "air",
+      "speed": 12,
+      "frames": 86,
+      "air": true,
+      "returned": true,
+      "rollout": true,
+      "maxY": 11.612945843199745,
+      "maxStep": 0.31066833929773396,
+      "bails": 0,
+      "end": [
+        48.19456475695391,
+        6.999999994039536,
+        21.3
+      ]
+    },
+    {
+      "name": "AC transition west return 16",
+      "kind": "air",
+      "speed": 16,
+      "frames": 94,
+      "air": true,
+      "returned": true,
+      "rollout": true,
+      "maxY": 13.465291325593157,
+      "maxStep": 0.3599717157447946,
+      "bails": 0,
+      "end": [
+        47.9371410378985,
+        6.999999994039536,
+        21.3
+      ]
+    },
+    {
+      "name": "AC transition west hip return 12",
+      "kind": "air",
+      "speed": 12,
+      "frames": 97,
+      "air": true,
+      "returned": true,
+      "rollout": true,
+      "maxY": 12.615221079365583,
+      "maxStep": 0.34750099211084773,
+      "bails": 0,
+      "end": [
+        48.012541061662255,
+        7.052666386243249,
+        26.47935917358637
+      ]
+    },
+    {
+      "name": "AC transition west hip return 16",
+      "kind": "air",
+      "speed": 16,
+      "frames": 102,
+      "air": true,
+      "returned": true,
+      "rollout": true,
+      "maxY": 14.36463076636857,
+      "maxStep": 0.38425787475282636,
+      "bails": 0,
+      "end": [
+        48.19443982204789,
+        7.006288451771201,
+        26.54596078982237
+      ]
+    },
+    {
+      "name": "AC transition south return 8",
+      "kind": "air",
+      "speed": 8,
+      "frames": 88,
+      "air": true,
+      "returned": true,
+      "rollout": true,
+      "maxY": 10.446384481739363,
+      "maxStep": 0.27842949750138746,
+      "bails": 0,
+      "end": [
+        57.5,
+        6.999999994039536,
+        29.307841028794968
+      ]
+    },
+    {
+      "name": "AC transition south return 12",
+      "kind": "air",
+      "speed": 12,
+      "frames": 90,
+      "air": true,
+      "returned": true,
+      "rollout": true,
+      "maxY": 11.777256088965476,
+      "maxStep": 0.3208141008708862,
+      "bails": 0,
+      "end": [
+        57.5,
+        6.999999994039536,
+        29.25422899215541
+      ]
+    },
+    {
+      "name": "AC transition south return 16",
+      "kind": "air",
+      "speed": 16,
+      "frames": 97,
+      "air": true,
+      "returned": true,
+      "rollout": true,
+      "maxY": 13.524946254028041,
+      "maxStep": 0.36896248898002076,
+      "bails": 0,
+      "end": [
+        57.5,
+        6.999999994039536,
+        29.504766524474753
+      ]
+    },
+    {
+      "name": "AC transition north low-speed rollback",
+      "kind": "ride",
+      "frames": 77,
+      "maxY": 8.89140203417133,
+      "rollout": true,
+      "maxLateral": 1.944833174956706,
+      "bails": 0,
+      "end": [
+        52.7551668250433,
+        7.006008808513875,
+        18.369489313700875
+      ]
+    },
+    {
+      "name": "AC transition north forward to top",
+      "kind": "air",
+      "speed": 12,
+      "frames": 65,
+      "air": true,
+      "firstLanding": [
+        54.7,
+        9.099999904632568,
+        26.02801775106286
+      ],
+      "rollout": true,
+      "bails": 0,
+      "end": [
+        54.7,
+        9.099999904632568,
+        26.88100602586624
+      ]
+    },
+    {
+      "name": "AC transition west forward to top",
+      "kind": "air",
+      "speed": 8,
+      "frames": 84,
+      "air": true,
+      "firstLanding": [
+        55.733351886066174,
+        9.099999904632568,
+        21.3
+      ],
+      "rollout": true,
+      "bails": 0,
+      "end": [
+        56.56980070501725,
+        9.099999904632568,
+        21.3
+      ]
+    },
+    {
+      "name": "AC transition south forward to top",
+      "kind": "air",
+      "speed": 8,
+      "frames": 88,
+      "air": true,
+      "firstLanding": [
+        57.5,
+        9.099999904632568,
+        21.274677899582308
+      ],
+      "rollout": true,
+      "bails": 0,
+      "end": [
+        57.5,
+        9.099999904632568,
+        20.40982781771912
+      ]
+    },
+    {
+      "name": "AC transition complete coping -1",
+      "kind": "grind",
+      "side": -1,
+      "grind": {
+        "frames": 196,
+        "grindFrames": 155,
+        "maxT": 29.34542668961408,
+        "minT": 0,
+        "progress": 29.34542668961408,
+        "direction": 1,
+        "maxBalance": 0.1,
+        "caught": true,
+        "landed": true
+      },
+      "bails": 0,
+      "end": [
+        65.06890057968374,
+        6.999999994039536,
+        27.95
+      ]
+    },
+    {
+      "name": "AC transition complete coping 1",
+      "kind": "grind",
+      "side": 1,
+      "grind": {
+        "frames": 221,
+        "grindFrames": 182,
+        "maxT": 29.34542668961408,
+        "minT": 0,
+        "progress": 29.34542668961408,
+        "direction": -1,
+        "maxBalance": 0.1,
+        "caught": true,
+        "landed": true
+      },
+      "bails": 0,
+      "end": [
+        64.30870565584453,
+        6.999999994039536,
+        19.45
+      ]
+    },
+    {
+      "name": "Roof joined vent 1/-1",
+      "kind": "ride",
+      "direction": -1,
+      "speed": 12,
+      "frames": 62,
+      "maxY": 7.699999809265137,
+      "maxStep": 0.22240070995237773,
+      "maxLateral": 0.0476218109531672,
+      "minSpeed": 11.540686524426212,
+      "arrived": true,
+      "bails": 0,
+      "end": [
+        58.13042799812081,
+        6.999999994039536,
+        40.48610737972844
+      ]
+    },
+    {
+      "name": "Roof joined vent 1/1",
+      "kind": "ride",
+      "direction": 1,
+      "speed": 12,
+      "frames": 62,
+      "maxY": 7.699999809265137,
+      "maxStep": 0.2253102435183743,
+      "maxLateral": 0.0440978797239282,
+      "minSpeed": 11.56450693255463,
+      "arrived": true,
+      "bails": 0,
+      "end": [
+        70.52631149123455,
+        6.999999994039536,
+        40.45590212027607
+      ]
+    },
+    {
+      "name": "Roof joined vent 2/-1",
+      "kind": "ride",
+      "direction": -1,
+      "speed": 16,
+      "frames": 50,
+      "maxY": 7.699999809265137,
+      "maxStep": 0.2837334529364264,
+      "maxLateral": 0.06597719524428669,
+      "minSpeed": 14.763670300634729,
+      "arrived": true,
+      "bails": 0,
+      "end": [
+        58.08080983751124,
+        6.999999994039536,
+        40.48437573562026
+      ]
+    },
+    {
+      "name": "Roof joined vent 2/1",
+      "kind": "ride",
+      "direction": 1,
+      "speed": 16,
+      "frames": 50,
+      "maxY": 7.699999809265137,
+      "maxStep": 0.2827004214665486,
+      "maxLateral": 0.07021613249559522,
+      "minSpeed": 14.802629694035428,
+      "arrived": true,
+      "bails": 0,
+      "end": [
+        70.63692760790524,
+        6.999999994039536,
+        40.429783867504405
+      ]
+    },
+    {
+      "name": "Roof joined vent 3/-1",
+      "kind": "ride",
+      "direction": -1,
+      "speed": 16,
+      "frames": 37,
+      "maxY": 7.699999809265137,
+      "maxStep": 0.27551084655003116,
+      "maxLateral": 0.06950612680824264,
+      "minSpeed": 14.775516008708172,
+      "arrived": true,
+      "bails": 0,
+      "end": [
+        62.563802550710925,
+        6.999999994039536,
+        35.69588420485363
+      ]
+    },
+    {
+      "name": "Roof joined vent 3/1",
+      "kind": "ride",
+      "direction": 1,
+      "speed": 16,
+      "frames": 37,
+      "maxY": 7.699999809265137,
+      "maxStep": 0.2717867188897317,
+      "maxLateral": 0.06908786857227511,
+      "minSpeed": 14.808678690564575,
+      "arrived": true,
+      "bails": 0,
+      "end": [
+        62.66603655416503,
+        6.999999994039536,
+        45.12112965637171
+      ]
+    },
+    {
+      "name": "Roof joined vent 4/-1",
+      "kind": "ride",
+      "direction": -1,
+      "speed": 16,
+      "frames": 37,
+      "maxY": 7.699999809265137,
+      "maxStep": 0.27785759763363915,
+      "maxLateral": 0.15504279156075995,
+      "minSpeed": 14.807149289122238,
+      "arrived": true,
+      "bails": 0,
+      "end": [
+        66.97584698670818,
+        6.999999994039536,
+        35.710175380858594
+      ]
+    },
+    {
+      "name": "Roof joined vent 4/1",
+      "kind": "ride",
+      "direction": 1,
+      "speed": 16,
+      "frames": 37,
+      "maxY": 7.699999809265137,
+      "maxStep": 0.27592599566952364,
+      "maxLateral": 0.15131874864411543,
+      "minSpeed": 14.867555649541899,
+      "arrived": true,
+      "bails": 0,
+      "end": [
+        67.22830507498804,
+        6.999999994039536,
+        45.12199216073295
+      ]
+    },
+    {
+      "name": "Roof west hip 5/-1",
+      "kind": "ride",
+      "direction": -1,
+      "speed": 12,
+      "frames": 52,
+      "maxY": 8.25,
+      "maxStep": 0.2403281115275763,
+      "maxLateral": 0.22695187640156433,
+      "minSpeed": 11.364890442044873,
+      "arrived": true,
+      "bails": 0,
+      "end": [
+        45.61140692474806,
+        6.999999994039536,
+        21.270294457245285
+      ]
+    },
+    {
+      "name": "Roof west hip 5/1",
+      "kind": "ride",
+      "direction": 1,
+      "speed": 12,
+      "frames": 51,
+      "maxY": 8.25,
+      "maxStep": 0.24013837391341628,
+      "maxLateral": 0.2586704846306631,
+      "minSpeed": 11.353613799436292,
+      "arrived": true,
+      "bails": 0,
+      "end": [
+        45.32192803291838,
+        6.999999994039536,
+        31.50403468881906
+      ]
+    },
+    {
+      "name": "Roof west hip 6/-1",
+      "kind": "ride",
+      "direction": -1,
+      "speed": 16,
+      "frames": 43,
+      "maxY": 8.25,
+      "maxStep": 0.2740616917879477,
+      "maxLateral": 0.25360824454912745,
+      "minSpeed": 13.798432624165999,
+      "arrived": true,
+      "bails": 0,
+      "end": [
+        45.63882265771559,
+        6.999999994039536,
+        21.3059245264774
+      ]
+    },
+    {
+      "name": "Roof west hip 6/1",
+      "kind": "ride",
+      "direction": 1,
+      "speed": 16,
+      "frames": 43,
+      "maxY": 8.25,
+      "maxStep": 0.2768796942117594,
+      "maxLateral": 0.2912390816005157,
+      "minSpeed": 13.896322300937511,
+      "arrived": true,
+      "bails": 0,
+      "end": [
+        45.28999895457315,
+        6.999999994039536,
+        31.739825838509834
+      ]
+    },
+    {
+      "name": "Roof south lane 7/-1",
+      "kind": "ride",
+      "direction": -1,
+      "speed": 16,
+      "frames": 140,
+      "maxY": 7,
+      "maxStep": 0.26663867016623044,
+      "maxLateral": 0,
+      "minSpeed": 15.768212093863804,
+      "arrived": true,
+      "bails": 0,
+      "end": [
+        29.940332830827074,
+        6.999999994039536,
+        46.8
+      ]
+    },
+    {
+      "name": "Roof south lane 7/1",
+      "kind": "ride",
+      "direction": 1,
+      "speed": 16,
+      "frames": 140,
+      "maxY": 7,
+      "maxStep": 0.26663867016623044,
+      "maxLateral": 0,
+      "minSpeed": 15.768212093863804,
+      "arrived": true,
+      "bails": 0,
+      "end": [
+        67.05966716917291,
+        6.999999994039536,
+        46.8
+      ]
+    },
+    {
+      "name": "Roof south parapet grind -1",
+      "kind": "grind",
+      "direction": -1,
+      "frames": 227,
+      "grindFrames": 186,
+      "progress": 37.00000000000013,
+      "maxBalance": 0.1198146210117603,
+      "air": true,
+      "landed": true,
+      "bails": 0,
+      "end": [
+        26.899999999999842,
+        6.999999994039536,
+        47.09533333333345
+      ]
+    },
+    {
+      "name": "Roof south parapet grind 1",
+      "kind": "grind",
+      "direction": 1,
+      "frames": 227,
+      "grindFrames": 186,
+      "progress": 36.999999999999986,
+      "maxBalance": 0.1198146210117603,
+      "air": true,
+      "landed": true,
+      "bails": 0,
+      "end": [
+        70.4000000000001,
+        6.999999994039536,
+        47.09533333333345
+      ]
+    },
+    {
+      "name": "Gym hoop quarter at 12",
+      "kind": "air",
+      "speed": 12,
+      "frames": 110,
+      "air": true,
+      "returned": true,
+      "flatRollout": true,
+      "maxY": 5.445228219796689,
+      "bails": 0,
+      "end": [
+        48.5,
+        0,
+        42.48268404966955
+      ]
+    },
+    {
+      "name": "Gym hoop quarter at 16",
+      "kind": "air",
+      "speed": 16,
+      "frames": 90,
+      "air": true,
+      "returned": true,
+      "flatRollout": true,
+      "maxY": 5.564135709391538,
+      "bails": 0,
+      "end": [
+        48.5,
+        0,
+        42.453784918992355
+      ]
+    },
+    {
+      "name": "Gym hoop quarter at 20",
+      "kind": "air",
+      "speed": 20,
+      "frames": 81,
+      "air": true,
+      "returned": true,
+      "flatRollout": true,
+      "maxY": 5.564135709391538,
+      "bails": 0,
+      "end": [
+        48.5,
+        0,
+        42.452992841408786
+      ]
+    },
+    {
+      "name": "Gym west bank -1/12",
+      "kind": "ride",
+      "speed": 12,
+      "direction": -1,
+      "frames": 42,
+      "maxStep": 0.2865081843796844,
+      "minSpeed": 12.170025592902192,
+      "arrived": true,
+      "bails": 0,
+      "end": [
+        38.02594758992678,
+        0,
+        32
+      ]
+    },
+    {
+      "name": "Gym west bank -1/16",
+      "kind": "ride",
+      "speed": 16,
+      "direction": -1,
+      "frames": 35,
+      "maxStep": 0.33619927101741354,
+      "minSpeed": 16.169281708513978,
+      "arrived": true,
+      "bails": 0,
+      "end": [
+        38.21562009014986,
+        0,
+        32
+      ]
+    },
+    {
+      "name": "Gym west bank -1/20",
+      "kind": "ride",
+      "speed": 20,
+      "direction": -1,
+      "frames": 29,
+      "maxStep": 0.3882732274667641,
+      "minSpeed": 20.168327850372492,
+      "arrived": true,
+      "bails": 0,
+      "end": [
+        38.00168995535291,
+        0,
+        32
+      ]
+    },
+    {
+      "name": "Gym west bank 1/12",
+      "kind": "ride",
+      "speed": 12,
+      "direction": 1,
+      "frames": 54,
+      "maxStep": 0.2048794201679794,
+      "minSpeed": 11.820143054379033,
+      "arrived": true,
+      "bails": 0,
+      "end": [
+        27.856162372718885,
+        2.9777981244692824,
+        32
+      ]
+    },
+    {
+      "name": "Gym west bank 1/16",
+      "kind": "ride",
+      "speed": 16,
+      "direction": 1,
+      "frames": 46,
+      "maxStep": 0.26941391669107156,
+      "minSpeed": 11.951604689121769,
+      "arrived": true,
+      "bails": 0,
+      "end": [
+        27.801871196941608,
+        3.001770755616832,
+        32
+      ]
+    },
+    {
+      "name": "Gym west bank 1/20",
+      "kind": "ride",
+      "speed": 20,
+      "direction": 1,
+      "frames": 35,
+      "maxStep": 0.33738795784790215,
+      "minSpeed": 15.765107464427185,
+      "arrived": true,
+      "bails": 0,
+      "end": [
+        27.83856475985754,
+        2.9855684679212833,
+        32
+      ]
+    },
+    {
+      "name": "Gym east bank -1/12",
+      "kind": "ride",
+      "speed": 12,
+      "direction": -1,
+      "frames": 42,
+      "maxStep": 0.2865081845444166,
+      "minSpeed": 12.170028321864107,
+      "arrived": true,
+      "bails": 0,
+      "end": [
+        57.97405315138909,
+        0,
+        32
+      ]
+    },
+    {
+      "name": "Gym east bank -1/16",
+      "kind": "ride",
+      "speed": 16,
+      "direction": -1,
+      "frames": 35,
+      "maxStep": 0.3361995424071722,
+      "minSpeed": 16.169284437332617,
+      "arrived": true,
+      "bails": 0,
+      "end": [
+        57.7843765509613,
+        0,
+        32
+      ]
+    },
+    {
+      "name": "Gym east bank -1/20",
+      "kind": "ride",
+      "speed": 20,
+      "direction": -1,
+      "frames": 29,
+      "maxStep": 0.3882729141214504,
+      "minSpeed": 20.168330579047847,
+      "arrived": true,
+      "bails": 0,
+      "end": [
+        57.998308867665315,
+        0,
+        32
+      ]
+    },
+    {
+      "name": "Gym east bank 1/12",
+      "kind": "ride",
+      "speed": 12,
+      "direction": 1,
+      "frames": 54,
+      "maxStep": 0.2048794201679794,
+      "minSpeed": 11.82015123088299,
+      "arrived": true,
+      "bails": 0,
+      "end": [
+        68.14384022788781,
+        2.977800484229045,
+        32
+      ]
+    },
+    {
+      "name": "Gym east bank 1/16",
+      "kind": "ride",
+      "speed": 16,
+      "direction": 1,
+      "frames": 46,
+      "maxStep": 0.26941391669107156,
+      "minSpeed": 11.951607409005966,
+      "arrived": true,
+      "bails": 0,
+      "end": [
+        68.19813001707159,
+        3.0017729603539314,
+        32
+      ]
+    },
+    {
+      "name": "Gym east bank 1/20",
+      "kind": "ride",
+      "speed": 20,
+      "direction": 1,
+      "frames": 35,
+      "maxStep": 0.33738795784790215,
+      "minSpeed": 15.765080195597976,
+      "arrived": true,
+      "bails": 0,
+      "end": [
+        68.16142560077466,
+        2.9855655711453024,
+        32
+      ]
+    },
+    {
+      "name": "Gym doorway 46.5/-1",
+      "kind": "ride",
+      "x": 46.5,
+      "direction": -1,
+      "frames": 71,
+      "minSpeed": 11.999055118110237,
+      "arrived": true,
+      "bails": 0,
+      "end": [
+        46.5,
+        0,
+        8.801118110236185
+      ]
+    },
+    {
+      "name": "Gym doorway 46.5/1",
+      "kind": "ride",
+      "x": 46.5,
+      "direction": 1,
+      "frames": 71,
+      "minSpeed": 11.999055118110237,
+      "arrived": true,
+      "bails": 0,
+      "end": [
+        46.5,
+        0,
+        23.198881889763815
+      ]
+    },
+    {
+      "name": "Gym doorway 48.5/-1",
+      "kind": "ride",
+      "x": 48.5,
+      "direction": -1,
+      "frames": 71,
+      "minSpeed": 11.999055118110237,
+      "arrived": true,
+      "bails": 0,
+      "end": [
+        48.5,
+        0,
+        8.801118110236185
+      ]
+    },
+    {
+      "name": "Gym doorway 48.5/1",
+      "kind": "ride",
+      "x": 48.5,
+      "direction": 1,
+      "frames": 71,
+      "minSpeed": 11.999055118110237,
+      "arrived": true,
+      "bails": 0,
+      "end": [
+        48.5,
+        0,
+        23.198881889763815
+      ]
+    },
+    {
+      "name": "Gym doorway 50.5/-1",
+      "kind": "ride",
+      "x": 50.5,
+      "direction": -1,
+      "frames": 71,
+      "minSpeed": 11.999055118110237,
+      "arrived": true,
+      "bails": 0,
+      "end": [
+        50.5,
+        0,
+        8.801118110236185
+      ]
+    },
+    {
+      "name": "Gym doorway 50.5/1",
+      "kind": "ride",
+      "x": 50.5,
+      "direction": 1,
+      "frames": 71,
+      "minSpeed": 11.999055118110237,
+      "arrived": true,
+      "bails": 0,
+      "end": [
+        50.5,
+        0,
+        23.198881889763815
+      ]
+    },
+    {
+      "name": "Direct Roof 2 Awning at 16",
+      "kind": "air",
+      "speed": 16,
+      "frames": 97,
+      "air": true,
+      "landed": true,
+      "maxY": 12.485927478146111,
+      "bails": 0,
+      "end": [
+        45,
+        3.4000000953674316,
+        5.922684324743053
+      ]
+    },
+    {
+      "name": "Direct Roof 2 Awning at 18",
+      "kind": "air",
+      "speed": 18,
+      "frames": 98,
+      "air": true,
+      "landed": true,
+      "maxY": 13.069455351370927,
+      "bails": 0,
+      "end": [
+        45,
+        3.4000000953674316,
+        3.616031559176138
+      ]
+    },
+    {
+      "name": "Roof short rail 1/-1",
+      "kind": "grind",
+      "direction": -1,
+      "grind": {
+        "frames": 44,
+        "grindFrames": 25,
+        "maxT": 4.810405388322275,
+        "minT": 0,
+        "progress": 4.810405388322275,
+        "direction": -1,
+        "maxBalance": 0.1,
+        "caught": true,
+        "landed": true
+      },
+      "bails": 0,
+      "end": [
+        35.23035367271956,
+        6.999999994039536,
+        39.51932186226711
+      ]
+    },
+    {
+      "name": "Roof short rail 1/1",
+      "kind": "grind",
+      "direction": 1,
+      "grind": {
+        "frames": 44,
+        "grindFrames": 25,
+        "maxT": 4.810405388322275,
+        "minT": 0,
+        "progress": 4.810405388322275,
+        "direction": 1,
+        "maxBalance": 0.1,
+        "caught": true,
+        "landed": true
+      },
+      "bails": 0,
+      "end": [
+        43.469646327280444,
+        6.999999994039536,
+        30.780678137732885
+      ]
+    },
+    {
+      "name": "Roof short rail 2/-1",
+      "kind": "grind",
+      "direction": -1,
+      "grind": {
+        "frames": 47,
+        "grindFrames": 28,
+        "maxT": 5.408326913195983,
+        "minT": 0,
+        "progress": 5.408326913195983,
+        "direction": -1,
+        "maxBalance": 0.1,
+        "caught": true,
+        "landed": true
+      },
+      "bails": 0,
+      "end": [
+        32.80554272846047,
+        6.999999994039536,
+        44.50030792935891
+      ]
+    },
+    {
+      "name": "Roof short rail 2/1",
+      "kind": "grind",
+      "direction": 1,
+      "grind": {
+        "frames": 47,
+        "grindFrames": 28,
+        "maxT": 5.408326913195983,
+        "minT": 0,
+        "progress": 5.408326913195983,
+        "direction": 1,
+        "maxBalance": 0.1,
+        "caught": true,
+        "landed": true
+      },
+      "bails": 0,
+      "end": [
+        45.39445727153952,
+        6.999999994039536,
+        45.19969207064109
+      ]
+    },
+    {
+      "name": "Rear bank 0.27/-1",
+      "kind": "ride",
+      "t": 0.27,
+      "direction": -1,
+      "frames": 21,
+      "maxStep": 0.22787373124968777,
+      "minSpeed": 10.165988444152813,
+      "arrived": true,
+      "bails": 0,
+      "end": [
+        -3.193195010585317,
+        -5,
+        -75.5460652292176
+      ]
+    },
+    {
+      "name": "Rear bank 0.27/1",
+      "kind": "ride",
+      "t": 0.27,
+      "direction": 1,
+      "frames": 24,
+      "maxStep": 0.18894916345704965,
+      "minSpeed": 10.165988444152813,
+      "arrived": true,
+      "bails": 0,
+      "end": [
+        -2.088430561597444,
+        -3.8499999046325684,
+        -79.2958590793831
+      ]
+    },
+    {
+      "name": "Rear bank 0.72/-1",
+      "kind": "ride",
+      "t": 0.72,
+      "direction": -1,
+      "frames": 20,
+      "maxStep": 0.22794499737495233,
+      "minSpeed": 10.165988444152815,
+      "arrived": true,
+      "bails": 0,
+      "end": [
+        6.521415695148594,
+        -5,
+        -75.20007198036778
+      ]
+    },
+    {
+      "name": "Rear bank 0.72/1",
+      "kind": "ride",
+      "t": 0.72,
+      "direction": 1,
+      "frames": 23,
+      "maxStep": 0.18578825737424653,
+      "minSpeed": 10.165988444152815,
+      "arrived": true,
+      "bails": 0,
+      "end": [
+        7.396200884473975,
+        -3.8499999046325684,
+        -78.7537504792228
+      ]
+    },
+    {
+      "name": "Rear short rail 1/-1",
+      "kind": "grind",
+      "direction": -1,
+      "grind": {
+        "frames": 44,
+        "grindFrames": 23,
+        "maxT": 4.4854199651136115,
+        "minT": 0,
+        "progress": 4.4854199651136115,
+        "direction": -1,
+        "maxBalance": 0.1,
+        "caught": true,
+        "landed": true
+      },
+      "bails": 0,
+      "end": [
+        -12.384302617454816,
+        -4.351799946742048,
+        -79.81575473276784
+      ]
+    },
+    {
+      "name": "Rear short rail 1/1",
+      "kind": "grind",
+      "direction": 1,
+      "grind": {
+        "frames": 40,
+        "grindFrames": 23,
+        "maxT": 4.4854199651136115,
+        "minT": 0,
+        "progress": 4.4854199651136115,
+        "direction": 1,
+        "maxBalance": 0.1,
+        "caught": true,
+        "landed": true
+      },
+      "bails": 0,
+      "end": [
+        -0.715938187726292,
+        -3.8499999046325684,
+        -79.18463565040544
+      ]
+    },
+    {
+      "name": "Rear short rail 2/-1",
+      "kind": "grind",
+      "direction": -1,
+      "grind": {
+        "frames": 38,
+        "grindFrames": 20,
+        "maxT": 3.922919798073198,
+        "minT": 0,
+        "progress": 3.922919798073198,
+        "direction": -1,
+        "maxBalance": 0.1,
+        "caught": true,
+        "landed": true
+      },
+      "bails": 0,
+      "end": [
+        5.5552628993796676,
+        -3.938039106237523,
+        -78.23746669548444
+      ]
+    },
+    {
+      "name": "Rear short rail 2/1",
+      "kind": "grind",
+      "direction": 1,
+      "grind": {
+        "frames": 43,
+        "grindFrames": 20,
+        "maxT": 3.922919798073198,
+        "minT": 0,
+        "progress": 3.922919798073198,
+        "direction": 1,
+        "maxBalance": 0.1,
+        "caught": true,
+        "landed": true
+      },
+      "bails": 0,
+      "end": [
+        17.277033430960188,
+        -4.601644477730195,
+        -78.07331981909965
+      ]
+    },
+    {
+      "name": "Gym complete rail 1/-1",
+      "kind": "grind",
+      "direction": -1,
+      "grind": {
+        "frames": 543,
+        "grindFrames": 530,
+        "maxT": 42.28139816110658,
+        "minT": 0,
+        "progress": 42.28139816110658,
+        "direction": -1,
+        "maxBalance": 0.10229613026846184,
+        "caught": true,
+        "landed": true
+      },
+      "bails": 0,
+      "end": [
+        38.603839985506625,
+        0,
+        19
+      ]
+    },
+    {
+      "name": "Gym complete rail 1/1",
+      "kind": "grind",
+      "direction": 1,
+      "grind": {
+        "frames": 543,
+        "grindFrames": 530,
+        "maxT": 42.28139816110658,
+        "minT": 0,
+        "progress": 42.28139816110658,
+        "direction": 1,
+        "maxBalance": 0.10229613026847945,
+        "caught": true,
+        "landed": true
+      },
+      "bails": 0,
+      "end": [
+        38.603839985506525,
+        0,
+        45
+      ]
+    },
+    {
+      "name": "Gym complete rail 2/-1",
+      "kind": "grind",
+      "direction": -1,
+      "grind": {
+        "frames": 543,
+        "grindFrames": 530,
+        "maxT": 42.2813981611066,
+        "minT": 0,
+        "progress": 42.2813981611066,
+        "direction": -1,
+        "maxBalance": 0.10229613026846703,
+        "caught": true,
+        "landed": true
+      },
+      "bails": 0,
+      "end": [
+        57.396160014493375,
+        0,
+        19
+      ]
+    },
+    {
+      "name": "Gym complete rail 2/1",
+      "kind": "grind",
+      "direction": 1,
+      "grind": {
+        "frames": 543,
+        "grindFrames": 530,
+        "maxT": 42.2813981611066,
+        "minT": 0,
+        "progress": 42.2813981611066,
+        "direction": 1,
+        "maxBalance": 0.1022961302684801,
+        "caught": true,
+        "landed": true
+      },
+      "bails": 0,
+      "end": [
+        57.396160014493475,
+        0,
+        45
+      ]
+    },
+    {
+      "name": "Skylight drop -1/6",
+      "kind": "air",
+      "speed": 6,
+      "direction": -1,
+      "frames": 122,
+      "entered": true,
+      "landed": true,
+      "rollout": true,
+      "maxLateral": 0,
+      "firstLanding": [
+        53.43699197623739,
+        0,
+        39.2
+      ],
+      "bails": 0,
+      "end": [
+        49.708548937373536,
+        0,
+        39.2
+      ]
+    },
+    {
+      "name": "Skylight drop 1/6",
+      "kind": "air",
+      "speed": 6,
+      "direction": 1,
+      "frames": 68,
+      "entered": true,
+      "landed": true,
+      "rollout": true,
+      "maxLateral": 0,
+      "firstLanding": [
+        55.024226274183995,
+        0,
+        39.2
+      ],
+      "bails": 0,
+      "end": [
+        57.07184649115729,
+        0,
+        39.2
+      ]
+    },
+    {
+      "name": "Skylight drop -1/8",
+      "kind": "air",
+      "speed": 8,
+      "direction": -1,
+      "frames": 69,
+      "entered": true,
+      "landed": true,
+      "rollout": true,
+      "maxLateral": 0,
+      "firstLanding": [
+        51.44812859002134,
+        0,
+        39.2
+      ],
+      "bails": 0,
+      "end": [
+        49.68345384270395,
+        0,
+        39.2
+      ]
+    },
+    {
+      "name": "Skylight drop 1/8",
+      "kind": "air",
+      "speed": 8,
+      "direction": 1,
+      "frames": 51,
+      "entered": true,
+      "landed": true,
+      "rollout": true,
+      "maxLateral": 0,
+      "firstLanding": [
+        56.33348545875388,
+        0,
+        39.2
+      ],
+      "bails": 0,
+      "end": [
+        57.12532978435795,
+        0,
+        39.2
+      ]
+    }
+  ],
+  "tuningUnchanged": true,
+  "worldScale": 1,
+  "validationContext": "Original authoring coordinates; current playable-scale checks are in school-miami-scale.json."
+}

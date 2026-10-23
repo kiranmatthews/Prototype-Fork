@@ -1,0 +1,47 @@
+{
+  "logs": [],
+  "errors": [],
+  "startupErrors": {
+    "preview": [],
+    "game": []
+  },
+  "gymShortcut": {
+    "running": false,
+    "stage": "Smoothed east gym entry and return",
+    "passed": [
+      {
+        "name": "Smoothed west gym entry and return",
+        "frames": 192,
+        "result": {
+          "air": 0,
+          "verts": 0,
+          "grinds": 0,
+          "peak": 5.722984960792976
+        },
+        "end": [
+          147.5865686656556,
+          0,
+          71.77522147405301
+        ]
+      },
+      {
+        "name": "Smoothed east gym entry and return",
+        "frames": 192,
+        "result": {
+          "air": 0,
+          "verts": 0,
+          "grinds": 0,
+          "peak": 5.7258739801499
+        },
+        "end": [
+          103.79014676349368,
+          0,
+          56.63351704300869
+        ]
+      }
+    ],
+    "failure": null,
+    "frames": 384,
+    "tuningUnchanged": true
+  }
+}

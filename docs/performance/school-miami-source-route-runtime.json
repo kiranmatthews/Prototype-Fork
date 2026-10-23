@@ -1,0 +1,69 @@
+{
+  "runtimeSnapshots": {
+    "working": {
+      "player.ts": "24abe7a1b61de6be4b8a5cf770df334288c5cfb92d5942ac9a9e294017cdabc9",
+      "tuning.ts": "dc7b43eedbb160b2ddfc16cdfdca42f1419245a76214fdccd49cf872905038c0",
+      "level.ts": "b589f5333f86dd0ae3c08dab222b7c918a823b54a8e46891abcdb42fae57b9b2",
+      "input.ts": "53cd0f5d183777461c3af7514af6ebc22abe44513a7986287f4c592f00d2a433",
+      "skateParkPhysics.ts": "3cf5ce4c8bd9037539ffd21ff8559f78a0b9c2fd7a27f702a68bbe6aa2536f99",
+      "skateParkTuning.ts": "bc609a6765ffd91c0d3bc062b33ee25c03cd7386a9159b24c1f643f38bca0234",
+      "skateSteering.ts": "62b9d234f6feebaadd2f5c3b58cd6305d042c99ee46ea7d75d8fff7dbe953f68",
+      "vertBoardRelease.ts": "7ce3ba915f646ac97890d0a2b9f25635ccedddb8068e4c2217c2812808866e67",
+      "vertSkateMotion.ts": "944c8fa4293fe58b8baca9987c7573b78428774e77b93bccb2b889d893a7ac96",
+      "meshContactNormal.ts": "3fee5417da3a27bb63b1e7428af1532078b3a6f4d802e753d9635fd2260da224",
+      "skateChaseCamera.ts": "b8d670861fb3d53f081a98d74628c28176e78d87c5cebe47cb826f34f89fc145"
+    },
+    "task": {
+      "player.ts": "769de645725d032e5530e1d70d9231a4cde5ccb88f2ca72b355ead7295277514",
+      "tuning.ts": "f06c99fede5097695309dd9a2e1b8d28fe3dac1e615335aa91fc63d45d4f5759",
+      "level.ts": "4e3df0d74d028ba888ae47b0a976fc6591b9d467c9d15713b9640645bb4a2292",
+      "input.ts": "a5ab1cf82312ed40485c44ce92f750246382030d9bf500aaaf31972508573054",
+      "skateParkPhysics.ts": "3cf5ce4c8bd9037539ffd21ff8559f78a0b9c2fd7a27f702a68bbe6aa2536f99",
+      "skateParkTuning.ts": "bc609a6765ffd91c0d3bc062b33ee25c03cd7386a9159b24c1f643f38bca0234",
+      "skateSteering.ts": "62b9d234f6feebaadd2f5c3b58cd6305d042c99ee46ea7d75d8fff7dbe953f68",
+      "vertBoardRelease.ts": "7ce3ba915f646ac97890d0a2b9f25635ccedddb8068e4c2217c2812808866e67",
+      "vertSkateMotion.ts": "944c8fa4293fe58b8baca9987c7573b78428774e77b93bccb2b889d893a7ac96",
+      "meshContactNormal.ts": "3fee5417da3a27bb63b1e7428af1532078b3a6f4d802e753d9635fd2260da224",
+      "skateChaseCamera.ts": "b8d670861fb3d53f081a98d74628c28176e78d87c5cebe47cb826f34f89fc145"
+    }
+  },
+  "actorMeasurementFiles": {
+    "tools/school-source-scale.ts": "617f562ff137ae74e29758cc461547a5bff1da082c68b0b15f042eabc3008664",
+    "src/character/interactionBounds.ts": "8d6c1214eb548c65764ecb66b868cd945e3c958d4bec9a99d36ab40253c6e51d",
+    "src/character/proportionLayer.ts": "f497a5e4e8aa0dc963539eb93d49b97b59aac10127db42bce2e7a3519ff59c6a",
+    "src/characterAnimationRuntime.ts": "5ca52b240871baa86791cfe2e84c96d34454e101a208bafc7dc847588cc29638",
+    "tools/psx-skater-survey.py": "223cf2f09f3a861fed3373239a576a1f0cf4eeeb3e8f103de705401a272ed16e",
+    "tools/test-psx-skater-survey.py": "a3859435a044ed79857255dffd0e5a123740e6bb93817f80b57545929d21c0cb"
+  },
+  "sourceFiles": {
+    "src/levels/school-source.ts": "c959e76d8b87f321cc69cfe9f670b1e961f8ba25116f71489f511af304ef334a",
+    "docs/school/source-geometry.json": "ed33512389703218a79971f064badd7b5b829974af00d6457786a6ac7d11ef3e",
+    "tools/school-source-route.ts": "3cd9dca0953e9c96efb69650b852d08f267e837fe2b949365d0b2bf37e644684",
+    "tools/school-source-lines.ts": "b9598cb85d96c05c4a8137217a1008cc0e19c64d5213c8d738c0d6130b652cdd"
+  },
+  "mainLevelUnchangedFromTaskParent": true,
+  "taskParent": "977a8f340f4d0a57bf8ebb4c6431b8ca24298bd5",
+  "sharedHead": "79cdcdc0bf23f1696b0e5930e21ed99dbbfde82d",
+  "build": "3f649fa7312dfe1c576b",
+  "checks": {
+    "sourceCases": 17,
+    "sourceSteps": 13857,
+    "sourceRouteMetres": 950.5196065995784,
+    "sourceRouteSteps": 6094,
+    "sourceRouteWaypoints": 35,
+    "nativeEndpointsIdentical": true,
+    "typeScript": "pass",
+    "checkLevels": "pass",
+    "productionBuild": "pass",
+    "fullSuiteRun": false,
+    "isolatedTaskTypeScript": "pass",
+    "browserEndpointsIdentical": true,
+    "startupCapture": "Final full preview and game early/late arrays empty; prior MutationObserver startup occurrences retained and unattributed."
+  },
+  "previewTools": {
+    "tools/serve-school-source.mjs": "a62589dfd1f77688abfa3d148932a4358b94fff22c9be9a782bcf3e74cb17f76",
+    "tools/school-source-review.ts": "91f952d65f95bcbf45dcc909c940967740676d4387253439bbe9c09c54216690",
+    "tools/school-source-review.html": "6c11d2fb117ac2ba95a0df3ecbb0b54730ab20b0d26765b53334ed9104cda168",
+    "tools/school-source-scale.ts": "617f562ff137ae74e29758cc461547a5bff1da082c68b0b15f042eabc3008664"
+  }
+}

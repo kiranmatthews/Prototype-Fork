@@ -12,7 +12,7 @@ await withSkateRuntime(async ({ server, Level, Player, scene, THREE, CONST }) =>
   assert.deepEqual(built.heights, [2, 6]);
   assert.equal(built.geometry.boundingBox.max.y, 8);
   assert.equal(built.geometry.boundingBox.min.y, 0);
-  assert.ok(built.collision.some(b => Math.abs(b.max.y - 8) < 1e-6));
+  assert.ok(built.collision.some(b => Math.abs(b.max.y - 7.8) < 1e-6), 'Preserve the native 0.2 m top-contact inset');
   built.geometry.dispose();
   const level = new Level(scene, { id: 'wall-profile-test', name: data.name, data });
   const path = level.wallPathForBox(level.walls[0]);

@@ -1,0 +1,154 @@
+{
+  "boundary": {
+    "image": "docs/art-reviews/school-miami/source-boundary-balance-full.png",
+    "imageSha256": "e701eef283703dfd655f117a44fba2969c45744518c109c44d6812e010055ed1",
+    "capture": {
+      "grounded": false,
+      "state": "grind",
+      "pos": [
+        -241.74647524865483,
+        -16.3828441019825,
+        -182.22900030021015
+      ],
+      "sourcePosition": [
+        11205.687695113564,
+        422.8953943167305,
+        -6691
+      ],
+      "speed": 21.234229603479644,
+      "errors": [],
+      "startupErrors": {
+        "preview": [],
+        "game": []
+      }
+    },
+    "captureFrame": 5,
+    "checks": {
+      "running": false,
+      "stage": "Original rail 797 catch, traverse and land 1",
+      "passed": [
+        {
+          "name": "Original rail 797 catch, traverse and land 1",
+          "frames": 754,
+          "result": {
+            "air": 33,
+            "verts": 0,
+            "grinds": 720,
+            "peak": -16.262473731612126,
+            "grind": {
+              "frames": 754,
+              "grindFrames": 720,
+              "maxT": 212.20666087264325,
+              "minT": 0.4000000000000088,
+              "progress": 212.20666087264325,
+              "direction": 1,
+              "maxBalance": 0.14375,
+              "caught": true,
+              "landed": true
+            }
+          },
+          "end": [
+            -73.56301410987692,
+            -22.245811462402344,
+            -270.28495519068986
+          ]
+        }
+      ],
+      "failure": null,
+      "frames": 754,
+      "tuningUnchanged": true
+    }
+  },
+  "roof": {
+    "image": "docs/art-reviews/school-miami/source-roof-drop-full.png",
+    "imageSha256": "f77610a78e84282cb405f6a72336dff050dadf15bb89a9810a4f51a7dcaec489",
+    "capture": {
+      "grounded": false,
+      "state": "air",
+      "pos": [
+        25.78396999598168,
+        16.84089902319726,
+        -78.40551031371012
+      ],
+      "sourcePosition": [
+        -8000.000087427046,
+        2807.9878156523723,
+        762.3630419187839
+      ],
+      "speed": 8.53585526751634,
+      "errors": [],
+      "startupErrors": {
+        "preview": [],
+        "game": []
+      }
+    },
+    "captureFrame": 99,
+    "checks": {
+      "running": false,
+      "stage": "Original roof drop into lower courtyard",
+      "passed": [
+        {
+          "name": "Original roof drop into lower courtyard",
+          "frames": 213,
+          "result": {
+            "air": 87,
+            "verts": 0,
+            "grinds": 0,
+            "peak": 16.864518965698373,
+            "drop": {
+              "start": [
+                25.7839687781447,
+                16.8625468927915,
+                -65.34446112278594
+              ],
+              "rolloutFrames": 30,
+              "landing": [
+                25.7839806591353,
+                -19.875975766441446,
+                -89.63642546664703
+              ],
+              "metres": 36.74049473213982
+            }
+          },
+          "end": [
+            27.866777730736366,
+            -20.876688381618436,
+            -86.58382887703696
+          ]
+        }
+      ],
+      "failure": null,
+      "frames": 213,
+      "tuningUnchanged": true
+    }
+  },
+  "keyboardCheckpoints": {
+    "developerToolsEnabledWithM": true,
+    "toolsHiddenAfterCheck": true,
+    "events": [
+      {
+        "key": "L",
+        "destination": "Courtyard",
+        "grounded": true,
+        "sourcePosition": [
+          -11719.921481431227,
+          173.26782288600384,
+          -6474.124705346327
+        ],
+        "warpMessageObserved": true
+      },
+      {
+        "key": "K",
+        "destination": "Halfpipe",
+        "grounded": true,
+        "sourcePosition": [
+          2752,
+          2.0000435072799974,
+          -9075.722360367585
+        ],
+        "warpMessageObserved": true
+      }
+    ],
+    "note": "K/L choose a neighbouring stop from the nearest current location. Auto-kick moves the rider between actions; these observations do not assert an immediate inverse warp."
+  }
+}

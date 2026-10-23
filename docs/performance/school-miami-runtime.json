@@ -1,0 +1,32 @@
+{
+  "validationContext": "Read-only local runtime-banks snapshot for iteration 22 at 2x scale. Player, level, input and tuning match iteration 21; only the task-owned camera changes. School commits exclude unrelated runtime edits.",
+  "head": "79cdcdc0bf23f1696b0e5930e21ed99dbbfde82d",
+  "files": {
+    "src/player.ts": "e2e831fcbba751b823f35834b0183c157c30aaddb14dd85c7a20423ad82ea144",
+    "src/tuning.ts": "dc7b43eedbb160b2ddfc16cdfdca42f1419245a76214fdccd49cf872905038c0",
+    "src/level.ts": "4e49b9e2a189189e516f8c95418c14a762c2f4206024491a79c134543a4e7dbe",
+    "src/input.ts": "53cd0f5d183777461c3af7514af6ebc22abe44513a7986287f4c592f00d2a433",
+    "src/skateParkPhysics.ts": "3cf5ce4c8bd9037539ffd21ff8559f78a0b9c2fd7a27f702a68bbe6aa2536f99",
+    "src/skateParkTuning.ts": "bc609a6765ffd91c0d3bc062b33ee25c03cd7386a9159b24c1f643f38bca0234",
+    "src/skateSteering.ts": "62b9d234f6feebaadd2f5c3b58cd6305d042c99ee46ea7d75d8fff7dbe953f68",
+    "src/vertBoardRelease.ts": "7ce3ba915f646ac97890d0a2b9f25635ccedddb8068e4c2217c2812808866e67",
+    "src/vertSkateMotion.ts": "944c8fa4293fe58b8baca9987c7573b78428774e77b93bccb2b889d893a7ac96",
+    "src/meshContactNormal.ts": "3fee5417da3a27bb63b1e7428af1532078b3a6f4d802e753d9635fd2260da224"
+  },
+  "taskOwnedRuntimeFiles": {
+    "src/skateChaseCamera.ts": "b8d670861fb3d53f081a98d74628c28176e78d87c5cebe47cb826f34f89fc145"
+  },
+  "workingTreeDifferencesAtHandoff": [
+    {
+      "path": "src/player.ts",
+      "testedSHA256": "e2e831fcbba751b823f35834b0183c157c30aaddb14dd85c7a20423ad82ea144",
+      "workingSHA256": "3d619708ec21152d90f67f303ead78e870ff90fcbfe9f9d4fef435a249661788"
+    },
+    {
+      "path": "src/level.ts",
+      "testedSHA256": "4e49b9e2a189189e516f8c95418c14a762c2f4206024491a79c134543a4e7dbe",
+      "workingSHA256": "ec76e19fc74b7164b8a6534d9b987ae3d32b5a989ac0a6ce25b1f446c852de3e"
+    }
+  ],
+  "handoffRuntimeNote": "Concurrent work added the hugeDropBail level option, defaulting to true. School does not override it, so the changed branches retain prior behavior by source inspection. The reported 64-case browser/headless results are from the exact runtime-banks fingerprints above; the foreign runtime edits are excluded from the School commit."
+}

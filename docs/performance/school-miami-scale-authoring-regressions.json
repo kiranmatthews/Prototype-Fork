@@ -1,0 +1,766 @@
+{
+  "context": "Original-coordinate diagnostic regressions. Camera and 80 detail cases use accepted iteration-18 player/level snapshots, not the current shared movement changes. The current 2x suite and browsers use school-miami-runtime.json.",
+  "worldScale": 1,
+  "baselineFiles": {
+    "src/player.ts": "51a93fc9cb8f3613fedf0a16625e7b22e09859f3aa45898d3892677412b42e3b",
+    "src/level.ts": "898a6d458627d11c31f9a5fd02b12dbd3bf9984278da23c4526b2d7e62448917"
+  },
+  "detailSupports": 94,
+  "detailCases": 80,
+  "camera": {
+    "views": [
+      {
+        "position": [
+          44,
+          0,
+          -5
+        ],
+        "sign": -1,
+        "eye": [
+          43.25088071270226,
+          1.7878752109666278,
+          -9.994128581984903
+        ],
+        "trailing": 5.050000000000002,
+        "crop": 0.6902488873154862
+      },
+      {
+        "position": [
+          44,
+          0,
+          -5
+        ],
+        "sign": 1,
+        "eye": [
+          44.74911928729774,
+          2.4858867780637506,
+          -0.005871418015098051
+        ],
+        "trailing": 5.050000000000001,
+        "crop": 0.6193056565234657
+      },
+      {
+        "position": [
+          42,
+          -1.1123388384408874,
+          -15
+        ],
+        "sign": -1,
+        "eye": [
+          41.25088071270226,
+          0.23806028199756124,
+          -19.994128581984903
+        ],
+        "trailing": 5.050000000000002,
+        "crop": 0.8889821609663762
+      },
+      {
+        "position": [
+          42,
+          -1.1123388384408874,
+          -15
+        ],
+        "sign": 1,
+        "eye": [
+          42.74911928729774,
+          1.0151234502389976,
+          -10.005871418015097
+        ],
+        "trailing": 5.050000000000002,
+        "crop": 0.6433934056965213
+      },
+      {
+        "position": [
+          40,
+          -2.482131642745445,
+          -21
+        ],
+        "sign": -1,
+        "eye": [
+          39.25088071270226,
+          -0.8161808354492499,
+          -25.994128581984903
+        ],
+        "trailing": 5.050000000000002,
+        "crop": 0.7453914314963964
+      },
+      {
+        "position": [
+          40,
+          -2.482131642745445,
+          -21
+        ],
+        "sign": 1,
+        "eye": [
+          40.74911928729774,
+          0.028181980544065954,
+          -16.005871418015097
+        ],
+        "trailing": 5.050000000000002,
+        "crop": 0.6175202666059804
+      },
+      {
+        "position": [
+          38,
+          -4.389132854568325,
+          -30
+        ],
+        "sign": -1,
+        "eye": [
+          37.25088071270226,
+          -1.940216647549442,
+          -34.9941285819849
+        ],
+        "trailing": 5.050000000000002,
+        "crop": 0.6219760892459315
+      },
+      {
+        "position": [
+          38,
+          -4.389132854568325,
+          -30
+        ],
+        "sign": 1,
+        "eye": [
+          38.74911928729774,
+          -1.5173726360789122,
+          -25.005871418015097
+        ],
+        "trailing": 5.050000000000002,
+        "crop": 0.5953715792866792
+      },
+      {
+        "position": [
+          37,
+          -4.986167666864997,
+          -36
+        ],
+        "sign": -1,
+        "eye": [
+          36.25088071270226,
+          -1.6912189872675567,
+          -40.9941285819849
+        ],
+        "trailing": 5.050000000000002,
+        "crop": 0.5805553949103242
+      },
+      {
+        "position": [
+          37,
+          -4.986167666864997,
+          -36
+        ],
+        "sign": 1,
+        "eye": [
+          37.74911928729774,
+          -1.9026409930028216,
+          -31.005871418015097
+        ],
+        "trailing": 5.050000000000002,
+        "crop": 0.5888913093205416
+      },
+      {
+        "position": [
+          45,
+          3.4000000953674316,
+          4
+        ],
+        "sign": -1,
+        "eye": [
+          44.25088071270226,
+          8.500000095367431,
+          -0.994128581984902
+        ],
+        "trailing": 5.050000000000001,
+        "crop": 0.7712263826854464
+      },
+      {
+        "position": [
+          45,
+          3.4000000953674316,
+          4
+        ],
+        "sign": 1,
+        "eye": [
+          45.74911928729774,
+          8.500000095367431,
+          8.994128581984903
+        ],
+        "trailing": 5.050000000000002,
+        "crop": 0.7712263826854452
+      },
+      {
+        "position": [
+          48.5,
+          0,
+          32
+        ],
+        "sign": -1,
+        "eye": [
+          47.75088071270226,
+          5.1,
+          27.005871418015097
+        ],
+        "trailing": 5.050000000000002,
+        "crop": 0.7712263826854454
+      },
+      {
+        "position": [
+          48.5,
+          0,
+          32
+        ],
+        "sign": 1,
+        "eye": [
+          49.24911928729774,
+          5.1,
+          36.9941285819849
+        ],
+        "trailing": 5.050000000000002,
+        "crop": 0.7712263826854462
+      }
+    ],
+    "motion": [
+      {
+        "sign": -1,
+        "frames": 361,
+        "maxStep": 0.27975727284884555,
+        "minTrailing": 5.050000000000002,
+        "maxCrop": 0.783566491172821
+      },
+      {
+        "sign": 1,
+        "frames": 361,
+        "maxStep": 0.26581170233007295,
+        "minTrailing": 5.050000000000002,
+        "maxCrop": 0.815218009539723
+      }
+    ],
+    "recovery": [
+      {
+        "hz": 30,
+        "maxStep": 0.5890661214186914,
+        "eye": [
+          44,
+          5.098781612934477,
+          0.04999999999999982
+        ]
+      },
+      {
+        "hz": 60,
+        "maxStep": 0.31333304330781475,
+        "eye": [
+          44,
+          5.098781612934477,
+          0.04999999999999982
+        ]
+      },
+      {
+        "hz": 120,
+        "maxStep": 0.16167162022443682,
+        "eye": [
+          44,
+          5.098781612934477,
+          0.04999999999999982
+        ]
+      }
+    ],
+    "drops": [
+      {
+        "name": "Skylight drop -1/6",
+        "frames": 122,
+        "maxStep": 0.8526491250344638,
+        "minTrailing": 1.374323986983562,
+        "maxCrop": 0.7712263826854437,
+        "restoredTrailing": 5.05000000178525,
+        "bails": 0
+      },
+      {
+        "name": "Skylight drop 1/6",
+        "frames": 68,
+        "maxStep": 0.7826721490032996,
+        "minTrailing": 1.498886167152257,
+        "maxCrop": 0.7712263826854444,
+        "restoredTrailing": 5.050000009241089,
+        "bails": 0
+      },
+      {
+        "name": "Skylight drop -1/8",
+        "frames": 69,
+        "maxStep": 0.8867687535889176,
+        "minTrailing": 1.4992256160589363,
+        "maxCrop": 0.7712263826854429,
+        "restoredTrailing": 5.049996218981043,
+        "bails": 0
+      },
+      {
+        "name": "Skylight drop 1/8",
+        "frames": 51,
+        "maxStep": 0.8024695202230104,
+        "minTrailing": 1.5994644546027246,
+        "maxCrop": 0.7712263826854435,
+        "restoredTrailing": 5.050000012626107,
+        "bails": 0
+      }
+    ],
+    "entrances": [
+      {
+        "name": "Gym doorway 46.5/-1",
+        "frames": 71,
+        "maxStep": 0.36162110540850484,
+        "minTrailing": 5.050000000000001,
+        "maxCrop": 0.7712263826854454,
+        "restoredTrailing": 5.0500000191334316,
+        "bails": 0
+      },
+      {
+        "name": "Gym doorway 46.5/1",
+        "frames": 71,
+        "maxStep": 0.19998425160973668,
+        "minTrailing": 5.05,
+        "maxCrop": 0.5925199373370236,
+        "restoredTrailing": 5.0500000191334316,
+        "bails": 0
+      },
+      {
+        "name": "Gym doorway 48.5/-1",
+        "frames": 71,
+        "maxStep": 0.32057074305539074,
+        "minTrailing": 5.050000000000001,
+        "maxCrop": 0.7712263826854454,
+        "restoredTrailing": 5.0500000191334316,
+        "bails": 0
+      },
+      {
+        "name": "Gym doorway 48.5/1",
+        "frames": 71,
+        "maxStep": 0.3205015958498018,
+        "minTrailing": 5.05,
+        "maxCrop": 0.7712263826854454,
+        "restoredTrailing": 5.0500000191334316,
+        "bails": 0
+      },
+      {
+        "name": "Gym doorway 50.5/-1",
+        "frames": 71,
+        "maxStep": 0.32057074305539074,
+        "minTrailing": 5.050000000000001,
+        "maxCrop": 0.7712263826854454,
+        "restoredTrailing": 5.0500000191334316,
+        "bails": 0
+      },
+      {
+        "name": "Gym doorway 50.5/1",
+        "frames": 71,
+        "maxStep": 0.3205015958498018,
+        "minTrailing": 5.05,
+        "maxCrop": 0.7712263826854454,
+        "restoredTrailing": 5.0500000191334316,
+        "bails": 0
+      }
+    ],
+    "roofJumps": [
+      {
+        "name": "West pavilion roof jump -1/12",
+        "frames": 54,
+        "maxStep": 0.3474559493884115,
+        "minTrailing": 0.5999999999999996,
+        "maxCrop": 0.6315939863163229,
+        "restoredTrailing": 5.050000021998944,
+        "bails": 0
+      },
+      {
+        "name": "West pavilion roof jump -1/14",
+        "frames": 46,
+        "maxStep": 0.3233802497064334,
+        "minTrailing": 5.049999999999999,
+        "maxCrop": 0.7712263826854457,
+        "restoredTrailing": 5.050000025188606,
+        "bails": 0
+      },
+      {
+        "name": "West pavilion roof jump 1/12",
+        "frames": 43,
+        "maxStep": 0.2567382470909023,
+        "minTrailing": 5.05,
+        "maxCrop": 0.7712263826854453,
+        "restoredTrailing": 5.050000021284407,
+        "bails": 0
+      },
+      {
+        "name": "West pavilion roof jump 1/14",
+        "frames": 43,
+        "maxStep": 0.2844259004904051,
+        "minTrailing": 5.050000000000001,
+        "maxCrop": 0.7712263826854454,
+        "restoredTrailing": 5.050000024233829,
+        "bails": 0
+      }
+    ],
+    "roofVents": [
+      {
+        "name": "Roof joined vent 1/-1",
+        "frames": 62,
+        "maxStep": 0.8353306083993469,
+        "minTrailing": 4.685614289386655,
+        "maxCrop": 0.7712263826854469,
+        "restoredTrailing": 5.049959312682312,
+        "bails": 0
+      },
+      {
+        "name": "Roof joined vent 1/1",
+        "frames": 62,
+        "maxStep": 0.8561299593994066,
+        "minTrailing": 4.635607462740276,
+        "maxCrop": 0.7712263826854457,
+        "restoredTrailing": 5.0499310230754295,
+        "bails": 0
+      },
+      {
+        "name": "Roof joined vent 2/-1",
+        "frames": 50,
+        "maxStep": 0.8666559410359338,
+        "minTrailing": 4.914673181957114,
+        "maxCrop": 0.7712263826854462,
+        "restoredTrailing": 5.049949249612901,
+        "bails": 0
+      },
+      {
+        "name": "Roof joined vent 2/1",
+        "frames": 50,
+        "maxStep": 0.9419635137202357,
+        "minTrailing": 4.9594417819889545,
+        "maxCrop": 0.7712263826854485,
+        "restoredTrailing": 5.049931794207864,
+        "bails": 0
+      },
+      {
+        "name": "Roof joined vent 3/-1",
+        "frames": 37,
+        "maxStep": 0.5974488518534009,
+        "minTrailing": 5.049999999999997,
+        "maxCrop": 0.7712263826854454,
+        "restoredTrailing": 5.049957709930438,
+        "bails": 0
+      },
+      {
+        "name": "Roof joined vent 3/1",
+        "frames": 37,
+        "maxStep": 0.8525992373132112,
+        "minTrailing": 5.048982167942106,
+        "maxCrop": 0.7712263826854462,
+        "restoredTrailing": 5.0499480797134515,
+        "bails": 0
+      },
+      {
+        "name": "Roof joined vent 4/-1",
+        "frames": 37,
+        "maxStep": 0.64488304638555,
+        "minTrailing": 5.049999999999997,
+        "maxCrop": 0.7712263826854454,
+        "restoredTrailing": 5.049964472112614,
+        "bails": 0
+      },
+      {
+        "name": "Roof joined vent 4/1",
+        "frames": 37,
+        "maxStep": 0.8646314494635662,
+        "minTrailing": 5.050000000000001,
+        "maxCrop": 0.7712263826854462,
+        "restoredTrailing": 5.049962544382315,
+        "bails": 0
+      }
+    ],
+    "roofEdges": [
+      {
+        "name": "Roof west hip 5/-1",
+        "frames": 52,
+        "maxStep": 0.5855287240562097,
+        "minTrailing": 4.421840000448744,
+        "maxCrop": 0.7712263826854454,
+        "restoredTrailing": 5.049922184519215,
+        "bails": 0
+      },
+      {
+        "name": "Roof west hip 5/1",
+        "frames": 51,
+        "maxStep": 0.6206302591376064,
+        "minTrailing": 4.371992921667036,
+        "maxCrop": 0.7475929118318,
+        "restoredTrailing": 5.0499020543088315,
+        "bails": 0
+      },
+      {
+        "name": "Roof west hip 6/-1",
+        "frames": 43,
+        "maxStep": 0.6509707798720471,
+        "minTrailing": 4.597454981142707,
+        "maxCrop": 0.7712263826854469,
+        "restoredTrailing": 5.049917323612877,
+        "bails": 0
+      },
+      {
+        "name": "Roof west hip 6/1",
+        "frames": 43,
+        "maxStep": 0.6725804335795316,
+        "minTrailing": 4.513076787938677,
+        "maxCrop": 0.7365120812945866,
+        "restoredTrailing": 5.049906154368148,
+        "bails": 0
+      },
+      {
+        "name": "Roof south lane 7/-1",
+        "frames": 140,
+        "maxStep": 0.26585601936211845,
+        "minTrailing": 5.049999999999997,
+        "maxCrop": 0.771226382685446,
+        "restoredTrailing": 5.050000025151455,
+        "bails": 0
+      },
+      {
+        "name": "Roof south lane 7/1",
+        "frames": 140,
+        "maxStep": 0.26585601936212555,
+        "minTrailing": 5.050000000000001,
+        "maxCrop": 0.7712263826854454,
+        "restoredTrailing": 5.050000025151448,
+        "bails": 0
+      },
+      {
+        "name": "Roof south parapet grind -1",
+        "frames": 227,
+        "maxStep": 0.8665659426309182,
+        "minTrailing": 5.049999999999997,
+        "maxCrop": 0.7712263826854451,
+        "restoredTrailing": 5.0500000194929004,
+        "bails": 0
+      },
+      {
+        "name": "Roof south parapet grind 1",
+        "frames": 227,
+        "maxStep": 0.8665659426309226,
+        "minTrailing": 5.050000000000001,
+        "maxCrop": 0.771226382685444,
+        "restoredTrailing": 5.05000001949289,
+        "bails": 0
+      }
+    ],
+    "roofRails": [
+      {
+        "name": "Roof short rail 1/-1",
+        "frames": 44,
+        "maxStep": 0.3509796384403992,
+        "minTrailing": 5.050000000000001,
+        "maxCrop": 0.7712263826854453,
+        "restoredTrailing": 5.050000019109689,
+        "bails": 0
+      },
+      {
+        "name": "Roof short rail 1/1",
+        "frames": 44,
+        "maxStep": 0.3509796384403992,
+        "minTrailing": 5.050000000000001,
+        "maxCrop": 0.771226382685446,
+        "restoredTrailing": 5.050000019109689,
+        "bails": 0
+      },
+      {
+        "name": "Roof short rail 2/-1",
+        "frames": 47,
+        "maxStep": 0.3509796384403943,
+        "minTrailing": 5.049999999999998,
+        "maxCrop": 0.7712263826854454,
+        "restoredTrailing": 5.050000019109226,
+        "bails": 0
+      },
+      {
+        "name": "Roof short rail 2/1",
+        "frames": 47,
+        "maxStep": 0.350979638440401,
+        "minTrailing": 5.049999999999998,
+        "maxCrop": 0.7712263826854466,
+        "restoredTrailing": 5.050000019109219,
+        "bails": 0
+      }
+    ],
+    "acJumps": [
+      {
+        "name": "Hill to AC continuous air and roof rollout",
+        "frames": 271,
+        "maxStep": 0.7357968507903511,
+        "minTrailing": 5.049999999999997,
+        "maxCrop": 0.7712263826854466,
+        "restoredTrailing": 5.049969902270251,
+        "bails": 0
+      },
+      {
+        "name": "AC roof air 23.7",
+        "frames": 121,
+        "maxStep": 0.7801521293590028,
+        "minTrailing": 5.049999999999997,
+        "maxCrop": 0.7712263826854445,
+        "restoredTrailing": 5.05000002505308,
+        "bails": 0
+      },
+      {
+        "name": "AC roof air 26",
+        "frames": 121,
+        "maxStep": 0.7801521293590028,
+        "minTrailing": 5.049999999999997,
+        "maxCrop": 0.7712263826854435,
+        "restoredTrailing": 5.05000002505308,
+        "bails": 0
+      }
+    ],
+    "acTransitions": [
+      {
+        "name": "AC transition north return 12",
+        "frames": 66,
+        "maxStep": 0.7408968794027035,
+        "minTrailing": 0.25643294600730937,
+        "maxCrop": 0.7712983526576712,
+        "restoredTrailing": 2.130531563620875,
+        "bails": 0
+      },
+      {
+        "name": "AC transition north return 16",
+        "frames": 78,
+        "maxStep": 0.5989572178518839,
+        "minTrailing": 0.3487783075584667,
+        "maxCrop": 0.7713463537641376,
+        "restoredTrailing": 1.7938053239830756,
+        "bails": 0
+      },
+      {
+        "name": "AC transition west return 8",
+        "frames": 83,
+        "maxStep": 0.9193979195536305,
+        "minTrailing": 0.24651258046666408,
+        "maxCrop": 0.7712263826854466,
+        "restoredTrailing": 2.0520120270604543,
+        "bails": 0
+      },
+      {
+        "name": "AC transition west return 12",
+        "frames": 86,
+        "maxStep": 0.8113330584864796,
+        "minTrailing": 0.4242965641429374,
+        "maxCrop": 0.7712263826854445,
+        "restoredTrailing": 1.6489315069833617,
+        "bails": 0
+      },
+      {
+        "name": "AC transition west return 16",
+        "frames": 94,
+        "maxStep": 0.859805275805937,
+        "minTrailing": 0.23528401540242,
+        "maxCrop": 0.7712263826854445,
+        "restoredTrailing": 1.9268631705674502,
+        "bails": 0
+      },
+      {
+        "name": "AC transition west hip return 12",
+        "frames": 97,
+        "maxStep": 0.7584151089800737,
+        "minTrailing": 0.394596453138817,
+        "maxCrop": 0.7716804232390201,
+        "restoredTrailing": 1.990974298100158,
+        "bails": 0
+      },
+      {
+        "name": "AC transition west hip return 16",
+        "frames": 102,
+        "maxStep": 0.8612366979786571,
+        "minTrailing": 0.21156315633218306,
+        "maxCrop": 0.7716804095413138,
+        "restoredTrailing": 1.3087516071805323,
+        "bails": 0
+      },
+      {
+        "name": "AC transition south return 8",
+        "frames": 88,
+        "maxStep": 0.8617102467324734,
+        "minTrailing": 0.2506008568101639,
+        "maxCrop": 0.7712263826854465,
+        "restoredTrailing": 2.079347932809823,
+        "bails": 0
+      },
+      {
+        "name": "AC transition south return 12",
+        "frames": 90,
+        "maxStep": 0.6888451306106776,
+        "minTrailing": 0.46145553019526664,
+        "maxCrop": 0.7712263826854454,
+        "restoredTrailing": 1.6810898208889937,
+        "bails": 0
+      },
+      {
+        "name": "AC transition south return 16",
+        "frames": 97,
+        "maxStep": 0.7352966173383796,
+        "minTrailing": 0.21751296906009202,
+        "maxCrop": 0.7712263826854454,
+        "restoredTrailing": 1.9268420127508366,
+        "bails": 0
+      },
+      {
+        "name": "AC transition north low-speed rollback",
+        "frames": 77,
+        "maxStep": 0.23207232352989413,
+        "minTrailing": 4.1903904274287225,
+        "maxCrop": 0.7712503536607043,
+        "restoredTrailing": 2.491384101302903,
+        "bails": 0
+      },
+      {
+        "name": "AC transition north forward to top",
+        "frames": 65,
+        "maxStep": 0.5922688746839626,
+        "minTrailing": 5.050000000000001,
+        "maxCrop": 0.7712983526576712,
+        "restoredTrailing": 5.063535024703277,
+        "bails": 0
+      },
+      {
+        "name": "AC transition west forward to top",
+        "frames": 84,
+        "maxStep": 0.7687171438515633,
+        "minTrailing": 5.049999999999997,
+        "maxCrop": 0.7712263826854466,
+        "restoredTrailing": 5.063449429595282,
+        "bails": 0
+      },
+      {
+        "name": "AC transition south forward to top",
+        "frames": 88,
+        "maxStep": 0.6438479318412573,
+        "minTrailing": 5.049999999999997,
+        "maxCrop": 0.7712263826854465,
+        "restoredTrailing": 5.063454008848015,
+        "bails": 0
+      },
+      {
+        "name": "AC transition complete coping -1",
+        "frames": 196,
+        "maxStep": 0.9590115646341182,
+        "minTrailing": 2.5749480954448423,
+        "maxCrop": 0.771226382685442,
+        "restoredTrailing": 5.050000018138432,
+        "bails": 0
+      },
+      {
+        "name": "AC transition complete coping 1",
+        "frames": 221,
+        "maxStep": 0.7522628276561251,
+        "minTrailing": 2.6154863652429015,
+        "maxCrop": 0.7712263826854407,
+        "restoredTrailing": 5.034888229999631,
+        "bails": 0
+      }
+    ]
+  },
+  "legacyPhysicsFailure": {
+    "case": "West wedge to Long Ass Rail",
+    "message": "Caught a different rail in the original-coordinate street-transfer pilot. This older suite is not reported as passing, and does not certify the current 2x level."
+  }
+}

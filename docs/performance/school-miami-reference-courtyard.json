@@ -1,0 +1,93 @@
+{
+  "level": "School · measured geometry",
+  "unitScale": 0.013929750825577904,
+  "components": 2119,
+  "sourceObjects": 889,
+  "sourceFaces": 7593,
+  "sourceRailNodes": 393,
+  "activeRailNodes": 390,
+  "transitionFaces": 1262,
+  "wallSegments": 1339,
+  "railEdges": 270,
+  "railSegments": 331,
+  "railPaths": 128,
+  "grounded": true,
+  "state": "ride",
+  "pos": [
+    109.98002109552664,
+    -22.2930395133992,
+    -166.19356550642678
+  ],
+  "sourcePosition": [
+    -14044.332979939638,
+    -1.3904012744123975,
+    -5539.83548926525
+  ],
+  "speed": 16.663434070459605,
+  "checks": {
+    "running": false,
+    "stage": "Original courtyard ollie onto rail 163 and rollout (ground)",
+    "passed": [
+      {
+        "name": "Original courtyard ollie onto rail 163 and rollout (planter)",
+        "frames": 347,
+        "result": {
+          "air": 37,
+          "verts": 0,
+          "grinds": 300,
+          "peak": 3.251382824638088,
+          "grind": {
+            "frames": 347,
+            "grindFrames": 300,
+            "maxT": 104.58457012609946,
+            "minT": 14.751607848761992,
+            "progress": 104.58457012609946,
+            "direction": 1,
+            "maxBalance": 0.0715,
+            "caught": true,
+            "landed": true
+          }
+        },
+        "end": [
+          -2.113768868037722,
+          2.55957683932223,
+          -35.479075352746925
+        ]
+      },
+      {
+        "name": "Original courtyard ollie onto rail 163 and rollout (ground)",
+        "frames": 274,
+        "result": {
+          "air": 20,
+          "verts": 0,
+          "grinds": 232,
+          "peak": 2.699144401080756,
+          "grind": {
+            "frames": 274,
+            "grindFrames": 232,
+            "maxT": 104.58457012609946,
+            "minT": 28.695288301485622,
+            "progress": 104.58457012609946,
+            "direction": 1,
+            "maxBalance": 0.05125,
+            "caught": true,
+            "landed": true
+          }
+        },
+        "end": [
+          -2.248878871876451,
+          2.5595483972707695,
+          -35.479075352746925
+        ]
+      }
+    ],
+    "failure": null,
+    "frames": 621,
+    "tuningUnchanged": true
+  },
+  "errors": [],
+  "startupErrors": {
+    "preview": [],
+    "game": []
+  }
+}

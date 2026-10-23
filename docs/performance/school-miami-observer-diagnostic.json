@@ -1,0 +1,29 @@
+{
+  "url": "http://127.0.0.1:5310/tools/school-review.html",
+  "instrumentation": "Temporary Vite HTML injection installed an early window error listener and wrapped native MutationObserver.observe to record failing call stacks; no game source modified.",
+  "actions": [
+    "Fresh lite load",
+    "Switch to full renderer"
+  ],
+  "logs": [
+    {
+      "level": "info",
+      "message": "SCHOOL_OBSERVER_DIAGNOSTIC_READY /tools/school-review.html",
+      "timestamp": "2026-10-22T18:54:02.485Z",
+      "url": "http://127.0.0.1:5310/tools/school-review.html"
+    },
+    {
+      "level": "info",
+      "message": "SCHOOL_OBSERVER_DIAGNOSTIC_READY /",
+      "timestamp": "2026-10-22T18:54:02.664Z",
+      "url": "http://127.0.0.1:5310/?playtest&level=school-miami&lite"
+    },
+    {
+      "level": "info",
+      "message": "SCHOOL_OBSERVER_DIAGNOSTIC_READY /",
+      "timestamp": "2026-10-22T18:54:17.984Z",
+      "url": "http://127.0.0.1:5310/?playtest&level=school-miami"
+    }
+  ],
+  "conclusion": "The intermittent error did not recur in this diagnostic attempt; its origin remains unconfirmed."
+}

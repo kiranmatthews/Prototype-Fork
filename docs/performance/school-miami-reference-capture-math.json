@@ -1,0 +1,104 @@
+{
+  "sourceRevision": "d9319c8d5b42c431de02bec0f02f0cf955f2fbae",
+  "sourceSHA256": "899454604e51f99923bb726f173faeff78b96c5485e4c8901716954769f26f57",
+  "cppOracle": "Unmodified source Dot0/Lerp/LineLineClosestPoints, original pc_geom.h and SquareRoot0 implementation/table; only CVector storage/operators and IO are harness stubs.",
+  "linePairCases": 10007,
+  "squareRootTableEntries": 3072,
+  "fixtureResults": [
+    {
+      "distance": 0,
+      "t1": 2048,
+      "t2": 2048,
+      "point1": [
+        0,
+        0,
+        0
+      ],
+      "point2": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "distance": 500,
+      "t1": 4096,
+      "t2": 4096,
+      "point1": [
+        122880,
+        0,
+        -409600
+      ],
+      "point2": [
+        0,
+        0,
+        -2457600
+      ]
+    },
+    {
+      "distance": 500,
+      "t1": 4096,
+      "t2": 4096,
+      "point1": [
+        122880,
+        0,
+        -409600
+      ],
+      "point2": [
+        0,
+        0,
+        -2457600
+      ]
+    },
+    {
+      "distance": 99,
+      "t1": 2048,
+      "t2": 2048,
+      "point1": [
+        0,
+        405504,
+        0
+      ],
+      "point2": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "distance": 100,
+      "t1": 2048,
+      "t2": 2048,
+      "point1": [
+        0,
+        409600,
+        0
+      ],
+      "point2": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "distance": 101,
+      "t1": 2048,
+      "t2": 2048,
+      "point1": [
+        0,
+        413696,
+        0
+      ],
+      "point2": [
+        0,
+        0,
+        0
+      ]
+    }
+  ],
+  "strict100UnitLimit": true,
+  "outwardEndpointRejected": true,
+  "groundCannotReachUpward": true,
+  "productionModule": "src/referenceRailCapture.ts",
+  "integration": "Opt-in source coordinate frame; line-pair oracle does not prove full state-machine equivalence."
+}

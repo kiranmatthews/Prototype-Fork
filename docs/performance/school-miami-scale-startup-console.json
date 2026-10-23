@@ -1,0 +1,35 @@
+{
+  "note": "Historical intermittent review-tab startup exception, before gameplay checks. Browser logs supplied no source URL or stack. Iteration 21 passed its 58-case runs despite the exception. The exception is not claimed repaired.",
+  "logs": [
+    {
+      "level": "error",
+      "message": "Uncaught TypeError: Failed to execute 'observe' on 'MutationObserver': parameter 1 is not of type 'Node'.",
+      "timestamp": "2026-10-22T20:17:00.695Z"
+    },
+    {
+      "level": "error",
+      "message": "Uncaught TypeError: Failed to execute 'observe' on 'MutationObserver': parameter 1 is not of type 'Node'.",
+      "timestamp": "2026-10-22T22:52:23.767Z"
+    },
+    {
+      "level": "error",
+      "message": "Uncaught TypeError: Failed to execute 'observe' on 'MutationObserver': parameter 1 is not of type 'Node'.",
+      "timestamp": "2026-10-22T23:00:13.607Z"
+    }
+  ],
+  "isolation": {
+    "scriptFreePage": {
+      "initial": [],
+      "reload": []
+    },
+    "instrumentedFullPreview": [],
+    "note": "Neither isolated diagnostic reproduced the exception; no source attribution or fix is claimed."
+  },
+  "iteration22": {
+    "nativeCases": 64,
+    "framesPerMode": 18054,
+    "fullConsole": [],
+    "liteConsole": [],
+    "conclusion": "Did not recur in these two sessions; historical issue remains unresolved."
+  }
+}

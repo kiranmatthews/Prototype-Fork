@@ -1,0 +1,896 @@
+{
+  "components": 270,
+  "rails": 69,
+  "support": [
+    {
+      "label": "start canopy",
+      "y": 3.4000000953674316
+    },
+    {
+      "label": "upper court",
+      "y": 0
+    },
+    {
+      "label": "gym floor under roof",
+      "y": 0
+    },
+    {
+      "label": "gym roof",
+      "y": 6.999999994039536
+    },
+    {
+      "label": "gym north doorway",
+      "y": 0
+    },
+    {
+      "label": "perimeter lane width",
+      "y": -5
+    },
+    {
+      "label": "perimeter lane width",
+      "y": -5
+    },
+    {
+      "label": "perimeter lane width",
+      "y": -5
+    },
+    {
+      "label": "perimeter lane width",
+      "y": -5
+    },
+    {
+      "label": "perimeter lane width",
+      "y": -5
+    },
+    {
+      "label": "graded classroom lawn",
+      "y": -2.8161639637417295
+    },
+    {
+      "label": "graded east lawn",
+      "y": -1.0399468519069544
+    },
+    {
+      "label": "separate bonus roof",
+      "y": 7
+    },
+    {
+      "label": "west-descent wedge",
+      "y": -3.8499999046325684
+    },
+    {
+      "label": "Deep oval pool",
+      "y": -8.199999809265137
+    },
+    {
+      "label": "Square swimming pool",
+      "y": -7.800000190734863
+    },
+    {
+      "label": "footbridge 1",
+      "y": -4.579999926307096
+    },
+    {
+      "label": "footbridge 2",
+      "y": -4.579999927016189
+    },
+    {
+      "label": "footbridge 3",
+      "y": -4.579999929657447
+    },
+    {
+      "label": "under bridge 1",
+      "y": -6.5
+    },
+    {
+      "label": "under bridge 2",
+      "y": -6.5
+    },
+    {
+      "label": "under bridge 3",
+      "y": -6.5
+    },
+    {
+      "label": "checkpoint 1",
+      "y": 0
+    },
+    {
+      "label": "checkpoint 2",
+      "y": -5
+    },
+    {
+      "label": "checkpoint 3",
+      "y": -5
+    },
+    {
+      "label": "checkpoint 4",
+      "y": 6.999999994039536
+    },
+    {
+      "label": "checkpoint 5",
+      "y": 0
+    }
+  ],
+  "rides": [
+    {
+      "label": "native spawn along starting canopy",
+      "frames": 90,
+      "bails": 0,
+      "end": [
+        11.392539642230183,
+        3.4000000953674316,
+        0
+      ]
+    },
+    {
+      "label": "canopy drop to upper court",
+      "frames": 147,
+      "bails": 0,
+      "maxStep": 0.31462364611016086,
+      "minSpeed": 8.166229039078448,
+      "end": [
+        28.31086883508315,
+        0,
+        9.68843433303227
+      ],
+      "target": [
+        30,
+        0,
+        11
+      ]
+    },
+    {
+      "label": "handicap downhill",
+      "frames": 133,
+      "bails": 0,
+      "maxStep": 0.32868843360752303,
+      "minSpeed": 11.999055118110237,
+      "end": [
+        38.17637575359315,
+        -5,
+        -37.52379407499937
+      ],
+      "target": [
+        37,
+        -5,
+        -39
+      ]
+    },
+    {
+      "label": "gym doorway and court",
+      "frames": 157,
+      "bails": 0,
+      "maxStep": 0.19998425196850533,
+      "minSpeed": 8.166229039078448,
+      "end": [
+        48.5,
+        0,
+        39.828269202671095
+      ],
+      "target": [
+        48.5,
+        0,
+        42
+      ]
+    },
+    {
+      "label": "gym service-hill ascent",
+      "frames": 135,
+      "bails": 0,
+      "maxStep": 0.3192179882299203,
+      "minSpeed": 11.594231413006504,
+      "end": [
+        72.10136643370318,
+        7,
+        25.94305155693371
+      ],
+      "target": [
+        70,
+        7,
+        26
+      ]
+    },
+    {
+      "label": "west descent to pools",
+      "frames": 275,
+      "bails": 0,
+      "maxStep": 0.18172541212385335,
+      "minSpeed": 7.886316267414254,
+      "end": [
+        -26.100716662239584,
+        -4.693417498966229,
+        -24.84285693451288
+      ],
+      "target": [
+        -28.03661971830986,
+        -5,
+        -23.96676056338028
+      ]
+    },
+    {
+      "label": "perimeter lane width",
+      "frames": 22,
+      "bails": 0,
+      "maxStep": 0.19696795955239566,
+      "minSpeed": 8.166229039078448,
+      "end": [
+        -60,
+        -5,
+        -55.83064940957695
+      ],
+      "target": [
+        -60,
+        -5,
+        -58
+      ]
+    },
+    {
+      "label": "Huge Rail halfpipe corridor",
+      "frames": 337,
+      "bails": 0,
+      "maxStep": 0.19998425196851055,
+      "minSpeed": 11.999055118110237,
+      "end": [
+        -17.08617955002026,
+        -5,
+        -78.52571717055933
+      ],
+      "target": [
+        -14.923943661971832,
+        -5,
+        -78.79211267605633
+      ]
+    },
+    {
+      "label": "footbridge 1/-1",
+      "frames": 59,
+      "bails": 0,
+      "maxStep": 0.21330476918556718,
+      "minSpeed": 11.999055118110237,
+      "end": [
+        -9.253496903243144,
+        -4.996747007997243,
+        -47.61930169759802
+      ],
+      "target": [
+        -11.014102174404549,
+        -5,
+        -46.30799797211789
+      ]
+    },
+    {
+      "label": "footbridge 1/1",
+      "frames": 59,
+      "bails": 0,
+      "maxStep": 0.2133047674048868,
+      "minSpeed": 11.999055118110237,
+      "end": [
+        -1.2988974905302204,
+        -4.9967470056893575,
+        -53.54390954552401
+      ],
+      "target": [
+        0.46170780820736557,
+        -5,
+        -54.85521329548773
+      ]
+    },
+    {
+      "label": "footbridge 2/-1",
+      "frames": 59,
+      "bails": 0,
+      "maxStep": 0.21330476937826257,
+      "minSpeed": 11.999055118110237,
+      "end": [
+        -5.226736340157155,
+        -4.996747011558643,
+        -42.21282282724485
+      ],
+      "target": [
+        -6.9873416110242665,
+        -5,
+        -40.90151909887845
+      ]
+    },
+    {
+      "label": "footbridge 2/1",
+      "frames": 59,
+      "bails": 0,
+      "maxStep": 0.21330476737641751,
+      "minSpeed": 11.999055118110237,
+      "end": [
+        2.7278630697872863,
+        -4.99674700537284,
+        -48.137430673565724
+      ],
+      "target": [
+        4.488468371587647,
+        -5,
+        -49.44873442224829
+      ]
+    },
+    {
+      "label": "footbridge 3/-1",
+      "frames": 59,
+      "bails": 0,
+      "maxStep": 0.21330477020042252,
+      "minSpeed": 11.999055118110237,
+      "end": [
+        2.0214326568102985,
+        -4.996747011560577,
+        -32.48116085351179
+      ],
+      "target": [
+        0.26082740306024377,
+        -5,
+        -31.16985712704747
+      ]
+    },
+    {
+      "label": "footbridge 3/1",
+      "frames": 59,
+      "bails": 0,
+      "maxStep": 0.213304767948892,
+      "minSpeed": 11.999055118110237,
+      "end": [
+        9.976032093273899,
+        -4.9967470092583195,
+        -38.4057687165955
+      ],
+      "target": [
+        11.736637385672157,
+        -5,
+        -39.71707245041731
+      ]
+    }
+  ],
+  "airs": [
+    {
+      "name": "Kicker Gap",
+      "dir": -1,
+      "air": true,
+      "landed": true,
+      "maxY": -0.24190494116407912,
+      "bails": 0,
+      "end": [
+        43.07513897333603,
+        -3.8457693839321245,
+        -27.733148035377972
+      ]
+    },
+    {
+      "name": "Kicker Gap",
+      "dir": 1,
+      "air": true,
+      "landed": true,
+      "maxY": -0.11338563979150733,
+      "bails": 0,
+      "end": [
+        20.55990775699128,
+        -5,
+        -57.71884741074096
+      ]
+    },
+    {
+      "name": "Deep oval pool",
+      "dir": -1,
+      "air": true,
+      "landed": true,
+      "maxY": -1.4000485100458901,
+      "bails": 0,
+      "end": [
+        -71.43299397503056,
+        -5.691951272462697,
+        -33.242214942520725
+      ]
+    },
+    {
+      "name": "Deep oval pool",
+      "dir": 1,
+      "air": true,
+      "landed": true,
+      "maxY": -1.4067423435113795,
+      "bails": 0,
+      "end": [
+        -61.533844795242,
+        -5.69218934797367,
+        -32.94540751330127
+      ]
+    },
+    {
+      "name": "Square swimming pool",
+      "dir": -1,
+      "air": true,
+      "landed": true,
+      "maxY": -0.3927158691884216,
+      "bails": 0,
+      "end": [
+        -51.68267764289178,
+        -5.649546458080799,
+        -31.521690140845063
+      ]
+    },
+    {
+      "name": "Square swimming pool",
+      "dir": 1,
+      "air": true,
+      "landed": true,
+      "maxY": -0.3927138199395186,
+      "bails": 0,
+      "end": [
+        -37.235634410058545,
+        -5.649563753967675,
+        -31.521690140845063
+      ]
+    },
+    {
+      "name": "Over the Air Conditioner",
+      "air": true,
+      "landed": true,
+      "bails": 0,
+      "end": [
+        36.96174094317163,
+        6.999999994039536,
+        23.7
+      ]
+    },
+    {
+      "name": "Roof 2 Roof",
+      "speed": 16,
+      "air": true,
+      "landed": true,
+      "frames": 86,
+      "maxY": 12.485927478146111,
+      "bails": 0,
+      "end": [
+        65.5,
+        7,
+        7.592756339439489
+      ]
+    },
+    {
+      "name": "Roof 2 Roof",
+      "speed": 18,
+      "air": true,
+      "landed": true,
+      "frames": 87,
+      "maxY": 13.069455351370927,
+      "bails": 0,
+      "end": [
+        65.5,
+        7,
+        5.534336771056536
+      ]
+    },
+    {
+      "name": "Over a Footbridge",
+      "speed": 12,
+      "air": true,
+      "landed": true,
+      "overBridge": true,
+      "frames": 75,
+      "bails": 0,
+      "end": [
+        10.855675656827865,
+        -5,
+        -28.922351669709926
+      ]
+    },
+    {
+      "name": "Over a Footbridge",
+      "speed": 18,
+      "air": true,
+      "landed": true,
+      "overBridge": true,
+      "frames": 74,
+      "bails": 0,
+      "end": [
+        14.668274728171044,
+        -5,
+        -23.803414000854396
+      ]
+    },
+    {
+      "name": "Swim Team Gap",
+      "from": "Deep oval pool",
+      "to": "Square swimming pool",
+      "air": true,
+      "landed": true,
+      "firstLandingInTarget": true,
+      "frames": 98,
+      "bails": 0,
+      "end": [
+        -44.486240017247646,
+        -7.800000190734863,
+        -33.372190185400996
+      ]
+    },
+    {
+      "name": "Swim Team Gap",
+      "from": "Square swimming pool",
+      "to": "Deep oval pool",
+      "air": true,
+      "landed": true,
+      "firstLandingInTarget": true,
+      "frames": 107,
+      "bails": 0,
+      "end": [
+        -70.63602626631332,
+        -7.139370038075017,
+        -31.521690140845063
+      ]
+    },
+    {
+      "name": "Ditch Slap",
+      "dir": -1,
+      "air": true,
+      "landed": true,
+      "frames": 52,
+      "bails": 0,
+      "end": [
+        -4.890586492585754,
+        -5,
+        -35.73869105761297
+      ]
+    },
+    {
+      "name": "Ditch Slap",
+      "dir": 1,
+      "air": true,
+      "landed": true,
+      "frames": 52,
+      "bails": 0,
+      "end": [
+        8.834530154557587,
+        -5,
+        -45.96119626633069
+      ]
+    },
+    {
+      "name": "Garbage Ollie",
+      "air": true,
+      "landed": true,
+      "overGarbage": true,
+      "frames": 34,
+      "bails": 0,
+      "end": [
+        25.366344381501982,
+        0,
+        52.2
+      ]
+    },
+    {
+      "name": "Mini Gap",
+      "frames": 140,
+      "takeoffGrindFrames": 17,
+      "receivingGrindFrames": 60,
+      "air": true,
+      "landed": true,
+      "bails": 0,
+      "end": [
+        -8.65000063023978,
+        -4.953815667924893,
+        -84.6677752357427
+      ]
+    },
+    {
+      "name": "Roof Mini Gap",
+      "frames": 102,
+      "takeoffGrindFrames": 16,
+      "receivingGrindFrames": 14,
+      "air": true,
+      "landed": true,
+      "bails": 0,
+      "end": [
+        50.390568514736536,
+        7.014452257503031,
+        17.776666666666607
+      ]
+    },
+    {
+      "name": "Funbox to perimeter rail",
+      "frames": 108,
+      "air": true,
+      "takeoffY": -3.8499999046325684,
+      "receivingGrindFrames": 12,
+      "landed": true,
+      "bails": 0,
+      "end": [
+        -30.584403783353668,
+        -5,
+        -59.173896855688724
+      ]
+    },
+    {
+      "name": "Funbox to Table",
+      "frames": 86,
+      "air": true,
+      "takeoffY": -3.8499999046325684,
+      "receivingGrindFrames": 17,
+      "landed": true,
+      "bails": 0,
+      "end": [
+        -22.376859607637204,
+        -5,
+        -62.97133707987908
+      ]
+    },
+    {
+      "name": "Funbox to Playground Rail",
+      "frames": 105,
+      "air": true,
+      "takeoffY": -3.8499999046325684,
+      "receivingGrindFrames": 12,
+      "landed": true,
+      "bails": 0,
+      "end": [
+        -1.9200764692076935,
+        -5,
+        -70.17178544093271
+      ]
+    },
+    {
+      "name": "West wedge to Long Ass Rail",
+      "frames": 87,
+      "air": true,
+      "takeoffY": -4.332498430038665,
+      "receivingGrindFrames": 37,
+      "landed": true,
+      "bails": 0,
+      "end": [
+        -32.54245487343939,
+        -5,
+        -26.38528459326166
+      ]
+    },
+    {
+      "name": "Park Gap",
+      "frames": 92,
+      "takeoffGrindFrames": 17,
+      "receivingGrindFrames": 12,
+      "air": true,
+      "landed": true,
+      "bails": 0,
+      "end": [
+        32.51795314231009,
+        -5,
+        -52.25817499284531
+      ]
+    },
+    {
+      "name": "Hall Pass",
+      "frames": 214,
+      "takeoffGrindFrames": 104,
+      "receivingGrindFrames": 14,
+      "air": true,
+      "landed": true,
+      "bails": 0,
+      "end": [
+        -9.959485893219377,
+        0.03500000014901161,
+        -33.59748366368853
+      ]
+    },
+    {
+      "name": "Upper planter chain",
+      "frames": 176,
+      "grindFrames": [
+        18,
+        18,
+        18,
+        21
+      ],
+      "transfers": 3,
+      "landed": true,
+      "bails": 0,
+      "end": [
+        40.06510389516173,
+        0,
+        -2.909647887323943
+      ]
+    },
+    {
+      "name": "Lawn rail-to-rail",
+      "frames": 151,
+      "takeoffGrindFrames": 31,
+      "receivingGrindFrames": 50,
+      "air": true,
+      "landed": true,
+      "bails": 0,
+      "end": [
+        54.8941333333333,
+        -0.3992772585243167,
+        -11.38548846450322
+      ]
+    },
+    {
+      "name": "Classroom planter to Huge Rail",
+      "frames": 209,
+      "takeoffGrindFrames": 45,
+      "receivingGrindFrames": 117,
+      "receivingProgress": 27.481667540755346,
+      "air": true,
+      "landed": true,
+      "bails": 0,
+      "end": [
+        -59.13198898586656,
+        -5,
+        -42.80083926749386
+      ]
+    }
+  ],
+  "grinds": [
+    {
+      "name": "Dumpster Rail Gap",
+      "caught": true,
+      "landed": true,
+      "takeoffFrames": 33,
+      "receivingFrames": 25,
+      "frames": 109,
+      "bails": 0,
+      "end": [
+        17.93,
+        0,
+        50.49086526304841
+      ]
+    },
+    {
+      "name": "Roof to Awning",
+      "frames": 63,
+      "grindFrames": 53,
+      "maxT": 15.774973090040955,
+      "minT": 0.39533860176445024,
+      "progress": 15.774973090040955,
+      "direction": 1,
+      "maxBalance": 0.1,
+      "caught": true,
+      "landed": true,
+      "bails": 0,
+      "end": [
+        45,
+        3.4000000953674316,
+        3.61094114334572
+      ]
+    },
+    {
+      "name": "Handicap Rail downhill",
+      "frames": 110,
+      "grindFrames": 101,
+      "maxT": 32.8452971091869,
+      "minT": 0.3916813212322587,
+      "progress": 32.8452971091869,
+      "direction": 1,
+      "maxBalance": 0.1,
+      "caught": true,
+      "landed": true,
+      "bails": 0,
+      "end": [
+        34.67707700060528,
+        -4.132220110880928,
+        -40.346707196126374
+      ]
+    },
+    {
+      "name": "Handicap Rail uphill",
+      "frames": 423,
+      "grindFrames": 403,
+      "maxT": 32.43697843041917,
+      "minT": 0,
+      "progress": 32.8452971091869,
+      "direction": -1,
+      "maxBalance": 0.1,
+      "caught": true,
+      "landed": true,
+      "bails": 0,
+      "end": [
+        40.371101042303216,
+        0,
+        -3.904953329259203
+      ]
+    },
+    {
+      "name": "Long Ass Rail",
+      "frames": 169,
+      "grindFrames": 152,
+      "maxT": 51.58168337897551,
+      "minT": 0,
+      "progress": 51.58168337897551,
+      "direction": 1,
+      "maxBalance": 0.1,
+      "caught": true,
+      "landed": true,
+      "bails": 0,
+      "end": [
+        -36.04834807388578,
+        -5,
+        -24.600694064179052
+      ]
+    },
+    {
+      "name": "Huge Rail",
+      "frames": 141,
+      "grindFrames": 117,
+      "maxT": 27.481667540755346,
+      "minT": 0.4000000000000021,
+      "progress": 27.481667540755346,
+      "direction": 1,
+      "maxBalance": 0.1,
+      "caught": true,
+      "landed": true,
+      "bails": 0,
+      "end": [
+        -59.17308457934047,
+        -5,
+        -42.753300908379856
+      ]
+    },
+    {
+      "name": "Playground Rail",
+      "frames": 121,
+      "grindFrames": 95,
+      "maxT": 22.422580508128924,
+      "minT": 0.39999999999999947,
+      "progress": 22.422580508128924,
+      "direction": 1,
+      "maxBalance": 0.1,
+      "caught": true,
+      "landed": true,
+      "bails": 0,
+      "end": [
+        18.557265211126666,
+        -4.251395017886823,
+        -71.89961259338916
+      ]
+    },
+    {
+      "name": "Stair-side curb 1",
+      "frames": 87,
+      "grindFrames": 63,
+      "maxT": 18.57874357708274,
+      "minT": 0.38167408642498885,
+      "progress": 18.57874357708274,
+      "direction": 1,
+      "maxBalance": 0.1,
+      "caught": true,
+      "landed": true,
+      "bails": 0,
+      "end": [
+        32.59323809311717,
+        -4.890947867656789,
+        -33.440571441296804
+      ]
+    },
+    {
+      "name": "Stair-side curb 2",
+      "frames": 128,
+      "grindFrames": 102,
+      "maxT": 27.298508986271912,
+      "minT": 0.3999999999999999,
+      "progress": 27.298508986271912,
+      "direction": 1,
+      "maxBalance": 0.1,
+      "caught": true,
+      "landed": true,
+      "bails": 0,
+      "end": [
+        46,
+        -5,
+        -32.56964665462553
+      ]
+    }
+  ],
+  "circuits": [
+    {
+      "frames": 2404,
+      "waypoints": 51,
+      "totalWaypoints": 51,
+      "distance": 389.9094462453598,
+      "gimmeGrindFrames": 21,
+      "returnGrindFrames": 555,
+      "kickerAir": true,
+      "kickerLanded": true
+    }
+  ],
+  "worldScale": 1,
+  "validationContext": "Authoring-coordinate evidence collected before the user-requested world enlargement. Current playable-scale evidence is school-miami-scale.json."
+}

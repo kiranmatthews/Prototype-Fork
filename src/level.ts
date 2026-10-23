@@ -127,7 +127,7 @@ import { JUNGLE_CUP_LEVEL } from "./levels/jungle-cup";
 import { JUNGLE_TERRACES_LEVEL } from "./levels/jungle-sequels";
 import { PIRATE_WRECK_LEVEL } from './levels/pirate-wreck';
 import { CROWN_TEXTURE_KINDS, isCrownTexture, crownTextureFile, createCrownSurface, createCrownQuartz, isCrownWater, crownWaterReflectionFile, createCrownWater, createDrownedHarbourOceanLook } from './drownedCrownAssets';
-import { CODEX_LAB_LEVEL, WAREHOUSE_PARK_LEVEL, ROOFTOP_RELAY_LEVEL } from "./levels/codex-lab";
+import { CODEX_LAB_LEVEL, SCHOOL_MIAMI_LEVEL, WAREHOUSE_PARK_LEVEL, ROOFTOP_RELAY_LEVEL } from "./levels/codex-lab";
 import { JUNGLE_MINEFIELD_LEVEL } from "./levels/jungle-minefield";
 import { COUNTRY_CLUB_LEVEL } from "./levels/country-club";
 import { isPreviousCountryClubStock } from "./levels/country-club-stock";
@@ -777,6 +777,7 @@ export interface CustomComponent {
   vertices?: number[];
   indices?: number[];
   normals?: number[];
+  smoothCollision?: boolean; // mesh: interpolate authored ride normals across triangle seams
   uvs?: number[];
   colors?: number[];
   doubleSided?: boolean;
@@ -2290,7 +2291,7 @@ export function buildBendyWallGeometry(c: CustomComponent): BendyWallResult {
         const maxY = Math.max(
           minY + 0.05,
           heights
-            ? Math.max(a.y + THREE.MathUtils.lerp(heightA, heightB, t0), b.y + THREE.MathUtils.lerp(heightA, heightB, t1))
+            ? Math.max(a.y + THREE.MathUtils.lerp(heightA, heightB, t0), b.y + THREE.MathUtils.lerp(heightA, heightB, t1)) - TOP_INSET
             : Math.max(a.y, b.y) + collisionHeight - TOP_INSET,
         );
         collision.push(
@@ -2580,6 +2581,7 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
   { id: "jungle-minefield", name: JUNGLE_MINEFIELD_LEVEL.name, data: JUNGLE_MINEFIELD_LEVEL },
   { id: "rooftop-relay", name: ROOFTOP_RELAY_LEVEL.name, data: ROOFTOP_RELAY_LEVEL },
   { id: 'mall', name: MALL_LEVEL.name, data: MALL_LEVEL },
+  { id: "school-miami", name: SCHOOL_MIAMI_LEVEL.name, data: SCHOOL_MIAMI_LEVEL },
   { id: "jungle-cup", name: JUNGLE_CUP_LEVEL.name, data: JUNGLE_CUP_LEVEL },
   { id: 'warehouse', name: WAREHOUSE_PARK_LEVEL.name, data: WAREHOUSE_PARK_LEVEL },
   { id: "bone-yard", name: BONE_YARD_LEVEL.name, data: BONE_YARD_LEVEL },
@@ -2687,7 +2689,7 @@ const COMPONENT_DATA_KEYS = new Set([
   "baySpacing", "supportDepth", "supportBaseY", "terrainSupports", "structureStyle",
   "plankPalette", "polePalette", "shoreProfile", "shoreSeaLevel", "shorePhase",
   "trick", "exitYaw", "airOnly", "coverage", "radius", "color", "tex", "dir",
-  "layer", "grp", "lk", "nm", "trafficRoad", "materialStyle", "castShadow", "emissive", "opacity", "fog", "vertices", "indices", "normals", "uvs", "colors", "doubleSided", "breakable", "breakGroup", "sourceBox", "beachSand", "loopRadius", "loopOffset", "loopRequired", "gravityTrack", "lethal", "skateCamera", "outOfBounds", "swimDepth",
+  "layer", "grp", "lk", "nm", "trafficRoad", "materialStyle", "castShadow", "emissive", "opacity", "fog", "vertices", "indices", "normals", "uvs", "colors", "doubleSided", "smoothCollision", "breakable", "breakGroup", "sourceBox", "beachSand", "loopRadius", "loopOffset", "loopRequired", "gravityTrack", "lethal", "skateCamera", "outOfBounds", "swimDepth",
 ]);
 const hasOnlyKeys = (value: object, keys: ReadonlySet<string>): boolean =>
   Object.keys(value).every((key) => keys.has(key));
@@ -3056,7 +3058,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
     "artProxy", "fog", "hangLock", "checkpointTrip", "openFloor",
     "slip", "closed", "vert", "lit", "berms", "outline", "invisible", "containment",
     "scaffold", "supports", "rails", "terrainSupports", "airOnly", "solid", "scenerySolid", "solidSides", "lk",
-    "shoreProfile", "cameraView", "cameraPresentationOnly", "cameraCutaway", "edgeGrinding", "trafficRoad", "doubleSided", "castShadow", "beachSand", "loopRequired", "gravityTrack", "lethal", "skateCamera", "outOfBounds",
+    "shoreProfile", "cameraView", "cameraPresentationOnly", "cameraCutaway", "edgeGrinding", "trafficRoad", "doubleSided", "smoothCollision", "castShadow", "beachSand", "loopRequired", "gravityTrack", "lethal", "skateCamera", "outOfBounds",
   ];
   let aggregateNodes = source.ocean?.shore?.length ?? 0;
   let aggregateSamples = source.ocean
@@ -3191,6 +3193,8 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
     )
       return null;
     if (component.gravityTrack !== undefined && (!['mesh','vertramp'].includes(component.t) || component.solid === false || component.loopRadius !== undefined)) return null;
+    if (component.coping !== undefined && (component.t !== 'rail' || typeof component.coping !== 'boolean')) return null;
+    if (component.smoothCollision !== undefined && (component.t !== 'mesh' || !component.normals)) return null;
     if (component.skateCamera !== undefined && (!['mesh','vertramp'].includes(component.t) || component.solid === false)) return null;
     if(component.sourceBox!==undefined){
       if(component.t!=='mesh'||component.solid!==false||component.breakable||component.invisible||component.outline||component.materialStyle||component.s||
@@ -6139,6 +6143,7 @@ export class Level {
         ...(m.userData.lethal ? { lethal: true } : {}),
         ...(m.userData.swimDepth !== undefined ? { swimDepth: m.userData.swimDepth as number } : {}),
         ...(m.userData.skateCamera ? { skateCamera: true } : {}),
+        ...(m.userData.smoothCollision ? { smoothCollision: true } : {}),
         ...(m.userData.outOfBounds ? { outOfBounds: true } : {}),
       };
       remap = new Map();
@@ -6418,6 +6423,8 @@ export class Level {
     if(standingWater||jungleStream)mesh.userData.noWaterShore=true;
     if(jungleStream){mesh.userData.castShadow=false;mesh.userData.receiveShadow=true;}
     if (c.vert !== undefined) mesh.userData.vert = c.vert;
+    if (c.vert === true) mesh.userData.authoredVertMesh = true;
+    if (c.smoothCollision && c.normals) mesh.userData.smoothCollision = true;
     if (c.gravityTrack) mesh.userData.gravityTrack = true;
     if (c.lethal) mesh.userData.lethal = true;
     if (c.skateCamera) mesh.userData.skateCamera = true;
@@ -6790,6 +6797,7 @@ export class Level {
             ] as [number, number, number, number]) }
           : {}),
         invisible: mr.rail.object.children.length === 0 ? true : undefined,
+        ...(mr.rail.coping ? { coping: true } : {}),
       });
     }
     for (const rail of this.rails) {

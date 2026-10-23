@@ -1,0 +1,114 @@
+{
+  "input": "Ordinary forward/charged ollie, no movement tuning changes",
+  "kicker": {
+    "centreX": 62.1,
+    "run": 2.8,
+    "unitGap": 0.75
+  },
+  "approaches": [
+    {
+      "z": 23.7,
+      "speed": 12,
+      "frames": 120,
+      "air": true,
+      "bails": 0,
+      "end": [
+        44.84355014266685,
+        6.999999994039536,
+        23.7
+      ],
+      "clear": true
+    },
+    {
+      "z": 23.7,
+      "speed": 14,
+      "frames": 120,
+      "air": true,
+      "bails": 0,
+      "end": [
+        42.038785060051836,
+        6.999999994039536,
+        23.7
+      ],
+      "clear": true
+    },
+    {
+      "z": 23.7,
+      "speed": 16,
+      "frames": 119,
+      "air": true,
+      "bails": 0,
+      "end": [
+        39.53692480241951,
+        6.999999994039536,
+        23.7
+      ],
+      "clear": true
+    },
+    {
+      "z": 23.7,
+      "speed": 18,
+      "frames": 119,
+      "air": true,
+      "bails": 0,
+      "end": [
+        36.96174094317163,
+        6.999999994039536,
+        23.7
+      ],
+      "clear": true
+    },
+    {
+      "z": 26,
+      "speed": 12,
+      "frames": 117,
+      "air": true,
+      "bails": 0,
+      "end": [
+        45.48952255503042,
+        8.243258673866066,
+        26
+      ],
+      "clear": true
+    },
+    {
+      "z": 26,
+      "speed": 14,
+      "frames": 120,
+      "air": true,
+      "bails": 0,
+      "end": [
+        42.038785060051836,
+        6.999999994039536,
+        26
+      ],
+      "clear": true
+    },
+    {
+      "z": 26,
+      "speed": 16,
+      "frames": 119,
+      "air": true,
+      "bails": 0,
+      "end": [
+        39.53692480241951,
+        6.999999994039536,
+        26
+      ],
+      "clear": true
+    },
+    {
+      "z": 26,
+      "speed": 18,
+      "frames": 119,
+      "air": true,
+      "bails": 0,
+      "end": [
+        36.96174094317163,
+        6.999999994039536,
+        26
+      ],
+      "clear": true
+    }
+  ]
+}
