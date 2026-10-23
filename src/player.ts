@@ -49,6 +49,7 @@ import {
 } from './level';
 import { sfx } from './audio';
 import { Rail, RailSample, nearestRail } from './rails';
+import {nearestReferenceRail} from './referenceRailCapture';
 import { Halfpipe } from './halfpipe';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { milkBlob, setMilkVariant, updateMilkMotion, kickMilkMotion, resetMilkMotion, copyMilkMotion, MILK_SIZE as WUMPA_SIZE } from './milk';
@@ -1037,6 +1038,9 @@ export class Player {
   private parkRailSeconds = 0;
   private readonly parkRailBalance = new ReferenceRailBalance();
   private parkLastBalanceRail: Rail | null = null;
+  private readonly parkRailSweepStart = new THREE.Vector3();
+  private readonly parkRailSweepEnd = new THREE.Vector3();
+  private parkRailSweepReady = false;
   private readonly parkVelocity = new THREE.Vector3();
   private parkFlightGravity = this.parkPhysics.airGravity;
   private parkAutoTurn = 0;
@@ -3313,6 +3317,7 @@ export class Player {
     this.parkKickGroundSeconds = 0;
     this.parkRailBalance.reset();
     this.parkLastBalanceRail = null;
+    this.parkRailSweepReady = false;
     this.parkVelocity.set(0, 0, 0);
     this.parkAutoTurn = this.parkAutoTurnTarget = this.parkSpinHold = this.parkBreakHold = 0;
     this.endResultsPose();
@@ -3613,7 +3618,17 @@ export class Player {
     // Detached sockets are a final presentation layer. Never let them enter
     // the authored-pose baseline, interaction bounds or movement simulation.
     this.breakApart?.restore();
+    const capture=level.skateReferencePhysics?.railCapture;
+    if(capture){
+      // Original mPos sits thirty native units above supported contact. Keep
+      // the previous step's origin: prevPos is retired by measurePlanar.
+      this.parkRailSweepEnd.copy(this.pos);
+      if(this.grounded)this.parkRailSweepEnd.addScaledVector(this.rideNormal,30*capture.unit);
+      else this.parkRailSweepEnd.y+=30*capture.unit;
+      if(!this.parkRailSweepReady)this.parkRailSweepStart.copy(this.parkRailSweepEnd);
+    }
     this.stepSimulation(dt, input, level);
+    if(capture){this.parkRailSweepStart.copy(this.parkRailSweepEnd);this.parkRailSweepReady=true;}
     if (this.parkReference?.balanceStat !== undefined) {
       const mode = this.state === 'grind' ? 'grind' : this.grounded && this.state === 'ride' ? 'ground' : 'air';
       const failed = this.parkRailBalance.advance(dt, mode, this.rawInput.moveX,
@@ -10499,6 +10514,20 @@ export class Player {
   }
 
   private tryGrind(pressed: boolean, level: Level): boolean {
+    const capture=this.parkReference?.railCapture;
+    if(capture){
+      // The native candidate query owns distance, sweep and endpoint rules.
+      // The fork's trick completion and bail state remain separate guards.
+      if(!(pressed||this.rawInput.grindHeld)||this.regrindCd>0||this.isBailing||this.specialGrab!==null||this.flipT>CONST.fixedStep+1e-6)return false;
+      const v=this.parkVelocity;
+      if(this.grounded)skateSurfaceDirection(v,this.axisF,this.rideNormal).multiplyScalar(this.speed);
+      else if(this.vertAir)v.set(-this.vertNormal.z*this.vertLatVel,this.vVel,this.vertNormal.x*this.vertLatVel);
+      else v.set(this.axisF.x*this.speed+this.axisL.x*this.slideAirLat,this.vVel,this.axisF.z*this.speed+this.axisL.z*this.slideAirLat);
+      const found=nearestReferenceRail(level.grindRails,this.parkRailSweepStart,this.parkRailSweepEnd,v,capture,this.grounded);
+      if(!found)return false;
+      this.railCand=found;this.railCandidateDist=found.sample.point.distanceTo(this.pos);
+      this.enterGrind(found.rail,found.sample,level);return true;
+    }
     // The takeoff hold belongs to the grind we left. A fresh press can arm
     // the next catch early (even during cooldown), then be held to contact.
     if (this.grindExitAir && this.grindOllieAir) {
@@ -10954,7 +10983,7 @@ export class Player {
     this.grindRail = null;
     this.state = 'air';
     this.vVel = vVel;
-    this.regrindCd = CONST.regrindCooldown;
+    this.regrindCd = this.parkReference?.railCapture ? 5/30 : CONST.regrindCooldown;
     this.balance = 0;
     this.balanceCritT = 0;
     // Grind exits fly forward: the rail speed rides through the whole air,
@@ -11086,7 +11115,7 @@ export class Player {
       this.charging = false;
       this.chargeTimer = this.jumpBufferT = this.vertLaunchT = 0;
       this.clearCoyoteJumpWindow();
-      this.regrindCd = CONST.regrindCooldown;
+      this.regrindCd = this.parkReference?.railCapture ? 5/30 : CONST.regrindCooldown;
       this.lipCoolT = 0.5;
       this.pipeRideT = 0.2;
       this.pipeLandGraceT = this.grindDropSteerT = 0.35;

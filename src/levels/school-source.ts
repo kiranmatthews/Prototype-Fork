@@ -233,7 +233,10 @@ const spawn = schoolSourcePlacement(SCHOOL_SOURCE_PLACES[0]);
 add({ t: 'zone', p: spawn, s: [28, 3, 8], dir: 'E', grp: 4, nm: 'Original starting canopy direction' });
 export const SCHOOL_SOURCE_LEVEL: CustomLevelData = {
   v: 1, name: 'School · measured geometry', spawn, killY: -42, skatepark: true, hugeDropBail: false,
-  skateReference: { kind: 'thps1', metresPerUnit: SCHOOL_SOURCE_SCALE, stats: { ollie: 4, speed: 8, air: 8, balance: 5 } },
+  skateReference: { kind: 'thps1', metresPerUnit: SCHOOL_SOURCE_SCALE,
+    // Native Y points down; the authored mesh export already negated it.
+    railCapture: { origin: schoolSourcePoint(0, 0, 0), axes: [-1, -2, 3] },
+    stats: { ollie: 4, speed: 8, air: 8, balance: 5 } },
   sky: 'day', keepPlayFog: true,
   atmosphere: { fogEnabled: true, fogNear: 270, fogFar: 610, fogColor: '#b3c1bc', backdrop: 'fog', ambientSky: '#e0eced', ambientGround: '#7b8071', ambientIntensity: 1.15, sunColor: '#fff0d1', sunIntensity: 1.35, fillColor: '#a6c8d0', fillIntensity: .4, drawDistance: 700, shadowStrength: .65 },
   components: C,

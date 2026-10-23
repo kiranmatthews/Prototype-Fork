@@ -1,0 +1,43 @@
+{
+  "scale": 0.013929750825577904,
+  "frame": {
+    "origin": [
+      -85.65403782647853,
+      -22.27367157009907,
+      -89.02503752626839
+    ],
+    "axes": [
+      -1,
+      -2,
+      3
+    ],
+    "unit": 0.013929750825577904
+  },
+  "mappedOriginalNodes": 393,
+  "quantizedCrossingOffset": [
+    0,
+    0,
+    -0.027859501651164464
+  ],
+  "activationOrder": "Newest activated chain first",
+  "queryMilliseconds": {
+    "samples": 1000,
+    "median": 0.04816599999958271,
+    "p95": 0.09233299999959854,
+    "max": 2.1869159999996555
+  },
+  "sweptCrossing": true,
+  "outsideRadiusRejected": true,
+  "groundSideRejected": true,
+  "outwardEndpointRejected": true,
+  "alternateEligibleChain": true,
+  "inwardEndpointAccepted": true,
+  "disabledRailRejected": true,
+  "sourceFrameMapping": true,
+  "editorRoundTrip": true,
+  "invalidFramesRejected": true,
+  "legacyProfilesOptOut": true,
+  "productionCapture": true,
+  "heldInputRequired": true,
+  "sourceDepartureCooldownSeconds": 0.16666666666666666
+}

@@ -1,94 +1,93 @@
 {
-  "render": "full",
-  "screenshot": "docs/art-reviews/school-miami/source-reference-courtyard-rail.png",
-  "screenshotSha256": "390bde72fc67ce896bbfaeba02a0e9b3814851cf3415831190a56e850f3c60e8",
-  "capture": {
-    "state": "grind",
-    "grounded": false,
-    "pos": [
-      90.4657741734074,
-      2.820634706444465,
-      -34.443017518116704
-    ],
-    "sourcePosition": [
-      -12643.428745078018,
-      1801.4899613613472,
-      3918.3773415334754
-    ],
-    "speed": 18.03725789164079,
-    "errors": [],
-    "startupErrors": {
-      "preview": [],
-      "game": []
-    }
-  },
-  "captureStage": "Original courtyard ollie onto rail 163 and rollout (planter)",
-  "captureFrame": 37,
+  "level": "School · measured geometry",
+  "unitScale": 0.013929750825577904,
+  "components": 2119,
+  "sourceObjects": 889,
+  "sourceFaces": 7593,
+  "sourceRailNodes": 393,
+  "activeRailNodes": 390,
+  "transitionFaces": 1262,
+  "wallSegments": 1339,
+  "railEdges": 270,
+  "railSegments": 331,
+  "railPaths": 128,
+  "grounded": true,
+  "state": "ride",
+  "pos": [
+    109.98002109552664,
+    -22.2930395133992,
+    -166.19356550642678
+  ],
+  "sourcePosition": [
+    -14044.332979939638,
+    -1.3904012744123975,
+    -5539.83548926525
+  ],
+  "speed": 16.663434070459605,
   "checks": {
     "running": false,
     "stage": "Original courtyard ollie onto rail 163 and rollout (ground)",
     "passed": [
       {
         "name": "Original courtyard ollie onto rail 163 and rollout (planter)",
-        "frames": 346,
+        "frames": 347,
         "result": {
-          "air": 30,
+          "air": 37,
           "verts": 0,
-          "grinds": 306,
-          "peak": 2.943106601594458,
+          "grinds": 300,
+          "peak": 3.251382824638088,
           "grind": {
-            "frames": 346,
-            "grindFrames": 306,
+            "frames": 347,
+            "grindFrames": 300,
             "maxT": 104.58457012609946,
-            "minT": 12.904669452704049,
+            "minT": 14.751607848761992,
             "progress": 104.58457012609946,
             "direction": 1,
-            "maxBalance": 0.1,
+            "maxBalance": 0.0715,
             "caught": true,
             "landed": true
           }
         },
         "end": [
-          -2.113776228625455,
-          2.5595768377727506,
+          -2.113768868037722,
+          2.55957683932223,
           -35.479075352746925
         ]
       },
       {
         "name": "Original courtyard ollie onto rail 163 and rollout (ground)",
-        "frames": 276,
+        "frames": 274,
         "result": {
-          "air": 16,
+          "air": 20,
           "verts": 0,
-          "grinds": 238,
+          "grinds": 232,
           "peak": 2.699144401080756,
           "grind": {
-            "frames": 276,
-            "grindFrames": 238,
+            "frames": 274,
+            "grindFrames": 232,
             "maxT": 104.58457012609946,
-            "minT": 26.991283709920534,
+            "minT": 28.695288301485622,
             "progress": 104.58457012609946,
             "direction": 1,
-            "maxBalance": 0.1,
+            "maxBalance": 0.05125,
             "caught": true,
             "landed": true
           }
         },
         "end": [
-          -2.2488641507009834,
-          2.559548400369729,
+          -2.248878871876451,
+          2.5595483972707695,
           -35.479075352746925
         ]
       }
     ],
     "failure": null,
-    "frames": 622,
+    "frames": 621,
     "tuningUnchanged": true
   },
   "errors": [],
   "startupErrors": {
     "preview": [],
     "game": []
-  },
-  "initialization": "Both trials begin on original mesh support, then use normal device input with no intermediate pose or speed writes."
+  }
 }

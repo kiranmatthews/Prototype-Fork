@@ -11,7 +11,7 @@ await withSkateRuntime(async ({ server, Level, Player, scene, THREE, CONST, TUNI
   const { parseCustomLevelJson } = await server.ssrLoadModule('/src/level.ts');
   const data = m.SCHOOL_SOURCE_LEVEL, before = JSON.stringify(TUNING);
   assert.ok(parseCustomLevelJson(JSON.stringify(data)), 'Measured level must survive editor validation');
-  assert.deepEqual(data.skateReference, { kind: 'thps1', metresPerUnit: m.SCHOOL_SOURCE_SCALE, stats: { ollie: 4, speed: 8, air: 8, balance: 5 } });
+  assert.deepEqual(data.skateReference, { kind: 'thps1', metresPerUnit: m.SCHOOL_SOURCE_SCALE, railCapture: { origin: m.schoolSourcePoint(0, 0, 0), axes: [-1, -2, 3] }, stats: { ollie: 4, speed: 8, air: 8, balance: 5 } });
   assert.equal(data.hugeDropBail, false, 'Source landings do not use the fork height penalty');
   assert.equal(m.SCHOOL_SOURCE_STATS.railEdges, 270);
   const source = JSON.parse(await readFile(new URL('../docs/school/source-geometry.json', import.meta.url), 'utf8'));
