@@ -139,6 +139,7 @@ export const TUNING = {
   ledgeClimbPop: 1, // extra lift as you top out of the clamber (0 = plant flat)
   ledgeReach: 2.4, // highest a lip can sit above your feet and still be caught
   airControl: 0, // forward/back speed adjustment in the air
+  boardAbandonSteering: 25, // percent of the original heading response after jumping off the board
   manualMinSpeed: 3.5, // must be rolling at least this fast to pop (or hold) a manual
   manualDrift: 0.5, // manual balance: how fast the pitch needle runs away
   manualControl: 4, // slightly stronger up/down correction; edge shape and momentum stay unchanged
@@ -230,7 +231,8 @@ export type TuningKey = keyof typeof TUNING;
 // the keys the user actually MOVED off those defaults are re-applied — every
 // untouched key follows the new build. (The spineDrift saga: a snapshot from
 // an old build silently kept a retired mechanic alive for days.)
-export const TUNING_VERSION = 27; // v27: halfpipe high-speed steering endpoint
+export const TUNING_VERSION = 28; // v28: independent, gentler board-abandon steering
+// v27: halfpipe high-speed steering endpoint
 // v26: preserve double-jump traversal speed
 // v25: huge-drop bails require 24 m of descent; untouched saved defaults follow this build
 // v24: restore park feel; only speed/acceleration, coast-to-stop and camera tuning
@@ -369,6 +371,7 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   ledgeClimbPop: { min: 0, max: 12, step: 0.5 },
   ledgeReach: { min: 1.4, max: 3.5, step: 0.1 },
   airControl: { min: 0, max: 40, step: 1 },
+  boardAbandonSteering: { min: 0, max: 100, step: 1 },
   manualMinSpeed: { min: 0, max: 15, step: 0.5 },
   manualDrift: { min: 0, max: 3, step: 0.05 },
   manualControl: { min: 0.5, max: 8, step: 0.1 },
@@ -442,6 +445,7 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
 };
 
 export const TUNING_LABELS: Partial<Record<TuningKey, string>> = {
+  boardAbandonSteering: 'Board Abandon Steering (%)',
   teeterEdgeDistance: 'Teeter Edge Distance (m)',
   parkCruiseSpeed: 'Park Cruise Speed (m/s)',
   parkChargeSpeed: 'Park Charged Speed (m/s)',
@@ -713,6 +717,8 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   ledgeReach: 'The highest a ledge lip can sit above your feet and still be caught. Higher = you snag taller edges; lower = only chest-high lips grab.',
   airControl:
     'Forward/back speed adjustment in the air WHILE SKATING (braking against travel bites 2x harder). On-foot air is direct-drive and ignores this.',
+  boardAbandonSteering:
+    'How quickly held movement redirects you after jumping off the skateboard. 0% keeps the launch direction; 25% is gentle; 100% restores the original fast steering. Preserves carried speed and jump height. Applies to ordinary and vert board abandons; normal jumps and ragdoll bails keep their own controls.',
   manualMinSpeed:
     'Minimum rolling speed to START a manual. An existing manual drops below 70% of this speed, allowing brief speed dips over slopes.',
   manualDrift: 'How fast the manual balance needle runs away on its own (fought with up/down on the stick). Pegging it = bail.',
@@ -831,7 +837,7 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
   { title: 'WALKING', keys: ['walkSpeed', 'walkRampTime', 'walkSlowdownTime', 'crawlSpeed'] },
   {
     title: 'JUMPS & AIR',
-    keys: ['jumpVelocity', 'jumpMinVelocity', 'ollieVelocity', 'ollieMinVelocity', 'ollieDownCouple', 'jumpChargeTime', 'doubleJump', 'doubleJumpWindow', 'doubleJumpVelocity', 'doubleJumpHorizontalScale', 'riseGravity', 'fallGravity', 'boardRiseGravity', 'boardFallGravity', 'rampFallGravity', 'boardApexFloat', 'boardApexBand', 'airControl'],
+    keys: ['jumpVelocity', 'jumpMinVelocity', 'ollieVelocity', 'ollieMinVelocity', 'ollieDownCouple', 'jumpChargeTime', 'doubleJump', 'doubleJumpWindow', 'doubleJumpVelocity', 'doubleJumpHorizontalScale', 'boardAbandonSteering', 'riseGravity', 'fallGravity', 'boardRiseGravity', 'boardFallGravity', 'rampFallGravity', 'boardApexFloat', 'boardApexBand', 'airControl'],
   },
   {
     title: 'SKATING',

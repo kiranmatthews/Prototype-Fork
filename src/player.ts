@@ -565,8 +565,8 @@ const BAIL_CONTROL_F = new THREE.Vector3();
 const BAIL_CONTROL_L = new THREE.Vector3();
 const BAIL_PITCH_AXIS = new THREE.Vector3(1, 0, 0);
 // A bail or abandoned-board air is an active rescue attempt, not a cutscene.
-// This response reaches roughly 90% of the requested planar velocity in 0.2s
-// while neutral input preserves the trajectory that threw the rider there.
+// Full response reaches roughly 90% of the requested direction in 0.2s.
+// Board abandon scales it with its own tuner; neutral input preserves carry.
 const AIR_RESCUE_CONTROL_RESPONSE = 12;
 const AIR_RESCUE_INPUT_DEADZONE = 0.05;
 // Forgive a near-simultaneous Square/X smoosh at takeoff, but never bank an
@@ -6005,6 +6005,10 @@ export class Player {
       (this.isBailing || this.emergencyEjectLandingPending);
     if (!ownsAir) return false;
 
+    const abandon = this.emergencyEjectLandingPending && !this.isBailing;
+    const steering = abandon ? THREE.MathUtils.clamp(TUNING.boardAbandonSteering / 100, 0, 1) : 1;
+    if (steering === 0) return true; // still owns this air; ordinary foot steering must not take over
+
     const moveX = THREE.MathUtils.clamp(this.rawInput.moveX, -1, 1);
     const moveY = THREE.MathUtils.clamp(this.rawInput.moveY, -1, 1);
     const intent = Math.min(1, Math.hypot(moveX, moveY));
@@ -6016,12 +6020,12 @@ export class Player {
       .addScaledVector(BAIL_CONTROL_L, moveX);
     if (BAIL_TARGET.lengthSq() <= 1e-8) return true;
     const carrySpeed = Math.abs(this.speed);
-    BAIL_TARGET.normalize().multiplyScalar(this.emergencyEjectLandingPending && !this.isBailing
+    BAIL_TARGET.normalize().multiplyScalar(abandon
       ? Math.max(carrySpeed, TUNING.walkSpeed * intent) : TUNING.walkSpeed * intent);
 
     BAIL_V.copy(this.axisF).multiplyScalar(this.speed);
-    const response = 1 - Math.exp(-AIR_RESCUE_CONTROL_RESPONSE * Math.max(0, dt));
-    if (this.emergencyEjectLandingPending && !this.isBailing && carrySpeed > 1e-5) {
+    const response = 1 - Math.exp(-AIR_RESCUE_CONTROL_RESPONSE * steering * Math.max(0, dt));
+    if (abandon && carrySpeed > 1e-5) {
       // Turn the heading itself: normalizing a lerped velocity both loses
       // speed on corners and cannot turn through an exact 180° reversal.
       const angle = Math.atan2(BAIL_V.x * BAIL_TARGET.z - BAIL_V.z * BAIL_TARGET.x, BAIL_V.dot(BAIL_TARGET)) * response;

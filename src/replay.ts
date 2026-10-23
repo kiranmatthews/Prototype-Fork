@@ -309,9 +309,10 @@ export class Replayer {
     // Missing park values use this build's defaults; retired multipliers must
     // never become live properties or silently affect the absolute profile.
     for (const key of Object.keys(replayTuning)) if (retiredParkTuner(key)) delete replayTuning[key];
-    // Earlier recordings predate trick rewards and halfpipe steering. Keep
+    // Earlier recordings predate trick rewards and steering tuners. Keep
     // their original trajectories; new takes explicitly record these values.
-    Object.assign(TUNING, PARK_TUNING_DEFAULTS, { grindTrickBoost: 0, trickLandBoost: 0, pipeTurnRate: 0 }, replayTuning);
+    Object.assign(TUNING, PARK_TUNING_DEFAULTS,
+      { grindTrickBoost: 0, trickLandBoost: 0, pipeTurnRate: 0, boardAbandonSteering: 100 }, replayTuning);
     this.refreshLegacyCarveGrip();
     this.refreshLegacyCamera();
     this.onTuningApplied();

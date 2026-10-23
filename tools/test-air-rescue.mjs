@@ -212,7 +212,7 @@ try {
   const { Player } = await server.ssrLoadModule("/src/player.ts");
   const { CONST, TUNING } = await server.ssrLoadModule("/src/tuning.ts");
   const dt = CONST.fixedStep;
-  const tuningSnapshot = { airControl: TUNING.airControl };
+  const tuningSnapshot = { airControl: TUNING.airControl, boardAbandonSteering: TUNING.boardAbandonSteering };
   restoreTuning = () => Object.assign(TUNING, tuningSnapshot);
   TUNING.airControl = 0;
 
@@ -284,7 +284,9 @@ try {
   assert.deepEqual(ejectA, ejectB, "board-abandon steering was not deterministic");
 
   // Raw stick input in east/west side-scroll zones must not be interpreted
-  // as the already-swapped course input used by grounded recovery.
+  // as the already-swapped course input used by grounded recovery. Use full
+  // steering here to isolate direction mapping from the response-time tuner.
+  TUNING.boardAbandonSteering=100;
   for(const dir of ['E','W'])for(const mode of [{bail:true},{eject:true}])for(const [mx,my] of [[1,0],[-1,0],[0,1],[0,-1]]){
     const f=create({t:'zone',p:[0,0,0],s:[100,1,100],dir});
     prepareAirCarry(f.player,mode);f.player.travelDir=dir;
@@ -293,6 +295,7 @@ try {
     assert.ok(velocity.dot(wanted)>4,`${dir} ${mode.bail?'bail':'eject'} ignored screen input ${mx}/${my}`);
     assert.ok(velocity.clone().normalize().dot(wanted)>.9,'side-scroll rescue steered into the wrong axis');
   }
+  TUNING.boardAbandonSteering=tuningSnapshot.boardAbandonSteering;
 
   // Neutral input retains the exact planar carry. Steering is authority over
   // an existing flight, not hidden drag or an automatic course-axis snap.

@@ -1,0 +1,131 @@
+{
+  "date": "2026-10-23",
+  "baseCommit": "b485f6a8",
+  "control": {
+    "key": "boardAbandonSteering",
+    "label": "Board Abandon Steering (%)",
+    "section": "JUMPS & AIR",
+    "default": 25,
+    "min": 0,
+    "max": 100
+  },
+  "replay": {
+    "source": "replay-RollingBones-2026-10-23T10-32-42.json",
+    "sha256": "ad30a3d7b30f08812eea7f8d5fdf3db6101d739a947273488c9d7349a37fbfb9",
+    "frames": 38790,
+    "abandonFrame": 38357,
+    "originalPeakTurnDegreesPerFrame": 16.14982310017527,
+    "defaultPeakTurnDegreesPerFrame": 4.178980600425994,
+    "legacyTrajectoryUnchanged": true,
+    "legacyTrajectorySha256": "8275547871779b3b864183bed52eaa49eda80d8ab47a619b117579132f0dce99",
+    "carriedSpeedBefore": 8.30000000000001,
+    "carriedSpeedAfter": 8.30000000000001
+  },
+  "buildVersion": "69a7ddb3f4715e46e5fd",
+  "checks": [
+    {
+      "task": "tools/test-air-rescue.mjs",
+      "exitCode": 1,
+      "seconds": 13.49,
+      "log": "/private/tmp/board-abandon-steering-20261023/tools_test-air-rescue.log"
+    },
+    {
+      "task": "tools/test-board-abandon-tuning.mjs",
+      "exitCode": 0,
+      "seconds": 0.53,
+      "log": "/private/tmp/board-abandon-steering-20261023/tools_test-board-abandon-tuning.log"
+    },
+    {
+      "task": "tools/test-board-roll-landing.mjs",
+      "exitCode": 0,
+      "seconds": 12.71,
+      "log": "/private/tmp/board-abandon-steering-20261023/tools_test-board-roll-landing.log"
+    },
+    {
+      "task": "tools/test-skate-race-moveset.mjs",
+      "exitCode": 0,
+      "seconds": 12.18,
+      "log": "/private/tmp/board-abandon-steering-20261023/tools_test-skate-race-moveset.log"
+    },
+    {
+      "task": "tools/test-factory-defaults.mjs",
+      "exitCode": 1,
+      "seconds": 0.41,
+      "log": "/private/tmp/board-abandon-steering-20261023/tools_test-factory-defaults.log"
+    },
+    {
+      "task": "build",
+      "exitCode": 0,
+      "seconds": 111.55,
+      "log": "/private/tmp/board-abandon-steering-20261023/build.log"
+    },
+    {
+      "task": "tools/test-board-abandon-steering.mjs",
+      "exitCode": 0,
+      "seconds": 12.56,
+      "log": "/private/tmp/board-abandon-steering-20261023/tools_test-board-abandon-steering.log"
+    }
+  ],
+  "browser": {
+    "modes": [
+      {
+        "lite": true,
+        "slider": {
+          "default": 25,
+          "min": 0,
+          "max": 100,
+          "savedAndReloaded": 40,
+          "reset": 25
+        },
+        "runs": [
+          {
+            "strength": 0,
+            "frames": 10,
+            "maxTurn": 0
+          },
+          {
+            "strength": 25,
+            "frames": 10,
+            "maxTurn": 4.38935179493574
+          },
+          {
+            "strength": 100,
+            "frames": 10,
+            "maxTurn": 16.314232222981634
+          }
+        ]
+      },
+      {
+        "lite": false,
+        "slider": {
+          "default": 25,
+          "min": 0,
+          "max": 100,
+          "savedAndReloaded": 40,
+          "reset": 25
+        },
+        "runs": [
+          {
+            "strength": 25,
+            "frames": 10,
+            "maxTurn": 4.389351794935736
+          }
+        ]
+      }
+    ],
+    "errors": []
+  },
+  "preExistingFailures": [
+    {
+      "test": "tools/test-air-rescue.mjs",
+      "failure": "side contact was misclassified as a rescue stomp",
+      "baseline": "Reproduced on unmodified b485f6a8 in the integration checkout."
+    },
+    {
+      "test": "tools/test-factory-defaults.mjs",
+      "failure": "Historical snapshot omits existing grind transfer/reward, pipe steering, teeter edge and trick-landing defaults.",
+      "baseline": "Same missing fields reproduce on unmodified b485f6a8; the new steering default is covered separately."
+    }
+  ],
+  "delivery": "Local only. No push or deployment."
+}
