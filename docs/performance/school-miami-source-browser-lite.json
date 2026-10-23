@@ -1,0 +1,162 @@
+{
+  "level": "School · measured geometry",
+  "unitScale": 0.013524936601859678,
+  "components": 2090,
+  "sourceObjects": 889,
+  "sourceFaces": 7593,
+  "sourceRailNodes": 393,
+  "transitionFaces": 1262,
+  "wallSegments": 1340,
+  "railEdges": 271,
+  "railPaths": 121,
+  "grounded": true,
+  "state": "ride",
+  "pos": [
+    119.70921386306001,
+    0,
+    85.2290340686091
+  ],
+  "sourcePosition": [
+    -15000,
+    1599,
+    12692.621706447786
+  ],
+  "speed": 0,
+  "checks": {
+    "running": false,
+    "stage": "Existing charged flat ollie height",
+    "passed": [
+      {
+        "name": "Original canopy start",
+        "frames": 121,
+        "result": {
+          "air": 0,
+          "verts": 0,
+          "grinds": 0,
+          "peak": 15.729501724243164
+        },
+        "end": [
+          17.241825567904023,
+          14.84436668769795,
+          0
+        ]
+      },
+      {
+        "name": "Original west gym toe blocks",
+        "frames": 101,
+        "result": {
+          "air": 0,
+          "verts": 0,
+          "grinds": 0,
+          "peak": 0
+        },
+        "end": [
+          148.87283865772483,
+          0,
+          61.15238590057424
+        ]
+      },
+      {
+        "name": "Original west gym ollie and return",
+        "frames": 292,
+        "result": {
+          "air": 34,
+          "verts": 0,
+          "grinds": 0,
+          "peak": 6.116667609032158
+        },
+        "end": [
+          147.36114652443342,
+          0,
+          62.339438673617245
+        ]
+      },
+      {
+        "name": "Original east gym toe blocks",
+        "frames": 101,
+        "result": {
+          "air": 0,
+          "verts": 0,
+          "grinds": 0,
+          "peak": 0
+        },
+        "end": [
+          95.41193918448006,
+          0,
+          63.7358090869122
+        ]
+      },
+      {
+        "name": "Original east gym ollie and return",
+        "frames": 292,
+        "result": {
+          "air": 34,
+          "verts": 0,
+          "grinds": 0,
+          "peak": 6.12183703940654
+        },
+        "end": [
+          96.7098968938261,
+          0,
+          62.333856163069036
+        ]
+      },
+      {
+        "name": "Original rectangular pool vert return",
+        "frames": 154,
+        "result": {
+          "air": 78,
+          "verts": 79,
+          "grinds": 0,
+          "peak": -15.501642634492995
+        },
+        "end": [
+          -127.74608695952459,
+          -27.076923370361328,
+          -109.43421953869849
+        ]
+      },
+      {
+        "name": "Original oval pool vert return",
+        "frames": 138,
+        "result": {
+          "air": 63,
+          "verts": 64,
+          "grinds": 0,
+          "peak": -17.940725571490812
+        },
+        "end": [
+          -213.58261897471976,
+          -28.05614734567029,
+          -116.34453102334588
+        ]
+      },
+      {
+        "name": "Existing charged flat ollie height",
+        "frames": 70,
+        "result": {
+          "air": 39,
+          "verts": 0,
+          "grinds": 0,
+          "peak": 1.755457499999998
+        },
+        "end": [
+          119.70921386306001,
+          0,
+          85.2290340686091
+        ]
+      }
+    ],
+    "failure": null,
+    "frames": 1269,
+    "tuningUnchanged": true
+  },
+  "errors": [],
+  "console": [
+    {
+      "level": "error",
+      "message": "Uncaught TypeError: Failed to execute 'observe' on 'MutationObserver': parameter 1 is not of type 'Node'.",
+      "timestamp": "2026-10-23T00:55:32.299Z"
+    }
+  ]
+}

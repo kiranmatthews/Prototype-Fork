@@ -318,6 +318,7 @@ export interface WallPathRuntime {
   length: number;
   halfThickness: number;
   height: number;
+  heights?: number[];
   closed: boolean;
 }
 
@@ -333,6 +334,7 @@ export interface WallPathSample {
   distance: number;
   crossDistance: number;
   cap: boolean;
+  height: number;
 }
 
 // Moving platform: slides along one axis on a sine, carrying the rider.
@@ -685,6 +687,7 @@ export interface CustomComponent {
   p: [number, number, number];
   s?: [number, number, number];
   collisionHeight?: number; // wall/wallpath: optional collider height when visual height differs
+  wallHeights?: [number, number]; // straight two-knot wallpath: exact height at each end, including triangular caps
   slip?: boolean; // platform/mesh: an icy/slick deck (friction cut, you can't stop short)
   // Slip only, 0.02..1: fraction of dry skate steering/braking/drive; scales
   // legacy ice run response and rollout drag. Explicit values enable vector run inertia.
@@ -694,6 +697,7 @@ export interface CustomComponent {
   vertices?: number[];
   indices?: number[];
   normals?: number[];
+  smoothCollision?: boolean; // mesh: interpolate authored ride normals across triangle seams
   uvs?: number[];
   colors?: number[];
   doubleSided?: boolean;
@@ -777,6 +781,7 @@ export interface CustomComponent {
   scaffold?: boolean; // woodpath: bamboo posts/braces/handrails beneath and beside the deck
   supports?: boolean; // woodpath: generate terrain-reaching/fixed-depth support posts (default follows scaffold)
   rails?: boolean; // woodpath: handrails; vertramp: automatic coping rails (default true)
+  coping?: boolean; // rail: flush transition lip, grindable without acting as a street barrier
   spacing?: number; // woodpath: decorative plank spacing
   baySpacing?: number; // woodpath: distance between bamboo support/X-brace bays
   supportDepth?: number; // woodpath: fixed post depth below the deck
@@ -1836,6 +1841,7 @@ export interface BendyWallResult {
   spine: VertRampNode[];
   length: number;
   closed: boolean;
+  heights?: number[];
 }
 
 /**
@@ -1900,6 +1906,7 @@ export function buildBendyWallGeometry(c: CustomComponent): BendyWallResult {
   const thickness = Math.max(0.1, c.w ?? 1.2);
   const visualHeight = Math.max(0.2, c.rise ?? c.s?.[1] ?? 5);
   const collisionHeight = Math.max(0.2, c.collisionHeight ?? visualHeight);
+  const heights = c.wallHeights && spine.length === 2 ? [...c.wallHeights] : undefined;
   const wrap = (index: number): number =>
     closed
       ? ((index % spine.length) + spine.length) % spine.length
@@ -1944,9 +1951,9 @@ export function buildBendyWallGeometry(c: CustomComponent): BendyWallResult {
     const hz = right.y * thickness * 0.5;
     sections.push({
       leftBottom: new THREE.Vector3(node.x - hx, node.y, node.z - hz),
-      leftTop: new THREE.Vector3(node.x - hx, node.y + visualHeight, node.z - hz),
+      leftTop: new THREE.Vector3(node.x - hx, node.y + (heights?.[index] ?? visualHeight), node.z - hz),
       rightBottom: new THREE.Vector3(node.x + hx, node.y, node.z + hz),
-      rightTop: new THREE.Vector3(node.x + hx, node.y + visualHeight, node.z + hz),
+      rightTop: new THREE.Vector3(node.x + hx, node.y + (heights?.[index] ?? visualHeight), node.z + hz),
       center,
       right,
       arc,
@@ -2083,7 +2090,11 @@ export function buildBendyWallGeometry(c: CustomComponent): BendyWallResult {
       // A cardinal straight can remain one exact Box3 however long it is. Any
       // diagonal/curved run is subdivided so its bounding rectangle never grows
       // into a broad invisible blocker beside the rendered strip.
-      const verticalDelta = Math.abs(sourceB.y - sourceA.y);
+      const heightA = heights?.[index] ?? collisionHeight;
+      const heightB = heights?.[(index + 1) % spine.length] ?? collisionHeight;
+      const verticalDelta = heights
+        ? Math.max(Math.abs(sourceB.y - sourceA.y), Math.abs(sourceB.y + heightB - sourceA.y - heightA))
+        : Math.abs(sourceB.y - sourceA.y);
       const cardinal = Math.abs(fullDx) < 1e-5 || Math.abs(fullDz) < 1e-5;
       const steps = cardinal && verticalDelta < 0.05
         ? 1
@@ -2109,7 +2120,9 @@ export function buildBendyWallGeometry(c: CustomComponent): BendyWallResult {
         const minY = Math.min(a.y, b.y);
         const maxY = Math.max(
           minY + 0.05,
-          Math.max(a.y, b.y) + collisionHeight - TOP_INSET,
+          heights
+            ? Math.max(a.y + THREE.MathUtils.lerp(heightA, heightB, t0), b.y + THREE.MathUtils.lerp(heightA, heightB, t1)) - TOP_INSET
+            : Math.max(a.y, b.y) + collisionHeight - TOP_INSET,
         );
         collision.push(
           new THREE.Box3().setFromCenterAndSize(
@@ -2125,7 +2138,7 @@ export function buildBendyWallGeometry(c: CustomComponent): BendyWallResult {
       }
     }
   }
-  return { geometry, collision, collisionSegments, spine, length: totalLength, closed };
+  return { geometry, collision, collisionSegments, spine, length: totalLength, closed, heights };
 }
 
 // Fillet the corners of a polyline/polygon (Figma corner radius). Each
@@ -2491,15 +2504,15 @@ const LEVEL_DATA_KEYS = new Set([
   "components", "layers", "groups", "allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "cameraAirLift", "secretComboGem", "cameraLookAhead", "cameraRig",
 ]);
 const COMPONENT_DATA_KEYS = new Set([
-  "t", "p", "s", "to", "pts", "widths", "collisionHeight", "slip", "iceGrip", "containment",
+  "t", "p", "s", "to", "pts", "widths", "collisionHeight", "wallHeights", "slip", "iceGrip", "containment",
   "edgeGrinding", "cameraView", "cameraPosition", "cameraTarget", "cameraFov", "cameraAspect", "cameraFollowDistance", "cameraFollowTargetHeight", "cameraIntroDistance", "cameraCutaway", "len", "rise", "w", "yaw", "axis", "travelSign", "travelPhase", "vkind", "arc", "arcSteps", "deck",
   "closed", "bank", "curve", "vert", "lipRise", "outerBank", "depthBias", "shake", "kind", "dkind", "vr", "tn",
   "lit", "berms", "n", "outline", "range", "speed", "foe", "invisible", "solid",
-  "cycle", "phase", "amp", "seed", "scaffold", "supports", "rails", "spacing",
+  "cycle", "phase", "amp", "seed", "scaffold", "supports", "rails", "coping", "spacing",
   "baySpacing", "supportDepth", "supportBaseY", "terrainSupports", "structureStyle",
   "plankPalette", "polePalette", "shoreProfile", "shoreSeaLevel", "shorePhase",
   "trick", "exitYaw", "airOnly", "coverage", "radius", "color", "tex", "dir",
-  "layer", "grp", "lk", "nm", "trafficRoad", "materialStyle", "castShadow", "emissive", "opacity", "fog", "vertices", "indices", "normals", "uvs", "colors", "doubleSided", "beachSand", "loopRadius", "loopOffset", "loopRequired", "gravityTrack", "lethal", "skateCamera", "outOfBounds",
+  "layer", "grp", "lk", "nm", "trafficRoad", "materialStyle", "castShadow", "emissive", "opacity", "fog", "vertices", "indices", "normals", "smoothCollision", "uvs", "colors", "doubleSided", "beachSand", "loopRadius", "loopOffset", "loopRequired", "gravityTrack", "lethal", "skateCamera", "outOfBounds",
 ]);
 const hasOnlyKeys = (value: object, keys: ReadonlySet<string>): boolean =>
   Object.keys(value).every((key) => keys.has(key));
@@ -2858,7 +2871,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
     "fog",
     "slip", "closed", "vert", "lit", "berms", "outline", "invisible", "containment",
     "scaffold", "supports", "rails", "terrainSupports", "airOnly", "solid", "lk",
-    "shoreProfile", "cameraView", "cameraCutaway", "edgeGrinding", "trafficRoad", "doubleSided", "castShadow", "beachSand", "loopRequired", "gravityTrack", "lethal", "skateCamera", "outOfBounds",
+    "shoreProfile", "cameraView", "cameraCutaway", "edgeGrinding", "trafficRoad", "doubleSided", "smoothCollision", "castShadow", "beachSand", "loopRequired", "gravityTrack", "lethal", "skateCamera", "outOfBounds",
   ];
   let aggregateNodes = source.ocean?.shore?.length ?? 0;
   let aggregateSamples = source.ocean
@@ -2900,11 +2913,18 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
           !component.pts.every((point) => finiteTuple(point, 2, 5))))
     )
       return null;
+    if (component.wallHeights !== undefined && (
+      component.t !== 'wallpath' || !finiteTuple(component.wallHeights, 2) ||
+      component.wallHeights.some(h => h < 0 || h > MAX_ABS) || Math.max(...component.wallHeights) < .2 ||
+      component.pts?.length !== 2 || component.closed === true || component.curve === 'spline' ||
+      component.pts.some(p => (p[2] ?? 0) !== 0) || component.collisionHeight !== undefined ||
+      Math.hypot(component.pts[1][0] - component.pts[0][0], component.pts[1][1] - component.pts[0][1]) < .02
+    )) return null;
     if (component.t === 'spinbridge' && (component.s?.some(value => value <= 0) ||
       component.outline || component.solid === false ||
       (component.cycle !== undefined && component.cycle <= 0))) return null;
     aggregateNodes +=
-      (component.pts?.length ?? 0) + (component.widths?.length ?? 0);
+      (component.pts?.length ?? 0) + (component.widths?.length ?? 0) + (component.wallHeights?.length ?? 0);
     if (aggregateNodes > MAX_AGGREGATE_NODES) return null;
     if (
       component.p.some((number) => Math.abs(number) > MAX_ABS) ||
@@ -2975,6 +2995,8 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
     )
       return null;
     if (component.gravityTrack !== undefined && (!['mesh','vertramp'].includes(component.t) || component.solid === false || component.loopRadius !== undefined)) return null;
+    if (component.coping !== undefined && (component.t !== 'rail' || typeof component.coping !== 'boolean')) return null;
+    if (component.smoothCollision !== undefined && (component.t !== 'mesh' || !component.normals)) return null;
     if (component.skateCamera !== undefined && (!['mesh','vertramp'].includes(component.t) || component.solid === false)) return null;
     if (component.outOfBounds !== undefined && (component.t !== 'mesh' || component.solid === false || component.lethal === true)) return null;
     if (component.lethal !== undefined && (component.t !== 'mesh' || component.solid === false)) return null;
@@ -3123,7 +3145,11 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
         aggregateSamples += Math.max(nodes * 7, Math.ceil(curvedLength / 1.6)) *
           Math.max(24 * (source.skatepark ? 3 : 1), profileVertices);
       } else if (component.t === "wallpath" || component.t === "coastwall") {
-        aggregateSamples += Math.max(nodes * 7, Math.ceil(curvedLength / 0.6)) * 8;
+        const profileWork = component.wallHeights && component.pts ? Math.ceil(Math.max(
+          Math.abs((component.pts[1][3] ?? 0) - (component.pts[0][3] ?? 0)),
+          Math.abs((component.pts[1][3] ?? 0) + component.wallHeights[1] - (component.pts[0][3] ?? 0) - component.wallHeights[0]),
+        ) / .6) : 0;
+        aggregateSamples += Math.max(nodes * 7, Math.ceil(curvedLength / 0.6), profileWork) * 8;
       } else {
         aggregateSamples += nodes * 7 * 8;
       }
@@ -5505,6 +5531,7 @@ export class Level {
         ...(m.userData.gravityTrack ? { gravityTrack: true } : {}),
         ...(m.userData.lethal ? { lethal: true } : {}),
         ...(m.userData.skateCamera ? { skateCamera: true } : {}),
+        ...(m.userData.smoothCollision ? { smoothCollision: true } : {}),
         ...(m.userData.outOfBounds ? { outOfBounds: true } : {}),
       };
       remap = new Map();
@@ -5665,6 +5692,8 @@ export class Level {
     if(standingWater||jungleStream)mesh.userData.noWaterShore=true;
     if(jungleStream){mesh.userData.castShadow=false;mesh.userData.receiveShadow=true;}
     if (c.vert !== undefined) mesh.userData.vert = c.vert;
+    if (c.vert === true) mesh.userData.authoredVertMesh = true;
+    if (c.smoothCollision && c.normals) mesh.userData.smoothCollision = true;
     if (c.gravityTrack) mesh.userData.gravityTrack = true;
     if (c.lethal) mesh.userData.lethal = true;
     if (c.skateCamera) mesh.userData.skateCamera = true;
@@ -6019,6 +6048,7 @@ export class Level {
             ] as [number, number, number, number]) }
           : {}),
         invisible: mr.rail.object.children.length === 0 ? true : undefined,
+        ...(mr.rail.coping ? { coping: true } : {}),
       });
     }
     for (const rail of this.rails) {
@@ -6045,6 +6075,7 @@ export class Level {
             ],
         ),
         invisible: rail.object.children.length === 0 ? true : undefined,
+        ...(rail.coping ? { coping: true } : {}),
         grp: rail.object.userData.captureGroup as number | undefined,
       });
     }
@@ -7240,6 +7271,7 @@ export class Level {
               this.rails.push(rail);
               this.root.add(rail.object);
             }
+            this.rails[this.rails.length-1].coping = c.coping === true;
             if(c.dkind === "citydeck" || c.dkind === "cityutilitypole"){const rail=this.rails[this.rails.length-1];rail.object.traverse(o=>{const mesh=o as THREE.Mesh;if(mesh.isMesh){mesh.geometry.dispose();}});rail.object.clear();rail.object.userData.cityRail=true;rail.object.add(cityRailVisual(rail.points,c.dkind === "cityutilitypole"));}
             if (c.dkind === "nightrockridge") {
               const rail = this.rails[this.rails.length-1];
@@ -13002,6 +13034,7 @@ export class Level {
     halfThickness: number,
     height: number,
     closed: boolean,
+    heights?: number[],
   ): WallPathRuntime {
     const stations = [0];
     for (let index = 1; index < spine.length; index++)
@@ -13026,6 +13059,7 @@ export class Level {
       length: Math.max(0.001, stations[stations.length - 1]),
       halfThickness,
       height,
+      heights,
       closed: closed && stations.length === spine.length + 1,
     };
   }
@@ -13062,6 +13096,7 @@ export class Level {
       distance: 0,
       crossDistance: 0,
       cap: false,
+      height: THREE.MathUtils.lerp(path.heights?.[segment] ?? path.height, path.heights?.[next] ?? path.height, t),
     };
   }
 
@@ -13126,6 +13161,7 @@ export class Level {
         distance: contactDistance,
         crossDistance,
         cap,
+        height: THREE.MathUtils.lerp(path.heights?.[segment] ?? path.height, path.heights?.[(segment + 1) % path.spine.length] ?? path.height, t),
       };
       bestMetric = distance;
     }
@@ -13175,6 +13211,7 @@ export class Level {
       Math.max(0.05, c.w ?? 1.2) / 2,
       Math.max(0.2, c.collisionHeight ?? c.rise ?? c.s?.[1] ?? 5),
       built.closed,
+      built.heights,
     );
     for (const [index, box] of built.collision.entries()) {
       (c.containment === true ? this.containmentWalls : this.walls).push(box);

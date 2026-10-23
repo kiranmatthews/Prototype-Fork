@@ -1,0 +1,222 @@
+{
+  "scale": 0.013524936601859678,
+  "components": 2090,
+  "stats": {
+    "sourceObjects": 889,
+    "sourceFaces": 7593,
+    "sourceRailNodes": 393,
+    "transitionFaces": 1262,
+    "wallSegments": 1340,
+    "railEdges": 271,
+    "railPaths": 121
+  },
+  "supports": [
+    {
+      "name": "Start",
+      "expected": 15.729501267962805,
+      "actual": 15.729501724243164
+    },
+    {
+      "name": "Courtyard",
+      "expected": -18.907861369399825,
+      "actual": -18.90786226364122
+    },
+    {
+      "name": "Gym",
+      "expected": 0,
+      "actual": 0
+    },
+    {
+      "name": "Gym roof",
+      "expected": 18.39391377852916,
+      "actual": 18.39391326904297
+    },
+    {
+      "name": "Pools",
+      "expected": -22.432797971259514,
+      "actual": -22.432796787832725
+    },
+    {
+      "name": "Halfpipe",
+      "expected": -21.599323753169905,
+      "actual": -21.599323272705078
+    },
+    {
+      "name": "Street",
+      "expected": -18.85376162299239,
+      "actual": -18.853761985665724
+    }
+  ],
+  "trials": [
+    {
+      "name": "Original canopy start",
+      "passed": true,
+      "frames": 121,
+      "air": 0,
+      "verts": 0,
+      "grinds": 0,
+      "peak": 15.729501724243164,
+      "maxStep": 0.22865641633334358,
+      "end": [
+        17.241825567904023,
+        14.84436668769795,
+        0
+      ],
+      "sourceEnd": [
+        -7423.817477926904,
+        2696.5553619716675,
+        6391
+      ],
+      "error": null
+    },
+    {
+      "name": "Original west gym toe blocks",
+      "passed": true,
+      "frames": 101,
+      "air": 0,
+      "verts": 0,
+      "grinds": 0,
+      "peak": 0,
+      "maxStep": 0.09986833333334744,
+      "end": [
+        148.87283865772483,
+        0,
+        61.15238590057424
+      ],
+      "sourceEnd": [
+        -17156.285508255532,
+        1599,
+        10912.454532523709
+      ],
+      "error": null
+    },
+    {
+      "name": "Original west gym ollie and return",
+      "passed": true,
+      "frames": 292,
+      "air": 34,
+      "verts": 0,
+      "grinds": 0,
+      "peak": 6.116667609032158,
+      "maxStep": 0.37707076988983385,
+      "end": [
+        147.36114652443342,
+        0,
+        62.339438673617245
+      ],
+      "sourceEnd": [
+        -17044.514771150298,
+        1599,
+        11000.222246930574
+      ],
+      "error": null
+    },
+    {
+      "name": "Original east gym toe blocks",
+      "passed": true,
+      "frames": 101,
+      "air": 0,
+      "verts": 0,
+      "grinds": 0,
+      "peak": 0,
+      "maxStep": 0.09986833333333323,
+      "end": [
+        95.41193918448006,
+        0,
+        63.7358090869122
+      ],
+      "sourceEnd": [
+        -13203.520253452494,
+        1599,
+        11103.466384363572
+      ],
+      "error": null
+    },
+    {
+      "name": "Original east gym ollie and return",
+      "passed": true,
+      "frames": 292,
+      "air": 34,
+      "verts": 0,
+      "grinds": 0,
+      "peak": 6.12183703940654,
+      "maxStep": 0.38074881104881225,
+      "end": [
+        96.7098968938261,
+        0,
+        62.333856163069036
+      ],
+      "sourceEnd": [
+        -13299.488001587268,
+        1599,
+        10999.809490056916
+      ],
+      "error": null
+    },
+    {
+      "name": "Original rectangular pool vert return",
+      "passed": true,
+      "frames": 154,
+      "air": 78,
+      "verts": 79,
+      "grinds": 0,
+      "peak": -15.501642634492995,
+      "maxStep": 0.45460299805400317,
+      "end": [
+        -127.74608695952459,
+        -27.076923370361328,
+        -109.43421953869849
+      ],
+      "sourceEnd": [
+        3296.226304569849,
+        -403.0000216960909,
+        -1700.29260714252
+      ],
+      "error": null
+    },
+    {
+      "name": "Original oval pool vert return",
+      "passed": true,
+      "frames": 138,
+      "air": 63,
+      "verts": 64,
+      "grinds": 0,
+      "peak": -17.940725571490812,
+      "maxStep": 0.43084248965209415,
+      "end": [
+        -213.58261897471976,
+        -28.05614734567029,
+        -116.34453102334588
+      ],
+      "sourceEnd": [
+        9642.764890443343,
+        -475.4013943704972,
+        -2211.223762538637
+      ],
+      "error": null
+    },
+    {
+      "name": "Existing charged flat ollie height",
+      "passed": true,
+      "frames": 70,
+      "air": 39,
+      "verts": 0,
+      "grinds": 0,
+      "peak": 1.755457499999998,
+      "maxStep": 0.1932133464985581,
+      "end": [
+        119.70921386306001,
+        0,
+        85.2290340686091
+      ],
+      "sourceEnd": [
+        -15000,
+        1599,
+        12692.621706447786
+      ],
+      "error": null
+    }
+  ],
+  "failures": [],
+  "tuningUnchanged": true
+}

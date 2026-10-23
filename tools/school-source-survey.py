@@ -1,7 +1,7 @@
-"""Survey local School PSX v4 / TRG v2 files without exporting their geometry.
+"""Survey local School PSX v4 / TRG v2 files.
 
 Usage: python3 tools/school-source-survey.py --psx SKSCHL.PSX
-       --trg SKSCHL_T.TRG --out report.json
+       --trg SKSCHL_T.TRG --out report.json [--geometry-out source.json]
 
 Coordinates retain whole engine units; only Y is inverted for a Y-up survey.
 Object translations use 20.12 fixed point, mesh vertices use signed shorts,
@@ -69,7 +69,9 @@ def parse_mesh(path):
             if max(ids) >= nv:
                 raise ValueError(f'Face vertex index exceeds {nv} vertices')
             collision, = unpack('<H', data, p + 14)
-            faces.append({'indices': ids, 'flags': face_flags, 'collision': collision})
+            rgb = list(unpack('<3B', data, p + 8))
+            faces.append({'indices': ids, 'flags': face_flags, 'collision': collision,
+                          'color': rgb})
             p += size
         meshes.append({'flags': flags, 'vertices': vertices, 'types': types,
                        'faces': faces, 'lodDepth': lod_depth, 'lodNext': lod_next})
@@ -162,13 +164,51 @@ def survey(psx_path, trg_path):
     return result
 
 
+def geometry(psx_path, trg_path):
+    """Keep source measurements and flags; omit textures, scripts and sprites.
+
+    The level factory owns the unit conversion. Collision-only faces remain
+    present: the opaque draw-enable flag is independent of solid geometry.
+    """
+    objects, meshes = parse_mesh(psx_path)
+    result = {'v': 1, 'files': [fingerprint(psx_path), fingerprint(trg_path)],
+              'coordinates': 'X, -Y, Z in whole original engine units',
+              'meshes': [], 'railNodes': [], 'restarts': [], 'skippedSpriteFaces': 0}
+    for obj in objects:
+        mesh = meshes[obj['mesh']]
+        vertices = [v[k] + obj['position'][k] for v in mesh['vertices'] for k in range(3)]
+        faces = []
+        for index, face in enumerate(mesh['faces']):
+            if any(mesh['types'][i] & 16 for i in face['indices']):
+                result['skippedSpriteFaces'] += 1
+                continue
+            faces.append([index, face['flags'], face['collision'],
+                          *face['color'], *face['indices']])
+        if faces:
+            used = sorted({i for f in faces for i in f[6:]})
+            remap = {index: i for i, index in enumerate(used)}
+            result['meshes'].append({
+                'id': obj['id'], 'checksum': mesh['checksum'],
+                'vertices': [vertices[i * 3 + k] for i in used for k in range(3)],
+                'faces': [f[:6] + [remap[i] for i in f[6:]] for f in faces],
+            })
+    nodes = parse_nodes(trg_path)
+    result['railNodes'] = [n for n in nodes if n['type'] in (10, 11)]
+    result['restarts'] = [n for n in nodes if n['type'] == 8]
+    return result
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--psx', required=True, type=Path)
     parser.add_argument('--trg', required=True, type=Path)
     parser.add_argument('--out', required=True, type=Path)
+    parser.add_argument('--geometry-out', type=Path)
     args = parser.parse_args()
     result = survey(args.psx, args.trg)
     args.out.write_text(json.dumps(result, indent=2) + '\n')
+    if args.geometry_out:
+        args.geometry_out.parent.mkdir(parents=True, exist_ok=True)
+        args.geometry_out.write_text(json.dumps(geometry(args.psx, args.trg), separators=(',', ':')) + '\n')
     print(f"School survey: {result['objects']} objects, {result['faces']} faces, "
-          f"{result['railNodes']} rail nodes; no geometry exported")
+          f"{result['railNodes']} rail nodes; geometry export: {bool(args.geometry_out)}")

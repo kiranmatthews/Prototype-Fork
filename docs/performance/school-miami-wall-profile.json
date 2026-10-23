@@ -1,0 +1,166 @@
+{
+  "feature": "Optional endpoint heights for a straight two-knot wallpath",
+  "scope": "Optional geometry contacts and a below-board coping correction. No movement tuning or change to the accepted 2x School layout.",
+  "componentContract": {
+    "field": "wallHeights",
+    "type": "[startHeight, endHeight]",
+    "path": "Exactly two distinct X/Z knots, open, no spline or corner radius; no separate collisionHeight.",
+    "bounds": "Finite nonnegative values up to 100000; maximum at least 0.2; height variation is charged against the existing build-work limit."
+  },
+  "geometry": {
+    "baseY": [
+      0,
+      0.5,
+      1,
+      1.5,
+      2
+    ],
+    "height": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "samplesX": [
+      0,
+      3,
+      6,
+      9,
+      12
+    ],
+    "topMaximum": 8,
+    "triangularZeroHeightAllowed": true,
+    "broadphaseTopMaximum": 7.8,
+    "nativeTopInset": 0.2
+  },
+  "nativeApproaches": [
+    {
+      "name": "above low end",
+      "passed": true
+    },
+    {
+      "name": "tall end blocks",
+      "passed": true
+    },
+    {
+      "name": "open under lintel",
+      "passed": true
+    },
+    {
+      "name": "ordinary wall unchanged",
+      "passed": true
+    }
+  ],
+  "schemaRejections": 7,
+  "taskParentRuntimeTestPassed": true,
+  "acceptedCampusRegression": {
+    "worldScale": 2,
+    "passed": 64,
+    "frames": 18054,
+    "failures": [],
+    "tuningUnchanged": true
+  },
+  "build": "4f1353efaeca72e99e2c",
+  "levelChecks": "11 published levels and toolkit checks passed",
+  "measuredPreview": {
+    "status": "working preview; not the default level",
+    "url": "http://127.0.0.1:5313/tools/school-source-review.html?full",
+    "scale": 0.013524936601859678,
+    "components": 2090,
+    "stats": {
+      "sourceObjects": 889,
+      "sourceFaces": 7593,
+      "sourceRailNodes": 393,
+      "transitionFaces": 1262,
+      "wallSegments": 1340,
+      "railEdges": 271,
+      "railPaths": 121
+    },
+    "nativePassed": [
+      "Original canopy start",
+      "Original west gym toe blocks",
+      "Original west gym ollie and return",
+      "Original east gym toe blocks",
+      "Original east gym ollie and return",
+      "Original rectangular pool vert return",
+      "Original oval pool vert return",
+      "Existing charged flat ollie height"
+    ],
+    "nativeUnresolved": [],
+    "normalMovementPreserved": true,
+    "nativeFrames": 1269,
+    "sourceRegistration": {
+      "origin": [
+        -6149,
+        1599,
+        6391
+      ],
+      "conversion": "world=(-sourceX+originX,sourceY-originY,sourceZ-originZ)*scale; source Y was already inverted during decoding",
+      "scale": 0.013524936601859678,
+      "characterBindSpan": 221.8125,
+      "targetSpan": 3,
+      "calibrationLimit": "Gameplay-pose silhouette comparison remains unverified."
+    },
+    "remainingWork": [
+      "Original art and sprite scenery",
+      "Remaining alternate routes and rail transfers",
+      "Complete transition continuity and camera framing",
+      "Animated skater scale comparison",
+      "Intermittent MutationObserver startup error"
+    ]
+  },
+  "runtimeSnapshot": {
+    "input.ts": "53cd0f5d183777461c3af7514af6ebc22abe44513a7986287f4c592f00d2a433",
+    "level.ts": "b589f5333f86dd0ae3c08dab222b7c918a823b54a8e46891abcdb42fae57b9b2",
+    "meshContactNormal.ts": "3fee5417da3a27bb63b1e7428af1532078b3a6f4d802e753d9635fd2260da224",
+    "player.ts": "24abe7a1b61de6be4b8a5cf770df334288c5cfb92d5942ac9a9e294017cdabc9",
+    "skateChaseCamera.ts": "b8d670861fb3d53f081a98d74628c28176e78d87c5cebe47cb826f34f89fc145",
+    "skateParkPhysics.ts": "3cf5ce4c8bd9037539ffd21ff8559f78a0b9c2fd7a27f702a68bbe6aa2536f99",
+    "skateParkTuning.ts": "bc609a6765ffd91c0d3bc062b33ee25c03cd7386a9159b24c1f643f38bca0234",
+    "skateSteering.ts": "62b9d234f6feebaadd2f5c3b58cd6305d042c99ee46ea7d75d8fff7dbe953f68",
+    "tuning.ts": "dc7b43eedbb160b2ddfc16cdfdca42f1419245a76214fdccd49cf872905038c0",
+    "vertBoardRelease.ts": "7ce3ba915f646ac97890d0a2b9f25635ccedddb8068e4c2217c2812808866e67",
+    "vertSkateMotion.ts": "944c8fa4293fe58b8baca9987c7573b78428774e77b93bccb2b889d893a7ac96"
+  },
+  "delivery": "local only; no push, publish or upload",
+  "checks": {
+    "levelChecks": true,
+    "workingBuild": true,
+    "sourceReviewTypecheck": true,
+    "taskParentTypecheck": true,
+    "copingNativeCases": 4,
+    "fullSuiteRun": false
+  },
+  "copingFix": {
+    "before": "A flush coping 0.20\u20130.30 m below the board could block or trip the rider. The east gym rollback bailed at 2.12492 m, above its 1.92054 m coping.",
+    "after": "Coping already below the board is passable. Raised coping and ordinary rails retain their prior blocking behavior.",
+    "sourceClassification": "Length-weighted samples on both sides of the rail distinguish flush bank edges from suspended rails without moving source nodes.",
+    "geometryOrTuningChanged": false
+  },
+  "taskParentRuntimeSnapshot": {
+    "input.ts": "a5ab1cf82312ed40485c44ce92f750246382030d9bf500aaaf31972508573054",
+    "level.ts": "4e3df0d74d028ba888ae47b0a976fc6591b9d467c9d15713b9640645bb4a2292",
+    "meshContactNormal.ts": "3fee5417da3a27bb63b1e7428af1532078b3a6f4d802e753d9635fd2260da224",
+    "player.ts": "769de645725d032e5530e1d70d9231a4cde5ccb88f2ca72b355ead7295277514",
+    "skateChaseCamera.ts": "b8d670861fb3d53f081a98d74628c28176e78d87c5cebe47cb826f34f89fc145",
+    "skateParkPhysics.ts": "3cf5ce4c8bd9037539ffd21ff8559f78a0b9c2fd7a27f702a68bbe6aa2536f99",
+    "skateParkTuning.ts": "bc609a6765ffd91c0d3bc062b33ee25c03cd7386a9159b24c1f643f38bca0234",
+    "skateSteering.ts": "62b9d234f6feebaadd2f5c3b58cd6305d042c99ee46ea7d75d8fff7dbe953f68",
+    "tuning.ts": "f06c99fede5097695309dd9a2e1b8d28fe3dac1e615335aa91fc63d45d4f5759",
+    "vertBoardRelease.ts": "7ce3ba915f646ac97890d0a2b9f25635ccedddb8068e4c2217c2812808866e67",
+    "vertSkateMotion.ts": "944c8fa4293fe58b8baca9987c7573b78428774e77b93bccb2b889d893a7ac96"
+  },
+  "sharedPrerequisites": "Reuse explicit rail coping, optional smooth mesh contact normals and authored-vert continuity from the already-working shared runtime. Include only these required dependencies in the task branch; leave unrelated shared changes out.",
+  "browser": {
+    "fullPassed": 8,
+    "litePassed": 8,
+    "fixedStepsEach": 1269,
+    "gameErrors": [],
+    "consoleStartupError": {
+      "message": "Uncaught TypeError: Failed to execute 'observe' on 'MutationObserver': parameter 1 is not of type 'Node'.",
+      "timestamp": "2026-10-23T00:55:32.299Z",
+      "status": "Unresolved historical/intermittent startup issue; observed on fresh full tab, no new occurrence after lite navigation."
+    }
+  }
+}
