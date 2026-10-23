@@ -60,6 +60,24 @@ await withSkateRuntime(async ({THREE,server,Player,Level,scene,CONST,TUNING})=>{
   assert.equal(p.state,'air');assert.equal(p.lastJumpType,'Grind Exit');
   assert.ok(p.vVel>16 && p.pos.y>70,'The last supported release must ollie before the endpoint');
   const endpointRelease={vertical:p.vVel,height:p.pos.y};
+  const cornerProjection=[];
+  for(const degrees of [20,35])for(const direction of [1,-1]){
+   const a=degrees*Math.PI/180;
+   const pts=[new THREE.Vector3(0,70,0),new THREE.Vector3(0,70,-40),new THREE.Vector3(.1*Math.sin(a),70,-40-.1*Math.cos(a))];
+   pts.push(pts[2].clone().add(new THREE.Vector3(40*Math.sin(2*a),0,-40*Math.cos(2*a))));
+   const rail=new Rail(pts,false),at=direction===1?39.95:40.15;
+   setup(rail,at,rail.tangentAt(at).multiplyScalar(18*direction).toArray());
+   const before=p.grindVel;step();assert.equal(p.state,'grind');
+   near(p.grindVel,before*Math.cos(a)**2,1e-7);
+   cornerProjection.push({degrees,direction,before,after:p.grindVel,corners:2});
+  }
+  for(const direction of [1,-1]){
+   const rail=new Rail([new THREE.Vector3(0,70,0),new THREE.Vector3(0,70,-40),new THREE.Vector3(40,70,-40)],false);
+   const at=direction===1?39.95:40.05;
+   setup(rail,at,rail.tangentAt(at).multiplyScalar(18*direction).toArray());const before=p.grindVel;
+   step();assert.equal(p.state,'air');near(p.vVel,0);near(p.speed,before);
+   cornerProjection.push({degrees:90,direction,before,after:p.speed,exit:true});
+  }
   const transfers=[];
   for(const slope of [0,.4,-.4])for(const direction of [1,-1])for(const side of [-1,1]){
    const rail=makeRail(slope),t=rail.tangentAt(40).multiplyScalar(direction),v=t.clone().multiplyScalar(18);
@@ -78,7 +96,7 @@ await withSkateRuntime(async ({THREE,server,Player,Level,scene,CONST,TUNING})=>{
   p.state='air';p.grounded=false;p.airFromSkate=true;p.speed=30;p.vVel=-60;
   step();near(Math.hypot(p.speed,p.vVel),profile.finalSpeedLimit,1e-7);
   assert.equal(JSON.stringify(TUNING),tuning);
-  const report={cadence,entry,exits,endpointRelease,transfers,fall:{horizontal:p.speed,vertical:p.vVel,magnitude:Math.hypot(p.speed,p.vVel)},tuningUnchanged:true};
+  const report={cadence,entry,exits,endpointRelease,cornerProjection,transfers,fall:{horizontal:p.speed,vertical:p.vVel,magnitude:Math.hypot(p.speed,p.vVel)},tuningUnchanged:true};
   await writeFile('/private/tmp/mall-recreation/measured/reference-rails.json',JSON.stringify(report,null,2));
   console.log(JSON.stringify(report));
  }finally{l.dispose();}

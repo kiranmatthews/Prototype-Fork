@@ -27,7 +27,7 @@ import { trickRepeatFactor, extendHeldTrick, type HeldTrickScore } from './trick
 import { liveCarveGripAtSpeed } from './carveGrip';
 import { solveSkateSteering } from './skateSteering';
 import { SKATE_PARK, skateSurfaceDirection, skateSurfaceHeading, redirectSkateVelocity } from './skateParkPhysics';
-import { referenceKickDuration, referenceRailMotion, type SkateReferencePhysics, type SkateParkParameters } from './skateReferencePhysics';
+import { referenceKickDuration, referenceRailMotion, ReferenceRailBalance, type SkateReferencePhysics, type SkateParkParameters } from './skateReferencePhysics';
 import { parkCruiseSpeed, parkChargedSpeed } from './skateParkTuning';
 import { cameraSkateSpeed as resolveCameraSkateSpeed } from './cameraSpeedEffect';
 import { HANG_ANIMS } from './hangAnims';
@@ -1034,6 +1034,8 @@ export class Player {
   private parkReference: SkateReferencePhysics | undefined;
   private parkKickGroundSeconds = 0;
   private parkRailSeconds = 0;
+  private readonly parkRailBalance = new ReferenceRailBalance();
+  private parkLastBalanceRail: Rail | null = null;
   private readonly parkVelocity = new THREE.Vector3();
   private parkFlightGravity = this.parkPhysics.airGravity;
   private parkAutoTurn = 0;
@@ -3303,6 +3305,8 @@ export class Player {
     this.parkPhysics = this.parkReference?.park ?? SKATE_PARK;
     this.parkFlightGravity = this.parkPhysics.airGravity;
     this.parkKickGroundSeconds = 0;
+    this.parkRailBalance.reset();
+    this.parkLastBalanceRail = null;
     this.parkVelocity.set(0, 0, 0);
     this.parkAutoTurn = this.parkAutoTurnTarget = this.parkSpinHold = this.parkBreakHold = 0;
     this.endResultsPose();
@@ -3600,6 +3604,16 @@ export class Player {
     // the authored-pose baseline, interaction bounds or movement simulation.
     this.breakApart?.restore();
     this.stepSimulation(dt, input, level);
+    if (this.parkReference?.balanceStat !== undefined) {
+      const mode = this.state === 'grind' ? 'grind' : this.grounded && this.state === 'ride' ? 'ground' : 'air';
+      const failed = this.parkRailBalance.advance(dt, mode, this.rawInput.moveX,
+        this.parkReference.balanceStat, () => this.simRand());
+      if (mode === 'grind') {
+        this.balance = this.parkRailBalance.position / 4000;
+        this.balanceVel = this.parkRailBalance.velocity * 30 / 4000;
+        if (failed && !this.isBailing) this.bailFromRail(Math.sign(this.balance));
+      }
+    }
     if (this.parkReference && !this.isBailing &&
         (this.state === 'ride' || this.state === 'air' || this.state === 'grind')) {
       // DoPhysics caps the complete velocity after state physics. On ground
@@ -10185,77 +10199,80 @@ export class Player {
       this.grindVel = THREE.MathUtils.clamp(this.grindVel, rail.chiefTongueAssist?.minSpeed ?? CONST.grindMinSpeed, TUNING.downhillMax);
     }
 
-    // THPS balance: the needle is an unstable equilibrium that runs away from
-    // center, ramping up the longer you grind — but only after a settle-in
-    // grace, so there's no hidden "max grind length" booting you off long
-    // rails. Left/right input fights it; slow grinds are somewhat wobblier.
-    // Pegging the meter starts a short CRITICAL beat — slam the stick the
-    // other way and you can still save it — before the bail.
-    // The third-mask uber locks the needle dead center.
-    const rawSpeedFactor = THREE.MathUtils.clamp(
-      TUNING.grindSpeed / Math.max(this.grindVel, 1),
-      0.6,
-      1.5,
-    );
-    // How much grind speed matters to the needle at all (slider): 0 = not at
-    // all, 1 = slow grinds wobble the full amount, higher = exaggerated.
-    const speedFactor = 1 + (rawSpeedFactor - 1) * TUNING.balanceSpeedEffect;
-    // the crosswise slides look coolest and wobble hardest; the truck-balanced
-    // diagonals (Smith/Feeble) sit in between
-    const styleWobble =
-      this.specialGrind
-        ? 1.45
-        : this.grindStyle === 'lip'
-        ? 1.35
-        : this.grindStyle === 'board'
-          ? 1.25
-          : this.grindStyle === 'smith' || this.grindStyle === 'feeble'
-            ? 1.15
-            : 1;
-    // Difficulty ramps with grind length: flat for balanceGrace seconds,
-    // then grows at balanceRamp per second up to the balanceRampMax ceiling —
-    // marathon grinds get dicey, never impossible.
-    const ramp = Math.min(
-      Math.max(0, TUNING.balanceRampMax - 1),
-      Math.max(0, this.balanceAge - TUNING.balanceGrace) * TUNING.balanceRamp,
-    );
-    const instability = TUNING.balanceDrift * (1 + ramp) * speedFactor * styleWobble;
-    const runSign = Math.sign(this.balance || 1);
-    // Read live tuning against the current catch, not the combo's age.
-    const calm = this.balanceEntryEase(TUNING.grindCalm);
-    let control = this.rawInput.moveX * TUNING.balanceControl;
-    control *= this.safeGain(this.balanceEntryAge, control, runSign);
-    this.stepBalanceCore(dt, runSign, instability * calm, control, ramp, calm);
-    if (rail.chiefTongueAssist || this.uberTimer > 0 || this.balanceBoostT > 0) {
-      this.balance = 0;
-      this.balanceVel = 0;
-    } // perfect balance
-    if (Math.abs(this.balance) >= 1) {
-      this.balance = Math.sign(this.balance); // pinned at the edge, flailing
-      if (Math.sign(this.balanceVel) === this.balance) this.balanceVel = 0; // kill outward momentum: a counter-tap can still save it
-      this.balanceCritT += dt;
-      if (this.balanceCritT > TUNING.bailGrace) {
-        // NO MASK SAVE. A mask is armour against things that hit you; falling
-        // off a rail is a skill you did not execute, and letting a mask undo
-        // it meant the balance meter had no teeth while you were holding one.
-        // The third-mask invincibility (uberTimer) still pins the needle at
-        // zero further up, so being genuinely invincible still can't bail.
-        if (this.railUnder) {
-          // hanging underneath, the grip is all there is: the board SNAPS and
-          // you drop straight off — ground below breaks the fall, a pit doesn't
-          this.snapBoardFall();
-          return;
-        } else if (this.tryGrindDropIn(level)) {
-          return;
-        } else {
-          // thrown toward the deck / uphill side: the honest bail — and the
-          // tumble goes to the SIDE the needle pegged, not down the rail
-          this.bailFromRail(Math.sign(this.balance || 1));
-          return;
+    if (this.parkReference?.balanceStat === undefined) {
+      // THPS balance: the needle is an unstable equilibrium that runs away from
+      // center, ramping up the longer you grind — but only after a settle-in
+      // grace, so there's no hidden "max grind length" booting you off long
+      // rails. Left/right input fights it; slow grinds are somewhat wobblier.
+      // Pegging the meter starts a short CRITICAL beat — slam the stick the
+      // other way and you can still save it — before the bail.
+      // The third-mask uber locks the needle dead center.
+      const rawSpeedFactor = THREE.MathUtils.clamp(
+        TUNING.grindSpeed / Math.max(this.grindVel, 1),
+        0.6,
+        1.5,
+      );
+      // How much grind speed matters to the needle at all (slider): 0 = not at
+      // all, 1 = slow grinds wobble the full amount, higher = exaggerated.
+      const speedFactor = 1 + (rawSpeedFactor - 1) * TUNING.balanceSpeedEffect;
+      // the crosswise slides look coolest and wobble hardest; the truck-balanced
+      // diagonals (Smith/Feeble) sit in between
+      const styleWobble =
+        this.specialGrind
+          ? 1.45
+          : this.grindStyle === 'lip'
+          ? 1.35
+          : this.grindStyle === 'board'
+            ? 1.25
+            : this.grindStyle === 'smith' || this.grindStyle === 'feeble'
+              ? 1.15
+              : 1;
+      // Difficulty ramps with grind length: flat for balanceGrace seconds,
+      // then grows at balanceRamp per second up to the balanceRampMax ceiling —
+      // marathon grinds get dicey, never impossible.
+      const ramp = Math.min(
+        Math.max(0, TUNING.balanceRampMax - 1),
+        Math.max(0, this.balanceAge - TUNING.balanceGrace) * TUNING.balanceRamp,
+      );
+      const instability = TUNING.balanceDrift * (1 + ramp) * speedFactor * styleWobble;
+      const runSign = Math.sign(this.balance || 1);
+      // Read live tuning against the current catch, not the combo's age.
+      const calm = this.balanceEntryEase(TUNING.grindCalm);
+      let control = this.rawInput.moveX * TUNING.balanceControl;
+      control *= this.safeGain(this.balanceEntryAge, control, runSign);
+      this.stepBalanceCore(dt, runSign, instability * calm, control, ramp, calm);
+      if (rail.chiefTongueAssist || this.uberTimer > 0 || this.balanceBoostT > 0) {
+        this.balance = 0;
+        this.balanceVel = 0;
+      } // perfect balance
+      if (Math.abs(this.balance) >= 1) {
+        this.balance = Math.sign(this.balance); // pinned at the edge, flailing
+        if (Math.sign(this.balanceVel) === this.balance) this.balanceVel = 0; // kill outward momentum: a counter-tap can still save it
+        this.balanceCritT += dt;
+        if (this.balanceCritT > TUNING.bailGrace) {
+          // NO MASK SAVE. A mask is armour against things that hit you; falling
+          // off a rail is a skill you did not execute, and letting a mask undo
+          // it meant the balance meter had no teeth while you were holding one.
+          // The third-mask invincibility (uberTimer) still pins the needle at
+          // zero further up, so being genuinely invincible still can't bail.
+          if (this.railUnder) {
+            // hanging underneath, the grip is all there is: the board SNAPS and
+            // you drop straight off — ground below breaks the fall, a pit doesn't
+            this.snapBoardFall();
+            return;
+          } else if (this.tryGrindDropIn(level)) {
+            return;
+          } else {
+            // thrown toward the deck / uphill side: the honest bail — and the
+            // tumble goes to the SIDE the needle pegged, not down the rail
+            this.bailFromRail(Math.sign(this.balance || 1));
+            return;
+          }
         }
+      } else {
+        this.balanceCritT = 0;
       }
-    } else {
-      this.balanceCritT = 0;
+
     }
 
     // UNDER-RAIL HANG: Circle swings you beneath the rail (board held
@@ -10295,11 +10312,24 @@ export class Player {
     }
 
     const nextGrindT = this.grindT + (referenceDistance ?? this.grindDir * this.grindVel * dt);
-    const sharpCorner = rail.sharpCornerBetween(
+    let sharpCorner = rail.sharpCornerBetween(
       this.grindT,
       nextGrindT,
       this.parkReference?.railCornerAngle ?? MAX_CONTINUOUS_GRIND_CORNER_ANGLE,
     );
+    if (this.parkReference) {
+      // The native loop projects mVel onto each new segment, retaining only
+      // its along-rail component. Keep the authored nodes and hard-corner exit.
+      let from = this.grindT;
+      const direction = Math.sign(nextGrindT - from);
+      for (let count = 0; direction && count < rail.points.length; count++) {
+        const corner = rail.sharpCornerBetween(from, nextGrindT, 1e-7);
+        if (!corner || corner.angle >= this.parkReference.railCornerAngle) break;
+        this.grindVel *= Math.max(0, corner.incoming.dot(corner.outgoing));
+        from = corner.t + direction * 1e-6;
+        if ((nextGrindT - from) * direction <= 0) break;
+      }
+    }
     if (sharpCorner) {
       // Stop just before the node so exitGrind reads the incoming tangent.
       // The pop then continues naturally through the air instead of snapping
@@ -10667,7 +10697,13 @@ export class Player {
     if(!entrySpecial)this.special.consumeInput();
     // Only a new combo receives a fresh catch. Linked re-entries keep 90%
     // of the previous balance/momentum and all accumulated difficulty.
-    this.beginBalance((this.simRand() < 0.5 ? -1 : 1) * TUNING.balanceEntryLean);
+    if (this.parkReference?.balanceStat !== undefined) {
+      this.parkRailBalance.catchRail(this.parkLastBalanceRail === rail, this.parkReference.balanceStat);
+      this.parkLastBalanceRail = rail;
+      this.balance = this.parkRailBalance.position / 4000;
+      this.balanceVel = this.parkRailBalance.velocity * 30 / 4000;
+      this.balanceCritT = 0;
+    } else this.beginBalance((this.simRand() < 0.5 ? -1 : 1) * TUNING.balanceEntryLean);
     // landing-on-the-rail burst: one bright spray of the same sparks the
     // grind itself will now stream
     PUFF_DIR.set(-this.axisF.x * Math.sign(this.speed || 1), 0.5, -this.axisF.z * Math.sign(this.speed || 1));

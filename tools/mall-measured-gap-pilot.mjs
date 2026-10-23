@@ -9,7 +9,7 @@ export function createMallGapPilot(f,rails){
  const approachRail=rails.findIndex(r=>r.sourceNodes[0]===282),beamRail=rails.findIndex(r=>r.sourceNodes[0]===134);
  if(f.kind==='tape'&&(approachRail<0||beamRail<0))throw Error('Missing original tape rail chains');
  let phase='approach',offFrame=-1,frame=0,rollFrames=0,beamFrames=0,approachFrames=0,oldState='ride',previous=null;
- const e={name:f.name,kind:f.kind,expectedRails:f.kind==='tape'?[approachRail,beamRail]:[],frames:0,done:false,reached:false,bail:false,rails:[],launches:[],trace:[],beamFrames:0,beamDistance:0,approachFrames:0};
+ const e={name:f.name,kind:f.kind,expectedRails:f.kind==='tape'?[approachRail,beamRail]:[],frames:0,done:false,reached:false,bail:false,rails:[],launches:[],trace:[],beamFrames:0,beamDistance:0,approachFrames:0,maxBalance:0};
  return {e, sample(p,source,rail){
   const grinding=p.state==='grind';
   if(f.kind==='drop')return{moveX:0,moveY:p.grounded?1:0,jumpHeld:source[0]<f.release};
@@ -26,7 +26,7 @@ export function createMallGapPilot(f,rails){
    grindHeld:phase==='catch'||phase==='ride'||phase==='beam'||phase==='transfer'&&frame>offFrame+3,
   };
  }, observe(p,source,rail){
-  frame++;e.frames=frame;e.bail||=p.isBailing;e.source=source;e.speed=p.speed;e.state=p.state;
+  frame++;e.frames=frame;e.bail||=p.isBailing;if(p.state==='grind')e.maxBalance=Math.max(e.maxBalance,Math.abs(p.balance));e.source=source;e.speed=p.speed;e.state=p.state;
   if(rail!==null&&!e.rails.includes(rail))e.rails.push(rail);
   if(p.state==='air'&&oldState!=='air')e.launches.push({frame,source,speed:p.speed,verticalSpeed:p.vVel});
   if(rail===approachRail)approachFrames++;
@@ -35,7 +35,7 @@ export function createMallGapPilot(f,rails){
   const pastBeam=f.kind==='tape'&&phase==='rollout'&&beamFrames>0;
   if((pastDrop||pastBeam)&&p.grounded&&p.state==='ride')rollFrames++;else rollFrames=0;
   e.reached=rollFrames>=30;e.beamFrames=beamFrames;e.approachFrames=approachFrames;e.phase=phase;
-  if(frame%6===0||e.reached||e.bail)e.trace.push({frame,source,state:p.state,speed:p.speed,verticalSpeed:p.vVel,rail,phase});
+  if(frame%6===0||e.reached||e.bail)e.trace.push({frame,source,state:p.state,speed:p.speed,verticalSpeed:p.vVel,balance:p.balance,balanceVelocity:p.balanceVel,rail,phase});
   if(e.reached||e.bail||['dead','gameover'].includes(p.state)||frame>1800)e.done=true;
   oldState=p.state;previous=p.pos.toArray();
  }};

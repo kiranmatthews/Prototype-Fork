@@ -1,12 +1,12 @@
 {
-  "schema": 2,
-  "verifiedAt": "2026-10-23T03:07:25.923330+00:00",
+  "schema": 3,
+  "verifiedAt": "2026-10-23T03:48:04.095447+00:00",
   "status": "Enabled on Mall only; source-derived parameter adaptation, not a complete PS1 physics port.",
   "build": {
-    "version": "39caa737128e4da340eb",
-    "snapshot": "/private/tmp/mall-recreation/snapshot-23",
-    "output": "/private/tmp/mall-recreation/dist-23",
-    "preview": "http://127.0.0.1:5295/?playtest&level=mall",
+    "version": "1635c1e5d850dd19eea4",
+    "snapshot": "/private/tmp/mall-recreation/snapshot-24",
+    "output": "/private/tmp/mall-recreation/dist-24",
+    "preview": "http://127.0.0.1:5296/?playtest&level=mall",
     "published": false
   },
   "source": {
@@ -14,17 +14,25 @@
     "files": {
       "game/src/physics.cpp": [
         "DoOnGroundPhysics: Q12 gravity 6500 and linear drag 8/82.",
-        "HandleJump: first-board charge and additive pop; called at line 4901 before rail physics.",
+        "HandleJump: stat-dependent charge and additive pop; called at line 4901 before rail physics.",
         "HandleKick: four-unit pushes for five ticks in twenty; kick target stops pushing rather than clamping.",
         "StartGrind (810-868): mRailDir * (speedStat+5) impulse, then projection in DoOnRailPhysics.",
         "DoOnRailPhysics (2080-2480): Q12 gravity 13000, low-speed helpers, corner cutoff 2633/4096 and no endpoint pop.",
-        "DoPhysics LimitFinalSpeed (5328-5342): separate full-vector MAXSPEED(50) cap after state physics."
+        "DoPhysics LimitFinalSpeed (5328-5342): separate full-vector MAXSPEED(50) cap after state physics.",
+        "StartGrind (830-841): chain identity, rail-time adjustment and integer entry balance velocity.",
+        "DoOnRailPhysics (2432-2452): integer balance, neutral arming, analog threshold and strict >4000 bail.",
+        "DoPhysics (5053-5061): rail time ages in air; supported ground resets balance/velocity/time."
       ],
       "game/src/mech.cpp": [
-        "CBruce initialization: speed-stat offsets 17 and 39"
+        "CBruce initialization: speed-stat offsets 17 and 39",
+        "GetStats (95-120): selects unlocked board bonuses."
       ],
       "game/src/rail.cpp": [
-        "Rail_Update (264-275): initial mRailDir aligns with incoming velocity; StartGrind adds speed, not braking."
+        "Rail_Update (264-275): initial mRailDir aligns with incoming velocity; StartGrind adds speed, not braking.",
+        "Rail_Update (283-284): mRailStart is the original chain start; mRailNode is the current segment. Balance re-entry identity belongs to the whole chain."
+      ],
+      "game/data/unnamed.cpp": [
+        "Tony base stats 3/7/7/4 and first stat upgrade +1 to each stat."
       ]
     },
     "baseStepsPerSecond": 30,
@@ -36,7 +44,8 @@
     "stats": {
       "ollie": 4,
       "speed": 8,
-      "air": 8
+      "air": 8,
+      "balance": 5
     }
   },
   "parameters": {
@@ -62,7 +71,8 @@
     "railZeroSpeed": 0.13242186267564612,
     "railSlopeBoost": 0.26484372535129225,
     "railTransferAngle": 0.30679615757712825,
-    "railCornerAngle": 0.8726193850237524
+    "railCornerAngle": 0.8726193850237524,
+    "balanceStat": 5
   },
   "unitFixture": {
     "params": {
@@ -108,8 +118,8 @@
     "frames": 960,
     "sha256": "c355c28f30e0c6a248e396cfe83234e24b95fdaa5c907f8ec9fc97faa29c2fe2",
     "identical": true,
-    "previousSnapshot": "/private/tmp/mall-recreation/snapshot-22",
-    "currentSnapshot": "/private/tmp/mall-recreation/snapshot-23",
+    "previousSnapshot": "/private/tmp/mall-recreation/snapshot-23",
+    "currentSnapshot": "/private/tmp/mall-recreation/snapshot-24",
     "tool": "tools/mall-default-parity.mjs",
     "existingParkTuningChecks": "passed"
   },
@@ -193,13 +203,16 @@
     }
   },
   "limitations": [
-    "Continuous integration and 30 Hz rail-assist decisions, not every original fixed-point rounding or polygon-step operation.",
+    "Continuous 60 Hz movement with native 30 Hz balance/rail-assist decisions; not every original fixed-point operation or rail-node substep position.",
+    "Balance recurrence matches the compiled source for the same native state/input/random stream. Production uses the fork deterministic RNG and post-step state sampling; transition-boundary timing and the original global random sequence are not frame-exact.",
     "Original kick-animation gating and temporary crouched-target decay remain unimplemented.",
     "Steering, braking, ground-contact tracking, special-mode bonuses and terrain-specific friction remain to be compared.",
-    "Rail capture radius/eligibility, balance, smooth-corner velocity projection, and substep endpoint placement still use fork rules. Under-rail hangs and perfect-grind rewards are fork extensions.",
-    "Directional rail exits use the source angle in the local rail plane, with this prototype camera-relative input convention.",
+    "Rail capture radius/eligibility and substep endpoint placement still use fork rules. Under-rail hangs and perfect-grind rewards remain fork extensions.",
+    "Directional rail exits use the source angle in the local rail plane, with the prototype camera-relative input convention.",
     "Charged-pose calibration is supported; coasting pose and cruiser proportions differ from the source actor."
   ],
   "correctionToPass22": "mMaxSpeed remains a drag threshold, but DoPhysics has a separate MAXSPEED(50) full-vector cap. The previous 55 m/s no-clamp expectation was incomplete; pass 23 verifies drag at 45 m/s and the final cap at 55 m/s and during a fast fall.",
-  "railPhysicsReport": "rail-physics.json"
+  "railPhysicsReport": "rail-physics.json",
+  "configurationNote": "Tony base ollie/speed/air/balance is 3/7/7/4; the selected 4/8/8/5 includes his first STAT UPGRADE (+1 each), not a zero-bonus starting board. This corrects the earlier first-board label without changing the existing movement stats.",
+  "balanceReport": "rail-balance.json"
 }
