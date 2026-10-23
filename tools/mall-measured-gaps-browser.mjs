@@ -18,7 +18,7 @@ try{
   window.startMallGap=i=>{
    const f=mallGapFixtures[i],q=source.mallPoint(...f.start);q[1]=source.mallSupport(q[0],q[2],q[1]+.4)+.1;
    const heading=new Vector3(...f.heading).normalize();p.respawn(l,true,false,{position:new Vector3(...q),heading});p.axisF.copy(heading);p.axisL.set(-heading.z,0,heading.x);
-   pilot=createMallGapPilot(f);window.mallGap=pilot.e;window.mallGap.tuning=JSON.stringify(g.TUNING);window.mallGap.startedAt=performance.now();
+   pilot=createMallGapPilot(f,source.MALL_RAILS);window.mallGap=pilot.e;window.mallGap.tuning=JSON.stringify(g.TUNING);window.mallGap.startedAt=performance.now();
   };
   g.input.pollGamepad=()=>{const x=sample.moveX||0,y=sample.moveY||0,n=Math.hypot(x,y),v=n?.22+.78*Math.min(1,n):0,held={0:!!sample.jumpHeld,3:!!sample.grindHeld};return{id:'Mall gap controller',index:0,connected:true,mapping:'standard',axes:n?[x/n*v,-y/n*v,0,0]:[0,0,0,0],buttons:Array.from({length:18},(_,i)=>({pressed:!!held[i],touched:!!held[i],value:held[i]?1:0}))};};
   p.step=(dt,controls,level)=>{
@@ -37,5 +37,5 @@ try{
  }
  await writeFile('/private/tmp/mall-recreation/measured/gaps-browser.json',JSON.stringify({fixtures,errors},null,2));
  assert.equal(errors.length,0);assert.ok(fixtures.every(f=>f.reached&&!f.bail&&f.tuningUnchanged));
- const tape=fixtures.find(f=>f.kind==='tape');assert.deepEqual(tape.rails,[60,54]);assert.ok(tape.beamDistance>120);
+ const tape=fixtures.find(f=>f.kind==='tape');assert.deepEqual(tape.rails,tape.expectedRails);assert.ok(tape.beamDistance>120);
 }finally{await browser.close();}

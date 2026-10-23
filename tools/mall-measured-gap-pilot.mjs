@@ -5,18 +5,20 @@ export const mallGapFixtures = [
  {name:'Flying Leap, later release',kind:'drop',start:[-6300,315,185],heading:[0,0,-1],release:-4560},
  {name:'Right handrail to suspended tape beam',kind:'tape',start:[-6800,315,830],heading:[-.01,0,-1],release:-4110},
 ];
-export function createMallGapPilot(f){
+export function createMallGapPilot(f,rails){
+ const approachRail=rails.findIndex(r=>r.sourceNodes[0]===282),beamRail=rails.findIndex(r=>r.sourceNodes[0]===134);
+ if(f.kind==='tape'&&(approachRail<0||beamRail<0))throw Error('Missing original tape rail chains');
  let phase='approach',offFrame=-1,frame=0,rollFrames=0,beamFrames=0,approachFrames=0,oldState='ride',previous=null;
- const e={name:f.name,kind:f.kind,frames:0,done:false,reached:false,bail:false,rails:[],launches:[],trace:[],beamFrames:0,beamDistance:0,approachFrames:0};
+ const e={name:f.name,kind:f.kind,expectedRails:f.kind==='tape'?[approachRail,beamRail]:[],frames:0,done:false,reached:false,bail:false,rails:[],launches:[],trace:[],beamFrames:0,beamDistance:0,approachFrames:0};
  return {e, sample(p,source,rail){
   const grinding=p.state==='grind';
   if(f.kind==='drop')return{moveX:0,moveY:p.grounded?1:0,jumpHeld:source[0]<f.release};
   if(phase==='approach'&&source[0]>-5640)phase='catch';
   if(phase==='catch'&&grinding)phase='ride';
   if(phase==='ride'&&source[0]>f.release){phase='transfer';offFrame=frame;}
-  if(phase==='transfer'&&rail===54)phase='beam';
+  if(phase==='transfer'&&rail===beamRail)phase='beam';
   if(phase==='beam'&&!grinding)phase='rollout';
-  const lateral=(phase==='ride'&&source[0]>f.release-20)||(phase==='transfer'&&grinding&&rail===60);
+  const lateral=(phase==='ride'&&source[0]>f.release-20)||(phase==='transfer'&&grinding&&rail===approachRail);
   return{
    moveX:lateral?-1:grinding?Math.max(-1,Math.min(1,-p.balance*5-p.balanceVel*.7)):0,
    moveY:lateral?0:p.grounded||grinding?1:0,
@@ -27,8 +29,8 @@ export function createMallGapPilot(f){
   frame++;e.frames=frame;e.bail||=p.isBailing;e.source=source;e.speed=p.speed;e.state=p.state;
   if(rail!==null&&!e.rails.includes(rail))e.rails.push(rail);
   if(p.state==='air'&&oldState!=='air')e.launches.push({frame,source,speed:p.speed,verticalSpeed:p.vVel});
-  if(rail===60)approachFrames++;
-  if(rail===54){beamFrames++;if(previous)e.beamDistance+=Math.hypot(...p.pos.toArray().map((n,i)=>n-previous[i]));}
+  if(rail===approachRail)approachFrames++;
+  if(rail===beamRail){beamFrames++;if(previous)e.beamDistance+=Math.hypot(...p.pos.toArray().map((n,i)=>n-previous[i]));}
   const pastDrop=f.kind==='drop'&&source[0]>-4100;
   const pastBeam=f.kind==='tape'&&phase==='rollout'&&beamFrames>0;
   if((pastDrop||pastBeam)&&p.grounded&&p.state==='ride')rollFrames++;else rollFrames=0;

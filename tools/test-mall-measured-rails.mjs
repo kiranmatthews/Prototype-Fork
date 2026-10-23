@@ -12,7 +12,7 @@ await withBlockworksRuntime(async r=>{
   for(const q of source.points){const error=rail.closest(new THREE.Vector3(...q)).distance;report.maxNodeError=Math.max(report.maxNodeError,error);assert.ok(error<.0001,`Rail ${i} moved from its source node`);}
   report.paths++;report.edges+=source.points.length-1+Number(source.closed);
  }
- assert.equal(report.edges,637);
+ assert.equal(report.edges,214);
  const fixtures=[
   {name:'Concourse bench',start:[-11100,314.7586,968.0928],target:[-11529.2539,355.9365,968.0928],direction:[0,0,1],lead:4.5},
   {name:'First concourse display ledge',start:[-13600,314.7586,349.7578],target:[-13107.0352,355.9365,369.8467],direction:[.04072,0,-.99917],lead:6.5},

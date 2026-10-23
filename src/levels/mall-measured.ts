@@ -1,5 +1,6 @@
 import { Vector3 } from 'three';
 import survey from '../../docs/mall/source-survey.json';
+import retail from '../../docs/mall/retail-rails.json';
 import type { CustomComponent, CustomLevelData } from '../level';
 import { mallVisuals } from './mall-art';
 import { clipMallWallOpening, type MallWall } from './mall-wall-proxies';
@@ -9,7 +10,9 @@ type Triangle = { a:P; b:P; c:P; d:number; source:number };
 const C:CustomComponent[]=[];
 const add=(c:CustomComponent)=>{C.push(c);return c;};
 // One uniform scale; all source relationships and elevations remain intact.
-// The survey is a PS1 conversion, not a verified retail-disc extraction.
+// Static geometry comes from the PS1 conversion, registered against the
+// original-format Mall retained in THPS2 retail (see retail-reference.json).
+// This is not a byte-for-byte verification of the 1999 THPS1 disc.
 // The tightest arcade beam leaves 3.19 m on the normal lane at this scale,
 // clearing the existing ~3.02 m visible rider. Collision-capsule dimensions
 // alone would allow a much smaller scene while the rider clips its ceilings.
@@ -253,29 +256,22 @@ for(const {ends,source} of [...allWalls.values()].flat()){
 }
 MALL_SURVEY_STATS.wallSegments=MALL_WALLS.length;
 
-// Conversion nodes contain duplicate returns (A→B→A). Reconstruct the unique
-// undirected graph first, then stop paths at junctions and preserve true loops.
-const railPoints:P[]=[],nodeMap=new Map<number,number>(),pointMap=new Map<string,number>();
-for(const n of survey.railNodes){const p=mallPoint(...n.p as P),k=key(p);if(!pointMap.has(k)){pointMap.set(k,railPoints.length);railPoints.push(p);}nodeMap.set(n.index,pointMap.get(k)!);}
-const edges=new Set<string>(),neighbours=railPoints.map(()=>new Set<number>()),edgeKey=(a:number,b:number)=>`${Math.min(a,b)}:${Math.max(a,b)}`;
-for(const n of survey.railNodes)for(const link of n.links){const a=nodeMap.get(n.index)!,b=nodeMap.get(link)!;if(a===b||new Vector3(...railPoints[a]).distanceTo(new Vector3(...railPoints[b]))<.01)continue;const k=edgeKey(a,b);if(edges.has(k))continue;edges.add(k);neighbours[a].add(b);neighbours[b].add(a);}
-const used=new Set<string>();
-export const MALL_RAILS:{points:P[];closed:boolean;coping:boolean}[]=[];
-function rail(a:number,b:number){
- const ids=[a];let prev=a,now=b;used.add(edgeKey(prev,now));
- for(let guard=0;guard<railPoints.length;guard++){
-  ids.push(now);if(now===a||neighbours[now].size!==2)break;
-  const next=[...neighbours[now]].find(n=>n!==prev)!;if(used.has(edgeKey(now,next)))break;used.add(edgeKey(now,next));prev=now;now=next;
- }
- const closed=ids.length>2&&ids[ids.length-1]===a;if(closed)ids.pop();
- const points=ids.map(i=>railPoints[i]),p=points[0],clearance=points.map(q=>q[1]-mallSupport(q[0],q[2],q[1]+.15)).filter(Number.isFinite).sort((a,b)=>a-b);
+// Use only the rail chains activated by the normal retail Mall restart. The
+// source has separate alternate-mode rails; collecting every TRG node would
+// incorrectly activate those too. Preserve authored overlaps and endpoints.
+const retailNodes=new Map(retail.railNodes.map(n=>[n.index,n]));
+export const MALL_RAILS:{points:P[];closed:boolean;coping:boolean;sourceNodes:number[]}[]=[];
+for(const sourceNodes of retail.activation.paths){
+ const points=sourceNodes.map(id=>mallPoint(...retailNodes.get(id)!.p as P));
+ const closed=points.length>2&&points[0].every((v,k)=>Math.abs(v-points[points.length-1][k])<1e-8);
+ if(closed)points.pop();
+ const p=points[0],clearance=points.map(q=>q[1]-mallSupport(q[0],q[2],q[1]+.15)).filter(Number.isFinite).sort((a,b)=>a-b);
  const coping=clearance.length>0&&clearance[Math.floor(clearance.length/2)]<.24;
- const i=MALL_RAILS.length;MALL_RAILS.push({points,closed,coping});
- add({t:'rail',p,pts:points.map(q=>[q[0]-p[0],q[2]-p[2],0,q[1]-p[1]]),curve:'corner',closed,coping,invisible:true,grp:61,nm:`Measured ${coping?'coping':'grind'} ${i+1}`});
+ MALL_RAILS.push({points,closed,coping,sourceNodes});
+ add({t:'rail',p,pts:points.map(q=>[q[0]-p[0],q[2]-p[2],0,q[1]-p[1]]),curve:'corner',closed,coping,invisible:true,grp:61,nm:`Source ${coping?'coping':'grind'} ${sourceNodes[0]}`});
 }
-for(let a=0;a<neighbours.length;a++)if(neighbours[a].size!==2)for(const b of neighbours[a])if(!used.has(edgeKey(a,b)))rail(a,b);
-for(const k of edges)if(!used.has(k)){const [a,b]=k.split(':').map(Number);rail(a,b);}
-MALL_SURVEY_STATS.railEdges=edges.size;MALL_SURVEY_STATS.railPaths=MALL_RAILS.length;
+MALL_SURVEY_STATS.railEdges=retail.activation.activeUniqueEdges;
+MALL_SURVEY_STATS.railPaths=MALL_RAILS.length;
 
 export const MALL_CHECKPOINTS:P[]=[[-13100,315,800],[-6550,315,800],[-3300,-270,0],[800,-1100,5800],[10800,-1512,5800]].map(([x,y,z])=>{const p=mallPoint(x,y+10,z);p[1]=mallSupport(p[0],p[2],p[1]);return p;});
 for(const [i,p] of MALL_CHECKPOINTS.entries())add({t:'checkpoint',p,grp:62,nm:`Mall checkpoint ${i+1}`});

@@ -22,7 +22,7 @@ try{
  }
  assert.equal(new Set(reports.map(r=>r.vertTriangles)).size,1);
  assert.equal(new Set(reports.map(r=>r.railPaths)).size,1);
- assert.ok(reports.every(r=>r.railEdges===637&&r.vertices<100000&&r.triangles<100000&&r.bytes<8*1024*1024));
+ assert.ok(reports.every(r=>r.railEdges===210&&r.vertices<100000&&r.triangles<100000&&r.bytes<8*1024*1024));
  console.log(JSON.stringify(reports));
  await writeFile('/private/tmp/mall-recreation/measured/scale-topology.json',JSON.stringify(reports,null,2));
 }finally{await rm(temporary,{recursive:true,force:true});}

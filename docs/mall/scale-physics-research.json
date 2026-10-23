@@ -718,5 +718,30 @@
     "Verify source actor render/animation scale rather than using raw bind-pose bounds.",
     "Compare source charge timing, speed-dependent drag and rail pops before adopting any level profile.",
     "Retest complete entry and grounded rollout with ordinary input, in both native and full-render browser."
-  ]
+  ],
+  "retailRegistration": {
+    "report": "retail-reference.json",
+    "factor": 0.40177774038477515,
+    "axisSigns": [
+      1,
+      1,
+      -1
+    ],
+    "translation": [
+      5181.887263881525,
+      33.514145401064695,
+      9332.301909144444
+    ],
+    "originalUniqueVertices": 7103,
+    "convertedUniqueVertices": 8444,
+    "matchedUniqueVertices": 8232,
+    "matchedFraction": 0.9748934154429181,
+    "matchedOriginalVertices": 5893,
+    "rmsError": 0.002555350677387082,
+    "p95Error": 0.004733757950518703,
+    "maxError": 0.007500384308742831,
+    "method": "Uniform least-squares fit to matched static vertices; 0.03 converted-unit correspondence bound. Converted duplicates with different floating-point values are counted separately.",
+    "originalUnitAtCurrentScale": 0.018079998317314883,
+    "limitation": "The original-to-conversion transform is now measured against retained retail static geometry. Final actor-relative world scale and movement calibration remain unverified."
+  }
 }
