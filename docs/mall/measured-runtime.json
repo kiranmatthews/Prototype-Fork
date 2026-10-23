@@ -1,6 +1,6 @@
 {
-  "snapshot": "/private/tmp/mall-recreation/snapshot-25",
-  "createdAt": "2026-10-23T04:32:10.433851+00:00",
+  "snapshot": "/private/tmp/mall-recreation/snapshot-26",
+  "createdAt": "2026-10-23T05:12:12.102572+00:00",
   "files": {
     "src/animation/bridge.ts": "a5477582012e00b75bb83322f0b9aaecee04392d299cbe6c8d9bb560ac1f6686",
     "src/animation/crouch.ts": "473640f543d2e6e6a5890d16f6e198f753edc32b2a385dc1c0215860e9732d5e",
@@ -232,7 +232,7 @@
     "src/jungleStream.ts": "709944d3e0b613038f8c62eaaec86b7ad77144c4f9236da7076c5012c12912c8",
     "src/ledgeTraversal.ts": "d57ea4554c6d930bb600d9681e88a71f5261e470ef257d447d609e006ac5fd8e",
     "src/legRig.ts": "28140d49d6151920eb97fad835af1425aac686fdbc904702f10a48db9b081547",
-    "src/level.ts": "b3ceef08270f8c4cca71f6d36369ed567b76ce1ebc811bb3c836ba0513450628",
+    "src/level.ts": "15a32d4afb6cc05ec9d4e1033b0eaebec8207a40ad9c66bc7dc2e9b7a8693c53",
     "src/levelAtmosphere.ts": "071794fec0403a8c5c9c0d1055328c457be2393bd191bb377f9dc14aad7e0d68",
     "src/levels/astra-chimeworks.ts": "2861b19c180110af5dce2582e7ae0c6cf9e1ed821fbde36633d3f52fe0f1447b",
     "src/levels/backport-lab.ts": "012552dd7c15df225b165d9a6bad123895548bf7d45e45d2097046cd76d3d18a",
@@ -274,11 +274,11 @@
     "src/levels/jungle-temple-space.ts": "5f3e3feac05b3251a1dad2ef095c43869ae102c6cf7b76ccee2a3b5e30a8b426",
     "src/levels/kona-survey.json": "c65e0644524edca2b317fe192544ee143760c9fb29b76b3cf493f6fd275cee04",
     "src/levels/kona.ts": "f11cc616aced9e3a4f89496ec1df4c339ed29854d870c5719bd671c349169415",
-    "src/levels/mall-art-textures.json": "56a3beccfc75921c4ba698e2d419f86f4e2f104f240b962d502b302e9d658a3a",
+    "src/levels/mall-art-textures.json": "b44c39c7e6b2750ca924793e23884c8f8f31aba45fa9331267fa6b9400f34a1a",
     "src/levels/mall-art.json": "94941a1026c7cfbc009d86b64c21654744043c0a7699ea4e4e0ed96d40c7c720",
     "src/levels/mall-art.ts": "c567277c468e232c9fcd73f4537fe05bfd307491f143a245ca77512bd29c32cc",
     "src/levels/mall-measured-scale.ts": "bb491644d457c49cd8539de166219183a0bac76147d08a43d8b2ec37679d9e9a",
-    "src/levels/mall-measured.ts": "f0a1570b3b71b8b6f48523e05e4575df54d19426b4f6d00959650610ad419c97",
+    "src/levels/mall-measured.ts": "09584c742c8890ff7b1ecac26038062c6afd92594c2196ff54837dd6ba879995",
     "src/levels/mall-wall-proxies.ts": "4eef907d97bc4b1c2f5b3407ecf8d988a43a25109e30e2f6a732b02386fbff0e",
     "src/levels/mall.ts": "ad3747d8facab080fed74989bfa657370f801098511a93df66fd7ccdf6a80072",
     "src/levels/meshylook-thorns.ts": "4b9901c963ce817d3bae30c8a289145d87544c4245b80532d2473258b9f140b1",
@@ -354,7 +354,7 @@
     "src/oceanTuning.ts": "0a5aef9ffb9124717da316c8f8710cfba2b0a0c8a27b1688eddd04c94ac89b2f",
     "src/offline-worker.js": "68e53f008747714be035980835dd0aa9f9db9e0fe251cf0d2f535599552d7376",
     "src/offline.ts": "9c230653f84c7a673bd9097d98cb6d24e17694f171977971cc9768a1faef9266",
-    "src/player.ts": "448b95c1e0fd3dc35a5d5b971c512482933f1d626c53ebaa88f38436e49a1fb9",
+    "src/player.ts": "3f67127b806d1165c8cff2859e684d78f46146644a7bd7c7206a1613b0506cdf",
     "src/presentationCssViewport.ts": "69b925b053bcf1a6bf1122ec3fba543f361d3163ac7c17395d05e8e1e14dfb08",
     "src/presentationLoading.ts": "f23a904cd2cf8a3ac334c5123819a00965d2ab308155e4b9f3cd44e534eb3b62",
     "src/proceduralThorns.ts": "432730dc00ab803724114bacf9a9a6fc82341dc35f8beaa6823055b7b1b678b2",
@@ -528,13 +528,23 @@
     "tools/thps-rail-query.mjs": "11cee4ffc9484fee298315b85e4b934dcd4982d5ae496b713a69239eae0b2628",
     "tools/test-thps-rail-query.mjs": "11d5f90c7f56c32f6d4a1a2f1c9e7410c1354e44603ec263fd86bc19c2e29811",
     "tools/test-reference-rail-capture.mjs": "e84b53c7398440ea3fa8678f517ce06b0db593f985b6284ea84a83696c90eb49",
-    "tools/mall-source-catch-audit.mjs": "0ad835533bb83253dd9fc6a451e11b3d35383eddbc733a4e10b70e2943e58892"
+    "tools/mall-source-catch-audit.mjs": "0ad835533bb83253dd9fc6a451e11b3d35383eddbc733a4e10b70e2943e58892",
+    "src/sourceBouncyProps.ts": "fe5101c4d7cd5866179cae7993222a364fc790bf8b9b5540ef3a930fe811d9da",
+    "src/levels/mall-source-props.ts": "b5c75f2e5c79ae7d5a2905f0696b75d9d34ec24c44f8cef4bb8829f9c4e58cc6",
+    "src/levels/mall-source-props.json": "78e61acc4f8e041bdf8d122c1d1a3fe9cafb52cc9ea3fdd6290841619276231d",
+    "public/mall-reference/box-870d565c.png": "74e613d938f7663b8ac5e0ec25e4b37b9a538553e18cf48784f26450e71cefb1",
+    "public/mall-reference/box-e53d8f03.png": "cec26ea57bbc955ab4c0c344fcac6ff400074fdcb4081e382b204e70b5d057ac",
+    "tools/mall-source-props.py": "796e6f6d4d7c815434dc7bb06b650353282244cc8984b4dd646b6e3aa4947e57",
+    "tools/test-mall-source-props.py": "62555b7ec290973c97d5b0b8df3c54fb419a41f91466c9556f8ca34d206f169e",
+    "tools/test-mall-source-boxes.mjs": "5b186cef57dba87b301fd202dc196c403a61a18ddf0cccca69da78831f6a4dce",
+    "tools/mall-source-box-fixtures.mjs": "9b7a77cc1224e8a95648331f4e81776664c115198fbf9998d661bfe4291bcaa3",
+    "tools/mall-source-boxes-browser.mjs": "64d5fc1fd2975319db2c385bb450ae4c068dabcc9390f25504b9db8356f895f7"
   },
-  "sharedRuntime": "Frozen snapshot-24 plus pass-25 opt-in source rail-candidate math/frame/query and adjusted Mall pilot release timing. Existing default movement and TUNING are unchanged. The task-branch player is separately scoped and tested.",
+  "sharedRuntime": "Frozen snapshot25 plus optional source-box component/runtime. Default TUNING and movement are unchanged. Shared player/level additions are scoped and separately tested on the older task branch.",
   "decoderDependency": "School tool at b69bb158c5924ff456d346842f17c4915d2c7aca; live School geometry-export additions excluded.",
   "unusedResearchModule": "src/levels/mall-measured-scale.ts is an unimported historical scale probe.",
   "taskBranchSharedFiles": {
-    "src/player.ts": "01561160c4a5114f45dac50a4922094e615194d58190485de891bacf024ae684",
-    "src/level.ts": "b52df5059b857c37138e5a1a835387b01407d8d0cc2f14e6569273e3c968714c"
+    "src/player.ts": "21c2254dbc61dbf1302284bc72b503922a92d020088a23f431ec13ada9d0a1fb",
+    "src/level.ts": "7eac21a998d3c985c3caea55c8a0ee21059e7cbd43408ddac0b409d6ef44b525"
   }
 }

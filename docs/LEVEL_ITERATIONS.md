@@ -863,3 +863,16 @@ The production math matches compiled original C++ in 10,006 cases, including par
 Five intended rail approaches pass natively and in the full renderer. The display route crosses both original bends at 27.56→23.31→19.74 m/s, grinds 101 frames / 41.25 m, then completes thirty grounded rollout frames. The tape route catches rails 41 and 38, grinds the beam for 243 frames / 126.63 m, and rolls away cleanly. Main route remains 3841 frames / 64.02 s; both Flying Leap releases pass. Native fountain variants and vert returns pass. Lite checkpoint/pit/menu and full main/rails/gaps have zero console errors. Default 960-frame digest is unchanged. Exact check:levels/build and scoped branch type-check/capture/main route pass. No check:all, push or deployment.
 
 Continuation began 2026-10-23T03:50:26+00:00; verified playable 2026-10-23T04:32:10.433851+00:00; **41 min 44 s prompt-to-verified-playable**. Build 3d243395401e89a0d653, snapshot-25, preview 5297. Task-owned local commit; shared HEAD/index and other task changes preserved. Source findings shared with the authorized School, Warehouse and Kona chats, with version and timing limits. The literal 1:1 goal remains active.
+
+
+## 2026-10-23 · Mall original loose box stacks
+
+Recover the 29,748-byte `SKMALL_O.PSX` object record with a bounded range read and decode the original six-face wooden model, two textures and twelve TRG placements. Exclude altered conversion props. Preserve measured architecture, rail graph, uniform scale and all global movement settings.
+
+Add optional nonblocking source-box support: swept unrotated bounds, original native impulse/gravity/drag at 30 Hz, source retirement count, smooth render interpolation and restart lifecycle. Geometry and authored poses round-trip unchanged. 1,007 compiled-source impulse/free-flight comparisons, deterministic decoder repeat, twelve independent placement reads and four malformed-source checks pass. Contact boundaries, first-hit behavior, finite retirement and reset semantics pass.
+
+Two supported-start controller fixtures cover both stacks and the descent beneath them, 285 frames in total. Contacts are original nodes 520 and 514 at frames 23 and 96. Every player frame is identical with interactions disabled, and matches both lite/full browsers and the scoped task runtime. The main course remains 3,841 frames / 64.02 s in native and full browser, with no bail/death/console errors. MENU/K/L/pit recovery and default movement digest pass. Exact check:levels/build and scoped TypeScript pass. Full suite not run.
+
+The complete upper approach remains unverified: preliminary flat/late-ollie starts hit a measured raised edge with interactions disabled and were rejected as traversal evidence. Floating-point prop contacts/rotation, independent RNG, 60 Hz contact sampling and local sound remain adaptations. Retained THPS2 Mall bytes are not certified as a 1999-disc match. Goal remains active.
+
+Started 2026-10-23T04:35:17+00:00; verified playable 2026-10-23T05:12:12.102572+00:00; **36.9 minutes prompt-to-verified-playable**. Build 715803b3706e5211a841, snapshot26, preview 5298. User-requested source knowledge was sent to School, Warehouse and Kona, with experimental/verified work distinguished. Task-owned changes saved locally; no push, upload or deployment.

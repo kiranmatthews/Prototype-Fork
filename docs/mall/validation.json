@@ -1,6 +1,6 @@
 {
-  "schema": 25,
-  "verifiedAt": "2026-10-23T04:32:10.433851+00:00",
+  "schema": 26,
+  "verifiedAt": "2026-10-23T05:12:12.102572+00:00",
   "status": "Source rail candidate geometry and all measured Mall rail/gap approaches validated; literal 1:1 goal remains active.",
   "previousImageBasedEvidenceCommit": "2508077121b87c2b606c515ac025556bd05f44af",
   "reference": {
@@ -79,14 +79,14 @@
     "tools/mall-source-catch-audit.mjs": "0ad835533bb83253dd9fc6a451e11b3d35383eddbc733a4e10b70e2943e58892"
   },
   "build": {
-    "version": "3d243395401e89a0d653",
-    "snapshot": "/private/tmp/mall-recreation/snapshot-25",
-    "output": "/private/tmp/mall-recreation/dist-25",
-    "preview": "http://127.0.0.1:5297/?playtest&level=mall",
+    "version": "715803b3706e5211a841",
+    "snapshot": "/private/tmp/mall-recreation/snapshot-26",
+    "output": "/private/tmp/mall-recreation/dist-26",
+    "preview": "http://127.0.0.1:5298/?playtest&level=mall",
     "published": false
   },
   "runtimeManifest": "measured-runtime.json",
-  "sharedWorkspaceNote": "Scoped player/level hunks preserve live unrelated edits; Mall-owned sources/tools/docs copied separately. Shared HEAD, index and TUNING are preserved. No push or deployment.",
+  "sharedWorkspaceNote": "The browser build uses frozen snapshot26. The scoped local task branch is independently type-checked and gameplay-tested; unrelated shared workspace edits are preserved.",
   "scale": {
     "metresPerSourceUnit": 0.045,
     "minimumRenderedArcadeHeadClearance": 0.36999670788151207,
@@ -13980,13 +13980,549 @@
           "wallSeconds": 3.572699999988079
         }
       ]
+    },
+    "pass26Main": {
+      "frames": 3841,
+      "done": true,
+      "error": null,
+      "evidence": {
+        "turns": [
+          {
+            "stage": 0,
+            "frame": 328,
+            "source": [
+              -13422.826158311633,
+              1743.891105085886,
+              175.8263338961733
+            ]
+          },
+          {
+            "stage": 1,
+            "frame": 680,
+            "source": [
+              -15830.285163031684,
+              1665.19674526086,
+              144.15595766639706
+            ]
+          }
+        ],
+        "sections": [
+          {
+            "waypoint": 0,
+            "frame": 802,
+            "source": [
+              -15400.16754618284,
+              706.9845063203975,
+              469.69569645357194
+            ]
+          },
+          {
+            "waypoint": 1,
+            "frame": 929,
+            "source": [
+              -13575.120453704832,
+              313.55333116319434,
+              535.8221865824175
+            ]
+          },
+          {
+            "waypoint": 2,
+            "frame": 961,
+            "source": [
+              -13154.780331197395,
+              314.56820724209774,
+              695.9781517804848
+            ]
+          },
+          {
+            "waypoint": 3,
+            "frame": 1140,
+            "source": [
+              -10879.32223648587,
+              314.75860595703125,
+              782.7763925818942
+            ]
+          },
+          {
+            "waypoint": 4,
+            "frame": 1214,
+            "source": [
+              -10067.843958405316,
+              314.75860595703125,
+              976.9490405393747
+            ]
+          },
+          {
+            "waypoint": 5,
+            "frame": 1442,
+            "source": [
+              -7770.404845034028,
+              314.75860595703125,
+              997.8500982352123
+            ]
+          },
+          {
+            "waypoint": 6,
+            "frame": 1528,
+            "source": [
+              -6928.65028288632,
+              314.75860595703125,
+              909.5604954462315
+            ]
+          },
+          {
+            "waypoint": 7,
+            "frame": 1559,
+            "source": [
+              -6625.3232284817705,
+              314.75877549913184,
+              869.7825824043657
+            ]
+          },
+          {
+            "waypoint": 8,
+            "frame": 1595,
+            "source": [
+              -6306.005009677647,
+              314.75877549913184,
+              717.8862204612647
+            ]
+          },
+          {
+            "waypoint": 9,
+            "frame": 1667,
+            "source": [
+              -5573.854201226843,
+              156.4969238291801,
+              560.8548582756913
+            ]
+          },
+          {
+            "waypoint": 10,
+            "frame": 1786,
+            "source": [
+              -4077.38653176737,
+              -176.67616438469668,
+              548.4094130542211
+            ]
+          },
+          {
+            "waypoint": 11,
+            "frame": 1822,
+            "source": [
+              -3567.607303505536,
+              -270.6316121419268,
+              495.419714405724
+            ]
+          },
+          {
+            "waypoint": 12,
+            "frame": 1849,
+            "source": [
+              -3177.120644232511,
+              -270.6316121419268,
+              509.39286365488897
+            ]
+          },
+          {
+            "waypoint": 13,
+            "frame": 1880,
+            "source": [
+              -2767.7950730122357,
+              -270.6316121419268,
+              658.7264978724816
+            ]
+          },
+          {
+            "waypoint": 14,
+            "frame": 1914,
+            "source": [
+              -2361.5602343418996,
+              -288.6779480584735,
+              887.4579554705574
+            ]
+          },
+          {
+            "waypoint": 15,
+            "frame": 1954,
+            "source": [
+              -1945.1869184067618,
+              -235.10080830010384,
+              1234.9225015133102
+            ]
+          },
+          {
+            "waypoint": 16,
+            "frame": 1987,
+            "source": [
+              -1582.0626422131663,
+              -270.6316121419268,
+              1486.1333071962936
+            ]
+          },
+          {
+            "waypoint": 17,
+            "frame": 2031,
+            "source": [
+              -1146.451446134819,
+              -270.6316121419268,
+              1848.8661871954648
+            ]
+          },
+          {
+            "waypoint": 18,
+            "frame": 2066,
+            "source": [
+              -934.4264699794803,
+              -270.6316121419268,
+              2228.222430868236
+            ]
+          },
+          {
+            "waypoint": 19,
+            "frame": 2117,
+            "source": [
+              -989.3634480807723,
+              -270.6316121419268,
+              2824.1590850747966
+            ]
+          },
+          {
+            "waypoint": 20,
+            "frame": 2145,
+            "source": [
+              -1207.0554528179982,
+              -270.6316121419268,
+              3054.2261995609433
+            ]
+          },
+          {
+            "waypoint": 21,
+            "frame": 2183,
+            "source": [
+              -1551.7601297620695,
+              -287.469350653402,
+              3292.9430201484897
+            ]
+          },
+          {
+            "waypoint": 22,
+            "frame": 2264,
+            "source": [
+              -1598.3350615662457,
+              -583.6352416086531,
+              4231.593368815757
+            ]
+          },
+          {
+            "waypoint": 23,
+            "frame": 2308,
+            "source": [
+              -1727.854981253904,
+              -777.3252316974238,
+              4831.023128327994
+            ]
+          },
+          {
+            "waypoint": 24,
+            "frame": 2346,
+            "source": [
+              -1710.4195044791013,
+              -915.4849921332466,
+              5377.418908537079
+            ]
+          },
+          {
+            "waypoint": 25,
+            "frame": 2373,
+            "source": [
+              -1551.1738782806315,
+              -915.4847378200955,
+              5739.82721796888
+            ]
+          },
+          {
+            "waypoint": 26,
+            "frame": 2401,
+            "source": [
+              -1260.8540610465298,
+              -915.4847378200955,
+              6014.226379993249
+            ]
+          },
+          {
+            "waypoint": 27,
+            "frame": 2453,
+            "source": [
+              -565.9465833818904,
+              -915.4847378200955,
+              6165.845333721446
+            ]
+          },
+          {
+            "waypoint": 28,
+            "frame": 2483,
+            "source": [
+              -171.97044428517074,
+              -935.6887045206902,
+              6123.7120237536765
+            ]
+          },
+          {
+            "waypoint": 29,
+            "frame": 2514,
+            "source": [
+              228.37260232399967,
+              -1004.0278457921333,
+              6020.374208457502
+            ]
+          },
+          {
+            "waypoint": 30,
+            "frame": 2621,
+            "source": [
+              1729.3664191354364,
+              -1262.4361889641466,
+              5812.069445600404
+            ]
+          },
+          {
+            "waypoint": 31,
+            "frame": 2735,
+            "source": [
+              3427.262533693749,
+              -1467.5272115071614,
+              5800.2997168823085
+            ]
+          },
+          {
+            "waypoint": 32,
+            "frame": 2871,
+            "source": [
+              5323.918647813334,
+              -1467.5272115071614,
+              5800.334790107805
+            ]
+          },
+          {
+            "waypoint": 33,
+            "frame": 2958,
+            "source": [
+              6420.426762043822,
+              -1512.5272454155815,
+              5800.422442622633
+            ]
+          },
+          {
+            "waypoint": 34,
+            "frame": 3051,
+            "source": [
+              7530.101038602694,
+              -1512.5272454155815,
+              5800.264448581625
+            ]
+          },
+          {
+            "waypoint": 35,
+            "frame": 3246,
+            "source": [
+              9527.389569016716,
+              -1351.2758229232882,
+              5800.064711174736
+            ]
+          },
+          {
+            "waypoint": 36,
+            "frame": 3361,
+            "source": [
+              10627.411431696768,
+              -1512.5272454155815,
+              5799.619680370635
+            ]
+          },
+          {
+            "waypoint": 37,
+            "frame": 3483,
+            "source": [
+              11825.714450745822,
+              -1715.2373530032178,
+              5781.103360406249
+            ]
+          },
+          {
+            "waypoint": 38,
+            "frame": 3663,
+            "source": [
+              13921.931268732325,
+              -2099.122314453125,
+              5791.962348090277
+            ]
+          },
+          {
+            "waypoint": 39,
+            "frame": 3767,
+            "source": [
+              15020.641305844281,
+              -2324.5197754022147,
+              5853.458268548489
+            ]
+          },
+          {
+            "waypoint": 40,
+            "frame": 3819,
+            "source": [
+              15524.915231412859,
+              -2324.519287099441,
+              5854.922326395998
+            ]
+          }
+        ],
+        "minSpeed": 23.433923362086624,
+        "maxSpeed": 42.37460945977859,
+        "airFrames": 194,
+        "grinds": []
+      },
+      "sourceMatches": true,
+      "startedAt": 10890.300000011921,
+      "arcadeHeadroom": [
+        {
+          "frame": 2775,
+          "source": [
+            4011.494560808209,
+            -1467.5272115071614,
+            5800.310520581239
+          ],
+          "roof": "PS1 Mall scenery 34:3",
+          "headTop": 41.48062591823559,
+          "roofY": 42.409626368558094,
+          "margin": 0.9290004503225049
+        },
+        {
+          "frame": 2778,
+          "source": [
+            4054.398404184303,
+            -1467.5272115071614,
+            5800.311313965006
+          ],
+          "roof": "PS1 Mall scenery 34:3",
+          "headTop": 41.48361512750531,
+          "roofY": 42.275851496870104,
+          "margin": 0.7922363693647938
+        },
+        {
+          "frame": 2781,
+          "source": [
+            4097.176675415678,
+            -1467.5272115071614,
+            5800.312105026675
+          ],
+          "roof": "PS1 Mall scenery 34:3",
+          "headTop": 41.48763261306586,
+          "roofY": 42.14166080620308,
+          "margin": 0.6540281931372149
+        },
+        {
+          "frame": 2784,
+          "source": [
+            4139.829742030328,
+            -1467.5272115071614,
+            5800.312893773045
+          ],
+          "roof": "PS1 Mall scenery 34:3",
+          "headTop": 41.492331564752305,
+          "roofY": 42.00920525621547,
+          "margin": 0.516873691463168
+        },
+        {
+          "frame": 2787,
+          "source": [
+            4182.35797048056,
+            -1467.5272115071614,
+            5800.313680210889
+          ],
+          "roof": "PS1 Mall scenery 34:3",
+          "headTop": 41.49756532330254,
+          "roofY": 41.873657209897985,
+          "margin": 0.37609188659544657
+        },
+        {
+          "frame": 2790,
+          "source": [
+            4224.761726146135,
+            -1467.5272115071614,
+            5800.314464346966
+          ],
+          "roof": "PS1 Mall scenery 34:3",
+          "headTop": 41.50286384983769,
+          "roofY": 47.464475869009796,
+          "margin": 5.961612019172108
+        },
+        {
+          "frame": 2793,
+          "source": [
+            4267.041373337408,
+            -1467.5272115071614,
+            5800.315246188012
+          ],
+          "roof": "PS1 Mall scenery 34:3",
+          "headTop": 41.50768175837219,
+          "roofY": 47.47406218527046,
+          "margin": 5.966380426898269
+        },
+        {
+          "frame": 2796,
+          "source": [
+            4309.197275298469,
+            -1467.5272115071614,
+            5800.316025740744
+          ],
+          "roof": "PS1 Mall scenery 34:3",
+          "headTop": 41.51192586015289,
+          "roofY": 47.32971755210805,
+          "margin": 5.817791691955158
+        },
+        {
+          "frame": 2799,
+          "source": [
+            4351.229794210245,
+            -1467.5272115071614,
+            5800.31680301186
+          ],
+          "roof": "PS1 Mall scenery 34:3",
+          "headTop": 41.5152078797184,
+          "roofY": 47.186657473435204,
+          "margin": 5.671449593716801
+        },
+        {
+          "frame": 2802,
+          "source": [
+            4393.139291193624,
+            -1467.5272115071614,
+            5800.317578008037
+          ],
+          "roof": "PS1 Mall scenery 34:3",
+          "headTop": 41.51732933190468,
+          "roofY": 47.04458662373675,
+          "margin": 5.527257291832065
+        }
+      ],
+      "state": "finished",
+      "source": [
+        15731.623472087289,
+        -2308.3711389060372,
+        5809.287967931853
+      ],
+      "stage": 2,
+      "tuningUnchanged": true,
+      "wallSeconds": 63.91639999997616,
+      "errors": []
     }
   },
   "smoke": {
     "start": {
       "deaths": 0,
       "lives": 4,
-      "stamp": "Codex/sol fork \u00b7 build 10-23 04:25 UTC"
+      "stamp": "Codex/sol fork \u00b7 build 10-23 04:59 UTC"
     },
     "checkpoints": [
       {
@@ -14020,10 +14556,10 @@
         "index": 3,
         "position": [
           237.0549298095703,
-          55.119508814526824,
+          55.219508814526826,
           -691.8108837890625
         ],
-        "distance": 0.10000000000000142
+        "distance": 0
       },
       {
         "index": 4,
@@ -14046,24 +14582,10 @@
     "errors": []
   },
   "checks": {
-    "check:levels": "passed, exact frozen package script",
-    "typescript": "passed",
-    "productionBuild": "passed",
-    "check:all": "not run",
-    "browser": "Fresh final build: lite MENU/K/L/pit recovery; full main, both Flying Leap releases, complete tape transfer and five intended rail approaches; zero console errors.",
-    "landingPolicy": "Default/true 40 m drops still bail; false follows the identical trajectory and rolls away. Invalid types rejected, editor capture/import retained. Existing huge-drop boundary, aligned-transition and saved-settings regression suite passes.",
-    "breakables": "Seven identical native enabled/disabled movement traces; grouped visibility, thin swept contact, diagonal miss, finite fragment disposal, 20 reset cycles, editor round-trip and invalid import rejection pass.",
-    "wallOpenings": "Nineteen envelopes clipped to measured polygons, 69 endpoint-height profiles, 1035 source-interior samples; both old fountain exits bail and both corrected exits land cleanly.",
-    "required": "Exact final frozen check:levels and build scripts pass. No check:all.",
-    "retailReference": "Local byte hashes, 97.49% position registration, independent TRG node positions, normal/alternate activation distinction, and rejection of malformed source/unknown activation commands pass.",
-    "actorSurvey": "78 clip byte budgets, 4096 source trig pairs, independent codec/hierarchy/stitch fixtures and malformed-input rejection pass.",
-    "sourceProfile": "Parameters/cadence, neutral auto-kick, charge/pop, overspeed drag below final cap, final-speed clamp, strict config and editor round-trip pass.",
-    "copingDeparture": "Fresh source coping roll-off passes; jumped, later-fall, ordinary-bar and preexisting-level smacks retained.",
-    "defaultParity": "960 frames identical to snapshot-24; SHA256 c355c28f30e0c6a248e396cfe83234e24b95fdaa5c907f8ec9fc97faa29c2fe2",
-    "sourceRails": "Prior cadence/entry/runoff/transfer fixtures plus six forward/reverse soft- and hard-corner cases pass.",
-    "scopedCommit": "Isolated task branch type-check, source capture integration and full native route pass.",
-    "sourceBalance": "18 traces match compiled original C++ catch/balance statements at 30/60/120 Hz; strict bail boundary, held-entry neutral arming, same/different chain re-entry, air history, nonzero ground reset and eight-second production countersteering pass.",
-    "sourceCapture": "10,006 line-pair cases match compiled original C++; all 3,072 square-root table entries match. Swept crossing, strict distance, endpoint alternatives, grounded side, axes, disabled rails, held input, editor round-trip and opt-out validation pass."
+    "levelData": "exact package.json check:levels passed",
+    "production": "exact package.json build passed",
+    "scopedTypescript": "passed",
+    "fullSuiteRun": false
   },
   "fidelityRemaining": [
     "Continuous 60 Hz movement with native 30 Hz balance/rail-assist decisions; not every original fixed-point operation or rail-node substep position.",
@@ -14074,16 +14596,19 @@
     "Directional rail exits use the source angle in the local rail plane, with the prototype camera-relative input convention.",
     "Charged-pose calibration is supported; coasting pose and cruiser proportions differ from the source actor.",
     "Remaining alternate-route timing tolerance needs original-game comparison.",
-    "Directory rewards, original box stacks, collectibles, sky and animated water remain incomplete.",
-    "Retained retail geometry is not byte-verified against the 1999 disc."
+    "Directory rewards, collectibles, sky and animated water remain incomplete.",
+    "Retained retail geometry is not byte-verified against the 1999 disc.",
+    "Box impulses, free-flight drag/gravity and angular decisions run at 30 Hz. Visual rotation uses floating-point Three.js matrices and contacts use the fork mesh query, not the original quantized matrix/collision engine.",
+    "Random targets use an independent deterministic per-prop stream, not the original global RNG. Sound uses an existing local effect.",
+    "Player-to-prop contact is sampled after each 60 Hz player step. The source invokes it during its 30 Hz state pipeline before static collision; full state-order parity is not claimed.",
+    "The dedicated upper case starts once on the supported raised platform. It proves both stack contacts and rollout, not a complete approach to the platform. Preliminary flat/late-ollie approaches hit an existing raised edge even with props disabled; they are not counted as successful routes."
   ],
   "elapsed": {
-    "continuationStartedUTC": "2026-10-23T03:50:26+00:00",
-    "verifiedPlayableUTC": "2026-10-23T04:32:10.433851+00:00",
-    "promptToVerifiedPlayableSeconds": 2504.43,
-    "basis": "Pass25 source rail-query research, original C++ oracle, opt-in implementation, corrected audit, native/full-browser routes and scoped branch checks."
+    "startedAt": "2026-10-23T04:35:17+00:00",
+    "verifiedPlayableAt": "2026-10-23T05:12:12.102572+00:00",
+    "seconds": 2215.102572
   },
-  "previousValidationCommit": "f8995088a02f52e22a4735b7b6eb1fca9ada6574",
+  "previousValidationCommit": "3851223f21cf10435d14b239ee426d5319bf83c2",
   "upperRoutes": {
     "scale": 0.045,
     "stats": {
@@ -17182,11 +17707,12 @@
     "balance": "rail-balance.json",
     "capture": "rail-capture.json",
     "fountain": "pass25NativeFountain",
-    "verts": "verts"
+    "verts": "verts",
+    "boxes": "source-boxes.json"
   },
   "taskSharedFileSHA256": {
-    "src/player.ts": "01561160c4a5114f45dac50a4922094e615194d58190485de891bacf024ae684",
-    "src/level.ts": "b52df5059b857c37138e5a1a835387b01407d8d0cc2f14e6569273e3c968714c"
+    "src/player.ts": "21c2254dbc61dbf1302284bc72b503922a92d020088a23f431ec13ada9d0a1fb",
+    "src/level.ts": "7eac21a998d3c985c3caea55c8a0ee21059e7cbd43408ddac0b409d6ef44b525"
   },
   "taskSharedFileNote": "Only scoped pass25 player hunks are committed from the older task-branch parent. No level.ts edit. Concurrent live changes are preserved.",
   "retailReference": {
@@ -17227,7 +17753,8 @@
     "breakableBrowser": "Seven dedicated fixture approaches remain pass-18 evidence; the main-route contact runs fresh with the new profile.",
     "standaloneWallOpeningsBrowser": "Pass 19; complete upper-entry fountain route is freshly verified in pass 22.",
     "upperAndVerts": "Upper escalator evidence retains pass23; three vert returns freshly verified natively in pass25.",
-    "fountain": "Three complete fountain variants freshly verified natively in pass25; full-render fountain evidence retains its pass23 build stamp."
+    "fountain": "Three complete fountain variants freshly verified natively in pass25; full-render fountain evidence retains its pass23 build stamp.",
+    "railAndGapRoutes": "Pass25 source rail and gap checks remain separately stamped; source rail/profile geometry and motion logic are unchanged. Main, default trace and new prop contact checks rerun in pass26."
   },
   "actorScale": {
     "report": "actor-scale.json",
@@ -17289,23 +17816,7 @@
     }
   },
   "scopedBranchChecks": {
-    "typescript": "passed on the isolated task-branch source tree",
-    "sourceCapture": {
-      "sweptCrossing": true,
-      "outsideRadiusRejected": true,
-      "groundSideRejected": true,
-      "outwardEndpointRejected": true,
-      "alternateEligibleChain": true,
-      "inwardEndpointAccepted": true,
-      "disabledRailRejected": true,
-      "sourceFrameMapping": true,
-      "editorRoundTrip": true,
-      "invalidFramesRejected": true,
-      "legacyProfilesOptOut": true,
-      "productionCapture": true,
-      "heldInputRequired": true,
-      "sourceDepartureCooldownSeconds": 0.16666666666666666
-    },
+    "typescript": "passed",
     "nativeMain": {
       "state": "finished",
       "seconds": 60.083333333333336,
@@ -17321,7 +17832,7 @@
       ],
       "error": null
     },
-    "note": "The older scoped task-branch player has no grindAirLat or buffered grindRequested helper. Its source query uses its existing slideAirLat; the frozen shared runtime includes both existing lateral carriers and guards its existing request helper. Both trees are checked independently."
+    "sourceBoxes": "Identical gameplay and oracle results to frozen snapshot26. The older scoped player uses its existing slideAirLat carrier."
   },
   "pass25NativeFountain": {
     "build": {
@@ -17526,5 +18037,6 @@
       }
     ],
     "tuningUnchanged": true
-  }
+  },
+  "sourceBoxes": "source-boxes.json"
 }

@@ -1040,6 +1040,8 @@ export class Player {
   private readonly parkRailSweepStart = new THREE.Vector3();
   private readonly parkRailSweepEnd = new THREE.Vector3();
   private parkRailSweepReady = false;
+  private readonly parkPropSweepEnd = new THREE.Vector3();
+  private readonly parkPropVelocity = new THREE.Vector3();
   private readonly parkVelocity = new THREE.Vector3();
   private parkFlightGravity = this.parkPhysics.airGravity;
   private parkAutoTurn = 0;
@@ -3618,6 +3620,16 @@ export class Player {
       if(!this.parkRailSweepReady)this.parkRailSweepStart.copy(this.parkRailSweepEnd);
     }
     this.stepSimulation(dt, input, level);
+    if(capture&&level.sourceProps.objects.length&&(this.state==='ride'||this.state==='air')){
+      this.parkPropSweepEnd.copy(this.pos);
+      if(this.grounded)this.parkPropSweepEnd.addScaledVector(this.rideNormal,30*capture.unit);
+      else this.parkPropSweepEnd.y+=30*capture.unit;
+      const v=this.parkPropVelocity;
+      if(this.grounded)skateSurfaceDirection(v,this.axisF,this.rideNormal).multiplyScalar(this.speed);
+      else if(this.vertAir)v.set(-this.vertNormal.z*this.vertLatVel,this.vVel,this.vertNormal.x*this.vertLatVel);
+      else v.set(this.axisF.x*this.speed+this.axisL.x*this.slideAirLat,this.vVel,this.axisF.z*this.speed+this.axisL.z*this.slideAirLat);
+      level.sourceProps.touch(this.parkRailSweepEnd,this.parkPropSweepEnd,v);
+    }
     if(capture){this.parkRailSweepStart.copy(this.parkRailSweepEnd);this.parkRailSweepReady=true;}
     if (this.parkReference?.balanceStat !== undefined) {
       const mode = this.state === 'grind' ? 'grind' : this.grounded && this.state === 'ride' ? 'ground' : 'air';

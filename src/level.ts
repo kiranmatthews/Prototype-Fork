@@ -1,6 +1,7 @@
 import { createSkateReference, validSkateReference, type SkateReferenceData, type SkateReferencePhysics } from './skateReferencePhysics';
 import { MALL_TEXTURE_KINDS, mallArt } from './mallArt';
 import { BreakableScenery, type BreakableKind } from './breakableScenery';
+import {SourceBouncyProps,validSourceBox,type SourceBoxData} from './sourceBouncyProps';
 import { CARLISLE_COAST_LEVEL } from "./levels/carlisle-coast";
 import { CUSTARD_CREEK_LEVEL } from "./levels/custard-creek";
 import { isOriginalTestCourse } from "./levels/carlisleLegacy";
@@ -704,6 +705,7 @@ export interface CustomComponent {
   uvs?: number[];
   colors?: number[];
   doubleSided?: boolean;
+  sourceBox?: SourceBoxData; // nonblocking PS1 wooden-box prop; requires a registered source frame
   breakable?: BreakableKind; // non-solid mesh: shatter on swept body contact
   breakGroup?: number; // positive ID joining separate visual meshes into one breakable object
   loopRadius?: number; // mesh: analytic vertical loop matching createLoopMeshData, p = entry feet
@@ -2523,7 +2525,7 @@ const COMPONENT_DATA_KEYS = new Set([
   "baySpacing", "supportDepth", "supportBaseY", "terrainSupports", "structureStyle",
   "plankPalette", "polePalette", "shoreProfile", "shoreSeaLevel", "shorePhase",
   "trick", "exitYaw", "airOnly", "coverage", "radius", "color", "tex", "dir",
-  "layer", "grp", "lk", "nm", "trafficRoad", "materialStyle", "castShadow", "emissive", "opacity", "fog", "vertices", "indices", "normals", "uvs", "colors", "doubleSided", "breakable", "breakGroup", "beachSand", "loopRadius", "loopOffset", "loopRequired", "gravityTrack", "lethal", "skateCamera", "outOfBounds",
+  "layer", "grp", "lk", "nm", "trafficRoad", "materialStyle", "castShadow", "emissive", "opacity", "fog", "vertices", "indices", "normals", "uvs", "colors", "doubleSided", "breakable", "breakGroup", "sourceBox", "beachSand", "loopRadius", "loopOffset", "loopRequired", "gravityTrack", "lethal", "skateCamera", "outOfBounds",
 ]);
 const hasOnlyKeys = (value: object, keys: ReadonlySet<string>): boolean =>
   Object.keys(value).every((key) => keys.has(key));
@@ -2907,6 +2909,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
   const singletonKinds = new Set<string>();
   const breakGroups = new Map<number, BreakableKind>();
   let breakableCount = 0;
+  const sourceBoxes=new Map<number,string>();
   const dynamicKinds = new Set(["enemy", "crusher", "mover", "torch", "phasepad",
     "stone", "pendulum", "ropeswing", "grindosaurus", "angryball", "crumble",
     "rope", "trickgate", "returnportal", "thorn", "spinbridge"]);
@@ -3010,6 +3013,14 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
       return null;
     if (component.gravityTrack !== undefined && (!['mesh','vertramp'].includes(component.t) || component.solid === false || component.loopRadius !== undefined)) return null;
     if (component.skateCamera !== undefined && (!['mesh','vertramp'].includes(component.t) || component.solid === false)) return null;
+    if(component.sourceBox!==undefined){
+      if(component.t!=='mesh'||component.solid!==false||component.breakable||component.invisible||component.outline||component.materialStyle||component.s||
+        !validSourceBox(component.sourceBox)||!source.skateReference?.railCapture||source.skateReference.railCapture.axes[1]!==-2||component.sourceBox.angles[0]||component.sourceBox.angles[2]||
+        Math.abs((component.yaw??0)+component.sourceBox.angles[1]*360/4096)>1e-6)return null;
+      const signature=JSON.stringify([component.sourceBox,component.p,component.yaw]);
+      if(sourceBoxes.has(component.sourceBox.id)&&sourceBoxes.get(component.sourceBox.id)!==signature)return null;
+      sourceBoxes.set(component.sourceBox.id,signature);if(sourceBoxes.size>64)return null;
+    }
     if (component.coping !== undefined && (component.t !== 'rail' || typeof component.coping !== 'boolean')) return null;
     if (component.breakable !== undefined) {
       if (component.t !== 'mesh' || component.solid !== false || component.invisible || component.outline ||
@@ -4091,6 +4102,7 @@ export class Level {
   private root = new THREE.Group(); // everything the level owns, for disposal
   readonly discardedBoards = new DiscardedBoards();
   readonly breakableScenery = new BreakableScenery();
+  readonly sourceProps = new SourceBouncyProps();
   private pops: { obj: THREE.Object3D; t: number }[] = [];
   private time = 0;
   private thornClusters: ProceduralThornCluster[] = [];
@@ -4885,6 +4897,7 @@ export class Level {
     scene.add(this.root);
     this.root.add(this.discardedBoards.root, this.breakableScenery.root);
     this.breakableScenery.onBreak = kind => sfx.play(kind === 'glass' ? 'crateBreak2' : 'crateBreak1', .4, kind === 'glass' ? 1.65 : 1.15);
+    this.sourceProps.onHit=()=>sfx.play('crateBreak1',.25,.85);
     this.discardedBoards.onImpact = (broken) => sfx.play('skateHalt', broken ? 0.35 : 0.18, broken ? 0.65 : 1.5);
     this.discardedBoards.onSpinHit = (position, removed) => {
       puffs.burst(removed ? 'dustLand' : 'crateSmash', position.x, position.y, position.z,
@@ -5714,7 +5727,7 @@ export class Level {
     if(c.tex==='coast-terrain')addCarlisleTerrainLook(material,this.surfaceTexture('coast-turf'));
     // These remain separate authoring components. Runtime-only visual pieces
     // can share one draw per material/cell instead of one draw per rope/post.
-    if(!EDITOR_BUILD&&this.batchDecor&&c.solid===false&&!c.invisible&&!c.breakable&&!c.materialStyle&&!standingWater&&
+    if(!EDITOR_BUILD&&this.batchDecor&&c.solid===false&&!c.invisible&&!c.breakable&&!c.sourceBox&&!c.materialStyle&&!standingWater&&
       !c.colors&&!c.depthBias&&!c.cameraCutaway&&c.castShadow===undefined&&(c.s??[1,1,1]).every(scale=>scale>0)&&
       c.fog===undefined&&c.vert===undefined&&(c.opacity??1)===1){
       const key=JSON.stringify([c.color??'#ffffff',c.emissive??'#000000',c.tex??'checker',!!c.doubleSided]);
@@ -5760,6 +5773,7 @@ export class Level {
     }
     this.root.add(mesh);
     if(c.breakable)this.breakableScenery.add(mesh,c.breakable,c.breakGroup);
+    if(c.sourceBox&&this.skateReferencePhysics?.railCapture)this.sourceProps.add(mesh,c.sourceBox,this.skateReferencePhysics.railCapture);
     if(c.outline&&c.solid!==false){
       mesh.userData.outlinedSurface=true;
       this.outlinedSurfaces.push({mesh,component:JSON.parse(JSON.stringify(c)),groups:outlineGroups,
@@ -7725,6 +7739,7 @@ export class Level {
 
   dispose(preserveResourcesFrom?: Level): void {
     this.breakableScenery.dispose();
+    this.sourceProps.dispose();
     this.boss?.dispose();
     this.boss = null; // Meshy leases are released before the ordinary root traversal.
     if(this.bonusPlatform)this.bonusPlatform.group.userData.bonusStoneDisposed=true;
@@ -8720,6 +8735,7 @@ export class Level {
   update(dt: number): void {
     this.standingWaterClock.value+=Math.max(0,Math.min(dt,0.1));
     this.breakableScenery.update(dt);
+    this.sourceProps.update(dt,this.groundMeshes,this.killY);
     for (const bridge of this.spinBridges) bridge.update(dt);
     this.syncSpinBridgeFloors();
     this.boss?.present(dt);
@@ -9850,6 +9866,7 @@ export class Level {
     this.cancelBonusEntry();
     this.discardedBoards.clear(); // no debris from the previous life/run
     this.breakableScenery.reset(hard);
+    this.sourceProps.reset(hard);
     // Hard reset restores the committed crystal baseline and clears any
     // materialized run-local gem; a soft death keeps current-run pickups.
     if (hard) {
