@@ -58,6 +58,8 @@ Eight native-input cases pass in 1,269 fixed steps: the original canopy, both so
 
 The task commit includes the small existing shared mesh-normal, authored-vert and explicit-coping support needed by this preview. A task-parent source tree with only these dependencies and the new wall/coping changes type-checks independently, and repeats the same eight native cases. The tested working and task-parent runtime hashes are recorded in `school-miami-wall-profile.json`; unrelated shared edits are excluded. No movement tuning is included.
 
+Normal-restart rail activation remains a separate audit. The preview currently imports the complete decoded graph; it does not claim that all 271 links are enabled by the original normal start. A bounded inspection of restart node 393 (`Re_Start_School`) stops at command `0x9b`, which requires source interpretation before filtering any paths. The native and browser results above describe the complete-graph preview exactly as tested.
+
 Both browser game error reports are empty. The fresh full-render tab recorded the previously observed `MutationObserver.observe` startup error at 00:55:32 UTC; the lightweight navigation added no new occurrence. It remains unresolved. Original textures and sprite scenery are not included, material colours are approximate, and most alternate routes, rail transfers, camera framing, full transition continuity and animated scale comparisons remain unverified. The measured preview is an experimental local artifact, not the default level or a complete 1:1 claim. See `school-miami-source-{native,browser-full,browser-lite}.json` and the [campus](art-reviews/school-miami/measured-campus-full.png) and [gym](art-reviews/school-miami/measured-gym-entry-full.png) captures.
 
 ## Reference and scale

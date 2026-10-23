@@ -103,6 +103,7 @@
       "calibrationLimit": "Gameplay-pose silhouette comparison remains unverified."
     },
     "remainingWork": [
+      "Verify normal-restart rail activation; the preview currently imports the complete decoded graph.",
       "Original art and sprite scenery",
       "Remaining alternate routes and rail transfers",
       "Complete transition continuity and camera framing",
@@ -162,5 +163,12 @@
       "timestamp": "2026-10-23T00:55:32.299Z",
       "status": "Unresolved historical/intermittent startup issue; observed on fresh full tab, no new occurrence after lite navigation."
     }
+  },
+  "railActivationAudit": {
+    "status": "pending",
+    "restart": 393,
+    "name": "Re_Start_School",
+    "boundedProbe": "Stopped at unsupported restart command 0x9b; no filtering applied.",
+    "preview": "All 271 decoded links, not a verified active-at-start subset."
   }
 }
