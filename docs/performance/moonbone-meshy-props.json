@@ -1,0 +1,1243 @@
+{
+  "brief": "Replace Moonbone Vault props with Meshy models matching Crash 4 / punk / 90s art direction, maximum 50 credits; remove the moon prop.",
+  "validatedAtUTC": "2026-10-23T20:23:11.669924+00:00",
+  "delivery": "Local commit and 5417 preview only. No push or deployment. User-authorized Meshy generation/downloads only.",
+  "budget": {
+    "authorized": 50,
+    "spent": 45,
+    "remainingAuthorization": 5,
+    "startingBalance": 716,
+    "endingBalance": 671,
+    "jobs": 3,
+    "creditsPerJob": 15,
+    "purchases": 0
+  },
+  "art": {
+    "references": "tools/moonbone-assets/reference-prompts.json",
+    "generation": "Built-in imagegen references, official Meshy CLI image-to-3D, Meshy T2 smart topology with 4K source textures. Rejected realistic/gothic reference set never submitted to Meshy.",
+    "runtime": "public/moonbone-vault/manifest.json",
+    "geometryPreserved": true,
+    "sourceGeometryNormalsUvsTransformsByteIdentical": true,
+    "textureOnlyPacking": "2K albedo, 1K normal/roughness JPEG, 6,309,956 bytes combined",
+    "moonRemoved": true,
+    "placementReview": "Skulls offset beside crypts with stone plinths; 10 new Meshy instances through existing scenery caching/instancing/editor path."
+  },
+  "sourceComparison": {
+    "unchangedGameplayComponents": 51,
+    "physicalSourceSha256": "18c564be561b69c0287587a477b85b3ee5d25b084ab825ae12ae64b4fe81858e",
+    "spawnUnchanged": true,
+    "atmosphereUnchanged": true,
+    "moonRemoved": true,
+    "visualOnlyMeshyPlacements": [
+      {
+        "dkind": "moonboneribarch",
+        "p": [
+          4,
+          -5,
+          -17
+        ],
+        "s": [
+          26,
+          23,
+          4
+        ]
+      },
+      {
+        "dkind": "moonboneribarch",
+        "p": [
+          40,
+          -5,
+          -17
+        ],
+        "s": [
+          26,
+          23,
+          4
+        ]
+      },
+      {
+        "dkind": "moonboneribarch",
+        "p": [
+          80,
+          -5,
+          -17
+        ],
+        "s": [
+          26,
+          23,
+          4
+        ]
+      },
+      {
+        "dkind": "moonbonecrypt",
+        "p": [
+          -4,
+          -1.5,
+          -9
+        ],
+        "s": [
+          12,
+          8,
+          4
+        ]
+      },
+      {
+        "dkind": "moonbonecrypt",
+        "p": [
+          25,
+          4.5,
+          -9
+        ],
+        "s": [
+          12,
+          8,
+          4
+        ]
+      },
+      {
+        "dkind": "moonbonecrypt",
+        "p": [
+          56,
+          4.5,
+          -9
+        ],
+        "s": [
+          12,
+          8,
+          4
+        ]
+      },
+      {
+        "dkind": "moonbonecrypt",
+        "p": [
+          83,
+          -1.5,
+          -9
+        ],
+        "s": [
+          12,
+          8,
+          4
+        ]
+      },
+      {
+        "dkind": "moonboneskull",
+        "p": [
+          11,
+          -0.1,
+          -15
+        ],
+        "s": [
+          8,
+          8,
+          6
+        ]
+      },
+      {
+        "dkind": "moonboneskull",
+        "p": [
+          67,
+          3.1,
+          -15
+        ],
+        "s": [
+          8,
+          8,
+          6
+        ]
+      },
+      {
+        "dkind": "moonboneskull",
+        "p": [
+          96,
+          -0.1,
+          -15
+        ],
+        "s": [
+          8,
+          8,
+          6
+        ]
+      }
+    ]
+  },
+  "native": {
+    "result": {
+      "state": "finished",
+      "cratesBroken": 16,
+      "totalCrates": 16,
+      "deaths": 0,
+      "completionScope": "complete-stage",
+      "activeStageCrates": 16,
+      "bonusCrateTotal": 0,
+      "bonusCrates": 0,
+      "gemEarned": true
+    },
+    "frames": 2907,
+    "identicalBeforeAfterTrace": true,
+    "traceSha256": "bb009f6a6b9e4b56d2e55aeb59d67124d3efe8cddf2d2c0af21f6d92d40d5cb4"
+  },
+  "browser": {
+    "lite": {
+      "tag": "lite",
+      "requests": [
+        {
+          "url": "http://127.0.0.1:5419/moonbone-vault/moonbone-rib-arch.glb",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:5419/moonbone-vault/moonbone-crypt.glb",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:5419/moonbone-vault/moonbone-skull.glb",
+          "status": 200
+        }
+      ],
+      "errors": [],
+      "captures": [
+        {
+          "name": "arrival",
+          "position": [
+            -7,
+            -2.384185793236071e-08,
+            0
+          ],
+          "grounded": true,
+          "state": "ride",
+          "camera": [
+            -7,
+            8.351491353052007,
+            25.820309867674464
+          ],
+          "scenery": {
+            "components": 44,
+            "placements": 527,
+            "ready": 527,
+            "skipped": 0,
+            "draws": 52,
+            "triangles": 533159,
+            "allLodTriangles": 539759,
+            "cells": 52,
+            "residentCells": 52,
+            "pendingCells": 0,
+            "retryingCells": 0,
+            "compressedTextures": 8,
+            "textureMiB": 128.67,
+            "errors": [],
+            "windTime": 2.1996999999880766
+          },
+          "meshes": [
+            {
+              "name": "Moonbone sculpted fossil arch",
+              "material": "Moonbone sculpted fossil arch",
+              "count": 1,
+              "visible": true,
+              "triangles": 10837,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone sculpted fossil arch",
+              "material": "Moonbone sculpted fossil arch",
+              "count": 1,
+              "visible": true,
+              "triangles": 10837,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone sculpted fossil arch",
+              "material": "Moonbone sculpted fossil arch",
+              "count": 1,
+              "visible": true,
+              "triangles": 10837,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone punk crypt shrine",
+              "material": "Moonbone punk crypt shrine",
+              "count": 1,
+              "visible": true,
+              "triangles": 11737,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone punk crypt shrine",
+              "material": "Moonbone punk crypt shrine",
+              "count": 1,
+              "visible": true,
+              "triangles": 11737,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone punk crypt shrine",
+              "material": "Moonbone punk crypt shrine",
+              "count": 1,
+              "visible": true,
+              "triangles": 11737,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone punk crypt shrine",
+              "material": "Moonbone punk crypt shrine",
+              "count": 1,
+              "visible": true,
+              "triangles": 11737,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone punk skull monument",
+              "material": "Moonbone punk skull monument",
+              "count": 1,
+              "visible": true,
+              "triangles": 10622,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone punk skull monument",
+              "material": "Moonbone punk skull monument",
+              "count": 1,
+              "visible": true,
+              "triangles": 10622,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone punk skull monument",
+              "material": "Moonbone punk skull monument",
+              "count": 1,
+              "visible": true,
+              "triangles": 10622,
+              "map": true,
+              "normal": true
+            }
+          ]
+        },
+        {
+          "name": "gallery",
+          "position": [
+            30,
+            5.999999976158142,
+            0
+          ],
+          "grounded": true,
+          "state": "ride",
+          "camera": [
+            30,
+            14.35149114233785,
+            25.820309867674464
+          ],
+          "scenery": {
+            "components": 44,
+            "placements": 527,
+            "ready": 527,
+            "skipped": 0,
+            "draws": 52,
+            "triangles": 533159,
+            "allLodTriangles": 539759,
+            "cells": 52,
+            "residentCells": 52,
+            "pendingCells": 0,
+            "retryingCells": 0,
+            "compressedTextures": 8,
+            "textureMiB": 128.67,
+            "errors": [],
+            "windTime": 4.033033333321404
+          },
+          "meshes": [
+            {
+              "name": "Moonbone sculpted fossil arch",
+              "material": "Moonbone sculpted fossil arch",
+              "count": 1,
+              "visible": true,
+              "triangles": 10837,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone sculpted fossil arch",
+              "material": "Moonbone sculpted fossil arch",
+              "count": 1,
+              "visible": true,
+              "triangles": 10837,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone sculpted fossil arch",
+              "material": "Moonbone sculpted fossil arch",
+              "count": 1,
+              "visible": true,
+              "triangles": 10837,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone punk crypt shrine",
+              "material": "Moonbone punk crypt shrine",
+              "count": 1,
+              "visible": true,
+              "triangles": 11737,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone punk crypt shrine",
+              "material": "Moonbone punk crypt shrine",
+              "count": 1,
+              "visible": true,
+              "triangles": 11737,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone punk crypt shrine",
+              "material": "Moonbone punk crypt shrine",
+              "count": 1,
+              "visible": true,
+              "triangles": 11737,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone punk crypt shrine",
+              "material": "Moonbone punk crypt shrine",
+              "count": 1,
+              "visible": true,
+              "triangles": 11737,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone punk skull monument",
+              "material": "Moonbone punk skull monument",
+              "count": 1,
+              "visible": true,
+              "triangles": 10622,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone punk skull monument",
+              "material": "Moonbone punk skull monument",
+              "count": 1,
+              "visible": true,
+              "triangles": 10622,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone punk skull monument",
+              "material": "Moonbone punk skull monument",
+              "count": 1,
+              "visible": true,
+              "triangles": 10622,
+              "map": true,
+              "normal": true
+            }
+          ]
+        },
+        {
+          "name": "far-vault",
+          "position": [
+            61.5,
+            5.999999976158142,
+            0
+          ],
+          "grounded": true,
+          "state": "ride",
+          "camera": [
+            61.5,
+            14.35149114233785,
+            25.820309867674464
+          ],
+          "scenery": {
+            "components": 44,
+            "placements": 527,
+            "ready": 527,
+            "skipped": 0,
+            "draws": 52,
+            "triangles": 533159,
+            "allLodTriangles": 539759,
+            "cells": 52,
+            "residentCells": 52,
+            "pendingCells": 0,
+            "retryingCells": 0,
+            "compressedTextures": 8,
+            "textureMiB": 128.67,
+            "errors": [],
+            "windTime": 5.799699999988064
+          },
+          "meshes": [
+            {
+              "name": "Moonbone sculpted fossil arch",
+              "material": "Moonbone sculpted fossil arch",
+              "count": 1,
+              "visible": true,
+              "triangles": 10837,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone sculpted fossil arch",
+              "material": "Moonbone sculpted fossil arch",
+              "count": 1,
+              "visible": true,
+              "triangles": 10837,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone sculpted fossil arch",
+              "material": "Moonbone sculpted fossil arch",
+              "count": 1,
+              "visible": true,
+              "triangles": 10837,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone punk crypt shrine",
+              "material": "Moonbone punk crypt shrine",
+              "count": 1,
+              "visible": true,
+              "triangles": 11737,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone punk crypt shrine",
+              "material": "Moonbone punk crypt shrine",
+              "count": 1,
+              "visible": true,
+              "triangles": 11737,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone punk crypt shrine",
+              "material": "Moonbone punk crypt shrine",
+              "count": 1,
+              "visible": true,
+              "triangles": 11737,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone punk crypt shrine",
+              "material": "Moonbone punk crypt shrine",
+              "count": 1,
+              "visible": true,
+              "triangles": 11737,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone punk skull monument",
+              "material": "Moonbone punk skull monument",
+              "count": 1,
+              "visible": true,
+              "triangles": 10622,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone punk skull monument",
+              "material": "Moonbone punk skull monument",
+              "count": 1,
+              "visible": true,
+              "triangles": 10622,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone punk skull monument",
+              "material": "Moonbone punk skull monument",
+              "count": 1,
+              "visible": true,
+              "triangles": 10622,
+              "map": true,
+              "normal": true
+            }
+          ]
+        },
+        {
+          "name": "return",
+          "position": [
+            87,
+            -2.384185793236071e-08,
+            0
+          ],
+          "grounded": true,
+          "state": "ride",
+          "camera": [
+            87,
+            8.351491142337851,
+            25.820309867674464
+          ],
+          "scenery": {
+            "components": 44,
+            "placements": 527,
+            "ready": 527,
+            "skipped": 0,
+            "draws": 52,
+            "triangles": 533159,
+            "allLodTriangles": 539759,
+            "cells": 52,
+            "residentCells": 52,
+            "pendingCells": 0,
+            "retryingCells": 0,
+            "compressedTextures": 8,
+            "textureMiB": 128.67,
+            "errors": [],
+            "windTime": 7.549699999988058
+          },
+          "meshes": [
+            {
+              "name": "Moonbone sculpted fossil arch",
+              "material": "Moonbone sculpted fossil arch",
+              "count": 1,
+              "visible": true,
+              "triangles": 10837,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone sculpted fossil arch",
+              "material": "Moonbone sculpted fossil arch",
+              "count": 1,
+              "visible": true,
+              "triangles": 10837,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone sculpted fossil arch",
+              "material": "Moonbone sculpted fossil arch",
+              "count": 1,
+              "visible": true,
+              "triangles": 10837,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone punk crypt shrine",
+              "material": "Moonbone punk crypt shrine",
+              "count": 1,
+              "visible": true,
+              "triangles": 11737,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone punk crypt shrine",
+              "material": "Moonbone punk crypt shrine",
+              "count": 1,
+              "visible": true,
+              "triangles": 11737,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone punk crypt shrine",
+              "material": "Moonbone punk crypt shrine",
+              "count": 1,
+              "visible": true,
+              "triangles": 11737,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone punk crypt shrine",
+              "material": "Moonbone punk crypt shrine",
+              "count": 1,
+              "visible": true,
+              "triangles": 11737,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone punk skull monument",
+              "material": "Moonbone punk skull monument",
+              "count": 1,
+              "visible": true,
+              "triangles": 10622,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone punk skull monument",
+              "material": "Moonbone punk skull monument",
+              "count": 1,
+              "visible": true,
+              "triangles": 10622,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone punk skull monument",
+              "material": "Moonbone punk skull monument",
+              "count": 1,
+              "visible": true,
+              "triangles": 10622,
+              "map": true,
+              "normal": true
+            }
+          ]
+        }
+      ]
+    },
+    "full": {
+      "tag": "full",
+      "requests": [
+        {
+          "url": "http://127.0.0.1:5419/moonbone-vault/moonbone-rib-arch.glb",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:5419/moonbone-vault/moonbone-crypt.glb",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:5419/moonbone-vault/moonbone-skull.glb",
+          "status": 200
+        }
+      ],
+      "errors": [],
+      "captures": [
+        {
+          "name": "arrival",
+          "position": [
+            -7,
+            -2.384185793236071e-08,
+            0
+          ],
+          "grounded": true,
+          "state": "ride",
+          "camera": [
+            -7,
+            8.351491391724002,
+            25.820309867674464
+          ],
+          "scenery": {
+            "components": 50,
+            "placements": 533,
+            "ready": 533,
+            "skipped": 0,
+            "draws": 58,
+            "triangles": 538628,
+            "allLodTriangles": 545228,
+            "cells": 58,
+            "residentCells": 58,
+            "pendingCells": 0,
+            "retryingCells": 0,
+            "compressedTextures": 8,
+            "textureMiB": 128.67,
+            "errors": [],
+            "windTime": 2.1665666666428223
+          },
+          "meshes": [
+            {
+              "name": "Moonbone sculpted fossil arch",
+              "material": "Moonbone sculpted fossil arch",
+              "count": 1,
+              "visible": true,
+              "triangles": 10837,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone sculpted fossil arch",
+              "material": "Moonbone sculpted fossil arch",
+              "count": 1,
+              "visible": true,
+              "triangles": 10837,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone sculpted fossil arch",
+              "material": "Moonbone sculpted fossil arch",
+              "count": 1,
+              "visible": true,
+              "triangles": 10837,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone punk crypt shrine",
+              "material": "Moonbone punk crypt shrine",
+              "count": 1,
+              "visible": true,
+              "triangles": 11737,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone punk crypt shrine",
+              "material": "Moonbone punk crypt shrine",
+              "count": 1,
+              "visible": true,
+              "triangles": 11737,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone punk crypt shrine",
+              "material": "Moonbone punk crypt shrine",
+              "count": 1,
+              "visible": true,
+              "triangles": 11737,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone punk crypt shrine",
+              "material": "Moonbone punk crypt shrine",
+              "count": 1,
+              "visible": true,
+              "triangles": 11737,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone punk skull monument",
+              "material": "Moonbone punk skull monument",
+              "count": 1,
+              "visible": true,
+              "triangles": 10622,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone punk skull monument",
+              "material": "Moonbone punk skull monument",
+              "count": 1,
+              "visible": true,
+              "triangles": 10622,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone punk skull monument",
+              "material": "Moonbone punk skull monument",
+              "count": 1,
+              "visible": true,
+              "triangles": 10622,
+              "map": true,
+              "normal": true
+            }
+          ]
+        },
+        {
+          "name": "gallery",
+          "position": [
+            30,
+            5.999999976158142,
+            0
+          ],
+          "grounded": true,
+          "state": "ride",
+          "camera": [
+            30,
+            14.35149114233785,
+            25.820309867674464
+          ],
+          "scenery": {
+            "components": 50,
+            "placements": 533,
+            "ready": 533,
+            "skipped": 0,
+            "draws": 58,
+            "triangles": 538628,
+            "allLodTriangles": 545228,
+            "cells": 58,
+            "residentCells": 58,
+            "pendingCells": 0,
+            "retryingCells": 0,
+            "compressedTextures": 8,
+            "textureMiB": 128.67,
+            "errors": [],
+            "windTime": 3.9832333333094825
+          },
+          "meshes": [
+            {
+              "name": "Moonbone sculpted fossil arch",
+              "material": "Moonbone sculpted fossil arch",
+              "count": 1,
+              "visible": true,
+              "triangles": 10837,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone sculpted fossil arch",
+              "material": "Moonbone sculpted fossil arch",
+              "count": 1,
+              "visible": true,
+              "triangles": 10837,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone sculpted fossil arch",
+              "material": "Moonbone sculpted fossil arch",
+              "count": 1,
+              "visible": true,
+              "triangles": 10837,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone punk crypt shrine",
+              "material": "Moonbone punk crypt shrine",
+              "count": 1,
+              "visible": true,
+              "triangles": 11737,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone punk crypt shrine",
+              "material": "Moonbone punk crypt shrine",
+              "count": 1,
+              "visible": true,
+              "triangles": 11737,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone punk crypt shrine",
+              "material": "Moonbone punk crypt shrine",
+              "count": 1,
+              "visible": true,
+              "triangles": 11737,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone punk crypt shrine",
+              "material": "Moonbone punk crypt shrine",
+              "count": 1,
+              "visible": true,
+              "triangles": 11737,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone punk skull monument",
+              "material": "Moonbone punk skull monument",
+              "count": 1,
+              "visible": true,
+              "triangles": 10622,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone punk skull monument",
+              "material": "Moonbone punk skull monument",
+              "count": 1,
+              "visible": true,
+              "triangles": 10622,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone punk skull monument",
+              "material": "Moonbone punk skull monument",
+              "count": 1,
+              "visible": true,
+              "triangles": 10622,
+              "map": true,
+              "normal": true
+            }
+          ]
+        },
+        {
+          "name": "far-vault",
+          "position": [
+            61.5,
+            5.999999976158142,
+            0
+          ],
+          "grounded": true,
+          "state": "ride",
+          "camera": [
+            61.5,
+            14.35149114233785,
+            25.820309867674464
+          ],
+          "scenery": {
+            "components": 50,
+            "placements": 533,
+            "ready": 533,
+            "skipped": 0,
+            "draws": 58,
+            "triangles": 538628,
+            "allLodTriangles": 545228,
+            "cells": 58,
+            "residentCells": 58,
+            "pendingCells": 0,
+            "retryingCells": 0,
+            "compressedTextures": 8,
+            "textureMiB": 128.67,
+            "errors": [],
+            "windTime": 5.833233333309476
+          },
+          "meshes": [
+            {
+              "name": "Moonbone sculpted fossil arch",
+              "material": "Moonbone sculpted fossil arch",
+              "count": 1,
+              "visible": true,
+              "triangles": 10837,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone sculpted fossil arch",
+              "material": "Moonbone sculpted fossil arch",
+              "count": 1,
+              "visible": true,
+              "triangles": 10837,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone sculpted fossil arch",
+              "material": "Moonbone sculpted fossil arch",
+              "count": 1,
+              "visible": true,
+              "triangles": 10837,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone punk crypt shrine",
+              "material": "Moonbone punk crypt shrine",
+              "count": 1,
+              "visible": true,
+              "triangles": 11737,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone punk crypt shrine",
+              "material": "Moonbone punk crypt shrine",
+              "count": 1,
+              "visible": true,
+              "triangles": 11737,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone punk crypt shrine",
+              "material": "Moonbone punk crypt shrine",
+              "count": 1,
+              "visible": true,
+              "triangles": 11737,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone punk crypt shrine",
+              "material": "Moonbone punk crypt shrine",
+              "count": 1,
+              "visible": true,
+              "triangles": 11737,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone punk skull monument",
+              "material": "Moonbone punk skull monument",
+              "count": 1,
+              "visible": true,
+              "triangles": 10622,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone punk skull monument",
+              "material": "Moonbone punk skull monument",
+              "count": 1,
+              "visible": true,
+              "triangles": 10622,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone punk skull monument",
+              "material": "Moonbone punk skull monument",
+              "count": 1,
+              "visible": true,
+              "triangles": 10622,
+              "map": true,
+              "normal": true
+            }
+          ]
+        },
+        {
+          "name": "return",
+          "position": [
+            87,
+            -2.384185793236071e-08,
+            0
+          ],
+          "grounded": true,
+          "state": "ride",
+          "camera": [
+            87,
+            8.351491142337851,
+            25.820309867674464
+          ],
+          "scenery": {
+            "components": 50,
+            "placements": 533,
+            "ready": 533,
+            "skipped": 0,
+            "draws": 58,
+            "triangles": 538628,
+            "allLodTriangles": 545228,
+            "cells": 58,
+            "residentCells": 58,
+            "pendingCells": 0,
+            "retryingCells": 0,
+            "compressedTextures": 8,
+            "textureMiB": 128.67,
+            "errors": [],
+            "windTime": 7.666566666642803
+          },
+          "meshes": [
+            {
+              "name": "Moonbone sculpted fossil arch",
+              "material": "Moonbone sculpted fossil arch",
+              "count": 1,
+              "visible": true,
+              "triangles": 10837,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone sculpted fossil arch",
+              "material": "Moonbone sculpted fossil arch",
+              "count": 1,
+              "visible": true,
+              "triangles": 10837,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone sculpted fossil arch",
+              "material": "Moonbone sculpted fossil arch",
+              "count": 1,
+              "visible": true,
+              "triangles": 10837,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone punk crypt shrine",
+              "material": "Moonbone punk crypt shrine",
+              "count": 1,
+              "visible": true,
+              "triangles": 11737,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone punk crypt shrine",
+              "material": "Moonbone punk crypt shrine",
+              "count": 1,
+              "visible": true,
+              "triangles": 11737,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone punk crypt shrine",
+              "material": "Moonbone punk crypt shrine",
+              "count": 1,
+              "visible": true,
+              "triangles": 11737,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone punk crypt shrine",
+              "material": "Moonbone punk crypt shrine",
+              "count": 1,
+              "visible": true,
+              "triangles": 11737,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone punk skull monument",
+              "material": "Moonbone punk skull monument",
+              "count": 1,
+              "visible": true,
+              "triangles": 10622,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone punk skull monument",
+              "material": "Moonbone punk skull monument",
+              "count": 1,
+              "visible": true,
+              "triangles": 10622,
+              "map": true,
+              "normal": true
+            },
+            {
+              "name": "Moonbone punk skull monument",
+              "material": "Moonbone punk skull monument",
+              "count": 1,
+              "visible": true,
+              "triangles": 10622,
+              "map": true,
+              "normal": true
+            }
+          ]
+        }
+      ]
+    },
+    "scope": "Supported source spawn and three native-respawn visual fixtures; continuous full-course input journey validated separately in the native simulation."
+  },
+  "checks": {
+    "checkLevels": "passed",
+    "rollingBonesBonus": "passed",
+    "sourcePhysicsComparison": "passed",
+    "sourceMeshComparison": "passed",
+    "build": "passed",
+    "checkAll": "not run",
+    "finalRun": [
+      {
+        "task": "tools/test-rolling-bones-bonus.mjs",
+        "exitCode": 0,
+        "seconds": 10.4,
+        "log": "/private/tmp/moonbone-meshy-review/tools_test-rolling-bones-bonus.log"
+      },
+      {
+        "task": "build",
+        "exitCode": 0,
+        "seconds": 55.02,
+        "log": "/private/tmp/moonbone-meshy-review/build.log"
+      }
+    ]
+  },
+  "screenshots": [
+    "docs/art-reviews/moonbone-meshy/arrival.png",
+    "docs/art-reviews/moonbone-meshy/gallery.png",
+    "docs/art-reviews/moonbone-meshy/far-vault.png",
+    "docs/art-reviews/moonbone-meshy/return.png"
+  ]
+}

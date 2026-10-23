@@ -1,0 +1,123 @@
+{
+  "schemaVersion": 1,
+  "provider": "Meshy",
+  "model": "meshy-t2",
+  "modelType": "smart-topology",
+  "budgetCredits": 50,
+  "authorization": "User authorized up to 50 Meshy credits for Moonbone Vault props; Crash 4 / punk / 90s art direction. Three textured jobs at 15 credits each. No credit purchases.",
+  "tasks": {
+    "moonbone-skull": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "545e6e42-b2a4-4cc3-89dd-0f030129cc79",
+      "createdAt": "2026-10-23T20:11:01.671387+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/moonbone-assets/references/moonbone-skull.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 10000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "4k",
+        "target_formats": [
+          "glb"
+        ],
+        "texture_prompt": "Match the reference exactly: playful chunky cartoon platform-game prop, hand-painted broad color blocks, warm creamy ivory, indigo and lavender painted shadows, cobalt stone, bold cyan and hot-magenta punk paint. Preserve exaggerated asymmetry, thick sculpted bevels, big deliberate chips and clean readable silhouette. Matte finish, no realistic gritty noise or fine cracks. Preserve the crystal eyes or shrine relic where present. No floor, background, pedestal, extra props or moon ornament."
+      },
+      "balanceBefore": 716,
+      "reference": "tools/moonbone-assets/references/moonbone-skull.png",
+      "referenceSha256": "edc60a41095246a240487fb347dd24ef0acf96f392dde81d5d345d9d3e9b36ac",
+      "id": "01a16a63-6f62-7764-93a5-715f87aff462",
+      "checkedAt": "2026-10-23T20:13:29.334215+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1792786323482,
+      "expiresAt": 1793045523482,
+      "downloads": [
+        {
+          "path": ".img2threejs/moonbone/moonbone-skull/downloads/model.glb",
+          "bytes": 16044208,
+          "sha256": "8f5f15c9a150ee321ee1bb08487d56f8badc68eac41e696c8f2cb5465d02a80f"
+        }
+      ]
+    },
+    "moonbone-rib-arch": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "fb1192af-5328-4800-9d42-8f1fa415aaf3",
+      "createdAt": "2026-10-23T20:11:24.061855+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/moonbone-assets/references/moonbone-rib-arch.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 10000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "4k",
+        "target_formats": [
+          "glb"
+        ],
+        "texture_prompt": "Match the reference exactly: playful chunky cartoon platform-game prop, hand-painted broad color blocks, warm creamy ivory, indigo and lavender painted shadows, cobalt stone, bold cyan and hot-magenta punk paint. Preserve exaggerated asymmetry, thick sculpted bevels, big deliberate chips and clean readable silhouette. Matte finish, no realistic gritty noise or fine cracks. Preserve the crystal eyes or shrine relic where present. No floor, background, pedestal, extra props or moon ornament."
+      },
+      "balanceBefore": 701,
+      "reference": "tools/moonbone-assets/references/moonbone-rib-arch.png",
+      "referenceSha256": "d9f58e0921a17a3cb323defd0b7aa6406dc344e5339f67f0f859e8d782439efe",
+      "id": "01a16a63-c6db-718e-9ee9-8ae8c6d669cb",
+      "checkedAt": "2026-10-23T20:13:52.714278+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1792786331673,
+      "expiresAt": 1793045531673,
+      "downloads": [
+        {
+          "path": ".img2threejs/moonbone/moonbone-rib-arch/downloads/model.glb",
+          "bytes": 17503172,
+          "sha256": "bd31ed00efe3382c64c6ec6016c9f88f3582fb71b1ff9e16f26917e287061e3a"
+        }
+      ]
+    },
+    "moonbone-crypt": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "3e0147ee-ba26-4444-80a2-a2a7bf070110",
+      "createdAt": "2026-10-23T20:11:41.537993+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/moonbone-assets/references/moonbone-crypt.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 12000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "4k",
+        "target_formats": [
+          "glb"
+        ],
+        "texture_prompt": "Match the reference exactly: playful chunky cartoon platform-game prop, hand-painted broad color blocks, warm creamy ivory, indigo and lavender painted shadows, cobalt stone, bold cyan and hot-magenta punk paint. Preserve exaggerated asymmetry, thick sculpted bevels, big deliberate chips and clean readable silhouette. Matte finish, no realistic gritty noise or fine cracks. Preserve the crystal eyes or shrine relic where present. No floor, background, pedestal, extra props or moon ornament."
+      },
+      "balanceBefore": 686,
+      "reference": "tools/moonbone-assets/references/moonbone-crypt.png",
+      "referenceSha256": "fccbb04190622f9f2b8c11ad70a7c8c28c8faba79c0d639961e99a9cd284f182",
+      "id": "01a16a64-0afd-7162-a6d2-9622050f56bb",
+      "checkedAt": "2026-10-23T20:14:22.759207+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1792786370595,
+      "expiresAt": 1793045570595,
+      "downloads": [
+        {
+          "path": ".img2threejs/moonbone/moonbone-crypt/downloads/model.glb",
+          "bytes": 17527028,
+          "sha256": "d80a589c56fc4863af7145cfd847075d8a00631123c5f1074cd8185246351a44"
+        }
+      ]
+    }
+  },
+  "startingBalance": 716,
+  "endingBalance": 671,
+  "spentCredits": 45,
+  "pricingVerified": "2026-10-24 Pacific/Auckland",
+  "pricingSource": "https://docs.meshy.ai/en/api/pricing"
+}

@@ -1,0 +1,106 @@
+{
+  "budgetCredits": 50,
+  "spentCredits": 45,
+  "artDirection": "Crash 4 / 90s skate-punk nighttime ossuary",
+  "assets": [
+    {
+      "name": "moonbone-skull",
+      "provider": "Meshy",
+      "taskId": "01a16a63-6f62-7764-93a5-715f87aff462",
+      "credits": 15,
+      "reference": "tools/moonbone-assets/references/moonbone-skull.png",
+      "referenceSha256": "edc60a41095246a240487fb347dd24ef0acf96f392dde81d5d345d9d3e9b36ac",
+      "sourceSha256": "8f5f15c9a150ee321ee1bb08487d56f8badc68eac41e696c8f2cb5465d02a80f",
+      "sha256": "108ad8fe4e4d135203db86fe3616342dd9c55399fa03be09d3ad985b7ba5b45b",
+      "bytes": 1949572,
+      "triangles": 10622,
+      "images": [
+        {
+          "index": 0,
+          "width": 2048,
+          "height": 2048,
+          "bytes": 1304794
+        },
+        {
+          "index": 1,
+          "width": 1024,
+          "height": 1024,
+          "bytes": 138909
+        },
+        {
+          "index": 2,
+          "width": 1024,
+          "height": 1024,
+          "bytes": 107980
+        }
+      ],
+      "geometry": "Original generated geometry, normals and UVs preserved; JPEG atlas encoding only."
+    },
+    {
+      "name": "moonbone-rib-arch",
+      "provider": "Meshy",
+      "taskId": "01a16a63-c6db-718e-9ee9-8ae8c6d669cb",
+      "credits": 15,
+      "reference": "tools/moonbone-assets/references/moonbone-rib-arch.png",
+      "referenceSha256": "d9f58e0921a17a3cb323defd0b7aa6406dc344e5339f67f0f859e8d782439efe",
+      "sourceSha256": "bd31ed00efe3382c64c6ec6016c9f88f3582fb71b1ff9e16f26917e287061e3a",
+      "sha256": "90d81e27a4e99a4c3097a4182160baeea11e0fe260665370386961c68c40cf27",
+      "bytes": 2137616,
+      "triangles": 10837,
+      "images": [
+        {
+          "index": 0,
+          "width": 2048,
+          "height": 2048,
+          "bytes": 1473440
+        },
+        {
+          "index": 1,
+          "width": 1024,
+          "height": 1024,
+          "bytes": 151671
+        },
+        {
+          "index": 2,
+          "width": 1024,
+          "height": 1024,
+          "bytes": 114005
+        }
+      ],
+      "geometry": "Original generated geometry, normals and UVs preserved; JPEG atlas encoding only."
+    },
+    {
+      "name": "moonbone-crypt",
+      "provider": "Meshy",
+      "taskId": "01a16a64-0afd-7162-a6d2-9622050f56bb",
+      "credits": 15,
+      "reference": "tools/moonbone-assets/references/moonbone-crypt.png",
+      "referenceSha256": "fccbb04190622f9f2b8c11ad70a7c8c28c8faba79c0d639961e99a9cd284f182",
+      "sourceSha256": "d80a589c56fc4863af7145cfd847075d8a00631123c5f1074cd8185246351a44",
+      "sha256": "0598af4d1c2e06927710395e3d847196951a4f0afbda9605ca7df91ac55c8b18",
+      "bytes": 2222768,
+      "triangles": 11737,
+      "images": [
+        {
+          "index": 0,
+          "width": 2048,
+          "height": 2048,
+          "bytes": 1469586
+        },
+        {
+          "index": 1,
+          "width": 1024,
+          "height": 1024,
+          "bytes": 179805
+        },
+        {
+          "index": 2,
+          "width": 1024,
+          "height": 1024,
+          "bytes": 109633
+        }
+      ],
+      "geometry": "Original generated geometry, normals and UVs preserved; JPEG atlas encoding only."
+    }
+  ]
+}

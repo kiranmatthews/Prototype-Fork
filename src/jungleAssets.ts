@@ -9,6 +9,7 @@ import type { PlanarShadowOccluder } from './planarShadowOcclusion';
 import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 import { addCarlisleMaterialLook } from "./carlislePresentation";
 import { CARLISLE_ASSETS } from "./carlisleAssets";
+import { MOONBONE_ASSETS } from './moonboneAssets';
 import { CUSTARD_ASSETS } from "./custardAssets";
 import { HAZARD_ASSETS } from "./hazardAssets";
 import { COASTAL_TOWN_ASSETS } from './coastalTownAssets';
@@ -109,6 +110,7 @@ const ASSETS = {
   ...COUNTRY_CLUB_ASSETS,
   ...SUNNY_BEACH_ASSETS,
   ...CARLISLE_ASSETS,
+  ...MOONBONE_ASSETS,
   ...CUSTARD_ASSETS,
   ...HAZARD_ASSETS,
   ...JUNGLE_MODULES,
