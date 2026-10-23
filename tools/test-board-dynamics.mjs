@@ -34,6 +34,7 @@ try {
   const roof = new THREE.Mesh(new THREE.BoxGeometry(30, .2, 30)); roof.position.y = 1.4; roof.updateMatrixWorld(true);
   const ramp = new THREE.Mesh(new THREE.BoxGeometry(20, .2, 16)); ramp.rotation.x = -.25; ramp.position.set(0, 1.85, 0); ramp.updateMatrixWorld(true);
   const mildRamp = new THREE.Mesh(new THREE.BoxGeometry(60, .2, 60)); mildRamp.rotation.x = -.03; mildRamp.position.y = .9; mildRamp.updateMatrixWorld(true);
+  const seamFloor = new THREE.Mesh(new THREE.BoxGeometry(24, 1, 65)); seamFloor.position.set(55, -.5, -26); seamFloor.updateMatrixWorld(true);
   const wall = new THREE.Box3(new THREE.Vector3(-12, 0, -4.2), new THREE.Vector3(12, 4, -4));
   const cases = [
     { name:'wheel coast', position:[0,.008,0], velocity:[0,0,-12], angular:[0,0,0], ground:[floor] },
@@ -61,6 +62,7 @@ try {
     const solidWalls=[];
     if(spec.useWorldSolids){
       world.worldSolids=new WorldSolids();
+      for(const mesh of world.groundMeshes)world.worldSolids.add(mesh);
       for(const bounds of world.walls){
         const size=bounds.getSize(new THREE.Vector3()),mesh=new THREE.Mesh(new THREE.BoxGeometry(size.x,size.y,size.z));
         bounds.getCenter(mesh.position);mesh.updateMatrixWorld(true);
@@ -99,12 +101,14 @@ try {
       if(spec.walls&&spec.name!=='landing on barrier top')check(minZ> -4.05,`${spec.name}: board did not cross wall`);
       if(spec.name==='wheel coast'||spec.name==='sideways skid')check(events.length===0,`${spec.name}: quiet ground contact`);
       if(spec.name==='landing on barrier top')check(row.position[1]>3.99&&row.position[1]<4.1,`${spec.name}: supported by actual wall top`);
+      if(spec.quietStraight){check(events.length===0,'solid floor diagonal has no impact sounds');check(Math.abs(row.position[0]-spec.position[0])<.001,'solid floor diagonal does not deflect a rolling board');check(spec.position[2]-row.position[2]>30,'solid floor seam preserves the rolling distance');}
       if(spec.name==='ramp to flat')check(row.position[2]< -7,`${spec.name}: traversed downhill ramp`);
     }
     return row;
   }
   for(let i=0;i<4;i++)run(cases[3],1/60,true);
   for(const spec of cases)rows.push(run(spec));
+  rows.push(run({name:'quiet solid floor diagonal',position:[54.5,.008,-12],velocity:[0,0,-12],angular:[0,0,0],ground:[seamFloor],useWorldSolids:true,quietStraight:true}));
   // The merged production world supplies swept mesh contacts, while small
   // review worlds still use wall boxes. Verify the new tumbling solver in both.
   for(const spec of cases.filter(c=>c.walls&&c.name!=='landing on barrier top'))

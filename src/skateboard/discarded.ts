@@ -335,7 +335,9 @@ export class DiscardedBoards {
         if (world.worldSolids?.enabled) {
             this.hardResolved.copy(this.center);
             if (world.worldSolids.resolve(this.previous, this.hardResolved, {
-                low: 0, high: 0, radius: board.halfSize.length(), ignoreGround: true,
+                // The floor ray owns support. Skip upward faces before their
+                // triangle edges can masquerade as sideways hard contacts.
+                low: 0, high: 0, radius: board.halfSize.length(), ignoreGround: true, groundStep: 0,
                 supportRadius: normal => this.supportRadius(board, normal),
             }, this.hardContact)) {
                 this.center.copy(this.hardResolved);

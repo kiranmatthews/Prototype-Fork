@@ -1,0 +1,487 @@
+{
+  "date": "2026-10-23T21:49:49.558330+13:00",
+  "scope": "Merge all current level, ragdoll, enemy, map and gameplay work locally",
+  "sourceBranches": {
+    "codex/offline-integration": "f3f8abf4e10eb2ff3c6f45d40924f1776feb5fc0",
+    "codex/fluid-intact-bails": "81eb00f0a64e91a0d33cdc1f162279a8d4cfef6f",
+    "codex/mall-recreation": "ade9f836af9e94fec2eba4a5a81d5e19511a3ea1",
+    "codex/school-miami": "b68520e6d36847d50168df17896bdc97f041d103",
+    "codex/warehouse-reference": "92bd0cd72a08c30658520f8440c34e334a56a5f7",
+    "codex/kona-ps1": "c9c78bb2c5840401f575072391759df88a4b8be2"
+  },
+  "preservationSnapshot": "a4ef00bc8333f2a1f3d68cb9b306745d3d9b5d42",
+  "workspaceAudit": {
+    "changesSincePreviousSnapshot": 593,
+    "coveredByFeatureBranches": 593,
+    "unmatchedPaths": 0,
+    "primaryChangedDuringMerge": false,
+    "sharedFilesReviewed": 6
+  },
+  "mergeResolutions": [
+    "Preserve current swimming, skating overdrive, ice, grind transfers and shared collisions alongside scoped reference controls.",
+    "Keep original warehouse, Rooftop Relay, reconstructed Warehouse, School, Mall and Kona registrations.",
+    "Retain current world solid contacts in discarded-board substeps and ignore upward floor triangles before edge-contact resolution.",
+    "Give the School source review an explicit empty favicon to avoid missing-resource errors."
+  ],
+  "movementTuningMatchesOfflineIntegration": true,
+  "checks": [
+    {
+      "task": "build",
+      "exitCode": 0,
+      "seconds": 51.03
+    },
+    {
+      "task": "check:bail-recovery",
+      "exitCode": 0,
+      "seconds": 36.46
+    },
+    {
+      "task": "tools/test-bail-contact-collapse.mjs",
+      "exitCode": 0,
+      "seconds": 0.48
+    },
+    {
+      "task": "tools/test-bail-recovery-interruption.mjs",
+      "exitCode": 0,
+      "seconds": 45.47
+    },
+    {
+      "task": "tools/test-bail-recovery-motion.mjs",
+      "exitCode": 0,
+      "seconds": 9.72
+    },
+    {
+      "task": "tools/test-board-dynamics.mjs",
+      "exitCode": 0,
+      "seconds": 1.2
+    },
+    {
+      "task": "tools/test-crab-carcass.mjs",
+      "exitCode": 0,
+      "seconds": 8.01
+    },
+    {
+      "task": "tools/test-turtle-shell.mjs",
+      "exitCode": 0,
+      "seconds": 8.21
+    },
+    {
+      "task": "tools/test-skate-overdrive.mjs",
+      "exitCode": 0,
+      "seconds": 7.93
+    },
+    {
+      "task": "tools/test-six-island-campaign.mjs",
+      "exitCode": 0,
+      "seconds": 0.29
+    },
+    {
+      "task": "tools/test-grind-ollie-intent.mjs",
+      "exitCode": 0,
+      "seconds": 14.79
+    },
+    {
+      "task": "check:levels",
+      "exitCode": 0,
+      "seconds": 274.53
+    },
+    {
+      "task": "tools/test-warehouse-surfaces.mjs",
+      "exitCode": 0,
+      "seconds": 9.14
+    },
+    {
+      "task": "tools/test-kona-flow.mjs",
+      "exitCode": 0,
+      "seconds": 14.01
+    },
+    {
+      "task": "tools/test-school-gym-entry.mjs",
+      "exitCode": 0,
+      "seconds": 10.61
+    },
+    {
+      "task": "tools/test-mall-source-boxes.mjs",
+      "exitCode": 0,
+      "seconds": 14.92
+    },
+    {
+      "task": "tools/test-reference-rail-capture.mjs",
+      "exitCode": 0,
+      "seconds": 7.98
+    },
+    {
+      "task": "tools/test-school-source.mjs",
+      "exitCode": 0,
+      "seconds": 38.75
+    }
+  ],
+  "browser": {
+    "supportedLiteSpawns": [
+      {
+        "kind": "level",
+        "id": "mall",
+        "name": "Mall \u00b7 New York",
+        "position": [
+          0,
+          155.03604125976562,
+          0
+        ],
+        "grounded": true,
+        "support": true,
+        "render": {
+          "frame": 133,
+          "calls": 102,
+          "triangles": 86941,
+          "points": 0,
+          "lines": 0
+        }
+      },
+      {
+        "kind": "level",
+        "id": "school-miami",
+        "name": "School \u00b7 Miami",
+        "position": [
+          1,
+          6.800000190734863,
+          0
+        ],
+        "grounded": true,
+        "support": true,
+        "render": {
+          "frame": 131,
+          "calls": 149,
+          "triangles": 130668,
+          "points": 0,
+          "lines": 0
+        }
+      },
+      {
+        "kind": "level",
+        "id": "warehouse-reference",
+        "name": "Warehouse \u00b7 Reference",
+        "position": [
+          12.600000000000001,
+          9.449999809265137,
+          36.540000000000006
+        ],
+        "grounded": true,
+        "support": true,
+        "render": {
+          "frame": 144,
+          "calls": 262,
+          "triangles": 100147,
+          "points": 0,
+          "lines": 0
+        }
+      },
+      {
+        "kind": "level",
+        "id": "kona",
+        "name": "Kona \u00b7 PS1",
+        "position": [
+          -72.5,
+          9.066611289978027,
+          -55
+        ],
+        "grounded": true,
+        "support": true,
+        "render": {
+          "frame": 139,
+          "calls": 152,
+          "triangles": 105125,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    ],
+    "ragdollAndCrab": {
+      "results": [
+        {
+          "kind": "bails",
+          "lite": true,
+          "cases": 20,
+          "failures": []
+        },
+        {
+          "kind": "boards",
+          "lite": true,
+          "cases": 5,
+          "failures": []
+        },
+        {
+          "kind": "bails",
+          "lite": false,
+          "cases": 20,
+          "failures": []
+        },
+        {
+          "kind": "boards",
+          "lite": false,
+          "cases": 5,
+          "failures": []
+        },
+        {
+          "kind": "crab",
+          "stomp": {
+            "alive": false,
+            "carcass": true,
+            "normalBodyVisible": false,
+            "model": true,
+            "bounce": 14
+          },
+          "fling": {
+            "state": "crab-carcass-flung",
+            "carcass": false,
+            "velocity": [
+              42,
+              10,
+              0
+            ]
+          }
+        }
+      ],
+      "errors": []
+    },
+    "konaFull": {
+      "reports": [
+        {
+          "kind": "vert",
+          "frames": 651,
+          "done": true,
+          "bails": 0,
+          "deathsBefore": 0,
+          "livesBefore": 4,
+          "airFrames": 407,
+          "grindFrames": 0,
+          "maxY": 15.039352590188425,
+          "heading": [
+            1,
+            0,
+            0
+          ],
+          "aligned": true,
+          "side": 1,
+          "airs": 4,
+          "released": false,
+          "transferred": false,
+          "position": [
+            -10.148030318188956,
+            0.9447790627608854,
+            110.81099999999999
+          ],
+          "state": "ride",
+          "grounded": true,
+          "deaths": 0,
+          "lives": 4,
+          "mounted": true,
+          "takeoffFrom": "Spinal grooves",
+          "inAir": false
+        },
+        {
+          "kind": "jump",
+          "frames": 156,
+          "done": true,
+          "bails": 0,
+          "deathsBefore": 0,
+          "livesBefore": 4,
+          "airFrames": 69,
+          "grindFrames": 0,
+          "maxY": 4.2198620501369914,
+          "dir": [
+            0,
+            0,
+            1
+          ],
+          "mid": [
+            72.25,
+            0,
+            118.75
+          ],
+          "end": [
+            72.25,
+            0.10847882807227446,
+            136.25
+          ],
+          "streetPhase": 2,
+          "streetDeckY": 1.8888610000000001,
+          "heading": [
+            0,
+            0,
+            1
+          ],
+          "aligned": true,
+          "lateral": 0,
+          "position": [
+            72.25,
+            1.8888609409332275,
+            124.34913395509358
+          ],
+          "state": "ride",
+          "grounded": true,
+          "deaths": 0,
+          "lives": 4,
+          "mounted": true,
+          "firstReleaseAt": 84,
+          "takeoffFrom": "Street / north kicker",
+          "lipLandingAt": 116,
+          "landedOn": "Street / south catcher"
+        },
+        {
+          "kind": "rail",
+          "frames": 188,
+          "done": true,
+          "bails": 0,
+          "deathsBefore": 0,
+          "livesBefore": 4,
+          "airFrames": 125,
+          "grindFrames": 103,
+          "maxY": 1.4765776666666666,
+          "a": [
+            69.8555,
+            1.2361109999999997,
+            155.211
+          ],
+          "b": [
+            83.72225000000002,
+            1.2361109999999997,
+            155.211
+          ],
+          "dir": [
+            1,
+            0,
+            0
+          ],
+          "released": true,
+          "heading": [
+            1,
+            0,
+            0
+          ],
+          "aligned": true,
+          "position": [
+            86.82940973392462,
+            0.00011100000119768083,
+            155.211
+          ],
+          "state": "ride",
+          "grounded": true,
+          "deaths": 0,
+          "lives": 4,
+          "mounted": true,
+          "takeoffFrom": "Kona / concrete and architecture"
+        },
+        {
+          "kind": "recovery",
+          "frames": 226,
+          "done": true,
+          "bails": 133,
+          "deathsBefore": 0,
+          "livesBefore": 4,
+          "airFrames": 225,
+          "grindFrames": 0,
+          "maxY": 4,
+          "checkpoint": 4,
+          "returnPoint": [
+            45,
+            0.10011100000119769,
+            147.5
+          ],
+          "heading": [
+            1,
+            0,
+            0
+          ],
+          "aligned": true,
+          "died": true,
+          "position": [
+            45,
+            0.10011100000119769,
+            147.5
+          ],
+          "state": "ride",
+          "grounded": true,
+          "deaths": 0,
+          "lives": 3,
+          "mounted": true
+        },
+        {
+          "kind": "finish",
+          "frames": 75,
+          "done": true,
+          "bails": 0,
+          "deathsBefore": 0,
+          "livesBefore": 3,
+          "airFrames": 0,
+          "grindFrames": 0,
+          "maxY": 6.7822776691501945,
+          "gate": [
+            -46.25,
+            6.055611000000001,
+            -47.5
+          ],
+          "heading": [
+            0,
+            0,
+            -1
+          ],
+          "aligned": true,
+          "position": [
+            -46.25,
+            6.7822776691501945,
+            -46.01093735623889
+          ],
+          "state": "finished",
+          "grounded": true,
+          "deaths": 0,
+          "lives": 3,
+          "mounted": true
+        }
+      ],
+      "errors": []
+    },
+    "schoolSourceFull": {
+      "cases": [
+        {
+          "kind": "gym-entries",
+          "frames": 384,
+          "passed": [
+            "Smoothed west gym entry and return",
+            "Smoothed east gym entry and return"
+          ],
+          "failure": null
+        },
+        {
+          "kind": "rail-approach",
+          "frames": 621,
+          "passed": [
+            "Original courtyard ollie onto rail 163 and rollout (planter)",
+            "Original courtyard ollie onto rail 163 and rollout (ground)"
+          ],
+          "failure": null
+        },
+        {
+          "kind": "roof-drop",
+          "frames": 213,
+          "passed": [
+            "Original roof drop into lower courtyard"
+          ],
+          "failure": null
+        }
+      ],
+      "errors": []
+    }
+  },
+  "delivery": {
+    "localOnly": true,
+    "pushed": false,
+    "deployed": false,
+    "checkAllRun": false
+  },
+  "notes": [
+    "The existing 2x School campus remains the normal entry; the measured-source School is retained through its dedicated local preview server.",
+    "Node and the existing local dependencies run the package build/check scripts directly because npm is absent from the host PATH.",
+    "Headless level checks emit expected mocked-asset fallback warnings; the real-browser runs have no console errors."
+  ],
+  "buildVersion": "801ffc56e03bc331d832"
+}
