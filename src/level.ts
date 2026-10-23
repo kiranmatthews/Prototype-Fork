@@ -785,6 +785,7 @@ export interface CustomComponent {
   widths?: number[]; // woodpath: per-node deck width; absent entries use w
   scaffold?: boolean; // woodpath: bamboo posts/braces/handrails beneath and beside the deck
   supports?: boolean; // woodpath: generate terrain-reaching/fixed-depth support posts (default follows scaffold)
+  coping?: boolean; // rail: flush lip, not a freestanding street barrier
   rails?: boolean; // woodpath: handrails; vertramp: automatic coping rails (default true)
   spacing?: number; // woodpath: decorative plank spacing
   baySpacing?: number; // woodpath: distance between bamboo support/X-brace bays
@@ -979,6 +980,7 @@ export interface CustomLevelData {
   v: 1;
   name: string;
   spawn: [number, number, number];
+  startWarpPad?: boolean;
   killY: number;
   /** Source-authored boss, retained by editor copy/export/import. */
   encounter?: 'crab-chief';
@@ -2508,7 +2510,7 @@ const MAX_LEVEL_LABEL_LENGTH = 120;
 const FORBIDDEN_JSON_KEYS = new Set(["__proto__", "prototype", "constructor"]);
 const LEVEL_DATA_KEYS = new Set([
   'encounter',
-  "v", "name", "spawn", "killY", "hudMode", "ledgeAssist", "relicTime",
+  "v", "name", "spawn", "startWarpPad", "killY", "hudMode", "ledgeAssist", "relicTime",
   "medalTimes", "ocean", "unitySand", "shoreFoam", "sky", "jungleAtmosphere", "jungleDepthFade", "jungleStyle", "atmosphere",
   "components", "layers", "groups", "allBalanceCrates", "perfectGrindBoost", "hugeDropBail", "keepPlayFog", "skatepark", "skateReference", "cameraAirLift", "secretComboGem", "cameraLookAhead", "cameraRig",
 ]);
@@ -2517,7 +2519,7 @@ const COMPONENT_DATA_KEYS = new Set([
   "edgeGrinding", "cameraView", "cameraPosition", "cameraTarget", "cameraFov", "cameraAspect", "cameraFollowDistance", "cameraFollowTargetHeight", "cameraIntroDistance", "cameraCutaway", "len", "rise", "w", "yaw", "axis", "travelSign", "travelPhase", "vkind", "arc", "arcSteps", "deck",
   "closed", "bank", "curve", "vert", "lipRise", "outerBank", "depthBias", "shake", "kind", "dkind", "vr", "tn",
   "lit", "berms", "n", "outline", "range", "speed", "foe", "invisible", "solid",
-  "cycle", "phase", "amp", "seed", "scaffold", "supports", "rails", "spacing",
+  "cycle", "phase", "amp", "seed", "scaffold", "supports", "rails", "coping", "spacing",
   "baySpacing", "supportDepth", "supportBaseY", "terrainSupports", "structureStyle",
   "plankPalette", "polePalette", "shoreProfile", "shoreSeaLevel", "shorePhase",
   "trick", "exitYaw", "airOnly", "coverage", "radius", "color", "tex", "dir",
@@ -2747,7 +2749,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
     return null;
   if (source.hudMode !== undefined && source.hudMode !== "bonus" && source.hudMode !== "hub") return null;
   if (source.skateReference !== undefined && (!source.skatepark || !validSkateReference(source.skateReference))) return null;
-  for (const key of ["allBalanceCrates", "perfectGrindBoost", "hugeDropBail", "keepPlayFog", "skatepark", "secretComboGem", "jungleDepthFade"] as const)
+  for (const key of ["allBalanceCrates", "perfectGrindBoost", "hugeDropBail", "keepPlayFog", "skatepark", "secretComboGem", "jungleDepthFade", "startWarpPad"] as const)
     if (source[key] !== undefined && typeof source[key] !== "boolean") return null;
   if (source.cameraLookAhead !== undefined && (typeof source.cameraLookAhead !== "number" ||
       !Number.isFinite(source.cameraLookAhead) || source.cameraLookAhead < 0 || source.cameraLookAhead > 30)) return null;
@@ -3008,6 +3010,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
       return null;
     if (component.gravityTrack !== undefined && (!['mesh','vertramp'].includes(component.t) || component.solid === false || component.loopRadius !== undefined)) return null;
     if (component.skateCamera !== undefined && (!['mesh','vertramp'].includes(component.t) || component.solid === false)) return null;
+    if (component.coping !== undefined && (component.t !== 'rail' || typeof component.coping !== 'boolean')) return null;
     if (component.breakable !== undefined) {
       if (component.t !== 'mesh' || component.solid !== false || component.invisible || component.outline ||
           component.materialStyle || !['glass', 'sign'].includes(component.breakable) || ++breakableCount > 128) return null;
@@ -5624,7 +5627,7 @@ export class Level {
       surface.active=active;
     }
   }
-  private staticSurfaceMaterials=new Map<string,THREE.MeshLambertMaterial|THREE.MeshStandardMaterial>();
+  private staticSurfaceMaterials=new Map<string,THREE.MeshLambertMaterial|THREE.MeshStandardMaterial|THREE.MeshBasicMaterial>();
   private readonly standingWaterClock={value:0};
   private jungleStreamReflections:JungleStreamReflectionOwner|null=null;
   private buildSurfaceMesh(c: CustomComponent, outlineGroups:number[]=[]): void {
@@ -6113,6 +6116,7 @@ export class Level {
             ],
         ),
         invisible: rail.object.children.length === 0 ? true : undefined,
+        ...(rail.coping ? { coping: true } : {}),
         grp: rail.object.userData.captureGroup as number | undefined,
       });
     }
@@ -7314,6 +7318,7 @@ export class Level {
               this.rails.push(rail);
               this.root.add(rail.object);
             }
+            this.rails[this.rails.length-1].coping = c.coping === true;
             if(c.dkind === "citydeck" || c.dkind === "cityutilitypole"){const rail=this.rails[this.rails.length-1];rail.object.traverse(o=>{const mesh=o as THREE.Mesh;if(mesh.isMesh){mesh.geometry.dispose();}});rail.object.clear();rail.object.userData.cityRail=true;rail.object.add(cityRailVisual(rail.points,c.dkind === "cityutilitypole"));}
             if (c.dkind === "nightrockridge") {
               const rail = this.rails[this.rails.length-1];

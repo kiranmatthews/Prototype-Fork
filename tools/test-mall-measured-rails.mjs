@@ -14,8 +14,8 @@ await withBlockworksRuntime(async r=>{
  }
  assert.equal(report.edges,214);
  const fixtures=[
-  {name:'Concourse bench',start:[-11100,314.7586,968.0928],target:[-11529.2539,355.9365,968.0928],direction:[0,0,1],lead:4.5},
-  {name:'First concourse display ledge',start:[-13600,314.7586,349.7578],target:[-13107.0352,355.9365,369.8467],direction:[.04072,0,-.99917],lead:6.5},
+  {name:'Concourse bench',start:[-11100,314.7586,968.0928],target:[-11529.2539,355.9365,968.0928],direction:[0,0,1],lead:4.5,exitSide:1},
+  {name:'First concourse display ledge',start:[-13600,314.7586,349.7578],target:[-13107.0352,355.9365,369.8467],direction:[.04072,0,-.99917],lead:6.5,exitSide:0},
   {name:'Up-escalator inside handrail',start:[-13300,314.7586,10],target:[-13107.0352,380.833,-9.0332],direction:[-.01652,0,-.99986],lead:3,exitSide:1},
   {name:'Crossrail low arch',start:[5500,-1467,5780],target:[4801,-1466.5,5910.4],direction:[.18229,0,.98324],lead:5,exitSide:-1},
  ];
@@ -32,7 +32,7 @@ await withBlockworksRuntime(async r=>{
    if(e.grindFrames>=24||e.grindFrames>0&&!grinding)exited=true;
    const steer=(heading.x*-p.axisF.z+heading.z*p.axisF.x)*3;
    const moveX=grinding?(e.grindFrames>=22?(f.exitSide??0):Math.max(-1,Math.min(1,-p.balance*5-p.balanceVel*.7))):p.grounded?Math.max(-1,Math.min(1,steer)):0;
-   r.tick({moveX,moveY:grinding?1:p.grounded?heading.dot(p.axisF):0,jumpHeld:grinding?!exited:!launched,grindHeld:launched&&!exited&&(grinding||!p.grounded)});
+   r.tick({moveX,moveY:grinding?(e.grindFrames>=22?0:1):p.grounded?heading.dot(p.axisF):0,jumpHeld:grinding?!exited:!launched,grindHeld:launched&&!exited&&(grinding||!p.grounded)});
    if(p.state==='grind'){e.grindFrames++;e.grindDistance+=p.pos.distanceTo(previous);const rail=l.rails.indexOf(p.grindRail);if(!e.rails.includes(rail))e.rails.push(rail);}
    e.bail||=p.isBailing;previous.copy(p.pos);
    if(i%5===0)e.trace.push({frame:i,source:m.mallSourcePoint(...p.pos.toArray()),state:p.state,speed:p.speed,under:p.underK,rail:p.grindRail?l.rails.indexOf(p.grindRail):null});

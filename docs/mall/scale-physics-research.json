@@ -1,5 +1,5 @@
 {
-  "status": "Source-derived gravity/pop/charge/auto-kick/linear-drag parameters now enabled for Mall only; complete original movement remains unverified.",
+  "status": "Mall-only source parameter and rail motion adaptation, with verified global final speed cap; full original movement remains incomplete.",
   "sources": [
     {
       "path": "/private/tmp/mall-recreation/research/io-thps/helpers.py",
@@ -58,7 +58,7 @@
     "crouchedKickSpeed": 26.15142857142857,
     "highDragSpeedThreshold": 40.97057142857143
   },
-  "importantCorrection": "Original mMaxSpeed selects stronger ground drag, not a universal hard cap. The old partial experiment used an incorrect cap; the adopted source profile uses the measured linear-drag threshold.",
+  "importantCorrection": "mMaxSpeed remains a drag threshold, but DoPhysics has a separate MAXSPEED(50) full-vector cap. The previous 55 m/s no-clamp expectation was incomplete; pass 23 verifies drag at 45 m/s and the final cap at 55 m/s and during a fast fall.",
   "experiments": {
     "baselinePlateau": {
       "temporaryReport": "/private/tmp/mall-recreation/measured/fountain-baseline19.json",
@@ -967,12 +967,13 @@
     }
   },
   "nextEvidenceNeeded": [
-    "Continuous 60 Hz integration, not every original 30 Hz fixed-point rounding operation.",
-    "The five-tick auto-kick cycle does not reproduce the original push-animation gating or the slow decay of temporary crouched kick targets.",
-    "Steering, braking, ground-contact tracking, special-mode bonuses and terrain-specific friction are not yet source-equivalent.",
-    "Rail catch, balance, slope acceleration/caps, lateral transfer, run-off pop and trick-speed bonuses still use existing fork rules.",
-    "The charged-pose scale is supported; coasting and cruiser proportions differ from the original actor.",
-    "Compare remaining alternate-route input windows and original rail momentum/transfer behavior."
+    "Continuous integration and 30 Hz rail-assist decisions, not every original fixed-point rounding or polygon-step operation.",
+    "Original kick-animation gating and temporary crouched-target decay remain unimplemented.",
+    "Steering, braking, ground-contact tracking, special-mode bonuses and terrain-specific friction remain to be compared.",
+    "Rail capture radius/eligibility, balance, smooth-corner velocity projection, and substep endpoint placement still use fork rules. Under-rail hangs and perfect-grind rewards are fork extensions.",
+    "Directional rail exits use the source angle in the local rail plane, with this prototype camera-relative input convention.",
+    "Charged-pose calibration is supported; coasting pose and cruiser proportions differ from the source actor.",
+    "Compare remaining alternate-route timing tolerance with original gameplay."
   ],
   "retailRegistration": {
     "report": "retail-reference.json",
@@ -1022,12 +1023,13 @@
       }
     },
     "build": {
-      "version": "804169c7e6aa1cac5d2f",
-      "snapshot": "/private/tmp/mall-recreation/snapshot-22",
-      "output": "/private/tmp/mall-recreation/dist-22",
-      "preview": "http://127.0.0.1:5294/?playtest&level=mall",
+      "version": "39caa737128e4da340eb",
+      "snapshot": "/private/tmp/mall-recreation/snapshot-23",
+      "output": "/private/tmp/mall-recreation/dist-23",
+      "preview": "http://127.0.0.1:5295/?playtest&level=mall",
       "published": false
-    }
+    },
+    "railPhysics": "rail-physics.json"
   },
   "fountainCompletion": {
     "report": "fountain-route.json",

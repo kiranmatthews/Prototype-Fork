@@ -1,24 +1,30 @@
 {
-  "schema": 1,
-  "verifiedAt": "2026-10-23T02:32:43.291490+00:00",
+  "schema": 2,
+  "verifiedAt": "2026-10-23T03:07:25.923330+00:00",
   "status": "Enabled on Mall only; source-derived parameter adaptation, not a complete PS1 physics port.",
   "build": {
-    "version": "804169c7e6aa1cac5d2f",
-    "snapshot": "/private/tmp/mall-recreation/snapshot-22",
-    "output": "/private/tmp/mall-recreation/dist-22",
-    "preview": "http://127.0.0.1:5294/?playtest&level=mall",
+    "version": "39caa737128e4da340eb",
+    "snapshot": "/private/tmp/mall-recreation/snapshot-23",
+    "output": "/private/tmp/mall-recreation/dist-23",
+    "preview": "http://127.0.0.1:5295/?playtest&level=mall",
     "published": false
   },
   "source": {
     "repository": "https://github.com/LANCommander/TonyWasAProSkater/tree/d9319c8d5b42c431de02bec0f02f0cf955f2fbae",
     "files": {
       "game/src/physics.cpp": [
-        "DoOnGroundPhysics: Q12 gravity 6500 and linear drag 8/82",
-        "HandleOllie: nine-tick Tony first-board charge, ollie/air stats and additive vertical impulse",
-        "HandleKick: four-unit pushes for five ticks in twenty; kick target does not clamp speed"
+        "DoOnGroundPhysics: Q12 gravity 6500 and linear drag 8/82.",
+        "HandleJump: first-board charge and additive pop; called at line 4901 before rail physics.",
+        "HandleKick: four-unit pushes for five ticks in twenty; kick target stops pushing rather than clamping.",
+        "StartGrind (810-868): mRailDir * (speedStat+5) impulse, then projection in DoOnRailPhysics.",
+        "DoOnRailPhysics (2080-2480): Q12 gravity 13000, low-speed helpers, corner cutoff 2633/4096 and no endpoint pop.",
+        "DoPhysics LimitFinalSpeed (5328-5342): separate full-vector MAXSPEED(50) cap after state physics."
       ],
       "game/src/mech.cpp": [
         "CBruce initialization: speed-stat offsets 17 and 39"
+      ],
+      "game/src/rail.cpp": [
+        "Rail_Update (264-275): initial mRailDir aligns with incoming velocity; StartGrind adds speed, not braking."
       ]
     },
     "baseStepsPerSecond": 30,
@@ -49,7 +55,14 @@
     "kickAcceleration": 65.08799394233358,
     "lowDrag": 0.05859375,
     "highDrag": 0.6005859375,
-    "dragThreshold": 40.970529780668855
+    "dragThreshold": 40.970529780668855,
+    "finalSpeedLimit": 50.55932927887506,
+    "railEntryBoost": 7.051199343752804,
+    "railSlowThreshold": 7.945311760538766,
+    "railZeroSpeed": 0.13242186267564612,
+    "railSlopeBoost": 0.26484372535129225,
+    "railTransferAngle": 0.30679615757712825,
+    "railCornerAngle": 0.8726193850237524
   },
   "unitFixture": {
     "params": {
@@ -68,12 +81,19 @@
       "kickAcceleration": 65.088,
       "lowDrag": 0.05859375,
       "highDrag": 0.6005859375,
-      "dragThreshold": 40.97053359375
+      "dragThreshold": 40.97053359375,
+      "finalSpeedLimit": 50.559333984374994,
+      "railEntryBoost": 7.0512,
+      "railSlowThreshold": 7.945312499999999,
+      "railZeroSpeed": 0.132421875,
+      "railSlopeBoost": 0.26484375,
+      "railTransferAngle": 0.30679615757712825,
+      "railCornerAngle": 0.8726193850237524
     },
     "neutralSpeed": 21.658095339789742,
     "launch": 17.0856,
     "peak": 2.8260593750000003,
-    "overspeed": 54.449462890625,
+    "overspeed": 44.549560546875,
     "chargeSeconds": 0.3,
     "pulseFrameRates": [
       30,
@@ -88,8 +108,8 @@
     "frames": 960,
     "sha256": "c355c28f30e0c6a248e396cfe83234e24b95fdaa5c907f8ec9fc97faa29c2fe2",
     "identical": true,
-    "previousSnapshot": "/private/tmp/mall-recreation/snapshot-21",
-    "currentSnapshot": "/private/tmp/mall-recreation/snapshot-22",
+    "previousSnapshot": "/private/tmp/mall-recreation/snapshot-22",
+    "currentSnapshot": "/private/tmp/mall-recreation/snapshot-23",
     "tool": "tools/mall-default-parity.mjs",
     "existingParkTuningChecks": "passed"
   },
@@ -173,10 +193,13 @@
     }
   },
   "limitations": [
-    "Continuous 60 Hz integration, not every original 30 Hz fixed-point rounding operation.",
-    "The five-tick auto-kick cycle does not reproduce the original push-animation gating or the slow decay of temporary crouched kick targets.",
-    "Steering, braking, ground-contact tracking, special-mode bonuses and terrain-specific friction are not yet source-equivalent.",
-    "Rail catch, balance, slope acceleration/caps, lateral transfer, run-off pop and trick-speed bonuses still use existing fork rules.",
-    "The charged-pose scale is supported; coasting and cruiser proportions differ from the original actor."
-  ]
+    "Continuous integration and 30 Hz rail-assist decisions, not every original fixed-point rounding or polygon-step operation.",
+    "Original kick-animation gating and temporary crouched-target decay remain unimplemented.",
+    "Steering, braking, ground-contact tracking, special-mode bonuses and terrain-specific friction remain to be compared.",
+    "Rail capture radius/eligibility, balance, smooth-corner velocity projection, and substep endpoint placement still use fork rules. Under-rail hangs and perfect-grind rewards are fork extensions.",
+    "Directional rail exits use the source angle in the local rail plane, with this prototype camera-relative input convention.",
+    "Charged-pose calibration is supported; coasting pose and cruiser proportions differ from the source actor."
+  ],
+  "correctionToPass22": "mMaxSpeed remains a drag threshold, but DoPhysics has a separate MAXSPEED(50) full-vector cap. The previous 55 m/s no-clamp expectation was incomplete; pass 23 verifies drag at 45 m/s and the final cap at 55 m/s and during a fast fall.",
+  "railPhysicsReport": "rail-physics.json"
 }

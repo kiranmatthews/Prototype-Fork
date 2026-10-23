@@ -27,7 +27,7 @@ import { trickRepeatFactor, extendHeldTrick, type HeldTrickScore } from './trick
 import { liveCarveGripAtSpeed } from './carveGrip';
 import { solveSkateSteering } from './skateSteering';
 import { SKATE_PARK, skateSurfaceDirection, skateSurfaceHeading, redirectSkateVelocity } from './skateParkPhysics';
-import { referenceKickDuration, type SkateReferencePhysics, type SkateParkParameters } from './skateReferencePhysics';
+import { referenceKickDuration, referenceRailMotion, type SkateReferencePhysics, type SkateParkParameters } from './skateReferencePhysics';
 import { parkCruiseSpeed, parkChargedSpeed } from './skateParkTuning';
 import { cameraSkateSpeed as resolveCameraSkateSpeed } from './cameraSpeedEffect';
 import { HANG_ANIMS } from './hangAnims';
@@ -1033,6 +1033,7 @@ export class Player {
   private parkPhysics: SkateParkParameters = SKATE_PARK;
   private parkReference: SkateReferencePhysics | undefined;
   private parkKickGroundSeconds = 0;
+  private parkRailSeconds = 0;
   private readonly parkVelocity = new THREE.Vector3();
   private parkFlightGravity = this.parkPhysics.airGravity;
   private parkAutoTurn = 0;
@@ -3599,6 +3600,19 @@ export class Player {
     // the authored-pose baseline, interaction bounds or movement simulation.
     this.breakApart?.restore();
     this.stepSimulation(dt, input, level);
+    if (this.parkReference && !this.isBailing &&
+        (this.state === 'ride' || this.state === 'air' || this.state === 'grind')) {
+      // DoPhysics caps the complete velocity after state physics. On ground
+      // speed is already an arc speed; in air include every carried component.
+      const lateral = this.slideAirLat;
+      const magnitude = this.state === 'grind' ? this.grindVel : this.grounded ? Math.abs(this.speed)
+        : this.vertAir ? Math.hypot(this.vertLatVel, this.vVel)
+        : Math.hypot(this.speed, lateral, this.vVel);
+      const scale = Math.min(1, this.parkReference.finalSpeedLimit / (magnitude || 1));
+      this.speed *= scale; this.vVel *= scale; this.grindVel *= scale;
+      this.vertLatVel *= scale; this.slideAirLat *= scale;
+      this.parkVelocity.multiplyScalar(scale);
+    }
     this.breakApart?.step(dt, level, this.bailRecoverT >= 0,
       this.bailDownT / this.bailRush, this.isBailing);
   }
@@ -10083,6 +10097,12 @@ export class Player {
       this.exitGrind(1.2, level);
       return;
     }
+    // Native HandleJump precedes rail traversal. A release on the last
+    // supported sample must launch, even when this step would cross the end.
+    if (this.parkReference && this.handleGrindJump(dt, input, level)) {
+      this.stepAir(dt, input, level, true);
+      return;
+    }
     this.grindTime += dt;
     this.balanceAge += dt;
     this.balanceEntryAge += dt;
@@ -10139,7 +10159,7 @@ export class Player {
     // speed entry to survive at all.) grindDrag puts that friction back for
     // anyone who wants it — 0 by default, and still weighted per style so a
     // crosswise slide scrubs more than a nose.
-    if (TUNING.grindDrag > 0) {
+    if (!this.parkReference && TUNING.grindDrag > 0) {
       const drag =
         this.grindStyle === 'nose'
           ? TUNING.grindDrag * 0.4
@@ -10152,7 +10172,15 @@ export class Player {
     // speed, climbs bleed it (the same knobs as ground slopes), capped like
     // any earned downhill. tangent.y IS sin(slope) on a unit tangent.
     const railSlope = rail.tangentAt(this.grindT).y * this.grindDir; // + = climbing
-    if (Math.abs(railSlope) > 1e-3) {
+    let referenceDistance: number | undefined;
+    if (this.parkReference) {
+      const motion = referenceRailMotion(this.parkReference, this.grindVel * this.grindDir,
+        rail.tangentAt(this.grindT).y, this.parkRailSeconds, dt);
+      this.parkRailSeconds = motion.seconds;
+      this.grindDir = motion.speed >= 0 ? 1 : -1;
+      this.grindVel = Math.abs(motion.speed);
+      referenceDistance = motion.distance;
+    } else if (Math.abs(railSlope) > 1e-3) {
       this.grindVel -= railSlope * TUNING.groundGravity * dt;
       this.grindVel = THREE.MathUtils.clamp(this.grindVel, rail.chiefTongueAssist?.minSpeed ?? CONST.grindMinSpeed, TUNING.downhillMax);
     }
@@ -10266,11 +10294,11 @@ export class Player {
       }
     }
 
-    const nextGrindT = this.grindT + this.grindDir * this.grindVel * dt;
+    const nextGrindT = this.grindT + (referenceDistance ?? this.grindDir * this.grindVel * dt);
     const sharpCorner = rail.sharpCornerBetween(
       this.grindT,
       nextGrindT,
-      MAX_CONTINUOUS_GRIND_CORNER_ANGLE,
+      this.parkReference?.railCornerAngle ?? MAX_CONTINUOUS_GRIND_CORNER_ANGLE,
     );
     if (sharpCorner) {
       // Stop just before the node so exitGrind reads the incoming tangent.
@@ -10280,7 +10308,7 @@ export class Player {
       this.placeOnRail(rail);
       this.tickGrindCrate(level);
       this.lastJumpType = 'Sharp Rail Exit';
-      this.exitGrind(this.underK > 0.5 ? 0.8 : 2.5, level);
+      this.exitGrind(this.underK > 0.5 ? 0.8 : this.parkReference ? 0 : 2.5, level);
       sfx.play('railLand', 0.55, 1.35);
       return;
     }
@@ -10296,7 +10324,7 @@ export class Player {
       this.tickGrindCrate(level);
       this.completeGrindosaurusRun(rail, level);
       const perfect = this.perfectGrindRun(rail, level);
-      this.exitGrind(this.underK > 0.5 ? 0.8 : 2.5, level); // from under, no pop up through the rail
+      this.exitGrind(this.underK > 0.5 ? 0.8 : this.parkReference ? 0 : 2.5, level); // from under, no pop up through the rail
       if (perfect) this.applyPerfectGrind();
       return;
     }
@@ -10317,9 +10345,14 @@ export class Player {
     // (grind sparks now stream from the puff system's distance trail — see
     // updatePuffs — so nothing is emitted per-frame here)
 
+    if (!this.parkReference) this.handleGrindJump(dt, input, level);
+  }
+
+  private handleGrindJump(dt: number, input: Input, level: Level): boolean {
+    const rail = this.grindRail!;
     if (input.jumpHeld) {
       this.charging = true;
-      this.chargeTimer = Math.min(this.chargeTimer + dt, TUNING.jumpChargeTime);
+      this.chargeTimer = Math.min(this.chargeTimer + dt, this.parkReference ? this.parkPhysics.chargeSeconds : TUNING.jumpChargeTime);
     }
     if (input.jumpReleased && this.charging) {
       const t = Math.min(1, this.chargeTimer / (this.parkReference ? this.parkPhysics.chargeSeconds : TUNING.jumpChargeTime));
@@ -10328,6 +10361,9 @@ export class Player {
       this.lastJumpType = this.underK > 0.5 ? 'Under-Rail Drop' : 'Grind Exit';
       sfx.play('ollie', 0.7);
       const perfect = this.perfectGrindRun(rail, level);
+      const topOllie = this.underK <= 0.5;
+      const transfer = topOllie && this.parkReference
+        ? this.grindJumpSide(level, this.rawInput.moveX, this.rawInput.moveY) : 0;
       // from underneath, X lets go — a small drop away, never a pop up
       // through the rail overhead
       this.exitGrind(
@@ -10337,10 +10373,14 @@ export class Player {
             ? THREE.MathUtils.lerp(this.parkPhysics.ollieMin, this.parkPhysics.ollieMax, t)
             : THREE.MathUtils.lerp(TUNING.grindJumpForce * 0.72, TUNING.grindJumpForce, t),
         level,
+        transfer,
+        topOllie,
       );
       if (perfect) this.applyPerfectGrind();
       // grind exits are board airs: no somersault
+      return true;
     }
+    return false;
   }
 
   private stepFinished(dt: number, level: Level): void {
@@ -10540,7 +10580,10 @@ export class Player {
     // How much of our actual velocity runs ALONG the rail. Free-heading skate
     // lets you meet a rail at any angle — a perpendicular clip should give a
     // gentle grind, never rocket you down the rail at full cross-speed.
-    const alongVel = worldVx * sample.tangent.x + worldVz * sample.tangent.z;
+    const alongVel = this.parkReference && this.grounded
+      ? skateSurfaceDirection(this.parkVelocity, this.axisF, this.rideNormal).multiplyScalar(this.speed).dot(sample.tangent)
+      : worldVx * sample.tangent.x + worldVz * sample.tangent.z +
+        (this.parkReference ? this.vVel * sample.tangent.y : 0);
     this.grindDir = rail.chiefTongueAssist && sample.t <= rail.chiefTongueAssist.entryLength
       ? 1 : alongVel >= 0 ? 1 : -1;
     this.state = 'grind';
@@ -10576,6 +10619,7 @@ export class Player {
     }
     this.grabSpinAngle = 0;
     this.grindTime = 0;
+    this.parkRailSeconds = 0;
     // Grind trick from the stick at entry (THPS3+ vocabulary):
     // up = Nosegrind, down = 5-0, up-diagonal = Crooked, down-left = Smith,
     // down-right = Feeble, sideways = Boardslide — or LIPSLIDE when you came
@@ -10640,7 +10684,9 @@ export class Player {
     // railSpeedBoost survives as a 0-default slider for anyone who wants the
     // old gear-change gift back.
     const alongFrac = planarIn > 0.01 ? Math.min(1, Math.abs(alongVel) / planarIn) : 1;
-    this.grindVel = THREE.MathUtils.clamp(
+    this.grindVel = this.parkReference
+      ? Math.abs(alongVel) + this.parkReference.railEntryBoost
+      : THREE.MathUtils.clamp(
       planarIn * (0.72 + 0.28 * alongFrac) + TUNING.railSpeedBoost,
       rail.chiefTongueAssist?.minSpeed ?? CONST.grindMinSpeed,
       TUNING.downhillMax,
@@ -10730,7 +10776,20 @@ export class Player {
     this.grindCrate = best;
   }
 
-  private exitGrind(vVel: number, level?: Level): void {
+  private grindJumpSide(level: Level, x: number, y: number): number {
+    const t = this.grindRail!.tangentAt(this.grindT).multiplyScalar(this.grindDir);
+    const length = Math.hypot(t.x, t.z);
+    if (length < 0.05) return 0;
+    const camera = this.parkControls ? this.camDir
+      : this.courseInputDirection(level) ?? (TUNING.chaseCam > 0.5 ? this.camDir : { x: 0, z: -1 });
+    const scale = 1 / (Math.max(1, Math.hypot(x, y)) * (Math.hypot(camera.x, camera.z) || 1));
+    const wx = (camera.x * y - camera.z * x) * scale;
+    const wz = (camera.z * y + camera.x * x) * scale;
+    const side = (wx * t.z - wz * t.x) / length;
+    return Math.abs(side) > 0.3 ? side : 0;
+  }
+
+  private exitGrind(vVel: number, level?: Level, lateral = 0, ollie = false): void {
     this.airFromSkate = true; // leaving a rail is a board air: tricks live
     this.airGrav = 'board';
     // RAIL-HOP window: left/right may translate across the air by default.
@@ -10747,6 +10806,17 @@ export class Player {
       // Exit ALONG the rail: the tangent becomes the free-skate heading, so
       // diagonal and curved rails launch you where they were pointing.
       const t = this.grindRail.tangentAt(this.grindT);
+      if (this.parkReference && ollie && lateral !== 0) {
+        // AlignHeadingOnRail rotates velocity within the rail's local plane:
+        // fixed 200/4096-turn direction, conserving magnitude before the pop.
+        const h = Math.hypot(t.x, t.z);
+        if (h > 0.05) {
+          const angle = Math.sign(lateral) * this.parkReference.railTransferAngle;
+          const lx = t.z / h, lz = -t.x / h;
+          t.multiplyScalar(Math.cos(angle));
+          t.x += lx * Math.sin(angle); t.z += lz * Math.sin(angle);
+        }
+      }
       const hx = t.x * this.grindDir;
       const hz = t.z * this.grindDir;
       const len = Math.hypot(hx, hz);
@@ -10756,7 +10826,7 @@ export class Player {
       // descent rate into the pop (same knob, same floor) and keep the
       // snappy gravity — flat and climbing rails are untouched.
       const desc = Math.min(0, t.y * this.grindDir * this.grindVel);
-      if (this.parkReference && ollie) {
+      if (this.parkReference) {
         vVel += t.y * this.grindDir * this.grindVel;
       } else if (desc < -0.5) {
         vVel = Math.max(vVel * 0.45, vVel + desc * TUNING.ollieDownCouple);
@@ -10765,7 +10835,7 @@ export class Player {
       if (len > 0.05) {
         this.axisF.set(hx / len, 0, hz / len);
         this.axisL.set(this.axisF.z, 0, -this.axisF.x);
-        this.speed = this.parkReference && ollie ? this.grindVel * len : this.grindVel;
+        this.speed = this.parkReference ? this.grindVel * len : this.grindVel;
         this.freeSkate = true;
       } else {
         // near-vertical tangent (shouldn't happen): keep the old projection

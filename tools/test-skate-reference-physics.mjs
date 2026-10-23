@@ -60,8 +60,9 @@ await withSkateRuntime(async ({THREE, server, Player, Level, scene, TUNING, CONS
     assert.ok(p.grounded && !p.isBailing); assert.ok(peak > 2.65 && peak < 2.9);
     // A fixture may set initial speed once: strong drag must bleed overspeed,
     // rather than silently clamp it to either the old cap or source threshold.
-    reset(); p.speed = 55; step(); const overspeed = p.speed;
-    assert.ok(overspeed > 54 && overspeed < 55);
+    reset(); p.speed = 45; step(); const overspeed = p.speed;
+    assert.ok(overspeed > 44 && overspeed < 45);
+    reset(); p.speed = 55; step(); near(p.speed, params.finalSpeedLimit);
     assert.equal(JSON.stringify(TUNING), tuning);
     const report = {params, neutralSpeed, launch, peak, overspeed, chargeSeconds: params.park.chargeSeconds,
       pulseFrameRates: [30, 60, 120], editorRoundTrip: true, invalidDataRejected: true, tuningUnchanged: true};

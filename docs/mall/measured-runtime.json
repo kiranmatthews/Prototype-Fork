@@ -1,6 +1,6 @@
 {
-  "snapshot": "/private/tmp/mall-recreation/snapshot-22",
-  "createdAt": "2026-10-23T02:32:43.291490+00:00",
+  "snapshot": "/private/tmp/mall-recreation/snapshot-23",
+  "createdAt": "2026-10-23T03:07:25.923330+00:00",
   "files": {
     "src/animation/bridge.ts": "a5477582012e00b75bb83322f0b9aaecee04392d299cbe6c8d9bb560ac1f6686",
     "src/animation/crouch.ts": "473640f543d2e6e6a5890d16f6e198f753edc32b2a385dc1c0215860e9732d5e",
@@ -354,7 +354,7 @@
     "src/oceanTuning.ts": "0a5aef9ffb9124717da316c8f8710cfba2b0a0c8a27b1688eddd04c94ac89b2f",
     "src/offline-worker.js": "68e53f008747714be035980835dd0aa9f9db9e0fe251cf0d2f535599552d7376",
     "src/offline.ts": "9c230653f84c7a673bd9097d98cb6d24e17694f171977971cc9768a1faef9266",
-    "src/player.ts": "4cf5fff0af1d1cfbab1296f8b9dfe519c7a82c25859ed04c552a97cb6bdc5f2d",
+    "src/player.ts": "6130580d7c713493f9e474617eb8bbcb09429bd1c0fd22f60da9b5e41ea807ee",
     "src/presentationCssViewport.ts": "69b925b053bcf1a6bf1122ec3fba543f361d3163ac7c17395d05e8e1e14dfb08",
     "src/presentationLoading.ts": "f23a904cd2cf8a3ac334c5123819a00965d2ab308155e4b9f3cd44e534eb3b62",
     "src/proceduralThorns.ts": "432730dc00ab803724114bacf9a9a6fc82341dc35f8beaa6823055b7b1b678b2",
@@ -504,28 +504,29 @@
     "docs/mall/retail-rails.json": "e5a61482d810f7bcbf1a7f56016e6af2f5c9bee00936cc59e337cec1d99c73e5",
     "tools/mall-retail-reference.py": "f17ac6c6313eab0103a0dfad0baa4627ea7dc306d9bec6532df152605c97623e",
     "tools/test-mall-retail-reference.py": "4a7304a0bf6e0323ffde864fb51636bcaff70fb786dd3f340147f1f733b97998",
-    "tools/test-mall-measured-rails.mjs": "03ba496ff69088a36cf7aa4a60c4e9fea3069fd4915d1dd16e34d7211365f1da",
+    "tools/test-mall-measured-rails.mjs": "473d17675eab549ee42fc5556a94574cef3b75045466c0f0d7cd62a04319192c",
     "tools/test-mall-measured-topology.mjs": "b2fbe47e5395e9e418d98b2c87ecfbdf4144020960aac32101c45b084c50f275",
-    "tools/mall-measured-gap-pilot.mjs": "78d85a72b456bdd7df69f593711185953525ab48adbaf9c7f1df43dfe8aabe43",
-    "tools/test-mall-measured-gaps.mjs": "218f06f4555f9c2677d1c0fc94da2f15e88b77ffad1bbb336aca03592afb8119",
+    "tools/mall-measured-gap-pilot.mjs": "3a6810b612cb6790e3b3a43f3f32784a00b5c6d010f9ece4ff5a1d1fbc524381",
+    "tools/test-mall-measured-gaps.mjs": "5dd07bb9a0a7638baffc19a9ca36e46e3d525961707a9f38d203f41cce4ba3a5",
     "tools/mall-measured-gaps-browser.mjs": "4295c77696a9dc69cc812d70a816f6a244a4d61338e127110621fa42c56b8abb",
     "tools/psx-skater-survey.py": "223cf2f09f3a861fed3373239a576a1f0cf4eeeb3e8f103de705401a272ed16e",
     "tools/test-psx-skater-survey.py": "a3859435a044ed79857255dffd0e5a123740e6bb93817f80b57545929d21c0cb",
     "tools/mall-actor-scale-browser.mjs": "6fb9ecf3ffee94df4d6402d58ba2ec8be8908d5a7fb6e35cfd275eda1d2150f9",
-    "src/skateReferencePhysics.ts": "2a2e27545cb77d5a453cc302b88bc39614c0265978ca723472d46aa3b11d3717",
-    "tools/test-skate-reference-physics.mjs": "169086b325e4805ddb054e2bbe2ff4e8b77d5e767d570acf20397eff4ad7198e",
+    "src/skateReferencePhysics.ts": "a78d1590533a35b00f212d3fa174d6640dffa2768b936590ec493917c2878d23",
+    "tools/test-skate-reference-physics.mjs": "6b39a1a2e2c0437ba09339dd8328b74fd3e26227daa62ee9f6e457600ed7f7b4",
     "tools/test-skate-reference-coping.mjs": "021e7086d2f1a807352565daa220e3996ccb745c1a2d1ddbc937f4ed5703217a",
     "tools/mall-default-parity.mjs": "50cc66061cb32f9e08f9381229b8d6cea8718f6f19f752d2840fc3d7afd42e7d",
     "tools/mall-fountain-route-pilot.mjs": "d8333b0009d4385b8a26517318b244bf7a536802bdcb7bcc1bbe93aefd1271ab",
     "tools/test-mall-fountain-route.mjs": "ced4398dacab0be5d9f22590734dc9bdd7554f9d6770e499fff5b8dcdad39818",
     "tools/mall-fountain-route-browser.mjs": "5a50ac4e7b8dc10e3e52b1f596c0d98e9dba8eafabd59971e109704c339d185c",
-    "tools/mall-measured-browser.mjs": "32dea8f210d7122bf252427a4fbe643d92568e7a70f4e54ceea36fa28c43ceaf"
+    "tools/mall-measured-browser.mjs": "32dea8f210d7122bf252427a4fbe643d92568e7a70f4e54ceea36fa28c43ceaf",
+    "tools/test-skate-reference-rails.mjs": "089f9c3f740efebdb6e185b8171069eb0144ca9db46a9b9f73c52697e27fa3b2"
   },
-  "sharedRuntime": "Frozen snapshot-21 plus the scoped Mall source-profile changes in player/level, the new parameter module and route/check tools. Unrelated shared-workspace changes are not copied into the task branch. Global tuning and SKATE_PARK are byte-identical to snapshot-21.",
+  "sharedRuntime": "Frozen snapshot-22 plus the pass-23 source rail and final-speed changes. Shared defaults/TUNING are unchanged. Scoped branch player/level sources exclude concurrent work and have separate hashes; frozen full-browser evidence uses this file manifest.",
   "decoderDependency": "School tool at b69bb158c5924ff456d346842f17c4915d2c7aca; live School geometry-export additions excluded.",
   "unusedResearchModule": "src/levels/mall-measured-scale.ts is an unimported historical scale probe.",
   "taskBranchSharedFiles": {
-    "src/player.ts": "74fb39ff6112d14e45af04cd53873496eda66cd196a1a9fdf9d5abfa8706d135",
-    "src/level.ts": "a04ae00afd27ccddc968c39a3e7b8d1fe5d21626a2b4256d35a06439061b6f6c"
+    "src/player.ts": "4fac77f4499582b912b4b0770c58758d8080c336afcb95436479209f8464269a",
+    "src/level.ts": "b52df5059b857c37138e5a1a835387b01407d8d0cc2f14e6569273e3c968714c"
   }
 }

@@ -14,5 +14,5 @@ await withBlockworksRuntime(async r=>{
  const report={fixtures,tuningUnchanged:defaults===JSON.stringify(r.TUNING)};
  await writeFile('/private/tmp/mall-recreation/measured/gaps.json',JSON.stringify(report,null,2));
  assert.ok(report.tuningUnchanged);assert.ok(fixtures.every(f=>f.reached&&!f.bail));
- const tape=fixtures.find(f=>f.kind==='tape');assert.deepEqual(tape.rails,tape.expectedRails);assert.ok(tape.approachFrames>100&&tape.beamFrames>300&&tape.beamDistance>120);
+ const tape=fixtures.find(f=>f.kind==='tape');assert.deepEqual(tape.rails,tape.expectedRails);assert.ok(tape.approachFrames>100&&tape.beamFrames>200&&tape.beamDistance>120);
 },{modulePath:'/src/levels/mall-measured.ts',source:m=>m.MALL_LEVEL,levelId:'mall',endlessDeaths:true,maxFrames:5000,controlFrame:r=>r.p.axisF});

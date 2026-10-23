@@ -3,7 +3,7 @@
 export const mallGapFixtures = [
  {name:'Flying Leap, earlier release',kind:'drop',start:[-6300,315,185],heading:[0,0,-1],release:-4580},
  {name:'Flying Leap, later release',kind:'drop',start:[-6300,315,185],heading:[0,0,-1],release:-4560},
- {name:'Right handrail to suspended tape beam',kind:'tape',start:[-6800,315,830],heading:[-.01,0,-1],release:-4110},
+ {name:'Right handrail to suspended tape beam',kind:'tape',start:[-6800,315,830],heading:[-.01,0,-1],release:-4135,transferSide:0},
 ];
 export function createMallGapPilot(f,rails){
  const approachRail=rails.findIndex(r=>r.sourceNodes[0]===282),beamRail=rails.findIndex(r=>r.sourceNodes[0]===134);
@@ -20,7 +20,7 @@ export function createMallGapPilot(f,rails){
   if(phase==='beam'&&!grinding)phase='rollout';
   const lateral=(phase==='ride'&&source[0]>f.release-20)||(phase==='transfer'&&grinding&&rail===approachRail);
   return{
-   moveX:lateral?-1:grinding?Math.max(-1,Math.min(1,-p.balance*5-p.balanceVel*.7)):0,
+   moveX:lateral?(f.transferSide??-1):grinding?Math.max(-1,Math.min(1,-p.balance*5-p.balanceVel*.7)):0,
    moveY:lateral?0:p.grounded||grinding?1:0,
    jumpHeld:phase==='approach'||phase==='ride'||phase==='beam'||phase==='rollout',
    grindHeld:phase==='catch'||phase==='ride'||phase==='beam'||phase==='transfer'&&frame>offFrame+3,

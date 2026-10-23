@@ -1,11 +1,11 @@
 {
   "schema": 1,
-  "verifiedAt": "2026-10-23T02:32:43.291490+00:00",
+  "verifiedAt": "2026-10-23T03:07:25.923330+00:00",
   "build": {
-    "version": "804169c7e6aa1cac5d2f",
-    "snapshot": "/private/tmp/mall-recreation/snapshot-22",
-    "output": "/private/tmp/mall-recreation/dist-22",
-    "preview": "http://127.0.0.1:5294/?playtest&level=mall",
+    "version": "39caa737128e4da340eb",
+    "snapshot": "/private/tmp/mall-recreation/snapshot-23",
+    "output": "/private/tmp/mall-recreation/dist-23",
+    "preview": "http://127.0.0.1:5295/?playtest&level=mall",
     "published": false
   },
   "status": "Complete upper display/car/fountain/receiving-ramp route reaches the flat concourse.",
