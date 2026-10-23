@@ -1,0 +1,665 @@
+{
+  "brief": "Give Rolling Bones its own unique nighttime bonus",
+  "validatedAtUTC": "2026-10-23T11:04:13.284406+00:00",
+  "delivery": "Local only; no push, publication, deployment or downloaded assets.",
+  "level": {
+    "name": "Bonus: Moonbone Vault",
+    "parent": "rolling-bones",
+    "campaignAlias": "secret-4",
+    "directEntry": "bonus-rolling-bones",
+    "sky": "night",
+    "boxes": 16,
+    "route": "Vertical sarcophagus lift, upper crypt, four collapsing vertebrae, moon-eye high cache, descending jawbones, return vault"
+  },
+  "native": {
+    "result": {
+      "state": "finished",
+      "cratesBroken": 16,
+      "totalCrates": 16,
+      "deaths": 0,
+      "completionScope": "complete-stage",
+      "activeStageCrates": 16,
+      "bonusCrateTotal": 0,
+      "bonusCrates": 0,
+      "gemEarned": true
+    },
+    "frames": 2907,
+    "seconds": 48.45,
+    "evidence": [
+      {
+        "action": "Crypt offering",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "Sarcophagus waiting cache",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "board the rising sarcophagus",
+        "launch": [
+          6.635466666666663,
+          -2.384185793236071e-08,
+          0
+        ],
+        "landing": [
+          11.909466666666672,
+          0.034505190939327246,
+          0
+        ],
+        "ground": "moving platform"
+      },
+      {
+        "action": "real vertical lift ride",
+        "boarded": 0.034505190939327246,
+        "exit": 5.799025990566281
+      },
+      {
+        "action": "leave the lift for the moon gallery",
+        "launch": [
+          11.966900000000006,
+          5.799025990566281,
+          0
+        ],
+        "landing": [
+          17.37890000000001,
+          5.999999976158142,
+          0
+        ],
+        "ground": "platform"
+      },
+      {
+        "action": "Upper gallery cache",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "Ivory arch cache",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "Last cache before the bones",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "cross the breakaway spine 34.8",
+        "launch": [
+          30.42913333333342,
+          5.999999976158142,
+          0
+        ],
+        "landing": [
+          34.7656333333334,
+          5.999999988079071,
+          0
+        ],
+        "ground": "crumble pad"
+      },
+      {
+        "action": "cross the breakaway spine 40.4",
+        "launch": [
+          34.7656333333334,
+          5.999999988079071,
+          0
+        ],
+        "landing": [
+          40.25563333333335,
+          5.999999988079071,
+          0
+        ],
+        "ground": "crumble pad"
+      },
+      {
+        "action": "cross the breakaway spine 45.7",
+        "launch": [
+          40.25563333333335,
+          5.999999988079071,
+          0
+        ],
+        "landing": [
+          45.62157777777776,
+          5.999999988079071,
+          0
+        ],
+        "ground": "crumble pad"
+      },
+      {
+        "action": "cross the breakaway spine 49.3",
+        "launch": [
+          45.62157777777776,
+          5.999999988079071,
+          0
+        ],
+        "landing": [
+          49.27252222222218,
+          5.999999976158142,
+          0
+        ],
+        "ground": "platform"
+      },
+      {
+        "action": "Far crypt cache",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "Moon-eye offering",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "moon-eye high cache before its arrow support last",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "moon-eye high cache before its arrow",
+        "upperAlive": false,
+        "launcherAlive": false
+      },
+      {
+        "action": "first jawbone landing",
+        "launch": [
+          61.92407777777793,
+          5.999999976158142,
+          0
+        ],
+        "landing": [
+          66.47207777777798,
+          4.199999976158143,
+          0
+        ],
+        "ground": "platform"
+      },
+      {
+        "action": "lower jawbone landing",
+        "launch": [
+          66.47207777777798,
+          4.199999976158143,
+          0
+        ],
+        "landing": [
+          71.66807777777814,
+          2.0999999761581423,
+          0
+        ],
+        "ground": "platform"
+      },
+      {
+        "action": "descend into the last vault",
+        "launch": [
+          71.66807777777814,
+          2.0999999761581423,
+          0
+        ],
+        "landing": [
+          74.96507777777823,
+          -2.384185793236071e-08,
+          0
+        ],
+        "ground": "platform"
+      },
+      {
+        "action": "Vault cache",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "Last moonbone mystery",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "Vault life",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "all sixteen Moonbone offerings",
+        "totalCrates": 16,
+        "activeStageCrates": 16,
+        "bonusCrateTotal": 0,
+        "cratesBroken": 16,
+        "remaining": 0
+      }
+    ]
+  },
+  "checks": [
+    {
+      "task": "check:levels",
+      "exitCode": 0,
+      "seconds": 225.46
+    },
+    {
+      "task": "build",
+      "exitCode": 0,
+      "seconds": 48.64
+    },
+    {
+      "task": "tools/test-themed-bonus-flow.mjs",
+      "exitCode": 0,
+      "seconds": 8.91
+    },
+    {
+      "task": "tools/test-rumblewater-bonus.mjs",
+      "exitCode": 0,
+      "seconds": 13.26
+    },
+    {
+      "task": "tools/test-ripcord-river.mjs",
+      "exitCode": 0,
+      "seconds": 22.4
+    },
+    {
+      "task": "tools/test-rolling-bones-bonus.mjs",
+      "exitCode": 0,
+      "seconds": 13.27
+    }
+  ],
+  "productionBuild": "3135c4b0955ce77d6f6d",
+  "browser": {
+    "runs": [
+      {
+        "mode": "lite-complete",
+        "frames": 3096,
+        "result": {
+          "state": "finished",
+          "cratesBroken": 16,
+          "totalCrates": 16,
+          "deaths": 0,
+          "completionScope": "bonus-detour",
+          "activeStageCrates": 16,
+          "bonusCrateTotal": 0,
+          "bonusCrates": 0,
+          "gemEarned": false
+        },
+        "water": {
+          "sky": "night",
+          "borrowedNightSky": true
+        },
+        "returnedToSafeRoom": true,
+        "banked": true,
+        "retryable": false,
+        "initial": {
+          "level": "rolling-bones",
+          "name": "Rolling Bones",
+          "position": [
+            -29.1981,
+            -5.3767,
+            -739
+          ],
+          "state": "ride",
+          "grounded": true,
+          "deaths": 0,
+          "lives": 4,
+          "fruit": 0,
+          "crates": 0,
+          "bonusCrates": 0,
+          "bonusMode": false,
+          "sky": "night",
+          "stamp": "Codex/sol fork \u00b7 build 10-23 10:14 UTC"
+        },
+        "bonusStart": {
+          "level": "bonus:rolling-bones",
+          "name": "Rolling Bones",
+          "position": [
+            -7,
+            0.12,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "deaths": 0,
+          "lives": 0,
+          "fruit": 0,
+          "crates": 0,
+          "bonusCrates": 0,
+          "bonusMode": true,
+          "sky": "night",
+          "stamp": "Codex/sol fork \u00b7 build 10-23 10:14 UTC"
+        },
+        "bonusFinish": {
+          "level": "bonus:rolling-bones",
+          "name": "Rolling Bones",
+          "position": [
+            88.47557777520184,
+            0.7266666691501935,
+            -0.000701402759071855
+          ],
+          "state": "finished",
+          "grounded": true,
+          "deaths": 0,
+          "lives": 2,
+          "fruit": 62,
+          "crates": 16,
+          "bonusCrates": 0,
+          "bonusMode": true,
+          "sky": "night",
+          "stamp": "Codex/sol fork \u00b7 build 10-23 10:14 UTC"
+        },
+        "final": {
+          "level": "rolling-bones",
+          "name": "Rolling Bones",
+          "position": [
+            -29.6299,
+            -5.3967,
+            -741
+          ],
+          "state": "ride",
+          "grounded": true,
+          "deaths": 0,
+          "lives": 6,
+          "fruit": 62,
+          "crates": 0,
+          "bonusCrates": 16,
+          "bonusMode": false,
+          "sky": "night",
+          "stamp": "Codex/sol fork \u00b7 build 10-23 10:14 UTC"
+        },
+        "shots": [
+          "arrival",
+          "spine",
+          "moon-eye",
+          "vault",
+          "return"
+        ],
+        "errors": []
+      },
+      {
+        "mode": "full-complete",
+        "frames": 3097,
+        "result": {
+          "state": "finished",
+          "cratesBroken": 16,
+          "totalCrates": 16,
+          "deaths": 0,
+          "completionScope": "bonus-detour",
+          "activeStageCrates": 16,
+          "bonusCrateTotal": 0,
+          "bonusCrates": 0,
+          "gemEarned": false
+        },
+        "water": {
+          "sky": "night",
+          "borrowedNightSky": true,
+          "ready": 1
+        },
+        "returnedToSafeRoom": true,
+        "banked": true,
+        "retryable": false,
+        "initial": {
+          "level": "rolling-bones",
+          "name": "Rolling Bones",
+          "position": [
+            -29.1981,
+            -5.3767,
+            -739
+          ],
+          "state": "ride",
+          "grounded": true,
+          "deaths": 0,
+          "lives": 4,
+          "fruit": 0,
+          "crates": 0,
+          "bonusCrates": 0,
+          "bonusMode": false,
+          "sky": "night",
+          "stamp": "Codex/sol fork \u00b7 build 10-23 10:14 UTC"
+        },
+        "bonusStart": {
+          "level": "bonus:rolling-bones",
+          "name": "Rolling Bones",
+          "position": [
+            -7,
+            0.12,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "deaths": 0,
+          "lives": 0,
+          "fruit": 0,
+          "crates": 0,
+          "bonusCrates": 0,
+          "bonusMode": true,
+          "sky": "night",
+          "stamp": "Codex/sol fork \u00b7 build 10-23 10:14 UTC"
+        },
+        "bonusFinish": {
+          "level": "bonus:rolling-bones",
+          "name": "Rolling Bones",
+          "position": [
+            88.47557777520184,
+            0.7266666691501935,
+            -0.000701402759071855
+          ],
+          "state": "finished",
+          "grounded": true,
+          "deaths": 0,
+          "lives": 2,
+          "fruit": 62,
+          "crates": 16,
+          "bonusCrates": 0,
+          "bonusMode": true,
+          "sky": "night",
+          "stamp": "Codex/sol fork \u00b7 build 10-23 10:14 UTC"
+        },
+        "final": {
+          "level": "rolling-bones",
+          "name": "Rolling Bones",
+          "position": [
+            -29.6299,
+            -5.496699810028076,
+            -741
+          ],
+          "state": "ride",
+          "grounded": true,
+          "deaths": 0,
+          "lives": 6,
+          "fruit": 62,
+          "crates": 0,
+          "bonusCrates": 16,
+          "bonusMode": false,
+          "sky": "night",
+          "stamp": "Codex/sol fork \u00b7 build 10-23 10:14 UTC"
+        },
+        "shots": [
+          "arrival",
+          "spine",
+          "moon-eye",
+          "vault",
+          "return"
+        ],
+        "errors": []
+      },
+      {
+        "mode": "full-failure",
+        "frames": 392,
+        "water": {
+          "sky": "night",
+          "borrowedNightSky": true,
+          "ready": 1
+        },
+        "returnedToSafeRoom": true,
+        "banked": false,
+        "retryable": true,
+        "initial": {
+          "level": "rolling-bones",
+          "name": "Rolling Bones",
+          "position": [
+            -29.1981,
+            -5.3767,
+            -739
+          ],
+          "state": "ride",
+          "grounded": true,
+          "deaths": 0,
+          "lives": 4,
+          "fruit": 0,
+          "crates": 0,
+          "bonusCrates": 0,
+          "bonusMode": false,
+          "sky": "night",
+          "stamp": "Codex/sol fork \u00b7 build 10-23 10:14 UTC"
+        },
+        "bonusStart": {
+          "level": "bonus:rolling-bones",
+          "name": "Rolling Bones",
+          "position": [
+            -7,
+            0.12,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "deaths": 0,
+          "lives": 0,
+          "fruit": 0,
+          "crates": 0,
+          "bonusCrates": 0,
+          "bonusMode": true,
+          "sky": "night",
+          "stamp": "Codex/sol fork \u00b7 build 10-23 10:14 UTC"
+        },
+        "failedInBonus": {
+          "level": "bonus:rolling-bones",
+          "name": "Rolling Bones",
+          "position": [
+            -14.34999999980165,
+            -6.12,
+            5.3996115018830326e-05
+          ],
+          "state": "dead",
+          "grounded": false,
+          "deaths": 0,
+          "lives": 0,
+          "fruit": 0,
+          "crates": 0,
+          "bonusCrates": 0,
+          "bonusMode": true,
+          "sky": "night",
+          "stamp": "Codex/sol fork \u00b7 build 10-23 10:14 UTC"
+        },
+        "final": {
+          "level": "rolling-bones",
+          "name": "Rolling Bones",
+          "position": [
+            -29.6299,
+            -5.3967,
+            -741
+          ],
+          "state": "ride",
+          "grounded": true,
+          "deaths": 0,
+          "lives": 4,
+          "fruit": 0,
+          "crates": 0,
+          "bonusCrates": 0,
+          "bonusMode": false,
+          "sky": "night",
+          "stamp": "Codex/sol fork \u00b7 build 10-23 10:14 UTC"
+        },
+        "shots": [
+          "arrival",
+          "return"
+        ],
+        "errors": []
+      }
+    ],
+    "consoleErrors": [],
+    "entryFixture": "Only initial placement at the parent second sheltered checkpoint; real jump onto the bonus pad, ordinary control input throughout the bonus, real finish gate and production return flow."
+  },
+  "artReview": "docs/art-reviews/rolling-bones-bonus.png",
+  "timing": "Approximately 15 minutes from brief to validated playable course, including local build and browser validation."
+}

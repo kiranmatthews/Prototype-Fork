@@ -26,7 +26,8 @@ await withBlockworksRuntime(async r=>{
   assert.equal(data.components.filter(c=>c.t==='gate').length,1);
   assert.equal(data.components.filter(c=>c.t==='crystal').length,1);
  }
- assert.deepEqual(resolveBonusLevel('rolling-bones'),resolveBonusLevel('rumblewater-run'));
+ assert.notEqual(resolveBonusLevel('rolling-bones'),resolveBonusLevel('rumblewater-run'),'Rolling Bones owns its nighttime bonus');
+ assert.equal(resolveBonusLevel('rolling-bones').sky,'night');
  const copy=normalizeCustomLevelData(r.l.captureData());assert.ok(copy,'easy course survives editor capture');
  assert.deepEqual(copy.boulderChase,m.RIPCORD_RIVER_LEVEL.boulderChase);
  // Check real support across the new bank/pipe configurations and ordinary gaps.

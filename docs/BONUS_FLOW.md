@@ -27,6 +27,8 @@ Every non-boss campaign course has a distinct bonus room selected by `resolveBon
 | Temple Skyline | Sun-Crown Treasury | 10 | reveal and return → retain gap anchors → arrow before reward |
 | The Drowned Crown | The Captain’s Last Ledger | 9 | reveal and return → cap before fuse → visible switch bridge |
 | The Bone Yard | Ivory Salvage | 10 | retain gap anchors → finite supports → reveal and return |
+| Ripcord River | Sluicekeeper’s Cache | 21 | climb the spillway → reveal river islands → cross falling timbers |
+| Rolling Bones | Moonbone Vault | 16 | ride the rising sarcophagus → cross a breakaway spine → claim the high moon-eye cache → descend the jawbones |
 
 Ordinary courses use their raised bonus platforms. Temple Terraces and Temple Skyline have explicit pads beside their skating line. Crate Primer, Switchyard and Clockwork Gauntlet now supply the three replacement bonus layouts above. They and their former nested bonuses are retired from the campaign, editor menu and published pack. Map point indices remain reserved for old saves; the travel route connects Jungle Gate directly to The Drowned Crown.
 
@@ -35,6 +37,8 @@ Boss and competition levels have no bonus pad, scorecard action, detour or bonus
 Parent all-box totals use the selected room's actual breakable crates, excluding metal, metal arrows and switches. Completing a detour banks its broken-box count and locks that visit's entrance. Failing restores the original parent fruit/lives purse and leaves the bonus retryable. An ordinary exit with boxes left behind remains valid. A bonus detour contributes to the **parent's** gem objective; the direct standalone editor versions award their own gem before their gate. Main-only puzzle-course regression runs now correctly finish without a gem until the linked bonus boxes are also earned.
 
 Unknown editor courses retain Easy Street as a safe fallback. The original Unity bonus and Easy Street remain available as editor entries with normal world backgrounds. `bonus-<progressKey>` entries expose every new room for direct playtesting, while actual detours retain the established `bonus:<parentId>` session identity.
+
+Rolling Bones and its `secret-4` progress alias resolve to the separate **Moonbone Vault**, also available directly as `bonus-rolling-bones`. Its night sky, cool moonlight, giant ivory ribs, skull crypts and crescent moon frame an original 106 m route. The blackwater borrows the active night sky for its reflection. The vertical lift, four collapsing vertebrae and descending perches use existing native components; all sixteen crates and the return gate are reachable through ordinary input. Ripcord retains Sluicekeeper’s Cache and its own box total.
 
 A completed bonus also acts as a checkpoint crate: the supported return point becomes the respawn point, and the parent crate, outline, switch, partial multi-hit and deployed-bridge states are banked together with its box count, masks and score. Banking adds no extra physical crate or box to the level's total. Later deaths restore this snapshot and retain the completed bonus tally and locked entrance. A failed bonus preserves the previous checkpoint; a fresh run clears the bonus checkpoint and reopens the entrance. Reward inventory continues through the existing campaign autosave preference.
 
