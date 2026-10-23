@@ -13819,7 +13819,7 @@ export class Player {
     const segment = level.wallPathSegmentForBox(box);
     const contact = level.closestWallPath(path, this.pos.x, this.pos.z, segment);
     if (
-      this.pos.y > contact.y + path.height ||
+      this.pos.y > contact.y + contact.height ||
       this.pos.y + this.hitboxHalf.y * 2 < contact.y
     )
       return null;
@@ -14002,7 +14002,7 @@ export class Player {
         0.08;
       if (contact.distance > contactRadius) return false;
       if (
-        this.pos.y > contact.y + wallPath.height ||
+        this.pos.y > contact.y + contact.height ||
         this.pos.y + this.hitboxHalf.y * 2 < contact.y
       )
         return false;
@@ -14952,7 +14952,7 @@ export class Player {
 
     let off = pathOff;
     if (this.wallPath && pathSample) {
-      if (this.pos.y > pathSample.y + this.wallPath.height + 0.25) off = true;
+      if (this.pos.y > pathSample.y + pathSample.height + 0.25) off = true;
       if (this.pos.y + this.hitboxHalf.y * 2 < pathSample.y - 0.05) off = true;
     } else if (w) {
       if (this.wallNormal.x !== 0) {

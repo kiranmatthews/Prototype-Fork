@@ -2,6 +2,7 @@ import { Vector3 } from 'three';
 import survey from '../../docs/mall/source-survey.json';
 import type { CustomComponent, CustomLevelData } from '../level';
 import { mallVisuals } from './mall-art';
+import { clipMallWallOpening, type MallWall } from './mall-wall-proxies';
 
 type P = [number, number, number];
 type Triangle = { a:P; b:P; c:P; d:number; source:number };
@@ -62,10 +63,12 @@ function refine(v:number[],ix:number[],passes=3):{v:number[];ix:number[]} {
  }return{v,ix};
 }
 const sourceName=(id:number)=>id===18?'Entrance / first concourse':id===42?'Courtyard / exit':id===43?'Atrium / crossrail arcade':id>=33&&id<=37?'Directory':id===19||id===20||id===38?'Glass doorway':`Mall detail ${id}`;
-export const MALL_WALLS:{a:P;b:P;height:number;source:number}[]=[];
+export const MALL_WALLS:MallWall[]=[];
+export const MALL_WALL_OPENINGS:{a:P;b:P;height:number;source:number;segments:number}[]=[];
 export const MALL_SURVEY_STATS={sourceTriangles:0,solidTriangles:0,vertTriangles:0,visualTriangles:0,wallSegments:0,railEdges:0,railPaths:0};
 type WallPatch={ends:P[][];source:number;vertices:Set<string>};
 const allWalls=new Map<string,WallPatch[]>();
+const wallFaces=new Map<number,P[][]>();
 // Collision sectors cut through continuous ramps: the south courtyard's
 // vertical extension is in sector 43 while its curve is in sector 42. Find
 // transition neighbours and lip tangents across that storage boundary too.
@@ -106,6 +109,8 @@ for(const s of survey.meshes){
   const tex=glass||directory?'solid':vert?'stone':f.n.y>.55?'pavement':'stone';
   const k=`${solid}:${vert}:${color}:${tex}`;if(!batches.has(k))batches.set(k,{ix:[],vert,solid,color,tex});batches.get(k)!.ix.push(...f.ids);
   if(!solid||vert||Math.abs(f.n.y)>.025)continue;
+  if(!wallFaces.has(s.id))wallFaces.set(s.id,[]);
+  wallFaces.get(s.id)!.push(points);
   const columns=new Map<string,P[]>();for(const p of points){const k=columnKey(p);if(!columns.has(k))columns.set(k,[]);columns.get(k)!.push(p);}
   if(columns.size!==2)continue;
   const keys=[...columns.keys()].sort(),wk=keys.join('|');
@@ -228,14 +233,22 @@ function exposedWallSpans(a:P,b:P,height:number,source:number):[P,P][] {
  return spans;
 }
 // Native two-sided wall contacts complement the mesh's vertical raycasts.
-// Only coincident source columns merge; a door's lintel cannot seal its gap.
+// Split a connected frame around its measured opening before making wall
+// paths. A bounding rectangle alone would fill the fountain's passage.
+const emittedWalls=new Set<string>();
 for(const {ends,source} of [...allWalls.values()].flat()){
  const a=ends[0].reduce((p,q)=>p[1]<q[1]?p:q),b=ends[1].reduce((p,q)=>p[1]<q[1]?p:q);
  const height=Math.min(Math.max(...ends[0].map(p=>p[1]-a[1])),Math.max(...ends[1].map(p=>p[1]-b[1])));
  if(height<.24||Math.hypot(a[0]-b[0],a[2]-b[2])<.08)continue;
  for(const [start,end] of exposedWallSpans(a,b,height,source)){
   if(Math.hypot(end[0]-start[0],end[2]-start[2])<.001)continue;
-  MALL_WALLS.push({a:start,b:end,height,source});add({t:'wallpath',p:start,pts:[[0,0,0,0],[end[0]-start[0],end[2]-start[2],0,end[1]-start[1]]],w:.1,rise:height,invisible:true,edgeGrinding:false,curve:'corner',grp:source+1,nm:`${sourceName(source)} / wall`});
+  const envelope={a:start,b:end,height,source},clipped=clipMallWallOpening(envelope,wallFaces.get(source)??[]);
+  if(clipped.length!==1||clipped[0]!==envelope)MALL_WALL_OPENINGS.push({...envelope,segments:clipped.length});
+  for(const wall of clipped){
+   if(wall.height<.2||Math.hypot(...wall.b.map((v,i)=>v-wall.a[i]))<.02)continue;
+   const {a,b,height}=wall,id=[key(a),key(b),height.toFixed(6),wall.heights?.map(v=>v.toFixed(6)).join(',')??''].join('|');if(emittedWalls.has(id))continue;emittedWalls.add(id);
+   MALL_WALLS.push(wall);add({t:'wallpath',p:a,pts:[[0,0,0,0],[b[0]-a[0],b[2]-a[2],0,b[1]-a[1]]],w:.1,rise:height,...(wall.heights?{wallHeights:wall.heights}:{}),invisible:true,edgeGrinding:false,curve:'corner',grp:source+1,nm:`${sourceName(source)} / wall`});
+  }
  }
 }
 MALL_SURVEY_STATS.wallSegments=MALL_WALLS.length;

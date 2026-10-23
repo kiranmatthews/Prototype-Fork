@@ -20,11 +20,15 @@ The current provisional scale is **0.045 world metres per source unit**. It is c
 
 The source’s folded entrance, concourses, gallery, angled atrium, escalator, crossed arcade arches, courtyard quarters, canopies, pool, exit passage and parking retain their relative positions and elevations. The converted rail graph preserves **637 unique edges in 127 native paths**, including its closed loops and junctions. Every native rail control point matches its transformed source position within numerical precision.
 
-The source marks only the upper parts of some quarters as VERT. Classification follows smooth connected faces down to their toes and across storage-sector seams, covering 379 source triangles. Three subdivision passes add tangent midpoints without moving the source control vertices. Shared vertical tangents keep straight wall extensions straight. Native contact follows its current mesh, so continuous quarters use overlapping spatial chunks with a 1.2 m halo. Chunk dimensions follow source scale; this keeps the source connections stable and the full level within existing editor limits. The final data has 2,309 components, 60,615 mesh vertices and 68,091 mesh triangles, occupying about 6.93 MB as JSON.
+The source marks only the upper parts of some quarters as VERT. Classification follows smooth connected faces down to their toes and across storage-sector seams, covering 379 source triangles. Three subdivision passes add tangent midpoints without moving the source control vertices. Shared vertical tangents keep straight wall extensions straight. Native contact follows its current mesh, so continuous quarters use overlapping spatial chunks with a 1.2 m halo. Chunk dimensions follow source scale; this keeps the source connections stable and the full level within existing editor limits. The final data has 2,359 components, 60,615 mesh vertices and 68,091 mesh triangles, occupying about 6.95 MB as JSON.
 
 Original static scenery supplies 25 sectors, 208 meshes, 9,750 render triangles, 126 single-pass materials and 125 decoded textures. Native measured surfaces own collision; the original render meshes own appearance. Shared runtime support registers those textures and their unlit materials, and lets level data opt out of automatic huge-drop damage. Mall uses that option for its original gallery drop. Speeds, gravity, ollies, steering, camera implementation and rail physics are unchanged by this task. Course direction, a lower arcade camera view, five supported checkpoints and a finish gate are level data.
 
 The native wall proxies omit buried spans at continuous floor joins. The first up-escalator previously tripped the board against the deck’s front face just before reaching the landing. The correction splits that proxy at measured floor edges and checks strict support on both sides; exposed deck sides and actual guardrails remain collidable. Source render and collision control vertices stay unchanged.
+
+Connected wall frames also retain their openings. The fountain previously looked open but had a solid bounding rectangle across its passage. Nineteen wall envelopes are now clipped to their measured coplanar triangles. The shared School toolkit's `wallHeights` field gives the resulting 69 profiles their measured lower and upper edges; 1,035 interior samples remain inside source polygons. Both old fountain exits bailed. Both corrected exits pass with ordinary input and clean landings, natively and in the full renderer. Sills and lintels remain solid. See [wall-openings.json](mall/wall-openings.json).
+
+The separate [scale and physics research](mall/scale-physics-research.json) records the importer's coordinate conversion, the conversion mesh's inferred quantization, and original PS1 charge/gravity/kick calculations. These do not establish the final actor-relative scale. Experimental flight settings are not enabled in the validated build. In particular, the source's `mMaxSpeed` selects stronger drag rather than imposing a universal hard cap.
 
 ## Authored gaps and landing policy
 
@@ -46,13 +50,13 @@ All seven objects pass full-production browser approaches, including the transve
 
 Current evidence is saved in [validation.json](mall/validation.json), including hashes of the frozen runtime used while other chats edited the shared checkout.
 
-The complete full-render route uses normal controller input from the source restart to the parking finish: **83.57 simulation seconds, no bail or death, at least 16.20 m/s after the entrance**. Pass 18 repeats the complete native and full-render browser route with breakable scenery enabled. The separate pass-17 Flying Leap and suspended-beam evidence remains identified with its original build. Source equality, unchanged tuning and zero console errors are checked. The main route uses the courtyard’s sloped takeoff before clearing its raised lip.
+The complete full-render route uses normal controller input from the source restart to the parking finish: **83.57 simulation seconds, no bail or death, at least 16.20 m/s after the entrance**. Pass 19 repeats the complete native and full-render browser route after correcting wall openings. The seven breakable browser fixtures retain their pass-18 evidence; Flying Leap and suspended-beam browser evidence remains identified with its pass-17 build, and their native checks pass again in pass 19. Source equality, unchanged tuning and zero console errors are checked. The main route uses the courtyard’s sloped takeoff before clearing its raised lip.
 
 Focused native checks cover source control-point retention, 58 measured surface probes, supported spawn and five checkpoints, editor save/load, curved garden-skirt collision, both courtyard wall airs, and the atrium wall return. A separate data test checks three scales: transition and rail connectivity remain identical, and each version stays below the existing mesh and file-size caps. Rail section tests require the intended source path, a sustained grind and a clean exit, using ordinary controller samples after an initial supported placement.
 
 Both escalators are checked uphill and downhill with ordinary input, no ollie and no in-run placement or speed edits. All four routes retain support across their landings; minimum seam speeds range from 9.45 to 21.00 m/s. The actual inner handrail on the first escalator is separately verified: source path 115, 24 grind frames, 4.50 m travelled and a clean landing back on the ramp. This is distinct from the adjacent display ledge checked in the previous pass.
 
-The production build and required level checks are run locally. MENU selection, K/L warps and reserve-life pit recovery use the real browser. The full suite is not run. Shared runtime changes from other chats are pinned and identified in the evidence; they are excluded from the Mall-only commit.
+The production build and required level checks are run locally. MENU selection, K/L warps and reserve-life pit recovery use the real browser. The full suite is not run. The related endpoint-height wall support and shared check are included in the local Mall commit. Other concurrent runtime changes are excluded from that commit and identified in the frozen preview's manifest.
 
 ![Measured arcade at normal gameplay camera](mall/measured-arcade.png)
 
@@ -64,6 +68,10 @@ The production build and required level checks are run locally. MENU selection, 
 - `node tools/test-mall-measured-rails.mjs`
 - `node tools/test-mall-measured-upper.mjs`
 - `node tools/test-mall-measured-gaps.mjs`
+- `node tools/test-mall-wall-proxies.mjs`
+- `node tools/test-mall-wall-openings.mjs`
+- `node tools/test-school-wall-profile.mjs`
+- `node tools/mall-wall-openings-browser.mjs <local-url>`
 - `node tools/test-mall-landing-policy.mjs`
 - `node tools/test-breakable-scenery.mjs`
 - `node tools/test-mall-breakables.mjs`
@@ -78,4 +86,4 @@ Set `PLAYWRIGHT_MODULE` when Playwright is installed outside this repository. Us
 
 ## Remaining fidelity work
 
-The goal remains active. The Flying Leap and complete suspended-beam route now pass input-only checks, alongside both escalators and the actual first-escalator handrail. Remaining alternate upper routes and the tape transfer’s input tolerance still need comparison with original gameplay. Head clearance and one successful transfer do not settle the final scale. The conversion’s rail graph needs further comparison with original PS1 gameplay. The source directories and glass now break, but the directory-goal reward, original box stacks, collectibles, sky and animated water remain incomplete. Breakup motion and sound are local approximations. These limitations prevent calling the recreation a completed literal 1:1 match.
+The goal remains active. The Flying Leap and complete suspended-beam route now pass input-only checks, alongside both escalators and the actual first-escalator handrail. The fountain passage is physically open, but its complete upper-display/car-ramp entry and grounded rollout still need source-scale and movement comparison. Remaining alternate upper routes and the tape transfer’s input tolerance also need comparison with original gameplay. Head clearance and one successful transfer do not settle the final scale. The conversion’s rail graph needs further comparison with original PS1 gameplay. The source directories and glass now break, but the directory-goal reward, original box stacks, collectibles, sky and animated water remain incomplete. Breakup motion and sound are local approximations. These limitations prevent calling the recreation a completed literal 1:1 match.

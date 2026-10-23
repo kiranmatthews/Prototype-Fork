@@ -1,7 +1,7 @@
 {
-  "schema": 18,
-  "verifiedAt": "2026-10-22T23:54:41.100782+00:00",
-  "status": "Two source glass barriers and five directories break during native and full-browser skating; full 1:1 goal remains active.",
+  "schema": 19,
+  "verifiedAt": "2026-10-23T00:46:42.187355+00:00",
+  "status": "Measured wall frames preserve their openings; both fountain exits pass native/full-browser checks. Full 1:1 goal remains active.",
   "previousImageBasedEvidenceCommit": "2508077121b87c2b606c515ac025556bd05f44af",
   "reference": {
     "page": "https://thpsx.com/creation-details/?obj=958",
@@ -21,7 +21,7 @@
   },
   "sourceSHA256": {
     "src/levels/mall.ts": "ad3747d8facab080fed74989bfa657370f801098511a93df66fd7ccdf6a80072",
-    "src/levels/mall-measured.ts": "3a4532876c4a1d8881450539cd771bcdf129180f76e3ce4ac5831117bb8f1cea",
+    "src/levels/mall-measured.ts": "614a5dd43df2a973905bacc92c1a248a90c1e3da1baad9bf98992c87f96f1e1a",
     "src/levels/mall-art.ts": "c567277c468e232c9fcd73f4537fe05bfd307491f143a245ca77512bd29c32cc",
     "src/levels/mall-art.json": "94941a1026c7cfbc009d86b64c21654744043c0a7699ea4e4e0ed96d40c7c720",
     "src/levels/mall-art-textures.json": "56a3beccfc75921c4ba698e2d419f86f4e2f104f240b962d502b302e9d658a3a",
@@ -47,17 +47,22 @@
     "tools/test-breakable-scenery.mjs": "bd3e2ec906383cc365807d16f520643ff5f8184851e7cbfad0c773c6ee9f263c",
     "tools/mall-breakable-fixtures.mjs": "c38f6756f1c26618defc67a347f6d38f8d709168a6cb77d7ab8364b6c19192b2",
     "tools/test-mall-breakables.mjs": "c7b9a65f9154e1e6f6aef892ee34d1872bbb161bbfc2535a0c64ce77c7581e8a",
-    "tools/mall-breakables-browser.mjs": "13f6d9230d29cde8d52166a7aae15faff07beaeba6d65f05f273fed9331b3aa4"
+    "tools/mall-breakables-browser.mjs": "13f6d9230d29cde8d52166a7aae15faff07beaeba6d65f05f273fed9331b3aa4",
+    "src/levels/mall-wall-proxies.ts": "4eef907d97bc4b1c2f5b3407ecf8d988a43a25109e30e2f6a732b02386fbff0e",
+    "tools/test-mall-wall-proxies.mjs": "cc1cf59acc1dfe692e8b91a4e8dfe23d8020ff4ed0ace4b8d63e336b009ea64f",
+    "tools/test-mall-wall-openings.mjs": "d439126281bf6058cfb8aaba60e733b3c161e1627d4f85a3c1dab55168d7a5c7",
+    "tools/mall-wall-openings-browser.mjs": "9ef55feee1442e09bdf8d12b71e45620344fcac883322276a31e93aa5898d8f0",
+    "tools/test-school-wall-profile.mjs": "0898911b69e77060a4ec7d3d2ab0e9663b927bf7a105236b891002204d3cead5"
   },
   "build": {
-    "version": "6b21d6701b64413eecca",
-    "snapshot": "/private/tmp/mall-recreation/snapshot-18",
-    "output": "/private/tmp/mall-recreation/dist-18",
-    "preview": "http://127.0.0.1:5290/?playtest&level=mall",
+    "version": "af458a43df3417103f74",
+    "snapshot": "/private/tmp/mall-recreation/snapshot-19",
+    "output": "/private/tmp/mall-recreation/dist-19",
+    "preview": "http://127.0.0.1:5291/?playtest&level=mall",
     "published": false
   },
   "runtimeManifest": "measured-runtime.json",
-  "sharedWorkspaceNote": "Validated against frozen snapshot-18. The Mall commit includes source object mapping and scoped generic breakable-mesh support. Other chats\u2019 unrelated movement, camera, tuning and rail edits remain excluded.",
+  "sharedWorkspaceNote": "No live player.ts, level.ts, tuning or character files were changed by this pass. Source-owned Mall geometry uses the shared endpoint-height toolkit; its required support and focused shared test are included in the local Mall commit. Real main/index remain untouched.",
   "scale": {
     "metresPerSourceUnit": 0.045,
     "riderStandingHeight": 3.016705279790415,
@@ -127,7 +132,7 @@
       "solidTriangles": 8678,
       "vertTriangles": 379,
       "visualTriangles": 1148,
-      "wallSegments": 1541,
+      "wallSegments": 1591,
       "railEdges": 637,
       "railPaths": 127
     },
@@ -1689,7 +1694,7 @@
             222.15852574512667
           ],
           "name": "PS1 Mall scenery 18:59",
-          "distance": 0.4640788870974762
+          "distance": 0.45935769102527557
         },
         {
           "frame": 781,
@@ -1699,10 +1704,10 @@
             226.2564123855924
           ],
           "name": "PS1 Mall scenery 18:59",
-          "distance": 0.37217732765770356
+          "distance": 0.36887781756941457
         }
       ],
-      "startedAt": 11156,
+      "startedAt": 13663.199999988079,
       "arcadeHeadroom": [
         {
           "frame": 3666,
@@ -1712,21 +1717,9 @@
             5799.707893032765
           ],
           "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.513613294328195,
-          "roofY": 42.50007715259718,
-          "margin": 0.9864638582689835
-        },
-        {
-          "frame": 3666,
-          "source": [
-            3981.727596785553,
-            -1467.5272115071614,
-            5799.707893032765
-          ],
-          "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.51165690452491,
-          "roofY": 42.47594365033308,
-          "margin": 0.9642867458081668
+          "headTop": 41.471735984251794,
+          "roofY": 42.47413376047645,
+          "margin": 1.0023977762246545
         },
         {
           "frame": 3672,
@@ -1736,9 +1729,9 @@
             5799.702251374928
           ],
           "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.497156964980846,
-          "roofY": 42.31504918489905,
-          "margin": 0.8178922199182068
+          "headTop": 41.47191815890895,
+          "roofY": 42.31342719762059,
+          "margin": 0.8415090387116422
         },
         {
           "frame": 3675,
@@ -1748,9 +1741,9 @@
             5799.699430546009
           ],
           "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.48969990922788,
-          "roofY": 42.23331369663372,
-          "margin": 0.7436137874058417
+          "headTop": 41.47378232031609,
+          "roofY": 42.25809289719756,
+          "margin": 0.7843105768814667
         },
         {
           "frame": 3678,
@@ -1760,9 +1753,9 @@
             5799.696609717091
           ],
           "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.48301585707648,
-          "roofY": 42.152866248862075,
-          "margin": 0.6698503917855945
+          "headTop": 41.477939841082744,
+          "roofY": 42.17799035153038,
+          "margin": 0.7000505104476389
         },
         {
           "frame": 3681,
@@ -1772,9 +1765,9 @@
             5799.693788888172
           ],
           "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.477493605860175,
-          "roofY": 42.072903459156855,
-          "margin": 0.5954098532966796
+          "headTop": 41.48351026180658,
+          "roofY": 42.098373992888966,
+          "margin": 0.6148637310823872
         },
         {
           "frame": 3684,
@@ -1784,21 +1777,9 @@
             5799.690968059254
           ],
           "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.47347174303141,
-          "roofY": 41.99278267890489,
-          "margin": 0.5193109358734773
-        },
-        {
-          "frame": 3687,
-          "source": [
-            4160.611085051223,
-            -1467.5272115071614,
-            5799.688147230336
-          ],
-          "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.4717138844998,
-          "roofY": 41.936957688020044,
-          "margin": 0.4652438035202451
+          "headTop": 41.49020441722606,
+          "roofY": 42.01779548649202,
+          "margin": 0.5275910692659593
         },
         {
           "frame": 3690,
@@ -1808,21 +1789,33 @@
             5799.685326401417
           ],
           "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.47083592851055,
-          "roofY": 41.856521763898364,
-          "margin": 0.385685835387811
+          "headTop": 41.50482132150937,
+          "roofY": 41.85632146164646,
+          "margin": 0.35150014013709097
         },
         {
-          "frame": 3690,
+          "frame": 3693,
           "source": [
-            4186.1658690891745,
+            4211.720653127126,
             -1467.5272115071614,
-            5799.685326401417
+            5799.6825055724985
           ],
           "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.47097106895557,
-          "roofY": 41.83174839239084,
-          "margin": 0.360777323435272
+          "headTop": 41.51163454636491,
+          "roofY": 41.77606696202049,
+          "margin": 0.26443241565557685
+        },
+        {
+          "frame": 3693,
+          "source": [
+            4211.720653127126,
+            -1467.5272115071614,
+            5799.6825055724985
+          ],
+          "roof": "PS1 Mall scenery 34:3",
+          "headTop": 41.513600344296975,
+          "roofY": 47.45387230596491,
+          "margin": 5.940271961667932
         },
         {
           "frame": 3696,
@@ -1832,9 +1825,9 @@
             5799.67968474358
           ],
           "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.47630280569671,
-          "roofY": 47.52487958221136,
-          "margin": 6.0485767765146505
+          "headTop": 41.51751767988948,
+          "roofY": 47.50254283873223,
+          "margin": 5.9850251588427525
         },
         {
           "frame": 3699,
@@ -1844,9 +1837,21 @@
             5799.676863914661
           ],
           "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.48142521602278,
-          "roofY": 47.454892888314845,
-          "margin": 5.973467672292067
+          "headTop": 41.52197295607954,
+          "roofY": 47.48240729428146,
+          "margin": 5.960434338201921
+        },
+        {
+          "frame": 3699,
+          "source": [
+            4262.830221203032,
+            -1467.5272115071614,
+            5799.676863914661
+          ],
+          "roof": "PS1 Mall scenery 34:3",
+          "headTop": 41.52307511601745,
+          "roofY": 47.45407681595227,
+          "margin": 5.931001699934818
         },
         {
           "frame": 3702,
@@ -1856,9 +1861,21 @@
             5799.6740430857435
           ],
           "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.487789823144254,
-          "roofY": 47.367453141309475,
-          "margin": 5.879663318165221
+          "headTop": 41.52476482398113,
+          "roofY": 47.39479266643035,
+          "margin": 5.870027842449218
+        },
+        {
+          "frame": 3702,
+          "source": [
+            4288.385005240983,
+            -1467.5272115071614,
+            5799.6740430857435
+          ],
+          "roof": "PS1 Mall scenery 34:3",
+          "headTop": 41.525263214075835,
+          "roofY": 47.36681194666211,
+          "margin": 5.841548732586276
         },
         {
           "frame": 3705,
@@ -1868,9 +1885,21 @@
             5799.671222256825
           ],
           "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.49481495758837,
-          "roofY": 47.281062671949854,
-          "margin": 5.786247714361487
+          "headTop": 41.52565887789344,
+          "roofY": 47.30717803713203,
+          "margin": 5.7815191592385915
+        },
+        {
+          "frame": 3705,
+          "source": [
+            4313.939789278938,
+            -1467.5272115071614,
+            5799.671222256825
+          ],
+          "roof": "PS1 Mall scenery 34:3",
+          "headTop": 41.52553518622685,
+          "roofY": 47.27954707588988,
+          "margin": 5.754011889663033
         },
         {
           "frame": 3708,
@@ -1880,33 +1909,9 @@
             5799.668401427906
           ],
           "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.49993450029972,
-          "roofY": 47.22020460879364,
-          "margin": 5.720270108493914
-        },
-        {
-          "frame": 3708,
-          "source": [
-            4339.49457331689,
-            -1467.5272115071614,
-            5799.668401427906
-          ],
-          "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.502161534206635,
-          "roofY": 47.19362292609507,
-          "margin": 5.691461391888431
-        },
-        {
-          "frame": 3711,
-          "source": [
-            4365.049357354841,
-            -1467.5272115071614,
-            5799.665580598988
-          ],
-          "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.50938572774798,
-          "roofY": 47.10408462637658,
-          "margin": 5.5946988986286
+          "headTop": 41.524598060261894,
+          "roofY": 47.219563406381326,
+          "margin": 5.694965346119432
         },
         {
           "frame": 3714,
@@ -1916,9 +1921,21 @@
             5799.662759770069
           ],
           "roof": "PS1 Mall scenery 34:3",
-          "headTop": 41.51559493969111,
-          "roofY": 47.01716951865706,
-          "margin": 5.5015745789659505
+          "headTop": 41.51714685318666,
+          "roofY": 47.04538341780642,
+          "margin": 5.52823656461976
+        },
+        {
+          "frame": 3714,
+          "source": [
+            4390.604141392796,
+            -1467.5272115071614,
+            5799.662759770069
+          ],
+          "roof": "PS1 Mall scenery 34:3",
+          "headTop": 41.51536771958101,
+          "roofY": 47.017052937267586,
+          "margin": 5.501685217686578
         }
       ],
       "state": "finished",
@@ -1929,15 +1946,241 @@
       ],
       "stage": 2,
       "tuningUnchanged": true,
-      "wallSeconds": 83.4835,
+      "wallSeconds": 83.47560000002385,
       "errors": []
+    },
+    "pass18Breakables": {
+      "build": {
+        "version": "6b21d6701b64413eecca",
+        "snapshot": "/private/tmp/mall-recreation/snapshot-18",
+        "output": "/private/tmp/mall-recreation/dist-18",
+        "preview": "http://127.0.0.1:5290/?playtest&level=mall",
+        "published": false
+      },
+      "stamp": "Codex/sol fork \u00b7 build 10-22 23:52 UTC",
+      "fullRenderer": true,
+      "errors": [],
+      "fixtures": [
+        {
+          "id": 19,
+          "label": "Entrance glass",
+          "frames": 110,
+          "bail": false,
+          "done": true,
+          "contact": {
+            "frame": 77,
+            "speedBefore": 11.545420764943398,
+            "speedAfter": 11.695241259868766,
+            "sourcePosition": [
+              -13448.86881329272,
+              313.55333116319434,
+              370
+            ],
+            "fragments": 128
+          },
+          "tuningUnchanged": true,
+          "brokenIds": [
+            19
+          ],
+          "allMembersHidden": true,
+          "softResetPreserved": true,
+          "hardResetRestored": true
+        },
+        {
+          "id": 20,
+          "label": "Parking glass",
+          "frames": 110,
+          "bail": false,
+          "done": true,
+          "contact": {
+            "frame": 84,
+            "speedBefore": 12.59406497548968,
+            "speedAfter": 12.743851837442305,
+            "sourcePosition": [
+              15003.005729849458,
+              -2324.5197754022147,
+              5780
+            ],
+            "fragments": 64
+          },
+          "tuningUnchanged": true,
+          "brokenIds": [
+            20
+          ],
+          "allMembersHidden": true,
+          "softResetPreserved": true,
+          "hardResetRestored": true
+        },
+        {
+          "id": 33,
+          "label": "First upper directory",
+          "frames": 110,
+          "bail": false,
+          "done": true,
+          "contact": {
+            "frame": 75,
+            "speedBefore": 11.24576612487207,
+            "speedAfter": 11.395595700350322,
+            "sourcePosition": [
+              -11637.4764658945,
+              716.5365939670141,
+              176
+            ],
+            "fragments": 64
+          },
+          "tuningUnchanged": true,
+          "brokenIds": [
+            33
+          ],
+          "allMembersHidden": true,
+          "softResetPreserved": true,
+          "hardResetRestored": true
+        },
+        {
+          "id": 34,
+          "label": "Atrium directory",
+          "frames": 110,
+          "bail": false,
+          "done": true,
+          "contact": {
+            "frame": 65,
+            "speedBefore": 9.747235208489343,
+            "speedAfter": 9.897106658273106,
+            "sourcePosition": [
+              -955,
+              -270.6316121419268,
+              2352.8149769927186
+            ],
+            "fragments": 64
+          },
+          "tuningUnchanged": true,
+          "brokenIds": [
+            34
+          ],
+          "allMembersHidden": true,
+          "softResetPreserved": true,
+          "hardResetRestored": true
+        },
+        {
+          "id": 35,
+          "label": "Arcade directory",
+          "frames": 110,
+          "bail": false,
+          "done": true,
+          "contact": {
+            "frame": 64,
+            "speedBefore": 14.1809636642165,
+            "speedAfter": 14.403496151523367,
+            "sourcePosition": [
+              3122.6061074549725,
+              -1460.6234777972954,
+              5819
+            ],
+            "fragments": 64
+          },
+          "tuningUnchanged": true,
+          "brokenIds": [
+            35
+          ],
+          "allMembersHidden": true,
+          "softResetPreserved": true,
+          "hardResetRestored": true
+        },
+        {
+          "id": 36,
+          "label": "Court directory",
+          "frames": 110,
+          "bail": false,
+          "done": true,
+          "contact": {
+            "frame": 77,
+            "speedBefore": 11.545420764943398,
+            "speedAfter": 11.695241259868766,
+            "sourcePosition": [
+              10621.131186707273,
+              -1512.5272454155815,
+              5781
+            ],
+            "fragments": 64
+          },
+          "tuningUnchanged": true,
+          "brokenIds": [
+            36
+          ],
+          "allMembersHidden": true,
+          "softResetPreserved": true,
+          "hardResetRestored": true
+        },
+        {
+          "id": 37,
+          "label": "Gallery directory",
+          "frames": 110,
+          "bail": false,
+          "done": true,
+          "contact": {
+            "frame": 68,
+            "speedBefore": 10.196837730930929,
+            "speedAfter": 10.346697236113304,
+            "sourcePosition": [
+              -6115.855204802687,
+              685.599568684896,
+              380
+            ],
+            "fragments": 64
+          },
+          "tuningUnchanged": true,
+          "brokenIds": [
+            37
+          ],
+          "allMembersHidden": true,
+          "softResetPreserved": true,
+          "hardResetRestored": true
+        }
+      ]
+    },
+    "wallOpenings": {
+      "errors": [],
+      "fixtures": [
+        {
+          "name": "Fountain front exit",
+          "frames": 170,
+          "bail": false,
+          "passageFrames": 98,
+          "groundedAfterExit": 15,
+          "done": true,
+          "end": [
+            -9284.522096104112,
+            279.75126582179655,
+            393.3010081230492
+          ],
+          "state": "ride",
+          "reached": true,
+          "tuningUnchanged": true
+        },
+        {
+          "name": "Fountain rear exit",
+          "frames": 171,
+          "bail": false,
+          "passageFrames": 101,
+          "groundedAfterExit": 15,
+          "done": true,
+          "end": [
+            -7987.545800208092,
+            282.5915946306977,
+            390.9816246589299
+          ],
+          "state": "ride",
+          "reached": true,
+          "tuningUnchanged": true
+        }
+      ]
     }
   },
   "smoke": {
     "start": {
       "deaths": 0,
       "lives": 4,
-      "stamp": "Codex/sol fork \u00b7 build 10-22 23:52 UTC"
+      "stamp": "Codex/sol fork \u00b7 build 10-23 00:37 UTC"
     },
     "checkpoints": [
       {
@@ -1980,10 +2223,10 @@
         "index": 4,
         "position": [
           237.0549298095703,
-          36.65775833129883,
+          36.55775833129883,
           -1141.8108837890625
         ],
-        "distance": 0
+        "distance": 0.10000000000000142
       }
     ],
     "recovery": {
@@ -2001,25 +2244,28 @@
     "typescript": "passed",
     "productionBuild": "passed",
     "check:all": "not run",
-    "browser": "Seven full-production breakable approaches, complete full-render source-spawn-to-finish route, lite MENU/K/L/pit recovery; no console errors.",
+    "browser": "Lite MENU, five checkpoint warps and pit recovery; full-render fountain exits and the complete 5014-step route; no console errors.",
     "landingPolicy": "Default/true 40 m drops still bail; false follows the identical trajectory and rolls away. Invalid types rejected, editor capture/import retained. Existing huge-drop boundary, aligned-transition and saved-settings regression suite passes.",
-    "breakables": "Seven identical native enabled/disabled movement traces; grouped visibility, thin swept contact, diagonal miss, finite fragment disposal, 20 reset cycles, editor round-trip and invalid import rejection pass."
+    "breakables": "Seven identical native enabled/disabled movement traces; grouped visibility, thin swept contact, diagonal miss, finite fragment disposal, 20 reset cycles, editor round-trip and invalid import rejection pass.",
+    "wallOpenings": "Nineteen envelopes clipped to measured polygons, 69 endpoint-height profiles, 1035 source-interior samples; both old fountain exits bail and both corrected exits land cleanly.",
+    "required": "Exact check:levels package script passes. First build found unsupported Array.at; indexing replacement and clean TypeScript/production rebuild pass. No check:all."
   },
   "fidelityRemaining": [
     "Remaining upper alternate routes and tape-transfer timing tolerance need comparison with original gameplay.",
     "The 0.045 scale clears the rider and tested gaps are reachable, but original scale convention remains provisional.",
     "Converted rail nodes are not retail TRG verification.",
     "Directory-goal rewards, original box stacks, collectibles, sky and animated water remain incomplete.",
-    "Glass/sign breakup animation and sound are local approximations, not recovered source effects."
+    "Glass/sign breakup animation and sound are local approximations, not recovered source effects.",
+    "Fountain opening is fixed, but the complete display-to-fountain entry still requires final scale/movement comparison. Experimental PS1 flight/kick values are not enabled in the validated build."
   ],
   "elapsed": {
-    "continuationStartedUTC": "2026-10-22T23:32:29+00:00",
-    "allSevenPlayableConfirmedUTC": "2026-10-22T23:46:23+00:00",
-    "finalValidationUTC": "2026-10-22T23:54:41.100782+00:00",
-    "promptToPlayableSeconds": 834.0,
-    "note": "Conservative first clock confirmation after all seven native approaches passed; visual debris then refined and rechecked."
+    "continuationStartedUTC": "2026-10-23T00:14:09+00:00",
+    "fullBrowserPlayableConfirmedUTC": "2026-10-23T00:39:06.072973+00:00",
+    "finalValidationUTC": "2026-10-23T00:46:42.187355+00:00",
+    "promptToVerifiedPlayableSeconds": 1497.07,
+    "basis": "Conservative confirmation from completed full-production opening checks; initial native success occurred earlier."
   },
-  "previousValidationCommit": "039a04ee803400799aed0cd52811780ed9ec9125",
+  "previousValidationCommit": "fa5a161c6ac4b8c134d3fe4b313cf6536d2af327",
   "upperRoutes": {
     "scale": 0.045,
     "stats": {
@@ -2574,11 +2820,6 @@
     ],
     "interpretation": "Published decompilation checks orientation/trick judgement at ground contact without the fork\u2019s automatic height threshold. This is code research, not a local retail executable comparison."
   },
-  "taskSharedFileSHA256": {
-    "src/level.ts": "224c3b669e7fb9179cdc94cb7e5111385d6ce3dce0f9e15948e3bac78225edb4",
-    "src/player.ts": "6f4364819d12d25874843e63162d1cd20cfb2f20b87311dd6164d6beb7349b4b"
-  },
-  "taskSharedFileNote": "Task-branch file hashes exclude concurrent shared edits; measured-runtime.json pins the actual frozen tested runtime.",
   "breakables": {
     "mapping": [
       {
@@ -3013,5 +3254,1278 @@
       "editorRoundTrip": true,
       "invalidDataRejected": true
     }
-  }
+  },
+  "wallOpenings": {
+    "native": {
+      "profileWalls": 69,
+      "polygonSamples": 1035,
+      "openingPatches": [
+        {
+          "a": [
+            -7.302101440429687,
+            124.80626403808593,
+            -108.5907568359375
+          ],
+          "b": [
+            -7.302101440429687,
+            124.80626403808593,
+            -94.3980029296875
+          ],
+          "height": 23.178559570312515,
+          "source": 18,
+          "segments": 6
+        },
+        {
+          "a": [
+            -6.886159057617188,
+            118.78562438964843,
+            -354.15347167968747
+          ],
+          "b": [
+            1.4848956298828115,
+            118.78562438964843,
+            -354.15347167968747
+          ],
+          "height": 19.20095947265625,
+          "source": 18,
+          "segments": 2
+        },
+        {
+          "a": [
+            -14.895631713867187,
+            118.78562438964843,
+            -354.15347167968747
+          ],
+          "b": [
+            -6.886159057617187,
+            118.78562438964843,
+            -354.15347167968747
+          ],
+          "height": 19.20095947265625,
+          "source": 18,
+          "segments": 4
+        },
+        {
+          "a": [
+            -25.255211791992185,
+            130.8449816894531,
+            -94.3980029296875
+          ],
+          "b": [
+            -25.255211791992185,
+            124.80626403808593,
+            -80.1870556640625
+          ],
+          "height": 17.139841918945336,
+          "source": 18,
+          "segments": 2
+        },
+        {
+          "a": [
+            -25.255211791992185,
+            124.80626403808593,
+            -80.1870556640625
+          ],
+          "b": [
+            -25.255211791992185,
+            118.78562438964843,
+            -65.9943017578125
+          ],
+          "height": 23.178559570312515,
+          "source": 18,
+          "segments": 2
+        },
+        {
+          "a": [
+            -25.255211791992185,
+            136.14242431640625,
+            -108.5907568359375
+          ],
+          "b": [
+            -25.255211791992185,
+            130.8449816894531,
+            -94.3980029296875
+          ],
+          "height": 11.842399291992194,
+          "source": 18,
+          "segments": 3
+        },
+        {
+          "a": [
+            7.360911254882812,
+            118.73138351440429,
+            -51.783266601562495
+          ],
+          "b": [
+            7.360911254882812,
+            118.73138351440429,
+            -33.739453125
+          ],
+          "height": 72.62736465454103,
+          "source": 18,
+          "segments": 6
+        },
+        {
+          "a": [
+            7.360911254882812,
+            118.73138351440429,
+            -33.739453125
+          ],
+          "b": [
+            7.360911254882812,
+            118.73138351440429,
+            -15.677534179687498
+          ],
+          "height": 72.62736465454103,
+          "source": 18,
+          "segments": 2
+        },
+        {
+          "a": [
+            7.360911254882812,
+            118.73138351440429,
+            -15.6775341796875
+          ],
+          "b": [
+            7.360911254882812,
+            124.51698303222656,
+            2.3844287109375006
+          ],
+          "height": 66.84176513671875,
+          "source": 18,
+          "segments": 2
+        },
+        {
+          "a": [
+            7.360867309570312,
+            124.51698440551758,
+            2.3841650390624998
+          ],
+          "b": [
+            7.360867309570312,
+            130.86306518554687,
+            20.427934570312498
+          ],
+          "height": 60.49568298339844,
+          "source": 18,
+          "segments": 3
+        },
+        {
+          "a": [
+            -7.048844604492187,
+            113.542427444458,
+            -275.9029541015625
+          ],
+          "b": [
+            -16.088878784179688,
+            113.542427444458,
+            -266.8629638671875
+          ],
+          "height": 15.34991844177246,
+          "source": 18,
+          "segments": 10
+        },
+        {
+          "a": [
+            -13.431110229492187,
+            128.89234588623046,
+            -279.6458203125
+          ],
+          "b": [
+            -0.6485614013671874,
+            128.89234588623046,
+            -279.6458203125
+          ],
+          "height": 15.331835632324214,
+          "source": 18,
+          "segments": 8
+        },
+        {
+          "a": [
+            -13.431110229492187,
+            128.89234588623046,
+            -254.09843261718748
+          ],
+          "b": [
+            -0.6485614013671874,
+            128.89234588623046,
+            -254.09843261718748
+          ],
+          "height": 15.331835632324214,
+          "source": 18,
+          "segments": 8
+        },
+        {
+          "a": [
+            214.9735089111328,
+            30.663715209960937,
+            -1176.8113037109374
+          ],
+          "b": [
+            218.0651934814453,
+            28.295238647460938,
+            -1183.2477978515624
+          ],
+          "height": 19.345599975585937,
+          "source": 42,
+          "segments": 2
+        },
+        {
+          "a": [
+            218.0651934814453,
+            28.295238647460938,
+            -1183.2477978515624
+          ],
+          "b": [
+            221.1748956298828,
+            27.12004211425781,
+            -1189.7023095703125
+          ],
+          "height": 21.714076538085937,
+          "source": 42,
+          "segments": 2
+        },
+        {
+          "a": [
+            170.35200988769532,
+            63.42466003417969,
+            -630.8314892578124
+          ],
+          "b": [
+            171.0933233642578,
+            63.42466003417969,
+            -630.8314892578124
+          ],
+          "height": 63.940357453728915,
+          "source": 43,
+          "segments": 2
+        },
+        {
+          "a": [
+            170.3520977783203,
+            63.42465454101562,
+            -630.8314453125
+          ],
+          "b": [
+            178.9401104736328,
+            63.42465454101562,
+            -630.8314453125
+          ],
+          "height": 58.49006579168361,
+          "source": 43,
+          "segments": 3
+        },
+        {
+          "a": [
+            -24.929972534179687,
+            94.10642440795898,
+            -451.4417578125
+          ],
+          "b": [
+            -24.929972534179687,
+            94.10642440795898,
+            -449.000947265625
+          ],
+          "height": 24.679201354980464,
+          "source": 43,
+          "segments": 2
+        },
+        {
+          "a": [
+            -24.929928588867188,
+            95.75170394897461,
+            -449.0009033203125
+          ],
+          "b": [
+            -24.929928588867188,
+            97.41506149291992,
+            -446.5781982421875
+          ],
+          "height": 21.37056427001953,
+          "source": 43,
+          "segments": 2
+        }
+      ],
+      "scale": 0.045,
+      "components": 2359,
+      "stats": {
+        "sourceTriangles": 9826,
+        "solidTriangles": 8678,
+        "vertTriangles": 379,
+        "visualTriangles": 1148,
+        "wallSegments": 1591,
+        "railEdges": 637,
+        "railPaths": 127
+      },
+      "samples": [
+        {
+          "point": [
+            -8926.943359375,
+            610,
+            345
+          ],
+          "solid": false
+        },
+        {
+          "point": [
+            -8926.943359375,
+            610,
+            370
+          ],
+          "solid": false
+        },
+        {
+          "point": [
+            -8926.943359375,
+            610,
+            405
+          ],
+          "solid": false
+        },
+        {
+          "point": [
+            -8926.943359375,
+            650,
+            345
+          ],
+          "solid": false
+        },
+        {
+          "point": [
+            -8926.943359375,
+            650,
+            370
+          ],
+          "solid": false
+        },
+        {
+          "point": [
+            -8926.943359375,
+            650,
+            405
+          ],
+          "solid": false
+        },
+        {
+          "point": [
+            -8926.943359375,
+            700,
+            345
+          ],
+          "solid": false
+        },
+        {
+          "point": [
+            -8926.943359375,
+            700,
+            370
+          ],
+          "solid": false
+        },
+        {
+          "point": [
+            -8926.943359375,
+            700,
+            405
+          ],
+          "solid": false
+        },
+        {
+          "point": [
+            -8926.943359375,
+            750,
+            345
+          ],
+          "solid": false
+        },
+        {
+          "point": [
+            -8926.943359375,
+            750,
+            370
+          ],
+          "solid": false
+        },
+        {
+          "point": [
+            -8926.943359375,
+            750,
+            405
+          ],
+          "solid": false
+        },
+        {
+          "point": [
+            -8926.943359375,
+            800,
+            345
+          ],
+          "solid": false
+        },
+        {
+          "point": [
+            -8926.943359375,
+            800,
+            370
+          ],
+          "solid": false
+        },
+        {
+          "point": [
+            -8926.943359375,
+            800,
+            405
+          ],
+          "solid": false
+        }
+      ],
+      "tuningUnchanged": true
+    },
+    "fixtures": [
+      {
+        "name": "Fountain front exit",
+        "frames": 170,
+        "bail": false,
+        "passageFrames": 98,
+        "groundedAfterExit": 15,
+        "end": [
+          -9284.522096104112,
+          279.75126582179655,
+          393.3010081230492
+        ],
+        "state": "ride",
+        "reached": true
+      },
+      {
+        "name": "Fountain rear exit",
+        "frames": 171,
+        "bail": false,
+        "passageFrames": 101,
+        "groundedAfterExit": 15,
+        "end": [
+          -7987.545800208092,
+          282.5915946306977,
+          390.9816246589299
+        ],
+        "state": "ride",
+        "reached": true
+      }
+    ],
+    "before": [
+      {
+        "name": "Fountain front exit",
+        "frames": 98,
+        "bail": true,
+        "passageFrames": 98,
+        "groundedAfterExit": 0,
+        "end": [
+          -8914.054470486111,
+          590.3782823350693,
+          370
+        ],
+        "state": "air",
+        "reached": false
+      },
+      {
+        "name": "Fountain rear exit",
+        "frames": 100,
+        "bail": true,
+        "passageFrames": 100,
+        "groundedAfterExit": 0,
+        "end": [
+          -8372.112521701387,
+          590.3782823350693,
+          370
+        ],
+        "state": "air",
+        "reached": false
+      }
+    ],
+    "fullBrowser": {
+      "errors": [],
+      "fixtures": [
+        {
+          "name": "Fountain front exit",
+          "frames": 170,
+          "bail": false,
+          "passageFrames": 98,
+          "groundedAfterExit": 15,
+          "done": true,
+          "end": [
+            -9284.522096104112,
+            279.75126582179655,
+            393.3010081230492
+          ],
+          "state": "ride",
+          "reached": true,
+          "tuningUnchanged": true
+        },
+        {
+          "name": "Fountain rear exit",
+          "frames": 171,
+          "bail": false,
+          "passageFrames": 101,
+          "groundedAfterExit": 15,
+          "done": true,
+          "end": [
+            -7987.545800208092,
+            282.5915946306977,
+            390.9816246589299
+          ],
+          "state": "ride",
+          "reached": true,
+          "tuningUnchanged": true
+        }
+      ]
+    },
+    "polygonUnit": {
+      "frameOpening": true,
+      "solidSillAndLintel": true,
+      "rotatedFrame": true,
+      "unchangedPlainWall": true,
+      "bevelInteriorSamples": 72
+    },
+    "sharedWallProfile": "Schema, exact geometry, interpolated contacts, four native approaches and legacy defaults pass.",
+    "sourceGeometryUnchanged": true,
+    "movementSettingsUnchanged": true
+  },
+  "currentNative": {
+    "surfaces": {
+      "controls": 8650,
+      "components": 2359,
+      "stats": {
+        "sourceTriangles": 9826,
+        "solidTriangles": 8678,
+        "vertTriangles": 379,
+        "visualTriangles": 1148,
+        "wallSegments": 1591,
+        "railEdges": 637,
+        "railPaths": 127
+      },
+      "checkpoints": [
+        [
+          12.054929809570313,
+          118.88562927246093,
+          -66.3108837890625
+        ],
+        [
+          12.054929809570313,
+          118.88562927246093,
+          -361.0608837890625
+        ],
+        [
+          -23.945070190429686,
+          92.54306182861328,
+          -507.3108837890625
+        ],
+        [
+          237.0549298095703,
+          55.219508814526826,
+          -691.8108837890625
+        ],
+        [
+          237.0549298095703,
+          36.65775833129883,
+          -1141.8108837890625
+        ]
+      ],
+      "probes": [
+        {
+          "source": 18,
+          "triangle": 0,
+          "error": 1.678466787780053e-06
+        },
+        {
+          "source": 18,
+          "triangle": 402,
+          "error": 1.2343142543613794e-06
+        },
+        {
+          "source": 18,
+          "triangle": 603,
+          "error": 1.311552665583804e-06
+        },
+        {
+          "source": 18,
+          "triangle": 670,
+          "error": 2.136230477844947e-06
+        },
+        {
+          "source": 18,
+          "triangle": 737,
+          "error": 2.315854800372108e-06
+        },
+        {
+          "source": 18,
+          "triangle": 804,
+          "error": 1.678466787780053e-06
+        },
+        {
+          "source": 18,
+          "triangle": 1072,
+          "error": 9.155273517080786e-07
+        },
+        {
+          "source": 18,
+          "triangle": 1139,
+          "error": 3.662109378410605e-06
+        },
+        {
+          "source": 18,
+          "triangle": 1206,
+          "error": 3.662109378410605e-06
+        },
+        {
+          "source": 18,
+          "triangle": 1340,
+          "error": 7.0190429823924205e-06
+        },
+        {
+          "source": 18,
+          "triangle": 1474,
+          "error": 7.0190429823924205e-06
+        },
+        {
+          "source": 18,
+          "triangle": 1675,
+          "error": 1.3732910133512632e-06
+        },
+        {
+          "source": 18,
+          "triangle": 2144,
+          "error": 1.759873697437797e-06
+        },
+        {
+          "source": 18,
+          "triangle": 2211,
+          "error": 2.136230477844947e-06
+        },
+        {
+          "source": 18,
+          "triangle": 2814,
+          "error": 4.839371854359342e-07
+        },
+        {
+          "source": 18,
+          "triangle": 2881,
+          "error": 3.662109378410605e-06
+        },
+        {
+          "source": 21,
+          "triangle": 0,
+          "error": 2.1469156763487263e-06
+        },
+        {
+          "source": 25,
+          "triangle": 0,
+          "error": 2.2888183792701966e-06
+        },
+        {
+          "source": 26,
+          "triangle": 0,
+          "error": 9.155273446026513e-07
+        },
+        {
+          "source": 42,
+          "triangle": 201,
+          "error": 4.470348362317633e-10
+        },
+        {
+          "source": 42,
+          "triangle": 268,
+          "error": 9.759871559822386e-07
+        },
+        {
+          "source": 42,
+          "triangle": 335,
+          "error": 6.103515701738615e-07
+        },
+        {
+          "source": 42,
+          "triangle": 737,
+          "error": 1.0681152247116188e-06
+        },
+        {
+          "source": 42,
+          "triangle": 804,
+          "error": 1.1444091896350983e-07
+        },
+        {
+          "source": 42,
+          "triangle": 1005,
+          "error": 3.8146972514141453e-07
+        },
+        {
+          "source": 42,
+          "triangle": 1072,
+          "error": 4.577636705249688e-07
+        },
+        {
+          "source": 42,
+          "triangle": 1139,
+          "error": 6.103515701738615e-07
+        },
+        {
+          "source": 42,
+          "triangle": 1206,
+          "error": 1.0681152247116188e-06
+        },
+        {
+          "source": 42,
+          "triangle": 1273,
+          "error": 1.0681152247116188e-06
+        },
+        {
+          "source": 42,
+          "triangle": 1407,
+          "error": 1.0681152247116188e-06
+        },
+        {
+          "source": 42,
+          "triangle": 1541,
+          "error": 1.0681152247116188e-06
+        },
+        {
+          "source": 42,
+          "triangle": 1608,
+          "error": 7.629394573882564e-07
+        },
+        {
+          "source": 42,
+          "triangle": 1675,
+          "error": 1.7857231032536447e-05
+        },
+        {
+          "source": 42,
+          "triangle": 1742,
+          "error": 4.470348362317633e-10
+        },
+        {
+          "source": 42,
+          "triangle": 1876,
+          "error": 5.215406370662201e-10
+        },
+        {
+          "source": 42,
+          "triangle": 1943,
+          "error": 5.200512040559602e-06
+        },
+        {
+          "source": 42,
+          "triangle": 2345,
+          "error": 1.2207031261368684e-06
+        },
+        {
+          "source": 42,
+          "triangle": 2479,
+          "error": 1.2207031261368684e-06
+        },
+        {
+          "source": 42,
+          "triangle": 2680,
+          "error": 1.0410726140719362e-05
+        },
+        {
+          "source": 43,
+          "triangle": 134,
+          "error": 3.0517578295530257e-06
+        },
+        {
+          "source": 43,
+          "triangle": 402,
+          "error": 2.288818350848487e-06
+        },
+        {
+          "source": 43,
+          "triangle": 469,
+          "error": 6.016330758029653e-07
+        },
+        {
+          "source": 43,
+          "triangle": 603,
+          "error": 2.1543462764839205e-06
+        },
+        {
+          "source": 43,
+          "triangle": 938,
+          "error": 6.918582613479884e-07
+        },
+        {
+          "source": 43,
+          "triangle": 1005,
+          "error": 2.676921383226727e-06
+        },
+        {
+          "source": 43,
+          "triangle": 1139,
+          "error": 3.2103429248309112e-06
+        },
+        {
+          "source": 43,
+          "triangle": 1474,
+          "error": 1.3732910133512632e-06
+        },
+        {
+          "source": 43,
+          "triangle": 1809,
+          "error": 3.051757815342171e-07
+        },
+        {
+          "source": 43,
+          "triangle": 1876,
+          "error": 1.8310546892053026e-06
+        },
+        {
+          "source": 43,
+          "triangle": 2077,
+          "error": 2.288818350848487e-06
+        },
+        {
+          "source": 43,
+          "triangle": 2278,
+          "error": 6.619175756839013e-06
+        },
+        {
+          "source": 43,
+          "triangle": 2345,
+          "error": 1.5258790142524958e-07
+        },
+        {
+          "source": 43,
+          "triangle": 2814,
+          "error": 2.7465820267025265e-06
+        },
+        {
+          "source": 43,
+          "triangle": 3082,
+          "error": 2.2888183792701966e-06
+        },
+        {
+          "source": 43,
+          "triangle": 3149,
+          "error": 8.392333938900265e-07
+        },
+        {
+          "source": 46,
+          "triangle": 0,
+          "error": 9.155273517080786e-07
+        },
+        {
+          "source": 47,
+          "triangle": 0,
+          "error": 4.834667691966388e-06
+        },
+        {
+          "source": 50,
+          "triangle": 0,
+          "error": 1.3897765995807276e-06
+        }
+      ],
+      "boundary": {
+        "frame": 69,
+        "source": [
+          -1343.9818878692695,
+          -915.4849921332466,
+          5330.541433493541
+        ],
+        "speed": 4.723448688936302,
+        "peak": 10.346697236113304,
+        "state": "ride"
+      }
+    },
+    "upper": {
+      "scale": 0.045,
+      "stats": {
+        "sourceTriangles": 9826,
+        "solidTriangles": 8678,
+        "vertTriangles": 379,
+        "visualTriangles": 1148,
+        "wallSegments": 1591,
+        "railEdges": 637,
+        "railPaths": 127
+      },
+      "tuningUnchanged": true,
+      "fixtures": [
+        {
+          "name": "First escalator up",
+          "frames": 351,
+          "bail": false,
+          "airFrames": 0,
+          "minSeamSpeed": 13.605476396265349,
+          "seamSamples": 32,
+          "end": [
+            -11795.07126463056,
+            716.5365939670141,
+            180.00009070762235
+          ],
+          "reached": true
+        },
+        {
+          "name": "First escalator down",
+          "frames": 236,
+          "bail": false,
+          "airFrames": 0,
+          "minSeamSpeed": 14.99001714177466,
+          "seamSamples": 26,
+          "end": [
+            -13206.661836340281,
+            314.3544884029152,
+            180
+          ],
+          "reached": true
+        },
+        {
+          "name": "Gallery escalator up",
+          "frames": 320,
+          "bail": false,
+          "airFrames": 0,
+          "minSeamSpeed": 20.999643440324824,
+          "seamSamples": 21,
+          "end": [
+            -4348.725883072899,
+            685.599568684896,
+            185.00000413367252
+          ],
+          "reached": true
+        },
+        {
+          "name": "Gallery escalator down",
+          "frames": 202,
+          "bail": false,
+          "airFrames": 0,
+          "minSeamSpeed": 9.447480776287469,
+          "seamSamples": 36,
+          "end": [
+            -5500.868588370113,
+            314.75860595703125,
+            185.0000016429683
+          ],
+          "reached": true
+        }
+      ]
+    },
+    "gaps": {
+      "tuningUnchanged": true,
+      "fixtures": [
+        {
+          "name": "Flying Leap, earlier release",
+          "kind": "drop",
+          "frames": 456,
+          "done": true,
+          "reached": true,
+          "bail": false,
+          "rails": [],
+          "launches": [
+            {
+              "frame": 293,
+              "source": [
+                -4568.7701171097615,
+                674.0264001950059,
+                185.0000030236647
+              ],
+              "speed": 19.24632353820363,
+              "verticalSpeed": 19.15128606573812
+            }
+          ],
+          "beamFrames": 0,
+          "beamDistance": 0,
+          "approachFrames": 0,
+          "source": [
+            -3407.2531101719724,
+            -270.6316121419268,
+            185.00000888291265
+          ],
+          "speed": 19.17608499232608,
+          "state": "ride",
+          "phase": "approach"
+        },
+        {
+          "name": "Flying Leap, later release",
+          "kind": "drop",
+          "frames": 460,
+          "done": true,
+          "reached": true,
+          "bail": false,
+          "rails": [],
+          "launches": [
+            {
+              "frame": 296,
+              "source": [
+                -4547.262594230218,
+                683.1657548270596,
+                185.0000031321589
+              ],
+              "speed": 19.201762130704637,
+              "verticalSpeed": 19.13235024926508
+            }
+          ],
+          "beamFrames": 0,
+          "beamDistance": 0,
+          "approachFrames": 0,
+          "source": [
+            -3381.32220735796,
+            -270.6316121419268,
+            185.00000901372096
+          ],
+          "speed": 19.1318478873376,
+          "state": "ride",
+          "phase": "approach"
+        },
+        {
+          "name": "Right handrail to suspended tape beam",
+          "kind": "tape",
+          "frames": 948,
+          "done": true,
+          "reached": true,
+          "bail": false,
+          "rails": [
+            60,
+            54
+          ],
+          "launches": [
+            {
+              "frame": 214,
+              "source": [
+                -5626.457950813143,
+                314.75877549913184,
+                818.2645795081303
+              ],
+              "speed": 22.99583485520933,
+              "verticalSpeed": 10.9728
+            },
+            {
+              "frame": 395,
+              "source": [
+                -4093.4262076738687,
+                382.1711324055991,
+                791.3115234375
+              ],
+              "speed": 22.995512937664973,
+              "verticalSpeed": 12.5
+            },
+            {
+              "frame": 857,
+              "source": [
+                -1075.802734375,
+                74.00755818684911,
+                2539.4443359375
+              ],
+              "speed": 21.05015882167337,
+              "verticalSpeed": 2.5
+            }
+          ],
+          "beamFrames": 381,
+          "beamDistance": 135.17998691815376,
+          "approachFrames": 172,
+          "source": [
+            -510.21973637766496,
+            -270.6316121419268,
+            3002.051234665078
+          ],
+          "speed": 22.999305774278216,
+          "state": "ride",
+          "phase": "rollout"
+        }
+      ]
+    },
+    "verts": [
+      {
+        "name": "Courtyard north wall",
+        "start": [
+          232.5549298095703,
+          35.8984228515625,
+          -1060.8108837890625
+        ],
+        "frames": 254,
+        "vert": 122,
+        "air": 55,
+        "peak": 46.42909988954073,
+        "returned": true,
+        "bail": false,
+        "end": [
+          9000,
+          -1512.5272454155815,
+          5284.465063939462
+        ]
+      },
+      {
+        "name": "Courtyard south wall",
+        "start": [
+          241.5549298095703,
+          35.89842285156249,
+          -1060.8108837890625
+        ],
+        "frames": 256,
+        "vert": 121,
+        "air": 49,
+        "peak": 45.91929871679887,
+        "returned": true,
+        "bail": false,
+        "end": [
+          8980.997488667796,
+          -1512.5272454155815,
+          6278.739923656652
+        ]
+      },
+      {
+        "name": "Atrium curved wall",
+        "start": [
+          -33.84507019042969,
+          92.54306411743163,
+          -507.3108837890625
+        ],
+        "frames": 335,
+        "vert": 116,
+        "air": 50,
+        "peak": 104.26588217986506,
+        "returned": true,
+        "bail": false,
+        "end": [
+          -2189.934551659064,
+          -270.6316121419268,
+          -715.5092038970076
+        ]
+      }
+    ],
+    "rails": {
+      "paths": 127,
+      "edges": 637,
+      "maxNodeError": 7.105427357601002e-15,
+      "fixtures": [
+        {
+          "name": "Concourse bench",
+          "start": [
+            19.61910580957031,
+            118.88562389450496,
+            -156.3108837890625
+          ],
+          "targetRail": 126,
+          "grindFrames": 24,
+          "grindDistance": 8.29316735723149,
+          "rails": [
+            126
+          ],
+          "bail": false,
+          "landed": true,
+          "end": [
+            -11989.063430778155,
+            314.75860595703125,
+            968.0927734375
+          ]
+        },
+        {
+          "name": "First concourse display ledge",
+          "start": [
+            -8.205969190429688,
+            118.83138488769532,
+            -43.8108837890625
+          ],
+          "targetRail": 97,
+          "grindFrames": 24,
+          "grindDistance": 8.012609144477233,
+          "rails": [
+            97
+          ],
+          "bail": false,
+          "landed": true,
+          "end": [
+            -12736.283758616926,
+            352.7296336754898,
+            553.7446897826102
+          ]
+        },
+        {
+          "name": "Up-escalator inside handrail",
+          "start": [
+            -23.495070190429686,
+            118.85195360448563,
+            -57.3108837890625
+          ],
+          "targetRail": 115,
+          "grindFrames": 24,
+          "grindDistance": 4.495694350122708,
+          "rails": [
+            115
+          ],
+          "bail": false,
+          "landed": true,
+          "end": [
+            -12988.643864490221,
+            364.9808492792654,
+            54.55136574568189
+          ]
+        },
+        {
+          "name": "Crossrail low arch",
+          "start": [
+            236.1549298095703,
+            38.68275939941406,
+            -903.3108837890625
+          ],
+          "targetRail": 37,
+          "grindFrames": 24,
+          "grindDistance": 9.274622150992498,
+          "rails": [
+            37
+          ],
+          "bail": false,
+          "landed": true,
+          "end": [
+            4299.555475012203,
+            -1467.5272115071614,
+            5744.57005732549
+          ]
+        }
+      ]
+    },
+    "topology": [
+      {
+        "scale": 0.025,
+        "sourceTriangles": 9826,
+        "solidTriangles": 8678,
+        "vertTriangles": 379,
+        "visualTriangles": 1148,
+        "wallSegments": 1575,
+        "railEdges": 637,
+        "railPaths": 127,
+        "components": 2382,
+        "vertices": 71137,
+        "triangles": 84817,
+        "bytes": 8153719
+      },
+      {
+        "scale": 0.035,
+        "sourceTriangles": 9826,
+        "solidTriangles": 8678,
+        "vertTriangles": 379,
+        "visualTriangles": 1148,
+        "wallSegments": 1569,
+        "railEdges": 637,
+        "railPaths": 127,
+        "components": 2342,
+        "vertices": 64091,
+        "triangles": 73790,
+        "bytes": 7354960
+      },
+      {
+        "scale": 0.045,
+        "sourceTriangles": 9826,
+        "solidTriangles": 8678,
+        "vertTriangles": 379,
+        "visualTriangles": 1148,
+        "wallSegments": 1591,
+        "railEdges": 637,
+        "railPaths": 127,
+        "components": 2359,
+        "vertices": 60615,
+        "triangles": 68091,
+        "bytes": 6950015
+      }
+    ]
+  },
+  "taskSharedFileSHA256": {
+    "src/level.ts": "87b2a141d8aec2b2f9a4b090649f6862738fb4fcd6fe64da547981ff5dc0c148",
+    "src/player.ts": "c24c6e218afa46473d65d2ae6fab582ed7767fc02625b48a4b9ce49b95a5326e"
+  },
+  "taskSharedFileNote": "Related wallHeights support was reused from the School task and is included as a scoped dependency. The task-branch files exclude other concurrent changes. measured-runtime.json pins the full shared runtime actually tested, including independent vert tracking/contact edits."
 }

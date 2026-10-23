@@ -321,6 +321,7 @@ export interface WallPathRuntime {
   length: number;
   halfThickness: number;
   height: number;
+  heights?: number[];
   closed: boolean;
 }
 
@@ -336,6 +337,7 @@ export interface WallPathSample {
   distance: number;
   crossDistance: number;
   cap: boolean;
+  height: number;
 }
 
 // Moving platform: slides along one axis on a sine, carrying the rider.
@@ -688,6 +690,7 @@ export interface CustomComponent {
   p: [number, number, number];
   s?: [number, number, number];
   collisionHeight?: number; // wall/wallpath: optional collider height when visual height differs
+  wallHeights?: [number, number]; // straight two-knot wallpath: exact height at each end, including triangular caps
   slip?: boolean; // platform/mesh: an icy/slick deck (friction cut, you can't stop short)
   // Slip only, 0.02..1: fraction of dry skate steering/braking/drive; scales
   // legacy ice run response and rollout drag. Explicit values enable vector run inertia.
@@ -1844,6 +1847,7 @@ export interface BendyWallResult {
   spine: VertRampNode[];
   length: number;
   closed: boolean;
+  heights?: number[];
 }
 
 /**
@@ -1908,6 +1912,7 @@ export function buildBendyWallGeometry(c: CustomComponent): BendyWallResult {
   const thickness = Math.max(0.1, c.w ?? 1.2);
   const visualHeight = Math.max(0.2, c.rise ?? c.s?.[1] ?? 5);
   const collisionHeight = Math.max(0.2, c.collisionHeight ?? visualHeight);
+  const heights = c.wallHeights && spine.length === 2 ? [...c.wallHeights] : undefined;
   const wrap = (index: number): number =>
     closed
       ? ((index % spine.length) + spine.length) % spine.length
@@ -1952,9 +1957,9 @@ export function buildBendyWallGeometry(c: CustomComponent): BendyWallResult {
     const hz = right.y * thickness * 0.5;
     sections.push({
       leftBottom: new THREE.Vector3(node.x - hx, node.y, node.z - hz),
-      leftTop: new THREE.Vector3(node.x - hx, node.y + visualHeight, node.z - hz),
+      leftTop: new THREE.Vector3(node.x - hx, node.y + (heights?.[index] ?? visualHeight), node.z - hz),
       rightBottom: new THREE.Vector3(node.x + hx, node.y, node.z + hz),
-      rightTop: new THREE.Vector3(node.x + hx, node.y + visualHeight, node.z + hz),
+      rightTop: new THREE.Vector3(node.x + hx, node.y + (heights?.[index] ?? visualHeight), node.z + hz),
       center,
       right,
       arc,
@@ -2091,7 +2096,11 @@ export function buildBendyWallGeometry(c: CustomComponent): BendyWallResult {
       // A cardinal straight can remain one exact Box3 however long it is. Any
       // diagonal/curved run is subdivided so its bounding rectangle never grows
       // into a broad invisible blocker beside the rendered strip.
-      const verticalDelta = Math.abs(sourceB.y - sourceA.y);
+      const heightA = heights?.[index] ?? collisionHeight;
+      const heightB = heights?.[(index + 1) % spine.length] ?? collisionHeight;
+      const verticalDelta = heights
+        ? Math.max(Math.abs(sourceB.y - sourceA.y), Math.abs(sourceB.y + heightB - sourceA.y - heightA))
+        : Math.abs(sourceB.y - sourceA.y);
       const cardinal = Math.abs(fullDx) < 1e-5 || Math.abs(fullDz) < 1e-5;
       const steps = cardinal && verticalDelta < 0.05
         ? 1
@@ -2117,7 +2126,9 @@ export function buildBendyWallGeometry(c: CustomComponent): BendyWallResult {
         const minY = Math.min(a.y, b.y);
         const maxY = Math.max(
           minY + 0.05,
-          Math.max(a.y, b.y) + collisionHeight - TOP_INSET,
+          heights
+            ? Math.max(a.y + THREE.MathUtils.lerp(heightA, heightB, t0), b.y + THREE.MathUtils.lerp(heightA, heightB, t1))
+            : Math.max(a.y, b.y) + collisionHeight - TOP_INSET,
         );
         collision.push(
           new THREE.Box3().setFromCenterAndSize(
@@ -2133,7 +2144,7 @@ export function buildBendyWallGeometry(c: CustomComponent): BendyWallResult {
       }
     }
   }
-  return { geometry, collision, collisionSegments, spine, length: totalLength, closed };
+  return { geometry, collision, collisionSegments, spine, length: totalLength, closed, heights };
 }
 
 // Fillet the corners of a polyline/polygon (Figma corner radius). Each
@@ -2499,7 +2510,7 @@ const LEVEL_DATA_KEYS = new Set([
   "components", "layers", "groups", "allBalanceCrates", "perfectGrindBoost", "hugeDropBail", "keepPlayFog", "skatepark", "cameraAirLift", "secretComboGem", "cameraLookAhead", "cameraRig",
 ]);
 const COMPONENT_DATA_KEYS = new Set([
-  "t", "p", "s", "to", "pts", "widths", "collisionHeight", "slip", "iceGrip", "containment",
+  "t", "p", "s", "to", "pts", "widths", "collisionHeight", "wallHeights", "slip", "iceGrip", "containment",
   "edgeGrinding", "cameraView", "cameraPosition", "cameraTarget", "cameraFov", "cameraAspect", "cameraFollowDistance", "cameraFollowTargetHeight", "cameraIntroDistance", "cameraCutaway", "len", "rise", "w", "yaw", "axis", "travelSign", "travelPhase", "vkind", "arc", "arcSteps", "deck",
   "closed", "bank", "curve", "vert", "lipRise", "outerBank", "depthBias", "shake", "kind", "dkind", "vr", "tn",
   "lit", "berms", "n", "outline", "range", "speed", "foe", "invisible", "solid",
@@ -2910,11 +2921,18 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
           !component.pts.every((point) => finiteTuple(point, 2, 5))))
     )
       return null;
+    if (component.wallHeights !== undefined && (
+      component.t !== 'wallpath' || !finiteTuple(component.wallHeights, 2) ||
+      component.wallHeights.some(h => h < 0 || h > MAX_ABS) || Math.max(...component.wallHeights) < .2 ||
+      component.pts?.length !== 2 || component.closed === true || component.curve === 'spline' ||
+      component.pts.some(p => (p[2] ?? 0) !== 0) || component.collisionHeight !== undefined ||
+      Math.hypot(component.pts[1][0] - component.pts[0][0], component.pts[1][1] - component.pts[0][1]) < .02
+    )) return null;
     if (component.t === 'spinbridge' && (component.s?.some(value => value <= 0) ||
       component.outline || component.solid === false ||
       (component.cycle !== undefined && component.cycle <= 0))) return null;
     aggregateNodes +=
-      (component.pts?.length ?? 0) + (component.widths?.length ?? 0);
+      (component.pts?.length ?? 0) + (component.widths?.length ?? 0) + (component.wallHeights?.length ?? 0);
     if (aggregateNodes > MAX_AGGREGATE_NODES) return null;
     if (
       component.p.some((number) => Math.abs(number) > MAX_ABS) ||
@@ -3143,7 +3161,11 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
         aggregateSamples += Math.max(nodes * 7, Math.ceil(curvedLength / 1.6)) *
           Math.max(24 * (source.skatepark ? 3 : 1), profileVertices);
       } else if (component.t === "wallpath" || component.t === "coastwall") {
-        aggregateSamples += Math.max(nodes * 7, Math.ceil(curvedLength / 0.6)) * 8;
+        const profileWork = component.wallHeights && component.pts ? Math.ceil(Math.max(
+          Math.abs((component.pts[1][3] ?? 0) - (component.pts[0][3] ?? 0)),
+          Math.abs((component.pts[1][3] ?? 0) + component.wallHeights[1] - (component.pts[0][3] ?? 0) - component.wallHeights[0]),
+        ) / .6) : 0;
+        aggregateSamples += Math.max(nodes * 7, Math.ceil(curvedLength / 0.6), profileWork) * 8;
       } else {
         aggregateSamples += nodes * 7 * 8;
       }
@@ -13057,6 +13079,7 @@ export class Level {
     halfThickness: number,
     height: number,
     closed: boolean,
+    heights?: number[],
   ): WallPathRuntime {
     const stations = [0];
     for (let index = 1; index < spine.length; index++)
@@ -13081,6 +13104,7 @@ export class Level {
       length: Math.max(0.001, stations[stations.length - 1]),
       halfThickness,
       height,
+      heights,
       closed: closed && stations.length === spine.length + 1,
     };
   }
@@ -13117,6 +13141,7 @@ export class Level {
       distance: 0,
       crossDistance: 0,
       cap: false,
+      height: THREE.MathUtils.lerp(path.heights?.[segment] ?? path.height, path.heights?.[next] ?? path.height, t),
     };
   }
 
@@ -13181,6 +13206,7 @@ export class Level {
         distance: contactDistance,
         crossDistance,
         cap,
+        height: THREE.MathUtils.lerp(path.heights?.[segment] ?? path.height, path.heights?.[(segment + 1) % path.spine.length] ?? path.height, t),
       };
       bestMetric = distance;
     }
@@ -13230,6 +13256,7 @@ export class Level {
       Math.max(0.05, c.w ?? 1.2) / 2,
       Math.max(0.2, c.collisionHeight ?? c.rise ?? c.s?.[1] ?? 5),
       built.closed,
+      built.heights,
     );
     for (const [index, box] of built.collision.entries()) {
       (c.containment === true ? this.containmentWalls : this.walls).push(box);
