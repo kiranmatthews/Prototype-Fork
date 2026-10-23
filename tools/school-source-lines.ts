@@ -1,4 +1,4 @@
-import { schoolSourcePoint, SCHOOL_SOURCE_SCALE, SCHOOL_SOURCE_RAILS } from '../src/levels/school-source';
+import { schoolSourcePoint, SCHOOL_SOURCE_SCALE, SCHOOL_SOURCE_RAILS, SCHOOL_GYM_ENTRY } from '../src/levels/school-source';
 import { CONST } from '../src/tuning';
 import { createBalancedGrind } from './school-grind-lines';
 import { createSchoolSourceRoute } from './school-source-route';
@@ -33,15 +33,21 @@ export function schoolSourceTrials(p: any, level: any, place: Place, traceRoute 
     return result;
   }
   add('Original canopy start', () => p.respawn(level, true), () => ({ moveY: 1 }), frame => frame >= 121 && p.grounded && p.pos.x > 15 && Math.abs(p.pos.z) < .2);
-  for (const [name, x, heading] of [['west', -16800, [1, 0, 0]], ['east', -13500, [-1, 0, 0]]] as [string, number, Point][]) {
+  for (const [name, heading] of [['west', [1, 0, 0]], ['east', [-1, 0, 0]]] as [string, Point][]) {
     const toe = name === 'west' ? -17279 : -13065;
     const toeX = schoolSourcePoint(toe, 1599, 11000)[0];
-    let nearest = Infinity, released = false, turning = false, turned = false;
-    add(`Original ${name} gym toe blocks`, () => { nearest = Infinity; place([x, 1630, 11000], heading, 6); }, () => ({ grabHeld: p.speed > 6 }), frame => {
-      const distance = (toeX - p.pos.x) * heading[0]; nearest = Math.min(nearest, distance);
-      if (distance <= .25) throw Error('Passed through the raised toe');
-      return frame >= 101 && nearest < .85 && p.grounded;
-    }, 180);
+    let released = false, turning = false, turned = false;
+    add(`Smoothed ${name} gym entry and return`, () => {
+      turning = turned = false;
+      place([toe + heading[0] * (SCHOOL_GYM_ENTRY.runUnits + 100), 1630, 11000], heading, 18);
+    }, () => {
+      if (!turned && (p.pos.x - toeX) * heading[0] > 8) turning = true;
+      if (turning && p.axisF.x * heading[0] < -.98) { turning = false; turned = true; }
+      return { moveX: turning ? 1 : 0, grabHeld: p.speed > (turning ? 6 : 18) };
+    }, (_frame, r) => {
+      if (r.air) throw Error('Smooth gym entry unexpectedly launched the rider');
+      return turned && p.grounded && p.pos.y < .05 && (p.pos.x - toeX) * heading[0] < -SCHOOL_GYM_ENTRY.runUnits * SCHOOL_SOURCE_SCALE - 1;
+    }, 1000);
     add(`Original ${name} gym ollie and return`, () => { released = turning = turned = false; place([toe + heading[0] * 14 / SCHOOL_SOURCE_SCALE, 1630, 11000], heading, 10); }, n => {
       const release = !released && (toeX - p.pos.x) * heading[0] < 5.5;
       if (release) released = true;

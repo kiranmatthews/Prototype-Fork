@@ -3,10 +3,10 @@ import source from '../../docs/school/source-geometry.json';
 import type { CustomComponent, CustomLevelData } from '../level';
 
 type P = [number, number, number];
-type Face = { id: string; object: number; points: P[]; normal: Vector3; flags: number; collision: number; color: number[] };
+type Face = { id: string; object: number; points: P[]; normal: Vector3; entryNormals?: P[]; flags: number; collision: number; color: number[] };
 // Match the animated original board-to-head coast pose to our existing rider.
-// The opt-in source movement parameters below preserve the original gym lips
-// at this scale; no character dimensions or global tuning are changed.
+// The opt-in source movement profile is retained at this scale. The gym entry
+// exception below changes geometry only, not the rider or movement settings.
 export const SCHOOL_SOURCE_SCALE = 2.9 / 208.1875;
 export const SCHOOL_SOURCE_ORIGIN: P = [-6149, 1599, 6391];
 export const schoolSourcePoint = (x: number, y: number, z: number): P => [
@@ -22,21 +22,74 @@ export const schoolOriginalPoint = (x: number, y: number, z: number): P => [
 const key = (p: P) => p.map(v => Math.round(v * 1e5)).join(',');
 const edgeKey = (a: P, b: P) => [key(a), key(b)].sort().join('|');
 const normal = (a: P, b: P, c: P) => new Vector3(...b).sub(new Vector3(...a)).cross(new Vector3(...c).sub(new Vector3(...a))).normalize();
+// User-approved playability exception: soften the two gym-bank risers without
+// changing the rider, jump settings, upper banks or original rail coordinates.
+// These source objects contain the visible strips and duplicate collision faces.
+export const SCHOOL_GYM_ENTRY = { runUnits: 450, riseUnits: 142, floorUnits: 1599, bankSlope: 351 / 1051, segments: 12 };
+const entryObjects = new Set([370, 718, 966, 967]);
+const hiddenEntries = new Set(['662:18', '662:19', '719:17', '719:18']);
+const entryFeet = new Map<string, number>();
+const originalKey = (p: P) => p.join(':');
+for (const mesh of source.meshes) if (entryObjects.has(mesh.id)) {
+  for (const f of mesh.faces.filter(f => f[0] < 3)) for (const index of f.slice(6)) {
+    const p = mesh.vertices.slice(index * 3, index * 3 + 3) as P;
+    if (p[1] === SCHOOL_GYM_ENTRY.floorUnits) entryFeet.set(originalKey(p), p[0] < -15000 ? 1 : -1);
+  }
+}
+if (entryFeet.size !== 14) throw Error('Original gym entry stations changed');
+const entryPoint = (p: P, t: number): P => {
+  const { runUnits: run, riseUnits: rise, floorUnits: floor, bankSlope: slope } = SCHOOL_GYM_ENTRY;
+  const side = p[0] < -15000 ? 1 : -1;
+  // Cubic Hermite joins the flat floor and the original bank grade continuously.
+  const y = (-2 * rise + run * slope) * t ** 3 + (3 * rise - run * slope) * t ** 2;
+  return schoolSourcePoint(p[0] + side * run * (1 - t), floor + y, p[2]);
+};
+const entryNormal = (a: P, b: P, t: number): P => {
+  const { runUnits: run, riseUnits: rise, bankSlope: slope } = SCHOOL_GYM_ENTRY;
+  const side = a[0] < -15000 ? 1 : -1;
+  const grade = ((-6 * rise + 3 * run * slope) * t ** 2 + (6 * rise - 2 * run * slope) * t) / run;
+  return new Vector3(-side * grade, 1, -side * grade * (b[0] - a[0]) / (b[2] - a[2])).normalize().toArray() as P;
+};
 const faces: Face[] = [], edges = new Map<string, number[]>();
+let originalFaceCount = 0;
+function addFace(face: Face) {
+  if (face.normal.lengthSq() < .5) return;
+  const index = faces.length; faces.push(face);
+  for (let j = 0; j < face.points.length; j++) {
+    const k = edgeKey(face.points[j], face.points[(j + 1) % face.points.length]);
+    if (!edges.has(k)) edges.set(k, []);
+    edges.get(k)!.push(index);
+  }
+}
 for (const mesh of source.meshes) {
-  const vertices = Array.from({ length: mesh.vertices.length / 3 }, (_, i) => schoolSourcePoint(...mesh.vertices.slice(i * 3, i * 3 + 3) as P));
+  const originals = Array.from({ length: mesh.vertices.length / 3 }, (_, i) => mesh.vertices.slice(i * 3, i * 3 + 3) as P);
+  const vertices = originals.map(p => {
+    const side = entryFeet.get(originalKey(p));
+    // Move matching floor/end-cap vertices to the new foot so no seam is opened.
+    return schoolSourcePoint(p[0] + (side ?? 0) * SCHOOL_GYM_ENTRY.runUnits, p[1], p[2]);
+  });
   for (const f of mesh.faces) {
+    const raw = f.slice(6).reverse().map(i => originals[i]);
+    if (normal(raw[0], raw[1], raw[2]).lengthSq() >= .5) originalFaceCount++;
+    if (hiddenEntries.has(`${mesh.id}:${f[0]}`)) continue;
+    if (entryObjects.has(mesh.id) && f[0] < 3) {
+      const top = f.slice(6).map(i => originals[i]).filter(p => p[1] === 1741).sort((a, b) => a[2] - b[2]);
+      if (top.length !== 2) throw Error('Original gym bank riser changed');
+      const [a, b] = top;
+      for (let j = 0; j < SCHOOL_GYM_ENTRY.segments; j++) {
+        const lo = j / SCHOOL_GYM_ENTRY.segments, hi = (j + 1) / SCHOOL_GYM_ENTRY.segments;
+        const points = [entryPoint(a, lo), entryPoint(b, lo), entryPoint(b, hi), entryPoint(a, hi)];
+        const entryNormals = [entryNormal(a, b, lo), entryNormal(a, b, lo), entryNormal(a, b, hi), entryNormal(a, b, hi)];
+        if (normal(points[0], points[1], points[2]).y < 0) { points.reverse(); entryNormals.reverse(); }
+        addFace({ id: `${mesh.id}:${f[0]}:entry:${j}`, object: mesh.id, points, entryNormals,
+          normal: normal(points[0], points[1], points[2]), flags: f[1], collision: 1024, color: f.slice(3, 6) });
+      }
+      continue;
+    }
     // X reflection changes winding. Retain each original polygon boundary.
     const points = f.slice(6).reverse().map(i => vertices[i]);
     const n = normal(points[0], points[1], points[2]);
-    if (n.lengthSq() < .5) continue;
-    const index = faces.length;
-    faces.push({ id: `${mesh.id}:${f[0]}`, object: mesh.id, points, normal: n, flags: f[1], collision: f[2], color: f.slice(3, 6) });
-    for (let j = 0; j < points.length; j++) {
-      const k = edgeKey(points[j], points[(j + 1) % points.length]);
-      if (!edges.has(k)) edges.set(k, []);
-      edges.get(k)!.push(index);
-    }
+    addFace({ id: `${mesh.id}:${f[0]}`, object: mesh.id, points, normal: n, flags: f[1], collision: f[2], color: f.slice(3, 6) });
   }
 }
 // 0x1 disables collision; 0x2 is a trigger plane, explicitly non-solid.
@@ -87,11 +140,14 @@ export function schoolMeasuredSupport(x: number, z: number, ceiling = Infinity, 
 }
 const C: CustomComponent[] = [];
 const add = (c: CustomComponent) => C.push(c);
-export const SCHOOL_SOURCE_STATS = { sourceObjects: source.meshes.length, sourceFaces: faces.length, sourceRailNodes: source.railNodes.length, activeRailNodes: source.railActivation.activeNodes, transitionFaces: transitions.size, wallSegments: 0, railEdges: 0, railSegments: 0, railPaths: 0 };
-type Batch = { vertices: number[]; indices: number[]; normals: number[]; solid: boolean; vert: boolean; hidden: boolean; color: string; tex: string };
+export const SCHOOL_SOURCE_STATS = { sourceObjects: source.meshes.length, sourceFaces: originalFaceCount, playableFaces: faces.length, softenedEntryFaces: faces.filter(f => f.entryNormals).length, sourceRailNodes: source.railNodes.length, activeRailNodes: source.railActivation.activeNodes, transitionFaces: transitions.size, wallSegments: 0, railEdges: 0, railSegments: 0, railPaths: 0 };
+type Batch = { vertices: number[]; indices: number[]; normals: number[]; solid: boolean; vert: boolean; smooth: boolean; hidden: boolean; color: string; tex: string };
 const batches = new Map<string, Batch>();
 for (const [i, f] of faces.entries()) {
-  const vert = transitions.has(i), solid = isSolid(f), hidden = invisible(f);
+  // These new riding transitions meet original coping; label them accordingly
+  // so its retained rail is a grind target rather than a shin-high barrier.
+  const vert = transitions.has(i) || !!f.entryNormals, solid = isSolid(f), hidden = invisible(f);
+  const smooth = vert || !!f.entryNormals;
   if (hidden && !solid) continue;
   const terrain = (f.collision >> 9) & 15;
   const color = terrain === 2 ? '#bb9c70' : terrain === 11 ? '#829176' : terrain === 5 ? '#6f8992' : f.normal.y < -.3 ? '#858c87' : f.normal.y > .6 ? '#abb6ae' : '#8c9996';
@@ -99,10 +155,10 @@ for (const [i, f] of faces.entries()) {
   const centre = f.points.reduce((p, q) => p.map((v, j) => v + q[j] / f.points.length) as P, [0, 0, 0] as P);
   // Bound render/contact batches spatially. Authored normals cross storage
   // boundaries; the preview retains the original polygon stations.
-  const k = `${Math.floor(centre[0] / 40)}:${Math.floor(centre[2] / 40)}:${solid}:${vert}:${hidden}:${color}:${tex}`;
-  if (!batches.has(k)) batches.set(k, { vertices: [], indices: [], normals: [], solid, vert, hidden, color, tex });
+  const k = `${Math.floor(centre[0] / 40)}:${Math.floor(centre[2] / 40)}:${solid}:${vert}:${smooth}:${hidden}:${color}:${tex}`;
+  if (!batches.has(k)) batches.set(k, { vertices: [], indices: [], normals: [], solid, vert, smooth, hidden, color, tex });
   const b = batches.get(k)!, base = b.vertices.length / 3;
-  for (const p of f.points) { b.vertices.push(...p); b.normals.push(...(vert ? tangentNormals.get(key(p))! : f.normal).toArray()); }
+  for (const [j, p] of f.points.entries()) { b.vertices.push(...p); b.normals.push(...(f.entryNormals?.[j] ?? (vert ? tangentNormals.get(key(p))! : f.normal).toArray())); }
   for (let j = 1; j < f.points.length - 1; j++) b.indices.push(base, base + j, base + j + 1);
 }
 for (const b of batches.values()) {
@@ -113,7 +169,7 @@ for (const b of batches.values()) {
       if (!remap.has(i)) { remap.set(i, remap.size); vertices.push(...b.vertices.slice(i * 3, i * 3 + 3)); normals.push(...b.normals.slice(i * 3, i * 3 + 3)); }
       indices.push(remap.get(i)!);
     }
-    add({ t: 'mesh', p: [0, 0, 0], vertices, indices, normals, solid: b.solid, vert: b.vert, smoothCollision: b.vert, ...(b.vert ? { skateCamera: true } : {}), invisible: b.hidden, color: b.color, tex: b.tex, doubleSided: false, edgeGrinding: false, grp: 1, nm: b.vert ? 'School measured transition' : b.solid ? 'School measured architecture' : 'School measured scenery' });
+    add({ t: 'mesh', p: [0, 0, 0], vertices, indices, normals, solid: b.solid, vert: b.vert, smoothCollision: b.smooth, ...(b.vert ? { skateCamera: true } : {}), invisible: b.hidden, color: b.color, tex: b.tex, doubleSided: false, edgeGrinding: false, grp: 1, nm: b.vert ? 'School measured transition' : b.smooth ? 'School softened gym entry' : b.solid ? 'School measured architecture' : 'School measured scenery' });
   }
 }
 

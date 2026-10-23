@@ -36,6 +36,7 @@ document.querySelector('#overview')!.addEventListener('click', () => { overview 
 document.querySelector('#play')!.addEventListener('click', () => { overview = false; frame.contentWindow?.focus(); });
 document.querySelector('#checks')!.addEventListener('click', () => { if (!game || checks?.running || scaleMeasurement?.running) return; overview = false; checks = runSchoolSourceBrowserChecks(game); });
 document.querySelector('#route')!.addEventListener('click', () => { if (!game || checks?.running || scaleMeasurement?.running) return; overview = false; checks = runSchoolSourceBrowserChecks(game, true); });
+document.querySelector('#gym-entries')!.addEventListener('click', () => { if (!game || checks?.running || scaleMeasurement?.running) return; overview = false; checks = runSchoolSourceBrowserChecks(game, false, /Smoothed .*gym entry/); });
 document.querySelector('#rail-approach')!.addEventListener('click', () => { if (!game || checks?.running || scaleMeasurement?.running) return; overview = false; checks = runSchoolSourceBrowserChecks(game, false, /courtyard ollie/); });
 document.querySelector('#boundary-grind')!.addEventListener('click', () => { if (!game || checks?.running || scaleMeasurement?.running) return; overview = false; checks = runSchoolSourceBrowserChecks(game, false, /Original rail 797/); });
 document.querySelector('#roof-drop')!.addEventListener('click', () => { if (!game || checks?.running || scaleMeasurement?.running) return; overview = false; checks = runSchoolSourceBrowserChecks(game, false, /roof drop/); });
