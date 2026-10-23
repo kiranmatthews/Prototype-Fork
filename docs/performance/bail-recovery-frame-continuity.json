@@ -1,0 +1,936 @@
+{
+  "pass": "fidelity",
+  "date": "2026-10-22",
+  "baselineCommit": "69fdc352ccd89755bd0cd4c0affd8834c49885e3",
+  "evidenceDirectory": "/private/tmp/bail-contact-yield-20261022",
+  "changes": [
+    "Keep recovery rotation outside the same existing nonuniform body proportion scale used during tumble; carry its waist anchor in the body parent frame.",
+    "Capture the landed limb sprawl and release it with zero entry/exit slope on the recovery clock; preserve that spread if support disappears.",
+    "Retain all-axis momentum winding, exact support correction and finite segment elasticity/rebound."
+  ],
+  "continuity": {
+    "cases": 42,
+    "fixedStepHz": 60,
+    "units": "Difference between consecutive root-relative head displacements, metres per frame. This is a motion discontinuity proxy, not a total animation quality score.",
+    "summary": {
+      "entryVelocityChange": {
+        "before": {
+          "max": 0.27621310787616704,
+          "mean": 0.1560616094831699
+        },
+        "after": {
+          "max": 0.08496624736196168,
+          "mean": 0.017189096435809143
+        }
+      },
+      "earlyVelocityChange": {
+        "before": {
+          "max": 0.4347746703888338,
+          "mean": 0.18650412936002297
+        },
+        "after": {
+          "max": 0.22815297695792264,
+          "mean": 0.06631331717469761
+        }
+      },
+      "wholeRecoveryPeak": {
+        "before": {
+          "max": 0.4347746703888338,
+          "mean": 0.22450843232350481
+        },
+        "after": {
+          "max": 0.32342263700904617,
+          "mean": 0.18499037241776883
+        }
+      }
+    },
+    "rows": [
+      {
+        "cause": "balance",
+        "seed": 42,
+        "heading": 0,
+        "entryVelocityChangeBefore": 0.16745592036893514,
+        "entryVelocityChangeAfter": 0.0121256999442683,
+        "earlyVelocityChangeBefore": 0.16745592036893514,
+        "earlyVelocityChangeAfter": 0.04609889513736878,
+        "wholeRecoveryPeakBefore": 0.20303781332974644,
+        "wholeRecoveryPeakAfter": 0.2183693288366856,
+        "controlHandoffAfter": {
+          "frame": 60,
+          "shift": 0.018800053283436244,
+          "velocityChange": 0.020180423589362707
+        }
+      },
+      {
+        "cause": "manual",
+        "seed": 42,
+        "heading": 0,
+        "entryVelocityChangeBefore": 0.160700345886151,
+        "entryVelocityChangeAfter": 0.010886926485536784,
+        "earlyVelocityChangeBefore": 0.160700345886151,
+        "earlyVelocityChangeAfter": 0.03842583775760343,
+        "wholeRecoveryPeakBefore": 0.160700345886151,
+        "wholeRecoveryPeakAfter": 0.18761238778065192,
+        "controlHandoffAfter": {
+          "frame": 60,
+          "shift": 0.028616992744156945,
+          "velocityChange": 0.010836030603313535
+        }
+      },
+      {
+        "cause": "nose-manual",
+        "seed": 42,
+        "heading": 0,
+        "entryVelocityChangeBefore": 0.1040905794427402,
+        "entryVelocityChangeAfter": 0.008726425588757504,
+        "earlyVelocityChangeBefore": 0.1040905794427402,
+        "earlyVelocityChangeAfter": 0.0207848378906548,
+        "wholeRecoveryPeakBefore": 0.16921091851860798,
+        "wholeRecoveryPeakAfter": 0.1938393891593022,
+        "controlHandoffAfter": {
+          "frame": 60,
+          "shift": 0.019276826782433754,
+          "velocityChange": 0.02388741931153112
+        }
+      },
+      {
+        "cause": "wall",
+        "seed": 42,
+        "heading": 0,
+        "entryVelocityChangeBefore": 0.1673847461692366,
+        "entryVelocityChangeAfter": 0.007999687284350954,
+        "earlyVelocityChangeBefore": 0.24798919433314257,
+        "earlyVelocityChangeAfter": 0.15490347645386093,
+        "wholeRecoveryPeakBefore": 0.24798919433314257,
+        "wholeRecoveryPeakAfter": 0.15490347645386093,
+        "controlHandoffAfter": {
+          "frame": 71,
+          "shift": 0.018933560798480915,
+          "velocityChange": 0.017930336559834406
+        }
+      },
+      {
+        "cause": "trip",
+        "seed": 42,
+        "heading": 0,
+        "entryVelocityChangeBefore": 0.19121119278209026,
+        "entryVelocityChangeAfter": 0.01785909730839925,
+        "earlyVelocityChangeBefore": 0.4347746703888338,
+        "earlyVelocityChangeAfter": 0.13903825205950043,
+        "wholeRecoveryPeakBefore": 0.4347746703888338,
+        "wholeRecoveryPeakAfter": 0.13903825205950043,
+        "controlHandoffAfter": {
+          "frame": 78,
+          "shift": 0.01986346212370139,
+          "velocityChange": 0.02099637157199358
+        }
+      },
+      {
+        "cause": "landing",
+        "seed": 42,
+        "heading": 0,
+        "entryVelocityChangeBefore": 0.14597898577372645,
+        "entryVelocityChangeAfter": 0.015030435521692573,
+        "earlyVelocityChangeBefore": 0.14597898577372645,
+        "earlyVelocityChangeAfter": 0.0342998053134866,
+        "wholeRecoveryPeakBefore": 0.25277602156990886,
+        "wholeRecoveryPeakAfter": 0.27917622469857234,
+        "controlHandoffAfter": {
+          "frame": 73,
+          "shift": 0.017069514788680656,
+          "velocityChange": 0.022897763751158075
+        }
+      },
+      {
+        "cause": "pvp",
+        "seed": 42,
+        "heading": 0,
+        "entryVelocityChangeBefore": 0.10426996697311924,
+        "entryVelocityChangeAfter": 0.024832663321025468,
+        "earlyVelocityChangeBefore": 0.13229513333899093,
+        "earlyVelocityChangeAfter": 0.13482669507651393,
+        "wholeRecoveryPeakBefore": 0.17872714296317108,
+        "wholeRecoveryPeakAfter": 0.1891666947228547,
+        "controlHandoffAfter": {
+          "frame": 58,
+          "shift": 0.014353081626119474,
+          "velocityChange": 0.021240948040491554
+        }
+      },
+      {
+        "cause": "balance",
+        "seed": 42,
+        "heading": 1.5707963267948966,
+        "entryVelocityChangeBefore": 0.17201575044952128,
+        "entryVelocityChangeAfter": 0.011873357356026605,
+        "earlyVelocityChangeBefore": 0.17201575044952128,
+        "earlyVelocityChangeAfter": 0.07270638931206906,
+        "wholeRecoveryPeakBefore": 0.30266971242496793,
+        "wholeRecoveryPeakAfter": 0.19705577679583766,
+        "controlHandoffAfter": {
+          "frame": 60,
+          "shift": 0.060766654747683176,
+          "velocityChange": 0.011354477624481007
+        }
+      },
+      {
+        "cause": "manual",
+        "seed": 42,
+        "heading": 1.5707963267948966,
+        "entryVelocityChangeBefore": 0.15616395690801996,
+        "entryVelocityChangeAfter": 0.010658381251802808,
+        "earlyVelocityChangeBefore": 0.15616395690801996,
+        "earlyVelocityChangeAfter": 0.03607621796253996,
+        "wholeRecoveryPeakBefore": 0.15616395690801996,
+        "wholeRecoveryPeakAfter": 0.18342176541952906,
+        "controlHandoffAfter": {
+          "frame": 60,
+          "shift": 0.033385931997484304,
+          "velocityChange": 0.02130491338978662
+        }
+      },
+      {
+        "cause": "nose-manual",
+        "seed": 42,
+        "heading": 1.5707963267948966,
+        "entryVelocityChangeBefore": 0.10723317153108508,
+        "entryVelocityChangeAfter": 0.006689071189110812,
+        "earlyVelocityChangeBefore": 0.10723317153108508,
+        "earlyVelocityChangeAfter": 0.022164294368310793,
+        "wholeRecoveryPeakBefore": 0.27520324523845807,
+        "wholeRecoveryPeakAfter": 0.23701070939245075,
+        "controlHandoffAfter": {
+          "frame": 60,
+          "shift": 0.02370666448752681,
+          "velocityChange": 0.013873272251846312
+        }
+      },
+      {
+        "cause": "wall",
+        "seed": 42,
+        "heading": 1.5707963267948966,
+        "entryVelocityChangeBefore": 0.19611187939585065,
+        "entryVelocityChangeAfter": 0.03683341278496951,
+        "earlyVelocityChangeBefore": 0.19611187939585065,
+        "earlyVelocityChangeAfter": 0.044237567606150864,
+        "wholeRecoveryPeakBefore": 0.19611187939585065,
+        "wholeRecoveryPeakAfter": 0.08485920294900615,
+        "controlHandoffAfter": {
+          "frame": 71,
+          "shift": 0.026543769048548466,
+          "velocityChange": 0.014915591321067219
+        }
+      },
+      {
+        "cause": "trip",
+        "seed": 42,
+        "heading": 1.5707963267948966,
+        "entryVelocityChangeBefore": 0.10692839668763555,
+        "entryVelocityChangeAfter": 0.00585232658700417,
+        "earlyVelocityChangeBefore": 0.10822310031523791,
+        "earlyVelocityChangeAfter": 0.017142097521571805,
+        "wholeRecoveryPeakBefore": 0.11224614516385632,
+        "wholeRecoveryPeakAfter": 0.11148578625392128,
+        "controlHandoffAfter": {
+          "frame": 78,
+          "shift": 0.02318305306839957,
+          "velocityChange": 0.01637178826434177
+        }
+      },
+      {
+        "cause": "landing",
+        "seed": 42,
+        "heading": 1.5707963267948966,
+        "entryVelocityChangeBefore": 0.11381206879217645,
+        "entryVelocityChangeAfter": 0.017301279505902146,
+        "earlyVelocityChangeBefore": 0.13466459360840669,
+        "earlyVelocityChangeAfter": 0.05931706022996418,
+        "wholeRecoveryPeakBefore": 0.13466459360840669,
+        "wholeRecoveryPeakAfter": 0.12599100340993963,
+        "controlHandoffAfter": {
+          "frame": 73,
+          "shift": 0.02033984555526185,
+          "velocityChange": 0.018611098036530223
+        }
+      },
+      {
+        "cause": "pvp",
+        "seed": 42,
+        "heading": 1.5707963267948966,
+        "entryVelocityChangeBefore": 0.2620740365230081,
+        "entryVelocityChangeAfter": 0.0368163062142976,
+        "earlyVelocityChangeBefore": 0.34320082588402834,
+        "earlyVelocityChangeAfter": 0.08958557825725225,
+        "wholeRecoveryPeakBefore": 0.34320082588402834,
+        "wholeRecoveryPeakAfter": 0.13968761682253436,
+        "controlHandoffAfter": {
+          "frame": 58,
+          "shift": 0.011269966425965151,
+          "velocityChange": 0.02219577407744811
+        }
+      },
+      {
+        "cause": "balance",
+        "seed": 829,
+        "heading": 0,
+        "entryVelocityChangeBefore": 0.1669257036118187,
+        "entryVelocityChangeAfter": 0.012624419734624859,
+        "earlyVelocityChangeBefore": 0.1669257036118187,
+        "earlyVelocityChangeAfter": 0.04499730761893449,
+        "wholeRecoveryPeakBefore": 0.18503383059031106,
+        "wholeRecoveryPeakAfter": 0.18358437144667694,
+        "controlHandoffAfter": {
+          "frame": 60,
+          "shift": 0.029836642403624686,
+          "velocityChange": 0.040124480651345516
+        }
+      },
+      {
+        "cause": "manual",
+        "seed": 829,
+        "heading": 0,
+        "entryVelocityChangeBefore": 0.17082693829982823,
+        "entryVelocityChangeAfter": 0.012436796435805218,
+        "earlyVelocityChangeBefore": 0.17082693829982823,
+        "earlyVelocityChangeAfter": 0.039974033582024456,
+        "wholeRecoveryPeakBefore": 0.22805320796948042,
+        "wholeRecoveryPeakAfter": 0.23812059127269114,
+        "controlHandoffAfter": {
+          "frame": 60,
+          "shift": 0.055767547319598994,
+          "velocityChange": 0.011308976607752978
+        }
+      },
+      {
+        "cause": "nose-manual",
+        "seed": 829,
+        "heading": 0,
+        "entryVelocityChangeBefore": 0.14664414213628582,
+        "entryVelocityChangeAfter": 0.010788924001492938,
+        "earlyVelocityChangeBefore": 0.14664414213628582,
+        "earlyVelocityChangeAfter": 0.025746766986113178,
+        "wholeRecoveryPeakBefore": 0.14664414213628582,
+        "wholeRecoveryPeakAfter": 0.1330947966850998,
+        "controlHandoffAfter": {
+          "frame": 60,
+          "shift": 0.04943429480205795,
+          "velocityChange": 0.018893636755081458
+        }
+      },
+      {
+        "cause": "wall",
+        "seed": 829,
+        "heading": 0,
+        "entryVelocityChangeBefore": 0.03321894708967226,
+        "entryVelocityChangeAfter": 0.009578337233893935,
+        "earlyVelocityChangeBefore": 0.03321894708967226,
+        "earlyVelocityChangeAfter": 0.01904632301649602,
+        "wholeRecoveryPeakBefore": 0.10720209161704977,
+        "wholeRecoveryPeakAfter": 0.10775275892969728,
+        "controlHandoffAfter": {
+          "frame": 71,
+          "shift": 0.026339391968416007,
+          "velocityChange": 0.03366668757735456
+        }
+      },
+      {
+        "cause": "trip",
+        "seed": 829,
+        "heading": 0,
+        "entryVelocityChangeBefore": 0.1990080245515817,
+        "entryVelocityChangeAfter": 0.012855100088855969,
+        "earlyVelocityChangeBefore": 0.35949963565917586,
+        "earlyVelocityChangeAfter": 0.03756544895678865,
+        "wholeRecoveryPeakBefore": 0.35949963565917586,
+        "wholeRecoveryPeakAfter": 0.121912935414304,
+        "controlHandoffAfter": {
+          "frame": 78,
+          "shift": 0.024560539751397232,
+          "velocityChange": 0.037182943495056416
+        }
+      },
+      {
+        "cause": "landing",
+        "seed": 829,
+        "heading": 0,
+        "entryVelocityChangeBefore": 0.13427629342176498,
+        "entryVelocityChangeAfter": 0.01772131975537784,
+        "earlyVelocityChangeBefore": 0.3083125319003027,
+        "earlyVelocityChangeAfter": 0.18593505008878025,
+        "wholeRecoveryPeakBefore": 0.3083125319003027,
+        "wholeRecoveryPeakAfter": 0.18593505008878025,
+        "controlHandoffAfter": {
+          "frame": 73,
+          "shift": 0.02077089199003465,
+          "velocityChange": 0.04019194426387428
+        }
+      },
+      {
+        "cause": "pvp",
+        "seed": 829,
+        "heading": 0,
+        "entryVelocityChangeBefore": 0.14870594206947632,
+        "entryVelocityChangeAfter": 0.017059321900607795,
+        "earlyVelocityChangeBefore": 0.14916592672669263,
+        "earlyVelocityChangeAfter": 0.15420450171277642,
+        "wholeRecoveryPeakBefore": 0.14916592672669263,
+        "wholeRecoveryPeakAfter": 0.15420450171277642,
+        "controlHandoffAfter": {
+          "frame": 58,
+          "shift": 0.018768668905062093,
+          "velocityChange": 0.015894588768512827
+        }
+      },
+      {
+        "cause": "balance",
+        "seed": 829,
+        "heading": 1.5707963267948966,
+        "entryVelocityChangeBefore": 0.13285413434913673,
+        "entryVelocityChangeAfter": 0.007340277760640232,
+        "earlyVelocityChangeBefore": 0.13285413434913673,
+        "earlyVelocityChangeAfter": 0.019466458357417303,
+        "wholeRecoveryPeakBefore": 0.2537083790007471,
+        "wholeRecoveryPeakAfter": 0.24225198088952424,
+        "controlHandoffAfter": {
+          "frame": 60,
+          "shift": 0.022589971667018555,
+          "velocityChange": 0.012993446887339923
+        }
+      },
+      {
+        "cause": "manual",
+        "seed": 829,
+        "heading": 1.5707963267948966,
+        "entryVelocityChangeBefore": 0.16934588094958988,
+        "entryVelocityChangeAfter": 0.012291103692615822,
+        "earlyVelocityChangeBefore": 0.16934588094958988,
+        "earlyVelocityChangeAfter": 0.039307251162875145,
+        "wholeRecoveryPeakBefore": 0.22948550503086476,
+        "wholeRecoveryPeakAfter": 0.25280480509928693,
+        "controlHandoffAfter": {
+          "frame": 60,
+          "shift": 0.05500716111040334,
+          "velocityChange": 0.012518131588982788
+        }
+      },
+      {
+        "cause": "nose-manual",
+        "seed": 829,
+        "heading": 1.5707963267948966,
+        "entryVelocityChangeBefore": 0.1418061877509305,
+        "entryVelocityChangeAfter": 0.01042841772895546,
+        "earlyVelocityChangeBefore": 0.1418061877509305,
+        "earlyVelocityChangeAfter": 0.02524285824612332,
+        "wholeRecoveryPeakBefore": 0.17740942365591425,
+        "wholeRecoveryPeakAfter": 0.16505644665598315,
+        "controlHandoffAfter": {
+          "frame": 60,
+          "shift": 0.035792025692393155,
+          "velocityChange": 0.017103587574553318
+        }
+      },
+      {
+        "cause": "wall",
+        "seed": 829,
+        "heading": 1.5707963267948966,
+        "entryVelocityChangeBefore": 0.06914669839837559,
+        "entryVelocityChangeAfter": 0.00716484556657264,
+        "earlyVelocityChangeBefore": 0.06914669839837559,
+        "earlyVelocityChangeAfter": 0.020047698350315547,
+        "wholeRecoveryPeakBefore": 0.16582467155035882,
+        "wholeRecoveryPeakAfter": 0.1695759912306704,
+        "controlHandoffAfter": {
+          "frame": 71,
+          "shift": 0.07609369300993873,
+          "velocityChange": 0.01586105791681689
+        }
+      },
+      {
+        "cause": "trip",
+        "seed": 829,
+        "heading": 1.5707963267948966,
+        "entryVelocityChangeBefore": 0.1905247869827154,
+        "entryVelocityChangeAfter": 0.022485279865624645,
+        "earlyVelocityChangeBefore": 0.315960211242309,
+        "earlyVelocityChangeAfter": 0.19520768261393687,
+        "wholeRecoveryPeakBefore": 0.315960211242309,
+        "wholeRecoveryPeakAfter": 0.2747671704958855,
+        "controlHandoffAfter": {
+          "frame": 78,
+          "shift": 0.07548411699725187,
+          "velocityChange": 0.01661126273366918
+        }
+      },
+      {
+        "cause": "landing",
+        "seed": 829,
+        "heading": 1.5707963267948966,
+        "entryVelocityChangeBefore": 0.24981987157954066,
+        "entryVelocityChangeAfter": 0.08496624736196168,
+        "earlyVelocityChangeBefore": 0.3829194534985762,
+        "earlyVelocityChangeAfter": 0.08496624736196168,
+        "wholeRecoveryPeakBefore": 0.3829194534985762,
+        "wholeRecoveryPeakAfter": 0.08496624736196168,
+        "controlHandoffAfter": {
+          "frame": 73,
+          "shift": 0.07396705645017272,
+          "velocityChange": 0.018256848262500316
+        }
+      },
+      {
+        "cause": "pvp",
+        "seed": 829,
+        "heading": 1.5707963267948966,
+        "entryVelocityChangeBefore": 0.27621310787616704,
+        "entryVelocityChangeAfter": 0.08115754557967468,
+        "earlyVelocityChangeBefore": 0.2829138433639357,
+        "earlyVelocityChangeAfter": 0.08115754557967468,
+        "wholeRecoveryPeakBefore": 0.2829138433639357,
+        "wholeRecoveryPeakAfter": 0.15837975433622792,
+        "controlHandoffAfter": {
+          "frame": 58,
+          "shift": 0.057724926361376314,
+          "velocityChange": 0.01833337686794986
+        }
+      },
+      {
+        "cause": "balance",
+        "seed": 1229,
+        "heading": 0,
+        "entryVelocityChangeBefore": 0.17298857958664854,
+        "entryVelocityChangeAfter": 0.011314994300494489,
+        "earlyVelocityChangeBefore": 0.17298857958664854,
+        "earlyVelocityChangeAfter": 0.042923865556068565,
+        "wholeRecoveryPeakBefore": 0.20969200342050798,
+        "wholeRecoveryPeakAfter": 0.17433966220746466,
+        "controlHandoffAfter": {
+          "frame": 60,
+          "shift": 0.012913202017613232,
+          "velocityChange": 0.020414768128599985
+        }
+      },
+      {
+        "cause": "manual",
+        "seed": 1229,
+        "heading": 0,
+        "entryVelocityChangeBefore": 0.17119263079432942,
+        "entryVelocityChangeAfter": 0.011788760695488332,
+        "earlyVelocityChangeBefore": 0.17119263079432942,
+        "earlyVelocityChangeAfter": 0.03840501836576497,
+        "wholeRecoveryPeakBefore": 0.17119263079432942,
+        "wholeRecoveryPeakAfter": 0.1864694802442617,
+        "controlHandoffAfter": {
+          "frame": 60,
+          "shift": 0.028770175130636413,
+          "velocityChange": 0.011431817757136541
+        }
+      },
+      {
+        "cause": "nose-manual",
+        "seed": 1229,
+        "heading": 0,
+        "entryVelocityChangeBefore": 0.13211241806781493,
+        "entryVelocityChangeAfter": 0.010012335162498172,
+        "earlyVelocityChangeBefore": 0.13211241806781493,
+        "earlyVelocityChangeAfter": 0.026742624332225344,
+        "wholeRecoveryPeakBefore": 0.31566361398832604,
+        "wholeRecoveryPeakAfter": 0.32342263700904617,
+        "controlHandoffAfter": {
+          "frame": 60,
+          "shift": 0.031120337844359965,
+          "velocityChange": 0.021843368985955125
+        }
+      },
+      {
+        "cause": "wall",
+        "seed": 1229,
+        "heading": 0,
+        "entryVelocityChangeBefore": 0.13290955348257424,
+        "entryVelocityChangeAfter": 0.011211161822761601,
+        "earlyVelocityChangeBefore": 0.19209342294143486,
+        "earlyVelocityChangeAfter": 0.22815297695792264,
+        "wholeRecoveryPeakBefore": 0.19209342294143486,
+        "wholeRecoveryPeakAfter": 0.22815297695792264,
+        "controlHandoffAfter": {
+          "frame": 71,
+          "shift": 0.017352200460952562,
+          "velocityChange": 0.022855008230110538
+        }
+      },
+      {
+        "cause": "trip",
+        "seed": 1229,
+        "heading": 0,
+        "entryVelocityChangeBefore": 0.17149491076458415,
+        "entryVelocityChangeAfter": 0.009588665860475546,
+        "earlyVelocityChangeBefore": 0.17149491076458415,
+        "earlyVelocityChangeAfter": 0.025936171354351233,
+        "wholeRecoveryPeakBefore": 0.18214519816599747,
+        "wholeRecoveryPeakAfter": 0.16533098113932426,
+        "controlHandoffAfter": {
+          "frame": 78,
+          "shift": 0.014925303189531206,
+          "velocityChange": 0.022909320857386874
+        }
+      },
+      {
+        "cause": "landing",
+        "seed": 1229,
+        "heading": 0,
+        "entryVelocityChangeBefore": 0.15083972268292314,
+        "entryVelocityChangeAfter": 0.014382913016258957,
+        "earlyVelocityChangeBefore": 0.15083972268292314,
+        "earlyVelocityChangeAfter": 0.036652115967534975,
+        "wholeRecoveryPeakBefore": 0.2375427702537879,
+        "wholeRecoveryPeakAfter": 0.24580144156059977,
+        "controlHandoffAfter": {
+          "frame": 73,
+          "shift": 0.014804825408684006,
+          "velocityChange": 0.023483226975263224
+        }
+      },
+      {
+        "cause": "pvp",
+        "seed": 1229,
+        "heading": 0,
+        "entryVelocityChangeBefore": 0.11331211312892937,
+        "entryVelocityChangeAfter": 0.01776441970905047,
+        "earlyVelocityChangeBefore": 0.12436891015544839,
+        "earlyVelocityChangeAfter": 0.09861128197582139,
+        "wholeRecoveryPeakBefore": 0.14749722343657717,
+        "wholeRecoveryPeakAfter": 0.1427573691637443,
+        "controlHandoffAfter": {
+          "frame": 58,
+          "shift": 0.02401383812234077,
+          "velocityChange": 0.020314025488523044
+        }
+      },
+      {
+        "cause": "balance",
+        "seed": 1229,
+        "heading": 1.5707963267948966,
+        "entryVelocityChangeBefore": 0.14774759751474795,
+        "entryVelocityChangeAfter": 0.009243672296493591,
+        "earlyVelocityChangeBefore": 0.14774759751474795,
+        "earlyVelocityChangeAfter": 0.019583026331866586,
+        "wholeRecoveryPeakBefore": 0.2067334671911758,
+        "wholeRecoveryPeakAfter": 0.228469677926883,
+        "controlHandoffAfter": {
+          "frame": 60,
+          "shift": 0.06239313156899744,
+          "velocityChange": 0.012849753867906129
+        }
+      },
+      {
+        "cause": "manual",
+        "seed": 1229,
+        "heading": 1.5707963267948966,
+        "entryVelocityChangeBefore": 0.16985231982173762,
+        "entryVelocityChangeAfter": 0.01170423105305372,
+        "earlyVelocityChangeBefore": 0.16985231982173762,
+        "earlyVelocityChangeAfter": 0.03728276631196166,
+        "wholeRecoveryPeakBefore": 0.16985231982173762,
+        "wholeRecoveryPeakAfter": 0.18273661612703462,
+        "controlHandoffAfter": {
+          "frame": 60,
+          "shift": 0.025993845723215128,
+          "velocityChange": 0.02086879765823728
+        }
+      },
+      {
+        "cause": "nose-manual",
+        "seed": 1229,
+        "heading": 1.5707963267948966,
+        "entryVelocityChangeBefore": 0.1368711554734213,
+        "entryVelocityChangeAfter": 0.010153404697374304,
+        "earlyVelocityChangeBefore": 0.1368711554734213,
+        "earlyVelocityChangeAfter": 0.026944722601924646,
+        "wholeRecoveryPeakBefore": 0.23075407016569077,
+        "wholeRecoveryPeakAfter": 0.25208021459256547,
+        "controlHandoffAfter": {
+          "frame": 60,
+          "shift": 0.02659876445658729,
+          "velocityChange": 0.012130464097653495
+        }
+      },
+      {
+        "cause": "wall",
+        "seed": 1229,
+        "heading": 1.5707963267948966,
+        "entryVelocityChangeBefore": 0.16165605477495418,
+        "entryVelocityChangeAfter": 0.0025864012853554336,
+        "earlyVelocityChangeBefore": 0.3094958048447865,
+        "earlyVelocityChangeAfter": 0.11666600820669287,
+        "wholeRecoveryPeakBefore": 0.3094958048447865,
+        "wholeRecoveryPeakAfter": 0.11666600820669287,
+        "controlHandoffAfter": {
+          "frame": 71,
+          "shift": 0.020533007911423855,
+          "velocityChange": 0.018628468357111412
+        }
+      },
+      {
+        "cause": "trip",
+        "seed": 1229,
+        "heading": 1.5707963267948966,
+        "entryVelocityChangeBefore": 0.16904756228487916,
+        "entryVelocityChangeAfter": 0.00811135633542235,
+        "earlyVelocityChangeBefore": 0.16904756228487916,
+        "earlyVelocityChangeAfter": 0.03045057620870864,
+        "wholeRecoveryPeakBefore": 0.2081441697679701,
+        "wholeRecoveryPeakAfter": 0.21814201071997755,
+        "controlHandoffAfter": {
+          "frame": 78,
+          "shift": 0.018599739943798096,
+          "velocityChange": 0.02115126627915212
+        }
+      },
+      {
+        "cause": "landing",
+        "seed": 1229,
+        "heading": 1.5707963267948966,
+        "entryVelocityChangeBefore": 0.152596543017726,
+        "entryVelocityChangeAfter": 0.005545288821716976,
+        "earlyVelocityChangeBefore": 0.15741127543922268,
+        "earlyVelocityChangeAfter": 0.12818455038769855,
+        "wholeRecoveryPeakBefore": 0.20171936309204067,
+        "wholeRecoveryPeakAfter": 0.23965476938065933,
+        "controlHandoffAfter": {
+          "frame": 73,
+          "shift": 0.016124948435820508,
+          "velocityChange": 0.023605480155222992
+        }
+      },
+      {
+        "cause": "pvp",
+        "seed": 1229,
+        "heading": 1.5707963267948966,
+        "entryVelocityChangeBefore": 0.18721878014768611,
+        "entryVelocityChangeAfter": 0.04615143819769187,
+        "earlyVelocityChangeBefore": 0.18721878014768611,
+        "earlyVelocityChangeAfter": 0.04615143819769187,
+        "wholeRecoveryPeakBefore": 0.18721878014768611,
+        "wholeRecoveryPeakAfter": 0.15154677993590168,
+        "controlHandoffAfter": {
+          "frame": 58,
+          "shift": 0.01918079311802334,
+          "velocityChange": 0.02430250958175868
+        }
+      }
+    ]
+  },
+  "production": {
+    "incidents": 30,
+    "frames": 3450,
+    "realHandTriangles": 25152,
+    "gameplayAndDurationIdentical": true,
+    "rows": [
+      {
+        "cause": "balance",
+        "frames": 642,
+        "gameplayChecksum": "c4400b85bc629ddc1a97f272dcb3c1f5a504045c8a0e43db7552090db2bf658a",
+        "poseChecksumBefore": "543c4818d6dd7f9c4bec3e0976ace184ab9b4d40049e8d894f9e43da2fa0bd8d",
+        "poseChecksumAfter": "9407a79377101c3c0f7405d49624fd6716c187b8621b3f667746aa5d91913ac5",
+        "durationSeconds": {
+          "samples": 6,
+          "mean": 1.7833333333333334,
+          "median": 1.7833333333333334,
+          "p95": 1.7833333333333334
+        },
+        "hierarchy": {
+          "bodyMatrixPasses": 642
+        },
+        "deformationPasses": 642,
+        "newRecords": 0,
+        "newTransforms": 0,
+        "supportSamplesBefore": 400059,
+        "supportSamplesAfter": 387901
+      },
+      {
+        "cause": "wall",
+        "frames": 708,
+        "gameplayChecksum": "c7b7d13c2747e6efb5f430041b3a66e355d9e16cf257f6f20c7461b57d0b4256",
+        "poseChecksumBefore": "cd5fb2a8597704e01c16d93cb23260635a7efd4ec1005e41c5dce8ffbbcc2c92",
+        "poseChecksumAfter": "b6b6c3bef19725d113ec9db2f54af1f4655d0d307740dc304b72c47c43f98c3e",
+        "durationSeconds": {
+          "samples": 6,
+          "mean": 1.9666666666666666,
+          "median": 1.9666666666666666,
+          "p95": 1.9666666666666666
+        },
+        "hierarchy": {
+          "bodyMatrixPasses": 708
+        },
+        "deformationPasses": 708,
+        "newRecords": 0,
+        "newTransforms": 0,
+        "supportSamplesBefore": 343812,
+        "supportSamplesAfter": 343163
+      },
+      {
+        "cause": "trip",
+        "frames": 750,
+        "gameplayChecksum": "b151e394e8ef0dac71234e93e4b5052098e4025c832c8811d164f187d152fc55",
+        "poseChecksumBefore": "83e2ec38da916ba5f915df500e8de257d5828b7770e6759c0c9aa98ac8a9bf50",
+        "poseChecksumAfter": "c01602e369e3e6084f6e4a39f788ac2525ee0d2fdb364c05ea7be2689be86f10",
+        "durationSeconds": {
+          "samples": 6,
+          "mean": 2.0833333333333335,
+          "median": 2.0833333333333335,
+          "p95": 2.0833333333333335
+        },
+        "hierarchy": {
+          "bodyMatrixPasses": 750
+        },
+        "deformationPasses": 750,
+        "newRecords": 0,
+        "newTransforms": 0,
+        "supportSamplesBefore": 699442,
+        "supportSamplesAfter": 703275
+      },
+      {
+        "cause": "landing",
+        "frames": 720,
+        "gameplayChecksum": "d96fcaf136c510ae85e32a92f3531fe1ca2ad4da278e1fd1f992b4b851c68bf3",
+        "poseChecksumBefore": "c869259dee56760bc3a48d35de07e2ead515d43559ba1fac18123b64ace78f48",
+        "poseChecksumAfter": "17ba0af98727b52c021ea8076b8d03ca05e1015480d6de7ea88c59c941e0a708",
+        "durationSeconds": {
+          "samples": 6,
+          "mean": 2,
+          "median": 2,
+          "p95": 2
+        },
+        "hierarchy": {
+          "bodyMatrixPasses": 720
+        },
+        "deformationPasses": 720,
+        "newRecords": 0,
+        "newTransforms": 0,
+        "supportSamplesBefore": 248546,
+        "supportSamplesAfter": 244549
+      },
+      {
+        "cause": "pvp",
+        "frames": 630,
+        "gameplayChecksum": "c6781319911e2f55d1ade98616fa44ddd3dbbe49f8f59dba3e2584913b847291",
+        "poseChecksumBefore": "0c5860620b4ff016b25cffa913995df07c971c8fc16d02434158a71e2e1ebdb1",
+        "poseChecksumAfter": "ed66e040733fc5ade62dc915d81fd69eb7327542391fc89b574af72300e99ded",
+        "durationSeconds": {
+          "samples": 6,
+          "mean": 1.75,
+          "median": 1.75,
+          "p95": 1.75
+        },
+        "hierarchy": {
+          "bodyMatrixPasses": 630
+        },
+        "deformationPasses": 630,
+        "newRecords": 0,
+        "newTransforms": 0,
+        "supportSamplesBefore": 457252,
+        "supportSamplesAfter": 474607
+      }
+    ]
+  },
+  "resources": {
+    "newPerPlayerState": "One numeric sprawl capture. Reuse existing scratch vectors/quaternions and anchor.",
+    "newPerFrameObjects": 0,
+    "hierarchyAndDeformationPassesUnchanged": true,
+    "cpuSpeedupClaim": false,
+    "note": "Sparse work varies with the new pose; exact support algorithm and prior skin optimizations stay intact. Profiling here is instrumented and concurrent, not a timing comparison."
+  },
+  "checks": {
+    "passed": [
+      "test-bail-recovery-continuity",
+      "test-bail-recovery-rollthrough",
+      "test-bail-support-continuity",
+      "test-bail-matrix-pass",
+      "test-bail-recovery-motion",
+      "test-bail-recovery-direction",
+      "test-bail-directional-falls",
+      "test-bail-soft-landing",
+      "test-bail-impacts",
+      "test-board-dynamics",
+      "test-character-elasticity",
+      "test-ragdoll-recovery"
+    ],
+    "baselineRegressionCheck": "The strengthened continuity test rejects the saved source at balance/42/0 (0.16746 m/frame entry velocity change); current source passes all 42 cases.",
+    "matrixOracle": {
+      "cases": 14,
+      "framesCompared": 1578,
+      "maxPoseError": 0,
+      "realHandTriangles": 25152
+    },
+    "build": {
+      "typecheck": true,
+      "vite": true,
+      "offlineVersion": "3a172b1503df7eea73e7",
+      "fullSuite": false
+    }
+  },
+  "browser": {
+    "lite": {
+      "passed": true,
+      "cases": 17,
+      "secondsEach": 3.367,
+      "presentation": {
+        "blocked": false,
+        "loading": {
+          "phase": null,
+          "pending": [],
+          "failed": [],
+          "revision": 112
+        },
+        "renderedFrames": 5734
+      },
+      "consoleWarningsOrErrors": 0
+    },
+    "full": {
+      "passed": true,
+      "cases": 17,
+      "secondsEach": 3.367,
+      "presentation": {
+        "blocked": false,
+        "loading": {
+          "phase": null,
+          "pending": [],
+          "failed": [],
+          "revision": 112
+        },
+        "renderedFrames": 5509
+      },
+      "consoleWarningsOrErrors": 0
+    },
+    "boards": {
+      "passed": true,
+      "cases": 5,
+      "secondsEach": 12.000000000000176,
+      "presentation": {
+        "blocked": false,
+        "loading": {
+          "phase": null,
+          "pending": [],
+          "failed": [],
+          "revision": 112
+        },
+        "renderedFrames": 10198
+      },
+      "consoleWarningsOrErrors": 0
+    }
+  },
+  "exploratorySupportLoss": {
+    "cases": 16,
+    "method": "Remove reachable support for one fixed step during a live get-up; compare root-relative visible head and waist positions.",
+    "maxWaistShiftBefore": 0.004934889498741232,
+    "maxWaistShiftAfter": 0.0053502573345099455,
+    "maxHeadShiftBefore": 0.5652142273818161,
+    "maxHeadShiftAfter": 0.5166007434217161,
+    "note": "Waist remains continuous; current limb/angular re-entry can still move the head sharply. The first exploratory forced-hop probe retained a reachable floor, allowing floor correction; raw outputs retained separately."
+  },
+  "limitations": [
+    "Normal get-up entry improves across this set; individual later hard contact peaks still vary and may be larger. Maximum full-recovery velocity change remains 0.3234 m/frame.",
+    "Early interrupted recovery still has abrupt secondary pose/spin re-entry; observed in baseline as well, remains a future fidelity target.",
+    "No CPU/FPS gain claimed in this fidelity pass. Original intermittent graphics-startup issue is unchanged."
+  ],
+  "rejectedExperiment": "An additional knee-gather layer worsened aggregate head peaks; fully removed before final validation."
+}

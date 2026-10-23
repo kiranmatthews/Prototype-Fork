@@ -1,0 +1,447 @@
+{
+  "date": "2026-10-22",
+  "pass": "Performance/stability: defer redundant bail matrices and shrink reaction storage",
+  "baselineTaskCommit": "f9d6528a5bfcabbd404f8788ec90261e5ac84b0b",
+  "changes": [
+    "During fixed-step bails, defer the appearance layer's full-body matrix update to the existing final pose/support measurement. The hand solver still updates its own hierarchy, and public/editor appearance calls remain immediate.",
+    "Size the fixed reaction delay line from the longest joint/segment propagation path, including the immediate bin and between-tick contacts. Keep Float64 impulses and original arrival times; reduce 32 bins to 17."
+  ],
+  "profileMotivation": {
+    "scope": "One local CPU sample including startup/warmup. Used to locate redundant work, not as a standalone performance claim.",
+    "fullMatrixUpdateSelfMs": 590.7549999999995,
+    "appearanceCallerMatrixSelfMs": 268.33199999999994
+  },
+  "equivalence": {
+    "incidents": 120,
+    "frames": 8160,
+    "perCause": [
+      {
+        "cause": "balance",
+        "frames": 1056,
+        "poseIdentical": true,
+        "gameplayIdentical": true,
+        "durationIdentical": true,
+        "bodyMatrixPasses": 1032
+      },
+      {
+        "cause": "wall",
+        "frames": 1824,
+        "poseIdentical": true,
+        "gameplayIdentical": true,
+        "durationIdentical": true,
+        "bodyMatrixPasses": 1800
+      },
+      {
+        "cause": "trip",
+        "frames": 2112,
+        "poseIdentical": true,
+        "gameplayIdentical": true,
+        "durationIdentical": true,
+        "bodyMatrixPasses": 2088
+      },
+      {
+        "cause": "landing",
+        "frames": 1464,
+        "poseIdentical": true,
+        "gameplayIdentical": true,
+        "durationIdentical": true,
+        "bodyMatrixPasses": 1440
+      },
+      {
+        "cause": "pvp",
+        "frames": 1704,
+        "poseIdentical": true,
+        "gameplayIdentical": true,
+        "durationIdentical": true,
+        "bodyMatrixPasses": 1680
+      }
+    ],
+    "note": "All local pose/morph and gameplay checksums and recovery durations are identical. The actual artist-hand fixture adds 680 frames of exact local/world/bind-matrix, morph, bounds and gameplay comparison."
+  },
+  "hierarchy": {
+    "perCause": [
+      {
+        "cause": "balance",
+        "before": 2064,
+        "after": 1032
+      },
+      {
+        "cause": "wall",
+        "before": 3600,
+        "after": 1800
+      },
+      {
+        "cause": "trip",
+        "before": 4176,
+        "after": 2088
+      },
+      {
+        "cause": "landing",
+        "before": 2880,
+        "after": 1440
+      },
+      {
+        "cause": "pvp",
+        "before": 3360,
+        "after": 1680
+      }
+    ],
+    "beforeFullBodyPasses": 16080,
+    "afterFullBodyPasses": 8040,
+    "scope": "Counts only active bail frames in the measured 120 incidents, excluding triggers and the completed final frame."
+  },
+  "cpu": {
+    "scope": "Local production Player.step CPU in Node with procedural fallback assets and the animation runtime. Two plain pairs exclude checksum/hierarchy instrumentation. These measurements exclude renderer/GPU/browser costs and are not FPS claims.",
+    "order": [
+      "before-1",
+      "after-1",
+      "after-2",
+      "before-2"
+    ],
+    "meanOfPairedMedians": [
+      {
+        "cause": "balance",
+        "beforeMedianMs": 0.3852294999996957,
+        "afterMedianMs": 0.34481250000044383,
+        "reductionPercent": 10.491667953592287,
+        "pairs": [
+          {
+            "before-1": 0.3811249999998836,
+            "after-1": 0.3424170000007507
+          },
+          {
+            "before-2": 0.3893339999995078,
+            "after-2": 0.34720800000013696
+          }
+        ]
+      },
+      {
+        "cause": "wall",
+        "beforeMedianMs": 0.37627100000008795,
+        "afterMedianMs": 0.3402085000002444,
+        "reductionPercent": 9.584182676803454,
+        "pairs": [
+          {
+            "before-1": 0.3710000000000946,
+            "after-1": 0.34799999999995634
+          },
+          {
+            "before-2": 0.3815420000000813,
+            "after-2": 0.3324170000005324
+          }
+        ]
+      },
+      {
+        "cause": "trip",
+        "beforeMedianMs": 0.34670850000020437,
+        "afterMedianMs": 0.3247079999991911,
+        "reductionPercent": 6.345532342299165,
+        "pairs": [
+          {
+            "before-1": 0.3470420000003287,
+            "after-1": 0.3468749999992724
+          },
+          {
+            "before-2": 0.34637500000008004,
+            "after-2": 0.30254099999910977
+          }
+        ]
+      },
+      {
+        "cause": "landing",
+        "beforeMedianMs": 0.34252049999940937,
+        "afterMedianMs": 0.29962499999965075,
+        "reductionPercent": 12.523483995799545,
+        "pairs": [
+          {
+            "before-1": 0.34229099999902246,
+            "after-1": 0.3014579999999114
+          },
+          {
+            "before-2": 0.3427499999997963,
+            "after-2": 0.2977919999993901
+          }
+        ]
+      },
+      {
+        "cause": "pvp",
+        "beforeMedianMs": 0.3472090000004755,
+        "afterMedianMs": 0.30133349999960046,
+        "reductionPercent": 13.21264713783693,
+        "pairs": [
+          {
+            "before-1": 0.34770899999966787,
+            "after-1": 0.3040419999997539
+          },
+          {
+            "before-2": 0.34670900000128313,
+            "after-2": 0.298624999999447
+          }
+        ]
+      }
+    ],
+    "interpretation": "Every per-case plain pair improves, although the first trip pair is almost flat. Means of paired medians improve by 6.35-13.21%; wall bails improve by 9.58%, recouping the prior fidelity pass's approximately .0124 ms wall cost."
+  },
+  "storage": {
+    "beforeSlots": 32,
+    "afterSlots": 17,
+    "beforeWaveBytes": 13056,
+    "afterWaveBytes": 6936,
+    "bytesSavedPerRig": 6120,
+    "waveReductionPercent": 46.875,
+    "beforeTotalNumericBytes": 14840,
+    "afterTotalNumericBytes": 8720,
+    "scope": "Typed-array backing storage only, not total process heap. No per-contact allocation or growth; buffer reset and wrap behavior remain bounded."
+  },
+  "realHands": {
+    "passed": true,
+    "realHandTriangles": 25152,
+    "cases": 10,
+    "framesCompared": 680,
+    "maxPoseError": 0,
+    "immediatePublicSync": true,
+    "rows": [
+      {
+        "cause": "balance",
+        "seed": 42,
+        "frames": 44,
+        "eagerPasses": 87,
+        "deferredPasses": 44
+      },
+      {
+        "cause": "wall",
+        "seed": 42,
+        "frames": 76,
+        "eagerPasses": 151,
+        "deferredPasses": 76
+      },
+      {
+        "cause": "trip",
+        "seed": 42,
+        "frames": 88,
+        "eagerPasses": 175,
+        "deferredPasses": 88
+      },
+      {
+        "cause": "landing",
+        "seed": 42,
+        "frames": 61,
+        "eagerPasses": 121,
+        "deferredPasses": 61
+      },
+      {
+        "cause": "pvp",
+        "seed": 42,
+        "frames": 71,
+        "eagerPasses": 141,
+        "deferredPasses": 71
+      },
+      {
+        "cause": "balance",
+        "seed": 1229,
+        "frames": 44,
+        "eagerPasses": 87,
+        "deferredPasses": 44
+      },
+      {
+        "cause": "wall",
+        "seed": 1229,
+        "frames": 76,
+        "eagerPasses": 151,
+        "deferredPasses": 76
+      },
+      {
+        "cause": "trip",
+        "seed": 1229,
+        "frames": 88,
+        "eagerPasses": 175,
+        "deferredPasses": 88
+      },
+      {
+        "cause": "landing",
+        "seed": 1229,
+        "frames": 61,
+        "eagerPasses": 121,
+        "deferredPasses": 61
+      },
+      {
+        "cause": "pvp",
+        "seed": 1229,
+        "frames": 71,
+        "eagerPasses": 141,
+        "deferredPasses": 71
+      }
+    ]
+  },
+  "comparisonMethodology": "An initial sequential replay in one Player retained presentation history and differed even when both runs used the old eager path. The final regression compares independent, identically seeded actors frame-by-frame, including the local 25,152-triangle hand asset. It reports zero pose error without widening tolerance.",
+  "waveRegression": {
+    "passed": true,
+    "overlapCases": 36,
+    "angularError": 1.887379141862766e-15,
+    "strainError": 3.469446951953614e-17,
+    "stress": {
+      "rates": [
+        60,
+        120,
+        144,
+        240,
+        15
+      ],
+      "maxAngle": 1.8,
+      "maxVelocity": 22,
+      "minLength": 0.7552633693390499,
+      "maxLength": 1.1141063035712109,
+      "maxSettle": 1.2155180111635943e-09,
+      "retainedTypedArrayBytes": 8720,
+      "buffersReused": true
+    }
+  },
+  "checks": [
+    {
+      "test": "test-bail-contact-waves",
+      "exitCode": 0,
+      "seconds": 6.86420202255249
+    },
+    {
+      "test": "test-bail-motion",
+      "exitCode": 0,
+      "seconds": 8.951694965362549
+    },
+    {
+      "test": "test-bail-inertia",
+      "exitCode": 0,
+      "seconds": 0.5686049461364746
+    },
+    {
+      "test": "test-bail-joint-stops",
+      "exitCode": 0,
+      "seconds": 0.7528641223907471
+    },
+    {
+      "test": "test-bail-impacts",
+      "exitCode": 0,
+      "seconds": 8.52168083190918
+    },
+    {
+      "test": "test-bail-support-continuity",
+      "exitCode": 0,
+      "seconds": 20.147845029830933
+    },
+    {
+      "test": "test-bail-recovery-motion",
+      "exitCode": 0,
+      "seconds": 7.477520942687988
+    },
+    {
+      "test": "test-trip-clearance",
+      "exitCode": 0,
+      "seconds": 10.4304940700531
+    },
+    {
+      "test": "test-ragdoll-recovery",
+      "exitCode": 0,
+      "seconds": 7.634501934051514
+    },
+    {
+      "test": "test-break-apart",
+      "exitCode": 0,
+      "seconds": 7.810819149017334
+    },
+    {
+      "test": "test-rigged-cartoon-hand",
+      "exitCode": 0,
+      "seconds": 0.4751460552215576
+    },
+    {
+      "test": "test-character-animation-runtime",
+      "exitCode": 0,
+      "seconds": 0.739434003829956
+    },
+    {
+      "test": "test-bail-matrix-pass",
+      "exitCode": 0
+    },
+    {
+      "test": "test-bail-overlap-waves",
+      "exitCode": 0
+    }
+  ],
+  "exactSupport": {
+    "cases": 30,
+    "hintCases": 120,
+    "minimumMetres": 0.007179486526511791,
+    "maximumMetres": 0.025000022655366105,
+    "fullScans": 0,
+    "gameplayUnchanged": true
+  },
+  "build": {
+    "typecheck": "pass",
+    "vite": "pass",
+    "seconds": 14.26,
+    "version": "6d1ea8e1705b6f122e6f",
+    "existingWarning": "Some chunks exceed 500 kB after minification.",
+    "fullSuiteRun": false
+  },
+  "browser": {
+    "lite": {
+      "passed": true,
+      "cases": 14
+    },
+    "full": {
+      "passed": true,
+      "cases": 14
+    },
+    "boards": {
+      "passed": true,
+      "rows": [
+        {
+          "kind": "Board toss",
+          "settledAt": 3.516666666666659,
+          "observedSeconds": 12.000000000000176,
+          "active": 0,
+          "soundsAfterRest": 0
+        },
+        {
+          "kind": "Board roll",
+          "settledAt": 6.049999999999984,
+          "observedSeconds": 12.000000000000176,
+          "active": 0,
+          "soundsAfterRest": 0
+        },
+        {
+          "kind": "Board skid",
+          "settledAt": 0.9333333333333346,
+          "observedSeconds": 12.000000000000176,
+          "active": 0,
+          "soundsAfterRest": 0
+        },
+        {
+          "kind": "Board wall",
+          "settledAt": 1.100000000000001,
+          "observedSeconds": 12.000000000000176,
+          "active": 0,
+          "soundsAfterRest": 0
+        },
+        {
+          "kind": "Board pile",
+          "settledAt": 2.199999999999997,
+          "observedSeconds": 12.000000000000176,
+          "active": 0,
+          "soundsAfterRest": 0
+        }
+      ]
+    },
+    "manual": {
+      "scenario": "Angled edge",
+      "firstFloorContactSeconds": 0.06666666666666667,
+      "secondFloorContactSeconds": 0.49999999999999994,
+      "followThroughSeconds": 0.6000000000000002,
+      "wallImpacts": 1,
+      "floorImpacts": 2,
+      "detachedParts": 0,
+      "views": "Side and quarter views show the body/hands. The front view is occluded by the obstacle and is not used as visual evidence.",
+      "consoleErrors": []
+    }
+  },
+  "delivery": "Task-only local follow-up on codex/fluid-intact-bails. Preserve the shared checkout/index and unrelated pending work; no push, publication or upload. Alternating goal remains active for the next fidelity pass."
+}

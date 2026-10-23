@@ -1,0 +1,2004 @@
+{
+  "date": "2026-10-22",
+  "pass": "CPU/stability after recovery frame continuity",
+  "baselineCommit": "c68b99698a3603dfd003eb510bbb11df0e191571",
+  "change": "Unroll four authored weight slots and pair independent X/Y f64 transforms with standard WebAssembly SIMD. Preserve arithmetic order, zero skips, finite guards and scalar/JS fallbacks. Instantiate only the selected variant once.",
+  "scope": "Production Player.step on Node v24.19.0 arm64 with actual 25,152-triangle hands, warm native bounds and procedural fallback assets. Complete bail and finite post-control rebound. Timings exclude browser/render/GPU costs and do not establish an FPS improvement on other devices.",
+  "discovery": "Full-incident CPU profile put native exact bounds at approximately 22% of Player.step samples; it remained the largest leaf after earlier bounds work.",
+  "timing": {
+    "pairs": 3,
+    "measuredIncidentsPerRun": 120,
+    "measuredFramesPerRun": 13800,
+    "wholeBeforeMs": 0.5438268723429932,
+    "wholeAfterMs": 0.5297029465458922,
+    "wholeReductionPercent": 2.597136426203117,
+    "postControlRiseBeforeMs": 0.7157169378019351,
+    "postControlRiseAfterMs": 0.6807605317028977,
+    "postControlRiseReductionPercent": 4.884110498543359,
+    "allPairsImproved": true,
+    "runs": [
+      {
+        "order": "before then scalar-unroll experiment then SIMD",
+        "wholeBeforeMs": 0.5420269198550682,
+        "wholeAfterMs": 0.527132306376815,
+        "riseBeforeMs": 0.7124850518115895,
+        "riseAfterMs": 0.6768350692028958,
+        "before": {
+          "source": "initial working tree snapshot",
+          "warmupsPerCase": 8,
+          "measuredIncidentsPerCase": 24,
+          "completeIncident": true,
+          "realHandTriangles": 25152,
+          "scope": "Production fixed-step CPU in Node with animation runtime and actual artist-hand meshes, warm exact skin kernel and other procedural fallback assets. Includes the complete bail and finite post-control rise rebound; excludes render/GPU/browser costs. Timings are descriptive, work counts are deterministic.",
+          "contact": null,
+          "results": [
+            {
+              "cause": "balance",
+              "stepMs": {
+                "samples": 2568,
+                "mean": 0.5529877278037247,
+                "median": 0.6389580000004571,
+                "p95": 0.8527500000000146
+              },
+              "incidentCpuMs": {
+                "samples": 24,
+                "mean": 59.16968687499855,
+                "median": 59.41087599999901,
+                "p95": 63.613870999993196
+              },
+              "triggerMs": {
+                "samples": 24,
+                "mean": 0.25016150000006593,
+                "median": 0.23937500000010914,
+                "p95": 0.3275840000005701
+              },
+              "durationSeconds": {
+                "samples": 24,
+                "mean": 1.7833333333333334,
+                "median": 1.7833333333333334,
+                "p95": 1.7833333333333334
+              },
+              "fullSkinScans": 6768,
+              "phases": {
+                "bail": {
+                  "stepMs": {
+                    "samples": 1464,
+                    "mean": 0.42559186202184096,
+                    "median": 0.3263329999999769,
+                    "p95": 0.7878749999999854
+                  },
+                  "fullSkinScans": 144
+                },
+                "rise": {
+                  "stepMs": {
+                    "samples": 1104,
+                    "mean": 0.721925723731875,
+                    "median": 0.6824589999996533,
+                    "p95": 0.9277089999995951
+                  },
+                  "fullSkinScans": 6624
+                }
+              }
+            },
+            {
+              "cause": "wall",
+              "stepMs": {
+                "samples": 2832,
+                "mean": 0.5371605335451869,
+                "median": 0.5002919999997175,
+                "p95": 0.882499999999709
+              },
+              "incidentCpuMs": {
+                "samples": 24,
+                "mean": 63.384942958332054,
+                "median": 62.41324899999745,
+                "p95": 68.07874899998933
+              },
+              "triggerMs": {
+                "samples": 24,
+                "mean": 0.23081245833331346,
+                "median": 0.22370799999953306,
+                "p95": 0.2698339999997188
+              },
+              "durationSeconds": {
+                "samples": 24,
+                "mean": 1.9666666666666668,
+                "median": 1.9666666666666666,
+                "p95": 1.9666666666666666
+              },
+              "fullSkinScans": 6768,
+              "phases": {
+                "bail": {
+                  "stepMs": {
+                    "samples": 1728,
+                    "mean": 0.4146199050925861,
+                    "median": 0.33141599999999016,
+                    "p95": 0.8221659999999247
+                  },
+                  "fullSkinScans": 144
+                },
+                "rise": {
+                  "stepMs": {
+                    "samples": 1104,
+                    "mean": 0.728963256340562,
+                    "median": 0.6974579999996422,
+                    "p95": 0.9032919999999649
+                  },
+                  "fullSkinScans": 6624
+                }
+              }
+            },
+            {
+              "cause": "trip",
+              "stepMs": {
+                "samples": 3000,
+                "mean": 0.5722758246666563,
+                "median": 0.6508750000011787,
+                "p95": 0.977999999999156
+              },
+              "incidentCpuMs": {
+                "samples": 24,
+                "mean": 71.53447808333203,
+                "median": 71.4597119999944,
+                "p95": 78.06225699999777
+              },
+              "triggerMs": {
+                "samples": 24,
+                "mean": 0.2039460833332972,
+                "median": 0.2053749999995489,
+                "p95": 0.2233329999999114
+              },
+              "durationSeconds": {
+                "samples": 24,
+                "mean": 2.083333333333334,
+                "median": 2.0833333333333335,
+                "p95": 2.0833333333333335
+              },
+              "fullSkinScans": 6768,
+              "phases": {
+                "bail": {
+                  "stepMs": {
+                    "samples": 1896,
+                    "mean": 0.4886179045358542,
+                    "median": 0.3367079999989073,
+                    "p95": 1.025207999999111
+                  },
+                  "fullSkinScans": 144
+                },
+                "rise": {
+                  "stepMs": {
+                    "samples": 1104,
+                    "mean": 0.7159492092391208,
+                    "median": 0.6836249999996653,
+                    "p95": 0.8890830000000278
+                  },
+                  "fullSkinScans": 6624
+                }
+              }
+            },
+            {
+              "cause": "landing",
+              "stepMs": {
+                "samples": 2880,
+                "mean": 0.4891921875000068,
+                "median": 0.3607499999998254,
+                "p95": 0.7880000000004657
+              },
+              "incidentCpuMs": {
+                "samples": 24,
+                "mean": 58.70306250000082,
+                "median": 58.640878000005614,
+                "p95": 61.87787699999899
+              },
+              "triggerMs": {
+                "samples": 24,
+                "mean": 0.20135583333330942,
+                "median": 0.20083300000078452,
+                "p95": 0.22379100000034668
+              },
+              "durationSeconds": {
+                "samples": 24,
+                "mean": 2,
+                "median": 2,
+                "p95": 2
+              },
+              "fullSkinScans": 6768,
+              "phases": {
+                "bail": {
+                  "stepMs": {
+                    "samples": 1776,
+                    "mean": 0.3549138226351332,
+                    "median": 0.30633300000044983,
+                    "p95": 0.6744589999998425
+                  },
+                  "fullSkinScans": 144
+                },
+                "rise": {
+                  "stepMs": {
+                    "samples": 1104,
+                    "mean": 0.7052052092391513,
+                    "median": 0.6761659999992844,
+                    "p95": 0.8609169999999722
+                  },
+                  "fullSkinScans": 6624
+                }
+              }
+            },
+            {
+              "cause": "pvp",
+              "stepMs": {
+                "samples": 2520,
+                "mean": 0.5606981761904838,
+                "median": 0.644125000000713,
+                "p95": 0.7934999999997672
+              },
+              "incidentCpuMs": {
+                "samples": 24,
+                "mean": 58.8733085000008,
+                "median": 58.912452000000485,
+                "p95": 61.62503400000605
+              },
+              "triggerMs": {
+                "samples": 24,
+                "mean": 0.02742887499986561,
+                "median": 0.026665999999750056,
+                "p95": 0.03712500000074215
+              },
+              "durationSeconds": {
+                "samples": 24,
+                "mean": 1.75,
+                "median": 1.75,
+                "p95": 1.75
+              },
+              "fullSkinScans": 6768,
+              "phases": {
+                "bail": {
+                  "stepMs": {
+                    "samples": 1416,
+                    "mean": 0.4595888629943702,
+                    "median": 0.335957999999664,
+                    "p95": 0.7562909999996918
+                  },
+                  "fullSkinScans": 144
+                },
+                "rise": {
+                  "stepMs": {
+                    "samples": 1104,
+                    "mean": 0.6903818605072383,
+                    "median": 0.6633330000004207,
+                    "p95": 0.8445830000000569
+                  },
+                  "fullSkinScans": 6624
+                }
+              }
+            }
+          ]
+        },
+        "after": {
+          "source": "current working tree",
+          "warmupsPerCase": 8,
+          "measuredIncidentsPerCase": 24,
+          "completeIncident": true,
+          "realHandTriangles": 25152,
+          "scope": "Production fixed-step CPU in Node with animation runtime and actual artist-hand meshes, warm exact skin kernel and other procedural fallback assets. Includes the complete bail and finite post-control rise rebound; excludes render/GPU/browser costs. Timings are descriptive, work counts are deterministic.",
+          "contact": null,
+          "results": [
+            {
+              "cause": "balance",
+              "stepMs": {
+                "samples": 2568,
+                "mean": 0.5396473917445456,
+                "median": 0.6043749999998909,
+                "p95": 0.8274579999997513
+              },
+              "incidentCpuMs": {
+                "samples": 24,
+                "mean": 57.74227091666637,
+                "median": 57.208670999997594,
+                "p95": 62.053461000002244
+              },
+              "triggerMs": {
+                "samples": 24,
+                "mean": 0.253934083333282,
+                "median": 0.23908400000073016,
+                "p95": 0.34616600000026665
+              },
+              "durationSeconds": {
+                "samples": 24,
+                "mean": 1.7833333333333334,
+                "median": 1.7833333333333334,
+                "p95": 1.7833333333333334
+              },
+              "fullSkinScans": 6768,
+              "phases": {
+                "bail": {
+                  "stepMs": {
+                    "samples": 1464,
+                    "mean": 0.4303644125683116,
+                    "median": 0.3271249999997963,
+                    "p95": 0.7834999999995489
+                  },
+                  "fullSkinScans": 144
+                },
+                "rise": {
+                  "stepMs": {
+                    "samples": 1104,
+                    "mean": 0.6845661249999861,
+                    "median": 0.6498750000000655,
+                    "p95": 0.8703329999998459
+                  },
+                  "fullSkinScans": 6624
+                }
+              }
+            },
+            {
+              "cause": "wall",
+              "stepMs": {
+                "samples": 2832,
+                "mean": 0.5247157164547988,
+                "median": 0.5154580000016722,
+                "p95": 0.8749580000003334
+              },
+              "incidentCpuMs": {
+                "samples": 24,
+                "mean": 61.91645454166625,
+                "median": 60.56304099998488,
+                "p95": 67.55133400000523
+              },
+              "triggerMs": {
+                "samples": 24,
+                "mean": 0.22607116666661872,
+                "median": 0.22370800000135205,
+                "p95": 0.27775000000110595
+              },
+              "durationSeconds": {
+                "samples": 24,
+                "mean": 1.9666666666666668,
+                "median": 1.9666666666666666,
+                "p95": 1.9666666666666666
+              },
+              "fullSkinScans": 6768,
+              "phases": {
+                "bail": {
+                  "stepMs": {
+                    "samples": 1728,
+                    "mean": 0.4164961869212778,
+                    "median": 0.3323339999988093,
+                    "p95": 0.8315419999998994
+                  },
+                  "fullSkinScans": 144
+                },
+                "rise": {
+                  "stepMs": {
+                    "samples": 1104,
+                    "mean": 0.6941028061594402,
+                    "median": 0.6572079999987182,
+                    "p95": 0.9003749999992579
+                  },
+                  "fullSkinScans": 6624
+                }
+              }
+            },
+            {
+              "cause": "trip",
+              "stepMs": {
+                "samples": 3000,
+                "mean": 0.5511539570000005,
+                "median": 0.6133330000011483,
+                "p95": 0.9306669999987207
+              },
+              "incidentCpuMs": {
+                "samples": 24,
+                "mean": 68.89424462500006,
+                "median": 68.07004300000335,
+                "p95": 73.33645399999659
+              },
+              "triggerMs": {
+                "samples": 24,
+                "mean": 0.23482983333353027,
+                "median": 0.20633399999860558,
+                "p95": 0.22941700000046694
+              },
+              "durationSeconds": {
+                "samples": 24,
+                "mean": 2.083333333333334,
+                "median": 2.0833333333333335,
+                "p95": 2.0833333333333335
+              },
+              "fullSkinScans": 6768,
+              "phases": {
+                "bail": {
+                  "stepMs": {
+                    "samples": 1896,
+                    "mean": 0.48043423470465446,
+                    "median": 0.32670799999868905,
+                    "p95": 1.0086670000000595
+                  },
+                  "fullSkinScans": 144
+                },
+                "rise": {
+                  "stepMs": {
+                    "samples": 1104,
+                    "mean": 0.6726073931159208,
+                    "median": 0.645290999998906,
+                    "p95": 0.841167000000496
+                  },
+                  "fullSkinScans": 6624
+                }
+              }
+            },
+            {
+              "cause": "landing",
+              "stepMs": {
+                "samples": 2880,
+                "mean": 0.47424500104168094,
+                "median": 0.36858399999982794,
+                "p95": 0.7613330000003771
+              },
+              "incidentCpuMs": {
+                "samples": 24,
+                "mean": 56.90940012500172,
+                "median": 56.74729200000729,
+                "p95": 59.12721600000077
+              },
+              "triggerMs": {
+                "samples": 24,
+                "mean": 0.2054931249999754,
+                "median": 0.19816700000046694,
+                "p95": 0.24654200000077253
+              },
+              "durationSeconds": {
+                "samples": 24,
+                "mean": 2,
+                "median": 2,
+                "p95": 2
+              },
+              "fullSkinScans": 6768,
+              "phases": {
+                "bail": {
+                  "stepMs": {
+                    "samples": 1776,
+                    "mean": 0.3526312804054292,
+                    "median": 0.304415999999037,
+                    "p95": 0.6664999999993597
+                  },
+                  "fullSkinScans": 144
+                },
+                "rise": {
+                  "stepMs": {
+                    "samples": 1104,
+                    "mean": 0.669884464673912,
+                    "median": 0.6387080000004062,
+                    "p95": 0.8539160000000265
+                  },
+                  "fullSkinScans": 6624
+                }
+              }
+            },
+            {
+              "cause": "pvp",
+              "stepMs": {
+                "samples": 2520,
+                "mean": 0.5489400567460399,
+                "median": 0.6120410000003176,
+                "p95": 0.7913339999995515
+              },
+              "incidentCpuMs": {
+                "samples": 24,
+                "mean": 57.638705958334185,
+                "median": 57.19625300000189,
+                "p95": 60.00700099999631
+              },
+              "triggerMs": {
+                "samples": 24,
+                "mean": 0.027499999999766562,
+                "median": 0.02591700000084529,
+                "p95": 0.04587499999979627
+              },
+              "durationSeconds": {
+                "samples": 24,
+                "mean": 1.75,
+                "median": 1.75,
+                "p95": 1.75
+              },
+              "fullSkinScans": 6768,
+              "phases": {
+                "bail": {
+                  "stepMs": {
+                    "samples": 1416,
+                    "mean": 0.46000061581922136,
+                    "median": 0.3432919999995647,
+                    "p95": 0.7637909999994008
+                  },
+                  "fullSkinScans": 144
+                },
+                "rise": {
+                  "stepMs": {
+                    "samples": 1104,
+                    "mean": 0.6630145570652201,
+                    "median": 0.6313330000011774,
+                    "p95": 0.818834000001516
+                  },
+                  "fullSkinScans": 6624
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "order": "before then SIMD",
+        "wholeBeforeMs": 0.5457542224637695,
+        "wholeAfterMs": 0.5282456180434748,
+        "riseBeforeMs": 0.7204999074275403,
+        "riseAfterMs": 0.6788174121376868,
+        "before": {
+          "source": "initial working tree snapshot",
+          "warmupsPerCase": 8,
+          "measuredIncidentsPerCase": 24,
+          "completeIncident": true,
+          "realHandTriangles": 25152,
+          "scope": "Production fixed-step CPU in Node with animation runtime and actual artist-hand meshes, warm exact skin kernel and other procedural fallback assets. Includes the complete bail and finite post-control rise rebound; excludes render/GPU/browser costs. Timings are descriptive, work counts are deterministic.",
+          "contact": null,
+          "results": [
+            {
+              "cause": "balance",
+              "stepMs": {
+                "samples": 2568,
+                "mean": 0.5518778621495345,
+                "median": 0.6376250000002983,
+                "p95": 0.8392499999999927
+              },
+              "incidentCpuMs": {
+                "samples": 24,
+                "mean": 59.05093125000019,
+                "median": 58.66716499999984,
+                "p95": 63.165710000002036
+              },
+              "triggerMs": {
+                "samples": 24,
+                "mean": 0.2554358333333842,
+                "median": 0.2519579999998314,
+                "p95": 0.29900000000088767
+              },
+              "durationSeconds": {
+                "samples": 24,
+                "mean": 1.7833333333333334,
+                "median": 1.7833333333333334,
+                "p95": 1.7833333333333334
+              },
+              "fullSkinScans": 6768,
+              "phases": {
+                "bail": {
+                  "stepMs": {
+                    "samples": 1464,
+                    "mean": 0.42747126707649963,
+                    "median": 0.32745799999975134,
+                    "p95": 0.781792000000678
+                  },
+                  "fullSkinScans": 144
+                },
+                "rise": {
+                  "stepMs": {
+                    "samples": 1104,
+                    "mean": 0.7168518251811676,
+                    "median": 0.6804579999998168,
+                    "p95": 0.9190000000007785
+                  },
+                  "fullSkinScans": 6624
+                }
+              }
+            },
+            {
+              "cause": "wall",
+              "stepMs": {
+                "samples": 2832,
+                "mean": 0.538032126765548,
+                "median": 0.4934590000002572,
+                "p95": 0.8936250000006112
+              },
+              "incidentCpuMs": {
+                "samples": 24,
+                "mean": 63.487790958334664,
+                "median": 62.308875999997326,
+                "p95": 69.0564990000039
+              },
+              "triggerMs": {
+                "samples": 24,
+                "mean": 0.24337679166664353,
+                "median": 0.24204199999985576,
+                "p95": 0.28708300000107556
+              },
+              "durationSeconds": {
+                "samples": 24,
+                "mean": 1.9666666666666668,
+                "median": 1.9666666666666666,
+                "p95": 1.9666666666666666
+              },
+              "fullSkinScans": 6768,
+              "phases": {
+                "bail": {
+                  "stepMs": {
+                    "samples": 1728,
+                    "mean": 0.41575650983796786,
+                    "median": 0.33150000000023283,
+                    "p95": 0.8532500000001164
+                  },
+                  "fullSkinScans": 144
+                },
+                "rise": {
+                  "stepMs": {
+                    "samples": 1104,
+                    "mean": 0.7294200489130647,
+                    "median": 0.6969169999993028,
+                    "p95": 0.9098749999993743
+                  },
+                  "fullSkinScans": 6624
+                }
+              }
+            },
+            {
+              "cause": "trip",
+              "stepMs": {
+                "samples": 3000,
+                "mean": 0.575593873333326,
+                "median": 0.6541660000002594,
+                "p95": 0.9750409999996918
+              },
+              "incidentCpuMs": {
+                "samples": 24,
+                "mean": 71.94923416666575,
+                "median": 71.32466800000111,
+                "p95": 76.16728300000614
+              },
+              "triggerMs": {
+                "samples": 24,
+                "mean": 0.21364420833333497,
+                "median": 0.21095900000000256,
+                "p95": 0.23937500000101863
+              },
+              "durationSeconds": {
+                "samples": 24,
+                "mean": 2.083333333333334,
+                "median": 2.0833333333333335,
+                "p95": 2.0833333333333335
+              },
+              "fullSkinScans": 6768,
+              "phases": {
+                "bail": {
+                  "stepMs": {
+                    "samples": 1896,
+                    "mean": 0.48733251371307823,
+                    "median": 0.3328750000000582,
+                    "p95": 1.014999999999418
+                  },
+                  "fullSkinScans": 144
+                },
+                "rise": {
+                  "stepMs": {
+                    "samples": 1104,
+                    "mean": 0.7271731648550558,
+                    "median": 0.6936660000010306,
+                    "p95": 0.901625000000422
+                  },
+                  "fullSkinScans": 6624
+                }
+              }
+            },
+            {
+              "cause": "landing",
+              "stepMs": {
+                "samples": 2880,
+                "mean": 0.4992625420139057,
+                "median": 0.37666600000011385,
+                "p95": 0.8130419999997684
+              },
+              "incidentCpuMs": {
+                "samples": 24,
+                "mean": 59.91150504166868,
+                "median": 59.853341,
+                "p95": 66.68437000000449
+              },
+              "triggerMs": {
+                "samples": 24,
+                "mean": 0.20947929166663926,
+                "median": 0.20600000000013097,
+                "p95": 0.25575000000026193
+              },
+              "durationSeconds": {
+                "samples": 24,
+                "mean": 2,
+                "median": 2,
+                "p95": 2
+              },
+              "fullSkinScans": 6768,
+              "phases": {
+                "bail": {
+                  "stepMs": {
+                    "samples": 1776,
+                    "mean": 0.35946306587839766,
+                    "median": 0.3062079999999696,
+                    "p95": 0.6709579999987909
+                  },
+                  "fullSkinScans": 144
+                },
+                "rise": {
+                  "stepMs": {
+                    "samples": 1104,
+                    "mean": 0.7241573514492882,
+                    "median": 0.6842500000002474,
+                    "p95": 0.9095419999994192
+                  },
+                  "fullSkinScans": 6624
+                }
+              }
+            },
+            {
+              "cause": "pvp",
+              "stepMs": {
+                "samples": 2520,
+                "mean": 0.5658020619047441,
+                "median": 0.6465000000007421,
+                "p95": 0.8193329999994603
+              },
+              "incidentCpuMs": {
+                "samples": 24,
+                "mean": 59.40921649999814,
+                "median": 59.55691300000035,
+                "p95": 62.28158700000313
+              },
+              "triggerMs": {
+                "samples": 24,
+                "mean": 0.026552166666685178,
+                "median": 0.02591700000084529,
+                "p95": 0.032124999999723514
+              },
+              "durationSeconds": {
+                "samples": 24,
+                "mean": 1.75,
+                "median": 1.75,
+                "p95": 1.75
+              },
+              "fullSkinScans": 6768,
+              "phases": {
+                "bail": {
+                  "stepMs": {
+                    "samples": 1416,
+                    "mean": 0.45735504661014204,
+                    "median": 0.33445899999969697,
+                    "p95": 0.7629999999990105
+                  },
+                  "fullSkinScans": 144
+                },
+                "rise": {
+                  "stepMs": {
+                    "samples": 1104,
+                    "mean": 0.7048971467391252,
+                    "median": 0.6737919999995938,
+                    "p95": 0.8648749999993015
+                  },
+                  "fullSkinScans": 6624
+                }
+              }
+            }
+          ]
+        },
+        "after": {
+          "source": "current working tree",
+          "warmupsPerCase": 8,
+          "measuredIncidentsPerCase": 24,
+          "completeIncident": true,
+          "realHandTriangles": 25152,
+          "scope": "Production fixed-step CPU in Node with animation runtime and actual artist-hand meshes, warm exact skin kernel and other procedural fallback assets. Includes the complete bail and finite post-control rise rebound; excludes render/GPU/browser costs. Timings are descriptive, work counts are deterministic.",
+          "contact": null,
+          "results": [
+            {
+              "cause": "balance",
+              "stepMs": {
+                "samples": 2568,
+                "mean": 0.5394454049844293,
+                "median": 0.6067089999996824,
+                "p95": 0.8300829999998314
+              },
+              "incidentCpuMs": {
+                "samples": 24,
+                "mean": 57.72065833333394,
+                "median": 57.89270399999987,
+                "p95": 62.28033599999617
+              },
+              "triggerMs": {
+                "samples": 24,
+                "mean": 0.25138712500002686,
+                "median": 0.2419580000005226,
+                "p95": 0.33341699999982666
+              },
+              "durationSeconds": {
+                "samples": 24,
+                "mean": 1.7833333333333334,
+                "median": 1.7833333333333334,
+                "p95": 1.7833333333333334
+              },
+              "fullSkinScans": 6768,
+              "phases": {
+                "bail": {
+                  "stepMs": {
+                    "samples": 1464,
+                    "mean": 0.427395137295079,
+                    "median": 0.32524999999986903,
+                    "p95": 0.7794170000006488
+                  },
+                  "fullSkinScans": 144
+                },
+                "rise": {
+                  "stepMs": {
+                    "samples": 1104,
+                    "mean": 0.688033803442046,
+                    "median": 0.648707999999715,
+                    "p95": 0.8918750000002547
+                  },
+                  "fullSkinScans": 6624
+                }
+              }
+            },
+            {
+              "cause": "wall",
+              "stepMs": {
+                "samples": 2832,
+                "mean": 0.5229044371468721,
+                "median": 0.5233749999988504,
+                "p95": 0.8677499999994325
+              },
+              "incidentCpuMs": {
+                "samples": 24,
+                "mean": 61.70272358333091,
+                "median": 60.51600000000508,
+                "p95": 67.85362400000213
+              },
+              "triggerMs": {
+                "samples": 24,
+                "mean": 0.24029350000023442,
+                "median": 0.22945900000013353,
+                "p95": 0.29637499999989814
+              },
+              "durationSeconds": {
+                "samples": 24,
+                "mean": 1.9666666666666668,
+                "median": 1.9666666666666666,
+                "p95": 1.9666666666666666
+              },
+              "fullSkinScans": 6768,
+              "phases": {
+                "bail": {
+                  "stepMs": {
+                    "samples": 1728,
+                    "mean": 0.4144284612268173,
+                    "median": 0.3326249999990978,
+                    "p95": 0.8297920000004524
+                  },
+                  "fullSkinScans": 144
+                },
+                "rise": {
+                  "stepMs": {
+                    "samples": 1104,
+                    "mean": 0.6926929211956535,
+                    "median": 0.6585420000010345,
+                    "p95": 0.8946669999986625
+                  },
+                  "fullSkinScans": 6624
+                }
+              }
+            },
+            {
+              "cause": "trip",
+              "stepMs": {
+                "samples": 3000,
+                "mean": 0.5558427676666519,
+                "median": 0.6126669999994192,
+                "p95": 0.9610410000004777
+              },
+              "incidentCpuMs": {
+                "samples": 24,
+                "mean": 69.48034595833148,
+                "median": 68.52033899999697,
+                "p95": 74.07133100001374
+              },
+              "triggerMs": {
+                "samples": 24,
+                "mean": 0.21164070833303109,
+                "median": 0.20670799999970768,
+                "p95": 0.2583340000001044
+              },
+              "durationSeconds": {
+                "samples": 24,
+                "mean": 2.083333333333334,
+                "median": 2.0833333333333335,
+                "p95": 2.0833333333333335
+              },
+              "fullSkinScans": 6768,
+              "phases": {
+                "bail": {
+                  "stepMs": {
+                    "samples": 1896,
+                    "mean": 0.48647527162444704,
+                    "median": 0.33491699999831326,
+                    "p95": 1.0132919999996375
+                  },
+                  "fullSkinScans": 144
+                },
+                "rise": {
+                  "stepMs": {
+                    "samples": 1104,
+                    "mean": 0.6749739021739166,
+                    "median": 0.6417079999991984,
+                    "p95": 0.8631249999998545
+                  },
+                  "fullSkinScans": 6624
+                }
+              }
+            },
+            {
+              "cause": "landing",
+              "stepMs": {
+                "samples": 2880,
+                "mean": 0.4772614756944563,
+                "median": 0.36183299999902374,
+                "p95": 0.772584000000279
+              },
+              "incidentCpuMs": {
+                "samples": 24,
+                "mean": 57.271377083334755,
+                "median": 57.30237600000146,
+                "p95": 61.894251000014265
+              },
+              "triggerMs": {
+                "samples": 24,
+                "mean": 0.20189062499995694,
+                "median": 0.19829199999912817,
+                "p95": 0.2532919999994192
+              },
+              "durationSeconds": {
+                "samples": 24,
+                "mean": 2,
+                "median": 2,
+                "p95": 2
+              },
+              "fullSkinScans": 6768,
+              "phases": {
+                "bail": {
+                  "stepMs": {
+                    "samples": 1776,
+                    "mean": 0.35465642117118445,
+                    "median": 0.3056249999990541,
+                    "p95": 0.6766670000015438
+                  },
+                  "fullSkinScans": 144
+                },
+                "rise": {
+                  "stepMs": {
+                    "samples": 1104,
+                    "mean": 0.6744956938405893,
+                    "median": 0.6395830000001297,
+                    "p95": 0.8481250000004366
+                  },
+                  "fullSkinScans": 6624
+                }
+              }
+            },
+            {
+              "cause": "pvp",
+              "stepMs": {
+                "samples": 2520,
+                "mean": 0.5482488134920661,
+                "median": 0.611957999999504,
+                "p95": 0.7891249999993306
+              },
+              "incidentCpuMs": {
+                "samples": 24,
+                "mean": 57.56612541666694,
+                "median": 57.170381000009,
+                "p95": 60.808287999998356
+              },
+              "triggerMs": {
+                "samples": 24,
+                "mean": 0.026631916666625937,
+                "median": 0.02495900000030815,
+                "p95": 0.03070800000023155
+              },
+              "durationSeconds": {
+                "samples": 24,
+                "mean": 1.75,
+                "median": 1.75,
+                "p95": 1.75
+              },
+              "fullSkinScans": 6768,
+              "phases": {
+                "bail": {
+                  "stepMs": {
+                    "samples": 1416,
+                    "mean": 0.4580873114406853,
+                    "median": 0.3297080000011192,
+                    "p95": 0.7671659999996336
+                  },
+                  "fullSkinScans": 144
+                },
+                "rise": {
+                  "stepMs": {
+                    "samples": 1104,
+                    "mean": 0.6638907400362284,
+                    "median": 0.6294170000001031,
+                    "p95": 0.8291669999998703
+                  },
+                  "fullSkinScans": 6624
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "order": "SIMD then before",
+        "wholeBeforeMs": 0.5436994747101418,
+        "wholeAfterMs": 0.533730915217387,
+        "riseBeforeMs": 0.7141658541666754,
+        "riseAfterMs": 0.6866291137681106,
+        "before": {
+          "source": "initial working tree snapshot",
+          "warmupsPerCase": 8,
+          "measuredIncidentsPerCase": 24,
+          "completeIncident": true,
+          "realHandTriangles": 25152,
+          "scope": "Production fixed-step CPU in Node with animation runtime and actual artist-hand meshes, warm exact skin kernel and other procedural fallback assets. Includes the complete bail and finite post-control rise rebound; excludes render/GPU/browser costs. Timings are descriptive, work counts are deterministic.",
+          "contact": null,
+          "results": [
+            {
+              "cause": "balance",
+              "stepMs": {
+                "samples": 2568,
+                "mean": 0.5512478625389222,
+                "median": 0.6382080000003043,
+                "p95": 0.8396659999998519
+              },
+              "incidentCpuMs": {
+                "samples": 24,
+                "mean": 58.98352129166468,
+                "median": 59.1989609999946,
+                "p95": 62.28895999999531
+              },
+              "triggerMs": {
+                "samples": 24,
+                "mean": 0.25189750000000305,
+                "median": 0.24800000000050204,
+                "p95": 0.31037500000002183
+              },
+              "durationSeconds": {
+                "samples": 24,
+                "mean": 1.7833333333333334,
+                "median": 1.7833333333333334,
+                "p95": 1.7833333333333334
+              },
+              "fullSkinScans": 6768,
+              "phases": {
+                "bail": {
+                  "stepMs": {
+                    "samples": 1464,
+                    "mean": 0.42759724590161724,
+                    "median": 0.3288330000004862,
+                    "p95": 0.794540999999299
+                  },
+                  "fullSkinScans": 144
+                },
+                "rise": {
+                  "stepMs": {
+                    "samples": 1104,
+                    "mean": 0.7152193324275223,
+                    "median": 0.6804579999998168,
+                    "p95": 0.8727499999995416
+                  },
+                  "fullSkinScans": 6624
+                }
+              }
+            },
+            {
+              "cause": "wall",
+              "stepMs": {
+                "samples": 2832,
+                "mean": 0.5318204883474701,
+                "median": 0.4950410000001284,
+                "p95": 0.8762079999996786
+              },
+              "incidentCpuMs": {
+                "samples": 24,
+                "mean": 62.754817625001465,
+                "median": 61.939204999998765,
+                "p95": 67.66425299999719
+              },
+              "triggerMs": {
+                "samples": 24,
+                "mean": 0.24197754166652885,
+                "median": 0.2264999999988504,
+                "p95": 0.3072500000016589
+              },
+              "durationSeconds": {
+                "samples": 24,
+                "mean": 1.9666666666666668,
+                "median": 1.9666666666666666,
+                "p95": 1.9666666666666666
+              },
+              "fullSkinScans": 6768,
+              "phases": {
+                "bail": {
+                  "stepMs": {
+                    "samples": 1728,
+                    "mean": 0.41164436111112146,
+                    "median": 0.3314169999994192,
+                    "p95": 0.8238750000000437
+                  },
+                  "fullSkinScans": 144
+                },
+                "rise": {
+                  "stepMs": {
+                    "samples": 1104,
+                    "mean": 0.719922252717407,
+                    "median": 0.6899159999993572,
+                    "p95": 0.8938749999997526
+                  },
+                  "fullSkinScans": 6624
+                }
+              }
+            },
+            {
+              "cause": "trip",
+              "stepMs": {
+                "samples": 3000,
+                "mean": 0.5678697029999882,
+                "median": 0.6491249999999127,
+                "p95": 0.952832999999373
+              },
+              "incidentCpuMs": {
+                "samples": 24,
+                "mean": 70.98371287499852,
+                "median": 70.3464240000012,
+                "p95": 76.17800199999874
+              },
+              "triggerMs": {
+                "samples": 24,
+                "mean": 0.2058298750000631,
+                "median": 0.2074159999992844,
+                "p95": 0.2288749999988795
+              },
+              "durationSeconds": {
+                "samples": 24,
+                "mean": 2.083333333333334,
+                "median": 2.0833333333333335,
+                "p95": 2.0833333333333335
+              },
+              "fullSkinScans": 6768,
+              "phases": {
+                "bail": {
+                  "stepMs": {
+                    "samples": 1896,
+                    "mean": 0.4846929193037828,
+                    "median": 0.333042000000205,
+                    "p95": 1.0206249999991996
+                  },
+                  "fullSkinScans": 144
+                },
+                "rise": {
+                  "stepMs": {
+                    "samples": 1104,
+                    "mean": 0.7107167880434714,
+                    "median": 0.6844999999993888,
+                    "p95": 0.8554169999988517
+                  },
+                  "fullSkinScans": 6624
+                }
+              }
+            },
+            {
+              "cause": "landing",
+              "stepMs": {
+                "samples": 2880,
+                "mean": 0.4978310965277703,
+                "median": 0.3687079999999696,
+                "p95": 0.8148750000000291
+              },
+              "incidentCpuMs": {
+                "samples": 24,
+                "mean": 59.739731583332436,
+                "median": 59.64333599999554,
+                "p95": 63.20687099999486
+              },
+              "triggerMs": {
+                "samples": 24,
+                "mean": 0.21960416666646174,
+                "median": 0.21737500000017462,
+                "p95": 0.2544999999990978
+              },
+              "durationSeconds": {
+                "samples": 24,
+                "mean": 2,
+                "median": 2,
+                "p95": 2
+              },
+              "fullSkinScans": 6768,
+              "phases": {
+                "bail": {
+                  "stepMs": {
+                    "samples": 1776,
+                    "mean": 0.3606908378378269,
+                    "median": 0.3107079999990674,
+                    "p95": 0.6812090000003082
+                  },
+                  "fullSkinScans": 144
+                },
+                "rise": {
+                  "stepMs": {
+                    "samples": 1104,
+                    "mean": 0.7184480344202879,
+                    "median": 0.6832500000000437,
+                    "p95": 0.9014999999999418
+                  },
+                  "fullSkinScans": 6624
+                }
+              }
+            },
+            {
+              "cause": "pvp",
+              "stepMs": {
+                "samples": 2520,
+                "mean": 0.5730039484127087,
+                "median": 0.648749999998472,
+                "p95": 0.8247919999994338
+              },
+              "incidentCpuMs": {
+                "samples": 24,
+                "mean": 60.16541458333442,
+                "median": 60.280254000008426,
+                "p95": 63.12895800000297
+              },
+              "triggerMs": {
+                "samples": 24,
+                "mean": 0.02767716666691437,
+                "median": 0.02554200000122364,
+                "p95": 0.04854200000045239
+              },
+              "durationSeconds": {
+                "samples": 24,
+                "mean": 1.75,
+                "median": 1.75,
+                "p95": 1.75
+              },
+              "fullSkinScans": 6768,
+              "phases": {
+                "bail": {
+                  "stepMs": {
+                    "samples": 1416,
+                    "mean": 0.4689044555084532,
+                    "median": 0.3431249999994179,
+                    "p95": 0.7787499999994907
+                  },
+                  "fullSkinScans": 144
+                },
+                "rise": {
+                  "stepMs": {
+                    "samples": 1104,
+                    "mean": 0.7065228632246887,
+                    "median": 0.6715839999997115,
+                    "p95": 0.8754580000004353
+                  },
+                  "fullSkinScans": 6624
+                }
+              }
+            }
+          ]
+        },
+        "after": {
+          "source": "current working tree",
+          "warmupsPerCase": 8,
+          "measuredIncidentsPerCase": 24,
+          "completeIncident": true,
+          "realHandTriangles": 25152,
+          "scope": "Production fixed-step CPU in Node with animation runtime and actual artist-hand meshes, warm exact skin kernel and other procedural fallback assets. Includes the complete bail and finite post-control rise rebound; excludes render/GPU/browser costs. Timings are descriptive, work counts are deterministic.",
+          "contact": null,
+          "results": [
+            {
+              "cause": "balance",
+              "stepMs": {
+                "samples": 2568,
+                "mean": 0.5390993029594997,
+                "median": 0.6084160000000338,
+                "p95": 0.8290409999999611
+              },
+              "incidentCpuMs": {
+                "samples": 24,
+                "mean": 57.68362541666647,
+                "median": 57.959169000001566,
+                "p95": 61.79695500000071
+              },
+              "triggerMs": {
+                "samples": 24,
+                "mean": 0.25276045833330346,
+                "median": 0.2483750000001237,
+                "p95": 0.2992500000000291
+              },
+              "durationSeconds": {
+                "samples": 24,
+                "mean": 1.7833333333333334,
+                "median": 1.7833333333333334,
+                "p95": 1.7833333333333334
+              },
+              "fullSkinScans": 6768,
+              "phases": {
+                "bail": {
+                  "stepMs": {
+                    "samples": 1464,
+                    "mean": 0.4249343060109251,
+                    "median": 0.3264999999992142,
+                    "p95": 0.7774170000002414
+                  },
+                  "fullSkinScans": 144
+                },
+                "rise": {
+                  "stepMs": {
+                    "samples": 1104,
+                    "mean": 0.6904920163043488,
+                    "median": 0.6528339999995296,
+                    "p95": 0.8743329999997513
+                  },
+                  "fullSkinScans": 6624
+                }
+              }
+            },
+            {
+              "cause": "wall",
+              "stepMs": {
+                "samples": 2832,
+                "mean": 0.5339806730225855,
+                "median": 0.5249590000003082,
+                "p95": 0.8956669999988662
+              },
+              "incidentCpuMs": {
+                "samples": 24,
+                "mean": 63.009719416665085,
+                "median": 62.3698370000202,
+                "p95": 66.93961999999556
+              },
+              "triggerMs": {
+                "samples": 24,
+                "mean": 0.23931241666665906,
+                "median": 0.2369170000001759,
+                "p95": 0.3040419999997539
+              },
+              "durationSeconds": {
+                "samples": 24,
+                "mean": 1.9666666666666668,
+                "median": 1.9666666666666666,
+                "p95": 1.9666666666666666
+              },
+              "fullSkinScans": 6768,
+              "phases": {
+                "bail": {
+                  "stepMs": {
+                    "samples": 1728,
+                    "mean": 0.42327373495371035,
+                    "median": 0.33895899999970425,
+                    "p95": 0.8315419999998994
+                  },
+                  "fullSkinScans": 144
+                },
+                "rise": {
+                  "stepMs": {
+                    "samples": 1104,
+                    "mean": 0.7072610978260421,
+                    "median": 0.6720829999994749,
+                    "p95": 0.9288329999999405
+                  },
+                  "fullSkinScans": 6624
+                }
+              }
+            },
+            {
+              "cause": "trip",
+              "stepMs": {
+                "samples": 3000,
+                "mean": 0.563402660000013,
+                "median": 0.6274169999996957,
+                "p95": 0.9594170000000304
+              },
+              "incidentCpuMs": {
+                "samples": 24,
+                "mean": 70.42533250000163,
+                "median": 70.41508800001247,
+                "p95": 74.78649600000972
+              },
+              "triggerMs": {
+                "samples": 24,
+                "mean": 0.21561637500008146,
+                "median": 0.20750000000043656,
+                "p95": 0.2797080000000278
+              },
+              "durationSeconds": {
+                "samples": 24,
+                "mean": 2.083333333333334,
+                "median": 2.0833333333333335,
+                "p95": 2.0833333333333335
+              },
+              "fullSkinScans": 6768,
+              "phases": {
+                "bail": {
+                  "stepMs": {
+                    "samples": 1896,
+                    "mean": 0.4896099272152006,
+                    "median": 0.33924999999908323,
+                    "p95": 1.020542000000205
+                  },
+                  "fullSkinScans": 144
+                },
+                "rise": {
+                  "stepMs": {
+                    "samples": 1104,
+                    "mean": 0.6901336576087128,
+                    "median": 0.6615829999991547,
+                    "p95": 0.8594589999993332
+                  },
+                  "fullSkinScans": 6624
+                }
+              }
+            },
+            {
+              "cause": "landing",
+              "stepMs": {
+                "samples": 2880,
+                "mean": 0.4827470677083252,
+                "median": 0.37370799999916926,
+                "p95": 0.7656669999996666
+              },
+              "incidentCpuMs": {
+                "samples": 24,
+                "mean": 57.92964812499903,
+                "median": 57.359961999991356,
+                "p95": 62.28892099999939
+              },
+              "triggerMs": {
+                "samples": 24,
+                "mean": 0.2122152916667043,
+                "median": 0.2046250000003056,
+                "p95": 0.26783400000022084
+              },
+              "durationSeconds": {
+                "samples": 24,
+                "mean": 2,
+                "median": 2,
+                "p95": 2
+              },
+              "fullSkinScans": 6768,
+              "phases": {
+                "bail": {
+                  "stepMs": {
+                    "samples": 1776,
+                    "mean": 0.3616328845720574,
+                    "median": 0.31004099999881873,
+                    "p95": 0.6756669999995211
+                  },
+                  "fullSkinScans": 144
+                },
+                "rise": {
+                  "stepMs": {
+                    "samples": 1104,
+                    "mean": 0.6775829275362343,
+                    "median": 0.6461249999993015,
+                    "p95": 0.8629160000000411
+                  },
+                  "fullSkinScans": 6624
+                }
+              }
+            },
+            {
+              "cause": "pvp",
+              "stepMs": {
+                "samples": 2520,
+                "mean": 0.5509233408730029,
+                "median": 0.6208330000008573,
+                "p95": 0.7888339999990421
+              },
+              "incidentCpuMs": {
+                "samples": 24,
+                "mean": 57.8469507916653,
+                "median": 58.186377999996694,
+                "p95": 60.72546500000317
+              },
+              "triggerMs": {
+                "samples": 24,
+                "mean": 0.02595308333313066,
+                "median": 0.025415999998585903,
+                "p95": 0.028916999999637483
+              },
+              "durationSeconds": {
+                "samples": 24,
+                "mean": 1.75,
+                "median": 1.75,
+                "p95": 1.75
+              },
+              "fullSkinScans": 6768,
+              "phases": {
+                "bail": {
+                  "stepMs": {
+                    "samples": 1416,
+                    "mean": 0.4598959456214476,
+                    "median": 0.33562499999970896,
+                    "p95": 0.7445829999996931
+                  },
+                  "fullSkinScans": 144
+                },
+                "rise": {
+                  "stepMs": {
+                    "samples": 1104,
+                    "mean": 0.667675869565215,
+                    "median": 0.6390420000006998,
+                    "p95": 0.8410420000000158
+                  },
+                  "fullSkinScans": 6624
+                }
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "nativeKernelMicrobenchmark": {
+    "runtime": "v24.19.0",
+    "kind": "old scalar vs paired-f64 SIMD production mesh CPU microbenchmark, includes copies + palette preparation + animated pose updates",
+    "checks": 240,
+    "samples": 11,
+    "iterations": 150,
+    "results": [
+      {
+        "mesh": "meshy-torso-surface",
+        "vertices": 6758,
+        "morphs": 2,
+        "baselineScalarMedianMs": 0.07910305333333327,
+        "simdMedianMs": 0.06860722666666637,
+        "speedup": 1.15298427259947,
+        "samples": {
+          "baselineScalar": [
+            0.08023000000000062,
+            0.08022916666666637,
+            0.07910305333333327,
+            0.07920583333333298,
+            0.07981972666666631,
+            0.07838027333333306,
+            0.07887500000000046,
+            0.07885944666666699,
+            0.07807416666666617,
+            0.07773833333333338,
+            0.07977250000000065
+          ],
+          "simd": [
+            0.06858360666666688,
+            0.06940833333333331,
+            0.06904444666666677,
+            0.07058943999999959,
+            0.06923249999999977,
+            0.07032833333333353,
+            0.0670941666666666,
+            0.06769694666666662,
+            0.06860722666666637,
+            0.06735500000000001,
+            0.06847861333333337
+          ]
+        }
+      },
+      {
+        "mesh": "meshy-shorts-surface",
+        "vertices": 8218,
+        "morphs": 3,
+        "baselineScalarMedianMs": 0.06997583333333296,
+        "simdMedianMs": 0.05989222000000003,
+        "speedup": 1.168362657676288,
+        "samples": {
+          "baselineScalar": [
+            0.07000111333333356,
+            0.0702533333333334,
+            0.06997583333333296,
+            0.06952028000000003,
+            0.07092416666666622,
+            0.07051333333333332,
+            0.06964999999999993,
+            0.06921056000000059,
+            0.06966138666666666,
+            0.07048860666666694,
+            0.06923500000000028
+          ],
+          "simd": [
+            0.060156106666666646,
+            0.0600649999999996,
+            0.05957666666666606,
+            0.059781666666666906,
+            0.05995638666666688,
+            0.05929749999999937,
+            0.05989222000000003,
+            0.05925861333333311,
+            0.0600927733333333,
+            0.059675279999999775,
+            0.060804726666666135
+          ]
+        }
+      }
+    ],
+    "kernel": {
+      "status": "ready",
+      "variant": "simd",
+      "calls": 4140,
+      "copiedBytes": 4431960,
+      "geometryUploads": 2,
+      "residentHits": 4138,
+      "residentResets": 0,
+      "workspaceBytes": 1507328,
+      "maxWorkspaceBytes": 8388608,
+      "fallbacks": {
+        "unavailable": 0,
+        "unsupported": 0,
+        "small": 0,
+        "invalid": 0,
+        "oversize": 0,
+        "nonfinite": 0
+      }
+    }
+  },
+  "preservation": {
+    "incidents": 60,
+    "frames": 6900,
+    "bitIdenticalPoseAndGameplayHashes": true,
+    "identicalDurationsRecoveryEntryAndRollChoices": true,
+    "identicalWorkCounts": true,
+    "cases": [
+      {
+        "cause": "balance",
+        "durationSeconds": {
+          "samples": 12,
+          "mean": 1.7833333333333339,
+          "median": 1.7833333333333334,
+          "p95": 1.7833333333333334
+        },
+        "fullSkinScans": 3384,
+        "phases": {
+          "bail": {
+            "fullSkinScans": 72,
+            "bodyMatrixPasses": 732,
+            "deformationPasses": 732,
+            "deformationRequests": 2064,
+            "support": {
+              "samples": 632676
+            }
+          },
+          "rise": {
+            "fullSkinScans": 3312,
+            "bodyMatrixPasses": 552,
+            "deformationPasses": 552,
+            "deformationRequests": 1632,
+            "support": {
+              "samples": 68028
+            }
+          }
+        },
+        "support": {
+          "samples": 700704
+        },
+        "hierarchy": {
+          "bodyMatrixPasses": 1284
+        },
+        "deformations": {
+          "calls": 1284,
+          "requests": 3696,
+          "newRecords": 0,
+          "newTransformObjects": 0,
+          "newMorphRecords": 0
+        },
+        "skinUploads": {
+          "calls": 3384,
+          "copiedBytes": 4859424,
+          "geometryUploads": 0,
+          "residentHits": 3384,
+          "residentResets": 0,
+          "workspaceBytes": 2424832,
+          "exactSkinVertices": 13233132
+        },
+        "poseChecksum": "bed275980b5d66b65417011e5b2f7bffaa3ef0acdeb7d14e4d35fc4a9fed0357",
+        "gameplayChecksum": "8b5cb58289306af1e1c8b73e32caf257275f34e782ada71b925c50c81da59b75",
+        "frames": 1284,
+        "recoveries": 12
+      },
+      {
+        "cause": "wall",
+        "durationSeconds": {
+          "samples": 12,
+          "mean": 1.9666666666666661,
+          "median": 1.9666666666666666,
+          "p95": 1.9666666666666666
+        },
+        "fullSkinScans": 3384,
+        "phases": {
+          "bail": {
+            "fullSkinScans": 72,
+            "bodyMatrixPasses": 864,
+            "deformationPasses": 864,
+            "deformationRequests": 2460,
+            "support": {
+              "samples": 628885
+            }
+          },
+          "rise": {
+            "fullSkinScans": 3312,
+            "bodyMatrixPasses": 552,
+            "deformationPasses": 552,
+            "deformationRequests": 1632,
+            "support": {
+              "samples": 61081
+            }
+          }
+        },
+        "support": {
+          "samples": 689966
+        },
+        "hierarchy": {
+          "bodyMatrixPasses": 1416
+        },
+        "deformations": {
+          "calls": 1416,
+          "requests": 4092,
+          "newRecords": 0,
+          "newTransformObjects": 0,
+          "newMorphRecords": 0
+        },
+        "skinUploads": {
+          "calls": 3384,
+          "copiedBytes": 4859424,
+          "geometryUploads": 0,
+          "residentHits": 3384,
+          "residentResets": 0,
+          "workspaceBytes": 2424832,
+          "exactSkinVertices": 13233132
+        },
+        "poseChecksum": "2a5e1488412015dc714b73921eba407b671104ea9f7b60497cab0110b67fc5f6",
+        "gameplayChecksum": "01c978c976643054d36c9b5f596936c1e6957a68ec328c1e7132aa2ebc370e00",
+        "frames": 1416,
+        "recoveries": 12
+      },
+      {
+        "cause": "trip",
+        "durationSeconds": {
+          "samples": 12,
+          "mean": 2.083333333333333,
+          "median": 2.0833333333333335,
+          "p95": 2.0833333333333335
+        },
+        "fullSkinScans": 3384,
+        "phases": {
+          "bail": {
+            "fullSkinScans": 72,
+            "bodyMatrixPasses": 948,
+            "deformationPasses": 948,
+            "deformationRequests": 2712,
+            "support": {
+              "samples": 1376883
+            }
+          },
+          "rise": {
+            "fullSkinScans": 3312,
+            "bodyMatrixPasses": 552,
+            "deformationPasses": 552,
+            "deformationRequests": 1632,
+            "support": {
+              "samples": 56849
+            }
+          }
+        },
+        "support": {
+          "samples": 1433732
+        },
+        "hierarchy": {
+          "bodyMatrixPasses": 1500
+        },
+        "deformations": {
+          "calls": 1500,
+          "requests": 4344,
+          "newRecords": 0,
+          "newTransformObjects": 0,
+          "newMorphRecords": 0
+        },
+        "skinUploads": {
+          "calls": 3384,
+          "copiedBytes": 4859424,
+          "geometryUploads": 0,
+          "residentHits": 3384,
+          "residentResets": 0,
+          "workspaceBytes": 2424832,
+          "exactSkinVertices": 13233132
+        },
+        "poseChecksum": "89b575b0145c521b40bb1532a36a1c2c1175a82bb4f6431d5975d69f20f7cb72",
+        "gameplayChecksum": "65b270ae3dd26bd155e0026ff7c4641e4d3f0cf37aae1fe7a46e99df989b5d7f",
+        "frames": 1500,
+        "recoveries": 12
+      },
+      {
+        "cause": "landing",
+        "durationSeconds": {
+          "samples": 12,
+          "mean": 2,
+          "median": 2,
+          "p95": 2
+        },
+        "fullSkinScans": 3384,
+        "phases": {
+          "bail": {
+            "fullSkinScans": 72,
+            "bodyMatrixPasses": 888,
+            "deformationPasses": 888,
+            "deformationRequests": 2532,
+            "support": {
+              "samples": 409297
+            }
+          },
+          "rise": {
+            "fullSkinScans": 3312,
+            "bodyMatrixPasses": 552,
+            "deformationPasses": 552,
+            "deformationRequests": 1632,
+            "support": {
+              "samples": 60746
+            }
+          }
+        },
+        "support": {
+          "samples": 470043
+        },
+        "hierarchy": {
+          "bodyMatrixPasses": 1440
+        },
+        "deformations": {
+          "calls": 1440,
+          "requests": 4164,
+          "newRecords": 0,
+          "newTransformObjects": 0,
+          "newMorphRecords": 0
+        },
+        "skinUploads": {
+          "calls": 3384,
+          "copiedBytes": 4859424,
+          "geometryUploads": 0,
+          "residentHits": 3384,
+          "residentResets": 0,
+          "workspaceBytes": 2424832,
+          "exactSkinVertices": 13233132
+        },
+        "poseChecksum": "3991dfb17cf0b5e032a706d54a3f42b893009e87d530281f1f2005cc9983727e",
+        "gameplayChecksum": "f65707e7f110728a5d1447ff5d384714443388406fd939b39011279762632521",
+        "frames": 1440,
+        "recoveries": 12
+      },
+      {
+        "cause": "pvp",
+        "durationSeconds": {
+          "samples": 12,
+          "mean": 1.75,
+          "median": 1.75,
+          "p95": 1.75
+        },
+        "fullSkinScans": 3384,
+        "phases": {
+          "bail": {
+            "fullSkinScans": 72,
+            "bodyMatrixPasses": 708,
+            "deformationPasses": 708,
+            "deformationRequests": 1992,
+            "support": {
+              "samples": 928859
+            }
+          },
+          "rise": {
+            "fullSkinScans": 3312,
+            "bodyMatrixPasses": 552,
+            "deformationPasses": 552,
+            "deformationRequests": 1632,
+            "support": {
+              "samples": 63594
+            }
+          }
+        },
+        "support": {
+          "samples": 992453
+        },
+        "hierarchy": {
+          "bodyMatrixPasses": 1260
+        },
+        "deformations": {
+          "calls": 1260,
+          "requests": 3624,
+          "newRecords": 0,
+          "newTransformObjects": 0,
+          "newMorphRecords": 0
+        },
+        "skinUploads": {
+          "calls": 3384,
+          "copiedBytes": 4859424,
+          "geometryUploads": 0,
+          "residentHits": 3384,
+          "residentResets": 0,
+          "workspaceBytes": 2424832,
+          "exactSkinVertices": 13233132
+        },
+        "poseChecksum": "f4bb10ddbda22c10d7413fe8248c89eee237caee1296a2741a5cdd90ff530652",
+        "gameplayChecksum": "7ba72f5aeb27dd6116ecd774eaeb1d71688c40f2782bb0e035ef3e0e07787f8b",
+        "frames": 1260,
+        "recoveries": 12
+      }
+    ],
+    "warmNativeGeometryUploads": 0,
+    "nativeCalls": 16920,
+    "exactNativeVertices": 66165660,
+    "copiedInputBytes": 24297120,
+    "nativeWorkspaceBytes": 2424832,
+    "nativeWorkspaceCapBytes": 8388608
+  },
+  "resources": {
+    "previousEmbeddedModuleBytes": 939,
+    "scalarModuleBytes": 1433,
+    "simdModuleBytes": 1393,
+    "additionalEmbeddedModuleBytes": 1887,
+    "residentInputAndWorkspaceChangeBytes": 0,
+    "newPerFrameObjects": 0,
+    "newQueriesOrSkinScans": 0,
+    "compiler": "wabt 1.0.39, temporary local build tooling only; not an app dependency"
+  },
+  "validation": {
+    "checks": [
+      "89 independent full-vertex Three.js comparisons per JavaScript/native mode, run with SIMD and forced scalar; live edits, exact f64 edge cases, overflow, ABI validation, CSP/module/runtime/growth failures and memory cap",
+      "SIMD validation false: scalar compiles and measures, feature checked only once; WebAssembly absent: JS fallback",
+      "287 mutable/resident geometry comparisons across live poses, arena growth, eviction/revisit and near-capacity fallback",
+      "54 Three.js comparisons plus exact tuple compaction/adversarial collision tests",
+      "14 eager/deferred hierarchy and deformation oracle cases, 1,578 complete-incident frames, zero pose error",
+      "42 recovery continuity cases, including entry, early contact and post-control rebound",
+      "30 support-continuity cases with exact authored ground clearance",
+      "Pinned generator reproduces scalar 1,433-byte and SIMD 1,393-byte modules"
+    ],
+    "typecheckAndProductionBuild": "passed",
+    "offlineBuild": "37ab4bfaa390f0cd51e0",
+    "fullSuiteRun": false,
+    "browser": {
+      "lite-bails": {
+        "passed": true,
+        "cases": 17,
+        "secondsPerCase": 3.367
+      },
+      "lite-boards": {
+        "passed": true,
+        "cases": 5,
+        "secondsPerCase": 12.000000000000176
+      },
+      "full-bails": {
+        "passed": true,
+        "cases": 17,
+        "secondsPerCase": 3.367
+      },
+      "full-boards": {
+        "passed": true,
+        "cases": 5,
+        "secondsPerCase": 12.000000000000176
+      },
+      "consoleWarningsOrErrors": 0,
+      "visualReview": "Full-render sideways recovery with planted hand and intact body; screenshot saved locally. No pose changes in this CPU pass."
+    }
+  },
+  "rejectedExperiments": [
+    "Skipping zero morph-prefix/suffix slots removed no actual work on current character meshes; reverted.",
+    "Scalar unrolling alone produced only about 1% whole-incident improvement in the first pair. The final variant adds paired f64 SIMD; all final timing pairs retained separately."
+  ],
+  "limitations": [
+    "Descriptive single-machine CPU timing; no total-frame or GPU speed claim. SIMD-disabled devices retain exact scalar behavior, with device-specific timing unmeasured.",
+    "Later hard contact and interruption head-velocity changes remain fidelity work; this pass intentionally preserves every measured pose.",
+    "Original GPU loading code is unchanged; successful preview starts do not establish a fix for the earlier intermittent startup fence stall."
+  ],
+  "delivery": "Local task-only commit on codex/fluid-intact-bails. No push, upload, publish or deployment. Shared checkout/index and unrelated work preserved. Alternating goal remains active; fidelity next.",
+  "elapsedSeconds": 1640
+}

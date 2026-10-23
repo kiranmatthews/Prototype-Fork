@@ -1,0 +1,501 @@
+{
+  "date": "2026-10-22",
+  "pass": "Performance/stability: combine live rig searches and reuse lookup storage",
+  "baselineTaskCommit": "1b78e71a2fae4ed6b678942f1b40badecbccb6ab",
+  "changes": [
+    "Resolve each stretchable limb component in one early-exit depth-first walk instead of up to five recursive name searches. Keep fresh independent result records, required/optional-name behavior and live hierarchy semantics.",
+    "Reuse the bridge joint lookup maps, requested-name set and visitor. Rebuild answers every deformation pass, resolve the torso in the same pass, and clear active references on restoration."
+  ],
+  "profileMotivation": {
+    "topSelfMs": [
+      [
+        "",
+        557.004
+      ],
+      [
+        "(garbage collector)",
+        536.753
+      ],
+      [
+        "updateMatrixWorld",
+        359.118
+      ],
+      [
+        "visit",
+        350.915
+      ],
+      [
+        "instantiateModule",
+        315.502
+      ],
+      [
+        "traverse",
+        302.21
+      ],
+      [
+        "getObjectByProperty",
+        275.258
+      ],
+      [
+        "localBounds",
+        228.378
+      ],
+      [
+        "addUneditedChunk",
+        224.582
+      ],
+      [
+        "originalPositionFor",
+        180.547
+      ],
+      [
+        "encode$1",
+        159.995
+      ],
+      [
+        "decode",
+        157.252
+      ],
+      [
+        "skinnedBounds",
+        154.29
+      ],
+      [
+        "syncVisual",
+        148.825
+      ],
+      [
+        "multiplyMatrices",
+        144.253
+      ],
+      [
+        "CharacterRigidMeshBatches.root.updateMatrixWorld",
+        127.335
+      ],
+      [
+        "stateFor",
+        127.294
+      ],
+      [
+        "(program)",
+        123.296
+      ],
+      [
+        "traceMappings",
+        116.248
+      ],
+      [
+        "countryClubNearestRoad",
+        107.334
+      ],
+      [
+        "sortedKeys",
+        104.79
+      ],
+      [
+        "applyDeformations",
+        101.378
+      ],
+      [
+        "setFromRotationMatrix",
+        100.495
+      ],
+      [
+        "sampleMesh",
+        98.755
+      ],
+      [
+        "collectNamedNode",
+        95.373
+      ],
+      [
+        "detectModuleFormat",
+        93.75
+      ],
+      [
+        "validate",
+        93.493
+      ],
+      [
+        "enter",
+        93.332
+      ],
+      [
+        "apply",
+        87.584
+      ],
+      [
+        "literalNumber",
+        86.79
+      ]
+    ],
+    "searchCallersMs": [
+      [
+        "('getObjectByProperty', 'resolveStretchableBone')",
+        135.377
+      ],
+      [
+        "('getObjectByProperty', 'applyDeformations')",
+        117.84
+      ],
+      [
+        "('traverse', 'applyOverlay')",
+        116.581
+      ],
+      [
+        "('apply', 'syncCharacterAppearance')",
+        81.543
+      ],
+      [
+        "('traverse', 'resolveRigJointNodes')",
+        80.961
+      ],
+      [
+        "('traverse', 'syncCharacterAppearance')",
+        62.628
+      ],
+      [
+        "('apply', 'syncVisual')",
+        6.041
+      ],
+      [
+        "('traverse', '(root)')",
+        5.999
+      ],
+      [
+        "('getObjectByProperty', '(root)')",
+        3.041
+      ],
+      [
+        "('traverse', 'captureHierarchy')",
+        2.959
+      ],
+      [
+        "('getObjectByProperty', 'scaleStretchableKnobs')",
+        1.542
+      ],
+      [
+        "('getObjectByProperty', 'buildVisual')",
+        1.5
+      ],
+      [
+        "('traverse', 'hasMesh')",
+        1.5
+      ],
+      [
+        "('traverse', 'bakeSpinSmear')",
+        1.5
+      ],
+      [
+        "('getObjectByProperty', 'scaleStretchableBonesAlong')",
+        1.417
+      ]
+    ]
+  },
+  "cpu": {
+    "scope": "Production Player.step in local Node with animation runtime and fallback assets, 120 measured incidents plus 8 warmups per cause. Two plain timing pairs, ordered before/after/after/before. No simultaneous tests, build or browser actions during timing. Excludes browser/render/GPU costs; no FPS or total-heap claim.",
+    "cases": [
+      {
+        "cause": "balance",
+        "metrics": {
+          "median": {
+            "beforeMs": 0.35314599999992424,
+            "afterMs": 0.3319165000002613,
+            "lessCpuPercent": 6.011536305003451
+          },
+          "mean": {
+            "beforeMs": 0.3921894791666615,
+            "afterMs": 0.3748597679924236,
+            "lessCpuPercent": 4.4187088371316685
+          },
+          "p95": {
+            "beforeMs": 0.6670414999994136,
+            "afterMs": 0.6733539999995628,
+            "lessCpuPercent": -0.9463429187171579
+          }
+        },
+        "pairs": [
+          {
+            "beforeMs": 0.3513329999996131,
+            "afterMs": 0.3309159999998883
+          },
+          {
+            "beforeMs": 0.3549590000002354,
+            "afterMs": 0.3329170000006343
+          }
+        ]
+      },
+      {
+        "cause": "wall",
+        "metrics": {
+          "median": {
+            "beforeMs": 0.3353124999994179,
+            "afterMs": 0.31758350000018254,
+            "lessCpuPercent": 5.287306616742937
+          },
+          "mean": {
+            "beforeMs": 0.3733255101273072,
+            "afterMs": 0.3540368405671286,
+            "lessCpuPercent": 5.166716186526066
+          },
+          "p95": {
+            "beforeMs": 0.6422704999995403,
+            "afterMs": 0.6270629999999073,
+            "lessCpuPercent": 2.3677718343974807
+          }
+        },
+        "pairs": [
+          {
+            "beforeMs": 0.3377919999993537,
+            "afterMs": 0.31479200000012497
+          },
+          {
+            "beforeMs": 0.3328329999994821,
+            "afterMs": 0.3203750000002401
+          }
+        ]
+      },
+      {
+        "cause": "trip",
+        "metrics": {
+          "median": {
+            "beforeMs": 0.30387500000006185,
+            "afterMs": 0.28420850000020437,
+            "lessCpuPercent": 6.471904565973996
+          },
+          "mean": {
+            "beforeMs": 0.3415539477848031,
+            "afterMs": 0.32337520226794303,
+            "lessCpuPercent": 5.322364339443563
+          },
+          "p95": {
+            "beforeMs": 0.6121250000001055,
+            "afterMs": 0.598978999999872,
+            "lessCpuPercent": 2.1476005718164104
+          }
+        },
+        "pairs": [
+          {
+            "beforeMs": 0.3060830000003989,
+            "afterMs": 0.28162499999962165
+          },
+          {
+            "beforeMs": 0.3016669999997248,
+            "afterMs": 0.2867920000007871
+          }
+        ]
+      },
+      {
+        "cause": "landing",
+        "metrics": {
+          "median": {
+            "beforeMs": 0.302666500000214,
+            "afterMs": 0.2821254999998928,
+            "lessCpuPercent": 6.786677746069259
+          },
+          "mean": {
+            "beforeMs": 0.338210868806303,
+            "afterMs": 0.32147113513513803,
+            "lessCpuPercent": 4.949496073336435
+          },
+          "p95": {
+            "beforeMs": 0.5631670000011582,
+            "afterMs": 0.5585834999997132,
+            "lessCpuPercent": 0.8138793646352616
+          }
+        },
+        "pairs": [
+          {
+            "beforeMs": 0.30500000000029104,
+            "afterMs": 0.2785839999996824
+          },
+          {
+            "beforeMs": 0.30033300000013696,
+            "afterMs": 0.28566700000010314
+          }
+        ]
+      },
+      {
+        "cause": "pvp",
+        "metrics": {
+          "median": {
+            "beforeMs": 0.30987499999991996,
+            "afterMs": 0.29218699999910314,
+            "lessCpuPercent": 5.708108108373178
+          },
+          "mean": {
+            "beforeMs": 0.34802929590394194,
+            "afterMs": 0.3298008993643996,
+            "lessCpuPercent": 5.237604062094093
+          },
+          "p95": {
+            "beforeMs": 0.5958125000006476,
+            "afterMs": 0.5804369999996197,
+            "lessCpuPercent": 2.5805937272231017
+          }
+        },
+        "pairs": [
+          {
+            "beforeMs": 0.3122089999997115,
+            "afterMs": 0.28695799999877636
+          },
+          {
+            "beforeMs": 0.3075410000001284,
+            "afterMs": 0.2974159999994299
+          }
+        ]
+      }
+    ],
+    "tailNote": "Mean step CPU improves in every case. P95 changes are small: balance is 0.95% higher; the others are 0.81-2.58% lower. Do not treat small tail differences as proven stability gains."
+  },
+  "equivalence": {
+    "incidents": 120,
+    "frames": 7872,
+    "cases": [
+      {
+        "cause": "balance",
+        "frames": 1056,
+        "poseAndMorphIdentical": true,
+        "gameplayIdentical": true,
+        "durationIdentical": true,
+        "fullSkinScans": 0
+      },
+      {
+        "cause": "wall",
+        "frames": 1728,
+        "poseAndMorphIdentical": true,
+        "gameplayIdentical": true,
+        "durationIdentical": true,
+        "fullSkinScans": 0
+      },
+      {
+        "cause": "trip",
+        "frames": 1896,
+        "poseAndMorphIdentical": true,
+        "gameplayIdentical": true,
+        "durationIdentical": true,
+        "fullSkinScans": 0
+      },
+      {
+        "cause": "landing",
+        "frames": 1776,
+        "poseAndMorphIdentical": true,
+        "gameplayIdentical": true,
+        "durationIdentical": true,
+        "fullSkinScans": 0
+      },
+      {
+        "cause": "pvp",
+        "frames": 1416,
+        "poseAndMorphIdentical": true,
+        "gameplayIdentical": true,
+        "durationIdentical": true,
+        "fullSkinScans": 0
+      }
+    ],
+    "baselineEvidence": "Previous pass final pose trace, whose Player and runtime sources match this pass saved baseline. Profiler changes only extend source-snapshot replacement to stretchableBone.ts."
+  },
+  "lookupRegression": {
+    "passed": true,
+    "partComparisons": 800,
+    "separateNameVisits": 34796,
+    "combinedNameVisits": 16763,
+    "jointChecks": 4890,
+    "liveEditFrames": 240,
+    "newWarmLookupContainers": 0,
+    "activeLookupReferencesCleared": true,
+    "fewerNodeVisitsPercent": 51.82492240487413,
+    "allocationScope": "Identity checks cover the two lookup Maps and requested-name Set across 240 warm edited passes, plus reference clearing. Internal Map/Set backing-store allocations and total heap are not measured."
+  },
+  "artistHands": {
+    "realHandTriangles": 25152,
+    "framesCompared": 656,
+    "maximumPoseMatrixError": 0,
+    "publicSyncImmediate": true
+  },
+  "supports": {
+    "cases": 30,
+    "fullScans": 0,
+    "gameplayUnchanged": true,
+    "minimumClearanceM": 0.0030930253458099077,
+    "maximumClearanceM": 0.02500001617117925
+  },
+  "checks": {
+    "passed": [
+      "bail-rig-lookups",
+      "animation-deformation-cache",
+      "bail-presentation-cache",
+      "character-animation-runtime",
+      "bail-matrix-pass",
+      "bail-support-continuity",
+      "bail-soft-landing",
+      "ragdoll-recovery",
+      "trip-clearance",
+      "bail-impacts",
+      "break-apart",
+      "bail-recovery-motion",
+      "bail-impact-spin",
+      "rigged-cartoon-hand"
+    ],
+    "typescript": "pass",
+    "productionBuild": "pass",
+    "buildVersion": "a4899d1cdbd4e66cb3e4",
+    "fullSuiteRun": false,
+    "baselineFailure": {
+      "test": "tools/test-stretchable-bone.mjs:749",
+      "message": "The input did not match the regular expression /upperLegBone\\.root\\.visible = false/. Input:",
+      "sameBeforeAndAfter": true,
+      "playerSourceUnchanged": true,
+      "scope": "All earlier runtime assertions complete, then the old source-text guard fails. Reproduced with a Vite loader serving saved pre-change bridge/stretchableBone sources without altering the working tree."
+    }
+  },
+  "browser": {
+    "litePassed": true,
+    "fullPassed": true,
+    "bailCases": 14,
+    "watchSeconds": 3.367,
+    "maximumFullSkinScans": 0,
+    "boards": [
+      {
+        "kind": "Board toss",
+        "settledAtSeconds": 3.516666666666659,
+        "watchSeconds": 12.000000000000176,
+        "soundsAfterRest": 0
+      },
+      {
+        "kind": "Board roll",
+        "settledAtSeconds": 6.049999999999984,
+        "watchSeconds": 12.000000000000176,
+        "soundsAfterRest": 0
+      },
+      {
+        "kind": "Board skid",
+        "settledAtSeconds": 0.9333333333333346,
+        "watchSeconds": 12.000000000000176,
+        "soundsAfterRest": 0
+      },
+      {
+        "kind": "Board wall",
+        "settledAtSeconds": 1.100000000000001,
+        "watchSeconds": 12.000000000000176,
+        "soundsAfterRest": 0
+      },
+      {
+        "kind": "Board pile",
+        "settledAtSeconds": 2.199999999999997,
+        "watchSeconds": 12.000000000000176,
+        "soundsAfterRest": 0
+      }
+    ],
+    "manualReview": "Angled-edge wall rebound, two floor contacts and six more frames in full-render quarter view, intact body and hand follow-through.",
+    "consoleErrors": []
+  },
+  "sourceHashes": {
+    "src/animation/bridge.ts": "31c7885e3f02663eb752cfd26efa38f471c620112c8f8dea5a6c5e32ef9cc7c0",
+    "src/character/stretchableBone.ts": "c73a79c7ce510e0411df4bc737a94ebe4bc2100fcbc25dc8f219e318514cb579",
+    "tools/profile-intact-bail.mjs": "7ae15431b73c23d7e7dfd82e133cf0794f015363f6cc3854439e7d8378323fe6",
+    "tools/test-bail-rig-lookups.mjs": "49118f9b21e7f7aab90044136ed09a2f6318100b5a13124c72ec7e08b631e846"
+  },
+  "rawEvidenceDirectory": "/private/tmp/bail-appearance-cache-20261022",
+  "delivery": "Local task-only commit; preserve shared checkout/index and unrelated work. No remote transfers. Alternating goal remains active for fidelity next."
+}

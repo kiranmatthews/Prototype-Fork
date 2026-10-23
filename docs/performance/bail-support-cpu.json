@@ -1,0 +1,576 @@
+{
+  "date": "2026-10-22",
+  "pass": "Performance and stability after contact-driven rebounds",
+  "parent": "98775653354947a345bf7597752eea8376841dcc",
+  "sourceSha256": {
+    "src/character/interactionBounds.ts": "43f3f818c7c5b64ce1c14a260f1f49bef09ca3bae693b8563e8ed68608b344c1",
+    "tools/profile-intact-bail.mjs": "f147d8b7fb24aab17200764c43b4b40b8e018dcda383dc599eeb1813e4f6c23a",
+    "tools/test-bail-support-pruning.mjs": "a74fd5839bd7a83787fea321bbbd6dea497e47b3f9e1d9eb96fe19bfd64bef2a"
+  },
+  "changes": [
+    "Reuse current conservative morph/skin bounds to skip support probes above the known lowest contact. Preserve sparse hulls, struck-part selection and vertex arithmetic.",
+    "Invalidate cached rigid/morph bounds for attribute replacement/version, morph target edits and relative/absolute changes. Reuse weakly owned cache records, boxes and metadata arrays across pose changes.",
+    "Add optional bounds-allocation accounting to the existing seeded CPU harness."
+  ],
+  "experimentDecision": "Per-bone palette reuse preserved exact results but did not improve representative support CPU; remove it. Keep the independently measured bounds-pruning and cache-reuse changes.",
+  "cpu": {
+    "scope": "Production fixed-step CPU in Node with the animation runtime and procedural fallback assets. Includes first active frame; excludes render/GPU/browser costs. Timings are descriptive, scan counts are deterministic.",
+    "warmupsPerCause": 8,
+    "incidentsPerCause": 24,
+    "measuredIncidents": 120,
+    "measuredFrames": 8160,
+    "rows": [
+      {
+        "cause": "balance",
+        "frames": 1056,
+        "poseChecksum": "7e5bca0ca95ed416a7116b3bf6a8f373fe11f02a5c1bfbaf326469fa124d1853",
+        "gameplayChecksum": "b51b8f1c626815da67e7d14a481a0c496acf127731c67c72c19db5918bfbf8ba",
+        "hashesMatch": true,
+        "durationSeconds": 0.7333333333333333,
+        "fullSkinScans": 0,
+        "supportBeforeMs": 0.03670799999963492,
+        "supportAfterMs": 0.009791999999833934,
+        "supportReductionPercent": 73.32461588773205,
+        "samplesBefore": 743811,
+        "samplesAfter": 263759,
+        "plainStepBeforeMs": 0.5299159999995027,
+        "plainStepAfterMs": 0.4808339999999589,
+        "plainStepReductionPercent": 9.26222269182093,
+        "boundsBefore": {
+          "calls": 83592,
+          "newRecords": 6192,
+          "newBoxes": 6192
+        },
+        "boundsAfter": {
+          "calls": 83592,
+          "newRecords": 0,
+          "newBoxes": 0
+        }
+      },
+      {
+        "cause": "wall",
+        "frames": 1824,
+        "poseChecksum": "9806c3affed1822584653484bf689715c847e808ce4d9e6cbcdd390897385f8a",
+        "gameplayChecksum": "40a25e75bfd1a576aa9a3d76d39e4a8f144ce954769f01800218e2721ba66d1f",
+        "hashesMatch": true,
+        "durationSeconds": 1.2666666666666666,
+        "fullSkinScans": 0,
+        "supportBeforeMs": 0.03366699999969569,
+        "supportAfterMs": 0.009042000000590633,
+        "supportReductionPercent": 73.14284016790221,
+        "samplesBefore": 1414588,
+        "samplesAfter": 578712,
+        "plainStepBeforeMs": 0.5042499999999563,
+        "plainStepAfterMs": 0.48370799999975134,
+        "plainStepReductionPercent": 4.0737729301352115,
+        "boundsBefore": {
+          "calls": 145800,
+          "newRecords": 9648,
+          "newBoxes": 9648
+        },
+        "boundsAfter": {
+          "calls": 145800,
+          "newRecords": 0,
+          "newBoxes": 0
+        }
+      },
+      {
+        "cause": "trip",
+        "frames": 2112,
+        "poseChecksum": "d0c933ca34b77e39ddb3a575bd73e4ed2c1d0b405471321429dc8799882fd87e",
+        "gameplayChecksum": "6ce599704bd3f33f977d7db5bf0e448b0c3625f46bcd33e0fa879c26ca4c3207",
+        "hashesMatch": true,
+        "durationSeconds": 1.4666666666666666,
+        "fullSkinScans": 0,
+        "supportBeforeMs": 0.03329199999825505,
+        "supportAfterMs": 0.009000000000014552,
+        "supportReductionPercent": 72.96647843179662,
+        "samplesBefore": 1732779,
+        "samplesAfter": 761061,
+        "plainStepBeforeMs": 0.47791699999925186,
+        "plainStepAfterMs": 0.45633300000008603,
+        "plainStepReductionPercent": 4.516265376456497,
+        "boundsBefore": {
+          "calls": 169128,
+          "newRecords": 9648,
+          "newBoxes": 9648
+        },
+        "boundsAfter": {
+          "calls": 169128,
+          "newRecords": 0,
+          "newBoxes": 0
+        }
+      },
+      {
+        "cause": "landing",
+        "frames": 1464,
+        "poseChecksum": "2f5f4f5f66ff40427f2e3a82c0ddc23e53c30da198cc76101e18ed72b816cde7",
+        "gameplayChecksum": "3560e96f96bdf2aa9d46365dd5500dd2b8ed8131a0eba5586732f6a06c844be8",
+        "hashesMatch": true,
+        "durationSeconds": 1.0166666666666666,
+        "fullSkinScans": 0,
+        "supportBeforeMs": 0.03283300000111922,
+        "supportAfterMs": 0.008750000000873115,
+        "supportReductionPercent": 73.3499832468101,
+        "samplesBefore": 1050192,
+        "samplesAfter": 380614,
+        "plainStepBeforeMs": 0.47287499999947613,
+        "plainStepAfterMs": 0.44770799999969313,
+        "plainStepReductionPercent": 5.322125297343039,
+        "boundsBefore": {
+          "calls": 116640,
+          "newRecords": 8640,
+          "newBoxes": 8640
+        },
+        "boundsAfter": {
+          "calls": 116640,
+          "newRecords": 0,
+          "newBoxes": 0
+        }
+      },
+      {
+        "cause": "pvp",
+        "frames": 1704,
+        "poseChecksum": "4274603f7beddcbd9745e7000b26e531fc483004fb4931238019d739f9614c94",
+        "gameplayChecksum": "1b2f0441720760e1b936c6314ee87724dfa5f6353614b2b0ce935dca7944685f",
+        "hashesMatch": true,
+        "durationSeconds": 1.1833333333333333,
+        "fullSkinScans": 0,
+        "supportBeforeMs": 0.033250000000407454,
+        "supportAfterMs": 0.009125000000494765,
+        "supportReductionPercent": 72.5563909762919,
+        "samplesBefore": 1352272,
+        "samplesAfter": 570854,
+        "plainStepBeforeMs": 0.47729099999924074,
+        "plainStepAfterMs": 0.45812499999919964,
+        "plainStepReductionPercent": 4.015579594015306,
+        "boundsBefore": {
+          "calls": 136080,
+          "newRecords": 9648,
+          "newBoxes": 9648
+        },
+        "boundsAfter": {
+          "calls": 136080,
+          "newRecords": 0,
+          "newBoxes": 0
+        }
+      }
+    ],
+    "newBoundsRecordsBefore": 43776,
+    "newBoundsRecordsAfter": 0,
+    "newBoundsBoxesBefore": 43776,
+    "newBoundsBoxesAfter": 0,
+    "interpretation": "Final instrumented pair reduces support CPU by 72.6-73.4% and probe samples by 56-65%, with identical posed transforms/morphs and gameplay hashes. A separate pair without support/pose/allocation counters reduces whole Player.step medians by 4-9%. Local Node CPU only; no browser/GPU/FPS claim."
+  },
+  "pruningRegression": {
+    "passed": true,
+    "cases": 191,
+    "animatedPoses": 180,
+    "instancedPoses": 180,
+    "exactDistanceAndContact": true,
+    "liveAttributeAndMorphEdits": true,
+    "warmBoundsRecordsReused": true,
+    "savedMorphSamples": 77529
+  },
+  "clothSupport": {
+    "passed": true,
+    "poses": 240,
+    "maximumError": 0.005232910348600128,
+    "minimumError": 0,
+    "maximumSamples": 475,
+    "vertices": 8218
+  },
+  "runtimeSupport": {
+    "passed": true,
+    "cases": 30,
+    "supportHintCases": 120,
+    "fullScans": 0,
+    "supportCalls": 1925,
+    "maxSamples": 2686,
+    "gameplayUnchanged": true
+  },
+  "surfaceClearanceMeters": {
+    "minimum": 0.008723305001571258,
+    "maximum": 0.02500002264145973
+  },
+  "focusedChecks": [
+    {
+      "check": "test-character-interactions",
+      "exitCode": 0
+    },
+    {
+      "check": "test-bail-recovery-motion",
+      "exitCode": 0
+    },
+    {
+      "check": "test-trip-clearance",
+      "exitCode": 0
+    },
+    {
+      "check": "test-bail-impacts",
+      "exitCode": 0
+    },
+    {
+      "check": "test-break-apart",
+      "exitCode": 0
+    },
+    {
+      "check": "test-board-dynamics",
+      "exitCode": 0
+    },
+    {
+      "check": "test-bail-support-pruning",
+      "exitCode": 0
+    },
+    {
+      "check": "test-bail-cloth-support",
+      "exitCode": 0
+    },
+    {
+      "check": "test-bail-support-continuity",
+      "exitCode": 0
+    },
+    {
+      "check": "test-skinned-interaction-bounds",
+      "exitCode": 0
+    }
+  ],
+  "browser": {
+    "lite": {
+      "passed": true,
+      "cases": 14,
+      "rows": [
+        {
+          "kind": "Head hit",
+          "recovered": true,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "seconds": 3.367,
+          "maxSkinScans": 0
+        },
+        {
+          "kind": "Low trip",
+          "recovered": true,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "seconds": 3.367,
+          "maxSkinScans": 0
+        },
+        {
+          "kind": "Mid trip",
+          "recovered": true,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "seconds": 3.367,
+          "maxSkinScans": 0
+        },
+        {
+          "kind": "Side bail",
+          "recovered": true,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "seconds": 3.367,
+          "maxSkinScans": 0
+        },
+        {
+          "kind": "Balance bail",
+          "recovered": true,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "seconds": 3.367,
+          "maxSkinScans": 0
+        },
+        {
+          "kind": "Bank tumble",
+          "recovered": true,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "seconds": 3.367,
+          "maxSkinScans": 0
+        },
+        {
+          "kind": "Pit edge",
+          "recovered": true,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 1,
+          "seconds": 3.367,
+          "maxSkinScans": 0
+        },
+        {
+          "kind": "Angled edge",
+          "recovered": true,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 1,
+          "seconds": 3.367,
+          "maxSkinScans": 0
+        },
+        {
+          "kind": "Bailing into edge",
+          "recovered": true,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 1,
+          "seconds": 3.367,
+          "maxSkinScans": 0
+        },
+        {
+          "kind": "Held-mask wall",
+          "recovered": true,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "seconds": 3.367,
+          "maxSkinScans": 0
+        },
+        {
+          "kind": "Masked bail",
+          "recovered": true,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "seconds": 3.367,
+          "maxSkinScans": 0
+        },
+        {
+          "kind": "Blast",
+          "recovered": false,
+          "parts": 9,
+          "lives": 3,
+          "wallImpacts": 0,
+          "seconds": 3.367,
+          "maxSkinScans": 0
+        },
+        {
+          "kind": "Crusher",
+          "recovered": false,
+          "parts": 9,
+          "lives": 3,
+          "wallImpacts": 0,
+          "seconds": 3.367,
+          "maxSkinScans": 0
+        },
+        {
+          "kind": "Pit fall",
+          "recovered": false,
+          "parts": 0,
+          "lives": 3,
+          "wallImpacts": 0,
+          "seconds": 3.367,
+          "maxSkinScans": 0
+        }
+      ]
+    },
+    "full": {
+      "passed": true,
+      "cases": 14,
+      "rows": [
+        {
+          "kind": "Head hit",
+          "recovered": true,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "seconds": 3.367,
+          "maxSkinScans": 0
+        },
+        {
+          "kind": "Low trip",
+          "recovered": true,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "seconds": 3.367,
+          "maxSkinScans": 0
+        },
+        {
+          "kind": "Mid trip",
+          "recovered": true,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "seconds": 3.367,
+          "maxSkinScans": 0
+        },
+        {
+          "kind": "Side bail",
+          "recovered": true,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "seconds": 3.367,
+          "maxSkinScans": 0
+        },
+        {
+          "kind": "Balance bail",
+          "recovered": true,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "seconds": 3.367,
+          "maxSkinScans": 0
+        },
+        {
+          "kind": "Bank tumble",
+          "recovered": true,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "seconds": 3.367,
+          "maxSkinScans": 0
+        },
+        {
+          "kind": "Pit edge",
+          "recovered": true,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 1,
+          "seconds": 3.367,
+          "maxSkinScans": 0
+        },
+        {
+          "kind": "Angled edge",
+          "recovered": true,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 1,
+          "seconds": 3.367,
+          "maxSkinScans": 0
+        },
+        {
+          "kind": "Bailing into edge",
+          "recovered": true,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 1,
+          "seconds": 3.367,
+          "maxSkinScans": 0
+        },
+        {
+          "kind": "Held-mask wall",
+          "recovered": true,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "seconds": 3.367,
+          "maxSkinScans": 0
+        },
+        {
+          "kind": "Masked bail",
+          "recovered": true,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "seconds": 3.367,
+          "maxSkinScans": 0
+        },
+        {
+          "kind": "Blast",
+          "recovered": false,
+          "parts": 9,
+          "lives": 3,
+          "wallImpacts": 0,
+          "seconds": 3.367,
+          "maxSkinScans": 0
+        },
+        {
+          "kind": "Crusher",
+          "recovered": false,
+          "parts": 9,
+          "lives": 3,
+          "wallImpacts": 0,
+          "seconds": 3.367,
+          "maxSkinScans": 0
+        },
+        {
+          "kind": "Pit fall",
+          "recovered": false,
+          "parts": 0,
+          "lives": 3,
+          "wallImpacts": 0,
+          "seconds": 3.367,
+          "maxSkinScans": 0
+        }
+      ]
+    },
+    "boards": {
+      "passed": true,
+      "cases": 5,
+      "rows": [
+        {
+          "kind": "Board toss",
+          "settledAt": 3.516666666666659,
+          "observedSeconds": 12.000000000000176,
+          "activeAfter": 0,
+          "soundsAfterRest": 0
+        },
+        {
+          "kind": "Board roll",
+          "settledAt": 6.049999999999984,
+          "observedSeconds": 12.000000000000176,
+          "activeAfter": 0,
+          "soundsAfterRest": 0
+        },
+        {
+          "kind": "Board skid",
+          "settledAt": 0.9333333333333346,
+          "observedSeconds": 12.000000000000176,
+          "activeAfter": 0,
+          "soundsAfterRest": 0
+        },
+        {
+          "kind": "Board wall",
+          "settledAt": 1.100000000000001,
+          "observedSeconds": 12.000000000000176,
+          "activeAfter": 0,
+          "soundsAfterRest": 0
+        },
+        {
+          "kind": "Board pile",
+          "settledAt": 2.199999999999997,
+          "observedSeconds": 12.000000000000176,
+          "activeAfter": 0,
+          "soundsAfterRest": 0
+        }
+      ]
+    }
+  },
+  "consoleErrors": [],
+  "manualEdge": {
+    "first": {
+      "mode": "Angled edge",
+      "frozen": true,
+      "incidentAge": 0.06666666666666667,
+      "floorImpacts": 1,
+      "wallImpacts": 1
+    },
+    "second": {
+      "mode": "Angled edge",
+      "frozen": true,
+      "incidentAge": 0.49999999999999994,
+      "floorImpacts": 2,
+      "wallImpacts": 1,
+      "supportClearance": 0.025000000000000633
+    },
+    "laterFramesReviewed": 12,
+    "screenshots": [
+      "/private/tmp/bail-skin-palette/edge-follow-through.png",
+      "/private/tmp/bail-skin-palette/edge-late-tumble.png"
+    ]
+  },
+  "build": {
+    "typeScriptNoEmit": "passed",
+    "viteProduction": "passed",
+    "version": "6f2158d1c56b593d6b70",
+    "runtime": "Bundled Node; same build stages, npm unavailable",
+    "fullSuiteRun": false
+  },
+  "delivery": "Local task-only follow-up on codex/fluid-intact-bails. Preserve shared checkout/index and unrelated pending work; no push, upload or deployment. Goal remains active for the next fidelity pass."
+}

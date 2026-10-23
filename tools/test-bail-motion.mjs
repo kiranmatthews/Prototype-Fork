@@ -24,6 +24,8 @@ await withSkateRuntime(async ({ THREE, server, Player, Level, CONST }) => {
   // The same continuous forcing is stable under frame subdivision.
   a.begin('back', spin, 25); b.begin('back', spin, 25);
   for (let i = 0; i < 90; i++) {
+    if (i === 10 || i === 35) for (const m of [a, b])
+      m.impact(12, new THREE.Vector3(.6, 0, .8), new THREE.Vector3(.4, -.3, 0));
     a.step(1 / 60, orientation, spin, false, 0, 0, 1);
     b.step(1 / 120, orientation, spin, false, 0, 0, 1);
     b.step(1 / 120, orientation, spin, false, 0, 0, 1);
@@ -34,6 +36,7 @@ await withSkateRuntime(async ({ THREE, server, Player, Level, CONST }) => {
   assert.ok(Math.max(...a.velocity.map(Math.abs)) < .0001, 'settled body kept cycling');
   assert.ok(Object.values(a.deformations).every(v => Math.abs(v - 1) < .0001), 'elasticity never settled');
   assert.equal(a.step(1 / 60, orientation, spin, true, .4, 0, 1), false, 'spring rig stole planted recovery');
+  assert.equal(a.step(1 / 60, orientation, spin, true, .5, 0, 1), false, 'invisible spring rig restarted during recovery');
   const joint = new THREE.Object3D(); joint.rotation.set(.2, -.1, .3);
   const original = joint.quaternion.clone();
   for (let i = 0; i < 120; i++) { a.apply(1, joint, 1); a.restore(); }
@@ -107,7 +110,9 @@ await withSkateRuntime(async ({ THREE, server, Player, Level, CONST }) => {
       }
       assert.ok(!p.isBailing && p.grounded && p.state !== 'dead', `${cause} did not recover`);
       assert.ok(frames < 150 && peak > .1, `${cause} stalled or did not articulate`);
-      if (cause === 'balance') assert.ok(frames <= 41, `neutral grounded bail took ${frames} frames`);
+      // A low-speed spill now earns a full fall before its get-up. Keep it
+      // brisk, but do not regress to the old sub-second knee-only recovery.
+      if (cause === 'balance') assert.ok(frames >= 54 && frames <= 72, `neutral grounded fall/get-up took ${frames} frames`);
       scenarios.push({ cause, seconds: frames / 60, impact, peak });
     }
     assert.equal(supportedShadowQueries, 0, 'supported bail repeated its world shadow query');

@@ -1,0 +1,730 @@
+{
+  "date": "2026-10-22",
+  "pass": "Fidelity: recovery follows landed momentum",
+  "baselineTaskCommit": "c404f7ccf431e6ecccbe89c3655c18902c005e1a",
+  "problem": "The .55-radian pitch cutoff sent most landed orientations toward a positive full revolution, including quiet leans and backward-moving tumbles.",
+  "change": "Choose the upright winding nearest the initial pitch plus its stopping distance over the existing roll window. This minimizes integrated squared pitch acceleration for the cubic with preserved incoming rate and zero final rate. Retain continuous swing, exact upright completion, quaternion hemisphere continuity across multiple windings, authored limb/segment elasticity and existing recovery timing.",
+  "directionTests": {
+    "before": {
+      "quiet": [
+        {
+          "lean": -3,
+          "rate": 0,
+          "duration": 0.56,
+          "travel": 3,
+          "reversed": 0,
+          "maxTurn": 0.05207849591811426,
+          "minDot": 0.999660997938328
+        },
+        {
+          "lean": -2,
+          "rate": 0,
+          "duration": 0.56,
+          "travel": 2.0000000000000004,
+          "reversed": 0,
+          "maxTurn": 0.03471899727874285,
+          "minDot": 0.9998493276873378
+        },
+        {
+          "lean": -1.4,
+          "rate": 0,
+          "duration": 0.56,
+          "travel": 1.3999999999999995,
+          "reversed": 0,
+          "maxTurn": 0.0243032980951199,
+          "minDot": 0.999926169621218
+        },
+        {
+          "lean": -0.56,
+          "rate": 0,
+          "duration": 0.56,
+          "travel": 0.5599999999999996,
+          "reversed": 0,
+          "maxTurn": 0.009721319238048294,
+          "minDot": 0.9999881870172918
+        },
+        {
+          "lean": -0.2,
+          "rate": 0,
+          "duration": 0.56,
+          "travel": 0.20000000000000007,
+          "reversed": 0,
+          "maxTurn": 0.003471899727874645,
+          "minDot": 0.9999984932394135
+        },
+        {
+          "lean": 0,
+          "rate": 0,
+          "duration": 0.56,
+          "travel": 0,
+          "reversed": 0,
+          "maxTurn": 0,
+          "minDot": 1
+        },
+        {
+          "lean": 0.2,
+          "rate": 0,
+          "duration": 0.56,
+          "travel": 0.20000000000000007,
+          "reversed": 0,
+          "maxTurn": 0.003471899727874312,
+          "minDot": 0.9999984932394136
+        },
+        {
+          "lean": 0.56,
+          "rate": 0,
+          "duration": 0.56,
+          "travel": 5.723185307179585,
+          "reversed": 0,
+          "maxTurn": 0.09935162755285362,
+          "minDot": 0.9987664104701443
+        },
+        {
+          "lean": 1.4,
+          "rate": 0,
+          "duration": 0.56,
+          "travel": 4.883185307179585,
+          "reversed": 0,
+          "maxTurn": 0.0847696486957825,
+          "minDot": 0.9991018977959657
+        },
+        {
+          "lean": 2,
+          "rate": 0,
+          "duration": 0.56,
+          "travel": 4.283185307179586,
+          "reversed": 0,
+          "maxTurn": 0.07435394951215804,
+          "minDot": 0.9993090158651716
+        },
+        {
+          "lean": 3,
+          "rate": 0,
+          "duration": 0.56,
+          "travel": 3.2831853071795876,
+          "reversed": 0,
+          "maxTurn": 0.05699445087278775,
+          "minDot": 0.9995939815493526
+        }
+      ],
+      "carry": [
+        {
+          "lean": 1.3,
+          "rate": -6,
+          "duration": 0.56,
+          "travel": 5.136625055915147,
+          "reversed": 5.059905181547366,
+          "maxTurn": 0.09395090717753173,
+          "minDot": 0.9988968562607685
+        },
+        {
+          "lean": -1.3,
+          "rate": 6,
+          "duration": 0.56,
+          "travel": 1.2999999999999998,
+          "reversed": 0,
+          "maxTurn": 0.027874012373462723,
+          "minDot": 0.9999028815013169
+        },
+        {
+          "lean": 2.7,
+          "rate": 10,
+          "duration": 0.56,
+          "travel": 3.583185307179587,
+          "reversed": 0,
+          "maxTurn": 0.05554234381946883,
+          "minDot": 0.999614405788411
+        },
+        {
+          "lean": -2.7,
+          "rate": -10,
+          "duration": 0.56,
+          "travel": 3.2469290123456793,
+          "reversed": 2.9734645061728395,
+          "maxTurn": 0.06019952328389337,
+          "minDot": 0.9995470363746878
+        }
+      ],
+      "mirroredCases": 105,
+      "mirrorError": 3.119776193808461,
+      "minDot": 0.9968738075609584,
+      "worstUnneededQuietTurn": 5.163185307179585,
+      "worstReverseCarry": 5.059905181547366
+    },
+    "after": {
+      "quiet": [
+        {
+          "lean": -3,
+          "rate": 0,
+          "duration": 0.56,
+          "travel": 3,
+          "reversed": 0,
+          "maxTurn": 0.05207849591811426,
+          "minDot": 0.999660997938328
+        },
+        {
+          "lean": -2,
+          "rate": 0,
+          "duration": 0.56,
+          "travel": 2.0000000000000004,
+          "reversed": 0,
+          "maxTurn": 0.03471899727874285,
+          "minDot": 0.9998493276873378
+        },
+        {
+          "lean": -1.4,
+          "rate": 0,
+          "duration": 0.56,
+          "travel": 1.3999999999999995,
+          "reversed": 0,
+          "maxTurn": 0.0243032980951199,
+          "minDot": 0.999926169621218
+        },
+        {
+          "lean": -0.56,
+          "rate": 0,
+          "duration": 0.56,
+          "travel": 0.5599999999999996,
+          "reversed": 0,
+          "maxTurn": 0.009721319238048294,
+          "minDot": 0.9999881870172918
+        },
+        {
+          "lean": -0.2,
+          "rate": 0,
+          "duration": 0.56,
+          "travel": 0.20000000000000007,
+          "reversed": 0,
+          "maxTurn": 0.003471899727874645,
+          "minDot": 0.9999984932394135
+        },
+        {
+          "lean": 0,
+          "rate": 0,
+          "duration": 0.56,
+          "travel": 0,
+          "reversed": 0,
+          "maxTurn": 0,
+          "minDot": 1
+        },
+        {
+          "lean": 0.2,
+          "rate": 0,
+          "duration": 0.56,
+          "travel": 0.20000000000000007,
+          "reversed": 0,
+          "maxTurn": 0.003471899727874312,
+          "minDot": 0.9999984932394136
+        },
+        {
+          "lean": 0.56,
+          "rate": 0,
+          "duration": 0.56,
+          "travel": 0.5600000000000004,
+          "reversed": 0,
+          "maxTurn": 0.00972131923804796,
+          "minDot": 0.9999881870172918
+        },
+        {
+          "lean": 1.4,
+          "rate": 0,
+          "duration": 0.56,
+          "travel": 1.3999999999999995,
+          "reversed": 0,
+          "maxTurn": 0.024303298095119896,
+          "minDot": 0.9999261696212182
+        },
+        {
+          "lean": 2,
+          "rate": 0,
+          "duration": 0.56,
+          "travel": 2,
+          "reversed": 0,
+          "maxTurn": 0.03471899727874252,
+          "minDot": 0.9998493276873378
+        },
+        {
+          "lean": 3,
+          "rate": 0,
+          "duration": 0.56,
+          "travel": 2.9999999999999996,
+          "reversed": 0,
+          "maxTurn": 0.052078495918114136,
+          "minDot": 0.9996609979383282
+        }
+      ],
+      "carry": [
+        {
+          "lean": 1.3,
+          "rate": -6,
+          "duration": 0.56,
+          "travel": 1.2999999999999998,
+          "reversed": 0,
+          "maxTurn": 0.027874012373463174,
+          "minDot": 0.9999028815013167
+        },
+        {
+          "lean": -1.3,
+          "rate": 6,
+          "duration": 0.56,
+          "travel": 1.2999999999999998,
+          "reversed": 0,
+          "maxTurn": 0.027874012373462723,
+          "minDot": 0.9999028815013169
+        },
+        {
+          "lean": 2.7,
+          "rate": 10,
+          "duration": 0.56,
+          "travel": 3.583185307179587,
+          "reversed": 0,
+          "maxTurn": 0.05554234381946883,
+          "minDot": 0.999614405788411
+        },
+        {
+          "lean": -2.7,
+          "rate": -10,
+          "duration": 0.56,
+          "travel": 3.5831853071795874,
+          "reversed": 0,
+          "maxTurn": 0.05554234381946927,
+          "minDot": 0.999614405788411
+        }
+      ],
+      "mirroredCases": 105,
+      "mirrorError": 2.9802322387695312e-08,
+      "minDot": 0.9967017108592642,
+      "worstUnneededQuietTurn": 4.440892098500626e-16,
+      "worstReverseCarry": 0
+    }
+  },
+  "runtimeComparison": {
+    "incidents": 120,
+    "frames": 8160,
+    "scope": "World-space normalized rider orientations sampled around production Player.step. Seeded incidents, animation runtime and procedural fallback assets; gameplay hashes and duration summaries match before/after.",
+    "cases": [
+      {
+        "cause": "balance",
+        "frames": 1056,
+        "changedRoutes": 12,
+        "gameplayChecksum": "b51b8f1c626815da67e7d14a481a0c496acf127731c67c72c19db5918bfbf8ba",
+        "durations": {
+          "samples": 24,
+          "mean": 0.7333333333333331,
+          "median": 0.7333333333333333,
+          "p95": 0.7333333333333333
+        },
+        "beforeMeanAngularTravel": 3.026122599191646,
+        "afterMeanAngularTravel": 0.7692970143097799,
+        "beforePeakTurn": 0.332811282544504,
+        "afterPeakTurn": 0.07320858294833422
+      },
+      {
+        "cause": "wall",
+        "frames": 1824,
+        "changedRoutes": 0,
+        "gameplayChecksum": "40a25e75bfd1a576aa9a3d76d39e4a8f144ce954769f01800218e2721ba66d1f",
+        "durations": {
+          "samples": 24,
+          "mean": 1.266666666666666,
+          "median": 1.2666666666666666,
+          "p95": 1.2666666666666666
+        },
+        "beforeMeanAngularTravel": 0.9610672404628628,
+        "afterMeanAngularTravel": 0.9610672404628628,
+        "beforePeakTurn": 0.14507193424126044,
+        "afterPeakTurn": 0.14507193424126044
+      },
+      {
+        "cause": "trip",
+        "frames": 2112,
+        "changedRoutes": 12,
+        "gameplayChecksum": "6ce599704bd3f33f977d7db5bf0e448b0c3625f46bcd33e0fa879c26ca4c3207",
+        "durations": {
+          "samples": 24,
+          "mean": 1.4666666666666661,
+          "median": 1.4666666666666666,
+          "p95": 1.4666666666666666
+        },
+        "beforeMeanAngularTravel": 3.510675667181665,
+        "afterMeanAngularTravel": 2.342005505215104,
+        "beforePeakTurn": 0.36900407628507126,
+        "afterPeakTurn": 0.3681603253863263
+      },
+      {
+        "cause": "landing",
+        "frames": 1464,
+        "changedRoutes": 0,
+        "gameplayChecksum": "3560e96f96bdf2aa9d46365dd5500dd2b8ed8131a0eba5586732f6a06c844be8",
+        "durations": {
+          "samples": 24,
+          "mean": 1.016666666666666,
+          "median": 1.0166666666666666,
+          "p95": 1.0166666666666666
+        },
+        "beforeMeanAngularTravel": 1.7299659462862953,
+        "afterMeanAngularTravel": 1.7299659462862953,
+        "beforePeakTurn": 0.16308304935323692,
+        "afterPeakTurn": 0.16308304935323692
+      },
+      {
+        "cause": "pvp",
+        "frames": 1704,
+        "changedRoutes": 5,
+        "gameplayChecksum": "1b2f0441720760e1b936c6314ee87724dfa5f6353614b2b0ce935dca7944685f",
+        "durations": {
+          "samples": 24,
+          "mean": 1.1833333333333333,
+          "median": 1.1833333333333333,
+          "p95": 1.1833333333333333
+        },
+        "beforeMeanAngularTravel": 3.6047619027414783,
+        "afterMeanAngularTravel": 3.0489573544490685,
+        "beforePeakTurn": 0.4072804741805756,
+        "afterPeakTurn": 0.3581740949237174
+      }
+    ],
+    "changedRoutes": {
+      "incidents": 29,
+      "beforeMeanAngularTravel": 5.293291818450874,
+      "afterMeanAngularTravel": 1.998422608679148,
+      "rotationReductionPercent": 62.24612817088171,
+      "beforeMeanPeakFrameTurn": 0.32484542909627717,
+      "afterMeanPeakFrameTurn": 0.14600378858547747,
+      "peakTurnReductionPercent": 55.05438109698472
+    }
+  },
+  "checks": [
+    {
+      "test": "test-bail-recovery-direction",
+      "exitCode": 0,
+      "seconds": 0.24656319618225098
+    },
+    {
+      "test": "test-bail-recovery-motion",
+      "exitCode": 0,
+      "seconds": 10.960853099822998
+    },
+    {
+      "test": "test-bail-support-continuity",
+      "exitCode": 0,
+      "seconds": 22.079205751419067
+    },
+    {
+      "test": "test-bail-joint-stops",
+      "exitCode": 0,
+      "seconds": 0.6094567775726318
+    },
+    {
+      "test": "test-bail-motion",
+      "exitCode": 0,
+      "seconds": 9.649813890457153
+    },
+    {
+      "test": "test-trip-clearance",
+      "exitCode": 0,
+      "seconds": 15.838871955871582
+    },
+    {
+      "test": "test-bail-impacts",
+      "exitCode": 0,
+      "seconds": 11.545958757400513
+    },
+    {
+      "test": "test-ragdoll-recovery",
+      "exitCode": 0,
+      "seconds": 9.056100845336914
+    },
+    {
+      "test": "test-break-apart",
+      "exitCode": 0,
+      "seconds": 8.738110303878784
+    }
+  ],
+  "recoveryContinuity": {
+    "orientationCases": 240,
+    "runtimeCases": 30,
+    "initialDerivativeError": 8.383757516152903e-05,
+    "maxFrameTurn": 0.3458477636617687,
+    "maxEntryError": 0.09174740070618691
+  },
+  "floorSupport": {
+    "cases": 30,
+    "dynamicHintCases": 120,
+    "minClearanceMetres": 0.008727637273679534,
+    "maxClearanceMetres": 0.02500002264145973,
+    "fullSkinScans": 0,
+    "gameplayUnchanged": true
+  },
+  "cpu": {
+    "scope": "Production fixed-step CPU in Node with the animation runtime and procedural fallback assets. Includes first active frame; excludes render/GPU/browser costs. Timings are descriptive, scan counts are deterministic.",
+    "order": [
+      "before-1",
+      "after-1",
+      "after-2",
+      "before-2"
+    ],
+    "pairs": [
+      [
+        {
+          "cause": "balance",
+          "beforeMedianMs": 0.4127920000000813,
+          "afterMedianMs": 0.43658400000003894,
+          "deltaMs": 0.023791999999957625
+        },
+        {
+          "cause": "wall",
+          "beforeMedianMs": 0.4124579999997877,
+          "afterMedianMs": 0.42704200000025594,
+          "deltaMs": 0.014584000000468222
+        },
+        {
+          "cause": "trip",
+          "beforeMedianMs": 0.38295800000014424,
+          "afterMedianMs": 0.39470799999980954,
+          "deltaMs": 0.011749999999665306
+        },
+        {
+          "cause": "landing",
+          "beforeMedianMs": 0.38591599999926984,
+          "afterMedianMs": 0.3932910000003176,
+          "deltaMs": 0.007375000001047738
+        },
+        {
+          "cause": "pvp",
+          "beforeMedianMs": 0.39020800000071176,
+          "afterMedianMs": 0.3978750000005675,
+          "deltaMs": 0.007666999999855761
+        }
+      ],
+      [
+        {
+          "cause": "balance",
+          "beforeMedianMs": 0.42283300000053714,
+          "afterMedianMs": 0.4392500000003565,
+          "deltaMs": 0.01641699999981938
+        },
+        {
+          "cause": "wall",
+          "beforeMedianMs": 0.42520800000056624,
+          "afterMedianMs": 0.421291999999994,
+          "deltaMs": -0.0039160000005722395
+        },
+        {
+          "cause": "trip",
+          "beforeMedianMs": 0.3897919999999431,
+          "afterMedianMs": 0.38850000000002183,
+          "deltaMs": -0.001291999999921245
+        },
+        {
+          "cause": "landing",
+          "beforeMedianMs": 0.388915999999881,
+          "afterMedianMs": 0.38412500000049477,
+          "deltaMs": -0.004790999999386258
+        },
+        {
+          "cause": "pvp",
+          "beforeMedianMs": 0.3913749999992433,
+          "afterMedianMs": 0.3918340000000171,
+          "deltaMs": 0.00045900000077381264
+        }
+      ]
+    ],
+    "interpretation": "Balance-bail median cost rises by 0.016-0.024 ms in both pairs as the rendered recovery follows a different path. Other cases are mixed in the reverse pair. This fidelity pass does not claim a CPU reduction; profile the balance path in the next performance pass.",
+    "addedPersistentStateBytes": 0,
+    "addedProductionAllocations": 0,
+    "addedWorldQueries": 0
+  },
+  "build": {
+    "typecheck": "pass",
+    "vite": "pass",
+    "seconds": 9.44,
+    "version": "bd96602d62f9b23c1af1",
+    "existingWarning": "Some chunks exceed 500 kB after minification.",
+    "fullSuiteRun": false
+  },
+  "browser": {
+    "lite": {
+      "passed": true,
+      "cases": 14
+    },
+    "full": {
+      "passed": true,
+      "cases": 14
+    },
+    "boards": {
+      "passed": true,
+      "rows": [
+        {
+          "kind": "Board toss",
+          "thrown": 1,
+          "snapped": 0,
+          "folded": 0,
+          "active": 0,
+          "settledPieces": 1,
+          "batches": 3,
+          "lost": 0,
+          "poofed": 0,
+          "seconds": 12.000000000000176,
+          "settledAt": 3.516666666666659,
+          "sounds": [
+            {
+              "age": 0.5333333333333333,
+              "speed": 12.711157412281914,
+              "broken": false
+            }
+          ],
+          "position": [
+            55.23231070245848,
+            0.004921358200535797,
+            -30.77391670146814
+          ]
+        },
+        {
+          "kind": "Board roll",
+          "thrown": 1,
+          "snapped": 0,
+          "folded": 0,
+          "active": 0,
+          "settledPieces": 1,
+          "batches": 3,
+          "lost": 0,
+          "poofed": 0,
+          "seconds": 12.000000000000176,
+          "settledAt": 6.049999999999984,
+          "sounds": [],
+          "position": [
+            54.5,
+            0.004921351969242149,
+            -46.151342535628984
+          ]
+        },
+        {
+          "kind": "Board skid",
+          "thrown": 1,
+          "snapped": 0,
+          "folded": 0,
+          "active": 0,
+          "settledPieces": 1,
+          "batches": 3,
+          "lost": 0,
+          "poofed": 0,
+          "seconds": 12.000000000000176,
+          "settledAt": 0.9333333333333346,
+          "sounds": [],
+          "position": [
+            57.476111111111116,
+            0.004921351969242149,
+            -12
+          ]
+        },
+        {
+          "kind": "Board wall",
+          "thrown": 1,
+          "snapped": 0,
+          "folded": 0,
+          "active": 0,
+          "settledPieces": 1,
+          "batches": 3,
+          "lost": 0,
+          "poofed": 0,
+          "seconds": 12.000000000000176,
+          "settledAt": 1.100000000000001,
+          "sounds": [
+            {
+              "age": 0.19999999999999998,
+              "speed": 24,
+              "broken": false
+            }
+          ],
+          "position": [
+            54.214669123366086,
+            0.27700524695980655,
+            -44.39230190501321
+          ]
+        },
+        {
+          "kind": "Board pile",
+          "thrown": 12,
+          "snapped": 2,
+          "folded": 1,
+          "active": 0,
+          "settledPieces": 14,
+          "batches": 8,
+          "lost": 0,
+          "poofed": 0,
+          "seconds": 12.000000000000176,
+          "settledAt": 2.199999999999997,
+          "sounds": [
+            {
+              "age": 0.4666666666666666,
+              "speed": 16.37500226697357,
+              "broken": false
+            },
+            {
+              "age": 0.5333333333333333,
+              "speed": 12.711157412281914,
+              "broken": true
+            },
+            {
+              "age": 0.6000000000000002,
+              "speed": 4.957695009612789,
+              "broken": false
+            },
+            {
+              "age": 0.6666666666666671,
+              "speed": 6.269997106969263,
+              "broken": false
+            },
+            {
+              "age": 0.7833333333333341,
+              "speed": 3.0061319054033375,
+              "broken": false
+            },
+            {
+              "age": 0.850000000000001,
+              "speed": 7.872545812373369,
+              "broken": false
+            },
+            {
+              "age": 0.9833333333333347,
+              "speed": 8.522948729772986,
+              "broken": false
+            },
+            {
+              "age": 1.2000000000000006,
+              "speed": 3.6976045640630852,
+              "broken": false
+            },
+            {
+              "age": 1.4166666666666665,
+              "speed": 6.736302050544138,
+              "broken": false
+            }
+          ],
+          "position": [
+            52.77878743260538,
+            -0.18510428712305138,
+            -23.96734028548215
+          ]
+        }
+      ],
+      "failures": []
+    },
+    "manual": {
+      "scenario": "Mid trip",
+      "startAge": 1.3000000000000003,
+      "startRecoveryTime": 0.11666666666666665,
+      "lateAge": 1.4999999999999996,
+      "lateRecoveryTime": 0.31666666666666665,
+      "parts": 0,
+      "clearance": 0.025000000000000133,
+      "views": [
+        "side",
+        "quarter"
+      ],
+      "consoleErrors": []
+    }
+  },
+  "delivery": "Keep task-owned changes local on codex/fluid-intact-bails. Preserve unrelated pending work, main checkout and index; no remote transfer. Alternating goal remains active."
+}

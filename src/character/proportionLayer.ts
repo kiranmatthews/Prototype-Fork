@@ -66,6 +66,11 @@ const SEGMENT_FACTORS: Readonly<
   'deform.leg.lower.right.length': 'shinLength',
 });
 
+const PRESENTATION_NAMES = ['procedural-rider', 'meshy-torso-surface', 'meshy-shorts-surface',
+  'hips', 'head', 'head-presentation', ...['left', 'right'].flatMap(side =>
+    ['clavicle', 'shoulder', 'hip', 'wrist', 'hand-rest-orientation', 'artist-hand-dorsal-x',
+      'glove-stitch-a', 'glove-stitch-b', 'ankle', 'elbow', 'knee'].map(part => `${part}-${side}`))];
+
 function isRenderable(object: THREE.Object3D): boolean {
   const candidate = object as THREE.Object3D & {
     isMesh?: boolean;
@@ -97,6 +102,12 @@ function runtimeDeformations(root: THREE.Object3D): RuntimeDeformation[] {
  */
 export class CharacterProportionLayer {
   private readonly states = new Map<THREE.Object3D, TransformState>();
+  private readonly reusableStates = new WeakMap<THREE.Object3D, TransformState>();
+  private readonly namedNodes = new Map<string, THREE.Object3D>();
+  private readonly requestedNames = new Set<string>();
+  private readonly collectNamedNode = (node: THREE.Object3D): void => {
+    if (this.requestedNames.has(node.name) && !this.namedNodes.has(node.name)) this.namedNodes.set(node.name, node);
+  };
 
   constructor(private readonly root: THREE.Object3D) {}
 
@@ -134,6 +145,7 @@ export class CharacterProportionLayer {
       }
     }
     this.states.clear();
+    this.namedNodes.clear(); this.requestedNames.clear();
   }
 
   apply(
@@ -141,8 +153,26 @@ export class CharacterProportionLayer {
     options: { upperArmRestAngleWeight?: number; crawlPalmWeight?: number } = {},
   ): void {
     this.clear();
+    // Proportions need only their presentation parts and current deformation
+    // anchors/endpoints. Avoid indexing every decorative mesh and finger bone.
+    // Rebuild from the live tree so late-loaded parts, renames, removals and
+    // duplicate-name depth-first order retain getObjectByName semantics.
+    const policies = runtimeDeformations(this.root);
+    const runtime = this.root.userData.sculptRuntime as { joints?: Record<string, string> } | undefined;
+    for (const name of PRESENTATION_NAMES) this.requestedNames.add(name);
+    for (const policy of policies) {
+      const jointId = typeof policy.jointId === 'string' ? policy.jointId : '';
+      const anchorName = runtime?.joints?.[jointId];
+      if (anchorName) this.requestedNames.add(anchorName);
+      if (Array.isArray(policy.downstreamJointIds)) for (const id of policy.downstreamJointIds) {
+        if (typeof id !== 'string') continue;
+        const name = runtime?.joints?.[id];
+        if (name) this.requestedNames.add(name);
+      }
+    }
+    this.root.traverse(this.collectNamedNode);
 
-    const rider = this.root.getObjectByName('procedural-rider');
+    const rider = this.namedNodes.get('procedural-rider');
     this.multiplyScale(
       rider,
       value.overallScale * value.bodyWidth,
@@ -150,14 +180,13 @@ export class CharacterProportionLayer {
       value.overallScale * value.bodyDepth,
     );
 
-    for (const policy of runtimeDeformations(this.root)) {
+    for (const policy of policies) {
       const controlId = typeof policy.controlId === 'string' ? policy.controlId : '';
       const factorKey = SEGMENT_FACTORS[controlId];
       const axis = finiteAxis(policy.lengthAxis);
       const jointId = typeof policy.jointId === 'string' ? policy.jointId : '';
-      const runtime = this.root.userData.sculptRuntime as { joints?: Record<string, string> };
-      const jointName = runtime.joints?.[jointId];
-      const anchor = jointName ? this.root.getObjectByName(jointName) : null;
+      const jointName = runtime?.joints?.[jointId];
+      const anchor = jointName ? this.namedNodes.get(jointName) : null;
       if (!factorKey || !axis || !anchor) continue;
       const factor = value[factorKey];
       const thicknessFactor = factorKey === 'upperArmLength' || factorKey === 'forearmLength'
@@ -177,13 +206,13 @@ export class CharacterProportionLayer {
         ? policy.downstreamJointIds.filter((id): id is string => typeof id === 'string')
         : [];
       for (const endpointId of endpointIds) {
-        const endpointName = runtime.joints?.[endpointId];
-        const endpoint = endpointName ? this.root.getObjectByName(endpointName) : null;
+        const endpointName = runtime?.joints?.[endpointId];
+        const endpoint = endpointName ? this.namedNodes.get(endpointName) : null;
         if (endpoint?.parent === anchor) this.scalePositionAlong(endpoint, axis, factor);
       }
     }
 
-    const torsoSurface = this.root.getObjectByName('meshy-torso-surface');
+    const torsoSurface = this.namedNodes.get('meshy-torso-surface');
     if (torsoSurface) {
       const state = this.stateFor(torsoSurface);
       const influences = (torsoSurface as THREE.Mesh).morphTargetInfluences;
@@ -202,7 +231,7 @@ export class CharacterProportionLayer {
       influences[1] = composedAnimationTransverse * value.torsoDepth - 1;
     }
 
-    const shortsSurface = this.root.getObjectByName('meshy-shorts-surface');
+    const shortsSurface = this.namedNodes.get('meshy-shorts-surface');
     if (shortsSurface) {
       const state = this.stateFor(shortsSurface);
       const influences = (shortsSurface as THREE.Mesh).morphTargetInfluences;
@@ -218,14 +247,14 @@ export class CharacterProportionLayer {
     const legHeightDelta =
       PROCEDURAL_THIGH_LENGTH * (value.thighLength - 1) +
       PROCEDURAL_SHIN_LENGTH * (value.shinLength - 1);
-    const hips = this.root.getObjectByName('hips');
+    const hips = this.namedNodes.get('hips');
     if (hips) {
       this.stateFor(hips).movesPosition = true;
       hips.position.y += legHeightDelta;
     }
 
-    const head = this.root.getObjectByName('head');
-    const headPresentation = this.root.getObjectByName('head-presentation') ?? head;
+    const head = this.namedNodes.get('head');
+    const headPresentation = this.namedNodes.get('head-presentation') ?? head;
     this.multiplyScale(
       headPresentation,
       value.headSize * value.headWidth,
@@ -284,62 +313,62 @@ export class CharacterProportionLayer {
     );
     for (const side of ['left', 'right'] as const) {
       const sideSign = side === 'left' ? 1 : -1;
-      this.multiplyPosition(this.root.getObjectByName(`clavicle-${side}`), value.shoulderWidth, 1, 1);
-      this.multiplyPosition(this.root.getObjectByName(`shoulder-${side}`), value.shoulderWidth, 1, 1);
+      this.multiplyPosition(this.namedNodes.get(`clavicle-${side}`), value.shoulderWidth, 1, 1);
+      this.multiplyPosition(this.namedNodes.get(`shoulder-${side}`), value.shoulderWidth, 1, 1);
       this.multiplyQuaternion(
-        this.root.getObjectByName(`shoulder-${side}`),
+        this.namedNodes.get(`shoulder-${side}`),
         0,
         0,
         THREE.MathUtils.degToRad(
           -value.upperArmRestAngle * sideSign * upperArmRestAngleWeight,
         ),
       );
-      this.multiplyPosition(this.root.getObjectByName(`hip-${side}`), value.hipWidth, 1, 1);
-      this.multiplyScale(this.root.getObjectByName(`wrist-${side}`), value.handSize, value.handSize, value.handSize);
+      this.multiplyPosition(this.namedNodes.get(`hip-${side}`), value.hipWidth, 1, 1);
+      this.multiplyScale(this.namedNodes.get(`wrist-${side}`), value.handSize, value.handSize, value.handSize);
       this.multiplyQuaternion(
-        this.root.getObjectByName(`hand-rest-orientation-${side}`),
+        this.namedNodes.get(`hand-rest-orientation-${side}`),
         THREE.MathUtils.degToRad(value.wristRestPitch),
         THREE.MathUtils.degToRad(value.wristRestYaw * sideSign),
         THREE.MathUtils.degToRad(value.wristRestRoll * sideSign),
       );
       const markAcross = value.gloveXAcross * sideSign;
-      const artistMark = this.root.getObjectByName(`artist-hand-dorsal-x-${side}`);
+      const artistMark = this.namedNodes.get(`artist-hand-dorsal-x-${side}`);
       if (artistMark) {
         this.addPosition(artistMark, markAcross, value.gloveXAlong, value.gloveXLift);
       } else {
         for (const bar of ['a', 'b']) {
           this.addPosition(
-            this.root.getObjectByName(`glove-stitch-${bar}-${side}`),
+            this.namedNodes.get(`glove-stitch-${bar}-${side}`),
             markAcross,
             value.gloveXAlong,
             value.gloveXLift,
           );
         }
       }
-      this.multiplyScale(this.root.getObjectByName(`ankle-${side}`), value.footSize, value.footSize, value.footSize);
+      this.multiplyScale(this.namedNodes.get(`ankle-${side}`), value.footSize, value.footSize, value.footSize);
     }
 
     for (const anchorName of ['shoulder-left', 'shoulder-right', 'elbow-left', 'elbow-right']) {
       this.scaleRenderableChildrenTransverse(
-        this.root.getObjectByName(anchorName),
+        this.namedNodes.get(anchorName),
         value.armThickness,
       );
     }
     for (const anchorName of ['hip-left', 'hip-right', 'knee-left', 'knee-right']) {
       this.scaleRenderableChildrenTransverse(
-        this.root.getObjectByName(anchorName),
+        this.namedNodes.get(anchorName),
         value.legThickness,
       );
     }
     for (const anchorName of ['shoulder-left', 'shoulder-right', 'elbow-left', 'elbow-right']) {
       this.scaleStretchableKnobs(
-        this.root.getObjectByName(anchorName),
+        this.namedNodes.get(anchorName),
         value.armKnobSize,
       );
     }
     for (const anchorName of ['hip-left', 'hip-right', 'knee-left', 'knee-right']) {
       this.scaleStretchableKnobs(
-        this.root.getObjectByName(anchorName),
+        this.namedNodes.get(anchorName),
         value.legKnobSize,
       );
     }
@@ -348,7 +377,7 @@ export class CharacterProportionLayer {
     if (palmWeight > 0) {
       this.root.updateWorldMatrix(true, true);
       for (const side of ['left', 'right']) {
-        const mount = this.root.getObjectByName(`hand-rest-orientation-${side}`);
+        const mount = this.namedNodes.get(`hand-rest-orientation-${side}`);
         if (!mount?.parent) continue;
         this.stateFor(mount).movesQuaternion = true;
         // The glove's +Z is its back/X-mark, -Z its palm. Bring the back
@@ -387,19 +416,31 @@ export class CharacterProportionLayer {
   private stateFor(object: THREE.Object3D): TransformState {
     let state = this.states.get(object);
     if (!state) {
-      state = {
-        object,
-        basePosition: object.position.clone(),
-        baseQuaternion: object.quaternion.clone(),
-        baseScale: object.scale.clone(),
-        appliedPosition: object.position.clone(),
-        appliedQuaternion: object.quaternion.clone(),
-        appliedScale: object.scale.clone(),
-        movesPosition: false,
-        movesQuaternion: false,
-        movesScale: false,
-        morphs: [],
-      };
+      state = this.reusableStates.get(object);
+      if (state) {
+        // Capture this pass's authored pose, never the previous deformation.
+        // Weak ownership lets removed/replaced character parts be collected.
+        state.basePosition.copy(object.position);
+        state.baseQuaternion.copy(object.quaternion);
+        state.baseScale.copy(object.scale);
+        state.movesPosition = state.movesQuaternion = state.movesScale = false;
+        state.morphs.length = 0;
+      } else {
+        state = {
+          object,
+          basePosition: object.position.clone(),
+          baseQuaternion: object.quaternion.clone(),
+          baseScale: object.scale.clone(),
+          appliedPosition: object.position.clone(),
+          appliedQuaternion: object.quaternion.clone(),
+          appliedScale: object.scale.clone(),
+          movesPosition: false,
+          movesQuaternion: false,
+          movesScale: false,
+          morphs: [],
+        };
+        this.reusableStates.set(object, state);
+      }
       this.states.set(object, state);
     }
     return state;

@@ -382,8 +382,8 @@ try {
   assert.equal(contactPlayer.resolveRagdollGroundBounce({...contactPlayer.groundHit,
     normal: new THREE.Vector3(.6, .8, 0)}), false, "separating bank contact bounced again");
   contactPlayer.axisF.set(0, 0, -1);contactPlayer.speed = 8;contactPlayer.vVel = -20;contactPlayer.ragBounces = 3;
-  assert.equal(contactPlayer.resolveRagdollGroundBounce(contactPlayer.groundHit), false,
-    "three-impact bounce budget was exceeded");
+  assert.equal(contactPlayer.resolveRagdollGroundBounce(contactPlayer.groundHit), true,
+    "earlier contacts swallowed a fresh heavy impact");
 
   // Rotating about the combined angular velocity has no sequential-axis
   // bias. One long advance and 12 subdivisions must describe the same arc.
@@ -650,15 +650,28 @@ try {
   const runOut = createFixture();
   // The roll must close its waist-pivot offset before the later Idle/Walk
   // sole correction seats the upright rider. A seated walk no longer has a
-  // zero rider-root translation, so do not conflate those two pose layers.
+  // zero root translation, so do not conflate those two pose layers. Measure
+  // the combined body/rider transform: recovery must keep rotation outside
+  // the nonuniform body scale without losing its visible waist pivot.
   const recoveryRootBeforeSeating = new THREE.Vector3();
   const seatOnFoot = runOut.player.seatOnFoot.bind(runOut.player);
   runOut.player.seatOnFoot = () => {
-    recoveryRootBeforeSeating.copy(runOut.player.riderG.position);
+    recoveryRootBeforeSeating.copy(runOut.player.riderG.position)
+      .multiply(runOut.player.bodyGroup.scale).applyQuaternion(runOut.player.bodyGroup.quaternion)
+      .add(runOut.player.bodyGroup.position);
     seatOnFoot();
   };
   const neutral = makeInput();
-  assert.equal(runOut.player.beginPvpKnockdown(0, 1), true);
+  const cosmeticRandom = Math.random;
+  try {
+    Math.random = () => .5;
+    assert.equal(runOut.player.beginPvpKnockdown(0, 1), true);
+  } finally { Math.random = cosmeticRandom; }
+  // Deliberately start tilted and at rest. A randomized near-upright tumble
+  // legitimately takes a short recovery arc and need not move its waist by
+  // 20 cm; it cannot reliably exercise this pivot-closure assertion.
+  runOut.player.ragQ.setFromAxisAngle(new THREE.Vector3(1, 0, 0), .6);
+  runOut.player.ragAngVel.set(0, 0, 0);
   runOut.player.state = "ride";
   runOut.player.grounded = true;
   runOut.player.vVel = 0;
@@ -673,27 +686,40 @@ try {
   const startZ = runOut.player.pos.z;
   let observedRecovery = false;
   let peakRecoverySpeed = 0;
-  let recoveryEntryOffset = null;
-  let peakRiderOffset = 0;
+  let recoveryEntryShift = null;
+  let peakRootOffset = 0;
+  const combinedRoot = new THREE.Vector3();
+  const waistBeforeRecovery = new THREE.Vector3(), waistAfterRecovery = new THREE.Vector3();
+  const positionBeforeRecovery = new THREE.Vector3();
   for (let step = 0; step < 120 && runOut.player.bailTimeLeft > 0; step++) {
     assert.equal(neutral.moveX, 0);
     assert.equal(neutral.moveY, 0);
     assert.equal(neutral.jumpPressed, false);
+    waistBeforeRecovery.set(0, runOut.player.characterWaistLocal(.82), 0)
+      .applyMatrix4(runOut.player.riderG.matrixWorld);
+    positionBeforeRecovery.copy(runOut.player.pos);
     runOut.player.step(CONST.fixedStep, neutral, runOut.level);
     runOut.level.update(CONST.fixedStep);
     neutral.consumeEdges();
     if (!observedRecovery && runOut.player.bailRecoveryK > 0) {
       observedRecovery = true;
-      recoveryEntryOffset = runOut.player.riderG.position.length();
+      // Recovery carries the existing tilted body offset. Its absolute
+      // local translation can be large without a visible waist jump.
+      waistAfterRecovery.set(0, runOut.player.characterWaistLocal(.82), 0)
+        .applyMatrix4(runOut.player.riderG.matrixWorld);
+      recoveryEntryShift = waistAfterRecovery.sub(waistBeforeRecovery)
+        .sub(runOut.player.pos).add(positionBeforeRecovery).length();
     }
-    peakRiderOffset = Math.max(peakRiderOffset, runOut.player.riderG.position.length());
+    combinedRoot.copy(runOut.player.riderG.position).multiply(runOut.player.bodyGroup.scale)
+      .applyQuaternion(runOut.player.bodyGroup.quaternion).add(runOut.player.bodyGroup.position);
+    peakRootOffset = Math.max(peakRootOffset, combinedRoot.length());
     peakRecoverySpeed = Math.max(peakRecoverySpeed, Math.abs(runOut.player.speed));
   }
   assert.equal(runOut.player.bailTimeLeft, 0, "neutral recovery did not finish");
   assert.equal(observedRecovery, true, "neutral recovery never entered the roll phase");
-  assert.ok(recoveryEntryOffset < 0.3, "recovery root teleported at roll entry");
-  assert.ok(peakRiderOffset > 0.2, "recovery never moved around its waist pivot");
-  assert.ok(recoveryRootBeforeSeating.length() < 0.12, "recovery root did not close at 2pi");
+  assert.ok(recoveryEntryShift < 0.3, `recovery waist teleported at roll entry (${recoveryEntryShift})`);
+  assert.ok(peakRootOffset > 0.2, "recovery never moved around its waist pivot");
+  assert.ok(recoveryRootBeforeSeating.length() < 0.12, "recovery root did not close at the upright handoff");
   assert.ok(peakRecoverySpeed > 0.5, "neutral recovery never generated run-out speed");
   assert.ok(runOut.player.pos.z < startZ - 0.1, "neutral recovery stayed anchored at its feet");
   assert.ok(runOut.player.walkVelocity.z < -0.1, "recovery did not hand forward carry to walking");
@@ -713,6 +739,10 @@ try {
   rebound.player.speed = -4;
   rebound.player.bailDownT = rebound.player.bailRecoverDuration - .01;
   rebound.player.bailGroundT = 0.12;
+  // This fixture starts at the supported recovery boundary, after the body
+  // has fallen. The directional-fall regression exercises earning that state.
+  rebound.player.bailFallAge = 1;
+  rebound.player.ragQ.setFromAxisAngle(new THREE.Vector3(1, 0, 0), 1.35);
   rebound.player.step(CONST.fixedStep, makeInput(), rebound.level);
   assert.ok(rebound.player.bailRecoveryK > 0, "rebound did not start recovery");
   assert.ok(rebound.player.speed >= 0, "rebound recovery kept negative speed");

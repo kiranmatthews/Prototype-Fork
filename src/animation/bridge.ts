@@ -53,13 +53,16 @@ export interface PlayerAnimationRig {
 }
 
 export interface PlayerAnimationOverlayContext {
+  /** Resolved on first access and retained for this callback. */
   readonly rig: PlayerAnimationRig;
   readonly deltaSeconds: number;
   /**
    * Apply all independent length controls in one absolute pass. Missing controls
    * resolve to 1, which also clears a deformation authored on the prior frame.
+   * A final write may opt into deferral until Player finishes secondary joint
+   * posing. Ordinary callbacks retain immediate endpoint updates by default.
    */
-  applyDeformations(values: Readonly<Record<string, number>>): void;
+  applyDeformations(values: Readonly<Record<string, number>>, deferUntilSecondaryPose?: boolean): void;
 }
 
 export type PlayerAnimationOverlay = (context: PlayerAnimationOverlayContext) => void;
@@ -83,10 +86,13 @@ interface SculptRuntimeMetadata {
 
 interface MutableTransformSnapshot {
   readonly object: THREE.Object3D;
-  readonly position: THREE.Vector3;
-  readonly quaternion: THREE.Quaternion;
-  readonly scale: THREE.Vector3;
-  readonly visible: boolean;
+  px: number; py: number; pz: number;
+  qx: number; qy: number; qz: number; qw: number;
+  sx: number; sy: number; sz: number;
+  visible: boolean;
+  quaternionRestored: boolean;
+  rx: number; ry: number; rz: number;
+  restoredOrder: THREE.EulerOrder;
 }
 
 interface AppliedDeformationState {
@@ -96,10 +102,11 @@ interface AppliedDeformationState {
   readonly deformedPosition: THREE.Vector3;
   readonly deformedScale: THREE.Vector3;
   readonly movesPosition: boolean;
-  readonly movesScale: boolean;
+  movesScale: boolean;
+  morphCount: number;
   readonly morphs: Array<{
-    readonly index: number;
-    readonly base: number;
+    index: number;
+    base: number;
     deformed: number;
   }>;
 }
@@ -134,28 +141,26 @@ function captureHierarchy(
 ): MutableTransformSnapshot[] {
   let index = 0;
   root.traverse((object) => {
-    const existing = reusable[index];
-    if (existing?.object === object) {
-      existing.position.copy(object.position);
-      existing.quaternion.copy(object.quaternion);
-      existing.scale.copy(object.scale);
-      // Visibility is readonly on the snapshot's shape so callers cannot
-      // rewrite it accidentally; replace this one cheap record on an edge.
-      if (existing.visible !== object.visible) {
-        reusable[index] = { ...existing, visible: object.visible };
-      }
-    } else {
+    let snapshot = reusable[index];
+    const p = object.position, q = object.quaternion, s = object.scale;
+    if (snapshot?.object !== object) {
       // Hierarchy replacement (for example a procedural rebuild) makes
       // every later traversal slot suspect. Rebuild only from this point.
       reusable.length = index;
-      reusable.push({
-        object,
-        position: object.position.clone(),
-        quaternion: object.quaternion.clone(),
-        scale: object.scale.clone(),
-        visible: object.visible,
-      });
+      snapshot = { object, px: 0, py: 0, pz: 0, qx: 0, qy: 0, qz: 0, qw: 1,
+        sx: 1, sy: 1, sz: 1, visible: true, quaternionRestored: false,
+        rx: 0, ry: 0, rz: 0, restoredOrder: object.rotation.order };
+      reusable.push(snapshot);
+    } else if (snapshot.quaternionRestored) {
+      // A cached Euler result is valid only for this exact captured quaternion.
+      // Object.is also preserves signed zero when a live edit changes it.
+      snapshot.quaternionRestored = Object.is(snapshot.qx, q.x) && Object.is(snapshot.qy, q.y) &&
+        Object.is(snapshot.qz, q.z) && Object.is(snapshot.qw, q.w);
     }
+    snapshot.px = p.x; snapshot.py = p.y; snapshot.pz = p.z;
+    snapshot.qx = q.x; snapshot.qy = q.y; snapshot.qz = q.z; snapshot.qw = q.w;
+    snapshot.sx = s.x; snapshot.sy = s.y; snapshot.sz = s.z;
+    snapshot.visible = object.visible;
     index++;
   });
   reusable.length = index;
@@ -164,10 +169,22 @@ function captureHierarchy(
 
 function restoreHierarchy(snapshots: readonly MutableTransformSnapshot[]): void {
   for (const snapshot of snapshots) {
-    snapshot.object.position.copy(snapshot.position);
-    snapshot.object.quaternion.copy(snapshot.quaternion);
-    snapshot.object.scale.copy(snapshot.scale);
-    snapshot.object.visible = snapshot.visible;
+    const object = snapshot.object, q = object.quaternion, r = object.rotation;
+    object.position.set(snapshot.px, snapshot.py, snapshot.pz);
+    // Quaternion writes invoke Three.js's matrix-to-Euler conversion. Most
+    // descendants were never posed by the overlay. Reuse a previously observed
+    // canonical result only when quaternion, Euler values AND order still match;
+    // equivalent rotations with a different Euler winding must still restore.
+    if (!snapshot.quaternionRestored || !Object.is(q.x, snapshot.qx) || !Object.is(q.y, snapshot.qy) ||
+      !Object.is(q.z, snapshot.qz) || !Object.is(q.w, snapshot.qw) ||
+      !Object.is(r.x, snapshot.rx) || !Object.is(r.y, snapshot.ry) || !Object.is(r.z, snapshot.rz) ||
+      r.order !== snapshot.restoredOrder) {
+      q.set(snapshot.qx, snapshot.qy, snapshot.qz, snapshot.qw);
+      snapshot.rx = r.x; snapshot.ry = r.y; snapshot.rz = r.z;
+      snapshot.restoredOrder = r.order; snapshot.quaternionRestored = true;
+    }
+    object.scale.set(snapshot.sx, snapshot.sy, snapshot.sz);
+    object.visible = snapshot.visible;
   }
 }
 
@@ -199,6 +216,57 @@ function parseDeformation(value: unknown): IndependentSegmentDeformation | null 
   };
 }
 
+class RigNodeLookup {
+  readonly byName = new Map<string, THREE.Object3D>();
+  readonly byId = new Map<string, THREE.Object3D>();
+  private readonly requested = new Set<string>();
+  private readonly collect = (node: THREE.Object3D): void => {
+    if (this.requested.has(node.name) && !this.byName.has(node.name))
+      this.byName.set(node.name, node);
+  };
+
+  clear(): void {
+    this.byName.clear(); this.byId.clear(); this.requested.clear();
+  }
+
+  resolve(root: THREE.Group, declaredJoints: Record<string, unknown>): Map<string, THREE.Object3D> {
+    this.clear();
+    const ids = Object.keys(declaredJoints);
+    for (const id of ids) {
+      const name = declaredJoints[id];
+      if (typeof name === 'string') this.requested.add(name);
+    }
+    // Resolve the torso surface in the same live pass as its semantic bones.
+    // Reuse storage, never old answers: edits, late parts and duplicate-name
+    // depth-first ordering must still be visible on every deformation pass.
+    this.requested.add('meshy-torso-surface');
+    root.traverse(this.collect);
+    for (const id of ids) {
+      const name = declaredJoints[id];
+      if (typeof name !== 'string') continue;
+      const node = this.byName.get(name);
+      if (node) this.byId.set(id, node);
+    }
+    return this.byId;
+  }
+}
+
+function resolveRigJointNodes(root: THREE.Group, declaredJoints: Record<string, unknown>): Map<string, THREE.Object3D> {
+  return new RigNodeLookup().resolve(root, declaredJoints);
+}
+
+function resolveRigDeformations(
+  value: unknown,
+  joints: ReadonlyMap<string, THREE.Object3D>,
+): IndependentSegmentDeformation[] {
+  return (Array.isArray(value)
+    ? value.map(parseDeformation).filter((item): item is IndependentSegmentDeformation => item !== null)
+    : []
+  ).filter(
+    (policy) => joints.has(policy.jointId) && policy.downstreamJointIds.every((id) => joints.has(id)),
+  );
+}
+
 /** Resolve serializable sculpt metadata into live, semantically addressed nodes. */
 export function resolvePlayerAnimationRig(root: THREE.Group): PlayerAnimationRig {
   const runtime = (root.userData.sculptRuntime ?? {}) as SculptRuntimeMetadata;
@@ -218,23 +286,7 @@ export function resolvePlayerAnimationRig(root: THREE.Group): PlayerAnimationRig
       }
     }
   }
-
-  const jointEntries = Object.entries(declaredJoints);
-  const requestedNames = new Set(jointEntries.map(([, name]) => name).filter((name): name is string => typeof name === 'string'));
-  const nodesByName = new Map<string, THREE.Object3D>();
-  // Match getObjectByName's first depth-first result, while walking the live
-  // hierarchy once instead of once per joint. Rebuild on every resolution so
-  // late-loaded parts, editor renames/reparenting and metadata edits stay live.
-  root.traverse((node) => {
-    if (requestedNames.has(node.name) && !nodesByName.has(node.name))
-      nodesByName.set(node.name, node);
-  });
-  const liveById = new Map<string, THREE.Object3D>();
-  for (const [id, declaredName] of jointEntries) {
-    if (typeof declaredName !== 'string') continue;
-    const node = nodesByName.get(declaredName);
-    if (node) liveById.set(id, node);
-  }
+  const liveById = resolveRigJointNodes(root, declaredJoints);
   const idByNode = new Map<THREE.Object3D, string>();
   for (const [id, node] of liveById) idByNode.set(node, id);
 
@@ -272,14 +324,7 @@ export function resolvePlayerAnimationRig(root: THREE.Group): PlayerAnimationRig
     });
   }
   const jointsById = new Map(joints.map((joint) => [joint.id, joint]));
-  const deformations = (Array.isArray(runtime.deformations)
-    ? runtime.deformations.map(parseDeformation).filter((item): item is IndependentSegmentDeformation => item !== null)
-    : []
-  ).filter(
-    (policy) =>
-      jointsById.has(policy.jointId) &&
-      policy.downstreamJointIds.every((id) => jointsById.has(id)),
-  );
+  const deformations = resolveRigDeformations(runtime.deformations, liveById);
   return {
     schemaVersion: Number.isFinite(runtime.schemaVersion) ? Number(runtime.schemaVersion) : 1,
     rigId: typeof runtime.rigId === 'string' ? runtime.rigId : 'player.procedural',
@@ -294,7 +339,9 @@ export function resolvePlayerAnimationRig(root: THREE.Group): PlayerAnimationRig
 function captureDeformedMorphs(state: AppliedDeformationState): void {
   const influences = (state.object as THREE.Mesh).morphTargetInfluences;
   if (!influences) return;
-  for (const morph of state.morphs) morph.deformed = influences[morph.index];
+  for (let i = 0; i < state.morphCount; i++) {
+    const morph = state.morphs[i]; morph.deformed = influences[morph.index];
+  }
 }
 
 function renderableDirectChildren(node: THREE.Object3D): THREE.Object3D[] {
@@ -319,8 +366,17 @@ export class PlayerAnimationBridge {
   private readonly overlayBaseline: MutableTransformSnapshot[] = [];
   private overlayBaselineApplied = false;
   private overlay: PlayerAnimationOverlay | null = null;
-  private deformationStates: AppliedDeformationState[] = [];
+  private readonly deformationStates: AppliedDeformationState[] = [];
+  private readonly visualDeformations = new Map<THREE.Object3D, AppliedDeformationState>();
+  private readonly endpointDeformations = new Map<THREE.Object3D, AppliedDeformationState>();
+  private readonly visualDeformationCache = new WeakMap<THREE.Object3D, AppliedDeformationState>();
+  private readonly endpointDeformationCache = new WeakMap<THREE.Object3D, AppliedDeformationState>();
+  private readonly deformationAxis = new THREE.Vector3();
+  private readonly deformationOffset = new THREE.Vector3();
+  private readonly deformationLookup = new RigNodeLookup();
   private deformationValues: Readonly<Record<string, number>> = {};
+  private deformationBatch = false;
+  private deformationPending = false;
 
   constructor(
     private readonly playerRoot: THREE.Group,
@@ -387,15 +443,22 @@ export class PlayerAnimationBridge {
   }
 
   /** Run exactly once after all current syncVisual pose writes. */
-  applyOverlay(deltaSeconds: number): void {
+  applyOverlay(deltaSeconds: number, allowDeferredDeformations = false): void {
     if (!this.overlay || this.previewActive) return;
     captureHierarchy(this.playerRoot, this.overlayBaseline);
     this.overlayBaselineApplied = true;
     try {
+      const bridge = this;
+      let rig: PlayerAnimationRig | undefined;
       this.overlay({
-        rig: this.rig,
+        // Most runtime samplers already own their binding. Build the public
+        // snapshot only if an overlay requests it, once for that callback.
+        get rig() { return rig ??= bridge.rig; },
         deltaSeconds,
-        applyDeformations: (values) => this.applyDeformations(values),
+        applyDeformations: (values, deferUntilSecondaryPose) => {
+          if (allowDeferredDeformations && deferUntilSecondaryPose) this.beginDeformationBatch();
+          this.applyDeformations(values);
+        },
       });
     } catch (error) {
       this.restoreOverlayBaseline();
@@ -408,17 +471,30 @@ export class PlayerAnimationBridge {
    * anchor, endpoint joints translate, and no joint inherits non-uniform scale.
    */
   applyDeformations(values: Readonly<Record<string, number>>): void {
+    if (this.deformationBatch) {
+      // Batch only a pose section that does not read deformed endpoints.
+      // Keep absolute replacement semantics; later multiplicative layers
+      // compose onto these values without reskinning each intermediate pose.
+      if (values !== this.deformationValues) this.deformationValues = { ...values };
+      this.deformationPending = true;
+      return;
+    }
     // If the animation sampler has not rewritten an endpoint since the last
     // pass, undo our prior endpoint translation. If it has, that new pose is
     // the baseline and must not be replaced with stale data.
     this.restoreDeformationStates();
-    this.deformationValues = { ...values };
+    // A completed batch or modulation already owns its values. Public input
+    // still gets a defensive copy; internal composition need not copy twice.
+    if (values !== this.deformationValues) this.deformationValues = { ...values };
 
-    const rig = this.rig;
-    const visualStates = new Map<THREE.Object3D, AppliedDeformationState>();
-    const endpointStates = new Map<THREE.Object3D, AppliedDeformationState>();
-    const axis = new THREE.Vector3();
-    const offset = new THREE.Vector3();
+    // Elastic modifiers need live nodes and length policies, not the full
+    // authoring snapshot (rest tuples, mirror links and semantic parents).
+    // Resolve afresh so editor changes and late-loaded parts remain visible.
+    const runtime = (this.rigRoot.userData.sculptRuntime ?? {}) as SculptRuntimeMetadata;
+    const joints = this.deformationLookup.resolve(this.rigRoot, isRecord(runtime.joints) ? runtime.joints : {});
+    const deformations = resolveRigDeformations(runtime.deformations, joints);
+    const visualStates = this.visualDeformations, endpointStates = this.endpointDeformations;
+    const axis = this.deformationAxis, offset = this.deformationOffset;
     const stateFor = (
       map: Map<THREE.Object3D, AppliedDeformationState>,
       object: THREE.Object3D,
@@ -427,28 +503,37 @@ export class PlayerAnimationBridge {
     ): AppliedDeformationState => {
       let state = map.get(object);
       if (!state) {
-        state = {
-          object,
-          basePosition: object.position.clone(),
-          baseScale: object.scale.clone(),
-          deformedPosition: object.position.clone(),
-          deformedScale: object.scale.clone(),
-          movesPosition: true,
-          movesScale,
-          morphs: [],
-        };
+        // Keep storage with the live node, not a traversal slot or old name.
+        // Visuals/endpoints have separate baselines even if a node fills both
+        // roles. Refresh every value after restoring the preceding layer.
+        const cache = map === visualStates ? this.visualDeformationCache : this.endpointDeformationCache;
+        state = cache.get(object);
+        if (!state) {
+          state = { object, basePosition:new THREE.Vector3(), baseScale:new THREE.Vector3(),
+            deformedPosition:new THREE.Vector3(), deformedScale:new THREE.Vector3(),
+            movesPosition:true, movesScale, morphs:[], morphCount:0 };
+          cache.set(object, state);
+        }
+        state.basePosition.copy(object.position); state.baseScale.copy(object.scale);
+        // Each caller captures the result after writing its transform; the
+        // previous result is unused until then, so do not copy it twice.
+        state.movesScale = movesScale; state.morphCount = 0;
         map.set(object, state);
       }
       const influences = (object as THREE.Mesh).morphTargetInfluences;
       for (const index of morphIndices) {
         if (!influences || index < 0 || index >= influences.length) continue;
-        if (state.morphs.some((morph) => morph.index === index)) continue;
-        state.morphs.push({ index, base: influences[index], deformed: influences[index] });
+        let existing = false;
+        for (let i = 0; i < state.morphCount; i++) if (state.morphs[i].index === index) { existing = true; break; }
+        if (existing) continue;
+        let morph = state.morphs[state.morphCount++];
+        if (!morph) state.morphs.push(morph = { index, base:0, deformed:0 });
+        morph.index = index; morph.base = morph.deformed = influences[index];
       }
       return state;
     };
 
-    for (const policy of rig.deformations) {
+    for (const policy of deformations) {
       const raw = values[policy.controlId] ?? 1;
       const lengthScale = THREE.MathUtils.clamp(
         Number.isFinite(raw) ? raw : 1,
@@ -461,7 +546,7 @@ export class PlayerAnimationBridge {
         policy.volume === 'preserve-cross-section-area'
           ? 1 / Math.sqrt(lengthScale)
           : 1;
-      const anchor = rig.jointsById.get(policy.jointId)?.node;
+      const anchor = joints.get(policy.jointId);
       if (!anchor) continue;
 
       // A stretchable cartoon bone is one semantic visual component nested
@@ -553,7 +638,7 @@ export class PlayerAnimationBridge {
       }
 
       for (const endpointId of policy.downstreamJointIds) {
-        const endpoint = rig.jointsById.get(endpointId)?.node;
+        const endpoint = joints.get(endpointId);
         if (!endpoint || endpoint.parent !== anchor) continue;
         const state = stateFor(endpointStates, endpoint, false);
         offset.copy(state.basePosition);
@@ -570,8 +655,8 @@ export class PlayerAnimationBridge {
     // semantic bones provide its longitudinal deformation. Apply only the
     // matching cross-section correction here; scaling Y would double-stretch
     // the skin and scaling a joint would contaminate every descendant.
-    const torso = rig.root.getObjectByName('meshy-torso-surface');
-    const torsoPolicy = rig.deformations.find(
+    const torso = this.deformationLookup.byName.get('meshy-torso-surface');
+    const torsoPolicy = deformations.find(
       (policy) => policy.controlId === 'deform.torso.length',
     );
     if (torso && torsoPolicy) {
@@ -596,7 +681,8 @@ export class PlayerAnimationBridge {
         captureDeformedMorphs(state);
       }
     }
-    this.deformationStates = [...visualStates.values(), ...endpointStates.values()];
+    for (const state of visualStates.values()) this.deformationStates.push(state);
+    for (const state of endpointStates.values()) this.deformationStates.push(state);
   }
 
   /** Compose a procedural length layer over any authored scalar pose, instead
@@ -605,12 +691,31 @@ export class PlayerAnimationBridge {
     const values = { ...this.deformationValues };
     for (const [control, factor] of Object.entries(factors))
       values[control] = (values[control] ?? 1) * factor;
+    this.deformationValues = values;
     this.applyDeformations(values);
+  }
+
+  /** Combine adjacent authored/secondary length layers. Joint posing may
+   * continue, but callers must finish before reading endpoint positions or
+   * solving contacts. Repeated begin calls join the current pose batch. */
+  beginDeformationBatch(): void {
+    this.deformationBatch = true;
+  }
+
+  finishDeformationBatch(): void {
+    if (!this.deformationBatch) return;
+    this.deformationBatch = false;
+    if (!this.deformationPending) return;
+    this.deformationPending = false;
+    this.applyDeformations(this.deformationValues);
   }
 
   deformationValue(control: string): number { return this.deformationValues[control] ?? 1; }
 
   private restoreOverlayBaseline(): void {
+    // Preview entry, overlay replacement and exception recovery also cancel
+    // an unfinished batch; no queued deformation can leak into the next pose.
+    this.deformationBatch = this.deformationPending = false;
     this.restoreDeformationStates(true);
     this.deformationValues = {};
     if (this.overlayBaselineApplied) restoreHierarchy(this.overlayBaseline);
@@ -629,13 +734,16 @@ export class PlayerAnimationBridge {
       ) state.object.scale.copy(state.baseScale);
       const influences = (state.object as THREE.Mesh).morphTargetInfluences;
       if (influences) {
-        for (const morph of state.morphs) {
+        for (let i = 0; i < state.morphCount; i++) {
+          const morph = state.morphs[i];
           if (force || Math.abs(influences[morph.index] - morph.deformed) <= 1e-10) {
             influences[morph.index] = morph.base;
           }
         }
       }
     }
-    this.deformationStates = [];
+    this.deformationStates.length = 0;
+    this.visualDeformations.clear(); this.endpointDeformations.clear();
+    this.deformationLookup.clear();
   }
 }

@@ -1,11 +1,15 @@
 import * as THREE from 'three';
 import { BoneEnvelopeBounds } from './boneEnvelopeBounds';
 import { sharedSkinBoundsKernel, SkinBoundsKernel, type SkinBoundsVertices } from './skinBoundsKernel';
+import { compactSkinBoundsVertices } from './compactSkinBounds';
 
 interface CachedMeshBounds {
   geometry: THREE.BufferGeometry;
-  version: number;
+  attributes: (THREE.BufferAttribute|THREE.InterleavedBufferAttribute)[];
+  versions: number[];
   morphs: number[];
+  relative: boolean;
+  vertexReader: THREE.Mesh['getVertexPosition'];
   box: THREE.Box3;
 }
 interface CachedSupportPoints {
@@ -46,17 +50,25 @@ export class CharacterInteractionBounds {
   private readonly skinPalettes = new WeakMap<THREE.Skeleton,THREE.Matrix4[]>();
   private readonly skinVertices = new WeakMap<THREE.SkinnedMesh,CachedSkinVertices>();
   private readonly skinBase = new THREE.Vector3();
+  private readonly skinPoint = new THREE.Vector3();
   meshCount = 0;
   supportSamples = 0;
   private readonly supportCache = new WeakMap<THREE.BufferGeometry, Uint32Array>();
   private readonly rigidSupportCache = new WeakMap<THREE.Mesh, CachedSupportPoints>();
+  private supportHint: THREE.Mesh | null = null;
+  private readonly measuredSupportMeshes: THREE.Mesh[] = [];
+  private measuredSupportRoot: THREE.Object3D | null = null;
   private readonly directions = Array.from({length:128},(_,i)=>{
     const y=1-2*(i+.5)/128,r=Math.sqrt(1-y*y),a=i*2.399963229728653;
     return [Math.cos(a)*r,y,Math.sin(a)*r];
   }).concat([[1,0,0],[-1,0,0],[0,1,0],[0,-1,0],[0,0,1],[0,0,-1]]);
+  private readonly boneDirections = Array.from({length:32},(_,i)=>{
+    const y=1-2*(i+.5)/32,r=Math.sqrt(1-y*y),a=i*2.399963229728653;
+    return [Math.cos(a)*r,y,Math.sin(a)*r];
+  }).concat([[1,0,0],[-1,0,0],[0,1,0],[0,-1,0],[0,0,1],[0,0,-1]]);
 
   /** Cache a small surface hull while the live character is already being
-   * measured. Per-bone extrema preserve bent limbs without scanning a skin
+   * measured. Skin-weight hulls preserve bent limbs without scanning a skin
    * again during its fatal animation. Topology, not pose, owns these indices. */
   private supportIndices(geometry: THREE.BufferGeometry): Uint32Array {
     let cached=this.supportCache.get(geometry);if(cached)return cached;
@@ -65,7 +77,7 @@ export class CharacterInteractionBounds {
     if(p.count<=70){cached=Uint32Array.from({length:p.count},(_,i)=>i);}
     else {
       const best=new Float64Array(this.directions.length).fill(-Infinity),indices=new Uint32Array(this.directions.length);
-      const bones=new Map<number,{min:number[];max:number[];indices:number[]}>();
+      const skinGroups=new Map<string,{best:Float64Array;indices:Uint32Array}>();
       const skin=geometry.getAttribute('skinIndex'),weights=geometry.getAttribute('skinWeight');
       for(let i=0;i<p.count;i++){
         const x=p.getX(i),y=p.getY(i),z=p.getZ(i);
@@ -73,16 +85,25 @@ export class CharacterInteractionBounds {
           const n=this.directions[d],v=x*n[0]+y*n[1]+z*n[2];if(v>best[d]){best[d]=v;indices[d]=i;}
         }
         if(skin&&weights){
-          let channel=0;for(let c=1;c<4;c++)if(weights.getComponent(i,c)>weights.getComponent(i,channel))channel=c;
-          const bone=skin.getComponent(i,channel);let envelope=bones.get(bone);
-          if(!envelope){envelope={min:[Infinity,Infinity,Infinity],max:[-Infinity,-Infinity,-Infinity],indices:Array(6).fill(i)};bones.set(bone,envelope);}
-          for(let axis=0;axis<3;axis++){const v=axis===0?x:axis===1?y:z;
-            if(v<envelope.min[axis]){envelope.min[axis]=v;envelope.indices[axis*2]=i;}
-            if(v>envelope.max[axis]){envelope.max[axis]=v;envelope.indices[axis*2+1]=i;}
+          let group='';
+          for(let c=0;c<4;c++){
+            const weight=weights.getComponent(i,c);
+            if(weight>0)group+=`${skin.getComponent(i,c)}:${Math.round(weight*8)};`;
+          }
+          let envelope=skinGroups.get(group);
+          if(!envelope){envelope={best:new Float64Array(this.boneDirections.length).fill(-Infinity),indices:new Uint32Array(this.boneDirections.length)};skinGroups.set(group,envelope);}
+          // A rotated thigh/hip can expose a curved clothing surface that
+          // was interior to the whole bind-pose hull. Six axial endpoints
+          // miss those diagonal supports. Weight bands also separate cloth
+          // that follows the pelvis from cloth following a bent thigh. Cache
+          // their small hulls once; posed contact still skins sparse vertices.
+          for(let d=0;d<this.boneDirections.length;d++){
+            const n=this.boneDirections[d],v=x*n[0]+y*n[1]+z*n[2];
+            if(v>envelope.best[d]){envelope.best[d]=v;envelope.indices[d]=i;}
           }
         }
       }
-      cached=Uint32Array.from(new Set([...indices,...Array.from({length:32},(_,i)=>Math.floor(i*(p.count-1)/31)),...[...bones.values()].flatMap(b=>b.indices)]));
+      cached=Uint32Array.from(new Set([...indices,...Array.from({length:32},(_,i)=>Math.floor(i*(p.count-1)/31)),...[...skinGroups.values()].flatMap(b=>Array.from(b.indices))]));
     }
     this.supportCache.set(geometry,cached);return cached;
   }
@@ -115,19 +136,31 @@ export class CharacterInteractionBounds {
    * their complete mesh measurement. No world collision or CPU full-skin scan. */
   sampledPlaneDistance(root: THREE.Object3D, normal: Readonly<THREE.Vector3>, point: Readonly<THREE.Vector3>, contact?: THREE.Vector3, bounds?: THREE.Box3, measured = false): number {
     let minimum=Infinity;this.supportSamples=0;bounds?.makeEmpty();
-    const visit=(node:THREE.Object3D):void=>{
-      if(node!==root&&!node.visible)return;
-      if(node instanceof THREE.Mesh){
+    let nearest: THREE.Mesh | null = null;
+    // The last supporting glove, shoe or shoulder is a useful first bound.
+    // Re-evaluate its current pose, never its old distance, then prune higher
+    // meshes as usual. Point/bounds callers keep original traversal tie order.
+    let hint = !contact && !bounds ? this.supportHint : null;
+    if (hint) {
+      let ancestor: THREE.Object3D | null = hint;
+      while (ancestor && ancestor !== root && ancestor.visible) ancestor = ancestor.parent;
+      if (ancestor !== root) hint = null;
+    }
+    const sampleMesh=(node:THREE.Mesh):void=>{
         if(hasVisibleMaterial(node.material)){
           const indices=this.supportIndices(node.geometry),count=node instanceof THREE.InstancedMesh?node.count:1;
           for(let instance=0;instance<count;instance++){
             this.world.copy(node.matrixWorld);
             if(node instanceof THREE.InstancedMesh){node.getMatrixAt(instance,this.instance);this.world.multiply(this.instance);}
-            if (!bounds && measured && node instanceof THREE.SkinnedMesh && node.boundingBox) {
-              // The immediately preceding exact bounds pass already skinned
-              // this pose. Its local box is conservative for every support
-              // sample, so reject higher body sections before skinning again.
-              const m = this.world.elements, box = node.boundingBox;
+            const measuredBox = !bounds && measured ? node instanceof THREE.SkinnedMesh
+              ? node.boundingBox : node.getVertexPosition === THREE.Mesh.prototype.getVertexPosition
+                ? this.cache.get(node)?.box : null : null;
+            if (measuredBox) {
+              // The immediately preceding bounds pass measured this pose.
+              // Its local box includes the current morph/skin pose, so
+              // reject higher sections before probing them again. This also
+              // avoids resampling each stretched shaft above the contact.
+              const m = this.world.elements, box = measuredBox;
               if (m[3] === 0 && m[7] === 0 && m[11] === 0 && m[15] === 1) {
                 const nx = normal.x*m[0]+normal.y*m[1]+normal.z*m[2];
                 const ny = normal.x*m[4]+normal.y*m[5]+normal.z*m[6];
@@ -163,22 +196,65 @@ export class CharacterInteractionBounds {
               this.supportSamples += indices.length;
               const distance = localMinimum + offset;
               if (distance < minimum) {
-                minimum = distance;
+                minimum = distance; nearest = node;
                 if (contact) contact.set(points[best], points[best + 1], points[best + 2]).applyMatrix4(this.world);
               }
               continue;
             }
+            // A sparse contact hull still used Three's full bone world ×
+            // inverse multiplication for every weight of every sample. These
+            // matrices are constant within this query. Reuse the existing
+            // exact-bounds palette storage, refreshing from the live bones.
+            const skin = node instanceof THREE.SkinnedMesh &&
+              node.getVertexPosition === THREE.SkinnedMesh.prototype.getVertexPosition &&
+              node.applyBoneTransform === THREE.SkinnedMesh.prototype.applyBoneTransform &&
+              indices.length >= node.skeleton.bones.length ? node : null;
+            let palette: THREE.Matrix4[] | null = null;
+            if (skin) {
+              const skeleton = skin.skeleton;
+              palette = this.skinPalettes.get(skeleton) ?? null;
+              if (!palette) { palette = []; this.skinPalettes.set(skeleton, palette); }
+              palette.length = skeleton.bones.length;
+              for (let bone = 0; bone < skeleton.bones.length; bone++) {
+                // Preserve native behavior for unusual/incomplete skeletons,
+                // including unused absent bones that a sparse hull skips.
+                if (!skeleton.bones[bone]?.matrixWorld || !skeleton.boneInverses[bone]) { palette = null; break; }
+                (palette[bone] ??= new THREE.Matrix4()).multiplyMatrices(skeleton.bones[bone].matrixWorld, skeleton.boneInverses[bone]);
+              }
+            }
             for(const i of indices){
-              node.getVertexPosition(i,this.point).applyMatrix4(this.world);this.supportSamples++;bounds?.expandByPoint(this.point);
+              if (skin && palette) {
+                THREE.Mesh.prototype.getVertexPosition.call(skin, i, this.skinBase).applyMatrix4(skin.bindMatrix);
+                this.point.set(0, 0, 0);
+                const weights = skin.geometry.attributes.skinWeight, bones = skin.geometry.attributes.skinIndex;
+                for (let channel = 0; channel < 4; channel++) {
+                  const weight = weights.getComponent(i, channel);
+                  if (weight !== 0) this.point.addScaledVector(this.skinPoint.copy(this.skinBase)
+                    .applyMatrix4(palette[bones.getComponent(i, channel)]), weight);
+                }
+                this.point.applyMatrix4(skin.bindMatrixInverse);
+              } else node.getVertexPosition(i, this.point);
+              this.point.applyMatrix4(this.world);this.supportSamples++;bounds?.expandByPoint(this.point);
               const distance=normal.x*(this.point.x-point.x)+normal.y*(this.point.y-point.y)+normal.z*(this.point.z-point.z);
-              if(distance<minimum){minimum=distance;contact?.copy(this.point);}
+              if(distance<minimum){minimum=distance;nearest=node;contact?.copy(this.point);}
             }
           }
         }
-      }
+    };
+    if (hint) sampleMesh(hint);
+    const visit=(node:THREE.Object3D):void=>{
+      if(node!==root&&!node.visible)return;
+      if(node instanceof THREE.Mesh && node !== hint) sampleMesh(node);
       for(const child of node.children)visit(child);
     };
-    visit(root);return minimum;
+    if (measured && this.measuredSupportRoot === root) {
+      // The immediately preceding bounds pass already resolved the
+      // visible hierarchy. Reuse that ordered mesh list instead of walking
+      // hundreds of bones/sockets a second time. Unmeasured queries still
+      // discover current visibility, additions and removals normally.
+      for (const mesh of this.measuredSupportMeshes) if (mesh !== hint) sampleMesh(mesh);
+    } else visit(root);
+    this.supportHint=nearest;return minimum;
   }
 
   private transformBounds(box: THREE.Box3, matrix: THREE.Matrix4): THREE.Box3 {
@@ -202,18 +278,24 @@ export class CharacterInteractionBounds {
     return this.transformed;
   }
 
-  measure(root: THREE.Object3D, out: THREE.Box3, worldMatricesReady = false, intactBail = false): boolean {
+  measure(root: THREE.Object3D, out: THREE.Box3, worldMatricesReady = false, intactBail = false, collectSupport = intactBail): boolean {
     if (!worldMatricesReady) {
       root.updateWorldMatrix(true,true);
       if (intactBail) root.updateMatrixWorld(true);
     }
     out.makeEmpty();this.meshCount=0;
+    // An exact live silhouette can share its visible mesh list with the
+    // immediately following support query too. This does not enable envelopes
+    // after control returns; bounds accuracy and hierarchy reuse are separate.
+    this.measuredSupportRoot = collectSupport ? root : null;
+    let supportCount = 0;
     const visit=(node:THREE.Object3D):void=>{
       // The root may be hidden by a temporary presentation effect. Visibility
       // below it still selects the actual current head, outfit and limbs.
       if(node!==root&&!node.visible)return;
       if(node instanceof THREE.Mesh){
         if(hasVisibleMaterial(node.material)){
+          if (collectSupport) this.measuredSupportMeshes[supportCount++] = node;
           this.supportIndices(node.geometry);
           const box=intactBail && node instanceof THREE.SkinnedMesh
             ? this.bailEnvelopes.measure(node) ?? this.localBounds(node) : this.localBounds(node);
@@ -231,6 +313,7 @@ export class CharacterInteractionBounds {
       for(const child of node.children)visit(child);
     };
     visit(root);
+    this.measuredSupportMeshes.length = supportCount;
     return !out.isEmpty() && Number.isFinite(out.min.x) && Number.isFinite(out.min.y) &&
       Number.isFinite(out.min.z) && Number.isFinite(out.max.x) && Number.isFinite(out.max.y) && Number.isFinite(out.max.z);
   }
@@ -307,17 +390,68 @@ export class CharacterInteractionBounds {
       return this.skinnedBounds(mesh);
     }
     const morphs=mesh.morphTargetInfluences??NO_MORPHS;
-    const version='version' in positions?positions.version:positions.data.version;
+    const targets=geometry.morphAttributes.position;
+    const nativeVertex=mesh.getVertexPosition===THREE.Mesh.prototype.getVertexPosition;
     let cached=this.cache.get(mesh);
-    if(!cached||cached.geometry!==geometry||cached.version!==version||
-        cached.morphs.length!==morphs.length||morphs.some((value,i)=>value!==cached!.morphs[i])){
-      const box=new THREE.Box3();
+    let stale=!nativeVertex||!cached||cached.vertexReader!==mesh.getVertexPosition||
+      cached.geometry!==geometry||cached.relative!==geometry.morphTargetsRelative||
+      cached.attributes.length!==1+(targets?.length??0)||cached.morphs.length!==morphs.length;
+    if(cached&&!stale){
+      for(let i=0;i<cached.attributes.length;i++){
+        const attribute=i===0?positions:targets![i-1];
+        if(attribute!==cached.attributes[i]||attributeVersion(attribute)!==cached.versions[i]){stale=true;break;}
+      }
+      for(let i=0;!stale&&i<morphs.length;i++)if(morphs[i]!==cached.morphs[i])stale=true;
+    }
+    if(stale){
+      if(!cached){
+        cached={geometry,attributes:[],versions:[],morphs:[],relative:geometry.morphTargetsRelative,
+          vertexReader:mesh.getVertexPosition,box:new THREE.Box3()};
+        this.cache.set(mesh,cached);
+      }
+      const box=cached.box;box.makeEmpty();
       // BufferGeometry.computeBoundingBox unions every morph target, even
       // inactive ones. Read only the currently applied shape instead.
-      for(let i=0;i<positions.count;i++)box.expandByPoint(mesh.getVertexPosition(i,this.point));
-      cached={geometry,version,morphs:[...morphs],box};this.cache.set(mesh,cached);
+      if(nativeVertex){
+        // Match Mesh.getVertexPosition's arithmetic, including normalized and
+        // interleaved attribute getters, but keep the vertex and extrema in
+        // scalars. Animated shafts need this full measurement every pose;
+        // publishing two vectors once avoids mutating scratch vectors for
+        // every vertex and every morph contribution.
+        let minX=Infinity,minY=Infinity,minZ=Infinity,maxX=-Infinity,maxY=-Infinity,maxZ=-Infinity;
+        const relative=geometry.morphTargetsRelative,blend=targets&&mesh.morphTargetInfluences;
+        for(let i=0;i<positions.count;i++){
+          const px=positions.getX(i),py=positions.getY(i),pz=positions.getZ(i);
+          let x=px,y=py,z=pz;
+          if(blend){
+            let dx=0,dy=0,dz=0;
+            for(let m=0;m<targets!.length;m++){
+              const influence=blend[m];if(influence===0)continue;
+              const target=targets![m],tx=target.getX(i),ty=target.getY(i),tz=target.getZ(i);
+              dx+=(relative?tx:tx-px)*influence;
+              dy+=(relative?ty:ty-py)*influence;
+              dz+=(relative?tz:tz-pz)*influence;
+            }
+            x+=dx;y+=dy;z+=dz;
+          }
+          minX=Math.min(minX,x);minY=Math.min(minY,y);minZ=Math.min(minZ,z);
+          maxX=Math.max(maxX,x);maxY=Math.max(maxY,y);maxZ=Math.max(maxZ,z);
+        }
+        box.min.set(minX,minY,minZ);box.max.set(maxX,maxY,maxZ);
+      }else for(let i=0;i<positions.count;i++)box.expandByPoint(mesh.getVertexPosition(i,this.point));
+      // Fresh bounds are also used to reject support work. Attribute swaps,
+      // morph edits and relative/absolute target changes must invalidate them,
+      // even when the new attribute has the same version as the old one.
+      cached.geometry=geometry;cached.relative=geometry.morphTargetsRelative;cached.vertexReader=mesh.getVertexPosition;
+      cached.attributes.length=cached.versions.length=1+(targets?.length??0);
+      for(let i=0;i<cached.attributes.length;i++){
+        const attribute=i===0?positions:targets![i-1];
+        cached.attributes[i]=attribute;cached.versions[i]=attributeVersion(attribute);
+      }
+      cached.morphs.length=morphs.length;
+      for(let i=0;i<morphs.length;i++)cached.morphs[i]=morphs[i];
     }
-    return cached.box;
+    return cached!.box;
   }
 
   /** Same full vertex/morph/skin measurement as SkinnedMesh.computeBoundingBox.
@@ -346,12 +480,26 @@ export class CharacterInteractionBounds {
     }
     const geometry=mesh.geometry,positions=geometry.getAttribute('position');
     const indices=geometry.getAttribute('skinIndex'),weights=geometry.getAttribute('skinWeight');
-    const attributes=[positions,indices,weights,...(geometry.morphAttributes.position??[])];
+    const targets=geometry.morphAttributes.position;
+    const attributeCount=3+(targets?.length??0);
     const morphs=mesh.morphTargetInfluences??NO_MORPHS;
     const bind=mesh.bindMatrix.elements,linearBind=bind[3]===0&&bind[7]===0&&bind[11]===0&&bind[15]===1;
     let cached=this.skinVertices.get(mesh);
-    if(!cached||attributes.length!==cached.attributes.length||attributes.some((a,i)=>a!==cached!.attributes[i]||attributeVersion(a)!==cached!.versions[i])||
-      geometry.morphTargetsRelative!==cached.relative||(!linearBind&&(morphs.length!==cached.morphs.length||morphs.some((v,i)=>v!==cached!.morphs[i])))||bind.some((v,i)=>v!==cached!.bind[i])){
+    let stale=!cached||attributeCount!==cached.attributes.length||geometry.morphTargetsRelative!==cached.relative||
+      (!linearBind&&morphs.length!==cached.morphs.length);
+    // Geometry and bind-space input usually survive thousands of poses.
+    // Compare the live sources directly instead of allocating an attribute
+    // array and predicate closures for every exact skin measurement.
+    if(cached&&!stale){
+      for(let i=0;i<attributeCount;i++){
+        const attribute=i===0?positions:i===1?indices:i===2?weights:targets![i-3];
+        if(attribute!==cached.attributes[i]||attributeVersion(attribute)!==cached.versions[i]){stale=true;break;}
+      }
+      for(let i=0;!stale&&i<16;i++)if(bind[i]!==cached.bind[i])stale=true;
+      if(!linearBind)for(let i=0;!stale&&i<morphs.length;i++)if(morphs[i]!==cached.morphs[i])stale=true;
+    }
+    if(!cached||stale){
+      const attributes=[positions,indices,weights,...(targets??[])];
       cached={attributes,versions:attributes.map(attributeVersion),morphs:[...morphs],relative:geometry.morphTargetsRelative,bind:[...mesh.bindMatrix.elements],
         positions:new Float64Array(positions.count*3),morphDeltas:linearBind?(geometry.morphAttributes.position??[]).map(()=>new Float64Array(positions.count*3)):[],indices:new Uint32Array(positions.count*4),weights:new Float64Array(positions.count*4),kernelInputsFinite:true,highestWeightedIndex:-1};
       for(let i=0;i<positions.count;i++){
@@ -373,14 +521,17 @@ export class CharacterInteractionBounds {
           if(cached.weights[offset]!==0)cached.highestWeightedIndex=Math.max(cached.highestWeightedIndex,cached.indices[offset]);
         }
       }
+      compactSkinBoundsVertices(cached);
       this.skinVertices.set(mesh,cached);
     }
     const box=mesh.boundingBox??=new THREE.Box3();box.makeEmpty();
     const base=cached.positions,skinIndices=cached.indices,skinWeights=cached.weights,inv=mesh.bindMatrixInverse.elements;
     const affineInverse=inv[3]===0&&inv[7]===0&&inv[11]===0&&inv[15]===1;
     const constantInverse=inv[3]===0&&inv[7]===0&&inv[11]===0&&inv[15]!==0;
-    if(this.boundsKernel?.measure(cached,morphs,palette,inv,box,linearBind&&constantSkin&&constantInverse))return box;
-    for(let i=0;i<positions.count;i++){
+    // Derived arrays are immutable: every source/version/bind edit above
+    // replaces the entire bundle, including its native residency identity.
+    if(this.boundsKernel?.measure(cached,morphs,palette,inv,box,linearBind&&constantSkin&&constantInverse,true))return box;
+    for(let i=0;i<base.length/3;i++){
       let x=base[i*3],y=base[i*3+1],z=base[i*3+2],sx=0,sy=0,sz=0;
       for(let m=0;m<cached.morphDeltas.length;m++){
         const influence=morphs[m]??0;if(influence===0)continue;

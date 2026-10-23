@@ -52,7 +52,7 @@ await withSkateRuntime(async ({ THREE, Player, Level, CONST, player: rotationPla
         assert.ok(!p.breakApartDiagnostics?.active, `${name}: detached body`);
         if (age > 1) assert.ok(Math.hypot(p.pos.x - previous.x, p.pos.z - previous.z) <= beforeSpeed * CONST.fixedStep + .2,
           `${name}: discontinuous horizontal travel`);
-        if (!firstImpact && !p.ragdollImpactCount && !p.grounded && age >= 7) {
+        if (!firstImpact && !p.ragdollImpactCount && !p.ragdollWallImpactCount && !p.grounded && age >= 7) {
           p.headM.getWorldPosition(head); p.ankleL.getWorldPosition(feet); p.ankleR.getWorldPosition(foot);
           feet.add(foot).multiplyScalar(.5);
           const lead = head.sub(feet).dot(travel);

@@ -1,0 +1,364 @@
+{
+  "date": "2026-10-22",
+  "pass": "CPU/stability after stronger limb rebound momentum",
+  "baselineParent": "5bb2b56be77f2038c731005ad5831c2458c6e9c8",
+  "change": "Use live ordered key arrays directly; retain original copied stable time/locale-ID sort for unordered, sparse or nonfinite input. No persistent key cache and no change to interpolation.",
+  "sourceSha256": "178655cf5d2ddd292392016e3f8ee418fce22771cb4894613aed9854af7fddf8",
+  "scope": "Production fixed-step CPU in Node with animation runtime and actual artist-hand meshes, warm exact skin kernel and other procedural fallback assets. Includes the complete bail and finite post-control rise rebound; excludes render/GPU/browser costs. Timings are descriptive, work counts are deterministic.",
+  "deterministicComparison": {
+    "incidents": 60,
+    "frames": 6900,
+    "handTriangles": 25152,
+    "warmupsPerCause": 4,
+    "incidentsPerCause": 12,
+    "sortsBefore": 151260,
+    "sortsAfter": 0,
+    "copiedKeyReferencesBefore": 7530720,
+    "copiedKeyReferencesAfter": 0,
+    "identical": [
+      "joint/morph poses",
+      "gameplay state",
+      "recovery durations",
+      "full skin scans",
+      "hierarchy passes",
+      "support samples",
+      "deformation passes and requests"
+    ],
+    "deformationPassesPerFrame": 1,
+    "newRetainedKeyCache": false,
+    "rows": [
+      {
+        "cause": "balance",
+        "frames": 1284,
+        "beforeKeySorts": 28836,
+        "afterKeySorts": 0,
+        "beforeCopiedKeyReferences": 1505136,
+        "afterCopiedKeyReferences": 0,
+        "identicalPoseAndGameplay": true,
+        "poseChecksum": "41d878208ee458ad71751cf9c01b0dff1de8e52eaaca9451aeb212098ba9ecda",
+        "gameplayChecksum": "8b5cb58289306af1e1c8b73e32caf257275f34e782ada71b925c50c81da59b75"
+      },
+      {
+        "cause": "wall",
+        "frames": 1416,
+        "beforeKeySorts": 30852,
+        "afterKeySorts": 0,
+        "beforeCopiedKeyReferences": 1506108,
+        "afterCopiedKeyReferences": 0,
+        "identicalPoseAndGameplay": true,
+        "poseChecksum": "8b6677383716b2eda0f494bfa8adbfaabc713b81cad29f38efe02ccf241ef3ee",
+        "gameplayChecksum": "01c978c976643054d36c9b5f596936c1e6957a68ec328c1e7132aa2ebc370e00"
+      },
+      {
+        "cause": "trip",
+        "frames": 1500,
+        "beforeKeySorts": 31608,
+        "afterKeySorts": 0,
+        "beforeCopiedKeyReferences": 1509888,
+        "afterCopiedKeyReferences": 0,
+        "identicalPoseAndGameplay": true,
+        "poseChecksum": "5a8c1891cd7ba1b664223a4cc63637fb9d5461f298d392886798616d03dee389",
+        "gameplayChecksum": "65b270ae3dd26bd155e0026ff7c4641e4d3f0cf37aae1fe7a46e99df989b5d7f"
+      },
+      {
+        "cause": "landing",
+        "frames": 1440,
+        "beforeKeySorts": 31068,
+        "afterKeySorts": 0,
+        "beforeCopiedKeyReferences": 1507188,
+        "afterCopiedKeyReferences": 0,
+        "identicalPoseAndGameplay": true,
+        "poseChecksum": "cd4114ee6c71f310cb2e60dd634152836bc6759e39a74f7992dccd8c35b6e4ec",
+        "gameplayChecksum": "f65707e7f110728a5d1447ff5d384714443388406fd939b39011279762632521"
+      },
+      {
+        "cause": "pvp",
+        "frames": 1260,
+        "beforeKeySorts": 28896,
+        "afterKeySorts": 0,
+        "beforeCopiedKeyReferences": 1502400,
+        "afterCopiedKeyReferences": 0,
+        "identicalPoseAndGameplay": true,
+        "poseChecksum": "df8f2409499af7256ff814dd143e050878ecf60b6a62518738df9c02cdec8e03",
+        "gameplayChecksum": "7ba72f5aeb27dd6116ecd774eaeb1d71688c40f2782bb0e035ef3e0e07787f8b"
+      }
+    ]
+  },
+  "pairedTiming": {
+    "order": [
+      "final-before-1",
+      "final-after-1",
+      "final-after-2",
+      "final-before-2"
+    ],
+    "scope": "Production fixed-step CPU in Node with animation runtime and actual artist-hand meshes, warm exact skin kernel and other procedural fallback assets. Includes the complete bail and finite post-control rise rebound; excludes render/GPU/browser costs. Timings are descriptive, work counts are deterministic.",
+    "warmupsPerCause": 8,
+    "measuredIncidentsPerCausePerRun": 24,
+    "rows": [
+      {
+        "cause": "balance",
+        "all": {
+          "beforeMedianMeanMs": 0.8590210000002116,
+          "afterMedianMeanMs": 0.849688000000242,
+          "reductionPercent": 1.0864693645402546,
+          "pairReductions": [
+            2.212903225981333,
+            -0.06376155549812079
+          ]
+        },
+        "bail": {
+          "beforeMedianMeanMs": 0.38174999999955617,
+          "afterMedianMeanMs": 0.37472900000102527,
+          "reductionPercent": 1.8391617546926198,
+          "pairReductions": [
+            8.743986150258698,
+            -5.656625255916903
+          ]
+        },
+        "rise": {
+          "beforeMedianMeanMs": 0.9897289999998975,
+          "afterMedianMeanMs": 0.9488540000002104,
+          "reductionPercent": 4.129918391771015,
+          "pairReductions": [
+            7.726765028697713,
+            0.26625926159199453
+          ]
+        }
+      },
+      {
+        "cause": "wall",
+        "all": {
+          "beforeMedianMeanMs": 0.8128335000001243,
+          "afterMedianMeanMs": 0.7909374999999272,
+          "reductionPercent": 2.6937866119191356,
+          "pairReductions": [
+            5.390223093248581,
+            -0.10978670009071934
+          ]
+        },
+        "bail": {
+          "beforeMedianMeanMs": 0.36670849999973143,
+          "afterMedianMeanMs": 0.36214599999948405,
+          "reductionPercent": 1.2441762326891093,
+          "pairReductions": [
+            4.814443330006557,
+            -2.468418154076768
+          ]
+        },
+        "rise": {
+          "beforeMedianMeanMs": 1.0056454999994457,
+          "afterMedianMeanMs": 0.9530420000000959,
+          "reductionPercent": 5.230819408964582,
+          "pairReductions": [
+            10.667150907102164,
+            -0.8610818825699917
+          ]
+        }
+      },
+      {
+        "cause": "trip",
+        "all": {
+          "beforeMedianMeanMs": 0.8883130000003803,
+          "afterMedianMeanMs": 0.8727920000001177,
+          "reductionPercent": 1.7472444960566769,
+          "pairReductions": [
+            3.017435751636355,
+            0.4422041968132895
+          ]
+        },
+        "bail": {
+          "beforeMedianMeanMs": 0.47835399999985384,
+          "afterMedianMeanMs": 0.4602084999996805,
+          "reductionPercent": 3.793320428004965,
+          "pairReductions": [
+            8.158714261252165,
+            -1.215937149339874
+          ]
+        },
+        "rise": {
+          "beforeMedianMeanMs": 0.9970420000008744,
+          "afterMedianMeanMs": 0.9432709999991857,
+          "reductionPercent": 5.393052649902563,
+          "pairReductions": [
+            8.407217365202113,
+            2.205502250930713
+          ]
+        }
+      },
+      {
+        "cause": "landing",
+        "all": {
+          "beforeMedianMeanMs": 0.5187710000009247,
+          "afterMedianMeanMs": 0.47197899999810033,
+          "reductionPercent": 9.019779440782338,
+          "pairReductions": [
+            14.192970674265249,
+            2.9914413979063914
+          ]
+        },
+        "bail": {
+          "beforeMedianMeanMs": 0.3382709999987128,
+          "afterMedianMeanMs": 0.33341699999982666,
+          "reductionPercent": 1.434944171656638,
+          "pairReductions": [
+            1.8040920445507314,
+            1.0579370670070531
+          ]
+        },
+        "rise": {
+          "beforeMedianMeanMs": 0.9715624999989814,
+          "afterMedianMeanMs": 0.9472710000009101,
+          "reductionPercent": 2.5002508843328886,
+          "pairReductions": [
+            4.9737241124153675,
+            -0.19731929817385918
+          ]
+        }
+      },
+      {
+        "cause": "pvp",
+        "all": {
+          "beforeMedianMeanMs": 0.8708334999992076,
+          "afterMedianMeanMs": 0.8637914999981149,
+          "reductionPercent": 0.8086505630639063,
+          "pairReductions": [
+            2.3030440323270063,
+            -0.7276500011892173
+          ]
+        },
+        "bail": {
+          "beforeMedianMeanMs": 0.41431200000079116,
+          "afterMedianMeanMs": 0.3932085000014922,
+          "reductionPercent": 5.093625093953024,
+          "pairReductions": [
+            10.767704847248572,
+            -1.317598916306939
+          ]
+        },
+        "rise": {
+          "beforeMedianMeanMs": 0.9649790000003122,
+          "afterMedianMeanMs": 0.9251874999990832,
+          "reductionPercent": 4.123561238246232,
+          "pairReductions": [
+            8.16137211047745,
+            -0.27050187822323934
+          ]
+        }
+      }
+    ]
+  },
+  "timingInterpretation": "Mean-of-two whole-step medians are lower by 0.8\u20139.0% by cause, with individual regressions. Timings are noisy/descriptive. Deterministic savings are sorted-array allocations/reference copies, not guaranteed FPS, a measured total heap reduction or a 100% animation-CPU reduction.",
+  "samplerOracle": {
+    "passed": true,
+    "comparisons": 4704,
+    "liveEditsPerKind": 100,
+    "optimizedSorts": 0,
+    "eagerSorts": 720,
+    "frozenSourcePreserved": true,
+    "nonfiniteFallback": true,
+    "stableLocaleTies": true,
+    "retainedKeyCache": false
+  },
+  "checks": [
+    {
+      "name": "animation-suite",
+      "exitCode": 1,
+      "seconds": 0.76
+    },
+    {
+      "name": "character-animation-runtime",
+      "exitCode": 0,
+      "seconds": 0.75
+    },
+    {
+      "name": "character-elasticity",
+      "exitCode": 0,
+      "seconds": 9.86
+    },
+    {
+      "name": "bail-recovery-continuity",
+      "exitCode": 0,
+      "seconds": 17.67
+    },
+    {
+      "name": "bail-matrix-pass",
+      "exitCode": 0,
+      "seconds": 14.96
+    }
+  ],
+  "knownTestFailure": {
+    "check": "tools/test-animation-suite.mjs",
+    "currentExitCode": 1,
+    "baselineExitCode": 1,
+    "failure": "Starter clip targets tail, which the test fixture does not bind. Same validation assertion fails before sampling with the saved baseline sampler.",
+    "baselineSamplingSource": "/private/tmp/bail-followthrough-cpu-20261022/before/src/animation/sampling.ts"
+  },
+  "build": {
+    "passed": true,
+    "offlineVersion": "2fe32e1880cd1d9ab9e8",
+    "fullSuiteRun": false
+  },
+  "browser": {
+    "liteDirectBailChecks": {
+      "passed": true,
+      "cases": 17
+    },
+    "fullPageDirectBailChecks": {
+      "passed": true,
+      "cases": 17,
+      "maximumHeadHandoffShift": 0.07404419075413175,
+      "maximumHeadVelocityChange": 0.02258233050397879
+    },
+    "fullPageDirectBoardChecks": {
+      "passed": true,
+      "cases": 5,
+      "observedSeconds": 12,
+      "rows": [
+        {
+          "kind": "Board toss",
+          "settledAtSeconds": 3.516666666666659,
+          "activeAtEnd": 0,
+          "lastSoundSeconds": 0.5333333333333333
+        },
+        {
+          "kind": "Board roll",
+          "settledAtSeconds": 6.049999999999984,
+          "activeAtEnd": 0,
+          "lastSoundSeconds": null
+        },
+        {
+          "kind": "Board skid",
+          "settledAtSeconds": 0.9333333333333346,
+          "activeAtEnd": 0,
+          "lastSoundSeconds": null
+        },
+        {
+          "kind": "Board wall",
+          "settledAtSeconds": 1.100000000000001,
+          "activeAtEnd": 0,
+          "lastSoundSeconds": 0.19999999999999998
+        },
+        {
+          "kind": "Board pile",
+          "settledAtSeconds": 2.199999999999997,
+          "activeAtEnd": 0,
+          "lastSoundSeconds": 1.4166666666666665
+        }
+      ]
+    },
+    "visualReviewComplete": false,
+    "limitation": "Direct browser simulations pass, but normal playback remains covered by the startup loading frame. Full reload repeats the stall and lite playback also stalls. Temporary review diagnostics locate prepare-destination with no pending or failed assets. No console warnings/errors. Temporary diagnostics were removed; no unrelated loader changes included. Visual smoothness cannot be re-certified in this pass.",
+    "consoleErrors": []
+  },
+  "reproduction": [
+    "node tools/test-animation-key-order.mjs",
+    "node tools/test-character-animation-runtime.mjs",
+    "node tools/test-character-elasticity.mjs",
+    "node tools/test-bail-recovery-continuity.mjs",
+    "node tools/test-bail-matrix-pass.mjs",
+    "node tools/profile-intact-bail.mjs --complete-incident --real-hands --warmups=4 --incidents=12 --key-order-profile --pose-checksum --deformation-profile --hierarchy-profile --support-profile",
+    "node tools/profile-intact-bail.mjs --complete-incident --real-hands --warmups=8 --incidents=24",
+    "npm run build"
+  ],
+  "delivery": "Local-only task-owned private-branch commit, shared HEAD/index preserved; no remote transfer. Ongoing goal remains active."
+}

@@ -1,0 +1,305 @@
+{
+  "description": "Fixed-step head point continuity at the bail-to-locomotion handoff, relative to the physical player position. Full starter animation runtime, 60 Hz. Maximum recovery change also includes real floor/contact changes during the rise.",
+  "comparisonCases": 14,
+  "regressionCases": 42,
+  "torsoLengthRange": [
+    0.9035369912963482,
+    1.0467192424148666
+  ],
+  "summary": {
+    "before": {
+      "headShiftMetres": {
+        "min": 0.2540006351597489,
+        "max": 0.34319301173218497,
+        "median": 0.2788710310233553
+      },
+      "headVelocityChangeMetresPerFrame": {
+        "min": 0.24141197110861404,
+        "max": 0.3278725734693512,
+        "median": 0.2647318498479049
+      },
+      "maxRecoveryHeadVelocityChange": {
+        "min": 0.24143730807303396,
+        "max": 0.4157010869855579,
+        "median": 0.3229196889587102
+      }
+    },
+    "after": {
+      "headShiftMetres": {
+        "min": 0.011214931897925903,
+        "max": 0.060583193976190594,
+        "median": 0.02006302468825019
+      },
+      "headVelocityChangeMetresPerFrame": {
+        "min": 0.010836030603313535,
+        "max": 0.02388741931153112,
+        "median": 0.019389346630192886
+      },
+      "maxRecoveryHeadVelocityChange": {
+        "min": 0.1591723443441727,
+        "max": 0.2624626454265737,
+        "median": 0.19355889616401684
+      }
+    }
+  },
+  "rows": [
+    {
+      "cause": "balance",
+      "seed": 42,
+      "before": {
+        "handoffFrame": 60,
+        "headShiftMetres": 0.2540006351597489,
+        "headVelocityChangeMetresPerFrame": 0.24141197110861404,
+        "maxRecoveryHeadVelocityChange": 0.2517364237481919
+      },
+      "after": {
+        "handoffFrame": 60,
+        "headShiftMetres": 0.018800053283436244,
+        "headVelocityChangeMetresPerFrame": 0.020180423589362707,
+        "maxRecoveryHeadVelocityChange": 0.17535258082329555
+      }
+    },
+    {
+      "cause": "manual",
+      "seed": 42,
+      "before": {
+        "handoffFrame": 60,
+        "headShiftMetres": 0.27217793161151377,
+        "headVelocityChangeMetresPerFrame": 0.2594146225489018,
+        "maxRecoveryHeadVelocityChange": 0.2604824509717722
+      },
+      "after": {
+        "handoffFrame": 60,
+        "headShiftMetres": 0.028616992744156945,
+        "headVelocityChangeMetresPerFrame": 0.010836030603313535,
+        "maxRecoveryHeadVelocityChange": 0.19206578285206616
+      }
+    },
+    {
+      "cause": "nose-manual",
+      "seed": 42,
+      "before": {
+        "handoffFrame": 60,
+        "headShiftMetres": 0.27212457823073205,
+        "headVelocityChangeMetresPerFrame": 0.2594428096186353,
+        "maxRecoveryHeadVelocityChange": 0.3627174404114323
+      },
+      "after": {
+        "handoffFrame": 60,
+        "headShiftMetres": 0.019276826782433754,
+        "headVelocityChangeMetresPerFrame": 0.02388741931153112,
+        "maxRecoveryHeadVelocityChange": 0.18816502236843455
+      }
+    },
+    {
+      "cause": "wall",
+      "seed": 42,
+      "before": {
+        "handoffFrame": 71,
+        "headShiftMetres": 0.3385291926018716,
+        "headVelocityChangeMetresPerFrame": 0.32308115519862346,
+        "maxRecoveryHeadVelocityChange": 0.32308115519862346
+      },
+      "after": {
+        "handoffFrame": 71,
+        "headShiftMetres": 0.018884280135064994,
+        "headVelocityChangeMetresPerFrame": 0.017923740146792065,
+        "maxRecoveryHeadVelocityChange": 0.21821834192083067
+      }
+    },
+    {
+      "cause": "trip",
+      "seed": 42,
+      "before": {
+        "handoffFrame": 78,
+        "headShiftMetres": 0.34319301173217387,
+        "headVelocityChangeMetresPerFrame": 0.327872573469341,
+        "maxRecoveryHeadVelocityChange": 0.327872573469341
+      },
+      "after": {
+        "handoffFrame": 78,
+        "headShiftMetres": 0.019824036917747628,
+        "headVelocityChangeMetresPerFrame": 0.020984417925957694,
+        "maxRecoveryHeadVelocityChange": 0.21675781551494974
+      }
+    },
+    {
+      "cause": "landing",
+      "seed": 42,
+      "before": {
+        "handoffFrame": 73,
+        "headShiftMetres": 0.33773822809772197,
+        "headVelocityChangeMetresPerFrame": 0.3229196889587785,
+        "maxRecoveryHeadVelocityChange": 0.3229196889587785
+      },
+      "after": {
+        "handoffFrame": 73,
+        "headShiftMetres": 0.017022294350155648,
+        "headVelocityChangeMetresPerFrame": 0.022886322236190044,
+        "maxRecoveryHeadVelocityChange": 0.1591723443441727
+      }
+    },
+    {
+      "cause": "pvp",
+      "seed": 42,
+      "before": {
+        "handoffFrame": 58,
+        "headShiftMetres": 0.2788710310233999,
+        "headVelocityChangeMetresPerFrame": 0.264731849847938,
+        "maxRecoveryHeadVelocityChange": 0.2684808773835748
+      },
+      "after": {
+        "handoffFrame": 58,
+        "headShiftMetres": 0.01430743177663242,
+        "headVelocityChangeMetresPerFrame": 0.021229324024219468,
+        "maxRecoveryHeadVelocityChange": 0.17472138880746094
+      }
+    },
+    {
+      "cause": "balance",
+      "seed": 1229,
+      "before": {
+        "handoffFrame": 60,
+        "headShiftMetres": 0.2545016989014609,
+        "headVelocityChangeMetresPerFrame": 0.24143730807303396,
+        "maxRecoveryHeadVelocityChange": 0.24143730807303396
+      },
+      "after": {
+        "handoffFrame": 60,
+        "headShiftMetres": 0.060583193976190594,
+        "headVelocityChangeMetresPerFrame": 0.010839252094850982,
+        "maxRecoveryHeadVelocityChange": 0.17073655185928102
+      }
+    },
+    {
+      "cause": "manual",
+      "seed": 1229,
+      "before": {
+        "handoffFrame": 60,
+        "headShiftMetres": 0.27217793161142734,
+        "headVelocityChangeMetresPerFrame": 0.2594146225488294,
+        "maxRecoveryHeadVelocityChange": 0.28392230373240057
+      },
+      "after": {
+        "handoffFrame": 60,
+        "headShiftMetres": 0.0333863078605221,
+        "headVelocityChangeMetresPerFrame": 0.021305258293719233,
+        "maxRecoveryHeadVelocityChange": 0.20032316046388468
+      }
+    },
+    {
+      "cause": "nose-manual",
+      "seed": 1229,
+      "before": {
+        "handoffFrame": 60,
+        "headShiftMetres": 0.27212457823073594,
+        "headVelocityChangeMetresPerFrame": 0.2594428096186376,
+        "maxRecoveryHeadVelocityChange": 0.2788927941732395
+      },
+      "after": {
+        "handoffFrame": 60,
+        "headShiftMetres": 0.023707343079852977,
+        "headVelocityChangeMetresPerFrame": 0.013874043644701807,
+        "maxRecoveryHeadVelocityChange": 0.2052151541106316
+      }
+    },
+    {
+      "cause": "wall",
+      "seed": 1229,
+      "before": {
+        "handoffFrame": 71,
+        "headShiftMetres": 0.3385291926018659,
+        "headVelocityChangeMetresPerFrame": 0.32308115519861735,
+        "maxRecoveryHeadVelocityChange": 0.32308115519861735
+      },
+      "after": {
+        "handoffFrame": 71,
+        "headShiftMetres": 0.02651371692417381,
+        "headVelocityChangeMetresPerFrame": 0.014900601913764277,
+        "maxRecoveryHeadVelocityChange": 0.22609276556227256
+      }
+    },
+    {
+      "cause": "trip",
+      "seed": 1229,
+      "before": {
+        "handoffFrame": 78,
+        "headShiftMetres": 0.34319301173218497,
+        "headVelocityChangeMetresPerFrame": 0.3278725734693512,
+        "maxRecoveryHeadVelocityChange": 0.3278725734693512
+      },
+      "after": {
+        "handoffFrame": 78,
+        "headShiftMetres": 0.023150846690036066,
+        "headVelocityChangeMetresPerFrame": 0.016358002067989423,
+        "maxRecoveryHeadVelocityChange": 0.2624626454265737
+      }
+    },
+    {
+      "cause": "landing",
+      "seed": 1229,
+      "before": {
+        "handoffFrame": 73,
+        "headShiftMetres": 0.3377382280975224,
+        "headVelocityChangeMetresPerFrame": 0.3229196889586419,
+        "maxRecoveryHeadVelocityChange": 0.3229196889586419
+      },
+      "after": {
+        "handoffFrame": 73,
+        "headShiftMetres": 0.020302012458752752,
+        "headVelocityChangeMetresPerFrame": 0.018598269671023068,
+        "maxRecoveryHeadVelocityChange": 0.16449195984978493
+      }
+    },
+    {
+      "cause": "pvp",
+      "seed": 1229,
+      "before": {
+        "handoffFrame": 58,
+        "headShiftMetres": 0.2788710310233108,
+        "headVelocityChangeMetresPerFrame": 0.2647318498478718,
+        "maxRecoveryHeadVelocityChange": 0.4157010869855579
+      },
+      "after": {
+        "handoffFrame": 58,
+        "headShiftMetres": 0.011214931897925903,
+        "headVelocityChangeMetresPerFrame": 0.022184544362881392,
+        "maxRecoveryHeadVelocityChange": 0.1950520094759675
+      }
+    }
+  ],
+  "checks": [
+    "bail-recovery-continuity (42 cases)",
+    "character-animation-runtime",
+    "bail-recovery-motion (240 orientation cases, 30 runtime cases)",
+    "ragdoll-recovery",
+    "bail-directional-falls (72 cases)",
+    "bail-support-continuity",
+    "bail-matrix-pass (real hands)",
+    "bail-impacts",
+    "trip-clearance",
+    "board-dynamics",
+    "TypeScript and production build"
+  ],
+  "browser": {
+    "lite-bails": {
+      "passed": true,
+      "cases": 17,
+      "failures": []
+    },
+    "full-bails": {
+      "passed": true,
+      "cases": 17,
+      "failures": []
+    },
+    "full-boards": {
+      "passed": true,
+      "cases": 5,
+      "failures": []
+    }
+  },
+  "build": {
+    "version": "8035f06506ad7cd34479",
+    "consoleErrors": 0
+  }
+}

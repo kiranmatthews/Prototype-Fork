@@ -1,0 +1,295 @@
+{
+  "date": "2026-10-22",
+  "pass": "Fidelity: retain secondary angular momentum through rebounds",
+  "parentCommit": "869238a280e46bfe24738684f0220d732ce6a10e",
+  "problem": "Clamping body angular acceleration to 60 rad/s squared discarded most of the relative angular impulse on a hard spin reversal. Limbs followed the rapidly turning root too rigidly, and an instantaneous spin change differed with frame subdivision.",
+  "change": "Transfer the bounded change in world angular velocity into body-local joint velocities once per step. Spine/hips retain less relative momentum than neck, wrists and ankles. Existing asymmetric springs, compliant stops, contact waves and editable segment elasticity then govern the catch-up and rebound.",
+  "isolatedSpinProbe": {
+    "scope": "Production BailMotion with a fixed body orientation, identical seed and isolated abrupt spin history; wrist sweep is relative to an unaccelerated control over 0.5 seconds. Not a gameplay or FPS benchmark.",
+    "before": {
+      "source": "before",
+      "rows": [
+        {
+          "axis": 0,
+          "rate": 2,
+          "firstVelocity": -0.046594110369294936,
+          "peak": 0.049801015119206496
+        },
+        {
+          "axis": 0,
+          "rate": 8,
+          "firstVelocity": -0.08447520999179352,
+          "peak": 0.19774015649504556
+        },
+        {
+          "axis": 0,
+          "rate": -8,
+          "firstVelocity": 0.08447520999179352,
+          "peak": 0.19817751968311165
+        },
+        {
+          "axis": 2,
+          "rate": 2,
+          "firstVelocity": -0.03637556150820508,
+          "peak": 0.037151443778056945
+        },
+        {
+          "axis": 2,
+          "rate": 8,
+          "firstVelocity": -0.06590453988434807,
+          "peak": 0.14798195569087086
+        },
+        {
+          "axis": 2,
+          "rate": -8,
+          "firstVelocity": 0.06590453988434805,
+          "peak": 0.14798195569087091
+        }
+      ],
+      "subdivisionError": 0.019157463912892775,
+      "maxVelocity": 12.286731724960019,
+      "maxAngle": 1.8,
+      "minLength": 1,
+      "maxLength": 1.0431826766061607,
+      "settledVelocity": 9.47055113533578e-13,
+      "settledStrain": 2.220446049250313e-15,
+      "resetMatchesFresh": true
+    },
+    "after": {
+      "source": "after",
+      "rows": [
+        {
+          "axis": 0,
+          "rate": 2,
+          "firstVelocity": -0.8803338195441882,
+          "peak": 0.11592216184170609
+        },
+        {
+          "axis": 0,
+          "rate": 8,
+          "firstVelocity": -3.521335278176753,
+          "peak": 0.45601615600859796
+        },
+        {
+          "axis": 0,
+          "rate": -8,
+          "firstVelocity": 3.5213352781767533,
+          "peak": 0.46368864736682425
+        },
+        {
+          "axis": 2,
+          "rate": 2,
+          "firstVelocity": -0.6886238931426903,
+          "peak": 0.0868071725855735
+        },
+        {
+          "axis": 2,
+          "rate": 8,
+          "firstVelocity": -2.754495572570762,
+          "peak": 0.3472286903422941
+        },
+        {
+          "axis": 2,
+          "rate": -8,
+          "firstVelocity": 2.7544955725707614,
+          "peak": 0.34722869034229426
+        }
+      ],
+      "subdivisionError": 0,
+      "maxVelocity": 21.094715823475244,
+      "maxAngle": 1.8,
+      "minLength": 1,
+      "maxLength": 1.060911999999991,
+      "settledVelocity": 1.3186589451164924e-12,
+      "settledStrain": 3.774758283725532e-15,
+      "resetMatchesFresh": true
+    },
+    "comparison": [
+      {
+        "axis": 0,
+        "beforeWristSweepRadians": 0.19774015649504556,
+        "afterWristSweepRadians": 0.45601615600859796,
+        "sweepRatio": 2.3061383387750256
+      },
+      {
+        "axis": 2,
+        "beforeWristSweepRadians": 0.14798195569087086,
+        "afterWristSweepRadians": 0.3472286903422941,
+        "sweepRatio": 2.346425878217495
+      }
+    ]
+  },
+  "completeIncidentComparison": {
+    "scope": "Thirty paired seeded production incidents and full supported recovery; default procedural assets. Poses intentionally differ. Gameplay timing/travel/contact counts must stay identical. Profiling runs overlapped with functional validation, so their timings are not used as performance evidence.",
+    "frames": 3450,
+    "rows": [
+      {
+        "cause": "balance",
+        "frames": 642,
+        "gameplayIdentical": true,
+        "durationIdentical": true,
+        "beforeStops": 2,
+        "afterStops": 1,
+        "beforeLongestStop": 1,
+        "afterLongestStop": 1,
+        "deformationPasses": 642,
+        "newDeformationRecords": 0,
+        "poseChanged": true,
+        "gameplayChecksum": "c4400b85bc629ddc1a97f272dcb3c1f5a504045c8a0e43db7552090db2bf658a"
+      },
+      {
+        "cause": "wall",
+        "frames": 708,
+        "gameplayIdentical": true,
+        "durationIdentical": true,
+        "beforeStops": 5,
+        "afterStops": 4,
+        "beforeLongestStop": 3,
+        "afterLongestStop": 1,
+        "deformationPasses": 708,
+        "newDeformationRecords": 0,
+        "poseChanged": true,
+        "gameplayChecksum": "c7b7d13c2747e6efb5f430041b3a66e355d9e16cf257f6f20c7461b57d0b4256"
+      },
+      {
+        "cause": "trip",
+        "frames": 750,
+        "gameplayIdentical": true,
+        "durationIdentical": true,
+        "beforeStops": 55,
+        "afterStops": 68,
+        "beforeLongestStop": 12,
+        "afterLongestStop": 12,
+        "deformationPasses": 750,
+        "newDeformationRecords": 0,
+        "poseChanged": true,
+        "gameplayChecksum": "b151e394e8ef0dac71234e93e4b5052098e4025c832c8811d164f187d152fc55"
+      },
+      {
+        "cause": "landing",
+        "frames": 720,
+        "gameplayIdentical": true,
+        "durationIdentical": true,
+        "beforeStops": 5,
+        "afterStops": 3,
+        "beforeLongestStop": 1,
+        "afterLongestStop": 1,
+        "deformationPasses": 720,
+        "newDeformationRecords": 0,
+        "poseChanged": true,
+        "gameplayChecksum": "d96fcaf136c510ae85e32a92f3531fe1ca2ad4da278e1fd1f992b4b851c68bf3"
+      },
+      {
+        "cause": "pvp",
+        "frames": 630,
+        "gameplayIdentical": true,
+        "durationIdentical": true,
+        "beforeStops": 0,
+        "afterStops": 0,
+        "beforeLongestStop": 0,
+        "afterLongestStop": 0,
+        "deformationPasses": 630,
+        "newDeformationRecords": 0,
+        "poseChanged": true,
+        "gameplayChecksum": "c6781319911e2f55d1ade98616fa44ddd3dbbe49f8f59dba3e2584913b847291"
+      }
+    ]
+  },
+  "validation": {
+    "passedChecks": [
+      "bail-spin-followthrough",
+      "bail-inertia",
+      "bail-recovery-continuity",
+      "bail-motion",
+      "bail-contact-waves",
+      "bail-overlap-waves",
+      "bail-joint-stops",
+      "bail-impacts",
+      "trip-clearance",
+      "bail-directional-falls",
+      "bail-matrix-pass",
+      "bail-support-continuity",
+      "bail-soft-landing"
+    ],
+    "jointStopCases": {
+      "passed": true,
+      "poses": 240,
+      "frames": 43200,
+      "maxHiddenAngle": 6.938893903907228e-17,
+      "maxVelocity": 12.489342893451948,
+      "releaseSeconds": 0.016666666666666666,
+      "unpreparedReleaseSeconds": 0.13333333333333333,
+      "subdivisionError": 0,
+      "changingBaseAndBlend": true,
+      "resetAndEditedBase": true
+    },
+    "contactStress": {
+      "passed": true,
+      "overlapCases": 36,
+      "angularError": 1.887379141862766e-15,
+      "strainError": 3.469446951953614e-17,
+      "stress": {
+        "rates": [
+          60,
+          120,
+          144,
+          240,
+          15
+        ],
+        "maxAngle": 1.8,
+        "maxVelocity": 22,
+        "minLength": 0.7552633693390499,
+        "maxLength": 1.1141063035712109,
+        "maxSettle": 1.2155180111635943e-09,
+        "retainedTypedArrayBytes": 9056,
+        "buffersReused": true
+      }
+    },
+    "headContinuity": {
+      "cases": 42,
+      "maxHandoffShiftMetres": 0.0760782432689016,
+      "maxHandoffVelocityChangeMetresPerFrame": 0.04019158966635695,
+      "finiteRebound": true
+    },
+    "actualHandOracle": {
+      "triangles": 25152,
+      "frames": 1578,
+      "maxPoseError": 0,
+      "immediatePublicSync": true
+    },
+    "browser": {
+      "browser-lite-bails": {
+        "passed": true,
+        "cases": 17,
+        "maxHeadHandoffShiftMetres": 0.07380256559279365,
+        "maxHeadHandoffVelocityChangeMetresPerFrame": 0.02258233050397879
+      },
+      "browser-full-bails": {
+        "passed": true,
+        "cases": 17,
+        "maxHeadHandoffShiftMetres": 0.06409464810976787,
+        "maxHeadHandoffVelocityChangeMetresPerFrame": 0.027217605037503565
+      },
+      "browser-full-boards": {
+        "passed": true,
+        "cases": 5,
+        "settledAtSeconds": [
+          3.516666666666659,
+          6.049999999999984,
+          0.9333333333333346,
+          1.100000000000001,
+          2.199999999999997
+        ],
+        "silentAfterRest": true
+      }
+    },
+    "browserConsoleErrors": [],
+    "build": "TypeScript and Vite production build passed; offline version c31074a866f40b33756b",
+    "fullSuiteRun": false
+  },
+  "resourceNotes": "No new actor state, typed arrays, scene nodes, world queries or per-step allocation introduced. Existing one-pass deformation batching remains verified. Profile the complete change in the next performance/stability pass.",
+  "sourceSha256": {
+    "src/character/bailMotion.ts": "a617f84be9ca550e49243f90f4133d5b48325a777dd7dd03e66f25eeff2c8aa1",
+    "tools/test-bail-spin-followthrough.mjs": "39f8004122550a9bbc60b1e1674c5fbe1e3027e8982fd5cf4aba87ce12152650"
+  }
+}

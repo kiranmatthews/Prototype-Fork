@@ -1,0 +1,173 @@
+{
+  "date": "2026-10-22",
+  "parent": "26ab2073ab9cde7f72b0c35ab8820900cb1580c7",
+  "change": "Select recovery roll around the actual ground-plane tumble axis. Keep the latest clear angular direction through friction counter-rocks; a new strong rebound supersedes it. Preserve actual incoming angular velocity and keep near-upright/no-momentum exits short. Long rolls gather then push upright with continuous rotation velocity.",
+  "axisOracle": {
+    "cases": 192,
+    "oldReverseCases": 180,
+    "newReverseCases": 0,
+    "oldWorstReverseRadians": 2.3692391637876318,
+    "newWorstReverseRadians": 0,
+    "quietCases": 96,
+    "unnecessaryQuietTravel": 8.881784197001252e-16,
+    "memoryCases": 48,
+    "memoryEntryDerivativeError": 1.0446730339115005e-05,
+    "plantJoinVelocityChange": 6.996986445151885e-05
+  },
+  "capturedStarts": [
+    {
+      "cause": "balance",
+      "capturedStarts": 6,
+      "oldReverseRadians": 12.161545696109512,
+      "newReverseRadians": 0
+    },
+    {
+      "cause": "wall",
+      "capturedStarts": 6,
+      "oldReverseRadians": 0.35367793392164754,
+      "newReverseRadians": 0.35155335140362043
+    },
+    {
+      "cause": "trip",
+      "capturedStarts": 6,
+      "oldReverseRadians": 4.040747212337798,
+      "newReverseRadians": 0.0012920143855294137
+    },
+    {
+      "cause": "landing",
+      "capturedStarts": 6,
+      "oldReverseRadians": 0.3180475797758125,
+      "newReverseRadians": 0.31808527371178735
+    },
+    {
+      "cause": "pvp",
+      "capturedStarts": 6,
+      "oldReverseRadians": 10.32686547024618,
+      "newReverseRadians": 0
+    }
+  ],
+  "comparison": [
+    {
+      "cause": "balance",
+      "frames": 642,
+      "gameplayChecksum": "c4400b85bc629ddc1a97f272dcb3c1f5a504045c8a0e43db7552090db2bf658a",
+      "posesChanged": true,
+      "entryOrientationAndSpinUnchanged": true,
+      "durationUnchanged": true
+    },
+    {
+      "cause": "wall",
+      "frames": 708,
+      "gameplayChecksum": "c7b7d13c2747e6efb5f430041b3a66e355d9e16cf257f6f20c7461b57d0b4256",
+      "posesChanged": true,
+      "entryOrientationAndSpinUnchanged": true,
+      "durationUnchanged": true
+    },
+    {
+      "cause": "trip",
+      "frames": 750,
+      "gameplayChecksum": "b151e394e8ef0dac71234e93e4b5052098e4025c832c8811d164f187d152fc55",
+      "posesChanged": true,
+      "entryOrientationAndSpinUnchanged": true,
+      "durationUnchanged": true
+    },
+    {
+      "cause": "landing",
+      "frames": 720,
+      "gameplayChecksum": "d96fcaf136c510ae85e32a92f3531fe1ca2ad4da278e1fd1f992b4b851c68bf3",
+      "posesChanged": true,
+      "entryOrientationAndSpinUnchanged": true,
+      "durationUnchanged": true
+    },
+    {
+      "cause": "pvp",
+      "frames": 630,
+      "gameplayChecksum": "c6781319911e2f55d1ade98616fa44ddd3dbbe49f8f59dba3e2584913b847291",
+      "posesChanged": true,
+      "entryOrientationAndSpinUnchanged": true,
+      "durationUnchanged": true
+    }
+  ],
+  "framesCompared": 3450,
+  "head": {
+    "cases": 42,
+    "maxHandoffShiftMetres": 0.0760782432689016,
+    "maxHandoffVelocityChangeMetresPerFrame": 0.04019158966635695,
+    "maxRecoveryVelocityChangeMetresPerFrame": 0.4347746703888338,
+    "maxReboundVelocityChangeMetresPerFrame": 0.08502977956992601
+  },
+  "orientation": {
+    "passed": true,
+    "orientationCases": 240,
+    "derivativeError": 8.531344561035485e-05,
+    "hemisphereError": 5.16191365590357e-08,
+    "maxNormError": 2.220446049250313e-16,
+    "runtimeCases": 30
+  },
+  "resources": "One persistent Vector3 and five cached numeric curve/axis fields per player; no added world queries, skin scans, hierarchy passes, random draws or per-frame objects. No CPU-speedup claim for this fidelity pass. Previous compact-skin CPU changes retained.",
+  "limits": "Finite contact-constrained animation can still change velocity sharply at hard contacts; this is not a claim of zero acceleration through every floor collision. The longest 42-case head recovery velocity change is recorded above. Existing intermittent loading issue is unchanged.",
+  "validation": {
+    "focusedChecks": [
+      {
+        "check": "test-bail-recovery-rollthrough",
+        "exit": 0
+      },
+      {
+        "check": "test-bail-recovery-direction",
+        "exit": 0
+      },
+      {
+        "check": "test-bail-recovery-motion",
+        "exit": 0
+      },
+      {
+        "check": "test-bail-recovery-continuity",
+        "exit": 0
+      },
+      {
+        "check": "test-bail-directional-falls",
+        "exit": 0
+      },
+      {
+        "check": "test-bail-support-continuity",
+        "exit": 0
+      },
+      {
+        "check": "test-bail-matrix-pass",
+        "exit": 0
+      },
+      {
+        "check": "test-ragdoll-recovery",
+        "exit": 0
+      },
+      {
+        "check": "test-trip-clearance",
+        "exit": 0
+      },
+      {
+        "check": "test-bail-impacts",
+        "exit": 0
+      },
+      {
+        "check": "test-character-elasticity",
+        "exit": 0
+      },
+      {
+        "check": "test-board-dynamics",
+        "exit": 0
+      }
+    ],
+    "directionalFallCases": 72,
+    "matrixCases": 14,
+    "matrixFrames": 1578,
+    "build": "1f06627cd71878c3d92f",
+    "browser": {
+      "liteBails": 17,
+      "fullBails": 17,
+      "fullBoards": 5,
+      "consoleWarningsErrors": 0,
+      "visualReview": "Both side directions, manual back, nose-manual rebound, shoulder-to-foot transition; controls collapse to expose the whole body."
+    }
+  },
+  "elapsedMinutes": 21.7
+}

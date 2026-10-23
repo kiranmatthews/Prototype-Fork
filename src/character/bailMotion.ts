@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { characterElasticityAmplitudes, ELASTIC_LENGTH_CONTROLS } from '../animation/elasticity';
+import { sampleBailJointTorque, sampleBailSegmentLoad, type BailContactPose } from './bailContactPose';
 
 export type BailTumbleKind = 'forward' | 'back' | 'side' | 'air';
 
@@ -8,6 +9,10 @@ export type BailTumbleKind = 'forward' | 'back' | 'side' | 'air';
 // constraints, mesh clones, per-frame random draws or world queries are needed.
 const JOINTS = 14;
 const PARENTS = [-1, 0, 0, 2, 3, 0, 5, 6, -1, 8, 9, -1, 11, 12];
+// Relative angular momentum retained when the torso changes spin. The neck,
+// wrists and ankles trail more freely than the spine/hips; each chain then
+// catches up through its existing spring, without a repeated flail animation.
+const SPIN_INERTIA = [.12, .4, .32, .48, .64, .32, .48, .64, .26, .42, .56, .26, .42, .56];
 const LIMITS = [
   .48, .35, .4, .55, .5, .42,
   1.8, .7, 1.05, 1.05, .22, .25, .7, .4, .55,
@@ -16,6 +21,36 @@ const LIMITS = [
   1.2, .4, .6, .95, .12, .12, .55, .2, .3,
 ];
 const clamp = (v: number, bound: number) => Math.max(-bound, Math.min(bound, v));
+// Player's legacy armR/legR are the anatomical LEFT (+X). Elastic controls
+// use anatomical names, so their spring ownership must follow the actual rig.
+const ELASTIC_CHANNELS = ELASTIC_LENGTH_CONTROLS.map(([id, part]) => ({ id, part,
+  joint: part === 0 ? 0 : part <= 2 ? (id.includes('left') ? 5 : 2) + part - 1 :
+    (id.includes('left') ? 11 : 8) + part - 3 }));
+const SEGMENTS = ELASTIC_CHANNELS.length;
+const WAVE_HZ = 120, WAVE_STRIDE = JOINTS * 3 + SEGMENTS;
+const STRAIN_STIFFNESS = [260, 230, 310, 220, 300];
+const STRAIN_DAMPING = [12, 10, 8.5, 11, 9.5];
+// The virtual pelvis connects both hips to the spine. Distances are tiny,
+// fixed rig data; no scene traversal or geometry work is needed at contact.
+const CONTACT_PARENTS = [14, 0, 0, 2, 3, 0, 5, 6, 14, 8, 9, 14, 11, 12, -1];
+const CONTACT_RESPONSE = [.45, .75, .85, 1.2, 1.35, .85, 1.2, 1.35, .7, 1.05, 1.25, .7, 1.05, 1.25];
+function jointDistance(a: number, b: number): number {
+  for (let ancestor = a, da = 0; ancestor >= 0; ancestor = CONTACT_PARENTS[ancestor], da++)
+    for (let other = b, db = 0; other >= 0; other = CONTACT_PARENTS[other], db++)
+      if (ancestor === other) return da + db;
+  return 0;
+}
+const CONTACT_DISTANCE = Uint8Array.from({ length: JOINTS * JOINTS }, (_, i) =>
+  jointDistance(Math.floor(i / JOINTS), i % JOINTS));
+const SEGMENT_DISTANCE = Uint8Array.from({ length: JOINTS * SEGMENTS }, (_, i) => {
+  const origin = Math.floor(i / SEGMENTS) * JOINTS, {joint} = ELASTIC_CHANNELS[i % SEGMENTS];
+  return Math.min(CONTACT_DISTANCE[origin + joint], CONTACT_DISTANCE[origin + joint + 1]);
+});
+// Include the immediate bin and every possible anatomical arrival, including
+// a contact between spring ticks. The current rig needs 17 bins, not 32.
+// Empty bins still cost one bit check; contacts never allocate records.
+const WAVE_SLOTS = 1 + Math.ceil(WAVE_HZ * Math.max(.083,
+  Math.max(...CONTACT_DISTANCE) * .018, Math.max(...SEGMENT_DISTANCE) * .022));
 
 /** Inertial secondary motion for an INTACT bail. The existing controller owns
  * translation/contact/recovery. This tiny spring rig responds to those events,
@@ -26,16 +61,32 @@ export class BailMotion {
   private readonly bias = new Float64Array(JOINTS * 3);
   private readonly stiffness = new Float64Array(JOINTS);
   private readonly damping = new Float64Array(JOINTS);
+  private readonly lower = Float64Array.from({length:JOINTS}, (_, joint) => -LIMITS[joint * 3]);
+  private readonly upper = Float64Array.from({length:JOINTS}, (_, joint) => LIMITS[joint * 3]);
   private readonly gravity = new THREE.Vector3();
   private readonly inverse = new THREE.Quaternion();
   private readonly previousSpin = new THREE.Vector3();
-  private readonly acceleration = new THREE.Vector3();
+  private readonly localSpin = new THREE.Vector3();
+  private readonly previousTravel = new THREE.Vector3();
+  private readonly linearChange = new THREE.Vector3();
+  private hasTravel = false;
+  private readonly frameTarget = new Float64Array(3);
+  private readonly torsoImpulse = new Float64Array(3);
+  private readonly limbImpulse = new Float64Array(3);
+  private readonly frameDamping = new Float64Array(JOINTS);
+  private readonly angularChange = new THREE.Vector3();
+  private readonly contactWaves = new Float64Array(WAVE_SLOTS * WAVE_STRIDE);
+  private readonly contactTorque = new Float64Array(JOINTS * 3);
+  private waveMask = 0;
+  private waveTime = 0;
+  private waveTick = 0;
+  private loosen = 0;
   private readonly elasticity = characterElasticityAmplitudes('bail');
   private readonly applied = new Array<THREE.Object3D | null>(JOINTS).fill(null);
   private readonly baseline = Array.from({ length: JOINTS }, () => new THREE.Quaternion());
   readonly deformations: Record<string, number> = Object.fromEntries(ELASTIC_LENGTH_CONTROLS.map(([id]) => [id, 1]));
-  private strain = 0;
-  private strainVelocity = 0;
+  private readonly strain = new Float64Array(SEGMENTS);
+  private readonly strainVelocity = new Float64Array(SEGMENTS);
   private seed = 1;
   private kick = 0;
   private live = false;
@@ -48,8 +99,15 @@ export class BailMotion {
   reset(): void {
     this.live = false;
     this.angles.fill(0); this.velocity.fill(0);
-    this.strain = this.strainVelocity = this.kick = 0;
+    for (let joint = 0; joint < JOINTS; joint++) {
+      this.lower[joint] = -LIMITS[joint * 3]; this.upper[joint] = LIMITS[joint * 3];
+    }
+    this.contactWaves.fill(0); this.contactTorque.fill(0);
+    this.waveMask = 0; this.waveTime = this.waveTick = 0; this.loosen = 0;
+    this.strain.fill(0); this.strainVelocity.fill(0);
+    this.kick = 0;
     this.previousSpin.set(0, 0, 0);
+    this.previousTravel.set(0, 0, 0); this.linearChange.set(0, 0, 0); this.hasTravel = false;
   }
 
   /** Also supports the legacy rig when the editable animation bridge is off. */
@@ -60,11 +118,14 @@ export class BailMotion {
     }
   }
 
-  begin(kind: BailTumbleKind, spin: THREE.Vector3, seed: number, carryPose = false): void {
+  begin(kind: BailTumbleKind, spin: THREE.Vector3, seed: number, carryPose = false, travel?: THREE.Vector3): void {
     if (!carryPose) this.reset();
     this.live = true;
     this.seed = seed >>> 0 || 1;
     this.previousSpin.copy(spin);
+    this.hasTravel = !!travel;
+    if (travel) this.previousTravel.copy(travel);
+    this.linearChange.set(0, 0, 0);
     // A different loose/tucked side on each incident, with independently soft
     // wrists, elbows and knees. The random stream is cosmetic and isolated.
     const curl = this.random() * 1.8 - .5;
@@ -91,23 +152,138 @@ export class BailMotion {
     this.bias[36] = .15 + this.random() * .7;
     this.velocity[27] = side > 0 ? 6 : 1.5;
     this.velocity[36] = side > 0 ? 1.5 : 6;
-    this.strainVelocity -= 3;
+    for (let segment = 0; segment < SEGMENTS; segment++) this.strainVelocity[segment] -= 3;
   }
 
-  impact(speed: number): void {
+  /** Losing support is a continuation, not another collision or random kick. */
+  resume(spin: THREE.Vector3, travel: THREE.Vector3): void {
+    this.live = true;
+    this.previousSpin.copy(spin);
+    this.previousTravel.copy(travel); this.hasTravel = true;
+    this.linearChange.set(0, 0, 0);
+  }
+
+  impact(speed: number, normal?: THREE.Vector3, contact?: THREE.Vector3, contactJoint?: number,
+    pose?: BailContactPose): void {
     if (!this.live) return;
     const strength = Math.min(1.7, Math.max(.12, speed / 12));
-    this.strainVelocity = Math.max(-20, this.strainVelocity - strength * 12);
-    for (let i = 0; i < this.velocity.length; i++) {
-      // Every impact redirects momentum instead of restarting a pose/clock.
-      this.velocity[i] = clamp(this.velocity[i] * .6 +
-        (this.random() * 2 - 1) * LIMITS[i] * strength * 9, 24);
+    const origin = contactJoint ?? (contact ? (contact.y > .35 ? 1 : contact.y < -.2 ?
+      (contact.x < 0 ? 9 : 12) : Math.abs(contact.x) > .12 ? (contact.x < 0 ? 2 : 5) : 0) : 0);
+    if (pose) {
+      this.contactTorque.fill(0);
+      // A braced hand loads wrist/elbow/shoulder; a foot loads ankle/knee/hip.
+      // Other limbs receive the delayed loose reaction and body inertia.
+      // The virtual pelvis is handled by whole-body angular momentum.
+      for (let joint = origin; joint >= 0; joint = CONTACT_PARENTS[joint]) {
+        const node = pose.joints[joint];
+        if (joint < JOINTS && node)
+          sampleBailJointTorque(node, pose.point, pose.impulse, this.contactTorque, joint * 3);
+      }
+    }
+    for (let segment = 0; segment < SEGMENTS; segment++) {
+      // A segment can be loaded from either end: a hand strike starts at
+      // the forearm, whereas a shoulder strike reaches it a beat later.
+      const distance = SEGMENT_DISTANCE[origin * SEGMENTS + segment];
+      const delay = distance * .022;
+      const wave = this.contactWaveOffset(delay) + JOINTS * 3 + segment;
+      let load = -1;
+      if (pose) {
+        const {joint} = ELASTIC_CHANNELS[segment], row = origin * JOINTS;
+        const fromEnd = CONTACT_DISTANCE[row + joint + 1] < CONTACT_DISTANCE[row + joint];
+        const axial = sampleBailSegmentLoad(pose.joints[joint], pose.joints[joint + 1], pose.impulse, fromEnd);
+        // A braced limb crushes then rebounds; a trailing limb can be pulled
+        // long before recoiling. Glancing hits mostly bend, with a small soft
+        // squash. Re-evaluate the posed direction at each subsequent bounce
+        // instead of repeating the same whole-body shrinking pulse.
+        if (axial !== null) load = -.25 + 1.4 * axial;
+      }
+      this.contactWaves[wave] = clamp(this.contactWaves[wave] + strength * 12 * load / (1 + distance * .55), 20);
+    }
+    this.loosen = Math.max(this.loosen, strength);
+    for (let joint = 0; joint < JOINTS; joint++) {
+      const leg = joint >= 8, distal = joint === 4 || joint === 7 || joint === 10 || joint === 13;
+      const left = joint >= 2 && joint <= 4 || joint >= 8 && joint <= 10;
+      const struckSide = !contact || Math.abs(contact.x) < .12 || (contact.x < 0) === left;
+      // The contacted joint reacts first, even for a hand/foot strike.
+      // Successive impacts keep their own arrival times. A wrist hit must
+      // not erase an approaching ankle reaction or pull it forward in time.
+      const distance = CONTACT_DISTANCE[origin * JOINTS + joint];
+      const delay = contactJoint !== undefined ? distance * .018 :
+        (distal ? .065 : joint === 3 || joint === 6 || joint === 9 || joint === 12 ? .035 : 0) + (struckSide ? 0 : .018);
+      const wave = this.contactWaveOffset(delay) + joint * 3;
+      const transfer = contactJoint !== undefined ? 1 / (1 + distance * .22) : 1;
+      for (let axis = 0; axis < 3; axis++) {
+        const i = joint * 3 + axis, limit = LIMITS[i];
+        const directed = !pose && normal ? (axis === 0 ? normal.z * (leg ? -1 : 1) : axis === 2 ? -normal.x : 0) : 0;
+        const loose = (this.random() * 2 - 1) * (pose ? .22 : .65);
+        const loaded = pose ? clamp(this.contactTorque[i] * CONTACT_RESPONSE[joint], limit * 12) : 0;
+        const impulse = ((loose + directed * 1.1) * limit * strength * 7 + loaded) * transfer;
+        // Carry existing spring momentum through the hit. Joint damping and
+        // compliant stops dissipate it locally as each new impulse arrives.
+        this.contactWaves[wave + axis] = clamp(this.contactWaves[wave + axis] + impulse, 18);
+        // Each collision finds a new asymmetric fold, which slowly releases.
+        // Real contact bends the moving limb toward its force, then lets it
+        // rebound. Do not instantly retarget unrelated joints into a new pose.
+        if (!pose) this.bias[i] = clamp(this.bias[i] * .55 + impulse * .035, limit * .8);
+      }
+    }
+    // Folding joints retain their anatomical direction: one knee gathers
+    // under the body while the other trails, then the delayed ankle catches
+    // up. Independent draws avoid a repeated symmetric starfish on landing.
+    const elbowLeft = -.2 - this.random() * .6, elbowRight = -.2 - this.random() * .6;
+    const tuck = this.random();
+    if (!pose) {
+      this.bias[9] = elbowLeft; this.bias[18] = elbowRight;
+      this.bias[27] = .15 + tuck * .65;
+      this.bias[36] = .15 + (1 - tuck) * .65;
     }
   }
 
+  private contactWaveOffset(delay: number): number {
+    const tick = Math.max(this.waveTick, Math.ceil((this.waveTime + delay) * WAVE_HZ - 1e-8));
+    const slot = tick % WAVE_SLOTS;
+    this.waveMask |= 1 << slot;
+    return slot * WAVE_STRIDE;
+  }
+
+  private advanceContactWaves(dt: number): void {
+    this.waveTime += dt;
+    const through = Math.floor(this.waveTime * WAVE_HZ + 1e-8);
+    for (let tick = this.waveTick; this.waveMask !== 0 && tick <= through; tick++) {
+      const slot = tick % WAVE_SLOTS, bit = 1 << slot;
+      if (!(this.waveMask & bit)) continue;
+      const offset = slot * WAVE_STRIDE;
+      for (let i = 0; i < JOINTS * 3; i++) this.velocity[i] += this.contactWaves[offset + i];
+      for (let i = 0; i < SEGMENTS; i++)
+        this.strainVelocity[i] = clamp(this.strainVelocity[i] + this.contactWaves[offset + JOINTS * 3 + i], 20);
+      this.contactWaves.fill(0, offset, offset + WAVE_STRIDE);
+      this.waveMask &= ~bit;
+    }
+    this.waveTick = through + 1;
+  }
+
+  /** The editable/base pose is already composed. Put its anatomical stops
+   * into spring space before integration: a visually straight knee must not
+   * keep simulating an invisible backwards bend and take ages to release. */
+  prepareHinge(joint: number, node: THREE.Object3D | null, weight: number): void {
+    const limit = LIMITS[joint * 3];
+    this.lower[joint] = -limit; this.upper[joint] = limit;
+    if (!node || weight <= 1e-5) return;
+    const elbow = joint === 3 || joint === 6;
+    if (!elbow && joint !== 9 && joint !== 12) return;
+    const lo = Math.max(-limit, ((elbow ? -2.35 : .03) - node.rotation.x) / weight);
+    const hi = Math.min(limit, ((elbow ? -.05 : 2.45) - node.rotation.x) / weight);
+    // An edited base entirely outside the reachable interval retains the
+    // existing final safety clamp. Never create an inverted spring interval.
+    if (lo <= hi) { this.lower[joint] = lo; this.upper[joint] = hi; }
+  }
+
   step(dt: number, orientation: THREE.Quaternion, spin: THREE.Vector3,
-    grounded: boolean, recovery: number, kick: number, weight: number): boolean {
+    grounded: boolean, recovery: number, kick: number, weight: number, travel?: THREE.Vector3): boolean {
     if (!this.live || dt <= 0) return false;
+    // The planted recovery has fully taken over. Stop integrating invisible
+    // springs; a later lost-support event resumes beneath the carried pose.
+    if (recovery >= .32) { this.reset(); return false; }
     // Bounded work even after a debugger pause. Gameplay advances at 60 Hz;
     // two cheap spring substeps prevent stiff wrist/knee limits from jittering.
     const elapsed = Math.min(dt, 1 / 15), steps = Math.ceil(elapsed * 120), h = elapsed / steps;
@@ -115,42 +291,103 @@ export class BailMotion {
     this.kick = kick;
     this.inverse.copy(orientation).invert();
     this.gravity.set(0, -1, 0).applyQuaternion(this.inverse);
-    this.acceleration.copy(spin).sub(this.previousSpin).multiplyScalar(1 / Math.max(dt, 1 / 240));
+    // Both velocity streams arrive in world space. Different travel/control
+    // bases must not change the response of the same posed body. Differentiate
+    // there first, then bring forces and spin into the body's local frame.
+    this.angularChange.copy(spin).sub(this.previousSpin).applyQuaternion(this.inverse).clampLength(0, 24);
     this.previousSpin.copy(spin);
+    this.localSpin.copy(spin).applyQuaternion(this.inverse);
+    this.linearChange.set(0, 0, 0);
+    if (travel) {
+      if (this.hasTravel) this.linearChange.copy(travel).sub(this.previousTravel)
+        .clampLength(0, 12).applyQuaternion(this.inverse);
+      this.previousTravel.copy(travel); this.hasTravel = true;
+    } else this.hasTravel = false;
+    const outward = Math.min(.35, this.localSpin.lengthSq() * .0018);
     const settle = grounded ? 1.8 : 1;
     const recover = 1 - THREE.MathUtils.smoothstep(recovery, 0, .32);
     const amount = Math.max(0, Math.min(2, weight)) * recover;
+    const looseDecay = Math.exp(-7 * h);
+    // Resolve body-frame forcing once, rather than branching/clamping the
+    // same vectors for all 42 spring coordinates on every substep.
+    for (let axis = 0; axis < 3; axis++) {
+      const gravity = axis === 0 ? this.gravity.z : axis === 2 ? -this.gravity.x : 0;
+      const angular = this.localSpin.getComponent(axis);
+      const linear = axis === 0 ? this.linearChange.z : axis === 2 ? -this.linearChange.x : 0;
+      this.frameTarget[axis] = gravity * .42 - angular * .025;
+      this.torsoImpulse[axis] = -linear * .24;
+      this.limbImpulse[axis] = linear * .38;
+    }
+    for (let joint = 0; joint < JOINTS; joint++) {
+      this.frameDamping[joint] = 1 / (1 + this.damping[joint] * settle * h);
+      for (let axis = 0; axis < 3; axis++) {
+        const i = joint * 3 + axis;
+        // A collision changes angular velocity instantaneously. Clipping its
+        // acceleration to 60 rad/s² discarded almost all of a hard rebound,
+        // and made the reaction depend on frame duration. Transfer the bounded
+        // velocity change once; integration and compliant stops absorb it.
+        // Travel has the same instantaneous character at a rebound. The old
+        // acceleration cap made a 2 m/s and an 8 m/s hit indistinguishable and
+        // lost more momentum at higher update rates. Let hanging limbs lag a
+        // braking torso, with the upper body counterbalancing above the waist.
+        const linearImpulse = (joint <= 1 ? this.torsoImpulse : this.limbImpulse)[axis];
+        this.velocity[i] = clamp(this.velocity[i] + (linearImpulse - this.angularChange.getComponent(axis) *
+          SPIN_INERTIA[joint]) * LIMITS[i], 22);
+      }
+    }
     for (let step = 0; step < steps; step++) {
+      this.advanceContactWaves(h);
+      this.loosen *= looseDecay;
+      const softness = 1 / (1 + this.loosen * .8);
       for (let joint = 0; joint < JOINTS; joint++) {
         const parent = PARENTS[joint];
+        const stiffness = this.stiffness[joint] * softness;
+        const damping = this.frameDamping[joint];
         for (let axis = 0; axis < 3; axis++) {
           const i = joint * 3 + axis, limit = LIMITS[i];
-          const gravity = axis === 0 ? this.gravity.z : axis === 2 ? -this.gravity.x : 0;
-          const angular = axis === 0 ? spin.x : axis === 1 ? spin.y : spin.z;
-          const accel = axis === 0 ? this.acceleration.x : axis === 1 ? this.acceleration.y : this.acceleration.z;
+          const lo = axis === 0 ? this.lower[joint] : -limit;
+          const hi = axis === 0 ? this.upper[joint] : limit;
+          const hinge = axis === 0 && (joint === 3 || joint === 6 || joint === 9 || joint === 12);
+          let angle = this.angles[i], velocity = this.velocity[i];
           const chain = parent >= 0 ? this.velocity[parent * 3 + axis] * .7 : 0;
-          const target = clamp(this.bias[i] + gravity * limit * .42 - angular * limit * .025, limit);
-          const force = this.stiffness[joint] * (target * recover - this.angles[i]) +
-            chain - clamp(accel, 60) * limit * .1;
-          this.velocity[i] = clamp((this.velocity[i] + force * h) /
-            (1 + this.damping[joint] * settle * h), 22);
-          this.angles[i] += this.velocity[i] * h;
-          if (Math.abs(this.angles[i]) > limit) {
-            this.angles[i] = clamp(this.angles[i], limit);
-            this.velocity[i] *= -.18;
+          const target = Math.max(lo, Math.min(hi, clamp(this.bias[i] + this.frameTarget[axis] * limit, limit) * recover));
+          // Hanging limbs carry through a braking torso; upward spine/head
+          // respond oppositely. No clip clock or pose needs to restart.
+          const force = stiffness * (target - angle) + chain;
+          velocity = clamp((velocity + force * h) * damping, 22);
+          if (hinge) {
+            // A small compliant stop slows only motion into the boundary.
+            // Inward motion is free immediately; there is no dead interval
+            // hidden behind a rendering clamp after a later bounce.
+            const margin = Math.min(.18, (hi - lo) * .2);
+            const gap = velocity < 0 ? angle - lo : hi - angle;
+            const load = margin > 0 ? Math.max(0, 1 - Math.max(0, gap) / margin) : 1;
+            velocity /= 1 + load * load * 24 * h;
           }
+          angle += velocity * h;
+          if (angle < lo || angle > hi) {
+            const outward = angle < lo ? velocity < 0 : velocity > 0;
+            angle = Math.max(lo, Math.min(hi, angle));
+            if (outward) velocity *= hinge ? -.08 : -.18;
+          }
+          this.angles[i] = angle; this.velocity[i] = velocity;
         }
       }
-      this.strainVelocity = (this.strainVelocity - this.strain * 240 * h) / (1 + 10 * h);
-      this.strain = clamp(this.strain + this.strainVelocity * h, 1.8);
+      for (let segment = 0; segment < SEGMENTS; segment++) {
+        const {part} = ELASTIC_CHANNELS[segment];
+        const velocity = (this.strainVelocity[segment] - this.strain[segment] * STRAIN_STIFFNESS[part] * h) /
+          (1 + STRAIN_DAMPING[part] * h);
+        const strain = this.strain[segment] + velocity * h;
+        this.strain[segment] = clamp(strain, 1.8);
+        this.strainVelocity[segment] = Math.abs(strain) > 1.8 ? velocity * -.15 : velocity;
+      }
     }
-    for (const [id, part] of ELASTIC_LENGTH_CONTROLS) {
+    for (let segment = 0; segment < SEGMENTS; segment++) {
+      const {id, part, joint} = ELASTIC_CHANNELS[segment];
       // Independent lengths multiply editable authored deformation. Distal
       // inertia adds small delayed stretch; impact compression rebounds finitely.
-      const joint = part === 0 ? 0 : part <= 2 ? (id.includes('left') ? 2 : 5) + part - 1 :
-        (id.includes('left') ? 8 : 11) + part - 3;
-      const lag = clamp(Math.abs(this.velocity[joint * 3]) * .035, .45);
-      this.deformations[id] = 1 + this.elasticity[part] * (this.strain * 1.7 + lag) * amount;
+      const lag = clamp((Math.abs(this.velocity[joint * 3]) + Math.abs(this.velocity[joint * 3 + 2]) * .6) * .035, .45);
+      this.deformations[id] = 1 + this.elasticity[part] * (this.strain[segment] * 1.7 + lag + outward * (part === 0 ? .2 : 1)) * amount;
     }
     return amount > .001;
   }

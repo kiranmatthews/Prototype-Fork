@@ -1,0 +1,315 @@
+{
+  "pass": "Fidelity: direction-aware segment strain on subsequent bail impacts",
+  "change": "Read the actual posed segment axis and impact impulse. A load toward the opposite endpoint compresses the segment; an outward load stretches it before recoil. Glancing loads retain a small squash while existing joint torque bends the limb. Re-evaluate at every hit and keep delayed anatomical wave propagation, overlapping impulses, bounded springs and finite settle.",
+  "scope": "Intact bail secondary deformation only. No controller force, skeleton scaling, gameplay randomness, new scene body, or changed recovery clock. Shared editable bail segment amplitudes remain authoritative. Contacts without a valid posed axis retain the existing response.",
+  "isolatedBefore": {
+    "passed": true,
+    "source": "before",
+    "rows": [
+      {
+        "name": "compression",
+        "firstVelocity": -9.26640926670543,
+        "minStrain": -0.39426400263896216,
+        "maxStrain": 0.16408834453798418,
+        "firstNear": 0.008333333333333333,
+        "firstFar": 0.11666666666666667,
+        "settle": 4.13881054674331e-09
+      },
+      {
+        "name": "tension",
+        "firstVelocity": -9.26640926670543,
+        "minStrain": -0.39426400263896216,
+        "maxStrain": 0.16408834453798418,
+        "firstNear": 0.008333333333333333,
+        "firstFar": 0.11666666666666667,
+        "settle": 4.13881054674331e-09
+      },
+      {
+        "name": "glancing",
+        "firstVelocity": -9.26640926670543,
+        "minStrain": -0.39426400263896216,
+        "maxStrain": 0.16408834453798418,
+        "firstNear": 0.008333333333333333,
+        "firstFar": 0.11666666666666667,
+        "settle": 4.13881054674331e-09
+      }
+    ],
+    "oracleCases": 0,
+    "oracleError": 0,
+    "subdivisionError": 0,
+    "instantaneousChange": 0,
+    "minLength": 0.8662035033521878,
+    "maxLength": 1.0416730341960159,
+    "retainedBytes": 9056
+  },
+  "isolatedAfter": {
+    "passed": true,
+    "source": "after",
+    "rows": [
+      {
+        "name": "compression",
+        "firstVelocity": -15.289575289871454,
+        "minStrain": -0.6505356043449874,
+        "maxStrain": 0.2707457684838013,
+        "firstNear": 0.008333333333333333,
+        "firstFar": 0.11666666666666667,
+        "settle": 4.345202128890991e-09
+      },
+      {
+        "name": "tension",
+        "firstVelocity": 10.656370656074493,
+        "minStrain": -0.18870159620587285,
+        "maxStrain": 0.45340360300404403,
+        "firstNear": 0.008333333333333333,
+        "firstFar": 0.11666666666666667,
+        "settle": 6.414607404692754e-09
+      },
+      {
+        "name": "glancing",
+        "firstVelocity": -2.316602316898479,
+        "minStrain": -0.09856600067047154,
+        "maxStrain": 0.041022086138964214,
+        "firstNear": 0.008333333333333333,
+        "firstFar": 0.11666666666666667,
+        "settle": 3.186664544617629e-09
+      }
+    ],
+    "oracleCases": 96,
+    "oracleError": 3.3306690738754696e-16,
+    "subdivisionError": 0,
+    "instantaneousChange": 0,
+    "minLength": 0.9397557966775386,
+    "maxLength": 1.0773009555601494,
+    "retainedBytes": 9056
+  },
+  "interpretation": {
+    "bracedLowerLegStrainGainPercent": 64.99999999764113,
+    "bracedLengthContributionBefore": -0.05361990435889886,
+    "bracedLengthContributionAfter": -0.08847284219091828,
+    "pullLengthContributionAfter": 0.06166289000854999,
+    "note": "Length contributions isolate the strain term at weight 1 using the current lower-leg amplitude; actual final length also contains inertial lag and authored deformation. The old compression/pull/glance traces were identical."
+  },
+  "production": {
+    "incidents": 30,
+    "frames": 3450,
+    "realHandTriangles": 25152,
+    "cases": [
+      {
+        "cause": "balance",
+        "frames": 642,
+        "poseChanged": false,
+        "gameplayHashIdentical": true,
+        "durationSeconds": 1.7833333333333334,
+        "deformationPasses": 642,
+        "matrixPasses": 642,
+        "newDeformationRecords": 0,
+        "warmGeometryUploads": 0
+      },
+      {
+        "cause": "wall",
+        "frames": 708,
+        "poseChanged": true,
+        "gameplayHashIdentical": true,
+        "durationSeconds": 1.9666666666666666,
+        "deformationPasses": 708,
+        "matrixPasses": 708,
+        "newDeformationRecords": 0,
+        "warmGeometryUploads": 0
+      },
+      {
+        "cause": "trip",
+        "frames": 750,
+        "poseChanged": true,
+        "gameplayHashIdentical": true,
+        "durationSeconds": 2.0833333333333335,
+        "deformationPasses": 750,
+        "matrixPasses": 750,
+        "newDeformationRecords": 0,
+        "warmGeometryUploads": 0
+      },
+      {
+        "cause": "landing",
+        "frames": 720,
+        "poseChanged": false,
+        "gameplayHashIdentical": true,
+        "durationSeconds": 2,
+        "deformationPasses": 720,
+        "matrixPasses": 720,
+        "newDeformationRecords": 0,
+        "warmGeometryUploads": 0
+      },
+      {
+        "cause": "pvp",
+        "frames": 630,
+        "poseChanged": true,
+        "gameplayHashIdentical": true,
+        "durationSeconds": 1.75,
+        "deformationPasses": 630,
+        "matrixPasses": 630,
+        "newDeformationRecords": 0,
+        "warmGeometryUploads": 0
+      }
+    ],
+    "queuedPulsesBefore": {
+      "all": {
+        "events": 42,
+        "eventsWithPulses": 24,
+        "compressivePulses": 216,
+        "tensilePulses": 0,
+        "range": [
+          -12.05,
+          0
+        ]
+      },
+      "later": {
+        "events": 24,
+        "eventsWithPulses": 6,
+        "compressivePulses": 54,
+        "tensilePulses": 0,
+        "range": [
+          -3.2944373514097585,
+          0
+        ]
+      }
+    },
+    "queuedPulsesAfter": {
+      "all": {
+        "events": 42,
+        "eventsWithPulses": 24,
+        "compressivePulses": 163,
+        "tensilePulses": 53,
+        "range": [
+          -19.650161074652605,
+          4.114774411888132
+        ]
+      },
+      "later": {
+        "events": 24,
+        "eventsWithPulses": 6,
+        "compressivePulses": 40,
+        "tensilePulses": 14,
+        "range": [
+          -3.9962475301213845,
+          1.3423794416339254
+        ]
+      }
+    },
+    "note": "Tiny contacts or contacts after spring ownership ends can queue zero pulses. The comparison includes complete bails and finite post-control rise; gameplay hashes and durations stay identical. Pose changes appear in wall/trip/PvP cases with actual impacts; no-contact balance/landing fixtures remain unchanged."
+  },
+  "resourceEvidence": {
+    "retainedTypedArrayBytesBefore": 9056,
+    "retainedTypedArrayBytesAfter": 9056,
+    "newPerFrameBuffers": 0,
+    "newWorldQueries": 0,
+    "deformationPassesPerFrame": 1,
+    "workAdded": "At an impact only, nine posed segment projections; no hierarchy update or vertex scan. No CPU speedup claim in this fidelity pass; profile in the next performance turn."
+  },
+  "validation": {
+    "focusedChecks": [
+      {
+        "test": "test-bail-impact-strain",
+        "exitCode": 0
+      },
+      {
+        "test": "test-bail-contact-pose",
+        "exitCode": 0,
+        "seconds": 6.18
+      },
+      {
+        "test": "test-bail-contact-waves",
+        "exitCode": 0,
+        "seconds": 5.78
+      },
+      {
+        "test": "test-bail-overlap-waves",
+        "exitCode": 0,
+        "seconds": 5.59
+      },
+      {
+        "test": "test-bail-recovery-continuity",
+        "exitCode": 0,
+        "seconds": 10.85
+      },
+      {
+        "test": "test-bail-matrix-pass",
+        "exitCode": 0,
+        "seconds": 10.46
+      },
+      {
+        "test": "test-bail-motion",
+        "exitCode": 0,
+        "seconds": 5.89
+      },
+      {
+        "test": "test-bail-soft-landing",
+        "exitCode": 0,
+        "seconds": 9.29
+      },
+      {
+        "test": "test-bail-impacts",
+        "exitCode": 0,
+        "seconds": 7.25
+      },
+      {
+        "test": "test-bail-directional-falls",
+        "exitCode": 0,
+        "seconds": 16.93
+      },
+      {
+        "test": "test-bail-support-continuity",
+        "exitCode": 0,
+        "seconds": 14.17
+      },
+      {
+        "test": "test-character-elasticity",
+        "exitCode": 0,
+        "seconds": 5.53
+      },
+      {
+        "test": "test-board-dynamics",
+        "exitCode": 0,
+        "seconds": 1.18
+      }
+    ],
+    "headContinuityCases": 42,
+    "independentMatrixOracle": {
+      "cases": 14,
+      "frames": 1578,
+      "maxPoseError": 0
+    },
+    "overlapAndStress": "Existing wave/contact tests pass at 15, 60, 120, 144 and 240 Hz. New opposing-impulse test has zero instantaneous strain jump and zero 60/120 Hz strain difference; buffers reused; finite settle. Ninety-six independent posed-axis comparisons include rotation, translation and mirrored/nonuniform scale; proximal vs distal impact direction tested.",
+    "build": {
+      "passed": true,
+      "offlineVersion": "4993402222099646b200",
+      "command": "Package-equivalent installed Node: tsc --noEmit then vite build; npm unavailable"
+    },
+    "fullSuiteRun": false
+  },
+  "browser": {
+    "lite": {
+      "ready": true,
+      "bailCasesPassed": 17,
+      "consoleWarningsErrors": []
+    },
+    "full": {
+      "ready": true,
+      "bailCasesPassed": 17,
+      "boardCasesPassed": 5,
+      "consoleWarningsErrors": []
+    },
+    "bailReviewSeconds": 3.367,
+    "boardReviewSeconds": 12,
+    "boardSettleSeconds": [
+      3.516666666666659,
+      6.049999999999984,
+      0.9333333333333346,
+      1.100000000000001,
+      2.199999999999997
+    ],
+    "visualReview": "Pit-edge strike, first bounce, next floor impact and follow-through. The saved third-impact state has one wall and two floor impacts at 0.367 seconds; inspect recoil six frames later. Also leave an already-bailing edge collision preview.",
+    "startupNote": "Both render modes loaded successfully using the unchanged original loader; prior intermittent startup issue is not declared fixed."
+  },
+  "elapsedMinutes": 11,
+  "evidenceDirectory": "/private/tmp/bail-load-fidelity-20261022",
+  "delivery": "Local task branch only; shared HEAD/index preserved. The alternating goal remains active, with CPU/stability next."
+}

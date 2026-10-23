@@ -1,0 +1,187 @@
+{
+  "date": "2026-10-22",
+  "parent": "b85d88b797e39b966732b38fd7264645d4b57c2a",
+  "change": "Refresh one bone matrix per eligible bone for each sampled skin query, reusing the exact-bounds palette. Read native live morph vertices and preserve the native skin accumulation order, homogeneous divides and bind/world transforms.",
+  "profileEvidence": {
+    "sampledPlaneDistanceInclusiveMs": 836.0,
+    "sampleMeshInclusiveMs": 820.8,
+    "applyBoneTransformInclusiveMs": 559.3,
+    "note": "Initial sampled Node CPU profile includes startup and harness work; used to locate the hot path, not to claim a speedup."
+  },
+  "comparison": [
+    {
+      "cause": "balance",
+      "frames": 1284,
+      "poseChecksum": "6b2f40f97aa69eeb614a4d5a71ed1ffe867e5432f8484dda38830419ea6dc696",
+      "gameplayChecksum": "8b5cb58289306af1e1c8b73e32caf257275f34e782ada71b925c50c81da59b75",
+      "supportSamples": 721623,
+      "queries": 1272,
+      "oldBoneMatrixProducts": 1358593,
+      "newBoneMatrixProducts": 2275
+    },
+    {
+      "cause": "wall",
+      "frames": 1416,
+      "poseChecksum": "f270c972aab2c3cfa6c5637ce9ad528d51e4d16a430bf0a2f54386775a7fb533",
+      "gameplayChecksum": "01c978c976643054d36c9b5f596936c1e6957a68ec328c1e7132aa2ebc370e00",
+      "supportSamples": 708209,
+      "queries": 1404,
+      "oldBoneMatrixProducts": 1270441,
+      "newBoneMatrixProducts": 2134
+    },
+    {
+      "cause": "trip",
+      "frames": 1500,
+      "poseChecksum": "57b5d6c108798f61abb2ae42d4d8e53c0e7d1c3811f2a38786780deb1dd96241",
+      "gameplayChecksum": "65b270ae3dd26bd155e0026ff7c4641e4d3f0cf37aae1fe7a46e99df989b5d7f",
+      "supportSamples": 1434549,
+      "queries": 1488,
+      "oldBoneMatrixProducts": 3114653,
+      "newBoneMatrixProducts": 5162
+    },
+    {
+      "cause": "landing",
+      "frames": 1440,
+      "poseChecksum": "2d62054eeccddd0ce8733312bdf095e731445ef25bf9e8898d84dee655e02447",
+      "gameplayChecksum": "f65707e7f110728a5d1447ff5d384714443388406fd939b39011279762632521",
+      "supportSamples": 470865,
+      "queries": 1428,
+      "oldBoneMatrixProducts": 665666,
+      "newBoneMatrixProducts": 1102
+    },
+    {
+      "cause": "pvp",
+      "frames": 1260,
+      "poseChecksum": "0dd8666ba25d899af6ac81d00524071d6ab108bf3e7d205fdcbdecafaa8307a9",
+      "gameplayChecksum": "7ba72f5aeb27dd6116ecd774eaeb1d71688c40f2782bb0e035ef3e0e07787f8b",
+      "supportSamples": 931834,
+      "queries": 1248,
+      "oldBoneMatrixProducts": 1917376,
+      "newBoneMatrixProducts": 3182
+    }
+  ],
+  "totalFrames": 6900,
+  "boneMatrixProducts": {
+    "before": 8326729,
+    "after": 13855,
+    "reductionPercent": 99.83360813111607
+  },
+  "exactNativeOracle": {
+    "passed": true,
+    "cases": 315,
+    "exactDistanceContactAndBounds": true,
+    "warmPaletteReused": true,
+    "fastProducts": 4311,
+    "nativeProducts": 84030,
+    "savedProducts": 79719
+  },
+  "timingOrder": [
+    "before-a",
+    "after-a",
+    "after-b",
+    "before-b",
+    "after-c",
+    "before-c"
+  ],
+  "quietTiming": {
+    "before-a": {
+      "wholeMs": 0.5873161761594216,
+      "bailMs": 0.486709118840583,
+      "riseMs": 0.7382267621376796
+    },
+    "after-a": {
+      "wholeMs": 0.6173403012318885,
+      "bailMs": 0.47635645954106604,
+      "riseMs": 0.8288160637681223
+    },
+    "after-b": {
+      "wholeMs": 0.5653253016666657,
+      "bailMs": 0.4456170307971059,
+      "riseMs": 0.7448877079710056
+    },
+    "before-b": {
+      "wholeMs": 0.5900365892753614,
+      "bailMs": 0.4899766326086969,
+      "riseMs": 0.7401265242753582
+    },
+    "after-c": {
+      "wholeMs": 0.5606684299999997,
+      "bailMs": 0.4408625055555511,
+      "riseMs": 0.7403773166666726
+    },
+    "before-c": {
+      "wholeMs": 0.6109384918840558,
+      "bailMs": 0.5036604856280225,
+      "riseMs": 0.771855501268106
+    }
+  },
+  "pooledMeans": {
+    "wholeMs": {
+      "before": 0.5960970857729463,
+      "after": 0.581111344299518,
+      "reductionPercent": 2.5139766375466444
+    },
+    "bailMs": {
+      "before": 0.49344874569243413,
+      "after": 0.45427866529790767,
+      "reductionPercent": 7.938024108169706
+    },
+    "riseMs": {
+      "before": 0.7500695958937146,
+      "after": 0.7713603628019334,
+      "reductionPercent": -2.8385055233242307
+    }
+  },
+  "timingLimits": "All three pairs improve bail-phase mean CPU. Whole-incident timing improves in two pairs and regresses in one; rise timing is noisy. Pooled means are descriptive, exclude render/GPU/browser work, and do not prove an equivalent FPS gain. Instrumented work-count timing is deliberately not used for speed claims.",
+  "resourceCost": "One scratch Vector3 per bounds object. The player reuses its already-warm skeleton palettes; no new warm arrays, matrices, geometry bundles, morph/deformation records or native workspace. Standalone contact-only callers can allocate one matrix per eligible bone once. Very wide skeletons use native sparse getters instead. Palette values are weak-keyed and contain no skeleton/mesh owners.",
+  "safety": "Preserve per-mesh custom vertex/bone hooks, projective binds/bone inverses, normalized/interleaved attributes, nonfinite inputs and unused missing bones. Trim palettes after skeleton shrink so invalid used indices cannot read stale transforms.",
+  "validation": {
+    "checks": [
+      {
+        "check": "test-sparse-skin-support",
+        "exit": 0
+      },
+      {
+        "check": "test-bail-support-continuity",
+        "exit": 0
+      },
+      {
+        "check": "test-bail-support-pruning",
+        "exit": 0
+      },
+      {
+        "check": "test-skinned-interaction-bounds",
+        "exit": 0
+      },
+      {
+        "check": "test-bail-matrix-pass",
+        "exit": 0
+      },
+      {
+        "check": "test-bail-recovery-continuity",
+        "exit": 0
+      },
+      {
+        "check": "test-bail-recovery-rollthrough",
+        "exit": 0
+      },
+      {
+        "check": "test-bail-impacts",
+        "exit": 0
+      },
+      {
+        "check": "test-board-dynamics",
+        "exit": 0
+      }
+    ],
+    "build": "43cfc14a8f7b60cf3af4",
+    "browser": {
+      "liteBails": 17,
+      "fullBails": 17,
+      "fullBoards": 5,
+      "consoleWarningsErrors": 0
+    },
+    "unchanged": "Pose/gameplay hashes, duration, support samples, exact skin work, native uploads/workspace, deformation work and hierarchy passes across 60 full incidents."
+  },
+  "elapsedMinutes": 15.9
+}

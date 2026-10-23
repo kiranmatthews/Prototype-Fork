@@ -1,0 +1,203 @@
+{
+  "date": "2026-10-22",
+  "parent": "7fee81b7746126e67cf867d50636010f909716a3",
+  "change": "Compact bit-identical exact skin bounds samples once per derived geometry rebuild; renderer attributes unchanged. Bounded hash probes preserve unread tail on saturation.",
+  "scope": "Production fixed-step CPU in Node with animation runtime and actual artist-hand meshes, warm exact skin kernel and other procedural fallback assets. Includes the complete bail and finite post-control rise rebound; excludes render/GPU/browser costs. Timings are descriptive, work counts are deterministic.",
+  "realHandTriangles": 25152,
+  "comparisons": [
+    {
+      "cause": "balance",
+      "frames": 1284,
+      "poseChecksum": "e1761fe1ab07e6f63540f4be28d3e3c4fd76f6c1dc4f22a99309c30afdba8769",
+      "gameplayChecksum": "8b5cb58289306af1e1c8b73e32caf257275f34e782ada71b925c50c81da59b75",
+      "exactSkinVerticesBefore": 15543840,
+      "exactSkinVerticesAfter": 13233132
+    },
+    {
+      "cause": "wall",
+      "frames": 1416,
+      "poseChecksum": "6cb0170b457953423e8060ddcf4857ba404a91fc37c1bab94c0356a7bfe93bd9",
+      "gameplayChecksum": "01c978c976643054d36c9b5f596936c1e6957a68ec328c1e7132aa2ebc370e00",
+      "exactSkinVerticesBefore": 15543840,
+      "exactSkinVerticesAfter": 13233132
+    },
+    {
+      "cause": "trip",
+      "frames": 1500,
+      "poseChecksum": "7a4ea2445179cd9c41e313cb2831308c91435aa36fd84a0edc01494e6f08e4dd",
+      "gameplayChecksum": "65b270ae3dd26bd155e0026ff7c4641e4d3f0cf37aae1fe7a46e99df989b5d7f",
+      "exactSkinVerticesBefore": 15543840,
+      "exactSkinVerticesAfter": 13233132
+    },
+    {
+      "cause": "landing",
+      "frames": 1440,
+      "poseChecksum": "ec6cc7542a6523b92a3a7c4ce22c74a4fe330034c5e344ee4c9f809a6093dc8c",
+      "gameplayChecksum": "f65707e7f110728a5d1447ff5d384714443388406fd939b39011279762632521",
+      "exactSkinVerticesBefore": 15543840,
+      "exactSkinVerticesAfter": 13233132
+    },
+    {
+      "cause": "pvp",
+      "frames": 1260,
+      "poseChecksum": "ea440a3e131e4ed5080ae427d9c0dd24ca26a0a6891ac2d852950b54896672af",
+      "gameplayChecksum": "7ba72f5aeb27dd6116ecd774eaeb1d71688c40f2782bb0e035ef3e0e07787f8b",
+      "exactSkinVerticesBefore": 15543840,
+      "exactSkinVerticesAfter": 13233132
+    }
+  ],
+  "totalFrames": 6900,
+  "samplesBefore": 77719200,
+  "samplesAfter": 66165660,
+  "nativeWorkspaceBytes": {
+    "before": 3014656,
+    "after": 2424832
+  },
+  "retainedInputBytesSaved": 559752,
+  "timingPairs": {
+    "before-a": {
+      "wholeMs": 0.7117951255797003,
+      "riseMs": 0.9395938106884003
+    },
+    "after-a": {
+      "wholeMs": 0.6707185763043592,
+      "riseMs": 0.8465582701086976
+    },
+    "after-b": {
+      "wholeMs": 0.6102546731159403,
+      "riseMs": 0.7649417016304232
+    },
+    "before-b": {
+      "wholeMs": 0.6453704448550676,
+      "riseMs": 0.8311326277173656
+    }
+  },
+  "pooledMeans": {
+    "wholeMs": {
+      "before": 0.6785827852173839,
+      "after": 0.6404866247101497,
+      "reductionPercent": 5.614077064308387
+    },
+    "riseMs": {
+      "before": 0.885363219202883,
+      "after": 0.8057499858695604,
+      "reductionPercent": 8.992155039487704
+    }
+  },
+  "coldPreparation": {
+    "before": [
+      {
+        "name": "artist-hand-surface-right_1",
+        "sourceVertices": 5778,
+        "retainedVertices": 5778,
+        "retainedBytes": 416016,
+        "coldMeasurementMs": {
+          "samples": 20,
+          "mean": 1.4096894999999676,
+          "median": 1.2522079999998823,
+          "p95": 4.266125000000102
+        }
+      },
+      {
+        "name": "artist-hand-surface-left_1",
+        "sourceVertices": 5778,
+        "retainedVertices": 5778,
+        "retainedBytes": 416016,
+        "coldMeasurementMs": {
+          "samples": 20,
+          "mean": 1.208595650000052,
+          "median": 1.1864580000001297,
+          "p95": 1.451082999999926
+        }
+      },
+      {
+        "name": "meshy-shorts-surface",
+        "sourceVertices": 8218,
+        "retainedVertices": 8218,
+        "retainedBytes": 1183392,
+        "coldMeasurementMs": {
+          "samples": 20,
+          "mean": 4.550018849999924,
+          "median": 3.3390840000001845,
+          "p95": 17.09820899999977
+        }
+      },
+      {
+        "name": "meshy-torso-surface",
+        "sourceVertices": 6758,
+        "retainedVertices": 6758,
+        "retainedBytes": 810960,
+        "coldMeasurementMs": {
+          "samples": 20,
+          "mean": 2.838741700000173,
+          "median": 2.8245420000002923,
+          "p95": 3.0621659999997064
+        }
+      }
+    ],
+    "after": [
+      {
+        "name": "artist-hand-surface-right_1",
+        "sourceVertices": 5778,
+        "retainedVertices": 5778,
+        "retainedBytes": 416016,
+        "coldMeasurementMs": {
+          "samples": 20,
+          "mean": 1.6498083999999835,
+          "median": 1.6002920000000813,
+          "p95": 1.9813749999993888
+        }
+      },
+      {
+        "name": "artist-hand-surface-left_1",
+        "sourceVertices": 5778,
+        "retainedVertices": 5778,
+        "retainedBytes": 416016,
+        "coldMeasurementMs": {
+          "samples": 20,
+          "mean": 1.6380082999999104,
+          "median": 1.578708000000006,
+          "p95": 2.6892500000003565
+        }
+      },
+      {
+        "name": "meshy-shorts-surface",
+        "sourceVertices": 8218,
+        "retainedVertices": 5380,
+        "retainedBytes": 774720,
+        "coldMeasurementMs": {
+          "samples": 20,
+          "mean": 6.495279200000004,
+          "median": 4.92083300000013,
+          "p95": 16.43866700000035
+        }
+      },
+      {
+        "name": "meshy-torso-surface",
+        "sourceVertices": 6758,
+        "retainedVertices": 5499,
+        "retainedBytes": 659880,
+        "coldMeasurementMs": {
+          "samples": 20,
+          "mean": 5.146985500000028,
+          "median": 4.169416000000638,
+          "p95": 17.937208000000282
+        }
+      }
+    ],
+    "sumMedianCostIncreaseMs": 3.666957000000366
+  },
+  "limits": "Retained exact bounds inputs and native workspace only; not process heap or peak memory. Cold cache preparation is slower. Node timings exclude render/GPU/browser. Existing intermittent startup stall not changed.",
+  "validation": {
+    "focusedChecks": 10,
+    "compactOracle": "7172 unique tuples; 54 Three.js pose/source-edit comparisons, max error 1.99e-15; adversarial collisions bounded",
+    "build": "509acb63d0fb475cb06f",
+    "browser": {
+      "liteBails": 17,
+      "fullBails": 17,
+      "fullBoards": 5,
+      "consoleWarningsErrors": 0
+    }
+  },
+  "elapsedMinutes": 18.6
+}

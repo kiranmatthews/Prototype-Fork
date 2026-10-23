@@ -1,0 +1,631 @@
+{
+  "date": "2026-10-22",
+  "pass": "Performance and stability after anatomical bail joint stops",
+  "baselineTaskCommit": "baac55ab05f549b06f593a17265ec31d23a38469",
+  "changes": [
+    "Resolve overlay authoring snapshots lazily on first access, retained for that callback.",
+    "Length modifiers resolve live joint nodes and policies without allocating unused parent/mirror/rest snapshots. No cross-frame rig cache; live edits stay visible.",
+    "Integrate each spring coordinate in scalar locals and publish its final angle/velocity before dependent children. Arithmetic and substep order are unchanged."
+  ],
+  "scope": "Production fixed-step CPU in Node with the animation runtime and procedural fallback assets. Includes first active frame; excludes render/GPU/browser costs. Timings are descriptive, scan counts are deterministic.",
+  "comparison": {
+    "measuredIncidents": 120,
+    "frames": 8160,
+    "cases": [
+      {
+        "cause": "balance",
+        "frames": 1056,
+        "poseAndMorphChecksum": "c460e5a9f1b75a2ce37e8d7b9cdeb360d8003d0f6314ec7c7dd5a75d56dba587",
+        "gameplayChecksum": "b51b8f1c626815da67e7d14a481a0c496acf127731c67c72c19db5918bfbf8ba",
+        "durationSeconds": {
+          "samples": 24,
+          "mean": 0.7333333333333331,
+          "median": 0.7333333333333333,
+          "p95": 0.7333333333333333
+        },
+        "exactMatch": true
+      },
+      {
+        "cause": "wall",
+        "frames": 1824,
+        "poseAndMorphChecksum": "2b60a5de9392d8dd1ccae00f2dbc5d12f03e30fcb6ef4f2cbb8845f934896a5a",
+        "gameplayChecksum": "40a25e75bfd1a576aa9a3d76d39e4a8f144ce954769f01800218e2721ba66d1f",
+        "durationSeconds": {
+          "samples": 24,
+          "mean": 1.266666666666666,
+          "median": 1.2666666666666666,
+          "p95": 1.2666666666666666
+        },
+        "exactMatch": true
+      },
+      {
+        "cause": "trip",
+        "frames": 2112,
+        "poseAndMorphChecksum": "ac305f675dea285bf811322d9f8d5275dd05b3af09a1ad5afbb88e215d2add63",
+        "gameplayChecksum": "6ce599704bd3f33f977d7db5bf0e448b0c3625f46bcd33e0fa879c26ca4c3207",
+        "durationSeconds": {
+          "samples": 24,
+          "mean": 1.4666666666666661,
+          "median": 1.4666666666666666,
+          "p95": 1.4666666666666666
+        },
+        "exactMatch": true
+      },
+      {
+        "cause": "landing",
+        "frames": 1464,
+        "poseAndMorphChecksum": "8982231ef1e05ace41e70aa2967983b20599059021daab48d2da271e6a019a4d",
+        "gameplayChecksum": "3560e96f96bdf2aa9d46365dd5500dd2b8ed8131a0eba5586732f6a06c844be8",
+        "durationSeconds": {
+          "samples": 24,
+          "mean": 1.016666666666666,
+          "median": 1.0166666666666666,
+          "p95": 1.0166666666666666
+        },
+        "exactMatch": true
+      },
+      {
+        "cause": "pvp",
+        "frames": 1704,
+        "poseAndMorphChecksum": "48fde757a01babbeea8efa95d9e5d0d4167f0ff48e1f35785613a172ed2325a5",
+        "gameplayChecksum": "1b2f0441720760e1b936c6314ee87724dfa5f6353614b2b0ce935dca7944685f",
+        "durationSeconds": {
+          "samples": 24,
+          "mean": 1.1833333333333333,
+          "median": 1.1833333333333333,
+          "p95": 1.1833333333333333
+        },
+        "exactMatch": true
+      }
+    ]
+  },
+  "wholePlayerCpu": {
+    "order": [
+      "before-1",
+      "after-1",
+      "after-2",
+      "before-2"
+    ],
+    "pairedRuns": [
+      [
+        {
+          "cause": "balance",
+          "beforeMedianMs": 0.4780829999999696,
+          "afterMedianMs": 0.4194579999993948,
+          "cpuReductionPercent": 12.262515086413561
+        },
+        {
+          "cause": "wall",
+          "beforeMedianMs": 0.4809580000001006,
+          "afterMedianMs": 0.4204589999999371,
+          "cpuReductionPercent": 12.578853039174076
+        },
+        {
+          "cause": "trip",
+          "beforeMedianMs": 0.45129199999973935,
+          "afterMedianMs": 0.3864590000002863,
+          "cpuReductionPercent": 14.366086702066616
+        },
+        {
+          "cause": "landing",
+          "beforeMedianMs": 0.44529099999999744,
+          "afterMedianMs": 0.38745899999958056,
+          "cpuReductionPercent": 12.987462131598715
+        },
+        {
+          "cause": "pvp",
+          "beforeMedianMs": 0.44812500000080036,
+          "afterMedianMs": 0.3850000000002183,
+          "cpuReductionPercent": 14.086471408751876
+        }
+      ],
+      [
+        {
+          "cause": "balance",
+          "beforeMedianMs": 0.49275000000034197,
+          "afterMedianMs": 0.4164169999994556,
+          "cpuReductionPercent": 15.491222729748033
+        },
+        {
+          "cause": "wall",
+          "beforeMedianMs": 0.48858299999938026,
+          "afterMedianMs": 0.4209160000000338,
+          "cpuReductionPercent": 13.84964274226329
+        },
+        {
+          "cause": "trip",
+          "beforeMedianMs": 0.456040999999459,
+          "afterMedianMs": 0.3953750000000582,
+          "cpuReductionPercent": 13.302751287597559
+        },
+        {
+          "cause": "landing",
+          "beforeMedianMs": 0.4532500000004802,
+          "afterMedianMs": 0.3877919999995356,
+          "cpuReductionPercent": 14.441919470684006
+        },
+        {
+          "cause": "pvp",
+          "beforeMedianMs": 0.45750000000043656,
+          "afterMedianMs": 0.39245800000026065,
+          "cpuReductionPercent": 14.216830601117781
+        }
+      ]
+    ],
+    "meanOfPairedMedians": [
+      {
+        "cause": "balance",
+        "meanOfBeforeMediansMs": 0.4854165000001558,
+        "meanOfAfterMediansMs": 0.4179374999994252,
+        "cpuReductionPercent": 13.901257991994287
+      },
+      {
+        "cause": "wall",
+        "meanOfBeforeMediansMs": 0.4847704999997404,
+        "meanOfAfterMediansMs": 0.42068749999998545,
+        "cpuReductionPercent": 13.219244982891754
+      },
+      {
+        "cause": "trip",
+        "meanOfBeforeMediansMs": 0.4536664999995992,
+        "meanOfAfterMediansMs": 0.39091700000017227,
+        "cpuReductionPercent": 13.83163623487349
+      },
+      {
+        "cause": "landing",
+        "meanOfBeforeMediansMs": 0.4492705000002388,
+        "meanOfAfterMediansMs": 0.3876254999995581,
+        "cpuReductionPercent": 13.721132369173572
+      },
+      {
+        "cause": "pvp",
+        "meanOfBeforeMediansMs": 0.45281250000061846,
+        "meanOfAfterMediansMs": 0.38872900000023947,
+        "cpuReductionPercent": 14.15232574195533
+      }
+    ]
+  },
+  "springCpu": {
+    "pairedRuns": [
+      {
+        "before": {
+          "scope": "Production BailMotion.step plus orientation and periodic impact; CPU only, 9 x 3000 warm samples. No render, GPU or player collision.",
+          "medianStepMs": 0.001420597333333319,
+          "samples": [
+            0.001375722000000015,
+            0.001384763666666667,
+            0.001403000000000001,
+            0.0014164030000000025,
+            0.001420597333333319,
+            0.0014448053333333444,
+            0.0014463609999999865,
+            0.001460111333333335,
+            0.0014634443333333327
+          ]
+        },
+        "after": {
+          "scope": "Production BailMotion.step plus orientation and periodic impact; CPU only, 9 x 3000 warm samples. No render, GPU or player collision.",
+          "medianStepMs": 0.001262694333333324,
+          "samples": [
+            0.001209166666666666,
+            0.0012405973333333312,
+            0.0012484026666666637,
+            0.0012506806666666534,
+            0.001262694333333324,
+            0.0012640139999999936,
+            0.0012688470000000128,
+            0.00129443066666668,
+            0.0013202779999999924
+          ]
+        },
+        "cpuReductionPercent": 11.115253865040575
+      },
+      {
+        "before": {
+          "scope": "Production BailMotion.step plus orientation and periodic impact; CPU only, 9 x 3000 warm samples. No render, GPU or player collision.",
+          "medianStepMs": 0.001492513666666677,
+          "samples": [
+            0.0014239443333333383,
+            0.0014501666666666513,
+            0.0014914999999999926,
+            0.0014921390000000089,
+            0.001492513666666677,
+            0.0014965833333333383,
+            0.0015035416666666491,
+            0.0015082500000000133,
+            0.001513763666666667
+          ]
+        },
+        "after": {
+          "scope": "Production BailMotion.step plus orientation and periodic impact; CPU only, 9 x 3000 warm samples. No render, GPU or player collision.",
+          "medianStepMs": 0.0013069859999999948,
+          "samples": [
+            0.0012669443333333372,
+            0.001273041666666662,
+            0.0013042363333333356,
+            0.001306277666666669,
+            0.0013069859999999948,
+            0.001313000000000007,
+            0.0013365833333333322,
+            0.0014139443333333285,
+            0.0014314860000000068
+          ]
+        },
+        "cpuReductionPercent": 12.430550608024415
+      }
+    ],
+    "additionalPersistentStateBytes": 0
+  },
+  "rigSnapshotAllocations": {
+    "before": {
+      "perCause": [
+        {
+          "cause": "balance",
+          "snapshots": 2568,
+          "jointRecords": 133536,
+          "restTuples": 400608
+        },
+        {
+          "cause": "wall",
+          "snapshots": 4872,
+          "jointRecords": 253344,
+          "restTuples": 760032
+        },
+        {
+          "cause": "trip",
+          "snapshots": 5736,
+          "jointRecords": 298272,
+          "restTuples": 894816
+        },
+        {
+          "cause": "landing",
+          "snapshots": 3792,
+          "jointRecords": 197184,
+          "restTuples": 591552
+        },
+        {
+          "cause": "pvp",
+          "snapshots": 4512,
+          "jointRecords": 234624,
+          "restTuples": 703872
+        }
+      ],
+      "total": {
+        "snapshots": 21480,
+        "jointRecords": 1116960,
+        "restTuples": 3350880
+      }
+    },
+    "after": {
+      "perCause": [
+        {
+          "cause": "balance",
+          "snapshots": 0,
+          "jointRecords": 0,
+          "restTuples": 0
+        },
+        {
+          "cause": "wall",
+          "snapshots": 0,
+          "jointRecords": 0,
+          "restTuples": 0
+        },
+        {
+          "cause": "trip",
+          "snapshots": 0,
+          "jointRecords": 0,
+          "restTuples": 0
+        },
+        {
+          "cause": "landing",
+          "snapshots": 0,
+          "jointRecords": 0,
+          "restTuples": 0
+        },
+        {
+          "cause": "pvp",
+          "snapshots": 0,
+          "jointRecords": 0,
+          "restTuples": 0
+        }
+      ],
+      "total": {
+        "snapshots": 0,
+        "jointRecords": 0,
+        "restTuples": 0
+      }
+    }
+  },
+  "resourceNotes": [
+    "Counts cover only complete authoring snapshots and their explicit joint/rest-tuple records. They do not claim zero total per-frame allocations.",
+    "Live joint lookup maps, policy parsing and deformation state records still do their existing work. The lazy context uses a getter closure per overlay invocation.",
+    "No new persistent caches, arrays, physics bodies or world queries."
+  ],
+  "checks": [
+    {
+      "test": "test-animation-rig-resolution",
+      "exitCode": 0,
+      "seconds": 0.036733150482177734,
+      "rerun": "test-animation-rig-resolution-final.log",
+      "note": "Fixed a duplicate fixture variable in the new test."
+    },
+    {
+      "test": "test-stretchable-bone",
+      "exitCode": 1,
+      "seconds": 0.895158052444458,
+      "classification": "pre-existing source-text guard failure",
+      "evidence": "stretchable-baseline-result.json"
+    },
+    {
+      "test": "test-meshy-torso",
+      "exitCode": 0,
+      "seconds": 0.9137060642242432
+    },
+    {
+      "test": "test-character-elasticity",
+      "exitCode": 0,
+      "seconds": 9.104355812072754
+    },
+    {
+      "test": "test-character-animation-runtime",
+      "exitCode": 0,
+      "seconds": 1.0196988582611084
+    },
+    {
+      "test": "test-bail-joint-stops",
+      "exitCode": 0,
+      "seconds": 0.8030219078063965
+    },
+    {
+      "test": "test-bail-contact-waves",
+      "exitCode": 0,
+      "seconds": 8.419227838516235
+    },
+    {
+      "test": "test-bail-motion",
+      "exitCode": 0,
+      "seconds": 9.631954908370972
+    },
+    {
+      "test": "test-bail-support-continuity",
+      "exitCode": 0,
+      "seconds": 19.964467763900757
+    },
+    {
+      "test": "test-bail-recovery-motion",
+      "exitCode": 0,
+      "seconds": 11.148077964782715
+    },
+    {
+      "test": "test-trip-clearance",
+      "exitCode": 0,
+      "seconds": 15.195034980773926
+    },
+    {
+      "test": "test-bail-impacts",
+      "exitCode": 0,
+      "seconds": 8.487390041351318
+    },
+    {
+      "test": "test-ragdoll-recovery",
+      "exitCode": 0,
+      "seconds": 8.246768951416016
+    },
+    {
+      "test": "test-break-apart",
+      "exitCode": 0,
+      "seconds": 7.787184000015259
+    },
+    {
+      "test": "test-bail-inertia",
+      "exitCode": 0,
+      "repeatedRuns": 4
+    }
+  ],
+  "knownBaselineFailure": {
+    "baselineExitCode": 1,
+    "sameUnchangedSourceAssertion": true,
+    "assertionAt": "tools/test-stretchable-bone.mjs:749",
+    "unchangedPlayer": true,
+    "bridgeRuntimeAssertionsCompletedBeforeSourceGuard": true
+  },
+  "anatomicalStops": {
+    "passed": true,
+    "poses": 240,
+    "frames": 43200,
+    "maxHiddenAngle": 2.7755575615628914e-17,
+    "maxVelocity": 11.45331394485721,
+    "releaseSeconds": 0.016666666666666666,
+    "unpreparedReleaseSeconds": 0.13333333333333333,
+    "subdivisionError": 0,
+    "changingBaseAndBlend": true,
+    "resetAndEditedBase": true
+  },
+  "build": {
+    "typecheck": "pass",
+    "vite": "pass",
+    "seconds": 9.74,
+    "version": "958b039a3f333ea73924",
+    "existingWarning": "Some chunks exceed 500 kB after minification.",
+    "fullSuiteRun": false
+  },
+  "browser": {
+    "lite": {
+      "passed": true,
+      "cases": 14
+    },
+    "full": {
+      "passed": true,
+      "cases": 14
+    },
+    "boards": {
+      "passed": true,
+      "rows": [
+        {
+          "kind": "Board toss",
+          "thrown": 1,
+          "snapped": 0,
+          "folded": 0,
+          "active": 0,
+          "settledPieces": 1,
+          "batches": 3,
+          "lost": 0,
+          "poofed": 0,
+          "seconds": 12.000000000000176,
+          "settledAt": 3.516666666666659,
+          "sounds": [
+            {
+              "age": 0.5333333333333333,
+              "speed": 12.711157412281914,
+              "broken": false
+            }
+          ],
+          "position": [
+            55.23231070245848,
+            0.004921358200532244,
+            -30.77391670146814
+          ]
+        },
+        {
+          "kind": "Board roll",
+          "thrown": 1,
+          "snapped": 0,
+          "folded": 0,
+          "active": 0,
+          "settledPieces": 1,
+          "batches": 3,
+          "lost": 0,
+          "poofed": 0,
+          "seconds": 12.000000000000176,
+          "settledAt": 6.049999999999984,
+          "sounds": [],
+          "position": [
+            54.5,
+            0.004921351969242149,
+            -46.151342535628984
+          ]
+        },
+        {
+          "kind": "Board skid",
+          "thrown": 1,
+          "snapped": 0,
+          "folded": 0,
+          "active": 0,
+          "settledPieces": 1,
+          "batches": 3,
+          "lost": 0,
+          "poofed": 0,
+          "seconds": 12.000000000000176,
+          "settledAt": 0.9333333333333346,
+          "sounds": [],
+          "position": [
+            57.476111111111116,
+            0.004921351969242149,
+            -12
+          ]
+        },
+        {
+          "kind": "Board wall",
+          "thrown": 1,
+          "snapped": 0,
+          "folded": 0,
+          "active": 0,
+          "settledPieces": 1,
+          "batches": 3,
+          "lost": 0,
+          "poofed": 0,
+          "seconds": 12.000000000000176,
+          "settledAt": 1.100000000000001,
+          "sounds": [
+            {
+              "age": 0.19999999999999998,
+              "speed": 24,
+              "broken": false
+            }
+          ],
+          "position": [
+            54.214669123366086,
+            0.27700524695980655,
+            -44.39230190501321
+          ]
+        },
+        {
+          "kind": "Board pile",
+          "thrown": 12,
+          "snapped": 2,
+          "folded": 1,
+          "active": 0,
+          "settledPieces": 14,
+          "batches": 8,
+          "lost": 0,
+          "poofed": 0,
+          "seconds": 12.000000000000176,
+          "settledAt": 2.199999999999997,
+          "sounds": [
+            {
+              "age": 0.4666666666666666,
+              "speed": 16.37500226697357,
+              "broken": false
+            },
+            {
+              "age": 0.5333333333333333,
+              "speed": 12.711157412281914,
+              "broken": true
+            },
+            {
+              "age": 0.6000000000000002,
+              "speed": 4.957695009612789,
+              "broken": false
+            },
+            {
+              "age": 0.6666666666666671,
+              "speed": 6.269997106969263,
+              "broken": false
+            },
+            {
+              "age": 0.7833333333333341,
+              "speed": 3.0061319054033375,
+              "broken": false
+            },
+            {
+              "age": 0.850000000000001,
+              "speed": 7.872545812373369,
+              "broken": false
+            },
+            {
+              "age": 0.9833333333333347,
+              "speed": 8.522948729772986,
+              "broken": false
+            },
+            {
+              "age": 1.2000000000000006,
+              "speed": 3.6976045640630852,
+              "broken": false
+            },
+            {
+              "age": 1.4166666666666665,
+              "speed": 6.736302050544138,
+              "broken": false
+            }
+          ],
+          "position": [
+            52.77878743260538,
+            -0.18510428712305138,
+            -23.96734028548215
+          ]
+        }
+      ],
+      "failures": []
+    },
+    "manual": {
+      "scenario": "Mid trip",
+      "firstContactSeconds": 0.55,
+      "secondContactSeconds": 0.8666666666666677,
+      "reboundSeconds": 0.966666666666668,
+      "parts": 0,
+      "consoleErrors": []
+    },
+    "timingNote": "Browser review is functional/visual evidence; CPU improvement is measured separately in Node, not an FPS claim."
+  },
+  "delivery": "Task-only local follow-up on codex/fluid-intact-bails. No push, upload or deployment; preserve unrelated work and the main checkout/index. Broader alternating goal remains active."
+}

@@ -1,0 +1,621 @@
+{
+  "pass": "CPU and stability after linear rebound follow-through",
+  "change": "Reuse immutable bind-space skin geometry in the existing bounded WASM arena; copy every live pose and morph weight. Generic mutable callers remain eager. Derived geometry identity changes on every source, version or bind edit. Weak keys retain no source arrays or meshes; epoch eviction reclaims the arena at its unchanged 8 MiB cap.",
+  "sourceBaseline": "Saved working tree at f87b818 task branch plus pre-existing unrelated working changes, held fixed for all comparisons.",
+  "deterministic": {
+    "incidents": 60,
+    "frames": 6900,
+    "realHandTriangles": 25152,
+    "skinCalls": 16920,
+    "geometryUploadsBefore": 16920,
+    "geometryUploadsAfter": 0,
+    "copiedBytesBefore": 8203425120,
+    "copiedBytesAfter": 24297120,
+    "copyReductionPercent": 99.70381737329737,
+    "workspaceBytesBefore": 1245184,
+    "workspaceBytesAfter": 3014656,
+    "maxWorkspaceBytes": 8388608,
+    "memoryTradeoff": "The shared native workspace increases by 1,769,472 bytes for this rig. This reduces copying, not total resident memory. No total-heap or browser-memory claim.",
+    "cases": [
+      {
+        "cause": "balance",
+        "framesCompared": 1284,
+        "poseAndGameplayIdentical": true,
+        "durationSeconds": {
+          "samples": 12,
+          "mean": 1.7833333333333339,
+          "median": 1.7833333333333334,
+          "p95": 1.7833333333333334
+        },
+        "before": {
+          "calls": 3384,
+          "copiedBytes": 1640685024,
+          "geometryUploads": 3384,
+          "residentHits": 0,
+          "residentResets": 0,
+          "workspaceBytes": 1245184
+        },
+        "after": {
+          "calls": 3384,
+          "copiedBytes": 4859424,
+          "geometryUploads": 0,
+          "residentHits": 3384,
+          "residentResets": 0,
+          "workspaceBytes": 3014656
+        },
+        "deformationPasses": 1284,
+        "newDeformationRecords": 0,
+        "matrixPasses": 1284,
+        "supportSamples": 751074
+      },
+      {
+        "cause": "wall",
+        "framesCompared": 1416,
+        "poseAndGameplayIdentical": true,
+        "durationSeconds": {
+          "samples": 12,
+          "mean": 1.9666666666666661,
+          "median": 1.9666666666666666,
+          "p95": 1.9666666666666666
+        },
+        "before": {
+          "calls": 3384,
+          "copiedBytes": 1640685024,
+          "geometryUploads": 3384,
+          "residentHits": 0,
+          "residentResets": 0,
+          "workspaceBytes": 1245184
+        },
+        "after": {
+          "calls": 3384,
+          "copiedBytes": 4859424,
+          "geometryUploads": 0,
+          "residentHits": 3384,
+          "residentResets": 0,
+          "workspaceBytes": 3014656
+        },
+        "deformationPasses": 1416,
+        "newDeformationRecords": 0,
+        "matrixPasses": 1416,
+        "supportSamples": 707893
+      },
+      {
+        "cause": "trip",
+        "framesCompared": 1500,
+        "poseAndGameplayIdentical": true,
+        "durationSeconds": {
+          "samples": 12,
+          "mean": 2.083333333333333,
+          "median": 2.0833333333333335,
+          "p95": 2.0833333333333335
+        },
+        "before": {
+          "calls": 3384,
+          "copiedBytes": 1640685024,
+          "geometryUploads": 3384,
+          "residentHits": 0,
+          "residentResets": 0,
+          "workspaceBytes": 1245184
+        },
+        "after": {
+          "calls": 3384,
+          "copiedBytes": 4859424,
+          "geometryUploads": 0,
+          "residentHits": 3384,
+          "residentResets": 0,
+          "workspaceBytes": 3014656
+        },
+        "deformationPasses": 1500,
+        "newDeformationRecords": 0,
+        "matrixPasses": 1500,
+        "supportSamples": 1422690
+      },
+      {
+        "cause": "landing",
+        "framesCompared": 1440,
+        "poseAndGameplayIdentical": true,
+        "durationSeconds": {
+          "samples": 12,
+          "mean": 2,
+          "median": 2,
+          "p95": 2
+        },
+        "before": {
+          "calls": 3384,
+          "copiedBytes": 1640685024,
+          "geometryUploads": 3384,
+          "residentHits": 0,
+          "residentResets": 0,
+          "workspaceBytes": 1245184
+        },
+        "after": {
+          "calls": 3384,
+          "copiedBytes": 4859424,
+          "geometryUploads": 0,
+          "residentHits": 3384,
+          "residentResets": 0,
+          "workspaceBytes": 3014656
+        },
+        "deformationPasses": 1440,
+        "newDeformationRecords": 0,
+        "matrixPasses": 1440,
+        "supportSamples": 417842
+      },
+      {
+        "cause": "pvp",
+        "framesCompared": 1260,
+        "poseAndGameplayIdentical": true,
+        "durationSeconds": {
+          "samples": 12,
+          "mean": 1.75,
+          "median": 1.75,
+          "p95": 1.75
+        },
+        "before": {
+          "calls": 3384,
+          "copiedBytes": 1640685024,
+          "geometryUploads": 3384,
+          "residentHits": 0,
+          "residentResets": 0,
+          "workspaceBytes": 1245184
+        },
+        "after": {
+          "calls": 3384,
+          "copiedBytes": 4859424,
+          "geometryUploads": 0,
+          "residentHits": 3384,
+          "residentResets": 0,
+          "workspaceBytes": 3014656
+        },
+        "deformationPasses": 1260,
+        "newDeformationRecords": 0,
+        "matrixPasses": 1260,
+        "supportSamples": 1029209
+      }
+    ]
+  },
+  "timing": {
+    "scope": "Descriptive Node production fixed-step CPU, actual 25,152-triangle artist hands and warm exact skin kernel, complete bails and finite post-control rise. Quiet full-render review held frozen; excludes browser/render/GPU costs.",
+    "order": "before, after, after, before; 8 warmups and 24 measured incidents for each of 5 causes per run",
+    "summary": {
+      "wholeMeanStepMs": {
+        "before": 0.6905609543115895,
+        "after": 0.6584351448188333,
+        "reductionPercent": 4.652132341421189
+      },
+      "riseMeanStepMs": {
+        "before": 0.9393043071557873,
+        "after": 0.8649546586956465,
+        "reductionPercent": 7.915395244515755
+      }
+    },
+    "runs": [
+      {
+        "name": "timing-before-a",
+        "wholeMeanStepMs": 0.6910086174637644,
+        "riseMeanStepMs": 0.9463370079710093,
+        "cases": [
+          {
+            "cause": "balance",
+            "stepMs": {
+              "samples": 2568,
+              "mean": 0.7596829376946862,
+              "median": 0.8040000000000873,
+              "p95": 1.390292000000045
+            },
+            "riseStepMs": {
+              "samples": 1104,
+              "mean": 1.0181247943840348,
+              "median": 0.9158330000000205,
+              "p95": 1.5612500000006548
+            }
+          },
+          {
+            "cause": "wall",
+            "stepMs": {
+              "samples": 2832,
+              "mean": 0.6761757754237103,
+              "median": 0.6979579999988346,
+              "p95": 1.314749999999549
+            },
+            "riseStepMs": {
+              "samples": 1104,
+              "mean": 0.9670083822463487,
+              "median": 0.883958000000348,
+              "p95": 1.3975420000006125
+            }
+          },
+          {
+            "cause": "trip",
+            "stepMs": {
+              "samples": 3000,
+              "mean": 0.7243797343333311,
+              "median": 0.8041250000005675,
+              "p95": 1.347208999999566
+            },
+            "riseStepMs": {
+              "samples": 1104,
+              "mean": 0.9222160090579798,
+              "median": 0.8640419999992446,
+              "p95": 1.2657920000001468
+            }
+          },
+          {
+            "cause": "landing",
+            "stepMs": {
+              "samples": 2880,
+              "mean": 0.5934417694444404,
+              "median": 0.4174590000002354,
+              "p95": 1.1413749999992433
+            },
+            "riseStepMs": {
+              "samples": 1104,
+              "mean": 0.9195619121376651,
+              "median": 0.8584169999994629,
+              "p95": 1.2726670000010927
+            }
+          },
+          {
+            "cause": "pvp",
+            "stepMs": {
+              "samples": 2520,
+              "mean": 0.7094729531746293,
+              "median": 0.806166000002122,
+              "p95": 1.1696669999982987
+            },
+            "riseStepMs": {
+              "samples": 1104,
+              "mean": 0.9047739420290182,
+              "median": 0.8521660000005795,
+              "p95": 1.2304159999985131
+            }
+          }
+        ]
+      },
+      {
+        "name": "timing-after-a",
+        "wholeMeanStepMs": 0.6604698278985508,
+        "riseMeanStepMs": 0.868264737318851,
+        "cases": [
+          {
+            "cause": "balance",
+            "stepMs": {
+              "samples": 2568,
+              "mean": 0.6743538014018553,
+              "median": 0.7287089999999807,
+              "p95": 1.1752500000002328
+            },
+            "riseStepMs": {
+              "samples": 1104,
+              "mean": 0.8762991865941919,
+              "median": 0.8103750000000218,
+              "p95": 1.2566249999999854
+            }
+          },
+          {
+            "cause": "wall",
+            "stepMs": {
+              "samples": 2832,
+              "mean": 0.6376482793079181,
+              "median": 0.6902079999999842,
+              "p95": 1.2012500000000728
+            },
+            "riseStepMs": {
+              "samples": 1104,
+              "mean": 0.8663585199275484,
+              "median": 0.8069159999995463,
+              "p95": 1.2341250000008586
+            }
+          },
+          {
+            "cause": "trip",
+            "stepMs": {
+              "samples": 3000,
+              "mean": 0.7207510146666942,
+              "median": 0.7440829999995913,
+              "p95": 1.3872080000001006
+            },
+            "riseStepMs": {
+              "samples": 1104,
+              "mean": 0.8929400625000189,
+              "median": 0.8134589999990567,
+              "p95": 1.302333000001454
+            }
+          },
+          {
+            "cause": "landing",
+            "stepMs": {
+              "samples": 2880,
+              "mean": 0.5824334010416584,
+              "median": 0.4487910000007105,
+              "p95": 1.1266249999989668
+            },
+            "riseStepMs": {
+              "samples": 1104,
+              "mean": 0.8639856820652092,
+              "median": 0.7939169999990554,
+              "p95": 1.2411670000001322
+            }
+          },
+          {
+            "cause": "pvp",
+            "stepMs": {
+              "samples": 2520,
+              "mean": 0.6893896416666481,
+              "median": 0.7319999999999709,
+              "p95": 1.1610409999993863
+            },
+            "riseStepMs": {
+              "samples": 1104,
+              "mean": 0.8417402355072866,
+              "median": 0.7708750000019791,
+              "p95": 1.1969580000004498
+            }
+          }
+        ]
+      },
+      {
+        "name": "timing-after-b",
+        "wholeMeanStepMs": 0.6564004617391156,
+        "riseMeanStepMs": 0.8616445800724419,
+        "cases": [
+          {
+            "cause": "balance",
+            "stepMs": {
+              "samples": 2568,
+              "mean": 0.6662624719626218,
+              "median": 0.719916000000012,
+              "p95": 1.1765839999998207
+            },
+            "riseStepMs": {
+              "samples": 1104,
+              "mean": 0.8637443469202963,
+              "median": 0.796291999999994,
+              "p95": 1.2498750000004293
+            }
+          },
+          {
+            "cause": "wall",
+            "stepMs": {
+              "samples": 2832,
+              "mean": 0.6593564622175105,
+              "median": 0.6997500000015862,
+              "p95": 1.2263750000001892
+            },
+            "riseStepMs": {
+              "samples": 1104,
+              "mean": 0.8909573740942064,
+              "median": 0.826374999998734,
+              "p95": 1.2655420000010054
+            }
+          },
+          {
+            "cause": "trip",
+            "stepMs": {
+              "samples": 3000,
+              "mean": 0.6992584313333209,
+              "median": 0.733250000001135,
+              "p95": 1.3349159999997937
+            },
+            "riseStepMs": {
+              "samples": 1104,
+              "mean": 0.8546028985507074,
+              "median": 0.7843750000010914,
+              "p95": 1.2317499999990105
+            }
+          },
+          {
+            "cause": "landing",
+            "stepMs": {
+              "samples": 2880,
+              "mean": 0.575402480555556,
+              "median": 0.44133400000100664,
+              "p95": 1.089125000000422
+            },
+            "riseStepMs": {
+              "samples": 1104,
+              "mean": 0.8577096766304396,
+              "median": 0.793666999999914,
+              "p95": 1.2293750000008004
+            }
+          },
+          {
+            "cause": "pvp",
+            "stepMs": {
+              "samples": 2520,
+              "mean": 0.6845763511904085,
+              "median": 0.7380000000011933,
+              "p95": 1.1494170000005397
+            },
+            "riseStepMs": {
+              "samples": 1104,
+              "mean": 0.8412086041665602,
+              "median": 0.7787919999973383,
+              "p95": 1.2180420000004233
+            }
+          }
+        ]
+      },
+      {
+        "name": "timing-before-b",
+        "wholeMeanStepMs": 0.6901132911594146,
+        "riseMeanStepMs": 0.9322716063405653,
+        "cases": [
+          {
+            "cause": "balance",
+            "stepMs": {
+              "samples": 2568,
+              "mean": 0.6883695973520277,
+              "median": 0.7842920000002778,
+              "p95": 1.1840000000001965
+            },
+            "riseStepMs": {
+              "samples": 1104,
+              "mean": 0.9205905362319026,
+              "median": 0.8588330000002316,
+              "p95": 1.282999999999447
+            }
+          },
+          {
+            "cause": "wall",
+            "stepMs": {
+              "samples": 2832,
+              "mean": 0.6623225872175222,
+              "median": 0.7074159999992844,
+              "p95": 1.253541000000041
+            },
+            "riseStepMs": {
+              "samples": 1104,
+              "mean": 0.9358852481884005,
+              "median": 0.8806670000012673,
+              "p95": 1.2833749999990687
+            }
+          },
+          {
+            "cause": "trip",
+            "stepMs": {
+              "samples": 3000,
+              "mean": 0.7128481123333137,
+              "median": 0.7903330000008282,
+              "p95": 1.33245800000077
+            },
+            "riseStepMs": {
+              "samples": 1104,
+              "mean": 0.8995828469202531,
+              "median": 0.8384159999986878,
+              "p95": 1.236624999999549
+            }
+          },
+          {
+            "cause": "landing",
+            "stepMs": {
+              "samples": 2880,
+              "mean": 0.636192388541678,
+              "median": 0.49504200000046694,
+              "p95": 1.2500840000011522
+            },
+            "riseStepMs": {
+              "samples": 1104,
+              "mean": 0.9713242753623326,
+              "median": 0.9000830000004498,
+              "p95": 1.377875000000131
+            }
+          },
+          {
+            "cause": "pvp",
+            "stepMs": {
+              "samples": 2520,
+              "mean": 0.757680281349174,
+              "median": 0.8036250000004657,
+              "p95": 1.2536250000011933
+            },
+            "riseStepMs": {
+              "samples": 1104,
+              "mean": 0.9339751249999377,
+              "median": 0.8646249999983411,
+              "p95": 1.3065839999981108
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "validation": {
+    "residencyOracleComparisons": 287,
+    "independentThreeSkinComparisonsPerMode": 89,
+    "focusedChecks": [
+      {
+        "test": "test-skin-bounds-residency",
+        "exitCode": 0
+      },
+      {
+        "test": "test-skinned-interaction-bounds",
+        "exitCode": 0
+      },
+      {
+        "test": "test-bail-recovery-continuity",
+        "exitCode": 0,
+        "seconds": 11.37
+      },
+      {
+        "test": "test-bail-matrix-pass",
+        "exitCode": 0,
+        "seconds": 11.21
+      },
+      {
+        "test": "test-bail-motion",
+        "exitCode": 0,
+        "seconds": 6.17
+      },
+      {
+        "test": "test-bail-linear-followthrough",
+        "exitCode": 0,
+        "seconds": 0.35
+      },
+      {
+        "test": "test-bail-spin-followthrough",
+        "exitCode": 0,
+        "seconds": 0.34
+      },
+      {
+        "test": "test-bail-directional-falls",
+        "exitCode": 0,
+        "seconds": 18.05
+      },
+      {
+        "test": "test-bail-support-continuity",
+        "exitCode": 0,
+        "seconds": 15.34
+      },
+      {
+        "test": "test-character-elasticity",
+        "exitCode": 0,
+        "seconds": 5.85
+      },
+      {
+        "test": "test-board-dynamics",
+        "exitCode": 0,
+        "seconds": 1.21
+      }
+    ],
+    "headContinuityCases": 42,
+    "matrixOracle": {
+      "cases": 14,
+      "frames": 1578,
+      "maxPoseError": 0
+    },
+    "liveEditAndFailureCoverage": [
+      "Position/weight/index/morph identity and version changes",
+      "Morph topology, normalized/interleaved attributes, bind changes and custom getters",
+      "Moving bone palettes/morph weights/inverse matrices, non-unit homogeneous divisors",
+      "Default mutable input edits followed by resident revisits",
+      "Dynamic arena prefix growth, capacity eviction and revisiting old live keys",
+      "Near-capacity valid packed fallback, exact 8 MiB native limit, stable warm workspace",
+      "WASM unsupported, module/runtime/allocation failures, nonfinite/projective/overflow fallback"
+    ],
+    "build": {
+      "passed": true,
+      "command": "Installed Node: typescript/bin/tsc --noEmit followed by vite/bin/vite.js build; package build equivalent (npm unavailable)",
+      "offlineVersion": "b8f11d13ef76ce67dbce"
+    },
+    "fullSuiteRun": false
+  },
+  "browser": {
+    "lite": {
+      "ready": true,
+      "bailsPassed": 17,
+      "consoleErrors": []
+    },
+    "full": {
+      "ready": true,
+      "bailsPassed": 17,
+      "boardsPassed": 5,
+      "consoleErrors": []
+    },
+    "review": "Manual get-up, intermediate rise and finite rebound in full rendering; no loading cover. Review duration 3.367 seconds, board verification 12 seconds.",
+    "startupCaveat": "Current lite/full starts succeeded with the unchanged original loader. The prior intermittent GPU-fence startup stall was not altered or proven resolved by this pass."
+  },
+  "evidenceDirectory": "/private/tmp/bail-linear-cpu-20261022",
+  "delivery": "Local only, codex/fluid-intact-bails; preserve shared checkout/index. Alternating fidelity/performance goal remains active.",
+  "elapsedMinutes": 14
+}

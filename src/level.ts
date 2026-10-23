@@ -5272,11 +5272,12 @@ export class Level {
     this.scene = scene;
     scene.add(this.root);
     this.root.add(this.discardedBoards.root);
-    this.discardedBoards.onImpact = (broken) => sfx.play('skateHalt', broken ? 0.35 : 0.18, broken ? 0.65 : 1.5);
+    this.discardedBoards.onImpact = (broken, speed) => sfx.play(broken ? 'crateBreak1' : 'crateBounce',
+      Math.min(broken ? .4 : .28, .07 + speed * .012), broken ? 1.15 : 1.3);
     this.discardedBoards.onSpinHit = (position, removed) => {
       puffs.burst(removed ? 'dustLand' : 'crateSmash', position.x, position.y, position.z,
         { surface: 'wood', groundY: position.y - 0.1, strength: removed ? 0.8 : 0.55 });
-      sfx.play('skateHalt', 0.4, removed ? 1.6 : 0.65);
+      sfx.play(removed ? 'crateBounce' : 'crateBreak1', removed ? .18 : .35, removed ? 1.5 : 1.15);
     };
     this.name = entry.name;
     this.skateRace = entry.data?.skateRace ?? null;

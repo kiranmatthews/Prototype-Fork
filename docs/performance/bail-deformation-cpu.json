@@ -1,0 +1,545 @@
+{
+  "date": "2026-10-22",
+  "pass": "Performance/stability: deformation storage and live morph bounds",
+  "baselineTaskCommit": "701df7816f494dae0278907e89817a83932c5ec0",
+  "changes": [
+    "Reuse deformation baselines/results and morph slots in weak caches keyed by node and role. Refresh authored values and restoration flags on every pass; clear active strong references on restore.",
+    "Reuse the active maps/array and two scratch vectors. Capture final transforms only after they are written.",
+    "Evaluate native rigid/morph bounds in scalar locals with the same vertex arithmetic and attribute getters, publishing extrema once per mesh.",
+    "Refresh custom vertex-reader bounds on every measurement and invalidate when switching back to the native reader."
+  ],
+  "profileMotivation": {
+    "sampledInclusiveMilliseconds": {
+      "applyDeformations": 757.788,
+      "localBounds": 895.292
+    },
+    "scope": "One Node CPU sampling profile, includes warmup/startup context. Used to select work, not a benchmark or FPS claim."
+  },
+  "equivalence": {
+    "incidents": 120,
+    "frames": 8160,
+    "cases": [
+      {
+        "cause": "balance",
+        "frames": 1056,
+        "poseAndMorphChecksum": "70e0bb447e2d58200e0bb177fb9ed849246c18ab86f0c93f9398a1b12180e697",
+        "gameplayChecksum": "b51b8f1c626815da67e7d14a481a0c496acf127731c67c72c19db5918bfbf8ba",
+        "durations": {
+          "samples": 24,
+          "mean": 0.7333333333333331,
+          "median": 0.7333333333333333,
+          "p95": 0.7333333333333333
+        },
+        "exactMatch": true
+      },
+      {
+        "cause": "wall",
+        "frames": 1824,
+        "poseAndMorphChecksum": "2b60a5de9392d8dd1ccae00f2dbc5d12f03e30fcb6ef4f2cbb8845f934896a5a",
+        "gameplayChecksum": "40a25e75bfd1a576aa9a3d76d39e4a8f144ce954769f01800218e2721ba66d1f",
+        "durations": {
+          "samples": 24,
+          "mean": 1.266666666666666,
+          "median": 1.2666666666666666,
+          "p95": 1.2666666666666666
+        },
+        "exactMatch": true
+      },
+      {
+        "cause": "trip",
+        "frames": 2112,
+        "poseAndMorphChecksum": "4a3381dd545ba14e5ec8d2b336e38a3dc8bda4ef2fdacf05035797888e6d9c1a",
+        "gameplayChecksum": "6ce599704bd3f33f977d7db5bf0e448b0c3625f46bcd33e0fa879c26ca4c3207",
+        "durations": {
+          "samples": 24,
+          "mean": 1.4666666666666661,
+          "median": 1.4666666666666666,
+          "p95": 1.4666666666666666
+        },
+        "exactMatch": true
+      },
+      {
+        "cause": "landing",
+        "frames": 1464,
+        "poseAndMorphChecksum": "8982231ef1e05ace41e70aa2967983b20599059021daab48d2da271e6a019a4d",
+        "gameplayChecksum": "3560e96f96bdf2aa9d46365dd5500dd2b8ed8131a0eba5586732f6a06c844be8",
+        "durations": {
+          "samples": 24,
+          "mean": 1.016666666666666,
+          "median": 1.0166666666666666,
+          "p95": 1.0166666666666666
+        },
+        "exactMatch": true
+      },
+      {
+        "cause": "pvp",
+        "frames": 1704,
+        "poseAndMorphChecksum": "cfb1e06fca84524ce46b631c17727fc69c2d1d1cec914096d4ba8d2fc4c7b653",
+        "gameplayChecksum": "1b2f0441720760e1b936c6314ee87724dfa5f6353614b2b0ce935dca7944685f",
+        "durations": {
+          "samples": 24,
+          "mean": 1.1833333333333333,
+          "median": 1.1833333333333333,
+          "p95": 1.1833333333333333
+        },
+        "exactMatch": true
+      }
+    ]
+  },
+  "cpu": {
+    "scope": "Production fixed-step CPU in Node with the animation runtime and procedural fallback assets. Includes first active frame; excludes render/GPU/browser costs. Timings are descriptive, scan counts are deterministic.",
+    "order": [
+      "after-1",
+      "before-1",
+      "before-2",
+      "after-2"
+    ],
+    "pairs": [
+      [
+        {
+          "cause": "balance",
+          "beforeMedianMs": 0.4390829999993002,
+          "afterMedianMs": 0.3859580000007554,
+          "cpuReductionPercent": 12.099079217056797
+        },
+        {
+          "cause": "wall",
+          "beforeMedianMs": 0.4242500000000291,
+          "afterMedianMs": 0.3758330000000569,
+          "cpuReductionPercent": 11.412374779014467
+        },
+        {
+          "cause": "trip",
+          "beforeMedianMs": 0.3939169999994192,
+          "afterMedianMs": 0.3457079999998314,
+          "cpuReductionPercent": 12.238364934658552
+        },
+        {
+          "cause": "landing",
+          "beforeMedianMs": 0.388915999999881,
+          "afterMedianMs": 0.34337500000037835,
+          "cpuReductionPercent": 11.709726521798181
+        },
+        {
+          "cause": "pvp",
+          "beforeMedianMs": 0.3967499999998836,
+          "afterMedianMs": 0.34579200000007404,
+          "cpuReductionPercent": 12.843856332658977
+        }
+      ],
+      [
+        {
+          "cause": "balance",
+          "beforeMedianMs": 0.4328749999995125,
+          "afterMedianMs": 0.39504200000010314,
+          "cpuReductionPercent": 8.739936471141085
+        },
+        {
+          "cause": "wall",
+          "beforeMedianMs": 0.4172499999995125,
+          "afterMedianMs": 0.3760840000004464,
+          "cpuReductionPercent": 9.86602756120173
+        },
+        {
+          "cause": "trip",
+          "beforeMedianMs": 0.3947500000003856,
+          "afterMedianMs": 0.3482500000000073,
+          "cpuReductionPercent": 11.779607346506127
+        },
+        {
+          "cause": "landing",
+          "beforeMedianMs": 0.387457999999242,
+          "afterMedianMs": 0.3414169999996375,
+          "cpuReductionPercent": 11.88283633314956
+        },
+        {
+          "cause": "pvp",
+          "beforeMedianMs": 0.3938749999997526,
+          "afterMedianMs": 0.3398749999996653,
+          "cpuReductionPercent": 13.70993335452142
+        }
+      ]
+    ],
+    "meanOfPairedMedians": [
+      {
+        "cause": "balance",
+        "meanBeforeMedianMs": 0.43597899999940637,
+        "meanAfterMedianMs": 0.3905000000004293,
+        "cpuReductionPercent": 10.431465735514555
+      },
+      {
+        "cause": "wall",
+        "meanBeforeMedianMs": 0.4207499999997708,
+        "meanAfterMedianMs": 0.37595850000025166,
+        "cpuReductionPercent": 10.645632798465488
+      },
+      {
+        "cause": "trip",
+        "meanBeforeMedianMs": 0.3943334999999024,
+        "meanAfterMedianMs": 0.3469789999999193,
+        "cpuReductionPercent": 12.008743867816152
+      },
+      {
+        "cause": "landing",
+        "meanBeforeMedianMs": 0.3881869999995615,
+        "meanAfterMedianMs": 0.3423960000000079,
+        "cpuReductionPercent": 11.796118880746997
+      },
+      {
+        "cause": "pvp",
+        "meanBeforeMedianMs": 0.3953124999998181,
+        "meanAfterMedianMs": 0.3428334999998697,
+        "cpuReductionPercent": 13.275320158095827
+      }
+    ],
+    "note": "Record reuse alone gave a clear allocation reduction but a small mixed timing result. Combined with scalar bounds, every final measured case improves in both plain pairs. The final timing runs have no pose/allocation/route counters."
+  },
+  "deformationAllocations": {
+    "before": {
+      "perCause": [
+        {
+          "cause": "balance",
+          "calls": 1536,
+          "cpuMs": {
+            "samples": 1536,
+            "mean": 0.05400822591145271,
+            "median": 0.04133300000012241,
+            "p95": 0.06725000000005821
+          },
+          "newRecords": 61992,
+          "newTransformObjects": 247968,
+          "newMorphRecords": 15120
+        },
+        {
+          "cause": "wall",
+          "calls": 3072,
+          "cpuMs": {
+            "samples": 3072,
+            "mean": 0.04787554622395085,
+            "median": 0.03849999999965803,
+            "p95": 0.05650000000059663
+          },
+          "newRecords": 116112,
+          "newTransformObjects": 464448,
+          "newMorphRecords": 28320
+        },
+        {
+          "cause": "trip",
+          "calls": 3648,
+          "cpuMs": {
+            "samples": 3648,
+            "mean": 0.045040977521925867,
+            "median": 0.037916999999652035,
+            "p95": 0.05249999999978172
+          },
+          "newRecords": 127920,
+          "newTransformObjects": 511680,
+          "newMorphRecords": 31200
+        },
+        {
+          "cause": "landing",
+          "calls": 2352,
+          "cpuMs": {
+            "samples": 2352,
+            "mean": 0.04145634353740655,
+            "median": 0.038500000000567525,
+            "p95": 0.05725000000165892
+          },
+          "newRecords": 95448,
+          "newTransformObjects": 381792,
+          "newMorphRecords": 23280
+        },
+        {
+          "cause": "pvp",
+          "calls": 2832,
+          "cpuMs": {
+            "samples": 2832,
+            "mean": 0.04069642761298593,
+            "median": 0.03816699999879347,
+            "p95": 0.05462500000066939
+          },
+          "newRecords": 111192,
+          "newTransformObjects": 444768,
+          "newMorphRecords": 27120
+        }
+      ],
+      "total": {
+        "calls": 13440,
+        "newRecords": 512664,
+        "newTransformObjects": 2050656,
+        "newMorphRecords": 125040
+      }
+    },
+    "after": {
+      "perCause": [
+        {
+          "cause": "balance",
+          "calls": 1536,
+          "cpuMs": {
+            "samples": 1536,
+            "mean": 0.04788078971353826,
+            "median": 0.042374999999992724,
+            "p95": 0.07175000000006548
+          },
+          "newRecords": 0,
+          "newTransformObjects": 0,
+          "newMorphRecords": 0
+        },
+        {
+          "cause": "wall",
+          "calls": 3072,
+          "cpuMs": {
+            "samples": 3072,
+            "mean": 0.04232401171875141,
+            "median": 0.03899999999975989,
+            "p95": 0.057708000000275206
+          },
+          "newRecords": 0,
+          "newTransformObjects": 0,
+          "newMorphRecords": 0
+        },
+        {
+          "cause": "trip",
+          "calls": 3648,
+          "cpuMs": {
+            "samples": 3648,
+            "mean": 0.040675266173227635,
+            "median": 0.03825000000142609,
+            "p95": 0.05479099999865866
+          },
+          "newRecords": 0,
+          "newTransformObjects": 0,
+          "newMorphRecords": 0
+        },
+        {
+          "cause": "landing",
+          "calls": 2352,
+          "cpuMs": {
+            "samples": 2352,
+            "mean": 0.04253208673469544,
+            "median": 0.03929199999947741,
+            "p95": 0.05795899999975518
+          },
+          "newRecords": 0,
+          "newTransformObjects": 0,
+          "newMorphRecords": 0
+        },
+        {
+          "cause": "pvp",
+          "calls": 2832,
+          "cpuMs": {
+            "samples": 2832,
+            "mean": 0.04150739371468935,
+            "median": 0.03879199999937555,
+            "p95": 0.05500000000029104
+          },
+          "newRecords": 0,
+          "newTransformObjects": 0,
+          "newMorphRecords": 0
+        }
+      ],
+      "total": {
+        "calls": 13440,
+        "newRecords": 0,
+        "newTransformObjects": 0,
+        "newMorphRecords": 0
+      }
+    }
+  },
+  "resourceTradeoff": "Retain one state with four transform vectors and reused morph slots per touched live node/role, plus two maps, two weak maps and two scratch vectors per bridge. Active maps/arrays clear on restoration, and weak cache entries follow node lifetime. This removes repeated warm allocations; it does not claim zero total runtime allocation.",
+  "deformationCacheRegression": {
+    "passed": true,
+    "editedFrames": 300,
+    "comparisons": 901,
+    "warmFrames": 240,
+    "warmStateVisits": 4992,
+    "newWarmStateRecords": 0,
+    "newWarmTransforms": 0,
+    "newWarmMorphRecords": 0,
+    "activeStrongReferencesCleared": true
+  },
+  "rigidBoundsRegression": {
+    "passed": true,
+    "cases": 921,
+    "formats": 5,
+    "relativeAndAbsolute": true,
+    "zeroNegativeAndMultipleWeights": true,
+    "liveAttributeEdits": true,
+    "customReadersAndReturnToNative": true,
+    "nonfiniteParity": true,
+    "warmRecordsReused": true
+  },
+  "checks": [
+    {
+      "test": "test-animation-deformation-cache",
+      "exitCode": 0,
+      "seconds": 0.63395094871521
+    },
+    {
+      "test": "test-rigid-morph-bounds",
+      "exitCode": 0,
+      "seconds": 0.33386898040771484
+    },
+    {
+      "test": "test-animation-rig-resolution",
+      "exitCode": 0,
+      "seconds": 0.36148500442504883
+    },
+    {
+      "test": "test-stretchable-bone",
+      "exitCode": 1,
+      "seconds": 0.5152528285980225,
+      "classification": "Known pre-existing source-text guard at line 749; runtime assertions complete before it. Unchanged Player source and prior baseline reproduction establish this is unrelated."
+    },
+    {
+      "test": "test-meshy-torso",
+      "exitCode": 0,
+      "seconds": 0.5391240119934082
+    },
+    {
+      "test": "test-character-elasticity",
+      "exitCode": 0,
+      "seconds": 8.583291053771973
+    },
+    {
+      "test": "test-character-animation-runtime",
+      "exitCode": 0,
+      "seconds": 0.845224142074585
+    },
+    {
+      "test": "test-bail-support-pruning",
+      "exitCode": 0,
+      "seconds": 0.4142019748687744
+    },
+    {
+      "test": "test-skinned-interaction-bounds",
+      "exitCode": 0,
+      "seconds": 0.6726222038269043
+    },
+    {
+      "test": "test-character-interactions",
+      "exitCode": 0,
+      "seconds": 8.540673017501831
+    },
+    {
+      "test": "test-bail-recovery-direction",
+      "exitCode": 0,
+      "seconds": 0.4917943477630615
+    },
+    {
+      "test": "test-bail-recovery-motion",
+      "exitCode": 0,
+      "seconds": 11.1703200340271
+    },
+    {
+      "test": "test-bail-support-continuity",
+      "exitCode": 0,
+      "seconds": 20.67857789993286
+    },
+    {
+      "test": "test-trip-clearance",
+      "exitCode": 0,
+      "seconds": 16.051479816436768
+    },
+    {
+      "test": "test-bail-impacts",
+      "exitCode": 0,
+      "seconds": 11.367043018341064
+    },
+    {
+      "test": "test-ragdoll-recovery",
+      "exitCode": 0,
+      "seconds": 8.601578950881958
+    },
+    {
+      "test": "test-break-apart",
+      "exitCode": 0,
+      "seconds": 8.271136045455933
+    }
+  ],
+  "knownBaselineFailure": {
+    "test": "test-stretchable-bone",
+    "line": 749,
+    "assertion": "upperLegBone.root.visible = false source-text match",
+    "referencedPlayerSourceUnchanged": true,
+    "runtimeAssertionsBeforeGuardPassed": true,
+    "previousBaselineReproduction": "bail-hinge-cpu/stretchable-baseline-result.json"
+  },
+  "exactSupport": {
+    "cases": 30,
+    "hintCases": 120,
+    "minMetres": 0.008727637273679534,
+    "maxMetres": 0.02500002264145973,
+    "fullScans": 0
+  },
+  "build": {
+    "typecheck": "pass",
+    "vite": "pass",
+    "seconds": 10.41,
+    "version": "6ac8d8b0b9a9fddc8fe8",
+    "existingWarning": "Some chunks exceed 500 kB after minification.",
+    "fullSuiteRun": false
+  },
+  "browser": {
+    "lite": {
+      "passed": true,
+      "cases": 14
+    },
+    "full": {
+      "passed": true,
+      "cases": 14
+    },
+    "boards": {
+      "passed": true,
+      "rows": [
+        {
+          "kind": "Board toss",
+          "settledAt": 3.516666666666659,
+          "observedSeconds": 12.000000000000176,
+          "active": 0,
+          "soundsAfterRest": 0
+        },
+        {
+          "kind": "Board roll",
+          "settledAt": 6.049999999999984,
+          "observedSeconds": 12.000000000000176,
+          "active": 0,
+          "soundsAfterRest": 0
+        },
+        {
+          "kind": "Board skid",
+          "settledAt": 0.9333333333333346,
+          "observedSeconds": 12.000000000000176,
+          "active": 0,
+          "soundsAfterRest": 0
+        },
+        {
+          "kind": "Board wall",
+          "settledAt": 1.100000000000001,
+          "observedSeconds": 12.000000000000176,
+          "active": 0,
+          "soundsAfterRest": 0
+        },
+        {
+          "kind": "Board pile",
+          "settledAt": 2.199999999999997,
+          "observedSeconds": 12.000000000000176,
+          "active": 0,
+          "soundsAfterRest": 0
+        }
+      ]
+    },
+    "manual": {
+      "scenario": "Angled edge",
+      "firstContactSeconds": 0.06666666666666667,
+      "secondContactSeconds": 0.49999999999999994,
+      "followThroughSeconds": 0.6000000000000002,
+      "floorImpacts": 2,
+      "wallImpacts": 1,
+      "intactParts": 0,
+      "airborne": true,
+      "consoleErrors": []
+    }
+  },
+  "delivery": "Task-owned local commit on codex/fluid-intact-bails; preserve shared checkout/index and unrelated work. No push, publication or upload. Alternating goal remains active."
+}

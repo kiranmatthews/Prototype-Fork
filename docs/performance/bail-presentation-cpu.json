@@ -1,0 +1,1396 @@
+{
+  "date": "2026-10-22",
+  "cycle": "Performance and stability after landed-pose recovery",
+  "parentLocalCommit": "98e0a3f17bda27fd79bdf9973754ae02cb7e953c",
+  "sourceHashes": {
+    "src/character/proportionLayer.ts": "dd0cbfb4b96df2db2095b7b54555df07efbd152695832c37a8c66b640c66ac07",
+    "tools/profile-intact-bail.mjs": "dcd5cf8ce6372afe77ffc610cd152c88619b401844a88f10bd12d70ef9e307e2",
+    "tools/test-bail-presentation-cache.mjs": "24cac370d9a9cc2d9766b61d031bdb12b734beffd51150f4a06c8f8443f601c0"
+  },
+  "changes": [
+    "Resolve all live object names once per proportion pass, retaining depth-first duplicate-name order and current hierarchy/metadata.",
+    "Reuse transform records with weak ownership; recapture authored bases and reset movement flags/morph ownership for every application.",
+    "Keep physics, all limb/segment transforms, contacts, recovery, fatal breakup, audio and gameplay randomness unchanged."
+  ],
+  "performance": {
+    "scope": "Local Node production Player.step with animation runtime and procedural fallback assets; 8 warmups and 24 measured incidents per cause. Whole-player numbers have appearance/clone/pose instrumentation disabled. Excludes rendering, GPU, audio output and browser costs; not an FPS claim.",
+    "uninstrumentedWholePlayer": [
+      {
+        "cause": "balance",
+        "beforeMedianStepMs": 0.6684590000004391,
+        "afterMedianStepMs": 0.5187079999996058,
+        "cpuReductionPercent": 22.402421091007064,
+        "beforeMedianIncidentMs": 32.24304000000211,
+        "afterMedianIncidentMs": 24.196920000005775,
+        "durationSeconds": {
+          "samples": 24,
+          "mean": 0.7333333333333331,
+          "median": 0.7333333333333333,
+          "p95": 0.7333333333333333
+        },
+        "fullSkinScans": 0
+      },
+      {
+        "cause": "wall",
+        "beforeMedianStepMs": 0.6257499999992433,
+        "afterMedianStepMs": 0.48620800000026065,
+        "cpuReductionPercent": 22.299960047806856,
+        "beforeMedianIncidentMs": 51.911921999994775,
+        "afterMedianIncidentMs": 38.93937800000367,
+        "durationSeconds": {
+          "samples": 24,
+          "mean": 1.266666666666666,
+          "median": 1.2666666666666666,
+          "p95": 1.2666666666666666
+        },
+        "fullSkinScans": 0
+      },
+      {
+        "cause": "trip",
+        "beforeMedianStepMs": 0.6376669999990554,
+        "afterMedianStepMs": 0.48412500000085856,
+        "cpuReductionPercent": 24.078711929333696,
+        "beforeMedianIncidentMs": 60.53112499999406,
+        "afterMedianIncidentMs": 44.72691500000292,
+        "durationSeconds": {
+          "samples": 24,
+          "mean": 1.4666666666666661,
+          "median": 1.4666666666666666,
+          "p95": 1.4666666666666666
+        },
+        "fullSkinScans": 0
+      },
+      {
+        "cause": "landing",
+        "beforeMedianStepMs": 0.6202920000014274,
+        "afterMedianStepMs": 0.47045800000159943,
+        "cpuReductionPercent": 24.15539778031688,
+        "beforeMedianIncidentMs": 41.46750200000133,
+        "afterMedianIncidentMs": 30.436330000002272,
+        "durationSeconds": {
+          "samples": 24,
+          "mean": 1.016666666666666,
+          "median": 1.0166666666666666,
+          "p95": 1.0166666666666666
+        },
+        "fullSkinScans": 0
+      },
+      {
+        "cause": "pvp",
+        "beforeMedianStepMs": 0.6139170000005834,
+        "afterMedianStepMs": 0.4656670000003942,
+        "cpuReductionPercent": 24.148215475389723,
+        "beforeMedianIncidentMs": 46.725663000006534,
+        "afterMedianIncidentMs": 35.55045799999425,
+        "durationSeconds": {
+          "samples": 24,
+          "mean": 1.1833333333333333,
+          "median": 1.1833333333333333,
+          "p95": 1.1833333333333333
+        },
+        "fullSkinScans": 0
+      }
+    ],
+    "instrumentedPairs": [
+      {
+        "pair": 1,
+        "perCause": [
+          {
+            "cause": "balance",
+            "before": {
+              "cpuMs": {
+                "samples": 1032,
+                "mean": 0.2161400988372209,
+                "median": 0.20433300000058807,
+                "p95": 0.2709999999997308
+              },
+              "calls": 1032,
+              "nameSearches": 66048,
+              "transformClones": 390096
+            },
+            "after": {
+              "cpuMs": {
+                "samples": 1032,
+                "mean": 0.06486725096898463,
+                "median": 0.05887499999971624,
+                "p95": 0.09870800000044255
+              },
+              "calls": 1032,
+              "nameSearches": 0,
+              "transformClones": 0
+            },
+            "beforePoseChecksum": "60778ad851a3e667c10e300c83ab44e7cc409d5fbd23011bec736db3dd37ac63",
+            "afterPoseChecksum": "60778ad851a3e667c10e300c83ab44e7cc409d5fbd23011bec736db3dd37ac63",
+            "recordedFrames": 1056
+          },
+          {
+            "cause": "wall",
+            "before": {
+              "cpuMs": {
+                "samples": 1800,
+                "mean": 0.21508786499999283,
+                "median": 0.20266699999956472,
+                "p95": 0.26912499999889405
+              },
+              "calls": 1800,
+              "nameSearches": 115200,
+              "transformClones": 680400
+            },
+            "after": {
+              "cpuMs": {
+                "samples": 1800,
+                "mean": 0.058932467777788385,
+                "median": 0.052625000000261934,
+                "p95": 0.09229099999993196
+              },
+              "calls": 1800,
+              "nameSearches": 0,
+              "transformClones": 0
+            },
+            "beforePoseChecksum": "d945a32b327f7ac0e2a4a38af9677bbf5d9fddbef7e546bab0460609eab38acf",
+            "afterPoseChecksum": "d945a32b327f7ac0e2a4a38af9677bbf5d9fddbef7e546bab0460609eab38acf",
+            "recordedFrames": 1824
+          },
+          {
+            "cause": "trip",
+            "before": {
+              "cpuMs": {
+                "samples": 2088,
+                "mean": 0.20952860057470574,
+                "median": 0.2001670000008744,
+                "p95": 0.25720799999908195
+              },
+              "calls": 2088,
+              "nameSearches": 133632,
+              "transformClones": 789264
+            },
+            "after": {
+              "cpuMs": {
+                "samples": 2088,
+                "mean": 0.05804235296938271,
+                "median": 0.05175000000053842,
+                "p95": 0.0867500000003929
+              },
+              "calls": 2088,
+              "nameSearches": 0,
+              "transformClones": 0
+            },
+            "beforePoseChecksum": "45276da61fb04084acae946cf83f1b35dcacfdc0329c584fb7d31ec0e3327577",
+            "afterPoseChecksum": "45276da61fb04084acae946cf83f1b35dcacfdc0329c584fb7d31ec0e3327577",
+            "recordedFrames": 2112
+          },
+          {
+            "cause": "landing",
+            "before": {
+              "cpuMs": {
+                "samples": 1440,
+                "mean": 0.2113220201389001,
+                "median": 0.19979099999909522,
+                "p95": 0.26925000000119326
+              },
+              "calls": 1440,
+              "nameSearches": 92160,
+              "transformClones": 544320
+            },
+            "after": {
+              "cpuMs": {
+                "samples": 1440,
+                "mean": 0.057678506249986744,
+                "median": 0.05154199999924458,
+                "p95": 0.08625000000029104
+              },
+              "calls": 1440,
+              "nameSearches": 0,
+              "transformClones": 0
+            },
+            "beforePoseChecksum": "0bea9bd83b55cf176b7dcfe218aa99635bcc31e0d908d3ed253ea5abbcede30d",
+            "afterPoseChecksum": "0bea9bd83b55cf176b7dcfe218aa99635bcc31e0d908d3ed253ea5abbcede30d",
+            "recordedFrames": 1464
+          },
+          {
+            "cause": "pvp",
+            "before": {
+              "cpuMs": {
+                "samples": 1680,
+                "mean": 0.21717833273809165,
+                "median": 0.19695800000044983,
+                "p95": 0.26291700000001583
+              },
+              "calls": 1680,
+              "nameSearches": 107520,
+              "transformClones": 635040
+            },
+            "after": {
+              "cpuMs": {
+                "samples": 1680,
+                "mean": 0.05830337857145358,
+                "median": 0.05170899999939138,
+                "p95": 0.09029199999895354
+              },
+              "calls": 1680,
+              "nameSearches": 0,
+              "transformClones": 0
+            },
+            "beforePoseChecksum": "e8badc9ac4e72c87375868e096593ec18ad7c9aff2992f4fabe71e5b21b90185",
+            "afterPoseChecksum": "e8badc9ac4e72c87375868e096593ec18ad7c9aff2992f4fabe71e5b21b90185",
+            "recordedFrames": 1704
+          }
+        ]
+      },
+      {
+        "pair": 2,
+        "perCause": [
+          {
+            "cause": "balance",
+            "before": {
+              "cpuMs": {
+                "samples": 1032,
+                "mean": 0.21046450096898028,
+                "median": 0.19970800000010058,
+                "p95": 0.2641670000002705
+              },
+              "calls": 1032,
+              "nameSearches": 66048,
+              "transformClones": 390096
+            },
+            "after": {
+              "cpuMs": {
+                "samples": 1032,
+                "mean": 0.06530333139536044,
+                "median": 0.05925000000024738,
+                "p95": 0.0985419999997248
+              },
+              "calls": 1032,
+              "nameSearches": 0,
+              "transformClones": 0
+            },
+            "beforePoseChecksum": null,
+            "afterPoseChecksum": null,
+            "recordedFrames": 1056
+          },
+          {
+            "cause": "wall",
+            "before": {
+              "cpuMs": {
+                "samples": 1800,
+                "mean": 0.20668797611111334,
+                "median": 0.19708300000093004,
+                "p95": 0.25716600000032486
+              },
+              "calls": 1800,
+              "nameSearches": 115200,
+              "transformClones": 680400
+            },
+            "after": {
+              "cpuMs": {
+                "samples": 1800,
+                "mean": 0.06074721944444365,
+                "median": 0.054292000000714324,
+                "p95": 0.09591600000021572
+              },
+              "calls": 1800,
+              "nameSearches": 0,
+              "transformClones": 0
+            },
+            "beforePoseChecksum": null,
+            "afterPoseChecksum": null,
+            "recordedFrames": 1824
+          },
+          {
+            "cause": "trip",
+            "before": {
+              "cpuMs": {
+                "samples": 2088,
+                "mean": 0.20633717337165147,
+                "median": 0.19595900000058464,
+                "p95": 0.2509170000012091
+              },
+              "calls": 2088,
+              "nameSearches": 133632,
+              "transformClones": 789264
+            },
+            "after": {
+              "cpuMs": {
+                "samples": 2088,
+                "mean": 0.06114043007662322,
+                "median": 0.05291700000088895,
+                "p95": 0.09108399999968242
+              },
+              "calls": 2088,
+              "nameSearches": 0,
+              "transformClones": 0
+            },
+            "beforePoseChecksum": null,
+            "afterPoseChecksum": null,
+            "recordedFrames": 2112
+          },
+          {
+            "cause": "landing",
+            "before": {
+              "cpuMs": {
+                "samples": 1440,
+                "mean": 0.20924403958332885,
+                "median": 0.19633299999986775,
+                "p95": 0.2508749999997235
+              },
+              "calls": 1440,
+              "nameSearches": 92160,
+              "transformClones": 544320
+            },
+            "after": {
+              "cpuMs": {
+                "samples": 1440,
+                "mean": 0.06200400902775856,
+                "median": 0.05270799999925657,
+                "p95": 0.08899999999994179
+              },
+              "calls": 1440,
+              "nameSearches": 0,
+              "transformClones": 0
+            },
+            "beforePoseChecksum": null,
+            "afterPoseChecksum": null,
+            "recordedFrames": 1464
+          },
+          {
+            "cause": "pvp",
+            "before": {
+              "cpuMs": {
+                "samples": 1680,
+                "mean": 0.20819443392856124,
+                "median": 0.19604100000105973,
+                "p95": 0.2568749999991269
+              },
+              "calls": 1680,
+              "nameSearches": 107520,
+              "transformClones": 635040
+            },
+            "after": {
+              "cpuMs": {
+                "samples": 1680,
+                "mean": 0.060380297619040645,
+                "median": 0.05283400000007532,
+                "p95": 0.09116700000049605
+              },
+              "calls": 1680,
+              "nameSearches": 0,
+              "transformClones": 0
+            },
+            "beforePoseChecksum": null,
+            "afterPoseChecksum": null,
+            "recordedFrames": 1704
+          }
+        ]
+      }
+    ],
+    "avoidedPerWarmFrame": {
+      "recursiveNameSearches": 64,
+      "transformObjects": 378
+    },
+    "poseEquality": {
+      "incidents": 120,
+      "frames": 8160,
+      "exactHashesMatch": true,
+      "scope": "All local position/quaternion/scale channels and morph weights in the posed body hierarchy, plus physical root, speed, vertical velocity, state, support, impact counts and recovery clock."
+    }
+  },
+  "stability": {
+    "presentation": {
+      "passed": true,
+      "authoredFrames": 180,
+      "hierarchyEditsAtFrames": [
+        20,
+        40,
+        60,
+        80,
+        100,
+        120,
+        140,
+        160
+      ],
+      "warmFrames": 240,
+      "transformClones": 0,
+      "nameSearches": 0,
+      "restoredExactly": true
+    },
+    "support": {
+      "passed": true,
+      "cases": 30,
+      "supportHintCases": 120,
+      "fullScans": 0,
+      "supportCalls": 1925,
+      "maxSamples": 1611,
+      "gameplayUnchanged": true
+    },
+    "recovery": {
+      "passed": true,
+      "orientationCases": 240,
+      "derivativeError": 0.00011743571776040534,
+      "hemisphereError": 5.16191365590357e-08,
+      "maxNormError": 2.220446049250313e-16,
+      "runtimeCases": 30
+    }
+  },
+  "browser": {
+    "lite": {
+      "passed": true,
+      "rows": [
+        {
+          "kind": "Head hit",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "bankContactFrames": 0,
+          "bankRollAngle": 0,
+          "supportFrames": 46,
+          "minimumClearance": 0.024999999999998412,
+          "maximumClearance": 0.02500000000000213,
+          "recoveryFrames": 33,
+          "maxRecoveryTurn": 0.22360658974769876,
+          "remainingRoll": 3.628972383804342,
+          "position": [
+            -7,
+            0,
+            -24.22343046030579
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 1.164,
+          "maxStep": 14.799999952316284
+        },
+        {
+          "kind": "Low trip",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": 0.5761696373034546,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "bankContactFrames": 0,
+          "bankRollAngle": 0,
+          "supportFrames": 40,
+          "minimumClearance": 0.02499999999999772,
+          "maximumClearance": 0.025000005428769012,
+          "recoveryFrames": 33,
+          "maxRecoveryTurn": 0.2680130405456867,
+          "remainingRoll": -0.49440052771551013,
+          "position": [
+            7,
+            0,
+            -39.37268734057356
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 1.101,
+          "maxStep": 4.699999988079071
+        },
+        {
+          "kind": "Mid trip",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": 0.9287066505517174,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "bankContactFrames": 0,
+          "bankRollAngle": 0,
+          "supportFrames": 41,
+          "minimumClearance": 0.02499999179356069,
+          "maximumClearance": 0.02500000000000574,
+          "recoveryFrames": 33,
+          "maxRecoveryTurn": 0.16056146955995088,
+          "remainingRoll": 1.8538998218976674,
+          "position": [
+            7,
+            0,
+            -59.09546341910359
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 0.947,
+          "maxStep": 3.400000035762787
+        },
+        {
+          "kind": "Side bail",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "bankContactFrames": 0,
+          "bankRollAngle": 0,
+          "supportFrames": 40,
+          "minimumClearance": 0.024999986563861765,
+          "maximumClearance": 0.02500000000000102,
+          "recoveryFrames": 33,
+          "maxRecoveryTurn": 0.14715679666450807,
+          "remainingRoll": -0.07420331250247791,
+          "position": [
+            0,
+            0,
+            -21.208369341253906
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 1.107,
+          "maxStep": 3.800000011920929
+        },
+        {
+          "kind": "Balance bail",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "bankContactFrames": 0,
+          "bankRollAngle": 0,
+          "supportFrames": 43,
+          "minimumClearance": 0.024999999999999634,
+          "maximumClearance": 0.025000000000000286,
+          "recoveryFrames": 33,
+          "maxRecoveryTurn": 0.014985258810624047,
+          "remainingRoll": 0.2659939968563263,
+          "position": [
+            0,
+            0,
+            -22.084615539190267
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 1.086,
+          "maxStep": 2.300000011920929
+        },
+        {
+          "kind": "Bank tumble",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "bankContactFrames": 50,
+          "bankRollAngle": 1.7922021058062807,
+          "supportFrames": 50,
+          "minimumClearance": 0.02499998306194208,
+          "maximumClearance": 0.02500000000000091,
+          "recoveryFrames": 33,
+          "maxRecoveryTurn": 0.32294457026526674,
+          "remainingRoll": 5.36238658050975,
+          "position": [
+            85,
+            2.730479980362925,
+            -22.53904003927415
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 1.102,
+          "maxStep": 2.5
+        },
+        {
+          "kind": "Pit edge",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 1,
+          "bankContactFrames": 0,
+          "bankRollAngle": 0,
+          "supportFrames": 41,
+          "minimumClearance": 0.024999999999997247,
+          "maximumClearance": 0.02500000000000302,
+          "recoveryFrames": 33,
+          "maxRecoveryTurn": 0.16767548062806625,
+          "remainingRoll": 0.5472096970527094,
+          "position": [
+            25,
+            -4,
+            -23.447990886576694
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 0.946,
+          "maxStep": 2.799999952316284
+        },
+        {
+          "kind": "Angled edge",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 1,
+          "bankContactFrames": 0,
+          "bankRollAngle": 0,
+          "supportFrames": 44,
+          "minimumClearance": 0.0249999999999988,
+          "maximumClearance": 0.02500000000000213,
+          "recoveryFrames": 33,
+          "maxRecoveryTurn": 0.20763325051742468,
+          "remainingRoll": 3.078005638678407,
+          "position": [
+            33.25807394102306,
+            -4,
+            -26.321647403450324
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 0.97,
+          "maxStep": 2.699999988079071
+        },
+        {
+          "kind": "Bailing into edge",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 1,
+          "bankContactFrames": 0,
+          "bankRollAngle": 0,
+          "supportFrames": 41,
+          "minimumClearance": 0.024999984759753513,
+          "maximumClearance": 0.02500000000000524,
+          "recoveryFrames": 33,
+          "maxRecoveryTurn": 0.288305308234923,
+          "remainingRoll": 4.246357178852631,
+          "position": [
+            25,
+            -4,
+            -23.447990886576694
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 0.897,
+          "maxStep": 2.399999976158142
+        },
+        {
+          "kind": "Held-mask wall",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "bankContactFrames": 0,
+          "bankRollAngle": 0,
+          "supportFrames": 46,
+          "minimumClearance": 0.02499999999999547,
+          "maximumClearance": 0.025000000000002187,
+          "recoveryFrames": 33,
+          "maxRecoveryTurn": 0.2558965658739077,
+          "remainingRoll": 4.021551085345729,
+          "position": [
+            -7,
+            0,
+            -24.22343046030579
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 0.985,
+          "maxStep": 3.5
+        },
+        {
+          "kind": "Masked bail",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "bankContactFrames": 0,
+          "bankRollAngle": 0,
+          "supportFrames": 37,
+          "minimumClearance": 0.024999999999999578,
+          "maximumClearance": 0.02500000000000073,
+          "recoveryFrames": 33,
+          "maxRecoveryTurn": 0.04633506784248986,
+          "remainingRoll": -0.06739155767621785,
+          "position": [
+            0,
+            0,
+            -21.208369341253906
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 1.058,
+          "maxStep": 2.5
+        },
+        {
+          "kind": "Blast",
+          "entered": true,
+          "recovered": false,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 9,
+          "lives": 3,
+          "wallImpacts": 0,
+          "bankContactFrames": 0,
+          "bankRollAngle": 0,
+          "supportFrames": 0,
+          "minimumClearance": null,
+          "maximumClearance": null,
+          "recoveryFrames": 0,
+          "maxRecoveryTurn": 0,
+          "remainingRoll": null,
+          "position": [
+            0,
+            0,
+            -40
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 0.482,
+          "maxStep": 6.100000023841858
+        },
+        {
+          "kind": "Crusher",
+          "entered": true,
+          "recovered": false,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 9,
+          "lives": 3,
+          "wallImpacts": 0,
+          "bankContactFrames": 0,
+          "bankRollAngle": 0,
+          "supportFrames": 0,
+          "minimumClearance": null,
+          "maximumClearance": null,
+          "recoveryFrames": 0,
+          "maxRecoveryTurn": 0,
+          "remainingRoll": null,
+          "position": [
+            0,
+            0,
+            -46
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 0.471,
+          "maxStep": 2.699999988079071
+        },
+        {
+          "kind": "Pit fall",
+          "entered": true,
+          "recovered": false,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 0,
+          "lives": 3,
+          "wallImpacts": 0,
+          "bankContactFrames": 0,
+          "bankRollAngle": 0,
+          "supportFrames": 0,
+          "minimumClearance": null,
+          "maximumClearance": null,
+          "recoveryFrames": 0,
+          "maxRecoveryTurn": 0,
+          "remainingRoll": null,
+          "position": [
+            3,
+            -172.6766666666666,
+            -78
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 0.584,
+          "maxStep": 2.200000047683716
+        }
+      ],
+      "failures": []
+    },
+    "full": {
+      "passed": true,
+      "rows": [
+        {
+          "kind": "Head hit",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "bankContactFrames": 0,
+          "bankRollAngle": 0,
+          "supportFrames": 46,
+          "minimumClearance": 0.024999999999997413,
+          "maximumClearance": 0.025000000000001077,
+          "recoveryFrames": 33,
+          "maxRecoveryTurn": 0.2269282236422344,
+          "remainingRoll": 3.864511692194828,
+          "position": [
+            -7,
+            0,
+            -24.22343046030579
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 1.081,
+          "maxStep": 13.599999964237213
+        },
+        {
+          "kind": "Low trip",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": 0.6249690938464347,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "bankContactFrames": 0,
+          "bankRollAngle": 0,
+          "supportFrames": 40,
+          "minimumClearance": 0.024999999999997913,
+          "maximumClearance": 0.025000000000000244,
+          "recoveryFrames": 33,
+          "maxRecoveryTurn": 0.18787721683440245,
+          "remainingRoll": 2.701534458993105,
+          "position": [
+            7,
+            0,
+            -39.37268734057356
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 0.952,
+          "maxStep": 4.5
+        },
+        {
+          "kind": "Mid trip",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": 0.6249664208121715,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "bankContactFrames": 0,
+          "bankRollAngle": 0,
+          "supportFrames": 41,
+          "minimumClearance": 0.0249999999999998,
+          "maximumClearance": 0.0250000000000018,
+          "recoveryFrames": 33,
+          "maxRecoveryTurn": 0.32041612263680214,
+          "remainingRoll": 2.5385206390927686,
+          "position": [
+            7,
+            0,
+            -59.09546341910359
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 0.924,
+          "maxStep": 3.399999976158142
+        },
+        {
+          "kind": "Side bail",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "bankContactFrames": 0,
+          "bankRollAngle": 0,
+          "supportFrames": 40,
+          "minimumClearance": 0.024999999165185915,
+          "maximumClearance": 0.025000000000001604,
+          "recoveryFrames": 33,
+          "maxRecoveryTurn": 0.15059286812619613,
+          "remainingRoll": -0.13681748378970138,
+          "position": [
+            0,
+            0,
+            -21.208369341253906
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 0.958,
+          "maxStep": 2.300000011920929
+        },
+        {
+          "kind": "Balance bail",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "bankContactFrames": 0,
+          "bankRollAngle": 0,
+          "supportFrames": 43,
+          "minimumClearance": 0.024999999999999523,
+          "maximumClearance": 0.025000000000001354,
+          "recoveryFrames": 33,
+          "maxRecoveryTurn": 0.32627341801110576,
+          "remainingRoll": 5.489919196783472,
+          "position": [
+            0,
+            0,
+            -22.084615539190267
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 0.976,
+          "maxStep": 2.099999964237213
+        },
+        {
+          "kind": "Bank tumble",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "bankContactFrames": 50,
+          "bankRollAngle": 1.2032744327535723,
+          "supportFrames": 50,
+          "minimumClearance": 0.024999999999997743,
+          "maximumClearance": 0.025000010842596735,
+          "recoveryFrames": 33,
+          "maxRecoveryTurn": 0.046030272685417276,
+          "remainingRoll": 0.6832577620620022,
+          "position": [
+            85,
+            2.730479980362925,
+            -22.53904003927415
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 1.027,
+          "maxStep": 2.199999988079071
+        },
+        {
+          "kind": "Pit edge",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 1,
+          "bankContactFrames": 0,
+          "bankRollAngle": 0,
+          "supportFrames": 41,
+          "minimumClearance": 0.02499998735706299,
+          "maximumClearance": 0.025000000000003908,
+          "recoveryFrames": 33,
+          "maxRecoveryTurn": 0.17970824648862438,
+          "remainingRoll": 2.327663925919378,
+          "position": [
+            25,
+            -4,
+            -23.447990886576694
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 0.934,
+          "maxStep": 2.399999976158142
+        },
+        {
+          "kind": "Angled edge",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 1,
+          "bankContactFrames": 0,
+          "bankRollAngle": 0,
+          "supportFrames": 44,
+          "minimumClearance": 0.024999999969893327,
+          "maximumClearance": 0.025000000000003464,
+          "recoveryFrames": 33,
+          "maxRecoveryTurn": 0.25437344227144476,
+          "remainingRoll": 4.1005334209734805,
+          "position": [
+            33.25807394102306,
+            -4,
+            -26.321647403450324
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 0.891,
+          "maxStep": 2.699999988079071
+        },
+        {
+          "kind": "Bailing into edge",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 1,
+          "bankContactFrames": 0,
+          "bankRollAngle": 0,
+          "supportFrames": 41,
+          "minimumClearance": 0.02499999999999769,
+          "maximumClearance": 0.025000011723367965,
+          "recoveryFrames": 33,
+          "maxRecoveryTurn": 0.2476547920361224,
+          "remainingRoll": 1.8133907116487205,
+          "position": [
+            25,
+            -4,
+            -23.447990886576694
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 0.862,
+          "maxStep": 1.899999976158142
+        },
+        {
+          "kind": "Held-mask wall",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "bankContactFrames": 0,
+          "bankRollAngle": 0,
+          "supportFrames": 46,
+          "minimumClearance": 0.02499999999999508,
+          "maximumClearance": 0.025000000000001354,
+          "recoveryFrames": 33,
+          "maxRecoveryTurn": 0.19227889824482303,
+          "remainingRoll": 3.14111729803842,
+          "position": [
+            -7,
+            0,
+            -24.22343046030579
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 0.961,
+          "maxStep": 3.300000011920929
+        },
+        {
+          "kind": "Masked bail",
+          "entered": true,
+          "recovered": true,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 0,
+          "lives": 4,
+          "wallImpacts": 0,
+          "bankContactFrames": 0,
+          "bankRollAngle": 0,
+          "supportFrames": 37,
+          "minimumClearance": 0.024999999999998357,
+          "maximumClearance": 0.025000000000001993,
+          "recoveryFrames": 33,
+          "maxRecoveryTurn": 0.04527659804070436,
+          "remainingRoll": -0.4661462620383512,
+          "position": [
+            0,
+            0,
+            -21.208369341253906
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 1.135,
+          "maxStep": 11.300000011920929
+        },
+        {
+          "kind": "Blast",
+          "entered": true,
+          "recovered": false,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 9,
+          "lives": 3,
+          "wallImpacts": 0,
+          "bankContactFrames": 0,
+          "bankRollAngle": 0,
+          "supportFrames": 0,
+          "minimumClearance": null,
+          "maximumClearance": null,
+          "recoveryFrames": 0,
+          "maxRecoveryTurn": 0,
+          "remainingRoll": null,
+          "position": [
+            0,
+            0,
+            -40
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 0.462,
+          "maxStep": 5.399999976158142
+        },
+        {
+          "kind": "Crusher",
+          "entered": true,
+          "recovered": false,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 9,
+          "lives": 3,
+          "wallImpacts": 0,
+          "bankContactFrames": 0,
+          "bankRollAngle": 0,
+          "supportFrames": 0,
+          "minimumClearance": null,
+          "maximumClearance": null,
+          "recoveryFrames": 0,
+          "maxRecoveryTurn": 0,
+          "remainingRoll": null,
+          "position": [
+            0,
+            0,
+            -46
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 0.426,
+          "maxStep": 2.5
+        },
+        {
+          "kind": "Pit fall",
+          "entered": true,
+          "recovered": false,
+          "maxSkinScans": 0,
+          "minimumBodyLead": null,
+          "parts": 0,
+          "lives": 3,
+          "wallImpacts": 0,
+          "bankContactFrames": 0,
+          "bankRollAngle": 0,
+          "supportFrames": 0,
+          "minimumClearance": null,
+          "maximumClearance": null,
+          "recoveryFrames": 0,
+          "maxRecoveryTurn": 0,
+          "remainingRoll": null,
+          "position": [
+            3,
+            -172.6766666666666,
+            -78
+          ],
+          "seconds": 3.367,
+          "meanStepMs": 0.502,
+          "maxStep": 1.5999999642372131
+        }
+      ],
+      "failures": []
+    },
+    "boards": {
+      "passed": true,
+      "rows": [
+        {
+          "kind": "Board toss",
+          "thrown": 1,
+          "snapped": 0,
+          "folded": 0,
+          "active": 0,
+          "settledPieces": 1,
+          "batches": 3,
+          "lost": 0,
+          "poofed": 0,
+          "seconds": 12.000000000000176,
+          "settledAt": 3.516666666666659,
+          "sounds": [
+            {
+              "age": 0.5333333333333333,
+              "speed": 12.71115741228191,
+              "broken": false
+            }
+          ],
+          "position": [
+            55.232310702451755,
+            0.0049213645175174014,
+            -30.773916702475987
+          ]
+        },
+        {
+          "kind": "Board roll",
+          "thrown": 1,
+          "snapped": 0,
+          "folded": 0,
+          "active": 0,
+          "settledPieces": 1,
+          "batches": 3,
+          "lost": 0,
+          "poofed": 0,
+          "seconds": 12.000000000000176,
+          "settledAt": 6.049999999999984,
+          "sounds": [],
+          "position": [
+            54.5,
+            0.004921351969242094,
+            -46.151342535628984
+          ]
+        },
+        {
+          "kind": "Board skid",
+          "thrown": 1,
+          "snapped": 0,
+          "folded": 0,
+          "active": 0,
+          "settledPieces": 1,
+          "batches": 3,
+          "lost": 0,
+          "poofed": 0,
+          "seconds": 12.000000000000176,
+          "settledAt": 0.9333333333333346,
+          "sounds": [],
+          "position": [
+            57.476111111111116,
+            0.004921351969242094,
+            -12
+          ]
+        },
+        {
+          "kind": "Board wall",
+          "thrown": 1,
+          "snapped": 0,
+          "folded": 0,
+          "active": 0,
+          "settledPieces": 1,
+          "batches": 3,
+          "lost": 0,
+          "poofed": 0,
+          "seconds": 12.000000000000176,
+          "settledAt": 1.100000000000001,
+          "sounds": [
+            {
+              "age": 0.19999999999999998,
+              "speed": 24,
+              "broken": false
+            }
+          ],
+          "position": [
+            54.214669123366086,
+            0.27700524695980655,
+            -44.39230190501321
+          ]
+        },
+        {
+          "kind": "Board pile",
+          "thrown": 12,
+          "snapped": 2,
+          "folded": 1,
+          "active": 0,
+          "settledPieces": 14,
+          "batches": 8,
+          "lost": 0,
+          "poofed": 0,
+          "seconds": 12.000000000000176,
+          "settledAt": 2.199999999999997,
+          "sounds": [
+            {
+              "age": 0.4666666666666666,
+              "speed": 16.37500226697357,
+              "broken": false
+            },
+            {
+              "age": 0.5333333333333333,
+              "speed": 12.711157412281914,
+              "broken": true
+            },
+            {
+              "age": 0.6000000000000002,
+              "speed": 4.957695009612789,
+              "broken": false
+            },
+            {
+              "age": 0.6666666666666671,
+              "speed": 6.269997106969263,
+              "broken": false
+            },
+            {
+              "age": 0.7833333333333341,
+              "speed": 3.006131905403338,
+              "broken": false
+            },
+            {
+              "age": 0.850000000000001,
+              "speed": 7.872545812373369,
+              "broken": false
+            },
+            {
+              "age": 0.9833333333333347,
+              "speed": 8.522948729772986,
+              "broken": false
+            },
+            {
+              "age": 1.2000000000000006,
+              "speed": 3.6976045640630852,
+              "broken": false
+            },
+            {
+              "age": 1.4166666666666665,
+              "speed": 6.736302050544138,
+              "broken": false
+            }
+          ],
+          "position": [
+            52.77878743260538,
+            -0.18510428712305138,
+            -23.967340285482145
+          ]
+        }
+      ],
+      "failures": []
+    },
+    "consoleErrors": [],
+    "extendedReviewSeconds": 3.35
+  },
+  "checks": [
+    {
+      "check": "test-bail-presentation-cache",
+      "exitCode": 0
+    },
+    {
+      "check": "test-character-animation-runtime",
+      "exitCode": 0
+    },
+    {
+      "check": "test-character-elasticity",
+      "exitCode": 0
+    },
+    {
+      "check": "test-bail-support-continuity",
+      "exitCode": 0
+    },
+    {
+      "check": "test-bail-recovery-motion",
+      "exitCode": 0
+    },
+    {
+      "check": "test-ragdoll-recovery",
+      "exitCode": 0
+    },
+    {
+      "check": "test-trip-clearance",
+      "exitCode": 0
+    },
+    {
+      "check": "test-bail-impacts",
+      "exitCode": 0
+    },
+    {
+      "check": "test-break-apart",
+      "exitCode": 0
+    }
+  ],
+  "knownBaselineFailure": {
+    "baseline": true,
+    "name": "AssertionError",
+    "expected": "/spinBox\\.min\\.y \\+ BASE_CHARACTER_HITBOX_HEIGHT/",
+    "message": "tall character hitboxes can expand a spin through multiple crate rows",
+    "unchangedFailure": true
+  },
+  "baselineFailureContext": "The unchanged Character Lab script completes its live transform/morph/reversibility checks, then fails an existing source-text assertion about spin hitbox height. The same assertion fails with the original proportion layer loaded; no related source or test was edited.",
+  "build": {
+    "typescript": true,
+    "vite": true,
+    "offlineVersion": "56175535a89ae8dd2905",
+    "seconds": 11.15,
+    "warning": "Existing large chunks",
+    "command": "Bundled Node: node node_modules/typescript/bin/tsc --noEmit; node node_modules/vite/bin/vite.js build (npm is unavailable)."
+  },
+  "screenshots": [
+    "/private/tmp/bail-contact-cpu/bank-contact.png",
+    "/private/tmp/bail-contact-cpu/bank-roll.png"
+  ],
+  "delivery": "Local task-only commit; no push, publication or deployment. Broader alternating refinement goal remains active."
+}

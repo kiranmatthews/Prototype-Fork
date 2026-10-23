@@ -1,0 +1,359 @@
+{
+  "date": "2026-10-22",
+  "pass": "Fidelity: preserve overlapping impact reactions",
+  "baselineTaskCommit": "dd21d24f9ea9eabc87fe2c7c167f3a80b5a134b1",
+  "problem": "A new impact immediately reduced every joint velocity by 18%, discarded 65% of pending angular impulses and merged old/new arrival times. Close edge/floor hits could erase or rush the first reaction before it reached a limb.",
+  "changes": [
+    "Carry live joint velocity through subsequent hits; retain existing damping, compliant stops and speed bounds.",
+    "Schedule bounded angular and segment-compression impulses in a fixed 120 Hz delay line. Separate arrivals survive later hits; same-bin impulses add within the existing bounds.",
+    "Reset all queued reactions between bails, preserve the cosmetic random stream and add no scene queries or per-contact objects."
+  ],
+  "overlapRegression": {
+    "before": {
+      "cases": 36,
+      "instantaneousBrake": 0.1467397440094954,
+      "angularError": 0.9157088633204187,
+      "strainError": 0.026568166263165802
+    },
+    "after": {
+      "passed": true,
+      "overlapCases": 36,
+      "angularError": 1.887379141862766e-15,
+      "strainError": 3.469446951953614e-17,
+      "stress": {
+        "rates": [
+          60,
+          120,
+          144,
+          240,
+          15
+        ],
+        "maxAngle": 1.8,
+        "maxVelocity": 22,
+        "minLength": 0.7552633693390499,
+        "maxLength": 1.1141063035712109,
+        "maxSettle": 1.2155180111635943e-09,
+        "retainedTypedArrayBytes": 14840,
+        "buffersReused": true
+      }
+    },
+    "interpretation": "In a controlled linear spring regime, two contacts must equal the sum of their isolated responses with matching cosmetic random samples. Real nonlinear limits are separately stressed at five rates with two impacts per frame for three seconds and a nine-second settle."
+  },
+  "gameplay": {
+    "incidents": 120,
+    "frames": 8160,
+    "cases": [
+      {
+        "cause": "balance",
+        "frames": 1056,
+        "gameplayIdentical": true,
+        "poseChanged": true,
+        "durationIdentical": true,
+        "beforeImpacts": 0,
+        "afterImpacts": 0
+      },
+      {
+        "cause": "wall",
+        "frames": 1824,
+        "gameplayIdentical": true,
+        "poseChanged": true,
+        "durationIdentical": true,
+        "beforeImpacts": 48,
+        "afterImpacts": 48
+      },
+      {
+        "cause": "trip",
+        "frames": 2112,
+        "gameplayIdentical": true,
+        "poseChanged": true,
+        "durationIdentical": true,
+        "beforeImpacts": 96,
+        "afterImpacts": 96
+      },
+      {
+        "cause": "landing",
+        "frames": 1464,
+        "gameplayIdentical": true,
+        "poseChanged": true,
+        "durationIdentical": true,
+        "beforeImpacts": 0,
+        "afterImpacts": 0
+      },
+      {
+        "cause": "pvp",
+        "frames": 1704,
+        "gameplayIdentical": true,
+        "poseChanged": true,
+        "durationIdentical": true,
+        "beforeImpacts": 72,
+        "afterImpacts": 72
+      }
+    ],
+    "note": "Pose hashes intentionally change; all gameplay hashes, impact counts and duration summaries match."
+  },
+  "resources": {
+    "waveBufferBytes": 13056,
+    "replacedNumericBytes": 592,
+    "netAdditionalNumericBytesPerRig": 12464,
+    "fixedStorage": true,
+    "perContactRecords": 0,
+    "newWorldQueries": 0,
+    "note": "Numeric backing-store counts, not a total heap measurement. The bounded buffer replaces four small arrays; memory does not grow with contacts."
+  },
+  "cpu": {
+    "scope": "Local Node CPU with production Player.step and procedural fallback assets. Excludes browser rendering and GPU. Plain timing pairs are separate from checksum/impact tracing; descriptive measurements, not FPS claims.",
+    "order": [
+      "before-1",
+      "after-1",
+      "after-2",
+      "before-2"
+    ],
+    "wholePlayer": [
+      {
+        "cause": "balance",
+        "beforeMs": 0.39820849999978236,
+        "afterMs": 0.3947504999996454,
+        "changePercent": -0.8683892986058428,
+        "pairs": [
+          {
+            "before-1": 0.3901669999995647,
+            "after-1": 0.39383399999951507
+          },
+          {
+            "before-2": 0.40625,
+            "after-2": 0.3956669999997757
+          }
+        ]
+      },
+      {
+        "cause": "wall",
+        "beforeMs": 0.3791879999998855,
+        "afterMs": 0.3915624999999636,
+        "changePercent": 3.2634207833797113,
+        "pairs": [
+          {
+            "before-1": 0.37379199999941193,
+            "after-1": 0.37845800000013696
+          },
+          {
+            "before-2": 0.3845840000003591,
+            "after-2": 0.4046669999997903
+          }
+        ]
+      },
+      {
+        "cause": "trip",
+        "beforeMs": 0.3511880000005476,
+        "afterMs": 0.3523744999997689,
+        "changePercent": 0.33785322938695295,
+        "pairs": [
+          {
+            "before-1": 0.34283400000094844,
+            "after-1": 0.34779099999923346
+          },
+          {
+            "before-2": 0.3595420000001468,
+            "after-2": 0.3569580000003043
+          }
+        ]
+      },
+      {
+        "cause": "landing",
+        "beforeMs": 0.3437914999994973,
+        "afterMs": 0.34633300000041345,
+        "changePercent": 0.7392562064274077,
+        "pairs": [
+          {
+            "before-1": 0.33695799999986775,
+            "after-1": 0.3430000000007567
+          },
+          {
+            "before-2": 0.3506249999991269,
+            "after-2": 0.3496660000000702
+          }
+        ]
+      },
+      {
+        "cause": "pvp",
+        "beforeMs": 0.3491874999990614,
+        "afterMs": 0.3537080000005517,
+        "changePercent": 1.294576696331462,
+        "pairs": [
+          {
+            "before-1": 0.3419579999990674,
+            "after-1": 0.3515000000006694
+          },
+          {
+            "before-2": 0.3564169999990554,
+            "after-2": 0.355916000000434
+          }
+        ]
+      }
+    ],
+    "isolatedSpring": {
+      "runs": [
+        {
+          "label": "spring-before-1",
+          "medianStepMs": 0.0012803889999999948
+        },
+        {
+          "label": "spring-after-1",
+          "medianStepMs": 0.001054583333333331
+        },
+        {
+          "label": "spring-after-2",
+          "medianStepMs": 0.0010641390000000115
+        },
+        {
+          "label": "spring-before-2",
+          "medianStepMs": 0.0013223890000000058
+        }
+      ],
+      "meanBeforeMedianMs": 0.0013013890000000005,
+      "meanAfterMedianMs": 0.0010593611666666713,
+      "reductionPercent": 18.597654762206307
+    },
+    "interpretation": "The spring update is cheaper, while whole-player medians are mixed. The wall case adds approximately .0124 ms across the two medians; changed visible poses also change downstream support work. No whole-player speedup claim; profile wall motion in the next performance pass."
+  },
+  "checks": [
+    {
+      "test": "test-bail-overlap-waves",
+      "exitCode": 0,
+      "seconds": 6.703716993331909
+    },
+    {
+      "test": "test-bail-impacts",
+      "exitCode": 0,
+      "seconds": 9.439558744430542
+    },
+    {
+      "test": "test-trip-clearance",
+      "exitCode": 0,
+      "seconds": 12.588515043258667
+    },
+    {
+      "test": "test-ragdoll-recovery",
+      "exitCode": 0,
+      "seconds": 7.898153066635132
+    },
+    {
+      "test": "test-break-apart",
+      "exitCode": 0,
+      "seconds": 8.009310960769653
+    },
+    {
+      "test": "test-bail-support-continuity",
+      "exitCode": 0,
+      "seconds": 19.669769048690796
+    },
+    {
+      "test": "test-bail-recovery-motion",
+      "exitCode": 0,
+      "seconds": 7.358954191207886
+    },
+    {
+      "test": "test-bail-recovery-direction",
+      "exitCode": 0,
+      "seconds": 0.24483990669250488
+    },
+    {
+      "test": "test-board-dynamics",
+      "exitCode": 0,
+      "seconds": 1.2709319591522217
+    },
+    {
+      "test": "test-bail-contact-waves",
+      "exitCode": 0
+    },
+    {
+      "test": "test-bail-motion",
+      "exitCode": 0
+    },
+    {
+      "test": "test-bail-inertia",
+      "exitCode": 0
+    },
+    {
+      "test": "test-bail-joint-stops",
+      "exitCode": 0
+    }
+  ],
+  "exactSupport": {
+    "cases": 30,
+    "hintCases": 120,
+    "minMetres": 0.007179486526511791,
+    "maxMetres": 0.025000022655366105,
+    "fullScans": 0,
+    "gameplayUnchanged": true
+  },
+  "build": {
+    "typecheck": "pass",
+    "vite": "pass",
+    "seconds": 10.17,
+    "version": "5a85209c99cd1b0aa494",
+    "existingWarning": "Some chunks exceed 500 kB after minification.",
+    "fullSuiteRun": false
+  },
+  "browser": {
+    "lite": {
+      "passed": true,
+      "cases": 14
+    },
+    "full": {
+      "passed": true,
+      "cases": 14
+    },
+    "boards": {
+      "passed": true,
+      "rows": [
+        {
+          "kind": "Board toss",
+          "settledAt": 3.516666666666659,
+          "observedSeconds": 12.000000000000176,
+          "active": 0,
+          "soundsAfterRest": 0
+        },
+        {
+          "kind": "Board roll",
+          "settledAt": 6.049999999999984,
+          "observedSeconds": 12.000000000000176,
+          "active": 0,
+          "soundsAfterRest": 0
+        },
+        {
+          "kind": "Board skid",
+          "settledAt": 0.9333333333333346,
+          "observedSeconds": 12.000000000000176,
+          "active": 0,
+          "soundsAfterRest": 0
+        },
+        {
+          "kind": "Board wall",
+          "settledAt": 1.100000000000001,
+          "observedSeconds": 12.000000000000176,
+          "active": 0,
+          "soundsAfterRest": 0
+        },
+        {
+          "kind": "Board pile",
+          "settledAt": 2.199999999999997,
+          "observedSeconds": 12.000000000000176,
+          "active": 0,
+          "soundsAfterRest": 0
+        }
+      ]
+    },
+    "manual": {
+      "scenario": "Angled edge",
+      "firstContactSeconds": 0.06666666666666667,
+      "secondContactSeconds": 0.49999999999999994,
+      "followThroughSeconds": 0.6000000000000002,
+      "floorImpacts": 2,
+      "wallImpacts": 1,
+      "detachedParts": 0,
+      "state": "air",
+      "consoleErrors": []
+    }
+  },
+  "delivery": "Task-owned local commit on codex/fluid-intact-bails. Preserve shared checkout/index and unrelated pending work; no push, publication or upload. Alternating goal remains active."
+}
