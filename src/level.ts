@@ -284,6 +284,7 @@ export interface Enemy {
   attackBox?: THREE.Box3; // articulated moa bill; empty outside the strike
   roast?: { box: THREE.Box3; lastSpin?: object }; // harmless cooked moa; a new spin clears it
   crabCarcass?: { box: THREE.Box3; lastSpin?: object }; // harmless stomped Coral Crab
+  crabCarcassYaw?: number; // fixed local face heading, retained while flung
   shell?: { box: THREE.Box3; lastSpin?: object; lastSlam?: object; bounceT?: number };
   alive: boolean;
   x0: number; // patrol bounds — x for corridor levels, z for side-scroll levels
@@ -10739,7 +10740,7 @@ export class Level {
     return b;
   }
 
-  killEnemy(enemy: Enemy, fling?: THREE.Vector3, spinToken?: object, slamToken?: object, cause?: "stomp"): boolean {
+  killEnemy(enemy: Enemy, fling?: THREE.Vector3, spinToken?: object, slamToken?: object, cause?: "stomp", stompView?: THREE.Vector3): boolean {
     if(!enemy.alive)return false;
     if(isNightworksGoblin(enemy)) {
       const state=enemy.state;
@@ -10757,6 +10758,8 @@ export class Level {
     // spun enemies and other skins retain their original defeat presentation.
     if (cause === "stomp" && enemy.kind === "grunt" && !isNightworksGoblin(enemy) && !enemy.group.userData.ghostSkin) {
       enemy.state = "crab-carcass"; enemy.stateT = 0;
+      enemy.crabCarcassYaw = stompView && stompView.x * stompView.x + stompView.z * stompView.z > 1e-8
+        ? Math.atan2(-stompView.x, -stompView.z) - enemy.group.rotation.y : 0;
       enemy.defeatedT = enemy.flungT = undefined; enemy.flungVel = undefined;
       enemy.spinKill = enemy.stompKill = enemy.meleeKill = enemy.touchHurt = false;
       const box = new THREE.Box3().setFromCenterAndSize(
@@ -18645,6 +18648,7 @@ export class Level {
     e.defeatedT = undefined;
     e.roast = undefined;
     e.crabCarcass = undefined;
+    e.crabCarcassYaw = undefined;
     e.shell = undefined;
     e.attackBox?.makeEmpty();
     e.visual.reset();
@@ -18813,6 +18817,7 @@ export class Level {
       grounded: e.kind !== "floater" && e.group.position.y <= e.baseY + 0.06,
       alive: e.alive, flung: e.flungT !== undefined,
       shellBounceTime: e.shell?.bounceT,
+      crabCarcassYaw: e.crabCarcassYaw,
       alert: e.kind === "moa" ? undefined : Math.max(0, 1 - e.group.position.distanceTo(this.playerPos) / 7),
     });
     updateEnemySounds(e, dt, speed, this.playerPos);

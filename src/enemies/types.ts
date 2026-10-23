@@ -49,6 +49,8 @@ export interface EnemyAnimationFrame {
   flung: boolean;
   /** Time since the most recent landing on an overturned turtle. */
   shellBounceTime?: number;
+  /** Fixed local heading of the stomped face, captured at impact; never billboards. */
+  crabCarcassYaw?: number;
   /** Nearby-player presentation only; never changes hitboxes or attack rules. */
   alert?: number;
   /** Optional cycle [0,1); otherwise the active walk clip supplies the phase. */

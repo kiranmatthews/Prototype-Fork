@@ -1,0 +1,169 @@
+{
+  "reviewedAt": "2026-10-24T01:07:25.697103+13:00",
+  "scope": "Make the stomped crab X eyes readable in the supplied Jungle Ruins replay",
+  "baselineCommit": "0b4a9ba5",
+  "replay": {
+    "sourceName": "replay-JungleRuins-2026-10-23T10-56-06.json",
+    "fixture": "tools/fixtures/crab-stomp-jungle-replay.json",
+    "sha256": "b1c3fc77e1e3ef5ac06a237b92ca89e61238e59598233d476fa121ba35803d32",
+    "frames": 1845,
+    "recordedAt": "2026-10-23T10:56:06.422Z"
+  },
+  "diagnosis": "The recording successfully stomps the crab at frame 859. Its flattened Meshy model is installed, but the sideways patrol heading leaves the facial X marks almost edge-on to the gameplay camera.",
+  "change": "Capture the attacking player camera heading at impact and orient only the static defeated model toward that view. Keep the heading fixed through settling and the later fling; clear it on reset.",
+  "gameplayRootsCollidersAndTuningUnchanged": true,
+  "asset": {
+    "path": "public/enemies/crab-stomped.glb",
+    "sha256": "ae351242f672788e7ba14e9febcb3e42f61c504c4af2fc9385c6ba1ccdcd619f",
+    "unchanged": true,
+    "triangles": 16160,
+    "textureResolution": [
+      2048,
+      2048
+    ]
+  },
+  "impact": {
+    "frame": 859,
+    "p": [
+      -2.5732437764106306,
+      0.13560748898958191,
+      -63.27563405020228
+    ],
+    "prev": [
+      -2.5732437764106306,
+      0.47116304454513763,
+      -63.27563405020228
+    ],
+    "state": "air",
+    "grounded": false,
+    "speed": 0,
+    "vy": -20.133333333333344,
+    "spin": false,
+    "slam": false,
+    "bailing": false,
+    "lives": 4,
+    "points": 205,
+    "enemy": 0,
+    "kind": "grunt",
+    "ep": [
+      -2.9588420842014846,
+      -0.8735379110206622,
+      -64
+    ],
+    "box": [
+      [
+        -3.6088420842014846,
+        -0.8735379110206622,
+        -64.65
+      ],
+      [
+        -2.3088420842014847,
+        0.22646208897933784,
+        -63.35
+      ]
+    ],
+    "cause": "stomp",
+    "killed": true,
+    "after": "crab-carcass",
+    "carcass": true
+  },
+  "visiblePose": {
+    "frame": 925,
+    "rootYaw": 1.5707963267948966,
+    "localFaceYaw": -1.533503673205103,
+    "worldFaceYaw": 0.0372926535897935,
+    "bodyVisible": false,
+    "carcassShown": true,
+    "asset": {
+      "url": "/enemies/crab-stomped.glb",
+      "status": "ready"
+    }
+  },
+  "regression": {
+    "command": "node tools/test-crab-carcass.mjs",
+    "exitCode": 0,
+    "coverage": [
+      "Supplied real input replay through frame 1000 and its actual stomp",
+      "X-eyed face toward recorded impact view",
+      "Finite settle without following later camera motion",
+      "Original gameplay root heading preserved",
+      "Same model/heading throughout fresh spin fling",
+      "Single score, crate hit and finite debris removal",
+      "Soft/hard reset removes captured view",
+      "Edge and fast stomp contacts, spin/uber priority, side/rising rejection, ghost skin isolation"
+    ]
+  },
+  "checks": [
+    {
+      "task": "tools/test-enemy-runtime.mjs --assets",
+      "exitCode": 0,
+      "seconds": 1.05
+    },
+    {
+      "task": "tools/test-enemy-gameplay.mjs --assets",
+      "exitCode": 0,
+      "seconds": 7.68
+    },
+    {
+      "task": "tools/test-turtle-shell.mjs",
+      "exitCode": 0,
+      "seconds": 7.88
+    },
+    {
+      "task": "build",
+      "exitCode": 0,
+      "seconds": 47.43
+    }
+  ],
+  "browser": {
+    "base": "http://127.0.0.1:5419",
+    "viewport": [
+      1280,
+      720
+    ],
+    "lite": {
+      "frames": 1845,
+      "allContactEventsUnchanged": true,
+      "allPlayerStateTransitionsUnchanged": true,
+      "nearbyPhysicsSamples": 290,
+      "nearbyPhysicsExactlyUnchanged": true,
+      "trajectorySha256": "5ebe40527c4c48ff538687ac54e78bfd978640bdd2c45c2d780f23cd20bb9f83",
+      "errors": []
+    },
+    "full": {
+      "playbackThroughFrame": 1000,
+      "fixtureNote": "End replay explicitly before its automatic level reset; send a real F key to the existing corpse.",
+      "stompMatchesLite": true,
+      "freshSpin": {
+        "beforeSpin": {
+          "state": "crab-carcass",
+          "visible": true,
+          "bodyVisible": false,
+          "carcassUuid": "b4dd16aa-7f9a-47f0-825d-014badf0499a",
+          "faceYaw": -1.533503673205103,
+          "points": 305
+        },
+        "flung": {
+          "state": "crab-carcass-flung",
+          "bodyVisible": false,
+          "carcassUuid": "b4dd16aa-7f9a-47f0-825d-014badf0499a",
+          "faceYaw": -1.533503673205103,
+          "points": 305
+        },
+        "removed": true
+      },
+      "errors": []
+    },
+    "capture": "docs/art-reviews/crab-x-eyes-replay.png",
+    "localRawEvidence": "/private/tmp/crab-replay-20261024"
+  },
+  "elapsedMinutesApproximate": 15,
+  "fullSuiteRun": false,
+  "delivery": {
+    "branch": "main",
+    "preview": "http://127.0.0.1:5417/?playtest&level=jungle",
+    "localOnly": true,
+    "pushed": false,
+    "published": false
+  }
+}

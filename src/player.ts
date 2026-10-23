@@ -13382,7 +13382,7 @@ export class Player {
           // Spikes, airborne hoppers/floaters and other non-stompable states
           // keep their published combat identity through validStomp above.
           const top = e.box.max.y;
-          if (level.killEnemy(e, undefined, this.debrisSpinToken, this.slamActive ? this.debrisSlamToken : undefined, "stomp"))
+          if (level.killEnemy(e, undefined, this.debrisSpinToken, this.slamActive ? this.debrisSlamToken : undefined, "stomp", this.camDir))
             this.score(CONST.ptsEnemy, 'Bonk');
           this.pos.y = (e.shell?.box.max.y ?? top) + 0.02;
           this.vVel = TUNING.crateBounce;
@@ -13399,7 +13399,7 @@ export class Player {
         } else if (validStomp) {
           // Crash rules: jumping on an enemy squashes it and bounces you
           // (slams punch straight through instead).
-          if (level.killEnemy(e, undefined, this.debrisSpinToken, this.slamActive ? this.debrisSlamToken : undefined, "stomp"))
+          if (level.killEnemy(e, undefined, this.debrisSpinToken, this.slamActive ? this.debrisSlamToken : undefined, "stomp", this.camDir))
             this.score(CONST.ptsEnemy, 'Bonk');
           if (!this.slamActive) {
             // The overturned turtle is taller than its live combat box. Start

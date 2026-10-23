@@ -84,7 +84,8 @@ try{
   const bounds=new THREE.Box3().setFromObject(carcass,true);
   assert.ok(Math.abs(bounds.min.y-e.group.position.y)<1e-5);assert.ok(Math.abs(bounds.max.y-e.group.position.y-provenance.worldSize[1])<1e-5);
   assert.equal(carcass.position.y,0,'finite settle must end');
-  const stable=carcass.matrix.clone();wait(60);assert.ok(carcass.matrix.equals(stable));
+  assert.ok(carcass.getWorldDirection(new THREE.Vector3()).dot(p.camDir.clone().negate())>.999,'X-eyed face looks toward the impact view, not the sideways patrol');
+  const stable=carcass.matrix.clone(),faceYaw=carcass.rotation.y;p.camDir.set(1,0,0);wait(60);assert.ok(carcass.matrix.equals(stable),'dead pose stays fixed when the camera moves');
   reports.push('real falling stomp, bounce, persistent harmless X-eye model, finite settle');
 
   p.pos.set(-1.2,0,0);p.prevPos.copy(p.pos);p.speed=0;p.walkVelocity.set(0,0,0);
@@ -92,6 +93,7 @@ try{
   assert.equal(e.crabCarcass,undefined);assert.equal(e.state,'crab-carcass-flung');assert.ok(e.flungVel?.y>0);
   assert.equal(p.points,points,'carcass spin cannot award another kill');
   assert.equal(body.visible,false);assert.ok(e.group.getObjectByName('CoralCrab_Stomped'));
+  assert.equal(carcass.rotation.y,faceYaw,'flinging retains the defeated face orientation');
   wait(12);assert.equal(level.crates[0].alive,false,'flung carcass uses ordinary crate-smashing debris');
   wait(100);assert.equal(e.group.visible,false);
   reports.push('fresh F spin, no duplicate kill, X-eye body in flight, crate hit, finite removal');
@@ -111,6 +113,7 @@ try{
 
   for(const hard of [false,true]){
    level.reset(hard);level.update(0);assert.equal(e.alive,true);assert.equal(e.crabCarcass,undefined);assert.equal(e.flungVel,undefined);
+   assert.equal(e.crabCarcassYaw,undefined,'reset retires the previous impact view');
    assert.equal(e.body.visible,true);assert.equal(e.group.getObjectByName('CoralCrab_Stomped'),undefined);
    level.killEnemy(e,undefined,undefined,undefined,'stomp');assert.ok(e.crabCarcass);assert.equal(level.killEnemy(e),false);
   }
@@ -126,4 +129,29 @@ try{
   {t:'crate',p:[4.2,1.3,0]},
   {t:'gate',p:[0,0,-18]},
  ]}}});
+
+ // The reported Jungle Ruins run lands on a sideways-patrolling crab. Check
+ // its real input/contact path and the visible face, beyond model readiness.
+ const replay=JSON.parse(await readFile(new URL('tools/fixtures/crab-stomp-jungle-replay.json',base)));
+ await withSkateRuntime(async({THREE,server,level,player:p,step})=>{
+  const {Replayer}=await server.ssrLoadModule('/src/replay.ts');
+  const e=level.enemies[0];await e.visual.ready;
+  p.competitionMode=false;p.endlessDeaths=replay.endlessDeaths===true;p.enterLevel('jungle');p.respawn(level,true);level.update(0);
+  const replayer=new Replayer(),input=makeInput();let impact=null;
+  replayer.begin(replay);
+  try{
+   for(let frame=0;frame<1000;frame++){
+    replayer.feed(input,p.camDir);const wasAlive=e.alive,patrolYaw=e.group.rotation.y;
+    step(input);p.flushLevelCrateRewards(level);p.commitRenderStep(level);
+    if(wasAlive&&!e.alive)impact={frame,view:p.camDir.clone().negate(),patrolYaw};
+   }
+   assert.ok(impact,'supplied recording must actually stomp the crab');
+   assert.equal(impact.frame,858);assert.ok(e.crabCarcass&&e.group.visible);
+   const carcass=e.group.getObjectByName('CoralCrab_Stomped');assert.ok(carcass);assert.equal(e.body.visible,false);
+   assert.ok(carcass.getWorldDirection(new THREE.Vector3()).dot(impact.view)>.999,'both X eyes face the recorded gameplay view');
+   assert.equal(e.group.rotation.y,impact.patrolYaw,'presentation cannot change the gameplay root');
+   assert.equal(p.lives,4);assert.equal(p.totalDeaths,0);
+   console.log('Reported Jungle replay: frame 859 stomp, persistent X-eyed face toward impact view, unchanged root and no deaths.');
+  }finally{replayer.end();}
+ },{levelEntry:{id:'jungle',name:'Jungle Ruins'}});
 }finally{GLTFLoader.prototype.loadAsync=original;}

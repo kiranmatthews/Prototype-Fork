@@ -514,6 +514,9 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
     body.visible=!showCarcass;
     if(showCarcass&&carcassModel){
       if(carcassModel.parent!==artwork)artwork.add(carcassModel);
+      // Sideways patrols hid the X eyes at the model handoff. The dead pose
+      // faces the impact view once, then keeps that heading through its fling.
+      carcassModel.rotation.y=frame.crabCarcassYaw??0;
       const elastic=sampleEnemyElasticity('grunt',frame,0,{},frame.stateTime-.10);
       carcassModel.position.y=Math.max(0,elastic.torso-1)*.25;
       mixer?.stopAllAction();currentAction=null;fadingActions.clear();
