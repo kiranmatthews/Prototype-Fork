@@ -1,31 +1,27 @@
 {
-  "since": "2026-10-23T03:00:25Z",
   "source": [
     {
       "level": "error",
       "message": "Uncaught TypeError: Failed to execute 'observe' on 'MutationObserver': parameter 1 is not of type 'Node'.",
-      "timestamp": "2026-10-23T03:02:14.443Z"
+      "timestamp": "2026-10-23T03:44:26.275Z"
     },
     {
       "level": "error",
       "message": "Uncaught TypeError: Failed to execute 'observe' on 'MutationObserver': parameter 1 is not of type 'Node'.",
-      "timestamp": "2026-10-23T03:20:11.134Z"
-    }
-  ],
-  "main": [
+      "timestamp": "2026-10-23T03:48:50.490Z"
+    },
     {
       "level": "error",
       "message": "Uncaught TypeError: Failed to execute 'observe' on 'MutationObserver': parameter 1 is not of type 'Node'.",
-      "timestamp": "2026-10-23T03:22:20.523Z"
+      "timestamp": "2026-10-23T03:59:39.293Z"
     }
   ],
-  "pageCapture": {
-    "source": [],
-    "startup": {
-      "preview": [],
-      "game": []
-    },
-    "main": []
+  "main": [],
+  "since": "2026-10-23T03:33:22Z",
+  "sourcePageErrors": [],
+  "sourceStartupErrors": {
+    "preview": [],
+    "game": []
   },
-  "note": "Recurring MutationObserver errors have no captured source URL or stack and remain unattributed. No captured game-page errors."
+  "attribution": "DevTools records three bare MutationObserver errors during reloads. No URL or stack identifies their source; they are retained as unresolved, not assigned to the game or claimed fixed. Current early-page/game capture and main preview DevTools entries are empty."
 }

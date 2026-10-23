@@ -1,0 +1,94 @@
+{
+  "render": "full",
+  "screenshot": "docs/art-reviews/school-miami/source-reference-courtyard-rail.png",
+  "screenshotSha256": "390bde72fc67ce896bbfaeba02a0e9b3814851cf3415831190a56e850f3c60e8",
+  "capture": {
+    "state": "grind",
+    "grounded": false,
+    "pos": [
+      90.4657741734074,
+      2.820634706444465,
+      -34.443017518116704
+    ],
+    "sourcePosition": [
+      -12643.428745078018,
+      1801.4899613613472,
+      3918.3773415334754
+    ],
+    "speed": 18.03725789164079,
+    "errors": [],
+    "startupErrors": {
+      "preview": [],
+      "game": []
+    }
+  },
+  "captureStage": "Original courtyard ollie onto rail 163 and rollout (planter)",
+  "captureFrame": 37,
+  "checks": {
+    "running": false,
+    "stage": "Original courtyard ollie onto rail 163 and rollout (ground)",
+    "passed": [
+      {
+        "name": "Original courtyard ollie onto rail 163 and rollout (planter)",
+        "frames": 346,
+        "result": {
+          "air": 30,
+          "verts": 0,
+          "grinds": 306,
+          "peak": 2.943106601594458,
+          "grind": {
+            "frames": 346,
+            "grindFrames": 306,
+            "maxT": 104.58457012609946,
+            "minT": 12.904669452704049,
+            "progress": 104.58457012609946,
+            "direction": 1,
+            "maxBalance": 0.1,
+            "caught": true,
+            "landed": true
+          }
+        },
+        "end": [
+          -2.113776228625455,
+          2.5595768377727506,
+          -35.479075352746925
+        ]
+      },
+      {
+        "name": "Original courtyard ollie onto rail 163 and rollout (ground)",
+        "frames": 276,
+        "result": {
+          "air": 16,
+          "verts": 0,
+          "grinds": 238,
+          "peak": 2.699144401080756,
+          "grind": {
+            "frames": 276,
+            "grindFrames": 238,
+            "maxT": 104.58457012609946,
+            "minT": 26.991283709920534,
+            "progress": 104.58457012609946,
+            "direction": 1,
+            "maxBalance": 0.1,
+            "caught": true,
+            "landed": true
+          }
+        },
+        "end": [
+          -2.2488641507009834,
+          2.559548400369729,
+          -35.479075352746925
+        ]
+      }
+    ],
+    "failure": null,
+    "frames": 622,
+    "tuningUnchanged": true
+  },
+  "errors": [],
+  "startupErrors": {
+    "preview": [],
+    "game": []
+  },
+  "initialization": "Both trials begin on original mesh support, then use normal device input with no intermediate pose or speed writes."
+}

@@ -61,24 +61,53 @@ export function schoolSourceTrials(p: any, level: any, place: Place, traceRoute 
     if (r.peak < 2.1 || r.peak > 2.25) throw Error('Source-calibrated flat ollie height differs');
     return true;
   });
+  for (const [origin, sourceX] of [['planter', -13200], ['ground', -12200]] as const) {
+    let approachLine: ReturnType<typeof createBalancedGrind>, approachRail: any, approachReleased = false;
+    const approach = add(`Original courtyard ollie onto rail 163 and rollout (${origin})`, () => {
+      const authored = SCHOOL_SOURCE_RAILS.find(r => r.ids[0] === 163)!;
+      approachRail = level.rails.find((r: any) => r.points[0].distanceTo(p.pos.clone().set(...authored.points[0])) < .001);
+      if (!approachRail) throw Error('Missing courtyard rail');
+      place([sourceX, origin === 'planter' ? 1800 : 1630, 4500], [-Math.SQRT1_2, 0, -Math.SQRT1_2], 18);
+      const supportHeight = origin === 'planter' ? 165 * SCHOOL_SOURCE_SCALE : 0;
+      if (Math.abs(p.pos.y - supportHeight) > .01) throw Error(`Wrong ${origin} approach support`);
+      approachReleased = false; approachLine = createBalancedGrind(p, approachRail, CONST.fixedStep);
+      approach.grind = approachLine.report;
+    }, () => {
+      if (approachLine.report.caught) return approachLine.sample();
+      if (p.pos.z - approachRail.points[0].z < 4.5) approachReleased = true;
+      return { moveY: 1, jumpHeld: !approachReleased, grindHeld: approachReleased };
+    }, () => {
+      if (p.state === 'grind' && p.grindRail !== approachRail) throw Error('Courtyard ollie caught the wrong rail');
+      return approachLine.observe();
+    }, 1500);
+  }
   // Catch-and-traverse cases start 30 cm above the rail at 18 m/s. These
   // validate original chains and natural run-offs; approach ollies are a
   // separate coverage item. The controller uses ordinary balance inputs.
   for (const [root, direction] of [[163, 1], [163, -1], [784, 1], [784, -1], [206, 1], [206, -1], [797, 1], [283, -1]]) {
+    // These two source rails climb farther than the final speed cap's entire
+    // kinetic head. Starting at the bottom must reverse, never creep uphill
+    // forever on the fork's generic minimum-grind-speed clamp.
+    const reversal = direction < 0 && (root === 784 || root === 206);
     let line: ReturnType<typeof createBalancedGrind>;
-    const result = add(`Original rail ${root} catch, traverse and land ${direction}`, () => {
+    const result = add(reversal ? `Original rail ${root} uphill reversal and return` : `Original rail ${root} catch, traverse and land ${direction}`, () => {
       const authored = SCHOOL_SOURCE_RAILS.find(r => r.ids[0] === root)!;
       const start = p.pos.clone().set(...authored.points[0]);
       const length = authored.points.slice(1).reduce((sum, q, i) => sum + p.pos.clone().set(...q).distanceTo(p.pos.clone().set(...authored.points[i])), 0);
       const rail = level.rails.find((r: any) => r.points[0].distanceTo(start) < .001 && Math.abs(r.totalLength - length) < .001);
       if (!rail) throw Error(`Missing activated rail ${root}`);
+      if (reversal) {
+        const profile = level.skateReferencePhysics;
+        const head = profile.finalSpeedLimit ** 2 / (2 * profile.park.airGravity);
+        if (rail.points[0].y - rail.points.at(-1).y <= head) throw Error('Reversal fixture must retain the original over-height climb');
+      }
       const t = direction > 0 ? .4 : rail.totalLength - .4;
       const heading = rail.tangentAt(t).multiplyScalar(direction).setY(0).normalize();
       const position = rail.pointAt(t).add(p.pos.clone().set(0, .3, 0));
       p.respawn(level, true, true, { position, heading }); p.axisF.copy(heading); p.axisL.set(heading.z, 0, -heading.x);
       p.freeSkate = true; p.speed = 18; p.pos.copy(position); p.prevPos.copy(position);
       p.grounded = false; p.state = 'air'; p.vVel = 0; p.airFromSkate = true; p.airGrav = 'board';
-      line = createBalancedGrind(p, rail, CONST.fixedStep); result.grind = line.report;
+      line = createBalancedGrind(p, rail, CONST.fixedStep, false, reversal); result.grind = line.report;
     }, () => line.sample(), () => line.observe(), root === 784 && direction < 0 ? 2800 : 1800);
   }
   let route: ReturnType<typeof createSchoolSourceRoute>;
@@ -95,7 +124,7 @@ export function schoolSourceTrials(p: any, level: any, place: Place, traceRoute 
 }
 
 /** The same cases run through the rendered game's ordinary gamepad input. */
-export function runSchoolSourceBrowserChecks(game: any, routeOnly = false) {
+export function runSchoolSourceBrowserChecks(game: any, routeOnly = false, filter?: RegExp) {
   const p = game.player, level = game.getLevel(), input = game.input;
   const oldStep = p.step, oldPoll = input.pollGamepad, update = input.update.bind(input);
   const report: any = { running: true, stage: '', passed: [], failure: null, frames: 0, tuningBefore: JSON.stringify(game.TUNING) };
@@ -105,7 +134,7 @@ export function runSchoolSourceBrowserChecks(game: any, routeOnly = false) {
     p.groundHit = p.queryGround(level); if (!p.groundHit) throw Error('Missing measured support');
     p.pos.y = p.groundHit.y; p.prevPos.copy(p.pos); p.grounded = true; p.rideNormal.copy(p.groundHit.normal);
   };
-  const trials = schoolSourceTrials(p, level, place, routeOnly).filter(c => !routeOnly || c.name === 'Original continuous campus route');
+  const trials = schoolSourceTrials(p, level, place, routeOnly).filter(c => (!routeOnly || c.name === 'Original continuous campus route') && (!filter || filter.test(c.name)));
   let sample: any = {}, frame = 0, index = 0;
   const stop = (failure: string | null) => {
     p.step = oldStep; input.pollGamepad = oldPoll; report.running = false; report.failure = failure;

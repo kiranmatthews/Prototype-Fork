@@ -88,6 +88,7 @@ export const TUNING = {
   perfectGrindHold: 3.9, // how long that over-ceiling speed is allowed to survive before the normal downhillMax clamp takes it back (heavyDrag is bleeding it the whole time)
   grindSpeed: 5, // reference speed: you grind at ENTRY speed; slower than this drifts harder
   grindJumpForce: 12.5, // vertical pop when jumping off a rail
+  grindTransferSpeed: 4.8, // sideways launch speed from a direction held BEFORE releasing a rail ollie
   underRailCooldown: 1.5, // seconds between under-rail hang switches (Circle on a rail)
   spinDuration: 0.3,
   spinAirCorrection: 0.5, // small vertical stall from spinning in air (not a rescue)
@@ -305,6 +306,7 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   perfectGrindHold: { min: 0, max: 6, step: 0.1 },
   grindSpeed: { min: 5, max: 50, step: 1 },
   grindJumpForce: { min: 4, max: 30, step: 0.5 },
+  grindTransferSpeed: { min: 0, max: 10, step: 0.1 },
   underRailCooldown: { min: 0.5, max: 4, step: 0.1 },
   spinDuration: { min: 0.1, max: 1.2, step: 0.05 },
   flipHoldTime: { min: 0, max: 0.6, step: 0.02 },
@@ -606,6 +608,7 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   grindSpeed:
     'REFERENCE grind speed: you actually grind at whatever speed you arrive with, but slower than this wobbles the balance meter harder and faster than it steadies it.',
   grindJumpForce: 'Vertical pop of a fully-charged jump off a rail.',
+  grindTransferSpeed: 'Sideways speed of a rail ollie when direction was held before releasing Jump. Tap jumps use 80%; full charge uses 100%, scaled by stick deflection. Neutral pops keep the rail line. Airborne direction spins without steering the flight.',
   underRailCooldown: 'Cooldown between Circle switches on a rail (grind top <-> hanging underneath).',
   spinDuration: 'How long the Square spin attack stays active per press.',
   spinAirCorrection:
@@ -865,7 +868,7 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
   { title: 'LEDGE GRAB', keys: ['ledgeGrabTime', 'ledgeClimbTime', 'ledgeClimbPop', 'ledgeReach'] },
   {
     title: 'GRINDS',
-    keys: ['railSnapDistance', 'grindApproachMargin', 'railTripSpeed', 'railSpeedBoost', 'grindDrag', 'perfectGrindSpeed', 'perfectGrindHold', 'grindSpeed', 'grindJumpForce', 'underRailCooldown', 'balanceDrift', 'balanceControl', 'balanceEntryLean', 'grindCalm', 'balanceSpeedEffect'],
+    keys: ['railSnapDistance', 'grindApproachMargin', 'railTripSpeed', 'railSpeedBoost', 'grindDrag', 'perfectGrindSpeed', 'perfectGrindHold', 'grindSpeed', 'grindJumpForce', 'grindTransferSpeed', 'underRailCooldown', 'balanceDrift', 'balanceControl', 'balanceEntryLean', 'grindCalm', 'balanceSpeedEffect'],
   },
   {
     title: 'BALANCE · SHARED',

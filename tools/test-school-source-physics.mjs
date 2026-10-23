@@ -29,11 +29,14 @@ await withSkateRuntime(async ({ THREE, server, Level, Player, scene, CONST, TUNI
       step({ grindHeld: true, grindPressed: true });
       assert.equal(p.grindRail, rail, 'Must catch through normal grind input');
       for (let i = 0; i < 30; i++) step({ grindHeld: true, jumpHeld: true, jumpPressed: i === 0 });
+      const takeoffSpeed = p.grindVel;
       step({ grindHeld: true, jumpReleased: true });
       assert.equal(p.state, 'air');
-      const expectedPop = 31.5 * 30 * scale; // Original Tony + first-board charged ollie, units/tick.
-      near(p.vVel, expectedPop + tangent.y * p.grindVel, 'signed source slope velocity');
-      near(p.speed, Math.hypot(tangent.x, tangent.z) * p.grindVel, 'horizontal rail velocity');
+      const expectedPop = 31.5 * 30 * scale; // Tony with first STAT UPGRADE charged ollie, units/tick.
+      // HandleJump precedes state physics, so release advances one air step.
+      const gravity = 13000 / 4096 * 30 * 30 * scale;
+      near(p.vVel, expectedPop + tangent.y * takeoffSpeed - gravity * CONST.fixedStep, 'signed source slope velocity after release step');
+      near(p.speed, Math.hypot(tangent.x, tangent.z) * takeoffSpeed, 'horizontal rail velocity');
       results.push({ slope, direction, speed: p.speed, vertical: p.vVel, expectedPop });
     } finally { level.dispose(); }
   }

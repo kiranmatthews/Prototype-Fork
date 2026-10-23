@@ -12,6 +12,9 @@ document.querySelector('#game-host')!.replaceWith(frame);
 function bind() {
   const w = frame.contentWindow as any; if (!w?.__game) { setTimeout(bind, 250); return; }
   if (game === w.__game) return; game = w.__game;
+  // This inspection session must stay playable after idle auto-kick falls.
+  // Leave the saved game mode and production level settings untouched.
+  game.player.endlessDeaths = true;
   const render = game.renderer.render.bind(game.renderer);
   game.renderer.render = (scene: any, current: any) => {
     if (!overview || scene !== game.scene) return render(scene, current);
@@ -33,6 +36,7 @@ document.querySelector('#overview')!.addEventListener('click', () => { overview 
 document.querySelector('#play')!.addEventListener('click', () => { overview = false; frame.contentWindow?.focus(); });
 document.querySelector('#checks')!.addEventListener('click', () => { if (!game || checks?.running || scaleMeasurement?.running) return; overview = false; checks = runSchoolSourceBrowserChecks(game); });
 document.querySelector('#route')!.addEventListener('click', () => { if (!game || checks?.running || scaleMeasurement?.running) return; overview = false; checks = runSchoolSourceBrowserChecks(game, true); });
+document.querySelector('#rail-approach')!.addEventListener('click', () => { if (!game || checks?.running || scaleMeasurement?.running) return; overview = false; checks = runSchoolSourceBrowserChecks(game, false, /courtyard ollie/); });
 document.querySelector('#measure')!.addEventListener('click', () => { if (!game || checks?.running || scaleMeasurement?.running) return; overview = false; scaleMeasurement = runSchoolScaleMeasurement(game); });
 document.querySelector('#full')!.textContent = full ? 'Lite render' : 'Full render';
 document.querySelector('#full')!.addEventListener('click', () => { location.search = full ? '' : '?full'; });

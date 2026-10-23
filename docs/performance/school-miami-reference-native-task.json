@@ -228,172 +228,328 @@
       "error": null
     },
     {
-      "name": "Original rail 163 catch, traverse and land 1",
+      "name": "Original courtyard ollie onto rail 163 and rollout (planter)",
       "passed": true,
-      "frames": 377,
-      "air": 28,
+      "frames": 346,
+      "air": 30,
       "verts": 0,
-      "grinds": 348,
-      "peak": 2.835267926759767,
-      "maxStep": 0.39130027395546274,
+      "grinds": 306,
+      "peak": 2.943106601594458,
+      "maxStep": 0.5986431223047899,
       "end": [
-        -9.012909015463299,
-        -0.3424209878343336,
+        -2.113776228625455,
+        2.5595768377727506,
         -35.479075352746925
       ],
       "sourceEnd": [
-        -5501.974139428701,
-        1574.4180105500827,
+        -5997.25455565622,
+        1782.7489320392465,
         3843.9999999999995
       ],
-      "error": null
+      "error": null,
+      "grind": {
+        "frames": 346,
+        "grindFrames": 306,
+        "maxT": 104.58457012609946,
+        "minT": 12.904669452704049,
+        "progress": 104.58457012609946,
+        "direction": 1,
+        "maxBalance": 0.1,
+        "caught": true,
+        "landed": true
+      }
+    },
+    {
+      "name": "Original courtyard ollie onto rail 163 and rollout (ground)",
+      "passed": true,
+      "frames": 276,
+      "air": 16,
+      "verts": 0,
+      "grinds": 238,
+      "peak": 2.699144401080756,
+      "maxStep": 0.6380663730824848,
+      "end": [
+        -2.2488641507009834,
+        2.559548400369729,
+        -35.479075352746925
+      ],
+      "sourceEnd": [
+        -5987.556756767565,
+        1782.7468905524045,
+        3843.9999999999995
+      ],
+      "error": null,
+      "grind": {
+        "frames": 276,
+        "grindFrames": 238,
+        "maxT": 104.58457012609946,
+        "minT": 26.991283709920534,
+        "progress": 104.58457012609946,
+        "direction": 1,
+        "maxBalance": 0.1,
+        "caught": true,
+        "landed": true
+      }
+    },
+    {
+      "name": "Original rail 163 catch, traverse and land 1",
+      "passed": true,
+      "frames": 273,
+      "air": 5,
+      "verts": 0,
+      "grinds": 267,
+      "peak": 2.835267926759767,
+      "maxStep": 0.3935279611533079,
+      "end": [
+        -2.563660630606493,
+        2.55948213245894,
+        -35.479075352746925
+      ],
+      "sourceEnd": [
+        -5964.957897401935,
+        1782.7421332590675,
+        3843.9999999999995
+      ],
+      "error": null,
+      "grind": {
+        "frames": 273,
+        "grindFrames": 267,
+        "maxT": 104.58457012609946,
+        "minT": 0.40003995737844816,
+        "progress": 104.58457012609946,
+        "direction": 1,
+        "maxBalance": 0.1,
+        "caught": true,
+        "landed": true
+      }
     },
     {
       "name": "Original rail 163 catch, traverse and land -1",
       "passed": true,
-      "frames": 375,
-      "air": 26,
+      "frames": 290,
+      "air": 22,
       "verts": 0,
-      "grinds": 348,
+      "grinds": 267,
       "peak": 2.849091124576167,
-      "maxStep": 0.639763666654693,
+      "maxStep": 0.6833767370431423,
       "end": [
-        111.77166014274145,
+        112.57226161388819,
         0,
         -34.949079999999995
       ],
       "sourceEnd": [
-        -14172.952584816201,
+        -14230.426798186672,
         1599,
         3882.047726724138
       ],
-      "error": null
+      "error": null,
+      "grind": {
+        "frames": 290,
+        "grindFrames": 267,
+        "maxT": 104.18461008347788,
+        "minT": 0,
+        "progress": 104.58457012609946,
+        "direction": -1,
+        "maxBalance": 0.1,
+        "caught": true,
+        "landed": true
+      }
     },
     {
       "name": "Original rail 784 catch, traverse and land 1",
       "passed": true,
-      "frames": 475,
-      "air": 21,
+      "frames": 379,
+      "air": 17,
       "verts": 0,
-      "grinds": 453,
+      "grinds": 361,
       "peak": 2.849144401080756,
-      "maxStep": 0.5372430916364227,
+      "maxStep": 0.6521431968166134,
       "end": [
-        -99.49109126388484,
-        -20.949186428959365,
+        -99.71510454102649,
+        -20.930701867340975,
         -87.99423596517562
       ],
       "sourceEnd": [
-        993.3453663793189,
-        95.08318976586975,
+        1009.4270091844664,
+        96.41017413550026,
         74
       ],
-      "error": null
+      "error": null,
+      "grind": {
+        "frames": 379,
+        "grindFrames": 361,
+        "maxT": 175.06429652253195,
+        "minT": 0.3999999999999991,
+        "progress": 175.06429652253195,
+        "direction": 1,
+        "maxBalance": 0.1,
+        "caught": true,
+        "landed": true
+      }
     },
     {
-      "name": "Original rail 784 catch, traverse and land -1",
+      "name": "Original rail 784 uphill reversal and return",
       "passed": true,
-      "frames": 2499,
-      "air": 26,
+      "frames": 330,
+      "air": 18,
       "verts": 0,
-      "grinds": 2472,
-      "peak": 2.777389797858501,
-      "maxStep": 0.3024952181726599,
+      "grinds": 311,
+      "peak": -12.642878410053827,
+      "maxStep": 0.4345899724784233,
       "end": [
-        -15.661449097756693,
-        0,
-        33.148926308942364
+        -95.91663017846425,
+        -21.244134777686995,
+        -87.99423596517562
       ],
       "sourceEnd": [
-        -5024.683471020958,
-        1599,
-        8770.721412394116
+        736.7391190617327,
+        73.90920378285819,
+        74
       ],
-      "error": null
+      "error": null,
+      "grind": {
+        "frames": 330,
+        "grindFrames": 311,
+        "maxT": 175.06429652253195,
+        "minT": 127.60233985671437,
+        "progress": 47.46195666581758,
+        "direction": -1,
+        "maxBalance": 0.1,
+        "caught": true,
+        "landed": true,
+        "reversed": true,
+        "turnT": 127.60233985671437
+      }
     },
     {
       "name": "Original rail 206 catch, traverse and land 1",
       "passed": true,
-      "frames": 291,
-      "air": 56,
+      "frames": 242,
+      "air": 49,
       "verts": 0,
-      "grinds": 234,
+      "grinds": 192,
       "peak": 2.7457037542221285,
-      "maxStep": 0.805375775344055,
+      "maxStep": 0.8850508530906698,
       "end": [
-        -89.60774444444445,
-        -22.072081527936017,
+        -91.92452742623153,
+        -21.685951030971502,
         -104.10993695586912
       ],
       "sourceEnd": [
-        283.83182638888957,
-        14.471905828558647,
+        450.1508805339927,
+        42.19174818607598,
         -1082.926724137932
       ],
-      "error": null
+      "error": null,
+      "grind": {
+        "frames": 242,
+        "grindFrames": 192,
+        "maxT": 111.98078743920179,
+        "minT": 0.3224195148560266,
+        "progress": 111.98078743920179,
+        "direction": 1,
+        "maxBalance": 0.1,
+        "caught": true,
+        "landed": true
+      }
     },
     {
-      "name": "Original rail 206 catch, traverse and land -1",
+      "name": "Original rail 206 uphill reversal and return",
       "passed": true,
-      "frames": 1459,
-      "air": 26,
+      "frames": 443,
+      "air": 37,
       "verts": 0,
-      "grinds": 1432,
-      "peak": 2.777389797858501,
-      "maxStep": 0.3024952181726458,
+      "grinds": 405,
+      "peak": -10.868141733996277,
+      "maxStep": 0.7373294461150769,
       "end": [
-        -3.468507955568898,
-        0,
-        -33.962408686080344
+        -76.44353659792445,
+        -18.907822595455652,
+        -104.10993695586912
       ],
       "sourceEnd": [
-        -5900,
-        1599,
-        3952.8796695402234
+        -661.210767075725,
+        241.63023565812978,
+        -1082.926724137932
       ],
-      "error": null
+      "error": null,
+      "grind": {
+        "frames": 443,
+        "grindFrames": 405,
+        "maxT": 111.98078743920179,
+        "minT": 59.84176279887709,
+        "progress": 52.1390246403247,
+        "direction": -1,
+        "maxBalance": 0.1,
+        "caught": true,
+        "landed": true,
+        "reversed": true,
+        "turnT": 59.84460019126536
+      }
     },
     {
       "name": "Original rail 797 catch, traverse and land 1",
       "passed": true,
-      "frames": 744,
-      "air": 36,
+      "frames": 574,
+      "air": 30,
       "verts": 0,
-      "grinds": 707,
+      "grinds": 543,
       "peak": -16.262473731612126,
-      "maxStep": 0.4531690226329818,
+      "maxStep": 0.5017465690519843,
       "end": [
         -73.56301410987692,
-        -21.982744799488295,
-        -273.6507028387593
+        -21.381209367403393,
+        -274.63482940917703
       ],
       "sourceEnd": [
         -868,
-        20.88528174363114,
-        -13254.053688704898
+        64.06878442196762,
+        -13324.702947456222
       ],
-      "error": null
+      "error": null,
+      "grind": {
+        "frames": 574,
+        "grindFrames": 543,
+        "maxT": 212.20666087264325,
+        "minT": 0.4000000000000088,
+        "progress": 212.20666087264325,
+        "direction": 1,
+        "maxBalance": 0.1,
+        "caught": true,
+        "landed": true
+      }
     },
     {
       "name": "Original rail 283 catch, traverse and land -1",
       "passed": true,
-      "frames": 456,
-      "air": 32,
+      "frames": 354,
+      "air": 28,
       "verts": 0,
-      "grinds": 423,
+      "grinds": 325,
       "peak": 23.409456619633744,
-      "maxStep": 0.4213460727493103,
+      "maxStep": 0.48817197829287123,
       "end": [
-        80.20510357250083,
+        78.86988892224565,
         18.944461822509766,
         22.99801861302912
       ],
       "sourceEnd": [
-        -11906.827586206902,
+        -11810.97413793104,
         2959.0000502323282,
         8042
       ],
-      "error": null
+      "error": null,
+      "grind": {
+        "frames": 354,
+        "grindFrames": 325,
+        "maxT": 126.82392941640815,
+        "minT": 0,
+        "progress": 127.22392941640815,
+        "direction": -1,
+        "maxBalance": 0.1,
+        "caught": true,
+        "landed": true
+      }
     },
     {
       "name": "Original continuous campus route",

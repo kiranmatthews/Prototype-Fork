@@ -25,7 +25,7 @@ export class Input {
   grindHeld = false;
   spinHeld = false;
   grabHeld = false;
-  transferHeld = false; // R2: rail-air transfer strafe; press also triggers revert/lip actions
+  transferHeld = false; // R2: revert/lip actions; rail transfers use direction before Jump release
   // Presentation-only: it reveals collection inventory and is deliberately
   // absent from replay.ts, whose channels are only inputs consumed by the sim.
   inventoryHeld = false;

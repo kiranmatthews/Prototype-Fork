@@ -9,9 +9,9 @@ function meterControl(p:any,dt:number){
   let previous=0;
   return()=>{const value=p.balanceMeter?.bal??0,axis=clamp(-value*6-(value-previous)/dt*.65);previous=value;return axis;};
 }
-export function createBalancedGrind(p:any,rail:any,dt:number,sideExit=false){
+export function createBalancedGrind(p:any,rail:any,dt:number,sideExit=false,returnOnReversal=false){
   const direction=p.axisF.dot(rail.tangentAt(rail.closest(p.pos).t))<0?-1:1;
-  const balance=meterControl(p,dt),report={frames:0,grindFrames:0,maxT:0,minT:rail.totalLength,progress:0,direction,maxBalance:0,caught:false,landed:false};
+  const balance=meterControl(p,dt),report={frames:0,grindFrames:0,maxT:0,minT:rail.totalLength,progress:0,direction,maxBalance:0,caught:false,landed:false,...(returnOnReversal?{reversed:false,turnT:0}: {})};
   let exitPopped=false,held=false;
   return {report,sample:()=>{
     const nearEnd=sideExit&&report.progress>rail.totalLength-1.5,release=nearEnd&&!exitPopped&&report.progress>rail.totalLength-.6;
@@ -22,11 +22,18 @@ export function createBalancedGrind(p:any,rail:any,dt:number,sideExit=false){
     return quantize({grindHeld:!exitPopped,grindPressed:report.frames===0,moveX,moveY,jumpHeld:charge,jumpPressed:press,jumpReleased:release});
   },observe:()=>{
     report.frames++;
+    if(returnOnReversal&&p.state==='grind'&&p.grindRail===rail&&p.grindDir!==direction&&!report.reversed){report.reversed=true;report.turnT=p.grindT;}
     if(p.state==='grind'&&p.grindRail===rail){report.caught=true;report.grindFrames++;report.maxT=Math.max(report.maxT,p.grindT);report.minT=Math.min(report.minT,p.grindT);report.progress=Math.max(report.progress,direction>0?p.grindT:rail.totalLength-p.grindT);report.maxBalance=Math.max(report.maxBalance,Math.abs(p.balanceMeter?.bal??0));}
     // Natural run-off advances grindT to the exact endpoint before changing
     // state. Include that last step, not only samples still marked grind.
     if(p.state==='air'&&(exitPopped||report.caught&&p.lastRail===rail)){report.maxT=Math.max(report.maxT,p.grindT);report.minT=Math.min(report.minT,p.grindT);report.progress=Math.max(report.progress,direction>0?p.grindT:rail.totalLength-p.grindT);}
-    if(report.caught&&p.grounded){if(report.progress<rail.totalLength-.3)throw Error('Long grind left its rail before the end');report.landed=true;return true;}
+    if(report.caught&&p.grounded){
+      if(returnOnReversal){
+        const returned=direction>0?report.minT<.3:report.maxT>rail.totalLength-.3;
+        if(!report.reversed||report.progress<5||!returned)throw Error('Uphill grind did not reverse and return through its starting endpoint');
+      }else if(report.progress<rail.totalLength-.3)throw Error('Long grind left its rail before the end');
+      report.landed=true;return true;
+    }
     return false;
   }};
 }

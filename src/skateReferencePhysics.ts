@@ -14,6 +14,13 @@ export interface SkateReferencePhysics {
   lowDrag: number;
   highDrag: number;
   dragThreshold: number;
+  finalSpeedLimit: number;
+  railEntryBoost: number;
+  railSlowThreshold: number;
+  railZeroSpeed: number;
+  railSlopeBoost: number;
+  railTransferAngle: number;
+  railCornerAngle: number;
 }
 
 export function validSkateReference(value: unknown): value is SkateReferenceData {
@@ -57,6 +64,13 @@ export function createSkateReference(data: SkateReferenceData): SkateReferencePh
     lowDrag: 8 / q * hz,
     highDrag: 82 / q * hz,
     dragThreshold: speed(39),
+    finalSpeedLimit: speed(50),
+    railEntryBoost: (data.stats.speed + 5) * hz * unit,
+    railSlowThreshold: 60000 / q * hz * unit,
+    railZeroSpeed: 1000 / q * hz * unit,
+    railSlopeBoost: 2000 / q * hz * unit,
+    railTransferAngle: 200 / q * Math.PI * 2,
+    railCornerAngle: Math.acos(2633 / q),
   };
 }
 
@@ -68,4 +82,32 @@ export function referenceKickDuration(groundSeconds: number, dt: number): number
     return (Math.floor(ticks / 20) * 5 + Math.min(5, Math.max(0, ticks % 20 - 5))) / 30;
   };
   return accumulated(groundSeconds + dt) - accumulated(groundSeconds);
+}
+
+/** Native low-speed rail assistance runs once per 30 Hz tick. Between those
+ * decisions, integrate the projected gravity continuously, including its
+ * half-acceleration displacement. `speed` and `distance` are signed along the
+ * authored rail tangent, so a stalled uphill grind can reverse downhill. */
+export function referenceRailMotion(
+  profile: SkateReferencePhysics, speed: number, tangentY: number, seconds: number, dt: number,
+): { speed: number; distance: number; seconds: number } {
+  let distance = 0;
+  const end = seconds + dt;
+  while (seconds < end - 1e-10) {
+    const tick = Math.floor(seconds * 30 + 1e-7);
+    if (Math.abs(seconds * 30 - tick) < 1e-7) {
+      if (speed === 0) speed = profile.railZeroSpeed;
+      if (Math.abs(speed) < profile.railSlowThreshold) {
+        if (tangentY > 0) speed -= profile.railSlopeBoost;
+        else if (tangentY < 0) speed += profile.railSlopeBoost;
+        else speed *= 1.25;
+      }
+    }
+    const h = Math.min(end - seconds, (tick + 1) / 30 - seconds);
+    const acceleration = -tangentY * profile.park.airGravity;
+    distance += speed * h + acceleration * h * h / 2;
+    speed += acceleration * h;
+    seconds += h;
+  }
+  return { speed, distance, seconds: end };
 }
