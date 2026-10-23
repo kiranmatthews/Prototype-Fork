@@ -2,10 +2,10 @@
 // controller input. The same pilot runs in the native and production browser.
 export const mallRailFixtures = [
  {name:'Concourse bench',start:[-11100,314.7586,968.0928],target:[-11529.2539,355.9365,968.0928],direction:[0,0,1],lead:4.5,exitSide:1},
- {name:'First concourse display ledge',start:[-13600,314.7586,349.7578],target:[-13107.0352,355.9365,369.8467],direction:[.04072,0,-.99917],lead:6.5,exitSide:0},
+ {name:'First concourse display ledge',start:[-13600,314.7586,349.7578],target:[-13107.0352,355.9365,369.8467],direction:[.04072,0,-.99917],lead:2,exitSide:0},
  {name:'Up-escalator inside handrail',start:[-13300,314.7586,10],target:[-13107.0352,380.833,-9.0332],direction:[-.01652,0,-.99986],lead:3,exitSide:1},
- {name:'Concourse display, both bends and outward exit',start:[-13600,314.7586,349.7578],target:[-13107.0352,355.9365,369.8467],direction:[.04072,0,-.99917],lead:6.5,exitLead:8,exitSide:1,rolloutFrames:30},
- {name:'Crossrail low arch',start:[5500,-1467,5780],target:[4801,-1466.5,5910.4],direction:[.18229,0,.98324],lead:5,exitSide:-1},
+ {name:'Concourse display, both bends and outward exit',start:[-13600,314.7586,349.7578],target:[-13107.0352,355.9365,369.8467],direction:[.04072,0,-.99917],lead:2,exitLead:8,exitSide:1,rolloutFrames:30},
+ {name:'Crossrail low arch',start:[5500,-1467,5780],target:[4801,-1466.5,5910.4],direction:[.18229,0,.98324],lead:9,exitSide:-1},
 ];
 
 export function createMallRailPilot(f,m,l,p,Vector3){

@@ -1,8 +1,10 @@
 import { SKATE_PARK } from './skateParkPhysics';
+import type {ReferenceRailFrame} from './referenceRailCapture';
 
 /** Parameters tied to measured source geometry; absent on existing levels. */
 export interface SkateReferenceData {
   kind: 'thps1';
+  railCapture?: Omit<ReferenceRailFrame,'unit'>;
   metresPerUnit: number;
   stats: { ollie: number; speed: number; air: number; balance?: number };
 }
@@ -22,15 +24,21 @@ export interface SkateReferencePhysics {
   railTransferAngle: number;
   railCornerAngle: number;
   balanceStat?: number;
+  railCapture?: ReferenceRailFrame;
 }
 
 export function validSkateReference(value: unknown): value is SkateReferenceData {
   if (!value || typeof value !== 'object' || Array.isArray(value)) return false;
   const data = value as SkateReferenceData;
-  if (Object.keys(data).some(k => !['kind', 'metresPerUnit', 'stats'].includes(k)) ||
+  if (Object.keys(data).some(k => !['kind', 'metresPerUnit', 'stats', 'railCapture'].includes(k)) ||
       data.kind !== 'thps1' || !Number.isFinite(data.metresPerUnit) ||
       data.metresPerUnit < 0.001 || data.metresPerUnit > 1 ||
       !data.stats || typeof data.stats !== 'object' || Array.isArray(data.stats)) return false;
+  const frame=data.railCapture;
+  if(frame!==undefined&&(!frame||typeof frame!=='object'||Array.isArray(frame)||
+    Object.keys(frame).some(k=>!['origin','axes'].includes(k))||
+    !Array.isArray(frame.origin)||frame.origin.length!==3||!frame.origin.every(n=>Number.isFinite(n)&&Math.abs(n)<1e6)||
+    !Array.isArray(frame.axes)||frame.axes.length!==3||!frame.axes.every(n=>Number.isInteger(n)&&Math.abs(n)>=1&&Math.abs(n)<=3)||new Set(frame.axes.map(Math.abs)).size!==3))return false;
   return Object.keys(data.stats).every(k => ['ollie', 'speed', 'air', 'balance'].includes(k)) &&
     [data.stats.ollie, data.stats.speed, data.stats.air].every(n => Number.isInteger(n) && n >= 0 && n <= 10) &&
     (data.stats.balance === undefined || Number.isInteger(data.stats.balance) && data.stats.balance >= 0 && data.stats.balance <= 10);
@@ -74,6 +82,7 @@ export function createSkateReference(data: SkateReferenceData): SkateReferencePh
     railTransferAngle: 200 / q * Math.PI * 2,
     railCornerAngle: Math.acos(2633 / q),
     balanceStat: data.stats.balance,
+    railCapture: data.railCapture?{origin:[...data.railCapture.origin],axes:[...data.railCapture.axes],unit}:undefined,
   };
 }
 

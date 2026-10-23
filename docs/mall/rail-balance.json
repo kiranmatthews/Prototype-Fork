@@ -1,11 +1,11 @@
 {
-  "schema": 1,
-  "verifiedAt": "2026-10-23T03:48:04.095447+00:00",
+  "schema": 2,
+  "verifiedAt": "2026-10-23T04:32:10.433851+00:00",
   "build": {
-    "version": "1635c1e5d850dd19eea4",
-    "snapshot": "/private/tmp/mall-recreation/snapshot-24",
-    "output": "/private/tmp/mall-recreation/dist-24",
-    "preview": "http://127.0.0.1:5296/?playtest&level=mall",
+    "version": "3d243395401e89a0d653",
+    "snapshot": "/private/tmp/mall-recreation/snapshot-25",
+    "output": "/private/tmp/mall-recreation/dist-25",
+    "preview": "http://127.0.0.1:5297/?playtest&level=mall",
     "published": false
   },
   "configuration": {
@@ -16,6 +16,18 @@
       "speed": 8,
       "air": 8,
       "balance": 5
+    },
+    "railCapture": {
+      "origin": [
+        396.0085157210703,
+        106.1296209180479,
+        -888.995810663731
+      ],
+      "axes": [
+        -3,
+        -2,
+        -1
+      ]
     }
   },
   "configurationNote": "Tony base ollie/speed/air/balance is 3/7/7/4; the selected 4/8/8/5 includes his first STAT UPGRADE (+1 each), not a zero-bonus starting board. This corrects the earlier first-board label without changing the existing movement stats.",
@@ -373,9 +385,9 @@
           -156.3108837890625
         ],
         "targetRail": 45,
-        "frames": 154,
+        "frames": 156,
         "grindFrames": 24,
-        "grindDistance": 12.666354325735803,
+        "grindDistance": 11.955734033036386,
         "rails": [
           45
         ],
@@ -400,9 +412,9 @@
           -43.8108837890625
         ],
         "targetRail": 17,
-        "frames": 161,
+        "frames": 164,
         "grindFrames": 24,
-        "grindDistance": 11.499271645640498,
+        "grindDistance": 11.91161429461563,
         "rails": [
           17
         ],
@@ -414,9 +426,9 @@
         "maxBalance": 0.04725,
         "done": true,
         "end": [
-          -12576.154624341867,
+          -12520.688341961633,
           314.75877549913184,
-          715.5073705886879
+          750.5089940754588
         ]
       },
       {
@@ -454,9 +466,9 @@
           -43.8108837890625
         ],
         "targetRail": 17,
-        "frames": 277,
-        "grindFrames": 111,
-        "grindDistance": 41.70920046363615,
+        "frames": 270,
+        "grindFrames": 101,
+        "grindDistance": 41.24565356640534,
         "rails": [
           17
         ],
@@ -470,21 +482,21 @@
         "corners": [
           {
             "node": 59,
-            "entrySpeed": 24.991562159110103,
-            "exitSpeed": 21.13519860471187
+            "entrySpeed": 27.558000307662972,
+            "exitSpeed": 23.30561835002584
           },
           {
             "node": 60,
-            "entrySpeed": 21.13519860471187,
-            "exitSpeed": 17.89823287464493
+            "entrySpeed": 23.30561835002584,
+            "exitSpeed": 19.736241533276438
           }
         ],
         "maxBalance": 0.08025,
         "done": true,
         "end": [
-          -11805.998694949176,
+          -11761.418923665125,
           314.75860595703125,
-          379.69282631911824
+          368.4178484836987
         ]
       },
       {
@@ -497,7 +509,7 @@
         "targetRail": 55,
         "frames": 215,
         "grindFrames": 24,
-        "grindDistance": 12.029204107099844,
+        "grindDistance": 11.965144772559203,
         "rails": [
           55
         ],
@@ -510,16 +522,16 @@
         "corners": [
           {
             "node": 118,
-            "entrySpeed": 29.315158069578313,
-            "exitSpeed": 29.180894887939168
+            "entrySpeed": 28.44593345780402,
+            "exitSpeed": 28.31207417652175
           }
         ],
         "maxBalance": 0.04725,
         "done": true,
         "end": [
-          3876.7179619809212,
+          3886.6693959921795,
           -1512.5263977050781,
-          5580.1996408208925
+          5587.764546204175
         ]
       }
     ]
@@ -535,9 +547,9 @@
           -156.3108837890625
         ],
         "targetRail": 45,
-        "frames": 154,
+        "frames": 156,
         "grindFrames": 24,
-        "grindDistance": 12.666354325735803,
+        "grindDistance": 11.955734033036386,
         "rails": [
           45
         ],
@@ -548,14 +560,14 @@
         "corners": [],
         "maxBalance": 0.04725,
         "done": true,
-        "startedAt": 8571.199999988079,
+        "startedAt": 8295.600000023842,
         "end": [
           -12219.184825777134,
           314.75860595703125,
           825.2063637020068
         ],
         "tuningUnchanged": true,
-        "wallSeconds": 2.5255
+        "wallSeconds": 2.583599999964237
       },
       {
         "name": "First concourse display ledge",
@@ -565,9 +577,9 @@
           -43.8108837890625
         ],
         "targetRail": 17,
-        "frames": 161,
+        "frames": 164,
         "grindFrames": 24,
-        "grindDistance": 11.499271645640498,
+        "grindDistance": 11.91161429461563,
         "rails": [
           17
         ],
@@ -578,14 +590,14 @@
         "corners": [],
         "maxBalance": 0.04725,
         "done": true,
-        "startedAt": 11141.599999964237,
+        "startedAt": 10893.5,
         "end": [
-          -12576.154624341867,
+          -12520.688341961633,
           314.75877549913184,
-          715.5073705886879
+          750.5089940754588
         ],
         "tuningUnchanged": true,
-        "wallSeconds": 2.669800000011921
+        "wallSeconds": 2.731100000023842
       },
       {
         "name": "Up-escalator inside handrail",
@@ -608,14 +620,14 @@
         "corners": [],
         "maxBalance": 0.04725,
         "done": true,
-        "startedAt": 13859.300000011921,
+        "startedAt": 13633.5,
         "end": [
           -12770.086200991682,
           457.709918755987,
           62.176912226243644
         ],
         "tuningUnchanged": true,
-        "wallSeconds": 2.1345
+        "wallSeconds": 2.1418999999761583
       },
       {
         "name": "Concourse display, both bends and outward exit",
@@ -625,9 +637,9 @@
           -43.8108837890625
         ],
         "targetRail": 17,
-        "frames": 277,
-        "grindFrames": 111,
-        "grindDistance": 41.70920046363615,
+        "frames": 270,
+        "grindFrames": 101,
+        "grindDistance": 41.24565356640534,
         "rails": [
           17
         ],
@@ -641,25 +653,25 @@
         "corners": [
           {
             "node": 59,
-            "entrySpeed": 24.991562159110103,
-            "exitSpeed": 21.13519860471187
+            "entrySpeed": 27.558000307662972,
+            "exitSpeed": 23.30561835002584
           },
           {
             "node": 60,
-            "entrySpeed": 21.13519860471187,
-            "exitSpeed": 17.89823287464493
+            "entrySpeed": 23.30561835002584,
+            "exitSpeed": 19.736241533276438
           }
         ],
         "maxBalance": 0.08025,
         "done": true,
-        "startedAt": 16006.300000011921,
+        "startedAt": 15783.800000011921,
         "end": [
-          -11805.998694949176,
+          -11761.418923665125,
           314.75860595703125,
-          379.69282631911824
+          368.4178484836987
         ],
         "tuningUnchanged": true,
-        "wallSeconds": 4.6035
+        "wallSeconds": 4.490300000011921
       },
       {
         "name": "Crossrail low arch",
@@ -671,7 +683,7 @@
         "targetRail": 55,
         "frames": 215,
         "grindFrames": 24,
-        "grindDistance": 12.029204107099844,
+        "grindDistance": 11.965144772559203,
         "rails": [
           55
         ],
@@ -684,28 +696,28 @@
         "corners": [
           {
             "node": 118,
-            "entrySpeed": 29.315158069578313,
-            "exitSpeed": 29.180894887939168
+            "entrySpeed": 28.44593345780402,
+            "exitSpeed": 28.31207417652175
           }
         ],
         "maxBalance": 0.04725,
         "done": true,
-        "startedAt": 20624.30000001192,
+        "startedAt": 20284.80000001192,
         "end": [
-          3876.7179619809212,
+          3886.6693959921795,
           -1512.5263977050781,
-          5580.1996408208925
+          5587.764546204175
         ],
         "tuningUnchanged": true,
-        "wallSeconds": 3.5692999999523165
+        "wallSeconds": 3.572699999988079
       }
     ]
   },
   "tapeBalance": {
-    "nativeMaximum": 0.08425,
-    "fullBrowserMaximum": 0.08425,
-    "beamFrames": 242,
-    "beamDistance": 127.02796133289861
+    "nativeMaximum": 0.0955,
+    "fullBrowserMaximum": 0.0955,
+    "beamFrames": 243,
+    "beamDistance": 126.63041401755156
   },
   "debugEvidence": {
     "displayRunoff": "A natural endpoint runoff and an inward ollie hit the original tall storefront wall beside native endpoint 62. The passing ordinary-input route crosses nodes 59 and 60, then makes an outward ollie with eight metres remaining. Thirty consecutive grounded frames verify the rollout. No wall/rail/control point was removed.",
@@ -716,8 +728,9 @@
     "Balance recurrence matches the compiled source for the same native state/input/random stream. Production uses the fork deterministic RNG and post-step state sampling; transition-boundary timing and the original global random sequence are not frame-exact.",
     "Original kick-animation gating and temporary crouched-target decay remain unimplemented.",
     "Steering, braking, ground-contact tracking, special-mode bonuses and terrain-specific friction remain to be compared.",
-    "Rail capture radius/eligibility and substep endpoint placement still use fork rules. Under-rail hangs and perfect-grind rewards remain fork extensions.",
+    "Rail candidate geometry now uses source integer line-pair and endpoint/ground-side rules, but queries the preceding 60 Hz step rather than the source 30 Hz scheduled offer. Full trick/handplant eligibility, snap placement/easing and node substep timing remain fork adaptations. Under-rail hangs and perfect-grind rewards remain fork extensions.",
     "Directional rail exits use the source angle in the local rail plane, with the prototype camera-relative input convention.",
     "Charged-pose calibration is supported; coasting pose and cruiser proportions differ from the source actor."
-  ]
+  ],
+  "captureReport": "rail-capture.json"
 }
