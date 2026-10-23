@@ -10,6 +10,14 @@ export type SourceTrial = {
   init: () => void; sample: (frame: number) => any; observe: (frame: number) => boolean;
 };
 
+/** Device encoding is shared by native and browser checks. Both then pass
+ * through Input.update(), including radial clamping and axis quantization. */
+export function schoolSourceGamepad(sample: any) {
+  const x = sample.moveX || 0, y = sample.moveY || 0, n = Math.hypot(x, y), raw = n ? .22 + .78 * Math.min(1, n) : 0;
+  const held: any = { 0: sample.jumpHeld, 1: sample.grabHeld, 2: sample.spinHeld, 3: sample.grindHeld, 7: sample.transferHeld };
+  return { id: 'School measured validation', index: 0, connected: true, mapping: 'standard', axes: n ? [x / n * raw, -y / n * raw, 0, 0] : [0, 0, 0, 0], buttons: Array.from({ length: 18 }, (_, i) => ({ pressed: !!held[i], touched: false, value: held[i] ? 1 : 0 })) };
+}
+
 /** Feature placements only initialize a case; all subsequent movement uses
  * native controls, without changing positions, velocities or tuning. */
 export function schoolSourceTrials(p: any, level: any, place: Place): SourceTrial[] {
@@ -28,21 +36,31 @@ export function schoolSourceTrials(p: any, level: any, place: Place): SourceTria
   for (const [name, x, heading] of [['west', -16800, [1, 0, 0]], ['east', -13500, [-1, 0, 0]]] as [string, number, Point][]) {
     const toe = name === 'west' ? -17279 : -13065;
     const toeX = schoolSourcePoint(toe, 1599, 11000)[0];
-    let nearest = Infinity, released = false;
-    add(`Original ${name} gym toe blocks`, () => { nearest = Infinity; place([x, 1630, 11000], heading, 6); }, () => ({}), frame => {
+    let nearest = Infinity, released = false, turning = false, turned = false;
+    add(`Original ${name} gym toe blocks`, () => { nearest = Infinity; place([x, 1630, 11000], heading, 6); }, () => ({ grabHeld: p.speed > 6 }), frame => {
       const distance = (toeX - p.pos.x) * heading[0]; nearest = Math.min(nearest, distance);
       if (distance <= .25) throw Error('Passed through the raised toe');
       return frame >= 101 && nearest < .85 && p.grounded;
     }, 180);
-    add(`Original ${name} gym ollie and return`, () => { released = false; place([toe + heading[0] * 14 / SCHOOL_SOURCE_SCALE, 1630, 11000], heading, 10); }, n => {
+    add(`Original ${name} gym ollie and return`, () => { released = turning = turned = false; place([toe + heading[0] * 14 / SCHOOL_SOURCE_SCALE, 1630, 11000], heading, 10); }, n => {
       const release = !released && (toeX - p.pos.x) * heading[0] < 5.5;
       if (release) released = true;
-      return { jumpHeld: !released, jumpPressed: n === 0, jumpReleased: release };
-    }, (_frame, r) => r.air > 0 && r.peak > 2.3 && p.grounded && p.pos.y < .1 && (p.pos.x - toeX) * heading[0] < -3, 1000);
+      // Auto-kick keeps climbing the original flat bank. Turn below its back
+      // wall, using ordinary steering/braking rather than waiting for a
+      // passive rollout that only the fork's neutral-stick friction produces.
+      if (!turned && (p.pos.x - toeX) * heading[0] > 16) turning = true;
+      if (turning && p.axisF.x * heading[0] < -.98) { turning = false; turned = true; }
+      return { jumpHeld: !released, jumpPressed: n === 0, jumpReleased: release,
+        moveX: turning ? 1 : 0, grabHeld: p.grounded && (turning ? p.speed > 6 : turned && p.speed > 12) };
+    }, (_frame, r) => turned && r.air > 0 && r.peak > 5 && p.grounded && p.pos.y < .1 && (p.pos.x - toeX) * heading[0] < -3, 1000);
   }
   for (const [name, original, heading] of [['rectangular pool', [4200, -390, -1700], [1, 0, 0]], ['oval pool', [9400, -470, -2200], [-1, 0, 0]]] as [string, Point, Point][])
     add(`Original ${name} vert return`, () => place(original, heading, 18), n => ({ jumpHeld: true, jumpPressed: n === 0 }), (_frame, r) => r.verts > 0 && p.grounded && p.rideNormal.y > .98 && p.pos.y < -26.8, 900);
-  add('Existing charged flat ollie height', () => place([-15000, 1630, 13000], [0, 0, -1], 0), n => ({ jumpHeld: n < 30, jumpPressed: n === 0, jumpReleased: n === 30 }), (_frame, r) => r.air > 0 && p.grounded);
+  add('Measured charged flat ollie height', () => place([-15000, 1630, 13000], [0, 0, -1], 0), n => ({ jumpHeld: n < 30, jumpPressed: n === 0, jumpReleased: n === 30 }), (_frame, r) => {
+    if (!r.air || !p.grounded) return false;
+    if (r.peak < 2.1 || r.peak > 2.25) throw Error('Source-calibrated flat ollie height differs');
+    return true;
+  });
   // Catch-and-traverse cases start 30 cm above the rail at 18 m/s. These
   // validate original chains and natural run-offs; approach ollies are a
   // separate coverage item. The controller uses ordinary balance inputs.
@@ -93,11 +111,7 @@ export function runSchoolSourceBrowserChecks(game: any) {
     report.tuningUnchanged = report.tuningBefore === JSON.stringify(game.TUNING); delete report.tuningBefore; p.speed = 0;
   };
   const next = () => { frame = 0; sample = {}; if (index === trials.length) { stop(null); return; } report.stage = trials[index].name; trials[index].init(); };
-  input.pollGamepad = () => {
-    const x = sample.moveX || 0, y = sample.moveY || 0, n = Math.hypot(x, y), raw = n ? .22 + .78 * Math.min(1, n) : 0;
-    const held: any = { 0: sample.jumpHeld, 1: sample.grabHeld, 2: sample.spinHeld, 3: sample.grindHeld, 7: sample.transferHeld };
-    return { id: 'School measured validation', index: 0, connected: true, mapping: 'standard', axes: n ? [x / n * raw, -y / n * raw, 0, 0] : [0, 0, 0, 0], buttons: Array.from({ length: 18 }, (_, i) => ({ pressed: !!held[i], touched: false, value: held[i] ? 1 : 0 })) };
-  };
+  input.pollGamepad = () => schoolSourceGamepad(sample);
   p.step = (dt: number, controls: any, current: any) => {
     try {
       const c = trials[index]; sample = c.sample(frame); update(); oldStep.call(p, dt, controls, current); frame++; report.frames++;

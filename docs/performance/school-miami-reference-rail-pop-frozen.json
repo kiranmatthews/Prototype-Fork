@@ -1,0 +1,48 @@
+{
+  "scale": 0.013929750825577904,
+  "cases": [
+    {
+      "slope": -0.1,
+      "direction": -1,
+      "speed": 15.583800797002695,
+      "vertical": 14.721994609871388,
+      "expectedPop": 13.163614530171118
+    },
+    {
+      "slope": -0.1,
+      "direction": 1,
+      "speed": 20.1877611930422,
+      "vertical": 11.1448384108669,
+      "expectedPop": 13.163614530171118
+    },
+    {
+      "slope": 0,
+      "direction": -1,
+      "speed": 18,
+      "vertical": 13.163614530171118,
+      "expectedPop": 13.163614530171118
+    },
+    {
+      "slope": 0,
+      "direction": 1,
+      "speed": 18,
+      "vertical": 13.163614530171118,
+      "expectedPop": 13.163614530171118
+    },
+    {
+      "slope": 0.1,
+      "direction": -1,
+      "speed": 20.1877611930422,
+      "vertical": 11.1448384108669,
+      "expectedPop": 13.163614530171118
+    },
+    {
+      "slope": 0.1,
+      "direction": 1,
+      "speed": 15.583800797002695,
+      "vertical": 14.721994609871388,
+      "expectedPop": 13.163614530171118
+    }
+  ],
+  "tuningUnchanged": true
+}

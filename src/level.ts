@@ -1,3 +1,4 @@
+import { createSkateReference, validSkateReference, type SkateReferenceData, type SkateReferencePhysics } from './skateReferencePhysics';
 import { CARLISLE_COAST_LEVEL } from "./levels/carlisle-coast";
 import { CUSTARD_CREEK_LEVEL } from "./levels/custard-creek";
 import { isOriginalTestCourse } from "./levels/carlisleLegacy";
@@ -979,6 +980,8 @@ export interface CustomLevelData {
   encounter?: 'crab-chief';
   /** Continuous park: always-mounted rider-relative skating/chase camera, no course finish or run-mode pickups. */
   skatepark?: boolean;
+  /** Optional source calibration; other levels retain their authored movement. */
+  skateReference?: SkateReferenceData;
   /** Bonus stages opt into their distinct persistent collection HUD. */
   hudMode?: "bonus" | "hub";
   /** Explicit opt-in for an authored secret combo-gem challenge. */
@@ -2501,7 +2504,7 @@ const LEVEL_DATA_KEYS = new Set([
   'encounter',
   "v", "name", "spawn", "killY", "hudMode", "ledgeAssist", "relicTime",
   "medalTimes", "ocean", "unitySand", "shoreFoam", "sky", "jungleAtmosphere", "jungleDepthFade", "jungleStyle", "atmosphere",
-  "components", "layers", "groups", "allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "cameraAirLift", "secretComboGem", "cameraLookAhead", "cameraRig",
+  "components", "layers", "groups", "allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "skateReference", "cameraAirLift", "secretComboGem", "cameraLookAhead", "cameraRig",
 ]);
 const COMPONENT_DATA_KEYS = new Set([
   "t", "p", "s", "to", "pts", "widths", "collisionHeight", "wallHeights", "slip", "iceGrip", "containment",
@@ -2737,6 +2740,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
       (!source.medalTimes || !hasOnlyKeys(source.medalTimes, new Set(["gold", "silver", "bronze"]))))
     return null;
   if (source.hudMode !== undefined && source.hudMode !== "bonus" && source.hudMode !== "hub") return null;
+  if (source.skateReference !== undefined && (!source.skatepark || !validSkateReference(source.skateReference))) return null;
   for (const key of ["allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "secretComboGem", "jungleDepthFade"] as const)
     if (source[key] !== undefined && typeof source[key] !== "boolean") return null;
   if (source.cameraLookAhead !== undefined && (typeof source.cameraLookAhead !== "number" ||
@@ -3928,6 +3932,8 @@ export class Level {
   cameraRig: CustomLevelData["cameraRig"];
   cameraAirLift: number | undefined; // presentation only; does not change lane/input frames
   skatepark = false;
+  skateReference: SkateReferenceData | undefined;
+  skateReferencePhysics: SkateReferencePhysics | undefined;
   // Presentation semantics are authored with data so edited/copied bonus
   // stages retain their HUD without relying on a special registry id.
   hudMode: "standard" | "bonus" | "hub" = "standard";
@@ -6478,6 +6484,7 @@ export class Level {
       hudMode: this.hudMode === "bonus" ? "bonus" : undefined,
       allBalanceCrates: this.allBalanceCrates || undefined,
       perfectGrindBoost: this.perfectGrindBoost || undefined,
+      ...(this.skateReference ? {skatepark: true, skateReference: {...this.skateReference, stats: {...this.skateReference.stats}}} : {}),
       keepPlayFog: this.keepPlayFog || undefined,
       cameraAirLift: this.cameraAirLift,
       cameraLookAhead: this.cameraLookAhead,
@@ -6607,6 +6614,8 @@ export class Level {
     this.skyPreset = asSkyPreset(data.sky); // unknown/absent -> sunset
     this.hudMode = data.hudMode ?? "standard";
     this.skatepark = data.skatepark === true;
+    this.skateReference = this.skatepark && data.skateReference ? {...data.skateReference, stats: {...data.skateReference.stats}} : undefined;
+    this.skateReferencePhysics = this.skateReference ? createSkateReference(this.skateReference) : undefined;
     this.allBalanceCrates = data.allBalanceCrates === true;
     this.perfectGrindBoost = data.perfectGrindBoost === true;
     this.keepPlayFog = data.keepPlayFog === true;

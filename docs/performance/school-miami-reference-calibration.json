@@ -1,0 +1,146 @@
+{
+  "scale": 0.013929750825577904,
+  "previousScale": 0.013524936601859678,
+  "increasePercent": 2.9930951666166328,
+  "reference": {
+    "kind": "thps1",
+    "metresPerUnit": 0.013929750825577904,
+    "stats": {
+      "ollie": 4,
+      "speed": 8,
+      "air": 8
+    }
+  },
+  "sourceStats": {
+    "sourceObjects": 889,
+    "sourceFaces": 7593,
+    "sourceRailNodes": 393,
+    "activeRailNodes": 390,
+    "transitionFaces": 1262,
+    "wallSegments": 1339,
+    "railEdges": 270,
+    "railSegments": 331,
+    "railPaths": 128
+  },
+  "components": 2119,
+  "skaterChanged": false,
+  "globalTuningChanged": false,
+  "acceptedMainScale": 2,
+  "acceptedMainLevelUnchanged": true,
+  "parentTaskCommit": "9c13814bb458d7eed7b5989ea67b0d54888001a0",
+  "sharedDependencyCommit": "73ddb1615a4e84d42cef830ad5074dbe229a7311",
+  "runtimeSnapshots": {
+    "working": {
+      "player": "cf815a7356ba4b620dac1aa00dc4d7063db8e1789e4ca7501a52d69923829d0a",
+      "tuning": "dc7b43eedbb160b2ddfc16cdfdca42f1419245a76214fdccd49cf872905038c0",
+      "level": "77484671f00e7a24b1de632903db97663b6b0e5a362ffbdb898fc5e27b7841e0",
+      "input": "53cd0f5d183777461c3af7514af6ebc22abe44513a7986287f4c592f00d2a433",
+      "skateParkPhysics": "3cf5ce4c8bd9037539ffd21ff8559f78a0b9c2fd7a27f702a68bbe6aa2536f99",
+      "skateParkTuning": "bc609a6765ffd91c0d3bc062b33ee25c03cd7386a9159b24c1f643f38bca0234",
+      "skateSteering": "62b9d234f6feebaadd2f5c3b58cd6305d042c99ee46ea7d75d8fff7dbe953f68",
+      "vertBoardRelease": "7ce3ba915f646ac97890d0a2b9f25635ccedddb8068e4c2217c2812808866e67",
+      "vertSkateMotion": "944c8fa4293fe58b8baca9987c7573b78428774e77b93bccb2b889d893a7ac96",
+      "meshContactNormal": "3fee5417da3a27bb63b1e7428af1532078b3a6f4d802e753d9635fd2260da224",
+      "skateChaseCamera": "b8d670861fb3d53f081a98d74628c28176e78d87c5cebe47cb826f34f89fc145",
+      "skateReferencePhysics": "2a2e27545cb77d5a453cc302b88bc39614c0265978ca723472d46aa3b11d3717"
+    },
+    "task": {
+      "player": "a8578b20efaf727b8d8c7a6adf7134d4cf4eb7c707b1c2c17c7f7f503e6f1cfa",
+      "tuning": "f06c99fede5097695309dd9a2e1b8d28fe3dac1e615335aa91fc63d45d4f5759",
+      "level": "096ccab6e811641eb8f7bf51ff273e1d9ab1a165434994ca3d91d33ce4059ad5",
+      "input": "a5ab1cf82312ed40485c44ce92f750246382030d9bf500aaaf31972508573054",
+      "skateParkPhysics": "3cf5ce4c8bd9037539ffd21ff8559f78a0b9c2fd7a27f702a68bbe6aa2536f99",
+      "skateParkTuning": "bc609a6765ffd91c0d3bc062b33ee25c03cd7386a9159b24c1f643f38bca0234",
+      "skateSteering": "62b9d234f6feebaadd2f5c3b58cd6305d042c99ee46ea7d75d8fff7dbe953f68",
+      "vertBoardRelease": "7ce3ba915f646ac97890d0a2b9f25635ccedddb8068e4c2217c2812808866e67",
+      "vertSkateMotion": "944c8fa4293fe58b8baca9987c7573b78428774e77b93bccb2b889d893a7ac96",
+      "meshContactNormal": "3fee5417da3a27bb63b1e7428af1532078b3a6f4d802e753d9635fd2260da224",
+      "skateChaseCamera": "b8d670861fb3d53f081a98d74628c28176e78d87c5cebe47cb826f34f89fc145",
+      "skateReferencePhysics": "2a2e27545cb77d5a453cc302b88bc39614c0265978ca723472d46aa3b11d3717"
+    }
+  },
+  "sourceFiles": {
+    "src/levels/school-source.ts": "3178ad85a44ed52f0c67ce32cbbebdf9e2df108c604e1d89eabd7d37a60069f2",
+    "tools/school-source-lines.ts": "e42d12894446fb85e670ecb5d454226b0f0993aac057788470af908a79004df2",
+    "tools/school-source-route.ts": "3cd9dca0953e9c96efb69650b852d08f267e837fe2b949365d0b2bf37e644684",
+    "tools/test-school-source.mjs": "cf578302bc0ad1814531decdab33eccecc8589a78280003231d820c6dfa15bf7",
+    "tools/test-school-source-physics.mjs": "155fd695a83914ec5452e2c8ce8ab526e87d0c6d7e4fbec3d784bffaf73e813b",
+    "tools/school-source-default-trace.mjs": "f037eaf1a9d68753e588ef77820dfbcf8248270136481f52ea851271cb6fc46b",
+    "tools/serve-school-source.mjs": "8e27b0eff39b5faac105d0e390acbd924946518cfd68ad8fd7990a506ebaddda",
+    "tools/school-source-review.ts": "91f952d65f95bcbf45dcc909c940967740676d4387253439bbe9c09c54216690",
+    "docs/school/source-geometry.json": "ed33512389703218a79971f064badd7b5b829974af00d6457786a6ac7d11ef3e"
+  },
+  "native": {
+    "cases": 17,
+    "steps": 15281,
+    "exactTaskWorkingAgreement": true,
+    "routeSteps": 7358,
+    "routeMetres": 997.2184946567343
+  },
+  "browser": {
+    "cases": 17,
+    "steps": 14270,
+    "exactLiteFullAgreement": true,
+    "routeSteps": 6347,
+    "routeMetres": 986.9059559178905,
+    "earlyErrors": {
+      "preview": [],
+      "game": []
+    },
+    "lateErrors": []
+  },
+  "nativeBrowserAgreement": {
+    "first16FramesAndEndpointsExact": true,
+    "routeFirst3WaypointVisitsExact": true,
+    "routeTimingAndTrajectoryExact": false,
+    "note": "Divergence during turn after canopy descent. Real Input.update normalization did not remove it; both finish all 35 waypoints without bails. Cause unresolved."
+  },
+  "railOllies": {
+    "cases": 6,
+    "directions": [
+      -1,
+      1
+    ],
+    "slopes": [
+      -0.1,
+      0,
+      0.1
+    ],
+    "exactTaskWorkingAgreement": true
+  },
+  "defaultParity": {
+    "frames": 960,
+    "sha256": "c355c28f30e0c6a248e396cfe83234e24b95fdaa5c907f8ec9fc97faa29c2fe2",
+    "exactBeforeAfter": true,
+    "baselineTaskCommit": "9c13814bb458d7eed7b5989ea67b0d54888001a0",
+    "source": "tools/school-source-default-trace.mjs",
+    "phases": [
+      "neutral",
+      "drive",
+      "charged drive",
+      "release jump",
+      "turn and charge",
+      "coast/release",
+      "brake",
+      "charged drive"
+    ]
+  },
+  "checks": {
+    "checkLevels": "pass",
+    "productionBuild": "pass",
+    "build": "c5117edd78e9051da7fb",
+    "isolatedTaskTypeScript": "pass",
+    "sourceToolsTypeScript": "pass",
+    "referenceParametersAndEditorValidation": "pass",
+    "fullSuiteRun": false
+  },
+  "integration": "Only shared source-profile hunks are applied to task player/level. Four level conflicts keep School fields. An explicit third exitGrind argument carries source ollie intent in the older task signature; unrelated rail-transfer work is excluded. Frozen working preview retains recorded concurrent dependencies.",
+  "limitations": [
+    "Neutral-coast pose scale only; crouch proportions differ.",
+    "Partial source physics: fixed-point/animation gating/steering/braking/contact/terrain/special and parts of rail physics remain different.",
+    "Original source art and remaining transfers require work.",
+    "Retained retail THPS2 School data is not independently matched to a THPS1 disc.",
+    "Historical intermittent MutationObserver startup error remains unattributed; no new occurrence during this continuation."
+  ],
+  "delivery": "Local only. No push, publication, upload or deployment."
+}

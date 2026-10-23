@@ -4,7 +4,7 @@ import { createServer } from 'vite';
 // Separate preview: the normal 2x level and shared registry stay untouched.
 const port = Number(process.env.SCHOOL_SOURCE_PORT || 5313);
 const frozen = process.env.SCHOOL_RUNTIME_SNAPSHOT;
-const runtime = ['player', 'tuning', 'level', 'input', 'skateParkPhysics', 'skateParkTuning', 'skateSteering', 'vertBoardRelease', 'vertSkateMotion', 'meshContactNormal', 'skateChaseCamera'];
+const runtime = ['player', 'tuning', 'level', 'input', 'skateParkPhysics', 'skateParkTuning', 'skateSteering', 'vertBoardRelease', 'vertSkateMotion', 'meshContactNormal', 'skateChaseCamera', 'skateReferencePhysics'];
 const server = await createServer({
   plugins: [{ name: 'school-source-preview', enforce: 'pre',
   transformIndexHtml() {

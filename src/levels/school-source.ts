@@ -4,10 +4,10 @@ import type { CustomComponent, CustomLevelData } from '../level';
 
 type P = [number, number, number];
 type Face = { id: string; object: number; points: P[]; normal: Vector3; flags: number; collision: number; color: number[] };
-// Retain the validated preview scale. The animated board-to-head candidate
-// (2.90 / 208.1875) is 3% larger, but its raised gym toes exceed our flat ollie.
-// See docs/school/README.md for the measured pose and movement mismatch.
-export const SCHOOL_SOURCE_SCALE = 3 / 221.8125;
+// Match the animated original board-to-head coast pose to our existing rider.
+// The opt-in source movement parameters below preserve the original gym lips
+// at this scale; no character dimensions or global tuning are changed.
+export const SCHOOL_SOURCE_SCALE = 2.9 / 208.1875;
 export const SCHOOL_SOURCE_ORIGIN: P = [-6149, 1599, 6391];
 export const schoolSourcePoint = (x: number, y: number, z: number): P => [
   -(x - SCHOOL_SOURCE_ORIGIN[0]) * SCHOOL_SOURCE_SCALE,
@@ -232,7 +232,9 @@ for (const place of SCHOOL_SOURCE_PLACES) add({ t: 'camnode', p: schoolSourcePla
 const spawn = schoolSourcePlacement(SCHOOL_SOURCE_PLACES[0]);
 add({ t: 'zone', p: spawn, s: [28, 3, 8], dir: 'E', grp: 4, nm: 'Original starting canopy direction' });
 export const SCHOOL_SOURCE_LEVEL: CustomLevelData = {
-  v: 1, name: 'School · measured geometry', spawn, killY: -42, skatepark: true, sky: 'day', keepPlayFog: true,
+  v: 1, name: 'School · measured geometry', spawn, killY: -42, skatepark: true,
+  skateReference: { kind: 'thps1', metresPerUnit: SCHOOL_SOURCE_SCALE, stats: { ollie: 4, speed: 8, air: 8 } },
+  sky: 'day', keepPlayFog: true,
   atmosphere: { fogEnabled: true, fogNear: 270, fogFar: 610, fogColor: '#b3c1bc', backdrop: 'fog', ambientSky: '#e0eced', ambientGround: '#7b8071', ambientIntensity: 1.15, sunColor: '#fff0d1', sunIntensity: 1.35, fillColor: '#a6c8d0', fillIntensity: .4, drawDistance: 700, shadowStrength: .65 },
   components: C,
   groups: ['Measured surfaces', 'Measured walls', 'Original grind graph', 'Session recovery'].map((nm, i) => ({ id: i + 1, nm, editorOnly: true })),

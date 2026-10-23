@@ -1,0 +1,26 @@
+{
+  "chargedOllieScreenshot": "docs/art-reviews/school-miami/source-reference-gym-full.png",
+  "forward": {
+    "state": "ride",
+    "grounded": true,
+    "sourcePosition": [
+      -18000,
+      2959.0000502323282,
+      14994.00976085756
+    ]
+  },
+  "back": {
+    "state": "ride",
+    "grounded": true,
+    "sourcePosition": [
+      -15150,
+      1599,
+      10999.0009765625
+    ]
+  },
+  "errors": [],
+  "startupErrors": {
+    "preview": [],
+    "game": []
+  }
+}

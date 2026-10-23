@@ -1,0 +1,17 @@
+{
+  "frames": 960,
+  "sha256": "c355c28f30e0c6a248e396cfe83234e24b95fdaa5c907f8ec9fc97faa29c2fe2",
+  "exactBeforeAfter": true,
+  "baselineTaskCommit": "9c13814bb458d7eed7b5989ea67b0d54888001a0",
+  "source": "tools/school-source-default-trace.mjs",
+  "phases": [
+    "neutral",
+    "drive",
+    "charged drive",
+    "release jump",
+    "turn and charge",
+    "coast/release",
+    "brake",
+    "charged drive"
+  ]
+}
