@@ -2,8 +2,9 @@ import {getMenuPngFocusSettings,setMenuPngFocusSettings,resetMenuPngFocusSetting
 import { getRooAppearance, setRooAppearance, ROO_APPEARANCE_EVENT } from './roo-type/settings';
 import { SECONDARY_TEXT_RANGES, secondaryTextSettings, type SecondaryTextSettings } from "./secondaryTextSettings";
 
-export function createSecondaryTextPanel(): void {
-  if (document.querySelector(".secondary-text-tuner")) return;
+export function createSecondaryTextPanel(): HTMLDetailsElement {
+  const existing = document.querySelector<HTMLDetailsElement>(".secondary-text-tuner");
+  if (existing) return existing;
   const root = document.createElement("details");
   root.className = "secondary-text-tuner";
   root.innerHTML = `<summary>TEXT TUNING</summary><div class="secondary-text-tuner-body"><header><b>Text tuning</b><button type="button" aria-label="Close text tuning">×</button></header><p>Live map preview · saved in this browser</p><div class="secondary-text-controls"></div><p>Weight adjusts the glyph face thickness; the supplied font is a fixed Bold face.</p><footer><button type="button" data-action="reset">Reset</button><button type="button" data-action="copy">Copy settings</button></footer><textarea aria-label="Text settings JSON" readonly hidden></textarea><p role="status"></p></div>`;
@@ -107,4 +108,5 @@ export function createSecondaryTextPanel(): void {
   document.head.appendChild(style); document.body.appendChild(root);
   // Keep the body reference owned by this details panel, not a fullscreen modal.
   body.setAttribute("aria-label", "Text tuning");
+  return root;
 }

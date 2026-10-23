@@ -1,0 +1,394 @@
+{
+  "date": "2026-10-24",
+  "baselineCommit": "a2c8c70a",
+  "delivery": "Local only; primary main and the existing 5417 integration preview.",
+  "change": {
+    "left": [
+      "MENU"
+    ],
+    "right": [
+      "TUNER",
+      "TEXT",
+      "CRT",
+      "RENDER",
+      "BOARD",
+      "SPIN",
+      "LOOK"
+    ],
+    "oneRightPanelAtATime": true,
+    "settingsAndSelectionPersist": true
+  },
+  "build": {
+    "task": "build",
+    "exitCode": 0,
+    "seconds": 48.07,
+    "command": "tsc --noEmit && vite build",
+    "version": "40bc9d5bef8658975099"
+  },
+  "focusedChecks": [
+    {
+      "task": "tools/test-debug-shortcuts.mjs",
+      "exitCode": 0,
+      "seconds": 0.28
+    },
+    {
+      "task": "tools/test-mobile-ui-layout.mjs",
+      "exitCode": 1,
+      "seconds": 0.05
+    },
+    {
+      "task": "tools/test-game-flow-interaction.mjs",
+      "exitCode": 0,
+      "seconds": 0.04
+    },
+    {
+      "task": "tools/test-game-hud-pipeline.mjs",
+      "exitCode": 1,
+      "seconds": 0.17
+    },
+    {
+      "task": "tools/test-crt-guest-panel-semantics.mjs",
+      "exitCode": 0,
+      "seconds": 0.24
+    },
+    {
+      "task": "tools/test-touch-release.mjs",
+      "exitCode": 0,
+      "seconds": 0.28
+    }
+  ],
+  "preexistingFailures": [
+    {
+      "check": "tools/test-mobile-ui-layout.mjs",
+      "baseline": "a2c8c70a",
+      "exitCode": 1,
+      "failure": [
+        "  expected: /this\\.enterButton\\.disabled = this\\.moving \\|\\| !unlocked/,"
+      ]
+    },
+    {
+      "check": "tools/test-game-hud-pipeline.mjs",
+      "baseline": "a2c8c70a",
+      "exitCode": 1,
+      "failure": [
+        "  expected: /private collectFruit\\(\\): void \\{\\s*this\\.fruitCollectionRevision\\+\\+;/,"
+      ]
+    }
+  ],
+  "browser": {
+    "runs": [
+      {
+        "name": "desktop-lite",
+        "panels": [
+          {
+            "id": "tuner",
+            "left": 1168,
+            "right": 1440,
+            "top": 10,
+            "bottom": 890,
+            "viewport": [
+              1440,
+              900
+            ],
+            "width": 270,
+            "scrollWidth": 270
+          },
+          {
+            "id": "text",
+            "left": 1110,
+            "right": 1440,
+            "top": 10,
+            "bottom": 890,
+            "viewport": [
+              1440,
+              900
+            ],
+            "width": 328,
+            "scrollWidth": 328
+          },
+          {
+            "id": "crt",
+            "left": 820,
+            "right": 1440,
+            "top": 10,
+            "bottom": 890,
+            "viewport": [
+              1440,
+              900
+            ],
+            "width": 618,
+            "scrollWidth": 618
+          },
+          {
+            "id": "render",
+            "left": 1020,
+            "right": 1440,
+            "top": 10,
+            "bottom": 890,
+            "viewport": [
+              1440,
+              900
+            ],
+            "width": 418,
+            "scrollWidth": 418
+          },
+          {
+            "id": "board",
+            "left": 1016,
+            "right": 1440,
+            "top": 10,
+            "bottom": 890,
+            "viewport": [
+              1440,
+              900
+            ],
+            "width": 422,
+            "scrollWidth": 422
+          },
+          {
+            "id": "spin",
+            "left": 1016,
+            "right": 1440,
+            "top": 10,
+            "bottom": 890,
+            "viewport": [
+              1440,
+              900
+            ],
+            "width": 422,
+            "scrollWidth": 422
+          },
+          {
+            "id": "look",
+            "left": 970,
+            "right": 1440,
+            "top": 10,
+            "bottom": 890,
+            "viewport": [
+              1440,
+              900
+            ],
+            "width": 468,
+            "scrollWidth": 468
+          }
+        ]
+      },
+      {
+        "name": "desktop-full",
+        "panels": [
+          {
+            "id": "tuner",
+            "left": 1008,
+            "right": 1280,
+            "top": 10,
+            "bottom": 710,
+            "viewport": [
+              1280,
+              720
+            ],
+            "width": 270,
+            "scrollWidth": 270
+          },
+          {
+            "id": "text",
+            "left": 950,
+            "right": 1280,
+            "top": 10,
+            "bottom": 710,
+            "viewport": [
+              1280,
+              720
+            ],
+            "width": 328,
+            "scrollWidth": 328
+          },
+          {
+            "id": "crt",
+            "left": 660,
+            "right": 1280,
+            "top": 10,
+            "bottom": 710,
+            "viewport": [
+              1280,
+              720
+            ],
+            "width": 618,
+            "scrollWidth": 618
+          },
+          {
+            "id": "render",
+            "left": 860,
+            "right": 1280,
+            "top": 10,
+            "bottom": 710,
+            "viewport": [
+              1280,
+              720
+            ],
+            "width": 418,
+            "scrollWidth": 418
+          },
+          {
+            "id": "board",
+            "left": 856,
+            "right": 1280,
+            "top": 10,
+            "bottom": 710,
+            "viewport": [
+              1280,
+              720
+            ],
+            "width": 422,
+            "scrollWidth": 422
+          },
+          {
+            "id": "spin",
+            "left": 856,
+            "right": 1280,
+            "top": 10,
+            "bottom": 710,
+            "viewport": [
+              1280,
+              720
+            ],
+            "width": 422,
+            "scrollWidth": 422
+          },
+          {
+            "id": "look",
+            "left": 810,
+            "right": 1280,
+            "top": 10,
+            "bottom": 710,
+            "viewport": [
+              1280,
+              720
+            ],
+            "width": 468,
+            "scrollWidth": 468
+          }
+        ]
+      },
+      {
+        "name": "touch-full",
+        "panels": [
+          {
+            "id": "tuner",
+            "left": 118,
+            "right": 390,
+            "top": 10,
+            "bottom": 834,
+            "viewport": [
+              390,
+              844
+            ],
+            "width": 270,
+            "scrollWidth": 270
+          },
+          {
+            "id": "text",
+            "left": 112,
+            "right": 390,
+            "top": 10,
+            "bottom": 834,
+            "viewport": [
+              390,
+              844
+            ],
+            "width": 276,
+            "scrollWidth": 276
+          },
+          {
+            "id": "crt",
+            "left": 112,
+            "right": 390,
+            "top": 10,
+            "bottom": 834,
+            "viewport": [
+              390,
+              844
+            ],
+            "width": 276,
+            "scrollWidth": 276
+          },
+          {
+            "id": "render",
+            "left": 112,
+            "right": 390,
+            "top": 10,
+            "bottom": 834,
+            "viewport": [
+              390,
+              844
+            ],
+            "width": 276,
+            "scrollWidth": 276
+          },
+          {
+            "id": "board",
+            "left": 112,
+            "right": 390,
+            "top": 10,
+            "bottom": 834,
+            "viewport": [
+              390,
+              844
+            ],
+            "width": 276,
+            "scrollWidth": 276
+          },
+          {
+            "id": "spin",
+            "left": 112,
+            "right": 390,
+            "top": 10,
+            "bottom": 834,
+            "viewport": [
+              390,
+              844
+            ],
+            "width": 276,
+            "scrollWidth": 276
+          },
+          {
+            "id": "look",
+            "left": 112,
+            "right": 390,
+            "top": 10,
+            "bottom": 834,
+            "viewport": [
+              390,
+              844
+            ],
+            "width": 276,
+            "scrollWidth": 276
+          }
+        ],
+        "compactSliderRow": {
+          "labelBottom": 422.1875,
+          "rangeTop": 432.984375,
+          "rangeY": 440.984375,
+          "numberY": 440.984375,
+          "rangeWidth": 165
+        }
+      }
+    ],
+    "errors": []
+  },
+  "browserChecks": [
+    "MENU and all right drawers fit their viewport without horizontal overflow",
+    "One selected right panel; inactive controls inert",
+    "Native close buttons, arrow-key tab navigation, Escape and F10",
+    "M hides and restores the selected panel; Pause returns focus to its selected menu action",
+    "Pointer closes release debug keyboard focus; keyboard closes return to the tab",
+    "Board-abandon steering retains its value across tab changes; text size and active tab survive reload",
+    "Phone sliders keep their label above a shared range/value row",
+    "Full-render phone portrait and rotated landscape; desktop lite/full and 4:3 Pause; clean consoles"
+  ],
+  "screenshots": [
+    "docs/art-reviews/debug-side-tabs.png",
+    "docs/art-reviews/debug-side-tabs-touch.png",
+    "docs/art-reviews/debug-side-tabs-landscape.png"
+  ],
+  "elapsedPromptToValidatedPreviewMinutesApproximate": 30
+}

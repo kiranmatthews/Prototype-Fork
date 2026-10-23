@@ -122,8 +122,8 @@ assert.match(main, /worldMapController\?\.revealUnlocks\(unlockReveal\)/);
 assert.match(main, /if \(input\.pausePressed\)[\s\S]{0,120}gameFlow\.handlePauseToggle\(\)/);
 assert.match(main, /new MutationObserver\(syncToolPanelState\)/);
 assert.match(ui, /setPresentationTools\(/);
-assert.match(ui, /this\.rightSideWrap\.classList\.add\("collapsed"\)/);
-assert.match(ui, /side-panel-\$\{side\}-open/);
+assert.match(ui, /this\.sideGroups\.right\.close\(\)/);
+assert.match(await readFile(new URL('../src/debugSidePanels.ts', import.meta.url), 'utf8'), /side-panel-\$\{this\.side\}-open/);
 
 assert.match(
   hud,

@@ -45,8 +45,8 @@ try {
     // Debug text controls remain usable while menus are open, and M dismisses them.
     await page.evaluate(()=>window.__game.gameFlow.showMapSection('options'));
     await page.keyboard.press('KeyM');
-    assert.equal(await page.locator('.secondary-text-tuner').isVisible(),true);
-    await page.locator('.secondary-text-tuner summary').click();
+    assert.equal(await page.locator('[data-debug-tab="text"]').isVisible(),true);
+    await page.locator('[data-debug-tab="text"]').click();
     await page.locator('[data-roo-setting="shimmer"]').uncheck();
     assert.equal(await page.evaluate(()=>JSON.parse(localStorage.getItem('solProtoRooAppearanceV4')).shimmer),false);
     await page.keyboard.press('KeyM');

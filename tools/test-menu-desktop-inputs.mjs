@@ -40,7 +40,7 @@ try {
   // M and a pointer update the same existing row without losing selection.
   await page.keyboard.press('KeyM');
   assert.equal(await page.locator('.game-debug-toggle').textContent(),'HIDE DEBUG MENUS');
-  await page.locator('.secondary-text-tuner summary').focus();
+  await page.locator('[data-debug-tab="text"]').focus();
   await page.keyboard.press('KeyM');
   await page.waitForFunction(()=>document.activeElement===document.querySelector('.game-debug-toggle'));
   assert.equal(await page.locator('.secondary-text-tuner').isVisible(),false);

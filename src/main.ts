@@ -1537,120 +1537,45 @@ const spinPanel = createSpinTuningPanel({
 const visualTreatmentPanel = createVisualTreatmentPanel(
   visualTreatmentSettings,
 );
+const textPanel = createSecondaryTextPanel();
+ui.addDebugPanel({ id: 'text', label: 'TEXT', element: textPanel, width: 330,
+  openAttribute: 'open', setOpen: open => { textPanel.open = open; } });
+for (const [id, label, panel, width] of [
+  ['crt', 'CRT', crtGuestPanel, 620],
+  ['render', 'RENDER', renderQualityPanel, 420],
+  ['board', 'BOARD', skateboardPanel, 424],
+  ['spin', 'SPIN', spinPanel, 424],
+  ['look', 'LOOK', visualTreatmentPanel, 470],
+] as const) ui.addDebugPanel({ id, label, element: panel.element, width, setOpen: open => panel.setOpen(open) });
 const presentationPanelHosts = [
-  crtGuestPanel.element,
-  renderQualityPanel.element,
-  skateboardPanel.element,
-  spinPanel.element,
-  visualTreatmentPanel.element,
+  crtGuestPanel.element, renderQualityPanel.element, skateboardPanel.element,
+  spinPanel.element, visualTreatmentPanel.element, textPanel,
 ];
-const closePresentationPanels = (): void => {
-  crtGuestPanel.close();
-  renderQualityPanel?.setOpen(false);
-  skateboardPanel.setOpen(false);
-  spinPanel.setOpen(false);
-  visualTreatmentPanel.setOpen(false);
-};
+const closePresentationPanels = (): void => ui.closeDebugPanels();
 const toggleCharacterTailVisibility = (): void => {
   player.toggleCharacterTailVisibility();
   const state = player.characterTailVisibilityState;
-  ui.showMessage(
-    'CHARACTER TAIL',
-    state.detail,
-    1800,
-  );
+  ui.showMessage('CHARACTER TAIL', state.detail, 1800);
 };
-if (TOUCH_PRESENTATION) {
-  ui.setPresentationTools([
-    { label: "WATER", open: () => { closePresentationPanels(); void openWaterStudioTool(); } },
-    {
-      label: "ANIMATION",
-      open: () => {
-        closePresentationPanels();
-        void openAnimationStudioTool();
-      },
-    },
-    {
-      label: "CHARACTER",
-      open: () => {
-        closePresentationPanels();
-        void openCharacterLabTool();
-      },
-    },
-    {
-      label: "TAIL",
-      open: () => {
-        closePresentationPanels();
-        toggleCharacterTailVisibility();
-      },
-    },
-    {
-      label: "CRT",
-      open: () => {
-        closePresentationPanels();
-        crtGuestPanel.open();
-      },
-    },
-    {
-      label: "RENDER",
-      open: () => {
-        closePresentationPanels();
-        renderQualityPanel?.setOpen(true);
-      },
-    },
-    {
-      label: "BOARD",
-      open: () => {
-        closePresentationPanels();
-        skateboardPanel.setOpen(true);
-      },
-    },
-    {
-      label: "SPIN",
-      open: () => {
-        closePresentationPanels();
-        spinPanel.setOpen(true);
-      },
-    },
-    {
-      label: "LOOK",
-      open: () => {
-        closePresentationPanels();
-        visualTreatmentPanel.setOpen(true);
-      },
-    },
-  ]);
-  const syncToolPanelState = (): void => {
-    document.body.classList.toggle(
-      "tool-panel-open",
-      presentationPanelHosts.some((host) => host.hasAttribute("data-open")),
-    );
-  };
-  const panelObserver = new MutationObserver(syncToolPanelState);
-  for (const host of presentationPanelHosts)
-    panelObserver.observe(host, {
-      attributes: true,
-      attributeFilter: ["data-open"],
-    });
-  syncToolPanelState();
-} else {
-  // Character and animation authoring stay reachable in every browser build.
-  ui.setPresentationTools([
-    { label: "WATER", open: () => void openWaterStudioTool() },
-    {
-      label: "ANIMATION",
-      open: () => void openAnimationStudioTool(),
-    },
-    {
-      label: "CHARACTER",
-      open: () => void openCharacterLabTool(),
-    },
-    {
-      label: "TAIL",
-      open: toggleCharacterTailVisibility,
-    },
-  ]);
-}
+// Full authoring studios remain available inside TUNER; inline debug controls
+// now use the same right-hand tabs on mouse, keyboard and touch devices.
+ui.setPresentationTools([
+  { label: 'WATER', open: () => void openWaterStudioTool() },
+  { label: 'ANIMATION', open: () => void openAnimationStudioTool() },
+  { label: 'CHARACTER', open: () => void openCharacterLabTool() },
+  { label: 'TAIL', open: toggleCharacterTailVisibility },
+]);
+const syncToolPanelState = (): void => {
+  const open = !document.body.classList.contains('game-debug-hidden')
+    && presentationPanelHosts.some(host => host.hasAttribute('data-open') || host.hasAttribute('open'));
+  if (document.body.classList.contains('tool-panel-open') !== open)
+    document.body.classList.toggle('tool-panel-open', open);
+};
+const panelObserver = new MutationObserver(syncToolPanelState);
+for (const host of presentationPanelHosts)
+  panelObserver.observe(host, { attributes: true, attributeFilter: ['data-open', 'open'] });
+panelObserver.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+syncToolPanelState();
 visualTreatmentSettings.subscribe((value) => {
   configureCoastPost(
     levelPostEnabled || (visualTreatmentActivity(value).any && !NO_COAST_POST),
@@ -3869,12 +3794,8 @@ async function openLinkedTool(): Promise<void> {
     case "spin": spinPanel.setOpen(true); break;
     case "look": visualTreatmentPanel.setOpen(true); break;
     case "text": {
-      createSecondaryTextPanel();
-      const panel = document.querySelector<HTMLDetailsElement>(".secondary-text-tuner");
-      if (panel) {
-        panel.open = true;
-        if (section === "focus") panel.querySelector(".menu-png-tuning")?.scrollIntoView({ block: "start" });
-      }
+      ui.openDebugPanel('text');
+      if (section === "focus") textPanel.querySelector(".menu-png-tuning")?.scrollIntoView({ block: "start" });
       break;
     }
   }

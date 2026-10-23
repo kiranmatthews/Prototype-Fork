@@ -1063,10 +1063,7 @@ export class TouchControls {
       body.tc-on .hud-tuning { width: min(78vw, 320px); max-height: calc(100dvh - 16px); }
       body.tc-on .hud-slider { grid-template-columns: 84px 1fr 46px; }
       body.tc-on .hud-slider input[type=range] { height: 30px; }
-      body.tc-on .side-tab { width: 34px; padding: 14px 4px; font-size: 11px; }
       body.tc-on .side-wrap { z-index: 16; }
-      body.tc-on .side-wrap.left.collapsed { transform: translateX(calc(-100% + 34px)); }
-      body.tc-on .side-wrap.right.collapsed { transform: translateX(calc(100% - 34px)); }
     `;
     document.head.appendChild(style);
   }

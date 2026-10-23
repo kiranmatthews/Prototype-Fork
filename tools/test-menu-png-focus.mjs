@@ -63,7 +63,7 @@ try{
    await p.screenshot({path:`${out}/${screen}-${lite?'lite':'full'}.png`});
   }
   // Six live sliders belong to M-dismissible debug chrome, never the game menu.
-  await p.evaluate(()=>window.__game.gameFlow.showPause({levelName:'CODEX GEOMETRY LAB',inWarpRoom:false}));await p.keyboard.press('KeyM');await p.locator('.secondary-text-tuner summary').click();
+  await p.evaluate(()=>window.__game.gameFlow.showPause({levelName:'CODEX GEOMETRY LAB',inWarpRoom:false}));await p.keyboard.press('KeyM');await p.locator('[data-debug-tab="text"]').click();
   assert.equal(await p.locator('[data-menu-png-setting]').count(),6);assert.equal(await p.locator('.game-shell [data-menu-png-setting]').count(),0);
   const slider=async(key,value)=>{await p.locator(`[data-menu-png-setting="${key}"]`).evaluate((e,v)=>{e.value=String(v);e.dispatchEvent(new Event('input',{bubbles:true}));},value);await p.waitForTimeout(80);};
   await slider('whitePercent',0);assert.equal(await p.locator('.game-menu-button.selected').evaluate(e=>e.style.getPropertyValue('--menu-png-colour-filter')),'none');

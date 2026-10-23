@@ -1,6 +1,7 @@
 import { RaceHud } from './race/hud';
 import type { RaceHudState } from './race/types';
 import { toolSectionId } from "./toolRoutes";
+import { DebugSidePanelGroup, type DebugSidePanel } from './debugSidePanels';
 // DOM overlay: Crash-style game HUD (counters that pop, THPS trick plate),
 // plus the debug/menu and tuning panels tucked into collapsible side tabs.
 
@@ -303,7 +304,7 @@ export class UI {
   private recBtn!: HTMLButtonElement;
   private presentationToolsHead!: HTMLElement;
   private presentationToolsRow!: HTMLElement;
-  private rightSideWrap!: HTMLElement;
+  private sideGroups!: Record<'left' | 'right', DebugSidePanelGroup>;
   private mpBtn!: HTMLButtonElement; // 2-player split toggle
   private runBtn!: HTMLButtonElement; // time trial + combo run toggle
   private endlessBtn!: HTMLButtonElement; // selectable standard-run death rule
@@ -653,9 +654,13 @@ export class UI {
     );
     addSection("OTHER", leftovers);
 
-    document.body.appendChild(this.sidePanel("left", "MENU", statsWrap));
-    this.rightSideWrap = this.sidePanel("right", "TUNER", panel);
-    document.body.appendChild(this.rightSideWrap);
+    this.sideGroups = {
+      left: new DebugSidePanelGroup('left', 'menu', () => this.onSideTab?.('left')),
+      right: new DebugSidePanelGroup('right', 'tuner', () => this.onSideTab?.('right')),
+    };
+    this.sideGroups.left.add({ id: 'menu', label: 'MENU', element: statsWrap, width: 330 });
+    this.sideGroups.right.add({ id: 'tuner', label: 'TUNER', element: panel, width: 272 });
+    document.body.append(this.sideGroups.left.element, this.sideGroups.right.element);
 
     // Game-owned presentation has one explicit root so it can be mirrored
     // into the pre-CRT WebGL surface without also capturing MENU, TUNER, the
@@ -1053,9 +1058,7 @@ export class UI {
       button.className = "hud-levelbtn";
       button.textContent = tool.label;
       button.addEventListener("click", () => {
-        this.rightSideWrap.classList.add("collapsed");
-        document.body.classList.remove("side-panel-right-open");
-        localStorage.setItem("solProtoPanel_right", "closed");
+        this.sideGroups.right.close();
         tool.open();
         button.blur();
       });
@@ -1065,55 +1068,24 @@ export class UI {
 
   /** Open a bookmark without depending on the remembered collapsed state. */
   openToolPanel(side: "left" | "right", section = ""): void {
-    this.onSideTab?.(side);
-    const wrap = document.querySelector<HTMLElement>(`.side-wrap.${side}`);
-    if (!wrap) return;
-    wrap.classList.remove("collapsed");
-    document.body.classList.add(`side-panel-${side}-open`);
+    this.sideGroups[side].open(side === 'right' ? 'tuner' : 'menu');
+    const wrap = this.sideGroups[side].element;
     const target = [...wrap.querySelectorAll<HTMLElement>("[data-tool-section]")]
       .find(element => element.dataset.toolSection === section);
     if (target) target.scrollIntoView({ block: "start" });
     else wrap.querySelector<HTMLElement>(".hud-tuning, .hud-stats")?.scrollTo(0, 0);
   }
 
-  // A fixed side wrapper with a vertical tab that slides the content off-screen.
-  // Collapsed by default (game view); state persists per side.
-  private sidePanel(
-    side: "left" | "right",
-    label: string,
-    content: HTMLElement,
-  ): HTMLElement {
-    const wrap = div(`side-wrap ${side}`);
-    const tab = document.createElement("button");
-    tab.className = "side-tab";
-    tab.textContent = label;
-    const key = "solProtoPanel_" + side;
-    if (localStorage.getItem(key) !== "open") wrap.classList.add("collapsed");
-    document.body.classList.toggle(
-      `side-panel-${side}-open`,
-      !wrap.classList.contains("collapsed"),
-    );
-    tab.addEventListener("click", () => {
-      if (this.onSideTab) this.onSideTab(side);
-      wrap.classList.toggle("collapsed");
-      document.body.classList.toggle(
-        `side-panel-${side}-open`,
-        !wrap.classList.contains("collapsed"),
-      );
-      localStorage.setItem(
-        key,
-        wrap.classList.contains("collapsed") ? "closed" : "open",
-      );
-      tab.blur();
-    });
-    if (side === "left") {
-      wrap.appendChild(content);
-      wrap.appendChild(tab);
-    } else {
-      wrap.appendChild(tab);
-      wrap.appendChild(content);
-    }
-    return wrap;
+  addDebugPanel(panel: DebugSidePanel): void {
+    this.sideGroups.right.add(panel);
+  }
+
+  openDebugPanel(id: string): void {
+    this.sideGroups.right.open(id);
+  }
+
+  closeDebugPanels(): void {
+    this.sideGroups.right.close();
   }
 
   showDeathScreen(visible: boolean): void {
@@ -2376,27 +2348,6 @@ export class UI {
       .hud-slider input[type=range] { width: 100%; accent-color: #8fd4a8; }
       .hud-tunernum { width: 100%; text-align: right; color: #eef4ff; background: #1c2230; border: 1px solid #3a4152; border-radius: 4px; padding: 1px 2px; font: 12px/1.5 ui-monospace, Menlo, Consolas, monospace; box-sizing: border-box; }
       .hud-tunernum:focus { outline: none; border-color: #8fd4a8; background: #243044; }
-
-      /* --- collapsible side panels --- */
-      .side-wrap {
-        position: fixed; top: 10px; z-index: 15; display: flex;
-        align-items: flex-start; transition: transform 0.25s ease;
-      }
-      .side-wrap.left { left: 0; }
-      .side-wrap.right { right: 0; }
-      .side-wrap.left.collapsed { transform: translateX(calc(-100% + 24px)); }
-      .side-wrap.right.collapsed { transform: translateX(calc(100% - 24px)); }
-      .side-tab {
-        width: 24px; padding: 10px 2px; cursor: pointer;
-        writing-mode: vertical-rl; text-orientation: upright;
-        font: bold 10px ui-monospace, Menlo, Consolas, monospace;
-        letter-spacing: 2px; color: #cfe3d8;
-        background: linear-gradient(180deg, rgba(26, 30, 44, 0.92), rgba(10, 12, 18, 0.92));
-        border: 1px solid #3a4152;
-        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
-      }
-      .side-wrap.left .side-tab { border-radius: 0 8px 8px 0; border-left: none; }
-      .side-wrap.right .side-tab { border-radius: 8px 0 0 8px; border-right: none; }
 
       /* --- Crash-style game HUD --- */
       .game-hud-layer { display: block; }

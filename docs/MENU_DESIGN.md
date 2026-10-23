@@ -145,6 +145,28 @@ runs, and `MENU_PROMPTS=ps5` exercises hybrid touch/controller layouts.
 held Confirm, keyboard/mouse, the last scrollable level, confirmation cancellation,
 2×2 save navigation and debug persistence in lite/full rendering.
 
+## Shared debug tabs
+
+MENU stays at the left edge. TUNER, TEXT, CRT, RENDER, BOARD, SPIN and LOOK share
+one matching tab group at the right edge. Selecting a tab opens its drawer and
+closes the previous right-hand panel; selecting it again collapses the drawer.
+The former floating launchers are hidden in the main game. Full authoring studios
+remain reachable through TUNER's presentation tools, and retain their own layouts.
+
+The selected tab and open state persist per edge. Native close buttons, F10 for
+CRT, tool bookmarks and M for debug visibility use the same drawer state. Escape
+closes a focused drawer and returns focus to its tab; Up/Down/Home/End move
+between tabs. Pointer closes release focus back to the game; hidden controls are
+inert. M retains the selected panel and returns
+focus to the selected game-menu action when dismissing debug controls over Pause.
+
+Panel bodies scroll within the available screen height. Touch has 48px tab
+targets; short screens use horizontal tab lettering in a scrollable edge rail.
+`tools/test-debug-tabs-browser.mjs` checks switching, native close actions,
+keyboard shortcuts, live settings, reload persistence, pause focus and viewport
+bounds in desktop lite/full and touch portrait/landscape rendering. It accepts
+`PLAYWRIGHT_MODULE`, `DEBUG_TABS_OUTPUT` and optional `DEBUG_TABS_CASES` overrides.
+
 ## Painted stone and brass finish
 
 The October 2026 pass uses five [ImageGen menu studies](../art/menu-polish/README.md)
