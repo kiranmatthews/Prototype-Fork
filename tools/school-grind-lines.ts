@@ -7,7 +7,13 @@ const quantize=(sample:any)=>{
 };
 function meterControl(p:any,dt:number){
   let previous=0;
-  return()=>{const value=p.balanceMeter?.bal??0,axis=clamp(-value*6-(value-previous)/dt*.65);previous=value;return axis;};
+  return()=>{
+    // The source needle advances at 30 Hz; differentiating its held 60 Hz
+    // display samples alternates zero and double velocity. Read its actual
+    // needle velocity when choosing normal countersteering input.
+    if(p.parkReference?.balanceStat!==undefined)return clamp(-p.balance*4-p.balanceVel*3);
+    const value=p.balanceMeter?.bal??0,axis=clamp(-value*6-(value-previous)/dt*.65);previous=value;return axis;
+  };
 }
 export function createBalancedGrind(p:any,rail:any,dt:number,sideExit=false,returnOnReversal=false){
   const direction=p.axisF.dot(rail.tangentAt(rail.closest(p.pos).t))<0?-1:1;

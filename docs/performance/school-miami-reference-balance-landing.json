@@ -1,0 +1,937 @@
+{
+  "parentTaskCommit": "217ee3c61ba280c1639dbbaf94fd9de11ac8e0e0",
+  "acceptedMainScale": 2,
+  "mainLevelUnchanged": true,
+  "sourceGeometryUnchanged": true,
+  "sourceScaleUnchanged": true,
+  "skaterChanged": false,
+  "tuningChanged": false,
+  "dependencies": {
+    "balanceAndCorners": "f8995088a02f52e22a4735b7b6eb1fca9ada6574",
+    "landingOption": "039a04ee803400799aed0cd52811780ed9ec9125",
+    "originalSourceRevision": "d9319c8d5b42c431de02bec0f02f0cf955f2fbae",
+    "sourcePhysics": "https://github.com/LANCommander/TonyWasAProSkater/blob/d9319c8d5b42c431de02bec0f02f0cf955f2fbae/game/src/physics.cpp"
+  },
+  "profile": {
+    "kind": "thps1",
+    "metresPerUnit": 0.013929750825577904,
+    "stats": {
+      "ollie": 4,
+      "speed": 8,
+      "air": 8,
+      "balance": 5
+    }
+  },
+  "hugeDropBail": false,
+  "runtimeSnapshots": {
+    "working": {
+      "skateParkTuning": "bc609a6765ffd91c0d3bc062b33ee25c03cd7386a9159b24c1f643f38bca0234",
+      "vertSkateMotion": "944c8fa4293fe58b8baca9987c7573b78428774e77b93bccb2b889d893a7ac96",
+      "skateSteering": "62b9d234f6feebaadd2f5c3b58cd6305d042c99ee46ea7d75d8fff7dbe953f68",
+      "tuning": "dc7b43eedbb160b2ddfc16cdfdca42f1419245a76214fdccd49cf872905038c0",
+      "input": "53cd0f5d183777461c3af7514af6ebc22abe44513a7986287f4c592f00d2a433",
+      "level": "77484671f00e7a24b1de632903db97663b6b0e5a362ffbdb898fc5e27b7841e0",
+      "meshContactNormal": "3fee5417da3a27bb63b1e7428af1532078b3a6f4d802e753d9635fd2260da224",
+      "player": "cd0158acb568de88833b26e9543b8fbdfcbfc738a3b830cb20f821f7deb39158",
+      "vertBoardRelease": "7ce3ba915f646ac97890d0a2b9f25635ccedddb8068e4c2217c2812808866e67",
+      "skateParkPhysics": "3cf5ce4c8bd9037539ffd21ff8559f78a0b9c2fd7a27f702a68bbe6aa2536f99",
+      "skateChaseCamera": "b8d670861fb3d53f081a98d74628c28176e78d87c5cebe47cb826f34f89fc145",
+      "skateReferencePhysics": "9c4faf9d0baf7dcf48720906c27f91689fbbfd0363afe08c7efb5e5570be62ce"
+    },
+    "task": {
+      "skateParkTuning": "bc609a6765ffd91c0d3bc062b33ee25c03cd7386a9159b24c1f643f38bca0234",
+      "vertSkateMotion": "944c8fa4293fe58b8baca9987c7573b78428774e77b93bccb2b889d893a7ac96",
+      "skateSteering": "62b9d234f6feebaadd2f5c3b58cd6305d042c99ee46ea7d75d8fff7dbe953f68",
+      "tuning": "2b19f1ef4f08d3cc2b33d857c09da03bbc8ad59497a9210cf5e0d11c342cd9c7",
+      "input": "e927301959f455734fea461cfca35001c2410d720b274e559d5d7ba7121e5dec",
+      "level": "e3501d7bbe2229a319c41d9bfb5937a943f4ffeb1155d46e9ddaf0ef8d960f5a",
+      "meshContactNormal": "3fee5417da3a27bb63b1e7428af1532078b3a6f4d802e753d9635fd2260da224",
+      "player": "9db93856a52d16444472ccf87d029e9c23ad0a71adf360f1e4585a7c3fc992be",
+      "vertBoardRelease": "7ce3ba915f646ac97890d0a2b9f25635ccedddb8068e4c2217c2812808866e67",
+      "skateParkPhysics": "3cf5ce4c8bd9037539ffd21ff8559f78a0b9c2fd7a27f702a68bbe6aa2536f99",
+      "skateChaseCamera": "b8d670861fb3d53f081a98d74628c28176e78d87c5cebe47cb826f34f89fc145",
+      "skateReferencePhysics": "9c4faf9d0baf7dcf48720906c27f91689fbbfd0363afe08c7efb5e5570be62ce"
+    }
+  },
+  "sourceFiles": {
+    "src/levels/school-source.ts": "71b272d861b7c0ca55c52226d80bb743fa87d598501389e163d1950238396126",
+    "tools/school-grind-lines.ts": "4ab62b2934b0e39ecffdeb6f1c18eb3c72ce6e07c0e711caae06abb462e6c9c9",
+    "tools/school-source-lines.ts": "b939c3ef9e3887f7f35f774a60c572ffd93b8b2755aac6b67694691288230e94",
+    "tools/test-school-source.mjs": "5eec5a9a373c5c26be8a16006eed6090fa603b05bdb537dec426a7112e500aed",
+    "tools/test-school-source-rails.mjs": "d3462043cfbf02e465c05f29ec9cbd3a360b0080a13ccc05bc92b79e438e6ba5",
+    "tools/test-school-source-balance.mjs": "9cd98593ce8f44c5509289b955c6ec4f0871e33dc220f0a24dd3e1f78e7bf860",
+    "tools/test-school-landing-policy.mjs": "1929231d2e45b1284fdd6c0ebede7f9135e0ad13c25bf79d41862f3d5d75ce45",
+    "tools/school-source-review.ts": "1f0671431e2be84b915872dd9b5ccdc84a34a1e525789718a311fccf74d15c0b",
+    "tools/school-source-review.html": "fa2d1da3fa320779ec2c7278422faf740c5251993ed8593a4bd78600e3e00a29"
+  },
+  "geometryFileSha256": "ed33512389703218a79971f064badd7b5b829974af00d6457786a6ac7d11ef3e",
+  "balance": {
+    "sourceSHA256": "60f61f8b0a7ff124e80a6506ae606c509da0f60563c6885b6636b2fd2ee10777",
+    "oracle": "Compiled unmodified source balance/catch statements with deterministic RNG and state stubs.",
+    "cases": 18,
+    "integration": [
+      {
+        "controlled": false,
+        "frames": 123,
+        "peak": 0.9985,
+        "bail": true,
+        "state": "air",
+        "distance": 48.4273791654153
+      },
+      {
+        "controlled": true,
+        "frames": 1200,
+        "peak": 0.18025,
+        "bail": false,
+        "state": "grind",
+        "distance": 468.65205643779285
+      }
+    ],
+    "sourceStat": 5,
+    "pilot": {
+      "positionGain": 4,
+      "velocityGain": 3,
+      "inputOnly": true,
+      "reason": "Read the actual 30 Hz needle velocity; differentiating held 60 Hz display samples alternates zero and double velocity. More damping avoids late overcorrection on the longer source line."
+    },
+    "optionalForExistingProfiles": true
+  },
+  "corners": {
+    "chain": [
+      797,
+      347,
+      346,
+      344,
+      343,
+      342,
+      341,
+      340,
+      345,
+      339,
+      338,
+      337,
+      336,
+      335,
+      334,
+      333
+    ],
+    "frames": 754,
+    "grind": {
+      "frames": 754,
+      "grindFrames": 720,
+      "maxT": 212.20666087264325,
+      "minT": 0.4000000000000088,
+      "progress": 212.20666087264325,
+      "direction": 1,
+      "maxBalance": 0.14375,
+      "caught": true,
+      "landed": true
+    },
+    "corners": [
+      {
+        "sourceNode": 347,
+        "frame": 1,
+        "angleDegrees": 25.016893478100034,
+        "entrySpeed": 23.432602821975383,
+        "exitSpeed": 21.234229603479644,
+        "expectedProjectedSpeed": 21.23422960347957
+      },
+      {
+        "sourceNode": 346,
+        "frame": 62,
+        "angleDegrees": 11.266885314942526,
+        "entrySpeed": 21.234229603479644,
+        "exitSpeed": 20.824998091378703,
+        "expectedProjectedSpeed": 20.824998091378692
+      },
+      {
+        "sourceNode": 344,
+        "frame": 83,
+        "angleDegrees": 22.484070370383186,
+        "entrySpeed": 20.824998091378703,
+        "exitSpeed": 19.242004440847825,
+        "expectedProjectedSpeed": 19.242004440847843
+      },
+      {
+        "sourceNode": 343,
+        "frame": 106,
+        "angleDegrees": 11.249044314674327,
+        "entrySpeed": 19.242004440847825,
+        "exitSpeed": 18.872337333402662,
+        "expectedProjectedSpeed": 18.872337333402662
+      },
+      {
+        "sourceNode": 342,
+        "frame": 245,
+        "angleDegrees": 5.725966300402337,
+        "entrySpeed": 18.872337333402662,
+        "exitSpeed": 18.778172981945048,
+        "expectedProjectedSpeed": 18.778172981945048
+      },
+      {
+        "sourceNode": 341,
+        "frame": 269,
+        "angleDegrees": 11.143646265195146,
+        "entrySpeed": 18.778172981945048,
+        "exitSpeed": 18.424124081250245,
+        "expectedProjectedSpeed": 18.424124081250238
+      },
+      {
+        "sourceNode": 340,
+        "frame": 293,
+        "angleDegrees": 11.284660518611418,
+        "entrySpeed": 18.424124081250245,
+        "exitSpeed": 18.067932019172588,
+        "expectedProjectedSpeed": 18.0679320191726
+      },
+      {
+        "sourceNode": 345,
+        "frame": 317,
+        "angleDegrees": 11.14602237175853,
+        "entrySpeed": 18.067932019172588,
+        "exitSpeed": 17.72712936860652,
+        "expectedProjectedSpeed": 17.727129368606512
+      },
+      {
+        "sourceNode": 339,
+        "frame": 341,
+        "angleDegrees": 5.699704544032643,
+        "entrySpeed": 17.72712936860652,
+        "exitSpeed": 17.639487896549152,
+        "expectedProjectedSpeed": 17.639487896549152
+      },
+      {
+        "sourceNode": 338,
+        "frame": 541,
+        "angleDegrees": 11.288368387905138,
+        "entrySpeed": 17.639487896549152,
+        "exitSpeed": 17.29824172557798,
+        "expectedProjectedSpeed": 17.29824172557799
+      },
+      {
+        "sourceNode": 337,
+        "frame": 566,
+        "angleDegrees": 22.46258729742057,
+        "entrySpeed": 17.29824172557798,
+        "exitSpeed": 15.985810601872549,
+        "expectedProjectedSpeed": 15.985810601872538
+      },
+      {
+        "sourceNode": 336,
+        "frame": 593,
+        "angleDegrees": 22.406918282866783,
+        "entrySpeed": 15.985810601872549,
+        "exitSpeed": 14.778882122650716,
+        "expectedProjectedSpeed": 14.778882122650709
+      },
+      {
+        "sourceNode": 335,
+        "frame": 622,
+        "angleDegrees": 22.575240716865075,
+        "entrySpeed": 14.778882122650716,
+        "exitSpeed": 13.646467967890704,
+        "expectedProjectedSpeed": 13.646467967890718
+      },
+      {
+        "sourceNode": 334,
+        "frame": 654,
+        "angleDegrees": 11.266885314942494,
+        "entrySpeed": 13.646467967890704,
+        "exitSpeed": 13.3834697416484,
+        "expectedProjectedSpeed": 13.383469741648394
+      }
+    ],
+    "allProjectionErrorsBelow": 1e-07,
+    "end": [
+      -73.56301410987692,
+      -22.245811462402344,
+      -270.28495519068986
+    ]
+  },
+  "roofDrop": {
+    "trial": {
+      "name": "Original roof drop into lower courtyard",
+      "passed": true,
+      "frames": 213,
+      "air": 87,
+      "verts": 0,
+      "grinds": 0,
+      "peak": 16.864518965698373,
+      "maxStep": 0.6546983620761824,
+      "end": [
+        27.866777730736366,
+        -20.876688381618436,
+        -86.58382887703696
+      ],
+      "sourceEnd": [
+        -8149.522340971613,
+        100.28773708683161,
+        175.2514226420226
+      ],
+      "error": null,
+      "drop": {
+        "start": [
+          25.7839687781447,
+          16.8625468927915,
+          -65.34446112278594
+        ],
+        "rolloutFrames": 30,
+        "landing": [
+          25.7839806591353,
+          -19.875975766441446,
+          -89.63642546664703
+        ],
+        "metres": 36.74049473213982
+      }
+    },
+    "policy": {
+      "tuningUnchanged": true,
+      "approachAndFlightExact": true,
+      "comparedFrames": 183,
+      "invalidFlagRejected": true,
+      "results": [
+        {
+          "option": "default",
+          "heightPenaltyTriggered": true,
+          "bail": true,
+          "contact": {
+            "frame": 183,
+            "position": [
+              25.7839806591353,
+              -19.875975766441446,
+              -89.63642546664703
+            ],
+            "state": "air"
+          },
+          "completed": false,
+          "frames": 184,
+          "drop": {
+            "start": [
+              25.7839687781447,
+              16.8625468927915,
+              -65.34446112278594
+            ],
+            "rolloutFrames": 0
+          }
+        },
+        {
+          "option": true,
+          "heightPenaltyTriggered": true,
+          "bail": true,
+          "contact": {
+            "frame": 183,
+            "position": [
+              25.7839806591353,
+              -19.875975766441446,
+              -89.63642546664703
+            ],
+            "state": "air"
+          },
+          "completed": false,
+          "frames": 184,
+          "drop": {
+            "start": [
+              25.7839687781447,
+              16.8625468927915,
+              -65.34446112278594
+            ],
+            "rolloutFrames": 0
+          }
+        },
+        {
+          "option": false,
+          "heightPenaltyTriggered": false,
+          "bail": false,
+          "contact": {
+            "frame": 183,
+            "position": [
+              25.7839806591353,
+              -19.875975766441446,
+              -89.63642546664703
+            ],
+            "state": "ride"
+          },
+          "completed": true,
+          "frames": 213,
+          "drop": {
+            "start": [
+              25.7839687781447,
+              16.8625468927915,
+              -65.34446112278594
+            ],
+            "rolloutFrames": 30,
+            "landing": [
+              25.7839806591353,
+              -19.875975766441446,
+              -89.63642546664703
+            ],
+            "metres": 36.74049473213982
+          },
+          "pitRecovery": {
+            "died": true,
+            "recovered": true,
+            "frames": 136,
+            "end": [
+              0,
+              16.320300210147103,
+              0
+            ]
+          }
+        }
+      ]
+    },
+    "beforePolicy": {
+      "name": "Original roof drop into lower courtyard",
+      "passed": false,
+      "frames": 183,
+      "air": 87,
+      "verts": 0,
+      "grinds": 0,
+      "peak": 16.864518965698373,
+      "maxStep": 0.6546983620761824,
+      "end": [
+        25.7839806591353,
+        -19.875975766441446,
+        -89.63642546664703
+      ],
+      "sourceEnd": [
+        -8000.000852921976,
+        172.12768797378317,
+        -43.890802357786015
+      ],
+      "error": "AssertionError [ERR_ASSERTION]: bail",
+      "drop": {
+        "start": [
+          25.7839687781447,
+          16.8625468927915,
+          -65.34446112278594
+        ],
+        "rolloutFrames": 0
+      }
+    },
+    "primarySourceFinding": "HandleBailOnLanding and its inspected contact path judge orientation/trick conditions and contain no fall-height penalty. The optional flag disables only the fork generic height/impact bail."
+  },
+  "native": {
+    "cases": 20,
+    "steps": 11686,
+    "taskWorkingExact": true,
+    "route": {
+      "frames": 6293,
+      "waypoints": 35,
+      "totalWaypoints": 35,
+      "distance": 980.9310510586971,
+      "airFrames": 78,
+      "tableOllie": {
+        "released": true,
+        "landed": true,
+        "returned": true,
+        "release": [
+          37.69686442343699,
+          0,
+          -15.998535445630699
+        ]
+      },
+      "visits": [
+        {
+          "index": 0,
+          "frame": 194,
+          "source": [
+            -8324.57909072082,
+            2473.7886233705713,
+            6391
+          ],
+          "grounded": true
+        },
+        {
+          "index": 1,
+          "frame": 296,
+          "source": [
+            -9239.77813398152,
+            1608.039236452223,
+            5661.889023557696
+          ],
+          "grounded": false
+        },
+        {
+          "index": 2,
+          "frame": 331,
+          "source": [
+            -9312.863115339263,
+            1599,
+            5422.977342476107
+          ],
+          "grounded": true
+        },
+        {
+          "index": 3,
+          "frame": 546,
+          "source": [
+            -7174.695119237971,
+            1598.5205399001175,
+            5474.501121286103
+          ],
+          "grounded": true
+        },
+        {
+          "index": 4,
+          "frame": 682,
+          "source": [
+            -5676.393954061024,
+            1598.2014308113999,
+            5276.678514814076
+          ],
+          "grounded": true
+        },
+        {
+          "index": 5,
+          "frame": 782,
+          "source": [
+            -5347.801310107888,
+            1598.7531619400452,
+            4567.407359926351
+          ],
+          "grounded": true
+        },
+        {
+          "index": 6,
+          "frame": 863,
+          "source": [
+            -5074.952661169994,
+            1577.765975157513,
+            3959.085944897926
+          ],
+          "grounded": true
+        },
+        {
+          "index": 7,
+          "frame": 948,
+          "source": [
+            -4605.913623527509,
+            1444.7154165910147,
+            3339.3341754152734
+          ],
+          "grounded": true
+        },
+        {
+          "index": 8,
+          "frame": 1065,
+          "source": [
+            -4067.0627852064417,
+            1155.7413189911663,
+            2166.402939518335
+          ],
+          "grounded": true
+        },
+        {
+          "index": 9,
+          "frame": 1184,
+          "source": [
+            -4003.4847108322656,
+            773.7637016580376,
+            875.593130099599
+          ],
+          "grounded": true
+        },
+        {
+          "index": 10,
+          "frame": 1378,
+          "source": [
+            -2512.3719330912727,
+            92.04242947255761,
+            -868.6285274520706
+          ],
+          "grounded": true
+        },
+        {
+          "index": 11,
+          "frame": 1581,
+          "source": [
+            -177.26104685669543,
+            121.47339601727867,
+            -997.8274148964574
+          ],
+          "grounded": true
+        },
+        {
+          "index": 12,
+          "frame": 1899,
+          "source": [
+            2352.4779307578046,
+            3.999988407924093,
+            -1910.2930488318834
+          ],
+          "grounded": true
+        },
+        {
+          "index": 13,
+          "frame": 2293,
+          "source": [
+            2657.128213766904,
+            173.6175757463027,
+            714.8145675077649
+          ],
+          "grounded": true
+        },
+        {
+          "index": 14,
+          "frame": 2597,
+          "source": [
+            5822.9678702480705,
+            171.45300287501482,
+            1006.2517304710746
+          ],
+          "grounded": true
+        },
+        {
+          "index": 15,
+          "frame": 2797,
+          "source": [
+            8327.989957160205,
+            -3.83196206712455e-05,
+            1278.2778310889025
+          ],
+          "grounded": true
+        },
+        {
+          "index": 16,
+          "frame": 2933,
+          "source": [
+            9830.524184829794,
+            -3.83196206712455e-05,
+            853.4410967354725
+          ],
+          "grounded": true
+        },
+        {
+          "index": 17,
+          "frame": 3054,
+          "source": [
+            10859.44727444919,
+            -3.83196206712455e-05,
+            108.37227636641728
+          ],
+          "grounded": true
+        },
+        {
+          "index": 18,
+          "frame": 3230,
+          "source": [
+            11268.501045611909,
+            0.21410809713711387,
+            -1825.410107788659
+          ],
+          "grounded": true
+        },
+        {
+          "index": 19,
+          "frame": 3482,
+          "source": [
+            11015.683961700812,
+            0.3620260631439578,
+            -5025.220785312591
+          ],
+          "grounded": true
+        },
+        {
+          "index": 20,
+          "frame": 3638,
+          "source": [
+            9644.830424358577,
+            1.7417392095051127,
+            -6099.530029171932
+          ],
+          "grounded": true
+        },
+        {
+          "index": 21,
+          "frame": 3792,
+          "source": [
+            8144.958507543886,
+            6.006008512568087,
+            -7194.970382876623
+          ],
+          "grounded": true
+        },
+        {
+          "index": 22,
+          "frame": 3939,
+          "source": [
+            6653.589935649763,
+            2.0000435072799974,
+            -8107.602606608632
+          ],
+          "grounded": true
+        },
+        {
+          "index": 23,
+          "frame": 4111,
+          "source": [
+            4677.117490676224,
+            2.0000435072799974,
+            -8287.637235790527
+          ],
+          "grounded": true
+        },
+        {
+          "index": 24,
+          "frame": 4313,
+          "source": [
+            2175.0719069351035,
+            3.744183976563818,
+            -8299.227345204132
+          ],
+          "grounded": true
+        },
+        {
+          "index": 25,
+          "frame": 4487,
+          "source": [
+            167.88042725325704,
+            0.0618007008092718,
+            -8943.089500333788
+          ],
+          "grounded": true
+        },
+        {
+          "index": 26,
+          "frame": 4717,
+          "source": [
+            -2828.8095866736403,
+            -280.3097219490103,
+            -9041.65363681036
+          ],
+          "grounded": true
+        },
+        {
+          "index": 27,
+          "frame": 5032,
+          "source": [
+            -6820.791405064433,
+            0.9942252808168632,
+            -9001.110984273118
+          ],
+          "grounded": true
+        },
+        {
+          "index": 28,
+          "frame": 5192,
+          "source": [
+            -7900.368892654012,
+            144.3201570794106,
+            -7643.968110091635
+          ],
+          "grounded": true
+        },
+        {
+          "index": 29,
+          "frame": 5392,
+          "source": [
+            -9856.776255120805,
+            0.4482398272696173,
+            -6106.769196090303
+          ],
+          "grounded": true
+        },
+        {
+          "index": 30,
+          "frame": 5593,
+          "source": [
+            -11860.641057675,
+            -0.7069169688286365,
+            -4605.327478649302
+          ],
+          "grounded": true
+        },
+        {
+          "index": 31,
+          "frame": 5701,
+          "source": [
+            -11998.274857077526,
+            -1.999983220264994,
+            -3474.342309150137
+          ],
+          "grounded": true
+        },
+        {
+          "index": 32,
+          "frame": 5920,
+          "source": [
+            -13822.620186229266,
+            -1.999983220264994,
+            -3312.0384364883466
+          ],
+          "grounded": true
+        },
+        {
+          "index": 33,
+          "frame": 6155,
+          "source": [
+            -14349.085279110406,
+            5.333984678279194,
+            -2388.886668189467
+          ],
+          "grounded": true
+        },
+        {
+          "index": 34,
+          "frame": 6292,
+          "source": [
+            -14496.923209518192,
+            188.59499324823537,
+            -1279.2876040286592
+          ],
+          "grounded": true
+        }
+      ]
+    },
+    "routeMaximumStep": 0.808990276076102
+  },
+  "railFixtures": {
+    "cadenceTraces": 21,
+    "entryVectors": 4,
+    "runoffs": 6,
+    "corners": 6,
+    "directionalLaunches": 12,
+    "cameraIndependentInputLaunches": 16
+  },
+  "browser": {
+    "cases": 20,
+    "steps": 11686,
+    "liteFullExact": true,
+    "nativeExact": true,
+    "pageErrors": [],
+    "startupErrors": {
+      "preview": [],
+      "game": []
+    },
+    "focusedFinalPage": {
+      "boundary": {
+        "checks": {
+          "running": false,
+          "stage": "Original rail 797 catch, traverse and land 1",
+          "passed": [
+            {
+              "name": "Original rail 797 catch, traverse and land 1",
+              "frames": 754,
+              "result": {
+                "air": 33,
+                "verts": 0,
+                "grinds": 720,
+                "peak": -16.262473731612126,
+                "grind": {
+                  "frames": 754,
+                  "grindFrames": 720,
+                  "maxT": 212.20666087264325,
+                  "minT": 0.4000000000000088,
+                  "progress": 212.20666087264325,
+                  "direction": 1,
+                  "maxBalance": 0.14375,
+                  "caught": true,
+                  "landed": true
+                }
+              },
+              "end": [
+                -73.56301410987692,
+                -22.245811462402344,
+                -270.28495519068986
+              ]
+            }
+          ],
+          "failure": null,
+          "frames": 754,
+          "tuningUnchanged": true
+        },
+        "errors": [],
+        "startupErrors": {
+          "preview": [],
+          "game": []
+        }
+      },
+      "roof": {
+        "checks": {
+          "running": false,
+          "stage": "Original roof drop into lower courtyard",
+          "passed": [
+            {
+              "name": "Original roof drop into lower courtyard",
+              "frames": 213,
+              "result": {
+                "air": 87,
+                "verts": 0,
+                "grinds": 0,
+                "peak": 16.864518965698373,
+                "drop": {
+                  "start": [
+                    25.7839687781447,
+                    16.8625468927915,
+                    -65.34446112278594
+                  ],
+                  "rolloutFrames": 30,
+                  "landing": [
+                    25.7839806591353,
+                    -19.875975766441446,
+                    -89.63642546664703
+                  ],
+                  "metres": 36.74049473213982
+                }
+              },
+              "end": [
+                27.866777730736366,
+                -20.876688381618436,
+                -86.58382887703696
+              ]
+            }
+          ],
+          "failure": null,
+          "frames": 213,
+          "tuningUnchanged": true
+        },
+        "errors": [],
+        "startupErrors": {
+          "preview": [],
+          "game": []
+        }
+      }
+    }
+  },
+  "mainRegression": {
+    "cases": 64,
+    "steps": 18058,
+    "previousTaskReportExact": true,
+    "supportCount": 18,
+    "railClearanceSamples": 97,
+    "ditchApproaches": 8
+  },
+  "defaultTrace": {
+    "frames": 960,
+    "sha256": "c355c28f30e0c6a248e396cfe83234e24b95fdaa5c907f8ec9fc97faa29c2fe2"
+  },
+  "checks": {
+    "checkLevels": "pass",
+    "build": "pass",
+    "buildStamp": "70dc9c1e9590399d8e0e",
+    "buildSeconds": 14,
+    "isolatedTaskTypeScript": "pass",
+    "sourceToolsTypeScript": "pass",
+    "scriptRunner": "Exact package.json script bodies run with bundled Node and local binaries; npm was unavailable. No dependency install was performed.",
+    "fullSuiteRun": false
+  },
+  "limitations": [
+    "Source balance uses the fork deterministic RNG and its existing post-step state boundary; native RNG and scheduling are not exact.",
+    "Corner velocity projection is retained, but the motion integrator remains continuous at 60 Hz.",
+    "Source rail-catch eligibility, complete state/trick/handplant/snap timing, contact/steering/braking details and fixed-point rounding remain incomplete.",
+    "Original visual materials are not recreated.",
+    "Retained THPS2 PC School data is not independently hash-matched to THPS1 media.",
+    "Campus route ends below Hall Pass stairs; it is not a closed loop.",
+    "Historical unattributed MutationObserver reload errors are not declared fixed."
+  ],
+  "nextAvailableEvidence": {
+    "sourceRailCaptureDependency": "3851223f21cf10435d14b239ee426d5319bf83c2",
+    "note": "Validated local source-query port reported by the Mall chat. Not adopted in this iteration; School must register its own source frame."
+  },
+  "continuationStartedAt": "2026-10-23T04:18:00+00:00",
+  "verifiedFullSuiteAt": "2026-10-23T04:36:48.156264+00:00",
+  "verifiedFinalFeatureAt": "2026-10-23T04:45:23.056082+00:00",
+  "minutesToVerifiedPlayable": 27.4,
+  "delivery": "Local only; no push, upload, publication or deployment."
+}

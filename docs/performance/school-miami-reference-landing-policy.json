@@ -1,0 +1,96 @@
+{
+  "tuningUnchanged": true,
+  "approachAndFlightExact": true,
+  "comparedFrames": 183,
+  "invalidFlagRejected": true,
+  "results": [
+    {
+      "option": "default",
+      "heightPenaltyTriggered": true,
+      "bail": true,
+      "contact": {
+        "frame": 183,
+        "position": [
+          25.7839806591353,
+          -19.875975766441446,
+          -89.63642546664703
+        ],
+        "state": "air"
+      },
+      "completed": false,
+      "frames": 184,
+      "drop": {
+        "start": [
+          25.7839687781447,
+          16.8625468927915,
+          -65.34446112278594
+        ],
+        "rolloutFrames": 0
+      }
+    },
+    {
+      "option": true,
+      "heightPenaltyTriggered": true,
+      "bail": true,
+      "contact": {
+        "frame": 183,
+        "position": [
+          25.7839806591353,
+          -19.875975766441446,
+          -89.63642546664703
+        ],
+        "state": "air"
+      },
+      "completed": false,
+      "frames": 184,
+      "drop": {
+        "start": [
+          25.7839687781447,
+          16.8625468927915,
+          -65.34446112278594
+        ],
+        "rolloutFrames": 0
+      }
+    },
+    {
+      "option": false,
+      "heightPenaltyTriggered": false,
+      "bail": false,
+      "contact": {
+        "frame": 183,
+        "position": [
+          25.7839806591353,
+          -19.875975766441446,
+          -89.63642546664703
+        ],
+        "state": "ride"
+      },
+      "completed": true,
+      "frames": 213,
+      "drop": {
+        "start": [
+          25.7839687781447,
+          16.8625468927915,
+          -65.34446112278594
+        ],
+        "rolloutFrames": 30,
+        "landing": [
+          25.7839806591353,
+          -19.875975766441446,
+          -89.63642546664703
+        ],
+        "metres": 36.74049473213982
+      },
+      "pitRecovery": {
+        "died": true,
+        "recovered": true,
+        "frames": 136,
+        "end": [
+          0,
+          16.320300210147103,
+          0
+        ]
+      }
+    }
+  ]
+}

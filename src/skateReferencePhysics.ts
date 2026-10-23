@@ -4,7 +4,7 @@ import { SKATE_PARK } from './skateParkPhysics';
 export interface SkateReferenceData {
   kind: 'thps1';
   metresPerUnit: number;
-  stats: { ollie: number; speed: number; air: number };
+  stats: { ollie: number; speed: number; air: number; balance?: number };
 }
 
 export type SkateParkParameters = Readonly<{ [K in keyof typeof SKATE_PARK]: number }>;
@@ -21,6 +21,7 @@ export interface SkateReferencePhysics {
   railSlopeBoost: number;
   railTransferAngle: number;
   railCornerAngle: number;
+  balanceStat?: number;
 }
 
 export function validSkateReference(value: unknown): value is SkateReferenceData {
@@ -30,8 +31,9 @@ export function validSkateReference(value: unknown): value is SkateReferenceData
       data.kind !== 'thps1' || !Number.isFinite(data.metresPerUnit) ||
       data.metresPerUnit < 0.001 || data.metresPerUnit > 1 ||
       !data.stats || typeof data.stats !== 'object' || Array.isArray(data.stats)) return false;
-  return Object.keys(data.stats).every(k => ['ollie', 'speed', 'air'].includes(k)) &&
-    [data.stats.ollie, data.stats.speed, data.stats.air].every(n => Number.isInteger(n) && n >= 0 && n <= 10);
+  return Object.keys(data.stats).every(k => ['ollie', 'speed', 'air', 'balance'].includes(k)) &&
+    [data.stats.ollie, data.stats.speed, data.stats.air].every(n => Number.isInteger(n) && n >= 0 && n <= 10) &&
+    (data.stats.balance === undefined || Number.isInteger(data.stats.balance) && data.stats.balance >= 0 && data.stats.balance <= 10);
 }
 
 /** Our 60 Hz integration of measured 30 Hz/Q12 parameters. This covers
@@ -71,6 +73,7 @@ export function createSkateReference(data: SkateReferenceData): SkateReferencePh
     railSlopeBoost: 2000 / q * hz * unit,
     railTransferAngle: 200 / q * Math.PI * 2,
     railCornerAngle: Math.acos(2633 / q),
+    balanceStat: data.stats.balance,
   };
 }
 
@@ -110,4 +113,55 @@ export function referenceRailMotion(
     seconds += h;
   }
   return { speed, distance, seconds: end };
+}
+
+/** Source integer balance state. The exposed needle is position/4000; velocity
+ * here is the original per-tick quantity, not a smoothed force. The caller
+ * supplies its random stream and native state sequence, so fixtures can compare
+ * every source recurrence independently of presentation or global randomness. */
+export class ReferenceRailBalance {
+  position = 0;
+  velocity = 0;
+  railTicks = 0;
+  armed = false;
+  private seconds = 0;
+
+  reset(): void {
+    this.position = this.velocity = this.railTicks = this.seconds = 0;
+    this.armed = false;
+  }
+
+  catchRail(sameRail: boolean, stat: number): void {
+    this.armed = false;
+    if (sameRail) this.railTicks += 40;
+    else { this.railTicks = Math.max(0, this.railTicks - 30); this.velocity = 0; }
+    this.velocity = Math.trunc(Math.trunc(this.velocity * (100 - stat * 15) / 100) * (this.railTicks + 60) / 80) || 0;
+  }
+
+  advance(dt: number, mode: 'ground' | 'air' | 'grind', axis: number, stat: number, random: () => number): boolean {
+    const previous = Math.floor(this.seconds * 30 + 1e-7);
+    this.seconds += dt;
+    const ticks = Math.floor(this.seconds * 30 + 1e-7) - previous;
+    for (let tick = 0; tick < ticks; tick++) {
+      this.railTicks++;
+      if (mode === 'ground') {
+        this.position = this.velocity = this.railTicks = 0;
+      } else if (mode === 'grind') {
+        const time = this.railTicks + 60;
+        this.position += Math.trunc(Math.trunc(this.position / (stat * 3 + 28)) * time / 80);
+        this.position += Math.trunc(this.velocity * time / 80);
+        // Native analog mAX ranges approximately -128..127; digital buttons
+        // map to the ends. Holding the catch direction never arms steering.
+        const direction = axis < -40 / 128 ? -1 : axis > 40 / 128 ? 1 : 0;
+        if (direction === 0) this.armed = true;
+        if (direction && this.armed) this.velocity += direction * 20;
+        else if (Math.abs(this.velocity) < 20 - stat) {
+          const range = 80 - stat * 3;
+          this.velocity = Math.floor(random() * range) - Math.trunc(range / 2);
+        }
+        if (Math.abs(this.position) > 4000) return true;
+      }
+    }
+    return false;
+  }
 }

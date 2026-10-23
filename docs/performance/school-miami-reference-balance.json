@@ -1,0 +1,298 @@
+{
+  "integration": [
+    {
+      "controlled": false,
+      "frames": 123,
+      "peak": 0.9985,
+      "bail": true,
+      "state": "air",
+      "distance": 48.4273791654153
+    },
+    {
+      "controlled": true,
+      "frames": 1200,
+      "peak": 0.18025,
+      "bail": false,
+      "state": "grind",
+      "distance": 468.65205643779285
+    }
+  ],
+  "sourcePath": "/private/tmp/mall-recreation/research/decomp/game_src_physics.cpp",
+  "sourceSHA256": "60f61f8b0a7ff124e80a6506ae606c509da0f60563c6885b6636b2fd2ee10777",
+  "sourceRevision": "d9319c8d5b42c431de02bec0f02f0cf955f2fbae",
+  "oracle": "Compiled unmodified source balance/catch statements with deterministic RNG and state stubs.",
+  "scenarios": [
+    {
+      "stat": 1,
+      "seed": 1,
+      "hz": 30,
+      "comparedCommands": 198,
+      "final": [
+        4144,
+        21,
+        88,
+        0,
+        1
+      ],
+      "heldCatchVerified": true,
+      "neutralArmVerified": true
+    },
+    {
+      "stat": 1,
+      "seed": 1,
+      "hz": 60,
+      "comparedCommands": 198,
+      "final": [
+        4144,
+        21,
+        88,
+        0,
+        1
+      ],
+      "heldCatchVerified": true,
+      "neutralArmVerified": true
+    },
+    {
+      "stat": 1,
+      "seed": 1,
+      "hz": 120,
+      "comparedCommands": 198,
+      "final": [
+        4144,
+        21,
+        88,
+        0,
+        1
+      ],
+      "heldCatchVerified": true,
+      "neutralArmVerified": true
+    },
+    {
+      "stat": 1,
+      "seed": 1789,
+      "hz": 30,
+      "comparedCommands": 191,
+      "final": [
+        4058,
+        30,
+        81,
+        0,
+        1
+      ],
+      "heldCatchVerified": true,
+      "neutralArmVerified": true
+    },
+    {
+      "stat": 1,
+      "seed": 1789,
+      "hz": 60,
+      "comparedCommands": 191,
+      "final": [
+        4058,
+        30,
+        81,
+        0,
+        1
+      ],
+      "heldCatchVerified": true,
+      "neutralArmVerified": true
+    },
+    {
+      "stat": 1,
+      "seed": 1789,
+      "hz": 120,
+      "comparedCommands": 191,
+      "final": [
+        4058,
+        30,
+        81,
+        0,
+        1
+      ],
+      "heldCatchVerified": true,
+      "neutralArmVerified": true
+    },
+    {
+      "stat": 5,
+      "seed": 1,
+      "hz": 30,
+      "comparedCommands": 207,
+      "final": [
+        4011,
+        18,
+        97,
+        0,
+        1
+      ],
+      "heldCatchVerified": true,
+      "neutralArmVerified": true
+    },
+    {
+      "stat": 5,
+      "seed": 1,
+      "hz": 60,
+      "comparedCommands": 207,
+      "final": [
+        4011,
+        18,
+        97,
+        0,
+        1
+      ],
+      "heldCatchVerified": true,
+      "neutralArmVerified": true
+    },
+    {
+      "stat": 5,
+      "seed": 1,
+      "hz": 120,
+      "comparedCommands": 207,
+      "final": [
+        4011,
+        18,
+        97,
+        0,
+        1
+      ],
+      "heldCatchVerified": true,
+      "neutralArmVerified": true
+    },
+    {
+      "stat": 5,
+      "seed": 1789,
+      "hz": 30,
+      "comparedCommands": 200,
+      "final": [
+        4145,
+        25,
+        90,
+        0,
+        1
+      ],
+      "heldCatchVerified": true,
+      "neutralArmVerified": true
+    },
+    {
+      "stat": 5,
+      "seed": 1789,
+      "hz": 60,
+      "comparedCommands": 200,
+      "final": [
+        4145,
+        25,
+        90,
+        0,
+        1
+      ],
+      "heldCatchVerified": true,
+      "neutralArmVerified": true
+    },
+    {
+      "stat": 5,
+      "seed": 1789,
+      "hz": 120,
+      "comparedCommands": 200,
+      "final": [
+        4145,
+        25,
+        90,
+        0,
+        1
+      ],
+      "heldCatchVerified": true,
+      "neutralArmVerified": true
+    },
+    {
+      "stat": 8,
+      "seed": 1,
+      "hz": 30,
+      "comparedCommands": 216,
+      "final": [
+        4132,
+        15,
+        106,
+        0,
+        1
+      ],
+      "heldCatchVerified": true,
+      "neutralArmVerified": true
+    },
+    {
+      "stat": 8,
+      "seed": 1,
+      "hz": 60,
+      "comparedCommands": 216,
+      "final": [
+        4132,
+        15,
+        106,
+        0,
+        1
+      ],
+      "heldCatchVerified": true,
+      "neutralArmVerified": true
+    },
+    {
+      "stat": 8,
+      "seed": 1,
+      "hz": 120,
+      "comparedCommands": 216,
+      "final": [
+        4132,
+        15,
+        106,
+        0,
+        1
+      ],
+      "heldCatchVerified": true,
+      "neutralArmVerified": true
+    },
+    {
+      "stat": 8,
+      "seed": 1789,
+      "hz": 30,
+      "comparedCommands": 207,
+      "final": [
+        4057,
+        21,
+        97,
+        0,
+        1
+      ],
+      "heldCatchVerified": true,
+      "neutralArmVerified": true
+    },
+    {
+      "stat": 8,
+      "seed": 1789,
+      "hz": 60,
+      "comparedCommands": 207,
+      "final": [
+        4057,
+        21,
+        97,
+        0,
+        1
+      ],
+      "heldCatchVerified": true,
+      "neutralArmVerified": true
+    },
+    {
+      "stat": 8,
+      "seed": 1789,
+      "hz": 120,
+      "comparedCommands": 207,
+      "final": [
+        4057,
+        21,
+        97,
+        0,
+        1
+      ],
+      "heldCatchVerified": true,
+      "neutralArmVerified": true
+    }
+  ],
+  "optionalOnExistingProfiles": true,
+  "invalidStatsRejected": true
+}

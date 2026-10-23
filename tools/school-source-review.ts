@@ -37,6 +37,8 @@ document.querySelector('#play')!.addEventListener('click', () => { overview = fa
 document.querySelector('#checks')!.addEventListener('click', () => { if (!game || checks?.running || scaleMeasurement?.running) return; overview = false; checks = runSchoolSourceBrowserChecks(game); });
 document.querySelector('#route')!.addEventListener('click', () => { if (!game || checks?.running || scaleMeasurement?.running) return; overview = false; checks = runSchoolSourceBrowserChecks(game, true); });
 document.querySelector('#rail-approach')!.addEventListener('click', () => { if (!game || checks?.running || scaleMeasurement?.running) return; overview = false; checks = runSchoolSourceBrowserChecks(game, false, /courtyard ollie/); });
+document.querySelector('#boundary-grind')!.addEventListener('click', () => { if (!game || checks?.running || scaleMeasurement?.running) return; overview = false; checks = runSchoolSourceBrowserChecks(game, false, /Original rail 797/); });
+document.querySelector('#roof-drop')!.addEventListener('click', () => { if (!game || checks?.running || scaleMeasurement?.running) return; overview = false; checks = runSchoolSourceBrowserChecks(game, false, /roof drop/); });
 document.querySelector('#measure')!.addEventListener('click', () => { if (!game || checks?.running || scaleMeasurement?.running) return; overview = false; scaleMeasurement = runSchoolScaleMeasurement(game); });
 document.querySelector('#full')!.textContent = full ? 'Lite render' : 'Full render';
 document.querySelector('#full')!.addEventListener('click', () => { location.search = full ? '' : '?full'; });

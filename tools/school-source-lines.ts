@@ -6,7 +6,7 @@ import { createSchoolSourceRoute } from './school-source-route';
 type Point = [number, number, number];
 type Place = (original: Point, heading: Point, speed?: number) => void;
 export type SourceTrial = {
-  name: string; limit: number; result: { air: number; verts: number; grinds: number; peak: number; grind?: ReturnType<typeof createBalancedGrind>['report']; route?: ReturnType<typeof createSchoolSourceRoute>['report'] };
+  name: string; limit: number; result: { air: number; verts: number; grinds: number; peak: number; grind?: ReturnType<typeof createBalancedGrind>['report']; route?: ReturnType<typeof createSchoolSourceRoute>['report']; drop?: { start: number[]; landing?: number[]; metres?: number; rolloutFrames: number } };
   init: () => void; sample: (frame: number) => any; observe: (frame: number) => boolean;
 };
 
@@ -61,6 +61,19 @@ export function schoolSourceTrials(p: any, level: any, place: Place, traceRoute 
     if (r.peak < 2.1 || r.peak > 2.25) throw Error('Source-calibrated flat ollie height differs');
     return true;
   });
+  const roofDrop = add('Original roof drop into lower courtyard', () => {
+    place([-8000, 2825, 1700], [0, 0, -1], 10);
+    if(p.pos.y < 16.8 || p.pos.y > 17)throw Error('Roof drop must start on the original roof');
+    roofDrop.drop = {start:p.pos.toArray(),rolloutFrames:0};
+  }, () => ({grabHeld:p.grounded && p.speed > 8}), (_frame,r) => {
+    if(!r.air || !p.grounded)return false;
+    const drop=roofDrop.drop!;
+    if(!drop.landing){drop.landing=p.pos.toArray();drop.metres=r.peak-p.pos.y;}
+    drop.rolloutFrames++;
+    if(drop.rolloutFrames < 30)return false;
+    if((drop.metres??0) < 30)throw Error('Roof drop omitted the original descent');
+    return true;
+  }, 900);
   for (const [origin, sourceX] of [['planter', -13200], ['ground', -12200]] as const) {
     let approachLine: ReturnType<typeof createBalancedGrind>, approachRail: any, approachReleased = false;
     const approach = add(`Original courtyard ollie onto rail 163 and rollout (${origin})`, () => {

@@ -11,7 +11,8 @@ await withSkateRuntime(async ({ server, Level, Player, scene, THREE, CONST, TUNI
   const { parseCustomLevelJson } = await server.ssrLoadModule('/src/level.ts');
   const data = m.SCHOOL_SOURCE_LEVEL, before = JSON.stringify(TUNING);
   assert.ok(parseCustomLevelJson(JSON.stringify(data)), 'Measured level must survive editor validation');
-  assert.deepEqual(data.skateReference, { kind: 'thps1', metresPerUnit: m.SCHOOL_SOURCE_SCALE, stats: { ollie: 4, speed: 8, air: 8 } });
+  assert.deepEqual(data.skateReference, { kind: 'thps1', metresPerUnit: m.SCHOOL_SOURCE_SCALE, stats: { ollie: 4, speed: 8, air: 8, balance: 5 } });
+  assert.equal(data.hugeDropBail, false, 'Source landings do not use the fork height penalty');
   assert.equal(m.SCHOOL_SOURCE_STATS.railEdges, 270);
   const source = JSON.parse(await readFile(new URL('../docs/school/source-geometry.json', import.meta.url), 'utf8'));
   const edgeKey = (a, b) => [Math.min(a, b), Math.max(a, b)].join(':');
@@ -62,6 +63,7 @@ await withSkateRuntime(async ({ server, Level, Player, scene, THREE, CONST, TUNI
       run(c.name, c.init, c.sample, ({ frame }) => c.observe(frame + 1), c.limit);
       if (c.result.route) report.trials[report.trials.length - 1].route = c.result.route;
       if (c.result.grind) report.trials[report.trials.length - 1].grind = c.result.grind;
+      if (c.result.drop) report.trials[report.trials.length - 1].drop = c.result.drop;
     }
     assert.equal(JSON.stringify(TUNING), before); report.tuningUnchanged = true;
   } finally { await writeFile(process.env.SCHOOL_SOURCE_REPORT || '/private/tmp/school-miami-review/source-native.json', JSON.stringify(report, null, 2)); level.dispose(); }
