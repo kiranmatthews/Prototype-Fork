@@ -21,6 +21,8 @@ assert [a['node'] for a in actual['activators'] if a['normalStart']] == [3, 506,
 assert [a['node'] for a in actual['activators'] if not a['normalStart']] == [961]
 assert (len(actual['paths']), actual['activeNodes'], actual['activeSegments'], actual['activeUniqueEdges']) == (128, 390, 331, 270)
 assert actual['excludedEdges'] == [[189, 190]]
+assert nodes[393]['angles'] == [0, 1023, 0]
+assert nodes[393]['position'] == [-6149, 2792, 6391]
 assert [163, 164] in actual['paths']
 assert [206, 165, 166, 167, 546, 547] in actual['paths']
 assert [790, 258, 259, 791] in actual['paths']

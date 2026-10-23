@@ -51,7 +51,10 @@ await withSkateRuntime(async ({ server, Level, Player, scene, THREE, CONST, TUNI
       const hit = ray.intersectObjects(level.groundMeshes, false)[0]; assert.ok(hit, q.name); assert.ok(Math.abs(hit.point.y - position[1] + .12) < .002, q.name); report.supports.push({ name: q.name, expected: position[1] - .12, actual: hit.point.y });
     }
     const { schoolSourceTrials } = await server.ssrLoadModule('/tools/school-source-lines.ts');
-    for (const c of schoolSourceTrials(p, level, place)) run(c.name, c.init, c.sample, ({ frame }) => c.observe(frame + 1), c.limit);
+    for (const c of schoolSourceTrials(p, level, place)) {
+      run(c.name, c.init, c.sample, ({ frame }) => c.observe(frame + 1), c.limit);
+      if (c.result.route) report.trials[report.trials.length - 1].route = c.result.route;
+    }
     assert.equal(JSON.stringify(TUNING), before); report.tuningUnchanged = true;
   } finally { await writeFile(process.env.SCHOOL_SOURCE_REPORT || '/private/tmp/school-miami-review/source-native.json', JSON.stringify(report, null, 2)); level.dispose(); }
   assert.equal(report.failures.length, 0, JSON.stringify(report.failures));

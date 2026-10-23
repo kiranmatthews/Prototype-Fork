@@ -1,9 +1,10 @@
 import { OrthographicCamera, Vector3 } from 'three';
 import { SCHOOL_SOURCE_LEVEL, SCHOOL_SOURCE_PLACES, SCHOOL_SOURCE_SCALE, SCHOOL_SOURCE_STATS, schoolSourcePlacement, schoolOriginalPoint } from '../src/levels/school-source';
 import { runSchoolSourceBrowserChecks } from './school-source-lines';
+import { runSchoolScaleMeasurement } from './school-source-scale';
 const frame = document.createElement('iframe'), status = document.querySelector<HTMLDivElement>('#status')!;
 const full = new URLSearchParams(location.search).has('full'), errors: string[] = [];
-let game: any, checks: ReturnType<typeof runSchoolSourceBrowserChecks> | undefined, overview = false;
+let game: any, checks: ReturnType<typeof runSchoolSourceBrowserChecks> | undefined, scaleMeasurement: ReturnType<typeof runSchoolScaleMeasurement> | undefined, overview = false;
 const camera = new OrthographicCamera(-350, 350, 280, -280, .1, 1800);
 camera.position.set(300, 650, 650); camera.lookAt(-30, -10, -70);
 frame.id = 'game'; frame.title = 'School original geometry game'; frame.src = '/?playtest&level=school-miami' + (full ? '' : '&lite');
@@ -30,10 +31,11 @@ for (const place of SCHOOL_SOURCE_PLACES) {
 }
 document.querySelector('#overview')!.addEventListener('click', () => { overview = true; });
 document.querySelector('#play')!.addEventListener('click', () => { overview = false; frame.contentWindow?.focus(); });
-document.querySelector('#checks')!.addEventListener('click', () => { if (!game || checks?.running) return; overview = false; checks = runSchoolSourceBrowserChecks(game); });
+document.querySelector('#checks')!.addEventListener('click', () => { if (!game || checks?.running || scaleMeasurement?.running) return; overview = false; checks = runSchoolSourceBrowserChecks(game); });
+document.querySelector('#measure')!.addEventListener('click', () => { if (!game || checks?.running || scaleMeasurement?.running) return; overview = false; scaleMeasurement = runSchoolScaleMeasurement(game); });
 document.querySelector('#full')!.textContent = full ? 'Lite render' : 'Full render';
 document.querySelector('#full')!.addEventListener('click', () => { location.search = full ? '' : '?full'; });
 setInterval(() => {
   if (!game) return; const p = game.player;
-  status.textContent = JSON.stringify({ level: game.getCurrentLevel().name, unitScale: SCHOOL_SOURCE_SCALE, components: SCHOOL_SOURCE_LEVEL.components.length, ...SCHOOL_SOURCE_STATS, grounded: p.grounded, state: p.state, pos: p.pos.toArray(), sourcePosition: schoolOriginalPoint(...p.pos.toArray() as [number, number, number]), speed: p.speed, checks, errors });
+  status.textContent = JSON.stringify({ level: game.getCurrentLevel().name, unitScale: SCHOOL_SOURCE_SCALE, components: SCHOOL_SOURCE_LEVEL.components.length, ...SCHOOL_SOURCE_STATS, grounded: p.grounded, state: p.state, pos: p.pos.toArray(), sourcePosition: schoolOriginalPoint(...p.pos.toArray() as [number, number, number]), speed: p.speed, checks, scaleMeasurement, errors, startupErrors: { preview: (window as any).__schoolStartupErrors ?? [], game: (frame.contentWindow as any).__schoolStartupErrors ?? [] } });
 }, 300);

@@ -1,11 +1,12 @@
 import { schoolSourcePoint, SCHOOL_SOURCE_SCALE, SCHOOL_SOURCE_RAILS } from '../src/levels/school-source';
 import { CONST } from '../src/tuning';
 import { createBalancedGrind } from './school-grind-lines';
+import { createSchoolSourceRoute } from './school-source-route';
 
 type Point = [number, number, number];
 type Place = (original: Point, heading: Point, speed?: number) => void;
 export type SourceTrial = {
-  name: string; limit: number; result: { air: number; verts: number; grinds: number; peak: number; grind?: ReturnType<typeof createBalancedGrind>['report'] };
+  name: string; limit: number; result: { air: number; verts: number; grinds: number; peak: number; grind?: ReturnType<typeof createBalancedGrind>['report']; route?: ReturnType<typeof createSchoolSourceRoute>['report'] };
   init: () => void; sample: (frame: number) => any; observe: (frame: number) => boolean;
 };
 
@@ -62,6 +63,15 @@ export function schoolSourceTrials(p: any, level: any, place: Place): SourceTria
       line = createBalancedGrind(p, rail, CONST.fixedStep); result.grind = line.report;
     }, () => line.sample(), () => line.observe(), root === 784 && direction < 0 ? 2800 : 1800);
   }
+  let route: ReturnType<typeof createSchoolSourceRoute>;
+  const campus = add('Original continuous campus route', () => {
+    p.respawn(level, true); p.speed = 0; p.freeSkate = true;
+    route = createSchoolSourceRoute(p); campus.route = route.report;
+  }, () => route.sample(), () => {
+    if (!route.observe()) return false;
+    if (route.report.distance < 900 || route.report.airFrames < 20) throw Error('Campus route omitted the canopy descent');
+    return true;
+  }, 8000);
   return trials;
 }
 

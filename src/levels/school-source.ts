@@ -4,10 +4,9 @@ import type { CustomComponent, CustomLevelData } from '../level';
 
 type P = [number, number, number];
 type Face = { id: string; object: number; points: P[]; normal: Vector3; flags: number; collision: number; color: number[] };
-// Original HAWK's board-to-head bind span is 221.8125 engine units. The
-// original CBruce constructor sets all actor-scale axes to 4096 (identity).
-// Match that span to our existing ~3 m rider without changing the player.
-// Animation-dependent silhouette differences remain a calibration limit.
+// Retain the validated preview scale. The animated board-to-head candidate
+// (2.90 / 208.1875) is 3% larger, but its raised gym toes exceed our flat ollie.
+// See docs/school/README.md for the measured pose and movement mismatch.
 export const SCHOOL_SOURCE_SCALE = 3 / 221.8125;
 export const SCHOOL_SOURCE_ORIGIN: P = [-6149, 1599, 6391];
 export const schoolSourcePoint = (x: number, y: number, z: number): P => [
@@ -215,6 +214,8 @@ SCHOOL_SOURCE_STATS.railSegments = source.railActivation.activeSegments;
 SCHOOL_SOURCE_STATS.railPaths = SCHOOL_SOURCE_RAILS.length;
 
 export const SCHOOL_SOURCE_PLACES: { name: string; source: P; heading: P }[] = [
+  // TRG yaw 1023 becomes +X in FudgeAngles, but HandleKick accelerates
+  // along -mFront. Reflect that travel direction in X: native +X (east).
   { name: 'Start', source: [-6149, 2792, 6391], heading: [1, 0, 0] },
   { name: 'Courtyard', source: [-11718, 231, -6274], heading: [0, 0, -1] },
   { name: 'Gym', source: [-15150, 1650, 11000], heading: [-1, 0, 0] },

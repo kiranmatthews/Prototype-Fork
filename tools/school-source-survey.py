@@ -110,6 +110,7 @@ def parse_nodes(path):
             x, y, z = unpack('<3i', data, q)
             node.update(links=links, position=[x, -y, z])
             if kind == 8:
+                node['angles'] = list(unpack('<3h', data, q + 12))
                 end = offsets[i + 1] if i + 1 < count else len(data)
                 terminator = data.find(b'\0', q + 18, end)
                 if terminator < 0:
