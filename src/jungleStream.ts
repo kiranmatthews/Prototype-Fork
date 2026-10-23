@@ -8,6 +8,19 @@ const STONE=/riverstone|mossrock|boulder/;
 export interface JungleStreamReflectionSource {
   acquire():{promise:Promise<Template>;release:()=>void;subscribe?:(listener:(template:Template)=>void)=>()=>void};
 }
+/** Borrow the active backdrop for night streams instead of a baked daylight
+ * probe. The sky owns this texture; every creek segment shares its uniforms. */
+export class JungleStreamSkyReflection {
+  readonly map={value:null as THREE.Texture|null};
+  readonly ready={value:0};
+  readonly transform={value:new THREE.Matrix3()};
+  readonly tint={value:new THREE.Color()};
+  setSky(map:THREE.Texture|null,tint:THREE.Color):void {
+    this.map.value=map;this.ready.value=map?1:0;this.tint.value.copy(tint);
+    if(map){if(map.matrixAutoUpdate)map.updateMatrix();this.transform.value.copy(map.matrix);}
+  }
+  clear():void {this.map.value=null;this.ready.value=0;}
+}
 /** One scope and retry schedule shared by all stream materials in a level. */
 export class JungleStreamReflectionOwner implements JungleStreamReflectionSource {
   constructor(private readonly reflectionKind:JungleAssetKind='trialsv2waterreflection'){}
@@ -86,7 +99,8 @@ export function jungleStreamContacts(water:CustomComponent,geometry:THREE.Buffer
 /** Clear, sheltered stream: one surface draw, analytic fragment normals,
  * attached stone ripples and thin contact foam. Authored vertices stay exact. */
 export function createJungleStreamMaterial(clock:{value:number},c:CustomComponent,
-  geometry:THREE.BufferGeometry,components:readonly CustomComponent[],reflection?:JungleStreamReflectionSource):THREE.MeshStandardMaterial{
+  geometry:THREE.BufferGeometry,components:readonly CustomComponent[],reflection?:JungleStreamReflectionSource,
+  skyReflection?:JungleStreamSkyReflection):THREE.MeshStandardMaterial{
   geometry.computeBoundingBox();const bounds=geometry.boundingBox!;
   const contacts=jungleStreamContacts(c,geometry,components);
   const stones=Array.from({length:MAX_CONTACTS},(_,i)=>contacts[i]??new THREE.Vector4(0,0,1,1));
@@ -96,6 +110,7 @@ export function createJungleStreamMaterial(clock:{value:number},c:CustomComponen
     vertexColors:!!c.colors,fog:c.fog!==false,side:c.doubleSided===false?THREE.FrontSide:THREE.DoubleSide});
   material.forceSinglePass=true;
   material.userData.waterSurface=true;material.userData.jungleStream=true;material.userData.noWaterShore=true;
+  material.userData.streamReflectionMode=skyReflection?'sky':'probe';
   material.userData.streamContacts=contacts.map(stone=>stone.toArray());
   const reflectionMap={value:null as THREE.Texture|null},reflectionReady={value:0};
   const lease=reflection?.acquire();let disposed=false;
@@ -114,7 +129,12 @@ export function createJungleStreamMaterial(clock:{value:number},c:CustomComponen
     shader.uniforms.uJungleStreamBounds={value:new THREE.Vector4(bounds.min.x,bounds.min.z,bounds.max.x,bounds.max.z)};
     shader.uniforms.uJungleStreamScale={value:new THREE.Vector2(Math.abs(localScale[0]),Math.abs(localScale[2]))};
     shader.uniforms.uJungleStreamStoneCount={value:contacts.length};shader.uniforms.uJungleStreamStones={value:stones};
-    shader.uniforms.uJungleStreamReflection=reflectionMap;shader.uniforms.uJungleStreamReflectionReady=reflectionReady;
+    shader.uniforms.uJungleStreamReflection=skyReflection?.map??reflectionMap;
+    shader.uniforms.uJungleStreamReflectionReady=skyReflection?.ready??reflectionReady;
+    if(skyReflection){
+      shader.uniforms.uJungleStreamSkyTransform=skyReflection.transform;
+      shader.uniforms.uJungleStreamSkyTint=skyReflection.tint;
+    }
     shader.vertexShader='varying vec2 vJungleStreamXZ; varying vec2 vJungleStreamLocal; varying vec3 vJungleStreamWorld;\n'+shader.vertexShader;
     shader.vertexShader=shader.vertexShader.replace('#include <begin_vertex>', '#include <begin_vertex>\nvJungleStreamWorld = (modelMatrix*vec4(position,1.0)).xyz;\nvJungleStreamXZ = vJungleStreamWorld.xz;\nvJungleStreamLocal = position.xz;');
     shader.fragmentShader=/* glsl */`
@@ -122,6 +142,7 @@ export function createJungleStreamMaterial(clock:{value:number},c:CustomComponen
       uniform vec2 uJungleStreamScale; uniform int uJungleStreamStoneCount;
       uniform vec4 uJungleStreamStones[6];
       uniform sampler2D uJungleStreamReflection; uniform float uJungleStreamReflectionReady;
+      ${skyReflection?'uniform mat3 uJungleStreamSkyTransform; uniform vec3 uJungleStreamSkyTint;':''}
       varying vec2 vJungleStreamXZ; varying vec2 vJungleStreamLocal; varying vec3 vJungleStreamWorld;
       void jungleStreamDetail(vec2 xz,out vec2 slope,out float foam){
         float drift=uJungleStreamTime*0.42;
@@ -163,14 +184,21 @@ export function createJungleStreamMaterial(clock:{value:number},c:CustomComponen
         vec3 streamReflection=vec3(0.0);
         if(uJungleStreamReflectionReady>0.5){
           vec3 streamRay=reflect(-streamView,streamWorldNormal);
+          ${skyReflection?/* glsl */`
+          // Match skyProjection's longitude and the active painting's framing.
+          float streamLongitude=dot(streamRay.xz,streamRay.xz)>0.00000001?atan(streamRay.z,-streamRay.x)*0.1591549431:0.0;
+          vec2 streamEnvUv=(uJungleStreamSkyTransform*vec3(streamLongitude,asin(clamp(streamRay.y,-1.0,1.0))*0.3183098862+0.5,1.0)).xy;
+          streamReflection=texture2DLodEXT(uJungleStreamReflection,streamEnvUv,2.0).rgb*uJungleStreamSkyTint;
+          `:/* glsl */`
           vec2 streamEnvUv=vec2(atan(streamRay.z,streamRay.x)*0.1591549431+0.5,asin(clamp(streamRay.y,-1.0,1.0))*0.3183098862+0.5);
           // Nearby canopy fills the grazing horizon in this authored probe.
           streamEnvUv.y=clamp(streamEnvUv.y-0.16*(1.0-abs(streamRay.y)),0.0,1.0);
           streamReflection=texture2DLodEXT(uJungleStreamReflection,streamEnvUv,2.0).rgb;
+          `}
           reflectedLight.indirectSpecular+=streamReflection*streamFresnel*(1.0-streamFoam*0.45);
         }
       `).replace('vec3 outgoingLight = totalDiffuse + totalSpecular + totalEmissiveRadiance;',
         'vec3 outgoingLight = totalDiffuse + totalSpecular + totalEmissiveRadiance;\nif(uJungleStreamReflectionReady>0.5)outgoingLight=mix(outgoingLight,streamReflection,streamFresnel*0.6*(1.0-streamFoam));');
   };
-  material.customProgramCacheKey=()=> 'clear-jungle-stream-v3';return material;
+  material.customProgramCacheKey=()=> 'clear-jungle-stream-v4-'+(skyReflection?'sky':'probe');return material;
 }

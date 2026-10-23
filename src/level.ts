@@ -102,7 +102,7 @@ import { puffs, PUFF_PRESETS } from "./puffs";
 import { swirls, SWIRL_PRESETS, type Swirl } from "./swirls";
 import { CoastWater, type ShoreSample } from "./water";
 import { createStandingWaterMaterial, isStandingWater, refineStandingWater } from './standingWater';
-import { createJungleStreamMaterial, JungleStreamReflectionOwner } from './jungleStream';
+import { createJungleStreamMaterial, JungleStreamReflectionOwner, JungleStreamSkyReflection } from './jungleStream';
 import { addTreehouseTrialsMaterialLook } from './treehouseTrialsPresentation';
 import {addCarlisleTerrainLook,applyCarlisleChannelUV} from './carlislePresentation';
 import {CarlisleSceneryCollision} from './carlisleSceneryCollision';
@@ -6221,6 +6221,10 @@ export class Level {
   private replacedSurfaceMaterials: THREE.Material[] = [];
   private readonly standingWaterClock={value:0};
   private jungleStreamReflections:JungleStreamReflectionOwner|null=null;
+  private jungleStreamSkyReflection:JungleStreamSkyReflection|null=null;
+  setStreamSkyReflection(map:THREE.Texture|null,tint:THREE.Color):void {
+    this.jungleStreamSkyReflection?.setSky(map,tint);
+  }
   private custardFinale:CustardFinalePresentation|undefined;
   private buildSurfaceMesh(c: CustomComponent, outlineGroups:number[]=[]): void {
     let geometry = new THREE.BufferGeometry();
@@ -6261,8 +6265,10 @@ export class Level {
     if(c.tex==='waterslide-shallows'&&standingWater)material=createShallowSlideWater(this.standingWaterClock,c);
     else if(c.tex==='custard-pool')material=custardPoolMaterial(this.standingWaterClock,c,this.builtFromData?.components??[]);
     else if(jungleStream){
-      this.jungleStreamReflections??=new JungleStreamReflectionOwner(c.tex==='custard-water'?'custardwaterreflection':undefined);
-      material=createJungleStreamMaterial(this.standingWaterClock,c,geometry,this.builtFromData?.components??[],this.jungleStreamReflections);
+      if(this.skyPreset==='night')this.jungleStreamSkyReflection??=new JungleStreamSkyReflection();
+      else this.jungleStreamReflections??=new JungleStreamReflectionOwner(c.tex==='custard-water'?'custardwaterreflection':undefined);
+      material=createJungleStreamMaterial(this.standingWaterClock,c,geometry,this.builtFromData?.components??[],
+        this.jungleStreamReflections??undefined,this.jungleStreamSkyReflection??undefined);
       if(this.jungleStyle==='painterly'){material.userData.junglePainterly=true;addTreehouseTrialsMaterialLook(material);}
     }
     else if(standingWater) {
@@ -8619,6 +8625,7 @@ export class Level {
     this.hazardVisuals?.dispose();this.hazardVisuals=null;
     this.lethalWater.length=0;this.swimmingPools.length=0;
     this.jungleStreamReflections?.dispose();this.jungleStreamReflections=null;
+    this.jungleStreamSkyReflection?.clear();this.jungleStreamSkyReflection=null;
     this.custardFinale?.dispose();this.custardFinale=undefined;
     this.campaignWorldMap?.dispose();
     this.campaignWorldMap = null;

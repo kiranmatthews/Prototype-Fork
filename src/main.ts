@@ -538,6 +538,7 @@ function buildSkyLayers(img: HTMLImageElement, p: SkyPreset, ocean: boolean): Sk
 // The dome cut and the water meet at the same world-space sea level.
 function updateSeaHorizon(): void {
   skyProjection.setSeaLevel(level.water?.seaLevel ?? null);
+  level.setStreamSkyReflection(sky.material.map,sky.material.color);
   if (level.water) {
     skyMist.visible = false;
     level.water.setHorizonSky(sky.visible ? sky.material.map : null);

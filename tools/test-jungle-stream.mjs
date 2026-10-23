@@ -15,7 +15,7 @@ const stones=[
   {t:'decor',dkind:'trialsv2riverstonec',p:[34.8,-14.7,-238.1],s:[6.5,1,4]},
 ];
 try{
-  const {createJungleStreamMaterial,jungleStreamContacts}=await server.ssrLoadModule('/src/jungleStream.ts');
+  const {createJungleStreamMaterial,jungleStreamContacts,JungleStreamSkyReflection}=await server.ssrLoadModule('/src/jungleStream.ts');
   const {createStandingWaterMaterial,isStandingWater}=await server.ssrLoadModule('/src/standingWater.ts');
   const {TREEHOUSE_SOFT_SHADOW_CHUNK,addTreehouseTrialsMaterialLook}=await server.ssrLoadModule('/src/treehouseTrialsPresentation.ts');
   const {Level,normalizeCustomLevelData,parseCustomLevelJson,migrateCustomLevel}=await server.ssrLoadModule('/src/level.ts');
@@ -56,6 +56,24 @@ try{
   const cancelled=createJungleStreamMaterial(clock,water,geo,stones,{acquire:()=>({promise:latePromise,release:()=>lateReleases++})});
   const cancelledShader={uniforms:{},vertexShader:THREE.ShaderLib.standard.vertexShader,fragmentShader:THREE.ShaderLib.standard.fragmentShader};cancelled.onBeforeCompile(cancelledShader,{});
   cancelled.dispose();resolveLate({map:probe,geometry:probeGeo});await latePromise;await Promise.resolve();assert.equal(lateReleases,1);assert.equal(cancelledShader.uniforms.uJungleStreamReflectionReady.value,0,'a late load cannot resurrect a disposed material');
+  const skyReflection=new JungleStreamSkyReflection(),nightA=createJungleStreamMaterial(clock,water,geo,stones,undefined,skyReflection),
+    nightB=createJungleStreamMaterial(clock,water,geo,stones,undefined,skyReflection);
+  const nightShader={uniforms:{},vertexShader:THREE.ShaderLib.standard.vertexShader,fragmentShader:THREE.ShaderLib.standard.fragmentShader};
+  nightB.onBeforeCompile(nightShader,{});
+  const nightVersion=nightB.version,nightMap=new THREE.Texture(),nightTint=new THREE.Color('#adcaff');let skyDisposed=0;
+  nightMap.repeat.set(2,2.15);nightMap.offset.set(0,-.75);nightMap.addEventListener('dispose',()=>skyDisposed++);
+  assert.equal(nightShader.uniforms.uJungleStreamReflectionReady.value,0,'night streams cannot flash a daylight probe before the sky arrives');
+  skyReflection.setSky(nightMap,nightTint);
+  assert.equal(nightShader.uniforms.uJungleStreamReflection.value,nightMap,'stream borrows the exact active backdrop');
+  assert.equal(nightShader.uniforms.uJungleStreamReflectionReady.value,1);
+  assert.deepEqual(nightShader.uniforms.uJungleStreamSkyTransform.value.elements,nightMap.matrix.elements);
+  assert.deepEqual(nightShader.uniforms.uJungleStreamSkyTint.value,nightTint);
+  nightA.dispose();assert.equal(nightShader.uniforms.uJungleStreamReflectionReady.value,1,'disposing one segment cannot clear the other segments');
+  skyReflection.setSky(probe,new THREE.Color());
+  assert.equal(nightShader.uniforms.uJungleStreamReflection.value,probe,'asynchronous painted-sky replacement updates existing materials');
+  assert.equal(nightB.version,nightVersion,'sky changes do not recompile creek materials');
+  skyReflection.clear();assert.equal(nightShader.uniforms.uJungleStreamReflectionReady.value,0);
+  nightB.dispose();assert.equal(skyDisposed,0,'stream disposal cannot free the shared backdrop');nightMap.dispose();
   probe.dispose();probeGeo.dispose();
   const data={v:1,name:'Clear stream sentinel',spawn:[0,1,0],killY:-30,components:[water,{t:'gate',p:[0,0,-2]}]};
   assert.ok(normalizeCustomLevelData(data));assert.deepEqual(parseCustomLevelJson(JSON.stringify(data)),normalizeCustomLevelData(data));
@@ -74,6 +92,20 @@ try{
     mesh.material.onBeforeCompile(compiled,{});const before=compiled.uniforms.uJungleStreamTime.value;level.update(1/60);
     assert.ok(compiled.uniforms.uJungleStreamTime.value>before,'the existing level water clock animates the stream');
   }finally{level.dispose();}
+  const {ROLLING_BONES_LEVEL}=await server.ssrLoadModule('/src/levels/ripcord-river.ts');
+  const nightData={...ROLLING_BONES_LEVEL,components:[{...water,tex:'custard-water'},{t:'gate',p:[0,0,-2]}]};
+  const nightLevel=new Level(new THREE.Scene(),{id:'rolling-bones-sky-sentinel',name:nightData.name,data:nightData});
+  const backdrop=new THREE.Texture();let backdropDisposed=false;backdrop.addEventListener('dispose',()=>backdropDisposed=true);
+  try{
+    const mesh=nightLevel.pickRoot.children.find(o=>o.isMesh&&o.userData.editorIdx===0);
+    assert.equal(mesh.material.userData.streamReflectionMode,'sky');
+    assert.equal(nightLevel.jungleStreamReflections,null,'Rolling Bones never requests the warm Custard Creek probe');
+    const compiled={uniforms:{},vertexShader:THREE.ShaderLib.standard.vertexShader,fragmentShader:THREE.ShaderLib.standard.fragmentShader};
+    mesh.material.onBeforeCompile(compiled,{});nightLevel.setStreamSkyReflection(backdrop,new THREE.Color());
+    assert.equal(compiled.uniforms.uJungleStreamReflection.value,backdrop);
+    nightLevel.dispose();assert.equal(compiled.uniforms.uJungleStreamReflectionReady.value,0,'leaving the level releases the borrowed sky reference');
+    assert.equal(backdropDisposed,false);
+  }finally{nightLevel.dispose();backdrop.dispose();}
   const visualData={...data,jungleAtmosphere:true,jungleStyle:'painterly',components:[
     {t:'mesh',p:[0,0,0],vertices:[0,0,0,4,0,0,0,0,-4],solid:false,tex:'solid',colors:[1,1,1,1,1,1,1,1,1]},
     {t:'gate',p:[0,0,-2]}]};

@@ -1,0 +1,78 @@
+{
+  "date": "2026-10-23",
+  "level": "rolling-bones",
+  "baseCommit": "56609ef002fcc62823e6e5873467e708c005b4b8",
+  "problem": "Night creek surfaces inherited the warm Custard Creek reflection probe independently of the active sky.",
+  "fix": "Night jungle streams borrow the active sky texture, framing matrix and tint. Daytime stream probes keep their existing behavior.",
+  "buildVersion": "645796247c18db51426f",
+  "checks": [
+    {
+      "task": "tools/test-jungle-stream.mjs",
+      "exitCode": 0,
+      "seconds": 10.86,
+      "log": "/private/tmp/rolling-bones-water-20261023/tools_test-jungle-stream.log"
+    },
+    {
+      "task": "build",
+      "exitCode": 0,
+      "seconds": 67.07,
+      "log": "/private/tmp/rolling-bones-water-20261023/build.log"
+    }
+  ],
+  "browser": {
+    "engine": "Chrome",
+    "lite": {
+      "supportedSpawn": true,
+      "streamSegments": 101,
+      "errors": []
+    },
+    "full": {
+      "supportedSpawn": true,
+      "reflections": {
+        "sky": "night",
+        "segments": 101,
+        "modes": [
+          "sky"
+        ],
+        "compiled": 22,
+        "ready": true,
+        "matchesSky": true,
+        "matchesTransform": true,
+        "warmProbeOwner": false
+      },
+      "daytimeReturn": {
+        "sky": "carlisle",
+        "segments": 74,
+        "modes": [
+          "probe"
+        ],
+        "compiled": 7,
+        "ready": true,
+        "matchesSky": false,
+        "matchesTransform": false,
+        "warmProbeOwner": true
+      },
+      "previousNightReferenceReleased": true,
+      "nightReturn": {
+        "sky": "night",
+        "segments": 101,
+        "modes": [
+          "sky"
+        ],
+        "compiled": 6,
+        "ready": true,
+        "matchesSky": true,
+        "matchesTransform": true,
+        "warmProbeOwner": false
+      },
+      "errors": []
+    }
+  },
+  "visualReview": "Compared the same creek camera before and after. Warm pink/gold streaks are replaced by the blue night panorama; reviewed full-render spawn and downstream as well.",
+  "captures": {
+    "before": "/private/tmp/rolling-bones-water-20261023/before-full-creek.png",
+    "after": "/private/tmp/rolling-bones-water-20261023/after-full-creek.png",
+    "spawn": "/private/tmp/rolling-bones-water-20261023/after-full-spawn.png"
+  },
+  "delivery": "Local only; no push or deployment."
+}
