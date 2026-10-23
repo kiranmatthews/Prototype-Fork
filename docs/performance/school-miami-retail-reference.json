@@ -1,0 +1,224 @@
+{
+  "files": [
+    {
+      "file": "SKSCHL.PSX",
+      "bytes": 481760,
+      "sha256": "5aa8e58953315e339b43827b6987b91a50d4153622cc90b0edeceb003baaca72"
+    },
+    {
+      "file": "SKSCHL_T.TRG",
+      "bytes": 28160,
+      "sha256": "1ecc2864eb36169e2666756205d3eaea6c5a52e474ace0c93a06f3e3a8817de4"
+    }
+  ],
+  "coordinates": "X, -Y, Z in whole engine units; no metre conversion",
+  "objects": 987,
+  "meshes": 987,
+  "vertices": 12271,
+  "faces": 7698,
+  "vertexTypes": {
+    "0": 11879,
+    "16": 392
+  },
+  "nodes": 965,
+  "nodeTypes": {
+    "6": 234,
+    "4": 1,
+    "11": 51,
+    "10": 342,
+    "5": 17,
+    "1": 17,
+    "12": 186,
+    "3": 9,
+    "2": 28,
+    "8": 10,
+    "13": 64,
+    "14": 5,
+    "255": 1
+  },
+  "railNodes": 393,
+  "directedRailLinks": 271,
+  "restarts": [
+    {
+      "id": 393,
+      "name": "Re_Start_School",
+      "position": [
+        -6149,
+        2792,
+        6391
+      ]
+    },
+    {
+      "id": 394,
+      "name": "Ho_Start_School_Two_Player",
+      "position": [
+        -11718,
+        231,
+        -6274
+      ]
+    },
+    {
+      "id": 851,
+      "name": "Ho_Start_School_Rails01",
+      "position": [
+        -1812,
+        30,
+        -10344
+      ]
+    },
+    {
+      "id": 852,
+      "name": "Re_Start_School_Two_Player",
+      "position": [
+        -10108,
+        207,
+        -12382
+      ]
+    },
+    {
+      "id": 853,
+      "name": "Ho_Start_School_Pool01",
+      "position": [
+        5467,
+        -29,
+        -2970
+      ]
+    },
+    {
+      "id": 854,
+      "name": "Ho_Start_School_Halfpipe01",
+      "position": [
+        8383,
+        30,
+        -6087
+      ]
+    },
+    {
+      "id": 855,
+      "name": "Ho_Start_School_Halfpipe02",
+      "position": [
+        2752,
+        30,
+        -9011
+      ]
+    },
+    {
+      "id": 856,
+      "name": "Ho_Start_School_Pool02",
+      "position": [
+        8310,
+        37,
+        -2331
+      ]
+    },
+    {
+      "id": 857,
+      "name": "Ho_Start_School_Billboard01",
+      "position": [
+        -2053,
+        235,
+        -12212
+      ]
+    },
+    {
+      "id": 939,
+      "name": "RE_2P",
+      "position": [
+        -2253,
+        235,
+        -12382
+      ]
+    }
+  ],
+  "gymBankCrossSection": {
+    "object": 718,
+    "meshChecksum": "63a7309c",
+    "stations": [
+      [
+        -17293.0,
+        1741.0,
+        9031.0
+      ],
+      [
+        -18344.0,
+        2092.0,
+        9031.0
+      ],
+      [
+        -19394.0,
+        2442.0,
+        9031.0
+      ]
+    ],
+    "floorY": 1599.0,
+    "toeStep": 142.0,
+    "faceRun": 2101.0,
+    "faceRise": 701.0,
+    "heightAboveFloor": 843.0,
+    "faceAngleDegrees": 18.451309696124692
+  },
+  "reviewedUTC": "2026-10-22T23:59:23.910230+00:00",
+  "provenance": {
+    "archiveMetadata": "https://archive.org/metadata/thps-2",
+    "archiveTitle": "Tony Hawk Pro Skater 2",
+    "discFile": "THPS2.img",
+    "discBytes": 830514720,
+    "isoPath": "SETUP/DATA/ALL.PKR",
+    "packLBA": 61410,
+    "packBytes": 197886331,
+    "packFormat": "PKR2, 48-byte file entries, uncompressed selected records",
+    "meshPackOffset": 89288813,
+    "triggerPackOffset": 99149016,
+    "ps1Inventory": "https://gist.github.com/iamgreaser/ee48ac4adb0a18fc8928eb8494703730",
+    "historicalGuide": "https://planettonyhawk.gamespy.com/View160a.html?id=61&view=thps2_faqs_guides.Detail",
+    "formatReference": "https://github.com/slfx77/neversoft-multitool/tree/3c9028e0178deb9060190362d1c47039a32846e2/src/NeversoftMultitool/Core/Formats",
+    "variant": "Original School retained in THPS2 PC retail, PSX v4 / TRG v2.0. Sizes match the published PS1 THPS2 inventory; not independently hash-matched to a THPS1 retail disc.",
+    "localReferenceDirectory": "/private/tmp/school-miami-review/reference-data/pc-disc",
+    "rawRangeBytesFetched": 1538208,
+    "fullDiscDownloaded": false,
+    "gameExecuted": false
+  },
+  "comparison": {
+    "acceptedWorldScale": 2,
+    "acceptedGameplayCommit": "e161564c7a04d787d862b64a1199ad47cacdc91e",
+    "currentBankMiddleFaceAngleDegrees": 23.82426058289542,
+    "sourceBankMiddleFaceAngleDegrees": 18.451309696124692,
+    "finding": "The current smooth floor join and steeper main bank differ from the source raised toe and shallower face; a uniform campus scale cannot correct this shape difference.",
+    "appliedToPlayableGeometry": false,
+    "characterScaleVerified": false,
+    "remaining": [
+      "Register source coordinates against current landmarks.",
+      "Verify source character render scale before interpreting bind-pose dimensions.",
+      "Author measured obstacle profiles and spacing with native smoothness checks."
+    ],
+    "rawAssetsCommitted": false,
+    "sourceMeshArraysCommitted": false
+  },
+  "checks": {
+    "boundedDecode": true,
+    "expectedCounts": true,
+    "identifiedBankChecksum": "63a7309c",
+    "truncatedInputRejected": true,
+    "playableSourceUnchangedFromAcceptedCommit": true,
+    "movementTuningChanged": false,
+    "checkLevels": "passed; 11 published levels plus existing toolkit checks",
+    "build": "passed; 97acaa6f2a94e03095de",
+    "browserPreview": {
+      "worldScale": 2,
+      "components": 275,
+      "rails": 69,
+      "preservedPassedCases": 64,
+      "preservedFixedSteps": 18054,
+      "gameErrors": [],
+      "note": "Read the existing completed full-render report; this research pass did not rerun gameplay cases."
+    }
+  },
+  "timing": {
+    "startedUTC": "2026-10-22T23:35:41+00:00",
+    "completedUTC": "2026-10-23T00:01:12.141092+00:00",
+    "researchMinutes": 25.5,
+    "goalElapsedMinutes": 789.2,
+    "playableChange": false,
+    "acceptedPlayableTiming": "Iteration 22: 758.4 cumulative minutes to validated playable handoff."
+  }
+}

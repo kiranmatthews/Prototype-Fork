@@ -16,8 +16,9 @@
   "originalSourceDimensionVerification": false,
   "downloadedAssetsCommitted": false,
   "outstanding": [
-    "Roof feature registration and spacing",
-    "Original dimensions, skater-relative scale and traversal timing"
+    "Register recovered retail School geometry and rails against the playable campus.",
+    "Verify source character-relative scale and original traversal timings.",
+    "Revalidate any measured geometry changes with the existing native movement model."
   ],
   "originalGymProfileEvidence": {
     "source": "https://www.cheatcodes.com/guide/faq-walkthrough-tony-hawks-pro-skater-playstation-15891/",
@@ -80,5 +81,15 @@
     "application": "Topology cross-check only. Retain the original-image footprint and smooth floor joins; no conversion vertices or dimensions were copied. Add native collision to the already-authored closed gym-bank faces.",
     "retailOriginalDimensionsVerified": false,
     "downloadedAssetsCommitted": false
+  },
+  "retailSourceSurvey": {
+    "reviewedUTC": "2026-10-22T23:59:23.910230+00:00",
+    "report": "school-miami-retail-reference.json",
+    "sourceAvailableLocally": true,
+    "variant": "Original School retained in THPS2 PC retail, PSX v4 / TRG v2.0. Sizes match the published PS1 THPS2 inventory; not independently hash-matched to a THPS1 retail disc.",
+    "decodedObjects": 987,
+    "decodedRailNodes": 393,
+    "playableRegistrationVerified": false,
+    "rawAssetsCommitted": false
   }
 }

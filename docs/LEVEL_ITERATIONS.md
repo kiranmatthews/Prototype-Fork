@@ -822,3 +822,14 @@
 - Timing: original goal prompt 10:52:02 UTC → validated playable handoff 23:30:25 UTC: 758.4 minutes cumulative, or 25.1 minutes since iteration 21. Initial enlargement timing remains in iteration 18.
 - Handoff audit: concurrent work added a default-on `hugeDropBail` option in player/level. School retains that default by source inspection. Record both working-tree differences; all reported runs refer to the fingerprinted snapshot. Exclude those unrelated edits from this commit.
 - Evidence: updated scale/browser/runtime reports, bank-collision comparison, reference audit and full-render gym capture. Commit locally; preserve shared main, its index and unrelated work. No push, upload or deployment.
+
+
+## 2026-10-23 — School iteration 23: recover retail geometry measurements
+
+- Recover the original School PSX-format mesh and TRG records retained in a retail THPS2 PC data pack through bounded disc range reads. The reference search, pack index and selected records require about 1.54 MB of raw disc ranges; no full game is downloaded or executed. The relevant School file sizes match the published PS1 THPS2 inventory, without claiming a THPS1 byte-for-byte match.
+- Decode 987 objects, 12,271 vertices, 7,698 faces, 965 trigger nodes and 393 rail nodes with 271 directed links. Record binary hashes, archive offsets and coordinate conventions. Add a local-file measurement tool and two generated survey figures; keep binaries, raw mesh arrays, textures and third-party decoder code outside the repository.
+- Identify the main bank by object and checksum: a 142-unit toe, 701-unit face rise over a 2,101-unit run, and an 18.451-degree face. The current middle face is 23.824 degrees, so uniform scaling alone cannot establish 1:1 profile fidelity. Original skater render scale and source registration remain to be verified before applying measured changes.
+- The playable campus and task-owned camera are byte-identical to e161564. Preserve the user-requested 2× scale, movement tuning and the accepted 64-case / 18,054-step result. Read the existing full-render preview report: scale 2, 275 components, 69 rails and no game errors. No gameplay case is newly claimed by this research pass.
+- Validate the bounded decoder, known counts and identified bank stations, and reject a truncated input. check:levels passes (11 published levels); build passes (97acaa6f2a94e03095de). No check:all.
+- Timing: research 23:35:41 UTC → 2026-10-23 00:01:12 UTC, 25.5 minutes. No new prompt-to-playable time: the accepted playable handoff remains iteration 22 at 758.4 minutes cumulative. Total goal elapsed at this survey handoff is 789.2 minutes.
+- Commit task-owned measurement code/docs/figures locally; preserve shared main, its index and unrelated work. No push, upload or deployment. Strict original 1:1 remains unverified.
