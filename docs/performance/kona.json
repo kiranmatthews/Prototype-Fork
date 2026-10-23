@@ -1,0 +1,981 @@
+{
+  "level": "kona",
+  "source": "Kona PS1 geometric survey",
+  "scale": 0.0125,
+  "scope": "Playable geometry and native controls; reference palette, no original texture or career-goal port",
+  "geometry": {
+    "surveyGroups": 163,
+    "measuredTriangles": 6365,
+    "grindPaths": 97,
+    "nativeTriangles": 39320,
+    "checkpoints": 5,
+    "components": 306
+  },
+  "browser": {
+    "reports": [
+      {
+        "kind": "snake",
+        "frames": 736,
+        "done": true,
+        "bails": 0,
+        "deathsBefore": 0,
+        "livesBefore": 4,
+        "airFrames": 0,
+        "grindFrames": 0,
+        "maxY": 2.9993046887187846,
+        "index": 191,
+        "maxError": 2.078564051264871,
+        "heading": [
+          0.07804033007320044,
+          0,
+          1.623803790464577
+        ],
+        "aligned": true,
+        "position": [
+          -33.83374008705716,
+          2.9993046887187846,
+          -5.6025321036061095
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0,
+        "lives": 4,
+        "mounted": true
+      },
+      {
+        "kind": "vert",
+        "frames": 548,
+        "done": true,
+        "bails": 0,
+        "deathsBefore": 0,
+        "livesBefore": 4,
+        "airFrames": 393,
+        "grindFrames": 0,
+        "maxY": 16.90884750827786,
+        "heading": [
+          1,
+          0,
+          0
+        ],
+        "aligned": true,
+        "side": 1,
+        "airs": 4,
+        "released": false,
+        "transferred": false,
+        "position": [
+          -22.82333659607135,
+          1.1345909049430347,
+          47.905499999999996
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0,
+        "lives": 4,
+        "mounted": true,
+        "takeoffFrom": "Spinal grooves",
+        "inAir": false
+      },
+      {
+        "kind": "transfer",
+        "frames": 117,
+        "done": true,
+        "bails": 0,
+        "deathsBefore": 0,
+        "livesBefore": 4,
+        "airFrames": 47,
+        "grindFrames": 0,
+        "maxY": 3.1770241562522106,
+        "heading": [
+          1,
+          0,
+          0
+        ],
+        "aligned": true,
+        "side": -1,
+        "airs": 1,
+        "released": false,
+        "transferred": true,
+        "position": [
+          -8.827518950958188,
+          5.550000059886817e-05,
+          47.905499999999996
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0,
+        "lives": 4,
+        "mounted": true,
+        "takeoffFrom": "Spinal grooves",
+        "inAir": false
+      },
+      {
+        "kind": "jump",
+        "frames": 113,
+        "done": true,
+        "bails": 0,
+        "deathsBefore": 0,
+        "livesBefore": 4,
+        "airFrames": 39,
+        "grindFrames": 0,
+        "maxY": 2.6998879704666114,
+        "dir": [
+          0,
+          0,
+          1
+        ],
+        "mid": [
+          18.625,
+          0,
+          51.875
+        ],
+        "end": [
+          18.625,
+          0.05423941403613723,
+          60.625
+        ],
+        "released": true,
+        "heading": [
+          0,
+          0,
+          1
+        ],
+        "aligned": true,
+        "lateral": 0,
+        "position": [
+          18.625,
+          0.9444304704666138,
+          55.263547774129655
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0,
+        "lives": 4,
+        "mounted": true,
+        "takeoffFrom": "Street / north kicker",
+        "landedOn": "Street / south catcher"
+      },
+      {
+        "kind": "rail",
+        "frames": 133,
+        "done": true,
+        "bails": 0,
+        "deathsBefore": 0,
+        "livesBefore": 4,
+        "airFrames": 70,
+        "grindFrames": 52,
+        "maxY": 0.8585221666666665,
+        "a": [
+          17.427750000000003,
+          0.6180554999999999,
+          70.1055
+        ],
+        "b": [
+          24.36112500000001,
+          0.6180554999999999,
+          70.1055
+        ],
+        "dir": [
+          1,
+          0,
+          0
+        ],
+        "released": true,
+        "heading": [
+          1,
+          0,
+          0
+        ],
+        "aligned": true,
+        "position": [
+          26.92839092057195,
+          5.5500000598840415e-05,
+          70.1055
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0,
+        "lives": 4,
+        "mounted": true,
+        "takeoffFrom": "Kona / concrete and architecture"
+      },
+      {
+        "kind": "recovery",
+        "frames": 202,
+        "done": true,
+        "bails": 133,
+        "deathsBefore": 0,
+        "livesBefore": 4,
+        "airFrames": 201,
+        "grindFrames": 0,
+        "maxY": 4,
+        "checkpoint": 4,
+        "returnPoint": [
+          5,
+          0.10005550000059885,
+          66.25
+        ],
+        "heading": [
+          1,
+          0,
+          0
+        ],
+        "aligned": true,
+        "died": true,
+        "position": [
+          5,
+          0.10005550000059885,
+          66.25
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0,
+        "lives": 3,
+        "mounted": true
+      },
+      {
+        "kind": "finish",
+        "frames": 75,
+        "done": true,
+        "bails": 0,
+        "deathsBefore": 0,
+        "livesBefore": 3,
+        "airFrames": 0,
+        "grindFrames": 0,
+        "maxY": 3.7833054065704346,
+        "gate": [
+          -40.625,
+          3.0278055,
+          -31.25
+        ],
+        "heading": [
+          0,
+          0,
+          -1
+        ],
+        "aligned": true,
+        "position": [
+          -40.625,
+          3.754472169150193,
+          -29.760937356238884
+        ],
+        "state": "finished",
+        "grounded": true,
+        "deaths": 0,
+        "lives": 3,
+        "mounted": true
+      }
+    ],
+    "errors": []
+  },
+  "fullRender": {
+    "name": "Kona \u00b7 PS1",
+    "sourceMatches": true,
+    "position": [
+      -53.75,
+      4.533305644989014,
+      -35
+    ],
+    "grounded": true,
+    "state": "ride",
+    "mounted": true,
+    "ground": "Kona / concrete and architecture",
+    "components": 306,
+    "meshes": 160,
+    "rails": 97,
+    "pipes": 3,
+    "checkpoints": 5,
+    "stamp": "Codex/sol fork \u00b7 build 10-22 11:19 UTC",
+    "render": {
+      "frame": 1487,
+      "calls": 324,
+      "triangles": 231511,
+      "points": 0,
+      "lines": 0
+    },
+    "errors": []
+  },
+  "inputPilots": [
+    {
+      "name": "Snake downhill",
+      "index": 191,
+      "total": 197,
+      "maxError": 4.149013910042188,
+      "air": 0,
+      "stalls": 0,
+      "end": {
+        "frame": 758,
+        "time": 12.633333333333333,
+        "position": [
+          -33.81698303330807,
+          2.9955062720487975,
+          -5.5842156992219065
+        ],
+        "heading": [
+          -0.38233360791904913,
+          0,
+          -0.9240243569601414
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 11.999055118110237,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "Snake run",
+          "y": 2.9955062720487975,
+          "normal": [
+            -0.08495107418612209,
+            0.9573249206766571,
+            0.27624683029141944
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": -0.3,
+          "moveY": 0.95,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "Snake uphill",
+      "index": 191,
+      "total": 197,
+      "maxError": 0.779422998674779,
+      "air": 0,
+      "stalls": 0,
+      "end": {
+        "frame": 564,
+        "time": 9.4,
+        "position": [
+          16.447442551625162,
+          0.5099360152691315,
+          -6.418239566578179
+        ],
+        "heading": [
+          -0.01414406333850469,
+          0,
+          -0.9998999677329109
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 14.509629652220855,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "Snake run",
+          "y": 0.5099360152691315,
+          "normal": [
+            0.08300032268407152,
+            0.9728982776823885,
+            -0.21582374224580234
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": -0.06,
+          "moveY": 1,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "Spinal grooves / west mini",
+      "airs": [
+        {
+          "frame": 62,
+          "peak": 3.9445208887539884,
+          "landed": 114
+        },
+        {
+          "frame": 150,
+          "peak": 11.96837023738884,
+          "landed": 250
+        },
+        {
+          "frame": 274,
+          "peak": 16.949341600989655,
+          "landed": 395
+        },
+        {
+          "frame": 420,
+          "peak": 16.912317032124733,
+          "landed": 541
+        }
+      ],
+      "maxY": 16.949341600989655,
+      "end": {
+        "frame": 575,
+        "time": 9.583333333333334,
+        "position": [
+          -22.830478164120862,
+          1.170465344570825,
+          47.90005784264251
+        ],
+        "heading": [
+          0.9999999751637566,
+          0,
+          0.00022287325143962967
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 31.091556158287652,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "Spinal grooves",
+          "y": 1.170465344570825,
+          "normal": [
+            0.9807554609279935,
+            0.19524017481020509,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "Spinal grooves / east mini",
+      "airs": [
+        {
+          "frame": 61,
+          "peak": 3.7486261125968383,
+          "landed": 108
+        },
+        {
+          "frame": 148,
+          "peak": 12.0109326051516,
+          "landed": 249
+        },
+        {
+          "frame": 274,
+          "peak": 16.876917932762666,
+          "landed": 394
+        },
+        {
+          "frame": 421,
+          "peak": 16.866069486210943,
+          "landed": 542
+        }
+      ],
+      "maxY": 16.876917932762666,
+      "end": {
+        "frame": 576,
+        "time": 9.6,
+        "position": [
+          -13.047596676940158,
+          1.1725432999101644,
+          48.861861021569474
+        ],
+        "heading": [
+          0.9997833905300468,
+          0,
+          0.020812785018925965
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 31.107599326205868,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "Spinal grooves",
+          "y": 1.1725432999101644,
+          "normal": [
+            0.980720411826524,
+            0.19541615549082214,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "Over the roll-in / timber vert",
+      "airs": [
+        {
+          "frame": 70,
+          "peak": 4.546547216531946,
+          "landed": 129
+        },
+        {
+          "frame": 176,
+          "peak": 10.927123339791043,
+          "landed": 272
+        },
+        {
+          "frame": 308,
+          "peak": 15.048331029090617,
+          "landed": 422
+        },
+        {
+          "frame": 455,
+          "peak": 15.087011782440472,
+          "landed": 569
+        }
+      ],
+      "maxY": 15.087011782440472,
+      "end": {
+        "frame": 603,
+        "time": 10.05,
+        "position": [
+          -43.675937218938685,
+          1.0221539442937209,
+          48.36394149109732
+        ],
+        "heading": [
+          0.9999999170821314,
+          0,
+          0.000407229333994815
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 22.164059295305766,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "Over the roll-in / timber vert",
+          "y": 1.0221539442937209,
+          "normal": [
+            0.7461161634975026,
+            0.6658157932700065,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "Freestyle basin",
+      "airs": [
+        {
+          "frame": 136,
+          "peak": 11.902495452340908,
+          "landed": 228
+        },
+        {
+          "frame": 384,
+          "peak": 9.868937988577173,
+          "landed": 470
+        }
+      ],
+      "maxY": 11.902495452340908,
+      "end": {
+        "frame": 504,
+        "time": 8.4,
+        "position": [
+          -27.356160273329856,
+          2.240562687161054,
+          -4.966385682172079
+        ],
+        "heading": [
+          0.9201783368823634,
+          0,
+          0.3914994614714149
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 27.073008094266118,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "Tombstone",
+          "y": 2.240562687161054,
+          "normal": [
+            0.9563292339176482,
+            0.17457039392253645,
+            -0.23443458345605664
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "Tombstone",
+      "airs": [
+        {
+          "frame": 97,
+          "peak": 6.315282725446355,
+          "landed": 164
+        },
+        {
+          "frame": 223,
+          "peak": 12.604826518042318,
+          "landed": 321
+        }
+      ],
+      "maxY": 12.604826518042318,
+      "end": {
+        "frame": 355,
+        "time": 5.916666666666667,
+        "position": [
+          -32.112397926006764,
+          3.0278055667877197,
+          -26.16259137266435
+        ],
+        "heading": [
+          -0.23078694328320182,
+          0,
+          -0.9730043097592097
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 11.646317771859634,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "Kona / concrete and architecture",
+          "y": 3.0278055667877197,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "Clover pool",
+      "airs": [
+        {
+          "frame": 62,
+          "peak": 3.2897885014514916,
+          "landed": 111
+        },
+        {
+          "frame": 151,
+          "peak": 9.583318827994393,
+          "landed": 242
+        }
+      ],
+      "maxY": 9.583318827994393,
+      "end": {
+        "frame": 276,
+        "time": 4.6,
+        "position": [
+          -49.56480865510782,
+          0.6283268782202511,
+          8.50208996327446
+        ],
+        "heading": [
+          0.990805613141423,
+          0,
+          0.13529315196065497
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 16.201622235480297,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "Clover pool",
+          "y": 0.6283268782202511,
+          "normal": [
+            0.675375323560273,
+            0.7308857805782404,
+            0.09835724718795763
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "Lower kidney / J-run",
+      "airs": [
+        {
+          "frame": 95,
+          "peak": 7.919807856415737,
+          "landed": 172
+        },
+        {
+          "frame": 202,
+          "peak": 5.6689623949198635,
+          "landed": 262
+        }
+      ],
+      "maxY": 7.919807856415737,
+      "end": {
+        "frame": 300,
+        "time": 5,
+        "position": [
+          -77.40306056955848,
+          2.5393795804803765,
+          26.39979969451723
+        ],
+        "heading": [
+          -0.6871414321202705,
+          0,
+          0.726523676327003
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 21.148407948823113,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "Grass terrace",
+          "y": 2.5393795804803765,
+          "normal": [
+            -0.13510867822180753,
+            0.9890951696803224,
+            -0.05862073339877786
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    }
+  ],
+  "validation": {
+    "levelChecks": "pass",
+    "typecheck": "pass",
+    "productionBuild": "pass",
+    "copingAndEditorRoundtrip": "pass",
+    "vertRailOptOut": "pass",
+    "blockworks48Airs": "pass",
+    "waterparkVert": "pass",
+    "broaderVertOllieSequence": "Existing board-stow/slam assertion fails identically with Kona Player edits removed; see KONA_RECONSTRUCTION.md.",
+    "isolatedCommitBase": "79cdcdc0bf23f1696b0e5930e21ed99dbbfde82d",
+    "isolatedTypecheckAndStructure": "pass",
+    "isolatedStrictInputPilots": "pass: two snake directions, four airs in each of three pipes, two airs from each of four bowls",
+    "productionOfflineVersion": "0d910aee952d1031a0bb"
+  },
+  "fullRenderJump": {
+    "reports": [
+      {
+        "kind": "jump",
+        "frames": 113,
+        "done": true,
+        "bails": 0,
+        "deathsBefore": 0,
+        "livesBefore": 4,
+        "airFrames": 39,
+        "grindFrames": 0,
+        "maxY": 2.6998879704666114,
+        "dir": [
+          0,
+          0,
+          1
+        ],
+        "mid": [
+          18.625,
+          0,
+          51.875
+        ],
+        "end": [
+          18.625,
+          0.05423941403613723,
+          60.625
+        ],
+        "released": true,
+        "heading": [
+          0,
+          0,
+          1
+        ],
+        "aligned": true,
+        "lateral": 0,
+        "position": [
+          18.625,
+          0.9444304704666138,
+          55.263547774129655
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0,
+        "lives": 4,
+        "mounted": true,
+        "takeoffFrom": "Street / north kicker",
+        "landedOn": "Street / south catcher"
+      }
+    ],
+    "consoleErrors": []
+  }
+}

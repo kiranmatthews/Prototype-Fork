@@ -137,6 +137,7 @@ import {warehouseContactMesh} from './warehouseContacts';
 import { TREEHOUSE_ROOM_LEVEL } from './levels/treehouse-room';
 import { roomArt, ROOM_TEXTURE_KINDS } from './levels/treehouse-room-art';
 import { MALL_LEVEL } from './levels/mall';
+import { KONA_LEVEL } from "./levels/kona";
 import { PUZZLE_LEVELS } from './levels/puzzle-trilogy';
 import { CRAB_CHIEF_LEVEL } from './levels/crab-chief';
 import { CrabChiefEncounter } from './boss/crabChief';
@@ -2584,6 +2585,7 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
   { id: "school-miami", name: SCHOOL_MIAMI_LEVEL.name, data: SCHOOL_MIAMI_LEVEL },
 
   { id: "warehouse-reference", name: WAREHOUSE_REFERENCE_LEVEL.name, data: WAREHOUSE_REFERENCE_LEVEL },
+  { id: "kona", name: KONA_LEVEL.name, data: KONA_LEVEL },
   { id: "jungle-cup", name: JUNGLE_CUP_LEVEL.name, data: JUNGLE_CUP_LEVEL },
   { id: 'warehouse', name: WAREHOUSE_PARK_LEVEL.name, data: WAREHOUSE_PARK_LEVEL },
   { id: "bone-yard", name: BONE_YARD_LEVEL.name, data: BONE_YARD_LEVEL },

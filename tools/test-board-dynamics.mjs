@@ -16,6 +16,7 @@ const server = await createServer({ appType: 'custom', logLevel: 'silent', serve
 const failures = [];
 const check = (condition, description) => { if (!condition) failures.push(description); };
 try {
+  const { WorldSolids } = await server.ssrLoadModule('/src/worldSolids.ts');
   const { DiscardedBoards } = await server.ssrLoadModule('/src/skateboard/discarded.ts');
   const { buildSkateboardDeckGeometry } = await server.ssrLoadModule('/src/skateboard/model.ts');
   const { DEFAULT_SKATEBOARD_SETTINGS: settings } = await server.ssrLoadModule('/src/skateboard/settings.ts');
@@ -57,6 +58,15 @@ try {
     const events=[];let age=0,settle=null,lastSpeed=0,maxHeight=board.root.position.y,minZ=0,maxHop=0,lastY=board.root.position.y;
     let maxStoppedSpeed=0,raycasts=0,postSleepRaycasts=0,postSleepMotion=0;
     const world={groundMeshes:spec.ground,walls:spec.walls??[],crumbles:[],killY:-20};
+    const solidWalls=[];
+    if(spec.useWorldSolids){
+      world.worldSolids=new WorldSolids();
+      for(const bounds of world.walls){
+        const size=bounds.getSize(new THREE.Vector3()),mesh=new THREE.Mesh(new THREE.BoxGeometry(size.x,size.y,size.z));
+        bounds.getCenter(mesh.position);mesh.updateMatrixWorld(true);
+        world.worldSolids.add(mesh);solidWalls.push(mesh);
+      }
+    }
     const originals=world.groundMeshes.map(mesh=>mesh.raycast);
     world.groundMeshes.forEach((mesh,i)=>mesh.raycast=function(...args){raycasts++; if(settle!==null)postSleepRaycasts++;return originals[i].apply(this,args);});
     pile.onImpact=(broken,speed)=>events.push({age:+age.toFixed(4),broken,speed});
@@ -75,6 +85,8 @@ try {
     const row={name:spec.name,dt,settle,position:board.root.position.toArray(),maxHeight,minZ,maxHop,maxStoppedSpeed,events,raycasts,postSleepRaycasts,postSleepMotion,
       cpuMs:frameMs.reduce((a,b)=>a+b,0),pile:pile.diagnostics};
     pile.dispose();
+    world.worldSolids?.dispose();
+    for(const mesh of solidWalls){mesh.geometry.dispose();mesh.material.dispose();}
     if(!warmup){
       check(settle!==null&&settle<12,`${spec.name}: settled within 12s`);
       check(row.pile.lost===0,`${spec.name}: settled rather than being culled`);
@@ -93,6 +105,10 @@ try {
   }
   for(let i=0;i<4;i++)run(cases[3],1/60,true);
   for(const spec of cases)rows.push(run(spec));
+  // The merged production world supplies swept mesh contacts, while small
+  // review worlds still use wall boxes. Verify the new tumbling solver in both.
+  for(const spec of cases.filter(c=>c.walls&&c.name!=='landing on barrier top'))
+    for(const dt of [1/30,1/60,1/120])rows.push(run({...spec,name:`solid world ${spec.name}`,useWorldSolids:true},dt));
   check(Math.abs(rows[0].position[2])>Math.abs(rows[1].position[0])*2,'wheels coast further than sideways skid');
   check(rows[0].settle>1&&rows[1].settle> .3,'finite friction, not immediate sleep');
   const rates=[1/30,1/120].map(dt=>run(cases[3],dt));

@@ -1143,6 +1143,7 @@ export class Player {
   private parkAutoTurnTarget = 0;
   private parkSpinHold = 0;
   private parkBreakHold = 0;
+  private parkBreakArmed = false;
   private readonly parkCameraForward = new THREE.Vector3();
   // Deliberate dismount (pull-back brake bled to walking pace): drop the
   // skate persistence THIS frame so the feet take the stick immediately.
@@ -4138,7 +4139,7 @@ export class Player {
       // in a pipe must still let a HELD X pump the transition. Keep the release
       // edge consumed while restoring the continuous motor/crouch immediately.
       const pumpHeld = input.jumpHeld && this.state==='ride' && this.grounded &&
-        this.freeSkate && (!!this.groundHit?.halfpipe || this.charging&&this.chargeTimer>0) && !this.isBailing;
+        this.freeSkate && (!!this.groundHit?.halfpipe || this.groundHit?.mesh?.userData.authoredVertMesh === true || this.charging&&this.chargeTimer>0) && !this.isBailing;
       if(!pumpHeld){this.charging=false;this.chargeTimer=0;}
       // A full, newly earned ground load is now an intentional next ollie.
       // Only an immediate landing release remains owned by the preceding air.
@@ -7857,6 +7858,7 @@ export class Player {
     this.vertLossT = 0;
     this.parkFlightGravity = vert ? this.parkPhysics.vertGravity : this.parkPhysics.airGravity;
     this.parkAutoTurn = this.parkAutoTurnTarget = this.parkSpinHold = this.parkBreakHold = 0;
+    this.parkBreakArmed = this.rawInput.moveY <= 0.5;
     this.grabSpinAngle = 0;
     if (vert) {
       this.vertLatVel = velocity.x * -this.vertNormal.z + velocity.z * this.vertNormal.x;
@@ -7893,11 +7895,13 @@ export class Player {
       this.parkAutoTurn += THREE.MathUtils.clamp(this.parkAutoTurnTarget - this.parkAutoTurn,
         -SKATE_PARK.autoTurnRate * dt, SKATE_PARK.autoTurnRate * dt);
     }
-    const pushOver = this.rawInput.moveY > 0.5 && Math.abs(this.rawInput.moveX) < 0.1 &&
+    if (this.rawInput.moveY <= 0.5) this.parkBreakArmed = true;
+    const pushOver = this.parkBreakArmed && this.rawInput.moveY > 0.5 && Math.abs(this.rawInput.moveX) < 0.1 &&
       !input.spinHeld && !input.grabHeld;
     this.parkBreakHold = pushOver ? this.parkBreakHold + dt : 0;
-    // Up deliberately transfers over the coping. Neutral/X preserves the air.
-    if (this.parkBreakHold > 0.13 && this.airborneT <= SKATE_PARK.breakWindow &&
+    // Carrying the approach input through takeoff must preserve the hang.
+    // A fresh Up after release, or the explicit transfer button, exits it.
+    if ((this.parkBreakHold > 0.13 || input.transferHeld) && this.airborneT <= SKATE_PARK.breakWindow &&
         this.vertTracked && this.vVel > 0) {
       VERT_RAY_O.copy(this.pos).addScaledVector(this.vertNormal, 0.0254);
       VERT_RAY_D.copy(this.vertNormal).negate();
@@ -15161,10 +15165,36 @@ export class Player {
   ): boolean | null {
     if (this.passesTripObstacle(box)) return false;
     const segment = level.wallPathSegmentForBox(box);
-    const contact = level.closestWallPath(path, this.pos.x, this.pos.z, segment);
+    let contact = level.closestWallPath(path, this.pos.x, this.pos.z, segment);
+    // On vert the rider leans into the pipe. An upright body test hits raised
+    // deck end caps while the board is still below them, shoving it off the
+    // transition. Use the same support normal as the riding pose here.
+    const onVert = this.freeSkate && !this.isBailing && (this.vertAir ||
+      this.grounded && this.groundHit?.vert === true && this.rideNormal.y < 0.9);
+    const bodyNormal = this.vertAir ? this.vertNormal : this.rideNormal;
+    const bodyRadius = Math.min(this.hitboxHalf.y, Math.max(CONST.playerHalf.x, CONST.playerHalf.z));
+    let bodyOffset = 0;
+    if (onVert) {
+      let nearest: typeof contact | null = null;
+      for (const offset of [bodyRadius, this.hitboxHalf.y, this.hitboxHalf.y * 2 - bodyRadius]) {
+        const sample = level.closestWallPath(path, this.pos.x + bodyNormal.x * offset,
+          this.pos.z + bodyNormal.z * offset, segment);
+        const y = this.pos.y + bodyNormal.y * offset;
+        if (y + bodyRadius < sample.y || y - bodyRadius > sample.y + path.height) continue;
+        if (sample.cap && sample.crossDistance >= path.halfThickness + bodyRadius) continue;
+        if (!nearest || sample.distance < nearest.distance) { nearest = sample; bodyOffset = offset; }
+      }
+      if (!nearest) return null;
+      contact = nearest;
+    }
+    // A wall slab's artificial end is not a second obstacle when it lies
+    // behind the same smooth transition the board is already supporting on.
+    // The perpendicular side of a raised roll-in remains a solid wall.
+    if (onVert && contact.cap && this.groundHit?.mesh?.userData.smoothCollision === true &&
+        contact.nx * bodyNormal.x + contact.nz * bodyNormal.z > 0.9) return null;
     if (
       this.pos.y > contact.y + contact.height ||
-      this.pos.y + this.hitboxHalf.y * 2 < contact.y
+      !onVert && this.pos.y + this.hitboxHalf.y * 2 < contact.y
     )
       return null;
     const insideCapWidth = (sample: ReturnType<Level['closestWallPath']>): boolean => {
@@ -15177,7 +15207,7 @@ export class Player {
       return sample.crossDistance < lateralRadius;
     };
     if (!insideCapWidth(contact)) return null;
-    const radius =
+    const radius = onVert ? (contact.cap ? 0 : path.halfThickness) + bodyRadius + 0.02 :
       (contact.cap ? 0 : path.halfThickness) +
       Math.abs(contact.nx) * CONST.playerHalf.x +
       Math.abs(contact.nz) * CONST.playerHalf.z +
@@ -15192,8 +15222,8 @@ export class Player {
         nearest.distance + 1e-5 < contact.distance) return null;
     const before = level.closestWallPath(
       path,
-      this.prevPos.x,
-      this.prevPos.z,
+      this.prevPos.x + bodyNormal.x * bodyOffset,
+      this.prevPos.z + bodyNormal.z * bodyOffset,
       segment,
     );
     const beforeRadius =

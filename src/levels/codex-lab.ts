@@ -1,6 +1,8 @@
 import {warehouseRibbon,warehouseIsland,warehouseBeam,type WarehousePoint} from './warehouse-geometry';
 import {warehouseDressing} from './warehouse-dressing';
 import {dressBlockworks,HAUNTED_ISLAND_ATMOSPHERE} from './blockworks-art';
+
+export { KONA_LEVEL } from './kona';
 import {addSkateWedge,addSkateLid,addWedgeBetween,type SkateBlock,type SkateWedge} from './blockworks-ramps';
 import type { CustomComponent, CustomGroup, CustomLevelData } from '../level';
 // Source-owned School reference reconstruction using the shared component pipeline.
