@@ -7,8 +7,9 @@ for(const [id,modulePath,name] of [
 ])await withBlockworksRuntime(async r=>{
  const {SkateRace}=await r.server.ssrLoadModule('/src/race/runtime.ts');
  const {RaceFinishPresentation}=await r.server.ssrLoadModule('/src/race/finishPresentation.ts');
- const race=new SkateRace(r.scene,r.p);race.attach(r.l,id);
- let reports=0;race.onFinish=()=>reports++;
+ let crystalEarned=false;
+ const race=new SkateRace(r.scene,r.p,false,levelId=>levelId===id&&crystalEarned);race.attach(r.l,id);
+ let reports=0;race.onFinish=result=>{reports++;if(result.mode==='race'&&result.won)crystalEarned=true;};
  const place=(rider,behind,offset=0)=>{
   const at=race.course.length-behind,point=race.course.sample(at,offset);
   const support=race.course.supportAt(r.l,point,new r.THREE.Vector3(),10,12);assert.ok(support);
@@ -46,7 +47,7 @@ for(const [id,modulePath,name] of [
  }
  const rolloutMetres=r.p.pos.distanceTo(crossing.position);
  const finished=race.riders.map(r=>({id:r.id,time:r.finish,falls:r.falls,position:r.player.pos.toArray()}));
- race.start('time-trial',0);race.phase='running';assert.ok(race.riders.every(r=>r.finish===null&&!r.rollout));place(race.riders[0],2);
+ race.start('time-trial',0);assert.equal(race.mode,'time-trial');assert.equal(race.count,1);race.phase='running';assert.ok(race.riders.every(r=>r.finish===null&&!r.rollout));place(race.riders[0],2);
  for(let i=0;i<240;i++)tick({moveY:1});
  assert.equal(race.phase,'finished');assert.equal(reports,2);assert.equal(race.count,1);assert.equal(r.p.ttTime,race.riders[0].finish);assert.equal(race.riders[0].rollout,null);
  race.start('race',0);assert.equal(race.phase,'countdown');assert.ok(race.riders.every(r=>r.finish===null&&!r.rollout));

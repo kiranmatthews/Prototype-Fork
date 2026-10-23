@@ -8,7 +8,9 @@ await withBlockworksRuntime(async r=>{
   assert.ok(normalizeCustomLevelData(data));assert.equal(r.l.checkpoints.length,0);assert.equal(r.l.allowsBonus,false);
   assert.ok(data.components.filter(c=>c.t==='crate').every(c=>['empty','mystery','tnt','nitro'].includes(c.kind)));
   assert.ok(!data.components.some(c=>['checkpoint','wumpa','clock','crystal'].includes(c.t)));
-  const race=new SkateRace(r.scene,r.p);race.attach(r.l,'country-club');race.start(process.env.RACE_SOLO?'time-trial':'race',Number(process.env.RACE_SEED??0));
+  const solo=!!process.env.RACE_SOLO;
+  const race=new SkateRace(r.scene,r.p,false,id=>solo&&id==='country-club');race.attach(r.l,'country-club');race.start(solo?'time-trial':'race',Number(process.env.RACE_SEED??0));
+  assert.equal(race.mode,solo?'time-trial':'race');assert.equal(race.count,solo?1:8);
   const from=Number(process.env.RACE_FROM??0);
   if(from>0){race.phase='running';for(const a of race.riders.slice(0,race.count)){const p=race.course.sample(from,(a.id%2?1:-1)*2);p.y+=.15;a.player.resetRacePosition(r.l,p,race.course.tangent(from));a.player.speed=26;a.progress=a.previousProgress=a.anchorProgress=from;a.anchor.copy(p);}}
   const traffic=process.env.RACE_CARTS?new (await r.server.ssrLoadModule('/src/golf-cart/course.ts')).CountryClubCarts(r.scene):null;
@@ -23,5 +25,5 @@ await withBlockworksRuntime(async r=>{
   await writeFile(process.env.RACE_REPORT??'/private/tmp/country-club-art-race.json',JSON.stringify({stats:{length:race.course.length,holes:18},traffic:traffic?{...traffic.stats,fleet:traffic.fleet.stats,progress:traffic.roaming.progress,respawns:traffic.fleet.physics.carts.map(c=>c.respawns)}:undefined,result,report,riders:race.riders.map(a=>({id:a.id,progress:a.progress,finish:a.finish,falls:a.falls,deaths:a.player.totalDeaths,fruit:a.player.fruit}))},null,2));
   assert.equal(JSON.stringify(r.TUNING),tuning);for(const a of race.riders)assert.equal(a.player.totalDeaths,0);
   if(frames>=18000||process.env.RACE_FROM)assert.ok(result,'Input-driven human and rivals must traverse the complete race');
-  if(process.env.RACE_ALL_FINISH)assert.ok(race.riders.every(r=>r.finish!==null),'All seven rivals must complete their real traversal');
+  if(process.env.RACE_ALL_FINISH)assert.ok(race.riders.slice(0,race.count).every(r=>r.finish!==null),'All active riders must complete their real traversal');
 }, {modulePath:'/src/levels/country-club.ts',source:m=>m.COUNTRY_CLUB_LEVEL,levelId:'country-club',maxFrames:20000});

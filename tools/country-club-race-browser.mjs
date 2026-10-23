@@ -35,16 +35,22 @@ try{
   if(!finishShot&&s.length-s.progress<65&&s.phase==='running'){finishShot=true;await page.screenshot({path:output+'/finish-approach.png'});}
   if(s.finished===8){complete=true;break;}
  }
- const result=await page.evaluate(()=>{const g=window.__game,r=g.getSkateRace();return {...window.raceReview,finalTuning:JSON.stringify(g.TUNING),wallSeconds:(performance.now()-window.raceReview.started)/1000,traffic:{...g.getGolfCarts().root.userData.traffic,...g.getGolfCarts().stats},phase:r.phase,level:g.getCurrentLevel().id,stamp:document.querySelector('.hud-build')?.textContent,
+ const result=await page.evaluate(()=>{const g=window.__game,r=g.getSkateRace();return {...window.raceReview,finalTuning:JSON.stringify(g.TUNING),wallSeconds:(performance.now()-window.raceReview.started)/1000,traffic:{...g.getGolfCarts().root.userData.traffic,...g.getGolfCarts().stats,moving:g.getGolfCarts().physics.carts.filter(c=>c.travel>5).length},phase:r.phase,level:g.getCurrentLevel().id,stamp:document.querySelector('.hud-build')?.textContent,
   hud:r.hud(),riders:r.riders.map(a=>({id:a.id,finish:a.finish,falls:a.falls,deaths:a.player.totalDeaths,fruit:a.player.fruit,lives:a.player.lives})),campaign:g.campaign.levelProgress('country-club')};});
  await page.screenshot({path:output+'/results.png'});await writeFile(output+'/report.json',JSON.stringify({base,complete,result,errors},null,2));
  console.log(JSON.stringify({complete,...result,hud:undefined,initialTuning:undefined,finalTuning:undefined,errors}));
  assert.ok(complete);assert.equal(result.phase,'finished');
- if(process.env.RACE_CARTS){assert.equal(result.traffic.count,10);assert.equal(result.traffic.scale,2);assert.ok(result.traffic.contacts>=10);assert.ok(result.traffic.knockdowns>=3);}assert.match(result.stamp,/Codex\/sol fork/);assert.equal(result.initialTuning,result.finalTuning);
+ if(process.env.RACE_CARTS){assert.equal(result.traffic.count,10);assert.equal(result.traffic.scale,2);assert.equal(result.traffic.moving,10,'independent carts keep roaming; random contact counts are not a race quota');}assert.match(result.stamp,/Codex\/sol fork/);assert.equal(result.initialTuning,result.finalTuning);
  for(const r of result.riders){assert.equal(r.deaths,0);assert.equal(r.fruit,0);assert.ok(r.finish>0);}
  assert.deepEqual(errors,[]);
- // The results can start a solo trial without changing the course or adding a clock crate.
- await page.getByRole('button',{name:'TIME TRIAL',exact:true}).click();await page.waitForFunction(()=>window.__game.getSkateRace().mode==='time-trial',null,{timeout:30000});
- const trial=await page.evaluate(()=>{const r=window.__game.getSkateRace();return {count:r.count,phase:r.phase,clock:r.level.clockPickup,others:r.riders.slice(1).some(v=>v.scene.visible)};});
- assert.equal(trial.count,1);assert.equal(trial.clock,null);assert.equal(trial.others,false);await writeFile(output+'/trial.json',JSON.stringify(trial,null,2));
+ // A fresh save earns the trial by winning the crystal; losing results keep it locked.
+ const trialButton=page.getByRole('button',{name:'TIME TRIAL',exact:true});
+ assert.equal(result.hud.timeTrialUnlocked,result.hud.won);
+ if(result.hud.timeTrialUnlocked){
+  await trialButton.click();await page.waitForFunction(()=>window.__game.getSkateRace().mode==='time-trial',null,{timeout:30000});
+  const trial=await page.evaluate(()=>{const r=window.__game.getSkateRace();return {unlocked:true,count:r.count,phase:r.phase,clock:r.level.clockPickup,others:r.riders.slice(1).some(v=>v.scene.visible)};});
+  assert.equal(trial.count,1);assert.equal(trial.clock,null);assert.equal(trial.others,false);await writeFile(output+'/trial.json',JSON.stringify(trial,null,2));
+ }else{
+  assert.equal(await trialButton.count(),0);await writeFile(output+'/trial.json',JSON.stringify({unlocked:false,reason:'Race crystal not earned'},null,2));
+ }
 }finally{await browser.close();}

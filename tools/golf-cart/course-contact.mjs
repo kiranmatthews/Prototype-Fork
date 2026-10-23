@@ -5,7 +5,8 @@ import {withBlockworksRuntime} from '../blockworks-runner.mjs';
 await withBlockworksRuntime(async runtime=>{
   const {SkateRace}=await runtime.server.ssrLoadModule('/src/race/runtime.ts');
   const {CountryClubCarts}=await runtime.server.ssrLoadModule('/src/golf-cart/course.ts');
-  const race=new SkateRace(runtime.scene,runtime.p),traffic=new CountryClubCarts(runtime.scene);
+  let crystalEarned=false;
+  const race=new SkateRace(runtime.scene,runtime.p,false,id=>id==='country-club'&&crystalEarned),traffic=new CountryClubCarts(runtime.scene);
   race.attach(runtime.l,'country-club');traffic.attach(runtime.l,'country-club');race.start('race',0);
   traffic.step(runtime.dt,runtime.p,race);
   const parked=traffic.fleet.physics.carts.map(c=>[c.x,c.y,c.z]);
@@ -37,6 +38,9 @@ await withBlockworksRuntime(async runtime=>{
   const above=setup(0);above.p.pos.y+=5;traffic.step(runtime.dt,runtime.p,race);
   assert.equal(traffic.stats.contacts,0,'a rider above the roof clears the cart');
 
+  race.start('time-trial',0);
+  assert.equal(race.mode,'race');assert.equal(race.count,8,'a locked trial cannot bypass the earned-crystal gate');
+  crystalEarned=true;
   race.start('time-trial',0);traffic.step(runtime.dt,runtime.p,race);
   assert.equal(race.count,1);assert.equal(traffic.fleet.models.length,10);
   assert.deepEqual(traffic.fleet.physics.carts.map(c=>[c.x,c.y,c.z]),parked,'trial restart restores the complete traffic grid');
@@ -45,5 +49,5 @@ await withBlockworksRuntime(async runtime=>{
   const geometry=traffic.fleet.models[0].root.getObjectByName('chassis').geometry;
   assert.equal(geometry,traffic.fleet.models[9].root.getObjectByName('chassis').geometry,'ten large carts still share geometry');
   traffic.attach({walls:[]},'flats');assert.equal(traffic.fleet,null);
-  console.log('Country Club: doubled contacts, rival knockdown, shield, spin, roof clearance, countdown, solo restart and unload passed.');
+  console.log('Country Club: doubled contacts, rival knockdown, shield, spin, roof clearance, countdown, locked/earned solo restart and unload passed.');
 },{modulePath:'/src/levels/country-club.ts',source:m=>m.COUNTRY_CLUB_LEVEL,levelId:'country-club'});

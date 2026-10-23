@@ -1,0 +1,1494 @@
+{
+  "reviewedAt": "2026-10-24T00:51:40.093873+13:00",
+  "scope": "Verify all golf/race work is merged and audit retained offline work for omissions",
+  "auditedMain": "1fc48236e0222568a4822a9195e631eee5ac603b",
+  "result": "All completed feature work was already included in main; no additional gameplay merge was needed. Updated stale integration fixtures and canonical checkout documentation.",
+  "localInventory": {
+    "branchCount": 97,
+    "mergedBranches": 92,
+    "worktreeCount": 26,
+    "allWorktreeHeadsAncestorsOfMain": true,
+    "stashesRetained": 6,
+    "countryArtUntrackedFiles": {
+      "count": 11,
+      "byteIdenticalToTrackedMain": 11,
+      "preservedIn": "785cb088"
+    },
+    "unmergedLocalRefs": [
+      {
+        "ref": "backup/pre-blockworks-cleanup-20260930",
+        "head": "94fd499b6b2274cb4bd731f339dcc63fcbb9ac60",
+        "resolution": "Historical recovery snapshot, not a pending feature."
+      },
+      {
+        "ref": "cleanup/pre-sync-20261005",
+        "head": "dc0880e53bfaec5c83127ad0163366e3d9bb667b",
+        "resolution": "Superseded crate-course map placement; later roster/bonus changes are retained."
+      },
+      {
+        "ref": "codex/nightworks-floating-rocks-20260908",
+        "head": "35caaa8ad7255475b1977c03aa42f92ed8cb7295",
+        "resolution": "Old renderer roundoff assertion is covered by the stronger current test."
+      },
+      {
+        "ref": "codex/pre-merge-snapshot-20261023",
+        "head": "a4ef00bc8333f2a1f3d68cb9b306745d3d9b5d42",
+        "resolution": "Primary recovery snapshot: the prior integration audited all 593 changed paths as covered by feature branches."
+      },
+      {
+        "ref": "drafts/roo-character-studies",
+        "head": "706925c27682941c52452b70287779a79bb51ceb",
+        "resolution": "Deliberately unfinished character studies; retained separately."
+      }
+    ],
+    "branches": [
+      {
+        "ref": "backup/pre-blockworks-cleanup-20260930",
+        "head": "94fd499b6b2274cb4bd731f339dcc63fcbb9ac60",
+        "merged": false
+      },
+      {
+        "ref": "cleanup/pre-sync-20261005",
+        "head": "dc0880e53bfaec5c83127ad0163366e3d9bb667b",
+        "merged": false
+      },
+      {
+        "ref": "codex/beachside-figma-edits",
+        "head": "91c285d3990f84315d451f6c0b3dbb166ae3053d",
+        "merged": true
+      },
+      {
+        "ref": "codex/blockworks-ramp-collision",
+        "head": "b61d22889a8a8db18c20be85db8cf9eda13b9d9d",
+        "merged": true
+      },
+      {
+        "ref": "codex/bonus-layout-replacements",
+        "head": "2d5ffea59866c7b28ea102d45a730c08f7c08f9f",
+        "merged": true
+      },
+      {
+        "ref": "codex/bonus-mask-continuity",
+        "head": "3ff7e5f75df4a5ea36d801830c3924331308170f",
+        "merged": true
+      },
+      {
+        "ref": "codex/bonus-production-polish",
+        "head": "199a1750d1880147bb1f89b0bfd49181adbd23c7",
+        "merged": true
+      },
+      {
+        "ref": "codex/boulder-impact-hold",
+        "head": "a88f285d3e8db4f882505e6fc500dc94e1aa4abc",
+        "merged": true
+      },
+      {
+        "ref": "codex/carlisle-bonus-storyboards",
+        "head": "bb7866f77fe970d42d346f59ea639d666e2bdc96",
+        "merged": true
+      },
+      {
+        "ref": "codex/carlisle-boxes-20260913",
+        "head": "f378e4cadc7e412679d3f0bb3373795264c3a8ab",
+        "merged": true
+      },
+      {
+        "ref": "codex/carlisle-coast-20260913",
+        "head": "1e8868c0f62bfe71a686674c1bc727b892d66b88",
+        "merged": true
+      },
+      {
+        "ref": "codex/carlisle-layout-20260913",
+        "head": "3b0c637b64c7dfe509deef30ac67c2eafc2883d8",
+        "merged": true
+      },
+      {
+        "ref": "codex/carlisle-replay-clearance",
+        "head": "19300eaf48202d1f13861a43f867c69b3e99486e",
+        "merged": true
+      },
+      {
+        "ref": "codex/chief-phase-three",
+        "head": "3a8aca156a0f615c1c621d3393919b1899a926bf",
+        "merged": true
+      },
+      {
+        "ref": "codex/competition-clock-scale",
+        "head": "f35cd24dbe09fdb6006a8e83389135cd02941d15",
+        "merged": true
+      },
+      {
+        "ref": "codex/controller-trick-guide",
+        "head": "9ed1e9e476d9cfb70b15872e0a0330185f16301b",
+        "merged": true
+      },
+      {
+        "ref": "codex/country-club-cart-pursuit",
+        "head": "b4be13996df0072159d818368bb6438a7ea1674b",
+        "merged": true
+      },
+      {
+        "ref": "codex/crate-hit-forgiveness",
+        "head": "58186803e962245829fb8954e674d8651ee07e55",
+        "merged": true
+      },
+      {
+        "ref": "codex/crate-ledge-camera",
+        "head": "c07b755774e948039b32719cbcfeca33ef67fb98",
+        "merged": true
+      },
+      {
+        "ref": "codex/crouch-spin-contact",
+        "head": "b0b88351e8453a39aea3797302cdeb72f578de0a",
+        "merged": true
+      },
+      {
+        "ref": "codex/custard-creek-sunset",
+        "head": "5ac0b01c3e33f749136086319e40071074dbec28",
+        "merged": true
+      },
+      {
+        "ref": "codex/custard-horizon-streaming",
+        "head": "6a8c33fb2f6348eaed02d397d0818e641b800464",
+        "merged": true
+      },
+      {
+        "ref": "codex/custard-storyboard",
+        "head": "b0b88351e8453a39aea3797302cdeb72f578de0a",
+        "merged": true
+      },
+      {
+        "ref": "codex/custard-uneven-ledges",
+        "head": "2439305efe2a1f72f7ff68a72b2315050d726c1c",
+        "merged": true
+      },
+      {
+        "ref": "codex/deadwater-lip-collision",
+        "head": "a7630df9119b797afa0a9fdee434a869924c1d1f",
+        "merged": true
+      },
+      {
+        "ref": "codex/deadwater-vert",
+        "head": "72bc582e4d32a08858f04024e70dcb7006c6b854",
+        "merged": true
+      },
+      {
+        "ref": "codex/debug-local-data-reset",
+        "head": "c48a7ba092641a34ed1b7849d7f1e328f82ab2fb",
+        "merged": true
+      },
+      {
+        "ref": "codex/drowned-crown-harbour",
+        "head": "d19ed5f65a22635f7d7037261e9d38df34c4b360",
+        "merged": true
+      },
+      {
+        "ref": "codex/drowned-crown-harbour-proof",
+        "head": "3e4fece9bc61d927db86a2d662e6d844ab531f7b",
+        "merged": true
+      },
+      {
+        "ref": "codex/editor-compatibility-audit",
+        "head": "5e3992f75964ccbd20e69e8aa4df46f2bfc33835",
+        "merged": true
+      },
+      {
+        "ref": "codex/editor-reliability-20260908",
+        "head": "424f65642fac755e580915d69a6f4ba553fc8479",
+        "merged": true
+      },
+      {
+        "ref": "codex/editor-thorns-no-cars",
+        "head": "39b33615d9f4aa13f87cfb3ac87f82e96cfe7c5a",
+        "merged": true
+      },
+      {
+        "ref": "codex/enemy-distance-fog",
+        "head": "3420b026affec7aac875408f349cfa598c340a48",
+        "merged": true
+      },
+      {
+        "ref": "codex/fix-mask-presentation",
+        "head": "6a99e68a38b2f7154201c3a943c978fcdb24b2cf",
+        "merged": true
+      },
+      {
+        "ref": "codex/fluid-intact-bails",
+        "head": "81eb00f0a64e91a0d33cdc1f162279a8d4cfef6f",
+        "merged": true
+      },
+      {
+        "ref": "codex/frog-hop",
+        "head": "42576304d06ed161c9e9e6f236096fc7a4a29fec",
+        "merged": true
+      },
+      {
+        "ref": "codex/gouraud-fireballs",
+        "head": "251b5202ef43b19902450a9ac223719874a3aefb",
+        "merged": true
+      },
+      {
+        "ref": "codex/grind-catch-buffer",
+        "head": "5d0f9d6b3d6ded80e2a5dcd5c5b9500a55cbc88c",
+        "merged": true
+      },
+      {
+        "ref": "codex/hollowwake-descent",
+        "head": "197639416ee320da40532c812d196f831b9c3d0a",
+        "merged": true
+      },
+      {
+        "ref": "codex/ice-intent-animation",
+        "head": "751d93e3ccf411304a752f6d384b354623c5faf7",
+        "merged": true
+      },
+      {
+        "ref": "codex/ice-slide-carry",
+        "head": "bdc537075a377e25f60678ee592db8007c0efdb5",
+        "merged": true
+      },
+      {
+        "ref": "codex/jungle-camera-controls",
+        "head": "592b0797aaf1a7569f54899f364b45f658decb14",
+        "merged": true
+      },
+      {
+        "ref": "codex/jungle-enclosure-20260908",
+        "head": "b5c983851bbb43e218641467655a693591f11539",
+        "merged": true
+      },
+      {
+        "ref": "codex/jungle-minefield",
+        "head": "86dbcb9764b0ce56023eb25c6f72a14b2f1deae5",
+        "merged": true
+      },
+      {
+        "ref": "codex/jungle-ruins-scenery",
+        "head": "bb861b5f0a1faddd18f25231d094be84b38821f9",
+        "merged": true
+      },
+      {
+        "ref": "codex/jungle-worn-path-20260908",
+        "head": "4a5e91d81e84ead9d5e66200961734caf91d24a5",
+        "merged": true
+      },
+      {
+        "ref": "codex/kona-ps1",
+        "head": "c9c78bb2c5840401f575072391759df88a4b8be2",
+        "merged": true
+      },
+      {
+        "ref": "codex/level-atlas",
+        "head": "79ec2f961a1cf179e929cb478c8199a8d7ab4c82",
+        "merged": true
+      },
+      {
+        "ref": "codex/level-atlas-figma",
+        "head": "980cc1cd40039480f50061fbb3cc1a70f73ad1f9",
+        "merged": true
+      },
+      {
+        "ref": "codex/look-panel-performance",
+        "head": "9f7a985be64cf568e881f8d7ae814bc85a61f141",
+        "merged": true
+      },
+      {
+        "ref": "codex/mall-recreation",
+        "head": "ade9f836af9e94fec2eba4a5a81d5e19511a3ea1",
+        "merged": true
+      },
+      {
+        "ref": "codex/masonry-relief",
+        "head": "cf30394e35935b2bfd16babda82e32a284482de8",
+        "merged": true
+      },
+      {
+        "ref": "codex/menu-touch-followup",
+        "head": "e8ec1ff4b8702acf906793185433bbd3f7f3f8ff",
+        "merged": true
+      },
+      {
+        "ref": "codex/merge-current-20261023",
+        "head": "1fc48236e0222568a4822a9195e631eee5ac603b",
+        "merged": true
+      },
+      {
+        "ref": "codex/modular-golf-cart",
+        "head": "09f895182c7bfeeac32efc75fd4d04825120b85e",
+        "merged": true
+      },
+      {
+        "ref": "codex/neon-trial-clock",
+        "head": "4282c5bbe18b48a8a1fef140abe8e403bbe50907",
+        "merged": true
+      },
+      {
+        "ref": "codex/nightworks-camera-release-20260908",
+        "head": "b4bcf63bda8038c462efb590efd9cad85ed784fd",
+        "merged": true
+      },
+      {
+        "ref": "codex/nightworks-floating-rocks-20260908",
+        "head": "35caaa8ad7255475b1977c03aa42f92ed8cb7295",
+        "merged": false
+      },
+      {
+        "ref": "codex/nightworks-volcano",
+        "head": "85e04c8eb89618aae00268fe363cef8abf689179",
+        "merged": true
+      },
+      {
+        "ref": "codex/nightworks-zombies-quarry",
+        "head": "8ee9812b203683be0396dcf11bd5425e30d46c79",
+        "merged": true
+      },
+      {
+        "ref": "codex/offline-country-art-snapshot-20261020",
+        "head": "785cb088d4001466822568af0f0c64fe601d0420",
+        "merged": true
+      },
+      {
+        "ref": "codex/offline-integration",
+        "head": "f3f8abf4e10eb2ff3c6f45d40924f1776feb5fc0",
+        "merged": true
+      },
+      {
+        "ref": "codex/offline-primary-snapshot-20261020",
+        "head": "72e9b89ca3300c1418382bf2c91936635c06ae1b",
+        "merged": true
+      },
+      {
+        "ref": "codex/platform-edge-grinding",
+        "head": "54d22e391c7fc1da9b904e2e797170d9bf8579d6",
+        "merged": true
+      },
+      {
+        "ref": "codex/pre-merge-snapshot-20261023",
+        "head": "a4ef00bc8333f2a1f3d68cb9b306745d3d9b5d42",
+        "merged": false
+      },
+      {
+        "ref": "codex/rail-trick-speed",
+        "head": "9ff49851f51e9d4f8a33d583c0fdaf27fecdc4fc",
+        "merged": true
+      },
+      {
+        "ref": "codex/remaining-level-polish",
+        "head": "8977ba177f7d17f0bbfb11b61800823a835d51ce",
+        "merged": true
+      },
+      {
+        "ref": "codex/ripcord-river-easier",
+        "head": "ed7be2a681a23206e0b5ae36d297647e67599dd8",
+        "merged": true
+      },
+      {
+        "ref": "codex/roo-painted-blink",
+        "head": "2a4c3246fb8831c6fa56643ebf7acdbe85ae330e",
+        "merged": true
+      },
+      {
+        "ref": "codex/rooftop-odyssey",
+        "head": "071f55947fdcf7f9cf6e9723865db6f1f56fd5fa",
+        "merged": true
+      },
+      {
+        "ref": "codex/rooftop-relay",
+        "head": "8b46ca930a799a7c63f23894f287636f356d4a1c",
+        "merged": true
+      },
+      {
+        "ref": "codex/rumblewater-polish",
+        "head": "3050ad3e9fbe2c83fb04f7655769466e3caaa45b",
+        "merged": true
+      },
+      {
+        "ref": "codex/school-miami",
+        "head": "b68520e6d36847d50168df17896bdc97f041d103",
+        "merged": true
+      },
+      {
+        "ref": "codex/score-challenge-trick-hud",
+        "head": "8513a6a1f80064c67407c8793f6fed7912b41a61",
+        "merged": true
+      },
+      {
+        "ref": "codex/secured-crystal-time-trial",
+        "head": "0255552b9b22e0323acdc62fb6bb66d7753ecacd",
+        "merged": true
+      },
+      {
+        "ref": "codex/six-island-campaign",
+        "head": "6f432218c3adee7347b37b92077de1a372d6030c",
+        "merged": true
+      },
+      {
+        "ref": "codex/sky-bonus-clearance",
+        "head": "43b8ab7a69ba39aae23b2773a1f719d88630878c",
+        "merged": true
+      },
+      {
+        "ref": "codex/sky-bridge-construction",
+        "head": "aba7b53004cf796a053377cb60bf7c77d7d583d6",
+        "merged": true
+      },
+      {
+        "ref": "codex/sky-bridge-surfaces",
+        "head": "c906367489b089c6e1d0e016358ff853d4cb713c",
+        "merged": true
+      },
+      {
+        "ref": "codex/sky-sea-horizons",
+        "head": "303840a950891421d313a9053d59605b1cc532b1",
+        "merged": true
+      },
+      {
+        "ref": "codex/slipstream-continuous",
+        "head": "c11e47c4563176c787242baf7d7df933361a7dea",
+        "merged": true
+      },
+      {
+        "ref": "codex/solid-world-impacts",
+        "head": "1ae0c1060097ae8754b1a8238dc860817d993435",
+        "merged": true
+      },
+      {
+        "ref": "codex/sunny-beach-island",
+        "head": "6b0df904f4b2adea6c7c618556cdd86be5408c53",
+        "merged": true
+      },
+      {
+        "ref": "codex/temple-of-embers",
+        "head": "66c699212d30877fd7bd5f6d31c1c5dd6c75c452",
+        "merged": true
+      },
+      {
+        "ref": "codex/treehouse-dense-enclosure",
+        "head": "169c0b7557429c7f519aaab91cdbceb58424a57a",
+        "merged": true
+      },
+      {
+        "ref": "codex/treehouse-opening-flow",
+        "head": "4359c90268f7d77cf1dbc7f932906231689bae50",
+        "merged": true
+      },
+      {
+        "ref": "codex/treehouse-reference-opening",
+        "head": "2bda9e97c88a014d37a22fdfe9cd51801b058d40",
+        "merged": true
+      },
+      {
+        "ref": "codex/treehouse-trials-continuity",
+        "head": "35254135765858be68f1aeefa0d2769bc9904115",
+        "merged": true
+      },
+      {
+        "ref": "codex/treehouse-trials-photo-fidelity",
+        "head": "c95d8614ad88a1e739c6c6ba5f851f1c88b2bac2",
+        "merged": true
+      },
+      {
+        "ref": "codex/treehouse-trials-repairs",
+        "head": "012ec538fa4e78da2a27912375581241452ce5eb",
+        "merged": true
+      },
+      {
+        "ref": "codex/treehouse-water-fix",
+        "head": "218f27a0ed2a1dfad951ae58cef1a9d389fc8041",
+        "merged": true
+      },
+      {
+        "ref": "codex/trial-clock-lockout",
+        "head": "1e00f72a6439df7a3da0f5644a1c900ec6e1bcff",
+        "merged": true
+      },
+      {
+        "ref": "codex/trial-death-clock-return",
+        "head": "37cf21bfd9f8f9106c2d893bed51b7109cd8b9e3",
+        "merged": true
+      },
+      {
+        "ref": "codex/warehouse-reference",
+        "head": "92bd0cd72a08c30658520f8440c34e334a56a5f7",
+        "merged": true
+      },
+      {
+        "ref": "codex/warehouse-skatepark",
+        "head": "ea06ca9ffa5f2054a8d7fd411def1e4f6495859b",
+        "merged": true
+      },
+      {
+        "ref": "drafts/roo-character-studies",
+        "head": "706925c27682941c52452b70287779a79bb51ceb",
+        "merged": false
+      },
+      {
+        "ref": "main",
+        "head": "1fc48236e0222568a4822a9195e631eee5ac603b",
+        "merged": true
+      }
+    ],
+    "worktreeHeads": [
+      {
+        "path": "/Users/kiki/Documents/ChatGPT/Prototype Fork",
+        "head": "1fc48236e0222568a4822a9195e631eee5ac603b"
+      },
+      {
+        "path": "/private/tmp/prototype-merge-20261023/work",
+        "head": "1fc48236e0222568a4822a9195e631eee5ac603b"
+      },
+      {
+        "path": "/Users/kiki/.codex/worktrees/beachside-figma-edits/Prototype Fork",
+        "head": "91c285d3990f84315d451f6c0b3dbb166ae3053d"
+      },
+      {
+        "path": "/Users/kiki/.codex/worktrees/bonus-layout-replacements/Prototype Fork",
+        "head": "a88f285d3e8db4f882505e6fc500dc94e1aa4abc"
+      },
+      {
+        "path": "/Users/kiki/.codex/worktrees/bonus-mask-continuity/Prototype Fork",
+        "head": "3ff7e5f75df4a5ea36d801830c3924331308170f"
+      },
+      {
+        "path": "/Users/kiki/.codex/worktrees/coastal-storyboard/Prototype Fork",
+        "head": "3527658773269099963ce2bc8eea2fac5311024c"
+      },
+      {
+        "path": "/Users/kiki/.codex/worktrees/country-club-art/Prototype Fork",
+        "head": "b4be13996df0072159d818368bb6438a7ea1674b"
+      },
+      {
+        "path": "/Users/kiki/.codex/worktrees/custard-creek-finished/Prototype Fork",
+        "head": "eab8fd1291ed57bc78c5084d9eea335ce6039573"
+      },
+      {
+        "path": "/Users/kiki/.codex/worktrees/drowned-crown/Prototype Fork",
+        "head": "3e4fece9bc61d927db86a2d662e6d844ab531f7b"
+      },
+      {
+        "path": "/Users/kiki/.codex/worktrees/enemy-distance-fog/Prototype Fork",
+        "head": "3420b026affec7aac875408f349cfa598c340a48"
+      },
+      {
+        "path": "/Users/kiki/.codex/worktrees/frog-hop/Prototype Fork",
+        "head": "42576304d06ed161c9e9e6f236096fc7a4a29fec"
+      },
+      {
+        "path": "/Users/kiki/.codex/worktrees/gouraud-fireballs/Prototype Fork",
+        "head": "251b5202ef43b19902450a9ac223719874a3aefb"
+      },
+      {
+        "path": "/Users/kiki/.codex/worktrees/jungle-minefield/Prototype Fork",
+        "head": "86dbcb9764b0ce56023eb25c6f72a14b2f1deae5"
+      },
+      {
+        "path": "/Users/kiki/.codex/worktrees/jungle-ruins-scenery/Prototype Fork",
+        "head": "bb861b5f0a1faddd18f25231d094be84b38821f9"
+      },
+      {
+        "path": "/Users/kiki/.codex/worktrees/modular-golf-cart/Prototype Fork",
+        "head": "09f895182c7bfeeac32efc75fd4d04825120b85e"
+      },
+      {
+        "path": "/Users/kiki/.codex/worktrees/nightworks-volcano/Prototype Fork",
+        "head": "85e04c8eb89618aae00268fe363cef8abf689179"
+      },
+      {
+        "path": "/Users/kiki/.codex/worktrees/ripcord-river-easier/Prototype Fork",
+        "head": "ed7be2a681a23206e0b5ae36d297647e67599dd8"
+      },
+      {
+        "path": "/Users/kiki/.codex/worktrees/rooftop-descent/Prototype Fork",
+        "head": "071f55947fdcf7f9cf6e9723865db6f1f56fd5fa"
+      },
+      {
+        "path": "/Users/kiki/.codex/worktrees/rumblewater-chase/Prototype Fork",
+        "head": "197639416ee320da40532c812d196f831b9c3d0a"
+      },
+      {
+        "path": "/Users/kiki/.codex/worktrees/six-island-campaign/Prototype Fork",
+        "head": "f3f8abf4e10eb2ff3c6f45d40924f1776feb5fc0"
+      },
+      {
+        "path": "/Users/kiki/.codex/worktrees/sky-sea-horizons/Prototype Fork",
+        "head": "303840a950891421d313a9053d59605b1cc532b1"
+      },
+      {
+        "path": "/Users/kiki/.codex/worktrees/slipstream-continuous/Prototype Fork",
+        "head": "c11e47c4563176c787242baf7d7df933361a7dea"
+      },
+      {
+        "path": "/Users/kiki/.codex/worktrees/sunny-beach-island/Prototype Fork",
+        "head": "6b0df904f4b2adea6c7c618556cdd86be5408c53"
+      },
+      {
+        "path": "/Users/kiki/.codex/worktrees/temple-night-journey/Prototype Fork",
+        "head": "66c699212d30877fd7bd5f6d31c1c5dd6c75c452"
+      },
+      {
+        "path": "/Users/kiki/.codex/worktrees/warehouse-skatepark/Prototype Fork",
+        "head": "ea06ca9ffa5f2054a8d7fd411def1e4f6495859b"
+      },
+      {
+        "path": "/Users/kiki/Documents/Codex/2026-10-10/do/work/enemy-polish",
+        "head": "aae30b9a11a1d6d5a3cc3e2a0f88a758d784c889"
+      }
+    ]
+  },
+  "cachedOriginRefs": {
+    "mainAndFrogAlreadyAncestors": true,
+    "hauntedHassle": {
+      "remote": "origin/codex/haunted-hassle-quality",
+      "head": "20bd2634",
+      "mergedReplacement": "0d476fec",
+      "changedPaths": 323,
+      "differentFromReplacement": [
+        "docs/LEVEL_ITERATIONS.md"
+      ],
+      "resolution": "All task files match merged replacement except the cumulative iteration log."
+    },
+    "networkFetch": false
+  },
+  "reflog": {
+    "scanSince": "2026-10-10",
+    "uniqueHeads": 499,
+    "unreferencedPredecessors": 66,
+    "offlineWorkflowSince": "2026-10-18",
+    "offlinePredecessorsReviewed": [
+      {
+        "sha": "05a3c33e5c9b82d9db0820295624ee153eb0547a",
+        "subject": "Refine warehouse daylight, local lighting and surface construction",
+        "classification": "same-task-files-on-main-history",
+        "replacement": "ea06ca9ffa5f2054a8d7fd411def1e4f6495859b",
+        "reviewOnlyPaths": [
+          "docs/warehouse-art/walking-camera.json"
+        ],
+        "date": "2026-10-18 03:53:14 +1300"
+      },
+      {
+        "sha": "27e4136f1379d5d124bdaff60b0ed6770abe02c1",
+        "subject": "Add modular golf carts with playful driving, damage and rare rollovers",
+        "classification": "reviewed-successor-on-main",
+        "runtimePaths": [
+          ".github/workflows/deploy.yml",
+          "golf-cart-lab.html",
+          "package.json",
+          "public/golf-cart/driver-captain.glb",
+          "public/golf-cart/driver-groundskeeper.glb",
+          "public/golf-cart/driver-robot.glb",
+          "public/golf-cart/golf-cart-modular.glb",
+          "public/golf-cart/golf-cart-with-driver.glb",
+          "public/golf-cart/manifest.json",
+          "src/golf-cart/course.ts",
+          "src/golf-cart/driver.ts",
+          "src/golf-cart/fleet.ts",
+          "src/golf-cart/geometry.ts",
+          "src/golf-cart/lab.css",
+          "src/golf-cart/lab.ts",
+          "src/golf-cart/labCourse.ts",
+          "src/golf-cart/model.ts",
+          "src/golf-cart/physics.ts",
+          "src/main.ts",
+          "src/toolDirectoryEntries.ts",
+          "tools/golf-cart/export.mjs",
+          "tools/golf-cart/test.mjs",
+          "tools/site-entries.mjs"
+        ],
+        "candidates": [
+          {
+            "replacement": "cea641d1e260d37d8541d42af1bc0c952ac53b8a",
+            "differentRuntimePaths": [
+              "tools/golf-cart/test.mjs"
+            ]
+          }
+        ],
+        "date": "2026-10-18 07:55:00 +1300",
+        "resolution": "Replacement adds the natural T-bone collision/rollover regression; runtime and assets match."
+      },
+      {
+        "sha": "4ed707f941d7413ba18a6faf0169e5eb371bda23",
+        "subject": "Refine warehouse daylight, local lighting and surface construction",
+        "classification": "same-task-files-on-main-history",
+        "replacement": "ea06ca9ffa5f2054a8d7fd411def1e4f6495859b",
+        "reviewOnlyPaths": [
+          "docs/warehouse-art/walking-camera.json"
+        ],
+        "date": "2026-10-18 03:53:13 +1300"
+      },
+      {
+        "sha": "66e1f79add916fccdfefb690158f4ba8ccff890b",
+        "subject": "Add Rooftop Relay with forgiving downhill transfers and fast recovery",
+        "classification": "reviewed-successor-on-main",
+        "runtimePaths": [
+          "public/levels.json",
+          "src/level.ts",
+          "src/levels/codex-lab.ts",
+          "tools/rooftop-browser.mjs",
+          "tools/rooftop-pilot.mjs",
+          "tools/rooftop-smoke.mjs",
+          "tools/sync-rooftop.mjs",
+          "tools/test-rooftop-recovery.mjs",
+          "tools/test-rooftop-relay.mjs"
+        ],
+        "candidates": [
+          {
+            "replacement": "8b677a1bcb2a9f1e46d9da353200615def626604",
+            "differentRuntimePaths": [
+              "src/level.ts"
+            ]
+          }
+        ],
+        "date": "2026-10-18 08:35:33 +1300",
+        "resolution": "Shared level.ts differs only by concurrent Grove minefield support; Rooftop feature files match."
+      },
+      {
+        "sha": "73f50d6ffdd48370240628e3368044436872b21f",
+        "subject": "Add No-Man\u2019s Grove with concealed jungle minefields",
+        "classification": "same-task-files-on-main-history",
+        "replacement": "bc62a8575832ca9aee5f6071ede8b93f1665bda6",
+        "reviewOnlyPaths": [
+          "docs/LEVEL_ITERATIONS.md",
+          "docs/jungle-minefield/README.md",
+          "docs/jungle-minefield/blast.png",
+          "docs/jungle-minefield/jungle.png",
+          "docs/jungle-minefield/validation.json"
+        ],
+        "date": "2026-10-18 08:30:46 +1300"
+      },
+      {
+        "sha": "81384ae6b13297af60b454c5cdaa4e10beab92cc",
+        "subject": "Restore measured retail Mall rail chains",
+        "classification": "same-task-files-on-main-history",
+        "replacement": "0a85bb40e99823c4b8da6cf5ff79e5e97e3abb2e",
+        "reviewOnlyPaths": [
+          "docs/LEVEL_ITERATIONS.md",
+          "docs/MALL_RECREATION.md",
+          "docs/mall/measured-retail-tape.png",
+          "docs/mall/measured-runtime.json",
+          "docs/mall/retail-rails.json",
+          "docs/mall/retail-reference.json",
+          "docs/mall/scale-physics-research.json",
+          "docs/mall/validation.json"
+        ],
+        "date": "2026-10-23 14:14:32 +1300"
+      },
+      {
+        "sha": "dab05d13c31332cad5f1b98c26a2cbbcab904d07",
+        "subject": "Add Rooftop Relay with forgiving downhill transfers and fast recovery",
+        "classification": "same-task-files-on-main-history",
+        "replacement": "8b677a1bcb2a9f1e46d9da353200615def626604",
+        "reviewOnlyPaths": [
+          "docs/LEVEL_ITERATIONS.md",
+          "docs/art-reviews/rooftop-relay/checkpoint-return.png",
+          "docs/art-reviews/rooftop-relay/final-transfer.png",
+          "docs/art-reviews/rooftop-relay/mid-descent.png",
+          "docs/art-reviews/rooftop-relay/overview.png",
+          "docs/performance/rooftop-relay.json"
+        ],
+        "date": "2026-10-18 08:37:02 +1300"
+      },
+      {
+        "sha": "fae942a835ca3a2f7b366cf8e71bc5c0f922ec37",
+        "subject": "Preserve grindable timber edges in No-Man's Grove",
+        "classification": "reviewed-successor-on-main",
+        "runtimePaths": [
+          "src/levels/jungle-minefield.ts",
+          "tools/test-course-edge-policy.mjs"
+        ],
+        "candidates": [
+          {
+            "replacement": "e7a2cf06ea57b1678719c613ba073c994fc1723b",
+            "differentRuntimePaths": [
+              "tools/test-course-edge-policy.mjs"
+            ]
+          }
+        ],
+        "date": "2026-10-18 08:49:13 +1300",
+        "resolution": "Replacement adds deliberate buried-soil exceptions to the edge-policy test; grindable Grove timber is identical."
+      },
+      {
+        "sha": "fbadaf2d812cf281ba16646a19cbe86c1f805805",
+        "subject": "Use source swept rail capture for measured Mall",
+        "classification": "same-task-files-on-main-history",
+        "replacement": "3851223f21cf10435d14b239ee426d5319bf83c2",
+        "reviewOnlyPaths": [
+          "docs/LEVEL_ITERATIONS.md",
+          "docs/MALL_RECREATION.md",
+          "docs/mall/measured-runtime.json",
+          "docs/mall/rail-balance.json",
+          "docs/mall/rail-balance.png",
+          "docs/mall/rail-capture.json",
+          "docs/mall/rail-physics.json",
+          "docs/mall/reference-physics.json",
+          "docs/mall/scale-physics-research.json",
+          "docs/mall/validation.json"
+        ],
+        "date": "2026-10-23 17:32:55 +1300"
+      }
+    ],
+    "note": "Older reflog entries are primarily amended/rebased predecessors; the offline-period predecessors are explicitly reconciled above."
+  },
+  "stashes": [
+    {
+      "ref": "stash@{0}",
+      "head": "81982c837f0ad457b1370981c5d2892b5cf29f19",
+      "subject": "On main: Pre-integration primary checkout 2026-10-23 (also preserved as codex/pre-merge-snapshot-20261023)",
+      "trackedPaths": 196,
+      "trackedByteIdenticalToMain": 98,
+      "untrackedPaths": 1621,
+      "untrackedByteIdenticalToMain": 1559,
+      "absentPaths": [],
+      "resolution": "Primary snapshot retained; 593 changes since its earlier snapshot were already reconciled by the main integration."
+    },
+    {
+      "ref": "stash@{1}",
+      "head": "cf77cf05af194e7c391d3e9896afd5f7a69c2afe",
+      "subject": "On (no branch): country-club-downhill-integration-20261017",
+      "trackedPaths": 13,
+      "trackedByteIdenticalToMain": 5,
+      "untrackedPaths": 3,
+      "untrackedByteIdenticalToMain": 1,
+      "absentPaths": [],
+      "resolution": "All course-specific tracked paths match completed 5743bf80; its player.ts also contains later warehouse ramp support."
+    },
+    {
+      "ref": "stash@{2}",
+      "head": "6195b7dcb00a16bf13e254033f7354250718f747",
+      "subject": "On codex/custard-uneven-ledges: custard-ledges-release-integration",
+      "trackedPaths": 9,
+      "trackedByteIdenticalToMain": 2,
+      "untrackedPaths": 7,
+      "untrackedByteIdenticalToMain": 6,
+      "absentPaths": [],
+      "resolution": "Custard support work is represented by completed 2439305e and later shared/runtime changes."
+    },
+    {
+      "ref": "stash@{3}",
+      "head": "1ffdf4e116be567078db46008198bba86a40c12b",
+      "subject": "On (no branch): Image Blaster demo integration on published main",
+      "trackedPaths": 6,
+      "trackedByteIdenticalToMain": 0,
+      "untrackedPaths": 6,
+      "untrackedByteIdenticalToMain": 0,
+      "absentPaths": [
+        "public/splat-scenery/valley-150k.spz",
+        "public/splat-scenery/valley-250k.spz",
+        "src/gaussianSplats.d.ts",
+        "src/levels/splat-valley.ts",
+        "src/splatScenery.ts",
+        "tools/import-splat-scenery.py"
+      ],
+      "resolution": "Image Blaster/splat experiment was intentionally retired by fccf04e9."
+    },
+    {
+      "ref": "stash@{4}",
+      "head": "96ba9aeda338763f6477e957b5bddb05978561a3",
+      "subject": "On (no branch): tidebreak-meshy-before-release-sync",
+      "trackedPaths": 9,
+      "trackedByteIdenticalToMain": 1,
+      "untrackedPaths": 10,
+      "untrackedByteIdenticalToMain": 7,
+      "absentPaths": [
+        "tools/.chief-pit-debug.mjs",
+        "tools/.chief-skin-probe.mjs"
+      ],
+      "resolution": "Tidebreak assets/runtime are included; only two temporary diagnostic probes are absent."
+    },
+    {
+      "ref": "stash@{5}",
+      "head": "970a29d576c194f5ad7b44f54851253252059100",
+      "subject": "On codex/nightworks-floating-rocks-20260908: Nightworks work before editor integration",
+      "trackedPaths": 8,
+      "trackedByteIdenticalToMain": 0,
+      "untrackedPaths": 32,
+      "untrackedByteIdenticalToMain": 26,
+      "absentPaths": [],
+      "resolution": "Nightworks work is included; current stronger renderer assertions supersede the old roundoff patch."
+    }
+  ],
+  "golfWork": {
+    "latestCourseAndRoamingHead": "b4be1399",
+    "modularMeshyCartHead": "09f89518",
+    "downhillIntegration": "5743bf80",
+    "offlineConsolidation": "f3f8abf4",
+    "mainConsolidation": "56609ef0",
+    "included": [
+      "Eighteen-hole downhill course and estate art",
+      "Deep sand, boost approaches and crossing jumps",
+      "Eight-rider races and item models/effects",
+      "Live finish arrivals and rollout",
+      "Scored time crates and earned-crystal trial gate",
+      "Ten double-sized independently roaming carts",
+      "Modular carts, drivers, sculpted Meshy canopy/wheels/bags, damage and recovery"
+    ],
+    "latestCartSourceMatches": true,
+    "courseChangesSinceFeature": "Lazy component construction only; authored geometry retained."
+  },
+  "fixtureRepairs": [
+    "Cart contact test checks locked denial and explicitly earned solo restart.",
+    "Optional solo traversal authorizes the trial and checks only active finishers.",
+    "Live finish fixture records the winning crystal before trial/retry.",
+    "Browser race fixture checks locked/earned trial UI and ten moving carts without obsolete collision quotas."
+  ],
+  "checks": [
+    {
+      "task": "check:golf-cart",
+      "exitCode": 0,
+      "seconds": 45.0
+    },
+    {
+      "task": "tools/golf-cart/roaming-terrain.mjs",
+      "exitCode": 0,
+      "seconds": 115.52
+    },
+    {
+      "task": "tools/test-country-club-stock.mjs",
+      "exitCode": 0,
+      "seconds": 21.32
+    },
+    {
+      "task": "tools/test-country-club-race.mjs",
+      "exitCode": 0,
+      "seconds": 226.32
+    },
+    {
+      "task": "tools/test-skate-race-time-trial.mjs",
+      "exitCode": 0,
+      "seconds": 20.35
+    },
+    {
+      "task": "tools/test-race-live-finish.mjs",
+      "exitCode": 0,
+      "seconds": 40.19
+    },
+    {
+      "task": "tools/test-race-powerup-presentation.mjs",
+      "exitCode": 0,
+      "seconds": 0.47
+    },
+    {
+      "task": "tools/test-time-trial-unlock.mjs",
+      "exitCode": 0,
+      "seconds": 0.4
+    },
+    {
+      "task": "build",
+      "exitCode": 0,
+      "seconds": 66.52
+    },
+    {
+      "task": "tools/test-country-club-race.mjs",
+      "exitCode": 0,
+      "seconds": 25.84,
+      "fixture": "Earned solo trial, carts active, final 225 metres, all active riders finish"
+    }
+  ],
+  "nativeFullCourseRace": {
+    "stats": {
+      "length": 3924.9862767370287,
+      "holes": 18
+    },
+    "traffic": {
+      "contacts": 5,
+      "knockdowns": 5,
+      "spinHits": 0,
+      "fleet": {
+        "count": 10,
+        "scale": 2,
+        "cartTriangles": 8086,
+        "fleetTriangles": 79168,
+        "fleetDrawCalls": 90,
+        "geometryBuffers": 20,
+        "steps": 26518,
+        "droppedTime": 0,
+        "activeDebris": 0
+      },
+      "progress": [
+        205.68795406726764,
+        589.3757814719872,
+        915.3800566981986,
+        1343.7826866664977,
+        1698.417960059699,
+        2177.145079823438,
+        2440.568104775007,
+        2857.507614404986,
+        3287.344744358592,
+        3324.9078347254404
+      ],
+      "respawns": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "result": {
+      "mode": "race",
+      "rank": 1,
+      "time": 103.81666666666206,
+      "won": true,
+      "boxes": 3,
+      "totalBoxes": 32,
+      "boxGem": false
+    },
+    "riders": [
+      {
+        "id": 0,
+        "progress": 3924.9862767370287,
+        "finish": 103.81666666666206,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0
+      },
+      {
+        "id": 1,
+        "progress": 3924.9862767370287,
+        "finish": 169.30000000002687,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0
+      },
+      {
+        "id": 2,
+        "progress": 3924.9862767370287,
+        "finish": 211.00000000006006,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0
+      },
+      {
+        "id": 3,
+        "progress": 3924.9862767370287,
+        "finish": 175.73333333336532,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0
+      },
+      {
+        "id": 4,
+        "progress": 3924.9862767370287,
+        "finish": 163.08333333335526,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0
+      },
+      {
+        "id": 5,
+        "progress": 3924.9862767370287,
+        "finish": 186.8833333333742,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0
+      },
+      {
+        "id": 6,
+        "progress": 3924.9862767370287,
+        "finish": 220.96666666673465,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0
+      },
+      {
+        "id": 7,
+        "progress": 3924.9862767370287,
+        "finish": 204.83333333338848,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0
+      }
+    ]
+  },
+  "terrainRoaming": {
+    "secondsPerSeed": 220,
+    "runs": [
+      {
+        "seed": 0,
+        "offroadFraction": 0.88,
+        "minimumTravel": 2258.216637960987,
+        "maximumHomeRadius": 107.56689002723678,
+        "respawns": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "seed": 1,
+        "offroadFraction": 0.8804545454545455,
+        "minimumTravel": 2213.1998914099463,
+        "maximumHomeRadius": 101.70579203663245,
+        "respawns": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "seed": 71,
+        "offroadFraction": 0.8736363636363637,
+        "minimumTravel": 2255.8767029893156,
+        "maximumHomeRadius": 101.10199616451384,
+        "respawns": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    ]
+  },
+  "browser": {
+    "base": "http://127.0.0.1:5419",
+    "liteKeyboardAndUnload": {
+      "grid": {
+        "level": "country-club",
+        "phase": "grid",
+        "count": 8,
+        "length": 3924.9862767370287,
+        "clock": false,
+        "trial": false,
+        "progress": 0,
+        "fleet": {
+          "count": 10,
+          "scale": 2,
+          "cartTriangles": 8086,
+          "fleetTriangles": 79168,
+          "fleetDrawCalls": 90,
+          "geometryBuffers": 20,
+          "steps": 0,
+          "droppedTime": 0,
+          "activeDebris": 0,
+          "positions": [
+            [
+              56.28810513234407,
+              4.175553892835735,
+              -20.567447033202995
+            ],
+            [
+              100.87007598669751,
+              -16.372515561205006,
+              -322.70045143791384
+            ],
+            [
+              -21.400000000000006,
+              -8.671346667302636,
+              -210.65555741482757
+            ],
+            [
+              -337.4,
+              -18.22789530236343,
+              -369.09641100650356
+            ],
+            [
+              91.51006679717779,
+              -19.2532291518471,
+              -364.11425608595266
+            ],
+            [
+              113.71487708209979,
+              -44.87408719015209,
+              -634.0406024833223
+            ],
+            [
+              -179.2824321849402,
+              -51.85751305267303,
+              -737.9405377069755
+            ],
+            [
+              -68.25464597327988,
+              -56.5962881173694,
+              -834.65450776002
+            ],
+            [
+              151.5569689128976,
+              -55.34051401507419,
+              -752.3993571877099
+            ],
+            [
+              289.58358061945586,
+              -51.809105089199164,
+              -730.151815726958
+            ]
+          ],
+          "travel": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "textured": true,
+          "drivers": true
+        }
+      },
+      "running": {
+        "level": "country-club",
+        "phase": "running",
+        "count": 8,
+        "length": 3924.9862767370287,
+        "clock": false,
+        "trial": false,
+        "progress": 125.05794966808382,
+        "fleet": {
+          "count": 10,
+          "scale": 2,
+          "cartTriangles": 8086,
+          "fleetTriangles": 79168,
+          "fleetDrawCalls": 90,
+          "geometryBuffers": 20,
+          "steps": 748,
+          "droppedTime": 0,
+          "activeDebris": 0,
+          "positions": [
+            [
+              94.60733613277837,
+              5.948778738628922,
+              43.27582260335092
+            ],
+            [
+              103.49535503206484,
+              -3.1918864819459305,
+              -171.40954708835028
+            ],
+            [
+              -118.99450431519114,
+              -14.438253161513977,
+              -273.1766328358238
+            ],
+            [
+              -223.9315681064241,
+              -16.441878506390402,
+              -349.77322773584547
+            ],
+            [
+              82.59215789232574,
+              -23.32417732663896,
+              -426.53525166279195
+            ],
+            [
+              26.91349614977106,
+              -31.956886172129735,
+              -526.0715274053231
+            ],
+            [
+              -139.60217345458986,
+              -42.802564968769715,
+              -636.3110213572311
+            ],
+            [
+              -127.76444822278025,
+              -60.84659271870545,
+              -902.7413501854378
+            ],
+            [
+              155.47015020662764,
+              -53.011991791200614,
+              -718.7923362214201
+            ],
+            [
+              321.1380165873805,
+              -54.08719821400254,
+              -773.5494708664199
+            ]
+          ],
+          "travel": [
+            73.91697568542574,
+            34.23898583648365,
+            56.80907164285869,
+            68.60293410180212,
+            66.25327184708318,
+            65.20710520346132,
+            67.13109246008769,
+            39.446018500343285,
+            69.02432230387878,
+            60.762974404608435
+          ],
+          "textured": true,
+          "drivers": true
+        }
+      },
+      "slipstream": {
+        "level": "slipstream-race",
+        "phase": "grid",
+        "count": 8,
+        "length": 4093.3106342590136,
+        "clock": false,
+        "trial": false,
+        "progress": 0,
+        "fleet": null
+      },
+      "errors": []
+    },
+    "fullRenderFinish": {
+      "fixture": "Final 225 metres with all eight racers; complete traversal is covered separately by the native simulation.",
+      "complete": true,
+      "riders": [
+        {
+          "id": 0,
+          "finish": 14.133333333333615,
+          "falls": 0,
+          "deaths": 0,
+          "fruit": 0,
+          "lives": 4
+        },
+        {
+          "id": 1,
+          "finish": 16.36666666666702,
+          "falls": 0,
+          "deaths": 0,
+          "fruit": 0,
+          "lives": 4
+        },
+        {
+          "id": 2,
+          "finish": 12.066666666666846,
+          "falls": 0,
+          "deaths": 0,
+          "fruit": 0,
+          "lives": 4
+        },
+        {
+          "id": 3,
+          "finish": 8.683333333333344,
+          "falls": 0,
+          "deaths": 0,
+          "fruit": 0,
+          "lives": 4
+        },
+        {
+          "id": 4,
+          "finish": 14.666666666666975,
+          "falls": 0,
+          "deaths": 0,
+          "fruit": 0,
+          "lives": 4
+        },
+        {
+          "id": 5,
+          "finish": 17.033333333333648,
+          "falls": 0,
+          "deaths": 0,
+          "fruit": 0,
+          "lives": 4
+        },
+        {
+          "id": 6,
+          "finish": 7.416666666666646,
+          "falls": 0,
+          "deaths": 0,
+          "fruit": 0,
+          "lives": 4
+        },
+        {
+          "id": 7,
+          "finish": 7.733333333333311,
+          "falls": 0,
+          "deaths": 0,
+          "fruit": 0,
+          "lives": 4
+        }
+      ],
+      "traffic": {
+        "contacts": 0,
+        "knockdowns": 0,
+        "spinHits": 0,
+        "count": 10,
+        "scale": 2,
+        "cartTriangles": 8086,
+        "fleetTriangles": 79168,
+        "fleetDrawCalls": 90,
+        "geometryBuffers": 20,
+        "steps": 2074,
+        "droppedTime": 0,
+        "activeDebris": 0,
+        "moving": 10
+      },
+      "campaign": {
+        "cleared": true,
+        "crystal": false,
+        "boxGem": false,
+        "comboGem": false,
+        "timeRelic": false
+      },
+      "trial": {
+        "unlocked": false,
+        "reason": "Race crystal not earned"
+      },
+      "errors": []
+    },
+    "fullRenderEarnedTrial": {
+      "fixture": "Real finish crossing with a starting lead near the line",
+      "earned": {
+        "won": true,
+        "crystal": true
+      },
+      "trial": {
+        "mode": "time-trial",
+        "count": 1,
+        "clock": false,
+        "rivalsVisible": false,
+        "carts": 10,
+        "travel": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "contacts": 0
+      },
+      "errors": []
+    },
+    "screenshotsReviewed": [
+      "browser-full/results.png",
+      "lite-running.png"
+    ],
+    "localEvidenceDirectory": "/private/tmp/offline-audit-20261024"
+  },
+  "levelDataChanged": false,
+  "gameplayOrTuningChanged": false,
+  "fullSuiteRun": false,
+  "delivery": {
+    "branch": "main",
+    "preview": "http://127.0.0.1:5417/?playtest&level=country-club",
+    "localOnly": true,
+    "pushed": false,
+    "published": false
+  }
+}
