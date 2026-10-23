@@ -812,3 +812,338 @@ export const ROOFTOP_RELAY_LEVEL:CustomLevelData=(()=>{
   atmosphere:{backdrop:'sky',fogEnabled:true,fogNear:420,fogFar:1100,fogColor:'#c3c0ce',ambientSky:'#d5e2f1',ambientGround:'#8d7669',ambientIntensity:1.6,sunColor:'#ffdbad',sunIntensity:2.5,fillColor:'#a7c7de',fillIntensity:.5,drawDistance:1100,shadowStrength:.7},
   medalTimes:{gold:135,silver:210,bronze:340},components,groups};
 })();
+
+// Warehouse · 1999 reference study. u runs away from the start on the supplied
+// overhead plan; v runs to the rider's right. Keep the surveyed proportions,
+// then enlarge the whole environment relative to the unchanged native skater.
+const WAREHOUSE_PLAN_SCALE=.14;
+export const WAREHOUSE_SIZE=1.5;
+export const WAREHOUSE_SCALE=WAREHOUSE_PLAN_SCALE*WAREHOUSE_SIZE;
+const warehouseAuthoredPoint=(u:number,v:number,y=0):Point=>[(v-208)*WAREHOUSE_PLAN_SCALE,y,(253-u)*WAREHOUSE_PLAN_SCALE];
+export const warehousePoint=(u:number,v:number,y=0):Point=>warehouseAuthoredPoint(u,v,y).map(n=>n*WAREHOUSE_SIZE) as Point;
+const WAREHOUSE_HALFPIPE={u:388,v0:208,v1:405,radius:2.8,flatHalf:3.5,height:2.8,bankRun:5,deck:.65};
+export const WAREHOUSE_LANDMARKS={
+ spawn:warehousePoint(79,268,6.42),
+ halfpipe:{...WAREHOUSE_HALFPIPE,radius:2.8*WAREHOUSE_SIZE,flatHalf:3.5*WAREHOUSE_SIZE,height:2.8*WAREHOUSE_SIZE,bankRun:5*WAREHOUSE_SIZE,deck:.65*WAREHOUSE_SIZE},
+ bigRail:[[330,148,.78],[442,148,.78],[469,170,.78]],
+ kickerGap:{left:441,right:472,centreV:69,width:3.36*WAREHOUSE_SIZE,height:1.05*WAREHOUSE_SIZE},
+ taxi:warehousePoint(520,279),secret:warehousePoint(388,372,6.35),
+} as const;
+export const WAREHOUSE_REFERENCE_LEVEL:CustomLevelData=(()=>{
+ // All construction below uses the original survey units. Transform both
+ // collision and visuals once at the end; never scale the player or physics.
+ const warehousePoint=warehouseAuthoredPoint,WAREHOUSE_SCALE=WAREHOUSE_PLAN_SCALE;
+ const components:CustomComponent[]=[],groups:CustomGroup[]=[
+  {id:500,nm:'Warehouse · floor and roll-in',editorOnly:true},
+  {id:501,nm:'Halfpipe · banks · secret room',editorOnly:true},
+  {id:502,nm:'Wall transitions · channel gaps',editorOnly:true},
+  {id:503,nm:'Big Rail · kicker gap · taxi',editorOnly:true},
+  {id:504,nm:'Industrial shell and surface details',editorOnly:true},
+  {id:505,nm:'Five source box stacks and recovery',editorOnly:true},
+  {id:506,nm:'Warehouse roof · hide for plan inspection',editorOnly:true},
+ ];
+ const wood='#aa8458',concrete='#858983',steel='#858e87',dark='#363c3b';
+ const add=(c:CustomComponent)=>components.push(c);
+ const box=(nm:string,u:number,v:number,y:number,w:number,h:number,d:number,color=concrete,tex='pavement',grp=500,solid=true)=>{
+  add({t:solid?'platform':'mesh',nm,p:warehousePoint(u,v,y),s:[w,h,d],color,tex,edgeGrinding:false,grp,
+   ...(!solid?{solid:false,vertices:cubeVertices,indices:cubeIndices}: {})});
+ };
+ const mesh=(nm:string,points:Point[],indices:number[],color:string,grp=500,solid=true,tex='pavement',vert=false)=>{
+  const p=points[0];add({t:'mesh',nm,p,vertices:points.flatMap(q=>q.map((n,i)=>n-p[i])),indices,color,tex,solid,...(solid?{vert}:grp===506?{castShadow:true}:{}),edgeGrinding:false,grp});
+ };
+ const quad=(nm:string,a:Point,b:Point,c:Point,d:Point,color:string)=>mesh(nm,[a,b,c,d],[0,2,1,0,3,2],color,504,false,'solid');
+ const rect=(nm:string,u0:number,v0:number,u1:number,v1:number,y:number,color=concrete,grp=500)=>
+  box(nm,(u0+u1)/2,(v0+v1)/2,y-1,(v1-v0)*WAREHOUSE_SCALE,2,(u1-u0)*WAREHOUSE_SCALE,color,'pavement',grp);
+ const line=(nm:string,points:number[][],grp=503)=>{
+  const p=warehousePoint(points[0][0],points[0][1],points[0][2]);
+  add({t:'rail',nm,p,pts:points.map(q=>{const w=warehousePoint(q[0],q[1],q[2]);return[w[0]-p[0],w[2]-p[2],0,w[1]-p[1]];}),color:steel,grp});
+ };
+ // Closed ruled prisms keep the riding triangles unchanged, then add the
+ // two sides, end faces and underside. Their backing stays below wheel reach.
+ const backing=(nm:string,x0:number,x1:number,z0:number,z1:number,top:number,base=-.3,grp=500)=>{
+  if(top<=base+.02)return;
+  add({t:'wall',nm:nm+' · buried backing',p:[(x0+x1)/2,base,(z0+z1)/2],
+   s:[Math.abs(x1-x0),top-base,Math.abs(z1-z0)],invisible:true,edgeGrinding:false,grp});
+ };
+ const profile=(nm:string,u:number,v0:number,v1:number,knots:number[][],color=concrete,grp=500,endInset=0)=>{
+  const vertices:Point[]=[],indices:number[]=[],shell:number[]=[],base=-.3;
+  for(const [du,y]of knots)vertices.push(warehousePoint(u+du,v0,y),warehousePoint(u+du,v1,y));
+  const bottom=vertices.length;
+  for(const [du]of knots)vertices.push(warehousePoint(u+du,v0,base),warehousePoint(u+du,v1,base));
+  for(let i=0;i<knots.length-1;i++){
+   const a=i*2,b=bottom+a;
+   indices.push(a,a+1,a+3,a,a+3,a+2);
+   shell.push(b,b+3,b+1,b,b+2,b+3,
+    a,a+2,b+2,a,b+2,b,a+1,b+3,a+3,a+1,b+1,b+3);
+  }
+  const end=bottom-2;
+  shell.push(0,bottom,bottom+1,0,bottom+1,1,end,end+1,bottom+end+1,end,bottom+end+1,bottom+end);
+  // Separate normal vertices at the hard edges; the top keeps its original
+  // smooth normals, and the side panels cannot darken the riding surface.
+  for(const index of shell){indices.push(vertices.length);vertices.push([...vertices[index]]);}
+  mesh(nm,vertices,indices,color,grp,true);
+  const height=(du:number)=>{
+   if(du<=knots[0][0])return knots[0][1];
+   for(let i=1;i<knots.length;i++)if(du<=knots[i][0]){
+    const a=knots[i-1],b=knots[i];return a[1]+(b[1]-a[1])*(du-a[0])/(b[0]-a[0]);
+   }
+   return knots[knots.length-1][1];
+  };
+  // The min over the capsule's horizontal reach prevents a buried riser
+  // catching a fast board on the visible slope or on a channel landing.
+  const reach=.6/WAREHOUSE_SIZE/WAREHOUSE_SCALE,skin=.25/WAREHOUSE_SIZE;
+  for(let i=0;i<knots.length-1;i++){
+   const [du0]=knots[i],[du1]=knots[i+1];
+   const n=Math.max(1,Math.ceil((du1-du0)*WAREHOUSE_SCALE*WAREHOUSE_SIZE/1.2));
+   for(let j=0;j<n;j++){
+    const lo=du0+(du1-du0)*j/n,hi=Math.min(du0+(du1-du0)*(j+1)/n,knots[knots.length-1][0]-endInset/WAREHOUSE_SIZE/WAREHOUSE_SCALE);
+    if(hi<=lo)continue;
+    const sample=[height(lo),height(hi),height(lo-reach),height(hi+reach),...knots.filter(k=>k[0]>lo-reach&&k[0]<hi+reach).map(k=>k[1])];
+    const l=warehousePoint(u+lo,v0),r=warehousePoint(u+hi,v1);
+    backing(nm,l[0],r[0],l[2],r[2],Math.min(...sample)-skin,base,grp);
+   }
+  }
+ };
+ const transition=(nm:string,uv:number[][],radius:number,base=0,deck=.42,grp=502)=>{
+  const p=warehousePoint(uv[0][0],uv[0][1],base);
+  add({t:'vertramp',nm,p,pts:uv.map(q=>{const w=warehousePoint(q[0],q[1]);return[w[0]-p[0],w[2]-p[2],(q[2]??0)*WAREHOUSE_SCALE];}),
+   vkind:'quarter',w:0,rise:radius,arc:90,arcSteps:32,deck,tex:'wood',color:wood,edgeGrinding:false,grp});
+  for(const end of [0,uv.length-1]){
+   const q=warehousePoint(uv[end][0],uv[end][1],base),n=warehousePoint(uv[end===0?1:end-1][0],uv[end===0?1:end-1][1],base);
+   const sign=end===0?1:-1,dx=(n[0]-q[0])*sign,dz=(n[2]-q[2])*sign,len=Math.hypot(dx,dz),rx=dz/len,rz=-dx/len;
+   const section=Array.from({length:33},(_,i)=>{const angle=i/32*Math.PI/2;return[radius*Math.sin(angle),radius*(1-Math.cos(angle))];});
+   // The native sweep's knife edge is a fixed 0.1 world metres.
+   section.push([radius+deck, radius],[radius+deck+.1/WAREHOUSE_SIZE,radius]);
+   const vertices:Point[]=[],indices:number[]=[];
+   for(const [lat,y]of section)vertices.push([q[0]+rx*lat,base+y,q[2]+rz*lat],[q[0]+rx*lat,base,q[2]+rz*lat]);
+   for(let i=0;i<section.length-1;i++){
+    const a=i*2;
+    if(i>0)indices.push(...(end===0?[a,a+3,a+1]:[a,a+1,a+3]));
+    indices.push(...(end===0?[a,a+2,a+3]:[a,a+3,a+2]));
+   }
+   mesh(nm+' · closed end',vertices,indices,wood,grp,true,'wood');
+   // End panels can meet a concrete roll-in on the same plane.
+   components[components.length-1].depthBias=-1;
+   // Only exposed end planes need a side stop. Short, recessed boxes follow
+   // the profile; the transition's own surface remains the support owner.
+   const reach=.6/WAREHOUSE_SIZE,skin=.25/WAREHOUSE_SIZE;
+   for(let i=1;i<section.length;i++){
+    const lo=section[i-1][0],hi=section[i][0],lat=Math.max(0,lo-reach);
+    const top=base+(lat>=radius?radius:radius-Math.sqrt(radius*radius-lat*lat))-skin;
+    const x0=q[0]+rx*lo,x1=q[0]+rx*hi,z0=q[2]+rz*lo,z1=q[2]+rz*hi;
+    const depth=.12/WAREHOUSE_SIZE;
+    backing(nm,Math.min(x0,x1)-Math.abs(dx/len)*depth/2,Math.max(x0,x1)+Math.abs(dx/len)*depth/2,
+     Math.min(z0,z1)-Math.abs(dz/len)*depth/2,Math.max(z0,z1)+Math.abs(dz/len)*depth/2,top,base,grp);
+   }
+  }
+ };
+ // Staggered outline, raised balcony and two independent roll-ins.
+ rect('Main warehouse slab',253,58,634,407,0);components[components.length-1].depthBias=2;
+ rect('North kicker bay',330,8,584,58,0);
+ profile('Raised loading bay deck',138,58,157,[[0,1.68],[124,1.68]],concrete,500,.7);
+ rect('Loading bay foundation',138,58,262,157,0);
+ box('Start balcony',73,231.5,3,149*WAREHOUSE_SCALE,6.6,128*WAREHOUSE_SCALE,wood);
+ transition('Start balcony back quarterpipe',[[28,306],[28,157]],2.52,6.3,.14);
+ rect('Left roll-in foundation',137,157,274,208,0);
+ rect('Right roll-in foundation',137,256,274,306,0);
+ const roll=Array.from({length:49},(_,i)=>{const t=i/48;return[137*t,6.3*(1-t*t*(3-2*t))];});
+ profile('Left smooth roll-in',137,157,208,roll);
+ profile('Right smooth roll-in',137,256,306,roll);
+ box('Centre roll-in divider',203,232,4.5,6.72,9,13.16,'#42483f','metal');
+ transition('Divider foot quarterpipe',[[273,256],[273,208]],1.68,0,.2);
+ transition('Loading bay back transition',[[153,157],[153,58]],1.68,1.68,.28);
+ transition('Loading bay front lip',[[274,157],[274,58]],1.68,0,.42);
+ // Actual channel gaps interrupt the near-wall coping.
+ // The raised loading bay supplies the coping between the two roll-ins.
+ transition('Near wall · below channels',[[274,407],[274,306]],2.52,0,.3);
+ transition('Far wall · continuous hips and rear coping',[
+  [561,8],[561,91,18],[523,137,20],[523,158,18],
+  [552,181,18],[609,181,20],[609,365,20],[590,382,20],[530,382,18],[510,359,18],[445,359],
+ ],2.66,0,.56);
+ transition('Kicker wall quarterpipe',[[350,31],[420,31]],2.66,0,.56);
+ rect('Kicker wall box shelf',330,8,365,31,2.66,wood,502);
+ profile('Box shelf return bank',350,31,54,[[0,2.66],[18,0]],wood,502);
+ const hp=WAREHOUSE_HALFPIPE,bankLip=hp.flatHalf+hp.radius+hp.deck,bankOuter=bankLip+hp.bankRun;
+ add({t:'vertramp',nm:'Main halfpipe · bank-to-bank profile',p:warehousePoint(hp.u,(hp.v0+hp.v1)/2),
+  len:(hp.v1-hp.v0)*WAREHOUSE_SCALE,yaw:90,vkind:'half',w:hp.flatHalf,rise:hp.radius,
+  arc:90,arcSteps:40,deck:hp.deck,tex:'wood',color:wood,edgeGrinding:false,grp:501});
+ // Exterior kickers are ordinary banks. Sharing the vert flag with the U
+ // would turn their forward transfers into a wall air back toward the start.
+ // A 7.5 m run / 4.2 m rise at final scale gives a 31 degree upper face.
+ // The eased toe keeps the wheels down before the predictable straight takeoff.
+ for(const side of [-1,1]){
+  const verts:Point[]=[],indices:number[]=[],zc=warehousePoint(hp.u,0)[2];
+  for(let i=0;i<=24;i++){
+   const t=i/24,e=.14,f=t<e?t*t/(2*e):t-e/2,y=hp.radius*f/(1-e/2),lat=bankOuter-hp.bankRun*t;
+   verts.push([0,y,zc+side*lat],[(hp.v1-hp.v0)*WAREHOUSE_SCALE,y,zc+side*lat]);
+   if(i){const a=(i-1)*2;indices.push(...(side>0?[a,a+1,a+3,a,a+3,a+2]:[a,a+3,a+1,a,a+2,a+3]));}
+  }
+  // Preserve the tested deck overlap so the native vert component owns
+  // coping support and re-entry on both sides of the U.
+  mesh(side>0?'Halfpipe roll-in transfer bank':'Halfpipe taxi-side transfer bank',verts,indices,wood,501,true,'wood',false);
+ }
+ // The mouth's hips share EVERY arc/deck/bank station with their neighbours.
+ // A short loft to the floor closes the old triangular holes while keeping
+ // the flat centre of the U open for entering and leaving along its length.
+ for(const side of [-1,1]){
+  const section:number[][]=[];
+  for(let i=0;i<=40;i++){const t=i/40*Math.PI/2;section.push([hp.flatHalf+hp.radius*Math.sin(t),hp.radius*(1-Math.cos(t))]);}
+  const knife=.1/WAREHOUSE_SIZE;
+  section.push([bankLip,hp.height],[bankLip+knife,hp.height],
+   [bankLip+knife,hp.height*(1-knife/hp.bankRun-.14/2)/(1-.14/2)]);
+  for(let i=23;i>=0;i--){const t=i/24,e=.14,f=t<e?t*t/(2*e):t-e/2;section.push([bankOuter-hp.bankRun*t,hp.height*f/(1-e/2)]);}
+  const zc=warehousePoint(hp.u,0)[2],vertices:Point[]=[],indices:number[]=[],rows=12;
+  for(let j=0;j<=rows;j++){
+   const t=j/rows,x=-hp.radius*(1-t),h=t*t*(3-2*t);
+   for(const [lat,y]of section)vertices.push([x,y*h,zc+side*lat]);
+  }
+  for(let j=0;j<rows;j++)for(let i=0;i<section.length-1;i++){
+   const a=j*section.length+i,b=a+section.length;
+   indices.push(...(side>0?[a,a+1,b,a+1,b+1,b]:[a,b,a+1,a+1,b,b+1]));
+  }
+  mesh('Halfpipe mouth · continuous hip',vertices,indices,wood,501,true,'wood');
+  // The inaccessible rear end meets the masonry, but still gets a complete
+  // cap so its volume is closed from every inspection and camera angle.
+  const back:Point[]=[],caps:number[]=[],x=(hp.v1-hp.v0)*WAREHOUSE_SCALE;
+  for(const [lat,y]of section)back.push([x,y,zc+side*lat],[x,-.3,zc+side*lat]);
+  for(let i=0;i<section.length-1;i++){const a=i*2;caps.push(...(side>0?[a,a+3,a+1,a,a+2,a+3]:[a,a+1,a+3,a,a+3,a+2]));}
+  mesh('Halfpipe rear · closed end',back,caps,wood,501,true,'wood');
+ }
+ // The suspended secret room is open along the bank-to-bank flight corridor.
+ box('Secret room floor',388,378,6.21,7.56,.28,3.92,'#544f40','metal',501);
+ box('Secret room roof',388,378,10.9,7.56,.28,4.48,'#343b38','metal',501);
+ for(const v of [351,405])box('Secret room side panel',388,v,8.55,.18,4.4,3.92,dark,'metal',501);
+ for(const u of [374,402])for(const v of [351,405])box('Secret room steel frame',u,v,8.55,.18,4.4,.18,'#303936','metal',501);
+ for(const v of [351,405])for(const u of [381,388,395])box('Secret room window upright',u,v,8.7,.16,4.1,.08,steel,'metal',504);
+ line('Big Rail · straight to kink',WAREHOUSE_LANDMARKS.bigRail.map(q=>[...q]));
+ // Opposed kickers, 6.51 m clear gap at final scale, with solid back faces.
+ profile('Kicker gap · launch',417,57,81,[[0,0],[24,1.05],[24.15,0]],wood,503);
+ profile('Kicker gap · receiver',472,57,81,[[0,0],[.15,1.05],[26,0]],wood,503);
+ profile('Taxi transfer · hood roof boot',502,269,288,[[0,0],[7,.65],[11,1.18],[24,1.18],[28,.65],[36,0]],'#b29b3f',503);
+ box('Taxi yellow body',520,278.5,.38,2.65,.7,4.45,'#a89132','metal',504,false);
+ for(const v of [268.5,288.5])for(const u of [509,530]){
+  const centre=warehousePoint(u,v,.33),points:Point[]=[],indices:number[]=[];
+  for(const x of [-.15,.15])for(let j=0;j<12;j++){const a=j*Math.PI/6;points.push([centre[0]+x,centre[1]+Math.sin(a)*.33,centre[2]+Math.cos(a)*.33]);}
+  for(let j=0;j<12;j++){const n=(j+1)%12;indices.push(j,n,12+n,j,12+n,12+j);if(j>0&&j<11)indices.push(0,j,j+1,12,12+j+1,12+j);}
+  mesh('Taxi rubber wheel',points,indices,'#252925',504,false,'solid');
+  box('Taxi wheel hub',u,v,.33,.33,.28,.28,'#8c9185','metal',504,false);
+ }
+ for(const v of [269,288]){
+  const points=[warehousePoint(509,v,.66),warehousePoint(513,v,1.16),warehousePoint(525,v,1.16),warehousePoint(530,v,.66)];
+  mesh('Taxi side glazing',points,[0,1,2,0,2,3],'#263c3a',504,false,'solid');components[components.length-1].doubleSided=true;
+  box('Taxi window pillar',520,v,.87,.045,.5,.13,'#bca346','solid',504,false);
+ }
+ for(const [u0,u1]of [[509,513],[526,530]]){
+  const front=u0===509;
+  mesh('Taxi windscreen',[warehousePoint(u0,270,front ? .67 : 1.19),warehousePoint(u0,287,front ? .67 : 1.19),warehousePoint(u1,287,front ? 1.19 : .67),warehousePoint(u1,270,front ? 1.19 : .67)],
+   [0,1,2,0,2,3],'#314948',504,false,'solid');components[components.length-1].doubleSided=true;
+ }
+ box('Taxi roof sign',520,278.5,1.32,1.1,.25,.28,'#d8c477','solid',504,false);
+ for(const u of [504,536])box('Taxi bumper',u,278.5,.42,2.7,.19,.14,'#8c9289','metal',504,false);
+ rect('Rear coping box deck',445,378,510,407,2.66,wood,502);
+ line('High Rail · wall above the far quarterpipe',[[629,238,5.25],[629,337,5.25],[623,362,5.25]],502);
+ for(const [i,u,v,y]of [[1,114,287,6.3],[2,469,389,2.66],[3,566,159,2.66],[4,345,22,2.66],[5,219,80,1.68]]){
+  for(const [du,dv,dy]of [[0,0,0],[7,0,0],[0,7,0],[7,7,0],[3.5,3.5,.96]])
+   add({t:'crate',kind:'wood',p:warehousePoint(u+du/WAREHOUSE_SIZE,v+dv/WAREHOUSE_SIZE,y+dy/WAREHOUSE_SIZE),grp:505,nm:`Source Box ${i}`});
+ }
+ const perimeter=[[9,157],[138,157],[138,58],[330,58],[330,8],[584,8],[584,157],[634,157],[634,407],[253,407],[253,306],[9,306]];
+ const wallP=warehousePoint(9,157,-3);
+ add({t:'wallpath',nm:'Warehouse shell · surveyed outline',p:wallP,
+  pts:perimeter.map(([u,v])=>{const p=warehousePoint(u,v);return[p[0]-wallP[0],p[2]-wallP[2]];}),closed:true,
+  w:.6,rise:18,solid:false,color:'#72766b',tex:'solid',edgeGrinding:false,grp:504});
+ // Tall plaster bays and rusted columns replace oversized masonry blocks.
+ for(let i=0;i<perimeter.length;i++){
+  const a=perimeter[i],b=perimeter[(i+1)%perimeter.length],length=Math.hypot(b[0]-a[0],b[1]-a[1]),n=Math.max(1,Math.round(length*WAREHOUSE_SCALE/6));
+  const du=-(b[1]-a[1])/length*.34/WAREHOUSE_SCALE,dv=(b[0]-a[0])/length*.34/WAREHOUSE_SCALE;
+  for(let j=0;j<n;j++){
+   const t0=(j+.045)/n,t1=(j+.955)/n;
+   const u0=a[0]+(b[0]-a[0])*t0+du,v0=a[1]+(b[1]-a[1])*t0+dv,u1=a[0]+(b[0]-a[0])*t1+du,v1=a[1]+(b[1]-a[1])*t1+dv;
+   mesh('Weathered warehouse wall bay',[warehousePoint(u0,v0,3),warehousePoint(u1,v1,3),warehousePoint(u1,v1,14.7),warehousePoint(u0,v0,14.7)],
+    [0,1,2,0,2,3],['#626b63','#7c8070','#697267'][j%3],504,false,'solid');components[components.length-1].doubleSided=true;
+   const u=a[0]+(b[0]-a[0])*j/n+du,v=a[1]+(b[1]-a[1])*j/n+dv;
+   box('Rusted I-beam',u,v,7.5,.24,15,.24,'#71583b','metal',504,false);
+  }
+ }
+ // The board's vert plane stays at the visible coping. Its forgiving body
+ // collider needs clearance behind that plane during launch and re-entry.
+ // Solid vertical faces also answer the native 'is there a wall behind
+ // this lip?' probe, preventing Up from transferring through masonry.
+ for(let i=0;i<perimeter.length;i++){
+  const a=perimeter[i],b=perimeter[(i+1)%perimeter.length],k=.5/WAREHOUSE_SCALE/Math.hypot(b[0]-a[0],b[1]-a[1]);
+  const du=-(b[1]-a[1])*k,dv=(b[0]-a[0])*k;
+  mesh('Masonry contact face', [warehousePoint(a[0]+du,a[1]+dv,-3),warehousePoint(b[0]+du,b[1]+dv,-3),warehousePoint(b[0]+du,b[1]+dv,45),warehousePoint(a[0]+du,a[1]+dv,45)],
+   [0,1,2,0,2,3],concrete,504,true,'solid');
+  Object.assign(components[components.length-1],{invisible:true,doubleSided:true});
+ }
+ const outer=perimeter.map((q,i)=>{
+  const a=perimeter[(i+perimeter.length-1)%perimeter.length],b=perimeter[(i+1)%perimeter.length];
+  const n=(dx:number,dz:number)=>{const l=Math.hypot(dx,dz);return[dz/l,-dx/l];};
+  const n0=n(q[0]-a[0],q[1]-a[1]),n1=n(b[0]-q[0],b[1]-q[1]);
+  const k=1.2/WAREHOUSE_SCALE/(1+n0[0]*n1[0]+n0[1]*n1[1]);
+  return[q[0]+(n0[0]+n1[0])*k,q[1]+(n0[1]+n1[1])*k];
+ });
+ add({t:'wallpath',nm:'Outside masonry · vert-body clearance',p:wallP,pts:outer.map(([u,v])=>{const p=warehousePoint(u,v);return[p[0]-wallP[0],p[2]-wallP[2]];}),
+  closed:true,w:.3,rise:48,containment:true,invisible:true,edgeGrinding:false,grp:504});
+ for(let v=181;v<402;v+=44){
+  box('Far wall steel upright',631,v,7,.24,14,.35,'#4c4435','metal',504,false);
+  box('Far wall clerestory',630,v+12,10.8,2.6,2.2,.06,'#b5c9b4','solid',504,false);
+ }
+ for(let u=284;u<630;u+=55){
+  box('Side wall steel upright',u,405,7,.35,14,.24,'#4c4435','metal',504,false);
+  box('Side wall clerestory',u+15,404.5,11,.06,2.2,2.5,'#bdcbb7','solid',504,false);
+ }
+ // A pitched roof and open trusses enclose the chase view, with clearance
+ // for the existing skater's full bank transfers and pumped halfpipe airs.
+ const roofY=(v:number)=>17+7*(1-Math.min(1,Math.abs(v-208)/200));
+ for(let i=0;i<perimeter.length;i++){
+  const a=perimeter[i],b=perimeter[(i+1)%perimeter.length];
+  mesh('Warehouse roof · upper gable',[warehousePoint(a[0],a[1],14.9),warehousePoint(b[0],b[1],14.9),warehousePoint(b[0],b[1],roofY(b[1])),warehousePoint(a[0],a[1],roofY(a[1]))],
+   [0,1,2,0,2,3],'#555c50',506,false,'solid');components[components.length-1].doubleSided=true;
+ }
+ for(const [u0,v0,u1,v1]of [[253,58,634,407],[330,8,584,58],[138,58,253,157],[9,157,253,306]]){
+  const mid=Math.max(v0,Math.min(v1,208)),cuts=[v0,mid,v1].filter((v,i,a)=>i===0||v!==a[i-1]);
+  for(let j=0;j<cuts.length-1;j++){
+   const a=cuts[j],b=cuts[j+1];
+   mesh('Warehouse roof · corrugated pitch',[warehousePoint(u0,a,roofY(a)),warehousePoint(u1,a,roofY(a)),warehousePoint(u1,b,roofY(b)),warehousePoint(u0,b,roofY(b))],
+    [0,1,2,0,2,3],'#454942',506,false,'metal');
+   components[components.length-1].doubleSided=true;
+  }
+ }
+ for(let u=280;u<625;u+=58){
+  const vertices:Point[]=[],indices:number[]=[];
+  for(const [a,b]of [[58,208],[208,407]]){
+   const i=vertices.length;vertices.push(warehousePoint(u,a,roofY(a)-.12),warehousePoint(u,b,roofY(b)-.12),warehousePoint(u,b,roofY(b)-.72),warehousePoint(u,a,roofY(a)-.72));indices.push(i,i+1,i+2,i,i+2,i+3);
+  }
+  mesh('Warehouse roof · steel truss',vertices,indices,'#655b45',506,false,'metal');components[components.length-1].doubleSided=true;
+ }
+ for(let u=280;u<625;u+=20){
+  const v1=Math.abs(u-hp.u)<=bankOuter/WAREHOUSE_SCALE?hp.v0-hp.radius/WAREHOUSE_SCALE-1:403;
+  quad('Concrete joint',warehousePoint(u,60,.008),warehousePoint(u+.15,60,.008),warehousePoint(u+.15,v1,.008),warehousePoint(u,v1,.008),'#747b74');
+ }
+ for(let v=65;v<402;v+=20)for(const [u0,u1]of (v>=hp.v0-hp.radius/WAREHOUSE_SCALE?[[275,hp.u-bankOuter/WAREHOUSE_SCALE],[hp.u+bankOuter/WAREHOUSE_SCALE,629]]:[[275,629]]))
+  quad('Concrete joint',warehousePoint(u0,v,.009),warehousePoint(u1,v,.009),warehousePoint(u1,v+.15,.009),warehousePoint(u0,v+.15,.009),'#747b74');
+ for(const [u,v]of [[398,149],[520,279],[481,369]])for(let i=0;i<13;i++){
+  const du=Math.sin(i*2.4)*23,dv=Math.cos(i*1.9)*17;
+  const p=warehousePoint(u+du,v+dv,.014+i*.0003),a=i*1.73,cs=Math.cos(a),sn=Math.sin(a),w=1.1+(i%3)*.4,d=2.1;
+  const points=[[-w,-d],[w,-d],[w,d],[-w,d]].map(([x,z])=>[p[0]+x*cs+z*sn,p[1],p[2]-x*sn+z*cs] as Point);
+  mesh('Flush scattered plywood',points,[0,2,1,0,3,2],['#7c7255','#a18b67','#686f59'][i%3],504,false,'wood');
+ }
+ add({t:'checkpoint',nm:'Warehouse floor recovery',p:warehousePoint(296,289,.02),grp:505});
+ add({t:'zone',nm:'Warehouse arrival heading',p:warehousePoint(80,235,6.3),s:[25,1,19],dir:'S',grp:500});
+ add({t:'pit',nm:'Outside shell recovery',p:warehousePoint(320,208,-7),s:[160,1,160],invisible:true,grp:505});
+ // Mesh s is a multiplier; platform s and path fields are metre dimensions.
+ // Native breakable crates keep their stock size and stacked spacing.
+ for(const c of components){
+  c.p=c.p.map(n=>n*WAREHOUSE_SIZE) as Point;
+  if(c.s)c.s=c.s.map(n=>n*WAREHOUSE_SIZE) as Point;
+  else if(c.t==='mesh')c.s=[WAREHOUSE_SIZE,WAREHOUSE_SIZE,WAREHOUSE_SIZE];
+  if(c.pts)c.pts=c.pts.map(q=>q.map((n,i)=>i<4?n*WAREHOUSE_SIZE:n) as typeof q);
+  for(const key of ['len','rise','w','deck'] as const)if(c[key]!==undefined)c[key]!*=WAREHOUSE_SIZE;
+ }
+ return {v:1,name:'Warehouse · Reference',spawn:[...WAREHOUSE_LANDMARKS.spawn],startWarpPad:false,
+  skatepark:true,killY:-12*WAREHOUSE_SIZE,sky:'day',keepPlayFog:true,
+  atmosphere:{backdrop:'fog',fogEnabled:true,fogNear:85*WAREHOUSE_SIZE,fogFar:175*WAREHOUSE_SIZE,fogColor:'#454d48',
+   ambientSky:'#d5dfd2',ambientGround:'#776b54',ambientIntensity:1.25,
+   sunColor:'#ffedc4',sunIntensity:1.55,fillColor:'#a7bcc2',fillIntensity:.42,drawDistance:210*WAREHOUSE_SIZE,shadowStrength:.65},
+  components,groups};
+})();

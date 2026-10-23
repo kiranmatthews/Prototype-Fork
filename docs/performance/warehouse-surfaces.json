@@ -1,0 +1,3222 @@
+{
+  "validatedAt": "2026-10-22T22:20:03.207Z",
+  "elapsedMinutes": 53,
+  "level": "warehouse-reference",
+  "warehouseGeometrySHA256": "4aef69125c71afa4a3c1e27d278970dfb4f7e9f578f99c181fde2883a4bf28af",
+  "physicsGeometrySHA256": "5214dad31f197e29ebe9eab489cf7020da6db98aa70dac6a38def2a44e839da4",
+  "renderOnlyChange": "Final quarterpipe end panels use depthBias=-1; exact source comparison proves every physical surface and collider unchanged after the controller runs.",
+  "runtimeSHA256": {
+    "src/player.ts": "e2e831fcbba751b823f35834b0183c157c30aaddb14dd85c7a20423ad82ea144",
+    "src/tuning.ts": "dc7b43eedbb160b2ddfc16cdfdca42f1419245a76214fdccd49cf872905038c0",
+    "src/level.ts": "4e49b9e2a189189e516f8c95418c14a762c2f4206024491a79c134543a4e7dbe",
+    "src/skateChaseCamera.ts": "9365e1ed6b11f73e25b48a13f38a0f80ecbe8b58b8d2aa3990dec3b8f50d52e8"
+  },
+  "checks": {
+    "levels": "passed",
+    "build": "passed",
+    "buildVersion": "43d614c3213a90c72b05",
+    "fullSuite": "not requested"
+  },
+  "physics": {
+    "tuning": {
+      "cruise": 12,
+      "charged": 23
+    },
+    "ground": [
+      {
+        "u": 114,
+        "v": 287,
+        "y": 9.45,
+        "support": 9.449999809265137,
+        "mesh": "platform"
+      },
+      {
+        "u": 469,
+        "v": 389,
+        "y": 3.99,
+        "support": 3.99,
+        "mesh": "platform"
+      },
+      {
+        "u": 566,
+        "v": 159,
+        "y": 3.99,
+        "support": 3.990000009536743,
+        "mesh": "vertramp"
+      },
+      {
+        "u": 345,
+        "v": 22,
+        "y": 3.99,
+        "support": 3.99,
+        "mesh": "platform"
+      },
+      {
+        "u": 219,
+        "v": 80,
+        "y": 2.52,
+        "support": 2.52,
+        "mesh": "Raised loading bay deck"
+      }
+    ],
+    "results": [
+      {
+        "name": "supported start",
+        "ok": true,
+        "frames": 91,
+        "airFrames": 0,
+        "vertAirs": 0,
+        "nearLipClear": false,
+        "farLipClear": false,
+        "lipCrossings": [],
+        "railFrames": 0,
+        "highRailFrames": 0,
+        "roomFrames": 0,
+        "gapAirFrames": 0,
+        "bails": 0,
+        "peak": 9.569999999999999,
+        "maxStep": 0.12000019073486179,
+        "minSpeed": 0,
+        "end": {
+          "p": [
+            12.600000000000001,
+            9.449999809265137,
+            36.540000000000006
+          ],
+          "uv": [
+            79,
+            268
+          ],
+          "speed": 0,
+          "grounded": true,
+          "state": "ride"
+        }
+      },
+      {
+        "name": "roll-in 182",
+        "ok": true,
+        "frames": 187,
+        "airFrames": 0,
+        "vertAirs": 0,
+        "nearLipClear": false,
+        "farLipClear": false,
+        "lipCrossings": [],
+        "railFrames": 0,
+        "highRailFrames": 0,
+        "roomFrames": 0,
+        "gapAirFrames": 0,
+        "bails": 0,
+        "peak": 9.569999999999999,
+        "maxStep": 0.43539833333333344,
+        "minSpeed": 0.14999997047244093,
+        "end": {
+          "p": [
+            -5.460000000000001,
+            0,
+            -7.655476668971801
+          ],
+          "uv": [
+            289.4546508046276,
+            182
+          ],
+          "speed": 25.73617814291884,
+          "grounded": true,
+          "state": "ride"
+        }
+      },
+      {
+        "name": "roll-in 268",
+        "ok": true,
+        "frames": 187,
+        "airFrames": 0,
+        "vertAirs": 0,
+        "nearLipClear": false,
+        "farLipClear": false,
+        "lipCrossings": [],
+        "railFrames": 0,
+        "highRailFrames": 0,
+        "roomFrames": 0,
+        "gapAirFrames": 0,
+        "bails": 0,
+        "peak": 9.569999999999999,
+        "maxStep": 0.43539833333333366,
+        "minSpeed": 0.14999997047244093,
+        "end": {
+          "p": [
+            12.600000000000001,
+            0,
+            -7.655476668971795
+          ],
+          "uv": [
+            289.4546508046276,
+            268
+          ],
+          "speed": 25.73617814291884,
+          "grounded": true,
+          "state": "ride"
+        }
+      },
+      {
+        "name": "halfpipe near",
+        "ok": true,
+        "frames": 118,
+        "airFrames": 65,
+        "vertAirs": 1,
+        "nearLipClear": false,
+        "farLipClear": false,
+        "lipCrossings": [],
+        "railFrames": 0,
+        "highRailFrames": 0,
+        "roomFrames": 0,
+        "gapAirFrames": 0,
+        "bails": 0,
+        "peak": 8.437021771664012,
+        "maxStep": 0.40257904420670443,
+        "minSpeed": 0,
+        "end": {
+          "p": [
+            17.64,
+            0.09214858642729262,
+            -22.228449270616707
+          ],
+          "uv": [
+            358.8497584315081,
+            292
+          ],
+          "speed": 24.137465109577782,
+          "grounded": true,
+          "state": "ride"
+        }
+      },
+      {
+        "name": "halfpipe far",
+        "ok": true,
+        "frames": 118,
+        "airFrames": 65,
+        "vertAirs": 1,
+        "nearLipClear": false,
+        "farLipClear": false,
+        "lipCrossings": [],
+        "railFrames": 0,
+        "highRailFrames": 0,
+        "roomFrames": 0,
+        "gapAirFrames": 0,
+        "bails": 0,
+        "peak": 8.437017374284046,
+        "maxStep": 0.40257924409713075,
+        "minSpeed": 0,
+        "end": {
+          "p": [
+            17.64,
+            0.09214540761995871,
+            -34.47153700416717
+          ],
+          "uv": [
+            417.15017621031984,
+            292
+          ],
+          "speed": 24.137474469071762,
+          "grounded": true,
+          "state": "ride"
+        }
+      },
+      {
+        "name": "far wall",
+        "ok": true,
+        "frames": 143,
+        "airFrames": 77,
+        "vertAirs": 1,
+        "nearLipClear": false,
+        "farLipClear": false,
+        "lipCrossings": [],
+        "railFrames": 0,
+        "highRailFrames": 0,
+        "roomFrames": 0,
+        "gapAirFrames": 0,
+        "bails": 0,
+        "peak": 10.174403853856635,
+        "maxStep": 0.42909450324872067,
+        "minSpeed": 0,
+        "end": {
+          "p": [
+            8.820016533358656,
+            0.11576952286190245,
+            -75.71253934318145
+          ],
+          "uv": [
+            613.5359016341973,
+            250.0000787302793
+          ],
+          "speed": 25.676856403757384,
+          "grounded": true,
+          "state": "ride"
+        }
+      },
+      {
+        "name": "near wall",
+        "ok": true,
+        "frames": 127,
+        "airFrames": 74,
+        "vertAirs": 1,
+        "nearLipClear": false,
+        "farLipClear": false,
+        "lipCrossings": [],
+        "railFrames": 0,
+        "highRailFrames": 0,
+        "roomFrames": 0,
+        "gapAirFrames": 0,
+        "bails": 0,
+        "peak": 9.294410174661015,
+        "maxStep": 0.4175387476443202,
+        "minSpeed": 0,
+        "end": {
+          "p": [
+            28.770000000000003,
+            0.07949409959871967,
+            -3.641998643502418
+          ],
+          "uv": [
+            270.34285068334486,
+            345
+          ],
+          "speed": 25.010145411449376,
+          "grounded": true,
+          "state": "ride"
+        }
+      },
+      {
+        "name": "kicker wall",
+        "ok": true,
+        "frames": 143,
+        "airFrames": 77,
+        "vertAirs": 1,
+        "nearLipClear": false,
+        "farLipClear": false,
+        "lipCrossings": [],
+        "railFrames": 0,
+        "highRailFrames": 0,
+        "roomFrames": 0,
+        "gapAirFrames": 0,
+        "bails": 0,
+        "peak": 10.174399400896526,
+        "maxStep": 0.4290955836505342,
+        "minSpeed": 0,
+        "end": {
+          "p": [
+            -38.122540539784275,
+            0.11576874276229221,
+            -26.67
+          ],
+          "uv": [
+            380,
+            26.464092667693933
+          ],
+          "speed": 25.67691253539247,
+          "grounded": true,
+          "state": "ride"
+        }
+      },
+      {
+        "name": "start quarterpipe",
+        "ok": true,
+        "frames": 136,
+        "airFrames": 75,
+        "vertAirs": 1,
+        "nearLipClear": false,
+        "farLipClear": false,
+        "lipCrossings": [],
+        "railFrames": 0,
+        "highRailFrames": 0,
+        "roomFrames": 0,
+        "gapAirFrames": 0,
+        "bails": 0,
+        "peak": 19.006649812897994,
+        "maxStep": 0.4197429689855221,
+        "minSpeed": 0,
+        "end": {
+          "p": [
+            4.62,
+            9.523952483380794,
+            47.99332392204732
+          ],
+          "uv": [
+            24.460362275965167,
+            230
+          ],
+          "speed": 25.133589664955867,
+          "grounded": true,
+          "state": "ride"
+        }
+      },
+      {
+        "name": "loading bay transition",
+        "ok": true,
+        "frames": 119,
+        "airFrames": 73,
+        "vertAirs": 1,
+        "nearLipClear": false,
+        "farLipClear": false,
+        "lipCrossings": [],
+        "railFrames": 0,
+        "highRailFrames": 0,
+        "roomFrames": 0,
+        "gapAirFrames": 0,
+        "bails": 0,
+        "peak": 8.091989168205796,
+        "maxStep": 0.39559621512167825,
+        "minSpeed": 0,
+        "end": {
+          "p": [
+            -21.630000000000003,
+            0.014236377370972608,
+            -4.145955129444
+          ],
+          "uv": [
+            272.74264347354284,
+            105
+          ],
+          "speed": 23.648865000193435,
+          "grounded": true,
+          "state": "ride"
+        }
+      },
+      {
+        "name": "halfpipe repeated airs",
+        "ok": true,
+        "frames": 538,
+        "airFrames": 315,
+        "vertAirs": 4,
+        "nearLipClear": false,
+        "farLipClear": false,
+        "lipCrossings": [],
+        "railFrames": 0,
+        "highRailFrames": 0,
+        "roomFrames": 0,
+        "gapAirFrames": 0,
+        "bails": 0,
+        "peak": 11.599892826001401,
+        "maxStep": 0.4365130705203129,
+        "minSpeed": 0,
+        "end": {
+          "p": [
+            17.64,
+            0.04744516085840389,
+            -22.473802150392018
+          ],
+          "uv": [
+            360.01810547805724,
+            292
+          ],
+          "speed": 26.1239,
+          "grounded": true,
+          "state": "ride"
+        }
+      },
+      {
+        "name": "over the pipe",
+        "ok": true,
+        "frames": 127,
+        "airFrames": 82,
+        "vertAirs": 0,
+        "nearLipClear": true,
+        "farLipClear": true,
+        "lipCrossings": [
+          {
+            "lip": 343,
+            "y": 5.671113383502005,
+            "airborne": true
+          },
+          {
+            "lip": 433,
+            "y": 7.068079304581387,
+            "airborne": true
+          }
+        ],
+        "railFrames": 0,
+        "highRailFrames": 0,
+        "roomFrames": 0,
+        "gapAirFrames": 0,
+        "bails": 0,
+        "peak": 10.865567640333923,
+        "maxStep": 0.5036592149149729,
+        "minSpeed": 18.510614709874773,
+        "end": {
+          "p": [
+            14.49,
+            0,
+            -47.11740326879442
+          ],
+          "uv": [
+            477.3685869942591,
+            277
+          ],
+          "speed": 26.072015097872896,
+          "grounded": true,
+          "state": "ride"
+        }
+      },
+      {
+        "name": "over the pipe reverse",
+        "ok": true,
+        "frames": 127,
+        "airFrames": 82,
+        "vertAirs": 0,
+        "nearLipClear": true,
+        "farLipClear": true,
+        "lipCrossings": [
+          {
+            "lip": 433,
+            "y": 5.671113383502033,
+            "airborne": true
+          },
+          {
+            "lip": 343,
+            "y": 7.068079304581346,
+            "airborne": true
+          }
+        ],
+        "railFrames": 0,
+        "highRailFrames": 0,
+        "roomFrames": 0,
+        "gapAirFrames": 0,
+        "bails": 0,
+        "peak": 10.865567640333913,
+        "maxStep": 0.5036592149149751,
+        "minSpeed": 18.510614709874773,
+        "end": {
+          "p": [
+            14.49,
+            0,
+            -9.582596731205578
+          ],
+          "uv": [
+            298.63141300574085,
+            277
+          ],
+          "speed": 26.072015097872896,
+          "grounded": true,
+          "state": "ride"
+        }
+      },
+      {
+        "name": "opening halfpipe gap 320",
+        "ok": true,
+        "frames": 304,
+        "airFrames": 74,
+        "vertAirs": 0,
+        "nearLipClear": true,
+        "farLipClear": true,
+        "lipCrossings": [
+          {
+            "lip": 343,
+            "y": 6.383856440931446,
+            "airborne": true
+          },
+          {
+            "lip": 433,
+            "y": 4.984014220189457,
+            "airborne": true
+          }
+        ],
+        "railFrames": 0,
+        "highRailFrames": 0,
+        "roomFrames": 0,
+        "gapAirFrames": 0,
+        "bails": 0,
+        "peak": 9.703878609301018,
+        "maxStep": 0.49707116346977104,
+        "minSpeed": 0.14999997047244093,
+        "end": {
+          "p": [
+            12.600000000000001,
+            0,
+            -46.68372855026693
+          ],
+          "uv": [
+            475.3034692869853,
+            268
+          ],
+          "speed": 24.079938196531426,
+          "grounded": true,
+          "state": "ride"
+        }
+      },
+      {
+        "name": "opening halfpipe gap 324",
+        "ok": true,
+        "frames": 302,
+        "airFrames": 79,
+        "vertAirs": 0,
+        "nearLipClear": true,
+        "farLipClear": true,
+        "lipCrossings": [
+          {
+            "lip": 343,
+            "y": 6.185627720109806,
+            "airborne": true
+          },
+          {
+            "lip": 433,
+            "y": 6.100509306122528,
+            "airborne": true
+          }
+        ],
+        "railFrames": 0,
+        "highRailFrames": 0,
+        "roomFrames": 0,
+        "gapAirFrames": 0,
+        "bails": 0,
+        "peak": 10.213557121152155,
+        "maxStep": 0.4933939637883334,
+        "minSpeed": 0.14999997047244093,
+        "end": {
+          "p": [
+            12.600000000000001,
+            0,
+            -46.754913596013964
+          ],
+          "uv": [
+            475.64244569530456,
+            268
+          ],
+          "speed": 26.079119281416666,
+          "grounded": true,
+          "state": "ride"
+        }
+      },
+      {
+        "name": "opening halfpipe gap 328",
+        "ok": true,
+        "frames": 303,
+        "airFrames": 82,
+        "vertAirs": 0,
+        "nearLipClear": true,
+        "farLipClear": true,
+        "lipCrossings": [
+          {
+            "lip": 343,
+            "y": 6.0067961045007685,
+            "airborne": true
+          },
+          {
+            "lip": 433,
+            "y": 6.843420007161955,
+            "airborne": true
+          }
+        ],
+        "railFrames": 0,
+        "highRailFrames": 0,
+        "roomFrames": 0,
+        "gapAirFrames": 0,
+        "bails": 0,
+        "peak": 10.556210464434969,
+        "maxStep": 0.505673304864813,
+        "minSpeed": 0.14999997047244093,
+        "end": {
+          "p": [
+            12.600000000000001,
+            0,
+            -46.718896542710546
+          ],
+          "uv": [
+            475.47093591766924,
+            268
+          ],
+          "speed": 26.079119281416666,
+          "grounded": true,
+          "state": "ride"
+        }
+      },
+      {
+        "name": "opening halfpipe gap 332",
+        "ok": true,
+        "frames": 304,
+        "airFrames": 86,
+        "vertAirs": 0,
+        "nearLipClear": true,
+        "farLipClear": true,
+        "lipCrossings": [
+          {
+            "lip": 343,
+            "y": 5.66765899484862,
+            "airborne": true
+          },
+          {
+            "lip": 433,
+            "y": 7.921118257513304,
+            "airborne": true
+          }
+        ],
+        "railFrames": 0,
+        "highRailFrames": 0,
+        "roomFrames": 0,
+        "gapAirFrames": 0,
+        "bails": 0,
+        "peak": 11.067415235698125,
+        "maxStep": 0.5352482781198843,
+        "minSpeed": 0.14999997047244093,
+        "end": {
+          "p": [
+            12.600000000000001,
+            0,
+            -46.42761359771094
+          ],
+          "uv": [
+            474.083874274814,
+            268
+          ],
+          "speed": 26.11677138050686,
+          "grounded": true,
+          "state": "ride"
+        }
+      },
+      {
+        "name": "opening halfpipe gap 334",
+        "ok": true,
+        "frames": 305,
+        "airFrames": 87,
+        "vertAirs": 0,
+        "nearLipClear": true,
+        "farLipClear": true,
+        "lipCrossings": [
+          {
+            "lip": 343,
+            "y": 5.5353615821756526,
+            "airborne": true
+          },
+          {
+            "lip": 433,
+            "y": 8.26870817597716,
+            "airborne": true
+          }
+        ],
+        "railFrames": 0,
+        "highRailFrames": 0,
+        "roomFrames": 0,
+        "gapAirFrames": 0,
+        "bails": 0,
+        "peak": 11.236679779216141,
+        "maxStep": 0.5428391435336182,
+        "minSpeed": 0.14999997047244093,
+        "end": {
+          "p": [
+            12.600000000000001,
+            0,
+            -46.65417092430086
+          ],
+          "uv": [
+            475.16271868714693,
+            268
+          ],
+          "speed": 26.11677138050686,
+          "grounded": true,
+          "state": "ride"
+        }
+      },
+      {
+        "name": "outside bank roll-in",
+        "ok": true,
+        "frames": 170,
+        "airFrames": 0,
+        "vertAirs": 0,
+        "nearLipClear": false,
+        "farLipClear": false,
+        "lipCrossings": [
+          {
+            "lip": 343,
+            "y": 3.8905503963764825,
+            "airborne": false
+          }
+        ],
+        "railFrames": 0,
+        "highRailFrames": 0,
+        "roomFrames": 0,
+        "gapAirFrames": 0,
+        "bails": 0,
+        "peak": 4.199999809265137,
+        "maxStep": 0.37646845181173266,
+        "minSpeed": 0.14999997047244093,
+        "end": {
+          "p": [
+            14.49,
+            0,
+            -24.683694330556833
+          ],
+          "uv": [
+            370.54140157408017,
+            277
+          ],
+          "speed": 19.48744929243179,
+          "grounded": true,
+          "state": "ride"
+        }
+      },
+      {
+        "name": "halfpipe mouth floor",
+        "ok": true,
+        "frames": 43,
+        "airFrames": 0,
+        "vertAirs": 0,
+        "nearLipClear": false,
+        "farLipClear": false,
+        "lipCrossings": [],
+        "railFrames": 0,
+        "highRailFrames": 0,
+        "roomFrames": 0,
+        "gapAirFrames": 0,
+        "bails": 0,
+        "peak": 0.12,
+        "maxStep": 0.3738134326948934,
+        "minSpeed": 16.14965771325459,
+        "end": {
+          "p": [
+            6.894730989852155,
+            0,
+            -28.35
+          ],
+          "uv": [
+            388,
+            240.8320523326293
+          ],
+          "speed": 22.428805961693605,
+          "grounded": true,
+          "state": "ride"
+        }
+      },
+      {
+        "name": "halfpipe mouth near hip",
+        "ok": true,
+        "frames": 46,
+        "airFrames": 0,
+        "vertAirs": 0,
+        "nearLipClear": false,
+        "farLipClear": false,
+        "lipCrossings": [],
+        "railFrames": 0,
+        "highRailFrames": 0,
+        "roomFrames": 0,
+        "gapAirFrames": 0,
+        "bails": 0,
+        "peak": 1.899527147736089,
+        "maxStep": 0.338919483380879,
+        "minSpeed": 16.14965771325459,
+        "end": {
+          "p": [
+            6.896259715538678,
+            1.899527147736089,
+            -19.586753219558883
+          ],
+          "uv": [
+            346.27025342647084,
+            240.8393319787556
+          ],
+          "speed": 20.334960544372237,
+          "grounded": true,
+          "state": "ride"
+        }
+      },
+      {
+        "name": "halfpipe mouth far hip",
+        "ok": true,
+        "frames": 46,
+        "airFrames": 0,
+        "vertAirs": 0,
+        "nearLipClear": false,
+        "farLipClear": false,
+        "lipCrossings": [],
+        "railFrames": 0,
+        "highRailFrames": 0,
+        "roomFrames": 0,
+        "gapAirFrames": 0,
+        "bails": 0,
+        "peak": 1.899529258717933,
+        "maxStep": 0.33891942961097854,
+        "minSpeed": 16.14965771325459,
+        "end": {
+          "p": [
+            6.896258782301045,
+            1.899529258717933,
+            -37.11324698736642
+          ],
+          "uv": [
+            429.7297475588877,
+            240.83932753476688
+          ],
+          "speed": 20.33495739209632,
+          "grounded": true,
+          "state": "ride"
+        }
+      },
+      {
+        "name": "outside bank end hip",
+        "ok": true,
+        "frames": 49,
+        "airFrames": 0,
+        "vertAirs": 0,
+        "nearLipClear": false,
+        "farLipClear": false,
+        "lipCrossings": [],
+        "railFrames": 0,
+        "highRailFrames": 0,
+        "roomFrames": 0,
+        "gapAirFrames": 0,
+        "bails": 0,
+        "peak": 2.822383777314812,
+        "maxStep": 0.32153703058905664,
+        "minSpeed": 16.14965771325459,
+        "end": {
+          "p": [
+            6.786067309869075,
+            2.822383777314812,
+            -15.63717308164664
+          ],
+          "uv": [
+            327.4627289602221,
+            240.3146062374718
+          ],
+          "speed": 19.292221835343362,
+          "grounded": true,
+          "state": "ride"
+        }
+      },
+      {
+        "name": "halfpipe mouth exit",
+        "ok": true,
+        "frames": 43,
+        "airFrames": 0,
+        "vertAirs": 0,
+        "nearLipClear": false,
+        "farLipClear": false,
+        "lipCrossings": [
+          {
+            "lip": 343,
+            "y": 0,
+            "airborne": false
+          }
+        ],
+        "railFrames": 0,
+        "highRailFrames": 0,
+        "roomFrames": 0,
+        "gapAirFrames": 0,
+        "bails": 0,
+        "peak": 1.1282763277501613,
+        "maxStep": 0.38332176290463743,
+        "minSpeed": 16.15212846184072,
+        "end": {
+          "p": [
+            -7.020654034593908,
+            0,
+            -18.70785085617067
+          ],
+          "uv": [
+            342.0850040770032,
+            174.5683141209814
+          ],
+          "speed": 22.999305774278216,
+          "grounded": true,
+          "state": "ride"
+        }
+      },
+      {
+        "name": "outside bank coping grind",
+        "ok": true,
+        "frames": 78,
+        "airFrames": 31,
+        "vertAirs": 0,
+        "nearLipClear": true,
+        "farLipClear": false,
+        "lipCrossings": [
+          {
+            "lip": 343,
+            "y": 4.399999999999999,
+            "airborne": true
+          }
+        ],
+        "railFrames": 31,
+        "highRailFrames": 0,
+        "roomFrames": 0,
+        "gapAirFrames": 0,
+        "bails": 0,
+        "peak": 4.399999999999999,
+        "maxStep": 0.5461833002280102,
+        "minSpeed": 18.149567687007874,
+        "end": {
+          "p": [
+            27.609689776346347,
+            4.399999999999999,
+            -18.900000000000002
+          ],
+          "uv": [
+            343,
+            339.4747132206969
+          ],
+          "speed": 18.26974610175172,
+          "grounded": false,
+          "state": "grind"
+        }
+      },
+      {
+        "name": "secret room 18/330",
+        "ok": true,
+        "frames": 130,
+        "airFrames": 79,
+        "vertAirs": 0,
+        "nearLipClear": false,
+        "farLipClear": false,
+        "lipCrossings": [
+          {
+            "lip": 343,
+            "y": 6.027945112601065,
+            "airborne": true
+          },
+          {
+            "lip": 433,
+            "y": 6.871815773514219,
+            "airborne": true
+          }
+        ],
+        "railFrames": 0,
+        "highRailFrames": 0,
+        "roomFrames": 22,
+        "gapAirFrames": 0,
+        "bails": 0,
+        "peak": 9.635754302875402,
+        "maxStep": 0.45868925689199597,
+        "minSpeed": 16.23514623206599,
+        "end": {
+          "p": [
+            32.97,
+            2.277572921836157,
+            -41.96760205680778
+          ],
+          "uv": [
+            452.84572408003703,
+            365
+          ],
+          "speed": 25.405822195067014,
+          "grounded": true,
+          "state": "ride"
+        }
+      },
+      {
+        "name": "secret room 18/332",
+        "ok": true,
+        "frames": 130,
+        "airFrames": 84,
+        "vertAirs": 0,
+        "nearLipClear": false,
+        "farLipClear": false,
+        "lipCrossings": [
+          {
+            "lip": 343,
+            "y": 5.816365467305961,
+            "airborne": true
+          },
+          {
+            "lip": 433,
+            "y": 6.752482460828028,
+            "airborne": true
+          }
+        ],
+        "railFrames": 0,
+        "highRailFrames": 0,
+        "roomFrames": 21,
+        "gapAirFrames": 0,
+        "bails": 0,
+        "peak": 9.920353487799272,
+        "maxStep": 0.4470459500431949,
+        "minSpeed": 16.12953243766171,
+        "end": {
+          "p": [
+            32.97,
+            2.379331344045883,
+            -41.79861032434833
+          ],
+          "uv": [
+            452.04100154451584,
+            365
+          ],
+          "speed": 25.31535049073824,
+          "grounded": true,
+          "state": "ride"
+        }
+      },
+      {
+        "name": "secret room 18/334",
+        "ok": true,
+        "frames": 131,
+        "airFrames": 86,
+        "vertAirs": 0,
+        "nearLipClear": false,
+        "farLipClear": false,
+        "lipCrossings": [
+          {
+            "lip": 343,
+            "y": 5.69624459596614,
+            "airborne": true
+          },
+          {
+            "lip": 433,
+            "y": 6.917661114892487,
+            "airborne": true
+          }
+        ],
+        "railFrames": 0,
+        "highRailFrames": 0,
+        "roomFrames": 22,
+        "gapAirFrames": 0,
+        "bails": 0,
+        "peak": 10.061783129487356,
+        "maxStep": 0.4637289728370328,
+        "minSpeed": 16.074045062738346,
+        "end": {
+          "p": [
+            32.97,
+            2.269434805059091,
+            -41.98111715823648
+          ],
+          "uv": [
+            452.910081705888,
+            365
+          ],
+          "speed": 25.267810155825128,
+          "grounded": true,
+          "state": "ride"
+        }
+      },
+      {
+        "name": "secret room 20/330",
+        "ok": true,
+        "frames": 116,
+        "airFrames": 74,
+        "vertAirs": 0,
+        "nearLipClear": false,
+        "farLipClear": false,
+        "lipCrossings": [
+          {
+            "lip": 343,
+            "y": 5.908261074932418,
+            "airborne": true
+          },
+          {
+            "lip": 433,
+            "y": 5.2404988370071885,
+            "airborne": true
+          }
+        ],
+        "railFrames": 0,
+        "highRailFrames": 0,
+        "roomFrames": 20,
+        "gapAirFrames": 0,
+        "bails": 0,
+        "peak": 10.327136484763036,
+        "maxStep": 0.46695123386673804,
+        "minSpeed": 17.95904719464612,
+        "end": {
+          "p": [
+            32.97,
+            2.729757109692665,
+            -41.21665351512127
+          ],
+          "uv": [
+            449.2697786434346,
+            365
+          ],
+          "speed": 19.687227260130037,
+          "grounded": true,
+          "state": "ride"
+        }
+      },
+      {
+        "name": "secret room 20/332",
+        "ok": true,
+        "frames": 114,
+        "airFrames": 76,
+        "vertAirs": 0,
+        "nearLipClear": false,
+        "farLipClear": false,
+        "lipCrossings": [
+          {
+            "lip": 343,
+            "y": 5.795823057714824,
+            "airborne": true
+          },
+          {
+            "lip": 433,
+            "y": 5.618540520711216,
+            "airborne": true
+          }
+        ],
+        "railFrames": 0,
+        "highRailFrames": 0,
+        "roomFrames": 20,
+        "gapAirFrames": 0,
+        "bails": 0,
+        "peak": 10.485569158647,
+        "maxStep": 0.46586526200724965,
+        "minSpeed": 17.902116456650383,
+        "end": {
+          "p": [
+            32.97,
+            2.8160647347673406,
+            -41.073321053950195
+          ],
+          "uv": [
+            448.58724311404853,
+            365
+          ],
+          "speed": 26.1239,
+          "grounded": true,
+          "state": "ride"
+        }
+      },
+      {
+        "name": "secret room 20/334",
+        "ok": true,
+        "frames": 116,
+        "airFrames": 79,
+        "vertAirs": 0,
+        "nearLipClear": false,
+        "farLipClear": false,
+        "lipCrossings": [
+          {
+            "lip": 343,
+            "y": 5.542068146280618,
+            "airborne": true
+          },
+          {
+            "lip": 433,
+            "y": 6.357848012272175,
+            "airborne": true
+          }
+        ],
+        "railFrames": 0,
+        "highRailFrames": 0,
+        "roomFrames": 20,
+        "gapAirFrames": 0,
+        "bails": 0,
+        "peak": 10.800702358861388,
+        "maxStep": 0.47943058795726123,
+        "minSpeed": 17.783991872122744,
+        "end": {
+          "p": [
+            32.97,
+            2.68436372383985,
+            -41.2920390054431
+          ],
+          "uv": [
+            449.62875716877664,
+            365
+          ],
+          "speed": 26.1239,
+          "grounded": true,
+          "state": "ride"
+        }
+      },
+      {
+        "name": "taxi transfer",
+        "ok": true,
+        "frames": 79,
+        "airFrames": 46,
+        "vertAirs": 0,
+        "nearLipClear": false,
+        "farLipClear": false,
+        "lipCrossings": [],
+        "railFrames": 0,
+        "highRailFrames": 0,
+        "roomFrames": 0,
+        "gapAirFrames": 0,
+        "bails": 0,
+        "peak": 3.289874521198874,
+        "maxStep": 0.3290386074653925,
+        "minSpeed": 13.442389059517835,
+        "end": {
+          "p": [
+            14.910000000000002,
+            0,
+            -67.88474933018163
+          ],
+          "uv": [
+            576.260711096103,
+            279
+          ],
+          "speed": 13.44238905951812,
+          "grounded": true,
+          "state": "ride"
+        }
+      },
+      {
+        "name": "kicker gap",
+        "ok": true,
+        "frames": 100,
+        "airFrames": 64,
+        "vertAirs": 0,
+        "nearLipClear": false,
+        "farLipClear": false,
+        "lipCrossings": [
+          {
+            "lip": 433,
+            "y": 1.04999998509884,
+            "airborne": false
+          }
+        ],
+        "railFrames": 0,
+        "highRailFrames": 0,
+        "roomFrames": 0,
+        "gapAirFrames": 21,
+        "bails": 0,
+        "peak": 5.485990894763754,
+        "maxStep": 0.4431412647054523,
+        "minSpeed": 16.14965771325459,
+        "end": {
+          "p": [
+            -29.19,
+            0,
+            -58.748256884034426
+          ],
+          "uv": [
+            532.7536042096876,
+            69
+          ],
+          "speed": 18.698588281050093,
+          "grounded": true,
+          "state": "ride"
+        }
+      },
+      {
+        "name": "kicker reverse",
+        "ok": true,
+        "frames": 94,
+        "airFrames": 62,
+        "vertAirs": 0,
+        "nearLipClear": false,
+        "farLipClear": false,
+        "lipCrossings": [
+          {
+            "lip": 433,
+            "y": 5.266032857904103,
+            "airborne": true
+          }
+        ],
+        "railFrames": 0,
+        "highRailFrames": 0,
+        "roomFrames": 0,
+        "gapAirFrames": 22,
+        "bails": 0,
+        "peak": 5.267424520177397,
+        "maxStep": 0.42881070933335175,
+        "minSpeed": 16.14965771325459,
+        "end": {
+          "p": [
+            -29.19,
+            0,
+            -27.872239192552797
+          ],
+          "uv": [
+            385.7249485359657,
+            69
+          ],
+          "speed": 18.004727039596276,
+          "grounded": true,
+          "state": "ride"
+        }
+      },
+      {
+        "name": "Big Rail kink",
+        "ok": true,
+        "frames": 157,
+        "airFrames": 153,
+        "vertAirs": 0,
+        "nearLipClear": false,
+        "farLipClear": false,
+        "lipCrossings": [
+          {
+            "lip": 343,
+            "y": 1.3199999999999998,
+            "airborne": true
+          },
+          {
+            "lip": 433,
+            "y": 1.3199999999999998,
+            "airborne": true
+          }
+        ],
+        "railFrames": 147,
+        "highRailFrames": 0,
+        "roomFrames": 0,
+        "gapAirFrames": 0,
+        "bails": 0,
+        "peak": 1.3842833333333333,
+        "maxStep": 0.6996716301875495,
+        "minSpeed": 12.14980626968504,
+        "end": {
+          "p": [
+            -7.7147362209477075,
+            1.3842833333333333,
+            -45.68555100156418
+          ],
+          "uv": [
+            470.55024286459127,
+            171.26316085262997
+          ],
+          "speed": 12.59815440399463,
+          "grounded": false,
+          "state": "air"
+        }
+      },
+      {
+        "name": "left channel gap",
+        "ok": true,
+        "frames": 66,
+        "airFrames": 66,
+        "vertAirs": 0,
+        "nearLipClear": false,
+        "farLipClear": false,
+        "lipCrossings": [],
+        "railFrames": 33,
+        "highRailFrames": 0,
+        "roomFrames": 0,
+        "gapAirFrames": 0,
+        "bails": 0,
+        "peak": 4.998283333333328,
+        "maxStep": 0.6121133493968505,
+        "minSpeed": 20,
+        "end": {
+          "p": [
+            0.9160648148148164,
+            3.329051851851848,
+            -1.7514583333333336
+          ],
+          "uv": [
+            261.34027777777777,
+            212.36221340388008
+          ],
+          "speed": 20,
+          "grounded": false,
+          "state": "grind"
+        }
+      },
+      {
+        "name": "right channel gap",
+        "ok": true,
+        "frames": 61,
+        "airFrames": 61,
+        "vertAirs": 0,
+        "nearLipClear": false,
+        "farLipClear": false,
+        "lipCrossings": [],
+        "railFrames": 30,
+        "highRailFrames": 0,
+        "roomFrames": 0,
+        "gapAirFrames": 0,
+        "bails": 0,
+        "peak": 4.998283333333328,
+        "maxStep": 0.7697274714161441,
+        "minSpeed": 20,
+        "end": {
+          "p": [
+            21.635473251028802,
+            4.11901234567901,
+            -0.8374074074074074
+          ],
+          "uv": [
+            256.98765432098764,
+            311.02606310013715
+          ],
+          "speed": 20,
+          "grounded": false,
+          "state": "grind"
+        }
+      },
+      {
+        "name": "high rail",
+        "ok": true,
+        "frames": 109,
+        "airFrames": 63,
+        "vertAirs": 1,
+        "nearLipClear": false,
+        "farLipClear": false,
+        "lipCrossings": [],
+        "railFrames": 53,
+        "highRailFrames": 51,
+        "roomFrames": 0,
+        "gapAirFrames": 0,
+        "bails": 0,
+        "peak": 8.025,
+        "maxStep": 0.3838626222263473,
+        "minSpeed": 0,
+        "end": {
+          "p": [
+            10.803335978324185,
+            8.025,
+            -78.96000000000001
+          ],
+          "uv": [
+            629,
+            259.44445703963896
+          ],
+          "speed": 3.5,
+          "grounded": false,
+          "state": "grind"
+        }
+      },
+      {
+        "name": "floor checkpoint",
+        "ok": true,
+        "frames": 5,
+        "airFrames": 0,
+        "vertAirs": 0,
+        "nearLipClear": false,
+        "farLipClear": false,
+        "lipCrossings": [],
+        "railFrames": 0,
+        "highRailFrames": 0,
+        "roomFrames": 0,
+        "gapAirFrames": 0,
+        "bails": 0,
+        "peak": 0.12,
+        "maxStep": 0.3566203345745684,
+        "minSpeed": 19.08747541533884,
+        "end": {
+          "p": [
+            17.01,
+            0,
+            -8.214030797897426
+          ],
+          "uv": [
+            292.1144323709401,
+            289
+          ],
+          "speed": 19.08747541533884,
+          "grounded": true,
+          "state": "ride"
+        }
+      }
+    ],
+    "recovery": {
+      "checkpoint": [
+        17.01,
+        0.1,
+        -9.030000000000001
+      ],
+      "pitContact": {
+        "p": [
+          4.62,
+          -10.743055555555559,
+          57.33000000000001
+        ],
+        "pit": 0
+      },
+      "recovered": true,
+      "frames": 158,
+      "deaths": 1,
+      "end": [
+        17.01,
+        0.1,
+        -9.030000000000001
+      ]
+    }
+  },
+  "surfaces": {
+    "solids": [
+      {
+        "name": "Raised loading bay deck",
+        "triangles": 12,
+        "open": 0,
+        "degenerate": 0,
+        "volume": 476.4070080000002
+      },
+      {
+        "name": "Left smooth roll-in",
+        "triangles": 388,
+        "open": 0,
+        "degenerate": 0,
+        "volume": 472.46093999999954
+      },
+      {
+        "name": "Right smooth roll-in",
+        "triangles": 388,
+        "open": 0,
+        "degenerate": 0,
+        "volume": 463.19699999999995
+      },
+      {
+        "name": "Box shelf return bank",
+        "triangles": 12,
+        "open": 0,
+        "degenerate": 0,
+        "volume": 13.22647199999999
+      },
+      {
+        "name": "Kicker gap · launch",
+        "triangles": 20,
+        "open": 0,
+        "degenerate": 0,
+        "volume": 9.372131999999999
+      },
+      {
+        "name": "Kicker gap · receiver",
+        "triangles": 20,
+        "open": 0,
+        "degenerate": 0,
+        "volume": 10.09008
+      },
+      {
+        "name": "Taxi transfer · hood roof boot",
+        "triangles": 44,
+        "open": 0,
+        "degenerate": 0,
+        "volume": 14.275953999999999
+      }
+    ],
+    "faceRays": [
+      {
+        "name": "Kicker gap · launch",
+        "hit": true,
+        "distance": 1.8900001573562584,
+        "expected": 1.8900000000000001,
+        "error": 1.573562582457555e-7
+      },
+      {
+        "name": "Kicker gap · receiver",
+        "hit": true,
+        "distance": 1.8900001573562584,
+        "expected": 1.8900000000000001,
+        "error": 1.573562582457555e-7
+      },
+      {
+        "name": "Taxi transfer · hood roof boot",
+        "hit": true,
+        "distance": 1.8900000000000006,
+        "expected": 1.8900000000000001,
+        "error": 4.440892098500626e-16
+      },
+      {
+        "name": "Raised loading bay deck",
+        "hit": true,
+        "distance": 2.7300005149841375,
+        "expected": 2.7300000000000004,
+        "error": 5.149841371121511e-7
+      },
+      {
+        "name": "Left smooth roll-in",
+        "hit": true,
+        "distance": 1.0500002002716073,
+        "expected": 1.05,
+        "error": 2.0027160729796378e-7
+      },
+      {
+        "name": "Near wall · below channels · closed end",
+        "hit": true,
+        "distance": 1.4699999999999989,
+        "expected": 1.4700000000000002,
+        "error": 1.3322676295501878e-15
+      }
+    ],
+    "seams": {
+      "samples": 171,
+      "maxStep": 0.0023609740204353358,
+      "worst": [
+        {
+          "u": 338,
+          "heights": [
+            4.197638835244701,
+            4.199999809265137
+          ],
+          "step": 0.0023609740204353358
+        },
+        {
+          "u": 339,
+          "heights": [
+            4.197638835244701,
+            4.199999809265137
+          ],
+          "step": 0.0023609740204353358
+        },
+        {
+          "u": 340,
+          "heights": [
+            4.197638835244701,
+            4.199999809265137
+          ],
+          "step": 0.0023609740204353358
+        },
+        {
+          "u": 341,
+          "heights": [
+            4.197638835244701,
+            4.199999809265137
+          ],
+          "step": 0.0023609740204353358
+        },
+        {
+          "u": 342,
+          "heights": [
+            4.197638835244701,
+            4.199999809265137
+          ],
+          "step": 0.0023609740204353358
+        }
+      ]
+    },
+    "impacts": [
+      {
+        "name": "launch kicker side",
+        "closest": 0.5300000000000019,
+        "bails": 0,
+        "contact": true,
+        "end": [
+          -23.592536375605768,
+          0,
+          -35.88024774023958
+        ]
+      },
+      {
+        "name": "receiver kicker side",
+        "closest": 0.5300000000000019,
+        "bails": 0,
+        "contact": true,
+        "end": [
+          -23.592536375605768,
+          0,
+          -44.91024774023959
+        ]
+      },
+      {
+        "name": "taxi side",
+        "closest": 0.5299999999999989,
+        "bails": 0,
+        "contact": true,
+        "end": [
+          9.796247531579233,
+          0,
+          -58.76073184078913
+        ]
+      }
+    ],
+    "groundMeshes": 70,
+    "walls": 450
+  },
+  "browser": {
+    "lite": {
+      "info": {
+        "level": "Warehouse · Reference",
+        "spawn": [
+          12.600000000000001,
+          9.449999809265137,
+          36.540000000000006
+        ],
+        "grounded": true,
+        "freeSkate": true,
+        "stamp": "Codex/sol fork · build 10-22 22:09 UTC",
+        "meshes": 70,
+        "rails": 11
+      },
+      "reports": [
+        {
+          "name": "roll-in 268",
+          "ok": true,
+          "frames": 187,
+          "airFrames": 0,
+          "vertAirs": 0,
+          "nearLipClear": false,
+          "farLipClear": false,
+          "lipCrossings": [],
+          "railFrames": 0,
+          "highRailFrames": 0,
+          "roomFrames": 0,
+          "gapAirFrames": 0,
+          "bails": 0,
+          "peak": 9.449999809265137,
+          "maxStep": 0.43539833333333366,
+          "minSpeed": 0.14999997047244093,
+          "done": true,
+          "paused": false,
+          "shot": true,
+          "end": {
+            "p": [
+              12.600000000000001,
+              0,
+              -7.655476668971795
+            ],
+            "uv": [
+              289.4546508046276,
+              268
+            ],
+            "grounded": true,
+            "state": "ride",
+            "speed": 25.73617814291884
+          }
+        },
+        {
+          "name": "halfpipe repeated airs",
+          "ok": true,
+          "frames": 538,
+          "airFrames": 315,
+          "vertAirs": 4,
+          "nearLipClear": false,
+          "farLipClear": false,
+          "lipCrossings": [],
+          "railFrames": 0,
+          "highRailFrames": 0,
+          "roomFrames": 0,
+          "gapAirFrames": 0,
+          "bails": 0,
+          "peak": 11.599892826001401,
+          "maxStep": 0.4365130705203129,
+          "minSpeed": 0,
+          "done": true,
+          "paused": false,
+          "shot": true,
+          "end": {
+            "p": [
+              17.64,
+              0.04744516085840389,
+              -22.473802150392018
+            ],
+            "uv": [
+              360.01810547805724,
+              292
+            ],
+            "grounded": true,
+            "state": "ride",
+            "speed": 26.1239
+          }
+        },
+        {
+          "name": "opening halfpipe gap 334",
+          "ok": true,
+          "frames": 305,
+          "airFrames": 87,
+          "vertAirs": 0,
+          "nearLipClear": true,
+          "farLipClear": true,
+          "lipCrossings": [
+            {
+              "lip": 343,
+              "y": 5.5353615821756526,
+              "airborne": true
+            },
+            {
+              "lip": 433,
+              "y": 8.26870817597716,
+              "airborne": true
+            }
+          ],
+          "railFrames": 0,
+          "highRailFrames": 0,
+          "roomFrames": 0,
+          "gapAirFrames": 0,
+          "bails": 0,
+          "peak": 11.236679779216141,
+          "maxStep": 0.5428391435336182,
+          "minSpeed": 0.14999997047244093,
+          "done": true,
+          "paused": false,
+          "shot": true,
+          "end": {
+            "p": [
+              12.600000000000001,
+              0,
+              -46.65417092430086
+            ],
+            "uv": [
+              475.16271868714693,
+              268
+            ],
+            "grounded": true,
+            "state": "ride",
+            "speed": 26.11677138050686
+          }
+        },
+        {
+          "name": "over the pipe",
+          "ok": true,
+          "frames": 127,
+          "airFrames": 82,
+          "vertAirs": 0,
+          "nearLipClear": true,
+          "farLipClear": true,
+          "lipCrossings": [
+            {
+              "lip": 343,
+              "y": 5.671113383502005,
+              "airborne": true
+            },
+            {
+              "lip": 433,
+              "y": 7.068079304581387,
+              "airborne": true
+            }
+          ],
+          "railFrames": 0,
+          "highRailFrames": 0,
+          "roomFrames": 0,
+          "gapAirFrames": 0,
+          "bails": 0,
+          "peak": 10.865567640333923,
+          "maxStep": 0.5036592149149729,
+          "minSpeed": 18.510614709874773,
+          "done": true,
+          "paused": false,
+          "shot": true,
+          "end": {
+            "p": [
+              14.49,
+              0,
+              -47.11740326879442
+            ],
+            "uv": [
+              477.3685869942591,
+              277
+            ],
+            "grounded": true,
+            "state": "ride",
+            "speed": 26.072015097872896
+          }
+        },
+        {
+          "name": "outside bank roll-in",
+          "ok": true,
+          "frames": 170,
+          "airFrames": 0,
+          "vertAirs": 0,
+          "nearLipClear": false,
+          "farLipClear": false,
+          "lipCrossings": [
+            {
+              "lip": 343,
+              "y": 3.8905503963764825,
+              "airborne": false
+            }
+          ],
+          "railFrames": 0,
+          "highRailFrames": 0,
+          "roomFrames": 0,
+          "gapAirFrames": 0,
+          "bails": 0,
+          "peak": 4.199999809265137,
+          "maxStep": 0.37646845181173266,
+          "minSpeed": 0.14999997047244093,
+          "done": true,
+          "paused": false,
+          "shot": false,
+          "end": {
+            "p": [
+              14.49,
+              0,
+              -24.683694330556833
+            ],
+            "uv": [
+              370.54140157408017,
+              277
+            ],
+            "grounded": true,
+            "state": "ride",
+            "speed": 19.48744929243179
+          }
+        },
+        {
+          "name": "halfpipe mouth near hip",
+          "ok": true,
+          "frames": 46,
+          "airFrames": 0,
+          "vertAirs": 0,
+          "nearLipClear": false,
+          "farLipClear": false,
+          "lipCrossings": [],
+          "railFrames": 0,
+          "highRailFrames": 0,
+          "roomFrames": 0,
+          "gapAirFrames": 0,
+          "bails": 0,
+          "peak": 1.899527147736089,
+          "maxStep": 0.338919483380879,
+          "minSpeed": 16.14965771325459,
+          "done": true,
+          "paused": false,
+          "shot": false,
+          "end": {
+            "p": [
+              6.896259715538678,
+              1.899527147736089,
+              -19.586753219558883
+            ],
+            "uv": [
+              346.27025342647084,
+              240.8393319787556
+            ],
+            "grounded": true,
+            "state": "ride",
+            "speed": 20.334960544372237
+          }
+        },
+        {
+          "name": "outside bank end hip",
+          "ok": true,
+          "frames": 49,
+          "airFrames": 0,
+          "vertAirs": 0,
+          "nearLipClear": false,
+          "farLipClear": false,
+          "lipCrossings": [],
+          "railFrames": 0,
+          "highRailFrames": 0,
+          "roomFrames": 0,
+          "gapAirFrames": 0,
+          "bails": 0,
+          "peak": 2.822383777314812,
+          "maxStep": 0.32153703058905664,
+          "minSpeed": 16.14965771325459,
+          "done": true,
+          "paused": false,
+          "shot": false,
+          "end": {
+            "p": [
+              6.786067309869075,
+              2.822383777314812,
+              -15.63717308164664
+            ],
+            "uv": [
+              327.4627289602221,
+              240.3146062374718
+            ],
+            "grounded": true,
+            "state": "ride",
+            "speed": 19.292221835343362
+          }
+        },
+        {
+          "name": "halfpipe mouth exit",
+          "ok": true,
+          "frames": 43,
+          "airFrames": 0,
+          "vertAirs": 0,
+          "nearLipClear": false,
+          "farLipClear": false,
+          "lipCrossings": [
+            {
+              "lip": 343,
+              "y": 0,
+              "airborne": false
+            }
+          ],
+          "railFrames": 0,
+          "highRailFrames": 0,
+          "roomFrames": 0,
+          "gapAirFrames": 0,
+          "bails": 0,
+          "peak": 1.0612679645907046,
+          "maxStep": 0.38332176290463743,
+          "minSpeed": 16.15212846184072,
+          "done": true,
+          "paused": false,
+          "shot": false,
+          "end": {
+            "p": [
+              -7.020654034593908,
+              0,
+              -18.70785085617067
+            ],
+            "uv": [
+              342.0850040770032,
+              174.5683141209814
+            ],
+            "grounded": true,
+            "state": "ride",
+            "speed": 22.999305774278216
+          }
+        },
+        {
+          "name": "outside bank coping grind",
+          "ok": true,
+          "frames": 78,
+          "airFrames": 31,
+          "vertAirs": 0,
+          "nearLipClear": true,
+          "farLipClear": false,
+          "lipCrossings": [
+            {
+              "lip": 343,
+              "y": 4.399999999999999,
+              "airborne": true
+            }
+          ],
+          "railFrames": 31,
+          "highRailFrames": 0,
+          "roomFrames": 0,
+          "gapAirFrames": 0,
+          "bails": 0,
+          "peak": 4.399999999999999,
+          "maxStep": 0.5461833002280102,
+          "minSpeed": 18.149567687007874,
+          "done": true,
+          "paused": false,
+          "shot": false,
+          "end": {
+            "p": [
+              27.609689776346347,
+              4.399999999999999,
+              -18.900000000000002
+            ],
+            "uv": [
+              343,
+              339.4747132206969
+            ],
+            "grounded": false,
+            "state": "grind",
+            "speed": 18.26974610175172
+          }
+        },
+        {
+          "name": "secret room 20/332",
+          "ok": true,
+          "frames": 114,
+          "airFrames": 76,
+          "vertAirs": 0,
+          "nearLipClear": false,
+          "farLipClear": false,
+          "lipCrossings": [
+            {
+              "lip": 343,
+              "y": 5.795823057714824,
+              "airborne": true
+            },
+            {
+              "lip": 433,
+              "y": 5.618540520711216,
+              "airborne": true
+            }
+          ],
+          "railFrames": 0,
+          "highRailFrames": 0,
+          "roomFrames": 20,
+          "gapAirFrames": 0,
+          "bails": 0,
+          "peak": 10.485569158647,
+          "maxStep": 0.46586526200724965,
+          "minSpeed": 17.902116456650383,
+          "done": true,
+          "paused": false,
+          "shot": true,
+          "end": {
+            "p": [
+              32.97,
+              2.8160647347673406,
+              -41.073321053950195
+            ],
+            "uv": [
+              448.58724311404853,
+              365
+            ],
+            "grounded": true,
+            "state": "ride",
+            "speed": 26.1239
+          }
+        },
+        {
+          "name": "Big Rail kink",
+          "ok": true,
+          "frames": 157,
+          "airFrames": 153,
+          "vertAirs": 0,
+          "nearLipClear": false,
+          "farLipClear": false,
+          "lipCrossings": [
+            {
+              "lip": 343,
+              "y": 1.3199999999999998,
+              "airborne": true
+            },
+            {
+              "lip": 433,
+              "y": 1.3199999999999998,
+              "airborne": true
+            }
+          ],
+          "railFrames": 147,
+          "highRailFrames": 0,
+          "roomFrames": 0,
+          "gapAirFrames": 0,
+          "bails": 0,
+          "peak": 1.3842833333333333,
+          "maxStep": 0.6996716301875495,
+          "minSpeed": 12.14980626968504,
+          "done": true,
+          "paused": false,
+          "shot": true,
+          "end": {
+            "p": [
+              -7.7147362209477075,
+              1.3842833333333333,
+              -45.68555100156418
+            ],
+            "uv": [
+              470.55024286459127,
+              171.26316085262997
+            ],
+            "grounded": false,
+            "state": "air",
+            "speed": 12.59815440399463
+          }
+        },
+        {
+          "name": "high rail",
+          "ok": true,
+          "frames": 109,
+          "airFrames": 63,
+          "vertAirs": 1,
+          "nearLipClear": false,
+          "farLipClear": false,
+          "lipCrossings": [],
+          "railFrames": 53,
+          "highRailFrames": 51,
+          "roomFrames": 0,
+          "gapAirFrames": 0,
+          "bails": 0,
+          "peak": 8.025,
+          "maxStep": 0.3838626222263473,
+          "minSpeed": 0,
+          "done": true,
+          "paused": false,
+          "shot": true,
+          "end": {
+            "p": [
+              10.803335978324185,
+              8.025,
+              -78.96000000000001
+            ],
+            "uv": [
+              629,
+              259.44445703963896
+            ],
+            "grounded": false,
+            "state": "grind",
+            "speed": 3.5
+          }
+        },
+        {
+          "name": "kicker gap",
+          "ok": true,
+          "frames": 100,
+          "airFrames": 64,
+          "vertAirs": 0,
+          "nearLipClear": false,
+          "farLipClear": false,
+          "lipCrossings": [
+            {
+              "lip": 433,
+              "y": 1.04999998509884,
+              "airborne": false
+            }
+          ],
+          "railFrames": 0,
+          "highRailFrames": 0,
+          "roomFrames": 0,
+          "gapAirFrames": 21,
+          "bails": 0,
+          "peak": 5.485990894763754,
+          "maxStep": 0.4431412647054523,
+          "minSpeed": 16.14965771325459,
+          "done": true,
+          "paused": false,
+          "shot": true,
+          "end": {
+            "p": [
+              -29.19,
+              0,
+              -58.748256884034426
+            ],
+            "uv": [
+              532.7536042096876,
+              69
+            ],
+            "grounded": true,
+            "state": "ride",
+            "speed": 18.698588281050093
+          }
+        },
+        {
+          "name": "taxi transfer",
+          "ok": true,
+          "frames": 79,
+          "airFrames": 46,
+          "vertAirs": 0,
+          "nearLipClear": false,
+          "farLipClear": false,
+          "lipCrossings": [],
+          "railFrames": 0,
+          "highRailFrames": 0,
+          "roomFrames": 0,
+          "gapAirFrames": 0,
+          "bails": 0,
+          "peak": 3.289874521198874,
+          "maxStep": 0.3290386074653925,
+          "minSpeed": 13.442389059517835,
+          "done": true,
+          "paused": false,
+          "shot": true,
+          "end": {
+            "p": [
+              14.910000000000002,
+              0,
+              -67.88474933018163
+            ],
+            "uv": [
+              576.260711096103,
+              279
+            ],
+            "grounded": true,
+            "state": "ride",
+            "speed": 13.44238905951812
+          }
+        },
+        {
+          "name": "loading bay transition",
+          "ok": true,
+          "frames": 119,
+          "airFrames": 73,
+          "vertAirs": 1,
+          "nearLipClear": false,
+          "farLipClear": false,
+          "lipCrossings": [],
+          "railFrames": 0,
+          "highRailFrames": 0,
+          "roomFrames": 0,
+          "gapAirFrames": 0,
+          "bails": 0,
+          "peak": 8.091989168205796,
+          "maxStep": 0.39559621512167825,
+          "minSpeed": 0,
+          "done": true,
+          "paused": false,
+          "shot": true,
+          "end": {
+            "p": [
+              -21.630000000000003,
+              0.014236377370972608,
+              -4.145955129444
+            ],
+            "uv": [
+              272.74264347354284,
+              105
+            ],
+            "grounded": true,
+            "state": "ride",
+            "speed": 23.648865000193435
+          }
+        },
+        {
+          "name": "left channel gap",
+          "ok": true,
+          "frames": 66,
+          "airFrames": 66,
+          "vertAirs": 0,
+          "nearLipClear": false,
+          "farLipClear": false,
+          "lipCrossings": [],
+          "railFrames": 33,
+          "highRailFrames": 0,
+          "roomFrames": 0,
+          "gapAirFrames": 0,
+          "bails": 0,
+          "peak": 4.998283333333328,
+          "maxStep": 0.6121133493968505,
+          "minSpeed": 20,
+          "done": true,
+          "paused": false,
+          "shot": false,
+          "end": {
+            "p": [
+              0.9160648148148164,
+              3.329051851851848,
+              -1.7514583333333336
+            ],
+            "uv": [
+              261.34027777777777,
+              212.36221340388008
+            ],
+            "grounded": false,
+            "state": "grind",
+            "speed": 20
+          }
+        },
+        {
+          "name": "right channel gap",
+          "ok": true,
+          "frames": 61,
+          "airFrames": 61,
+          "vertAirs": 0,
+          "nearLipClear": false,
+          "farLipClear": false,
+          "lipCrossings": [],
+          "railFrames": 30,
+          "highRailFrames": 0,
+          "roomFrames": 0,
+          "gapAirFrames": 0,
+          "bails": 0,
+          "peak": 4.998283333333328,
+          "maxStep": 0.7697274714161441,
+          "minSpeed": 20,
+          "done": true,
+          "paused": false,
+          "shot": false,
+          "end": {
+            "p": [
+              21.635473251028802,
+              4.11901234567901,
+              -0.8374074074074074
+            ],
+            "uv": [
+              256.98765432098764,
+              311.02606310013715
+            ],
+            "grounded": false,
+            "state": "grind",
+            "speed": 20
+          }
+        }
+      ],
+      "rendering": {
+        "calls": {
+          "frame": 3222,
+          "calls": 253,
+          "triangles": 100045,
+          "points": 0,
+          "lines": 0
+        },
+        "memory": {
+          "geometries": 284,
+          "textures": 24
+        },
+        "frameMs": {
+          "median": 16.69999999999709,
+          "p95": 16.80000000000291
+        },
+        "limiter": {
+          "acceptedFrames": 3215,
+          "skippedFrames": 0,
+          "targetFps": 60,
+          "lastTimestampMs": 58927.8,
+          "budgetMs": 0
+        }
+      },
+      "errors": []
+    },
+    "full": {
+      "info": {
+        "level": "Warehouse · Reference",
+        "spawn": [
+          12.600000000000001,
+          9.449999809265137,
+          36.540000000000006
+        ],
+        "grounded": true,
+        "freeSkate": true,
+        "stamp": "Codex/sol fork · build 10-22 22:09 UTC",
+        "meshes": 70,
+        "rails": 11
+      },
+      "reports": [
+        {
+          "name": "roll-in 268",
+          "ok": true,
+          "frames": 187,
+          "airFrames": 0,
+          "vertAirs": 0,
+          "nearLipClear": false,
+          "farLipClear": false,
+          "lipCrossings": [],
+          "railFrames": 0,
+          "highRailFrames": 0,
+          "roomFrames": 0,
+          "gapAirFrames": 0,
+          "bails": 0,
+          "peak": 9.449999809265137,
+          "maxStep": 0.43539833333333366,
+          "minSpeed": 0.14999997047244093,
+          "done": true,
+          "paused": false,
+          "shot": true,
+          "end": {
+            "p": [
+              12.600000000000001,
+              0,
+              -7.655476668971795
+            ],
+            "uv": [
+              289.4546508046276,
+              268
+            ],
+            "grounded": true,
+            "state": "ride",
+            "speed": 25.73617814291884
+          }
+        },
+        {
+          "name": "halfpipe repeated airs",
+          "ok": true,
+          "frames": 538,
+          "airFrames": 315,
+          "vertAirs": 4,
+          "nearLipClear": false,
+          "farLipClear": false,
+          "lipCrossings": [],
+          "railFrames": 0,
+          "highRailFrames": 0,
+          "roomFrames": 0,
+          "gapAirFrames": 0,
+          "bails": 0,
+          "peak": 11.599892826001401,
+          "maxStep": 0.4365130705203129,
+          "minSpeed": 0,
+          "done": true,
+          "paused": false,
+          "shot": true,
+          "end": {
+            "p": [
+              17.64,
+              0.04744516085840389,
+              -22.473802150392018
+            ],
+            "uv": [
+              360.01810547805724,
+              292
+            ],
+            "grounded": true,
+            "state": "ride",
+            "speed": 26.1239
+          }
+        },
+        {
+          "name": "opening halfpipe gap 334",
+          "ok": true,
+          "frames": 305,
+          "airFrames": 87,
+          "vertAirs": 0,
+          "nearLipClear": true,
+          "farLipClear": true,
+          "lipCrossings": [
+            {
+              "lip": 343,
+              "y": 5.5353615821756526,
+              "airborne": true
+            },
+            {
+              "lip": 433,
+              "y": 8.26870817597716,
+              "airborne": true
+            }
+          ],
+          "railFrames": 0,
+          "highRailFrames": 0,
+          "roomFrames": 0,
+          "gapAirFrames": 0,
+          "bails": 0,
+          "peak": 11.236679779216141,
+          "maxStep": 0.5428391435336182,
+          "minSpeed": 0.14999997047244093,
+          "done": true,
+          "paused": false,
+          "shot": true,
+          "end": {
+            "p": [
+              12.600000000000001,
+              0,
+              -46.65417092430086
+            ],
+            "uv": [
+              475.16271868714693,
+              268
+            ],
+            "grounded": true,
+            "state": "ride",
+            "speed": 26.11677138050686
+          }
+        },
+        {
+          "name": "over the pipe",
+          "ok": true,
+          "frames": 127,
+          "airFrames": 82,
+          "vertAirs": 0,
+          "nearLipClear": true,
+          "farLipClear": true,
+          "lipCrossings": [
+            {
+              "lip": 343,
+              "y": 5.671113383502005,
+              "airborne": true
+            },
+            {
+              "lip": 433,
+              "y": 7.068079304581387,
+              "airborne": true
+            }
+          ],
+          "railFrames": 0,
+          "highRailFrames": 0,
+          "roomFrames": 0,
+          "gapAirFrames": 0,
+          "bails": 0,
+          "peak": 10.865567640333923,
+          "maxStep": 0.5036592149149729,
+          "minSpeed": 18.510614709874773,
+          "done": true,
+          "paused": false,
+          "shot": true,
+          "end": {
+            "p": [
+              14.49,
+              0,
+              -47.11740326879442
+            ],
+            "uv": [
+              477.3685869942591,
+              277
+            ],
+            "grounded": true,
+            "state": "ride",
+            "speed": 26.072015097872896
+          }
+        },
+        {
+          "name": "outside bank roll-in",
+          "ok": true,
+          "frames": 170,
+          "airFrames": 0,
+          "vertAirs": 0,
+          "nearLipClear": false,
+          "farLipClear": false,
+          "lipCrossings": [
+            {
+              "lip": 343,
+              "y": 3.8905503963764825,
+              "airborne": false
+            }
+          ],
+          "railFrames": 0,
+          "highRailFrames": 0,
+          "roomFrames": 0,
+          "gapAirFrames": 0,
+          "bails": 0,
+          "peak": 4.199999809265137,
+          "maxStep": 0.37646845181173266,
+          "minSpeed": 0.14999997047244093,
+          "done": true,
+          "paused": false,
+          "shot": false,
+          "end": {
+            "p": [
+              14.49,
+              0,
+              -24.683694330556833
+            ],
+            "uv": [
+              370.54140157408017,
+              277
+            ],
+            "grounded": true,
+            "state": "ride",
+            "speed": 19.48744929243179
+          }
+        },
+        {
+          "name": "halfpipe mouth near hip",
+          "ok": true,
+          "frames": 46,
+          "airFrames": 0,
+          "vertAirs": 0,
+          "nearLipClear": false,
+          "farLipClear": false,
+          "lipCrossings": [],
+          "railFrames": 0,
+          "highRailFrames": 0,
+          "roomFrames": 0,
+          "gapAirFrames": 0,
+          "bails": 0,
+          "peak": 1.899527147736089,
+          "maxStep": 0.338919483380879,
+          "minSpeed": 16.14965771325459,
+          "done": true,
+          "paused": false,
+          "shot": false,
+          "end": {
+            "p": [
+              6.896259715538678,
+              1.899527147736089,
+              -19.586753219558883
+            ],
+            "uv": [
+              346.27025342647084,
+              240.8393319787556
+            ],
+            "grounded": true,
+            "state": "ride",
+            "speed": 20.334960544372237
+          }
+        },
+        {
+          "name": "outside bank end hip",
+          "ok": true,
+          "frames": 49,
+          "airFrames": 0,
+          "vertAirs": 0,
+          "nearLipClear": false,
+          "farLipClear": false,
+          "lipCrossings": [],
+          "railFrames": 0,
+          "highRailFrames": 0,
+          "roomFrames": 0,
+          "gapAirFrames": 0,
+          "bails": 0,
+          "peak": 2.822383777314812,
+          "maxStep": 0.32153703058905664,
+          "minSpeed": 16.14965771325459,
+          "done": true,
+          "paused": false,
+          "shot": false,
+          "end": {
+            "p": [
+              6.786067309869075,
+              2.822383777314812,
+              -15.63717308164664
+            ],
+            "uv": [
+              327.4627289602221,
+              240.3146062374718
+            ],
+            "grounded": true,
+            "state": "ride",
+            "speed": 19.292221835343362
+          }
+        },
+        {
+          "name": "halfpipe mouth exit",
+          "ok": true,
+          "frames": 43,
+          "airFrames": 0,
+          "vertAirs": 0,
+          "nearLipClear": false,
+          "farLipClear": false,
+          "lipCrossings": [
+            {
+              "lip": 343,
+              "y": 0,
+              "airborne": false
+            }
+          ],
+          "railFrames": 0,
+          "highRailFrames": 0,
+          "roomFrames": 0,
+          "gapAirFrames": 0,
+          "bails": 0,
+          "peak": 1.0612679645907046,
+          "maxStep": 0.38332176290463743,
+          "minSpeed": 16.15212846184072,
+          "done": true,
+          "paused": false,
+          "shot": false,
+          "end": {
+            "p": [
+              -7.020654034593908,
+              0,
+              -18.70785085617067
+            ],
+            "uv": [
+              342.0850040770032,
+              174.5683141209814
+            ],
+            "grounded": true,
+            "state": "ride",
+            "speed": 22.999305774278216
+          }
+        },
+        {
+          "name": "outside bank coping grind",
+          "ok": true,
+          "frames": 78,
+          "airFrames": 31,
+          "vertAirs": 0,
+          "nearLipClear": true,
+          "farLipClear": false,
+          "lipCrossings": [
+            {
+              "lip": 343,
+              "y": 4.399999999999999,
+              "airborne": true
+            }
+          ],
+          "railFrames": 31,
+          "highRailFrames": 0,
+          "roomFrames": 0,
+          "gapAirFrames": 0,
+          "bails": 0,
+          "peak": 4.399999999999999,
+          "maxStep": 0.5461833002280102,
+          "minSpeed": 18.149567687007874,
+          "done": true,
+          "paused": false,
+          "shot": false,
+          "end": {
+            "p": [
+              27.609689776346347,
+              4.399999999999999,
+              -18.900000000000002
+            ],
+            "uv": [
+              343,
+              339.4747132206969
+            ],
+            "grounded": false,
+            "state": "grind",
+            "speed": 18.26974610175172
+          }
+        },
+        {
+          "name": "secret room 20/332",
+          "ok": true,
+          "frames": 114,
+          "airFrames": 76,
+          "vertAirs": 0,
+          "nearLipClear": false,
+          "farLipClear": false,
+          "lipCrossings": [
+            {
+              "lip": 343,
+              "y": 5.795823057714824,
+              "airborne": true
+            },
+            {
+              "lip": 433,
+              "y": 5.618540520711216,
+              "airborne": true
+            }
+          ],
+          "railFrames": 0,
+          "highRailFrames": 0,
+          "roomFrames": 20,
+          "gapAirFrames": 0,
+          "bails": 0,
+          "peak": 10.485569158647,
+          "maxStep": 0.46586526200724965,
+          "minSpeed": 17.902116456650383,
+          "done": true,
+          "paused": false,
+          "shot": true,
+          "end": {
+            "p": [
+              32.97,
+              2.8160647347673406,
+              -41.073321053950195
+            ],
+            "uv": [
+              448.58724311404853,
+              365
+            ],
+            "grounded": true,
+            "state": "ride",
+            "speed": 26.1239
+          }
+        },
+        {
+          "name": "Big Rail kink",
+          "ok": true,
+          "frames": 157,
+          "airFrames": 153,
+          "vertAirs": 0,
+          "nearLipClear": false,
+          "farLipClear": false,
+          "lipCrossings": [
+            {
+              "lip": 343,
+              "y": 1.3199999999999998,
+              "airborne": true
+            },
+            {
+              "lip": 433,
+              "y": 1.3199999999999998,
+              "airborne": true
+            }
+          ],
+          "railFrames": 147,
+          "highRailFrames": 0,
+          "roomFrames": 0,
+          "gapAirFrames": 0,
+          "bails": 0,
+          "peak": 1.3842833333333333,
+          "maxStep": 0.6996716301875495,
+          "minSpeed": 12.14980626968504,
+          "done": true,
+          "paused": false,
+          "shot": true,
+          "end": {
+            "p": [
+              -7.7147362209477075,
+              1.3842833333333333,
+              -45.68555100156418
+            ],
+            "uv": [
+              470.55024286459127,
+              171.26316085262997
+            ],
+            "grounded": false,
+            "state": "air",
+            "speed": 12.59815440399463
+          }
+        },
+        {
+          "name": "high rail",
+          "ok": true,
+          "frames": 109,
+          "airFrames": 63,
+          "vertAirs": 1,
+          "nearLipClear": false,
+          "farLipClear": false,
+          "lipCrossings": [],
+          "railFrames": 53,
+          "highRailFrames": 51,
+          "roomFrames": 0,
+          "gapAirFrames": 0,
+          "bails": 0,
+          "peak": 8.025,
+          "maxStep": 0.3838626222263473,
+          "minSpeed": 0,
+          "done": true,
+          "paused": false,
+          "shot": true,
+          "end": {
+            "p": [
+              10.803335978324185,
+              8.025,
+              -78.96000000000001
+            ],
+            "uv": [
+              629,
+              259.44445703963896
+            ],
+            "grounded": false,
+            "state": "grind",
+            "speed": 3.5
+          }
+        },
+        {
+          "name": "kicker gap",
+          "ok": true,
+          "frames": 100,
+          "airFrames": 64,
+          "vertAirs": 0,
+          "nearLipClear": false,
+          "farLipClear": false,
+          "lipCrossings": [
+            {
+              "lip": 433,
+              "y": 1.04999998509884,
+              "airborne": false
+            }
+          ],
+          "railFrames": 0,
+          "highRailFrames": 0,
+          "roomFrames": 0,
+          "gapAirFrames": 21,
+          "bails": 0,
+          "peak": 5.485990894763754,
+          "maxStep": 0.4431412647054523,
+          "minSpeed": 16.14965771325459,
+          "done": true,
+          "paused": false,
+          "shot": true,
+          "end": {
+            "p": [
+              -29.19,
+              0,
+              -58.748256884034426
+            ],
+            "uv": [
+              532.7536042096876,
+              69
+            ],
+            "grounded": true,
+            "state": "ride",
+            "speed": 18.698588281050093
+          }
+        },
+        {
+          "name": "taxi transfer",
+          "ok": true,
+          "frames": 79,
+          "airFrames": 46,
+          "vertAirs": 0,
+          "nearLipClear": false,
+          "farLipClear": false,
+          "lipCrossings": [],
+          "railFrames": 0,
+          "highRailFrames": 0,
+          "roomFrames": 0,
+          "gapAirFrames": 0,
+          "bails": 0,
+          "peak": 3.289874521198874,
+          "maxStep": 0.3290386074653925,
+          "minSpeed": 13.442389059517835,
+          "done": true,
+          "paused": false,
+          "shot": true,
+          "end": {
+            "p": [
+              14.910000000000002,
+              0,
+              -67.88474933018163
+            ],
+            "uv": [
+              576.260711096103,
+              279
+            ],
+            "grounded": true,
+            "state": "ride",
+            "speed": 13.44238905951812
+          }
+        },
+        {
+          "name": "loading bay transition",
+          "ok": true,
+          "frames": 119,
+          "airFrames": 73,
+          "vertAirs": 1,
+          "nearLipClear": false,
+          "farLipClear": false,
+          "lipCrossings": [],
+          "railFrames": 0,
+          "highRailFrames": 0,
+          "roomFrames": 0,
+          "gapAirFrames": 0,
+          "bails": 0,
+          "peak": 8.091989168205796,
+          "maxStep": 0.39559621512167825,
+          "minSpeed": 0,
+          "done": true,
+          "paused": false,
+          "shot": true,
+          "end": {
+            "p": [
+              -21.630000000000003,
+              0.014236377370972608,
+              -4.145955129444
+            ],
+            "uv": [
+              272.74264347354284,
+              105
+            ],
+            "grounded": true,
+            "state": "ride",
+            "speed": 23.648865000193435
+          }
+        },
+        {
+          "name": "left channel gap",
+          "ok": true,
+          "frames": 66,
+          "airFrames": 66,
+          "vertAirs": 0,
+          "nearLipClear": false,
+          "farLipClear": false,
+          "lipCrossings": [],
+          "railFrames": 33,
+          "highRailFrames": 0,
+          "roomFrames": 0,
+          "gapAirFrames": 0,
+          "bails": 0,
+          "peak": 4.998283333333328,
+          "maxStep": 0.6121133493968505,
+          "minSpeed": 20,
+          "done": true,
+          "paused": false,
+          "shot": false,
+          "end": {
+            "p": [
+              0.9160648148148164,
+              3.329051851851848,
+              -1.7514583333333336
+            ],
+            "uv": [
+              261.34027777777777,
+              212.36221340388008
+            ],
+            "grounded": false,
+            "state": "grind",
+            "speed": 20
+          }
+        },
+        {
+          "name": "right channel gap",
+          "ok": true,
+          "frames": 61,
+          "airFrames": 61,
+          "vertAirs": 0,
+          "nearLipClear": false,
+          "farLipClear": false,
+          "lipCrossings": [],
+          "railFrames": 30,
+          "highRailFrames": 0,
+          "roomFrames": 0,
+          "gapAirFrames": 0,
+          "bails": 0,
+          "peak": 4.998283333333328,
+          "maxStep": 0.7697274714161441,
+          "minSpeed": 20,
+          "done": true,
+          "paused": false,
+          "shot": false,
+          "end": {
+            "p": [
+              21.635473251028802,
+              4.11901234567901,
+              -0.8374074074074074
+            ],
+            "uv": [
+              256.98765432098764,
+              311.02606310013715
+            ],
+            "grounded": false,
+            "state": "grind",
+            "speed": 20
+          }
+        }
+      ],
+      "rendering": {
+        "calls": {
+          "frame": 22915,
+          "calls": 564,
+          "triangles": 202679,
+          "points": 0,
+          "lines": 0
+        },
+        "memory": {
+          "geometries": 286,
+          "textures": 33
+        },
+        "frameMs": {
+          "median": 16.69999999999709,
+          "p95": 16.700000000004366
+        },
+        "limiter": {
+          "acceptedFrames": 3413,
+          "skippedFrames": 0,
+          "targetFps": 60,
+          "lastTimestampMs": 63996.4,
+          "budgetMs": -0.9333333333333727
+        }
+      },
+      "errors": []
+    },
+    "fullSurfaceInspection": {
+      "views": [
+        {
+          "name": "halfpipe-end",
+          "eye": [
+            388,
+            165,
+            2.6
+          ],
+          "target": [
+            388,
+            225,
+            1.4
+          ]
+        },
+        {
+          "name": "halfpipe-end-oblique",
+          "eye": [
+            302,
+            180,
+            3.2
+          ],
+          "target": [
+            348,
+            215,
+            1.9
+          ]
+        },
+        {
+          "name": "loading-bay-side",
+          "eye": [
+            275,
+            185,
+            1.8
+          ],
+          "target": [
+            232,
+            151,
+            1.2
+          ]
+        },
+        {
+          "name": "roll-in-sides",
+          "eye": [
+            279,
+            224,
+            2.6
+          ],
+          "target": [
+            213,
+            201,
+            3
+          ]
+        },
+        {
+          "name": "kicker-sides",
+          "eye": [
+            451,
+            111,
+            1.9
+          ],
+          "target": [
+            452,
+            68,
+            0.7
+          ]
+        },
+        {
+          "name": "taxi-side",
+          "eye": [
+            522,
+            250,
+            1.3
+          ],
+          "target": [
+            520,
+            281,
+            0.6
+          ]
+        },
+        {
+          "name": "near-channel-end",
+          "eye": [
+            287,
+            293,
+            2.5
+          ],
+          "target": [
+            268,
+            311,
+            1
+          ]
+        },
+        {
+          "name": "rear-transition-end",
+          "eye": [
+            430,
+            340,
+            2.3
+          ],
+          "target": [
+            448,
+            364,
+            1.4
+          ]
+        }
+      ],
+      "errors": []
+    }
+  },
+  "performanceScope": "60-frame spawn sample only; not a whole-level frame-time bound."
+}
