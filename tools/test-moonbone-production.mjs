@@ -14,7 +14,7 @@ await withBlockworksRuntime(async r=>{
     const native=(c.t==='mover'?r.l.movers:r.l.crumbles).find(x=>x.mesh.name===c.nm);
     assert.ok(native);assert.notEqual(native.mesh.geometry.type,'BoxGeometry');
     assert.ok(native.mesh.geometry.userData.grindIndices.length>0,'actual moving rim keeps edge grinding');
-    if(c.t==='crumble')assert.ok(native.mesh.children.some(x=>x.name==='Fall-away split and warning bindings'));
+    if(c.t==='crumble')assert.equal(native.mesh.getObjectByName('Fall-away split and warning bindings'),undefined,'sculpted breakaway surface has no painted warning overlay');
     for(const change of [{indices:[0,1,999999]},{vertices:[0,0,Infinity]},{uvs:[0,0]}])
       assert.equal(normalizeCustomLevelData({...r.source,components:[{...c,...change}]}),null,'dynamic mesh input retains geometry validation');
   }

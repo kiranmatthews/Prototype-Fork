@@ -1,0 +1,279 @@
+{
+  "scope": "Remove all painted breakaway warning lines and flashes; use physical shake then fall only",
+  "coverage": {
+    "source": [
+      {
+        "id": "sky",
+        "name": "Sky Bridge",
+        "pads": 7,
+        "textures": [
+          "bridge-timber"
+        ],
+        "sculpted": 0
+      },
+      {
+        "id": "slipstream-race",
+        "name": "The Slipstream",
+        "pads": 2,
+        "textures": [
+          "waterslide-fiberglass"
+        ],
+        "sculpted": 0
+      },
+      {
+        "id": "test",
+        "name": "Carlisle Coast",
+        "pads": 14,
+        "textures": [
+          "coast-timber"
+        ],
+        "sculpted": 0
+      },
+      {
+        "id": "custard-creek",
+        "name": "Custard Creek",
+        "pads": 15,
+        "textures": [
+          "coast-timber"
+        ],
+        "sculpted": 0
+      },
+      {
+        "id": "rumblewater-run",
+        "name": "Ripcord River",
+        "pads": 5,
+        "textures": [
+          "bridge-timber"
+        ],
+        "sculpted": 0
+      },
+      {
+        "id": "rolling-bones",
+        "name": "Rolling Bones",
+        "pads": 48,
+        "textures": [
+          "bridge-timber"
+        ],
+        "sculpted": 0
+      },
+      {
+        "id": "hollowwake-descent",
+        "name": "Hollowwake Descent",
+        "pads": 10,
+        "textures": [
+          "bridge-timber"
+        ],
+        "sculpted": 0
+      },
+      {
+        "id": "bonus-beachside-run",
+        "name": "Bonus: Lifeguard Lockup",
+        "pads": 1,
+        "textures": [
+          "plank"
+        ],
+        "sculpted": 0
+      },
+      {
+        "id": "bonus-coastal",
+        "name": "Bonus: Rooftop Deliveries",
+        "pads": 1,
+        "textures": [
+          "bay-paving"
+        ],
+        "sculpted": 0
+      },
+      {
+        "id": "bonus-rumblewater-run",
+        "name": "Bonus: Sluicekeeper\u2019s Cache",
+        "pads": 3,
+        "textures": [
+          "bridge-timber"
+        ],
+        "sculpted": 0
+      },
+      {
+        "id": "bonus-rolling-bones",
+        "name": "Bonus: Moonbone Vault",
+        "pads": 4,
+        "textures": [
+          "coast-bedrock"
+        ],
+        "sculpted": 4
+      },
+      {
+        "id": "rooftop-relay",
+        "name": "Rooftop Relay",
+        "pads": 1,
+        "textures": [
+          "wood"
+        ],
+        "sculpted": 0
+      }
+    ],
+    "published": [
+      {
+        "id": "sky",
+        "name": "Sky Bridge",
+        "pads": 7,
+        "textures": [
+          "bridge-timber"
+        ],
+        "sculpted": 0
+      },
+      {
+        "id": "test",
+        "name": "Carlisle Coast",
+        "pads": 14,
+        "textures": [
+          "coast-timber"
+        ],
+        "sculpted": 0
+      },
+      {
+        "id": "custard-creek",
+        "name": "Custard Creek",
+        "pads": 15,
+        "textures": [
+          "coast-timber"
+        ],
+        "sculpted": 0
+      },
+      {
+        "id": "slipstream-race",
+        "name": "The Slipstream",
+        "pads": 2,
+        "textures": [
+          "waterslide-fiberglass"
+        ],
+        "sculpted": 0
+      },
+      {
+        "id": "rooftop-relay",
+        "name": "Rooftop Relay",
+        "pads": 1,
+        "textures": [
+          "wood"
+        ],
+        "sculpted": 0
+      }
+    ]
+  },
+  "implementation": "Remove the shared overlay builder and all warning-color updates from ordinary and authored sculpted crumble construction, shake, fall and reset. Saved/editor components use this same runtime. No level-data migration is required.",
+  "preserved": [
+    "authored shake duration",
+    "shake displacement",
+    "fall acceleration and tumble",
+    "collision removal",
+    "ten-second return",
+    "checkpoint/death reset",
+    "grindable rims",
+    "authored platform materials and geometry"
+  ],
+  "browser": {
+    "moonbone": {
+      "states": [
+        "idle",
+        "shake",
+        "fall"
+      ],
+      "samples": 122,
+      "realLanding": true,
+      "shakeXRange": [
+        33.94000058760696,
+        34.059994711606436
+      ],
+      "unchangedSurfaceColor": true,
+      "noWarningOverlay": true,
+      "errors": []
+    },
+    "skyBridgeAndFixture": {
+      "base": "http://127.0.0.1:5419/",
+      "reports": [
+        {
+          "lite": true,
+          "stamp": "Codex/sol fork \u00b7 build 10-23 10:14 UTC",
+          "course": {
+            "grounded": true,
+            "position": [
+              0,
+              0.7366666187594333,
+              5
+            ],
+            "pads": 7
+          },
+          "courseReturn": 10.000000000000128,
+          "fixtureReturn": 10.000000000000119,
+          "respawn": {
+            "grounded": true,
+            "pad": "idle",
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "checkpoint": true,
+          "finish": true
+        },
+        {
+          "lite": false,
+          "stamp": "Codex/sol fork \u00b7 build 10-23 10:14 UTC",
+          "course": {
+            "grounded": true,
+            "position": [
+              0,
+              0.7366666187594333,
+              5
+            ],
+            "pads": 7
+          },
+          "courseReturn": 10.00000000000013,
+          "fixtureReturn": 10.000000000000119,
+          "respawn": {
+            "grounded": true,
+            "pad": "idle",
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          },
+          "checkpoint": true,
+          "finish": true
+        }
+      ],
+      "errors": []
+    }
+  },
+  "checks": [
+    {
+      "task": "tools/test-surface-behavior.mjs",
+      "exitCode": 0,
+      "seconds": 10.81
+    },
+    {
+      "task": "tools/test-crumble-respawn.mjs",
+      "exitCode": 0,
+      "seconds": 11.63
+    },
+    {
+      "task": "tools/test-dynamic-platform-edges.mjs",
+      "exitCode": 0,
+      "seconds": 10.19
+    },
+    {
+      "task": "tools/test-moonbone-production.mjs",
+      "exitCode": 0,
+      "seconds": 10.24
+    },
+    {
+      "task": "build",
+      "exitCode": 0,
+      "seconds": 86.23
+    }
+  ],
+  "checkAllRun": false,
+  "delivery": "Local commit and shared port 5417 preview under slow-network workflow",
+  "screenshot": "docs/art-reviews/breakaway-shake-only.png"
+}

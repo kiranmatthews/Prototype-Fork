@@ -90,7 +90,7 @@ try{
   await page.waitForFunction(()=>window.__game.player.grounded&&window.__game.player.state==='ride');
   report.collapse.respawn=await page.evaluate(()=>({position:window.__game.player.pos.toArray(),
     allRestored:window.__game.getLevel().crumbles.every(c=>c.state==='idle'&&c.mesh.visible)}));
-  assert.equal(report.collapse.warning,true);assert.equal(report.collapse.respawn.allRestored,true);
+  assert.equal(report.collapse.warning,false);assert.equal(report.collapse.respawn.allRestored,true);
   assert.ok(report.collapse.respawn.position[2]>0,'fall returns to supported spawn');
   console.log('PASS collapse removes support and death restores the complete platform');
 

@@ -33,8 +33,8 @@ try {
     assert.deepEqual(c.mesh.position.toArray(), c.base.toArray());
     assert.deepEqual(c.mesh.scale.toArray(), [1, 1, 1]);
     assert.deepEqual(c.mesh.rotation.toArray(), [0, c.yaw, 0, 'XYZ']);
-    const warning = c.mesh.children.find(child => child.name.includes('warning bindings'));
-    if (warning) assert.equal(warning.material.color.getHex(), 0x815027, 'return retained the collapse warning');
+    assert.equal(c.mesh.getObjectByName('Fall-away split and warning bindings'), undefined,
+      'return must not recreate the removed painted warning');
     assert.equal(level.groundMeshes.filter(mesh => mesh === c.mesh).length, 1);
     assert.ok(supported(level, c), 'restored surface must immediately catch a ground ray');
   };

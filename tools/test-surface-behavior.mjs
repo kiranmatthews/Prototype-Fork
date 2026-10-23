@@ -73,10 +73,13 @@ await withSkateRuntime(async({THREE,server,Level,Player,CONST})=>{
     assert.equal(c.shakeTime,FALL_AWAY_SURFACE.delay);
     assert.equal(c.fallSpeed,FALL_AWAY_SURFACE.acceleration);
     assert.equal(c.base.y+ c.mesh.geometry.parameters.height/2,2,'top-centre contract');
-    const decoration=c.mesh.children.find(x=>x.name.includes('warning bindings'));
-    assert.ok(decoration,'warning dressing must be owned by the falling support');
+    assert.equal(c.mesh.getObjectByName('Fall-away split and warning bindings'),undefined);
+    const material=c.mesh.material, originalColor=material.color.getHex(), children=[...c.mesh.children];
     level.touchCrumble(0);level.update(.1);level.touchCrumble(0);
     assert.equal(c.t,.1,'continued contact must not restart the timer');
+    assert.notEqual(c.mesh.position.x,c.base.x,'the platform itself shakes before falling');
+    assert.equal(material.color.getHex(),originalColor,'shaking must not paint or flash the surface');
+    assert.deepEqual(c.mesh.children,children,'shaking must not add a warning overlay');
     for(let i=0;i<35;i++)level.update(1/60);
     assert.equal(c.state,'shake','warning ended prematurely');
     for(let i=0;i<20;i++)level.update(1/60);
@@ -87,7 +90,8 @@ await withSkateRuntime(async({THREE,server,Level,Player,CONST})=>{
     assert.equal(c.state,'idle');assert.equal(c.mesh.visible,true);
     assert.deepEqual(c.mesh.position.toArray(),c.base.toArray());
     assert.equal(c.mesh.rotation.y,THREE.MathUtils.degToRad(37));
-    assert.equal(decoration.material.color.getHex(),0x815027,'warning glow survived respawn');
+    assert.equal(c.mesh.material,material);assert.equal(material.color.getHex(),originalColor);
+    assert.deepEqual(c.mesh.children,children,'respawn must not add a warning overlay');
   }finally{level.dispose();}
 
   assert.ok(normalizeCustomLevelData(SKY_BRIDGE_LEVEL),'Sky Bridge data must normalize');

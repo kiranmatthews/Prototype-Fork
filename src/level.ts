@@ -17,7 +17,7 @@ import { NightworksFogVisibility } from './nightworksFog';
 import { addNightworksStoneLook, createNightworksMagma, NIGHTWORKS_VOLCANO_TEXTURES } from './nightworksMagma';
 import { SKY_BRIDGE_LEVEL } from './levels/sky-bridge';
 import { ICE_SURFACE, FALL_AWAY_SURFACE, SLIPPERY_COMPONENT_TYPES } from './surfaceBehavior';
-import { createIceMaterial, dressFallAwaySurface, updateFallAwayWarning } from './surfacePresentation';
+import { createIceMaterial } from './surfacePresentation';
 import { addMasonryLook, isMasonryTexture } from './masonryMaterial';
 import {BoulderLightning} from './boulderLightning';
 import {BoulderChase,validBoulderChase,type BoulderChaseData} from './boulderChase';
@@ -8278,7 +8278,6 @@ export class Level {
               c.speed ?? FALL_AWAY_SURFACE.acceleration,
               c.emissive,
               s[1],
-              !c.vertices,
             );
             this.applyAuthoredMovingSurface(this.crumbles[this.crumbles.length-1].mesh,c);
             if(c.dkind==="citydeck")this.dressCityMovingDeck(this.crumbles[this.crumbles.length-1].mesh,c,s[1]);
@@ -10046,12 +10045,12 @@ export class Level {
       }
     }
 
-    // Crumble pads: shake, drop, then return on one shared ten-second clock.
+    // Crumble pads warn through physical shaking only, then drop and return
+    // on one shared ten-second clock. Their authored surfaces stay untouched.
     for (const c of this.crumbles) {
       if (c.state === "idle" || c.state === "gone" && c.mesh.userData.chaseCradleReleased) continue;
       c.t += dt;
       if (c.state === "shake") {
-        updateFallAwayWarning(c.mesh, Math.min(1, c.t / Math.max(.001, c.shakeTime)));
         c.mesh.position.x = c.base.x + Math.sin(c.t * 55) * 0.06;
         c.mesh.position.y = c.base.y - c.t * 0.25;
         if (c.t > c.shakeTime) {
@@ -10070,7 +10069,6 @@ export class Level {
         // slow faller stays visible all the way down); time cap catches speed ~0
         if (c.base.y - c.mesh.position.y > 18 || c.t > 8) {
           c.state = "gone";
-          updateFallAwayWarning(c.mesh, 0);
           c.mesh.visible = false;
           c.mesh.position.y = c.base.y - 400; // park far below any raycast
         }
@@ -14591,7 +14589,6 @@ export class Level {
     c.mesh.position.copy(c.base);
     c.mesh.rotation.set(0, c.yaw, 0);
     c.mesh.scale.setScalar(1);
-    updateFallAwayWarning(c.mesh, 0);
     if (!this.groundMeshes.includes(c.mesh)) this.groundMeshes.push(c.mesh);
   }
 
@@ -14696,7 +14693,6 @@ export class Level {
     material.userData.texKind=c.tex ?? 'stone';
     material.color.set(c.color ?? '#ffffff'); material.emissive.set(c.emissive ?? '#000000');
     material.vertexColors = !!c.colors; material.needsUpdate = true;
-    if (c.t === 'crumble') dressFallAwaySurface(mesh, true, true);
     mesh.name = c.nm ?? mesh.name;
     mesh.rotation.y = THREE.MathUtils.degToRad(c.yaw ?? 0);
   }
@@ -14978,7 +14974,6 @@ export class Level {
     fallSpeed: number = FALL_AWAY_SURFACE.acceleration,
     emissive = "#000000",
     thickness: number = FALL_AWAY_SURFACE.thickness,
-    dress = true,
   ): Crumble {
     const mesh = new THREE.Mesh(
       new THREE.BoxGeometry(w, thickness, d),
@@ -14988,7 +14983,6 @@ export class Level {
     mesh.rotation.y = THREE.MathUtils.degToRad(yawDeg); // stand-detection is the ground raycast: free spin is fine
     mesh.name = "crumble pad";
     mesh.userData.crumbleId = this.crumbles.length;
-    if (dress) dressFallAwaySurface(mesh, tex !== 'bridge-timber');
     this.root.add(mesh);
     this.groundMeshes.push(mesh);
     const c: Crumble = {
