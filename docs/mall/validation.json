@@ -1,7 +1,7 @@
 {
-  "schema": 20,
-  "verifiedAt": "2026-10-23T01:13:32.835413+00:00",
-  "status": "Retained retail Mall rails registered and normal-start chains restored. Complete native and full-browser routes pass; final 1:1 goal remains active.",
+  "schema": 21,
+  "verifiedAt": "2026-10-23T01:46:44.130611+00:00",
+  "status": "Original animated actor surveyed and charged-pose scale checked. Runtime unchanged; complete fountain rollout remains unresolved.",
   "previousImageBasedEvidenceCommit": "2508077121b87c2b606c515ac025556bd05f44af",
   "reference": {
     "page": "https://thpsx.com/creation-details/?obj=958",
@@ -21,7 +21,7 @@
   },
   "sourceSHA256": {
     "src/levels/mall.ts": "ad3747d8facab080fed74989bfa657370f801098511a93df66fd7ccdf6a80072",
-    "src/levels/mall-measured.ts": "a4b60adc5fe14552cee6ca93a6a94c29a19650b0f24e7fe8b3a0b8837eebede5",
+    "src/levels/mall-measured.ts": "8cf1909bb2073f09e77cdb529dfddf1395393126055c2cca12d33ce7919334a8",
     "src/levels/mall-art.ts": "c567277c468e232c9fcd73f4537fe05bfd307491f143a245ca77512bd29c32cc",
     "src/levels/mall-art.json": "94941a1026c7cfbc009d86b64c21654744043c0a7699ea4e4e0ed96d40c7c720",
     "src/levels/mall-art-textures.json": "56a3beccfc75921c4ba698e2d419f86f4e2f104f240b962d502b302e9d658a3a",
@@ -55,22 +55,24 @@
     "tools/test-school-wall-profile.mjs": "0898911b69e77060a4ec7d3d2ab0e9663b927bf7a105236b891002204d3cead5",
     "docs/mall/retail-rails.json": "e5a61482d810f7bcbf1a7f56016e6af2f5c9bee00936cc59e337cec1d99c73e5",
     "tools/mall-retail-reference.py": "f17ac6c6313eab0103a0dfad0baa4627ea7dc306d9bec6532df152605c97623e",
-    "tools/test-mall-retail-reference.py": "4a7304a0bf6e0323ffde864fb51636bcaff70fb786dd3f340147f1f733b97998"
+    "tools/test-mall-retail-reference.py": "4a7304a0bf6e0323ffde864fb51636bcaff70fb786dd3f340147f1f733b97998",
+    "tools/psx-skater-survey.py": "223cf2f09f3a861fed3373239a576a1f0cf4eeeb3e8f103de705401a272ed16e",
+    "tools/test-psx-skater-survey.py": "a3859435a044ed79857255dffd0e5a123740e6bb93817f80b57545929d21c0cb",
+    "tools/mall-actor-scale-browser.mjs": "6fb9ecf3ffee94df4d6402d58ba2ec8be8908d5a7fb6e35cfd275eda1d2150f9"
   },
   "build": {
-    "version": "7a2b5653de8c469d3507",
-    "snapshot": "/private/tmp/mall-recreation/snapshot-20",
-    "output": "/private/tmp/mall-recreation/dist-20",
-    "preview": "http://127.0.0.1:5292/?playtest&level=mall",
+    "version": "3f4248e1153716794a75",
+    "snapshot": "/private/tmp/mall-recreation/snapshot-21",
+    "output": "/private/tmp/mall-recreation/dist-21",
+    "preview": "http://127.0.0.1:5293/?playtest&level=mall",
     "published": false
   },
   "runtimeManifest": "measured-runtime.json",
-  "sharedWorkspaceNote": "Only Mall-owned level, rail measurements, tests and docs changed in the live workspace. Shared runtime and tuning remain unchanged. The committed b69bb15 School decoder is included as a tool dependency via the isolated index; its live additions are preserved.",
+  "sharedWorkspaceNote": "Only Mall docs, research tools and a scale comment changed in the live workspace. Physics experiments ran in the isolated snapshot and were restored byte-for-byte before required checks/build. No shared runtime or tuning changes are committed.",
   "scale": {
     "metresPerSourceUnit": 0.045,
-    "riderStandingHeight": 3.016705279790415,
     "minimumRenderedArcadeHeadClearance": 0.36999670788151207,
-    "status": "Original-to-conversion registration measured. Final actor-relative world scale remains provisional; source actor animation/render transform and complete fountain entry still need comparison.",
+    "status": "Retain 0.045 conversion-unit scale for charged riding. Coasting proportions and source movement fidelity remain incomplete.",
     "topologyAcrossScales": [
       {
         "scale": 0.025,
@@ -115,7 +117,20 @@
         "bytes": 6920214
       }
     ],
-    "originalUnitAtCurrentScale": 0.018079998317314883
+    "originalUnitAtCurrentScale": 0.018079998317314883,
+    "historicalUnfilteredBodyHeight": 3.016705279790415,
+    "historicalBoundsCorrection": "Whole-player bounds include invisible helpers; the visible posed rider is now measured separately.",
+    "chargedVisibleHeight": {
+      "min": 2.5870508474305183,
+      "mean": 2.6096155166248973,
+      "max": 2.6298271892403164
+    },
+    "coastingVisibleHeight": {
+      "min": 2.6490846751418218,
+      "mean": 2.6727428608335106,
+      "max": 2.6939911941830275
+    },
+    "actorReport": "actor-scale.json"
   },
   "nativeMain": {
     "state": "finished",
@@ -2602,13 +2617,121 @@
           "wallSeconds": 15.783100000023842
         }
       ]
+    },
+    "pass21ActorScale": {
+      "build": {
+        "version": "3f4248e1153716794a75",
+        "snapshot": "/private/tmp/mall-recreation/snapshot-21",
+        "output": "/private/tmp/mall-recreation/dist-21",
+        "preview": "http://127.0.0.1:5293/?playtest&level=mall",
+        "published": false
+      },
+      "errors": [],
+      "poses": [
+        {
+          "mode": "idle",
+          "frames": 240,
+          "sampleWindow": [
+            181,
+            240
+          ],
+          "height": {
+            "min": 2.647705259585692,
+            "mean": 2.6725193621104117,
+            "max": 2.695854871069656
+          },
+          "finalSpeed": 0,
+          "finalRiderSize": [
+            0.8703159804292522,
+            2.656475420538996,
+            1.6050516737866474
+          ],
+          "finalBoardSize": [
+            0.5267444888091184,
+            0.2699180518388715,
+            1.982568383216858
+          ],
+          "finalUnfilteredPlayerSize": [
+            1.574245654630765,
+            3.851503930300211,
+            1.982568383216858
+          ],
+          "sourceMatches": true,
+          "tuningUnchanged": true,
+          "groundedWithoutBail": true
+        },
+        {
+          "mode": "coast",
+          "frames": 240,
+          "sampleWindow": [
+            181,
+            240
+          ],
+          "height": {
+            "min": 2.6490846751418218,
+            "mean": 2.6727428608335106,
+            "max": 2.6939911941830275
+          },
+          "finalSpeed": 11.999055118110237,
+          "finalRiderSize": [
+            0.8703159804293179,
+            2.6551679109050497,
+            1.6050516737867042
+          ],
+          "finalBoardSize": [
+            0.5267444888091184,
+            0.2699180518388715,
+            1.982568383216858
+          ],
+          "finalUnfilteredPlayerSize": [
+            1.5818930861251967,
+            3.8502118743300713,
+            1.982568383216858
+          ],
+          "sourceMatches": true,
+          "tuningUnchanged": true,
+          "groundedWithoutBail": true
+        },
+        {
+          "mode": "crouch",
+          "frames": 240,
+          "sampleWindow": [
+            181,
+            240
+          ],
+          "height": {
+            "min": 2.5870508474305183,
+            "mean": 2.6096155166248973,
+            "max": 2.6298271892403164
+          },
+          "finalSpeed": 22.999305774278216,
+          "finalRiderSize": [
+            1.4623599248844776,
+            2.5926447606444896,
+            1.5853115013704837
+          ],
+          "finalBoardSize": [
+            0.5267444888091184,
+            0.2699180518388715,
+            1.982568383216858
+          ],
+          "finalUnfilteredPlayerSize": [
+            1.8705908845694186,
+            3.9082778667890494,
+            2.016750309648728
+          ],
+          "sourceMatches": true,
+          "tuningUnchanged": true,
+          "groundedWithoutBail": true
+        }
+      ]
     }
   },
   "smoke": {
     "start": {
       "deaths": 0,
       "lives": 4,
-      "stamp": "Codex/sol fork \u00b7 build 10-23 01:06 UTC"
+      "stamp": "Codex/sol fork \u00b7 build 10-23 01:42 UTC"
     },
     "checkpoints": [
       {
@@ -2624,37 +2747,37 @@
         "index": 1,
         "position": [
           12.054929809570313,
-          118.78562927246094,
+          118.88562927246093,
           -361.0608837890625
         ],
-        "distance": 0.09999999999999432
+        "distance": 0
       },
       {
         "index": 2,
         "position": [
           -23.945070190429686,
-          92.44306182861328,
+          92.54306182861328,
           -507.3108837890625
         ],
-        "distance": 0.09999999999999432
+        "distance": 0
       },
       {
         "index": 3,
         "position": [
           237.0549298095703,
-          55.119508814526824,
+          55.219508814526826,
           -691.8108837890625
         ],
-        "distance": 0.10000000000000142
+        "distance": 0
       },
       {
         "index": 4,
         "position": [
           237.0549298095703,
-          36.55775833129883,
+          36.65775833129883,
           -1141.8108837890625
         ],
-        "distance": 0.10000000000000142
+        "distance": 0
       }
     ],
     "recovery": {
@@ -2672,12 +2795,13 @@
     "typescript": "passed",
     "productionBuild": "passed",
     "check:all": "not run",
-    "browser": "Current production: complete course, two Flying Leap releases and full original tape transfer; lite MENU, five K/L checkpoints and pit recovery. No console errors.",
+    "browser": "Fresh production build: lite MENU, five K/L checkpoints and pit recovery; full-render 240-frame idle, coasting and charged actor measurements. Zero console errors. Complete main/gap traversal remains the unchanged pass-20 evidence.",
     "landingPolicy": "Default/true 40 m drops still bail; false follows the identical trajectory and rolls away. Invalid types rejected, editor capture/import retained. Existing huge-drop boundary, aligned-transition and saved-settings regression suite passes.",
     "breakables": "Seven identical native enabled/disabled movement traces; grouped visibility, thin swept contact, diagonal miss, finite fragment disposal, 20 reset cycles, editor round-trip and invalid import rejection pass.",
     "wallOpenings": "Nineteen envelopes clipped to measured polygons, 69 endpoint-height profiles, 1035 source-interior samples; both old fountain exits bail and both corrected exits land cleanly.",
-    "required": "Exact frozen check:levels and build package scripts pass, including TypeScript. No check:all.",
-    "retailReference": "Local byte hashes, 97.49% position registration, independent TRG node positions, normal/alternate activation distinction, and rejection of malformed source/unknown activation commands pass."
+    "required": "Exact frozen check:levels and build scripts pass. No check:all.",
+    "retailReference": "Local byte hashes, 97.49% position registration, independent TRG node positions, normal/alternate activation distinction, and rejection of malformed source/unknown activation commands pass.",
+    "actorSurvey": "78 clip byte budgets, 4096 source trig pairs, independent codec/hierarchy/stitch fixtures and malformed-input rejection pass."
   },
   "fidelityRemaining": [
     "Remaining upper alternate routes and tape-transfer timing tolerance need comparison with original gameplay.",
@@ -2688,13 +2812,13 @@
     "Retained THPS2 retail Mall rails are measured and active in the build. A byte-identical 1999 THPS1 revision and original terrain-specific grind audio remain unverified."
   ],
   "elapsed": {
-    "continuationStartedUTC": "2026-10-23T00:52:22+00:00",
-    "fullBrowserPlayableConfirmedUTC": "2026-10-23T01:09:20.495672+00:00",
-    "finalValidationUTC": "2026-10-23T01:13:32.835413+00:00",
-    "promptToVerifiedPlayableSeconds": 1018.5,
-    "basis": "Completed full-production course and gap checks; earlier native successes are not used as the handoff timestamp."
+    "continuationStartedUTC": "2026-10-23T01:16:42+00:00",
+    "researchVerifiedUTC": "2026-10-23T01:46:44.130611+00:00",
+    "promptToResearchVerificationSeconds": 1802.13,
+    "promptToNewPlayableSeconds": null,
+    "basis": "Research-only continuation; existing playable baseline retained. Pass 20 prompt-to-verified-playable was 1018.50 seconds."
   },
-  "previousValidationCommit": "d4dacb97dc3cc0c778844f88915747dd6b7c51b7",
+  "previousValidationCommit": "0a85bb40e99823c4b8da6cf5ff79e5e97e3abb2e",
   "upperRoutes": {
     "scale": 0.045,
     "stats": {
@@ -5860,6 +5984,19 @@
   "inheritedEvidence": {
     "surfaces": "Source vertex/surface checks from pass 19. This pass changes only rail data/factory and test selection; collision vertices and art are unchanged.",
     "breakables": "Full browser pass 18; no breakable code or source art changed.",
-    "wallOpeningBrowser": "Full browser pass 19; native openings rechecked in pass 20."
+    "wallOpeningBrowser": "Full browser pass 19; native openings rechecked in pass 20.",
+    "mainRailsGapsUpperVerts": "Pass 20. This pass changes research tools/docs and a scale comment only; executable level/runtime code and data remain unchanged."
+  },
+  "actorScale": {
+    "report": "actor-scale.json",
+    "decoderPassed": true,
+    "liteAndFullPassed": true,
+    "comparison": {
+      "chargedHeightRatio": 1.011229108892233,
+      "coastingHeightRatio": 0.7635205430713589,
+      "boardWidthRatio": 1.0155677749486876,
+      "boardLengthRatio": 1.087715721122225,
+      "chargedHeightFittedConversionScale": 0.04550530990015048
+    }
   }
 }

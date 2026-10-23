@@ -1,6 +1,6 @@
 {
-  "snapshot": "/private/tmp/mall-recreation/snapshot-20",
-  "createdAt": "2026-10-23T01:13:32.835413+00:00",
+  "snapshot": "/private/tmp/mall-recreation/snapshot-21",
+  "createdAt": "2026-10-23T01:46:44.130611+00:00",
   "files": {
     "src/animation/bridge.ts": "a5477582012e00b75bb83322f0b9aaecee04392d299cbe6c8d9bb560ac1f6686",
     "src/animation/crouch.ts": "473640f543d2e6e6a5890d16f6e198f753edc32b2a385dc1c0215860e9732d5e",
@@ -278,7 +278,7 @@
     "src/levels/mall-art.json": "94941a1026c7cfbc009d86b64c21654744043c0a7699ea4e4e0ed96d40c7c720",
     "src/levels/mall-art.ts": "c567277c468e232c9fcd73f4537fe05bfd307491f143a245ca77512bd29c32cc",
     "src/levels/mall-measured-scale.ts": "bb491644d457c49cd8539de166219183a0bac76147d08a43d8b2ec37679d9e9a",
-    "src/levels/mall-measured.ts": "a4b60adc5fe14552cee6ca93a6a94c29a19650b0f24e7fe8b3a0b8837eebede5",
+    "src/levels/mall-measured.ts": "8cf1909bb2073f09e77cdb529dfddf1395393126055c2cca12d33ce7919334a8",
     "src/levels/mall-wall-proxies.ts": "4eef907d97bc4b1c2f5b3407ecf8d988a43a25109e30e2f6a732b02386fbff0e",
     "src/levels/mall.ts": "ad3747d8facab080fed74989bfa657370f801098511a93df66fd7ccdf6a80072",
     "src/levels/meshylook-thorns.ts": "4b9901c963ce817d3bae30c8a289145d87544c4245b80532d2473258b9f140b1",
@@ -508,9 +508,12 @@
     "tools/test-mall-measured-topology.mjs": "b2fbe47e5395e9e418d98b2c87ecfbdf4144020960aac32101c45b084c50f275",
     "tools/mall-measured-gap-pilot.mjs": "78d85a72b456bdd7df69f593711185953525ab48adbaf9c7f1df43dfe8aabe43",
     "tools/test-mall-measured-gaps.mjs": "218f06f4555f9c2677d1c0fc94da2f15e88b77ffad1bbb336aca03592afb8119",
-    "tools/mall-measured-gaps-browser.mjs": "4295c77696a9dc69cc812d70a816f6a244a4d61338e127110621fa42c56b8abb"
+    "tools/mall-measured-gaps-browser.mjs": "4295c77696a9dc69cc812d70a816f6a244a4d61338e127110621fa42c56b8abb",
+    "tools/psx-skater-survey.py": "223cf2f09f3a861fed3373239a576a1f0cf4eeeb3e8f103de705401a272ed16e",
+    "tools/test-psx-skater-survey.py": "a3859435a044ed79857255dffd0e5a123740e6bb93817f80b57545929d21c0cb",
+    "tools/mall-actor-scale-browser.mjs": "6fb9ecf3ffee94df4d6402d58ba2ec8be8908d5a7fb6e35cfd275eda1d2150f9"
   },
-  "sharedRuntime": "Cloned from snapshot-19; player, level toolkit, tuning and park physics unchanged.",
+  "sharedRuntime": "Player, level toolkit, tuning and park physics byte-identical to snapshot-20. The only level-source edit is the scale-evidence comment.",
   "decoderDependency": "School tool at b69bb158c5924ff456d346842f17c4915d2c7aca; live School geometry-export additions excluded.",
   "unusedResearchModule": "src/levels/mall-measured-scale.ts is an unimported historical scale probe."
 }

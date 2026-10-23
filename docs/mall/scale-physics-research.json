@@ -712,12 +712,265 @@
         }
       ],
       "limitation": "Three releases traversed the opening without bail; the probe stopped while still airborne beyond the fountain. It is not a grounded-rollout or production-build validation."
+    },
+    "groundedRollout21": {
+      "status": "Failed; diagnostic only. Experimental code restored before the production build.",
+      "defaults": [
+        {
+          "releases": [
+            -11175,
+            -10650,
+            -9465
+          ],
+          "frames": 185,
+          "bail": true,
+          "maxSpeed": 22.999305774278216,
+          "groundedRollout": 0,
+          "fountainFrames": 0,
+          "jumps": [
+            {
+              "frame": 162,
+              "source": [
+                -11169.347582341734,
+                716.5365939670141,
+                370
+              ],
+              "state": "ride",
+              "charge": 0.4
+            }
+          ],
+          "end": [
+            -10977.642795138889,
+            754.7212606336807,
+            370
+          ],
+          "state": "air"
+        },
+        {
+          "releases": [
+            -11175,
+            -10650,
+            -9450
+          ],
+          "frames": 185,
+          "bail": true,
+          "maxSpeed": 22.999305774278216,
+          "groundedRollout": 0,
+          "fountainFrames": 0,
+          "jumps": [
+            {
+              "frame": 162,
+              "source": [
+                -11169.347582341734,
+                716.5365939670141,
+                370
+              ],
+              "state": "ride",
+              "charge": 0.4
+            }
+          ],
+          "end": [
+            -10977.642795138889,
+            754.7212606336807,
+            370
+          ],
+          "state": "air"
+        },
+        {
+          "releases": [
+            -11175,
+            -10650,
+            -9440
+          ],
+          "frames": 185,
+          "bail": true,
+          "maxSpeed": 22.999305774278216,
+          "groundedRollout": 0,
+          "fountainFrames": 0,
+          "jumps": [
+            {
+              "frame": 162,
+              "source": [
+                -11169.347582341734,
+                716.5365939670141,
+                370
+              ],
+              "state": "ride",
+              "charge": 0.4
+            }
+          ],
+          "end": [
+            -10977.642795138889,
+            754.7212606336807,
+            370
+          ],
+          "state": "air"
+        }
+      ],
+      "partialCandidate": [
+        {
+          "releases": [
+            -11175,
+            -10650,
+            -9465
+          ],
+          "frames": 472,
+          "bail": true,
+          "maxSpeed": 35.09463518214967,
+          "groundedRollout": 5,
+          "fountainFrames": 58,
+          "jumps": [
+            {
+              "frame": 162,
+              "source": [
+                -11167.727719513232,
+                716.5365939670141,
+                370
+              ],
+              "state": "ride",
+              "charge": 0.4
+            },
+            {
+              "frame": 218,
+              "source": [
+                -10648.323140074332,
+                772.3834228515625,
+                370
+              ],
+              "state": "ride",
+              "charge": 0.4
+            },
+            {
+              "frame": 329,
+              "source": [
+                -9457.99213550333,
+                566.5220805403028,
+                368.1761804251818
+              ],
+              "state": "ride",
+              "charge": 0.4
+            }
+          ],
+          "end": [
+            -7861.6285179899205,
+            313.02573280552133,
+            373.87291776813174
+          ],
+          "state": "air"
+        },
+        {
+          "releases": [
+            -11175,
+            -10650,
+            -9450
+          ],
+          "frames": 473,
+          "bail": true,
+          "maxSpeed": 35.09463518214967,
+          "groundedRollout": 5,
+          "fountainFrames": 57,
+          "jumps": [
+            {
+              "frame": 162,
+              "source": [
+                -11167.727719513232,
+                716.5365939670141,
+                370
+              ],
+              "state": "ride",
+              "charge": 0.4
+            },
+            {
+              "frame": 218,
+              "source": [
+                -10648.323140074332,
+                772.3834228515625,
+                370
+              ],
+              "state": "ride",
+              "charge": 0.4
+            },
+            {
+              "frame": 330,
+              "source": [
+                -9446.152590332444,
+                568.1862236169582,
+                368.11629357096297
+              ],
+              "state": "ride",
+              "charge": 0.4
+            }
+          ],
+          "end": [
+            -7860.443724306556,
+            314.0192879211395,
+            375.8052101032004
+          ],
+          "state": "air"
+        },
+        {
+          "releases": [
+            -11175,
+            -10650,
+            -9440
+          ],
+          "frames": 473,
+          "bail": true,
+          "maxSpeed": 35.09463518214967,
+          "groundedRollout": 5,
+          "fountainFrames": 58,
+          "jumps": [
+            {
+              "frame": 162,
+              "source": [
+                -11167.727719513232,
+                716.5365939670141,
+                370
+              ],
+              "state": "ride",
+              "charge": 0.4
+            },
+            {
+              "frame": 218,
+              "source": [
+                -10648.323140074332,
+                772.3834228515625,
+                370
+              ],
+              "state": "ride",
+              "charge": 0.4
+            },
+            {
+              "frame": 331,
+              "source": [
+                -9434.360000589753,
+                569.8437667314006,
+                368.056644226956
+              ],
+              "state": "ride",
+              "charge": 0.4
+            }
+          ],
+          "end": [
+            -7861.543190980201,
+            313.09737434211365,
+            374.0120784753259
+          ],
+          "state": "air"
+        }
+      ],
+      "limitation": "The same partial source-flight/target-speed candidate from pass 19 uses an incorrect hard cap approximation and unchanged drag/charge/rail-pop behavior. It is not a source-faithful profile. All three releases clear the opening and land, then bail after five grounded frames. No candidate setting is shipped.",
+      "traceFiles": [
+        "/private/tmp/mall-recreation/measured/fountain-default21.json",
+        "/private/tmp/mall-recreation/measured/fountain-partial-candidate21.json"
+      ]
     }
   },
   "nextEvidenceNeeded": [
-    "Verify source actor render/animation scale rather than using raw bind-pose bounds.",
+    "Resolve the complete fountain exit/rollout near original-conversion X=-7861, Z=374.",
     "Compare source charge timing, speed-dependent drag and rail pops before adopting any level profile.",
-    "Retest complete entry and grounded rollout with ordinary input, in both native and full-render browser."
+    "Compare coasting/charged poses separately; actor and cruiser proportions prevent one exact scale fit for every dimension.",
+    "Retest the complete entry and grounded rollout with ordinary input, in native and full-render browser."
   ],
   "retailRegistration": {
     "report": "retail-reference.json",
@@ -743,5 +996,16 @@
     "method": "Uniform least-squares fit to matched static vertices; 0.03 converted-unit correspondence bound. Converted duplicates with different floating-point values are counted separately.",
     "originalUnitAtCurrentScale": 0.018079998317314883,
     "limitation": "The original-to-conversion transform is now measured against retained retail static geometry. Final actor-relative world scale and movement calibration remain unverified."
+  },
+  "actorSurvey": {
+    "report": "actor-scale.json",
+    "status": "Retain 0.045 conversion-unit scale for charged riding. Coasting proportions and source movement fidelity remain incomplete.",
+    "comparison": {
+      "chargedHeightRatio": 1.011229108892233,
+      "coastingHeightRatio": 0.7635205430713589,
+      "boardWidthRatio": 1.0155677749486876,
+      "boardLengthRatio": 1.087715721122225,
+      "chargedHeightFittedConversionScale": 0.04550530990015048
+    }
   }
 }

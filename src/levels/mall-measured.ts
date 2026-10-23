@@ -13,9 +13,9 @@ const add=(c:CustomComponent)=>{C.push(c);return c;};
 // Static geometry comes from the PS1 conversion, registered against the
 // original-format Mall retained in THPS2 retail (see retail-reference.json).
 // This is not a byte-for-byte verification of the 1999 THPS1 disc.
-// The tightest arcade beam leaves 3.19 m on the normal lane at this scale,
-// clearing the existing ~3.02 m visible rider. Collision-capsule dimensions
-// alone would allow a much smaller scene while the rider clips its ceilings.
+// Measured original crouch poses and our charged rider agree at this scale
+// (docs/mall/actor-scale.json). Coasting proportions still differ. Whole-player
+// bounds include hidden helpers; use the visible rider vertices for scale.
 export const MALL_SCALE=.045;
 export const MALL_ORIGIN:P=[-14573.5751953125,-2324.921875,532.1126708984375];
 export const mallPoint=(x:number,y:number,z:number):P=>[(z-MALL_ORIGIN[2])*MALL_SCALE,(y-MALL_ORIGIN[1])*MALL_SCALE,-(x-MALL_ORIGIN[0])*MALL_SCALE];
