@@ -1,3 +1,4 @@
+import { dressRollingBones } from './moonbone-scenery';
 import {BufferGeometry,Float32BufferAttribute} from 'three';
 import type {CustomComponent,CustomLevelData} from '../level';
 import {RUMBLEWATER_RUN_LEVEL,RUMBLEWATER_END,RUMBLEWATER_REFUGES,rumblePoint,rumbleHeight,rumbleProgress,rumbleTangent,rumbleYaw} from './rumblewater-run';
@@ -196,3 +197,5 @@ export const ROLLING_BONES_LEVEL:CustomLevelData={...structuredClone(RUMBLEWATER
     ambientSky:'#819dc7',ambientGround:'#28344b',ambientIntensity:1.05,
     sunColor:'#adcaff',sunIntensity:1.15,fillColor:'#557db6',fillIntensity:.42,drawDistance:250,shadowStrength:.6},
 };
+
+dressRollingBones(ROLLING_BONES_LEVEL);

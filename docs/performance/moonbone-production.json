@@ -1,0 +1,207 @@
+{
+  "scope": "Moonbone Vault production scenery and Rolling Bones night pipe lighting",
+  "baseCommit": "64843d6d",
+  "delivery": "Local commit and shared 5417 preview only; slow-network workflow remains active",
+  "art": {
+    "playableSculptedSolids": 11,
+    "movingSolids": 5,
+    "moonboneProps": {
+      "bonus": 8,
+      "main": 11
+    },
+    "allBonePropsUniformNativeScale": true,
+    "matteLayers": 3,
+    "matteRuntimeBytes": 453124,
+    "generator": "Built-in imagegen",
+    "additionalMeshyCredits": 0,
+    "prompts": [
+      "tools/moonbone-assets/backdrop-prompts.json",
+      "tools/moonbone-assets/backdrop-refinement.json",
+      "tools/moonbone-assets/ridge-refinement.json"
+    ],
+    "provenance": "tools/moonbone-assets/backdrop-sources.json"
+  },
+  "pipeFog": {
+    "cause": "Shared Blockworks material mixed a fixed turquoise into every surface below world Y -3, increasing toward -28. The descending river reached this band irrespective of its night atmosphere.",
+    "fix": "Use the active Three.js fogColor uniform under USE_FOG; keep original material maps and all collision data.",
+    "gpuProbe": {
+      "pass": true,
+      "samples": {
+        "night": [
+          46,
+          51,
+          65,
+          255
+        ],
+        "warm": [
+          65,
+          51,
+          46,
+          255
+        ],
+        "materialFogOff": [
+          59,
+          59,
+          59,
+          255
+        ],
+        "sceneFogOff": [
+          59,
+          59,
+          59,
+          255
+        ],
+        "exp2": [
+          46,
+          51,
+          65,
+          255
+        ]
+      },
+      "errors": []
+    },
+    "fullRenderPositions": [
+      400,
+      1808,
+      2272,
+      2655
+    ],
+    "errors": []
+  },
+  "bonusJourney": {
+    "frames": 2901,
+    "state": "finished",
+    "crates": 16,
+    "deaths": 0,
+    "gem": true,
+    "errors": []
+  },
+  "bonusFullRender": {
+    "assets": [
+      {
+        "url": "http://127.0.0.1:5419/moonbone-vault/sky.webp",
+        "status": 200
+      },
+      {
+        "url": "http://127.0.0.1:5419/moonbone-vault/clouds-alpha.webp",
+        "status": 200
+      },
+      {
+        "url": "http://127.0.0.1:5419/moonbone-vault/ridge-alpha.webp",
+        "status": 200
+      },
+      {
+        "url": "http://127.0.0.1:5419/moonbone-vault/moonbone-crypt.glb",
+        "status": 200
+      },
+      {
+        "url": "http://127.0.0.1:5419/moonbone-vault/moonbone-skull.glb",
+        "status": 200
+      },
+      {
+        "url": "http://127.0.0.1:5419/moonbone-vault/moonbone-rib-arch.glb",
+        "status": 200
+      }
+    ],
+    "errors": [],
+    "views": [
+      {
+        "view": "arrival",
+        "grounded": true,
+        "draws": 55,
+        "triangles": 453657,
+        "textureMiB": 136.67
+      },
+      {
+        "view": "gallery",
+        "grounded": true,
+        "draws": 54,
+        "triangles": 451457,
+        "textureMiB": 136.67
+      },
+      {
+        "view": "far-vault",
+        "grounded": true,
+        "draws": 53,
+        "triangles": 449257,
+        "textureMiB": 136.67
+      },
+      {
+        "view": "return",
+        "grounded": true,
+        "draws": 52,
+        "triangles": 447057,
+        "textureMiB": 136.67
+      }
+    ]
+  },
+  "mainJourney": {
+    "route": "outer-high",
+    "frames": 7260,
+    "final": {
+      "state": "finished",
+      "position": [
+        7.556772938558441,
+        -64.26333333355686,
+        -2674.7779024943084
+      ],
+      "deaths": 0,
+      "crystal": true,
+      "checkpoints": 5
+    },
+    "errors": [],
+    "harnessAssertion": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n5 !== 6\n\n    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/tools/test-ripcord-river-browser.mjs:55:9"
+  },
+  "preservation": "Main gameplay component geometry, solid scenery, camera nodes, collectibles and boulder chase deep-equal the original source in test-moonbone-production.mjs. Bonus centre support heights, lift period, crumble timing, crates and gate are retained; visible sculpted meshes own the actual contacts and grind rims.",
+  "knownBaselineFailures": [
+    {
+      "test": "tools/test-level-security.mjs",
+      "failure": "world-map coordinate exceeded its allocation bound",
+      "baselineReproduced": "64843d6d",
+      "log": "/private/tmp/moonbone-production-review/baseline-level-security.log"
+    },
+    {
+      "test": "Existing fixed-input Rolling Bones native outer-high pilot",
+      "failure": "first crown stamp remains alive",
+      "baselineReproduced": "64843d6d, identical death position [-36.55205103049453,-62.10295847627902,-2546.2591116148233]",
+      "log": "/private/tmp/moonbone-production-review/baseline-main-pilot.log"
+    },
+    {
+      "test": "Existing main full-render browser pilot",
+      "failure": "Finish succeeds with zero deaths and crystal, but checkpoint assertion expects 6 while observed 5. The inner-low pilot also dies at the existing crown stamp.",
+      "gameplayChangesInThisTask": false
+    }
+  ],
+  "screenshots": [
+    "docs/art-reviews/moonbone-production/bonus-arrival.png",
+    "docs/art-reviews/moonbone-production/bonus-far-vault.png",
+    "docs/art-reviews/moonbone-production/bonus-return.png",
+    "docs/art-reviews/moonbone-production/pipe-before.png",
+    "docs/art-reviews/moonbone-production/pipe-night-fog.png",
+    "docs/art-reviews/moonbone-production/main-finish-landmark.png"
+  ],
+  "checks": {
+    "tools/test-moonbone-production.mjs": {
+      "exitCode": 0,
+      "seconds": 13.54
+    },
+    "tools/test-rolling-bones-bonus.mjs": {
+      "exitCode": 0,
+      "seconds": 11.86
+    },
+    "tools/test-dynamic-platform-edges.mjs": {
+      "exitCode": 0,
+      "seconds": 8.62
+    },
+    "check:levels": {
+      "exitCode": 0,
+      "seconds": 226.55
+    },
+    "build": {
+      "exitCode": 0,
+      "seconds": 62.46
+    },
+    "checkAllRun": false
+  },
+  "localEvidence": "/private/tmp/moonbone-production-review"
+}

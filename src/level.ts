@@ -1,3 +1,4 @@
+import { authoredMovingGeometry } from './authoredMovingSurface';
 import {COUNTRY_CLUB_TEXTURES,isCountryClubTexture,countryClubTextureFile,createCountryClubSurface} from './countryClubMaterials';
 
 import {Minefields,validMinefields,type MinefieldData} from './minefields';
@@ -774,9 +775,9 @@ export interface CustomComponent {
   // Slip only, 0.02..1: fraction of dry steering/braking/drive. Omitted = ICE_SURFACE.grip.
   iceGrip?: number;
   edgeGrinding?: boolean; // solid surface boundary grind paths (default true; false = explicit opt-out)
-  grindTopTriangles?: number; // mesh: leading triangles that form the actual deck; excludes decorative body strata from derived edges
+  grindTopTriangles?: number; // mesh / authored moving surface: leading triangles that form the actual deck; excludes decorative body strata from derived edges
   trafficRoad?: boolean; // LEGACY only: removed by migration along with retired car enemies
-  vertices?: number[];
+  vertices?: number[]; // mesh, mover, crumble: metre-space geometry; dynamic origin is the slab centre
   indices?: number[];
   normals?: number[];
   smoothCollision?: boolean; // mesh: interpolate authored ride normals across triangle seams
@@ -3244,8 +3245,9 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
           (component.s !== undefined && component.s.some(scale => scale !== 1))) return null;
     }
     const meshFields = ["vertices", "indices", "normals", "uvs", "colors", "grindTopTriangles"] as const;
-    if (component.t !== "mesh" && meshFields.some(key => component[key] !== undefined)) return null;
-    if (component.t === "mesh") {
+    const authoredMoving = (component.t === "mover" || component.t === "crumble") && meshFields.some(key => component[key] !== undefined);
+    if (component.t !== "mesh" && !authoredMoving && meshFields.some(key => component[key] !== undefined)) return null;
+    if (component.t === "mesh" || authoredMoving) {
       if (!finiteTuple(component.vertices, 9, 12_288) || component.vertices.length % 3 !== 0 ||
           component.vertices.some(value => Math.abs(value) > MAX_ABS)) return null;
       const vertexCount = component.vertices.length / 3;
@@ -6266,7 +6268,11 @@ export class Level {
     if(c.tex==='waterslide-shallows'&&standingWater)material=createShallowSlideWater(this.standingWaterClock,c);
     else if(c.tex==='custard-pool')material=custardPoolMaterial(this.standingWaterClock,c,this.builtFromData?.components??[]);
     else if(jungleStream){
-      if(this.skyPreset==='night')this.jungleStreamSkyReflection??=new JungleStreamSkyReflection();
+      // The Moonbone room replaces the dome with a painted lunar backdrop.
+      // Its pool must borrow that same image rather than the hidden night dome.
+      if(this.builtFromData?.components.some(c=>c.dkind==='moonbonesky'))
+        this.jungleStreamReflections??=new JungleStreamReflectionOwner('moonbonesky');
+      else if(this.skyPreset==='night')this.jungleStreamSkyReflection??=new JungleStreamSkyReflection();
       else this.jungleStreamReflections??=new JungleStreamReflectionOwner(c.tex==='custard-water'?'custardwaterreflection':undefined);
       material=createJungleStreamMaterial(this.standingWaterClock,c,geometry,this.builtFromData?.components??[],
         this.jungleStreamReflections??undefined,this.jungleStreamSkyReflection??undefined);
@@ -8272,7 +8278,9 @@ export class Level {
               c.speed ?? FALL_AWAY_SURFACE.acceleration,
               c.emissive,
               s[1],
+              !c.vertices,
             );
+            this.applyAuthoredMovingSurface(this.crumbles[this.crumbles.length-1].mesh,c);
             if(c.dkind==="citydeck")this.dressCityMovingDeck(this.crumbles[this.crumbles.length-1].mesh,c,s[1]);
             if(!c.slip&&c.dkind!=='citydeck'&&(!c.tex||['wood','plank','coast-timber','bridge-timber'].includes(c.tex)))dressCarlisleTimberDeck(this.crumbles[this.crumbles.length-1].mesh,c,true);
           } else if (c.t === "crate") {
@@ -8363,6 +8371,7 @@ export class Level {
               s[1],
               c.travelSign ?? 1,
             );
+            this.applyAuthoredMovingSurface(this.movers[this.movers.length-1].mesh,c);
             if(c.dkind==="citydeck")this.dressCityMovingDeck(this.movers[this.movers.length-1].mesh,c,s[1]);
             if(!c.slip&&['coast-timber','creek-raft','bridge-timber','bridge-ice'].includes(c.tex??''))dressCarlisleTimberDeck(this.movers[this.movers.length-1].mesh,c,true);
             if(c.dkind==='ghostcart'){const cabin=this.ghostKit().cart(this.movers[this.movers.length-1].mesh,c,s[1]);this.groundMeshes.push(...cabin.support);this.walls.push(...cabin.walls);}
@@ -14674,6 +14683,24 @@ export class Level {
     this.syncRope(rope);
   }
 
+  private applyAuthoredMovingSurface(mesh: THREE.Mesh, c: CustomComponent): void {
+    const geometry = authoredMovingGeometry(c);
+    if (!geometry) return;
+    mesh.geometry.dispose(); mesh.geometry = geometry;
+    const previous = mesh.material as THREE.MeshPhongMaterial;
+    const material = this.surfaceMat(previous,c.tex ?? 'stone');
+    // Native slab builders own this patterned clone; the replacement borrows
+    // the level's shared metric texture and must retire the old clone here.
+    previous.map?.dispose(); previous.dispose(); mesh.material=material;
+    material.map = this.surfaceTexture(c.tex ?? 'stone');
+    material.userData.texKind=c.tex ?? 'stone';
+    material.color.set(c.color ?? '#ffffff'); material.emissive.set(c.emissive ?? '#000000');
+    material.vertexColors = !!c.colors; material.needsUpdate = true;
+    if (c.t === 'crumble') dressFallAwaySurface(mesh, true, true);
+    mesh.name = c.nm ?? mesh.name;
+    mesh.rotation.y = THREE.MathUtils.degToRad(c.yaw ?? 0);
+  }
+
   // Moving platform sliding along one axis on a sine.
   private mover(
     x: number,
@@ -14951,6 +14978,7 @@ export class Level {
     fallSpeed: number = FALL_AWAY_SURFACE.acceleration,
     emissive = "#000000",
     thickness: number = FALL_AWAY_SURFACE.thickness,
+    dress = true,
   ): Crumble {
     const mesh = new THREE.Mesh(
       new THREE.BoxGeometry(w, thickness, d),
@@ -14960,7 +14988,7 @@ export class Level {
     mesh.rotation.y = THREE.MathUtils.degToRad(yawDeg); // stand-detection is the ground raycast: free spin is fine
     mesh.name = "crumble pad";
     mesh.userData.crumbleId = this.crumbles.length;
-    dressFallAwaySurface(mesh, tex !== 'bridge-timber');
+    if (dress) dressFallAwaySurface(mesh, tex !== 'bridge-timber');
     this.root.add(mesh);
     this.groundMeshes.push(mesh);
     const c: Crumble = {

@@ -18,8 +18,8 @@ export function lightBlockworksMaterial(material:THREE.Material,kind:string,cloc
   mat.onBeforeCompile=(shader,renderer)=>{
     previous.call(mat,shader,renderer);
     if(toxic)shader.uniforms.bwTime=clock;
-    // One world-space low mist layer ties every placed component to the same
-    // turquoise abyss. It never changes with the storyboard or camera pose.
+    // Keep the low mist tied to the owning scene's atmosphere. These assets
+    // also appear far below zero on river courses, including night levels.
     shader.vertexShader='varying vec3 vBlockworksWorld;\n'+shader.vertexShader;
     shader.vertexShader=shader.vertexShader.replace('#include <project_vertex>',`#include <project_vertex>
       vec4 bwWorld=vec4(transformed,1.);
@@ -42,8 +42,10 @@ export function lightBlockworksMaterial(material:THREE.Material,kind:string,cloc
       totalEmissiveRadiance+=vec3(.17,.72,.006)*sludge*ripple*.18;
       roughnessFactor=mix(roughnessFactor,.31,sludge);`);
     shader.fragmentShader=shader.fragmentShader.replace('#include <fog_fragment>',`#include <fog_fragment>
+      #ifdef USE_FOG
       float lowMist=(1.-smoothstep(-28.,-3.,vBlockworksWorld.y))*(1.-exp(-length(vBlockworksWorld-cameraPosition)*.022));
-      gl_FragColor.rgb=mix(gl_FragColor.rgb,vec3(.28,.56,.63),lowMist*${toxic?'.22':'.82'});`);
+      gl_FragColor.rgb=mix(gl_FragColor.rgb,fogColor,lowMist*${toxic?'.22':'.82'});
+      #endif`);
   };
-  mat.customProgramCacheKey=()=> 'blockworks-meshy-light-v3:'+kind;
+  mat.customProgramCacheKey=()=> 'blockworks-meshy-light-v4:'+kind;
 }
