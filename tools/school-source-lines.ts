@@ -20,7 +20,7 @@ export function schoolSourceGamepad(sample: any) {
 
 /** Feature placements only initialize a case; all subsequent movement uses
  * native controls, without changing positions, velocities or tuning. */
-export function schoolSourceTrials(p: any, level: any, place: Place): SourceTrial[] {
+export function schoolSourceTrials(p: any, level: any, place: Place, traceRoute = false): SourceTrial[] {
   const trials: SourceTrial[] = [];
   function add(name: string, init: () => void, sample: (n: number) => any, done: (frame: number, r: SourceTrial['result']) => boolean, limit = 480) {
     const result: SourceTrial['result'] = { air: 0, verts: 0, grinds: 0, peak: -Infinity };
@@ -84,17 +84,18 @@ export function schoolSourceTrials(p: any, level: any, place: Place): SourceTria
   let route: ReturnType<typeof createSchoolSourceRoute>;
   const campus = add('Original continuous campus route', () => {
     p.respawn(level, true); p.speed = 0; p.freeSkate = true;
-    route = createSchoolSourceRoute(p); campus.route = route.report;
+    route = createSchoolSourceRoute(p, traceRoute); campus.route = route.report;
   }, () => route.sample(), () => {
     if (!route.observe()) return false;
     if (route.report.distance < 900 || route.report.airFrames < 20) throw Error('Campus route omitted the canopy descent');
+    if (!route.report.tableOllie.landed || !route.report.tableOllie.returned) throw Error('Campus route omitted the picnic-table ollie and rollout');
     return true;
   }, 8000);
   return trials;
 }
 
 /** The same cases run through the rendered game's ordinary gamepad input. */
-export function runSchoolSourceBrowserChecks(game: any) {
+export function runSchoolSourceBrowserChecks(game: any, routeOnly = false) {
   const p = game.player, level = game.getLevel(), input = game.input;
   const oldStep = p.step, oldPoll = input.pollGamepad, update = input.update.bind(input);
   const report: any = { running: true, stage: '', passed: [], failure: null, frames: 0, tuningBefore: JSON.stringify(game.TUNING) };
@@ -104,7 +105,7 @@ export function runSchoolSourceBrowserChecks(game: any) {
     p.groundHit = p.queryGround(level); if (!p.groundHit) throw Error('Missing measured support');
     p.pos.y = p.groundHit.y; p.prevPos.copy(p.pos); p.grounded = true; p.rideNormal.copy(p.groundHit.normal);
   };
-  const trials = schoolSourceTrials(p, level, place);
+  const trials = schoolSourceTrials(p, level, place, routeOnly).filter(c => !routeOnly || c.name === 'Original continuous campus route');
   let sample: any = {}, frame = 0, index = 0;
   const stop = (failure: string | null) => {
     p.step = oldStep; input.pollGamepad = oldPoll; report.running = false; report.failure = failure;
@@ -116,6 +117,7 @@ export function runSchoolSourceBrowserChecks(game: any) {
     try {
       const c = trials[index]; sample = c.sample(frame); update(); oldStep.call(p, dt, controls, current); frame++; report.frames++;
       if (p.isBailing) throw Error(`${c.name}: bail`);
+      if (p.state === 'hang') throw Error(`${c.name}: on-foot ledge hang in a skate park`);
       if (!p.pos.toArray().every(Number.isFinite)) throw Error('Non-finite position');
       if (c.observe(frame)) { report.passed.push({ name: c.name, frames: frame, result: c.result, end: p.pos.toArray() }); index++; next(); }
       else if (frame >= c.limit) throw Error(`${c.name}: timeout at ${p.pos.toArray()}`);

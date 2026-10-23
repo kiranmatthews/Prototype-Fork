@@ -1,27 +1,31 @@
 {
-  "since": "2026-10-23T02:25:06Z",
-  "allCaptured": [
+  "since": "2026-10-23T03:00:25Z",
+  "source": [
     {
       "level": "error",
       "message": "Uncaught TypeError: Failed to execute 'observe' on 'MutationObserver': parameter 1 is not of type 'Node'.",
-      "timestamp": "2026-10-23T02:38:09.063Z"
+      "timestamp": "2026-10-23T03:02:14.443Z"
     },
     {
       "level": "error",
       "message": "Uncaught TypeError: Failed to execute 'observe' on 'MutationObserver': parameter 1 is not of type 'Node'.",
-      "timestamp": "2026-10-23T02:43:38.623Z"
+      "timestamp": "2026-10-23T03:20:11.134Z"
     }
   ],
-  "current": [
+  "main": [
     {
       "level": "error",
       "message": "Uncaught TypeError: Failed to execute 'observe' on 'MutationObserver': parameter 1 is not of type 'Node'.",
-      "timestamp": "2026-10-23T02:38:09.063Z"
-    },
-    {
-      "level": "error",
-      "message": "Uncaught TypeError: Failed to execute 'observe' on 'MutationObserver': parameter 1 is not of type 'Node'.",
-      "timestamp": "2026-10-23T02:43:38.623Z"
+      "timestamp": "2026-10-23T03:22:20.523Z"
     }
-  ]
+  ],
+  "pageCapture": {
+    "source": [],
+    "startup": {
+      "preview": [],
+      "game": []
+    },
+    "main": []
+  },
+  "note": "Recurring MutationObserver errors have no captured source URL or stack and remain unattributed. No captured game-page errors."
 }

@@ -32,6 +32,7 @@ for (const place of SCHOOL_SOURCE_PLACES) {
 document.querySelector('#overview')!.addEventListener('click', () => { overview = true; });
 document.querySelector('#play')!.addEventListener('click', () => { overview = false; frame.contentWindow?.focus(); });
 document.querySelector('#checks')!.addEventListener('click', () => { if (!game || checks?.running || scaleMeasurement?.running) return; overview = false; checks = runSchoolSourceBrowserChecks(game); });
+document.querySelector('#route')!.addEventListener('click', () => { if (!game || checks?.running || scaleMeasurement?.running) return; overview = false; checks = runSchoolSourceBrowserChecks(game, true); });
 document.querySelector('#measure')!.addEventListener('click', () => { if (!game || checks?.running || scaleMeasurement?.running) return; overview = false; scaleMeasurement = runSchoolScaleMeasurement(game); });
 document.querySelector('#full')!.textContent = full ? 'Lite render' : 'Full render';
 document.querySelector('#full')!.addEventListener('click', () => { location.search = full ? '' : '?full'; });

@@ -1,0 +1,796 @@
+{
+  "parentTaskCommit": "741b51494818ad4cb5f9f5aeebe44871c4177bbe",
+  "acceptedMainScale": 2,
+  "mainLevelUnchanged": true,
+  "sourceLevelUnchanged": true,
+  "skaterChanged": false,
+  "globalTuningChanged": false,
+  "diagnosis": {
+    "priorNativeFrames": 7358,
+    "priorBrowserFrames": 6347,
+    "hangStartsAt": 509,
+    "firstPhysicalDivergenceAt": 518,
+    "cause": "Mesh ledge grabbing bypassed the existing skate-park guard and entered an on-foot hang. Subsequent climbing used camera-relative input.",
+    "collisionObject": 971,
+    "sourceTableTopHeightAboveFloor": 117,
+    "nativeTrace": [
+      {
+        "frame": 508,
+        "position": [
+          32.75367045127695,
+          0,
+          -12.666488758808743
+        ],
+        "heading": [
+          -0.9727377552349666,
+          0,
+          -0.23190786864709462
+        ],
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "speed": 4.866151582036705,
+        "vertical": 0,
+        "state": "ride",
+        "grounded": true,
+        "manual": 0,
+        "freeSkate": true,
+        "camera": [
+          0,
+          0,
+          -1
+        ],
+        "ground": "School measured architecture",
+        "kickClock": 7.5499999999999785,
+        "input": [
+          0,
+          0,
+          false
+        ]
+      },
+      {
+        "frame": 509,
+        "position": [
+          32.661163113358135,
+          0,
+          -12.687840475820943
+        ],
+        "heading": [
+          -0.9743822642090444,
+          0,
+          -0.22489820629532872
+        ],
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "speed": 0,
+        "vertical": 0,
+        "state": "hang",
+        "grounded": false,
+        "manual": 0,
+        "freeSkate": false,
+        "camera": [
+          0,
+          0,
+          -1
+        ],
+        "ground": "School measured architecture",
+        "kickClock": 7.566666666666645,
+        "input": [
+          -0.24,
+          0.97,
+          false
+        ]
+      },
+      {
+        "frame": 517,
+        "position": [
+          32.76069637575498,
+          0.3797808885574341,
+          -12.664111010589721
+        ],
+        "heading": [
+          -0.9743822642090444,
+          0,
+          -0.22489820629532872
+        ],
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "speed": 0,
+        "vertical": 0,
+        "state": "hang",
+        "grounded": false,
+        "manual": 0,
+        "freeSkate": false,
+        "camera": [
+          0,
+          0,
+          -1
+        ],
+        "ground": "School measured architecture",
+        "kickClock": 7.566666666666645,
+        "input": [
+          -0.22,
+          0.98,
+          false
+        ]
+      },
+      {
+        "frame": 518,
+        "position": [
+          32.76069637575498,
+          0.3797808885574341,
+          -12.664111010589721
+        ],
+        "heading": [
+          -0.9743822642090444,
+          0,
+          -0.22489820629532872
+        ],
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "speed": 0,
+        "vertical": 0,
+        "state": "hang",
+        "grounded": false,
+        "manual": 0,
+        "freeSkate": false,
+        "camera": [
+          0,
+          0,
+          -1
+        ],
+        "ground": "School measured architecture",
+        "kickClock": 7.566666666666645,
+        "input": [
+          -0.22,
+          0.98,
+          false
+        ]
+      }
+    ],
+    "browserTrace": [
+      {
+        "frame": 508,
+        "position": [
+          32.75367045127695,
+          0,
+          -12.666488758808743
+        ],
+        "heading": [
+          -0.9727377552349666,
+          0,
+          -0.23190786864709462
+        ],
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "speed": 4.866151582036705,
+        "vertical": 0,
+        "state": "ride",
+        "grounded": true,
+        "manual": 0,
+        "freeSkate": true,
+        "camera": [
+          -0.9706917552484436,
+          0,
+          -0.2403279348987454
+        ],
+        "ground": "School measured architecture",
+        "kickClock": 7.5499999999999785,
+        "input": [
+          0,
+          0,
+          false
+        ]
+      },
+      {
+        "frame": 509,
+        "position": [
+          32.661163113358135,
+          0,
+          -12.687840475820943
+        ],
+        "heading": [
+          -0.9743822642090444,
+          0,
+          -0.22489820629532872
+        ],
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "speed": 0,
+        "vertical": 0,
+        "state": "hang",
+        "grounded": false,
+        "manual": 0,
+        "freeSkate": false,
+        "camera": [
+          -0.9714795505823552,
+          0,
+          -0.2371233493359628
+        ],
+        "ground": "School measured architecture",
+        "kickClock": 7.566666666666645,
+        "input": [
+          -0.24,
+          0.97,
+          false
+        ]
+      },
+      {
+        "frame": 517,
+        "position": [
+          32.76069637575498,
+          0.3797808885574341,
+          -12.664111010589721
+        ],
+        "heading": [
+          -0.9743822642090444,
+          0,
+          -0.22489820629532872
+        ],
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "speed": 0,
+        "vertical": 0,
+        "state": "hang",
+        "grounded": false,
+        "manual": 0,
+        "freeSkate": false,
+        "camera": [
+          -0.9743226075931274,
+          0,
+          -0.2251565151909417
+        ],
+        "ground": "School measured architecture",
+        "kickClock": 7.566666666666645,
+        "input": [
+          -0.22,
+          0.98,
+          false
+        ]
+      },
+      {
+        "frame": 518,
+        "position": [
+          32.76069637575498,
+          0.39686949604814786,
+          -12.664111010589721
+        ],
+        "heading": [
+          -0.9743822642090444,
+          0,
+          -0.22489820629532872
+        ],
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "speed": 0,
+        "vertical": 0,
+        "state": "hang",
+        "grounded": false,
+        "manual": 0,
+        "freeSkate": false,
+        "camera": [
+          -0.9743226075931274,
+          0,
+          -0.2251565151909417
+        ],
+        "ground": "School measured architecture",
+        "kickClock": 7.566666666666645,
+        "input": [
+          -0.22,
+          0.98,
+          false
+        ]
+      }
+    ]
+  },
+  "runtimeSnapshots": {
+    "working": {
+      "skateParkTuning": "bc609a6765ffd91c0d3bc062b33ee25c03cd7386a9159b24c1f643f38bca0234",
+      "vertSkateMotion": "944c8fa4293fe58b8baca9987c7573b78428774e77b93bccb2b889d893a7ac96",
+      "skateSteering": "62b9d234f6feebaadd2f5c3b58cd6305d042c99ee46ea7d75d8fff7dbe953f68",
+      "tuning": "dc7b43eedbb160b2ddfc16cdfdca42f1419245a76214fdccd49cf872905038c0",
+      "input": "53cd0f5d183777461c3af7514af6ebc22abe44513a7986287f4c592f00d2a433",
+      "level": "77484671f00e7a24b1de632903db97663b6b0e5a362ffbdb898fc5e27b7841e0",
+      "meshContactNormal": "3fee5417da3a27bb63b1e7428af1532078b3a6f4d802e753d9635fd2260da224",
+      "player": "c1095f273db8179f7efce6b2e6a91faea9a48c21c92aae8d237366fe3f0215a3",
+      "vertBoardRelease": "7ce3ba915f646ac97890d0a2b9f25635ccedddb8068e4c2217c2812808866e67",
+      "skateParkPhysics": "3cf5ce4c8bd9037539ffd21ff8559f78a0b9c2fd7a27f702a68bbe6aa2536f99",
+      "skateChaseCamera": "b8d670861fb3d53f081a98d74628c28176e78d87c5cebe47cb826f34f89fc145",
+      "skateReferencePhysics": "2a2e27545cb77d5a453cc302b88bc39614c0265978ca723472d46aa3b11d3717"
+    },
+    "task": {
+      "skateParkTuning": "bc609a6765ffd91c0d3bc062b33ee25c03cd7386a9159b24c1f643f38bca0234",
+      "vertSkateMotion": "944c8fa4293fe58b8baca9987c7573b78428774e77b93bccb2b889d893a7ac96",
+      "skateSteering": "62b9d234f6feebaadd2f5c3b58cd6305d042c99ee46ea7d75d8fff7dbe953f68",
+      "tuning": "f06c99fede5097695309dd9a2e1b8d28fe3dac1e615335aa91fc63d45d4f5759",
+      "input": "a5ab1cf82312ed40485c44ce92f750246382030d9bf500aaaf31972508573054",
+      "level": "096ccab6e811641eb8f7bf51ff273e1d9ab1a165434994ca3d91d33ce4059ad5",
+      "meshContactNormal": "3fee5417da3a27bb63b1e7428af1532078b3a6f4d802e753d9635fd2260da224",
+      "player": "7966388cb273a93f396d0c610b61c36fc656b23c70a91e9b88618b66c3b48ffc",
+      "vertBoardRelease": "7ce3ba915f646ac97890d0a2b9f25635ccedddb8068e4c2217c2812808866e67",
+      "skateParkPhysics": "3cf5ce4c8bd9037539ffd21ff8559f78a0b9c2fd7a27f702a68bbe6aa2536f99",
+      "skateChaseCamera": "b8d670861fb3d53f081a98d74628c28176e78d87c5cebe47cb826f34f89fc145",
+      "skateReferencePhysics": "2a2e27545cb77d5a453cc302b88bc39614c0265978ca723472d46aa3b11d3717"
+    },
+    "mainPreview": {
+      "skateParkTuning": "bc609a6765ffd91c0d3bc062b33ee25c03cd7386a9159b24c1f643f38bca0234",
+      "vertSkateMotion": "944c8fa4293fe58b8baca9987c7573b78428774e77b93bccb2b889d893a7ac96",
+      "skateSteering": "62b9d234f6feebaadd2f5c3b58cd6305d042c99ee46ea7d75d8fff7dbe953f68",
+      "tuning": "dc7b43eedbb160b2ddfc16cdfdca42f1419245a76214fdccd49cf872905038c0",
+      "input": "53cd0f5d183777461c3af7514af6ebc22abe44513a7986287f4c592f00d2a433",
+      "level": "4e49b9e2a189189e516f8c95418c14a762c2f4206024491a79c134543a4e7dbe",
+      "meshContactNormal": "3fee5417da3a27bb63b1e7428af1532078b3a6f4d802e753d9635fd2260da224",
+      "player": "6d2b8717690f8576ff0f687cf532c7c57a7fbc2e62b7200164a14c4354c528d9",
+      "vertBoardRelease": "7ce3ba915f646ac97890d0a2b9f25635ccedddb8068e4c2217c2812808866e67",
+      "skateParkPhysics": "3cf5ce4c8bd9037539ffd21ff8559f78a0b9c2fd7a27f702a68bbe6aa2536f99",
+      "skateChaseCamera": "b8d670861fb3d53f081a98d74628c28176e78d87c5cebe47cb826f34f89fc145"
+    }
+  },
+  "sourceFiles": {
+    "tools/school-source-route.ts": "b7267a8993ddeeb536eecb1b0b5d849c79b5718f502ffa1a0a7ba5f54023280d",
+    "tools/school-source-lines.ts": "94c4c6ce29e99f84a4c59c0491612d1f03325f947d2d9d7b1770170ac7c3fc52",
+    "tools/test-school-source.mjs": "fe8f5ed23a13668f27a9ae183be336c4931267c317fde06bfd17ab2cf1ba46c9",
+    "tools/test-skatepark-ledge-guard.mjs": "8d72550c0515f2916cfc4b91960ddc82462369fc79ee13fff1ea4947cdb678fc",
+    "tools/school-source-review.ts": "0fd55239b3e9604f1b5e3c6071fa4f35e2b294235619ffac7988e90195ef2a3e",
+    "tools/school-source-review.html": "9ba587e8382c4e316929999c45646fa3af20c1cf39fc606198f54b0d6ec3be8e"
+  },
+  "native": {
+    "cases": 17,
+    "steps": 14216,
+    "taskWorkingExact": true,
+    "route": {
+      "frames": 6293,
+      "waypoints": 35,
+      "totalWaypoints": 35,
+      "distance": 980.9310510586971,
+      "airFrames": 78,
+      "tableOllie": {
+        "released": true,
+        "landed": true,
+        "returned": true,
+        "release": [
+          37.69686442343699,
+          0,
+          -15.998535445630699
+        ]
+      },
+      "visits": [
+        {
+          "index": 0,
+          "frame": 194,
+          "source": [
+            -8324.57909072082,
+            2473.7886233705713,
+            6391
+          ],
+          "grounded": true
+        },
+        {
+          "index": 1,
+          "frame": 296,
+          "source": [
+            -9239.77813398152,
+            1608.039236452223,
+            5661.889023557696
+          ],
+          "grounded": false
+        },
+        {
+          "index": 2,
+          "frame": 331,
+          "source": [
+            -9312.863115339263,
+            1599,
+            5422.977342476107
+          ],
+          "grounded": true
+        },
+        {
+          "index": 3,
+          "frame": 546,
+          "source": [
+            -7174.695119237971,
+            1598.5205399001175,
+            5474.501121286103
+          ],
+          "grounded": true
+        },
+        {
+          "index": 4,
+          "frame": 682,
+          "source": [
+            -5676.393954061024,
+            1598.2014308113999,
+            5276.678514814076
+          ],
+          "grounded": true
+        },
+        {
+          "index": 5,
+          "frame": 782,
+          "source": [
+            -5347.801310107888,
+            1598.7531619400452,
+            4567.407359926351
+          ],
+          "grounded": true
+        },
+        {
+          "index": 6,
+          "frame": 863,
+          "source": [
+            -5074.952661169994,
+            1577.765975157513,
+            3959.085944897926
+          ],
+          "grounded": true
+        },
+        {
+          "index": 7,
+          "frame": 948,
+          "source": [
+            -4605.913623527509,
+            1444.7154165910147,
+            3339.3341754152734
+          ],
+          "grounded": true
+        },
+        {
+          "index": 8,
+          "frame": 1065,
+          "source": [
+            -4067.0627852064417,
+            1155.7413189911663,
+            2166.402939518335
+          ],
+          "grounded": true
+        },
+        {
+          "index": 9,
+          "frame": 1184,
+          "source": [
+            -4003.4847108322656,
+            773.7637016580376,
+            875.593130099599
+          ],
+          "grounded": true
+        },
+        {
+          "index": 10,
+          "frame": 1378,
+          "source": [
+            -2512.3719330912727,
+            92.04242947255761,
+            -868.6285274520706
+          ],
+          "grounded": true
+        },
+        {
+          "index": 11,
+          "frame": 1581,
+          "source": [
+            -177.26104685669543,
+            121.47339601727867,
+            -997.8274148964574
+          ],
+          "grounded": true
+        },
+        {
+          "index": 12,
+          "frame": 1899,
+          "source": [
+            2352.4779307578046,
+            3.999988407924093,
+            -1910.2930488318834
+          ],
+          "grounded": true
+        },
+        {
+          "index": 13,
+          "frame": 2293,
+          "source": [
+            2657.128213766904,
+            173.6175757463027,
+            714.8145675077649
+          ],
+          "grounded": true
+        },
+        {
+          "index": 14,
+          "frame": 2597,
+          "source": [
+            5822.9678702480705,
+            171.45300287501482,
+            1006.2517304710746
+          ],
+          "grounded": true
+        },
+        {
+          "index": 15,
+          "frame": 2797,
+          "source": [
+            8327.989957160205,
+            -3.83196206712455e-05,
+            1278.2778310889025
+          ],
+          "grounded": true
+        },
+        {
+          "index": 16,
+          "frame": 2933,
+          "source": [
+            9830.524184829794,
+            -3.83196206712455e-05,
+            853.4410967354725
+          ],
+          "grounded": true
+        },
+        {
+          "index": 17,
+          "frame": 3054,
+          "source": [
+            10859.44727444919,
+            -3.83196206712455e-05,
+            108.37227636641728
+          ],
+          "grounded": true
+        },
+        {
+          "index": 18,
+          "frame": 3230,
+          "source": [
+            11268.501045611909,
+            0.21410809713711387,
+            -1825.410107788659
+          ],
+          "grounded": true
+        },
+        {
+          "index": 19,
+          "frame": 3482,
+          "source": [
+            11015.683961700812,
+            0.3620260631439578,
+            -5025.220785312591
+          ],
+          "grounded": true
+        },
+        {
+          "index": 20,
+          "frame": 3638,
+          "source": [
+            9644.830424358577,
+            1.7417392095051127,
+            -6099.530029171932
+          ],
+          "grounded": true
+        },
+        {
+          "index": 21,
+          "frame": 3792,
+          "source": [
+            8144.958507543886,
+            6.006008512568087,
+            -7194.970382876623
+          ],
+          "grounded": true
+        },
+        {
+          "index": 22,
+          "frame": 3939,
+          "source": [
+            6653.589935649763,
+            2.0000435072799974,
+            -8107.602606608632
+          ],
+          "grounded": true
+        },
+        {
+          "index": 23,
+          "frame": 4111,
+          "source": [
+            4677.117490676224,
+            2.0000435072799974,
+            -8287.637235790527
+          ],
+          "grounded": true
+        },
+        {
+          "index": 24,
+          "frame": 4313,
+          "source": [
+            2175.0719069351035,
+            3.744183976563818,
+            -8299.227345204132
+          ],
+          "grounded": true
+        },
+        {
+          "index": 25,
+          "frame": 4487,
+          "source": [
+            167.88042725325704,
+            0.0618007008092718,
+            -8943.089500333788
+          ],
+          "grounded": true
+        },
+        {
+          "index": 26,
+          "frame": 4717,
+          "source": [
+            -2828.8095866736403,
+            -280.3097219490103,
+            -9041.65363681036
+          ],
+          "grounded": true
+        },
+        {
+          "index": 27,
+          "frame": 5032,
+          "source": [
+            -6820.791405064433,
+            0.9942252808168632,
+            -9001.110984273118
+          ],
+          "grounded": true
+        },
+        {
+          "index": 28,
+          "frame": 5192,
+          "source": [
+            -7900.368892654012,
+            144.3201570794106,
+            -7643.968110091635
+          ],
+          "grounded": true
+        },
+        {
+          "index": 29,
+          "frame": 5392,
+          "source": [
+            -9856.776255120805,
+            0.4482398272696173,
+            -6106.769196090303
+          ],
+          "grounded": true
+        },
+        {
+          "index": 30,
+          "frame": 5593,
+          "source": [
+            -11860.641057675,
+            -0.7069169688286365,
+            -4605.327478649302
+          ],
+          "grounded": true
+        },
+        {
+          "index": 31,
+          "frame": 5701,
+          "source": [
+            -11998.274857077526,
+            -1.999983220264994,
+            -3474.342309150137
+          ],
+          "grounded": true
+        },
+        {
+          "index": 32,
+          "frame": 5920,
+          "source": [
+            -13822.620186229266,
+            -1.999983220264994,
+            -3312.0384364883466
+          ],
+          "grounded": true
+        },
+        {
+          "index": 33,
+          "frame": 6155,
+          "source": [
+            -14349.085279110406,
+            5.333984678279194,
+            -2388.886668189467
+          ],
+          "grounded": true
+        },
+        {
+          "index": 34,
+          "frame": 6292,
+          "source": [
+            -14496.923209518192,
+            188.59499324823537,
+            -1279.2876040286592
+          ],
+          "grounded": true
+        }
+      ]
+    },
+    "routeMaximumStep": 0.808990276076102
+  },
+  "ledgeRegression": [
+    {
+      "mode": "platformer",
+      "caught": true,
+      "state": "hang"
+    },
+    {
+      "mode": "skatepark",
+      "caught": false,
+      "state": "air"
+    },
+    {
+      "mode": "source",
+      "caught": false,
+      "state": "air"
+    }
+  ],
+  "defaultTrace": {
+    "frames": 960,
+    "sha256": "c355c28f30e0c6a248e396cfe83234e24b95fdaa5c907f8ec9fc97faa29c2fe2"
+  },
+  "mainRegression": {
+    "cases": 64,
+    "steps": 18054,
+    "previousReportExact": true,
+    "supportCount": 18,
+    "railClearanceSamples": 97,
+    "ditchApproaches": 8
+  },
+  "checks": {
+    "checkLevels": "pass",
+    "build": "pass",
+    "buildSeconds": 35.58,
+    "isolatedTaskTypeScript": "pass",
+    "sourceToolsTypeScript": "pass",
+    "fullSuiteRun": false
+  },
+  "limitations": [
+    "Full source physics and original visual materials remain incomplete.",
+    "School source retained in THPS2 PC is not independently hash-matched to THPS1 media.",
+    "Route ends below Hall Pass stairs, not a closed loop.",
+    "Recurring MutationObserver console errors remain unattributed; current game and early page error capture is empty."
+  ],
+  "delivery": "Local only; no push, upload, publication or deployment.",
+  "browser": {
+    "cases": 17,
+    "steps": 14216,
+    "liteFullExact": true,
+    "nativeExact": true,
+    "routeFrames": 6293,
+    "routeMetres": 980.9310510586971,
+    "all35WaypointVisitsExact": true,
+    "pageErrors": [],
+    "startupErrors": {
+      "preview": [],
+      "game": []
+    }
+  },
+  "continuationStartedAt": "2026-10-23T03:00:25+00:00",
+  "verifiedFullRenderAt": "2026-10-23T03:30:07.484330+00:00",
+  "minutesToVerifiedPlayable": 29.7
+}

@@ -41,6 +41,7 @@ await withSkateRuntime(async ({ server, Level, Player, scene, THREE, CONST, TUNI
         deviceSample = sample(frame); deviceInput.update();
         p.step(CONST.fixedStep, deviceInput, level); level.update(CONST.fixedStep); deviceInput.consumeEdges();
         assert.ok(!p.isBailing, 'bail'); assert.ok(p.pos.toArray().every(Number.isFinite));
+        assert.notEqual(p.state, 'hang', 'Always-mounted source skating must not enter an on-foot ledge hang');
         air += p.state === 'air' ? 1 : 0; verts += p.vertAir ? 1 : 0; grinds += p.state === 'grind' ? 1 : 0;
         peak = Math.max(peak, p.pos.y); maxStep = Math.max(maxStep, p.pos.distanceTo(previous)); previous.copy(p.pos);
         if (observe({ frame, air, verts, grinds, peak })) { done = true; frame++; break; }
@@ -56,7 +57,8 @@ await withSkateRuntime(async ({ server, Level, Player, scene, THREE, CONST, TUNI
       const position = m.schoolSourcePlacement(q); ray.set(new THREE.Vector3(...position).add(new THREE.Vector3(0, .5, 0)), new THREE.Vector3(0, -1, 0)); ray.far = 2;
       const hit = ray.intersectObjects(level.groundMeshes, false)[0]; assert.ok(hit, q.name); assert.ok(Math.abs(hit.point.y - position[1] + .12) < .002, q.name); report.supports.push({ name: q.name, expected: position[1] - .12, actual: hit.point.y });
     }
-    for (const c of schoolSourceTrials(p, level, place)) {
+    const routeOnly = process.argv.includes('--route');
+    for (const c of schoolSourceTrials(p, level, place, routeOnly).filter(c => !routeOnly || c.name === 'Original continuous campus route')) {
       run(c.name, c.init, c.sample, ({ frame }) => c.observe(frame + 1), c.limit);
       if (c.result.route) report.trials[report.trials.length - 1].route = c.result.route;
     }

@@ -14472,6 +14472,7 @@ export class Player {
   // hand height with open air at your own column IS a ledge, whatever
   // geometry made it.
   private tryLedgeGrabMesh(level: Level): boolean {
+    if (this.parkControls) return false; // always-mounted parks never enter an on-foot ledge hang
     if (
       this.state !== 'air' ||
       this.wallriding ||

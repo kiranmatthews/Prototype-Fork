@@ -1,26 +1,89 @@
 {
-  "chargedOllieScreenshot": "docs/art-reviews/school-miami/source-reference-gym-full.png",
-  "forward": {
+  "main": {
+    "chargedOllie": {
+      "level": "school-miami",
+      "worldScale": 2,
+      "grounded": false,
+      "state": "air",
+      "pos": [
+        97,
+        0.35,
+        54.09
+      ],
+      "speed": 11.7,
+      "components": 275,
+      "rails": 69,
+      "camera": {
+        "eye": [
+          97,
+          5.2549957395074145,
+          48.30434193269753
+        ],
+        "trailing": 5.790121652369031,
+        "bodyBounds": {
+          "min": [
+            96.04074419667919,
+            0.388156973355078,
+            53.279698482683976
+          ],
+          "max": [
+            97.6698667250007,
+            3.592736873155626,
+            55.07655347399537
+          ]
+        }
+      },
+      "errors": []
+    },
+    "landing": {
+      "level": "school-miami",
+      "worldScale": 2,
+      "grounded": true,
+      "state": "ride",
+      "pos": [
+        74.65,
+        0,
+        40.38
+      ],
+      "speed": 7.41,
+      "components": 275,
+      "rails": 69,
+      "camera": {
+        "eye": [
+          76.82992171420331,
+          5.099999999999999,
+          45.470577129008404
+        ],
+        "trailing": 5.539185043303929,
+        "bodyBounds": {
+          "min": [
+            73.88550961955671,
+            0.22013821741516854,
+            39.537859216389414
+          ],
+          "max": [
+            75.3986787652302,
+            2.993686637885038,
+            41.1821794887357
+          ]
+        }
+      },
+      "errors": []
+    }
+  },
+  "source": {
     "state": "ride",
     "grounded": true,
-    "sourcePosition": [
-      -18000,
-      2959.0000502323282,
-      14994.00976085756
-    ]
+    "pos": [
+      159.46199509771102,
+      0,
+      30.62921359842435
+    ],
+    "errors": [],
+    "startupErrors": {
+      "preview": [],
+      "game": []
+    }
   },
-  "back": {
-    "state": "ride",
-    "grounded": true,
-    "sourcePosition": [
-      -15150,
-      1599,
-      10999.0009765625
-    ]
-  },
-  "errors": [],
-  "startupErrors": {
-    "preview": [],
-    "game": []
-  }
+  "controls": "Main full-render Gym placement, W held 600 ms, Space held 600 ms, released and landed. Source full-render Gym placement after suite."
 }
