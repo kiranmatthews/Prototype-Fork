@@ -24,6 +24,10 @@ import {HOLLOWWAKE_LEVEL} from './levels/hollowwake-descent';
 import {HollowwakeTunnels} from './hollowwakeTunnels';
 import {RIPCORD_RIVER_LEVEL,ROLLING_BONES_LEVEL} from './levels/ripcord-river';
 import {RUMBLEWATER_RUN_LEVEL} from './levels/rumblewater-run';
+import { createSkateReference, validSkateReference, type SkateReferenceData, type SkateReferencePhysics } from './skateReferencePhysics';
+import { MALL_TEXTURE_KINDS, mallArt } from './mallArt';
+import { BreakableScenery, type BreakableKind } from './breakableScenery';
+import {SourceBouncyProps,validSourceBox,type SourceBoxData} from './sourceBouncyProps';
 import { CARLISLE_COAST_LEVEL } from "./levels/carlisle-coast";
 import { CUSTARD_CREEK_LEVEL } from "./levels/custard-creek";
 import { custardWaterfallMaterial } from './custardWaterfall';
@@ -132,6 +136,7 @@ import {WarehouseArt,WAREHOUSE_DECOR_KINDS,WAREHOUSE_DECOR_LABELS} from './wareh
 import {warehouseContactMesh} from './warehouseContacts';
 import { TREEHOUSE_ROOM_LEVEL } from './levels/treehouse-room';
 import { roomArt, ROOM_TEXTURE_KINDS } from './levels/treehouse-room-art';
+import { MALL_LEVEL } from './levels/mall';
 import { PUZZLE_LEVELS } from './levels/puzzle-trilogy';
 import { CRAB_CHIEF_LEVEL } from './levels/crab-chief';
 import { CrabChiefEncounter } from './boss/crabChief';
@@ -379,6 +384,7 @@ export interface WallPathRuntime {
   length: number;
   halfThickness: number;
   height: number;
+  heights?: number[];
   closed: boolean;
 }
 
@@ -394,6 +400,7 @@ export interface WallPathSample {
   distance: number;
   crossDistance: number;
   cap: boolean;
+  height: number;
 }
 
 // Moving platform: slides along one axis on a sine, carrying the rider.
@@ -760,6 +767,7 @@ export interface CustomComponent {
   p: [number, number, number];
   s?: [number, number, number];
   collisionHeight?: number; // wall/wallpath: optional collider height when visual height differs
+  wallHeights?: [number, number]; // straight two-knot wallpath: exact height at each end, including triangular caps
   slip?: boolean; // supported ground primitive: shared ice visuals and vector inertia
   // Slip only, 0.02..1: fraction of dry steering/braking/drive. Omitted = ICE_SURFACE.grip.
   iceGrip?: number;
@@ -773,6 +781,9 @@ export interface CustomComponent {
   colors?: number[];
   doubleSided?: boolean;
   solidSides?: boolean; // mesh: swept player contact on vertical faces; native top support stays unchanged
+  sourceBox?: SourceBoxData; // nonblocking PS1 wooden-box prop; requires a registered source frame
+  breakable?: BreakableKind; // non-solid mesh: shatter on swept body contact
+  breakGroup?: number; // positive ID joining separate visual meshes into one breakable object
   loopRadius?: number; // mesh: analytic vertical loop matching createLoopMeshData, p = entry feet
   loopOffset?: number; // loop: lateral separation between entry and exit, local +X
   loopRequired?: boolean; // loop: finish gate unlocks after one complete supported turn
@@ -796,7 +807,7 @@ export interface CustomComponent {
   lipRise?: number; // vertramp: straight vertical section above the curved transition
   outerBank?: number; // vertramp: horizontal run of a rideable outside bank from deck to base
   deck?: number; // vertramp: flat platform past the lip, with a skirt to the floor (0 = bare coping)
-  closed?: boolean; // vertramp: loop the spine end to end — a rounded-rect path becomes a pool
+  closed?: boolean; // vertramp/rail: loop the authored path end to end
   bank?: number; // vertramp: auto-lean into turns, in world units of curvature gain (0 = never lean)
   curve?: "corner" | "spline"; // path primitive: filleted/linear corners or Catmull-Rom; terrain uses linear or spline
   vert?: boolean; // vertramp: carry the vert surface flag (default true; false = an ordinary banked road)
@@ -859,6 +870,7 @@ export interface CustomComponent {
   widths?: number[]; // woodpath: per-node deck width; absent entries use w
   scaffold?: boolean; // woodpath: bamboo posts/braces/handrails beneath and beside the deck
   supports?: boolean; // woodpath: generate terrain-reaching/fixed-depth support posts (default follows scaffold)
+  coping?: boolean; // rail: flush lip, not a freestanding street barrier
   rails?: boolean; // woodpath: handrails; vertramp: automatic coping rails (default true)
   spacing?: number; // woodpath: decorative plank spacing
   baySpacing?: number; // woodpath: distance between bamboo support/X-brace bays
@@ -1023,6 +1035,7 @@ export const TEX_KINDS = [
   ...ROOM_TEXTURE_KINDS,
   ...COUNTRY_CLUB_TEXTURES,
   ...Object.keys(COASTAL_TOWN_TEXTURES),
+  ...MALL_TEXTURE_KINDS,
   ...CASTLE_TEXTURE_KINDS,
   "checker",
   "grass",
@@ -1105,12 +1118,16 @@ export interface CustomLevelData {
   warehouseArt?: boolean;
   /** Park-only objective: authored wumpa markers become exploration tokens. */
   skateCollectathon?: boolean;
+  /** Optional source calibration; other levels retain their authored movement. */
+  skateReference?: SkateReferenceData;
   /** Bonus stages opt into their distinct persistent collection HUD. */
   hudMode?: "bonus" | "hub";
   /** Explicit opt-in for an authored secret combo-gem challenge. */
   secretComboGem?: boolean;
   allBalanceCrates?: boolean;
   perfectGrindBoost?: boolean;
+  /** False permits authored large drops; trick, wall and rail landing judgement still applies. */
+  hugeDropBail?: boolean;
   keepPlayFog?: boolean;
   /** 0..1 camera-only airborne vertical follow; absent preserves shared camera tuning. */
   cameraAirLift?: number;
@@ -1993,6 +2010,7 @@ export interface BendyWallResult {
   spine: VertRampNode[];
   length: number;
   closed: boolean;
+  heights?: number[];
 }
 
 /**
@@ -2057,6 +2075,7 @@ export function buildBendyWallGeometry(c: CustomComponent): BendyWallResult {
   const thickness = Math.max(0.1, c.w ?? 1.2);
   const visualHeight = Math.max(0.2, c.rise ?? c.s?.[1] ?? 5);
   const collisionHeight = Math.max(0.2, c.collisionHeight ?? visualHeight);
+  const heights = c.wallHeights && spine.length === 2 ? [...c.wallHeights] : undefined;
   const wrap = (index: number): number =>
     closed
       ? ((index % spine.length) + spine.length) % spine.length
@@ -2101,9 +2120,9 @@ export function buildBendyWallGeometry(c: CustomComponent): BendyWallResult {
     const hz = right.y * thickness * 0.5;
     sections.push({
       leftBottom: new THREE.Vector3(node.x - hx, node.y, node.z - hz),
-      leftTop: new THREE.Vector3(node.x - hx, node.y + visualHeight, node.z - hz),
+      leftTop: new THREE.Vector3(node.x - hx, node.y + (heights?.[index] ?? visualHeight), node.z - hz),
       rightBottom: new THREE.Vector3(node.x + hx, node.y, node.z + hz),
-      rightTop: new THREE.Vector3(node.x + hx, node.y + visualHeight, node.z + hz),
+      rightTop: new THREE.Vector3(node.x + hx, node.y + (heights?.[index] ?? visualHeight), node.z + hz),
       center,
       right,
       arc,
@@ -2240,7 +2259,11 @@ export function buildBendyWallGeometry(c: CustomComponent): BendyWallResult {
       // A cardinal straight can remain one exact Box3 however long it is. Any
       // diagonal/curved run is subdivided so its bounding rectangle never grows
       // into a broad invisible blocker beside the rendered strip.
-      const verticalDelta = Math.abs(sourceB.y - sourceA.y);
+      const heightA = heights?.[index] ?? collisionHeight;
+      const heightB = heights?.[(index + 1) % spine.length] ?? collisionHeight;
+      const verticalDelta = heights
+        ? Math.max(Math.abs(sourceB.y - sourceA.y), Math.abs(sourceB.y + heightB - sourceA.y - heightA))
+        : Math.abs(sourceB.y - sourceA.y);
       const cardinal = Math.abs(fullDx) < 1e-5 || Math.abs(fullDz) < 1e-5;
       const steps = cardinal && verticalDelta < 0.05
         ? 1
@@ -2266,7 +2289,9 @@ export function buildBendyWallGeometry(c: CustomComponent): BendyWallResult {
         const minY = Math.min(a.y, b.y);
         const maxY = Math.max(
           minY + 0.05,
-          Math.max(a.y, b.y) + collisionHeight - TOP_INSET,
+          heights
+            ? Math.max(a.y + THREE.MathUtils.lerp(heightA, heightB, t0), b.y + THREE.MathUtils.lerp(heightA, heightB, t1))
+            : Math.max(a.y, b.y) + collisionHeight - TOP_INSET,
         );
         collision.push(
           new THREE.Box3().setFromCenterAndSize(
@@ -2282,7 +2307,7 @@ export function buildBendyWallGeometry(c: CustomComponent): BendyWallResult {
       }
     }
   }
-  return { geometry, collision, collisionSegments, spine, length: totalLength, closed };
+  return { geometry, collision, collisionSegments, spine, length: totalLength, closed, heights };
 }
 
 // Fillet the corners of a polyline/polygon (Figma corner radius). Each
@@ -2554,6 +2579,7 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
   }, // source-owned long course for fast, isolated geometry iterations
   { id: "jungle-minefield", name: JUNGLE_MINEFIELD_LEVEL.name, data: JUNGLE_MINEFIELD_LEVEL },
   { id: "rooftop-relay", name: ROOFTOP_RELAY_LEVEL.name, data: ROOFTOP_RELAY_LEVEL },
+  { id: 'mall', name: MALL_LEVEL.name, data: MALL_LEVEL },
   { id: "jungle-cup", name: JUNGLE_CUP_LEVEL.name, data: JUNGLE_CUP_LEVEL },
   { id: 'warehouse', name: WAREHOUSE_PARK_LEVEL.name, data: WAREHOUSE_PARK_LEVEL },
   { id: "bone-yard", name: BONE_YARD_LEVEL.name, data: BONE_YARD_LEVEL },
@@ -2650,18 +2676,18 @@ const LEVEL_DATA_KEYS = new Set([
   'encounter',
   "minefields", "v", "skateRace", "edgeGrindingRevision", "name", "spawn", "startWarpPad", "killY", "hudMode", "ledgeAssist", "relicTime",
   "medalTimes", "ocean", "unitySand", "shoreFoam", "sky", "jungleAtmosphere", "jungleDepthFade", "jungleStyle", "atmosphere",
-  "components", "layers", "groups", "allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "alwaysSkate", "warehouseArt", "skateCollectathon", "cameraAirLift", "secretComboGem", "cameraLookAhead", "cameraRig", "boulderChase",
+  "components", "layers", "groups", "allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "skateReference", "hugeDropBail", "alwaysSkate", "warehouseArt", "skateCollectathon", "cameraAirLift", "secretComboGem", "cameraLookAhead", "cameraRig", "boulderChase",
 ]);
 const COMPONENT_DATA_KEYS = new Set([
-  "minefieldTrap", "t", "p", "s", "to", "pts", "widths", "artProxy", "checkpointTrip", "openFloor", "collisionHeight", "slip", "iceGrip", "groundSpeedLimit", "containment",
+  "minefieldTrap", "t", "p", "s", "to", "pts", "widths", "artProxy", "checkpointTrip", "openFloor", "collisionHeight", "wallHeights", "slip", "iceGrip", "groundSpeedLimit", "containment",
   "edgeGrinding", "grindTopTriangles", "cameraView", "cameraPresentationOnly", "cameraPosition", "cameraTarget", "cameraFov", "cameraAspect", "cameraFollowDistance", "cameraFollowTargetHeight", "cameraIntroDistance", "cameraCutaway", "len", "rise", "w", "yaw", "axis", "travelSign", "travelPhase", "vkind", "arc", "arcSteps", "deck",
   "closed", "bank", "curve", "vert", "lipRise", "outerBank", "depthBias", "shake", "kind", "dkind", "vr", "tn",
   "lit", "berms", "n", "outline", "range", "speed", "foe", "invisible", "solid", "scenerySolid", "solidSides", "hangLock",
-  "cycle", "phase", "amp", "seed", "scaffold", "supports", "rails", "spacing",
+  "cycle", "phase", "amp", "seed", "scaffold", "supports", "rails", "coping", "spacing",
   "baySpacing", "supportDepth", "supportBaseY", "terrainSupports", "structureStyle",
   "plankPalette", "polePalette", "shoreProfile", "shoreSeaLevel", "shorePhase",
   "trick", "exitYaw", "airOnly", "coverage", "radius", "color", "tex", "dir",
-  "layer", "grp", "lk", "nm", "trafficRoad", "materialStyle", "castShadow", "emissive", "opacity", "fog", "vertices", "indices", "normals", "uvs", "colors", "doubleSided", "beachSand", "loopRadius", "loopOffset", "loopRequired", "gravityTrack", "lethal", "skateCamera", "outOfBounds", "swimDepth",
+  "layer", "grp", "lk", "nm", "trafficRoad", "materialStyle", "castShadow", "emissive", "opacity", "fog", "vertices", "indices", "normals", "uvs", "colors", "doubleSided", "breakable", "breakGroup", "sourceBox", "beachSand", "loopRadius", "loopOffset", "loopRequired", "gravityTrack", "lethal", "skateCamera", "outOfBounds", "swimDepth",
 ]);
 const hasOnlyKeys = (value: object, keys: ReadonlySet<string>): boolean =>
   Object.keys(value).every((key) => keys.has(key));
@@ -2887,7 +2913,8 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
       (!source.medalTimes || !hasOnlyKeys(source.medalTimes, new Set(["gold", "silver", "bronze"]))))
     return null;
   if (source.hudMode !== undefined && source.hudMode !== "bonus" && source.hudMode !== "hub") return null;
-  for (const key of ["allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "alwaysSkate", "warehouseArt", "skateCollectathon", "secretComboGem", "jungleDepthFade", "startWarpPad"] as const)
+  if (source.skateReference !== undefined && (!source.skatepark || !validSkateReference(source.skateReference))) return null;
+  for (const key of ["allBalanceCrates", "perfectGrindBoost", "hugeDropBail", "keepPlayFog", "skatepark", "alwaysSkate", "warehouseArt", "skateCollectathon", "secretComboGem", "jungleDepthFade", "startWarpPad"] as const)
     if (source[key] !== undefined && typeof source[key] !== "boolean") return null;
   if (source.skateCollectathon && (!source.skatepark || !source.components.some(c => c?.t === 'wumpa'))) return null;
   if (source.cameraLookAhead !== undefined && (typeof source.cameraLookAhead !== "number" ||
@@ -3052,6 +3079,9 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
   let meshVertices = 0;
   let meshTriangles = 0;
   const singletonKinds = new Set<string>();
+  const breakGroups = new Map<number, BreakableKind>();
+  let breakableCount = 0;
+  const sourceBoxes=new Map<number,string>();
   const dynamicKinds = new Set(["enemy", "crusher", "mover", "firetiki", "torch", "phasepad",
     "stone", "pendulum", "ropeswing", "grindosaurus", "angryball", "crumble",
     "rope", "trickgate", "returnportal", "thorn", "spinbridge"]);
@@ -3072,11 +3102,18 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
           !component.pts.every((point) => finiteTuple(point, 2, 5))))
     )
       return null;
+    if (component.wallHeights !== undefined && (
+      component.t !== 'wallpath' || !finiteTuple(component.wallHeights, 2) ||
+      component.wallHeights.some(h => h < 0 || h > MAX_ABS) || Math.max(...component.wallHeights) < .2 ||
+      component.pts?.length !== 2 || component.closed === true || component.curve === 'spline' ||
+      component.pts.some(p => (p[2] ?? 0) !== 0) || component.collisionHeight !== undefined ||
+      Math.hypot(component.pts[1][0] - component.pts[0][0], component.pts[1][1] - component.pts[0][1]) < .02
+    )) return null;
     if (component.t === 'spinbridge' && (component.s?.some(value => value <= 0) ||
       component.outline || component.solid === false ||
       (component.cycle !== undefined && component.cycle <= 0))) return null;
     aggregateNodes +=
-      (component.pts?.length ?? 0) + (component.widths?.length ?? 0);
+      (component.pts?.length ?? 0) + (component.widths?.length ?? 0) + (component.wallHeights?.length ?? 0);
     if (aggregateNodes > MAX_AGGREGATE_NODES) return null;
     if (
       component.p.some((number) => Math.abs(number) > MAX_ABS) ||
@@ -3155,6 +3192,25 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
       return null;
     if (component.gravityTrack !== undefined && (!['mesh','vertramp'].includes(component.t) || component.solid === false || component.loopRadius !== undefined)) return null;
     if (component.skateCamera !== undefined && (!['mesh','vertramp'].includes(component.t) || component.solid === false)) return null;
+    if(component.sourceBox!==undefined){
+      if(component.t!=='mesh'||component.solid!==false||component.breakable||component.invisible||component.outline||component.materialStyle||component.s||
+        !validSourceBox(component.sourceBox)||!source.skateReference?.railCapture||source.skateReference.railCapture.axes[1]!==-2||component.sourceBox.angles[0]||component.sourceBox.angles[2]||
+        Math.abs((component.yaw??0)+component.sourceBox.angles[1]*360/4096)>1e-6)return null;
+      const signature=JSON.stringify([component.sourceBox,component.p,component.yaw]);
+      if(sourceBoxes.has(component.sourceBox.id)&&sourceBoxes.get(component.sourceBox.id)!==signature)return null;
+      sourceBoxes.set(component.sourceBox.id,signature);if(sourceBoxes.size>64)return null;
+    }
+    if (component.coping !== undefined && (component.t !== 'rail' || typeof component.coping !== 'boolean')) return null;
+    if (component.breakable !== undefined) {
+      if (component.t !== 'mesh' || component.solid !== false || component.invisible || component.outline ||
+          component.materialStyle || !['glass', 'sign'].includes(component.breakable) || ++breakableCount > 128) return null;
+    }
+    if (component.breakGroup !== undefined) {
+      if (!component.breakable || !Number.isSafeInteger(component.breakGroup) || component.breakGroup < 1 || component.breakGroup > MAX_EDITOR_ID) return null;
+      const previous = breakGroups.get(component.breakGroup);
+      if (previous && previous !== component.breakable) return null;
+      breakGroups.set(component.breakGroup, component.breakable);
+    }
     if (component.outOfBounds !== undefined && (component.t !== 'mesh' || component.solid === false || component.lethal === true)) return null;
     if (component.lethal !== undefined && (component.t !== 'mesh' || (component.solid === false&&
       component.materialStyle!=='water'&&component.materialStyle!=='jungle-stream'))) return null;
@@ -3330,7 +3386,11 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
         aggregateSamples += Math.max(nodes * 7, Math.ceil(curvedLength / 1.6)) *
           Math.max(24 * (source.skatepark ? 3 : 1), profileVertices);
       } else if (component.t === "wallpath" || component.t === "coastwall") {
-        aggregateSamples += Math.max(nodes * 7, Math.ceil(curvedLength / 0.6)) * 8;
+        const profileWork = component.wallHeights && component.pts ? Math.ceil(Math.max(
+          Math.abs((component.pts[1][3] ?? 0) - (component.pts[0][3] ?? 0)),
+          Math.abs((component.pts[1][3] ?? 0) + component.wallHeights[1] - (component.pts[0][3] ?? 0) - component.wallHeights[0]),
+        ) / .6) : 0;
+        aggregateSamples += Math.max(nodes * 7, Math.ceil(curvedLength / 0.6), profileWork) * 8;
       } else {
         aggregateSamples += nodes * 7 * 8;
       }
@@ -4251,6 +4311,8 @@ export class Level {
   skatepark = false;
   get alwaysSkate(): boolean { return this.skatepark && this.builtFromData?.alwaysSkate !== false; }
   skateCollectathon: SkateCollectathon | null = null;
+  skateReference: SkateReferenceData | undefined;
+  skateReferencePhysics: SkateReferencePhysics | undefined;
   // Presentation semantics are authored with data so edited/copied bonus
   // stages retain their HUD without relying on a special registry id.
   hudMode: "standard" | "bonus" | "hub" = "standard";
@@ -4338,6 +4400,7 @@ export class Level {
   // speed ceiling. Only set on the level built around one long grind line —
   // elsewhere it would quietly rewrite the speed balance of the whole park.
   perfectGrindBoost = false;
+  hugeDropBail = true;
   // Time of day for THIS level. Hand-coded levels are all sunset (the look the
   // game shipped with); a data-built level takes it from its authored data.
   skyPreset: SkyPreset = DEFAULT_SKY;
@@ -4420,6 +4483,8 @@ export class Level {
   private chaseLightning?:BoulderLightning;
   private root = new THREE.Group(); // everything the level owns, for disposal
   readonly discardedBoards = new DiscardedBoards();
+  readonly breakableScenery = new BreakableScenery();
+  readonly sourceProps = new SourceBouncyProps();
   private pops: { obj: THREE.Object3D; t: number }[] = [];
   private time = 0;
   private thornClusters: ProceduralThornCluster[] = [];
@@ -4671,6 +4736,14 @@ export class Level {
     if(kind==='sunny-sand'){
       const texture=Level.finishTex(this.surfaceImage('sunny-beach/sand.webp'));
       this.surfTexCache.set(kind,texture);return texture;
+    }
+    const mall = mallArt(kind);
+    if (mall) {
+      const texture = Level.finishTex(this.surfaceImage(mall.file), true);
+      texture.wrapS = mall.wrap[0] === 0 ? THREE.RepeatWrapping : THREE.ClampToEdgeWrapping;
+      texture.wrapT = mall.wrap[1] === 0 ? THREE.RepeatWrapping : THREE.ClampToEdgeWrapping;
+      this.surfTexCache.set(kind, texture);
+      return texture;
     }
     if(kind==='coast-terrain')return this.surfaceTexture('coast-bedrock');
     if(kind==='custard-sandstone'){
@@ -5271,9 +5344,11 @@ export class Level {
       entry = { id: SLIPSTREAM_COURSE_ID, name: SLIPSTREAM_LEVEL.name, data: SLIPSTREAM_LEVEL };
     this.scene = scene;
     scene.add(this.root);
-    this.root.add(this.discardedBoards.root);
+    this.root.add(this.discardedBoards.root, this.breakableScenery.root);
     this.discardedBoards.onImpact = (broken, speed) => sfx.play(broken ? 'crateBreak1' : 'crateBounce',
       Math.min(broken ? .4 : .28, .07 + speed * .012), broken ? 1.15 : 1.3);
+    this.breakableScenery.onBreak = kind => sfx.play(kind === 'glass' ? 'crateBreak2' : 'crateBreak1', .4, kind === 'glass' ? 1.65 : 1.15);
+    this.sourceProps.onHit=()=>sfx.play('crateBreak1',.25,.85);
     this.discardedBoards.onSpinHit = (position, removed) => {
       puffs.burst(removed ? 'dustLand' : 'crateSmash', position.x, position.y, position.z,
         { surface: 'wood', groundY: position.y - 0.1, strength: removed ? 0.8 : 0.55 });
@@ -6222,6 +6297,14 @@ export class Level {
         this.meshSandMaterials.set(key, sand);
         material = sand;
       }
+    } else if (mallArt(c.tex)) {
+      const art = mallArt(c.tex)!;
+      material = new THREE.MeshBasicMaterial({
+        map: this.surfaceTexture(c.tex!), color: c.color ?? '#ffffff', vertexColors: !!c.colors,
+        side: c.doubleSided ? THREE.DoubleSide : THREE.FrontSide, alphaTest: art.cutoff,
+        transparent: art.transparent || (c.opacity ?? 1) < 1,
+        opacity: c.opacity ?? 1, depthWrite: !art.transparent, fog: c.fog !== false,
+      });
     } else if (c.materialStyle === "crown-quartz") {
       material=createCrownQuartz(c,geometry);
     } else if (nightworksArt(c.tex)?.unlit) {
@@ -6296,7 +6379,7 @@ export class Level {
     if(c.tex==='coast-terrain')addCarlisleTerrainLook(material,this.surfaceTexture('coast-turf'));
     // These remain separate authoring components. Runtime-only visual pieces
     // can share one draw per material/cell instead of one draw per rope/post.
-    if(!EDITOR_BUILD&&this.batchDecor&&!canvasCloth&&c.solid===false&&!c.invisible&&!c.materialStyle&&!standingWater&&
+    if(!EDITOR_BUILD&&this.batchDecor&&!canvasCloth&&c.solid===false&&!c.invisible&&!c.breakable&&!c.sourceBox&&!c.materialStyle&&!standingWater&&
       !c.colors&&!c.depthBias&&!c.cameraCutaway&&!c.slip&&c.iceGrip===undefined&&c.castShadow===undefined&&(c.s??[1,1,1]).every(scale=>scale>0)&&
       c.fog===undefined&&c.vert===undefined&&(c.opacity??1)===1){
       const key=JSON.stringify([c.color??'#ffffff',c.emissive??'#000000',c.tex??'checker',!!c.doubleSided]);
@@ -6374,6 +6457,8 @@ export class Level {
       mesh.updateMatrixWorld(true);
       this.lethalWater.push({mesh,bounds:geometry.boundingBox!.clone().applyMatrix4(mesh.matrixWorld)});
     }
+    if(c.breakable)this.breakableScenery.add(mesh,c.breakable,c.breakGroup);
+    if(c.sourceBox&&this.skateReferencePhysics?.railCapture)this.sourceProps.add(mesh,c.sourceBox,this.skateReferencePhysics.railCapture);
     if(c.outline&&c.solid!==false){
       mesh.userData.outlinedSurface=true;
       this.outlinedSurfaces.push({mesh,component:JSON.parse(JSON.stringify(c)),groups:outlineGroups,
@@ -6731,6 +6816,7 @@ export class Level {
             ],
         ),
         invisible: rail.object.children.length === 0 ? true : undefined,
+        ...(rail.coping ? { coping: true } : {}),
         grp: rail.object.userData.captureGroup as number | undefined,
       });
     }
@@ -7138,6 +7224,8 @@ export class Level {
       hudMode: this.hudMode === "bonus" ? "bonus" : undefined,
       allBalanceCrates: this.allBalanceCrates || undefined,
       perfectGrindBoost: this.perfectGrindBoost || undefined,
+      hugeDropBail: this.hugeDropBail ? undefined : false,
+      ...(this.skateReference ? {skatepark: true, skateReference: {...this.skateReference, stats: {...this.skateReference.stats}}} : {}),
       keepPlayFog: this.keepPlayFog || undefined,
       minefields: this.minefields?.data,
       cameraAirLift: this.cameraAirLift,
@@ -7291,8 +7379,11 @@ export class Level {
     this.hudMode = data.hudMode ?? "standard";
     this.skatepark = data.skatepark === true;
     this.skateCollectathon = data.skateCollectathon ? new SkateCollectathon(data.warehouseArt===true) : null;
+    this.skateReference = this.skatepark && data.skateReference ? {...data.skateReference, stats: {...data.skateReference.stats}} : undefined;
+    this.skateReferencePhysics = this.skateReference ? createSkateReference(this.skateReference) : undefined;
     this.allBalanceCrates = data.allBalanceCrates === true;
     this.perfectGrindBoost = data.perfectGrindBoost === true;
+    this.hugeDropBail = data.hugeDropBail !== false;
     this.keepPlayFog = data.keepPlayFog === true;
     this.cameraAirLift = data.cameraAirLift;
     this.cameraLookAhead = data.cameraLookAhead;
@@ -7980,13 +8071,14 @@ export class Level {
             if (c.pts && c.pts.length >= 2) {
               // multi-node rail: pen-drawn path — corner radii round the
               // bends, per-node height offsets climb and dive
-              const rp = roundCorners(c.pts, false);
+              const rp = roundCorners(c.pts, c.closed === true);
               const rail = new Rail(
                 rp.map(
                   (q) =>
                     new THREE.Vector3(c.p[0] + q.x, c.p[1] + q.y, c.p[2] + q.z),
                 ),
                 !c.invisible,
+                c.closed === true,
               );
               this.rails.push(rail);
               this.root.add(rail.object);
@@ -8034,6 +8126,7 @@ export class Level {
               });
               (this.blockworksSurfaces??=new BlockworksSurfaces(this.root,!EDITOR_BUILD)).fitRail(rail.points,rail.object,postHeights);
             }
+            this.rails[this.rails.length-1].coping = c.coping === true;
             if(c.dkind === "citydeck" || c.dkind === "cityutilitypole"){const rail=this.rails[this.rails.length-1];rail.object.traverse(o=>{const mesh=o as THREE.Mesh;if(mesh.isMesh){mesh.geometry.dispose();}});rail.object.clear();rail.object.userData.cityRail=true;rail.object.add(cityRailVisual(rail.points,c.dkind === "cityutilitypole"));}
             if (c.dkind === "nightrockridge") {
               const rail = this.rails[this.rails.length-1];
@@ -8067,6 +8160,15 @@ export class Level {
             // finish gate: crossing its plane ends the run (and the time trial)
             this.finishZ = c.p[2];
             this.finishGate(c.p[1], c.p[2], c.p[0], c.yaw ?? 0);
+            // An authored doorway can finish across its full opening. The
+            // ordinary warp pad keeps its existing contact-only behaviour.
+            if (c.invisible && c.w !== undefined) {
+              const a = THREE.MathUtils.degToRad(c.yaw ?? 0), width = Math.max(1, c.w);
+              this.finishGlow.setFromCenterAndSize(
+                new THREE.Vector3(c.p[0], c.p[1] + 2, c.p[2]),
+                new THREE.Vector3(Math.abs(Math.cos(a))*width + Math.abs(Math.sin(a))*.8, 4,
+                  Math.abs(Math.sin(a))*width + Math.abs(Math.cos(a))*.8));
+            }
             if(c.invisible){const pad=this.warpPads[this.warpPads.length-1];if(pad){pad.group.visible=false;pad.group.userData.editorGhost=true;}}
           } else if (c.t === "bonusplatform" && this.allowsBonus) {
             this.buildBonusPlatform(c);
@@ -8483,6 +8585,8 @@ export class Level {
     this.meshSideCollisions.dispose();
     this.carlisleScenery.dispose();
     this.worldSurfaceBinding?.dispose();this.worldSurfaceBinding=null;
+    this.breakableScenery.dispose();
+    this.sourceProps.dispose();
     this.boss?.dispose();
     this.boss = null; // Meshy leases are released before the ordinary root traversal.
     if(this.bonusPlatform)this.bonusPlatform.group.userData.bonusStoneDisposed=true;
@@ -9521,6 +9625,8 @@ export class Level {
     this.worldSurfaceBinding?.beginStep();
     this.standingWaterClock.value+=Math.max(0,Math.min(dt,0.1));
     this.nightworksPlume?.advance(dt);
+    this.breakableScenery.update(dt);
+    this.sourceProps.update(dt,this.groundMeshes,this.killY);
     for (const bridge of this.spinBridges) bridge.update(dt);
     this.syncSpinBridgeFloors();
     this.boss?.present(dt);
@@ -10824,6 +10930,8 @@ export class Level {
     this.boss?.reset(hard);
     this.cancelBonusEntry();
     this.discardedBoards.clear(); // no debris from the previous life/run
+    this.breakableScenery.reset(hard);
+    this.sourceProps.reset(hard);
     // Hard reset restores the committed crystal baseline and clears any
     // materialized run-local gem; a soft death keeps current-run pickups.
     if (hard) {
@@ -12970,6 +13078,7 @@ export class Level {
     halfThickness: number,
     height: number,
     closed: boolean,
+    heights?: number[],
   ): WallPathRuntime {
     const stations = [0];
     for (let index = 1; index < spine.length; index++)
@@ -12994,6 +13103,7 @@ export class Level {
       length: Math.max(0.001, stations[stations.length - 1]),
       halfThickness,
       height,
+      heights,
       closed: closed && stations.length === spine.length + 1,
     };
   }
@@ -13030,6 +13140,7 @@ export class Level {
       distance: 0,
       crossDistance: 0,
       cap: false,
+      height: THREE.MathUtils.lerp(path.heights?.[segment] ?? path.height, path.heights?.[next] ?? path.height, t),
     };
   }
 
@@ -13094,6 +13205,7 @@ export class Level {
         distance: contactDistance,
         crossDistance,
         cap,
+        height: THREE.MathUtils.lerp(path.heights?.[segment] ?? path.height, path.heights?.[(segment + 1) % path.spine.length] ?? path.height, t),
       };
       bestMetric = distance;
     }
@@ -13143,6 +13255,7 @@ export class Level {
       Math.max(0.05, c.w ?? 1.2) / 2,
       Math.max(0.2, c.collisionHeight ?? c.rise ?? c.s?.[1] ?? 5),
       built.closed,
+      built.heights,
     );
     for (const [index, box] of built.collision.entries()) {
       (c.containment === true ? this.containmentWalls : this.walls).push(box);

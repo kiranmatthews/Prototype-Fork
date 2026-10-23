@@ -1,0 +1,2087 @@
+{
+  "schema": 1,
+  "verifiedAt": "2026-10-23T04:32:10.433851+00:00",
+  "build": {
+    "version": "3d243395401e89a0d653",
+    "snapshot": "/private/tmp/mall-recreation/snapshot-25",
+    "output": "/private/tmp/mall-recreation/dist-25",
+    "preview": "http://127.0.0.1:5297/?playtest&level=mall",
+    "published": false
+  },
+  "configuration": {
+    "kind": "thps1",
+    "metresPerUnit": 0.018079998317314883,
+    "stats": {
+      "ollie": 4,
+      "speed": 8,
+      "air": 8,
+      "balance": 5
+    },
+    "railCapture": {
+      "origin": [
+        396.0085157210703,
+        106.1296209180479,
+        -888.995810663731
+      ],
+      "axes": [
+        -3,
+        -2,
+        -1
+      ]
+    }
+  },
+  "source": {
+    "repository": "https://github.com/LANCommander/TonyWasAProSkater/tree/d9319c8d5b42c431de02bec0f02f0cf955f2fbae",
+    "files": {
+      "game/src/physics.cpp": [
+        "DoOnGroundPhysics: Q12 gravity 6500 and linear drag 8/82.",
+        "HandleJump: stat-dependent charge and additive pop; called at line 4901 before rail physics.",
+        "HandleKick: four-unit pushes for five ticks in twenty; kick target stops pushing rather than clamping.",
+        "StartGrind (810-868): mRailDir * (speedStat+5) impulse, then projection in DoOnRailPhysics.",
+        "DoOnRailPhysics (2080-2480): Q12 gravity 13000, low-speed helpers, corner cutoff 2633/4096 and no endpoint pop.",
+        "DoPhysics LimitFinalSpeed (5328-5342): separate full-vector MAXSPEED(50) cap after state physics.",
+        "StartGrind (830-841): chain identity, rail-time adjustment and integer entry balance velocity.",
+        "DoOnRailPhysics (2432-2452): integer balance, neutral arming, analog threshold and strict >4000 bail.",
+        "DoPhysics (5053-5061): rail time ages in air; supported ground resets balance/velocity/time.",
+        "HandleStickToRail (996-1087): cooldown/input/state eligibility; grounded mPos is offset 30 source units along the support normal. mInAir denotes bailing, not ordinary air state."
+      ],
+      "game/src/mech.cpp": [
+        "CBruce initialization: speed-stat offsets 17 and 39",
+        "GetStats (95-120): selects unlocked board bonuses."
+      ],
+      "game/src/rail.cpp": [
+        "Rail_Update (264-275): initial mRailDir aligns with incoming velocity; StartGrind adds speed, not braking.",
+        "Rail_Update (283-284): mRailStart is the original chain start; mRailNode is the current segment. Balance re-entry identity belongs to the whole chain.",
+        "Rail_Update (166-302): previous motion-segment query, 100-unit strict candidate score, grounded Y-down guard, outward-end rejection and reverse activation list ordering."
+      ],
+      "game/data/unnamed.cpp": [
+        "Tony base stats 3/7/7/4 and first stat upgrade +1 to each stat."
+      ],
+      "game/src/m3dutils.cpp": [
+        "M3dUtils_LineLineClosestPoints: integer/GTE independent line clamping, including parallel/degenerate endpoint behavior."
+      ]
+    },
+    "baseStepsPerSecond": 30,
+    "fixedPointDenominator": 4096
+  },
+  "sourceSHA256": {
+    "game_src_rail.cpp": "effbdaae07c6132384f25d13d13d14a9e80b5f9c638c24e69b3feb215c8d47d9",
+    "game_src_physics.cpp": "60f61f8b0a7ff124e80a6506ae606c509da0f60563c6885b6636b2fd2ee10777",
+    "game_src_mech.cpp": "54368442fa36aaf7833210af3cf42fda0ba6c6535dba90583fdf347055eb25d1",
+    "game_include_game_bruce.h": "b5088344b2b0deefe51351079f933795b0e5a4c6a684f82d71086dc8bf75ec3a",
+    "game_src_m3dutils.cpp": "899454604e51f99923bb726f173faeff78b96c5485e4c8901716954769f26f57",
+    "platform_pc_include_pc_geom.h": "9b15ac30fb1b98c4b7f64dfe5b0745ebf176e24e180f3b779a184bf42742b6fe",
+    "game_data_m3dasm.cpp": "13ed2f4e788cd71747b71d90410217509639cb7a94237cfbe0c9582193a1e571"
+  },
+  "squareRootSourceSHA256": "b2cfef4aab7338d839862a363152cada38f0baf9122c2cf5e01b705aad32dc40",
+  "oracle": {
+    "sourceRevision": "d9319c8d5b42c431de02bec0f02f0cf955f2fbae",
+    "sourceSHA256": "899454604e51f99923bb726f173faeff78b96c5485e4c8901716954769f26f57",
+    "cppOracle": "Unmodified source Dot0/Lerp/LineLineClosestPoints, original pc_geom.h and SquareRoot0 implementation/table; only CVector storage/operators and IO are harness stubs.",
+    "linePairCases": 10006,
+    "squareRootTableEntries": 3072,
+    "fixtureResults": [
+      {
+        "distance": 0,
+        "t1": 2048,
+        "t2": 2048,
+        "point1": [
+          0,
+          0,
+          0
+        ],
+        "point2": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "distance": 500,
+        "t1": 4096,
+        "t2": 4096,
+        "point1": [
+          122880,
+          0,
+          -409600
+        ],
+        "point2": [
+          0,
+          0,
+          -2457600
+        ]
+      },
+      {
+        "distance": 500,
+        "t1": 4096,
+        "t2": 4096,
+        "point1": [
+          122880,
+          0,
+          -409600
+        ],
+        "point2": [
+          0,
+          0,
+          -2457600
+        ]
+      },
+      {
+        "distance": 99,
+        "t1": 2048,
+        "t2": 2048,
+        "point1": [
+          0,
+          405504,
+          0
+        ],
+        "point2": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "distance": 100,
+        "t1": 2048,
+        "t2": 2048,
+        "point1": [
+          0,
+          409600,
+          0
+        ],
+        "point2": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "distance": 101,
+        "t1": 2048,
+        "t2": 2048,
+        "point1": [
+          0,
+          413696,
+          0
+        ],
+        "point2": [
+          0,
+          0,
+          0
+        ]
+      }
+    ],
+    "strict100UnitLimit": true,
+    "outwardEndpointRejected": true,
+    "groundCannotReachUpward": true,
+    "productionModule": "src/referenceRailCapture.ts",
+    "integration": "Opt-in source coordinate frame; line-pair oracle does not prove full state-machine equivalence."
+  },
+  "integration": {
+    "sweptCrossing": true,
+    "outsideRadiusRejected": true,
+    "groundSideRejected": true,
+    "outwardEndpointRejected": true,
+    "alternateEligibleChain": true,
+    "inwardEndpointAccepted": true,
+    "disabledRailRejected": true,
+    "sourceFrameMapping": true,
+    "editorRoundTrip": true,
+    "invalidFramesRejected": true,
+    "legacyProfilesOptOut": true,
+    "productionCapture": true,
+    "heldInputRequired": true,
+    "sourceDepartureCooldownSeconds": 0.16666666666666666
+  },
+  "behavior": {
+    "query": "Previous movement segment against all enabled source rail segments; 100 original-unit broadphase and strict distance below 100. The grounded rail point cannot lie above the native Y-down motion origin.",
+    "linePair": "Original independent parameter clamping, short-vector GTE arithmetic and midpoint square-root table. Parallel/degenerate lines select their endpoints; generic Euclidean finite-segment distance differs.",
+    "endpoints": "Travel direction comes from incoming 3D velocity. Reject an outward endpoint, then continue searching eligible rails; ties retain reverse activation order.",
+    "origin": "Native Y-down origin is 30 native units above collision contact. The frame converts the registered world coordinates; no rail node or source collision vertex moved.",
+    "input": "Current press or hold required; a legacy released-input grace cannot catch. Source-profile departure cooldown is five 30 Hz ticks."
+  },
+  "baselineAudit": {
+    "sourceRevision": "d9319c8d5b42c431de02bec0f02f0cf955f2fbae",
+    "diagnosticOnly": true,
+    "isolatedQueryOverride": false,
+    "tunedReleases": false,
+    "querySpanSeconds": 0.016666666666666666,
+    "runtimeSnapshot": "snapshot-25 with source capture disabled for pass24 baseline; query override only when requested",
+    "nativeAnchor": "Original mPos is 30 source units along the support normal above collision contact; ordinary air uses the flat support offset. Feet-only queries are retained separately to expose the coordinate-reference effect.",
+    "inputContract": "One supported start per fixture, followed only by controller samples. Baseline queries observe pass24 capture behavior; --source-query replaces only the capture decision and --tuned changes release timing. Neither predicts the entire original-game trajectory.",
+    "scope": "Geometric Rail_Update offers only. Full HandleStickToRail cooldown, trick-state and handplant logic are not simulated. Source linked-list order is reverse normal-start activation order.",
+    "fixtures": [
+      {
+        "name": "Concourse bench",
+        "catches": [
+          {
+            "frame": 85,
+            "state": "air",
+            "source": [
+              -11486.73645135151,
+              346.988321707448,
+              980.9816623263889
+            ],
+            "grounded": false,
+            "requested": true,
+            "cooldown": 0,
+            "nativeSweep": {
+              "from": [
+                -169852945,
+                -3272015,
+                85139131
+              ],
+              "to": [
+                -169931472,
+                -3318652,
+                85139131
+              ]
+            },
+            "sourceAnchorCandidate": null,
+            "feetCandidate": null,
+            "actualRail": 45,
+            "actualDistance": 2.0399269286698156,
+            "actualT": 14.192798679092078,
+            "originalSegments": [
+              {
+                "segment": 0,
+                "distance": 129,
+                "t1": 0,
+                "t2": 4096,
+                "point1": [
+                  -169857024,
+                  -3272704,
+                  85135360
+                ],
+                "point2": [
+                  -170369024,
+                  -3272704,
+                  85266432
+                ]
+              }
+            ]
+          }
+        ],
+        "outcome": {
+          "frames": 154,
+          "bail": false,
+          "reached": true,
+          "intendedRails": [
+            45
+          ],
+          "actualRails": [
+            45
+          ],
+          "intendedRailCaught": true,
+          "crossedNodes": []
+        }
+      },
+      {
+        "name": "First concourse display ledge",
+        "catches": [
+          {
+            "frame": 92,
+            "state": "air",
+            "source": [
+              -13160.285665613716,
+              361.88293041979887,
+              367.67798723383754
+            ],
+            "grounded": false,
+            "requested": true,
+            "cooldown": 0,
+            "nativeSweep": {
+              "from": [
+                -187070880,
+                -3436545,
+                91394755
+              ],
+              "to": [
+                -186992789,
+                -3470498,
+                91391573
+              ]
+            },
+            "sourceAnchorCandidate": null,
+            "feetCandidate": null,
+            "actualRail": 17,
+            "actualDistance": 2.032319709416763,
+            "actualT": 0,
+            "originalSegments": [
+              {
+                "segment": 0,
+                "distance": 125,
+                "t1": 3165,
+                "t2": 0,
+                "point1": [
+                  -187015168,
+                  -3469312,
+                  91389952
+                ],
+                "point2": [
+                  -186544128,
+                  -3272704,
+                  91320320
+                ]
+              },
+              {
+                "segment": 1,
+                "distance": 1033,
+                "t1": 4096,
+                "t2": 0,
+                "point1": [
+                  -186992789,
+                  -3470498,
+                  91391573
+                ],
+                "point2": [
+                  -183324672,
+                  -3272704,
+                  89288704
+                ]
+              }
+            ]
+          }
+        ],
+        "outcome": {
+          "frames": 161,
+          "bail": false,
+          "reached": true,
+          "intendedRails": [
+            17
+          ],
+          "actualRails": [
+            17
+          ],
+          "intendedRailCaught": true,
+          "crossedNodes": []
+        }
+      },
+      {
+        "name": "Up-escalator inside handrail",
+        "catches": [
+          {
+            "frame": 57,
+            "state": "air",
+            "source": [
+              -13137.240145241089,
+              355.06197668449477,
+              7.31010410636145
+            ],
+            "grounded": false,
+            "requested": true,
+            "cooldown": 0,
+            "nativeSweep": {
+              "from": [
+                -186797244,
+                -3360675,
+                95064761
+              ],
+              "to": [
+                -186757847,
+                -3400961,
+                95065412
+              ]
+            },
+            "sourceAnchorCandidate": {
+              "rail": 0,
+              "segment": 0,
+              "direction": 1,
+              "distance": 93,
+              "t1": 2868,
+              "t2": 0,
+              "point1": [
+                -186773504,
+                -3395584,
+                95064064
+              ],
+              "point2": [
+                -186454016,
+                -3526656,
+                95227904
+              ]
+            },
+            "feetCandidate": null,
+            "actualRail": 0,
+            "actualDistance": 1.875361824389434,
+            "actualT": 0,
+            "originalSegments": [
+              {
+                "segment": 0,
+                "distance": 93,
+                "t1": 2868,
+                "t2": 0,
+                "point1": [
+                  -186773504,
+                  -3395584,
+                  95064064
+                ],
+                "point2": [
+                  -186454016,
+                  -3526656,
+                  95227904
+                ]
+              }
+            ]
+          }
+        ],
+        "outcome": {
+          "frames": 129,
+          "bail": false,
+          "reached": true,
+          "intendedRails": [
+            0
+          ],
+          "actualRails": [
+            0
+          ],
+          "intendedRailCaught": true,
+          "crossedNodes": []
+        }
+      },
+      {
+        "name": "Concourse display, both bends and outward exit",
+        "catches": [
+          {
+            "frame": 92,
+            "state": "air",
+            "source": [
+              -13160.285665613716,
+              361.88293041979887,
+              367.67798723383754
+            ],
+            "grounded": false,
+            "requested": true,
+            "cooldown": 0,
+            "nativeSweep": {
+              "from": [
+                -187070880,
+                -3436545,
+                91394755
+              ],
+              "to": [
+                -186992789,
+                -3470498,
+                91391573
+              ]
+            },
+            "sourceAnchorCandidate": null,
+            "feetCandidate": null,
+            "actualRail": 17,
+            "actualDistance": 2.032319709416763,
+            "actualT": 0,
+            "originalSegments": [
+              {
+                "segment": 0,
+                "distance": 125,
+                "t1": 3165,
+                "t2": 0,
+                "point1": [
+                  -187015168,
+                  -3469312,
+                  91389952
+                ],
+                "point2": [
+                  -186544128,
+                  -3272704,
+                  91320320
+                ]
+              },
+              {
+                "segment": 1,
+                "distance": 1033,
+                "t1": 4096,
+                "t2": 0,
+                "point1": [
+                  -186992789,
+                  -3470498,
+                  91391573
+                ],
+                "point2": [
+                  -183324672,
+                  -3272704,
+                  89288704
+                ]
+              }
+            ]
+          }
+        ],
+        "outcome": {
+          "frames": 277,
+          "bail": false,
+          "reached": true,
+          "intendedRails": [
+            17
+          ],
+          "actualRails": [
+            17
+          ],
+          "intendedRailCaught": true,
+          "crossedNodes": [
+            59,
+            60
+          ]
+        }
+      },
+      {
+        "name": "Crossrail low arch",
+        "catches": [
+          {
+            "frame": 134,
+            "state": "air",
+            "source": [
+              4662.940739131496,
+              -1407.4677170968307,
+              5935.188491786052
+            ],
+            "grounded": false,
+            "requested": true,
+            "cooldown": 0,
+            "nativeSweep": {
+              "from": [
+                -5191814,
+                14555622,
+                34650818
+              ],
+              "to": [
+                -5290500,
+                14567485,
+                34632522
+              ]
+            },
+            "sourceAnchorCandidate": null,
+            "feetCandidate": null,
+            "actualRail": 55,
+            "actualDistance": 2.090277247911866,
+            "actualT": 61.99018026469288,
+            "originalSegments": [
+              {
+                "segment": 6,
+                "distance": 147,
+                "t1": 4096,
+                "t2": 2163,
+                "point1": [
+                  -5290500,
+                  14567485,
+                  34632522
+                ],
+                "point2": [
+                  -5480448,
+                  15077376,
+                  34889728
+                ]
+              },
+              {
+                "segment": 5,
+                "distance": 459,
+                "t1": 4096,
+                "t2": 4096,
+                "point1": [
+                  -5290500,
+                  14567485,
+                  34632522
+                ],
+                "point2": [
+                  -7069696,
+                  14852096,
+                  35184640
+                ]
+              }
+            ]
+          }
+        ],
+        "outcome": {
+          "frames": 215,
+          "bail": false,
+          "reached": true,
+          "intendedRails": [
+            55
+          ],
+          "actualRails": [
+            55
+          ],
+          "intendedRailCaught": true,
+          "crossedNodes": [
+            118
+          ]
+        }
+      },
+      {
+        "name": "Right handrail to suspended tape beam",
+        "catches": [
+          {
+            "frame": 172,
+            "state": "air",
+            "source": [
+              -5576.755345464424,
+              342.4138553905823,
+              817.7675534546441
+            ],
+            "grounded": false,
+            "requested": true,
+            "cooldown": 0,
+            "nativeSweep": {
+              "from": [
+                -109779919,
+                -3222130,
+                86802060
+              ],
+              "to": [
+                -109681039,
+                -3272017,
+                86803049
+              ]
+            },
+            "sourceAnchorCandidate": null,
+            "feetCandidate": null,
+            "actualRail": 41,
+            "actualDistance": 2.0195571161321118,
+            "actualT": 12.19319638636051,
+            "originalSegments": [
+              {
+                "segment": 0,
+                "distance": 136,
+                "t1": 4096,
+                "t2": 727,
+                "point1": [
+                  -109681039,
+                  -3272017,
+                  86803049
+                ],
+                "point2": [
+                  -109264896,
+                  -3506176,
+                  87089152
+                ]
+              }
+            ]
+          },
+          {
+            "frame": 359,
+            "state": "air",
+            "source": [
+              -3287.8558890151744,
+              75.07522673105996,
+              789.7035930833554
+            ],
+            "grounded": false,
+            "requested": true,
+            "cooldown": 0,
+            "nativeSweep": {
+              "from": [
+                -86467321,
+                -695943,
+                87089152
+              ],
+              "to": [
+                -86346416,
+                -546582,
+                87089152
+              ]
+            },
+            "sourceAnchorCandidate": null,
+            "feetCandidate": {
+              "rail": 38,
+              "segment": 0,
+              "direction": 1,
+              "distance": 92,
+              "t1": 4096,
+              "t2": 221,
+              "point1": [
+                -86346416,
+                -423702,
+                87089152
+              ],
+              "point2": [
+                -86032384,
+                -368640,
+                87293952
+              ]
+            },
+            "actualRail": 38,
+            "actualDistance": 1.600833157250032,
+            "actualT": 6.693497250631977,
+            "originalSegments": [
+              {
+                "segment": 0,
+                "distance": 106,
+                "t1": 4096,
+                "t2": 229,
+                "point1": [
+                  -86346416,
+                  -546582,
+                  87089152
+                ],
+                "point2": [
+                  -85987328,
+                  -368640,
+                  87252992
+                ]
+              }
+            ]
+          }
+        ],
+        "outcome": {
+          "frames": 677,
+          "bail": false,
+          "reached": true,
+          "intendedRails": [
+            41,
+            38
+          ],
+          "actualRails": [
+            41,
+            38
+          ],
+          "intendedRailCaught": true
+        }
+      }
+    ]
+  },
+  "isolatedTunedAudit": {
+    "sourceRevision": "d9319c8d5b42c431de02bec0f02f0cf955f2fbae",
+    "diagnosticOnly": true,
+    "isolatedQueryOverride": true,
+    "tunedReleases": true,
+    "querySpanSeconds": 0.016666666666666666,
+    "runtimeSnapshot": "snapshot-25 with source capture disabled for pass24 baseline; query override only when requested",
+    "nativeAnchor": "Original mPos is 30 source units along the support normal above collision contact; ordinary air uses the flat support offset. Feet-only queries are retained separately to expose the coordinate-reference effect.",
+    "inputContract": "One supported start per fixture, followed only by controller samples. Baseline queries observe pass24 capture behavior; --source-query replaces only the capture decision and --tuned changes release timing. Neither predicts the entire original-game trajectory.",
+    "scope": "Geometric Rail_Update offers only. Full HandleStickToRail cooldown, trick-state and handplant logic are not simulated. Source linked-list order is reverse normal-start activation order.",
+    "fixtures": [
+      {
+        "name": "Concourse bench",
+        "catches": [
+          {
+            "frame": 87,
+            "state": "air",
+            "source": [
+              -11502.141832112417,
+              355.1812133060557,
+              980.9816623263889
+            ],
+            "grounded": false,
+            "requested": true,
+            "cooldown": 0,
+            "nativeSweep": {
+              "from": [
+                -170009998,
+                -3362039,
+                85139131
+              ],
+              "to": [
+                -170088525,
+                -3402176,
+                85139131
+              ]
+            },
+            "sourceAnchorCandidate": {
+              "rail": 45,
+              "segment": 0,
+              "direction": -1,
+              "distance": 95,
+              "t1": 0,
+              "t2": 4096,
+              "point1": [
+                -170009998,
+                -3362039,
+                85139131
+              ],
+              "point2": [
+                -170369024,
+                -3272704,
+                85266432
+              ]
+            },
+            "feetCandidate": {
+              "rail": 45,
+              "segment": 0,
+              "direction": -1,
+              "distance": 77,
+              "t1": 3276,
+              "t2": 4096,
+              "point1": [
+                -170078208,
+                -3272704,
+                85135360
+              ],
+              "point2": [
+                -170369024,
+                -3272704,
+                85266432
+              ]
+            },
+            "actualRail": 45,
+            "actualDistance": 1.3599949765923756,
+            "actualT": 14.192798679092078,
+            "originalSegments": [
+              {
+                "segment": 0,
+                "distance": 95,
+                "t1": 0,
+                "t2": 4096,
+                "point1": [
+                  -170009998,
+                  -3362039,
+                  85139131
+                ],
+                "point2": [
+                  -170369024,
+                  -3272704,
+                  85266432
+                ]
+              }
+            ]
+          }
+        ],
+        "outcome": {
+          "frames": 156,
+          "bail": false,
+          "reached": true,
+          "intendedRails": [
+            45
+          ],
+          "actualRails": [
+            45
+          ],
+          "intendedRailCaught": true,
+          "crossedNodes": []
+        }
+      },
+      {
+        "name": "First concourse display ledge",
+        "catches": [
+          {
+            "frame": 95,
+            "state": "air",
+            "source": [
+              -13134.43677129586,
+              314.6474563364609,
+              368.73144475784227
+            ],
+            "grounded": false,
+            "requested": true,
+            "cooldown": 0,
+            "nativeSweep": {
+              "from": [
+                -186819028,
+                -2988584,
+                91384471
+              ],
+              "to": [
+                -186729268,
+                -2988947,
+                91380833
+              ]
+            },
+            "sourceAnchorCandidate": {
+              "rail": 17,
+              "segment": 0,
+              "direction": 1,
+              "distance": 84,
+              "t1": 4096,
+              "t2": 0,
+              "point1": [
+                -186729268,
+                -2988947,
+                91380833
+              ],
+              "point2": [
+                -186544128,
+                -3272704,
+                91320320
+              ]
+            },
+            "feetCandidate": null,
+            "actualRail": 17,
+            "actualDistance": 1.990208310067752,
+            "actualT": 0,
+            "originalSegments": [
+              {
+                "segment": 0,
+                "distance": 84,
+                "t1": 4096,
+                "t2": 0,
+                "point1": [
+                  -186729268,
+                  -2988947,
+                  91380833
+                ],
+                "point2": [
+                  -186544128,
+                  -3272704,
+                  91320320
+                ]
+              },
+              {
+                "segment": 1,
+                "distance": 1697,
+                "t1": 4096,
+                "t2": 4096,
+                "point1": [
+                  -186729268,
+                  -2988947,
+                  91380833
+                ],
+                "point2": [
+                  -180109312,
+                  -3272704,
+                  89288704
+                ]
+              }
+            ]
+          }
+        ],
+        "outcome": {
+          "frames": 164,
+          "bail": false,
+          "reached": true,
+          "intendedRails": [
+            17
+          ],
+          "actualRails": [
+            17
+          ],
+          "intendedRailCaught": true,
+          "crossedNodes": []
+        }
+      },
+      {
+        "name": "Up-escalator inside handrail",
+        "catches": [
+          {
+            "frame": 57,
+            "state": "air",
+            "source": [
+              -13137.240145241089,
+              355.06197668449477,
+              7.31010410636145
+            ],
+            "grounded": false,
+            "requested": true,
+            "cooldown": 0,
+            "nativeSweep": {
+              "from": [
+                -186797244,
+                -3360675,
+                95064761
+              ],
+              "to": [
+                -186757847,
+                -3400961,
+                95065412
+              ]
+            },
+            "sourceAnchorCandidate": {
+              "rail": 0,
+              "segment": 0,
+              "direction": 1,
+              "distance": 93,
+              "t1": 2868,
+              "t2": 0,
+              "point1": [
+                -186773504,
+                -3395584,
+                95064064
+              ],
+              "point2": [
+                -186454016,
+                -3526656,
+                95227904
+              ]
+            },
+            "feetCandidate": null,
+            "actualRail": 0,
+            "actualDistance": 1.875361824389434,
+            "actualT": 0,
+            "originalSegments": [
+              {
+                "segment": 0,
+                "distance": 93,
+                "t1": 2868,
+                "t2": 0,
+                "point1": [
+                  -186773504,
+                  -3395584,
+                  95064064
+                ],
+                "point2": [
+                  -186454016,
+                  -3526656,
+                  95227904
+                ]
+              }
+            ]
+          }
+        ],
+        "outcome": {
+          "frames": 129,
+          "bail": false,
+          "reached": true,
+          "intendedRails": [
+            0
+          ],
+          "actualRails": [
+            0
+          ],
+          "intendedRailCaught": true,
+          "crossedNodes": []
+        }
+      },
+      {
+        "name": "Concourse display, both bends and outward exit",
+        "catches": [
+          {
+            "frame": 95,
+            "state": "air",
+            "source": [
+              -13134.43677129586,
+              314.6474563364609,
+              368.73144475784227
+            ],
+            "grounded": false,
+            "requested": true,
+            "cooldown": 0,
+            "nativeSweep": {
+              "from": [
+                -186819028,
+                -2988584,
+                91384471
+              ],
+              "to": [
+                -186729268,
+                -2988947,
+                91380833
+              ]
+            },
+            "sourceAnchorCandidate": {
+              "rail": 17,
+              "segment": 0,
+              "direction": 1,
+              "distance": 84,
+              "t1": 4096,
+              "t2": 0,
+              "point1": [
+                -186729268,
+                -2988947,
+                91380833
+              ],
+              "point2": [
+                -186544128,
+                -3272704,
+                91320320
+              ]
+            },
+            "feetCandidate": null,
+            "actualRail": 17,
+            "actualDistance": 1.990208310067752,
+            "actualT": 0,
+            "originalSegments": [
+              {
+                "segment": 0,
+                "distance": 84,
+                "t1": 4096,
+                "t2": 0,
+                "point1": [
+                  -186729268,
+                  -2988947,
+                  91380833
+                ],
+                "point2": [
+                  -186544128,
+                  -3272704,
+                  91320320
+                ]
+              },
+              {
+                "segment": 1,
+                "distance": 1697,
+                "t1": 4096,
+                "t2": 4096,
+                "point1": [
+                  -186729268,
+                  -2988947,
+                  91380833
+                ],
+                "point2": [
+                  -180109312,
+                  -3272704,
+                  89288704
+                ]
+              }
+            ]
+          }
+        ],
+        "outcome": {
+          "frames": 270,
+          "bail": false,
+          "reached": true,
+          "intendedRails": [
+            17
+          ],
+          "actualRails": [
+            17
+          ],
+          "intendedRailCaught": true,
+          "crossedNodes": [
+            59,
+            60
+          ]
+        }
+      },
+      {
+        "name": "Crossrail low arch",
+        "catches": [
+          {
+            "frame": 134,
+            "state": "air",
+            "source": [
+              4660.460813526461,
+              -1432.2862225995004,
+              5935.648263193382
+            ],
+            "grounded": false,
+            "requested": true,
+            "cooldown": 0,
+            "nativeSweep": {
+              "from": [
+                -5216225,
+                14779389,
+                34646293
+              ],
+              "to": [
+                -5315782,
+                14820502,
+                34627835
+              ]
+            },
+            "sourceAnchorCandidate": {
+              "rail": 55,
+              "segment": 6,
+              "direction": -1,
+              "distance": 95,
+              "t1": 4096,
+              "t2": 2204,
+              "point1": [
+                -5315782,
+                14820502,
+                34627835
+              ],
+              "point2": [
+                -5447680,
+                15085568,
+                34881536
+              ]
+            },
+            "feetCandidate": {
+              "rail": 55,
+              "segment": 6,
+              "direction": -1,
+              "distance": 70,
+              "t1": 4036,
+              "t2": 2404,
+              "point1": [
+                -5320704,
+                14938112,
+                34623488
+              ],
+              "point2": [
+                -5304320,
+                15106048,
+                34856960
+              ]
+            },
+            "actualRail": 55,
+            "actualDistance": 1.4204932194264612,
+            "actualT": 61.36153069227537,
+            "originalSegments": [
+              {
+                "segment": 6,
+                "distance": 95,
+                "t1": 4096,
+                "t2": 2204,
+                "point1": [
+                  -5315782,
+                  14820502,
+                  34627835
+                ],
+                "point2": [
+                  -5447680,
+                  15085568,
+                  34881536
+                ]
+              },
+              {
+                "segment": 5,
+                "distance": 449,
+                "t1": 4096,
+                "t2": 4096,
+                "point1": [
+                  -5315782,
+                  14820502,
+                  34627835
+                ],
+                "point2": [
+                  -7069696,
+                  14852096,
+                  35184640
+                ]
+              }
+            ]
+          }
+        ],
+        "outcome": {
+          "frames": 215,
+          "bail": false,
+          "reached": true,
+          "intendedRails": [
+            55
+          ],
+          "actualRails": [
+            55
+          ],
+          "intendedRailCaught": true,
+          "crossedNodes": [
+            118
+          ]
+        }
+      },
+      {
+        "name": "Right handrail to suspended tape beam",
+        "catches": [
+          {
+            "frame": 175,
+            "state": "air",
+            "source": [
+              -5547.657987471017,
+              355.1813828481568,
+              817.4765798747101
+            ],
+            "grounded": false,
+            "requested": true,
+            "cooldown": 0,
+            "nativeSweep": {
+              "from": [
+                -109483280,
+                -3362041,
+                86805026
+              ],
+              "to": [
+                -109384401,
+                -3402178,
+                86806015
+              ]
+            },
+            "sourceAnchorCandidate": {
+              "rail": 41,
+              "segment": 0,
+              "direction": 1,
+              "distance": 94,
+              "t1": 4096,
+              "t2": 754,
+              "point1": [
+                -109384401,
+                -3402178,
+                86806015
+              ],
+              "point2": [
+                -109146112,
+                -3506176,
+                87089152
+              ]
+            },
+            "feetCandidate": null,
+            "actualRail": 41,
+            "actualDistance": 1.9160367038836619,
+            "actualT": 14.554398645438537,
+            "originalSegments": [
+              {
+                "segment": 0,
+                "distance": 94,
+                "t1": 4096,
+                "t2": 754,
+                "point1": [
+                  -109384401,
+                  -3402178,
+                  86806015
+                ],
+                "point2": [
+                  -109146112,
+                  -3506176,
+                  87089152
+                ]
+              }
+            ]
+          },
+          {
+            "frame": 358,
+            "state": "air",
+            "source": [
+              -3285.2334115995054,
+              60.299016228450455,
+              789.7035930833554
+            ],
+            "grounded": false,
+            "requested": true,
+            "cooldown": 0,
+            "nativeSweep": {
+              "from": [
+                -86439006,
+                -546582,
+                87089152
+              ],
+              "to": [
+                -86319681,
+                -395943,
+                87089152
+              ]
+            },
+            "sourceAnchorCandidate": {
+              "rail": 38,
+              "segment": 0,
+              "direction": 1,
+              "distance": 87,
+              "t1": 4096,
+              "t2": 221,
+              "point1": [
+                -86319681,
+                -395943,
+                87089152
+              ],
+              "point2": [
+                -86032384,
+                -368640,
+                87293952
+              ]
+            },
+            "feetCandidate": {
+              "rail": 38,
+              "segment": 0,
+              "direction": 1,
+              "distance": 87,
+              "t1": 4096,
+              "t2": 213,
+              "point1": [
+                -86319681,
+                -273063,
+                87089152
+              ],
+              "point2": [
+                -86077440,
+                -368640,
+                87330816
+              ]
+            },
+            "actualRail": 38,
+            "actualDistance": 1.6183588594518272,
+            "actualT": 7.195019706626361,
+            "originalSegments": [
+              {
+                "segment": 0,
+                "distance": 87,
+                "t1": 4096,
+                "t2": 221,
+                "point1": [
+                  -86319681,
+                  -395943,
+                  87089152
+                ],
+                "point2": [
+                  -86032384,
+                  -368640,
+                  87293952
+                ]
+              }
+            ]
+          }
+        ],
+        "outcome": {
+          "frames": 677,
+          "bail": false,
+          "reached": true,
+          "intendedRails": [
+            41,
+            38
+          ],
+          "actualRails": [
+            41,
+            38
+          ],
+          "intendedRailCaught": true
+        }
+      }
+    ]
+  },
+  "nativeRails": {
+    "paths": 73,
+    "edges": 214,
+    "maxNodeError": 5.684341886080802e-14,
+    "fixtures": [
+      {
+        "name": "Concourse bench",
+        "start": [
+          19.61910580957031,
+          118.88562389450496,
+          -156.3108837890625
+        ],
+        "targetRail": 45,
+        "frames": 156,
+        "grindFrames": 24,
+        "grindDistance": 11.955734033036386,
+        "rails": [
+          45
+        ],
+        "bail": false,
+        "landed": true,
+        "groundFrames": 1,
+        "crossedNodes": [],
+        "corners": [],
+        "maxBalance": 0.04725,
+        "done": true,
+        "end": [
+          -12219.184825777134,
+          314.75860595703125,
+          1111.7830114071526
+        ]
+      },
+      {
+        "name": "First concourse display ledge",
+        "start": [
+          -8.205969190429688,
+          118.83138488769532,
+          -43.8108837890625
+        ],
+        "targetRail": 17,
+        "frames": 164,
+        "grindFrames": 24,
+        "grindDistance": 11.91161429461563,
+        "rails": [
+          17
+        ],
+        "bail": false,
+        "landed": true,
+        "groundFrames": 1,
+        "crossedNodes": [],
+        "corners": [],
+        "maxBalance": 0.04725,
+        "done": true,
+        "end": [
+          -12520.688341961633,
+          314.75877549913184,
+          750.5089940754588
+        ]
+      },
+      {
+        "name": "Up-escalator inside handrail",
+        "start": [
+          -23.495070190429686,
+          118.85195360448563,
+          -57.3108837890625
+        ],
+        "targetRail": 0,
+        "frames": 129,
+        "grindFrames": 24,
+        "grindDistance": 8.278654927070077,
+        "rails": [
+          0
+        ],
+        "bail": false,
+        "landed": true,
+        "groundFrames": 1,
+        "crossedNodes": [],
+        "corners": [],
+        "maxBalance": 0.04725,
+        "done": true,
+        "end": [
+          -12770.086200991682,
+          457.709918755987,
+          62.176912226243644
+        ]
+      },
+      {
+        "name": "Concourse display, both bends and outward exit",
+        "start": [
+          -8.205969190429688,
+          118.83138488769532,
+          -43.8108837890625
+        ],
+        "targetRail": 17,
+        "frames": 270,
+        "grindFrames": 101,
+        "grindDistance": 41.24565356640534,
+        "rails": [
+          17
+        ],
+        "bail": false,
+        "landed": true,
+        "groundFrames": 30,
+        "crossedNodes": [
+          59,
+          60
+        ],
+        "corners": [
+          {
+            "node": 59,
+            "entrySpeed": 27.558000307662972,
+            "exitSpeed": 23.30561835002584
+          },
+          {
+            "node": 60,
+            "entrySpeed": 23.30561835002584,
+            "exitSpeed": 19.736241533276438
+          }
+        ],
+        "maxBalance": 0.08025,
+        "done": true,
+        "end": [
+          -11761.418923665125,
+          314.75860595703125,
+          368.4178484836987
+        ]
+      },
+      {
+        "name": "Crossrail low arch",
+        "start": [
+          236.1549298095703,
+          38.68275939941406,
+          -903.3108837890625
+        ],
+        "targetRail": 55,
+        "frames": 215,
+        "grindFrames": 24,
+        "grindDistance": 11.965144772559203,
+        "rails": [
+          55
+        ],
+        "bail": false,
+        "landed": true,
+        "groundFrames": 1,
+        "crossedNodes": [
+          118
+        ],
+        "corners": [
+          {
+            "node": 118,
+            "entrySpeed": 28.44593345780402,
+            "exitSpeed": 28.31207417652175
+          }
+        ],
+        "maxBalance": 0.04725,
+        "done": true,
+        "end": [
+          3886.6693959921795,
+          -1512.5263977050781,
+          5587.764546204175
+        ]
+      }
+    ]
+  },
+  "fullBrowserRails": {
+    "errors": [],
+    "fixtures": [
+      {
+        "name": "Concourse bench",
+        "start": [
+          19.61910580957031,
+          118.88562389450496,
+          -156.3108837890625
+        ],
+        "targetRail": 45,
+        "frames": 156,
+        "grindFrames": 24,
+        "grindDistance": 11.955734033036386,
+        "rails": [
+          45
+        ],
+        "bail": false,
+        "landed": true,
+        "groundFrames": 1,
+        "crossedNodes": [],
+        "corners": [],
+        "maxBalance": 0.04725,
+        "done": true,
+        "startedAt": 8295.600000023842,
+        "end": [
+          -12219.184825777134,
+          314.75860595703125,
+          825.2063637020068
+        ],
+        "tuningUnchanged": true,
+        "wallSeconds": 2.583599999964237
+      },
+      {
+        "name": "First concourse display ledge",
+        "start": [
+          -8.205969190429688,
+          118.83138488769532,
+          -43.8108837890625
+        ],
+        "targetRail": 17,
+        "frames": 164,
+        "grindFrames": 24,
+        "grindDistance": 11.91161429461563,
+        "rails": [
+          17
+        ],
+        "bail": false,
+        "landed": true,
+        "groundFrames": 1,
+        "crossedNodes": [],
+        "corners": [],
+        "maxBalance": 0.04725,
+        "done": true,
+        "startedAt": 10893.5,
+        "end": [
+          -12520.688341961633,
+          314.75877549913184,
+          750.5089940754588
+        ],
+        "tuningUnchanged": true,
+        "wallSeconds": 2.731100000023842
+      },
+      {
+        "name": "Up-escalator inside handrail",
+        "start": [
+          -23.495070190429686,
+          118.85195360448563,
+          -57.3108837890625
+        ],
+        "targetRail": 0,
+        "frames": 129,
+        "grindFrames": 24,
+        "grindDistance": 8.278654927070077,
+        "rails": [
+          0
+        ],
+        "bail": false,
+        "landed": true,
+        "groundFrames": 1,
+        "crossedNodes": [],
+        "corners": [],
+        "maxBalance": 0.04725,
+        "done": true,
+        "startedAt": 13633.5,
+        "end": [
+          -12770.086200991682,
+          457.709918755987,
+          62.176912226243644
+        ],
+        "tuningUnchanged": true,
+        "wallSeconds": 2.1418999999761583
+      },
+      {
+        "name": "Concourse display, both bends and outward exit",
+        "start": [
+          -8.205969190429688,
+          118.83138488769532,
+          -43.8108837890625
+        ],
+        "targetRail": 17,
+        "frames": 270,
+        "grindFrames": 101,
+        "grindDistance": 41.24565356640534,
+        "rails": [
+          17
+        ],
+        "bail": false,
+        "landed": true,
+        "groundFrames": 30,
+        "crossedNodes": [
+          59,
+          60
+        ],
+        "corners": [
+          {
+            "node": 59,
+            "entrySpeed": 27.558000307662972,
+            "exitSpeed": 23.30561835002584
+          },
+          {
+            "node": 60,
+            "entrySpeed": 23.30561835002584,
+            "exitSpeed": 19.736241533276438
+          }
+        ],
+        "maxBalance": 0.08025,
+        "done": true,
+        "startedAt": 15783.800000011921,
+        "end": [
+          -11761.418923665125,
+          314.75860595703125,
+          368.4178484836987
+        ],
+        "tuningUnchanged": true,
+        "wallSeconds": 4.490300000011921
+      },
+      {
+        "name": "Crossrail low arch",
+        "start": [
+          236.1549298095703,
+          38.68275939941406,
+          -903.3108837890625
+        ],
+        "targetRail": 55,
+        "frames": 215,
+        "grindFrames": 24,
+        "grindDistance": 11.965144772559203,
+        "rails": [
+          55
+        ],
+        "bail": false,
+        "landed": true,
+        "groundFrames": 1,
+        "crossedNodes": [
+          118
+        ],
+        "corners": [
+          {
+            "node": 118,
+            "entrySpeed": 28.44593345780402,
+            "exitSpeed": 28.31207417652175
+          }
+        ],
+        "maxBalance": 0.04725,
+        "done": true,
+        "startedAt": 20284.80000001192,
+        "end": [
+          3886.6693959921795,
+          -1512.5263977050781,
+          5587.764546204175
+        ],
+        "tuningUnchanged": true,
+        "wallSeconds": 3.572699999988079
+      }
+    ]
+  },
+  "nativeGaps": {
+    "tuningUnchanged": true,
+    "fixtures": [
+      {
+        "name": "Flying Leap, earlier release",
+        "kind": "drop",
+        "expectedRails": [],
+        "frames": 388,
+        "done": true,
+        "reached": true,
+        "bail": false,
+        "rails": [],
+        "launches": [
+          {
+            "frame": 240,
+            "source": [
+              -4569.692216830012,
+              673.6345653753165,
+              185.00000303779018
+            ],
+            "speed": 20.63299311366941,
+            "verticalSpeed": 25.853332483315945
+          }
+        ],
+        "beamFrames": 0,
+        "beamDistance": 0,
+        "approachFrames": 0,
+        "maxBalance": 0,
+        "source": [
+          -3538.0558907993236,
+          -270.6316121419268,
+          185.000008241854
+        ],
+        "speed": 22.271487507628592,
+        "state": "ride",
+        "phase": "approach"
+      },
+      {
+        "name": "Flying Leap, later release",
+        "kind": "drop",
+        "expectedRails": [],
+        "frames": 391,
+        "done": true,
+        "reached": true,
+        "bail": false,
+        "rails": [],
+        "launches": [
+          {
+            "frame": 243,
+            "source": [
+              -4547.1550977209645,
+              683.2114341331003,
+              185.00000315147815
+            ],
+            "speed": 20.10878496439879,
+            "verticalSpeed": 25.630576743195192
+          }
+        ],
+        "beamFrames": 0,
+        "beamDistance": 0,
+        "approachFrames": 0,
+        "maxBalance": 0,
+        "source": [
+          -3528.7227494572307,
+          -270.6316121419268,
+          185.00000828893752
+        ],
+        "speed": 21.92976540701581,
+        "state": "ride",
+        "phase": "approach"
+      },
+      {
+        "name": "Right handrail to suspended tape beam",
+        "kind": "tape",
+        "expectedRails": [
+          41,
+          38
+        ],
+        "frames": 677,
+        "done": true,
+        "reached": true,
+        "bail": false,
+        "rails": [
+          41,
+          38
+        ],
+        "launches": [
+          {
+            "frame": 166,
+            "source": [
+              -5625.250942120103,
+              314.75877549913184,
+              818.252509421201
+            ],
+            "speed": 26.188931542443093,
+            "verticalSpeed": 17.085598409862563
+          },
+          {
+            "frame": 289,
+            "source": [
+              -4120.867274777005,
+              386.937827228272,
+              789.7035930833554
+            ],
+            "speed": 33.23882153781908,
+            "verticalSpeed": 16.22485630247086
+          },
+          {
+            "frame": 601,
+            "source": [
+              -1084.640152899814,
+              73.00747536902782,
+              2544.2669853436673
+            ],
+            "speed": 31.20251157039891,
+            "verticalSpeed": 0
+          }
+        ],
+        "beamFrames": 243,
+        "beamDistance": 126.63041401755156,
+        "approachFrames": 114,
+        "maxBalance": 0.0955,
+        "source": [
+          -408.243495438408,
+          -270.6316121419268,
+          3096.864709523463
+        ],
+        "speed": 30.330822534647627,
+        "state": "ride",
+        "phase": "rollout"
+      }
+    ]
+  },
+  "fullBrowserGaps": {
+    "errors": [],
+    "fixtures": [
+      {
+        "name": "Flying Leap, earlier release",
+        "kind": "drop",
+        "expectedRails": [],
+        "frames": 388,
+        "done": true,
+        "reached": true,
+        "bail": false,
+        "rails": [],
+        "launches": [
+          {
+            "frame": 240,
+            "source": [
+              -4569.692216830012,
+              673.6345653753165,
+              185.00000303779018
+            ],
+            "speed": 20.63299311366941,
+            "verticalSpeed": 25.853332483315945
+          }
+        ],
+        "beamFrames": 0,
+        "beamDistance": 0,
+        "approachFrames": 0,
+        "maxBalance": 0,
+        "startedAt": 8256.399999976158,
+        "source": [
+          -3538.0558907993236,
+          -270.6316121419268,
+          185.000008241854
+        ],
+        "speed": 22.271487507628592,
+        "state": "ride",
+        "phase": "approach",
+        "tuningUnchanged": true,
+        "wallSeconds": 6.4755
+      },
+      {
+        "name": "Flying Leap, later release",
+        "kind": "drop",
+        "expectedRails": [],
+        "frames": 391,
+        "done": true,
+        "reached": true,
+        "bail": false,
+        "rails": [],
+        "launches": [
+          {
+            "frame": 243,
+            "source": [
+              -4547.1550977209645,
+              683.2114341331003,
+              185.00000315147815
+            ],
+            "speed": 20.10878496439879,
+            "verticalSpeed": 25.630576743195192
+          }
+        ],
+        "beamFrames": 0,
+        "beamDistance": 0,
+        "approachFrames": 0,
+        "maxBalance": 0,
+        "startedAt": 14751.899999976158,
+        "source": [
+          -3528.7227494572307,
+          -270.6316121419268,
+          185.00000828893752
+        ],
+        "speed": 21.92976540701581,
+        "state": "ride",
+        "phase": "approach",
+        "tuningUnchanged": true,
+        "wallSeconds": 6.513199999988079
+      },
+      {
+        "name": "Right handrail to suspended tape beam",
+        "kind": "tape",
+        "expectedRails": [
+          41,
+          38
+        ],
+        "frames": 677,
+        "done": true,
+        "reached": true,
+        "bail": false,
+        "rails": [
+          41,
+          38
+        ],
+        "launches": [
+          {
+            "frame": 166,
+            "source": [
+              -5625.250942120103,
+              314.75877549913184,
+              818.252509421201
+            ],
+            "speed": 26.188931542443093,
+            "verticalSpeed": 17.085598409862563
+          },
+          {
+            "frame": 289,
+            "source": [
+              -4120.867274777005,
+              386.937827228272,
+              789.7035930833554
+            ],
+            "speed": 33.23882153781908,
+            "verticalSpeed": 16.22485630247086
+          },
+          {
+            "frame": 601,
+            "source": [
+              -1084.640152899814,
+              73.00747536902782,
+              2544.2669853436673
+            ],
+            "speed": 31.20251157039891,
+            "verticalSpeed": 0
+          }
+        ],
+        "beamFrames": 243,
+        "beamDistance": 126.63041401755156,
+        "approachFrames": 114,
+        "maxBalance": 0.0955,
+        "startedAt": 21283.5,
+        "source": [
+          -408.243495438408,
+          -270.6316121419268,
+          3096.864709523463
+        ],
+        "speed": 30.330822534647627,
+        "state": "ride",
+        "phase": "rollout",
+        "tuningUnchanged": true,
+        "wallSeconds": 11.280399999976158
+      }
+    ]
+  },
+  "defaultParity": {
+    "frames": 960,
+    "sha256": "c355c28f30e0c6a248e396cfe83234e24b95fdaa5c907f8ec9fc97faa29c2fe2",
+    "identical": true,
+    "previousSnapshot": "/private/tmp/mall-recreation/snapshot-24",
+    "currentSnapshot": "/private/tmp/mall-recreation/snapshot-25",
+    "tool": "tools/mall-default-parity.mjs",
+    "existingParkTuningChecks": "passed"
+  },
+  "scopedBranchChecks": {
+    "typescript": "passed on the isolated task-branch source tree",
+    "sourceCapture": {
+      "sweptCrossing": true,
+      "outsideRadiusRejected": true,
+      "groundSideRejected": true,
+      "outwardEndpointRejected": true,
+      "alternateEligibleChain": true,
+      "inwardEndpointAccepted": true,
+      "disabledRailRejected": true,
+      "sourceFrameMapping": true,
+      "editorRoundTrip": true,
+      "invalidFramesRejected": true,
+      "legacyProfilesOptOut": true,
+      "productionCapture": true,
+      "heldInputRequired": true,
+      "sourceDepartureCooldownSeconds": 0.16666666666666666
+    },
+    "nativeMain": {
+      "state": "finished",
+      "seconds": 60.083333333333336,
+      "position": [
+        237.4636728164158,
+        0.7447831242283187,
+        -1363.819852710139
+      ],
+      "source": [
+        15733.532642690589,
+        -2308.3711389060372,
+        5809.0831779299
+      ],
+      "error": null
+    },
+    "note": "The older scoped task-branch player has no grindAirLat or buffered grindRequested helper. Its source query uses its existing slideAirLat; the frozen shared runtime includes both existing lateral carriers and guards its existing request helper. Both trees are checked independently."
+  },
+  "verificationCorrection": "Preliminary audit results used a nonexistent lateral-velocity field and are invalidated. Final audit and production vectors use grindAirLat + slideAirLat, with finite checks in the audit; vert air uses its own lateral carrier. Only final corrected reports are included.",
+  "inputContract": "Each route starts once at rest on supported source floor, then uses controller samples only. Display release lead is 2 m; crossrail arch is 9 m. Intended original rail IDs, both display nodes and clean rollouts are explicitly checked. Isolated mathematical/state fixtures are separately labelled.",
+  "limitations": [
+    "Continuous 60 Hz movement with native 30 Hz balance/rail-assist decisions; not every original fixed-point operation or rail-node substep position.",
+    "Balance recurrence matches the compiled source for the same native state/input/random stream. Production uses the fork deterministic RNG and post-step state sampling; transition-boundary timing and the original global random sequence are not frame-exact.",
+    "Original kick-animation gating and temporary crouched-target decay remain unimplemented.",
+    "Steering, braking, ground-contact tracking, special-mode bonuses and terrain-specific friction remain to be compared.",
+    "Rail candidate geometry now uses source integer line-pair and endpoint/ground-side rules, but queries the preceding 60 Hz step rather than the source 30 Hz scheduled offer. Full trick/handplant eligibility, snap placement/easing and node substep timing remain fork adaptations. Under-rail hangs and perfect-grind rewards remain fork extensions.",
+    "Directional rail exits use the source angle in the local rail plane, with the prototype camera-relative input convention.",
+    "Charged-pose calibration is supported; coasting pose and cruiser proportions differ from the source actor."
+  ]
+}

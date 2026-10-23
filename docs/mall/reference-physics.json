@@ -1,0 +1,239 @@
+{
+  "schema": 4,
+  "verifiedAt": "2026-10-23T04:32:10.433851+00:00",
+  "status": "Enabled on Mall only; source-derived parameter adaptation, not a complete PS1 physics port.",
+  "build": {
+    "version": "3d243395401e89a0d653",
+    "snapshot": "/private/tmp/mall-recreation/snapshot-25",
+    "output": "/private/tmp/mall-recreation/dist-25",
+    "preview": "http://127.0.0.1:5297/?playtest&level=mall",
+    "published": false
+  },
+  "source": {
+    "repository": "https://github.com/LANCommander/TonyWasAProSkater/tree/d9319c8d5b42c431de02bec0f02f0cf955f2fbae",
+    "files": {
+      "game/src/physics.cpp": [
+        "DoOnGroundPhysics: Q12 gravity 6500 and linear drag 8/82.",
+        "HandleJump: stat-dependent charge and additive pop; called at line 4901 before rail physics.",
+        "HandleKick: four-unit pushes for five ticks in twenty; kick target stops pushing rather than clamping.",
+        "StartGrind (810-868): mRailDir * (speedStat+5) impulse, then projection in DoOnRailPhysics.",
+        "DoOnRailPhysics (2080-2480): Q12 gravity 13000, low-speed helpers, corner cutoff 2633/4096 and no endpoint pop.",
+        "DoPhysics LimitFinalSpeed (5328-5342): separate full-vector MAXSPEED(50) cap after state physics.",
+        "StartGrind (830-841): chain identity, rail-time adjustment and integer entry balance velocity.",
+        "DoOnRailPhysics (2432-2452): integer balance, neutral arming, analog threshold and strict >4000 bail.",
+        "DoPhysics (5053-5061): rail time ages in air; supported ground resets balance/velocity/time.",
+        "HandleStickToRail (996-1087): cooldown/input/state eligibility; grounded mPos is offset 30 source units along the support normal. mInAir denotes bailing, not ordinary air state."
+      ],
+      "game/src/mech.cpp": [
+        "CBruce initialization: speed-stat offsets 17 and 39",
+        "GetStats (95-120): selects unlocked board bonuses."
+      ],
+      "game/src/rail.cpp": [
+        "Rail_Update (264-275): initial mRailDir aligns with incoming velocity; StartGrind adds speed, not braking.",
+        "Rail_Update (283-284): mRailStart is the original chain start; mRailNode is the current segment. Balance re-entry identity belongs to the whole chain.",
+        "Rail_Update (166-302): previous motion-segment query, 100-unit strict candidate score, grounded Y-down guard, outward-end rejection and reverse activation list ordering."
+      ],
+      "game/data/unnamed.cpp": [
+        "Tony base stats 3/7/7/4 and first stat upgrade +1 to each stat."
+      ],
+      "game/src/m3dutils.cpp": [
+        "M3dUtils_LineLineClosestPoints: integer/GTE independent line clamping, including parallel/degenerate endpoint behavior."
+      ]
+    },
+    "baseStepsPerSecond": 30,
+    "fixedPointDenominator": 4096
+  },
+  "configuration": {
+    "kind": "thps1",
+    "metresPerUnit": 0.018079998317314883,
+    "stats": {
+      "ollie": 4,
+      "speed": 8,
+      "air": 8,
+      "balance": 5
+    },
+    "railCapture": {
+      "origin": [
+        396.0085157210703,
+        106.1296209180479,
+        -888.995810663731
+      ],
+      "axes": [
+        -3,
+        -2,
+        -1
+      ]
+    }
+  },
+  "parameters": {
+    "park": {
+      "groundGravity": 25.82226322175099,
+      "airGravity": 51.64452644350198,
+      "vertGravity": 51.64452644350198,
+      "standingSpeed": 21.792798362393757,
+      "crouchingSpeed": 26.15133155049997,
+      "ollieMin": 11.797198902047962,
+      "ollieMax": 17.085598409862563,
+      "vertPopMin": 12.61079882632713,
+      "vertPopMax": 17.899198334141733,
+      "chargeSeconds": 0.3
+    },
+    "kickAcceleration": 65.08799394233358,
+    "lowDrag": 0.05859375,
+    "highDrag": 0.6005859375,
+    "dragThreshold": 40.970529780668855,
+    "finalSpeedLimit": 50.55932927887506,
+    "railEntryBoost": 7.051199343752804,
+    "railSlowThreshold": 7.945311760538766,
+    "railZeroSpeed": 0.13242186267564612,
+    "railSlopeBoost": 0.26484372535129225,
+    "railTransferAngle": 0.30679615757712825,
+    "railCornerAngle": 0.8726193850237524,
+    "balanceStat": 5,
+    "railCaptureStrictNativeDistance": 100,
+    "railCaptureMetres": 1.8079998317314883,
+    "railDepartureCooldownSeconds": 0.16666666666666666
+  },
+  "unitFixture": {
+    "params": {
+      "park": {
+        "groundGravity": 25.822265625,
+        "airGravity": 51.64453125,
+        "vertGravity": 51.64453125,
+        "standingSpeed": 21.792800390624997,
+        "crouchingSpeed": 26.151333984374997,
+        "ollieMin": 11.7972,
+        "ollieMax": 17.0856,
+        "vertPopMin": 12.6108,
+        "vertPopMax": 17.8992,
+        "chargeSeconds": 0.3
+      },
+      "kickAcceleration": 65.088,
+      "lowDrag": 0.05859375,
+      "highDrag": 0.6005859375,
+      "dragThreshold": 40.97053359375,
+      "finalSpeedLimit": 50.559333984374994,
+      "railEntryBoost": 7.0512,
+      "railSlowThreshold": 7.945312499999999,
+      "railZeroSpeed": 0.132421875,
+      "railSlopeBoost": 0.26484375,
+      "railTransferAngle": 0.30679615757712825,
+      "railCornerAngle": 0.8726193850237524
+    },
+    "neutralSpeed": 21.658095339789742,
+    "launch": 17.0856,
+    "peak": 2.8260593750000003,
+    "overspeed": 44.549560546875,
+    "chargeSeconds": 0.3,
+    "pulseFrameRates": [
+      30,
+      60,
+      120
+    ],
+    "editorRoundTrip": true,
+    "invalidDataRejected": true,
+    "tuningUnchanged": true
+  },
+  "defaultParity": {
+    "frames": 960,
+    "sha256": "c355c28f30e0c6a248e396cfe83234e24b95fdaa5c907f8ec9fc97faa29c2fe2",
+    "identical": true,
+    "previousSnapshot": "/private/tmp/mall-recreation/snapshot-24",
+    "currentSnapshot": "/private/tmp/mall-recreation/snapshot-25",
+    "tool": "tools/mall-default-parity.mjs",
+    "existingParkTuningChecks": "passed"
+  },
+  "copingDeparture": {
+    "railNodes": [
+      24,
+      26
+    ],
+    "originalConversionLine": [
+      [
+        -6712.742740209744,
+        374.22166924735393,
+        270.60675250622444
+      ],
+      [
+        -6712.742740209744,
+        374.22166924735393,
+        512.0751744774752
+      ]
+    ],
+    "previousFailure": {
+      "source": [
+        -6703.868629483619,
+        374.1108003246636,
+        341.8295134693458
+      ],
+      "airRose": false,
+      "airborneSeconds": 0.05,
+      "verticalSpeed": -34.62693864065701
+    },
+    "correction": "On source-profile levels only, an unjumped departure within existing ground grace can cross coping. Jumped landings, later falls and ordinary bars retain rail-smack behavior.",
+    "checks": {
+      "fixtures": [
+        {
+          "name": "Fresh source roll-off across coping",
+          "source": true,
+          "coping": true,
+          "rose": false,
+          "grace": 0.08,
+          "smack": false,
+          "actualSmack": false
+        },
+        {
+          "name": "Source ollie descends onto coping",
+          "source": true,
+          "coping": true,
+          "rose": true,
+          "grace": 0.08,
+          "smack": true,
+          "actualSmack": true
+        },
+        {
+          "name": "Source fall after departure grace",
+          "source": true,
+          "coping": true,
+          "rose": false,
+          "grace": 0,
+          "smack": true,
+          "actualSmack": true
+        },
+        {
+          "name": "Source roll-off onto a separate bar",
+          "source": true,
+          "coping": false,
+          "rose": false,
+          "grace": 0.08,
+          "smack": true,
+          "actualSmack": true
+        },
+        {
+          "name": "Existing level retains its contact rule",
+          "source": false,
+          "coping": true,
+          "rose": false,
+          "grace": 0.08,
+          "smack": true,
+          "actualSmack": true
+        }
+      ],
+      "tuningUnchanged": true
+    }
+  },
+  "limitations": [
+    "Continuous 60 Hz movement with native 30 Hz balance/rail-assist decisions; not every original fixed-point operation or rail-node substep position.",
+    "Balance recurrence matches the compiled source for the same native state/input/random stream. Production uses the fork deterministic RNG and post-step state sampling; transition-boundary timing and the original global random sequence are not frame-exact.",
+    "Original kick-animation gating and temporary crouched-target decay remain unimplemented.",
+    "Steering, braking, ground-contact tracking, special-mode bonuses and terrain-specific friction remain to be compared.",
+    "Rail candidate geometry now uses source integer line-pair and endpoint/ground-side rules, but queries the preceding 60 Hz step rather than the source 30 Hz scheduled offer. Full trick/handplant eligibility, snap placement/easing and node substep timing remain fork adaptations. Under-rail hangs and perfect-grind rewards remain fork extensions.",
+    "Directional rail exits use the source angle in the local rail plane, with the prototype camera-relative input convention.",
+    "Charged-pose calibration is supported; coasting pose and cruiser proportions differ from the source actor."
+  ],
+  "correctionToPass22": "mMaxSpeed remains a drag threshold, but DoPhysics has a separate MAXSPEED(50) full-vector cap. The previous 55 m/s no-clamp expectation was incomplete; pass 23 verifies drag at 45 m/s and the final cap at 55 m/s and during a fast fall.",
+  "railPhysicsReport": "rail-physics.json",
+  "configurationNote": "Tony base ollie/speed/air/balance is 3/7/7/4; the selected 4/8/8/5 includes his first STAT UPGRADE (+1 each), not a zero-bonus starting board. This corrects the earlier first-board label without changing the existing movement stats.",
+  "balanceReport": "rail-balance.json",
+  "captureReport": "rail-capture.json"
+}

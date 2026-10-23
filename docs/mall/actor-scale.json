@@ -1,0 +1,526 @@
+{
+  "schema": 1,
+  "verifiedAt": "2026-10-23T01:46:44.130611+00:00",
+  "status": "Retain 0.045 conversion-unit scale for charged riding. Coasting proportions and source movement fidelity remain incomplete.",
+  "sourceInput": {
+    "name": "HAWK.PSX",
+    "bytes": 230820,
+    "sha256": "7e43dec317b8f35691df66c99df3a86f1618cce19c80fabbd12b283deb449fd5"
+  },
+  "rawAssetCommitted": false,
+  "localInput": "/private/tmp/school-miami-review/reference-data/pc-disc/HAWK.PSX",
+  "references": [
+    {
+      "url": "https://github.com/LANCommander/TonyWasAProSkater/tree/d9319c8d5b42c431de02bec0f02f0cf955f2fbae",
+      "files": [
+        "game/src/decomp.cpp",
+        "game/src/physics.cpp",
+        "game/src/m3d.cpp",
+        "game/data/psyq.cpp"
+      ],
+      "purpose": "Compressed animation transform, 30 Hz physics, crouch frames 19\u201326 and fixed-point rotation table."
+    },
+    {
+      "url": "https://github.com/slfx77/neversoft-multitool/blob/3c9028e0178deb9060190362d1c47039a32846e2/docs/formats/psx-animation.md",
+      "purpose": "Independent animation-format diagnostics and stitch-vertex contract; native code and byte budgets resolve format ambiguities."
+    }
+  ],
+  "contract": {
+    "coordinates": "X, -Y, Z in original whole engine units; no metre conversion",
+    "superVertexAndAnimationTranslationDivisor": 16,
+    "rotationUnitsPerTurn": 4096,
+    "rotationComposition": "Absolute model-space Ry * Rx * Rz; only bone translations follow the parent rotation and translation.",
+    "stitchReferences": "Disk type 2 vertices hold a global source-anchor index in their Y halfword. They are not positions.",
+    "staticObjectOffsets": "Do not add bind object positions to reconstructed animated poses.",
+    "precision": "Measure both near-renderer 16ths and far-renderer shifted integers in model space; no screen-space camera quantization claim."
+  },
+  "decoder": {
+    "clips": 78,
+    "allByteBudgetsVerified": true,
+    "nonzeroTrailingBytes": 0,
+    "totalPaddingBytes": 2,
+    "paddedClip": 77,
+    "independentFixtures": [
+      "MSB-packed signed deltas across byte boundaries",
+      "negative interpolation with exact endpoints",
+      "signed 16-bit overflow",
+      "absolute rotations with parent-relative origins",
+      "stitch references",
+      "truncated inputs and cyclic hierarchy rejection"
+    ],
+    "trig": {
+      "pairs": 4096,
+      "mismatches": 0,
+      "sha256": "e926fa99b46f7131fff2f63825f26029403f99bf0b62fbbeeb56e1787b71852e"
+    }
+  },
+  "originalPoses": [
+    {
+      "animation": 0,
+      "firstFrame": 0,
+      "lastFrame": 11,
+      "name": "Coasting loop",
+      "bodyHeightOriginalUnits": {
+        "min": 192.125,
+        "mean": 193.61458333333334,
+        "max": 195.5
+      },
+      "bodyHeightAtMallScale": {
+        "min": 3.473619676714122,
+        "mean": 3.500551340874289,
+        "max": 3.5346396710350594
+      },
+      "farRendererHeightOriginalUnits": {
+        "min": 191,
+        "mean": 193.25,
+        "max": 195
+      },
+      "samples": [
+        {
+          "frame": 0,
+          "nearBodyHeight": 192.8125,
+          "farBodyHeight": 193
+        },
+        {
+          "frame": 1,
+          "nearBodyHeight": 193.625,
+          "farBodyHeight": 193
+        },
+        {
+          "frame": 2,
+          "nearBodyHeight": 194.4375,
+          "farBodyHeight": 194
+        },
+        {
+          "frame": 3,
+          "nearBodyHeight": 194.8125,
+          "farBodyHeight": 195
+        },
+        {
+          "frame": 4,
+          "nearBodyHeight": 195.5,
+          "farBodyHeight": 195
+        },
+        {
+          "frame": 5,
+          "nearBodyHeight": 195.1875,
+          "farBodyHeight": 195
+        },
+        {
+          "frame": 6,
+          "nearBodyHeight": 194.5625,
+          "farBodyHeight": 194
+        },
+        {
+          "frame": 7,
+          "nearBodyHeight": 193.375,
+          "farBodyHeight": 193
+        },
+        {
+          "frame": 8,
+          "nearBodyHeight": 192.5,
+          "farBodyHeight": 192
+        },
+        {
+          "frame": 9,
+          "nearBodyHeight": 192.25,
+          "farBodyHeight": 192
+        },
+        {
+          "frame": 10,
+          "nearBodyHeight": 192.125,
+          "farBodyHeight": 192
+        },
+        {
+          "frame": 11,
+          "nearBodyHeight": 192.1875,
+          "farBodyHeight": 191
+        }
+      ]
+    },
+    {
+      "animation": 8,
+      "firstFrame": 19,
+      "lastFrame": 26,
+      "name": "Charged riding loop",
+      "bodyHeightOriginalUnits": {
+        "min": 140.1875,
+        "mean": 142.734375,
+        "max": 145.875
+      },
+      "bodyHeightAtMallScale": {
+        "min": 2.53458976410858,
+        "mean": 2.5806372598229914,
+        "max": 2.6374197545383087
+      },
+      "farRendererHeightOriginalUnits": {
+        "min": 140,
+        "mean": 142.625,
+        "max": 146
+      },
+      "samples": [
+        {
+          "frame": 19,
+          "nearBodyHeight": 140.1875,
+          "farBodyHeight": 140
+        },
+        {
+          "frame": 20,
+          "nearBodyHeight": 140.1875,
+          "farBodyHeight": 140
+        },
+        {
+          "frame": 21,
+          "nearBodyHeight": 140.875,
+          "farBodyHeight": 140
+        },
+        {
+          "frame": 22,
+          "nearBodyHeight": 141.625,
+          "farBodyHeight": 142
+        },
+        {
+          "frame": 23,
+          "nearBodyHeight": 142.75,
+          "farBodyHeight": 143
+        },
+        {
+          "frame": 24,
+          "nearBodyHeight": 144.5,
+          "farBodyHeight": 144
+        },
+        {
+          "frame": 25,
+          "nearBodyHeight": 145.875,
+          "farBodyHeight": 146
+        },
+        {
+          "frame": 26,
+          "nearBodyHeight": 145.875,
+          "farBodyHeight": 146
+        }
+      ]
+    },
+    {
+      "animation": 14,
+      "firstFrame": 0,
+      "lastFrame": 11,
+      "name": "Airborne neutral loop",
+      "bodyHeightOriginalUnits": {
+        "min": 137.75,
+        "mean": 141.71354166666666,
+        "max": 146.4375
+      },
+      "bodyHeightAtMallScale": {
+        "min": 2.490519768210125,
+        "mean": 2.562180594874066,
+        "max": 2.6475897535917983
+      },
+      "farRendererHeightOriginalUnits": {
+        "min": 137,
+        "mean": 141.5,
+        "max": 146
+      },
+      "samples": [
+        {
+          "frame": 0,
+          "nearBodyHeight": 137.75,
+          "farBodyHeight": 138
+        },
+        {
+          "frame": 1,
+          "nearBodyHeight": 138.75,
+          "farBodyHeight": 139
+        },
+        {
+          "frame": 2,
+          "nearBodyHeight": 140.1875,
+          "farBodyHeight": 140
+        },
+        {
+          "frame": 3,
+          "nearBodyHeight": 141.5,
+          "farBodyHeight": 142
+        },
+        {
+          "frame": 4,
+          "nearBodyHeight": 143.125,
+          "farBodyHeight": 143
+        },
+        {
+          "frame": 5,
+          "nearBodyHeight": 144.25,
+          "farBodyHeight": 144
+        },
+        {
+          "frame": 6,
+          "nearBodyHeight": 146.4375,
+          "farBodyHeight": 146
+        },
+        {
+          "frame": 7,
+          "nearBodyHeight": 145.125,
+          "farBodyHeight": 144
+        },
+        {
+          "frame": 8,
+          "nearBodyHeight": 144.25,
+          "farBodyHeight": 144
+        },
+        {
+          "frame": 9,
+          "nearBodyHeight": 141.5,
+          "farBodyHeight": 141
+        },
+        {
+          "frame": 10,
+          "nearBodyHeight": 139.8125,
+          "farBodyHeight": 140
+        },
+        {
+          "frame": 11,
+          "nearBodyHeight": 137.875,
+          "farBodyHeight": 137
+        }
+      ]
+    }
+  ],
+  "originalBoardSizeEngineUnits": [
+    28.6875,
+    19.4375,
+    100.8125
+  ],
+  "metresPerConversionUnit": 0.045,
+  "metresPerOriginalUnit": 0.018079998317314883,
+  "currentPlayer": {
+    "method": "CharacterInteractionBounds.measureRelative(riderG, scene) reads actual posed vertices, honors visibility, excludes render proxies and boards, updates skin matrices. Whole-bodyGroup bounds are retained only as a diagnostic.",
+    "rendererBuild": "3f4248e1153716794a75",
+    "preview": "http://127.0.0.1:5293/?playtest&level=mall",
+    "lite": {
+      "errors": [],
+      "poses": [
+        {
+          "mode": "idle",
+          "frames": 240,
+          "sampleWindow": [
+            181,
+            240
+          ],
+          "height": {
+            "min": 2.6477052595856634,
+            "mean": 2.672519362110414,
+            "max": 2.695854871069642
+          },
+          "finalSpeed": 0,
+          "finalRiderSize": [
+            0.8703159804292522,
+            2.6564754205390244,
+            1.6050516737866474
+          ],
+          "finalBoardSize": [
+            0.5267444888091184,
+            0.2699180518388715,
+            1.982568383216858
+          ],
+          "finalUnfilteredPlayerSize": [
+            1.574237580998556,
+            3.851503930300211,
+            1.982568383216858
+          ],
+          "sourceMatches": true,
+          "tuningUnchanged": true,
+          "groundedWithoutBail": true
+        },
+        {
+          "mode": "coast",
+          "frames": 240,
+          "sampleWindow": [
+            181,
+            240
+          ],
+          "height": {
+            "min": 2.6490846751418218,
+            "mean": 2.6727428608335106,
+            "max": 2.6939911941830275
+          },
+          "finalSpeed": 11.999055118110237,
+          "finalRiderSize": [
+            0.8703159804293179,
+            2.6551679109050497,
+            1.6050516737867042
+          ],
+          "finalBoardSize": [
+            0.5267444888091184,
+            0.2699180518388715,
+            1.982568383216858
+          ],
+          "finalUnfilteredPlayerSize": [
+            1.5819010969128673,
+            3.8502118743300713,
+            1.982568383216858
+          ],
+          "sourceMatches": true,
+          "tuningUnchanged": true,
+          "groundedWithoutBail": true
+        },
+        {
+          "mode": "crouch",
+          "frames": 240,
+          "sampleWindow": [
+            181,
+            240
+          ],
+          "height": {
+            "min": 2.5870508474305183,
+            "mean": 2.6096155166248973,
+            "max": 2.6298271892403164
+          },
+          "finalSpeed": 22.999305774278216,
+          "finalRiderSize": [
+            1.4623599248844776,
+            2.5926447606444896,
+            1.5853115013704837
+          ],
+          "finalBoardSize": [
+            0.5267444888091184,
+            0.2699180518388715,
+            1.982568383216858
+          ],
+          "finalUnfilteredPlayerSize": [
+            1.8706042138126016,
+            3.9082778667890494,
+            2.016750309648728
+          ],
+          "sourceMatches": true,
+          "tuningUnchanged": true,
+          "groundedWithoutBail": true
+        }
+      ]
+    },
+    "full": {
+      "errors": [],
+      "poses": [
+        {
+          "mode": "idle",
+          "frames": 240,
+          "sampleWindow": [
+            181,
+            240
+          ],
+          "height": {
+            "min": 2.647705259585692,
+            "mean": 2.6725193621104117,
+            "max": 2.695854871069656
+          },
+          "finalSpeed": 0,
+          "finalRiderSize": [
+            0.8703159804292522,
+            2.656475420538996,
+            1.6050516737866474
+          ],
+          "finalBoardSize": [
+            0.5267444888091184,
+            0.2699180518388715,
+            1.982568383216858
+          ],
+          "finalUnfilteredPlayerSize": [
+            1.574245654630765,
+            3.851503930300211,
+            1.982568383216858
+          ],
+          "sourceMatches": true,
+          "tuningUnchanged": true,
+          "groundedWithoutBail": true
+        },
+        {
+          "mode": "coast",
+          "frames": 240,
+          "sampleWindow": [
+            181,
+            240
+          ],
+          "height": {
+            "min": 2.6490846751418218,
+            "mean": 2.6727428608335106,
+            "max": 2.6939911941830275
+          },
+          "finalSpeed": 11.999055118110237,
+          "finalRiderSize": [
+            0.8703159804293179,
+            2.6551679109050497,
+            1.6050516737867042
+          ],
+          "finalBoardSize": [
+            0.5267444888091184,
+            0.2699180518388715,
+            1.982568383216858
+          ],
+          "finalUnfilteredPlayerSize": [
+            1.5818930861251967,
+            3.8502118743300713,
+            1.982568383216858
+          ],
+          "sourceMatches": true,
+          "tuningUnchanged": true,
+          "groundedWithoutBail": true
+        },
+        {
+          "mode": "crouch",
+          "frames": 240,
+          "sampleWindow": [
+            181,
+            240
+          ],
+          "height": {
+            "min": 2.5870508474305183,
+            "mean": 2.6096155166248973,
+            "max": 2.6298271892403164
+          },
+          "finalSpeed": 22.999305774278216,
+          "finalRiderSize": [
+            1.4623599248844776,
+            2.5926447606444896,
+            1.5853115013704837
+          ],
+          "finalBoardSize": [
+            0.5267444888091184,
+            0.2699180518388715,
+            1.982568383216858
+          ],
+          "finalUnfilteredPlayerSize": [
+            1.8705908845694186,
+            3.9082778667890494,
+            2.016750309648728
+          ],
+          "sourceMatches": true,
+          "tuningUnchanged": true,
+          "groundedWithoutBail": true
+        }
+      ]
+    }
+  },
+  "comparison": {
+    "chargedHeightRatio": 1.011229108892233,
+    "coastingHeightRatio": 0.7635205430713589,
+    "boardWidthRatio": 1.0155677749486876,
+    "boardLengthRatio": 1.087715721122225,
+    "chargedHeightFittedConversionScale": 0.04550530990015048
+  },
+  "visualReview": {
+    "original": "original-riding-poses.png",
+    "current": "current-charged-rider.png",
+    "views": 3,
+    "originalSlots": [
+      0,
+      8,
+      14
+    ],
+    "notes": "Anatomically consistent source mesh poses, connected stitch seams and planted riding feet. The current rider and cruiser retain their authored proportions."
+  },
+  "limitations": [
+    "Retained HAWK data is not byte-verified against a separately obtained 1999 THPS1 disc.",
+    "A uniform scale cannot match both actors in every pose: the current charged crouch differs substantially from its coasting pose relationship to the original.",
+    "Source actor measurement does not validate the current gravity, ollie timing, speed curve or rail pop against the source.",
+    "This actor survey used pass 21. Current fountain and movement status is recorded in validation.json and reference-physics.json."
+  ]
+}

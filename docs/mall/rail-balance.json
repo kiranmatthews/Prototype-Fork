@@ -1,0 +1,736 @@
+{
+  "schema": 2,
+  "verifiedAt": "2026-10-23T04:32:10.433851+00:00",
+  "build": {
+    "version": "3d243395401e89a0d653",
+    "snapshot": "/private/tmp/mall-recreation/snapshot-25",
+    "output": "/private/tmp/mall-recreation/dist-25",
+    "preview": "http://127.0.0.1:5297/?playtest&level=mall",
+    "published": false
+  },
+  "configuration": {
+    "kind": "thps1",
+    "metresPerUnit": 0.018079998317314883,
+    "stats": {
+      "ollie": 4,
+      "speed": 8,
+      "air": 8,
+      "balance": 5
+    },
+    "railCapture": {
+      "origin": [
+        396.0085157210703,
+        106.1296209180479,
+        -888.995810663731
+      ],
+      "axes": [
+        -3,
+        -2,
+        -1
+      ]
+    }
+  },
+  "configurationNote": "Tony base ollie/speed/air/balance is 3/7/7/4; the selected 4/8/8/5 includes his first STAT UPGRADE (+1 each), not a zero-bonus starting board. This corrects the earlier first-board label without changing the existing movement stats.",
+  "source": {
+    "repository": "https://github.com/LANCommander/TonyWasAProSkater/tree/d9319c8d5b42c431de02bec0f02f0cf955f2fbae",
+    "files": {
+      "game/src/physics.cpp": [
+        "DoOnGroundPhysics: Q12 gravity 6500 and linear drag 8/82.",
+        "HandleJump: stat-dependent charge and additive pop; called at line 4901 before rail physics.",
+        "HandleKick: four-unit pushes for five ticks in twenty; kick target stops pushing rather than clamping.",
+        "StartGrind (810-868): mRailDir * (speedStat+5) impulse, then projection in DoOnRailPhysics.",
+        "DoOnRailPhysics (2080-2480): Q12 gravity 13000, low-speed helpers, corner cutoff 2633/4096 and no endpoint pop.",
+        "DoPhysics LimitFinalSpeed (5328-5342): separate full-vector MAXSPEED(50) cap after state physics.",
+        "StartGrind (830-841): chain identity, rail-time adjustment and integer entry balance velocity.",
+        "DoOnRailPhysics (2432-2452): integer balance, neutral arming, analog threshold and strict >4000 bail.",
+        "DoPhysics (5053-5061): rail time ages in air; supported ground resets balance/velocity/time."
+      ],
+      "game/src/mech.cpp": [
+        "CBruce initialization: speed-stat offsets 17 and 39",
+        "GetStats (95-120): selects unlocked board bonuses."
+      ],
+      "game/src/rail.cpp": [
+        "Rail_Update (264-275): initial mRailDir aligns with incoming velocity; StartGrind adds speed, not braking.",
+        "Rail_Update (283-284): mRailStart is the original chain start; mRailNode is the current segment. Balance re-entry identity belongs to the whole chain."
+      ],
+      "game/data/unnamed.cpp": [
+        "Tony base stats 3/7/7/4 and first stat upgrade +1 to each stat."
+      ]
+    },
+    "baseStepsPerSecond": 30,
+    "fixedPointDenominator": 4096
+  },
+  "sourceSHA256": {
+    "game_src_physics.cpp": "60f61f8b0a7ff124e80a6506ae606c509da0f60563c6885b6636b2fd2ee10777",
+    "game_src_rail.cpp": "effbdaae07c6132384f25d13d13d14a9e80b5f9c638c24e69b3feb215c8d47d9",
+    "game_data_unnamed.cpp": "a60020460b165351549332ff397dda7b6a0ced919f88700e371b24997550badb",
+    "game_src_mech.cpp": "54368442fa36aaf7833210af3cf42fda0ba6c6535dba90583fdf347055eb25d1",
+    "game_include_game_bruce.h": "b5088344b2b0deefe51351079f933795b0e5a4c6a684f82d71086dc8bf75ec3a"
+  },
+  "oracle": {
+    "integration": [
+      {
+        "controlled": false,
+        "frames": 123,
+        "peak": 0.9985,
+        "bail": true,
+        "state": "air",
+        "distance": 51.772479999999405
+      },
+      {
+        "controlled": true,
+        "frames": 480,
+        "peak": 0.093,
+        "bail": false,
+        "state": "grind",
+        "distance": 200.40959999999805
+      }
+    ],
+    "sourcePath": "/private/tmp/mall-recreation/research/decomp/game_src_physics.cpp",
+    "sourceSHA256": "60f61f8b0a7ff124e80a6506ae606c509da0f60563c6885b6636b2fd2ee10777",
+    "sourceRevision": "d9319c8d5b42c431de02bec0f02f0cf955f2fbae",
+    "oracle": "Compiled unmodified source balance/catch statements with deterministic RNG and state stubs.",
+    "scenarios": [
+      {
+        "stat": 1,
+        "seed": 1,
+        "hz": 30,
+        "comparedCommands": 198,
+        "final": [
+          4144,
+          21,
+          88,
+          0,
+          1
+        ],
+        "heldCatchVerified": true,
+        "neutralArmVerified": true
+      },
+      {
+        "stat": 1,
+        "seed": 1,
+        "hz": 60,
+        "comparedCommands": 198,
+        "final": [
+          4144,
+          21,
+          88,
+          0,
+          1
+        ],
+        "heldCatchVerified": true,
+        "neutralArmVerified": true
+      },
+      {
+        "stat": 1,
+        "seed": 1,
+        "hz": 120,
+        "comparedCommands": 198,
+        "final": [
+          4144,
+          21,
+          88,
+          0,
+          1
+        ],
+        "heldCatchVerified": true,
+        "neutralArmVerified": true
+      },
+      {
+        "stat": 1,
+        "seed": 1789,
+        "hz": 30,
+        "comparedCommands": 191,
+        "final": [
+          4058,
+          30,
+          81,
+          0,
+          1
+        ],
+        "heldCatchVerified": true,
+        "neutralArmVerified": true
+      },
+      {
+        "stat": 1,
+        "seed": 1789,
+        "hz": 60,
+        "comparedCommands": 191,
+        "final": [
+          4058,
+          30,
+          81,
+          0,
+          1
+        ],
+        "heldCatchVerified": true,
+        "neutralArmVerified": true
+      },
+      {
+        "stat": 1,
+        "seed": 1789,
+        "hz": 120,
+        "comparedCommands": 191,
+        "final": [
+          4058,
+          30,
+          81,
+          0,
+          1
+        ],
+        "heldCatchVerified": true,
+        "neutralArmVerified": true
+      },
+      {
+        "stat": 5,
+        "seed": 1,
+        "hz": 30,
+        "comparedCommands": 207,
+        "final": [
+          4011,
+          18,
+          97,
+          0,
+          1
+        ],
+        "heldCatchVerified": true,
+        "neutralArmVerified": true
+      },
+      {
+        "stat": 5,
+        "seed": 1,
+        "hz": 60,
+        "comparedCommands": 207,
+        "final": [
+          4011,
+          18,
+          97,
+          0,
+          1
+        ],
+        "heldCatchVerified": true,
+        "neutralArmVerified": true
+      },
+      {
+        "stat": 5,
+        "seed": 1,
+        "hz": 120,
+        "comparedCommands": 207,
+        "final": [
+          4011,
+          18,
+          97,
+          0,
+          1
+        ],
+        "heldCatchVerified": true,
+        "neutralArmVerified": true
+      },
+      {
+        "stat": 5,
+        "seed": 1789,
+        "hz": 30,
+        "comparedCommands": 200,
+        "final": [
+          4145,
+          25,
+          90,
+          0,
+          1
+        ],
+        "heldCatchVerified": true,
+        "neutralArmVerified": true
+      },
+      {
+        "stat": 5,
+        "seed": 1789,
+        "hz": 60,
+        "comparedCommands": 200,
+        "final": [
+          4145,
+          25,
+          90,
+          0,
+          1
+        ],
+        "heldCatchVerified": true,
+        "neutralArmVerified": true
+      },
+      {
+        "stat": 5,
+        "seed": 1789,
+        "hz": 120,
+        "comparedCommands": 200,
+        "final": [
+          4145,
+          25,
+          90,
+          0,
+          1
+        ],
+        "heldCatchVerified": true,
+        "neutralArmVerified": true
+      },
+      {
+        "stat": 8,
+        "seed": 1,
+        "hz": 30,
+        "comparedCommands": 216,
+        "final": [
+          4132,
+          15,
+          106,
+          0,
+          1
+        ],
+        "heldCatchVerified": true,
+        "neutralArmVerified": true
+      },
+      {
+        "stat": 8,
+        "seed": 1,
+        "hz": 60,
+        "comparedCommands": 216,
+        "final": [
+          4132,
+          15,
+          106,
+          0,
+          1
+        ],
+        "heldCatchVerified": true,
+        "neutralArmVerified": true
+      },
+      {
+        "stat": 8,
+        "seed": 1,
+        "hz": 120,
+        "comparedCommands": 216,
+        "final": [
+          4132,
+          15,
+          106,
+          0,
+          1
+        ],
+        "heldCatchVerified": true,
+        "neutralArmVerified": true
+      },
+      {
+        "stat": 8,
+        "seed": 1789,
+        "hz": 30,
+        "comparedCommands": 207,
+        "final": [
+          4057,
+          21,
+          97,
+          0,
+          1
+        ],
+        "heldCatchVerified": true,
+        "neutralArmVerified": true
+      },
+      {
+        "stat": 8,
+        "seed": 1789,
+        "hz": 60,
+        "comparedCommands": 207,
+        "final": [
+          4057,
+          21,
+          97,
+          0,
+          1
+        ],
+        "heldCatchVerified": true,
+        "neutralArmVerified": true
+      },
+      {
+        "stat": 8,
+        "seed": 1789,
+        "hz": 120,
+        "comparedCommands": 207,
+        "final": [
+          4057,
+          21,
+          97,
+          0,
+          1
+        ],
+        "heldCatchVerified": true,
+        "neutralArmVerified": true
+      }
+    ],
+    "optionalOnExistingProfiles": true,
+    "invalidStatsRejected": true
+  },
+  "behavior": {
+    "cadence": "30 Hz integer recurrence with truncation toward zero at each original division.",
+    "control": "Analog threshold +/-40/128; neutral must arm control after each catch; a held catch direction does not immediately steer.",
+    "history": "Air retains balance and ages rail time. Ground clears balance/velocity/time. Same chain catch adds 40 ticks; a different chain subtracts 30 with a zero floor and clears balance velocity.",
+    "failure": "Immediate source bail when absolute balance exceeds 4000; no fork grace/style/speed instability in this opt-in profile.",
+    "corners": "Project velocity onto each soft joined segment without moving its control nodes; preserve the existing source-angle hard-corner runoff."
+  },
+  "nativeRails": {
+    "paths": 73,
+    "edges": 214,
+    "maxNodeError": 5.684341886080802e-14,
+    "fixtures": [
+      {
+        "name": "Concourse bench",
+        "start": [
+          19.61910580957031,
+          118.88562389450496,
+          -156.3108837890625
+        ],
+        "targetRail": 45,
+        "frames": 156,
+        "grindFrames": 24,
+        "grindDistance": 11.955734033036386,
+        "rails": [
+          45
+        ],
+        "bail": false,
+        "landed": true,
+        "groundFrames": 1,
+        "crossedNodes": [],
+        "corners": [],
+        "maxBalance": 0.04725,
+        "done": true,
+        "end": [
+          -12219.184825777134,
+          314.75860595703125,
+          1111.7830114071526
+        ]
+      },
+      {
+        "name": "First concourse display ledge",
+        "start": [
+          -8.205969190429688,
+          118.83138488769532,
+          -43.8108837890625
+        ],
+        "targetRail": 17,
+        "frames": 164,
+        "grindFrames": 24,
+        "grindDistance": 11.91161429461563,
+        "rails": [
+          17
+        ],
+        "bail": false,
+        "landed": true,
+        "groundFrames": 1,
+        "crossedNodes": [],
+        "corners": [],
+        "maxBalance": 0.04725,
+        "done": true,
+        "end": [
+          -12520.688341961633,
+          314.75877549913184,
+          750.5089940754588
+        ]
+      },
+      {
+        "name": "Up-escalator inside handrail",
+        "start": [
+          -23.495070190429686,
+          118.85195360448563,
+          -57.3108837890625
+        ],
+        "targetRail": 0,
+        "frames": 129,
+        "grindFrames": 24,
+        "grindDistance": 8.278654927070077,
+        "rails": [
+          0
+        ],
+        "bail": false,
+        "landed": true,
+        "groundFrames": 1,
+        "crossedNodes": [],
+        "corners": [],
+        "maxBalance": 0.04725,
+        "done": true,
+        "end": [
+          -12770.086200991682,
+          457.709918755987,
+          62.176912226243644
+        ]
+      },
+      {
+        "name": "Concourse display, both bends and outward exit",
+        "start": [
+          -8.205969190429688,
+          118.83138488769532,
+          -43.8108837890625
+        ],
+        "targetRail": 17,
+        "frames": 270,
+        "grindFrames": 101,
+        "grindDistance": 41.24565356640534,
+        "rails": [
+          17
+        ],
+        "bail": false,
+        "landed": true,
+        "groundFrames": 30,
+        "crossedNodes": [
+          59,
+          60
+        ],
+        "corners": [
+          {
+            "node": 59,
+            "entrySpeed": 27.558000307662972,
+            "exitSpeed": 23.30561835002584
+          },
+          {
+            "node": 60,
+            "entrySpeed": 23.30561835002584,
+            "exitSpeed": 19.736241533276438
+          }
+        ],
+        "maxBalance": 0.08025,
+        "done": true,
+        "end": [
+          -11761.418923665125,
+          314.75860595703125,
+          368.4178484836987
+        ]
+      },
+      {
+        "name": "Crossrail low arch",
+        "start": [
+          236.1549298095703,
+          38.68275939941406,
+          -903.3108837890625
+        ],
+        "targetRail": 55,
+        "frames": 215,
+        "grindFrames": 24,
+        "grindDistance": 11.965144772559203,
+        "rails": [
+          55
+        ],
+        "bail": false,
+        "landed": true,
+        "groundFrames": 1,
+        "crossedNodes": [
+          118
+        ],
+        "corners": [
+          {
+            "node": 118,
+            "entrySpeed": 28.44593345780402,
+            "exitSpeed": 28.31207417652175
+          }
+        ],
+        "maxBalance": 0.04725,
+        "done": true,
+        "end": [
+          3886.6693959921795,
+          -1512.5263977050781,
+          5587.764546204175
+        ]
+      }
+    ]
+  },
+  "fullBrowserRails": {
+    "errors": [],
+    "fixtures": [
+      {
+        "name": "Concourse bench",
+        "start": [
+          19.61910580957031,
+          118.88562389450496,
+          -156.3108837890625
+        ],
+        "targetRail": 45,
+        "frames": 156,
+        "grindFrames": 24,
+        "grindDistance": 11.955734033036386,
+        "rails": [
+          45
+        ],
+        "bail": false,
+        "landed": true,
+        "groundFrames": 1,
+        "crossedNodes": [],
+        "corners": [],
+        "maxBalance": 0.04725,
+        "done": true,
+        "startedAt": 8295.600000023842,
+        "end": [
+          -12219.184825777134,
+          314.75860595703125,
+          825.2063637020068
+        ],
+        "tuningUnchanged": true,
+        "wallSeconds": 2.583599999964237
+      },
+      {
+        "name": "First concourse display ledge",
+        "start": [
+          -8.205969190429688,
+          118.83138488769532,
+          -43.8108837890625
+        ],
+        "targetRail": 17,
+        "frames": 164,
+        "grindFrames": 24,
+        "grindDistance": 11.91161429461563,
+        "rails": [
+          17
+        ],
+        "bail": false,
+        "landed": true,
+        "groundFrames": 1,
+        "crossedNodes": [],
+        "corners": [],
+        "maxBalance": 0.04725,
+        "done": true,
+        "startedAt": 10893.5,
+        "end": [
+          -12520.688341961633,
+          314.75877549913184,
+          750.5089940754588
+        ],
+        "tuningUnchanged": true,
+        "wallSeconds": 2.731100000023842
+      },
+      {
+        "name": "Up-escalator inside handrail",
+        "start": [
+          -23.495070190429686,
+          118.85195360448563,
+          -57.3108837890625
+        ],
+        "targetRail": 0,
+        "frames": 129,
+        "grindFrames": 24,
+        "grindDistance": 8.278654927070077,
+        "rails": [
+          0
+        ],
+        "bail": false,
+        "landed": true,
+        "groundFrames": 1,
+        "crossedNodes": [],
+        "corners": [],
+        "maxBalance": 0.04725,
+        "done": true,
+        "startedAt": 13633.5,
+        "end": [
+          -12770.086200991682,
+          457.709918755987,
+          62.176912226243644
+        ],
+        "tuningUnchanged": true,
+        "wallSeconds": 2.1418999999761583
+      },
+      {
+        "name": "Concourse display, both bends and outward exit",
+        "start": [
+          -8.205969190429688,
+          118.83138488769532,
+          -43.8108837890625
+        ],
+        "targetRail": 17,
+        "frames": 270,
+        "grindFrames": 101,
+        "grindDistance": 41.24565356640534,
+        "rails": [
+          17
+        ],
+        "bail": false,
+        "landed": true,
+        "groundFrames": 30,
+        "crossedNodes": [
+          59,
+          60
+        ],
+        "corners": [
+          {
+            "node": 59,
+            "entrySpeed": 27.558000307662972,
+            "exitSpeed": 23.30561835002584
+          },
+          {
+            "node": 60,
+            "entrySpeed": 23.30561835002584,
+            "exitSpeed": 19.736241533276438
+          }
+        ],
+        "maxBalance": 0.08025,
+        "done": true,
+        "startedAt": 15783.800000011921,
+        "end": [
+          -11761.418923665125,
+          314.75860595703125,
+          368.4178484836987
+        ],
+        "tuningUnchanged": true,
+        "wallSeconds": 4.490300000011921
+      },
+      {
+        "name": "Crossrail low arch",
+        "start": [
+          236.1549298095703,
+          38.68275939941406,
+          -903.3108837890625
+        ],
+        "targetRail": 55,
+        "frames": 215,
+        "grindFrames": 24,
+        "grindDistance": 11.965144772559203,
+        "rails": [
+          55
+        ],
+        "bail": false,
+        "landed": true,
+        "groundFrames": 1,
+        "crossedNodes": [
+          118
+        ],
+        "corners": [
+          {
+            "node": 118,
+            "entrySpeed": 28.44593345780402,
+            "exitSpeed": 28.31207417652175
+          }
+        ],
+        "maxBalance": 0.04725,
+        "done": true,
+        "startedAt": 20284.80000001192,
+        "end": [
+          3886.6693959921795,
+          -1512.5263977050781,
+          5587.764546204175
+        ],
+        "tuningUnchanged": true,
+        "wallSeconds": 3.572699999988079
+      }
+    ]
+  },
+  "tapeBalance": {
+    "nativeMaximum": 0.0955,
+    "fullBrowserMaximum": 0.0955,
+    "beamFrames": 243,
+    "beamDistance": 126.63041401755156
+  },
+  "debugEvidence": {
+    "displayRunoff": "A natural endpoint runoff and an inward ollie hit the original tall storefront wall beside native endpoint 62. The passing ordinary-input route crosses nodes 59 and 60, then makes an outward ollie with eight metres remaining. Thirty consecutive grounded frames verify the rollout. No wall/rail/control point was removed.",
+    "browserControlFrame": "The camera-relative bench exit lands on the opposite side in the full renderer; both exits reach supported floor. Display, escalator and crossrail end coordinates agree with native."
+  },
+  "limitations": [
+    "Continuous 60 Hz movement with native 30 Hz balance/rail-assist decisions; not every original fixed-point operation or rail-node substep position.",
+    "Balance recurrence matches the compiled source for the same native state/input/random stream. Production uses the fork deterministic RNG and post-step state sampling; transition-boundary timing and the original global random sequence are not frame-exact.",
+    "Original kick-animation gating and temporary crouched-target decay remain unimplemented.",
+    "Steering, braking, ground-contact tracking, special-mode bonuses and terrain-specific friction remain to be compared.",
+    "Rail candidate geometry now uses source integer line-pair and endpoint/ground-side rules, but queries the preceding 60 Hz step rather than the source 30 Hz scheduled offer. Full trick/handplant eligibility, snap placement/easing and node substep timing remain fork adaptations. Under-rail hangs and perfect-grind rewards remain fork extensions.",
+    "Directional rail exits use the source angle in the local rail plane, with the prototype camera-relative input convention.",
+    "Charged-pose calibration is supported; coasting pose and cruiser proportions differ from the source actor."
+  ],
+  "captureReport": "rail-capture.json"
+}

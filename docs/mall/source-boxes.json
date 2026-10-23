@@ -1,0 +1,915 @@
+{
+  "schema": 1,
+  "verifiedAt": "2026-10-23T05:12:12.102572+00:00",
+  "build": {
+    "version": "715803b3706e5211a841",
+    "snapshot": "/private/tmp/mall-recreation/snapshot-26",
+    "output": "/private/tmp/mall-recreation/dist-26",
+    "preview": "http://127.0.0.1:5298/?playtest&level=mall",
+    "published": false
+  },
+  "provenance": {
+    "variant": "Original Mall objects retained in THPS2 retail; not byte-verified against the 1999 disc",
+    "files": [
+      {
+        "file": "SKMALL_O.PSX",
+        "bytes": 29748,
+        "sha256": "412092c6a588e8838c824560a174b4e5484f18fda4c4361df8ff7c6871c61831"
+      },
+      {
+        "file": "SKMALL_T.TRG",
+        "bytes": 28532,
+        "sha256": "7efd11c44a8e83d61b189088961dce2d38dcbd76a0257d6706dffb93aa6cd0ab"
+      }
+    ],
+    "sourceRevision": "d9319c8d5b42c431de02bec0f02f0cf955f2fbae"
+  },
+  "source": {
+    "repository": "https://github.com/LANCommander/TonyWasAProSkater/tree/d9319c8d5b42c431de02bec0f02f0cf955f2fbae",
+    "files": {
+      "game_src_platform.cpp": "2f3e7eb6300541df56c06a9dbf0946c77cd1433647411c17d3c83ccd2b9efb63",
+      "game_include_game_platform.h": "d32e087e97e8f5d849b73c838e19ab94bd892b5439c71445cf452d33f4e4e1dd",
+      "game_src_vector.cpp": "0f8fb8f69e852a43238751996f0b43bd51848f5de6f2e1975ca1a7ebebb1b3dc"
+    }
+  },
+  "extraction": {
+    "file": "SKMALL_O.PSX",
+    "packOffset": 84624477,
+    "recordBytes": 29748,
+    "fullDiscDownloaded": false,
+    "modelChecksum": "92331c98",
+    "nativeBounds": [
+      26,
+      -24,
+      49,
+      -51,
+      75,
+      -75
+    ],
+    "sizeMetres": [
+      0.9039999158657441,
+      1.8079998317314883,
+      2.7119997475972326
+    ],
+    "instances": 12,
+    "facesPerInstance": 6,
+    "textures": [
+      {
+        "index": 3,
+        "checksum": "870d565c",
+        "file": "box-870d565c.png",
+        "width": 64,
+        "height": 32,
+        "sha256": "74e613d938f7663b8ac5e0ec25e4b37b9a538553e18cf48784f26450e71cefb1"
+      },
+      {
+        "index": 4,
+        "checksum": "e53d8f03",
+        "file": "box-e53d8f03.png",
+        "width": 32,
+        "height": 32,
+        "sha256": "cec26ea57bbc955ab4c0c344fcac6ff400074fdcb4081e382b204e70b5d057ac"
+      }
+    ],
+    "placements": [
+      {
+        "node": 511,
+        "position": [
+          18499,
+          3581,
+          8927
+        ],
+        "angles": [
+          0,
+          4068,
+          0
+        ],
+        "model": "92331c98",
+        "bouncyType": 5,
+        "flags": [
+          0,
+          2,
+          4
+        ]
+      },
+      {
+        "node": 512,
+        "position": [
+          18492,
+          3481,
+          8811
+        ],
+        "angles": [
+          0,
+          4040,
+          0
+        ],
+        "model": "92331c98",
+        "bouncyType": 5,
+        "flags": [
+          0,
+          2,
+          4
+        ]
+      },
+      {
+        "node": 513,
+        "position": [
+          18471,
+          3681,
+          8994
+        ],
+        "angles": [
+          0,
+          85,
+          0
+        ],
+        "model": "92331c98",
+        "bouncyType": 5,
+        "flags": [
+          0,
+          2,
+          4
+        ]
+      },
+      {
+        "node": 514,
+        "position": [
+          18492,
+          3681,
+          8820
+        ],
+        "angles": [
+          0,
+          28,
+          0
+        ],
+        "model": "92331c98",
+        "bouncyType": 5,
+        "flags": [
+          0,
+          2,
+          4
+        ]
+      },
+      {
+        "node": 515,
+        "position": [
+          18492,
+          3681,
+          8658
+        ],
+        "angles": [
+          0,
+          4068,
+          0
+        ],
+        "model": "92331c98",
+        "bouncyType": 5,
+        "flags": [
+          0,
+          2,
+          4
+        ]
+      },
+      {
+        "node": 516,
+        "position": [
+          18485,
+          3581,
+          8755
+        ],
+        "angles": [
+          0,
+          28,
+          0
+        ],
+        "model": "92331c98",
+        "bouncyType": 5,
+        "flags": [
+          0,
+          2,
+          4
+        ]
+      },
+      {
+        "node": 518,
+        "position": [
+          17337,
+          3431,
+          8828
+        ],
+        "angles": [
+          0,
+          4040,
+          0
+        ],
+        "model": "92331c98",
+        "bouncyType": 5,
+        "flags": [
+          0,
+          2,
+          4
+        ]
+      },
+      {
+        "node": 519,
+        "position": [
+          17316,
+          3631,
+          9012
+        ],
+        "angles": [
+          0,
+          85,
+          0
+        ],
+        "model": "92331c98",
+        "bouncyType": 5,
+        "flags": [
+          0,
+          2,
+          4
+        ]
+      },
+      {
+        "node": 520,
+        "position": [
+          17337,
+          3631,
+          8838
+        ],
+        "angles": [
+          0,
+          28,
+          0
+        ],
+        "model": "92331c98",
+        "bouncyType": 5,
+        "flags": [
+          0,
+          2,
+          4
+        ]
+      },
+      {
+        "node": 521,
+        "position": [
+          17337,
+          3631,
+          8676
+        ],
+        "angles": [
+          0,
+          4068,
+          0
+        ],
+        "model": "92331c98",
+        "bouncyType": 5,
+        "flags": [
+          0,
+          2,
+          4
+        ]
+      },
+      {
+        "node": 522,
+        "position": [
+          17331,
+          3531,
+          8773
+        ],
+        "angles": [
+          0,
+          28,
+          0
+        ],
+        "model": "92331c98",
+        "bouncyType": 5,
+        "flags": [
+          0,
+          2,
+          4
+        ]
+      },
+      {
+        "node": 523,
+        "position": [
+          17344,
+          3531,
+          8945
+        ],
+        "angles": [
+          0,
+          4068,
+          0
+        ],
+        "model": "92331c98",
+        "bouncyType": 5,
+        "flags": [
+          0,
+          2,
+          4
+        ]
+      }
+    ],
+    "deterministicRepeat": true,
+    "independentPositionReads": 12,
+    "malformedInputsRejected": 4
+  },
+  "behavior": {
+    "trigger": "NODE_BADDY subtype 402 OBJ_PLATFORM; V_MODEL_CHECKSUM; C_IS_BOUNCY=5; original script loop is interpreted as data, never executed.",
+    "contact": "Swept old-to-new motion-origin AABB padded by 20 native units, inclusive, against unrotated original SModel bounds. One kick per box; no skater impulse or speed change.",
+    "kick": "Native Q12 X/Z = incoming + incoming>>1; Y=-0x50000.",
+    "flight": "30 Hz gravity +0x8000 on native Y; per-axis friction shift 6; kill components within \u00b10x800. Reflect/contact friction follows source branches. Retire after 19 contacts and 10 further ticks."
+  },
+  "native": {
+    "sourceRevision": "d9319c8d5b42c431de02bec0f02f0cf955f2fbae",
+    "sourceSHA256": "2f3e7eb6300541df56c06a9dbf0946c77cd1433647411c17d3c83ccd2b9efb63",
+    "fixtures": [
+      {
+        "name": "Raised platform through both box stacks",
+        "frames": 130,
+        "contacts": [
+          {
+            "id": 520,
+            "frame": 23,
+            "speedBefore": 10.758323551931955,
+            "speedAfter": 10.747817376588271,
+            "position": [
+              236.21749059264135,
+              40.48114702787758,
+              -1202.4487414910193
+            ]
+          },
+          {
+            "id": 514,
+            "frame": 96,
+            "speedBefore": 26.921294642144655,
+            "speedAfter": 26.895004315345687,
+            "position": [
+              236.54293056235304,
+              40.85856699275152,
+              -1224.6548770415066
+            ]
+          }
+        ],
+        "hitIds": [
+          514,
+          520
+        ],
+        "movementIdentical": true,
+        "supportedRollout": true,
+        "finiteRetirement": true
+      },
+      {
+        "name": "Exit descent beneath the stacks",
+        "frames": 155,
+        "contacts": [],
+        "hitIds": [],
+        "movementIdentical": true,
+        "supportedRollout": true,
+        "finiteRetirement": true
+      }
+    ],
+    "compiledSourceCases": 1007,
+    "contact": {
+      "unrotatedBounds": true,
+      "inclusiveBoundary": true,
+      "sweptCrossing": true,
+      "firstHitOnly": true,
+      "bounces": 19,
+      "retired": true
+    },
+    "tuningUnchanged": true,
+    "softResetKeepsProgress": true,
+    "hardResetRestoresAll": true,
+    "authoredDataPreserved": true
+  },
+  "browserLite": {
+    "fixtures": [
+      {
+        "name": "Raised platform through both box stacks",
+        "frames": 130,
+        "bail": false,
+        "done": true,
+        "contacts": [
+          {
+            "id": 520,
+            "frame": 23,
+            "speedBefore": 10.758323551931955,
+            "speedAfter": 10.747817376588271
+          },
+          {
+            "id": 514,
+            "frame": 96,
+            "speedBefore": 26.921294642144655,
+            "speedAfter": 26.895004315345687
+          }
+        ],
+        "tuningUnchanged": true,
+        "supported": true,
+        "softResetHidden": true,
+        "hardResetRestored": true
+      },
+      {
+        "name": "Exit descent beneath the stacks",
+        "frames": 155,
+        "bail": false,
+        "done": true,
+        "contacts": [],
+        "tuningUnchanged": true,
+        "supported": true,
+        "softResetHidden": true,
+        "hardResetRestored": true
+      }
+    ],
+    "stamp": "Codex/sol fork \u00b7 build 10-23 04:59 UTC",
+    "lite": true,
+    "nativeExact": true,
+    "errors": []
+  },
+  "browserFull": {
+    "fixtures": [
+      {
+        "name": "Raised platform through both box stacks",
+        "frames": 130,
+        "bail": false,
+        "done": true,
+        "contacts": [
+          {
+            "id": 520,
+            "frame": 23,
+            "speedBefore": 10.758323551931955,
+            "speedAfter": 10.747817376588271
+          },
+          {
+            "id": 514,
+            "frame": 96,
+            "speedBefore": 26.921294642144655,
+            "speedAfter": 26.895004315345687
+          }
+        ],
+        "tuningUnchanged": true,
+        "supported": true,
+        "softResetHidden": true,
+        "hardResetRestored": true
+      },
+      {
+        "name": "Exit descent beneath the stacks",
+        "frames": 155,
+        "bail": false,
+        "done": true,
+        "contacts": [],
+        "tuningUnchanged": true,
+        "supported": true,
+        "softResetHidden": true,
+        "hardResetRestored": true
+      }
+    ],
+    "stamp": "Codex/sol fork \u00b7 build 10-23 04:59 UTC",
+    "lite": false,
+    "nativeExact": true,
+    "errors": []
+  },
+  "scopedBranch": {
+    "typescript": "passed",
+    "boxesMatchFrozenRuntime": true,
+    "main": {
+      "state": "finished",
+      "seconds": 60.083333333333336,
+      "position": [
+        237.4636728164158,
+        0.7447831242283187,
+        -1363.819852710139
+      ],
+      "source": [
+        15733.532642690589,
+        -2308.3711389060372,
+        5809.0831779299
+      ],
+      "stage": 2,
+      "stats": {
+        "sourceTriangles": 9826,
+        "solidTriangles": 8678,
+        "vertTriangles": 379,
+        "visualTriangles": 1148,
+        "wallSegments": 1591,
+        "railEdges": 210,
+        "railPaths": 73
+      },
+      "evidence": {
+        "turns": [
+          {
+            "stage": 0,
+            "frame": 242,
+            "source": [
+              -13424.519491644965,
+              1310.2346136006076,
+              108.21193153766541
+            ]
+          },
+          {
+            "stage": 1,
+            "frame": 516,
+            "source": [
+              -15828.591829698351,
+              906.6370020797581,
+              157.3999195035347
+            ]
+          }
+        ],
+        "sections": [
+          {
+            "waypoint": 0,
+            "frame": 561,
+            "source": [
+              -15392.114945104964,
+              704.3083715973062,
+              457.0003357162159
+            ]
+          },
+          {
+            "waypoint": 1,
+            "frame": 690,
+            "source": [
+              -13578.338453549079,
+              313.55333116319434,
+              536.1034276107667
+            ]
+          },
+          {
+            "waypoint": 2,
+            "frame": 723,
+            "source": [
+              -13143.812401466035,
+              314.6104556583332,
+              701.3569767201657
+            ]
+          },
+          {
+            "waypoint": 3,
+            "frame": 901,
+            "source": [
+              -10874.846213457082,
+              314.75860595703125,
+              783.0982263558192
+            ]
+          },
+          {
+            "waypoint": 4,
+            "frame": 974,
+            "source": [
+              -10071.939245847174,
+              314.75860595703125,
+              976.1179109589567
+            ]
+          },
+          {
+            "waypoint": 5,
+            "frame": 1202,
+            "source": [
+              -7777.887621949727,
+              314.75860595703125,
+              998.0267856600237
+            ]
+          },
+          {
+            "waypoint": 6,
+            "frame": 1290,
+            "source": [
+              -6922.654916676114,
+              314.75860595703125,
+              908.888562524163
+            ]
+          },
+          {
+            "waypoint": 7,
+            "frame": 1321,
+            "source": [
+              -6622.486924185674,
+              314.75877549913184,
+              869.0238098658979
+            ]
+          },
+          {
+            "waypoint": 8,
+            "frame": 1357,
+            "source": [
+              -6305.648112306424,
+              314.75877549913184,
+              717.6768988479274
+            ]
+          },
+          {
+            "waypoint": 9,
+            "frame": 1429,
+            "source": [
+              -5572.01927278248,
+              156.09105598097494,
+              560.7483935404235
+            ]
+          },
+          {
+            "waypoint": 10,
+            "frame": 1548,
+            "source": [
+              -4073.3864277145567,
+              -177.60750104492945,
+              548.2473271385674
+            ]
+          },
+          {
+            "waypoint": 11,
+            "frame": 1583,
+            "source": [
+              -3577.6791424160183,
+              -270.6316121419268,
+              496.3549550359476
+            ]
+          },
+          {
+            "waypoint": 12,
+            "frame": 1611,
+            "source": [
+              -3172.146254654079,
+              -270.6316121419268,
+              510.2753261885427
+            ]
+          },
+          {
+            "waypoint": 13,
+            "frame": 1642,
+            "source": [
+              -2762.82737641681,
+              -270.6316121419268,
+              661.1914970244351
+            ]
+          },
+          {
+            "waypoint": 14,
+            "frame": 1675,
+            "source": [
+              -2367.938727468905,
+              -290.5413387900928,
+              883.7119643023346
+            ]
+          },
+          {
+            "waypoint": 15,
+            "frame": 1716,
+            "source": [
+              -1939.7466570160323,
+              -235.441168587015,
+              1238.9278842424771
+            ]
+          },
+          {
+            "waypoint": 16,
+            "frame": 1749,
+            "source": [
+              -1574.9929381100865,
+              -270.6316121419268,
+              1488.0200974577542
+            ]
+          },
+          {
+            "waypoint": 17,
+            "frame": 1792,
+            "source": [
+              -1150.301229649096,
+              -270.6316121419268,
+              1844.3848204619705
+            ]
+          },
+          {
+            "waypoint": 18,
+            "frame": 1828,
+            "source": [
+              -932.3864027058153,
+              -270.6316121419268,
+              2234.617087863482
+            ]
+          },
+          {
+            "waypoint": 19,
+            "frame": 1879,
+            "source": [
+              -992.0814034668838,
+              -270.6316121419268,
+              2830.0946939996597
+            ]
+          },
+          {
+            "waypoint": 20,
+            "frame": 1906,
+            "source": [
+              -1202.6105137825052,
+              -270.6316121419268,
+              3051.9576249903216
+            ]
+          },
+          {
+            "waypoint": 21,
+            "frame": 1944,
+            "source": [
+              -1548.8483071748415,
+              -286.37346795710323,
+              3289.4544542373314
+            ]
+          },
+          {
+            "waypoint": 22,
+            "frame": 2025,
+            "source": [
+              -1598.1917610530581,
+              -582.1862818987368,
+              4227.0811277543435
+            ]
+          },
+          {
+            "waypoint": 23,
+            "frame": 2069,
+            "source": [
+              -1726.9538219001915,
+              -775.8995230463447,
+              4826.684784262218
+            ]
+          },
+          {
+            "waypoint": 24,
+            "frame": 2107,
+            "source": [
+              -1711.3946713058904,
+              -915.4849921332466,
+              5373.095502067227
+            ]
+          },
+          {
+            "waypoint": 25,
+            "frame": 2135,
+            "source": [
+              -1545.2244000945047,
+              -915.4847378200955,
+              5748.051796308787
+            ]
+          },
+          {
+            "waypoint": 26,
+            "frame": 2162,
+            "source": [
+              -1264.583712913709,
+              -915.4847378200955,
+              6011.94954579562
+            ]
+          },
+          {
+            "waypoint": 27,
+            "frame": 2214,
+            "source": [
+              -570.3431698719342,
+              -915.4847378200955,
+              6165.675900583536
+            ]
+          },
+          {
+            "waypoint": 28,
+            "frame": 2244,
+            "source": [
+              -176.31038037173676,
+              -934.9478711083432,
+              6124.7462527456
+            ]
+          },
+          {
+            "waypoint": 29,
+            "frame": 2275,
+            "source": [
+              223.25588116525978,
+              -1003.1544140363544,
+              6021.521013107242
+            ]
+          },
+          {
+            "waypoint": 30,
+            "frame": 2382,
+            "source": [
+              1723.2960458789312,
+              -1261.3769093935039,
+              5812.782578343432
+            ]
+          },
+          {
+            "waypoint": 31,
+            "frame": 2496,
+            "source": [
+              3420.560276244283,
+              -1467.5272115071614,
+              5800.285553023605
+            ]
+          },
+          {
+            "waypoint": 32,
+            "frame": 2633,
+            "source": [
+              5329.311766289873,
+              -1467.5272115071614,
+              5800.08200691981
+            ]
+          },
+          {
+            "waypoint": 33,
+            "frame": 2720,
+            "source": [
+              6423.625771919629,
+              -1512.5272454155815,
+              5800.451465887835
+            ]
+          },
+          {
+            "waypoint": 34,
+            "frame": 2813,
+            "source": [
+              7528.570226690048,
+              -1512.5272454155815,
+              5800.260594393064
+            ]
+          },
+          {
+            "waypoint": 35,
+            "frame": 3010,
+            "source": [
+              9520.42847656682,
+              -1353.7218266439054,
+              5800.188916513237
+            ]
+          },
+          {
+            "waypoint": 36,
+            "frame": 3128,
+            "source": [
+              10627.753757998245,
+              -1512.5272454155815,
+              5799.792118108622
+            ]
+          },
+          {
+            "waypoint": 37,
+            "frame": 3249,
+            "source": [
+              11820.083740284332,
+              -1714.212142727079,
+              5781.126834373031
+            ]
+          },
+          {
+            "waypoint": 38,
+            "frame": 3430,
+            "source": [
+              13923.673526047984,
+              -2099.122314453125,
+              5791.962348090277
+            ]
+          },
+          {
+            "waypoint": 39,
+            "frame": 3533,
+            "source": [
+              15027.249936446031,
+              -2324.519287099441,
+              5853.870257907751
+            ]
+          },
+          {
+            "waypoint": 40,
+            "frame": 3583,
+            "source": [
+              15520.1905882018,
+              -2324.519287099441,
+              5855.466009499451
+            ]
+          }
+        ],
+        "minSpeed": 24.06406130047111,
+        "maxSpeed": 42.35320495762201,
+        "airFrames": 323,
+        "grinds": []
+      },
+      "error": null,
+      "contacts": []
+    }
+  },
+  "defaultMovement": {
+    "frames": 960,
+    "sha256": "c355c28f30e0c6a248e396cfe83234e24b95fdaa5c907f8ec9fc97faa29c2fe2"
+  },
+  "limits": [
+    "Box impulses, free-flight drag/gravity and angular decisions run at 30 Hz. Visual rotation uses floating-point Three.js matrices and contacts use the fork mesh query, not the original quantized matrix/collision engine.",
+    "Random targets use an independent deterministic per-prop stream, not the original global RNG. Sound uses an existing local effect.",
+    "Player-to-prop contact is sampled after each 60 Hz player step. The source invokes it during its 30 Hz state pipeline before static collision; full state-order parity is not claimed.",
+    "The dedicated upper case starts once on the supported raised platform. It proves both stack contacts and rollout, not a complete approach to the platform. Preliminary flat/late-ollie approaches hit an existing raised edge even with props disabled; they are not counted as successful routes.",
+    "A soft level reset hides already-hit props; a hard restart restores all original placements. Below-kill-plane cleanup is a fork lifecycle policy.",
+    "The asset records are retained original Mall data in THPS2 retail; not byte-verified against a 1999 THPS1 disc."
+  ],
+  "inputContract": "Each gameplay case starts at rest once on supported floor, then uses ordinary controller input. Contact micro-fixtures use explicit standalone prop setups; they are not claimed as level traversal."
+}

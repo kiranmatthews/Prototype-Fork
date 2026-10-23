@@ -1,0 +1,43 @@
+import assert from 'node:assert/strict';
+import {withBlockworksRuntime} from './blockworks-runner.mjs';
+const base={v:1,name:'Breakable contact',spawn:[0,.1,8],killY:-10,components:[{t:'platform',p:[0,-.5,0],s:[20,1,30]},{t:'gate',p:[0,0,-12]}]};
+await withBlockworksRuntime(async r=>{
+ const {BreakableScenery}=await r.server.ssrLoadModule('/src/breakableScenery.ts');
+ const {normalizeCustomLevelData}=await r.server.ssrLoadModule('/src/level.ts');
+ const T=r.THREE,owner=new BreakableScenery(),texture=new T.Texture(),material=new T.MeshBasicMaterial({map:texture});
+ const geometry=new T.PlaneGeometry(2,2),a=new T.Mesh(geometry,material),b=new T.Mesh(geometry,material),other=new T.Mesh(geometry,material);
+ a.position.set(-1,1,0);b.position.set(1,1,0);other.position.set(8,1,0);
+ owner.add(a,'glass',1);owner.add(b,'glass',1);owner.add(other,'sign',2);
+ let events=0,sourceDisposals=0,fragmentDisposals=0;
+ owner.onBreak=()=>events++;
+ for(const resource of [texture,geometry,material])resource.addEventListener('dispose',()=>sourceDisposals++);
+ const body=(x,y,z)=>new T.Box3().setFromCenterAndSize(new T.Vector3(x,y,z),new T.Vector3(.2,1,.2));
+ owner.touch(body(1,1,5),new T.Vector3(-5,1,-1),new T.Vector3(1,1,5));
+ assert.equal(owner.brokenCount,0,'Diagonal enclosing-box overlap is not contact');
+ owner.touch(body(0,1,-5),new T.Vector3(0,1,5),new T.Vector3(0,1,-5));
+ assert.equal(events,1);assert.equal(owner.brokenCount,1);assert.equal(a.visible,false);assert.equal(b.visible,false);assert.equal(other.visible,true);
+ assert.ok(owner.fragmentCount>8&&owner.fragmentCount<=128);assert.equal(owner.root.children.length,2,'One draw per source mesh, not per shard');
+ for(const mesh of owner.root.children)for(const resource of [mesh.geometry,mesh.material])resource.addEventListener('dispose',()=>fragmentDisposals++);
+ const initial=owner.root.children[0].geometry.attributes.position.array.slice();owner.update(.1);
+ assert.notDeepEqual(owner.root.children[0].geometry.attributes.position.array,initial);
+ owner.touch(body(0,1,0),new T.Vector3(0,1,0),new T.Vector3(0,1,0));assert.equal(events,1);
+ for(let i=0;i<10;i++)owner.update(.1);
+ assert.equal(owner.fragmentCount,0);assert.equal(owner.root.children.length,0);assert.equal(fragmentDisposals,4);assert.equal(sourceDisposals,0);
+ owner.reset(false);assert.equal(a.visible,false);assert.equal(owner.brokenCount,1);
+ for(let i=0;i<20;i++){
+  owner.reset(true);assert.equal(a.visible,true);assert.equal(b.visible,true);assert.equal(owner.brokenCount,0);
+  owner.touch(body(0,1,-5),new T.Vector3(0,1,5),new T.Vector3(0,1,-5));assert.ok(owner.fragmentCount<=128);
+ }
+ owner.dispose();assert.equal(owner.fragmentCount,0);assert.equal(owner.objects.length,0);assert.equal(sourceDisposals,0);
+ const mesh={t:'mesh',p:[0,0,0],vertices:[-2,0,0,2,0,0,0,4,0],solid:false,breakable:'glass',breakGroup:10,tex:'solid'};
+ const data={...base,components:[...base.components,mesh,{...mesh,p:[5,0,0]}]};
+ const normalized=normalizeCustomLevelData(data);assert.ok(normalized);
+ const scene=new T.Scene(),level=new r.Level(scene,{id:'breakable-test',name:data.name,data:normalized});
+ assert.equal(level.breakableScenery.objects.length,1);assert.equal(level.breakableScenery.objects[0].members.length,2,'Breakable meshes must bypass static batching');
+ assert.deepEqual(level.captureData().components.filter(c=>c.breakable).map(c=>[c.breakable,c.breakGroup]),[['glass',10],['glass',10]]);
+ const invalid=[{breakable:'wood'},{solid:true},{t:'wall'},{invisible:true},{outline:true},{breakGroup:0},{breakGroup:-1},{breakGroup:1.5},{breakGroup:1e12},{breakable:undefined}];
+ for(const patch of invalid)assert.equal(normalizeCustomLevelData({...base,components:[...base.components,{...mesh,...patch}]}),null,JSON.stringify(patch));
+ assert.equal(normalizeCustomLevelData({...data,components:[...data.components,{...mesh,breakable:'sign'}]}),null);
+ assert.equal(normalizeCustomLevelData({...base,components:[...base.components,...Array.from({length:129},(_,i)=>({...mesh,breakGroup:i+1}))]}),null);
+ level.dispose();console.log(JSON.stringify({sweptThinPanel:true,diagonalMiss:true,groupedContact:true,oneShot:true,borrowedResourcesRetained:true,fragmentLifetime:true,resetCycles:20,editorRoundTrip:true,invalidDataRejected:true}));
+},{modulePath:'/src/levels/mall-measured.ts',source:()=>base,levelId:'breakable-test',maxFrames:1});

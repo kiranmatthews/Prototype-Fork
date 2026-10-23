@@ -1,0 +1,1060 @@
+{
+  "status": "Mall source parameters, rail motion, integer balance and source rail-candidate geometry adapted; complete source state timing and final 1:1 fidelity remain incomplete.",
+  "sources": [
+    {
+      "path": "/private/tmp/mall-recreation/research/io-thps/helpers.py",
+      "sha256": "0c637b12c1ee6a989db8330a185fe0aba0dcea839e01256d399136577bd7f06f"
+    },
+    {
+      "path": "/private/tmp/mall-recreation/research/io-thps/import_thps2.py",
+      "sha256": "d0fc5457226313035f33e117e733589c7151caca852ae8b60b53fabad7bb88cc"
+    },
+    {
+      "path": "/private/tmp/mall-recreation/research/decomp/game_src_physics.cpp",
+      "sha256": "60f61f8b0a7ff124e80a6506ae606c509da0f60563c6885b6636b2fd2ee10777"
+    },
+    {
+      "path": "/private/tmp/mall-recreation/research/decomp/game_src_main.cpp",
+      "sha256": "7f576bcb725990f018f4a1c9b038a5dc4096e742c0cfb08db361e312a796c004"
+    },
+    {
+      "path": "/private/tmp/mall-recreation/research/decomp/game_src_mech.cpp",
+      "sha256": "54368442fa36aaf7833210af3cf42fda0ba6c6535dba90583fdf347055eb25d1"
+    },
+    {
+      "path": "/private/tmp/mall-recreation/research/decomp/game_data_unnamed.cpp",
+      "sha256": "a60020460b165351549332ff397dda7b6a0ced919f88700e371b24997550badb"
+    }
+  ],
+  "importer": {
+    "url": "https://github.com/denetii/io_thps_scene/tree/a22d66e9330c6c5d92e480dc9366649cc1597d16",
+    "ps1AxisHelperDivisor": 2.25,
+    "exporterScaleCanDiffer": true
+  },
+  "coordinateLattice": {
+    "candidateStep": 0.4017770880896218,
+    "fitCount": 4305,
+    "differenceCount": 4540,
+    "tolerance": 0.006,
+    "method": "Four least-squares refinements of rounded integer multiples, seeded at the observed 0.40178 coordinate increment.",
+    "inferredExporterScale": 0.9039984482016491,
+    "caveat": "Quantization evidence, not proof of the conversion author setting or independently verified retail bytes."
+  },
+  "physicsSource": "https://github.com/LANCommander/TonyWasAProSkater/tree/d9319c8d5b42c431de02bec0f02f0cf955f2fbae",
+  "calibrationExample": {
+    "actor": "Tony Hawk with first board stat upgrade; no special-mode bonus",
+    "originalUnitMetres": 0.01808,
+    "baseStepsPerSecond": 30,
+    "flatOllieStat": 4,
+    "airStat": 8,
+    "speedStat": 8,
+    "groundGravity": 25.822265625,
+    "airGravity": 51.64453125,
+    "flatPopMin": 11.7972,
+    "flatPopMax": 17.0856,
+    "vertPopMin": 12.6108,
+    "vertPopMax": 17.8992,
+    "standingKickSpeed": 21.792857142857144,
+    "crouchedKickSpeed": 26.15142857142857,
+    "highDragSpeedThreshold": 40.97057142857143
+  },
+  "importantCorrection": "mMaxSpeed remains a drag threshold, but DoPhysics has a separate MAXSPEED(50) full-vector cap. The previous 55 m/s no-clamp expectation was incomplete; pass 23 verifies drag at 45 m/s and the final cap at 55 m/s and during a fast fall.",
+  "experiments": {
+    "baselinePlateau": {
+      "temporaryReport": "/private/tmp/mall-recreation/measured/fountain-baseline19.json",
+      "fixtures": [
+        {
+          "release": -9510,
+          "frames": 397,
+          "bail": true,
+          "maxSpeed": 26.1239,
+          "fountainFrames": 0,
+          "end": [
+            -8853.20665062387,
+            373.04300282090117,
+            360.16753658242897
+          ],
+          "state": "air"
+        },
+        {
+          "release": -9470,
+          "frames": 398,
+          "bail": true,
+          "maxSpeed": 26.1239,
+          "fountainFrames": 0,
+          "end": [
+            -8855.238146874712,
+            417.1797088299513,
+            362.1990328332705
+          ],
+          "state": "air"
+        },
+        {
+          "release": -9430,
+          "frames": 400,
+          "bail": true,
+          "maxSpeed": 28.355709862081113,
+          "fountainFrames": 0,
+          "end": [
+            -8851.581454820513,
+            199.5715363120721,
+            358.54234077906915
+          ],
+          "state": "air"
+        }
+      ]
+    },
+    "flightOnly": {
+      "temporaryReport": "/private/tmp/mall-recreation/measured/fountain-route-probe19.json",
+      "fixtures": [
+        {
+          "releases": [
+            -11175,
+            -10650,
+            -9490
+          ],
+          "frames": 425,
+          "bail": true,
+          "maxSpeed": 26.538705210628624,
+          "fountainFrames": 0,
+          "jumps": [
+            {
+              "frame": 162,
+              "source": [
+                -11169.347582341734,
+                716.5365939670141,
+                370
+              ],
+              "state": "ride",
+              "charge": 0.4
+            },
+            {
+              "frame": 221,
+              "source": [
+                -10648.649746576619,
+                772.3834228515625,
+                370
+              ],
+              "state": "ride",
+              "charge": 0.4
+            },
+            {
+              "frame": 352,
+              "source": [
+                -9484.102143087768,
+                562.8503555610746,
+                368.6856918087765
+              ],
+              "state": "ride",
+              "charge": 0.4
+            }
+          ],
+          "end": [
+            -8854.35083011821,
+            281.2975418607748,
+            361.31171607676913
+          ],
+          "state": "air"
+        },
+        {
+          "releases": [
+            -11175,
+            -10650,
+            -9460
+          ],
+          "frames": 427,
+          "bail": true,
+          "maxSpeed": 26.538705210628624,
+          "fountainFrames": 0,
+          "jumps": [
+            {
+              "frame": 162,
+              "source": [
+                -11169.347582341734,
+                716.5365939670141,
+                370
+              ],
+              "state": "ride",
+              "charge": 0.4
+            },
+            {
+              "frame": 221,
+              "source": [
+                -10648.649746576619,
+                772.3834228515625,
+                370
+              ],
+              "state": "ride",
+              "charge": 0.4
+            },
+            {
+              "frame": 355,
+              "source": [
+                -9458.143225623255,
+                566.4990315944356,
+                368.5668928625282
+              ],
+              "state": "ride",
+              "charge": 0.4
+            }
+          ],
+          "end": [
+            -8849.466553470022,
+            299.1300419169929,
+            356.42743942857965
+          ],
+          "state": "air"
+        },
+        {
+          "releases": [
+            -11175,
+            -10650,
+            -9435
+          ],
+          "frames": 426,
+          "bail": true,
+          "maxSpeed": 26.538705210628624,
+          "fountainFrames": 0,
+          "jumps": [
+            {
+              "frame": 162,
+              "source": [
+                -11169.347582341734,
+                716.5365939670141,
+                370
+              ],
+              "state": "ride",
+              "charge": 0.4
+            },
+            {
+              "frame": 221,
+              "source": [
+                -10648.649746576619,
+                772.3834228515625,
+                370
+              ],
+              "state": "ride",
+              "charge": 0.4
+            },
+            {
+              "frame": 358,
+              "source": [
+                -9432.497794646817,
+                570.1036452882399,
+                368.44952856256293
+              ],
+              "state": "ride",
+              "charge": 0.4
+            }
+          ],
+          "end": [
+            -8866.252503807433,
+            359.5913511328795,
+            376.15862120637144
+          ],
+          "state": "air"
+        }
+      ]
+    },
+    "raisedCap": {
+      "temporaryReport": "/private/tmp/mall-recreation/measured/fountain-source-cap19.json",
+      "fixtures": [
+        {
+          "releases": [
+            -11175,
+            -10650,
+            -9490
+          ],
+          "frames": 390,
+          "bail": true,
+          "maxSpeed": 32.31028582949117,
+          "fountainFrames": 2,
+          "jumps": [
+            {
+              "frame": 162,
+              "source": [
+                -11169.347582341734,
+                716.5365939670141,
+                370
+              ],
+              "state": "ride",
+              "charge": 0.4
+            },
+            {
+              "frame": 221,
+              "source": [
+                -10648.649746576619,
+                772.3834228515625,
+                370
+              ],
+              "state": "ride",
+              "charge": 0.4
+            },
+            {
+              "frame": 340,
+              "source": [
+                -9484.678611412022,
+                562.7616387197963,
+                370.34341696681713
+              ],
+              "state": "ride",
+              "charge": 0.4
+            }
+          ],
+          "end": [
+            -8939.83224826389,
+            566.9580876405398,
+            369.3819591108775
+          ],
+          "state": "air"
+        },
+        {
+          "releases": [
+            -11175,
+            -10650,
+            -9460
+          ],
+          "frames": 391,
+          "bail": true,
+          "maxSpeed": 32.31028582949117,
+          "fountainFrames": 2,
+          "jumps": [
+            {
+              "frame": 162,
+              "source": [
+                -11169.347582341734,
+                716.5365939670141,
+                370
+              ],
+              "state": "ride",
+              "charge": 0.4
+            },
+            {
+              "frame": 221,
+              "source": [
+                -10648.649746576619,
+                772.3834228515625,
+                370
+              ],
+              "state": "ride",
+              "charge": 0.4
+            },
+            {
+              "frame": 343,
+              "source": [
+                -9452.00465631248,
+                567.3537243172259,
+                370.28595560944416
+              ],
+              "state": "ride",
+              "charge": 0.4
+            }
+          ],
+          "end": [
+            -8939.83224826389,
+            585.5597835588082,
+            369.37378141534356
+          ],
+          "state": "air"
+        },
+        {
+          "releases": [
+            -11175,
+            -10650,
+            -9435
+          ],
+          "frames": 391,
+          "bail": true,
+          "maxSpeed": 32.31028582949117,
+          "fountainFrames": 2,
+          "jumps": [
+            {
+              "frame": 162,
+              "source": [
+                -11169.347582341734,
+                716.5365939670141,
+                370
+              ],
+              "state": "ride",
+              "charge": 0.4
+            },
+            {
+              "frame": 221,
+              "source": [
+                -10648.649746576619,
+                772.3834228515625,
+                370
+              ],
+              "state": "ride",
+              "charge": 0.4
+            },
+            {
+              "frame": 345,
+              "source": [
+                -9430.435201250382,
+                570.3851535896642,
+                370.24802294528126
+              ],
+              "state": "ride",
+              "charge": 0.4
+            }
+          ],
+          "end": [
+            -8939.83224826389,
+            601.6794361534266,
+            369.38070543566056
+          ],
+          "state": "air"
+        }
+      ]
+    },
+    "sourceKick": {
+      "temporaryReport": "/private/tmp/mall-recreation/measured/fountain-source-kick19.json",
+      "fixtures": [
+        {
+          "releases": [
+            -11175,
+            -10650,
+            -9460
+          ],
+          "frames": 374,
+          "bail": true,
+          "maxSpeed": 34.97905690753545,
+          "fountainFrames": 2,
+          "jumps": [
+            {
+              "frame": 162,
+              "source": [
+                -11167.727719513232,
+                716.5365939670141,
+                370
+              ],
+              "state": "ride",
+              "charge": 0.4
+            },
+            {
+              "frame": 218,
+              "source": [
+                -10648.323140074332,
+                772.3834228515625,
+                370
+              ],
+              "state": "ride",
+              "charge": 0.4
+            },
+            {
+              "frame": 329,
+              "source": [
+                -9459.689833698665,
+                566.2834694125249,
+                368.1817600270291
+              ],
+              "state": "ride",
+              "charge": 0.4
+            }
+          ],
+          "end": [
+            -8939.83224826389,
+            610.8074085576131,
+            365.4941383491938
+          ],
+          "state": "air"
+        },
+        {
+          "releases": [
+            -11175,
+            -10650,
+            -9435
+          ],
+          "frames": 381,
+          "bail": true,
+          "maxSpeed": 34.97905690753545,
+          "fountainFrames": 0,
+          "jumps": [
+            {
+              "frame": 162,
+              "source": [
+                -11167.727719513232,
+                716.5365939670141,
+                370
+              ],
+              "state": "ride",
+              "charge": 0.4
+            },
+            {
+              "frame": 218,
+              "source": [
+                -10648.323140074332,
+                772.3834228515625,
+                370
+              ],
+              "state": "ride",
+              "charge": 0.4
+            },
+            {
+              "frame": 332,
+              "source": [
+                -9424.406428928072,
+                571.2428350741548,
+                368.00328930983983
+              ],
+              "state": "ride",
+              "charge": 0.4
+            }
+          ],
+          "end": [
+            -8855.394475719746,
+            284.35938199115117,
+            362.35536167830503
+          ],
+          "state": "air"
+        },
+        {
+          "releases": [
+            -11175,
+            -10650,
+            -9425
+          ],
+          "frames": 381,
+          "bail": true,
+          "maxSpeed": 34.97905690753545,
+          "fountainFrames": 0,
+          "jumps": [
+            {
+              "frame": 162,
+              "source": [
+                -11167.727719513232,
+                716.5365939670141,
+                370
+              ],
+              "state": "ride",
+              "charge": 0.4
+            },
+            {
+              "frame": 218,
+              "source": [
+                -10648.323140074332,
+                772.3834228515625,
+                370
+              ],
+              "state": "ride",
+              "charge": 0.4
+            },
+            {
+              "frame": 332,
+              "source": [
+                -9424.406428928072,
+                571.2428350741548,
+                368.00328930983983
+              ],
+              "state": "ride",
+              "charge": 0.4
+            }
+          ],
+          "end": [
+            -8855.394475719746,
+            284.35938199115117,
+            362.35536167830503
+          ],
+          "state": "air"
+        }
+      ]
+    },
+    "openedPassageWithCandidate": {
+      "temporaryReport": "/private/tmp/mall-recreation/measured/fountain-open-source19.json",
+      "fixtures": [
+        {
+          "releases": [
+            -11175,
+            -10650,
+            -9465
+          ],
+          "frames": 458,
+          "bail": false,
+          "maxSpeed": 34.97905690753545,
+          "fountainFrames": 57,
+          "jumps": [
+            {
+              "frame": 162,
+              "source": [
+                -11167.727719513232,
+                716.5365939670141,
+                370
+              ],
+              "state": "ride",
+              "charge": 0.4
+            },
+            {
+              "frame": 218,
+              "source": [
+                -10648.323140074332,
+                772.3834228515625,
+                370
+              ],
+              "state": "ride",
+              "charge": 0.4
+            },
+            {
+              "frame": 329,
+              "source": [
+                -9459.689833698665,
+                566.2834694125249,
+                368.1817600270291
+              ],
+              "state": "ride",
+              "charge": 0.4
+            }
+          ],
+          "end": [
+            -7999.410906827118,
+            416.79527452256934,
+            360.7953689156915
+          ],
+          "state": "air"
+        },
+        {
+          "releases": [
+            -11175,
+            -10650,
+            -9450
+          ],
+          "frames": 459,
+          "bail": false,
+          "maxSpeed": 34.97905690753545,
+          "fountainFrames": 58,
+          "jumps": [
+            {
+              "frame": 162,
+              "source": [
+                -11167.727719513232,
+                716.5365939670141,
+                370
+              ],
+              "state": "ride",
+              "charge": 0.4
+            },
+            {
+              "frame": 218,
+              "source": [
+                -10648.323140074332,
+                772.3834228515625,
+                370
+              ],
+              "state": "ride",
+              "charge": 0.4
+            },
+            {
+              "frame": 330,
+              "source": [
+                -9447.882301469948,
+                567.9431128132801,
+                368.122035100855
+              ],
+              "state": "ride",
+              "charge": 0.4
+            }
+          ],
+          "end": [
+            -7990.686470352886,
+            406.1156955295137,
+            360.7512389218689
+          ],
+          "state": "air"
+        },
+        {
+          "releases": [
+            -11175,
+            -10650,
+            -9440
+          ],
+          "frames": 459,
+          "bail": false,
+          "maxSpeed": 34.97905690753545,
+          "fountainFrames": 58,
+          "jumps": [
+            {
+              "frame": 162,
+              "source": [
+                -11167.727719513232,
+                716.5365939670141,
+                370
+              ],
+              "state": "ride",
+              "charge": 0.4
+            },
+            {
+              "frame": 218,
+              "source": [
+                -10648.323140074332,
+                772.3834228515625,
+                370
+              ],
+              "state": "ride",
+              "charge": 0.4
+            },
+            {
+              "frame": 331,
+              "source": [
+                -9436.121231731846,
+                569.5962255381546,
+                368.0625451915132
+              ],
+              "state": "ride",
+              "charge": 0.4
+            }
+          ],
+          "end": [
+            -7994.440981291971,
+            406.1156955295137,
+            360.7702300102944
+          ],
+          "state": "air"
+        }
+      ],
+      "limitation": "Three releases traversed the opening without bail; the probe stopped while still airborne beyond the fountain. It is not a grounded-rollout or production-build validation."
+    },
+    "groundedRollout21": {
+      "status": "Failed; diagnostic only. Experimental code restored before the production build.",
+      "defaults": [
+        {
+          "releases": [
+            -11175,
+            -10650,
+            -9465
+          ],
+          "frames": 185,
+          "bail": true,
+          "maxSpeed": 22.999305774278216,
+          "groundedRollout": 0,
+          "fountainFrames": 0,
+          "jumps": [
+            {
+              "frame": 162,
+              "source": [
+                -11169.347582341734,
+                716.5365939670141,
+                370
+              ],
+              "state": "ride",
+              "charge": 0.4
+            }
+          ],
+          "end": [
+            -10977.642795138889,
+            754.7212606336807,
+            370
+          ],
+          "state": "air"
+        },
+        {
+          "releases": [
+            -11175,
+            -10650,
+            -9450
+          ],
+          "frames": 185,
+          "bail": true,
+          "maxSpeed": 22.999305774278216,
+          "groundedRollout": 0,
+          "fountainFrames": 0,
+          "jumps": [
+            {
+              "frame": 162,
+              "source": [
+                -11169.347582341734,
+                716.5365939670141,
+                370
+              ],
+              "state": "ride",
+              "charge": 0.4
+            }
+          ],
+          "end": [
+            -10977.642795138889,
+            754.7212606336807,
+            370
+          ],
+          "state": "air"
+        },
+        {
+          "releases": [
+            -11175,
+            -10650,
+            -9440
+          ],
+          "frames": 185,
+          "bail": true,
+          "maxSpeed": 22.999305774278216,
+          "groundedRollout": 0,
+          "fountainFrames": 0,
+          "jumps": [
+            {
+              "frame": 162,
+              "source": [
+                -11169.347582341734,
+                716.5365939670141,
+                370
+              ],
+              "state": "ride",
+              "charge": 0.4
+            }
+          ],
+          "end": [
+            -10977.642795138889,
+            754.7212606336807,
+            370
+          ],
+          "state": "air"
+        }
+      ],
+      "partialCandidate": [
+        {
+          "releases": [
+            -11175,
+            -10650,
+            -9465
+          ],
+          "frames": 472,
+          "bail": true,
+          "maxSpeed": 35.09463518214967,
+          "groundedRollout": 5,
+          "fountainFrames": 58,
+          "jumps": [
+            {
+              "frame": 162,
+              "source": [
+                -11167.727719513232,
+                716.5365939670141,
+                370
+              ],
+              "state": "ride",
+              "charge": 0.4
+            },
+            {
+              "frame": 218,
+              "source": [
+                -10648.323140074332,
+                772.3834228515625,
+                370
+              ],
+              "state": "ride",
+              "charge": 0.4
+            },
+            {
+              "frame": 329,
+              "source": [
+                -9457.99213550333,
+                566.5220805403028,
+                368.1761804251818
+              ],
+              "state": "ride",
+              "charge": 0.4
+            }
+          ],
+          "end": [
+            -7861.6285179899205,
+            313.02573280552133,
+            373.87291776813174
+          ],
+          "state": "air"
+        },
+        {
+          "releases": [
+            -11175,
+            -10650,
+            -9450
+          ],
+          "frames": 473,
+          "bail": true,
+          "maxSpeed": 35.09463518214967,
+          "groundedRollout": 5,
+          "fountainFrames": 57,
+          "jumps": [
+            {
+              "frame": 162,
+              "source": [
+                -11167.727719513232,
+                716.5365939670141,
+                370
+              ],
+              "state": "ride",
+              "charge": 0.4
+            },
+            {
+              "frame": 218,
+              "source": [
+                -10648.323140074332,
+                772.3834228515625,
+                370
+              ],
+              "state": "ride",
+              "charge": 0.4
+            },
+            {
+              "frame": 330,
+              "source": [
+                -9446.152590332444,
+                568.1862236169582,
+                368.11629357096297
+              ],
+              "state": "ride",
+              "charge": 0.4
+            }
+          ],
+          "end": [
+            -7860.443724306556,
+            314.0192879211395,
+            375.8052101032004
+          ],
+          "state": "air"
+        },
+        {
+          "releases": [
+            -11175,
+            -10650,
+            -9440
+          ],
+          "frames": 473,
+          "bail": true,
+          "maxSpeed": 35.09463518214967,
+          "groundedRollout": 5,
+          "fountainFrames": 58,
+          "jumps": [
+            {
+              "frame": 162,
+              "source": [
+                -11167.727719513232,
+                716.5365939670141,
+                370
+              ],
+              "state": "ride",
+              "charge": 0.4
+            },
+            {
+              "frame": 218,
+              "source": [
+                -10648.323140074332,
+                772.3834228515625,
+                370
+              ],
+              "state": "ride",
+              "charge": 0.4
+            },
+            {
+              "frame": 331,
+              "source": [
+                -9434.360000589753,
+                569.8437667314006,
+                368.056644226956
+              ],
+              "state": "ride",
+              "charge": 0.4
+            }
+          ],
+          "end": [
+            -7861.543190980201,
+            313.09737434211365,
+            374.0120784753259
+          ],
+          "state": "air"
+        }
+      ],
+      "limitation": "The same partial source-flight/target-speed candidate from pass 19 uses an incorrect hard cap approximation and unchanged drag/charge/rail-pop behavior. It is not a source-faithful profile. All three releases clear the opening and land, then bail after five grounded frames. No candidate setting is shipped.",
+      "traceFiles": [
+        "/private/tmp/mall-recreation/measured/fountain-default21.json",
+        "/private/tmp/mall-recreation/measured/fountain-partial-candidate21.json"
+      ]
+    }
+  },
+  "nextEvidenceNeeded": [
+    "Continuous 60 Hz movement with native 30 Hz balance/rail-assist decisions; not every original fixed-point operation or rail-node substep position.",
+    "Balance recurrence matches the compiled source for the same native state/input/random stream. Production uses the fork deterministic RNG and post-step state sampling; transition-boundary timing and the original global random sequence are not frame-exact.",
+    "Original kick-animation gating and temporary crouched-target decay remain unimplemented.",
+    "Steering, braking, ground-contact tracking, special-mode bonuses and terrain-specific friction remain to be compared.",
+    "Rail candidate geometry now uses source integer line-pair and endpoint/ground-side rules, but queries the preceding 60 Hz step rather than the source 30 Hz scheduled offer. Full trick/handplant eligibility, snap placement/easing and node substep timing remain fork adaptations. Under-rail hangs and perfect-grind rewards remain fork extensions.",
+    "Directional rail exits use the source angle in the local rail plane, with the prototype camera-relative input convention.",
+    "Charged-pose calibration is supported; coasting pose and cruiser proportions differ from the source actor.",
+    "Recover original box-stack jump obstacles and compare remaining alternate routes against original gameplay."
+  ],
+  "retailRegistration": {
+    "report": "retail-reference.json",
+    "factor": 0.40177774038477515,
+    "axisSigns": [
+      1,
+      1,
+      -1
+    ],
+    "translation": [
+      5181.887263881525,
+      33.514145401064695,
+      9332.301909144444
+    ],
+    "originalUniqueVertices": 7103,
+    "convertedUniqueVertices": 8444,
+    "matchedUniqueVertices": 8232,
+    "matchedFraction": 0.9748934154429181,
+    "matchedOriginalVertices": 5893,
+    "rmsError": 0.002555350677387082,
+    "p95Error": 0.004733757950518703,
+    "maxError": 0.007500384308742831,
+    "method": "Uniform least-squares fit to matched static vertices; 0.03 converted-unit correspondence bound. Converted duplicates with different floating-point values are counted separately.",
+    "originalUnitAtCurrentScale": 0.018079998317314883,
+    "limitation": "The original-to-conversion transform is now measured against retained retail static geometry. Final actor-relative world scale and movement calibration remain unverified."
+  },
+  "actorSurvey": {
+    "report": "actor-scale.json",
+    "status": "Retain 0.045 conversion-unit scale for charged riding. Coasting proportions and source movement fidelity remain incomplete.",
+    "comparison": {
+      "chargedHeightRatio": 1.011229108892233,
+      "coastingHeightRatio": 0.7635205430713589,
+      "boardWidthRatio": 1.0155677749486876,
+      "boardLengthRatio": 1.087715721122225,
+      "chargedHeightFittedConversionScale": 0.04550530990015048
+    }
+  },
+  "implementedProfile": {
+    "report": "reference-physics.json",
+    "configuration": {
+      "kind": "thps1",
+      "metresPerUnit": 0.018079998317314883,
+      "stats": {
+        "ollie": 4,
+        "speed": 8,
+        "air": 8,
+        "balance": 5
+      },
+      "railCapture": {
+        "origin": [
+          396.0085157210703,
+          106.1296209180479,
+          -888.995810663731
+        ],
+        "axes": [
+          -3,
+          -2,
+          -1
+        ]
+      }
+    },
+    "build": {
+      "version": "3d243395401e89a0d653",
+      "snapshot": "/private/tmp/mall-recreation/snapshot-25",
+      "output": "/private/tmp/mall-recreation/dist-25",
+      "preview": "http://127.0.0.1:5297/?playtest&level=mall",
+      "published": false
+    },
+    "railPhysics": "rail-physics.json",
+    "balanceReport": "rail-balance.json",
+    "captureReport": "rail-capture.json"
+  },
+  "fountainCompletion": {
+    "report": "fountain-route.json",
+    "frames": [
+      562,
+      549,
+      549
+    ],
+    "bails": 0,
+    "fullBrowserParity": 0
+  }
+}

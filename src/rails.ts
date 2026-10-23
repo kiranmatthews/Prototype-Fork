@@ -73,8 +73,10 @@ export class Rail {
   private queryBoundsOrigin = new THREE.Vector3();
   private queryBoundsDirty = true;
 
-  constructor(points: THREE.Vector3[], visual = true) {
+  constructor(points: THREE.Vector3[], visual = true, readonly closed = false) {
     if (points.length < 2) throw new Error('rail needs at least 2 points');
+    if (closed && points[0].distanceToSquared(points[points.length - 1]) > 1e-10)
+      points = [...points, points[0].clone()];
     this.points = points;
     this.hasVisual = visual;
 
@@ -220,14 +222,21 @@ export class Rail {
     return best!;
   }
 
+  wrapDistance(t: number): number {
+    return this.closed && this.totalLength > 0
+      ? ((t % this.totalLength) + this.totalLength) % this.totalLength
+      : t;
+  }
+
   pointAt(t: number): THREE.Vector3 {
+    t = this.wrapDistance(t);
     const i = this.segmentIndexAt(t);
     const local = THREE.MathUtils.clamp(t - this.cumLengths[i], 0, this.segLengths[i]);
     return this.points[i].clone().addScaledVector(this.segDirs[i], local);
   }
 
   tangentAt(t: number): THREE.Vector3 {
-    return this.segDirs[this.segmentIndexAt(t)].clone();
+    return this.segDirs[this.segmentIndexAt(this.wrapDistance(t))].clone();
   }
 
   /**
@@ -240,26 +249,33 @@ export class Rail {
     to: number,
     minimumAngle: number,
   ): RailSharpCorner | null {
+    if (!(this.totalLength > 0)) return null;
     const forward = to >= from;
     const epsilon = 1e-7;
-    const start = forward ? 1 : this.segDirs.length - 1;
-    const end = forward ? this.segDirs.length : 0;
+    const first = this.closed ? 0 : 1;
+    const start = forward ? first : this.segDirs.length - 1;
+    const end = forward ? this.segDirs.length : first - 1;
     const step = forward ? 1 : -1;
-    for (let index = start; index !== end; index += step) {
-      const boundary = this.cumLengths[index];
-      const crossed = forward
-        ? boundary > from + epsilon && boundary <= to + epsilon
-        : boundary < from - epsilon && boundary >= to - epsilon;
-      if (!crossed) continue;
-      const incoming = forward
-        ? this.segDirs[index - 1].clone()
-        : this.segDirs[index].clone().negate();
-      const outgoing = forward
-        ? this.segDirs[index].clone()
-        : this.segDirs[index - 1].clone().negate();
-      const angle = incoming.angleTo(outgoing);
-      if (angle >= minimumAngle) {
-        return { t: boundary, angle, incoming, outgoing };
+    const firstLap = this.closed ? Math.floor(from / this.totalLength) : 0;
+    const lastLap = this.closed ? Math.floor(to / this.totalLength) : 0;
+    for (let lap = firstLap; lap !== lastLap + step; lap += step) {
+      for (let index = start; index !== end; index += step) {
+        const boundary = this.cumLengths[index] + lap * this.totalLength;
+        const crossed = forward
+          ? boundary > from + epsilon && boundary <= to + epsilon
+          : boundary < from - epsilon && boundary >= to - epsilon;
+        if (!crossed) continue;
+        const previous = (index + this.segDirs.length - 1) % this.segDirs.length;
+        const incoming = forward
+          ? this.segDirs[previous].clone()
+          : this.segDirs[index].clone().negate();
+        const outgoing = forward
+          ? this.segDirs[index].clone()
+          : this.segDirs[previous].clone().negate();
+        const angle = incoming.angleTo(outgoing);
+        if (angle >= minimumAngle) {
+          return { t: boundary, angle, incoming, outgoing };
+        }
       }
     }
     return null;
