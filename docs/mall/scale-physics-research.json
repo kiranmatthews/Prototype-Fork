@@ -1,5 +1,5 @@
 {
-  "status": "Provisional research only; validated game settings are unchanged.",
+  "status": "Source-derived gravity/pop/charge/auto-kick/linear-drag parameters now enabled for Mall only; complete original movement remains unverified.",
   "sources": [
     {
       "path": "/private/tmp/mall-recreation/research/io-thps/helpers.py",
@@ -58,7 +58,7 @@
     "crouchedKickSpeed": 26.15142857142857,
     "highDragSpeedThreshold": 40.97057142857143
   },
-  "importantCorrection": "Original mMaxSpeed selects stronger ground drag; it is not a universal hard speed clamp. The temporary experiment used it as a cap, so that experiment is not a faithful complete movement implementation.",
+  "importantCorrection": "Original mMaxSpeed selects stronger ground drag, not a universal hard cap. The old partial experiment used an incorrect cap; the adopted source profile uses the measured linear-drag threshold.",
   "experiments": {
     "baselinePlateau": {
       "temporaryReport": "/private/tmp/mall-recreation/measured/fountain-baseline19.json",
@@ -967,10 +967,12 @@
     }
   },
   "nextEvidenceNeeded": [
-    "Resolve the complete fountain exit/rollout near original-conversion X=-7861, Z=374.",
-    "Compare source charge timing, speed-dependent drag and rail pops before adopting any level profile.",
-    "Compare coasting/charged poses separately; actor and cruiser proportions prevent one exact scale fit for every dimension.",
-    "Retest the complete entry and grounded rollout with ordinary input, in native and full-render browser."
+    "Continuous 60 Hz integration, not every original 30 Hz fixed-point rounding operation.",
+    "The five-tick auto-kick cycle does not reproduce the original push-animation gating or the slow decay of temporary crouched kick targets.",
+    "Steering, braking, ground-contact tracking, special-mode bonuses and terrain-specific friction are not yet source-equivalent.",
+    "Rail catch, balance, slope acceleration/caps, lateral transfer, run-off pop and trick-speed bonuses still use existing fork rules.",
+    "The charged-pose scale is supported; coasting and cruiser proportions differ from the original actor.",
+    "Compare remaining alternate-route input windows and original rail momentum/transfer behavior."
   ],
   "retailRegistration": {
     "report": "retail-reference.json",
@@ -1007,5 +1009,34 @@
       "boardLengthRatio": 1.087715721122225,
       "chargedHeightFittedConversionScale": 0.04550530990015048
     }
+  },
+  "implementedProfile": {
+    "report": "reference-physics.json",
+    "configuration": {
+      "kind": "thps1",
+      "metresPerUnit": 0.018079998317314883,
+      "stats": {
+        "ollie": 4,
+        "speed": 8,
+        "air": 8
+      }
+    },
+    "build": {
+      "version": "804169c7e6aa1cac5d2f",
+      "snapshot": "/private/tmp/mall-recreation/snapshot-22",
+      "output": "/private/tmp/mall-recreation/dist-22",
+      "preview": "http://127.0.0.1:5294/?playtest&level=mall",
+      "published": false
+    }
+  },
+  "fountainCompletion": {
+    "report": "fountain-route.json",
+    "frames": [
+      562,
+      549,
+      549
+    ],
+    "bails": 0,
+    "fullBrowserParity": 0
   }
 }

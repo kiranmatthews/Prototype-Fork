@@ -1,0 +1,182 @@
+{
+  "schema": 1,
+  "verifiedAt": "2026-10-23T02:32:43.291490+00:00",
+  "status": "Enabled on Mall only; source-derived parameter adaptation, not a complete PS1 physics port.",
+  "build": {
+    "version": "804169c7e6aa1cac5d2f",
+    "snapshot": "/private/tmp/mall-recreation/snapshot-22",
+    "output": "/private/tmp/mall-recreation/dist-22",
+    "preview": "http://127.0.0.1:5294/?playtest&level=mall",
+    "published": false
+  },
+  "source": {
+    "repository": "https://github.com/LANCommander/TonyWasAProSkater/tree/d9319c8d5b42c431de02bec0f02f0cf955f2fbae",
+    "files": {
+      "game/src/physics.cpp": [
+        "DoOnGroundPhysics: Q12 gravity 6500 and linear drag 8/82",
+        "HandleOllie: nine-tick Tony first-board charge, ollie/air stats and additive vertical impulse",
+        "HandleKick: four-unit pushes for five ticks in twenty; kick target does not clamp speed"
+      ],
+      "game/src/mech.cpp": [
+        "CBruce initialization: speed-stat offsets 17 and 39"
+      ]
+    },
+    "baseStepsPerSecond": 30,
+    "fixedPointDenominator": 4096
+  },
+  "configuration": {
+    "kind": "thps1",
+    "metresPerUnit": 0.018079998317314883,
+    "stats": {
+      "ollie": 4,
+      "speed": 8,
+      "air": 8
+    }
+  },
+  "parameters": {
+    "park": {
+      "groundGravity": 25.82226322175099,
+      "airGravity": 51.64452644350198,
+      "vertGravity": 51.64452644350198,
+      "standingSpeed": 21.792798362393757,
+      "crouchingSpeed": 26.15133155049997,
+      "ollieMin": 11.797198902047962,
+      "ollieMax": 17.085598409862563,
+      "vertPopMin": 12.61079882632713,
+      "vertPopMax": 17.899198334141733,
+      "chargeSeconds": 0.3
+    },
+    "kickAcceleration": 65.08799394233358,
+    "lowDrag": 0.05859375,
+    "highDrag": 0.6005859375,
+    "dragThreshold": 40.970529780668855
+  },
+  "unitFixture": {
+    "params": {
+      "park": {
+        "groundGravity": 25.822265625,
+        "airGravity": 51.64453125,
+        "vertGravity": 51.64453125,
+        "standingSpeed": 21.792800390624997,
+        "crouchingSpeed": 26.151333984374997,
+        "ollieMin": 11.7972,
+        "ollieMax": 17.0856,
+        "vertPopMin": 12.6108,
+        "vertPopMax": 17.8992,
+        "chargeSeconds": 0.3
+      },
+      "kickAcceleration": 65.088,
+      "lowDrag": 0.05859375,
+      "highDrag": 0.6005859375,
+      "dragThreshold": 40.97053359375
+    },
+    "neutralSpeed": 21.658095339789742,
+    "launch": 17.0856,
+    "peak": 2.8260593750000003,
+    "overspeed": 54.449462890625,
+    "chargeSeconds": 0.3,
+    "pulseFrameRates": [
+      30,
+      60,
+      120
+    ],
+    "editorRoundTrip": true,
+    "invalidDataRejected": true,
+    "tuningUnchanged": true
+  },
+  "defaultParity": {
+    "frames": 960,
+    "sha256": "c355c28f30e0c6a248e396cfe83234e24b95fdaa5c907f8ec9fc97faa29c2fe2",
+    "identical": true,
+    "previousSnapshot": "/private/tmp/mall-recreation/snapshot-21",
+    "currentSnapshot": "/private/tmp/mall-recreation/snapshot-22",
+    "tool": "tools/mall-default-parity.mjs",
+    "existingParkTuningChecks": "passed"
+  },
+  "copingDeparture": {
+    "railNodes": [
+      24,
+      26
+    ],
+    "originalConversionLine": [
+      [
+        -6712.742740209744,
+        374.22166924735393,
+        270.60675250622444
+      ],
+      [
+        -6712.742740209744,
+        374.22166924735393,
+        512.0751744774752
+      ]
+    ],
+    "previousFailure": {
+      "source": [
+        -6703.868629483619,
+        374.1108003246636,
+        341.8295134693458
+      ],
+      "airRose": false,
+      "airborneSeconds": 0.05,
+      "verticalSpeed": -34.62693864065701
+    },
+    "correction": "On source-profile levels only, an unjumped departure within existing ground grace can cross coping. Jumped landings, later falls and ordinary bars retain rail-smack behavior.",
+    "checks": {
+      "fixtures": [
+        {
+          "name": "Fresh source roll-off across coping",
+          "source": true,
+          "coping": true,
+          "rose": false,
+          "grace": 0.08,
+          "smack": false,
+          "actualSmack": false
+        },
+        {
+          "name": "Source ollie descends onto coping",
+          "source": true,
+          "coping": true,
+          "rose": true,
+          "grace": 0.08,
+          "smack": true,
+          "actualSmack": true
+        },
+        {
+          "name": "Source fall after departure grace",
+          "source": true,
+          "coping": true,
+          "rose": false,
+          "grace": 0,
+          "smack": true,
+          "actualSmack": true
+        },
+        {
+          "name": "Source roll-off onto a separate bar",
+          "source": true,
+          "coping": false,
+          "rose": false,
+          "grace": 0.08,
+          "smack": true,
+          "actualSmack": true
+        },
+        {
+          "name": "Existing level retains its contact rule",
+          "source": false,
+          "coping": true,
+          "rose": false,
+          "grace": 0.08,
+          "smack": true,
+          "actualSmack": true
+        }
+      ],
+      "tuningUnchanged": true
+    }
+  },
+  "limitations": [
+    "Continuous 60 Hz integration, not every original 30 Hz fixed-point rounding operation.",
+    "The five-tick auto-kick cycle does not reproduce the original push-animation gating or the slow decay of temporary crouched kick targets.",
+    "Steering, braking, ground-contact tracking, special-mode bonuses and terrain-specific friction are not yet source-equivalent.",
+    "Rail catch, balance, slope acceleration/caps, lateral transfer, run-off pop and trick-speed bonuses still use existing fork rules.",
+    "The charged-pose scale is supported; coasting and cruiser proportions differ from the original actor."
+  ]
+}

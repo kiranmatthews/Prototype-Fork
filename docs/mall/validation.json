@@ -1,7 +1,7 @@
 {
-  "schema": 21,
-  "verifiedAt": "2026-10-23T01:46:44.130611+00:00",
-  "status": "Original animated actor surveyed and charged-pose scale checked. Runtime unchanged; complete fountain rollout remains unresolved.",
+  "schema": 22,
+  "verifiedAt": "2026-10-23T02:32:43.291490+00:00",
+  "status": "Mall source-derived movement profile and complete fountain route validated. Literal 1:1 goal remains active.",
   "previousImageBasedEvidenceCommit": "2508077121b87c2b606c515ac025556bd05f44af",
   "reference": {
     "page": "https://thpsx.com/creation-details/?obj=958",
@@ -21,7 +21,7 @@
   },
   "sourceSHA256": {
     "src/levels/mall.ts": "ad3747d8facab080fed74989bfa657370f801098511a93df66fd7ccdf6a80072",
-    "src/levels/mall-measured.ts": "8cf1909bb2073f09e77cdb529dfddf1395393126055c2cca12d33ce7919334a8",
+    "src/levels/mall-measured.ts": "f8542e20a4c82839bde868cd8e391229fc0866c10552ca77c58fc805dea20ef1",
     "src/levels/mall-art.ts": "c567277c468e232c9fcd73f4537fe05bfd307491f143a245ca77512bd29c32cc",
     "src/levels/mall-art.json": "94941a1026c7cfbc009d86b64c21654744043c0a7699ea4e4e0ed96d40c7c720",
     "src/levels/mall-art-textures.json": "56a3beccfc75921c4ba698e2d419f86f4e2f104f240b962d502b302e9d658a3a",
@@ -35,7 +35,7 @@
     "tools/test-mall-measured-verts.mjs": "deb7f9e3adbf7e60b323cf278c22fce74faa40ebc63aae4ff443d6c57be7066a",
     "tools/test-mall-measured-rails.mjs": "03ba496ff69088a36cf7aa4a60c4e9fea3069fd4915d1dd16e34d7211365f1da",
     "tools/test-mall-measured-topology.mjs": "b2fbe47e5395e9e418d98b2c87ecfbdf4144020960aac32101c45b084c50f275",
-    "tools/mall-measured-browser.mjs": "98d3077f028f6cea123214499225009f9de19f40b58e0226f1f76018a793d312",
+    "tools/mall-measured-browser.mjs": "32dea8f210d7122bf252427a4fbe643d92568e7a70f4e54ceea36fa28c43ceaf",
     "tools/mall-smoke.mjs": "0df5ba8671e6db912b94844e192a70613a202c555240534705cf3b1b754ee9e9",
     "tools/test-mall-measured-upper.mjs": "5f1e1bd970444b151f82552ca2ddfb7469d0daa0fd0c7bfb6fe80cdcb831b229",
     "tools/mall-measured-upper-browser.mjs": "bdf68178cab4543eb2e3639a1243f1d0fe291083334ad248424da92527330eb0",
@@ -58,17 +58,26 @@
     "tools/test-mall-retail-reference.py": "4a7304a0bf6e0323ffde864fb51636bcaff70fb786dd3f340147f1f733b97998",
     "tools/psx-skater-survey.py": "223cf2f09f3a861fed3373239a576a1f0cf4eeeb3e8f103de705401a272ed16e",
     "tools/test-psx-skater-survey.py": "a3859435a044ed79857255dffd0e5a123740e6bb93817f80b57545929d21c0cb",
-    "tools/mall-actor-scale-browser.mjs": "6fb9ecf3ffee94df4d6402d58ba2ec8be8908d5a7fb6e35cfd275eda1d2150f9"
+    "tools/mall-actor-scale-browser.mjs": "6fb9ecf3ffee94df4d6402d58ba2ec8be8908d5a7fb6e35cfd275eda1d2150f9",
+    "src/skateReferencePhysics.ts": "2a2e27545cb77d5a453cc302b88bc39614c0265978ca723472d46aa3b11d3717",
+    "src/player.ts": "4cf5fff0af1d1cfbab1296f8b9dfe519c7a82c25859ed04c552a97cb6bdc5f2d",
+    "src/level.ts": "b3ceef08270f8c4cca71f6d36369ed567b76ce1ebc811bb3c836ba0513450628",
+    "tools/test-skate-reference-physics.mjs": "169086b325e4805ddb054e2bbe2ff4e8b77d5e767d570acf20397eff4ad7198e",
+    "tools/test-skate-reference-coping.mjs": "021e7086d2f1a807352565daa220e3996ccb745c1a2d1ddbc937f4ed5703217a",
+    "tools/mall-default-parity.mjs": "50cc66061cb32f9e08f9381229b8d6cea8718f6f19f752d2840fc3d7afd42e7d",
+    "tools/mall-fountain-route-pilot.mjs": "d8333b0009d4385b8a26517318b244bf7a536802bdcb7bcc1bbe93aefd1271ab",
+    "tools/test-mall-fountain-route.mjs": "ced4398dacab0be5d9f22590734dc9bdd7554f9d6770e499fff5b8dcdad39818",
+    "tools/mall-fountain-route-browser.mjs": "5a50ac4e7b8dc10e3e52b1f596c0d98e9dba8eafabd59971e109704c339d185c"
   },
   "build": {
-    "version": "3f4248e1153716794a75",
-    "snapshot": "/private/tmp/mall-recreation/snapshot-21",
-    "output": "/private/tmp/mall-recreation/dist-21",
-    "preview": "http://127.0.0.1:5293/?playtest&level=mall",
+    "version": "804169c7e6aa1cac5d2f",
+    "snapshot": "/private/tmp/mall-recreation/snapshot-22",
+    "output": "/private/tmp/mall-recreation/dist-22",
+    "preview": "http://127.0.0.1:5294/?playtest&level=mall",
     "published": false
   },
   "runtimeManifest": "measured-runtime.json",
-  "sharedWorkspaceNote": "Only Mall docs, research tools and a scale comment changed in the live workspace. Physics experiments ran in the isolated snapshot and were restored byte-for-byte before required checks/build. No shared runtime or tuning changes are committed.",
+  "sharedWorkspaceNote": "Scoped player/level hunks preserve live unrelated edits; Mall-owned sources/tools/docs copied separately. Shared HEAD, index and TUNING are preserved. No push or deployment.",
   "scale": {
     "metresPerSourceUnit": 0.045,
     "minimumRenderedArcadeHeadClearance": 0.36999670788151207,
@@ -134,16 +143,16 @@
   },
   "nativeMain": {
     "state": "finished",
-    "seconds": 83.56666666666666,
+    "seconds": 64.01666666666667,
     "position": [
-      237.35081257032155,
-      0.7547831215212741,
-      -1363.8061080714958
+      237.4728883665037,
+      0.7447831242283187,
+      -1363.7339400329904
     ],
     "source": [
-      15733.227206276297,
-      -2308.1489167439718,
-      5806.575172461139
+      15731.623472087289,
+      -2308.3711389060372,
+      5809.287967931853
     ],
     "stage": 2,
     "stats": {
@@ -159,693 +168,401 @@
       "turns": [
         {
           "stage": 0,
-          "frame": 346,
+          "frame": 328,
           "source": [
             -13422.826158311633,
-            1522.1718794443827,
-            124.79375550105141
+            1743.891105085886,
+            175.8263338961733
           ]
         },
         {
           "stage": 1,
-          "frame": 730,
+          "frame": 680,
           "source": [
             -15830.285163031684,
-            1115.92079066118,
-            144.39331630655607
+            1665.19674526086,
+            144.15595766639706
           ]
         }
       ],
       "sections": [
         {
           "waypoint": 0,
-          "frame": 840,
+          "frame": 802,
           "source": [
-            -15408.359825196789,
-            709.7070604514747,
-            477.6778782835362
+            -15400.16754618284,
+            706.9845063203975,
+            469.69569645357194
           ]
         },
         {
           "waypoint": 1,
-          "frame": 1041,
+          "frame": 929,
           "source": [
-            -13577.78307704966,
+            -13575.120453704832,
             313.55333116319434,
-            537.6978117406335
+            535.8221865824175
           ]
         },
         {
           "waypoint": 2,
-          "frame": 1094,
+          "frame": 961,
           "source": [
-            -13162.4958384673,
-            314.54084630752413,
-            709.7149011482768
+            -13154.780331197395,
+            314.56820724209774,
+            695.9781517804848
           ]
         },
         {
           "waypoint": 3,
-          "frame": 1363,
+          "frame": 1140,
           "source": [
-            -10878.250406008765,
+            -10879.32223648587,
             314.75860595703125,
-            783.2792232906636
+            782.7763925818942
           ]
         },
         {
           "waypoint": 4,
-          "frame": 1460,
+          "frame": 1214,
           "source": [
-            -10075.538467876851,
+            -10067.843958405316,
             314.75860595703125,
-            974.7573453376771
+            976.9490405393747
           ]
         },
         {
           "waypoint": 5,
-          "frame": 1730,
+          "frame": 1442,
           "source": [
-            -7779.0758900533865,
+            -7770.404845034028,
             314.75860595703125,
-            997.8977815004168
+            997.8500982352123
           ]
         },
         {
           "waypoint": 6,
-          "frame": 1831,
+          "frame": 1528,
           "source": [
-            -6923.562822816606,
+            -6928.65028288632,
             314.75860595703125,
-            909.0723554426777
+            909.5604954462315
           ]
         },
         {
           "waypoint": 7,
-          "frame": 1866,
+          "frame": 1559,
           "source": [
-            -6628.26714651773,
+            -6625.3232284817705,
             314.75877549913184,
-            869.6964981783485
+            869.7825824043657
           ]
         },
         {
           "waypoint": 8,
-          "frame": 1908,
+          "frame": 1595,
           "source": [
-            -6307.298972893184,
+            -6306.005009677647,
             314.75877549913184,
-            714.920355319367
+            717.8862204612647
           ]
         },
         {
           "waypoint": 9,
-          "frame": 1992,
+          "frame": 1667,
           "source": [
-            -5571.075121644351,
-            155.8822191415661,
-            561.4301279750285
+            -5573.854201226843,
+            156.4969238291801,
+            560.8548582756913
           ]
         },
         {
           "waypoint": 10,
-          "frame": 2150,
+          "frame": 1786,
           "source": [
-            -4079.2667974374435,
-            -176.23277619087776,
-            547.9782061693846
+            -4077.38653176737,
+            -176.67616438469668,
+            548.4094130542211
           ]
         },
         {
           "waypoint": 11,
-          "frame": 2204,
+          "frame": 1822,
           "source": [
-            -3571.727026634102,
+            -3567.607303505536,
             -270.6316121419268,
-            494.5808148225954
+            495.419714405724
           ]
         },
         {
           "waypoint": 12,
-          "frame": 2247,
+          "frame": 1849,
           "source": [
-            -3179.470409895701,
+            -3177.120644232511,
             -270.6316121419268,
-            517.8706004983941
+            509.39286365488897
           ]
         },
         {
           "waypoint": 13,
-          "frame": 2298,
+          "frame": 1880,
           "source": [
-            -2768.614374152743,
-            -275.41834142383914,
-            666.7589648459984
+            -2767.7950730122357,
+            -270.6316121419268,
+            658.7264978724816
           ]
         },
         {
           "waypoint": 14,
-          "frame": 2352,
+          "frame": 1914,
           "source": [
-            -2368.3240574103274,
-            -298.0679348240867,
-            889.0623048048919
+            -2361.5602343418996,
+            -288.6779480584735,
+            887.4579554705574
           ]
         },
         {
           "waypoint": 15,
-          "frame": 2419,
+          "frame": 1954,
           "source": [
-            -1957.8358840740166,
-            -254.9483517789199,
-            1247.7558177245905
+            -1945.1869184067618,
+            -235.10080830010384,
+            1234.9225015133102
           ]
         },
         {
           "waypoint": 16,
-          "frame": 2491,
+          "frame": 1987,
           "source": [
-            -1547.4678232405622,
+            -1582.0626422131663,
             -270.6316121419268,
-            1419.3997684708697
+            1486.1333071962936
           ]
         },
         {
           "waypoint": 17,
-          "frame": 2559,
+          "frame": 2031,
           "source": [
-            -1159.4065812268072,
+            -1146.451446134819,
             -270.6316121419268,
-            1848.4794106793215
+            1848.8661871954648
           ]
         },
         {
           "waypoint": 18,
-          "frame": 2611,
+          "frame": 2066,
           "source": [
-            -941.7730679359411,
+            -934.4264699794803,
             -270.6316121419268,
-            2231.876938211437
+            2228.222430868236
           ]
         },
         {
           "waypoint": 19,
-          "frame": 2682,
+          "frame": 2117,
           "source": [
-            -1000.6206890818885,
+            -989.3634480807723,
             -270.6316121419268,
-            2824.6342373429093
+            2824.1590850747966
           ]
         },
         {
           "waypoint": 20,
-          "frame": 2717,
+          "frame": 2145,
           "source": [
-            -1217.4114677490634,
+            -1207.0554528179982,
             -270.6316121419268,
-            3020.431271201101
+            3054.2261995609433
           ]
         },
         {
           "waypoint": 21,
-          "frame": 2768,
+          "frame": 2183,
           "source": [
-            -1546.7073399584406,
-            -288.0631048561754,
-            3294.8331409418897
+            -1551.7601297620695,
+            -287.469350653402,
+            3292.9430201484897
           ]
         },
         {
           "waypoint": 22,
-          "frame": 2872,
+          "frame": 2264,
           "source": [
-            -1603.7233986938827,
-            -582.3547200537243,
-            4227.60566515455
+            -1598.3350615662457,
+            -583.6352416086531,
+            4231.593368815757
           ]
         },
         {
           "waypoint": 23,
-          "frame": 2939,
+          "frame": 2308,
           "source": [
-            -1728.5733339722483,
-            -777.7198969179542,
-            4832.224250443058
+            -1727.854981253904,
+            -777.3252316974238,
+            4831.023128327994
           ]
         },
         {
           "waypoint": 24,
-          "frame": 2998,
+          "frame": 2346,
           "source": [
-            -1701.3054211981707,
+            -1710.4195044791013,
             -915.4849921332466,
-            5376.587938920418
+            5377.418908537079
           ]
         },
         {
           "waypoint": 25,
-          "frame": 3041,
+          "frame": 2373,
           "source": [
-            -1538.9905288059726,
+            -1551.1738782806315,
             -915.4847378200955,
-            5731.5428860851625
+            5739.82721796888
           ]
         },
         {
           "waypoint": 26,
-          "frame": 3087,
+          "frame": 2401,
           "source": [
-            -1251.8767639828638,
+            -1260.8540610465298,
             -915.4847378200955,
-            5999.938308746703
+            6014.226379993249
           ]
         },
         {
           "waypoint": 27,
-          "frame": 3169,
+          "frame": 2453,
           "source": [
-            -576.552552456098,
+            -565.9465833818904,
             -915.4847378200955,
-            6160.760072207681
+            6165.845333721446
           ]
         },
         {
           "waypoint": 28,
-          "frame": 3217,
+          "frame": 2483,
           "source": [
-            -171.84063506862367,
-            -935.7108631430592,
-            6116.014962495669
+            -171.97044428517074,
+            -935.6887045206902,
+            6123.7120237536765
           ]
         },
         {
           "waypoint": 29,
-          "frame": 3263,
+          "frame": 2514,
           "source": [
-            223.8562108074475,
-            -1003.2568911808291,
-            6020.689395959254
+            228.37260232399967,
+            -1004.0278457921333,
+            6020.374208457502
           ]
         },
         {
           "waypoint": 30,
-          "frame": 3424,
+          "frame": 2621,
           "source": [
-            1724.4600551351814,
-            -1261.5800289008362,
-            5812.075611082703
+            1729.3664191354364,
+            -1262.4361889641466,
+            5812.069445600404
           ]
         },
         {
           "waypoint": 31,
-          "frame": 3603,
+          "frame": 2735,
           "source": [
-            3427.6957428455607,
+            3427.262533693749,
             -1467.5272115071614,
-            5799.977959955739
+            5800.2997168823085
           ]
         },
         {
           "waypoint": 32,
-          "frame": 3824,
+          "frame": 2871,
           "source": [
-            5327.61287892242,
+            5323.918647813334,
             -1467.5272115071614,
-            5799.825099130775
+            5800.334790107805
           ]
         },
         {
           "waypoint": 33,
-          "frame": 3953,
+          "frame": 2958,
           "source": [
-            6428.163178033577,
+            6420.426762043822,
             -1512.5272454155815,
-            5799.88281686017
+            5800.422442622633
           ]
         },
         {
           "waypoint": 34,
-          "frame": 4082,
+          "frame": 3051,
           "source": [
-            7527.017380290894,
+            7530.101038602694,
             -1512.5272454155815,
-            5800.237928921663
+            5800.264448581625
           ]
         },
         {
           "waypoint": 35,
-          "frame": 4318,
+          "frame": 3246,
           "source": [
-            9527.437385656125,
-            -1375.7633732020436,
-            5800.317632495
+            9527.389569016716,
+            -1351.2758229232882,
+            5800.064711174736
           ]
         },
         {
           "waypoint": 36,
-          "frame": 4450,
+          "frame": 3361,
           "source": [
-            10625.726160019596,
+            10627.411431696768,
             -1512.5272454155815,
-            5799.950093581931
+            5799.619680370635
           ]
         },
         {
           "waypoint": 37,
-          "frame": 4589,
+          "frame": 3483,
           "source": [
-            11823.282438332426,
-            -1714.794544917992,
-            5781.126423123479
+            11825.714450745822,
+            -1715.2373530032178,
+            5781.103360406249
           ]
         },
         {
           "waypoint": 38,
-          "frame": 4812,
+          "frame": 3663,
           "source": [
-            13926.211154513887,
+            13921.931268732325,
             -2099.122314453125,
-            5791.745701414607
+            5791.962348090277
           ]
         },
         {
           "waypoint": 39,
-          "frame": 4930,
+          "frame": 3767,
           "source": [
-            15023.744969383744,
+            15020.641305844281,
             -2324.5197754022147,
-            5853.2628147480555
+            5853.458268548489
           ]
         },
         {
           "waypoint": 40,
-          "frame": 4989,
+          "frame": 3819,
           "source": [
-            15525.971216177848,
+            15524.915231412859,
             -2324.519287099441,
-            5854.014941382185
+            5854.922326395998
           ]
         }
       ],
-      "minSpeed": 16.2006670314567,
-      "maxSpeed": 30.455687958756346,
-      "airFrames": 219,
+      "minSpeed": 23.433923362086624,
+      "maxSpeed": 42.37460945977859,
+      "airFrames": 194,
       "grinds": []
     },
     "error": null,
-    "contacts": [],
-    "tail": [
-      {
-        "frame": 5010,
-        "time": 83.5,
-        "position": [
-          237.8044097174605,
-          0.018116455525159836,
-          -1362.3414876363674
-        ],
-        "heading": [
-          -0.2814785045823413,
-          0,
-          -0.9595675335577423
-        ],
-        "state": "ride",
-        "grounded": true,
-        "speed": 22.999305774278216,
-        "verticalSpeed": 0,
-        "bailing": false,
-        "deaths": 0,
-        "mover": null,
-        "ground": {
-          "name": "Courtyard / exit / surface",
-          "y": 0.018116455525159836,
-          "normal": [
-            0,
-            1,
-            0
-          ],
-          "slippy": false,
-          "iceGrip": null
-        },
-        "rail": null,
-        "railDistance": null,
-        "balance": 0,
-        "input": {
-          "moveX": -0.2,
-          "moveY": 0.98,
-          "jumpHeld": true,
-          "grindHeld": false,
-          "spinHeld": false,
-          "grabHeld": false,
-          "transferHeld": false,
-          "jumpPressed": false,
-          "jumpReleased": false,
-          "grindPressed": false,
-          "spinPressed": false,
-          "grabPressed": false,
-          "transferPressed": false,
-          "restartPressed": false
-        },
-        "requested": {
-          "moveX": -0.2072609564970489,
-          "moveY": 0.9976106396959985,
-          "jumpHeld": true,
-          "grindHeld": false,
-          "spinHeld": false
-        }
-      },
-      {
-        "frame": 5011,
-        "time": 83.51666666666667,
-        "position": [
-          237.69430789753153,
-          0.018116455525159836,
-          -1362.7086567570252
-        ],
-        "heading": [
-          -0.287230808641436,
-          0,
-          -0.9578614004996687
-        ],
-        "state": "ride",
-        "grounded": true,
-        "speed": 22.999305774278216,
-        "verticalSpeed": 0,
-        "bailing": false,
-        "deaths": 0,
-        "mover": null,
-        "ground": {
-          "name": "Courtyard / exit / surface",
-          "y": 0.018116455525159836,
-          "normal": [
-            0,
-            1,
-            0
-          ],
-          "slippy": false,
-          "iceGrip": null
-        },
-        "rail": null,
-        "railDistance": null,
-        "balance": 0,
-        "input": {
-          "moveX": -0.2,
-          "moveY": 0.98,
-          "jumpHeld": true,
-          "grindHeld": false,
-          "spinHeld": false,
-          "grabHeld": false,
-          "transferHeld": false,
-          "jumpPressed": false,
-          "jumpReleased": false,
-          "grindPressed": false,
-          "spinPressed": false,
-          "grabPressed": false,
-          "transferPressed": false,
-          "restartPressed": false
-        },
-        "requested": {
-          "moveX": -0.20449886704010706,
-          "moveY": 0.9976739733210171,
-          "jumpHeld": true,
-          "grindHeld": false,
-          "spinHeld": false
-        }
-      },
-      {
-        "frame": 5012,
-        "time": 83.53333333333333,
-        "position": [
-          237.5820050579235,
-          0.018116455525159836,
-          -1363.0751586617027
-        ],
-        "heading": [
-          -0.2929727724224406,
-          0,
-          -0.9561207845346261
-        ],
-        "state": "ride",
-        "grounded": true,
-        "speed": 22.999305774278216,
-        "verticalSpeed": 0,
-        "bailing": false,
-        "deaths": 0,
-        "mover": null,
-        "ground": {
-          "name": "Courtyard / exit / surface",
-          "y": 0.018116455525159836,
-          "normal": [
-            0,
-            1,
-            0
-          ],
-          "slippy": false,
-          "iceGrip": null
-        },
-        "rail": null,
-        "railDistance": null,
-        "balance": 0,
-        "input": {
-          "moveX": -0.2,
-          "moveY": 0.98,
-          "jumpHeld": true,
-          "grindHeld": false,
-          "spinHeld": false,
-          "grabHeld": false,
-          "transferHeld": false,
-          "jumpPressed": false,
-          "jumpReleased": false,
-          "grindPressed": false,
-          "spinPressed": false,
-          "grabPressed": false,
-          "transferPressed": false,
-          "restartPressed": false
-        },
-        "requested": {
-          "moveX": -0.20282211985605547,
-          "moveY": 0.9977120040760534,
-          "jumpHeld": true,
-          "grindHeld": false,
-          "spinHeld": false
-        }
-      },
-      {
-        "frame": 5013,
-        "time": 83.55,
-        "position": [
-          237.4675052415265,
-          0.018116455525159836,
-          -1363.440980156371
-        ],
-        "heading": [
-          -0.2987041892152789,
-          0,
-          -0.9543457483246011
-        ],
-        "state": "ride",
-        "grounded": true,
-        "speed": 22.999305774278216,
-        "verticalSpeed": 0,
-        "bailing": false,
-        "deaths": 0,
-        "mover": null,
-        "ground": {
-          "name": "Courtyard / exit / surface",
-          "y": 0.018116455525159836,
-          "normal": [
-            0,
-            1,
-            0
-          ],
-          "slippy": false,
-          "iceGrip": null
-        },
-        "rail": null,
-        "railDistance": null,
-        "balance": 0,
-        "input": {
-          "moveX": -0.2,
-          "moveY": 0.98,
-          "jumpHeld": true,
-          "grindHeld": false,
-          "spinHeld": false,
-          "grabHeld": false,
-          "transferHeld": false,
-          "jumpPressed": false,
-          "jumpReleased": false,
-          "grindPressed": false,
-          "spinPressed": false,
-          "grabPressed": false,
-          "transferPressed": false,
-          "restartPressed": false
-        },
-        "requested": {
-          "moveX": -0.20254238326711288,
-          "moveY": 0.9977183182408682,
-          "jumpHeld": true,
-          "grindHeld": false,
-          "spinHeld": false
-        }
-      },
-      {
-        "frame": 5014,
-        "time": 83.56666666666666,
-        "position": [
-          237.35081257032155,
-          0.7547831215212741,
-          -1363.8061080714958
-        ],
-        "heading": [
-          -0.3044248526895655,
-          0,
-          -0.9525363557707055
-        ],
-        "state": "finished",
-        "grounded": true,
-        "speed": 0,
-        "verticalSpeed": 0,
-        "bailing": false,
-        "deaths": 0,
-        "mover": null,
-        "ground": {
-          "name": "warp pad",
-          "y": 0.7547831215212741,
-          "normal": [
-            0,
-            1,
-            0
-          ],
-          "slippy": false,
-          "iceGrip": null
-        },
-        "rail": null,
-        "railDistance": null,
-        "balance": 0,
-        "input": {
-          "moveX": -0.2,
-          "moveY": 0.98,
-          "jumpHeld": true,
-          "grindHeld": false,
-          "spinHeld": false,
-          "grabHeld": false,
-          "transferHeld": false,
-          "jumpPressed": false,
-          "jumpReleased": false,
-          "grindPressed": false,
-          "spinPressed": false,
-          "grabPressed": false,
-          "transferPressed": false,
-          "restartPressed": false
-        },
-        "requested": {
-          "moveX": -0.2041029819417769,
-          "moveY": 0.9976829808646339,
-          "jumpHeld": true,
-          "grindHeld": false,
-          "spinHeld": false
-        }
-      }
-    ]
+    "contacts": []
   },
   "surfaces": {
     "controls": 8650,
@@ -1198,16 +915,16 @@
         35.8984228515625,
         -1060.8108837890625
       ],
-      "frames": 254,
-      "vert": 122,
+      "frames": 192,
+      "vert": 99,
       "air": 55,
-      "peak": 46.42909988954073,
+      "peak": 48.34567505428355,
       "returned": true,
       "bail": false,
       "end": [
         9000,
         -1512.5272454155815,
-        5284.465063939462
+        5279.997116992233
       ]
     },
     {
@@ -1217,16 +934,16 @@
         35.89842285156249,
         -1060.8108837890625
       ],
-      "frames": 256,
-      "vert": 121,
-      "air": 49,
-      "peak": 45.91929871679887,
+      "frames": 189,
+      "vert": 99,
+      "air": 54,
+      "peak": 48.30775141966256,
       "returned": true,
       "bail": false,
       "end": [
-        8980.997488667796,
+        9000,
         -1512.5272454155815,
-        6278.739923656652
+        6281.812010107367
       ]
     },
     {
@@ -1236,16 +953,16 @@
         92.54306411743163,
         -507.3108837890625
       ],
-      "frames": 335,
-      "vert": 116,
-      "air": 50,
-      "peak": 104.26588217986506,
+      "frames": 261,
+      "vert": 91,
+      "air": 43,
+      "peak": 103.20845663202898,
       "returned": true,
       "bail": false,
       "end": [
-        -2189.934551659064,
+        -2168.6681675798154,
         -270.6316121419268,
-        -715.5092038970076
+        -656.3206085309457
       ]
     }
   ],
@@ -1263,14 +980,14 @@
         ],
         "targetRail": 45,
         "grindFrames": 24,
-        "grindDistance": 8.293720629297473,
+        "grindDistance": 9.973056569608616,
         "rails": [
           45
         ],
         "bail": false,
         "landed": true,
         "end": [
-          -11989.46559421097,
+          -12068.844396314542,
           314.75860595703125,
           968.4946875545793
         ]
@@ -1284,16 +1001,16 @@
         ],
         "targetRail": 17,
         "grindFrames": 24,
-        "grindDistance": 7.951309907425031,
+        "grindDistance": 9.566971189655305,
         "rails": [
           17
         ],
         "bail": false,
         "landed": true,
         "end": [
-          -12751.072059789025,
-          354.56240117133257,
-          556.1766432534554
+          -12656.086835890681,
+          314.75877549913184,
+          613.4613722350183
         ]
       },
       {
@@ -1305,16 +1022,16 @@
         ],
         "targetRail": 0,
         "grindFrames": 24,
-        "grindDistance": 4.43281640861513,
+        "grindDistance": 4.4491420308099805,
         "rails": [
           0
         ],
         "bail": false,
         "landed": true,
         "end": [
-          -12989.083178802415,
-          364.79448974080196,
-          54.94797930948749
+          -12995.355266877103,
+          362.13383561149794,
+          52.96808032216546
         ]
       },
       {
@@ -1326,16 +1043,16 @@
         ],
         "targetRail": 55,
         "grindFrames": 24,
-        "grindDistance": 8.812031681882797,
+        "grindDistance": 10.202133341710127,
         "rails": [
           55
         ],
         "bail": false,
         "landed": true,
         "end": [
-          4282.39126369782,
+          4016.89113042592,
           -1467.5272115071614,
-          5770.590070100672
+          5716.741287334762
         ]
       }
     ]
@@ -2725,13 +2442,1022 @@
           "groundedWithoutBail": true
         }
       ]
+    },
+    "pass22Main": {
+      "build": {
+        "version": "804169c7e6aa1cac5d2f",
+        "snapshot": "/private/tmp/mall-recreation/snapshot-22",
+        "output": "/private/tmp/mall-recreation/dist-22",
+        "preview": "http://127.0.0.1:5294/?playtest&level=mall",
+        "published": false
+      },
+      "frames": 3841,
+      "done": true,
+      "error": null,
+      "evidence": {
+        "turns": [
+          {
+            "stage": 0,
+            "frame": 328,
+            "source": [
+              -13422.826158311633,
+              1743.891105085886,
+              175.8263338961733
+            ]
+          },
+          {
+            "stage": 1,
+            "frame": 680,
+            "source": [
+              -15830.285163031684,
+              1665.19674526086,
+              144.15595766639706
+            ]
+          }
+        ],
+        "sections": [
+          {
+            "waypoint": 0,
+            "frame": 802,
+            "source": [
+              -15400.16754618284,
+              706.9845063203975,
+              469.69569645357194
+            ]
+          },
+          {
+            "waypoint": 1,
+            "frame": 929,
+            "source": [
+              -13575.120453704832,
+              313.55333116319434,
+              535.8221865824175
+            ]
+          },
+          {
+            "waypoint": 2,
+            "frame": 961,
+            "source": [
+              -13154.780331197395,
+              314.56820724209774,
+              695.9781517804848
+            ]
+          },
+          {
+            "waypoint": 3,
+            "frame": 1140,
+            "source": [
+              -10879.32223648587,
+              314.75860595703125,
+              782.7763925818942
+            ]
+          },
+          {
+            "waypoint": 4,
+            "frame": 1214,
+            "source": [
+              -10067.843958405316,
+              314.75860595703125,
+              976.9490405393747
+            ]
+          },
+          {
+            "waypoint": 5,
+            "frame": 1442,
+            "source": [
+              -7770.404845034028,
+              314.75860595703125,
+              997.8500982352123
+            ]
+          },
+          {
+            "waypoint": 6,
+            "frame": 1528,
+            "source": [
+              -6928.65028288632,
+              314.75860595703125,
+              909.5604954462315
+            ]
+          },
+          {
+            "waypoint": 7,
+            "frame": 1559,
+            "source": [
+              -6625.3232284817705,
+              314.75877549913184,
+              869.7825824043657
+            ]
+          },
+          {
+            "waypoint": 8,
+            "frame": 1595,
+            "source": [
+              -6306.005009677647,
+              314.75877549913184,
+              717.8862204612647
+            ]
+          },
+          {
+            "waypoint": 9,
+            "frame": 1667,
+            "source": [
+              -5573.854201226843,
+              156.4969238291801,
+              560.8548582756913
+            ]
+          },
+          {
+            "waypoint": 10,
+            "frame": 1786,
+            "source": [
+              -4077.38653176737,
+              -176.67616438469668,
+              548.4094130542211
+            ]
+          },
+          {
+            "waypoint": 11,
+            "frame": 1822,
+            "source": [
+              -3567.607303505536,
+              -270.6316121419268,
+              495.419714405724
+            ]
+          },
+          {
+            "waypoint": 12,
+            "frame": 1849,
+            "source": [
+              -3177.120644232511,
+              -270.6316121419268,
+              509.39286365488897
+            ]
+          },
+          {
+            "waypoint": 13,
+            "frame": 1880,
+            "source": [
+              -2767.7950730122357,
+              -270.6316121419268,
+              658.7264978724816
+            ]
+          },
+          {
+            "waypoint": 14,
+            "frame": 1914,
+            "source": [
+              -2361.5602343418996,
+              -288.6779480584735,
+              887.4579554705574
+            ]
+          },
+          {
+            "waypoint": 15,
+            "frame": 1954,
+            "source": [
+              -1945.1869184067618,
+              -235.10080830010384,
+              1234.9225015133102
+            ]
+          },
+          {
+            "waypoint": 16,
+            "frame": 1987,
+            "source": [
+              -1582.0626422131663,
+              -270.6316121419268,
+              1486.1333071962936
+            ]
+          },
+          {
+            "waypoint": 17,
+            "frame": 2031,
+            "source": [
+              -1146.451446134819,
+              -270.6316121419268,
+              1848.8661871954648
+            ]
+          },
+          {
+            "waypoint": 18,
+            "frame": 2066,
+            "source": [
+              -934.4264699794803,
+              -270.6316121419268,
+              2228.222430868236
+            ]
+          },
+          {
+            "waypoint": 19,
+            "frame": 2117,
+            "source": [
+              -989.3634480807723,
+              -270.6316121419268,
+              2824.1590850747966
+            ]
+          },
+          {
+            "waypoint": 20,
+            "frame": 2145,
+            "source": [
+              -1207.0554528179982,
+              -270.6316121419268,
+              3054.2261995609433
+            ]
+          },
+          {
+            "waypoint": 21,
+            "frame": 2183,
+            "source": [
+              -1551.7601297620695,
+              -287.469350653402,
+              3292.9430201484897
+            ]
+          },
+          {
+            "waypoint": 22,
+            "frame": 2264,
+            "source": [
+              -1598.3350615662457,
+              -583.6352416086531,
+              4231.593368815757
+            ]
+          },
+          {
+            "waypoint": 23,
+            "frame": 2308,
+            "source": [
+              -1727.854981253904,
+              -777.3252316974238,
+              4831.023128327994
+            ]
+          },
+          {
+            "waypoint": 24,
+            "frame": 2346,
+            "source": [
+              -1710.4195044791013,
+              -915.4849921332466,
+              5377.418908537079
+            ]
+          },
+          {
+            "waypoint": 25,
+            "frame": 2373,
+            "source": [
+              -1551.1738782806315,
+              -915.4847378200955,
+              5739.82721796888
+            ]
+          },
+          {
+            "waypoint": 26,
+            "frame": 2401,
+            "source": [
+              -1260.8540610465298,
+              -915.4847378200955,
+              6014.226379993249
+            ]
+          },
+          {
+            "waypoint": 27,
+            "frame": 2453,
+            "source": [
+              -565.9465833818904,
+              -915.4847378200955,
+              6165.845333721446
+            ]
+          },
+          {
+            "waypoint": 28,
+            "frame": 2483,
+            "source": [
+              -171.97044428517074,
+              -935.6887045206902,
+              6123.7120237536765
+            ]
+          },
+          {
+            "waypoint": 29,
+            "frame": 2514,
+            "source": [
+              228.37260232399967,
+              -1004.0278457921333,
+              6020.374208457502
+            ]
+          },
+          {
+            "waypoint": 30,
+            "frame": 2621,
+            "source": [
+              1729.3664191354364,
+              -1262.4361889641466,
+              5812.069445600404
+            ]
+          },
+          {
+            "waypoint": 31,
+            "frame": 2735,
+            "source": [
+              3427.262533693749,
+              -1467.5272115071614,
+              5800.2997168823085
+            ]
+          },
+          {
+            "waypoint": 32,
+            "frame": 2871,
+            "source": [
+              5323.918647813334,
+              -1467.5272115071614,
+              5800.334790107805
+            ]
+          },
+          {
+            "waypoint": 33,
+            "frame": 2958,
+            "source": [
+              6420.426762043822,
+              -1512.5272454155815,
+              5800.422442622633
+            ]
+          },
+          {
+            "waypoint": 34,
+            "frame": 3051,
+            "source": [
+              7530.101038602694,
+              -1512.5272454155815,
+              5800.264448581625
+            ]
+          },
+          {
+            "waypoint": 35,
+            "frame": 3246,
+            "source": [
+              9527.389569016716,
+              -1351.2758229232882,
+              5800.064711174736
+            ]
+          },
+          {
+            "waypoint": 36,
+            "frame": 3361,
+            "source": [
+              10627.411431696768,
+              -1512.5272454155815,
+              5799.619680370635
+            ]
+          },
+          {
+            "waypoint": 37,
+            "frame": 3483,
+            "source": [
+              11825.714450745822,
+              -1715.2373530032178,
+              5781.103360406249
+            ]
+          },
+          {
+            "waypoint": 38,
+            "frame": 3663,
+            "source": [
+              13921.931268732325,
+              -2099.122314453125,
+              5791.962348090277
+            ]
+          },
+          {
+            "waypoint": 39,
+            "frame": 3767,
+            "source": [
+              15020.641305844281,
+              -2324.5197754022147,
+              5853.458268548489
+            ]
+          },
+          {
+            "waypoint": 40,
+            "frame": 3819,
+            "source": [
+              15524.915231412859,
+              -2324.519287099441,
+              5854.922326395998
+            ]
+          }
+        ],
+        "minSpeed": 23.433923362086624,
+        "maxSpeed": 42.37460945977859,
+        "airFrames": 194,
+        "grinds": []
+      },
+      "sourceMatches": true,
+      "obstructions": [
+        {
+          "frame": 3609,
+          "source": [
+            13323.543185763887,
+            -1797.7886962890625,
+            5780.113158476242
+          ],
+          "name": "PS1 Mall scenery 33:21",
+          "distance": 1.8519457497351093
+        },
+        {
+          "frame": 3612,
+          "source": [
+            13360.908420138887,
+            -1816.6724650065103,
+            5780.13046789886
+          ],
+          "name": "PS1 Mall scenery 33:21",
+          "distance": 1.8313111918023501
+        },
+        {
+          "frame": 3621,
+          "source": [
+            13474.211154513887,
+            -1872.9214901394314,
+            5780.1820927892395
+          ],
+          "name": "PS1 Mall scenery 33:21",
+          "distance": 1.8234250409050126
+        },
+        {
+          "frame": 3634,
+          "source": [
+            13614.830375356414,
+            -1948.4554629855686,
+            5791.962348090277
+          ],
+          "name": "PS1 Mall scenery 33:21",
+          "distance": 3.2098550259335292
+        },
+        {
+          "frame": 3641,
+          "source": [
+            13689.769751510841,
+            -1986.2227884928384,
+            5791.962348090277
+          ],
+          "name": "PS1 Mall scenery 33:21",
+          "distance": 3.218462522298762
+        },
+        {
+          "frame": 3648,
+          "source": [
+            13764.177204799322,
+            -2023.5885111490884,
+            5791.962348090277
+          ],
+          "name": "PS1 Mall scenery 33:21",
+          "distance": 3.177525451845406
+        },
+        {
+          "frame": 3666,
+          "source": [
+            13953.223641602028,
+            -2118.005362616645,
+            5791.962348090277
+          ],
+          "name": "PS1 Mall scenery 33:21",
+          "distance": 3.1990209103227496
+        },
+        {
+          "frame": 3686,
+          "source": [
+            14189.777560763887,
+            -2230.905026329888,
+            5794.217493112309
+          ],
+          "name": "PS1 Mall scenery 33:21",
+          "distance": 1.8326740654279772
+        },
+        {
+          "frame": 3695,
+          "source": [
+            14302.67404513889,
+            -2287.5556649102105,
+            5798.800007417362
+          ],
+          "name": "PS1 Mall scenery 33:21",
+          "distance": 1.8326059909217618
+        },
+        {
+          "frame": 3698,
+          "source": [
+            14340.44552951389,
+            -2306.4396972126433,
+            5800.771433681408
+          ],
+          "name": "PS1 Mall scenery 33:21",
+          "distance": 1.83532065675119
+        },
+        {
+          "frame": 3701,
+          "source": [
+            14378.213107638887,
+            -2324.9213867187304,
+            5802.918185041389
+          ],
+          "name": "PS1 Mall scenery 33:21",
+          "distance": 1.8068556948898433
+        }
+      ],
+      "startedAt": 12035.599999964237,
+      "arcadeHeadroom": [
+        {
+          "frame": 2775,
+          "source": [
+            4011.494560808209,
+            -1467.5272115071614,
+            5800.310520581239
+          ],
+          "roof": "PS1 Mall scenery 34:3",
+          "headTop": 41.48071293167321,
+          "roofY": 42.40493593208496,
+          "margin": 0.9242230004117502
+        },
+        {
+          "frame": 2778,
+          "source": [
+            4054.398404184303,
+            -1467.5272115071614,
+            5800.311313965006
+          ],
+          "roof": "PS1 Mall scenery 34:3",
+          "headTop": 41.48371940475546,
+          "roofY": 42.27198433191377,
+          "margin": 0.7882649271583091
+        },
+        {
+          "frame": 2781,
+          "source": [
+            4097.176675415678,
+            -1467.5272115071614,
+            5800.312105026675
+          ],
+          "roof": "PS1 Mall scenery 34:3",
+          "headTop": 41.487824932830776,
+          "roofY": 42.135922012315554,
+          "margin": 0.6480970794847778
+        },
+        {
+          "frame": 2784,
+          "source": [
+            4139.829742030328,
+            -1467.5272115071614,
+            5800.312893773045
+          ],
+          "roof": "PS1 Mall scenery 34:3",
+          "headTop": 41.49261834101126,
+          "roofY": 42.00160586318941,
+          "margin": 0.5089875221781526
+        },
+        {
+          "frame": 2787,
+          "source": [
+            4182.35797048056,
+            -1467.5272115071614,
+            5800.313680210889
+          ],
+          "roof": "PS1 Mall scenery 34:3",
+          "headTop": 41.49776873619401,
+          "roofY": 41.86848696607576,
+          "margin": 0.37071822988174574
+        },
+        {
+          "frame": 2790,
+          "source": [
+            4224.761726146135,
+            -1467.5272115071614,
+            5800.314464346966
+          ],
+          "roof": "PS1 Mall scenery 34:3",
+          "headTop": 41.50312200815314,
+          "roofY": 47.47040030503574,
+          "margin": 5.967278296882597
+        },
+        {
+          "frame": 2793,
+          "source": [
+            4267.041373337408,
+            -1467.5272115071614,
+            5800.315246188012
+          ],
+          "roof": "PS1 Mall scenery 34:3",
+          "headTop": 41.50788622991891,
+          "roofY": 47.4676067260022,
+          "margin": 5.959720496083293
+        },
+        {
+          "frame": 2796,
+          "source": [
+            4309.197275298469,
+            -1467.5272115071614,
+            5800.316025740744
+          ],
+          "roof": "PS1 Mall scenery 34:3",
+          "headTop": 41.51209316748509,
+          "roofY": 47.323280986860176,
+          "margin": 5.811187819375085
+        },
+        {
+          "frame": 2799,
+          "source": [
+            4351.229794210245,
+            -1467.5272115071614,
+            5800.31680301186
+          ],
+          "roof": "PS1 Mall scenery 34:3",
+          "headTop": 41.51535319091188,
+          "roofY": 47.17880294265903,
+          "margin": 5.663449751747152
+        },
+        {
+          "frame": 2802,
+          "source": [
+            4393.139291193624,
+            -1467.5272115071614,
+            5800.317578008037
+          ],
+          "roof": "PS1 Mall scenery 34:3",
+          "headTop": 41.51739704347055,
+          "roofY": 47.0376146413475,
+          "margin": 5.52021759787695
+        }
+      ],
+      "state": "finished",
+      "source": [
+        15731.623472087289,
+        -2308.3711389060372,
+        5809.287967931853
+      ],
+      "stage": 2,
+      "tuningUnchanged": true,
+      "wallSeconds": 63.91480000001192,
+      "errors": []
+    },
+    "pass22Gaps": {
+      "build": {
+        "version": "804169c7e6aa1cac5d2f",
+        "snapshot": "/private/tmp/mall-recreation/snapshot-22",
+        "output": "/private/tmp/mall-recreation/dist-22",
+        "preview": "http://127.0.0.1:5294/?playtest&level=mall",
+        "published": false
+      },
+      "errors": [],
+      "fixtures": [
+        {
+          "name": "Flying Leap, earlier release",
+          "kind": "drop",
+          "expectedRails": [],
+          "frames": 382,
+          "done": true,
+          "reached": true,
+          "bail": false,
+          "rails": [],
+          "launches": [
+            {
+              "frame": 240,
+              "source": [
+                -4569.692216830012,
+                673.6345653753165,
+                185.00000303779018
+              ],
+              "speed": 20.63299311366941,
+              "verticalSpeed": 25.853332483315945
+            }
+          ],
+          "beamFrames": 0,
+          "beamDistance": 0,
+          "approachFrames": 0,
+          "startedAt": 9434,
+          "source": [
+            -3473.0415759972675,
+            -270.6316121419268,
+            185.0000085698165
+          ],
+          "speed": 22.187315777430385,
+          "state": "ride",
+          "phase": "approach",
+          "tuningUnchanged": true,
+          "wallSeconds": 6.3442000000476835
+        },
+        {
+          "name": "Flying Leap, later release",
+          "kind": "drop",
+          "expectedRails": [],
+          "frames": 385,
+          "done": true,
+          "reached": true,
+          "bail": false,
+          "rails": [],
+          "launches": [
+            {
+              "frame": 243,
+              "source": [
+                -4547.1550977209645,
+                683.2114341331003,
+                185.00000315147815
+              ],
+              "speed": 20.10878496439879,
+              "verticalSpeed": 25.630576743195192
+            }
+          ],
+          "beamFrames": 0,
+          "beamDistance": 0,
+          "approachFrames": 0,
+          "startedAt": 15797.300000011921,
+          "source": [
+            -3475.6293291787224,
+            -270.6316121419268,
+            185.00000855676632
+          ],
+          "speed": 21.67151587285044,
+          "state": "ride",
+          "phase": "approach",
+          "tuningUnchanged": true,
+          "wallSeconds": 6.412900000035763
+        },
+        {
+          "name": "Right handrail to suspended tape beam",
+          "kind": "tape",
+          "expectedRails": [
+            41,
+            38
+          ],
+          "frames": 808,
+          "done": true,
+          "reached": true,
+          "bail": false,
+          "rails": [
+            41,
+            38
+          ],
+          "launches": [
+            {
+              "frame": 166,
+              "source": [
+                -5625.250942120103,
+                314.75877549913184,
+                818.252509421201
+              ],
+              "speed": 26.188931542443093,
+              "verticalSpeed": 17.085598409862563
+            },
+            {
+              "frame": 325,
+              "source": [
+                -4092.736666386896,
+                380.7692245037656,
+                789.7035930833554
+              ],
+              "speed": 26.18856492489758,
+              "verticalSpeed": 17.085598409862563
+            },
+            {
+              "frame": 729,
+              "source": [
+                -1084.640152899814,
+                73.00747536902782,
+                2544.2669853436673
+              ],
+              "speed": 23.998187084681526,
+              "verticalSpeed": 2.5
+            }
+          ],
+          "beamFrames": 334,
+          "beamDistance": 134.94101691383116,
+          "approachFrames": 153,
+          "startedAt": 22253,
+          "source": [
+            -518.0525527760437,
+            -270.6316121419268,
+            3007.1536878769516
+          ],
+          "speed": 26.524924950344666,
+          "state": "ride",
+          "phase": "rollout",
+          "tuningUnchanged": true,
+          "wallSeconds": 13.456900000035763
+        }
+      ]
+    },
+    "pass22Fountain": {
+      "build": {
+        "version": "804169c7e6aa1cac5d2f",
+        "snapshot": "/private/tmp/mall-recreation/snapshot-22",
+        "output": "/private/tmp/mall-recreation/dist-22",
+        "preview": "http://127.0.0.1:5294/?playtest&level=mall",
+        "published": false
+      },
+      "errors": [],
+      "maxPositionError": 0,
+      "fixtures": [
+        {
+          "name": "Fountain route, car release -9465",
+          "releases": [
+            -11175,
+            -10650,
+            -9465,
+            -8390
+          ],
+          "frames": 562,
+          "bail": false,
+          "maxSpeed": 38.20426612315585,
+          "groundedRollout": 30,
+          "fountainFrames": 50,
+          "jumps": [
+            {
+              "frame": 121,
+              "source": [
+                -11167.563820325233,
+                716.5365939670141,
+                370
+              ],
+              "state": "ride",
+              "charge": 0.4
+            },
+            {
+              "frame": 173,
+              "source": [
+                -10645.032271685423,
+                772.3834228515625,
+                370
+              ],
+              "state": "ride",
+              "charge": 0.4
+            },
+            {
+              "frame": 277,
+              "source": [
+                -9458.037848701444,
+                566.5157481858846,
+                368.15639742978135
+              ],
+              "state": "ride",
+              "charge": 0.4
+            },
+            {
+              "frame": 359,
+              "source": [
+                -8384.64581622652,
+                590.3782823350693,
+                362.72695979170055
+              ],
+              "state": "ride",
+              "charge": 0.4
+            }
+          ],
+          "done": true,
+          "reached": true,
+          "end": [
+            -6267.220833299858,
+            314.75860595703125,
+            318.07192886711755
+          ],
+          "state": "ride",
+          "tuningUnchanged": true
+        },
+        {
+          "name": "Fountain route, car release -9450",
+          "releases": [
+            -11175,
+            -10650,
+            -9450,
+            -8390
+          ],
+          "frames": 549,
+          "bail": false,
+          "maxSpeed": 38.139633687548134,
+          "groundedRollout": 30,
+          "fountainFrames": 50,
+          "jumps": [
+            {
+              "frame": 121,
+              "source": [
+                -11167.563820325233,
+                716.5365939670141,
+                370
+              ],
+              "state": "ride",
+              "charge": 0.4
+            },
+            {
+              "frame": 173,
+              "source": [
+                -10645.032271685423,
+                772.3834228515625,
+                370
+              ],
+              "state": "ride",
+              "charge": 0.4
+            },
+            {
+              "frame": 278,
+              "source": [
+                -9444.865703812231,
+                568.3671988459987,
+                368.0897700121445
+              ],
+              "state": "ride",
+              "charge": 0.4
+            },
+            {
+              "frame": 359,
+              "source": [
+                -8387.0434164248,
+                590.3782823350693,
+                362.73908734655777
+              ],
+              "state": "ride",
+              "charge": 0.4
+            }
+          ],
+          "done": true,
+          "reached": true,
+          "end": [
+            -6396.096936888073,
+            314.75860595703125,
+            325.40726815878395
+          ],
+          "state": "ride",
+          "tuningUnchanged": true
+        },
+        {
+          "name": "Fountain route, car release -9440",
+          "releases": [
+            -11175,
+            -10650,
+            -9440,
+            -8390
+          ],
+          "frames": 549,
+          "bail": false,
+          "maxSpeed": 38.08300707429003,
+          "groundedRollout": 30,
+          "fountainFrames": 51,
+          "jumps": [
+            {
+              "frame": 121,
+              "source": [
+                -11167.563820325233,
+                716.5365939670141,
+                370
+              ],
+              "state": "ride",
+              "charge": 0.4
+            },
+            {
+              "frame": 173,
+              "source": [
+                -10645.032271685423,
+                772.3834228515625,
+                370
+              ],
+              "state": "ride",
+              "charge": 0.4
+            },
+            {
+              "frame": 279,
+              "source": [
+                -9431.72837074887,
+                570.2137564246523,
+                368.0233186798817
+              ],
+              "state": "ride",
+              "charge": 0.4
+            },
+            {
+              "frame": 359,
+              "source": [
+                -8389.41805722843,
+                590.3782823350693,
+                362.7510987680764
+              ],
+              "state": "ride",
+              "charge": 0.4
+            }
+          ],
+          "done": true,
+          "reached": true,
+          "end": [
+            -6394.620461224147,
+            314.75860595703125,
+            325.244488400317
+          ],
+          "state": "ride",
+          "tuningUnchanged": true
+        }
+      ]
     }
   },
   "smoke": {
     "start": {
       "deaths": 0,
       "lives": 4,
-      "stamp": "Codex/sol fork \u00b7 build 10-23 01:42 UTC"
+      "stamp": "Codex/sol fork \u00b7 build 10-23 02:27 UTC"
     },
     "checkpoints": [
       {
@@ -2756,10 +3482,10 @@
         "index": 2,
         "position": [
           -23.945070190429686,
-          92.54306182861328,
+          92.44306182861328,
           -507.3108837890625
         ],
-        "distance": 0
+        "distance": 0.09999999999999432
       },
       {
         "index": 3,
@@ -2786,7 +3512,7 @@
       "lives": 3,
       "savedCheckpoint": 4,
       "spawnIndex": 3,
-      "distance": 0.10000000000000142
+      "distance": 0
     },
     "errors": []
   },
@@ -2795,30 +3521,35 @@
     "typescript": "passed",
     "productionBuild": "passed",
     "check:all": "not run",
-    "browser": "Fresh production build: lite MENU, five K/L checkpoints and pit recovery; full-render 240-frame idle, coasting and charged actor measurements. Zero console errors. Complete main/gap traversal remains the unchanged pass-20 evidence.",
+    "browser": "Fresh final production build: lite MENU/K/L/pit smoke, full main route, complete fountain rollout, Flying Leap and tape beam; zero console errors.",
     "landingPolicy": "Default/true 40 m drops still bail; false follows the identical trajectory and rolls away. Invalid types rejected, editor capture/import retained. Existing huge-drop boundary, aligned-transition and saved-settings regression suite passes.",
     "breakables": "Seven identical native enabled/disabled movement traces; grouped visibility, thin swept contact, diagonal miss, finite fragment disposal, 20 reset cycles, editor round-trip and invalid import rejection pass.",
     "wallOpenings": "Nineteen envelopes clipped to measured polygons, 69 endpoint-height profiles, 1035 source-interior samples; both old fountain exits bail and both corrected exits land cleanly.",
-    "required": "Exact frozen check:levels and build scripts pass. No check:all.",
+    "required": "Exact final frozen check:levels and build scripts pass. No check:all.",
     "retailReference": "Local byte hashes, 97.49% position registration, independent TRG node positions, normal/alternate activation distinction, and rejection of malformed source/unknown activation commands pass.",
-    "actorSurvey": "78 clip byte budgets, 4096 source trig pairs, independent codec/hierarchy/stitch fixtures and malformed-input rejection pass."
+    "actorSurvey": "78 clip byte budgets, 4096 source trig pairs, independent codec/hierarchy/stitch fixtures and malformed-input rejection pass.",
+    "sourceProfile": "Independent parameters and pulse cadence at 30/60/120 Hz; neutral auto-kick, air-clock freeze, full flat ollie, overspeed drag, editor round-trip and malformed config rejection pass.",
+    "copingDeparture": "Fresh source coping roll-off passes; jumped, later-fall, ordinary-bar and preexisting-level smacks retained.",
+    "defaultParity": "960-frame default trajectory identical to frozen snapshot-21; existing park-tuning checks pass."
   },
   "fidelityRemaining": [
-    "Remaining upper alternate routes and tape-transfer timing tolerance need comparison with original gameplay.",
-    "The 0.045 scale clears the rider and tested gaps are reachable, but original scale convention remains provisional.",
+    "Continuous 60 Hz integration, not every original 30 Hz fixed-point rounding operation.",
+    "The five-tick auto-kick cycle does not reproduce the original push-animation gating or the slow decay of temporary crouched kick targets.",
+    "Steering, braking, ground-contact tracking, special-mode bonuses and terrain-specific friction are not yet source-equivalent.",
+    "Rail catch, balance, slope acceleration/caps, lateral transfer, run-off pop and trick-speed bonuses still use existing fork rules.",
+    "The charged-pose scale is supported; coasting and cruiser proportions differ from the original actor.",
+    "Remaining alternate upper routes and input tolerance need comparison with original gameplay.",
     "Directory-goal rewards, original box stacks, collectibles, sky and animated water remain incomplete.",
-    "Glass/sign breakup animation and sound are local approximations, not recovered source effects.",
-    "Fountain opening is fixed, but the complete display-to-fountain entry still requires final scale/movement comparison. Experimental PS1 flight/kick values are not enabled in the validated build.",
-    "Retained THPS2 retail Mall rails are measured and active in the build. A byte-identical 1999 THPS1 revision and original terrain-specific grind audio remain unverified."
+    "Glass/sign breakup motion and sound are local approximations.",
+    "The retained retail data is not byte-verified against a 1999 THPS1 disc; original terrain-specific grind audio is unverified."
   ],
   "elapsed": {
-    "continuationStartedUTC": "2026-10-23T01:16:42+00:00",
-    "researchVerifiedUTC": "2026-10-23T01:46:44.130611+00:00",
-    "promptToResearchVerificationSeconds": 1802.13,
-    "promptToNewPlayableSeconds": null,
-    "basis": "Research-only continuation; existing playable baseline retained. Pass 20 prompt-to-verified-playable was 1018.50 seconds."
+    "continuationStartedUTC": "2026-10-23T01:49:21+00:00",
+    "verifiedPlayableUTC": "2026-10-23T02:32:43.291490+00:00",
+    "promptToVerifiedPlayableSeconds": 2602.29,
+    "basis": "Pass 22 continuation, including source-parameter implementation, complete rollout debugging and final native/full-browser checks."
   },
-  "previousValidationCommit": "0a85bb40e99823c4b8da6cf5ff79e5e97e3abb2e",
+  "previousValidationCommit": "cec163f0206927b5ce0cf24abc634332ee8b8cfc",
   "upperRoutes": {
     "scale": 0.045,
     "stats": {
@@ -3096,57 +3827,57 @@
     "fixtures": [
       {
         "name": "First escalator up",
-        "frames": 351,
+        "frames": 236,
         "bail": false,
         "airFrames": 0,
-        "minSeamSpeed": 13.605476396265349,
-        "seamSamples": 32,
+        "minSeamSpeed": 22.902541527304916,
+        "seamSamples": 19,
         "end": [
-          -11795.07126463056,
+          -11790.522955961414,
           716.5365939670141,
-          180.00009070762235
+          180.00009088667036
         ],
         "reached": true
       },
       {
         "name": "First escalator down",
-        "frames": 236,
+        "frames": 178,
         "bail": false,
         "airFrames": 0,
-        "minSeamSpeed": 14.99001714177466,
-        "seamSamples": 26,
+        "minSeamSpeed": 20.736394024849798,
+        "seamSamples": 21,
         "end": [
-          -13206.661836340281,
-          314.3544884029152,
+          -13210.17259012155,
+          314.34024766419316,
           180
         ],
         "reached": true
       },
       {
         "name": "Gallery escalator up",
-        "frames": 320,
+        "frames": 265,
         "bail": false,
         "airFrames": 0,
-        "minSeamSpeed": 20.999643440324824,
-        "seamSamples": 21,
+        "minSeamSpeed": 21.532935713814016,
+        "seamSamples": 20,
         "end": [
-          -4348.725883072899,
+          -4347.1710672557165,
           685.599568684896,
-          185.00000413367252
+          185.0000041602928
         ],
         "reached": true
       },
       {
         "name": "Gallery escalator down",
-        "frames": 202,
+        "frames": 156,
         "bail": false,
         "airFrames": 0,
-        "minSeamSpeed": 9.447480776287469,
-        "seamSamples": 36,
+        "minSeamSpeed": 10.478228919493299,
+        "seamSamples": 27,
         "end": [
-          -5500.868588370113,
+          -5503.673811896073,
           314.75860595703125,
-          185.0000016429683
+          185.0000016649605
         ],
         "reached": true
       }
@@ -3159,32 +3890,32 @@
         "name": "Flying Leap, earlier release",
         "kind": "drop",
         "expectedRails": [],
-        "frames": 456,
+        "frames": 382,
         "done": true,
         "reached": true,
         "bail": false,
         "rails": [],
         "launches": [
           {
-            "frame": 293,
+            "frame": 240,
             "source": [
-              -4568.7701171097615,
-              674.0264001950059,
-              185.0000030236647
+              -4569.692216830012,
+              673.6345653753165,
+              185.00000303779018
             ],
-            "speed": 19.24632353820363,
-            "verticalSpeed": 19.15128606573812
+            "speed": 20.63299311366941,
+            "verticalSpeed": 25.853332483315945
           }
         ],
         "beamFrames": 0,
         "beamDistance": 0,
         "approachFrames": 0,
         "source": [
-          -3407.2531101719724,
+          -3473.0415759972675,
           -270.6316121419268,
-          185.00000888291265
+          185.0000085698165
         ],
-        "speed": 19.17608499232608,
+        "speed": 22.187315777430385,
         "state": "ride",
         "phase": "approach"
       },
@@ -3192,32 +3923,32 @@
         "name": "Flying Leap, later release",
         "kind": "drop",
         "expectedRails": [],
-        "frames": 460,
+        "frames": 385,
         "done": true,
         "reached": true,
         "bail": false,
         "rails": [],
         "launches": [
           {
-            "frame": 296,
+            "frame": 243,
             "source": [
-              -4547.262594230218,
-              683.1657548270596,
-              185.0000031321589
+              -4547.1550977209645,
+              683.2114341331003,
+              185.00000315147815
             ],
-            "speed": 19.201762130704637,
-            "verticalSpeed": 19.13235024926508
+            "speed": 20.10878496439879,
+            "verticalSpeed": 25.630576743195192
           }
         ],
         "beamFrames": 0,
         "beamDistance": 0,
         "approachFrames": 0,
         "source": [
-          -3381.32220735796,
+          -3475.6293291787224,
           -270.6316121419268,
-          185.00000901372096
+          185.00000855676632
         ],
-        "speed": 19.1318478873376,
+        "speed": 21.67151587285044,
         "state": "ride",
         "phase": "approach"
       },
@@ -3228,7 +3959,7 @@
           41,
           38
         ],
-        "frames": 948,
+        "frames": 808,
         "done": true,
         "reached": true,
         "bail": false,
@@ -3238,188 +3969,49 @@
         ],
         "launches": [
           {
-            "frame": 214,
+            "frame": 166,
             "source": [
-              -5626.457950813143,
+              -5625.250942120103,
               314.75877549913184,
-              818.2645795081303
+              818.252509421201
             ],
-            "speed": 22.99583485520933,
-            "verticalSpeed": 10.9728
+            "speed": 26.188931542443093,
+            "verticalSpeed": 17.085598409862563
           },
           {
-            "frame": 395,
+            "frame": 325,
             "source": [
-              -4093.4262076739196,
+              -4092.736666386896,
               380.7692245037656,
               789.7035930833554
             ],
-            "speed": 22.99551293766497,
-            "verticalSpeed": 12.5
+            "speed": 26.18856492489758,
+            "verticalSpeed": 17.085598409862563
           },
           {
-            "frame": 857,
+            "frame": 729,
             "source": [
               -1084.640152899814,
               73.00747536902782,
               2544.2669853436673
             ],
-            "speed": 21.04956817409959,
+            "speed": 23.998187084675394,
             "verticalSpeed": 2.5
           }
         ],
-        "beamFrames": 381,
-        "beamDistance": 135.0022577565124,
-        "approachFrames": 172,
+        "beamFrames": 334,
+        "beamDistance": 134.94101691385055,
+        "approachFrames": 153,
         "source": [
-          -518.8038713779388,
+          -518.0525527762438,
           -270.6316121419268,
-          3006.5398809562544
+          3007.1536878768275
         ],
-        "speed": 22.999305774278216,
+        "speed": 26.524924950336906,
         "state": "ride",
         "phase": "rollout"
       }
-    ],
-    "fullBrowser": {
-      "errors": [],
-      "fixtures": [
-        {
-          "name": "Flying Leap, earlier release",
-          "kind": "drop",
-          "expectedRails": [],
-          "frames": 456,
-          "done": true,
-          "reached": true,
-          "bail": false,
-          "rails": [],
-          "launches": [
-            {
-              "frame": 293,
-              "source": [
-                -4568.7701171097615,
-                674.0264001950059,
-                185.0000030236647
-              ],
-              "speed": 19.24632353820363,
-              "verticalSpeed": 19.15128606573812
-            }
-          ],
-          "beamFrames": 0,
-          "beamDistance": 0,
-          "approachFrames": 0,
-          "startedAt": 12172.599999964237,
-          "source": [
-            -3407.2531101719724,
-            -270.6316121419268,
-            185.00000888291265
-          ],
-          "speed": 19.17608499232608,
-          "state": "ride",
-          "phase": "approach",
-          "tuningUnchanged": true,
-          "wallSeconds": 7.5941000000238414
-        },
-        {
-          "name": "Flying Leap, later release",
-          "kind": "drop",
-          "expectedRails": [],
-          "frames": 460,
-          "done": true,
-          "reached": true,
-          "bail": false,
-          "rails": [],
-          "launches": [
-            {
-              "frame": 296,
-              "source": [
-                -4547.262594230218,
-                683.1657548270596,
-                185.0000031321589
-              ],
-              "speed": 19.201762130704637,
-              "verticalSpeed": 19.13235024926508
-            }
-          ],
-          "beamFrames": 0,
-          "beamDistance": 0,
-          "approachFrames": 0,
-          "startedAt": 19796.69999998808,
-          "source": [
-            -3381.32220735796,
-            -270.6316121419268,
-            185.00000901372096
-          ],
-          "speed": 19.1318478873376,
-          "state": "ride",
-          "phase": "approach",
-          "tuningUnchanged": true,
-          "wallSeconds": 7.654100000023842
-        },
-        {
-          "name": "Right handrail to suspended tape beam",
-          "kind": "tape",
-          "expectedRails": [
-            41,
-            38
-          ],
-          "frames": 948,
-          "done": true,
-          "reached": true,
-          "bail": false,
-          "rails": [
-            41,
-            38
-          ],
-          "launches": [
-            {
-              "frame": 214,
-              "source": [
-                -5626.457950813143,
-                314.75877549913184,
-                818.2645795081303
-              ],
-              "speed": 22.99583485520933,
-              "verticalSpeed": 10.9728
-            },
-            {
-              "frame": 395,
-              "source": [
-                -4093.4262076739196,
-                380.7692245037656,
-                789.7035930833554
-              ],
-              "speed": 22.99551293766497,
-              "verticalSpeed": 12.5
-            },
-            {
-              "frame": 857,
-              "source": [
-                -1084.640152899814,
-                73.00747536902782,
-                2544.2669853436673
-              ],
-              "speed": 21.04956817410348,
-              "verticalSpeed": 2.5
-            }
-          ],
-          "beamFrames": 381,
-          "beamDistance": 135.0022577564325,
-          "approachFrames": 172,
-          "startedAt": 27465.69999998808,
-          "source": [
-            -518.8038713777605,
-            -270.6316121419268,
-            3006.539880956307
-          ],
-          "speed": 22.999305774278216,
-          "state": "ride",
-          "phase": "rollout",
-          "tuningUnchanged": true,
-          "wallSeconds": 15.783100000023842
-        }
-      ]
-    }
+    ]
   },
   "landingPolicy": {
     "tuningUnchanged": true,
@@ -4488,1467 +5080,18 @@
     "movementSettingsUnchanged": true
   },
   "currentNative": {
-    "surfaces": {
-      "controls": 8650,
-      "components": 2359,
-      "stats": {
-        "sourceTriangles": 9826,
-        "solidTriangles": 8678,
-        "vertTriangles": 379,
-        "visualTriangles": 1148,
-        "wallSegments": 1591,
-        "railEdges": 637,
-        "railPaths": 127
-      },
-      "checkpoints": [
-        [
-          12.054929809570313,
-          118.88562927246093,
-          -66.3108837890625
-        ],
-        [
-          12.054929809570313,
-          118.88562927246093,
-          -361.0608837890625
-        ],
-        [
-          -23.945070190429686,
-          92.54306182861328,
-          -507.3108837890625
-        ],
-        [
-          237.0549298095703,
-          55.219508814526826,
-          -691.8108837890625
-        ],
-        [
-          237.0549298095703,
-          36.65775833129883,
-          -1141.8108837890625
-        ]
-      ],
-      "probes": [
-        {
-          "source": 18,
-          "triangle": 0,
-          "error": 1.678466787780053e-06
-        },
-        {
-          "source": 18,
-          "triangle": 402,
-          "error": 1.2343142543613794e-06
-        },
-        {
-          "source": 18,
-          "triangle": 603,
-          "error": 1.311552665583804e-06
-        },
-        {
-          "source": 18,
-          "triangle": 670,
-          "error": 2.136230477844947e-06
-        },
-        {
-          "source": 18,
-          "triangle": 737,
-          "error": 2.315854800372108e-06
-        },
-        {
-          "source": 18,
-          "triangle": 804,
-          "error": 1.678466787780053e-06
-        },
-        {
-          "source": 18,
-          "triangle": 1072,
-          "error": 9.155273517080786e-07
-        },
-        {
-          "source": 18,
-          "triangle": 1139,
-          "error": 3.662109378410605e-06
-        },
-        {
-          "source": 18,
-          "triangle": 1206,
-          "error": 3.662109378410605e-06
-        },
-        {
-          "source": 18,
-          "triangle": 1340,
-          "error": 7.0190429823924205e-06
-        },
-        {
-          "source": 18,
-          "triangle": 1474,
-          "error": 7.0190429823924205e-06
-        },
-        {
-          "source": 18,
-          "triangle": 1675,
-          "error": 1.3732910133512632e-06
-        },
-        {
-          "source": 18,
-          "triangle": 2144,
-          "error": 1.759873697437797e-06
-        },
-        {
-          "source": 18,
-          "triangle": 2211,
-          "error": 2.136230477844947e-06
-        },
-        {
-          "source": 18,
-          "triangle": 2814,
-          "error": 4.839371854359342e-07
-        },
-        {
-          "source": 18,
-          "triangle": 2881,
-          "error": 3.662109378410605e-06
-        },
-        {
-          "source": 21,
-          "triangle": 0,
-          "error": 2.1469156763487263e-06
-        },
-        {
-          "source": 25,
-          "triangle": 0,
-          "error": 2.2888183792701966e-06
-        },
-        {
-          "source": 26,
-          "triangle": 0,
-          "error": 9.155273446026513e-07
-        },
-        {
-          "source": 42,
-          "triangle": 201,
-          "error": 4.470348362317633e-10
-        },
-        {
-          "source": 42,
-          "triangle": 268,
-          "error": 9.759871559822386e-07
-        },
-        {
-          "source": 42,
-          "triangle": 335,
-          "error": 6.103515701738615e-07
-        },
-        {
-          "source": 42,
-          "triangle": 737,
-          "error": 1.0681152247116188e-06
-        },
-        {
-          "source": 42,
-          "triangle": 804,
-          "error": 1.1444091896350983e-07
-        },
-        {
-          "source": 42,
-          "triangle": 1005,
-          "error": 3.8146972514141453e-07
-        },
-        {
-          "source": 42,
-          "triangle": 1072,
-          "error": 4.577636705249688e-07
-        },
-        {
-          "source": 42,
-          "triangle": 1139,
-          "error": 6.103515701738615e-07
-        },
-        {
-          "source": 42,
-          "triangle": 1206,
-          "error": 1.0681152247116188e-06
-        },
-        {
-          "source": 42,
-          "triangle": 1273,
-          "error": 1.0681152247116188e-06
-        },
-        {
-          "source": 42,
-          "triangle": 1407,
-          "error": 1.0681152247116188e-06
-        },
-        {
-          "source": 42,
-          "triangle": 1541,
-          "error": 1.0681152247116188e-06
-        },
-        {
-          "source": 42,
-          "triangle": 1608,
-          "error": 7.629394573882564e-07
-        },
-        {
-          "source": 42,
-          "triangle": 1675,
-          "error": 1.7857231032536447e-05
-        },
-        {
-          "source": 42,
-          "triangle": 1742,
-          "error": 4.470348362317633e-10
-        },
-        {
-          "source": 42,
-          "triangle": 1876,
-          "error": 5.215406370662201e-10
-        },
-        {
-          "source": 42,
-          "triangle": 1943,
-          "error": 5.200512040559602e-06
-        },
-        {
-          "source": 42,
-          "triangle": 2345,
-          "error": 1.2207031261368684e-06
-        },
-        {
-          "source": 42,
-          "triangle": 2479,
-          "error": 1.2207031261368684e-06
-        },
-        {
-          "source": 42,
-          "triangle": 2680,
-          "error": 1.0410726140719362e-05
-        },
-        {
-          "source": 43,
-          "triangle": 134,
-          "error": 3.0517578295530257e-06
-        },
-        {
-          "source": 43,
-          "triangle": 402,
-          "error": 2.288818350848487e-06
-        },
-        {
-          "source": 43,
-          "triangle": 469,
-          "error": 6.016330758029653e-07
-        },
-        {
-          "source": 43,
-          "triangle": 603,
-          "error": 2.1543462764839205e-06
-        },
-        {
-          "source": 43,
-          "triangle": 938,
-          "error": 6.918582613479884e-07
-        },
-        {
-          "source": 43,
-          "triangle": 1005,
-          "error": 2.676921383226727e-06
-        },
-        {
-          "source": 43,
-          "triangle": 1139,
-          "error": 3.2103429248309112e-06
-        },
-        {
-          "source": 43,
-          "triangle": 1474,
-          "error": 1.3732910133512632e-06
-        },
-        {
-          "source": 43,
-          "triangle": 1809,
-          "error": 3.051757815342171e-07
-        },
-        {
-          "source": 43,
-          "triangle": 1876,
-          "error": 1.8310546892053026e-06
-        },
-        {
-          "source": 43,
-          "triangle": 2077,
-          "error": 2.288818350848487e-06
-        },
-        {
-          "source": 43,
-          "triangle": 2278,
-          "error": 6.619175756839013e-06
-        },
-        {
-          "source": 43,
-          "triangle": 2345,
-          "error": 1.5258790142524958e-07
-        },
-        {
-          "source": 43,
-          "triangle": 2814,
-          "error": 2.7465820267025265e-06
-        },
-        {
-          "source": 43,
-          "triangle": 3082,
-          "error": 2.2888183792701966e-06
-        },
-        {
-          "source": 43,
-          "triangle": 3149,
-          "error": 8.392333938900265e-07
-        },
-        {
-          "source": 46,
-          "triangle": 0,
-          "error": 9.155273517080786e-07
-        },
-        {
-          "source": 47,
-          "triangle": 0,
-          "error": 4.834667691966388e-06
-        },
-        {
-          "source": 50,
-          "triangle": 0,
-          "error": 1.3897765995807276e-06
-        }
-      ],
-      "boundary": {
-        "frame": 69,
-        "source": [
-          -1343.9818878692695,
-          -915.4849921332466,
-          5330.541433493541
-        ],
-        "speed": 4.723448688936302,
-        "peak": 10.346697236113304,
-        "state": "ride"
-      }
-    },
-    "upper": {
-      "scale": 0.045,
-      "stats": {
-        "sourceTriangles": 9826,
-        "solidTriangles": 8678,
-        "vertTriangles": 379,
-        "visualTriangles": 1148,
-        "wallSegments": 1591,
-        "railEdges": 210,
-        "railPaths": 73
-      },
-      "seams": [
-        {
-          "a": [
-            243.5398077392578,
-            35.87073486328125,
-            -869.198203125
-          ],
-          "b": [
-            241.6596514892578,
-            35.87073486328125,
-            -869.885244140625
-          ],
-          "source": 18
-        },
-        {
-          "a": [
-            -24.351563458810546,
-            118.78562438964843,
-            -108.5907568359375
-          ],
-          "b": [
-            -8.206101336111328,
-            118.78562438964843,
-            -108.5907568359375
-          ],
-          "source": 18
-        },
-        {
-          "a": [
-            -3.0893719482421873,
-            120.23202255249024,
-            -73.62404296875
-          ],
-          "b": [
-            -7.301973529709473,
-            120.23202255249024,
-            -67.0610926220581
-          ],
-          "source": 18
-        },
-        {
-          "a": [
-            1.1052081298828125,
-            120.23202255249024,
-            -94.3980029296875
-          ],
-          "b": [
-            1.1052081298828125,
-            120.23202255249024,
-            -80.18723187980859
-          ],
-          "source": 18
-        },
-        {
-          "a": [
-            1.1052081298828125,
-            120.23202255249024,
-            -80.18723187980859
-          ],
-          "b": [
-            1.1052081298828125,
-            120.23202255249024,
-            -80.1870556640625
-          ],
-          "source": 18
-        },
-        {
-          "a": [
-            1.1052081298828125,
-            120.23202255249024,
-            -80.1870556640625
-          ],
-          "b": [
-            -3.0893719482421877,
-            120.23202255249024,
-            -73.62404296875
-          ],
-          "source": 18
-        },
-        {
-          "a": [
-            8.734949340820313,
-            135.47346405029296,
-            -370.8954931269485
-          ],
-          "b": [
-            8.734949340820313,
-            135.47346405029296,
-            -370.89533935546876
-          ],
-          "source": 18
-        },
-        {
-          "a": [
-            8.734905395507813,
-            135.47346405029296,
-            -464.53166015625
-          ],
-          "b": [
-            8.734905395507813,
-            135.47346405029296,
-            -464.5316379033413
-          ],
-          "source": 18
-        },
-        {
-          "a": [
-            8.734906111359372,
-            135.47346405029296,
-            -464.5316381835937
-          ],
-          "b": [
-            8.734907668051758,
-            135.47346405029296,
-            -464.5316381835937
-          ],
-          "source": 18
-        },
-        {
-          "a": [
-            8.734907668051758,
-            135.47346405029296,
-            -464.5316381835937
-          ],
-          "b": [
-            8.734993286132813,
-            135.47346405029296,
-            -464.5316381835937
-          ],
-          "source": 18
-        },
-        {
-          "a": [
-            -7.301881713867187,
-            152.88451721191404,
-            -33.739365234375
-          ],
-          "b": [
-            -7.301881713867187,
-            152.88447494085204,
-            -33.73923880094238
-          ],
-          "source": 18
-        },
-        {
-          "a": [
-            233.3788604736328,
-            35.50915283203125,
-            -863.71998046875
-          ],
-          "b": [
-            235.3858428955078,
-            35.50915283203125,
-            -863.71998046875
-          ],
-          "source": 43
-        },
-        {
-          "a": [
-            101.10562316894531,
-            104.35778366088867,
-            -641.73375
-          ],
-          "b": [
-            101.10562316894531,
-            104.35778366088867,
-            -641.7337264948828
-          ],
-          "source": 43
-        },
-        {
-          "a": [
-            101.10566711425781,
-            92.44306411743163,
-            -641.73375
-          ],
-          "b": [
-            101.10566361034863,
-            92.44306411743108,
-            -641.733748123289
-          ],
-          "source": 43
-        },
-        {
-          "a": [
-            101.10566361034863,
-            92.44306411743108,
-            -641.733748123289
-          ],
-          "b": [
-            101.1056338271206,
-            92.44306411742642,
-            -641.7337321712461
-          ],
-          "source": 43
-        },
-        {
-          "a": [
-            101.1056338271206,
-            92.44306411742642,
-            -641.7337321712461
-          ],
-          "b": [
-            101.10562331539306,
-            92.44306411742477,
-            -641.7337265411132
-          ],
-          "source": 43
-        },
-        {
-          "a": [
-            231.9506378173828,
-            35.8707568359375,
-            -806.6232861328125
-          ],
-          "b": [
-            230.0702618408203,
-            35.8707568359375,
-            -807.3103271484375
-          ],
-          "source": 43
-        },
-        {
-          "a": [
-            243.8833721923828,
-            35.50915283203125,
-            -800.96431640625
-          ],
-          "b": [
-            245.8903546142578,
-            35.50915283203125,
-            -800.96431640625
-          ],
-          "source": 43
-        },
-        {
-          "a": [
-            261.9273175048828,
-            40.82466247558594,
-            -1127.5071240234374
-          ],
-          "b": [
-            257.891975296875,
-            40.82466247558594,
-            -1138.0429252476563
-          ],
-          "source": 43
-        },
-        {
-          "a": [
-            257.891975296875,
-            40.82466247558594,
-            -1138.0429252476563
-          ],
-          "b": [
-            257.60617492675783,
-            40.82466247558594,
-            -1138.7891162109374
-          ],
-          "source": 43
-        }
-      ],
-      "tuningUnchanged": true,
-      "fixtures": [
-        {
-          "name": "First escalator up",
-          "frames": 351,
-          "bail": false,
-          "airFrames": 0,
-          "minSeamSpeed": 13.605476396265349,
-          "seamSamples": 32,
-          "end": [
-            -11795.07126463056,
-            716.5365939670141,
-            180.00009070762235
-          ],
-          "reached": true
-        },
-        {
-          "name": "First escalator down",
-          "frames": 236,
-          "bail": false,
-          "airFrames": 0,
-          "minSeamSpeed": 14.99001714177466,
-          "seamSamples": 26,
-          "end": [
-            -13206.661836340281,
-            314.3544884029152,
-            180
-          ],
-          "reached": true
-        },
-        {
-          "name": "Gallery escalator up",
-          "frames": 320,
-          "bail": false,
-          "airFrames": 0,
-          "minSeamSpeed": 20.999643440324824,
-          "seamSamples": 21,
-          "end": [
-            -4348.725883072899,
-            685.599568684896,
-            185.00000413367252
-          ],
-          "reached": true
-        },
-        {
-          "name": "Gallery escalator down",
-          "frames": 202,
-          "bail": false,
-          "airFrames": 0,
-          "minSeamSpeed": 9.447480776287469,
-          "seamSamples": 36,
-          "end": [
-            -5500.868588370113,
-            314.75860595703125,
-            185.0000016429683
-          ],
-          "reached": true
-        }
-      ]
-    },
-    "gaps": {
-      "tuningUnchanged": true,
-      "fixtures": [
-        {
-          "name": "Flying Leap, earlier release",
-          "kind": "drop",
-          "expectedRails": [],
-          "frames": 456,
-          "done": true,
-          "reached": true,
-          "bail": false,
-          "rails": [],
-          "launches": [
-            {
-              "frame": 293,
-              "source": [
-                -4568.7701171097615,
-                674.0264001950059,
-                185.0000030236647
-              ],
-              "speed": 19.24632353820363,
-              "verticalSpeed": 19.15128606573812
-            }
-          ],
-          "beamFrames": 0,
-          "beamDistance": 0,
-          "approachFrames": 0,
-          "source": [
-            -3407.2531101719724,
-            -270.6316121419268,
-            185.00000888291265
-          ],
-          "speed": 19.17608499232608,
-          "state": "ride",
-          "phase": "approach"
-        },
-        {
-          "name": "Flying Leap, later release",
-          "kind": "drop",
-          "expectedRails": [],
-          "frames": 460,
-          "done": true,
-          "reached": true,
-          "bail": false,
-          "rails": [],
-          "launches": [
-            {
-              "frame": 296,
-              "source": [
-                -4547.262594230218,
-                683.1657548270596,
-                185.0000031321589
-              ],
-              "speed": 19.201762130704637,
-              "verticalSpeed": 19.13235024926508
-            }
-          ],
-          "beamFrames": 0,
-          "beamDistance": 0,
-          "approachFrames": 0,
-          "source": [
-            -3381.32220735796,
-            -270.6316121419268,
-            185.00000901372096
-          ],
-          "speed": 19.1318478873376,
-          "state": "ride",
-          "phase": "approach"
-        },
-        {
-          "name": "Right handrail to suspended tape beam",
-          "kind": "tape",
-          "expectedRails": [
-            41,
-            38
-          ],
-          "frames": 948,
-          "done": true,
-          "reached": true,
-          "bail": false,
-          "rails": [
-            41,
-            38
-          ],
-          "launches": [
-            {
-              "frame": 214,
-              "source": [
-                -5626.457950813143,
-                314.75877549913184,
-                818.2645795081303
-              ],
-              "speed": 22.99583485520933,
-              "verticalSpeed": 10.9728
-            },
-            {
-              "frame": 395,
-              "source": [
-                -4093.4262076739196,
-                380.7692245037656,
-                789.7035930833554
-              ],
-              "speed": 22.99551293766497,
-              "verticalSpeed": 12.5
-            },
-            {
-              "frame": 857,
-              "source": [
-                -1084.640152899814,
-                73.00747536902782,
-                2544.2669853436673
-              ],
-              "speed": 21.04956817409959,
-              "verticalSpeed": 2.5
-            }
-          ],
-          "beamFrames": 381,
-          "beamDistance": 135.0022577565124,
-          "approachFrames": 172,
-          "source": [
-            -518.8038713779388,
-            -270.6316121419268,
-            3006.5398809562544
-          ],
-          "speed": 22.999305774278216,
-          "state": "ride",
-          "phase": "rollout"
-        }
-      ]
-    },
-    "verts": [
-      {
-        "name": "Courtyard north wall",
-        "start": [
-          232.5549298095703,
-          35.8984228515625,
-          -1060.8108837890625
-        ],
-        "frames": 254,
-        "vert": 122,
-        "air": 55,
-        "peak": 46.42909988954073,
-        "returned": true,
-        "bail": false,
-        "end": [
-          9000,
-          -1512.5272454155815,
-          5284.465063939462
-        ]
-      },
-      {
-        "name": "Courtyard south wall",
-        "start": [
-          241.5549298095703,
-          35.89842285156249,
-          -1060.8108837890625
-        ],
-        "frames": 256,
-        "vert": 121,
-        "air": 49,
-        "peak": 45.91929871679887,
-        "returned": true,
-        "bail": false,
-        "end": [
-          8980.997488667796,
-          -1512.5272454155815,
-          6278.739923656652
-        ]
-      },
-      {
-        "name": "Atrium curved wall",
-        "start": [
-          -33.84507019042969,
-          92.54306411743163,
-          -507.3108837890625
-        ],
-        "frames": 335,
-        "vert": 116,
-        "air": 50,
-        "peak": 104.26588217986506,
-        "returned": true,
-        "bail": false,
-        "end": [
-          -2189.934551659064,
-          -270.6316121419268,
-          -715.5092038970076
-        ]
-      }
-    ],
-    "rails": {
-      "paths": 73,
-      "edges": 214,
-      "maxNodeError": 5.684341886080802e-14,
-      "fixtures": [
-        {
-          "name": "Concourse bench",
-          "start": [
-            19.61910580957031,
-            118.88562389450496,
-            -156.3108837890625
-          ],
-          "targetRail": 45,
-          "grindFrames": 24,
-          "grindDistance": 8.293720629297473,
-          "rails": [
-            45
-          ],
-          "bail": false,
-          "landed": true,
-          "end": [
-            -11989.46559421097,
-            314.75860595703125,
-            968.4946875545793
-          ]
-        },
-        {
-          "name": "First concourse display ledge",
-          "start": [
-            -8.205969190429688,
-            118.83138488769532,
-            -43.8108837890625
-          ],
-          "targetRail": 17,
-          "grindFrames": 24,
-          "grindDistance": 7.951309907425031,
-          "rails": [
-            17
-          ],
-          "bail": false,
-          "landed": true,
-          "end": [
-            -12751.072059789025,
-            354.56240117133257,
-            556.1766432534554
-          ]
-        },
-        {
-          "name": "Up-escalator inside handrail",
-          "start": [
-            -23.495070190429686,
-            118.85195360448563,
-            -57.3108837890625
-          ],
-          "targetRail": 0,
-          "grindFrames": 24,
-          "grindDistance": 4.43281640861513,
-          "rails": [
-            0
-          ],
-          "bail": false,
-          "landed": true,
-          "end": [
-            -12989.083178802415,
-            364.79448974080196,
-            54.94797930948749
-          ]
-        },
-        {
-          "name": "Crossrail low arch",
-          "start": [
-            236.1549298095703,
-            38.68275939941406,
-            -903.3108837890625
-          ],
-          "targetRail": 55,
-          "grindFrames": 24,
-          "grindDistance": 8.812031681882797,
-          "rails": [
-            55
-          ],
-          "bail": false,
-          "landed": true,
-          "end": [
-            4282.39126369782,
-            -1467.5272115071614,
-            5770.590070100672
-          ]
-        }
-      ]
-    },
-    "topology": [
-      {
-        "scale": 0.025,
-        "sourceTriangles": 9826,
-        "solidTriangles": 8678,
-        "vertTriangles": 379,
-        "visualTriangles": 1148,
-        "wallSegments": 1575,
-        "railEdges": 210,
-        "railPaths": 73,
-        "components": 2328,
-        "vertices": 71137,
-        "triangles": 84817,
-        "bytes": 8124170
-      },
-      {
-        "scale": 0.035,
-        "sourceTriangles": 9826,
-        "solidTriangles": 8678,
-        "vertTriangles": 379,
-        "visualTriangles": 1148,
-        "wallSegments": 1569,
-        "railEdges": 210,
-        "railPaths": 73,
-        "components": 2288,
-        "vertices": 64091,
-        "triangles": 73790,
-        "bytes": 7324912
-      },
-      {
-        "scale": 0.045,
-        "sourceTriangles": 9826,
-        "solidTriangles": 8678,
-        "vertTriangles": 379,
-        "visualTriangles": 1148,
-        "wallSegments": 1591,
-        "railEdges": 210,
-        "railPaths": 73,
-        "components": 2305,
-        "vertices": 60615,
-        "triangles": 68091,
-        "bytes": 6920214
-      }
-    ],
-    "wallOpenings": {
-      "profileWalls": 69,
-      "polygonSamples": 1035,
-      "openingPatches": [
-        {
-          "a": [
-            -7.302101440429687,
-            124.80626403808593,
-            -108.5907568359375
-          ],
-          "b": [
-            -7.302101440429687,
-            124.80626403808593,
-            -94.3980029296875
-          ],
-          "height": 23.178559570312515,
-          "source": 18,
-          "segments": 6
-        },
-        {
-          "a": [
-            -6.886159057617188,
-            118.78562438964843,
-            -354.15347167968747
-          ],
-          "b": [
-            1.4848956298828115,
-            118.78562438964843,
-            -354.15347167968747
-          ],
-          "height": 19.20095947265625,
-          "source": 18,
-          "segments": 2
-        },
-        {
-          "a": [
-            -14.895631713867187,
-            118.78562438964843,
-            -354.15347167968747
-          ],
-          "b": [
-            -6.886159057617187,
-            118.78562438964843,
-            -354.15347167968747
-          ],
-          "height": 19.20095947265625,
-          "source": 18,
-          "segments": 4
-        },
-        {
-          "a": [
-            -25.255211791992185,
-            130.8449816894531,
-            -94.3980029296875
-          ],
-          "b": [
-            -25.255211791992185,
-            124.80626403808593,
-            -80.1870556640625
-          ],
-          "height": 17.139841918945336,
-          "source": 18,
-          "segments": 2
-        },
-        {
-          "a": [
-            -25.255211791992185,
-            124.80626403808593,
-            -80.1870556640625
-          ],
-          "b": [
-            -25.255211791992185,
-            118.78562438964843,
-            -65.9943017578125
-          ],
-          "height": 23.178559570312515,
-          "source": 18,
-          "segments": 2
-        },
-        {
-          "a": [
-            -25.255211791992185,
-            136.14242431640625,
-            -108.5907568359375
-          ],
-          "b": [
-            -25.255211791992185,
-            130.8449816894531,
-            -94.3980029296875
-          ],
-          "height": 11.842399291992194,
-          "source": 18,
-          "segments": 3
-        },
-        {
-          "a": [
-            7.360911254882812,
-            118.73138351440429,
-            -51.783266601562495
-          ],
-          "b": [
-            7.360911254882812,
-            118.73138351440429,
-            -33.739453125
-          ],
-          "height": 72.62736465454103,
-          "source": 18,
-          "segments": 6
-        },
-        {
-          "a": [
-            7.360911254882812,
-            118.73138351440429,
-            -33.739453125
-          ],
-          "b": [
-            7.360911254882812,
-            118.73138351440429,
-            -15.677534179687498
-          ],
-          "height": 72.62736465454103,
-          "source": 18,
-          "segments": 2
-        },
-        {
-          "a": [
-            7.360911254882812,
-            118.73138351440429,
-            -15.6775341796875
-          ],
-          "b": [
-            7.360911254882812,
-            124.51698303222656,
-            2.3844287109375006
-          ],
-          "height": 66.84176513671875,
-          "source": 18,
-          "segments": 2
-        },
-        {
-          "a": [
-            7.360867309570312,
-            124.51698440551758,
-            2.3841650390624998
-          ],
-          "b": [
-            7.360867309570312,
-            130.86306518554687,
-            20.427934570312498
-          ],
-          "height": 60.49568298339844,
-          "source": 18,
-          "segments": 3
-        },
-        {
-          "a": [
-            -7.048844604492187,
-            113.542427444458,
-            -275.9029541015625
-          ],
-          "b": [
-            -16.088878784179688,
-            113.542427444458,
-            -266.8629638671875
-          ],
-          "height": 15.34991844177246,
-          "source": 18,
-          "segments": 10
-        },
-        {
-          "a": [
-            -13.431110229492187,
-            128.89234588623046,
-            -279.6458203125
-          ],
-          "b": [
-            -0.6485614013671874,
-            128.89234588623046,
-            -279.6458203125
-          ],
-          "height": 15.331835632324214,
-          "source": 18,
-          "segments": 8
-        },
-        {
-          "a": [
-            -13.431110229492187,
-            128.89234588623046,
-            -254.09843261718748
-          ],
-          "b": [
-            -0.6485614013671874,
-            128.89234588623046,
-            -254.09843261718748
-          ],
-          "height": 15.331835632324214,
-          "source": 18,
-          "segments": 8
-        },
-        {
-          "a": [
-            214.9735089111328,
-            30.663715209960937,
-            -1176.8113037109374
-          ],
-          "b": [
-            218.0651934814453,
-            28.295238647460938,
-            -1183.2477978515624
-          ],
-          "height": 19.345599975585937,
-          "source": 42,
-          "segments": 2
-        },
-        {
-          "a": [
-            218.0651934814453,
-            28.295238647460938,
-            -1183.2477978515624
-          ],
-          "b": [
-            221.1748956298828,
-            27.12004211425781,
-            -1189.7023095703125
-          ],
-          "height": 21.714076538085937,
-          "source": 42,
-          "segments": 2
-        },
-        {
-          "a": [
-            170.35200988769532,
-            63.42466003417969,
-            -630.8314892578124
-          ],
-          "b": [
-            171.0933233642578,
-            63.42466003417969,
-            -630.8314892578124
-          ],
-          "height": 63.940357453728915,
-          "source": 43,
-          "segments": 2
-        },
-        {
-          "a": [
-            170.3520977783203,
-            63.42465454101562,
-            -630.8314453125
-          ],
-          "b": [
-            178.9401104736328,
-            63.42465454101562,
-            -630.8314453125
-          ],
-          "height": 58.49006579168361,
-          "source": 43,
-          "segments": 3
-        },
-        {
-          "a": [
-            -24.929972534179687,
-            94.10642440795898,
-            -451.4417578125
-          ],
-          "b": [
-            -24.929972534179687,
-            94.10642440795898,
-            -449.000947265625
-          ],
-          "height": 24.679201354980464,
-          "source": 43,
-          "segments": 2
-        },
-        {
-          "a": [
-            -24.929928588867188,
-            95.75170394897461,
-            -449.0009033203125
-          ],
-          "b": [
-            -24.929928588867188,
-            97.41506149291992,
-            -446.5781982421875
-          ],
-          "height": 21.37056427001953,
-          "source": 43,
-          "segments": 2
-        }
-      ],
-      "scale": 0.045,
-      "components": 2305,
-      "stats": {
-        "sourceTriangles": 9826,
-        "solidTriangles": 8678,
-        "vertTriangles": 379,
-        "visualTriangles": 1148,
-        "wallSegments": 1591,
-        "railEdges": 210,
-        "railPaths": 73
-      },
-      "samples": [
-        {
-          "point": [
-            -8926.943359375,
-            610,
-            345
-          ],
-          "solid": false
-        },
-        {
-          "point": [
-            -8926.943359375,
-            610,
-            370
-          ],
-          "solid": false
-        },
-        {
-          "point": [
-            -8926.943359375,
-            610,
-            405
-          ],
-          "solid": false
-        },
-        {
-          "point": [
-            -8926.943359375,
-            650,
-            345
-          ],
-          "solid": false
-        },
-        {
-          "point": [
-            -8926.943359375,
-            650,
-            370
-          ],
-          "solid": false
-        },
-        {
-          "point": [
-            -8926.943359375,
-            650,
-            405
-          ],
-          "solid": false
-        },
-        {
-          "point": [
-            -8926.943359375,
-            700,
-            345
-          ],
-          "solid": false
-        },
-        {
-          "point": [
-            -8926.943359375,
-            700,
-            370
-          ],
-          "solid": false
-        },
-        {
-          "point": [
-            -8926.943359375,
-            700,
-            405
-          ],
-          "solid": false
-        },
-        {
-          "point": [
-            -8926.943359375,
-            750,
-            345
-          ],
-          "solid": false
-        },
-        {
-          "point": [
-            -8926.943359375,
-            750,
-            370
-          ],
-          "solid": false
-        },
-        {
-          "point": [
-            -8926.943359375,
-            750,
-            405
-          ],
-          "solid": false
-        },
-        {
-          "point": [
-            -8926.943359375,
-            800,
-            345
-          ],
-          "solid": false
-        },
-        {
-          "point": [
-            -8926.943359375,
-            800,
-            370
-          ],
-          "solid": false
-        },
-        {
-          "point": [
-            -8926.943359375,
-            800,
-            405
-          ],
-          "solid": false
-        }
-      ],
-      "tuningUnchanged": true,
-      "fixtures": [
-        {
-          "name": "Fountain front exit",
-          "frames": 170,
-          "bail": false,
-          "passageFrames": 98,
-          "groundedAfterExit": 15,
-          "end": [
-            -9284.522096104112,
-            279.75126582179655,
-            393.3010081230492
-          ],
-          "state": "ride",
-          "reached": true
-        },
-        {
-          "name": "Fountain rear exit",
-          "frames": 171,
-          "bail": false,
-          "passageFrames": 101,
-          "groundedAfterExit": 15,
-          "end": [
-            -7987.545800208092,
-            282.5915946306977,
-            390.9816246589299
-          ],
-          "state": "ride",
-          "reached": true
-        }
-      ]
-    }
+    "main": "nativeMain",
+    "rails": "rails",
+    "verts": "verts",
+    "upper": "upperRoutes",
+    "gaps": "gaps",
+    "fountain": "fountain-route.json"
   },
   "taskSharedFileSHA256": {
-    "src/level.ts": "87b2a141d8aec2b2f9a4b090649f6862738fb4fcd6fe64da547981ff5dc0c148",
-    "src/player.ts": "c24c6e218afa46473d65d2ae6fab582ed7767fc02625b48a4b9ce49b95a5326e"
+    "src/player.ts": "74fb39ff6112d14e45af04cd53873496eda66cd196a1a9fdf9d5abfa8706d135",
+    "src/level.ts": "a04ae00afd27ccddc968c39a3e7b8d1fe5d21626a2b4256d35a06439061b6f6c"
   },
-  "taskSharedFileNote": "Related wallHeights support was reused from the School task and is included as a scoped dependency. The task-branch files exclude other concurrent changes. measured-runtime.json pins the full shared runtime actually tested, including independent vert tracking/contact edits.",
+  "taskSharedFileNote": "Only source-profile hunks are applied to the branch parent. The frozen preview includes preexisting shared runtime dependencies listed by SHA in measured-runtime.json; it is not a claim that the task branch contains all concurrent changes.",
   "retailReference": {
     "report": "retail-reference.json",
     "data": "retail-rails.json",
@@ -5982,10 +5125,10 @@
     "boundedSourceChecksPassed": true
   },
   "inheritedEvidence": {
-    "surfaces": "Source vertex/surface checks from pass 19. This pass changes only rail data/factory and test selection; collision vertices and art are unchanged.",
-    "breakables": "Full browser pass 18; no breakable code or source art changed.",
-    "wallOpeningBrowser": "Full browser pass 19; native openings rechecked in pass 20.",
-    "mainRailsGapsUpperVerts": "Pass 20. This pass changes research tools/docs and a scale comment only; executable level/runtime code and data remain unchanged."
+    "sourceGeometry": "Pass 20: source vertices, topology, surfaces and retail rail activation remain unchanged.",
+    "actor": "Pass 21: original actor decoder/pose-scale survey; no rig changes.",
+    "breakableBrowser": "Seven dedicated fixture approaches remain pass-18 evidence; the main-route contact runs fresh with the new profile.",
+    "standaloneWallOpeningsBrowser": "Pass 19; complete upper-entry fountain route is freshly verified in pass 22."
   },
   "actorScale": {
     "report": "actor-scale.json",
@@ -5998,5 +5141,35 @@
       "boardLengthRatio": 1.087715721122225,
       "chargedHeightFittedConversionScale": 0.04550530990015048
     }
+  },
+  "sourcePhysics": {
+    "report": "reference-physics.json",
+    "configuration": {
+      "kind": "thps1",
+      "metresPerUnit": 0.018079998317314883,
+      "stats": {
+        "ollie": 4,
+        "speed": 8,
+        "air": 8
+      }
+    },
+    "defaultParity": {
+      "frames": 960,
+      "sha256": "c355c28f30e0c6a248e396cfe83234e24b95fdaa5c907f8ec9fc97faa29c2fe2",
+      "identical": true,
+      "previousSnapshot": "/private/tmp/mall-recreation/snapshot-21",
+      "currentSnapshot": "/private/tmp/mall-recreation/snapshot-22",
+      "tool": "tools/mall-default-parity.mjs",
+      "existingParkTuningChecks": "passed"
+    }
+  },
+  "fountainRoute": {
+    "report": "fountain-route.json",
+    "nativeFrames": [
+      562,
+      549,
+      549
+    ],
+    "fullBrowserPositionError": 0
   }
 }

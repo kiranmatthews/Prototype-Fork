@@ -1,0 +1,463 @@
+{
+  "schema": 1,
+  "verifiedAt": "2026-10-23T02:32:43.291490+00:00",
+  "build": {
+    "version": "804169c7e6aa1cac5d2f",
+    "snapshot": "/private/tmp/mall-recreation/snapshot-22",
+    "output": "/private/tmp/mall-recreation/dist-22",
+    "preview": "http://127.0.0.1:5294/?playtest&level=mall",
+    "published": false
+  },
+  "status": "Complete upper display/car/fountain/receiving-ramp route reaches the flat concourse.",
+  "inputContract": "One supported start at rest. Four ordinary jump releases; no subsequent pose, velocity or state writes.",
+  "geometryUnchanged": true,
+  "receivingCurb": {
+    "sourceTriangles": [
+      {
+        "sector": 18,
+        "face": 1744,
+        "flags": 0,
+        "vertices": [
+          [
+            -7839.7255859375,
+            374.62353515625,
+            379.0869140625
+          ],
+          [
+            -7271.611328125,
+            314.7586669921875,
+            30.7451171875
+          ],
+          [
+            -7839.7255859375,
+            314.7586669921875,
+            379.0869140625
+          ]
+        ]
+      },
+      {
+        "sector": 18,
+        "face": 1745,
+        "flags": 0,
+        "vertices": [
+          [
+            -7271.611328125,
+            314.7586669921875,
+            30.7451171875
+          ],
+          [
+            -7839.7255859375,
+            374.62353515625,
+            379.0869140625
+          ],
+          [
+            -7271.611328125,
+            374.62353515625,
+            30.7451171875
+          ]
+        ]
+      }
+    ],
+    "interpretation": "Real rectangular curb. Retain it and ollie from the rear fountain ledge; do not remove it as a false wall."
+  },
+  "native": {
+    "tuningUnchanged": true,
+    "fixtures": [
+      {
+        "name": "Fountain route, car release -9465",
+        "releases": [
+          -11175,
+          -10650,
+          -9465,
+          -8390
+        ],
+        "frames": 562,
+        "bail": false,
+        "maxSpeed": 38.20426612315585,
+        "groundedRollout": 30,
+        "fountainFrames": 50,
+        "jumps": [
+          {
+            "frame": 121,
+            "source": [
+              -11167.563820325233,
+              716.5365939670141,
+              370
+            ],
+            "state": "ride",
+            "charge": 0.4
+          },
+          {
+            "frame": 173,
+            "source": [
+              -10645.032271685423,
+              772.3834228515625,
+              370
+            ],
+            "state": "ride",
+            "charge": 0.4
+          },
+          {
+            "frame": 277,
+            "source": [
+              -9458.037848701444,
+              566.5157481858846,
+              368.15639742978135
+            ],
+            "state": "ride",
+            "charge": 0.4
+          },
+          {
+            "frame": 359,
+            "source": [
+              -8384.64581622652,
+              590.3782823350693,
+              362.72695979170055
+            ],
+            "state": "ride",
+            "charge": 0.4
+          }
+        ],
+        "done": true,
+        "reached": true,
+        "end": [
+          -6267.220833299858,
+          314.75860595703125,
+          318.07192886711755
+        ],
+        "state": "ride"
+      },
+      {
+        "name": "Fountain route, car release -9450",
+        "releases": [
+          -11175,
+          -10650,
+          -9450,
+          -8390
+        ],
+        "frames": 549,
+        "bail": false,
+        "maxSpeed": 38.139633687548134,
+        "groundedRollout": 30,
+        "fountainFrames": 50,
+        "jumps": [
+          {
+            "frame": 121,
+            "source": [
+              -11167.563820325233,
+              716.5365939670141,
+              370
+            ],
+            "state": "ride",
+            "charge": 0.4
+          },
+          {
+            "frame": 173,
+            "source": [
+              -10645.032271685423,
+              772.3834228515625,
+              370
+            ],
+            "state": "ride",
+            "charge": 0.4
+          },
+          {
+            "frame": 278,
+            "source": [
+              -9444.865703812231,
+              568.3671988459987,
+              368.0897700121445
+            ],
+            "state": "ride",
+            "charge": 0.4
+          },
+          {
+            "frame": 359,
+            "source": [
+              -8387.0434164248,
+              590.3782823350693,
+              362.73908734655777
+            ],
+            "state": "ride",
+            "charge": 0.4
+          }
+        ],
+        "done": true,
+        "reached": true,
+        "end": [
+          -6396.096936888073,
+          314.75860595703125,
+          325.40726815878395
+        ],
+        "state": "ride"
+      },
+      {
+        "name": "Fountain route, car release -9440",
+        "releases": [
+          -11175,
+          -10650,
+          -9440,
+          -8390
+        ],
+        "frames": 549,
+        "bail": false,
+        "maxSpeed": 38.08300707429003,
+        "groundedRollout": 30,
+        "fountainFrames": 51,
+        "jumps": [
+          {
+            "frame": 121,
+            "source": [
+              -11167.563820325233,
+              716.5365939670141,
+              370
+            ],
+            "state": "ride",
+            "charge": 0.4
+          },
+          {
+            "frame": 173,
+            "source": [
+              -10645.032271685423,
+              772.3834228515625,
+              370
+            ],
+            "state": "ride",
+            "charge": 0.4
+          },
+          {
+            "frame": 279,
+            "source": [
+              -9431.72837074887,
+              570.2137564246523,
+              368.0233186798817
+            ],
+            "state": "ride",
+            "charge": 0.4
+          },
+          {
+            "frame": 359,
+            "source": [
+              -8389.41805722843,
+              590.3782823350693,
+              362.7510987680764
+            ],
+            "state": "ride",
+            "charge": 0.4
+          }
+        ],
+        "done": true,
+        "reached": true,
+        "end": [
+          -6394.620461224147,
+          314.75860595703125,
+          325.244488400317
+        ],
+        "state": "ride"
+      }
+    ]
+  },
+  "fullBrowser": {
+    "errors": [],
+    "maxPositionError": 0,
+    "fixtures": [
+      {
+        "name": "Fountain route, car release -9465",
+        "releases": [
+          -11175,
+          -10650,
+          -9465,
+          -8390
+        ],
+        "frames": 562,
+        "bail": false,
+        "maxSpeed": 38.20426612315585,
+        "groundedRollout": 30,
+        "fountainFrames": 50,
+        "jumps": [
+          {
+            "frame": 121,
+            "source": [
+              -11167.563820325233,
+              716.5365939670141,
+              370
+            ],
+            "state": "ride",
+            "charge": 0.4
+          },
+          {
+            "frame": 173,
+            "source": [
+              -10645.032271685423,
+              772.3834228515625,
+              370
+            ],
+            "state": "ride",
+            "charge": 0.4
+          },
+          {
+            "frame": 277,
+            "source": [
+              -9458.037848701444,
+              566.5157481858846,
+              368.15639742978135
+            ],
+            "state": "ride",
+            "charge": 0.4
+          },
+          {
+            "frame": 359,
+            "source": [
+              -8384.64581622652,
+              590.3782823350693,
+              362.72695979170055
+            ],
+            "state": "ride",
+            "charge": 0.4
+          }
+        ],
+        "done": true,
+        "reached": true,
+        "end": [
+          -6267.220833299858,
+          314.75860595703125,
+          318.07192886711755
+        ],
+        "state": "ride",
+        "tuningUnchanged": true
+      },
+      {
+        "name": "Fountain route, car release -9450",
+        "releases": [
+          -11175,
+          -10650,
+          -9450,
+          -8390
+        ],
+        "frames": 549,
+        "bail": false,
+        "maxSpeed": 38.139633687548134,
+        "groundedRollout": 30,
+        "fountainFrames": 50,
+        "jumps": [
+          {
+            "frame": 121,
+            "source": [
+              -11167.563820325233,
+              716.5365939670141,
+              370
+            ],
+            "state": "ride",
+            "charge": 0.4
+          },
+          {
+            "frame": 173,
+            "source": [
+              -10645.032271685423,
+              772.3834228515625,
+              370
+            ],
+            "state": "ride",
+            "charge": 0.4
+          },
+          {
+            "frame": 278,
+            "source": [
+              -9444.865703812231,
+              568.3671988459987,
+              368.0897700121445
+            ],
+            "state": "ride",
+            "charge": 0.4
+          },
+          {
+            "frame": 359,
+            "source": [
+              -8387.0434164248,
+              590.3782823350693,
+              362.73908734655777
+            ],
+            "state": "ride",
+            "charge": 0.4
+          }
+        ],
+        "done": true,
+        "reached": true,
+        "end": [
+          -6396.096936888073,
+          314.75860595703125,
+          325.40726815878395
+        ],
+        "state": "ride",
+        "tuningUnchanged": true
+      },
+      {
+        "name": "Fountain route, car release -9440",
+        "releases": [
+          -11175,
+          -10650,
+          -9440,
+          -8390
+        ],
+        "frames": 549,
+        "bail": false,
+        "maxSpeed": 38.08300707429003,
+        "groundedRollout": 30,
+        "fountainFrames": 51,
+        "jumps": [
+          {
+            "frame": 121,
+            "source": [
+              -11167.563820325233,
+              716.5365939670141,
+              370
+            ],
+            "state": "ride",
+            "charge": 0.4
+          },
+          {
+            "frame": 173,
+            "source": [
+              -10645.032271685423,
+              772.3834228515625,
+              370
+            ],
+            "state": "ride",
+            "charge": 0.4
+          },
+          {
+            "frame": 279,
+            "source": [
+              -9431.72837074887,
+              570.2137564246523,
+              368.0233186798817
+            ],
+            "state": "ride",
+            "charge": 0.4
+          },
+          {
+            "frame": 359,
+            "source": [
+              -8389.41805722843,
+              590.3782823350693,
+              362.7510987680764
+            ],
+            "state": "ride",
+            "charge": 0.4
+          }
+        ],
+        "done": true,
+        "reached": true,
+        "end": [
+          -6394.620461224147,
+          314.75860595703125,
+          325.244488400317
+        ],
+        "state": "ride",
+        "tuningUnchanged": true
+      }
+    ]
+  },
+  "copingCorrection": "reference-physics.json",
+  "previousProbeLimit": "The earlier 30-frame landing ended on the receiving ramp. The final fixture crosses the complete ramp and requires 30 consecutive grounded frames on the following flat concourse."
+}

@@ -18,6 +18,9 @@ try{
  if(inspect){assert.equal(errors.length,0);returnEarly();}else{
  await page.evaluate(async()=>{
   const {source,createMeasuredMallPilot,Vector3,Raycaster,Box3}=await import('/mall-measured-fixture.js'),g=window.__game,p=g.player,l=g.getLevel(),pilot=createMeasuredMallPilot(source);
+  // Auto-kick can travel while the browser loads and captures the first view.
+  // Start the input-only route at the same fresh supported spawn as native.
+  p.respawn(l,true,false);
   const canonical=o=>JSON.stringify(o,(_k,v)=>typeof v==='number'?Math.round(v*1e7)/1e7:v);
   const r=window.mallMeasuredReview={frames:0,done:false,error:null,evidence:pilot.evidence,sourceMatches:canonical(source.MALL_LEVEL)===canonical(g.getCurrentLevel().data),tuning:JSON.stringify(g.TUNING),samples:[],obstructions:[],startedAt:performance.now(),arcadeHeadroom:[]};
   if(!r.sourceMatches)throw Error('Stale measured Mall source');

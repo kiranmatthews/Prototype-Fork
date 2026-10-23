@@ -521,6 +521,6 @@
     "Retained HAWK data is not byte-verified against a separately obtained 1999 THPS1 disc.",
     "A uniform scale cannot match both actors in every pose: the current charged crouch differs substantially from its coasting pose relationship to the original.",
     "Source actor measurement does not validate the current gravity, ollie timing, speed curve or rail pop against the source.",
-    "The complete fountain approach still fails its grounded-rollout test; experimental settings are not adopted."
+    "This actor survey used pass 21. Current fountain and movement status is recorded in validation.json and reference-physics.json."
   ]
 }
