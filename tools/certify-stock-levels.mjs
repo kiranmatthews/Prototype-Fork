@@ -15,7 +15,7 @@ try{
     const snapshot=pack.levels.find(e=>e.id===id);
     levels[id]={snapshotSha256:levelSnapshotHash(snapshot)};
   }
-  const proof={v:2,authoringRuntime:process.version,sourceNumericTolerance:1e-9,
+  const proof={v:2,authoringRuntime:process.version,sourceNumericTolerance:1e-9,sourceYawToleranceDegrees:1e-8,
     method:'Exact complete JSON equality at certification; unrounded saved-snapshot hash plus complete source-data comparison with bounded runtime-only roundoff at build time.',levels};
   await writeFile('tools/fixtures/stock-level-snapshots.json',JSON.stringify(proof,null,2)+'\n');
   console.log(JSON.stringify({certified:exact.sourceBacked,retained:exact.pack.levels.map(e=>e.id)}));

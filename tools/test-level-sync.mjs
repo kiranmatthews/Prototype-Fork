@@ -69,6 +69,16 @@ try{
  assert.deepEqual(compactPublishedLevels({v:2,levels:[boundary]},[boundarySource],boundaryProof).pack.levels,[]);
  const boundaryEdit=structuredClone(boundary);boundaryEdit.data.spawn[0]+=1e-10;
  assert.deepEqual(compactPublishedLevels({v:2,levels:[boundaryEdit]},[boundarySource],boundaryProof).pack.levels,[boundaryEdit]);
+ // Actual authoring/Linux heading values from Jungle Terraces. Angular
+ // roundoff gets its own bound; saved changes remain exact-hash protected.
+ const yawStock=structuredClone(crown);yawStock.data.components[0].yaw=325.1641109152115;
+ const linuxSource=structuredClone(yawStock);linuxSource.data.components[0].yaw=325.16411091259215;
+ const yawProof={'drowned-crown':{snapshotSha256:levelSnapshotHash(yawStock)}};
+ assert.deepEqual(compactPublishedLevels({v:2,levels:[yawStock]},[linuxSource],yawProof).pack.levels,[]);
+ const yawEdit=structuredClone(yawStock);yawEdit.data.components[0].yaw+=1e-10;
+ assert.deepEqual(compactPublishedLevels({v:2,levels:[yawEdit]},[linuxSource],yawProof).pack.levels,[yawEdit]);
+ linuxSource.data.components[0].yaw+=.000001;
+ assert.deepEqual(compactPublishedLevels({v:2,levels:[yawStock]},[linuxSource],yawProof).pack.levels,[yawStock]);
  assert.throws(()=>compactPublishedLevels({v:2,levels:[crown,crown]},api.BUILTIN_LEVELS),/duplicate/);
  assert.throws(()=>compactPublishedLevels({v:3,levels:[]},api.BUILTIN_LEVELS),/Invalid/);
  assert.throws(()=>compactPublishedLevels({v:2,levels:[],extra:true},api.BUILTIN_LEVELS),/Invalid/);

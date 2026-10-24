@@ -14,14 +14,17 @@ export const levelSnapshotHash=entry=>hash(JSON.stringify(entry,(_key,value)=>{
     return Object.fromEntries(Object.entries(value).sort(([a],[b])=>a<b?-1:a>b?1:0));
   return value;
 }));
-function sameRuntimeSource(snapshot,source){
+function sameRuntimeSource(snapshot,source,key=''){
   if(snapshot===source)return true;
-  if(typeof snapshot==='number'&&typeof source==='number')return Math.abs(snapshot-source)<=1e-9;
+  // atan2-derived headings amplify the last-bit differences in sampled
+  // tangents. Linux's measured maximum is 2.62e-9 degrees; positions retain
+  // the tighter nanometre bound. This never applies to saved-snapshot hashes.
+  if(typeof snapshot==='number'&&typeof source==='number')return Math.abs(snapshot-source)<=(key==='yaw'?1e-8:1e-9);
   if(!snapshot||!source||typeof snapshot!=='object'||typeof source!=='object')return false;
   if(Array.isArray(snapshot)!==Array.isArray(source))return false;
   const keys=Object.keys(snapshot);
   return keys.length===Object.keys(source).length&&keys.every(key=>
-    Object.hasOwn(source,key)&&sameRuntimeSource(snapshot[key],source[key]));
+    Object.hasOwn(source,key)&&sameRuntimeSource(snapshot[key],source[key],key));
 }
 
 /** Public source snapshots remain complete. The served sync pack only needs
