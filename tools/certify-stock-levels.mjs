@@ -12,11 +12,11 @@ try{
   const exact=compactPublishedLevels(pack,BUILTIN_LEVELS);
   const levels={};
   for(const id of exact.sourceBacked){
-    const snapshot=pack.levels.find(e=>e.id===id),source=BUILTIN_LEVELS.find(e=>e.id===id);
-    levels[id]={snapshotSha256:levelSnapshotHash(snapshot),portableSourceSha256:levelSnapshotHash(source,true)};
+    const snapshot=pack.levels.find(e=>e.id===id);
+    levels[id]={snapshotSha256:levelSnapshotHash(snapshot)};
   }
-  const proof={v:1,authoringRuntime:process.version,numericPrecision:1e-9,
-    method:'Exact complete JSON equality at certification; unrounded saved-snapshot hash plus complete portable source fingerprint at build time.',levels};
+  const proof={v:2,authoringRuntime:process.version,sourceNumericTolerance:1e-9,
+    method:'Exact complete JSON equality at certification; unrounded saved-snapshot hash plus complete source-data comparison with bounded runtime-only roundoff at build time.',levels};
   await writeFile('tools/fixtures/stock-level-snapshots.json',JSON.stringify(proof,null,2)+'\n');
   console.log(JSON.stringify({certified:exact.sourceBacked,retained:exact.pack.levels.map(e=>e.id)}));
 }finally{await server.close();}

@@ -36,6 +36,8 @@ jobs:
       - name: Full suite (explicit request)
         if: github.event_name == 'workflow_dispatch' && inputs.full_suite
         run: npm run check:all
+      - name: Offline cache regression
+        run: npm run check:offline
       - name: World-map startup regression
         run: node tools/test-world-map-locomotion.mjs
       - name: Boardwalk mesh regression
@@ -60,8 +62,6 @@ jobs:
         run: node tools/test-treehouse-surface-restoration.mjs
       - name: Touch ownership and responsive layout regression
         run: node tools/test-touch-release.mjs && node tools/test-touch-screen-awake.mjs && node tools/test-jump-cancellation-replay.mjs && node tools/test-mobile-ui-layout.mjs && node tools/test-camera-portrait.mjs
-      - name: Offline cache regression
-        run: npm run check:offline
       - name: Enemy presentation and update regression
         run: node tools/test-enemy-catalog.mjs && node tools/test-game-update.mjs && node tools/test-update-game.mjs && node tools/test-frog-hop.mjs
       - name: Mobile resource regression

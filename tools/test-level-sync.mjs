@@ -5,7 +5,7 @@ import path from 'node:path';
 import {runInNewContext} from 'node:vm';
 import ts from 'typescript';
 import {createServer} from 'vite';
-import {compactPublishedLevels,preparePublishedLevels} from './release-levels.mjs';
+import {compactPublishedLevels,preparePublishedLevels,levelSnapshotHash} from './release-levels.mjs';
 
 const storage=new Map();let denyWrites=false;
 globalThis.localStorage={getItem:key=>storage.get(key)??null,setItem(key,value){if(denyWrites)throw new Error('quota');storage.set(key,String(value));},removeItem:key=>storage.delete(key)};
@@ -20,7 +20,24 @@ try{
  // These editor snapshots differ from the current authored source and must
  // survive compaction, even when the built-in registry has the same ID.
  const overrides=new Set(['flats','bonus-jungle-terraces','slipstream-race']);
- assert.deepEqual(compact.sourceBacked,pack.levels.filter(e=>!overrides.has(e.id)).map(e=>e.id));
+ const expectedStock=pack.levels.filter(e=>!overrides.has(e.id)).map(e=>e.id),diagnostics=[];
+ for(const id of expectedStock.filter(id=>!compact.sourceBacked.includes(id))){
+  const snapshot=pack.levels.find(e=>e.id===id),source=JSON.parse(JSON.stringify(api.BUILTIN_LEVELS.find(e=>e.id===id)));
+  const detail={id,maxNumericDelta:0,differences:[],snapshotHashMatches:levelSnapshotHash(snapshot)===certificates[id]?.snapshotSha256};
+  const compare=(a,b,path)=>{
+   if(a===b)return;
+   if(typeof a==='number'&&typeof b==='number'){
+    detail.maxNumericDelta=Math.max(detail.maxNumericDelta,Math.abs(a-b));
+    if(Math.abs(a-b)<=1e-9)return;
+   }else if(a&&b&&typeof a==='object'&&typeof b==='object'){
+    for(const key of new Set([...Object.keys(a),...Object.keys(b)]))compare(a[key],b[key],path+'.'+key);
+    return;
+   }
+   if(detail.differences.length<5)detail.differences.push({path,snapshot:a,source:b});
+  };
+  compare(snapshot,source,id);diagnostics.push(detail);
+ }
+ assert.deepEqual(compact.sourceBacked,expectedStock,JSON.stringify(diagnostics));
  assert.deepEqual(compact.pack,{v:2,levels:pack.levels.filter(e=>overrides.has(e.id))});
  assert.equal(api.MAX_LEVEL_PACK_BYTES,16*1024*1024,'untrusted import allocation bound stays unchanged');
  assert.ok(api.normalizeUserLevelEntries(compact.pack.levels));
@@ -44,6 +61,14 @@ try{
  assert.deepEqual(compactPublishedLevels(singleton,[runtimeSource],invalid).pack.levels,[crown]);
  runtimeSource.data.spawn[0]+=.000001;
  assert.deepEqual(compactPublishedLevels(singleton,[runtimeSource],certificates).pack.levels,[crown]);
+ // Rounding to a fixed number of decimals is not a portable equivalence:
+ // two adjacent floating-point values can straddle a rounding boundary.
+ const boundary=structuredClone(crown);boundary.data.spawn[0]=.5000000005;
+ const boundarySource=structuredClone(boundary);boundarySource.data.spawn[0]+=Number.EPSILON;
+ const boundaryProof={'drowned-crown':{snapshotSha256:levelSnapshotHash(boundary)}};
+ assert.deepEqual(compactPublishedLevels({v:2,levels:[boundary]},[boundarySource],boundaryProof).pack.levels,[]);
+ const boundaryEdit=structuredClone(boundary);boundaryEdit.data.spawn[0]+=1e-10;
+ assert.deepEqual(compactPublishedLevels({v:2,levels:[boundaryEdit]},[boundarySource],boundaryProof).pack.levels,[boundaryEdit]);
  assert.throws(()=>compactPublishedLevels({v:2,levels:[crown,crown]},api.BUILTIN_LEVELS),/duplicate/);
  assert.throws(()=>compactPublishedLevels({v:3,levels:[]},api.BUILTIN_LEVELS),/Invalid/);
  assert.throws(()=>compactPublishedLevels({v:2,levels:[],extra:true},api.BUILTIN_LEVELS),/Invalid/);

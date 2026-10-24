@@ -1,40 +1,32 @@
 {
-  "v": 1,
+  "v": 2,
   "authoringRuntime": "v24.19.0",
-  "numericPrecision": 1e-9,
-  "method": "Exact complete JSON equality at certification; unrounded saved-snapshot hash plus complete portable source fingerprint at build time.",
+  "sourceNumericTolerance": 1e-9,
+  "method": "Exact complete JSON equality at certification; unrounded saved-snapshot hash plus complete source-data comparison with bounded runtime-only roundoff at build time.",
   "levels": {
     "sky": {
-      "snapshotSha256": "9646f635314eec217f70467f1546ffac0a210bf3adff9cedeffccb68bc41a9ed",
-      "portableSourceSha256": "4a2e102778f097d6fcd2408e9a158281c32f5a8834d8c584affc7c1da104d89b"
+      "snapshotSha256": "9646f635314eec217f70467f1546ffac0a210bf3adff9cedeffccb68bc41a9ed"
     },
     "test": {
-      "snapshotSha256": "a0ad01c405c47c3b29a34b110d00875bcfdc872ad4edcc299c3e78518a518ccb",
-      "portableSourceSha256": "32b67efbea8097a2ac8dc7f5740a8485882a1b67aa6f35ae2cdf5f90386d1c4b"
+      "snapshotSha256": "a0ad01c405c47c3b29a34b110d00875bcfdc872ad4edcc299c3e78518a518ccb"
     },
     "custard-creek": {
-      "snapshotSha256": "ef4d9aa5b2462617c1756dad08820dcdd0e22c66463bccecfbd3f6b24abc7d4a",
-      "portableSourceSha256": "53e8829b821c0cd168f81a88068b4fd1d7c846213286b5da47664c1a3d7f8859"
+      "snapshotSha256": "ef4d9aa5b2462617c1756dad08820dcdd0e22c66463bccecfbd3f6b24abc7d4a"
     },
     "bonus-custard-creek": {
-      "snapshotSha256": "d029cd4d31c300f1ca0a9e44c12d043ad15e463bc266a2400ab31391dce75eb2",
-      "portableSourceSha256": "4cd5b1e2038a3be30a111a98cd3b96da016b216cab753fd84525bd60280a9311"
+      "snapshotSha256": "d029cd4d31c300f1ca0a9e44c12d043ad15e463bc266a2400ab31391dce75eb2"
     },
     "jungle-terraces": {
-      "snapshotSha256": "8abf80244d8a8a9b7bf90a069e9449bc689bd7e468ecb1309ab24778d1e777b4",
-      "portableSourceSha256": "cae5ce3ffc190456d9964e7c781a325b9ab162d75f232330c53f29e14f6797ff"
+      "snapshotSha256": "8abf80244d8a8a9b7bf90a069e9449bc689bd7e468ecb1309ab24778d1e777b4"
     },
     "drowned-crown": {
-      "snapshotSha256": "c96ad9cfda0023cb94ab4083acc3ada06b587cdbada964bb7089bf1d750fe667",
-      "portableSourceSha256": "fd067d56d7210ca64dad866ceeb67ee39075c24b5e34ebf67f75b52293d53af4"
+      "snapshotSha256": "c96ad9cfda0023cb94ab4083acc3ada06b587cdbada964bb7089bf1d750fe667"
     },
     "country-club": {
-      "snapshotSha256": "97ddaf2e2dcbf83e616b753122ec9fd52b81bcedeecb71b1075f8d943a4c7c6e",
-      "portableSourceSha256": "53b8e04e17ac6b8f0f880e45138580be93af843d7c3940e6848c3ffe9fe28bd9"
+      "snapshotSha256": "97ddaf2e2dcbf83e616b753122ec9fd52b81bcedeecb71b1075f8d943a4c7c6e"
     },
     "rooftop-relay": {
-      "snapshotSha256": "c8ae403e9712f5bf0f0d20c7d5e9f0b161e0fd2d94dc16c82e63f2f77aed1643",
-      "portableSourceSha256": "c10ccc01495794a5915fe8f9ed25a125d515cd9c2c96132aa04528b519c73ba2"
+      "snapshotSha256": "c8ae403e9712f5bf0f0d20c7d5e9f0b161e0fd2d94dc16c82e63f2f77aed1643"
     }
   }
 }
