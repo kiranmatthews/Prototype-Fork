@@ -4808,8 +4808,6 @@ camera.position.y += TUNING.camHeight;
 
 // --- fixed-step loop --------------------------------------------------------
 const clock = new THREE.Clock();
-let stepTimer = 0;
-let stepIdx = 0;
 const GAMEPLAY_RENDER_HZ = 60;
 const renderFrameLimiter = new PresentationFrameLimiter(GAMEPLAY_RENDER_HZ);
 const graphicsRecovery = new GraphicsRecovery(renderer.domElement, () => {
@@ -4859,11 +4857,9 @@ function allowRenderFrame(nowMs: number): boolean {
   );
 }
 
-// Continuous audio: skating/grinding loops track state and speed; walking
-// pace gets footsteps.
-function updateAudio(dt: number): void {
+// Continuous audio follows movement; foot attacks follow the rendered soles.
+function updateAudio(): void {
   const speedAbs = Math.abs(player.speed);
-  const onGround = player.state === "ride" && player.grounded;
   // Use the fixed-step audio contact policy: tiny floor-contact gaps must not
   // restart the loop, while actual jumps, stops and stowed boards stay silent.
   const skatingNow = player.skateSoundRolling;
@@ -4890,17 +4886,8 @@ function updateAudio(dt: number): void {
     0.3,
   );
 
-  stepTimer -= dt;
-  const walking =
-    onGround &&
-    !player.sliding &&
-    !player.boardRolling &&
-    speedAbs > 2 &&
-    speedAbs <= TUNING.walkSpeed + 0.5;
-  if (walking && stepTimer <= 0) {
-    sfx.play("footstep" + (1 + (stepIdx++ % 3)), 0.35);
-    stepTimer = 0.26;
-  }
+  player.updateFootstepAudio();
+  if (split2p && p2 && current.id !== 'warproom' && !level.isCampaignMap) p2.updateFootstepAudio();
 }
 
 function currentHudState(): HudState {
@@ -5359,7 +5346,7 @@ function advanceFrame(nowMs: number): void {
   // source is the ACTUAL level skybox, so hand it the active sky art (a
   // string compare per frame; reloads only when the sky really changes).
   updateWaterPresentation(dt);
-  updateAudio(dt);
+  updateAudio();
   sky.position.copy(camera.position);
   skyMist.position.copy(camera.position);
   updateSeaHorizon();

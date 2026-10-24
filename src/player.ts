@@ -55,6 +55,7 @@ import {
   newLaneCursor,
 } from './level';
 import { sfx } from './audio';
+import { FootstepAudio, footstepSurface } from './footstepAudio';
 import { Rail, RailSample, nearestRail } from './rails';
 import {nearestReferenceRail} from './referenceRailCapture';
 import { Halfpipe } from './halfpipe';
@@ -1536,6 +1537,7 @@ export class Player {
   // live joint chain by plantOnDeck() each frame.
   private soleR: THREE.Vector3[] | null = null;
   private soleL: THREE.Vector3[] | null = null;
+  private readonly footstepAudio = new FootstepAudio();
   private cartonFootPlantT = 0; // brief visual sole seating through a carton impact
   private teetering = false; // stopped on a ledge lip, Crash-style wobble
   private teeterPhase = 0;
@@ -3004,6 +3006,7 @@ export class Player {
    * Used for pause boundaries and an asynchronously replaced model hierarchy.
    */
   resetRenderInterpolation(): void {
+    this.footstepAudio.contacts.reset();
     this.renderInterpolator.snap();
     this.group.position.copy(this.pos);
     this.renderPosition.copy(this.pos);
@@ -3203,6 +3206,38 @@ export class Player {
   get skateSoundRolling(): boolean {
     return this.freeSkate && !this.sliding && !this.isBailing &&
       Math.abs(this.speed) > 0.3 && this.skateSoundContact;
+  }
+
+  /** Call once with the interpolated render pose, after the fixed-step loop.
+   * No forward-speed timer: lateral/backward motion uses the same actual feet. */
+  updateFootstepAudio(): void {
+    const hint = this.animationClipHint;
+    if (this.state !== 'ride' || !this.grounded || this.freeSkate || this.sliding ||
+        this.isBailing || this.slipping || this.teetering || this.resultsPose || this.worldMapBaseScale !== null ||
+        (hint !== 'player.run' && hint !== ICE_WALK_CLIP_ID) || this.proceduralFootwear.length !== 2) {
+      this.footstepAudio.contacts.reset();
+      return;
+    }
+    const normal = this.groundHit?.normal ?? THREE.Object3D.DEFAULT_UP;
+    if (normal.y < .1) { this.footstepAudio.contacts.reset(); return; }
+    const heights: [number, number] = [Infinity, Infinity];
+    for (const { sole, side } of this.proceduralFootwear) {
+      const index = side === 'left' ? 0 : 1;
+      sole.updateWorldMatrix(true, false);
+      const points = sole.geometry.getAttribute('position');
+      for (let i = 0; i < points.count; i++) {
+        _plantV.fromBufferAttribute(points, i).applyMatrix4(sole.matrixWorld).sub(this.renderPosition);
+        heights[index] = Math.min(heights[index], _plantV.dot(normal) / normal.y);
+      }
+    }
+    for (const side of this.footstepAudio.contacts.sample(heights, hint === ICE_WALK_CLIP_ID)) {
+      const hit = this.groundHit;
+      const material = (hit?.mesh as THREE.Mesh | undefined)?.material;
+      const materials = Array.isArray(material) ? material : material ? [material] : [];
+      const name = [hit?.name, ...materials.map(value => value.userData.texKind)].join(' ');
+      const surface = footstepSurface(hit?.surface ?? surfaceFromName(hit?.name), name);
+      this.footstepAudio.play(side, surface, this.animationPlanarSpeed / Math.max(.001, TUNING.walkSpeed));
+    }
   }
 
   /** Deterministic board-owned speed consumed only by camera presentation. */

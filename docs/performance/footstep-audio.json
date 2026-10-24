@@ -1,0 +1,197 @@
+{
+  "date": "2026-10-25",
+  "baseline": "9d1a5744",
+  "native": {
+    "result": "PASS",
+    "cases": [
+      {
+        "name": "slow forward",
+        "steps": 5,
+        "meanInterval": 0.6666666666666666
+      },
+      {
+        "name": "walk backward",
+        "steps": 5,
+        "meanInterval": 0.6666666666666666
+      },
+      {
+        "name": "walk left",
+        "steps": 5,
+        "meanInterval": 0.6666666666666666
+      },
+      {
+        "name": "run left",
+        "steps": 13,
+        "meanInterval": 0.2916666666666667
+      },
+      {
+        "name": "run right",
+        "steps": 13,
+        "meanInterval": 0.29444444444444445
+      },
+      {
+        "name": "run forward",
+        "steps": 13,
+        "meanInterval": 0.29305555555555557
+      },
+      {
+        "name": "run backward",
+        "steps": 13,
+        "meanInterval": 0.28888888888888886
+      },
+      {
+        "name": "diagonal blend",
+        "steps": 10,
+        "meanInterval": 0.40555555555555556
+      },
+      {
+        "name": "walk 30fps",
+        "steps": 6,
+        "meanInterval": 0.66
+      },
+      {
+        "name": "run 30fps",
+        "steps": 13,
+        "meanInterval": 0.28888888888888886
+      },
+      {
+        "name": "animation speed 0.5",
+        "steps": 7
+      },
+      {
+        "name": "animation speed 2",
+        "steps": 27
+      },
+      {
+        "name": "bridge-timber",
+        "steps": 14
+      },
+      {
+        "name": "rock",
+        "steps": 14
+      },
+      {
+        "name": "ice",
+        "steps": 7
+      }
+    ],
+    "tuningAndPhysicsUnchanged": true
+  },
+  "browser": {
+    "reports": [
+      {
+        "lite": true,
+        "stamp": "Codex/sol fork \u00b7 build 10-24 08:57 UTC",
+        "cases": [
+          {
+            "name": "keyboard-left",
+            "contacts": 5,
+            "actualAudioSources": 5,
+            "meanIntervalMs": 316.2666666507721
+          },
+          {
+            "name": "keyboard-right",
+            "contacts": 5,
+            "actualAudioSources": 5,
+            "meanIntervalMs": 294.3333333333333
+          },
+          {
+            "name": "keyboard-backward",
+            "contacts": 5,
+            "actualAudioSources": 5,
+            "meanIntervalMs": 289.03333334128064
+          },
+          {
+            "name": "analog-walk-sideways",
+            "contacts": 5,
+            "actualAudioSources": 5,
+            "meanIntervalMs": 672.2333333492279
+          },
+          {
+            "name": "analog-diagonal",
+            "contacts": 5,
+            "actualAudioSources": 5,
+            "meanIntervalMs": 377.7333333492279
+          },
+          {
+            "name": "ice-scuffs",
+            "contacts": 5,
+            "actualAudioSources": 5,
+            "meanIntervalMs": 627.7666666507721
+          }
+        ],
+        "idleSilent": true,
+        "airborneSilent": true,
+        "pitRespawn": true,
+        "checkpoint": true,
+        "finishGate": true
+      },
+      {
+        "lite": false,
+        "stamp": "Codex/sol fork \u00b7 build 10-24 08:57 UTC",
+        "cases": [
+          {
+            "name": "keyboard-left",
+            "contacts": 5,
+            "actualAudioSources": 5,
+            "meanIntervalMs": 283.8333333333333
+          },
+          {
+            "name": "keyboard-right",
+            "contacts": 5,
+            "actualAudioSources": 5,
+            "meanIntervalMs": 299.70000000794727
+          },
+          {
+            "name": "keyboard-backward",
+            "contacts": 5,
+            "actualAudioSources": 5,
+            "meanIntervalMs": 282.9000000158946
+          },
+          {
+            "name": "analog-walk-sideways",
+            "contacts": 5,
+            "actualAudioSources": 5,
+            "meanIntervalMs": 672.1666666666666
+          },
+          {
+            "name": "analog-diagonal",
+            "contacts": 5,
+            "actualAudioSources": 5,
+            "meanIntervalMs": 377.7333333492279
+          },
+          {
+            "name": "ice-scuffs",
+            "contacts": 5,
+            "actualAudioSources": 5,
+            "meanIntervalMs": 621.7333333094915
+          }
+        ],
+        "idleSilent": true,
+        "airborneSilent": true,
+        "pitRespawn": true,
+        "checkpoint": true,
+        "finishGate": true
+      }
+    ],
+    "errors": []
+  },
+  "otherChecks": {
+    "audioLifecycle": "pass",
+    "skateAudioReplay": "pass, 4636 frames with exact pre-bail movement parity",
+    "characterAnimationRuntime": "pass",
+    "build": "TypeScript and Vite production build"
+  },
+  "baselineLimitation": {
+    "test": "tools/test-locomotion-idle.mjs",
+    "failure": "Outdated assertion expects zero idle procedural drivers; current catalog has nine. Reproduced with unchanged HEAD player.ts through an isolated Vite source override.",
+    "changedByThisTask": false
+  },
+  "evidenceDirectory": "/private/tmp/footstep-audio-browser",
+  "notes": [
+    "Browser development build stamp reflects Vite startup; tested source includes updateFootstepAudio and actual scoped Web Audio nodes.",
+    "Existing samples remain the fallback for every surface until dedicated foley is supplied.",
+    "No movement tuning, animation keys or level geometry changed.",
+    "check:all was not run."
+  ]
+}
