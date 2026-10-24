@@ -15,7 +15,8 @@ const server=await createServer({configFile:false,cacheDir:path.join(temp,'cache
 try{
  const api=await server.ssrLoadModule('/src/level.ts'),sync=await server.ssrLoadModule('/src/sync.ts');
  const original=await readFile('public/levels.json'),pack=JSON.parse(original);
- const compact=compactPublishedLevels(pack,api.BUILTIN_LEVELS);
+ const certificates=JSON.parse(await readFile('tools/fixtures/stock-level-snapshots.json','utf8')).levels;
+ const compact=compactPublishedLevels(pack,api.BUILTIN_LEVELS,certificates);
  // These editor snapshots differ from the current authored source and must
  // survive compaction, even when the built-in registry has the same ID.
  const overrides=new Set(['flats','bonus-jungle-terraces','slipstream-race']);
@@ -24,15 +25,25 @@ try{
  assert.equal(api.MAX_LEVEL_PACK_BYTES,16*1024*1024,'untrusted import allocation bound stays unchanged');
  assert.ok(api.normalizeUserLevelEntries(compact.pack.levels));
  const crown=pack.levels.find(e=>e.id==='drowned-crown');
- for(const edit of [e=>e.name+=' edited',e=>e.data.name+=' edited',e=>e.data.spawn[0]+=.000001,
+ for(const edit of [e=>e.name+=' edited',e=>e.data.name+=' edited',e=>e.data.spawn[0]+=.000001,e=>e.data.spawn[0]+=1e-10,
   e=>e.data.components[0].color='#abcdef',e=>e.data.components[0].nm='authored metadata',e=>e.data.components.pop(),
   e=>e.data.edgeGrindingRevision=1,e=>e.id='my-crown']){
   const changed=structuredClone(crown);edit(changed);
-  const result=compactPublishedLevels({v:2,levels:[changed]},api.BUILTIN_LEVELS);
+  const result=compactPublishedLevels({v:2,levels:[changed]},api.BUILTIN_LEVELS,certificates);
   assert.deepEqual(result.pack.levels,[changed],'edited or copied stock was discarded');
  }
  const reordered={data:crown.data,name:crown.name,id:crown.id};
- assert.deepEqual(compactPublishedLevels({v:2,levels:[reordered]},api.BUILTIN_LEVELS).pack.levels,[]);
+ assert.deepEqual(compactPublishedLevels({v:2,levels:[reordered]},api.BUILTIN_LEVELS,certificates).pack.levels,[]);
+ // A verified, unchanged snapshot can tolerate runtime-only roundoff. No
+ // tolerance is available to uncertified snapshots or meaningful source edits.
+ const runtimeSource=structuredClone(crown);runtimeSource.data.spawn[0]+=1e-10;
+ const singleton={v:2,levels:[crown]};
+ assert.deepEqual(compactPublishedLevels(singleton,[runtimeSource]).pack.levels,[crown]);
+ assert.deepEqual(compactPublishedLevels(singleton,[runtimeSource],certificates).pack.levels,[]);
+ const invalid={...certificates,'drowned-crown':{...certificates['drowned-crown'],snapshotSha256:'invalid'}};
+ assert.deepEqual(compactPublishedLevels(singleton,[runtimeSource],invalid).pack.levels,[crown]);
+ runtimeSource.data.spawn[0]+=.000001;
+ assert.deepEqual(compactPublishedLevels(singleton,[runtimeSource],certificates).pack.levels,[crown]);
  assert.throws(()=>compactPublishedLevels({v:2,levels:[crown,crown]},api.BUILTIN_LEVELS),/duplicate/);
  assert.throws(()=>compactPublishedLevels({v:3,levels:[]},api.BUILTIN_LEVELS),/Invalid/);
  assert.throws(()=>compactPublishedLevels({v:2,levels:[],extra:true},api.BUILTIN_LEVELS),/Invalid/);
@@ -120,5 +131,5 @@ try{
  denyWrites=false;await manual.ui.onForceResync();assert.equal(api.getUserLevels()[0].id,'flats');assert.equal(sync.hasPulledLevels(),true);
  assert.ok(manual.events.some(e=>e[0]==='switch'));assert.ok(manual.events.some(e=>e[0]==='respawn'));
  console.log(JSON.stringify({pass:true,sourceBytes:proof.sourceBytes,downloadBytes:proof.outputBytes,sourceBacked:proof.sourceBacked.length,
-  retained:proof.retained,checks:'exact full-data comparison, authored variants, idempotent output, original retention, bounded fetch, atomic restore, quota/session preservation and actual startup/restore handlers'}));
+  retained:proof.retained,checks:'exact full-data comparison, certified stock with runtime roundoff, sub-nanometre authored variants, idempotent output, original retention, bounded fetch, atomic restore, quota/session preservation and actual startup/restore handlers'}));
 }finally{await server.close();await rm(temp,{recursive:true,force:true});}

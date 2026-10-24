@@ -9,12 +9,21 @@ import {fileURLToPath} from 'node:url';
 
 const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
 const within=(parent,child)=>{const relative=path.relative(parent,child);return relative===''||(!relative.startsWith('..'+path.sep)&&relative!=='..'&&!path.isAbsolute(relative));};
+export const levelSnapshotHash=(entry,portable=false)=>hash(JSON.stringify(entry,(_key,value)=>{
+  if(portable&&typeof value==='number')return Number(value.toFixed(9));
+  if(value&&typeof value==='object'&&!Array.isArray(value))
+    return Object.fromEntries(Object.entries(value).sort(([a],[b])=>a<b?-1:a>b?1:0));
+  return value;
+}));
 
 /** Public source snapshots remain complete. The served sync pack only needs
  * overrides: an exactly identical built-in already exists in the game bundle.
- * Compare complete JSON values (including names/metadata), never just IDs,
- * geometry, a tolerance, or a hash of selected fields. */
-export function compactPublishedLevels(pack,builtins) {
+ * Compare complete JSON values (including names/metadata), never just IDs or
+ * selected fields. A reviewed stock certificate may also recognize a snapshot
+ * proven exactly stock by its authoring runtime. Its full, unrounded hash must
+ * match: even sub-nanometre edits to a saved snapshot must be retained. Only
+ * the runtime-generated counterpart tolerates platform trig roundoff. */
+export function compactPublishedLevels(pack,builtins,stockCertificates={}) {
   assert.ok(pack&&typeof pack==='object'&&!Array.isArray(pack)&&pack.v===2&&
     Object.keys(pack).every(key=>key==='v'||key==='levels')&&Array.isArray(pack.levels)&&pack.levels.length<=128,'Invalid published level pack');
   const sources=new Map(builtins.filter(entry=>entry.data).map(entry=>[entry.id,entry]));
@@ -27,7 +36,11 @@ export function compactPublishedLevels(pack,builtins) {
     const source=sources.get(entry.id);
     // JSON conversion is deliberate: signed zero and absent undefined fields
     // have the same representation when a native level is exported to JSON.
-    if(source&&isDeepStrictEqual(entry,JSON.parse(JSON.stringify(source)))){
+    const certificate=stockCertificates[entry.id];
+    const certified=source&&certificate&&
+      levelSnapshotHash(entry)===certificate.snapshotSha256&&
+      levelSnapshotHash(source,true)===certificate.portableSourceSha256;
+    if(source&&(isDeepStrictEqual(entry,JSON.parse(JSON.stringify(source)))||certified)){
       sourceBacked.push(entry.id);
     }else levels.push(entry);
   }
@@ -63,7 +76,9 @@ async function prepare(root,outDir) {
     server=await createServer({root,configFile:false,cacheDir,appType:'custom',logLevel:'silent',
       optimizeDeps:{noDiscovery:true},server:{middlewareMode:true,hmr:false,ws:false,watch:null}});
     const api=await server.ssrLoadModule('/src/level.ts');
-    const result=compactPublishedLevels(JSON.parse(original),api.BUILTIN_LEVELS);
+    const certificates=JSON.parse(await readFile(path.join(root,'tools/fixtures/stock-level-snapshots.json'),'utf8'));
+    assert.equal(certificates.v,1,'Unsupported stock snapshot certificate');
+    const result=compactPublishedLevels(JSON.parse(original),api.BUILTIN_LEVELS,certificates.levels);
     const output=Buffer.from(JSON.stringify(result.pack)+'\n');
     assert.ok(api.levelJsonTextWithinLimits(output.toString('utf8'),api.MAX_LEVEL_PACK_BYTES,14)&&
       api.normalizeUserLevelEntries(result.pack.levels),'Published overrides exceed the bounded import contract');
