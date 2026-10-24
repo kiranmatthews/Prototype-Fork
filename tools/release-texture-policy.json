@@ -40,5 +40,15 @@
       }
     }
   },
-  "review": "Keep rivet-deck and metal-wedge colour grain at full resolution and fine highlights on narrow metal surfaces. Give the Crown ship sails and repeated boardwalk twice the default data-map resolution after close-up review. Colour encodes that fail their error gates retain approved full-resolution versions."
+  "review": "Keep rivet-deck and metal-wedge colour grain at full resolution and fine highlights on narrow metal surfaces. Give the Crown ship sails and repeated boardwalk twice the default data-map resolution after close-up review. Colour encodes that fail their error gates retain approved full-resolution versions.",
+  "map": {
+    "limits": {
+      "baseColorTexture": 1024,
+      "normalTexture": 512,
+      "metallicRoughnessTexture": 256,
+      "occlusionTexture": 256,
+      "emissiveTexture": 1024
+    },
+    "overrides": {}
+  }
 }

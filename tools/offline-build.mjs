@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto';
 import { readdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
-import {pruneRetiredFontAssets,prepareFontArchives,prepareLevelAtlasArchive} from './release-assets.mjs';
+import {pruneRetiredFontAssets,prepareFontArchives,pruneLocalReviewAssets} from './release-assets.mjs';
 import {prepareReleaseTextures} from './release-textures.mjs';
 import {prepareSharedReleaseTextures} from './release-shared-textures.mjs';
 import {preparePublishedLevels} from './release-levels.mjs';
@@ -35,12 +35,10 @@ export function runtimeAsset(file, fontVersions) {
 }
 
 export function offlineBuild() {
-  let root, outDir, atlasClientReference, atlasClientFile;
+  let root, outDir;
   return {
     name: 'boneman-offline', apply: 'build',
     configResolved(config) { root = config.root; outDir = path.resolve(root, config.build.outDir); },
-    buildStart(){atlasClientReference=this.emitFile({type:'chunk',id:path.join(root,'src/level-atlas/download.ts'),name:'levelAtlasDownload'});},
-    generateBundle(){atlasClientFile=this.getFileName(atlasClientReference);},
     async closeBundle() {
       const levels=await preparePublishedLevels({root,outDir});
       console.log(`Level sync: ${levels.retained.length} overrides, ${levels.sourceBacked.length} exact source copies omitted; ${(levels.outputBytes/1024).toFixed(1)} KiB download.`);
@@ -49,10 +47,10 @@ export function offlineBuild() {
       if (!fontVersions.bonus || !fontVersions.counter) throw new Error('Offline font versions could not be read');
       const retired=await pruneRetiredFontAssets({root,outDir,fontVersions});
       console.log(`Release assets: kept active fonts; omitted ${retired.files.length} historical files (${(retired.bytes/1048576).toFixed(1)} MiB) from generated output.`);
+      const reviews=await pruneLocalReviewAssets({root,outDir});
+      console.log(`Local review galleries: ${reviews.files.length} files (${(reviews.bytes/1048576).toFixed(1)} MiB) kept in the authoring library.`);
       const archives=await prepareFontArchives({root,outDir,fontVersions});
       console.log(`Font export: ${archives.length} on-demand archive(s), ${(archives.reduce((sum,item)=>sum+item.removedBytes-item.manifestBytes,0)/1048576).toFixed(1)} MiB less hosted data.`);
-      const atlas=await prepareLevelAtlasArchive({root,outDir,clientFile:atlasClientFile});
-      console.log(`Level Atlas export: ${atlas.members} original members, ${((atlas.removedBytes-atlas.manifestBytes-atlas.rawSnapshotBytes)/1048576).toFixed(1)} MiB less hosted data.`);
       const textures=await prepareReleaseTextures({root,outDir});
       console.log(`Reviewed textures: ${textures.images} reviewed images in ${textures.models} models, ${(textures.savedBytes/1048576).toFixed(1)} MiB less hosted data; original art retained.`);
       const shared=await prepareSharedReleaseTextures({root,outDir});

@@ -2,10 +2,6 @@
 
 This repository is the isolated browser prototype used to compare Codex/sol level-authoring speed with Unity. Keep changes focused on playable demo levels and the minimum runtime support they need.
 
-## Temporary slow-network workflow
-
-Until the user explicitly says the network is good again, keep completed work local. Run the relevant local checks and browser preview, and commit validated task-owned changes locally. Do not push, publish, upload artifacts, or trigger remote deployment as part of the default workflow. Defer those transfers and report which local commits are ready to publish. Prefer existing local assets and runtimes; avoid unnecessary network downloads. This temporary instruction overrides Fast path item 6 below.
-
 ## Fast path
 
 1. Use `src/levels/codex-lab.ts` for timed geometry briefs. It is a small source-owned data level, hot reloads cleanly, and uses the same component pipeline as the in-game editor.

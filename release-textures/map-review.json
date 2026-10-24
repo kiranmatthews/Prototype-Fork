@@ -1,0 +1,3875 @@
+{
+  "encoder": {
+    "pillow": "12.3.0",
+    "libwebp": "1.6.0",
+    "format": "WebP",
+    "dimensions": "Reviewed role limits for requested Drowned Crown/map scopes; other models unchanged",
+    "lossyQualityCandidates": [
+      85,
+      90,
+      95
+    ],
+    "minPSNR": 40,
+    "maxP99": 8,
+    "maxError": 64,
+    "losslessPNG": true
+  },
+  "models": {
+    "map-landmarks/ancienttree.glb": {
+      "sourceSha256": "ad138db6a26fca7d13e873bdce1d4c34911096edfd3df385dff9dd412f0ed81a",
+      "sourceBytes": 2496068
+    },
+    "map-landmarks/aqueduct.glb": {
+      "sourceSha256": "50339e0520d87ac7b76b693499068946c2f4a7c976abe5e2d13c6dd56b1e7ba3",
+      "sourceBytes": 28079084
+    },
+    "map-landmarks/basalt.glb": {
+      "sourceSha256": "3f7efdafb501fb896a86a310e87043e6dc0a11e24093b9bcbd43ef6f1e06c6ff",
+      "sourceBytes": 890312
+    },
+    "map-landmarks/bayawning.glb": {
+      "sourceSha256": "7276b826c22ac7b18d7c49031bfc129438acb8c56062ecf08fca49d0fd22c2c0",
+      "sourceBytes": 463548
+    },
+    "map-landmarks/baybody.glb": {
+      "sourceSha256": "ec445a37f3719282121b6debd17138cd78d7b66bc3f731bc0555161927f1737d",
+      "sourceBytes": 237756
+    },
+    "map-landmarks/baydoor.glb": {
+      "sourceSha256": "74de155ac66d9425c3a01802a9556f157f394b135df9122f9b09a3ccc54ebb20",
+      "sourceBytes": 513360
+    },
+    "map-landmarks/bayroof.glb": {
+      "sourceSha256": "137ee55440140b3cd6b055c32cd70fd332116bf56eeedf69ae3308472c3a9681",
+      "sourceBytes": 561716
+    },
+    "map-landmarks/baywindow.glb": {
+      "sourceSha256": "a96de085da3d7af93255819a7d2c1c99da3532a6ebeae50dc15f28fb8374d889",
+      "sourceBytes": 395528
+    },
+    "map-landmarks/boardwalk.glb": {
+      "sourceSha256": "21f2bab5e570d9e280605226101060914105b6ef6fb52992197827898e3d395b",
+      "sourceBytes": 11900976
+    },
+    "map-landmarks/bough.glb": {
+      "sourceSha256": "81ea1f119698fd7ff07592ba3608992c312f82f675bf236e70b748f0aef3286e",
+      "sourceBytes": 753648
+    },
+    "map-landmarks/boulder.glb": {
+      "sourceSha256": "6511cd6686099d20f5f3ae366d978c9833c9423567bac9ca73c1922f3f4abe4d",
+      "sourceBytes": 1717404
+    },
+    "map-landmarks/brazier.glb": {
+      "sourceSha256": "13b566657c9c0b61b4415f3a9b7c6adda358513d8332feaca44b91a788cf869f",
+      "sourceBytes": 188096
+    },
+    "map-landmarks/cane.glb": {
+      "sourceSha256": "2148203f45a3ea261f026817ab18c581ed1a9c460e956018a03171e807af593c",
+      "sourceBytes": 756264
+    },
+    "map-landmarks/cannon.glb": {
+      "sourceSha256": "98ee74fac76e8228163e0402400ac01f156091efe3c1850016a1f7148b4da544",
+      "sourceBytes": 1164840
+    },
+    "map-landmarks/canopy.glb": {
+      "sourceSha256": "88cf7831c43c6f043d827b41ef7fa4256158127157d754666012f5fa2299ef13",
+      "sourceBytes": 652484
+    },
+    "map-landmarks/capital.glb": {
+      "sourceSha256": "6606e2cad5d31c52e022e4733c9d6d9a1f3aa7cc0a66e0ebf5efb83a86f5db68",
+      "sourceBytes": 492352
+    },
+    "map-landmarks/cargo.glb": {
+      "sourceSha256": "182878e9ffb3db82318b6b5951470f975ff3e224734fb0c64db95ae4e14085ee",
+      "sourceBytes": 1159892
+    },
+    "map-landmarks/castle.glb": {
+      "sourceSha256": "10f499b6aba387861a92452be704de344a6a64891a294028b529d440b489d23c",
+      "sourceBytes": 27364300
+    },
+    "map-landmarks/chief.glb": {
+      "sourceSha256": "ef7793160c8b48251c93aa09bb94e3a35dea71f0fe7cc8194c6ae5eacb908843",
+      "sourceBytes": 784328
+    },
+    "map-landmarks/cliff-bay.glb": {
+      "sourceSha256": "8ffd6e8685faa2e77b18722415c85beb13338ee76f428346692e70577f6b18bc",
+      "sourceBytes": 881820
+    },
+    "map-landmarks/cliff-foliage.glb": {
+      "sourceSha256": "913e08eb16f7db1bc396bd11daaf9f2cdd4cd4dd28b9170d5ad212cdbfe5ac93",
+      "sourceBytes": 1549148
+    },
+    "map-landmarks/clockwork.glb": {
+      "sourceSha256": "017ad8b84b95b2711ec42e213aba372f5758d83a3b7bfde845ccc01f464c4370",
+      "sourceBytes": 330556
+    },
+    "map-landmarks/column.glb": {
+      "sourceSha256": "2253a4ff90e38e09090eaa1bf0efa7798c80acdbfac5e0f0d5d5e55a613606ed",
+      "sourceBytes": 441940
+    },
+    "map-landmarks/country-club-cart.glb": {
+      "sourceSha256": "69cf5765b5c6e3325dae9b9ce2dbe8ff3539f1463fd2d4b9e8b6695c5032ae15",
+      "sourceBytes": 3414800
+    },
+    "map-landmarks/deadwater-contest-bowl.glb": {
+      "sourceSha256": "b8acde5bc6a00493e28ade0377ee2e0d5d95e07b988c12feba9557619c8eebe0",
+      "sourceBytes": 3787492
+    },
+    "map-landmarks/deadwater-slide-tower.glb": {
+      "sourceSha256": "36b9fe9d72c0d0d5c6537ba1b2545704b0a64df2b6c3f2ab1faccc655ebcb916",
+      "sourceBytes": 4187068
+    },
+    "map-landmarks/demoncart.glb": {
+      "sourceSha256": "6e89974bb2bee93226613c07230517739068a79fc0cd467a3998ade4c32762f8",
+      "sourceBytes": 459004
+    },
+    "map-landmarks/dumpster.glb": {
+      "sourceSha256": "7a256e064ce3ca117077451031e17d83c753035549b3d642ec7158155aa7d5f0",
+      "sourceBytes": 1167232
+    },
+    "map-landmarks/eroded-cliff.glb": {
+      "sourceSha256": "d725149f6804e03e61fa3460821aad2780e84feb7c82f0eeaa1b7924efb9b803",
+      "sourceBytes": 1677276
+    },
+    "map-landmarks/fern.glb": {
+      "sourceSha256": "73578d8a89cc52a2285b283712b950a1ebdab54149676532e97ce7fc455e96f5",
+      "sourceBytes": 218628
+    },
+    "map-landmarks/flume.glb": {
+      "sourceSha256": "8cfa61e07b4ce19e40b60e40e21002a315b9eb9a0af0409e52b00e09f118937e",
+      "sourceBytes": 748016
+    },
+    "map-landmarks/flumesupport.glb": {
+      "sourceSha256": "25b1405562aba50c6b79292e36ed23a42efbe32922b93d176f3f8599302f3859",
+      "sourceBytes": 787980
+    },
+    "map-landmarks/fungus.glb": {
+      "sourceSha256": "78731926eb79111f02987c806a042c8c36f5bf06c2cd18a70bc68b86de752188",
+      "sourceBytes": 2350124
+    },
+    "map-landmarks/gorge.glb": {
+      "sourceSha256": "2cfbc93a89c156677dc6b8e7590ffaeb30749f40bba2c21172e07b37673c899e",
+      "sourceBytes": 1339608
+    },
+    "map-landmarks/harbour-rooftops.glb": {
+      "sourceSha256": "034cc466ddf23c994e26d7a650b1036652531a7dab24fd42ed46dd02b7b9141b",
+      "sourceBytes": 4084332
+    },
+    "map-landmarks/hibiscus.glb": {
+      "sourceSha256": "cbbcc9186c87a26ee6540b319fbeb1605f6c3df9ca9ef0be0b55d710a794bf2e",
+      "sourceBytes": 575008
+    },
+    "map-landmarks/hoist.glb": {
+      "sourceSha256": "cabed24b777878f7e99a38093e5b16a6cfbb17323acf36bd80f0bbe5ced962fb",
+      "sourceBytes": 1749248
+    },
+    "map-landmarks/ivy.glb": {
+      "sourceSha256": "b73f8e4c08bd303c9d3b773d711424efbf56ac20b647e0f9cf275d8a24d2eb87",
+      "sourceBytes": 9760592
+    },
+    "map-landmarks/leaf.glb": {
+      "sourceSha256": "e3a52708afe2693965ae388f594354d13ed8845f17da6895994a9eae23d14396",
+      "sourceBytes": 178540
+    },
+    "map-landmarks/lifeguard.glb": {
+      "sourceSha256": "a530c8965e6466380d937cf8d0117bb653ab48c6d5bb1bb09ee3bf95a9c37bdb",
+      "sourceBytes": 781372
+    },
+    "map-landmarks/lintel.glb": {
+      "sourceSha256": "be12a6427862023e95ee23b824ce5e63cf53dd0cf1fda120a9c205c58294f94d",
+      "sourceBytes": 501840
+    },
+    "map-landmarks/log.glb": {
+      "sourceSha256": "8f9f30b4d563244a40d5ba4c481207acd44babdf8bdd365ca3c3b758aeb8e403",
+      "sourceBytes": 355184
+    },
+    "map-landmarks/motu-contest-bowl.glb": {
+      "sourceSha256": "136d3772f94769f0da9f505a40289fa7b768e6041fc81c9befa7d1796322ce0a",
+      "sourceBytes": 2648640
+    },
+    "map-landmarks/motu-ridge.glb": {
+      "sourceSha256": "1f23619d3c429eb81cf3672c598db30f364d61f838d86d64658e3e09e9c615b1",
+      "sourceBytes": 3221528
+    },
+    "map-landmarks/nightarch.glb": {
+      "sourceSha256": "3e20dc40d832550259f9d12d98375c9a69bf07c844c43ec0ebff4f57ca5b0488",
+      "sourceBytes": 535100
+    },
+    "map-landmarks/nightridge.glb": {
+      "sourceSha256": "b2678d8a22a3b0025e97e7a9dbfca2666fde331393c6a987e28da9ea609323c9",
+      "sourceBytes": 261012
+    },
+    "map-landmarks/nightrock.glb": {
+      "sourceSha256": "94a0df921f70d19424e9af3298613e49624fba4e9ceccd2a792ae4c0465f87f8",
+      "sourceBytes": 288696
+    },
+    "map-landmarks/oak.glb": {
+      "sourceSha256": "b68b28ac1a5c7155a57848ca2cb0ea6608abbf240385eba8bb5d7abe33c0da54",
+      "sourceBytes": 5613912
+    },
+    "map-landmarks/palm.glb": {
+      "sourceSha256": "f6d70828b7403499889446df35c897662058accb9b6e6e17e22aa8a3660172ca",
+      "sourceBytes": 1214568
+    },
+    "map-landmarks/parkarch.glb": {
+      "sourceSha256": "b945b76ee2e4835de706a20c58433b04dddf1e8de8baae4f26ffcff95146aa50",
+      "sourceBytes": 887888
+    },
+    "map-landmarks/pavilion.glb": {
+      "sourceSha256": "fc2b449eba1d3aaa4206b402991cbcaafe8b90272ebb2e2172ab1654abb6acc2",
+      "sourceBytes": 482968
+    },
+    "map-landmarks/pine.glb": {
+      "sourceSha256": "a31764a7b97ffc876ed2f7a6eb72af0d9d8601343fd77d06011cb9de491c15b8",
+      "sourceBytes": 814584
+    },
+    "map-landmarks/pipes.glb": {
+      "sourceSha256": "51e1b39f3969374bda832bc54dd86a96a481e4d4d784279ddd7e753c014a6edc",
+      "sourceBytes": 1596568
+    },
+    "map-landmarks/planted-cliff.glb": {
+      "sourceSha256": "418bae48229bfd33be190a5ecc026d85a5d393a74d6660ff162553b153ae9c54",
+      "sourceBytes": 1755580
+    },
+    "map-landmarks/portal.glb": {
+      "sourceSha256": "4f09ae4bf3bbb8609e9188e497012234f04db22e5e191a8ef8ab04d54031c6a8",
+      "sourceBytes": 453504
+    },
+    "map-landmarks/quagmire-caldera.glb": {
+      "sourceSha256": "512a90c1af01df63434ee349e1d36a15bfab8d60ddcd27afe5cc3e76fa5c4297",
+      "sourceBytes": 3280076
+    },
+    "map-landmarks/quay-headland.glb": {
+      "sourceSha256": "eb6468ab4300734e90ff86dd5897c51b270837ccfdce408a3782275855653e7d",
+      "sourceBytes": 2695812
+    },
+    "map-landmarks/redfern.glb": {
+      "sourceSha256": "48d9ac2f1ed0f3976fa29fce49e3fe0f766493363811a4f8acd5ae24a8735900",
+      "sourceBytes": 727028
+    },
+    "map-landmarks/relief.glb": {
+      "sourceSha256": "516a3d79b004bdd8033b5041bf6adc8f551d4ae618158d7ee935289b02b0fc13",
+      "sourceBytes": 577156
+    },
+    "map-landmarks/sanctuary-mesa.glb": {
+      "sourceSha256": "47cc0f4f3f701012bdefd15cea25b98293aaf3dd4de90d07ee99eac5f8a4b1cf",
+      "sourceBytes": 3809800
+    },
+    "map-landmarks/sandstone.glb": {
+      "sourceSha256": "088d69ab3597378580cfb58b336906a6342adbd31b50b16e6cbcdfca228191e2",
+      "sourceBytes": 972740
+    },
+    "map-landmarks/shelf.glb": {
+      "sourceSha256": "ed35f392957e20f69aaeacdbd2ff1b407cb250032dd11cc3a87a759efd1ee09c",
+      "sourceBytes": 814288
+    },
+    "map-landmarks/ship.glb": {
+      "sourceSha256": "19b7d31bbd67689a86eadfcc1e61d25408cf88d396b87c0f1a50fe49cd1494ed",
+      "sourceBytes": 15201360
+    },
+    "map-landmarks/shutter.glb": {
+      "sourceSha256": "1b9e051c287db2afd4c074bcd4cc7089211c47f1c2d8f89f66448f17f94186f8",
+      "sourceBytes": 1218064
+    },
+    "map-landmarks/sky-spirit-totem.glb": {
+      "sourceSha256": "bcad5dc64193227ddebd50bb94cf8da3e1c38d75981230561f41dc1a440f86a3",
+      "sourceBytes": 3679436
+    },
+    "map-landmarks/sky-tiki-sanctuary.glb": {
+      "sourceSha256": "ae7aed4f9255f1fac7ee8d4b6527a00c5f794eb4616ff186404d138625a9897d",
+      "sourceBytes": 2802392
+    },
+    "map-landmarks/spire.glb": {
+      "sourceSha256": "4bd1233cd42753b826fb62083f12656262a0376c51f1a2a60ddfc6777429675d",
+      "sourceBytes": 857592
+    },
+    "map-landmarks/spooky-escarpment.glb": {
+      "sourceSha256": "04c65d70a42ee322f51fa40dfc61d2881ce9c9e3f7519b9c0f1f938449b440a1",
+      "sourceBytes": 2770548
+    },
+    "map-landmarks/stairs.glb": {
+      "sourceSha256": "ca532bfa50c45d945c0667aa5fc46be3520d08a770b41389cb0fb7f11956b471",
+      "sourceBytes": 2070428
+    },
+    "map-landmarks/step.glb": {
+      "sourceSha256": "eb61a4f7176fe7af02ab195d7a35394f325b65ea84e25ee9611b3bd86396891f",
+      "sourceBytes": 299356
+    },
+    "map-landmarks/thicket.glb": {
+      "sourceSha256": "500ecba0c5bf4ed2a4ac9fb49d0786575c82d23ea7dce26624efca0c2074f9b9",
+      "sourceBytes": 858376
+    },
+    "map-landmarks/tiki.glb": {
+      "sourceSha256": "ce067231ba3b3a937e359d2744ea1b1b397f54456a79d25c2ec8f0f74288d727",
+      "sourceBytes": 846824
+    },
+    "map-landmarks/timberrib.glb": {
+      "sourceSha256": "714a824336e44f556cc6401a9ec894a3229f24b8a54f8f14756800d1e65e2721",
+      "sourceBytes": 2681008
+    },
+    "map-landmarks/track.glb": {
+      "sourceSha256": "4d164bd62d4aa321ccef5cb1c946accdb981f6ed6322beaf6c2003c8b6367ebc",
+      "sourceBytes": 5951880
+    },
+    "map-landmarks/treecrown.glb": {
+      "sourceSha256": "f398de8f2221fc11c2f848f060783fc9a9a3ab6c91c8b53f241f14f55ad6af17",
+      "sourceBytes": 2406700
+    },
+    "map-landmarks/treehost.glb": {
+      "sourceSha256": "8e18f2d9dd615c15566aa3524d9a94d57fc582cf99fa711fa10cf57a3e55152b",
+      "sourceBytes": 2449404
+    },
+    "map-landmarks/treehut.glb": {
+      "sourceSha256": "d0123d5218d4de1cf1c7b26aef0377d1ec8dc1b552b26cb417475864a9518457",
+      "sourceBytes": 2270732
+    },
+    "map-landmarks/trestle.glb": {
+      "sourceSha256": "fc8de49b3c5824e224c03ef79f18eaf65fee999998adb6ef6d69a2d2f1abb96a",
+      "sourceBytes": 236892
+    },
+    "map-landmarks/tunnel.glb": {
+      "sourceSha256": "5664521c28d1621bea1a78218fc20510f33bfcfea3e113905f760b7a21cb0284",
+      "sourceBytes": 5800304
+    },
+    "map-landmarks/uga-karst.glb": {
+      "sourceSha256": "0e7c11fc871a0c0d2f8230d45e68ca7a9d28b6a865e24281b51d4871c8323b48",
+      "sourceBytes": 3327280
+    },
+    "map-landmarks/upperwall.glb": {
+      "sourceSha256": "1e401bbb3f99d9da6919273e38ec77383186241245a09a105b8676beb245bc30",
+      "sourceBytes": 6003708
+    },
+    "map-landmarks/volcano.glb": {
+      "sourceSha256": "f3a8c1ad44a31b5e6cb2f163d3da845d4e74504acb2952c354681d1a116c1845",
+      "sourceBytes": 1111140
+    },
+    "map-landmarks/wall.glb": {
+      "sourceSha256": "d26021217f53c7317107eca1a1ecd19e78802783793b3df28e52fb917d6e25d8",
+      "sourceBytes": 6630528
+    },
+    "map-landmarks/watermill.glb": {
+      "sourceSha256": "78d3beda09ff83cc1833ca439f8795e4aa55b4da75a5aa8c13914e5ceeb587d2",
+      "sourceBytes": 2612768
+    },
+    "map-landmarks/wheel.glb": {
+      "sourceSha256": "4d689e0361bc88302eeaef077f5e941353a95ec2544fe183dd3be3768c738a1b",
+      "sourceBytes": 10473092
+    },
+    "map-landmarks/willow.glb": {
+      "sourceSha256": "29dfb73b6e2307232b317233f2bb69afdaab2dbeedfea57fb0927523e7e48215",
+      "sourceBytes": 2463008
+    }
+  },
+  "images": [
+    {
+      "sourceSha256": "00c85a4d9237c42ee4ca547caec0dd5939934a9e2359ce0e81e3cebca09854ed",
+      "sourceBytes": 306740,
+      "mimeType": "image/png",
+      "width": 256,
+      "height": 256,
+      "uses": [
+        {
+          "file": "map-landmarks/upperwall.glb",
+          "image": 1,
+          "roles": [
+            "metallicRoughnessTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "resampling": {
+        "role": "metallicRoughnessTexture",
+        "filter": "linear-lanczos3"
+      },
+      "encodedSha256": "7b94bb5849b4b1a14b68eae63f1407d063002035fbb1d362aa3f3abfc587c471",
+      "encodedBytes": 51814,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 254926
+    },
+    {
+      "sourceSha256": "01c574460ef796c439dc1469953c89ddd93ff71e1a71a1c13042931de6a8cdc2",
+      "sourceBytes": 1120619,
+      "mimeType": "image/png",
+      "width": 512,
+      "height": 512,
+      "uses": [
+        {
+          "file": "map-landmarks/castle.glb",
+          "image": 2,
+          "roles": [
+            "normalTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "resampling": {
+        "role": "normalTexture",
+        "filter": "vector-lanczos3-renormalize"
+      },
+      "encodedSha256": "5636ae025f7cc4d0a7e90d2ca115586fc8f30ed0284bf7bf62d7ef351442c42f",
+      "encodedBytes": 145524,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 975095
+    },
+    {
+      "sourceSha256": "02ded542fc6dbe67332543fc4d8bbbb5fd93a687be2af643098c2f62bbd9192d",
+      "sourceBytes": 363311,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/baydoor.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "skip": "quality threshold",
+      "best": {
+        "encodedSha256": "996edda76c54f8a80bc4e53f9689711d87a379a86c418d67d89ad91c02188e7c",
+        "encodedBytes": 306132,
+        "quality": 95,
+        "lossless": false,
+        "meanAbs": 1.7081762949625652,
+        "p99": 9.0,
+        "max": 26,
+        "psnr": 40.175718244901965
+      }
+    },
+    {
+      "sourceSha256": "067272c16c7a3ba892246d16b843c985f628c8b0c85639332c87d33052a31377",
+      "sourceBytes": 5141402,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/ship.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 4096,
+      "sourceHeight": 4096,
+      "resampling": {
+        "role": "baseColorTexture",
+        "filter": "linear-light-lanczos3-sharpen-0.6-45-2"
+      },
+      "encodedSha256": "58c1c5a4718284316d1088ec1d68b51340708765eeffc5a87375722a62f9fc80",
+      "encodedBytes": 1346754,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 3794648
+    },
+    {
+      "sourceSha256": "0842c16bb72bad5d30cc9839ea749e19a7a43bc3b8d39f93f08c60e4c412fe78",
+      "sourceBytes": 355099,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/parkarch.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "skip": "less than three percent saving",
+      "best": {
+        "encodedSha256": "b40ef2aad81ac63bb0f9b45cb7759df5ce8bbd9d904dee66ab488f8b4e55eb0c",
+        "encodedBytes": 402210,
+        "quality": 95,
+        "lossless": false,
+        "meanAbs": 1.5706011454264324,
+        "p99": 6.0,
+        "max": 17,
+        "psnr": 41.55366313512165
+      }
+    },
+    {
+      "sourceSha256": "08d7657ac656aa28c8bfb7d031e14d4ce6c1ccf9d12767786cd0365fca0c53aa",
+      "sourceBytes": 1957394,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/ancienttree.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        },
+        {
+          "file": "map-landmarks/treecrown.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 2048,
+      "sourceHeight": 2048,
+      "resampling": {
+        "role": "baseColorTexture",
+        "filter": "linear-light-lanczos3-sharpen-0.6-45-2"
+      },
+      "encodedSha256": "e1aae1f37a0501fc6cc99a7126e6a604995d96c31341c3e2d8f1172b8f942eb7",
+      "encodedBytes": 1450302,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 507092
+    },
+    {
+      "sourceSha256": "0913bbf6e165c321c9602940b2b71ce2a67108b9173876a331914a9b316f20c5",
+      "sourceBytes": 786263,
+      "mimeType": "image/png",
+      "width": 256,
+      "height": 256,
+      "uses": [
+        {
+          "file": "map-landmarks/track.glb",
+          "image": 1,
+          "roles": [
+            "metallicRoughnessTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "resampling": {
+        "role": "metallicRoughnessTexture",
+        "filter": "linear-lanczos3"
+      },
+      "encodedSha256": "883462d21502d975f51a81cfae3118d1c6fca52a99bedd1294ce08d93bb7907b",
+      "encodedBytes": 62032,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 724231
+    },
+    {
+      "sourceSha256": "0934d0d77f81d6b94ad270eff1d6b0e3fccfdb5cc9125c38899c9ff24cce4b69",
+      "sourceBytes": 70606,
+      "mimeType": "image/jpeg",
+      "width": 512,
+      "height": 512,
+      "uses": [
+        {
+          "file": "map-landmarks/trestle.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "encodedSha256": "e451cecce2207552cb87da886e5e0f45072076b2f96e60115b170815f3202cac",
+      "encodedBytes": 54580,
+      "quality": 90,
+      "lossless": false,
+      "meanAbs": 1.5796368916829426,
+      "p99": 6.0,
+      "max": 14,
+      "psnr": 41.59422238870498,
+      "savedBytes": 16026
+    },
+    {
+      "sourceSha256": "0a55c1533a9dec7fb43b8db8a72ba4f1e858c3a784ad20cd873dc5a357b8b7c8",
+      "sourceBytes": 2679332,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/quagmire-caldera.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 2048,
+      "sourceHeight": 2048,
+      "resampling": {
+        "role": "baseColorTexture",
+        "filter": "linear-light-lanczos3-sharpen-0.6-45-2"
+      },
+      "encodedSha256": "d2ae4a982d5edaeb8b65b66f3e797e1ed9290fb525491d18ef745b8f74035ee5",
+      "encodedBytes": 1051108,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 1628224
+    },
+    {
+      "sourceSha256": "0c7f78462624d2f6578ebb4a1cafea27b62aefb39072a480294230d892ebb52f",
+      "sourceBytes": 1585695,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/timberrib.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 2048,
+      "sourceHeight": 2048,
+      "resampling": {
+        "role": "baseColorTexture",
+        "filter": "linear-light-lanczos3-sharpen-0.6-45-2"
+      },
+      "skip": "less than three percent saving",
+      "best": {
+        "encodedSha256": "facc6e8e1457460e114f863f71566617306ff5b7f1dab694db03d04b980b6423",
+        "encodedBytes": 1575494,
+        "quality": 100,
+        "lossless": true,
+        "meanAbs": 0.0,
+        "p99": 0.0,
+        "max": 0,
+        "psnr": null
+      }
+    },
+    {
+      "sourceSha256": "0d49ed076e95cda40304b93a4c49b2ab34004680639fc7f34a4fe48967fe0f84",
+      "sourceBytes": 2793751,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/uga-karst.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 2048,
+      "sourceHeight": 2048,
+      "resampling": {
+        "role": "baseColorTexture",
+        "filter": "linear-light-lanczos3-sharpen-0.6-45-2"
+      },
+      "encodedSha256": "f66436546d42a2e0d7177dbc3148233683ddf5e0354b453019d0476b991d96a2",
+      "encodedBytes": 159024,
+      "quality": 90,
+      "lossless": false,
+      "meanAbs": 1.8094549179077148,
+      "p99": 8.0,
+      "max": 53,
+      "psnr": 40.110725633970354,
+      "savedBytes": 2634727
+    },
+    {
+      "sourceSha256": "0ffcb7ff0114b69f5e05b28fefcc56796dcd2fbde2529ee6f6d5164ba9db059a",
+      "sourceBytes": 272673,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/volcano.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "skip": "quality threshold",
+      "best": {
+        "encodedSha256": "9cc27012663f6e1993aaeb5cc4f1242e8966f921bd5e695f8f65d2f4cc5c2da2",
+        "encodedBytes": 182838,
+        "quality": 95,
+        "lossless": false,
+        "meanAbs": 1.2305469512939453,
+        "p99": 6.0,
+        "max": 69,
+        "psnr": 41.850500111543205
+      }
+    },
+    {
+      "sourceSha256": "103e6512f0067a63a64ba7a944e8288b4c31b9e67ffa512c30c706e56ca5341c",
+      "sourceBytes": 3675644,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/deadwater-slide-tower.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 2048,
+      "sourceHeight": 2048,
+      "resampling": {
+        "role": "baseColorTexture",
+        "filter": "linear-light-lanczos3-sharpen-0.6-45-2"
+      },
+      "encodedSha256": "6ad1e0c0b6513b6f939a0cfcce35d5adbf0ad14403e4c0e538ae16623d214056",
+      "encodedBytes": 1387764,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 2287880
+    },
+    {
+      "sourceSha256": "117ce343264a0e8e282ca5023c8bb55a1e1c83f621175ad7aef1cf790dd38014",
+      "sourceBytes": 2159737,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/spooky-escarpment.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 2048,
+      "sourceHeight": 2048,
+      "resampling": {
+        "role": "baseColorTexture",
+        "filter": "linear-light-lanczos3-sharpen-0.6-45-2"
+      },
+      "encodedSha256": "2ebfe25b1bf46f56ff34a03a5a360feaf0341069b5547ba013294e47f05835ba",
+      "encodedBytes": 83606,
+      "quality": 85,
+      "lossless": false,
+      "meanAbs": 1.6503060658772786,
+      "p99": 8.0,
+      "max": 41,
+      "psnr": 40.695119656066396,
+      "savedBytes": 2076131
+    },
+    {
+      "sourceSha256": "157c1632224168538e825082349e16e8d3594fab4368f553fe215abdae97108b",
+      "sourceBytes": 337765,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/lintel.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "encodedSha256": "93aed016d69aad6bf9382686756e65fa10e2f40a94b4faf3c1763dc7560bbb64",
+      "encodedBytes": 143328,
+      "quality": 90,
+      "lossless": false,
+      "meanAbs": 1.4740670522054036,
+      "p99": 7.0,
+      "max": 22,
+      "psnr": 41.49836619114291,
+      "savedBytes": 194437
+    },
+    {
+      "sourceSha256": "15ad8438d9b85ae57cc7c6c00bf762854cea0ed8f918251a90d3a93c3bf33b8b",
+      "sourceBytes": 108876,
+      "mimeType": "image/jpeg",
+      "width": 512,
+      "height": 512,
+      "uses": [
+        {
+          "file": "map-landmarks/leaf.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "skip": "quality threshold",
+      "best": {
+        "encodedSha256": "062c3ace17153f374cf57ff349f7889e1c09918c96bc65b3a1cfae7831ef0a0b",
+        "encodedBytes": 77686,
+        "quality": 95,
+        "lossless": false,
+        "meanAbs": 3.0120849609375,
+        "p99": 28.0,
+        "max": 77,
+        "psnr": 32.83939615955199
+      }
+    },
+    {
+      "sourceSha256": "19651cf0697cebc1c188a1445ae6e8e9cf74ee810cf2d95609e94a280308491c",
+      "sourceBytes": 1242875,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/boulder.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 2048,
+      "sourceHeight": 2048,
+      "resampling": {
+        "role": "baseColorTexture",
+        "filter": "linear-light-lanczos3-sharpen-0.6-45-2"
+      },
+      "encodedSha256": "f9cc8f43f58e9fde8c0845dcfc0048f5a07e4418f540c71d64306fc19c43e67a",
+      "encodedBytes": 159438,
+      "quality": 90,
+      "lossless": false,
+      "meanAbs": 1.8149353663126628,
+      "p99": 8.0,
+      "max": 29,
+      "psnr": 40.00870291114799,
+      "savedBytes": 1083437
+    },
+    {
+      "sourceSha256": "19a3b07932020203dd04119b2798645dacc42ed33993f485bbfa12b45b3c6b1e",
+      "sourceBytes": 319525,
+      "mimeType": "image/png",
+      "width": 512,
+      "height": 512,
+      "uses": [
+        {
+          "file": "map-landmarks/cargo.glb",
+          "image": 2,
+          "roles": [
+            "normalTexture"
+          ]
+        }
+      ],
+      "encodedSha256": "c8345b807e3f3d19efc4e03fd7461c4753539b3843759302c16e166c52ae81cc",
+      "encodedBytes": 267900,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 51625
+    },
+    {
+      "sourceSha256": "1a477e45a895b956e4a888f5e37ac360b5d69a4398db0453356e0f0f9b8988a0",
+      "sourceBytes": 4411622,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/boardwalk.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 4096,
+      "sourceHeight": 4096,
+      "resampling": {
+        "role": "baseColorTexture",
+        "filter": "linear-light-lanczos3-sharpen-0.6-45-2"
+      },
+      "encodedSha256": "6999dbdf2eda7cfe0acdb31dd33f0c072f8e6431b18331fc8d70edd55bc8d9e6",
+      "encodedBytes": 1050290,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 3361332
+    },
+    {
+      "sourceSha256": "1b21a2d0a5cc49cb233a1f4d5c7d8acccf0bf148688f06561430d7fad0b673e2",
+      "sourceBytes": 2641381,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/motu-ridge.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 2048,
+      "sourceHeight": 2048,
+      "resampling": {
+        "role": "baseColorTexture",
+        "filter": "linear-light-lanczos3-sharpen-0.6-45-2"
+      },
+      "encodedSha256": "12d2b264a3518adb74867aea97249f7df7a10e5cc495cc7ce0c12e49a07e201e",
+      "encodedBytes": 128586,
+      "quality": 90,
+      "lossless": false,
+      "meanAbs": 1.7652479807535808,
+      "p99": 8.0,
+      "max": 28,
+      "psnr": 40.1332641127,
+      "savedBytes": 2512795
+    },
+    {
+      "sourceSha256": "1c8c3598a8f9ba40b4b8594b7c4683e4d11a6866b5e261e7ad68ca59759d8512",
+      "sourceBytes": 1102901,
+      "mimeType": "image/png",
+      "width": 256,
+      "height": 256,
+      "uses": [
+        {
+          "file": "map-landmarks/wheel.glb",
+          "image": 1,
+          "roles": [
+            "metallicRoughnessTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "resampling": {
+        "role": "metallicRoughnessTexture",
+        "filter": "linear-lanczos3"
+      },
+      "encodedSha256": "5047d941630374e249658b42620dd51ec7b7f6ad41fdbd669fd823611f430bfb",
+      "encodedBytes": 66974,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 1035927
+    },
+    {
+      "sourceSha256": "1cb954c3189988fdd6982e153cd179c565ac74b56bd29d7c31f8d33f0455567c",
+      "sourceBytes": 1155263,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/fungus.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 2048,
+      "sourceHeight": 2048,
+      "resampling": {
+        "role": "baseColorTexture",
+        "filter": "linear-light-lanczos3-sharpen-0.6-45-2"
+      },
+      "encodedSha256": "cd34ea60b2501bdd6414dd0889abbf1350a22462e84f474d3fb7b9ce868cdb11",
+      "encodedBytes": 390818,
+      "quality": 95,
+      "lossless": false,
+      "meanAbs": 1.5482695897420247,
+      "p99": 8.0,
+      "max": 39,
+      "psnr": 41.082256805927884,
+      "savedBytes": 764445
+    },
+    {
+      "sourceSha256": "1f30f19248cd0d23b4480aab5ac82b0eedc49dd8486fa76c41982020bad5d60f",
+      "sourceBytes": 1571008,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/treehut.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 2048,
+      "sourceHeight": 2048,
+      "resampling": {
+        "role": "baseColorTexture",
+        "filter": "linear-light-lanczos3-sharpen-0.6-45-2"
+      },
+      "encodedSha256": "f56a3b4dc05684da91b35d2bdc68de512664606df4a7bdc9aceb195d40e54b95",
+      "encodedBytes": 1186058,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 384950
+    },
+    {
+      "sourceSha256": "22a02a127da8167f270b306c2a98db510c61d46f5e3e720af02b5e47a45121f2",
+      "sourceBytes": 301871,
+      "mimeType": "image/png",
+      "width": 512,
+      "height": 512,
+      "uses": [
+        {
+          "file": "map-landmarks/cannon.glb",
+          "image": 2,
+          "roles": [
+            "normalTexture"
+          ]
+        }
+      ],
+      "encodedSha256": "d69d4151428dd42eea501d0e36ce8ffaf83578f0275af185b90525da7a4345b8",
+      "encodedBytes": 249468,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 52403
+    },
+    {
+      "sourceSha256": "2608d6c9fcc782ab84a0d51e6f6d260a46bf2ed5765035249b125f03896b88ad",
+      "sourceBytes": 4189582,
+      "mimeType": "image/png",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/upperwall.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 2048,
+      "sourceHeight": 2048,
+      "resampling": {
+        "role": "baseColorTexture",
+        "filter": "linear-light-lanczos3-sharpen-0.6-45-2"
+      },
+      "encodedSha256": "52aa85153d4a72afa0b2e80d2273d03a64456be209c80de1bed793b41bb44c27",
+      "encodedBytes": 1297694,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 2891888
+    },
+    {
+      "sourceSha256": "28ee73f96869a768b5d3af5e3b216deefdeaaced197df337c2afca1611e1a192",
+      "sourceBytes": 317048,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/column.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "encodedSha256": "f44b92a9293018609f6130a81e48eb544c7a13a5f16fc5b8c7bededc1f7b8d42",
+      "encodedBytes": 92576,
+      "quality": 85,
+      "lossless": false,
+      "meanAbs": 1.815713882446289,
+      "p99": 8.0,
+      "max": 30,
+      "psnr": 40.0618262745395,
+      "savedBytes": 224472
+    },
+    {
+      "sourceSha256": "294da600cbad98775bb288d2d2c5322591a8d4c697020cf62a9c31c695d3fd51",
+      "sourceBytes": 326309,
+      "mimeType": "image/png",
+      "width": 512,
+      "height": 512,
+      "uses": [
+        {
+          "file": "map-landmarks/hoist.glb",
+          "image": 2,
+          "roles": [
+            "normalTexture"
+          ]
+        }
+      ],
+      "encodedSha256": "6c4060392c24bf37bb82f8dc27ea4eddfc11d3af6314ac6a622c3b480fb1bff7",
+      "encodedBytes": 236924,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 89385
+    },
+    {
+      "sourceSha256": "295bfe69242ecb2862f293874ec83c12e85b8095ebd0aa3df0096df9ac73a462",
+      "sourceBytes": 2292651,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/sky-tiki-sanctuary.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 2048,
+      "sourceHeight": 2048,
+      "resampling": {
+        "role": "baseColorTexture",
+        "filter": "linear-light-lanczos3-sharpen-0.6-45-2"
+      },
+      "encodedSha256": "51bb60d9fb5045b6572e4d56d4effedbd539b0eabd48c74a2be9eaaa953eae9e",
+      "encodedBytes": 899246,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 1393405
+    },
+    {
+      "sourceSha256": "2960378c8a30f86e92acbe3f907b2d4f6e5737ee8bb0fb5b1a023a417bb2221d",
+      "sourceBytes": 160331,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 512,
+      "uses": [
+        {
+          "file": "map-landmarks/nightridge.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "skip": "quality threshold",
+      "best": {
+        "encodedSha256": "ccf3f78f42ba023d574c3f3816dc486c0b87456a016e3e835c3f3081b6756510",
+        "encodedBytes": 90330,
+        "quality": 95,
+        "lossless": false,
+        "meanAbs": 1.5028279622395833,
+        "p99": 13.0,
+        "max": 46,
+        "psnr": 39.32360600371386
+      }
+    },
+    {
+      "sourceSha256": "2bb2ea76369bd67fd87d40cbf7e0edfc89f11bc887f9990ca52314fb657e1b1e",
+      "sourceBytes": 390112,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/flumesupport.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "skip": "less than three percent saving",
+      "best": {
+        "encodedSha256": "01fb68747b4f131cab98581021156598c58d264eea24da0f7110488192238554",
+        "encodedBytes": 459754,
+        "quality": 95,
+        "lossless": false,
+        "meanAbs": 1.6020857493082683,
+        "p99": 6.0,
+        "max": 18,
+        "psnr": 41.51080074204558
+      }
+    },
+    {
+      "sourceSha256": "30685f95ac635d16e3a892058f26f67c1b71a7c12349babe53b99fbdb0c170fb",
+      "sourceBytes": 1141383,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/eroded-cliff.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 2048,
+      "sourceHeight": 2048,
+      "resampling": {
+        "role": "baseColorTexture",
+        "filter": "linear-light-lanczos3-sharpen-0.6-45-2"
+      },
+      "encodedSha256": "29a2c6f2f6bc3de78dd8796fc7c838a02f19cec2ea3500336951889ede221cf2",
+      "encodedBytes": 129078,
+      "quality": 90,
+      "lossless": false,
+      "meanAbs": 1.6037282943725586,
+      "p99": 7.0,
+      "max": 27,
+      "psnr": 41.14577272770126,
+      "savedBytes": 1012305
+    },
+    {
+      "sourceSha256": "33324e5b91ff4b0e0dc9a028f3da7ebcdd00ededb17d86b2c27d2d884028efe2",
+      "sourceBytes": 919279,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/gorge.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 2048,
+      "sourceHeight": 2048,
+      "resampling": {
+        "role": "baseColorTexture",
+        "filter": "linear-light-lanczos3-sharpen-0.6-45-2"
+      },
+      "encodedSha256": "9483160d0c94d341d3cea0b792aeb66072835b89344661ba0a35f2efd7b1355b",
+      "encodedBytes": 98312,
+      "quality": 90,
+      "lossless": false,
+      "meanAbs": 1.4797550837198894,
+      "p99": 7.0,
+      "max": 29,
+      "psnr": 41.442925268385736,
+      "savedBytes": 820967
+    },
+    {
+      "sourceSha256": "33ac6243dfaca2ed0b16c667ee06599ba3d0aeab9e8737b68f0f798246e48753",
+      "sourceBytes": 192010,
+      "mimeType": "image/png",
+      "width": 256,
+      "height": 256,
+      "uses": [
+        {
+          "file": "map-landmarks/hoist.glb",
+          "image": 1,
+          "roles": [
+            "metallicRoughnessTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 512,
+      "sourceHeight": 512,
+      "resampling": {
+        "role": "metallicRoughnessTexture",
+        "filter": "linear-lanczos3"
+      },
+      "encodedSha256": "523e66afad244d26d023dbef9049d62db951cdd1122497f8489662a107a1b195",
+      "encodedBytes": 83658,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 108352
+    },
+    {
+      "sourceSha256": "35ade754e9b4bfde5ce478b72de428c558d740b6d2ec8957eb18c6428235d8ce",
+      "sourceBytes": 1848364,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/treehost.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 2048,
+      "sourceHeight": 2048,
+      "resampling": {
+        "role": "baseColorTexture",
+        "filter": "linear-light-lanczos3-sharpen-0.6-45-2"
+      },
+      "encodedSha256": "03cce7cde3b20e398611bea9499cad333d6f4b500b15c7ff9cf87a33ca92773c",
+      "encodedBytes": 345756,
+      "quality": 95,
+      "lossless": false,
+      "meanAbs": 1.5901514689127605,
+      "p99": 8.0,
+      "max": 37,
+      "psnr": 40.91000380935128,
+      "savedBytes": 1502608
+    },
+    {
+      "sourceSha256": "38d85b94310becdefc3f3775ff90b206e70a83c066a39f3f6716aa1be13bf7fc",
+      "sourceBytes": 1383837,
+      "mimeType": "image/png",
+      "width": 256,
+      "height": 256,
+      "uses": [
+        {
+          "file": "map-landmarks/aqueduct.glb",
+          "image": 1,
+          "roles": [
+            "metallicRoughnessTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "resampling": {
+        "role": "metallicRoughnessTexture",
+        "filter": "linear-lanczos3"
+      },
+      "encodedSha256": "1a531dad258be9b611af37d0f806af7b033256674b2ccfd4814a1d2b8146f61f",
+      "encodedBytes": 90738,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 1293099
+    },
+    {
+      "sourceSha256": "3e0ca0ce9af1b14bf266f24ea6eb141c64ee0f13f3d3475fce71799b58a85221",
+      "sourceBytes": 1508162,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/willow.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 2048,
+      "sourceHeight": 2048,
+      "resampling": {
+        "role": "baseColorTexture",
+        "filter": "linear-light-lanczos3-sharpen-0.6-45-2"
+      },
+      "encodedSha256": "fa0f61cf94cd2f2f0990f9e876f19b37240c6488a1ccd163e7e67942c4025644",
+      "encodedBytes": 346542,
+      "quality": 95,
+      "lossless": false,
+      "meanAbs": 1.4679915110270183,
+      "p99": 6.0,
+      "max": 33,
+      "psnr": 42.22336351938459,
+      "savedBytes": 1161620
+    },
+    {
+      "sourceSha256": "3ed6e65b4716f7969ab4674f1b502124493423e184e74b5b246916967ac140da",
+      "sourceBytes": 960542,
+      "mimeType": "image/png",
+      "width": 256,
+      "height": 256,
+      "uses": [
+        {
+          "file": "map-landmarks/ivy.glb",
+          "image": 1,
+          "roles": [
+            "metallicRoughnessTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "resampling": {
+        "role": "metallicRoughnessTexture",
+        "filter": "linear-lanczos3"
+      },
+      "encodedSha256": "428ff56a0c6d5ff2dcced7bc3234025e298ede710c479b2a631082f994902178",
+      "encodedBytes": 58764,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 901778
+    },
+    {
+      "sourceSha256": "3f74f0a4b3db89d0424fe243e26993bbb4e6a4d9f5310302f86d675a15b52d2c",
+      "sourceBytes": 688187,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/sandstone.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 2048,
+      "sourceHeight": 2048,
+      "resampling": {
+        "role": "baseColorTexture",
+        "filter": "linear-light-lanczos3-sharpen-0.6-45-2"
+      },
+      "encodedSha256": "d3d9e02b161d4fd12e45091dd3829020384ecc9c655e63e23687c6731952416d",
+      "encodedBytes": 126584,
+      "quality": 90,
+      "lossless": false,
+      "meanAbs": 1.5520954132080078,
+      "p99": 7.0,
+      "max": 30,
+      "psnr": 41.49349730857474,
+      "savedBytes": 561603
+    },
+    {
+      "sourceSha256": "42c86e58e549fa026b5258294d8264e30494a779a1e88d6387061f7148c250e1",
+      "sourceBytes": 474899,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/thicket.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "encodedSha256": "69bdfde12750fdb5f48d0344c0e24f72197b61d253bf15323609facc342b48dd",
+      "encodedBytes": 296198,
+      "quality": 95,
+      "lossless": false,
+      "meanAbs": 1.605402946472168,
+      "p99": 7.0,
+      "max": 30,
+      "psnr": 41.23183666656033,
+      "savedBytes": 178701
+    },
+    {
+      "sourceSha256": "42ccfa596bc9ca4d2cbd043b914e935dac9602a412257d87fbea777a03c43a39",
+      "sourceBytes": 124403,
+      "mimeType": "image/jpeg",
+      "width": 512,
+      "height": 512,
+      "uses": [
+        {
+          "file": "map-landmarks/fern.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "skip": "quality threshold",
+      "best": {
+        "encodedSha256": "9507a577f9135a680a050abb68bc6332a5d98c5edc2f7f042be5597b485390a4",
+        "encodedBytes": 94020,
+        "quality": 95,
+        "lossless": false,
+        "meanAbs": 3.2653045654296875,
+        "p99": 21.0,
+        "max": 99,
+        "psnr": 33.60239787028598
+      }
+    },
+    {
+      "sourceSha256": "4713e654c232454b8e4ed946a377f3984b372f161009f40327aa2c3cc99d4cc6",
+      "sourceBytes": 2072800,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/quay-headland.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 2048,
+      "sourceHeight": 2048,
+      "resampling": {
+        "role": "baseColorTexture",
+        "filter": "linear-light-lanczos3-sharpen-0.6-45-2"
+      },
+      "encodedSha256": "191091101581af85865d1eb37d95e32e05dd4bcf4cfe9dc6809079cbb8207526",
+      "encodedBytes": 120746,
+      "quality": 90,
+      "lossless": false,
+      "meanAbs": 1.3917071024576824,
+      "p99": 7.0,
+      "max": 28,
+      "psnr": 41.78667085375387,
+      "savedBytes": 1952054
+    },
+    {
+      "sourceSha256": "4844fda11a5919d9f19ccf98cdbf5aec9adb2a8959e05468ed61ef652c34d381",
+      "sourceBytes": 24414332,
+      "mimeType": "image/png",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/castle.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 4096,
+      "sourceHeight": 4096,
+      "resampling": {
+        "role": "baseColorTexture",
+        "filter": "linear-light-lanczos3-sharpen-0.6-45-2"
+      },
+      "encodedSha256": "723027a305e42c721c79b5075996f48bad89c1fe499802fed52701fe1042c32d",
+      "encodedBytes": 1419678,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 22994654
+    },
+    {
+      "sourceSha256": "4b34b631c6e720c9fcbad64b94804bb831e94b6e11a1351d3152fb728c1a3139",
+      "sourceBytes": 960319,
+      "mimeType": "image/png",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/hoist.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "encodedSha256": "0437a004fd912c594443e9528d3d33760edacbfe965ec064005a487f8836f622",
+      "encodedBytes": 508798,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 451521
+    },
+    {
+      "sourceSha256": "4bdc34ab7f12717a1001e616c59e3aca82be740958f034e09fb3cbf743cc53b6",
+      "sourceBytes": 562754,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/shelf.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "encodedSha256": "5112514603a4a01122e58017b405e4531b31ef364e73856e75ff35d591193471",
+      "encodedBytes": 364650,
+      "quality": 95,
+      "lossless": false,
+      "meanAbs": 1.7443469365437825,
+      "p99": 8.0,
+      "max": 29,
+      "psnr": 40.33254907898374,
+      "savedBytes": 198104
+    },
+    {
+      "sourceSha256": "4c8021227da0e23062d8973eb910979e42c4f134c1cd85c34283788d63dfe013",
+      "sourceBytes": 935502,
+      "mimeType": "image/png",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/pipes.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "encodedSha256": "ca5a51cc72cde7f542aa5e8468bb81afd73a4f625ff0be3af8c7cd49621ac4cb",
+      "encodedBytes": 498580,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 436922
+    },
+    {
+      "sourceSha256": "4d323947cae8e83a25f7ea12911d3c7a8136add68b84522929b732b71e34f6d8",
+      "sourceBytes": 382355,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/chief.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "skip": "less than three percent saving",
+      "best": {
+        "encodedSha256": "479b59aa4cda9925836aab605f5421c98722db4188b952e5051a8e34cb1235ea",
+        "encodedBytes": 466246,
+        "quality": 95,
+        "lossless": false,
+        "meanAbs": 1.8769642512003581,
+        "p99": 8.0,
+        "max": 22,
+        "psnr": 40.022755099157564
+      }
+    },
+    {
+      "sourceSha256": "5345ea1aa6b9c4fa708ade96041760b09b64b37511b64f27328e49c18af23b61",
+      "sourceBytes": 232782,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/baybody.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "encodedSha256": "333fe386c695919d81aa11b9c3f4d153dc49c151cf040ae2323f01c655c92c31",
+      "encodedBytes": 145292,
+      "quality": 90,
+      "lossless": false,
+      "meanAbs": 1.54468568166097,
+      "p99": 5.0,
+      "max": 14,
+      "psnr": 42.05197240124395,
+      "savedBytes": 87490
+    },
+    {
+      "sourceSha256": "54eb9b8bb1a0cde8fdbfca5133a5097f9b9318a8189d5cabf22d51c1e81754d3",
+      "sourceBytes": 338789,
+      "mimeType": "image/png",
+      "width": 256,
+      "height": 256,
+      "uses": [
+        {
+          "file": "map-landmarks/cannon.glb",
+          "image": 1,
+          "roles": [
+            "metallicRoughnessTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 512,
+      "sourceHeight": 512,
+      "resampling": {
+        "role": "metallicRoughnessTexture",
+        "filter": "linear-lanczos3"
+      },
+      "encodedSha256": "833062b7471501f347df2f60797d0d1030016437ba29c7ec4a54a0cc432dbed7",
+      "encodedBytes": 82304,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 256485
+    },
+    {
+      "sourceSha256": "5545510f6a4871fb2935da9eb03c3c2758ede8d332942a9826388b8c356bfcd0",
+      "sourceBytes": 24918365,
+      "mimeType": "image/png",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/aqueduct.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 4096,
+      "sourceHeight": 4096,
+      "resampling": {
+        "role": "baseColorTexture",
+        "filter": "linear-light-lanczos3-sharpen-0.6-45-2"
+      },
+      "encodedSha256": "971841e3613e2f15e405faa5b173718612b10a744942d0d06e050251a8087381",
+      "encodedBytes": 1594552,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 23323813
+    },
+    {
+      "sourceSha256": "57246779e61b5271e8a56e871eea4c0f5ed90cf2d0b1f893111538ac3a05a069",
+      "sourceBytes": 178037,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/step.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "encodedSha256": "2064e690175edd28696cf9c35f54d3ccc292dcd0d1a9dbca57d7e28c0cbe0314",
+      "encodedBytes": 30030,
+      "quality": 85,
+      "lossless": false,
+      "meanAbs": 1.288617769877116,
+      "p99": 5.0,
+      "max": 20,
+      "psnr": 43.099222349725196,
+      "savedBytes": 148007
+    },
+    {
+      "sourceSha256": "607219562bc469008b2e385360d8c6e24fa829a97a458e8b1440fd76bdd06a2b",
+      "sourceBytes": 341495,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/cannon.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "encodedSha256": "a81c316c35537122878dd315774cc00682eb1a1562df0ae8182e84dee21f0ecc",
+      "encodedBytes": 245180,
+      "quality": 90,
+      "lossless": false,
+      "meanAbs": 1.864270528157552,
+      "p99": 7.0,
+      "max": 19,
+      "psnr": 40.13515303063413,
+      "savedBytes": 96315
+    },
+    {
+      "sourceSha256": "63c708b65f3500beb56de99edb53d1ecdb46fe22208f205cb2271bb219b7caa0",
+      "sourceBytes": 3041807,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/country-club-cart.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 2048,
+      "sourceHeight": 2048,
+      "resampling": {
+        "role": "baseColorTexture",
+        "filter": "linear-light-lanczos3-sharpen-0.6-45-2"
+      },
+      "encodedSha256": "a8387be5c81c34316fc2a4f88ef28b960271ddb18018664f8c9837fef68b1830",
+      "encodedBytes": 1146774,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 1895033
+    },
+    {
+      "sourceSha256": "69ddf83a159e9b82fa1cd288716e632060f851072801e4a14462c7b7d7d73e7e",
+      "sourceBytes": 76362,
+      "mimeType": "image/png",
+      "width": 256,
+      "height": 256,
+      "uses": [
+        {
+          "file": "map-landmarks/dumpster.glb",
+          "image": 1,
+          "roles": [
+            "metallicRoughnessTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 512,
+      "sourceHeight": 512,
+      "resampling": {
+        "role": "metallicRoughnessTexture",
+        "filter": "linear-lanczos3"
+      },
+      "encodedSha256": "e7c2f2e28fb33aa2b8173cb1efa72b5de6259f69965d044f971d081e1a70f792",
+      "encodedBytes": 59074,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 17288
+    },
+    {
+      "sourceSha256": "6a2eaca6194e054aedc476c313209948079d1835fc75113fa06d7cd4194e27b2",
+      "sourceBytes": 283921,
+      "mimeType": "image/png",
+      "width": 256,
+      "height": 256,
+      "uses": [
+        {
+          "file": "map-landmarks/tunnel.glb",
+          "image": 1,
+          "roles": [
+            "metallicRoughnessTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 512,
+      "sourceHeight": 512,
+      "resampling": {
+        "role": "metallicRoughnessTexture",
+        "filter": "linear-lanczos3"
+      },
+      "encodedSha256": "b66fb2f03c8594f8f589f365738c7a5f184d06378d14e2b2ffca0b065bc958fc",
+      "encodedBytes": 53770,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 230151
+    },
+    {
+      "sourceSha256": "6ca98f96baafc043700a89a357adcd802332bb00c184cf47e8ff648439b04ba3",
+      "sourceBytes": 555806,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/tiki.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "encodedSha256": "24e82b0c9cd5a4269c3d6056ae7f81e1b23b496ec1ae40be13eb1abe6bafdb32",
+      "encodedBytes": 379360,
+      "quality": 95,
+      "lossless": false,
+      "meanAbs": 1.5858167012532551,
+      "p99": 7.0,
+      "max": 33,
+      "psnr": 41.254927602178725,
+      "savedBytes": 176446
+    },
+    {
+      "sourceSha256": "6d5fd4009cda97bd06ab2790366e0e5e9772903c40d664cfcec40e65759a1210",
+      "sourceBytes": 281824,
+      "mimeType": "image/png",
+      "width": 256,
+      "height": 256,
+      "uses": [
+        {
+          "file": "map-landmarks/cargo.glb",
+          "image": 1,
+          "roles": [
+            "metallicRoughnessTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 512,
+      "sourceHeight": 512,
+      "resampling": {
+        "role": "metallicRoughnessTexture",
+        "filter": "linear-lanczos3"
+      },
+      "encodedSha256": "12303c64ed010bb9cbad970fdc5fe6e9a23ef289bc1a04be71704e5c202bb961",
+      "encodedBytes": 70518,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 211306
+    },
+    {
+      "sourceSha256": "6da755e3c2845645254d50f141c2e1a34c602b967bcc750b35af9f385cfb9c5b",
+      "sourceBytes": 248979,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/baywindow.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "encodedSha256": "c603874ba8da16b7af5aabd5221cef7b229b315dfa664c67fda2b7ba953d7cb8",
+      "encodedBytes": 126006,
+      "quality": 90,
+      "lossless": false,
+      "meanAbs": 1.6773557662963867,
+      "p99": 8.0,
+      "max": 25,
+      "psnr": 40.32386100653089,
+      "savedBytes": 122973
+    },
+    {
+      "sourceSha256": "71996f1ac7fc2db1aac7d11ece536dfcbd0eae6ca79c9420bfba5b087d0dbec1",
+      "sourceBytes": 527103,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/redfern.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "skip": "quality threshold",
+      "best": {
+        "encodedSha256": "7cf5acd18a2aad659a8c56af373bbf50112283bf4558f6855e73a064cc8cffc2",
+        "encodedBytes": 325062,
+        "quality": 95,
+        "lossless": false,
+        "meanAbs": 1.8226782480875652,
+        "p99": 10.0,
+        "max": 38,
+        "psnr": 39.31985997517816
+      }
+    },
+    {
+      "sourceSha256": "787272dd4ab7436e04ec10f51c2611f66265b0a0c254471e7e51a48f4db904ad",
+      "sourceBytes": 3988712,
+      "mimeType": "image/png",
+      "width": 512,
+      "height": 512,
+      "uses": [
+        {
+          "file": "map-landmarks/boardwalk.glb",
+          "image": 2,
+          "roles": [
+            "normalTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 2048,
+      "sourceHeight": 2048,
+      "resampling": {
+        "role": "normalTexture",
+        "filter": "vector-lanczos3-renormalize"
+      },
+      "encodedSha256": "e59566975ba09ee99f7004f7341f212bbbf01543a2f328b38b798e1e10fe2034",
+      "encodedBytes": 348948,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 3639764
+    },
+    {
+      "sourceSha256": "7c43867869d78544747533597629cbadf1cd2ea51ce1095cb1354907a909de15",
+      "sourceBytes": 506285,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/cane.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "encodedSha256": "f68f3be79d30560a338da4700e726ab3b3d7fdd49af02190e8abf69497bfe87f",
+      "encodedBytes": 311140,
+      "quality": 95,
+      "lossless": false,
+      "meanAbs": 1.6286967595418294,
+      "p99": 8.0,
+      "max": 33,
+      "psnr": 40.82956379743191,
+      "savedBytes": 195145
+    },
+    {
+      "sourceSha256": "80dbe14d9d6136d4860abce8191b32a1e3576d8434b477ffbd933ce31637e4ff",
+      "sourceBytes": 1014857,
+      "mimeType": "image/png",
+      "width": 256,
+      "height": 256,
+      "uses": [
+        {
+          "file": "map-landmarks/castle.glb",
+          "image": 1,
+          "roles": [
+            "metallicRoughnessTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "resampling": {
+        "role": "metallicRoughnessTexture",
+        "filter": "linear-lanczos3"
+      },
+      "encodedSha256": "ed9db83ffb27a00a3e888dc793077d304dbdea21566256761c809eb0b1702c9b",
+      "encodedBytes": 58644,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 956213
+    },
+    {
+      "sourceSha256": "819570c0d405c79146b30e7ccc56b53abae034452481d20a65b81fc5cef115b7",
+      "sourceBytes": 4739525,
+      "mimeType": "image/png",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/wall.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 2048,
+      "sourceHeight": 2048,
+      "resampling": {
+        "role": "baseColorTexture",
+        "filter": "linear-light-lanczos3-sharpen-0.6-45-2"
+      },
+      "encodedSha256": "462385136d053e1c3974fdc7d7c71deef18f7b8f3e7ac6e5b605f7296e42aba0",
+      "encodedBytes": 1475718,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 3263807
+    },
+    {
+      "sourceSha256": "852a847d80cf53bada49340bed53b2b462d4afcc5385adfb5e5fa4d107176fe5",
+      "sourceBytes": 3195064,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/sanctuary-mesa.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 2048,
+      "sourceHeight": 2048,
+      "resampling": {
+        "role": "baseColorTexture",
+        "filter": "linear-light-lanczos3-sharpen-0.6-45-2"
+      },
+      "encodedSha256": "6e543c34541cd7fd78344c740c956d3cb9b8cc5cc95e56f61b90950c6b74384f",
+      "encodedBytes": 1239726,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 1955338
+    },
+    {
+      "sourceSha256": "85b7c68279137fe5dfafe6c82a10b5957f7475697e3b31415df33133e9e107c8",
+      "sourceBytes": 1660628,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/watermill.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 2048,
+      "sourceHeight": 2048,
+      "resampling": {
+        "role": "baseColorTexture",
+        "filter": "linear-light-lanczos3-sharpen-0.6-45-2"
+      },
+      "encodedSha256": "0f660ca9e5a059779a4e9a357e50207641fd804f43f1bb637d0b57bf2d40875b",
+      "encodedBytes": 403692,
+      "quality": 95,
+      "lossless": false,
+      "meanAbs": 1.5520464579264324,
+      "p99": 7.0,
+      "max": 35,
+      "psnr": 41.45591995190378,
+      "savedBytes": 1256936
+    },
+    {
+      "sourceSha256": "88256679b3c213795120424703469439062d80ed0e4081771247de3b42d53685",
+      "sourceBytes": 257208,
+      "mimeType": "image/png",
+      "width": 256,
+      "height": 256,
+      "uses": [
+        {
+          "file": "map-landmarks/fungus.glb",
+          "image": 1,
+          "roles": [
+            "metallicRoughnessTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 512,
+      "sourceHeight": 512,
+      "resampling": {
+        "role": "metallicRoughnessTexture",
+        "filter": "linear-lanczos3"
+      },
+      "encodedSha256": "57ea7adb2e69de1f803455f5d3e717333dd3e4373650125b9234294e5e0f0829",
+      "encodedBytes": 49092,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 208116
+    },
+    {
+      "sourceSha256": "8a80cd41d3b7a425f67267f835f0ae6bc91654631d5348f5acc0a9d903527bf3",
+      "sourceBytes": 2220642,
+      "mimeType": "image/png",
+      "width": 256,
+      "height": 256,
+      "uses": [
+        {
+          "file": "map-landmarks/boardwalk.glb",
+          "image": 1,
+          "roles": [
+            "metallicRoughnessTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 2048,
+      "sourceHeight": 2048,
+      "resampling": {
+        "role": "metallicRoughnessTexture",
+        "filter": "linear-lanczos3"
+      },
+      "encodedSha256": "4121165566e4b7186ef46928c347c238cca033d7544aef85af37f6346893c4f4",
+      "encodedBytes": 59630,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 2161012
+    },
+    {
+      "sourceSha256": "8b786b29af310229f473210eb63b3a6e60bf0d5acadd656307e3697f0d0e2a4a",
+      "sourceBytes": 342557,
+      "mimeType": "image/png",
+      "width": 512,
+      "height": 512,
+      "uses": [
+        {
+          "file": "map-landmarks/palm.glb",
+          "image": 2,
+          "roles": [
+            "normalTexture"
+          ]
+        }
+      ],
+      "encodedSha256": "0a92d5be3a8083cc205cc0a024892e820976cd14ea8c98cfdf26a7166f4b1b64",
+      "encodedBytes": 282852,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 59705
+    },
+    {
+      "sourceSha256": "8bf389cb37d6e4aaa4bc73499eee7a5992e8f8a32093d38d67cc9c0057411fbc",
+      "sourceBytes": 1342895,
+      "mimeType": "image/png",
+      "width": 512,
+      "height": 512,
+      "uses": [
+        {
+          "file": "map-landmarks/wheel.glb",
+          "image": 2,
+          "roles": [
+            "normalTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "resampling": {
+        "role": "normalTexture",
+        "filter": "vector-lanczos3-renormalize"
+      },
+      "encodedSha256": "5e05e8c9e0e943d2ea6d1c874188f13aa2e2ac3a7da61c4345879ce4fbeb4cd8",
+      "encodedBytes": 218296,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 1124599
+    },
+    {
+      "sourceSha256": "9030931bd4c71f376d7ccb835848ac04be39940e8adac29fb31ffd78f5e0f4d3",
+      "sourceBytes": 1392006,
+      "mimeType": "image/png",
+      "width": 512,
+      "height": 512,
+      "uses": [
+        {
+          "file": "map-landmarks/upperwall.glb",
+          "image": 2,
+          "roles": [
+            "normalTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "resampling": {
+        "role": "normalTexture",
+        "filter": "vector-lanczos3-renormalize"
+      },
+      "encodedSha256": "b30c7762cc476c3c22aa732299ebd3826ca7b92deaf662e2199301de9b346922",
+      "encodedBytes": 206628,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 1185378
+    },
+    {
+      "sourceSha256": "90ee0958df89ef37ee9252251bbaa62b586318f203cf9ba32d25d785fdd9c03a",
+      "sourceBytes": 104443,
+      "mimeType": "image/jpeg",
+      "width": 512,
+      "height": 512,
+      "uses": [
+        {
+          "file": "map-landmarks/brazier.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "skip": "quality threshold",
+      "best": {
+        "encodedSha256": "cd6f79988d46bd7697137a278021eb4fd855762aa76e5f1546b4e182cd666965",
+        "encodedBytes": 129068,
+        "quality": 95,
+        "lossless": false,
+        "meanAbs": 2.354445139567057,
+        "p99": 10.0,
+        "max": 30,
+        "psnr": 37.880844928390104
+      }
+    },
+    {
+      "sourceSha256": "932110fb48ab421dbf585cde00f60c8061e53c070dbe371eb960824327872680",
+      "sourceBytes": 282934,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/log.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "encodedSha256": "82da465b610408d6de1518240d3908623d8d5e35e883dce689b59af8193ba021",
+      "encodedBytes": 230692,
+      "quality": 95,
+      "lossless": false,
+      "meanAbs": 1.381468137105306,
+      "p99": 7.0,
+      "max": 43,
+      "psnr": 41.752174777163766,
+      "savedBytes": 52242
+    },
+    {
+      "sourceSha256": "937a28c6d39b61af3e153501b083dd0f72910778b6809b282897e093a2a5a9ab",
+      "sourceBytes": 539548,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/cliff-bay.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "encodedSha256": "7d9dafecd13cb459dc5be698ba62c2f7475359ed695d1343641296ca755e23f1",
+      "encodedBytes": 362548,
+      "quality": 95,
+      "lossless": false,
+      "meanAbs": 1.579422950744629,
+      "p99": 7.0,
+      "max": 25,
+      "psnr": 41.37654057218349,
+      "savedBytes": 177000
+    },
+    {
+      "sourceSha256": "97c8aa0d807bda8e625c7e04e08714eff5420d8a4556bacdd045307630b77e01",
+      "sourceBytes": 1639277,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/stairs.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 2048,
+      "sourceHeight": 2048,
+      "resampling": {
+        "role": "baseColorTexture",
+        "filter": "linear-light-lanczos3-sharpen-0.6-45-2"
+      },
+      "encodedSha256": "7a21000a1cc06eebe0e3fba193df00b2562d5b2752376ed3474f947d684b39a1",
+      "encodedBytes": 1109638,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 529639
+    },
+    {
+      "sourceSha256": "9898290aa1ab34e2b271f78d9ebee447968f022cdcc488c3bc181781f70dbaff",
+      "sourceBytes": 454498,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/canopy.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "skip": "quality threshold",
+      "best": {
+        "encodedSha256": "b32b3908fab40509579fed794fd6322279f1960849f7cceaaed5bb164b52e98d",
+        "encodedBytes": 285438,
+        "quality": 95,
+        "lossless": false,
+        "meanAbs": 1.9725697835286458,
+        "p99": 13.0,
+        "max": 65,
+        "psnr": 38.12630550797481
+      }
+    },
+    {
+      "sourceSha256": "992f06873992df1c990fdb60e990a8ff42c7135c113ada1944359049cb1748db",
+      "sourceBytes": 493883,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/spire.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "encodedSha256": "cf88b70ce2075084d8e5d17e01240bc07334b0cc4a1b384aca546b494d148851",
+      "encodedBytes": 313152,
+      "quality": 95,
+      "lossless": false,
+      "meanAbs": 1.607447624206543,
+      "p99": 8.0,
+      "max": 27,
+      "psnr": 40.958089604263606,
+      "savedBytes": 180731
+    },
+    {
+      "sourceSha256": "9a75d652b37d27ea1a68d8d354e03c59d0fb6831eee75a3aaa727b8268feab1d",
+      "sourceBytes": 1377360,
+      "mimeType": "image/png",
+      "width": 512,
+      "height": 512,
+      "uses": [
+        {
+          "file": "map-landmarks/ivy.glb",
+          "image": 2,
+          "roles": [
+            "normalTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "resampling": {
+        "role": "normalTexture",
+        "filter": "vector-lanczos3-renormalize"
+      },
+      "encodedSha256": "161982d1222fe83ffc7a585fcbf51b247804aa988acd16abbfc57fd66ae2a5d2",
+      "encodedBytes": 236534,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 1140826
+    },
+    {
+      "sourceSha256": "9f3e10306760c6abebc91bb231762ffe2b8cf2fb8be69612449a45e74987ca2d",
+      "sourceBytes": 3441690,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/deadwater-contest-bowl.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 2048,
+      "sourceHeight": 2048,
+      "resampling": {
+        "role": "baseColorTexture",
+        "filter": "linear-light-lanczos3-sharpen-0.6-45-2"
+      },
+      "encodedSha256": "63ef5cd49d3072b71ab0c110e36300b5c8ef525d11276f438ff75879696a9e89",
+      "encodedBytes": 1293760,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 2147930
+    },
+    {
+      "sourceSha256": "9f7e122ade7ade95c644c43ce4d878cb3b8fecfd42e3213c0861dc88ae993382",
+      "sourceBytes": 332651,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/capital.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "encodedSha256": "3c6edb5069dcaa7b69ac4a1812b86930a0040ea4ba660b2ccae3e26ca83b414f",
+      "encodedBytes": 130662,
+      "quality": 90,
+      "lossless": false,
+      "meanAbs": 1.511338233947754,
+      "p99": 6.0,
+      "max": 26,
+      "psnr": 41.68505784097501,
+      "savedBytes": 201989
+    },
+    {
+      "sourceSha256": "9fdb669883892326d44dfd528f5674e0c1128eab79df1db5a8f79115b65d9f1d",
+      "sourceBytes": 255479,
+      "mimeType": "image/png",
+      "width": 512,
+      "height": 512,
+      "uses": [
+        {
+          "file": "map-landmarks/fungus.glb",
+          "image": 2,
+          "roles": [
+            "normalTexture"
+          ]
+        }
+      ],
+      "encodedSha256": "74428616bdf3c6f80952a32ddac9786d7d0b2ff7b9d21e6bf7e3c68208f24bd9",
+      "encodedBytes": 185984,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 69495
+    },
+    {
+      "sourceSha256": "a3863428591157ccdd41fd3e1821d59532f2d84792f69398d36750db8ad3ba5c",
+      "sourceBytes": 393191,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/bough.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "encodedSha256": "cd42c5ca2f5c0a26cce911e576d484ae805ef51206f592e1de481bb31e31b14c",
+      "encodedBytes": 145270,
+      "quality": 90,
+      "lossless": false,
+      "meanAbs": 1.804568608601888,
+      "p99": 7.0,
+      "max": 26,
+      "psnr": 40.322653581506806,
+      "savedBytes": 247921
+    },
+    {
+      "sourceSha256": "a3f634b015a4a9eb7cd2160229721a2444ef0e3df96319e1c4722a4039384148",
+      "sourceBytes": 137462,
+      "mimeType": "image/png",
+      "width": 256,
+      "height": 256,
+      "uses": [
+        {
+          "file": "map-landmarks/shutter.glb",
+          "image": 1,
+          "roles": [
+            "metallicRoughnessTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 512,
+      "sourceHeight": 512,
+      "resampling": {
+        "role": "metallicRoughnessTexture",
+        "filter": "linear-lanczos3"
+      },
+      "encodedSha256": "09825d70a9beacd10e1569bc10fb9c93d9a68a353137308e3094ee7945ef1ffe",
+      "encodedBytes": 67548,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 69914
+    },
+    {
+      "sourceSha256": "a81d6560c9cde39b543b100e55d1276dbd150f4ee65bece01e7fc8ffb3dfc4b5",
+      "sourceBytes": 301396,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/flume.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "encodedSha256": "337c4668bb25c54e1177cc194b7d750a78f6f9c59732074be5370c54c8e635e2",
+      "encodedBytes": 246304,
+      "quality": 90,
+      "lossless": false,
+      "meanAbs": 1.8462451299031575,
+      "p99": 7.0,
+      "max": 16,
+      "psnr": 40.326936550356116,
+      "savedBytes": 55092
+    },
+    {
+      "sourceSha256": "abaf475659c238524e15e34e64c26b09fc0a06e067b0f930196d632da5fb1927",
+      "sourceBytes": 204907,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/pine.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "encodedSha256": "3f753832728f02ca51d187785c21c571e933e8ac7d5ee914d1757434471fcd75",
+      "encodedBytes": 108810,
+      "quality": 90,
+      "lossless": false,
+      "meanAbs": 1.568037986755371,
+      "p99": 7.0,
+      "max": 18,
+      "psnr": 41.47430245913084,
+      "savedBytes": 96097
+    },
+    {
+      "sourceSha256": "b122e71236905f64872a01076bad5bd20185df4f6d0aa30a6bb0d4a352e975f4",
+      "sourceBytes": 4125184,
+      "mimeType": "image/png",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/track.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 2048,
+      "sourceHeight": 2048,
+      "resampling": {
+        "role": "baseColorTexture",
+        "filter": "linear-light-lanczos3-sharpen-0.6-45-2"
+      },
+      "encodedSha256": "622172e77a6c02600a69e2dbf464aeb0148108cb1b706bf4723ed0a37f299be1",
+      "encodedBytes": 957612,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 3167572
+    },
+    {
+      "sourceSha256": "b1d8bd0fb7e3458dea29ed4f73dc06b1fc70ceabb7342d372f4ed6186d9655b0",
+      "sourceBytes": 716565,
+      "mimeType": "image/png",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/dumpster.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "encodedSha256": "d2b4b9255f2e37853aef28c09ac3bf7543f518a92ec428feffe783eb50bc9eec",
+      "encodedBytes": 376064,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 340501
+    },
+    {
+      "sourceSha256": "b204e6ccbbef4fa00b32417982ffaf1865d1a1cd61f57951800cfc2f63118180",
+      "sourceBytes": 3578275,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/harbour-rooftops.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 2048,
+      "sourceHeight": 2048,
+      "resampling": {
+        "role": "baseColorTexture",
+        "filter": "linear-light-lanczos3-sharpen-0.6-45-2"
+      },
+      "encodedSha256": "19fe30854dfc4940b7c8d8c095e8c9baafa7c1cdd07ac7a53efe7633bc2c8592",
+      "encodedBytes": 1360944,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 2217331
+    },
+    {
+      "sourceSha256": "b252b5329c0c164de6ffc5065ec5827f6a136b37199e680876b39ff9b3c6b536",
+      "sourceBytes": 747607,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/planted-cliff.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 2048,
+      "sourceHeight": 2048,
+      "resampling": {
+        "role": "baseColorTexture",
+        "filter": "linear-light-lanczos3-sharpen-0.6-45-2"
+      },
+      "skip": "less than three percent saving",
+      "best": {
+        "encodedSha256": "45709fbcfa32d5fba6c14e040900a97f6fea5adf257c917e41b00972e2c14755",
+        "encodedBytes": 1137680,
+        "quality": 100,
+        "lossless": true,
+        "meanAbs": 0.0,
+        "p99": 0.0,
+        "max": 0,
+        "psnr": null
+      }
+    },
+    {
+      "sourceSha256": "b37275b4c48b3b571a8343700512ecc68769ca4ea68b09bad1e956325dd25186",
+      "sourceBytes": 3431325,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/sky-spirit-totem.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 2048,
+      "sourceHeight": 2048,
+      "resampling": {
+        "role": "baseColorTexture",
+        "filter": "linear-light-lanczos3-sharpen-0.6-45-2"
+      },
+      "encodedSha256": "faeb6b25adfe2aa6fba47952c4f9e9895c4ae091ad1f602a35982aea1b79ec4a",
+      "encodedBytes": 1303684,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 2127641
+    },
+    {
+      "sourceSha256": "b3f06ee2498e1b317097cf5fb0206aa6739ac5feaa165002d4b5384be4db660d",
+      "sourceBytes": 381427,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/oak.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "skip": "quality threshold",
+      "best": {
+        "encodedSha256": "16f6c9273fb9bda88b99b7526d4a5e1f91ec0b4e8cec7b6dd7f659ccc347efb6",
+        "encodedBytes": 364198,
+        "quality": 95,
+        "lossless": false,
+        "meanAbs": 1.9423926671346028,
+        "p99": 9.0,
+        "max": 25,
+        "psnr": 39.51784409635403
+      }
+    },
+    {
+      "sourceSha256": "b4e7f2c3fc0f1c305b9693826d5926e5d3d30cfd76da62cb8ed17eb2a34bb683",
+      "sourceBytes": 285214,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/hibiscus.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "encodedSha256": "9555f9d336701c4419d9bcd1513c8e7d6075b9237c249fc8d3eac0884a98d9cf",
+      "encodedBytes": 273860,
+      "quality": 95,
+      "lossless": false,
+      "meanAbs": 1.4869359334309895,
+      "p99": 8.0,
+      "max": 30,
+      "psnr": 41.164110271303365,
+      "savedBytes": 11354
+    },
+    {
+      "sourceSha256": "b551f55b4e69db8c4a4c0b9822e9c4d8821ca17cb19465a5a137ac7ce92a823d",
+      "sourceBytes": 5184804,
+      "mimeType": "image/png",
+      "width": 512,
+      "height": 512,
+      "uses": [
+        {
+          "file": "map-landmarks/ship.glb",
+          "image": 2,
+          "roles": [
+            "normalTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 2048,
+      "sourceHeight": 2048,
+      "resampling": {
+        "role": "normalTexture",
+        "filter": "vector-lanczos3-renormalize"
+      },
+      "encodedSha256": "50a103c5f004ca83e93104702bc8bcdd47ab4abcebf3859c2187c5711d1ca73a",
+      "encodedBytes": 439246,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 4745558
+    },
+    {
+      "sourceSha256": "b9ff279bd3a3ed01dbaef2b794a023a8cc79f6b8cde1f10f5bd31175465d6dbf",
+      "sourceBytes": 65855,
+      "mimeType": "image/jpeg",
+      "width": 512,
+      "height": 512,
+      "uses": [
+        {
+          "file": "map-landmarks/clockwork.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "skip": "less than three percent saving",
+      "best": {
+        "encodedSha256": "8af02cbc4a90bf2fb56ac1ebc3bc58920051aa5babe2ed62790e2209dea3b594",
+        "encodedBytes": 74630,
+        "quality": 95,
+        "lossless": false,
+        "meanAbs": 1.4628448486328125,
+        "p99": 6.0,
+        "max": 14,
+        "psnr": 42.29920599729459
+      }
+    },
+    {
+      "sourceSha256": "c001ddfd31c612500ee06dd83b5bcdb23d9a6a6e04d8834ccb4052043e58d849",
+      "sourceBytes": 353646,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/nightarch.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "encodedSha256": "618e2fc4fff78cd389f0089df038856c2644c2a5c65e5d553e689eefe5625e4c",
+      "encodedBytes": 161212,
+      "quality": 90,
+      "lossless": false,
+      "meanAbs": 1.6876386006673176,
+      "p99": 7.0,
+      "max": 24,
+      "psnr": 41.05238830312349,
+      "savedBytes": 192434
+    },
+    {
+      "sourceSha256": "c19a308a9e26688c6f52ad083508952e20d8fba0cad027f8549eef571d4a8ac7",
+      "sourceBytes": 306772,
+      "mimeType": "image/png",
+      "width": 512,
+      "height": 512,
+      "uses": [
+        {
+          "file": "map-landmarks/timberrib.glb",
+          "image": 2,
+          "roles": [
+            "normalTexture"
+          ]
+        }
+      ],
+      "encodedSha256": "ed709a5e2a392df02754613cc3ef7883562a2cdc051a87f7d5eddcc3cc4a208f",
+      "encodedBytes": 252606,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 54166
+    },
+    {
+      "sourceSha256": "c20bcea653e5baf5223d4b2f8b6e39d9aefdb33fec2ccd3ac9f64879f99b02cf",
+      "sourceBytes": 407768,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/palm.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "skip": "less than three percent saving",
+      "best": {
+        "encodedSha256": "5c743ff53fd288c55b49d294b9193229bd56f00997830b337fd586388aa4a37a",
+        "encodedBytes": 431244,
+        "quality": 95,
+        "lossless": false,
+        "meanAbs": 1.468767484029134,
+        "p99": 6.0,
+        "max": 21,
+        "psnr": 42.08344462475914
+      }
+    },
+    {
+      "sourceSha256": "c266fae7cbddba5404d663f6c65a2cbc9e708908feca0534958745a94ed4c2c9",
+      "sourceBytes": 1262946,
+      "mimeType": "image/png",
+      "width": 512,
+      "height": 512,
+      "uses": [
+        {
+          "file": "map-landmarks/aqueduct.glb",
+          "image": 2,
+          "roles": [
+            "normalTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "resampling": {
+        "role": "normalTexture",
+        "filter": "vector-lanczos3-renormalize"
+      },
+      "encodedSha256": "6703dc1ee8bf0f7e7fd7db3efe3d177399798556c3a0eb7fc43e1af6d3b4e37a",
+      "encodedBytes": 182688,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 1080258
+    },
+    {
+      "sourceSha256": "c3347b50052fcdeef2e0d443dc001e47d1dfb4a49b41ea059df5bcbab04fac9d",
+      "sourceBytes": 4576411,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/tunnel.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 4096,
+      "sourceHeight": 4096,
+      "resampling": {
+        "role": "baseColorTexture",
+        "filter": "linear-light-lanczos3-sharpen-0.6-45-2"
+      },
+      "encodedSha256": "2f27f1716f92018d1fb60b777319992be7b8b2d952292f0a9b4b132c07b9143d",
+      "encodedBytes": 337594,
+      "quality": 95,
+      "lossless": false,
+      "meanAbs": 1.4139245351155598,
+      "p99": 6.0,
+      "max": 24,
+      "psnr": 42.27059826229496,
+      "savedBytes": 4238817
+    },
+    {
+      "sourceSha256": "c3fb798870b890fd5328c2b2a5e4da187502dcf448eebd439cc46b197e562fab",
+      "sourceBytes": 7299572,
+      "mimeType": "image/png",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/wheel.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 2048,
+      "sourceHeight": 2048,
+      "resampling": {
+        "role": "baseColorTexture",
+        "filter": "linear-light-lanczos3-sharpen-0.6-45-2"
+      },
+      "encodedSha256": "1d8436cf2b62b9efa833108ab00d72dfa92a7615cfb64f8976beef15e16c0a43",
+      "encodedBytes": 1621910,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 5677662
+    },
+    {
+      "sourceSha256": "c527e03c300ec6d901594a855ca27c5f4196e60bd07a42c508d06d390095ffeb",
+      "sourceBytes": 177358,
+      "mimeType": "image/png",
+      "width": 256,
+      "height": 256,
+      "uses": [
+        {
+          "file": "map-landmarks/wall.glb",
+          "image": 1,
+          "roles": [
+            "metallicRoughnessTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "resampling": {
+        "role": "metallicRoughnessTexture",
+        "filter": "linear-lanczos3"
+      },
+      "encodedSha256": "23046ab91512aa721b14df3319ce8a77b1c59d6fb1879b47d0e5be8a7b534ff4",
+      "encodedBytes": 40704,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 136654
+    },
+    {
+      "sourceSha256": "c7cfea7c8d93c4c9eea3c4d9a30d3a18d7fa8a374c09f7e68f33b2b58376fd3b",
+      "sourceBytes": 297256,
+      "mimeType": "image/png",
+      "width": 256,
+      "height": 256,
+      "uses": [
+        {
+          "file": "map-landmarks/timberrib.glb",
+          "image": 1,
+          "roles": [
+            "metallicRoughnessTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 512,
+      "sourceHeight": 512,
+      "resampling": {
+        "role": "metallicRoughnessTexture",
+        "filter": "linear-lanczos3"
+      },
+      "encodedSha256": "524a8028d2068b9ef4f027aefc7ed51ef94f00d08f92bc51484d6a877cbecb88",
+      "encodedBytes": 62874,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 234382
+    },
+    {
+      "sourceSha256": "d4341fd0aa7773ec9bed787822d480487e4d57b95f8389987bb889444ecbfe90",
+      "sourceBytes": 178309,
+      "mimeType": "image/png",
+      "width": 256,
+      "height": 256,
+      "uses": [
+        {
+          "file": "map-landmarks/pipes.glb",
+          "image": 1,
+          "roles": [
+            "metallicRoughnessTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 512,
+      "sourceHeight": 512,
+      "resampling": {
+        "role": "metallicRoughnessTexture",
+        "filter": "linear-lanczos3"
+      },
+      "encodedSha256": "256cebdaf91cc5f9494b9af27419d64bcc60fedc11fe392bf2332d98480ac00d",
+      "encodedBytes": 76236,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 102073
+    },
+    {
+      "sourceSha256": "d5dcb290b260408037be0e7b67cd12ce1046337683b6177c510109004ef04bec",
+      "sourceBytes": 316865,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/basalt.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "encodedSha256": "df56cc6d34d00c79a7570fc347341ad04dc7d15b17fdac06f97656f9a8cf1ecc",
+      "encodedBytes": 152642,
+      "quality": 90,
+      "lossless": false,
+      "meanAbs": 1.5159692764282227,
+      "p99": 6.0,
+      "max": 14,
+      "psnr": 42.03488256920431,
+      "savedBytes": 164223
+    },
+    {
+      "sourceSha256": "d78c701a7289eafe423a9b318250b28c10d6a92925fec786427897d783c6f877",
+      "sourceBytes": 2327468,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/motu-contest-bowl.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 2048,
+      "sourceHeight": 2048,
+      "resampling": {
+        "role": "baseColorTexture",
+        "filter": "linear-light-lanczos3-sharpen-0.6-45-2"
+      },
+      "encodedSha256": "b9e2f19d1fe13582a0df97c0bca4d3bb6c2225435ce7039b3e90c25bb9568457",
+      "encodedBytes": 203104,
+      "quality": 95,
+      "lossless": false,
+      "meanAbs": 1.342990557352702,
+      "p99": 8.0,
+      "max": 44,
+      "psnr": 41.476329057666575,
+      "savedBytes": 2124364
+    },
+    {
+      "sourceSha256": "d9b45955d8b187a592dc6b10435747618120957c241f483cdc398014aaa9df7b",
+      "sourceBytes": 1042406,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/cliff-foliage.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 2048,
+      "sourceHeight": 2048,
+      "resampling": {
+        "role": "baseColorTexture",
+        "filter": "linear-light-lanczos3-sharpen-0.6-45-2"
+      },
+      "encodedSha256": "f9e05250120cc4318bbef6aadc743b1856f1c475098615c5ad73b83350c7cef4",
+      "encodedBytes": 129368,
+      "quality": 90,
+      "lossless": false,
+      "meanAbs": 1.665932337443034,
+      "p99": 7.0,
+      "max": 36,
+      "psnr": 40.883103251271265,
+      "savedBytes": 913038
+    },
+    {
+      "sourceSha256": "da71b1232fc98a26c0d6187198497dc03315ab55c2db4666b577c749256044ec",
+      "sourceBytes": 665830,
+      "mimeType": "image/png",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/shutter.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "encodedSha256": "8eec245b04e054caccbce0af56ee8497c4409066da7d56eab3df5d196e47d1cc",
+      "encodedBytes": 348414,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 317416
+    },
+    {
+      "sourceSha256": "e1649c44016837695d797cf6dab080bb74fb1dd7f827ae9b45a39f2974e1814b",
+      "sourceBytes": 220342,
+      "mimeType": "image/png",
+      "width": 512,
+      "height": 512,
+      "uses": [
+        {
+          "file": "map-landmarks/dumpster.glb",
+          "image": 2,
+          "roles": [
+            "normalTexture"
+          ]
+        }
+      ],
+      "encodedSha256": "d596cc134efe837e9fdb27b69cc2de6578f7685e949a422abedcfdccc7c5b895",
+      "encodedBytes": 150088,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 70254
+    },
+    {
+      "sourceSha256": "e1c4199219a2e0cb732a7e9b463047aad1e9b87ceae94665d55e8c7d522b675e",
+      "sourceBytes": 1588178,
+      "mimeType": "image/png",
+      "width": 512,
+      "height": 512,
+      "uses": [
+        {
+          "file": "map-landmarks/wall.glb",
+          "image": 2,
+          "roles": [
+            "normalTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "resampling": {
+        "role": "normalTexture",
+        "filter": "vector-lanczos3-renormalize"
+      },
+      "encodedSha256": "c6d96cf211bb0b868b140e03a53d3b7a73f4aa65f15757e841b8bc8f9bc5c839",
+      "encodedBytes": 224522,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 1363656
+    },
+    {
+      "sourceSha256": "e62134210d913c945edf7814115263341487425184347c2914d19902b5fbfbcb",
+      "sourceBytes": 352428,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/bayawning.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "encodedSha256": "cd3c19b64a30b2e3bda4bb334c53efb1f2b165c6e7f59856d709a7f5cc882a16",
+      "encodedBytes": 315068,
+      "quality": 95,
+      "lossless": false,
+      "meanAbs": 1.6268860499064128,
+      "p99": 8.0,
+      "max": 21,
+      "psnr": 40.866210430671764,
+      "savedBytes": 37360
+    },
+    {
+      "sourceSha256": "e73fb8ed9949102daad2cefe53ad0ec3f4b396f4094e7b5c26fd0b2963c1ef3d",
+      "sourceBytes": 305135,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/pavilion.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "skip": "less than three percent saving",
+      "best": {
+        "encodedSha256": "e71e36f579cf45cd9bf49f8be0d9788fcfc8dec11e5dcc2bfdef193815542091",
+        "encodedBytes": 380578,
+        "quality": 95,
+        "lossless": false,
+        "meanAbs": 1.3746363321940105,
+        "p99": 6.0,
+        "max": 17,
+        "psnr": 42.63270522761536
+      }
+    },
+    {
+      "sourceSha256": "e8673f76871f6ecba8662d89fbc55e7d8cd9c73731d81c24e8273603a54cd3bc",
+      "sourceBytes": 391181,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/relief.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "encodedSha256": "3ebe3d385338d50bbda8c64b31282d12914f5319da5f196d6ac63ce527411e84",
+      "encodedBytes": 173504,
+      "quality": 90,
+      "lossless": false,
+      "meanAbs": 1.6549110412597656,
+      "p99": 7.0,
+      "max": 19,
+      "psnr": 41.115699041790606,
+      "savedBytes": 217677
+    },
+    {
+      "sourceSha256": "e98f505683c6198392a608666041ad037e1674f46ff8acc2081ddd3ba824c276",
+      "sourceBytes": 227632,
+      "mimeType": "image/png",
+      "width": 512,
+      "height": 512,
+      "uses": [
+        {
+          "file": "map-landmarks/tunnel.glb",
+          "image": 2,
+          "roles": [
+            "normalTexture"
+          ]
+        }
+      ],
+      "encodedSha256": "30b74680e1706868b97d6780eb92878bcfb2dcb4b4c0e04dd9500357b2d00130",
+      "encodedBytes": 158658,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 68974
+    },
+    {
+      "sourceSha256": "ea1fd0928334aa3eabbc1b0580e0be6955f3af560e5a1c02c46e76c730e122bf",
+      "sourceBytes": 360847,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/cargo.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "encodedSha256": "cd1197e4fda1aa4a49498e3dbf216cc20b341fbee38c673a9c062f4b40301f83",
+      "encodedBytes": 267784,
+      "quality": 90,
+      "lossless": false,
+      "meanAbs": 1.7982378005981445,
+      "p99": 7.0,
+      "max": 19,
+      "psnr": 40.51543007946404,
+      "savedBytes": 93063
+    },
+    {
+      "sourceSha256": "eb1457dad7148487b1b71f3220bd409207bb8cb8e43bfeaebed2fee962a66de1",
+      "sourceBytes": 2883175,
+      "mimeType": "image/png",
+      "width": 256,
+      "height": 256,
+      "uses": [
+        {
+          "file": "map-landmarks/ship.glb",
+          "image": 1,
+          "roles": [
+            "metallicRoughnessTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 2048,
+      "sourceHeight": 2048,
+      "resampling": {
+        "role": "metallicRoughnessTexture",
+        "filter": "linear-lanczos3"
+      },
+      "encodedSha256": "30496bbedc2f6745b90a81290a6de56b22cd052284af95927ed014fb1b788b01",
+      "encodedBytes": 76210,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 2806965
+    },
+    {
+      "sourceSha256": "eb35b72233e8631db2e27a576b2e893cf3cccc7c4b9ffe9ed4b4eca5e6c21612",
+      "sourceBytes": 185048,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/portal.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "encodedSha256": "d3159c9d355d803a564b9bad6999e76deda1202b11eba811612b966228e03990",
+      "encodedBytes": 91262,
+      "quality": 85,
+      "lossless": false,
+      "meanAbs": 1.7273095448811848,
+      "p99": 8.0,
+      "max": 25,
+      "psnr": 40.33133602834631,
+      "savedBytes": 93786
+    },
+    {
+      "sourceSha256": "ed5c57c42280bc7c4026030a17224b4dea80baccfdf86bcaf8f8d0f995dc5314",
+      "sourceBytes": 175212,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 512,
+      "uses": [
+        {
+          "file": "map-landmarks/nightrock.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "skip": "quality threshold",
+      "best": {
+        "encodedSha256": "750ef902fa7fd459c21f9d91e9379508a90d2ec7d3b3c24db7f1dd49a174b988",
+        "encodedBytes": 112012,
+        "quality": 95,
+        "lossless": false,
+        "meanAbs": 1.415030797322591,
+        "p99": 9.0,
+        "max": 45,
+        "psnr": 40.73460257342012
+      }
+    },
+    {
+      "sourceSha256": "eeb095b23544f1878b082bcd16a6928fdb27b56a40bc9b2921ec3755488cbd78",
+      "sourceBytes": 7284334,
+      "mimeType": "image/png",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/ivy.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 2048,
+      "sourceHeight": 2048,
+      "resampling": {
+        "role": "baseColorTexture",
+        "filter": "linear-light-lanczos3-sharpen-0.6-45-2"
+      },
+      "encodedSha256": "e6bab4a7f55f761f61d90640022e7817a5e105e03357e9f9fca5fa51a6269f93",
+      "encodedBytes": 1605796,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 5678538
+    },
+    {
+      "sourceSha256": "eebb49bc3f26867091e2a04d27d23e3100dc3b265a8dfb7bb3cc5ee3a1303048",
+      "sourceBytes": 240037,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/demoncart.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "encodedSha256": "461432f842b549a1f5d2a9efb1eaa12c84d48bbb21abb449b47f2aa1dade89dd",
+      "encodedBytes": 173988,
+      "quality": 90,
+      "lossless": false,
+      "meanAbs": 1.4599396387736003,
+      "p99": 6.0,
+      "max": 17,
+      "psnr": 41.98375140854413,
+      "savedBytes": 66049
+    },
+    {
+      "sourceSha256": "eed01b862e517f1e7e0d60764a2bd141191bcd5c76a573f9007c69622a012d99",
+      "sourceBytes": 268040,
+      "mimeType": "image/png",
+      "width": 256,
+      "height": 256,
+      "uses": [
+        {
+          "file": "map-landmarks/palm.glb",
+          "image": 1,
+          "roles": [
+            "metallicRoughnessTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 512,
+      "sourceHeight": 512,
+      "resampling": {
+        "role": "metallicRoughnessTexture",
+        "filter": "linear-lanczos3"
+      },
+      "encodedSha256": "00c582b5c93673ae081e64653c36f89d23325981c270ffb267a2bb4e89bd1653",
+      "encodedBytes": 61036,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 207004
+    },
+    {
+      "sourceSha256": "f0d7a13db361d7c1303e804960d5d8f0929fad31447ea3407920a8f7dbb52715",
+      "sourceBytes": 948393,
+      "mimeType": "image/png",
+      "width": 512,
+      "height": 512,
+      "uses": [
+        {
+          "file": "map-landmarks/track.glb",
+          "image": 2,
+          "roles": [
+            "normalTexture"
+          ]
+        }
+      ],
+      "sourceWidth": 1024,
+      "sourceHeight": 1024,
+      "resampling": {
+        "role": "normalTexture",
+        "filter": "vector-lanczos3-renormalize"
+      },
+      "encodedSha256": "2856a7566f0896f8f0ad5b7e151ef6e9402cf48a99cb26964383a0ef202bea98",
+      "encodedBytes": 137854,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 810539
+    },
+    {
+      "sourceSha256": "f1a7c6df6b104975b6bcdb2c7ef27db07b140d9cd36012701dff632e9dbef2ef",
+      "sourceBytes": 210919,
+      "mimeType": "image/png",
+      "width": 512,
+      "height": 512,
+      "uses": [
+        {
+          "file": "map-landmarks/shutter.glb",
+          "image": 2,
+          "roles": [
+            "normalTexture"
+          ]
+        }
+      ],
+      "encodedSha256": "6b4a1ce4ce6a029517d8c731551ac68dc317cdbe52d29f5bc7840e1bdd819173",
+      "encodedBytes": 143958,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 66961
+    },
+    {
+      "sourceSha256": "f364ad02d7e2b8e565eec97f1fe8250bd61b39cd9db5e8beb23cac6a6f027573",
+      "sourceBytes": 308081,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/bayroof.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "encodedSha256": "e4f8aebe59b274f147d6124034da82c5921b0bb9f29e29879c4382ab28480a94",
+      "encodedBytes": 182024,
+      "quality": 90,
+      "lossless": false,
+      "meanAbs": 1.7239357630411785,
+      "p99": 8.0,
+      "max": 25,
+      "psnr": 40.59050795712856,
+      "savedBytes": 126057
+    },
+    {
+      "sourceSha256": "f6d308e287df1b7a71d37ad1b9416ee4fb6dbab99ea02c711e54fc77f1247ce5",
+      "sourceBytes": 304489,
+      "mimeType": "image/png",
+      "width": 512,
+      "height": 512,
+      "uses": [
+        {
+          "file": "map-landmarks/pipes.glb",
+          "image": 2,
+          "roles": [
+            "normalTexture"
+          ]
+        }
+      ],
+      "encodedSha256": "15fab25d3e93521c1c7f1d2d5a961329cdc6d6f7d3863e2ef8b2c25243cb615c",
+      "encodedBytes": 216876,
+      "quality": 100,
+      "lossless": true,
+      "meanAbs": 0.0,
+      "p99": 0.0,
+      "max": 0,
+      "psnr": null,
+      "savedBytes": 87613
+    },
+    {
+      "sourceSha256": "fc98fea08ca5ac97398f6e7c5311f08bcb4f09108d2b562f06198abf4150e47f",
+      "sourceBytes": 378988,
+      "mimeType": "image/jpeg",
+      "width": 1024,
+      "height": 1024,
+      "uses": [
+        {
+          "file": "map-landmarks/lifeguard.glb",
+          "image": 0,
+          "roles": [
+            "baseColorTexture"
+          ]
+        }
+      ],
+      "skip": "less than three percent saving",
+      "best": {
+        "encodedSha256": "109f3539d6a687761fd62c509fac43b2d56adc67a3c491c25acab3ab8dda565b",
+        "encodedBytes": 421338,
+        "quality": 95,
+        "lossless": false,
+        "meanAbs": 1.4721568425496419,
+        "p99": 6.0,
+        "max": 17,
+        "psnr": 42.29255880929193
+      }
+    }
+  ]
+}

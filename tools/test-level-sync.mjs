@@ -16,8 +16,11 @@ try{
  const api=await server.ssrLoadModule('/src/level.ts'),sync=await server.ssrLoadModule('/src/sync.ts');
  const original=await readFile('public/levels.json'),pack=JSON.parse(original);
  const compact=compactPublishedLevels(pack,api.BUILTIN_LEVELS);
- assert.deepEqual(compact.sourceBacked,pack.levels.filter(e=>e.id!=='flats').map(e=>e.id));
- assert.deepEqual(compact.pack,{v:2,levels:pack.levels.filter(e=>e.id==='flats')});
+ // These editor snapshots differ from the current authored source and must
+ // survive compaction, even when the built-in registry has the same ID.
+ const overrides=new Set(['flats','bonus-jungle-terraces','slipstream-race']);
+ assert.deepEqual(compact.sourceBacked,pack.levels.filter(e=>!overrides.has(e.id)).map(e=>e.id));
+ assert.deepEqual(compact.pack,{v:2,levels:pack.levels.filter(e=>overrides.has(e.id))});
  assert.equal(api.MAX_LEVEL_PACK_BYTES,16*1024*1024,'untrusted import allocation bound stays unchanged');
  assert.ok(api.normalizeUserLevelEntries(compact.pack.levels));
  const crown=pack.levels.find(e=>e.id==='drowned-crown');
@@ -35,7 +38,7 @@ try{
  assert.throws(()=>compactPublishedLevels({v:2,levels:[],extra:true},api.BUILTIN_LEVELS),/Invalid/);
  const output=path.join(temp,'dist');await mkdir(output);await writeFile(path.join(output,'levels.json'),original);
  const proof=await preparePublishedLevels({root:process.cwd(),outDir:output});
- assert.equal(proof.sourceBytes,31636645);assert.equal(proof.outputBytes,Buffer.byteLength(JSON.stringify(compact.pack)+'\n'));
+ assert.equal(proof.sourceBytes,original.length);assert.equal(proof.outputBytes,Buffer.byteLength(JSON.stringify(compact.pack)+'\n'));
  assert.deepEqual(JSON.parse(await readFile(path.join(output,'levels.json'))),compact.pack);
  assert.deepEqual(await preparePublishedLevels({root:process.cwd(),outDir:output}),proof,'repeated build must be idempotent');
  assert.deepEqual(await readFile('public/levels.json'),original,'build changed source snapshots');

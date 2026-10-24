@@ -1,0 +1,140 @@
+{
+  "date": "2026-10-24",
+  "reason": "User restored good Wi-Fi; resume default origin/main publication.",
+  "priorLocalHead": "29164f1c",
+  "remoteCommitsAhead": 0,
+  "localCommitsAheadBeforePackaging": 251,
+  "release": {
+    "beforeBytes": 1260398794,
+    "afterBytes": 944465495,
+    "budgetBytes": 1000000000,
+    "sourceAssetsRetained": true,
+    "mapModelsReviewed": 69,
+    "newUniqueEncodes": 69,
+    "mapTextureLimits": {
+      "colour": 1024,
+      "normal": 512,
+      "packedData": 256
+    },
+    "localOnlyReviews": [
+      "drowned-crown/storyboard",
+      "coastal-town/storyboard",
+      "custard-creek/storyboard",
+      "sunny-beach/gallery",
+      "carlisle-bonus/review",
+      "carlisle-bonus/storyboard.html",
+      "provenance/level-atlas"
+    ]
+  },
+  "checks": [
+    "build",
+    "check:release",
+    "check:offline",
+    "test-tool-directory",
+    "test-mobile-ui-layout",
+    "test-secret-course-roster",
+    "test-world-map-locomotion"
+  ],
+  "browser": {
+    "release": {
+      "url": "http://127.0.0.1:5421/",
+      "errors": [],
+      "views": [
+        {
+          "key": "treehouse-trail",
+          "mapAssets": 86,
+          "canvas": [
+            1440,
+            900
+          ],
+          "loadingFailures": []
+        },
+        {
+          "key": "custard-creek",
+          "mapAssets": 86,
+          "canvas": [
+            1440,
+            900
+          ],
+          "loadingFailures": []
+        },
+        {
+          "key": "waterpark",
+          "mapAssets": 86,
+          "canvas": [
+            1440,
+            900
+          ],
+          "loadingFailures": []
+        },
+        {
+          "key": "carlisle-coast",
+          "mapAssets": 86,
+          "canvas": [
+            1440,
+            900
+          ],
+          "loadingFailures": []
+        },
+        {
+          "key": "warehouse",
+          "mapAssets": 86,
+          "canvas": [
+            1440,
+            900
+          ],
+          "loadingFailures": []
+        },
+        {
+          "key": "secret-1",
+          "mapAssets": 86,
+          "canvas": [
+            1440,
+            900
+          ],
+          "loadingFailures": []
+        }
+      ]
+    },
+    "source": {
+      "url": "http://127.0.0.1:5419/",
+      "errors": [],
+      "views": [
+        {
+          "key": "treehouse-trail",
+          "mapAssets": 86,
+          "canvas": [
+            1440,
+            900
+          ],
+          "loadingFailures": []
+        },
+        {
+          "key": "waterpark",
+          "mapAssets": 86,
+          "canvas": [
+            1440,
+            900
+          ],
+          "loadingFailures": []
+        },
+        {
+          "key": "warehouse",
+          "mapAssets": 86,
+          "canvas": [
+            1440,
+            900
+          ],
+          "loadingFailures": []
+        }
+      ]
+    },
+    "review": "Full rendering at 1440\u00d7900, all six islands; compare three original/release pairs. Rock, foliage, wood and metal detail remain coherent at the authored map scale. Original GLBs are unchanged; non-image bytes and scene/material/animation metadata pass exact regression comparisons.",
+    "packagedCamera": {
+      "mode": "lite",
+      "debugTransitions": 6,
+      "errors": []
+    }
+  },
+  "fullSuiteRun": false
+}

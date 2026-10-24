@@ -2,6 +2,48 @@ import {lstat,readdir,readFile,realpath,rm,writeFile} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import path from 'node:path';
 
+// Historical comparison galleries are authoring tools, not gameplay assets.
+// Keep them available in public/ on the development server and mark their
+// directory entries local-only; the Pages package has a fixed 1 GB budget.
+export const LOCAL_REVIEW_DIRECTORIES = [
+ 'drowned-crown/storyboard', 'coastal-town/storyboard',
+ 'custard-creek/storyboard', 'sunny-beach/gallery', 'carlisle-bonus/review',
+ 'provenance/level-atlas',
+];
+export const LOCAL_REVIEW_FILES = ['carlisle-bonus/storyboard.html'];
+export const localReviewAsset = file => LOCAL_REVIEW_FILES.includes(file) || LOCAL_REVIEW_DIRECTORIES.some(directory =>
+ file === directory || file.startsWith(directory + '/'));
+
+export async function pruneLocalReviewAssets({root,outDir}){
+ const source=await realpath(path.join(root,'public')),output=await realpath(outDir);
+ if(source===output||source.startsWith(output+path.sep)||output.startsWith(source+path.sep))throw Error('Release output overlaps source assets');
+ const files=[];
+ const inspect=async(relative)=>{
+  const file=path.join(output,relative),info=await lstat(file);
+  if(info.isSymbolicLink())throw Error('Local review output cannot contain symbolic links');
+  if(info.isDirectory())for(const entry of await readdir(file))await inspect(relative+'/'+entry);
+  else if(info.isFile())files.push({url:relative,bytes:info.size});
+  else throw Error('Unsupported local review output');
+ };
+ const directories=[];
+ for(const relative of [...LOCAL_REVIEW_DIRECTORIES,...LOCAL_REVIEW_FILES]){
+  try{await lstat(path.join(output,relative));}catch(error){if(error.code==='ENOENT')continue;throw error;}
+  let parent=output;
+  const parts=relative.split('/');
+  for(const [index,part] of parts.entries()){
+   parent=path.join(parent,part);
+   const info=await lstat(parent);
+   const expectedFile=index===parts.length-1&&LOCAL_REVIEW_FILES.includes(relative);
+   if(info.isSymbolicLink()||(expectedFile?!info.isFile():!info.isDirectory()))throw Error('Local review output must be a real directory or file');
+  }
+  await inspect(relative);directories.push(relative);
+ }
+ // Validate every target before removing any generated review directory.
+ for(const relative of directories)await rm(path.join(output,relative),{recursive:true});
+ files.sort((a,b)=>a.url.localeCompare(b.url));
+ return{files,bytes:files.reduce((sum,file)=>sum+file.bytes,0)};
+}
+
 /** Historical font proofs remain in public/ for local authoring. A release
  * needs the exact versions selected by the game, including their export members. */
 export function retiredFontAsset(file,versions){

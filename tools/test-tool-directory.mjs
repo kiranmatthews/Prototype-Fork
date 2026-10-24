@@ -1,11 +1,12 @@
 import assert from 'node:assert/strict';
 import { readFile, access } from 'node:fs/promises';
 import { execFileSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
 import { build } from 'esbuild';
 import { discoverToolPages } from './tool-directory.mjs';
 import { siteEntries } from './site-entries.mjs';
 
-const root = new URL('../', import.meta.url).pathname;
+const root = fileURLToPath(new URL('../', import.meta.url));
 async function load(file) {
   const result = await build({ entryPoints: [root + file], bundle: true, write: false, format: 'esm', platform: 'node' });
   return import(`data:text/javascript;base64,${Buffer.from(result.outputFiles[0].text).toString('base64')}`);
@@ -38,6 +39,11 @@ for (const section of TUNING_SECTIONS.filter(section => section.keys.some(key =>
   assert.ok(toolEntries.some(entry => entry.name === section.title), `Missing tuning section ${section.title}`);
 assert.equal(pages.find(page => page.path === 'tools/enemies/motion-review.html')?.local,false);
 assert.ok(!pages.find(page => page.path === 'skate-pose-review.html')?.local);
+for (const prefix of ['drowned-crown/storyboard/', 'coastal-town/storyboard/', 'custard-creek/storyboard/', 'sunny-beach/gallery/', 'carlisle-bonus/storyboard.html', 'provenance/level-atlas/', 'docs/']) {
+  const reviews = pages.filter(page => page.path.startsWith(prefix));
+  assert.ok(reviews.length, `Missing local review directory ${prefix}`);
+  assert.ok(reviews.every(page => page.local), `Archived review must be labelled local: ${prefix}`);
+}
 for (const entry of Object.values(siteEntries)) await access(root + 'dist/' + entry);
 const worker = await readFile(root + 'dist/sw.js', 'utf8');
 assert.ok(worker.includes('labs/index.html'), 'Directory must ship in offline manifest');

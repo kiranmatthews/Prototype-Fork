@@ -14,6 +14,8 @@ import struct,io,json,hashlib,time,os,argparse,shutil
 from PIL import features
 parser=argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--resize-drowned',action='store_true',help='Review 2K colour, 512 normal and 256 packed data maps for Drowned Crown')
+parser.add_argument('--resize-map',action='store_true',help='Review map-diorama textures at their displayed scale')
+parser.add_argument('--only-prefix',help='Prepare only this public asset directory, for an incremental review batch')
 parser.add_argument('--out',type=Path,required=True,help='New candidate directory outside public/')
 parser.add_argument('--cache',type=Path,required=True,help='Reusable encoding cache outside public/')
 args=parser.parse_args();ROOT=Path(__file__).resolve().parents[1];OUT=args.cache.resolve();DEST=args.out.resolve()
@@ -26,6 +28,7 @@ POLICY=json.loads((ROOT/'tools/release-texture-policy.json').read_text())
 sha=lambda b:hashlib.sha256(b).hexdigest()
 unique={};models={}
 for path in sorted((ROOT/'public').rglob('*.glb')):
+ if args.only_prefix and not path.relative_to(ROOT/'public').as_posix().startswith(args.only_prefix):continue
  raw=path.read_bytes();n=struct.unpack_from('<I',raw,12)[0];doc=json.loads(raw[20:20+n]);binary=raw[28+n:];rel=str(path.relative_to(ROOT/'public'))
  if len(doc.get('buffers',[]))!=1 or any('EXT_meshopt_compression' in v.get('extensions',{}) for v in doc.get('bufferViews',[])):continue
  roles={}
@@ -52,30 +55,42 @@ print(json.dumps({'images':len(unique),'uses':sum(len(x['uses'])for x in unique.
 def encode(item,allow_resize=True):
  digest,entry=item;start=time.time();im=Image.open(io.BytesIO(entry['source']));mode='lossless' if entry['mime']=='image/png' else 'color';rgba=im.convert('RGBA')
  row={'sourceSha256':digest,'sourceBytes':len(entry['source']),'mimeType':entry['mime'],'width':im.width,'height':im.height,'uses':entry['uses']}
- if im.mode not in ['RGB','RGBA','L','LA','P'] or any(k in im.info for k in ['icc_profile','exif','gamma','chromaticity','transparency']) or getattr(im,'n_frames',1)!=1:return row|{'skip':'image metadata or unsupported precision','metadata':list(im.info),'imageMode':im.mode}
+ # The map pack's KTX extractor writes standard sRGB/Rec.709 primaries into
+ # PNGs. They do not change sampled channel values; glTF's texture role still
+ # owns colour/data interpretation. Continue rejecting custom colour profiles.
+ map_primaries=args.resize_map and all(u['file'].startswith('map-landmarks/') for u in entry['uses']) and im.info.get('chromaticity')==(0.3127,0.329,0.64,0.33,0.3,0.6,0.15,0.06) and im.info.get('srgb',0)==0
+ unsafe_metadata=any(k in im.info for k in ['icc_profile','exif','gamma','transparency']) or ('chromaticity' in im.info and not map_primaries)
+ if im.mode not in ['RGB','RGBA','L','LA','P'] or unsafe_metadata or getattr(im,'n_frames',1)!=1:return row|{'skip':'image metadata or unsupported precision','metadata':list(im.info),'imageMode':im.mode}
  strategy='';use_roles=set(r for u in entry['uses'] for r in u['roles'])
- if args.resize_drowned and allow_resize and all(u['file'].startswith('drowned-crown/') for u in entry['uses']) and len(use_roles)==1:
-  role=next(iter(use_roles));profile=POLICY['drowned'];limit=max((profile['overrides'].get(u['file'],{}).get(role,profile['limits'].get(role,0)) for u in entry['uses']))
+ profile=None
+ if args.resize_drowned and all(u['file'].startswith('drowned-crown/') for u in entry['uses']):profile=POLICY['drowned']
+ if args.resize_map and all(u['file'].startswith('map-landmarks/') for u in entry['uses']):profile=POLICY['map']
+ if profile and allow_resize and len(use_roles)==1:
+  role=next(iter(use_roles));limit=max((profile['overrides'].get(u['file'],{}).get(role,profile['limits'].get(role,0)) for u in entry['uses']))
   if role=='baseColorTexture' and rgba.getextrema()[3]!=(255,255):limit=0
   if limit and max(im.size)>limit:
    ratio=limit/max(im.size);size=(max(1,round(im.width*ratio)),max(1,round(im.height*ratio)))
    rgba=resize_map(im,size,role);row.update(sourceWidth=im.width,sourceHeight=im.height,width=size[0],height=size[1],resampling={'role':role,'filter':'linear-light-lanczos3-sharpen-0.6-45-2' if role=='baseColorTexture' else 'vector-lanczos3-renormalize' if role=='normalTexture' else 'linear-lanczos3'})
    strategy='-resized-v1-'+str(size[0])+'x'+str(size[1])+'-'+role
  ref=np.asarray(rgba).astype(np.int16);candidates=[100] if mode=='lossless' else [85,90,95]
- for quality in candidates:
-  key=f'{digest}{strategy}-{mode}-{quality}';cached=OUT/(key+'.json');target=CACHE/(key+'.webp');data=None
+ # A noisy miniature may fail a lossy encoder's worst-pixel gate. Keep the
+ # reviewed resized pixels exactly instead of restoring a huge source atlas.
+ if mode!='lossless' and strategy and args.resize_map:candidates.append(None)
+ for candidate in candidates:
+  lossless=mode=='lossless' or candidate is None;quality=100 if candidate is None else candidate
+  key=f'{digest}{strategy}-{"lossless" if lossless else mode}-{quality}';cached=OUT/(key+'.json');target=CACHE/(key+'.webp');data=None
   if cached.exists() and target.exists():
    old=json.loads(cached.read_text());b=target.read_bytes()
    if sha(b)==old['encodedSha256']:data=b
   if data is None:
-   b=io.BytesIO();(rgba if mode=='lossless' else rgba.convert('RGB')).save(b,format='WEBP',quality=quality,lossless=mode=='lossless',method=6,exact=True)
+   b=io.BytesIO();(rgba if lossless else rgba.convert('RGB')).save(b,format='WEBP',quality=quality,lossless=lossless,method=6,exact=True)
    data=b.getvalue()
   dec=Image.open(io.BytesIO(data)).convert('RGBA');assert dec.size==rgba.size
   diff=np.abs(np.asarray(dec).astype(np.int16)-ref);assert np.max(diff[:,:,3])==0
-  rgb=diff[:,:,:3];mse=np.mean(rgb.astype(np.float64)**2);metrics={'encodedSha256':sha(data),'encodedBytes':len(data),'quality':quality,'lossless':mode=='lossless','meanAbs':float(rgb.mean()),'p99':float(np.percentile(rgb,99)),'max':int(rgb.max()),'psnr':float(10*np.log10(255**2/mse)) if mse else None}
-  if mode=='lossless':assert rgba.tobytes()==dec.tobytes()
+  rgb=diff[:,:,:3];mse=np.mean(rgb.astype(np.float64)**2);metrics={'encodedSha256':sha(data),'encodedBytes':len(data),'quality':quality,'lossless':lossless,'meanAbs':float(rgb.mean()),'p99':float(np.percentile(rgb,99)),'max':int(rgb.max()),'psnr':float(10*np.log10(255**2/mse)) if mse else None}
+  if lossless:assert rgba.tobytes()==dec.tobytes()
   temp=target.with_suffix('.webp.tmp');temp.write_bytes(data);os.replace(temp,target);cached.write_text(json.dumps(metrics))
-  if mode=='lossless' or metrics['psnr'] is None or metrics['psnr']>=40 and metrics['p99']<=8 and metrics['max']<=64:
+  if lossless or metrics['psnr'] is None or metrics['psnr']>=40 and metrics['p99']<=8 and metrics['max']<=64:
    saving=len(entry['source'])-len(data)
    if saving<max(1024,len(entry['source'])*.03):return row|{'skip':'less than three percent saving','best':metrics}
    return row|metrics|{'encodedFile':str(target),'savedBytes':saving,'seconds':round(time.time()-start,2)}
@@ -88,13 +103,13 @@ with ThreadPoolExecutor(max_workers=2) as pool:
  for future in as_completed(futures):
   try:r=future.result()
   except Exception as e:r={'sourceSha256':futures[future],'error':str(e)}
-  rows.append(r);report={'encoder':{'pillow':Image.__version__,'libwebp':features.version('webp'),'format':'WebP','dimensions':'Drowned Crown reviewed role limits with close-up exceptions; other models unchanged' if args.resize_drowned else 'unchanged','lossyQualityCandidates':[85,90,95],'minPSNR':40,'maxP99':8,'maxError':64,'losslessPNG':True},'models':models,'images':sorted(rows,key=lambda r:r['sourceSha256'])}
+  rows.append(r);report={'encoder':{'pillow':Image.__version__,'libwebp':features.version('webp'),'format':'WebP','dimensions':'Reviewed role limits for requested Drowned Crown/map scopes; other models unchanged' if args.resize_drowned or args.resize_map else 'unchanged','lossyQualityCandidates':[85,90,95],'minPSNR':40,'maxP99':8,'maxError':64,'losslessPNG':True},'models':models,'images':sorted(rows,key=lambda r:r['sourceSha256'])}
   (OUT/'report.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps({'done':len(rows),'total':len(unique),'sha':r['sourceSha256'][:12],'uses':len(r.get('uses',[])),'sourceBytes':r.get('sourceBytes'),'encodedBytes':r.get('encodedBytes'),'quality':r.get('quality'),'skip':r.get('skip'),'error':r.get('error')}),flush=True)
 print(json.dumps({'uniqueEncoded':sum('encodedFile'in r for r in rows),'usedEncoded':sum(len(r.get('uses',[]))for r in rows if 'encodedFile'in r),'savedBytes':sum(r.get('savedBytes',0)*len(r.get('uses',[]))for r in rows),'errors':sum('error'in r for r in rows)}),flush=True)
 
 if any('error' in r for r in rows):raise RuntimeError('Resolve encoding errors before review')
 accepted=[r for r in sorted(rows,key=lambda r:r['sourceSha256']) if 'encodedFile' in r]
-manifest={'v':1,'encoder':report['encoder'],'policy':POLICY if args.resize_drowned else None,'textures':[],'models':[]};selected={}
+manifest={'v':1,'encoder':report['encoder'],'policy':POLICY if args.resize_drowned or args.resize_map else None,'textures':[],'models':[]};selected={}
 (DEST/'encoded').mkdir(parents=True)
 for row in accepted:
  image={k:row[k] for k in ['width','height','lossless','quality','psnr','p99','max','meanAbs']}

@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import {mkdtemp,mkdir,readFile,writeFile,symlink,rm} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import path from 'node:path';
-import {retiredFontAsset,pruneRetiredFontAssets,prepareFontArchives} from './release-assets.mjs';
+import {retiredFontAsset,pruneRetiredFontAssets,prepareFontArchives,LOCAL_REVIEW_DIRECTORIES,LOCAL_REVIEW_FILES,localReviewAsset,pruneLocalReviewAssets} from './release-assets.mjs';
 import {zipSync,unzipSync} from 'three/examples/jsm/libs/fflate.module.js';
 import {createServer} from 'vite';
 import {measureRelease,releaseWithinBudget,RELEASE_BYTE_LIMIT} from './check-release-size.mjs';
@@ -42,6 +42,35 @@ try{
  assert.equal(Buffer.from(manifest.entries.find(e=>e.name==='README.txt').inlineBase64,'base64').toString(),'Original font usage and attribution');
  await assert.rejects(prepareFontArchives({root,outDir:source,fontVersions:versions}),/overlaps source/);
  await assert.rejects(pruneRetiredFontAssets({root,outDir:path.join(source,'fonts'),fontVersions:versions}),/overlaps source/);
+ for(const directory of LOCAL_REVIEW_DIRECTORIES){
+  for(const base of [source,outDir]){
+   await mkdir(path.join(base,directory),{recursive:true});
+   await writeFile(path.join(base,directory,'index.html'),'original local review');
+  }
+  assert.equal(localReviewAsset(directory+'/index.html'),true);
+  assert.equal(localReviewAsset(directory+'-game/model.glb'),false);
+ }
+ assert.equal(localReviewAsset('drowned-crown/excellence/treasure-mound-hero.glb'),false);
+ for(const file of LOCAL_REVIEW_FILES){
+  for(const base of [source,outDir])await writeFile(path.join(base,file),'original review page');
+  assert.equal(localReviewAsset(file),true);
+  assert.equal(localReviewAsset(file+'.backup'),false);
+ }
+ const reviews=await pruneLocalReviewAssets({root,outDir});
+ assert.equal(reviews.files.length,LOCAL_REVIEW_DIRECTORIES.length+LOCAL_REVIEW_FILES.length);
+ for(const file of LOCAL_REVIEW_FILES){
+  assert.equal(await readFile(path.join(source,file),'utf8'),'original review page');
+  await assert.rejects(readFile(path.join(outDir,file)),/ENOENT/);
+ }
+ for(const directory of LOCAL_REVIEW_DIRECTORIES){
+  assert.equal(await readFile(path.join(source,directory,'index.html'),'utf8'),'original local review');
+  await assert.rejects(readFile(path.join(outDir,directory,'index.html')),/ENOENT/);
+ }
+ assert.deepEqual(await pruneLocalReviewAssets({root,outDir}),{files:[],bytes:0});
+ await assert.rejects(pruneLocalReviewAssets({root,outDir:source}),/overlaps source/);
+ const reviewLink=path.join(root,'review-link');await mkdir(reviewLink);
+ await symlink(path.join(source,'drowned-crown'),path.join(reviewLink,'drowned-crown'),'dir');
+ await assert.rejects(pruneLocalReviewAssets({root,outDir:reviewLink}),/real directory/);
  const server=await createServer({appType:'custom',logLevel:'silent',server:{middlewareMode:true,hmr:false,ws:false}});
  try{
   const {buildRooFontArchive}=await server.ssrLoadModule('/src/roo-type/archive.ts');

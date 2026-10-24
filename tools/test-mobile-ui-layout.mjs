@@ -112,7 +112,7 @@ assert.match(
 );
 assert.match(touch, /body:is\(\.world-map-active,[\s\S]*?:is\(\.tc-zone,\.tc-look,\.tc-pause\) \{ display:none !important; \}/);
 assert.match(worldMapUi, /createInputGlyph\(action\)/, "map glyph visibility must use the shared device policy");
-assert.match(worldMapUi, /this\.enterButton\.disabled = this\.moving \|\| !unlocked/);
+assert.match(worldMapUi, /this\.enterButton\.disabled = this\.moving \|\| !this\.campaign\.levelPlayable\(definition\.progressKey\)/, "Play must reject coming-soon destinations as well as locked levels");
 assert.match(worldMapUi, /tap\.canceled/);
 assert.doesNotMatch(worldMapUi, /unlockNotice|announceUnlock|NEW PATH OPEN/, "automatic map unlock popups must not return");
 assert.doesNotMatch(main, /player\.on(?:Checkpoint|Relic|TrickGateBlocked|ComboGraceLow)\s*=/, "gameplay events must not install stock title popups");

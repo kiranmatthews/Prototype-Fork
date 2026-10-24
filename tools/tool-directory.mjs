@@ -1,6 +1,7 @@
 import { readdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { siteEntries } from './site-entries.mjs';
+import { localReviewAsset } from './release-assets.mjs';
 
 const descriptions = {
   'index.html': ['Game', 'Launch the game, campaign and player menus.', 'Game & configuration'],
@@ -61,7 +62,7 @@ async function htmlFiles(root, directory, recursive) {
 // Never import their modules here: many QA harnesses deliberately stage game state.
 export async function discoverToolPages(root) {
   const files = (await Promise.all([
-    htmlFiles(root, '', false), htmlFiles(root, 'tools', true), htmlFiles(root, 'public', true),
+    htmlFiles(root, '', false), htmlFiles(root, 'tools', true), htmlFiles(root, 'public', true), htmlFiles(root, 'docs', true),
   ])).flat().sort();
   const published = new Set(Object.values(siteEntries));
   return Promise.all(files.map(async source => {
@@ -72,7 +73,8 @@ export async function discoverToolPages(root) {
       /roo-type/.test(source) ? 'Local font proof or baking utility; some historical proofs require their generated working assets.' :
       source.startsWith('tools/') ? 'Local authoring / asset review. Open with the development server running.' :
       'Local browser review with staging or inspection controls. Open with the development server running.', category(source)];
-    const local = !published.has(source) && !source.startsWith('public/');
+    const local = localReviewAsset(source.replace(/^public\//, '')) ||
+      (!published.has(source) && !source.startsWith('public/'));
     return { name, description, category: group, source,
       path: source.replace(/^public\//, '') + (local ? reviewQuery(source) : ''),
       local,

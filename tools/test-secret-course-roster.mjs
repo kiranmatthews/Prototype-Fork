@@ -11,11 +11,12 @@ try{
  assert.equal(bonuses.resolveBonusLevel('secret-1').name,'Bonus: Cloudtop Lockers');
  assert.equal(bonuses.resolveBonusLevel('secret-2').name,'Bonus: Ember Reliquary');
  const rows=campaign.CAMPAIGN_LEVELS.filter(l=>l.islandId==='hidden-shores');
- assert.deepEqual(rows.slice(0,3).map(l=>[l.levelId,l.name,l.secretRequirement]),[
-  ['sky','Sky Bridge','medals-5'],['jungle-terraces','Temple of Embers','gems-5'],['jungle-gate-run','The Ancient Gates','medals-10']]);
- assert.ok(rows.slice(0,3).every(l=>!l.placeholder&&!l.boss));
- assert.ok(rows.slice(3).every(l=>l.placeholder));
- for(const row of rows.slice(0,3)){
+ assert.deepEqual(rows.slice(0,4).map(l=>[l.levelId,l.name,l.secretRequirement]),[
+  ['sky','Sky Bridge','medals-5'],['jungle-terraces','Temple of Embers','gems-5'],['jungle-gate-run','The Ancient Gates','medals-10'],
+  ['rolling-bones','Rolling Bones','gems-15']]);
+ assert.ok(rows.slice(0,4).every(l=>!l.placeholder&&!l.boss));
+ assert.ok(rows.slice(4).every(l=>l.placeholder));
+ for(const row of rows.slice(0,4)){
   assert.ok(api.findLevel(row.levelId)?.data,row.name+' has no actual course');
   await access(new URL(`../public/level-previews/${row.previewKey}.jpg`,import.meta.url));
  }
@@ -32,5 +33,5 @@ try{
  assert.deepEqual(renamed.data.components,api.getUserLevels()[0].data.components,'rename changed edited geometry');
  assert.equal(api.getUserLevels()[0].name,'Jungle Gate Run','catalogue view mutated the archived editor entry');
  api.setUserLevels([]);
- console.log('PASS three real secret courses, five placeholders, existing previews, Ancient Gates rename and retired Descent override suppression.');
+ console.log('PASS four real secret courses, four placeholders, existing previews, Ancient Gates rename and retired Descent override suppression.');
 }finally{await server.close();}
