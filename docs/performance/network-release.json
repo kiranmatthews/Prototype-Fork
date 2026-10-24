@@ -6,7 +6,7 @@
   "localCommitsAheadBeforePackaging": 251,
   "release": {
     "beforeBytes": 1260398794,
-    "afterBytes": 944465495,
+    "afterBytes": 944468959,
     "budgetBytes": 1000000000,
     "sourceAssetsRetained": true,
     "mapModelsReviewed": 69,
@@ -136,5 +136,13 @@
       "errors": []
     }
   },
-  "fullSuiteRun": false
+  "fullSuiteRun": false,
+  "deploymentGateRepairs": {
+    "referenceEdges": "Pin the exact reviewed surfaces and live grind-network counts for four reference parks; preserve default audit policy for every other surface. Recognize the four relocated Ripcord and six Rolling Bones board-catching thresholds.",
+    "warehouseReplay": "Keep frame-662 bank exit, zero support flicker, measured rim traversals and movement checks; measure clearing/escape along the path instead of its endpoint after a later turn.",
+    "grindBuffer": "Extract all three original launch states from published controller aef70752 against the hashed historical level/replay. Current controller reproduces unbuffered bails and catches at frames 593, 2145 and 3072; all 44 synthetic cases still pass.",
+    "audio": "Old/current traces first differ at frame 2230, immediately after the shared first bail at frame 2229. All 2228 pre-bail movement samples have identical hash b7c9d46289f6c087b72b893c4079675cf928965ce2db4980ecf935dd9eba3508. Both tested contact gaps are now before that deliberate ragdoll change; full take still verifies inactive wheels remain silent and audio resumes after recovery.",
+    "race": "Bound physical recovery at ten seconds and isolate fall persistence from normal crate refill. Verify cleared pooled effects, detached projectile instances, reused shared geometry and stable scene child counts across four departures/reentries.",
+    "enemyIcon": "Regenerate the hopper thumbnail from the currently shipped model and verify its source/image hashes."
+  }
 }

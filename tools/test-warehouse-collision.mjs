@@ -36,10 +36,13 @@ await withSkateRuntime(async({THREE,server,scene,Level,level,player:p,CONST})=>{
    assert.ok(p.pos.toArray().every(Number.isFinite));
   }}finally{take.end();}
   assert.equal(maxFlicker,0,'overhead deck must not oscillate between support and air');
-  if(alwaysSkate)assert.ok(p.pos.z<-90,'recorded steering must clear the reported bank');
-  const end=p.pos.clone();for(let f=0;f<300;f++)tick(makeInput({moveY:1,jumpHeld:true}));
-  assert.ok(p.pos.distanceTo(end)>8,'the replay must leave the player able to move');
-  report[alwaysSkate?'recordedMountedRules':'walkingEnabled']={maxFlicker,samples,escape:p.pos.distanceTo(end)};
+  if(alwaysSkate)assert.ok(samples.some(s=>s.position[2]<-90),'recorded steering must clear the reported bank');
+  // Recovery may turn and revisit an earlier position. Measure actual free
+  // travel before any later death instead of the endpoint after five seconds.
+  const end=p.pos.clone(),deaths=p.totalDeaths;let escape=0;
+  for(let f=0;f<300;f++){tick(makeInput({moveY:1,jumpHeld:true}));if(p.totalDeaths===deaths)escape=Math.max(escape,p.pos.distanceTo(end));}
+  assert.ok(escape>8,'the replay must leave the player able to move');
+  report[alwaysSkate?'recordedMountedRules':'walkingEnabled']={maxFlicker,samples,escape};
   l.dispose();
  }
  // Current-source policy/control coverage has no historical coordinates,

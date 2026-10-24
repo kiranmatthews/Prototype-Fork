@@ -31,8 +31,8 @@
     },
     {
       "kind": "hopper",
-      "modelSha256": "4db06975d5ad7268a7bcae3a248a7b2347962f689056c734009b94d05f08440d",
-      "pngSha256": "4e1b9c45cbb085b18ed51259373d1a29bd7616c36e04047636c3ba6003dbcb48",
+      "modelSha256": "cfa901997daf7948d5abb368c1925797be6746b70dd3e7d23b2a0e658abc0865",
+      "pngSha256": "2ce9181848ba249285ef9206bca048e7d54696c1d9a87bdf668dba1310f72f27",
       "width": 256,
       "height": 256
     },

@@ -36,8 +36,12 @@ await withBlockworksRuntime(async r=>{
  const human=race.riders[0];r.p.invulnTimer=0;human.shield=0;human.knockGrace=0;human.item='shield';assert.ok(race.useItem());
  r.p.raceHooks.hazard('blast');assert.equal(human.shield,0);assert.equal(r.p.skateCameraBailing,false);
  human.knockGrace=0;r.p.invulnTimer=0;r.p.raceHooks.hazard('blast');assert.equal(r.p.skateCameraBailing,true);assert.ok(!r.p.breakApart?.active);
- tick(240);assert.equal(r.p.skateCameraBailing,false);assert.equal(r.p.boardRolling,false,'A recovered racer must remain on foot until choosing to remount');
+ for(let frame=0;frame<600&&r.p.skateCameraBailing;frame++)tick();
+ assert.equal(r.p.skateCameraBailing,false,'intact recovery must settle within ten seconds');assert.equal(r.p.boardRolling,false,'A recovered racer must remain on foot until choosing to remount');
  // Falling returns to the last supported centre, with world and tally intact.
+ // The longer physical recovery can cross the ordinary crate refill timer.
+ // Start this independent fall/reset check with a freshly broken crate.
+ r.l.reviveRaceCrate(empty,race.homes.get(empty));r.l.raceActorId=0;r.l.breakCrate(empty);
  const anchor=human.anchor.clone(),elapsed=race.elapsed,boxes=human.boxes.size;
  r.p.pos.y=r.l.killY-1;r.p.state='air';r.p.grounded=false;tick();assert.ok(human.recovery>0);while(human.recovery>0)tick();
  assert.ok(r.p.pos.distanceTo(anchor)<1);assert.ok(race.elapsed>=elapsed+r.CONST.respawnDelay+r.CONST.deathWatchTime);assert.equal(human.boxes.size,boxes);assert.equal(empty.alive,false);

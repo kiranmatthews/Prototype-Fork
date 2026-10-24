@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
@@ -14,6 +15,8 @@ console.warn=(...a)=>{if(!/failed|GLB|procedural skateboard/i.test(String(a[0]))
 console.error=(...a)=>{if(!/failed|GLB/i.test(String(a[0])))error(...a);};
 const reports=[],failures=[];
 const checkpointTripThresholds=new Map();
+const referencePolicies=JSON.parse(await readFile(new URL('./fixtures/reference-edge-policies.json',import.meta.url),'utf8')).levels;
+const surfaceHash=c=>createHash('sha256').update(JSON.stringify(c)).digest('hex');
 const requested=process.argv.slice(2).filter(a=>!a.startsWith('--'));
 const ordinary=new Set(['platform','ramp','mesh','woodpath','mover','crumble','phasepad','spinbridge','trampoline','speedpad']);
 // Concrete exceptions in the current authored courses, not blanket helper
@@ -28,8 +31,8 @@ function reason(c,id){
   if(c.t==='wall'||c.t==='wallpath')return 'architectural enclosure / containment';
   if(c.t==='rock')return 'scenic natural boulder';
   if(c.nm==='Showcase1ContinuousSandSeabed'||c.nm==='Jungle cove beach and seabed')return 'continuous beach/seabed';
-  if(id==='rumblewater-run'&&c.t==='platform'&&c.artProxy===true&&
-    c.nm===checkpointTripThresholds.get(c.grp)&&c.s?.join(',')==='10.5,0.22,0.9')
+  if(c.t==='platform'&&c.artProxy===true&&
+    c.nm===checkpointTripThresholds.get(id+':'+c.grp)&&c.s?.join(',')===(id==='rumblewater-run'?'13.65,0.22,0.9':'10.5,0.22,0.9'))
     return 'mandatory checkpoint board-ejection ridge; the six entrance thresholds intentionally cannot be ground';
   if(id==='descent'&&c.nm==='oil slick')return 'traction/paint overlay on the road, not a separate lip';
   if(id==='codex-lab'&&c.nm==='Continuous ground stratum')return 'under the ground-floor reset volume';
@@ -63,12 +66,17 @@ function reason(c,id){
     if(/^(Seamless small beach|Continuous painted opening ground|Continuous sculpted planted|Visible shallow solid dirt bed|Opening ocean ·|Supported left forest shoulder|Supported distant forest bank|Sunlit forest earth beyond the finish|Climb summit · continuous buried stone berm)/.test(c.nm??''))
       return 'continuous natural ground, seabed or buried seam fill';
   }
+  // Existing reference parks own explicit source grind networks. Permit only
+  // their reviewed exact surfaces, never a blanket exception for new floors.
+  if(referencePolicies[id]?.surfaceHashes.includes(surfaceHash(c)))return referencePolicies[id].reason;
   return null;
 }
 try{
   const {Level,BUILTIN_LEVELS}=await server.ssrLoadModule('/src/level.ts');
   const {RUMBLEWATER_REFUGES}=await server.ssrLoadModule('/src/levels/rumblewater-refuges.ts');
-  for(const room of RUMBLEWATER_REFUGES)checkpointTripThresholds.set(room.grp,room.name+' board-catching threshold');
+  const {RIPCORD_REFUGES}=await server.ssrLoadModule('/src/levels/ripcord-river.ts');
+  for(const [id,rooms] of [['rolling-bones',RUMBLEWATER_REFUGES],['rumblewater-run',RIPCORD_REFUGES]])
+    for(const room of rooms)checkpointTripThresholds.set(id+':'+room.grp,room.name+' board-catching threshold');
   const {Player}=await server.ssrLoadModule('/src/player.ts');
   const {CONST}=await server.ssrLoadModule('/src/tuning.ts');
   const {surfaceBoundaryEdges}=await server.ssrLoadModule('/src/surfaceEdges.ts');
@@ -120,6 +128,11 @@ try{
         if(!caught&&!lethal)report.uncaught.push({name:c?.nm??mesh.name,index:mesh.userData.editorIdx,railLengths:rails.slice(0,3).map(r=>r.totalLength),state:player.state});
       }
       report.activeRails=live.length;reports.push(report);
+      if(referencePolicies[entry.id]){
+        const policy=referencePolicies[entry.id];
+        assert.equal(data.components.filter(c=>c.edgeGrinding===false&&ordinary.has(c.t)).length,policy.disabledSurfaces,'reference surface policy changed; review explicit coping coverage');
+        assert.equal(live.length,policy.activeRails,'reference grind network must remain intact');
+      }
       console.log(`${entry.id}: ${report.meshes} surfaces / ${report.boundaries} boundaries / ${report.catches} catches / ${report.uncaught.length} needs review (${report.buildMs}ms)`);
     }finally{level.dispose();}
   }

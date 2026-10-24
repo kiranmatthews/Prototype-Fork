@@ -22,8 +22,10 @@ function retainedPath(owner,departed){
 
 await withBlockworksRuntime(async r=>{
  const {SkateRace}=await r.server.ssrLoadModule('/src/race/runtime.ts');
+ const {createRaceItemModel,disposeRaceItemModel}=await r.server.ssrLoadModule('/src/race/items.ts');
  const {Level}=await r.server.ssrLoadModule('/src/level.ts');
  const race=new SkateRace(r.scene,r.p,false,()=>true);race.attach(r.l,'race-return');
+ const retainedChildren=race.root.children.length;
  const players=race.riders.map(a=>a.player),scenes=race.riders.map(a=>a.scene),tuning={...r.TUNING};
  let current=r.l,visits=0;
  for(let i=0;i<4;i++){
@@ -34,28 +36,32 @@ await withBlockworksRuntime(async r=>{
   race.effects.lightning(r.p.pos);
   const rival=race.riders[1].player;rival.invulnTimer=0;assert.ok(rival.beginRaceStun(4,1));assert.ok(rival.looseBoard);
   const departed=new Set([current,...current.crates]);current.root.traverse(node=>departed.add(node));
-  const transient=[];race.projectiles[0].mesh.traverse(node=>{if(node.isMesh)transient.push(node.geometry);});
+  const projectile=race.projectiles[0].mesh,transient=[];projectile.traverse(node=>{if(node.isMesh)transient.push(node.geometry);});
   const disposed=new Map(transient.map(g=>[g,0]));for(const g of transient)g.addEventListener('dispose',()=>disposed.set(g,disposed.get(g)+1));
   const ordinary=new Level(r.scene,{id:'ordinary',name:'Ordinary',data:{v:1,name:'Ordinary',spawn:[0,.1,0],killY:-30,components:[{t:'platform',p:[0,-.5,0],s:[30,1,30]},{t:'gate',p:[0,0,-10]}]}},current);
   current.dispose(ordinary);r.p.respawn(ordinary,true);const humanPosition=r.p.pos.clone(),humanLevel=r.p.runLevel;
   race.attach(ordinary,'ordinary');
   assert.equal(retainedPath(race,departed),null,'inactive race must release departed Level and all its scene nodes');
   assert.deepEqual(r.p.pos,humanPosition);assert.equal(r.p.runLevel,humanLevel,'detaching rivals must preserve the human destination');
-  assert.equal(race.projectiles.length,0);assert.equal(race.effects.effects.length,0);
-  assert.ok([...disposed.values()].every(count=>count===1),'transient item geometry is released exactly once');
+  assert.equal(race.projectiles.length,0);assert.equal(race.effects.stats.active,0);assert.equal(race.effects.stats.draws,0);
+  assert.equal(projectile.parent,null,'departed projectile instance must leave the scene');
+  assert.ok([...disposed.values()].every(count=>count===0),'shared item geometry must remain reusable');
+  const replacement=createRaceItemModel('green-shell'),reused=[];
+  replacement.traverse(node=>{if(node.isMesh)reused.push(node.geometry);});
+  assert.deepEqual(reused,transient,'replacement projectiles reuse the bounded geometry cache');disposeRaceItemModel(replacement);
   assert.ok(race.riders.slice(1).every(a=>a.scene.parent===null));
   assert.equal(current.onRaceCrateBreak,null);
   // Reattaching the current ordinary level must remain a no-op.
-  race.attach(ordinary,'ordinary');assert.ok([...disposed.values()].every(count=>count===1));
+  race.attach(ordinary,'ordinary');assert.ok([...disposed.values()].every(count=>count===0));
   const next=new Level(r.scene,{id:'race-return',name:fixture.name,data:fixture},ordinary);
   ordinary.dispose(next);r.p.respawn(next,true);race.attach(next,'race-return');
   assert.deepEqual(race.riders.map(a=>a.player),players);assert.deepEqual(race.riders.map(a=>a.scene),scenes);
   race.start(i%2?'time-trial':'race',19410);race.phase='running';
   const before=r.p.pos.clone();for(let frame=0;frame<120;frame++){r.scene.updateMatrixWorld(true);race.step(r.dt,race.drive(0));r.p.commitRenderStep(next);race.commitRenderStep();}
   assert.ok(r.p.pos.distanceTo(before)>5,'reused rider still responds to ordinary drive input');
-  assert.equal(r.p.totalDeaths,0);assert.equal(race.riders.length,8);assert.equal(race.root.children.length,40);
+  assert.equal(r.p.totalDeaths,0);assert.equal(race.riders.length,8);assert.equal(race.root.children.length,retainedChildren);
   current=next;visits++;
  }
  current.dispose();assert.deepEqual(r.TUNING,tuning);
- console.log(`PASS ${visits} race departures/reentries: no departed world references, unchanged rider identities, one-time effect cleanup, independent human destination and native movement.`);
+ console.log(`PASS ${visits} race departures/reentries: no departed world references, unchanged rider identities, cleared effects, bounded shared geometry, independent human destination and native movement.`);
 },{modulePath:'/src/levels/slipstream.ts',source:()=>fixture,levelId:'race-return'});

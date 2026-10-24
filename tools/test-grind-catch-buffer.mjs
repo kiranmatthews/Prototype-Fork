@@ -1,27 +1,40 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { gunzipSync } from 'node:zlib';
+import { createHash } from 'node:crypto';
 import { withSkateRuntime, makeInput } from './jungle-cup-harness.mjs';
 
 const replayData = JSON.parse(await readFile(new URL('./fixtures/grind-catch-release-replay.json', import.meta.url), 'utf8'));
 // Input-only recordings require their recorded world. The current park now
 // offers additional platform rims, which correctly change earlier choices.
 const recordedLevel = JSON.parse(gunzipSync(await readFile(new URL('./fixtures/grind-catch-release-level.json.gz', import.meta.url))));
+const approaches=JSON.parse(await readFile(new URL('./fixtures/grind-catch-release-approaches.json',import.meta.url),'utf8'));
+for(const [file,digest] of [['grind-catch-release-replay.json',approaches.replaySha256],['grind-catch-release-level.json.gz',approaches.levelSha256]])
+  assert.equal(createHash('sha256').update(await readFile(new URL('./fixtures/'+file,import.meta.url))).digest('hex'),digest);
 await withSkateRuntime(async ({ THREE, server, Level, Player, player:p, level, step, CONST }) => {
   const { Replayer } = await server.ssrLoadModule('/src/replay.ts');
   const request = p.grindRequested?.bind(p) ?? (input => input.grindHeld || input.grindPressed);
   const replayCases = [];
-  // A repaired catch changes the subsequent route. Replay each original
-  // approach independently with its old held-only routing up to takeoff,
-  // then exercise the production controller through the reported impact.
-  // No recorded inputs, tuning, positions or rail/balance physics are edited.
-  for (const [takeoff, impact] of [[551, 595], [2111, 2147], [3036, 3075]]) {
+  // Isolate the three recorded launch states. The later approaches follow
+  // earlier bails, whose intentionally upgraded ragdoll now takes a different
+  // route. Original inputs/tuning from launch through impact remain intact.
+  for (const approach of approaches.approaches) {
+    const {takeoff,impact}=approach;
     for (const buffered of [false, true]) {
       const replay = new Replayer(); replay.begin(replayData);
       p.endlessDeaths = true; p.respawn(level, true);
-      let frame = 0, caught = -1;
+      let frame = takeoff, caught = -1;
       p.grindRequested = input => buffered && frame > takeoff ? request(input) : input.grindHeld || input.grindPressed;
       const input = makeInput();
+      for(let i=0;i<takeoff;i++)replay.feed(input,p.camDir);
+      const rail=level.grindRails[approach.rail];
+      p.pos.fromArray(approach.pos);p.prevPos.copy(p.pos);p.axisF.fromArray(approach.axisF);
+      p.axisL.set(p.axisF.z,0,-p.axisF.x);p.camDir.fromArray(approach.camDir);
+      p.freeSkate=p.airFromSkate=true;p.speed=approach.speed;p.rawInput=input;
+      p.enterGrind(rail,{t:approach.t,point:rail.pointAt(approach.t),tangent:rail.tangentAt(approach.t),distance:0},level);
+      p.grindT=approach.t;p.grindDir=approach.dir;p.grindVel=approach.grindVel;
+      p.speed=approach.speed;p.charging=true;p.chargeTimer=approach.chargeTimer;p.stance=approach.stance;
+      p.grindJumpInput.set(input.moveX,input.moveY);
       for (; frame <= impact; frame++) {
         replay.feed(input, p.camDir);
         const prior = p.state;
