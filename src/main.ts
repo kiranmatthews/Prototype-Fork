@@ -2135,6 +2135,7 @@ function updateBaseCamera2(dt: number): void {
       camera2.fov, camera2.aspect, subject, p2.cameraPoseBounds);
   }
   setCameraRigAim(cam2Aim, camera2.position, cam2ViewForward, framing.pitch);
+  camera2.up.set(0, 1, 0);
   camera2.lookAt(cam2Aim);
   if (fixedReviewShot) cam2Look.reset();
   else cam2Look.step(input2.lookX, input2.lookY, dt);
@@ -4767,6 +4768,9 @@ function updateBaseCamera(dt: number): void {
   camControlDir.y = 0;
   if (camControlDir.lengthSq() > 1e-6) camControlDir.normalize();
   else camControlDir.copy(camF);
+  // The skate rig owns a banked surface-up vector. A course shot must rebuild
+  // its horizon too, including the first frame after a debug level switch.
+  camera.up.set(0, 1, 0);
   camera.lookAt(aimSmooth);
   // A vert transfer can point the body back toward the close lens even after
   // its visible centre is followed. Fit only the presentation pitch when that
@@ -4793,7 +4797,7 @@ function updateBaseCamera(dt: number): void {
       ? -meter.bal * THREE.MathUtils.degToRad(TUNING.camBalanceRoll)
       : 0;
   // eased in and out, so stepping onto and off a rail is a lean rather than a snap
-  camRoll += (rollGoal - camRoll) * (1 - Math.exp(-7 * dt));
+  camRoll += (rollGoal - camRoll) * (snapped ? 1 : 1 - Math.exp(-7 * dt));
   if (Math.abs(camRoll) > 1e-4) camera.rotateZ(camRoll);
 }
 
