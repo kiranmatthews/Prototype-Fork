@@ -16,7 +16,13 @@ console.error=(...a)=>{if(!/failed|GLB/i.test(String(a[0])))error(...a);};
 const reports=[],failures=[];
 const checkpointTripThresholds=new Map();
 const referencePolicies=JSON.parse(await readFile(new URL('./fixtures/reference-edge-policies.json',import.meta.url),'utf8')).levels;
-const surfaceHash=c=>createHash('sha256').update(JSON.stringify(c)).digest('hex');
+// Generated trig coordinates vary in their final bits across V8/platforms.
+// Retain nanometre precision without making reviewed policies depend on libm.
+const surfaceHash=c=>createHash('sha256').update(JSON.stringify(c,(_key,value)=>
+  typeof value==='number'?Number(value.toFixed(9)):value)).digest('hex');
+assert.equal(surfaceHash({p:[1.1,0,0]}),surfaceHash({p:[1.1+Number.EPSILON,0,0]}));
+assert.notEqual(surfaceHash({p:[1.1,0,0]}),surfaceHash({p:[1.100001,0,0]}));
+assert.notEqual(surfaceHash({edgeGrinding:false}),surfaceHash({edgeGrinding:true}));
 const requested=process.argv.slice(2).filter(a=>!a.startsWith('--'));
 const ordinary=new Set(['platform','ramp','mesh','woodpath','mover','crumble','phasepad','spinbridge','trampoline','speedpad']);
 // Concrete exceptions in the current authored courses, not blanket helper
