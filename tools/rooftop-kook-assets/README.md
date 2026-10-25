@@ -60,8 +60,8 @@ The stock rig lacks finger joints. `src/enemies/kookGrip.ts` adds four measured 
 
 `tools/rooftop-wet-film-browser.mjs` checks the actual GPU output under rotated/scaled placements, UV rotation and distant translation, verifies downhill advection and bounded normals, and renders material comparisons and native/CRT course views. The previous shader is retained only as a review fixture in `docs/rooftop-kook/wet-runoff/before-source.ts`.
 
-## Yacht-club storm cases
+## Withdrawn case study
 
-`references/storm-case.png` and `references/storm-case.prompt.txt` are the ImageGen concept and exact prompt. `expansion_jobs.py create storm-case` submitted the 35-credit Meshy 7.1 job recorded in `tasks.json`; the official CLI owns all status checks and downloads. `storm-case` is an ordinary metal cover crate appearance in coastal-storm levels, not a new collision primitive. `src/stormCase.ts` leases its full 19,073-triangle PBR mesh and attaches it to the original crate body. Native output stays in `.img2threejs/rooftop-kook/storm-case/downloads/model.glb`; the web version uses 2K colour and 1K normal/material maps.
+The custom flight case was removed at the user's request. Rooftop Relay uses its standard metal crates and their original collision/cover behavior. The ImageGen reference, exact prompt, completed Meshy job and prior review evidence remain as authoring records only; the case has no runtime code or published GLB. The job consumed 35 credits.
 
-`compress_native.mjs --geometry-only estate cupola terrace hydrangea manor dormer` verifies all decoded geometry values, oriented triangles and encoded texture bytes. `pack_roof_height.mjs` verifies every height-map pixel while converting the original authoring PNG to lossless WebP. Neither packing operation introduces distance variants. The case and real enemy cover interaction have native-resolution browser evidence in `docs/rooftop-kook/storm-case/`.
+The independent lossless packing remains: `compress_native.mjs --geometry-only estate cupola terrace hydrangea manor dormer` preserves every geometry value, oriented triangle and encoded texture byte. `pack_roof_height.mjs` verifies every height-map pixel while encoding the authoring PNG as lossless WebP. Neither operation changes visible detail.

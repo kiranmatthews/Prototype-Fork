@@ -4540,3 +4540,9 @@ Meshy job `01a17416-d2b8-703f-87f0-a1fc1465072d` consumed 35 credits (385 total 
 The preceding water-film release was also verified publicly at native resolution in this iteration: build `Codex/sol fork · 10-25 17:15 UTC`, 57 treated surfaces, correct downhill flow, no console errors, and dry-level restoration. Public evidence is retained under `wet-runoff/public/`.
 
 Release verification: `npm run build` (including type-check) and `npm run check:release` pass at 999,811,433 / 1,000,000,000 bytes. The production preview repeats the lite/full case checks and native/CRT visual review without console errors. Level data was unchanged, so no unrelated level or full-suite audit was run.
+
+## 2026-10-26 — Final handoff: standard metal crates restored
+
+At the user's request, withdrew the custom Meshy case and ended further iteration. Removed its runtime module, crate integration, published GLB/manifest and feature-specific browser script. All 24 heavy cover crates use their prior standard metal appearance and retain their original contact, stacking and projectile cover. The Meshy charge and concept/review records remain in the authoring history; no additional credits were spent. Also stopped the unpublished splash-timing experiment and restored the previously published rain implementation. The preceding fog, wet roof materials, weather, enemy models and gameplay remain in place.
+
+Final verification: build/type-check and release-size check pass (996,778,503 bytes). Isolated browser checks confirm all 24 standard metal boxes are visible in lite and full rendering, no custom-case request occurs, and the original cover stops an awakened gunner firing. The seven wet-weather Meshy enemies load correctly; 2560×1440 review has no console errors. Evidence: `docs/rooftop-kook/final/production/`.

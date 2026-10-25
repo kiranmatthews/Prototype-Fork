@@ -1,0 +1,276 @@
+{
+  "base": "http://127.0.0.1:5269",
+  "render": {
+    "buffer": [
+      2560,
+      1440
+    ],
+    "stamp": "Codex/sol fork · build 10-25 17:47 UTC"
+  },
+  "downloads": [
+    {
+      "name": "karen-rain-clips.bin",
+      "bytes": 356388,
+      "sha256": "883999b44bfa840496d400d1980fe5bce9062221c897703bbfab0a9ca545e03a"
+    },
+    {
+      "name": "kook-rain-clips.bin",
+      "bytes": 49287,
+      "sha256": "33217d24ca49e3ddca0e7a6453473a33671e27b6b7934195156cb12a5c058448"
+    },
+    {
+      "name": "karen-rain-clips.bin",
+      "bytes": 356388,
+      "sha256": "883999b44bfa840496d400d1980fe5bce9062221c897703bbfab0a9ca545e03a"
+    },
+    {
+      "name": "kook-rain-clips.bin",
+      "bytes": 49287,
+      "sha256": "33217d24ca49e3ddca0e7a6453473a33671e27b6b7934195156cb12a5c058448"
+    }
+  ],
+  "initial": [
+    {
+      "role": "lookout",
+      "group": 1,
+      "status": "ready",
+      "url": "./rooftop-kook/karen-rain.glb",
+      "weapon": null,
+      "meshes": 1,
+      "skinned": 1
+    },
+    {
+      "role": "gunner",
+      "group": 1,
+      "status": "ready",
+      "url": "./rooftop-kook/kook-rain.glb",
+      "weapon": "heirloom-shotgun",
+      "meshes": 1,
+      "skinned": 1
+    },
+    {
+      "role": "lookout",
+      "group": 3,
+      "status": "ready",
+      "url": "./rooftop-kook/karen-rain.glb",
+      "weapon": null,
+      "meshes": 1,
+      "skinned": 1
+    },
+    {
+      "role": "gunner",
+      "group": 3,
+      "status": "ready",
+      "url": "./rooftop-kook/kook-rain.glb",
+      "weapon": "heirloom-shotgun",
+      "meshes": 1,
+      "skinned": 1
+    },
+    {
+      "role": "lookout",
+      "group": 5,
+      "status": "ready",
+      "url": "./rooftop-kook/karen-rain.glb",
+      "weapon": null,
+      "meshes": 1,
+      "skinned": 1
+    },
+    {
+      "role": "gunner",
+      "group": 5,
+      "status": "ready",
+      "url": "./rooftop-kook/kook-rain.glb",
+      "weapon": "heirloom-shotgun",
+      "meshes": 1,
+      "skinned": 1
+    },
+    {
+      "role": "gunner",
+      "group": 5,
+      "status": "ready",
+      "url": "./rooftop-kook/kook-rain.glb",
+      "weapon": "heirloom-shotgun",
+      "meshes": 1,
+      "skinned": 1
+    }
+  ],
+  "firing": {
+    "shots": 1,
+    "alarms": 1,
+    "awake": [
+      {
+        "group": 1,
+        "state": "fire"
+      },
+      {
+        "group": 3,
+        "state": "doze"
+      },
+      {
+        "group": 5,
+        "state": "doze"
+      },
+      {
+        "group": 5,
+        "state": "doze"
+      }
+    ]
+  },
+  "cover": {
+    "blocked": true,
+    "position": [
+      -186.38771633099933,
+      79.4200000059604,
+      -376.7830145202659
+    ],
+    "before": 1,
+    "awake": 9.183333333333193,
+    "crate": [
+      -187.15416948200425,
+      79.78000000596046,
+      -383.740927250914
+    ],
+    "box": [
+      [
+        -187.63416948200424,
+        79.30000000596046,
+        -384.22092725091403
+      ],
+      [
+        -186.67416948200426,
+        80.26000000596046,
+        -383.260927250914
+      ]
+    ],
+    "gunner": [
+      -188.14659488775928,
+      79.3000000059604,
+      -392.75023115405247
+    ]
+  },
+  "shotsBehindCover": 0,
+  "diagnostics": [
+    {
+      "role": "lookout",
+      "state": "watch",
+      "feet": [
+        7.116771616972963e-7,
+        1.604796134009997e-8
+      ],
+      "bounds": [
+        {
+          "bottom": -0.010841861594755642,
+          "top": 2.2402413329247395
+        }
+      ],
+      "status": "ready"
+    },
+    {
+      "role": "gunner",
+      "state": "track",
+      "hands": [
+        9.169215359853946e-8,
+        7.301068507519191e-8
+      ],
+      "feet": [
+        6.255480410487506e-7,
+        4.1793467519282446e-7
+      ],
+      "bounds": [
+        {
+          "bottom": -0.029411154952882157,
+          "top": 2.3925498464312795
+        }
+      ],
+      "status": "ready"
+    },
+    {
+      "role": "lookout",
+      "state": "watch",
+      "feet": [
+        6.879602385816126e-7,
+        1.6047994247732822e-8
+      ],
+      "bounds": [
+        {
+          "bottom": -0.010841941704264002,
+          "top": 2.2402409065303743
+        }
+      ],
+      "status": "ready"
+    },
+    {
+      "role": "gunner",
+      "state": "doze",
+      "hands": [
+        7.668890753561001e-8,
+        8.281254317730029e-8
+      ],
+      "feet": [
+        6.107943963009073e-7,
+        4.243245725388026e-7
+      ],
+      "bounds": [
+        {
+          "bottom": -0.0294111105531627,
+          "top": 2.384307743475631
+        }
+      ],
+      "status": "ready"
+    },
+    {
+      "role": "lookout",
+      "state": "watch",
+      "feet": [
+        7.243806500485332e-7,
+        1.6048126164103428e-8
+      ],
+      "bounds": [
+        {
+          "bottom": -0.010842002517982507,
+          "top": 2.240240563186667
+        }
+      ],
+      "status": "ready"
+    },
+    {
+      "role": "gunner",
+      "state": "doze",
+      "hands": [
+        1.1279989206678428e-7,
+        7.280894293572445e-8
+      ],
+      "feet": [
+        6.321609321931013e-7,
+        4.1591380669851156e-7
+      ],
+      "bounds": [
+        {
+          "bottom": -0.029411172063170454,
+          "top": 2.3843080315686365
+        }
+      ],
+      "status": "ready"
+    },
+    {
+      "role": "gunner",
+      "state": "doze",
+      "hands": [
+        8.524454204295058e-8,
+        7.258153299943545e-8
+      ],
+      "feet": [
+        6.310392699601365e-7,
+        4.1623152196586455e-7
+      ],
+      "bounds": [
+        {
+          "bottom": -0.029411169248419355,
+          "top": 2.3843080315686294
+        }
+      ],
+      "status": "ready"
+    }
+  ],
+  "errors": []
+}

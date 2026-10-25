@@ -1,0 +1,223 @@
+{
+  "liteMetal": [
+    {
+      "standard": true,
+      "visible": true
+    },
+    {
+      "standard": true,
+      "visible": true
+    },
+    {
+      "standard": true,
+      "visible": true
+    },
+    {
+      "standard": true,
+      "visible": true
+    },
+    {
+      "standard": true,
+      "visible": true
+    },
+    {
+      "standard": true,
+      "visible": true
+    },
+    {
+      "standard": true,
+      "visible": true
+    },
+    {
+      "standard": true,
+      "visible": true
+    },
+    {
+      "standard": true,
+      "visible": true
+    },
+    {
+      "standard": true,
+      "visible": true
+    },
+    {
+      "standard": true,
+      "visible": true
+    },
+    {
+      "standard": true,
+      "visible": true
+    },
+    {
+      "standard": true,
+      "visible": true
+    },
+    {
+      "standard": true,
+      "visible": true
+    },
+    {
+      "standard": true,
+      "visible": true
+    },
+    {
+      "standard": true,
+      "visible": true
+    },
+    {
+      "standard": true,
+      "visible": true
+    },
+    {
+      "standard": true,
+      "visible": true
+    },
+    {
+      "standard": true,
+      "visible": true
+    },
+    {
+      "standard": true,
+      "visible": true
+    },
+    {
+      "standard": true,
+      "visible": true
+    },
+    {
+      "standard": true,
+      "visible": true
+    },
+    {
+      "standard": true,
+      "visible": true
+    },
+    {
+      "standard": true,
+      "visible": true
+    }
+  ],
+  "metal": [
+    {
+      "standard": true,
+      "visible": true,
+      "children": []
+    },
+    {
+      "standard": true,
+      "visible": true,
+      "children": []
+    },
+    {
+      "standard": true,
+      "visible": true,
+      "children": []
+    },
+    {
+      "standard": true,
+      "visible": true,
+      "children": []
+    },
+    {
+      "standard": true,
+      "visible": true,
+      "children": []
+    },
+    {
+      "standard": true,
+      "visible": true,
+      "children": []
+    },
+    {
+      "standard": true,
+      "visible": true,
+      "children": []
+    },
+    {
+      "standard": true,
+      "visible": true,
+      "children": []
+    },
+    {
+      "standard": true,
+      "visible": true,
+      "children": []
+    },
+    {
+      "standard": true,
+      "visible": true,
+      "children": []
+    },
+    {
+      "standard": true,
+      "visible": true,
+      "children": []
+    },
+    {
+      "standard": true,
+      "visible": true,
+      "children": []
+    },
+    {
+      "standard": true,
+      "visible": true,
+      "children": []
+    },
+    {
+      "standard": true,
+      "visible": true,
+      "children": []
+    },
+    {
+      "standard": true,
+      "visible": true,
+      "children": []
+    },
+    {
+      "standard": true,
+      "visible": true,
+      "children": []
+    },
+    {
+      "standard": true,
+      "visible": true,
+      "children": []
+    },
+    {
+      "standard": true,
+      "visible": true,
+      "children": []
+    },
+    {
+      "standard": true,
+      "visible": true,
+      "children": []
+    },
+    {
+      "standard": true,
+      "visible": true,
+      "children": []
+    },
+    {
+      "standard": true,
+      "visible": true,
+      "children": []
+    },
+    {
+      "standard": true,
+      "visible": true,
+      "children": []
+    },
+    {
+      "standard": true,
+      "visible": true,
+      "children": []
+    },
+    {
+      "standard": true,
+      "visible": true,
+      "children": []
+    }
+  ],
+  "caseRequests": []
+}
