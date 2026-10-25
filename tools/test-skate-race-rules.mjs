@@ -17,7 +17,7 @@ await withBlockworksRuntime(async r=>{
  race.start('time-trial');assert.equal(race.phase,'grid');assert.equal(race.mode,'race');
  race.reset('time-trial');assert.equal(race.mode,'race');assert.equal(r.p.ttActive,false);
  race.step(r.dt,{raceTrialStartPressed:true});assert.equal(race.phase,'grid');assert.equal(race.mode,'race');
- race.start('race');race.phase='running';
+ race.start('race',0);race.phase='running'; // Use the authored fixture seed.
  const input={moveX:0,moveY:0,jumpHeld:false,jumpPressed:false,jumpReleased:false,spinPressed:false,grindHeld:false,itemPressed:false};
  const tick=(n=1)=>{for(let i=0;i<n;i++){r.scene.updateMatrixWorld(true);race.step(r.dt,input);}};
  assert.ok(registry.normalizeCustomLevelData(fixture));
@@ -46,6 +46,8 @@ await withBlockworksRuntime(async r=>{
  r.p.pos.y=r.l.killY-1;r.p.state='air';r.p.grounded=false;tick();assert.ok(human.recovery>0);while(human.recovery>0)tick();
  assert.ok(r.p.pos.distanceTo(anchor)<1);assert.ok(race.elapsed>=elapsed+r.CONST.respawnDelay+r.CONST.deathWatchTime);assert.equal(human.boxes.size,boxes);assert.equal(empty.alive,false);
  // Real item actors create and resolve their collision fields.
+ // Previous AI progress/items must not carry finish or immunity into this encounter.
+ race.reset('race');race.phase='running';
  human.item='shock-shell';human.knockGrace=0;r.p.speed=0;race.riders[1].item=null;race.riders[1].itemCooldown=1000;race.riders[1].player.invulnTimer=0;race.riders[1].knockGrace=0;
  race.riders[1].player.resetRacePosition(r.l,r.p.pos.clone().add(new r.THREE.Vector3(2,0,0)),new r.THREE.Vector3(0,0,-1));race.riders[1].player.invulnTimer=0;race.riders[1].progress=race.course.project(race.riders[1].player.pos).s;race.riders[1].recovery=0;race.riders[1].shield=0;
  const normalDrive=race.drive;race.drive=()=>input;assert.ok(race.useItem());tick(100);race.drive=normalDrive;assert.ok(race.riders[1].player.skateCameraBailing);
