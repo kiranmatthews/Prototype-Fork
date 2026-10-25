@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "provider": "Meshy",
   "cliVersion": "0.3.1",
-  "budgetCredits": 350,
+  "budgetCredits": 385,
   "startingBalance": 611,
   "scope": "Original Outer Banks rooftop kit and characters, including new Meshy wet-weather enemy models; user explicitly authorized credits and Meshy outfit replacement",
   "tasks": {
@@ -870,6 +870,43 @@
           "path": ".img2threejs/rooftop-kook/heirloom-shotgun/downloads/model.glb",
           "bytes": 11046940,
           "sha256": "9c17205a894a00eb9bc2650f380350e8478d8096eccc92dc16161c38d46c1af0"
+        }
+      ]
+    },
+    "storm-case": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "b6bd6fb8-13e4-44e4-873c-cb006d3d5d64",
+      "createdAt": "2026-10-25T17:23:34.447945+00:00",
+      "estimatedCredits": 35,
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/rooftop-kook-assets/references/storm-case.png",
+        "ai_model": "meshy-7.1",
+        "geometry_resolution": "2k",
+        "should_remesh": true,
+        "topology": "triangle",
+        "target_polycount": 20000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 261,
+      "reference": "tools/rooftop-kook-assets/references/storm-case.png",
+      "referenceSha256": "6d855ec4d42f094947778d5a1c46b203287f37505046fb2efcb8587948cad4c3",
+      "id": "01a17416-d2b8-703f-87f0-a1fc1465072d",
+      "checkedAt": "2026-10-25T17:26:55.295822+00:00",
+      "progress": 100,
+      "consumedCredits": 35,
+      "finishedAt": 1792949188063,
+      "expiresAt": 1793208388063,
+      "downloads": [
+        {
+          "path": ".img2threejs/rooftop-kook/storm-case/downloads/model.glb",
+          "bytes": 11721660,
+          "sha256": "dc4e6339ca7a1afb7e18fed62e681a9438b9ba1fd574084da2ef8f44103fac83"
         }
       ]
     }

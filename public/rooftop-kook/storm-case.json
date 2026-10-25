@@ -1,0 +1,28 @@
+{
+  "name": "storm-case",
+  "bytes": 3030100,
+  "sha256": "5066697abef4626e36b2c1bfecb91493635281abd23024e50eb9bf7872dd5acc",
+  "triangles": 19073,
+  "nativeGeometryPreserved": true,
+  "skinAndUVsPreserved": true,
+  "pbrPreserved": true,
+  "textureSizes": [
+    [
+      1024,
+      1024
+    ],
+    [
+      2048,
+      2048
+    ],
+    [
+      1024,
+      1024
+    ]
+  ],
+  "source": ".img2threejs/rooftop-kook/storm-case-native.glb",
+  "geometryCompression": "lossless EXT_meshopt_compression",
+  "allVertexAndSkinValuesVerified": true,
+  "orientedTrianglesVerified": true,
+  "texturePacking": "2K base colour, 1K PBR; WebP quality 94 colour/roughness, original packed normal map"
+}

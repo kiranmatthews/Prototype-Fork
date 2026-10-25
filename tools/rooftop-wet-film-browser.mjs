@@ -47,7 +47,7 @@ try{
   const {THREE,addWetRooftopLook,before}=await import('/wet-film-fixture.js');const renderer=new THREE.WebGLRenderer({antialias:true,preserveDrawingBuffer:true});renderer.setSize(2560,1440);renderer.setPixelRatio(1);document.body.appendChild(renderer.domElement);
   const scene=new THREE.Scene();scene.background=new THREE.Color('#a6b3be');const camera=new THREE.OrthographicCamera(-10,10,5.625,-5.625,.1,100);camera.position.set(0,10,18);camera.lookAt(0,0,0);
   scene.add(new THREE.HemisphereLight('#edf4fb','#78816b',2));const light=new THREE.DirectionalLight('#e5edf5',3.2);light.position.set(-2,8,-8);scene.add(light);
-  const loader=new THREE.TextureLoader(),map=await loader.loadAsync(base+'/rooftop-kook/metal.webp'),bump=await loader.loadAsync(base+'/rooftop-kook/metal-height.png');map.colorSpace=THREE.SRGBColorSpace;
+  const loader=new THREE.TextureLoader(),map=await loader.loadAsync(base+'/rooftop-kook/metal.webp'),bump=await loader.loadAsync(base+'/rooftop-kook/metal-height.webp');map.colorSpace=THREE.SRGBColorSpace;
   for(const t of [map,bump]){t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(2,2);t.anisotropy=renderer.capabilities.getMaxAnisotropy();}
   const time={value:1};for(const [index,apply]of [before,addWetRooftopLook].entries()){const material=new THREE.MeshPhongMaterial({map,bumpMap:bump,bumpScale:.085,color:'#cad5d1'});apply(material,time);const mesh=new THREE.Mesh(new THREE.PlaneGeometry(7.2,8),material);mesh.rotation.set(-Math.PI/2+.5,0,0);mesh.position.x=index===0?-3.9:3.9;scene.add(mesh);}
   window.__wetFixture={renderer,scene,camera,time,draw(){renderer.render(scene,camera);}};window.__wetFixture.draw();

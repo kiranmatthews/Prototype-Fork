@@ -1,0 +1,12 @@
+{
+  "source": "tools/rooftop-kook-assets/references/metal-height.png",
+  "output": "public/rooftop-kook/metal-height.webp",
+  "sourceBytes": 1416302,
+  "bytes": 836950,
+  "sourceSha256": "b13ac60bef78558267e37d165196005678a73e07bda5beb69c956aa700644c05",
+  "sha256": "5c2efb8a6fc3363ea070f59766c0462dd98fade5d4ada19ca86adbf20a05d25b",
+  "width": 1254,
+  "height": 1254,
+  "decodedRgbaSha256": "3f8ba0343a7c70917ceef46bd5c977f3f33e6b2d43c029c9c16e6099618c53fc",
+  "exactDecodedChannels": true
+}

@@ -1,0 +1,797 @@
+{
+  "base": "http://127.0.0.1:5267",
+  "fixture": {
+    "pendingBeforeReady": true,
+    "extent": [
+      0.96,
+      0.96,
+      0.96
+    ],
+    "centre": [
+      -2.7755575615628914e-17,
+      0,
+      0
+    ],
+    "triangles": 19073,
+    "meshCount": 1,
+    "disposedLoadIgnored": true
+  },
+  "distance": {
+    "same": true,
+    "removed": true
+  },
+  "passes": [
+    {
+      "lite": true,
+      "rows": [
+        {
+          "loaded": true,
+          "triangles": 19073,
+          "materials": [
+            {
+              "pbr": true,
+              "normal": true,
+              "roughness": true,
+              "metal": true
+            }
+          ],
+          "bodyHidden": true,
+          "contactFit": 0,
+          "home": true
+        },
+        {
+          "loaded": true,
+          "triangles": 19073,
+          "materials": [
+            {
+              "pbr": true,
+              "normal": true,
+              "roughness": true,
+              "metal": true
+            }
+          ],
+          "bodyHidden": true,
+          "contactFit": 0,
+          "home": true
+        },
+        {
+          "loaded": true,
+          "triangles": 19073,
+          "materials": [
+            {
+              "pbr": true,
+              "normal": true,
+              "roughness": true,
+              "metal": true
+            }
+          ],
+          "bodyHidden": true,
+          "contactFit": 0,
+          "home": true
+        },
+        {
+          "loaded": true,
+          "triangles": 19073,
+          "materials": [
+            {
+              "pbr": true,
+              "normal": true,
+              "roughness": true,
+              "metal": true
+            }
+          ],
+          "bodyHidden": true,
+          "contactFit": 0,
+          "home": true
+        },
+        {
+          "loaded": true,
+          "triangles": 19073,
+          "materials": [
+            {
+              "pbr": true,
+              "normal": true,
+              "roughness": true,
+              "metal": true
+            }
+          ],
+          "bodyHidden": true,
+          "contactFit": 0,
+          "home": true
+        },
+        {
+          "loaded": true,
+          "triangles": 19073,
+          "materials": [
+            {
+              "pbr": true,
+              "normal": true,
+              "roughness": true,
+              "metal": true
+            }
+          ],
+          "bodyHidden": true,
+          "contactFit": 0,
+          "home": true
+        },
+        {
+          "loaded": true,
+          "triangles": 19073,
+          "materials": [
+            {
+              "pbr": true,
+              "normal": true,
+              "roughness": true,
+              "metal": true
+            }
+          ],
+          "bodyHidden": true,
+          "contactFit": 7.105427357601002e-15,
+          "home": true
+        },
+        {
+          "loaded": true,
+          "triangles": 19073,
+          "materials": [
+            {
+              "pbr": true,
+              "normal": true,
+              "roughness": true,
+              "metal": true
+            }
+          ],
+          "bodyHidden": true,
+          "contactFit": 7.105427357601002e-15,
+          "home": true
+        },
+        {
+          "loaded": true,
+          "triangles": 19073,
+          "materials": [
+            {
+              "pbr": true,
+              "normal": true,
+              "roughness": true,
+              "metal": true
+            }
+          ],
+          "bodyHidden": true,
+          "contactFit": 7.105427357601002e-15,
+          "home": true
+        },
+        {
+          "loaded": true,
+          "triangles": 19073,
+          "materials": [
+            {
+              "pbr": true,
+              "normal": true,
+              "roughness": true,
+              "metal": true
+            }
+          ],
+          "bodyHidden": true,
+          "contactFit": 7.105427357601002e-15,
+          "home": true
+        },
+        {
+          "loaded": true,
+          "triangles": 19073,
+          "materials": [
+            {
+              "pbr": true,
+              "normal": true,
+              "roughness": true,
+              "metal": true
+            }
+          ],
+          "bodyHidden": true,
+          "contactFit": 7.105427357601002e-15,
+          "home": true
+        },
+        {
+          "loaded": true,
+          "triangles": 19073,
+          "materials": [
+            {
+              "pbr": true,
+              "normal": true,
+              "roughness": true,
+              "metal": true
+            }
+          ],
+          "bodyHidden": true,
+          "contactFit": 7.105427357601002e-15,
+          "home": true
+        },
+        {
+          "loaded": true,
+          "triangles": 19073,
+          "materials": [
+            {
+              "pbr": true,
+              "normal": true,
+              "roughness": true,
+              "metal": true
+            }
+          ],
+          "bodyHidden": true,
+          "contactFit": 7.105427357601002e-15,
+          "home": true
+        },
+        {
+          "loaded": true,
+          "triangles": 19073,
+          "materials": [
+            {
+              "pbr": true,
+              "normal": true,
+              "roughness": true,
+              "metal": true
+            }
+          ],
+          "bodyHidden": true,
+          "contactFit": 7.105427357601002e-15,
+          "home": true
+        },
+        {
+          "loaded": true,
+          "triangles": 19073,
+          "materials": [
+            {
+              "pbr": true,
+              "normal": true,
+              "roughness": true,
+              "metal": true
+            }
+          ],
+          "bodyHidden": true,
+          "contactFit": 7.105427357601002e-15,
+          "home": true
+        },
+        {
+          "loaded": true,
+          "triangles": 19073,
+          "materials": [
+            {
+              "pbr": true,
+              "normal": true,
+              "roughness": true,
+              "metal": true
+            }
+          ],
+          "bodyHidden": true,
+          "contactFit": 7.105427357601002e-15,
+          "home": true
+        },
+        {
+          "loaded": true,
+          "triangles": 19073,
+          "materials": [
+            {
+              "pbr": true,
+              "normal": true,
+              "roughness": true,
+              "metal": true
+            }
+          ],
+          "bodyHidden": true,
+          "contactFit": 7.105427357601002e-15,
+          "home": true
+        },
+        {
+          "loaded": true,
+          "triangles": 19073,
+          "materials": [
+            {
+              "pbr": true,
+              "normal": true,
+              "roughness": true,
+              "metal": true
+            }
+          ],
+          "bodyHidden": true,
+          "contactFit": 7.105427357601002e-15,
+          "home": true
+        },
+        {
+          "loaded": true,
+          "triangles": 19073,
+          "materials": [
+            {
+              "pbr": true,
+              "normal": true,
+              "roughness": true,
+              "metal": true
+            }
+          ],
+          "bodyHidden": true,
+          "contactFit": 7.105427357601002e-15,
+          "home": true
+        },
+        {
+          "loaded": true,
+          "triangles": 19073,
+          "materials": [
+            {
+              "pbr": true,
+              "normal": true,
+              "roughness": true,
+              "metal": true
+            }
+          ],
+          "bodyHidden": true,
+          "contactFit": 7.105427357601002e-15,
+          "home": true
+        },
+        {
+          "loaded": true,
+          "triangles": 19073,
+          "materials": [
+            {
+              "pbr": true,
+              "normal": true,
+              "roughness": true,
+              "metal": true
+            }
+          ],
+          "bodyHidden": true,
+          "contactFit": 7.105427357601002e-15,
+          "home": true
+        },
+        {
+          "loaded": true,
+          "triangles": 19073,
+          "materials": [
+            {
+              "pbr": true,
+              "normal": true,
+              "roughness": true,
+              "metal": true
+            }
+          ],
+          "bodyHidden": true,
+          "contactFit": 7.105427357601002e-15,
+          "home": true
+        },
+        {
+          "loaded": true,
+          "triangles": 19073,
+          "materials": [
+            {
+              "pbr": true,
+              "normal": true,
+              "roughness": true,
+              "metal": true
+            }
+          ],
+          "bodyHidden": true,
+          "contactFit": 7.105427357601002e-15,
+          "home": true
+        },
+        {
+          "loaded": true,
+          "triangles": 19073,
+          "materials": [
+            {
+              "pbr": true,
+              "normal": true,
+              "roughness": true,
+              "metal": true
+            }
+          ],
+          "bodyHidden": true,
+          "contactFit": 7.105427357601002e-15,
+          "home": true
+        }
+      ],
+      "buffer": [
+        1280,
+        720
+      ],
+      "stamp": "Codex/sol fork · build 10-25 15:48 UTC",
+      "landing": {
+        "grounded": true,
+        "bailing": false,
+        "feet": 82.20000000596048,
+        "top": 82.18000000596048
+      }
+    },
+    {
+      "lite": false,
+      "rows": [
+        {
+          "loaded": true,
+          "triangles": 19073,
+          "materials": [
+            {
+              "pbr": true,
+              "normal": true,
+              "roughness": true,
+              "metal": true
+            }
+          ],
+          "bodyHidden": true,
+          "contactFit": 0,
+          "home": true
+        },
+        {
+          "loaded": true,
+          "triangles": 19073,
+          "materials": [
+            {
+              "pbr": true,
+              "normal": true,
+              "roughness": true,
+              "metal": true
+            }
+          ],
+          "bodyHidden": true,
+          "contactFit": 0,
+          "home": true
+        },
+        {
+          "loaded": true,
+          "triangles": 19073,
+          "materials": [
+            {
+              "pbr": true,
+              "normal": true,
+              "roughness": true,
+              "metal": true
+            }
+          ],
+          "bodyHidden": true,
+          "contactFit": 0,
+          "home": true
+        },
+        {
+          "loaded": true,
+          "triangles": 19073,
+          "materials": [
+            {
+              "pbr": true,
+              "normal": true,
+              "roughness": true,
+              "metal": true
+            }
+          ],
+          "bodyHidden": true,
+          "contactFit": 0,
+          "home": true
+        },
+        {
+          "loaded": true,
+          "triangles": 19073,
+          "materials": [
+            {
+              "pbr": true,
+              "normal": true,
+              "roughness": true,
+              "metal": true
+            }
+          ],
+          "bodyHidden": true,
+          "contactFit": 0,
+          "home": true
+        },
+        {
+          "loaded": true,
+          "triangles": 19073,
+          "materials": [
+            {
+              "pbr": true,
+              "normal": true,
+              "roughness": true,
+              "metal": true
+            }
+          ],
+          "bodyHidden": true,
+          "contactFit": 0,
+          "home": true
+        },
+        {
+          "loaded": true,
+          "triangles": 19073,
+          "materials": [
+            {
+              "pbr": true,
+              "normal": true,
+              "roughness": true,
+              "metal": true
+            }
+          ],
+          "bodyHidden": true,
+          "contactFit": 7.105427357601002e-15,
+          "home": true
+        },
+        {
+          "loaded": true,
+          "triangles": 19073,
+          "materials": [
+            {
+              "pbr": true,
+              "normal": true,
+              "roughness": true,
+              "metal": true
+            }
+          ],
+          "bodyHidden": true,
+          "contactFit": 7.105427357601002e-15,
+          "home": true
+        },
+        {
+          "loaded": true,
+          "triangles": 19073,
+          "materials": [
+            {
+              "pbr": true,
+              "normal": true,
+              "roughness": true,
+              "metal": true
+            }
+          ],
+          "bodyHidden": true,
+          "contactFit": 7.105427357601002e-15,
+          "home": true
+        },
+        {
+          "loaded": true,
+          "triangles": 19073,
+          "materials": [
+            {
+              "pbr": true,
+              "normal": true,
+              "roughness": true,
+              "metal": true
+            }
+          ],
+          "bodyHidden": true,
+          "contactFit": 7.105427357601002e-15,
+          "home": true
+        },
+        {
+          "loaded": true,
+          "triangles": 19073,
+          "materials": [
+            {
+              "pbr": true,
+              "normal": true,
+              "roughness": true,
+              "metal": true
+            }
+          ],
+          "bodyHidden": true,
+          "contactFit": 7.105427357601002e-15,
+          "home": true
+        },
+        {
+          "loaded": true,
+          "triangles": 19073,
+          "materials": [
+            {
+              "pbr": true,
+              "normal": true,
+              "roughness": true,
+              "metal": true
+            }
+          ],
+          "bodyHidden": true,
+          "contactFit": 7.105427357601002e-15,
+          "home": true
+        },
+        {
+          "loaded": true,
+          "triangles": 19073,
+          "materials": [
+            {
+              "pbr": true,
+              "normal": true,
+              "roughness": true,
+              "metal": true
+            }
+          ],
+          "bodyHidden": true,
+          "contactFit": 7.105427357601002e-15,
+          "home": true
+        },
+        {
+          "loaded": true,
+          "triangles": 19073,
+          "materials": [
+            {
+              "pbr": true,
+              "normal": true,
+              "roughness": true,
+              "metal": true
+            }
+          ],
+          "bodyHidden": true,
+          "contactFit": 7.105427357601002e-15,
+          "home": true
+        },
+        {
+          "loaded": true,
+          "triangles": 19073,
+          "materials": [
+            {
+              "pbr": true,
+              "normal": true,
+              "roughness": true,
+              "metal": true
+            }
+          ],
+          "bodyHidden": true,
+          "contactFit": 7.105427357601002e-15,
+          "home": true
+        },
+        {
+          "loaded": true,
+          "triangles": 19073,
+          "materials": [
+            {
+              "pbr": true,
+              "normal": true,
+              "roughness": true,
+              "metal": true
+            }
+          ],
+          "bodyHidden": true,
+          "contactFit": 7.105427357601002e-15,
+          "home": true
+        },
+        {
+          "loaded": true,
+          "triangles": 19073,
+          "materials": [
+            {
+              "pbr": true,
+              "normal": true,
+              "roughness": true,
+              "metal": true
+            }
+          ],
+          "bodyHidden": true,
+          "contactFit": 7.105427357601002e-15,
+          "home": true
+        },
+        {
+          "loaded": true,
+          "triangles": 19073,
+          "materials": [
+            {
+              "pbr": true,
+              "normal": true,
+              "roughness": true,
+              "metal": true
+            }
+          ],
+          "bodyHidden": true,
+          "contactFit": 7.105427357601002e-15,
+          "home": true
+        },
+        {
+          "loaded": true,
+          "triangles": 19073,
+          "materials": [
+            {
+              "pbr": true,
+              "normal": true,
+              "roughness": true,
+              "metal": true
+            }
+          ],
+          "bodyHidden": true,
+          "contactFit": 7.105427357601002e-15,
+          "home": true
+        },
+        {
+          "loaded": true,
+          "triangles": 19073,
+          "materials": [
+            {
+              "pbr": true,
+              "normal": true,
+              "roughness": true,
+              "metal": true
+            }
+          ],
+          "bodyHidden": true,
+          "contactFit": 7.105427357601002e-15,
+          "home": true
+        },
+        {
+          "loaded": true,
+          "triangles": 19073,
+          "materials": [
+            {
+              "pbr": true,
+              "normal": true,
+              "roughness": true,
+              "metal": true
+            }
+          ],
+          "bodyHidden": true,
+          "contactFit": 7.105427357601002e-15,
+          "home": true
+        },
+        {
+          "loaded": true,
+          "triangles": 19073,
+          "materials": [
+            {
+              "pbr": true,
+              "normal": true,
+              "roughness": true,
+              "metal": true
+            }
+          ],
+          "bodyHidden": true,
+          "contactFit": 7.105427357601002e-15,
+          "home": true
+        },
+        {
+          "loaded": true,
+          "triangles": 19073,
+          "materials": [
+            {
+              "pbr": true,
+              "normal": true,
+              "roughness": true,
+              "metal": true
+            }
+          ],
+          "bodyHidden": true,
+          "contactFit": 7.105427357601002e-15,
+          "home": true
+        },
+        {
+          "loaded": true,
+          "triangles": 19073,
+          "materials": [
+            {
+              "pbr": true,
+              "normal": true,
+              "roughness": true,
+              "metal": true
+            }
+          ],
+          "bodyHidden": true,
+          "contactFit": 7.105427357601002e-15,
+          "home": true
+        }
+      ],
+      "buffer": [
+        2560,
+        1440
+      ],
+      "stamp": "Codex/sol fork · build 10-25 15:48 UTC",
+      "landing": {
+        "grounded": true,
+        "bailing": false,
+        "feet": 82.20000000596048,
+        "top": 82.18000000596048
+      },
+      "cover": {
+        "blocked": true,
+        "position": [
+          -186.38771633099933,
+          79.4200000059604,
+          -376.7830145202659
+        ],
+        "crate": [
+          -187.15416948200425,
+          79.78000000596046,
+          -383.740927250914
+        ]
+      },
+      "reset": {
+        "restored": true,
+        "attached": true,
+        "loaded": true,
+        "visible": true
+      }
+    }
+  ],
+  "errors": []
+}

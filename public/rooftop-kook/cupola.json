@@ -17,7 +17,11 @@
   "sourceGeometryPreserved": true,
   "originalUVsPreserved": true,
   "role": "editable modular scenery; per-placement collision policy",
-  "bytes": 2013452,
-  "sha256": "7cb095b67045e9497c3c63ac2fe4ebc358309c4c08d83a013acabe5a729d53be",
-  "atlasResolution": 2048
+  "bytes": 1953248,
+  "sha256": "300a6584ad1487b7522cf6608950ab42f28ed4b300a64cc7e7adc3fbd45444a6",
+  "atlasResolution": 2048,
+  "geometryCompression": "lossless EXT_meshopt_compression",
+  "allVertexAndSkinValuesVerified": true,
+  "orientedTrianglesVerified": true,
+  "originalTextureBytesVerified": true
 }

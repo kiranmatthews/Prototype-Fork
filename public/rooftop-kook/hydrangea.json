@@ -2,7 +2,7 @@
   "name": "hydrangea",
   "source": ".img2threejs/rooftop-kook/hydrangea/downloads/model.glb",
   "sourceSize": [
-    1.0,
+    1,
     0.4139060080051422,
     0.4610400050878525
   ],
@@ -17,7 +17,11 @@
   "sourceGeometryPreserved": true,
   "originalUVsPreserved": true,
   "role": "editable modular scenery; per-placement collision policy",
-  "bytes": 1956232,
-  "sha256": "dd4b5a1c04be555c42df56327f1e8950b81671d28eac30798fe7fb9143e382df",
-  "atlasResolution": 2048
+  "bytes": 1885272,
+  "sha256": "11466a4499790c59283e53afde041ca30070c81b383de906bdd3bcf39a0f8f45",
+  "atlasResolution": 2048,
+  "geometryCompression": "lossless EXT_meshopt_compression",
+  "allVertexAndSkinValuesVerified": true,
+  "orientedTrianglesVerified": true,
+  "originalTextureBytesVerified": true
 }

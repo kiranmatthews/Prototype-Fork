@@ -14,9 +14,9 @@ for name in sys.argv[1:]:
  for index,view in enumerate(doc['bufferViews']):
   data=binary[view.get('byteOffset',0):view.get('byteOffset',0)+view['byteLength']]
   if index in images:
-   image_index,definition=images[index];resolution=(2048 if image_index in base else 1024) if name=='heirloom-shotgun' else (4096 if image_index in base else 2048)
+   image_index,definition=images[index];resolution=(2048 if image_index in base else 1024) if name in ('heirloom-shotgun','storm-case') else (4096 if image_index in base else 2048)
    im=Image.open(io.BytesIO(data)).convert('RGB');im.thumbnail((resolution,resolution),Image.Resampling.LANCZOS)
-   buffer=io.BytesIO();im.save(buffer,'JPEG',quality=95 if image_index in base else 98,optimize=True,subsampling=0)
+   buffer=io.BytesIO();im.save(buffer,'JPEG',quality=95 if image_index in base else (96 if name=='storm-case' else 98),optimize=True,subsampling=0)
    data=buffer.getvalue();definition['mimeType']='image/jpeg';resolutions.append(im.size)
   packed.extend(b'\0'*(-len(packed)%4));view['byteOffset']=len(packed);view['byteLength']=len(data);packed.extend(data)
  for sampler in doc.get('samplers',[]):sampler.update(minFilter=9987,magFilter=9729)

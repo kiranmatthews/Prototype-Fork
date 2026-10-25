@@ -44,6 +44,7 @@ import { upgradeKnownEdgeDefaults } from './edgeGrindingMigration';
 import { CityAssetKit, CITY_ASSETS, CITY_ASSET_KINDS, CITY_ASSET_LABELS, isCityAsset, cityMatrix, cityCollisionGeometry, cityRailVisual, accelerateCityGround } from "./cityAssets";
 import { createExplosiveBundle, updateExplosiveBundle, disposeExplosiveBundle, type ExplosiveBundle } from "./explosiveBundle";
 import { createWoodCrate, setWoodCrateState, disposeWoodCrate, woodCrateTexture, type WoodCrate } from "./woodCrate";
+import { dressStormCase, type StormCase } from "./stormCase";
 import {attachBonusStone,BonusJumpGate,BONUS_PLATFORM_HEIGHT,BONUS_PLATFORM_RADIUS,BONUS_LANDING_RADIUS} from './bonusPlatform';
 import { DECK_TRICKS, deckTrickInfo, type DeckTrickKind } from './skateTricks';
 import { createJungleCupTrophy } from "./competition/trophy";
@@ -251,6 +252,7 @@ export interface Crate {
   mesh: THREE.Mesh;
   explosiveBundle?: ExplosiveBundle; // TNT/Nitro visual; the original cube owns contacts
   woodCrate?: WoodCrate; // shared Meshy art; the original cube still owns contact
+  stormCase?: StormCase; // rooftop metal cover, with complete Meshy artwork
   carton?: MilkCarton; // plain wood's visual replacement; the existing box owns all contact
   box: THREE.Box3;
   alive: boolean;
@@ -5281,7 +5283,7 @@ export class Level {
   // Per-deck copy of a base material with a surface texture tiled on it.
   private kookRoofBump():THREE.Texture {
     const key='kook-metal-height';let texture=this.surfTexCache.get(key);
-    if(!texture){texture=this.surfaceImage('rooftop-kook/metal-height.png');texture.colorSpace=THREE.NoColorSpace;this.surfTexCache.set(key,texture);}
+    if(!texture){texture=this.surfaceImage('rooftop-kook/metal-height.webp');texture.colorSpace=THREE.NoColorSpace;this.surfTexCache.set(key,texture);}
     return texture;
   }
   private patterned(
@@ -8727,6 +8729,7 @@ export class Level {
     if(this.bonusPlatform)this.bonusPlatform.group.userData.bonusStoneDisposed=true;
     for (const crate of this.crates) {
       if (crate.woodCrate) disposeWoodCrate(crate.woodCrate);
+      crate.stormCase?.dispose();
       if (crate.explosiveBundle) disposeExplosiveBundle(crate.explosiveBundle);
     }
     this.nightworksRocks?.dispose();
@@ -10798,6 +10801,7 @@ export class Level {
     if (c.realMat && c.ghostMat)
       c.mesh.material = pending ? c.ghostMat : c.realMat;
     if (c.ghostEdges) c.ghostEdges.visible = pending;
+    c.stormCase?.setPending(pending);
     if (c.woodCrate) setWoodCrateState(c.woodCrate, c.hitsRemaining ?? 5, pending, c.ttOrigMap !== undefined);
     if (c.explosiveBundle) updateExplosiveBundle(c.explosiveBundle, c.fuse, this.time, pending);
   }
@@ -16092,7 +16096,7 @@ export class Level {
     }
     this.nightworksFog?.update(camera.position,fogLimited?visibilityFar:Infinity,secondary?.position);
   }
-  async prepareJungleAssets(): Promise<void> { await Promise.all([...this.warpPads.map(pad=>pad.ready),this.hollowwakeTunnels?.ready(),...this.fireTikis.map(tiki=>tiki.ready),this.blockworksSurfaces?.ready(),this.blockworksAssets?.ready(),this.blockworksMattes?.ready(),...this.carlisleBridgeVisuals.map(bridge=>bridge.ready),this.clockVisual?.ready,this.boss?.prepareAssets(),this.jungleAssets?.ready(),this.hazardVisuals?.ready(),this.jungleStreamReflections?.ready(),this.cityAssets?.ready(),this.nightworksRocks?.ready(),this.ghostTrainAssets?.ready(),this.warehousePresentation?.ready(),this.ghostTrainAssets?prepareCastleTextures():undefined,this.campaignWorldMap?.prepareAssets(), ...this.crates.flatMap(crate => [crate.woodCrate?.ready,crate.explosiveBundle?.ready]), ...this.enemies.map(enemy => enemy.visual.ready)]); }
+  async prepareJungleAssets(): Promise<void> { await Promise.all([...this.warpPads.map(pad=>pad.ready),this.hollowwakeTunnels?.ready(),...this.fireTikis.map(tiki=>tiki.ready),this.blockworksSurfaces?.ready(),this.blockworksAssets?.ready(),this.blockworksMattes?.ready(),...this.carlisleBridgeVisuals.map(bridge=>bridge.ready),this.clockVisual?.ready,this.boss?.prepareAssets(),this.jungleAssets?.ready(),this.hazardVisuals?.ready(),this.jungleStreamReflections?.ready(),this.cityAssets?.ready(),this.nightworksRocks?.ready(),this.ghostTrainAssets?.ready(),this.warehousePresentation?.ready(),this.ghostTrainAssets?prepareCastleTextures():undefined,this.campaignWorldMap?.prepareAssets(), ...this.crates.flatMap(crate => [crate.woodCrate?.ready,crate.explosiveBundle?.ready,crate.stormCase?.ready]), ...this.enemies.map(enemy => enemy.visual.ready)]); }
   async prepareGhostTrainAssets():Promise<void> {await Promise.all([this.ghostTrainAssets?.ready(),prepareCastleTextures(),...this.enemies.filter(e=>e.group.userData.ghostSkin).map(e=>e.visual.ready)]);}
   get blockworksArtDiagnostics(){return {surfaces:this.blockworksSurfaces?.diagnostics??null,scenery:this.blockworksAssets?.diagnostics??null,mattes:this.blockworksMattes?.diagnostics??null};}
   get ghostTrainDiagnostics() {return {scenery:this.ghostTrainAssets?.diagnostics??null,textures:castleTextureDiagnostics(),enemies:this.enemies.filter(e=>e.group.userData.ghostSkin).map(e=>({skin:e.group.userData.ghostSkin,...e.visual.diagnostics,articulation:e.group.userData.ghostArticulation,contacts:e.group.userData.ghostFootContacts,servo:e.group.userData.ghostServo,height:e.group.userData.ghostHeight}))};}
@@ -17285,6 +17289,7 @@ export class Level {
     // Item boxes hover clear of steep road faces and are collected on contact.
     if(raceItem)base+=.9;
     const mesh = woodCrate?.body ?? explosiveBundle?.body ?? new THREE.Mesh(new THREE.BoxGeometry(size, size, size), mat);
+    const stormCase = kind === 'metal' && this.skyPreset === 'coastal-storm' ? dressStormCase(mesh, size) : undefined;
     mesh.position.set(x, base + size / 2, z);
     mesh.userData.baseY = mesh.position.y;
     mesh.userData.groundBaseY = groundBase; // the floor of this crate's column
@@ -17301,6 +17306,7 @@ export class Level {
     const entry: Crate = {
       mesh,
       woodCrate,
+      stormCase,
       explosiveBundle,
       box,
       alive: true,
@@ -17340,6 +17346,7 @@ export class Level {
       );
       mesh.add(edges);
       entry.ghostEdges = edges;
+      stormCase?.setPending(true);
       if (woodCrate) setWoodCrateState(woodCrate, woodCrate.hitsRemaining, true);
       if (explosiveBundle) updateExplosiveBundle(explosiveBundle,undefined,this.time,true);
     }

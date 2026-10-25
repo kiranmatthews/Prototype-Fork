@@ -37,7 +37,7 @@ compress_native.mjs uses lossless Meshopt geometry compression and high-quality 
 
 For the optional packing step, install @gltf-transform/core, @gltf-transform/extensions and @gltf-transform/functions 4.2.1 with sharp and meshoptimizer in a tooling directory. Set ROOFTOP_GLTF_PACKAGE to that directory's absolute package.json path, or install the tooling packages beside the script. This runtime does not ship those authoring dependencies.
 
-Roof grain is source-aligned, and metal-height.png supplies simulated seam depth through bump mapping. The skyline uses full Meshy buildings and existing coastal-town/country-club windows, balconies and trees. Added scenery is visual-only; native components own traversal and collision.
+Roof grain is source-aligned, and metal-height.webp supplies simulated seam depth through bump mapping. The skyline uses full Meshy buildings and existing coastal-town/country-club windows, balconies and trees. Added scenery is visual-only; native components own traversal and collision.
 
 Original downloads and Blender renders remain in ignored .img2threejs/rooftop-kook/. Runtime assets live in public/rooftop-kook/; placements are in src/levels/rooftop-kook-art.ts. The ledger refuses duplicate submission of an existing job name.
 
@@ -59,3 +59,9 @@ The stock rig lacks finger joints. `src/enemies/kookGrip.ts` adds four measured 
 `src/wetRooftop.ts` retains the authored metal seam bump and adds a thin animated lighting normal. Gravity projected onto the rendered plane sets downhill flow; flatter surfaces use expanding rain rings. World-oriented coordinates are anchored to each roof for stable precision on the late course. Vertical faces and undersides receive no rain-film deformation. No support mesh, texture UV, collision, traction or visible model detail changes.
 
 `tools/rooftop-wet-film-browser.mjs` checks the actual GPU output under rotated/scaled placements, UV rotation and distant translation, verifies downhill advection and bounded normals, and renders material comparisons and native/CRT course views. The previous shader is retained only as a review fixture in `docs/rooftop-kook/wet-runoff/before-source.ts`.
+
+## Yacht-club storm cases
+
+`references/storm-case.png` and `references/storm-case.prompt.txt` are the ImageGen concept and exact prompt. `expansion_jobs.py create storm-case` submitted the 35-credit Meshy 7.1 job recorded in `tasks.json`; the official CLI owns all status checks and downloads. `storm-case` is an ordinary metal cover crate appearance in coastal-storm levels, not a new collision primitive. `src/stormCase.ts` leases its full 19,073-triangle PBR mesh and attaches it to the original crate body. Native output stays in `.img2threejs/rooftop-kook/storm-case/downloads/model.glb`; the web version uses 2K colour and 1K normal/material maps.
+
+`compress_native.mjs --geometry-only estate cupola terrace hydrangea manor dormer` verifies all decoded geometry values, oriented triangles and encoded texture bytes. `pack_roof_height.mjs` verifies every height-map pixel while converting the original authoring PNG to lossless WebP. Neither packing operation introduces distance variants. The case and real enemy cover interaction have native-resolution browser evidence in `docs/rooftop-kook/storm-case/`.
