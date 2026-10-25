@@ -28,7 +28,7 @@ await withBlockworksRuntime(async r=>{
   if(!entry)continue;
   const level=new Level(new THREE.Scene(),entry);
   try{
-   if(level.isBossLevel||level.skatepark||level.hudMode==='hub'){
+   if(level.isBossLevel||level.skatepark||level.skateRace||level.hudMode==='hub'||level.builtFromData?.startWarpPad===false){
     assert.equal(level.startWarpPosition,null,'special course gained a standard start pad');continue;
    }
    assert.ok(level.startWarpPosition,`${entry.id}: missing start platform`);

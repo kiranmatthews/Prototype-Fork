@@ -1,0 +1,51 @@
+{
+  "provider": "Meshy",
+  "taskId": "01a1718b-8ae8-71eb-aa2c-1ab38bf9d8f5",
+  "consumedCredits": 15,
+  "referenceSha256": "67c1380e58f25c9e1b52044a2232bf4e4e3e6d9c81782f403c0b62b53a9a3267",
+  "sourceSha256": "fe1cb8717641ee8a621d374a1d99458cd8929bd0ab725a43df9fcae863e449bb",
+  "runtimeSha256": "ea95c6d8bb3bc32ddf04fe314761d94353653ee64f96831a07f71fe6f9a32179",
+  "runtimeBytes": 1458028,
+  "sourceBytes": 5674972,
+  "triangles": 6374,
+  "draws": 1,
+  "textures": [
+    {
+      "size": [
+        2048,
+        2048
+      ],
+      "bytes": 886987
+    },
+    {
+      "size": [
+        1024,
+        1024
+      ],
+      "bytes": 154494
+    },
+    {
+      "size": [
+        1024,
+        1024
+      ],
+      "bytes": 166612
+    }
+  ],
+  "bounds": [
+    [
+      -1.5902760028839111,
+      0.0,
+      -1.5902760028839111
+    ],
+    [
+      1.5902760028839111,
+      0.7333333492279053,
+      1.5902760028839111
+    ]
+  ],
+  "standingPlane": 0.7333333333333334,
+  "radius": 1.6166666666666665,
+  "flattenedDeckVertices": 1871,
+  "geometry": "Original Meshy topology and UVs; metre-space fit, flattened standing disk, compact PBR textures."
+}
