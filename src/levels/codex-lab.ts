@@ -1,3 +1,4 @@
+export { CAVE_COLLAPSE_LEVEL } from './cave-collapse';
 import {warehouseRibbon,warehouseIsland,warehouseBeam,type WarehousePoint} from './warehouse-geometry';
 import {warehouseDressing} from './warehouse-dressing';
 import {dressBlockworks,HAUNTED_ISLAND_ATMOSPHERE} from './blockworks-art';

@@ -3972,6 +3972,7 @@ export class Player {
     if (stop.cp && !stop.cp.active)
       level.activateCheckpoint(stop.cp, this.cratesBroken, this.fruit, this.masks, this.points);
     else if (stop.cp) level.currentSpawn.copy(stop.cp.spawnPos);
+    level.caveCollapse?.reset(this.pos);
     if(level.boulder?.course){
       level.boulder.course.reset(this.pos);level.boulder.st=level.boulder.course.stone;
       level.boulder.active=false;level.boulder.falling=false;
@@ -4076,6 +4077,11 @@ export class Player {
       if (this.groundHit.crumbleId !== undefined) level.touchCrumble(this.groundHit.crumbleId);
     }
     level.playerPos.copy(this.pos); // the boulder chase reads this
+    if(level.caveCollapse?.consumeWarning())this.onCourseHint?.('CAVE-IN!', 'Keep moving · jump the broken causeways');
+    // Falling cave mass remains lethal while airborne, grinding or hanging.
+    if(this.state!=='dead'&&this.state!=='gameover'&&this.state!=='finished'&&level.caveCollapse?.hitsPlayer(this.pos,this.prevPos)){
+      this.die('crush');return;
+    }
     if (this.iceSlideCarry && (this.state !== 'ride' || this.freeSkate || this.isBailing)) this.iceSlideCarry = false;
     if(this.state!=='dead'&&this.state!=='gameover'&&this.state!=='finished'&&level.boulder?.course?.consumeLightning()){
       level.strikeChaseLightning(this.pos);this.die('lightning');

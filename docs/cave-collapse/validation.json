@@ -1,0 +1,527 @@
+{
+  "level": "cave-collapse",
+  "name": "Crumblewake Cave",
+  "seed": 73419,
+  "rings": 48,
+  "rocks": 432,
+  "promptToFullRenderMinutes": 22,
+  "native": {
+    "route": [
+      {
+        "frame": 489,
+        "time": 8.15,
+        "position": [
+          -7.95000000000039,
+          2.3841857821338408e-08,
+          0
+        ],
+        "heading": [
+          0,
+          0,
+          -1
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": 2.3841857821338408e-08,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 1,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      },
+      {
+        "frame": 744,
+        "time": 12.4,
+        "position": [
+          0.2999999999996181,
+          2.3841857821338408e-08,
+          24.14999999999995
+        ],
+        "heading": [
+          0,
+          0,
+          -1
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": -9,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": 2.3841857821338408e-08,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": -1,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      },
+      {
+        "frame": 1143,
+        "time": 19.05,
+        "position": [
+          0.2999999999996181,
+          2.3841857821338408e-08,
+          84.00000000000033
+        ],
+        "heading": [
+          0,
+          0,
+          -1
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": -9,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": 2.3841857821338408e-08,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": -1,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      },
+      {
+        "frame": 1543,
+        "time": 25.716666666666665,
+        "position": [
+          0.2999999999996181,
+          2.3841857821338408e-08,
+          144.0000000000026
+        ],
+        "heading": [
+          0,
+          0,
+          -1
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": -9,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": 2.3841857821338408e-08,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": -1,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      },
+      {
+        "frame": 1863,
+        "time": 31.05,
+        "position": [
+          0.2999999999996181,
+          2.3841857821338408e-08,
+          192.0000000000044
+        ],
+        "heading": [
+          0,
+          0,
+          -1
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": -9,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": 2.3841857821338408e-08,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": -1,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      },
+      {
+        "frame": 2293,
+        "time": 38.21666666666667,
+        "position": [
+          0.2999999999996181,
+          0.7266666691501935,
+          256.50000000000676
+        ],
+        "heading": [
+          0,
+          0,
+          -1
+        ],
+        "state": "finished",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "warp plinth rim",
+          "y": 0.7266666691501935,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": -1,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    ],
+    "collapsed": 43,
+    "rocks": 432,
+    "seconds": 38.21666666666667
+  },
+  "browser": {
+    "runs": [
+      {
+        "mode": "lite",
+        "frame": 2234,
+        "stage": 7,
+        "gap": 3,
+        "pos": [
+          0.3018843523486074,
+          0.7266666691501935,
+          256.49949088684383
+        ],
+        "grounded": true,
+        "state": "finished",
+        "phase": "escaped",
+        "front": 195.3256784250044,
+        "collapsed": 43,
+        "checkpoint": true,
+        "done": true,
+        "failed": null,
+        "events": [
+          {
+            "frame": 1085,
+            "stage": 4,
+            "gap": 1,
+            "pos": [
+              0.30061819854952365,
+              2.3841857821338408e-08,
+              84.149490891503
+            ],
+            "grounded": true,
+            "state": "ride",
+            "phase": "chasing",
+            "front": 36.241923634071455,
+            "collapsed": 5,
+            "checkpoint": true
+          },
+          {
+            "frame": 1485,
+            "stage": 4,
+            "gap": 2,
+            "pos": [
+              0.3010589831619114,
+              2.3841857821338408e-08,
+              144.1494908898837
+            ],
+            "grounded": true,
+            "state": "ride",
+            "phase": "chasing",
+            "front": 97.822097176175,
+            "collapsed": 19,
+            "checkpoint": true
+          },
+          {
+            "frame": 1805,
+            "stage": 7,
+            "gap": 3,
+            "pos": [
+              0.30141161085182155,
+              2.3841857821338408e-08,
+              192.14949088858495
+            ],
+            "grounded": true,
+            "state": "ride",
+            "phase": "chasing",
+            "front": 146.2974288112944,
+            "collapsed": 29,
+            "checkpoint": true
+          },
+          {
+            "frame": 2234,
+            "stage": 7,
+            "gap": 3,
+            "pos": [
+              0.3018843523486074,
+              0.7266666691501935,
+              256.49949088684383
+            ],
+            "grounded": true,
+            "state": "finished",
+            "phase": "escaped",
+            "front": 195.3256784250044,
+            "collapsed": 43,
+            "checkpoint": true
+          }
+        ]
+      },
+      {
+        "mode": "full",
+        "frame": 2234,
+        "stage": 7,
+        "gap": 3,
+        "pos": [
+          0.3018843523486074,
+          0.7266666691501935,
+          256.49949088684383
+        ],
+        "grounded": true,
+        "state": "finished",
+        "phase": "escaped",
+        "front": 195.3256784250044,
+        "collapsed": 43,
+        "checkpoint": true,
+        "done": true,
+        "failed": null,
+        "events": [
+          {
+            "frame": 1085,
+            "stage": 4,
+            "gap": 1,
+            "pos": [
+              0.30061819854952365,
+              2.3841857821338408e-08,
+              84.149490891503
+            ],
+            "grounded": true,
+            "state": "ride",
+            "phase": "chasing",
+            "front": 36.241923634071455,
+            "collapsed": 5,
+            "checkpoint": true
+          },
+          {
+            "frame": 1485,
+            "stage": 4,
+            "gap": 2,
+            "pos": [
+              0.3010589831619114,
+              2.3841857821338408e-08,
+              144.1494908898837
+            ],
+            "grounded": true,
+            "state": "ride",
+            "phase": "chasing",
+            "front": 97.822097176175,
+            "collapsed": 19,
+            "checkpoint": true
+          },
+          {
+            "frame": 1805,
+            "stage": 7,
+            "gap": 3,
+            "pos": [
+              0.30141161085182155,
+              2.3841857821338408e-08,
+              192.14949088858495
+            ],
+            "grounded": true,
+            "state": "ride",
+            "phase": "chasing",
+            "front": 146.2974288112944,
+            "collapsed": 29,
+            "checkpoint": true
+          },
+          {
+            "frame": 2234,
+            "stage": 7,
+            "gap": 3,
+            "pos": [
+              0.3018843523486074,
+              0.7266666691501935,
+              256.49949088684383
+            ],
+            "grounded": true,
+            "state": "finished",
+            "phase": "escaped",
+            "front": 195.3256784250044,
+            "collapsed": 43,
+            "checkpoint": true
+          }
+        ]
+      }
+    ],
+    "recovery": {
+      "caught": {
+        "position": [
+          0.00020386288323436005,
+          2.3841857821338408e-08,
+          32.74999999925114
+        ],
+        "phase": "chasing"
+      },
+      "pit": {
+        "position": [
+          0.0005597964577462378,
+          -18.535833309491483,
+          81.1999999979448
+        ]
+      },
+      "retry": {
+        "position": [
+          0,
+          2.3841857821338408e-08,
+          5
+        ],
+        "spawn": [
+          0,
+          0.10000002384185783,
+          5
+        ],
+        "checkpoint": true
+      }
+    },
+    "errors": []
+  },
+  "stateChecks": "PASS: seeded geometry, warning, catch, monotonic pursuit, reset, timestep stability, path projection, bounded validation, disposal"
+}
