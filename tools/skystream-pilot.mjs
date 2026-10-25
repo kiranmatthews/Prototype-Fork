@@ -32,8 +32,13 @@ export function createSkystreamPilot(source, options = {}) {
     const release=!finishJump&&p.grounded&&p.pos.z<finish[2]+14;if(release)finishJump=true;
     return {...towards(p,l,finish),jumpHeld:!release};
    }
-   const q=lane[Math.min(lane.length-1,index+(index>170?4:2))];
+   // Read the next crate run early and trace the bend instead of cutting its
+   // inside chord. These are ordinary steering samples at the same speed.
+   const crateRun=l.crates.some(c=>c.alive&&c.mesh.position.distanceTo(p.pos)<30)||
+    l.checkpoints.some(cp=>!cp.active&&cp.spawnPos.distanceTo(p.pos)<30);
    const edge=source.SKYSTREAM_GAPS[gap];
+   const jumpApproach=edge&&Math.hypot(...edge.takeoff.map((n,i)=>n-p.pos.getComponent(i)))<55;
+   const q=lane[Math.min(lane.length-1,index+(index>170&&(!crateRun||jumpApproach)?4:2))];
    const gx=edge?edge.landing[0]-edge.takeoff[0]:0,gz=edge?edge.landing[2]-edge.takeoff[2]:0,gn=Math.hypot(gx,gz)||1;
    const remaining=edge?((edge.takeoff[0]-p.pos.x)*gx+(edge.takeoff[2]-p.pos.z)*gz)/gn:Infinity;
    const across=edge?Math.abs((edge.takeoff[0]-p.pos.x)*gz-(edge.takeoff[2]-p.pos.z)*gx)/gn:Infinity;
