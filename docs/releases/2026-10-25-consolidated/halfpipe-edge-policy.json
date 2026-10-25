@@ -1,0 +1,3269 @@
+{
+  "reports": [
+    {
+      "id": "treehouse-trail",
+      "components": 1873,
+      "disabled": [
+        {
+          "index": 24,
+          "t": "mesh",
+          "name": "Seamless small beach to the right of the route",
+          "reason": "continuous natural ground, seabed or buried seam fill"
+        },
+        {
+          "index": 26,
+          "t": "mesh",
+          "name": "Small clear coastal inlet beside the crab shack",
+          "reason": "visual-only"
+        },
+        {
+          "index": 39,
+          "t": "mesh",
+          "name": "Treehouse Trials shallow river",
+          "reason": "visual-only"
+        },
+        {
+          "index": 63,
+          "t": "mesh",
+          "name": "Clear cavern river below the broken rope bridge",
+          "reason": "visual-only"
+        },
+        {
+          "index": 72,
+          "t": "mesh",
+          "name": "Timber rope anchor firmly seated on the broken deck",
+          "reason": "visual-only"
+        },
+        {
+          "index": 73,
+          "t": "mesh",
+          "name": "Simple rope lashing around bridge anchor",
+          "reason": "visual-only"
+        },
+        {
+          "index": 74,
+          "t": "mesh",
+          "name": "Simple rope lashing around bridge anchor",
+          "reason": "visual-only"
+        },
+        {
+          "index": 75,
+          "t": "mesh",
+          "name": "Simple rope lashing around bridge anchor",
+          "reason": "visual-only"
+        },
+        {
+          "index": 76,
+          "t": "mesh",
+          "name": "Timber rope anchor firmly seated on the broken deck",
+          "reason": "visual-only"
+        },
+        {
+          "index": 77,
+          "t": "mesh",
+          "name": "Simple rope lashing around bridge anchor",
+          "reason": "visual-only"
+        },
+        {
+          "index": 78,
+          "t": "mesh",
+          "name": "Simple rope lashing around bridge anchor",
+          "reason": "visual-only"
+        },
+        {
+          "index": 79,
+          "t": "mesh",
+          "name": "Simple rope lashing around bridge anchor",
+          "reason": "visual-only"
+        },
+        {
+          "index": 120,
+          "t": "mesh",
+          "name": "Continuous painted opening ground 0",
+          "reason": "continuous natural ground, seabed or buried seam fill"
+        },
+        {
+          "index": 121,
+          "t": "mesh",
+          "name": "Continuous painted opening ground 20",
+          "reason": "continuous natural ground, seabed or buried seam fill"
+        },
+        {
+          "index": 122,
+          "t": "platform",
+          "name": "Opening safety foundation",
+          "reason": "buried/interior safety support"
+        },
+        {
+          "index": 131,
+          "t": "ramp",
+          "name": "Treehouse stair flight support",
+          "reason": "smooth collision proxy beneath stepped timber; visible handrails own the edge"
+        },
+        {
+          "index": 134,
+          "t": "mesh",
+          "name": "Stair rope handrail post",
+          "reason": "visual-only"
+        },
+        {
+          "index": 135,
+          "t": "mesh",
+          "name": "Stair rope handrail rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 136,
+          "t": "mesh",
+          "name": "Stair rope handrail rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 137,
+          "t": "mesh",
+          "name": "Stair rope handrail post",
+          "reason": "visual-only"
+        },
+        {
+          "index": 138,
+          "t": "mesh",
+          "name": "Stair rope handrail rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 139,
+          "t": "mesh",
+          "name": "Stair rope handrail rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 140,
+          "t": "mesh",
+          "name": "Stair rope handrail post",
+          "reason": "visual-only"
+        },
+        {
+          "index": 141,
+          "t": "mesh",
+          "name": "Stair rope handrail rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 142,
+          "t": "mesh",
+          "name": "Stair rope handrail rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 143,
+          "t": "mesh",
+          "name": "Stair rope handrail rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 144,
+          "t": "mesh",
+          "name": "Stair rope handrail rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 145,
+          "t": "mesh",
+          "name": "Stair rope handrail rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 146,
+          "t": "mesh",
+          "name": "Stair rope handrail rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 147,
+          "t": "mesh",
+          "name": "Continuous stair stringer",
+          "reason": "visual-only"
+        },
+        {
+          "index": 149,
+          "t": "mesh",
+          "name": "Stair rope handrail post",
+          "reason": "visual-only"
+        },
+        {
+          "index": 150,
+          "t": "mesh",
+          "name": "Stair rope handrail rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 151,
+          "t": "mesh",
+          "name": "Stair rope handrail rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 152,
+          "t": "mesh",
+          "name": "Stair rope handrail post",
+          "reason": "visual-only"
+        },
+        {
+          "index": 153,
+          "t": "mesh",
+          "name": "Stair rope handrail rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 154,
+          "t": "mesh",
+          "name": "Stair rope handrail rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 155,
+          "t": "mesh",
+          "name": "Stair rope handrail post",
+          "reason": "visual-only"
+        },
+        {
+          "index": 156,
+          "t": "mesh",
+          "name": "Stair rope handrail rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 157,
+          "t": "mesh",
+          "name": "Stair rope handrail rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 158,
+          "t": "mesh",
+          "name": "Stair rope handrail rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 159,
+          "t": "mesh",
+          "name": "Stair rope handrail rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 160,
+          "t": "mesh",
+          "name": "Stair rope handrail rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 161,
+          "t": "mesh",
+          "name": "Stair rope handrail rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 162,
+          "t": "mesh",
+          "name": "Continuous stair stringer",
+          "reason": "visual-only"
+        },
+        {
+          "index": 163,
+          "t": "ramp",
+          "name": "Treehouse stair flight support",
+          "reason": "smooth collision proxy beneath stepped timber; visible handrails own the edge"
+        },
+        {
+          "index": 166,
+          "t": "mesh",
+          "name": "Stair rope handrail post",
+          "reason": "visual-only"
+        },
+        {
+          "index": 167,
+          "t": "mesh",
+          "name": "Stair rope handrail rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 168,
+          "t": "mesh",
+          "name": "Stair rope handrail rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 169,
+          "t": "mesh",
+          "name": "Stair rope handrail post",
+          "reason": "visual-only"
+        },
+        {
+          "index": 170,
+          "t": "mesh",
+          "name": "Stair rope handrail rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 171,
+          "t": "mesh",
+          "name": "Stair rope handrail rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 172,
+          "t": "mesh",
+          "name": "Stair rope handrail post",
+          "reason": "visual-only"
+        },
+        {
+          "index": 173,
+          "t": "mesh",
+          "name": "Stair rope handrail rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 174,
+          "t": "mesh",
+          "name": "Stair rope handrail rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 175,
+          "t": "mesh",
+          "name": "Stair rope handrail rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 176,
+          "t": "mesh",
+          "name": "Stair rope handrail rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 177,
+          "t": "mesh",
+          "name": "Stair rope handrail rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 178,
+          "t": "mesh",
+          "name": "Stair rope handrail rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 179,
+          "t": "mesh",
+          "name": "Continuous stair stringer",
+          "reason": "visual-only"
+        },
+        {
+          "index": 181,
+          "t": "mesh",
+          "name": "Stair rope handrail post",
+          "reason": "visual-only"
+        },
+        {
+          "index": 182,
+          "t": "mesh",
+          "name": "Stair rope handrail rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 183,
+          "t": "mesh",
+          "name": "Stair rope handrail rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 184,
+          "t": "mesh",
+          "name": "Stair rope handrail post",
+          "reason": "visual-only"
+        },
+        {
+          "index": 185,
+          "t": "mesh",
+          "name": "Stair rope handrail rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 186,
+          "t": "mesh",
+          "name": "Stair rope handrail rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 187,
+          "t": "mesh",
+          "name": "Stair rope handrail post",
+          "reason": "visual-only"
+        },
+        {
+          "index": 188,
+          "t": "mesh",
+          "name": "Stair rope handrail rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 189,
+          "t": "mesh",
+          "name": "Stair rope handrail rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 190,
+          "t": "mesh",
+          "name": "Stair rope handrail rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 191,
+          "t": "mesh",
+          "name": "Stair rope handrail rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 192,
+          "t": "mesh",
+          "name": "Stair rope handrail rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 193,
+          "t": "mesh",
+          "name": "Stair rope handrail rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 194,
+          "t": "mesh",
+          "name": "Continuous stair stringer",
+          "reason": "visual-only"
+        },
+        {
+          "index": 195,
+          "t": "ramp",
+          "name": "Treehouse stair flight support",
+          "reason": "smooth collision proxy beneath stepped timber; visible handrails own the edge"
+        },
+        {
+          "index": 198,
+          "t": "mesh",
+          "name": "Stair rope handrail post",
+          "reason": "visual-only"
+        },
+        {
+          "index": 199,
+          "t": "mesh",
+          "name": "Stair rope handrail rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 200,
+          "t": "mesh",
+          "name": "Stair rope handrail rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 201,
+          "t": "mesh",
+          "name": "Stair rope handrail post",
+          "reason": "visual-only"
+        },
+        {
+          "index": 202,
+          "t": "mesh",
+          "name": "Stair rope handrail rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 203,
+          "t": "mesh",
+          "name": "Stair rope handrail rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 204,
+          "t": "mesh",
+          "name": "Stair rope handrail post",
+          "reason": "visual-only"
+        },
+        {
+          "index": 205,
+          "t": "mesh",
+          "name": "Stair rope handrail rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 206,
+          "t": "mesh",
+          "name": "Stair rope handrail rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 207,
+          "t": "mesh",
+          "name": "Stair rope handrail rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 208,
+          "t": "mesh",
+          "name": "Stair rope handrail rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 209,
+          "t": "mesh",
+          "name": "Stair rope handrail rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 210,
+          "t": "mesh",
+          "name": "Stair rope handrail rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 211,
+          "t": "mesh",
+          "name": "Continuous stair stringer",
+          "reason": "visual-only"
+        },
+        {
+          "index": 213,
+          "t": "mesh",
+          "name": "Stair rope handrail post",
+          "reason": "visual-only"
+        },
+        {
+          "index": 214,
+          "t": "mesh",
+          "name": "Stair rope handrail rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 215,
+          "t": "mesh",
+          "name": "Stair rope handrail rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 216,
+          "t": "mesh",
+          "name": "Stair rope handrail post",
+          "reason": "visual-only"
+        },
+        {
+          "index": 217,
+          "t": "mesh",
+          "name": "Stair rope handrail rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 218,
+          "t": "mesh",
+          "name": "Stair rope handrail rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 219,
+          "t": "mesh",
+          "name": "Stair rope handrail post",
+          "reason": "visual-only"
+        },
+        {
+          "index": 220,
+          "t": "mesh",
+          "name": "Stair rope handrail rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 221,
+          "t": "mesh",
+          "name": "Stair rope handrail rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 222,
+          "t": "mesh",
+          "name": "Stair rope handrail rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 223,
+          "t": "mesh",
+          "name": "Stair rope handrail rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 224,
+          "t": "mesh",
+          "name": "Stair rope handrail rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 225,
+          "t": "mesh",
+          "name": "Stair rope handrail rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 226,
+          "t": "mesh",
+          "name": "Continuous stair stringer",
+          "reason": "visual-only"
+        },
+        {
+          "index": 228,
+          "t": "mesh",
+          "name": "Bottom landing north rail post",
+          "reason": "visual-only"
+        },
+        {
+          "index": 229,
+          "t": "mesh",
+          "name": "Bottom landing north rail rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 230,
+          "t": "mesh",
+          "name": "Bottom landing north rail rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 231,
+          "t": "mesh",
+          "name": "Bottom landing north rail post",
+          "reason": "visual-only"
+        },
+        {
+          "index": 232,
+          "t": "mesh",
+          "name": "Bottom landing north rail rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 233,
+          "t": "mesh",
+          "name": "Bottom landing north rail rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 234,
+          "t": "mesh",
+          "name": "Bottom landing north rail rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 235,
+          "t": "mesh",
+          "name": "Bottom landing north rail rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 237,
+          "t": "mesh",
+          "name": "Bottom landing south rail post",
+          "reason": "visual-only"
+        },
+        {
+          "index": 238,
+          "t": "mesh",
+          "name": "Bottom landing south rail rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 239,
+          "t": "mesh",
+          "name": "Bottom landing south rail rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 240,
+          "t": "mesh",
+          "name": "Bottom landing south rail post",
+          "reason": "visual-only"
+        },
+        {
+          "index": 241,
+          "t": "mesh",
+          "name": "Bottom landing south rail rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 242,
+          "t": "mesh",
+          "name": "Bottom landing south rail rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 243,
+          "t": "mesh",
+          "name": "Bottom landing south rail rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 244,
+          "t": "mesh",
+          "name": "Bottom landing south rail rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 246,
+          "t": "mesh",
+          "name": "First landing outer balustrade post",
+          "reason": "visual-only"
+        },
+        {
+          "index": 247,
+          "t": "mesh",
+          "name": "First landing outer balustrade rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 248,
+          "t": "mesh",
+          "name": "First landing outer balustrade rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 249,
+          "t": "mesh",
+          "name": "First landing outer balustrade post",
+          "reason": "visual-only"
+        },
+        {
+          "index": 250,
+          "t": "mesh",
+          "name": "First landing outer balustrade rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 251,
+          "t": "mesh",
+          "name": "First landing outer balustrade rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 252,
+          "t": "mesh",
+          "name": "First landing outer balustrade post",
+          "reason": "visual-only"
+        },
+        {
+          "index": 253,
+          "t": "mesh",
+          "name": "First landing outer balustrade rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 254,
+          "t": "mesh",
+          "name": "First landing outer balustrade rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 255,
+          "t": "mesh",
+          "name": "First landing outer balustrade rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 256,
+          "t": "mesh",
+          "name": "First landing outer balustrade rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 257,
+          "t": "mesh",
+          "name": "First landing outer balustrade rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 258,
+          "t": "mesh",
+          "name": "First landing outer balustrade rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 260,
+          "t": "mesh",
+          "name": "Second landing outer balustrade post",
+          "reason": "visual-only"
+        },
+        {
+          "index": 261,
+          "t": "mesh",
+          "name": "Second landing outer balustrade rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 262,
+          "t": "mesh",
+          "name": "Second landing outer balustrade rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 263,
+          "t": "mesh",
+          "name": "Second landing outer balustrade post",
+          "reason": "visual-only"
+        },
+        {
+          "index": 264,
+          "t": "mesh",
+          "name": "Second landing outer balustrade rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 265,
+          "t": "mesh",
+          "name": "Second landing outer balustrade rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 266,
+          "t": "mesh",
+          "name": "Second landing outer balustrade post",
+          "reason": "visual-only"
+        },
+        {
+          "index": 267,
+          "t": "mesh",
+          "name": "Second landing outer balustrade rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 268,
+          "t": "mesh",
+          "name": "Second landing outer balustrade rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 269,
+          "t": "mesh",
+          "name": "Second landing outer balustrade rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 270,
+          "t": "mesh",
+          "name": "Second landing outer balustrade rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 271,
+          "t": "mesh",
+          "name": "Second landing outer balustrade rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 272,
+          "t": "mesh",
+          "name": "Second landing outer balustrade rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 274,
+          "t": "mesh",
+          "name": "Top landing outer balustrade post",
+          "reason": "visual-only"
+        },
+        {
+          "index": 275,
+          "t": "mesh",
+          "name": "Top landing outer balustrade rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 276,
+          "t": "mesh",
+          "name": "Top landing outer balustrade rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 277,
+          "t": "mesh",
+          "name": "Top landing outer balustrade post",
+          "reason": "visual-only"
+        },
+        {
+          "index": 278,
+          "t": "mesh",
+          "name": "Top landing outer balustrade rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 279,
+          "t": "mesh",
+          "name": "Top landing outer balustrade rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 280,
+          "t": "mesh",
+          "name": "Top landing outer balustrade post",
+          "reason": "visual-only"
+        },
+        {
+          "index": 281,
+          "t": "mesh",
+          "name": "Top landing outer balustrade rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 282,
+          "t": "mesh",
+          "name": "Top landing outer balustrade rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 283,
+          "t": "mesh",
+          "name": "Top landing outer balustrade rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 284,
+          "t": "mesh",
+          "name": "Top landing outer balustrade rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 285,
+          "t": "mesh",
+          "name": "Top landing outer balustrade rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 286,
+          "t": "mesh",
+          "name": "Top landing outer balustrade rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 290,
+          "t": "platform",
+          "name": "Treehouse cabin floor support",
+          "reason": "buried/interior safety support"
+        },
+        {
+          "index": 292,
+          "t": "mesh",
+          "name": "Warm recessed doorway",
+          "reason": "visual-only"
+        },
+        {
+          "index": 296,
+          "t": "mesh",
+          "name": "Balcony outer edge post",
+          "reason": "visual-only"
+        },
+        {
+          "index": 297,
+          "t": "mesh",
+          "name": "Balcony outer edge rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 298,
+          "t": "mesh",
+          "name": "Balcony outer edge rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 299,
+          "t": "mesh",
+          "name": "Balcony outer edge post",
+          "reason": "visual-only"
+        },
+        {
+          "index": 300,
+          "t": "mesh",
+          "name": "Balcony outer edge rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 301,
+          "t": "mesh",
+          "name": "Balcony outer edge rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 302,
+          "t": "mesh",
+          "name": "Balcony outer edge post",
+          "reason": "visual-only"
+        },
+        {
+          "index": 303,
+          "t": "mesh",
+          "name": "Balcony outer edge rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 304,
+          "t": "mesh",
+          "name": "Balcony outer edge rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 305,
+          "t": "mesh",
+          "name": "Balcony outer edge rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 306,
+          "t": "mesh",
+          "name": "Balcony outer edge rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 307,
+          "t": "mesh",
+          "name": "Balcony outer edge rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 308,
+          "t": "mesh",
+          "name": "Balcony outer edge rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 310,
+          "t": "mesh",
+          "name": "Balcony outer edge post",
+          "reason": "visual-only"
+        },
+        {
+          "index": 311,
+          "t": "mesh",
+          "name": "Balcony outer edge rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 312,
+          "t": "mesh",
+          "name": "Balcony outer edge rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 313,
+          "t": "mesh",
+          "name": "Balcony outer edge post",
+          "reason": "visual-only"
+        },
+        {
+          "index": 314,
+          "t": "mesh",
+          "name": "Balcony outer edge rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 315,
+          "t": "mesh",
+          "name": "Balcony outer edge rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 316,
+          "t": "mesh",
+          "name": "Balcony outer edge post",
+          "reason": "visual-only"
+        },
+        {
+          "index": 317,
+          "t": "mesh",
+          "name": "Balcony outer edge rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 318,
+          "t": "mesh",
+          "name": "Balcony outer edge rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 319,
+          "t": "mesh",
+          "name": "Balcony outer edge rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 320,
+          "t": "mesh",
+          "name": "Balcony outer edge rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 321,
+          "t": "mesh",
+          "name": "Balcony outer edge rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 322,
+          "t": "mesh",
+          "name": "Balcony outer edge rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 324,
+          "t": "mesh",
+          "name": "Balcony left return post",
+          "reason": "visual-only"
+        },
+        {
+          "index": 325,
+          "t": "mesh",
+          "name": "Balcony left return rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 326,
+          "t": "mesh",
+          "name": "Balcony left return rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 327,
+          "t": "mesh",
+          "name": "Balcony left return post",
+          "reason": "visual-only"
+        },
+        {
+          "index": 328,
+          "t": "mesh",
+          "name": "Balcony left return rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 329,
+          "t": "mesh",
+          "name": "Balcony left return rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 330,
+          "t": "mesh",
+          "name": "Balcony left return rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 331,
+          "t": "mesh",
+          "name": "Balcony left return rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 333,
+          "t": "mesh",
+          "name": "Balcony right return post",
+          "reason": "visual-only"
+        },
+        {
+          "index": 334,
+          "t": "mesh",
+          "name": "Balcony right return rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 335,
+          "t": "mesh",
+          "name": "Balcony right return rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 336,
+          "t": "mesh",
+          "name": "Balcony right return post",
+          "reason": "visual-only"
+        },
+        {
+          "index": 337,
+          "t": "mesh",
+          "name": "Balcony right return rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 338,
+          "t": "mesh",
+          "name": "Balcony right return rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 339,
+          "t": "mesh",
+          "name": "Balcony right return rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 340,
+          "t": "mesh",
+          "name": "Balcony right return rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 342,
+          "t": "mesh",
+          "name": "Balcony rear left guard post",
+          "reason": "visual-only"
+        },
+        {
+          "index": 343,
+          "t": "mesh",
+          "name": "Balcony rear left guard rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 344,
+          "t": "mesh",
+          "name": "Balcony rear left guard rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 345,
+          "t": "mesh",
+          "name": "Balcony rear left guard post",
+          "reason": "visual-only"
+        },
+        {
+          "index": 346,
+          "t": "mesh",
+          "name": "Balcony rear left guard rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 347,
+          "t": "mesh",
+          "name": "Balcony rear left guard rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 348,
+          "t": "mesh",
+          "name": "Balcony rear left guard rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 349,
+          "t": "mesh",
+          "name": "Balcony rear left guard rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 351,
+          "t": "mesh",
+          "name": "Balcony rear right guard post",
+          "reason": "visual-only"
+        },
+        {
+          "index": 352,
+          "t": "mesh",
+          "name": "Balcony rear right guard rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 353,
+          "t": "mesh",
+          "name": "Balcony rear right guard rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 354,
+          "t": "mesh",
+          "name": "Balcony rear right guard post",
+          "reason": "visual-only"
+        },
+        {
+          "index": 355,
+          "t": "mesh",
+          "name": "Balcony rear right guard rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 356,
+          "t": "mesh",
+          "name": "Balcony rear right guard rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 357,
+          "t": "mesh",
+          "name": "Balcony rear right guard rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 358,
+          "t": "mesh",
+          "name": "Balcony rear right guard rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 359,
+          "t": "mesh",
+          "name": "Balcony timber bearer",
+          "reason": "visual-only"
+        },
+        {
+          "index": 360,
+          "t": "mesh",
+          "name": "Angled timber brace tied into the trunk",
+          "reason": "visual-only"
+        },
+        {
+          "index": 361,
+          "t": "mesh",
+          "name": "Balcony timber bearer",
+          "reason": "visual-only"
+        },
+        {
+          "index": 362,
+          "t": "mesh",
+          "name": "Angled timber brace tied into the trunk",
+          "reason": "visual-only"
+        },
+        {
+          "index": 363,
+          "t": "mesh",
+          "name": "Balcony timber bearer",
+          "reason": "visual-only"
+        },
+        {
+          "index": 364,
+          "t": "mesh",
+          "name": "Angled timber brace tied into the trunk",
+          "reason": "visual-only"
+        },
+        {
+          "index": 365,
+          "t": "mesh",
+          "name": "Balcony timber bearer",
+          "reason": "visual-only"
+        },
+        {
+          "index": 366,
+          "t": "mesh",
+          "name": "Angled timber brace tied into the trunk",
+          "reason": "visual-only"
+        },
+        {
+          "index": 367,
+          "t": "mesh",
+          "name": "Landing support post",
+          "reason": "visual-only"
+        },
+        {
+          "index": 368,
+          "t": "mesh",
+          "name": "Landing brace into tree",
+          "reason": "visual-only"
+        },
+        {
+          "index": 369,
+          "t": "mesh",
+          "name": "Landing support post",
+          "reason": "visual-only"
+        },
+        {
+          "index": 370,
+          "t": "mesh",
+          "name": "Landing brace into tree",
+          "reason": "visual-only"
+        },
+        {
+          "index": 371,
+          "t": "mesh",
+          "name": "Landing support post",
+          "reason": "visual-only"
+        },
+        {
+          "index": 372,
+          "t": "mesh",
+          "name": "Landing brace into tree",
+          "reason": "visual-only"
+        },
+        {
+          "index": 373,
+          "t": "mesh",
+          "name": "Cabin and balcony grounded support post",
+          "reason": "visual-only"
+        },
+        {
+          "index": 375,
+          "t": "mesh",
+          "name": "Cabin and balcony grounded support post",
+          "reason": "visual-only"
+        },
+        {
+          "index": 377,
+          "t": "mesh",
+          "name": "Continuous under-cabin cross bearer",
+          "reason": "visual-only"
+        },
+        {
+          "index": 378,
+          "t": "mesh",
+          "name": "Continuous under-cabin cross bearer",
+          "reason": "visual-only"
+        },
+        {
+          "index": 379,
+          "t": "mesh",
+          "name": "Continuous under-cabin cross bearer",
+          "reason": "visual-only"
+        },
+        {
+          "index": 380,
+          "t": "mesh",
+          "name": "Second grounded landing post",
+          "reason": "visual-only"
+        },
+        {
+          "index": 381,
+          "t": "mesh",
+          "name": "Landing cross brace",
+          "reason": "visual-only"
+        },
+        {
+          "index": 382,
+          "t": "mesh",
+          "name": "Second grounded landing post",
+          "reason": "visual-only"
+        },
+        {
+          "index": 383,
+          "t": "mesh",
+          "name": "Landing cross brace",
+          "reason": "visual-only"
+        },
+        {
+          "index": 384,
+          "t": "mesh",
+          "name": "Second grounded landing post",
+          "reason": "visual-only"
+        },
+        {
+          "index": 385,
+          "t": "mesh",
+          "name": "Landing cross brace",
+          "reason": "visual-only"
+        },
+        {
+          "index": 386,
+          "t": "mesh",
+          "name": "Lantern hanger",
+          "reason": "visual-only"
+        },
+        {
+          "index": 387,
+          "t": "mesh",
+          "name": "Warm lantern glass",
+          "reason": "visual-only"
+        },
+        {
+          "index": 388,
+          "t": "mesh",
+          "name": "Lantern frame",
+          "reason": "visual-only"
+        },
+        {
+          "index": 389,
+          "t": "mesh",
+          "name": "Lantern frame",
+          "reason": "visual-only"
+        },
+        {
+          "index": 390,
+          "t": "mesh",
+          "name": "Lantern frame",
+          "reason": "visual-only"
+        },
+        {
+          "index": 391,
+          "t": "mesh",
+          "name": "Lantern frame",
+          "reason": "visual-only"
+        },
+        {
+          "index": 392,
+          "t": "mesh",
+          "name": "Lantern cap",
+          "reason": "visual-only"
+        },
+        {
+          "index": 393,
+          "t": "mesh",
+          "name": "Lantern hanger",
+          "reason": "visual-only"
+        },
+        {
+          "index": 394,
+          "t": "mesh",
+          "name": "Warm lantern glass",
+          "reason": "visual-only"
+        },
+        {
+          "index": 395,
+          "t": "mesh",
+          "name": "Lantern frame",
+          "reason": "visual-only"
+        },
+        {
+          "index": 396,
+          "t": "mesh",
+          "name": "Lantern frame",
+          "reason": "visual-only"
+        },
+        {
+          "index": 397,
+          "t": "mesh",
+          "name": "Lantern frame",
+          "reason": "visual-only"
+        },
+        {
+          "index": 398,
+          "t": "mesh",
+          "name": "Lantern frame",
+          "reason": "visual-only"
+        },
+        {
+          "index": 399,
+          "t": "mesh",
+          "name": "Lantern cap",
+          "reason": "visual-only"
+        },
+        {
+          "index": 402,
+          "t": "mesh",
+          "name": "Halfpipe end-cladding batten",
+          "reason": "visual-only"
+        },
+        {
+          "index": 403,
+          "t": "mesh",
+          "name": "Halfpipe end-cladding batten",
+          "reason": "visual-only"
+        },
+        {
+          "index": 404,
+          "t": "mesh",
+          "name": "Halfpipe end-cladding batten",
+          "reason": "visual-only"
+        },
+        {
+          "index": 405,
+          "t": "mesh",
+          "name": "Halfpipe end-cladding batten",
+          "reason": "visual-only"
+        },
+        {
+          "index": 406,
+          "t": "mesh",
+          "name": "Halfpipe end-cladding batten",
+          "reason": "visual-only"
+        },
+        {
+          "index": 407,
+          "t": "mesh",
+          "name": "Halfpipe end-cladding batten",
+          "reason": "visual-only"
+        },
+        {
+          "index": 408,
+          "t": "mesh",
+          "name": "Halfpipe end-cladding batten",
+          "reason": "visual-only"
+        },
+        {
+          "index": 409,
+          "t": "mesh",
+          "name": "Halfpipe end-cladding batten",
+          "reason": "visual-only"
+        },
+        {
+          "index": 411,
+          "t": "mesh",
+          "name": "Halfpipe end-cladding batten",
+          "reason": "visual-only"
+        },
+        {
+          "index": 412,
+          "t": "mesh",
+          "name": "Halfpipe end-cladding batten",
+          "reason": "visual-only"
+        },
+        {
+          "index": 413,
+          "t": "mesh",
+          "name": "Halfpipe end-cladding batten",
+          "reason": "visual-only"
+        },
+        {
+          "index": 414,
+          "t": "mesh",
+          "name": "Halfpipe end-cladding batten",
+          "reason": "visual-only"
+        },
+        {
+          "index": 415,
+          "t": "mesh",
+          "name": "Halfpipe end-cladding batten",
+          "reason": "visual-only"
+        },
+        {
+          "index": 416,
+          "t": "mesh",
+          "name": "Halfpipe end-cladding batten",
+          "reason": "visual-only"
+        },
+        {
+          "index": 417,
+          "t": "mesh",
+          "name": "Halfpipe end-cladding batten",
+          "reason": "visual-only"
+        },
+        {
+          "index": 418,
+          "t": "mesh",
+          "name": "Halfpipe end-cladding batten",
+          "reason": "visual-only"
+        },
+        {
+          "index": 420,
+          "t": "mesh",
+          "name": "Halfpipe rope deck fence post",
+          "reason": "visual-only"
+        },
+        {
+          "index": 421,
+          "t": "mesh",
+          "name": "Halfpipe rope deck fence rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 422,
+          "t": "mesh",
+          "name": "Halfpipe rope deck fence rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 423,
+          "t": "mesh",
+          "name": "Halfpipe rope deck fence post",
+          "reason": "visual-only"
+        },
+        {
+          "index": 424,
+          "t": "mesh",
+          "name": "Halfpipe rope deck fence rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 425,
+          "t": "mesh",
+          "name": "Halfpipe rope deck fence rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 426,
+          "t": "mesh",
+          "name": "Halfpipe rope deck fence post",
+          "reason": "visual-only"
+        },
+        {
+          "index": 427,
+          "t": "mesh",
+          "name": "Halfpipe rope deck fence rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 428,
+          "t": "mesh",
+          "name": "Halfpipe rope deck fence rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 429,
+          "t": "mesh",
+          "name": "Halfpipe rope deck fence post",
+          "reason": "visual-only"
+        },
+        {
+          "index": 430,
+          "t": "mesh",
+          "name": "Halfpipe rope deck fence rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 431,
+          "t": "mesh",
+          "name": "Halfpipe rope deck fence rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 432,
+          "t": "mesh",
+          "name": "Halfpipe rope deck fence post",
+          "reason": "visual-only"
+        },
+        {
+          "index": 433,
+          "t": "mesh",
+          "name": "Halfpipe rope deck fence rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 434,
+          "t": "mesh",
+          "name": "Halfpipe rope deck fence rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 435,
+          "t": "mesh",
+          "name": "Halfpipe rope deck fence rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 436,
+          "t": "mesh",
+          "name": "Halfpipe rope deck fence rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 437,
+          "t": "mesh",
+          "name": "Halfpipe rope deck fence rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 438,
+          "t": "mesh",
+          "name": "Halfpipe rope deck fence rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 439,
+          "t": "mesh",
+          "name": "Halfpipe rope deck fence rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 440,
+          "t": "mesh",
+          "name": "Halfpipe rope deck fence rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 441,
+          "t": "mesh",
+          "name": "Halfpipe rope deck fence rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 442,
+          "t": "mesh",
+          "name": "Halfpipe rope deck fence rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 443,
+          "t": "mesh",
+          "name": "Rounded timber coping",
+          "reason": "visual-only"
+        },
+        {
+          "index": 444,
+          "t": "mesh",
+          "name": "Halfpipe exterior timber upright",
+          "reason": "visual-only"
+        },
+        {
+          "index": 445,
+          "t": "mesh",
+          "name": "Halfpipe exterior timber upright",
+          "reason": "visual-only"
+        },
+        {
+          "index": 446,
+          "t": "mesh",
+          "name": "Halfpipe exterior timber upright",
+          "reason": "visual-only"
+        },
+        {
+          "index": 447,
+          "t": "mesh",
+          "name": "Halfpipe exterior timber upright",
+          "reason": "visual-only"
+        },
+        {
+          "index": 448,
+          "t": "mesh",
+          "name": "Halfpipe exterior timber upright",
+          "reason": "visual-only"
+        },
+        {
+          "index": 450,
+          "t": "mesh",
+          "name": "Halfpipe end-cladding batten",
+          "reason": "visual-only"
+        },
+        {
+          "index": 451,
+          "t": "mesh",
+          "name": "Halfpipe end-cladding batten",
+          "reason": "visual-only"
+        },
+        {
+          "index": 452,
+          "t": "mesh",
+          "name": "Halfpipe end-cladding batten",
+          "reason": "visual-only"
+        },
+        {
+          "index": 453,
+          "t": "mesh",
+          "name": "Halfpipe end-cladding batten",
+          "reason": "visual-only"
+        },
+        {
+          "index": 454,
+          "t": "mesh",
+          "name": "Halfpipe end-cladding batten",
+          "reason": "visual-only"
+        },
+        {
+          "index": 455,
+          "t": "mesh",
+          "name": "Halfpipe end-cladding batten",
+          "reason": "visual-only"
+        },
+        {
+          "index": 456,
+          "t": "mesh",
+          "name": "Halfpipe end-cladding batten",
+          "reason": "visual-only"
+        },
+        {
+          "index": 457,
+          "t": "mesh",
+          "name": "Halfpipe end-cladding batten",
+          "reason": "visual-only"
+        },
+        {
+          "index": 459,
+          "t": "mesh",
+          "name": "Halfpipe end-cladding batten",
+          "reason": "visual-only"
+        },
+        {
+          "index": 460,
+          "t": "mesh",
+          "name": "Halfpipe end-cladding batten",
+          "reason": "visual-only"
+        },
+        {
+          "index": 461,
+          "t": "mesh",
+          "name": "Halfpipe end-cladding batten",
+          "reason": "visual-only"
+        },
+        {
+          "index": 462,
+          "t": "mesh",
+          "name": "Halfpipe end-cladding batten",
+          "reason": "visual-only"
+        },
+        {
+          "index": 463,
+          "t": "mesh",
+          "name": "Halfpipe end-cladding batten",
+          "reason": "visual-only"
+        },
+        {
+          "index": 464,
+          "t": "mesh",
+          "name": "Halfpipe end-cladding batten",
+          "reason": "visual-only"
+        },
+        {
+          "index": 465,
+          "t": "mesh",
+          "name": "Halfpipe end-cladding batten",
+          "reason": "visual-only"
+        },
+        {
+          "index": 466,
+          "t": "mesh",
+          "name": "Halfpipe end-cladding batten",
+          "reason": "visual-only"
+        },
+        {
+          "index": 468,
+          "t": "mesh",
+          "name": "Halfpipe rope deck fence post",
+          "reason": "visual-only"
+        },
+        {
+          "index": 469,
+          "t": "mesh",
+          "name": "Halfpipe rope deck fence rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 470,
+          "t": "mesh",
+          "name": "Halfpipe rope deck fence rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 471,
+          "t": "mesh",
+          "name": "Halfpipe rope deck fence post",
+          "reason": "visual-only"
+        },
+        {
+          "index": 472,
+          "t": "mesh",
+          "name": "Halfpipe rope deck fence rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 473,
+          "t": "mesh",
+          "name": "Halfpipe rope deck fence rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 474,
+          "t": "mesh",
+          "name": "Halfpipe rope deck fence post",
+          "reason": "visual-only"
+        },
+        {
+          "index": 475,
+          "t": "mesh",
+          "name": "Halfpipe rope deck fence rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 476,
+          "t": "mesh",
+          "name": "Halfpipe rope deck fence rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 477,
+          "t": "mesh",
+          "name": "Halfpipe rope deck fence post",
+          "reason": "visual-only"
+        },
+        {
+          "index": 478,
+          "t": "mesh",
+          "name": "Halfpipe rope deck fence rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 479,
+          "t": "mesh",
+          "name": "Halfpipe rope deck fence rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 480,
+          "t": "mesh",
+          "name": "Halfpipe rope deck fence post",
+          "reason": "visual-only"
+        },
+        {
+          "index": 481,
+          "t": "mesh",
+          "name": "Halfpipe rope deck fence rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 482,
+          "t": "mesh",
+          "name": "Halfpipe rope deck fence rope lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 483,
+          "t": "mesh",
+          "name": "Halfpipe rope deck fence rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 484,
+          "t": "mesh",
+          "name": "Halfpipe rope deck fence rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 485,
+          "t": "mesh",
+          "name": "Halfpipe rope deck fence rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 486,
+          "t": "mesh",
+          "name": "Halfpipe rope deck fence rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 487,
+          "t": "mesh",
+          "name": "Halfpipe rope deck fence rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 488,
+          "t": "mesh",
+          "name": "Halfpipe rope deck fence rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 489,
+          "t": "mesh",
+          "name": "Halfpipe rope deck fence rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 490,
+          "t": "mesh",
+          "name": "Halfpipe rope deck fence rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 491,
+          "t": "mesh",
+          "name": "Rounded timber coping",
+          "reason": "visual-only"
+        },
+        {
+          "index": 492,
+          "t": "mesh",
+          "name": "Halfpipe exterior timber upright",
+          "reason": "visual-only"
+        },
+        {
+          "index": 493,
+          "t": "mesh",
+          "name": "Halfpipe exterior timber upright",
+          "reason": "visual-only"
+        },
+        {
+          "index": 494,
+          "t": "mesh",
+          "name": "Halfpipe exterior timber upright",
+          "reason": "visual-only"
+        },
+        {
+          "index": 495,
+          "t": "mesh",
+          "name": "Halfpipe exterior timber upright",
+          "reason": "visual-only"
+        },
+        {
+          "index": 496,
+          "t": "mesh",
+          "name": "Halfpipe exterior timber upright",
+          "reason": "visual-only"
+        },
+        {
+          "index": 497,
+          "t": "mesh",
+          "name": "Halfpipe grounded entrance fascia",
+          "reason": "visual-only"
+        },
+        {
+          "index": 498,
+          "t": "mesh",
+          "name": "Halfpipe grounded entrance fascia",
+          "reason": "visual-only"
+        },
+        {
+          "index": 510,
+          "t": "rock",
+          "name": "Mossy opening stones",
+          "reason": "scenic natural boulder"
+        },
+        {
+          "index": 511,
+          "t": "rock",
+          "name": "Mossy opening stones",
+          "reason": "scenic natural boulder"
+        },
+        {
+          "index": 512,
+          "t": "rock",
+          "name": "Mossy opening stones",
+          "reason": "scenic natural boulder"
+        },
+        {
+          "index": 520,
+          "t": "mesh",
+          "name": "Continuous sculpted planted left bank -28",
+          "reason": "continuous natural ground, seabed or buried seam fill"
+        },
+        {
+          "index": 521,
+          "t": "mesh",
+          "name": "Continuous sculpted planted right bank -28",
+          "reason": "continuous natural ground, seabed or buried seam fill"
+        },
+        {
+          "index": 522,
+          "t": "mesh",
+          "name": "Continuous sculpted planted left bank -50",
+          "reason": "continuous natural ground, seabed or buried seam fill"
+        },
+        {
+          "index": 523,
+          "t": "mesh",
+          "name": "Continuous sculpted planted right bank -50",
+          "reason": "continuous natural ground, seabed or buried seam fill"
+        },
+        {
+          "index": 524,
+          "t": "mesh",
+          "name": "Continuous sculpted planted left bank -75",
+          "reason": "continuous natural ground, seabed or buried seam fill"
+        },
+        {
+          "index": 525,
+          "t": "mesh",
+          "name": "Continuous sculpted planted right bank -75",
+          "reason": "continuous natural ground, seabed or buried seam fill"
+        },
+        {
+          "index": 526,
+          "t": "mesh",
+          "name": "Continuous sculpted planted left bank -102",
+          "reason": "continuous natural ground, seabed or buried seam fill"
+        },
+        {
+          "index": 527,
+          "t": "mesh",
+          "name": "Continuous sculpted planted right bank -102",
+          "reason": "continuous natural ground, seabed or buried seam fill"
+        },
+        {
+          "index": 528,
+          "t": "mesh",
+          "name": "Continuous sculpted planted left bank -151",
+          "reason": "continuous natural ground, seabed or buried seam fill"
+        },
+        {
+          "index": 529,
+          "t": "mesh",
+          "name": "Continuous sculpted planted right bank -151",
+          "reason": "continuous natural ground, seabed or buried seam fill"
+        },
+        {
+          "index": 530,
+          "t": "mesh",
+          "name": "Continuous sculpted planted left bank -189",
+          "reason": "continuous natural ground, seabed or buried seam fill"
+        },
+        {
+          "index": 531,
+          "t": "mesh",
+          "name": "Continuous sculpted planted right bank -189",
+          "reason": "continuous natural ground, seabed or buried seam fill"
+        },
+        {
+          "index": 532,
+          "t": "mesh",
+          "name": "Continuous sculpted planted left bank -382",
+          "reason": "continuous natural ground, seabed or buried seam fill"
+        },
+        {
+          "index": 533,
+          "t": "mesh",
+          "name": "Continuous sculpted planted right bank -382",
+          "reason": "continuous natural ground, seabed or buried seam fill"
+        },
+        {
+          "index": 534,
+          "t": "mesh",
+          "name": "Continuous sculpted planted left bank -160",
+          "reason": "continuous natural ground, seabed or buried seam fill"
+        },
+        {
+          "index": 795,
+          "t": "mesh",
+          "name": "Natural shelving near riverbank",
+          "reason": "visual-only"
+        },
+        {
+          "index": 796,
+          "t": "mesh",
+          "name": "Natural shelving far riverbank",
+          "reason": "visual-only"
+        },
+        {
+          "index": 821,
+          "t": "mesh",
+          "name": "Continuous enclosing left cavern rock shell",
+          "reason": "visual-only"
+        },
+        {
+          "index": 822,
+          "t": "mesh",
+          "name": "Continuous enclosing right cavern rock shell",
+          "reason": "visual-only"
+        },
+        {
+          "index": 823,
+          "t": "mesh",
+          "name": "Continuous natural cavern roof with skylight edge -248",
+          "reason": "visual-only"
+        },
+        {
+          "index": 824,
+          "t": "mesh",
+          "name": "Continuous natural cavern roof with skylight edge -264",
+          "reason": "visual-only"
+        },
+        {
+          "index": 825,
+          "t": "mesh",
+          "name": "Continuous natural cavern roof with skylight edge -289",
+          "reason": "visual-only"
+        },
+        {
+          "index": 826,
+          "t": "mesh",
+          "name": "Continuous natural cavern roof with skylight edge -311",
+          "reason": "visual-only"
+        },
+        {
+          "index": 827,
+          "t": "mesh",
+          "name": "Continuous natural cavern roof with skylight edge -334",
+          "reason": "visual-only"
+        },
+        {
+          "index": 828,
+          "t": "mesh",
+          "name": "Continuous natural cavern roof with skylight edge -353",
+          "reason": "visual-only"
+        },
+        {
+          "index": 829,
+          "t": "mesh",
+          "name": "Continuous natural cavern roof with skylight edge -369",
+          "reason": "visual-only"
+        },
+        {
+          "index": 865,
+          "t": "mesh",
+          "name": "Fitted narrow timber halfpipe boards 0",
+          "reason": "visual-only"
+        },
+        {
+          "index": 866,
+          "t": "mesh",
+          "name": "Fitted narrow timber halfpipe boards 20",
+          "reason": "visual-only"
+        },
+        {
+          "index": 867,
+          "t": "mesh",
+          "name": "Fitted narrow timber halfpipe boards 40",
+          "reason": "visual-only"
+        },
+        {
+          "index": 868,
+          "t": "mesh",
+          "name": "Fitted narrow timber halfpipe boards 60",
+          "reason": "visual-only"
+        },
+        {
+          "index": 869,
+          "t": "mesh",
+          "name": "Fitted narrow timber halfpipe boards 80",
+          "reason": "visual-only"
+        },
+        {
+          "index": 873,
+          "t": "mesh",
+          "name": "Halfpipe craft · rope knot collar",
+          "reason": "visual-only"
+        },
+        {
+          "index": 874,
+          "t": "mesh",
+          "name": "Halfpipe craft · rope knot collar",
+          "reason": "visual-only"
+        },
+        {
+          "index": 878,
+          "t": "mesh",
+          "name": "Halfpipe craft · rope knot collar",
+          "reason": "visual-only"
+        },
+        {
+          "index": 879,
+          "t": "mesh",
+          "name": "Halfpipe craft · rope knot collar",
+          "reason": "visual-only"
+        },
+        {
+          "index": 883,
+          "t": "mesh",
+          "name": "Halfpipe craft · rope knot collar",
+          "reason": "visual-only"
+        },
+        {
+          "index": 884,
+          "t": "mesh",
+          "name": "Halfpipe craft · rope knot collar",
+          "reason": "visual-only"
+        },
+        {
+          "index": 888,
+          "t": "mesh",
+          "name": "Halfpipe craft · rope knot collar",
+          "reason": "visual-only"
+        },
+        {
+          "index": 889,
+          "t": "mesh",
+          "name": "Halfpipe craft · rope knot collar",
+          "reason": "visual-only"
+        },
+        {
+          "index": 893,
+          "t": "mesh",
+          "name": "Halfpipe craft · rope knot collar",
+          "reason": "visual-only"
+        },
+        {
+          "index": 894,
+          "t": "mesh",
+          "name": "Halfpipe craft · rope knot collar",
+          "reason": "visual-only"
+        },
+        {
+          "index": 898,
+          "t": "mesh",
+          "name": "Halfpipe craft · rope knot collar",
+          "reason": "visual-only"
+        },
+        {
+          "index": 899,
+          "t": "mesh",
+          "name": "Halfpipe craft · rope knot collar",
+          "reason": "visual-only"
+        },
+        {
+          "index": 903,
+          "t": "mesh",
+          "name": "Halfpipe craft · rope knot collar",
+          "reason": "visual-only"
+        },
+        {
+          "index": 904,
+          "t": "mesh",
+          "name": "Halfpipe craft · rope knot collar",
+          "reason": "visual-only"
+        },
+        {
+          "index": 905,
+          "t": "mesh",
+          "name": "Halfpipe craft · low homemade deck rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 906,
+          "t": "mesh",
+          "name": "Halfpipe craft · upper homemade deck rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 907,
+          "t": "mesh",
+          "name": "Halfpipe craft · low homemade deck rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 908,
+          "t": "mesh",
+          "name": "Halfpipe craft · upper homemade deck rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 909,
+          "t": "mesh",
+          "name": "Halfpipe craft · low homemade deck rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 910,
+          "t": "mesh",
+          "name": "Halfpipe craft · upper homemade deck rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 911,
+          "t": "mesh",
+          "name": "Halfpipe craft · low homemade deck rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 912,
+          "t": "mesh",
+          "name": "Halfpipe craft · upper homemade deck rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 916,
+          "t": "mesh",
+          "name": "Halfpipe craft · rope knot collar",
+          "reason": "visual-only"
+        },
+        {
+          "index": 917,
+          "t": "mesh",
+          "name": "Halfpipe craft · rope knot collar",
+          "reason": "visual-only"
+        },
+        {
+          "index": 921,
+          "t": "mesh",
+          "name": "Halfpipe craft · rope knot collar",
+          "reason": "visual-only"
+        },
+        {
+          "index": 922,
+          "t": "mesh",
+          "name": "Halfpipe craft · rope knot collar",
+          "reason": "visual-only"
+        },
+        {
+          "index": 926,
+          "t": "mesh",
+          "name": "Halfpipe craft · rope knot collar",
+          "reason": "visual-only"
+        },
+        {
+          "index": 927,
+          "t": "mesh",
+          "name": "Halfpipe craft · rope knot collar",
+          "reason": "visual-only"
+        },
+        {
+          "index": 931,
+          "t": "mesh",
+          "name": "Halfpipe craft · rope knot collar",
+          "reason": "visual-only"
+        },
+        {
+          "index": 932,
+          "t": "mesh",
+          "name": "Halfpipe craft · rope knot collar",
+          "reason": "visual-only"
+        },
+        {
+          "index": 936,
+          "t": "mesh",
+          "name": "Halfpipe craft · rope knot collar",
+          "reason": "visual-only"
+        },
+        {
+          "index": 937,
+          "t": "mesh",
+          "name": "Halfpipe craft · rope knot collar",
+          "reason": "visual-only"
+        },
+        {
+          "index": 941,
+          "t": "mesh",
+          "name": "Halfpipe craft · rope knot collar",
+          "reason": "visual-only"
+        },
+        {
+          "index": 942,
+          "t": "mesh",
+          "name": "Halfpipe craft · rope knot collar",
+          "reason": "visual-only"
+        },
+        {
+          "index": 946,
+          "t": "mesh",
+          "name": "Halfpipe craft · rope knot collar",
+          "reason": "visual-only"
+        },
+        {
+          "index": 947,
+          "t": "mesh",
+          "name": "Halfpipe craft · rope knot collar",
+          "reason": "visual-only"
+        },
+        {
+          "index": 948,
+          "t": "mesh",
+          "name": "Halfpipe craft · low homemade deck rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 949,
+          "t": "mesh",
+          "name": "Halfpipe craft · upper homemade deck rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 950,
+          "t": "mesh",
+          "name": "Halfpipe craft · low homemade deck rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 951,
+          "t": "mesh",
+          "name": "Halfpipe craft · upper homemade deck rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 952,
+          "t": "mesh",
+          "name": "Halfpipe craft · low homemade deck rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 953,
+          "t": "mesh",
+          "name": "Halfpipe craft · upper homemade deck rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 954,
+          "t": "mesh",
+          "name": "Halfpipe craft · low homemade deck rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 955,
+          "t": "mesh",
+          "name": "Halfpipe craft · upper homemade deck rope",
+          "reason": "visual-only"
+        },
+        {
+          "index": 973,
+          "t": "mesh",
+          "name": "Visible shallow solid dirt bed 1",
+          "reason": "continuous natural ground, seabed or buried seam fill"
+        },
+        {
+          "index": 974,
+          "t": "mesh",
+          "name": "Visible shallow solid dirt bed 2",
+          "reason": "continuous natural ground, seabed or buried seam fill"
+        },
+        {
+          "index": 975,
+          "t": "mesh",
+          "name": "Visible shallow solid dirt bed 3",
+          "reason": "continuous natural ground, seabed or buried seam fill"
+        },
+        {
+          "index": 976,
+          "t": "mesh",
+          "name": "First lower landing · closed earthen cut face",
+          "reason": "visual-only"
+        },
+        {
+          "index": 977,
+          "t": "mesh",
+          "name": "Second lower landing · closed earthen cut face",
+          "reason": "visual-only"
+        },
+        {
+          "index": 978,
+          "t": "mesh",
+          "name": "Third lower landing · closed earthen cut face",
+          "reason": "visual-only"
+        },
+        {
+          "index": 979,
+          "t": "mesh",
+          "name": "Shallow stream farbank · closed shelving earth face",
+          "reason": "visual-only"
+        },
+        {
+          "index": 980,
+          "t": "mesh",
+          "name": "Broken bridge farshore · continuous rock mass beneath the landing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 989,
+          "t": "mesh",
+          "name": "Continuous sculpted planted left bank -240",
+          "reason": "continuous natural ground, seabed or buried seam fill"
+        },
+        {
+          "index": 990,
+          "t": "mesh",
+          "name": "Continuous sculpted planted right bank -240",
+          "reason": "continuous natural ground, seabed or buried seam fill"
+        },
+        {
+          "index": 1105,
+          "t": "mesh",
+          "name": "Opening ocean · continuous curved sandy shore",
+          "reason": "continuous natural ground, seabed or buried seam fill"
+        },
+        {
+          "index": 1111,
+          "t": "mesh",
+          "name": "Opening ocean · western sandy shelf below the host trees",
+          "reason": "continuous natural ground, seabed or buried seam fill"
+        },
+        {
+          "index": 1112,
+          "t": "mesh",
+          "name": "Opening ocean · continuous curved sandy shore corner",
+          "reason": "continuous natural ground, seabed or buried seam fill"
+        },
+        {
+          "index": 1232,
+          "t": "mesh",
+          "name": "Continuous distant forest earth outside the containment",
+          "reason": "visual-only"
+        },
+        {
+          "index": 1233,
+          "t": "mesh",
+          "name": "Continuous distant forest earth outside the containment",
+          "reason": "visual-only"
+        },
+        {
+          "index": 1234,
+          "t": "mesh",
+          "name": "Continuous distant forest earth outside the containment",
+          "reason": "visual-only"
+        },
+        {
+          "index": 1235,
+          "t": "mesh",
+          "name": "Continuous distant forest earth outside the containment",
+          "reason": "visual-only"
+        },
+        {
+          "index": 1236,
+          "t": "mesh",
+          "name": "Continuous distant forest earth outside the containment",
+          "reason": "visual-only"
+        },
+        {
+          "index": 1237,
+          "t": "mesh",
+          "name": "Continuous distant forest earth outside the containment",
+          "reason": "visual-only"
+        },
+        {
+          "index": 1238,
+          "t": "mesh",
+          "name": "Supported left forest shoulder behind the coastal hut",
+          "reason": "continuous natural ground, seabed or buried seam fill"
+        },
+        {
+          "index": 1239,
+          "t": "mesh",
+          "name": "Distant coast forest earth beyond the left shoulder",
+          "reason": "visual-only"
+        },
+        {
+          "index": 1240,
+          "t": "mesh",
+          "name": "Supported distant forest bank beside the shallow river",
+          "reason": "continuous natural ground, seabed or buried seam fill"
+        },
+        {
+          "index": 1241,
+          "t": "mesh",
+          "name": "Supported distant forest bank beside the shallow river",
+          "reason": "continuous natural ground, seabed or buried seam fill"
+        },
+        {
+          "index": 1242,
+          "t": "mesh",
+          "name": "Sunlit forest earth beyond the finish",
+          "reason": "continuous natural ground, seabed or buried seam fill"
+        },
+        {
+          "index": 1244,
+          "t": "mesh",
+          "name": "Climb summit · continuous buried stone berm closing the gallery seam",
+          "reason": "continuous natural ground, seabed or buried seam fill"
+        },
+        {
+          "index": 1382,
+          "t": "mesh",
+          "name": "Bush enclosure · continuous rising forest floor",
+          "reason": "visual-only"
+        },
+        {
+          "index": 1383,
+          "t": "mesh",
+          "name": "Bush enclosure · continuous rising forest floor",
+          "reason": "visual-only"
+        },
+        {
+          "index": 1384,
+          "t": "mesh",
+          "name": "Bush enclosure · continuous rising forest floor",
+          "reason": "visual-only"
+        },
+        {
+          "index": 1385,
+          "t": "mesh",
+          "name": "Bush enclosure · continuous rising forest floor",
+          "reason": "visual-only"
+        },
+        {
+          "index": 1386,
+          "t": "mesh",
+          "name": "Bush enclosure · continuous rising forest floor",
+          "reason": "visual-only"
+        },
+        {
+          "index": 1387,
+          "t": "mesh",
+          "name": "Bush enclosure · continuous rising forest floor",
+          "reason": "visual-only"
+        },
+        {
+          "index": 1388,
+          "t": "mesh",
+          "name": "Bush enclosure · continuous rising forest floor",
+          "reason": "visual-only"
+        },
+        {
+          "index": 1389,
+          "t": "mesh",
+          "name": "Bush enclosure · continuous rising forest floor",
+          "reason": "visual-only"
+        },
+        {
+          "index": 1390,
+          "t": "mesh",
+          "name": "Bush enclosure · continuous rising forest floor",
+          "reason": "visual-only"
+        },
+        {
+          "index": 1391,
+          "t": "mesh",
+          "name": "Bush enclosure · continuous rising forest floor",
+          "reason": "visual-only"
+        },
+        {
+          "index": 1392,
+          "t": "mesh",
+          "name": "Bush enclosure · continuous rising forest floor",
+          "reason": "visual-only"
+        },
+        {
+          "index": 1509,
+          "t": "mesh",
+          "name": "Bush enclosure · continuous rising forest floor",
+          "reason": "visual-only"
+        },
+        {
+          "index": 1510,
+          "t": "mesh",
+          "name": "Bush enclosure · continuous rising forest floor",
+          "reason": "visual-only"
+        },
+        {
+          "index": 1511,
+          "t": "mesh",
+          "name": "Bush enclosure · continuous rising forest floor",
+          "reason": "visual-only"
+        },
+        {
+          "index": 1512,
+          "t": "mesh",
+          "name": "Bush enclosure · continuous rising forest floor",
+          "reason": "visual-only"
+        },
+        {
+          "index": 1513,
+          "t": "mesh",
+          "name": "Bush enclosure · continuous rising forest floor",
+          "reason": "visual-only"
+        },
+        {
+          "index": 1514,
+          "t": "mesh",
+          "name": "Bush enclosure · continuous rising forest floor",
+          "reason": "visual-only"
+        },
+        {
+          "index": 1515,
+          "t": "mesh",
+          "name": "Bush enclosure · continuous rising forest floor",
+          "reason": "visual-only"
+        },
+        {
+          "index": 1516,
+          "t": "mesh",
+          "name": "Bush enclosure · continuous rising forest floor",
+          "reason": "visual-only"
+        },
+        {
+          "index": 1517,
+          "t": "mesh",
+          "name": "Bush enclosure · continuous rising forest floor",
+          "reason": "visual-only"
+        },
+        {
+          "index": 1518,
+          "t": "mesh",
+          "name": "Bush enclosure · continuous rising forest floor",
+          "reason": "visual-only"
+        },
+        {
+          "index": 1621,
+          "t": "mesh",
+          "name": "Bush enclosure · continuous rising forest floor",
+          "reason": "visual-only"
+        },
+        {
+          "index": 1622,
+          "t": "mesh",
+          "name": "Bush enclosure · continuous rising forest floor",
+          "reason": "visual-only"
+        },
+        {
+          "index": 1623,
+          "t": "mesh",
+          "name": "Bush enclosure · continuous rising forest floor",
+          "reason": "visual-only"
+        },
+        {
+          "index": 1656,
+          "t": "mesh",
+          "name": "Bush enclosure · continuous rising forest floor",
+          "reason": "visual-only"
+        },
+        {
+          "index": 1657,
+          "t": "mesh",
+          "name": "Bush enclosure · continuous rising forest floor",
+          "reason": "visual-only"
+        },
+        {
+          "index": 1658,
+          "t": "mesh",
+          "name": "Bush enclosure · continuous rising forest floor",
+          "reason": "visual-only"
+        },
+        {
+          "index": 1726,
+          "t": "mesh",
+          "name": "Bush enclosure · eastern clearing forest bank",
+          "reason": "visual-only"
+        },
+        {
+          "index": 1810,
+          "t": "mesh",
+          "name": "Reference cabin · grounded timber plinth",
+          "reason": "visual-only"
+        },
+        {
+          "index": 1811,
+          "t": "mesh",
+          "name": "Reference cabin · irregular vertical plank shell",
+          "reason": "visual-only"
+        },
+        {
+          "index": 1812,
+          "t": "mesh",
+          "name": "Reference cabin · irregular vertical plank shell",
+          "reason": "visual-only"
+        },
+        {
+          "index": 1813,
+          "t": "mesh",
+          "name": "Reference cabin · irregular vertical plank shell",
+          "reason": "visual-only"
+        },
+        {
+          "index": 1814,
+          "t": "mesh",
+          "name": "Reference cabin · irregular vertical plank shell",
+          "reason": "visual-only"
+        },
+        {
+          "index": 1815,
+          "t": "mesh",
+          "name": "Reference cabin · irregular vertical plank shell",
+          "reason": "visual-only"
+        },
+        {
+          "index": 1816,
+          "t": "mesh",
+          "name": "Reference cabin · thick corner framing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 1817,
+          "t": "mesh",
+          "name": "Reference cabin · horizontal battens",
+          "reason": "visual-only"
+        },
+        {
+          "index": 1818,
+          "t": "mesh",
+          "name": "Reference cabin · doorway jambs",
+          "reason": "visual-only"
+        },
+        {
+          "index": 1819,
+          "t": "mesh",
+          "name": "Reference cabin · dark door recess",
+          "reason": "visual-only"
+        },
+        {
+          "index": 1820,
+          "t": "mesh",
+          "name": "Reference cabin · warm inner doorway",
+          "reason": "visual-only"
+        },
+        {
+          "index": 1821,
+          "t": "mesh",
+          "name": "Reference roof · ridge supports",
+          "reason": "visual-only"
+        },
+        {
+          "index": 1822,
+          "t": "mesh",
+          "name": "Reference roof · sloping rafters",
+          "reason": "visual-only"
+        },
+        {
+          "index": 1823,
+          "t": "mesh",
+          "name": "Reference roof · exposed ridge pole",
+          "reason": "visual-only"
+        },
+        {
+          "index": 1824,
+          "t": "mesh",
+          "name": "Reference roof · continuous sagging striped sail",
+          "reason": "visual-only"
+        },
+        {
+          "index": 1825,
+          "t": "mesh",
+          "name": "Reference roof · stitched bound canvas hem",
+          "reason": "visual-only"
+        },
+        {
+          "index": 1826,
+          "t": "mesh",
+          "name": "Reference roof · corner tie post",
+          "reason": "visual-only"
+        },
+        {
+          "index": 1827,
+          "t": "mesh",
+          "name": "Reference roof · taut corner lashing",
+          "reason": "visual-only"
+        },
+        {
+          "index": 1828,
+          "t": "mesh",
+          "name": "Reference shoreline · leaning broken driftwood",
+          "reason": "visual-only"
+        },
+        {
+          "index": 1829,
+          "t": "mesh",
+          "name": "Reference shoreline · leaning wooden surfboard",
+          "reason": "visual-only"
+        },
+        {
+          "index": 1830,
+          "t": "mesh",
+          "name": "Reference shoreline · pale surfboard centre inlay",
+          "reason": "visual-only"
+        },
+        {
+          "index": 1831,
+          "t": "wall",
+          "name": "Fitted tree trunk · 287/0 · Rooted forked tree physically supporting the cabin",
+          "reason": "architectural enclosure / containment"
+        },
+        {
+          "index": 1832,
+          "t": "wall",
+          "name": "Fitted tree trunk · 287/1 · Rooted forked tree physically supporting the cabin",
+          "reason": "architectural enclosure / containment"
+        },
+        {
+          "index": 1833,
+          "t": "wall",
+          "name": "Fitted tree trunk · 287/2 · Rooted forked tree physically supporting the cabin",
+          "reason": "architectural enclosure / containment"
+        },
+        {
+          "index": 1834,
+          "t": "wall",
+          "name": "Fitted tree trunk · 500/0 · Framing jungle tree",
+          "reason": "architectural enclosure / containment"
+        },
+        {
+          "index": 1835,
+          "t": "wall",
+          "name": "Fitted tree trunk · 500/1 · Framing jungle tree",
+          "reason": "architectural enclosure / containment"
+        },
+        {
+          "index": 1836,
+          "t": "wall",
+          "name": "Fitted tree trunk · 500/2 · Framing jungle tree",
+          "reason": "architectural enclosure / containment"
+        },
+        {
+          "index": 1837,
+          "t": "wall",
+          "name": "Fitted tree trunk · 776/0 · Hero rooted tree frames the route in three dimensions",
+          "reason": "architectural enclosure / containment"
+        },
+        {
+          "index": 1838,
+          "t": "wall",
+          "name": "Fitted tree trunk · 776/1 · Hero rooted tree frames the route in three dimensions",
+          "reason": "architectural enclosure / containment"
+        },
+        {
+          "index": 1839,
+          "t": "wall",
+          "name": "Fitted tree trunk · 776/2 · Hero rooted tree frames the route in three dimensions",
+          "reason": "architectural enclosure / containment"
+        },
+        {
+          "index": 1840,
+          "t": "wall",
+          "name": "Fitted tree trunk · 778/0 · Hero rooted tree frames the route in three dimensions",
+          "reason": "architectural enclosure / containment"
+        },
+        {
+          "index": 1841,
+          "t": "wall",
+          "name": "Fitted tree trunk · 778/1 · Hero rooted tree frames the route in three dimensions",
+          "reason": "architectural enclosure / containment"
+        },
+        {
+          "index": 1842,
+          "t": "wall",
+          "name": "Fitted tree trunk · 778/2 · Hero rooted tree frames the route in three dimensions",
+          "reason": "architectural enclosure / containment"
+        },
+        {
+          "index": 1843,
+          "t": "wall",
+          "name": "Fitted tree trunk · 781/0 · Hero rooted tree frames the route in three dimensions",
+          "reason": "architectural enclosure / containment"
+        },
+        {
+          "index": 1844,
+          "t": "wall",
+          "name": "Fitted tree trunk · 781/1 · Hero rooted tree frames the route in three dimensions",
+          "reason": "architectural enclosure / containment"
+        },
+        {
+          "index": 1845,
+          "t": "wall",
+          "name": "Fitted tree trunk · 781/2 · Hero rooted tree frames the route in three dimensions",
+          "reason": "architectural enclosure / containment"
+        },
+        {
+          "index": 1846,
+          "t": "wall",
+          "name": "Fitted tree trunk · 1151/0 · Joining landscape · mature tree with supported roots",
+          "reason": "architectural enclosure / containment"
+        },
+        {
+          "index": 1847,
+          "t": "wall",
+          "name": "Fitted tree trunk · 1151/1 · Joining landscape · mature tree with supported roots",
+          "reason": "architectural enclosure / containment"
+        },
+        {
+          "index": 1848,
+          "t": "wall",
+          "name": "Fitted tree trunk · 1151/2 · Joining landscape · mature tree with supported roots",
+          "reason": "architectural enclosure / containment"
+        },
+        {
+          "index": 1849,
+          "t": "wall",
+          "name": "Fitted tree trunk · 1158/0 · Joining landscape · mature tree with supported roots",
+          "reason": "architectural enclosure / containment"
+        },
+        {
+          "index": 1850,
+          "t": "wall",
+          "name": "Fitted tree trunk · 1158/1 · Joining landscape · mature tree with supported roots",
+          "reason": "architectural enclosure / containment"
+        },
+        {
+          "index": 1851,
+          "t": "wall",
+          "name": "Fitted tree trunk · 1158/2 · Joining landscape · mature tree with supported roots",
+          "reason": "architectural enclosure / containment"
+        },
+        {
+          "index": 1852,
+          "t": "wall",
+          "name": "Fitted tree trunk · 1163/0 · Joining landscape · mature tree with supported roots",
+          "reason": "architectural enclosure / containment"
+        },
+        {
+          "index": 1853,
+          "t": "wall",
+          "name": "Fitted tree trunk · 1163/1 · Joining landscape · mature tree with supported roots",
+          "reason": "architectural enclosure / containment"
+        },
+        {
+          "index": 1854,
+          "t": "wall",
+          "name": "Fitted tree trunk · 1163/2 · Joining landscape · mature tree with supported roots",
+          "reason": "architectural enclosure / containment"
+        },
+        {
+          "index": 1855,
+          "t": "wall",
+          "name": "Fitted tree trunk · 1175/0 · Joining landscape · mature tree with supported roots",
+          "reason": "architectural enclosure / containment"
+        },
+        {
+          "index": 1856,
+          "t": "wall",
+          "name": "Fitted tree trunk · 1175/1 · Joining landscape · mature tree with supported roots",
+          "reason": "architectural enclosure / containment"
+        },
+        {
+          "index": 1857,
+          "t": "wall",
+          "name": "Fitted tree trunk · 1175/2 · Joining landscape · mature tree with supported roots",
+          "reason": "architectural enclosure / containment"
+        },
+        {
+          "index": 1858,
+          "t": "wall",
+          "name": "Fitted tree trunk · 1188/0 · Joining landscape · mature tree with supported roots",
+          "reason": "architectural enclosure / containment"
+        },
+        {
+          "index": 1859,
+          "t": "wall",
+          "name": "Fitted tree trunk · 1188/1 · Joining landscape · mature tree with supported roots",
+          "reason": "architectural enclosure / containment"
+        },
+        {
+          "index": 1860,
+          "t": "wall",
+          "name": "Fitted tree trunk · 1188/2 · Joining landscape · mature tree with supported roots",
+          "reason": "architectural enclosure / containment"
+        },
+        {
+          "index": 1861,
+          "t": "wall",
+          "name": "Fitted tree trunk · 1231/0 · River-to-cave forest · broad branching canopy before the distant portal",
+          "reason": "architectural enclosure / containment"
+        },
+        {
+          "index": 1862,
+          "t": "wall",
+          "name": "Fitted tree trunk · 1231/1 · River-to-cave forest · broad branching canopy before the distant portal",
+          "reason": "architectural enclosure / containment"
+        },
+        {
+          "index": 1863,
+          "t": "wall",
+          "name": "Fitted tree trunk · 1231/2 · River-to-cave forest · broad branching canopy before the distant portal",
+          "reason": "architectural enclosure / containment"
+        },
+        {
+          "index": 1864,
+          "t": "wall",
+          "name": "Fitted tree trunk · 1716/0 · Bush enclosure · rooted inland edge around the opening",
+          "reason": "architectural enclosure / containment"
+        },
+        {
+          "index": 1865,
+          "t": "wall",
+          "name": "Fitted tree trunk · 1716/1 · Bush enclosure · rooted inland edge around the opening",
+          "reason": "architectural enclosure / containment"
+        },
+        {
+          "index": 1866,
+          "t": "wall",
+          "name": "Fitted tree trunk · 1716/2 · Bush enclosure · rooted inland edge around the opening",
+          "reason": "architectural enclosure / containment"
+        },
+        {
+          "index": 1867,
+          "t": "wall",
+          "name": "Fitted tree trunk · 1724/0 · Bush enclosure · rooted inland edge around the opening",
+          "reason": "architectural enclosure / containment"
+        },
+        {
+          "index": 1868,
+          "t": "wall",
+          "name": "Fitted tree trunk · 1724/1 · Bush enclosure · rooted inland edge around the opening",
+          "reason": "architectural enclosure / containment"
+        },
+        {
+          "index": 1869,
+          "t": "wall",
+          "name": "Fitted tree trunk · 1724/2 · Bush enclosure · rooted inland edge around the opening",
+          "reason": "architectural enclosure / containment"
+        },
+        {
+          "index": 1870,
+          "t": "wall",
+          "name": "Fitted tree trunk · 1798/0 · Reference opening · foreground right trunk and sweeping boughs",
+          "reason": "architectural enclosure / containment"
+        },
+        {
+          "index": 1871,
+          "t": "wall",
+          "name": "Fitted tree trunk · 1798/1 · Reference opening · foreground right trunk and sweeping boughs",
+          "reason": "architectural enclosure / containment"
+        },
+        {
+          "index": 1872,
+          "t": "wall",
+          "name": "Fitted tree trunk · 1798/2 · Reference opening · foreground right trunk and sweeping boughs",
+          "reason": "architectural enclosure / containment"
+        }
+      ],
+      "meshes": 52,
+      "boundaries": 7285,
+      "activeRails": 3053,
+      "catches": 46,
+      "uncaught": [],
+      "buildMs": 636
+    }
+  ],
+  "failures": []
+}

@@ -261,7 +261,8 @@ const pipePoint = (x: number, y: number, z: number): Point => [
 for (const side of [-1, 1]) {
   // The native ramp sweeps an open profile. Fitted end cheeks follow its exact
   // arc segments, sealing the space below each transition without walling off
-  // either entrance to the riding trough. Structural faces do not create rails.
+  // either entrance to the riding trough. Exposed solid rims keep the ordinary
+  // edge-grinding policy; the helper's visual-only default must not disable it.
   const cheek = new THREE.Shape();
   cheek.moveTo(side * pipeFlat, -.16);
   cheek.lineTo(side * pipeEdge, -.16);
@@ -275,7 +276,7 @@ for (const side of [-1, 1]) {
   for (const end of [-1, 1]) {
     const g = new THREE.ExtrudeGeometry(cheek, { depth: .24, bevelEnabled: false, steps: 1 });
     g.translate(0, 0, end < 0 ? -pipeHalf : pipeHalf - .24).rotateY(pipeAngle);
-    mesh(g, TREEHOUSE_HALFPIPE.p, "Halfpipe fitted timber end cheek", G.pipe, "#b89c75", "treehouse-timber", { solid: true });
+    mesh(g, TREEHOUSE_HALFPIPE.p, "Halfpipe fitted timber end cheek", G.pipe, "#b89c75", "treehouse-timber", { solid: true, edgeGrinding: true });
     for (let x = pipeFlat + .65; x < pipeEdge; x += .65) {
       const h = x >= pipeLip ? pipeRise : pipeRise - Math.sqrt(pipeRise ** 2 - (x - pipeFlat) ** 2);
       if (h < .18) continue;
@@ -285,7 +286,7 @@ for (const side of [-1, 1]) {
   }
   const cladding = new THREE.BoxGeometry(.18, pipeRise + .16, pipeHalf * 2)
     .translate(side * (pipeEdge + .025), (pipeRise - .16) / 2, 0).rotateY(pipeAngle);
-  mesh(cladding, TREEHOUSE_HALFPIPE.p, "Halfpipe continuous outer timber cladding", G.pipe, "#af8b60", "treehouse-timber", { solid: true });
+  mesh(cladding, TREEHOUSE_HALFPIPE.p, "Halfpipe continuous outer timber cladding", G.pipe, "#af8b60", "treehouse-timber", { solid: true, edgeGrinding: true });
   const x = side * (pipeEdge - .28);
   const posts = [-pipeHalf + .2, -pipeHalf / 2, 0, pipeHalf / 2, pipeHalf - .2];
   railing(posts.map(z => pipePoint(x, pipeRise, z)), "Halfpipe rope deck fence", G.pipe);

@@ -94,3 +94,13 @@ remains the final handoff gate; a local build is not proof of deployment.
 Coordination preference: the user permits coordinating unfinished work in its
 own chat, but this chat must do its own future tasks. The two already-started
 Treehouse handoffs were permitted to finish after the user clarified that limit.
+
+The initial consolidated push `f5dc912e` reached Pages run `40172277711`, which
+correctly stopped on six new solid halfpipe panels inheriting a visual-only
+grinding opt-out. The coordinator restored ordinary exposed-rim grinding on
+those panels. The unchanged edge audit now passes 7,285 boundaries and 46
+catches; native and full-render traversal, level checks, build and release size
+also pass. The correction preserves every integrated feature and uses the same
+single publishing workflow. The earlier shared checkout is additionally safe
+in stash `0e575895dc50e5974cdcb2565e39d69fca634852`; never reapply its superseded
+implementations over this release.
