@@ -1,0 +1,1513 @@
+{
+  "replaySha256": "f42df6ad5cce72d2c1f5755172fbcddf095c33166c352ea3dc613f7910d06c6c",
+  "frames": 1282,
+  "turns": [
+    {
+      "frame": 160,
+      "neutralFrames": 0,
+      "before": {
+        "fourth": {
+          "frame": 163,
+          "input": [
+            1,
+            0
+          ],
+          "velocity": [
+            -6.235657729684574,
+            0,
+            0.2894130265435918
+          ],
+          "opposed": -6.242370320776243,
+          "facingError": 0,
+          "turn": true,
+          "ramp": 1,
+          "clip": "player.run",
+          "cadence": 1
+        },
+        "minimumCadence": 1
+      },
+      "after": {
+        "fourth": {
+          "frame": 163,
+          "input": [
+            1,
+            0
+          ],
+          "velocity": [
+            -6.235657729684574,
+            0,
+            0.2894130265435918
+          ],
+          "opposed": -6.242370320776243,
+          "facingError": 0,
+          "turn": true,
+          "ramp": 1,
+          "clip": "player.run",
+          "cadence": 1
+        },
+        "minimumCadence": 1
+      }
+    },
+    {
+      "frame": 256,
+      "neutralFrames": 3,
+      "before": {
+        "fourth": {
+          "frame": 259,
+          "input": [
+            -1,
+            0
+          ],
+          "velocity": [
+            5.882675070613859,
+            0,
+            -0.27303018705694976
+          ],
+          "opposed": -5.8890076812198275,
+          "facingError": 3.141592653589793,
+          "turn": false,
+          "ramp": 0.08888888888888889,
+          "clip": "player.run",
+          "cadence": 0.654334186802203
+        },
+        "minimumCadence": 0.004704580276213816
+      },
+      "after": {
+        "fourth": {
+          "frame": 259,
+          "input": [
+            -1,
+            0
+          ],
+          "velocity": [
+            4.9972276475021316,
+            0,
+            -0.23193427870584282
+          ],
+          "opposed": -5.002607087369394,
+          "facingError": -2.4492935982947064e-16,
+          "turn": true,
+          "ramp": 0.9777777777777781,
+          "clip": "player.run",
+          "cadence": 0.9777777777777781
+        },
+        "minimumCadence": 0.9111111111111112
+      }
+    },
+    {
+      "frame": 374,
+      "neutralFrames": 10,
+      "before": {
+        "fourth": {
+          "frame": 377,
+          "input": [
+            1,
+            0
+          ],
+          "velocity": [
+            -3.9295208876825822,
+            0,
+            0.18237924245851833
+          ],
+          "opposed": -3.933750957395937,
+          "facingError": -3.1415926535779564,
+          "turn": false,
+          "ramp": 0.08888888888888889,
+          "clip": "player.run",
+          "cadence": 0.43708343971065966
+        },
+        "minimumCadence": 0.0034225066508040327
+      },
+      "after": {
+        "fourth": {
+          "frame": 377,
+          "input": [
+            1,
+            0
+          ],
+          "velocity": [
+            -2.8168218809943824,
+            0,
+            0.13073599949720702
+          ],
+          "opposed": -2.8198541470815943,
+          "facingError": 0,
+          "turn": true,
+          "ramp": 0.7185185185185192,
+          "clip": "player.run",
+          "cadence": 0.7185185185185192
+        },
+        "minimumCadence": 0.6518518518518525
+      }
+    },
+    {
+      "frame": 444,
+      "neutralFrames": 0,
+      "before": {
+        "fourth": {
+          "frame": 447,
+          "input": [
+            -1,
+            0
+          ],
+          "velocity": [
+            5.614389130586863,
+            0,
+            -0.2605783416786062
+          ],
+          "opposed": -5.620432935442241,
+          "facingError": -2.4492935982947064e-16,
+          "turn": true,
+          "ramp": 1,
+          "clip": "player.run",
+          "cadence": 1
+        },
+        "minimumCadence": 1
+      },
+      "after": {
+        "fourth": {
+          "frame": 447,
+          "input": [
+            -1,
+            0
+          ],
+          "velocity": [
+            6.1750811290128205,
+            0,
+            -0.2866015096037386
+          ],
+          "opposed": -6.181728510311448,
+          "facingError": -2.4492935982947064e-16,
+          "turn": true,
+          "ramp": 1,
+          "clip": "player.run",
+          "cadence": 1
+        },
+        "minimumCadence": 1
+      }
+    },
+    {
+      "frame": 498,
+      "neutralFrames": 2,
+      "before": {
+        "fourth": {
+          "frame": 501,
+          "input": [
+            1,
+            0
+          ],
+          "velocity": [
+            -5.581743167008174,
+            0,
+            0.25906315795087154
+          ],
+          "opposed": -5.587751828978263,
+          "facingError": 3.141592653589793,
+          "turn": false,
+          "ramp": 0.08888888888888889,
+          "clip": "player.run",
+          "cadence": 0.620861314330918
+        },
+        "minimumCadence": 0.01254478660737041
+      },
+      "after": {
+        "fourth": {
+          "frame": 501,
+          "input": [
+            1,
+            0
+          ],
+          "velocity": [
+            -4.573255184942481,
+            0,
+            0.21225661856481148
+          ],
+          "opposed": -4.578178224875902,
+          "facingError": 0,
+          "turn": true,
+          "ramp": 1,
+          "clip": "player.run",
+          "cadence": 1
+        },
+        "minimumCadence": 0.9481481481481483
+      }
+    },
+    {
+      "frame": 582,
+      "neutralFrames": 3,
+      "before": {
+        "fourth": {
+          "frame": 585,
+          "input": [
+            -1,
+            0
+          ],
+          "velocity": [
+            5.623909522538042,
+            0,
+            -0.26102020772833423
+          ],
+          "opposed": -5.629963575951146,
+          "facingError": -3.141592577524904,
+          "turn": false,
+          "ramp": 0.08888888888888889,
+          "clip": "player.run",
+          "cadence": 0.6255515084390163
+        },
+        "minimumCadence": 0.0142443679738509
+      },
+      "after": {
+        "fourth": {
+          "frame": 585,
+          "input": [
+            -1,
+            0
+          ],
+          "velocity": [
+            4.934867049571799,
+            0,
+            -0.22903996183239267
+          ],
+          "opposed": -4.940179359199993,
+          "facingError": -2.4492935982947064e-16,
+          "turn": true,
+          "ramp": 0.9777777777777781,
+          "clip": "player.run",
+          "cadence": 0.9777777777777781
+        },
+        "minimumCadence": 0.9111111111111112
+      }
+    },
+    {
+      "frame": 688,
+      "neutralFrames": 2,
+      "before": {
+        "fourth": {
+          "frame": 691,
+          "input": [
+            1,
+            0
+          ],
+          "velocity": [
+            -6.210146476442968,
+            0,
+            0.2882289832025941
+          ],
+          "opposed": -6.216831605056954,
+          "facingError": 3.141592653369739,
+          "turn": false,
+          "ramp": 0.08888888888888889,
+          "clip": "player.run",
+          "cadence": 0.6907590672285503
+        },
+        "minimumCadence": 0.007770911547573379
+      },
+      "after": {
+        "fourth": {
+          "frame": 691,
+          "input": [
+            1,
+            0
+          ],
+          "velocity": [
+            -5.481992085375417,
+            0,
+            0.2544334518817102
+          ],
+          "opposed": -5.4878933668171035,
+          "facingError": 0,
+          "turn": true,
+          "ramp": 1,
+          "clip": "player.run",
+          "cadence": 1
+        },
+        "minimumCadence": 0.9481481481481483
+      }
+    },
+    {
+      "frame": 802,
+      "neutralFrames": 2,
+      "before": {
+        "fourth": {
+          "frame": 805,
+          "input": [
+            -1,
+            0
+          ],
+          "velocity": [
+            6.243938757908115,
+            0,
+            -0.28979737051257815
+          ],
+          "opposed": -6.2506602634012305,
+          "facingError": -3.1415926535555343,
+          "turn": false,
+          "ramp": 0.08888888888888889,
+          "clip": "player.run",
+          "cadence": 0.6945178070445812
+        },
+        "minimumCadence": 0.00905827686748029
+      },
+      "after": {
+        "fourth": {
+          "frame": 805,
+          "input": [
+            -1,
+            0
+          ],
+          "velocity": [
+            5.497028591032732,
+            0,
+            -0.25513133505611985
+          ],
+          "opposed": -5.5029460590449935,
+          "facingError": -2.4492935982947064e-16,
+          "turn": true,
+          "ramp": 1,
+          "clip": "player.run",
+          "cadence": 1
+        },
+        "minimumCadence": 0.9481481481481483
+      }
+    },
+    {
+      "frame": 912,
+      "neutralFrames": 2,
+      "before": {
+        "fourth": {
+          "frame": 915,
+          "input": [
+            1,
+            0
+          ],
+          "velocity": [
+            -6.2282124410677415,
+            0,
+            0.28906747141444616
+          ],
+          "opposed": -6.234917017418993,
+          "facingError": 3.1415926534906298,
+          "turn": false,
+          "ramp": 0.08888888888888889,
+          "clip": "player.run",
+          "cadence": 0.6927685574909991
+        },
+        "minimumCadence": 0.008459160322743759
+      },
+      "after": {
+        "fourth": {
+          "frame": 915,
+          "input": [
+            1,
+            0
+          ],
+          "velocity": [
+            -5.489281780945592,
+            0,
+            0.25477178553455065
+          ],
+          "opposed": -5.495190909634139,
+          "facingError": 0,
+          "turn": true,
+          "ramp": 1,
+          "clip": "player.run",
+          "cadence": 1
+        },
+        "minimumCadence": 0.9481481481481483
+      }
+    },
+    {
+      "frame": 1020,
+      "neutralFrames": 3,
+      "before": {
+        "fourth": {
+          "frame": 1023,
+          "input": [
+            -1,
+            0
+          ],
+          "velocity": [
+            5.867527020824011,
+            0,
+            -0.272327126830433
+          ],
+          "opposed": -5.873843324783834,
+          "facingError": -3.1415926534210854,
+          "turn": false,
+          "ramp": 0.08888888888888889,
+          "clip": "player.run",
+          "cadence": 0.652649258309315
+        },
+        "minimumCadence": 0.005281666910147914
+      },
+      "after": {
+        "fourth": {
+          "frame": 1023,
+          "input": [
+            -1,
+            0
+          ],
+          "velocity": [
+            5.044365399163213,
+            0,
+            -0.23412206385443263
+          ],
+          "opposed": -5.049795582106122,
+          "facingError": -2.4492935982947064e-16,
+          "turn": true,
+          "ramp": 0.9777777777777781,
+          "clip": "player.run",
+          "cadence": 0.9777777777777781
+        },
+        "minimumCadence": 0.9111111111111112
+      }
+    },
+    {
+      "frame": 1120,
+      "neutralFrames": 2,
+      "before": {
+        "fourth": {
+          "frame": 1123,
+          "input": [
+            1,
+            0
+          ],
+          "velocity": [
+            -6.170758534933707,
+            0,
+            0.2864008868163459
+          ],
+          "opposed": -6.177401263025286,
+          "facingError": 3.141592652176335,
+          "turn": false,
+          "ramp": 0.08888888888888889,
+          "clip": "player.run",
+          "cadence": 0.6863779181139206
+        },
+        "minimumCadence": 0.00627037155077441
+      },
+      "after": {
+        "fourth": {
+          "frame": 1123,
+          "input": [
+            1,
+            0
+          ],
+          "velocity": [
+            -5.463044425904776,
+            0,
+            0.2535540419283368
+          ],
+          "opposed": -5.468925310478052,
+          "facingError": 0,
+          "turn": true,
+          "ramp": 1,
+          "clip": "player.run",
+          "cadence": 1
+        },
+        "minimumCadence": 0.9481481481481483
+      }
+    }
+  ],
+  "checks": {
+    "test-rooftop-run-turns": "passed",
+    "test-rooftop-weather": "passed",
+    "test-run-inertia-presentation": "passed",
+    "test-ice-walk-animation": "passed",
+    "build": "passed",
+    "check:release": "passed"
+  },
+  "releaseBytes": 996774582,
+  "browser": {
+    "before-browser": {
+      "stamp": "Codex/sol fork \u00b7 build 10-25 15:48 UTC",
+      "buffer": [
+        1280,
+        720
+      ],
+      "frames": 1282,
+      "errors": [],
+      "turns": [
+        {
+          "frame": 163,
+          "input": [
+            1,
+            0
+          ],
+          "position": [
+            -8.249651711243391,
+            95.30000000596046,
+            -5.620589853987897
+          ],
+          "velocity": [
+            -6.235657729684574,
+            0,
+            0.2894130265435918
+          ],
+          "yaw": -1.524417019862575,
+          "facingError": 0,
+          "opposed": -6.242370320776243,
+          "turn": true,
+          "ramp": 1,
+          "cadence": 1,
+          "clip": "player.run",
+          "phase": 0.7461477312915875,
+          "grounded": true,
+          "state": "ride",
+          "board": false,
+          "grip": 0.94
+        },
+        {
+          "frame": 259,
+          "input": [
+            -1,
+            0
+          ],
+          "position": [
+            1.3459162976425865,
+            95.30000000596046,
+            -6.065945019271645
+          ],
+          "velocity": [
+            5.882675070613859,
+            0,
+            -0.27303018705694976
+          ],
+          "yaw": -1.524417019862575,
+          "facingError": 3.141592653589793,
+          "opposed": -5.8890076812198275,
+          "turn": false,
+          "ramp": 0.08888888888888889,
+          "cadence": 0.654334186802203,
+          "clip": "player.run",
+          "phase": 0.05960527536728777,
+          "grounded": true,
+          "state": "ride",
+          "board": false,
+          "grip": 0.94
+        },
+        {
+          "frame": 377,
+          "input": [
+            1,
+            0
+          ],
+          "position": [
+            -8.65472321912069,
+            95.30000000596046,
+            -5.6017894361100415
+          ],
+          "velocity": [
+            -3.9295208876825822,
+            0,
+            0.18237924245851833
+          ],
+          "yaw": -4.666009673440532,
+          "facingError": -3.1415926535779564,
+          "opposed": -3.933750957395937,
+          "turn": false,
+          "ramp": 0.08888888888888889,
+          "cadence": 0.43708343971065966,
+          "clip": "player.run",
+          "phase": 0.044073648278613264,
+          "grounded": true,
+          "state": "ride",
+          "board": false,
+          "grip": 0.94
+        },
+        {
+          "frame": 447,
+          "input": [
+            -1,
+            0
+          ],
+          "position": [
+            -4.520043125422721,
+            95.30000000596046,
+            -5.79369064871351
+          ],
+          "velocity": [
+            5.614389130586863,
+            0,
+            -0.2605783416786062
+          ],
+          "yaw": 1.6171756337272178,
+          "facingError": -2.4492935982947064e-16,
+          "opposed": -5.620432935442241,
+          "turn": true,
+          "ramp": 1,
+          "cadence": 1,
+          "clip": "player.run",
+          "phase": 0.275166051042523,
+          "grounded": true,
+          "state": "ride",
+          "board": false,
+          "grip": 0.94
+        },
+        {
+          "frame": 501,
+          "input": [
+            1,
+            0
+          ],
+          "position": [
+            -8.300181036784346,
+            95.30000000596046,
+            -5.6182446571108455
+          ],
+          "velocity": [
+            -5.581743167008174,
+            0,
+            0.25906315795087154
+          ],
+          "yaw": 1.6171756337272178,
+          "facingError": 3.141592653589793,
+          "opposed": -5.587751828978263,
+          "turn": false,
+          "ramp": 0.08888888888888889,
+          "cadence": 0.620861314330918,
+          "clip": "player.run",
+          "phase": 0.057212242524957935,
+          "grounded": true,
+          "state": "ride",
+          "board": false,
+          "grip": 0.94
+        },
+        {
+          "frame": 585,
+          "input": [
+            -1,
+            0
+          ],
+          "position": [
+            -2.745505245094108,
+            95.30000000596046,
+            -5.876051548064562
+          ],
+          "velocity": [
+            5.623909522538042,
+            0,
+            -0.26102020772833423
+          ],
+          "yaw": -1.5244169437976858,
+          "facingError": -3.141592577524904,
+          "opposed": -5.629963575951146,
+          "turn": false,
+          "ramp": 0.08888888888888889,
+          "cadence": 0.6255515084390163,
+          "clip": "player.run",
+          "phase": 0.05754755251507637,
+          "grounded": true,
+          "state": "ride",
+          "board": false,
+          "grip": 0.94
+        },
+        {
+          "frame": 691,
+          "input": [
+            1,
+            0
+          ],
+          "position": [
+            -11.565940500741396,
+            95.30000000596046,
+            -5.46667230157122
+          ],
+          "velocity": [
+            -6.210146476442968,
+            0,
+            0.2882289832025941
+          ],
+          "yaw": 1.6171756335071639,
+          "facingError": 3.141592653369739,
+          "opposed": -6.216831605056954,
+          "turn": false,
+          "ramp": 0.08888888888888889,
+          "cadence": 0.6907590672285503,
+          "clip": "player.run",
+          "phase": 0.06220935230191482,
+          "grounded": true,
+          "state": "ride",
+          "board": false,
+          "grip": 0.94
+        },
+        {
+          "frame": 805,
+          "input": [
+            -1,
+            0
+          ],
+          "position": [
+            -1.7249205513944632,
+            95.30000000596046,
+            -5.923419527169899
+          ],
+          "velocity": [
+            6.243938757908115,
+            0,
+            -0.28979737051257815
+          ],
+          "yaw": -1.524417019828316,
+          "facingError": -3.1415926535555343,
+          "opposed": -6.2506602634012305,
+          "turn": false,
+          "ramp": 0.08888888888888889,
+          "cadence": 0.6945178070445812,
+          "clip": "player.run",
+          "phase": 0.06247807103327707,
+          "grounded": true,
+          "state": "ride",
+          "board": false,
+          "grip": 0.94
+        },
+        {
+          "frame": 915,
+          "input": [
+            1,
+            0
+          ],
+          "position": [
+            -10.961395621861236,
+            95.30000000596046,
+            -5.494730795263915
+          ],
+          "velocity": [
+            -6.2282124410677415,
+            0,
+            0.28906747141444616
+          ],
+          "yaw": 1.617175633628055,
+          "facingError": 3.1415926534906298,
+          "opposed": -6.234917017418993,
+          "turn": false,
+          "ramp": 0.08888888888888889,
+          "cadence": 0.6927685574909991,
+          "clip": "player.run",
+          "phase": 0.06235301419404882,
+          "grounded": true,
+          "state": "ride",
+          "board": false,
+          "grip": 0.94
+        },
+        {
+          "frame": 1023,
+          "input": [
+            -1,
+            0
+          ],
+          "position": [
+            -2.066299320734704,
+            95.30000000596046,
+            -5.907575254261498
+          ],
+          "velocity": [
+            5.867527020824011,
+            0,
+            -0.272327126830433
+          ],
+          "yaw": -1.5244170196938671,
+          "facingError": -3.1415926534210854,
+          "opposed": -5.873843324783834,
+          "turn": false,
+          "ramp": 0.08888888888888889,
+          "cadence": 0.652649258309315,
+          "clip": "player.run",
+          "phase": 0.05948481695058283,
+          "grounded": true,
+          "state": "ride",
+          "board": false,
+          "grip": 0.94
+        },
+        {
+          "frame": 1123,
+          "input": [
+            1,
+            0
+          ],
+          "position": [
+            -9.929030343755773,
+            95.30000000596046,
+            -5.542645541805032
+          ],
+          "velocity": [
+            -6.170758534933707,
+            0,
+            0.2864008868163459
+          ],
+          "yaw": 1.6171756323137598,
+          "facingError": 3.141592652176335,
+          "opposed": -6.177401263025286,
+          "turn": false,
+          "ramp": 0.08888888888888889,
+          "cadence": 0.6863779181139206,
+          "clip": "player.run",
+          "phase": 0.061896136466391694,
+          "grounded": true,
+          "state": "ride",
+          "board": false,
+          "grip": 0.94
+        }
+      ]
+    },
+    "after-lite": {
+      "stamp": "Codex/sol fork \u00b7 build 10-25 15:48 UTC",
+      "buffer": [
+        1280,
+        720
+      ],
+      "frames": 1282,
+      "errors": [],
+      "turns": [
+        {
+          "frame": 163,
+          "input": [
+            1,
+            0
+          ],
+          "position": [
+            -8.249651711243391,
+            95.30000000596046,
+            -5.620589853987897
+          ],
+          "velocity": [
+            -6.235657729684574,
+            0,
+            0.2894130265435918
+          ],
+          "yaw": -1.524417019862575,
+          "facingError": 0,
+          "opposed": -6.242370320776243,
+          "turn": true,
+          "ramp": 1,
+          "cadence": 1,
+          "clip": "player.run",
+          "phase": 0.7461477312915875,
+          "grounded": true,
+          "state": "ride",
+          "board": false,
+          "grip": 0.94
+        },
+        {
+          "frame": 259,
+          "input": [
+            -1,
+            0
+          ],
+          "position": [
+            1.3099844624219277,
+            95.30000000596046,
+            -6.064277329730095
+          ],
+          "velocity": [
+            4.9972276475021316,
+            0,
+            -0.23193427870584282
+          ],
+          "yaw": 1.6171756337272178,
+          "facingError": -2.4492935982947064e-16,
+          "opposed": -5.002607087369394,
+          "turn": true,
+          "ramp": 0.9777777777777781,
+          "cadence": 0.9777777777777781,
+          "clip": "player.run",
+          "phase": 0.07699999980000005,
+          "grounded": true,
+          "state": "ride",
+          "board": false,
+          "grip": 0.94
+        },
+        {
+          "frame": 377,
+          "input": [
+            1,
+            0
+          ],
+          "position": [
+            -11.507774338433276,
+            95.30000000596046,
+            -5.469371943823207
+          ],
+          "velocity": [
+            -2.8168218809943824,
+            0,
+            0.13073599949720702
+          ],
+          "yaw": -1.524417019862575,
+          "facingError": 0,
+          "opposed": -2.8198541470815943,
+          "turn": true,
+          "ramp": 0.7185185185185192,
+          "cadence": 0.7185185185185192,
+          "clip": "player.run",
+          "phase": 0.05949999863333344,
+          "grounded": true,
+          "state": "ride",
+          "board": false,
+          "grip": 0.94
+        },
+        {
+          "frame": 447,
+          "input": [
+            -1,
+            0
+          ],
+          "position": [
+            -4.693138923625678,
+            95.30000000596046,
+            -5.7856568243742705
+          ],
+          "velocity": [
+            6.1750811290128205,
+            0,
+            -0.2866015096037386
+          ],
+          "yaw": 1.6171756337272178,
+          "facingError": -2.4492935982947064e-16,
+          "opposed": -6.181728510311448,
+          "turn": true,
+          "ramp": 1,
+          "cadence": 1,
+          "clip": "player.run",
+          "phase": 0.022500062833335388,
+          "grounded": true,
+          "state": "ride",
+          "board": false,
+          "grip": 0.94
+        },
+        {
+          "frame": 501,
+          "input": [
+            1,
+            0
+          ],
+          "position": [
+            -8.227280406105708,
+            95.30000000596046,
+            -5.621628164204439
+          ],
+          "velocity": [
+            -4.573255184942481,
+            0,
+            0.21225661856481148
+          ],
+          "yaw": -1.524417019862575,
+          "facingError": 0,
+          "opposed": -4.578178224875902,
+          "turn": true,
+          "ramp": 1,
+          "cadence": 1,
+          "clip": "player.run",
+          "phase": 0.07916666661111116,
+          "grounded": true,
+          "state": "ride",
+          "board": false,
+          "grip": 0.94
+        },
+        {
+          "frame": 585,
+          "input": [
+            -1,
+            0
+          ],
+          "position": [
+            0.17044557550323797,
+            95.30000000596046,
+            -6.0113883784078785
+          ],
+          "velocity": [
+            4.934867049571799,
+            0,
+            -0.22903996183239267
+          ],
+          "yaw": 1.6171756337272178,
+          "facingError": -2.4492935982947064e-16,
+          "opposed": -4.940179359199993,
+          "turn": true,
+          "ramp": 0.9777777777777781,
+          "cadence": 0.9777777777777781,
+          "clip": "player.run",
+          "phase": 0.07699999980000005,
+          "grounded": true,
+          "state": "ride",
+          "board": false,
+          "grip": 0.94
+        },
+        {
+          "frame": 691,
+          "input": [
+            1,
+            0
+          ],
+          "position": [
+            -11.42478959706404,
+            95.30000000596046,
+            -5.473223480613344
+          ],
+          "velocity": [
+            -5.481992085375417,
+            0,
+            0.2544334518817102
+          ],
+          "yaw": -1.524417019862575,
+          "facingError": 0,
+          "opposed": -5.4878933668171035,
+          "turn": true,
+          "ramp": 1,
+          "cadence": 1,
+          "clip": "player.run",
+          "phase": 0.07916666661111116,
+          "grounded": true,
+          "state": "ride",
+          "board": false,
+          "grip": 0.94
+        },
+        {
+          "frame": 805,
+          "input": [
+            -1,
+            0
+          ],
+          "position": [
+            1.1630634530785926,
+            95.30000000596046,
+            -6.0574583451385475
+          ],
+          "velocity": [
+            5.497028591032732,
+            0,
+            -0.25513133505611985
+          ],
+          "yaw": 1.6171756337272178,
+          "facingError": -2.4492935982947064e-16,
+          "opposed": -5.5029460590449935,
+          "turn": true,
+          "ramp": 1,
+          "cadence": 1,
+          "clip": "player.run",
+          "phase": 0.07916666661111116,
+          "grounded": true,
+          "state": "ride",
+          "board": false,
+          "grip": 0.94
+        },
+        {
+          "frame": 915,
+          "input": [
+            1,
+            0
+          ],
+          "position": [
+            -10.821571079274444,
+            95.30000000596046,
+            -5.501220414452345
+          ],
+          "velocity": [
+            -5.489281780945592,
+            0,
+            0.25477178553455065
+          ],
+          "yaw": -1.524417019862575,
+          "facingError": 0,
+          "opposed": -5.495190909634139,
+          "turn": true,
+          "ramp": 1,
+          "cadence": 1,
+          "clip": "player.run",
+          "phase": 0.07916666661111116,
+          "grounded": true,
+          "state": "ride",
+          "board": false,
+          "grip": 0.94
+        },
+        {
+          "frame": 1023,
+          "input": [
+            -1,
+            0
+          ],
+          "position": [
+            0.8145750355243528,
+            95.30000000596046,
+            -6.041284095041451
+          ],
+          "velocity": [
+            5.044365399163213,
+            0,
+            -0.23412206385443263
+          ],
+          "yaw": 1.6171756337272178,
+          "facingError": -2.4492935982947064e-16,
+          "opposed": -5.049795582106122,
+          "turn": true,
+          "ramp": 0.9777777777777781,
+          "cadence": 0.9777777777777781,
+          "clip": "player.run",
+          "phase": 0.07699999980000005,
+          "grounded": true,
+          "state": "ride",
+          "board": false,
+          "grip": 0.94
+        },
+        {
+          "frame": 1123,
+          "input": [
+            1,
+            0
+          ],
+          "position": [
+            -9.845226063882988,
+            95.30000000596046,
+            -5.546535115499845
+          ],
+          "velocity": [
+            -5.463044425904776,
+            0,
+            0.2535540419283368
+          ],
+          "yaw": -1.524417019862575,
+          "facingError": 0,
+          "opposed": -5.468925310478052,
+          "turn": true,
+          "ramp": 1,
+          "cadence": 1,
+          "clip": "player.run",
+          "phase": 0.07916666661111116,
+          "grounded": true,
+          "state": "ride",
+          "board": false,
+          "grip": 0.94
+        }
+      ]
+    },
+    "after-native": {
+      "stamp": "Codex/sol fork \u00b7 build 10-25 15:48 UTC",
+      "buffer": [
+        2560,
+        1440
+      ],
+      "frames": 1282,
+      "errors": [],
+      "turns": [
+        {
+          "frame": 163,
+          "input": [
+            1,
+            0
+          ],
+          "position": [
+            -8.249651711243391,
+            95.30000000596046,
+            -5.620589853987897
+          ],
+          "velocity": [
+            -6.235657729684574,
+            0,
+            0.2894130265435918
+          ],
+          "yaw": -1.524417019862575,
+          "facingError": 0,
+          "opposed": -6.242370320776243,
+          "turn": true,
+          "ramp": 1,
+          "cadence": 1,
+          "clip": "player.run",
+          "phase": 0.7461477312915875,
+          "grounded": true,
+          "state": "ride",
+          "board": false,
+          "grip": 0.94
+        },
+        {
+          "frame": 259,
+          "input": [
+            -1,
+            0
+          ],
+          "position": [
+            1.3099844624219277,
+            95.30000000596046,
+            -6.064277329730095
+          ],
+          "velocity": [
+            4.9972276475021316,
+            0,
+            -0.23193427870584282
+          ],
+          "yaw": 1.6171756337272178,
+          "facingError": -2.4492935982947064e-16,
+          "opposed": -5.002607087369394,
+          "turn": true,
+          "ramp": 0.9777777777777781,
+          "cadence": 0.9777777777777781,
+          "clip": "player.run",
+          "phase": 0.07699999980000005,
+          "grounded": true,
+          "state": "ride",
+          "board": false,
+          "grip": 0.94
+        },
+        {
+          "frame": 377,
+          "input": [
+            1,
+            0
+          ],
+          "position": [
+            -11.507774338433276,
+            95.30000000596046,
+            -5.469371943823207
+          ],
+          "velocity": [
+            -2.8168218809943824,
+            0,
+            0.13073599949720702
+          ],
+          "yaw": -1.524417019862575,
+          "facingError": 0,
+          "opposed": -2.8198541470815943,
+          "turn": true,
+          "ramp": 0.7185185185185192,
+          "cadence": 0.7185185185185192,
+          "clip": "player.run",
+          "phase": 0.05949999863333344,
+          "grounded": true,
+          "state": "ride",
+          "board": false,
+          "grip": 0.94
+        },
+        {
+          "frame": 447,
+          "input": [
+            -1,
+            0
+          ],
+          "position": [
+            -4.693138923625678,
+            95.30000000596046,
+            -5.7856568243742705
+          ],
+          "velocity": [
+            6.1750811290128205,
+            0,
+            -0.2866015096037386
+          ],
+          "yaw": 1.6171756337272178,
+          "facingError": -2.4492935982947064e-16,
+          "opposed": -6.181728510311448,
+          "turn": true,
+          "ramp": 1,
+          "cadence": 1,
+          "clip": "player.run",
+          "phase": 0.022500062833335388,
+          "grounded": true,
+          "state": "ride",
+          "board": false,
+          "grip": 0.94
+        },
+        {
+          "frame": 501,
+          "input": [
+            1,
+            0
+          ],
+          "position": [
+            -8.227280406105708,
+            95.30000000596046,
+            -5.621628164204439
+          ],
+          "velocity": [
+            -4.573255184942481,
+            0,
+            0.21225661856481148
+          ],
+          "yaw": -1.524417019862575,
+          "facingError": 0,
+          "opposed": -4.578178224875902,
+          "turn": true,
+          "ramp": 1,
+          "cadence": 1,
+          "clip": "player.run",
+          "phase": 0.07916666661111116,
+          "grounded": true,
+          "state": "ride",
+          "board": false,
+          "grip": 0.94
+        },
+        {
+          "frame": 585,
+          "input": [
+            -1,
+            0
+          ],
+          "position": [
+            0.17044557550323797,
+            95.30000000596046,
+            -6.0113883784078785
+          ],
+          "velocity": [
+            4.934867049571799,
+            0,
+            -0.22903996183239267
+          ],
+          "yaw": 1.6171756337272178,
+          "facingError": -2.4492935982947064e-16,
+          "opposed": -4.940179359199993,
+          "turn": true,
+          "ramp": 0.9777777777777781,
+          "cadence": 0.9777777777777781,
+          "clip": "player.run",
+          "phase": 0.07699999980000005,
+          "grounded": true,
+          "state": "ride",
+          "board": false,
+          "grip": 0.94
+        },
+        {
+          "frame": 691,
+          "input": [
+            1,
+            0
+          ],
+          "position": [
+            -11.42478959706404,
+            95.30000000596046,
+            -5.473223480613344
+          ],
+          "velocity": [
+            -5.481992085375417,
+            0,
+            0.2544334518817102
+          ],
+          "yaw": -1.524417019862575,
+          "facingError": 0,
+          "opposed": -5.4878933668171035,
+          "turn": true,
+          "ramp": 1,
+          "cadence": 1,
+          "clip": "player.run",
+          "phase": 0.07916666661111116,
+          "grounded": true,
+          "state": "ride",
+          "board": false,
+          "grip": 0.94
+        },
+        {
+          "frame": 805,
+          "input": [
+            -1,
+            0
+          ],
+          "position": [
+            1.1630634530785926,
+            95.30000000596046,
+            -6.0574583451385475
+          ],
+          "velocity": [
+            5.497028591032732,
+            0,
+            -0.25513133505611985
+          ],
+          "yaw": 1.6171756337272178,
+          "facingError": -2.4492935982947064e-16,
+          "opposed": -5.5029460590449935,
+          "turn": true,
+          "ramp": 1,
+          "cadence": 1,
+          "clip": "player.run",
+          "phase": 0.07916666661111116,
+          "grounded": true,
+          "state": "ride",
+          "board": false,
+          "grip": 0.94
+        },
+        {
+          "frame": 915,
+          "input": [
+            1,
+            0
+          ],
+          "position": [
+            -10.821571079274444,
+            95.30000000596046,
+            -5.501220414452345
+          ],
+          "velocity": [
+            -5.489281780945592,
+            0,
+            0.25477178553455065
+          ],
+          "yaw": -1.524417019862575,
+          "facingError": 0,
+          "opposed": -5.495190909634139,
+          "turn": true,
+          "ramp": 1,
+          "cadence": 1,
+          "clip": "player.run",
+          "phase": 0.07916666661111116,
+          "grounded": true,
+          "state": "ride",
+          "board": false,
+          "grip": 0.94
+        },
+        {
+          "frame": 1023,
+          "input": [
+            -1,
+            0
+          ],
+          "position": [
+            0.8145750355243528,
+            95.30000000596046,
+            -6.041284095041451
+          ],
+          "velocity": [
+            5.044365399163213,
+            0,
+            -0.23412206385443263
+          ],
+          "yaw": 1.6171756337272178,
+          "facingError": -2.4492935982947064e-16,
+          "opposed": -5.049795582106122,
+          "turn": true,
+          "ramp": 0.9777777777777781,
+          "cadence": 0.9777777777777781,
+          "clip": "player.run",
+          "phase": 0.07699999980000005,
+          "grounded": true,
+          "state": "ride",
+          "board": false,
+          "grip": 0.94
+        },
+        {
+          "frame": 1123,
+          "input": [
+            1,
+            0
+          ],
+          "position": [
+            -9.845226063882988,
+            95.30000000596046,
+            -5.546535115499845
+          ],
+          "velocity": [
+            -5.463044425904776,
+            0,
+            0.2535540419283368
+          ],
+          "yaw": -1.524417019862575,
+          "facingError": 0,
+          "opposed": -5.468925310478052,
+          "turn": true,
+          "ramp": 1,
+          "cadence": 1,
+          "clip": "player.run",
+          "phase": 0.07916666661111116,
+          "grounded": true,
+          "state": "ride",
+          "board": false,
+          "grip": 0.94
+        }
+      ]
+    }
+  }
+}

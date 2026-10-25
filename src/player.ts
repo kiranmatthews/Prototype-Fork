@@ -6675,7 +6675,10 @@ export class Player {
     else if (walkDir && TUNING.walkRampTime > 0)
       this.walkRamp = Math.min(1, this.walkRamp + dt / TUNING.walkRampTime);
     else if (walkDir) this.walkRamp = 1;
-    else if (!slickWalk && TUNING.walkSlowdownTime > 0)
+    // Rain keeps the ordinary run envelope through brief key/stick releases,
+    // so pressing the opposite direction can immediately commit a run pivot.
+    // Ice retains its own fresh-push envelope and scrabbling presentation.
+    else if ((!slickWalk || this.groundHit?.iceWalk === false) && TUNING.walkSlowdownTime > 0)
       this.walkRamp = Math.max(0, this.walkRamp - dt / TUNING.walkSlowdownTime);
     else this.walkRamp = 0;
     const runScale = Math.min(moveScale, this.walkRamp, groundSpeedLimit(this.groundHit) / TUNING.walkSpeed);
