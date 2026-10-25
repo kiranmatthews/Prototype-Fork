@@ -4570,3 +4570,9 @@ Validation: level suite, build/type-check and release-size check passed (996,774
 Reproduced the supplied 1,282-frame Rooftop Relay recording. The two uninterrupted direction swaps worked, but all nine swaps separated by 2–10 neutral frames lost the turn intent: wet ground reset the run ramp to zero, leaving the character facing its old momentum and blending down toward a walk. Wet non-ice surfaces now decay that intent ramp with the existing ordinary walking slowdown, preserving the committed pivot when input resumes. The wet traction response and actual ice envelope remain unchanged. Prompt-to-local replay and native verification: approximately 12 minutes.
 
 Added the exact recording as a regression fixture and replay tests for four-frame facing, retained opposing velocity, continuous normal run/cadence and advancing animation. All eleven reversals pass in the real Player, normal browser rendering and MAX 2560×1440 rendering; before/after browser reproduction confirmed the failure and fix with zero console errors. Wet traction, default run-inertia/stop, and ice-walk regressions pass; build/type-check and release-size check pass (996,774,582 bytes). Native short/long release captures were inspected. Evidence: `docs/rooftop-kook/run-turn-replay/`.
+
+## 2026-10-26 — Stronger rain through CRT
+
+Doubled falling rain streak width and the alpha of both roof-impact rings and central spray to improve visibility through CRT. Prompt-to-local playable: under one minute; native and CRT browser verification: approximately three minutes.
+
+The existing weather regression and real-browser native/fixed/CRT animation, dry-level exit and rooftop re-entry checks pass with no console errors. Inspected the 2560×1440 native and normal CRT captures. Build/type-check passed; evidence: `docs/rooftop-kook/rain-visibility/`.

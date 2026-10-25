@@ -23,7 +23,7 @@ const rainVertex=/* glsl */`
   vec4 mvPosition=viewMatrix*vec4(world,1.0);
   vec2 fall=normalize((viewMatrix*vec4(drift,0.0)).xy+vec2(.001));
   vec2 side=vec2(-fall.y,fall.x);
-  mvPosition.xy+=side*position.x*(.013+aSeed.w*.014)+fall*position.y*(.7+aSeed.w*.65);
+  mvPosition.xy+=side*position.x*(.026+aSeed.w*.028)+fall*position.y*(.7+aSeed.w*.65);
   gl_Position=projectionMatrix*mvPosition;
   vRainUv=uv;
   float distanceToEye=length(world-uEye);
@@ -75,7 +75,7 @@ const splashFragment=/* glsl */`
   float r=length(vRainUv-.5)*2.0;
   float ring=1.0-smoothstep(.045,.14,abs(r-.78));
   float spray=(1.0-smoothstep(.0,.28,r))*(1.0-smoothstep(.0,.22,vAge));
-  gl_FragColor=vec4(.66,.79,.85,(ring*.34+spray*.28)*pow(1.0-vAge,1.7)*vAlpha);
+  gl_FragColor=vec4(.66,.79,.85,(ring*.68+spray*.56)*pow(1.0-vAge,1.7)*vAlpha);
   #include <tonemapping_fragment>
   #include <colorspace_fragment>
   #include <fog_fragment>
