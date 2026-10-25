@@ -7472,13 +7472,13 @@ export class Level {
     // be able to click an individual fern.
     this.batchDecor = !EDITOR_BUILD;
 
-    const deck = new THREE.MeshLambertMaterial({ color: 0xffffff });
-    // tag every root child a component adds with that component's index
     this.buildCustomComponents(data);
   }
 
   /** Shared component builder, also used by source-owned native extensions. */
   private buildCustomComponents(data: CustomLevelData): void {
+    const deck = new THREE.MeshLambertMaterial({ color: 0xffffff });
+    // tag every root child a component adds with that component's index
     const buildTagged = (idx: number, fn: () => void): void => {
       const before = this.root.children.length;
       const groundBefore = this.groundMeshes.length,wallBefore=this.walls.length;
@@ -12782,8 +12782,6 @@ export class Level {
       lane.push({ x: gx(z), y: laneY(z), z });
     this.lanePts = lane;
     this.measureLane();
-  }
-
     const finale = jungleRuinsFinale();
     // Preserve exact source components for editor copies (notably boost
     // stones). A legacy mesh capture alone cannot retain their mechanics.
@@ -12797,6 +12795,8 @@ export class Level {
     this.builtFromData = { ...original, name: this.name,
       groups: [...(original.groups ?? []), ...finale.groups],
       components: [...original.components, ...finale.components] };
+  }
+
   // Build-time ground probe: what the terrain actually is at (x, z). Used to
   // seat crates/enemies/checkpoints on wavy floors. Falls back to the given y.
   // COAST FOG POLICY: everything the player can reach or ride past stays

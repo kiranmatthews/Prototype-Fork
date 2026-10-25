@@ -1,36 +1,31 @@
 import assert from 'node:assert/strict';
-import {readFile} from 'node:fs/promises';
-import {createHash} from 'node:crypto';
-
-for(const kind of ['arrival','finish']){
-  const root=new URL(`../public/props/beacon-platforms/${kind}`,import.meta.url);
-  const raw=await readFile(new URL(root.href+'.glb'));
-  const evidence=JSON.parse(await readFile(new URL(root.href+'.provenance.json'),'utf8'));
-  assert.equal(raw.readUInt32LE(0),0x46546c67);
-  assert.equal(raw.readUInt32LE(8),raw.length);
-  assert.equal(createHash('sha256').update(raw).digest('hex'),evidence.runtimeSha256);
-  assert.equal(evidence.provider,'Meshy');assert.ok(evidence.taskId);
-  assert.ok(raw.length<2.5*1024*1024,'one platform exceeds its download budget');
-  const length=raw.readUInt32LE(12),gltf=JSON.parse(raw.subarray(20,20+length));
-  const primitives=gltf.meshes.flatMap(mesh=>mesh.primitives);
-  assert.equal(primitives.length,1,'each platform must render in one opaque draw');
-  const triangles=primitives.reduce((total,p)=>total+gltf.accessors[p.indices].count/3,0);
-  assert.equal(triangles,evidence.triangles);assert.ok(triangles<8000);
-  const material=gltf.materials[0];assert.equal(material.alphaMode,'OPAQUE');
-  assert.equal(material.doubleSided,false);assert.ok(material.normalTexture);
-  assert.ok(material.pbrMetallicRoughness.metallicRoughnessTexture);
-  assert.equal(material.emissiveTexture.index,material.pbrMetallicRoughness.baseColorTexture.index);
-  const accessor=gltf.accessors[primitives[0].attributes.POSITION],view=gltf.bufferViews[accessor.bufferView];
-  const binary=raw.subarray(length+28),start=(view.byteOffset||0)+(accessor.byteOffset||0);
-  let deck=0,underside=0;
-  for(let i=0;i<accessor.count;i++){
-    const x=binary.readFloatLE(start+i*12),y=binary.readFloatLE(start+i*12+4),z=binary.readFloatLE(start+i*12+8);
-    assert.ok([x,y,z].every(Number.isFinite));
-    assert.ok(Math.hypot(x,z)<=4.85/3+1e-5,'art extends beyond the authored footprint');
-    assert.ok(y>=-1e-5&&y<=2.2/3+.016,'art leaves the existing support envelope');
-    if(Math.hypot(x,z)<1.1&&Math.abs(y-2.2/3)<1e-5)deck++;
-    if(y<.03)underside++;
+import {createServer} from 'vite';
+import * as THREE from 'three';
+const server=await createServer({server:{middlewareMode:true},appType:'custom'});
+try{
+  const {createBeaconArtwork}=await server.ssrLoadModule('/src/beaconPlatform.ts');
+  for(const kind of ['arrival','finish']){
+    const model=createBeaconArtwork(kind),surfaces=[],geometries=new Set(),materials=new Set();
+    let triangles=0,lights=0;
+    model.traverse(o=>{
+      if(!o.geometry)return;
+      geometries.add(o.geometry);materials.add(o.material);
+      for(const v of o.geometry.getAttribute('position').array)assert.ok(Number.isFinite(v));
+      if(o.isMesh)triangles+=(o.geometry.index?.count||o.geometry.getAttribute('position').count)/3;
+      if(o.userData.beaconSurface)surfaces.push(o);
+      if(o.material.isShaderMaterial){lights++;assert.equal(o.material.depthWrite,false);}
+      assert.equal(o.material.map??null,null,'beacons must not need texture downloads');
+    });
+    assert.ok(triangles<35000);assert.ok(lights>=4);model.updateMatrixWorld(true);
+    const bound=new THREE.Box3();for(const s of surfaces)bound.expandByObject(s);
+    assert.ok(bound.min.y>=-1e-6&&bound.max.y<=2.2/3+.004);
+    assert.ok(bound.max.x<=4.85/3&&bound.min.x>=-4.85/3);
+    for(const radius of [0,.35,.7,1.05])for(let i=0;i<36;i++){
+      const a=i*Math.PI/18;
+      const hits=new THREE.Raycaster(new THREE.Vector3(Math.cos(a)*radius,2,Math.sin(a)*radius),new THREE.Vector3(0,-1,0)).intersectObjects(surfaces,false);
+      assert.ok(hits.length);assert.ok(Math.abs(hits[0].point.y-2.2/3)<1e-6,'deck must be flat and supported in all directions');
+    }
+    for(const g of geometries)g.dispose();for(const m of materials)m.dispose();
+    console.log(`PASS ${kind}: ${triangles} triangles, 144 flat deck contacts, finite smooth geometry, ${lights} texture-free animated light layers`);
   }
-  assert.ok(deck>100&&underside>20,'platform needs a flat central deck and a grounded base');
-  console.log(`PASS ${kind}: verified Meshy provenance, ${triangles} triangles, ${raw.length} bytes, flat deck and bounded single-draw PBR art`);
-}
+}finally{await server.close();}

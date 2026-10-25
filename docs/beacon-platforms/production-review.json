@@ -1,0 +1,386 @@
+{
+  "gallery": null,
+  "modes": [
+    {
+      "mode": "lite",
+      "start": {
+        "name": "Haunted Hassle",
+        "position": [
+          0.5712883843718615,
+          0.8533333333333333,
+          18
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "snap": 1,
+        "currentSpawn": [
+          0.5712883843718615,
+          0.8533333333333333,
+          18
+        ],
+        "pads": [
+          {
+            "kind": "finish",
+            "state": "ready",
+            "solids": 3
+          },
+          {
+            "kind": "arrival",
+            "state": "ready",
+            "solids": 3
+          }
+        ],
+        "checkpoint": -1,
+        "build": "Codex/sol fork \u00b7 build 10-25 05:54 UTC"
+      },
+      "walkOff": {
+        "name": "Haunted Hassle",
+        "position": [
+          1.1831486144528962,
+          0,
+          15.865983350850989
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "snap": 1,
+        "currentSpawn": [
+          0.5712883843718615,
+          0.8533333333333333,
+          18
+        ],
+        "pads": [
+          {
+            "kind": "finish",
+            "state": "ready",
+            "solids": 3
+          },
+          {
+            "kind": "arrival",
+            "state": "ready",
+            "solids": 3
+          }
+        ],
+        "checkpoint": -1,
+        "build": "Codex/sol fork \u00b7 build 10-25 05:54 UTC"
+      },
+      "landing": {
+        "name": "Haunted Hassle",
+        "position": [
+          1.445899403947154,
+          0,
+          14.949573798814026
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "snap": 1,
+        "currentSpawn": [
+          0.5712883843718615,
+          0.8533333333333333,
+          18
+        ],
+        "pads": [
+          {
+            "kind": "finish",
+            "state": "ready",
+            "solids": 3
+          },
+          {
+            "kind": "arrival",
+            "state": "ready",
+            "solids": 3
+          }
+        ],
+        "checkpoint": -1,
+        "build": "Codex/sol fork \u00b7 build 10-25 05:54 UTC"
+      },
+      "checkpoint": {
+        "name": "Haunted Hassle",
+        "position": [
+          -66.12787406345001,
+          7.199951171875,
+          -402.77397664781984
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "snap": 2,
+        "currentSpawn": [
+          -66.12787406345001,
+          7.2999511718750005,
+          -402.77397664781984
+        ],
+        "pads": [
+          {
+            "kind": "finish",
+            "state": "ready",
+            "solids": 3
+          },
+          {
+            "kind": "arrival",
+            "state": "ready",
+            "solids": 3
+          }
+        ],
+        "checkpoint": 0,
+        "build": "Codex/sol fork \u00b7 build 10-25 05:54 UTC"
+      },
+      "respawn": {
+        "name": "Haunted Hassle",
+        "position": [
+          -66.12787406345001,
+          7.2999511718750005,
+          -402.77397664781984
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "snap": 3,
+        "currentSpawn": [
+          -66.12787406345001,
+          7.2999511718750005,
+          -402.77397664781984
+        ],
+        "pads": [
+          {
+            "kind": "finish",
+            "state": "ready",
+            "solids": 3
+          },
+          {
+            "kind": "arrival",
+            "state": "ready",
+            "solids": 3
+          }
+        ],
+        "checkpoint": 0,
+        "build": "Codex/sol fork \u00b7 build 10-25 05:54 UTC"
+      },
+      "finish": {
+        "name": "Haunted Hassle",
+        "position": [
+          62.68849476955042,
+          13.936666666443148,
+          -2116
+        ],
+        "grounded": true,
+        "state": "finished",
+        "deaths": 0,
+        "snap": 5,
+        "currentSpawn": [
+          0.5712883843718615,
+          0.8533333333333333,
+          18
+        ],
+        "pads": [
+          {
+            "kind": "finish",
+            "state": "ready",
+            "solids": 3
+          },
+          {
+            "kind": "arrival",
+            "state": "ready",
+            "solids": 3
+          }
+        ],
+        "checkpoint": -1,
+        "build": "Codex/sol fork \u00b7 build 10-25 05:54 UTC"
+      }
+    },
+    {
+      "mode": "full",
+      "start": {
+        "name": "Haunted Hassle",
+        "position": [
+          0.5712883843718615,
+          0.8533333333333333,
+          18
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "snap": 1,
+        "currentSpawn": [
+          0.5712883843718615,
+          0.8533333333333333,
+          18
+        ],
+        "pads": [
+          {
+            "kind": "finish",
+            "state": "ready",
+            "solids": 3
+          },
+          {
+            "kind": "arrival",
+            "state": "ready",
+            "solids": 3
+          }
+        ],
+        "checkpoint": -1,
+        "build": "Codex/sol fork \u00b7 build 10-25 05:54 UTC"
+      },
+      "walkOff": {
+        "name": "Haunted Hassle",
+        "position": [
+          1.1831486144528962,
+          0,
+          15.865983350850989
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "snap": 1,
+        "currentSpawn": [
+          0.5712883843718615,
+          0.8533333333333333,
+          18
+        ],
+        "pads": [
+          {
+            "kind": "finish",
+            "state": "ready",
+            "solids": 3
+          },
+          {
+            "kind": "arrival",
+            "state": "ready",
+            "solids": 3
+          }
+        ],
+        "checkpoint": -1,
+        "build": "Codex/sol fork \u00b7 build 10-25 05:54 UTC"
+      },
+      "landing": {
+        "name": "Haunted Hassle",
+        "position": [
+          1.445899403947154,
+          0,
+          14.949573798814026
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "snap": 1,
+        "currentSpawn": [
+          0.5712883843718615,
+          0.8533333333333333,
+          18
+        ],
+        "pads": [
+          {
+            "kind": "finish",
+            "state": "ready",
+            "solids": 3
+          },
+          {
+            "kind": "arrival",
+            "state": "ready",
+            "solids": 3
+          }
+        ],
+        "checkpoint": -1,
+        "build": "Codex/sol fork \u00b7 build 10-25 05:54 UTC"
+      },
+      "checkpoint": {
+        "name": "Haunted Hassle",
+        "position": [
+          -66.12787406345001,
+          7.199951171875,
+          -402.77397664781984
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "snap": 2,
+        "currentSpawn": [
+          -66.12787406345001,
+          7.2999511718750005,
+          -402.77397664781984
+        ],
+        "pads": [
+          {
+            "kind": "finish",
+            "state": "ready",
+            "solids": 3
+          },
+          {
+            "kind": "arrival",
+            "state": "ready",
+            "solids": 3
+          }
+        ],
+        "checkpoint": 0,
+        "build": "Codex/sol fork \u00b7 build 10-25 05:54 UTC"
+      },
+      "respawn": {
+        "name": "Haunted Hassle",
+        "position": [
+          -66.12787406345001,
+          7.2999511718750005,
+          -402.77397664781984
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "snap": 3,
+        "currentSpawn": [
+          -66.12787406345001,
+          7.2999511718750005,
+          -402.77397664781984
+        ],
+        "pads": [
+          {
+            "kind": "finish",
+            "state": "ready",
+            "solids": 3
+          },
+          {
+            "kind": "arrival",
+            "state": "ready",
+            "solids": 3
+          }
+        ],
+        "checkpoint": 0,
+        "build": "Codex/sol fork \u00b7 build 10-25 05:54 UTC"
+      },
+      "finish": {
+        "name": "Haunted Hassle",
+        "position": [
+          62.68849476955042,
+          13.936666666443148,
+          -2116
+        ],
+        "grounded": true,
+        "state": "finished",
+        "deaths": 0,
+        "snap": 5,
+        "currentSpawn": [
+          0.5712883843718615,
+          0.8533333333333333,
+          18
+        ],
+        "pads": [
+          {
+            "kind": "finish",
+            "state": "ready",
+            "solids": 3
+          },
+          {
+            "kind": "arrival",
+            "state": "ready",
+            "solids": 3
+          }
+        ],
+        "checkpoint": -1,
+        "build": "Codex/sol fork \u00b7 build 10-25 05:54 UTC"
+      }
+    }
+  ],
+  "errors": [],
+  "validation": "Packaged production build, http://127.0.0.1:5463/",
+  "releaseBytes": 938388243
+}

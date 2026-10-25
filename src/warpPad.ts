@@ -216,13 +216,13 @@ export function createWarpPad(options:{quiet?:boolean;arrival?:boolean}={}): War
   };
 
   // ---- PLINTH: lit, opaque, flat-shaded masonry ---------------------------
-  const stoneTex = keep(stoneTexture());
-  stoneTex.repeat.set(4, 1);
+  const stoneTex = options.quiet ? null : keep(stoneTexture());
+  stoneTex?.repeat.set(4, 1);
   const stoneMat = keep(
     new THREE.MeshLambertMaterial({ map: stoneTex, flatShading: true }),
   );
   const discMat = keep(
-    new THREE.MeshLambertMaterial({ map: keep(discTexture()), flatShading: true }),
+    new THREE.MeshLambertMaterial({ map: options.quiet ? null : keep(discTexture()), flatShading: true }),
   );
 
   // 14-sided prism, not a smoothed cylinder: the facets ARE the read. The
@@ -252,14 +252,14 @@ export function createWarpPad(options:{quiet?:boolean;arrival?:boolean}={}): War
   disc.name = 'warp pad';
   group.add(disc);
 
-  // Main courses use the image-generated Meshy beacon pair. The original
+  // Main courses use smooth procedural green beacons. The original
   // three solids retain their exact collision and travel trigger contracts.
   if(options.quiet){
     stoneMat.color.setHex(0x8195a8);
     discMat.color.setHex(0x45e969);
     const solids=[body,rim,disc];
-    const ready=attachBeaconPlatform(group,solids,!!options.arrival);
-    return {group,solids,ready,update:()=>{},dispose:()=>{for(const d of disposables)d.dispose();}};
+    const beacon=attachBeaconPlatform(group,solids,!!options.arrival);
+    return {group,solids,ready:beacon.ready,update:beacon.update,dispose:()=>{for(const d of disposables)d.dispose();}};
   }
 
   // ---- COLUMN: additive, unlit, depthWrite off ----------------------------

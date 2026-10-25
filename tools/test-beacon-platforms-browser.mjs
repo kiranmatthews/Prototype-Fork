@@ -18,19 +18,24 @@ try{
       const {createWarpPad}=await import('/src/warpPad.ts');
       const samples=[];
       for(const pad of pads){
-        if(pad.group.userData.beaconPlatformState!=='ready')throw Error('Meshy art did not load');
+        if(pad.group.userData.beaconPlatformState!=='ready')throw Error('Procedural art did not initialize');
         pad.group.updateMatrixWorld(true);
-        const art=pad.group.children.find(c=>c.name.startsWith('Meshy '));
+        const art=pad.group.children.find(c=>c.name.startsWith('Procedural '));
         let drawCount=0;art.traverse(o=>{if(o.isMesh)drawCount++});
         for(const radius of [0,.3,.65,1.05])for(let i=0;i<12;i++){
           const a=i/12*Math.PI*2,from=new THREE.Vector3(Math.cos(a)*radius,2,Math.sin(a)*radius).add(pad.group.position);
           const ray=new THREE.Raycaster(from,new THREE.Vector3(0,-1,0),0,3);
-          const physical=ray.intersectObjects(pad.solids,false)[0],visual=ray.intersectObject(art,true)[0];
+          const surfaces=[];art.traverse(o=>{if(o.userData.beaconSurface)surfaces.push(o)});
+          const physical=ray.intersectObjects(pad.solids,false)[0],visual=ray.intersectObjects(surfaces,false)[0];
           if(!physical||!visual)throw Error('Open or unsupported standing deck');
           if(Math.abs(physical.point.y-visual.point.y)>.045)throw Error('Feet do not meet the visible deck');
           samples.push(Math.abs(physical.point.y-visual.point.y));
         }
-        if(drawCount!==1)throw Error('Expected one Meshy draw');
+        if(drawCount>12)throw Error('Procedural beacon exceeded its bounded draw budget');
+        const shaders=[];art.traverse(o=>{if(o.material?.isShaderMaterial)shaders.push(o.material)});
+        if(shaders.length<3)throw Error('Missing procedural light layers');
+        const before=shaders[0].uniforms.time.value;pad.update(.05);
+        if(shaders[0].uniforms.time.value===before)throw Error('Beacon light is not animated');
       }
       const original=pads[0],duplicate=createWarpPad({quiet:true,arrival:true});scene.add(duplicate.group);
       await duplicate.ready;
@@ -43,7 +48,7 @@ try{
       duplicate.dispose();scene.remove(duplicate.group);
       if(destroyed)throw Error('A live pad lost its shared geometry');
       const cancelled=createWarpPad({quiet:true,arrival:true});cancelled.dispose();await cancelled.ready;
-      if(cancelled.group.children.some(c=>c.name.startsWith('Meshy ')))throw Error('A disposed pad accepted a late download');
+      if(cancelled.group.children.some(c=>c.name.startsWith('Procedural ')))throw Error('A disposed pad accepted a late download');
       render();
       const result={samples:samples.length,maxDeckGap:Math.max(...samples),draws:renderer.info.render.calls,triangles:renderer.info.render.triangles,
         shared:true,graphicsReset:true,lateLoadGuard:true};
@@ -105,7 +110,7 @@ try{
     });
     await page.waitForFunction(()=>window.__game.player.state==='finished'||window.__game.gameFlow.blocksGameplay,null,{timeout:15000});
     row.finish=await sample();assert.equal(row.finish.state,'finished');
-    await page.close();console.log(`PASS ${mode}: loaded Meshy pair, supported arrival, walk-off, jump, checkpoint, pit respawn and finish`);
+    await page.close();console.log(`PASS ${mode}: loaded procedural pair, supported arrival, walk-off, jump, checkpoint, pit respawn and finish`);
   }
   assert.deepEqual(report.errors,[]);
 }finally{

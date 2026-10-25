@@ -158,7 +158,8 @@
           "bytes": 56310,
           "sha256": "1d52fc71c96d0424f5d6d24d2393210e0204fdd457122fc1abdacbc0c90953de"
         }
-      ]
+      ],
+      "disposition": "Rejected by user. Replaced with a fully procedural model and animated glow."
     },
     "finish-green": {
       "resource": "image-to-3d",
@@ -199,7 +200,8 @@
           "bytes": 64564,
           "sha256": "a5d844397be36167eec0b6ebe7fbb34ca78c653327c6106dcab216eba229d2e2"
         }
-      ]
+      ],
+      "disposition": "Rejected by user. Replaced with a fully procedural model and animated glow."
     }
   }
 }

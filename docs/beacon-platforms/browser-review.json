@@ -2,8 +2,8 @@
   "gallery": {
     "samples": 96,
     "maxDeckGap": 0.0033333172152441026,
-    "draws": 3,
-    "triangles": 12303,
+    "draws": 25,
+    "triangles": 40622,
     "shared": true,
     "graphicsReset": true,
     "lateLoadGuard": true
@@ -40,14 +40,14 @@
           }
         ],
         "checkpoint": -1,
-        "build": "Codex/sol fork · build 10-25 05:27 UTC"
+        "build": "Codex/sol fork · build 10-25 05:52 UTC"
       },
       "walkOff": {
         "name": "Haunted Hassle",
         "position": [
-          1.2496019027049405,
+          1.1831486144528962,
           0,
-          15.63421077183931
+          15.865983350850989
         ],
         "grounded": true,
         "state": "ride",
@@ -71,14 +71,14 @@
           }
         ],
         "checkpoint": -1,
-        "build": "Codex/sol fork · build 10-25 05:27 UTC"
+        "build": "Codex/sol fork · build 10-25 05:52 UTC"
       },
       "landing": {
         "name": "Haunted Hassle",
         "position": [
-          1.5527758905829308,
+          1.4296688773233828,
           0,
-          14.57681513487358
+          15.006181848065726
         ],
         "grounded": true,
         "state": "ride",
@@ -102,7 +102,7 @@
           }
         ],
         "checkpoint": -1,
-        "build": "Codex/sol fork · build 10-25 05:27 UTC"
+        "build": "Codex/sol fork · build 10-25 05:52 UTC"
       },
       "checkpoint": {
         "name": "Haunted Hassle",
@@ -133,13 +133,13 @@
           }
         ],
         "checkpoint": 0,
-        "build": "Codex/sol fork · build 10-25 05:27 UTC"
+        "build": "Codex/sol fork · build 10-25 05:52 UTC"
       },
       "respawn": {
         "name": "Haunted Hassle",
         "position": [
           -66.12787406345001,
-          7.199951171875,
+          7.2999511718750005,
           -402.77397664781984
         ],
         "grounded": true,
@@ -164,7 +164,7 @@
           }
         ],
         "checkpoint": 0,
-        "build": "Codex/sol fork · build 10-25 05:27 UTC"
+        "build": "Codex/sol fork · build 10-25 05:52 UTC"
       },
       "finish": {
         "name": "Haunted Hassle",
@@ -176,7 +176,7 @@
         "grounded": true,
         "state": "finished",
         "deaths": 0,
-        "snap": 4,
+        "snap": 5,
         "currentSpawn": [
           0.5712883843718615,
           0.8533333333333333,
@@ -195,7 +195,7 @@
           }
         ],
         "checkpoint": -1,
-        "build": "Codex/sol fork · build 10-25 05:27 UTC"
+        "build": "Codex/sol fork · build 10-25 05:52 UTC"
       }
     },
     {
@@ -204,7 +204,7 @@
         "name": "Haunted Hassle",
         "position": [
           0.5712883843718615,
-          0.7366666664431492,
+          0.8533333333333333,
           18
         ],
         "grounded": true,
@@ -229,14 +229,14 @@
           }
         ],
         "checkpoint": -1,
-        "build": "Codex/sol fork · build 10-25 05:27 UTC"
+        "build": "Codex/sol fork · build 10-25 05:52 UTC"
       },
       "walkOff": {
         "name": "Haunted Hassle",
         "position": [
-          1.2854315558177938,
+          1.1831486144528962,
           0,
-          15.509245832925178
+          15.865983350850989
         ],
         "grounded": true,
         "state": "ride",
@@ -260,14 +260,14 @@
           }
         ],
         "checkpoint": -1,
-        "build": "Codex/sol fork · build 10-25 05:27 UTC"
+        "build": "Codex/sol fork · build 10-25 05:52 UTC"
       },
       "landing": {
         "name": "Haunted Hassle",
         "position": [
-          1.628722505728124,
+          1.445899403947154,
           0,
-          14.311932187431667
+          14.949573798814026
         ],
         "grounded": true,
         "state": "ride",
@@ -291,7 +291,7 @@
           }
         ],
         "checkpoint": -1,
-        "build": "Codex/sol fork · build 10-25 05:27 UTC"
+        "build": "Codex/sol fork · build 10-25 05:52 UTC"
       },
       "checkpoint": {
         "name": "Haunted Hassle",
@@ -322,13 +322,13 @@
           }
         ],
         "checkpoint": 0,
-        "build": "Codex/sol fork · build 10-25 05:27 UTC"
+        "build": "Codex/sol fork · build 10-25 05:52 UTC"
       },
       "respawn": {
         "name": "Haunted Hassle",
         "position": [
           -66.12787406345001,
-          7.199951171875,
+          7.2999511718750005,
           -402.77397664781984
         ],
         "grounded": true,
@@ -353,7 +353,7 @@
           }
         ],
         "checkpoint": 0,
-        "build": "Codex/sol fork · build 10-25 05:27 UTC"
+        "build": "Codex/sol fork · build 10-25 05:52 UTC"
       },
       "finish": {
         "name": "Haunted Hassle",
@@ -365,7 +365,7 @@
         "grounded": true,
         "state": "finished",
         "deaths": 0,
-        "snap": 4,
+        "snap": 5,
         "currentSpawn": [
           0.5712883843718615,
           0.8533333333333333,
@@ -384,7 +384,7 @@
           }
         ],
         "checkpoint": -1,
-        "build": "Codex/sol fork · build 10-25 05:27 UTC"
+        "build": "Codex/sol fork · build 10-25 05:52 UTC"
       }
     }
   ],

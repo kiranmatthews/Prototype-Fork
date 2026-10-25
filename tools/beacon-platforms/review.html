@@ -9,13 +9,14 @@ renderer.setSize(innerWidth,innerHeight);renderer.setPixelRatio(devicePixelRatio
 renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
 renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.15;
 document.body.append(renderer.domElement);
-const scene=new THREE.Scene();scene.background=new THREE.Color('#dbe2e3');
-scene.add(new THREE.HemisphereLight(0xedfbff,0x424753,2.4));
-const sun=new THREE.DirectionalLight(0xffefd9,3.4);sun.position.set(-3,7,5);sun.castShadow=true;
+const night=new URLSearchParams(location.search).has('night');
+const scene=new THREE.Scene();scene.background=new THREE.Color(night?'#101c24':'#dbe2e3');
+scene.add(new THREE.HemisphereLight(0xedfbff,0x424753,night?.5:1.8));
+const sun=new THREE.DirectionalLight(0xffefd9,night?.7:2.6);sun.position.set(-3,7,5);sun.castShadow=true;
 sun.shadow.mapSize.set(2048,2048);sun.shadow.camera.left=-8;sun.shadow.camera.right=8;
 sun.shadow.camera.top=8;sun.shadow.camera.bottom=-8;sun.shadow.normalBias=.025;scene.add(sun);
-const fill=new THREE.DirectionalLight(0xc7efff,1.6);fill.position.set(5,4,-3);scene.add(fill);
-const floor=new THREE.Mesh(new THREE.PlaneGeometry(200,200),new THREE.MeshStandardMaterial({color:0xc5d1d1,roughness:1}));
+const fill=new THREE.DirectionalLight(0xc7efff,night?.4:1.2);fill.position.set(5,4,-3);scene.add(fill);
+const floor=new THREE.Mesh(new THREE.PlaneGeometry(200,200),new THREE.MeshStandardMaterial({color:night?0x1b292e:0xc5d1d1,roughness:.8}));
 floor.rotation.x=-Math.PI/2;floor.position.y=-.015;floor.receiveShadow=true;scene.add(floor);
 const pair=!new URLSearchParams(location.search).has('kind');
 const kinds=pair?['arrival','finish']:[new URLSearchParams(location.search).get('kind')];
@@ -23,6 +24,7 @@ const pads=kinds.map((kind,i)=>{const p=createWarpPad({quiet:true,arrival:kind==
 const camera=new THREE.PerspectiveCamera(36,innerWidth/innerHeight,.1,100);
 camera.position.set(pair?4.2:3.6,pair?5.4:4.2,pair?7.2:5.1);camera.lookAt(0,.5,0);
 await Promise.all(pads.map(p=>p.ready));
-function render(){renderer.render(scene,camera)}render();
+function render(){renderer.render(scene,camera)}
+let previous=performance.now();function tick(now){const dt=(now-previous)/1000;previous=now;for(const pad of pads)pad.update(dt);render();requestAnimationFrame(tick)}requestAnimationFrame(tick);render();
 window.__beaconReview={scene,renderer,camera,pads,THREE,WARP_PAD_TOP,releaseLostGraphicsResources,render};
 </script></body></html>
