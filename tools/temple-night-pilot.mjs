@@ -44,7 +44,8 @@ export function* runTempleJourney(r){
    const checkpoint=r.l.checkpoints.some(cp=>!cp.active&&cp.box.distanceToPoint(p.pos)<3.5);
    const plainCrate=r.l.crates.some(c=>c.alive&&!c.pending&&!c.metal&&!c.metalBounce&&!c.bang&&!c.nitroBang&&!c.bouncy&&!c.tnt&&!c.nitro&&c.box.distanceToPoint(p.pos)<2.8);
    const explosive=r.l.crates.some(c=>c.alive&&!c.pending&&(c.tnt||c.nitro)&&c.box.distanceToPoint(p.pos)<3.5);
-   if(checkpoint||plainCrate&&!explosive)sample.spinHeld=p.spinning||!r.lastInput.spinHeld;
+   const enemy=r.l.enemies.some(e=>e.alive&&e.spinKill&&e.box.distanceToPoint(p.pos)<3.5);
+   if(checkpoint||(plainCrate||enemy)&&!explosive)sample.spinHeld=p.spinning||!r.lastInput.spinHeld;
   }
   yield sample;
  }

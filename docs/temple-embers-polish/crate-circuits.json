@@ -1,0 +1,289 @@
+{
+  "terraces-tnt": {
+    "stage": "collect the safe recovery reward after the blast",
+    "actions": [
+      {
+        "name": "stomp the wooden cap without spinning",
+        "firstFrame": 47,
+        "lastFrame": 80
+      },
+      {
+        "name": "rebound onto TNT and prime its normal fuse",
+        "firstFrame": 80,
+        "lastFrame": 121
+      },
+      {
+        "name": "retreat into the clear recovery refuge",
+        "firstFrame": 121,
+        "lastFrame": 192
+      },
+      {
+        "name": "wait beyond the TNT blast radius",
+        "firstFrame": 192,
+        "lastFrame": 300
+      },
+      {
+        "name": "approach collect the safe recovery reward after the blast",
+        "firstFrame": 345,
+        "lastFrame": 454
+      },
+      {
+        "name": "collect the safe recovery reward after the blast",
+        "firstFrame": 474,
+        "lastFrame": 474
+      }
+    ],
+    "evidence": [
+      {
+        "action": "collect the safe recovery reward after the blast",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      }
+    ],
+    "result": {
+      "name": "terraces-tnt",
+      "test": "TNT cap stomp, fuse and supported refuge",
+      "id": "jungle-terraces",
+      "blastRadius": 2.75,
+      "blastDistance": 5.9837467228179495,
+      "rewardDistance": 5.5,
+      "fuseFrames": 179,
+      "refugeFrames": 71,
+      "rewardSurvivedBlast": true,
+      "rewardCollectedAfterBlast": true,
+      "deaths": 0,
+      "frames": 496,
+      "seconds": 8.266666666666666
+    }
+  },
+  "skyline-tnt": {
+    "stage": "collect the safe recovery reward after the blast",
+    "actions": [
+      {
+        "name": "stomp the wooden cap without spinning",
+        "firstFrame": 47,
+        "lastFrame": 80
+      },
+      {
+        "name": "rebound onto TNT and prime its normal fuse",
+        "firstFrame": 80,
+        "lastFrame": 121
+      },
+      {
+        "name": "retreat into the clear recovery refuge",
+        "firstFrame": 121,
+        "lastFrame": 185
+      },
+      {
+        "name": "wait beyond the TNT blast radius",
+        "firstFrame": 185,
+        "lastFrame": 300
+      },
+      {
+        "name": "approach collect the safe recovery reward after the blast",
+        "firstFrame": 345,
+        "lastFrame": 423
+      },
+      {
+        "name": "collect the safe recovery reward after the blast",
+        "firstFrame": 443,
+        "lastFrame": 443
+      }
+    ],
+    "evidence": [
+      {
+        "action": "collect the safe recovery reward after the blast",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      }
+    ],
+    "result": {
+      "name": "skyline-tnt",
+      "test": "TNT cap stomp, fuse and supported refuge",
+      "id": "jungle-terraces",
+      "blastRadius": 2.75,
+      "blastDistance": 5.983746722817944,
+      "rewardDistance": 5.40427843286384,
+      "fuseFrames": 179,
+      "refugeFrames": 64,
+      "rewardSurvivedBlast": true,
+      "rewardCollectedAfterBlast": true,
+      "deaths": 0,
+      "frames": 465,
+      "seconds": 7.75
+    }
+  },
+  "skyline-return": {
+    "stage": "clear the spent arrow last",
+    "actions": [
+      {
+        "name": "move onto the clear central lane",
+        "firstFrame": 20,
+        "lastFrame": 97
+      },
+      {
+        "name": "pass the preserved arrow to the distant reveal switch",
+        "firstFrame": 115,
+        "lastFrame": 290
+      },
+      {
+        "name": "approach the reveal switch from its supported side",
+        "firstFrame": 308,
+        "lastFrame": 385
+      },
+      {
+        "name": "reveal the earlier balcony rewards",
+        "firstFrame": 405,
+        "lastFrame": 405
+      },
+      {
+        "name": "return to the clear central lane",
+        "firstFrame": 427,
+        "lastFrame": 503
+      },
+      {
+        "name": "return to the conserved arrow",
+        "firstFrame": 521,
+        "lastFrame": 690
+      },
+      {
+        "name": "use the preserved arrow to reach the upper balcony takeoff",
+        "firstFrame": 708,
+        "lastFrame": 785
+      },
+      {
+        "name": "use the preserved arrow to reach the upper balcony arrow contact",
+        "firstFrame": 830,
+        "lastFrame": 867
+      },
+      {
+        "name": "use the preserved arrow to reach the upper balcony apex outside the shelf",
+        "firstFrame": 870,
+        "lastFrame": 903
+      },
+      {
+        "name": "use the preserved arrow to reach the upper balcony rise above the shelf",
+        "firstFrame": 905,
+        "lastFrame": 911
+      },
+      {
+        "name": "use the preserved arrow to reach the upper balcony",
+        "firstFrame": 911,
+        "lastFrame": 955
+      },
+      {
+        "name": "stage at the balcony return edge",
+        "firstFrame": 955,
+        "lastFrame": 1007
+      },
+      {
+        "name": "return to the supported court",
+        "firstFrame": 1052,
+        "lastFrame": 1103
+      },
+      {
+        "name": "approach clear the spent arrow last",
+        "firstFrame": 1103,
+        "lastFrame": 1150
+      },
+      {
+        "name": "clear the spent arrow last",
+        "firstFrame": 1170,
+        "lastFrame": 1170
+      }
+    ],
+    "evidence": [
+      {
+        "action": "reveal the earlier balcony rewards",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": true
+        }
+      },
+      {
+        "action": "use the preserved arrow to reach the upper balcony",
+        "contact": {
+          "frame": 867,
+          "position": [
+            604.9945792109266,
+            35.51500000014901,
+            -2.2649728023825872
+          ],
+          "state": "air",
+          "grounded": false,
+          "bailing": false,
+          "speed": 0.06363961030678927,
+          "verticalSpeed": 20,
+          "deaths": 0,
+          "ground": "High temple arrival and open skating runway"
+        },
+        "landing": [
+          609.5848720631499,
+          42.33500003814697,
+          -2.2897061357159245
+        ],
+        "launcherAlive": true
+      },
+      {
+        "action": "return to the supported court",
+        "launch": [
+          608.0189712385863,
+          42.33500003814697,
+          -2.29951063513127
+        ],
+        "landing": [
+          603.2339712385864,
+          34.53500000014901,
+          -2.29951063513127
+        ],
+        "ground": "High temple arrival and open skating runway"
+      },
+      {
+        "action": "clear the spent arrow last",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      }
+    ],
+    "result": {
+      "name": "skyline-return",
+      "test": "optional balcony upper-first solution",
+      "id": "jungle-terraces",
+      "switchX": 619,
+      "rewards": 2,
+      "launcherAlive": false,
+      "deaths": 0,
+      "frames": 1192,
+      "seconds": 19.866666666666667
+    }
+  }
+}

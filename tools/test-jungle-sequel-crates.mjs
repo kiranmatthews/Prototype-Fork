@@ -120,6 +120,8 @@ function* crownWrong(r) {
 function* tntRefuge(r, x, y) {
   const c = puzzleControls(r), { p, TUNING, THREE } = r;
   const tnt = c.crateSpecAt(x, y), cap = c.crateSpecAt(x, y + .96), reward = c.crateSpecAt(x + 5.5, y);
+  const relay = c.crateSpecAt(x + 1.55, y);
+  assert.ok(relay?.bang && !relay.bangUsed && reward.pending, 'fuse reward starts as a ghost on its own circuit');
   yield* c.stepFor(20);
   const rewardDistance = reward.mesh.position.distanceTo(tnt.mesh.position);
   assert.ok(rewardDistance > TUNING.tntRadius + .6,
@@ -136,6 +138,7 @@ function* tntRefuge(r, x, y) {
   yield* c.until(() => !tnt.alive, {}, { label: 'wait beyond the TNT blast radius', limit: 240 });
   const fuseFrames = r.frame - fuseStart;
   yield* c.stepFor(45);
+  assert.ok(relay.bangUsed && !reward.pending, 'the expanding native blast must flip the relay and restore its reward');
   assert.ok(reward.alive, 'the recovery reward was destroyed by the TNT blast');
   assert.equal(p.totalDeaths, 0);
   assert.ok(p.grounded && !p.isBailing);
@@ -157,7 +160,7 @@ const cases = [
   ['skyline-tnt', 1, [236.7, 17.37, -2.3], r => tntRefuge(r, 813, 51.75)],
 ];
 for (const [name, index, start, pilot] of cases) {
-  if (requestedCase && requestedCase !== name) continue;
+  if (requestedCase && !requestedCase.split(',').includes(name)) continue;
   const id = 'jungle-terraces';
   const report = await withBlockworksRuntime(async r => {
     r.id = id; r.report = { stage: 'start', actions: [], evidence: [] };

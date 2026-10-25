@@ -1,0 +1,249 @@
+{
+  "level": "Temple of Embers",
+  "id": "jungle-terraces",
+  "source": "src/levels/temple-embers-polish.ts",
+  "releaseSnapshot": {
+    "snapshotSha256": "9caa803db9b99789dc376c7346247b6631f2418169c6be3ae85748892a46bcc5"
+  },
+  "components": 5732,
+  "crates": 115,
+  "enemies": 8,
+  "timing": {
+    "promptUTC": "2026-10-25T04:52:02+00:00",
+    "firstNativeFinishUTC": "2026-10-25T05:01:51.688997+00:00",
+    "firstNativePlayableSeconds": 590,
+    "finalBrowserFinishUTC": "2026-10-25T05:30:39.555622+00:00",
+    "promptToFinalBrowserPlayableSeconds": 2318
+  },
+  "geometry": {
+    "shoulderProbes": 2192,
+    "unsupportedBefore": 1783,
+    "unsupportedAfter": 0,
+    "lateralInputExits": 18,
+    "supportedExits": 18,
+    "solidRoadSideSweeps": 16,
+    "blockedSideSweeps": 16,
+    "finalPhysicalGeometryUnchangedSinceAudit": {
+      "physicalComponentsCompared": 5366,
+      "exactEquality": true,
+      "excludedChanges": "Non-solid decorative paving and enemy patrol placements, verified separately."
+    },
+    "preservedIntentionalGaps": true,
+    "checkpointAndPitRespawn": "passed tools/test-jungle-sequels.mjs and tools/test-temple-night.mjs"
+  },
+  "playability": {
+    "completeBrowserJourney": {
+      "frame": 8032,
+      "done": true,
+      "failure": null,
+      "stamp": "Codex/sol fork \u00b7 build 10-25 05:26 UTC",
+      "result": {
+        "state": "finished",
+        "deaths": 0,
+        "position": [
+          -85.4125341750509,
+          104.23666666644314,
+          25.99414674918497
+        ]
+      },
+      "tuningUnchanged": true,
+      "checkpoints": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "errors": [],
+      "simulationSeconds": 133.86666666666667
+    },
+    "lanternStair": {
+      "frames": 1412,
+      "deaths": 0,
+      "restoredMetalCrates": 48,
+      "collectedRewards": 3,
+      "returnedToMainPath": true,
+      "consoleErrors": []
+    },
+    "fuseRelays": {
+      "terraces-tnt": {
+        "name": "terraces-tnt",
+        "test": "TNT cap stomp, fuse and supported refuge",
+        "id": "jungle-terraces",
+        "blastRadius": 2.75,
+        "blastDistance": 5.9837467228179495,
+        "rewardDistance": 5.5,
+        "fuseFrames": 179,
+        "refugeFrames": 71,
+        "rewardSurvivedBlast": true,
+        "rewardCollectedAfterBlast": true,
+        "deaths": 0,
+        "frames": 496,
+        "seconds": 8.266666666666666
+      },
+      "skyline-tnt": {
+        "name": "skyline-tnt",
+        "test": "TNT cap stomp, fuse and supported refuge",
+        "id": "jungle-terraces",
+        "blastRadius": 2.75,
+        "blastDistance": 5.983746722817944,
+        "rewardDistance": 5.40427843286384,
+        "fuseFrames": 179,
+        "refugeFrames": 64,
+        "rewardSurvivedBlast": true,
+        "rewardCollectedAfterBlast": true,
+        "deaths": 0,
+        "frames": 465,
+        "seconds": 7.75
+      }
+    },
+    "existingSideStairs": "Both six-step and eight-step branches passed ordinary-input climbs and returned to mainline.",
+    "enemyEncounters": [
+      {
+        "s": 56,
+        "foe": "grunt",
+        "patrolProbes": 21,
+        "frames": 118,
+        "deaths": 0,
+        "defeated": true
+      },
+      {
+        "s": 198,
+        "foe": "turtle",
+        "patrolProbes": 21,
+        "frames": 120,
+        "deaths": 0,
+        "defeated": true
+      },
+      {
+        "s": 319,
+        "foe": "grunt",
+        "patrolProbes": 21,
+        "frames": 118,
+        "deaths": 0,
+        "defeated": true
+      },
+      {
+        "s": 666,
+        "foe": "turtle",
+        "patrolProbes": 21,
+        "frames": 121,
+        "deaths": 0,
+        "defeated": true
+      },
+      {
+        "s": 848,
+        "foe": "hopper",
+        "patrolProbes": 21,
+        "frames": 151,
+        "deaths": 0,
+        "defeated": true
+      },
+      {
+        "s": 1058,
+        "foe": "grunt",
+        "patrolProbes": 21,
+        "frames": 97,
+        "deaths": 0,
+        "defeated": true
+      },
+      {
+        "s": 1290,
+        "foe": "turtle",
+        "patrolProbes": 21,
+        "frames": 120,
+        "deaths": 0,
+        "defeated": true
+      },
+      {
+        "s": 1362,
+        "foe": "grunt",
+        "patrolProbes": 21,
+        "frames": 100,
+        "deaths": 0,
+        "defeated": true
+      }
+    ]
+  },
+  "visualReview": {
+    "initialFullRenderViews": 14,
+    "finalPavingAndCourtViews": {
+      "report": [
+        {
+          "s": 50,
+          "position": [
+            1.25,
+            3.1654348373413086,
+            20
+          ],
+          "state": "ride",
+          "grounded": true,
+          "level": "Temple of Embers",
+          "stamp": "Codex/sol fork \u00b7 build 10-25 05:26 UTC"
+        },
+        {
+          "s": 508,
+          "position": [
+            60,
+            34.53499997615814,
+            48.75
+          ],
+          "state": "ride",
+          "grounded": true,
+          "level": "Temple of Embers",
+          "stamp": "Codex/sol fork \u00b7 build 10-25 05:26 UTC"
+        },
+        {
+          "s": 1294,
+          "position": [
+            -148.6346,
+            96.30642726366611,
+            0.0367999999999995
+          ],
+          "state": "ride",
+          "grounded": true,
+          "level": "Temple of Embers",
+          "stamp": "Codex/sol fork \u00b7 build 10-25 05:26 UTC"
+        }
+      ],
+      "errors": []
+    },
+    "screenshots": [
+      "patrol-court.png",
+      "lantern-court.png",
+      "lantern-stair-reward.png",
+      "final-ascent.png"
+    ]
+  },
+  "checks": {
+    "focused": [
+      "tools/temple-embers-audit.mjs",
+      "tools/test-temple-embers-encounters.mjs",
+      "tools/test-temple-embers-puzzles.mjs",
+      "tools/test-jungle-sequel-climbs.mjs",
+      "tools/test-jungle-sequel-crates.mjs --case=terraces-tnt,skyline-tnt,skyline-return",
+      "tools/test-jungle-sequels.mjs",
+      "tools/test-temple-night.mjs"
+    ],
+    "browser": [
+      "tools/jungle-sequels-browser.mjs --lite",
+      "tools/temple-embers-puzzle-browser.mjs",
+      "tools/temple-embers-browser.mjs"
+    ],
+    "release": [],
+    "fullSuiteRun": false
+  },
+  "scope": {
+    "movementTuningChanged": false,
+    "newEngineSystems": false,
+    "ordinaryEdgeGrindingPreserved": true,
+    "otherWorkspaceEditsExcluded": true
+  }
+}

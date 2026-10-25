@@ -1,5 +1,6 @@
 import type { CustomComponent, CustomLevelData } from '../level';
 import type { TempleRoute } from './jungle-sequels';
+import { polishTempleEmbers } from './temple-embers-polish';
 type P = [number, number, number];
 export const TEMPLE_NIGHT_ATMOSPHERE: CustomLevelData['atmosphere'] = {
   fogNear: 28, fogFar: 185, fogColor: '#101f30', drawDistance: 240,
@@ -150,6 +151,8 @@ export function mergeTempleRoutes(a: TempleRoute, b: TempleRoute): TempleRoute {
     medalTimes:{gold:240,silver:330,bronze:460},components,groups};
   const sourceComponents=[...a.sourceComponents.filter(c=>prune(c,true)),...b.sourceComponents.filter(c=>prune(c,false)).map(c=>({...c,p:[c.p[0]+offset,c.p[1]+lift,c.p[2]] as P,grp:c.grp===undefined?undefined:c.grp+100}))];
 
-  return {id:'jungle-terraces',data,sourceComponents,toWorld,toLocal,frameAt,groundAt,
+  const route:TempleRoute={id:'jungle-terraces',data,sourceComponents,toWorld,toLocal,frameAt,groundAt,
     profile:[...a.profile,[a.end+link,lift],...b.profile.map(([s,y])=>[s+offset,y+lift] as const)],pipes,gaps,rooms,climbs,tikiTrials,peak:lift+b.peak,end};
+  polishTempleEmbers(route);
+  return route;
 }

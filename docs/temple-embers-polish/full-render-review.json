@@ -1,0 +1,41 @@
+{
+  "report": [
+    {
+      "s": 50,
+      "position": [
+        1.25,
+        3.1654348373413086,
+        20
+      ],
+      "state": "ride",
+      "grounded": true,
+      "level": "Temple of Embers",
+      "stamp": "Codex/sol fork \u00b7 build 10-25 05:26 UTC"
+    },
+    {
+      "s": 508,
+      "position": [
+        60,
+        34.53499997615814,
+        48.75
+      ],
+      "state": "ride",
+      "grounded": true,
+      "level": "Temple of Embers",
+      "stamp": "Codex/sol fork \u00b7 build 10-25 05:26 UTC"
+    },
+    {
+      "s": 1294,
+      "position": [
+        -148.6346,
+        96.30642726366611,
+        0.0367999999999995
+      ],
+      "state": "ride",
+      "grounded": true,
+      "level": "Temple of Embers",
+      "stamp": "Codex/sol fork \u00b7 build 10-25 05:26 UTC"
+    }
+  ],
+  "errors": []
+}

@@ -1,0 +1,32 @@
+{
+  "frame": 8032,
+  "done": true,
+  "failure": null,
+  "stamp": "Codex/sol fork \u00b7 build 10-25 05:26 UTC",
+  "result": {
+    "state": "finished",
+    "deaths": 0,
+    "position": [
+      -85.4125341750509,
+      104.23666666644314,
+      25.99414674918497
+    ]
+  },
+  "tuningUnchanged": true,
+  "checkpoints": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+  ],
+  "errors": [],
+  "simulationSeconds": 133.86666666666667
+}

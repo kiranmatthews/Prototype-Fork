@@ -1,0 +1,556 @@
+{
+  "report": {
+    "stage": "rejoin the main causeway",
+    "actions": [
+      {
+        "name": "approach restore the complete metal staircase",
+        "firstFrame": 25,
+        "lastFrame": 79
+      },
+      {
+        "name": "restore the complete metal staircase",
+        "firstFrame": 99,
+        "lastFrame": 99
+      },
+      {
+        "name": "step around the used metal switch",
+        "firstFrame": 121,
+        "lastFrame": 194
+      },
+      {
+        "name": "pass the switch on the clear courtyard floor",
+        "firstFrame": 212,
+        "lastFrame": 304
+      },
+      {
+        "name": "approach the first restored step",
+        "firstFrame": 322,
+        "lastFrame": 395
+      },
+      {
+        "name": "jump onto restored tower at 513",
+        "firstFrame": 440,
+        "lastFrame": 474
+      },
+      {
+        "name": "jump onto restored tower at 516",
+        "firstFrame": 501,
+        "lastFrame": 535
+      },
+      {
+        "name": "jump onto restored tower at 519",
+        "firstFrame": 562,
+        "lastFrame": 596
+      },
+      {
+        "name": "reach the upper lantern offering shelf",
+        "firstFrame": 623,
+        "lastFrame": 656
+      },
+      {
+        "name": "claim the upper lantern offering",
+        "firstFrame": 658,
+        "lastFrame": 658
+      },
+      {
+        "name": "approach claim the upper lantern offering",
+        "firstFrame": 680,
+        "lastFrame": 753
+      },
+      {
+        "name": "claim the upper lantern offering",
+        "firstFrame": 773,
+        "lastFrame": 773
+      },
+      {
+        "name": "approach claim the upper lantern offering",
+        "firstFrame": 795,
+        "lastFrame": 866
+      },
+      {
+        "name": "claim the upper lantern offering",
+        "firstFrame": 886,
+        "lastFrame": 886
+      },
+      {
+        "name": "return to the shelf lip",
+        "firstFrame": 908,
+        "lastFrame": 981
+      },
+      {
+        "name": "return via supported tower at 519",
+        "firstFrame": 1026,
+        "lastFrame": 1070
+      },
+      {
+        "name": "return via supported tower at 516",
+        "firstFrame": 1097,
+        "lastFrame": 1141
+      },
+      {
+        "name": "return via supported tower at 513",
+        "firstFrame": 1168,
+        "lastFrame": 1212
+      },
+      {
+        "name": "return via supported tower at 510",
+        "firstFrame": 1239,
+        "lastFrame": 1282
+      },
+      {
+        "name": "rejoin the main causeway",
+        "firstFrame": 1282,
+        "lastFrame": 1394
+      }
+    ],
+    "evidence": [
+      {
+        "action": "restore the complete metal staircase",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": true
+        }
+      },
+      {
+        "action": "jump onto restored tower at 513",
+        "launch": [
+          511.0957164350901,
+          34.53499997615814,
+          7.916505787132245
+        ],
+        "landing": [
+          512.9641650955101,
+          36.47499997615813,
+          7.96741747537768
+        ],
+        "ground": "crate"
+      },
+      {
+        "action": "jump onto restored tower at 516",
+        "launch": [
+          512.9641650955101,
+          36.47499997615813,
+          7.96741747537768
+        ],
+        "landing": [
+          515.9157042527537,
+          38.39499997615812,
+          7.969491675160363
+        ],
+        "ground": "crate"
+      },
+      {
+        "action": "jump onto restored tower at 519",
+        "launch": [
+          515.9157042527537,
+          38.39499997615812,
+          7.969491675160363
+        ],
+        "landing": [
+          518.90998075578,
+          40.314999976158106,
+          7.973038155096944
+        ],
+        "ground": "crate"
+      },
+      {
+        "action": "reach the upper lantern offering shelf",
+        "launch": [
+          518.90998075578,
+          40.314999976158106,
+          7.973038155096944
+        ],
+        "landing": [
+          521.99,
+          42.29999997615814,
+          7.977681556323752
+        ],
+        "ground": "platform"
+      },
+      {
+        "action": "claim the upper lantern offering",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "claim the upper lantern offering",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "claim the upper lantern offering",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "return via supported tower at 519",
+        "launch": [
+          522.2625113308394,
+          42.29999997615814,
+          8.034885443756409
+        ],
+        "landing": [
+          519.0200731857085,
+          40.314999976158106,
+          8.034885443756409
+        ],
+        "ground": "crate"
+      },
+      {
+        "action": "return via supported tower at 516",
+        "launch": [
+          519.0200731857085,
+          40.314999976158106,
+          8.034885443756409
+        ],
+        "landing": [
+          516.0133901462394,
+          38.39499997615812,
+          8.033920302949973
+        ],
+        "ground": "crate"
+      },
+      {
+        "action": "return via supported tower at 513",
+        "launch": [
+          516.0133901462394,
+          38.39499997615812,
+          8.033920302949973
+        ],
+        "landing": [
+          513.0135195096832,
+          36.47499997615813,
+          8.033380851678366
+        ],
+        "ground": "crate"
+      },
+      {
+        "action": "return via supported tower at 510",
+        "launch": [
+          513.0135195096832,
+          36.47499997615813,
+          8.033380851678366
+        ],
+        "landing": [
+          510.0168308536423,
+          34.53499997615814,
+          8.03284140040676
+        ],
+        "ground": "platform"
+      }
+    ],
+    "frame": 1412,
+    "done": true,
+    "failure": null,
+    "result": {
+      "deaths": 0,
+      "frames": 1412,
+      "steps": 48,
+      "rewards": 3,
+      "position": [
+        510.00102635422695,
+        34.53499997615814,
+        1.3307739091765285
+      ],
+      "actions": [
+        {
+          "name": "approach restore the complete metal staircase",
+          "firstFrame": 25,
+          "lastFrame": 79
+        },
+        {
+          "name": "restore the complete metal staircase",
+          "firstFrame": 99,
+          "lastFrame": 99
+        },
+        {
+          "name": "step around the used metal switch",
+          "firstFrame": 121,
+          "lastFrame": 194
+        },
+        {
+          "name": "pass the switch on the clear courtyard floor",
+          "firstFrame": 212,
+          "lastFrame": 304
+        },
+        {
+          "name": "approach the first restored step",
+          "firstFrame": 322,
+          "lastFrame": 395
+        },
+        {
+          "name": "jump onto restored tower at 513",
+          "firstFrame": 440,
+          "lastFrame": 474
+        },
+        {
+          "name": "jump onto restored tower at 516",
+          "firstFrame": 501,
+          "lastFrame": 535
+        },
+        {
+          "name": "jump onto restored tower at 519",
+          "firstFrame": 562,
+          "lastFrame": 596
+        },
+        {
+          "name": "reach the upper lantern offering shelf",
+          "firstFrame": 623,
+          "lastFrame": 656
+        },
+        {
+          "name": "claim the upper lantern offering",
+          "firstFrame": 658,
+          "lastFrame": 658
+        },
+        {
+          "name": "approach claim the upper lantern offering",
+          "firstFrame": 680,
+          "lastFrame": 753
+        },
+        {
+          "name": "claim the upper lantern offering",
+          "firstFrame": 773,
+          "lastFrame": 773
+        },
+        {
+          "name": "approach claim the upper lantern offering",
+          "firstFrame": 795,
+          "lastFrame": 866
+        },
+        {
+          "name": "claim the upper lantern offering",
+          "firstFrame": 886,
+          "lastFrame": 886
+        },
+        {
+          "name": "return to the shelf lip",
+          "firstFrame": 908,
+          "lastFrame": 981
+        },
+        {
+          "name": "return via supported tower at 519",
+          "firstFrame": 1026,
+          "lastFrame": 1070
+        },
+        {
+          "name": "return via supported tower at 516",
+          "firstFrame": 1097,
+          "lastFrame": 1141
+        },
+        {
+          "name": "return via supported tower at 513",
+          "firstFrame": 1168,
+          "lastFrame": 1212
+        },
+        {
+          "name": "return via supported tower at 510",
+          "firstFrame": 1239,
+          "lastFrame": 1282
+        },
+        {
+          "name": "rejoin the main causeway",
+          "firstFrame": 1282,
+          "lastFrame": 1394
+        }
+      ],
+      "evidence": [
+        {
+          "action": "restore the complete metal staircase",
+          "before": {
+            "alive": true,
+            "pending": false,
+            "bangUsed": false
+          },
+          "after": {
+            "alive": true,
+            "pending": false,
+            "bangUsed": true
+          }
+        },
+        {
+          "action": "jump onto restored tower at 513",
+          "launch": [
+            511.0957164350901,
+            34.53499997615814,
+            7.916505787132245
+          ],
+          "landing": [
+            512.9641650955101,
+            36.47499997615813,
+            7.96741747537768
+          ],
+          "ground": "crate"
+        },
+        {
+          "action": "jump onto restored tower at 516",
+          "launch": [
+            512.9641650955101,
+            36.47499997615813,
+            7.96741747537768
+          ],
+          "landing": [
+            515.9157042527537,
+            38.39499997615812,
+            7.969491675160363
+          ],
+          "ground": "crate"
+        },
+        {
+          "action": "jump onto restored tower at 519",
+          "launch": [
+            515.9157042527537,
+            38.39499997615812,
+            7.969491675160363
+          ],
+          "landing": [
+            518.90998075578,
+            40.314999976158106,
+            7.973038155096944
+          ],
+          "ground": "crate"
+        },
+        {
+          "action": "reach the upper lantern offering shelf",
+          "launch": [
+            518.90998075578,
+            40.314999976158106,
+            7.973038155096944
+          ],
+          "landing": [
+            521.99,
+            42.29999997615814,
+            7.977681556323752
+          ],
+          "ground": "platform"
+        },
+        {
+          "action": "claim the upper lantern offering",
+          "before": {
+            "alive": true,
+            "pending": false,
+            "bangUsed": false
+          },
+          "after": {
+            "alive": false,
+            "pending": false,
+            "bangUsed": false
+          }
+        },
+        {
+          "action": "claim the upper lantern offering",
+          "before": {
+            "alive": true,
+            "pending": false,
+            "bangUsed": false
+          },
+          "after": {
+            "alive": false,
+            "pending": false,
+            "bangUsed": false
+          }
+        },
+        {
+          "action": "claim the upper lantern offering",
+          "before": {
+            "alive": true,
+            "pending": false,
+            "bangUsed": false
+          },
+          "after": {
+            "alive": false,
+            "pending": false,
+            "bangUsed": false
+          }
+        },
+        {
+          "action": "return via supported tower at 519",
+          "launch": [
+            522.2625113308394,
+            42.29999997615814,
+            8.034885443756409
+          ],
+          "landing": [
+            519.0200731857085,
+            40.314999976158106,
+            8.034885443756409
+          ],
+          "ground": "crate"
+        },
+        {
+          "action": "return via supported tower at 516",
+          "launch": [
+            519.0200731857085,
+            40.314999976158106,
+            8.034885443756409
+          ],
+          "landing": [
+            516.0133901462394,
+            38.39499997615812,
+            8.033920302949973
+          ],
+          "ground": "crate"
+        },
+        {
+          "action": "return via supported tower at 513",
+          "launch": [
+            516.0133901462394,
+            38.39499997615812,
+            8.033920302949973
+          ],
+          "landing": [
+            513.0135195096832,
+            36.47499997615813,
+            8.033380851678366
+          ],
+          "ground": "crate"
+        },
+        {
+          "action": "return via supported tower at 510",
+          "launch": [
+            513.0135195096832,
+            36.47499997615813,
+            8.033380851678366
+          ],
+          "landing": [
+            510.0168308536423,
+            34.53499997615814,
+            8.03284140040676
+          ],
+          "ground": "platform"
+        }
+      ]
+    }
+  },
+  "errors": []
+}
