@@ -16055,6 +16055,7 @@ export class Level {
       if(!this.rainWeather){this.rainWeather=new RainWeather(ray=>this.raycastGround(ray));this.root.add(this.rainWeather.group);}
       this.rainWeather.setView(camera,this.atmosphere.rain,!clearInspectionView);
     }else if(this.rainWeather)this.rainWeather.group.visible=false;
+    this.jungleAssets?.setWeatherWind(clearInspectionView?undefined:this.atmosphere?.rain,this.rainWeather?.uniforms.uTime.value??0);
     if(this.atmosphere?.heightFog){
       const atmosphere=resolveLevelAtmosphere(this),color=Array.isArray(atmosphere.fogColor)?new THREE.Color().setRGB(...atmosphere.fogColor):new THREE.Color(atmosphere.fogColor);
       (this.heightFog??=new HeightFog()).update(this.root,camera.position,this.atmosphere.heightFog,color,atmosphere.fogEnabled&&!clearInspectionView);

@@ -449,7 +449,7 @@ try{
  waterpark.dispose();
  const {Level,setEditorBuild,normalizeCustomLevelData,parseCustomLevelJson}=await server.ssrLoadModule('/src/level.ts');
  const horizonLevel=new Level(new THREE.Scene(),{id:'horizon-fog-probe',name:'Horizon fog probe',data:{v:1,name:'Horizon fog probe',spawn:[0,.1,0],killY:-20,jungleAtmosphere:true,keepPlayFog:true,atmosphere:{fogFar:280},components:[{t:'gate',p:[0,0,0]}]}});
- const requested=[];horizonLevel.jungleAssets={setView:(_position,distance)=>requested.push(distance),dispose(){}};
+ const requested=[];horizonLevel.jungleAssets={setView:(_position,distance)=>requested.push(distance),setWeatherWind(){},dispose(){}};
  const viewCamera=new THREE.PerspectiveCamera();viewCamera.far=360;
  horizonLevel.updateSceneryView(viewCamera);assert.equal(requested.at(-1),280,'prefetch follows authored fog instead of inherited jungle fog');
  horizonLevel.atmosphere.fogEnabled=false;horizonLevel.updateSceneryView(viewCamera);assert.equal(requested.at(-1),360,'disabled fog retains all camera-visible scenery');

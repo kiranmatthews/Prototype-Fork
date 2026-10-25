@@ -1,0 +1,1407 @@
+{
+  "base": "http://127.0.0.1:5269",
+  "gpu": {
+    "samples": [
+      {
+        "yaw": 0,
+        "scale": [
+          18,
+          11,
+          9
+        ],
+        "time": 0,
+        "along": 0.5037784768751217,
+        "across": 0.08087592992602774,
+        "local": 0.0380042843136994,
+        "rootError": 7.577222101219254e-7
+      },
+      {
+        "yaw": 0,
+        "scale": [
+          18,
+          11,
+          9
+        ],
+        "time": 1.7,
+        "along": 0.5098769331283385,
+        "across": 0.07704444964406942,
+        "local": 0.03867039711061165,
+        "rootError": 7.577222101219254e-7
+      },
+      {
+        "yaw": 0,
+        "scale": [
+          18,
+          11,
+          9
+        ],
+        "time": 5.3,
+        "along": 0.4819897948368565,
+        "across": 0.08675013391686606,
+        "local": 0.035971210742275626,
+        "rootError": 7.577222101219254e-7
+      },
+      {
+        "yaw": 0,
+        "scale": [
+          18,
+          11,
+          9
+        ],
+        "time": 14.2,
+        "along": 0.43897180591265,
+        "across": 0.050380627725074345,
+        "local": 0.03400735554150631,
+        "rootError": 7.577222101219254e-7
+      },
+      {
+        "yaw": 0,
+        "scale": [
+          18,
+          11,
+          9
+        ],
+        "dryError": 4.7019288775436754e-7,
+        "disabledError": 4.7019288775436754e-7
+      },
+      {
+        "yaw": 0,
+        "scale": [
+          9,
+          17,
+          24
+        ],
+        "time": 0,
+        "along": 0.4710999939008943,
+        "across": 0.09506252792004555,
+        "local": 0.04779734695559343,
+        "rootError": 8.167935653004372e-7
+      },
+      {
+        "yaw": 0,
+        "scale": [
+          9,
+          17,
+          24
+        ],
+        "time": 1.7,
+        "along": 0.47680229819885894,
+        "across": 0.09055877373696039,
+        "local": 0.04801601539145539,
+        "rootError": 8.167935653004372e-7
+      },
+      {
+        "yaw": 0,
+        "scale": [
+          9,
+          17,
+          24
+        ],
+        "time": 5.3,
+        "along": 0.4507205045806216,
+        "across": 0.10196501641914264,
+        "local": 0.046434786538875075,
+        "rootError": 8.167935653004372e-7
+      },
+      {
+        "yaw": 0,
+        "scale": [
+          9,
+          17,
+          24
+        ],
+        "time": 14.2,
+        "along": 0.410495868281716,
+        "across": 0.05921728913621087,
+        "local": 0.04015700752680134,
+        "rootError": 8.167935653004372e-7
+      },
+      {
+        "yaw": 0,
+        "scale": [
+          9,
+          17,
+          24
+        ],
+        "dryError": 4.405450871620061e-7,
+        "disabledError": 4.405450871620061e-7
+      },
+      {
+        "yaw": 0.57,
+        "scale": [
+          18,
+          11,
+          9
+        ],
+        "time": 0,
+        "along": 0.3906434614494533,
+        "across": 0.11944558493107342,
+        "local": 0.03965276938342837,
+        "rootError": 5.970179813393315e-7
+      },
+      {
+        "yaw": 0.57,
+        "scale": [
+          18,
+          11,
+          9
+        ],
+        "time": 1.7,
+        "along": 0.39537168036476067,
+        "across": 0.11378618795228601,
+        "local": 0.040234605537853914,
+        "rootError": 5.970179813393315e-7
+      },
+      {
+        "yaw": 0.57,
+        "scale": [
+          18,
+          11,
+          9
+        ],
+        "time": 5.3,
+        "along": 0.3737456188818285,
+        "across": 0.12811921045856828,
+        "local": 0.0377529541574208,
+        "rootError": 5.970179813393315e-7
+      },
+      {
+        "yaw": 0.57,
+        "scale": [
+          18,
+          11,
+          9
+        ],
+        "time": 14.2,
+        "along": 0.34038788431473266,
+        "across": 0.07440541233724736,
+        "local": 0.03501389431043715,
+        "rootError": 5.970179813393315e-7
+      },
+      {
+        "yaw": 0.57,
+        "scale": [
+          18,
+          11,
+          9
+        ],
+        "dryError": 0.0000010835422810717344,
+        "disabledError": 0.0000010835422810717344
+      },
+      {
+        "yaw": 0.57,
+        "scale": [
+          9,
+          17,
+          24
+        ],
+        "time": 0,
+        "along": 0.8132525792767414,
+        "across": 0.06975416882346963,
+        "local": 0.04643220487955406,
+        "rootError": 0.000001428996228626733
+      },
+      {
+        "yaw": 0.57,
+        "scale": [
+          9,
+          17,
+          24
+        ],
+        "time": 1.7,
+        "along": 0.8230962221506416,
+        "across": 0.06644884113644584,
+        "local": 0.04670660744998015,
+        "rootError": 0.000001428996228626733
+      },
+      {
+        "yaw": 0.57,
+        "scale": [
+          9,
+          17,
+          24
+        ],
+        "time": 5.3,
+        "along": 0.7780750829917291,
+        "across": 0.07481951170834195,
+        "local": 0.04499111057814122,
+        "rootError": 0.000001428996228626733
+      },
+      {
+        "yaw": 0.57,
+        "scale": [
+          9,
+          17,
+          24
+        ],
+        "time": 14.2,
+        "along": 0.7086315628729472,
+        "across": 0.04345166925770083,
+        "local": 0.03927792179068011,
+        "rootError": 0.000001428996228626733
+      },
+      {
+        "yaw": 0.57,
+        "scale": [
+          9,
+          17,
+          24
+        ],
+        "dryError": 5.287281007280743e-7,
+        "disabledError": 5.287281007280743e-7
+      },
+      {
+        "yaw": 1.5707963267948966,
+        "scale": [
+          18,
+          11,
+          9
+        ],
+        "time": 0,
+        "along": 0.4552605834175641,
+        "across": 0.08949493863743227,
+        "local": 0.04677701604199013,
+        "rootError": 3.995932351634415e-7
+      },
+      {
+        "yaw": 1.5707963267948966,
+        "scale": [
+          18,
+          11,
+          9
+        ],
+        "time": 1.7,
+        "along": 0.4607708613338179,
+        "across": 0.08525486725664112,
+        "local": 0.047037178174949804,
+        "rootError": 3.995932351634415e-7
+      },
+      {
+        "yaw": 1.5707963267948966,
+        "scale": [
+          18,
+          11,
+          9
+        ],
+        "time": 5.3,
+        "along": 0.4355696200099225,
+        "across": 0.09599510196654369,
+        "local": 0.045356384393796405,
+        "rootError": 3.995932351634415e-7
+      },
+      {
+        "yaw": 1.5707963267948966,
+        "scale": [
+          18,
+          11,
+          9
+        ],
+        "time": 14.2,
+        "along": 0.39669327870869703,
+        "across": 0.055749013939593514,
+        "local": 0.0394993611124546,
+        "rootError": 3.995932351634415e-7
+      },
+      {
+        "yaw": 1.5707963267948966,
+        "scale": [
+          18,
+          11,
+          9
+        ],
+        "dryError": 7.858117191747735e-7,
+        "disabledError": 7.858117191747735e-7
+      },
+      {
+        "yaw": 1.5707963267948966,
+        "scale": [
+          9,
+          17,
+          24
+        ],
+        "time": 0,
+        "along": 0.5351164682578093,
+        "across": 0.08368995055020459,
+        "local": 0.03671302988861184,
+        "rootError": 7.740247695576804e-7
+      },
+      {
+        "yaw": 1.5707963267948966,
+        "scale": [
+          9,
+          17,
+          24
+        ],
+        "time": 1.7,
+        "along": 0.5415931362852879,
+        "across": 0.0797251550990011,
+        "local": 0.03744826324423291,
+        "rootError": 7.740247695576804e-7
+      },
+      {
+        "yaw": 1.5707963267948966,
+        "scale": [
+          9,
+          17,
+          24
+        ],
+        "time": 5.3,
+        "along": 0.51197001892992,
+        "across": 0.08976756930637966,
+        "local": 0.034567434139078076,
+        "rootError": 7.740247695576804e-7
+      },
+      {
+        "yaw": 1.5707963267948966,
+        "scale": [
+          9,
+          17,
+          24
+        ],
+        "time": 14.2,
+        "along": 0.4662763315906279,
+        "across": 0.052133272628597294,
+        "local": 0.03322835013591674,
+        "rootError": 7.740247695576804e-7
+      },
+      {
+        "yaw": 1.5707963267948966,
+        "scale": [
+          9,
+          17,
+          24
+        ],
+        "dryError": 0.0000014077015972210113,
+        "disabledError": 0.0000014077015972210113
+      },
+      {
+        "yaw": 2.8,
+        "scale": [
+          18,
+          11,
+          9
+        ],
+        "time": 0,
+        "along": 0.6450647771044473,
+        "across": 0.07043112163644216,
+        "local": 0.039233405504590424,
+        "rootError": 0.0000018157432268969752
+      },
+      {
+        "yaw": 2.8,
+        "scale": [
+          18,
+          11,
+          9
+        ],
+        "time": 1.7,
+        "along": 0.6528754776084569,
+        "across": 0.06709570821954058,
+        "local": 0.03983639080762497,
+        "rootError": 0.0000018157432268969752
+      },
+      {
+        "yaw": 2.8,
+        "scale": [
+          18,
+          11,
+          9
+        ],
+        "time": 5.3,
+        "along": 0.6171641952664868,
+        "across": 0.07554706324883612,
+        "local": 0.03730076675416678,
+        "rootError": 0.0000018157432268969752
+      },
+      {
+        "yaw": 2.8,
+        "scale": [
+          18,
+          11,
+          9
+        ],
+        "time": 14.2,
+        "along": 0.5620810405913361,
+        "across": 0.04387426089988869,
+        "local": 0.03475661424085275,
+        "rootError": 0.0000018157432268969752
+      },
+      {
+        "yaw": 2.8,
+        "scale": [
+          18,
+          11,
+          9
+        ],
+        "dryError": 4.5240175853839264e-7,
+        "disabledError": 4.5240175853839264e-7
+      },
+      {
+        "yaw": 2.8,
+        "scale": [
+          9,
+          17,
+          24
+        ],
+        "time": 0,
+        "along": 0.39945604362339693,
+        "across": 0.13501995576447767,
+        "local": 0.04682851075230462,
+        "rootError": 8.750664166208287e-7
+      },
+      {
+        "yaw": 2.8,
+        "scale": [
+          9,
+          17,
+          24
+        ],
+        "time": 1.7,
+        "along": 0.404292073600521,
+        "across": 0.12862326911237001,
+        "local": 0.047086678890395264,
+        "rootError": 8.750664166208287e-7
+      },
+      {
+        "yaw": 2.8,
+        "scale": [
+          9,
+          17,
+          24
+        ],
+        "time": 5.3,
+        "along": 0.38217883035508976,
+        "across": 0.1448255549470789,
+        "local": 0.04541086388457139,
+        "rootError": 8.750664166208287e-7
+      },
+      {
+        "yaw": 2.8,
+        "scale": [
+          9,
+          17,
+          24
+        ],
+        "time": 14.2,
+        "along": 0.3480712858462435,
+        "across": 0.08410904436981079,
+        "local": 0.03953284375271356,
+        "rootError": 8.750664166208287e-7
+      },
+      {
+        "yaw": 2.8,
+        "scale": [
+          9,
+          17,
+          24
+        ],
+        "dryError": 8.206992223507514e-7,
+        "disabledError": 8.206992223507514e-7
+      }
+    ],
+    "independent": {
+      "wind": [
+        0,
+        0
+      ],
+      "intensity": 0,
+      "time": 0
+    }
+  },
+  "initial": {
+    "level": "rooftop-relay",
+    "rain": {
+      "visible": true,
+      "streaks": 2200,
+      "impactCapacity": 96,
+      "activeImpacts": 29,
+      "samples": 416,
+      "time": 1.272366666714351,
+      "span": 68,
+      "intensity": 0.86,
+      "wind": [
+        5.5,
+        2.8
+      ]
+    },
+    "wind": {
+      "wind": [
+        5.5,
+        2.8
+      ],
+      "intensity": 0.86,
+      "time": 1.272366666714351
+    },
+    "trees": [
+      {
+        "kind": "countryumbrellapine",
+        "vertices": 15575,
+        "triangles": 9153,
+        "hash": 4034559127,
+        "wind": [
+          5.5,
+          2.8,
+          0.86
+        ],
+        "time": 1.272366666714351,
+        "sharedShadow": true
+      },
+      {
+        "kind": "countryumbrellapine",
+        "vertices": 15575,
+        "triangles": 9153,
+        "hash": 4034559127,
+        "wind": [
+          5.5,
+          2.8,
+          0.86
+        ],
+        "time": 1.272366666714351,
+        "sharedShadow": true
+      },
+      {
+        "kind": "countryumbrellapine",
+        "vertices": 15575,
+        "triangles": 9153,
+        "hash": 4034559127,
+        "wind": [
+          5.5,
+          2.8,
+          0.86
+        ],
+        "time": 1.272366666714351,
+        "sharedShadow": true
+      },
+      {
+        "kind": "countryumbrellapine",
+        "vertices": 15575,
+        "triangles": 9153,
+        "hash": 4034559127,
+        "wind": [
+          5.5,
+          2.8,
+          0.86
+        ],
+        "time": 1.272366666714351,
+        "sharedShadow": true
+      },
+      {
+        "kind": "countryumbrellapine",
+        "vertices": 15575,
+        "triangles": 9153,
+        "hash": 4034559127,
+        "wind": [
+          5.5,
+          2.8,
+          0.86
+        ],
+        "time": 1.272366666714351,
+        "sharedShadow": true
+      },
+      {
+        "kind": "countryumbrellapine",
+        "vertices": 15575,
+        "triangles": 9153,
+        "hash": 4034559127,
+        "wind": [
+          5.5,
+          2.8,
+          0.86
+        ],
+        "time": 1.272366666714351,
+        "sharedShadow": true
+      },
+      {
+        "kind": "countryumbrellapine",
+        "vertices": 15575,
+        "triangles": 9153,
+        "hash": 4034559127,
+        "wind": [
+          5.5,
+          2.8,
+          0.86
+        ],
+        "time": 1.272366666714351,
+        "sharedShadow": true
+      },
+      {
+        "kind": "countryumbrellapine",
+        "vertices": 15575,
+        "triangles": 9153,
+        "hash": 4034559127,
+        "wind": [
+          5.5,
+          2.8,
+          0.86
+        ],
+        "time": 1.272366666714351,
+        "sharedShadow": true
+      },
+      {
+        "kind": "countryumbrellapine",
+        "vertices": 15575,
+        "triangles": 9153,
+        "hash": 4034559127,
+        "wind": [
+          5.5,
+          2.8,
+          0.86
+        ],
+        "time": 1.272366666714351,
+        "sharedShadow": true
+      },
+      {
+        "kind": "countryumbrellapine",
+        "vertices": 15575,
+        "triangles": 9153,
+        "hash": 4034559127,
+        "wind": [
+          5.5,
+          2.8,
+          0.86
+        ],
+        "time": 1.272366666714351,
+        "sharedShadow": true
+      },
+      {
+        "kind": "countryumbrellapine",
+        "vertices": 15575,
+        "triangles": 9153,
+        "hash": 4034559127,
+        "wind": [
+          5.5,
+          2.8,
+          0.86
+        ],
+        "time": 1.272366666714351,
+        "sharedShadow": true
+      },
+      {
+        "kind": "countryumbrellapine",
+        "vertices": 15575,
+        "triangles": 9153,
+        "hash": 4034559127,
+        "wind": [
+          5.5,
+          2.8,
+          0.86
+        ],
+        "time": 1.272366666714351,
+        "sharedShadow": true
+      },
+      {
+        "kind": "countryumbrellapine",
+        "vertices": 15575,
+        "triangles": 9153,
+        "hash": 4034559127,
+        "wind": [
+          5.5,
+          2.8,
+          0.86
+        ],
+        "time": 1.272366666714351,
+        "sharedShadow": true
+      },
+      {
+        "kind": "countryumbrellapine",
+        "vertices": 15575,
+        "triangles": 9153,
+        "hash": 4034559127,
+        "wind": [
+          5.5,
+          2.8,
+          0.86
+        ],
+        "time": 1.272366666714351,
+        "sharedShadow": true
+      },
+      {
+        "kind": "countryumbrellapine",
+        "vertices": 15575,
+        "triangles": 9153,
+        "hash": 4034559127,
+        "wind": [
+          5.5,
+          2.8,
+          0.86
+        ],
+        "time": 1.272366666714351,
+        "sharedShadow": true
+      },
+      {
+        "kind": "countryumbrellapine",
+        "vertices": 15575,
+        "triangles": 9153,
+        "hash": 4034559127,
+        "wind": [
+          5.5,
+          2.8,
+          0.86
+        ],
+        "time": 1.272366666714351,
+        "sharedShadow": true
+      },
+      {
+        "kind": "countryumbrellapine",
+        "vertices": 15575,
+        "triangles": 9153,
+        "hash": 4034559127,
+        "wind": [
+          5.5,
+          2.8,
+          0.86
+        ],
+        "time": 1.272366666714351,
+        "sharedShadow": true
+      },
+      {
+        "kind": "countryoak",
+        "vertices": 140252,
+        "triangles": 61915,
+        "hash": 216328861,
+        "wind": [
+          5.5,
+          2.8,
+          0.86
+        ],
+        "time": 1.272366666714351,
+        "sharedShadow": true
+      },
+      {
+        "kind": "countryoak",
+        "vertices": 140252,
+        "triangles": 61915,
+        "hash": 216328861,
+        "wind": [
+          5.5,
+          2.8,
+          0.86
+        ],
+        "time": 1.272366666714351,
+        "sharedShadow": true
+      },
+      {
+        "kind": "countryoak",
+        "vertices": 140252,
+        "triangles": 61915,
+        "hash": 216328861,
+        "wind": [
+          5.5,
+          2.8,
+          0.86
+        ],
+        "time": 1.272366666714351,
+        "sharedShadow": true
+      },
+      {
+        "kind": "countryoak",
+        "vertices": 140252,
+        "triangles": 61915,
+        "hash": 216328861,
+        "wind": [
+          5.5,
+          2.8,
+          0.86
+        ],
+        "time": 1.272366666714351,
+        "sharedShadow": true
+      },
+      {
+        "kind": "countryoak",
+        "vertices": 140252,
+        "triangles": 61915,
+        "hash": 216328861,
+        "wind": [
+          5.5,
+          2.8,
+          0.86
+        ],
+        "time": 1.272366666714351,
+        "sharedShadow": true
+      },
+      {
+        "kind": "countryoak",
+        "vertices": 140252,
+        "triangles": 61915,
+        "hash": 216328861,
+        "wind": [
+          5.5,
+          2.8,
+          0.86
+        ],
+        "time": 1.272366666714351,
+        "sharedShadow": true
+      },
+      {
+        "kind": "countryoak",
+        "vertices": 140252,
+        "triangles": 61915,
+        "hash": 216328861,
+        "wind": [
+          5.5,
+          2.8,
+          0.86
+        ],
+        "time": 1.272366666714351,
+        "sharedShadow": true
+      },
+      {
+        "kind": "countryoak",
+        "vertices": 140252,
+        "triangles": 61915,
+        "hash": 216328861,
+        "wind": [
+          5.5,
+          2.8,
+          0.86
+        ],
+        "time": 1.272366666714351,
+        "sharedShadow": true
+      },
+      {
+        "kind": "countryoak",
+        "vertices": 140252,
+        "triangles": 61915,
+        "hash": 216328861,
+        "wind": [
+          5.5,
+          2.8,
+          0.86
+        ],
+        "time": 1.272366666714351,
+        "sharedShadow": true
+      },
+      {
+        "kind": "countryoak",
+        "vertices": 140252,
+        "triangles": 61915,
+        "hash": 216328861,
+        "wind": [
+          5.5,
+          2.8,
+          0.86
+        ],
+        "time": 1.272366666714351,
+        "sharedShadow": true
+      },
+      {
+        "kind": "countryoak",
+        "vertices": 140252,
+        "triangles": 61915,
+        "hash": 216328861,
+        "wind": [
+          5.5,
+          2.8,
+          0.86
+        ],
+        "time": 1.272366666714351,
+        "sharedShadow": true
+      },
+      {
+        "kind": "countryoak",
+        "vertices": 140252,
+        "triangles": 61915,
+        "hash": 216328861,
+        "wind": [
+          5.5,
+          2.8,
+          0.86
+        ],
+        "time": 1.272366666714351,
+        "sharedShadow": true
+      },
+      {
+        "kind": "countryoak",
+        "vertices": 140252,
+        "triangles": 61915,
+        "hash": 216328861,
+        "wind": [
+          5.5,
+          2.8,
+          0.86
+        ],
+        "time": 1.272366666714351,
+        "sharedShadow": true
+      }
+    ],
+    "buffer": [
+      2560,
+      1440
+    ],
+    "stamp": "Codex/sol fork · build 10-25 14:56 UTC"
+  },
+  "later": {
+    "level": "rooftop-relay",
+    "rain": {
+      "visible": true,
+      "streaks": 2200,
+      "impactCapacity": 96,
+      "activeImpacts": 27,
+      "samples": 1144,
+      "time": 4.405700000047673,
+      "span": 68,
+      "intensity": 0.86,
+      "wind": [
+        5.5,
+        2.8
+      ]
+    },
+    "wind": {
+      "wind": [
+        5.5,
+        2.8
+      ],
+      "intensity": 0.86,
+      "time": 4.405700000047673
+    },
+    "trees": [
+      {
+        "kind": "countryumbrellapine",
+        "vertices": 15575,
+        "triangles": 9153,
+        "hash": 4034559127,
+        "wind": [
+          5.5,
+          2.8,
+          0.86
+        ],
+        "time": 4.405700000047673,
+        "sharedShadow": true
+      },
+      {
+        "kind": "countryumbrellapine",
+        "vertices": 15575,
+        "triangles": 9153,
+        "hash": 4034559127,
+        "wind": [
+          5.5,
+          2.8,
+          0.86
+        ],
+        "time": 4.405700000047673,
+        "sharedShadow": true
+      },
+      {
+        "kind": "countryumbrellapine",
+        "vertices": 15575,
+        "triangles": 9153,
+        "hash": 4034559127,
+        "wind": [
+          5.5,
+          2.8,
+          0.86
+        ],
+        "time": 4.405700000047673,
+        "sharedShadow": true
+      },
+      {
+        "kind": "countryumbrellapine",
+        "vertices": 15575,
+        "triangles": 9153,
+        "hash": 4034559127,
+        "wind": [
+          5.5,
+          2.8,
+          0.86
+        ],
+        "time": 4.405700000047673,
+        "sharedShadow": true
+      },
+      {
+        "kind": "countryumbrellapine",
+        "vertices": 15575,
+        "triangles": 9153,
+        "hash": 4034559127,
+        "wind": [
+          5.5,
+          2.8,
+          0.86
+        ],
+        "time": 4.405700000047673,
+        "sharedShadow": true
+      },
+      {
+        "kind": "countryumbrellapine",
+        "vertices": 15575,
+        "triangles": 9153,
+        "hash": 4034559127,
+        "wind": [
+          5.5,
+          2.8,
+          0.86
+        ],
+        "time": 4.405700000047673,
+        "sharedShadow": true
+      },
+      {
+        "kind": "countryumbrellapine",
+        "vertices": 15575,
+        "triangles": 9153,
+        "hash": 4034559127,
+        "wind": [
+          5.5,
+          2.8,
+          0.86
+        ],
+        "time": 4.405700000047673,
+        "sharedShadow": true
+      },
+      {
+        "kind": "countryumbrellapine",
+        "vertices": 15575,
+        "triangles": 9153,
+        "hash": 4034559127,
+        "wind": [
+          5.5,
+          2.8,
+          0.86
+        ],
+        "time": 4.405700000047673,
+        "sharedShadow": true
+      },
+      {
+        "kind": "countryumbrellapine",
+        "vertices": 15575,
+        "triangles": 9153,
+        "hash": 4034559127,
+        "wind": [
+          5.5,
+          2.8,
+          0.86
+        ],
+        "time": 4.405700000047673,
+        "sharedShadow": true
+      },
+      {
+        "kind": "countryumbrellapine",
+        "vertices": 15575,
+        "triangles": 9153,
+        "hash": 4034559127,
+        "wind": [
+          5.5,
+          2.8,
+          0.86
+        ],
+        "time": 4.405700000047673,
+        "sharedShadow": true
+      },
+      {
+        "kind": "countryumbrellapine",
+        "vertices": 15575,
+        "triangles": 9153,
+        "hash": 4034559127,
+        "wind": [
+          5.5,
+          2.8,
+          0.86
+        ],
+        "time": 4.405700000047673,
+        "sharedShadow": true
+      },
+      {
+        "kind": "countryumbrellapine",
+        "vertices": 15575,
+        "triangles": 9153,
+        "hash": 4034559127,
+        "wind": [
+          5.5,
+          2.8,
+          0.86
+        ],
+        "time": 4.405700000047673,
+        "sharedShadow": true
+      },
+      {
+        "kind": "countryumbrellapine",
+        "vertices": 15575,
+        "triangles": 9153,
+        "hash": 4034559127,
+        "wind": [
+          5.5,
+          2.8,
+          0.86
+        ],
+        "time": 4.405700000047673,
+        "sharedShadow": true
+      },
+      {
+        "kind": "countryumbrellapine",
+        "vertices": 15575,
+        "triangles": 9153,
+        "hash": 4034559127,
+        "wind": [
+          5.5,
+          2.8,
+          0.86
+        ],
+        "time": 4.405700000047673,
+        "sharedShadow": true
+      },
+      {
+        "kind": "countryumbrellapine",
+        "vertices": 15575,
+        "triangles": 9153,
+        "hash": 4034559127,
+        "wind": [
+          5.5,
+          2.8,
+          0.86
+        ],
+        "time": 4.405700000047673,
+        "sharedShadow": true
+      },
+      {
+        "kind": "countryumbrellapine",
+        "vertices": 15575,
+        "triangles": 9153,
+        "hash": 4034559127,
+        "wind": [
+          5.5,
+          2.8,
+          0.86
+        ],
+        "time": 4.405700000047673,
+        "sharedShadow": true
+      },
+      {
+        "kind": "countryumbrellapine",
+        "vertices": 15575,
+        "triangles": 9153,
+        "hash": 4034559127,
+        "wind": [
+          5.5,
+          2.8,
+          0.86
+        ],
+        "time": 4.405700000047673,
+        "sharedShadow": true
+      },
+      {
+        "kind": "countryoak",
+        "vertices": 140252,
+        "triangles": 61915,
+        "hash": 216328861,
+        "wind": [
+          5.5,
+          2.8,
+          0.86
+        ],
+        "time": 4.405700000047673,
+        "sharedShadow": true
+      },
+      {
+        "kind": "countryoak",
+        "vertices": 140252,
+        "triangles": 61915,
+        "hash": 216328861,
+        "wind": [
+          5.5,
+          2.8,
+          0.86
+        ],
+        "time": 4.405700000047673,
+        "sharedShadow": true
+      },
+      {
+        "kind": "countryoak",
+        "vertices": 140252,
+        "triangles": 61915,
+        "hash": 216328861,
+        "wind": [
+          5.5,
+          2.8,
+          0.86
+        ],
+        "time": 4.405700000047673,
+        "sharedShadow": true
+      },
+      {
+        "kind": "countryoak",
+        "vertices": 140252,
+        "triangles": 61915,
+        "hash": 216328861,
+        "wind": [
+          5.5,
+          2.8,
+          0.86
+        ],
+        "time": 4.405700000047673,
+        "sharedShadow": true
+      },
+      {
+        "kind": "countryoak",
+        "vertices": 140252,
+        "triangles": 61915,
+        "hash": 216328861,
+        "wind": [
+          5.5,
+          2.8,
+          0.86
+        ],
+        "time": 4.405700000047673,
+        "sharedShadow": true
+      },
+      {
+        "kind": "countryoak",
+        "vertices": 140252,
+        "triangles": 61915,
+        "hash": 216328861,
+        "wind": [
+          5.5,
+          2.8,
+          0.86
+        ],
+        "time": 4.405700000047673,
+        "sharedShadow": true
+      },
+      {
+        "kind": "countryoak",
+        "vertices": 140252,
+        "triangles": 61915,
+        "hash": 216328861,
+        "wind": [
+          5.5,
+          2.8,
+          0.86
+        ],
+        "time": 4.405700000047673,
+        "sharedShadow": true
+      },
+      {
+        "kind": "countryoak",
+        "vertices": 140252,
+        "triangles": 61915,
+        "hash": 216328861,
+        "wind": [
+          5.5,
+          2.8,
+          0.86
+        ],
+        "time": 4.405700000047673,
+        "sharedShadow": true
+      },
+      {
+        "kind": "countryoak",
+        "vertices": 140252,
+        "triangles": 61915,
+        "hash": 216328861,
+        "wind": [
+          5.5,
+          2.8,
+          0.86
+        ],
+        "time": 4.405700000047673,
+        "sharedShadow": true
+      },
+      {
+        "kind": "countryoak",
+        "vertices": 140252,
+        "triangles": 61915,
+        "hash": 216328861,
+        "wind": [
+          5.5,
+          2.8,
+          0.86
+        ],
+        "time": 4.405700000047673,
+        "sharedShadow": true
+      },
+      {
+        "kind": "countryoak",
+        "vertices": 140252,
+        "triangles": 61915,
+        "hash": 216328861,
+        "wind": [
+          5.5,
+          2.8,
+          0.86
+        ],
+        "time": 4.405700000047673,
+        "sharedShadow": true
+      },
+      {
+        "kind": "countryoak",
+        "vertices": 140252,
+        "triangles": 61915,
+        "hash": 216328861,
+        "wind": [
+          5.5,
+          2.8,
+          0.86
+        ],
+        "time": 4.405700000047673,
+        "sharedShadow": true
+      },
+      {
+        "kind": "countryoak",
+        "vertices": 140252,
+        "triangles": 61915,
+        "hash": 216328861,
+        "wind": [
+          5.5,
+          2.8,
+          0.86
+        ],
+        "time": 4.405700000047673,
+        "sharedShadow": true
+      }
+    ],
+    "buffer": [
+      2560,
+      1440
+    ],
+    "stamp": "Codex/sol fork · build 10-25 14:56 UTC"
+  },
+  "closeup": {
+    "kind": "countryumbrellapine",
+    "vertices": 15575,
+    "triangles": 9153,
+    "scale": [
+      28.049999383102687,
+      20.81089973449707,
+      26.529499300829528
+    ]
+  },
+  "dry": {
+    "level": "codex-lab",
+    "rain": null,
+    "trees": [],
+    "buffer": [
+      2560,
+      1440
+    ],
+    "stamp": "Codex/sol fork · build 10-25 14:56 UTC"
+  },
+  "revisited": {
+    "level": "rooftop-relay",
+    "rain": {
+      "visible": true,
+      "streaks": 2200,
+      "impactCapacity": 96,
+      "activeImpacts": 28,
+      "samples": 104,
+      "time": 0.19999999999999998,
+      "span": 68,
+      "intensity": 0.86,
+      "wind": [
+        5.5,
+        2.8
+      ]
+    },
+    "wind": {
+      "wind": [
+        5.5,
+        2.8
+      ],
+      "intensity": 0.86,
+      "time": 0.19999999999999998
+    },
+    "trees": [],
+    "buffer": [
+      2560,
+      1440
+    ],
+    "stamp": "Codex/sol fork · build 10-25 14:56 UTC"
+  },
+  "errors": []
+}

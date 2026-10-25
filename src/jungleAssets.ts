@@ -30,6 +30,8 @@ import { addJungleDepthFade } from "./jungleGround";
 import { AssetCache, disposeTextures } from "./assetLifetime";
 import { sceneryLoads } from "./assetLoadQueue";
 import { addTreehouseTrialsMaterialLook } from "./treehouseTrialsPresentation";
+import {StormFoliageWind} from './stormFoliageWind';
+import type {RainProfile} from './rainWeather';
 
 export interface JungleAssetSpec {
   /** Optional authored batching grain for repeated parts along long streets. */
@@ -451,7 +453,7 @@ vJungleWorld = (modelMatrix * jungleWorld).xyz;
 `;
 
 /** Moving canopy shade costs a few ALU operations, with no extra render pass. */
-export function addJungleDapple(material: THREE.Material, time: { value: number }, wind = false, cloth = false): void {
+export function addJungleDapple(material: THREE.Material, time: { value: number }, wind = false, cloth = false, weatherWind?:StormFoliageWind): void {
   const dirt = material.userData.jungleDirt === true;
   const painterly = material.userData.junglePainterly === true;
   const previous = material.onBeforeCompile;
@@ -461,8 +463,9 @@ export function addJungleDapple(material: THREE.Material, time: { value: number 
     if(trail)shader.uniforms.uJungleGrass={value:material.userData.jungleGrassTexture};
     shader.uniforms.uJungleTime = time;
     if(wind){shader.uniforms.uJungleWindScale={value:painterly?1.65:1};shader.uniforms.uJungleWindFrequency={value:painterly?.72:1.15};}
+    const windBody=wind?(cloth?CLOTH_WIND:weatherWind?weatherWind.vertex(shader,WIND):WIND):'';
     shader.vertexShader = `uniform float uJungleTime;\n${wind ? 'attribute float aJungleFlex; uniform float uJungleWindScale; uniform float uJungleWindFrequency;' : ''}\n${trail?'attribute vec2 aJungleTrail; varying vec2 vJungleTrail;':''}\nvarying vec3 vJungleWorld;\n` + shader.vertexShader;
-    shader.vertexShader = shader.vertexShader.replace("#include <begin_vertex>", `#include <begin_vertex>\n${trail?'vJungleTrail = aJungleTrail;':''}\n${wind ? cloth?CLOTH_WIND:WIND : ''}\n${WORLD}`);
+    shader.vertexShader = shader.vertexShader.replace("#include <begin_vertex>", `#include <begin_vertex>\n${trail?'vJungleTrail = aJungleTrail;':''}\n${windBody}\n${WORLD}`);
     shader.fragmentShader = 'uniform float uJungleTime;\nvarying vec3 vJungleWorld;\n'+(trail?'uniform sampler2D uJungleGrass; varying vec2 vJungleTrail;\n':'') + shader.fragmentShader;
     if (dirt) shader.fragmentShader = shader.fragmentShader.replace("#include <map_fragment>", /* glsl */ `
       #ifdef USE_MAP
@@ -501,7 +504,7 @@ export function addJungleDapple(material: THREE.Material, time: { value: number 
       #endif
     `);
   };
-  material.customProgramCacheKey = () => `jungle-dapple-v6-${wind}-${cloth}-${dirt}-${material.userData.jungleTrail===true}-${painterly}`;
+  material.customProgramCacheKey = () => `jungle-dapple-v7-${wind}-${cloth}-${dirt}-${material.userData.jungleTrail===true}-${painterly}-${!!weatherWind}`;
   if(painterly)addTreehouseTrialsMaterialLook(material);
 }
 
@@ -509,6 +512,8 @@ interface Bucket {scenerySolid?:boolean;retryCount?:number;castShadow?:boolean;c
 export class JungleAssetKit {
   private assets=createJungleAssetScope();
   readonly root=new THREE.Group();readonly time={value:0};readonly errors:string[]=[];
+  private readonly weatherWind=new StormFoliageWind();
+  setWeatherWind(profile:RainProfile|undefined,time:number):void {this.weatherWind.set(profile,time);}
   private buckets=new Map<string,Bucket>();private jobs:Promise<void>[]=[];
   private materials=new Map<RenderKind,THREE.MeshStandardMaterial|THREE.MeshLambertMaterial|THREE.MeshBasicMaterial>();
   private readonly viewPosition=new THREE.Vector3();
@@ -625,7 +630,7 @@ export class JungleAssetKit {
     m.name=spec.label;m.userData.jungleAsset=true;
     m.userData.junglePainterly=this.style==='painterly';m.userData.jungleAO=true;
     if(kind==="earth")m.userData.jungleDirt=true;
-    addJungleDapple(m,this.time,spec.wind,spec.cloth);
+    addJungleDapple(m,this.time,spec.wind,spec.cloth,this.weatherWind);
     if(spec.windowGlow){
       const compile=m.onBeforeCompile,key=m.customProgramCacheKey.bind(m);
       m.onBeforeCompile=(shader,renderer)=>{
@@ -652,11 +657,12 @@ export class JungleAssetKit {
       depth=new THREE.MeshDepthMaterial({depthPacking:THREE.RGBADepthPacking});
       depth.onBeforeCompile=shader=>{shader.uniforms.uJungleTime=this.time;
         shader.uniforms.uJungleWindScale={value:this.style==='painterly'?1.65:1};shader.uniforms.uJungleWindFrequency={value:this.style==='painterly'?.72:1.15};
+        const windBody=spec.cloth?CLOTH_WIND:this.weatherWind.vertex(shader,WIND);
         shader.vertexShader='uniform float uJungleTime;\nuniform float uJungleWindScale;\nuniform float uJungleWindFrequency;\nattribute float aJungleFlex;\n'+shader.vertexShader;
-        shader.vertexShader=shader.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\n'+(spec.cloth?CLOTH_WIND:WIND));
+        shader.vertexShader=shader.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\n'+windBody);
 
       };
-      depth.customProgramCacheKey=()=>`jungle-wind-depth-v7-native-${this.style??'native'}-${spec.cloth===true}`;this.depths.set(kind,depth);
+      depth.customProgramCacheKey=()=>`jungle-wind-depth-v8-storm-${this.style??'native'}-${spec.cloth===true}`;this.depths.set(kind,depth);
     }
     mesh.customDepthMaterial=depth;
   }
@@ -872,7 +878,7 @@ export class JungleAssetKit {
     }
     return {components:this.sourceCount,placements:this.count,ready:this.readyCount,skipped:this.skipped,draws,triangles,allLodTriangles:highTriangles,
       cells:this.cells.length,residentCells:this.cells.filter(c=>!!c.mesh).length,pendingCells:this.pending.size,retryingCells:this.failedBuckets.size,
-      compressedTextures,textureMiB:Math.round(textureBytes/1048576*100)/100,errors:[...this.errors],windTime:this.time.value};
+      compressedTextures,textureMiB:Math.round(textureBytes/1048576*100)/100,errors:[...this.errors],windTime:this.time.value,weatherWind:this.weatherWind.diagnostics};
   }
   dispose():void {
     for(const cell of this.cells)this.retire(cell);this.cells.length=0;this.failedBuckets.clear();
