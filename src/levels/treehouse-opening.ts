@@ -244,29 +244,62 @@ for (const component of C.slice(houseStart)) {
   component.yaw = (component.yaw ?? 0) + houseYaw;
 }
 
-// Deep, compact, camera-aligned timber halfpipe: a narrow flat, tall transitions and
-// a real underside scaffold. Its floor sits 10cm above the clearing.
+// A longer timber halfpipe with wider flat/decks and enclosed structural cheeks.
+// Retain the authored transition radius and the floor 10cm above the clearing.
 export const TREEHOUSE_HALFPIPE: CustomComponent = { t: "vertramp", p: [14, 0.1, -0.8],
-  len: 5.8, w: 0.9, rise: 4.2, arc: 90, arcSteps: 32, deck: 1.5, vkind: "half", yaw: 0,
+  len: 11.6, w: 1.5, rise: 4.2, arc: 90, arcSteps: 32, deck: 1.8, vkind: "half", yaw: 0,
   tex: "treehouse-timber", color: "#e0d0b3", nm: "Camera-aligned timber halfpipe", grp: G.pipe };
 add(TREEHOUSE_HALFPIPE);
 const pipeAngle = THREE.MathUtils.degToRad(TREEHOUSE_HALFPIPE.yaw!);
+const pipeHalf = TREEHOUSE_HALFPIPE.len! / 2, pipeFlat = TREEHOUSE_HALFPIPE.w!;
+const pipeRise = TREEHOUSE_HALFPIPE.rise!, pipeLip = pipeFlat + pipeRise;
+const pipeEdge = pipeLip + TREEHOUSE_HALFPIPE.deck! + .1;
 const pipePoint = (x: number, y: number, z: number): Point => [
-  14 + Math.cos(pipeAngle) * x + Math.sin(pipeAngle) * z, y,
-  -0.8 - Math.sin(pipeAngle) * x + Math.cos(pipeAngle) * z];
+  TREEHOUSE_HALFPIPE.p[0] + Math.cos(pipeAngle) * x + Math.sin(pipeAngle) * z,
+  TREEHOUSE_HALFPIPE.p[1] + y,
+  TREEHOUSE_HALFPIPE.p[2] - Math.sin(pipeAngle) * x + Math.cos(pipeAngle) * z];
 for (const side of [-1, 1]) {
-  const x = side * 5.85;
-  railing([-2.7, 0, 2.7].map(z => pipePoint(x, 4.3, z)), "Halfpipe rope deck fence", G.pipe);
-  rope(pipePoint(side * 5.1, 4.35, -2.95), pipePoint(side * 5.1, 4.35, 2.95), 0,
-    "Rounded timber coping", G.pipe, 0.12);
-  for (const z of [-2.2, 2.2]) {
-    timber(pipePoint(x, 0, z), pipePoint(x, 4.22, z), 0.38, 0.4, "Halfpipe scaffold upright", G.pipe);
-    // Keep every brace behind the outer lip. A diagonal from the flat to
-    // the deck cuts straight through the concave riding surface.
-    timber(pipePoint(side * 5.35, 0.1, z), pipePoint(x, 4.05, z), 0.26, 0.3, "Halfpipe exterior diagonal brace", G.pipe);
+  // The native ramp sweeps an open profile. Fitted end cheeks follow its exact
+  // arc segments, sealing the space below each transition without walling off
+  // either entrance to the riding trough. Structural faces do not create rails.
+  const cheek = new THREE.Shape();
+  cheek.moveTo(side * pipeFlat, -.16);
+  cheek.lineTo(side * pipeEdge, -.16);
+  cheek.lineTo(side * pipeEdge, pipeRise);
+  cheek.lineTo(side * pipeLip, pipeRise);
+  for (let j = TREEHOUSE_HALFPIPE.arcSteps! - 1; j >= 0; j--) {
+    const phi = j / TREEHOUSE_HALFPIPE.arcSteps! * Math.PI / 2;
+    cheek.lineTo(side * (pipeFlat + pipeRise * Math.sin(phi)), pipeRise * (1 - Math.cos(phi)));
   }
-  timber(pipePoint(x, 0.25, -2.2), pipePoint(x, 4.1, 2.2), 0.22, 0.26, "Halfpipe lateral X brace", G.pipe);
-  timber(pipePoint(x, 0.25, 2.2), pipePoint(x, 4.1, -2.2), 0.22, 0.26, "Halfpipe lateral X brace", G.pipe);
+  cheek.closePath();
+  for (const end of [-1, 1]) {
+    const g = new THREE.ExtrudeGeometry(cheek, { depth: .24, bevelEnabled: false, steps: 1 });
+    g.translate(0, 0, end < 0 ? -pipeHalf : pipeHalf - .24).rotateY(pipeAngle);
+    mesh(g, TREEHOUSE_HALFPIPE.p, "Halfpipe fitted timber end cheek", G.pipe, "#b89c75", "treehouse-timber", { solid: true });
+    for (let x = pipeFlat + .65; x < pipeEdge; x += .65) {
+      const h = x >= pipeLip ? pipeRise : pipeRise - Math.sqrt(pipeRise ** 2 - (x - pipeFlat) ** 2);
+      if (h < .18) continue;
+      timber(pipePoint(side * x, -.1, end * (pipeHalf + .045)),
+        pipePoint(side * x, h - .035, end * (pipeHalf + .045)), .10, .12, "Halfpipe end-cladding batten", G.pipe);
+    }
+  }
+  const cladding = new THREE.BoxGeometry(.18, pipeRise + .16, pipeHalf * 2)
+    .translate(side * (pipeEdge + .025), (pipeRise - .16) / 2, 0).rotateY(pipeAngle);
+  mesh(cladding, TREEHOUSE_HALFPIPE.p, "Halfpipe continuous outer timber cladding", G.pipe, "#af8b60", "treehouse-timber", { solid: true });
+  const x = side * (pipeEdge - .28);
+  const posts = [-pipeHalf + .2, -pipeHalf / 2, 0, pipeHalf / 2, pipeHalf - .2];
+  railing(posts.map(z => pipePoint(x, pipeRise, z)), "Halfpipe rope deck fence", G.pipe);
+  rope(pipePoint(side * pipeLip, pipeRise + .05, -pipeHalf - .05), pipePoint(side * pipeLip, pipeRise + .05, pipeHalf + .05), 0,
+    "Rounded timber coping", G.pipe, 0.12);
+  for (const z of posts) {
+    const outer = side * (pipeEdge + .15);
+    timber(pipePoint(outer, -.1, z), pipePoint(outer, pipeRise, z), .26, .28, "Halfpipe exterior timber upright", G.pipe);
+  }
+}
+for (const end of [-1, 1]) {
+  const fascia = new THREE.BoxGeometry(pipeEdge * 2, .16, .24)
+    .translate(0, -.08, end * (pipeHalf - .12)).rotateY(pipeAngle);
+  mesh(fascia, TREEHOUSE_HALFPIPE.p, "Halfpipe grounded entrance fascia", G.pipe, "#99734c", "treehouse-timber");
 }
 
 // The host canopy is a separate fitted Meshy module, leaving the cabin and

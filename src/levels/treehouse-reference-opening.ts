@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import {mergeGeometries} from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import type {CustomComponent} from '../level';
-import {openingHousePoint,TREEHOUSE_CLEARING_ROUTE} from './treehouse-opening';
+import {openingHousePoint,TREEHOUSE_CLEARING_ROUTE,TREEHOUSE_HALFPIPE} from './treehouse-opening';
 import {treehouseTrialPoint} from './treehouse-trials-continuity';
 
 type P=[number,number,number];
@@ -43,6 +43,8 @@ export function referenceTreehouseOpening(source:CustomComponent[]):CustomCompon
   const hp=(p:P)=>openingHousePoint(p);
   const route=new THREE.CatmullRomCurve3(TREEHOUSE_CLEARING_ROUTE.map(p=>new THREE.Vector3(...p))).getPoints(96);
   const pathDistance=(x:number,z:number)=>Math.min(...route.map(p=>Math.hypot(p.x-x,p.z-z)));
+  const pipeHalfWidth=TREEHOUSE_HALFPIPE.w!+TREEHOUSE_HALFPIPE.rise!+TREEHOUSE_HALFPIPE.deck!+.1;
+  const pipeHalfLength=TREEHOUSE_HALFPIPE.len!/2;
   for(let c of source){
     if(c.dkind==='treehousebody'||c.nm==='Warm recessed doorway')continue;
     if(c.nm?.startsWith('Diagonal structural bracing beneath treehouse'))continue;
@@ -64,7 +66,8 @@ export function referenceTreehouseOpening(source:CustomComponent[]):CustomCompon
       }
       for(let i=0;i<c.vertices!.length;i+=3){
         const x=c.vertices![i]+c.p[0],z=c.vertices![i+2]+c.p[2],distance=pathDistance(x,z);
-        const pipeDistance=Math.hypot((x-14)*.78,(z+.8)*.85)-3.8;
+        const px=Math.abs(x-TREEHOUSE_HALFPIPE.p[0])-pipeHalfWidth,pz=Math.abs(z-TREEHOUSE_HALFPIPE.p[2])-pipeHalfLength;
+        const pipeDistance=Math.hypot(Math.max(0,px),Math.max(0,pz))+Math.min(Math.max(px,pz),0);
         const houseDistance=Math.hypot((x+12)*.85,(z-3)*.8)-4;
         const bank=Math.min(distance,pipeDistance,houseDistance);
         const green=THREE.MathUtils.smoothstep(bank,3.3,6.8)*(1-THREE.MathUtils.smoothstep(z,12,shoreZ(x)+1));
@@ -129,7 +132,7 @@ export function referenceTreehouseOpening(source:CustomComponent[]):CustomCompon
     [-13,15,7,3.3,5,31],[-5,14,5,2.2,4,-31],[10,13,4.5,2.9,4,61],[12,19,6,2.6,4,41]];
   for(const [i,[x,z,w,h,d,yaw]] of planting.entries()){
     // Both transitions and the open-ended approach need their full clear width.
-    if(pathDistance(x,z)<3.4||Math.abs(x-14)<6.65+w*.4&&Math.abs(z+.8)<2.9+d*.4)continue;
+    if(pathDistance(x,z)<3.4||Math.abs(x-TREEHOUSE_HALFPIPE.p[0])<pipeHalfWidth+w*.6&&Math.abs(z-TREEHOUSE_HALFPIPE.p[2])<pipeHalfLength+d*.6)continue;
     decor(i%3?'trialsv3thicket':'treehousebush',[x,-.18,z],[w,h,d],yaw,'layered rooted path-edge foliage');
     decor(i%2?'trialsv2ferna':'trialsv2fernb',[x-.8,-.12,z+1.7],[w*.55,h*.65,d*.62],yaw+51,'fern overlapping the sandy bank');
   }

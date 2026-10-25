@@ -1,0 +1,101 @@
+{
+  "base": "http://127.0.0.1:5471/",
+  "rows": [],
+  "lifecycle": {
+    "checkpoint": {
+      "label": "checkpoint",
+      "position": [
+        31.9,
+        -1.25,
+        -67
+      ],
+      "grounded": true,
+      "state": "ride",
+      "board": false,
+      "deaths": 0,
+      "lives": 4,
+      "snap": 2,
+      "currentSpawn": [
+        32.9,
+        -1.15,
+        -67
+      ],
+      "at": null,
+      "watch": {
+        "mounted": false,
+        "bailed": false,
+        "maxOffset": 0,
+        "frames": 87
+      },
+      "stamp": "Codex/sol fork · build 10-25 06:22 UTC"
+    },
+    "respawn": {
+      "label": "checkpoint respawn",
+      "position": [
+        32.9,
+        -1.25,
+        -67
+      ],
+      "grounded": true,
+      "state": "ride",
+      "board": false,
+      "deaths": 0,
+      "lives": 3,
+      "snap": 3,
+      "currentSpawn": [
+        32.9,
+        -1.15,
+        -67
+      ],
+      "at": null,
+      "watch": {
+        "mounted": false,
+        "bailed": true,
+        "maxOffset": 0,
+        "frames": 251
+      },
+      "stamp": "Codex/sol fork · build 10-25 06:22 UTC"
+    },
+    "finish": {
+      "label": "finish gate",
+      "position": [
+        55,
+        -6.463333333556851,
+        -666
+      ],
+      "grounded": true,
+      "state": "finished",
+      "board": false,
+      "deaths": 0,
+      "lives": 4,
+      "snap": 4,
+      "currentSpawn": [
+        -16.97026,
+        8.55,
+        -0.40991
+      ],
+      "at": null,
+      "watch": {
+        "mounted": false,
+        "bailed": true,
+        "maxOffset": 0,
+        "frames": 255
+      },
+      "stamp": "Codex/sol fork · build 10-25 06:22 UTC"
+    }
+  },
+  "errors": [],
+  "finalState": {
+    "position": [
+      55,
+      -6.463333333556851,
+      -666
+    ],
+    "watch": {
+      "mounted": false,
+      "bailed": true,
+      "maxOffset": 0,
+      "frames": 255
+    }
+  }
+}
