@@ -52,3 +52,10 @@ The stock rig lacks finger joints. `src/enemies/kookGrip.ts` adds four measured 
 `thunder_sound.py` synthesizes the original 6.4-second distant roll from seeded, filtered noise, with a soft attack and zero-ended tail. Run it with Python and NumPy to reproduce `public/sfx/weather/rooftop-thunder.wav`; `thunder-sound.json` records the waveform measurements. No sampled or licensed recording is used.
 
 `src/stormSquall.ts` schedules sparse single cloud glows and delayed finite thunder on the existing rain clock. Only the rainy `coastal-storm` sky opts in. The sky shader lights an upper cloud region; the lower fog and gameplay lighting remain unchanged. Pause, navigation and background-tab cleanup cancel the audio voice, and resume never replays skipped cues. Focused verification lives in `tools/test-rooftop-storm.mjs`, `tools/test-audio-loops.mjs` and `tools/rooftop-squall-browser.mjs`.
+
+
+## Water on the roof surfaces
+
+`src/wetRooftop.ts` retains the authored metal seam bump and adds a thin animated lighting normal. Gravity projected onto the rendered plane sets downhill flow; flatter surfaces use expanding rain rings. World-oriented coordinates are anchored to each roof for stable precision on the late course. Vertical faces and undersides receive no rain-film deformation. No support mesh, texture UV, collision, traction or visible model detail changes.
+
+`tools/rooftop-wet-film-browser.mjs` checks the actual GPU output under rotated/scaled placements, UV rotation and distant translation, verifies downhill advection and bounded normals, and renders material comparisons and native/CRT course views. The previous shader is retained only as a review fixture in `docs/rooftop-kook/wet-runoff/before-source.ts`.

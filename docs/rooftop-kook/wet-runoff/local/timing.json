@@ -1,0 +1,19 @@
+{
+  "nativeResolution": [
+    2560,
+    1440
+  ],
+  "available": true,
+  "gpuMillisecondsPerFrame": {
+    "before": [
+      0.29204675,
+      0.275927,
+      0.275781125
+    ],
+    "after": [
+      0.4837135,
+      0.483255125,
+      0.483135375
+    ]
+  }
+}
