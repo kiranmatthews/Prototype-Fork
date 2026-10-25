@@ -1,0 +1,19 @@
+{
+  "base": "http://127.0.0.1:5471/",
+  "state": {
+    "stamp": "Codex/sol fork · build 10-25 06:22 UTC",
+    "grounded": true,
+    "position": [
+      -16.97026,
+      8.400000000372529,
+      -0.40991
+    ],
+    "assets": {
+      "phase": null,
+      "pending": [],
+      "failed": [],
+      "revision": 372
+    }
+  },
+  "errors": []
+}

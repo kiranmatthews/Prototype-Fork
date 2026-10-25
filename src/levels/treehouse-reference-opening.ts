@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import {mergeGeometries} from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import type {CustomComponent} from '../level';
-import {openingHousePoint,TREEHOUSE_CLEARING_ROUTE,TREEHOUSE_HALFPIPE} from './treehouse-opening';
+import {TREEHOUSE_CLEARING_ROUTE,TREEHOUSE_HALFPIPE} from './treehouse-opening';
 import {treehouseTrialPoint} from './treehouse-trials-continuity';
 
 type P=[number,number,number];
@@ -39,14 +39,17 @@ export function referenceTreehouseOpening(source:CustomComponent[]):CustomCompon
   };
   const decor=(dkind:NonNullable<CustomComponent['dkind']>,p:P,s:P,yaw:number,name:string,color?:string,amp?:number)=>
     C.push({t:'decor',dkind,p,s,yaw,nm:'Reference opening · '+name,grp:10,color,amp});
-  const house=(g:THREE.BufferGeometry)=>g.translate(17,0,6).rotateY(-Math.PI/18).translate(-17,0,-6);
-  const hp=(p:P)=>openingHousePoint(p);
+  // Reuse the plank-and-canvas cabin on the right bank of the later coastal
+  // settlement, before the crab shack. The rounded cabin keeps its balcony.
+  const cabinOrigin=new THREE.Vector3(...treehouseTrialPoint([46,-13.45,-166])),cabinYaw=-Math.PI/18;
+  const house=(g:THREE.BufferGeometry)=>g.translate(17,-8.4,6.1).rotateY(cabinYaw).translate(...cabinOrigin.toArray());
+  const hp=(p:P):P=>new THREE.Vector3(...p).add(new THREE.Vector3(17,-8.4,6.1))
+    .applyAxisAngle(new THREE.Vector3(0,1,0),cabinYaw).add(cabinOrigin).toArray();
   const route=new THREE.CatmullRomCurve3(TREEHOUSE_CLEARING_ROUTE.map(p=>new THREE.Vector3(...p))).getPoints(96);
   const pathDistance=(x:number,z:number)=>Math.min(...route.map(p=>Math.hypot(p.x-x,p.z-z)));
   const pipeHalfWidth=TREEHOUSE_HALFPIPE.w!+TREEHOUSE_HALFPIPE.rise!+TREEHOUSE_HALFPIPE.deck!+.1;
   const pipeHalfLength=TREEHOUSE_HALFPIPE.len!/2;
   for(let c of source){
-    if(c.dkind==='treehousebody'||c.nm==='Warm recessed doorway')continue;
     if(c.nm?.startsWith('Diagonal structural bracing beneath treehouse'))continue;
     if((c.nm==='Cabin and balcony grounded support post'||c.nm==='Stone footing beneath a timber support')&&c.p[2]>-3)continue;
     if(c.nm==='Framing jungle tree'&&c.p[0]<0)c={...c,dkind:'trialsv2treea',color:'#b4c8b8'};
@@ -81,7 +84,10 @@ export function referenceTreehouseOpening(source:CustomComponent[]):CustomCompon
     C.push(c);
   }
 
-  // Individual uneven boards preserve the reference's rectangular cabin silhouette.
+  // Individual uneven boards preserve the relocated cabin's rectangular silhouette.
+  box([-17,7.625,-6.1],[12.7,1.55,8.7],'Reference cabin · grounded timber plinth','#7d6242','treehouse-timber',8,house);
+  C.push({t:'wall',p:hp([-17,6.85,-6.1]),s:[12.5,7.05,8.5],yaw:-10,invisible:true,
+    nm:'Relocated scenery cabin collision',grp:10});
   const shades=['#e6d8bc','#f0e1c7','#d1c3a9','#ddcfb4','#dfc9a7'];
   for(const z of [-10.1,-2.1])for(let i=0;i<24;i++){
     const x=-22.75+i*.49,front=z>-3,door=front&&x>-20.9&&x<-18.5;
@@ -97,7 +103,7 @@ export function referenceTreehouseOpening(source:CustomComponent[]):CustomCompon
   const doorGlow=new THREE.PlaneGeometry(1.35,2.9).translate(-19.8,10.0,-2.38);house(doorGlow);
   geometry(doorGlow,'Reference cabin · warm inner doorway','solid','#c48d47',8,{emissive:'#492006'});
   // The canvas ridge runs across the cabin, exposing the broad sloping sail
-  // to the beach view. All four corners remain tied to the balcony posts.
+  // to the path. All four corners remain tied to the building's ground posts.
   for(const x of [-23,-11]){
     rod(hp([x,12.8,-6.1]),hp([x,16.0,-6.1]),.14,'Reference roof · ridge supports');
     rod(hp([x,13.1,-11.45]),hp([x,16,-6.1]),.1,'Reference roof · sloping rafters');
@@ -119,7 +125,7 @@ export function referenceTreehouseOpening(source:CustomComponent[]):CustomCompon
   for(const v of [-1,1])rope(Array.from({length:33},(_,i)=>hp(roofPoint(i/16-1,v))),'Reference roof · stitched bound canvas hem',.041,'#b39a6b');
   for(const u of [-1,1])for(const v of [-1,1]){
     const end=hp([v<0?-24.1:-9.8,12.75,u<0?-11.3:-.5]);
-    rod([end[0],8.22,end[2]],end,.10,'Reference roof · corner tie post');
+    rod([end[0],cabinOrigin.y-1.55,end[2]],end,.10,'Reference roof · corner tie post');
     rope([hp(roofPoint(u,v)),end],'Reference roof · taut corner lashing',.044);
   }
 
