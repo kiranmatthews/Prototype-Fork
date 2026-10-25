@@ -1,57 +1,47 @@
-# Slipstream art polish
+# Slipstream tropical island polish
 
-Seven real baseline views cover the entrance, enclosed flume, forest bend,
-ruined reservoir, broken-platform pools, falling coils and coastal finish.
-Each has its own ImageGen paintover in `concepts/`. These are art-direction
-studies, not gameplay evidence. The latest user direction prioritizes overall
-quality and cohesion; distant scenery and skybox matching are excluded.
+The current pass replaces the rejected first implementation. Seven actual
+major-section screenshots have seven ImageGen paintovers in `concepts/`.
+These are reference studies, not gameplay evidence. The user clarified that
+only ImageGen references have a 15-image maximum; verification captures are
+unlimited. No new reference images were generated during this correction.
 
-The playable treatment uses brighter aqua enamel with restrained wear, broad
-rounded ivory coping, warm sunlight and stronger teal bounce inside the flumes.
-Sandstone surfaces unify the old ruins and maintenance decks. Existing Meshy
-palms, hibiscus, ferns, broadleaf plants and flowering vines form compact gardens
-at entrances, supported terraces, old masonry and tunnel walls. The 74 cliff
-plants were fitted to the approved near rock triangles with vertical raycasts.
-`garden-anchors.json` records those measured roots. New props are visual only.
+The race now has layered, actual Meshy cliffs and sea stacks, with palms,
+shrubs, hibiscus and broadleaf foliage rooted on their triangle surfaces.
+All scenery matte planes were removed from Slipstream, including the canopy
+and portal paintings that could intersect the enclosed ride. The original
+flat cliff skirts were retired after an actual moving-camera review exposed
+their oversized silhouettes. Rotated rock bounds are checked against every
+stacked course leg. Slipstream uses intact near meshes at all distances;
+broken reduced donor meshes are not rendered. Other levels keep their settings.
 
-All four edges of the waterpark mattes are feathered, including the upper edge
-of alpha paintings. Wider borders and the existing depth-fog fade prevent
-rectangular cut edges. Distant sky art is unchanged.
+Every enclosed tube has physical roof openings with rusted thickness edges,
+sunlight reaching the riding surface and softly fading light shafts. Real
+flowering vines hang from the roof and portals. A dedicated tropical sky,
+warm sun, cool fill, aqua enamel and ivory coping unify the route. Far scenery
+is not matched literally to the ImageGen references.
 
-`screenshots.json` is the shared capture ledger. The review script refuses to
-exceed 15 screenshots across every pass. Other gameplay tests disable image
-capture. The `before/`, `iteration/`, and `after/` folders contain real browser
-captures; the single iteration view is separate from the final seven views.
+The new midground contains 249 rock placements and 1,208 fitted or lip-anchored plants, on top
+of the existing park props and gardens. `corrective/midground-anchors.json`
+records the roots. `public/waterslide/island-headland.provenance.json` records
+the reused Meshy commission and geometry preservation. Meshy spend remains
+**0 / 300 credits**; no new generation was needed.
 
-`art-direction.json` retains every paintover prompt and source. The generated
-fiberglass source is in `tools/waterslide-island/polish/`; its 1024px WebP is the
-only new runtime image. Meshy spending for this brief: **0 / 300 credits**.
+`corrective/ride-physics-baseline.json` fingerprints the original riding and
+return surfaces, route, spawn, camera, kill plane and rules, excluding the
+explicitly requested enclosed-tube group. The roof openings are the intended
+geometry change. All newly placed scenery is non-colliding. The focused audit
+checks the original floor, liner clearance, side walls, structural columns,
+and actual roof openings in all seven tunnels.
 
-`physics-baseline.json` fingerprints the original source at commit `18cbf33e`,
-before the art changes. Numeric coordinates are canonicalized to one
-micrometre to remove V8 trigonometric roundoff; Node 22 and 24 agree. The test confirms
-that all 1,600 physical components, spawn, kill plane, camera rig, race route,
-gaps and rules retain the original fingerprint. Decorative trim is kept within
-the existing 100,000-triangle editor limit.
+The full browser race completed all eight riders with no console errors,
+zero player falls and zero deaths. The player finished in 158.63 game seconds.
+`corrective/motion/report.json` records that run; `validation.json` records the
+final build, level checks and section review. The race run precedes the final
+visual-only removal of cliff skirts and repositioning of sea stacks.
 
-Regenerate rounded coping with `tools/bake-waterslide-trim.mjs`, the planted
-cliff anchors with `tools/waterslide-island/bake-polish-gardens.mjs`, and the
-published level entry with `tools/sync-slipstream.mjs` in that order.
-
-The final captured review prompted two small cleanup changes: the service
-decks and ruins now use Custard Creek's lighter sandstone, and the service
-decks use the existing render-only depth bias to eliminate their coplanar
-flicker against the slide. No additional screenshot was taken after reaching
-the 15-image cap; the `after/` images show the pass immediately before those
-two corrections.
-
-Validation covers the original physics fingerprint, all 74 measured cliff
-plant roots, 344 prop-foot probes, 48 trestle-foot probes, 528 tunnel rays,
-3,075 column-clearance probes, editor portability, `npm run check:levels`,
-and `npm run build`. The complete lite browser race finished all eight riders;
-the player finished in 157.10 seconds with zero falls/deaths. Seven full-render
-section visits recorded supported positions and no asset or console errors.
-`race-lite.json`, `time-trial.json`, and `after/report.json` retain the evidence.
-The post-cleanup visits are in `final-browser.json`; the full summary is in
-`validation.json`. Open [the visual comparison gallery](review.html) to review
-all seven sections alongside their built-in ImageGen paintovers.
+Open [the comparison gallery](review.html) for original gameplay, the seven
+references and corrected gameplay. Earlier `after/` and `corrective-pass*/`
+images are retained as iteration history, not final evidence. Regenerate the
+new foliage with `tools/waterslide-island/bake-midground-gardens.mjs`, then
+publish the level entry with `tools/sync-slipstream.mjs`.

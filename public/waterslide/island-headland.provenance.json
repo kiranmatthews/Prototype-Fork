@@ -1,0 +1,61 @@
+{
+  "provider": "Meshy",
+  "existingTaskId": "01a140a4-4c5e-71ca-b89a-f0cf89ae47b4",
+  "reusedFrom": "Drowned Crown original uncut commissioned coastal headland",
+  "creditsUsed": 0,
+  "sourceSha256": "519a1f00286c45bcc27d65b03a8ad627f6225e8b875055dd49cfc28acbbd0b98",
+  "sourceGeometryAndUVsUnchanged": true,
+  "textures": [
+    {
+      "image": 0,
+      "sourceSize": [
+        4096,
+        4096
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/png",
+      "bytes": 1284086
+    },
+    {
+      "image": 1,
+      "sourceSize": [
+        4096,
+        4096
+      ],
+      "size": [
+        2048,
+        2048
+      ],
+      "mimeType": "image/jpeg",
+      "bytes": 1104447
+    },
+    {
+      "image": 2,
+      "sourceSize": [
+        4096,
+        4096
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/png",
+      "bytes": 839335
+    }
+  ],
+  "distanceLod": {
+    "method": "Blender collapse; existing runtime distance crossfade",
+    "ratio": 0.16,
+    "triangles": 5504,
+    "nearTriangles": 34401,
+    "nearGeometryAndMapsUnchanged": true,
+    "packedSourceSha256": "b8920026b78ef02819a766ecc4f1791d25c4b001b26040844c59af08e8631a04",
+    "preservedBinaryBytes": 4519144,
+    "preservedBinarySha256": "948fdad61535d108bde340a0e5bbb73902e726e9ca1a9655fc06be8f4b1fe4bb"
+  },
+  "sha256": "74af094e0ecb9bd9132c9ed196a57b56894967ce9b8e411726300570eb9ba72b",
+  "runtimeRenderPolicy": "Slipstream renders the preserved LOD0 at all distances; the reduced trial mesh is not used."
+}

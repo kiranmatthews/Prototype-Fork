@@ -11,14 +11,18 @@ await withBlockworksRuntime(async r=>{
  const shells=[];r.scene.traverse(o=>{if(o.isMesh&&/^Enclosed flume \d+ \/ inner$/.test(o.name))shells.push(o);});
  const reports=[],issues=[];let rays=0,columnProbes=0;
  for(const [index,[a,b]] of WATERPARK_TUNNELS.entries()){
-  const own=shells.filter(o=>o.name===`Enclosed flume ${index+1} / inner`),row={tunnel:index+1,from:a,to:b,sections:0,maxLinerGap:0,minHeadroom:Infinity};assert.ok(own.length);
+  const {WATERPARK_SKYLIGHTS}=await r.server.ssrLoadModule('/src/levels/slipstream-island.ts');
+  const own=shells.filter(o=>o.name===`Enclosed flume ${index+1} / inner`),row={tunnel:index+1,from:a,to:b,sections:0,openRoofSamples:0,maxLinerGap:0,minHeadroom:Infinity};assert.ok(own.length);
   for(let s=a+7.5;s<b-5;s+=9.3){const p=floor(s);assert.ok(p,'Native floor '+s);const origin=p.clone().add(new r.THREE.Vector3(0,2.5,0)),f=course.tangent(s),right=new r.THREE.Vector3(-f.z,0,f.x).normalize();
    for(const [name,dir] of [['roof',new r.THREE.Vector3(0,1,0)],['floor',down],['left',right.clone().negate()],['right',right]]){
-    ray.set(origin,dir);ray.near=0;ray.far=80;rays++;const hit=ray.intersectObjects(own,false)[0];if(!hit){issues.push({tunnel:index+1,s,missing:name});continue;}
+    ray.set(origin,dir);ray.near=0;ray.far=80;rays++;const hit=ray.intersectObjects(own,false)[0];if(!hit){
+     if(name==='roof'&&WATERPARK_SKYLIGHTS.some(g=>g.tunnel===index&&Math.abs(s-g.s)<g.length/2+5))row.openRoofSamples++;
+     else issues.push({tunnel:index+1,s,missing:name});continue;
+    }
     if(name==='floor'){const gap=hit.distance-2.5;row.maxLinerGap=Math.max(row.maxLinerGap,gap);if(gap>1.1||gap<-.06)issues.push({tunnel:index+1,s,floorGap:gap});}
     if(name==='roof'){row.minHeadroom=Math.min(row.minHeadroom,hit.distance+2.5);if(hit.distance<6)issues.push({tunnel:index+1,s,headroom:hit.distance+2.5});}
    }row.sections++;
-  }reports.push(row);
+  }assert.ok(row.openRoofSamples>0,'Every enclosure has real openings to the sky');reports.push(row);
  }
  const {WATERSLIDE_ASSETS}=await r.server.ssrLoadModule('/src/waterslideAssets.ts');
  const trestles=r.source.components.filter(c=>c.dkind==='waterslideflumesupport');

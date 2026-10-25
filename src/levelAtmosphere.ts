@@ -150,6 +150,13 @@ export interface SkyPresetDef {
   tint?: string;
 }
 export const SKY_PRESETS: Record<SkyPreset, SkyPresetDef> = {
+  'waterslide-island': {
+    file:'waterslide/island-sky.webp',label:'Slipstream tropical daylight',fog:0x9bc9cc,fogFarCap:620,
+    sunTint:0xffe3ac,sunK:1,sunMul:1,groundTint:0x69704d,groundK:1,
+    hemiTint:0xc0e5e7,hemiK:1,hemiMul:1,fillTint:0x8fcbd4,fillK:1,fillMul:.3,
+    top:'#278cce',bottom:'#c8e8dd',stars:false,sunHex:null,imgH:724,horizonPx:706,
+    seaHorizon:true,farPlane:2000,equirectangular:true,oceanContentFraction:706/724,
+  },
   'country-club': {
     file:'country-club-art/sky.webp',label:'Country Club sunshine',fog:0xa8cee4,fogFarCap:1100,
     sunTint:0xffefcf,sunK:1,sunMul:1,groundTint:0x8eac64,groundK:1,

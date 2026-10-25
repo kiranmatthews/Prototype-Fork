@@ -48,7 +48,7 @@ try{
   await page.waitForTimeout(250);
   const s=await page.evaluate(()=>{const r=window.__game.getSkateRace();return {phase:r.phase,time:r.elapsed,progress:r.riders[0].progress,length:r.course.length,finished:r.riders.filter(v=>v.finish!==null).length,falls:r.riders.map(v=>v.falls),riders:r.riders.map(v=>({id:v.id,s:v.progress,p:v.player.pos.toArray(),state:v.player.state,speed:v.player.speed,bailing:v.player.skateCameraBailing,grounded:v.player.grounded,recovery:v.recovery,finished:v.finish})),fps:1/window.__game.frameStats.rawDt};});
   if(i%80===0){console.log(JSON.stringify({heartbeat:true,...s}));await writeFile(output+'/latest.json',JSON.stringify(s));}
-  const next=Math.floor(s.progress/700);if(next!==mark){mark=next;console.log(JSON.stringify(s));await page.screenshot({path:`${output}/section-${mark}.png`});}
+  const next=Math.floor(s.progress/Number(process.env.RACE_SHOT_STEP||700));if(next!==mark){mark=next;console.log(JSON.stringify(s));await page.screenshot({path:`${output}/section-${mark}.png`});}
   if(!finishShot&&s.length-s.progress<65&&s.phase==='running'){finishShot=true;await page.screenshot({path:output+'/finish-approach.png'});}
   if(s.finished===8){complete=true;break;}
  }
