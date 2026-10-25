@@ -9,6 +9,15 @@ const output = ts.transpileModule(source, { compilerOptions: { target: ts.Script
 const { MapDeckFlip, MapLevelPresentation, MAP_DECK_FLIP_SECONDS: duration, mapTrialTime } = await import(`data:text/javascript;base64,${Buffer.from(output).toString('base64')}`);
 globalThis.TIME_MEDALS = ['gold', 'silver', 'bronze'];
 globalThis.TIME_MEDAL_COLORS = {gold: 0xf8c64e, silver: 0xc6d5e2, bronze: 0xc98246};
+globalThis.setTimeMedalTier = () => {};
+for(const allowsCrystal of [true,false]){
+  const sockets=[];
+  const ctx=new Proxy({ellipse:(x,y)=>sockets.push([x,y])},{get:(obj,key)=>obj[key]??(()=>{})});
+  MapLevelPresentation.prototype.paint.call({rewards:[{},{},{}],faceTexture:{image:{getContext:()=>ctx}},boardSettings:{value:{}},rooAtlas:{draw:()=>true},paintTrial:()=>{}},
+    {name:'Secret course',earned:[false,false,false],allowsCrystal});
+  assert.equal(sockets.length,allowsCrystal?3:2,'Secret map card must have no crystal socket');
+  if(!allowsCrystal)assert.ok(Math.abs(sockets[0][0]+sockets[1][0]-1536)<.01,'Gem and medal sockets must remain centred');
+}
 for (const [medal, expected] of [[null, 0], ['bronze', 1], ['silver', 2], ['gold', 3]]) for (const times of [[], [59.12], [59.12, 62.34, 70.56]]) {
   const labels = [];
   const ctx = new Proxy({ fillText: text => labels.push(text) }, {get: (obj, key) => obj[key] ?? (() => {})});

@@ -1,0 +1,839 @@
+{
+  "sourceSha256": "1492874a654bb1a06826ebfd409eda6d127ae9543b91458071605a76a66352cf",
+  "savedRouteMetres": 1222.735739,
+  "routeMetres": 3795.44,
+  "ratio": 3.1040539602904667,
+  "fog": {
+    "near": 36,
+    "far": 192
+  },
+  "native": {
+    "evidence": {
+      "gaps": [
+        {
+          "index": 0,
+          "takeoff": [
+            -4.889182467271228,
+            6.97263694121299,
+            -734.7413108610114
+          ],
+          "landed": [
+            -8.190777888945538,
+            0.6815187232937512,
+            -768.4954658552573
+          ],
+          "aired": true
+        },
+        {
+          "index": 1,
+          "takeoff": [
+            30.758661751942576,
+            -108.10007620970823,
+            -1216.6039609983384
+          ],
+          "landed": [
+            17.00587710074476,
+            -114.37013811053355,
+            -1241.4111287021656
+          ],
+          "aired": true
+        },
+        {
+          "index": 2,
+          "takeoff": [
+            73.63572903482394,
+            -221.76393822314796,
+            -1616.9852281762544
+          ],
+          "landed": [
+            80.40641449000718,
+            -225,
+            -1635.3571870521491
+          ],
+          "aired": true
+        },
+        {
+          "index": 3,
+          "takeoff": [
+            128.31539603977666,
+            -328.40852327675617,
+            -1826.6049096291479
+          ],
+          "landed": [
+            128.090888196159,
+            -338.596110117029,
+            -1856.3763525042236
+          ],
+          "aired": true
+        }
+      ],
+      "inverted": true,
+      "loopEntrySpeed": 66.4193753451934,
+      "finished": true,
+      "checkpoints": [
+        0,
+        1,
+        2,
+        3,
+        5,
+        6
+      ]
+    },
+    "index": 758,
+    "end": {
+      "frame": 7487,
+      "time": 124.78333333333333,
+      "position": [
+        96.2226283108299,
+        -346.4498889450597,
+        -1958.6590469443497
+      ],
+      "heading": [
+        -0.14980537942799527,
+        0,
+        -0.988715504224769
+      ],
+      "state": "finished",
+      "grounded": false,
+      "speed": 27.20115617696691,
+      "verticalSpeed": -4.727310044209244,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "warp pad",
+        "y": -347.26333333355683,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": -0.16,
+        "moveY": 0.99,
+        "jumpHeld": true,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      }
+    },
+    "recovery": {
+      "frame": 7888,
+      "time": 131.46666666666667,
+      "position": [
+        128,
+        -329.92875717628306,
+        -1794
+      ],
+      "heading": [
+        0,
+        0,
+        -1
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 1,
+      "mover": null,
+      "ground": null,
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0,
+        "moveY": 0,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      }
+    }
+  },
+  "fullRenderBrowser": {
+    "frame": 7487,
+    "finished": true,
+    "failed": null,
+    "index": 758,
+    "position": [
+      96,
+      -348,
+      -1958.2
+    ],
+    "speed": 0,
+    "grounded": true,
+    "loop": {
+      "active": false,
+      "progress": 0,
+      "pressure": 0,
+      "completed": 0
+    },
+    "evidence": {
+      "gaps": [
+        {
+          "index": 0,
+          "takeoff": [
+            -4.934950525287065,
+            7.00354982601627,
+            -734.9389272484526
+          ],
+          "landed": [
+            -8.144234257689227,
+            0.6880552759369913,
+            -767.6857602657037
+          ],
+          "aired": true
+        },
+        {
+          "index": 1,
+          "takeoff": [
+            30.704844473359103,
+            -108.09880209164614,
+            -1216.7116134581784
+          ],
+          "landed": [
+            17.48964473135656,
+            -114.3693971131678,
+            -1240.2531861380094
+          ],
+          "aired": true
+        },
+        {
+          "index": 2,
+          "takeoff": [
+            73.63043715065893,
+            -221.7590352171117,
+            -1616.6164007427665
+          ],
+          "landed": [
+            80.44213709877793,
+            -225,
+            -1635.2066658770277
+          ],
+          "aired": true
+        },
+        {
+          "index": 3,
+          "takeoff": [
+            128.29122113125683,
+            -328.3642513666079,
+            -1826.95375910541
+          ],
+          "landed": [
+            127.96187566738743,
+            -338.7862503454417,
+            -1857.108192746161
+          ],
+          "aired": true
+        }
+      ],
+      "inverted": true,
+      "loopEntrySpeed": 66.19719810953667,
+      "finished": true,
+      "checkpoints": [
+        0,
+        1,
+        2,
+        3,
+        5,
+        6
+      ]
+    }
+  },
+  "shortcuts": [
+    {
+      "name": "Pearl halo \u00b7 round right-hand descent",
+      "target": [
+        0,
+        -49,
+        -984
+      ],
+      "jump": {
+        "frame": 202,
+        "time": 3.3666666666666667,
+        "position": [
+          -11.300158727170118,
+          -15.163709150329042,
+          -976.028781063929
+        ],
+        "heading": [
+          0.8186024426403197,
+          0,
+          -0.5743605495708276
+        ],
+        "state": "air",
+        "grounded": false,
+        "speed": 22.380796676750407,
+        "verticalSpeed": 17.478360190514316,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "slide deck",
+          "y": -15.163709150329042,
+          "normal": [
+            -0.00012767441263289602,
+            0.8062001574994679,
+            0.5916428734862591
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": -0.7,
+          "moveY": 0.72,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": true,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        },
+        "requested": {
+          "moveX": -0.6955524974658727,
+          "moveY": 0.7184752767277294,
+          "jumpHeld": false
+        }
+      },
+      "landing": {
+        "frame": 321,
+        "time": 5.35,
+        "position": [
+          25.036441348014606,
+          -49.77888832585974,
+          -1001.5238303107925
+        ],
+        "heading": [
+          0.6530822692250199,
+          0,
+          -0.7572869664954619
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 30.5,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "slide deck",
+          "y": -49.77888832585974,
+          "normal": [
+            0.05528838388474979,
+            0.9677142658733126,
+            -0.24591115109463518
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": true,
+          "grindHeld": false,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      },
+      "trail": [
+        [
+          -4.28,
+          -10.99,
+          -980.96
+        ],
+        [
+          3.05,
+          -11.51,
+          -986.1
+        ],
+        [
+          10.38,
+          -17.96,
+          -991.24
+        ],
+        [
+          17.71,
+          -30.81,
+          -996.38
+        ]
+      ]
+    },
+    {
+      "name": "Cloud eye \u00b7 wide left oval",
+      "target": [
+        72,
+        -104,
+        -1166
+      ],
+      "jump": {
+        "frame": 529,
+        "time": 8.816666666666666,
+        "position": [
+          78.76117293386079,
+          -65.74743213294985,
+          -1160.7290137647478
+        ],
+        "heading": [
+          -0.7920331041417833,
+          0,
+          -0.6104781420686008
+        ],
+        "state": "air",
+        "grounded": false,
+        "speed": 22.706799469278806,
+        "verticalSpeed": 16.47408836257126,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "slide deck",
+          "y": -65.74743213294985,
+          "normal": [
+            -0.08962589718918271,
+            0.8028851197720518,
+            0.5893578564858978
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0.62,
+          "moveY": 0.79,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": true,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        },
+        "requested": {
+          "moveX": 0.6163169572506412,
+          "moveY": 0.7874981956838452,
+          "jumpHeld": false
+        }
+      },
+      "landing": {
+        "frame": 654,
+        "time": 10.9,
+        "position": [
+          41.293387790573505,
+          -107.33827246667497,
+          -1189.6081903321058
+        ],
+        "heading": [
+          -0.3528252918501,
+          0,
+          -0.9356892184004749
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 29.637251775226026,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "slide deck",
+          "y": -107.33827246667497,
+          "normal": [
+            0.1697371903047744,
+            0.9580206121325854,
+            -0.2310536581760772
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": true,
+          "grindHeld": false,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      },
+      "trail": [
+        [
+          71.27,
+          -61.86,
+          -1166.5
+        ],
+        [
+          63.77,
+          -63.39,
+          -1172.28
+        ],
+        [
+          56.28,
+          -71.6,
+          -1178.06
+        ],
+        [
+          48.79,
+          -86.75,
+          -1183.83
+        ]
+      ]
+    },
+    {
+      "name": "Seraph coil \u00b7 tall oval quarter-turn exit",
+      "target": [
+        -116,
+        -162,
+        -1380
+      ],
+      "jump": {
+        "frame": 929,
+        "time": 15.483333333333333,
+        "position": [
+          -113.30029173408477,
+          -126.98943718533678,
+          -1385.6193571285296
+        ],
+        "heading": [
+          0.02692919416140096,
+          0,
+          -0.9996373434910399
+        ],
+        "state": "air",
+        "grounded": false,
+        "speed": 20.309196538467347,
+        "verticalSpeed": 19.672436410687013,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "slide deck",
+          "y": -126.98943718533678,
+          "normal": [
+            0.35075995788711456,
+            0.8049162468317219,
+            0.47862019130973193
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0.61,
+          "moveY": -0.79,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": true,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        },
+        "requested": {
+          "moveX": 0.6067993295930959,
+          "moveY": -0.7948550645277223,
+          "jumpHeld": false
+        }
+      },
+      "landing": {
+        "frame": 1061,
+        "time": 17.683333333333334,
+        "position": [
+          -112.09708908102189,
+          -167.5051577271492,
+          -1430.2833859360528
+        ],
+        "heading": [
+          0.02692919416140096,
+          0,
+          -0.9996373434910399
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 22.509196538467346,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "slide deck",
+          "y": -167.5051577271492,
+          "normal": [
+            0.04946737297128743,
+            0.9966884303750855,
+            -0.0645379870136033
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": true,
+          "grindHeld": false,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      },
+      "trail": [
+        [
+          -113.06,
+          -121.68,
+          -1394.42
+        ],
+        [
+          -112.83,
+          -122.26,
+          -1403.21
+        ],
+        [
+          -112.58,
+          -130.27,
+          -1412.35
+        ],
+        [
+          -112.34,
+          -145.64,
+          -1421.15
+        ]
+      ]
+    },
+    {
+      "name": "Last halo \u00b7 oblique return",
+      "target": [
+        68,
+        -221,
+        -1609
+      ],
+      "jump": {
+        "frame": 1247,
+        "time": 20.78333333333333,
+        "position": [
+          60.9980552190032,
+          -191.11999667366908,
+          -1598.5125605713515
+        ],
+        "heading": [
+          0.5616812639892157,
+          0,
+          -0.8273537077232896
+        ],
+        "state": "air",
+        "grounded": false,
+        "speed": 22.03613070993675,
+        "verticalSpeed": 17.87571531233784,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "slide deck",
+          "y": -191.11999667366908,
+          "normal": [
+            0.1799092462192165,
+            0.806750300296025,
+            0.5628380016462168
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": -0.73,
+          "moveY": 0.68,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": true,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        },
+        "requested": {
+          "moveX": -0.7333472038206802,
+          "moveY": 0.6798543069278817,
+          "jumpHeld": false
+        }
+      },
+      "landing": {
+        "frame": 1367,
+        "time": 22.78333333333333,
+        "position": [
+          85.75261872018055,
+          -225,
+          -1634.9759094648366
+        ],
+        "heading": [
+          0.5616812639892157,
+          0,
+          -0.8273537077232896
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 24.23613070993675,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "slide deck",
+          "y": -225,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": true,
+          "grindHeld": false,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      },
+      "trail": [
+        [
+          65.95,
+          -186.72,
+          -1605.81
+        ],
+        [
+          70.9,
+          -187.29,
+          -1613.1
+        ],
+        [
+          75.85,
+          -193.8,
+          -1620.39
+        ],
+        [
+          80.8,
+          -206.71,
+          -1627.68
+        ]
+      ]
+    }
+  ],
+  "solidWallBypassMaxX": 101.22083333333362,
+  "browserSecretMenus": [
+    {
+      "key": "secret-1",
+      "detail": "SKY BRIDGE\nALL BOXES\nTIME TRIAL\nBEST TIMES\n1.\n\u2014:\u2014.\u2014\n2.\n\u2014:\u2014.\u2014\n3.\n\u2014:\u2014.\u2014"
+    },
+    {
+      "key": "secret-2",
+      "detail": "TEMPLE OF EMBERS\nALL BOXES\nTIME TRIAL\nBEST TIMES\n1.\n\u2014:\u2014.\u2014\n2.\n\u2014:\u2014.\u2014\n3.\n\u2014:\u2014.\u2014"
+    },
+    {
+      "key": "secret-3",
+      "detail": "THE ANCIENT GATES\nALL BOXES\nTIME TRIAL\nBEST TIMES\n1.\n\u2014:\u2014.\u2014\n2.\n\u2014:\u2014.\u2014\n3.\n\u2014:\u2014.\u2014"
+    },
+    {
+      "key": "secret-4",
+      "detail": "ROLLING BONES\nALL BOXES\nTIME TRIAL\nBEST TIMES\n1.\n\u2014:\u2014.\u2014\n2.\n\u2014:\u2014.\u2014\n3.\n\u2014:\u2014.\u2014"
+    },
+    {
+      "key": "secret-5",
+      "detail": "THE SKYSTREAM\nALL BOXES\nTIME TRIAL\nBEST TIMES\n1.\n\u2014:\u2014.\u2014\n2.\n\u2014:\u2014.\u2014\n3.\n\u2014:\u2014.\u2014"
+    }
+  ]
+}

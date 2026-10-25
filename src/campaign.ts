@@ -383,6 +383,7 @@ const ASSIGNMENTS: Record<string, Partial<CampaignLevelDefinition> & { name: str
   'secret-2': {name:'Temple of Embers',levelId:'jungle-terraces',previewKey:'jungle-terraces',relicTime:240,secretRequirement:'gems-5'},
   'secret-3': {name:'The Ancient Gates',levelId:'jungle-gate-run',previewKey:'jungle-gate',secretRequirement:'medals-10'},
   'secret-4': {name:'Rolling Bones',levelId:'rolling-bones',previewKey:'rolling-bones',relicTime:118,secretRequirement:'gems-15'},
+  'secret-5': {name:'The Skystream',levelId:'skystream',previewKey:'skystream',relicTime:180,secretRequirement:'medals-20'},
 };
 
 /** Hand-placed coastal loops, in progression order. Coordinates are island-local. */
@@ -584,16 +585,16 @@ export function campaignLevelByKey(key: string): CampaignLevelDefinition | null 
   return LEVEL_BY_KEY.get(key) ?? null;
 }
 
-/** Ordinary courses keep crystal awards independently of bonus detours. */
+/** Secret Island offers gems and medals; crystals belong to main courses. */
 export function levelAllowsCrystal(id: string): boolean {
   const definition = campaignLevelById(id) ?? campaignLevelByKey(id);
-  return !definition?.placeholder && (!definition?.boss || definition?.skateRace === true) && !definition?.competition;
+  return definition?.islandId !== 'hidden-shores' && !definition?.placeholder && (!definition?.boss || definition?.skateRace === true) && !definition?.competition;
 }
 
 /** A course can explicitly omit a bonus without becoming a boss encounter. */
 export function levelAllowsBonus(id: string): boolean {
   const definition = campaignLevelById(id) ?? campaignLevelByKey(id);
-  return levelAllowsCrystal(id) && definition?.bonus !== false;
+  return !definition?.placeholder && (!definition?.boss || definition?.skateRace === true) && !definition?.competition && definition?.bonus !== false;
 }
 
 export function isCampaignLevel(id: string): boolean {
@@ -1112,12 +1113,12 @@ export class CampaignStore {
   }
 
   // A pickup belongs to the current run until a normal finish secures it.
-  // Race crystals follow the same rule: only a winning finish earns one.
+  // Main courses secure a crystal; Secret Island unlocks trials on a clear.
   runModesUnlocked(levelId: string): boolean {
     const progress = this.levelProgress(levelId);
     const definition = campaignLevelById(levelId);
     return !!definition && !definition.placeholder && campaignHasTimeTrial(definition)
-      && (progress?.cleared === true && progress.crystal === true);
+      && progress?.cleared === true && (!levelAllowsCrystal(levelId) || progress.crystal === true);
   }
 
   private get inspectionUnlocks(): boolean {
@@ -1210,7 +1211,7 @@ export class CampaignStore {
     if(!progress||!campaignLevelById(levelId)?.skateRace||campaignLevelById(levelId)?.placeholder)return null;
     const before=JSON.stringify(progress),finishedChanged=this.updateLastFinishedLevel(levelId);
     progress.cleared=true;
-    if(rewards.won){progress.crystal=true;progress.raceWon=true;}
+    if(rewards.won){progress.crystal=levelAllowsCrystal(levelId);progress.raceWon=true;}
     progress.boxGem ||= rewards.boxGem;
     if(JSON.stringify(progress)!==before||finishedChanged)this.noteWorkingChange();
     return progress;

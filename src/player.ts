@@ -5446,7 +5446,7 @@ export class Player {
   }
 
   private stepBossEncounter(dt: number, level: Level): void {
-    if (level.isBossLevel) this.hasCrystal = false;
+    if (level.isBossLevel || level.allowsCrystal === false) this.hasCrystal = false;
     if (!level.boss) return;
     const result = level.boss.step(dt, {
       position: this.pos, state: this.state, speed: Math.abs(this.state === 'grind' ? this.grindVel : this.speed),

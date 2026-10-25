@@ -6,7 +6,7 @@ import type * as THREE from "three";
 import { MapLevelPresentation, mapTrialTime } from "./mapLevelPresentation";
 import {
   CAMPAIGN_START_LEVEL_KEY, CAMPAIGN_ISLANDS,
-  campaignLevelByKey,
+  campaignLevelByKey, levelAllowsCrystal,
   defaultMedalTimes, earnedTimeMedal, TIME_MEDALS, type MedalTimes,
   type CampaignStore,
 } from "./campaign";
@@ -127,6 +127,7 @@ export class WorldMapUI {
     ] as const;
     this.collectibleRow.replaceChildren();
     for (const [label, earned] of rewards) {
+      if (label === 'CRYSTAL' && !levelAllowsCrystal(definition.levelId)) continue;
       const reward = node("span", `world-map-collectible${earned ? " earned" : ""}`);
       reward.setAttribute("aria-label", `${label}: ${earned ? "collected" : "missing"}`);
       reward.textContent = `${label}: ${earned ? "collected" : "missing"}`;
@@ -152,6 +153,7 @@ export class WorldMapUI {
     }
     this.presentation ??= new MapLevelPresentation(this.levelCard, this.trial);
     this.presentation.select({ key: definition.progressKey, name: definition.name,
+      allowsCrystal: levelAllowsCrystal(definition.levelId),
       earned: rewards.map(([, earned]) => earned), competition: definition.competition, cup: progress?.cup === true, status:definition.placeholder ? 'COMING SOON' : undefined, trialUnlocked, times: [...times], target: targets.gold, targets, medal }, immediate);
   }
 

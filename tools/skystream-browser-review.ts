@@ -1,0 +1,48 @@
+import * as THREE from 'three';
+import * as source from '../src/levels/skystream';
+import { createSkystreamPilot } from './skystream-pilot.mjs';
+
+const g:any=await new Promise(resolve=>{const poll=()=>{const game=(window as any).__game;if(game&&!game.gameFlow.blocksGameplay)resolve(game);else requestAnimationFrame(poll);};poll();});
+const panel=document.createElement('details');panel.open=true;panel.id='skystream-review-controls';
+panel.style.cssText='position:fixed;left:8px;top:8px;z-index:999999;max-width:330px;padding:8px;background:#122d40ed;color:#fff;font:12px monospace';
+const title=document.createElement('summary');title.textContent='Skystream review';panel.append(title);
+const controls=document.createElement('div'),status=document.createElement('pre');status.id='skystream-review-status';status.style.whiteSpace='pre-wrap';panel.append(controls,status);document.body.append(panel);
+const add=(name:string,action:()=>void)=>{const b=document.createElement('button');b.textContent=name;b.style.cssText='margin:3px;padding:6px';b.onclick=action;controls.append(b);};
+let pilot:any=null,frame=0,finished=false,failed:string|null=null;
+const p=g.player,realStep=p.step.bind(p),realCommit=p.commitRenderStep.bind(p);
+p.step=(dt:any,input:any,level:any)=>{
+ if(!pilot||finished||failed){realStep(dt,input,level);return;}
+ const request=pilot.sample(p,level),previous=p.rawInput;
+ const sample={...input,moveX:request.moveX??0,moveY:request.moveY??0,jumpHeld:request.jumpHeld??false,
+  grabHeld:request.grabHeld??false,spinHeld:request.spinHeld??false,grindHeld:false,transferHeld:false,
+  jumpPressed:!!request.jumpHeld&&!previous?.jumpHeld,jumpReleased:!request.jumpHeld&&!!previous?.jumpHeld,
+  grabPressed:!!request.grabHeld&&!previous?.grabHeld,spinPressed:!!request.spinHeld&&!previous?.spinHeld,
+  grindPressed:false,transferPressed:false,restartPressed:false};
+ realStep(dt,sample,level);
+};
+p.commitRenderStep=(...args:any[])=>{realCommit(...args);if(!pilot||finished||failed)return;
+ frame++;pilot.observe(p,g.getLevel());finished=p.state==='finished';
+ if(p.isBailing||['dead','gameover'].includes(p.state))failed='Route failed at '+JSON.stringify(p.pos.toArray());
+};
+add('Run full route',()=>{g.gameFlow.hide();g.switchLevel('skystream');p.respawn(g.getLevel(),true);pilot=createSkystreamPilot(source);frame=0;finished=false;failed=null;});
+add('Stop pilot',()=>{pilot=null;});
+for(const [i,cp]of source.SKYSTREAM_CHECKPOINTS.entries())add(`Sanctuary ${i+1}`,()=>{pilot=null;g.gameFlow.hide();p.respawn(g.getLevel(),true,false,{position:new THREE.Vector3(...cp).add(new THREE.Vector3(0,.1,0)),heading:new THREE.Vector3(0,0,-1)});});
+add('Hide controls',()=>{panel.open=false;});
+const download=document.createElement('a');download.textContent='Download preview';download.download='skystream-preview.jpg';download.style.cssText='display:block;color:white;padding:6px';panel.append(download);
+add('Make loop preview',async()=>{
+ const l=g.getLevel();await l.prepareSurfaceImages();
+ const renderer=g.renderer,previous=renderer.getRenderTarget();
+ const target=new THREE.WebGLRenderTarget(640,360);target.texture.colorSpace=THREE.SRGBColorSpace;
+ const camera=new THREE.PerspectiveCamera(67,640/360,.1,4000);
+ camera.position.set(0,-276,-1820);camera.lookAt(104,-296,-1760);
+ renderer.setRenderTarget(target);renderer.render(g.scene,camera);
+ const pixels=new Uint8Array(640*360*4);renderer.readRenderTargetPixels(target,0,0,640,360,pixels);renderer.setRenderTarget(previous);target.dispose();
+ const canvas=document.createElement('canvas');canvas.width=640;canvas.height=360;const ctx=canvas.getContext('2d')!,im=ctx.createImageData(640,360);
+ for(let y=0;y<360;y++)im.data.set(pixels.subarray((359-y)*640*4,(360-y)*640*4),y*640*4);ctx.putImageData(im,0,0);
+ download.href=canvas.toDataURL('image/jpeg',.9);
+ let image=document.getElementById('skystream-preview') as HTMLImageElement|null;
+ if(!image){image=document.createElement('img');image.id='skystream-preview';image.style.cssText='position:fixed;right:10px;top:10px;width:640px;z-index:999999';document.body.append(image);}image.src=download.href;
+});
+function report(){panel.style.setProperty('display','block','important');panel.style.setProperty('visibility','visible','important');panel.inert=false;panel.removeAttribute('aria-hidden');status.textContent=JSON.stringify({frame,finished,failed,index:pilot?.index,
+ position:p.pos.toArray().map((n:number)=>Math.round(n*100)/100),speed:Math.round(p.speed*10)/10,grounded:p.grounded,loop:p.loopStatus,evidence:pilot?.evidence},null,2);requestAnimationFrame(report);}
+report();

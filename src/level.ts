@@ -16,6 +16,7 @@ import { NightworksPlume } from './nightworksPlume';
 import { NightworksFogVisibility } from './nightworksFog';
 import { addNightworksStoneLook, createNightworksMagma, NIGHTWORKS_VOLCANO_TEXTURES } from './nightworksMagma';
 import { SKY_BRIDGE_LEVEL } from './levels/sky-bridge';
+import { SKYSTREAM_LEVEL } from './levels/skystream';
 import { ICE_SURFACE, FALL_AWAY_SURFACE, SLIPPERY_COMPONENT_TYPES } from './surfaceBehavior';
 import { createIceMaterial } from './surfacePresentation';
 import { addMasonryLook, isMasonryTexture } from './masonryMaterial';
@@ -170,7 +171,7 @@ import {
   validRelicTime,
   resolveMedalTimes, validMedalTimes, defaultMedalTimes,
   type MedalTimes, type TimeMedal,
-  isCampaignLevel, levelAllowsBonus, levelAllowsCrystal,
+  isCampaignLevel, campaignLevelById, levelAllowsBonus, levelAllowsCrystal,
   type CampaignLevelProgress,
 } from "./campaign";
 import {
@@ -1021,6 +1022,7 @@ export const DECOR_LABELS: Record<DecorKind, string> = {
 // Every paintable surface kind the texture system offers. The editor's
 // texture dropdown is built from this list; 'checker' is the classic default.
 export const TEX_KINDS = [
+  'skystream-marble',
   'cardboard',
   'waterslide-fiberglass',
   'waterslide-shallows',
@@ -2560,6 +2562,7 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
   { id: "flats", name: "Flats & Pipes" }, // sky-deck runway opening into the transition yard
   { id: 'country-club', name: COUNTRY_CLUB_LEVEL.name, data: COUNTRY_CLUB_LEVEL },
   { id: "sky", name: "Sky Bridge", data: SKY_BRIDGE_LEVEL },
+  { id: 'skystream', name: SKYSTREAM_LEVEL.name, data: SKYSTREAM_LEVEL },
   { id: SLIPSTREAM_COURSE_ID, name: SLIPSTREAM_LEVEL.name, data: SLIPSTREAM_LEVEL },
   {id:"test",name:CARLISLE_COAST_LEVEL.name,data:CARLISLE_COAST_LEVEL},
   {id:"custard-creek",name:CUSTARD_CREEK_LEVEL.name,data:CUSTARD_CREEK_LEVEL},
@@ -4254,6 +4257,7 @@ export function isEditUnlocked(): boolean {
 export class Level {
   minefields: Minefields | null = null;
   readonly isBossLevel: boolean;
+  readonly allowsCrystal: boolean;
   readonly skateRace: SkateRaceData | null;
   readonly allowsBonus: boolean;
   boss: CrabChiefEncounter | null = null;
@@ -4714,6 +4718,10 @@ export class Level {
     if(kind==='nightworks-caldera-rim'||kind==='nightworks-caldera-terraces')return this.surfaceTexture('nightworks-caldera');
     const cached = this.surfTexCache.get(kind);
     if (cached) return cached;
+    if(kind==='skystream-marble'){
+      const texture=Level.finishTex(this.surfaceImage('skystream/ivory-marble.webp'));
+      this.surfTexCache.set(kind,texture);return texture;
+    }
     if(isCountryClubTexture(kind)){const texture=Level.finishTex(this.surfaceImage(countryClubTextureFile(kind)),true);this.surfTexCache.set(kind,texture);return texture;}
     if(kind==='waterslide-fiberglass'){const texture=Level.finishTex(this.surfaceImage('waterslide/fiberglass.webp'),true);this.surfTexCache.set(kind,texture);return texture;}
     if (isCrownTexture(kind)) {
@@ -5170,6 +5178,7 @@ export class Level {
     pavement: { spec: 0x2e3238, shine: 22 },
     asphalt: { spec: 0x24262a, shine: 14 },
     stone: { spec: 0x2a2c30, shine: 18 },
+    'skystream-marble': { spec: 0x727c85, shine: 74 },
     checker: { spec: 0x34383e, shine: 26 },
     plank: { spec: 0x22201c, shine: 12 },
     wood: { spec: 0x1e1c18, shine: 10 },
@@ -5367,7 +5376,9 @@ export class Level {
     };
     this.name = entry.name;
     this.skateRace = entry.data?.skateRace ?? null;
-    this.isBossLevel = !levelAllowsCrystal(entry.id) || !!entry.data?.encounter || isCompetitionLevel(entry.id);
+    const campaignDefinition = campaignLevelById(entry.id);
+    this.isBossLevel = !!campaignDefinition?.placeholder || (!!campaignDefinition?.boss && !campaignDefinition.skateRace) || !!entry.data?.encounter || isCompetitionLevel(entry.id);
+    this.allowsCrystal = !this.isBossLevel && levelAllowsCrystal(entry.id);
     this.allowsBonus = !this.isBossLevel && !this.skateRace && levelAllowsBonus(entry.id);
     this.relicTime = resolveRelicTime(entry.id, entry.data);
     this.medalTimes = resolveMedalTimes(entry.id, entry.data);
@@ -5414,7 +5425,7 @@ export class Level {
       this.theme.fogFar = SKY_BRIDGE_FOG_FAR;
     }
     if (isCampaignLevel(entry.id) && !isCompetitionLevel(entry.id)) {
-      if (!this.isBossLevel && !this.skateRace && !this.crystalPickup) this.placeCampaignCrystal();
+      if (this.allowsCrystal && !this.skateRace && !this.crystalPickup) this.placeCampaignCrystal();
       if (this.allowsBonus && !this.bonusPlatform) this.placeDefaultBonusPlatform();
     }
     // The entrance and the parent gem tally resolve the same authored room.
@@ -6358,7 +6369,7 @@ export class Level {
       side:c.doubleSided?THREE.DoubleSide:THREE.FrontSide,fog:c.fog!==false,
     });
     else {
-      const SurfaceMaterial = isMasonryTexture(c.tex) ? THREE.MeshPhongMaterial : THREE.MeshLambertMaterial;
+      const SurfaceMaterial = isMasonryTexture(c.tex) || c.tex === 'skystream-marble' ? THREE.MeshPhongMaterial : THREE.MeshLambertMaterial;
       material = new SurfaceMaterial({
         color: c.color ?? "#ffffff", vertexColors: !!c.colors,
         emissive: c.emissive ?? "#000000", opacity: c.opacity ?? 1,
@@ -15249,6 +15260,7 @@ export class Level {
     if((c.tex==='coast-bedrock'||c.tex==='custard-sandstone'||c.tex==='crown-bilge-paint'||c.tex==='waterslide-fiberglass')&&mat.map)mat.map.repeat.set(1,1);
     if(c.tex==='waterslide-fiberglass')addWaterparkFlumeLook(mat);
     if(c.tex==='custard-sandstone'){mat.bumpMap=mat.map;mat.bumpScale=.045;}
+    if(c.tex==='skystream-marble'&&mat.map){mat.map.repeat.set(1,1);mat.bumpMap=mat.map;mat.bumpScale=.025;}
     const vr = buildVertRampGeometry(spine, {
       uvTileMetres:c.tex==='crown-bilge-paint'?6:c.tex==='waterslide-fiberglass'?5:c.tex==='coast-bedrock'||c.tex==='custard-sandstone'?3.1:undefined,
       radius: R,
@@ -17964,7 +17976,7 @@ export class Level {
 
   // Main-route crystal: faceted specular shell, with pickup glints in update.
   private crystal(x: number, y: number, z: number): void {
-    if (this.isBossLevel) return;
+    if (!this.allowsCrystal) return;
     const g = Level.crystalMesh(1);
     // belt sits at the group origin; the long bottom point reaches ~1.5 below,
     // so float the group up to keep the tip hovering just above the ground
@@ -17999,7 +18011,7 @@ export class Level {
     crystal: boolean;
     boxGem: boolean;
   }): void {
-    this.committedCrystal = rewards.crystal;
+    this.committedCrystal = this.allowsCrystal && rewards.crystal;
     this.committedBoxGem = rewards.boxGem;
     if (this.crystalPickup) {
       this.crystalPickup.collected = rewards.crystal;

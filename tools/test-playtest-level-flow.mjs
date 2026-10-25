@@ -75,7 +75,7 @@ const clear = new Function(
   `${compile(functionSource("showCampaignResults"))}\nshowCampaignResults();`,
 );
 function finish({ canonical = false, before = null, runMode = false, totalBoxes = 12,
-  crates = 9, bonus = 3, collected = true, starting = {}, relicTime = 60, clock = true } = {}) {
+  crates = 9, bonus = 3, collected = true, starting = {}, relicTime = 60, clock = true, crystals = true } = {}) {
   const calls = { bank: 0, progress: [], commits: [], inventory: [], results: [] };
   const current = registry.get(canonical ? "jungle" : "astra-chimeworks");
   const player = {
@@ -85,7 +85,7 @@ function finish({ canonical = false, before = null, runMode = false, totalBoxes 
   };
   let secured = before?.cleared === true && before?.crystal === true;
   clear(
-    player, { runMode, totalCrates: totalBoxes, relicTime, clockPickup: clock ? {} : null }, current,
+    player, { allowsCrystal: crystals, runMode, totalCrates: totalBoxes, relicTime, clockPickup: clock ? {} : null }, current,
     (id) => canonical && id === "jungle"
       ? { name: "Canonical Jungle Name", relicTime: 60 }
       : null,
@@ -109,6 +109,7 @@ function finish({ canonical = false, before = null, runMode = false, totalBoxes 
 }
 
 const lab = finish();
+assert.equal(finish({canonical:true,crystals:false}).result.crystal,false,'Secret course results must omit crystals');
 assert.deepEqual(lab.calls.progress, []);
 assert.deepEqual(lab.calls.commits, [], "A debug clear must not create/modify canonical progress");
 assert.deepEqual(lab.result, {

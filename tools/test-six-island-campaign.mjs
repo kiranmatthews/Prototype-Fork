@@ -13,10 +13,10 @@ const expected=[
  ['custard-creek','Sunset Safari'],['test','Uga Ambush'],['drowned-crown','The Merchant Wreck'],['crab-chief','High Chief Uga Ha ku'],
  ['waterpark','Deadwater Park'],['codex-lab','Haunted Hassle'],['ghost-train','Ghost Train'],['hollowwake-descent','Tunnelbore Tracks'],['slipstream-race','Slipstream'],['waterpark-cup','Deadwater Cup'],
  ['country-club','Country Club Circuit'],['rooftop-relay','Hogsworth Harbour'],['warehouse','Factory Fuss'],['jungle-minefield','Nightmare Grove'],['nightworks-after-hours','Guptus Eruptus'],['dark','Torchlight Trouble'],
- ['sky','Sky Bridge'],['jungle-terraces','Temple of Embers'],['jungle-gate-run','The Ancient Gates'],['rolling-bones','Rolling Bones'],
+ ['sky','Sky Bridge'],['jungle-terraces','Temple of Embers'],['jungle-gate-run','The Ancient Gates'],['rolling-bones','Rolling Bones'],['skystream','The Skystream'],
 ];
 assert.deepEqual(levels.filter(d=>!d.placeholder).map(d=>[d.levelId,d.name]),expected);
-assert.equal(levels.length,38);assert.equal(levels.filter(d=>d.placeholder).length,12);
+assert.equal(levels.length,38);assert.equal(levels.filter(d=>d.placeholder).length,11);
 assert.equal(new Set(levels.map(d=>d.levelId)).size,38);assert.equal(new Set(levels.map(d=>d.progressKey)).size,38);
 assert.deepEqual(c.validateCampaignMapGraph(),[]);assert.equal(c.CAMPAIGN_MAP_EDGES.length,37);
 assert.deepEqual(bosses.map(d=>d.progressKey),['jungle-cup','crab-chief','slipstream','waterpark-cup','maynard-boss','quagmire-race','quagmire-boss']);
@@ -62,11 +62,11 @@ fresh.active.levels['sky-bridge']={cleared:true,crystal:true,boxGem:true,comboGe
 fresh.saveActive();const reload=new CampaignStore();reload.load(1);
 assert.equal(reload.levelProgress('test').crystal,true);assert.equal(reload.levelProgress('test').timeMedal,'silver');
 assert.equal(reload.levelPlayable('test'),true);assert.equal(reload.levelPlayable('carlisle-coast'),false,'new Carlisle inherited Uga Ambush save');
-assert.deepEqual(reload.active.levels['sky-bridge'],{cleared:true,crystal:true,boxGem:true,comboGem:true,timeRelic:true,timeMedal:'gold',bestTime:42,trialTimes:[42]},'unassigned course rewards lost on migration');
-assert.equal(reload.totals().maxLevels,26);assert.equal(reload.runModesUnlocked('warehouse'),false);
+assert.deepEqual(reload.active.levels['sky-bridge'],{cleared:true,crystal:false,boxGem:true,comboGem:true,timeRelic:true,timeMedal:'gold',bestTime:42,trialTimes:[42]},'Secret Island migration should retain gems and medals');
+assert.equal(reload.totals().maxLevels,27);assert.equal(reload.runModesUnlocked('warehouse'),false);
 assert.deepEqual(reload.levelProgress('sky'),reload.active.levels['sky-bridge'],'reassigned Sky Bridge lost its older rewards');
 assert.equal(reload.levelPlayable('sky'),false,'old completion bypassed the secret-island boss gate');
-for(const [key,id,requirement] of [['secret-1','sky','medals-5'],['secret-2','jungle-terraces','gems-5'],['secret-3','jungle-gate-run','medals-10'],['secret-4','rolling-bones','gems-15']]){
+for(const [key,id,requirement] of [['secret-1','sky','medals-5'],['secret-2','jungle-terraces','gems-5'],['secret-3','jungle-gate-run','medals-10'],['secret-4','rolling-bones','gems-15'],['secret-5','skystream','medals-20']]){
  assert.equal(byKey(key).levelId,id);assert.equal(byKey(key).secretRequirement,requirement);assert.equal(!!byKey(key).placeholder,false);
 }
 assert.equal(c.campaignLevelById('country-club').skateRace,true);assert.equal(reload.totals().maxCups,2);
@@ -142,8 +142,22 @@ const migrated=new CampaignStore();migrated.load(3);
 assert.equal(migrated.active.mapFocus,'secret-3');assert.equal(migrated.active.lastFinishedLevel,'secret-1');
 for(const id of ['sky','jungle-terraces','jungle-gate-run']){
  const progress=migrated.levelProgress(id);
- assert.equal(progress.cleared,true);assert.equal(progress.crystal,true);assert.equal(progress.boxGem,true);
+ assert.equal(progress.cleared,true);assert.equal(progress.crystal,false);assert.equal(progress.boxGem,true);
  assert.equal(progress.timeMedal,'gold');assert.equal(progress.bestTime,39);assert.deepEqual(progress.trialTimes,[39,42,45]);
  assert.equal(migrated.levelPlayable(id),false,'archived completion bypassed the secret island gate');
 }
 console.log('PASS secret-course save migration preserves rewards, strongest medals, best runs and remembered course identities.');
+
+const secretRewards=new CampaignStore();secretRewards.startEphemeral({unlockAll:true});
+for(const def of levels.filter(level=>level.islandId==='hidden-shores'&&!level.placeholder)){
+ assert.equal(secretRewards.runModesUnlocked(def.levelId),false);
+ secretRewards.commitClear(def.levelId,{crystal:true,boxGem:true,comboGem:true});
+ assert.equal(secretRewards.runModesUnlocked(def.levelId),true,'A secret-course clear must unlock its medals without a crystal');
+ secretRewards.commitTimeTrial(def.levelId,{time:42,medal:'gold'});
+ const progress=secretRewards.levelProgress(def.levelId);
+ assert.equal(progress.crystal,false);assert.equal(progress.boxGem,true);assert.equal(progress.timeMedal,'gold');
+}
+assert.equal(secretRewards.totals().crystals,0);
+assert.equal(secretRewards.totals().gems,5);assert.equal(secretRewards.totals().relics,5);
+assert.equal(secretRewards.totals().maxCrystals,levels.filter(d=>d.islandId!=='hidden-shores'&&!d.placeholder&&(!d.boss||d.skateRace)&&!d.competition).length);
+console.log('PASS Secret Island awards and counts gems and medals only.');

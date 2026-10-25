@@ -1,0 +1,67 @@
+import assert from 'node:assert/strict';
+import {readFile,writeFile,mkdir} from 'node:fs/promises';
+import {tmpdir} from 'node:os';
+import {join} from 'node:path';
+import {withBlockworksRuntime} from './blockworks-runner.mjs';
+import {slipstreamPlayableLength} from './slipstream-course-length.mjs';
+import {createSkystreamPilot} from './skystream-pilot.mjs';
+const output=process.env.SKYSTREAM_REVIEW_DIR??join(tmpdir(),'skystream-review');
+await mkdir(output,{recursive:true});
+
+await withBlockworksRuntime(async r=>{
+ const {p,l,source,sourceModule:m}=r;
+ const saved=JSON.parse(await readFile(new URL('./fixtures/skystream/saved-slipstream.json',import.meta.url),'utf8'));
+ const original=await r.server.ssrLoadModule('/src/levels/skystream-source.ts');
+ assert.deepEqual(original.SAVED_SLIPSTREAM_LEVEL,saved,'Keep the exact exported saved course as the mirrored foundation');
+ const api=await r.server.ssrLoadModule('/src/level.ts');
+ assert.ok(api.normalizeCustomLevelData(source),'The full editor data must survive normalization');
+ const before=slipstreamPlayableLength(saved).playable,after=slipstreamPlayableLength(source).playable;
+ console.log({baselineMetres:before,skystreamMetres:after,ratio:after/before,components:source.components.length});
+ assert.ok(after/before>=3&&after/before<3.15,'Triple the actual 3D route, not just its footprint');
+ for(const original of saved.components.filter(c=>c.t==='vertramp')){
+  const reflected=source.components.find(c=>c.t==='vertramp'&&c.p[2]===original.p[2]);
+  const a=api.vertRampSpine(original),b=api.vertRampSpine(reflected);
+  assert.equal(a.length,b.length);
+  a.forEach((q,i)=>{assert.ok(Math.abs(q.x+b[i].x)<1e-6&&Math.abs(q.y-b[i].y)<1e-6&&Math.abs(q.z-b[i].z)<1e-6&&Math.abs(q.roll+b[i].roll)<1e-6);});
+ }
+ assert.equal(l.loopMeshes.length,1);assert.equal(l.loopMeshes[0].userData.loopRequired,false);
+ const {resolveLevelAtmosphere}=await r.server.ssrLoadModule('/src/levelAtmosphere.ts');
+ const atmosphere=resolveLevelAtmosphere(l);
+ assert.equal(atmosphere.fogNear,36);assert.equal(atmosphere.fogFar,192);
+ assert.equal(l.crystalPickup,null);assert.equal(l.isBossLevel,false);
+ const probes=[source.spawn,...source.components.filter(c=>['checkpoint','gate'].includes(c.t)).map(c=>c.p)];
+ const ray=new r.THREE.Raycaster();l.root.updateMatrixWorld(true);
+ for(const q of probes){
+  ray.set(new r.THREE.Vector3(q[0],q[1]+2,q[2]),new r.THREE.Vector3(0,-1,0));ray.far=4;
+  const hit=ray.intersectObjects(l.groundMeshes.filter(mesh=>!mesh.userData.startWarpPad&&!mesh.userData.finishPad),false)[0];
+  assert.ok(hit&&Math.abs(hit.point.y-q[1])<.5,'Unsupported checkpoint/spawn/finish '+q+' actual '+hit?.point.y);
+ }
+ if(process.argv.includes('--structure'))return;
+ const pilot=createSkystreamPilot(m),tuning=JSON.stringify(r.TUNING);
+ let error,finished,recovery;
+ try{
+  for(let i=0;i<42000&&p.state!=='finished';i++){
+   r.tick(pilot.sample(p,l));pilot.observe(p,l);
+   if(i%1800===0)console.log(JSON.stringify({frame:i,index:pilot.index,p:p.pos.toArray(),speed:p.speed,state:p.state}));
+   assert.ok(!p.isBailing&&!['dead','gameover'].includes(p.state),'Lost route '+JSON.stringify({index:pilot.index,...r.snapshot()}));
+  }
+  assert.equal(p.state,'finished');assert.equal(p.totalDeaths,0);
+  assert.ok(pilot.evidence.inverted&&pilot.evidence.loopEntrySpeed>55);
+  assert.equal(pilot.evidence.gaps.length,4);assert.ok(pilot.evidence.gaps.every(g=>g.aired&&g.landed));
+  assert.equal(JSON.stringify(r.TUNING),tuning);
+  finished=r.snapshot();
+  // A normal retry uses the checkpoint earned by the route above. Drive off
+  // its edge, let the real pit/death path run, and verify the supported return.
+  p.respawn(l,false);
+  const checkpoint=p.pos.clone();
+  for(let i=0;i<1200&&p.totalDeaths===0;i++)r.tick({...r.worldDirectionInput([1,0,0]),jumpHeld:true});
+  assert.equal(p.totalDeaths,1,'Leaving the course must reach its kill plane');
+  for(let i=0;i<600&&(p.isBailing||p.state==='dead'||!p.grounded);i++)r.tick({});
+  assert.ok(p.grounded&&!p.isBailing&&p.pos.distanceTo(checkpoint)<3,'Pit respawn must return to the earned checkpoint');
+  recovery=r.snapshot();
+ }catch(e){error=String(e);}
+ await writeFile(join(output,'native.json'),JSON.stringify({evidence:pilot.evidence,index:pilot.index,end:finished??r.snapshot(),recovery,error,trace:r.trace}));
+ console.log(JSON.stringify({evidence:pilot.evidence,index:pilot.index,end:finished??r.snapshot(),recovery,error}));
+ assert.equal(error,undefined);
+},{modulePath:'/src/levels/skystream.ts',source:m=>m.SKYSTREAM_LEVEL,levelId:'skystream',endlessDeaths:true,maxFrames:43000,
+ controlFrame:r=>r.p.courseInputDirection(r.l)??r.p.camDir});

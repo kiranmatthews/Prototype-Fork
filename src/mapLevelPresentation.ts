@@ -12,6 +12,7 @@ export interface MapLevelCardData {
   key: string;
   name: string;
   earned: readonly boolean[];
+  allowsCrystal?: boolean;
   trialUnlocked: boolean;
   times: readonly number[];
   target: number;
@@ -33,6 +34,9 @@ export const MAP_DECK_FLIP_SECONDS = 0.64;
 const DECK_FACE = { width: 1.6, height: 0.534, textureWidth: 1536, textureHeight: 512 };
 // Printing and raised models share these texture-space slot centres.
 const REWARD_SOCKETS = [0, 1, 2].map(index => ({ x: 441.2 + index * 326.4, y: 366 }));
+const rewardSocket = (index: number, allowsCrystal = true) => ({
+  ...REWARD_SOCKETS[index], x: allowsCrystal ? REWARD_SOCKETS[index].x : 768 + (index - 1.5) * 326.4,
+});
 
 /** Shared flip clock: change the printing only while the grip faces away. */
 export class MapDeckFlip {
@@ -171,7 +175,7 @@ export class MapLevelPresentation {
     this.face.scale.setScalar(printScale);
     this.face.position.set(centre, 0, printZ);
     this.rewards.forEach((pivot, i) => {
-      const socket = REWARD_SOCKETS[i];
+      const socket = rewardSocket(i, this.flip.shown?.allowsCrystal !== false);
       const x = (socket.x / DECK_FACE.textureWidth - 0.5) * DECK_FACE.width;
       const y = (0.5 - socket.y / DECK_FACE.textureHeight) * DECK_FACE.height;
       pivot.position.set(centre + x * printScale, y * printScale, printZ + 0.145 * scale);
@@ -191,7 +195,7 @@ export class MapLevelPresentation {
     if (!data) return;
     const key = JSON.stringify(data);
     const lightPhase=Math.round(rooLightPosition()*64);
-    if (key !== this.inkKey) { this.paint(data); this.inkKey = key; }
+    if (key !== this.inkKey) { this.updateBoard(false); this.paint(data); this.inkKey = key; }
     else if(lightPhase!==this.lightPhase)this.paint(data,false);
     this.lightPhase=lightPhase;
     const w = window.innerWidth, h = window.innerHeight;
@@ -204,7 +208,7 @@ export class MapLevelPresentation {
     this.deckPivot.rotation.x = -0.08 + Math.PI * 2 * (phase * phase * (3 - 2 * phase));
     this.deckPivot.rotation.y = Math.sin(phase * Math.PI * 2) * 0.07;
     this.rewards.forEach((pivot, i) => {
-      pivot.visible = !data.status && !data.competition && data.earned[i] === true;
+      pivot.visible = !data.status && !data.competition && (i !== 0 || data.allowsCrystal !== false) && data.earned[i] === true;
       pivot.children[0].rotation.y = this.time * 0.8 + i * 0.45;
     });
     // The poster changes with the same hidden-face swap as the deck printing.
@@ -235,7 +239,8 @@ export class MapLevelPresentation {
     ctx.clearRect(0, 0, DECK_FACE.textureWidth, DECK_FACE.textureHeight);
     // Warm screen-printed reward sockets; missing shapes stay flat and dark.
     for (let i = 0; i < (data.competition || data.status ? 0 : REWARD_SOCKETS.length); i++) {
-      const { x, y } = REWARD_SOCKETS[i];
+      if (i === 0 && data.allowsCrystal === false) continue;
+      const { x, y } = rewardSocket(i, data.allowsCrystal !== false);
       ctx.fillStyle = "#9e9b8b"; ctx.beginPath(); ctx.ellipse(x, y, 109, 105, -0.08, 0, Math.PI * 2); ctx.fill();
       if (!data.earned[i]) silhouette(ctx, i, x, y);
     }

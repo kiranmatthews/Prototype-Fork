@@ -2857,7 +2857,7 @@ function showCampaignResults(): void {
   if (definition?.competition) return;
   if (definition)
     campaign.commitClear(current.id, {
-      crystal: !level.isBossLevel && player.hasCrystal,
+      crystal: level.allowsCrystal && player.hasCrystal,
       boxGem: player.gemEarned,
       comboGem: player.comboGemEarned,
     });
@@ -2875,7 +2875,7 @@ function showCampaignResults(): void {
     levelName: definition?.name ?? current.name,
     boxes,
     totalBoxes: level.totalCrates,
-    crystal: !level.isBossLevel && player.hasCrystal && !runStartRewards.crystal,
+    crystal: level.allowsCrystal && player.hasCrystal && !runStartRewards.crystal,
     boxGem: player.gemEarned && !runStartRewards.boxGem,
     comboGem: player.comboGemEarned && !runStartRewards.comboGem,
     firstClear,
@@ -4211,7 +4211,7 @@ ui.onToggleRunModes = () => {
   if (!shellBypass) {
     ui.showMessage(
       "CAMPAIGN RUN MODES",
-      "secure the crystal at the level end to unlock time trial and combo",
+      level.allowsCrystal ? "secure the crystal at the level end to unlock time trial and combo" : "finish this level to unlock time trial and combo",
       1800,
     );
     return;
@@ -4916,7 +4916,7 @@ function currentHudState(): HudState {
     // L2 shows this run's carried rewards, not the banked map collection.
     // Keep the start-of-run snapshot: committing results must not erase the
     // pickup from this run's presentation before its exit/retry boundary.
-    hasCrystal: !level.isBossLevel && player.hasCrystal && !runStartRewards.crystal,
+    hasCrystal: level.allowsCrystal && player.hasCrystal && !runStartRewards.crystal,
     hasGem: player.gemEarned && !runStartRewards.boxGem,
     hasComboGem: player.comboGemEarned && !runStartRewards.comboGem,
     race:skateRace.hud(),

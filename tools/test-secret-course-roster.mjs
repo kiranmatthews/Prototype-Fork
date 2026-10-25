@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import {readFile,access} from 'node:fs/promises';
 import {createServer} from 'vite';
+import * as THREE from 'three';
 const harness=await readFile(new URL('./validate-editor-roundtrip.mjs',import.meta.url),'utf8');
 new Function(harness.slice(harness.indexOf('function installHeadlessDom()'),harness.indexOf('\nfunction round('))+'\ninstallHeadlessDom();')();
 const server=await createServer({appType:'custom',logLevel:'silent',server:{middlewareMode:true,hmr:false,ws:false}});
@@ -11,13 +12,28 @@ try{
  assert.equal(bonuses.resolveBonusLevel('secret-1').name,'Bonus: Cloudtop Lockers');
  assert.equal(bonuses.resolveBonusLevel('secret-2').name,'Bonus: Ember Reliquary');
  const rows=campaign.CAMPAIGN_LEVELS.filter(l=>l.islandId==='hidden-shores');
- assert.deepEqual(rows.slice(0,4).map(l=>[l.levelId,l.name,l.secretRequirement]),[
+ assert.deepEqual(rows.slice(0,5).map(l=>[l.levelId,l.name,l.secretRequirement]),[
   ['sky','Sky Bridge','medals-5'],['jungle-terraces','Temple of Embers','gems-5'],['jungle-gate-run','The Ancient Gates','medals-10'],
-  ['rolling-bones','Rolling Bones','gems-15']]);
- assert.ok(rows.slice(0,4).every(l=>!l.placeholder&&!l.boss));
- assert.ok(rows.slice(4).every(l=>l.placeholder));
- for(const row of rows.slice(0,4)){
-  assert.ok(api.findLevel(row.levelId)?.data,row.name+' has no actual course');
+  ['rolling-bones','Rolling Bones','gems-15'],['skystream','The Skystream','medals-20']]);
+ assert.ok(rows.slice(0,5).every(l=>!l.placeholder&&!l.boss));
+ assert.ok(rows.slice(5).every(l=>l.placeholder));
+ for(const row of rows.slice(0,5)){
+  const entry=api.findLevel(row.levelId);
+  assert.ok(entry?.data,row.name+' has no actual course');
+  assert.equal(campaign.levelAllowsCrystal(row.levelId),false);
+  assert.equal(campaign.levelAllowsCrystal(row.progressKey),false);
+  assert.equal(campaign.levelAllowsBonus(row.levelId),true,'Secret gems still include bonus boxes');
+  // Include a stale editor crystal to prove both authored and automatically
+  // placed crystals obey the campaign rule, even with a saved level override.
+  const level=new api.Level(new THREE.Scene(),{...entry,data:{...entry.data,components:[...entry.data.components,{t:'crystal',p:entry.data.spawn}]}});
+  assert.equal(level.crystalPickup,null,row.name+' still creates a crystal');
+  assert.equal(level.isBossLevel,false,row.name+' was accidentally treated as a boss');
+  assert.ok(level.bonusPlatform,row.name+' lost its bonus');
+  assert.ok(level.clockPickup,row.name+' lost its time trial');
+  assert.ok(level.groundMeshes.some(mesh=>mesh.userData.finishPad),row.name+' lost its finish pad');
+  level.setCommittedCollectibles({crystal:true,boxGem:true});
+  assert.deepEqual(level.committedCollectibleDiagnostics,{crystal:false,boxGem:true});
+  level.dispose();
   await access(new URL(`../public/level-previews/${row.previewKey}.jpg`,import.meta.url));
  }
  const data={v:1,name:'The Descent',spawn:[0,1,0],killY:-30,components:[{t:'platform',p:[0,-.5,0],s:[10,1,10]},{t:'gate',p:[0,0,-4]}]};
@@ -33,5 +49,5 @@ try{
  assert.deepEqual(renamed.data.components,api.getUserLevels()[0].data.components,'rename changed edited geometry');
  assert.equal(api.getUserLevels()[0].name,'Jungle Gate Run','catalogue view mutated the archived editor entry');
  api.setUserLevels([]);
- console.log('PASS four real secret courses, four placeholders, existing previews, Ancient Gates rename and retired Descent override suppression.');
+ console.log('PASS five real secret courses, three placeholders, existing previews, Ancient Gates rename and retired Descent override suppression.');
 }finally{await server.close();}

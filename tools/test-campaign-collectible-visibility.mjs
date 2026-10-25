@@ -84,6 +84,7 @@ assert.doesNotMatch(
 );
 const { ProjectionHarness } = evaluateTypeScript(`
   export class ProjectionHarness {
+    allowsCrystal = true;
     committedCrystal = false;
     committedBoxGem = false;
     crystalPickup = null;
@@ -287,7 +288,7 @@ const { inventory } = evaluateTypeScript(`
     const input = { inventoryHeld: true };
     const competition = null;
     const skateRace = { hud: () => null };
-    const level = { runMode: false, hudMode: "normal", totalCrates: 12 };
+    const level = { allowsCrystal: true, runMode: false, hudMode: "normal", totalCrates: 12 };
     const sourceComboLabelLine = () => "";
     ${hudProjection}
     const hud = currentHudState();
