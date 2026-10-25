@@ -32,7 +32,7 @@ export function mirrorSlipstreamComponent(original: CustomComponent): CustomComp
 }
 
 for (const original of SAVED_SLIPSTREAM_LEVEL.components) {
-  if (original.t === 'gate' || original.t === 'crystal') continue;
+  if (original.t === 'gate' || original.t === 'crystal' || original.t === 'crate') continue;
   const c = mirrorSlipstreamComponent(original);
   c.grp = 1;
   if (c.t === 'camnode') { lane.push(c.p); continue; }
@@ -49,6 +49,8 @@ lane.push([0, .2, -866]);
 
 interface RoutePart { name: string; points: P[]; width: number; group: number; }
 export const SKYSTREAM_PARTS: RoutePart[] = [];
+const roadCurves = new Map<string, THREE.CatmullRomCurve3>();
+export const SKYSTREAM_CRATE_LINES: { name: string; positions: P[]; group: number }[] = [];
 export const SKYSTREAM_SHORTCUTS: { name: string; entry: P; exit: P; drop: number; aim: P; trail: P[]; }[] = [];
 export const SKYSTREAM_GAPS: { name: string; takeoff: P; landing: P; }[] = [
   { name: 'Mirrored original leap', takeoff: [-6, 7.5, -738], landing: [-7, .8, -756] },
@@ -75,6 +77,7 @@ function route(name: string, points: P[], group: number, width = 6.2, roll = 0) 
     curve: 'spline', vkind: 'half', w: width, rise: 2.4, arc: 48, arcSteps: 12,
     bank: 20, vert: false, tex: 'skystream-marble', color: IVORY, grp: group, nm: name });
   const curve = new THREE.CatmullRomCurve3(points.map(p => new THREE.Vector3(...p)), false, 'centripetal');
+  roadCurves.set(name, curve);
   const n = Math.ceil(curve.getLength() / 5);
   const samples = Array.from({ length: n + 1 }, (_, i) => tuple(curve.getPointAt(i / n)));
   for (const p of samples) if (!lane.length || new THREE.Vector3(...p).distanceTo(new THREE.Vector3(...lane[lane.length - 1])) > .1) lane.push(p);
@@ -172,6 +175,47 @@ add({ t: 'gate', p: SKYSTREAM_FINISH, grp: 7 });
 const partPoint = (name: string, t: number): P => { const p = SKYSTREAM_PARTS.find(part => part.name === name)!.points; return [...p[Math.round((p.length - 1) * t)]]; };
 export const SKYSTREAM_CHECKPOINTS: P[] = [[0, .2, -854], partPoint('Broken constellation launch', .3), partPoint('Falling feather switchbacks', .13), [80, -225, -1640], [128, -330, -1794]];
 for (const [i, p] of SKYSTREAM_CHECKPOINTS.entries()) add({ t: 'checkpoint', p, grp: 8, nm: `Cloud sanctuary ${i + 1}` });
+
+// Short, single-file runs follow the deck centre through the actual spline.
+// Their metre-based spacing leaves time to recover speed between boxes, and
+// clear road between runs lets the rider read the next turn. The inherited
+// two-abreast grids and explosives do not belong on this narrow skating line.
+function crateLine(name: string, curve: THREE.CatmullRomCurve3, start: number, spacing: number, group: number) {
+  const positions = [0, 1, 2].map(i => tuple(curve.getPointAt((start + i * spacing) / curve.getLength())));
+  SKYSTREAM_CRATE_LINES.push({ name, positions, group });
+  for (const [i, p] of positions.entries()) add({ t: 'crate', p, kind: 'wood', grp: group, nm: `${name} · ${i + 1}` });
+}
+const inheritedRoads = C.filter(c => c.t === 'vertramp' && c.grp === 1).map(c =>
+  new THREE.CatmullRomCurve3(c.pts!.map(q => new THREE.Vector3(c.p[0] + q[0], c.p[1] + (q[3] ?? 0), c.p[2] + q[1])), false, 'centripetal'));
+// Give the opening roll-in time to reach smash speed. Keep the tight spiral
+// entrances, checkpoint approaches and the first jump's final 70 m clear.
+for (const [name, start, spacing] of [
+  ['Opening carve', 60, 14], ['First return', 174, 16],
+  ['Spiral approach', 295, 15], ['Spiral sweep', 410, 15],
+  ['Long ribbon exit', 620, 18], ['Open downhill', 810, 18],
+  ['Last downhill rhythm', 974, 18],
+] as const) crateLine(name, inheritedRoads[0], start, spacing, 1);
+crateLine('First leap runout', inheritedRoads[1], 30, 14, 1);
+
+for (const [road, name, start, spacing] of [
+  ['Cloudhead approach', 'Cloudhead carve', 22, 14],
+  ['Pearl halo · round right-hand descent', 'Pearl sweep', 114, 14],
+  ['Crosswind S', 'Crosswind entry', 80, 18],
+  ['Crosswind S', 'Crosswind exit', 170, 18],
+  ['Cloud eye · wide left oval', 'Cloud eye sweep', 120, 18],
+  ['Cloud eye · wide left oval', 'Cloud eye exit', 200, 18],
+  ['Broken constellation catch', 'Constellation runout', 36, 16],
+  ['Seraph coil · tall oval quarter-turn exit', 'Seraph sweep', 140, 18],
+  ['Falling feather switchbacks', 'Feather entry', 80, 18],
+  ['Falling feather switchbacks', 'Feather exit', 204, 18],
+  ['Last halo · oblique return', 'Last halo sweep', 100, 16],
+  ['Last flight catch', 'Final runout', 32, 14],
+] as const) {
+  const part = SKYSTREAM_PARTS.find(part => part.name === road)!;
+  crateLine(name, roadCurves.get(road)!, start, spacing, part.group);
+}
+// The flat Constellation launch, Sanctuary Leap, Heavenfall, the loop and its
+// short exit need carried speed. Leave them open; crate hits spend momentum.
 
 // Large carved columns, stepped capitals and open gilt crowns supply a
 // consistent architectural scale. They remain below/beside playable edges.

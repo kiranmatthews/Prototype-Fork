@@ -29,12 +29,23 @@ await withBlockworksRuntime(async r=>{
  const atmosphere=resolveLevelAtmosphere(l);
  assert.equal(atmosphere.fogNear,36);assert.equal(atmosphere.fogFar,192);
  assert.equal(l.crystalPickup,null);assert.equal(l.isBossLevel,false);
- const probes=[source.spawn,...source.components.filter(c=>['checkpoint','gate'].includes(c.t)).map(c=>c.p)];
+ const probes=[source.spawn,...source.components.filter(c=>['checkpoint','gate','crate'].includes(c.t)).map(c=>c.p)];
  const ray=new r.THREE.Raycaster();l.root.updateMatrixWorld(true);
  for(const q of probes){
   ray.set(new r.THREE.Vector3(q[0],q[1]+2,q[2]),new r.THREE.Vector3(0,-1,0));ray.far=4;
   const hit=ray.intersectObjects(l.groundMeshes.filter(mesh=>!mesh.userData.startWarpPad&&!mesh.userData.finishPad),false)[0];
-  assert.ok(hit&&Math.abs(hit.point.y-q[1])<.5,'Unsupported checkpoint/spawn/finish '+q+' actual '+hit?.point.y);
+  assert.ok(hit&&Math.abs(hit.point.y-q[1])<.5,'Unsupported crate/checkpoint/spawn/finish '+q+' actual '+hit?.point.y);
+ }
+ const crates=source.components.filter(c=>c.t==='crate');
+ for(const line of m.SKYSTREAM_CRATE_LINES){
+  for(let i=1;i<line.positions.length;i++)
+   assert.ok(new r.THREE.Vector3(...line.positions[i]).distanceTo(new r.THREE.Vector3(...line.positions[i-1]))>=13,
+    line.name+': give the rider room to recover speed between boxes');
+ }
+ for(const c of crates)for(const gap of m.SKYSTREAM_GAPS){
+  const position=new r.THREE.Vector3(...c.p);
+  assert.ok(position.distanceTo(new r.THREE.Vector3(...gap.takeoff))>24,'Keep jump setup clear');
+  assert.ok(position.distanceTo(new r.THREE.Vector3(...gap.landing))>28,'Keep touchdown and rollout clear');
  }
  if(process.argv.includes('--structure'))return;
  const pilot=createSkystreamPilot(m),tuning=JSON.stringify(r.TUNING);
@@ -49,7 +60,9 @@ await withBlockworksRuntime(async r=>{
   assert.ok(pilot.evidence.inverted&&pilot.evidence.loopEntrySpeed>55);
   assert.equal(pilot.evidence.gaps.length,4);assert.ok(pilot.evidence.gaps.every(g=>g.aired&&g.landed));
   assert.equal(JSON.stringify(r.TUNING),tuning);
-  finished=r.snapshot();
+  finished={...r.snapshot(),cratesBroken:p.cratesBroken,totalCrates:l.totalCrates,
+   remainingCrates:l.crates.filter(c=>c.alive).map(c=>c.mesh.position.toArray())};
+  assert.equal(p.cratesBroken,l.totalCrates-l.bonusCrateTotal,'Collect every main-course box/checkpoint in one forward skating run');
   // A normal retry uses the checkpoint earned by the route above. Drive off
   // its edge, let the real pit/death path run, and verify the supported return.
   p.respawn(l,false);

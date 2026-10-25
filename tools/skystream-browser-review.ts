@@ -14,7 +14,9 @@ const p=g.player,realStep=p.step.bind(p),realCommit=p.commitRenderStep.bind(p);
 p.step=(dt:any,input:any,level:any)=>{
  if(!pilot||finished||failed){realStep(dt,input,level);return;}
  const request=pilot.sample(p,level),previous=p.rawInput;
- const sample={...input,moveX:request.moveX??0,moveY:request.moveY??0,jumpHeld:request.jumpHeld??false,
+ // Match Input.poll and the native runner's recorded stick precision.
+ const scale=Math.max(1,Math.hypot(request.moveX??0,request.moveY??0));
+ const sample={...input,moveX:Math.round((request.moveX??0)/scale*100)/100,moveY:Math.round((request.moveY??0)/scale*100)/100,jumpHeld:request.jumpHeld??false,
   grabHeld:request.grabHeld??false,spinHeld:request.spinHeld??false,grindHeld:false,transferHeld:false,
   jumpPressed:!!request.jumpHeld&&!previous?.jumpHeld,jumpReleased:!request.jumpHeld&&!!previous?.jumpHeld,
   grabPressed:!!request.grabHeld&&!previous?.grabHeld,spinPressed:!!request.spinHeld&&!previous?.spinHeld,
@@ -36,6 +38,8 @@ p.commitRenderStep=(...args:any[])=>{realCommit(...args);if(!pilot||finished||fa
   return;
  }
  finished=p.state==='finished';
+ if(finished&&p.cratesBroken!==g.getLevel().totalCrates-g.getLevel().bonusCrateTotal)
+  failed='The route left main-course crates behind';
  if(p.isBailing||['dead','gameover'].includes(p.state))failed='Route failed at '+JSON.stringify(p.pos.toArray());
 };
 add('Run full route',()=>{g.gameFlow.hide();g.switchLevel('skystream');p.respawn(g.getLevel(),true);reviewMode='route';pilot=createSkystreamPilot(source);frame=0;finished=false;failed=null;});
@@ -49,6 +53,14 @@ add('Test fall recovery',()=>{
 });
 add('Stop pilot',()=>{pilot=null;});
 for(const [i,cp]of source.SKYSTREAM_CHECKPOINTS.entries())add(`Sanctuary ${i+1}`,()=>{pilot=null;g.gameFlow.hide();p.respawn(g.getLevel(),true,false,{position:new THREE.Vector3(...cp).add(new THREE.Vector3(0,.1,0)),heading:new THREE.Vector3(0,0,-1)});});
+const reviewLane=source.SKYSTREAM_LEVEL.components.filter(c=>c.t==='camnode').map(c=>new THREE.Vector3(...c.p));
+for(const line of [source.SKYSTREAM_CRATE_LINES[0],source.SKYSTREAM_CRATE_LINES[9],source.SKYSTREAM_CRATE_LINES[19]])
+ add(`View ${line.name}`,()=>{
+  pilot=null;finished=false;failed=null;frame=0;g.gameFlow.hide();const first=new THREE.Vector3(...line.positions[0]);
+  let nearest=0;reviewLane.forEach((q,i)=>{if(q.distanceTo(first)<reviewLane[nearest].distanceTo(first))nearest=i;});
+  const start=reviewLane[Math.max(0,nearest-2)].clone();
+  p.respawn(g.getLevel(),true,false,{position:start.add(new THREE.Vector3(0,.1,0)),heading:first.sub(start).setY(0).normalize()});
+ });
 add('Hide controls',()=>{panel.open=false;});
 const download=document.createElement('a');download.textContent='Download preview';download.download='skystream-preview.jpg';download.style.cssText='display:block;color:white;padding:6px';panel.append(download);
 add('Make loop preview',async()=>{
@@ -66,5 +78,8 @@ add('Make loop preview',async()=>{
  if(!image){image=document.createElement('img');image.id='skystream-preview';image.style.cssText='position:fixed;right:10px;top:10px;width:640px;z-index:999999';document.body.append(image);}image.src=download.href;
 });
 function report(){panel.style.setProperty('display','block','important');panel.style.setProperty('visibility','visible','important');panel.inert=false;panel.removeAttribute('aria-hidden');status.textContent=JSON.stringify({reviewMode,frame,finished,failed,index:pilot?.index,
- position:p.pos.toArray().map((n:number)=>Math.round(n*100)/100),speed:Math.round(p.speed*10)/10,grounded:p.grounded,loop:p.loopStatus,evidence:pilot?.evidence},null,2);requestAnimationFrame(report);}
+ position:p.pos.toArray().map((n:number)=>Math.round(n*100)/100),speed:Math.round(p.speed*10)/10,grounded:p.grounded,
+ mainCourseCrates:`${p.cratesBroken}/${g.getLevel().totalCrates-g.getLevel().bonusCrateTotal}`,
+ remainingCrates:finished?g.getLevel().crates.filter((c:any)=>c.alive).map((c:any)=>c.mesh.position.toArray()):undefined,
+ loop:p.loopStatus,evidence:pilot?.evidence},null,2);requestAnimationFrame(report);}
 report();
