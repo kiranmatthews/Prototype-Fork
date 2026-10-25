@@ -23,6 +23,7 @@ import { createIceMaterial } from './surfacePresentation';
 import { addMasonryLook, isMasonryTexture } from './masonryMaterial';
 import {BoulderLightning} from './boulderLightning';
 import {BoulderChase,validBoulderChase,type BoulderChaseData} from './boulderChase';
+import {CaveCollapse,validCaveCollapse,type CaveCollapseData} from './caveCollapse';
 import {HOLLOWWAKE_LEVEL} from './levels/hollowwake-descent';
 import {HollowwakeTunnels} from './hollowwakeTunnels';
 import {RIPCORD_RIVER_LEVEL,ROLLING_BONES_LEVEL} from './levels/ripcord-river';
@@ -131,7 +132,7 @@ import { JUNGLE_CUP_LEVEL } from "./levels/jungle-cup";
 import { JUNGLE_TERRACES_LEVEL } from "./levels/jungle-sequels";
 import { PIRATE_WRECK_LEVEL } from './levels/pirate-wreck';
 import { CROWN_TEXTURE_KINDS, isCrownTexture, crownTextureFile, createCrownSurface, createCrownQuartz, isCrownWater, crownWaterReflectionFile, createCrownWater, createDrownedHarbourOceanLook } from './drownedCrownAssets';
-import { CODEX_LAB_LEVEL, WAREHOUSE_REFERENCE_LEVEL, SCHOOL_MIAMI_LEVEL, WAREHOUSE_PARK_LEVEL, ROOFTOP_RELAY_LEVEL } from "./levels/codex-lab";
+import { CAVE_COLLAPSE_LEVEL, CODEX_LAB_LEVEL, WAREHOUSE_REFERENCE_LEVEL, SCHOOL_MIAMI_LEVEL, WAREHOUSE_PARK_LEVEL, ROOFTOP_RELAY_LEVEL } from "./levels/codex-lab";
 import { JUNGLE_MINEFIELD_LEVEL } from "./levels/jungle-minefield";
 import { COUNTRY_CLUB_LEVEL } from "./levels/country-club";
 import { isPreviousCountryClubStock } from "./levels/country-club-stock";
@@ -1110,6 +1111,7 @@ export interface CustomLevelData {
   name: string;
   minefields?: MinefieldData[];
   boulderChase?: BoulderChaseData;
+  caveCollapse?: CaveCollapseData;
   /** Eight-rider point-to-point race, sharing the normal board physics. */
   skateRace?: SkateRaceData;
   spawn: [number, number, number];
@@ -2588,6 +2590,7 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
     name: CODEX_LAB_LEVEL.name,
     data: CODEX_LAB_LEVEL,
   }, // source-owned long course for fast, isolated geometry iterations
+  { id: "cave-collapse", name: CAVE_COLLAPSE_LEVEL.name, data: CAVE_COLLAPSE_LEVEL },
   { id: "jungle-minefield", name: JUNGLE_MINEFIELD_LEVEL.name, data: JUNGLE_MINEFIELD_LEVEL },
   { id: "rooftop-relay", name: ROOFTOP_RELAY_LEVEL.name, data: ROOFTOP_RELAY_LEVEL },
   { id: 'mall', name: MALL_LEVEL.name, data: MALL_LEVEL },
@@ -2691,7 +2694,7 @@ const LEVEL_DATA_KEYS = new Set([
   'encounter',
   "minefields", "v", "skateRace", "edgeGrindingRevision", "name", "spawn", "startWarpPad", "killY", "fallRecoveryDrop", "hudMode", "ledgeAssist", "relicTime",
   "medalTimes", "ocean", "unitySand", "shoreFoam", "sky", "jungleAtmosphere", "jungleDepthFade", "jungleStyle", "atmosphere",
-  "components", "layers", "groups", "allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "skateReference", "hugeDropBail", "alwaysSkate", "warehouseArt", "skateCollectathon", "cameraAirLift", "secretComboGem", "cameraLookAhead", "cameraRig", "boulderChase",
+  "components", "layers", "groups", "allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "skateReference", "hugeDropBail", "alwaysSkate", "warehouseArt", "skateCollectathon", "cameraAirLift", "secretComboGem", "cameraLookAhead", "cameraRig", "boulderChase", "caveCollapse",
 ]);
 const COMPONENT_DATA_KEYS = new Set([
   "minefieldTrap", "t", "p", "s", "to", "pts", "widths", "artProxy", "checkpointTrip", "openFloor", "collisionHeight", "wallHeights", "slip", "iceGrip", "groundSpeedLimit", "containment",
@@ -2937,6 +2940,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
   if(source.minefields!==undefined&&!validMinefields(source.minefields))return null;
   if(source.skateRace!==undefined&&!validSkateRace(source.skateRace))return null;
   if(source.boulderChase!==undefined&&!validBoulderChase(source.boulderChase))return null;
+  if(source.caveCollapse!==undefined&&!validCaveCollapse(source.caveCollapse))return null;
   if(source.cameraRig!==undefined){
     const rig=source.cameraRig;
     if(!rig||!hasOnlyKeys(rig,new Set(['camDist','camHeight','camPitch','camFov']))||
@@ -4365,6 +4369,8 @@ export class Level {
     hStep: number;
     heights: number[];
   } | null = null;
+
+  caveCollapse: CaveCollapse | null = null;
 
   // --- motion toolkit ---
   movers: Mover[] = [];
@@ -8610,6 +8616,14 @@ export class Level {
       const id=data.components[rail.object.userData.editorIdx]?.minefieldTrap;
       if(id!==undefined)this.minefields.trappedRails.push({rail,id});
     }
+    if(data.caveCollapse){
+      this.caveCollapse=new CaveCollapse(data.caveCollapse);this.root.add(this.caveCollapse.group);
+      (this.caveCollapse.rubble.material as THREE.MeshLambertMaterial).map=this.surfaceTexture('custard-sandstone');
+      this.caveCollapse.onImpact=at=>{
+        const volume=Math.max(.08,.55-this.playerPos.distanceTo(at)/100);sfx.play('crunch',volume,.6);
+        puffs.burst('dustLandHeavy',at.x,at.y+.2,at.z,{strength:1.4,count:8,groundY:at.y,surface:'stone',tint:0xb1a08b,ambient:true});
+      };
+    }
     if(data.boulderChase){
       const spec=data.boulderChase,start=spec.path[0],stones:Stone[]=[];
       for(let i=0;i<1+(spec.shelters?.length??0);i++){
@@ -8637,6 +8651,7 @@ export class Level {
   dispose(preserveResourcesFrom?: Level): void {
     this.pickupVisualBatch?.dispose();this.pickupVisualBatch=null;
     this.chaseLightning?.dispose();this.chaseLightning=undefined;
+    this.caveCollapse?.dispose();this.caveCollapse=null;
     for (const tiki of this.fireTikis) tiki.dispose();
     this.clockVisual?.dispose();
     this.clockVisual = null;
@@ -9680,6 +9695,7 @@ export class Level {
   }
 
   update(dt: number): void {
+    this.caveCollapse?.update(dt,this.playerPos);
     this.minefields?.update(dt);
     this.skateCollectathon?.update(this.time);
     this.worldSurfaceBinding?.beginStep();
@@ -11202,6 +11218,7 @@ export class Level {
 
     // Boulder: back to its mark a fair headstart behind wherever you respawn,
     // waiting for you to move before it rolls again.
+    this.caveCollapse?.reset(this.currentSpawn);
     if(this.boulder?.course){
       this.chaseLightning?.reset();this.boulder.course.reset(this.currentSpawn,hard);this.boulder.st=this.boulder.course.stone;this.boulder.active=false;this.boulder.falling=false;
     } else if (this.boulder) {
