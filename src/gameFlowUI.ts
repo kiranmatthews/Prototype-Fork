@@ -14,7 +14,7 @@ import { rooReady } from "./roofont";
 import { installRooMenuText, waitForRooMenuText } from './roo-type/menu';
 import { subscribeRooLight } from './roo-type/settings';
 import { inputPrompts, CONTROLLER_FAMILIES, PROMPT_FAMILY_NAMES } from "./inputPrompts";
-import { actionButtonDown } from "./inputBindings";
+import { actionButtonDown, INPUT_BINDINGS } from "./inputBindings";
 import { TrickGuidePagination } from './trickGuidePagination';
 import {
   CAMPAIGN_ISLANDS,
@@ -1852,6 +1852,11 @@ export class GameFlowUI {
     // With developer chrome exposed, let native Tab leave the roving GameFlow
     // buttons and reach those real controls. Arrows/gamepad still own the menu.
     if (this.debugVisible && event.code === "Tab") return;
+    // Gameplay Input deliberately ignores native form controls. Retain the
+    // usual Back/pause shortcuts while one of our sliders owns DOM focus.
+    if (target?.matches('.game-volume-input') && (event.code === INPUT_BINDINGS.back.key || event.code === INPUT_BINDINGS.pause.key)) {
+      event.preventDefault(); this.handlePauseToggle(); return;
+    }
     if (this.selectedVolumeSlider() && ['ArrowLeft', 'ArrowRight', 'KeyA', 'KeyD', 'Home', 'End'].includes(event.code)) {
       event.preventDefault();
       this.adjustVolume(event.code === 'Home' ? -AUDIO_VOLUME_STEPS : event.code === 'End' ? AUDIO_VOLUME_STEPS : ['ArrowLeft', 'KeyA'].includes(event.code) ? -1 : 1);

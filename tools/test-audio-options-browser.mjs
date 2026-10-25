@@ -61,11 +61,11 @@ try {
     await page.mouse.move(musicBounds.x+9+(musicBounds.width-18)*.7,musicBounds.y+musicBounds.height/2);
     await page.mouse.down();await page.mouse.move(musicBounds.x+9+(musicBounds.width-18)*.23,musicBounds.y+musicBounds.height/2,{steps:8});await page.mouse.up();
     assert.equal(await music.inputValue(),'2');await checkAudio(.4,.2);
-    await page.keyboard.press('KeyQ');assert.equal(await page.evaluate(()=>window.__game.gameFlow.currentScreen),'launch');
+    await music.focus();await page.keyboard.press('Escape');assert.equal(await page.evaluate(()=>window.__game.gameFlow.currentScreen),'launch');
     await page.evaluate(()=>window.__game.gameFlow.showPause({levelName:'CODEX GEOMETRY LAB',inWarpRoom:false}));
     await page.getByRole('button',{name:'OPTIONS',exact:true}).click();
     assert.equal(await sfx.inputValue(),'4');assert.equal(await music.inputValue(),'2');
-    await page.keyboard.press('KeyQ');assert.equal(await page.evaluate(()=>window.__game.gameFlow.currentScreen),'pause');
+    await sfx.focus();await page.keyboard.press('KeyP');assert.equal(await page.evaluate(()=>window.__game.gameFlow.currentScreen),'pause');
     await page.evaluate(()=>window.__game.gameFlow.showMapSection('options'));
     assert.equal(await sfx.inputValue(),'4');assert.equal(await music.inputValue(),'2');
     if(!lite){
