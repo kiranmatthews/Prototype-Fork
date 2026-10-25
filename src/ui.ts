@@ -279,6 +279,7 @@ export class UI {
   onToggle2P: (() => void) | null = null;
   onToggleRunModes: (() => void) | null = null;
   onToggleEndlessDeaths: (() => void) | null = null;
+  onToggleUnlockAllLevels: (() => void) | null = null;
   // level-list verbs (main.ts wires these)
   onLevelEdit: ((id: string) => void) | null = null;
   onLevelNew: (() => void) | null = null;
@@ -308,6 +309,7 @@ export class UI {
   private mpBtn!: HTMLButtonElement; // 2-player split toggle
   private runBtn!: HTMLButtonElement; // time trial + combo run toggle
   private endlessBtn!: HTMLButtonElement; // selectable standard-run death rule
+  private unlockAllBtn!: HTMLButtonElement;
   private syncPanel!: HTMLElement;
   private unlockRow!: HTMLElement;
   private tokenRow!: HTMLElement;
@@ -328,6 +330,16 @@ export class UI {
     directory.href = new URL(`${import.meta.env.BASE_URL}labs/`, location.href).href;
     directory.style.cssText = "display:block;text-align:center;text-decoration:none;margin-bottom:10px";
     if (import.meta.env.VITE_DESKTOP !== 'true') statsWrap.appendChild(directory);
+
+    this.unlockAllBtn = document.createElement("button");
+    this.unlockAllBtn.className = "hud-levelbtn hud-editbtn";
+    this.unlockAllBtn.title = "open every built level and island; saved rewards stay unchanged";
+    this.unlockAllBtn.addEventListener("click", () => {
+      this.onToggleUnlockAllLevels?.();
+      this.unlockAllBtn.blur();
+    });
+    statsWrap.appendChild(this.unlockAllBtn);
+    this.setUnlockAllLevels(false);
 
     // LEVEL LIST. Re-rendered (not built once) because the list grows at
     // runtime: NEW, IMPORT, editing a built-in copy, and RESTORE FROM CLOUD
@@ -1719,6 +1731,12 @@ export class UI {
       ? "⏱ TIME TRIAL + COMBO: ON"
       : "⏱ TIME TRIAL + COMBO: OFF";
     this.runBtn.style.color = on ? "" : "#e0705a";
+  }
+
+  setUnlockAllLevels(on: boolean): void {
+    this.unlockAllBtn.textContent = `UNLOCK ALL LEVELS: ${on ? "ON" : "OFF"}`;
+    this.unlockAllBtn.setAttribute("aria-pressed", String(on));
+    this.unlockAllBtn.style.color = on ? "#58e08a" : "";
   }
 
   setEndlessDeaths(on: boolean): void {

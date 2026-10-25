@@ -21,6 +21,14 @@ try {
  ui.changeLevelSelectIsland(1);assert.equal(ui.levelSelectIsland,'island-1');
  ui.updateLevelSelectChoice('beachside-run',true);assert.equal(ui.levelSelectKey,'treehouse-trail','locked name entered the detail panel');
  ui.levelSelectKey='beachside-run';ui.playSelectedLevel();assert.deepEqual(calls,[]);
+ campaign.setDebugUnlockAll(true);ui.refreshCampaignAvailability();
+ assert.equal(ui.levelSelectIslands().length,islands.length);
+ assert.equal(ui.levelSelectKeys().size,levels.length);
+ ui.changeLevelSelectIsland(-1);ui.updateLevelSelectChoice('secret-6',true);
+ assert.equal(ui.levelSelectPlay.disabled,false);
+ ui.screen='confirm-level-select';campaign.setDebugUnlockAll(false);ui.refreshCampaignAvailability();
+ assert.equal(ui.currentScreen,'level-select');
+ assert.deepEqual(rowKeys(),['treehouse-trail']);
  campaign.commitClear('treehouse-trail',{crystal:false,boxGem:false,comboGem:false});
  ui.showMapSection('level-select');assert.deepEqual(rowKeys(),['treehouse-trail','beachside-run']);
  ui.updateLevelSelectChoice('beachside-run',true);ui.playSelectedLevel();assert.deepEqual(calls,['beachfront']);

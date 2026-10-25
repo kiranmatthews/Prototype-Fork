@@ -717,6 +717,12 @@ const SAVES_KEY = "solProtoCampaignSavesV1";
 const LAST_SLOT_KEY = "solProtoCampaignLastSlotV1";
 const AUTOSAVE_KEY = "solProtoCampaignAutosaveV1";
 const OPTIONS_KEY = "solProtoGameOptionsV1";
+const DEBUG_UNLOCK_KEY = "solProtoDebugUnlockAllLevels";
+
+function readDebugUnlockAll(): boolean {
+  try { return localStorage.getItem(DEBUG_UNLOCK_KEY) === "on"; }
+  catch { return false; }
+}
 
 function emptyLevelProgress(): CampaignLevelProgress {
   return {
@@ -939,6 +945,7 @@ export class CampaignStore {
   /** Mutable working copy for the active run. */
   private activeValue: CampaignSaveV1 | null = null;
   private ephemeralUnlockAll = false;
+  private debugUnlockAllValue = readDebugUnlockAll();
   private lastSlot = readLastSlot();
   private dirtyValue = false;
   private autosaveValue = readAutosave();
@@ -958,6 +965,19 @@ export class CampaignStore {
 
   get autosaveEnabled(): boolean {
     return this.autosaveValue;
+  }
+
+  get debugUnlockAll(): boolean {
+    return this.debugUnlockAllValue;
+  }
+
+  /** Device-only access override; never manufactures saved progress or rewards. */
+  setDebugUnlockAll(enabled: boolean): boolean {
+    this.debugUnlockAllValue = enabled;
+    try {
+      localStorage.setItem(DEBUG_UNLOCK_KEY, enabled ? "on" : "off");
+      return true;
+    } catch { return false; }
   }
 
   listSlots(): readonly (CampaignSaveV1 | null)[] {
@@ -1123,7 +1143,7 @@ export class CampaignStore {
   }
 
   private get inspectionUnlocks(): boolean {
-    return this.activeValue?.slot === 0 && this.ephemeralUnlockAll;
+    return this.debugUnlockAllValue || (this.activeValue?.slot === 0 && this.ephemeralUnlockAll);
   }
 
   /** True when the active save has satisfied this hub's graph prerequisites. */

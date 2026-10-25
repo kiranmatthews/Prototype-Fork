@@ -341,6 +341,12 @@ export class GameFlowUI {
     return this.screen;
   }
 
+  refreshCampaignAvailability(): void {
+    if (this.screen === "confirm-level-select" && !this.campaign.levelPlayable(this.levelSelectKey))
+      this.screen = "level-select";
+    if (this.screen === "level-select") this.render();
+  }
+
   /** Developer changes and restored preferences must not leave a stale preset. */
   refreshRenderResolution(): void {
     const button = this.panel.querySelector<HTMLButtonElement>(".game-resolution");

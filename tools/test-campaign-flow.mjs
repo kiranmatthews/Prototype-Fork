@@ -53,6 +53,33 @@ assert.equal(save.fruit, 0);
 assert.equal(store.continueSlot(), 1, "a new durable game was not continuable");
 assert.equal(store.activeSlot, 1);
 assert.equal(store.dirty, false, "new-game baseline did not persist cleanly");
+// Debug access survives reloads, includes secret islands, and is reversible
+// without rewriting either the active run or any durable reward snapshot.
+const freshSave = JSON.stringify(save), freshSlots = memory.get('solProtoCampaignSavesV1');
+assert.equal(store.debugUnlockAll, false);
+assert.equal(store.setDebugUnlockAll(true), true);
+for (const definition of campaign.CAMPAIGN_LEVELS) {
+  assert.equal(store.levelUnlocked(definition.progressKey), true);
+  assert.equal(store.levelRevealed(definition.progressKey), true);
+  assert.equal(store.levelPlayable(definition.progressKey), !definition.placeholder);
+}
+assert.equal(JSON.stringify(save), freshSave);
+assert.equal(memory.get('solProtoCampaignSavesV1'), freshSlots);
+assert.equal(store.dirty, false);
+const debugReload = new campaign.CampaignStore();
+debugReload.load(1);
+assert.equal(debugReload.debugUnlockAll, true);
+assert.equal(debugReload.levelPlayable('secret-6'), true);
+assert.equal(store.runModesUnlocked('jungle'), false);
+assert.equal(store.setDebugUnlockAll(false), true);
+assert.equal(store.levelPlayable('secret-6'), false);
+assert.equal(store.levelPlayable('treehouse-trail'), true);
+failedWrites.add('solProtoDebugUnlockAllLevels');
+assert.equal(store.setDebugUnlockAll(true), false);
+assert.equal(store.levelPlayable('secret-6'), true, 'blocked storage still permits this session');
+failedWrites.delete('solProtoDebugUnlockAllLevels');
+store.setDebugUnlockAll(false);
+assert.equal(new campaign.CampaignStore().debugUnlockAll, false);
 assert.equal(store.runModesUnlocked("jungle"), false);
 assert.equal(store.runModesUnlocked("slipstream-race"), false, "races must start locked too");
 store.levelProgress("jungle").crystal = true;
@@ -438,7 +465,8 @@ const bossRewardStore=new campaign.CampaignStore();const legacyBossSave=bossRewa
 const bosses=campaign.CAMPAIGN_LEVELS.filter(level=>!level.placeholder&&!campaign.levelAllowsCrystal(level.levelId));
 for(const boss of bosses){
   const progress=bossRewardStore.levelProgress(boss.levelId);progress.crystal=true;
-  if(!boss.competition){bossRewardStore.commitClear(boss.levelId,{crystal:true,boxGem:false,comboGem:false});assert.equal(progress.crystal,false);}
+  if(boss.skateRace){bossRewardStore.commitRaceResult(boss.levelId,{won:true,boxGem:false});assert.equal(progress.crystal,false);}
+  else if(!boss.competition){bossRewardStore.commitClear(boss.levelId,{crystal:true,boxGem:false,comboGem:false});assert.equal(progress.crystal,false);}
   progress.crystal=true;progress.boxGem=true;
 }
 legacyBossSave.levels.jungle.crystal=true;legacyBossSave.slot=1;

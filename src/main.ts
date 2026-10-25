@@ -4266,6 +4266,19 @@ player.onCourseHint = (title, sub) => { if (!level.boss) ui.showMessage(title, s
 player.onComboBail = (labels, points, multiplier) => {
   ui.comboBail(labels, points, multiplier);
 };
+// Access overrides are independent of earned campaign progress.
+ui.setUnlockAllLevels(campaign.debugUnlockAll);
+ui.onToggleUnlockAllLevels = () => {
+  const enabled = !campaign.debugUnlockAll;
+  const persisted = campaign.setDebugUnlockAll(enabled);
+  ui.setUnlockAllLevels(enabled);
+  if (worldMapController?.active && !campaign.levelUnlocked(worldMapController.destinationKey))
+    worldMapController.activate(level, campaign.recommendedMapLevelKey());
+  syncCampaignPortalProgress();
+  gameFlow.refreshCampaignAvailability();
+  ui.showMessage(enabled ? "ALL LEVELS UNLOCKED" : "NORMAL LEVEL UNLOCKS",
+    persisted ? "Saved progress and collectibles unchanged" : "For this session · preference could not be saved", 2200);
+};
 // Debug cheat: clicking the HUD face banks an extra life.
 ui.onLifeCheat = () => {
   if (!shellBypass || player.endlessDeaths) return;

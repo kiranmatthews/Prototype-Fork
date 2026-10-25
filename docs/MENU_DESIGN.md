@@ -147,6 +147,12 @@ held Confirm, keyboard/mouse, the last scrollable level, confirmation cancellati
 
 ## Shared debug tabs
 
+The top of MENU includes **Unlock all levels: On / Off**. This device preference
+opens every built course and island in Level Select and map travel, including
+secret destinations. It survives reloads without granting collectibles or
+changing save-slot progress. Turning it off restores earned access; planned
+slots remain Coming Soon. Press M or use Pause → Show Debug Menus to reach it.
+
 MENU stays at the left edge. TUNER, TEXT, CRT, RENDER, BOARD, SPIN and LOOK share
 one matching tab group at the right edge. Selecting a tab opens its drawer and
 closes the previous right-hand panel; selecting it again collapses the drawer.
