@@ -1,0 +1,647 @@
+{
+  "native": [
+    {
+      "label": "down",
+      "frames": 140,
+      "maxOffset": 0.1537103592178733,
+      "position": [
+        -6.134978619487698,
+        0,
+        9.360043059674888
+      ]
+    },
+    {
+      "label": "up",
+      "frames": 139,
+      "maxOffset": 0.13363522873333084,
+      "position": [
+        -17.10548554791349,
+        8.400000000372529,
+        0.4729507595056851
+      ]
+    },
+    {
+      "label": "slow down",
+      "frames": 495,
+      "maxOffset": 0.1650389677526257,
+      "position": [
+        -6.136215557458607,
+        0,
+        9.359824159173932
+      ]
+    },
+    {
+      "label": "slow up",
+      "frames": 487,
+      "maxOffset": 0.16535005070582104,
+      "position": [
+        -17.109111114212027,
+        8.400000000372529,
+        0.6042655763344743
+      ]
+    },
+    {
+      "label": "jump 0",
+      "peak": 11.254166667039193,
+      "position": [
+        -17.20066280504838,
+        8.400000000372529,
+        1.2814448799225573
+      ]
+    },
+    {
+      "label": "jump 2.6",
+      "peak": 11.047261373707435,
+      "position": [
+        -15.078415927426024,
+        7.365210091656174,
+        2.2388441540461415
+      ]
+    },
+    {
+      "label": "jump 4.8",
+      "peak": 9.072902399348461,
+      "position": [
+        -12.934599601064285,
+        5.600000000372528,
+        2.620158945335616
+      ]
+    },
+    {
+      "label": "jump 7.1",
+      "peak": 8.454166667039194,
+      "position": [
+        -12.264560946089501,
+        5.22648871323816,
+        4.345675204010841
+      ]
+    },
+    {
+      "label": "jump 9.6",
+      "peak": 6.644757944007402,
+      "position": [
+        -12.702588556237234,
+        2.962706661956135,
+        6.829852746528307
+      ]
+    },
+    {
+      "label": "jump 12.2",
+      "peak": 5.654166667039194,
+      "position": [
+        -11.509715384878756,
+        2.5599736295168647,
+        8.411652704585448
+      ]
+    },
+    {
+      "label": "jump 14.8",
+      "peak": 3.9346162484999896,
+      "position": [
+        -8.905083094134737,
+        0.288045735679495,
+        8.871599409974047
+      ]
+    },
+    {
+      "label": "jump 17.8",
+      "peak": 2.974166667039193,
+      "position": [
+        -5.9949761243629975,
+        0,
+        9.384729436854057
+      ]
+    },
+    {
+      "label": "jump 16.724240177385376",
+      "peak": 2.974166667039193,
+      "position": [
+        -7.054392741992058,
+        0.12000000037252903,
+        9.197925726389702
+      ]
+    },
+    {
+      "label": "reverse / stop 3.5",
+      "position": [
+        -17.121038442467057,
+        8.400000000372529,
+        0.6637578433745653
+      ]
+    },
+    {
+      "label": "reverse / stop 7",
+      "position": [
+        -14.857924258804823,
+        7.164088591211698,
+        2.2789534724496634
+      ]
+    },
+    {
+      "label": "reverse / stop 10.8",
+      "position": [
+        -12.21045498415548,
+        5.505613511647239,
+        4.039392711050392
+      ]
+    },
+    {
+      "label": "reverse / stop 14.8",
+      "position": [
+        -12.659077099472077,
+        2.800000000372529,
+        7.844022286935356
+      ]
+    }
+  ],
+  "browser": {
+    "lite": {
+      "base": "http://127.0.0.1:5417/",
+      "stamp": "Codex/sol fork · build 10-25 01:11 UTC",
+      "errors": [],
+      "cases": [
+        {
+          "label": "supported balcony spawn",
+          "position": [
+            -16.97026,
+            8.400000000372529,
+            -0.40991
+          ],
+          "grounded": true,
+          "board": false,
+          "deaths": 0,
+          "mounted": false,
+          "bailed": false,
+          "maxOffset": 0,
+          "frames": 70
+        },
+        {
+          "label": "continuous keyboard descent",
+          "position": [
+            -4.619966693893215,
+            -0.7045484843564855,
+            18.9828732914338
+          ],
+          "grounded": true,
+          "board": false,
+          "deaths": 0,
+          "mounted": false,
+          "bailed": false,
+          "maxOffset": 0.15976539283323019,
+          "frames": 307
+        },
+        {
+          "label": "continuous keyboard ascent",
+          "position": [
+            -17.084887441819895,
+            8.400000000372529,
+            -1.3155577179013973
+          ],
+          "grounded": true,
+          "board": false,
+          "deaths": 0,
+          "mounted": false,
+          "bailed": false,
+          "maxOffset": 0.13363522873333084,
+          "frames": 191
+        },
+        {
+          "label": "keyboard reversal",
+          "position": [
+            -12.325826312481228,
+            4.908764284214693,
+            4.694369832035522
+          ],
+          "grounded": true,
+          "board": false,
+          "deaths": 0,
+          "mounted": false,
+          "bailed": false,
+          "maxOffset": 0.13297779029400994,
+          "frames": 105
+        },
+        {
+          "label": "still",
+          "position": [
+            -12.256333483184042,
+            5.600000000372528,
+            3.0670656185896075
+          ],
+          "grounded": true,
+          "board": false,
+          "deaths": 0,
+          "mounted": false,
+          "bailed": false,
+          "maxOffset": 0.14039200887239428,
+          "frames": 236
+        },
+        {
+          "label": "charge 0",
+          "position": [
+            -17.115154194364685,
+            8.400000000372529,
+            0.41181191224555214
+          ],
+          "grounded": true,
+          "board": false,
+          "deaths": 0,
+          "mounted": false,
+          "bailed": false,
+          "maxOffset": 0,
+          "frames": 98
+        },
+        {
+          "label": "landed jump 0",
+          "position": [
+            -16.60728974889223,
+            8.400000000372529,
+            1.893197139092543
+          ],
+          "grounded": true,
+          "board": false,
+          "deaths": 0,
+          "mounted": false,
+          "bailed": false,
+          "maxOffset": 0.1312685995620953,
+          "frames": 168
+        },
+        {
+          "label": "charge 4.4",
+          "position": [
+            -14.214739528034293,
+            6.578158809604874,
+            2.3911336058600434
+          ],
+          "grounded": true,
+          "board": false,
+          "deaths": 0,
+          "mounted": false,
+          "bailed": false,
+          "maxOffset": 4.440892098500626e-16,
+          "frames": 78
+        },
+        {
+          "label": "landed jump 4.4",
+          "position": [
+            -12.885727745944665,
+            5.600000000372528,
+            2.628140986297132
+          ],
+          "grounded": true,
+          "board": false,
+          "deaths": 0,
+          "mounted": false,
+          "bailed": false,
+          "maxOffset": 0.0026263143287660233,
+          "frames": 124
+        },
+        {
+          "label": "charge 11.5",
+          "position": [
+            -12.834787926310156,
+            2.800000000372529,
+            7.794995458842753
+          ],
+          "grounded": true,
+          "board": false,
+          "deaths": 0,
+          "mounted": false,
+          "bailed": false,
+          "maxOffset": 0,
+          "frames": 77
+        },
+        {
+          "label": "landed jump 11.5",
+          "position": [
+            -11.797463727469788,
+            2.800000000372529,
+            8.333366009663598
+          ],
+          "grounded": true,
+          "board": false,
+          "deaths": 0,
+          "mounted": false,
+          "bailed": false,
+          "maxOffset": 0.10463023110189847,
+          "frames": 125
+        },
+        {
+          "label": "charge 17.5",
+          "position": [
+            -7.155079657411392,
+            0.12000000037252903,
+            9.180171883562421
+          ],
+          "grounded": true,
+          "board": false,
+          "deaths": 0,
+          "mounted": false,
+          "bailed": false,
+          "maxOffset": 0,
+          "frames": 68
+        },
+        {
+          "label": "landed jump 17.5",
+          "position": [
+            -5.825559437883575,
+            0,
+            13.46459692330348
+          ],
+          "grounded": true,
+          "board": false,
+          "deaths": 0,
+          "mounted": false,
+          "bailed": false,
+          "maxOffset": 1.9860273225978185e-15,
+          "frames": 128
+        }
+      ]
+    },
+    "full": {
+      "base": "http://127.0.0.1:5417/",
+      "stamp": "Codex/sol fork · build 10-25 01:11 UTC",
+      "errors": [],
+      "cases": [
+        {
+          "label": "supported balcony spawn",
+          "position": [
+            -16.97026,
+            8.400000000372529,
+            -0.40991
+          ],
+          "grounded": true,
+          "board": false,
+          "deaths": 0,
+          "mounted": false,
+          "bailed": false,
+          "maxOffset": 0,
+          "frames": 30
+        },
+        {
+          "label": "continuous keyboard descent",
+          "position": [
+            -4.403720588750377,
+            0,
+            10.231893418428571
+          ],
+          "grounded": true,
+          "board": false,
+          "deaths": 0,
+          "mounted": false,
+          "bailed": false,
+          "maxOffset": 0.15976539283323019,
+          "frames": 204
+        },
+        {
+          "label": "continuous keyboard ascent",
+          "position": [
+            -17.084938254490446,
+            8.400000000372529,
+            -1.3155577179013973
+          ],
+          "grounded": true,
+          "board": false,
+          "deaths": 0,
+          "mounted": false,
+          "bailed": false,
+          "maxOffset": 0.13363522873333084,
+          "frames": 218
+        },
+        {
+          "label": "keyboard reversal",
+          "position": [
+            -12.588758000447553,
+            3.52142289747456,
+            6.2177504868149756
+          ],
+          "grounded": true,
+          "board": false,
+          "deaths": 0,
+          "mounted": false,
+          "bailed": false,
+          "maxOffset": 0.13309445003611559,
+          "frames": 120
+        },
+        {
+          "label": "still",
+          "position": [
+            -12.304862185580653,
+            5.017133871288854,
+            4.575448854871299
+          ],
+          "grounded": true,
+          "board": false,
+          "deaths": 0,
+          "mounted": false,
+          "bailed": false,
+          "maxOffset": 0.13309445003611559,
+          "frames": 211
+        },
+        {
+          "label": "charge 0",
+          "position": [
+            -17.115154194364685,
+            8.400000000372529,
+            0.41181191224555214
+          ],
+          "grounded": true,
+          "board": false,
+          "deaths": 0,
+          "mounted": false,
+          "bailed": false,
+          "maxOffset": 0,
+          "frames": 77
+        },
+        {
+          "label": "landed jump 0",
+          "position": [
+            -13.668749021392946,
+            6.080628885184603,
+            2.487275145748339
+          ],
+          "grounded": true,
+          "board": false,
+          "deaths": 0,
+          "mounted": false,
+          "bailed": false,
+          "maxOffset": 0.1312685995620953,
+          "frames": 143
+        },
+        {
+          "label": "charge 4.4",
+          "position": [
+            -14.214739528034293,
+            6.578158809604874,
+            2.3911336058600434
+          ],
+          "grounded": true,
+          "board": false,
+          "deaths": 0,
+          "mounted": false,
+          "bailed": false,
+          "maxOffset": 4.440892098500626e-16,
+          "frames": 82
+        },
+        {
+          "label": "landed jump 4.4",
+          "position": [
+            -13.180691379177851,
+            5.635851117297186,
+            2.5734641459419327
+          ],
+          "grounded": true,
+          "board": false,
+          "deaths": 0,
+          "mounted": false,
+          "bailed": false,
+          "maxOffset": 4.718523673805673e-8,
+          "frames": 131
+        },
+        {
+          "label": "charge 11.5",
+          "position": [
+            -12.834787926310156,
+            2.800000000372529,
+            7.794995458842753
+          ],
+          "grounded": true,
+          "board": false,
+          "deaths": 0,
+          "mounted": false,
+          "bailed": false,
+          "maxOffset": 0,
+          "frames": 69
+        },
+        {
+          "label": "landed jump 11.5",
+          "position": [
+            -10.768118649825428,
+            1.9134862917378213,
+            8.540055063667113
+          ],
+          "grounded": true,
+          "board": false,
+          "deaths": 0,
+          "mounted": false,
+          "bailed": false,
+          "maxOffset": 0.10463023110189847,
+          "frames": 116
+        },
+        {
+          "label": "charge 17.5",
+          "position": [
+            -7.155079657411392,
+            0.12000000037252903,
+            9.180171883562421
+          ],
+          "grounded": true,
+          "board": false,
+          "deaths": 0,
+          "mounted": false,
+          "bailed": false,
+          "maxOffset": 0,
+          "frames": 71
+        },
+        {
+          "label": "landed jump 17.5",
+          "position": [
+            -6.711916168555898,
+            0.12000000037252903,
+            9.258313563512539
+          ],
+          "grounded": true,
+          "board": false,
+          "deaths": 0,
+          "mounted": false,
+          "bailed": false,
+          "maxOffset": 0,
+          "frames": 116
+        }
+      ]
+    },
+    "lifecycle": {
+      "checkpoint": {
+        "label": "checkpoint",
+        "position": [
+          31.9,
+          -1.25,
+          -67
+        ],
+        "grounded": true,
+        "state": "ride",
+        "board": false,
+        "deaths": 0,
+        "lives": 4,
+        "snap": 2,
+        "currentSpawn": [
+          32.9,
+          -1.15,
+          -67
+        ],
+        "at": null,
+        "watch": {
+          "mounted": false,
+          "bailed": false,
+          "maxOffset": 0,
+          "frames": 19
+        },
+        "stamp": "Codex/sol fork · build 10-25 01:11 UTC"
+      },
+      "respawn": {
+        "label": "checkpoint respawn",
+        "position": [
+          32.9,
+          -1.25,
+          -67
+        ],
+        "grounded": true,
+        "state": "ride",
+        "board": false,
+        "deaths": 0,
+        "lives": 3,
+        "snap": 3,
+        "currentSpawn": [
+          32.9,
+          -1.15,
+          -67
+        ],
+        "at": null,
+        "watch": {
+          "mounted": false,
+          "bailed": true,
+          "maxOffset": 0,
+          "frames": 166
+        },
+        "stamp": "Codex/sol fork · build 10-25 01:11 UTC"
+      },
+      "finish": {
+        "label": "finish gate",
+        "position": [
+          55,
+          -6.463333333556851,
+          -666
+        ],
+        "grounded": true,
+        "state": "finished",
+        "board": false,
+        "deaths": 0,
+        "lives": 4,
+        "snap": 4,
+        "currentSpawn": [
+          -16.97026,
+          8.55,
+          -0.40991
+        ],
+        "at": null,
+        "watch": {
+          "mounted": false,
+          "bailed": true,
+          "maxOffset": 0,
+          "frames": 173
+        },
+        "stamp": "Codex/sol fork · build 10-25 01:11 UTC"
+      }
+    },
+    "lifecycleErrors": []
+  }
+}

@@ -53,6 +53,7 @@ import { SpinBridge } from './spinBridge';
 // finish gate at the far end.
 
 import * as THREE from "three";
+import { createTreehouseStairPath, type TreehouseStairPath } from './treehouseStairGuide';
 import { attachTrialClockModel, type TrialClockVisual } from "./trialClockModel";
 import { createEnemyVisual } from "./enemies/runtime";
 import { BULL } from "./enemies/bull";
@@ -6100,6 +6101,7 @@ export class Level {
   // comes through correct by construction. Authored geometry, scenery and
   // motion retain their component identities so an edit rebuilds their logic.
   private builtFromData: CustomLevelData | null = null;
+  treehouseStairPath: TreehouseStairPath | null = null;
   private capturedSceneryMeshes: THREE.Mesh[] = [];
   private meshSandMaterials = new Map<string, THREE.MeshStandardMaterial>();
   private sharedUnitySandMaps: UnitySandMaps | null = null;
@@ -7422,6 +7424,7 @@ export class Level {
     // Atmosphere controls lighting. Native Jungle already authors its dirt
     // explicitly; never overwrite a material the editor or a shared file chose.
     this.builtFromData = data; // captureData: a data-built level IS its own capture
+    this.treehouseStairPath = createTreehouseStairPath(data.components);
     this.holdShadowOccluder = !EDITOR_BUILD && !this.liteDecor ? createHoldShadowOccluder(data) : undefined;
     this.jungleAtmosphere = data.jungleAtmosphere === true;
     this.jungleDepthFade = data.jungleDepthFade !== false;

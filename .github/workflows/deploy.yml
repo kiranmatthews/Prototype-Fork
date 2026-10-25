@@ -59,7 +59,7 @@ jobs:
       - name: Skate race systems regression
         run: npm run check:race:rules
       - name: Treehouse authored support regression
-        run: node tools/test-treehouse-surface-restoration.mjs
+        run: node tools/test-treehouse-surface-restoration.mjs && node tools/test-treehouse-stair-guide.mjs
       - name: Touch ownership and responsive layout regression
         run: node tools/test-touch-release.mjs && node tools/test-touch-screen-awake.mjs && node tools/test-jump-cancellation-replay.mjs && node tools/test-mobile-ui-layout.mjs && node tools/test-camera-portrait.mjs
       - name: Enemy presentation and update regression

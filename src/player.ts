@@ -99,6 +99,7 @@ import {
 import { RUN_REVERSAL_YAW_RATE, stepFacingYaw } from './runFacing';
 import { RUN_MOVE_INTENT_INPUT } from './animation/runStop';
 import { sampleSkateMount, SKATE_MOUNT_DURATION, SKATE_DISMOUNT_DURATION, DEFAULT_SKATE_STANCE } from './skateMount';
+import { TreehouseStairInput } from './treehouseStairGuide';
 import { JUMP_CHARGE_CLIP_ID } from './animation/jumpCharge';
 import {
   SpinEffectsPresentation,
@@ -1581,6 +1582,8 @@ export class Player {
   private lean = 0;
 
   private rawInput!: Input; // pre-remap stick (see step): slam/grab-spin/balance
+  private readonly treehouseStairInput = new TreehouseStairInput();
+  private treehouseBoardBlocked = false;
   // Travel axes, latched across zone boundaries: the course usually runs
   // along -Z ('S'), but turned stretches run along +X ('E') / -X ('W').
   private travelDir: 'S' | 'E' | 'W' | 'N' = 'S';
@@ -3901,6 +3904,8 @@ export class Player {
     this.chargeTimer = 0;
     this.skateCharge = 0;
     this.freeSkate = level.alwaysSkate;
+    this.treehouseStairInput.reset();
+    this.treehouseBoardBlocked = false;
     this.airMomentum = false;
     this.airJumpUsed = false;
     this.doubleJumpAir = false;
@@ -4421,6 +4426,26 @@ export class Player {
       }
     }
     input = ctl;
+
+    // The narrow opening stairs remap intent through their authored supports.
+    // Keep buttons and analog magnitude intact; the ordinary motor still owns
+    // acceleration, stopping, jump charge, gravity and collisions.
+    const stairPath = level.treehouseStairPath;
+    this.treehouseBoardBlocked = stairPath?.blocksBoard(this.pos) ?? false;
+    const guide = this.treehouseStairInput.sample(
+      !this.freeSkate && !this.isBailing && !this.wallriding && this.slideTimer <= 0 &&
+        !this.slideJumpAir && (this.state === 'ride' || this.state === 'air') ? stairPath : null,
+      this.pos, this.rawInput.moveX, this.rawInput.moveY, laneDir ?? this.axisF,
+    );
+    if (guide) {
+      const along = this.walkVelocity.x * guide.tangent.x + this.walkVelocity.z * guide.tangent.z;
+      const velocity = Math.sign(along) * this.walkVelocity.length();
+      this.axisF.set(guide.x, 0, guide.z);
+      this.axisL.set(-guide.z, 0, guide.x);
+      this.walkVelocity.copy(this.axisF).multiplyScalar(velocity);
+      this.speed = velocity;
+      input = { ...input, moveX: 0, moveY: guide.amount } as Input;
+    }
 
     // GET-UP BEAT: a plain dry-ground slide leaves the skater sprawled on the ground.
     // While the recover timer runs (and they're back on their feet, not
@@ -6483,7 +6508,7 @@ export class Player {
     // actual movement in any direction — so pushing sideways skates exactly
     // like pushing forward, never stuck in second-class walk.
     const stickHeld = input.moveX !== 0 || input.moveY !== 0;
-    if (this.charging && stickHeld) this.skateCharge += dt;
+    if (!this.treehouseBoardBlocked && this.charging && stickHeld) this.skateCharge += dt;
     else this.skateCharge = 0;
     const planarSpeed = Math.max(Math.abs(this.speed), this.lastPlanar);
     // Standstill launch: a charge planted from a dead stop keeps the feet pinned
@@ -6495,12 +6520,12 @@ export class Player {
       this.chargePlanted &&
       stickHeld &&
       this.skateCharge >= TUNING.skateHoldTime;
-    const pushingOff =
+    const pushingOff = !this.treehouseBoardBlocked && (
       plantedPush ||
       (this.charging &&
         stickHeld &&
         this.skateCharge >= TUNING.skateHoldTime &&
-        planarSpeed >= TUNING.skateEntrySpeed);
+        planarSpeed >= TUNING.skateEntrySpeed));
     this.skateOn = pushingOff;
     // Ground too steep to RIDE (halfpipe transitions, steep banks): with real
     // momentum the board pops out here. Steepness reads the SMOOTHED ride plane,
@@ -6542,7 +6567,7 @@ export class Player {
     // A thrown deck is never recovered by proximity or carried speed. Only
     // the normal hold-X + direction commitment recalls it; until that point
     // steep ground and bailout momentum remain genuinely on foot.
-    const boardAvailable = (!looseDeck && !this.boardRunCarry && !this.iceSlideCarry) || pushingOff;
+    const boardAvailable = !this.treehouseBoardBlocked && ((!looseDeck && !this.boardRunCarry && !this.iceSlideCarry) || pushingOff);
     // On steep ground the board only pops out when it's a RIDER (charge/
     // momentum/rollout) — a walker (footPlant OR footSlip) stays on foot and
     // obeys footGrip. Standing still on a bank no longer flashes the board.
@@ -11409,6 +11434,9 @@ export class Player {
   }
 
   private tryGrind(pressed: boolean, level: Level): boolean {
+    // A grind catch also mounts the board. Retain the authored grindable
+    // edges, but do not let this alternate entry bypass the opening walk zone.
+    if (this.treehouseBoardBlocked) return false;
     const capture=this.parkReference?.railCapture;
     if(capture){
       // The native candidate query owns distance, sweep and endpoint rules.
