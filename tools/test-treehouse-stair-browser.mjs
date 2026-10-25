@@ -1,10 +1,12 @@
 import assert from 'node:assert/strict';
 import { mkdir, writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 const { chromium } = await import(process.env.PLAYWRIGHT_MODULE || 'playwright');
 const base = process.argv.find(a => /^https?:/.test(a)) || 'http://127.0.0.1:5417/';
 const full = process.argv.includes('--full'), mode = full ? 'full' : 'lite';
 const lifecycleOnly = process.argv.includes('--lifecycle-only');
-const out = process.env.TREEHOUSE_STAIR_BROWSER_OUT || '/private/tmp/treehouse-stair-browser';
+const out = process.env.TREEHOUSE_STAIR_BROWSER_OUT || join(tmpdir(), 'treehouse-stair-browser');
 await mkdir(out, { recursive: true });
 const browser = await chromium.launch({ channel: 'chrome', headless: true });
 const page = await browser.newPage({ viewport: { width: 1440, height: 900 } }), errors = [], rows = [];

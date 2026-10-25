@@ -1,5 +1,7 @@
 import assert from 'node:assert/strict';
 import { writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { withBlockworksRuntime } from './blockworks-runner.mjs';
 
 const rows = [];
@@ -79,5 +81,5 @@ await withBlockworksRuntime(async r => {
   assert.equal(JSON.stringify(TUNING), tuning, 'shared movement tuning stays unchanged');
 }, { modulePath: '/src/levels/treehouse-trail.ts', levelId: 'treehouse-trail', source: m => m.TREEHOUSE_TRAIL_LEVEL,
   controlFrame: r => r.p.courseInputDirection(r.l) ?? r.p.camDir });
-await writeFile(process.env.TREEHOUSE_STAIR_REPORT ?? '/private/tmp/treehouse-stair-guide.json', JSON.stringify(rows, null, 2));
+await writeFile(process.env.TREEHOUSE_STAIR_REPORT ?? join(tmpdir(), 'treehouse-stair-guide.json'), JSON.stringify(rows, null, 2));
 console.log(`PASS Treehouse stair guidance: ${rows.length} traversal, analog, jump, reversal and stop cases; balcony mounting blocked; clearing mounting restored.`);
