@@ -1,0 +1,205 @@
+{
+  "schemaVersion": 1,
+  "provider": "Meshy",
+  "cliVersion": "0.3.1",
+  "budgetCredits": 60,
+  "authorization": "User requested new image-generated Meshy replacements for level start/end platforms.",
+  "tasks": {
+    "arrival-rejected-parameters": {
+      "resource": "image-to-3d",
+      "state": "REJECTED",
+      "operationId": "6744562e-85a1-4351-b953-a35009d4f3ac",
+      "createdAt": "2026-10-25T05:16:20.859882+00:00",
+      "estimatedCredits": 0,
+      "payload": {
+        "image_url": "tools/beacon-platforms/references/arrival.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 6000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "remove_lighting": true,
+        "texture_prompt": "Preserve the image exactly: polished pearl ivory stone rim, dark blue gray beveled stone foundation, delicate bronze compass engraving and trims, luminous mint teal glazed flat central deck and ring inlay. Premium stylized platformer material detail. Closed circular low platform, clean flat standing deck, no text, environment or baked cast shadows.",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "reference": "tools/beacon-platforms/references/arrival.png",
+      "referenceSha256": "8cdd6bbf77c4b007e712540c33dcffe36a1d9e7e94dfeb572c0e1147bb0dffbb",
+      "error": {
+        "code": "validation",
+        "httpStatus": 400
+      },
+      "consumedCredits": 0,
+      "rejection": "HTTP 400: remove_lighting is not supported for smart-topology. No task was created."
+    },
+    "arrival": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "855ce79c-d39a-46a8-a0bb-89ec3edbd2e7",
+      "createdAt": "2026-10-25T05:17:46.180911+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "tools/beacon-platforms/references/arrival.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 6000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "texture_prompt": "Preserve the image exactly: polished pearl ivory stone rim, dark blue gray beveled stone foundation, delicate bronze compass engraving and trims, luminous mint teal glazed flat central deck and ring inlay. Premium stylized platformer material detail. Closed circular low platform, clean flat standing deck, no text, environment or baked cast shadows.",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "reference": "tools/beacon-platforms/references/arrival.png",
+      "referenceSha256": "8cdd6bbf77c4b007e712540c33dcffe36a1d9e7e94dfeb572c0e1147bb0dffbb",
+      "id": "01a1717e-68b3-7005-8302-601375537e6a",
+      "checkedAt": "2026-10-25T05:19:19.067259+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1792905506119,
+      "expiresAt": 1793164706119,
+      "downloads": [
+        {
+          "path": ".img2threejs/beacon-platforms/arrival/downloads/model.glb",
+          "bytes": 8238600,
+          "sha256": "64090f7573d2b5d081b4f25500955fcddaf1de0d3d5fd813c4f3ca077c1b949b"
+        },
+        {
+          "path": ".img2threejs/beacon-platforms/arrival/downloads/thumbnail.png",
+          "bytes": 101355,
+          "sha256": "7426ef9cd7bfe4bb338df03b9f00b85f51cb7d52108d43100a5ac10ed962545a"
+        }
+      ],
+      "disposition": "Rejected by user: did not resemble the green world-map beacons. Superseded by arrival-green."
+    },
+    "finish": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "81d7557d-a6a0-4b48-88e7-f5b3d3c4fa81",
+      "createdAt": "2026-10-25T05:18:03.548140+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "tools/beacon-platforms/references/finish.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 6000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "texture_prompt": "Preserve the image exactly: polished pearl ivory stone rim, dark blue gray beveled stone foundation, delicate bronze compass engraving and trims, luminous amber gold glazed flat central deck and ring inlay. Premium stylized platformer material detail. Closed circular low platform, clean flat standing deck, no text, environment or baked cast shadows.",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "reference": "tools/beacon-platforms/references/finish.png",
+      "referenceSha256": "c9ebd621863ee1e6dd362ca7c8f3d5bd82df6224bae3e1c17ec5d13e40a8f884",
+      "id": "01a1717e-9e74-738d-8e3f-dc14650c1eef",
+      "checkedAt": "2026-10-25T05:19:35.662738+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1792905522634,
+      "expiresAt": 1793164722634,
+      "downloads": [
+        {
+          "path": ".img2threejs/beacon-platforms/finish/downloads/model.glb",
+          "bytes": 7683392,
+          "sha256": "b13053a7899ce6c80cedf16d06eadde8c643113cd8e7455a81851e8a2859061e"
+        },
+        {
+          "path": ".img2threejs/beacon-platforms/finish/downloads/thumbnail.png",
+          "bytes": 113352,
+          "sha256": "1376cc940a8b1bf80b03a3cd3a29657d43a4531a925469aee23282244f5393d6"
+        }
+      ],
+      "disposition": "Rejected by user: did not resemble the green world-map beacons. Superseded by finish-green."
+    },
+    "arrival-green": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "6c5f189b-e5b0-4665-ba94-9d3cfade8ee4",
+      "createdAt": "2026-10-25T05:31:55.499121+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "tools/beacon-platforms/references/arrival-green.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 6000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "texture_prompt": "Match the reference precisely: vivid fresh GRASS GREEN unpatterned flat center disk, broad continuous PURE WHITE luminous rounded rim, dark charcoal gray smooth stepped foundation and thin GREEN light strip around the side. Minimal refined premium stylized game world-map beacon. Satin enamel materials, restrained material texture. No turquoise, cyan, teal, gold, bronze, compass, engraving, symbols, gems, masonry blocks, text or environment. Broad clear playable flat deck.",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "reference": "tools/beacon-platforms/references/arrival-green.png",
+      "referenceSha256": "282234c144c5d172c95fed00217632bb2768704cbcef9bece04d681180cbc7e7",
+      "id": "01a1718b-5ac8-71bd-bdd8-9f262beb2f32",
+      "checkedAt": "2026-10-25T05:33:34.312915+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1792906351780,
+      "expiresAt": 1793165551780,
+      "downloads": [
+        {
+          "path": ".img2threejs/beacon-platforms/arrival-green/downloads/model.glb",
+          "bytes": 4946564,
+          "sha256": "38f28dfafa92448ebf1053e2d20654dabc0478b6d16c8543c451392b2d6a26d6"
+        },
+        {
+          "path": ".img2threejs/beacon-platforms/arrival-green/downloads/thumbnail.png",
+          "bytes": 56310,
+          "sha256": "1d52fc71c96d0424f5d6d24d2393210e0204fdd457122fc1abdacbc0c90953de"
+        }
+      ]
+    },
+    "finish-green": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "65c40fe8-d17e-4258-8403-5dc64f6ad696",
+      "createdAt": "2026-10-25T05:32:08.957595+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "tools/beacon-platforms/references/finish-green.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 6000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "texture_prompt": "Match the reference precisely: vivid fresh GRASS GREEN unpatterned flat center disk, broad continuous PURE WHITE luminous rounded rim, dark charcoal gray smooth stepped foundation and thin GREEN light strip around the side. Minimal refined premium stylized game world-map beacon. Satin enamel materials, restrained material texture. No turquoise, cyan, teal, gold, bronze, compass, engraving, symbols, gems, masonry blocks, text or environment. Broad clear playable flat deck.",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "reference": "tools/beacon-platforms/references/finish-green.png",
+      "referenceSha256": "67c1380e58f25c9e1b52044a2232bf4e4e3e6d9c81782f403c0b62b53a9a3267",
+      "id": "01a1718b-8ae8-71eb-aa2c-1ab38bf9d8f5",
+      "checkedAt": "2026-10-25T05:33:41.090796+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1792906360952,
+      "expiresAt": 1793165560952,
+      "downloads": [
+        {
+          "path": ".img2threejs/beacon-platforms/finish-green/downloads/model.glb",
+          "bytes": 5674972,
+          "sha256": "fe1cb8717641ee8a621d374a1d99458cd8929bd0ab725a43df9fcae863e449bb"
+        },
+        {
+          "path": ".img2threejs/beacon-platforms/finish-green/downloads/thumbnail.png",
+          "bytes": 64564,
+          "sha256": "a5d844397be36167eec0b6ebe7fbb34ca78c653327c6106dcab216eba229d2e2"
+        }
+      ]
+    }
+  }
+}

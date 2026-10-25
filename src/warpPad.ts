@@ -18,6 +18,7 @@
 // this effect: shade the plasma and it turns into orange plastic.
 
 import { isGraphicsReset } from './lostGraphicsResources';
+import { attachBeaconPlatform } from './beaconPlatform';
 import * as THREE from 'three';
 
 // ONE SCALE KNOB. The first build was authored at gate scale (9.7 across) and
@@ -193,6 +194,7 @@ function plumeGeometry(height: number): THREE.BufferGeometry {
 
 export interface WarpPad {
   group: THREE.Group;
+  ready?: Promise<void>;
   /** the drum meshes, for the level to push into its ground/collision set */
   solids: THREE.Mesh[];
   update(dt: number): void;
@@ -250,17 +252,14 @@ export function createWarpPad(options:{quiet?:boolean;arrival?:boolean}={}): War
   disc.name = 'warp pad';
   group.add(disc);
 
-  // Course pads keep the readable masonry and a small inset marker. Travel
-  // owns the bright ribbons/sparks, so the resting pad never hides the rider.
+  // Main courses use the image-generated Meshy beacon pair. The original
+  // three solids retain their exact collision and travel trigger contracts.
   if(options.quiet){
     stoneMat.color.setHex(0x8195a8);
-    discMat.color.setHex(0xc0c7bd);
-    const markerMat=keep(new THREE.MeshBasicMaterial({color:options.arrival?0x65dbc9:0xe9bd76,
-      transparent:true,opacity:.65,depthWrite:false,toneMapped:false}));
-    const marker=new THREE.Mesh(keep(new THREE.RingGeometry(.87,1.02,48)),markerMat);
-    marker.name='warp pad inset';marker.rotation.x=-Math.PI/2;marker.position.y=WARP_PAD_TOP+.014;
-    group.add(marker);
-    return {group,solids:[body,rim,disc],update:()=>{},dispose:()=>{for(const d of disposables)d.dispose();}};
+    discMat.color.setHex(0x45e969);
+    const solids=[body,rim,disc];
+    const ready=attachBeaconPlatform(group,solids,!!options.arrival);
+    return {group,solids,ready,update:()=>{},dispose:()=>{for(const d of disposables)d.dispose();}};
   }
 
   // ---- COLUMN: additive, unlit, depthWrite off ----------------------------
