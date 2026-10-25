@@ -649,9 +649,11 @@ export interface CampaignTotals {
 }
 
 export interface GameAudioOptions {
-  sfxMuted: boolean;
-  musicMuted: boolean;
+  sfxVolume: number;
+  musicVolume: number;
 }
+
+export const AUDIO_VOLUME_STEPS = 10;
 
 export type GamePlayMode = 'modern' | 'classic';
 
@@ -1382,13 +1384,17 @@ export class CampaignStore {
 
 export function loadGameAudioOptions(): GameAudioOptions {
   try {
-    const value = JSON.parse(localStorage.getItem(OPTIONS_KEY) ?? "{}") as Partial<GameAudioOptions>;
+    const value = JSON.parse(localStorage.getItem(OPTIONS_KEY) ?? "{}") as Partial<GameAudioOptions> & { sfxMuted?: boolean; musicMuted?: boolean };
+    const volume = (level: unknown, muted: unknown): number =>
+      typeof level === 'number' && Number.isFinite(level)
+        ? Math.round(Math.max(0, Math.min(1, level)) * AUDIO_VOLUME_STEPS) / AUDIO_VOLUME_STEPS
+        : muted === true ? 0 : 1;
     return {
-      sfxMuted: value.sfxMuted === true,
-      musicMuted: value.musicMuted === true,
+      sfxVolume: volume(value.sfxVolume, value.sfxMuted),
+      musicVolume: volume(value.musicVolume, value.musicMuted),
     };
   } catch {
-    return { sfxMuted: false, musicMuted: false };
+    return { sfxVolume: 1, musicVolume: 1 };
   }
 }
 

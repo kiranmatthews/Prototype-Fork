@@ -32,10 +32,26 @@ assert.ok(peakDecoding<=2,'startup audio decoder concurrency is bounded');
 sfx.countdownBeep();
 assert.equal(tones[0].type,'sine');assert.equal(tones[0].frequency.value,880);
 assert.ok(Math.abs(tones[0].stopped-tones[0].started-.15)<1e-9);
-sfx.setMuted({sfxMuted:true,musicMuted:false});sfx.countdownBeep();
+sfx.setVolumes({sfxVolume:0,musicVolume:1});sfx.countdownBeep();
 assert.equal(tones[1].output.output.gain.value,0,'clock cue bypassed SFX mute');
 tones[0].onended();assert.equal(tones[0].disconnected,true);assert.equal(tones[0].output.disconnected,true);
-sfx.setMuted({sfxMuted:false,musicMuted:false});
+sfx.setVolumes({sfxVolume:1,musicVolume:1});
+// User volume scales both ongoing loops and new cues without changing their
+// authored mix, playback rate or phase. Music and SFX stay independent.
+sfx.setLoop('volume-test-sfx','skateLoop',true,.5,1);
+sfx.setLoop('volume-test-music','uberMusic',true,.65,1);
+const sfxLoop=sfx.loops.get('volume-test-sfx'),musicLoop=sfx.loops.get('volume-test-music');
+for(let step=0;step<=10;step++){
+  sfx.setVolumes({sfxVolume:step/10,musicVolume:(10-step)/10});
+  assert.equal(sfxLoop.gain.output.gain.value,step/10);
+  assert.equal(musicLoop.gain.output.gain.value,(10-step)/10);
+  assert.equal(sfxLoop.gain.gain.value,.5);
+  assert.equal(musicLoop.gain.gain.value,.65);
+  assert.equal(sfxLoop.src.starts,1);assert.equal(sfxLoop.src.stops,0);
+  assert.equal(musicLoop.src.starts,1);assert.equal(musicLoop.src.stops,0);
+  sfx.countdownBeep();assert.equal(tones.at(-1).output.output.gain.value,step/10);
+}
+sfx.stopLoops();sfx.setVolumes({sfxVolume:1,musicVolume:1});
 for(const [length,sampleRate] of [[15764,12000],[57932,44100],[63056,48000],[2,48000],[1,48000]]){
   const buffer={length,sampleRate,duration:length/sampleRate};sfx.buffers.set('grindLoop',buffer);
   sfx.setLoop('grind','grindLoop',true,.55,1);

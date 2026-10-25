@@ -18,6 +18,7 @@ import { actionButtonDown } from "./inputBindings";
 import { TrickGuidePagination } from './trickGuidePagination';
 import {
   CAMPAIGN_ISLANDS,
+  AUDIO_VOLUME_STEPS,
   CAMPAIGN_LEVELS,
   CAMPAIGN_START_LEVEL_KEY,
   CAMPAIGN_SAVE_SLOTS,
@@ -176,7 +177,7 @@ export class GameFlowUI {
   private previousScreen: GameScreen | null = null;
   private trickGuidePage = 0;
   private trickGuide: TrickGuidePagination | null = null;
-  private navButtons: HTMLButtonElement[] = [];
+  private navButtons: (HTMLButtonElement | HTMLInputElement)[] = [];
   private selected = 0;
   private levelSelectKey = CAMPAIGN_START_LEVEL_KEY;
   private levelSelectIsland = 'island-1';
@@ -231,7 +232,7 @@ export class GameFlowUI {
         snapshotGameFlowSurface({
           root: this.root,
           panel: this.panel,
-          buttons: [...this.panel.querySelectorAll<HTMLButtonElement>(".game-menu-button")],
+          buttons: [...this.panel.querySelectorAll<HTMLElement>(".game-menu-button")],
           screen: this.screen,
           transitionActive: this.panel.hasAttribute('data-roo-menu-pending') || this.startupLoading && !this.destinationRevealing || this.transitionActive && !this.destinationRevealing && this.transitionPhase !== "cover",
           thumbnail: this.thumbnail,
@@ -287,7 +288,7 @@ export class GameFlowUI {
       if (moved) {
         this.pointerSelectionArmed = true;
         const target = event.target instanceof Element
-          ? event.target.closest<HTMLButtonElement>(".game-menu-button")
+          ? event.target.closest<HTMLElement>(".game-menu-button")
           : null;
         if (target) this.selectPointerButton(target);
       }
@@ -702,6 +703,11 @@ export class GameFlowUI {
       else if (right && !this.previousPad.right) this.changeTrickGuidePage(1);
       else if (up && !this.previousPad.up) this.moveSelection(-1);
       else if (down && !this.previousPad.down) this.moveSelection(1);
+    } else if (this.selectedVolumeSlider()) {
+      if (left && !this.previousPad.left) this.adjustVolume(-1);
+      else if (right && !this.previousPad.right) this.adjustVolume(1);
+      else if (up && !this.previousPad.up) this.moveSelection(-1);
+      else if (down && !this.previousPad.down) this.moveSelection(1);
     } else {
       if ((up && !this.previousPad.up) || (left && !this.previousPad.left)) this.moveSelection(-1);
       if ((down && !this.previousPad.down) || (right && !this.previousPad.right)) this.moveSelection(1);
@@ -960,7 +966,7 @@ export class GameFlowUI {
     const current = this.navButtons[this.selected];
     const slots = this.navButtons.filter(button => button.dataset.saveSlot);
     const actions = this.navButtons.filter(button => !button.dataset.saveSlot && !button.disabled);
-    const select = (button: HTMLButtonElement | undefined) => {
+    const select = (button: HTMLButtonElement | HTMLInputElement | undefined) => {
       if (!button || button.disabled) return;
       this.selected = this.navButtons.indexOf(button); this.syncSelection();
     };
@@ -1524,14 +1530,8 @@ export class GameFlowUI {
       toggles.append(modeButton, description);
     }
     toggles.append(
-      this.toggleButton("SOUND", !this.options.sfxMuted, (enabled) => {
-        this.options.sfxMuted = !enabled;
-        return enabled;
-      }),
-      this.toggleButton("MUSIC", !this.options.musicMuted, (enabled) => {
-        this.options.musicMuted = !enabled;
-        return enabled;
-      }),
+      this.volumeSlider("SFX", "sfxVolume"),
+      this.volumeSlider("MUSIC", "musicVolume"),
       this.toggleButton("CRT", this.callbacks.getCrtEnabled(), (enabled) => {
         this.callbacks.onCrtEnabled(enabled);
         return enabled;
@@ -1563,7 +1563,7 @@ export class GameFlowUI {
     card.append(title, toggles);
     // Prompt style is constructed before its synchronizer; navigate in the
     // visible order rather than the order those controls were constructed.
-    this.navButtons = [...toggles.querySelectorAll<HTMLButtonElement>('button')];
+    this.navButtons = [...toggles.querySelectorAll<HTMLButtonElement | HTMLInputElement>('button, input[type="range"]')];
     const layout = element("div", "game-options-layout");
     layout.append(card, this.progressCard()); this.panel.append(layout);
   }
@@ -1707,6 +1707,54 @@ export class GameFlowUI {
     return card;
   }
 
+  private volumeSlider(label: string, key: keyof GameAudioOptions): HTMLLabelElement {
+    const row = element('label', 'game-menu-button game-toggle game-volume');
+    const name = element('span'); name.textContent = label;
+    const value = element('strong'); value.setAttribute('aria-hidden', 'true');
+    const control = element('span', 'game-volume-control');
+    const track = element('span', 'game-volume-track'); track.setAttribute('aria-hidden', 'true');
+    for (let step = 0; step < AUDIO_VOLUME_STEPS; step++) track.append(element('i'));
+    const thumb = element('span', 'game-volume-thumb'); track.append(thumb);
+    const input = element('input', 'game-volume-input');
+    input.type = 'range'; input.min = '0'; input.max = String(AUDIO_VOLUME_STEPS); input.step = '1';
+    input.value = String(Math.round(this.options[key] * AUDIO_VOLUME_STEPS));
+    input.setAttribute('aria-label', `${label === 'SFX' ? 'SFX' : 'Music'} volume`);
+    const sync = (): void => {
+      const step = Number(input.value);
+      value.textContent = String(step);
+      input.setAttribute('aria-valuetext', step === 0 ? 'Muted' : `${step} of ${AUDIO_VOLUME_STEPS}`);
+      track.style.setProperty('--volume-position', `${step / AUDIO_VOLUME_STEPS * 100}%`);
+      [...track.querySelectorAll('i')].forEach((tick, index) => tick.classList.toggle('filled', index < step));
+      this.invalidatePreCrt();
+    };
+    input.addEventListener('input', () => {
+      if (this.transitionActive || this.startupLoading) return;
+      this.options[key] = Number(input.value) / AUDIO_VOLUME_STEPS;
+      sync();
+      this.callbacks.onAudioOptions({ ...this.options });
+    });
+    row.addEventListener('pointerenter', event => {
+      if (event.pointerType !== 'touch' && this.pointerSelectionArmed) this.selectPointerButton(input);
+    });
+    input.addEventListener('pointerdown', () => this.selectPointerButton(input));
+    input.addEventListener('focus', () => this.selectPointerButton(input));
+    control.append(track, input); row.append(name, value, control);
+    this.navButtons.push(input); sync();
+    return row;
+  }
+
+  private selectedVolumeSlider(): HTMLInputElement | null {
+    const selected = this.navButtons[this.selected];
+    return selected instanceof HTMLInputElement && selected.type === 'range' ? selected : null;
+  }
+
+  private adjustVolume(delta: number): void {
+    const input = this.selectedVolumeSlider();
+    if (!input) return;
+    input.value = String(Math.max(0, Math.min(AUDIO_VOLUME_STEPS, Number(input.value) + delta)));
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+  }
+
   private toggleButton(
     label: string,
     on: boolean,
@@ -1750,10 +1798,11 @@ export class GameFlowUI {
     return button;
   }
 
-  private selectPointerButton(button: HTMLButtonElement): void {
+  private selectPointerButton(target: HTMLElement): void {
     this.cancelScheduledFocus();
-    const index = this.navButtons.indexOf(button);
-    if (index < 0 || index === this.selected || button.disabled) return;
+    const button = target.querySelector<HTMLInputElement>('.game-volume-input') ?? target;
+    const index = this.navButtons.findIndex(control => control === button);
+    if (index < 0 || index === this.selected || this.navButtons[index].disabled) return;
     this.selected = index;
     this.syncSelection(false);
   }
@@ -1792,7 +1841,7 @@ export class GameFlowUI {
   private onKey(event: KeyboardEvent): void {
     if (this.startupLoading) return;
     const target = event.target as HTMLElement | null;
-    const editing = target && ["INPUT", "TEXTAREA", "SELECT"].includes(target.tagName);
+    const editing = target && !target.matches('.game-volume-input') && ["INPUT", "TEXTAREA", "SELECT"].includes(target.tagName);
     if (editing && !(event.code === "KeyM" && target instanceof HTMLInputElement && ["checkbox", "range", "button"].includes(target.type))) return;
     if (event.code === "KeyM" && !event.repeat) {
       this.toggleDeveloperChrome();
@@ -1803,6 +1852,11 @@ export class GameFlowUI {
     // With developer chrome exposed, let native Tab leave the roving GameFlow
     // buttons and reach those real controls. Arrows/gamepad still own the menu.
     if (this.debugVisible && event.code === "Tab") return;
+    if (this.selectedVolumeSlider() && ['ArrowLeft', 'ArrowRight', 'KeyA', 'KeyD', 'Home', 'End'].includes(event.code)) {
+      event.preventDefault();
+      this.adjustVolume(event.code === 'Home' ? -AUDIO_VOLUME_STEPS : event.code === 'End' ? AUDIO_VOLUME_STEPS : ['ArrowLeft', 'KeyA'].includes(event.code) ? -1 : 1);
+      return;
+    }
     if (event.code === "Tab") {
       event.preventDefault();
       this.moveSelection(event.shiftKey ? -1 : 1);
@@ -1931,6 +1985,7 @@ export class GameFlowUI {
     this.navButtons.forEach((button, index) => {
       const active = index === this.selected && !button.disabled;
       button.classList.toggle("selected", active);
+      button.closest('.game-volume')?.classList.toggle('selected', active);
       button.setAttribute("tabindex", active ? "0" : "-1");
     });
     const selected = this.navButtons[this.selected];
@@ -1939,7 +1994,7 @@ export class GameFlowUI {
     if (focusSelected && selected && !selected.disabled) {
       const segment = selected.closest<HTMLElement>('.game-scroll-segment');
       if (segment && typeof segment.getBoundingClientRect === 'function' && typeof selected.getBoundingClientRect === 'function') {
-        const bounds = segment.getBoundingClientRect(), target = selected.getBoundingClientRect();
+        const bounds = segment.getBoundingClientRect(), target = (selected.closest<HTMLElement>('.game-volume') ?? selected).getBoundingClientRect();
         const top = bounds.top + segment.clientTop, bottom = top + segment.clientHeight;
         if (target.top < top) segment.scrollTop -= top - target.top;
         else if (target.bottom > bottom) segment.scrollTop += target.bottom - bottom;

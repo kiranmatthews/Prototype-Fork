@@ -74,7 +74,8 @@ export interface GameFlowSurfaceText {
 export interface GameFlowSurfaceButton {
   rooPalette?:'bonus'|'counter';
   rect: GameFlowSurfaceRect;
-  kind: "action" | "slot" | "toggle" | "close" | "level" | "hint";
+  kind: "action" | "slot" | "toggle" | "close" | "level" | "hint" | "volume";
+  volume?: { track: GameFlowSurfaceRect; thumb: GameFlowSurfaceRect; label: GameFlowSurfaceRect; value: GameFlowSurfaceRect; step: number; steps: number };
   label: string;
   valueLabel: string;
   color: string;
@@ -127,7 +128,7 @@ export interface GameFlowSurfaceRenderState {
 export interface GameFlowSurfaceDomSource {
   root: HTMLElement;
   panel: HTMLElement;
-  buttons: readonly HTMLButtonElement[];
+  buttons: readonly HTMLElement[];
   screen: GameFlowSurfaceScreen | null;
   transitionActive: boolean;
   thumbnail: HTMLCanvasElement | null;
@@ -239,10 +240,10 @@ function cssColorAlpha(value: string): number {
 }
 
 function stableButtonColor(
-  button: HTMLButtonElement,
+  button: HTMLElement,
   computedColor: string,
 ): string {
-  if (button.disabled) return opaqueCssColor(computedColor, "#462416");
+  if (button.matches(':disabled')) return opaqueCssColor(computedColor, "#462416");
   const selected = button.classList.contains("selected");
   const gameOver = button.closest(".game-over-actions") !== null;
   // These are discrete authored states. Reading their transitioning computed
@@ -429,7 +430,15 @@ export function snapshotGameFlowSurface(
     const value = levelRow ? button.querySelector<HTMLElement>(".game-level-mark") : toggle ? button.querySelector<HTMLElement>(":scope > strong") : null;
     const label = levelRow ? button.querySelector<HTMLElement>(".game-level-label") : toggle ? button.querySelector<HTMLElement>(":scope > span") : null;
     const selected = button.classList.contains("selected");
-    const disabled = button.disabled;
+    const disabled = button.matches(':disabled');
+    const range = button.querySelector<HTMLInputElement>('.game-volume-input');
+    const track = button.querySelector<HTMLElement>('.game-volume-track');
+    const thumb = button.querySelector<HTMLElement>('.game-volume-thumb');
+    const trackRect = track && rectFrom(track, origin), thumbRect = thumb && rectFrom(thumb, origin);
+    const labelRect = label && rectFrom(label, origin), valueRect = value && rectFrom(value, origin);
+    const volume = range && trackRect && thumbRect && labelRect && valueRect
+      ? { track: trackRect, thumb: thumbRect, label: labelRect, value: valueRect, step: Number(range.value), steps: Number(range.max) }
+      : undefined;
     const danger = button.classList.contains("danger");
     const localOpacity = clamp01(finiteCssNumber(style.opacity, 1));
     let opacity = effectiveOpacity(button, source.panel);
@@ -438,7 +447,8 @@ export function snapshotGameFlowSurface(
     buttons.push(
       Object.freeze({
         rect,
-        kind: button.classList.contains("game-control-hint") ? "hint" : levelRow ? "level" : button.classList.contains("game-map-close") ? "close" : slot ? "slot" : toggle ? "toggle" : "action",
+        kind: volume ? "volume" : button.classList.contains("game-control-hint") ? "hint" : levelRow ? "level" : button.classList.contains("game-map-close") ? "close" : slot ? "slot" : toggle ? "toggle" : "action",
+        volume,
         launch: source.screen === "launch",
         rooPalette:rooMenuPalette(button),
         pngFilter:style.getPropertyValue("--menu-png-colour-filter").trim()||undefined,
@@ -814,6 +824,23 @@ export class GameFlowSurface {
     // compound background. Slot child text receives that ancestor opacity in
     // its own snapshot, so rgba color alpha is never multiplied a second time.
     ctx.globalAlpha = button.opacity;
+    if (button.kind === 'volume' && button.volume) {
+      const { track, thumb, label, value, step, steps } = button.volume;
+      ctx.font = `${button.fontWeight} ${button.fontSize}px ${button.fontFamily}`;
+      ctx.textBaseline = 'middle'; ctx.textAlign = 'left'; ctx.fillStyle = button.color;
+      for (const [text, bounds] of [[button.label, label], [button.valueLabel, value]] as const) {
+        if (!png(rooMenuText(text), bounds.x, bounds.y + bounds.height / 2, {size:button.fontSize*.882, palette:button.rooPalette, align:'left', maxWidth:bounds.width}))
+          ctx.fillText(text, bounds.x, bounds.y + bounds.height / 2, bounds.width);
+      }
+      const gap = 3, width = (track.width - gap * (steps - 1)) / steps;
+      for (let tick = 0; tick < steps; tick++) {
+        roundedRect(ctx, {x:track.x + tick * (width + gap), y:track.y, width, height:track.height}, 2);
+        ctx.fillStyle = tick < step ? '#ffb32e' : '#426155'; ctx.fill();
+      }
+      roundedRect(ctx, thumb, thumb.width / 2);
+      ctx.fillStyle = '#fff0d0'; ctx.fill(); ctx.strokeStyle = '#c17d25'; ctx.lineWidth = 2; ctx.stroke();
+      ctx.restore(); this.primitiveCount++; return;
+    }
     if (button.kind === 'hint') {
       ctx.restore(); this.primitiveCount++;return;
     }

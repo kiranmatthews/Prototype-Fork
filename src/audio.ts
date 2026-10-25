@@ -107,8 +107,8 @@ class SfxEngine {
   private master: GainNode | null = null;
   private sfxBus: GainNode | null = null;
   private musicBus: GainNode | null = null;
-  private sfxMuted = false;
-  private musicMuted = false;
+  private sfxVolume = 1;
+  private musicVolume = 1;
   private buffers = new Map<string, AudioBuffer>();
   private loops = new Map<string, LoopChannel>();
   private lastPlay = new Map<string, number>();
@@ -188,8 +188,8 @@ class SfxEngine {
         this.master.gain.value = this.volume;
         this.sfxBus = this.ctx.createGain();
         this.musicBus = this.ctx.createGain();
-        this.sfxBus.gain.value = this.sfxMuted ? 0 : 1;
-        this.musicBus.gain.value = this.musicMuted ? 0 : 1;
+        this.sfxBus.gain.value = this.sfxVolume;
+        this.musicBus.gain.value = this.musicVolume;
         this.sfxBus.connect(this.master);
         this.musicBus.connect(this.master);
         this.master.connect(this.ctx.destination);
@@ -343,11 +343,11 @@ class SfxEngine {
     }
   }
 
-  setMuted(options: { sfxMuted: boolean; musicMuted: boolean }): void {
-    this.sfxMuted = options.sfxMuted;
-    this.musicMuted = options.musicMuted;
-    if (this.sfxBus) this.sfxBus.gain.value = this.sfxMuted ? 0 : 1;
-    if (this.musicBus) this.musicBus.gain.value = this.musicMuted ? 0 : 1;
+  setVolumes(options: { sfxVolume: number; musicVolume: number }): void {
+    this.sfxVolume = options.sfxVolume;
+    this.musicVolume = options.musicVolume;
+    if (this.sfxBus) this.sfxBus.gain.value = this.sfxVolume;
+    if (this.musicBus) this.musicBus.gain.value = this.musicVolume;
   }
 
   stopLoops(): void {

@@ -30,6 +30,28 @@ const campaign = await import(
   `data:text/javascript;base64,${Buffer.from(output).toString("base64")}`
 );
 
+// Audio sliders migrate the old device-level mute flags and keep independent,
+// bounded, snapping volumes through reloads and unavailable storage.
+const audioKey='solProtoGameOptionsV1';
+assert.deepEqual(campaign.loadGameAudioOptions(),{sfxVolume:1,musicVolume:1});
+for(const sfxMuted of [false,true])for(const musicMuted of [false,true]){
+  memory.set(audioKey,JSON.stringify({sfxMuted,musicMuted}));
+  assert.deepEqual(campaign.loadGameAudioOptions(),{sfxVolume:sfxMuted?0:1,musicVolume:musicMuted?0:1});
+}
+for(let step=0;step<=10;step++){
+  const options={sfxVolume:step/10,musicVolume:(10-step)/10};
+  campaign.saveGameAudioOptions(options);assert.deepEqual(campaign.loadGameAudioOptions(),options);
+}
+for(const [stored,expected] of [
+  ['null',{sfxVolume:1,musicVolume:1}],['broken',{sfxVolume:1,musicVolume:1}],
+  ['{"sfxVolume":-2,"musicVolume":4}',{sfxVolume:0,musicVolume:1}],
+  ['{"sfxVolume":0.34,"musicVolume":0.76}',{sfxVolume:.3,musicVolume:.8}],
+  ['{"sfxVolume":"quiet","sfxMuted":true,"musicVolume":null}',{sfxVolume:0,musicVolume:1}],
+  ['{"sfxVolume":0.6,"sfxMuted":true,"musicVolume":0.2,"musicMuted":true}',{sfxVolume:.6,musicVolume:.2}],
+]){memory.set(audioKey,stored);assert.deepEqual(campaign.loadGameAudioOptions(),expected);}
+failedWrites.add(audioKey);assert.doesNotThrow(()=>campaign.saveGameAudioOptions({sfxVolume:.4,musicVolume:.7}));
+failedWrites.delete(audioKey);memory.delete(audioKey);
+
 assert.ok(campaign.CAMPAIGN_LEVELS.length >= 20);
 assert.equal(campaign.resolveRelicTime('jungle'), 150);
 assert.equal(campaign.resolveRelicTime('editor-course', { relicTime: 83.75 }), 83.75);

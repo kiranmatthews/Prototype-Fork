@@ -259,8 +259,8 @@ try {
     onAudioOptions: noop,
   };
   const gameFlow = new GameFlowUI({}, callbacks, {
-    sfxMuted: false,
-    musicMuted: false,
+    sfxVolume: 1,
+    musicVolume: 1,
   });
 
   gameFlow.showResults(resultState(false));

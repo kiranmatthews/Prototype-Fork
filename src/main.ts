@@ -1497,7 +1497,7 @@ const campaign = new CampaignStore();
 let worldMapController: WorldMapController | null = null;
 let worldMapUI: WorldMapUI | null = null;
 let gameAudioOptions: GameAudioOptions = loadGameAudioOptions();
-sfx.setMuted(gameAudioOptions);
+sfx.setVolumes(gameAudioOptions);
 const crtGuestPanel = createCrtGuestTuningPanel({
   settings: crtGuestSettings,
   bindToggle: (toggle) => {
@@ -2560,7 +2560,7 @@ function currentCampaignName(): string {
 function applyGameAudioOptions(options: GameAudioOptions): void {
   gameAudioOptions = { ...options };
   saveGameAudioOptions(gameAudioOptions);
-  sfx.setMuted(gameAudioOptions);
+  sfx.setVolumes(gameAudioOptions);
 }
 
 function applyGamePlayMode(mode: GamePlayMode): void {

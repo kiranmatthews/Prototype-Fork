@@ -12,7 +12,7 @@ try {
  const {CampaignStore,CAMPAIGN_LEVELS:levels,CAMPAIGN_ISLANDS:islands,CAMPAIGN_BOSSES:bosses,campaignLevelById}=await server.ssrLoadModule('/src/campaign.ts');
  const {inputPrompts}=await server.ssrLoadModule('/src/inputPrompts.ts');
  const campaign=new CampaignStore();campaign.startEphemeral();const calls=[];
- const ui=new GameFlowUI(campaign,{onResume:()=>calls.push('resume'),onLevelSelect:id=>calls.push(id),getLevelSelectFocus:()=> 'treehouse-trail',getPlayMode:()=> 'classic',onAudioOptions(){}},{sfxMuted:false,musicMuted:false});
+ const ui=new GameFlowUI(campaign,{onResume:()=>calls.push('resume'),onLevelSelect:id=>calls.push(id),getLevelSelectFocus:()=> 'treehouse-trail',getPlayMode:()=> 'classic',onAudioOptions(){}},{sfxVolume:1,musicVolume:1});
  const rowKeys=()=>ui.navButtons.filter(b=>b.dataset.levelKey).map(b=>b.dataset.levelKey);
  ui.showMapSection('level-select');
  assert.deepEqual(rowKeys(),['treehouse-trail']);

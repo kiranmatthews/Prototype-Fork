@@ -93,6 +93,33 @@
 .game-secondary-action { margin-top:1.5vh; }
 .game-options-card .game-menu-button,.game-slot-card > .game-menu-button { min-height:5vh; font-size:clamp(18px,3.6vh,38px); }
 .game-toggle-list { gap:1.2vh; }
+
+/* Native range inputs own mouse, touch and accessibility; the same measured
+   track, thumb and PNG labels are mirrored beneath CRT by GameFlowSurface. */
+.game-shell .game-options-layout .game-volume {
+  display:grid; grid-template-columns:minmax(0,1fr) auto; gap:0;
+  text-align:left; line-height:1.1; align-items:center;
+}
+.game-shell .game-volume > strong { text-align:right; font:inherit; }
+.game-volume-control { grid-column:1 / -1; position:relative; display:block; width:100%; height:32px; }
+.game-volume-track {
+  position:absolute; left:9px; right:9px; top:calc(50% - 4px); height:8px;
+  display:grid; grid-template-columns:repeat(10,minmax(0,1fr)); gap:3px;
+}
+.game-volume-track > i { border-radius:2px; background:#426155; }
+.game-volume-track > i.filled { background:#ffb32e; }
+.game-volume-thumb {
+  position:absolute; left:var(--volume-position); top:50%; width:18px; height:18px;
+  box-sizing:border-box; transform:translate(-50%,-50%); border-radius:50%;
+  background:#fff0d0; border:2px solid #c17d25;
+}
+.game-volume-input {
+  appearance:none; -webkit-appearance:none; position:absolute; inset:0; width:100%; height:100%;
+  margin:0; padding:0; opacity:0; cursor:pointer; touch-action:pan-y;
+}
+.game-volume-input::-webkit-slider-thumb { appearance:none; -webkit-appearance:none; width:18px; height:18px; }
+.game-volume-input::-moz-range-thumb { width:18px; height:18px; border:0; }
+:is(body[data-prompt-family="touch"],body.tc-on) .game-volume-control { height:48px; }
 .game-launch-card { width:min(1000px,88vw); max-height:100%; padding:2vh 2vw; }
 .game-launch-card .game-logo { margin:0 0 4vh; }
 .game-launch-card .game-logo span { font-size:clamp(48px,min(19vh,16vw),190px); }
