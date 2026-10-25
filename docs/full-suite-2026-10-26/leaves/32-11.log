@@ -1,0 +1,950 @@
+FAIL jungle ?lite true: native and copied effective renderer state: AssertionError [ERR_ASSERTION]: capture changed effective fog, lights or backdrop under a different ID
++ actual - expected
+
+  {
+    ambientGround: [
++     0.18777917471958977,
++     0.17332196602618025,
++     0.1541323843592471
+-     0.21486634817524602,
+-     0.18622849962831442,
+-     0.1648857788307322
+    ],
++   ambientIntensity: 1.38,
+-   ambientIntensity: 1.196,
+    ambientSky: [
++     0.5317913815074256,
++     0.7921349221155581,
++     0.7010260627438663
+-     0.5548592937120609,
+-     0.7515233663828247,
+-     0.7467137189518562
+    ],
+    background: [
++     0.158960835050774,
++     0.4232676699760063,
++     0.20863687013464577
+-     0.08650046202808521,
+-     0.20507873637973145,
+-     0.16202937562896222
+    ],
+    drawDistance: 175,
+    fallback: null,
+    fillColor: [
++     0.5026432015448599,
++     0.76052450467022,
++     0.728205511585333
+-     0.5236140308218011,
+-     0.7236049085495533,
+-     0.7697397445016874
+    ],
++   fillIntensity: 0.3588,
+-   fillIntensity: 0.31096,
+    fog: {
+      color: [
++       0.158960835050774,
++       0.4232676699760063,
++       0.20863687013464577
+-       0.08650046202808521,
+-       0.20507873637973145,
+-       0.16202937562896222
+      ],
++     far: 155,
++     near: 26
+-     far: 150,
+-     near: 38
+    },
+    mistVisible: false,
+    secondDrawDistance: 175,
+    shadowStrength: 1,
+    skyVisible: true,
+    sunColor: [
+      1,
++     0.8432546093915835,
++     0.5119662795073463
+-     0.774010848660792,
+-     0.45000050200114183
+    ],
++   sunIntensity: 1.7249999999999999
+-   sunIntensity: 1.8974999999999997
+  }
+
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:136:18
+    at check (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:45:39)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:132:43
+FAIL jungle ?lite false: native and copied effective renderer state: AssertionError [ERR_ASSERTION]: capture changed effective fog, lights or backdrop under a different ID
++ actual - expected
+... Skipped lines
+
+  {
+    ambientGround: [
++     0.18777917471958977,
++     0.17332196602618025,
++     0.1541323843592471
+-     0.21486634817524602,
+-     0.18622849962831442,
+-     0.1648857788307322
+    ],
++   ambientIntensity: 1.38,
+-   ambientIntensity: 1.196,
+    ambientSky: [
++     0.5317913815074256,
++     0.7921349221155581,
++     0.7010260627438663
+-     0.5548592937120609,
+-     0.7515233663828247,
+-     0.7467137189518562
+    ],
+    background: [
++     0.158960835050774,
++     0.4232676699760063,
++     0.20863687013464577
+-     0.08650046202808521,
+-     0.20507873637973145,
+-     0.16202937562896222
+    ],
+    drawDistance: 175,
+    fallback: {
+      fog: 14674418,
+      skyBottom: '#e9f0f4',
+...
+    fillColor: [
++     0.5026432015448599,
++     0.76052450467022,
++     0.728205511585333
+-     0.5236140308218011,
+-     0.7236049085495533,
+-     0.7697397445016874
+    ],
++   fillIntensity: 0.3588,
+-   fillIntensity: 0.31096,
+    fog: {
+      color: [
++       0.158960835050774,
++       0.4232676699760063,
++       0.20863687013464577
+-       0.08650046202808521,
+-       0.20507873637973145,
+-       0.16202937562896222
+      ],
++     far: 155,
++     near: 26
+-     far: 150,
+-     near: 38
+    },
+    mistVisible: false,
+    secondDrawDistance: 175,
+    shadowStrength: 1,
+    skyVisible: true,
+    sunColor: [
+      1,
++     0.8432546093915835,
++     0.5119662795073463
+-     0.774010848660792,
+-     0.45000050200114183
+    ],
++   sunIntensity: 1.7249999999999999
+-   sunIntensity: 1.8974999999999997
+  }
+
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:136:18
+    at check (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:45:39)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:132:43
+FAIL jungle: lite renderer preserves copied atmosphere: AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
++ actual - expected
+
+  {
+    ambientGround: [
++     0.18777917471958977,
++     0.17332196602618025,
++     0.1541323843592471
+-     0.21486634817524602,
+-     0.18622849962831442,
+-     0.1648857788307322
+    ],
++   ambientIntensity: 1.38,
+-   ambientIntensity: 1.196,
+    ambientSky: [
++     0.5317913815074256,
++     0.7921349221155581,
++     0.7010260627438663
+-     0.5548592937120609,
+-     0.7515233663828247,
+-     0.7467137189518562
+    ],
+    background: [
++     0.158960835050774,
++     0.4232676699760063,
++     0.20863687013464577
+-     0.08650046202808521,
+-     0.20507873637973145,
+-     0.16202937562896222
+    ],
+    drawDistance: 175,
+    fallback: null,
+    fillColor: [
++     0.5026432015448599,
++     0.76052450467022,
++     0.728205511585333
+-     0.5236140308218011,
+-     0.7236049085495533,
+-     0.7697397445016874
+    ],
++   fillIntensity: 0.3588,
+-   fillIntensity: 0.31096,
+    fog: {
+      color: [
++       0.158960835050774,
++       0.4232676699760063,
++       0.20863687013464577
+-       0.08650046202808521,
+-       0.20507873637973145,
+-       0.16202937562896222
+      ],
++     far: 155,
++     near: 26
+-     far: 150,
+-     near: 38
+    },
+    mistVisible: false,
+    secondDrawDistance: 175,
+    shadowStrength: 1,
+    skyVisible: false,
+    sunColor: [
+      1,
++     0.8432546093915835,
++     0.5119662795073463
+-     0.774010848660792,
+-     0.45000050200114183
+    ],
++   sunIntensity: 1.7249999999999999
+-   sunIntensity: 1.8974999999999997
+  }
+
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:141:18
+    at check (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:45:39)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:138:18
+FAIL warproom ?lite true: native and copied effective renderer state: ReferenceError: MapIslandLighting is not defined
+    at applyTheme (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:99:72)
+    at eval (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:180:5)
+    at file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:50:21
+    at renderLevel (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:54:62)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:133:24
+    at check (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:45:39)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:132:43
+FAIL warproom ?lite false: native and copied effective renderer state: ReferenceError: MapIslandLighting is not defined
+    at applyTheme (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:99:72)
+    at eval (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:180:5)
+    at file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:50:21
+    at renderLevel (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:54:62)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:133:24
+    at check (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:45:39)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:132:43
+FAIL warproom: lite renderer preserves copied atmosphere: ReferenceError: MapIslandLighting is not defined
+    at applyTheme (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:99:72)
+    at eval (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:180:5)
+    at file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:50:21
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:139:26
+    at check (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:45:39)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:138:18
+FAIL beachfront ?lite true: native and copied effective renderer state: AssertionError [ERR_ASSERTION]: renderer.fog.near: expected 190, received 160
+    at assertRenderBaseline (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:21:12)
+    at assertRenderBaseline (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:29:46)
+    at assertRenderBaseline (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:29:46)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:135:11
+    at check (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:45:39)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:132:43
+FAIL beachfront ?lite false: native and copied effective renderer state: AssertionError [ERR_ASSERTION]: renderer.fog.near: expected 190, received 160
+    at assertRenderBaseline (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:21:12)
+    at assertRenderBaseline (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:29:46)
+    at assertRenderBaseline (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:29:46)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:135:11
+    at check (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:45:39)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:132:43
+FAIL jungle  true: native and copied effective renderer state: AssertionError [ERR_ASSERTION]: capture changed effective fog, lights or backdrop under a different ID
++ actual - expected
+
+  {
+    ambientGround: [
++     0.18777917471958977,
++     0.17332196602618025,
++     0.1541323843592471
+-     0.21486634817524602,
+-     0.18622849962831442,
+-     0.1648857788307322
+    ],
++   ambientIntensity: 1.38,
+-   ambientIntensity: 1.196,
+    ambientSky: [
++     0.5317913815074256,
++     0.7921349221155581,
++     0.7010260627438663
+-     0.5548592937120609,
+-     0.7515233663828247,
+-     0.7467137189518562
+    ],
+    background: [
++     0.158960835050774,
++     0.4232676699760063,
++     0.20863687013464577
+-     0.08650046202808521,
+-     0.20507873637973145,
+-     0.16202937562896222
+    ],
+    drawDistance: 175,
+    fallback: null,
+    fillColor: [
++     0.5026432015448599,
++     0.76052450467022,
++     0.728205511585333
+-     0.5236140308218011,
+-     0.7236049085495533,
+-     0.7697397445016874
+    ],
++   fillIntensity: 0.3588,
+-   fillIntensity: 0.31096,
+    fog: {
+      color: [
++       0.158960835050774,
++       0.4232676699760063,
++       0.20863687013464577
+-       0.08650046202808521,
+-       0.20507873637973145,
+-       0.16202937562896222
+      ],
++     far: 155,
++     near: 26
+-     far: 150,
+-     near: 38
+    },
+    mistVisible: false,
+    secondDrawDistance: 175,
+    shadowStrength: 1,
+    skyVisible: true,
+    sunColor: [
+      1,
++     0.8432546093915835,
++     0.5119662795073463
+-     0.774010848660792,
+-     0.45000050200114183
+    ],
++   sunIntensity: 1.7249999999999999
+-   sunIntensity: 1.8974999999999997
+  }
+
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:136:18
+    at check (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:45:39)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:132:43
+FAIL jungle  false: native and copied effective renderer state: AssertionError [ERR_ASSERTION]: capture changed effective fog, lights or backdrop under a different ID
++ actual - expected
+... Skipped lines
+
+  {
+    ambientGround: [
++     0.18777917471958977,
++     0.17332196602618025,
++     0.1541323843592471
+-     0.21486634817524602,
+-     0.18622849962831442,
+-     0.1648857788307322
+    ],
++   ambientIntensity: 1.38,
+-   ambientIntensity: 1.196,
+    ambientSky: [
++     0.5317913815074256,
++     0.7921349221155581,
++     0.7010260627438663
+-     0.5548592937120609,
+-     0.7515233663828247,
+-     0.7467137189518562
+    ],
+    background: [
++     0.158960835050774,
++     0.4232676699760063,
++     0.20863687013464577
+-     0.08650046202808521,
+-     0.20507873637973145,
+-     0.16202937562896222
+    ],
+    drawDistance: 175,
+    fallback: {
+      fog: 14674418,
+      skyBottom: '#e9f0f4',
+...
+    fillColor: [
++     0.5026432015448599,
++     0.76052450467022,
++     0.728205511585333
+-     0.5236140308218011,
+-     0.7236049085495533,
+-     0.7697397445016874
+    ],
++   fillIntensity: 0.3588,
+-   fillIntensity: 0.31096,
+    fog: {
+      color: [
++       0.158960835050774,
++       0.4232676699760063,
++       0.20863687013464577
+-       0.08650046202808521,
+-       0.20507873637973145,
+-       0.16202937562896222
+      ],
++     far: 155,
++     near: 26
+-     far: 150,
+-     near: 38
+    },
+    mistVisible: false,
+    secondDrawDistance: 175,
+    shadowStrength: 1,
+    skyVisible: true,
+    sunColor: [
+      1,
++     0.8432546093915835,
++     0.5119662795073463
+-     0.774010848660792,
+-     0.45000050200114183
+    ],
++   sunIntensity: 1.7249999999999999
+-   sunIntensity: 1.8974999999999997
+  }
+
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:136:18
+    at check (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:45:39)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:132:43
+FAIL warproom  true: native and copied effective renderer state: ReferenceError: MapIslandLighting is not defined
+    at applyTheme (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:99:72)
+    at eval (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:180:5)
+    at file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:50:21
+    at renderLevel (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:54:62)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:133:24
+    at check (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:45:39)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:132:43
+FAIL warproom  false: native and copied effective renderer state: ReferenceError: MapIslandLighting is not defined
+    at applyTheme (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:99:72)
+    at eval (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:180:5)
+    at file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:50:21
+    at renderLevel (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:54:62)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:133:24
+    at check (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:45:39)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:132:43
+FAIL beachfront  true: native and copied effective renderer state: AssertionError [ERR_ASSERTION]: renderer.fog.near: expected 190, received 160
+    at assertRenderBaseline (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:21:12)
+    at assertRenderBaseline (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:29:46)
+    at assertRenderBaseline (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:29:46)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:135:11
+    at check (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:45:39)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:132:43
+FAIL beachfront  false: native and copied effective renderer state: AssertionError [ERR_ASSERTION]: renderer.fog.near: expected 190, received 160
+    at assertRenderBaseline (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:21:12)
+    at assertRenderBaseline (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:29:46)
+    at assertRenderBaseline (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:29:46)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:135:11
+    at check (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:45:39)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:132:43
+FAIL absent overrides preserve map/day/true defaults: ReferenceError: MapIslandLighting is not defined
+    at applyTheme (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:99:72)
+    at eval (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:180:5)
+    at file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:50:21
+    at renderLevel (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:54:62)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:157:28
+    at check (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:45:39)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:154:43
+FAIL absent overrides preserve map/day/false defaults: ReferenceError: MapIslandLighting is not defined
+    at applyTheme (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:99:72)
+    at eval (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:180:5)
+    at file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:50:21
+    at renderLevel (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:54:62)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:157:28
+    at check (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:45:39)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:154:43
+FAIL absent overrides preserve map/sunset/true defaults: ReferenceError: MapIslandLighting is not defined
+    at applyTheme (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:99:72)
+    at eval (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:180:5)
+    at file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:50:21
+    at renderLevel (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:54:62)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:157:28
+    at check (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:45:39)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:154:43
+FAIL absent overrides preserve map/sunset/false defaults: ReferenceError: MapIslandLighting is not defined
+    at applyTheme (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:99:72)
+    at eval (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:180:5)
+    at file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:50:21
+    at renderLevel (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:54:62)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:157:28
+    at check (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:45:39)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:154:43
+FAIL absent overrides preserve map/night/true defaults: ReferenceError: MapIslandLighting is not defined
+    at applyTheme (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:99:72)
+    at eval (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:180:5)
+    at file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:50:21
+    at renderLevel (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:54:62)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:157:28
+    at check (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:45:39)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:154:43
+FAIL absent overrides preserve map/night/false defaults: ReferenceError: MapIslandLighting is not defined
+    at applyTheme (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:99:72)
+    at eval (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:180:5)
+    at file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:50:21
+    at renderLevel (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:54:62)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:157:28
+    at check (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:45:39)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:154:43
+FAIL absent overrides preserve map/coast/true defaults: ReferenceError: MapIslandLighting is not defined
+    at applyTheme (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:99:72)
+    at eval (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:180:5)
+    at file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:50:21
+    at renderLevel (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:54:62)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:157:28
+    at check (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:45:39)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:154:43
+FAIL absent overrides preserve map/coast/false defaults: ReferenceError: MapIslandLighting is not defined
+    at applyTheme (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:99:72)
+    at eval (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:180:5)
+    at file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:50:21
+    at renderLevel (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:54:62)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:157:28
+    at check (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:45:39)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:154:43
+FAIL map: final numeric override fogNear: ReferenceError: MapIslandLighting is not defined
+    at applyTheme (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:99:72)
+    at eval (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:180:5)
+    at file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:50:21
+    at renderLevel (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:54:62)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:169:61
+    at check (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:45:39)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:167:62
+FAIL map: final numeric override fogFar: ReferenceError: MapIslandLighting is not defined
+    at applyTheme (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:99:72)
+    at eval (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:180:5)
+    at file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:50:21
+    at renderLevel (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:54:62)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:169:61
+    at check (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:45:39)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:167:62
+FAIL map: final numeric override ambientIntensity: ReferenceError: MapIslandLighting is not defined
+    at applyTheme (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:99:72)
+    at eval (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:180:5)
+    at file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:50:21
+    at renderLevel (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:54:62)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:169:61
+    at check (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:45:39)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:167:62
+FAIL map: final numeric override sunIntensity: ReferenceError: MapIslandLighting is not defined
+    at applyTheme (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:99:72)
+    at eval (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:180:5)
+    at file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:50:21
+    at renderLevel (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:54:62)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:169:61
+    at check (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:45:39)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:167:62
+FAIL map: final numeric override fillIntensity: ReferenceError: MapIslandLighting is not defined
+    at applyTheme (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:99:72)
+    at eval (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:180:5)
+    at file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:50:21
+    at renderLevel (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:54:62)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:169:61
+    at check (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:45:39)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:167:62
+FAIL map: final numeric override shadowStrength: ReferenceError: MapIslandLighting is not defined
+    at applyTheme (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:99:72)
+    at eval (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:180:5)
+    at file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:50:21
+    at renderLevel (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:54:62)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:169:61
+    at check (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:45:39)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:167:62
+FAIL map: final numeric override drawDistance: ReferenceError: MapIslandLighting is not defined
+    at applyTheme (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:99:72)
+    at eval (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:180:5)
+    at file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:50:21
+    at renderLevel (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:54:62)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:169:61
+    at check (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:45:39)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:167:62
+FAIL map: final numeric override fallbackSunU: ReferenceError: MapIslandLighting is not defined
+    at applyTheme (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:99:72)
+    at eval (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:180:5)
+    at file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:50:21
+    at renderLevel (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:54:62)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:169:61
+    at check (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:45:39)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:167:62
+FAIL map: final numeric override fallbackSunV: ReferenceError: MapIslandLighting is not defined
+    at applyTheme (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:99:72)
+    at eval (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:180:5)
+    at file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:50:21
+    at renderLevel (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:54:62)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:169:61
+    at check (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:45:39)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:167:62
+FAIL map: final color override fogColor/object: ReferenceError: MapIslandLighting is not defined
+    at applyTheme (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:99:72)
+    at eval (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:180:5)
+    at file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:50:21
+    at renderLevel (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:54:62)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:177:61
+    at check (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:45:39)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:175:97
+FAIL map: final color override fogColor/string: ReferenceError: MapIslandLighting is not defined
+    at applyTheme (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:99:72)
+    at eval (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:180:5)
+    at file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:50:21
+    at renderLevel (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:54:62)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:177:61
+    at check (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:45:39)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:175:97
+FAIL map: final color override ambientSky/object: ReferenceError: MapIslandLighting is not defined
+    at applyTheme (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:99:72)
+    at eval (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:180:5)
+    at file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:50:21
+    at renderLevel (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:54:62)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:177:61
+    at check (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:45:39)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:175:97
+FAIL map: final color override ambientSky/string: ReferenceError: MapIslandLighting is not defined
+    at applyTheme (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:99:72)
+    at eval (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:180:5)
+    at file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:50:21
+    at renderLevel (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:54:62)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:177:61
+    at check (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:45:39)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:175:97
+FAIL map: final color override ambientGround/object: ReferenceError: MapIslandLighting is not defined
+    at applyTheme (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:99:72)
+    at eval (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:180:5)
+    at file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:50:21
+    at renderLevel (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:54:62)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:177:61
+    at check (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:45:39)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:175:97
+FAIL map: final color override ambientGround/string: ReferenceError: MapIslandLighting is not defined
+    at applyTheme (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:99:72)
+    at eval (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:180:5)
+    at file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:50:21
+    at renderLevel (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:54:62)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:177:61
+    at check (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:45:39)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:175:97
+FAIL map: final color override sunColor/object: ReferenceError: MapIslandLighting is not defined
+    at applyTheme (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:99:72)
+    at eval (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:180:5)
+    at file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:50:21
+    at renderLevel (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:54:62)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:177:61
+    at check (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:45:39)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:175:97
+FAIL map: final color override sunColor/string: ReferenceError: MapIslandLighting is not defined
+    at applyTheme (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:99:72)
+    at eval (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:180:5)
+    at file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:50:21
+    at renderLevel (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:54:62)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:177:61
+    at check (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:45:39)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:175:97
+FAIL map: final color override fillColor/object: ReferenceError: MapIslandLighting is not defined
+    at applyTheme (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:99:72)
+    at eval (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:180:5)
+    at file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:50:21
+    at renderLevel (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:54:62)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:177:61
+    at check (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:45:39)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:175:97
+FAIL map: final color override fillColor/string: ReferenceError: MapIslandLighting is not defined
+    at applyTheme (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:99:72)
+    at eval (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:180:5)
+    at file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:50:21
+    at renderLevel (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:54:62)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:177:61
+    at check (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:45:39)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:175:97
+FAIL map: final color override fallbackTop/object: ReferenceError: MapIslandLighting is not defined
+    at applyTheme (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:99:72)
+    at eval (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:180:5)
+    at file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:50:21
+    at renderLevel (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:54:62)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:177:61
+    at check (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:45:39)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:175:97
+FAIL map: final color override fallbackTop/string: ReferenceError: MapIslandLighting is not defined
+    at applyTheme (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:99:72)
+    at eval (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:180:5)
+    at file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:50:21
+    at renderLevel (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:54:62)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:177:61
+    at check (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:45:39)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:175:97
+FAIL map: final color override fallbackBottom/object: ReferenceError: MapIslandLighting is not defined
+    at applyTheme (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:99:72)
+    at eval (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:180:5)
+    at file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:50:21
+    at renderLevel (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:54:62)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:177:61
+    at check (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:45:39)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:175:97
+FAIL map: final color override fallbackBottom/string: ReferenceError: MapIslandLighting is not defined
+    at applyTheme (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:99:72)
+    at eval (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:180:5)
+    at file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:50:21
+    at renderLevel (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:54:62)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:177:61
+    at check (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:45:39)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:175:97
+FAIL map: final color override fallbackFog/object: ReferenceError: MapIslandLighting is not defined
+    at applyTheme (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:99:72)
+    at eval (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:180:5)
+    at file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:50:21
+    at renderLevel (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:54:62)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:177:61
+    at check (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:45:39)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:175:97
+FAIL map: final color override fallbackFog/string: ReferenceError: MapIslandLighting is not defined
+    at applyTheme (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:99:72)
+    at eval (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:180:5)
+    at file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:50:21
+    at renderLevel (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:54:62)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:177:61
+    at check (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:45:39)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:175:97
+FAIL map: final color override fallbackSunColor/object: ReferenceError: MapIslandLighting is not defined
+    at applyTheme (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:99:72)
+    at eval (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:180:5)
+    at file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:50:21
+    at renderLevel (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:54:62)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:177:61
+    at check (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:45:39)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:175:97
+FAIL map: final color override fallbackSunColor/string: ReferenceError: MapIslandLighting is not defined
+    at applyTheme (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:99:72)
+    at eval (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:180:5)
+    at file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:50:21
+    at renderLevel (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:54:62)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:177:61
+    at check (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:45:39)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:175:97
+FAIL map: fog/stars booleans true: ReferenceError: MapIslandLighting is not defined
+    at applyTheme (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:99:72)
+    at eval (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:180:5)
+    at file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:50:21
+    at renderLevel (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:54:62)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:187:78
+    at check (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:45:39)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:186:39
+FAIL map: fog/stars booleans false: ReferenceError: MapIslandLighting is not defined
+    at applyTheme (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:99:72)
+    at eval (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:180:5)
+    at file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:50:21
+    at renderLevel (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:54:62)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:187:78
+    at check (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:45:39)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:186:39
+FAIL map: final backdrop sky: ReferenceError: MapIslandLighting is not defined
+    at applyTheme (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:99:72)
+    at eval (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:180:5)
+    at file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:50:21
+    at renderLevel (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:54:62)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:191:56
+    at check (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:45:39)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:190:54
+FAIL map: final backdrop painted sky: ReferenceError: MapIslandLighting is not defined
+    at applyTheme (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:99:72)
+    at eval (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:180:5)
+    at file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:50:21
+    at renderLevel (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:54:62)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:191:56
+    at check (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:45:39)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:190:54
+FAIL map: final backdrop fog: ReferenceError: MapIslandLighting is not defined
+    at applyTheme (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:99:72)
+    at eval (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:180:5)
+    at file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:50:21
+    at renderLevel (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:54:62)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:191:56
+    at check (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:45:39)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:190:54
+FAIL map: null fallback sun hides its disc: ReferenceError: MapIslandLighting is not defined
+    at applyTheme (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:99:72)
+    at eval (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:180:5)
+    at file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:50:21
+    at renderLevel (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:54:62)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:194:63
+    at check (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:45:39)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:193:7
+FAIL Nightworks defaults/custom transition preserves effective appearance: ReferenceError: MapIslandLighting is not defined
+    at applyTheme (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:99:72)
+    at eval (eval at atmosphereRenderer (file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:19:17), <anonymous>:180:5)
+    at file:///$WORKSPACE/tools/atmosphere-runtime-harness.mjs:50:21
+    at renderLevel (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:54:62)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:249:20
+    at check (file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:45:39)
+    at file:///$WORKSPACE/tools/test-editor-atmosphere.mjs:248:9
+[bonus] GLB stone platform failed HttpError: fetch for "" responded with 404:
+    at file:///$WORKSPACE/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+[bonus] GLB stone platform failed HttpError: fetch for "" responded with 404:
+    at file:///$WORKSPACE/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+[bonus] GLB stone platform failed HttpError: fetch for "" responded with 404:
+    at file:///$WORKSPACE/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+[bonus] GLB stone platform failed HttpError: fetch for "" responded with 404:
+    at file:///$WORKSPACE/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+[bonus] GLB stone platform failed HttpError: fetch for "" responded with 404:
+    at file:///$WORKSPACE/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+[bonus] GLB stone platform failed HttpError: fetch for "" responded with 404:
+    at file:///$WORKSPACE/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+[bonus] GLB stone platform failed HttpError: fetch for "" responded with 404:
+    at file:///$WORKSPACE/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+[bonus] GLB stone platform failed HttpError: fetch for "" responded with 404:
+    at file:///$WORKSPACE/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+[bonus] GLB stone platform failed HttpError: fetch for "" responded with 404:
+    at file:///$WORKSPACE/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+[bonus] GLB stone platform failed HttpError: fetch for "" responded with 404:
+    at file:///$WORKSPACE/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+[bonus] GLB stone platform failed HttpError: fetch for "" responded with 404:
+    at file:///$WORKSPACE/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+[bonus] GLB stone platform failed HttpError: fetch for "" responded with 404:
+    at file:///$WORKSPACE/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+379/435 editor atmosphere runtime/security/history checks passed

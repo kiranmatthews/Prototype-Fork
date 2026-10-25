@@ -1,0 +1,2 @@
+Character batch mutation audit: 6 unsupported constructors bypassed; 44 unsupported edits fell back; supported live uniforms retained parity.
+Character rigid batches: affine/mirrored normals, morph poses, shadows, visibility, fallback, bounds and disposal passed.

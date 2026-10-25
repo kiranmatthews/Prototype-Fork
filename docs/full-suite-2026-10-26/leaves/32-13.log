@@ -1,0 +1,14 @@
+PASS spin bridge inspection, rotation and sparse group scaling match its runtime hinge
+PASS closed wallpath end removal preserves three playable knots
+PASS turning off authored ice clears dependent grip and remains exportable
+FAIL mesh ride flags can be edited and converted to scenery without rejected transactions: AssertionError [ERR_ASSERTION]: missing walkable collision
+    at inputFor (file:///$WORKSPACE/tools/test-editor-current-components.mjs:53:12)
+    at changeBoolean (file:///$WORKSPACE/tools/test-editor-current-components.mjs:56:67)
+    at file:///$WORKSPACE/tools/test-editor-current-components.mjs:102:5
+    at check (file:///$WORKSPACE/tools/test-editor-current-components.mjs:58:11)
+    at file:///$WORKSPACE/tools/test-editor-current-components.mjs:97:3
+PASS analytic loops resize mesh and ride profile together and reject circular-profile distortion
+PASS imported city and jungle fitted assets scale once rather than squaring their scale
+PASS footprint resizing preserves thin authored scenery and inspector accepts its thickness
+PASS castle light aim travels with movement, implicit rotation and group scaling
+PASS jungle stream inspector shows its actual omitted material defaults without mutating data

@@ -1,0 +1,365 @@
+GROUP 10/43 check:chimeworks
+START node tools/test-chimeworks.mjs
+FAIL node tools/test-chimeworks.mjs (8.114s)
+GROUP 11/43 check:campaign
+START node tools/test-six-island-campaign.mjs
+FAIL node tools/test-six-island-campaign.mjs (0.285s)
+START node tools/test-secret-course-roster.mjs
+PASS node tools/test-secret-course-roster.mjs (9.18s)
+START node tools/test-map-archipelago.mjs
+PASS node tools/test-map-archipelago.mjs (0.33s)
+START node tools/test-playtest-level-flow.mjs
+PASS node tools/test-playtest-level-flow.mjs (0.321s)
+START node tools/test-campaign-flow.mjs
+PASS node tools/test-campaign-flow.mjs (0.291s)
+START node tools/test-secret-combo-gems.mjs
+PASS node tools/test-secret-combo-gems.mjs (8.834s)
+START node tools/test-save-slot-previews.mjs
+PASS node tools/test-save-slot-previews.mjs (0.311s)
+START node tools/test-time-medals.mjs
+PASS node tools/test-time-medals.mjs (0.31s)
+START node tools/test-map-level-presentation.mjs
+PASS node tools/test-map-level-presentation.mjs (0.263s)
+START node tools/test-collectible-specular.mjs
+PASS node tools/test-collectible-specular.mjs (0.266s)
+START node tools/test-campaign-death-flow.mjs
+PASS node tools/test-campaign-death-flow.mjs (11.876s)
+START node tools/test-campaign-collectible-visibility.mjs
+PASS node tools/test-campaign-collectible-visibility.mjs (0.484s)
+START node tools/test-campaign-performance.mjs
+PASS node tools/test-campaign-performance.mjs (0.275s)
+START node tools/test-warp-room-return.mjs
+FAIL node tools/test-warp-room-return.mjs (9.481s)
+START node tools/test-gouraud-context-presets.mjs
+PASS node tools/test-gouraud-context-presets.mjs (0.293s)
+START node tools/test-game-flow-surface.mjs
+PASS node tools/test-game-flow-surface.mjs (0.043s)
+START node tools/test-game-flow-results.mjs
+PASS node tools/test-game-flow-results.mjs (7.854s)
+START node tools/test-results-presentation.mjs
+PASS node tools/test-results-presentation.mjs (24.193s)
+START node tools/test-game-flow-interaction.mjs
+PASS node tools/test-game-flow-interaction.mjs (0.057s)
+START node tools/test-game-flow-vortex.mjs
+PASS node tools/test-game-flow-vortex.mjs (0.048s)
+START node tools/test-presentation-loading.mjs
+PASS node tools/test-presentation-loading.mjs (0.271s)
+START node tools/test-bonus-polish.mjs
+PASS node tools/test-bonus-polish.mjs (8.47s)
+GROUP 12/43 check:competition
+START node tools/test-park-tuning.mjs
+FAIL node tools/test-park-tuning.mjs (15.725s)
+START node tools/test-park-camera-framing.mjs
+PASS node tools/test-park-camera-framing.mjs (12.906s)
+START node tools/test-jungle-cup.mjs
+FAIL node tools/test-jungle-cup.mjs (0.573s)
+START node tools/test-competition-judging.mjs
+PASS node tools/test-competition-judging.mjs (10.362s)
+START node tools/test-jungle-cup-runtime.mjs
+FAIL node tools/test-jungle-cup-runtime.mjs (12.842s)
+START node tools/test-jungle-cup-skating.mjs
+FAIL node tools/test-jungle-cup-skating.mjs (13.241s)
+START node tools/test-jungle-cup-overtime.mjs
+PASS node tools/test-jungle-cup-overtime.mjs (10.478s)
+START node tools/test-jungle-cup-grind-camera.mjs
+PASS node tools/test-jungle-cup-grind-camera.mjs (13.252s)
+START node tools/test-grind-head-stability.mjs
+PASS node tools/test-grind-head-stability.mjs (41.013s)
+START node tools/test-grind-catch-buffer.mjs
+PASS node tools/test-grind-catch-buffer.mjs (15.235s)
+START node tools/test-grind-trick-speed.mjs
+PASS node tools/test-grind-trick-speed.mjs (18.673s)
+START node tools/test-grind-drop-in.mjs
+PASS node tools/test-grind-drop-in.mjs (11.614s)
+START node tools/test-jungle-cup-lip-recovery.mjs
+PASS node tools/test-jungle-cup-lip-recovery.mjs (10.352s)
+START node tools/test-jungle-cup-layout.mjs
+FAIL node tools/test-jungle-cup-layout.mjs (9.854s)
+START node tools/test-jungle-cup-ui.mjs
+PASS node tools/test-jungle-cup-ui.mjs (8.527s)
+START node tools/test-skate-tricks.mjs
+PASS node tools/test-skate-tricks.mjs (15.668s)
+START node tools/test-skate-input-polish.mjs
+PASS node tools/test-skate-input-polish.mjs (10.588s)
+START node tools/test-jungle-cup-surface-layers.mjs
+PASS node tools/test-jungle-cup-surface-layers.mjs (8.943s)
+START node tools/test-balance-dynamics.mjs
+PASS node tools/test-balance-dynamics.mjs (10.511s)
+START node tools/test-balance-sliders.mjs
+PASS node tools/test-balance-sliders.mjs (9.466s)
+START node tools/test-balance-reentry.mjs
+PASS node tools/test-balance-reentry.mjs (9.314s)
+START node tools/test-skate-run-finish.mjs
+PASS node tools/test-skate-run-finish.mjs (9.125s)
+GROUP 13/43 check:unity-ports
+START node tools/test-unity-level-ports.mjs
+FAIL node tools/test-unity-level-ports.mjs (0.31s)
+START node tools/test-beachside-merge.mjs
+PASS node tools/test-beachside-merge.mjs (0.278s)
+START node tools/test-beachfront-cliff.mjs
+PASS node tools/test-beachfront-cliff.mjs (0.336s)
+START node tools/test-wood-path-kit.mjs
+PASS node tools/test-wood-path-kit.mjs (0.258s)
+START node tools/test-island-shelf.mjs
+PASS node tools/test-island-shelf.mjs (0.249s)
+START node tools/test-island-shore-foam.mjs
+PASS node tools/test-island-shore-foam.mjs (0.306s)
+START node tools/test-crate-rest-surface.mjs
+PASS node tools/test-crate-rest-surface.mjs (0.222s)
+START node tools/test-coastal-street-kit.mjs
+PASS node tools/test-coastal-street-kit.mjs (0.259s)
+START node tools/test-unity-sand-material.mjs
+PASS node tools/test-unity-sand-material.mjs (0.278s)
+GROUP 14/43 check:ground
+START node tools/validate-ground-acceleration.mjs
+PASS node tools/validate-ground-acceleration.mjs (26.788s)
+GROUP 15/43 check:crouch-jump
+START node tools/test-crouch-jump-slam.mjs
+PASS node tools/test-crouch-jump-slam.mjs (13.354s)
+START node tools/test-crouch-stance.mjs
+PASS node tools/test-crouch-stance.mjs (12.037s)
+START node tools/test-quaternius-crouch.mjs
+FAIL node tools/test-quaternius-crouch.mjs (8.326s)
+START node tools/test-slide-jump.mjs
+PASS node tools/test-slide-jump.mjs (9.729s)
+GROUP 16/43 check:pipe
+START node tools/test-halfpipe-contact.mjs
+PASS node tools/test-halfpipe-contact.mjs (0.258s)
+START node tools/validate-halfpipe-safety.mjs
+PASS node tools/validate-halfpipe-safety.mjs (8.404s)
+START node tools/test-vert-ollie-sequence.mjs tools/fixtures/vert-ollie-release-edge-replay.json
+FAIL node tools/test-vert-ollie-sequence.mjs tools/fixtures/vert-ollie-release-edge-replay.json (17.462s)
+GROUP 17/43 check:ledge
+START node tools/validate-ledge-traversal.mjs
+FAIL node tools/validate-ledge-traversal.mjs (17.602s)
+GROUP 18/43 check:rope
+START node tools/test-rope-board-transfer.mjs
+PASS node tools/test-rope-board-transfer.mjs (9.08s)
+START node tools/test-rope-limb-mapping.mjs
+PASS node tools/test-rope-limb-mapping.mjs (10.192s)
+GROUP 19/43 check:rail-air
+START node tools/test-rail-air-transfer.mjs
+PASS node tools/test-rail-air-transfer.mjs (16.468s)
+GROUP 20/43 check:landing-x
+START node tools/validate-landing-indicator.mjs
+FAIL node tools/validate-landing-indicator.mjs (37.963s)
+GROUP 21/43 check:run-facing
+START node tools/test-run-facing.mjs
+FAIL node tools/test-run-facing.mjs (0.279s)
+START node tools/test-locomotion-replays.mjs
+FAIL node tools/test-locomotion-replays.mjs (32.866s)
+START node tools/test-locomotion-idle.mjs
+FAIL node tools/test-locomotion-idle.mjs (11.322s)
+START node tools/test-run-inertia-presentation.mjs
+PASS node tools/test-run-inertia-presentation.mjs (12.971s)
+START node tools/test-idle-recovery-charge.mjs
+PASS node tools/test-idle-recovery-charge.mjs (12.161s)
+START node tools/test-world-map-locomotion.mjs
+PASS node tools/test-world-map-locomotion.mjs (15.093s)
+GROUP 22/43 check:carve-grip
+START node tools/test-carve-grip.mjs
+PASS node tools/test-carve-grip.mjs (0.505s)
+START node tools/test-halfpipe-steering.mjs
+PASS node tools/test-halfpipe-steering.mjs (10.747s)
+GROUP 23/43 check:skate-speed
+START node tools/test-skate-overdrive.mjs
+PASS node tools/test-skate-overdrive.mjs (8.755s)
+START node tools/test-speed-pad-air-carry.mjs
+PASS node tools/test-speed-pad-air-carry.mjs (25.061s)
+START node tools/test-trick-landing-speed.mjs
+PASS node tools/test-trick-landing-speed.mjs (10.808s)
+GROUP 24/43 check:surface-friction
+START node tools/test-surface-friction.mjs
+FAIL node tools/test-surface-friction.mjs (0.378s)
+GROUP 25/43 check:camera-speed
+START node tools/test-camera-speed-effect.mjs
+FAIL node tools/test-camera-speed-effect.mjs (0.444s)
+START node tools/test-camera-look.mjs
+FAIL node tools/test-camera-look.mjs (0.272s)
+START node tools/test-camera-rig.mjs
+PASS node tools/test-camera-rig.mjs (0.415s)
+START node tools/test-camera-level-switch.mjs
+PASS node tools/test-camera-level-switch.mjs (0.794s)
+START node tools/test-camera-portrait.mjs
+PASS node tools/test-camera-portrait.mjs (0.4s)
+START node tools/test-camera-landing-forecast.mjs
+PASS node tools/test-camera-landing-forecast.mjs (8.401s)
+START node tools/test-camera-fall-replay.mjs
+FAIL node tools/test-camera-fall-replay.mjs (19.971s)
+GROUP 26/43 check:bail-recovery
+START node tools/test-ragdoll-recovery.mjs
+PASS node tools/test-ragdoll-recovery.mjs (11.366s)
+START node tools/test-break-apart.mjs
+PASS node tools/test-break-apart.mjs (10.946s)
+START node tools/test-wipeout-policy.mjs
+PASS node tools/test-wipeout-policy.mjs (9.005s)
+GROUP 27/43 check:air-rescue
+START node tools/test-board-abandon-tuning.mjs
+PASS node tools/test-board-abandon-tuning.mjs (0.503s)
+START node tools/test-board-abandon-steering.mjs
+PASS node tools/test-board-abandon-steering.mjs (8.718s)
+START node tools/test-air-rescue.mjs
+FAIL node tools/test-air-rescue.mjs (11.652s)
+GROUP 28/43 check:crate-types
+START node tools/test-life-multihit-crates.mjs
+PASS node tools/test-life-multihit-crates.mjs (9.883s)
+START node tools/test-nitro-clear-switch.mjs
+PASS node tools/test-nitro-clear-switch.mjs (35.669s)
+START node tools/test-explosive-bundles.mjs
+PASS node tools/test-explosive-bundles.mjs (9.356s)
+GROUP 29/43 check:crate-jump
+START node tools/test-crate-jump-parity.mjs
+PASS node tools/test-crate-jump-parity.mjs (11.014s)
+GROUP 30/43 check:nst-port
+START python3 -B tools/test_iga_igz_layout.py
+PASS python3 -B tools/test_iga_igz_layout.py (0.216s)
+GROUP 31/43 check:editor-roundtrip
+START node tools/validate-editor-roundtrip.mjs
+FAIL node tools/validate-editor-roundtrip.mjs (12.832s)
+GROUP 32/43 check:editor-security
+START node tools/test-level-security.mjs
+FAIL node tools/test-level-security.mjs (9.255s)
+START node tools/test-editor-ux.mjs
+PASS node tools/test-editor-ux.mjs (7.674s)
+START node tools/test-editor-environment.mjs
+PASS node tools/test-editor-environment.mjs (0.301s)
+START node tools/test-editor-transactions.mjs
+PASS node tools/test-editor-transactions.mjs (9.185s)
+START node tools/test-editor-pointers.mjs
+PASS node tools/test-editor-pointers.mjs (7.463s)
+START node tools/test-terrain-support-budget.mjs
+FAIL node tools/test-terrain-support-budget.mjs (13.073s)
+START node tools/test-legacy-scenery-capture.mjs
+FAIL node tools/test-legacy-scenery-capture.mjs (8.236s)
+START node tools/test-level-switch-transactions.mjs
+FAIL node tools/test-level-switch-transactions.mjs (9.605s)
+START node tools/test-editor-motion-transforms.mjs
+PASS node tools/test-editor-motion-transforms.mjs (13.839s)
+START node tools/test-editor-material-fidelity.mjs
+FAIL node tools/test-editor-material-fidelity.mjs (9.328s)
+START node tools/test-editor-atmosphere.mjs
+FAIL node tools/test-editor-atmosphere.mjs (27.396s)
+START node tools/test-editor-thorns.mjs
+PASS node tools/test-editor-thorns.mjs (7.8s)
+START node tools/test-editor-current-components.mjs
+FAIL node tools/test-editor-current-components.mjs (7.557s)
+START node tools/test-editor-runtime-integration.mjs
+FAIL node tools/test-editor-runtime-integration.mjs (7.781s)
+GROUP 33/43 check:interpolation
+START node tools/validate-render-interpolation.mjs
+PASS node tools/validate-render-interpolation.mjs (0.237s)
+GROUP 34/43 check:animation
+START node tools/test-animation-suite.mjs
+FAIL node tools/test-animation-suite.mjs (0.57s)
+START node tools/test-animation-ik.mjs
+PASS node tools/test-animation-ik.mjs (0.301s)
+START node tools/test-character-animation-runtime.mjs
+PASS node tools/test-character-animation-runtime.mjs (0.592s)
+START node tools/test-procedural-leg-rig.mjs
+PASS node tools/test-procedural-leg-rig.mjs (0.223s)
+START node tools/test-jump-arms.mjs
+PASS node tools/test-jump-arms.mjs (8.893s)
+START node tools/test-skate-charge-ollie.mjs
+PASS node tools/test-skate-charge-ollie.mjs (13.23s)
+START node tools/test-character-elasticity.mjs
+PASS node tools/test-character-elasticity.mjs (8.779s)
+GROUP 35/43 check:character-lab
+START node tools/test-character-head-profile-settings.mjs
+PASS node tools/test-character-head-profile-settings.mjs (0.24s)
+START node tools/test-character-lab.mjs
+FAIL node tools/test-character-lab.mjs (0.41s)
+START node tools/test-cartoon-glove.mjs
+FAIL node tools/test-cartoon-glove.mjs (8.408s)
+START node tools/test-rigged-cartoon-hand.mjs
+PASS node tools/test-rigged-cartoon-hand.mjs (0.455s)
+START node tools/test-stretchable-bone.mjs
+FAIL node tools/test-stretchable-bone.mjs (0.482s)
+START node tools/test-meshy-torso.mjs
+PASS node tools/test-meshy-torso.mjs (0.503s)
+START node tools/test-meshy-head.mjs
+FAIL node tools/test-meshy-head.mjs (0.488s)
+START node tools/test-roo-painted-blink.mjs
+PASS node tools/test-roo-painted-blink.mjs (0.295s)
+START node tools/test-meshy-shorts.mjs
+PASS node tools/test-meshy-shorts.mjs (0.468s)
+START node tools/test-procedural-footwear.mjs
+FAIL node tools/test-procedural-footwear.mjs (12.477s)
+START node tools/test-character-interactions.mjs
+PASS node tools/test-character-interactions.mjs (8.75s)
+GROUP 36/43 check:ocean
+START node tools/test-shore-field.mjs
+PASS node tools/test-shore-field.mjs (0.325s)
+START node tools/test-shore-field-crown-regression.mjs
+PASS node tools/test-shore-field-crown-regression.mjs (0.504s)
+START node tools/validate-ocean-port.mjs
+FAIL node tools/validate-ocean-port.mjs (0.056s)
+START node tools/test-ocean-formulas.mjs
+PASS node tools/test-ocean-formulas.mjs (0.318s)
+START node tools/test-ocean-tuning.mjs
+PASS node tools/test-ocean-tuning.mjs (0.324s)
+START node tools/test-unity-post.mjs
+PASS node tools/test-unity-post.mjs (0.247s)
+START node tools/test-unity-smaa.mjs
+PASS node tools/test-unity-smaa.mjs (0.043s)
+START node tools/test-ocean-resources.mjs
+PASS node tools/test-ocean-resources.mjs (0.324s)
+START node tools/test-waterslide-shore-field.mjs
+PASS node tools/test-waterslide-shore-field.mjs (9.292s)
+GROUP 37/43 check:crt
+START node tools/test-crt-optimizer.mjs
+PASS node tools/test-crt-optimizer.mjs (0.296s)
+START node tools/audit-crt-guest-parameters.mjs
+PASS node tools/audit-crt-guest-parameters.mjs (0.062s)
+START node tools/test-crt-guest-settings.mjs
+PASS node tools/test-crt-guest-settings.mjs (0.264s)
+START node tools/test-crt-guest-panel-semantics.mjs
+PASS node tools/test-crt-guest-panel-semantics.mjs (0.264s)
+START node tools/test-crt-guest-web.mjs
+PASS node tools/test-crt-guest-web.mjs (0.053s)
+GROUP 38/43 check:render-quality
+START node tools/test-render-quality-settings.mjs
+PASS node tools/test-render-quality-settings.mjs (0.238s)
+START node tools/test-fixed-render-pipeline.mjs
+PASS node tools/test-fixed-render-pipeline.mjs (0.044s)
+START node tools/test-hud-visibility.mjs
+PASS node tools/test-hud-visibility.mjs (0.389s)
+START node tools/test-wood-crate-assets.mjs
+PASS node tools/test-wood-crate-assets.mjs (0.045s)
+START node tools/test-mobile-ui-layout.mjs
+PASS node tools/test-mobile-ui-layout.mjs (0.231s)
+START node tools/test-input-prompts.mjs
+PASS node tools/test-input-prompts.mjs (0.327s)
+START node tools/test-debug-shortcuts.mjs
+PASS node tools/test-debug-shortcuts.mjs (0.303s)
+START node tools/test-touch-release.mjs
+PASS node tools/test-touch-release.mjs (0.309s)
+START node tools/test-balance-meter-pointer.mjs
+PASS node tools/test-balance-meter-pointer.mjs (0.247s)
+GROUP 39/43 check:look
+START node tools/test-visual-treatment.mjs
+FAIL node tools/test-visual-treatment.mjs (0.247s)
+START node tools/test-factory-defaults.mjs
+FAIL node tools/test-factory-defaults.mjs (0.312s)
+GROUP 40/43 check:skateboard
+START node tools/test-skateboard-port.mjs
+PASS node tools/test-skateboard-port.mjs (0.326s)
+START node tools/test-discarded-boards.mjs
+PASS node tools/test-discarded-boards.mjs (0.733s)
+START node tools/test-map-skateboard-profile.mjs
+PASS node tools/test-map-skateboard-profile.mjs (7.726s)
+GROUP 41/43 check:special
+START node tools/test-special-system.mjs
+FAIL node tools/test-special-system.mjs (0.235s)
+GROUP 42/43 check:combo-hud
+START node tools/test-modern-life-hud.mjs
+PASS node tools/test-modern-life-hud.mjs (0.327s)
+START node tools/test-combo-hud-parity.mjs
+PASS node tools/test-combo-hud-parity.mjs (0.365s)
+GROUP 43/43 check:spin-effects
+START node tools/test-spin-effects-port.mjs
+PASS node tools/test-spin-effects-port.mjs (0.341s)
+START node tools/test-spin-smear.mjs
+PASS node tools/test-spin-smear.mjs (0.271s)
+START node tools/test-spin-arm-pose.mjs
+PASS node tools/test-spin-arm-pose.mjs (8.731s)
+{"finished":"2026-10-25T18:36:06.918Z","groups":43,"failed":40,"failures":["node tools/test-chimeworks.mjs","node tools/test-six-island-campaign.mjs","node tools/test-warp-room-return.mjs","node tools/test-park-tuning.mjs","node tools/test-jungle-cup.mjs","node tools/test-jungle-cup-runtime.mjs","node tools/test-jungle-cup-skating.mjs","node tools/test-jungle-cup-layout.mjs","node tools/test-unity-level-ports.mjs","node tools/test-quaternius-crouch.mjs","node tools/test-vert-ollie-sequence.mjs tools/fixtures/vert-ollie-release-edge-replay.json","node tools/validate-ledge-traversal.mjs","node tools/validate-landing-indicator.mjs","node tools/test-run-facing.mjs","node tools/test-locomotion-replays.mjs","node tools/test-locomotion-idle.mjs","node tools/test-surface-friction.mjs","node tools/test-camera-speed-effect.mjs","node tools/test-camera-look.mjs","node tools/test-camera-fall-replay.mjs","node tools/test-air-rescue.mjs","node tools/validate-editor-roundtrip.mjs","node tools/test-level-security.mjs","node tools/test-terrain-support-budget.mjs","node tools/test-legacy-scenery-capture.mjs","node tools/test-level-switch-transactions.mjs","node tools/test-editor-material-fidelity.mjs","node tools/test-editor-atmosphere.mjs","node tools/test-editor-current-components.mjs","node tools/test-editor-runtime-integration.mjs","node tools/test-animation-suite.mjs","node tools/test-character-lab.mjs","node tools/test-cartoon-glove.mjs","node tools/test-stretchable-bone.mjs","node tools/test-meshy-head.mjs","node tools/test-procedural-footwear.mjs","node tools/validate-ocean-port.mjs","node tools/test-visual-treatment.mjs","node tools/test-factory-defaults.mjs","node tools/test-special-system.mjs"]}

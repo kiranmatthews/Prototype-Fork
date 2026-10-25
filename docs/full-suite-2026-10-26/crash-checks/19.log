@@ -1,0 +1,1 @@
+PASS {"lookouts":3,"gunners":4,"groupIsolation":true,"visibility":true,"interruptibleAlarm":true,"telegraphedShot":true,"cover":true,"reset":true}

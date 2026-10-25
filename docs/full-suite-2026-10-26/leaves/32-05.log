@@ -1,0 +1,21 @@
+PASS single touch moves geometry while the camera remains stationary
+PASS a second pen's down/move/up/cancel cannot replace or end a first pen's drag
+PASS adding a second touch rolls back the preview and hands pan/pinch to OrbitControls
+PASS pen drawing drops a touch vertex only on a completed single-finger tap
+PASS a third touch and a foreign pen cannot interrupt the active pinch
+PASS canceling one pinch finger waits for the other to lift, then permits a clean pinch
+PASS axis gizmo movement belongs to its touch and rolls back on pinch handoff
+PASS node-handle movement ignores foreign contacts and restores its sparse source on cancel
+PASS group-scale handle movement cancels atomically when a second touch starts navigation
+PASS marquee owns pointer capture and ignores another contact's move/up
+PASS pointercancel rolls back touch geometry and the next gesture starts cleanly
+PASS lostpointercapture rolls back touch geometry and the next gesture starts cleanly
+PASS blur rolls back touch geometry and the next gesture starts cleanly
+PASS resize rolls back touch geometry and the next gesture starts cleanly
+PASS window blur resets an in-flight OrbitControls mouse orbit
+PASS axis/3D view changes roll back geometry before changing the drag plane
+PASS numeric scrub owns its pointer and commits once after unrelated pointer endings
+PASS a numeric click released before threshold leaves no scrub armed
+PASS global Escape cancels a blurred numeric scrub without a transaction
+PASS a second numeric field cannot replace another field's active scrub owner
+All 20 editor pointer regressions passed

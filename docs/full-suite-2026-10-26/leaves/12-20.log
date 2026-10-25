@@ -1,0 +1,1 @@
+PASS replay catch comparisons [{"frame":1788,"old":0.35,"new":0.9833333333333333},{"frame":2791,"old":0.31666666666666665,"new":0.85},{"frame":3294,"old":0.16666666666666666,"new":0.8333333333333334}]; live grind/manual dynamics, catch input polarity, retained combo difficulty, landing buffer and slider metadata.

@@ -1,0 +1,3 @@
+PASS 16 native entry/switch/exit/landing cases, 4976 frames: gaze dot >= 0.95668, head <= 7.12°/step, shoulders <= 11.14°/step, sole error <= 2.574 mm.
+PASS 24 straight/curved, mirrored cross-grind cases with overlay and render restoration: peak turn 0.751°/step, render divergence 0.00577°.
+PASS supplied replay: 238 grind frames, maximum 17.74° head turn including trick transitions; no repeated flips. Authored head override and reset remain valid.

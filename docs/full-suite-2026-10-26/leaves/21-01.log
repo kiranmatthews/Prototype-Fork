@@ -1,0 +1,248 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: legacy gait still reads world/platform displacement
+    at file:///$WORKSPACE/tools/test-run-facing.mjs:96:10 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: "import { createRaceRivalHead, createRaceRivalShirt, attachRaceRivalShorts, type RaceRivalShirt } from './character/raceRival';\n" +
+    "import type { RacePlayerHooks } from './race/types';\n" +
+    "import { surfaceGrip } from './surfaceBehavior';\n" +
+    "import type { LoopCameraFrame, LoopFallCameraFrame } from './loopCamera';\n" +
+    "import { LOOP_TURN, loopContactPressure, sampleLoop, stepLoopMotion, type LoopShape } from './loopRide';\n" +
+    "import { sampleTeeterMotion, probeTeeterEdge } from './teeterMotion';\n" +
+    "import { SkateBalanceArms, SKATE_UNDER_RAIL_DEPTH, SKATE_UNDER_RAIL_TRANSITION, sampleUnderRailMotion, SKATE_REVERT_DURATION, sampleSkateRevert } from './skateBodyMotion';\n" +
+    "import { skateGrabTweakElasticity, skateUnderRailElasticity, skate900Elasticity, skateBackflipElasticity, skateFootFlipElasticity, skateImpossibleElasticity, skateRevertElasticity, skateVertElasticity, SKATE_UNDER_RAIL_ARM_LIMIT } from './animation/elasticity';\n" +
+    "import { ICE_WALK_CLIP_ID } from './animation/iceWalk';\n" +
+    '// Authored fake-physics board movement. No rigidbody, no forces: just a\n' +
+    '// heading, a scalar speed, a vertical velocity, and hand-tuned numbers from\n' +
+    '// tuning.ts. Ground following is a single downward raycast; slopes only exist\n' +
+    '// as fake boost/slowdown numbers derived from the surface normal.\n' +
+    '\n' +
+    "import * as THREE from 'three';\n" +
+    "import { groundDriveCeiling, groundSpeedLimit, softGroundSpeed } from './softGround';\n" +
+    "import { meshContactNormal } from './meshContactNormal';\n" +
+    "import { SwimEffects } from './swimEffects';\n" +
+    "import { SWIMMING, stepSwimVelocity, stepSwimBuoyancy, legacySwimmingReplay } from './swimming';\n" +
+    "import { CharacterInteractionBounds } from './character/interactionBounds';\n" +
+    'import { CameraInputFrame } from "./cameraViews";\n' +
+    "import { ChiefInputFrame, type ChiefDeviceInput, type ChiefInputDirection } from './boss/inputFrame';\n" +
+    "import { softSkateRebound, sampleSoftSkateImpact, SOFT_SKATE_IMPACT_SECONDS } from './skateImpact';\n" +
+    "import { BONUS_FRUIT_FLIGHT_SECONDS } from './bonusPayout';\n" +
+    "import type { BonusAlignmentPose } from './bonusDeparture';\n" +
+    "import { TUNING, CONST } from './tuning';\n" +
+    "import { GRIND_TRICKS, GRIND_CONTACTS, LIP_CONTACTS, grabTrickInfo, grabTrickFromInput, sampleDeckTrick, sampleBackflip, sampleFootFlip, sampleImpossible, type GrabTrickKind, type GrindStyle, type LipStyle } from './skateTricks';\n" +
+    "import { SkateAnimation } from './skateAnimation';\n" +
+    "import { sampleSpineTransfer, spineTransferNormal } from './vertSkateMotion';\n" +
+    "import { SkateOllieMotion } from './skateOllieMotion';\n" +
+    "import { IceSkateMotion } from './iceSkateMotion';\n" +
+    "import { trickRepeatFactor, extendHeldTrick, type HeldTrickScore } from './trickScoring';\n" +
+    "import { carveGripAtSpeed, liveCarveGripAtSpeed } from './carveGrip';\n" +
+    "import { solveSkateSteering } from './skateSteering';\n" +
+    "import { SKATE_PARK, skateSurfaceDirection, skateSurfaceHeading, redirectSkateVelocity } from './skateParkPhysics';\n" +
+    "import { referenceKickDuration, referenceRailMotion, ReferenceRailBalance, type SkateReferencePhysics, type SkateParkParameters } from './skateReferencePhysics';\n" +
+    "import { parkCruiseSpeed, parkChargedSpeed } from './skateParkTuning';\n" +
+    "import { SkateOverdrive } from './skateOverdrive';\n" +
+    "import { cameraSkateSpeed as resolveCameraSkateSpeed } from './cameraSpeedEffect';\n" +
+    "import { HANG_ANIMS } from './hangAnims';\n" +
+    "import { Input } from './input';\n" +
+    'import {\n' +
+    '  Checkpoint,\n' +
+    '  Crate,\n' +
+    '  type Enemy,\n' +
+    '  deckTrickFromInput,\n' +
+    '  deckTrickInfo,\n' +
+    '  type DeckTrickKind,\n' +
+    '  type Pickup,\n' +
+    '  type CampaignPortalReturnPose,\n' +
+    '  LaneCursor,\n' +
+    '  Level,\n' +
+    '  RopeSwing,\n' +
+    '  type WallPathRuntime,\n' +
+    '  newLaneCursor,\n' +
+    "} from './level';\n" +
+    "import { sfx } from './audio';\n" +
+    "import { FootstepAudio, footstepSurface } from './footstepAudio';\n" +
+    "import { Rail, RailSample, nearestRail } from './rails';\n" +
+    "import {nearestReferenceRail} from './referenceRailCapture';\n" +
+    "import { Halfpipe } from './halfpipe';\n" +
+    "import { copingPlane, nearestCoping, nextCoping } from './vertHangPlane';\n" +
+    "import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';\n" +
+    "import { milkBlob, setMilkVariant, updateMilkMotion, kickMilkMotion, resetMilkMotion, copyMilkMotion, MILK_SIZE as WUMPA_SIZE } from './milk';\n" +
+    "import { puffs, surfaceFromName, type SurfaceKind } from './puffs';\n" +
+    'import {\n' +
+    '  skateGroundFrictionRate,\n' +
+    '  surfaceKindFromGroundObject,\n' +
+    "} from './surfaceFriction';\n" +
+    "import { Tail, type TailCollider } from './tail';\n" +
+    'import {\n' +
+    '  PROCEDURAL_SHIN_LENGTH,\n' +
+    '  PROCEDURAL_THIGH_LENGTH,\n' +
+    '  solveSagittalLegTarget,\n' +
+    '  type SagittalLegPose,\n' +
+    "} from './legRig';\n" +
+    "import { RenderInterpolator } from './renderInterpolation';\n" +
+    'import {\n' +
+    '  createSkateboardPresentation,\n' +
+    '  rebuildSkateboardPresentation,\n' +
+    '  SKATEBOARD_GRIP_TOP,\n' +
+    "} from './skateboard/model';\n" +
+    "import { skateboardSettings } from './skateboard/settings';\n" +
+    "import type { DiscardedBoard } from './skateboard/discarded';\n" +
+    'import {\n' +
+    '  ledgeBasis,\n' +
+    '  ledgeBlockerIntersects,\n' +
+    '  ledgeBodyBox,\n' +
+    '  ledgeCatchEnvelope,\n' +
+    '  ledgeClimbPoint,\n' +
+    '  ledgeEdgePoint,\n' +
+    '  ledgeLandingPoint,\n' +
+    '  ledgeScreenGripIntent,\n' +
+    '  ledgeTraversePoint,\n' +
+    '  LEDGE_SHIM_INPUT_THRESHOLD,\n' +
+    '  type LedgeBasis,\n' +
+    '  type LedgeCatchEnvelope,\n' +
+    "} from './ledgeTraversal';\n" +
+    "import { RUN_REVERSAL_YAW_RATE, stepFacingYaw } from './runFacing';\n" +
+    "import { RUN_MOVE_INTENT_INPUT } from './animation/runStop';\n" +
+    "import { sampleSkateMount, SKATE_MOUNT_DURATION, SKATE_DISMOUNT_DURATION, DEFAULT_SKATE_STANCE } from './skateMount';\n" +
+    "import { TreehouseStairInput } from './treehouseStairGuide';\n" +
+    "import { JUMP_CHARGE_CLIP_ID } from './animation/jumpCharge';\n" +
+    'import {\n' +
+    '  SpinEffectsPresentation,\n' +
+    '  type SpinPresentationDiagnostics,\n' +
+    "} from './spin-effects/presentation';\n" +
+    "import { groundedSkateSpinEligible } from './spin-effects/routing';\n" +
+    "import { SpecialSystem, type SpecialTrick } from './specialTricks';\n" +
+    'import {\n' +
+    '  projectComboLabels,\n' +
+    '  sourceComboLabelLine,\n' +
+    '  type ComboHudPreview,\n' +
+    "} from './comboHud';\n" +
+    'import {\n' +
+    '  PlayerAnimationBridge,\n' +
+    '  type PlayerAnimationOverlay,\n' +
+    '  type PlayerAnimationRig,\n' +
+    "} from './animation/bridge';\n" +
+    "import type { ProceduralMotionContext } from './animation/types';\n" +
+    "import { solveTwoBoneIk } from './animation/ik';\n" +
+    'import {\n' +
+    '  FORWARD_ROLL_TUCK_INPUT,\n' +
+    '  sampleForwardRollPresentation,\n' +
+    '  type ForwardRollPresentation,\n' +
+    "} from './animation/forwardRoll';\n" +
+    'import {\n' +
+    '  UNITY_ROPE_CLIP_IDS,\n' +
+    '  UNITY_ROPE_INPUTS,\n' +
+    '  UNITY_ROPE_TIMING,\n' +
+    '  unityRopeReleaseDuration,\n' +
+    "} from './animation/unityRope';\n" +
+    'import {\n' +
+    '  LOCOMOTION_WALK_BLEND_INPUT,\n' +
+    '  locomotionWalkBlendWeight,\n' +
+    "} from './animation/locomotionBlend';\n" +
+    'import {\n' +
+    '  BAIL_RECOVERY_SPRAWL_PITCH,\n' +
+    '  sampleBailRecovery,\n' +
+    "} from './bailRecovery';\n" +
+    "import { BailRecoveryMotion } from './character/bailRecoveryMotion';\n" +
+    "import { BailPoseCarry, BAIL_POSE_CARRY_SECONDS } from './character/bailPoseCarry';\n" +
+    "import { BailGetUpPose, recoveryStrideMagnitude } from './character/bailGetUpPose';\n" +
+    "import { BailFallPose } from './character/bailFallPose';\n" +
+    "import { BailKnockdown } from './character/bailKnockdown';\n" +
+    "import { BailRiseMotion, BAIL_RISE_SETTLE_SECONDS } from './character/bailRiseMotion';\n" +
+    'import {\n' +
+    '  beginVertBoardRelease,\n' +
+    '  createVertBoardReleaseState,\n' +
+    '  resetVertBoardRelease,\n' +
+    '  spineTransferDirectionHeld,\n' +
+    '  stepVertBoardRelease,\n' +
+    "} from './vertBoardRelease';\n" +
+    "import { CharacterProportionLayer } from './character/proportionLayer';\n" +
+    "import { CharacterRigidMeshBatches } from './character/rigidMeshBatch';\n" +
+    "import { captureSpinCharacter } from './spin-effects/smear';\n" +
+    "import { withSpinArmPose, SPIN_ELBOW_BEND_DEGREES } from './spin-effects/armPose';\n" +
+    "import { SPIN_SMEAR_POSE_REVISION } from './spin-effects/storageKeys';\n" +
+    "import { CharacterBreakApart } from './character/breakApart';\n" +
+    "import { BailMotion } from './character/bailMotion';\n" +
+    "import { resolveBailGroundVelocity, stepBailGroundSpin } from './character/bailGroundContact';\n" +
+    "import { resolveBailImpactSpin } from './character/bailImpactSpin';\n" +
+    "import { selectWipeoutStyle, type WipeoutCause } from './character/wipeoutPolicy';\n" +
+    "import { ROLL_LANDING_CLIP_ID, ROLL_LANDING_DURATION, ROLL_LANDING_CONTROL_SECONDS } from './animation/rollLanding';\n" +
+    'import {\n' +
+    '  BASE_CHARACTER_HITBOX_HEIGHT,\n' +
+    '  characterCollisionHeight,\n' +
+    "} from './character/collisionDimensions';\n" +
+    'import {\n' +
+    '  characterProportionSettings,\n' +
+    '  DEFAULT_CHARACTER_TAIL_VISIBLE,\n' +
+    '  DEFAULT_CHARACTER_HEAD_STYLE,\n' +
+    '  type CharacterHeadProfileId,\n' +
+    '  type CharacterHeadProfiles,\n' +
+    '  type CharacterProportionSettingsValue,\n' +
+    "} from './character/settings';\n" +
+    'import {\n' +
+    '  CARTOON_GLOVE_POSES,\n' +
+    '  blendCartoonGlovePose,\n' +
+    '  createCartoonGlove,\n' +
+    '  removeProceduralCartoonGloveSurface,\n' +
+    '  setCartoonGlovePose,\n' +
+    '  type CartoonGloveRig,\n' +
+    '  type CartoonGlovePoseName,\n' +
+    "} from './character/cartoonGlove';\n" +
+    'import {\n' +
+    '  attachAndSyncRiggedCartoonHandPair,\n' +
+    '  loadRiggedCartoonHandPair,\n' +
+    '  RIGGED_CARTOON_HAND_COLOR,\n' +
+    '  RIGGED_CARTOON_HAND_MARK_COLOR,\n' +
+    '  type RiggedCartoonHandPair,\n' +
+    "} from './character/riggedCartoonHand';\n" +
+    'import {\n' +
+    '  STRETCHABLE_BONE_SCHEMA_VERSION,\n' +
+    '  createStretchableBone,\n' +
+    '  stretchableBoneTriangleCount,\n' +
+    '  type StretchableBoneComponent,\n' +
+    "} from './character/stretchableBone';\n" +
+    'import {\n' +
+    '  createMeshyTorso,\n' +
+    '  meshyTorsoTextureDiagnostics,\n' +
+    '  type MeshyTorsoComponent,\n' +
+    "} from './character/meshyTorso';\n" +
+    'import {\n' +
+    '  MESHY_HEAD_DEFAULT_GAP,\n' +
+    '  MESHY_HEAD_EYE_CENTER_Y,\n' +
+    '  MESHY_HEAD_VISUAL_CENTER_Y,\n' +
+    '  createMeshyHead,\n' +
+    '  meshyHeadTextureDiagnostics,\n' +
+    '  type MeshyHeadComponent,\n' +
+    "} from './character/meshyHead';\n" +
+    'import type {\n' +
+    '  MeshyBoolieRooHeadComponent,\n' +
+    '  MeshyBoolieRooHeadTextureDiagnostics,\n' +
+    "} from './character/meshyBoolieRooHead';\n" +
+    'import {\n' +
+    '  createMeshyShorts,\n' +
+    '  meshyShortsTextureDiagnostics,\n' +
+    '  type MeshyShortsComponent,\n' +
+    "} from './character/meshyShorts';\n" +
+    'import {\n' +
+    '  PROCEDURAL_FOOTWEAR_SCHEMA_VERSION,\n' +
+    '  PROCEDURAL_FOOTWEAR_STYLE_ID,\n' +
+    '  createProceduralFootwear,\n' +
+    '  type ProceduralFootwearComponent,\n' +
+    "} from './character/proceduralFootwear';\n" +
+    '\n' +
+    "const CHARACTER_TAIL_VISIBILITY_STORAGE_KEY = 'solProtoCharacterTailVisibleV1';\n" +
+    "const CHARACTER_HEAD_STYLE_STORAGE_KEY = 'solProtoCharacterHeadStyleV1';\n" +
+    "export type CharacterHeadStyle = 'skull' | 'alternate';\n" +
+    'const CHARACTER_HEAD_STYLE_PLAYERS = new Set<Player>();\n' +
+    'let sharedCharacterHeadStyle: CharacterHeadStyle | null = null;\n' +
+    '\n' +
+    'const TAIL_V = new THREE.Vector3(); //'... 995913 more characters,
+  expected: /const selfDrivenPlanar = this\.walkVelocity\.length\(\)[\s\S]{0,260}runningAnim = onFoot/,
+  operator: 'match',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

@@ -1,0 +1,2033 @@
+{
+  "root": "$WORKSPACE",
+  "started": "2026-10-25T18:17:45.268Z",
+  "canonicalExit": 1,
+  "canonicalStarted": [
+    "check:level-select",
+    "check:swimming",
+    "check:fruit-hud",
+    "check:bare-spins",
+    "check:milk",
+    "check:levels",
+    "check:nightworks",
+    "check:local-data-reset",
+    "check:audio",
+    "check:chimeworks"
+  ],
+  "groups": [
+    {
+      "name": "check:level-select",
+      "commands": [
+        "node tools/test-level-select.mjs"
+      ],
+      "status": "passed-canonical",
+      "results": []
+    },
+    {
+      "name": "check:swimming",
+      "commands": [
+        "node tools/test-swim-controls.mjs",
+        "node tools/test-swimming.mjs",
+        "node tools/test-swim-death-polish.mjs",
+        "node tools/test-death-performance.mjs"
+      ],
+      "status": "passed-canonical",
+      "results": []
+    },
+    {
+      "name": "check:fruit-hud",
+      "commands": [
+        "node tools/test-hud-visibility.mjs",
+        "node tools/test-wood-crate-assets.mjs"
+      ],
+      "status": "passed-canonical",
+      "results": []
+    },
+    {
+      "name": "check:bare-spins",
+      "commands": [
+        "node tools/test-bare-spins.mjs"
+      ],
+      "status": "passed-canonical",
+      "results": []
+    },
+    {
+      "name": "check:milk",
+      "commands": [
+        "node tools/test-milk.mjs",
+        "node tools/test-milk-depth-isolation.mjs",
+        "node tools/test-pickup-visual-batch.mjs"
+      ],
+      "status": "passed-canonical",
+      "results": []
+    },
+    {
+      "name": "check:levels",
+      "commands": [
+        "node tools/validate-levels.mjs",
+        "node tools/test-lazy-source.mjs",
+        "node tools/test-tropical-plants.mjs",
+        "node tools/test-jungle-assets.mjs",
+        "node tools/test-crown-quartz.mjs",
+        "node tools/test-jungle-stream.mjs",
+        "node tools/test-custard-pool.mjs",
+        "node tools/test-jungle-enclosure.mjs",
+        "node tools/test-map-landscape-assets.mjs",
+        "node tools/test-world-map-save.mjs",
+        "node tools/test-map-clay-geometry.mjs",
+        "node tools/test-hollowwake-assets.mjs",
+        "node tools/test-scenery-normals.mjs",
+        "node tools/test-waterslide-scenery-lod.mjs",
+        "node tools/test-waterslide-ocean-look.mjs",
+        "node tools/test-waterslide-shallows.mjs",
+        "node tools/test-waterpark-decks.mjs",
+        "node tools/test-waterpark-portals.mjs",
+        "node tools/test-waterslide-forest.mjs",
+        "node tools/test-hollowwake-tunnel-build.mjs"
+      ],
+      "status": "passed-canonical",
+      "results": []
+    },
+    {
+      "name": "check:nightworks",
+      "commands": [
+        "node tools/test-nightworks.mjs"
+      ],
+      "status": "passed-canonical",
+      "results": []
+    },
+    {
+      "name": "check:local-data-reset",
+      "commands": [
+        "node tools/test-local-game-data-reset.mjs"
+      ],
+      "status": "passed-canonical",
+      "results": []
+    },
+    {
+      "name": "check:audio",
+      "commands": [
+        "node tools/test-audio-loops.mjs",
+        "node tools/test-skate-audio-replay.mjs",
+        "node tools/test-footstep-audio.mjs"
+      ],
+      "status": "passed-canonical",
+      "results": []
+    },
+    {
+      "name": "check:chimeworks",
+      "commands": [
+        "node tools/test-chimeworks.mjs"
+      ],
+      "status": "failed",
+      "results": [
+        {
+          "command": "node tools/test-chimeworks.mjs",
+          "code": 1,
+          "signal": null,
+          "seconds": 8.114,
+          "log": "leaves/10-01.log"
+        }
+      ]
+    },
+    {
+      "name": "check:campaign",
+      "commands": [
+        "node tools/test-six-island-campaign.mjs",
+        "node tools/test-secret-course-roster.mjs",
+        "node tools/test-map-archipelago.mjs",
+        "node tools/test-playtest-level-flow.mjs",
+        "node tools/test-campaign-flow.mjs",
+        "node tools/test-secret-combo-gems.mjs",
+        "node tools/test-save-slot-previews.mjs",
+        "node tools/test-time-medals.mjs",
+        "node tools/test-map-level-presentation.mjs",
+        "node tools/test-collectible-specular.mjs",
+        "node tools/test-campaign-death-flow.mjs",
+        "node tools/test-campaign-collectible-visibility.mjs",
+        "node tools/test-campaign-performance.mjs",
+        "node tools/test-warp-room-return.mjs",
+        "node tools/test-gouraud-context-presets.mjs",
+        "node tools/test-game-flow-surface.mjs",
+        "node tools/test-game-flow-results.mjs",
+        "node tools/test-results-presentation.mjs",
+        "node tools/test-game-flow-interaction.mjs",
+        "node tools/test-game-flow-vortex.mjs",
+        "node tools/test-presentation-loading.mjs",
+        "node tools/test-bonus-polish.mjs"
+      ],
+      "status": "failed",
+      "results": [
+        {
+          "command": "node tools/test-six-island-campaign.mjs",
+          "code": 1,
+          "signal": null,
+          "seconds": 0.285,
+          "log": "leaves/11-01.log"
+        },
+        {
+          "command": "node tools/test-secret-course-roster.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 9.18,
+          "log": "leaves/11-02.log"
+        },
+        {
+          "command": "node tools/test-map-archipelago.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 0.33,
+          "log": "leaves/11-03.log"
+        },
+        {
+          "command": "node tools/test-playtest-level-flow.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 0.321,
+          "log": "leaves/11-04.log"
+        },
+        {
+          "command": "node tools/test-campaign-flow.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 0.291,
+          "log": "leaves/11-05.log"
+        },
+        {
+          "command": "node tools/test-secret-combo-gems.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 8.834,
+          "log": "leaves/11-06.log"
+        },
+        {
+          "command": "node tools/test-save-slot-previews.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 0.311,
+          "log": "leaves/11-07.log"
+        },
+        {
+          "command": "node tools/test-time-medals.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 0.31,
+          "log": "leaves/11-08.log"
+        },
+        {
+          "command": "node tools/test-map-level-presentation.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 0.263,
+          "log": "leaves/11-09.log"
+        },
+        {
+          "command": "node tools/test-collectible-specular.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 0.266,
+          "log": "leaves/11-10.log"
+        },
+        {
+          "command": "node tools/test-campaign-death-flow.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 11.876,
+          "log": "leaves/11-11.log"
+        },
+        {
+          "command": "node tools/test-campaign-collectible-visibility.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 0.484,
+          "log": "leaves/11-12.log"
+        },
+        {
+          "command": "node tools/test-campaign-performance.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 0.275,
+          "log": "leaves/11-13.log"
+        },
+        {
+          "command": "node tools/test-warp-room-return.mjs",
+          "code": 1,
+          "signal": null,
+          "seconds": 9.481,
+          "log": "leaves/11-14.log"
+        },
+        {
+          "command": "node tools/test-gouraud-context-presets.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 0.293,
+          "log": "leaves/11-15.log"
+        },
+        {
+          "command": "node tools/test-game-flow-surface.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 0.043,
+          "log": "leaves/11-16.log"
+        },
+        {
+          "command": "node tools/test-game-flow-results.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 7.854,
+          "log": "leaves/11-17.log"
+        },
+        {
+          "command": "node tools/test-results-presentation.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 24.193,
+          "log": "leaves/11-18.log"
+        },
+        {
+          "command": "node tools/test-game-flow-interaction.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 0.057,
+          "log": "leaves/11-19.log"
+        },
+        {
+          "command": "node tools/test-game-flow-vortex.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 0.048,
+          "log": "leaves/11-20.log"
+        },
+        {
+          "command": "node tools/test-presentation-loading.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 0.271,
+          "log": "leaves/11-21.log"
+        },
+        {
+          "command": "node tools/test-bonus-polish.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 8.47,
+          "log": "leaves/11-22.log"
+        }
+      ]
+    },
+    {
+      "name": "check:competition",
+      "commands": [
+        "node tools/test-park-tuning.mjs",
+        "node tools/test-park-camera-framing.mjs",
+        "node tools/test-jungle-cup.mjs",
+        "node tools/test-competition-judging.mjs",
+        "node tools/test-jungle-cup-runtime.mjs",
+        "node tools/test-jungle-cup-skating.mjs",
+        "node tools/test-jungle-cup-overtime.mjs",
+        "node tools/test-jungle-cup-grind-camera.mjs",
+        "node tools/test-grind-head-stability.mjs",
+        "node tools/test-grind-catch-buffer.mjs",
+        "node tools/test-grind-trick-speed.mjs",
+        "node tools/test-grind-drop-in.mjs",
+        "node tools/test-jungle-cup-lip-recovery.mjs",
+        "node tools/test-jungle-cup-layout.mjs",
+        "node tools/test-jungle-cup-ui.mjs",
+        "node tools/test-skate-tricks.mjs",
+        "node tools/test-skate-input-polish.mjs",
+        "node tools/test-jungle-cup-surface-layers.mjs",
+        "node tools/test-balance-dynamics.mjs",
+        "node tools/test-balance-sliders.mjs",
+        "node tools/test-balance-reentry.mjs",
+        "node tools/test-skate-run-finish.mjs"
+      ],
+      "status": "failed",
+      "results": [
+        {
+          "command": "node tools/test-park-tuning.mjs",
+          "code": 1,
+          "signal": null,
+          "seconds": 15.725,
+          "log": "leaves/12-01.log"
+        },
+        {
+          "command": "node tools/test-park-camera-framing.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 12.906,
+          "log": "leaves/12-02.log"
+        },
+        {
+          "command": "node tools/test-jungle-cup.mjs",
+          "code": 1,
+          "signal": null,
+          "seconds": 0.573,
+          "log": "leaves/12-03.log"
+        },
+        {
+          "command": "node tools/test-competition-judging.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 10.362,
+          "log": "leaves/12-04.log"
+        },
+        {
+          "command": "node tools/test-jungle-cup-runtime.mjs",
+          "code": 1,
+          "signal": null,
+          "seconds": 12.842,
+          "log": "leaves/12-05.log"
+        },
+        {
+          "command": "node tools/test-jungle-cup-skating.mjs",
+          "code": 1,
+          "signal": null,
+          "seconds": 13.241,
+          "log": "leaves/12-06.log"
+        },
+        {
+          "command": "node tools/test-jungle-cup-overtime.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 10.478,
+          "log": "leaves/12-07.log"
+        },
+        {
+          "command": "node tools/test-jungle-cup-grind-camera.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 13.252,
+          "log": "leaves/12-08.log"
+        },
+        {
+          "command": "node tools/test-grind-head-stability.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 41.013,
+          "log": "leaves/12-09.log"
+        },
+        {
+          "command": "node tools/test-grind-catch-buffer.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 15.235,
+          "log": "leaves/12-10.log"
+        },
+        {
+          "command": "node tools/test-grind-trick-speed.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 18.673,
+          "log": "leaves/12-11.log"
+        },
+        {
+          "command": "node tools/test-grind-drop-in.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 11.614,
+          "log": "leaves/12-12.log"
+        },
+        {
+          "command": "node tools/test-jungle-cup-lip-recovery.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 10.352,
+          "log": "leaves/12-13.log"
+        },
+        {
+          "command": "node tools/test-jungle-cup-layout.mjs",
+          "code": 1,
+          "signal": null,
+          "seconds": 9.854,
+          "log": "leaves/12-14.log"
+        },
+        {
+          "command": "node tools/test-jungle-cup-ui.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 8.527,
+          "log": "leaves/12-15.log"
+        },
+        {
+          "command": "node tools/test-skate-tricks.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 15.668,
+          "log": "leaves/12-16.log"
+        },
+        {
+          "command": "node tools/test-skate-input-polish.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 10.588,
+          "log": "leaves/12-17.log"
+        },
+        {
+          "command": "node tools/test-jungle-cup-surface-layers.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 8.943,
+          "log": "leaves/12-18.log"
+        },
+        {
+          "command": "node tools/test-balance-dynamics.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 10.511,
+          "log": "leaves/12-19.log"
+        },
+        {
+          "command": "node tools/test-balance-sliders.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 9.466,
+          "log": "leaves/12-20.log"
+        },
+        {
+          "command": "node tools/test-balance-reentry.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 9.314,
+          "log": "leaves/12-21.log"
+        },
+        {
+          "command": "node tools/test-skate-run-finish.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 9.125,
+          "log": "leaves/12-22.log"
+        }
+      ]
+    },
+    {
+      "name": "check:unity-ports",
+      "commands": [
+        "node tools/test-unity-level-ports.mjs",
+        "node tools/test-beachside-merge.mjs",
+        "node tools/test-beachfront-cliff.mjs",
+        "node tools/test-wood-path-kit.mjs",
+        "node tools/test-island-shelf.mjs",
+        "node tools/test-island-shore-foam.mjs",
+        "node tools/test-crate-rest-surface.mjs",
+        "node tools/test-coastal-street-kit.mjs",
+        "node tools/test-unity-sand-material.mjs"
+      ],
+      "status": "failed",
+      "results": [
+        {
+          "command": "node tools/test-unity-level-ports.mjs",
+          "code": 1,
+          "signal": null,
+          "seconds": 0.31,
+          "log": "leaves/13-01.log"
+        },
+        {
+          "command": "node tools/test-beachside-merge.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 0.278,
+          "log": "leaves/13-02.log"
+        },
+        {
+          "command": "node tools/test-beachfront-cliff.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 0.336,
+          "log": "leaves/13-03.log"
+        },
+        {
+          "command": "node tools/test-wood-path-kit.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 0.258,
+          "log": "leaves/13-04.log"
+        },
+        {
+          "command": "node tools/test-island-shelf.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 0.249,
+          "log": "leaves/13-05.log"
+        },
+        {
+          "command": "node tools/test-island-shore-foam.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 0.306,
+          "log": "leaves/13-06.log"
+        },
+        {
+          "command": "node tools/test-crate-rest-surface.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 0.222,
+          "log": "leaves/13-07.log"
+        },
+        {
+          "command": "node tools/test-coastal-street-kit.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 0.259,
+          "log": "leaves/13-08.log"
+        },
+        {
+          "command": "node tools/test-unity-sand-material.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 0.278,
+          "log": "leaves/13-09.log"
+        }
+      ]
+    },
+    {
+      "name": "check:ground",
+      "commands": [
+        "node tools/validate-ground-acceleration.mjs"
+      ],
+      "status": "passed",
+      "results": [
+        {
+          "command": "node tools/validate-ground-acceleration.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 26.788,
+          "log": "leaves/14-01.log"
+        }
+      ]
+    },
+    {
+      "name": "check:crouch-jump",
+      "commands": [
+        "node tools/test-crouch-jump-slam.mjs",
+        "node tools/test-crouch-stance.mjs",
+        "node tools/test-quaternius-crouch.mjs",
+        "node tools/test-slide-jump.mjs"
+      ],
+      "status": "failed",
+      "results": [
+        {
+          "command": "node tools/test-crouch-jump-slam.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 13.354,
+          "log": "leaves/15-01.log"
+        },
+        {
+          "command": "node tools/test-crouch-stance.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 12.037,
+          "log": "leaves/15-02.log"
+        },
+        {
+          "command": "node tools/test-quaternius-crouch.mjs",
+          "code": 1,
+          "signal": null,
+          "seconds": 8.326,
+          "log": "leaves/15-03.log"
+        },
+        {
+          "command": "node tools/test-slide-jump.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 9.729,
+          "log": "leaves/15-04.log"
+        }
+      ]
+    },
+    {
+      "name": "check:pipe",
+      "commands": [
+        "node tools/test-halfpipe-contact.mjs",
+        "node tools/validate-halfpipe-safety.mjs",
+        "node tools/test-vert-ollie-sequence.mjs tools/fixtures/vert-ollie-release-edge-replay.json"
+      ],
+      "status": "failed",
+      "results": [
+        {
+          "command": "node tools/test-halfpipe-contact.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 0.258,
+          "log": "leaves/16-01.log"
+        },
+        {
+          "command": "node tools/validate-halfpipe-safety.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 8.404,
+          "log": "leaves/16-02.log"
+        },
+        {
+          "command": "node tools/test-vert-ollie-sequence.mjs tools/fixtures/vert-ollie-release-edge-replay.json",
+          "code": 1,
+          "signal": null,
+          "seconds": 17.462,
+          "log": "leaves/16-03.log"
+        }
+      ]
+    },
+    {
+      "name": "check:ledge",
+      "commands": [
+        "node tools/validate-ledge-traversal.mjs"
+      ],
+      "status": "failed",
+      "results": [
+        {
+          "command": "node tools/validate-ledge-traversal.mjs",
+          "code": 1,
+          "signal": null,
+          "seconds": 17.602,
+          "log": "leaves/17-01.log"
+        }
+      ]
+    },
+    {
+      "name": "check:rope",
+      "commands": [
+        "node tools/test-rope-board-transfer.mjs",
+        "node tools/test-rope-limb-mapping.mjs"
+      ],
+      "status": "passed",
+      "results": [
+        {
+          "command": "node tools/test-rope-board-transfer.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 9.08,
+          "log": "leaves/18-01.log"
+        },
+        {
+          "command": "node tools/test-rope-limb-mapping.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 10.192,
+          "log": "leaves/18-02.log"
+        }
+      ]
+    },
+    {
+      "name": "check:rail-air",
+      "commands": [
+        "node tools/test-rail-air-transfer.mjs"
+      ],
+      "status": "passed",
+      "results": [
+        {
+          "command": "node tools/test-rail-air-transfer.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 16.468,
+          "log": "leaves/19-01.log"
+        }
+      ]
+    },
+    {
+      "name": "check:landing-x",
+      "commands": [
+        "node tools/validate-landing-indicator.mjs"
+      ],
+      "status": "failed",
+      "results": [
+        {
+          "command": "node tools/validate-landing-indicator.mjs",
+          "code": 1,
+          "signal": null,
+          "seconds": 37.963,
+          "log": "leaves/20-01.log"
+        }
+      ]
+    },
+    {
+      "name": "check:run-facing",
+      "commands": [
+        "node tools/test-run-facing.mjs",
+        "node tools/test-locomotion-replays.mjs",
+        "node tools/test-locomotion-idle.mjs",
+        "node tools/test-run-inertia-presentation.mjs",
+        "node tools/test-idle-recovery-charge.mjs",
+        "node tools/test-world-map-locomotion.mjs"
+      ],
+      "status": "failed",
+      "results": [
+        {
+          "command": "node tools/test-run-facing.mjs",
+          "code": 1,
+          "signal": null,
+          "seconds": 0.279,
+          "log": "leaves/21-01.log"
+        },
+        {
+          "command": "node tools/test-locomotion-replays.mjs",
+          "code": 1,
+          "signal": null,
+          "seconds": 32.866,
+          "log": "leaves/21-02.log"
+        },
+        {
+          "command": "node tools/test-locomotion-idle.mjs",
+          "code": 1,
+          "signal": null,
+          "seconds": 11.322,
+          "log": "leaves/21-03.log"
+        },
+        {
+          "command": "node tools/test-run-inertia-presentation.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 12.971,
+          "log": "leaves/21-04.log"
+        },
+        {
+          "command": "node tools/test-idle-recovery-charge.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 12.161,
+          "log": "leaves/21-05.log"
+        },
+        {
+          "command": "node tools/test-world-map-locomotion.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 15.093,
+          "log": "leaves/21-06.log"
+        }
+      ]
+    },
+    {
+      "name": "check:carve-grip",
+      "commands": [
+        "node tools/test-carve-grip.mjs",
+        "node tools/test-halfpipe-steering.mjs"
+      ],
+      "status": "passed",
+      "results": [
+        {
+          "command": "node tools/test-carve-grip.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 0.505,
+          "log": "leaves/22-01.log"
+        },
+        {
+          "command": "node tools/test-halfpipe-steering.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 10.747,
+          "log": "leaves/22-02.log"
+        }
+      ]
+    },
+    {
+      "name": "check:skate-speed",
+      "commands": [
+        "node tools/test-skate-overdrive.mjs",
+        "node tools/test-speed-pad-air-carry.mjs",
+        "node tools/test-trick-landing-speed.mjs"
+      ],
+      "status": "passed",
+      "results": [
+        {
+          "command": "node tools/test-skate-overdrive.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 8.755,
+          "log": "leaves/23-01.log"
+        },
+        {
+          "command": "node tools/test-speed-pad-air-carry.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 25.061,
+          "log": "leaves/23-02.log"
+        },
+        {
+          "command": "node tools/test-trick-landing-speed.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 10.808,
+          "log": "leaves/23-03.log"
+        }
+      ]
+    },
+    {
+      "name": "check:surface-friction",
+      "commands": [
+        "node tools/test-surface-friction.mjs"
+      ],
+      "status": "failed",
+      "results": [
+        {
+          "command": "node tools/test-surface-friction.mjs",
+          "code": 1,
+          "signal": null,
+          "seconds": 0.378,
+          "log": "leaves/24-01.log"
+        }
+      ]
+    },
+    {
+      "name": "check:camera-speed",
+      "commands": [
+        "node tools/test-camera-speed-effect.mjs",
+        "node tools/test-camera-look.mjs",
+        "node tools/test-camera-rig.mjs",
+        "node tools/test-camera-level-switch.mjs",
+        "node tools/test-camera-portrait.mjs",
+        "node tools/test-camera-landing-forecast.mjs",
+        "node tools/test-camera-fall-replay.mjs"
+      ],
+      "status": "failed",
+      "results": [
+        {
+          "command": "node tools/test-camera-speed-effect.mjs",
+          "code": 1,
+          "signal": null,
+          "seconds": 0.444,
+          "log": "leaves/25-01.log"
+        },
+        {
+          "command": "node tools/test-camera-look.mjs",
+          "code": 1,
+          "signal": null,
+          "seconds": 0.272,
+          "log": "leaves/25-02.log"
+        },
+        {
+          "command": "node tools/test-camera-rig.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 0.415,
+          "log": "leaves/25-03.log"
+        },
+        {
+          "command": "node tools/test-camera-level-switch.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 0.794,
+          "log": "leaves/25-04.log"
+        },
+        {
+          "command": "node tools/test-camera-portrait.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 0.4,
+          "log": "leaves/25-05.log"
+        },
+        {
+          "command": "node tools/test-camera-landing-forecast.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 8.401,
+          "log": "leaves/25-06.log"
+        },
+        {
+          "command": "node tools/test-camera-fall-replay.mjs",
+          "code": 1,
+          "signal": null,
+          "seconds": 19.971,
+          "log": "leaves/25-07.log"
+        }
+      ]
+    },
+    {
+      "name": "check:bail-recovery",
+      "commands": [
+        "node tools/test-ragdoll-recovery.mjs",
+        "node tools/test-break-apart.mjs",
+        "node tools/test-wipeout-policy.mjs"
+      ],
+      "status": "passed",
+      "results": [
+        {
+          "command": "node tools/test-ragdoll-recovery.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 11.366,
+          "log": "leaves/26-01.log"
+        },
+        {
+          "command": "node tools/test-break-apart.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 10.946,
+          "log": "leaves/26-02.log"
+        },
+        {
+          "command": "node tools/test-wipeout-policy.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 9.005,
+          "log": "leaves/26-03.log"
+        }
+      ]
+    },
+    {
+      "name": "check:air-rescue",
+      "commands": [
+        "node tools/test-board-abandon-tuning.mjs",
+        "node tools/test-board-abandon-steering.mjs",
+        "node tools/test-air-rescue.mjs"
+      ],
+      "status": "failed",
+      "results": [
+        {
+          "command": "node tools/test-board-abandon-tuning.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 0.503,
+          "log": "leaves/27-01.log"
+        },
+        {
+          "command": "node tools/test-board-abandon-steering.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 8.718,
+          "log": "leaves/27-02.log"
+        },
+        {
+          "command": "node tools/test-air-rescue.mjs",
+          "code": 1,
+          "signal": null,
+          "seconds": 11.652,
+          "log": "leaves/27-03.log"
+        }
+      ]
+    },
+    {
+      "name": "check:crate-types",
+      "commands": [
+        "node tools/test-life-multihit-crates.mjs",
+        "node tools/test-nitro-clear-switch.mjs",
+        "node tools/test-explosive-bundles.mjs"
+      ],
+      "status": "passed",
+      "results": [
+        {
+          "command": "node tools/test-life-multihit-crates.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 9.883,
+          "log": "leaves/28-01.log"
+        },
+        {
+          "command": "node tools/test-nitro-clear-switch.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 35.669,
+          "log": "leaves/28-02.log"
+        },
+        {
+          "command": "node tools/test-explosive-bundles.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 9.356,
+          "log": "leaves/28-03.log"
+        }
+      ]
+    },
+    {
+      "name": "check:crate-jump",
+      "commands": [
+        "node tools/test-crate-jump-parity.mjs"
+      ],
+      "status": "passed",
+      "results": [
+        {
+          "command": "node tools/test-crate-jump-parity.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 11.014,
+          "log": "leaves/29-01.log"
+        }
+      ]
+    },
+    {
+      "name": "check:nst-port",
+      "commands": [
+        "python3 -B tools/test_iga_igz_layout.py"
+      ],
+      "status": "passed",
+      "results": [
+        {
+          "command": "python3 -B tools/test_iga_igz_layout.py",
+          "code": 0,
+          "signal": null,
+          "seconds": 0.216,
+          "log": "leaves/30-01.log"
+        }
+      ]
+    },
+    {
+      "name": "check:editor-roundtrip",
+      "commands": [
+        "node tools/validate-editor-roundtrip.mjs"
+      ],
+      "status": "failed",
+      "results": [
+        {
+          "command": "node tools/validate-editor-roundtrip.mjs",
+          "code": 1,
+          "signal": null,
+          "seconds": 12.832,
+          "log": "leaves/31-01.log"
+        }
+      ]
+    },
+    {
+      "name": "check:editor-security",
+      "commands": [
+        "node tools/test-level-security.mjs",
+        "node tools/test-editor-ux.mjs",
+        "node tools/test-editor-environment.mjs",
+        "node tools/test-editor-transactions.mjs",
+        "node tools/test-editor-pointers.mjs",
+        "node tools/test-terrain-support-budget.mjs",
+        "node tools/test-legacy-scenery-capture.mjs",
+        "node tools/test-level-switch-transactions.mjs",
+        "node tools/test-editor-motion-transforms.mjs",
+        "node tools/test-editor-material-fidelity.mjs",
+        "node tools/test-editor-atmosphere.mjs",
+        "node tools/test-editor-thorns.mjs",
+        "node tools/test-editor-current-components.mjs",
+        "node tools/test-editor-runtime-integration.mjs"
+      ],
+      "status": "failed",
+      "results": [
+        {
+          "command": "node tools/test-level-security.mjs",
+          "code": 1,
+          "signal": null,
+          "seconds": 9.255,
+          "log": "leaves/32-01.log"
+        },
+        {
+          "command": "node tools/test-editor-ux.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 7.674,
+          "log": "leaves/32-02.log"
+        },
+        {
+          "command": "node tools/test-editor-environment.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 0.301,
+          "log": "leaves/32-03.log"
+        },
+        {
+          "command": "node tools/test-editor-transactions.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 9.185,
+          "log": "leaves/32-04.log"
+        },
+        {
+          "command": "node tools/test-editor-pointers.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 7.463,
+          "log": "leaves/32-05.log"
+        },
+        {
+          "command": "node tools/test-terrain-support-budget.mjs",
+          "code": 1,
+          "signal": null,
+          "seconds": 13.073,
+          "log": "leaves/32-06.log"
+        },
+        {
+          "command": "node tools/test-legacy-scenery-capture.mjs",
+          "code": 1,
+          "signal": null,
+          "seconds": 8.236,
+          "log": "leaves/32-07.log"
+        },
+        {
+          "command": "node tools/test-level-switch-transactions.mjs",
+          "code": 1,
+          "signal": null,
+          "seconds": 9.605,
+          "log": "leaves/32-08.log"
+        },
+        {
+          "command": "node tools/test-editor-motion-transforms.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 13.839,
+          "log": "leaves/32-09.log"
+        },
+        {
+          "command": "node tools/test-editor-material-fidelity.mjs",
+          "code": 1,
+          "signal": null,
+          "seconds": 9.328,
+          "log": "leaves/32-10.log"
+        },
+        {
+          "command": "node tools/test-editor-atmosphere.mjs",
+          "code": 1,
+          "signal": null,
+          "seconds": 27.396,
+          "log": "leaves/32-11.log"
+        },
+        {
+          "command": "node tools/test-editor-thorns.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 7.8,
+          "log": "leaves/32-12.log"
+        },
+        {
+          "command": "node tools/test-editor-current-components.mjs",
+          "code": 1,
+          "signal": null,
+          "seconds": 7.557,
+          "log": "leaves/32-13.log"
+        },
+        {
+          "command": "node tools/test-editor-runtime-integration.mjs",
+          "code": 1,
+          "signal": null,
+          "seconds": 7.781,
+          "log": "leaves/32-14.log"
+        }
+      ]
+    },
+    {
+      "name": "check:interpolation",
+      "commands": [
+        "node tools/validate-render-interpolation.mjs"
+      ],
+      "status": "passed",
+      "results": [
+        {
+          "command": "node tools/validate-render-interpolation.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 0.237,
+          "log": "leaves/33-01.log"
+        }
+      ]
+    },
+    {
+      "name": "check:animation",
+      "commands": [
+        "node tools/test-animation-suite.mjs",
+        "node tools/test-animation-ik.mjs",
+        "node tools/test-character-animation-runtime.mjs",
+        "node tools/test-procedural-leg-rig.mjs",
+        "node tools/test-jump-arms.mjs",
+        "node tools/test-skate-charge-ollie.mjs",
+        "node tools/test-character-elasticity.mjs"
+      ],
+      "status": "failed",
+      "results": [
+        {
+          "command": "node tools/test-animation-suite.mjs",
+          "code": 1,
+          "signal": null,
+          "seconds": 0.57,
+          "log": "leaves/34-01.log"
+        },
+        {
+          "command": "node tools/test-animation-ik.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 0.301,
+          "log": "leaves/34-02.log"
+        },
+        {
+          "command": "node tools/test-character-animation-runtime.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 0.592,
+          "log": "leaves/34-03.log"
+        },
+        {
+          "command": "node tools/test-procedural-leg-rig.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 0.223,
+          "log": "leaves/34-04.log"
+        },
+        {
+          "command": "node tools/test-jump-arms.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 8.893,
+          "log": "leaves/34-05.log"
+        },
+        {
+          "command": "node tools/test-skate-charge-ollie.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 13.23,
+          "log": "leaves/34-06.log"
+        },
+        {
+          "command": "node tools/test-character-elasticity.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 8.779,
+          "log": "leaves/34-07.log"
+        }
+      ]
+    },
+    {
+      "name": "check:character-lab",
+      "commands": [
+        "node tools/test-character-head-profile-settings.mjs",
+        "node tools/test-character-lab.mjs",
+        "node tools/test-cartoon-glove.mjs",
+        "node tools/test-rigged-cartoon-hand.mjs",
+        "node tools/test-stretchable-bone.mjs",
+        "node tools/test-meshy-torso.mjs",
+        "node tools/test-meshy-head.mjs",
+        "node tools/test-roo-painted-blink.mjs",
+        "node tools/test-meshy-shorts.mjs",
+        "node tools/test-procedural-footwear.mjs",
+        "node tools/test-character-interactions.mjs"
+      ],
+      "status": "failed",
+      "results": [
+        {
+          "command": "node tools/test-character-head-profile-settings.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 0.24,
+          "log": "leaves/35-01.log"
+        },
+        {
+          "command": "node tools/test-character-lab.mjs",
+          "code": 1,
+          "signal": null,
+          "seconds": 0.41,
+          "log": "leaves/35-02.log"
+        },
+        {
+          "command": "node tools/test-cartoon-glove.mjs",
+          "code": 1,
+          "signal": null,
+          "seconds": 8.408,
+          "log": "leaves/35-03.log"
+        },
+        {
+          "command": "node tools/test-rigged-cartoon-hand.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 0.455,
+          "log": "leaves/35-04.log"
+        },
+        {
+          "command": "node tools/test-stretchable-bone.mjs",
+          "code": 1,
+          "signal": null,
+          "seconds": 0.482,
+          "log": "leaves/35-05.log"
+        },
+        {
+          "command": "node tools/test-meshy-torso.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 0.503,
+          "log": "leaves/35-06.log"
+        },
+        {
+          "command": "node tools/test-meshy-head.mjs",
+          "code": 1,
+          "signal": null,
+          "seconds": 0.488,
+          "log": "leaves/35-07.log"
+        },
+        {
+          "command": "node tools/test-roo-painted-blink.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 0.295,
+          "log": "leaves/35-08.log"
+        },
+        {
+          "command": "node tools/test-meshy-shorts.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 0.468,
+          "log": "leaves/35-09.log"
+        },
+        {
+          "command": "node tools/test-procedural-footwear.mjs",
+          "code": 1,
+          "signal": null,
+          "seconds": 12.477,
+          "log": "leaves/35-10.log"
+        },
+        {
+          "command": "node tools/test-character-interactions.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 8.75,
+          "log": "leaves/35-11.log"
+        }
+      ]
+    },
+    {
+      "name": "check:ocean",
+      "commands": [
+        "node tools/test-shore-field.mjs",
+        "node tools/test-shore-field-crown-regression.mjs",
+        "node tools/validate-ocean-port.mjs",
+        "node tools/test-ocean-formulas.mjs",
+        "node tools/test-ocean-tuning.mjs",
+        "node tools/test-unity-post.mjs",
+        "node tools/test-unity-smaa.mjs",
+        "node tools/test-ocean-resources.mjs",
+        "node tools/test-waterslide-shore-field.mjs"
+      ],
+      "status": "failed",
+      "results": [
+        {
+          "command": "node tools/test-shore-field.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 0.325,
+          "log": "leaves/36-01.log"
+        },
+        {
+          "command": "node tools/test-shore-field-crown-regression.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 0.504,
+          "log": "leaves/36-02.log"
+        },
+        {
+          "command": "node tools/validate-ocean-port.mjs",
+          "code": 1,
+          "signal": null,
+          "seconds": 0.056,
+          "log": "leaves/36-03.log"
+        },
+        {
+          "command": "node tools/test-ocean-formulas.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 0.318,
+          "log": "leaves/36-04.log"
+        },
+        {
+          "command": "node tools/test-ocean-tuning.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 0.324,
+          "log": "leaves/36-05.log"
+        },
+        {
+          "command": "node tools/test-unity-post.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 0.247,
+          "log": "leaves/36-06.log"
+        },
+        {
+          "command": "node tools/test-unity-smaa.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 0.043,
+          "log": "leaves/36-07.log"
+        },
+        {
+          "command": "node tools/test-ocean-resources.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 0.324,
+          "log": "leaves/36-08.log"
+        },
+        {
+          "command": "node tools/test-waterslide-shore-field.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 9.292,
+          "log": "leaves/36-09.log"
+        }
+      ]
+    },
+    {
+      "name": "check:crt",
+      "commands": [
+        "node tools/test-crt-optimizer.mjs",
+        "node tools/audit-crt-guest-parameters.mjs",
+        "node tools/test-crt-guest-settings.mjs",
+        "node tools/test-crt-guest-panel-semantics.mjs",
+        "node tools/test-crt-guest-web.mjs"
+      ],
+      "status": "passed",
+      "results": [
+        {
+          "command": "node tools/test-crt-optimizer.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 0.296,
+          "log": "leaves/37-01.log"
+        },
+        {
+          "command": "node tools/audit-crt-guest-parameters.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 0.062,
+          "log": "leaves/37-02.log"
+        },
+        {
+          "command": "node tools/test-crt-guest-settings.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 0.264,
+          "log": "leaves/37-03.log"
+        },
+        {
+          "command": "node tools/test-crt-guest-panel-semantics.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 0.264,
+          "log": "leaves/37-04.log"
+        },
+        {
+          "command": "node tools/test-crt-guest-web.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 0.053,
+          "log": "leaves/37-05.log"
+        }
+      ]
+    },
+    {
+      "name": "check:render-quality",
+      "commands": [
+        "node tools/test-render-quality-settings.mjs",
+        "node tools/test-fixed-render-pipeline.mjs",
+        "node tools/test-hud-visibility.mjs",
+        "node tools/test-wood-crate-assets.mjs",
+        "node tools/test-mobile-ui-layout.mjs",
+        "node tools/test-input-prompts.mjs",
+        "node tools/test-debug-shortcuts.mjs",
+        "node tools/test-touch-release.mjs",
+        "node tools/test-balance-meter-pointer.mjs"
+      ],
+      "status": "passed",
+      "results": [
+        {
+          "command": "node tools/test-render-quality-settings.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 0.238,
+          "log": "leaves/38-01.log"
+        },
+        {
+          "command": "node tools/test-fixed-render-pipeline.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 0.044,
+          "log": "leaves/38-02.log"
+        },
+        {
+          "command": "node tools/test-hud-visibility.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 0.389,
+          "log": "leaves/38-03.log"
+        },
+        {
+          "command": "node tools/test-wood-crate-assets.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 0.045,
+          "log": "leaves/38-04.log"
+        },
+        {
+          "command": "node tools/test-mobile-ui-layout.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 0.231,
+          "log": "leaves/38-05.log"
+        },
+        {
+          "command": "node tools/test-input-prompts.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 0.327,
+          "log": "leaves/38-06.log"
+        },
+        {
+          "command": "node tools/test-debug-shortcuts.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 0.303,
+          "log": "leaves/38-07.log"
+        },
+        {
+          "command": "node tools/test-touch-release.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 0.309,
+          "log": "leaves/38-08.log"
+        },
+        {
+          "command": "node tools/test-balance-meter-pointer.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 0.247,
+          "log": "leaves/38-09.log"
+        }
+      ]
+    },
+    {
+      "name": "check:look",
+      "commands": [
+        "node tools/test-visual-treatment.mjs",
+        "node tools/test-factory-defaults.mjs"
+      ],
+      "status": "failed",
+      "results": [
+        {
+          "command": "node tools/test-visual-treatment.mjs",
+          "code": 1,
+          "signal": null,
+          "seconds": 0.247,
+          "log": "leaves/39-01.log"
+        },
+        {
+          "command": "node tools/test-factory-defaults.mjs",
+          "code": 1,
+          "signal": null,
+          "seconds": 0.312,
+          "log": "leaves/39-02.log"
+        }
+      ]
+    },
+    {
+      "name": "check:skateboard",
+      "commands": [
+        "node tools/test-skateboard-port.mjs",
+        "node tools/test-discarded-boards.mjs",
+        "node tools/test-map-skateboard-profile.mjs"
+      ],
+      "status": "passed",
+      "results": [
+        {
+          "command": "node tools/test-skateboard-port.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 0.326,
+          "log": "leaves/40-01.log"
+        },
+        {
+          "command": "node tools/test-discarded-boards.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 0.733,
+          "log": "leaves/40-02.log"
+        },
+        {
+          "command": "node tools/test-map-skateboard-profile.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 7.726,
+          "log": "leaves/40-03.log"
+        }
+      ]
+    },
+    {
+      "name": "check:special",
+      "commands": [
+        "node tools/test-special-system.mjs"
+      ],
+      "status": "failed",
+      "results": [
+        {
+          "command": "node tools/test-special-system.mjs",
+          "code": 1,
+          "signal": null,
+          "seconds": 0.235,
+          "log": "leaves/41-01.log"
+        }
+      ]
+    },
+    {
+      "name": "check:combo-hud",
+      "commands": [
+        "node tools/test-modern-life-hud.mjs",
+        "node tools/test-combo-hud-parity.mjs"
+      ],
+      "status": "passed",
+      "results": [
+        {
+          "command": "node tools/test-modern-life-hud.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 0.327,
+          "log": "leaves/42-01.log"
+        },
+        {
+          "command": "node tools/test-combo-hud-parity.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 0.365,
+          "log": "leaves/42-02.log"
+        }
+      ]
+    },
+    {
+      "name": "check:spin-effects",
+      "commands": [
+        "node tools/test-spin-effects-port.mjs",
+        "node tools/test-spin-smear.mjs",
+        "node tools/test-spin-arm-pose.mjs"
+      ],
+      "status": "passed",
+      "results": [
+        {
+          "command": "node tools/test-spin-effects-port.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 0.341,
+          "log": "leaves/43-01.log"
+        },
+        {
+          "command": "node tools/test-spin-smear.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 0.271,
+          "log": "leaves/43-02.log"
+        },
+        {
+          "command": "node tools/test-spin-arm-pose.mjs",
+          "code": 0,
+          "signal": null,
+          "seconds": 8.731,
+          "log": "leaves/43-03.log"
+        }
+      ]
+    }
+  ],
+  "finished": "2026-10-25T18:36:06.918Z",
+  "failures": [
+    {
+      "group": "check:chimeworks",
+      "command": "node tools/test-chimeworks.mjs",
+      "code": 1,
+      "signal": null,
+      "seconds": 8.114,
+      "log": "leaves/10-01.log"
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-six-island-campaign.mjs",
+      "code": 1,
+      "signal": null,
+      "seconds": 0.285,
+      "log": "leaves/11-01.log"
+    },
+    {
+      "group": "check:campaign",
+      "command": "node tools/test-warp-room-return.mjs",
+      "code": 1,
+      "signal": null,
+      "seconds": 9.481,
+      "log": "leaves/11-14.log"
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-park-tuning.mjs",
+      "code": 1,
+      "signal": null,
+      "seconds": 15.725,
+      "log": "leaves/12-01.log"
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-jungle-cup.mjs",
+      "code": 1,
+      "signal": null,
+      "seconds": 0.573,
+      "log": "leaves/12-03.log"
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-jungle-cup-runtime.mjs",
+      "code": 1,
+      "signal": null,
+      "seconds": 12.842,
+      "log": "leaves/12-05.log"
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-jungle-cup-skating.mjs",
+      "code": 1,
+      "signal": null,
+      "seconds": 13.241,
+      "log": "leaves/12-06.log"
+    },
+    {
+      "group": "check:competition",
+      "command": "node tools/test-jungle-cup-layout.mjs",
+      "code": 1,
+      "signal": null,
+      "seconds": 9.854,
+      "log": "leaves/12-14.log"
+    },
+    {
+      "group": "check:unity-ports",
+      "command": "node tools/test-unity-level-ports.mjs",
+      "code": 1,
+      "signal": null,
+      "seconds": 0.31,
+      "log": "leaves/13-01.log"
+    },
+    {
+      "group": "check:crouch-jump",
+      "command": "node tools/test-quaternius-crouch.mjs",
+      "code": 1,
+      "signal": null,
+      "seconds": 8.326,
+      "log": "leaves/15-03.log"
+    },
+    {
+      "group": "check:pipe",
+      "command": "node tools/test-vert-ollie-sequence.mjs tools/fixtures/vert-ollie-release-edge-replay.json",
+      "code": 1,
+      "signal": null,
+      "seconds": 17.462,
+      "log": "leaves/16-03.log"
+    },
+    {
+      "group": "check:ledge",
+      "command": "node tools/validate-ledge-traversal.mjs",
+      "code": 1,
+      "signal": null,
+      "seconds": 17.602,
+      "log": "leaves/17-01.log"
+    },
+    {
+      "group": "check:landing-x",
+      "command": "node tools/validate-landing-indicator.mjs",
+      "code": 1,
+      "signal": null,
+      "seconds": 37.963,
+      "log": "leaves/20-01.log"
+    },
+    {
+      "group": "check:run-facing",
+      "command": "node tools/test-run-facing.mjs",
+      "code": 1,
+      "signal": null,
+      "seconds": 0.279,
+      "log": "leaves/21-01.log"
+    },
+    {
+      "group": "check:run-facing",
+      "command": "node tools/test-locomotion-replays.mjs",
+      "code": 1,
+      "signal": null,
+      "seconds": 32.866,
+      "log": "leaves/21-02.log"
+    },
+    {
+      "group": "check:run-facing",
+      "command": "node tools/test-locomotion-idle.mjs",
+      "code": 1,
+      "signal": null,
+      "seconds": 11.322,
+      "log": "leaves/21-03.log"
+    },
+    {
+      "group": "check:surface-friction",
+      "command": "node tools/test-surface-friction.mjs",
+      "code": 1,
+      "signal": null,
+      "seconds": 0.378,
+      "log": "leaves/24-01.log"
+    },
+    {
+      "group": "check:camera-speed",
+      "command": "node tools/test-camera-speed-effect.mjs",
+      "code": 1,
+      "signal": null,
+      "seconds": 0.444,
+      "log": "leaves/25-01.log"
+    },
+    {
+      "group": "check:camera-speed",
+      "command": "node tools/test-camera-look.mjs",
+      "code": 1,
+      "signal": null,
+      "seconds": 0.272,
+      "log": "leaves/25-02.log"
+    },
+    {
+      "group": "check:camera-speed",
+      "command": "node tools/test-camera-fall-replay.mjs",
+      "code": 1,
+      "signal": null,
+      "seconds": 19.971,
+      "log": "leaves/25-07.log"
+    },
+    {
+      "group": "check:air-rescue",
+      "command": "node tools/test-air-rescue.mjs",
+      "code": 1,
+      "signal": null,
+      "seconds": 11.652,
+      "log": "leaves/27-03.log"
+    },
+    {
+      "group": "check:editor-roundtrip",
+      "command": "node tools/validate-editor-roundtrip.mjs",
+      "code": 1,
+      "signal": null,
+      "seconds": 12.832,
+      "log": "leaves/31-01.log"
+    },
+    {
+      "group": "check:editor-security",
+      "command": "node tools/test-level-security.mjs",
+      "code": 1,
+      "signal": null,
+      "seconds": 9.255,
+      "log": "leaves/32-01.log"
+    },
+    {
+      "group": "check:editor-security",
+      "command": "node tools/test-terrain-support-budget.mjs",
+      "code": 1,
+      "signal": null,
+      "seconds": 13.073,
+      "log": "leaves/32-06.log"
+    },
+    {
+      "group": "check:editor-security",
+      "command": "node tools/test-legacy-scenery-capture.mjs",
+      "code": 1,
+      "signal": null,
+      "seconds": 8.236,
+      "log": "leaves/32-07.log"
+    },
+    {
+      "group": "check:editor-security",
+      "command": "node tools/test-level-switch-transactions.mjs",
+      "code": 1,
+      "signal": null,
+      "seconds": 9.605,
+      "log": "leaves/32-08.log"
+    },
+    {
+      "group": "check:editor-security",
+      "command": "node tools/test-editor-material-fidelity.mjs",
+      "code": 1,
+      "signal": null,
+      "seconds": 9.328,
+      "log": "leaves/32-10.log"
+    },
+    {
+      "group": "check:editor-security",
+      "command": "node tools/test-editor-atmosphere.mjs",
+      "code": 1,
+      "signal": null,
+      "seconds": 27.396,
+      "log": "leaves/32-11.log"
+    },
+    {
+      "group": "check:editor-security",
+      "command": "node tools/test-editor-current-components.mjs",
+      "code": 1,
+      "signal": null,
+      "seconds": 7.557,
+      "log": "leaves/32-13.log"
+    },
+    {
+      "group": "check:editor-security",
+      "command": "node tools/test-editor-runtime-integration.mjs",
+      "code": 1,
+      "signal": null,
+      "seconds": 7.781,
+      "log": "leaves/32-14.log"
+    },
+    {
+      "group": "check:animation",
+      "command": "node tools/test-animation-suite.mjs",
+      "code": 1,
+      "signal": null,
+      "seconds": 0.57,
+      "log": "leaves/34-01.log"
+    },
+    {
+      "group": "check:character-lab",
+      "command": "node tools/test-character-lab.mjs",
+      "code": 1,
+      "signal": null,
+      "seconds": 0.41,
+      "log": "leaves/35-02.log"
+    },
+    {
+      "group": "check:character-lab",
+      "command": "node tools/test-cartoon-glove.mjs",
+      "code": 1,
+      "signal": null,
+      "seconds": 8.408,
+      "log": "leaves/35-03.log"
+    },
+    {
+      "group": "check:character-lab",
+      "command": "node tools/test-stretchable-bone.mjs",
+      "code": 1,
+      "signal": null,
+      "seconds": 0.482,
+      "log": "leaves/35-05.log"
+    },
+    {
+      "group": "check:character-lab",
+      "command": "node tools/test-meshy-head.mjs",
+      "code": 1,
+      "signal": null,
+      "seconds": 0.488,
+      "log": "leaves/35-07.log"
+    },
+    {
+      "group": "check:character-lab",
+      "command": "node tools/test-procedural-footwear.mjs",
+      "code": 1,
+      "signal": null,
+      "seconds": 12.477,
+      "log": "leaves/35-10.log"
+    },
+    {
+      "group": "check:ocean",
+      "command": "node tools/validate-ocean-port.mjs",
+      "code": 1,
+      "signal": null,
+      "seconds": 0.056,
+      "log": "leaves/36-03.log"
+    },
+    {
+      "group": "check:look",
+      "command": "node tools/test-visual-treatment.mjs",
+      "code": 1,
+      "signal": null,
+      "seconds": 0.247,
+      "log": "leaves/39-01.log"
+    },
+    {
+      "group": "check:look",
+      "command": "node tools/test-factory-defaults.mjs",
+      "code": 1,
+      "signal": null,
+      "seconds": 0.312,
+      "log": "leaves/39-02.log"
+    },
+    {
+      "group": "check:special",
+      "command": "node tools/test-special-system.mjs",
+      "code": 1,
+      "signal": null,
+      "seconds": 0.235,
+      "log": "leaves/41-01.log"
+    }
+  ]
+}

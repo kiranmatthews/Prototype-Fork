@@ -1,0 +1,30 @@
+Descent export {"quality":"lite","sourceScenery":0,"sceneryCount":0,"vertices":2244,"triangles":4224,"pineCount":0,"bytes":1025762}
+FAIL lite: complete source export stays within existing interchange budgets: AssertionError [ERR_ASSERTION]: native roadside pine placements were lost
+
+0 !== 214
+
+    at file:///$WORKSPACE/tools/test-legacy-scenery-capture.mjs:94:16
+    at check (file:///$WORKSPACE/tools/test-legacy-scenery-capture.mjs:21:9)
+    at file:///$WORKSPACE/tools/test-legacy-scenery-capture.mjs:88:7
+FAIL lite: every native scenery owner has editable components and a declared group: AssertionError [ERR_ASSERTION]: missing source role centre line
+    at file:///$WORKSPACE/tools/test-legacy-scenery-capture.mjs:105:50
+    at check (file:///$WORKSPACE/tools/test-legacy-scenery-capture.mjs:21:9)
+    at file:///$WORKSPACE/tools/test-legacy-scenery-capture.mjs:103:7
+PASS lite: scenery capture contains no extra or duplicated owners
+FAIL lite: wall and guardrail visual owners retain their physical assemblies: AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+
+  assert.ok(mountains.length>1)
+
+    at file:///$WORKSPACE/tools/test-legacy-scenery-capture.mjs:131:16
+    at check (file:///$WORKSPACE/tools/test-legacy-scenery-capture.mjs:21:9)
+    at file:///$WORKSPACE/tools/test-legacy-scenery-capture.mjs:128:7
+file:///$WORKSPACE/tools/test-legacy-scenery-capture.mjs:147
+        const members=data.components.filter(c=>c.grp===group.id).map(clone);
+                                                              ^
+
+TypeError: Cannot read properties of undefined (reading 'id')
+    at file:///$WORKSPACE/tools/test-legacy-scenery-capture.mjs:147:63
+    at Array.filter (<anonymous>)
+    at file:///$WORKSPACE/tools/test-legacy-scenery-capture.mjs:147:39
+
+Node.js v24.19.0

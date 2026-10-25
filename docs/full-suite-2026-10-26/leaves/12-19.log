@@ -1,0 +1,1 @@
+PASS progressive balance: symmetric cubic pull, momentum, early recovery / failed late saves, immediate grind/manual/lip boundaries. No-input vs held-wrong failures [{"side":-1,"neutral":1.4166666666666667,"wrong":0.4},{"side":1,"neutral":1.4166666666666667,"wrong":0.4}]. Twelve-second active grind: 200 corrections, peak 0.251.

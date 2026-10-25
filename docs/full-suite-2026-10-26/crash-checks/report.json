@@ -1,0 +1,160 @@
+{
+  "started": "2026-10-25T18:23:42.747Z",
+  "results": [
+    {
+      "command": "node tools/test-render-quality-settings.mjs",
+      "code": 0,
+      "signal": null,
+      "seconds": 0.257,
+      "log": "01.log"
+    },
+    {
+      "command": "node tools/test-frame-limiter.mjs",
+      "code": 0,
+      "signal": null,
+      "seconds": 0.249,
+      "log": "02.log"
+    },
+    {
+      "command": "node tools/test-world-render-frame.mjs",
+      "code": 0,
+      "signal": null,
+      "seconds": 0.233,
+      "log": "03.log"
+    },
+    {
+      "command": "node tools/test-context-resource-recovery.mjs",
+      "code": 0,
+      "signal": null,
+      "seconds": 0.236,
+      "log": "04.log"
+    },
+    {
+      "command": "node tools/test-warp-pad-batching.mjs",
+      "code": 0,
+      "signal": null,
+      "seconds": 0.352,
+      "log": "05.log"
+    },
+    {
+      "command": "node tools/test-ocean-resources.mjs",
+      "code": 0,
+      "signal": null,
+      "seconds": 0.328,
+      "log": "06.log"
+    },
+    {
+      "command": "node tools/test-ocean-sizing.mjs",
+      "code": 0,
+      "signal": null,
+      "seconds": 0.337,
+      "log": "07.log"
+    },
+    {
+      "command": "node tools/test-treehouse-ocean.mjs",
+      "code": 0,
+      "signal": null,
+      "seconds": 11.419,
+      "log": "08.log"
+    },
+    {
+      "command": "node tools/test-fixed-render-pipeline.mjs",
+      "code": 0,
+      "signal": null,
+      "seconds": 0.06,
+      "log": "09.log"
+    },
+    {
+      "command": "node tools/test-crt-resolution.mjs",
+      "code": 0,
+      "signal": null,
+      "seconds": 0.044,
+      "log": "10.log"
+    },
+    {
+      "command": "node tools/test-crt-guest-web.mjs",
+      "code": 0,
+      "signal": null,
+      "seconds": 0.058,
+      "log": "11.log"
+    },
+    {
+      "command": "node tools/test-unity-post.mjs",
+      "code": 0,
+      "signal": null,
+      "seconds": 0.252,
+      "log": "12.log"
+    },
+    {
+      "command": "node tools/test-character-rigid-batches.mjs",
+      "code": 0,
+      "signal": null,
+      "seconds": 9.437,
+      "log": "13.log"
+    },
+    {
+      "command": "node tools/test-interface-paint-cache.mjs",
+      "code": 0,
+      "signal": null,
+      "seconds": 0.283,
+      "log": "14.log"
+    },
+    {
+      "command": "node tools/test-skinned-interaction-bounds.mjs",
+      "code": 0,
+      "signal": null,
+      "seconds": 0.548,
+      "log": "15.log"
+    },
+    {
+      "command": "node tools/test-input-prompts.mjs",
+      "code": 0,
+      "signal": null,
+      "seconds": 0.344,
+      "log": "16.log"
+    },
+    {
+      "command": "node tools/test-graphics-memory.mjs",
+      "code": 0,
+      "signal": null,
+      "seconds": 8.135,
+      "log": "17.log"
+    },
+    {
+      "command": "node tools/test-stability-report.mjs",
+      "code": 0,
+      "signal": null,
+      "seconds": 0.273,
+      "log": "18.log"
+    },
+    {
+      "command": "node tools/test-rooftop-enemies.mjs",
+      "code": 0,
+      "signal": null,
+      "seconds": 8.925,
+      "log": "19.log"
+    },
+    {
+      "command": "node tools/test-rooftop-weather.mjs",
+      "code": 0,
+      "signal": null,
+      "seconds": 10.086,
+      "log": "20.log"
+    },
+    {
+      "command": "node tools/test-rooftop-storm.mjs",
+      "code": 0,
+      "signal": null,
+      "seconds": 0.116,
+      "log": "21.log"
+    },
+    {
+      "command": "node tools/test-height-fog.mjs",
+      "code": 0,
+      "signal": null,
+      "seconds": 0.516,
+      "log": "22.log"
+    }
+  ],
+  "finished": "2026-10-25T18:24:35.259Z"
+}

@@ -1,0 +1,28 @@
+PASS exact support-build rejection happens before registry or history changes
+PASS prepared transactions isolate a canonical snapshot and reject forged identities
+PASS prepared commits recheck target identity and live library capacity
+PASS exact preflight sees owned canonical data before persistence and cannot reuse stale drafts
+PASS prepared quota failure accepts an exportable session snapshot
+PASS save/copy names match exported names without changing legacy repair ordering
+PASS geometry edits preserve legacy menu titles and align the real saved export
+PASS registry snapshots isolate caller lists and deeply freeze retained data
+PASS ordinary edits retain unrelated canonical identities without trusting unknown wrappers
+PASS retained snapshots still obey duplicate/count checks and rejected packs are atomic
+PASS history with an unchanged title writes the registry only once
+PASS history still restores a title when the name really changes
+PASS accepted edit, undo and redo all match the registry used by play
+PASS quota failure preserves the accepted draft, selected paste and history
+PASS first built-in fork is rejected atomically at the library count limit
+PASS redo at a newly full library preserves its state and can retry after freeing a slot
+PASS data-owned builtin override is also rejected at the library count limit
+PASS rejected HUD migration restores the selected source component and its handles
+PASS total pack capacity refuses edits before history or live data diverge from play
+PASS rejected grouped paste restores selection, node mode, wiring and history
+PASS a rejected paste does not consume its next successful offset
+PASS selection admits only existing unlocked integer component indices
+PASS pasting a singleton cannot replace its locked original
+PASS grouping unlocked selections does not reparent a locked sibling
+PASS ungroup refuses to dissolve wiring belonging to a locked member
+PASS retarget cancels old gestures while their original identity is still active
+PASS undo cancels a pending move before traversing committed history
+27/27 editor transaction regressions passed

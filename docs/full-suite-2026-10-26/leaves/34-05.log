@@ -1,0 +1,15 @@
+{
+  'player.jump': {
+    minElbowClearance: 0.08237778368526266,
+    minWristClearance: 0.1572358383124799
+  },
+  'player.fall': {
+    minElbowClearance: 0.07410083187368896,
+    minWristClearance: 0.15046007126938968
+  },
+  'player.land': {
+    minElbowClearance: 0.05497315974635503,
+    minWristClearance: 0.11484420164886011
+  }
+}
+PASS jump/fall/landing arm clearance, continuous descent, real jump handoffs and saved arm-only upgrade { maxDescentArmStepDegrees: 8.246361871289606 }

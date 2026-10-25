@@ -1,0 +1,18 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: supplied edge case must still land
+
+'air' !== 'ride'
+
+    at file:///$WORKSPACE/tools/test-vert-ollie-sequence.mjs:923:14 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 'air',
+  expected: 'ride',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

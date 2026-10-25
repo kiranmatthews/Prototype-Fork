@@ -1,0 +1,163 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: The Descent beach sand did not opt into full surface drag
+    at file:///$WORKSPACE/tools/test-surface-friction.mjs:167:10 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: "import { authoredMovingGeometry } from './authoredMovingSurface';\n" +
+    "import {RainWeather} from './rainWeather';\n" +
+    "import {addWetRooftopLook} from './wetRooftop';\n" +
+    "import {COUNTRY_CLUB_TEXTURES,isCountryClubTexture,countryClubTextureFile,createCountryClubSurface} from './countryClubMaterials';\n" +
+    '\n' +
+    "import {Minefields,validMinefields,type MinefieldData} from './minefields';\n" +
+    "import {addWaterparkDeckLook} from './waterparkDeck';\n" +
+    "import {createWaterparkPortal,WATERPARK_PORTAL_WORK} from './waterparkPortal';\n" +
+    "import {addWaterparkFlumeLook, createShallowSlideWater} from './waterparkFlume';\n" +
+    "import { isGraphicsReset } from './lostGraphicsResources';\n" +
+    "import { validSkateRace } from './race/schema';\n" +
+    "import { createRaceFinish } from './race/finish';\n" +
+    "import { RaceCourse } from './race/course';\n" +
+    "import type { SkateRaceData } from './race/types';\n" +
+    "import {custardPoolMaterial,custardFoamMaterial,addCustardPoolBedLook,attachCustardPoolReflection,CustardFinalePresentation} from './custardPool';\n" +
+    "import { NightworksBackdrop } from './nightworksBackdrop';\n" +
+    "import { NightworksLighting } from './nightworksLighting';\n" +
+    "import { NightworksPlume } from './nightworksPlume';\n" +
+    "import { NightworksFogVisibility } from './nightworksFog';\n" +
+    "import { addNightworksStoneLook, createNightworksMagma, NIGHTWORKS_VOLCANO_TEXTURES } from './nightworksMagma';\n" +
+    "import { SKY_BRIDGE_LEVEL } from './levels/sky-bridge';\n" +
+    "import { COCONUT_CART_RALLY_LEVEL } from './levels/coconut-cart-rally';\n" +
+    "import { SKYSTREAM_LEVEL } from './levels/skystream';\n" +
+    "import { ICE_SURFACE, FALL_AWAY_SURFACE, SLIPPERY_COMPONENT_TYPES } from './surfaceBehavior';\n" +
+    "import { createIceMaterial } from './surfacePresentation';\n" +
+    "import { addMasonryLook, isMasonryTexture } from './masonryMaterial';\n" +
+    "import {BoulderLightning} from './boulderLightning';\n" +
+    "import {BoulderChase,validBoulderChase,type BoulderChaseData} from './boulderChase';\n" +
+    "import {CaveCollapse,validCaveCollapse,type CaveCollapseData} from './caveCollapse';\n" +
+    "import {HOLLOWWAKE_LEVEL} from './levels/hollowwake-descent';\n" +
+    "import {HollowwakeTunnels} from './hollowwakeTunnels';\n" +
+    "import {RIPCORD_RIVER_LEVEL,ROLLING_BONES_LEVEL} from './levels/ripcord-river';\n" +
+    "import {RUMBLEWATER_RUN_LEVEL} from './levels/rumblewater-run';\n" +
+    "import { createSkateReference, validSkateReference, type SkateReferenceData, type SkateReferencePhysics } from './skateReferencePhysics';\n" +
+    "import { MALL_TEXTURE_KINDS, mallArt } from './mallArt';\n" +
+    "import { BreakableScenery, type BreakableKind } from './breakableScenery';\n" +
+    "import {SourceBouncyProps,validSourceBox,type SourceBoxData} from './sourceBouncyProps';\n" +
+    'import { CARLISLE_COAST_LEVEL } from "./levels/carlisle-coast";\n' +
+    'import { CUSTARD_CREEK_LEVEL } from "./levels/custard-creek";\n' +
+    "import { custardWaterfallMaterial } from './custardWaterfall';\n" +
+    "import { HazardVisuals } from './hazardVisuals';\n" +
+    'import { isOriginalTestCourse } from "./levels/carlisleLegacy";\n' +
+    "import { upgradeKnownEdgeDefaults } from './edgeGrindingMigration';\n" +
+    'import { CityAssetKit, CITY_ASSETS, CITY_ASSET_KINDS, CITY_ASSET_LABELS, isCityAsset, cityMatrix, cityCollisionGeometry, cityRailVisual, accelerateCityGround } from "./cityAssets";\n' +
+    'import { createExplosiveBundle, updateExplosiveBundle, disposeExplosiveBundle, type ExplosiveBundle } from "./explosiveBundle";\n' +
+    'import { createWoodCrate, setWoodCrateState, disposeWoodCrate, woodCrateTexture, type WoodCrate } from "./woodCrate";\n' +
+    "import {attachBonusStone,BonusJumpGate,BONUS_PLATFORM_HEIGHT,BONUS_PLATFORM_RADIUS,BONUS_LANDING_RADIUS} from './bonusPlatform';\n" +
+    "import { DECK_TRICKS, deckTrickInfo, type DeckTrickKind } from './skateTricks';\n" +
+    'import { createJungleCupTrophy } from "./competition/trophy";\n' +
+    "import { isCompetitionLevel } from './competition/courses';\n" +
+    'import { cameraViewDirection, type CameraView } from "./cameraViews";\n' +
+    "import { SpinBridge } from './spinBridge';\n" +
+    '// Every level in the game, plus the toolkit they are all assembled from.\n' +
+    '// Built-ins are hand-coded builders picked by id; user levels carry component\n' +
+    '// data and build through the same pipeline the editor writes. Courses run\n' +
+    '// along -Z: a corridor of decks, gaps, rails, crates and set pieces, with a\n' +
+    '// finish gate at the far end.\n' +
+    '\n' +
+    'import * as THREE from "three";\n' +
+    "import { createTreehouseStairPath, type TreehouseStairPath } from './treehouseStairGuide';\n" +
+    'import { attachTrialClockModel, type TrialClockVisual } from "./trialClockModel";\n' +
+    'import { createEnemyVisual } from "./enemies/runtime";\n' +
+    'import { BULL } from "./enemies/bull";\n' +
+    'import { TempleFireTiki } from "./templeFireTiki";\n' +
+    'import { SentryFireball, SENTRY_FIREBALL_SPEED } from "./enemies/fireball";\n' +
+    "import {createKookState,resetKook,stepKook,type KookRole,type KookState} from './enemies/kookBehavior';\n" +
+    "import {createKookVisual} from './enemies/kookVisual';\n" +
+    "import {KookBullet} from './enemies/kookBullet';\n" +
+    'import {playEnemySound,resetEnemySounds,updateEnemySounds} from "./enemies/sounds";\n' +
+    'import { stepMoa, updateMoaAttack } from "./enemies/moaBehavior";\n' +
+    "import { GhostTrainAssetKit, GHOST_DECOR_KINDS, GHOST_DECOR_LABELS, createGhostEnemyVisual } from './ghostTrain';\n" +
+    "import {BlockworksSurfaces,BLOCKWORKS_SURFACE_KINDS,BLOCKWORKS_SURFACE_LABELS,isBlockworksSurface} from './blockworksSurfaces';\n" +
+    "import { BlockworksAssetKit, BLOCKWORKS_ASSET_KINDS, BLOCKWORKS_ASSET_LABELS, isBlockworksAsset } from './blockworksAssets';\n" +
+    "import { BlockworksMattes, BLOCKWORKS_MATTE_KINDS, BLOCKWORKS_MATTE_LABELS } from './blockworksMattes';\n" +
+    "import { CASTLE_TEXTURE_KINDS, isCastleTexture, createCastleMaterial, prepareCastleTextures, castleTextureDiagnostics } from './ghostCastleMaterials';\n" +
+    "import { COASTAL_TOWN_TEXTURES } from './coastalTownPalette';\n" +
+    "import { ROOFTOP_KOOK_TEXTURES, applyKookPolygonUVs } from './rooftopKookAssets';\n" +
+    "import {HeightFog} from './heightFog';\n" +
+    "import { GHOST_TRAIN_LEVEL } from './levels/ghost-train';\n" +
+    'import type { EnemyKind, EnemyVisual } from "./enemies/types";\n' +
+    'export type { EnemyKind } from "./enemies/types";\n' +
+    'import { resolveLevelAtmosphere, validAtmosphere, CUSTOM_LEVEL_THEME, JUNGLE_THEME_OVERRIDES, NIGHTWORKS_THEME_OVERRIDES,\n' +
+    '  SKY_BRIDGE_FOG_NEAR, SKY_BRIDGE_FOG_FAR, type CustomAtmosphereData } from "./levelAtmosphere";\n' +
+    'export type { CustomAtmosphereData } from "./levelAtmosphere";\n' +
+    'export { SKY_BRIDGE_FOG_NEAR, SKY_BRIDGE_FOG_FAR } from "./levelAtmosphere";\n' +
+    'import { createCollectibleShell } from "./collectibleSpecular";\n' +
+    'import { createTimeMedal, timeMedalGeometry } from "./timeMedalModel";\n' +
+    'import { trackPresentationImage } from "./presentationLoading";\n' +
+    'import { Rail, batchRailVisuals } from "./rails";\n' +
+    'import { DiscardedBoards } from "./skateboard/discarded";\n' +
+    'import {\n' +
+    '  PROP_SCALE,\n' +
+    '  PropFamily,\n' +
+    '  PropRoleName,\n' +
+    '  propRoll,\n' +
+    '  propSurfaces,\n' +
+    '  propTint,\n' +
+    '} from "./props";\n' +
+    'import { Halfpipe } from "./halfpipe";\n' +
+    'import {\n' +
+    '  createWarpPad,\n' +
+    '  WarpPad,\n' +
+    '  WARP_PAD_TOP,\n' +
+    '  WARP_PAD_GLOW_RADIUS,\n' +
+    '  WARP_PAD_GLOW_BASE,\n' +
+    '  WARP_PAD_GLOW_TOP,\n' +
+    '} from "./warpPad";\n' +
+    'import { CONST, TUNING } from "./tuning";\n' +
+    'import {WorldSolids} from "./worldSolids";\n' +
+    'import {MeshSideCollisions} from "./meshSideCollisions";\n' +
+    'import {WorldSurfaceBinding,meshScenerySolid} from "./worldSurfaceBinding";\n' +
+    'import { sfx } from "./audio";\n' +
+    'import { rooReady, rooLoaded } from "./roofont"; // crate stencils are set in Roo\n' +
+    'import { puffs, PUFF_PRESETS } from "./puffs";\n' +
+    'import { swirls, SWIRL_PRESETS, type Swirl } from "./swirls";\n' +
+    'import { CoastWater, type ShoreSample } from "./water";\n' +
+    "import { createStandingWaterMaterial, isStandingWater, refineStandingWater } from './standingWater';\n" +
+    "import { createJungleStreamMaterial, JungleStreamReflectionOwner, JungleStreamSkyReflection } from './jungleStream';\n" +
+    "import { addTreehouseTrialsMaterialLook } from './treehouseTrialsPresentation';\n" +
+    "import {addCarlisleTerrainLook,applyCarlisleChannelUV} from './carlislePresentation';\n" +
+    "import {CarlisleSceneryCollision} from './carlisleSceneryCollision';\n" +
+    "import {CarlisleBonusBridgeVisual} from './carlisleBonusBridge';\n" +
+    "import {dressCarlisleTimberDeck,dressCarlisleTimberBeam,disposeCarlisleTimberDeck,estimateCarlisleTimberWork} from './carlisleTimber';\n" +
+    'import { createUnityBeachfrontReference } from "./beachfront";\n' +
+    'import {\n' +
+    '  BEACHFRONT_COURSE_LENGTH,\n' +
+    '  beachfrontPointAtDistance,\n' +
+    '} from "./beachfrontCourse";\n' +
+    'import { BraidedRope, ropeLocalPoint, flexibleRopePoint, flexibleRopeVelocity, closestRopeDistance } from "./ropeGeometry";\n' +
+    'import { NightworksRocks, nightworksGeometry, isNightworksSurface } from "./nightworksRocks";\n' +
+    "import { GOBLIN, isNightworksGoblin, stepNightworksGoblin, hitNightworksGoblin, resetNightworksGoblin } from './enemies/nightworksGoblin';\n" +
+    "import { nightworksArt, NIGHTWORKS_TEXTURE_KINDS } from './levels/nightworks-bonus';\n" +
+    'import { NIGHTWORKS_LEVEL } from "./levels/nightworks";\n' +
+    'import { NIGHTWORKS_AFTER_HOURS_LEVEL } from "./levels/nightworks-after-hours";\n' +
+    'import { migrateSlipstreamCamera } from "./levels/slipstream-camera";\n' +
+    'import { migrateDrownedCamera } from "./levels/pirate-camera";\n' +
+    'import { SLIPSTREAM_LEVEL } from "./levels/slipstream";\n' +
+    'import { isRetiredSlipstreamSnapshot, isLegacySlipstreamId, archivedSlipstreamEntry, SLIPSTREAM_COURSE_ID } from "./levels/slipstream-migration";\n' +
+    'import { JUNGLE_CUP_LEVEL } from "./levels/jungle-cup";\n' +
+    'import { JUNGLE_TERRACES_LEVEL } from "./levels/jungle-sequels";\n' +
+    "import { PIRATE_WRECK_LEVEL } from './levels/pirate-wreck';\n" +
+    "import { CROWN_TEXTURE_KINDS, isCrownTexture, crownTextureFile, createCrownSurface, createCrownQuartz, isCrownWater, crownWaterReflectionFile, createCrownWater, createDrownedHarbourOceanLook } from './drownedCrownAssets';\n" +
+    'import { CAVE_COLLAPSE_LEVEL, CODEX_LAB_LEVEL, WAREHOUSE_REFERENCE_LEVEL, SCHOOL_MIAMI_LEVEL, WAREHOUSE_PARK_LEVEL, ROOFTOP_RELAY_LEVEL } from "./levels/codex-lab";\n' +
+    'import { JUNGLE_MINEFIELD_LEVEL } from "./levels/jungle-minefield";\n' +
+    'import { COUNTRY_CLUB_LEVEL } from "./levels/country-club";\n' +
+    'import { isPreviousCountryClubStock } from "./levels/country-club-stock";\n' +
+    "import { SkateCollectathon } from './skateCollectathon';\n" +
+    "import {WarehouseArt,WAREHOUSE_DECOR_KINDS,WAREHOUSE_DECOR_LABELS} from './warehouseArt';\n" +
+    'i'... 842233 more characters,
+  expected: /sand\.name = "Showcase1ContinuousSandSeabed";[\s\S]{0,240}sand\.userData\.beachSandFriction = true/,
+  operator: 'match',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

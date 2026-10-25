@@ -1,0 +1,309 @@
+Validated universal ground BVH parity and lifecycle; 248.3x synthetic ray speedup (69.50ms -> 0.28ms per 40 rays); 98.4x Beachfront six-ray speedup (24.95ms -> 0.25ms); 2571 dense meshes across 57 built-ins prewarmed; slowest BVH build country-club 48.2ms.
+[bonus] GLB stone platform failed HttpError: fetch for "" responded with 404:
+    at file:///$WORKSPACE/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+[bonus] GLB stone platform failed HttpError: fetch for "" responded with 404:
+    at file:///$WORKSPACE/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+[bonus] GLB stone platform failed HttpError: fetch for "" responded with 404:
+    at file:///$WORKSPACE/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+[bonus] GLB stone platform failed HttpError: fetch for "" responded with 404:
+    at file:///$WORKSPACE/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+[bonus] GLB stone platform failed HttpError: fetch for "" responded with 404:
+    at file:///$WORKSPACE/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+[bonus] GLB stone platform failed HttpError: fetch for "" responded with 404:
+    at file:///$WORKSPACE/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+[bonus] GLB stone platform failed HttpError: fetch for "" responded with 404:
+    at file:///$WORKSPACE/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+[bonus] GLB stone platform failed HttpError: fetch for "" responded with 404:
+    at file:///$WORKSPACE/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+[bonus] GLB stone platform failed HttpError: fetch for "" responded with 404:
+    at file:///$WORKSPACE/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+[bonus] GLB stone platform failed HttpError: fetch for "" responded with 404:
+    at file:///$WORKSPACE/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+[bonus] GLB stone platform failed HttpError: fetch for "" responded with 404:
+    at file:///$WORKSPACE/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+[bonus] GLB stone platform failed HttpError: fetch for "" responded with 404:
+    at file:///$WORKSPACE/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+[bonus] GLB stone platform failed HttpError: fetch for "" responded with 404:
+    at file:///$WORKSPACE/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+[bonus] GLB stone platform failed HttpError: fetch for "" responded with 404:
+    at file:///$WORKSPACE/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+[bonus] GLB stone platform failed HttpError: fetch for "" responded with 404:
+    at file:///$WORKSPACE/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+[bonus] GLB stone platform failed HttpError: fetch for "" responded with 404:
+    at file:///$WORKSPACE/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+[bonus] GLB stone platform failed HttpError: fetch for "" responded with 404:
+    at file:///$WORKSPACE/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+[bonus] GLB stone platform failed HttpError: fetch for "" responded with 404:
+    at file:///$WORKSPACE/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+[bonus] GLB stone platform failed HttpError: fetch for "" responded with 404:
+    at file:///$WORKSPACE/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+[bonus] GLB stone platform failed HttpError: fetch for "" responded with 404:
+    at file:///$WORKSPACE/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+[bonus] GLB stone platform failed HttpError: fetch for "" responded with 404:
+    at file:///$WORKSPACE/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+[bonus] GLB stone platform failed HttpError: fetch for "" responded with 404:
+    at file:///$WORKSPACE/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}

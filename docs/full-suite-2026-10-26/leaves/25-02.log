@@ -1,0 +1,261 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: touch look does not clear when the app backgrounds
+    at file:///$WORKSPACE/tools/test-camera-look.mjs:182:10 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: '// Mobile touch controls: an 8-way D-pad, face-button diamond, visible\n' +
+    '// R2/L2 controls, pause and a gentle camera peek. Legacy vertical flicks in\n' +
+    '// empty right-hand space remain available alongside the explicit triggers.\n' +
+    "// Active only on coarse-pointer devices (or force-enabled with '?touch' for\n" +
+    '// testing) — desktop keeps keyboard/gamepad\n' +
+    '// untouched. The same class also flips the HUD into its compact phone layout\n' +
+    '// via the body.tc-on styles below.\n' +
+    '//\n' +
+    '// Input flow: Input.update() polls this object every render frame and merges\n' +
+    '// it exactly like the gamepad, so edge detection (pressed/released) comes for\n' +
+    '// free and replays record touch play like any other input.\n' +
+    '\n' +
+    "import { sfx } from './audio';\n" +
+    "import { TouchScreenAwake } from './touchScreenAwake';\n" +
+    '\n' +
+    '// 8 sectors, 45° apart, index 0 = East, counter-clockwise (atan2 space).\n' +
+    "// Diagonals emit both axes at ±1; Input's unit-clamp normalizes them.\n" +
+    'const SECTOR_XY: [number, number][] = [\n' +
+    '  [1, 0],\n' +
+    '  [1, 1],\n' +
+    '  [0, 1],\n' +
+    '  [-1, 1],\n' +
+    '  [-1, 0],\n' +
+    '  [-1, -1],\n' +
+    '  [0, -1],\n' +
+    '  [1, -1],\n' +
+    '];\n' +
+    '\n' +
+    'interface BtnDef {\n' +
+    "  key: 'x' | 'o' | 'sq' | 'tri';\n" +
+    '  glyph: string;\n' +
+    '  label: string;\n' +
+    '  // diamond offsets in button-radius units from the cluster centre\n' +
+    '  dx: number;\n' +
+    '  dy: number;\n' +
+    '  tickRate: number; // audio feedback pitch per button\n' +
+    '}\n' +
+    '\n' +
+    '// diamond offsets in % of the cluster box from its centre — at 38% button\n' +
+    '// size, ±31% puts every button edge EXACTLY at the box edge (no overflow,\n' +
+    '// no clipping, even visual padding against the mirrored D-pad)\n' +
+    'const BTNS: BtnDef[] = [\n' +
+    "  { key: 'tri', glyph: '△', label: 'Grind', dx: 0, dy: -31, tickRate: 2.4 },\n" +
+    "  { key: 'o', glyph: '○', label: 'Grab', dx: 31, dy: 0, tickRate: 2.0 },\n" +
+    "  { key: 'x', glyph: '×', label: 'Jump', dx: 0, dy: 31, tickRate: 1.7 },\n" +
+    "  { key: 'sq', glyph: '□', label: 'Spin', dx: -31, dy: 0, tickRate: 2.2 },\n" +
+    '];\n' +
+    '\n' +
+    "type TriggerKey = 'transfer' | 'inventory';\n" +
+    "const buttonPresses = (): Record<BtnDef['key'], Set<number>> => ({\n" +
+    '  x: new Set(), o: new Set(), sq: new Set(), tri: new Set(),\n' +
+    '});\n' +
+    '\n' +
+    '// R2 swipe gate: a clear, fast, mostly-vertical upward flick — button taps\n' +
+    '// (short travel) and slides between buttons (slow / horizontal) never fire it.\n' +
+    'const SWIPE_MIN_PX = 64;\n' +
+    'const SWIPE_MAX_MS = 320;\n' +
+    'const SWIPE_MIN_VEL = 0.35; // px per ms\n' +
+    '// Touch has no physical trigger to keep depressed. Preserve a short trigger\n' +
+    '// pulse across input polling; rail-ollie trajectories never depend on R2.\n' +
+    'const SWIPE_HOLD_MS = 450;\n' +
+    '// The unobstructed upper screen is a small, anchored virtual right stick.\n' +
+    '// Reaching full intent should take a deliberate drag, not a tiny camera nudge.\n' +
+    'const LOOK_DRAG_PX = 110;\n' +
+    '\n' +
+    '/** One shared touch/coarse-pointer gate for input and presentation policy. */\n' +
+    'export function touchControlsRequested(): boolean {\n' +
+    '  return (\n' +
+    "    (typeof matchMedia === 'function' &&\n" +
+    "      (matchMedia('(pointer: coarse)').matches || matchMedia('(any-pointer: coarse)').matches)) ||\n" +
+    "    new URLSearchParams(window.location.search).has('touch')\n" +
+    '  );\n' +
+    '}\n' +
+    '\n' +
+    'export class TouchControls {\n' +
+    '  enabled = false;\n' +
+    '  moveX = 0;\n' +
+    '  moveY = 0;\n' +
+    '  lookX = 0;\n' +
+    '  lookY = 0;\n' +
+    '  jumpHeld = false;\n' +
+    '  grabHeld = false;\n' +
+    '  spinHeld = false;\n' +
+    '  grindHeld = false;\n' +
+    '\n' +
+    '  private triggerPulses = new Map<number, { key: TriggerKey; until: number; pending: boolean }>();\n' +
+    '  private dirIdx = -1; // active D-pad sector, -1 = neutral (hysteresis state)\n' +
+    '  private padPointer: number | null = null;\n' +
+    '  private lookPointer: number | null = null;\n' +
+    '  private lookStartX = 0;\n' +
+    '  private lookStartY = 0;\n' +
+    '  private padEl!: HTMLElement;\n' +
+    '  private padContact!: HTMLElement;\n' +
+    '  private lookCue!: HTMLElement;\n' +
+    '  private lookContact!: HTMLElement;\n' +
+    '  private pauseEl!: HTMLButtonElement;\n' +
+    '  private pausePointer: number | null = null;\n' +
+    "  private arrowEls!: Record<'up' | 'down' | 'left' | 'right', HTMLElement>;\n" +
+    '  private btnEls = new Map<string, HTMLElement>();\n' +
+    '  private prevBtn = { x: false, o: false, sq: false, tri: false };\n' +
+    '  // Unconsumed edges retain their owners. Cancelling one finger must never\n' +
+    '  // erase a completed tap (or a shared held button) belonging to another.\n' +
+    '  private pressedBtn = buttonPresses();\n' +
+    '  private jumpReleases = new Set<number>();\n' +
+    '  private jumpCancellation = false;\n' +
+    '  private transferPresses = new Set<number>();\n' +
+    '  private directionTap: [number, number] | null = null;\n' +
+    '  private directionOwner: number | null = null;\n' +
+    '  private mapMode = false;\n' +
+    '  private graphicsBlocked = false;\n' +
+    '  private screenAwake = new TouchScreenAwake();\n' +
+    '  private pageActive = true;\n' +
+    '  private captures = new Map<number, HTMLElement>();\n' +
+    '  private pointerOwners = new Map<number, number>();\n' +
+    '  private pointerStarts = new Map<number, { x: number; y: number; type: string }>();\n' +
+    '  // Touch IDs and Pointer IDs are different namespaces. Associate only a\n' +
+    '  // unique matching START position, so native partial lifts can recover a\n' +
+    '  // missing pointerup without cancelling the other thumb.\n' +
+    '  private nativeContacts = new Map<number, { pointer: number | null; x: number; y: number }>();\n' +
+    '  private nextOwner = 0;\n' +
+    '  private triggerTouches = new Map<number, TriggerKey>();\n' +
+    '  private triggerEls = new Map<TriggerKey, HTMLButtonElement>();\n' +
+    '  private layoutDirty = true;\n' +
+    '  private padBounds!: DOMRect;\n' +
+    "  private buttonBounds = new Map<BtnDef['key'], DOMRect>();\n" +
+    '  private viewportWidth = window.innerWidth;\n' +
+    '  private viewportHeight = window.innerHeight;\n' +
+    '  // every live right-hand pointer: which button it holds + swipe bookkeeping\n' +
+    '  private rightTouches = new Map<\n' +
+    '    number,\n' +
+    "    { btn: BtnDef['key'] | null; x0: number; y0: number; t0: number; swiped: TriggerKey | null; onBtn: boolean }\n" +
+    '  >();\n' +
+    '\n' +
+    '  constructor(private onPause: () => void = () => {}) {\n' +
+    '    this.enabled = touchControlsRequested();\n' +
+    '    if (!this.enabled) return;\n' +
+    "    document.body.classList.add('tc-on');\n" +
+    '    this.injectStyle();\n' +
+    '    this.buildDpad();\n' +
+    '    this.buildButtons();\n' +
+    '    this.buildLookSurface();\n' +
+    '    this.buildPauseButton();\n' +
+    '    this.installReleaseSafety();\n' +
+    '    // iOS zoom killers: pinch (gesture*) and double-tap (dblclick) must never\n' +
+    '    // scale the game. touch-action handles modern Safari; these catch the rest.\n' +
+    '    const kill = (e: Event): void => e.preventDefault();\n' +
+    '    // Scope native gesture suppression to game surfaces. Editor fields and\n' +
+    '    // bounded menu lists retain their normal interaction and scrolling.\n' +
+    '    const gameGesture = (e: Event): void => {\n' +
+    "      if ((e.target as Element | null)?.closest?.('.tc-zone, .tc-look, .tc-pause, #app')) kill(e);\n" +
+    '    };\n' +
+    "    document.addEventListener('gesturestart', gameGesture, { passive: false });\n" +
+    "    document.addEventListener('gesturechange', gameGesture, { passive: false });\n" +
+    "    document.addEventListener('dblclick', gameGesture, { passive: false });\n" +
+    '    (window as unknown as Record<string, unknown>).__touch = this; // test hook\n' +
+    '  }\n' +
+    '\n' +
+    '  transferActive(): boolean {\n' +
+    "    return this.triggerActive('transfer');\n" +
+    '  }\n' +
+    '\n' +
+    '  inventoryActive(): boolean {\n' +
+    "    return this.triggerActive('inventory');\n" +
+    '  }\n' +
+    '\n' +
+    '  private triggerActive(key: TriggerKey): boolean {\n' +
+    '    for (const held of this.triggerTouches.values()) if (held === key) return true;\n' +
+    '    const now = performance.now();\n' +
+    '    for (const pulse of this.triggerPulses.values()) if (pulse.key === key && (pulse.pending || pulse.until > now)) return true;\n' +
+    '    return false;\n' +
+    '  }\n' +
+    '\n' +
+    '  /** Preserve a quick tap even when pointer down/up both land between RAFs. */\n' +
+    "  consumeButtonPress(key: BtnDef['key']): boolean {\n" +
+    '    const pressed = this.pressedBtn[key].size > 0;\n' +
+    '    this.pressedBtn[key].clear();\n' +
+    '    return pressed;\n' +
+    '  }\n' +
+    '\n' +
+    '  consumeJumpRelease(): boolean {\n' +
+    '    const released = this.jumpReleases.size > 0;\n' +
+    '    this.jumpReleases.clear();\n' +
+    '    return released;\n' +
+    '  }\n' +
+    '\n' +
+    '  consumeJumpCancellation(): boolean {\n' +
+    '    const cancelled = this.jumpCancellation;\n' +
+    '    this.jumpCancellation = false;\n' +
+    '    return cancelled;\n' +
+    '  }\n' +
+    '\n' +
+    '  consumeTransferPress(): boolean {\n' +
+    '    const pressed = this.transferPresses.size > 0;\n' +
+    '    this.transferPresses.clear();\n' +
+    '    return pressed;\n' +
+    '  }\n' +
+    '\n' +
+    '  /** A frame stall cannot expire a gesture before the game ever observes it. */\n' +
+    '  beginFrame(): void {\n' +
+    '    this.syncAvailability();\n' +
+    '    const now = performance.now();\n' +
+    '    for (const pulse of this.triggerPulses.values()) {\n' +
+    '      if (!pulse.pending) continue;\n' +
+    '      pulse.pending = false; pulse.until = now + SWIPE_HOLD_MS;\n' +
+    '    }\n' +
+    '  }\n' +
+    '\n' +
+    '  /** Recheck synchronously before polling, including between observer turns. */\n' +
+    '  syncAvailability(): void {\n' +
+    '    this.screenAwake.sync(this.pageActive && !this.controlsBlocked());\n' +
+    '    const now = performance.now();\n' +
+    '    for (const [owner, pulse] of this.triggerPulses) if (!pulse.pending && pulse.until <= now) this.triggerPulses.delete(owner);\n' +
+    '    if (this.controlsBlocked()) this.releaseAll(true);\n' +
+    '    else {\n' +
+    '      if (this.padBlocked()) {\n' +
+    '        if (this.padPointer !== null) this.releasePointer(this.padPointer, true);\n' +
+    '        this.directionTap = null; this.directionOwner = null;\n' +
+    '      }\n' +
+    '      if (this.buttonsBlocked()) {\n' +
+    '        for (const id of [...this.rightTouches.keys(), ...this.triggerTouches.keys()]) this.releasePointer(id, true);\n' +
+    '        for (const presses of Object.values(this.pressedBtn)) presses.clear();\n' +
+    '        this.jumpReleases.clear(); this.transferPresses.clear(); this.triggerPulses.clear();\n' +
+    '      }\n' +
+    '      if (this.lookBlocked() && this.lookPointer !== null) this.releasePointer(this.lookPointer, true);\n' +
+    '      if (this.pauseBlocked() && this.pausePointer !== null) this.releasePointer(this.pausePointer, true);\n' +
+    '      this.refreshTriggers();\n' +
+    '    }\n' +
+    '  }\n' +
+    '\n' +
+    '  /** One discrete map-navigation pulse from the most recent D-pad sector. */\n' +
+    '  consumeDirectionTap(): [number, number] | null {\n' +
+    '    const tap = this.directionTap;\n' +
+    '    this.directionTap = null;\n' +
+    '    return tap;\n' +
+    '  }\n' +
+    '\n' +
+    '  /** The touch map owns its input; do not carry a held gameplay button across. */\n' +
+    '  setMapMode(on: boolean): void {\n' +
+    '    if (on === this.mapMode) return;\n' +
+    '    this.mapMode = on;\n' +
+    '    this.releaseAll(true);\n' +
+    '  }\n' +
+    '\n' +
+    '  /** Interruptions discard intent; ordinary lifts retain between-frame taps. */\n' +
+    '  private releaseAll(discardPresses: boolean): void {\n' +
+    '    for (const id of new Set([\n' +
+    '      ...this.captures.key'... 39374 more characters,
+  expected: /window\.addEventListener\('blur', \(\) => this\.releaseAll\(true\)\)/,
+  operator: 'match',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

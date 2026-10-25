@@ -1,0 +1,2 @@
+PASS all three recorded Triangle-release bails reproduced before and caught after; 44 controller cases cover taps/holds, both directions/modes, consumed/expired requests, stale holds and respawn.
+[{"takeoff":551,"impact":595,"buffered":false,"caught":-1},{"takeoff":551,"impact":595,"buffered":true,"caught":593},{"takeoff":2111,"impact":2147,"buffered":false,"caught":-1},{"takeoff":2111,"impact":2147,"buffered":true,"caught":2145},{"takeoff":3036,"impact":3075,"buffered":false,"caught":-1},{"takeoff":3036,"impact":3075,"buffered":true,"caught":3072}]

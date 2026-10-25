@@ -1,0 +1,10 @@
+empty: 0 contours, 2.0/0.1/0.0 ms; exact bytes and samples
+bed-only: 0 contours, 14.7/4.1/3.6 ms; exact bytes and samples
+long-edges-negative-cells: 4 contours, 8.4/2.3/2.4 ms; exact bytes and samples
+transformed-coast: 48 contours, 3.7/4.3/4.0 ms; exact bytes and samples
+equal-distance-east-first: 4 contours, 7.1/8.8/7.6 ms; exact bytes and samples
+equal-distance-west-first: 4 contours, 7.7/7.7/8.2 ms; exact bytes and samples
+ignored-meshes: 4 contours, 6.4/2.4/2.1 ms; exact bytes and samples
+sparse-kilometre: 132 contours, 37.1/37.3/25.5 ms; exact bytes and samples
+narrow-bounds: 4 contours, 0.0/0.0/0.0 ms; exact bytes and samples
+PASS exact shoreline texture bytes and CPU samples across 9 coastline fixtures

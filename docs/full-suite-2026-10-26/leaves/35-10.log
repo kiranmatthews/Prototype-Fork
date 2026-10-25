@@ -1,0 +1,28 @@
+On-foot seating: {
+  idle: {
+    minimum: 0.005999999999999783,
+    maximum: 0.006000000000000276,
+    meanLowering: 0.16226974675415926
+  },
+  walk: {
+    minimum: 0.005999999999999672,
+    maximum: 0.006000000000000255,
+    meanLowering: 0.1424723885404512
+  }
+}
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: 1.7907269101630572e-8 is not within 1e-8 of 0
+    at near (file:///$WORKSPACE/tools/test-procedural-footwear.mjs:71:10)
+    at file:///$WORKSPACE/tools/test-procedural-footwear.mjs:388:7 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

@@ -1,0 +1,20 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: rhythm line interrupted the planned jump/grind sequence
+
+true !== false
+
+    at file:///$WORKSPACE/tools/test-jungle-cup-layout.mjs:102:12
+    at async withSkateRuntime (file:///$WORKSPACE/tools/jungle-cup-harness.mjs:43:5)
+    at async file:///$WORKSPACE/tools/test-jungle-cup-layout.mjs:4:1 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: true,
+  expected: false,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

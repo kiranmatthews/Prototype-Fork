@@ -1,0 +1,17 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: charged target differs from platforming
+    at file:///$WORKSPACE/tools/test-jungle-cup-skating.mjs:46:10
+    at async withSkateRuntime (file:///$WORKSPACE/tools/jungle-cup-harness.mjs:43:5)
+    at async file:///$WORKSPACE/tools/test-jungle-cup-skating.mjs:4:1 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

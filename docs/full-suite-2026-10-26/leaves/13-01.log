@@ -1,0 +1,29 @@
+node:internal/modules/esm/resolve:843
+      const error = new ERR_UNSUPPORTED_RESOLVE_REQUEST(specifier, base);
+                    ^
+
+TypeError [ERR_UNSUPPORTED_RESOLVE_REQUEST]: Failed to resolve module specifier "./coastal-town-art" from "[transpiled module data URL omitted]": Invalid relative URL or base scheme is not hierarchical.
+    at moduleResolve (node:internal/modules/esm/resolve:843:21)
+    at defaultResolve (node:internal/modules/esm/resolve:992:11)
+    ... 6 lines matching cause stack trace ...
+    at ModuleJob.link (node:internal/modules/esm/module_job:253:17)
+    at new ModuleJob (node:internal/modules/esm/module_job:232:26) {
+  code: 'ERR_UNSUPPORTED_RESOLVE_REQUEST',
+  cause: TypeError: Invalid URL
+      at new URL (node:internal/url:840:25)
+      at moduleResolve (node:internal/modules/esm/resolve:841:18)
+      at defaultResolve (node:internal/modules/esm/resolve:992:11)
+      at #cachedDefaultResolve (node:internal/modules/esm/loader:701:20)
+      at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:721:38)
+      at ModuleLoader.resolveSync (node:internal/modules/esm/loader:759:56)
+      at #resolve (node:internal/modules/esm/loader:683:17)
+      at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:603:35)
+      at ModuleJob.syncLink (node:internal/modules/esm/module_job:163:33)
+      at ModuleJob.link (node:internal/modules/esm/module_job:253:17) {
+    code: 'ERR_INVALID_URL',
+    input: './coastal-town-art',
+    base: '[transpiled module data URL omitted]'... 35276 more characters
+  }
+}
+
+Node.js v24.19.0

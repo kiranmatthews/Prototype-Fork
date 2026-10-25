@@ -1,0 +1,19 @@
+{"physicsEvidence":[{"style":"blast","peakVertical":7.60511305305602,"high":4.246372901902939,"maxQueries":2,"sleepingQueries":0},{"style":"crush","peakVertical":-1.1008450238344571,"high":2.8857646041624765,"maxQueries":2,"sleepingQueries":0}],"slopeClearance":0.007999999999999952,"edgeY":-31.488699025412405,"wallX":0.8820000005960464}
+{
+  "evidence": [
+    {
+      "height": 3,
+      "intact": true,
+      "completed": true
+    },
+    {
+      "height": 0.5,
+      "intact": true,
+      "completed": true
+    }
+  ],
+  "fatalParts": 9,
+  "maxProbes": 2,
+  "courseFrames": 833,
+  "tests": "real intact collisions, finite fatal fragments, slow scrapes, fatal settle, removed floor, respawn cleanup; playground spawn, checkpoints, continuous bypass, finish, pit and respawn"
+}

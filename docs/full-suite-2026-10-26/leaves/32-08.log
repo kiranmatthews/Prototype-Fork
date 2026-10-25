@@ -1,0 +1,29 @@
+[bonus] GLB stone platform failed HttpError: fetch for "" responded with 404:
+    at file:///$WORKSPACE/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: quiet course marker disappeared during the switch
+    at file:///$WORKSPACE/tools/test-level-switch-transactions.mjs:217:10 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: undefined,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

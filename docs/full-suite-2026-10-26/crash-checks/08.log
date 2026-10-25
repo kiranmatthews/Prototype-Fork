@@ -1,0 +1,3 @@
+PASS lite: 1269 Treehouse inland coverage probes and near/far coast visibility.
+PASS full: 1269 Treehouse inland coverage probes and near/far coast visibility.
+PASS Treehouse ocean editor roundtrip and legacy data validation.

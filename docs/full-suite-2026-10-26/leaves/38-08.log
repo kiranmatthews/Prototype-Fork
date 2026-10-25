@@ -1,0 +1,1 @@
+PASS touch ownership, short/completed taps, ID reuse, concurrent cancellation, 8-way hysteresis, 4,000 layout-free moves, capture/native fallback, long holds, triggers, lifecycle/mode/viewport recovery and merged keyboard/gamepad/fixed-step edges

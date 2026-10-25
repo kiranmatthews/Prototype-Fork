@@ -1,0 +1,38 @@
+{
+  "persistent": {
+    "thrown": 120,
+    "snapped": 0,
+    "folded": 0,
+    "active": 0,
+    "settledPieces": 120,
+    "batches": 2,
+    "lost": 0,
+    "poofed": 0
+  },
+  "broken": [
+    {
+      "style": "snap",
+      "thrown": 9,
+      "snapped": 9,
+      "folded": 0,
+      "active": 0,
+      "settledPieces": 18,
+      "batches": 6,
+      "lost": 0,
+      "poofed": 0
+    },
+    {
+      "style": "fold",
+      "thrown": 9,
+      "snapped": 0,
+      "folded": 9,
+      "active": 0,
+      "settledPieces": 9,
+      "batches": 6,
+      "lost": 0,
+      "poofed": 0
+    }
+  ],
+  "borrowedDisposals": 0
+}
+PASS persistent board piles, split/fold breakage, batching, single stepping, interpolation and resource ownership

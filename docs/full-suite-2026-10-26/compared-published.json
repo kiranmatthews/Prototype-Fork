@@ -1,0 +1,51 @@
+{
+  "reference": "origin/main",
+  "commit": "608b8c426d5160c7edf6242dfa939cad3e009419",
+  "comparedFiles": 2989,
+  "differences": [
+    {
+      "path": "src/audio.ts",
+      "reason": "different"
+    },
+    {
+      "path": "src/campaign.ts",
+      "reason": "different"
+    },
+    {
+      "path": "src/game-menu-layout.css",
+      "reason": "different"
+    },
+    {
+      "path": "src/gameFlowSurface.ts",
+      "reason": "different"
+    },
+    {
+      "path": "src/gameFlowUI.ts",
+      "reason": "different"
+    },
+    {
+      "path": "src/main.ts",
+      "reason": "different"
+    },
+    {
+      "path": "tools/test-audio-loops.mjs",
+      "reason": "different"
+    },
+    {
+      "path": "tools/test-audio-options-browser.mjs",
+      "reason": "missing locally"
+    },
+    {
+      "path": "tools/test-campaign-flow.mjs",
+      "reason": "different"
+    },
+    {
+      "path": "tools/test-game-flow-results.mjs",
+      "reason": "different"
+    },
+    {
+      "path": "tools/test-level-select.mjs",
+      "reason": "different"
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "date": "2026-10-26",
+  "timezone": "Pacific/Auckland",
+  "request": "Run the full suite after the user reported the tab going blank or reloading.",
+  "canonicalStart": "2026-10-25T18:11:25Z",
+  "finished": "2026-10-25T18:36:06.918Z",
+  "elapsedSeconds": 1481.918,
+  "commandOccurrences": 201,
+  "passed": 161,
+  "failed": 40,
+  "groups": 43,
+  "passedGroups": 24,
+  "failedGroups": 19,
+  "additionalChecks": {
+    "total": 22,
+    "passed": 22
+  },
+  "buildPassed": true,
+  "releaseSizePassed": true,
+  "releaseBytes": 996773696,
+  "releaseBudget": 1000000000,
+  "browser": {
+    "passed": true,
+    "errors": [],
+    "crashes": [],
+    "failedRequests": [],
+    "nativeBuffer": [
+      2560,
+      1440
+    ],
+    "forcedContextRestores": 2
+  },
+  "rooftopRoute": {
+    "finished": true,
+    "simulatedSeconds": 101.64999999999552,
+    "roofs": 44,
+    "jumps": 43,
+    "checkpoints": 6,
+    "deaths": 0,
+    "sourceMatches": true,
+    "tuningUnchanged": true,
+    "errors": []
+  },
+  "crashReproduced": false,
+  "crashFixed": false,
+  "productionSourceChanged": false,
+  "testExpectationsChanged": false
+}

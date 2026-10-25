@@ -1,0 +1,117 @@
+{
+  "boundaries": [
+    [
+      "wall",
+      18
+    ],
+    [
+      "trip",
+      16
+    ],
+    [
+      "rail",
+      16
+    ],
+    [
+      "landing",
+      22
+    ]
+  ],
+  "evidence": [
+    {
+      "cause": "wall",
+      "masked": false,
+      "style": "intact"
+    },
+    {
+      "cause": "wall",
+      "masked": true,
+      "style": "intact"
+    },
+    {
+      "cause": "trip",
+      "masked": false,
+      "style": "intact"
+    },
+    {
+      "cause": "trip",
+      "masked": true,
+      "style": "intact"
+    },
+    {
+      "cause": "rail",
+      "masked": false,
+      "style": "intact"
+    },
+    {
+      "cause": "rail",
+      "masked": true,
+      "style": "intact"
+    },
+    {
+      "cause": "landing",
+      "masked": false,
+      "style": "intact"
+    },
+    {
+      "cause": "landing",
+      "masked": true,
+      "style": "intact"
+    },
+    {
+      "blast": true,
+      "hanging": false,
+      "protection": "none",
+      "state": "dead"
+    },
+    {
+      "blast": true,
+      "hanging": false,
+      "protection": "mask",
+      "state": "ride"
+    },
+    {
+      "blast": true,
+      "hanging": false,
+      "protection": "invulnerable",
+      "state": "ride"
+    },
+    {
+      "blast": true,
+      "hanging": false,
+      "protection": "uber",
+      "state": "ride"
+    },
+    {
+      "blast": true,
+      "hanging": true,
+      "protection": "none",
+      "state": "dead"
+    },
+    {
+      "blast": true,
+      "hanging": true,
+      "protection": "mask",
+      "state": "air"
+    },
+    {
+      "blast": true,
+      "hanging": true,
+      "protection": "invulnerable",
+      "state": "hang"
+    },
+    {
+      "blast": true,
+      "hanging": true,
+      "protection": "uber",
+      "state": "hang"
+    }
+  ],
+  "actualHazards": [
+    "blast",
+    "hang blast",
+    "stone",
+    "crusher"
+  ],
+  "escalation": "intact bail -> blast"
+}

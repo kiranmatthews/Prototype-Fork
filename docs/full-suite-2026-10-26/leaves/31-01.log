@@ -1,0 +1,37 @@
+[bonus] GLB stone platform failed HttpError: fetch for "" responded with 404:
+    at file:///$WORKSPACE/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+[bonus] GLB stone platform failed HttpError: fetch for "" responded with 404:
+    at file:///$WORKSPACE/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+file:///$WORKSPACE/tools/editor-runtime-regressions.mjs:115
+        assert.ok(edge.position.distanceTo(expected) < 1e-8, "map route did not follow its edited hub");
+                       ^
+
+TypeError: Cannot read properties of null (reading 'position')
+    at assertEditorRuntimeAuthoring (file:///$WORKSPACE/tools/editor-runtime-regressions.mjs:115:24)
+    at file:///$WORKSPACE/tools/validate-editor-roundtrip.mjs:1521:3
+
+Node.js v24.19.0

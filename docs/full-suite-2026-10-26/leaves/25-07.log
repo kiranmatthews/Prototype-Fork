@@ -1,0 +1,17 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: real fatal falls lost their hold
+    at withBlockworksRuntime.modulePath (file:///$WORKSPACE/tools/test-camera-fall-replay.mjs:33:10)
+    at async withBlockworksRuntime (file:///$WORKSPACE/tools/blockworks-runner.mjs:221:12)
+    at async file:///$WORKSPACE/tools/test-camera-fall-replay.mjs:7:1 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

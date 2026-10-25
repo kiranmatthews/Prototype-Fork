@@ -1,0 +1,71 @@
+PASS camera framing validation, source/runtime capture and editor world-anchor transforms
+PASS lite: mover default/explicit signed axes follow ±90° without changing clocks
+PASS lite: mover repeated quarter turns restore motion and opposite turns cancel
+PASS lite: mover signed group travel follows translation, rotation and world-axis scaling
+PASS lite: rail default/explicit signed axes follow ±90° without changing clocks
+PASS lite: rail repeated quarter turns restore motion and opposite turns cancel
+PASS lite: rail signed group travel follows translation, rotation and world-axis scaling
+PASS lite: ropeswing default/explicit signed axes follow ±90° without changing clocks
+PASS lite: ropeswing repeated quarter turns restore motion and opposite turns cancel
+PASS lite: ropeswing signed group travel follows translation, rotation and world-axis scaling
+PASS lite: source-owned Nightworks ferry retains independent clocks and flexible grips
+PASS lite: captured negative travel and independent phases survive reopening
+PASS lite: legacy natural rope capture retains speed zero and independent anchor clock
+PASS lite: asymmetric Nightworks platform hulls, support and torches follow group turns
+PASS lite: rotated Nightworks platform supports nonuniform world-axis scaling
+PASS lite: asymmetric Nightworks mover hulls, support and torches follow group turns
+PASS lite: rotated Nightworks mover supports nonuniform world-axis scaling
+PASS lite: asymmetric Nightworks phasepad hulls, support and torches follow group turns
+PASS lite: rotated Nightworks phasepad supports nonuniform world-axis scaling
+PASS lite: diagonal moving rock ridge keeps its signed grind line over its collider
+PASS full: mover default/explicit signed axes follow ±90° without changing clocks
+PASS full: mover repeated quarter turns restore motion and opposite turns cancel
+PASS full: mover signed group travel follows translation, rotation and world-axis scaling
+PASS full: rail default/explicit signed axes follow ±90° without changing clocks
+PASS full: rail repeated quarter turns restore motion and opposite turns cancel
+PASS full: rail signed group travel follows translation, rotation and world-axis scaling
+PASS full: ropeswing default/explicit signed axes follow ±90° without changing clocks
+PASS full: ropeswing repeated quarter turns restore motion and opposite turns cancel
+PASS full: ropeswing signed group travel follows translation, rotation and world-axis scaling
+PASS full: source-owned Nightworks ferry retains independent clocks and flexible grips
+PASS full: captured negative travel and independent phases survive reopening
+PASS full: legacy natural rope capture retains speed zero and independent anchor clock
+PASS full: asymmetric Nightworks platform hulls, support and torches follow group turns
+PASS full: rotated Nightworks platform supports nonuniform world-axis scaling
+PASS full: asymmetric Nightworks mover hulls, support and torches follow group turns
+PASS full: rotated Nightworks mover supports nonuniform world-axis scaling
+PASS full: asymmetric Nightworks phasepad hulls, support and torches follow group turns
+PASS full: rotated Nightworks phasepad supports nonuniform world-axis scaling
+PASS full: diagonal moving rock ridge keeps its signed grind line over its collider
+PASS travel schema rejects wrong types, excessive phase and unsupported component owners
+PASS sparse motion inspectors remain pure and expose effective travel direction/phase
+PASS sparse rock mover/phase inspectors expose actual dimensions and yaw without changing box defaults
+[bonus] GLB stone platform failed HttpError: fetch for "" responded with 404:
+    at file:///$WORKSPACE/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+[bonus] GLB stone platform failed HttpError: fetch for "" responded with 404:
+    at file:///$WORKSPACE/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+42/42 editor motion transform regressions passed

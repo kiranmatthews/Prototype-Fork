@@ -1,0 +1,9 @@
+<anonymous_script>:3
+return THREE.MathUtils.lerp(cameraValues.camFov, TUNING.camFov, sideF)
+^
+
+ReferenceError: THREE is not defined
+    at eval (eval at <anonymous> (file:///$WORKSPACE/tools/test-camera-speed-effect.mjs:115:21), <anonymous>:3:1)
+    at file:///$WORKSPACE/tools/test-camera-speed-effect.mjs:117:12
+
+Node.js v24.19.0

@@ -1,0 +1,881 @@
+{
+  "base": "http://127.0.0.1:5267",
+  "started": "2026-10-25T18:19:18.885Z",
+  "rows": [
+    {
+      "label": "visit-1-rooftop-relay",
+      "id": "rooftop-relay",
+      "steps": 284,
+      "frames": 274,
+      "buffer": [
+        2560,
+        1440
+      ],
+      "memory": {
+        "geometries": 193,
+        "textures": 73,
+        "programs": 52
+      },
+      "recovery": {
+        "lost": false,
+        "losses": 0,
+        "restores": 0
+      },
+      "loading": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 250
+      },
+      "decoder": {
+        "workers": 0,
+        "limit": 1
+      },
+      "rain": {
+        "visible": true,
+        "streaks": 2200,
+        "impactCapacity": 96,
+        "activeImpacts": 24,
+        "samples": 1336,
+        "time": 5.284733333309478,
+        "span": 68,
+        "intensity": 0.86,
+        "wind": [
+          5.5,
+          2.8
+        ]
+      },
+      "lens": {
+        "enabled": true,
+        "amount": 0.82,
+        "time": 5.284733333309478
+      },
+      "enemy": [
+        {
+          "role": "lookout",
+          "status": "ready"
+        },
+        {
+          "role": "gunner",
+          "status": "ready"
+        },
+        {
+          "role": "lookout",
+          "status": "ready"
+        },
+        {
+          "role": "gunner",
+          "status": "ready"
+        },
+        {
+          "role": "lookout",
+          "status": "ready"
+        },
+        {
+          "role": "gunner",
+          "status": "ready"
+        },
+        {
+          "role": "gunner",
+          "status": "ready"
+        }
+      ],
+      "glError": 0,
+      "contextLost": false,
+      "position": [
+        -0.09307193374784212,
+        95.30000000596046,
+        -5.999157848252818
+      ],
+      "deaths": 0,
+      "stamp": "Codex/sol fork · build 10-25 15:48 UTC",
+      "heap": {
+        "usedSize": 253497920,
+        "totalSize": 262144000,
+        "embedderHeapUsedSize": 10041160,
+        "backingStorageSize": 127070497
+      }
+    },
+    {
+      "label": "visit-1-sky",
+      "id": "sky",
+      "steps": 563,
+      "frames": 549,
+      "buffer": [
+        2560,
+        1440
+      ],
+      "memory": {
+        "geometries": 214,
+        "textures": 68,
+        "programs": 104
+      },
+      "recovery": {
+        "lost": false,
+        "losses": 0,
+        "restores": 0
+      },
+      "loading": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 366
+      },
+      "decoder": {
+        "workers": 0,
+        "limit": 1
+      },
+      "rain": null,
+      "lens": {
+        "enabled": false,
+        "amount": 0,
+        "time": 0
+      },
+      "enemy": [],
+      "glError": 0,
+      "contextLost": false,
+      "position": [
+        0,
+        0.7366666187594333,
+        5
+      ],
+      "deaths": 0,
+      "stamp": "Codex/sol fork · build 10-25 15:48 UTC",
+      "heap": {
+        "usedSize": 233334856,
+        "totalSize": 239763456,
+        "embedderHeapUsedSize": 10274144,
+        "backingStorageSize": 118770187
+      }
+    },
+    {
+      "label": "visit-1-treehouse-trail",
+      "id": "treehouse-trail",
+      "steps": 844,
+      "frames": 822,
+      "buffer": [
+        2560,
+        1440
+      ],
+      "memory": {
+        "geometries": 255,
+        "textures": 118,
+        "programs": 141
+      },
+      "recovery": {
+        "lost": false,
+        "losses": 0,
+        "restores": 0
+      },
+      "loading": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 622
+      },
+      "decoder": {
+        "workers": 0,
+        "limit": 1
+      },
+      "rain": null,
+      "lens": {
+        "enabled": false,
+        "amount": 0,
+        "time": 0
+      },
+      "enemy": [],
+      "glError": 0,
+      "contextLost": false,
+      "position": [
+        -16.97026,
+        8.400000000372529,
+        -0.40991
+      ],
+      "deaths": 0,
+      "stamp": "Codex/sol fork · build 10-25 15:48 UTC",
+      "heap": {
+        "usedSize": 255089096,
+        "totalSize": 261783552,
+        "embedderHeapUsedSize": 10557584,
+        "backingStorageSize": 227500086
+      }
+    },
+    {
+      "label": "visit-2-rooftop-relay",
+      "id": "rooftop-relay",
+      "steps": 1126,
+      "frames": 1091,
+      "buffer": [
+        2560,
+        1440
+      ],
+      "memory": {
+        "geometries": 203,
+        "textures": 79,
+        "programs": 118
+      },
+      "recovery": {
+        "lost": false,
+        "losses": 0,
+        "restores": 0
+      },
+      "loading": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 756
+      },
+      "decoder": {
+        "workers": 0,
+        "limit": 1
+      },
+      "rain": {
+        "visible": true,
+        "streaks": 2200,
+        "impactCapacity": 96,
+        "activeImpacts": 24,
+        "samples": 1300,
+        "time": 5.165866666714337,
+        "span": 68,
+        "intensity": 0.86,
+        "wind": [
+          5.5,
+          2.8
+        ]
+      },
+      "lens": {
+        "enabled": true,
+        "amount": 0.82,
+        "time": 5.165866666714337
+      },
+      "enemy": [
+        {
+          "role": "lookout",
+          "status": "ready"
+        },
+        {
+          "role": "gunner",
+          "status": "ready"
+        },
+        {
+          "role": "lookout",
+          "status": "ready"
+        },
+        {
+          "role": "gunner",
+          "status": "ready"
+        },
+        {
+          "role": "lookout",
+          "status": "ready"
+        },
+        {
+          "role": "gunner",
+          "status": "ready"
+        },
+        {
+          "role": "gunner",
+          "status": "ready"
+        }
+      ],
+      "glError": 0,
+      "contextLost": false,
+      "position": [
+        -0.09307193374784212,
+        95.30000000596046,
+        -5.999157848252818
+      ],
+      "deaths": 0,
+      "stamp": "Codex/sol fork · build 10-25 15:48 UTC",
+      "heap": {
+        "usedSize": 258009772,
+        "totalSize": 266076160,
+        "embedderHeapUsedSize": 10213960,
+        "backingStorageSize": 127838593
+      }
+    },
+    {
+      "label": "visit-2-sky",
+      "id": "sky",
+      "steps": 1404,
+      "frames": 1365,
+      "buffer": [
+        2560,
+        1440
+      ],
+      "memory": {
+        "geometries": 215,
+        "textures": 68,
+        "programs": 123
+      },
+      "recovery": {
+        "lost": false,
+        "losses": 0,
+        "restores": 0
+      },
+      "loading": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 852
+      },
+      "decoder": {
+        "workers": 0,
+        "limit": 1
+      },
+      "rain": null,
+      "lens": {
+        "enabled": false,
+        "amount": 0,
+        "time": 0
+      },
+      "enemy": [],
+      "glError": 0,
+      "contextLost": false,
+      "position": [
+        0,
+        0.7366666187594333,
+        5
+      ],
+      "deaths": 0,
+      "stamp": "Codex/sol fork · build 10-25 15:48 UTC",
+      "heap": {
+        "usedSize": 234801556,
+        "totalSize": 243171328,
+        "embedderHeapUsedSize": 10277032,
+        "backingStorageSize": 118773329
+      }
+    },
+    {
+      "label": "visit-2-treehouse-trail",
+      "id": "treehouse-trail",
+      "steps": 1682,
+      "frames": 1637,
+      "buffer": [
+        2560,
+        1440
+      ],
+      "memory": {
+        "geometries": 255,
+        "textures": 118,
+        "programs": 142
+      },
+      "recovery": {
+        "lost": false,
+        "losses": 0,
+        "restores": 0
+      },
+      "loading": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 1108
+      },
+      "decoder": {
+        "workers": 0,
+        "limit": 1
+      },
+      "rain": null,
+      "lens": {
+        "enabled": false,
+        "amount": 0,
+        "time": 0
+      },
+      "enemy": [],
+      "glError": 0,
+      "contextLost": false,
+      "position": [
+        -16.97026,
+        8.400000000372529,
+        -0.40991
+      ],
+      "deaths": 0,
+      "stamp": "Codex/sol fork · build 10-25 15:48 UTC",
+      "heap": {
+        "usedSize": 256008184,
+        "totalSize": 263094272,
+        "embedderHeapUsedSize": 10607784,
+        "backingStorageSize": 227500085
+      }
+    },
+    {
+      "label": "visit-3-rooftop-relay",
+      "id": "rooftop-relay",
+      "steps": 1964,
+      "frames": 1909,
+      "buffer": [
+        2560,
+        1440
+      ],
+      "memory": {
+        "geometries": 203,
+        "textures": 79,
+        "programs": 118
+      },
+      "recovery": {
+        "lost": false,
+        "losses": 0,
+        "restores": 0
+      },
+      "loading": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 1242
+      },
+      "decoder": {
+        "workers": 0,
+        "limit": 1
+      },
+      "rain": {
+        "visible": true,
+        "streaks": 2200,
+        "impactCapacity": 96,
+        "activeImpacts": 22,
+        "samples": 1312,
+        "time": 5.166866666714338,
+        "span": 68,
+        "intensity": 0.86,
+        "wind": [
+          5.5,
+          2.8
+        ]
+      },
+      "lens": {
+        "enabled": true,
+        "amount": 0.82,
+        "time": 5.166866666714338
+      },
+      "enemy": [
+        {
+          "role": "lookout",
+          "status": "ready"
+        },
+        {
+          "role": "gunner",
+          "status": "ready"
+        },
+        {
+          "role": "lookout",
+          "status": "ready"
+        },
+        {
+          "role": "gunner",
+          "status": "ready"
+        },
+        {
+          "role": "lookout",
+          "status": "ready"
+        },
+        {
+          "role": "gunner",
+          "status": "ready"
+        },
+        {
+          "role": "gunner",
+          "status": "ready"
+        }
+      ],
+      "glError": 0,
+      "contextLost": false,
+      "position": [
+        -0.09307193374784212,
+        95.30000000596046,
+        -5.999157848252818
+      ],
+      "deaths": 0,
+      "stamp": "Codex/sol fork · build 10-25 15:48 UTC",
+      "heap": {
+        "usedSize": 260785528,
+        "totalSize": 266862592,
+        "embedderHeapUsedSize": 10308656,
+        "backingStorageSize": 127838593
+      }
+    },
+    {
+      "label": "visit-3-sky",
+      "id": "sky",
+      "steps": 2295,
+      "frames": 2234,
+      "buffer": [
+        2560,
+        1440
+      ],
+      "memory": {
+        "geometries": 215,
+        "textures": 68,
+        "programs": 123
+      },
+      "recovery": {
+        "lost": false,
+        "losses": 0,
+        "restores": 0
+      },
+      "loading": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 1338
+      },
+      "decoder": {
+        "workers": 0,
+        "limit": 1
+      },
+      "rain": null,
+      "lens": {
+        "enabled": false,
+        "amount": 0,
+        "time": 0
+      },
+      "enemy": [],
+      "glError": 0,
+      "contextLost": false,
+      "position": [
+        0,
+        0.7366666187594333,
+        5
+      ],
+      "deaths": 0,
+      "stamp": "Codex/sol fork · build 10-25 15:48 UTC",
+      "heap": {
+        "usedSize": 236466596,
+        "totalSize": 241336320,
+        "embedderHeapUsedSize": 10549728,
+        "backingStorageSize": 118773330
+      }
+    },
+    {
+      "label": "visit-3-treehouse-trail",
+      "id": "treehouse-trail",
+      "steps": 2617,
+      "frames": 2552,
+      "buffer": [
+        2560,
+        1440
+      ],
+      "memory": {
+        "geometries": 255,
+        "textures": 118,
+        "programs": 142
+      },
+      "recovery": {
+        "lost": false,
+        "losses": 0,
+        "restores": 0
+      },
+      "loading": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 1594
+      },
+      "decoder": {
+        "workers": 0,
+        "limit": 1
+      },
+      "rain": null,
+      "lens": {
+        "enabled": false,
+        "amount": 0,
+        "time": 0
+      },
+      "enemy": [],
+      "glError": 0,
+      "contextLost": false,
+      "position": [
+        -16.97026,
+        8.400000000372529,
+        -0.40991
+      ],
+      "deaths": 0,
+      "stamp": "Codex/sol fork · build 10-25 15:48 UTC",
+      "heap": {
+        "usedSize": 256866524,
+        "totalSize": 263880704,
+        "embedderHeapUsedSize": 10847096,
+        "backingStorageSize": 227500154
+      }
+    },
+    {
+      "label": "graphics-reset-1",
+      "id": "rooftop-relay",
+      "steps": 3189,
+      "frames": 3101,
+      "buffer": [
+        2560,
+        1440
+      ],
+      "memory": {
+        "geometries": 191,
+        "textures": 68,
+        "programs": 52
+      },
+      "recovery": {
+        "lost": false,
+        "losses": 1,
+        "restores": 1
+      },
+      "loading": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 1740
+      },
+      "decoder": {
+        "workers": 0,
+        "limit": 1
+      },
+      "rain": {
+        "visible": true,
+        "streaks": 2200,
+        "impactCapacity": 96,
+        "activeImpacts": 21,
+        "samples": 2192,
+        "time": 9.06686666671438,
+        "span": 68,
+        "intensity": 0.86,
+        "wind": [
+          5.5,
+          2.8
+        ]
+      },
+      "lens": {
+        "enabled": true,
+        "amount": 0.82,
+        "time": 9.06686666671438
+      },
+      "enemy": [
+        {
+          "role": "lookout",
+          "status": "ready"
+        },
+        {
+          "role": "gunner",
+          "status": "ready"
+        },
+        {
+          "role": "lookout",
+          "status": "ready"
+        },
+        {
+          "role": "gunner",
+          "status": "ready"
+        },
+        {
+          "role": "lookout",
+          "status": "ready"
+        },
+        {
+          "role": "gunner",
+          "status": "ready"
+        },
+        {
+          "role": "gunner",
+          "status": "ready"
+        }
+      ],
+      "glError": 0,
+      "contextLost": false,
+      "position": [
+        -0.09307193374784212,
+        95.30000000596046,
+        -5.999157848252818
+      ],
+      "deaths": 0,
+      "stamp": "Codex/sol fork · build 10-25 15:48 UTC"
+    },
+    {
+      "label": "graphics-reset-2",
+      "id": "rooftop-relay",
+      "steps": 3511,
+      "frames": 3417,
+      "buffer": [
+        2560,
+        1440
+      ],
+      "memory": {
+        "geometries": 191,
+        "textures": 68,
+        "programs": 52
+      },
+      "recovery": {
+        "lost": false,
+        "losses": 2,
+        "restores": 2
+      },
+      "loading": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 1752
+      },
+      "decoder": {
+        "workers": 0,
+        "limit": 1
+      },
+      "rain": {
+        "visible": true,
+        "streaks": 2200,
+        "impactCapacity": 96,
+        "activeImpacts": 20,
+        "samples": 3456,
+        "time": 14.433533333381314,
+        "span": 68,
+        "intensity": 0.86,
+        "wind": [
+          5.5,
+          2.8
+        ]
+      },
+      "lens": {
+        "enabled": true,
+        "amount": 0.82,
+        "time": 14.433533333381314
+      },
+      "enemy": [
+        {
+          "role": "lookout",
+          "status": "ready"
+        },
+        {
+          "role": "gunner",
+          "status": "ready"
+        },
+        {
+          "role": "lookout",
+          "status": "ready"
+        },
+        {
+          "role": "gunner",
+          "status": "ready"
+        },
+        {
+          "role": "lookout",
+          "status": "ready"
+        },
+        {
+          "role": "gunner",
+          "status": "ready"
+        },
+        {
+          "role": "gunner",
+          "status": "ready"
+        }
+      ],
+      "glError": 0,
+      "contextLost": false,
+      "position": [
+        -0.09307193374784212,
+        95.30000000596046,
+        -5.999157848252818
+      ],
+      "deaths": 0,
+      "stamp": "Codex/sol fork · build 10-25 15:48 UTC"
+    },
+    {
+      "label": "normal-crt",
+      "id": "rooftop-relay",
+      "steps": 3718,
+      "frames": 3621,
+      "buffer": [
+        853,
+        480
+      ],
+      "memory": {
+        "geometries": 191,
+        "textures": 73,
+        "programs": 57
+      },
+      "recovery": {
+        "lost": false,
+        "losses": 2,
+        "restores": 2
+      },
+      "loading": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 1752
+      },
+      "decoder": {
+        "workers": 0,
+        "limit": 1
+      },
+      "rain": {
+        "visible": true,
+        "streaks": 2200,
+        "impactCapacity": 96,
+        "activeImpacts": 24,
+        "samples": 4272,
+        "time": 17.883533333381283,
+        "span": 68,
+        "intensity": 0.86,
+        "wind": [
+          5.5,
+          2.8
+        ]
+      },
+      "lens": {
+        "enabled": true,
+        "amount": 0.82,
+        "time": 17.883533333381283
+      },
+      "enemy": [
+        {
+          "role": "lookout",
+          "status": "ready"
+        },
+        {
+          "role": "gunner",
+          "status": "ready"
+        },
+        {
+          "role": "lookout",
+          "status": "ready"
+        },
+        {
+          "role": "gunner",
+          "status": "ready"
+        },
+        {
+          "role": "lookout",
+          "status": "ready"
+        },
+        {
+          "role": "gunner",
+          "status": "ready"
+        },
+        {
+          "role": "gunner",
+          "status": "ready"
+        }
+      ],
+      "glError": 0,
+      "contextLost": false,
+      "position": [
+        -0.09307193374784212,
+        95.30000000596046,
+        -5.999157848252818
+      ],
+      "deaths": 0,
+      "stamp": "Codex/sol fork · build 10-25 15:48 UTC"
+    }
+  ],
+  "errors": [],
+  "crashes": [],
+  "requestsFailed": [],
+  "lite": {
+    "before": [
+      -0.09307193374784212,
+      95.30000000596046,
+      -5.999157848252818
+    ],
+    "after": [
+      -0.2615733014449308,
+      95.30000000596046,
+      -9.629667740952868
+    ]
+  },
+  "passed": true,
+  "finished": "2026-10-25T18:21:39.106Z"
+}

@@ -1,0 +1,8 @@
+{
+  moving: 600,
+  visited: [ 'jungle', 'beachside-run', 'rumblewater-run', 'coastal' ],
+  skidFrames: 0,
+  firstSkid: undefined,
+  finalClip: 'player.idle'
+}
+PASS fresh startup without gameplay input, recorded map taps, island pan visibility and endings, active-skid entry, idle hold and restored gameplay skids

@@ -1,0 +1,464 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: The input did not match the regular expression /label: "CHARACTER"/. Input:
+
+'import { presentStartupFrame, finishStartup, failStartup, startupFailed } from "./startupScreen";\n' +
+  "import { CountryClubCarts } from './golf-cart/course';\n" +
+  "import { SkateRace } from './race/runtime';\n" +
+  "import {BoulderChaseCamera} from './boulderChase';\n" +
+  "import {CrackedDisplay} from './crackedDisplay';\n" +
+  "import {CarlisleSceneryCamera} from './carlisleSceneryCollision';\n" +
+  'import { requestedTool } from "./toolRoutes";\n' +
+  'import { createSecondaryTextPanel } from "./secondaryTextPanel";\n' +
+  'import { startOfflineCache } from "./offline";\n' +
+  "import { stabilityReport } from './stabilityReport';\n" +
+  "import { rooAtlasDiagnostics } from './roo-type/atlas';\n" +
+  "import { menuAssetsReady } from './roo-type/menuAssets';\n" +
+  "import { sceneryDecoderDiagnostics } from './sceneryTextureLoader';\n" +
+  'import { installShadowTextureCleanup } from "./shadowTextureCleanup";\n' +
+  'import { resizeRendererSurface } from "./render-quality/surfaceSize";\n' +
+  'import { prepareWorldFrame, finishWorldFrame } from "./render-quality/worldFrame";\n' +
+  "import { releaseLostGraphicsResources } from './lostGraphicsResources';\n" +
+  'import { GraphicsRecovery } from "./graphicsRecovery";\n' +
+  'import { installContextResourceRecovery } from "./contextResourceRecovery";\n' +
+  "import { warmSkinBoundsKernel, skinBoundsKernelDiagnostics } from './character/skinBoundsKernel';\n" +
+  'import { configureCityAssetRenderer } from "./cityAssets";\n' +
+  "import {configureWarehouseAssetRenderer} from './warehouseTextureLoader';\n" +
+  "import { addSkateReviewClips, loadSkateReviewCatalog, skateBoardVisibleAt, withSkatePresentationRig } from './animation/skateCatalog';\n" +
+  "import { Halfpipe } from './halfpipe';\n" +
+  "import { parkCruiseSpeed, parkChargedSpeed } from './skateParkTuning';\n" +
+  'import { MenuRewardsPresentation } from "./menuPresentation";\n' +
+  'import { mapSkateboardSettings } from "./skateboard/mapSettings";\n' +
+  "import { isCompetitionLevel, competitionCourse } from './competition/courses';\n" +
+  'import { JungleCupEvent, COMPETITION_TUNING, COMPETITORS, JUDGES } from "./competition/event";\n' +
+  'import { CompetitionPresentation, type CompetitionAction } from "./competition/presentation";\n' +
+  '// Entry point: renderer, Crash-style corridor camera, and the deterministic\n' +
+  '// fixed-step game loop.\n' +
+  '\n' +
+  'import * as THREE from "three";\n' +
+  'import { installSkyProjection } from "./skyProjection";\n' +
+  "import {StormSquall} from './stormSquall';\n" +
+  'import { SEA_SKY_ART, SEA_SKY_CONTENT_FRACTION } from "./seaBackdrop";\n' +
+  'import { SKY_PRESETS, resolveLevelAtmosphere, atmosphereColor, atmosphereColorHex } from "./levelAtmosphere";\n' +
+  'import { DrownedCrownLighting } from "./drownedCrownLighting";\n' +
+  'import { MapIslandLighting } from "./mapIslandLighting";\n' +
+  "import {configureBlockworksAssetRenderer} from './blockworksModelLoader';\n" +
+  'import { configureJungleAssetRenderer } from "./jungleAssets";\n' +
+  'import { installSceneryShadowPass } from "./sceneryShadowPass";\n' +
+  'import { afterPresentationPaint, presentationAssets, warmPresentationTextures, warmPresentationScene, waitForPresentationGpu } from "./presentationLoading";\n' +
+  'import { installLocalResetListener } from "./localGameStorage";\n' +
+  'import { Input } from "./input";\n' +
+  'import { requiresTerrainSupportBuildCheck } from "./terrainSupportBudget";\n' +
+  'import {\n' +
+  '  Level,\n' +
+  '  LevelEntry,\n' +
+  '  CustomLevelData,\n' +
+  '  DEFAULT_LEVEL_ID,\n' +
+  '  setEditorBuild,\n' +
+  '  levelList,\n' +
+  '  findLevel,\n' +
+  '  saveUserLevel,\n' +
+  '  restoreUserLevels,\n' +
+  '  getUserLevels,\n' +
+  '  deleteUserLevel,\n' +
+  '  restoreBuiltin,\n' +
+  '  adoptLegacyLevels,\n' +
+  '  starterCustomLevel,\n' +
+  '  normalizeCustomLevelData,\n' +
+  '  borrowedValidatedLevelData,\n' +
+  '  parseCustomLevelJson,\n' +
+  '  newLaneCursor,\n' +
+  '  userLevelStorageHealthy,\n' +
+  '  isEditUnlocked,\n' +
+  '  checkEditPass,\n' +
+  '  DEFAULT_SKY,\n' +
+  '  type SkyPreset,\n' +
+  '} from "./level";\n' +
+  'import { pushLevels, fetchRemoteLevels, getToken, setToken, hasPulledLevels, markLevelsPulled } from "./sync";\n' +
+  'import {\n' +
+  '  Player,\n' +
+  '  type PlayerRunState,\n' +
+  '  type PlayerWorldFruitSnapshot,\n' +
+  '} from "./player";\n' +
+  'import { UI, type HudState } from "./ui";\n' +
+  'import { GameFlowUI, type ResultsScreenState } from "./gameFlowUI";\n' +
+  'import {\n' +
+  '  WorldMapController,\n' +
+  '  type WorldMapSection,\n' +
+  '} from "./worldMapController";\n' +
+  'import { WorldMapUI } from "./worldMapUI";\n' +
+  'import { oceanTuning } from "./oceanTuning";\n' +
+  'import type { WaterStudioHandle } from "./waterstudio";\n' +
+  'import { inputPrompts } from "./inputPrompts";\n' +
+  'import { GameInterfaceSurface } from "./gameInterfaceSurface";\n' +
+  "import { BossPresentation } from './boss/presentation';\n" +
+  "import { ChiefCamera } from './boss/camera';\n" +
+  'import { ResultsPresentation } from "./resultsPresentation";\n' +
+  'import { RaceFinishPresentation } from "./race/finishPresentation";\n' +
+  'import { GameFlowVortexHost } from "./gameFlowVortex";\n' +
+  'import {\n' +
+  '  CampaignStore,\n' +
+  '  CAMPAIGN_LEVELS,\n' +
+  '  resolveRelicTime,\n' +
+  '  resolveMedalTimes, defaultMedalTimes, medalForTime,\n' +
+  '  DEFAULT_CAMPAIGN_LIVES,\n' +
+  '  campaignLevelById,\n' +
+  '  isCampaignLevel,\n' +
+  '  loadGameAudioOptions,\n' +
+  '  loadGamePlayMode,\n' +
+  '  mergeCompletedBonusInventory,\n' +
+  '  saveGameAudioOptions,\n' +
+  '  saveGamePlayMode,\n' +
+  '  type GameAudioOptions,\n' +
+  '  type GamePlayMode,\n' +
+  '} from "./campaign";\n' +
+  'import { resolveBonusLevel } from "./levels/themed-bonuses";\n' +
+  'import { bonusDeparturePose, bonusAlignmentPose } from "./bonusDeparture";\n' +
+  "import {BonusWarpEffect} from './bonusWarp';\n" +
+  "import {bonusTransferFrame,BONUS_TRANSFER_SECONDS,type BonusReceipt} from './bonusTransfer';\n" +
+  "import {WARP_PAD_TOP} from './warpPad';\n" +
+  'import { TUNING, CONST } from "./tuning";\n' +
+  'import {\n' +
+  '  speedSkateFovTarget,\n' +
+  '  stepSpeedSkateFov,\n' +
+  '} from "./cameraSpeedEffect";\n' +
+  'import { CameraLookOffset } from "./cameraLook";\n' +
+  'import { cameraViewAt, cameraViewDirection, CameraViewFraming, BONUS_PRESENTATION_VIEW } from "./cameraViews";\n' +
+  'import { cameraRigFraming, setCameraRigAim, CourseCameraHeading, fitCameraRigHorizontal, CameraFallHold } from "./cameraRig";\n' +
+  'import { LoopCameraFraming } from "./loopCamera";\n' +
+  'import { CameraHeroFraming } from "./cameraHeroFraming";\n' +
+  'import { CameraPortraitFraming } from "./cameraPortraitFraming";\n' +
+  'import { SkateChaseCamera, SkateChaseCameraOverlay } from "./skateChaseCamera";\n' +
+  'import { sfx } from "./audio";\n' +
+  'import { Recorder, Replayer, ReplayFile, camYawOf, isReplayFile } from "./replay";\n' +
+  'import { Editor } from "./editor";\n' +
+  'import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";\n' +
+  'import { puffs, PUFF_PRESETS } from "./puffs";\n' +
+  'import { swirls } from "./swirls";\n' +
+  'import { fieldSwirls } from "./swirlfield";\n' +
+  'import {\n' +
+  '  CoastPostRenderer,\n' +
+  '  type CoastPostPreCrtOverlay,\n' +
+  '} from "./coastpost";\n' +
+  'import { crtGuestSettings } from "./crt-guest/settings";\n' +
+  'import { createCrtGuestTuningPanel } from "./crt-guest/panel";\n' +
+  'import {\n' +
+  '  renderQualitySettings,\n' +
+  '  type RenderQualitySizes,\n' +
+  '} from "./render-quality/settings";\n' +
+  'import {\n' +
+  '  createRenderQualityPanel,\n' +
+  '  type RenderQualityPanel,\n' +
+  '} from "./render-quality/panel";\n' +
+  'import { PresentationFrameLimiter } from "./render-quality/frameLimiter";\n' +
+  'import { createSkateboardTuningPanel } from "./skateboard/panel";\n' +
+  'import { skateboardSettings } from "./skateboard/settings";\n' +
+  'import { createSpinTuningPanel } from "./spin-effects/panel";\n' +
+  'import {\n' +
+  '  groundedSkateSpinRingSettings,\n' +
+  '  spinRingSettings,\n' +
+  '} from "./spin-effects/settings";\n' +
+  'import { sourceComboLabelLine } from "./comboHud";\n' +
+  'import { createVisualTreatmentPanel } from "./visual-treatment/panel";\n' +
+  'import {\n' +
+  '  visualTreatmentActivity,\n' +
+  '  visualTreatmentSettings,\n' +
+  '} from "./visual-treatment/settings";\n' +
+  'import { touchControlsRequested } from "./touch";\n' +
+  'import {\n' +
+  '  RigBinding,\n' +
+  '  UNITY_CRAWL_CONTACT_ADAPTATION,\n' +
+  '  QUATERNIUS_CRAWL_PALMS,\n' +
+  '  createLocalDraftStore,\n' +
+  '  createPreferredDraftStore,\n' +
+  '  createPlayerStarterAnimationSuite,\n' +
+  '  reconcilePlayerStarterAnimationSuite,\n' +
+  '  type AnimationSuiteDocument,\n' +
+  '} from "./animation";\n' +
+  'import {\n' +
+  '  createCharacterAnimationRuntime,\n' +
+  '  type CharacterAnimationRuntime,\n' +
+  '} from "./characterAnimationRuntime";\n' +
+  '\n' +
+  'const app = document.getElementById("app")!;\n' +
+  'installLocalResetListener();\n' +
+  'const TOUCH_PRESENTATION = touchControlsRequested();\n' +
+  "// '?lite' (headless smoke) renders in software: no AA, and resize() caps the\n" +
+  "// internal resolution — slow frames desync the suite's wall-clock scripting.\n" +
+  'const LITE_RENDER = window.location.search.includes("lite");\n' +
+  'const NO_COAST_POST = window.location.search.includes("nopost");\n' +
+  'const NO_OCEAN_PASSES = window.location.search.includes("nopasses");\n' +
+  'const renderer = new THREE.WebGLRenderer({ antialias: !LITE_RENDER });\n' +
+  'const contextResourceRecovery = installContextResourceRecovery(renderer.domElement, renderer.getContext());\n' +
+  '// Count the complete presentation (world, shadows, ocean, post and HUD).\n' +
+  "// Three's default reset-per-render reports only the final fullscreen triangle.\n" +
+  'renderer.info.autoReset = false;\n' +
+  'configureJungleAssetRenderer(renderer);\n' +
+  'configureBlockworksAssetRenderer(renderer);\n' +
+  'configureCityAssetRenderer(renderer);\n' +
+  'configureWarehouseAssetRenderer(renderer);\n' +
+  '// A zero-resource host. The actual Gouraud scene/render target exists only\n' +
+  '// while title/loading/Game Over owns the framebuffer.\n' +
+  'const gameFlowVortex = new GameFlowVortexHost();\n' +
+  '// Fixed presets own physical pixels. Only MAX/native follows display DPR,\n' +
+  '// capped at 2 to retain the existing native fill-rate budget.\n' +
+  'renderer.setPixelRatio(\n' +
+  '  renderQualitySettings.enabled && !LITE_RENDER\n' +
+  '    ? 1\n' +
+  '    : Math.min(window.devicePixelRatio || 1, 2),\n' +
+  ');\n' +
+  '// No tone curve. Every colour in this game was authored by eye against a raw\n' +
+  '// output, and ACES/AgX/Neutral all pull the saturation out of it — the sky\n' +
+  '// goes milky and the greens go grey. Shot side by side, untouched wins.\n' +
+  '// Soft shadows. This is what stops everything reading as a lit grey box:\n' +
+  '// contact between the skater, the props and the ground.\n' +
+  'renderer.shadowMap.enabled = !LITE_RENDER;\n' +
+  'renderer.shadowMap.type = THREE.PCFSoftShadowMap;\n' +
+  'installShadowTextureCleanup(renderer);\n' +
+  'Level.setMaxAnisotropy(renderer.capabilities.getMaxAnisotropy());\n' +
+  'app.appendChild(renderer.domElement);\n' +
+  '\n' +
+  'const scene = new THREE.Scene();\n' +
+  '// The world root stays at identity. Avoid marking every descendant dirty on\n' +
+  '// every render; animated children still update their own transforms normally.\n' +
+  'scene.matrixAutoUpdate = false;\n' +
+  'scene.background = new THREE.Color(0x232634);\n' +
+  'scene.fog = new THREE.Fog(0x232634, 30, 170);\n' +
+  '\n' +
+  'const'... 228472 more characters
+
+    at file:///$WORKSPACE/tools/test-character-lab.mjs:634:10 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: 'import { presentStartupFrame, finishStartup, failStartup, startupFailed } from "./startupScreen";\n' +
+    "import { CountryClubCarts } from './golf-cart/course';\n" +
+    "import { SkateRace } from './race/runtime';\n" +
+    "import {BoulderChaseCamera} from './boulderChase';\n" +
+    "import {CrackedDisplay} from './crackedDisplay';\n" +
+    "import {CarlisleSceneryCamera} from './carlisleSceneryCollision';\n" +
+    'import { requestedTool } from "./toolRoutes";\n' +
+    'import { createSecondaryTextPanel } from "./secondaryTextPanel";\n' +
+    'import { startOfflineCache } from "./offline";\n' +
+    "import { stabilityReport } from './stabilityReport';\n" +
+    "import { rooAtlasDiagnostics } from './roo-type/atlas';\n" +
+    "import { menuAssetsReady } from './roo-type/menuAssets';\n" +
+    "import { sceneryDecoderDiagnostics } from './sceneryTextureLoader';\n" +
+    'import { installShadowTextureCleanup } from "./shadowTextureCleanup";\n' +
+    'import { resizeRendererSurface } from "./render-quality/surfaceSize";\n' +
+    'import { prepareWorldFrame, finishWorldFrame } from "./render-quality/worldFrame";\n' +
+    "import { releaseLostGraphicsResources } from './lostGraphicsResources';\n" +
+    'import { GraphicsRecovery } from "./graphicsRecovery";\n' +
+    'import { installContextResourceRecovery } from "./contextResourceRecovery";\n' +
+    "import { warmSkinBoundsKernel, skinBoundsKernelDiagnostics } from './character/skinBoundsKernel';\n" +
+    'import { configureCityAssetRenderer } from "./cityAssets";\n' +
+    "import {configureWarehouseAssetRenderer} from './warehouseTextureLoader';\n" +
+    "import { addSkateReviewClips, loadSkateReviewCatalog, skateBoardVisibleAt, withSkatePresentationRig } from './animation/skateCatalog';\n" +
+    "import { Halfpipe } from './halfpipe';\n" +
+    "import { parkCruiseSpeed, parkChargedSpeed } from './skateParkTuning';\n" +
+    'import { MenuRewardsPresentation } from "./menuPresentation";\n' +
+    'import { mapSkateboardSettings } from "./skateboard/mapSettings";\n' +
+    "import { isCompetitionLevel, competitionCourse } from './competition/courses';\n" +
+    'import { JungleCupEvent, COMPETITION_TUNING, COMPETITORS, JUDGES } from "./competition/event";\n' +
+    'import { CompetitionPresentation, type CompetitionAction } from "./competition/presentation";\n' +
+    '// Entry point: renderer, Crash-style corridor camera, and the deterministic\n' +
+    '// fixed-step game loop.\n' +
+    '\n' +
+    'import * as THREE from "three";\n' +
+    'import { installSkyProjection } from "./skyProjection";\n' +
+    "import {StormSquall} from './stormSquall';\n" +
+    'import { SEA_SKY_ART, SEA_SKY_CONTENT_FRACTION } from "./seaBackdrop";\n' +
+    'import { SKY_PRESETS, resolveLevelAtmosphere, atmosphereColor, atmosphereColorHex } from "./levelAtmosphere";\n' +
+    'import { DrownedCrownLighting } from "./drownedCrownLighting";\n' +
+    'import { MapIslandLighting } from "./mapIslandLighting";\n' +
+    "import {configureBlockworksAssetRenderer} from './blockworksModelLoader';\n" +
+    'import { configureJungleAssetRenderer } from "./jungleAssets";\n' +
+    'import { installSceneryShadowPass } from "./sceneryShadowPass";\n' +
+    'import { afterPresentationPaint, presentationAssets, warmPresentationTextures, warmPresentationScene, waitForPresentationGpu } from "./presentationLoading";\n' +
+    'import { installLocalResetListener } from "./localGameStorage";\n' +
+    'import { Input } from "./input";\n' +
+    'import { requiresTerrainSupportBuildCheck } from "./terrainSupportBudget";\n' +
+    'import {\n' +
+    '  Level,\n' +
+    '  LevelEntry,\n' +
+    '  CustomLevelData,\n' +
+    '  DEFAULT_LEVEL_ID,\n' +
+    '  setEditorBuild,\n' +
+    '  levelList,\n' +
+    '  findLevel,\n' +
+    '  saveUserLevel,\n' +
+    '  restoreUserLevels,\n' +
+    '  getUserLevels,\n' +
+    '  deleteUserLevel,\n' +
+    '  restoreBuiltin,\n' +
+    '  adoptLegacyLevels,\n' +
+    '  starterCustomLevel,\n' +
+    '  normalizeCustomLevelData,\n' +
+    '  borrowedValidatedLevelData,\n' +
+    '  parseCustomLevelJson,\n' +
+    '  newLaneCursor,\n' +
+    '  userLevelStorageHealthy,\n' +
+    '  isEditUnlocked,\n' +
+    '  checkEditPass,\n' +
+    '  DEFAULT_SKY,\n' +
+    '  type SkyPreset,\n' +
+    '} from "./level";\n' +
+    'import { pushLevels, fetchRemoteLevels, getToken, setToken, hasPulledLevels, markLevelsPulled } from "./sync";\n' +
+    'import {\n' +
+    '  Player,\n' +
+    '  type PlayerRunState,\n' +
+    '  type PlayerWorldFruitSnapshot,\n' +
+    '} from "./player";\n' +
+    'import { UI, type HudState } from "./ui";\n' +
+    'import { GameFlowUI, type ResultsScreenState } from "./gameFlowUI";\n' +
+    'import {\n' +
+    '  WorldMapController,\n' +
+    '  type WorldMapSection,\n' +
+    '} from "./worldMapController";\n' +
+    'import { WorldMapUI } from "./worldMapUI";\n' +
+    'import { oceanTuning } from "./oceanTuning";\n' +
+    'import type { WaterStudioHandle } from "./waterstudio";\n' +
+    'import { inputPrompts } from "./inputPrompts";\n' +
+    'import { GameInterfaceSurface } from "./gameInterfaceSurface";\n' +
+    "import { BossPresentation } from './boss/presentation';\n" +
+    "import { ChiefCamera } from './boss/camera';\n" +
+    'import { ResultsPresentation } from "./resultsPresentation";\n' +
+    'import { RaceFinishPresentation } from "./race/finishPresentation";\n' +
+    'import { GameFlowVortexHost } from "./gameFlowVortex";\n' +
+    'import {\n' +
+    '  CampaignStore,\n' +
+    '  CAMPAIGN_LEVELS,\n' +
+    '  resolveRelicTime,\n' +
+    '  resolveMedalTimes, defaultMedalTimes, medalForTime,\n' +
+    '  DEFAULT_CAMPAIGN_LIVES,\n' +
+    '  campaignLevelById,\n' +
+    '  isCampaignLevel,\n' +
+    '  loadGameAudioOptions,\n' +
+    '  loadGamePlayMode,\n' +
+    '  mergeCompletedBonusInventory,\n' +
+    '  saveGameAudioOptions,\n' +
+    '  saveGamePlayMode,\n' +
+    '  type GameAudioOptions,\n' +
+    '  type GamePlayMode,\n' +
+    '} from "./campaign";\n' +
+    'import { resolveBonusLevel } from "./levels/themed-bonuses";\n' +
+    'import { bonusDeparturePose, bonusAlignmentPose } from "./bonusDeparture";\n' +
+    "import {BonusWarpEffect} from './bonusWarp';\n" +
+    "import {bonusTransferFrame,BONUS_TRANSFER_SECONDS,type BonusReceipt} from './bonusTransfer';\n" +
+    "import {WARP_PAD_TOP} from './warpPad';\n" +
+    'import { TUNING, CONST } from "./tuning";\n' +
+    'import {\n' +
+    '  speedSkateFovTarget,\n' +
+    '  stepSpeedSkateFov,\n' +
+    '} from "./cameraSpeedEffect";\n' +
+    'import { CameraLookOffset } from "./cameraLook";\n' +
+    'import { cameraViewAt, cameraViewDirection, CameraViewFraming, BONUS_PRESENTATION_VIEW } from "./cameraViews";\n' +
+    'import { cameraRigFraming, setCameraRigAim, CourseCameraHeading, fitCameraRigHorizontal, CameraFallHold } from "./cameraRig";\n' +
+    'import { LoopCameraFraming } from "./loopCamera";\n' +
+    'import { CameraHeroFraming } from "./cameraHeroFraming";\n' +
+    'import { CameraPortraitFraming } from "./cameraPortraitFraming";\n' +
+    'import { SkateChaseCamera, SkateChaseCameraOverlay } from "./skateChaseCamera";\n' +
+    'import { sfx } from "./audio";\n' +
+    'import { Recorder, Replayer, ReplayFile, camYawOf, isReplayFile } from "./replay";\n' +
+    'import { Editor } from "./editor";\n' +
+    'import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";\n' +
+    'import { puffs, PUFF_PRESETS } from "./puffs";\n' +
+    'import { swirls } from "./swirls";\n' +
+    'import { fieldSwirls } from "./swirlfield";\n' +
+    'import {\n' +
+    '  CoastPostRenderer,\n' +
+    '  type CoastPostPreCrtOverlay,\n' +
+    '} from "./coastpost";\n' +
+    'import { crtGuestSettings } from "./crt-guest/settings";\n' +
+    'import { createCrtGuestTuningPanel } from "./crt-guest/panel";\n' +
+    'import {\n' +
+    '  renderQualitySettings,\n' +
+    '  type RenderQualitySizes,\n' +
+    '} from "./render-quality/settings";\n' +
+    'import {\n' +
+    '  createRenderQualityPanel,\n' +
+    '  type RenderQualityPanel,\n' +
+    '} from "./render-quality/panel";\n' +
+    'import { PresentationFrameLimiter } from "./render-quality/frameLimiter";\n' +
+    'import { createSkateboardTuningPanel } from "./skateboard/panel";\n' +
+    'import { skateboardSettings } from "./skateboard/settings";\n' +
+    'import { createSpinTuningPanel } from "./spin-effects/panel";\n' +
+    'import {\n' +
+    '  groundedSkateSpinRingSettings,\n' +
+    '  spinRingSettings,\n' +
+    '} from "./spin-effects/settings";\n' +
+    'import { sourceComboLabelLine } from "./comboHud";\n' +
+    'import { createVisualTreatmentPanel } from "./visual-treatment/panel";\n' +
+    'import {\n' +
+    '  visualTreatmentActivity,\n' +
+    '  visualTreatmentSettings,\n' +
+    '} from "./visual-treatment/settings";\n' +
+    'import { touchControlsRequested } from "./touch";\n' +
+    'import {\n' +
+    '  RigBinding,\n' +
+    '  UNITY_CRAWL_CONTACT_ADAPTATION,\n' +
+    '  QUATERNIUS_CRAWL_PALMS,\n' +
+    '  createLocalDraftStore,\n' +
+    '  createPreferredDraftStore,\n' +
+    '  createPlayerStarterAnimationSuite,\n' +
+    '  reconcilePlayerStarterAnimationSuite,\n' +
+    '  type AnimationSuiteDocument,\n' +
+    '} from "./animation";\n' +
+    'import {\n' +
+    '  createCharacterAnimationRuntime,\n' +
+    '  type CharacterAnimationRuntime,\n' +
+    '} from "./characterAnimationRuntime";\n' +
+    '\n' +
+    'const app = document.getElementById("app")!;\n' +
+    'installLocalResetListener();\n' +
+    'const TOUCH_PRESENTATION = touchControlsRequested();\n' +
+    "// '?lite' (headless smoke) renders in software: no AA, and resize() caps the\n" +
+    "// internal resolution — slow frames desync the suite's wall-clock scripting.\n" +
+    'const LITE_RENDER = window.location.search.includes("lite");\n' +
+    'const NO_COAST_POST = window.location.search.includes("nopost");\n' +
+    'const NO_OCEAN_PASSES = window.location.search.includes("nopasses");\n' +
+    'const renderer = new THREE.WebGLRenderer({ antialias: !LITE_RENDER });\n' +
+    'const contextResourceRecovery = installContextResourceRecovery(renderer.domElement, renderer.getContext());\n' +
+    '// Count the complete presentation (world, shadows, ocean, post and HUD).\n' +
+    "// Three's default reset-per-render reports only the final fullscreen triangle.\n" +
+    'renderer.info.autoReset = false;\n' +
+    'configureJungleAssetRenderer(renderer);\n' +
+    'configureBlockworksAssetRenderer(renderer);\n' +
+    'configureCityAssetRenderer(renderer);\n' +
+    'configureWarehouseAssetRenderer(renderer);\n' +
+    '// A zero-resource host. The actual Gouraud scene/render target exists only\n' +
+    '// while title/loading/Game Over owns the framebuffer.\n' +
+    'const gameFlowVortex = new GameFlowVortexHost();\n' +
+    '// Fixed presets own physical pixels. Only MAX/native follows display DPR,\n' +
+    '// capped at 2 to retain the existing native fill-rate budget.\n' +
+    'renderer.setPixelRatio(\n' +
+    '  renderQualitySettings.enabled && !LITE_RENDER\n' +
+    '    ? 1\n' +
+    '    : Math.min(window.devicePixelRatio || 1, 2),\n' +
+    ');\n' +
+    '// No tone curve. Every colour in this game was authored by eye against a raw\n' +
+    '// output, and ACES/AgX/Neutral all pull the saturation out of it — the sky\n' +
+    '// goes milky and the greens go grey. Shot side by side, untouched wins.\n' +
+    '// Soft shadows. This is what stops everything reading as a lit grey box:\n' +
+    '// contact between the skater, the props and the ground.\n' +
+    'renderer.shadowMap.enabled = !LITE_RENDER;\n' +
+    'renderer.shadowMap.type = THREE.PCFSoftShadowMap;\n' +
+    'installShadowTextureCleanup(renderer);\n' +
+    'Level.setMaxAnisotropy(renderer.capabilities.getMaxAnisotropy());\n' +
+    'app.appendChild(renderer.domElement);\n' +
+    '\n' +
+    'const scene = new THREE.Scene();\n' +
+    '// The world root stays at identity. Avoid marking every descendant dirty on\n' +
+    '// every render; animated children still update their own transforms normally.\n' +
+    'scene.matrixAutoUpdate = false;\n' +
+    'scene.background = new THREE.Color(0x232634);\n' +
+    'scene.fog = new THREE.Fog(0x232634, 30, 170);\n' +
+    '\n' +
+    'const'... 228472 more characters,
+  expected: /label: "CHARACTER"/,
+  operator: 'match',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

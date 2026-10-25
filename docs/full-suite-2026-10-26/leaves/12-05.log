@@ -1,0 +1,20 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+-31 !== -47
+
+    at file:///$WORKSPACE/tools/test-jungle-cup-runtime.mjs:71:10
+    at async withSkateRuntime (file:///$WORKSPACE/tools/jungle-cup-harness.mjs:43:5)
+    at async file:///$WORKSPACE/tools/test-jungle-cup-runtime.mjs:3:1 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: -31,
+  expected: -47,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

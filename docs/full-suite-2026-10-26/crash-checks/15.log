@@ -1,0 +1,3 @@
+PASS JavaScript: 89 full-vertex bounds comparisons with Three.js: skin/morph/deformation, cache invalidation, interleaved/normalized attributes and custom getters.
+PASS WebAssembly: 89 full-vertex bounds comparisons with Three.js: skin/morph/deformation, cache invalidation, interleaved/normalized attributes and custom getters.
+PASS simd: exact f64 edge cases, scalar/JS fallbacks, module/runtime/growth failures, overflow fallback, pre-copy ABI validation, workspace reuse and enforced 8 MiB memory bound.

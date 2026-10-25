@@ -1,0 +1,402 @@
+[
+  {
+    "group": "check:chimeworks",
+    "command": "node tools/test-chimeworks.mjs",
+    "code": 1,
+    "signal": null,
+    "seconds": 8.114,
+    "log": "leaves/10-01.log",
+    "classification": "outdated roster assertion",
+    "evidence": "tools/test-chimeworks.mjs:165 requires slipstream-continuous; src/levels/slipstream-migration.ts:14-15 explicitly retires that ID in favor of slipstream-race."
+  },
+  {
+    "group": "check:campaign",
+    "command": "node tools/test-six-island-campaign.mjs",
+    "code": 1,
+    "signal": null,
+    "seconds": 0.285,
+    "log": "leaves/11-01.log",
+    "classification": "outdated campaign fixture",
+    "evidence": "Actual roster includes authored Coconut Cart Rally; expected list at tools/test-six-island-campaign.mjs:18 omits it and still expects 11 placeholders / 27 playable levels."
+  },
+  {
+    "group": "check:campaign",
+    "command": "node tools/test-warp-room-return.mjs",
+    "code": 1,
+    "signal": null,
+    "seconds": 9.481,
+    "log": "leaves/11-14.log",
+    "classification": "outdated authored visual value",
+    "evidence": "Assertion at line 471 expects causticsStrength 0.32; src/mapOceanPreset.ts:23 authors 0.18."
+  },
+  {
+    "group": "check:competition",
+    "command": "node tools/test-park-tuning.mjs",
+    "code": 1,
+    "signal": null,
+    "seconds": 15.725,
+    "log": "leaves/12-01.log",
+    "classification": "outdated movement expectation",
+    "evidence": "Diagnostic using the exact fixture measures charge=23.1, target=23, overdriveCeiling=23.1. src/skateOverdrive.ts intentionally adds the first 0.1 m/s overdrive increment."
+  },
+  {
+    "group": "check:competition",
+    "command": "node tools/test-jungle-cup.mjs",
+    "code": 1,
+    "signal": null,
+    "seconds": 0.573,
+    "log": "leaves/12-03.log",
+    "classification": "outdated campaign route fixture",
+    "evidence": "Fixture clears treehouse/jungle/test/sky/dark/slip before expecting Jungle Cup unlocked, omitting the current Banana Bay, Ripcord River and Beach Street prerequisites."
+  },
+  {
+    "group": "check:competition",
+    "command": "node tools/test-jungle-cup-runtime.mjs",
+    "code": 1,
+    "signal": null,
+    "seconds": 12.842,
+    "log": "leaves/12-05.log",
+    "classification": "outdated map migration expectation",
+    "evidence": "Test expects the older 12-point map and hardcoded -47/-31 positions while current campaign migration preserves authored changes and has an expanded six-island map."
+  },
+  {
+    "group": "check:competition",
+    "command": "node tools/test-jungle-cup-skating.mjs",
+    "code": 1,
+    "signal": null,
+    "seconds": 13.241,
+    "log": "leaves/12-06.log",
+    "classification": "movement assertion requires review",
+    "evidence": "Charged-speed fixture expects a fixed target; separate park diagnostic proves overdrive changes that assumption. This file has not yet been isolated beyond its first failed assertion."
+  },
+  {
+    "group": "check:competition",
+    "command": "node tools/test-jungle-cup-layout.mjs",
+    "code": 1,
+    "signal": null,
+    "seconds": 9.854,
+    "log": "leaves/12-14.log",
+    "classification": "unresolved gameplay replay failure",
+    "evidence": "Rhythm-line jump/grind sequence bails. Earlier arena support, pocket airs, bank entry and channel checks in this file passed; do not weaken the failed replay."
+  },
+  {
+    "group": "check:unity-ports",
+    "command": "node tools/test-unity-level-ports.mjs",
+    "code": 1,
+    "signal": null,
+    "seconds": 0.31,
+    "log": "leaves/13-01.log",
+    "classification": "test harness module-resolution failure",
+    "evidence": "Data-URL transpilation does not resolve the newer relative ./coastal-town-art import. This is not the Vite browser module loader."
+  },
+  {
+    "group": "check:crouch-jump",
+    "command": "node tools/test-quaternius-crouch.mjs",
+    "code": 1,
+    "signal": null,
+    "seconds": 8.326,
+    "log": "leaves/15-03.log",
+    "classification": "animation assertion requires review",
+    "evidence": "Line 51 expects no scalar tracks; current clip contains scalar tracks. No runtime crash is shown by this assertion."
+  },
+  {
+    "group": "check:pipe",
+    "command": "node tools/test-vert-ollie-sequence.mjs tools/fixtures/vert-ollie-release-edge-replay.json",
+    "code": 1,
+    "signal": null,
+    "seconds": 17.462,
+    "log": "leaves/16-03.log",
+    "classification": "unresolved gameplay replay failure",
+    "evidence": "Supplied replay ends in air where ride is expected at test line 923."
+  },
+  {
+    "group": "check:ledge",
+    "command": "node tools/validate-ledge-traversal.mjs",
+    "code": 1,
+    "signal": null,
+    "seconds": 17.602,
+    "log": "leaves/17-01.log",
+    "classification": "unresolved gameplay replay failure",
+    "evidence": "Ledge scenario returns ride where hang is expected at test line 783."
+  },
+  {
+    "group": "check:landing-x",
+    "command": "node tools/validate-landing-indicator.mjs",
+    "code": 1,
+    "signal": null,
+    "seconds": 37.963,
+    "log": "leaves/20-01.log",
+    "classification": "test harness source-inspection mismatch",
+    "evidence": "Physical landing checks completed, then AST matcher at line 310 failed to find level.update as a direct expression in the fixed-step loop. Current loop nests the update in runtime branches."
+  },
+  {
+    "group": "check:run-facing",
+    "command": "node tools/test-run-facing.mjs",
+    "code": 1,
+    "signal": null,
+    "seconds": 0.279,
+    "log": "leaves/21-01.log",
+    "classification": "outdated source-pattern assertion",
+    "evidence": "Line 96 requires selfDrivenPlanar to equal walkVelocity directly. Current code intentionally blends recovery speed first, then uses walkVelocity outside recovery (src/player.ts:18155)."
+  },
+  {
+    "group": "check:run-facing",
+    "command": "node tools/test-locomotion-replays.mjs",
+    "code": 1,
+    "signal": null,
+    "seconds": 32.866,
+    "log": "leaves/21-02.log",
+    "classification": "unresolved gameplay replay failure",
+    "evidence": "Test-course replay does not reach the expected grounded recovery at test line 125."
+  },
+  {
+    "group": "check:run-facing",
+    "command": "node tools/test-locomotion-idle.mjs",
+    "code": 1,
+    "signal": null,
+    "seconds": 11.322,
+    "log": "leaves/21-03.log",
+    "classification": "outdated animation fixture",
+    "evidence": "Line 35 expects zero procedural drivers; current authored idle has nine. No change made to authored animation."
+  },
+  {
+    "group": "check:surface-friction",
+    "command": "node tools/test-surface-friction.mjs",
+    "code": 1,
+    "signal": null,
+    "seconds": 0.378,
+    "log": "leaves/24-01.log",
+    "classification": "source-pattern assertion requires review",
+    "evidence": "A regex expects sand-name assignment and friction flag within 240 characters in level.ts; the runtime curve checks preceding it pass."
+  },
+  {
+    "group": "check:camera-speed",
+    "command": "node tools/test-camera-speed-effect.mjs",
+    "code": 1,
+    "signal": null,
+    "seconds": 0.444,
+    "log": "leaves/25-01.log",
+    "classification": "test harness missing dependency",
+    "evidence": "Extracted production expression uses THREE.MathUtils.lerp, but test new Function does not supply THREE; main.ts imports THREE normally."
+  },
+  {
+    "group": "check:camera-speed",
+    "command": "node tools/test-camera-look.mjs",
+    "code": 1,
+    "signal": null,
+    "seconds": 0.272,
+    "log": "leaves/25-02.log",
+    "classification": "outdated source-pattern assertion",
+    "evidence": "Line 182 only accepts a one-expression blur callback; src/touch.ts:358 now has a block callback that still releases controls."
+  },
+  {
+    "group": "check:camera-speed",
+    "command": "node tools/test-camera-fall-replay.mjs",
+    "code": 1,
+    "signal": null,
+    "seconds": 19.971,
+    "log": "leaves/25-07.log",
+    "classification": "unresolved gameplay replay failure",
+    "evidence": "Camera replay line 33 reports that expected fatal-fall holds are missing."
+  },
+  {
+    "group": "check:air-rescue",
+    "command": "node tools/test-air-rescue.mjs",
+    "code": 1,
+    "signal": null,
+    "seconds": 11.652,
+    "log": "leaves/27-03.log",
+    "classification": "unresolved gameplay contact failure",
+    "evidence": "Rescue fixture line 427 reports a side-contact/stomp classification mismatch."
+  },
+  {
+    "group": "check:editor-roundtrip",
+    "command": "node tools/validate-editor-roundtrip.mjs",
+    "code": 1,
+    "signal": null,
+    "seconds": 12.832,
+    "log": "leaves/31-01.log",
+    "classification": "map route fixture requires review",
+    "evidence": "tools/editor-runtime-regressions.mjs:114 assumes a direct jungle → test-course edge. campaignMapTravel returns null for that pair, then the harness dereferences position. Current worldMap.route explicitly returns null for absent edges. Other map pose/transform assertions immediately before this passed."
+  },
+  {
+    "group": "check:editor-security",
+    "command": "node tools/test-level-security.mjs",
+    "code": 1,
+    "signal": null,
+    "seconds": 9.255,
+    "log": "leaves/32-01.log",
+    "classification": "outdated map bounds fixture",
+    "evidence": "Test expects x/z/y bounds 512/512/128. src/level.ts:3317 uses 1536/512/256, and the current test-world-map-save.mjs tests those exact expanded bounds and passed."
+  },
+  {
+    "group": "check:editor-security",
+    "command": "node tools/test-terrain-support-budget.mjs",
+    "code": 1,
+    "signal": null,
+    "seconds": 13.073,
+    "log": "leaves/32-06.log",
+    "classification": "unresolved level validation failure",
+    "evidence": "tools/test-terrain-support-budget.mjs:269 rejects the current country-club source. Earlier terrain budget checks passed. Requires isolating the rejected component/property; no browser crash was demonstrated."
+  },
+  {
+    "group": "check:editor-security",
+    "command": "node tools/test-legacy-scenery-capture.mjs",
+    "code": 1,
+    "signal": null,
+    "seconds": 8.236,
+    "log": "leaves/32-07.log",
+    "classification": "legacy scenery fixture requires review",
+    "evidence": "The Descent capture has zero legacy pine/scenery owners versus the fixture’s 214 pines and named centre-line/mountain groups. The harness subsequently dereferences a missing group. Asset replacement versus an export regression has not been resolved."
+  },
+  {
+    "group": "check:editor-security",
+    "command": "node tools/test-level-switch-transactions.mjs",
+    "code": 1,
+    "signal": null,
+    "seconds": 9.605,
+    "log": "leaves/32-08.log",
+    "classification": "scenery assertion requires review",
+    "evidence": "Switching to dark succeeds, but the fixture cannot find the named warp pad inset child at line 217. Requires checking the current pad asset contract; this assertion is not evidence of a renderer crash."
+  },
+  {
+    "group": "check:editor-security",
+    "command": "node tools/test-editor-material-fidelity.mjs",
+    "code": 1,
+    "signal": null,
+    "seconds": 9.328,
+    "log": "leaves/32-10.log",
+    "classification": "unresolved material round-trip failure",
+    "evidence": "Native Unity sand and reconstructed sand differ in material.fog at line 85. Keep this failure until the intended rendering/capture contract is verified."
+  },
+  {
+    "group": "check:editor-security",
+    "command": "node tools/test-editor-atmosphere.mjs",
+    "code": 1,
+    "signal": null,
+    "seconds": 27.396,
+    "log": "leaves/32-11.log",
+    "classification": "unresolved atmosphere round-trip failure",
+    "evidence": "Capturing Jungle Ruins under a different ID changes effective ambient/fog/backdrop values. The log preserves all reported mismatches. No expectations were loosened."
+  },
+  {
+    "group": "check:editor-security",
+    "command": "node tools/test-editor-current-components.mjs",
+    "code": 1,
+    "signal": null,
+    "seconds": 7.557,
+    "log": "leaves/32-13.log",
+    "classification": "editor control fixture requires review",
+    "evidence": "The mesh inspector fixture cannot find a control labelled walkable collision. Other current-component editing cases continue and pass. Needs current UI-contract validation."
+  },
+  {
+    "group": "check:editor-security",
+    "command": "node tools/test-editor-runtime-integration.mjs",
+    "code": 1,
+    "signal": null,
+    "seconds": 7.781,
+    "log": "leaves/32-14.log",
+    "classification": "test harness incomplete mock",
+    "evidence": "The fake jungleAssets object at line 141 provides only setView; current Level.updateSceneryView calls setWeatherWind too. Real JungleAssetKit implements that method in src/jungleAssets.ts:516."
+  },
+  {
+    "group": "check:animation",
+    "command": "node tools/test-animation-suite.mjs",
+    "code": 1,
+    "signal": null,
+    "seconds": 0.57,
+    "log": "leaves/34-01.log",
+    "classification": "unresolved animation schema failure",
+    "evidence": "A starter suite made for a conventional humanoid rig contains a tail track targeting a joint absent from that rig; validation fails at line 325. This is not a player tab-crash reproduction."
+  },
+  {
+    "group": "check:character-lab",
+    "command": "node tools/test-character-lab.mjs",
+    "code": 1,
+    "signal": null,
+    "seconds": 0.41,
+    "log": "leaves/35-02.log",
+    "classification": "outdated source-pattern assertion",
+    "evidence": "The regex requires label: \"CHARACTER\" with double quotes. src/main.ts:1575 still exposes CHARACTER but uses single quotes."
+  },
+  {
+    "group": "check:character-lab",
+    "command": "node tools/test-cartoon-glove.mjs",
+    "code": 1,
+    "signal": null,
+    "seconds": 8.408,
+    "log": "leaves/35-03.log",
+    "classification": "character fixture requires review",
+    "evidence": "Reset stretchable-bone maxScale is 9.085 versus expected 2.765 at line 446. Could reflect the updated character proportions/rig; not dismissed without a geometry review."
+  },
+  {
+    "group": "check:character-lab",
+    "command": "node tools/test-stretchable-bone.mjs",
+    "code": 1,
+    "signal": null,
+    "seconds": 0.482,
+    "log": "leaves/35-05.log",
+    "classification": "outdated source-pattern assertion",
+    "evidence": "The regex requires upperLegBone.root.visible = false. Current src/player.ts:19977 uses !!this.rivalColor to support race rivals."
+  },
+  {
+    "group": "check:character-lab",
+    "command": "node tools/test-meshy-head.mjs",
+    "code": 1,
+    "signal": null,
+    "seconds": 0.488,
+    "log": "leaves/35-07.log",
+    "classification": "outdated source-pattern assertion",
+    "evidence": "The fixture searches for the exact call applyOverlay(dt); current src/player.ts:19301 supplies the second batchBailDeformations argument. The later appearance call remains present."
+  },
+  {
+    "group": "check:character-lab",
+    "command": "node tools/test-procedural-footwear.mjs",
+    "code": 1,
+    "signal": null,
+    "seconds": 12.477,
+    "log": "leaves/35-10.log",
+    "classification": "numerical tolerance failure requires review",
+    "evidence": "A vertex correction differs from zero by 1.7907269101630572e-8, exceeding the test’s 1e-8 tolerance at line 388. No tolerance was changed."
+  },
+  {
+    "group": "check:ocean",
+    "command": "node tools/validate-ocean-port.mjs",
+    "code": 1,
+    "signal": null,
+    "seconds": 0.056,
+    "log": "leaves/36-03.log",
+    "classification": "outdated source-pattern assertion",
+    "evidence": "The validator expects the old literal coastReviewQuery.has(\"coastphysics\") in main.ts. Coast physics is now represented in the central tool directory/routes. Other ocean tests ran independently."
+  },
+  {
+    "group": "check:look",
+    "command": "node tools/test-visual-treatment.mjs",
+    "code": 1,
+    "signal": null,
+    "seconds": 0.247,
+    "log": "leaves/39-01.log",
+    "classification": "source-pattern assertion requires review",
+    "evidence": "The regex requires !bonusBackdropActive in the sky visibility expression; current main.ts:798 uses !LITE && !fogBackdrop. Requires confirming the intended bonus backdrop contract, not blindly updating the regex."
+  },
+  {
+    "group": "check:look",
+    "command": "node tools/test-factory-defaults.mjs",
+    "code": 1,
+    "signal": null,
+    "seconds": 0.312,
+    "log": "leaves/39-02.log",
+    "classification": "outdated tuning snapshot",
+    "evidence": "The expected browser snapshot omits grindTransferSpeed, grindTrickBoost, pipeTurnRate, teeterEdgeDistance and the trickLandBoost fields now present in TUNING. No tuning values were changed."
+  },
+  {
+    "group": "check:special",
+    "command": "node tools/test-special-system.mjs",
+    "code": 1,
+    "signal": null,
+    "seconds": 0.235,
+    "log": "leaves/41-01.log",
+    "classification": "outdated source-pattern assertion",
+    "evidence": "The regex requires private die(): void and tightly bounded source spacing. Current die accepts cause/origin and still clears uberTimer before entering dead state at src/player.ts:16782."
+  }
+]

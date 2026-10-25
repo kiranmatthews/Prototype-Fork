@@ -1,0 +1,1 @@
+PASS 8 exact coast fields: empty, seabed, long edges, opposing ties, transformed negative coordinates, closed island, ripples and excluded meshes.

@@ -1,0 +1,43 @@
+[campaign] no supported midpoint bonus site in Landing forecast
+[
+  {
+    "name": "lower deck ahead",
+    "y": 4
+  },
+  {
+    "name": "thin deck swept between samples",
+    "y": 4
+  },
+  {
+    "name": "missed beside deck",
+    "y": null
+  },
+  {
+    "name": "deck behind travel",
+    "y": null
+  },
+  {
+    "name": "nearby deck without speed",
+    "y": null
+  },
+  {
+    "name": "pit at catch",
+    "y": null
+  },
+  {
+    "name": "pit crossed before catch",
+    "y": null
+  },
+  {
+    "name": "blocking wall",
+    "y": null
+  },
+  {
+    "name": "crate above hazardous floor",
+    "y": 4.960000000000001
+  },
+  {
+    "name": "true void",
+    "y": null
+  }
+]

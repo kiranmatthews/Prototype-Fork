@@ -1,0 +1,23 @@
+PASS a rejected batch preserves existing singleton furniture and groups
+PASS cross-level clipboard preserves nested switch groups without reusing destination groups
+PASS group-size scrubbing has one final transaction and cancellation restores source
+PASS a yawed vert spine exposes every knot in world coordinates plus its radius handle
+PASS translation keeps return points, support feet and shore waterlines attached
+PASS retarget abandons a previous built-in fork lineage before undo
+PASS HUD migration keeps working indices, preview geometry and persisted data aligned
+PASS removing a captured campaign map restores normal gate and run activators
+PASS secret combo activators opt in on placement and stay deleted
+PASS node deletion retains shape minimums and aligned wood-path widths
+PASS sparse campaign maps expose fixed named hubs without mutating on inspection
+PASS default terrain and wood routes offer editable knots without changing sparse source
+PASS numeric fields ignore non-finite input and restore fresh controls after a rejected edit
+PASS numeric blur and Enter commit edits while Escape and scrub blur preserve transactions
+PASS quarter-turn terrain edits preserve ground support and berm grind/collision paths
+PASS mesh inspection, world-axis scaling and vertex edits retain the authored surface
+PASS narrow editor docks are exclusive, reversible and do not edit the level
+PASS reentrant pointer capture loss cannot cancel a completed numeric scrub
+PASS every scenery inspector and sparse wood-path inspector renders without modifying data
+PASS surface glow and shoreline style edits persist, undo and rebuild the chosen material
+PASS rock texture selector preserves the asset default and commits explicit checker with undo
+PASS thorn controls preserve sparse data and commit geometry, color and optional seed with undo
+PASS a thorn and its pit rotate in one saved transaction and undo together

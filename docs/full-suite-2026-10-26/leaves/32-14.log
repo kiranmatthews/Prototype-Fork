@@ -1,0 +1,9 @@
+<anonymous_script>:13409
+    this.jungleAssets?.setWeatherWind(clearInspectionView ? void 0 : this.atmosphere?.rain, this.rainWeather?.uniforms.uTime.value ?? 0);
+                       ^
+
+TypeError: this.jungleAssets?.setWeatherWind is not a function
+    at Object.updateSceneryView (eval at instantiateModule (file:///$WORKSPACE/node_modules/.pnpm/vite@5.4.21/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:53012:24), <anonymous>:13409:24)
+    at file:///$WORKSPACE/tools/test-editor-runtime-integration.mjs:143:41
+
+Node.js v24.19.0

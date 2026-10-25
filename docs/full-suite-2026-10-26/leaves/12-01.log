@@ -1,0 +1,20 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+
+  assert.ok(Math.abs(charge.at(-1)-23)<.002)
+
+    at file:///$WORKSPACE/tools/test-park-tuning.mjs:14:108
+    at async withSkateRuntime (file:///$WORKSPACE/tools/jungle-cup-harness.mjs:43:5)
+    at async file:///$WORKSPACE/tools/test-park-tuning.mjs:3:1 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

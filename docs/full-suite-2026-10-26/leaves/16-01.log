@@ -1,0 +1,1 @@
+Validated concave halfpipe support, rejection of backside catches, and exact collider/mesh intersection checks.

@@ -1,0 +1,9 @@
+CRT Guest parameter audit
+Pinned source: https://github.com/libretro/slang-shaders@a62d9cda9140294d22b6da5e4ff4187365890d42
+advanced: 133 controls, 170 control declarations, 17 ignored UI/info rows, 11 selected shader files
+advanced generated: 133/133 controls, 10 explicit ABI fields, 11 shader files
+hd: 130 controls, 179 control declarations, 19 ignored UI/info rows, 11 selected shader files
+hd generated: 130/130 controls, 12 explicit ABI fields, 11 shader files
+catalog: 143 union, 120 shared (133 Advanced / 130 HD)
+author release delta: 5 additions, 1 removal, 11 metadata rows; 147 target union
+PASS: 0 missing, extra, conflicting, metadata, provenance, or count mismatches.

@@ -1,0 +1,2 @@
+PASS atmosphere controls, effective defaults, bounded fields, fallback visibility, precise display and history rebinding
+PASS environment add/move/resize/rotate/remove, independent patch selection, undo/reset bindings, live choices, map ownership and safe shoreline conversion

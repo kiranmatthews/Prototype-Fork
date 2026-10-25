@@ -1,0 +1,18 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+'ride' !== 'hang'
+
+    at file:///$WORKSPACE/tools/validate-ledge-traversal.mjs:783:10 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: 'ride',
+  expected: 'hang',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

@@ -1,0 +1,19 @@
+raw {
+  kneeGap: -0.16048282422715185,
+  ankleGap: -0.025879039274741028,
+  ankleY: 0.22700866789476679,
+  kneeSide: -0.20897603826384178
+}
+luna {
+  kneeGap: 0.00401826959535595,
+  ankleGap: 0.14838871169306633,
+  ankleY: 0.2232253170385526,
+  kneeSide: -0.12851176012263113
+}
+fixed {
+  kneeGap: 0.36447322993984166,
+  ankleGap: 0.3988028727822464,
+  ankleY: 0.23024803149966205,
+  kneeSide: 0.06736634107763206
+}
+PASS crouch stance: 2,103 preview samples, four complete gameplay loops, crawl transitions, source preservation and saved upgrades

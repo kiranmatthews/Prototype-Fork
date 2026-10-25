@@ -1,0 +1,1 @@
+{"pass":true,"landings":[{"park":false,"kind":"plain","boost":0},{"park":false,"kind":"flip","boost":1.25},{"park":false,"kind":"grab","boost":1.25},{"park":true,"kind":"plain","boost":0},{"park":true,"kind":"flip","boost":1.25},{"park":true,"kind":"grab","boost":1.25}],"stackCap":5,"plainAndFailureGuards":true,"decay":true,"brakeReset":true,"replayCompatibility":true}
