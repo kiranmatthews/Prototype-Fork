@@ -1,0 +1,25 @@
+{
+  "validatedAt": "2026-10-25T07:17:04.107777+00:00",
+  "sourceCommit": "8dd3f98d",
+  "checks": [
+    "npm run check:levels",
+    "npm run build",
+    "npm run check:release",
+    "test-treehouse-shore.mjs",
+    "test-treehouse-tree-collision.mjs",
+    "coastal cabin clearance/contact/return",
+    "test-level-sync.mjs",
+    "test-slipstream-polish.mjs",
+    "production Chrome lite/full shoreline swim/wall/return",
+    "production full-render restored house and relocated coastal cabin"
+  ],
+  "allPassed": true,
+  "consoleErrors": [],
+  "failedAssets": [],
+  "releaseBytes": 943559259,
+  "releaseBudgetBytes": 1000000000,
+  "releaseFiles": 1779,
+  "offlineFiles": 1682,
+  "offlineVersion": "79fe2b59d5c8ce8484c1",
+  "deployment": "pending single coordinated push; verify public URL after workflow succeeds"
+}

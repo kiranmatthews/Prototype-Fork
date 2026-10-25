@@ -1,0 +1,181 @@
+{
+  "sweeps": 168,
+  "contacts": [
+    {
+      "name": "opening foreground walk",
+      "closest": 4.015739999999999,
+      "maxY": 0,
+      "penetrated": false,
+      "position": [
+        24.69229,
+        0,
+        5.783600000000002
+      ],
+      "deaths": 0,
+      "bailed": false
+    },
+    {
+      "name": "opening foreground skate",
+      "closest": 4.015739999999999,
+      "maxY": 0,
+      "penetrated": false,
+      "position": [
+        28.008868422150332,
+        0,
+        5.81963136246855
+      ],
+      "deaths": 0,
+      "bailed": false
+    },
+    {
+      "name": "opening foreground jump",
+      "closest": 3.989073333333332,
+      "maxY": 1.77907584806457,
+      "penetrated": false,
+      "position": [
+        24.69229,
+        0,
+        5.783600000000002
+      ],
+      "deaths": 0,
+      "bailed": false
+    },
+    {
+      "name": "later beach and huts walk",
+      "closest": 3.5350000000000463,
+      "maxY": -13.238858102890811,
+      "penetrated": false,
+      "position": [
+        56.53717578580526,
+        -13.239960520467653,
+        -279.4071
+      ],
+      "deaths": 0,
+      "bailed": false
+    },
+    {
+      "name": "later beach and huts skate",
+      "closest": 3.5581297974183146,
+      "maxY": -12.34263099896847,
+      "penetrated": false,
+      "position": [
+        56.29989435508829,
+        -12.442825188521782,
+        -282.1526667674136
+      ],
+      "deaths": 0,
+      "bailed": false
+    },
+    {
+      "name": "later beach and huts jump",
+      "closest": 3.528498488908207,
+      "maxY": -12.206252718915785,
+      "penetrated": false,
+      "position": [
+        56.54053903550547,
+        -13.353979497163772,
+        -279.258320042319
+      ],
+      "deaths": 0,
+      "bailed": true
+    },
+    {
+      "name": "shaded hut approach walk",
+      "closest": 3.476779999999998,
+      "maxY": -13.428337639287271,
+      "penetrated": false,
+      "position": [
+        42.40386,
+        -13.428337639287271,
+        -316.09138
+      ],
+      "deaths": 0,
+      "bailed": false
+    },
+    {
+      "name": "shaded hut approach skate",
+      "closest": 3.477042015449977,
+      "maxY": -13.16291810316691,
+      "penetrated": false,
+      "position": [
+        42.230045861363,
+        -13.16291810316691,
+        -311.9979606365
+      ],
+      "deaths": 0,
+      "bailed": false
+    },
+    {
+      "name": "shaded hut approach jump",
+      "closest": 3.4473539622738265,
+      "maxY": -12.21400199574256,
+      "penetrated": false,
+      "position": [
+        42.42054931586006,
+        -13.466950301014913,
+        -316.15135263039787
+      ],
+      "deaths": 0,
+      "bailed": true
+    }
+  ],
+  "routes": [
+    {
+      "name": "opening clearing",
+      "reached": true,
+      "position": [
+        6.55500000000001,
+        0,
+        9.044499999999971
+      ]
+    },
+    {
+      "name": "clearing to pipe entrance",
+      "reached": true,
+      "position": [
+        13.534000000000008,
+        0,
+        6.666000000000004
+      ]
+    },
+    {
+      "name": "later beach straight",
+      "reached": true,
+      "position": [
+        53,
+        -14,
+        -271.5150000000019
+      ]
+    },
+    {
+      "name": "hut bend",
+      "reached": true,
+      "position": [
+        44.235499999999725,
+        -14,
+        -286.6290000000013
+      ]
+    },
+    {
+      "name": "hut bend exit",
+      "reached": true,
+      "position": [
+        35.235499999999725,
+        -14,
+        -300.6290000000013
+      ]
+    },
+    {
+      "name": "shaded huts",
+      "reached": true,
+      "position": [
+        35,
+        -14,
+        -327.56500000000415
+      ]
+    }
+  ],
+  "trees": 14,
+  "bands": 42,
+  "wallBoxes": 1813
+}
