@@ -156,7 +156,7 @@ const LEGACY_CAMPAIGN_MAP_HUBS: readonly CampaignLevelDefinition[] = [
     progressKey: "jungle",
     levelId: "jungle",
     name: "Jungle Ruins",
-    relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
+    relicTime: 150, // Full Ruins route, including the aqueduct and summit ascent.
     islandId: "island-1",
     mapPath: "main",
     mapPosition: [-151, 1.35, 22],

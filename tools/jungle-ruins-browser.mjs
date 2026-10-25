@@ -66,10 +66,10 @@ try{
   assert.deepEqual(report.bonusFailure,{same:true,checkpoint:true});
   // The existing themed-bonus pilot separately proves the complete positive
   // puzzle journey without warps, including all boxes and the real return.
-  await stage(0,-688,0);await until(()=>window.__game.player.grounded);
+  await stage(176,-1360,26.4);await until(()=>window.__game.player.grounded);
   await page.keyboard.down('Space');await page.waitForTimeout(450);
-  await page.keyboard.down('ArrowUp');await page.keyboard.up('Space');
-  await until(()=>window.__game.player.state==='finished');await page.keyboard.up('ArrowUp');
+  await page.keyboard.down('ArrowRight');await page.keyboard.up('Space');
+  await until(()=>window.__game.player.state==='finished');await page.keyboard.up('ArrowRight');
   report.finish=await sample();await page.screenshot({path:`${out}/${report.mode}-finish.png`});
   await page.close();console.log('PASS',report.mode,'Jungle Ruins and Fern Reliquary native input smoke');
  }

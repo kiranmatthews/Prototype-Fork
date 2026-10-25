@@ -513,7 +513,7 @@ try{
   assert.ok(shader.fragmentShader.includes('grassBlend'));
   assert.ok(shader.fragmentShader.indexOf('gl_FragColor.rgb *= smoothstep(-10.0')>shader.fragmentShader.indexOf('#include <fog_fragment>'),'fog cannot recolour the black pit floor');
  }
- assert.equal(capture.components.filter(c=>c.dkind==='roofedtemple'||c.dkind==='hangingarch').length,0,'landmarks are authored as individual blocks');
+ assert.equal(capture.components.filter(c=>(c.grp??0)<260&&(c.dkind==='roofedtemple'||c.dkind==='hangingarch')).length,0,'original landmarks retain their individually authored blocks');
  for(const kind of ['stoneblock','stonepaver','stoneshaft','stonecapital','stonecornice','stoneroof','stonehip','junglecanopy'])assert.ok(capture.components.some(c=>c.dkind===kind),kind+' used in the actual level');
  for(const old of ['fern','broadleaf','jungletree','palm','plants','tree','vines','log'])assert.equal(capture.components.filter(c=>c.dkind===old).length,0,old+' was replaced');
  const support=(value,p)=>new THREE.Raycaster(new THREE.Vector3(p[0],p[1]+1,p[2]),new THREE.Vector3(0,-1,0),0,3).intersectObjects(value.groundMeshes)[0]?.point.y;

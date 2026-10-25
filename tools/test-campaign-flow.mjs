@@ -31,12 +31,12 @@ const campaign = await import(
 );
 
 assert.ok(campaign.CAMPAIGN_LEVELS.length >= 20);
-assert.equal(campaign.resolveRelicTime('jungle'), 60);
+assert.equal(campaign.resolveRelicTime('jungle'), 150);
 assert.equal(campaign.resolveRelicTime('editor-course', { relicTime: 83.75 }), 83.75);
 assert.equal(campaign.resolveRelicTime('jungle', { relicTime: 45.125 }), 45.125);
 for (const relicTime of [0, -1, NaN, Infinity, '70', null, 86401]) {
   assert.equal(campaign.validRelicTime(relicTime), false);
-  assert.equal(campaign.resolveRelicTime('jungle', { relicTime }), 60);
+  assert.equal(campaign.resolveRelicTime('jungle', { relicTime }), 150);
 }
 // Island assignments, prerequisite gates and secret requirements are exercised
 // in test-six-island-campaign.mjs. Keep this suite focused on durable storage.

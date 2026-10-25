@@ -5,7 +5,8 @@ const memory=new Map();globalThis.localStorage={getItem:k=>memory.get(k)??null,s
 const server=await createServer({appType:'custom',logLevel:'silent',server:{middlewareMode:true}});
 try {
  const c=await server.ssrLoadModule('/src/campaign.ts');
- const targets=c.resolveMedalTimes('jungle');assert.deepEqual(targets,{gold:60,silver:69,bronze:78});
+ assert.deepEqual(c.resolveMedalTimes('jungle'),{gold:150,silver:172.5,bronze:195});
+ const targets=c.defaultMedalTimes();assert.deepEqual(targets,{gold:60,silver:69,bronze:78});
  assert.deepEqual(c.resolveMedalTimes('custom',{relicTime:80}),{gold:80,silver:92,bronze:104});
  const authored={gold:40,silver:55,bronze:90};assert.deepEqual(c.resolveMedalTimes('jungle',{relicTime:80,medalTimes:authored}),authored);
  const copy=c.resolveMedalTimes('jungle',{medalTimes:authored});copy.gold=1;assert.equal(authored.gold,40);

@@ -10,7 +10,8 @@ export const JUNGLE_BOUNDARY_CLEARANCE = 0.35;
 export const JUNGLE_BOUNDARY_SECTIONS = [
   [15.55, -34, 7, 7], [-34, -39.5, 7, 6], [-39.5, -300, 6, 6],
   [-300, -444, 8, 8], [-444, -486, 7, 7], [-486, -492.5, 7, 6],
-  [-492.5, -676, 6, 6], [-676, -716.05, 7, 7],
+  [-492.5, -676, 6, 6], [-676, -718, 7, 7],
+  [-718, -1336, 9, 9], [-1336, -1370, 14, 14],
 ] as const;
 
 export function junglePathHalfWidth(z: number): number {
@@ -34,7 +35,13 @@ export function jungleContainment(gx: (z: number) => number, group: number): Cus
   const cove: [number,number,number][] = [];
   for (const z of [25,42,62,96]) cove.push([gx(14)+jungleCoveWidth(z)+1.55,z,0]);
   for (const z of [96,62,42,25]) cove.push([gx(14)-jungleCoveWidth(z)-1.55,z,0]);
-  return {t:"wallpath",p:[0,JUNGLE_BOUNDARY_BOTTOM,0],pts:[...left,...right.reverse(),...cove],
+  // Open the former end cap into the aqueduct, then wrap the rightward ascent.
+  // Its rear/front walls stay beyond every ledge and the broad turning court.
+  const ascent: [number,number,number][] = [
+    [-15.55,-1371.55,0], [195,-1371.55,0], [195,-1352.95,0],
+    [15.55,-1352.95,0], [15.55,-1336,0],
+  ];
+  return {t:"wallpath",p:[0,JUNGLE_BOUNDARY_BOTTOM,0],pts:[...left,...ascent,...right.filter(p=>p[1]>=-1336).reverse(),...cove],
     w:JUNGLE_BOUNDARY_THICKNESS,rise:JUNGLE_BOUNDARY_TOP-JUNGLE_BOUNDARY_BOTTOM,
     collisionHeight:JUNGLE_BOUNDARY_TOP-JUNGLE_BOUNDARY_BOTTOM,closed:true,curve:"corner",
     invisible:true,containment:true,edgeGrinding:false,tex:"solid",grp:group,nm:"Jungle perimeter"};

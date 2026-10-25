@@ -74,7 +74,7 @@ export function jungleRuinsDressing(gx: (z: number) => number, gy: (z: number) =
   for (const [x, y, z, yaw, scale] of [
     [-19, 0, -65, 20, 1], [19, 0, -273, -25, 1.15],
     [-23, 16, -348, 22, 1.3], [23, 16, -438, -20, 1.2],
-    [-20, 0, -604, 25, 1.05], [0, -1.5, -721, 0, 1.65],
+    [-20, 0, -604, 25, 1.05], [-24, -1.5, -714, 20, 1.65],
   ]) {
     out.push(...jungleAssemblyComponents({dkind:"roofedtemple",p:[gx(z)+x,y+gy(z)-.3,z],
       s:[14*scale,13.5*scale,12*scale],yaw,vr:x<0?1:0},z<-700?"Finish sanctuary":`Wayside temple ${Math.abs(z)}`,group(z<-700?"Finish sanctuary":`Wayside temple ${Math.abs(z)}`)));
@@ -123,8 +123,6 @@ export function jungleRuinsDressing(gx: (z: number) => number, gy: (z: number) =
       s:[43+r*5,39+r*6,46+r*4],yaw:r*360,color:side<0?"#89a796":"#98af93",
       solid:false,grp:outerGroup,nm:"Outer jungle canopy"});
   }
-  for(const z of [-748])out.push({t:"decor",dkind:"junglecliff",p:[gx(z),gy(z)-5,z],
-    s:[98,39,28],yaw:7,color:"#acbba9",solid:false,grp:outerGroup,nm:"Jungle end rock face"});
   out.push(jungleContainment(gx,group("Jungle perimeter")));
   out.push(...jungleRuinsForest(gx,gy,group("Treehouse forest floor"),group("Treehouse rooted canopy")));
   return {components:out,groups};

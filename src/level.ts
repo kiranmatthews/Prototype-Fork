@@ -163,6 +163,7 @@ import { createHoldShadowOccluder, type PlanarShadowOccluder } from "./planarSha
 import { jungleShore } from "./levels/jungle-shore";
 import { jungleRuinsDressing } from "./levels/jungle-ruins-art";
 import { isJungleAssembly, jungleAssemblyWork } from "./jungleAssemblies";
+import { jungleRuinsFinale } from "./levels/jungle-ruins-finale";
 import { createJungleShoulder, addJungleDepthFade } from "./jungleGround";
 import {
   CAMPAIGN_LEVELS,
@@ -7471,6 +7472,11 @@ export class Level {
 
     const deck = new THREE.MeshLambertMaterial({ color: 0xffffff });
     // tag every root child a component adds with that component's index
+    this.buildCustomComponents(data);
+  }
+
+  /** Shared component builder, also used by source-owned native extensions. */
+  private buildCustomComponents(data: CustomLevelData): void {
     const buildTagged = (idx: number, fn: () => void): void => {
       const before = this.root.children.length;
       const groundBefore = this.groundMeshes.length,wallBefore=this.walls.length;
@@ -12299,8 +12305,8 @@ export class Level {
     // light where a jungle floor wants it.
     this.skyPreset = "day";
     this.killY = -12; // well under the lowest strip, well over the ravine floor
-    this.finishZ = -694;
-    this.endWallZ = -714;
+    this.finishZ = -1360;
+    this.endWallZ = -1e9;
     // Late morning under a closed canopy: green humid haze, warm shafts.
     this.theme = {
       skyTop: "#1f6f86",
@@ -12515,7 +12521,7 @@ export class Level {
     });
     bank(-572, -676);
     bank(-566, -572, 0, 5.1, 0);
-    this.slab("finish landing", -676, -718, 0, 14, matFinish, true, 0, "stone");
+    this.slab("sanctuary approach", -676, -718, 0, 14, matFinish, true, 0, "stone");
     bank(-676, -718);
     // the landing is straight masonry, so it gets masonry sides rather than
     // berms — but it still has to be closed, same as everywhere else
@@ -12755,9 +12761,6 @@ export class Level {
     for (let i = 0; i < 4; i++) fruitAt(-656 - i * 2.4, 0, 1.6);
     crateAt(-668, 0, "mystery");
 
-    this.finishGate(0, this.finishZ);
-    this.endWall(0);
-
     // ---- CAMERA LANE -------------------------------------------------------
     // The spine again. Without it the frame would keep facing down -z while
     // the path bent out from under it; with it, screen-up is always "onward"
@@ -12779,6 +12782,19 @@ export class Level {
     this.measureLane();
   }
 
+    const finale = jungleRuinsFinale();
+    // Preserve exact source components for editor copies (notably boost
+    // stones). A legacy mesh capture alone cannot retain their mechanics.
+    const original = this.captureData();
+    this.sceneryCaptureGroups.push(...finale.groups);
+    this.buildCustomComponents({ v: 1, name: this.name, spawn: this.spawnPos.toArray(), killY: this.killY,
+      components: [
+        ...lane.map(({x,y,z}): CustomComponent => ({t:'camnode',p:[x,y,z]})),
+        ...finale.components,
+      ] });
+    this.builtFromData = { ...original, name: this.name,
+      groups: [...(original.groups ?? []), ...finale.groups],
+      components: [...original.components, ...finale.components] };
   // Build-time ground probe: what the terrain actually is at (x, z). Used to
   // seat crates/enemies/checkpoints on wavy floors. Falls back to the given y.
   // COAST FOG POLICY: everything the player can reach or ride past stays
@@ -13688,7 +13704,7 @@ export class Level {
     emissive: number,
   ): THREE.Mesh {
     const size = c.s ?? [5, 0.45, 5];
-    const material = new THREE.MeshLambertMaterial({ color, emissive });
+    const material = new THREE.MeshLambertMaterial({ color: c.color ?? color, emissive });
     const mesh = new THREE.Mesh(
       new THREE.BoxGeometry(size[0], Math.max(0.08, size[1]), size[2]),
       material,
@@ -19651,19 +19667,6 @@ export class Level {
   private buildSlipstream(): void {
     // ID-only construction must use the same three-act data as the registry.
     this.buildCustom(migrateCustomLevel(JSON.parse(JSON.stringify(SLIPSTREAM_LEVEL)) as CustomLevelData));
-  }
-
-  private endWall(deckY: number, cx = 0): void {
-    if (this.jungleAtmosphere) {
-      this.cladJungleWall(cx, deckY, this.endWallZ - 1, 14, 4, 1);
-      return;
-    }
-    const wall = new THREE.Mesh(
-      new THREE.BoxGeometry(14, 4, 1),
-      this.baseMat("wall", this.wallTint, "stone", 3, 1),
-    );
-    wall.position.set(cx, deckY + 2, this.endWallZ - 1);
-    this.root.add(wall);
   }
 
   private placeStartWarpPad():void {

@@ -1,0 +1,192 @@
+{
+  "level": "jungle",
+  "name": "Jungle Ruins — broken aqueduct and sunward ascent",
+  "promptTimeUtc": "2026-10-25T04:49:20Z",
+  "firstPlayableUtc": "2026-10-25T05:06:48Z",
+  "firstPlayableElapsedSeconds": 1048,
+  "skateGapMetres": [
+    26,
+    30,
+    32,
+    34
+  ],
+  "climbRiseMetres": 26.4,
+  "newCheckpoints": 5,
+  "native": {
+    "frames": 4525,
+    "seconds": 75.41666666666667,
+    "deaths": 0,
+    "checkpoints": 5,
+    "unchangedTuning": true,
+    "editorRoundTrip": true,
+    "sideCameraDistanceMetres": 18,
+    "sourceTint": true,
+    "pitRecovery": [
+      {
+        "name": "aqueduct pit",
+        "seconds": 2.6333333333333333,
+        "spawn": [
+          107,
+          17.70000002384186,
+          -1360
+        ],
+        "returned": [
+          107,
+          17.70000002384186,
+          -1360
+        ]
+      },
+      {
+        "name": "climbing pit",
+        "seconds": 2.8333333333333335,
+        "spawn": [
+          107,
+          17.70000002384186,
+          -1360
+        ],
+        "returned": [
+          107,
+          17.70000002384186,
+          -1360
+        ]
+      }
+    ]
+  },
+  "browser": {
+    "sourceValidated": true,
+    "runs": [
+      {
+        "mode": "lite",
+        "frame": 4525,
+        "state": "finished",
+        "deaths": 0,
+        "checkpoints": 5,
+        "recovery": [
+          {
+            "name": "aqueduct pit",
+            "before": {
+              "snap": 4,
+              "spawn": [
+                107,
+                17.70000002384186,
+                -1360
+              ]
+            },
+            "after": [
+              107,
+              17.600000023841858,
+              -1360
+            ]
+          },
+          {
+            "name": "climbing pit",
+            "before": {
+              "snap": 6,
+              "spawn": [
+                107,
+                17.70000002384186,
+                -1360
+              ]
+            },
+            "after": [
+              107,
+              17.600000023841858,
+              -1360
+            ]
+          }
+        ]
+      },
+      {
+        "mode": "full",
+        "frame": 4525,
+        "state": "finished",
+        "deaths": 0,
+        "checkpoints": 5,
+        "recovery": [
+          {
+            "name": "aqueduct pit",
+            "before": {
+              "snap": 4,
+              "spawn": [
+                107,
+                17.70000002384186,
+                -1360
+              ]
+            },
+            "after": [
+              107,
+              17.600000023841858,
+              -1360
+            ]
+          },
+          {
+            "name": "climbing pit",
+            "before": {
+              "snap": 6,
+              "spawn": [
+                107,
+                17.70000002384186,
+                -1360
+              ]
+            },
+            "after": [
+              107,
+              17.600000023841858,
+              -1360
+            ]
+          }
+        ]
+      }
+    ],
+    "consoleErrors": []
+  },
+  "finalArtReview": {
+    "sourceValidated": true,
+    "consoleErrors": [],
+    "images": [
+      "aqueduct.png",
+      "climb.png",
+      "summit.png"
+    ]
+  },
+  "campaignAndMedalChecks": "passed",
+  "originalRoute": {
+    "runs": [
+      {
+        "mode": "lite",
+        "supportedSpawn": true,
+        "openingJump": true,
+        "boundary": true,
+        "checkpoint": 0,
+        "respawn": [
+          -1.4179450392282735,
+          -2.7958760261293656,
+          -116
+        ],
+        "bonusReturn": {
+          "same": true,
+          "checkpoint": true
+        },
+        "finish": "finished"
+      },
+      {
+        "mode": "full",
+        "supportedSpawn": true,
+        "openingJump": true,
+        "boundary": true,
+        "checkpoint": 0,
+        "respawn": [
+          -1.4179450392282735,
+          -2.7958760261293656,
+          -116
+        ],
+        "bonusReturn": {
+          "same": true,
+          "checkpoint": true
+        },
+        "finish": "finished"
+      }
+    ],
+    "consoleErrors": []
+  }
+}
