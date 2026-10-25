@@ -31,7 +31,7 @@ function face(e:Enemy,point:THREE.Vector3,dt:number):void {
  * an encounter cannot wake an enemy three roofs away behind the player. */
 export function stepKook(e:Enemy,dt:number,ctx:Context):void {
  const k=e.kook!;e.stateT+=dt;k.awake=Math.max(0,k.awake-dt);
- eye.copy(e.group.position).y+=k.role==='lookout'?1.95:1.85;
+ eye.copy(e.group.position).y+=(k.role==='lookout'?1.95:1.85)*e.body.scale.y;
  target.copy(ctx.player).y+=.8;
  const distance=eye.distanceTo(target),dx=target.x-eye.x,dz=target.z-eye.z;
  const forward=(Math.sin(e.body.rotation.y)*dx+Math.cos(e.body.rotation.y)*dz)/Math.max(.001,Math.hypot(dx,dz));

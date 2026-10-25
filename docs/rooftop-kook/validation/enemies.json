@@ -1,6 +1,10 @@
 {
   "lookouts": 3,
   "gunners": 4,
+  "sizeMultiplier": 1.7,
+  "scaledBounds": true,
+  "sizeSurvivesReset": true,
+  "sizeSurvivesCapture": true,
   "groupIsolation": true,
   "visibility": true,
   "interruptibleAlarm": true,

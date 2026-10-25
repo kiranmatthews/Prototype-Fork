@@ -31,14 +31,14 @@ try{
   const g=window.__game,l=g.getLevel(),enemy=l.enemies.find(e=>e.kook?.role==='gunner'&&e.kook.group===window.kookReview.group);
   const crate=l.crates.filter(c=>c.metal).sort((a,b)=>a.mesh.position.distanceTo(enemy.group.position)-b.mesh.position.distanceTo(enemy.group.position))[0];
   const away=crate.mesh.position.clone().sub(enemy.group.position).setY(0).normalize(),pos=crate.mesh.position.clone().addScaledVector(away,7);pos.y=enemy.baseY+.12;
-  const blocked=l.projectilePathBlocked(enemy.group.position.clone().add(pos.clone().set(0,1.85,0)),pos.clone().add(pos.clone().set(0,.8,0)));
+  const blocked=l.projectilePathBlocked(enemy.group.position.clone().add(pos.clone().set(0,1.85*enemy.body.scale.y,0)),pos.clone().add(pos.clone().set(0,.8,0)));
   g.player.resetRacePosition(l,pos,away.clone().negate());g.player.invulnTimer=20;
   return {blocked,position:pos.toArray(),before:window.kookReview.shots,awake:enemy.kook.awake,crate:crate.mesh.position.toArray(),box:[crate.box.min.toArray(),crate.box.max.toArray()],gunner:enemy.group.position.toArray()};
  });
  console.log('cover fixture',JSON.stringify(cover));assert.equal(cover.blocked,true);assert.ok(cover.awake>0);await page.waitForTimeout(4500);
  const after=await page.evaluate(()=>window.kookReview.shots);assert.equal(after,cover.before);await page.screenshot({path:out+'/cover.png'});
  const diagnostics=await page.evaluate(()=>window.__game.getLevel().enemies.filter(e=>e.kook).map(e=>{const bounds=[];e.visual.body.traverse(o=>{if(o.isSkinnedMesh){o.computeBoundingBox();const b=o.boundingBox.clone().applyMatrix4(o.matrixWorld);bounds.push({bottom:b.min.y-e.baseY,top:b.max.y-e.baseY});}});return {role:e.kook.role,state:e.state,hands:e.group.userData.kookHandErrors,feet:e.group.userData.kookFootErrors,bounds,status:e.visual.diagnostics.status};}));
- for(const e of diagnostics){assert.equal(e.status,'ready');assert.ok([...(e.hands??[]),...e.feet].every(v=>v<.03),'Enemy contacts must remain planted on a translated rooftop');assert.ok(e.bounds.length>0);for(const b of e.bounds){assert.ok(Math.abs(b.bottom)<.25,'Enemy feet must align with the roof');assert.ok(b.top>2&&b.top<3,'Enemy artwork must stay around its gameplay collider');}}
+ for(const e of diagnostics){assert.equal(e.status,'ready');assert.ok([...(e.hands??[]),...e.feet].every(v=>v<.03),'Enemy contacts must remain planted on a translated rooftop');assert.ok(e.bounds.length>0);for(const b of e.bounds){assert.ok(Math.abs(b.bottom)<.25,'Enemy feet must align with the roof');assert.ok(b.top>2*1.7&&b.top<3*1.7,'Enemy artwork must grow with its gameplay collider');}}
  const downloads=await Promise.all(animationRequests);assert.deepEqual([...new Set(downloads.map(d=>d.name))].sort(),['karen-rain-clips.bin','kook-rain-clips.bin']);
  const render=await page.evaluate(()=>{const g=window.__game;return {buffer:[g.renderer.domElement.width,g.renderer.domElement.height],stamp:document.querySelector('.hud-build')?.textContent};});assert.deepEqual(render.buffer,[2560,1440]);
  await writeFile(out+'/browser.json',JSON.stringify({base,render,downloads,initial,firing,cover,shotsBehindCover:after-cover.before,diagnostics,errors},null,2)+'\n');assert.deepEqual(errors,[]);console.log('PASS',JSON.stringify({render,downloads,firing,cover,diagnostics,errors}));

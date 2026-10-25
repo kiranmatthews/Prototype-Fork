@@ -1,0 +1,20 @@
+{
+  "commands": {
+    "npm run check:levels": "passed",
+    "npm run build": "passed",
+    "npm run check:release": "passed",
+    "node tools/test-rooftop-weather.mjs": "passed",
+    "node tools/test-rooftop-enemies.mjs": "passed",
+    "node tools/test-rooftop-ridges.mjs": "passed",
+    "node tools/test-run-inertia-presentation.mjs": "passed",
+    "node tools/test-ice-walk-animation.mjs": "passed",
+    "node tools/rooftop-enemy-browser.mjs http://127.0.0.1:5267": "passed",
+    "node tools/rooftop-browser.mjs http://127.0.0.1:5267 --native": "passed"
+  },
+  "releaseBytes": 996774533,
+  "renderBuffer": [
+    2560,
+    1440
+  ],
+  "consoleErrors": 0
+}

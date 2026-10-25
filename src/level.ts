@@ -7035,7 +7035,7 @@ export class Level {
               speed: r2(e.speed),
               terrainSupports: e.terrainSupports || undefined,
               foe,
-              ...(e.kook?{kookRole:e.kook.role,alertGroup:e.kook.group}:{}),
+              ...(e.kook?{kookRole:e.kook.role,alertGroup:e.kook.group,s:[1,e.group.userData.kookHeight,1] as [number,number,number]}:{}),
               yaw: e.kook?THREE.MathUtils.radToDeg(e.kook.bearing):90,
               dkind: e.group.userData.ghostSkin as CustomComponent['dkind'],
               ...(e.group.userData.ghostSkin?{s:[1,e.group.userData.ghostHeight,1] as [number,number,number],vr:e.group.userData.ghostVariant}:{}),
@@ -7051,7 +7051,7 @@ export class Level {
               speed: r2(e.speed),
               terrainSupports: e.terrainSupports || undefined,
               foe,
-              ...(e.kook?{kookRole:e.kook.role,alertGroup:e.kook.group,yaw:THREE.MathUtils.radToDeg(e.kook.bearing)}:{}),
+              ...(e.kook?{kookRole:e.kook.role,alertGroup:e.kook.group,yaw:THREE.MathUtils.radToDeg(e.kook.bearing),s:[1,e.group.userData.kookHeight,1] as [number,number,number]}:{}),
               dkind: e.group.userData.ghostSkin as CustomComponent['dkind'],
               ...(e.group.userData.ghostSkin?{s:[1,e.group.userData.ghostHeight,1] as [number,number,number],vr:e.group.userData.ghostVariant}:{}),
             },
@@ -18738,7 +18738,7 @@ export class Level {
 
   /** Imported enemy artwork; gameplay roots and collision remain level-owned. */
   private enemyGroup(kind: EnemyKind, skin?:CustomComponent['dkind'],height?:number,variant?:number,kookRole?:KookRole): EnemyVisual {
-    const visual = kookRole?createKookVisual(kind,kookRole):skin==='ghostknight'||skin==='ghostfood'||skin==='ghostcake'?createGhostEnemyVisual(kind,skin,{height,variant,lookAt:()=>this.playerPos}):createEnemyVisual(kind, { appearance: this.nightworksRocks ? "nightworks" : undefined });
+    const visual = kookRole?createKookVisual(kind,kookRole,height):skin==='ghostknight'||skin==='ghostfood'||skin==='ghostcake'?createGhostEnemyVisual(kind,skin,{height,variant,lookAt:()=>this.playerPos}):createEnemyVisual(kind, { appearance: this.nightworksRocks ? "nightworks" : undefined });
     this.root.add(visual.group);
     return visual;
   }
@@ -18913,7 +18913,7 @@ export class Level {
           cue:(owner,cue)=>{const distance=owner.group.position.distanceTo(this.playerPos),gain=Math.max(0,1-distance/55)**2;
             sfx.play(cue==='screech'?'karenScreech':cue==='shot'?'kookShot':cue==='wake'?'kookCock':'karenNotice',gain*.8,1,.05);},
         });
-        boxW=1.05;boxH=e.kook.role==='lookout'?2.35:2.5;cy=boxH/2;
+        boxW=1.05*e.body.scale.x;boxH=e.group.userData.kookHeight;cy=boxH/2;
       }else if(goblin){
         boxW=GOBLIN.width;boxH=GOBLIN.height;cy=boxH/2;
         e.touchHurt=e.state!=="stagger";

@@ -82,9 +82,12 @@ function makeGun(){
  return {group,muzzle,right,left,flash,ready,dispose(){disposed=true;flash.geometry.dispose();flash.material.dispose();lease.release();group.removeFromParent();}};
 }
 
-export function createKookVisual(kind:EnemyKind,role:KookRole):EnemyVisual {
+export function createKookVisual(kind:EnemyKind,role:KookRole,height=role==='lookout'?2.35:2.5):EnemyVisual {
  const name=role==='lookout'?'karen-rain':'kook-rain',group=new THREE.Group(),body=new THREE.Group(),artwork=new THREE.Group();
- group.name=role==='lookout'?'Kook courtyard lookout':'Sleeping Kook gunner';group.userData.kookRole=role;group.add(body);body.add(artwork);
+ group.name=role==='lookout'?'Kook courtyard lookout':'Sleeping Kook gunner';group.userData.kookRole=role;group.userData.kookHeight=height;group.add(body);body.add(artwork);
+ // Authored size belongs below the gameplay root, whose scale is also used
+ // by defeat/reset effects. Weapon sockets and planted contacts inherit it.
+ body.scale.setScalar(height/(role==='lookout'?2.35:2.5));
  const diagnostic:EnemyVisualDiagnostics={kind,status:'loading',url:base+name+'.glb',clips:[],activeClip:null,mappedNodes:{},skinnedMeshes:0,meshes:0,animationTime:0,gaitPhase:0,state:'idle'};
  const lease=cache.acquire(name),gun=role==='gunner'?makeGun():null;if(gun){body.add(gun.group);gun.group.visible=false;}
  let model:THREE.Group|null=null,mixer:THREE.AnimationMixer|null=null,disposed=false,defeatTime=0,gunAim=0,last:EnemyAnimationFrame={state:'watch',stateTime:0,time:0,speed:0,verticalVelocity:0,grounded:true,alive:true,flung:false};

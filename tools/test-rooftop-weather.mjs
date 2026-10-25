@@ -9,6 +9,9 @@ await withSkateRuntime(async({server,THREE,Level,Player,CONST,TUNING})=>{
  const {validAtmosphere}=await server.ssrLoadModule('/src/levelAtmosphere.ts');
  const {RainWeather}=await server.ssrLoadModule('/src/rainWeather.ts');
  const {ROOFTOP_RELAY_LEVEL:roof}=await server.ssrLoadModule('/src/levels/codex-lab.ts');
+ const animation=await server.ssrLoadModule('/src/animation/index.ts');
+ const {createCharacterAnimationRuntime}=await server.ssrLoadModule('/src/characterAnimationRuntime.ts');
+ const {wrapFacingAngle}=await server.ssrLoadModule('/src/runFacing.ts');
  const before=JSON.stringify(TUNING),report={traction:[],impacts:null,geometryUnchanged:true};
  assert.ok(validAtmosphere(roof.atmosphere));
  for(const rain of [{intensity:NaN,wind:[1,2]},{intensity:2,wind:[1,2]},
@@ -20,24 +23,44 @@ await withSkateRuntime(async({server,THREE,Level,Player,CONST,TUNING})=>{
   const data={...fixture,components:fixture.components.map(c=>c.t==='platform'?{...c,tex:name==='stone'?'kook-paving':'kook-metal',...(grip===null?{}:{slip:true,iceGrip:grip})}:c)};
   const level=new Level(new THREE.Scene(),{id:'wet-probe',name:data.name,data});level.scene.updateMatrixWorld(true);
   const p=new Player(level.scene);
+  const binding=animation.RigBinding.fromSculptRuntime(p.animationRig.root);
+  const runtime=createCharacterAnimationRuntime(p,animation.createPlayerStarterAnimationSuite(binding.definition));
   const reset=()=>{p.enterLevel('wet-probe');p.respawn(level,true);p.step(CONST.fixedStep,makeInput(),level);assert.ok(p.grounded);};
   const step=(input,n)=>{for(let i=0;i<n;i++){p.step(CONST.fixedStep,makeInput(input),level);level.update(CONST.fixedStep);}};
   try{
    reset();p.walkVelocity.set(0,0,-6);p.speed=6;step({},30);
    const footRelease={distance:-p.pos.z,speed:p.walkVelocity.length(),clip:p.animationClipHint};
    if(grip!==null)assert.equal(footRelease.clip,'player.run','Rain-slick roofs must use the ordinary foot cycle, not the ice walk');
+   reset();step({moveY:1},180);const turnStart=p.pos.z;
+   let reverseFrame=0,oldDirectionDistance=0,turnPose=null;
+   for(let frame=1;frame<=150;frame++){
+    step({moveY:-1},1);
+    if(frame===4){
+     assert.ok(Math.abs(wrapFacingAngle(p.visualYaw-Math.PI))<1e-6,'Wet run must face the new intent in four frames');
+     assert.ok(p.walkVelocity.z<-5,'The pivot must retain the old travel direction');
+     turnPose={yaw:p.visualYaw,velocity:p.walkVelocity.toArray(),clip:runtime.activeClipId};
+    }
+    if(!reverseFrame&&p.walkVelocity.z>=0)reverseFrame=frame;
+    oldDirectionDistance=Math.max(oldDirectionDistance,turnStart-p.pos.z);
+    assert.equal(runtime.activeClipId,'player.run','Reversing through zero speed must keep the normal run cycle');
+    assert.ok(p.animationIntent.motion.normalizedSpeed>.95,'The opposing slide must keep the ordinary run cadence');
+   }
+   assert.ok(reverseFrame>4);assert.equal(p.walkTurnaround,false,'Turn intent must clear after velocity catches up');
+   const reversal={reverseFrame,oldDirectionDistance,turnPose};
    reset();p.freeSkate=true;p.speed=20;p.lastPlanar=20;p.axisF.set(0,0,-1);p.axisL.set(-1,0,0);step({grabHeld:true},30);
    const brake={distance:-p.pos.z,speed:p.speed};
    reset();p.freeSkate=true;p.speed=20;p.lastPlanar=20;p.axisF.set(0,0,-1);p.axisL.set(-1,0,0);step({},30);
    const coast={distance:-p.pos.z,speed:p.speed};
    assert.ok(level.surfaceEdgeRails.length>0,'Wet traction must preserve ordinary edge grinding');
-   report.traction.push({name,grip,footRelease,brake,coast});
-  }finally{level.dispose();}
+   report.traction.push({name,grip,footRelease,reversal,brake,coast});
+  }finally{runtime.dispose();level.dispose();}
  }
  const [dry,paving,metalResult]=report.traction;
  assert.ok(metalResult.footRelease.distance>paving.footRelease.distance&&paving.footRelease.distance>dry.footRelease.distance,'Foot drift must follow the surface grip');
  assert.ok(metalResult.brake.speed>paving.brake.speed&&paving.brake.speed>dry.brake.speed,'Wet braking must retain more momentum');
  assert.ok(metalResult.coast.speed>dry.coast.speed,'Wet rollout must be longer than dry');
+ assert.ok(metalResult.reversal.reverseFrame>paving.reversal.reverseFrame&&paving.reversal.reverseFrame>dry.reversal.reverseFrame,'Rain must increase reversal inertia according to grip');
+ assert.ok(metalResult.reversal.oldDirectionDistance>paving.reversal.oldDirectionDistance&&paving.reversal.oldDirectionDistance>dry.reversal.oldDirectionDistance,'Wet run turns must slide farther in the old direction');
  assert.equal(JSON.stringify(TUNING),before,'Weather cannot retune other levels');
 
  const deck=new THREE.Mesh(new THREE.PlaneGeometry(140,140),new THREE.MeshBasicMaterial());

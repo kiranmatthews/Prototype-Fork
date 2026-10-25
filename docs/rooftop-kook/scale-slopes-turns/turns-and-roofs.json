@@ -1,0 +1,203 @@
+{
+  "runs": [
+    {
+      "lite": true,
+      "reversed": {
+        "position": [
+          -1.4758981053387152,
+          95.30000000596046,
+          -27.561536371610856
+        ],
+        "velocity": [
+          -0.6146644094162637,
+          0,
+          -6.462215168956712
+        ],
+        "opposed": -6.490754960650591,
+        "turning": true,
+        "yaw": -3.0328644374598865,
+        "facingError": 0,
+        "grounded": true,
+        "board": false,
+        "grip": 0.94,
+        "active": "player.run",
+        "time": 0.3353301417175466
+      },
+      "continued": {
+        "position": [
+          -0.4520322372600488,
+          95.30000000596046,
+          -17.301465976399115
+        ],
+        "velocity": [
+          0.7143763612872451,
+          0,
+          8.912491074067054
+        ],
+        "opposed": 8.940696354124471,
+        "turning": true,
+        "yaw": -3.0708181549987583,
+        "facingError": 0,
+        "grounded": true,
+        "board": false,
+        "grip": 0.94,
+        "active": "player.run",
+        "time": 0.2019969083842038
+      },
+      "side": {
+        "position": [
+          -0.33650885558881055,
+          95.30000000596046,
+          -16.78567484870239
+        ],
+        "velocity": [
+          2.3288553972152743,
+          0,
+          7.0494202301562785
+        ],
+        "opposed": 1.8394931951487887,
+        "turning": true,
+        "yaw": -1.5021026777736108,
+        "facingError": 0,
+        "grounded": true,
+        "board": false,
+        "grip": 0.94,
+        "active": "player.run",
+        "time": 0.3086635750508703
+      },
+      "render": {
+        "buffer": [
+          1280,
+          720
+        ],
+        "stamp": "Codex/sol fork · build 10-25 15:48 UTC"
+      }
+    },
+    {
+      "lite": false,
+      "reversed": {
+        "position": [
+          -1.4758981053387152,
+          95.30000000596046,
+          -27.561536371610856
+        ],
+        "velocity": [
+          -0.6146644094162637,
+          0,
+          -6.462215168956712
+        ],
+        "opposed": -6.490754960650591,
+        "turning": true,
+        "yaw": -3.0328644374598865,
+        "facingError": 0,
+        "grounded": true,
+        "board": false,
+        "grip": 0.94,
+        "active": "player.run",
+        "time": 0.3353301417175466
+      },
+      "continued": {
+        "position": [
+          -0.4520322372600488,
+          95.30000000596046,
+          -17.301465976399115
+        ],
+        "velocity": [
+          0.7143763612872451,
+          0,
+          8.912491074067054
+        ],
+        "opposed": 8.940696354124471,
+        "turning": true,
+        "yaw": -3.0708181549987583,
+        "facingError": 0,
+        "grounded": true,
+        "board": false,
+        "grip": 0.94,
+        "active": "player.run",
+        "time": 0.2019969083842038
+      },
+      "side": {
+        "position": [
+          -0.33650885558881055,
+          95.30000000596046,
+          -16.78567484870239
+        ],
+        "velocity": [
+          2.3288553972152743,
+          0,
+          7.0494202301562785
+        ],
+        "opposed": 1.8394931951487887,
+        "turning": true,
+        "yaw": -1.5021026777736108,
+        "facingError": 0,
+        "grounded": true,
+        "board": false,
+        "grip": 0.94,
+        "active": "player.run",
+        "time": 0.3086635750508703
+      },
+      "render": {
+        "buffer": [
+          2560,
+          1440
+        ],
+        "stamp": "Codex/sol fork · build 10-25 15:48 UTC"
+      }
+    }
+  ],
+  "roofs": [
+    {
+      "index": 3,
+      "grounded": true,
+      "bailing": false,
+      "position": [
+        -38.488962267720055,
+        88.09999989104216,
+        -148.03364907286013
+      ]
+    },
+    {
+      "index": 5,
+      "grounded": true,
+      "bailing": false,
+      "position": [
+        -79.96859514777758,
+        86.99999985394994,
+        -225.08669416871504
+      ]
+    },
+    {
+      "index": 36,
+      "grounded": true,
+      "bailing": false,
+      "position": [
+        33.79390590277122,
+        47.39999968793791,
+        -1505.577432571147
+      ]
+    },
+    {
+      "index": 39,
+      "grounded": true,
+      "bailing": false,
+      "position": [
+        33.43529462770497,
+        43.39999976071717,
+        -1665.4851064201646
+      ]
+    },
+    {
+      "index": 40,
+      "grounded": true,
+      "bailing": false,
+      "position": [
+        15.501320295034507,
+        43.40000032343772,
+        -1700.8228158699687
+      ]
+    }
+  ],
+  "errors": []
+}

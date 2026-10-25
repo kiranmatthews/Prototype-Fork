@@ -10,25 +10,25 @@
     },
     {
       "name": "RR:3 gable roof",
-      "creases": 38,
+      "creases": 1,
       "safeLanding": true,
       "grindCatch": true
     },
     {
       "name": "RR:5 hip roof",
-      "creases": 61,
+      "creases": 1,
       "safeLanding": true,
       "grindCatch": true
     },
     {
       "name": "RR:10 hip roof",
-      "creases": 61,
+      "creases": 1,
       "safeLanding": true,
       "grindCatch": true
     },
     {
       "name": "RR:16 gable roof",
-      "creases": 41,
+      "creases": 1,
       "safeLanding": true,
       "grindCatch": true
     },
@@ -40,19 +40,19 @@
     },
     {
       "name": "RR:19 hip roof",
-      "creases": 61,
+      "creases": 1,
       "safeLanding": true,
       "grindCatch": true
     },
     {
       "name": "RR:20 gable roof",
-      "creases": 36,
+      "creases": 1,
       "safeLanding": true,
       "grindCatch": true
     },
     {
       "name": "RR:21 gable roof",
-      "creases": 35,
+      "creases": 1,
       "safeLanding": true,
       "grindCatch": true
     },
@@ -64,13 +64,13 @@
     },
     {
       "name": "RR:34 gable roof",
-      "creases": 38,
+      "creases": 1,
       "safeLanding": true,
       "grindCatch": true
     },
     {
       "name": "RR:36 hip roof",
-      "creases": 61,
+      "creases": 5,
       "safeLanding": true,
       "grindCatch": true
     },
@@ -82,13 +82,13 @@
     },
     {
       "name": "RR:39 gable roof",
-      "creases": 43,
+      "creases": 1,
       "safeLanding": true,
       "grindCatch": true
     },
     {
       "name": "RR:40 gable roof",
-      "creases": 39,
+      "creases": 1,
       "safeLanding": true,
       "grindCatch": true
     },

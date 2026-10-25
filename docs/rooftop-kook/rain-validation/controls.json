@@ -5,7 +5,21 @@
       "grip": null,
       "footRelease": {
         "distance": 0.8500000000000004,
-        "speed": 0
+        "speed": 0,
+        "clip": "player.idle"
+      },
+      "reversal": {
+        "reverseFrame": 14,
+        "oldDirectionDistance": 0.9388888888888864,
+        "turnPose": {
+          "yaw": -3.141592653589793,
+          "velocity": [
+            0,
+            0,
+            -6.333333333333333
+          ],
+          "clip": "player.run"
+        }
       },
       "brake": {
         "distance": 8.751032021604939,
@@ -21,7 +35,21 @@
       "grip": 0.94,
       "footRelease": {
         "distance": 1.4062287295350568,
-        "speed": 1.1051040167480135
+        "speed": 1.1051040167480135,
+        "clip": "player.run"
+      },
+      "reversal": {
+        "reverseFrame": 15,
+        "oldDirectionDistance": 1.0069366211640727,
+        "turnPose": {
+          "yaw": -3.141592653589793,
+          "velocity": [
+            0,
+            0,
+            -6.4917652633545035
+          ],
+          "clip": "player.run"
+        }
       },
       "brake": {
         "distance": 8.825970100308641,
@@ -37,7 +65,21 @@
       "grip": 0.84,
       "footRelease": {
         "distance": 1.5108841542683886,
-        "speed": 1.3291278511576603
+        "speed": 1.3291278511576603,
+        "clip": "player.run"
+      },
+      "reversal": {
+        "reverseFrame": 17,
+        "oldDirectionDistance": 1.1352641824887826,
+        "turnPose": {
+          "yaw": -3.141592653589793,
+          "velocity": [
+            0,
+            0,
+            -6.756059371059577
+          ],
+          "clip": "player.run"
+        }
       },
       "brake": {
         "distance": 8.950866898148147,

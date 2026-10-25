@@ -541,7 +541,7 @@ for(const [district,d] of roofDistrictSpecs.entries()){
   // between them. Ramp launches and several uphill catches interrupt that fall.
   const step=d.steps[j];
   const gap=d.gaps?.[j]??(2.8+Math.min(1.4,district*.12)+[0,.25,.5,.1][j%4]);
-  ROOFTOP_ROOFS.push({index,district,name:`${d.name} / ${j+1}`,a:roofStation,b:roofStation+depth,depth,width:d.widths[j],top:roofHeight-(shape==='gable'?pitch:0),rise,step,gap,kind,route:-1,shape,pitch,grade});
+  ROOFTOP_ROOFS.push({index,district,name:`${d.name} / ${j+1}`,a:roofStation,b:roofStation+depth,depth,width:d.widths[j],top:roofHeight-(['gable','hip'].includes(shape)?pitch:0),rise,step,gap,kind,route:-1,shape,pitch,grade});
   roofStation+=depth+gap;roofHeight+=grade+rise+step;
  }
  const last=ROOFTOP_ROOFS.length-1;
@@ -600,11 +600,16 @@ export function rooftopRoofAt(s:number,route='main'){
  const list=fork?ROOFTOP_BRANCH_ROOFS.filter(r=>r.route===fork.index):ROOFTOP_ROOFS;
  return list.find(r=>s<=r.b)??list[list.length-1];
 }
+export function rooftopWidthAt(r:RooftopRoof,s:number){
+ const t=Math.max(0,Math.min(1,(s-r.a)/r.depth));
+ return r.width*(r.kind==='taper'?1.15-.4*t:r.kind==='diamond'?.72+.4*Math.sin(Math.PI*t):1);
+}
 export function rooftopSurfaceY(r:RooftopRoof,s:number,u=0){
- const t=Math.max(0,Math.min(1,(s-r.a)/r.depth)),side=Math.max(0,1-Math.abs(u)/(r.width/2));
- // A short launch terrace brings both gable flanks up to ridge height.
- // Off-centre riders get the same visible transfer height as the ridge line.
- const roof=r.shape==='gable'?r.pitch*mix(side,1,smooth(r.b-22,r.b-8,s)):r.shape==='aframe'?r.pitch*Math.max(0,1-Math.abs(s-(r.a+r.b)/2)/(r.depth/2-2)):r.shape==='hip'?r.pitch*Math.min(1,Math.max(0,(s-r.a-14)/10),Math.max(0,(r.b-14-s)/10))*side:0;
+ const t=Math.max(0,Math.min(1,(s-r.a)/r.depth)),side=Math.max(0,1-Math.abs(u)/(rooftopWidthAt(r,s)/2));
+ // Longitudinal spines keep both flanks pitched from gable to gable.
+ // Their ridge datum preserves the authored transfer heights; launch rises
+ // lift the entire cross-section without flattening its side slopes.
+ const roof=r.shape==='gable'||r.shape==='hip'?r.pitch*side:r.shape==='aframe'?r.pitch*Math.max(0,1-Math.abs(s-(r.a+r.b)/2)/(r.depth/2-2)):0;
  return r.top+roof+r.grade*t+r.rise*smooth(r.b-Math.min(22,r.depth*.48),r.b,s);
 }
 function roofGuideOffset(r:RooftopRoof,s:number){
@@ -643,7 +648,7 @@ export const ROOFTOP_RELAY_LEVEL:CustomLevelData=(()=>{
  const crossesBranch=(r:RooftopRoof,s:number,u:number,w=0,depth=0)=>r.route<0&&ROOFTOP_FORKS.some(f=>
   [s-depth/2,s,s+depth/2].some(t=>t>=f.a&&t<=f.b&&Math.abs(u-roofForkOffset(t,f.index))<(f.width+5)/2+w/2+1.4));
  const localBox=(r:RooftopRoof,s:number,u:number,y:number,size:Point,color:string)=>box(r.district,rooftopWorld(s,y,roofForkOffset(s,r.route)+u),size,color,rooftopYaw(s));
- const widthAt=(r:RooftopRoof,s:number)=>{const t=Math.max(0,Math.min(1,(s-r.a)/r.depth));return r.width*(r.kind==='taper'?1.15-.4*t:r.kind==='diamond'?.72+.4*Math.sin(Math.PI*t):1);};
+ const widthAt=rooftopWidthAt;
  const outline=(r:RooftopRoof,a:number,b:number,width:number|((s:number)=>number),u=0)=>{
   const n=Math.max(1,Math.ceil((b-a)/14)),s=Array.from({length:n+1},(_,i)=>a+(b-a)*i/n);
   return [...s.map(t=>rooftopWorld(t,0,roofForkOffset(t,r.route)+u-(typeof width==='function'?width(t):width)/2)),...s.reverse().map(t=>rooftopWorld(t,0,roofForkOffset(t,r.route)+u+(typeof width==='function'?width(t):width)/2))];
@@ -778,7 +783,7 @@ export const ROOFTOP_RELAY_LEVEL:CustomLevelData=(()=>{
   const r=ROOFTOP_ROOFS[index],alertGroup=r.district;
   const foe=(offset:number,u:number,role:'lookout'|'gunner')=>{
    const s=r.a+offset;components.push({t:'enemy',p:rooftopWorld(s,rooftopSurfaceY(r,s,u),u),
-    range:0,speed:0,foe:role==='lookout'?'grunt':'sentry',kookRole:role,alertGroup,yaw:rooftopYaw(s),
+    range:0,speed:0,s:[1,(role==='lookout'?2.35:2.5)*1.7,1],foe:role==='lookout'?'grunt':'sentry',kookRole:role,alertGroup,yaw:rooftopYaw(s),
     grp:300+r.district,nm:role==='lookout'?'Courtyard Karen · alarm lookout':'Kook club gunner · sleeps until alarm'});
   };
   foe(index===43?27:23,lookoutSide,'lookout');

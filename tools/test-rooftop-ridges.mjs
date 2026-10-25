@@ -5,7 +5,23 @@ import {withSkateRuntime,makeInput} from './jungle-cup-harness.mjs';
 await withSkateRuntime(async({server,THREE,Level,player,CONST})=>{
  const {surfaceRidgeEdges,joinSurfaceBoundaryEdges}=await server.ssrLoadModule('/src/surfaceEdges.ts');
  const {normalizeCustomLevelData}=await server.ssrLoadModule('/src/level.ts');
- const {ROOFTOP_RELAY_LEVEL:data,ROOFTOP_CHECKPOINTS}=await server.ssrLoadModule('/src/levels/codex-lab.ts');
+ const {ROOFTOP_RELAY_LEVEL:data,ROOFTOP_CHECKPOINTS,ROOFTOP_ROOFS,rooftopSurfaceY,rooftopWidthAt}=await server.ssrLoadModule('/src/levels/codex-lab.ts');
+ // Both roof flanks retain their pitch at the entry, middle and departure;
+ // the actual mesh rows must agree, including the diamond footprint's edges.
+ for(const r of ROOFTOP_ROOFS.filter(r=>['gable','hip'].includes(r.shape))){
+  const mesh=data.components.find(c=>c.nm===`RR:${r.index} ${r.shape} roof`);
+  const strips=mesh.grindTopTriangles/8;
+  for(let row=0;row<strips;row++){
+   // Roof UV islands duplicate vertices: each strip has eight triangles.
+   const y=vertex=>mesh.vertices[(row*24+vertex)*3+1];
+   for(const [ridge,edges]of [[7,[0,19]],[8,[5,20]]])for(const edge of edges)
+    assert.ok(Math.abs(y(ridge)-y(edge)-r.pitch)<1e-6,r.name+' flattened mesh flank');
+  }
+  for(const t of [0,.05,.25,.5,.75,.95,1]){
+   const s=r.a+r.depth*t,half=rooftopWidthAt(r,s)/2;
+   for(const side of [-1,1])assert.ok(Math.abs(rooftopSurfaceY(r,s)-rooftopSurfaceY(r,s,side*half)-r.pitch)<1e-6,r.name+' flattened flank');
+  }
+ }
  // Shared, split-UV, flat and concave roofs distinguish true spines from seams.
  for(const split of [false,true])for(const peak of [2,0,-2]){
   let geometry=new THREE.BufferGeometry();

@@ -6758,11 +6758,24 @@ export class Player {
         this.walkTurnaround = false;
         this.walkIntent.set(0, 0, 0);
       } else if (slickWalk) {
-        // Authored ice carries the entire approach vector through release and
-        // steering. Counter-steer early; sideways input cannot erase inertia.
-        this.walkVelocity.lerp(this.walkTarget, Math.min(1, CONST.slipAccel * iceGrip * dt));
-        this.walkTurnaround = false;
-        this.walkIntent.set(0, 0, 0);
+        // Slick ground keeps the approach vector through release and steering.
+        // Rain retains the ordinary cartoon pivot/run while velocity catches
+        // up. Only ice owns the separate scrabbling presentation.
+        const previousSpeed = this.walkVelocity.length();
+        const targetSpeed = this.walkTarget.length();
+        const startsTurnaround = previousSpeed >= TUNING.walkSpeed * 0.5 &&
+          targetSpeed >= TUNING.walkSpeed * 0.5 &&
+          this.walkVelocity.dot(this.walkTarget) / Math.max(previousSpeed * targetSpeed, 1e-6) < 0.95;
+        this.walkTurnaround = this.groundHit?.iceWalk === false && walkDir &&
+          (this.walkTurnaround || startsTurnaround) && targetSpeed > 1e-6 &&
+          this.walkVelocity.distanceToSquared(this.walkTarget) > 0.05 ** 2;
+        if (this.walkTurnaround) this.walkIntent.copy(this.walkTarget).multiplyScalar(1 / targetSpeed);
+        else this.walkIntent.set(0, 0, 0);
+        const turnLimit = this.walkTurnaround && TUNING.walkSlowdownTime > 0
+          ? (2 * TUNING.walkSpeed * iceGrip * dt) / TUNING.walkSlowdownTime
+          : Infinity;
+        this.walkVelocity.lerp(this.walkTarget, Math.min(1, CONST.slipAccel * iceGrip * dt,
+          turnLimit / Math.max(this.walkVelocity.distanceTo(this.walkTarget), 1e-6)));
       } else if (!walkDir) {
         this.walkTurnaround = false;
         this.walkIntent.set(0, 0, 0);
