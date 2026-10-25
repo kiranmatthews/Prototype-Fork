@@ -4590,3 +4590,9 @@ To fit the new art on the existing host, eighteen released assets now use lossle
 Final porch visual correction: suspending the retained rooftop now releases its height-fog uniforms before the bonus reuses shared crate and pickup materials. This removes the pale silhouettes without changing fog profiles or colors. The lifecycle regression covers suspension and resume, and the complete native browser playthrough was rechecked with corrected warm crate textures and orange pickups.
 
 The garden now meets the veranda foundation and wraps around both ends, grounding the live-oak roots and flower boxes. Real repair openings remain empty. Expanded face UVs give the three revealed boards the same metre-scale plank direction as the porch, without changing their dimensions or jumps. The garden-contact and deeper gap-ray checks pass; falling off the porch still returns the player to the parent run without losing lives.
+
+## 2026-10-26 — Keep rooftop haze out of HUD pickup animation
+
+Fixed the shared height-fog shader applying rooftop uniforms to crates and fruit in fog-free HUD render passes. It now respects Three.js USE_FOG for the scene and material, preserving all authored world fog and level geometry. Prompt-to-local verified fix: approximately 15 minutes.
+
+The GPU regression reproduced 100% erroneous HUD extinction before the change and verifies zero after it, plus material opt-out and world resume. Eight density-integral fixtures retain their numerical match. Real fruit at three flight positions and the shared Meshy crate icon now match their clear references pixel-for-pixel. Early/mid/late roof-crate probes remain readable. Lite/native Chrome, MAX 2560×1440, normal CRT, bonus entry and fog lifecycle checks pass without console errors. Evidence: `docs/rooftop-kook/hud-fog/`.

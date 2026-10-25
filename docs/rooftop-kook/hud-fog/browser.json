@@ -1,0 +1,148 @@
+{
+  "base": "http://127.0.0.1:5267",
+  "runs": [
+    {
+      "mode": "lite",
+      "rows": [
+        {
+          "kind": "fruit flight",
+          "name": "start",
+          "difference": 0,
+          "orangePixels": 328
+        },
+        {
+          "kind": "fruit flight",
+          "name": "middle",
+          "difference": 0,
+          "orangePixels": 326
+        },
+        {
+          "kind": "fruit flight",
+          "name": "arrival",
+          "difference": 0,
+          "orangePixels": 327
+        },
+        {
+          "kind": "shared crate HUD",
+          "difference": 0,
+          "orangePixels": 16213
+        },
+        {
+          "kind": "world crate",
+          "position": [
+            -6.368189387708097,
+            95.78000000596046,
+            -18.697929204016756
+          ],
+          "nearFogDifference": 26755,
+          "fullFogDifference": 989885,
+          "orangePixels": 3699
+        },
+        {
+          "kind": "world crate",
+          "position": [
+            -124.05621959664674,
+            70.58000000596044,
+            -729.2566080259139
+          ],
+          "nearFogDifference": 28050,
+          "fullFogDifference": 989885,
+          "orangePixels": 3699
+        },
+        {
+          "kind": "world crate",
+          "position": [
+            53.985407215595174,
+            47.64000000596045,
+            -1620.7891992160055
+          ],
+          "nearFogDifference": 22720,
+          "fullFogDifference": 989885,
+          "orangePixels": 3699
+        }
+      ],
+      "buffer": [
+        1280,
+        720
+      ],
+      "stamp": "Codex/sol fork · build 10-25 21:52 UTC",
+      "bonus": {
+        "name": "Bonus: The Storm Parlour",
+        "heightFog": false,
+        "slippy": false
+      }
+    },
+    {
+      "mode": "native",
+      "rows": [
+        {
+          "kind": "fruit flight",
+          "name": "start",
+          "difference": 0,
+          "orangePixels": 328
+        },
+        {
+          "kind": "fruit flight",
+          "name": "middle",
+          "difference": 0,
+          "orangePixels": 326
+        },
+        {
+          "kind": "fruit flight",
+          "name": "arrival",
+          "difference": 0,
+          "orangePixels": 327
+        },
+        {
+          "kind": "shared crate HUD",
+          "difference": 0,
+          "orangePixels": 16213
+        },
+        {
+          "kind": "world crate",
+          "position": [
+            -6.368189387708097,
+            95.78000000596046,
+            -18.697929204016756
+          ],
+          "nearFogDifference": 26755,
+          "fullFogDifference": 989885,
+          "orangePixels": 3699
+        },
+        {
+          "kind": "world crate",
+          "position": [
+            -124.05621959664674,
+            70.58000000596044,
+            -729.2566080259139
+          ],
+          "nearFogDifference": 28050,
+          "fullFogDifference": 989885,
+          "orangePixels": 3699
+        },
+        {
+          "kind": "world crate",
+          "position": [
+            53.985407215595174,
+            47.64000000596045,
+            -1620.7891992160055
+          ],
+          "nearFogDifference": 22720,
+          "fullFogDifference": 989885,
+          "orangePixels": 3699
+        }
+      ],
+      "buffer": [
+        2560,
+        1440
+      ],
+      "stamp": "Codex/sol fork · build 10-25 21:52 UTC",
+      "bonus": {
+        "name": "Bonus: The Storm Parlour",
+        "heightFog": false,
+        "slippy": false
+      }
+    }
+  ],
+  "errors": []
+}

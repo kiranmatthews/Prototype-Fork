@@ -27,8 +27,11 @@ export class HeightFog {
      if(!shader.fragmentShader.includes('#include <fog_fragment>'))return;
      shader.uniforms.uHeightFogCamera=uniforms.camera;shader.uniforms.uHeightFogProfile=uniforms.profile;shader.uniforms.uHeightFogColor=uniforms.color;shader.uniforms.uHeightFogSlope=uniforms.slope;
      shader.uniforms.uHeightFogContour=uniforms.contour;shader.uniforms.uHeightFogCount=uniforms.count;
-     shader.vertexShader='varying vec3 vHeightFogWorld;\n'+shader.vertexShader;
+     // A shared world material also draws in fog-free HUD/fruit-flight scenes.
+     // Use Three's per-pass flag, which covers both scene fog and material opt-outs.
+     shader.vertexShader='#ifdef USE_FOG\nvarying vec3 vHeightFogWorld;\n#endif\n'+shader.vertexShader;
      shader.vertexShader=shader.vertexShader.replace('#include <worldpos_vertex>',`#include <worldpos_vertex>
+      #ifdef USE_FOG
       vec4 heightFogWorld=vec4(transformed,1.0);
       #ifdef USE_BATCHING
        heightFogWorld=batchingMatrix*heightFogWorld;
@@ -37,8 +40,10 @@ export class HeightFog {
        heightFogWorld=instanceMatrix*heightFogWorld;
       #endif
       vHeightFogWorld=(modelMatrix*heightFogWorld).xyz;
+      #endif
      `);
-     shader.fragmentShader=`varying vec3 vHeightFogWorld;
+     shader.fragmentShader=`#ifdef USE_FOG
+      varying vec3 vHeightFogWorld;
       uniform vec3 uHeightFogCamera,uHeightFogProfile,uHeightFogColor;
       uniform vec2 uHeightFogSlope,uHeightFogContour[16];uniform int uHeightFogCount;
       // Exact exponential-density integral on one linear section of the fog
@@ -48,8 +53,10 @@ export class HeightFog {
        float average=abs(exponent)<.01?1.0+exponent*.5:(exp(exponent)-1.0)/exponent;
        return span*exp(clamp(-uHeightFogProfile.z*startHeight,-60.0,12.0))*average;
       }
+      #endif
      `+shader.fragmentShader;
      shader.fragmentShader=shader.fragmentShader.replace('#include <fog_fragment>',`#include <fog_fragment>
+      #ifdef USE_FOG
       float heightFogIntegral=0.0;
       vec3 heightFogRay=vHeightFogWorld-uHeightFogCamera;
       if(uHeightFogCount<2){
@@ -75,9 +82,10 @@ export class HeightFog {
       }
       float heightFogOptical=uHeightFogProfile.y*length(heightFogRay)*heightFogIntegral;
       gl_FragColor.rgb=mix(gl_FragColor.rgb,linearToOutputTexel(vec4(uHeightFogColor,1.0)).rgb,1.0-exp(-max(0.0,heightFogOptical)));
+      #endif
      `);
     };
-    material.customProgramCacheKey=()=>key()+'|analytic-height-fog-v4';material.needsUpdate=true;
+    material.customProgramCacheKey=()=>key()+'|analytic-height-fog-v5';material.needsUpdate=true;
    }
   });
  }

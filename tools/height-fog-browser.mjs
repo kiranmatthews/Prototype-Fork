@@ -1,13 +1,17 @@
 import assert from 'node:assert/strict';
 import {mkdir,writeFile} from 'node:fs/promises';
+import {build} from 'esbuild';
 const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
+const base=(process.argv[2]||'http://127.0.0.1:5267').replace(/\/$/,'');
 const out=process.env.ROOFTOP_OUTPUT||'docs/rooftop-kook/coastal-detail';await mkdir(out,{recursive:true});
+const fixture=await build({stdin:{contents:"export * as THREE from 'three'; export {HeightFog} from './src/heightFog';",resolveDir:process.cwd()},bundle:true,format:'esm',write:false});
 const browser=await chromium.launch({headless:true,channel:'chrome'}),page=await browser.newPage(),errors=[];
 page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
 try{
- await page.goto('http://127.0.0.1:5267/?lite');
- const samples=await page.evaluate(async()=>{
-  const THREE=await import('/node_modules/three/build/three.module.js'),{HeightFog}=await import('/src/heightFog.ts');
+ await page.route('**/fog-fixture.js',r=>r.fulfill({contentType:'application/javascript',body:fixture.outputFiles[0].text}));
+ await page.goto(`${base}/?lite`);
+ const {samples,passes}=await page.evaluate(async()=>{
+  const {THREE,HeightFog}=await import('/fog-fixture.js');
   const renderer=new THREE.WebGLRenderer();renderer.setSize(1,1);renderer.outputColorSpace=THREE.LinearSRGBColorSpace;renderer.toneMapping=THREE.NoToneMapping;
   const scene=new THREE.Scene();scene.fog=new THREE.Fog(0xffffff,100000,100001);
   const material=new THREE.MeshBasicMaterial({color:0x000000,side:THREE.DoubleSide}),mesh=new THREE.Mesh(new THREE.PlaneGeometry(.01,.01),material);scene.add(mesh);
@@ -37,8 +41,22 @@ try{
    }
    results.push({name:sample.name,expected:1-Math.exp(-optical),actual:pixel[0]/255});
   }
-  fog.dispose();material.dispose();mesh.geometry.dispose();target.dispose();renderer.dispose();return results;
+  // Reuse the exact same world material in the fog-free HUD scene. Its
+  // overlay coordinates lie below the roof datum but must never gain haze.
+  camera.position.set(0,0,4);camera.lookAt(0,0,0);camera.updateMatrixWorld(true);
+  mesh.position.set(0,0,0);mesh.quaternion.copy(camera.quaternion);scene.updateMatrixWorld(true);
+  fog.update(scene,camera.position,{height:50,density:.16,falloff:.3},new THREE.Color(0xffffff),true);
+  const worldFog=scene.fog,passes=[];
+  for(const [name,sceneFog,materialFog,expected] of [
+   ['world',worldFog,true,1],['HUD scene',null,true,0],['material opt-out',worldFog,false,0],['world resumed',worldFog,true,1],
+  ]){
+   scene.fog=sceneFog;material.fog=materialFog;material.needsUpdate=true;
+   renderer.render(scene,camera);renderer.readRenderTargetPixels(target,0,0,1,1,pixel);
+   passes.push({name,expected,actual:pixel[0]/255});
+  }
+  fog.dispose();material.dispose();mesh.geometry.dispose();target.dispose();renderer.dispose();return {samples:results,passes};
  });
- for(const sample of samples)assert.ok(Math.abs(sample.actual-sample.expected)<.006,JSON.stringify(sample));
- assert.deepEqual(errors,[]);await writeFile(out+'/fog-gpu.json',JSON.stringify({samples,errors},null,2)+'\n');console.log('PASS continuous fog contour: actual GPU pixels match numerical volume integration',samples);
+ await writeFile(out+'/fog-gpu.json',JSON.stringify({samples,passes,errors},null,2)+'\n');
+ for(const sample of [...samples,...passes])assert.ok(Math.abs(sample.actual-sample.expected)<.006,JSON.stringify(sample));
+ assert.deepEqual(errors,[]);console.log('PASS continuous fog contour and world/HUD/material fog boundaries',JSON.stringify({samples,passes}));
 }finally{await browser.close();}
