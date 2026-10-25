@@ -6350,7 +6350,7 @@ export class Level {
       // Its pool must borrow that same image rather than the hidden night dome.
       if(this.builtFromData?.components.some(c=>c.dkind==='moonbonesky'))
         this.jungleStreamReflections??=new JungleStreamReflectionOwner('moonbonesky');
-      else if(this.skyPreset==='night')this.jungleStreamSkyReflection??=new JungleStreamSkyReflection();
+      else if(this.skyPreset==='night'||this.skyPreset==='coastal-storm')this.jungleStreamSkyReflection??=new JungleStreamSkyReflection();
       else this.jungleStreamReflections??=new JungleStreamReflectionOwner(c.tex==='custard-water'?'custardwaterreflection':undefined);
       material=createJungleStreamMaterial(this.standingWaterClock,c,geometry,this.builtFromData?.components??[],
         this.jungleStreamReflections??undefined,this.jungleStreamSkyReflection??undefined);

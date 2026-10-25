@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "provider": "Meshy",
   "cliVersion": "0.3.1",
-  "budgetCredits": 385,
+  "budgetCredits": 455,
   "startingBalance": 611,
-  "scope": "Original Outer Banks rooftop kit and characters, including new Meshy wet-weather enemy models; user explicitly authorized credits and Meshy outfit replacement",
+  "scope": "Original Outer Banks rooftop kit and characters, plus weathered waterfront bonus porch architecture; user explicitly authorized Meshy credits and requested Meshy architecture",
   "tasks": {
     "estate": {
       "resource": "image-to-3d",
@@ -907,6 +907,80 @@
           "path": ".img2threejs/rooftop-kook/storm-case/downloads/model.glb",
           "bytes": 11721660,
           "sha256": "dc4e6339ca7a1afb7e18fed62e681a9438b9ba1fd574084da2ef8f44103fac83"
+        }
+      ]
+    },
+    "storm-veranda": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "af994174-9de5-4d7d-be54-fef043f5c1ba",
+      "createdAt": "2026-10-25T21:29:42.638986+00:00",
+      "estimatedCredits": 35,
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/rooftop-kook-assets/references/storm-veranda.png",
+        "ai_model": "meshy-7.1",
+        "geometry_resolution": "4k",
+        "should_remesh": true,
+        "topology": "triangle",
+        "target_polycount": 80000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "4k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 226,
+      "reference": "tools/rooftop-kook-assets/references/storm-veranda.png",
+      "referenceSha256": "35fc336e87fae6343ca24ce666cedd625a44c6d7f3c6905ef9d4c490cd55bbe9",
+      "id": "01a174f8-2b64-72ff-80d2-c909ea4cacf5",
+      "checkedAt": "2026-10-25T21:35:32.211163+00:00",
+      "progress": 100,
+      "consumedCredits": 35,
+      "finishedAt": 1792964052142,
+      "expiresAt": 1793223252142,
+      "downloads": [
+        {
+          "path": ".img2threejs/rooftop-kook/storm-veranda/downloads/model.glb",
+          "bytes": 44915556,
+          "sha256": "c2cfc634bccf0acaf29289ac528662f2ef0711e60be601e8998fa81f71ea859a"
+        }
+      ]
+    },
+    "storm-balustrade": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "20e98c57-c4f8-4123-af34-dd05f756776b",
+      "createdAt": "2026-10-25T21:30:45.364971+00:00",
+      "estimatedCredits": 35,
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/rooftop-kook-assets/references/storm-balustrade.png",
+        "ai_model": "meshy-7.1",
+        "geometry_resolution": "2k",
+        "should_remesh": true,
+        "topology": "triangle",
+        "target_polycount": 24000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 191,
+      "reference": "tools/rooftop-kook-assets/references/storm-balustrade.png",
+      "referenceSha256": "163440de13e355065078f702d9a464f519e899d8332edf25b78d4a6eabcaecc5",
+      "id": "01a174f9-1fe8-735f-89a0-e907f69d5f8b",
+      "checkedAt": "2026-10-25T21:32:55.163047+00:00",
+      "progress": 100,
+      "consumedCredits": 35,
+      "finishedAt": 1792963911529,
+      "expiresAt": 1793223111529,
+      "downloads": [
+        {
+          "path": ".img2threejs/rooftop-kook/storm-balustrade/downloads/model.glb",
+          "bytes": 11949496,
+          "sha256": "28de6c04f49fffe3cdf86efbfd908b8eeb644c81a5599abe3d68a192aa53a399"
         }
       ]
     }

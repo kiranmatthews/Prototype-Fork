@@ -1,4 +1,6 @@
 {
+  "storm-veranda": {"triangles": 80000, "width": 26},
+  "storm-balustrade": {"triangles": 24000, "width": 6},
   "clubhouse": {"triangles": 80000, "width": 40},
   "estate": {
     "triangles": 15000,

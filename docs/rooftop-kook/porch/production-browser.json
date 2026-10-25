@@ -1,0 +1,168 @@
+[
+  {
+    "mode": "lite",
+    "shelter": {
+      "name": "Bonus: The Storm Parlour",
+      "rain": {
+        "visible": true,
+        "streaks": 2200,
+        "impactCapacity": 96,
+        "activeImpacts": 36,
+        "samples": 556,
+        "time": 1.8663666665951397,
+        "span": 68,
+        "intensity": 0.86,
+        "wind": [
+          5.5,
+          2.8
+        ]
+      },
+      "lens": {
+        "enabled": false,
+        "amount": 0,
+        "time": 1.8663666665951397
+      },
+      "slippy": false,
+      "buffer": [
+        1280,
+        720
+      ]
+    },
+    "gpu": [
+      {
+        "kind": "streak",
+        "exposed": 1328,
+        "covered": 0,
+        "beside": 1328
+      },
+      {
+        "kind": "impact",
+        "exposed": 558,
+        "covered": 0,
+        "beside": 558
+      }
+    ],
+    "failedAttempt": {
+      "sameParent": true,
+      "completed": false,
+      "lives": 4,
+      "fruit": 0,
+      "deaths": 0,
+      "before": {
+        "lives": 4,
+        "fruit": 0,
+        "deaths": 0,
+        "crates": 0,
+        "lens": false
+      }
+    },
+    "after": {
+      "sameParent": true,
+      "completed": true,
+      "boxes": 23,
+      "crates": 0,
+      "before": {
+        "lives": 4,
+        "fruit": 0,
+        "deaths": 0,
+        "crates": 0,
+        "lens": false
+      },
+      "lens": {
+        "enabled": false,
+        "amount": 0,
+        "time": 1.7174666666189824
+      },
+      "stamp": "Codex/sol fork · build 10-25 21:53 UTC"
+    },
+    "result": {
+      "state": "finished",
+      "cratesBroken": 23,
+      "totalCrates": 23,
+      "deaths": 0,
+      "completionScope": "bonus-detour",
+      "activeStageCrates": 23,
+      "bonusCrateTotal": 0,
+      "bonusCrates": 0,
+      "gemEarned": false
+    },
+    "frames": 3335,
+    "errors": []
+  },
+  {
+    "mode": "native",
+    "shelter": {
+      "name": "Bonus: The Storm Parlour",
+      "rain": {
+        "visible": true,
+        "streaks": 2200,
+        "impactCapacity": 96,
+        "activeImpacts": 41,
+        "samples": 588,
+        "time": 1.9987999999523143,
+        "span": 68,
+        "intensity": 0.86,
+        "wind": [
+          5.5,
+          2.8
+        ]
+      },
+      "lens": {
+        "enabled": false,
+        "amount": 0,
+        "time": 1.9987999999523143
+      },
+      "slippy": false,
+      "buffer": [
+        2560,
+        1440
+      ]
+    },
+    "gpu": [
+      {
+        "kind": "streak",
+        "exposed": 1328,
+        "covered": 0,
+        "beside": 1328
+      },
+      {
+        "kind": "impact",
+        "exposed": 558,
+        "covered": 0,
+        "beside": 558
+      }
+    ],
+    "after": {
+      "sameParent": true,
+      "completed": true,
+      "boxes": 23,
+      "crates": 0,
+      "before": {
+        "lives": 4,
+        "fruit": 0,
+        "deaths": 0,
+        "crates": 0,
+        "lens": true
+      },
+      "lens": {
+        "enabled": true,
+        "amount": 0.82,
+        "time": 1.2037999999523157
+      },
+      "stamp": "Codex/sol fork · build 10-25 21:53 UTC"
+    },
+    "result": {
+      "state": "finished",
+      "cratesBroken": 23,
+      "totalCrates": 23,
+      "deaths": 0,
+      "completionScope": "bonus-detour",
+      "activeStageCrates": 23,
+      "bonusCrateTotal": 0,
+      "bonusCrates": 0,
+      "gemEarned": false
+    },
+    "frames": 3335,
+    "errors": []
+  }
+]

@@ -1,0 +1,44 @@
+{
+  "name": "storm-balustrade",
+  "source": ".img2threejs/rooftop-kook/storm-balustrade-native.glb",
+  "sourceSize": [
+    1.903598964214325,
+    0.5622640252113342,
+    0.1305679976940155
+  ],
+  "sizeAtDefaultWidth": [
+    6,
+    1.77221,
+    0.41154
+  ],
+  "nearTriangles": 23828,
+  "farTriangles": 0,
+  "materials": 1,
+  "sourceGeometryPreserved": true,
+  "originalUVsPreserved": true,
+  "role": "editable modular scenery; per-placement collision policy",
+  "bytes": 3624664,
+  "sha256": "d21db01514c5cc174142ed7b9b6f134e6c747a7846f1eaca0126c190447bf4d1",
+  "triangles": 23828,
+  "nativeGeometryPreserved": true,
+  "skinAndUVsPreserved": true,
+  "pbrPreserved": true,
+  "textureSizes": [
+    [
+      1024,
+      1024
+    ],
+    [
+      2048,
+      2048
+    ],
+    [
+      1024,
+      1024
+    ]
+  ],
+  "geometryCompression": "lossless EXT_meshopt_compression",
+  "allVertexAndSkinValuesVerified": true,
+  "orientedTrianglesVerified": true,
+  "texturePacking": "2K base colour, 1K PBR; WebP quality 94 colour/roughness, original packed normal map"
+}

@@ -65,3 +65,7 @@ The stock rig lacks finger joints. `src/enemies/kookGrip.ts` adds four measured 
 The custom flight case was removed at the user's request. Rooftop Relay uses its standard metal crates and their original collision/cover behavior. The ImageGen reference, exact prompt, completed Meshy job and prior review evidence remain as authoring records only; the case has no runtime code or published GLB. The job consumed 35 credits.
 
 The independent lossless packing remains: `compress_native.mjs --geometry-only estate cupola terrace hydrangea manor dormer` preserves every geometry value, oriented triangle and encoded texture byte. `pack_roof_height.mjs` verifies every height-map pixel while encoding the authoring PNG as lossless WebP. Neither operation changes visible detail.
+
+## Ground-level Storm Parlour bonus
+
+`storm-veranda` and `storm-balustrade` are new Meshy 7.1 architecture commissioned from the saved ImageGen references and prompts. Both jobs succeeded for 35 credits each. Total recorded spend is now 455 credits and the verified balance is 156. The bay retains 77,130 triangles and the balustrade 23,828 at every distance. Blender only prepares the native meshes and review views; it does not simplify or replace their surfaces. The bay uses 4K colour / 2K PBR maps; the balustrade uses 2K colour / 1K PBR. `src/levels/rooftop-porch-art.ts` uniformly places the complete models around the new 23-crate waterfront porch course. See `docs/rooftop-kook/porch/README.md` for full-resolution review and gameplay checks.

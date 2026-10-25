@@ -3,6 +3,8 @@ import * as THREE from 'three';
 
 /** Meshy scenery; dimensions are updated from the prepared source geometry. */
 export const ROOFTOP_KOOK_ASSETS = {
+ kookstormveranda:{file:'../rooftop-kook/storm-veranda',label:'Storm Parlour aged Meshy veranda',size:[26,15.97164,12.84518],wind:false,cellSize:45,normalStrength:.5,doubleSided:false,metalnessMap:true},
+ kookstormrail:{file:'../rooftop-kook/storm-balustrade',label:'Storm Parlour worn white Meshy balustrade',size:[6,1.77221,.41154],wind:false,cellSize:45,normalStrength:.4,doubleSided:false,metalnessMap:true},
  kookclubhouse:{file:'../rooftop-kook/clubhouse',label:'Kook Club columned waterfront mansion',size:[40,21.68749,26.0183],wind:false,cellSize:75,normalStrength:.45,doubleSided:false,metalnessMap:true},
  kookmanor:{file:'../rooftop-kook/manor',label:'Pelican Point turret manor',size:[25.0,18.90383,20.79512],wind:false,cellSize:65,normalStrength:0,doubleSided:false},
  kookdormer:{file:'../rooftop-kook/dormer',label:'Cedar roof dormer and hydrangeas',size:[4.6,4.45673,3.68599],wind:false,cellSize:50,normalStrength:0,doubleSided:false},

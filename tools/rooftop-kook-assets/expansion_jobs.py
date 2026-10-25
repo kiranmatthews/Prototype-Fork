@@ -11,6 +11,7 @@ def main():
    character=name in ('karen','kook','karen-rain','kook-rain')
    payload={'image_url':str(HERE/'references'/f'{name}.png'),'ai_model':'meshy-7.1','geometry_resolution':'4k','should_remesh':True,'topology':'triangle','target_polycount':40000 if character else 80000,'should_texture':True,'enable_pbr':True,'texture_resolution':'4k','target_formats':['glb']}
    if name=='heirloom-shotgun':payload.update(target_polycount=20000,geometry_resolution='2k',texture_resolution='2k')
+   if name=='storm-balustrade':payload.update(target_polycount=24000,geometry_resolution='2k',texture_resolution='2k')
    if character:payload['pose_mode']='a-pose'
    adapter.submit(name,'image-to-3d',payload,35)
   elif args.verb=='rig':

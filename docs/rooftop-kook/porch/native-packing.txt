@@ -1,0 +1,1 @@
+PASS native release packing: every geometry and image byte unchanged across 18 models, 200 views; 16296556 bytes saved

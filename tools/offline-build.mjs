@@ -5,6 +5,7 @@ import {pruneRetiredFontAssets,prepareFontArchives,pruneLocalReviewAssets} from 
 import {prepareReleaseTextures} from './release-textures.mjs';
 import {prepareSharedReleaseTextures} from './release-shared-textures.mjs';
 import {preparePublishedLevels} from './release-levels.mjs';
+import {prepareNativeGeometry} from './release-native-geometry.mjs';
 
 const hash = bytes => createHash('sha256').update(bytes).digest('hex');
 async function filesIn(directory, prefix = '') {
@@ -55,6 +56,8 @@ export function offlineBuild() {
       console.log(`Reviewed textures: ${textures.images} reviewed images in ${textures.models} models, ${(textures.savedBytes/1048576).toFixed(1)} MiB less hosted data; original art retained.`);
       const shared=await prepareSharedReleaseTextures({root,outDir});
       console.log(`Shared textures: ${shared.images} exact images reused across ${shared.models} models, ${(shared.savedBytes/1048576).toFixed(1)} MiB less hosted data.`);
+      const native=await prepareNativeGeometry({root,outDir});
+      console.log(`Native geometry: ${native.files} complete models packed losslessly, ${(native.savedBytes/1048576).toFixed(1)} MiB less hosted data.`);
       const entries = [];
       for (const file of await filesIn(outDir)) {
         if (!runtimeAsset(file, fontVersions)) continue;

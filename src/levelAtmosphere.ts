@@ -70,10 +70,17 @@ export function validAtmosphere(value: unknown): value is CustomAtmosphereData {
   if (Object.keys(data).some(key => !ATMOSPHERE_KEYS.has(key))) return false;
   if(data.rain!==undefined){
     const rain=data.rain as Record<string,unknown>;
-    if(!rain||typeof rain!=='object'||Array.isArray(rain)||Object.keys(rain).some(k=>!['intensity','wind','lens'].includes(k))||
+    if(!rain||typeof rain!=='object'||Array.isArray(rain)||Object.keys(rain).some(k=>!['intensity','wind','lens','shelter'].includes(k))||
       typeof rain.intensity!=='number'||!Number.isFinite(rain.intensity)||rain.intensity<0||rain.intensity>1||
       !Array.isArray(rain.wind)||rain.wind.length!==2||rain.wind.some(v=>typeof v!=='number'||!Number.isFinite(v)||Math.abs(v)>15)||
       rain.lens!==undefined&&(typeof rain.lens!=='number'||!Number.isFinite(rain.lens)||rain.lens<0||rain.lens>1))return false;
+    if(rain.shelter!==undefined){
+      const shelter=rain.shelter as Record<string,unknown>;
+      if(!shelter||typeof shelter!=='object'||Array.isArray(shelter)||Object.keys(shelter).some(k=>!['min','max'].includes(k)))return false;
+      for(const key of ['min','max'])if(!Array.isArray(shelter[key])||shelter[key].length!==3||
+        shelter[key].some(v=>typeof v!=='number'||!Number.isFinite(v)||Math.abs(v)>10000))return false;
+      if((shelter.min as number[]).some((v,i)=>v>=(shelter.max as number[])[i]))return false;
+    }
   }
   if(data.heightFog!==undefined){
     const fog=data.heightFog as Record<string,unknown>;

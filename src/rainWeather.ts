@@ -1,9 +1,19 @@
 import * as THREE from 'three';
 
-export interface RainProfile { intensity:number; wind:[number,number]; lens?:number; }
+export interface RainShelter { min:[number,number,number]; max:[number,number,number]; }
+export interface RainProfile { intensity:number; wind:[number,number]; lens?:number; shelter?:RainShelter; }
+export function rainSheltered(shelter:RainShelter|undefined,p:{x:number;y:number;z:number}):boolean {
+ return !!shelter&&p.x>=shelter.min[0]&&p.x<=shelter.max[0]&&p.y>=shelter.min[1]&&p.y<=shelter.max[1]&&p.z>=shelter.min[2]&&p.z<=shelter.max[2];
+}
 const DROP_COUNT=2200, IMPACT_COUNT=96, SPAN=68;
 const fract=(n:number)=>n-Math.floor(n);
 const random=(n:number)=>fract(Math.sin(n*127.1+311.7)*43758.5453);
+const shelterFragment=/* glsl */`
+ uniform float uShelterEnabled;
+ uniform vec3 uShelterMin,uShelterMax;
+ varying vec3 vRainWorld;
+ bool rainSheltered(){return uShelterEnabled>.5&&all(greaterThanEqual(vRainWorld,uShelterMin))&&all(lessThanEqual(vRainWorld,uShelterMax));}
+`;
 
 const rainVertex=/* glsl */`
  attribute vec4 aSeed;
@@ -11,6 +21,7 @@ const rainVertex=/* glsl */`
  uniform vec3 uEye;
  uniform vec2 uWind;
  varying vec2 vRainUv;
+ varying vec3 vRainWorld;
  varying float vAlpha;
  #include <fog_pars_vertex>
  void main(){
@@ -23,7 +34,9 @@ const rainVertex=/* glsl */`
   vec4 mvPosition=viewMatrix*vec4(world,1.0);
   vec2 fall=normalize((viewMatrix*vec4(drift,0.0)).xy+vec2(.001));
   vec2 side=vec2(-fall.y,fall.x);
-  mvPosition.xy+=side*position.x*(.026+aSeed.w*.028)+fall*position.y*(.7+aSeed.w*.65);
+  vec2 offset=side*position.x*(.026+aSeed.w*.028)+fall*position.y*(.7+aSeed.w*.65);
+  mvPosition.xy+=offset;
+  vRainWorld=world+vec3(dot(viewMatrix[0].xy,offset),dot(viewMatrix[1].xy,offset),dot(viewMatrix[2].xy,offset));
   gl_Position=projectionMatrix*mvPosition;
   vRainUv=uv;
   float distanceToEye=length(world-uEye);
@@ -34,10 +47,12 @@ const rainVertex=/* glsl */`
  }
 `;
 const rainFragment=/* glsl */`
+ ${shelterFragment}
  varying vec2 vRainUv;
  varying float vAlpha;
  #include <fog_pars_fragment>
  void main(){
+  if(rainSheltered())discard;
   float edge=1.0-smoothstep(.12,.5,abs(vRainUv.x-.5));
   float tail=sin(vRainUv.y*3.14159265);
   gl_FragColor=vec4(.62,.76,.84,edge*tail*vAlpha);
@@ -52,6 +67,7 @@ const splashVertex=/* glsl */`
  attribute float aPhase;
  uniform float uTime,uIntensity;
  varying vec2 vRainUv;
+ varying vec3 vRainWorld;
  varying float vAge,vAlpha;
  #include <fog_pars_vertex>
  void main(){
@@ -60,6 +76,7 @@ const splashVertex=/* glsl */`
   vec3 bitangent=cross(aNormal,tangent);
   float radius=.06+age*.23;
   vec3 transformed=aImpact.xyz+aNormal*.018+(tangent*position.x+bitangent*position.y)*radius*2.0;
+  vRainWorld=(modelMatrix*vec4(transformed,1.0)).xyz;
   vec4 mvPosition=modelViewMatrix*vec4(transformed,1.0);
   gl_Position=projectionMatrix*mvPosition;
   vRainUv=uv;vAge=age;vAlpha=aImpact.w*uIntensity;
@@ -68,10 +85,12 @@ const splashVertex=/* glsl */`
  }
 `;
 const splashFragment=/* glsl */`
+ ${shelterFragment}
  varying vec2 vRainUv;
  varying float vAge,vAlpha;
  #include <fog_pars_fragment>
  void main(){
+  if(rainSheltered())discard;
   float r=length(vRainUv-.5)*2.0;
   float ring=1.0-smoothstep(.045,.14,abs(r-.78));
   float spray=(1.0-smoothstep(.0,.28,r))*(1.0-smoothstep(.0,.22,vAge));
@@ -93,7 +112,8 @@ function instancedQuad(count:number):THREE.InstancedBufferGeometry {
  * rain behind the mansions. The sample budget is fixed and local to the view. */
 export class RainWeather {
  readonly group=new THREE.Group();
- readonly uniforms={uTime:{value:0},uIntensity:{value:1},uEye:{value:new THREE.Vector3()},uWind:{value:new THREE.Vector2()}};
+ readonly uniforms={uTime:{value:0},uIntensity:{value:1},uEye:{value:new THREE.Vector3()},uWind:{value:new THREE.Vector2()},
+  uShelterEnabled:{value:0},uShelterMin:{value:new THREE.Vector3()},uShelterMax:{value:new THREE.Vector3()}};
  private readonly rainGeometry=instancedQuad(DROP_COUNT);
  private readonly splashGeometry=instancedQuad(IMPACT_COUNT);
  private readonly impacts=new THREE.InstancedBufferAttribute(new Float32Array(IMPACT_COUNT*4),4).setUsage(THREE.DynamicDrawUsage);
@@ -121,6 +141,8 @@ export class RainWeather {
  setView(camera:THREE.Camera,profile:RainProfile,enabled=true):void {
   this.group.visible=enabled&&profile.intensity>0;
   this.uniforms.uIntensity.value=profile.intensity;this.uniforms.uWind.value.set(...profile.wind);
+  this.uniforms.uShelterEnabled.value=profile.shelter?1:0;
+  if(profile.shelter){this.uniforms.uShelterMin.value.set(...profile.shelter.min);this.uniforms.uShelterMax.value.set(...profile.shelter.max);}
   this.uniforms.uEye.value.copy(camera.position);if(!this.group.visible)return;
   const jumped=this.previousEye.distanceToSquared(camera.position)>24*24;
   this.previousEye.copy(camera.position);
@@ -132,7 +154,7 @@ export class RainWeather {
    const hit=this.ground(this.ray)[0];this.samples++;
    if(hit?.face){
     this.normal.copy(hit.face.normal).applyNormalMatrix(this.normalMatrix.getNormalMatrix(hit.object.matrixWorld));
-    this.impacts.setXYZW(index,hit.point.x,hit.point.y,hit.point.z,this.normal.y>.3?1:0);
+    this.impacts.setXYZW(index,hit.point.x,hit.point.y,hit.point.z,this.normal.y>.3&&!rainSheltered(profile.shelter,hit.point)?1:0);
     this.normals.setXYZ(index,this.normal.x,this.normal.y,this.normal.z);
    }else this.impacts.setW(index,0);
   }
