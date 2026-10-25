@@ -12,9 +12,9 @@ try{
   const marker=window.kookReview={shots:0,alarms:0,group:karen.kook.group};const fire=l.spawnProjectile.bind(l);l.spawnProjectile=(e,...args)=>{if(e===gunner)marker.shots++;return fire(e,...args);};
   const pos=karen.group.position.clone(),yaw=karen.kook.bearing;pos.x+=Math.sin(yaw)*12;pos.z+=Math.cos(yaw)*12;pos.y+=.12;
   g.player.respawn(l,true,false,{position:pos,heading:pos.clone().set(-Math.sin(yaw),0,-Math.cos(yaw))});g.player.invulnTimer=25;
-  return l.enemies.filter(e=>e.kook).map(e=>({role:e.kook.role,group:e.kook.group,status:e.visual.diagnostics.status,meshes:e.visual.diagnostics.meshes,skinned:e.visual.diagnostics.skinnedMeshes}));
+  return l.enemies.filter(e=>e.kook).map(e=>{let weapon=null;e.visual.body.traverse(o=>{if(o.userData.nativeWeapon)weapon=o.userData.nativeWeapon;});return {role:e.kook.role,group:e.kook.group,status:e.visual.diagnostics.status,url:e.visual.diagnostics.url,weapon,meshes:e.visual.diagnostics.meshes,skinned:e.visual.diagnostics.skinnedMeshes};});
  });
- assert.equal(initial.length,7);for(const e of initial)assert.equal(e.status,'ready');
+ assert.equal(initial.length,7);for(const e of initial){assert.equal(e.status,'ready');assert.ok(e.url.endsWith(e.role==='lookout'?'karen-rain.glb':'kook-rain.glb'));if(e.role==='gunner')assert.equal(e.weapon,'heirloom-shotgun');}
  await page.waitForTimeout(1400);await page.screenshot({path:out+'/alarm.png'});
  await page.waitForFunction(()=>window.kookReview.shots>0,null,{timeout:12000});
  const firing=await page.evaluate(()=>{const l=window.__game.getLevel(),k=l.enemies.find(e=>e.kook?.role==='lookout'&&e.kook.group===window.kookReview.group);return {shots:window.kookReview.shots,alarms:k.kook.alarms,awake:l.enemies.filter(e=>e.kook?.role==='gunner').map(e=>({group:e.kook.group,state:e.state}))};});

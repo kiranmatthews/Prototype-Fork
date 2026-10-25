@@ -1,0 +1,92 @@
+{
+  "motion": [
+    {
+      "name": "front",
+      "angle": 0,
+      "frames": 722,
+      "seconds": 12,
+      "maxHandError": 1.0942404312232756e-7,
+      "maxFootError": 8.752373289984693e-7,
+      "minBottom": -0.029793138093594962,
+      "maxBottom": -0.00561989390318729,
+      "minTop": 1.8577772473915957,
+      "maxTop": 2.4277426058186364,
+      "states": [
+        [
+          "watch",
+          "windup",
+          "shriek",
+          "recover"
+        ],
+        [
+          "doze",
+          "wake",
+          "aim",
+          "fire",
+          "reload"
+        ]
+      ],
+      "nonFinite": 0,
+      "maxRootScaleError": 0
+    },
+    {
+      "name": "forty",
+      "angle": 0.6981317007977318,
+      "frames": 719,
+      "seconds": 12,
+      "maxHandError": 1.094790333327255e-7,
+      "maxFootError": 8.551455920201435e-7,
+      "minBottom": -0.02973917994344788,
+      "maxBottom": -0.0056060284608179245,
+      "minTop": 1.8862045666226521,
+      "maxTop": 2.4883493554713993,
+      "states": [
+        [
+          "watch",
+          "windup",
+          "shriek",
+          "recover"
+        ],
+        [
+          "doze",
+          "wake",
+          "aim",
+          "fire",
+          "reload"
+        ]
+      ],
+      "nonFinite": 0,
+      "maxRootScaleError": 0
+    },
+    {
+      "name": "side",
+      "angle": 1.5707963267948966,
+      "frames": 720,
+      "seconds": 12,
+      "maxHandError": 1.5740513392060255e-7,
+      "maxFootError": 9.552212430081104e-7,
+      "minBottom": -0.02978413753686482,
+      "maxBottom": -0.005550809035014481,
+      "minTop": 1.8666787836346685,
+      "maxTop": 2.427712128273967,
+      "states": [
+        [
+          "watch",
+          "windup",
+          "shriek",
+          "recover"
+        ],
+        [
+          "doze",
+          "wake",
+          "aim",
+          "fire",
+          "reload"
+        ]
+      ],
+      "nonFinite": 0,
+      "maxRootScaleError": 0
+    }
+  ],
+  "errors": []
+}

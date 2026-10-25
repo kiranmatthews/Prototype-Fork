@@ -7,6 +7,7 @@ import {sceneryLoads} from '../assetLoadQueue';
 import {sampleEnemyElasticity,enemyElasticPulse,type EnemyElasticityProfile} from './elasticity';
 import type {EnemyAnimationFrame,EnemyKind,EnemyVisual,EnemyVisualDiagnostics} from './types';
 import type {KookRole} from './kookBehavior';
+import {rigKookGrip,poseKookGrip} from './kookGrip';
 
 export const KOOK_ELASTICITY:EnemyElasticityProfile={idle:.65,walk:1,anticipation:1.5,rebound:1.3,landing:1,defeat:1.4};
 type Asset={scene:THREE.Group;clips:THREE.AnimationClip[]};
@@ -17,6 +18,7 @@ const cache=new AssetCache<string,Asset>(async(name,_dependency,wanted)=>{
   sceneryLoads.run(()=>new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).loadAsync(base+name+'.glb'),wanted),
   fetch(base+name+'-clips.json').then(r=>{if(!r.ok)throw Error('Kook animation load '+r.status);return r.json();}),
  ]);
+ if(name==='kook-rain')rigKookGrip(gltf.scene);
  gltf.scene.traverse(o=>{const m=o as THREE.Mesh;if(!m.isMesh)return;m.geometry.userData.shared=true;
   for(const mat of Array.isArray(m.material)?m.material:[m.material]){mat.userData.shared=true;for(const t of textures(mat)){t.userData.shared=true;t.anisotropy=8;}}
  });
@@ -53,24 +55,34 @@ function arm(upper:THREE.Object3D,lower:THREE.Object3D,hand:THREE.Object3D,targe
  return hand.getWorldPosition(new THREE.Vector3()).distanceTo(target);
 }
 
+const weaponCache=new AssetCache<string,THREE.Group>(async(name,_dependency,wanted)=>{
+ const gltf=await sceneryLoads.run(()=>new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).loadAsync(base+name+'.glb'),wanted);
+ gltf.scene.traverse(o=>{const m=o as THREE.Mesh;if(!m.isMesh)return;m.geometry.userData.shared=true;
+  for(const mat of Array.isArray(m.material)?m.material:[m.material]){mat.userData.shared=true;for(const t of textures(mat)){t.userData.shared=true;t.anisotropy=8;}}
+ });return gltf.scene;
+},scene=>{
+ const geos=new Set<THREE.BufferGeometry>(),mats=new Set<THREE.Material>(),maps=new Set<THREE.Texture>();
+ scene.traverse(o=>{const m=o as THREE.Mesh;if(!m.isMesh)return;geos.add(m.geometry);for(const mat of Array.isArray(m.material)?m.material:[m.material])mats.add(mat);});
+ for(const mat of mats){for(const t of textures(mat))maps.add(t);mat.dispose();}for(const geo of geos)geo.dispose();disposeTextures(maps);
+});
+
+/** Native Meshy prop. These invisible sockets fit its measured stock, fore-end
+ * and muzzle; they do not replace or approximate the generated surface. */
 function makeGun(){
- const group=new THREE.Group(),muzzle=new THREE.Object3D(),right=new THREE.Object3D(),left=new THREE.Object3D(),meshes:THREE.Mesh[]=[];
- const metal=new THREE.MeshStandardMaterial({color:0x304247,metalness:.8,roughness:.24});
- const walnut=new THREE.MeshStandardMaterial({color:0x683b26,roughness:.43});
- const brass=new THREE.MeshStandardMaterial({color:0xcbb27b,metalness:.72,roughness:.32});
- const part=(geometry:THREE.BufferGeometry,material:THREE.Material,p:number[],rotation?:number[])=>{const m=new THREE.Mesh(geometry,material);m.position.fromArray(p);if(rotation)m.rotation.set(rotation[0],rotation[1],rotation[2]);m.castShadow=true;group.add(m);meshes.push(m);return m;};
- part(new THREE.CapsuleGeometry(.07,.52,8,16),walnut,[0,-.025,-.24],[Math.PI/2,0,0]);
- part(new THREE.BoxGeometry(.14,.18,.31),metal,[0,0,.16]);
- part(new THREE.CapsuleGeometry(.065,.28,8,16),walnut,[0,-.03,.42],[Math.PI/2,0,0]);
- for(const x of [-.047,.047]){part(new THREE.CylinderGeometry(.037,.041,.76,24),metal,[x,.05,.66],[Math.PI/2,0,0]);part(new THREE.TorusGeometry(.038,.012,8,24),brass,[x,.05,1.04]);}
- part(new THREE.TorusGeometry(.075,.014,8,24,Math.PI*1.65),brass,[0,-.105,.12],[0,Math.PI/2,.2]);
- muzzle.position.set(0,.05,1.07);right.position.set(0,.09,.05);left.position.set(.1,-.04,.36);group.add(muzzle,right,left);
- const flash=part(new THREE.SphereGeometry(.18,16,12),new THREE.MeshBasicMaterial({color:0xffe9ac,toneMapped:false}),[0,.05,1.08]);flash.scale.set(.6,.6,2);flash.visible=false;
- return {group,muzzle,right,left,flash,dispose(){for(const m of meshes)m.geometry.dispose();for(const m of new Set(meshes.map(m=>m.material as THREE.Material)))m.dispose();}};
+ const group=new THREE.Group(),muzzle=new THREE.Object3D(),right=new THREE.Object3D(),left=new THREE.Object3D();
+ const lease=weaponCache.acquire('heirloom-shotgun');let disposed=false;
+ const ready=lease.promise.then(asset=>{
+  if(disposed)return;const model=asset.clone(true);model.rotation.y=Math.PI/2;model.scale.setScalar(1.4/1.903805971);model.position.set(0,-.09,.37);
+  model.traverse(o=>{const m=o as THREE.Mesh;if(m.isMesh)m.castShadow=m.receiveShadow=true;});group.add(model);group.userData.nativeWeapon='heirloom-shotgun';
+ });
+ muzzle.position.set(0,.04,1.07);right.position.set(-.055,-.30,.23);left.position.set(.24,-.08,.32);group.add(muzzle,right,left);
+ const flash=new THREE.Mesh(new THREE.SphereGeometry(.18,16,12),new THREE.MeshBasicMaterial({color:0xffe9ac,toneMapped:false}));
+ flash.position.set(0,.05,1.08);flash.scale.set(.6,.6,2);flash.visible=false;group.add(flash);
+ return {group,muzzle,right,left,flash,ready,dispose(){disposed=true;flash.geometry.dispose();flash.material.dispose();lease.release();group.removeFromParent();}};
 }
 
 export function createKookVisual(kind:EnemyKind,role:KookRole):EnemyVisual {
- const name=role==='lookout'?'karen':'kook',group=new THREE.Group(),body=new THREE.Group(),artwork=new THREE.Group();
+ const name=role==='lookout'?'karen-rain':'kook-rain',group=new THREE.Group(),body=new THREE.Group(),artwork=new THREE.Group();
  group.name=role==='lookout'?'Kook courtyard lookout':'Sleeping Kook gunner';group.userData.kookRole=role;group.add(body);body.add(artwork);
  const diagnostic:EnemyVisualDiagnostics={kind,status:'loading',url:base+name+'.glb',clips:[],activeClip:null,mappedNodes:{},skinnedMeshes:0,meshes:0,animationTime:0,gaitPhase:0,state:'idle'};
  const lease=cache.acquire(name),gun=role==='gunner'?makeGun():null;if(gun){body.add(gun.group);gun.group.visible=false;}
@@ -79,7 +91,7 @@ export function createKookVisual(kind:EnemyKind,role:KookRole):EnemyVisual {
  const samples=new Map<string,{node:THREE.Object3D;property:string;interpolant:THREE.Interpolant}[]>();
  const bones=new Map<string,THREE.Object3D>(),previous=new Map<string,{p:THREE.Vector3;q:THREE.Quaternion;s:THREE.Vector3}>(),skeletons=new Set<THREE.Skeleton>();
  const feet=new Map<string,{p:THREE.Vector3;q:THREE.Quaternion}>(),rest=new Map<string,THREE.Quaternion>();
- const ready=lease.promise.then(asset=>{
+ const ready=Promise.all([lease.promise,gun?.ready]).then(([asset])=>{
   if(disposed)return;model=cloneSkeleton(asset.scene) as THREE.Group;
   model.traverse(o=>{if((o as THREE.Bone).isBone){bones.set(o.name,o);rest.set(o.name,o.quaternion.clone());previous.set(o.name,{p:o.position.clone(),q:o.quaternion.clone(),s:o.scale.clone()});}
    const mesh=o as THREE.SkinnedMesh;if(!mesh.isMesh)return;diagnostic.meshes++;mesh.castShadow=mesh.receiveShadow=true;mesh.frustumCulled=false;if(mesh.isSkinnedMesh){diagnostic.skinnedMeshes++;skeletons.add(mesh.skeleton);}
@@ -112,7 +124,10 @@ export function createKookVisual(kind:EnemyKind,role:KookRole):EnemyVisual {
   for(const sample of samples.get(clip)??[]){const value=sample.interpolant.evaluate(selected.time);
    if(sample.property==='quaternion')sample.node.quaternion.fromArray(value);else if(sample.property==='position')sample.node.position.fromArray(value);else sample.node.scale.fromArray(value);}
   diagnostic.activeClip=clip;diagnostic.animationTime=selected.time;
-  if(role==='gunner'&&['aim','fire','reload','track'].includes(frame.state))for(const name of ['Hips','Spine','Spine01','Spine02','neck','Head'])bones.get(name)?.quaternion.copy(rest.get(name)!);
+  // The imported idle turns the torso far away from a braced weapon. Keep the
+  // weapon-bearing chain forward; the original hip motion,
+  // breathing deformation and a sleepy head nod remain active.
+  if(role==='gunner')for(const name of ['Hips','Spine','Spine01','Spine02','neck','Head','LeftShoulder','RightShoulder'])bones.get(name)?.quaternion.copy(rest.get(name)!);
   // Imported gestures retain their authored deformation. Blend joint poses
   // across FSM boundaries, without scaling the character's gameplay root.
   const blend=dt>0?1-Math.exp(-dt*14):1;
@@ -129,17 +144,18 @@ export function createKookVisual(kind:EnemyKind,role:KookRole):EnemyVisual {
   if(gun){
    const aimed=['aim','fire','reload','track'].includes(frame.state),recoil=frame.state==='fire'?Math.sin(Math.min(1,frame.stateTime/.18)*Math.PI)*.12:0;
    gunAim=THREE.MathUtils.damp(gunAim,aimed?1:0,10,dt);
-   gun.group.position.set(-.08-.10*gunAim,1.52+.14*gunAim,-.1+.15*gunAim);gun.group.rotation.set(.25*(1-gunAim),0,0);gun.group.position.z-=recoil;gun.flash.visible=frame.state==='fire'&&frame.stateTime<.07;
+   gun.group.position.set(-.20,1.72+.08*gunAim,.24);gun.group.rotation.set(.15*(1-gunAim),0,0);gun.group.position.z-=recoil;gun.flash.visible=frame.state==='fire'&&frame.stateTime<.07;
    const head=bones.get('Head');if(head&&frame.state==='doze')head.rotateX(.13+.055*Math.sin(frame.time*1.9));
    group.updateMatrixWorld(true);const errors=[];
    for(const [side,contact,x]of [['Right',gun.right,-1],['Left',gun.left,1]] as const){
     const upper=bones.get(side+'Arm'),lower=bones.get(side+'ForeArm'),hand=bones.get(side+'Hand');
     if(upper&&lower&&hand){errors.push(arm(upper,lower,hand,contact.getWorldPosition(new THREE.Vector3()),body.localToWorld(new THREE.Vector3(x*.9,1.1,.15))));
-     const grip=new THREE.Quaternion().setFromRotationMatrix(new THREE.Matrix4().makeBasis(new THREE.Vector3(0,0,side==='Right'?1:-1),new THREE.Vector3(side==='Right'?0:-1,side==='Right'?-1:0,0),new THREE.Vector3(side==='Right'?1:0,side==='Right'?0:1,0)));
+     const grip=new THREE.Quaternion().setFromRotationMatrix(new THREE.Matrix4().makeBasis(new THREE.Vector3(0,0,1),new THREE.Vector3(side==='Right'?0:-1,side==='Right'?1:0,0),new THREE.Vector3(side==='Right'?-1:0,side==='Right'?0:-1,0)));
      const world=gun.group.getWorldQuaternion(new THREE.Quaternion()).multiply(grip);hand.quaternion.copy(hand.parent!.getWorldQuaternion(new THREE.Quaternion()).invert().multiply(world));
     }
    }
    group.userData.kookHandErrors=errors;
+   poseKookGrip(bones,.9+.1*gunAim);
   }
   group.updateMatrixWorld(true);diagnostic.plantedFeet={hindLeft:true,hindRight:true};
  }

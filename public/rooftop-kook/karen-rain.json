@@ -1,0 +1,33 @@
+{
+  "name": "karen-rain",
+  "bytes": 10012232,
+  "sha256": "795f51721a80ab32e63b96eda22632ed263996a5a0beeed3fb8e9305f9309b9c",
+  "triangles": 41331,
+  "nativeGeometryPreserved": true,
+  "skinAndUVsPreserved": true,
+  "pbrPreserved": true,
+  "textureSizes": [
+    [
+      2048,
+      2048
+    ],
+    [
+      4096,
+      4096
+    ],
+    [
+      2048,
+      2048
+    ]
+  ],
+  "source": ".img2threejs/rooftop-kook/karen-rain-rig/downloads/rigged_character.glb",
+  "geometryCompression": "lossless EXT_meshopt_compression",
+  "allVertexAndSkinValuesVerified": true,
+  "orientedTrianglesVerified": true,
+  "texturePacking": "4K base colour, 2K PBR; WebP quality 94 colour/roughness, original packed normal map",
+  "provider": "Meshy",
+  "assetLane": "generative-assist",
+  "modelTaskId": "01a17309-9b69-7604-9b33-5ef77595bc32",
+  "reference": "tools/rooftop-kook-assets/references/karen-rain.png",
+  "rigTaskId": "01a17312-3bbd-72c8-802b-a613dc681ad7"
+}

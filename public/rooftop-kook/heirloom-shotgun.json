@@ -1,0 +1,32 @@
+{
+  "name": "heirloom-shotgun",
+  "bytes": 3188756,
+  "sha256": "51ea97ad1c81e7941784abd817ccc859e3254dc10ab315e32996109b6273dbed",
+  "triangles": 19835,
+  "nativeGeometryPreserved": true,
+  "skinAndUVsPreserved": true,
+  "pbrPreserved": true,
+  "textureSizes": [
+    [
+      1024,
+      1024
+    ],
+    [
+      2048,
+      2048
+    ],
+    [
+      1024,
+      1024
+    ]
+  ],
+  "source": ".img2threejs/rooftop-kook/heirloom-shotgun-native.glb",
+  "geometryCompression": "lossless EXT_meshopt_compression",
+  "allVertexAndSkinValuesVerified": true,
+  "orientedTrianglesVerified": true,
+  "texturePacking": "2K base colour, 1K PBR; WebP quality 94 colour/roughness, original packed normal map",
+  "provider": "Meshy",
+  "assetLane": "generative-assist",
+  "modelTaskId": "01a1733d-4f69-76c2-acbe-4d15eabfb0dd",
+  "reference": "tools/rooftop-kook-assets/references/heirloom-shotgun.png"
+}

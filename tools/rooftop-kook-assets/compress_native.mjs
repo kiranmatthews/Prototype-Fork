@@ -23,6 +23,6 @@ for(const name of process.argv.slice(2)){
  });
  await writeFile(file,encoded);
  const bytes=await readFile(file),manifest=JSON.parse(await readFile('public/rooftop-kook/'+name+'.json'));
- Object.assign(manifest,{bytes:bytes.length,sha256:createHash('sha256').update(bytes).digest('hex'),geometryCompression:'lossless EXT_meshopt_compression',allVertexAndSkinValuesVerified:true,orientedTrianglesVerified:true,texturePacking:'4K base colour, 2K PBR; WebP quality 94 colour/roughness, original packed normal map'});
+ Object.assign(manifest,{bytes:bytes.length,sha256:createHash('sha256').update(bytes).digest('hex'),geometryCompression:'lossless EXT_meshopt_compression',allVertexAndSkinValuesVerified:true,orientedTrianglesVerified:true,texturePacking:(name==='heirloom-shotgun'?'2K base colour, 1K PBR':'4K base colour, 2K PBR')+'; WebP quality 94 colour/roughness, original packed normal map'});
  await writeFile('public/rooftop-kook/'+name+'.json',JSON.stringify(manifest,null,2)+'\n');console.log(name,bytes.length,'all geometry, skin and animation values identical');
 }

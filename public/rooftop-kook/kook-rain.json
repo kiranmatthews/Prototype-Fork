@@ -1,0 +1,34 @@
+{
+  "name": "kook-rain",
+  "bytes": 9641820,
+  "sha256": "6866b8b2e4603375033d270d55eb2127e1bafb1c376d31a3d66c760da380d387",
+  "triangles": 41318,
+  "nativeGeometryPreserved": true,
+  "skinAndUVsPreserved": true,
+  "pbrPreserved": true,
+  "textureSizes": [
+    [
+      2048,
+      2048
+    ],
+    [
+      4096,
+      4096
+    ],
+    [
+      2048,
+      2048
+    ]
+  ],
+  "source": ".img2threejs/rooftop-kook/kook-rain-rig/downloads/rigged_character.glb",
+  "geometryCompression": "lossless EXT_meshopt_compression",
+  "allVertexAndSkinValuesVerified": true,
+  "orientedTrianglesVerified": true,
+  "texturePacking": "4K base colour, 2K PBR; WebP quality 94 colour/roughness, original packed normal map",
+  "provider": "Meshy",
+  "assetLane": "generative-assist",
+  "modelTaskId": "01a17309-aa51-7459-ba4d-9f8bc071b1a9",
+  "reference": "tools/rooftop-kook-assets/references/kook-rain.png",
+  "rigTaskId": "01a17312-5301-774a-9e68-45796cc098de",
+  "runtimeRig": "Original Meshy body rig plus four supplemental finger-curl joints; only 2,229 hand vertices reweighted, original rest surface and all geometry/UV/material attributes preserved."
+}

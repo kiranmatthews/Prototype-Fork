@@ -1,0 +1,17 @@
+{
+  "tool": "built-in image_gen",
+  "created": "2026-10-26",
+  "use": "Original wet-weather references for new Meshy character models",
+  "prompts": [
+    {
+      "key": "karen-rain",
+      "path": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/rooftop-kook-assets/references/karen.png",
+      "prompt": "Use case: identity-preserve. Asset: high quality stylized 3D game character reference for Meshy image-to-3D, Crash 4 influenced polished exaggerated shape language. Edit the provided original character reference into her cyclone wet-weather outfit. Preserve the blonde bob, haughty face, body proportions and original character identity. One full body character alone, head to soles fully inside frame, neutral symmetric A pose with both arms clearly separated from torso, relaxed empty open hands with separated fingers, feet separated. Replace sports outfit with an expensive coral-pink waterproof sailing jacket ending at the upper hip, full sleeves and visible cuffs, zip closed to upper chest, hood folded down behind neck so face stays clear, tasteful cream piping and small brass hardware. Navy tapered rain trousers tucked into deep navy knee-high Wellington boots with tan soles and a small brass buckle. Pearl stud earrings and short pearl necklace visible at collar, no floating accessories, no text or brands. Subtle realistic wet fabric sheen and tiny water beads on jacket, strong readable large clothing folds, complete detailed 3D asset appearance. Plain light gray studio background, even soft neutral studio lighting, no rain in the air, no puddle, no umbrella, no handheld prop, no plinth, no secondary views. Frame at near-front slight three-quarter view, same scale as original."
+    },
+    {
+      "key": "kook-rain",
+      "path": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/rooftop-kook-assets/references/kook.png",
+      "prompt": "Use case: identity-preserve. Asset: high quality stylized 3D game character reference for Meshy image-to-3D, Crash 4 influenced polished exaggerated shape language. Edit the provided original wealthy Outer Banks Kook man into his cyclone wet-weather outfit. Preserve his broad shoulders, chunky jaw, smug mature face, swept salt-and-pepper hair and original identity. One full body character alone, head to soles fully inside frame, neutral symmetric A pose with both arms separated clearly from torso, relaxed empty open hands with separated fingers, feet separated. Outfit: expensive dark maritime navy waterproof sailing jacket ending at the upper hip with muted sage shoulder panels, full long sleeves, cream storm collar, hood folded down behind neck, brass zipper and sturdy pocket seams; a hint of mint polo collar. Sand-colored waterproof straight trousers tucked into dark bottle-green rubber deck boots with substantial ivory soles. Gold watch peeks below left cuff. Wet waxed fabric sheen and tiny beads, tailored affluent yacht-club aesthetic. Large readable folds and polished PBR detail, not a fisherman in overalls. NO gun or other handheld prop in this modeling reference. Plain light gray studio background with even soft neutral lighting, no airborne rain, no puddle, no base, no text, no logos, no secondary views. Near-front slight three-quarter view, same scale as original."
+    }
+  ]
+}

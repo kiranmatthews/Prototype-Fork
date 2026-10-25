@@ -1,0 +1,153 @@
+{
+  "base": "https://kiranmatthews.github.io/Prototype-Fork",
+  "native": {
+    "level": "rooftop-relay",
+    "world": {
+      "visible": true,
+      "streaks": 2200,
+      "impactCapacity": 96,
+      "activeImpacts": 27,
+      "samples": 604,
+      "time": 2.1666666666666643,
+      "span": 68,
+      "intensity": 0.86,
+      "wind": [
+        5.5,
+        2.8
+      ]
+    },
+    "lens": {
+      "enabled": true,
+      "amount": 0.82,
+      "time": 2.1666666666666643
+    },
+    "buffer": [
+      2560,
+      1440
+    ],
+    "stamp": "Codex/sol fork · build 10-25 13:15 UTC"
+  },
+  "moving": {
+    "level": "rooftop-relay",
+    "world": {
+      "visible": true,
+      "streaks": 2200,
+      "impactCapacity": 96,
+      "activeImpacts": 18,
+      "samples": 968,
+      "time": 3.6833333333333256,
+      "span": 68,
+      "intensity": 0.86,
+      "wind": [
+        5.5,
+        2.8
+      ]
+    },
+    "lens": {
+      "enabled": true,
+      "amount": 0.82,
+      "time": 3.6833333333333256
+    },
+    "buffer": [
+      2560,
+      1440
+    ],
+    "stamp": "Codex/sol fork · build 10-25 13:15 UTC"
+  },
+  "fixed": {
+    "level": "rooftop-relay",
+    "world": {
+      "visible": true,
+      "streaks": 2200,
+      "impactCapacity": 96,
+      "activeImpacts": 24,
+      "samples": 1308,
+      "time": 5.083333333333321,
+      "span": 68,
+      "intensity": 0.86,
+      "wind": [
+        5.5,
+        2.8
+      ]
+    },
+    "lens": {
+      "enabled": true,
+      "amount": 0.82,
+      "time": 5.083333333333321
+    },
+    "buffer": [
+      853,
+      480
+    ],
+    "stamp": "Codex/sol fork · build 10-25 13:15 UTC"
+  },
+  "crt": {
+    "level": "rooftop-relay",
+    "world": {
+      "visible": true,
+      "streaks": 2200,
+      "impactCapacity": 96,
+      "activeImpacts": 22,
+      "samples": 1812,
+      "time": 7.19999999999998,
+      "span": 68,
+      "intensity": 0.86,
+      "wind": [
+        5.5,
+        2.8
+      ]
+    },
+    "lens": {
+      "enabled": true,
+      "amount": 0.82,
+      "time": 7.19999999999998
+    },
+    "buffer": [
+      853,
+      480
+    ],
+    "stamp": "Codex/sol fork · build 10-25 13:15 UTC"
+  },
+  "dry": {
+    "level": "codex-lab",
+    "world": null,
+    "lens": {
+      "enabled": false,
+      "amount": 0,
+      "time": 0
+    },
+    "buffer": [
+      853,
+      480
+    ],
+    "stamp": "Codex/sol fork · build 10-25 13:15 UTC"
+  },
+  "revisited": {
+    "level": "rooftop-relay",
+    "world": {
+      "visible": true,
+      "streaks": 2200,
+      "impactCapacity": 96,
+      "activeImpacts": 27,
+      "samples": 340,
+      "time": 1.2000000000000006,
+      "span": 68,
+      "intensity": 0.86,
+      "wind": [
+        5.5,
+        2.8
+      ]
+    },
+    "lens": {
+      "enabled": true,
+      "amount": 0.82,
+      "time": 1.2000000000000006
+    },
+    "buffer": [
+      2560,
+      1440
+    ],
+    "stamp": "Codex/sol fork · build 10-25 13:15 UTC"
+  },
+  "errors": []
+}

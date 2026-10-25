@@ -1,8 +1,10 @@
 """Keep official animation tracks, without shipping six duplicate character meshes."""
 from pathlib import Path
-import json,struct
+import json,struct,sys
 ROOT=Path(__file__).resolve().parents[2];WORK=ROOT/'.img2threejs/rooftop-kook'
-for character,names in [('karen',['idle','shout','angry']),('kook',['idle','aim','shoot'])]:
+characters={'karen':['idle','shout','angry'],'kook':['idle','aim','shoot'],'karen-rain':['idle','shout','angry'],'kook-rain':['idle']}
+for character in sys.argv[1:] or ['karen','kook']:
+ names=characters[character]
  clips=[]
  for name in names:
   source=next((WORK/(character+'-'+name)/'downloads').glob('*.glb'))

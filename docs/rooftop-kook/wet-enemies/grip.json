@@ -1,0 +1,26 @@
+{
+  "result": {
+    "count": 44155,
+    "unchanged": {
+      "position": true,
+      "normal": true,
+      "uv": true,
+      "triangles": true
+    },
+    "maxRestError": 0.00005167870243720673,
+    "restoredError": 0.00005167870243720673,
+    "changedWeights": 2229,
+    "untouchedVertices": 41926,
+    "weightError": 4.6566128730773926e-8,
+    "deformedVertices": 2229,
+    "maxCurlDisplacement": 25.606367735964323,
+    "nonFinite": 0,
+    "rig": {
+      "source": "Meshy kook-rain",
+      "supplementalJoints": 4,
+      "weightedVertices": 2229,
+      "surfaceUnchanged": true
+    }
+  },
+  "errors": []
+}

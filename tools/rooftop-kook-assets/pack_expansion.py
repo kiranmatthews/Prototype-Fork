@@ -5,7 +5,7 @@ from PIL import Image
 ROOT=Path(__file__).resolve().parents[2]
 WORK=ROOT/'.img2threejs/rooftop-kook'; OUT=ROOT/'public/rooftop-kook'
 for name in sys.argv[1:]:
- source=WORK/(name+'-rig')/'downloads/rigged_character.glb' if name in ('karen','kook') else WORK/(name+'-native.glb')
+ source=WORK/(name+'-rig')/'downloads/rigged_character.glb' if name in ('karen','kook','karen-rain','kook-rain') else WORK/(name+'-native.glb')
  raw=source.read_bytes();n=struct.unpack_from('<I',raw,12)[0]
  doc=json.loads(raw[20:20+n]);binary=raw[28+n:];packed=bytearray()
  images={i['bufferView']:(index,i) for index,i in enumerate(doc.get('images',[]))}
@@ -14,7 +14,7 @@ for name in sys.argv[1:]:
  for index,view in enumerate(doc['bufferViews']):
   data=binary[view.get('byteOffset',0):view.get('byteOffset',0)+view['byteLength']]
   if index in images:
-   image_index,definition=images[index];resolution=4096 if image_index in base else 2048
+   image_index,definition=images[index];resolution=(2048 if image_index in base else 1024) if name=='heirloom-shotgun' else (4096 if image_index in base else 2048)
    im=Image.open(io.BytesIO(data)).convert('RGB');im.thumbnail((resolution,resolution),Image.Resampling.LANCZOS)
    buffer=io.BytesIO();im.save(buffer,'JPEG',quality=95 if image_index in base else 98,optimize=True,subsampling=0)
    data=buffer.getvalue();definition['mimeType']='image/jpeg';resolutions.append(im.size)

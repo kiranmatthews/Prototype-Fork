@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "provider": "Meshy",
   "cliVersion": "0.3.1",
-  "budgetCredits": 250,
+  "budgetCredits": 350,
   "startingBalance": 611,
-  "scope": "Initial coastal kit plus user-authorized AAA expansion: two humanoid enemies with rigs and animation, columned clubhouse; full-detail assets only.",
+  "scope": "Original Outer Banks rooftop kit and characters, including new Meshy wet-weather enemy models; user explicitly authorized credits and Meshy outfit replacement",
   "tasks": {
     "estate": {
       "resource": "image-to-3d",
@@ -597,6 +597,279 @@
           "path": ".img2threejs/rooftop-kook/kook-shoot/downloads/animation_glb.glb",
           "bytes": 35350368,
           "sha256": "196ac9e08ec1c723c33d6e92855fa9dabb09770b68a6adb78d835a90796c6283"
+        }
+      ]
+    },
+    "karen-rain": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "f29dd779-9f30-4974-8731-9a98ee725eaf",
+      "createdAt": "2026-10-25T12:29:31.103576+00:00",
+      "estimatedCredits": 35,
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/rooftop-kook-assets/references/karen-rain.png",
+        "ai_model": "meshy-7.1",
+        "geometry_resolution": "4k",
+        "should_remesh": true,
+        "topology": "triangle",
+        "target_polycount": 40000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "4k",
+        "target_formats": [
+          "glb"
+        ],
+        "pose_mode": "a-pose"
+      },
+      "balanceBefore": 388,
+      "reference": "tools/rooftop-kook-assets/references/karen-rain.png",
+      "referenceSha256": "0a69f575badfc85b71903f300f856d28be27839b63fe50e61bba903269120ec6",
+      "id": "01a17309-9b69-7604-9b33-5ef77595bc32",
+      "checkedAt": "2026-10-25T12:38:50.177203+00:00",
+      "progress": 100,
+      "consumedCredits": 35,
+      "finishedAt": 1792931575528,
+      "expiresAt": 1793190775528,
+      "downloads": [
+        {
+          "path": ".img2threejs/rooftop-kook/karen-rain/downloads/model.glb",
+          "bytes": 32701720,
+          "sha256": "292fddfd18798b56ade43c61940f48ca696e557fdb1d1e65631a4319114db28d"
+        }
+      ]
+    },
+    "kook-rain": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "4ce732b8-1cb2-46dc-a743-e373f415e6cc",
+      "createdAt": "2026-10-25T12:29:34.877357+00:00",
+      "estimatedCredits": 35,
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/rooftop-kook-assets/references/kook-rain.png",
+        "ai_model": "meshy-7.1",
+        "geometry_resolution": "4k",
+        "should_remesh": true,
+        "topology": "triangle",
+        "target_polycount": 40000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "4k",
+        "target_formats": [
+          "glb"
+        ],
+        "pose_mode": "a-pose"
+      },
+      "balanceBefore": 353,
+      "reference": "tools/rooftop-kook-assets/references/kook-rain.png",
+      "referenceSha256": "fe079236e27c2df946c13cc746b0b7376d4974bad441f2c01af4d65a9b2e37fa",
+      "id": "01a17309-aa51-7459-ba4d-9f8bc071b1a9",
+      "checkedAt": "2026-10-25T12:38:53.226032+00:00",
+      "progress": 100,
+      "consumedCredits": 35,
+      "finishedAt": 1792931609031,
+      "expiresAt": 1793190809031,
+      "downloads": [
+        {
+          "path": ".img2threejs/rooftop-kook/kook-rain/downloads/model.glb",
+          "bytes": 31714824,
+          "sha256": "349d5bc32078367fad9a7a7302ee33a57bbdbca0e1064e75cb04c30d9c42b464"
+        }
+      ]
+    },
+    "karen-rain-rig": {
+      "resource": "rigging",
+      "state": "SUCCEEDED",
+      "operationId": "cbd33127-675c-438c-a525-a2b64a9976d6",
+      "createdAt": "2026-10-25T12:38:56.427644+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "input_task_id": "01a17309-9b69-7604-9b33-5ef77595bc32",
+        "height_meters": 2.35
+      },
+      "balanceBefore": 318,
+      "id": "01a17312-3bbd-72c8-802b-a613dc681ad7",
+      "checkedAt": "2026-10-25T13:03:31.668131+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1792932007452,
+      "expiresAt": 1793191207452,
+      "downloads": [
+        {
+          "path": ".img2threejs/rooftop-kook/karen-rain-rig/downloads/rigged_character.glb",
+          "bytes": 34268328,
+          "sha256": "80eb72a78113d816e0f80d11b26cb5a5b327cf4c9daaca2ca7f439e32a75ccfd"
+        },
+        {
+          "path": ".img2threejs/rooftop-kook/karen-rain-rig/downloads/walking_glb.glb",
+          "bytes": 34249320,
+          "sha256": "767da690e3f14b9594c2c1af2bd1f9f8b15fab8f183c745703d5c901b856dc71"
+        }
+      ]
+    },
+    "kook-rain-rig": {
+      "resource": "rigging",
+      "state": "SUCCEEDED",
+      "operationId": "3a4dfb0a-a104-4bf3-9a57-b2951966cf70",
+      "createdAt": "2026-10-25T12:39:02.365915+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "input_task_id": "01a17309-aa51-7459-ba4d-9f8bc071b1a9",
+        "height_meters": 2.5
+      },
+      "balanceBefore": 313,
+      "id": "01a17312-5301-774a-9e68-45796cc098de",
+      "checkedAt": "2026-10-25T13:03:37.006213+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1792932014882,
+      "expiresAt": 1793191214882,
+      "downloads": [
+        {
+          "path": ".img2threejs/rooftop-kook/kook-rain-rig/downloads/rigged_character.glb",
+          "bytes": 33398884,
+          "sha256": "ef751dc09f945b1c2b5281610b00cf586c47b33212e9abedbf1e129f1aa30306"
+        },
+        {
+          "path": ".img2threejs/rooftop-kook/kook-rain-rig/downloads/walking_glb.glb",
+          "bytes": 33378920,
+          "sha256": "5fa4cebd3f6441b029bdeb254ac6dc25570f3c034aa2d798ae055a37a9d351b8"
+        }
+      ]
+    },
+    "karen-rain-idle": {
+      "resource": "animate",
+      "state": "SUCCEEDED",
+      "operationId": "bc219ba7-3d74-4c6c-9318-c52ba3eaae39",
+      "createdAt": "2026-10-25T13:03:41.269605+00:00",
+      "estimatedCredits": 3,
+      "payload": {
+        "rig_task_id": "01a17312-3bbd-72c8-802b-a613dc681ad7",
+        "action_id": 0
+      },
+      "balanceBefore": 308,
+      "id": "01a17328-e3a2-72e0-8612-68bb1dabac25",
+      "checkedAt": "2026-10-25T13:06:59.530491+00:00",
+      "progress": 100,
+      "consumedCredits": 3,
+      "finishedAt": 1792933451503,
+      "expiresAt": 1793192651503,
+      "downloads": [
+        {
+          "path": ".img2threejs/rooftop-kook/karen-rain-idle/downloads/animation_glb.glb",
+          "bytes": 34328112,
+          "sha256": "dc83f6d85dad615310f0c20e67d87069fd3ed859b21f5b088111f27db066bfa4"
+        }
+      ]
+    },
+    "karen-rain-shout": {
+      "resource": "animate",
+      "state": "SUCCEEDED",
+      "operationId": "f8a7e436-5003-457c-aa90-dcf407fe34fa",
+      "createdAt": "2026-10-25T13:03:43.404966+00:00",
+      "estimatedCredits": 3,
+      "payload": {
+        "rig_task_id": "01a17312-3bbd-72c8-802b-a613dc681ad7",
+        "action_id": 51
+      },
+      "balanceBefore": 305,
+      "id": "01a17328-ebed-76d3-b002-494063095bfa",
+      "checkedAt": "2026-10-25T13:07:02.699479+00:00",
+      "progress": 100,
+      "consumedCredits": 3,
+      "finishedAt": 1792933456183,
+      "expiresAt": 1793192656183,
+      "downloads": [
+        {
+          "path": ".img2threejs/rooftop-kook/karen-rain-shout/downloads/animation_glb.glb",
+          "bytes": 34412080,
+          "sha256": "6179658c36a1f137e3ad4a4b773c2def7275c0e23bbc3c232ec7f56a8d66170f"
+        }
+      ]
+    },
+    "karen-rain-angry": {
+      "resource": "animate",
+      "state": "SUCCEEDED",
+      "operationId": "024bc2c1-66e5-4cbb-8572-1599b35462d9",
+      "createdAt": "2026-10-25T13:03:45.438328+00:00",
+      "estimatedCredits": 3,
+      "payload": {
+        "rig_task_id": "01a17312-3bbd-72c8-802b-a613dc681ad7",
+        "action_id": 311
+      },
+      "balanceBefore": 302,
+      "id": "01a17328-f3ec-74f1-89fe-10c1e5bc546d",
+      "checkedAt": "2026-10-25T13:07:06.261706+00:00",
+      "progress": 100,
+      "consumedCredits": 3,
+      "finishedAt": 1792933480304,
+      "expiresAt": 1793192680304,
+      "downloads": [
+        {
+          "path": ".img2threejs/rooftop-kook/karen-rain-angry/downloads/animation_glb.glb",
+          "bytes": 34773688,
+          "sha256": "4c96a6dacf071a3fe90f76119f5926b2d1e1d063386e806c4de1cc064437dbec"
+        }
+      ]
+    },
+    "kook-rain-idle": {
+      "resource": "animate",
+      "state": "SUCCEEDED",
+      "operationId": "4532778e-698b-4640-b069-90a9359e022e",
+      "createdAt": "2026-10-25T13:03:47.418139+00:00",
+      "estimatedCredits": 3,
+      "payload": {
+        "rig_task_id": "01a17312-5301-774a-9e68-45796cc098de",
+        "action_id": 0
+      },
+      "balanceBefore": 299,
+      "id": "01a17328-fb9a-7640-a0e7-0fa58d36a5d9",
+      "checkedAt": "2026-10-25T13:07:10.106224+00:00",
+      "progress": 100,
+      "consumedCredits": 3,
+      "finishedAt": 1792933456871,
+      "expiresAt": 1793192656871,
+      "downloads": [
+        {
+          "path": ".img2threejs/rooftop-kook/kook-rain-idle/downloads/animation_glb.glb",
+          "bytes": 33457708,
+          "sha256": "fff23709bc4b320efefd3c09539b3cb54ed8796203bb0c9ab8e20f429ff1898c"
+        }
+      ]
+    },
+    "heirloom-shotgun": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "ebc478bb-ddfe-458f-8542-7082a0dc5aec",
+      "createdAt": "2026-10-25T13:25:59.540428+00:00",
+      "estimatedCredits": 35,
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/rooftop-kook-assets/references/heirloom-shotgun.png",
+        "ai_model": "meshy-7.1",
+        "geometry_resolution": "2k",
+        "should_remesh": true,
+        "topology": "triangle",
+        "target_polycount": 20000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 296,
+      "reference": "tools/rooftop-kook-assets/references/heirloom-shotgun.png",
+      "referenceSha256": "f7353558523557d0685fad6e360203b2b6f7bd24d54aa009671c45ef22229cd8",
+      "id": "01a1733d-4f69-76c2-acbe-4d15eabfb0dd",
+      "checkedAt": "2026-10-25T13:29:08.818001+00:00",
+      "progress": 100,
+      "consumedCredits": 35,
+      "finishedAt": 1792934848778,
+      "expiresAt": 1793194048778,
+      "downloads": [
+        {
+          "path": ".img2threejs/rooftop-kook/heirloom-shotgun/downloads/model.glb",
+          "bytes": 11046940,
+          "sha256": "9c17205a894a00eb9bc2650f380350e8478d8096eccc92dc16161c38d46c1af0"
         }
       ]
     }
