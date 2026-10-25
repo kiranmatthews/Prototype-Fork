@@ -32,9 +32,11 @@ try{for(const mode of (process.env.PORCH_MODES||'lite,native').split(',')){
  }
  await enter();await page.waitForTimeout(700);
  await page.screenshot({path:`${out}/${mode}-arrival.png`});
- const shelter=await page.evaluate(()=>{const g=window.__game;return {name:g.getCurrentLevel().data.name,rain:g.getLevel().rainDiagnostics,lens:g.getLookDiagnostics()?.rain,
+ const shelter=await page.evaluate(()=>{const g=window.__game,material=g.getLevel().crates.find(c=>c.woodCrate).woodCrate.visual.material;
+  const shader={uniforms:{},vertexShader:'#include <worldpos_vertex>',fragmentShader:'#include <fog_fragment>'};material.onBeforeCompile(shader,g.renderer);
+  return {name:g.getCurrentLevel().data.name,rain:g.getLevel().rainDiagnostics,lens:g.getLookDiagnostics()?.rain,sharedFogDensity:shader.uniforms.uHeightFogProfile?.value.y??0,
   slippy:g.player.groundHit?.slippy??false,buffer:[g.renderer.domElement.width,g.renderer.domElement.height]};});
- assert.equal(shelter.name,'Bonus: The Storm Parlour');assert.ok(shelter.rain.visible);assert.equal(shelter.lens.enabled,false);assert.equal(shelter.slippy,false);
+ assert.equal(shelter.name,'Bonus: The Storm Parlour');assert.ok(shelter.rain.visible);assert.equal(shelter.lens.enabled,false);assert.equal(shelter.slippy,false);assert.equal(shelter.sharedFogDensity,0);
  if(mode==='native')assert.deepEqual(shelter.buffer,[2560,1440]);
  // Render the actual loaded rain shaders into a small isolated target. Both
  // streaks and impact rings must vanish inside cover, and survive beside it.
@@ -105,9 +107,11 @@ try{for(const mode of (process.env.PORCH_MODES||'lite,native').split(',')){
  assert.ok(journey.done);assert.equal(journey.error,null);assert.ok(journey.sourceMatches&&journey.tuningUnchanged);
  assert.equal(journey.result.cratesBroken,23);assert.equal(journey.result.deaths,0);assert.ok(journey.trace.every(p=>!p.slippy));
  await ready('rooftop-relay');
- const after=await page.evaluate(()=>{const g=window.__game;return {sameParent:g.getLevel()===window.porchParent,completed:g.getLevel().bonusRoundCompleted,
+ const after=await page.evaluate(()=>{const g=window.__game,material=g.getLevel().crates.find(c=>c.woodCrate).woodCrate.visual.material;
+  const shader={uniforms:{},vertexShader:'#include <worldpos_vertex>',fragmentShader:'#include <fog_fragment>'};material.onBeforeCompile(shader,g.renderer);
+  return {sameParent:g.getLevel()===window.porchParent,completed:g.getLevel().bonusRoundCompleted,sharedFogDensity:shader.uniforms.uHeightFogProfile?.value.y??0,
   boxes:g.player.bonusCrates,crates:g.player.cratesBroken,before:window.porchBefore,lens:g.getLookDiagnostics()?.rain,stamp:document.querySelector('.hud-build')?.textContent};});
- assert.ok(after.sameParent&&after.completed);assert.equal(after.boxes,23);assert.equal(after.crates,after.before.crates);
+ assert.ok(after.sameParent&&after.completed);assert.equal(after.boxes,23);assert.equal(after.crates,after.before.crates);assert.ok(after.sharedFogDensity>0);
  assert.equal(after.lens.enabled,after.before.lens);assert.match(after.stamp,/Codex\/sol fork/);assert.deepEqual(errors,[]);
  reports.push({mode,shelter,gpu,failedAttempt,after,result:journey.result,frames:journey.frame,errors});
  await writeFile(`${out}/report.json`,JSON.stringify(reports,null,2));console.log('PASS',JSON.stringify(reports.at(-1)));await page.close();

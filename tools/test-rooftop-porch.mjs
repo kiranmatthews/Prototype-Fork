@@ -15,9 +15,13 @@ await withBlockworksRuntime(async r=>{
  assert.ok(validAtmosphere(r.source.atmosphere));
  for(const shelter of [null,{}, {min:[0,0,0],max:[0,1,1]}, {min:[0,0,0],max:[1,Infinity,1]}, {min:[0,0],max:[1,1,1]}, {min:[0,0,0],max:[1,1,1],extra:true}])
   assert.equal(validAtmosphere({rain:{intensity:1,wind:[1,1],shelter}}),false);
- const ray=new r.THREE.Raycaster(new r.THREE.Vector3(),new r.THREE.Vector3(0,-1,0),0,.5);
+ const ray=new r.THREE.Raycaster(new r.THREE.Vector3(),new r.THREE.Vector3(0,-1,0),0,4);
  for(const x of [29,71,73.5,78,82.5,85]){
   ray.ray.origin.set(x,1.3,0);assert.equal(r.l.raycastGround(ray).length,0,'open unrepaired floor '+x);
+ }
+ for(const [x,z] of [[0,4.4],[50,4.4],[100,4.4],[-24,0],[132,0]]){
+  ray.ray.origin.set(x,.5,z);const hit=r.l.raycastGround(ray)[0];
+  assert.ok(hit&&hit.point.y>-1.6&&hit.point.y<-1.1,'garden meets the foundation and oak roots '+[x,z]);
  }
  for(const mesh of r.l.groundMeshes)assert.notEqual(mesh.userData.slippy,true,'sheltered surfaces must not inherit parent traction');
  // The same fixed rain sample field reaches the exposed plane but never

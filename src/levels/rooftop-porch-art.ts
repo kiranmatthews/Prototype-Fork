@@ -23,18 +23,19 @@ export function dressStormPorch(components:CustomComponent[]):void{
  }
  model('kookstormrail',[14,4.2,-1.65],1.22);
  for(const x of [-8,19,38,62,88,100])model('baypot',[x,.02,-3.1],.9,x*11);
- for(const x of [3,44,94])model('kookhydrangea',[x,-1.1,7.1],.72,0,91);
+ for(const x of [3,44,94])model('kookhydrangea',[x,-1.4,7.1],.72,0,91);
  for(const x of [22,66])model('bayvine',[x,.1,-4.7],1.2,0);
 
  // Uneven lawns slope into a sinuous tidal bank. Fixed geometry at every
  // viewing distance; world-sized turf UVs remain aligned across each strip.
  const shore=(x:number)=>14+2.4*Math.sin(x*.052)+1.3*Math.sin(x*.117);
- const ground=(front:boolean)=>{
+ const ground=(front:boolean,side?:[number,number])=>{
   const vertices:number[]=[],indices:number[]=[],colors:number[]=[],uvs:number[]=[];
-  const nx=62,nz=14;
+  const nx=side?20:62,nz=side?3:14;
   for(let i=0;i<=nx;i++)for(let j=0;j<=nz;j++){
-   const x=-95+i*4.6,t=j/nz,z=front?5.1+t*(shore(x)+10-5.1):-100+t*94.7;
-   const bank=front?Math.max(0,Math.min(1,(z-shore(x)+1)/8)):0;
+   const x=side?side[0]+i/nx*(side[1]-side[0]):-95+i*4.6,t=j/nz;
+   const z=side?-5.3+t*9:front?3.7+t*(shore(x)+10-3.7):-100+t*94.7;
+   const bank=front&&!side?Math.max(0,Math.min(1,(z-shore(x)+1)/8)):0;
    const y=-1.34+.16*Math.sin(x*.09)*Math.sin(z*.23)-4.3*bank*bank;
    vertices.push(x,y,z);uvs.push(x/8,z/8);
    const shade=.94+.055*Math.sin(x*.67+z*.35);
@@ -43,10 +44,13 @@ export function dressStormPorch(components:CustomComponent[]):void{
   for(let i=0;i<nx;i++)for(let j=0;j<nz;j++){
    const a=i*(nz+1)+j,b=a+nz+1;indices.push(a,a+1,b,b,a+1,b+1);
   }
-  components.push({t:'mesh',p:[0,0,0],vertices,indices,colors,uvs,tex:'country-turf',color:'#738677',
-   solid:true,castShadow:false,grp:91,nm:front?'Sinuous riverbank and rain-dark lawn':'Manor grounds at garden level'});
+  components.push({t:'mesh',p:[0,0,0],vertices,indices,colors,uvs,tex:'country-turf',color:'#8fa970',
+   solid:true,...(side?{lethal:true}:{}),castShadow:false,grp:91,nm:side?'Grounded live-oak side garden':front?'Sinuous riverbank and rain-dark lawn':'Manor grounds at garden level'});
  };
  ground(true);ground(false);
+ // The garden meets the stone foundation and continues around both ends;
+ // only the actual repair openings expose water beneath the playable lane.
+ ground(false,[-95,-12]);ground(false,[108,190.2]);
  components.push({t:'mesh',p:[48,-2.65,0],vertices:[-240,0,-160,240,0,-160,240,0,200,-240,0,200],
   indices:[0,2,1,0,3,2],uvs:[0,0,40,0,40,30,0,30],tex:'custard-water',materialStyle:'jungle-stream',
   solid:false,scenerySolid:false,doubleSided:true,lethal:true,color:'#537c83',opacity:.9,castShadow:false,grp:91,

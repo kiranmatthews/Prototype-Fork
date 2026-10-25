@@ -4,6 +4,14 @@ import {dressStormPorch} from './rooftop-porch-art';
 const components:CustomComponent[]=[];
 const cube={vertices:[-.5,-.5,-.5,.5,-.5,-.5,.5,.5,-.5,-.5,.5,-.5,-.5,-.5,.5,.5,-.5,.5,.5,.5,.5,-.5,.5,.5],
  indices:[0,2,1,0,3,2,4,5,6,4,6,7,0,1,5,0,5,4,3,7,6,3,6,2,0,4,7,0,7,3,1,2,6,1,6,5]};
+const repairBoard={vertices:[] as number[],uvs:[] as number[]};
+// Give each face its own metric UVs, matching the porch plank direction and
+// density instead of stretching a single tiny tile over a 17-metre board.
+for(const [i,vertex] of cube.indices.entries()){
+ const x=cube.vertices[vertex*3]*3,y=cube.vertices[vertex*3+1]*.6,z=cube.vertices[vertex*3+2]*17.4;
+ repairBoard.vertices.push(x,y,z);
+ repairBoard.uvs.push(...(i<12?[x/3.4,y/3.4]:i<24?[x/3.4,z/3.4]:[z/3.4,y/3.4]));
+}
 export const STORM_PORCH_DECKS=[[-12,26,0],[32,70,0],[86,108,0]] as const;
 export const STORM_PORCH_STEPS=[[73.5,.6],[78,1.2],[82.5,.6]] as const;
 const deck=(a:number,b:number,y:number,nm:string,depth=17.4)=>components.push({t:'platform',p:[(a+b)/2,y-.45,depth===17.4?-4.5:0],
@@ -35,7 +43,7 @@ crate(64,0,'wood','Bell-pull parcel');crate(64,.96,'life','Bell-pull parcel cap'
 // heights and visible gaps ask for three deliberate jumps, then a safe landing.
 crate(68,0,'bang','Porch bell-pull switch');
 for(const [i,[x,y]] of STORM_PORCH_STEPS.entries()){
- components.push({t:'mesh',p:[x,y-.3,-4.5],s:[3,.6,17.4],...cube,tex:'plank',color:'#c4d0c9',outline:true,grp:20,nm:`Revealed porch board ${i+1}`});
+ components.push({t:'mesh',p:[x,y-.3,-4.5],...repairBoard,tex:'plank',color:'#c4d0c9',outline:true,grp:20,nm:`Revealed porch board ${i+1}`});
  crate(x,y,i===1?'mystery':'wood',`Bell-pull crossing parcel ${i+1}`,true);
 }
 crate(91,0,'wood','Departure parcel');crate(91,.96,'wood','Departure parcel middle');crate(91,1.92,'life','Departure parcel crown');

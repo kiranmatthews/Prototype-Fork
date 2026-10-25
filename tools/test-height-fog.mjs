@@ -1,7 +1,11 @@
 import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
 import * as THREE from 'three';
 import {createServer} from 'vite';
-const server=await createServer({server:{middlewareMode:true,hmr:false},appType:'custom'});
+const fixture=await readFile(new URL('./test-crouch-jump-slam.mjs',import.meta.url),'utf8');
+const dom=fixture.slice(fixture.indexOf('function installHeadlessDom()'),fixture.indexOf('\nconst held'));
+new Function('noop',dom+'\ninstallHeadlessDom();')(()=>{});
+const server=await createServer({server:{middlewareMode:true,hmr:false,ws:false},appType:'custom'});
 try{
  const {HeightFog}=await server.ssrLoadModule('/src/heightFog.ts');
  const {validAtmosphere}=await server.ssrLoadModule('/src/levelAtmosphere.ts');
@@ -12,6 +16,12 @@ try{
  const first=new HeightFog();first.update(root,camera,profile,color,true);
  const shader=compile(),uniforms=shader.uniforms,key=material.customProgramCacheKey();
  assert.equal(uniforms.uHeightFogProfile.value.y,.12);
+ const {Level}=await server.ssrLoadModule('/src/level.ts');
+ const suspended=Object.assign(Object.create(Level.prototype),{root,scene:new THREE.Scene(),heightFog:first});
+ suspended.scene.add(root);suspended.setActive(false);
+ assert.equal(uniforms.uHeightFogProfile.value.y,0,'a retained parent cannot fog the next bonus shared materials');
+ suspended.setActive(true);first.update(root,camera,profile,color,true);
+ assert.equal(uniforms.uHeightFogProfile.value.y,.12,'resumed parent restores its own fog');
  first.dispose();assert.equal(uniforms.uHeightFogProfile.value.y,0,'shared materials must lose fog when leaving the level');
  const second=new HeightFog();second.update(root,new THREE.Vector3(0,60,-900),{...profile,height:52},color,true);
  assert.equal(uniforms.uHeightFogProfile.value.x,52,'a compiled material must adopt its new level uniforms');

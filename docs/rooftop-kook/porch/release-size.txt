@@ -2,5 +2,5 @@
 > board-platformer-proto@0.1.0 check:release
 > node tools/check-release-size.mjs
 
-Release output: 1819 files, 999,465,419 bytes / 1,000,000,000 byte budget.
+Release output: 1819 files, 999,470,639 bytes / 1,000,000,000 byte budget.
 PASS release fits the hosting budget.

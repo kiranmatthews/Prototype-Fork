@@ -8940,6 +8940,9 @@ export class Level {
     // matrix pass. Detach it and release recreatable ocean render targets.
     this.root.visible = false;
     this.scene.remove(this.root);
+    // A suspended rooftop still owns shared crate/pickup shader uniforms.
+    // Release its haze before a ground-level bonus borrows those materials.
+    this.heightFog?.disable();
     this.water?.setQuality("lite");
   }
 
