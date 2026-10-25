@@ -1111,7 +1111,7 @@ export interface CustomGroup {
 // ---- TIME OF DAY ----------------------------------------------------------
 // Authored sky selection and shared lighting presets. Each painting declares
 // its own horizon geometry in levelAtmosphere.ts.
-export const SKY_PRESETS = ["day", "sunset", "night", "coast", "clouds", "carlisle", "haunted", "coastal-town", "pirate", "country-club", "waterslide-island"] as const;
+export const SKY_PRESETS = ["day", "sunset", "night", "coast", "clouds", "carlisle", "haunted", "coastal-town", "pirate", "country-club", "waterslide-island", "coastal-storm"] as const;
 export type SkyPreset = (typeof SKY_PRESETS)[number];
 export const DEFAULT_SKY: SkyPreset = "sunset";
 export function asSkyPreset(v: unknown): SkyPreset {

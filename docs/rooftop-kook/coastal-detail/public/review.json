@@ -1,0 +1,113 @@
+{
+  "base": "https://kiranmatthews.github.io/Prototype-Fork",
+  "lite": false,
+  "native": true,
+  "scenes": [
+    {
+      "id": "1-vista",
+      "s": 477.29,
+      "grounded": true,
+      "position": [
+        -212.94905434547934,
+        79.30000000596046,
+        -419.1089289502211
+      ],
+      "state": "ride",
+      "camera": [
+        -210.35051019104435,
+        86.30000000596046,
+        -407.9063592326317
+      ],
+      "assets": {
+        "components": 1493,
+        "placements": 1493,
+        "ready": 710,
+        "skipped": 0,
+        "draws": 260,
+        "triangles": 4706750,
+        "allLodTriangles": 4706750,
+        "cells": 548,
+        "residentCells": 260,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 7,
+        "textureMiB": 147,
+        "errors": [],
+        "windTime": 2.485133333285646
+      },
+      "meshDetail": {
+        "native": 260,
+        "reduced": 0,
+        "automaticLod": 0
+      },
+      "buffer": [
+        2560,
+        1440
+      ],
+      "resolution": "max",
+      "crt": false,
+      "render": {
+        "frame": 2778,
+        "calls": 533,
+        "triangles": 3870192,
+        "points": 0,
+        "lines": 0
+      },
+      "stamp": "Codex/sol fork · build 10-25 14:20 UTC"
+    },
+    {
+      "id": "finish",
+      "s": 2309.6099999999997,
+      "grounded": true,
+      "position": [
+        -71.96425820695613,
+        41.300000005960456,
+        -1874.553339130907
+      ],
+      "state": "ride",
+      "camera": [
+        -70.93600331589865,
+        48.300000005960456,
+        -1863.0994012980473
+      ],
+      "assets": {
+        "components": 1493,
+        "placements": 1493,
+        "ready": 415,
+        "skipped": 0,
+        "draws": 152,
+        "triangles": 2937380,
+        "allLodTriangles": 2937380,
+        "cells": 548,
+        "residentCells": 152,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 6,
+        "textureMiB": 273.67,
+        "errors": [],
+        "windTime": 7.13513333328563
+      },
+      "meshDetail": {
+        "native": 152,
+        "reduced": 0,
+        "automaticLod": 0
+      },
+      "buffer": [
+        2560,
+        1440
+      ],
+      "resolution": "max",
+      "crt": false,
+      "render": {
+        "frame": 4954,
+        "calls": 152,
+        "triangles": 1557079,
+        "points": 10,
+        "lines": 0
+      },
+      "stamp": "Codex/sol fork · build 10-25 14:20 UTC"
+    }
+  ],
+  "errors": [],
+  "failed": []
+}

@@ -8,6 +8,7 @@ for (let i = 0; i <= SEA_BACKDROP_SEGMENTS; i++) {
   ring[i * 3] = -Math.cos(phi); ring[i * 3 + 2] = Math.sin(phi);
 }
 export const SEA_SKY_ART = {
+  'coastal-storm':'rooftop-kook/storm-sky-v1.webp',
   'waterslide-island':'waterslide/island-sky.webp',
   'country-club':'country-club-art/sky.webp',
   'coastal-town': 'coastal-town/sky.webp',

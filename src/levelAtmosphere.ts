@@ -172,11 +172,20 @@ export interface SkyPresetDef {
   oceanContentFraction?: number;
   /** Full 360-degree panorama with a single horizontal wrap. */
   equirectangular?: boolean;
+  /** Sine of the elevation where painted cloud detail clears horizon haze. */
+  hazeElevation?: number;
   /** Horizontal turn of an authored panorama, in texture turns. */
   longitudeOffset?: number;
   tint?: string;
 }
 export const SKY_PRESETS: Record<SkyPreset, SkyPresetDef> = {
+  'coastal-storm': {
+    file:'rooftop-kook/storm-sky-v1.webp',label:'Coastal cyclone brewing',fog:0xaebdca,fogFarCap:380,
+    sunTint:0xe3edf2,sunK:1,groundTint:0x87939b,groundK:1,
+    hemiTint:0xc7d8e8,hemiK:1,hemiMul:1,sunMul:1,fillTint:0x9fbdd5,fillK:1,fillMul:.4,
+    top:'#677d94',bottom:'#bdc9d1',stars:false,sunHex:null,imgH:887,horizonPx:400,
+    farPlane:680,equirectangular:true,hazeElevation:.065,oceanContentFraction:.5,
+  },
   'waterslide-island': {
     file:'waterslide/island-sky.webp',label:'Slipstream tropical daylight',fog:0x9bc9cc,fogFarCap:620,
     sunTint:0xffe3ac,sunK:1,sunMul:1,groundTint:0x69704d,groundK:1,

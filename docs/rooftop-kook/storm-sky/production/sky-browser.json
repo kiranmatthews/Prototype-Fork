@@ -1,0 +1,141 @@
+{
+  "base": "http://127.0.0.1:5269",
+  "normal": {
+    "level": "rooftop-relay",
+    "preset": "coastal-storm",
+    "skyVisible": true,
+    "image": [
+      1774,
+      887
+    ],
+    "haze": 1,
+    "hazeElevation": 0.065,
+    "buffer": [
+      2560,
+      1440
+    ],
+    "camera": [
+      -0.5240647817669586,
+      0.04016205587161222,
+      0.023202130643619652,
+      "XYZ"
+    ],
+    "stamp": "Codex/sol fork · build 10-25 14:40 UTC"
+  },
+  "views": [
+    {
+      "name": "look-up",
+      "level": "rooftop-relay",
+      "preset": "coastal-storm",
+      "skyVisible": true,
+      "image": [
+        1774,
+        887
+      ],
+      "haze": 1,
+      "hazeElevation": 0.065,
+      "buffer": [
+        2560,
+        1440
+      ],
+      "camera": [
+        -0.40231378056576156,
+        0.042680957269714714,
+        0.018154232356409485,
+        "XYZ"
+      ],
+      "stamp": "Codex/sol fork · build 10-25 14:40 UTC"
+    },
+    {
+      "name": "look-left",
+      "level": "rooftop-relay",
+      "preset": "coastal-storm",
+      "skyVisible": true,
+      "image": [
+        1774,
+        887
+      ],
+      "haze": 1,
+      "hazeElevation": 0.065,
+      "buffer": [
+        2560,
+        1440
+      ],
+      "camera": [
+        -0.4516241409459123,
+        0.13989502905325152,
+        0.06753347469365724,
+        "XYZ"
+      ],
+      "stamp": "Codex/sol fork · build 10-25 14:40 UTC"
+    },
+    {
+      "name": "look-right",
+      "level": "rooftop-relay",
+      "preset": "coastal-storm",
+      "skyVisible": true,
+      "image": [
+        1774,
+        887
+      ],
+      "haze": 1,
+      "hazeElevation": 0.065,
+      "buffer": [
+        2560,
+        1440
+      ],
+      "camera": [
+        -0.4478288929364611,
+        -0.055931197388467996,
+        -0.026847777955220857,
+        "XYZ"
+      ],
+      "stamp": "Codex/sol fork · build 10-25 14:40 UTC"
+    }
+  ],
+  "dry": {
+    "level": "codex-lab",
+    "preset": "haunted",
+    "skyVisible": true,
+    "image": [
+      512,
+      512
+    ],
+    "haze": 0,
+    "hazeElevation": 0.26,
+    "buffer": [
+      2560,
+      1440
+    ],
+    "camera": [
+      -0.45791513447678145,
+      -0.2517237620539751,
+      -0.12214609586036788,
+      "XYZ"
+    ],
+    "stamp": "Codex/sol fork · build 10-25 14:40 UTC"
+  },
+  "revisited": {
+    "level": "rooftop-relay",
+    "preset": "coastal-storm",
+    "skyVisible": true,
+    "image": [
+      1774,
+      887
+    ],
+    "haze": 1,
+    "hazeElevation": 0.065,
+    "buffer": [
+      2560,
+      1440
+    ],
+    "camera": [
+      -0.5240647817669586,
+      0.04016205587161222,
+      0.023202130643619652,
+      "XYZ"
+    ],
+    "stamp": "Codex/sol fork · build 10-25 14:40 UTC"
+  },
+  "errors": []
+}

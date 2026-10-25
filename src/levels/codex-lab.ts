@@ -823,9 +823,9 @@ export const ROOFTOP_RELAY_LEVEL:CustomLevelData=(()=>{
  // follows those changes, keeping roof-level contrast and hiding the bases.
  const fogContour:[number,number][]=ROOFTOP_DISTRICTS.map(d=>[rooftopWorld(d.a,0)[2],ROOFTOP_ROOFS[d.first].top-10]);
  fogContour.push([rooftopWorld(ROOFTOP_LENGTH,0)[2],last.top-10]);fogContour.reverse();
- return {v:1,name:'Rooftop Relay',spawn,startWarpPad:false,killY:ROOFTOP_LOWEST_Y-24,sky:'clouds',keepPlayFog:true,cameraAirLift:1,cameraLookAhead:15,
+ return {v:1,name:'Rooftop Relay',spawn,startWarpPad:false,killY:ROOFTOP_LOWEST_Y-24,sky:'coastal-storm',keepPlayFog:true,cameraAirLift:1,cameraLookAhead:15,
   cameraRig:{camDist:11.5,camHeight:7,camPitch:30,camFov:66},
-  atmosphere:{backdrop:'fog',fogEnabled:true,fogNear:55,fogFar:380,fogColor:'#aebdca',heightFog:{height:ROOFTOP_ROOFS[0].top-10,density:.16,falloff:.3,contour:fogContour},rain:{intensity:.86,wind:[5.5,2.8],lens:.82},ambientSky:'#c7d8e8',ambientGround:'#87939b',ambientIntensity:1.22,sunColor:'#e3edf2',sunIntensity:1.35,sunDirection:[-.65,.58,.48],fillColor:'#9fbdd5',fillIntensity:.55,drawDistance:680,shadowStrength:.48,fallbackTop:'#677d94',fallbackBottom:'#bdc9d1',fallbackFog:'#aebdca',fallbackSunColor:null,fallbackSunU:.77,fallbackSunV:.23},
+  atmosphere:{backdrop:'painted sky',fogEnabled:true,fogNear:55,fogFar:380,fogColor:'#aebdca',heightFog:{height:ROOFTOP_ROOFS[0].top-10,density:.16,falloff:.3,contour:fogContour},rain:{intensity:.86,wind:[5.5,2.8],lens:.82},ambientSky:'#c7d8e8',ambientGround:'#87939b',ambientIntensity:1.22,sunColor:'#e3edf2',sunIntensity:1.35,sunDirection:[-.65,.58,.48],fillColor:'#9fbdd5',fillIntensity:.55,drawDistance:680,shadowStrength:.48,fallbackTop:'#677d94',fallbackBottom:'#bdc9d1',fallbackFog:'#aebdca',fallbackSunColor:null,fallbackSunU:.77,fallbackSunV:.23},
   medalTimes:{gold:135,silver:210,bronze:340},components,groups};
 })();
 

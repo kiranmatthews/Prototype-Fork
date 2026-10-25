@@ -12,7 +12,7 @@ export function installSkyProjection(
   hazeStrength: Scalar,
   opaque: Scalar,
   sea: Scalar,
-): { setSeaLevel: (height: number | null) => void } {
+): { setSeaLevel: (height: number | null) => void;setHazeElevation:(elevation:number)=>void } {
   const flatGeometry = sky.geometry;
   const seaGeometry = createSeaSkyGeometry();
   let seaLevel: number | null = null;
@@ -21,6 +21,7 @@ export function installSkyProjection(
   const cameraWorld = { value: new THREE.Matrix4() };
   const textureTransform = { value: new THREE.Matrix3() };
   const poleColor = { value: new THREE.Color() };
+  const hazeElevation = { value: .26 };
   let lastMap: THREE.Texture | null = null;
   sky.name = 'Distant sky backdrop';
   // Transparent water must draw after the background, including the far fill.
@@ -61,6 +62,7 @@ export function installSkyProjection(
       uSkyCameraWorld: cameraWorld, uSkyTextureTransform: textureTransform,
       uSkyHazeColor: hazeColor, uSkyHazeStrength: hazeStrength,
       uSkyOpaqueBackdrop: opaque, uSkySea: sea, uSkyPoleColor: poleColor,
+      uSkyHazeElevation:hazeElevation,
     });
     shader.vertexShader = 'uniform mat4 uSkyCameraWorld; uniform float uSkySea; varying vec3 vSkyRay;\n' + shader.vertexShader;
     shader.vertexShader = shader.vertexShader.replace('#include <project_vertex>', `
@@ -87,7 +89,7 @@ export function installSkyProjection(
       varying vec3 vSkyRay;
       uniform mat3 uSkyTextureTransform;
       uniform vec3 uSkyHazeColor, uSkyPoleColor;
-      uniform float uSkyHazeStrength, uSkyOpaqueBackdrop, uSkySea;
+      uniform float uSkyHazeStrength, uSkyOpaqueBackdrop, uSkySea,uSkyHazeElevation;
     ` + shader.fragmentShader;
     shader.fragmentShader = shader.fragmentShader.replace('#include <map_fragment>', `
       vec3 skyRay = normalize(vSkyRay);
@@ -113,7 +115,7 @@ export function installSkyProjection(
         diffuseColor.rgb = mix(diffuseColor.rgb, uSkyPoleColor,
           smoothstep(0.6, 0.96, skyRay.y));
       #endif
-      float horizonAir = smoothstep(0.01, 0.26, skyRay.y);
+      float horizonAir = smoothstep(0.01, uSkyHazeElevation, skyRay.y);
       diffuseColor.rgb = mix(diffuseColor.rgb, uSkyHazeColor,
         (1.0 - horizonAir) * uSkyHazeStrength * (1.0 - uSkySea));
       if (uSkyOpaqueBackdrop > 0.5 || uSkySea > 0.5) {
@@ -123,8 +125,8 @@ export function installSkyProjection(
 
     `);
   };
-  material.customProgramCacheKey = () => 'sea-level-hemisphere-v3';
-  return { setSeaLevel(height) {
+  material.customProgramCacheKey = () => 'sea-level-hemisphere-v4';
+  return {setHazeElevation(elevation){hazeElevation.value=THREE.MathUtils.clamp(elevation,.02,1);},setSeaLevel(height) {
     const enabled = height !== null;
     seaLevel = height; sea.value = enabled ? 1 : 0;
     sky.name = enabled ? 'Sea-level sky backdrop' : 'Distant sky backdrop';

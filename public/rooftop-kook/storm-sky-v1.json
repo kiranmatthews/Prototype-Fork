@@ -1,0 +1,10 @@
+{
+  "provider": "OpenAI built-in ImageGen",
+  "reference": "tools/rooftop-kook-assets/references/storm-sky-v1.png",
+  "prompt": "tools/rooftop-kook-assets/storm-sky-prompt.json",
+  "width": 1774,
+  "height": 887,
+  "bytes": 128764,
+  "sha256": "2b67d34e62e45f3cfe378cdce4acb72e091be84d0028c261bdb37df218227044",
+  "processing": "Full native image resolution; WebP quality 94 encoding only. Runtime panorama wraps with existing seam blend and horizon fog."
+}

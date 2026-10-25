@@ -864,6 +864,7 @@ function applyTheme(): void {
   skyHazeColor.value.copy(sceneFogColor);
   skyHazeStrength.value=(!level.water||level.isCampaignMap)&&atmosphere.backdrop==='painted sky'&&atmosphere.fogEnabled?(level.isCampaignMap ? .78 : 1):0;
   skyOpaqueBackdrop.value=atmosphere.backdrop==='painted sky'?1:0;
+  skyProjection.setHazeElevation(SKY_PRESETS[skyPreset].hazeElevation??.26);
   scene.fog = editorViewActive || !atmosphere.fogEnabled ? null :
     new THREE.Fog(sceneFogColor, atmosphere.fogNear, atmosphere.fogFar);
   scene.background = sceneFogColor.clone();
