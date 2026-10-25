@@ -1,0 +1,14 @@
+{
+  "beforeCommit": "24057231333db37adcb18c82feafaf084fad88f7",
+  "productionBuild": "10-25 15:18 UTC",
+  "nativeGeometry": "PASS; 8152 measured plank vertices; zero overlapping envelopes",
+  "returnRegression": "PASS; real level repeated cycles, frame rates, clocks, reset and editor capture",
+  "browser": "PASS; actual player landing and 10-second return in lite/full; errors and failed assets empty",
+  "releaseBytes": 999653733,
+  "supplementalBaselineFailure": {
+    "check": "tools/test-carlisle-fidelity.mjs",
+    "assertion": "published pack is importable",
+    "line": 48,
+    "unchangedReleaseResult": "failed before applying this fix"
+  }
+}

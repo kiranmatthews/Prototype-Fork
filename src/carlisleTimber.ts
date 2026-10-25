@@ -116,6 +116,16 @@ export function dressCarlisleTimberDeck(mesh: THREE.Mesh, component: CustomCompo
     lowerLedgers: !moving, diagonalBraces: !moving,
     handrails: false, tonalBucketCount: 4,
   };
+  if(width>8){
+    // On mansion-width decks a small random yaw swings a plank's tips across
+    // several neighbouring boards. Their level top faces then fight for depth.
+    // Keep four tenths of the seam clear even at both jitter extremes, without
+    // moving the contact proxy, changing the source mesh or raising its top.
+    profile.plankScaleJitter=Math.min(profile.plankScaleJitter,profile.plankGap/(4*profile.plankSpacing));
+    const widest=(width+profile.plankSideOverhang*2)*(1+profile.plankScaleJitter);
+    const safeYaw=Math.asin(Math.min(1,profile.plankGap*.35/widest))*180/Math.PI;
+    profile.plankYawJitterDegrees=Math.min(profile.plankYawJitterDegrees,safeYaw);
+  }
   const layout = buildWoodPathLayout({
     length,
     sampleAtDistance: distance => ({

@@ -1,0 +1,94 @@
+{
+  "decks": [
+    {
+      "name": "RR:33 loose construction deck",
+      "width": 20,
+      "boards": 13,
+      "vertices": 8152,
+      "minimumGap": 0.01586657860360008,
+      "overlaps": 0,
+      "yaw": 0.02374379319167113,
+      "scaleJitter": 0.008955223880597014
+    }
+  ],
+  "motion": [
+    [
+      "shake"
+    ],
+    [
+      "shake"
+    ],
+    [
+      "shake"
+    ],
+    [
+      "fall"
+    ],
+    [
+      "fall"
+    ],
+    [
+      "gone"
+    ],
+    [
+      "gone"
+    ],
+    [
+      "gone"
+    ],
+    [
+      "gone"
+    ],
+    [
+      "gone"
+    ],
+    [
+      "gone"
+    ],
+    [
+      "gone"
+    ],
+    [
+      "gone"
+    ],
+    [
+      "gone"
+    ],
+    [
+      "gone"
+    ],
+    [
+      "gone"
+    ],
+    [
+      "gone"
+    ],
+    [
+      "gone"
+    ],
+    [
+      "gone"
+    ],
+    [
+      "gone"
+    ],
+    [
+      "gone"
+    ],
+    [
+      "gone"
+    ],
+    [
+      "gone"
+    ],
+    [
+      "idle"
+    ],
+    [
+      "idle"
+    ],
+    [
+      "idle"
+    ]
+  ]
+}
