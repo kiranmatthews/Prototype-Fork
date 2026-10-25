@@ -1,6 +1,6 @@
 import {lightBlockworksMaterial} from './blockworksLighting';
 import * as THREE from 'three';
-import {loadBlockworksModel,blockworksDetail,blockworksSourceBox} from './blockworksModelLoader';
+import {loadBlockworksModel,blockworksSourceBox} from './blockworksModelLoader';
 import type {CustomComponent} from './level';
 
 export const BLOCKWORKS_ASSET_KINDS=['bw-turret','bw-wall-bay','bw-buttress','bw-palm','bw-foliage','bw-lantern','bw-wheel','bw-winch','bw-rubble','bw-cliff','bw-parapet-v2','bw-spire-v2','bw-viaduct-v2','bw-jungle-shelf-v2','bw-coaster-v2','bw-steel-block','bw-hanging-vines','bw-steel-switch','bw-ghost-train-castle','bw-toxic-basin','bw-sludge-outfall','bw-sludge-stream'] as const;
@@ -126,7 +126,6 @@ export class BlockworksAssetKit {
             group.updateWorldMatrix(true,true);
             const sphere=new THREE.Box3().setFromObject(group).getBoundingSphere(new THREE.Sphere());
             group.userData.viewSphere=sphere;
-            group.userData.maxLod=Math.max(...group.children.map(m=>m.userData.bwLod??0));
           }
           batch.state='ready';
         }catch{if(!this.released)batch.state='error';}
@@ -185,9 +184,8 @@ export class BlockworksAssetKit {
       const sphere=root.userData.viewSphere as THREE.Sphere|undefined,centre=sphere?.center??root.position;
       const distance=Math.max(0,Math.sqrt(Math.min(centre.distanceToSquared(position),secondary?centre.distanceToSquared(secondary):Infinity))-(sphere?.radius??0));
       root.visible=distance<Math.min(far,225);
-      const lod=Math.min(root.userData.maxLod??0,blockworksDetail(distance));
       for(const child of root.children){const mesh=child as THREE.Mesh;if(!mesh.isMesh)continue;
-        mesh.visible=(mesh.userData.bwLod??0)===lod;
+        mesh.visible=true;
         mesh.castShadow=distance<38&&!mesh.userData.noShadow;mesh.receiveShadow=distance<85;
       }
     }

@@ -92,7 +92,7 @@ globalThis.Image=class extends HeadlessImage {
 };
 globalThis.createImageBitmap=async()=>({width:1024,height:1024,close(){}});
 globalThis.ProgressEvent??=class{constructor(type,data){this.type=type;Object.assign(this,data);}};
-globalThis.fetch=async input=>{const url=typeof input==='string'?input:input.url;if(url.startsWith('blob:'))return nativeFetch(input);const match=new URL(url,'http://headless.invalid').pathname.match(/\/((?:jungle-kit\/(?:(?:modular|editor)\/)?|map-kit\/|nightworks-kit\/|treehouse-trail\/|treehouse-trials\/|treehouse-trials-v[23]\/|carlisle-coast\/|carlisle-bonus\/|carlisle-coast-fidelity\/|beachfront\/|custard-creek\/|coastal-town\/|country-club-art\/|moonbone-vault\/|sunny-beach\/|waterslide\/|hollowwake\/|grove\/|drowned-crown\/(?:(?:excellence|boards)\/)?|hazards\/)[\w-]+\.glb)$/);return match?new Response(await readFile(new URL('public/'+match[1],root))):new Response('',{status:404});};
+globalThis.fetch=async input=>{const url=typeof input==='string'?input:input.url;if(url.startsWith('blob:'))return nativeFetch(input);const match=new URL(url,'http://headless.invalid').pathname.match(/\/((?:jungle-kit\/(?:(?:modular|editor)\/)?|map-kit\/|nightworks-kit\/|treehouse-trail\/|treehouse-trials\/|treehouse-trials-v[23]\/|carlisle-coast\/|carlisle-bonus\/|carlisle-coast-fidelity\/|beachfront\/|custard-creek\/|coastal-town\/|rooftop-kook\/|country-club-art\/|moonbone-vault\/|sunny-beach\/|waterslide\/|hollowwake\/|grove\/|drowned-crown\/(?:(?:excellence|boards)\/)?|hazards\/)[\w-]+\.glb)$/);return match?new Response(await readFile(new URL('public/'+match[1],root))):new Response('',{status:404});};
 const cacheDir=await mkdtemp(join(tmpdir(),'jungle-assets-'));
 const server=await createServer({configFile:false,cacheDir,logLevel:'silent',optimizeDeps:{noDiscovery:true},
  server:{middlewareMode:true,hmr:false,ws:false,watch:null},appType:'custom'});
@@ -284,8 +284,8 @@ try{
  assert.deepEqual(streamed.errors,[]);streamed.dispose();await streamed.ready();
  assert.equal(streamed.root.children.length,0);
 
- // Single-LOD rocks must keep their sole visible representation, even beyond
- // the high-detail range. Real paired LODs transition only in the fog band.
+ // Every asset keeps its original geometry beyond its former LOD thresholds.
+ // Distance streaming and nested reflection scopes still retain their owners.
  const horizon=new JungleAssetKit(true,false,false,true,'painterly');
  horizon.add({dkind:'coastbeachrock',p:[0,0,-220],s:[10,5.56,5.49]});
  horizon.add({dkind:'coastv2grass',p:[0,0,-90],s:[1.15,.32,1.15]});
@@ -299,21 +299,19 @@ try{
  const grass=horizon.root.children.filter(m=>m.userData.jungleAsset==='coastv2grass'),nearGrass=grass.find(m=>m.visible);
  assert.ok(nearGrass);const grassShader=shaderFor(nearGrass.material);
  assert.doesNotMatch(grassShader.vertexShader,/grassDistance|transformed\s*\*=\s*1\.0-smoothstep/,'plant dimensions do not change with camera distance');
- assert.deepEqual(grassShader.uniforms.uJungleLodRange.value.toArray(),[152,180.5],'paired detail changes occur at the authored atmospheric horizon');
+ assert.equal(grass.length,1,'legacy distanceLod metadata must not create a reduced draw');
+ assert.doesNotMatch(grassShader.fragmentShader,/sceneryDither|uJungleLodRange/,'native scenery never cross-fades to simplified geometry');
  const primaryVisibility=horizon.root.children.map(mesh=>[mesh.id,mesh.visible]);
- horizon.withLowDetailCapture(()=>{
-  assert.equal(grass.find(mesh=>mesh.userData.sceneryLod===0).visible,false,'reflection omits high-detail plants');
-  assert.equal(grass.find(mesh=>mesh.userData.sceneryLod===1).visible,true,'reflection reuses the real distant mesh');
+ horizon.withSceneryCapture(()=>{
+  assert.equal(grass[0].visible,true,'reflection retains the original plant');
+  assert.equal(grass[0].userData.sceneryLod,0);
   assert.equal(rock[0].visible,true,'one-mesh assets remain available to the reflection');
-  assert.deepEqual(grassShader.uniforms.uJungleLodRange.value.toArray(),[0,.001]);
   horizon.setView(new THREE.Vector3(1000,0,1000),190);
-  assert.deepEqual(grassShader.uniforms.uJungleLodRange.value.toArray(),[0,.001],'secondary capture cannot replace the primary LOD view');
+  assert.deepEqual(horizon.root.children.map(mesh=>[mesh.id,mesh.visible]),primaryVisibility,'secondary camera cannot change primary streaming');
  });
  assert.deepEqual(horizon.root.children.map(mesh=>[mesh.id,mesh.visible]),primaryVisibility);
- assert.deepEqual(grassShader.uniforms.uJungleLodRange.value.toArray(),[152,180.5]);
- assert.throws(()=>horizon.withLowDetailCapture(()=>horizon.withLowDetailCapture(()=>{throw Error('capture failure');})),/capture failure/);
+ assert.throws(()=>horizon.withSceneryCapture(()=>horizon.withSceneryCapture(()=>{throw Error('capture failure');})),/capture failure/);
  assert.deepEqual(horizon.root.children.map(mesh=>[mesh.id,mesh.visible]),primaryVisibility,'failed nested capture restores all primary visibility');
- assert.deepEqual(grassShader.uniforms.uJungleLodRange.value.toArray(),[152,180.5]);
  horizon.setView(new THREE.Vector3(0,0,1000),190);await horizon.ready();assert.equal(horizon.diagnostics.ready,0,'prefetch still releases distant instance buffers');
  horizon.dispose();
  // This paired mesh serves secondary passes. Distance, cutaway and
@@ -330,10 +328,10 @@ try{
  for(const z of [0,160,-210]){
   reflectedBoardwalk.setView(new THREE.Vector3(0,0,z),190);await reflectedBoardwalk.ready();
   assert.equal(boardwalkNear.visible,true);assert.equal(boardwalkFar.visible,false);
-  reflectedBoardwalk.withLowDetailCapture(()=>{assert.equal(boardwalkNear.visible,false);assert.equal(boardwalkFar.visible,true);});
+  reflectedBoardwalk.withSceneryCapture(()=>{assert.equal(boardwalkNear.visible,true);assert.equal(boardwalkFar.visible,false);});
   assert.equal(boardwalkNear.visible,true);assert.equal(boardwalkFar.visible,false);
  }
- assert.throws(()=>reflectedBoardwalk.withLowDetailCapture(()=>{throw Error('boardwalk reflection failure');}),/boardwalk reflection failure/);
+ assert.throws(()=>reflectedBoardwalk.withSceneryCapture(()=>{throw Error('boardwalk reflection failure');}),/boardwalk reflection failure/);
  assert.equal(boardwalkNear.visible,true);assert.equal(boardwalkFar.visible,false);reflectedBoardwalk.dispose();
  // Shadow copies never replace the authored colour mesh, reflection choice
  // or standing/collision geometry. Exercise real loader and cell lifetimes.
@@ -386,9 +384,9 @@ try{
  assert.deepEqual(snapshot(),normal,'shadow draw restores every primary flag and asset');
  assert.throws(()=>shadowKit.withLowDetailShadows(()=>shadowKit.withLowDetailShadows(()=>{assertShadow();throw Error('shadow draw failed');})),/shadow draw failed/);
  assert.deepEqual(snapshot(),normal,'failed nested shadow draw restores every primary flag');
- shadowKit.withLowDetailCapture(()=>{
+ shadowKit.withSceneryCapture(()=>{
   for(const cell of [plank,...shadowTreasure]){assert.equal(cell.mesh.visible,true);assert.equal(cell.farMesh.visible,false,'shadow-only meshes must retain native reflections');}
-  assert.equal(shadowBoardwalk.mesh.visible,false);assert.equal(shadowBoardwalk.farMesh.visible,true);
+  assert.equal(shadowBoardwalk.mesh.visible,true);assert.equal(shadowBoardwalk.farMesh.visible,false);
   const reflected=snapshot();shadowKit.withLowDetailShadows(()=>assert.deepEqual(snapshot(),reflected));
  });
  assert.deepEqual(snapshot(),normal);
@@ -419,8 +417,8 @@ try{
  shadowKit.setView(new THREE.Vector3(1000,0,1000),190);await shadowKit.ready();
  assert.equal(shadowKit.diagnostics.ready,0);assert.equal(shadowKit.root.children.length,0,'retiring cells releases both shadow and primary instances');
  shadowKit.dispose();shadowKit.withLowDetailShadows(()=>assert.equal(shadowKit.root.children.length,0));
- // Actual waterpark GLBs retain the approved near model and share its atlas
- // with the new distant silhouette in both gameplay and reflection captures.
+ // Actual waterpark GLBs use the complete approved model in both primary
+ // and reflected views, including 400 m beyond their former LOD threshold.
  const waterpark=new JungleAssetKit(true,false,false,true,'painterly');
  const waterKinds=['waterslidetropicalgrove','waterslideplantedcliff'];
  for(const kind of waterKinds)for(const z of [0,-400])waterpark.add({dkind:kind,p:[0,0,z],scenerySolid:false});
@@ -428,13 +426,13 @@ try{
  assert.deepEqual(waterpark.errors,[]);
  for(const kind of waterKinds){
   const cells=waterpark.root.children.filter(m=>m.userData.jungleAsset===kind);
-  assert.equal(cells.length,4,'two placements each load near and far geometry');
+  assert.equal(cells.length,2,'each placement renders one complete mesh');
   const close=cells.filter(m=>m.position.z===0),distant=cells.filter(m=>m.position.z===-400);
   assert.equal(close.find(m=>m.visible).userData.sceneryLod,0,'close scenery keeps the original model');
-  assert.equal(distant.find(m=>m.visible).userData.sceneryLod,1,'distant scenery uses the reduced silhouette');
-  const near=close.find(m=>m.userData.sceneryLod===0),far=close.find(m=>m.userData.sceneryLod===1);
-  assert.equal(near.material.map,far.material.map,'detail levels reuse the exact same decoded atlas');
-  assert.ok(far.geometry.index.count<near.geometry.index.count*.55);
+  assert.equal(distant.find(m=>m.visible).userData.sceneryLod,0,'distant scenery retains the complete model');
+  const near=close[0],far=distant[0];
+  assert.equal(near.geometry,far.geometry,'near and distant placements share the identical original geometry');
+  assert.equal(near.material,far.material,'distance does not replace the material or atlas');
   for(const mesh of [near,far]){
    const normals=mesh.geometry.attributes.normal;
    for(let i=0;i<normals.count;i++){
@@ -442,11 +440,11 @@ try{
     assert.ok(Number.isFinite(length)&&Math.abs(length-1)<1e-6,'loaded scenery must have usable unit normals for normal-mapped lighting');
    }
   }
-  assert.deepEqual(shaderFor(near.material).uniforms.uJungleLodRange.value.toArray(),[160,200]);
+  assert.doesNotMatch(shaderFor(near.material).fragmentShader,/sceneryDither|uJungleLodRange/);
   assert.ok(cells.every(m=>m.userData.solidSurface==='none'),'visual detail never changes course collision');
  }
  const waterVisibility=waterpark.root.children.map(m=>m.visible);
- waterpark.withLowDetailCapture(()=>assert.ok(waterpark.root.children.filter(m=>m.visible).every(m=>m.userData.sceneryLod===1)));
+ waterpark.withSceneryCapture(()=>assert.ok(waterpark.root.children.filter(m=>m.visible).every(m=>m.userData.sceneryLod===0)));
  assert.deepEqual(waterpark.root.children.map(m=>m.visible),waterVisibility);
  waterpark.dispose();
  const {Level,setEditorBuild,normalizeCustomLevelData,parseCustomLevelJson}=await server.ssrLoadModule('/src/level.ts');

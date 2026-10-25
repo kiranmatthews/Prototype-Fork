@@ -51,6 +51,9 @@ try {
   assert.deepEqual(copy.containmentWalls.map(b=>b.toArray?.()??[b.min.toArray(),b.max.toArray()]),
     level.containmentWalls.map(b=>[b.min.toArray(),b.max.toArray()]));
   copy.dispose();
+  const {createJungleAssetScope}=await server.ssrLoadModule('/src/jungleAssets.ts');
+  const nativeScope=createJungleAssetScope(),nativeCanopy=await nativeScope.load('junglecanopy');
+  const canopyTriangles=(nativeCanopy.geometry.index?.count??nativeCanopy.geometry.attributes.position.count)/3;
   let cliffs=0,trees=0;const textures=new Set();
   level.root.traverse(o=>{
     if(!o.isMesh)return;
@@ -59,10 +62,11 @@ try {
       assert.ok(!o.castShadow && !o.receiveShadow);
     }
     if(o.userData.jungleAsset==='junglebackdrop'){
-      trees+=o.count??1;assert.ok(o.geometry.index.count/3<600);assert.ok(!o.castShadow);
+      trees+=o.count??1;assert.equal((o.geometry.index?.count??o.geometry.attributes.position.count)/3,canopyTriangles,'backdrop retains the full native canopy');assert.ok(!o.castShadow);
     }
     if(o.material.map)textures.add(o.material.map);
   });
+  nativeScope.dispose();
   assert.ok(cliffs>60&&trees>30,'large continuous background layer');
   assert.ok(level.containmentWalls.length>300,'continuous sides and both end caps');
 

@@ -1,6 +1,6 @@
 import {lightBlockworksMaterial} from './blockworksLighting';
 import * as THREE from 'three';
-import {loadBlockworksModel,blockworksDetail,blockworksSourceBox} from './blockworksModelLoader';
+import {loadBlockworksModel,blockworksSourceBox} from './blockworksModelLoader';
 import {disposeBlockworksModel} from './blockworksAssets';
 import type {CustomComponent} from './level';
 
@@ -277,10 +277,8 @@ export class BlockworksSurfaces {
       const distance=Math.sqrt(Math.min(world.distanceToSquared(position),secondary?world.distanceToSquared(secondary):Infinity));
       p.visible=!ghost&&distance<Math.min(far+12,235);
       const meshes:THREE.Mesh[]=p.userData.lodMeshes??=[];if(!meshes.length)p.traverse(o=>{if((o as THREE.Mesh).isMesh)meshes.push(o as THREE.Mesh);});
-      const maxLod=p.userData.maxLod??=Math.max(...meshes.map(m=>m.userData.bwLod??0));
-      const lod=Math.min(maxLod,blockworksDetail(Math.max(0,distance-6)));
       for(const mesh of meshes){
-        mesh.visible=mesh.userData.mortarBed||(mesh.userData.bwLod??0)===lod;
+        mesh.visible=true;
         mesh.castShadow=distance<42&&!mesh.userData.mortarBed;mesh.receiveShadow=distance<90;
       }
     }

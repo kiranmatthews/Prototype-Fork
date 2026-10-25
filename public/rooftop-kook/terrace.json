@@ -1,0 +1,23 @@
+{
+  "name": "terrace",
+  "source": ".img2threejs/rooftop-kook/terrace/downloads/model.glb",
+  "sourceSize": [
+    1.0,
+    0.8734360039234161,
+    0.9804139733314514
+  ],
+  "sizeAtDefaultWidth": [
+    5.4,
+    4.71655,
+    5.29424
+  ],
+  "nearTriangles": 10243,
+  "farTriangles": 0,
+  "materials": 1,
+  "sourceGeometryPreserved": true,
+  "originalUVsPreserved": true,
+  "role": "editable modular scenery; per-placement collision policy",
+  "bytes": 1566120,
+  "sha256": "722f7ca1872352e9502940d5ac8cef4081acc779b04fa2f3d797ecfc54d16f60",
+  "atlasResolution": 2048
+}

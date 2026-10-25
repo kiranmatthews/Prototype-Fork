@@ -12,6 +12,7 @@ export interface CustomAtmosphereData {
   fogNear?: number;
   fogFar?: number;
   fogColor?: AtmosphereColor;
+  heightFog?: {height:number;density:number;falloff:number;slope?:[number,number]};
   ambientSky?: AtmosphereColor;
   ambientGround?: AtmosphereColor;
   ambientIntensity?: number;
@@ -34,7 +35,7 @@ export interface CustomAtmosphereData {
   fallbackSunU?: number;
   fallbackSunV?: number;
 }
-export type ResolvedAtmosphere = Required<Omit<CustomAtmosphereData,'sunDirection'|'profile'>> & Pick<CustomAtmosphereData,'sunDirection'|'profile'>;
+export type ResolvedAtmosphere = Required<Omit<CustomAtmosphereData,'sunDirection'|'profile'|'heightFog'>> & Pick<CustomAtmosphereData,'sunDirection'|'profile'|'heightFog'>;
 
 export const ATMOSPHERE_NUMBERS = {
   fogNear: { label: "fog start", min: 0, max: 4999.99, step: 1 },
@@ -53,7 +54,7 @@ export const ATMOSPHERE_COLORS = {
   fallbackBottom: "fallback sky bottom", fallbackFog: "fallback horizon color", fallbackSunColor: "fallback sun color",
 } as const;
 const ATMOSPHERE_KEYS = new Set([...Object.keys(ATMOSPHERE_NUMBERS), ...Object.keys(ATMOSPHERE_COLORS),
-  "fogEnabled", "fallbackStars", "fallbackRidges", "backdrop", "sunDirection", "profile"]);
+  "fogEnabled", "fallbackStars", "fallbackRidges", "backdrop", "sunDirection", "profile", "heightFog"]);
 const validColor = (value: unknown): boolean =>
   typeof value === "string" ? /^#[0-9a-fA-F]{6}$/.test(value) : Array.isArray(value) && value.length === 3 &&
     value.every(component => typeof component === "number" && Number.isFinite(component) && component >= 0 && component <= 1);
@@ -62,6 +63,14 @@ export function validAtmosphere(value: unknown): value is CustomAtmosphereData {
   const data = value as Record<string, unknown>;
   if(data.profile!==undefined&&data.profile!=='drowned-crown')return false;
   if (Object.keys(data).some(key => !ATMOSPHERE_KEYS.has(key))) return false;
+  if(data.heightFog!==undefined){
+    const fog=data.heightFog as Record<string,unknown>;
+    if(!fog||typeof fog!=='object'||Array.isArray(fog)||Object.keys(fog).some(k=>!['height','density','falloff','slope'].includes(k))||
+      typeof fog.height!=='number'||!Number.isFinite(fog.height)||Math.abs(fog.height)>10000||
+      typeof fog.density!=='number'||!Number.isFinite(fog.density)||fog.density<0||fog.density>1||
+      typeof fog.falloff!=='number'||!Number.isFinite(fog.falloff)||fog.falloff<.001||fog.falloff>2)return false;
+    if(fog.slope!==undefined&&(!Array.isArray(fog.slope)||fog.slope.length!==2||fog.slope.some(v=>typeof v!=='number'||!Number.isFinite(v)||Math.abs(v)>.5)))return false;
+  }
   if(data.sunDirection!==undefined&&(!Array.isArray(data.sunDirection)||data.sunDirection.length!==3||
     !data.sunDirection.every(v=>typeof v==='number'&&Number.isFinite(v)&&Math.abs(v)<=1)||
     Math.hypot(...data.sunDirection as [number,number,number])<.01))return false;

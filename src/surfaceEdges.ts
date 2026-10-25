@@ -52,6 +52,39 @@ const weldKey = (position: THREE.BufferAttribute, index: number): string =>
   `${Math.round(position.getY(index) * WELD_QUANTIZATION)},` +
   `${Math.round(position.getZ(index) * WELD_QUANTIZATION)}`;
 
+/** Convex creases in an explicitly authored roof cap. These are grind paths,
+ * never extra collision geometry. UV-split vertices share the same topology;
+ * coplanar tessellation, concave valleys and the fascia are excluded. */
+export function surfaceRidgeEdges(mesh: THREE.Mesh): SurfaceBoundaryEdge[] {
+  const position = mesh.geometry.getAttribute('position') as THREE.BufferAttribute;
+  const indices = mesh.geometry.userData.grindIndices as number[] | undefined;
+  if (!position || !indices) return [];
+  mesh.updateWorldMatrix(true, false);
+  type FaceEdge = { a: THREE.Vector3; b: THREE.Vector3; opposite: THREE.Vector3; normal: THREE.Vector3 };
+  const edges = new Map<string, FaceEdge[]>();
+  for (let i = 0; i + 2 < indices.length; i += 3) {
+    const ids = indices.slice(i, i + 3);
+    const points = ids.map(id => new THREE.Vector3().fromBufferAttribute(position, id).applyMatrix4(mesh.matrixWorld));
+    const normal = points[1].clone().sub(points[0]).cross(points[2].clone().sub(points[0])).normalize();
+    if (normal.y < 0) normal.negate();
+    if (normal.y < SYSTEMIC_EDGE_TOP_NORMAL_Y) continue;
+    for (let j = 0; j < 3; j++) {
+      const keys = [weldKey(position, ids[j]), weldKey(position, ids[(j + 1) % 3])].sort();
+      const key = keys.join('|'), adjacent = edges.get(key) ?? [];
+      adjacent.push({ a: points[j], b: points[(j + 1) % 3], opposite: points[(j + 2) % 3], normal });
+      edges.set(key, adjacent);
+    }
+  }
+  return [...edges.values()].flatMap(faces => {
+    if (faces.length !== 2) return [];
+    const [a, b] = faces;
+    if (a.normal.dot(b.normal) > Math.cos(4 * Math.PI / 180)) return [];
+    if (a.normal.dot(b.opposite.clone().sub(a.a)) >= -.0001 ||
+        b.normal.dot(a.opposite.clone().sub(b.a)) >= -.0001) return [];
+    return a.a.distanceTo(a.b) >= SYSTEMIC_EDGE_MIN_LENGTH ? [[a.a, a.b] as const] : [];
+  });
+}
+
 /** A sculpted deck may have overlapping cap triangles at its UV/bevel joins.
  * Union only the explicitly identified top in XZ, then recover each boundary
  * vertex's actual surface height. Internal seams never become grind paths. */

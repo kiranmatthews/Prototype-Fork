@@ -13,7 +13,7 @@ export class HazardVisuals {
   private disposed=false;
   private errors:string[]=[];
   private loaded=0;
-  private roundTemplate?:Promise<{geometry:THREE.BufferGeometry;lodGeometry:THREE.BufferGeometry;map:THREE.Texture;material:THREE.MeshStandardMaterial}|null>;
+  private roundTemplate?:Promise<{geometry:THREE.BufferGeometry;map:THREE.Texture;material:THREE.MeshStandardMaterial}|null>;
 
   private material(kind:JungleAssetKind,template:Template,color='#ffffff'):THREE.MeshStandardMaterial {
     const key=kind+color,existing=this.materials.get(key);if(existing)return existing;
@@ -25,20 +25,14 @@ export class HazardVisuals {
     this.materials.set(key,m);return m;
   }
 
-  private lod(template:Template,material:THREE.Material,matrices?:THREE.Matrix4[]):THREE.LOD {
-    const lod=new THREE.LOD();
-    for(const [index,geometry] of [template.geometry,template.lodGeometry??template.geometry].entries()){
-      const mesh=matrices?new THREE.InstancedMesh(geometry,material,matrices.length):new THREE.Mesh(geometry,material);
-      if(mesh instanceof THREE.InstancedMesh){
-        matrices!.forEach((matrix,i)=>mesh.setMatrixAt(i,matrix));
-        mesh.instanceMatrix.needsUpdate=true;mesh.computeBoundingBox();mesh.computeBoundingSphere();
-      }
-      mesh.castShadow=true;mesh.receiveShadow=true;mesh.userData.hazardVisual=true;
-      mesh.userData.solidSurface='none';
-      lod.addLevel(mesh,index?38:0,.15);
+  private visual(template:Template,material:THREE.Material,matrices?:THREE.Matrix4[]):THREE.Mesh {
+    const mesh=matrices?new THREE.InstancedMesh(template.geometry,material,matrices.length):new THREE.Mesh(template.geometry,material);
+    if(mesh instanceof THREE.InstancedMesh){
+      matrices!.forEach((matrix,i)=>mesh.setMatrixAt(i,matrix));
+      mesh.instanceMatrix.needsUpdate=true;mesh.computeBoundingBox();mesh.computeBoundingSphere();
     }
-    // One draw per part, with automatic camera-distance switching in every view.
-    lod.levels[1].object.visible=false;return lod;
+    mesh.castShadow=true;mesh.receiveShadow=true;mesh.userData.hazardVisual=true;
+    mesh.userData.solidSurface='none';return mesh;
   }
 
   private queue(owner:THREE.Object3D,work:()=>Promise<void>):void {
@@ -54,7 +48,7 @@ export class HazardVisuals {
     body.userData.hazardAsset=kind;
     this.queue(body,async()=>{
       const template=await this.assets.load(kind);if(this.disposed)return;
-      const visual=this.lod(template,this.material(kind,template,color));
+      const visual=this.visual(template,this.material(kind,template,color));
       visual.name='Meshy crusher boulder';visual.position.y=-size[1]/2;visual.scale.fromArray(size);
       body.add(visual);this.roots.push(visual);
       for(const m of Array.isArray(body.material)?body.material:[body.material])m.visible=false;
@@ -64,19 +58,19 @@ export class HazardVisuals {
 
   rollingBoulder(body:THREE.Mesh,radius:number):void {
     body.userData.hazardAsset='round-custard-boulder';
-    // Separate physical stones share one texture/material and both sphere LODs.
+    // Separate physical stones share one texture/material and the complete sphere geometry.
     this.roundTemplate??=(async()=>{
       const map=await new THREE.TextureLoader().loadAsync(import.meta.env.BASE_URL+'custard-creek/sandstone-albedo.webp');
       if(this.disposed){map.dispose();return null;}
       this.ownedTextures.add(map);
-      const geometry=createRoundBoulderGeometry(28),lodGeometry=createRoundBoulderGeometry(14);
-      this.ownedGeometries.add(geometry);this.ownedGeometries.add(lodGeometry);
+      const geometry=createRoundBoulderGeometry(28);
+      this.ownedGeometries.add(geometry);
       const material=createRoundBoulderMaterial(map);this.materials.set('round-custard-boulder',material);
-      return{geometry,lodGeometry,map,material};
+      return{geometry,map,material};
     })();
     this.queue(body,async()=>{
       const template=await this.roundTemplate;if(!template||this.disposed)return;
-      const visual=this.lod(template,template.material);
+      const visual=this.visual(template,template.material);
       visual.name='Round cracked mossy pursuit boulder';visual.scale.setScalar(radius);
       body.add(visual);this.roots.push(visual);
       for(const m of Array.isArray(body.material)?body.material:[body.material])m.visible=false;
@@ -90,7 +84,7 @@ export class HazardVisuals {
       const [weight,link]=await Promise.all([this.assets.load('hazardironweight'),this.assets.load('hazardironlink')]);
       if(this.disposed)return;
       const root=new THREE.Group();root.name='Meshy iron ball and interlocking chain';
-      const bob=this.lod(weight,this.material('hazardironweight',weight));
+      const bob=this.visual(weight,this.material('hazardironweight',weight));
       bob.name='Meshy iron weight';bob.scale.set(1.9,2.25,1.8);bob.position.y=-len-.95;root.add(bob);
       // Repeated links retain their thickness and alternate by 90 degrees.
       // Fit the whole chain between its overhead anchor and the weight's eye.
@@ -100,7 +94,7 @@ export class HazardVisuals {
         new THREE.Vector3(0,.08-(i*.39+.54)*scale,0),
         new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,1,0),(i%2)*Math.PI/2),
         new THREE.Vector3(.3,.54,.1).multiplyScalar(scale)));
-      const chain=this.lod(link,this.material('hazardironlink',link),matrices);chain.name='Meshy interlocking chain';root.add(chain);
+      const chain=this.visual(link,this.material('hazardironlink',link),matrices);chain.name='Meshy interlocking chain';root.add(chain);
       pivot.add(root);this.roots.push(root);fallback.forEach(object=>object.visible=false);
       pivot.userData.hazardAssetReady=true;pivot.userData.chainLinks=count;this.loaded++;
     });

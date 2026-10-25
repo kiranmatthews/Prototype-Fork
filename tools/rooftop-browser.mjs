@@ -2,15 +2,20 @@ import assert from 'node:assert/strict';
 import {mkdir,writeFile} from 'node:fs/promises';
 import {build} from 'esbuild';
 const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
-const base=(process.argv.find(a=>a.startsWith('http'))||'http://127.0.0.1:5261').replace(/\/$/,''),full=process.argv.includes('--full'),mode=process.argv.includes('--foot')?'foot':'skate',route=process.env.ROOF_ROUTE||'main',district=Number(process.env.ROOF_DISTRICT??-1),tag=`${full?'full':'lite'}-${mode}-${route}-${district}`;
+const base=(process.argv.find(a=>a.startsWith('http'))||'http://127.0.0.1:5261').replace(/\/$/,''),native=process.argv.includes('--native'),full=native||process.argv.includes('--full'),mode=process.argv.includes('--foot')?'foot':'skate',route=process.env.ROOF_ROUTE||'main',district=Number(process.env.ROOF_DISTRICT??-1),tag=`${native?'native':full?'full':'lite'}-${mode}-${route}-${district}`;
 const out=process.env.ROOFTOP_OUTPUT||'/private/tmp/rooftop-city-browser';await mkdir(out,{recursive:true});
 const fixture=await build({stdin:{contents:"export * as source from './src/levels/codex-lab'; export {createRooftopPilot} from './tools/rooftop-pilot.mjs';",resolveDir:process.cwd()},bundle:true,format:'esm',write:false});
-const browser=await chromium.launch({headless:true,channel:'chrome'}),page=await browser.newPage({viewport:{width:1440,height:900},serviceWorkers:'block'}),errors=[];
+const browser=await chromium.launch({headless:true,channel:'chrome'}),page=await browser.newPage({viewport:native?{width:2560,height:1440}:{width:1440,height:900},deviceScaleFactor:1,serviceWorkers:'block'}),errors=[];
 page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
 await page.route('**/rooftop-fixture.js',r=>r.fulfill({contentType:'application/javascript',body:fixture.outputFiles[0].text}));
 try{
  await page.goto(`${base}/?playtest&level=rooftop-relay${full?'':'&lite'}`,{timeout:180000});
  await page.waitForFunction(()=>window.__game?.getCurrentLevel().id==='rooftop-relay'&&!window.__game.gameFlow.blocksGameplay,null,{timeout:180000});
+ if(native){
+  await page.evaluate(()=>{window.__game.renderQualitySettings.setRegularResolution(null);window.__game.crtGuestSettings.setEnabled(false);});
+  const display=await page.evaluate(()=>({buffer:[window.__game.renderer.domElement.width,window.__game.renderer.domElement.height],resolution:window.__game.renderQualitySettings.regularResolution,crt:window.__game.crtGuestSettings.enabled}));
+  assert.deepEqual(display,{buffer:[2560,1440],resolution:'max',crt:false});
+ }
  if(district>0){await page.evaluate(async d=>{const {source:m}=await import('/rooftop-fixture.js'),g=window.__game,target=m.ROOFTOP_CHECKPOINTS.findIndex(c=>c.district===d);for(let i=0;i<=target;i++)g.player.warpCheckpoint(g.getLevel(),1);},district);await page.waitForTimeout(250);}
  await page.screenshot({path:`${out}/${tag}-spawn.png`});
  await page.evaluate(async({mode,route,district})=>{
@@ -39,7 +44,8 @@ try{
   if(r.done)break;
  }
  const report=await page.evaluate(()=>window.rooftopReview);await page.screenshot({path:`${out}/${tag}-end.png`});
- await writeFile(`${out}/${tag}.json`,JSON.stringify({base,mode,route,district,report,errors},null,2));
+ const display=await page.evaluate(()=>({buffer:[window.__game.renderer.domElement.width,window.__game.renderer.domElement.height],resolution:window.__game.renderQualitySettings.regularResolution,crt:window.__game.crtGuestSettings.enabled}));
+ await writeFile(`${out}/${tag}.json`,JSON.stringify({base,native,display,mode,route,district,report,errors},null,2));
  console.log(JSON.stringify({...report,evidence:{...report.evidence,jumps:report.evidence.jumps.length},views:report.views.length,errors},null,2));
  assert.equal(report.error,null);assert.equal(report.deaths,0);assert.equal(report.sourceMatches,true);assert.equal(report.tuningUnchanged,true);assert.match(report.stamp,/Codex\/sol fork/);assert.deepEqual(errors,[]);
  if(district<0){assert.equal(report.state,'finished');assert.equal(report.evidence.districts.length,report.expected.districts);assert.equal(report.evidence.checkpoints.length,report.expected.checkpoints);assert.equal(report.evidence.jumps.length,report.expected.gaps);if(route==='main')for(let id=0;id<report.expected.roofs;id++)assert.ok(report.evidence.roofs.includes(id),'Missing actual main roof contact '+id);if(route==='challenge'){assert.equal(report.evidence.crystal,true);for(const id of report.expected.branchRoofs)assert.ok(report.evidence.roofs.includes(id),'Missing actual branch contact '+id);}}

@@ -1,0 +1,6 @@
+{
+  "provider": "Built-in ImageGen",
+  "prompt": "Convert this exact standing-seam roof albedo texture into a seamless grayscale HEIGHT MAP for bump mapping. Preserve the exact pixel positions, widths, counts, direction and layout of every vertical raised metal seam and horizontal overlap joint. Full canvas square orthographic material map; no perspective, no lighting, no cast shadows, no text, no border. HEIGHT ONLY: main sheet metal panels medium gray, narrow rolled standing seams bright gray/white at their crest with smoothly curved bevel profile, thin overlap joints slightly raised, a little extremely subtle broad waviness in the sheet metal. Remove every painted color, illumination gradient, dark painted shadow and dirt mark because these are not geometry. Make it useful as a physically plausible height field: shallow smooth panel waviness, strong narrow ridge relief, low random noise. Retain seamless edges and exact registration with the reference.",
+  "source": "public/rooftop-kook/metal.webp",
+  "output": "public/rooftop-kook/metal-height.png"
+}

@@ -1,0 +1,23 @@
+{
+  "name": "dormer",
+  "source": ".img2threejs/rooftop-kook/dormer/downloads/model.glb",
+  "sourceSize": [
+    1.0,
+    0.9688549935817719,
+    0.8013020157814026
+  ],
+  "sizeAtDefaultWidth": [
+    4.6,
+    4.45673,
+    3.68599
+  ],
+  "nearTriangles": 6861,
+  "farTriangles": 0,
+  "materials": 1,
+  "sourceGeometryPreserved": true,
+  "originalUVsPreserved": true,
+  "role": "editable modular scenery; per-placement collision policy",
+  "bytes": 1243384,
+  "sha256": "d9c84c6c2ac9e924c6bc312b88f8a7a1420974d88e3566648a51dea534e7616f",
+  "atlasResolution": 2048
+}

@@ -2,6 +2,7 @@ import {GROVE_ASSETS} from './groveAssets';
 import { createNightworksVolcanoMaterial } from './nightworksMagma';
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { MeshoptDecoder } from "three/examples/jsm/libs/meshopt_decoder.module.js";
 import { KTX2Loader } from "three/examples/jsm/loaders/KTX2Loader.js";
 import { repairSceneryNormals } from './sceneryNormals';
 import { sceneryTextureLoader } from './sceneryTextureLoader';
@@ -14,6 +15,7 @@ import { CUSTARD_ASSETS } from "./custardAssets";
 import { HAZARD_ASSETS } from "./hazardAssets";
 import { COASTAL_TOWN_ASSETS } from './coastalTownAssets';
 import {COUNTRY_CLUB_ASSETS} from './countryClubAssets';
+import {ROOFTOP_KOOK_ASSETS} from './rooftopKookAssets';
 import { SUNNY_BEACH_ASSETS } from './sunnyBeachAssets';
 import { JUNGLE_MODULES } from "./jungleModules";
 import {WATERSLIDE_ASSETS} from './waterslideAssets';
@@ -32,7 +34,7 @@ import { addTreehouseTrialsMaterialLook } from "./treehouseTrialsPresentation";
 export interface JungleAssetSpec {
   /** Optional authored batching grain for repeated parts along long streets. */
   cellSize?: number;
-  /** Small architectural modules need less distant geometry than large trees. */
+  /** Legacy authoring metadata; visible meshes always retain native geometry. */
   lodRange?: readonly [number,number];
   file: string; label: string; size: readonly [number,number,number]; wind: boolean;
   normalStrength?: number; lod?: boolean;
@@ -40,9 +42,9 @@ export interface JungleAssetSpec {
   metalness?: number; roughness?: number;
   /** Set false for a constant metalness factor while retaining mapped roughness. */
   metalnessMap?: boolean;
-  /** Carlisle alone uses authored low geometry beyond the close view. */
+  /** Deprecated: distance may stream/cull a cell, never simplify its mesh. */
   distanceLod?: boolean;
-  /** A cheaper secondary capture mesh; primary views always retain the original. */
+  /** Deprecated: reflections use the same native geometry as the primary view. */
   reflectionLod?: boolean;
   /** Reuse the reduced mesh only while the renderer fills shadow maps. */
   shadowLod?: boolean;
@@ -110,6 +112,7 @@ const ASSETS = {
   treehouserepairvines:{file:'',image:'treehouse-repair/cave.ktx2',imageFallback:'treehouse-repair/cave.webp',label:'Layered cavern vine curtain',size:[30,12.53,.02],wind:false,matte:true,edgeFade:.025,fog:true},
   ...COASTAL_TOWN_ASSETS,
   ...COUNTRY_CLUB_ASSETS,
+  ...ROOFTOP_KOOK_ASSETS,
   ...SUNNY_BEACH_ASSETS,
   ...CARLISLE_ASSETS,
   ...MOONBONE_ASSETS,
@@ -284,7 +287,7 @@ function combineAssetMeshes(meshes:THREE.Mesh[],kind:RenderKind):THREE.BufferGeo
 function createTemplate(kind:RenderKind,dependency:(kind:RenderKind)=>Promise<Template>,wanted:()=>boolean):Promise<Template> {
   const spec=renderSpec(kind);
   const portableAtlas=spec.portableAtlas||kind==='nightvolcano'||kind==='nightbasalt'||kind.startsWith('treehouse')||/^trialsv[23]/.test(kind);
-  if(kind==='nightbasaltfar')return dependency('nightbasalt').then(source=>({...source,geometry:source.lodGeometry??source.geometry,lodGeometry:undefined}));
+  if(kind==='nightbasaltfar')return dependency('nightbasalt').then(source=>({...source,geometry:source.geometry,lodGeometry:undefined}));
   if(spec.shaft){
     const geometry=new THREE.PlaneGeometry(1,1).translate(0,.5,0);
     geometry.setAttribute('aJungleShaftUv',geometry.attributes.uv);
@@ -320,7 +323,7 @@ function createTemplate(kind:RenderKind,dependency:(kind:RenderKind)=>Promise<Te
   }
   if(kind==="junglebackdrop") {
     const pending=dependency("junglecanopy").then(source=>({...source,
-      geometry:source.lodGeometry??source.geometry,lodGeometry:undefined}));
+      geometry:source.geometry,lodGeometry:undefined}));
     return pending;
   }
   if(kind==="junglecliff") {
@@ -352,7 +355,7 @@ function createTemplate(kind:RenderKind,dependency:(kind:RenderKind)=>Promise<Te
   const donor=sharedAtlas?dependency(sharedAtlas.donor):Promise.resolve(null);
   const borrowedTextures:THREE.Texture[]=[];
   const load=(compressed:boolean)=>donor.then(source=>{
-    const loader=new GLTFLoader();if(compressed&&compressedLoader)loader.setKTX2Loader(compressedLoader);
+    const loader=new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);if(compressed&&compressedLoader)loader.setKTX2Loader(compressedLoader);
     if(source&&sharedAtlas){
       const atlas=sharedAtlas.roles.map(role=>{
         const texture=source[role];
@@ -502,41 +505,14 @@ export function addJungleDapple(material: THREE.Material, time: { value: number 
   if(painterly)addTreehouseTrialsMaterialLook(material);
 }
 
-function sceneryLodFragment(far:boolean):string {
-  return `
-    float sceneryLod = smoothstep(uJungleLodRange.x, uJungleLodRange.y, distance(vJungleWorld, uJungleView));
-    float sceneryDither = fract(dot(floor(gl_FragCoord.xy), vec2(0.754877666,0.569840296)));
-    if (${far?'sceneryLod <= sceneryDither':'sceneryLod > sceneryDither'}) discard;
-  `;
-}
-function addSceneryLodFade(material:THREE.Material,view:THREE.Vector3,range:THREE.Vector2,far:boolean):void {
-  const compile=material.onBeforeCompile,key=material.customProgramCacheKey.bind(material);
-  material.onBeforeCompile=(shader,renderer)=>{
-    compile.call(material,shader,renderer);shader.uniforms.uJungleView={value:view};shader.uniforms.uJungleLodRange={value:range};
-    shader.fragmentShader='uniform vec3 uJungleView; uniform vec2 uJungleLodRange;\n'+shader.fragmentShader;
-    shader.fragmentShader=shader.fragmentShader.replace('#include <alphatest_fragment>',
-      '#include <alphatest_fragment>\n'+sceneryLodFragment(far));
-  };
-  material.customProgramCacheKey=()=>key()+`|scenery-lod-fade-v2-${far}`;
-}
-interface Bucket {scenerySolid?:boolean;nearVisible?:boolean;farVisible?:boolean;retryCount?:number;castShadow?:boolean;cameraCutaway?:boolean;far?:boolean;farMesh?:THREE.InstancedMesh;kind:RenderKind;transforms:THREE.Matrix4[];colors:THREE.Color[];bounds:THREE.Box3;mesh?:THREE.InstancedMesh;assets?:ReturnType<typeof createJungleAssetScope>;}
+interface Bucket {scenerySolid?:boolean;retryCount?:number;castShadow?:boolean;cameraCutaway?:boolean;farMesh?:THREE.InstancedMesh;kind:RenderKind;transforms:THREE.Matrix4[];colors:THREE.Color[];bounds:THREE.Box3;mesh?:THREE.InstancedMesh;assets?:ReturnType<typeof createJungleAssetScope>;}
 export class JungleAssetKit {
   private assets=createJungleAssetScope();
   readonly root=new THREE.Group();readonly time={value:0};readonly errors:string[]=[];
   private buckets=new Map<string,Bucket>();private jobs:Promise<void>[]=[];
   private materials=new Map<RenderKind,THREE.MeshStandardMaterial|THREE.MeshLambertMaterial|THREE.MeshBasicMaterial>();
-  private farMaterials=new Map<RenderKind,THREE.MeshStandardMaterial|THREE.MeshLambertMaterial|THREE.MeshBasicMaterial>();
   private readonly viewPosition=new THREE.Vector3();
-  private readonly lodRange=new THREE.Vector2(72,96);
-  private readonly authoredLodRanges=new Map<RenderKind,THREE.Vector2>();
-  private rangeFor(kind:RenderKind):THREE.Vector2 {
-    const range=renderSpec(kind).lodRange;
-    if(!range)return this.lodRange;
-    let value=this.authoredLodRanges.get(kind);
-    if(!value){value=new THREE.Vector2(range[0],range[1]);this.authoredLodRanges.set(kind,value);}
-    return value;
-  }
-  private captureLowDetail=false;
+  private capturingScenery=false;
   private shadowLowDetail=false;
   private shadowOccluder?:PlanarShadowOccluder;
   setShadowOccluder(occluder:PlanarShadowOccluder|undefined):void {this.shadowOccluder=occluder;}
@@ -559,8 +535,8 @@ export class JungleAssetKit {
   private lastRadius=0;
   private cutaway=false;
   constructor(private batched:boolean,private lite:boolean,private depthFade=false,private streamed=false,private style?:'painterly'){this.root.name="Jungle Ruins modular kit";this.root.userData.assetBatchRoot=true;}
-  private material(kind:RenderKind,template:Template,far=false):THREE.MeshStandardMaterial|THREE.MeshLambertMaterial|THREE.MeshBasicMaterial {
-    const cache=far?this.farMaterials:this.materials;
+  private material(kind:RenderKind,template:Template):THREE.MeshStandardMaterial|THREE.MeshLambertMaterial|THREE.MeshBasicMaterial {
+    const cache=this.materials;
     const cached=cache.get(kind);if(cached)return cached;
     const spec=renderSpec(kind),isVine=kind==="vine"||kind==="junglevine";
     if(spec.shaft){
@@ -661,11 +637,9 @@ export class JungleAssetKit {
     // Grass keeps its authored dimensions; distance never grows it from the soil.
     if(kind.startsWith("coast")&&!kind.startsWith("coastv2grass"))addCarlisleMaterialLook(m);
     if(this.depthFade)addJungleDepthFade(m);
-    // A one-mesh asset must never fade into a nonexistent far representation.
-    if(this.streamed&&spec.distanceLod&&template.lodGeometry)addSceneryLodFade(m,this.viewPosition,this.rangeFor(kind),far);
     cache.set(kind,m);return m;
   }
-  private configure(mesh:THREE.Mesh,kind:RenderKind,hasLod=false,scenerySolid?:boolean):void {
+  private configure(mesh:THREE.Mesh,kind:RenderKind,scenerySolid?:boolean):void {
     const spec=renderSpec(kind);mesh.name=spec.label;mesh.userData.jungleAsset=kind;
     mesh.userData.solidSurface=scenerySolid===false?'none':scenerySolid===true?'mesh':jungleSolidRole(kind);
     if(spec.matte||spec.shaft){mesh.castShadow=false;mesh.receiveShadow=false;return;}
@@ -680,15 +654,9 @@ export class JungleAssetKit {
         shader.uniforms.uJungleWindScale={value:this.style==='painterly'?1.65:1};shader.uniforms.uJungleWindFrequency={value:this.style==='painterly'?.72:1.15};
         shader.vertexShader='uniform float uJungleTime;\nuniform float uJungleWindScale;\nuniform float uJungleWindFrequency;\nattribute float aJungleFlex;\n'+shader.vertexShader;
         shader.vertexShader=shader.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\n'+(spec.cloth?CLOTH_WIND:WIND));
-        if(this.streamed&&spec.distanceLod&&hasLod){
-          shader.uniforms.uJungleView={value:this.viewPosition};shader.uniforms.uJungleLodRange={value:this.rangeFor(kind)};
-          shader.vertexShader='varying vec3 vJungleWorld;\n'+shader.vertexShader;
-          shader.vertexShader=shader.vertexShader.replace('#include <project_vertex>',WORLD+'\n#include <project_vertex>');
-          shader.fragmentShader='varying vec3 vJungleWorld; uniform vec3 uJungleView; uniform vec2 uJungleLodRange;\n'+shader.fragmentShader;
-          shader.fragmentShader=shader.fragmentShader.replace('#include <alphatest_fragment>','#include <alphatest_fragment>\n'+sceneryLodFragment(false));
-        }
+
       };
-      depth.customProgramCacheKey=()=>`jungle-wind-depth-v6-${this.streamed&&spec.distanceLod&&hasLod}-${this.style??'native'}-${spec.cloth===true}`;this.depths.set(kind,depth);
+      depth.customProgramCacheKey=()=>`jungle-wind-depth-v7-native-${this.style??'native'}-${spec.cloth===true}`;this.depths.set(kind,depth);
     }
     mesh.customDepthMaterial=depth;
   }
@@ -721,7 +689,7 @@ export class JungleAssetKit {
     this.jobs.push(Promise.all(drawParts.map(async part=>{
       const template=await this.loadTemplate(this.assets,part.kind,()=>!this.disposed);if(this.disposed)return;
       const mesh=new THREE.Mesh(template.geometry,this.material(part.kind,template));
-      this.configure(mesh,part.kind,false,c.scenerySolid);mesh.matrix.copy(inverseAnchor).multiply(part.matrix);mesh.matrixAutoUpdate=false;
+      this.configure(mesh,part.kind,c.scenerySolid);mesh.matrix.copy(inverseAnchor).multiply(part.matrix);mesh.matrixAutoUpdate=false;
       mesh.userData.editorIdx=holder.userData.editorIdx;holder.add(mesh);this.readyCount++;
     })).then(()=>{holder.userData.assetReady=true;}).catch(error=>this.failed(c.dkind,error)));
     return holder;
@@ -754,7 +722,7 @@ export class JungleAssetKit {
           const mesh=new THREE.InstancedMesh(geometry,drawMaterial,bucket.transforms.length);
           bucket.transforms.forEach((matrix,i)=>{mesh.setMatrixAt(i,inverse.clone().multiply(matrix));mesh.setColorAt(i,bucket.colors[i]);});
           mesh.instanceMatrix.needsUpdate=true;if(mesh.instanceColor)mesh.instanceColor.needsUpdate=true;
-          mesh.computeBoundingBox();mesh.computeBoundingSphere();this.configure(mesh,bucket.kind,!!template.lodGeometry,bucket.scenerySolid);
+          mesh.computeBoundingBox();mesh.computeBoundingSphere();this.configure(mesh,bucket.kind,bucket.scenerySolid);
           if(bucket.castShadow===false){mesh.castShadow=false;mesh.userData.castShadow=false;}return mesh;
         };
         // Keep the authored mesh at every distance. Cell bounds still allow
@@ -767,8 +735,8 @@ export class JungleAssetKit {
         this.root.add(mesh);bucket.mesh=mesh;
         mesh.userData.cameraCutaway=bucket.cameraCutaway===true;
         const spec=renderSpec(bucket.kind);
-        if((spec.distanceLod||spec.reflectionLod||spec.shadowLod)&&template.lodGeometry){
-          const far=make(template.lodGeometry,spec.distanceLod||spec.reflectionLod?this.material(bucket.kind,template,true):material);far.position.copy(center);far.updateMatrix();far.matrixAutoUpdate=false;
+        if(spec.shadowLod&&template.lodGeometry){
+          const far=make(template.lodGeometry,material);far.position.copy(center);far.updateMatrix();far.matrixAutoUpdate=false;
           far.userData.sceneryLod=1;far.castShadow=false;far.userData.castShadow=false;far.userData.cameraCutaway=bucket.cameraCutaway===true;
           this.root.add(far);bucket.farMesh=far;
         }
@@ -796,43 +764,31 @@ export class JungleAssetKit {
     else{
       this.kindUsers.delete(bucket.kind);
       this.materials.get(bucket.kind)?.dispose();this.materials.delete(bucket.kind);
-      this.farMaterials.get(bucket.kind)?.dispose();this.farMaterials.delete(bucket.kind);
       this.depths.get(bucket.kind)?.dispose();this.depths.delete(bucket.kind);
     }
     bucket.assets.dispose();bucket.assets=undefined;
   }
   private showBucket(bucket:Bucket):void{
     const show=!(this.cutaway&&bucket.cameraCutaway);
-    if(bucket.mesh)bucket.mesh.visible=show&&(!bucket.farMesh||(bucket.nearVisible??true));
-    if(bucket.farMesh)bucket.farMesh.visible=show&&(bucket.farVisible??false);
+    if(bucket.mesh)bucket.mesh.visible=show;
+    if(bucket.farMesh)bucket.farMesh.visible=false;
   }
   setCutaway(value:boolean):void{
     if(this.cutaway===value)return;this.cutaway=value;
     for(const cell of this.cells)this.showBucket(cell);
   }
-  /** Synchronous secondary captures reuse existing distant meshes. Restore
-   * the primary view's visibility and fade range, including on render errors. */
-  withLowDetailCapture(draw:()=>void):void {
-    if(this.captureLowDetail||!this.batched||!this.streamed||this.disposed){draw();return;}
-    const changed:[THREE.InstancedMesh,THREE.InstancedMesh,boolean,boolean][]=[];
-    const ranges=[this.lodRange,...this.authoredLodRanges.values()].map(range=>({range,x:range.x,y:range.y}));this.captureLowDetail=true;
-    try{
-      for(const cell of this.cells)if((renderSpec(cell.kind).distanceLod||renderSpec(cell.kind).reflectionLod)&&cell.mesh&&cell.farMesh&&(cell.mesh.visible||cell.farMesh.visible)){
-        changed.push([cell.mesh,cell.farMesh,cell.mesh.visible,cell.farMesh.visible]);
-        cell.mesh.visible=false;cell.farMesh.visible=true;
-      }
-      for(const {range} of ranges)range.set(0,.001);draw();
-    }finally{
-      for(const {range,x,y} of ranges)range.set(x,y);
-      for(const [mesh,distant,showNear,showFar] of changed){mesh.visible=showNear;distant.visible=showFar;}
-      this.captureLowDetail=false;
-    }
+  /** Reflections retain native geometry. Freeze primary streaming ownership
+   * while a secondary camera renders, including nested/erroring captures. */
+  withSceneryCapture(draw:()=>void):void {
+    if(this.capturingScenery||this.disposed){draw();return;}
+    this.capturingScenery=true;
+    try{draw();}finally{this.capturingScenery=false;}
   }
   /** Shadow maps can use opted-in reduced meshes while colour/collision keep
    * the native asset. Scope the entire pass: Three selects geometry before
    * onBeforeShadow, so changing it from that callback would be too late. */
   withLowDetailShadows(draw:()=>void,lights?:readonly THREE.Light[]):void {
-    if(this.shadowLowDetail||this.captureLowDetail||!this.batched||!this.streamed||this.disposed){draw();return;}
+    if(this.shadowLowDetail||this.capturingScenery||!this.batched||!this.streamed||this.disposed){draw();return;}
     const changed:[THREE.InstancedMesh,THREE.InstancedMesh,boolean,boolean][]=[];
     const occluded:THREE.InstancedMesh[]=[];
     this.shadowLowDetail=true;
@@ -862,11 +818,10 @@ export class JungleAssetKit {
   /** Retain exact authored meshes in nearby cells, with ample travel/shadow
    * prefetch. Background silhouettes and painted mattes are always resident. */
   setView(position:THREE.Vector3,visibleDistance:number,secondary?:THREE.Vector3):void {
-    if(!this.streamed||this.disposed||this.captureLowDetail||this.shadowLowDetail)return;
+    if(!this.streamed||this.disposed||this.capturingScenery||this.shadowLowDetail)return;
     this.viewPosition.copy(position);this.viewDistance.value=visibleDistance;
-    // LOD changes happen in the distant atmospheric band. Preload another
-    // 128 m beyond visible scenery, leaving several seconds at skating speed.
-    this.lodRange.set(Math.max(72,Math.min(160,visibleDistance*.8)),Math.max(96,Math.min(200,visibleDistance*.95)));
+    // Preload 128 m beyond visible scenery, retaining full source detail.
+    // Distance controls residency only; it never selects another mesh.
     const radius=Math.max(96,visibleDistance)+128;
     this.viewSet=true;
     const views=secondary?[position,secondary]:[position];
@@ -875,16 +830,6 @@ export class JungleAssetKit {
     const distanceTo=(cell:Bucket)=>Math.min(...views.map(p=>cell.bounds.distanceToPoint(p)));
     for(const cell of this.cells){
       const spec=renderSpec(cell.kind),distance=distanceTo(cell);
-      if(spec.distanceLod){
-        // The material cross-fades individual pixels in the distant fog band.
-        // Conservative bounds keep both meshes available until the entire
-        // cell is outside that band, eliminating a whole-tree switch.
-        const center=cell.bounds.getCenter(new THREE.Vector3()),radius=cell.bounds.getSize(new THREE.Vector3()).length()*.5;
-        const furthest=Math.max(...views.map(p=>p.distanceTo(center)+radius));
-        const range=this.rangeFor(cell.kind);
-        cell.nearVisible=distance<range.y+2;cell.farVisible=furthest>range.x-2;
-        this.showBucket(cell);
-      }
       if(spec.backdrop||spec.matte||distance<=radius)this.activate(cell);
     }
     // Acquire incoming leases before releasing outgoing cells, so a camera
@@ -935,7 +880,7 @@ export class JungleAssetKit {
     if(this.disposed)return;this.disposed=true;this.shadowOccluder=undefined;
     this.root.traverse(o=>{if((o as THREE.InstancedMesh).isInstancedMesh)(o as THREE.InstancedMesh).dispose();});
     this.root.removeFromParent();this.root.clear();for(const holder of this.loose){holder.removeFromParent();holder.clear();}this.loose.clear();
-    for(const m of this.materials.values())m.dispose();for(const m of this.farMaterials.values())m.dispose();for(const m of this.depths.values())m.dispose();
-    this.materials.clear();this.farMaterials.clear();this.depths.clear();this.buckets.clear();
+    for(const m of this.materials.values())m.dispose();for(const m of this.depths.values())m.dispose();
+    this.materials.clear();this.depths.clear();this.buckets.clear();
   }
 }

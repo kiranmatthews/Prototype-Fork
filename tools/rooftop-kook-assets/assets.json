@@ -1,0 +1,27 @@
+{
+  "clubhouse": {"triangles": 80000, "width": 40},
+  "estate": {
+    "triangles": 15000,
+    "width": 26
+  },
+  "cupola": {
+    "triangles": 8000,
+    "width": 5.5
+  },
+  "terrace": {
+    "triangles": 10000,
+    "width": 5.4
+  },
+  "hydrangea": {
+    "triangles": 8000,
+    "width": 5.8
+  },
+  "manor": {
+    "triangles": 15000,
+    "width": 25
+  },
+  "dormer": {
+    "triangles": 7500,
+    "width": 4.6
+  }
+}

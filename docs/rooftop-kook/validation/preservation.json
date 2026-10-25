@@ -1,0 +1,31 @@
+{
+  "scope": "Original opening, roof count and early geometry retained. User-authorized late gaps, widths and pitches are changed.",
+  "earlyGameplayComponents": 365,
+  "earlyGeometryMatches": 364,
+  "spawnUnchanged": true,
+  "beforeKillY": 14,
+  "afterKillY": 11.399999999999991,
+  "checkpoints": 6,
+  "crates": 61,
+  "enemies": 7,
+  "authorizedLateGaps": [
+    6.8,
+    8.2,
+    9.6
+  ],
+  "mainRoofs": 44,
+  "branchRoofs": 9,
+  "sourceHash": "64d9f929730e601227faa82c3fa979039fd2c6ba2a7addfeab39e766976fd526",
+  "transitionPitFootprints": [
+    {
+      "t": "pit",
+      "nm": "Local street reset · short missed-roof recovery",
+      "p": [
+        -184.94325831715372,
+        42.849999999999994,
+        -1309.9309408620943
+      ]
+    }
+  ],
+  "note": "One Pelican Point reset footprint extends into the edited Sailmaker curve; its shape follows that transition. Render-only UV vertex splits preserve oriented triangles."
+}

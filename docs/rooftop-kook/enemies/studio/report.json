@@ -1,0 +1,370 @@
+{
+  "report": [
+    {
+      "name": "front",
+      "result": [
+        {
+          "diagnostic": {
+            "kind": "grunt",
+            "status": "ready",
+            "url": "/rooftop-kook/karen.glb",
+            "clips": [
+              "idle",
+              "shout",
+              "angry"
+            ],
+            "activeClip": "idle",
+            "mappedNodes": {
+              "torso": "Spine01",
+              "head": "Head"
+            },
+            "skinnedMeshes": 1,
+            "meshes": 1,
+            "animationTime": 1,
+            "gaitPhase": 0,
+            "state": "watch",
+            "plantedFeet": {
+              "hindLeft": true,
+              "hindRight": true
+            }
+          },
+          "feet": [
+            0.00000441745799914582,
+            7.355541938102509e-7
+          ],
+          "bottom": -0.011612155547538805,
+          "top": 2.237850206792345
+        },
+        {
+          "diagnostic": {
+            "kind": "sentry",
+            "status": "ready",
+            "url": "/rooftop-kook/kook.glb",
+            "clips": [
+              "idle",
+              "aim",
+              "shoot"
+            ],
+            "activeClip": "idle",
+            "mappedNodes": {
+              "torso": "Spine01",
+              "head": "Head"
+            },
+            "skinnedMeshes": 1,
+            "meshes": 1,
+            "animationTime": 1,
+            "gaitPhase": 0,
+            "state": "doze",
+            "plantedFeet": {
+              "hindLeft": true,
+              "hindRight": true
+            }
+          },
+          "hands": [
+            2.0629736254905097e-7,
+            1.4121420617264502e-7
+          ],
+          "feet": [
+            9.601077756288234e-7,
+            9.455518647135435e-7
+          ],
+          "bottom": -0.030327467308566725,
+          "top": 2.352389407628337
+        }
+      ]
+    },
+    {
+      "name": "quarter",
+      "result": [
+        {
+          "diagnostic": {
+            "kind": "grunt",
+            "status": "ready",
+            "url": "/rooftop-kook/karen.glb",
+            "clips": [
+              "idle",
+              "shout",
+              "angry"
+            ],
+            "activeClip": "idle",
+            "mappedNodes": {
+              "torso": "Spine01",
+              "head": "Head"
+            },
+            "skinnedMeshes": 1,
+            "meshes": 1,
+            "animationTime": 1,
+            "gaitPhase": 0,
+            "state": "watch",
+            "plantedFeet": {
+              "hindLeft": true,
+              "hindRight": true
+            }
+          },
+          "feet": [
+            0.000004394512797199347,
+            7.432039800598775e-7
+          ],
+          "bottom": -0.011613181904962744,
+          "top": 2.2378373754365413
+        },
+        {
+          "diagnostic": {
+            "kind": "sentry",
+            "status": "ready",
+            "url": "/rooftop-kook/kook.glb",
+            "clips": [
+              "idle",
+              "aim",
+              "shoot"
+            ],
+            "activeClip": "idle",
+            "mappedNodes": {
+              "torso": "Spine01",
+              "head": "Head"
+            },
+            "skinnedMeshes": 1,
+            "meshes": 1,
+            "animationTime": 1,
+            "gaitPhase": 0,
+            "state": "doze",
+            "plantedFeet": {
+              "hindLeft": true,
+              "hindRight": true
+            }
+          },
+          "hands": [
+            1.987156038892063e-7,
+            1.5072338321520347e-7
+          ],
+          "feet": [
+            9.09614433125341e-7,
+            9.491187630296158e-7
+          ],
+          "bottom": -0.030328528915504194,
+          "top": 2.352371666997243
+        }
+      ]
+    },
+    {
+      "name": "rear",
+      "result": [
+        {
+          "diagnostic": {
+            "kind": "grunt",
+            "status": "ready",
+            "url": "/rooftop-kook/karen.glb",
+            "clips": [
+              "idle",
+              "shout",
+              "angry"
+            ],
+            "activeClip": "idle",
+            "mappedNodes": {
+              "torso": "Spine01",
+              "head": "Head"
+            },
+            "skinnedMeshes": 1,
+            "meshes": 1,
+            "animationTime": 1,
+            "gaitPhase": 0,
+            "state": "watch",
+            "plantedFeet": {
+              "hindLeft": true,
+              "hindRight": true
+            }
+          },
+          "feet": [
+            0.000004413375517682321,
+            7.296772547358256e-7
+          ],
+          "bottom": -0.011612568372328269,
+          "top": 2.2378373637818783
+        },
+        {
+          "diagnostic": {
+            "kind": "sentry",
+            "status": "ready",
+            "url": "/rooftop-kook/kook.glb",
+            "clips": [
+              "idle",
+              "aim",
+              "shoot"
+            ],
+            "activeClip": "idle",
+            "mappedNodes": {
+              "torso": "Spine01",
+              "head": "Head"
+            },
+            "skinnedMeshes": 1,
+            "meshes": 1,
+            "animationTime": 1,
+            "gaitPhase": 0,
+            "state": "doze",
+            "plantedFeet": {
+              "hindLeft": true,
+              "hindRight": true
+            }
+          },
+          "hands": [
+            2.0552745423073124e-7,
+            1.4121706433163236e-7
+          ],
+          "feet": [
+            9.60139137576301e-7,
+            9.456452971184642e-7
+          ],
+          "bottom": -0.030328555874106655,
+          "top": 2.35237164995479
+        }
+      ]
+    },
+    {
+      "name": "alarm",
+      "result": [
+        {
+          "diagnostic": {
+            "kind": "grunt",
+            "status": "ready",
+            "url": "/rooftop-kook/karen.glb",
+            "clips": [
+              "idle",
+              "shout",
+              "angry"
+            ],
+            "activeClip": "shout",
+            "mappedNodes": {
+              "torso": "Spine01",
+              "head": "Head"
+            },
+            "skinnedMeshes": 1,
+            "meshes": 1,
+            "animationTime": 1.8800000000000001,
+            "gaitPhase": 0,
+            "state": "shriek",
+            "plantedFeet": {
+              "hindLeft": true,
+              "hindRight": true
+            }
+          },
+          "feet": [
+            0.0000023262555841904006,
+            0.000006996449995006575
+          ],
+          "bottom": -0.01583009652260614,
+          "top": 2.0455440921674324
+        },
+        {
+          "diagnostic": {
+            "kind": "sentry",
+            "status": "ready",
+            "url": "/rooftop-kook/kook.glb",
+            "clips": [
+              "idle",
+              "aim",
+              "shoot"
+            ],
+            "activeClip": "idle",
+            "mappedNodes": {
+              "torso": "Spine01",
+              "head": "Head"
+            },
+            "skinnedMeshes": 1,
+            "meshes": 1,
+            "animationTime": 0.55,
+            "gaitPhase": 0,
+            "state": "fire",
+            "plantedFeet": {
+              "hindLeft": true,
+              "hindRight": true
+            }
+          },
+          "hands": [
+            1.6488298693489034e-7,
+            1.6211616896521474e-7
+          ],
+          "feet": [
+            9.285011097112697e-7,
+            8.468310807343548e-7
+          ],
+          "bottom": -0.029396610823170022,
+          "top": 2.4097279058191248
+        }
+      ]
+    },
+    {
+      "name": "aim",
+      "result": [
+        {
+          "diagnostic": {
+            "kind": "grunt",
+            "status": "ready",
+            "url": "/rooftop-kook/karen.glb",
+            "clips": [
+              "idle",
+              "shout",
+              "angry"
+            ],
+            "activeClip": "shout",
+            "mappedNodes": {
+              "torso": "Spine01",
+              "head": "Head"
+            },
+            "skinnedMeshes": 1,
+            "meshes": 1,
+            "animationTime": 0.65,
+            "gaitPhase": 0,
+            "state": "windup",
+            "plantedFeet": {
+              "hindLeft": true,
+              "hindRight": true
+            }
+          },
+          "feet": [
+            0.0000018501109429918383,
+            0.000001124825085919967
+          ],
+          "bottom": -0.012842475332433878,
+          "top": 2.2746956668224385
+        },
+        {
+          "diagnostic": {
+            "kind": "sentry",
+            "status": "ready",
+            "url": "/rooftop-kook/kook.glb",
+            "clips": [
+              "idle",
+              "aim",
+              "shoot"
+            ],
+            "activeClip": "idle",
+            "mappedNodes": {
+              "torso": "Spine01",
+              "head": "Head"
+            },
+            "skinnedMeshes": 1,
+            "meshes": 1,
+            "animationTime": 0.5,
+            "gaitPhase": 0,
+            "state": "aim",
+            "plantedFeet": {
+              "hindLeft": true,
+              "hindRight": true
+            }
+          },
+          "hands": [
+            1.6500966438127583e-7,
+            1.6653430344199676e-7
+          ],
+          "feet": [
+            9.323675449156386e-7,
+            8.495599229593309e-7
+          ],
+          "bottom": -0.029225342592923198,
+          "top": 2.4113124167861173
+        }
+      ]
+    }
+  ],
+  "errors": []
+}

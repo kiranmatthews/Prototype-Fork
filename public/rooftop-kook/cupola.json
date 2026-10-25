@@ -1,0 +1,23 @@
+{
+  "name": "cupola",
+  "source": ".img2threejs/rooftop-kook/cupola/downloads/model.glb",
+  "sourceSize": [
+    0.8376000225543976,
+    1.0000609755516052,
+    0.8263690173625946
+  ],
+  "sizeAtDefaultWidth": [
+    5.5,
+    6.56678,
+    5.42625
+  ],
+  "nearTriangles": 8114,
+  "farTriangles": 0,
+  "materials": 1,
+  "sourceGeometryPreserved": true,
+  "originalUVsPreserved": true,
+  "role": "editable modular scenery; per-placement collision policy",
+  "bytes": 2013452,
+  "sha256": "7cb095b67045e9497c3c63ac2fe4ebc358309c4c08d83a013acabe5a729d53be",
+  "atlasResolution": 2048
+}

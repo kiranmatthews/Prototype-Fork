@@ -1,0 +1,47 @@
+{
+  "date": "2026-10-25",
+  "provider": "built-in imagegen",
+  "brief": "Crash 4, affluent Outer Banks kook town",
+  "assets": [
+    {
+      "id": "estate",
+      "prompt": "Use-case: stylized-concept. Single isolated 3D GAME ENVIRONMENT ASSET reference on a flat warm light gray studio background: a luxurious Outer Banks North Carolina seaside cedar-shingle estate, an exuberant stylized platformer building in the art direction of Crash Bandicoot 4. Wide three-story mansion with chunky gently crooked silhouette, warm ivory painted cedar shingles, thick white cornices and wraparound veranda, pale turquoise louvered shutters, huge deep navy blue windows, coral salmon standing seam metal hip roof with two beautiful white dormer windows, little copper chimney, rounded architectural edges and hand-painted broad texture. Rich affluent beach-club / kook-town aesthetic, elegant playful and sun-bleached. One compact coherent building, model fills frame with room around silhouette, three-quarter FRONT view from a slightly raised camera, entire foundation visible. High-end game sculpt with actual depth in windows, roof seams and porch columns. No surrounding landscape, no ground plane, no trees, no props, no text, no logos, no people. Soft even studio lighting, avoid baked shadows. Landscape 3:2.",
+      "source": "/Users/kiki/.codex/generated_images/01a17238-1d52-7cc3-898a-48ec0ae9d0b7/exec-73ddc630-5d9c-4b61-bf16-e1dbe8f48e15.png"
+    },
+    {
+      "id": "cupola",
+      "prompt": "Use-case: stylized-concept. An isolated modular rooftop cupola / coastal belvedere for a rich Outer Banks yacht club in Crash Bandicoot 4 stylized high quality 3D game art. Squat white octagonal wooden lantern-room cupola, big dark turquoise glass windows, thick ivory frames and weathered ornate cornice, delicious chunky flared patinated verdigris copper roof with curled eave corners, small gold wind vane shaped as a sailboat on top. Compact footprint, white base plinth. Hand-painted premium game sculpt, slightly exaggerated organic silhouette, visible wood grain and copper panels. Three-quarter front view from slightly above. ONE object isolated centered on flat pale gray studio background. Entire asset visible with comfortable margin. No building underneath, no separate props, no people, no text. Soft even lighting without strong shadows. Square image.",
+      "source": "/Users/kiki/.codex/generated_images/01a17238-1d52-7cc3-898a-48ec0ae9d0b7/exec-3cf4b7d0-ceb2-4348-93e3-bcbc5da33257.png"
+    },
+    {
+      "id": "terrace",
+      "prompt": "Use-case: stylized-concept. ONE isolated luxurious coastal roof terrace furniture set for a richly colored Crash Bandicoot 4 style platformer environment. Two chunky white Adirondack lounge chairs with coral cushions arranged either side of a small teak round table, one tall big open elegant scalloped parasol behind them with broad alternating teal and ivory stripes and golden finial. All are one compact coherent arrangement, full objects visible, clean separations between legs and arms. Expensive Outer Banks kook-country-club holiday aesthetic. Sculpted stylized 3D game asset, rounded oversized details, tasteful hand painted texture, no wear damage. Three-quarter front view from slightly above, flat pale gray studio background, soft even lighting, no landscape or floor platform, no people, no text, no additional props. Square image.",
+      "source": "/Users/kiki/.codex/generated_images/01a17238-1d52-7cc3-898a-48ec0ae9d0b7/exec-5c2f6e7a-e891-4f2d-9e73-72013b9d0050.png"
+    },
+    {
+      "id": "hydrangea",
+      "prompt": "Use-case: stylized-concept. One isolated long rectangular ivory coastal garden planter brimming with lush hydrangeas, a polished Crash Bandicoot 4 style 3D game environment prop. Chunky painted white timber box with paneled sides and small feet, overflowing round dense lavender-blue, periwinkle and pink hydrangea flower clusters, voluptuous sculpted dark emerald leaves with varied silhouettes. Expensive Outer Banks beach estate garden aesthetic. Each flower cluster made of readable big sculpted petals, hand-painted stylized gradients, strong beautiful silhouette. Rectangular planter width 3 times its height, entire prop including flowers has width twice its total height. Three-quarter front view, centered isolated on pale gray studio background. No ground or extra objects, no text, no people, soft even light without directional shadows. Landscape image.",
+      "source": "/Users/kiki/.codex/generated_images/01a17238-1d52-7cc3-898a-48ec0ae9d0b7/exec-7d2764a8-6938-44a2-9f85-aaa231d799df.png"
+    },
+    {
+      "id": "cedar",
+      "prompt": "Use-case: stylized-concept. Production seamless tiling albedo texture of luxurious pale ivory painted cedar shake shingles for a coastal Outer Banks mansion in a Crash Bandicoot 4 quality stylized game. Straight-on orthographic macro view ONLY of the flat wall material. About 12 horizontal staggered rows of broad rectangular wooden shingles, subtly irregular hand-cut bottom edges and fine elegant woodgrain, warm cream with slight shell-pink and warm gray variations, thin soft dark creases under each row, chunky hand-painted artistry with calm readable forms. Uniform neutral ambient light, no directional cast shadows, no vignette, no perspective, no frame, no text, no objects. Entire square image filled edge to edge with the texture, perfectly seamless left-right and top-bottom.",
+      "source": "/Users/kiki/.codex/generated_images/01a17238-1d52-7cc3-898a-48ec0ae9d0b7/exec-6aca69a1-b1ab-4196-ae64-a34d9c1e33bd.png"
+    },
+    {
+      "id": "metal",
+      "prompt": "Use-case: stylized-concept. Production seamless tiling ALBEDO texture of premium painted standing-seam metal roofing, for a luxury coastal mansion in a vibrant stylized 3D platformer. Orthographic top down view, neutral very pale silvery ivory color so the game can tint it coral or turquoise. Six wide vertical metal panels separated by slender raised double seams running straight vertically through the image, horizontal staggered joint halfway on alternate panels, faint tasteful hand painted weathering and warm edge highlights. Expensive well cared for beach estate, softly rounded forms like Crash Bandicoot 4, beautifully crafted broad readable material, minimal noise. Neutral even lighting no directional shadows. No text, perspective, border, objects or vignette. Seamless tile filling entire square edge to edge.",
+      "source": "/Users/kiki/.codex/generated_images/01a17238-1d52-7cc3-898a-48ec0ae9d0b7/exec-4a058c76-15d5-4631-8640-891a4a34b280.png"
+    },
+    {
+      "id": "manor",
+      "prompt": "Use-case: stylized-concept. Single isolated 3D GAME ENVIRONMENT ASSET reference: luxurious whimsical Outer Banks North Carolina shingle-style seaside manor, high-quality Crash Bandicoot 4 stylized art direction. Compact asymmetrical rich beach-house silhouette: a tall round corner turret with conical deep cobalt-blue roof on the LEFT, a broad pale SEAFOAM gambrel roof above a two-story warm peach-pink cedar shingle mansion, three white dormers, generous thick ivory veranda columns and simple white balcony rails, dark teal windowpanes, stout pink brick chimney. Proud affluent kook coastal country club aesthetic. Architectural sculpture with chunky softly crooked edges, hand-painted broad details, beautiful clean readable topology. Distinct from a symmetrical coral-roof mansion. One coherent building with grounded foundation and entrance steps. Three-quarter FRONT view from slightly raised camera, all architecture and silhouette visible, no cropping. Flat pale gray studio background, soft neutral illumination. No garden or trees, no ground plane, no people, no text, no branding. Landscape image.",
+      "source": "/Users/kiki/.codex/generated_images/01a17238-1d52-7cc3-898a-48ec0ae9d0b7/exec-4c930cd3-a834-404f-a6ee-67f50e8859d8.png"
+    },
+    {
+      "id": "dormer",
+      "prompt": "Use-case: stylized-concept. A single modular chunky coastal ROOF DORMER for a luxury Outer Banks beach mansion in a colorful Crash Bandicoot 4 stylized 3D platformer. One broad white timber box facade with a single huge arched navy-blue window, elegant turquoise louvered shutters, deep ivory curved gable trim, coral-orange standing-seam pitched roof with slightly swooping eaves. Small rectangular hydrangea flower box below the window with blue-purple flowers. Rectangular robust base with vertical sides, COMPLETE enclosed standalone module. Roof silhouette and actual carved trim fully 3D. Beautiful premium stylized hand-painted game prop, wide clear proportions, roughly equally wide and tall. Three-quarter FRONT view slightly elevated. Centered isolated on flat light gray studio background, whole object with margin. No house below, no loose parts, no text or people. Soft even neutral lighting. Square image.",
+      "source": "/Users/kiki/.codex/generated_images/01a17238-1d52-7cc3-898a-48ec0ae9d0b7/exec-79fd6b1d-53ab-4cd4-a139-6178f574f52a.png"
+    }
+  ]
+}

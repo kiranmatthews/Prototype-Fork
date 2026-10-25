@@ -1,0 +1,604 @@
+{
+  "schemaVersion": 1,
+  "provider": "Meshy",
+  "cliVersion": "0.3.1",
+  "budgetCredits": 250,
+  "startingBalance": 611,
+  "scope": "Initial coastal kit plus user-authorized AAA expansion: two humanoid enemies with rigs and animation, columned clubhouse; full-detail assets only.",
+  "tasks": {
+    "estate": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "26a90f4a-b5b8-48f7-abd3-19386cb83310",
+      "createdAt": "2026-10-25T08:47:51.232141+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/rooftop-kook-assets/references/estate.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 15000,
+        "should_texture": true,
+        "enable_pbr": false,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 611,
+      "reference": "tools/rooftop-kook-assets/references/estate.png",
+      "referenceSha256": "a94f74590fa7e467c349aae1ec155bd2619878845a7865b479e86eda178618fd",
+      "id": "01a1723e-ab39-7261-ba3c-8a5a0a64bff2",
+      "checkedAt": "2026-10-25T08:55:54.830450+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1792918131474,
+      "expiresAt": 1793177331474,
+      "downloads": [
+        {
+          "path": ".img2threejs/rooftop-kook/estate/downloads/model.glb",
+          "bytes": 4525772,
+          "sha256": "ada7098b53b3a6aae3c8d23dfce175777524a984cb9a81772f6cb0d7abbd2a8a"
+        },
+        {
+          "path": ".img2threejs/rooftop-kook/estate/downloads/thumbnail.png",
+          "bytes": 248195,
+          "sha256": "160d9c8d8a3bfce608f56865d8c67abdc79301d33129318c000fb188562e23ca"
+        }
+      ]
+    },
+    "cupola": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "31288aa8-01c5-440b-9719-1079e7e2bbdd",
+      "createdAt": "2026-10-25T08:47:54.895310+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/rooftop-kook-assets/references/cupola.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 8000,
+        "should_texture": true,
+        "enable_pbr": false,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 596,
+      "reference": "tools/rooftop-kook-assets/references/cupola.png",
+      "referenceSha256": "a639e03556f2fccd7cbbfeda464fb2e7f244c6dcc3d9c17ea1396aef365b7f75",
+      "id": "01a1723e-b9dc-73ce-b0b9-ba4c8d244379",
+      "checkedAt": "2026-10-25T08:55:57.089104+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1792918126457,
+      "expiresAt": 1793177326457,
+      "downloads": [
+        {
+          "path": ".img2threejs/rooftop-kook/cupola/downloads/model.glb",
+          "bytes": 4268368,
+          "sha256": "b6a83dcc16dc2aad78882f5b384d5cccc7ee2fa5ce59afb082ad6edce5774405"
+        },
+        {
+          "path": ".img2threejs/rooftop-kook/cupola/downloads/thumbnail.png",
+          "bytes": 195115,
+          "sha256": "2e668424c0868d473d6c266982a7413bb38756c4b5b9ebbc65f2837a5ab609d9"
+        }
+      ]
+    },
+    "terrace": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "a61bd0b1-883a-4466-b0e8-2fdea683dc56",
+      "createdAt": "2026-10-25T08:47:58.586410+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/rooftop-kook-assets/references/terrace.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 10000,
+        "should_texture": true,
+        "enable_pbr": false,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 581,
+      "reference": "tools/rooftop-kook-assets/references/terrace.png",
+      "referenceSha256": "09b5e143f409922cfb8095dce3fe06c3bf1683ad96989fd540b3349b6c87f7cc",
+      "id": "01a1723e-c87b-739c-bb2b-7a572e7cd7f1",
+      "checkedAt": "2026-10-25T08:55:59.355820+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1792918135033,
+      "expiresAt": 1793177335033,
+      "downloads": [
+        {
+          "path": ".img2threejs/rooftop-kook/terrace/downloads/model.glb",
+          "bytes": 3636536,
+          "sha256": "1d27bc7e912dec9a1d158b3370fae64aa08216061259bf343b2e25724234f37c"
+        },
+        {
+          "path": ".img2threejs/rooftop-kook/terrace/downloads/thumbnail.png",
+          "bytes": 184227,
+          "sha256": "0988215882c45a4e6df94729032083650480c19ee1e32c97049b9731a74ae58a"
+        }
+      ]
+    },
+    "hydrangea": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "32c73c1b-abbc-4268-a636-0732698650c7",
+      "createdAt": "2026-10-25T08:48:03.080943+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/rooftop-kook-assets/references/hydrangea.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 8000,
+        "should_texture": true,
+        "enable_pbr": false,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 566,
+      "reference": "tools/rooftop-kook-assets/references/hydrangea.png",
+      "referenceSha256": "6a7e74f527985be14163d804ab0a6ed5bbb072df78b02f29e7992bab04b73716",
+      "id": "01a1723e-d953-778f-ac06-133c8021b28a",
+      "checkedAt": "2026-10-25T08:56:01.768360+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1792918127724,
+      "expiresAt": 1793177327724,
+      "downloads": [
+        {
+          "path": ".img2threejs/rooftop-kook/hydrangea/downloads/model.glb",
+          "bytes": 4254884,
+          "sha256": "1931ebfab82ed15b426e600afd682f6a9ccb91a6046952961feaec17ab25a4c3"
+        },
+        {
+          "path": ".img2threejs/rooftop-kook/hydrangea/downloads/thumbnail.png",
+          "bytes": 130173,
+          "sha256": "e62aafd1f1b5d85822aa7e97e01781cadf3bde3f58337e83205382ff0d3e680c"
+        }
+      ]
+    },
+    "manor": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "e656858e-78a5-4064-8ec8-f00032503afa",
+      "createdAt": "2026-10-25T09:03:21.949058+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/rooftop-kook-assets/references/manor.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 15000,
+        "should_texture": true,
+        "enable_pbr": false,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 551,
+      "reference": "tools/rooftop-kook-assets/references/manor.png",
+      "referenceSha256": "123a85cb39a3f32495137058c4e0d9ff173b3f9cd8a9e46c873cf6b8e89a4efb",
+      "id": "01a1724c-deb5-7400-84ce-ad7f3268e3dc",
+      "checkedAt": "2026-10-25T09:06:06.087601+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1792919033855,
+      "expiresAt": 1793178233855,
+      "downloads": [
+        {
+          "path": ".img2threejs/rooftop-kook/manor/downloads/model.glb",
+          "bytes": 4401476,
+          "sha256": "0cb505cd3dcd1b7224c569a5482c239b0ebb1076dc4d9e9e6cf5a2a2e09e8a5b"
+        },
+        {
+          "path": ".img2threejs/rooftop-kook/manor/downloads/thumbnail.png",
+          "bytes": 244310,
+          "sha256": "ec2a6dbc0d4b7fdb5537a3e5716f4fb40008656e08751ad1065d3b8634f7a5bb"
+        }
+      ]
+    },
+    "dormer": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "ee7fb050-b085-4a07-bf01-91e74916cf38",
+      "createdAt": "2026-10-25T09:03:25.933188+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/rooftop-kook-assets/references/dormer.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 7500,
+        "should_texture": true,
+        "enable_pbr": false,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 536,
+      "reference": "tools/rooftop-kook-assets/references/dormer.png",
+      "referenceSha256": "16488fc84152c73d2717fdd4e2f346b25654a00bbdf27a3538c76af14f6b1d6d",
+      "id": "01a1724c-ee2c-73de-9861-ad210681e523",
+      "checkedAt": "2026-10-25T09:06:08.438569+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1792919037903,
+      "expiresAt": 1793178237903,
+      "downloads": [
+        {
+          "path": ".img2threejs/rooftop-kook/dormer/downloads/model.glb",
+          "bytes": 2806228,
+          "sha256": "56f74e39936c354df61f91fa866cf5e369785b400f73402bc69bdb0ff67dd786"
+        },
+        {
+          "path": ".img2threejs/rooftop-kook/dormer/downloads/thumbnail.png",
+          "bytes": 263319,
+          "sha256": "d6a066c311502624125e5c2348ff92dac006905f99462e8558bf7406d612d97d"
+        }
+      ]
+    },
+    "karen": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "ed6025b0-8d2c-420b-9cfe-3fed858ff101",
+      "createdAt": "2026-10-25T10:38:40.419342+00:00",
+      "estimatedCredits": 35,
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/rooftop-kook-assets/references/karen.png",
+        "ai_model": "meshy-7.1",
+        "geometry_resolution": "4k",
+        "should_remesh": true,
+        "topology": "triangle",
+        "target_polycount": 40000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "4k",
+        "target_formats": [
+          "glb"
+        ],
+        "pose_mode": "a-pose"
+      },
+      "balanceBefore": 521,
+      "reference": "tools/rooftop-kook-assets/references/karen.png",
+      "referenceSha256": "e221115dfa67007e889e6f3b35ff5be8e8a1f4f9e0cb0811aa67fd4a8dbf1d55",
+      "id": "01a172a4-20b9-7148-a08e-fbc4e3ff1197",
+      "checkedAt": "2026-10-25T10:45:27.222763+00:00",
+      "progress": 100,
+      "consumedCredits": 35,
+      "finishedAt": 1792924892839,
+      "expiresAt": 1793184092839,
+      "downloads": [
+        {
+          "path": ".img2threejs/rooftop-kook/karen/downloads/model.glb",
+          "bytes": 32618848,
+          "sha256": "10cb19efbc700ef6df917a80246ca7b902721f9e0b1256b4ca0de35852b0a63b"
+        },
+        {
+          "path": ".img2threejs/rooftop-kook/karen/downloads/thumbnail.png",
+          "bytes": 83365,
+          "sha256": "60c11f5bd12c76ac2aee5530f465dd10db460b801a5d0e50a145604248ec21d2"
+        }
+      ]
+    },
+    "kook": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "726255ee-da57-48c3-ad3e-72a29cd90a06",
+      "createdAt": "2026-10-25T10:38:44.734803+00:00",
+      "estimatedCredits": 35,
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/rooftop-kook-assets/references/kook.png",
+        "ai_model": "meshy-7.1",
+        "geometry_resolution": "4k",
+        "should_remesh": true,
+        "topology": "triangle",
+        "target_polycount": 40000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "4k",
+        "target_formats": [
+          "glb"
+        ],
+        "pose_mode": "a-pose"
+      },
+      "balanceBefore": 486,
+      "reference": "tools/rooftop-kook-assets/references/kook.png",
+      "referenceSha256": "db352787f49c6feb5aee6288826099e36d1c653540aa35c6534f820217458bcf",
+      "id": "01a172a4-3200-76a1-b449-2b35f6bdde14",
+      "checkedAt": "2026-10-25T10:45:30.834446+00:00",
+      "progress": 100,
+      "consumedCredits": 35,
+      "finishedAt": 1792924916245,
+      "expiresAt": 1793184116245,
+      "downloads": [
+        {
+          "path": ".img2threejs/rooftop-kook/kook/downloads/model.glb",
+          "bytes": 33798444,
+          "sha256": "4161445f4b9cf563e813492415f9ee21b1874264825fe8c87e39acfd77261391"
+        },
+        {
+          "path": ".img2threejs/rooftop-kook/kook/downloads/thumbnail.png",
+          "bytes": 99930,
+          "sha256": "522bf1fd20a9ee3bc92c9d38da691e846ab80830f0711abad25af8d38f4d23c3"
+        }
+      ]
+    },
+    "clubhouse": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "78a1200c-6530-4960-949d-bdbb24f989a6",
+      "createdAt": "2026-10-25T10:38:49.237489+00:00",
+      "estimatedCredits": 35,
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/rooftop-kook-assets/references/clubhouse.png",
+        "ai_model": "meshy-7.1",
+        "geometry_resolution": "4k",
+        "should_remesh": true,
+        "topology": "triangle",
+        "target_polycount": 80000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "4k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 451,
+      "reference": "tools/rooftop-kook-assets/references/clubhouse.png",
+      "referenceSha256": "24c78842ed5bed7ee7ee57d5d0abb6b04966bc2192e2d1af95523268b2dc1d72",
+      "id": "01a172a4-4393-70c5-93cc-5a886ef500be",
+      "checkedAt": "2026-10-25T10:50:17.285771+00:00",
+      "progress": 100,
+      "consumedCredits": 35,
+      "finishedAt": 1792925088430,
+      "expiresAt": 1793184288430,
+      "downloads": [
+        {
+          "path": ".img2threejs/rooftop-kook/clubhouse/downloads/model.glb",
+          "bytes": 46879984,
+          "sha256": "5dc959607ea4ffd472c5481edf514875254202636d8d8c3a222aa6e2d044d522"
+        },
+        {
+          "path": ".img2threejs/rooftop-kook/clubhouse/downloads/thumbnail.png",
+          "bytes": 201037,
+          "sha256": "777ee01878af338b6d53006af78260f54893b5bb9fb05bb6a099a7347dd82b6a"
+        }
+      ]
+    },
+    "karen-rig": {
+      "resource": "rigging",
+      "state": "SUCCEEDED",
+      "operationId": "db95837a-40d1-4aa8-a8f8-b2b4cdbe49a7",
+      "createdAt": "2026-10-25T10:45:14.356004+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "input_task_id": "01a172a4-20b9-7148-a08e-fbc4e3ff1197",
+        "height_meters": 2.35
+      },
+      "balanceBefore": 416,
+      "id": "01a172aa-23b0-731e-b372-8fbcfab8e712",
+      "checkedAt": "2026-10-25T10:50:01.331315+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1792925185097,
+      "expiresAt": 1793184385097,
+      "downloads": [
+        {
+          "path": ".img2threejs/rooftop-kook/karen-rig/downloads/rigged_character.glb",
+          "bytes": 34150388,
+          "sha256": "617874a24b896798cfbb330b6d24ae2f556f273d6029f623e96dd018b215948c"
+        },
+        {
+          "path": ".img2threejs/rooftop-kook/karen-rig/downloads/running_glb.glb",
+          "bytes": 34119972,
+          "sha256": "7f9fdbe1a86d75f62ded47e82a3299d1297b58bed3ac18ccc53ea968462ebcad"
+        },
+        {
+          "path": ".img2threejs/rooftop-kook/karen-rig/downloads/walking_glb.glb",
+          "bytes": 34130592,
+          "sha256": "745ef469cca0baf8ee2cc683bcd304033b01f712c27baed8b57bf4f0f1a7877e"
+        }
+      ]
+    },
+    "kook-rig": {
+      "resource": "rigging",
+      "state": "SUCCEEDED",
+      "operationId": "1a6b85dc-d825-4c88-bdfd-f5336a2b9974",
+      "createdAt": "2026-10-25T10:45:20.771366+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "input_task_id": "01a172a4-3200-76a1-b449-2b35f6bdde14",
+        "height_meters": 2.5
+      },
+      "balanceBefore": 411,
+      "id": "01a172aa-3d29-77dc-b7f2-5a787903eba8",
+      "checkedAt": "2026-10-25T10:50:08.259526+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1792925191742,
+      "expiresAt": 1793184391742,
+      "downloads": [
+        {
+          "path": ".img2threejs/rooftop-kook/kook-rig/downloads/rigged_character.glb",
+          "bytes": 35310596,
+          "sha256": "2c75fd369a0e44d89d597bcddff5cc142992bbb04577fdc3f66df59e291117d4"
+        },
+        {
+          "path": ".img2threejs/rooftop-kook/kook-rig/downloads/running_glb.glb",
+          "bytes": 35280440,
+          "sha256": "01059d1f47d875f97478f69965147cb4d2b4dea067be754957fd2bec4823365c"
+        },
+        {
+          "path": ".img2threejs/rooftop-kook/kook-rig/downloads/walking_glb.glb",
+          "bytes": 35291044,
+          "sha256": "a6b018db97b8d01719d070c7da307847ecd77929db542249b47406f254d160e5"
+        }
+      ]
+    },
+    "karen-idle": {
+      "resource": "animate",
+      "state": "SUCCEEDED",
+      "operationId": "83c2839c-7433-4c38-aee9-efcfe4eae39f",
+      "createdAt": "2026-10-25T11:03:51.225776+00:00",
+      "estimatedCredits": 3,
+      "payload": {
+        "rig_task_id": "01a172aa-23b0-731e-b372-8fbcfab8e712",
+        "action_id": 0
+      },
+      "balanceBefore": 406,
+      "id": "01a172bb-2e08-70e1-ac0f-8dcea4366bb4",
+      "checkedAt": "2026-10-25T11:05:50.304891+00:00",
+      "progress": 100,
+      "consumedCredits": 3,
+      "finishedAt": 1792926260408,
+      "expiresAt": 1793185460408,
+      "downloads": [
+        {
+          "path": ".img2threejs/rooftop-kook/karen-idle/downloads/animation_glb.glb",
+          "bytes": 34209364,
+          "sha256": "aae625966476cd84f10bff8614c8dccf8e0717dc8b6c2095714db9cb1e97144f"
+        }
+      ]
+    },
+    "karen-shout": {
+      "resource": "animate",
+      "state": "SUCCEEDED",
+      "operationId": "d23b3dac-b14a-474d-abbd-5e816c6a16a9",
+      "createdAt": "2026-10-25T11:03:53.481117+00:00",
+      "estimatedCredits": 3,
+      "payload": {
+        "rig_task_id": "01a172aa-23b0-731e-b372-8fbcfab8e712",
+        "action_id": 51
+      },
+      "balanceBefore": 403,
+      "id": "01a172bb-36d3-7766-939f-7553529a204c",
+      "checkedAt": "2026-10-25T11:05:53.881376+00:00",
+      "progress": 100,
+      "consumedCredits": 3,
+      "finishedAt": 1792926266740,
+      "expiresAt": 1793185466740,
+      "downloads": [
+        {
+          "path": ".img2threejs/rooftop-kook/karen-shout/downloads/animation_glb.glb",
+          "bytes": 34293380,
+          "sha256": "269ac07fd1f64cfe4218c8299bf4394fd4c938c488ffb8e4218f07fad851249a"
+        }
+      ]
+    },
+    "karen-angry": {
+      "resource": "animate",
+      "state": "SUCCEEDED",
+      "operationId": "9a7dd30b-20d2-4da9-a63b-76cfb7d7a3d6",
+      "createdAt": "2026-10-25T11:03:55.511194+00:00",
+      "estimatedCredits": 3,
+      "payload": {
+        "rig_task_id": "01a172aa-23b0-731e-b372-8fbcfab8e712",
+        "action_id": 311
+      },
+      "balanceBefore": 400,
+      "id": "01a172bb-3ee8-7110-957b-effaf0c6e065",
+      "checkedAt": "2026-10-25T11:05:58.098533+00:00",
+      "progress": 100,
+      "consumedCredits": 3,
+      "finishedAt": 1792926292684,
+      "expiresAt": 1793185492684,
+      "downloads": [
+        {
+          "path": ".img2threejs/rooftop-kook/karen-angry/downloads/animation_glb.glb",
+          "bytes": 34654980,
+          "sha256": "dbc946be86de01738d37fc8abf06e487398dbbaf389b132ad267a988a0cc68a3"
+        }
+      ]
+    },
+    "kook-idle": {
+      "resource": "animate",
+      "state": "SUCCEEDED",
+      "operationId": "c20b67b1-4d4a-4c24-9eb1-a95deca1155a",
+      "createdAt": "2026-10-25T11:03:57.668418+00:00",
+      "estimatedCredits": 3,
+      "payload": {
+        "rig_task_id": "01a172aa-3d29-77dc-b7f2-5a787903eba8",
+        "action_id": 0
+      },
+      "balanceBefore": 397,
+      "id": "01a172bb-4739-730d-a483-0850c21c5658",
+      "checkedAt": "2026-10-25T11:06:00.952186+00:00",
+      "progress": 100,
+      "consumedCredits": 3,
+      "finishedAt": 1792926270565,
+      "expiresAt": 1793185470565,
+      "downloads": [
+        {
+          "path": ".img2threejs/rooftop-kook/kook-idle/downloads/animation_glb.glb",
+          "bytes": 35369856,
+          "sha256": "ff722cb3c81d74e51c7bbe83178870401af7f8f4ed941c76d4326570e833bd78"
+        }
+      ]
+    },
+    "kook-aim": {
+      "resource": "animate",
+      "state": "SUCCEEDED",
+      "operationId": "7ed2f3db-c7c5-4e97-b1ba-e72d05faa371",
+      "createdAt": "2026-10-25T11:03:59.713091+00:00",
+      "estimatedCredits": 3,
+      "payload": {
+        "rig_task_id": "01a172aa-3d29-77dc-b7f2-5a787903eba8",
+        "action_id": 585
+      },
+      "balanceBefore": 394,
+      "id": "01a172bb-4f33-7321-84f4-e7a4c98990f3",
+      "checkedAt": "2026-10-25T11:06:04.132915+00:00",
+      "progress": 100,
+      "consumedCredits": 3,
+      "finishedAt": 1792926265101,
+      "expiresAt": 1793185465101,
+      "downloads": [
+        {
+          "path": ".img2threejs/rooftop-kook/kook-aim/downloads/animation_glb.glb",
+          "bytes": 35311396,
+          "sha256": "b956f51051e4849f96b2e4e39588cd5788e49366fb620f7cca89bec3bd8b2f70"
+        }
+      ]
+    },
+    "kook-shoot": {
+      "resource": "animate",
+      "state": "SUCCEEDED",
+      "operationId": "17e16e9d-73f5-4936-95c4-11af880a8a6d",
+      "createdAt": "2026-10-25T11:04:01.621506+00:00",
+      "estimatedCredits": 3,
+      "payload": {
+        "rig_task_id": "01a172aa-3d29-77dc-b7f2-5a787903eba8",
+        "action_id": 234
+      },
+      "balanceBefore": 391,
+      "id": "01a172bb-56e7-727a-bb71-f01db6915027",
+      "checkedAt": "2026-10-25T11:06:07.300698+00:00",
+      "progress": 100,
+      "consumedCredits": 3,
+      "finishedAt": 1792926270688,
+      "expiresAt": 1793185470688,
+      "downloads": [
+        {
+          "path": ".img2threejs/rooftop-kook/kook-shoot/downloads/animation_glb.glb",
+          "bytes": 35350368,
+          "sha256": "196ac9e08ec1c723c33d6e92855fa9dabb09770b68a6adb78d835a90796c6283"
+        }
+      ]
+    }
+  }
+}

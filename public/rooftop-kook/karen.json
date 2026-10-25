@@ -1,0 +1,28 @@
+{
+  "name": "karen",
+  "bytes": 9906392,
+  "sha256": "7c99fc9335625acf5c07b95239b2d1613462f9e39d7a4f8798c70728e62298d6",
+  "triangles": 41066,
+  "nativeGeometryPreserved": true,
+  "skinAndUVsPreserved": true,
+  "pbrPreserved": true,
+  "textureSizes": [
+    [
+      2048,
+      2048
+    ],
+    [
+      4096,
+      4096
+    ],
+    [
+      2048,
+      2048
+    ]
+  ],
+  "source": ".img2threejs/rooftop-kook/karen-rig/downloads/rigged_character.glb",
+  "geometryCompression": "lossless EXT_meshopt_compression",
+  "allVertexAndSkinValuesVerified": true,
+  "orientedTrianglesVerified": true,
+  "texturePacking": "4K base colour, 2K PBR; WebP quality 94 colour/roughness, original packed normal map"
+}

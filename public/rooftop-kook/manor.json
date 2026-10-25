@@ -1,0 +1,23 @@
+{
+  "name": "manor",
+  "source": ".img2threejs/rooftop-kook/manor/downloads/model.glb",
+  "sourceSize": [
+    1.0,
+    0.756153017282486,
+    0.8318049907684326
+  ],
+  "sizeAtDefaultWidth": [
+    25.0,
+    18.90383,
+    20.79512
+  ],
+  "nearTriangles": 14003,
+  "farTriangles": 0,
+  "materials": 1,
+  "sourceGeometryPreserved": true,
+  "originalUVsPreserved": true,
+  "role": "editable modular scenery; per-placement collision policy",
+  "bytes": 2258568,
+  "sha256": "77c11a2991169436e92aa4e27e8b36c37a42680bcf752eec3b59a73962a24fad",
+  "atlasResolution": 2048
+}

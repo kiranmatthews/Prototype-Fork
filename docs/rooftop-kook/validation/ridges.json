@@ -1,0 +1,114 @@
+{
+  "checkpoints": 6,
+  "physicalRails": 2,
+  "roofs": [
+    {
+      "name": "RR:2 aframe roof",
+      "creases": 1,
+      "safeLanding": true,
+      "grindCatch": true
+    },
+    {
+      "name": "RR:3 gable roof",
+      "creases": 38,
+      "safeLanding": true,
+      "grindCatch": true
+    },
+    {
+      "name": "RR:5 hip roof",
+      "creases": 61,
+      "safeLanding": true,
+      "grindCatch": true
+    },
+    {
+      "name": "RR:10 hip roof",
+      "creases": 61,
+      "safeLanding": true,
+      "grindCatch": true
+    },
+    {
+      "name": "RR:16 gable roof",
+      "creases": 41,
+      "safeLanding": true,
+      "grindCatch": true
+    },
+    {
+      "name": "RR:17 aframe roof",
+      "creases": 1,
+      "safeLanding": true,
+      "grindCatch": true
+    },
+    {
+      "name": "RR:19 hip roof",
+      "creases": 61,
+      "safeLanding": true,
+      "grindCatch": true
+    },
+    {
+      "name": "RR:20 gable roof",
+      "creases": 36,
+      "safeLanding": true,
+      "grindCatch": true
+    },
+    {
+      "name": "RR:21 gable roof",
+      "creases": 35,
+      "safeLanding": true,
+      "grindCatch": true
+    },
+    {
+      "name": "RR:30 aframe roof",
+      "creases": 1,
+      "safeLanding": true,
+      "grindCatch": true
+    },
+    {
+      "name": "RR:34 gable roof",
+      "creases": 38,
+      "safeLanding": true,
+      "grindCatch": true
+    },
+    {
+      "name": "RR:36 hip roof",
+      "creases": 61,
+      "safeLanding": true,
+      "grindCatch": true
+    },
+    {
+      "name": "RR:37 aframe roof",
+      "creases": 1,
+      "safeLanding": true,
+      "grindCatch": true
+    },
+    {
+      "name": "RR:39 gable roof",
+      "creases": 43,
+      "safeLanding": true,
+      "grindCatch": true
+    },
+    {
+      "name": "RR:40 gable roof",
+      "creases": 39,
+      "safeLanding": true,
+      "grindCatch": true
+    },
+    {
+      "name": "RR:42 aframe roof",
+      "creases": 1,
+      "safeLanding": true,
+      "grindCatch": true
+    },
+    {
+      "name": "RR:212 aframe roof",
+      "creases": 1,
+      "safeLanding": true,
+      "grindCatch": true
+    },
+    {
+      "name": "RR:232 aframe roof",
+      "creases": 1,
+      "safeLanding": true,
+      "grindCatch": true
+    }
+  ]
+}

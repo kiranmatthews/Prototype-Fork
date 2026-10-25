@@ -1,0 +1,23 @@
+{
+  "name": "estate",
+  "source": ".img2threejs/rooftop-kook/estate/downloads/model.glb",
+  "sourceSize": [
+    1.0,
+    0.6813750267028809,
+    0.866894006729126
+  ],
+  "sizeAtDefaultWidth": [
+    26.0,
+    17.71575,
+    22.53924
+  ],
+  "nearTriangles": 14762,
+  "farTriangles": 0,
+  "materials": 1,
+  "sourceGeometryPreserved": true,
+  "originalUVsPreserved": true,
+  "role": "editable modular scenery; per-placement collision policy",
+  "bytes": 2317912,
+  "sha256": "94781cd601e50274b10d38319f6f8e14c89015077cbca42965690c298ca4c89c",
+  "atlasResolution": 2048
+}

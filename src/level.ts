@@ -61,6 +61,9 @@ import { createEnemyVisual } from "./enemies/runtime";
 import { BULL } from "./enemies/bull";
 import { TempleFireTiki } from "./templeFireTiki";
 import { SentryFireball, SENTRY_FIREBALL_SPEED } from "./enemies/fireball";
+import {createKookState,resetKook,stepKook,type KookRole,type KookState} from './enemies/kookBehavior';
+import {createKookVisual} from './enemies/kookVisual';
+import {KookBullet} from './enemies/kookBullet';
 import {playEnemySound,resetEnemySounds,updateEnemySounds} from "./enemies/sounds";
 import { stepMoa, updateMoaAttack } from "./enemies/moaBehavior";
 import { GhostTrainAssetKit, GHOST_DECOR_KINDS, GHOST_DECOR_LABELS, createGhostEnemyVisual } from './ghostTrain';
@@ -69,6 +72,8 @@ import { BlockworksAssetKit, BLOCKWORKS_ASSET_KINDS, BLOCKWORKS_ASSET_LABELS, is
 import { BlockworksMattes, BLOCKWORKS_MATTE_KINDS, BLOCKWORKS_MATTE_LABELS } from './blockworksMattes';
 import { CASTLE_TEXTURE_KINDS, isCastleTexture, createCastleMaterial, prepareCastleTextures, castleTextureDiagnostics } from './ghostCastleMaterials';
 import { COASTAL_TOWN_TEXTURES } from './coastalTownPalette';
+import { ROOFTOP_KOOK_TEXTURES, applyKookPolygonUVs } from './rooftopKookAssets';
+import {HeightFog} from './heightFog';
 import { GHOST_TRAIN_LEVEL } from './levels/ghost-train';
 import type { EnemyKind, EnemyVisual } from "./enemies/types";
 export type { EnemyKind } from "./enemies/types";
@@ -210,7 +215,7 @@ import {
   woodPathProfileForComponent,
 } from "./terrainSupportBudget";
 import { selectCrateRestSurface } from "./crateRestSurface";
-import { surfaceBoundaryEdges, joinSurfaceBoundaryEdges, type SurfaceBoundaryEdge } from "./surfaceEdges";
+import { surfaceBoundaryEdges, surfaceRidgeEdges, joinSurfaceBoundaryEdges, type SurfaceBoundaryEdge } from "./surfaceEdges";
 import {
   buildWoodPathLayout,
   type WoodPathFrame,
@@ -286,6 +291,7 @@ const NO_BROKEN_CRATES: Crate[] = [];
 // (spinKill/stompKill/...) that the player's collision simply reads.
 
 export interface Enemy {
+  kook?: KookState;
   group: THREE.Group;
   box: THREE.Box3;
   attackBox?: THREE.Box3; // articulated moa bill; empty outside the strike
@@ -335,7 +341,7 @@ export interface Enemy {
 type Spine = (wz: number) => { dx: number; dy: number };
 
 interface Projectile {
-  mesh: SentryFireball;
+  mesh: SentryFireball | KookBullet;
   vel: THREE.Vector3;
   life: number;
   box: THREE.Box3;
@@ -781,6 +787,8 @@ export interface CustomComponent {
   // Slip only, 0.02..1: fraction of dry steering/braking/drive. Omitted = ICE_SURFACE.grip.
   iceGrip?: number;
   edgeGrinding?: boolean; // solid surface boundary grind paths (default true; false = explicit opt-out)
+  ridgeGrinding?: boolean; // mesh: convex creases in the designated top are safe surface grinds
+  flatShading?: boolean; // mesh: preserve crisp faces when untextured render vertices are shared
   grindTopTriangles?: number; // mesh / authored moving surface: leading triangles that form the actual deck; excludes decorative body strata from derived edges
   trafficRoad?: boolean; // LEGACY only: removed by migration along with retired car enemies
   vertices?: number[]; // mesh, mover, crumble: metre-space geometry; dynamic origin is the slab centre
@@ -852,6 +860,8 @@ export interface CustomComponent {
   range?: number;
   speed?: number;
   foe?: EnemyKind; // enemy variant (including the wingless moa)
+  kookRole?: KookRole;
+  alertGroup?: number; // independent rooftop lookout/gunner encounter
   artProxy?: boolean; // keep native collision/camera geometry while Meshy modules own its rendering
   invisible?: boolean; // wall/pit/ramp: collider only; nitro crate: concealed at its exact authored burial height
   containment?: boolean; // wallpath: course boundary resolved after ordinary contacts; cannot be ridden or grabbed
@@ -1047,6 +1057,7 @@ export const TEX_KINDS = [
   ...ROOM_TEXTURE_KINDS,
   ...COUNTRY_CLUB_TEXTURES,
   ...Object.keys(COASTAL_TOWN_TEXTURES),
+  ...Object.keys(ROOFTOP_KOOK_TEXTURES),
   ...MALL_TEXTURE_KINDS,
   ...CASTLE_TEXTURE_KINDS,
   "checker",
@@ -2702,9 +2713,9 @@ const LEVEL_DATA_KEYS = new Set([
 ]);
 const COMPONENT_DATA_KEYS = new Set([
   "minefieldTrap", "t", "p", "s", "to", "pts", "widths", "artProxy", "checkpointTrip", "openFloor", "collisionHeight", "wallHeights", "slip", "iceGrip", "groundSpeedLimit", "containment",
-  "edgeGrinding", "grindTopTriangles", "cameraView", "cameraPresentationOnly", "cameraPosition", "cameraTarget", "cameraFov", "cameraAspect", "cameraFollowDistance", "cameraKeepDistance", "cameraFollowTargetHeight", "cameraIntroDistance", "cameraCutaway", "len", "rise", "w", "yaw", "axis", "travelSign", "travelPhase", "vkind", "arc", "arcSteps", "deck",
+  "edgeGrinding", "ridgeGrinding", "flatShading", "grindTopTriangles", "cameraView", "cameraPresentationOnly", "cameraPosition", "cameraTarget", "cameraFov", "cameraAspect", "cameraFollowDistance", "cameraKeepDistance", "cameraFollowTargetHeight", "cameraIntroDistance", "cameraCutaway", "len", "rise", "w", "yaw", "axis", "travelSign", "travelPhase", "vkind", "arc", "arcSteps", "deck",
   "closed", "bank", "curve", "vert", "lipRise", "outerBank", "depthBias", "shake", "kind", "dkind", "vr", "tn",
-  "lit", "berms", "n", "outline", "range", "speed", "foe", "invisible", "solid", "scenerySolid", "solidSides", "hangLock",
+  "lit", "berms", "n", "outline", "range", "speed", "foe", "kookRole", "alertGroup", "invisible", "solid", "scenerySolid", "solidSides", "hangLock",
   "cycle", "phase", "amp", "seed", "scaffold", "supports", "rails", "coping", "spacing",
   "baySpacing", "supportDepth", "supportBaseY", "terrainSupports", "structureStyle",
   "plankPalette", "polePalette", "shoreProfile", "shoreSeaLevel", "shorePhase",
@@ -3078,10 +3089,10 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
   const structureStyles = new Set(["light", "island", "beach"]);
   const textureKinds = new Set<string>(TEX_KINDS);
   const booleanKeys: (keyof CustomComponent)[] = [
-    "artProxy", "fog", "hangLock", "checkpointTrip", "openFloor",
+    "artProxy", "fog", "hangLock", "checkpointTrip", "openFloor", "flatShading",
     "slip", "closed", "vert", "lit", "berms", "outline", "invisible", "containment",
     "scaffold", "supports", "rails", "terrainSupports", "airOnly", "solid", "scenerySolid", "solidSides", "lk",
-    "shoreProfile", "cameraView", "cameraPresentationOnly", "cameraKeepDistance", "cameraCutaway", "edgeGrinding", "trafficRoad", "doubleSided", "smoothCollision", "castShadow", "beachSand", "loopRequired", "gravityTrack", "lethal", "skateCamera", "outOfBounds",
+    "shoreProfile", "cameraView", "cameraPresentationOnly", "cameraKeepDistance", "cameraCutaway", "edgeGrinding", "ridgeGrinding", "trafficRoad", "doubleSided", "smoothCollision", "castShadow", "beachSand", "loopRequired", "gravityTrack", "lethal", "skateCamera", "outOfBounds",
   ];
   let aggregateNodes = source.ocean?.shore?.length ?? 0;
   let aggregateSamples = source.ocean
@@ -3127,6 +3138,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
           !component.pts.every((point) => finiteTuple(point, 2, 5))))
     )
       return null;
+    if(component.t!=='enemy'&&(component.kookRole!==undefined||component.alertGroup!==undefined))return null;
     if (component.wallHeights !== undefined && (
       component.t !== 'wallpath' || !finiteTuple(component.wallHeights, 2) ||
       component.wallHeights.some(h => h < 0 || h > MAX_ABS) || Math.max(...component.wallHeights) < .2 ||
@@ -3520,6 +3532,9 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
       case "enemy":
         if ((component.range ?? 5) < 0 || (component.speed ?? 3) < 0)
           return null;
+        if(component.kookRole!==undefined&&(!['lookout','gunner'].includes(component.kookRole)||
+          component.foe!==(component.kookRole==='lookout'?'grunt':'sentry')))return null;
+        if(component.alertGroup!==undefined&&(!Number.isSafeInteger(component.alertGroup)||component.alertGroup<0||component.alertGroup>9999||!component.kookRole))return null;
         break;
       case "mover":
         if ((component.amp ?? 4) < 0 || (component.speed ?? 0.6) < 0)
@@ -4773,6 +4788,12 @@ export class Level {
       return texture;
     }
     if(['coast-timber','creek-raft','bridge-timber','bridge-ice'].includes(kind))return this.surfaceTexture('wood');
+    if (Object.prototype.hasOwnProperty.call(ROOFTOP_KOOK_TEXTURES, kind)) {
+      const file = ROOFTOP_KOOK_TEXTURES[kind as keyof typeof ROOFTOP_KOOK_TEXTURES];
+      const texture = Level.finishTex(this.surfaceImage(file));
+      this.surfTexCache.set(kind, texture);
+      return texture;
+    }
     if (Object.prototype.hasOwnProperty.call(COASTAL_TOWN_TEXTURES, kind)) {
       const file = COASTAL_TOWN_TEXTURES[kind as keyof typeof COASTAL_TOWN_TEXTURES];
       const texture = Level.finishTex(this.surfaceImage(`coastal-town/${file}`));
@@ -5202,6 +5223,8 @@ export class Level {
     { spec: number; shine: number }
   > = {
     metal: { spec: 0x6e7784, shine: 60 },
+    'kook-metal': { spec: 0x52646b, shine: 62 },
+    'kook-branch-metal': { spec: 0x52646b, shine: 62 },
     pavement: { spec: 0x2e3238, shine: 22 },
     asphalt: { spec: 0x24262a, shine: 14 },
     stone: { spec: 0x2a2c30, shine: 18 },
@@ -5254,6 +5277,11 @@ export class Level {
   }
 
   // Per-deck copy of a base material with a surface texture tiled on it.
+  private kookRoofBump():THREE.Texture {
+    const key='kook-metal-height';let texture=this.surfTexCache.get(key);
+    if(!texture){texture=this.surfaceImage('rooftop-kook/metal-height.png');texture.colorSpace=THREE.NoColorSpace;this.surfTexCache.set(key,texture);}
+    return texture;
+  }
   private patterned(
     mat: THREE.Material,
     w: number,
@@ -5299,6 +5327,12 @@ export class Level {
     tex.needsUpdate = true;
     m.map = tex;
     m.userData.texKind = kind; // capture: editing a copy of a level reads this back
+    if(kind==='kook-metal'||kind==='kook-branch-metal'){
+      m.bumpMap=this.kookRoofBump().clone();m.bumpMap.repeat.copy(tex.repeat);m.bumpScale=.085;
+    }
+    // Optional roof routes intentionally cross courtyard edges at the same
+    // height. Resolve their visual priority without moving either collider.
+    if(kind==='kook-branch-metal'){m.polygonOffset=true;m.polygonOffsetFactor=-2;m.polygonOffsetUnits=-4;}
     addMasonryLook(m, kind);
     if (this.jungleAtmosphere && (kind === "dirt" || kind === "sunsoil")) {
       m.userData.jungleDapple = true;
@@ -5707,7 +5741,10 @@ export class Level {
           : this.builtFromData?.components[componentIndex];
       if (!this.componentEdgeGrinding(component)) continue;
       const edges: SurfaceBoundaryEdge[] = [];
-      for (const [rawStart, rawEnd] of surfaceBoundaryEdges(mesh)) {
+      for (const [rawStart, rawEnd] of [
+        ...surfaceBoundaryEdges(mesh),
+        ...(component?.ridgeGrinding ? surfaceRidgeEdges(mesh) : []),
+      ]) {
         const start = rawStart.clone();
         const end = rawEnd.clone();
         start.y += 0.05;
@@ -6397,7 +6434,7 @@ export class Level {
       side:c.doubleSided?THREE.DoubleSide:THREE.FrontSide,fog:c.fog!==false,
     });
     else {
-      const SurfaceMaterial = isMasonryTexture(c.tex) || c.tex === 'skystream-marble' ? THREE.MeshPhongMaterial : THREE.MeshLambertMaterial;
+      const SurfaceMaterial = isMasonryTexture(c.tex) || c.tex === 'skystream-marble' || c.tex==='kook-metal' || c.tex==='kook-branch-metal' ? THREE.MeshPhongMaterial : THREE.MeshLambertMaterial;
       material = new SurfaceMaterial({
         color: c.color ?? "#ffffff", vertexColors: !!c.colors,
         emissive: c.emissive ?? "#000000", opacity: c.opacity ?? 1,
@@ -6409,11 +6446,14 @@ export class Level {
         const sheen = Level.SHEEN[c.tex!]!;
         material.specular.setHex(sheen.spec);
         material.shininess = sheen.shine;
+        if(c.tex==='kook-metal'||c.tex==='kook-branch-metal'){material.bumpMap=this.kookRoofBump();material.bumpScale=.085;}
         addMasonryLook(material, c.tex!);
       }
     }
     if((c.tex==='nightworks-basalt'||c.tex==='nightworks-path')&&material instanceof THREE.MeshLambertMaterial)addNightworksStoneLook(material,c.tex==='nightworks-path'?this.surfaceTexture(c.tex):undefined);
     material.userData.texKind = c.materialStyle === "unity-sand" ? c.tex ?? "sand" : c.tex ?? "checker";
+    if(c.tex==='kook-branch-metal'){material.polygonOffset=true;material.polygonOffsetFactor=-2;material.polygonOffsetUnits=-4;}
+    if(c.flatShading!==undefined&&'flatShading' in material)material.flatShading=c.flatShading;
     if(this.jungleStyle==='painterly'&&!standingWater&&!jungleStream&&!material.userData.jungleDapple){
       material.userData.junglePainterly=true;material.userData.jungleDapple=true;
       addJungleDapple(material,this.jungleTime,canvasCloth,canvasCloth);
@@ -6443,7 +6483,7 @@ export class Level {
     if(!EDITOR_BUILD&&this.batchDecor&&!canvasCloth&&c.solid===false&&!c.invisible&&!c.breakable&&!c.sourceBox&&!c.materialStyle&&!standingWater&&
       !c.colors&&!c.depthBias&&!c.cameraCutaway&&!c.slip&&c.iceGrip===undefined&&c.castShadow===undefined&&(c.s??[1,1,1]).every(scale=>scale>0)&&
       c.fog===undefined&&c.vert===undefined&&(c.opacity??1)===1){
-      const key=JSON.stringify([c.color??'#ffffff',c.emissive??'#000000',c.tex??'checker',!!c.doubleSided]);
+      const key=JSON.stringify([c.color??'#ffffff',c.emissive??'#000000',c.tex??'checker',!!c.doubleSided,!!c.flatShading]);
       let shared=this.staticSurfaceMaterials.get(key);
       if(shared)material.dispose();else{shared=material;this.staticSurfaceMaterials.set(key,shared);}
       const matrix=new THREE.Matrix4().compose(new THREE.Vector3(...c.p),
@@ -6506,7 +6546,7 @@ export class Level {
     this.root.add(mesh);
     if(c.tex==='custard-pool'){
       attachCustardPoolReflection(mesh,this.standingWaterClock,this.liteDecor,draw=>{
-        if(this.jungleAssets)this.jungleAssets.withLowDetailCapture(draw);else draw();
+        if(this.jungleAssets)this.jungleAssets.withSceneryCapture(draw);else draw();
       });
       if(!this.custardFinale){this.custardFinale=new CustardFinalePresentation(mesh,this.scene);this.root.add(this.custardFinale.root);}
     }
@@ -6979,7 +7019,7 @@ export class Level {
     }
     for (const e of this.enemies) {
       const range = r2(Math.abs((e.x1 - e.x0) / 2));
-      const foe = e.kind !== "grunt" ? e.kind : undefined;
+      const foe = e.kind !== "grunt" || e.kook ? e.kind : undefined;
       C.push(
         e.axis === "z"
           ? {
@@ -6993,7 +7033,8 @@ export class Level {
               speed: r2(e.speed),
               terrainSupports: e.terrainSupports || undefined,
               foe,
-              yaw: 90,
+              ...(e.kook?{kookRole:e.kook.role,alertGroup:e.kook.group}:{}),
+              yaw: e.kook?THREE.MathUtils.radToDeg(e.kook.bearing):90,
               dkind: e.group.userData.ghostSkin as CustomComponent['dkind'],
               ...(e.group.userData.ghostSkin?{s:[1,e.group.userData.ghostHeight,1] as [number,number,number],vr:e.group.userData.ghostVariant}:{}),
             }
@@ -7008,6 +7049,7 @@ export class Level {
               speed: r2(e.speed),
               terrainSupports: e.terrainSupports || undefined,
               foe,
+              ...(e.kook?{kookRole:e.kook.role,alertGroup:e.kook.group,yaw:THREE.MathUtils.radToDeg(e.kook.bearing)}:{}),
               dkind: e.group.userData.ghostSkin as CustomComponent['dkind'],
               ...(e.group.userData.ghostSkin?{s:[1,e.group.userData.ghostHeight,1] as [number,number,number],vr:e.group.userData.ghostVariant}:{}),
             },
@@ -7361,7 +7403,7 @@ export class Level {
       // Both secondary water captures can reuse the Crown's existing distant
       // scenery meshes. The primary colour view and collision retain native detail.
       const waterSceneryCapture = spec.look === "pirate-harbour" ? (draw: () => void) => {
-        if (this.jungleAssets) this.jungleAssets.withLowDetailCapture(draw);
+        if (this.jungleAssets) this.jungleAssets.withSceneryCapture(draw);
         else draw();
       } : undefined;
       this.water = new CoastWater({
@@ -7692,6 +7734,7 @@ export class Level {
               const uv = geo.getAttribute('uv');
               for(let i=0;i<uv.count;i++)uv.setXY(i,uv.getX(i)/pw,uv.getY(i)/pd);
             }
+            if(c.tex?.startsWith('kook-')&&!c.shoreProfile)applyKookPolygonUVs(geo,polyPts,pw,pd);
             const mesh = new THREE.Mesh(
               geo,
               this.patterned(tinted(deck), pw, pd, c.tex ?? "checker"),
@@ -7734,6 +7777,9 @@ export class Level {
                 })
               : tinted(new THREE.MeshLambertMaterial({ color: 0x9a8a7a }));
             const [ww, wd] = polySpan();
+            // Image-authored shingles use metre UVs. Normalize once before
+            // patterned() applies the ordinary four-metre texture repeat.
+            if(c.tex?.startsWith('kook-'))applyKookPolygonUVs(geo,polyPts,Math.max(ww,wd),h+2,true);
             const mesh = new THREE.Mesh(
               geo,
               !c.invisible && c.tex
@@ -8383,7 +8429,7 @@ export class Level {
                 "z",
                 foe,
                 c.dkind,
-                c.s?.[1],c.vr,c.terrainSupports,
+                c.s?.[1],c.vr,c.terrainSupports,c.kookRole,c.alertGroup,c.yaw,
               );
             } else {
               this.enemy(
@@ -8395,7 +8441,7 @@ export class Level {
                 "x",
                 foe,
                 c.dkind,
-                c.s?.[1],c.vr,c.terrainSupports,
+                c.s?.[1],c.vr,c.terrainSupports,c.kookRole,c.alertGroup,c.yaw,
               );
             }
           } else if (c.t === "grindosaurus") {
@@ -8686,6 +8732,7 @@ export class Level {
     this.nightworksBackdrop?.dispose();this.nightworksBackdrop=undefined;
     this.nightworksPlume?.dispose();this.nightworksPlume=undefined;
     this.nightworksLighting?.dispose();this.nightworksLighting=undefined;
+    this.heightFog?.dispose();this.heightFog=undefined;
     this.hollowwakeTunnels?.dispose();this.hollowwakeTunnels=null;
     this.jungleAssets?.dispose();
     this.jungleAssets = null;
@@ -10823,7 +10870,7 @@ export class Level {
     this.clearProjectilesFrom(enemy);
     // Only an actual top-face stomp creates this body; slides, shockwaves,
     // spun enemies and other skins retain their original defeat presentation.
-    if (cause === "stomp" && enemy.kind === "grunt" && !isNightworksGoblin(enemy) && !enemy.group.userData.ghostSkin) {
+    if (cause === "stomp" && enemy.kind === "grunt" && !isNightworksGoblin(enemy) && !enemy.group.userData.ghostSkin && !enemy.kook) {
       enemy.state = "crab-carcass"; enemy.stateT = 0;
       enemy.crabCarcassYaw = stompView && stompView.x * stompView.x + stompView.z * stompView.z > 1e-8
         ? Math.atan2(-stompView.x, -stompView.z) - enemy.group.rotation.y : 0;
@@ -15985,6 +16032,7 @@ export class Level {
     for(const pad of this.warpPads)pad.update(dt);
   }
   private nightworksFog:NightworksFogVisibility|null|undefined;
+  private heightFog:HeightFog|undefined;
   private nightworksPlume:NightworksPlume|undefined;
   private nightworksLighting:NightworksLighting|undefined;
   private nightworksBackdrop:NightworksBackdrop|undefined;
@@ -15993,6 +16041,10 @@ export class Level {
     if(this.jungleAssets)this.jungleAssets.withLowDetailShadows(draw,lights);else draw();
   }
   updateSceneryView(camera:THREE.Camera,secondary?:THREE.Camera,clearInspectionView=false):void {
+    if(this.atmosphere?.heightFog){
+      const atmosphere=resolveLevelAtmosphere(this),color=Array.isArray(atmosphere.fogColor)?new THREE.Color().setRGB(...atmosphere.fogColor):new THREE.Color(atmosphere.fogColor);
+      (this.heightFog??=new HeightFog()).update(this.root,camera.position,this.atmosphere.heightFog,color,atmosphere.fogEnabled&&!clearInspectionView);
+    }else this.heightFog?.disable();
     this.pickupVisualBatch?.sync();
     this.hollowwakeTunnels?.setView(camera.position);
     this.custardFinale?.update(camera);
@@ -18667,8 +18719,8 @@ export class Level {
   }
 
   /** Imported enemy artwork; gameplay roots and collision remain level-owned. */
-  private enemyGroup(kind: EnemyKind, skin?:CustomComponent['dkind'],height?:number,variant?:number): EnemyVisual {
-    const visual = skin==='ghostknight'||skin==='ghostfood'||skin==='ghostcake'?createGhostEnemyVisual(kind,skin,{height,variant,lookAt:()=>this.playerPos}):createEnemyVisual(kind, { appearance: this.nightworksRocks ? "nightworks" : undefined });
+  private enemyGroup(kind: EnemyKind, skin?:CustomComponent['dkind'],height?:number,variant?:number,kookRole?:KookRole): EnemyVisual {
+    const visual = kookRole?createKookVisual(kind,kookRole):skin==='ghostknight'||skin==='ghostfood'||skin==='ghostcake'?createGhostEnemyVisual(kind,skin,{height,variant,lookAt:()=>this.playerPos}):createEnemyVisual(kind, { appearance: this.nightworksRocks ? "nightworks" : undefined });
     this.root.add(visual.group);
     return visual;
   }
@@ -18685,9 +18737,9 @@ export class Level {
     axis: "x" | "z" = "x",
     kind: EnemyKind = "grunt",
     skin?:CustomComponent['dkind'],
-    height?:number,variant?:number,terrainSupports=false,
+    height?:number,variant?:number,terrainSupports=false,kookRole?:KookRole,alertGroup=0,bearing=0,
   ): void {
-    const visual = this.enemyGroup(kind,skin,height,variant);
+    const visual = this.enemyGroup(kind,skin,height,variant,kookRole);
     const { group, body } = visual;
     // snap to real ground (wavy jungle floors), then remember it for resets
     const mid = (a0 + a1) / 2;
@@ -18701,6 +18753,7 @@ export class Level {
       a0 = a1 = mid;
     }
     this.enemies.push({
+      kook:kookRole?createKookState(kookRole,alertGroup,THREE.MathUtils.degToRad(bearing)):undefined,
       group,
       box: new THREE.Box3(),
       alive: true,
@@ -18724,6 +18777,7 @@ export class Level {
       touchHurt: true,
       spinRecoil: false,
     });
+    if(kookRole)resetKook(this.enemies[this.enemies.length-1]);
   }
 
   private enemyStartState(kind: EnemyKind): string {
@@ -18753,6 +18807,7 @@ export class Level {
     e.attackBox?.makeEmpty();
     e.visual.reset();
     if(isNightworksGoblin(e))resetNightworksGoblin(e);
+    if(e.kook)resetKook(e);
     resetEnemySounds(e);
     e.spinKill = e.stompKill = e.meleeKill = e.touchHurt = true;
     e.spinRecoil = false;
@@ -18833,7 +18888,15 @@ export class Level {
       let boxW = 1.3,
         boxH = 1.1,
         cy = 0.55;
-      if(goblin){
+      if(e.kook){
+        stepKook(e,dt,{player:this.playerPos,enemies:this.enemies,
+          blocked:(from,to)=>this.projectilePathBlocked(from,to),
+          fire:(owner,target)=>{this.updateEnemyVisual(owner,0,0);if(!owner.visual.getMuzzlePosition(SENTRY_MUZZLE))SENTRY_MUZZLE.copy(owner.group.position).add(new THREE.Vector3(0,1.6,0));this.spawnProjectile(owner,SENTRY_MUZZLE,target);},
+          cue:(owner,cue)=>{const distance=owner.group.position.distanceTo(this.playerPos),gain=Math.max(0,1-distance/55)**2;
+            sfx.play(cue==='screech'?'karenScreech':cue==='shot'?'kookShot':cue==='wake'?'kookCock':'karenNotice',gain*.8,1,.05);},
+        });
+        boxW=1.05;boxH=e.kook.role==='lookout'?2.35:2.5;cy=boxH/2;
+      }else if(goblin){
         boxW=GOBLIN.width;boxH=GOBLIN.height;cy=boxH/2;
         e.touchHurt=e.state!=="stagger";
       } else switch (e.kind) {
@@ -18920,7 +18983,7 @@ export class Level {
       crabCarcassYaw: e.crabCarcassYaw,
       alert: e.kind === "moa" ? undefined : Math.max(0, 1 - e.group.position.distanceTo(this.playerPos) / 7),
     });
-    updateEnemySounds(e, dt, speed, this.playerPos);
+    if(!e.kook)updateEnemySounds(e, dt, speed, this.playerPos);
   }
 
   // BULL: stalk → spot you in its lane → lower horns and brace → DASH (invincible,
@@ -19133,6 +19196,11 @@ export class Level {
       const hit = PROJECTILE_PATH_RAY.intersectBox(wall, PROJECTILE_PATH_HIT);
       if (hit && hit.distanceTo(from) <= distance + 0.28) return true;
     }
+    for(const crate of this.crates){
+      if(!crate.alive||crate.pending)continue;
+      const hit=PROJECTILE_PATH_RAY.intersectBox(crate.box,PROJECTILE_PATH_HIT);
+      if(hit&&hit.distanceTo(from)<=distance+.12)return true;
+    }
     PROJECTILE_PATH_RAYCASTER.set(from, PROJECTILE_PATH_DIR);
     PROJECTILE_PATH_RAYCASTER.near = 0.05;
     PROJECTILE_PATH_RAYCASTER.far = distance + 0.28;
@@ -19147,8 +19215,8 @@ export class Level {
   ): void {
     const dir = target.clone().sub(from);
     if (dir.lengthSq() < 1e-4) dir.set(0, 0, 1);
-    dir.normalize().multiplyScalar(SENTRY_FIREBALL_SPEED);
-    const mesh = new SentryFireball(dir, this.time * 3.7);
+    dir.normalize().multiplyScalar(owner.kook?19:SENTRY_FIREBALL_SPEED);
+    const mesh = owner.kook?new KookBullet(dir):new SentryFireball(dir, this.time * 3.7);
     mesh.position.copy(from);
     this.root.add(mesh);
     this.projectiles.push({
@@ -19169,7 +19237,7 @@ export class Level {
       pr.mesh.update(dt);
       pr.box.setFromCenterAndSize(
         pr.mesh.position,
-        new THREE.Vector3(0.7, 0.7, 0.7),
+        new THREE.Vector3().setScalar(pr.owner.kook?.48:.7),
       );
       if (
         pr.life <= 0 ||

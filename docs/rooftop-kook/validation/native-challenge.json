@@ -1,0 +1,1921 @@
+{
+  "sourceHash": "64d9f929730e601227faa82c3fa979039fd2c6ba2a7addfeab39e766976fd526",
+  "mode": "skate",
+  "route": "challenge",
+  "district": -1,
+  "takeoff": 1.6,
+  "lateral": 0,
+  "start": 0,
+  "stop": null,
+  "seconds": 102.05,
+  "state": "finished",
+  "progress": 2322.2645476829166,
+  "deaths": 0,
+  "tuningUnchanged": true,
+  "position": [
+    -73.25195321733867,
+    42.036666666443146,
+    -1887.1371275538686
+  ],
+  "evidence": {
+    "route": "challenge",
+    "mode": "skate",
+    "jumps": [
+      {
+        "index": "0-1",
+        "a": 60,
+        "b": 62.8,
+        "from": 95.3,
+        "to": 93.49999999999999,
+        "roof": 0,
+        "next": 1,
+        "route": -1,
+        "ramp": false,
+        "takeoff": 58.503091592814776,
+        "air": true,
+        "airFrames": 44,
+        "landing": 76.02125141472548,
+        "speed": 23.348433141429766,
+        "foot": false
+      },
+      {
+        "index": "1-2",
+        "a": 90.8,
+        "b": 93.85,
+        "from": 91.89999999999999,
+        "to": 91.89999999999999,
+        "roof": 1,
+        "next": 2,
+        "route": -1,
+        "ramp": false,
+        "takeoff": 89.21433650939031,
+        "air": true,
+        "airFrames": 30,
+        "landing": 101.22624650310846,
+        "speed": 23.238886281104502,
+        "foot": false
+      },
+      {
+        "index": "2-3",
+        "a": 147.85,
+        "b": 151.14999999999998,
+        "from": 91.89999999999999,
+        "to": 88.09999999999998,
+        "roof": 2,
+        "next": 3,
+        "route": -1,
+        "ramp": false,
+        "takeoff": 146.6489401708742,
+        "air": true,
+        "airFrames": 44,
+        "landing": 166.73838279866624,
+        "speed": 30.236926630668087,
+        "foot": false
+      },
+      {
+        "index": "3-4",
+        "a": 191.14999999999998,
+        "b": 194.04999999999998,
+        "from": 89.59999999999998,
+        "to": 89.59999999999998,
+        "roof": 3,
+        "next": 4,
+        "route": -1,
+        "ramp": true,
+        "takeoff": 189.9087862454575,
+        "air": true,
+        "airFrames": 45,
+        "landing": 209.0406408614208,
+        "speed": 25.05200553666665,
+        "foot": false
+      },
+      {
+        "index": "4-5",
+        "a": 236.04999999999998,
+        "b": 238.84999999999997,
+        "from": 89.59999999999998,
+        "to": 86.99999999999999,
+        "roof": 4,
+        "next": 5,
+        "route": -1,
+        "ramp": false,
+        "takeoff": 234.65313801459834,
+        "air": true,
+        "airFrames": 44,
+        "landing": 251.95180716290977,
+        "speed": 23.0555325,
+        "foot": false
+      },
+      {
+        "index": "5-6",
+        "a": 290.84999999999997,
+        "b": 293.9,
+        "from": 86.99999999999999,
+        "to": 86.99999999999999,
+        "roof": 5,
+        "next": 6,
+        "route": -1,
+        "ramp": false,
+        "takeoff": 289.54699405528135,
+        "air": true,
+        "airFrames": 36,
+        "landing": 305.1835499268872,
+        "speed": 25.354932509120857,
+        "foot": false
+      },
+      {
+        "index": "6-7",
+        "a": 335.9,
+        "b": 339.2,
+        "from": 86.99999999999999,
+        "to": 82.49999999999999,
+        "roof": 6,
+        "next": 7,
+        "route": -1,
+        "ramp": false,
+        "takeoff": 334.4541524331392,
+        "air": true,
+        "airFrames": 48,
+        "landing": 353.29338261961794,
+        "speed": 23.0555325,
+        "foot": false
+      },
+      {
+        "index": "7-8",
+        "a": 399.2,
+        "b": 402.12,
+        "from": 82.49999999999999,
+        "to": 79.3,
+        "roof": 7,
+        "next": 8,
+        "route": -1,
+        "ramp": false,
+        "takeoff": 397.61789582387206,
+        "air": true,
+        "airFrames": 45,
+        "landing": 415.6882801862188,
+        "speed": 23.632620566625242,
+        "foot": false
+      },
+      {
+        "index": "210-211",
+        "a": 484.02862500000003,
+        "b": 487.52862500000003,
+        "from": 79.3,
+        "to": 79.3,
+        "roof": 210,
+        "next": 211,
+        "route": 1,
+        "ramp": false,
+        "takeoff": 482.61841839429565,
+        "air": true,
+        "airFrames": 36,
+        "landing": 496.9169689071485,
+        "speed": 24.586552622930522,
+        "foot": false
+      },
+      {
+        "index": "211-212",
+        "a": 537.03425,
+        "b": 540.53425,
+        "from": 79.3,
+        "to": 79.3,
+        "roof": 211,
+        "next": 212,
+        "route": 1,
+        "ramp": false,
+        "takeoff": 535.7336248324206,
+        "air": true,
+        "airFrames": 34,
+        "landing": 549.9933627739631,
+        "speed": 24.95861806189147,
+        "foot": false
+      },
+      {
+        "index": "212-213",
+        "a": 619.74325,
+        "b": 623.24325,
+        "from": 79.3,
+        "to": 79.3,
+        "roof": 212,
+        "next": 213,
+        "route": 1,
+        "ramp": false,
+        "takeoff": 618.2880676499624,
+        "air": true,
+        "airFrames": 36,
+        "landing": 630.495150662976,
+        "speed": 23.595270464817034,
+        "foot": false
+      },
+      {
+        "index": "12-13",
+        "a": 688.65,
+        "b": 691.8199999999999,
+        "from": 79.3,
+        "to": 75.89999999999999,
+        "roof": 12,
+        "next": 13,
+        "route": -1,
+        "ramp": false,
+        "takeoff": 687.3854116755316,
+        "air": true,
+        "airFrames": 46,
+        "landing": 706.1116520626863,
+        "speed": 23.908354372890795,
+        "foot": false
+      },
+      {
+        "index": "13-14",
+        "a": 755.8199999999999,
+        "b": 759.2399999999999,
+        "from": 75.89999999999999,
+        "to": 75.89999999999999,
+        "roof": 13,
+        "next": 14,
+        "route": -1,
+        "ramp": false,
+        "takeoff": 754.4270920312199,
+        "air": true,
+        "airFrames": 38,
+        "landing": 770.2965605253935,
+        "speed": 24.411964101451147,
+        "foot": false
+      },
+      {
+        "index": "14-15",
+        "a": 795.2399999999999,
+        "b": 798.2599999999999,
+        "from": 74.3,
+        "to": 70.09999999999998,
+        "roof": 14,
+        "next": 15,
+        "route": -1,
+        "ramp": false,
+        "takeoff": 793.831679475204,
+        "air": true,
+        "airFrames": 46,
+        "landing": 812.2504741010872,
+        "speed": 23.513662267457196,
+        "foot": false
+      },
+      {
+        "index": "15-16",
+        "a": 858.2599999999999,
+        "b": 861.2999999999998,
+        "from": 70.09999999999998,
+        "to": 67.59999999999998,
+        "roof": 15,
+        "next": 16,
+        "route": -1,
+        "ramp": false,
+        "takeoff": 856.9924365810562,
+        "air": true,
+        "airFrames": 44,
+        "landing": 875.0330253761209,
+        "speed": 26.42636270924021,
+        "foot": false
+      },
+      {
+        "index": "16-17",
+        "a": 907.2999999999998,
+        "b": 910.5899999999998,
+        "from": 67.59999999999998,
+        "to": 67.59999999999998,
+        "roof": 16,
+        "next": 17,
+        "route": -1,
+        "ramp": false,
+        "takeoff": 905.8136186192868,
+        "air": true,
+        "airFrames": 30,
+        "landing": 917.8288842049923,
+        "speed": 20.395470440993282,
+        "foot": false
+      },
+      {
+        "index": "17-18",
+        "a": 942.5899999999998,
+        "b": 946.1299999999998,
+        "from": 69.79999999999998,
+        "to": 65.59999999999998,
+        "roof": 17,
+        "next": 18,
+        "route": -1,
+        "ramp": true,
+        "takeoff": 941.1311209264902,
+        "air": true,
+        "airFrames": 48,
+        "landing": 960.1018392564645,
+        "speed": 23.229755085061655,
+        "foot": false
+      },
+      {
+        "index": "18-19",
+        "a": 1000.1299999999998,
+        "b": 1003.2699999999998,
+        "from": 66.19999999999997,
+        "to": 66.74999999999999,
+        "roof": 18,
+        "next": 19,
+        "route": -1,
+        "ramp": true,
+        "takeoff": 998.7271216464522,
+        "air": true,
+        "airFrames": 42,
+        "landing": 1015.2516453754968,
+        "speed": 23,
+        "foot": false
+      },
+      {
+        "index": "19-20",
+        "a": 1055.2699999999998,
+        "b": 1058.3099999999997,
+        "from": 66.74999999999999,
+        "to": 63.749999999999986,
+        "roof": 19,
+        "next": 20,
+        "route": -1,
+        "ramp": false,
+        "takeoff": 1053.955862188437,
+        "air": true,
+        "airFrames": 45,
+        "landing": 1073.5272213511987,
+        "speed": 30.12977789377643,
+        "foot": false
+      },
+      {
+        "index": "20-21",
+        "a": 1094.3099999999997,
+        "b": 1097.5999999999997,
+        "from": 63.749999999999986,
+        "to": 63.74999999999998,
+        "roof": 20,
+        "next": 21,
+        "route": -1,
+        "ramp": false,
+        "takeoff": 1093.0751206240445,
+        "air": true,
+        "airFrames": 42,
+        "landing": 1111.3894153429787,
+        "speed": 28.265527529457223,
+        "foot": false
+      },
+      {
+        "index": "21-22",
+        "a": 1145.5999999999997,
+        "b": 1149.1399999999996,
+        "from": 65.94999999999997,
+        "to": 61.449999999999974,
+        "roof": 21,
+        "next": 22,
+        "route": -1,
+        "ramp": true,
+        "takeoff": 1144.1125789073353,
+        "air": true,
+        "airFrames": 63,
+        "landing": 1168.4117804363345,
+        "speed": 22.965093635676574,
+        "foot": false
+      },
+      {
+        "index": "22-23",
+        "a": 1209.1399999999996,
+        "b": 1212.2999999999997,
+        "from": 61.449999999999974,
+        "to": 58.249999999999986,
+        "roof": 22,
+        "next": 23,
+        "route": -1,
+        "ramp": false,
+        "takeoff": 1207.617979458061,
+        "air": true,
+        "airFrames": 45,
+        "landing": 1225.61655948756,
+        "speed": 23.53884337360942,
+        "foot": false
+      },
+      {
+        "index": "230-231",
+        "a": 1287.3749999999998,
+        "b": 1291.5249999999999,
+        "from": 58.249999999999986,
+        "to": 58.249999999999986,
+        "roof": 230,
+        "next": 231,
+        "route": 3,
+        "ramp": false,
+        "takeoff": 1285.8183063214785,
+        "air": true,
+        "airFrames": 36,
+        "landing": 1299.6765482626424,
+        "speed": 24.41923283455243,
+        "foot": false
+      },
+      {
+        "index": "231-232",
+        "a": 1335.733,
+        "b": 1339.883,
+        "from": 58.249999999999986,
+        "to": 58.249999999999986,
+        "roof": 231,
+        "next": 232,
+        "route": 3,
+        "ramp": false,
+        "takeoff": 1334.2354138484122,
+        "air": true,
+        "airFrames": 33,
+        "landing": 1347.7229353975288,
+        "speed": 24.72063385478926,
+        "foot": false
+      },
+      {
+        "index": "232-233",
+        "a": 1395.143,
+        "b": 1399.2930000000001,
+        "from": 58.249999999999986,
+        "to": 58.249999999999986,
+        "roof": 232,
+        "next": 233,
+        "route": 3,
+        "ramp": false,
+        "takeoff": 1393.7990188233193,
+        "air": true,
+        "airFrames": 34,
+        "landing": 1409.6836812703061,
+        "speed": 25.249364643821988,
+        "foot": false
+      },
+      {
+        "index": "233-234",
+        "a": 1440.738,
+        "b": 1444.8880000000001,
+        "from": 58.249999999999986,
+        "to": 58.249999999999986,
+        "roof": 233,
+        "next": 234,
+        "route": 3,
+        "ramp": false,
+        "takeoff": 1439.300072516567,
+        "air": true,
+        "airFrames": 36,
+        "landing": 1456.3081713629037,
+        "speed": 23.0555325,
+        "foot": false
+      },
+      {
+        "index": "28-29",
+        "a": 1517.2,
+        "b": 1520.8600000000001,
+        "from": 58.249999999999986,
+        "to": 54.84999999999998,
+        "roof": 28,
+        "next": 29,
+        "route": -1,
+        "ramp": false,
+        "takeoff": 1515.7329960166467,
+        "air": true,
+        "airFrames": 46,
+        "landing": 1533.8629835361457,
+        "speed": 23.0555325,
+        "foot": false
+      },
+      {
+        "index": "29-30",
+        "a": 1584.8600000000001,
+        "b": 1588.1200000000001,
+        "from": 54.84999999999998,
+        "to": 54.84999999999998,
+        "roof": 29,
+        "next": 30,
+        "route": -1,
+        "ramp": false,
+        "takeoff": 1583.3321066809488,
+        "air": true,
+        "airFrames": 30,
+        "landing": 1595.6417222963457,
+        "speed": 23.725458532488545,
+        "foot": false
+      },
+      {
+        "index": "30-31",
+        "a": 1630.1200000000001,
+        "b": 1633.2800000000002,
+        "from": 57.64999999999998,
+        "to": 53.84999999999998,
+        "roof": 30,
+        "next": 31,
+        "route": -1,
+        "ramp": true,
+        "takeoff": 1628.7506807501884,
+        "air": true,
+        "airFrames": 47,
+        "landing": 1647.215200055301,
+        "speed": 23.072526953364427,
+        "foot": false
+      },
+      {
+        "index": "31-32",
+        "a": 1693.2800000000002,
+        "b": 1696.5600000000002,
+        "from": 53.84999999999998,
+        "to": 51.64999999999999,
+        "roof": 31,
+        "next": 32,
+        "route": -1,
+        "ramp": false,
+        "takeoff": 1691.9177971576216,
+        "air": true,
+        "airFrames": 45,
+        "landing": 1710.0446709501573,
+        "speed": 23.632620566625242,
+        "foot": false
+      },
+      {
+        "index": "32-33",
+        "a": 1728.5600000000002,
+        "b": 1732.0900000000001,
+        "from": 50.04999999999999,
+        "to": 50.05,
+        "roof": 32,
+        "next": 33,
+        "route": -1,
+        "ramp": false,
+        "takeoff": 1727.2159122681464,
+        "air": true,
+        "airFrames": 34,
+        "landing": 1740.775774618059,
+        "speed": 23.232802282530553,
+        "foot": false
+      },
+      {
+        "index": "33-34",
+        "a": 1778.0900000000001,
+        "b": 1781.8700000000001,
+        "from": 50.05,
+        "to": 46.650000000000006,
+        "roof": 33,
+        "next": 34,
+        "route": -1,
+        "ramp": false,
+        "takeoff": 1776.687747793067,
+        "air": true,
+        "airFrames": 46,
+        "landing": 1795.2522357521755,
+        "speed": 28.03966552403647,
+        "foot": false
+      },
+      {
+        "index": "34-35",
+        "a": 1821.8700000000001,
+        "b": 1828.67,
+        "from": 49.45,
+        "to": 49.999999999999986,
+        "roof": 34,
+        "next": 35,
+        "route": -1,
+        "ramp": true,
+        "takeoff": 1820.4653437816992,
+        "air": true,
+        "airFrames": 47,
+        "landing": 1838.665281976954,
+        "speed": 22.941836447014733,
+        "foot": false
+      },
+      {
+        "index": "35-36",
+        "a": 1900.67,
+        "b": 1903.95,
+        "from": 49.999999999999986,
+        "to": 47.39999999999999,
+        "roof": 35,
+        "next": 36,
+        "route": -1,
+        "ramp": false,
+        "takeoff": 1899.183235484065,
+        "air": true,
+        "airFrames": 44,
+        "landing": 1917.1726275398635,
+        "speed": 23.908354372890795,
+        "foot": false
+      },
+      {
+        "index": "36-37",
+        "a": 1955.95,
+        "b": 1959.48,
+        "from": 50.19999999999999,
+        "to": 46.2,
+        "roof": 36,
+        "next": 37,
+        "route": -1,
+        "ramp": true,
+        "takeoff": 1954.493123813592,
+        "air": true,
+        "airFrames": 50,
+        "landing": 1974.030726233623,
+        "speed": 17.11220729452017,
+        "foot": false
+      },
+      {
+        "index": "37-38",
+        "a": 2003.48,
+        "b": 2007.26,
+        "from": 46.2,
+        "to": 46.2,
+        "roof": 37,
+        "next": 38,
+        "route": -1,
+        "ramp": false,
+        "takeoff": 2002.10657032774,
+        "air": true,
+        "airFrames": 29,
+        "landing": 2016.6818655507052,
+        "speed": 29.103646798297152,
+        "foot": false
+      },
+      {
+        "index": "38-39",
+        "a": 2067.26,
+        "b": 2070.66,
+        "from": 46.2,
+        "to": 43.39999999999999,
+        "roof": 38,
+        "next": 39,
+        "route": -1,
+        "ramp": false,
+        "takeoff": 2065.8201301657086,
+        "air": true,
+        "airFrames": 45,
+        "landing": 2083.4625806374115,
+        "speed": 28.406355286875794,
+        "foot": false
+      },
+      {
+        "index": "39-40",
+        "a": 2106.66,
+        "b": 2110.31,
+        "from": 43.39999999999999,
+        "to": 43.39999999999999,
+        "roof": 39,
+        "next": 40,
+        "route": -1,
+        "ramp": false,
+        "takeoff": 2105.0682412663973,
+        "air": true,
+        "airFrames": 37,
+        "landing": 2120.8977851900963,
+        "speed": 26.1885215372099,
+        "foot": false
+      },
+      {
+        "index": "40-41",
+        "a": 2148.31,
+        "b": 2156.5099999999998,
+        "from": 46.19999999999999,
+        "to": 41.999999999999986,
+        "roof": 40,
+        "next": 41,
+        "route": -1,
+        "ramp": true,
+        "takeoff": 2146.9250267337898,
+        "air": true,
+        "airFrames": 63,
+        "landing": 2171.3864397893644,
+        "speed": 22.935973208454218,
+        "foot": false
+      },
+      {
+        "index": "41-42",
+        "a": 2196.5099999999998,
+        "b": 2200.0099999999998,
+        "from": 41.999999999999986,
+        "to": 41.999999999999986,
+        "roof": 41,
+        "next": 42,
+        "route": -1,
+        "ramp": false,
+        "takeoff": 2194.9243768721144,
+        "air": true,
+        "airFrames": 27,
+        "landing": 2205.8227539311038,
+        "speed": 19.833112216965564,
+        "foot": false
+      },
+      {
+        "index": "42-43",
+        "a": 2254.0099999999998,
+        "b": 2263.6099999999997,
+        "from": 44.79999999999998,
+        "to": 41.3,
+        "roof": 42,
+        "next": 43,
+        "route": -1,
+        "ramp": true,
+        "takeoff": 2252.710669078559,
+        "air": true,
+        "airFrames": 43,
+        "landing": 2273.201993729865,
+        "speed": 27.874640107298728,
+        "foot": false
+      }
+    ],
+    "roofs": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      210,
+      211,
+      212,
+      213,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      230,
+      231,
+      232,
+      233,
+      234,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43
+    ],
+    "checkpoints": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "districts": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "peakSpeed": 30.5,
+    "minimumLandingMargin": 14.778748585274514,
+    "doubleJumps": 0,
+    "crystal": true,
+    "branchLandings": [
+      {
+        "roof": 210,
+        "route": 1,
+        "station": 441.33644184797896,
+        "position": [
+          -207.86124951193406,
+          79.30000000596046,
+          -381.9233323411194
+        ],
+        "component": "RR:210 roof"
+      },
+      {
+        "roof": 211,
+        "route": 1,
+        "station": 496.9169689071485,
+        "position": [
+          -239.182835114034,
+          79.30000000596046,
+          -434.1125345618354
+        ],
+        "component": "RR:211 roof"
+      },
+      {
+        "roof": 212,
+        "route": 1,
+        "station": 549.9933627739631,
+        "position": [
+          -248.6105036387381,
+          79.89507080339675,
+          -488.26400257389326
+        ],
+        "component": "RR:212 aframe roof"
+      },
+      {
+        "roof": 213,
+        "route": 1,
+        "station": 630.495150662976,
+        "position": [
+          -246.60436203251422,
+          79.30000000596046,
+          -576.1386570513151
+        ],
+        "component": "RR:213 roof"
+      },
+      {
+        "roof": 230,
+        "route": 3,
+        "station": 1251.0826576859076,
+        "position": [
+          9.470387152223138,
+          58.250000005960445,
+          -1055.9782159321041
+        ],
+        "component": "RR:230 roof"
+      },
+      {
+        "roof": 231,
+        "route": 3,
+        "station": 1299.6765482626424,
+        "position": [
+          -16.28311551151385,
+          58.250000005960445,
+          -1104.9783936651359
+        ],
+        "component": "RR:231 roof"
+      },
+      {
+        "roof": 232,
+        "route": 3,
+        "station": 1347.7229353975288,
+        "position": [
+          -57.324570428733956,
+          58.93491745290079,
+          -1134.9183218431606
+        ],
+        "component": "RR:232 aframe roof"
+      },
+      {
+        "roof": 233,
+        "route": 3,
+        "station": 1409.6836812703061,
+        "position": [
+          -108.97146597858561,
+          58.250000005960445,
+          -1168.0935564834463
+        ],
+        "component": "RR:233 roof"
+      },
+      {
+        "roof": 234,
+        "route": 3,
+        "station": 1456.3081713629037,
+        "position": [
+          -142.66195487239614,
+          58.250000005960445,
+          -1188.5708375067873
+        ],
+        "component": "RR:234 roof"
+      }
+    ]
+  },
+  "error": null,
+  "traceTail": [
+    {
+      "frame": 6106,
+      "time": 101.76666666666667,
+      "position": [
+        -72.61613864578094,
+        41.300000005960456,
+        -1880.6283638264583
+      ],
+      "heading": [
+        -0.11352026576447186,
+        0,
+        -0.9935356809197963
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 23,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "platform",
+        "y": 41.300000005960456,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0,
+        "moveY": 1,
+        "jumpHeld": true,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      },
+      "requested": {
+        "moveX": 0.00034462911739404376,
+        "moveY": 0.999999940615384,
+        "jumpHeld": true,
+        "spinHeld": false
+      }
+    },
+    {
+      "frame": 6107,
+      "time": 101.78333333333333,
+      "position": [
+        -72.65895907503698,
+        41.300000005960456,
+        -1881.0092980140587
+      ],
+      "heading": [
+        -0.11170546762444121,
+        0,
+        -0.9937413589575531
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 23,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "platform",
+        "y": 41.300000005960456,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0,
+        "moveY": 1,
+        "jumpHeld": true,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      },
+      "requested": {
+        "moveX": 0.0005201026893849311,
+        "moveY": 0.999999864746587,
+        "jumpHeld": true,
+        "spinHeld": false
+      }
+    },
+    {
+      "frame": 6108,
+      "time": 101.8,
+      "position": [
+        -72.70108372507248,
+        41.300000005960456,
+        -1881.3903097701816
+      ],
+      "heading": [
+        -0.10989039139695679,
+        0,
+        -0.9939437116248702
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 23,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "platform",
+        "y": 41.300000005960456,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0,
+        "moveY": 1,
+        "jumpHeld": true,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      },
+      "requested": {
+        "moveX": 0.000600875526955044,
+        "moveY": 0.9999998194742842,
+        "jumpHeld": true,
+        "spinHeld": false
+      }
+    },
+    {
+      "frame": 6109,
+      "time": 101.81666666666666,
+      "position": [
+        -72.74251249859498,
+        41.300000005960456,
+        -1881.7713978192842
+      ],
+      "heading": [
+        -0.10807506136303692,
+        0,
+        -0.9941427367895292
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 23,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "platform",
+        "y": 41.300000005960456,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0,
+        "moveY": 1,
+        "jumpHeld": true,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      },
+      "requested": {
+        "moveX": 0.000576402615556964,
+        "moveY": 0.9999998338799986,
+        "jumpHeld": true,
+        "spinHeld": false
+      }
+    },
+    {
+      "frame": 6110,
+      "time": 101.83333333333333,
+      "position": [
+        -72.78342240679193,
+        41.300000005960456,
+        -1882.154218115783
+      ],
+      "heading": [
+        -0.1062595018102792,
+        0,
+        -0.9943384324640332
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 23.1,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "platform",
+        "y": 41.300000005960456,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0,
+        "moveY": 1,
+        "jumpHeld": true,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      },
+      "requested": {
+        "moveX": 0.0004521430151709672,
+        "moveY": 0.9999998977833415,
+        "jumpHeld": true,
+        "spinHeld": false
+      }
+    },
+    {
+      "frame": 6111,
+      "time": 101.85,
+      "position": [
+        -72.82363020601157,
+        41.300000005960456,
+        -1882.5371127917474
+      ],
+      "heading": [
+        -0.10443584212895815,
+        0,
+        -0.9945316258816583
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 23.1,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "platform",
+        "y": 41.300000005960456,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0,
+        "moveY": 1,
+        "jumpHeld": true,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      },
+      "requested": {
+        "moveX": 0.0005660635945733124,
+        "moveY": 0.9999998397859908,
+        "jumpHeld": true,
+        "spinHeld": false
+      }
+    },
+    {
+      "frame": 6112,
+      "time": 101.86666666666666,
+      "position": [
+        -72.86313582602433,
+        41.300000005960456,
+        -1882.9200805527762
+      ],
+      "heading": [
+        -0.10261200003313932,
+        0,
+        -0.9947214572176467
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 23.1,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "platform",
+        "y": 41.300000005960456,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0,
+        "moveY": 1,
+        "jumpHeld": true,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      },
+      "requested": {
+        "moveX": 0.0007493516844848001,
+        "moveY": 0.999999719235987,
+        "jumpHeld": true,
+        "spinHeld": false
+      }
+    },
+    {
+      "frame": 6113,
+      "time": 101.88333333333333,
+      "position": [
+        -72.90193920607736,
+        41.300000005960456,
+        -1883.3031201038625
+      ],
+      "heading": [
+        -0.10078800013772592,
+        0,
+        -0.9949079248997051
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 23.1,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "platform",
+        "y": 41.300000005960456,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0,
+        "moveY": 1,
+        "jumpHeld": true,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      },
+      "requested": {
+        "moveX": 0.0008370328869755644,
+        "moveY": 0.9999996496879118,
+        "jumpHeld": true,
+        "spinHeld": false
+      }
+    },
+    {
+      "frame": 6114,
+      "time": 101.9,
+      "position": [
+        -72.94004029489432,
+        41.300000005960456,
+        -1883.6862301494511
+      ],
+      "heading": [
+        -0.09896386705703308,
+        0,
+        -0.995091027503071
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 23.1,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "platform",
+        "y": 41.300000005960456,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0,
+        "moveY": 1,
+        "jumpHeld": true,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      },
+      "requested": {
+        "moveX": 0.0008189013211042479,
+        "moveY": 0.9999996647002569,
+        "jumpHeld": true,
+        "spinHeld": false
+      }
+    },
+    {
+      "frame": 6115,
+      "time": 101.91666666666667,
+      "position": [
+        -72.97743905067446,
+        41.300000005960456,
+        -1884.069409393495
+      ],
+      "heading": [
+        -0.09713962540296514,
+        0,
+        -0.995270763750534
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 23.1,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "platform",
+        "y": 41.300000005960456,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0,
+        "moveY": 1,
+        "jumpHeld": true,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      },
+      "requested": {
+        "moveX": 0.0007002533838537432,
+        "moveY": 0.9999997548225691,
+        "jumpHeld": true,
+        "spinHeld": false
+      }
+    },
+    {
+      "frame": 6116,
+      "time": 101.93333333333334,
+      "position": [
+        -73.01413544109099,
+        41.300000005960456,
+        -1884.4526565395124
+      ],
+      "heading": [
+        -0.09531529978319474,
+        0,
+        -0.9954471325124401
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 23.1,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "platform",
+        "y": 41.300000005960456,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0,
+        "moveY": 1,
+        "jumpHeld": true,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      },
+      "requested": {
+        "moveX": 0.0007205276420979655,
+        "moveY": 0.9999997404199247,
+        "jumpHeld": true,
+        "spinHeld": false
+      }
+    },
+    {
+      "frame": 6117,
+      "time": 101.95,
+      "position": [
+        -73.05012944328874,
+        41.300000005960456,
+        -1884.835970290643
+      ],
+      "heading": [
+        -0.09349091479934302,
+        0,
+        -0.9956201328066753
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 23.1,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "platform",
+        "y": 41.300000005960456,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0,
+        "moveY": 1,
+        "jumpHeld": true,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      },
+      "requested": {
+        "moveX": 0.0009060439853882127,
+        "moveY": 0.999999589542064,
+        "jumpHeld": true,
+        "spinHeld": false
+      }
+    },
+    {
+      "frame": 6118,
+      "time": 101.96666666666667,
+      "position": [
+        -73.08542104388113,
+        41.300000005960456,
+        -1885.2193493497055
+      ],
+      "heading": [
+        -0.09166649504516167,
+        0,
+        -0.9957897637986318
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 23.1,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "platform",
+        "y": 41.300000005960456,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0,
+        "moveY": 1,
+        "jumpHeld": true,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      },
+      "requested": {
+        "moveX": 0.0009911472645082282,
+        "moveY": 0.9999995088134296,
+        "jumpHeld": true,
+        "spinHeld": false
+      }
+    },
+    {
+      "frame": 6119,
+      "time": 101.98333333333333,
+      "position": [
+        -73.12001023894645,
+        41.300000005960456,
+        -1885.602792419254
+      ],
+      "heading": [
+        -0.08984206510471712,
+        0,
+        -0.9959560248011553
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 23.1,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "platform",
+        "y": 41.300000005960456,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0,
+        "moveY": 1,
+        "jumpHeld": true,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      },
+      "requested": {
+        "moveX": 0.0009803651023166488,
+        "moveY": 0.9999995194420175,
+        "jumpHeld": true,
+        "spinHeld": false
+      }
+    },
+    {
+      "frame": 6120,
+      "time": 102,
+      "position": [
+        -73.15389703402342,
+        41.300000005960456,
+        -1885.9862982016348
+      ],
+      "heading": [
+        -0.0880176495505772,
+        0,
+        -0.9961189152744724
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 23.1,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "platform",
+        "y": 41.300000005960456,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0,
+        "moveY": 1,
+        "jumpHeld": true,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      },
+      "requested": {
+        "moveX": 0.0008644290951631563,
+        "moveY": 0.9999996263811001,
+        "jumpHeld": true,
+        "spinHeld": false
+      }
+    },
+    {
+      "frame": 6121,
+      "time": 102.01666666666667,
+      "position": [
+        -73.1871261709323,
+        41.300000005960456,
+        -1886.3698615268631
+      ],
+      "heading": [
+        -0.08630944651657571,
+        0,
+        -0.9962683772167026
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 23.1,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "platform",
+        "y": 41.300000005960456,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0,
+        "moveY": 1,
+        "jumpHeld": true,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      },
+      "requested": {
+        "moveX": 0.0009060094012497826,
+        "moveY": 0.9999995895733982,
+        "jumpHeld": true,
+        "spinHeld": false
+      }
+    },
+    {
+      "frame": 6122,
+      "time": 102.03333333333333,
+      "position": [
+        -73.21981160687547,
+        41.300000005960456,
+        -1886.7534715661964
+      ],
+      "heading": [
+        -0.08489723621599607,
+        0,
+        -0.9963897125537201
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 23.1,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "platform",
+        "y": 41.300000005960456,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0,
+        "moveY": 1,
+        "jumpHeld": true,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      },
+      "requested": {
+        "moveX": 0.0015104793991027037,
+        "moveY": 0.9999988592253418,
+        "jumpHeld": true,
+        "spinHeld": false
+      }
+    },
+    {
+      "frame": 6123,
+      "time": 102.05,
+      "position": [
+        -73.25195321733867,
+        42.036666666443146,
+        -1887.1371275538686
+      ],
+      "heading": [
+        -0.08348470250181193,
+        0,
+        -0.9965090588891722
+      ],
+      "state": "finished",
+      "grounded": true,
+      "speed": 0,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "warp pad",
+        "y": 42.036666666443146,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0,
+        "moveY": 1,
+        "jumpHeld": true,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      },
+      "requested": {
+        "moveX": 0.002036943850874933,
+        "moveY": 0.9999979254277223,
+        "jumpHeld": true,
+        "spinHeld": false
+      }
+    }
+  ]
+}

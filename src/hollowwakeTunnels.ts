@@ -5,7 +5,7 @@ import {createJungleAssetScope,type Template} from './jungleAssets';
 import type {CustomComponent} from './level';
 
 type Node={p:THREE.Vector3;r:number;d?:THREE.Vector3};
-type Bore={c:CustomComponent;nodes:Node[];box:THREE.Box3;group:THREE.Group;near?:THREE.Mesh;far?:THREE.Mesh;floor?:THREE.Mesh};
+type Bore={c:CustomComponent;nodes:Node[];box:THREE.Box3;group:THREE.Group;near?:THREE.Mesh;floor?:THREE.Mesh};
 type Lamp={p:THREE.Vector3;color:THREE.Color;power:number;range:number;target?:THREE.Vector3};
 const clamp=THREE.MathUtils.clamp,mix=THREE.MathUtils.lerp;
 const TAU=Math.PI*2;
@@ -174,25 +174,25 @@ export class HollowwakeTunnels{
  addGlow(c:CustomComponent):void{const h=(c.s?.[1]??2.1)*(c.w??1);this.lamps.push({p:new THREE.Vector3(...c.p).add(new THREE.Vector3(0,h*.75,0)),color:new THREE.Color('#48bfd0'),power:38,range:18});}
  ready():Promise<void>{return this.pending??=Promise.all([this.scope.load('hollowcavebore'),this.scope.load('crowngrottofloor')]).then(async ([template,floorTemplate])=>{
   if(this.disposed)return;this.material=this.makeMaterial(template);this.floorMaterial=new THREE.MeshStandardMaterial({map:floorTemplate.map,normalMap:floorTemplate.normalMap,normalScale:new THREE.Vector2(.1,.1),roughness:.94,color:'#abb9bf'});this.floorMaterial.userData.jungleAsset=true;
-  const near=measuredBore(template.geometry),far=measuredBore(template.lodGeometry??template.geometry),floor=measuredFloor(floorTemplate.geometry);
+  const near=measuredBore(template.geometry),floor=measuredFloor(floorTemplate.geometry);
   let built=0;for(const b of this.bores){if(++built%8===0)await new Promise(resolve=>setTimeout(resolve,0));if(this.disposed)return;const neighbours=b.c.vr?this.bores.filter(o=>o!==b&&o.c.vr&&o.c.vr!==b.c.vr&&b.box.intersectsBox(o.box)):[];
    // Treat the adjoining bore as one continuous volume. Touching per-module
    // end planes have zero distance inside the passage and preserve false caps.
    const joined:Node[]=[];
    for(const node of neighbours.flatMap(o=>o.nodes).sort((a,z)=>z.p.z-a.p.z))if(!joined.length||joined[joined.length-1].p.distanceToSquared(node.p)>1e-8)joined.push(node);
    const others=joined.length>1?[{...neighbours[0],nodes:joined}]:[];
-   b.near=new THREE.Mesh(closeRockSkin(fit(near,b,others),2.2),this.material);b.far=new THREE.Mesh(closeRockSkin(fit(far,b,others),2.2),this.material);
-   for(const m of [b.near,b.far]){m.receiveShadow=true;m.userData.hollowwakeBore=true;b.group.add(m);}b.far.visible=false;
+   b.near=new THREE.Mesh(closeRockSkin(fit(near,b,others),2.2),this.material);
+   b.near.receiveShadow=true;b.near.userData.hollowwakeBore=true;b.group.add(b.near);
    if(!b.c.openFloor){b.floor=new THREE.Mesh(closeRockSkin(fit(floor,b,others,true),2.4),this.floorMaterial);b.floor.receiveShadow=true;b.floor.userData.hollowwakeBore=true;b.group.add(b.floor);}
   }
  }).catch(error=>{if(this.disposed)return;this.failures.push(String(error));console.error('Hollowwake tunnel asset failed',error);});}
  private makeMaterial(t:Template){const m=new THREE.MeshStandardMaterial({map:t.map,normalMap:t.normalMap,normalScale:new THREE.Vector2(.12,.12),roughness:.96,metalness:0,color:'#b8c3d2',side:THREE.DoubleSide});m.name='Hollowwake original painted rock atlas';m.userData.jungleAsset=true;return m;}
  setView(p:THREE.Vector3,far=145):void{
-  for(const b of this.bores){const distance=b.box.distanceToPoint(p);b.group.visible=distance<far;if(b.near)b.near.visible=distance<48;if(b.far)b.far.visible=distance>=48;}
+  for(const b of this.bores){const distance=b.box.distanceToPoint(p);b.group.visible=distance<far;}
   const ordered=this.lamps.filter(l=>p.distanceTo(l.p)<l.range+65).sort((a,b)=>a.p.distanceToSquared(p)-b.p.distanceToSquared(p)),nearest=ordered.filter(l=>!l.target),sky=ordered.filter(l=>l.target).filter((l,i,a)=>!a.slice(0,i).some(q=>q.p.distanceTo(l.p)<10));
   this.shafts.forEach((l,i)=>{const a=sky[i];if(a){l.position.copy(a.p);l.target.position.copy(a.target!);l.color.copy(a.color);l.intensity=a.power;l.distance=a.range;}else l.intensity=0;});
   this.lights.forEach((l,i)=>{const a=nearest[i];if(a){l.position.copy(a.p);l.color.copy(a.color);l.intensity=a.power;l.distance=a.range;}else l.intensity=0;});
  }
  get diagnostics(){return{bores:this.bores.length,ready:this.bores.filter(b=>!!b.near).length,visible:this.bores.filter(b=>b.group.visible).length,lamps:this.lamps.length,failures:this.failures};}
- dispose():void{this.disposed=true;this.root.removeFromParent();for(const b of this.bores){b.near?.geometry.dispose();b.far?.geometry.dispose();b.floor?.geometry.dispose();}this.material?.dispose();this.floorMaterial?.dispose();for(const light of this.shafts)light.shadow.dispose();this.scope.dispose();}
+ dispose():void{this.disposed=true;this.root.removeFromParent();for(const b of this.bores){b.near?.geometry.dispose();b.floor?.geometry.dispose();}this.material?.dispose();this.floorMaterial?.dispose();for(const light of this.shafts)light.shadow.dispose();this.scope.dispose();}
 }

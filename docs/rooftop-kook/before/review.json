@@ -1,0 +1,83 @@
+{
+  "base": "http://127.0.0.1:5267",
+  "lite": true,
+  "scenes": [
+    {
+      "id": "0-arrival",
+      "s": 6,
+      "grounded": true,
+      "position": [
+        -0.09307193374784212,
+        95.30000000596047,
+        -5.999157848252818
+      ],
+      "state": "ride",
+      "camera": [
+        0.370554880541515,
+        103.90000000596046,
+        3.9900888789569926
+      ],
+      "assets": null,
+      "render": {
+        "frame": 343,
+        "calls": 206,
+        "triangles": 154349,
+        "points": 0,
+        "lines": 0
+      },
+      "stamp": "Codex/sol fork · build 10-25 08:45 UTC"
+    },
+    {
+      "id": "2-vista",
+      "s": 922.5899999999998,
+      "grounded": true,
+      "position": [
+        -36.833756061046955,
+        70.22857140991404,
+        -789.1530813152316
+      ],
+      "state": "ride",
+      "camera": [
+        -45.38638292548163,
+        78.68600742163521,
+        -783.9711344110507
+      ],
+      "assets": null,
+      "render": {
+        "frame": 531,
+        "calls": 86,
+        "triangles": 125092,
+        "points": 0,
+        "lines": 0
+      },
+      "stamp": "Codex/sol fork · build 10-25 08:45 UTC"
+    },
+    {
+      "id": "finish",
+      "s": 2295.6900000000005,
+      "grounded": true,
+      "position": [
+        -69.99601278636692,
+        41.30000000596047,
+        -1862.520638390495
+      ],
+      "state": "ride",
+      "camera": [
+        -68.70846793300636,
+        49.90000000596047,
+        -1852.6038733811492
+      ],
+      "assets": null,
+      "render": {
+        "frame": 641,
+        "calls": 41,
+        "triangles": 106491,
+        "points": 10,
+        "lines": 0
+      },
+      "stamp": "Codex/sol fork · build 10-25 08:45 UTC"
+    }
+  ],
+  "errors": [],
+  "failed": []
+}
