@@ -38,16 +38,38 @@ await withBlockworksRuntime(async runtime=>{
   const above=setup(0);above.p.pos.y+=5;traffic.step(runtime.dt,runtime.p,race);
   assert.equal(traffic.stats.contacts,0,'a rider above the roof clears the cart');
 
+  const drive=traffic.roaming.drive.bind(traffic.roaming);let leaders=[];
+  traffic.roaming.drive=(world,selected)=>{leaders=selected;drive(world,selected);};
+  for(const r of race.riders){r.progress=100+r.id*10;r.player.speed=25;r.recovery=0;}
+  traffic.step(runtime.dt,runtime.p,race);
+  assert.deepEqual(leaders.map(r=>[r.rank,r.progress]),[[1,170],[2,160],[3,150]],'crossings use the live top three, not the human or fixed racer IDs');
+  race.riders[0].progress=200;traffic.step(runtime.dt,runtime.p,race);
+  assert.equal(leaders[0].progress,200,'the human receives first-place pressure when leading');
+
   race.start('time-trial',0);
   assert.equal(race.mode,'race');assert.equal(race.count,8,'a locked trial cannot bypass the earned-crystal gate');
   crystalEarned=true;
   race.start('time-trial',0);traffic.step(runtime.dt,runtime.p,race);
-  assert.equal(race.count,1);assert.equal(traffic.fleet.models.length,10);
+  assert.equal(race.count,1);assert.equal(traffic.fleet.models.length,20);
   assert.deepEqual(traffic.fleet.physics.carts.map(c=>[c.x,c.y,c.z]),parked,'trial restart restores the complete traffic grid');
   assert.ok(traffic.fleet.physics.carts.every(c=>c.health===1));
   assert.deepEqual(traffic.stats,{contacts:0,knockdowns:0,spinHits:0});
+  race.phase='running';traffic.step(runtime.dt,runtime.p,race);assert.deepEqual(leaders,[],'solo trials retain ambient traffic without leader targeting');
   const geometry=traffic.fleet.models[0].root.getObjectByName('chassis').geometry;
-  assert.equal(geometry,traffic.fleet.models[9].root.getObjectByName('chassis').geometry,'ten large carts still share geometry');
+  assert.equal(geometry,traffic.fleet.models[19].root.getObjectByName('chassis').geometry,'twenty large carts still share geometry');
   traffic.attach({walls:[]},'flats');assert.equal(traffic.fleet,null);
+  // Reproduce two actual post-impact bank stalls from the complete race.
+  // The rival must escape through normal charged-jump input, without a reset.
+  for(const [id,at,position]of [[6,1250.0333,[-270.1198796661799,-8.351739933613466,-276.7085844813643]],
+    [5,2190.20745,[91.88649244115403,-33.68213328143321,-572.3703866783143]]]){
+    race.start('race',71);race.phase='running';const r=race.riders[id],p=r.player;
+    for(const other of race.riders)if(other!==r)other.finish=0;
+    p.resetRacePosition(runtime.l,new THREE.Vector3(...position),race.course.tangent(at));p.speed=4;
+    r.progress=r.previousProgress=at;
+    for(let f=0;f<1200;f++)race.step(runtime.dt,{moveX:0,moveY:0});
+    assert.ok(r.progress>at+60,`rival ${id} must jump free of its bank and resume racing`);
+    assert.equal(p.totalDeaths,0);assert.equal(r.falls,0,'bank recovery uses movement, not teleportation');
+    console.log(JSON.stringify({bankRecovery:id,start:at,progress:r.progress,falls:r.falls}));
+  }
   console.log('Country Club: doubled contacts, rival knockdown, shield, spin, roof clearance, countdown, locked/earned solo restart and unload passed.');
 },{modulePath:'/src/levels/country-club.ts',source:m=>m.COUNTRY_CLUB_LEVEL,levelId:'country-club'});

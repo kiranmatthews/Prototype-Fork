@@ -64,17 +64,17 @@ timings.sort((a,b)=>a-b);report.fleet={...fleet.stats,updateMedianMs:timings[Mat
 const boxes=fleet.models.map(model=>{model.root.position.set(0,0,0);model.root.rotation.set(0,0,0);model.update({time:0,steer:0,roll:0,pitch:0,impact:0,speed:0,wheelTravel:0,suspension:[0,0,0,0],damage:[0,0,0]});model.root.updateMatrixWorld(true);return new THREE.Box3().setFromObject(model.root).getSize(new THREE.Vector3()).toArray();});
 report.bounds=boxes[0];assert.ok(boxes[0][0]<2&&boxes[0][1]<2.2&&boxes[0][2]<3.4,'game-sized chassis');
 let disposed=0;initialGeometry.addEventListener('dispose',()=>disposed++);fleet.models[0].dispose();assert.equal(disposed,0,'one cart cannot invalidate peers');fleet.dispose();assert.equal(disposed,1);fleet.dispose();assert.equal(disposed,1,'idempotent fleet disposal');assert.equal(textureDisposed,1,'shared artwork texture disposed exactly once');
-const scene=new THREE.Scene(),traffic=new m.CountryClubCarts(scene);const level={walls:[]};const begin=performance.now();traffic.attach(level,'country-club');assert.equal(traffic.fleet.models.length,10);const courseFleet=traffic.fleet;report.courseAttachMs=performance.now()-begin;
+const scene=new THREE.Scene(),traffic=new m.CountryClubCarts(scene);const level={walls:[]};const begin=performance.now();traffic.attach(level,'country-club');assert.equal(traffic.fleet.models.length,20);const courseFleet=traffic.fleet;report.courseAttachMs=performance.now()-begin;
 for(const c of courseFleet.physics.carts)assert.ok(Math.abs(c.y-courseFleet.physics.ground(c.x,c.z).height)<.12,'tyres sit on the actual fairway support');
-const probe=new m.CountryClubCarts(new THREE.Scene());let casts=0;probe.attach({walls:[],raycastGround:()=>{casts++;return [{point:{y:12}}];}},'country-club');assert.ok(casts>0&&casts<=64,'traffic setup samples real support without raycasting the whole navigation grid');assert.ok(probe.fleet.physics.carts.every(c=>c.y===12),'authored runtime collision support overrides source fallback');probe.attach({walls:[]},'flats');
-assert.ok(courseFleet.models.every(m=>m.root.scale.x===2),'all ten carts and their seated drivers are double size');
+const probe=new m.CountryClubCarts(new THREE.Scene());let casts=0;probe.attach({walls:[],raycastGround:()=>{casts++;return [{point:{y:12}}];}},'country-club');assert.ok(casts>0&&casts<=128,'traffic setup samples real support without raycasting the whole navigation grid');assert.ok(probe.fleet.physics.carts.every(c=>c.y===12),'authored runtime collision support overrides source fallback');probe.attach({walls:[]},'flats');
+assert.ok(courseFleet.models.every(m=>m.root.scale.x===2),'all twenty carts and their seated drivers are double size');
 assert.equal(courseFleet.physics.radius,CART_PHYSICS.radius*2);assert.equal(courseFleet.physics.probeOffset,CART_PHYSICS.probeOffset*2);
 const moving={pos:new THREE.Vector3(),speed:52,state:'dead'};
 const roam=traffic.roaming,world=courseFleet.physics;
 roam.reset(world,71);const firstSpawns=world.carts.map(c=>[c.x,c.z,c.yaw]);
 roam.reset(world,72);assert.notDeepEqual(world.carts.map(c=>[c.x,c.z,c.yaw]),firstSpawns,'different race seeds change traffic placement');
 roam.reset(world,71);assert.deepEqual(world.carts.map(c=>[c.x,c.z,c.yaw]),firstSpawns,'traffic restart remains reproducible for replays');
-const samples=Array.from({length:10},()=>({offroad:0,total:0,onroad:0,maxHome:0,minX:Infinity,maxX:-Infinity,minZ:Infinity,maxZ:-Infinity}));
+const samples=Array.from({length:20},()=>({offroad:0,total:0,onroad:0,maxHome:0,minX:Infinity,maxX:-Infinity,minZ:Infinity,maxZ:-Infinity}));
 for(let i=0;i<60*150;i++){
   roam.course.sample(Math.min(roam.course.length-20,i/60*52),0,moving.pos);traffic.step(1/60,moving);
   if(i%60===0)world.carts.forEach((c,j)=>{
@@ -86,7 +86,7 @@ for(let i=0;i<60*150;i++){
 }
 report.course={fleet:courseFleet.stats,progress:roam.progress,speed:world.carts.map(c=>c.speed),health:world.carts.map(c=>c.health),rolls:world.carts.map(c=>c.rolls),elapsedMs:performance.now()-begin,positions:world.carts.map(c=>[c.x,c.y,c.z]),travel:world.carts.map(c=>c.travel),respawns:world.carts.map(c=>c.respawns),samples,trips:roam.drivers.map(d=>d.trips),nodes:roam.patches.map(p=>p.nodes.length)};
 console.log(JSON.stringify({roaming:report.course}));
-assert.ok(world.carts.every(c=>[c.x,c.y,c.z,c.speed].every(Number.isFinite)),'all ten roaming carts remain finite');
+assert.ok(world.carts.every(c=>[c.x,c.y,c.z,c.speed].every(Number.isFinite)),'all twenty roaming carts remain finite');
 assert.ok(samples.every(s=>s.maxHome<130),'carts stay dispersed in local territories instead of racing to the finish');
 assert.ok(samples.reduce((n,s)=>n+s.offroad,0)/samples.reduce((n,s)=>n+s.total,0)>.65,'most traffic travels across the field');
 assert.ok(samples.filter(s=>s.onroad>0).length>=6,'independent fairway trips still cross the race');
@@ -96,6 +96,27 @@ assert.ok(world.carts.every(c=>c.respawns<=2),'safe routes avoid repeated water 
 // Moving the skater to the opposite end cannot alter a cart's controls or route.
 const snapshot=()=>world.carts.map(c=>[c.x,c.z,c.yaw,c.speed]);
 const replay=at=>{roam.reset(world,82);moving.pos.copy(roam.course.sample(at));for(let j=0;j<60*12;j++)traffic.step(1/60,moving);return snapshot();};
-assert.deepEqual(replay(0),replay(roam.course.length),'roaming never targets or follows any skater');
+assert.deepEqual(replay(0),replay(roam.course.length),'free roam stays independent of the skater');
+// Equal arrival windows must favour actual first place, even when it is last
+// in the supplied list. Commit to supported grass destinations, not a chase.
+const targeted=[0,0,0];
+for(let i=0;i<roam.patches.length;i++){
+  roam.reset(world,71);
+  const station=roam.course.project(roam.patches[i].home).s;
+  const leaders=[3,2,1].map(rank=>({rank,progress:station-80,speed:25}));
+  world.advance(1/60,w=>roam.drive(w,leaders));
+  roam.crossingsByRank.forEach((n,rank)=>targeted[rank]+=n);
+  for(const [j,d]of roam.drivers.entries())if(d.targetRank){
+    assert.equal(d.targetRank,1,'first place wins otherwise equal crossing opportunities');
+    assert.ok(roam.patches[j].nodes[d.path.at(-1)].offroad,'targeted crossing still exits onto grass');
+    const path=[...d.path];roam.clearAfterContact(j,world);
+    for(let step=0;step<30;step++)world.advance(1/60,w=>roam.drive(w,leaders));
+    assert.deepEqual(d.path,path,'contact grace cannot immediately retarget the racer');
+  }
+}
+assert.ok(targeted[0]>=10,'leaders approaching the real course receive crossing traffic');
+assert.deepEqual(targeted.slice(1),[0,0]);
+report.leaderCrossings=targeted;
+roam.reset(world,71);assert.deepEqual(roam.crossingsByRank,[0,0,0],'retry clears leader crossing history');
 traffic.attach({walls:[]},'flats');assert.equal(traffic.fleet,null);assert.equal(scene.children.length,0,'level switching releases the fleet');
 await mkdir('docs/golf-cart',{recursive:true});await writeFile(process.env.GOLF_CART_REPORT||'docs/golf-cart/validation.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));console.log('Golf cart dynamics, shared resources, driver swaps, budgets and course patrols passed.');

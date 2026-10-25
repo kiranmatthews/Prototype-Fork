@@ -1,0 +1,225 @@
+{
+  "fleet": {
+    "before": 10,
+    "after": 20,
+    "scale": 2,
+    "newAssets": 0
+  },
+  "ambientComparison": {
+    "seconds": 150,
+    "seed": 71,
+    "baseline": "docs/golf-cart/validation.json at 610d24d2fa132243bbeeb1fcaefaa425ea5d0b53",
+    "beforeOnroadCartSamples": 174,
+    "afterOnroadCartSamples": 366,
+    "trackOccupancyRatio": 2.103448275862069,
+    "offroadFraction": 0.878,
+    "respawns": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "travelMetres": [
+      1625.2820442294988,
+      1543.776596538704,
+      1593.995118964203,
+      1724.850896037525,
+      1679.2300942961779,
+      1685.8500856352455,
+      1609.402324214059,
+      1578.7816286941465,
+      1564.8638246273104,
+      1512.0122377465652,
+      1682.7535076563488,
+      1646.6136272215856,
+      1646.4689096730374,
+      1585.2947833573025,
+      1558.2077659746112,
+      1626.8510198920048,
+      1476.9205282417456,
+      1616.8154365313437,
+      1630.1980244095744,
+      1560.7146751763255
+    ]
+  },
+  "equalArrivalPriority": {
+    "plannedCrossingsByRank": [
+      27,
+      0,
+      0
+    ],
+    "grassDestinations": true,
+    "contactGraceMaintained": true,
+    "seededRetry": true
+  },
+  "bankRecovery": {
+    "input": "Normal rival controller, without the probe\u2019s forced periodic jump override",
+    "secondsPerCase": 20,
+    "cases": [
+      {
+        "id": 6,
+        "jump": false,
+        "start": 1250.0333,
+        "progress": 1735.5738139156679,
+        "position": [
+          107.20112083406924,
+          -22.00923572284521,
+          -409.8935407388775
+        ],
+        "state": "ride",
+        "deaths": 0,
+        "falls": 0
+      },
+      {
+        "id": 5,
+        "jump": false,
+        "start": 2190.20745,
+        "progress": 2697.9477527450717,
+        "position": [
+          -250.84899383396174,
+          -56.1924047366906,
+          -789.46770199032
+        ],
+        "state": "ride",
+        "deaths": 0,
+        "falls": 0
+      }
+    ]
+  },
+  "fullRender": {
+    "spawn": {
+      "p": [
+        -61.475723690116446,
+        4.159088822282515,
+        54.93124364370337
+      ],
+      "grounded": true,
+      "carts": 20,
+      "stamp": "Codex/sol fork \u00b7 build 10-25 05:18 UTC"
+    },
+    "state": {
+      "elapsed": 24.666666666666547,
+      "progress": 851.7792613739822,
+      "counts": [
+        8,
+        2,
+        0
+      ],
+      "contacts": 1,
+      "falls": 0,
+      "deaths": 0,
+      "fps": 3.633720929602946
+    },
+    "errors": []
+  },
+  "completeRace": {
+    "seed": 71,
+    "traffic": {
+      "contacts": 9,
+      "knockdowns": 6,
+      "spinHits": 0,
+      "crossingsByRank": [
+        28,
+        17,
+        11
+      ],
+      "count": 20,
+      "scale": 2,
+      "cartTriangles": 8086,
+      "fleetTriangles": 158202,
+      "fleetDrawCalls": 160,
+      "geometryBuffers": 20,
+      "steps": 25752,
+      "droppedTime": 0,
+      "activeDebris": 0,
+      "moving": 20
+    },
+    "riders": [
+      {
+        "id": 0,
+        "finish": 112.26666666666158,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 1,
+        "finish": 178.9166666667012,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 2,
+        "finish": 177.30000000003324,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 3,
+        "finish": 174.53333333336437,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 4,
+        "finish": 214.38333333339608,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 5,
+        "finish": 205.51666666672236,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 6,
+        "finish": 187.3833333333746,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      },
+      {
+        "id": 7,
+        "finish": 213.50000000006204,
+        "falls": 0,
+        "deaths": 0,
+        "fruit": 0,
+        "lives": 4
+      }
+    ],
+    "errors": [],
+    "complete": true,
+    "tuningUnchanged": true
+  },
+  "movementTuningChanged": false,
+  "fullSuiteRun": false
+}

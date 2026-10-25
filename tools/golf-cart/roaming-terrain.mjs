@@ -11,7 +11,7 @@ await withBlockworksRuntime(async r=>{
   const rider={pos:r.p.pos,speed:0,state:'dead'};
   for(const seed of [0,1,71]){
     roam.reset(world,seed);
-    const travel=Array(10).fill(0),maxHome=Array(10).fill(0),timings=[];let offroad=0,total=0;
+    const travel=Array(world.carts.length).fill(0),maxHome=Array(world.carts.length).fill(0),timings=[];let offroad=0,total=0;
     for(let frame=0;frame<60*220;frame++){
       const start=performance.now();traffic.step(1/60,rider);timings.push(performance.now()-start);
       world.carts.forEach((c,i)=>{travel[i]+=Math.abs(c.speed)/60;
@@ -20,7 +20,7 @@ await withBlockworksRuntime(async r=>{
     }
     timings.sort((a,b)=>a-b);
     const run={seed,offroadFraction:offroad/total,travel,respawns:world.carts.map(c=>c.respawns),maxHome,trips:roam.drivers.map(d=>d.trips),nodes:roam.patches.map(p=>p.nodes.length),medianMs:timings[Math.floor(timings.length*.5)],p95Ms:timings[Math.floor(timings.length*.95)]};report.runs.push(run);console.log(JSON.stringify(run));
-    assert.ok(travel.every(d=>d>800),'all ten carts keep moving across the actual field');
+    assert.ok(travel.every(d=>d>800),'all twenty carts keep moving across the actual field');
     assert.ok(maxHome.every(d=>d<125),'actual terrain and trees do not scatter carts out of their territories');
     assert.ok(run.respawns.every(n=>n<=2),'ponds cannot trap a cart in repeated recoveries');
     assert.ok(run.offroadFraction>.65,'actual terrain routes mostly use the field');

@@ -9,7 +9,7 @@ import { GolfCartFleet } from './fleet';
 import { CartFieldRoaming, COUNTRY_CLUB_CART_SCALE } from './roaming';
 import type { CartGround } from './physics';
 
-/** Ten oversized fairway wanderers, using the existing vehicle and rider physics. */
+/** Oversized fairway cross traffic, using the existing vehicle and rider physics. */
 export class CountryClubCarts {
   fleet:GolfCartFleet|null=null;
   roaming:CartFieldRoaming|null=null;
@@ -60,7 +60,7 @@ export class CountryClubCarts {
     this.roaming=new CartFieldRoaming(course,jumps.map(g=>({start:course.project(new THREE.Vector3(...g.takeoff)).s,end:course.project(new THREE.Vector3(...g.landing)).s})),sample(sourceHeight),obstacles);
     const spawns=this.roaming.initial.map(s=>({...s}));this.spinCooldown=spawns.map(()=>0);
     this.fleet=new GolfCartFleet({ground,spawns,obstacles,physics:{scale:COUNTRY_CLUB_CART_SCALE,topSpeed:29,engine:15,speedLimit:32,crestLaunch:false}});
-    this.fleet.root.userData.traffic=this.stats;this.scene.add(this.fleet.root);
+    this.fleet.root.userData.traffic=this.stats;this.fleet.root.userData.crossingsByRank=this.roaming.crossingsByRank;this.scene.add(this.fleet.root);
   }
   setVisible(visible:boolean){if(this.fleet)this.fleet.root.visible=visible;}
   step(dt:number,player:Player,race?:SkateRace){
@@ -75,7 +75,10 @@ export class CountryClubCarts {
     const riders=active?race.riders.slice(0,race.count).filter(r=>r.finish===null&&!r.recovery):[];
     const participants=active?riders.map(r=>({player:r.player,rider:r,progress:r.progress})):
       [{player,rider:undefined,progress:roaming.course.project(player.pos).s}];
-    fleet.update(dt,world=>roaming.drive(world));
+    const leaders=active&&race.mode==='race'&&race.phase==='running'?race.order().slice(0,3).flatMap((r,i)=>
+      r.finish===null&&!r.recovery&&!r.player.skateCameraBailing&&(r.player.state==='ride'||r.player.state==='air')?
+        [{rank:i+1,progress:r.progress,speed:r.player.speed}]:[]):[];
+    fleet.update(dt,world=>roaming.drive(world,leaders));
     for(const [p,t]of this.contactCooldown)this.contactCooldown.set(p,Math.max(0,t-dt));
     this.spinCooldown=this.spinCooldown.map(t=>Math.max(0,t-dt));
     for(const {player:p,rider,progress} of participants){

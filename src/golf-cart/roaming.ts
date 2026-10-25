@@ -3,18 +3,20 @@ import { RaceCourse } from '../race/course';
 import { COUNTRY_CLUB_PONDS } from '../levels/country-club-layout';
 import { CART_PHYSICS, type CartGround, type CartObstacle, type CartSpawn, type GolfCartPhysics } from './physics';
 
-export const COUNTRY_CLUB_CART_COUNT=10;
+export const COUNTRY_CLUB_CART_COUNT=20;
 export const COUNTRY_CLUB_CART_SCALE=2;
 export interface CartJump {start:number;end:number}
+export interface CartRaceLeader {rank:number;progress:number;speed:number}
 interface Point {x:number;z:number}
 interface Node extends Point {y:number;side:number;offroad:boolean;links:number[]}
-interface Patch {nodes:Node[];home:THREE.Vector3;right:THREE.Vector3}
-interface Driver {seed:number;path:number[];next:number;speed:number;wait:number;clearUntil:number;stuck:number;reverse:number;anchorAt:number;respawns:number;trips:number}
+interface Patch {nodes:Node[];home:THREE.Vector3;right:THREE.Vector3;station:number}
+interface Driver {seed:number;path:number[];next:number;speed:number;wait:number;clearUntil:number;interceptAt:number;targetRank:number;stuck:number;reverse:number;anchorAt:number;respawns:number;trips:number}
 const clamp=THREE.MathUtils.clamp,spacing=16,radius=6;
 
-/** Independent, seeded fairway traffic. Drivers have local territories and no
- * racer targets, finish destination or progress-based catch-up acceleration. */
+/** Seeded local fairway traffic. Nearby leaders influence the next crossing,
+ * then drivers commit to a grass destination at their ordinary cruising speed. */
 export class CartFieldRoaming {
+  readonly crossingsByRank=[0,0,0];
   readonly progress:number[]=[];
   readonly initial:CartSpawn[]=[];
   readonly patches:Patch[]=[];
@@ -23,7 +25,8 @@ export class CartFieldRoaming {
   private projectionAt=0;
   private safeCache=new Map<string,boolean>();
   constructor(readonly course:RaceCourse,readonly jumps:readonly CartJump[],private ground:CartGround,private obstacles:readonly CartObstacle[]){
-    for(const fraction of [.045,.14,.24,.33,.43,.53,.63,.73,.83,.91]){
+    for(let i=0;i<COUNTRY_CLUB_CART_COUNT;i++){
+      const fraction=.045+i*(.91-.045)/(COUNTRY_CLUB_CART_COUNT-1);
       let station=fraction*course.length;
       for(const gap of jumps)if(station>gap.start-60&&station<gap.end+60)station=gap.end+65;
       const home=course.sample(station),tangent=course.tangent(station),right=new THREE.Vector3(-tangent.z,0,tangent.x).normalize();
@@ -52,8 +55,8 @@ export class CartFieldRoaming {
       const remap=new Map(largest.map((n,i)=>[n,i]));
       const connected=largest.map(n=>({...nodes[n],links:nodes[n].links.map(v=>remap.get(v)!)}));
       if(!connected.length)throw new Error('Country Club cart territory has no supported ground');
-      this.patches.push({home,right,nodes:connected});
-      this.drivers.push({seed:1,path:[],next:0,speed:16,wait:0,clearUntil:0,stuck:0,reverse:0,anchorAt:0,respawns:0,trips:0});
+      this.patches.push({home,right,nodes:connected,station});
+      this.drivers.push({seed:1,path:[],next:0,speed:16,wait:0,clearUntil:0,interceptAt:0,targetRank:0,stuck:0,reverse:0,anchorAt:0,respawns:0,trips:0});
       this.progress.push(station);
     }
     this.seedSpawns(1);
@@ -86,7 +89,7 @@ export class CartFieldRoaming {
   private seedSpawns(seed:number){
     this.initial.length=0;
     for(const [i,patch]of this.patches.entries()){
-      const d=this.drivers[i];Object.assign(d,{seed:(seed^Math.imul(i+1,0x9e3779b9))>>>0,path:[],next:0,wait:0,clearUntil:0,stuck:0,reverse:0,anchorAt:0,respawns:0,trips:0});
+      const d=this.drivers[i];Object.assign(d,{seed:(seed^Math.imul(i+1,0x9e3779b9))>>>0,path:[],next:0,wait:0,clearUntil:0,interceptAt:0,targetRank:0,stuck:0,reverse:0,anchorAt:0,respawns:0,trips:0});
       const candidates=patch.nodes.filter(n=>n.offroad&&Math.abs(n.side)>25),pool=candidates.length?candidates:patch.nodes;
       const spawn=pool[Math.floor(this.random(d)*pool.length)];
       this.initial.push({x:spawn.x,z:spawn.z,yaw:Math.atan2(spawn.x-patch.home.x,spawn.z-patch.home.z)+(this.random(d)-.5)*.7});
@@ -94,19 +97,46 @@ export class CartFieldRoaming {
     }
   }
   reset(world:GolfCartPhysics,seed=1){
-    this.seedSpawns(seed);this.projectionAt=0;
+    this.seedSpawns(seed);this.projectionAt=0;this.crossingsByRank.fill(0);
     for(let i=0;i<world.carts.length;i++){Object.assign(world.spawns[i],this.initial[i]);world.reset(i);}
     world.time=0;
   }
   /** Complete the current crossing, then stay on that side while the pack passes. */
   clearAfterContact(index:number,world:GolfCartPhysics){this.drivers[index].clearUntil=world.time+9;}
-  private plan(index:number,world:GolfCartPhysics){
+  private leaderCrossing(index:number,world:GolfCartPhysics,goals:number[],leaders:readonly CartRaceLeader[]){
+    const c=world.carts[index],d=this.drivers[index],patch=this.patches[index];
+    // Distant territories do not need encounter prediction.
+    const nearby=leaders.filter(r=>r.progress<patch.station+120&&r.progress+r.speed*12>patch.station-120);
+    if(!nearby.length)return;
+    const side=(c.x-patch.home.x)*patch.right.x+(c.z-patch.home.z)*patch.right.z;
+    let best:{goal:number;rank:number;score:number}|undefined;
+    for(const goal of goals){
+      const n=patch.nodes[goal],t=clamp(-side/(n.side-side),0,1);
+      const x=c.x+(n.x-c.x)*t,z=c.z+(n.z-c.z)*t;
+      const near=this.course.project(this.position.set(x,c.y+(n.y-c.y)*t,z));
+      if(this.protectedJump(near.s)||near.distance>this.course.width(near.s)/2+6)continue;
+      // Predict one encounter, with enough lead-in to see and dodge the cart.
+      const seconds=.6+Math.hypot(x-c.x,z-c.z)/Math.max(8,d.speed)*1.35;
+      for(const leader of nearby){
+        if(leader.rank<1||leader.rank>3||leader.speed<5||leader.progress>near.s+6)continue;
+        const error=Math.abs(near.s-leader.progress-leader.speed*seconds)/leader.speed;
+        if(error>2.5)continue;
+        const score=error+(leader.rank-1)*1.25;
+        if(!best||score<best.score)best={goal,rank:leader.rank,score};
+      }
+    }
+    return best;
+  }
+  private plan(index:number,world:GolfCartPhysics,leaders:readonly CartRaceLeader[]=[],onlyIntercept=false){
     const c=world.carts[index],d=this.drivers[index],patch=this.patches[index],nodes=patch.nodes;
     let start=0,best=Infinity;
     for(const [i,n]of nodes.entries()){const distance=(n.x-c.x)**2+(n.z-c.z)**2;if(distance<best){best=distance;start=i;}}
     const side=(c.x-patch.home.x)*patch.right.x+(c.z-patch.home.z)*patch.right.z;
-    const crossing=world.time>=d.clearUntil&&this.random(d)<.72;
-    let goals=nodes.map((_,i)=>i).filter(i=>nodes[i].offroad&&Math.hypot(nodes[i].x-c.x,nodes[i].z-c.z)>55&&(crossing?nodes[i].side*side< -300:nodes[i].side*side>200));
+    const opposite=nodes.map((_,i)=>i).filter(i=>nodes[i].offroad&&Math.hypot(nodes[i].x-c.x,nodes[i].z-c.z)>55&&nodes[i].side*side< -300);
+    const target=world.time>=d.clearUntil&&world.time>=d.interceptAt&&leaders.length?this.leaderCrossing(index,world,opposite,leaders):undefined;
+    if(onlyIntercept&&!target){d.interceptAt=world.time+1;return;}
+    const crossing=world.time>=d.clearUntil&&(!!target||this.random(d)<.72);
+    let goals=target?[target.goal]:crossing?opposite:nodes.map((_,i)=>i).filter(i=>nodes[i].offroad&&Math.hypot(nodes[i].x-c.x,nodes[i].z-c.z)>55&&nodes[i].side*side>200);
     if(!goals.length&&!crossing)goals=nodes.map((_,i)=>i).filter(i=>nodes[i].offroad&&nodes[i].side*side>=0&&i!==start);
     if(!goals.length)goals=nodes.map((_,i)=>i).filter(i=>nodes[i].offroad&&i!==start);
     if(!goals.length)goals=nodes.map((_,i)=>i);
@@ -125,19 +155,24 @@ export class CartFieldRoaming {
     const path=[goal];while(path[0]!==start&&previous[path[0]]>=0)path.unshift(previous[path[0]]);
     const smooth=[path[0]];
     for(let k=0;k<path.length-1;){let next=k+1;for(let j=k+2;j<path.length&&j<=k+5;j++)if(this.clearSegment(nodes[path[k]],nodes[path[j]]))next=j;k=next;smooth.push(path[k]);}
-    d.path=smooth;d.next=smooth.length>1?1:0;d.speed=13+this.random(d)*10;d.trips++;
+    d.path=smooth;d.next=smooth.length>1?1:0;d.trips++;d.targetRank=target?.rank??0;
+    if(target){d.wait=0;d.interceptAt=world.time+8;this.crossingsByRank[target.rank-1]++;}
+    else d.speed=13+this.random(d)*10;
   }
-  drive(world:GolfCartPhysics){
+  drive(world:GolfCartPhysics,leaders:readonly CartRaceLeader[]=[]){
     const dt=CART_PHYSICS.step,project=world.time>=this.projectionAt;if(project)this.projectionAt=world.time+.25;
     for(const [i,c]of world.carts.entries()){
       const d=this.drivers[i],nodes=this.patches[i].nodes;
-      if(project)this.progress[i]=this.course.project(this.position.set(c.x,c.y,c.z)).s;
+      if(project){
+        const near=this.course.project(this.position.set(c.x,c.y,c.z));this.progress[i]=near.s;
+        if(leaders.length&&world.time>=d.interceptAt&&world.time>=d.clearUntil&&!c.tumbling&&near.distance>this.course.width(near.s)/2+12)this.plan(i,world,leaders,true);
+      }
       if(c.respawns!==d.respawns){d.path=[];d.respawns=c.respawns;d.stuck=0;}
-      if(!d.path.length)this.plan(i,world);
+      if(!d.path.length)this.plan(i,world,leaders);
       let aim=nodes[d.path[d.next]],distance=Math.hypot(aim.x-c.x,aim.z-c.z);
       if(distance<5){
         if(d.next<d.path.length-1)d.next++;
-        else{d.wait=world.time<d.clearUntil?2+this.random(d)*2:this.random(d)*1.6;this.plan(i,world);}
+        else{d.wait=world.time<d.clearUntil?2+this.random(d)*2:this.random(d)*1.6;this.plan(i,world,leaders);}
         aim=nodes[d.path[d.next]];distance=Math.hypot(aim.x-c.x,aim.z-c.z);
       }
       const dx=aim.x-c.x,dz=aim.z-c.z;

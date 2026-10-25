@@ -57,6 +57,7 @@ export class SkateRace {
   private ray=new THREE.Ray(); private wallHit=vec();
   private a=vec();private b=vec();
   private viewForward=vec();private viewOrigin=vec();
+  private cartStalls=new Map<number,{position:THREE.Vector3;since:number}>();
   constructor(private scene:THREE.Scene,private human:Player,private readonly fullRivals=false,
     private readonly canStartTimeTrial:(levelId:string)=>boolean=()=>false){scene.add(this.root);}
   get active():boolean{return !!this.level;}
@@ -107,7 +108,7 @@ export class SkateRace {
     if(!this.level||!this.course)return;
     if(mode==='time-trial'&&!this.canStartTimeTrial(this.levelId))mode='race';
     const level=this.level;this.mode=mode;this.phase='grid';this.countdown=3;this.elapsed=0;this.reported=false;
-    this.runSeed=runSeed>>>0;this.seed=this.runSeed;this.returns.clear();this.clearItems();this.heavyAt=20;this.warningBeep=0;
+    this.runSeed=runSeed>>>0;this.seed=this.runSeed;this.cartStalls.clear();this.returns.clear();this.clearItems();this.heavyAt=20;this.warningBeep=0;
     if(resetWorld)level.reset(true);
     level.setTimeTrial(mode==='time-trial');
     for(const r of this.riders){
@@ -268,6 +269,14 @@ export class SkateRace {
     // Braking locks the normal board's heading. Coast through a bend and brake on its straights.
     r.braking=id>0&&!approach&&bend<.2&&p.grounded&&(r.braking?Math.abs(p.speed)>pace-1.5:Math.abs(p.speed)>pace+3);
     input.grabHeld=r.braking;
+    if(this.levelId==='country-club'&&id>0){
+      // A cart knockdown can leave a rival leaning into a fairway bank.
+      // Release the normal charged jump after a genuine positional stall.
+      const stalled=this.cartStalls.get(id);
+      if(!stalled||!p.grounded||p.swimming||p.pos.distanceToSquared(stalled.position)>4)
+        this.cartStalls.set(id,{position:p.pos.clone(),since:this.elapsed});
+      else if(this.elapsed-stalled.since>2.5){input.jumpHeld=false;input.grabHeld=false;this.cartStalls.delete(id);}
+    }
     const threat=r.threats[0];
     if(threat?.item==='shock-shell'&&threat.seconds<.5&&p.grounded)input.jumpHeld=false;
     if(threat&&threat.item!=='shock-shell'&&threat.seconds<.3&&r.attackCooldown<=0&&this.random()>.25){input.spinPressed=input.spinHeld=true;r.attackCooldown=1.4;}

@@ -11,12 +11,12 @@ const render=g.renderer.render.bind(g.renderer);g.renderer.render=(...args:any[]
 };
 const panel=document.createElement('section');panel.setAttribute('aria-label','Fairway traffic review');panel.style.cssText='position:fixed;z-index:999999;left:10px;top:10px;padding:10px;background:#10291fea;color:#fff;font:12px monospace;max-width:400px;border-radius:10px';
 const title=document.createElement('strong');title.textContent='FAIRWAY TRAFFIC · LOCAL REVIEW';panel.append(title,document.createElement('br'));
-const trails:{x:number;z:number}[][]=Array.from({length:10},()=>[]);
+const trails:{x:number;z:number}[][]=Array.from({length:g.getGolfCarts().models.length},()=>[]);
 function start(){race.start('race',seed);pilot=true;trails.forEach(t=>t.length=0);}
 function button(label:string,action:()=>void){const b=document.createElement('button');b.textContent=label;b.style.cssText='padding:8px;margin:3px';b.onclick=action;panel.append(b);}
 button('Start race',start);button('New traffic pattern',()=>{seed++;start();});button('Follow skater',()=>{watch=-1;});
 const select=document.createElement('select');select.setAttribute('aria-label','Watch cart');select.style.cssText='padding:8px;margin:3px';
-for(let i=0;i<10;i++){const option=document.createElement('option');option.value=String(i);option.textContent=`Cart ${i+1}`;select.append(option);}select.onchange=()=>{watch=Number(select.value);};panel.append(select);
+for(let i=0;i<g.getGolfCarts().models.length;i++){const option=document.createElement('option');option.value=String(i);option.textContent=`Cart ${i+1}`;select.append(option);}select.onchange=()=>{watch=Number(select.value);};panel.append(select);
 button('Watch selected cart',()=>{watch=Number(select.value);});button('Hide controls',()=>{panel.hidden=true;map.hidden=true;});
 const status=document.createElement('output');status.style.cssText='display:block;white-space:pre-wrap;font-size:11px';panel.append(status);document.body.append(panel);
 const map=document.createElement('canvas');map.width=280;map.height=405;map.setAttribute('aria-label','Course map: orange carts and trails, green racers, white race track');map.style.cssText='position:fixed;right:10px;bottom:10px;z-index:999998;background:#10291fed;border:1px solid #9bba8a;border-radius:10px';document.body.append(map);
