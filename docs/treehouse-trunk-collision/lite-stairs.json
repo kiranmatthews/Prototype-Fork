@@ -1,0 +1,430 @@
+{
+  "base": "http://127.0.0.1:5442/",
+  "rows": [
+    {
+      "label": "supported balcony spawn",
+      "position": [
+        -16.97026,
+        8.400000000372529,
+        -0.40991
+      ],
+      "grounded": true,
+      "state": "ride",
+      "board": false,
+      "deaths": 0,
+      "lives": 4,
+      "snap": 1,
+      "currentSpawn": [
+        -16.97026,
+        8.55,
+        -0.40991
+      ],
+      "at": null,
+      "watch": {
+        "mounted": false,
+        "bailed": false,
+        "maxOffset": 0,
+        "frames": 10
+      },
+      "stamp": "Codex/sol fork · build 10-25 06:47 UTC"
+    },
+    {
+      "label": "continuous keyboard descent",
+      "position": [
+        -6.12445604873931,
+        0,
+        9.36189847347786
+      ],
+      "grounded": true,
+      "state": "ride",
+      "board": false,
+      "deaths": 0,
+      "lives": 4,
+      "snap": 1,
+      "currentSpawn": [
+        -16.97026,
+        8.55,
+        -0.40991
+      ],
+      "at": {
+        "s": 18.546522611430127,
+        "distance": 1.5682922878076584e-7,
+        "x": 0.9848077530122079,
+        "z": 0.17364817766693094
+      },
+      "watch": {
+        "mounted": false,
+        "bailed": false,
+        "maxOffset": 0.15976539283323019,
+        "frames": 159
+      },
+      "stamp": "Codex/sol fork · build 10-25 06:47 UTC"
+    },
+    {
+      "label": "continuous keyboard ascent",
+      "position": [
+        -17.124075601936607,
+        8.400000000372529,
+        0.6217943347496895
+      ],
+      "grounded": true,
+      "state": "ride",
+      "board": false,
+      "deaths": 0,
+      "lives": 4,
+      "snap": 2,
+      "currentSpawn": [
+        -16.97026,
+        8.55,
+        -0.40991
+      ],
+      "at": {
+        "s": 0.2083415038454479,
+        "distance": 0.02767719366532015,
+        "x": -0.17364817766692944,
+        "z": 0.9848077530122084
+      },
+      "watch": {
+        "mounted": false,
+        "bailed": false,
+        "maxOffset": 0.13363522873333084,
+        "frames": 140
+      },
+      "stamp": "Codex/sol fork · build 10-25 06:47 UTC"
+    },
+    {
+      "label": "keyboard reversal",
+      "position": [
+        -12.286662472550077,
+        5.112265066514542,
+        4.471019351238201
+      ],
+      "grounded": true,
+      "state": "ride",
+      "board": false,
+      "deaths": 0,
+      "lives": 4,
+      "snap": 3,
+      "currentSpawn": [
+        -16.97026,
+        8.55,
+        -0.40991
+      ],
+      "at": {
+        "s": 8.127777777777759,
+        "distance": 7.798863128904577e-10,
+        "x": -0.1736481776669305,
+        "z": 0.9848077530122082
+      },
+      "watch": {
+        "mounted": false,
+        "bailed": false,
+        "maxOffset": 0.00897746316543087,
+        "frames": 79
+      },
+      "stamp": "Codex/sol fork · build 10-25 06:47 UTC"
+    },
+    {
+      "label": "still",
+      "position": [
+        -12.661182484082376,
+        5.600000000372528,
+        2.78094861146327
+      ],
+      "grounded": true,
+      "state": "ride",
+      "board": false,
+      "deaths": 0,
+      "lives": 4,
+      "snap": 3,
+      "currentSpawn": [
+        -16.97026,
+        8.55,
+        -0.40991
+      ],
+      "at": {
+        "s": 5.997645650724758,
+        "distance": 0.11412065146983227,
+        "x": 0.9848078081800904,
+        "z": 0.17364786479403194
+      },
+      "watch": {
+        "mounted": false,
+        "bailed": false,
+        "maxOffset": 0.15356416024840927,
+        "frames": 158
+      },
+      "stamp": "Codex/sol fork · build 10-25 06:47 UTC"
+    },
+    {
+      "label": "charge 0",
+      "position": [
+        -17.115733021623573,
+        8.400000000372529,
+        0.41509460475559284
+      ],
+      "grounded": true,
+      "state": "ride",
+      "board": false,
+      "deaths": 0,
+      "lives": 4,
+      "snap": 4,
+      "currentSpawn": [
+        -16.97026,
+        8.55,
+        -0.40991
+      ],
+      "at": {
+        "s": 0.0033333333333330456,
+        "distance": 2.7755575615628914e-16,
+        "x": -0.17364817766692944,
+        "z": 0.9848077530122084
+      },
+      "watch": {
+        "mounted": false,
+        "bailed": false,
+        "maxOffset": 2.7755575615628914e-16,
+        "frames": 61
+      },
+      "stamp": "Codex/sol fork · build 10-25 06:47 UTC"
+    },
+    {
+      "label": "landed jump 0",
+      "position": [
+        -17.115733021623573,
+        8.400000000372529,
+        0.41509460475559284
+      ],
+      "grounded": true,
+      "state": "ride",
+      "board": false,
+      "deaths": 0,
+      "lives": 4,
+      "snap": 4,
+      "currentSpawn": [
+        -16.97026,
+        8.55,
+        -0.40991
+      ],
+      "at": {
+        "s": 0.0033333333333330456,
+        "distance": 2.7755575615628914e-16,
+        "x": -0.17364817766692944,
+        "z": 0.9848077530122084
+      },
+      "watch": {
+        "mounted": false,
+        "bailed": false,
+        "maxOffset": 2.7755575615628914e-16,
+        "frames": 104
+      },
+      "stamp": "Codex/sol fork · build 10-25 06:47 UTC"
+    },
+    {
+      "label": "charge 4.4",
+      "position": [
+        -14.211456835524253,
+        6.575167356613419,
+        2.3917124331189332
+      ],
+      "grounded": true,
+      "state": "ride",
+      "board": false,
+      "deaths": 0,
+      "lives": 4,
+      "snap": 5,
+      "currentSpawn": [
+        -16.97026,
+        8.55,
+        -0.40991
+      ],
+      "at": {
+        "s": 4.403333333333335,
+        "distance": 4.440892098500626e-16,
+        "x": 0.9848077530122081,
+        "z": 0.17364817766693058
+      },
+      "watch": {
+        "mounted": false,
+        "bailed": false,
+        "maxOffset": 4.440892098500626e-16,
+        "frames": 63
+      },
+      "stamp": "Codex/sol fork · build 10-25 06:47 UTC"
+    },
+    {
+      "label": "landed jump 4.4",
+      "position": [
+        -14.063735672572422,
+        6.440551971998037,
+        2.417759659768973
+      ],
+      "grounded": true,
+      "state": "ride",
+      "board": false,
+      "deaths": 0,
+      "lives": 4,
+      "snap": 5,
+      "currentSpawn": [
+        -16.97026,
+        8.55,
+        -0.40991
+      ],
+      "at": {
+        "s": 4.553333333333335,
+        "distance": 1.7763568394002505e-15,
+        "x": 0.9848077530122081,
+        "z": 0.17364817766693058
+      },
+      "watch": {
+        "mounted": false,
+        "bailed": false,
+        "maxOffset": 1.7763568394002505e-15,
+        "frames": 103
+      },
+      "stamp": "Codex/sol fork · build 10-25 06:47 UTC"
+    },
+    {
+      "label": "charge 11.5",
+      "position": [
+        -12.834787926310156,
+        2.800000000372529,
+        7.794995458842753
+      ],
+      "grounded": true,
+      "state": "ride",
+      "board": false,
+      "deaths": 0,
+      "lives": 4,
+      "snap": 6,
+      "currentSpawn": [
+        -16.97026,
+        8.55,
+        -0.40991
+      ],
+      "at": {
+        "s": 11.5,
+        "distance": 0,
+        "x": 0.08269508067519801,
+        "z": 0.9965748961478623
+      },
+      "watch": {
+        "mounted": false,
+        "bailed": false,
+        "maxOffset": 0,
+        "frames": 61
+      },
+      "stamp": "Codex/sol fork · build 10-25 06:47 UTC"
+    },
+    {
+      "label": "landed jump 11.5",
+      "position": [
+        -12.834787926310156,
+        2.800000000372529,
+        7.794995458842753
+      ],
+      "grounded": true,
+      "state": "ride",
+      "board": false,
+      "deaths": 0,
+      "lives": 4,
+      "snap": 6,
+      "currentSpawn": [
+        -16.97026,
+        8.55,
+        -0.40991
+      ],
+      "at": {
+        "s": 11.5,
+        "distance": 0,
+        "x": 0.08269508067519801,
+        "z": 0.9965748961478623
+      },
+      "watch": {
+        "mounted": false,
+        "bailed": false,
+        "maxOffset": 0,
+        "frames": 101
+      },
+      "stamp": "Codex/sol fork · build 10-25 06:47 UTC"
+    },
+    {
+      "label": "charge 17.5",
+      "position": [
+        -7.151796964901351,
+        0.12000000037252903,
+        9.180750710821311
+      ],
+      "grounded": true,
+      "state": "ride",
+      "board": false,
+      "deaths": 0,
+      "lives": 4,
+      "snap": 7,
+      "currentSpawn": [
+        -16.97026,
+        8.55,
+        -0.40991
+      ],
+      "at": {
+        "s": 17.503333333333334,
+        "distance": 0,
+        "x": 0.9848077530122079,
+        "z": 0.17364817766693094
+      },
+      "watch": {
+        "mounted": false,
+        "bailed": false,
+        "maxOffset": 0,
+        "frames": 60
+      },
+      "stamp": "Codex/sol fork · build 10-25 06:47 UTC"
+    },
+    {
+      "label": "landed jump 17.5",
+      "position": [
+        -7.151796964901351,
+        0.12000000037252903,
+        9.180750710821311
+      ],
+      "grounded": true,
+      "state": "ride",
+      "board": false,
+      "deaths": 0,
+      "lives": 4,
+      "snap": 7,
+      "currentSpawn": [
+        -16.97026,
+        8.55,
+        -0.40991
+      ],
+      "at": {
+        "s": 17.503333333333334,
+        "distance": 0,
+        "x": 0.9848077530122079,
+        "z": 0.17364817766693094
+      },
+      "watch": {
+        "mounted": false,
+        "bailed": false,
+        "maxOffset": 0,
+        "frames": 100
+      },
+      "stamp": "Codex/sol fork · build 10-25 06:47 UTC"
+    }
+  ],
+  "errors": [],
+  "finalState": {
+    "position": [
+      -12.229744457991215,
+      5.406424610674071,
+      4.148221254552976
+    ],
+    "watch": {
+      "mounted": false,
+      "bailed": false,
+      "maxOffset": 0,
+      "frames": 18
+    }
+  }
+}

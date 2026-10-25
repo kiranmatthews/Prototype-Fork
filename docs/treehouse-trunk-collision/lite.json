@@ -1,0 +1,255 @@
+{
+  "base": "http://127.0.0.1:5442/",
+  "mode": "lite",
+  "report": {
+    "done": true,
+    "rows": [
+      {
+        "name": "opening foreground walk",
+        "mode": "walk",
+        "penetrated": false,
+        "closest": 4.015740000300757,
+        "maxY": 0,
+        "reached": false,
+        "bailed": false,
+        "position": [
+          24.68041609227476,
+          0,
+          5.783600000000002
+        ],
+        "frames": 153,
+        "deaths": 0
+      },
+      {
+        "name": "opening foreground skate",
+        "mode": "skate",
+        "penetrated": false,
+        "closest": 4.015740000420887,
+        "maxY": 0,
+        "reached": false,
+        "bailed": false,
+        "position": [
+          22.16907238708261,
+          0,
+          5.6005517771388975
+        ],
+        "frames": 153,
+        "deaths": 0
+      },
+      {
+        "name": "opening foreground jump",
+        "mode": "jump",
+        "penetrated": false,
+        "closest": 3.9890734352622417,
+        "maxY": 1.77907584806457,
+        "reached": false,
+        "bailed": false,
+        "position": [
+          24.688767791018957,
+          0,
+          5.783600000000002
+        ],
+        "frames": 153,
+        "deaths": 0
+      },
+      {
+        "name": "later beach and huts walk",
+        "mode": "walk",
+        "penetrated": false,
+        "closest": 3.5369142281099095,
+        "maxY": -13.234025258005607,
+        "reached": false,
+        "bailed": false,
+        "position": [
+          56.53717578580526,
+          -13.234177127608987,
+          -279.4226751355042
+        ],
+        "frames": 153,
+        "deaths": 0
+      },
+      {
+        "name": "later beach and huts skate",
+        "mode": "skate",
+        "penetrated": false,
+        "closest": 3.5580051725741293,
+        "maxY": -12.34275674062165,
+        "reached": false,
+        "bailed": false,
+        "position": [
+          56.30007516598125,
+          -12.442618458667388,
+          -282.15316976251495
+        ],
+        "frames": 153,
+        "deaths": 0
+      },
+      {
+        "name": "later beach and huts jump",
+        "mode": "jump",
+        "penetrated": false,
+        "closest": 3.5281024239611387,
+        "maxY": -12.206220374889048,
+        "reached": false,
+        "bailed": true,
+        "position": [
+          56.54441973792053,
+          -13.346036153191033,
+          -279.27362674895187
+        ],
+        "frames": 153,
+        "deaths": 0
+      },
+      {
+        "name": "shaded hut approach walk",
+        "mode": "walk",
+        "penetrated": false,
+        "closest": 3.47678000014921,
+        "maxY": -13.428343645063755,
+        "reached": false,
+        "bailed": false,
+        "position": [
+          42.40386,
+          -13.428356707770888,
+          -316.0914847201808
+        ],
+        "frames": 153,
+        "deaths": 0
+      },
+      {
+        "name": "shaded hut approach skate",
+        "mode": "skate",
+        "penetrated": false,
+        "closest": 3.477042349215324,
+        "maxY": -13.162919037047736,
+        "reached": false,
+        "bailed": false,
+        "position": [
+          42.230045917269926,
+          -13.162919037047736,
+          -311.9979877087929
+        ],
+        "frames": 153,
+        "deaths": 0
+      },
+      {
+        "name": "shaded hut approach jump",
+        "mode": "jump",
+        "penetrated": false,
+        "closest": 3.447354179819535,
+        "maxY": -12.214001995742752,
+        "reached": false,
+        "bailed": true,
+        "position": [
+          42.40386,
+          -13.461770459044978,
+          -316.1517189581193
+        ],
+        "frames": 153,
+        "deaths": 0
+      },
+      {
+        "name": "opening clearing",
+        "mode": "route",
+        "penetrated": false,
+        "closest": 0.44721947096295395,
+        "maxY": 0.08,
+        "reached": true,
+        "bailed": false,
+        "position": [
+          6.554992980247199,
+          0,
+          9.044429805076264
+        ],
+        "frames": 116,
+        "deaths": 0
+      },
+      {
+        "name": "clearing to pipe entrance",
+        "mode": "route",
+        "penetrated": false,
+        "closest": 0.49467260358200255,
+        "maxY": 0.08,
+        "reached": true,
+        "bailed": false,
+        "position": [
+          13.533982853057402,
+          0,
+          6.6659186652853695
+        ],
+        "frames": 91,
+        "deaths": 0
+      },
+      {
+        "name": "later beach straight",
+        "mode": "route",
+        "penetrated": false,
+        "closest": 0.47853735363937144,
+        "maxY": -13.92,
+        "reached": true,
+        "bailed": false,
+        "position": [
+          53.00046109831789,
+          -14,
+          -271.5214628685081
+        ],
+        "frames": 268,
+        "deaths": 0
+      },
+      {
+        "name": "hut bend",
+        "mode": "route",
+        "penetrated": false,
+        "closest": 0.467265417540566,
+        "maxY": -13.92,
+        "reached": true,
+        "bailed": false,
+        "position": [
+          44.25092325785535,
+          -14,
+          -286.60582429159496
+        ],
+        "frames": 179,
+        "deaths": 0
+      },
+      {
+        "name": "hut bend exit",
+        "mode": "route",
+        "penetrated": false,
+        "closest": 0.4677559076703067,
+        "maxY": -13.92,
+        "reached": true,
+        "bailed": false,
+        "position": [
+          35.25183225424851,
+          -14,
+          -300.60582224202705
+        ],
+        "frames": 179,
+        "deaths": 0
+      },
+      {
+        "name": "shaded huts",
+        "mode": "route",
+        "penetrated": false,
+        "closest": 0.4274208675113261,
+        "maxY": -13.92,
+        "reached": true,
+        "bailed": false,
+        "position": [
+          34.99695718725117,
+          -14,
+          -327.5725899635307
+        ],
+        "frames": 278,
+        "deaths": 0
+      }
+    ],
+    "index": 15,
+    "stamp": "Codex/sol fork \u00b7 build 10-25 06:47 UTC",
+    "preview": 7,
+    "tuningUnchanged": true,
+    "failedAssets": []
+  },
+  "errors": []
+}

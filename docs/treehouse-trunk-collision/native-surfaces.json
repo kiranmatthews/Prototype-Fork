@@ -1,0 +1,282 @@
+[
+  {
+    "name": "river -3 walk",
+    "below": false,
+    "bailed": false,
+    "minY": -14.650000011920929,
+    "maxY": -13.839871752238821,
+    "furthest": 16.559999999995853,
+    "reached": true,
+    "position": [
+      32,
+      -14,
+      -374.55999999999585
+    ]
+  },
+  {
+    "name": "river -3 board",
+    "below": false,
+    "bailed": false,
+    "minY": -14.650000011920929,
+    "maxY": -13.840888082898815,
+    "furthest": 16.64755979058208,
+    "reached": true,
+    "position": [
+      38.44671512918313,
+      -14,
+      -374.6475597905821
+    ]
+  },
+  {
+    "name": "river 0 walk",
+    "below": false,
+    "bailed": false,
+    "minY": -14.650000011920929,
+    "maxY": -13.800000019073487,
+    "furthest": 16.559999999995853,
+    "reached": true,
+    "position": [
+      35,
+      -14,
+      -374.55999999999585
+    ]
+  },
+  {
+    "name": "river 0 board",
+    "below": false,
+    "bailed": false,
+    "minY": -14.650000011920929,
+    "maxY": -13.800000019073487,
+    "furthest": 16.539432746127204,
+    "reached": true,
+    "position": [
+      34.98800954483087,
+      -14,
+      -374.5394327461272
+    ]
+  },
+  {
+    "name": "river 3 walk",
+    "below": false,
+    "bailed": false,
+    "minY": -14.650000011920929,
+    "maxY": -13.800000019073487,
+    "furthest": 16.559999999995853,
+    "reached": true,
+    "position": [
+      38,
+      -14,
+      -374.55999999999585
+    ]
+  },
+  {
+    "name": "river 3 board",
+    "below": false,
+    "bailed": false,
+    "minY": -14.650000011920929,
+    "maxY": -13.800000019073487,
+    "furthest": 16.51118350792001,
+    "reached": true,
+    "position": [
+      38.0229026684484,
+      -14,
+      -374.51118350792
+    ]
+  },
+  {
+    "name": "opening halfpipe -1/-5.3 walk",
+    "below": false,
+    "bailed": false,
+    "minY": 0.10000000149011612,
+    "maxY": 3.657561412006567,
+    "furthest": 7.649999999999988,
+    "reached": true,
+    "position": [
+      8.500498303766463,
+      3.0213292388690105,
+      -6.1
+    ]
+  },
+  {
+    "name": "opening halfpipe -1/-5.3 board",
+    "below": false,
+    "bailed": false,
+    "minY": 0.10000000149011601,
+    "maxY": 4.666594069232084,
+    "furthest": 7.650097025407376,
+    "reached": true,
+    "position": [
+      8.349902974592624,
+      4.666594069232084,
+      -6.1
+    ]
+  },
+  {
+    "name": "opening halfpipe 1/0 walk",
+    "below": false,
+    "bailed": false,
+    "minY": 0.10000000149011612,
+    "maxY": 3.657560703812034,
+    "furthest": 7.649999999999988,
+    "reached": true,
+    "position": [
+      19.499632944982757,
+      3.021726531229235,
+      -0.8
+    ]
+  },
+  {
+    "name": "opening halfpipe 1/0 board",
+    "below": false,
+    "bailed": false,
+    "minY": 0.10000000149011601,
+    "maxY": 4.6665926087749705,
+    "furthest": 7.650097109026429,
+    "reached": true,
+    "position": [
+      19.65009710902643,
+      4.6665926087749705,
+      -0.8
+    ]
+  },
+  {
+    "name": "opening halfpipe 1/5.3 walk",
+    "below": false,
+    "bailed": false,
+    "minY": 0.10000000149011612,
+    "maxY": 3.657560703812034,
+    "furthest": 7.649999999999988,
+    "reached": true,
+    "position": [
+      19.499632944982757,
+      3.021726531229235,
+      4.5
+    ]
+  },
+  {
+    "name": "opening halfpipe 1/5.3 board",
+    "below": false,
+    "bailed": false,
+    "minY": 0.10000000149011601,
+    "maxY": 4.6665926087749705,
+    "furthest": 7.650097109026429,
+    "reached": true,
+    "position": [
+      19.65009710902643,
+      4.6665926087749705,
+      4.5
+    ]
+  },
+  {
+    "name": "opening pipe entrance -1 walk",
+    "below": false,
+    "bailed": false,
+    "minY": 0,
+    "maxY": 0.10000000149011612,
+    "furthest": 14.129999999999987,
+    "reached": true,
+    "position": [
+      14,
+      0,
+      -8.129999999999987
+    ]
+  },
+  {
+    "name": "opening pipe entrance -1 board",
+    "below": false,
+    "bailed": false,
+    "minY": 0,
+    "maxY": 0.10000000149011612,
+    "furthest": 14.326000000000008,
+    "reached": true,
+    "position": [
+      14,
+      0,
+      -8.326000000000008
+    ]
+  },
+  {
+    "name": "opening pipe entrance 1 walk",
+    "below": false,
+    "bailed": false,
+    "minY": 0,
+    "maxY": 0.10000000149011612,
+    "furthest": 14.129999999999985,
+    "reached": true,
+    "position": [
+      14,
+      0,
+      6.529999999999986
+    ]
+  },
+  {
+    "name": "opening pipe entrance 1 board",
+    "below": false,
+    "bailed": false,
+    "minY": 0,
+    "maxY": 0.10000000149011612,
+    "furthest": 14.326000000000008,
+    "reached": true,
+    "position": [
+      14,
+      0,
+      6.726000000000007
+    ]
+  },
+  {
+    "name": "cavern pipe -1 walk",
+    "below": false,
+    "bailed": false,
+    "minY": -7.2,
+    "maxY": -7.199999809265137,
+    "furthest": 50.58000000001459,
+    "reached": true,
+    "position": [
+      57,
+      -7.2,
+      -556.5800000000146
+    ]
+  },
+  {
+    "name": "cavern pipe -1 board",
+    "below": false,
+    "bailed": false,
+    "minY": -7.2,
+    "maxY": -7.199999809265137,
+    "furthest": 50.51694417231863,
+    "reached": true,
+    "position": [
+      57,
+      -7.2,
+      -556.5169441723186
+    ]
+  },
+  {
+    "name": "cavern pipe 1 walk",
+    "below": false,
+    "bailed": false,
+    "minY": -7.2,
+    "maxY": -7.199999809265137,
+    "furthest": 50.580000000012774,
+    "reached": true,
+    "position": [
+      57,
+      -7.2,
+      -505.4199999999872
+    ]
+  },
+  {
+    "name": "cavern pipe 1 board",
+    "below": false,
+    "bailed": false,
+    "minY": -7.2,
+    "maxY": -7.199999809265137,
+    "furthest": 50.51694417231846,
+    "reached": true,
+    "position": [
+      57,
+      -7.2,
+      -505.48305582768154
+    ]
+  }
+]

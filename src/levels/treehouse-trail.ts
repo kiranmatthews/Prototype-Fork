@@ -1,3 +1,4 @@
+import {collideTreehouseTrunks} from './treehouse-tree-collision';
 import {referenceTreehouseOpening} from './treehouse-reference-opening';
 import {encloseTreehouseWorld} from './treehouse-enclosure';
 import * as THREE from "three";
@@ -339,6 +340,6 @@ export const TREEHOUSE_TRAIL_LEVEL: CustomLevelData = {
     ambientSky: "#9fc5c4", ambientGround: "#6c6044", ambientIntensity: 1.10,
     sunDirection: [-.45,.7,.55], sunColor: "#fff0cf", sunIntensity: 1.85, fillColor: "#bdd2ca", fillIntensity: 0.42,
     shadowStrength: 0.85, drawDistance: 320 },
-  components: referenceTreehouseOpening(encloseTreehouseWorld(repairTreehouseWorld(treehouseTrialContinuity(components)))),
+  components: collideTreehouseTrunks(referenceTreehouseOpening(encloseTreehouseWorld(repairTreehouseWorld(treehouseTrialContinuity(components))))),
   groups: [...Object.entries(GROUP).map(([nm, id]) => ({ id, nm })), ...TREEHOUSE_TRIALS_SCENE_GROUPS_V2],
 };
