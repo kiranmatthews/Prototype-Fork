@@ -116,7 +116,7 @@ route('Loop summit landing', [[80, -225, -1634], [80, -225, -1645]], 6, 8);
 
 export const SKYSTREAM_LOOP = { entry: [80, -330, -1760] as P, radius: 34, width: 12, offset: 48,
   exit: [128, -330, -1760] as P };
-export const SKYSTREAM_WALL = { p: [104, -346, -1760] as P, s: [4.5, 62, 88] as P };
+export const SKYSTREAM_WALL = { p: [104, -346, -1760] as P, s: [4.5, 60, 88] as P };
 
 // Cosine descent has horizontal tangents at both ends. It supplies all loop
 // energy through the existing gravity-track physics; there is no speed pad.
@@ -147,9 +147,9 @@ for (let i = 1; i <= 96; i++) {
 // or invisible gate validation is used to make this obstacle compulsory.
 add({ t: 'wall', p: SKYSTREAM_WALL.p, s: SKYSTREAM_WALL.s, tex: 'skystream-marble', color: IVORY, grp: 6, nm: 'Aureole central sanctuary wall' });
 for (const x of [101.65, 106.35]) {
-  visual(new THREE.BoxGeometry(.22, 3, 90), [x, -286, -1760], GOLD, 'Sanctuary wall gilt cornice', 'metal');
+  visual(new THREE.BoxGeometry(.22, 3, 90), [x, -288, -1760], GOLD, 'Sanctuary wall gilt cornice', 'metal');
   for (const z of [-1796, -1778, -1760, -1742, -1724]) {
-    visual(new THREE.CylinderGeometry(.7, .9, 60, 12), [x, -315, z], '#d5deeb', 'Sanctuary wall fluted pilaster', 'skystream-marble');
+    visual(new THREE.CylinderGeometry(.7, .9, 58, 12), [x, -316, z], '#d5deeb', 'Sanctuary wall fluted pilaster', 'skystream-marble');
     const medallion = new THREE.TorusGeometry(3.8, .24, 6, 40); medallion.rotateY(Math.PI / 2);
     visual(medallion, [x, -296, z], GOLD, 'Sanctuary wall sun seal', 'metal');
   }

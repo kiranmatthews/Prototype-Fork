@@ -835,5 +835,12 @@
       "key": "secret-5",
       "detail": "THE SKYSTREAM\nALL BOXES\nTIME TRIAL\nBEST TIMES\n1.\n\u2014:\u2014.\u2014\n2.\n\u2014:\u2014.\u2014\n3.\n\u2014:\u2014.\u2014"
     }
-  ]
+  ],
+  "wallClearance": {
+    "heightMetres": 60,
+    "topY": -286,
+    "sampledFullWidthClearanceMetres": 3.01123670041306,
+    "bodyRadiusMetres": 0.8,
+    "minimumClearanceMetres": 2
+  }
 }

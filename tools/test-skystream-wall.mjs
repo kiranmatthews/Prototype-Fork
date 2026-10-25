@@ -5,9 +5,12 @@ await withBlockworksRuntime(async r=>{
  const {p,l,sourceModule:m}=r;
  const {sampleLoop}=await r.server.ssrLoadModule('/src/loopRide.ts');
  const [wx,wy,wz]=m.SKYSTREAM_WALL.p,[sx,sy,sz]=m.SKYSTREAM_WALL.s;
+ const barrier=l.walls.find(box=>Math.abs(box.min.x-(wx-sx/2))<.001&&Math.abs(box.max.x-(wx+sx/2))<.001&&Math.abs(box.min.z-(wz-sz/2))<.001);
+ assert.ok(barrier,'Missing physical central wall');
+ assert.equal(barrier.max.y,wy+sy,'Wall origins are at the base, unlike platform centres');
  for(let i=0;i<=720;i++)for(const lateral of [-6,0,6]){
   const q=sampleLoop(m.SKYSTREAM_LOOP,i/720*Math.PI*2,lateral).point.map((v,k)=>v+m.SKYSTREAM_LOOP.entry[k]);
-  assert.ok(Math.abs(q[0]-wx)>sx/2+.8||Math.abs(q[2]-wz)>sz/2+.8||q[1]>wy+sy/2+2,'Loop clips the solid central wall');
+  assert.ok(Math.abs(q[0]-wx)>sx/2+.8||Math.abs(q[2]-wz)>sz/2+.8||q[1]>barrier.max.y+2,'Loop clips the solid central wall');
  }
  let airborne=false,maxX=p.pos.x,hit=false;
  for(let frame=0;frame<300;frame++){
