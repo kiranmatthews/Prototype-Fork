@@ -1,6 +1,6 @@
 /** Deterministic lightweight vehicle dynamics. No renderer, solver dependency or player-tuning writes. */
 export interface CartInput { throttle:number; steer:number; brake:number; handbrake:boolean; hop?:boolean }
-export interface GroundSample { height:number; grip:number; drag:number; safe:boolean }
+export interface GroundSample { height:number; grip:number; drag:number; safe:boolean; supported?:boolean }
 export type CartGround=(x:number,z:number)=>GroundSample;
 export interface CartObstacle {x:number;z:number;radius:number;id:string;height?:number}
 export interface CartSpawn {x:number;z:number;yaw:number}
@@ -12,7 +12,7 @@ export interface CartState extends CartSpawn {
   supportHeight:number;supportVelocity:number;airTime:number;airborneCount:number;hopCooldown:number;hopLatch:boolean;
   tumbling:boolean;tumbleAngle:number;tumbleVelocity:number;tumbleTime:number;rollCooldown:number;rolls:number;recoveries:number;
 }
-export interface CartPhysicsOptions {scale?:number;topSpeed?:number;engine?:number;speedLimit?:number;crestLaunch?:boolean}
+export interface CartPhysicsOptions {scale?:number;topSpeed?:number;engine?:number;speedLimit?:number;crestLaunch?:boolean;maxLaunchVelocity?:number;airRecoveryDelay?:number}
 export const CART_PHYSICS=Object.freeze({step:1/120,maxSteps:24,mass:340,inertia:230,topSpeed:17,reverseSpeed:6,engine:8.4,brake:17,grip:7.7,wheelbase:1.72,radius:.78,probeOffset:.72,restitution:.38,gravity:13.5,hopVelocity:5.8,hopCooldown:1.0,rollImpact:10.5});
 const clamp=(v:number,a:number,b:number)=>Math.max(a,Math.min(b,v));
 const finite=(v:number)=>Number.isFinite(v)?v:0;
@@ -28,10 +28,12 @@ export class GolfCartPhysics {
   readonly carts:CartState[];readonly inputs:CartInput[];readonly impacts:CartImpact[]=[];
   time=0;steps=0;droppedTime=0;private accumulator=0;
   readonly scale:number;readonly topSpeed:number;readonly engine:number;readonly speedLimit:number;readonly crestLaunch:boolean;
+  readonly maxLaunchVelocity:number;readonly airRecoveryDelay:number;
   get radius(){return CART_PHYSICS.radius*this.scale;}
   get probeOffset(){return CART_PHYSICS.probeOffset*this.scale;}
   constructor(readonly ground:CartGround,readonly spawns:readonly CartSpawn[],readonly obstacles:readonly CartObstacle[]=[],options:CartPhysicsOptions={}){
     this.scale=options.scale??1;this.topSpeed=options.topSpeed??CART_PHYSICS.topSpeed;this.engine=options.engine??CART_PHYSICS.engine;this.speedLimit=options.speedLimit??24;this.crestLaunch=options.crestLaunch??true;
+    this.maxLaunchVelocity=options.maxLaunchVelocity??7.5;this.airRecoveryDelay=options.airRecoveryDelay??1.1;
     this.carts=spawns.map(s=>createCartState(s,ground));this.inputs=spawns.map(()=>({...NO_CART_INPUT}));
   }
   reset(index:number,repair=true){const old=this.carts[index],fresh=createCartState(this.spawns[index],this.ground);if(!repair){fresh.damage=[...old.damage];fresh.health=old.health;fresh.respawns=old.respawns+1;fresh.hits=old.hits;fresh.rolls=old.rolls;fresh.recoveries=old.recoveries;fresh.airborneCount=old.airborneCount;}Object.assign(old,fresh);this.inputs[index]={...NO_CART_INPUT};}
@@ -67,14 +69,16 @@ export class GolfCartPhysics {
       c.yaw=wrap(c.yaw+c.yawRate*dt);c.vx=fx*forward+rx*lateral;c.vz=fz*forward+rz*lateral;
       const horizontal=Math.hypot(c.vx,c.vz);if(horizontal>this.speedLimit){c.vx*=this.speedLimit/horizontal;c.vz*=this.speedLimit/horizontal;}
       c.x+=c.vx*dt;c.z+=c.vz*dt;c.speed=forward;c.travel+=forward*dt;c.impact*=Math.exp(-6*dt);c.cooldown=Math.max(0,c.cooldown-dt);
-      const heights:number[]=[];let safe=true;
-      for(let i=0;i<4;i++){const localX=(i%2?.74:-.74)*this.scale,localZ=(i<2?-.86:.86)*this.scale,sample=this.ground(c.x+cs*localX+sn*localZ,c.z-sn*localX+cs*localZ);heights.push(sample.height);safe&&=sample.safe;}
+      const heights:number[]=[];let safe=true,supported=true;
+      for(let i=0;i<4;i++){const localX=(i%2?.74:-.74)*this.scale,localZ=(i<2?-.86:.86)*this.scale,sample=this.ground(c.x+cs*localX+sn*localZ,c.z-sn*localX+cs*localZ);heights.push(sample.height);safe&&=sample.safe;supported&&=sample.supported!==false;}
       const floor=heights.reduce((a,b)=>a+b,0)/4;
-      const wasGrounded=c.grounded,terrainVelocity=clamp((floor-c.supportHeight)/dt,-10,10);
-      if(this.crestLaunch&&wasGrounded&&c.supportVelocity>1.2&&terrainVelocity<c.supportVelocity-.6&&Math.abs(forward)>5){c.vy=Math.min(7.5,c.supportVelocity*1.65+1.0);c.grounded=false;c.airborneCount++;}
+      const wasGrounded=c.grounded,terrainVelocity=clamp((floor-c.supportHeight)/dt,-Math.max(10,this.maxLaunchVelocity+2),Math.max(10,this.maxLaunchVelocity+2));
+      // Explicit finite road samples also release a chassis over a lower floor.
+      if(wasGrounded&&(!supported||g.supported!==undefined&&floor<c.y-.45)){c.vy=Math.max(0,Math.min(this.maxLaunchVelocity,c.supportVelocity));c.grounded=false;c.airborneCount++;}
+      else if(this.crestLaunch&&wasGrounded&&c.supportVelocity>1.2&&terrainVelocity<c.supportVelocity-.6&&Math.abs(forward)>5){c.vy=Math.min(this.maxLaunchVelocity,c.supportVelocity*1.65+1.0);c.grounded=false;c.airborneCount++;}
       if(c.grounded){c.y=floor;c.vy=0;}else{
         c.vy-=CART_PHYSICS.gravity*dt;c.y+=c.vy*dt;c.airTime+=dt;
-        if(c.y<=floor+.005&&c.vy<=0){
+        if(supported&&c.y<=floor+.005&&c.vy<=0){
           const impact=-c.vy,longFlight=c.airTime>.30;c.y=floor;c.grounded=true;
           if(impact>2.8){if(impact>8.3)this.damage(index,impact*.65,c.x,c.z,2);c.pitchV-=Math.min(2.2,impact*.22);c.impact=Math.max(c.impact,Math.min(1.2,impact*.12));}
           if(longFlight&&Math.abs(forward)>9&&(Math.abs(lateral)>4.2||Math.abs(c.roll)>.245+.08*(this.scale-1)))this.rollover(index,Math.sign(lateral||c.roll||1),impact);
@@ -82,10 +86,10 @@ export class GolfCartPhysics {
           c.airTime=0;
         }
       }
-      c.supportHeight=floor;c.supportVelocity=terrainVelocity;
+      c.supportHeight=floor;c.supportVelocity=supported?terrainVelocity:c.supportVelocity;
       const front=(heights[0]+heights[1])/2,back=(heights[2]+heights[3])/2,left=(heights[0]+heights[2])/2,right=(heights[1]+heights[3])/2;
       const terrainPitch=Math.atan2(front-back,1.72*this.scale),terrainRoll=Math.atan2(right-left,1.48*this.scale);
-      const rollTarget=clamp(terrainRoll-forward*c.yawRate*.013/this.scale,-.28,.28),pitchTarget=clamp(terrainPitch+(forward-previous)/dt*.008,-.22,.24);
+      const rollTarget=clamp((supported?terrainRoll:0)-forward*c.yawRate*.013/this.scale,-.28,.28),pitchTarget=clamp((supported?terrainPitch:Math.atan2(c.vy,Math.max(1,Math.abs(forward))))+(forward-previous)/dt*.008,-.22,.24);
       [c.roll,c.rollV]=spring(c.roll,c.rollV,rollTarget,dt);[c.pitch,c.pitchV]=spring(c.pitch,c.pitchV,pitchTarget,dt);
       c.roll=clamp(c.roll,-.38,.38);c.pitch=clamp(c.pitch,-.35,.35);
       if(c.tumbling){
@@ -96,7 +100,7 @@ export class GolfCartPhysics {
       }
       for(let i=0;i<4;i++)c.wheels[i]=clamp((heights[i]-floor)/this.scale,-.16,.16);
       c.unsafeTime=safe?0:c.unsafeTime+dt;
-      if(c.unsafeTime>1.1||c.y<floor-6||![c.x,c.z,c.y,c.yaw,c.vx,c.vz].every(Number.isFinite))this.reset(index,false);
+      if(c.unsafeTime>(c.grounded?1.1:this.airRecoveryDelay)||c.y<floor-6||![c.x,c.z,c.y,c.yaw,c.vx,c.vz].every(Number.isFinite))this.reset(index,false);
     }
     // Bounded fleet contact work: two scaled chassis circles, three solver passes.
     for(let iteration=0;iteration<3;iteration++){

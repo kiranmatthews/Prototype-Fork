@@ -29,7 +29,7 @@ export class GolfCartFleet {
     this.chipMesh.name='BoundedImpactChips';this.chipMesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);this.chipMesh.frustumCulled=false;this.root.add(this.chipMesh);this.present(0);
   }
   setDriver(index:number,style:DriverStyle|null){const previous=this.models[index].setDriver(style?this.drivers.create(style):null);previous?.dispose();if(style)this.driverStyles[index]=style;}
-  update(dt:number,control?:(world:GolfCartPhysics)=>void){
+  update(dt:number,control?:(world:GolfCartPhysics)=>void,present=true){
     this.physics.advance(dt,control??(world=>{world.carts.forEach((c,i)=>{world.inputs[i]=i===this.selected?this.input:this.pilots[i]?.sample(c,CART_PHYSICS.step)??{throttle:0,steer:0,brake:0,handbrake:false};});}));
     for(const hit of this.physics.impacts){
       const n=Math.min(8,Math.ceil(hit.strength));for(let i=0;i<n;i++){
@@ -38,7 +38,7 @@ export class GolfCartFleet {
       }
     }
     this.physics.impacts.length=0;
-    this.present(Math.min(dt,.1));
+    if(present)this.present(Math.min(dt,.1));else this.updateChips(Math.min(dt,.1));
   }
   present(dt:number){
     this.models.forEach((m,i)=>{const c=this.physics.carts[i],angle=c.tumbleAngle;
@@ -51,6 +51,9 @@ export class GolfCartFleet {
       if(visible)this.instanceMatrix.multiplyMatrices(this.inverseRoot,source.matrixWorld);else this.instanceMatrix.makeScale(0,0,0);
       mesh.setMatrixAt(i,this.instanceMatrix);mesh.setColorAt(i,(source.material as THREE.MeshStandardMaterial).color);
     });mesh.instanceMatrix.needsUpdate=true;if(mesh.instanceColor)mesh.instanceColor.needsUpdate=true;}
+    this.updateChips(dt);
+  }
+  private updateChips(dt:number){
     let alive=0;
     this.chips.forEach((p,i)=>{
       if(p.life>0){p.life-=dt;p.vy-=12*dt;p.x+=p.vx*dt;p.y+=p.vy*dt;p.z+=p.vz*dt;this.dummy.position.set(p.x,p.y,p.z);this.dummy.rotation.set(p.spin+p.life*6,p.life*8,p.spin);this.dummy.scale.setScalar(Math.min(1,p.life*4));alive++;}

@@ -7,6 +7,7 @@ export type RaceKnot = [number, number, number, number];
 export interface SkateRaceData {
   v: 1;
   racers: 8;
+  vehicle?: 'golf-cart';
   seed: number;
   stages?: string[];
   /** Ordered world-space racing guide, with rideable width at each knot. */
@@ -30,6 +31,7 @@ export interface RaceThreat {
   seconds:number; bearing:number; urgent:boolean;
 }
 export interface RaceHudState {
+  vehicle?: 'golf-cart'; crystalReward?:boolean;
   title:string; sections:readonly string[]; medalTimes:MedalTimes; medal:TimeMedal|null;
   phase: RacePhase; mode: RaceMode; countdown: number; runTime: number; elapsed: number; freeze: number;
   rank: number; item: RaceItem | null; shield: number; star: number; recovering: number;

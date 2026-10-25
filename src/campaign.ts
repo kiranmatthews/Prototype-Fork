@@ -384,6 +384,7 @@ const ASSIGNMENTS: Record<string, Partial<CampaignLevelDefinition> & { name: str
   'secret-3': {name:'The Ancient Gates',levelId:'jungle-gate-run',previewKey:'jungle-gate',secretRequirement:'medals-10'},
   'secret-4': {name:'Rolling Bones',levelId:'rolling-bones',previewKey:'rolling-bones',relicTime:118,secretRequirement:'gems-15'},
   'secret-5': {name:'The Skystream',levelId:'skystream',previewKey:'skystream',relicTime:180,secretRequirement:'medals-20'},
+  'secret-6': {name:'Coconut Cart Rally',levelId:'coconut-cart-rally',previewKey:'coconut-cart-rally',skateRace:true,bonus:false,relicTime:125,secretRequirement:'main-medals'},
 };
 
 /** Hand-placed coastal loops, in progression order. Coordinates are island-local. */

@@ -17,6 +17,7 @@ import { NightworksPlume } from './nightworksPlume';
 import { NightworksFogVisibility } from './nightworksFog';
 import { addNightworksStoneLook, createNightworksMagma, NIGHTWORKS_VOLCANO_TEXTURES } from './nightworksMagma';
 import { SKY_BRIDGE_LEVEL } from './levels/sky-bridge';
+import { COCONUT_CART_RALLY_LEVEL } from './levels/coconut-cart-rally';
 import { SKYSTREAM_LEVEL } from './levels/skystream';
 import { ICE_SURFACE, FALL_AWAY_SURFACE, SLIPPERY_COMPONENT_TYPES } from './surfaceBehavior';
 import { createIceMaterial } from './surfacePresentation';
@@ -2571,6 +2572,7 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
   { id: 'country-club', name: COUNTRY_CLUB_LEVEL.name, data: COUNTRY_CLUB_LEVEL },
   { id: "sky", name: "Sky Bridge", data: SKY_BRIDGE_LEVEL },
   { id: 'skystream', name: SKYSTREAM_LEVEL.name, data: SKYSTREAM_LEVEL },
+  { id: 'coconut-cart-rally', name: COCONUT_CART_RALLY_LEVEL.name, data: COCONUT_CART_RALLY_LEVEL },
   { id: SLIPSTREAM_COURSE_ID, name: SLIPSTREAM_LEVEL.name, data: SLIPSTREAM_LEVEL },
   {id:"test",name:CARLISLE_COAST_LEVEL.name,data:CARLISLE_COAST_LEVEL},
   {id:"custard-creek",name:CUSTARD_CREEK_LEVEL.name,data:CUSTARD_CREEK_LEVEL},

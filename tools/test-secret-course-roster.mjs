@@ -16,7 +16,13 @@ try{
   ['sky','Sky Bridge','medals-5'],['jungle-terraces','Temple of Embers','gems-5'],['jungle-gate-run','The Ancient Gates','medals-10'],
   ['rolling-bones','Rolling Bones','gems-15'],['skystream','The Skystream','medals-20']]);
  assert.ok(rows.slice(0,5).every(l=>!l.placeholder&&!l.boss));
- assert.ok(rows.slice(5).every(l=>l.placeholder));
+ assert.deepEqual([rows[5].levelId,rows[5].name,rows[5].secretRequirement],['coconut-cart-rally','Coconut Cart Rally','main-medals']);
+ assert.ok(rows[5].skateRace&&!rows[5].placeholder&&!rows[5].boss);
+ assert.equal(campaign.levelAllowsCrystal(rows[5].levelId),false);
+ assert.equal(campaign.levelAllowsBonus(rows[5].levelId),false);
+ assert.equal(api.findLevel(rows[5].levelId).data.skateRace.vehicle,'golf-cart');
+ await access(new URL('../public/level-previews/coconut-cart-rally.jpg',import.meta.url));
+ assert.ok(rows.slice(6).every(l=>l.placeholder));
  for(const row of rows.slice(0,5)){
   const entry=api.findLevel(row.levelId);
   assert.ok(entry?.data,row.name+' has no actual course');
@@ -49,5 +55,5 @@ try{
  assert.deepEqual(renamed.data.components,api.getUserLevels()[0].data.components,'rename changed edited geometry');
  assert.equal(api.getUserLevels()[0].name,'Jungle Gate Run','catalogue view mutated the archived editor entry');
  api.setUserLevels([]);
- console.log('PASS five real secret courses, three placeholders, existing previews, Ancient Gates rename and retired Descent override suppression.');
+ console.log('PASS six real secret courses, two placeholders, existing previews, Ancient Gates rename and retired Descent override suppression.');
 }finally{await server.close();}
