@@ -1,0 +1,359 @@
+{
+  "base": "http://127.0.0.1:5269",
+  "lite": {
+    "level": "rooftop-relay",
+    "weather": {
+      "time": 22.524301100817148,
+      "glow": 0,
+      "azimuth": 2.7716139040992283,
+      "cues": 1,
+      "lastCue": 0
+    },
+    "uniform": [
+      0.36159561945225926,
+      0.27,
+      -0.9323350299076706,
+      0
+    ],
+    "audio": {
+      "decoded": true,
+      "events": [
+        {
+          "duration": 6.4,
+          "loop": false,
+          "rate": 1.0228230953216553,
+          "stopped": false,
+          "clock": 22.524301100817148
+        }
+      ]
+    },
+    "buffer": [
+      1280,
+      720
+    ],
+    "stamp": "Codex/sol fork · build 10-25 16:24 UTC"
+  },
+  "litePaused": {
+    "level": "rooftop-relay",
+    "weather": {
+      "time": 22.524301100817148,
+      "glow": 0,
+      "azimuth": 2.7716139040992283,
+      "cues": 1,
+      "lastCue": 0
+    },
+    "uniform": [
+      0.36159561945225926,
+      0.27,
+      -0.9323350299076706,
+      0
+    ],
+    "audio": {
+      "decoded": true,
+      "events": [
+        {
+          "duration": 6.4,
+          "loop": false,
+          "rate": 1.0228230953216553,
+          "stopped": true,
+          "clock": 22.524301100817148
+        }
+      ]
+    },
+    "buffer": [
+      1280,
+      720
+    ],
+    "stamp": "Codex/sol fork · build 10-25 16:24 UTC"
+  },
+  "gpu": {
+    "positive": 10334,
+    "maxDifference": 79,
+    "restoreDifference": 0,
+    "belowDifference": 0,
+    "brightness": 623538
+  },
+  "timeline": {
+    "cycle": 0,
+    "start": 18.49022275997777,
+    "thunderAt": 22.490967767483834,
+    "glow": 0,
+    "azimuth": 2.7716139040992283,
+    "gain": 0.33085321881066193,
+    "rate": 1.0228231188829704
+  },
+  "before": {
+    "level": "rooftop-relay",
+    "weather": {
+      "time": 18.390222759977767,
+      "glow": 0,
+      "azimuth": 2.7716139040992283,
+      "cues": 0,
+      "lastCue": -1
+    },
+    "uniform": [
+      0.36159561945225926,
+      0.27,
+      -0.9323350299076706,
+      0
+    ],
+    "audio": {
+      "decoded": true,
+      "events": []
+    },
+    "buffer": [
+      2560,
+      1440
+    ],
+    "stamp": "Codex/sol fork · build 10-25 16:24 UTC"
+  },
+  "peak": {
+    "level": "rooftop-relay",
+    "weather": {
+      "time": 19.16522275997777,
+      "glow": 0.86,
+      "azimuth": 2.7716139040992283,
+      "cues": 0,
+      "lastCue": -1
+    },
+    "uniform": [
+      0.36159561945225926,
+      0.27,
+      -0.9323350299076706,
+      0.86
+    ],
+    "audio": {
+      "decoded": true,
+      "events": []
+    },
+    "buffer": [
+      2560,
+      1440
+    ],
+    "stamp": "Codex/sol fork · build 10-25 16:24 UTC"
+  },
+  "after": {
+    "level": "rooftop-relay",
+    "weather": {
+      "time": 19.940222759977768,
+      "glow": 0,
+      "azimuth": 2.7716139040992283,
+      "cues": 0,
+      "lastCue": -1
+    },
+    "uniform": [
+      0.36159561945225926,
+      0.27,
+      -0.9323350299076706,
+      0
+    ],
+    "audio": {
+      "decoded": true,
+      "events": []
+    },
+    "buffer": [
+      2560,
+      1440
+    ],
+    "stamp": "Codex/sol fork · build 10-25 16:24 UTC"
+  },
+  "thunder": {
+    "level": "rooftop-relay",
+    "weather": {
+      "time": 22.50763443415049,
+      "glow": 0,
+      "azimuth": 2.7716139040992283,
+      "cues": 1,
+      "lastCue": 0
+    },
+    "uniform": [
+      0.36159561945225926,
+      0.27,
+      -0.9323350299076706,
+      0
+    ],
+    "audio": {
+      "decoded": true,
+      "events": [
+        {
+          "duration": 6.4,
+          "loop": false,
+          "rate": 1.0228230953216553,
+          "stopped": false,
+          "clock": 22.50763443415049
+        }
+      ]
+    },
+    "buffer": [
+      2560,
+      1440
+    ],
+    "stamp": "Codex/sol fork · build 10-25 16:24 UTC"
+  },
+  "paused": {
+    "level": "rooftop-relay",
+    "weather": {
+      "time": 22.50763443415049,
+      "glow": 0,
+      "azimuth": 2.7716139040992283,
+      "cues": 1,
+      "lastCue": 0
+    },
+    "uniform": [
+      0.36159561945225926,
+      0.27,
+      -0.9323350299076706,
+      0
+    ],
+    "audio": {
+      "decoded": true,
+      "events": [
+        {
+          "duration": 6.4,
+          "loop": false,
+          "rate": 1.0228230953216553,
+          "stopped": true,
+          "clock": 22.50763443415049
+        }
+      ]
+    },
+    "buffer": [
+      2560,
+      1440
+    ],
+    "stamp": "Codex/sol fork · build 10-25 16:24 UTC"
+  },
+  "resumed": {
+    "level": "rooftop-relay",
+    "weather": {
+      "time": 22.957634434150464,
+      "glow": 0,
+      "azimuth": 2.7716139040992283,
+      "cues": 1,
+      "lastCue": 0
+    },
+    "uniform": [
+      0.36159561945225926,
+      0.27,
+      -0.9323350299076706,
+      0
+    ],
+    "audio": {
+      "decoded": true,
+      "events": [
+        {
+          "duration": 6.4,
+          "loop": false,
+          "rate": 1.0228230953216553,
+          "stopped": true,
+          "clock": 22.50763443415049
+        }
+      ]
+    },
+    "buffer": [
+      2560,
+      1440
+    ],
+    "stamp": "Codex/sol fork · build 10-25 16:24 UTC"
+  },
+  "dry": {
+    "level": "codex-lab",
+    "weather": {
+      "time": 0,
+      "glow": 0,
+      "azimuth": 2.7716139040992283,
+      "cues": 1,
+      "lastCue": -1
+    },
+    "uniform": [
+      0.36159561945225926,
+      0.27,
+      -0.9323350299076706,
+      0
+    ],
+    "audio": {
+      "decoded": true,
+      "events": [
+        {
+          "duration": 6.4,
+          "loop": false,
+          "rate": 1.0228230953216553,
+          "stopped": true,
+          "clock": 22.50763443415049
+        }
+      ]
+    },
+    "buffer": [
+      2560,
+      1440
+    ],
+    "stamp": "Codex/sol fork · build 10-25 16:24 UTC"
+  },
+  "returned": {
+    "level": "rooftop-relay",
+    "weather": {
+      "time": 0.19999999999999998,
+      "glow": 0,
+      "azimuth": 2.7716139040992283,
+      "cues": 1,
+      "lastCue": -1
+    },
+    "uniform": [
+      0.36159561945225926,
+      0.27,
+      -0.9323350299076706,
+      0
+    ],
+    "audio": {
+      "decoded": true,
+      "events": [
+        {
+          "duration": 6.4,
+          "loop": false,
+          "rate": 1.0228230953216553,
+          "stopped": true,
+          "clock": 22.50763443415049
+        }
+      ]
+    },
+    "buffer": [
+      2560,
+      1440
+    ],
+    "stamp": "Codex/sol fork · build 10-25 16:24 UTC"
+  },
+  "regular": {
+    "level": "rooftop-relay",
+    "weather": {
+      "time": 5.716666666666652,
+      "glow": 0,
+      "azimuth": 2.7716139040992283,
+      "cues": 1,
+      "lastCue": -1
+    },
+    "uniform": [
+      0.36159561945225926,
+      0.27,
+      -0.9323350299076706,
+      0
+    ],
+    "audio": {
+      "decoded": true,
+      "events": [
+        {
+          "duration": 6.4,
+          "loop": false,
+          "rate": 1.0228230953216553,
+          "stopped": true,
+          "clock": 22.50763443415049
+        }
+      ]
+    },
+    "buffer": [
+      1280,
+      720
+    ],
+    "stamp": "Codex/sol fork · build 10-25 16:24 UTC"
+  },
+  "errors": []
+}

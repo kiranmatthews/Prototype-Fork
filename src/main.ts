@@ -33,6 +33,7 @@ import { CompetitionPresentation, type CompetitionAction } from "./competition/p
 
 import * as THREE from "three";
 import { installSkyProjection } from "./skyProjection";
+import {StormSquall} from './stormSquall';
 import { SEA_SKY_ART, SEA_SKY_CONTENT_FRACTION } from "./seaBackdrop";
 import { SKY_PRESETS, resolveLevelAtmosphere, atmosphereColor, atmosphereColorHex } from "./levelAtmosphere";
 import { DrownedCrownLighting } from "./drownedCrownLighting";
@@ -324,6 +325,8 @@ const sky = new THREE.Mesh(
   }),
 );
 const skyProjection = installSkyProjection(sky, skyHazeColor, skyHazeStrength, skyOpaqueBackdrop, skySeaBackdrop);
+const stormSquall=new StormSquall((gain,rate)=>sfx.playManaged('rooftop-thunder','rooftopThunder',gain,rate));
+function suspendStormSquall(){stormSquall.stop();skyProjection.setStormGlow(0,Math.PI);}
 sky.frustumCulled = false;
 sky.visible = !LITE;
 // Unity's Camera Opaque Texture includes the skybox. Keep this backdrop in the
@@ -865,6 +868,7 @@ function applyTheme(): void {
   skyHazeStrength.value=(!level.water||level.isCampaignMap)&&atmosphere.backdrop==='painted sky'&&atmosphere.fogEnabled?(level.isCampaignMap ? .78 : 1):0;
   skyOpaqueBackdrop.value=atmosphere.backdrop==='painted sky'?1:0;
   skyProjection.setHazeElevation(SKY_PRESETS[skyPreset].hazeElevation??.26);
+  skyProjection.setStormGlow(0,Math.PI);stormSquall.stop();
   scene.fog = editorViewActive || !atmosphere.fogEnabled ? null :
     new THREE.Fog(sceneFogColor, atmosphere.fogNear, atmosphere.fogFar);
   scene.background = sceneFogColor.clone();
@@ -1138,6 +1142,9 @@ function drawPrimaryScene(
   }
   const rain=level.rainPresentation;
   coastPost?.setRain(editorViewActive||gameFlow.blocksGameplay||split2p?0:rain.amount,rain.time);
+  const storm=stormSquall.update(level,rain.time,
+    !editorViewActive&&!gameFlow.blocksGameplay&&!paused&&!split2p&&!characterLab&&!animationStudio&&level.skyPreset==='coastal-storm'?(level.atmosphere?.rain?.intensity??0):0);
+  skyProjection.setStormGlow(storm.glow,storm.azimuth);
   const automaticWorldMatrices = prepareWorldFrame(scene);
   const originalTone=renderer.toneMapping,originalExposure=renderer.toneMappingExposure;
   if(level.warehouseArtEnabled){renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.2;}
@@ -4828,7 +4835,7 @@ const GAMEPLAY_RENDER_HZ = 60;
 const renderFrameLimiter = new PresentationFrameLimiter(GAMEPLAY_RENDER_HZ);
 const graphicsRecovery = new GraphicsRecovery(renderer.domElement, () => {
   recordPresentationStage('graphics-lost');
-  sfx.stopLoops();
+  sfx.stopLoops();suspendStormSquall();
   level.invalidateWarehouseEnvironment();
   releaseLostGraphicsResources([scene,level,player,p2,skateRace]);
   level.water?.resetGraphicsContext();
@@ -4858,7 +4865,7 @@ document.addEventListener('visibilitychange', () => {
   input2.consumeEdges(true);
   player.snapRenderInterpolation();
   p2?.snapRenderInterpolation();
-  if (document.hidden) sfx.stopLoops();
+  if (document.hidden) {sfx.stopLoops();suspendStormSquall();}
   else {
     input.armMenuReleaseGuard();
     input2.armMenuReleaseGuard();
@@ -5019,7 +5026,7 @@ let reportedPresentationStage='';
 function frame(nowMs: number): void {
   if (startupFailed) return;
   requestAnimationFrame(frame);
-  if (document.hidden || graphicsRecovery.lost || renderer.getContext().isContextLost()) return;
+  if (document.hidden || graphicsRecovery.lost || renderer.getContext().isContextLost()) {stormSquall.stop();return;}
   try {
     advanceFrame(nowMs);
   } catch (error) {
@@ -5135,7 +5142,7 @@ function advanceFrame(nowMs: number): void {
     input.consumeEdges(true);
     if (split2p) input2.consumeEdges(true);
     acc = 0;
-    sfx.stopLoops();
+    sfx.stopLoops();suspendStormSquall();
     if (bonusDeparture && !gameFlow.loadingPhase) { renderBonusDeparture(dt); return; }
     const vortexContext = gameFlow.vortexContext;
     if (vortexContext) {
@@ -5200,7 +5207,7 @@ function advanceFrame(nowMs: number): void {
     competition.stepPresentation(dt);
     competitionUI.render(competition);
     if ((competition.phase as string) !== "running") {
-      input.consumeEdges(true); acc = 0; sfx.stopLoops();
+      input.consumeEdges(true); acc = 0; sfx.stopLoops();suspendStormSquall();
       if (competition.phase === "countdown") updateCamera(dt);
       else frameCompetitionOverview();
       sky.position.copy(camera.position); skyMist.position.copy(camera.position);
@@ -5283,7 +5290,7 @@ function advanceFrame(nowMs: number): void {
       player.beginCompetitionFinish(level);
       ui.deathFade(false);
       player.collapseRenderInterpolation();
-      sfx.stopLoops();
+      sfx.stopLoops();suspendStormSquall();
     }
     flushPendingCompletion();
     checkCampaignEntrances();
@@ -5382,7 +5389,7 @@ function advanceFrame(nowMs: number): void {
     commitCompetitionVictory();
     competitionUI.render(competition);
     player.collapseRenderInterpolation();
-    sfx.stopLoops();
+    sfx.stopLoops();suspendStormSquall();
   }
   // M-hidden developer chrome should be computationally hidden too. Building
   // these strings and replacing innerHTML every frame was pure background work.
@@ -5577,6 +5584,7 @@ requestAnimationFrame(frame);
   setCharacterTailVisible: (visible: boolean) => player.setCharacterTailVisible(visible),
   toggleCharacterTailVisibility: () => player.toggleCharacterTailVisibility(),
   getLookDiagnostics: () => coastPost?.lookDiagnostics ?? null,
+  getStormDiagnostics: () => stormSquall.diagnostics,
   getIslandShoreFoamDiagnostics: () => level.shoreFoamDiagnostics,
   // playtest capture (also on F8/F9 + tuner buttons + drag-drop):
   exportReplay,

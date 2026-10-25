@@ -83,6 +83,13 @@ sfx.play('railLand',.7,1,0);
 assert.equal(sources.length,count+1);assert.equal(sources.at(-1).loop,false,'one-shot impacts must remain full-length');
 assert.equal(sources.at(-1).loopEnd,0);
 sources.at(-1).onended();assert.equal(sources.at(-1).disconnected,true);assert.equal(sources.at(-1).output.disconnected,true,'completed one-shot gain must leave the graph');
+// Distant thunder is a finite source, cancelled by the existing pause/hide path.
+sfx.ctx.currentTime+=.1;const cancelThunder=sfx.playManaged('storm','rooftopThunder',.3,.96),thunder=sources.at(-1);
+assert.equal(typeof cancelThunder,'function');assert.equal(thunder.loop,false);assert.equal(thunder.playbackRate.value,.96);
+sfx.stopLoops();assert.equal(thunder.stops,1);assert.equal(sfx.managedShots.size,0);assert.equal(thunder.disconnected,true);
+cancelThunder();assert.equal(thunder.stops,1,'Repeated storm teardown must not stop an ended source twice');
+sfx.ctx.state='suspended';const beforeSuspendedStorm=sources.length;
+assert.equal(sfx.playManaged('storm','rooftopThunder',.3),undefined);assert.equal(sources.length,beforeSuspendedStorm,'Autoplay suspension must not queue old thunder');sfx.ctx.state='running';
 // Rival one-shots are quieter without stealing the hero's matching cue or changing settings.
 sfx.ctx.currentTime+=.1;const beforeScoped=sources.length;
 sfx.withGain(0,()=>sfx.play('railLand',.7,1,0),'race-rivals');assert.equal(sources.length,beforeScoped);

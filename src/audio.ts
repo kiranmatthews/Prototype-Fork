@@ -50,6 +50,7 @@ const FILES: Record<string, string> = {
   kookCock: 'enemies/kook-cock.wav',
   kookShot: 'enemies/kook-shot.wav',
   rooftopRain: 'weather/rooftop-rain.wav',
+  rooftopThunder: 'weather/rooftop-thunder.wav',
   enemyCrabStep: 'enemies/crab-step.wav',
   enemyCrabClack: 'enemies/crab-clack.wav',
   enemySpikerStep: 'enemies/spiker-step.wav',
@@ -116,6 +117,7 @@ class SfxEngine {
   private musicVolume = 1;
   private buffers = new Map<string, AudioBuffer>();
   private loops = new Map<string, LoopChannel>();
+  private managedShots = new Map<string,()=>void>();
   private lastPlay = new Map<string, number>();
   private emitterGain = 1;
   private emitterChannel = "";
@@ -240,7 +242,7 @@ class SfxEngine {
     try{return work();}finally{this.emitterGain=previous;this.emitterChannel=previousChannel;}
   }
 
-  play(name: string, vol = 1, rate = 1, pitchVariance = 0.04): void {
+  play(name: string, vol = 1, rate = 1, pitchVariance = 0.04): (()=>void)|undefined {
     try {
       const ctx = this.ctx;
       const buf = this.buffers.get(name);
@@ -260,11 +262,23 @@ class SfxEngine {
       gain.gain.value = vol;
       src.connect(gain);
       gain.connect(bus);
-      src.onended = () => { src.disconnect(); gain.disconnect(); };
+      let ended=false;
+      const release=()=>{if(ended)return;ended=true;src.disconnect();gain.disconnect();};
+      src.onended = release;
       src.start();
+      return ()=>{if(!ended){try{src.stop();}catch{/* Already finished. */}release();}};
     } catch {
       /* ignore */
     }
+  }
+
+  /** Finite ambience shares loop cancellation on pause, navigation and hide. */
+  playManaged(id:string,name:string,vol:number,rate=1):(()=>void)|undefined {
+    this.managedShots.get(id)?.();
+    if(this.ctx?.state!=='running')return;
+    const stop=this.play(name,vol,rate,0);if(!stop)return;
+    const cancel=()=>{stop();if(this.managedShots.get(id)===cancel)this.managedShots.delete(id);};
+    this.managedShots.set(id,cancel);return cancel;
   }
 
   /** A short descending water impact and spray through the existing SFX bus. */
@@ -356,6 +370,8 @@ class SfxEngine {
   }
 
   stopLoops(): void {
+    for(const stop of this.managedShots.values())stop();
+    this.managedShots.clear();
     for (const loop of this.loops.values()) {
       try {
         loop.src.stop();
