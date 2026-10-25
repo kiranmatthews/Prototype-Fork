@@ -4,7 +4,7 @@ import { medalForTime } from '../campaign';
 import * as THREE from 'three';
 import { Player } from '../player';
 import { sfx } from '../audio';
-import { createRaceItemModel, disposeRaceItemModel } from './items';
+import { createRaceItemModel, createRallyItemModel, disposeRaceItemModel } from './items';
 import type { Input } from '../input';
 import type { Crate, Checkpoint, Level } from '../level';
 import type { WipeoutCause } from '../character/wipeoutPolicy';
@@ -65,7 +65,7 @@ export class SkateRace {
   get active():boolean{return !!this.level;}
   get count():number{return this.mode==='race'?8:1;}
   async preparePresentationAssets():Promise<void> {
-    if(this.active)await Promise.all([prepareRaceItemPictures(),...(this.carts?[]:this.riders.slice(1,this.count).map(r=>r.player.preparePresentationAssets()))]);
+    if(this.active)await Promise.all([prepareRaceItemPictures(),...this.riders.slice(1,this.count).map(r=>r.player.preparePresentationAssets())]);
   }
   private allocate():void {
     if(this.riders.length)return;
@@ -120,7 +120,7 @@ export class SkateRace {
       const start=level.spawnPos.clone().addScaledVector(right,(r.id%2?1:-1)*2.2)
         .addScaledVector(forward,-Math.floor(r.id/2)*3.5);
       if(mode==='time-trial')start.copy(level.spawnPos);
-      r.player.enterLevel(this.levelId);r.player.raceHooks={canCollectItem:()=>!r.item&&r.finish===null&&!r.recovery,hazard:(cause,origin)=>this.hazard(r,cause,origin),unrecoverableFall:()=>this.unrecoverableFall(r),fallStarted:()=>{r.falls++;r.recovery=1;r.boost=0;},respawn:()=>this.recover(r)};
+      r.player.enterLevel(this.levelId);r.player.raceHooks={onFoot:()=>!!this.carts&&!this.carts.isDriving(r.id),canCollectItem:()=>!r.item&&r.finish===null&&!r.recovery,hazard:(cause,origin)=>this.hazard(r,cause,origin),unrecoverableFall:()=>this.unrecoverableFall(r),fallStarted:()=>{r.falls++;r.recovery=1;r.boost=0;},respawn:()=>this.recover(r)};
       r.player.racePresentationInterval=r.id===0?0:1/15;
       r.player.resetRacePosition(level,start,this.course.tangent(0));
       r.player.hasCrystal=false;r.player.gemEarned=false;r.player.cratesBroken=0;r.player.bonusCrates=0;
@@ -130,7 +130,7 @@ export class SkateRace {
       if(r.scene){r.scene.visible=r.id<this.count;if(r.id<this.count&&r.scene.parent!==this.scene)this.scene.add(r.scene);else if(r.id>=this.count)r.scene.removeFromParent();}
       r.marker.visible=r.id<this.count;r.player.prepareStartPresentation(level);this.placeMarker(r);
     }
-    if(level.skateRace?.vehicle==='golf-cart'){this.carts=new GolfCartRace(level,this.course,this.riders,this.count);this.root.add(this.carts.fleet.root);}
+    if(level.skateRace?.vehicle==='golf-cart'){this.carts=new GolfCartRace(level,this.course,this.riders,this.count,(id,origin,power)=>this.hit(this.riders[id],origin,power));this.root.add(this.carts.fleet.root);this.heavyAt=8;}
   }
   start(mode:RaceMode=this.mode,seed?:number):void {
     if(!this.level||mode==='time-trial'&&!this.canStartTimeTrial(this.levelId))return;
@@ -153,10 +153,10 @@ export class SkateRace {
       const lead=this.order()[0],fresh=r.progress>r.itemProgress+12;
       const heavy=fresh&&this.elapsed>=this.heavyAt&&!this.riders.some(a=>a.item==='blue-shell'||a.item==='shock-shell'||a.item==='tidal-wave')&&
         !this.projectiles.some(p=>p.type==='blue-shell'||p.type==='shock-shell'||p.type==='tidal-wave');
-      r.item=this.mode==='time-trial'?'mushroom':r.deck.draw(this.rank(r.id),Math.max(0,lead.progress-r.progress),heavy,this.elapsed>=30&&!r.ultraUsed);
+      r.item=this.mode==='time-trial'?'mushroom':r.deck.draw(this.rank(r.id),Math.max(0,lead.progress-r.progress),heavy,this.elapsed>=30&&!r.ultraUsed,!!this.carts);
       r.itemProgress=Math.max(r.itemProgress,r.progress);
       if(r.item==='star'||r.item==='tidal-wave')r.ultraUsed=true;
-      if(r.item==='blue-shell'||r.item==='shock-shell'||r.item==='tidal-wave')this.heavyAt=this.elapsed+(r.item==='tidal-wave'?45:25);
+      if(r.item==='blue-shell'||r.item==='shock-shell'||r.item==='tidal-wave')this.heavyAt=this.elapsed+(this.carts?10:r.item==='tidal-wave'?45:25);
     }
     this.returns.set(c,c.mystery?4:7);
   }
@@ -168,11 +168,11 @@ export class SkateRace {
     if(cause==='pit'||cause==='water')return; // native fall presentation owns these
     this.hit(r,origin);
   }
-  private hit(r:Rider,origin?:THREE.Vector3):boolean {
+  private hit(r:Rider,origin?:THREE.Vector3,power=.24):boolean {
     if(r.recovery>0||r.finish!==null||r.knockGrace>0)return false;
     if(r.star>0){this.effects.pulse(r.player.pos,0xffdc5b,2);return false;}
     if(r.shield>0){r.shield=0;r.knockGrace=1;this.effects.burst('shield',r.player.pos);sfx.withGain(this.soundGain(r),()=>sfx.play('maskLoss',.55),r.id?'race-rivals':'');return false;}
-    if(this.carts){this.carts.hit(r.id,origin);r.knockGrace=2.4;r.boost=0;this.effects.pulse(r.player.pos,0xffcb79,1.8);return true;}
+    if(this.carts?.isDriving(r.id)){this.carts.hit(r.id,origin,power);r.knockGrace=1.4;r.boost=0;this.effects.pulse(r.player.pos,0xffcb79,1.8);return true;}
     const direction=origin?this.a.copy(r.player.pos).sub(origin).setY(0).normalize():this.a.copy(r.player.raceHeading);
     const sign=direction.x*r.player.raceHeading.z-direction.z*r.player.raceHeading.x>=0?1:-1;
     if(!sfx.withGain(this.soundGain(r),()=>r.player.beginRaceStun(4.5,sign),r.id?'race-rivals':''))return false;
@@ -191,7 +191,7 @@ export class SkateRace {
   private recover(r:Rider):void {
     r.recovery=0;r.boost=0;r.jumped=-1;r.oldJump=false;r.think=0;r.braking=false;
     r.progress=r.previousProgress=r.anchorProgress;
-    r.player.resetRacePosition(this.level!,r.anchor,this.course!.tangent(r.anchorProgress));
+    r.player.resetRacePosition(this.level!,r.anchor,this.course!.tangent(r.anchorProgress),!!this.carts&&!this.carts.isDriving(r.id));
     r.knockGrace=1.5;
   }
   /** UI and replay both feed this one semantic item edge. */
@@ -201,20 +201,20 @@ export class SkateRace {
     const item=r.item;r.item=null;sfx.withGain(this.soundGain(r),()=>sfx.play('woosh2',.55),r.id?'race-rivals':'');
     if(item==='star'){r.star=6;r.boost=6;this.effects.burst('star',r.player.pos);sfx.withGain(this.soundGain(r),()=>sfx.play('maskGet',.65),r.id?'race-rivals':'');return true;}
     if(item==='shield'){r.shield=8;this.effects.burst('shield',r.player.pos);return true;}
-    if(item==='mushroom'){r.boost=2.5;r.dodge=.55;this.effects.burst('mushroom',r.player.pos);return true;}
+    if(item==='mushroom'){r.boost=this.carts?4:2.5;r.dodge=.55;this.effects.burst('mushroom',r.player.pos);return true;}
     if(item==='horn'){
-      this.effects.burst('horn',r.player.pos);
+      this.effects.burst('horn',r.player.pos);if(this.carts)this.effects.pulse(r.player.pos,0xffbc52,13);
       sfx.withGain(this.soundGain(r),()=>sfx.play('bouncyBounce',.8,.6),r.id?'race-rivals':'');
-      for(const p of this.projectiles)if(p.type!=='shock-shell'&&p.mesh.position.distanceTo(r.player.pos)<8)p.time=99;
-      for(const other of this.riders.slice(0,this.count))if(other!==r&&other.player.pos.distanceTo(r.player.pos)<6)this.hit(other,r.player.pos);
+      for(const p of this.projectiles)if(p.type!=='shock-shell'&&p.mesh.position.distanceTo(r.player.pos)<(this.carts?15:8))p.time=99;
+      for(const other of this.riders.slice(0,this.count))if(other!==r&&other.player.pos.distanceTo(r.player.pos)<(this.carts?13:6))this.hit(other,r.player.pos,this.carts?.38:.24);
       return true;
     }
-    if(item==='shock-shell'){this.heavyAt=Math.max(this.heavyAt,this.elapsed+25);sfx.withGain(this.soundGain(r),()=>sfx.play('enemySentryCharge',.55),r.id?'race-rivals':'');}
-    if(item==='tidal-wave')this.heavyAt=Math.max(this.heavyAt,this.elapsed+45);
-    if(item==='blue-shell')this.heavyAt=Math.max(this.heavyAt,this.elapsed+25);
+    if(item==='shock-shell'){this.heavyAt=Math.max(this.heavyAt,this.elapsed+(this.carts?10:25));sfx.withGain(this.soundGain(r),()=>sfx.play('enemySentryCharge',.55),r.id?'race-rivals':'');}
+    if(item==='tidal-wave')this.heavyAt=Math.max(this.heavyAt,this.elapsed+(this.carts?12:45));
+    if(item==='blue-shell')this.heavyAt=Math.max(this.heavyAt,this.elapsed+(this.carts?10:25));
     const order=this.order().filter(a=>a.finish===null),index=order.indexOf(r);
     const target=item==='blue-shell'?order.find(a=>a!==r):index>0?order[index-1]:null;
-    const mesh=createRaceItemModel(item);mesh.scale.setScalar(item==='banana'?.72:.6);
+    const mesh=this.carts?createRallyItemModel(item):createRaceItemModel(item);mesh.scale.setScalar(this.carts?(item==='banana'?1.7:1.25):item==='banana'?.72:.6);
     mesh.position.copy(r.player.pos).y+=item==='banana'?.05:.7;
     const direction=r.player.raceHeading;if((item==='green-shell'||item==='water-bomb'||item==='boomerang')&&backwards)direction.negate();
     if(item==='banana')mesh.position.addScaledVector(direction,-2.2);
@@ -223,8 +223,13 @@ export class SkateRace {
     if(item==='tidal-wave'){mesh.children[0].rotation.y=-Math.PI/2;mesh.scale.set(this.course!.width(r.progress)/.6,1.35,1.4);mesh.rotation.y=Math.atan2(direction.x,direction.z);}
     this.root.add(mesh);
     const projected=this.course!.project(mesh.position,r.progress,40);
-    this.projectiles.push({phase:'travel',phaseTime:0,locked:vec(),type:item,owner:id,target:target?.id??-1,direction,mesh,previous:mesh.position.clone(),
-      progress:projected.s,offset:projected.offset,velocityY:item==='water-bomb'?10:0,bounces:0,time:0,hit:new Set()});
+    const projectile:Projectile={phase:'travel',phaseTime:0,locked:vec(),type:item,owner:id,target:target?.id??-1,direction,mesh,previous:mesh.position.clone(),
+      progress:projected.s,offset:projected.offset,velocityY:item==='water-bomb'?10:0,bounces:0,time:0,hit:new Set()};
+    this.projectiles.push(projectile);
+    if(this.carts&&(item==='green-shell'||item==='banana'))for(const side of [-1,1]){
+      const extra=createRallyItemModel(item);extra.scale.copy(mesh.scale);extra.position.copy(mesh.position).addScaledVector(new THREE.Vector3(-direction.z,0,direction.x),side*2.4);this.root.add(extra);
+      this.projectiles.push({...projectile,mesh:extra,previous:extra.position.clone(),direction:direction.clone().applyAxisAngle(new THREE.Vector3(0,1,0),side*.13),locked:vec(),hit:new Set()});
+    }
     return true;
   }
   private clearItems():void {for(const p of this.projectiles)disposeRaceItemModel(p.mesh);this.projectiles=[];this.effects.clear();this.itemVisualClock=0;for(const r of this.riders){r.targetRing.visible=r.storm.visible=r.starModel.visible=false;r.threats=[];}}
@@ -328,7 +333,7 @@ export class SkateRace {
       const previousPosition=cartPrevious?.[r.id]??p.pos.clone();
       if(r.boost>0){r.boost=Math.max(0,r.boost-dt);if(!this.carts&&p.boardRolling&&p.speed<42){p.speed=Math.min(42,Math.max(0,p.speed)+dt*20);p.registerSkateBoost();}}
       p.racePresentationInterval=r.id===0?0:p.pos.distanceToSquared(this.human.pos)<1600?1/30:1/10;
-      if(!this.carts)sfx.withGain(this.soundGain(r),()=>p.step(dt,device,level),r.id?'race-rivals':'');
+      if(!this.carts?.isDriving(r.id))sfx.withGain(this.soundGain(r),()=>p.step(dt,this.carts?{...device,grindHeld:false,grindPressed:false} as Input:device,level),r.id?'race-rivals':'');
       r.velocity.copy(p.pos).sub(previousPosition).divideScalar(Math.max(.001,dt));if(r.velocity.length()>80)r.velocity.setLength(80);
       if(device.spinPressed&&p.spinning)r.parry=.28;
       r.recovery=p.state==='dead'?1:0;
@@ -342,7 +347,7 @@ export class SkateRace {
       }
       r.progress=projected.s;
       const centre=c.sample(r.progress,0,this.a);
-      if(!this.carts&&(p.grounded||p.state==='grind')){
+      if(!this.carts?.isDriving(r.id)&&(p.grounded||p.state==='grind')){
         // A gap lip needs a small supported run-up after a normal stopped return.
         const lip=this.jumps.find(j=>r.progress>j.s-12&&r.progress<j.end);
         const at=lip?lip.s-30:r.progress,support=c.support(level,at,this.b);
@@ -367,7 +372,7 @@ export class SkateRace {
       }
       this.placeMarker(r);
     }
-    level.raceActorId=0;level.playerPos.copy(this.human.pos);level.update(dt);if(!this.carts)this.contact();if(allFinished)this.clearItems();else{this.updateItems(dt);this.updateThreats(dt);this.presentItems(dt);}this.effects.update(dt);
+    level.raceActorId=0;level.playerPos.copy(this.human.pos);level.update(dt);this.contact();if(allFinished)this.clearItems();else{this.updateItems(dt);this.updateThreats(dt);this.presentItems(dt);}this.effects.update(dt);
     for(const [box,seconds] of this.returns){if(seconds<=dt){level.reviveRaceCrate(box,this.homes.get(box)!);this.returns.delete(box);}else this.returns.set(box,seconds-dt);}
     // Only human-owned unique boxes count. NPC blast rewards never leak through
     // the single-player queue, and repeated item-box laps cannot farm the gem.
@@ -381,7 +386,7 @@ export class SkateRace {
 
   }
   private finishRollout(r:Rider,dt:number):void {
-    if(this.carts){r.rollout=null;return;}
+    if(this.carts?.isDriving(r.id)){r.rollout=null;return;}
     const p=r.player,roll=r.rollout,level=this.level!;
     if(!roll){p.updateResultsPose(dt);return;}
     roll.time+=dt;
@@ -403,7 +408,7 @@ export class SkateRace {
   }
   private contact():void {
     for(const a of this.riders.slice(0,this.count))for(const b of this.riders.slice(a.id+1,this.count)){
-      if(a.recovery||b.recovery||a.finish!==null||b.finish!==null)continue;
+      if(a.recovery||b.recovery||a.finish!==null||b.finish!==null||this.carts&&(this.carts.isDriving(a.id)||this.carts.isDriving(b.id)))continue;
       const dx=b.player.pos.x-a.player.pos.x,dz=b.player.pos.z-a.player.pos.z,d=Math.hypot(dx,dz),dy=b.player.pos.y-a.player.pos.y;
       if(d>2.1||Math.abs(dy)>3)continue;
       const attack=(att:Rider,victim:Rider)=>{
@@ -438,7 +443,7 @@ export class SkateRace {
             this.effects.lightning(ground);
             // A timed normal hop avoids the ground strike. Never knock a rider
             // out of a gap jump, ledge traversal or an existing knockdown.
-            if(r.shield>0||r.player.grounded||r.player.state==='grind'||r.player.swimming)this.hit(r);
+            if(r.shield>0||r.player.grounded||r.player.state==='grind'||r.player.swimming)this.hit(r,undefined,this.carts?.3:.24);
             p.hit.add(r.id);
           }
           if(this.riders[0].finish===null){sfx.play('tntBoom',.45,.65);sfx.play('enemySentryFire',.35,1.15);}
@@ -451,10 +456,10 @@ export class SkateRace {
           p.velocityY-=24*dt;p.mesh.position.addScaledVector(p.direction,dt*38);p.mesh.position.y+=p.velocityY*dt;
           const ground=c.supportAt(level,p.mesh.position,vec(),2,15);
           if((ground&&p.velocityY<0&&p.mesh.position.y<=ground.y+.7)||this.blocked(p.previous,p.mesh.position)){
-            if(ground)p.mesh.position.y=ground.y+.7;p.locked.copy(p.mesh.position);p.phase='windup';p.phaseTime=0;this.effects.pulse(p.locked,0x39c9ed,4.5);
+            if(ground)p.mesh.position.y=ground.y+.7;p.locked.copy(p.mesh.position);p.phase='windup';p.phaseTime=0;this.effects.pulse(p.locked,0x39c9ed,this.carts?9:4.5);
           }
         }else if(p.phaseTime>=.7){
-          for(const other of this.riders.slice(0,this.count))if(other.id!==p.owner&&Math.hypot(other.player.pos.x-p.locked.x,other.player.pos.z-p.locked.z)<4.5&&Math.abs(other.player.pos.y-(p.locked.y-.7))<1.6)this.hit(other,p.locked);
+          for(const other of this.riders.slice(0,this.count))if(other.id!==p.owner&&Math.hypot(other.player.pos.x-p.locked.x,other.player.pos.z-p.locked.z)<(this.carts?9:4.5)&&Math.abs(other.player.pos.y-(p.locked.y-.7))<(this.carts?4:1.6))this.hit(other,p.locked,this.carts?.4:.24);
           this.effects.burst('water-bomb',p.locked);sfx.withGain(this.soundGain(this.riders[p.owner]),()=>sfx.waterPlop(),p.owner?'race-rivals':'');p.time=99;
         }
         continue;
@@ -465,7 +470,7 @@ export class SkateRace {
         const forward=c.tangent(p.progress);p.direction.copy(forward);p.mesh.rotation.y=Math.atan2(forward.x,forward.z);p.mesh.scale.x=c.width(p.progress)/.6;
         for(const other of this.riders.slice(0,this.count))if(other.id!==p.owner&&!p.hit.has(other.id)&&other.finish===null&&!other.recovery&&Math.abs(other.progress-p.progress)<3){
           const centre=c.sample(other.progress);const horizontal=Math.hypot(other.player.pos.x-centre.x,other.player.pos.z-centre.z);
-          if(horizontal<c.width(p.progress)/2&&Math.abs(other.player.pos.y-centre.y)<1.5){this.hit(other,p.mesh.position);p.hit.add(other.id);}
+          if(horizontal<c.width(p.progress)/2&&Math.abs(other.player.pos.y-centre.y)<1.5){this.hit(other,p.mesh.position,this.carts?.4:.24);p.hit.add(other.id);}
         }
         if(p.progress>=c.length)p.time=99;continue;
       }
@@ -502,8 +507,8 @@ export class SkateRace {
         }else if(blue){
           p.mesh.position.lerp(p.locked,Math.min(1,dt/Math.max(dt,.8-p.phaseTime+dt)));
           if(p.phaseTime>=.8){
-            this.effects.burst('blue-shell',p.locked);
-            for(const other of this.riders.slice(0,this.count))if(other.id!==p.owner&&other.dodge<=0&&other.player.pos.clone().add(new THREE.Vector3(0,.8,0)).distanceTo(p.locked)<3.2)this.hit(other,p.locked);
+            this.effects.burst('blue-shell',p.locked);if(this.carts)this.effects.pulse(p.locked,0x57aaff,7);
+            for(const other of this.riders.slice(0,this.count))if(other.id!==p.owner&&other.dodge<=0&&other.player.pos.clone().add(new THREE.Vector3(0,.8,0)).distanceTo(p.locked)<(this.carts?7:3.2))this.hit(other,p.locked,this.carts?.48:.24);
             p.time=99;continue;
           }
         }else{
@@ -530,7 +535,7 @@ export class SkateRace {
         const ground=c.supportAt(level,p.mesh.position,this.a,3,8);if(ground)p.mesh.position.y=ground.y+.025;
       }
       if(p.type==='red-shell'||p.type==='green-shell'||p.type==='boomerang'){
-        for(const trap of this.projectiles)if(trap!==p&&trap.time<90&&(trap.type==='banana'||trap.type==='green-shell'||trap.type==='boomerang'||p.type==='green-shell'&&trap.type==='red-shell')&&this.nearSegment(trap.mesh.position,p.previous,p.mesh.position,1.6)){
+        for(const trap of this.projectiles)if(trap!==p&&trap.time<90&&!(this.carts&&trap.owner===p.owner&&Math.abs(trap.time-p.time)<.1)&&(trap.type==='banana'||trap.type==='green-shell'||trap.type==='boomerang'||p.type==='green-shell'&&trap.type==='red-shell')&&this.nearSegment(trap.mesh.position,p.previous,p.mesh.position,1.6)){
           p.time=trap.time=99;this.effects.burst('banana',trap.mesh.position);break;
         }
         if(p.time>=90)continue;
@@ -541,9 +546,12 @@ export class SkateRace {
       for(const r of this.riders.slice(0,this.count)){
         if(r.id===p.owner||p.hit.has(r.id)||r.recovery||r.finish!==null)continue;
         const centre=r.player.pos.clone();centre.y+=p.type==='banana'?.2:1;
-        if(!this.nearSegment(centre,p.previous,p.mesh.position,r.parry>0?2.6:1.5))continue;
+        if(!this.nearSegment(centre,p.previous,p.mesh.position,r.parry>0?2.6:this.carts?2.1:1.5))continue;
         if(r.parry>0&&p.type!=='banana'){
           this.effects.pulse(r.player.pos,0xfff4c7,3);sfx.withGain(this.soundGain(r),()=>sfx.play('railLand',.7,1.3),r.id?'race-rivals':'');
+        }else if(this.carts&&(p.type==='banana'||p.type==='green-shell')){
+          this.effects.burst(p.type,p.mesh.position);this.effects.pulse(p.mesh.position,p.type==='banana'?0xffdd40:0x7bff65,4.5);
+          for(const other of this.riders.slice(0,this.count))if(other.id!==p.owner&&other.player.pos.distanceTo(r.player.pos)<4.5)this.hit(other,p.mesh.position,.28);
         }else this.hit(r,p.mesh.position);
         p.hit.add(r.id);if(p.type!=='boomerang'||r.parry>0)p.time=99;break;
       }
@@ -591,7 +599,7 @@ export class SkateRace {
       r.targetRing.visible=true;r.targetRing.material.color.set(RACE_ITEMS[threat.item].color);
       r.targetRing.position.copy(r.player.pos).y+=.12;r.targetRing.scale.setScalar(threat.urgent?1.5:2.3);
       const dive=this.projectiles.find(p=>p.type==='blue-shell'&&p.target===r.id&&p.phase==='strike'||p.type==='water-bomb'&&p.phase==='windup'&&p.locked.distanceTo(r.player.pos)<9);
-      if(dive){r.targetRing.position.copy(dive.locked);r.targetRing.position.y-=.65;r.targetRing.scale.setScalar(dive.type==='water-bomb'?4.5:3.2);}
+      if(dive){r.targetRing.position.copy(dive.locked);r.targetRing.position.y-=.65;r.targetRing.scale.setScalar(this.carts?(dive.type==='water-bomb'?9:7):dive.type==='water-bomb'?4.5:3.2);}
       if(r.threats.some(t=>t.item==='shock-shell')){r.storm.visible=true;r.storm.position.copy(r.player.pos).y+=4;r.storm.rotation.y=this.elapsed*2;}
     }
     this.warningBeep-=dt;
@@ -635,7 +643,7 @@ export class SkateRace {
   hud():RaceHudState|undefined {
     if(!this.level||!this.course)return;
     const h=this.riders[0];return {vehicle:this.level.skateRace?.vehicle,crystalReward:this.level.allowsCrystal,title:this.level.name,sections:this.sections,medalTimes:this.level.medalTimes,medal:this.mode==='time-trial'&&h.finish!==null?medalForTime(h.finish,this.level.medalTimes):null,phase:this.phase,mode:this.mode,countdown:this.countdown,runTime:this.elapsed,elapsed:h.finish??(this.mode==='time-trial'?this.human.ttTime:this.elapsed),freeze:this.mode==='time-trial'?this.human.ttFreeze:0,rank:this.rank(),item:h.item,shield:h.shield,star:h.star,
-      recovering:h.recovery,threats:h.threats,boxes:h.boxes.size,totalBoxes:this.level.totalCrates,won:h.finish!==null&&this.rank()===1&&this.mode==='race',
+      cart:this.carts?.hud(),recovering:h.recovery,threats:h.threats,boxes:h.boxes.size,totalBoxes:this.level.totalCrates,won:h.finish!==null&&this.rank()===1&&this.mode==='race',
       timeTrialUnlocked:this.canStartTimeTrial(this.levelId),
       racers:this.order().map(r=>({id:r.id,...RACE_ROSTER[r.id],x:r.player.pos.x,y:r.player.pos.y,z:r.player.pos.z,progress:r.progress/this.course!.length,finish:r.finish})),line:this.level.skateRace!.line,visible:true};
   }

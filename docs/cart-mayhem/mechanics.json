@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "controls": "release hop / Circle brake / R2 drift / Square shunt / Triangle steal",
+  "ownership": true,
+  "damage": true,
+  "burnout": true,
+  "footMovement": true,
+  "onFootFinish": true,
+  "rivalTheft": true,
+  "loaners": 12,
+  "tuningUnchanged": true
+}

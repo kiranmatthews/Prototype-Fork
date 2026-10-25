@@ -1,5 +1,5 @@
 /** Deterministic lightweight vehicle dynamics. No renderer, solver dependency or player-tuning writes. */
-export interface CartInput { throttle:number; steer:number; brake:number; handbrake:boolean; hop?:boolean }
+export interface CartInput { throttle:number; steer:number; brake:number; handbrake:boolean; hop?:boolean; hopCharge?:number }
 export interface GroundSample { height:number; grip:number; drag:number; safe:boolean; supported?:boolean }
 export type CartGround=(x:number,z:number)=>GroundSample;
 export interface CartObstacle {x:number;z:number;radius:number;id:string;height?:number}
@@ -12,7 +12,7 @@ export interface CartState extends CartSpawn {
   supportHeight:number;supportVelocity:number;airTime:number;airborneCount:number;hopCooldown:number;hopLatch:boolean;
   tumbling:boolean;tumbleAngle:number;tumbleVelocity:number;tumbleTime:number;rollCooldown:number;rolls:number;recoveries:number;
 }
-export interface CartPhysicsOptions {scale?:number;topSpeed?:number;engine?:number;speedLimit?:number;crestLaunch?:boolean;maxLaunchVelocity?:number;airRecoveryDelay?:number}
+export interface CartPhysicsOptions {scale?:number;topSpeed?:number;engine?:number;speedLimit?:number;crestLaunch?:boolean;maxLaunchVelocity?:number;airRecoveryDelay?:number;damageCapacity?:number}
 export const CART_PHYSICS=Object.freeze({step:1/120,maxSteps:24,mass:340,inertia:230,topSpeed:17,reverseSpeed:6,engine:8.4,brake:17,grip:7.7,wheelbase:1.72,radius:.78,probeOffset:.72,restitution:.38,gravity:13.5,hopVelocity:5.8,hopCooldown:1.0,rollImpact:10.5});
 const clamp=(v:number,a:number,b:number)=>Math.max(a,Math.min(b,v));
 const finite=(v:number)=>Number.isFinite(v)?v:0;
@@ -29,11 +29,13 @@ export class GolfCartPhysics {
   time=0;steps=0;droppedTime=0;private accumulator=0;
   readonly scale:number;readonly topSpeed:number;readonly engine:number;readonly speedLimit:number;readonly crestLaunch:boolean;
   readonly maxLaunchVelocity:number;readonly airRecoveryDelay:number;
+  private readonly damageCapacity:number;
   get radius(){return CART_PHYSICS.radius*this.scale;}
   get probeOffset(){return CART_PHYSICS.probeOffset*this.scale;}
   constructor(readonly ground:CartGround,readonly spawns:readonly CartSpawn[],readonly obstacles:readonly CartObstacle[]=[],options:CartPhysicsOptions={}){
     this.scale=options.scale??1;this.topSpeed=options.topSpeed??CART_PHYSICS.topSpeed;this.engine=options.engine??CART_PHYSICS.engine;this.speedLimit=options.speedLimit??24;this.crestLaunch=options.crestLaunch??true;
     this.maxLaunchVelocity=options.maxLaunchVelocity??7.5;this.airRecoveryDelay=options.airRecoveryDelay??1.1;
+    this.damageCapacity=options.damageCapacity??0;
     this.carts=spawns.map(s=>createCartState(s,ground));this.inputs=spawns.map(()=>({...NO_CART_INPUT}));
   }
   reset(index:number,repair=true){const old=this.carts[index],fresh=createCartState(this.spawns[index],this.ground);if(!repair){fresh.damage=[...old.damage];fresh.health=old.health;fresh.respawns=old.respawns+1;fresh.hits=old.hits;fresh.rolls=old.rolls;fresh.recoveries=old.recoveries;fresh.airborneCount=old.airborneCount;}Object.assign(old,fresh);this.inputs[index]={...NO_CART_INPUT};}
@@ -47,7 +49,7 @@ export class GolfCartPhysics {
     for(let index=0;index<this.carts.length;index++){
       const c=this.carts[index],input=this.inputs[index],g=this.ground(c.x,c.z);
       c.hopCooldown=Math.max(0,c.hopCooldown-dt);c.rollCooldown=Math.max(0,c.rollCooldown-dt);
-      if(input.hop&&!c.hopLatch&&c.grounded&&!c.tumbling&&c.hopCooldown===0){c.vy=CART_PHYSICS.hopVelocity+Math.min(1.4,Math.abs(c.speed)*.09);c.grounded=false;c.airborneCount++;c.hopCooldown=CART_PHYSICS.hopCooldown;c.pitchV=1.3;c.impact=.9;}
+      if(input.hop&&!c.hopLatch&&c.grounded&&!c.tumbling&&c.hopCooldown===0){c.vy=CART_PHYSICS.hopVelocity+(input.hopCharge===undefined?0:clamp(input.hopCharge,0,1)*2)+Math.min(1.4,Math.abs(c.speed)*.09);c.grounded=false;c.airborneCount++;c.hopCooldown=CART_PHYSICS.hopCooldown;c.pitchV=1.3;c.impact=.9;}
       c.hopLatch=!!input.hop;
       const throttle=clamp(finite(input.throttle),-1,1),brake=clamp(finite(input.brake),0,1);
       c.steer+=(clamp(finite(input.steer),-1,1)-c.steer)*(1-Math.exp(-9*dt));
@@ -139,7 +141,7 @@ export class GolfCartPhysics {
     const c=this.carts[index];if(c.cooldown>0||!Number.isFinite(strength))return;
     strength=clamp(strength,0,22);const localZ=(x-c.x)*Math.sin(c.yaw)+(z-c.z)*Math.cos(c.yaw);
     const hit=panel??(localZ<-.25?0:localZ>.25?1:2),amount=clamp((strength-1.6)*.042,0,.55);if(amount<=0)return;
-    c.damage[hit]=clamp(c.damage[hit]+amount,0,1);c.health=Math.max(.15,1-c.damage.reduce((a,b)=>a+b,0)*.25);c.impact=Math.min(1.4,strength*.12);c.pitchV+=localZ<0?-strength*.11:strength*.11;c.rollV+=(x-c.x)*strength*.08;c.cooldown=.18;c.hits++;
+    c.damage[hit]=clamp(c.damage[hit]+amount,0,1);c.health=this.damageCapacity>0?Math.max(0,c.health-amount/this.damageCapacity):Math.max(.15,1-c.damage.reduce((a,b)=>a+b,0)*.25);c.impact=Math.min(1.4,strength*.12);c.pitchV+=localZ<0?-strength*.11:strength*.11;c.rollV+=(x-c.x)*strength*.08;c.cooldown=.18;c.hits++;
     if(this.impacts.length===64)this.impacts.shift();
     this.impacts.push({cart:index,other,x,y:c.y+.75*this.scale,z,strength,panel:hit});
     const localX=(x-c.x)*Math.cos(c.yaw)-(z-c.z)*Math.sin(c.yaw);

@@ -1584,6 +1584,7 @@ export class Player {
   private rawInput!: Input; // pre-remap stick (see step): slam/grab-spin/balance
   private readonly treehouseStairInput = new TreehouseStairInput();
   private treehouseBoardBlocked = false;
+  private get boardMountBlocked(): boolean { return this.treehouseBoardBlocked || this.raceHooks?.onFoot?.() === true; }
   // Travel axes, latched across zone boundaries: the course usually runs
   // along -Z ('S'), but turned stretches run along +X ('E') / -X ('W').
   private travelDir: 'S' | 'E' | 'W' | 'N' = 'S';
@@ -3608,10 +3609,10 @@ export class Player {
   // warp that skipped any of this would arrive still grinding a rail that is
   // now four hundred units behind you.
   /** Reset only rider movement. Race recovery never resets the world, tally or clock. */
-  resetRacePosition(level:Level,position:THREE.Vector3,facing:THREE.Vector3):void {
+  resetRacePosition(level:Level,position:THREE.Vector3,facing:THREE.Vector3,onFoot=false):void {
     this.pos.copy(position);this.laneCursor.s=-1;this.viewInput.reset();
     this.settle(level,facing);this.axisF.copy(facing).setY(0).normalize();this.axisL.set(-this.axisF.z,0,this.axisF.x);
-    this.freeSkate=true;this.airFromSkate=true;this.raceStartMounted=true;this.skatePose=this.sidePose=this.deckPose=1;this.invulnTimer=1.5;this.invulnSilent=true;
+    this.freeSkate=!onFoot;this.airFromSkate=!onFoot;this.raceStartMounted=!onFoot;this.skatePose=this.sidePose=this.deckPose=onFoot?0:1;this.invulnTimer=1.5;this.invulnSilent=true;
     // Seed the actual road contact; ordinary movement owns the next step.
     const support=this.queryGround(level);
     if(support&&Math.abs(support.y-this.pos.y)<1.25){
@@ -6514,7 +6515,7 @@ export class Player {
     // actual movement in any direction — so pushing sideways skates exactly
     // like pushing forward, never stuck in second-class walk.
     const stickHeld = input.moveX !== 0 || input.moveY !== 0;
-    if (!this.treehouseBoardBlocked && this.charging && stickHeld) this.skateCharge += dt;
+    if (!this.boardMountBlocked && this.charging && stickHeld) this.skateCharge += dt;
     else this.skateCharge = 0;
     const planarSpeed = Math.max(Math.abs(this.speed), this.lastPlanar);
     // Standstill launch: a charge planted from a dead stop keeps the feet pinned
@@ -6526,7 +6527,7 @@ export class Player {
       this.chargePlanted &&
       stickHeld &&
       this.skateCharge >= TUNING.skateHoldTime;
-    const pushingOff = !this.treehouseBoardBlocked && (
+    const pushingOff = !this.boardMountBlocked && (
       plantedPush ||
       (this.charging &&
         stickHeld &&
@@ -6573,7 +6574,7 @@ export class Player {
     // A thrown deck is never recovered by proximity or carried speed. Only
     // the normal hold-X + direction commitment recalls it; until that point
     // steep ground and bailout momentum remain genuinely on foot.
-    const boardAvailable = !this.treehouseBoardBlocked && ((!looseDeck && !this.boardRunCarry && !this.iceSlideCarry) || pushingOff);
+    const boardAvailable = !this.boardMountBlocked && ((!looseDeck && !this.boardRunCarry && !this.iceSlideCarry) || pushingOff);
     // On steep ground the board only pops out when it's a RIDER (charge/
     // momentum/rollout) — a walker (footPlant OR footSlip) stays on foot and
     // obeys footGrip. Standing still on a bank no longer flashes the board.
@@ -11442,7 +11443,7 @@ export class Player {
   private tryGrind(pressed: boolean, level: Level): boolean {
     // A grind catch also mounts the board. Retain the authored grindable
     // edges, but do not let this alternate entry bypass the opening walk zone.
-    if (this.treehouseBoardBlocked) return false;
+    if (this.boardMountBlocked) return false;
     const capture=this.parkReference?.railCapture;
     if(capture){
       // The native candidate query owns distance, sweep and endpoint rules.

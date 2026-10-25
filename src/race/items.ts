@@ -49,7 +49,18 @@ function sculpt(kind:string):THREE.BufferGeometry {
   const ring=(r:number,tube:number,color:number,x=0,y=0,z=0,rotation:[number,number,number]=[Math.PI/2,0,0])=>add(new THREE.TorusGeometry(r,tube,5,24),color,x,y,z,[1,1,1],rotation);
   const extrude=(shape:THREE.Shape,depth=.2)=>new THREE.ExtrudeGeometry(shape,{depth,curveSegments:6,bevelEnabled:true,bevelSize:.045,bevelThickness:.04,bevelSegments:1});
   const eyes=(y:number,z:number,separation=.19)=>{for(const side of [-1,1]){sphere(.095,ink,side*separation,y,z,[.62,1.55,.48]);sphere(.029,white,side*separation-.015,y+.045,z+.04,[.8,1,1]);}};
-  if(kind==='banana'){
+  if(kind.startsWith('rally-coconut-')){
+    const band=kind.endsWith('red')?0xf2484b:kind.endsWith('blue')?0x3b9bff:0x7adf46;
+    add(new THREE.SphereGeometry(.9,28,18),0x975726,0,.1,0,[1,1.06,1]);
+    for(let i=0;i<7;i++)ring(.89,.018,0x613a20,0,.1,0,[Math.PI/2,i*Math.PI/7,0]);
+    ring(.9,.09,band,0,.2);eyes(.36,.86,.23);
+    sphere(.11,ink,0,.02,.88,[1.7,.55,.4]);
+    add(new THREE.CylinderGeometry(.045,.05,.5,8),cream,.06,1.25,0,[1,1,1],[0,0,-.3]);
+    sphere(.13,0xffa125,.14,1.5,0);sphere(.07,0xfff6a7,.15,1.53,.04);
+    if(kind.endsWith('blue'))for(const side of [-1,1]){
+      add(new THREE.ConeGeometry(.42,1.1,12),cream,side*1.1,.55,0,[1,.5,1],[0,0,side*-1]);
+    }
+  }else if(kind==='banana'){
     for(let petal=0;petal<3;petal++){
       const angle=petal*Math.PI*2/3,vertices:number[]=[],indices:number[]=[];
       // Four vertices across each petal form an actual curved, thick peel,
@@ -154,6 +165,11 @@ export function createRaceItemModel(kind:string):THREE.Group {
     root.add(new THREE.Mesh(bubbleGeometry,gouraud(true)));
   }
   root.updateMatrixWorld(true);return root;
+}
+
+/** Rally projectiles share the normal lifecycle and keep other courses' art intact. */
+export function createRallyItemModel(kind:string):THREE.Group {
+  return createRaceItemModel(kind.endsWith('-shell')&&kind!=='shock-shell'?`rally-coconut-${kind.split('-')[0]}`:kind);
 }
 
 export function disposeRaceItemModel(root:THREE.Object3D):void {

@@ -17,9 +17,11 @@ export interface SkateRaceData {
   originalLength: number;
 }
 export type RaceItem = 'banana' | 'green-shell' | 'red-shell' | 'blue-shell' | 'shock-shell' | 'mushroom' | 'shield' | 'horn' | 'water-bomb' | 'boomerang' | 'star' | 'tidal-wave';
+export const RALLY_ITEM_NAMES:Partial<Record<RaceItem,string>>={banana:'BANANA BOMB TRIO','green-shell':'TRIPLE COCONUT CANNON','red-shell':'HOMING COCONUT','blue-shell':'CLUB PRESIDENT ERASER','shock-shell':'BAD WEATHER POLICY','water-bomb':'POOL PARTY MORTAR',horn:'FOURTEEN FORE!',mushroom:'QUESTIONABLE ENERGY DRINK',boomerang:'RETURN TO SENDER',star:'LIABILITY WAIVER','tidal-wave':'TSUNAMI TEE TIME'};
 export type RacePhase = 'grid' | 'countdown' | 'running' | 'finished';
 export type RaceMode = 'race' | 'time-trial';
 export interface RacePlayerHooks {
+  onFoot?: () => boolean;
   canCollectItem?: () => boolean;
   hazard: (cause: WipeoutCause, origin?: Vector3) => void;
   unrecoverableFall?: () => boolean;
@@ -32,6 +34,7 @@ export interface RaceThreat {
 }
 export interface RaceHudState {
   vehicle?: 'golf-cart'; crystalReward?:boolean;
+  cart?: {health:number|null;onFoot:boolean;target:string;distance:number|null;notice:string;charge:number;spinReady:boolean};
   title:string; sections:readonly string[]; medalTimes:MedalTimes; medal:TimeMedal|null;
   phase: RacePhase; mode: RaceMode; countdown: number; runTime: number; elapsed: number; freeze: number;
   rank: number; item: RaceItem | null; shield: number; star: number; recovering: number;

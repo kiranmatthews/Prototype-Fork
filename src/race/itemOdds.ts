@@ -11,7 +11,7 @@ export class RaceItemDeck {
   private seed=1;
   private recent:RaceItem[]=[];
   reset(seed:number):void {this.seed=seed||1;this.recent=[];}
-  draw(rank:number,gap:number,heavy:boolean,ultra=false):RaceItem {
+  draw(rank:number,gap:number,heavy:boolean,ultra=false,rally=false):RaceItem {
     const weights:Partial<Record<RaceItem,number>>=rank<=2?
       {banana:18,'green-shell':14,shield:21,mushroom:17,horn:13,boomerang:10,'water-bomb':7}:
       rank<=5?{banana:7,'green-shell':9,'red-shell':21,shield:17,mushroom:24,horn:7,boomerang:8,'water-bomb':7}:
@@ -19,6 +19,10 @@ export class RaceItemDeck {
     if(rank>2&&gap>70)weights.mushroom!+=15;
     if(rank>=5&&gap>45&&heavy){weights['blue-shell']=7;if(rank>=6&&gap>90)weights['shock-shell']=4;}
     if(ultra){weights.star=.06;if(heavy&&rank>=5&&gap>70)weights['tidal-wave']=.04;}
+    if(rally){
+      Object.assign(weights,{'green-shell':20,banana:12,'red-shell':20,'water-bomb':20,horn:20,boomerang:12,mushroom:25,shield:14,star:8});
+      if(heavy)Object.assign(weights,{'blue-shell':9,'shock-shell':7,'tidal-wave':7});
+    }
     // The last two draws cannot repeat, including across rank changes.
     const choices=(Object.entries(weights) as [RaceItem,number][]).filter(([item])=>!this.recent.includes(item));
     let x=this.seed|0;x^=x<<13;x^=x>>>17;x^=x<<5;this.seed=x;
