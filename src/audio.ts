@@ -49,6 +49,7 @@ const FILES: Record<string, string> = {
   karenScreech: 'enemies/karen-screech.wav',
   kookCock: 'enemies/kook-cock.wav',
   kookShot: 'enemies/kook-shot.wav',
+  rooftopRain: 'weather/rooftop-rain.wav',
   enemyCrabStep: 'enemies/crab-step.wav',
   enemyCrabClack: 'enemies/crab-clack.wav',
   enemySpikerStep: 'enemies/spiker-step.wav',

@@ -1,0 +1,28 @@
+{
+  "base": "http://127.0.0.1:5269",
+  "report": {
+    "phase": "done",
+    "frames": 485,
+    "phaseFrames": 0,
+    "dead": true,
+    "returned": true,
+    "continued": true,
+    "livesBefore": 4,
+    "checkpoint": 5,
+    "checkpointsChecked": 6,
+    "stamp": "Codex/sol fork · build 10-25 12:38 UTC",
+    "sourceMatches": true,
+    "position": [
+      42.97498661874497,
+      46.20000000596046,
+      -1639.8315350610026
+    ],
+    "state": "ride",
+    "deathFrame": 266,
+    "returnFrame": 399,
+    "livesAfter": 3,
+    "returnDistance": 0,
+    "activeCheckpoint": 5
+  },
+  "errors": []
+}

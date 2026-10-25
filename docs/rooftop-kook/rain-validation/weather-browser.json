@@ -1,0 +1,153 @@
+{
+  "base": "http://127.0.0.1:5269",
+  "native": {
+    "level": "rooftop-relay",
+    "world": {
+      "visible": true,
+      "streaks": 2200,
+      "impactCapacity": 96,
+      "activeImpacts": 19,
+      "samples": 468,
+      "time": 2.297233333428698,
+      "span": 68,
+      "intensity": 0.86,
+      "wind": [
+        5.5,
+        2.8
+      ]
+    },
+    "lens": {
+      "enabled": true,
+      "amount": 0.82,
+      "time": 2.297233333428698
+    },
+    "buffer": [
+      2560,
+      1440
+    ],
+    "stamp": "Codex/sol fork · build 10-25 12:38 UTC"
+  },
+  "moving": {
+    "level": "rooftop-relay",
+    "world": {
+      "visible": true,
+      "streaks": 2200,
+      "impactCapacity": 96,
+      "activeImpacts": 21,
+      "samples": 1380,
+      "time": 7.54723333342868,
+      "span": 68,
+      "intensity": 0.86,
+      "wind": [
+        5.5,
+        2.8
+      ]
+    },
+    "lens": {
+      "enabled": true,
+      "amount": 0.82,
+      "time": 7.54723333342868
+    },
+    "buffer": [
+      2560,
+      1440
+    ],
+    "stamp": "Codex/sol fork · build 10-25 12:38 UTC"
+  },
+  "fixed": {
+    "level": "rooftop-relay",
+    "world": {
+      "visible": true,
+      "streaks": 2200,
+      "impactCapacity": 96,
+      "activeImpacts": 27,
+      "samples": 2236,
+      "time": 12.130566666762217,
+      "span": 68,
+      "intensity": 0.86,
+      "wind": [
+        5.5,
+        2.8
+      ]
+    },
+    "lens": {
+      "enabled": true,
+      "amount": 0.82,
+      "time": 12.130566666762217
+    },
+    "buffer": [
+      853,
+      480
+    ],
+    "stamp": "Codex/sol fork · build 10-25 12:38 UTC"
+  },
+  "crt": {
+    "level": "rooftop-relay",
+    "world": {
+      "visible": true,
+      "streaks": 2200,
+      "impactCapacity": 96,
+      "activeImpacts": 27,
+      "samples": 3352,
+      "time": 17.130566666762345,
+      "span": 68,
+      "intensity": 0.86,
+      "wind": [
+        5.5,
+        2.8
+      ]
+    },
+    "lens": {
+      "enabled": true,
+      "amount": 0.82,
+      "time": 17.130566666762345
+    },
+    "buffer": [
+      853,
+      480
+    ],
+    "stamp": "Codex/sol fork · build 10-25 12:38 UTC"
+  },
+  "dry": {
+    "level": "codex-lab",
+    "world": null,
+    "lens": {
+      "enabled": false,
+      "amount": 0,
+      "time": 0
+    },
+    "buffer": [
+      853,
+      480
+    ],
+    "stamp": "Codex/sol fork · build 10-25 12:38 UTC"
+  },
+  "revisited": {
+    "level": "rooftop-relay",
+    "world": {
+      "visible": true,
+      "streaks": 2200,
+      "impactCapacity": 96,
+      "activeImpacts": 23,
+      "samples": 188,
+      "time": 1.4,
+      "span": 68,
+      "intensity": 0.86,
+      "wind": [
+        5.5,
+        2.8
+      ]
+    },
+    "lens": {
+      "enabled": true,
+      "amount": 0.82,
+      "time": 1.4
+    },
+    "buffer": [
+      2560,
+      1440
+    ],
+    "stamp": "Codex/sol fork · build 10-25 12:38 UTC"
+  },
+  "errors": []
+}

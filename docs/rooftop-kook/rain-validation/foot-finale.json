@@ -1,0 +1,1185 @@
+{
+  "sourceHash": "6dfba567e81648fdeb7b1e1947449d274b8550869e8a7166e6fbf54aab85ab6a",
+  "mode": "foot",
+  "route": "main",
+  "district": 5,
+  "takeoff": 0.7,
+  "lateral": 0,
+  "start": 2013.26,
+  "stop": 2321.6099999999997,
+  "seconds": 35.31666666666666,
+  "state": "ride",
+  "progress": 2321.627650758044,
+  "deaths": 0,
+  "tuningUnchanged": true,
+  "position": [
+    -73.32844743478682,
+    41.300000005960456,
+    -1886.492220173647
+  ],
+  "evidence": {
+    "route": "main",
+    "mode": "foot",
+    "jumps": [
+      {
+        "index": "38-39",
+        "a": 2067.26,
+        "b": 2070.66,
+        "from": 46.2,
+        "to": 43.39999999999999,
+        "roof": 38,
+        "next": 39,
+        "route": -1,
+        "ramp": false,
+        "takeoff": 2066.6950567811355,
+        "air": true,
+        "airFrames": 44,
+        "double": false,
+        "landing": 2073.4470136628147,
+        "speed": 9,
+        "foot": true
+      },
+      {
+        "index": "39-40",
+        "a": 2106.66,
+        "b": 2110.31,
+        "from": 43.39999999999999,
+        "to": 43.39999999999999,
+        "roof": 39,
+        "next": 40,
+        "route": -1,
+        "ramp": false,
+        "takeoff": 2105.997464099278,
+        "air": true,
+        "airFrames": 56,
+        "double": true,
+        "doubleCounted": true,
+        "landing": 2114.5485825540322,
+        "speed": 9,
+        "foot": true
+      },
+      {
+        "index": "40-41",
+        "a": 2148.31,
+        "b": 2156.5099999999998,
+        "from": 46.19999999999999,
+        "to": 41.999999999999986,
+        "roof": 40,
+        "next": 41,
+        "route": -1,
+        "ramp": true,
+        "takeoff": 2147.6992341694913,
+        "air": true,
+        "airFrames": 63,
+        "double": true,
+        "doubleCounted": true,
+        "landing": 2157.299462150737,
+        "speed": 9,
+        "foot": true
+      },
+      {
+        "index": "41-42",
+        "a": 2196.5099999999998,
+        "b": 2200.0099999999998,
+        "from": 41.999999999999986,
+        "to": 41.999999999999986,
+        "roof": 41,
+        "next": 42,
+        "route": -1,
+        "ramp": false,
+        "takeoff": 2195.8500310366085,
+        "air": true,
+        "airFrames": 39,
+        "double": false,
+        "landing": 2201.850735608393,
+        "speed": 9,
+        "foot": true
+      },
+      {
+        "index": "42-43",
+        "a": 2254.0099999999998,
+        "b": 2263.6099999999997,
+        "from": 44.79999999999998,
+        "to": 41.3,
+        "roof": 42,
+        "next": 43,
+        "route": -1,
+        "ramp": true,
+        "takeoff": 2253.456390504004,
+        "air": true,
+        "airFrames": 97,
+        "double": true,
+        "doubleCounted": true,
+        "landing": 2264.482571350949,
+        "speed": 9,
+        "foot": true
+      }
+    ],
+    "roofs": [
+      38,
+      39,
+      40,
+      41,
+      42,
+      43
+    ],
+    "checkpoints": [
+      5
+    ],
+    "districts": [
+      5
+    ],
+    "peakSpeed": 9.002156159978401,
+    "minimumLandingMargin": 33.21298633718516,
+    "doubleJumps": 3,
+    "crystal": false,
+    "branchLandings": []
+  },
+  "error": null,
+  "traceTail": [
+    {
+      "frame": 2102,
+      "time": 35.03333333333333,
+      "position": [
+        -73.10000710958957,
+        41.300000005960456,
+        -1883.9524791124413
+      ],
+      "heading": [
+        -0.09652774401222332,
+        0,
+        -0.9953302942420224
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 9.000038972403255,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "slippy plank",
+        "y": 41.300000005960456,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": true,
+        "iceGrip": 0.94
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0.01,
+        "moveY": 1,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      },
+      "requested": {
+        "moveX": 0.01481940869171566,
+        "moveY": 0.9998901865335151,
+        "jumpHeld": false,
+        "spinHeld": false,
+        "grabHeld": false
+      }
+    },
+    {
+      "frame": 2103,
+      "time": 35.05,
+      "position": [
+        -73.11441676667998,
+        41.300000005960456,
+        -1884.1017859528552
+      ],
+      "heading": [
+        -0.09581696049466717,
+        0,
+        -0.9953989703036483
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 9.000033885081054,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "slippy plank",
+        "y": 41.300000005960456,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": true,
+        "iceGrip": 0.94
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0.01,
+        "moveY": 1,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      },
+      "requested": {
+        "moveX": 0.01494508747520408,
+        "moveY": 0.999888315943515,
+        "jumpHeld": false,
+        "spinHeld": false,
+        "grabHeld": false
+      }
+    },
+    {
+      "frame": 2104,
+      "time": 35.06666666666666,
+      "position": [
+        -73.12865478813082,
+        41.300000005960456,
+        -1884.2511091636693
+      ],
+      "heading": [
+        -0.09510616833700089,
+        0,
+        -0.995467134939298
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 9.000028350830295,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "slippy plank",
+        "y": 41.300000005960456,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": true,
+        "iceGrip": 0.94
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0.02,
+        "moveY": 1,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      },
+      "requested": {
+        "moveX": 0.015045325017447228,
+        "moveY": 0.9998868126918764,
+        "jumpHeld": false,
+        "spinHeld": false,
+        "grabHeld": false
+      }
+    },
+    {
+      "frame": 2105,
+      "time": 35.083333333333336,
+      "position": [
+        -73.14272472781464,
+        41.300000005960456,
+        -1884.4004482867629
+      ],
+      "heading": [
+        -0.09439536558124255,
+        0,
+        -0.99553478842117
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 9.000025764719162,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "slippy plank",
+        "y": 41.300000005960456,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": true,
+        "iceGrip": 0.94
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0.02,
+        "moveY": 1,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      },
+      "requested": {
+        "moveX": 0.015096345434597189,
+        "moveY": 0.9998860436842385,
+        "jumpHeld": false,
+        "spinHeld": false,
+        "grabHeld": false
+      }
+    },
+    {
+      "frame": 2106,
+      "time": 35.1,
+      "position": [
+        -73.15662994474503,
+        41.300000005960456,
+        -1884.5498028849288
+      ],
+      "heading": [
+        -0.09368455402186872,
+        0,
+        -0.9956019306619104
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 9.000025820038829,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "slippy plank",
+        "y": 41.300000005960456,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": true,
+        "iceGrip": 0.94
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0.02,
+        "moveY": 1,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      },
+      "requested": {
+        "moveX": 0.015099174200616766,
+        "moveY": 0.9998860009713405,
+        "jumpHeld": false,
+        "spinHeld": false,
+        "grabHeld": false
+      }
+    },
+    {
+      "frame": 2107,
+      "time": 35.11666666666667,
+      "position": [
+        -73.170373613776,
+        41.300000005960456,
+        -1884.6991725407272
+      ],
+      "heading": [
+        -0.0929737354345578,
+        0,
+        -0.9956685615802807
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 9.000028234852174,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "slippy plank",
+        "y": 41.300000005960456,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": true,
+        "iceGrip": 0.94
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0.02,
+        "moveY": 1,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      },
+      "requested": {
+        "moveX": 0.015054780724394567,
+        "moveY": 0.9998866703668674,
+        "jumpHeld": false,
+        "spinHeld": false,
+        "grabHeld": false
+      }
+    },
+    {
+      "frame": 2108,
+      "time": 35.13333333333333,
+      "position": [
+        -73.18404063489194,
+        41.300000005960456,
+        -1884.8485492667758
+      ],
+      "heading": [
+        -0.0922629115771876,
+        0,
+        -0.9957346811009948
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 9.000032750199962,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "slippy plank",
+        "y": 41.300000005960456,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": true,
+        "iceGrip": 0.94
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0.01,
+        "moveY": 1,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      },
+      "requested": {
+        "moveX": 0.014964081391199955,
+        "moveY": 0.9998880318656271,
+        "jumpHeld": false,
+        "spinHeld": false,
+        "grabHeld": false
+      }
+    },
+    {
+      "frame": 2109,
+      "time": 35.15,
+      "position": [
+        -73.19762935901996,
+        41.300000005960456,
+        -1884.9979331565485
+      ],
+      "heading": [
+        -0.09155208636493581,
+        0,
+        -0.9958002889546816
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 9.000035798747072,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "slippy plank",
+        "y": 41.300000005960456,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": true,
+        "iceGrip": 0.94
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0.01,
+        "moveY": 1,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      },
+      "requested": {
+        "moveX": 0.01485143721875496,
+        "moveY": 0.9998897113244727,
+        "jumpHeld": false,
+        "spinHeld": false,
+        "grabHeld": false
+      }
+    },
+    {
+      "frame": 2110,
+      "time": 35.166666666666664,
+      "position": [
+        -73.21113822755312,
+        41.300000005960456,
+        -1885.147324294185
+      ],
+      "heading": [
+        -0.09084126112539702,
+        0,
+        -0.9958653851184645
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 9.000037528174614,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "slippy plank",
+        "y": 41.300000005960456,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": true,
+        "iceGrip": 0.94
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0.01,
+        "moveY": 1,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      },
+      "requested": {
+        "moveX": 0.014716429898648149,
+        "moveY": 0.999891707481884,
+        "jumpHeld": false,
+        "spinHeld": false,
+        "grabHeld": false
+      }
+    },
+    {
+      "frame": 2111,
+      "time": 35.18333333333333,
+      "position": [
+        -73.22456576740096,
+        41.300000005960456,
+        -1885.2967227550025
+      ],
+      "heading": [
+        -0.09013043719284458,
+        0,
+        -0.9959299695718703
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 9.000038074384545,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "slippy plank",
+        "y": 41.300000005960456,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": true,
+        "iceGrip": 0.94
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0.01,
+        "moveY": 1,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      },
+      "requested": {
+        "moveX": 0.014558540598460333,
+        "moveY": 0.9998940188318172,
+        "jumpHeld": false,
+        "spinHeld": false,
+        "grabHeld": false
+      }
+    },
+    {
+      "frame": 2112,
+      "time": 35.2,
+      "position": [
+        -73.23791058631133,
+        41.300000005960456,
+        -1885.44612860598
+      ],
+      "heading": [
+        -0.08941961590783484,
+        0,
+        -0.995994042296888
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 9.000037562347394,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "slippy plank",
+        "y": 41.300000005960456,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": true,
+        "iceGrip": 0.94
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0.01,
+        "moveY": 1,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      },
+      "requested": {
+        "moveX": 0.01437736999897729,
+        "moveY": 0.9998966402743396,
+        "jumpHeld": false,
+        "spinHeld": false,
+        "grabHeld": false
+      }
+    },
+    {
+      "frame": 2113,
+      "time": 35.21666666666667,
+      "position": [
+        -73.25117136844887,
+        41.300000005960456,
+        -1885.5955419062143
+      ],
+      "heading": [
+        -0.08870879861683265,
+        0,
+        -0.9960576032780225
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 9.000036106892455,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "slippy plank",
+        "y": 41.300000005960456,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": true,
+        "iceGrip": 0.94
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0.01,
+        "moveY": 1,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      },
+      "requested": {
+        "moveX": 0.014377822443216217,
+        "moveY": 0.999896633768607,
+        "jumpHeld": false,
+        "spinHeld": false,
+        "grabHeld": false
+      }
+    },
+    {
+      "frame": 2114,
+      "time": 35.233333333333334,
+      "position": [
+        -73.2643468702159,
+        41.300000005960456,
+        -1885.7449627073538
+      ],
+      "heading": [
+        -0.08799798667186043,
+        0,
+        -0.9961206525023458
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 9.000033813444187,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "slippy plank",
+        "y": 41.300000005960456,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": true,
+        "iceGrip": 0.94
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0.01,
+        "moveY": 1,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      },
+      "requested": {
+        "moveX": 0.01454551665743467,
+        "moveY": 0.9998942083766506,
+        "jumpHeld": false,
+        "spinHeld": false,
+        "grabHeld": false
+      }
+    },
+    {
+      "frame": 2115,
+      "time": 35.25,
+      "position": [
+        -73.27743591630261,
+        41.300000005960456,
+        -1885.8943910540056
+      ],
+      "heading": [
+        -0.08728718143015687,
+        0,
+        -0.996183189959547
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 9.000030778708345,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "slippy plank",
+        "y": 41.300000005960456,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": true,
+        "iceGrip": 0.94
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0.01,
+        "moveY": 1,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      },
+      "requested": {
+        "moveX": 0.014688801997389134,
+        "moveY": 0.9998921137282171,
+        "jumpHeld": false,
+        "spinHeld": false,
+        "grabHeld": false
+      }
+    },
+    {
+      "frame": 2116,
+      "time": 35.266666666666666,
+      "position": [
+        -73.29043763947467,
+        41.300000005960456,
+        -1886.0438269654073
+      ],
+      "heading": [
+        -0.08660596595291976,
+        0,
+        -0.9962426444703929
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 9.000027260891281,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "slippy plank",
+        "y": 41.300000005960456,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": true,
+        "iceGrip": 0.94
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0.01,
+        "moveY": 1,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      },
+      "requested": {
+        "moveX": 0.014837033597066307,
+        "moveY": 0.9998899251587845,
+        "jumpHeld": false,
+        "spinHeld": false,
+        "grabHeld": false
+      }
+    },
+    {
+      "frame": 2117,
+      "time": 35.28333333333333,
+      "position": [
+        -73.30327035417996,
+        41.300000005960456,
+        -1886.193277451708
+      ],
+      "heading": [
+        -0.08605581896415508,
+        0,
+        -0.996290317137735
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 9.000024129981902,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "slippy plank",
+        "y": 41.300000005960456,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": true,
+        "iceGrip": 0.94
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0.02,
+        "moveY": 1,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      },
+      "requested": {
+        "moveX": 0.01509180289110613,
+        "moveY": 0.9998861122575387,
+        "jumpHeld": false,
+        "spinHeld": false,
+        "grabHeld": false
+      }
+    },
+    {
+      "frame": 2118,
+      "time": 35.3,
+      "position": [
+        -73.3159387945534,
+        41.300000005960456,
+        -1886.3427420128353
+      ],
+      "heading": [
+        -0.08550562198809335,
+        0,
+        -0.9963376880397676
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 9.000023889080968,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "slippy plank",
+        "y": 41.300000005960456,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": true,
+        "iceGrip": 0.94
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0.02,
+        "moveY": 1,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      },
+      "requested": {
+        "moveX": 0.015298086658951984,
+        "moveY": 0.9998829774251461,
+        "jumpHeld": false,
+        "spinHeld": false,
+        "grabHeld": false
+      }
+    },
+    {
+      "frame": 2119,
+      "time": 35.31666666666666,
+      "position": [
+        -73.32844743478682,
+        41.300000005960456,
+        -1886.492220173647
+      ],
+      "heading": [
+        -0.08495537584496428,
+        0,
+        -0.9963847570667874
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 9.000026230777278,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "slippy plank",
+        "y": 41.300000005960456,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": true,
+        "iceGrip": 0.94
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0.02,
+        "moveY": 1,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      },
+      "requested": {
+        "moveX": 0.015457246517173118,
+        "moveY": 0.9998805296284687,
+        "jumpHeld": false,
+        "spinHeld": false,
+        "grabHeld": false
+      }
+    }
+  ]
+}

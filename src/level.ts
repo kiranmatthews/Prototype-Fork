@@ -1,4 +1,6 @@
 import { authoredMovingGeometry } from './authoredMovingSurface';
+import {RainWeather} from './rainWeather';
+import {addWetRooftopLook} from './wetRooftop';
 import {COUNTRY_CLUB_TEXTURES,isCountryClubTexture,countryClubTextureFile,createCountryClubSurface} from './countryClubMaterials';
 
 import {Minefields,validMinefields,type MinefieldData} from './minefields';
@@ -7559,6 +7561,8 @@ export class Level {
           mesh.userData.iceGrip = surface.iceGrip ?? ICE_SURFACE.grip;
         }
         const old = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+        if(this.atmosphere?.rain&&surface.tex?.startsWith('kook-'))
+          for(const material of old)addWetRooftopLook(material,this.standingWaterClock);
         // Ice is the default appearance. An explicit alternate material can
         // describe oil or another slick without changing the shared physics.
         if (surface.tex === undefined || surface.tex === 'ice' || (surface.tex === 'bridge-ice' && !frozenDeck)) {
@@ -8733,6 +8737,7 @@ export class Level {
     this.nightworksPlume?.dispose();this.nightworksPlume=undefined;
     this.nightworksLighting?.dispose();this.nightworksLighting=undefined;
     this.heightFog?.dispose();this.heightFog=undefined;
+    this.rainWeather?.dispose();this.rainWeather=undefined;
     this.hollowwakeTunnels?.dispose();this.hollowwakeTunnels=null;
     this.jungleAssets?.dispose();
     this.jungleAssets = null;
@@ -9754,6 +9759,7 @@ export class Level {
   }
 
   update(dt: number): void {
+    this.rainWeather?.update(dt);
     this.caveCollapse?.update(dt,this.playerPos);
     this.minefields?.update(dt);
     this.skateCollectathon?.update(this.time);
@@ -16026,6 +16032,7 @@ export class Level {
   get hazardAssetDiagnostics() { return this.hazardVisuals?.diagnostics ?? null; }
   get carlisleBonusBridgeDiagnostics(){return this.carlisleBridgeVisuals.map(bridge=>bridge.diagnostics);}
   updateSceneryPresentation(dt:number):void {
+    this.rainWeather?.update(dt);
     this.jungleAssets?.update(dt);for(const bridge of this.carlisleBridgeVisuals)bridge.update(dt);
     // Keep exit light alive during a reward receipt without advancing crates,
     // hazards, collision, checkpoints or any gameplay clock.
@@ -16033,6 +16040,9 @@ export class Level {
   }
   private nightworksFog:NightworksFogVisibility|null|undefined;
   private heightFog:HeightFog|undefined;
+  private rainWeather:RainWeather|undefined;
+  get rainPresentation(){return {amount:this.rainWeather?.group.visible?(this.atmosphere?.rain?.lens??0):0,time:this.rainWeather?.uniforms.uTime.value??0};}
+  get rainDiagnostics(){return this.rainWeather?.diagnostics??null;}
   private nightworksPlume:NightworksPlume|undefined;
   private nightworksLighting:NightworksLighting|undefined;
   private nightworksBackdrop:NightworksBackdrop|undefined;
@@ -16041,6 +16051,10 @@ export class Level {
     if(this.jungleAssets)this.jungleAssets.withLowDetailShadows(draw,lights);else draw();
   }
   updateSceneryView(camera:THREE.Camera,secondary?:THREE.Camera,clearInspectionView=false):void {
+    if(this.atmosphere?.rain){
+      if(!this.rainWeather){this.rainWeather=new RainWeather(ray=>this.raycastGround(ray));this.root.add(this.rainWeather.group);}
+      this.rainWeather.setView(camera,this.atmosphere.rain,!clearInspectionView);
+    }else if(this.rainWeather)this.rainWeather.group.visible=false;
     if(this.atmosphere?.heightFog){
       const atmosphere=resolveLevelAtmosphere(this),color=Array.isArray(atmosphere.fogColor)?new THREE.Color().setRGB(...atmosphere.fogColor):new THREE.Color(atmosphere.fogColor);
       (this.heightFog??=new HeightFog()).update(this.root,camera.position,this.atmosphere.heightFog,color,atmosphere.fogEnabled&&!clearInspectionView);

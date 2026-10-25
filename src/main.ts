@@ -1135,6 +1135,8 @@ function drawPrimaryScene(
     coastPost.resumeFromGameFlow();
     coastPostResumeCount++;
   }
+  const rain=level.rainPresentation;
+  coastPost?.setRain(editorViewActive||gameFlow.blocksGameplay||split2p?0:rain.amount,rain.time);
   const automaticWorldMatrices = prepareWorldFrame(scene);
   const originalTone=renderer.toneMapping,originalExposure=renderer.toneMappingExposure;
   if(level.warehouseArtEnabled){renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.2;}
@@ -4872,6 +4874,8 @@ function allowRenderFrame(nowMs: number): boolean {
 
 // Continuous audio follows movement; foot attacks follow the rendered soles.
 function updateAudio(): void {
+  const rain=level.atmosphere?.rain;
+  sfx.setLoop('rooftop-rain','rooftopRain',!!rain&&rain.intensity>0,.3*(rain?.intensity??0));
   const speedAbs = Math.abs(player.speed);
   // Use the fixed-step audio contact policy: tiny floor-contact gaps must not
   // restart the loop, while actual jumps, stops and stowed boards stay silent.

@@ -11,7 +11,7 @@ export function createRooftopPilot(m,{nodeCamera=false,takeoff,mode='skate',rout
    if(p.isBailing||['dead','gameover'].includes(p.state))throw Error(`Lost city run ${JSON.stringify({frame,progress,p:p.pos.toArray(),state:p.state,bail:p.isBailing,active})}`);
    if(progress>stallAt+2){stallAt=progress;stallFrame=frame;}else if(frame-stallFrame>600)throw Error(`Stalled at ${progress}: ${JSON.stringify({p:p.pos.toArray(),active,speed:p.speed,state:p.state})}`);
    const gap=gaps.find(g=>progress<g.b+.15),offset=takeoff??(mode==='foot'?.7:1.6);
-   let jump=mode==='skate',q=m.rooftopPoint(Math.min(m.ROOFTOP_LENGTH-7,progress+(mode==='foot'?3.5:7)),route);
+   let jump=mode==='skate',q=m.rooftopPoint(Math.min(m.ROOFTOP_LENGTH-7,progress+(mode==='foot'?3.5:p.groundHit?.slippy?11:7)),route);
    if(active){
     jump=false;if(!p.grounded){active.air=true;active.airFrames++;}
     if(mode==='foot'&&active.double&&active.air&&active.airFrames>=17&&active.airFrames<=20)jump=true;
@@ -30,7 +30,11 @@ export function createRooftopPilot(m,{nodeCamera=false,takeoff,mode='skate',rout
    if(lateral&&!cp){const yaw=m.rooftopYaw(progress)*Math.PI/180;q[0]+=Math.cos(yaw)*lateral;q[2]-=Math.sin(yaw)*lateral;}
    const steer=p.state==='air'&&p.airFromSkate?{}:direction(p,l,q);
    if(mode==='foot'&&p.state==='air'&&Math.abs(steer.moveX??0)<.18){steer.moveX=0;steer.moveY=Math.sign(steer.moveY??1);}
-   return{...steer,jumpHeld:jump,spinHeld:p.grounded&&l.checkpoints.some(c=>!c.active&&c.spawnPos.distanceTo(p.pos)<2.7)};
+   // Wet roofs retain downhill momentum: use the normal brake to keep a
+   // controllable approach speed, releasing it for takeoff. No state writes.
+   const alignment=((q[0]-p.pos.x)*p.axisF.x+(q[2]-p.pos.z)*p.axisF.z)/(Math.hypot(q[0]-p.pos.x,q[2]-p.pos.z)||1);
+   const brake=mode==='skate'&&p.grounded&&p.groundHit?.slippy&&alignment>.995&&p.speed>25&&(!gap||gap.a-progress>10);
+   return{...steer,jumpHeld:jump,grabHeld:brake,spinHeld:p.grounded&&l.checkpoints.some(c=>!c.active&&c.spawnPos.distanceTo(p.pos)<2.7)};
   },
   observe(p,l){
    frame++;evidence.crystal=p.hasCrystal;progress=m.rooftopProject(p.pos.x,p.pos.z,progress);evidence.peakSpeed=Math.max(evidence.peakSpeed,p.speed);

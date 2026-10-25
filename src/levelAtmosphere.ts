@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { isNightworksSurface } from "./nightworksRocks";
 import type { CustomLevelData, SkyPreset, Theme } from "./level";
+import type {RainProfile} from './rainWeather';
 
 /** Hex colors are convenient to author; linear RGB tuples retain the exact
  * preset-blended native light values across JSON capture. */
@@ -13,6 +14,7 @@ export interface CustomAtmosphereData {
   fogFar?: number;
   fogColor?: AtmosphereColor;
   heightFog?: {height:number;density:number;falloff:number;slope?:[number,number]};
+  rain?: RainProfile;
   ambientSky?: AtmosphereColor;
   ambientGround?: AtmosphereColor;
   ambientIntensity?: number;
@@ -35,7 +37,7 @@ export interface CustomAtmosphereData {
   fallbackSunU?: number;
   fallbackSunV?: number;
 }
-export type ResolvedAtmosphere = Required<Omit<CustomAtmosphereData,'sunDirection'|'profile'|'heightFog'>> & Pick<CustomAtmosphereData,'sunDirection'|'profile'|'heightFog'>;
+export type ResolvedAtmosphere = Required<Omit<CustomAtmosphereData,'sunDirection'|'profile'|'heightFog'|'rain'>> & Pick<CustomAtmosphereData,'sunDirection'|'profile'|'heightFog'|'rain'>;
 
 export const ATMOSPHERE_NUMBERS = {
   fogNear: { label: "fog start", min: 0, max: 4999.99, step: 1 },
@@ -54,7 +56,7 @@ export const ATMOSPHERE_COLORS = {
   fallbackBottom: "fallback sky bottom", fallbackFog: "fallback horizon color", fallbackSunColor: "fallback sun color",
 } as const;
 const ATMOSPHERE_KEYS = new Set([...Object.keys(ATMOSPHERE_NUMBERS), ...Object.keys(ATMOSPHERE_COLORS),
-  "fogEnabled", "fallbackStars", "fallbackRidges", "backdrop", "sunDirection", "profile", "heightFog"]);
+  "fogEnabled", "fallbackStars", "fallbackRidges", "backdrop", "sunDirection", "profile", "heightFog", "rain"]);
 const validColor = (value: unknown): boolean =>
   typeof value === "string" ? /^#[0-9a-fA-F]{6}$/.test(value) : Array.isArray(value) && value.length === 3 &&
     value.every(component => typeof component === "number" && Number.isFinite(component) && component >= 0 && component <= 1);
@@ -63,6 +65,13 @@ export function validAtmosphere(value: unknown): value is CustomAtmosphereData {
   const data = value as Record<string, unknown>;
   if(data.profile!==undefined&&data.profile!=='drowned-crown')return false;
   if (Object.keys(data).some(key => !ATMOSPHERE_KEYS.has(key))) return false;
+  if(data.rain!==undefined){
+    const rain=data.rain as Record<string,unknown>;
+    if(!rain||typeof rain!=='object'||Array.isArray(rain)||Object.keys(rain).some(k=>!['intensity','wind','lens'].includes(k))||
+      typeof rain.intensity!=='number'||!Number.isFinite(rain.intensity)||rain.intensity<0||rain.intensity>1||
+      !Array.isArray(rain.wind)||rain.wind.length!==2||rain.wind.some(v=>typeof v!=='number'||!Number.isFinite(v)||Math.abs(v)>15)||
+      rain.lens!==undefined&&(typeof rain.lens!=='number'||!Number.isFinite(rain.lens)||rain.lens<0||rain.lens>1))return false;
+  }
   if(data.heightFog!==undefined){
     const fog=data.heightFog as Record<string,unknown>;
     if(!fog||typeof fog!=='object'||Array.isArray(fog)||Object.keys(fog).some(k=>!['height','density','falloff','slope'].includes(k))||

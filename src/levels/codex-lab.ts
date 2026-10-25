@@ -813,13 +813,19 @@ export const ROOFTOP_RELAY_LEVEL:CustomLevelData=(()=>{
  for(let s=0;s<ROOFTOP_LENGTH;s+=22)components.push({t:'camnode',p:rooftopWorld(s,rooftopPoint(s)[1]),grp:390});
  dressKookRooftops(components,groups,{roofs:[...ROOFTOP_ROOFS,...ROOFTOP_BRANCH_ROOFS],districts:ROOFTOP_DISTRICTS,
   world:rooftopWorld,yaw:rooftopYaw,surface:rooftopSurfaceY,branch:roofForkOffset,width:widthAt,blocked:crossesBranch,length:ROOFTOP_LENGTH});
+ // Rain changes authored contact grip, independently of automatic edge and
+ // ridge grinding. Paving offers recovery zones between slick metal runs.
+ for(const c of components)if((c.t==='platform'||c.t==='mesh')&&c.solid!==false&&
+   (c.tex==='kook-metal'||c.tex==='kook-branch-metal'||c.tex==='kook-paving')){
+  c.slip=true;c.iceGrip=c.tex==='kook-paving'?.94:.84;
+ }
  const last=ROOFTOP_ROOFS[ROOFTOP_ROOFS.length-1],finish=last.b-14;components.push({t:'camnode',p:rooftopWorld(ROOFTOP_LENGTH+20,last.top+last.rise),grp:390});
  components.push({t:'gate',p:rooftopPoint(finish),yaw:rooftopYaw(finish),grp:300+last.district,nm:'The Kook Club finish'});
  components.push({t:'clock',p:rooftopWorld(12,rooftopPoint(12)[1],5),grp:300,nm:'City relay time trial'});
  const spawn=rooftopPoint(6);spawn[1]+=.12;
  return {v:1,name:'Rooftop Relay',spawn,startWarpPad:false,killY:ROOFTOP_LOWEST_Y-24,sky:'clouds',keepPlayFog:true,cameraAirLift:1,cameraLookAhead:15,
   cameraRig:{camDist:11.5,camHeight:7,camPitch:30,camFov:66},
-  atmosphere:{backdrop:'fog',fogEnabled:true,fogNear:65,fogFar:420,fogColor:'#c3cedf',heightFog:{height:ROOFTOP_ROOFS[0].top-9,density:.12,falloff:.22,slope:[0,(ROOFTOP_ROOFS[0].top-last.top)/-rooftopWorld(ROOFTOP_LENGTH,0)[2]]},ambientSky:'#dbe7ff',ambientGround:'#b79a93',ambientIntensity:1.15,sunColor:'#ffe0b4',sunIntensity:2.15,sunDirection:[-.65,.58,.48],fillColor:'#b3ccec',fillIntensity:.45,drawDistance:680,shadowStrength:.75,fallbackTop:'#8baddb',fallbackBottom:'#e8dae0',fallbackFog:'#d0d8e6',fallbackSunColor:'#fff0ce',fallbackSunU:.77,fallbackSunV:.23},
+  atmosphere:{backdrop:'fog',fogEnabled:true,fogNear:55,fogFar:380,fogColor:'#aebdca',heightFog:{height:ROOFTOP_ROOFS[0].top-9,density:.12,falloff:.22,slope:[0,(ROOFTOP_ROOFS[0].top-last.top)/-rooftopWorld(ROOFTOP_LENGTH,0)[2]]},rain:{intensity:.86,wind:[5.5,2.8],lens:.82},ambientSky:'#c7d8e8',ambientGround:'#87939b',ambientIntensity:1.22,sunColor:'#e3edf2',sunIntensity:1.35,sunDirection:[-.65,.58,.48],fillColor:'#9fbdd5',fillIntensity:.55,drawDistance:680,shadowStrength:.48,fallbackTop:'#677d94',fallbackBottom:'#bdc9d1',fallbackFog:'#aebdca',fallbackSunColor:null,fallbackSunU:.77,fallbackSunV:.23},
   medalTimes:{gold:135,silver:210,bronze:340},components,groups};
 })();
 

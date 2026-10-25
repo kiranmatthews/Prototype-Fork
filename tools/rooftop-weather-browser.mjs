@@ -1,0 +1,31 @@
+import assert from 'node:assert/strict';
+import {mkdir,writeFile} from 'node:fs/promises';
+const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
+const base=process.argv[2]||'http://127.0.0.1:5267',out=process.env.ROOFTOP_OUTPUT||'docs/rooftop-kook/rain-validation';
+await mkdir(out,{recursive:true});
+const browser=await chromium.launch({channel:'chrome',headless:true}),page=await browser.newPage({viewport:{width:2560,height:1440},deviceScaleFactor:1,serviceWorkers:'block'}),errors=[];
+page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
+const state=()=>page.evaluate(()=>{const g=window.__game;return {level:g.getCurrentLevel().id,world:g.getLevel().rainDiagnostics,lens:g.getLookDiagnostics()?.rain,buffer:[g.renderer.domElement.width,g.renderer.domElement.height],stamp:document.querySelector('.hud-build')?.textContent};});
+try{
+ await page.goto(base+'/?playtest&level=rooftop-relay',{timeout:180000});
+ await page.waitForFunction(()=>window.__game?.getCurrentLevel().id==='rooftop-relay'&&!window.__game.gameFlow.blocksGameplay,null,{timeout:180000});
+ await page.evaluate(()=>{window.__game.renderQualitySettings.setRegularResolution(null);window.__game.crtGuestSettings.setEnabled(false);});
+ await page.waitForTimeout(1600);const native=await state();
+ assert.deepEqual(native.buffer,[2560,1440]);assert.ok(native.world.visible&&native.lens.enabled);assert.ok(native.world.activeImpacts>0);
+ await page.screenshot({path:out+'/rain-native.png'});
+ await page.waitForTimeout(750);const moving=await state();assert.ok(moving.world.time>native.world.time);assert.ok(moving.lens.time>native.lens.time);
+ await page.screenshot({path:out+'/rain-native-later.png'});
+ await page.evaluate(()=>window.__game.renderQualitySettings.setRegularResolution(480));await page.waitForTimeout(650);
+ const fixed=await state();assert.ok(fixed.lens.enabled);await page.screenshot({path:out+'/rain-fixed.png'});
+ await page.evaluate(()=>{window.__game.crtGuestSettings.setEnabled(true);});await page.waitForTimeout(1500);
+ const crt=await state();assert.ok(crt.lens.enabled);await page.screenshot({path:out+'/rain-crt.png'});
+ await page.evaluate(()=>window.__game.switchLevel('codex-lab'));
+ await page.waitForFunction(()=>window.__game.getCurrentLevel().id==='codex-lab'&&!window.__game.gameFlow.blocksGameplay,null,{timeout:180000});
+ await page.waitForTimeout(400);const dry=await state();assert.equal(dry.world,null);assert.equal(dry.lens.enabled,false);
+ await page.evaluate(()=>{window.__game.renderQualitySettings.setRegularResolution(null);window.__game.crtGuestSettings.setEnabled(false);return window.__game.switchLevel('rooftop-relay');});
+ await page.waitForFunction(()=>window.__game.getCurrentLevel().id==='rooftop-relay'&&!window.__game.gameFlow.blocksGameplay,null,{timeout:180000});
+ await page.waitForTimeout(1000);const revisited=await state();assert.ok(revisited.world.visible&&revisited.lens.enabled);
+ await page.screenshot({path:out+'/rain-revisited.png'});assert.deepEqual(errors,[]);
+ const report={base,native,moving,fixed,crt,dry,revisited,errors};
+ await writeFile(out+'/weather-browser.json',JSON.stringify(report,null,2)+'\n');console.log('PASS weather native/fixed/CRT animation, dry-level exit and rooftop re-entry',JSON.stringify(report));
+}finally{await browser.close();}
