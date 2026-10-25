@@ -5065,7 +5065,13 @@ export class Player {
         this.onRelic('ALL BOXES!', where === 'gate' ? 'the gem is at the finish' : 'grab the gem');
       }
       // Every unrecoverable fall uses the same native pit-death presentation.
-      if (this.pos.y < level.killY || this.raceHooks?.unrecoverableFall?.()) this.die('pit');
+      const courseVoid = level.fallRecoveryDrop !== undefined && this.state === 'air' &&
+        !this.grounded && this.vVel < 0 && this.airPeakY - this.pos.y >= level.fallRecoveryDrop &&
+        !level.hasReachableFallLanding(this.pos, this.vVel,
+          Math.max(Math.abs(this.speed), TUNING.maxSpeed, TUNING.downhillMax, TUNING.vertMax),
+          Math.max(1, Math.min(TUNING.fallGravity, TUNING.boardFallGravity, TUNING.rampFallGravity, TUNING.pipeAirGravity)),
+          CONST.maxFallSpeed);
+      if (this.pos.y < level.killY || courseVoid || this.raceHooks?.unrecoverableFall?.()) this.die('pit');
     }
 
     // Like blast hazards, the encounter also advances while hanging or on a

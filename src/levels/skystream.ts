@@ -208,7 +208,7 @@ for(const p of lane)add({t:'camnode',p});
 
 export const SKYSTREAM_LEVEL: CustomLevelData = {
   v:1,name:'The Skystream',spawn:[-SAVED_SLIPSTREAM_LEVEL.spawn[0],SAVED_SLIPSTREAM_LEVEL.spawn[1],SAVED_SLIPSTREAM_LEVEL.spawn[2]],
-  killY:-430,sky:'clouds',keepPlayFog:true,jungleDepthFade:false,hugeDropBail:false,
+  killY:-430,fallRecoveryDrop:24,sky:'clouds',keepPlayFog:true,jungleDepthFade:false,hugeDropBail:false,
   cameraAirLift:.65,cameraLookAhead:13,
   atmosphere:{...SKY_BRIDGE_LEVEL.atmosphere!,fogNear:36,fogFar:192},relicTime:180,medalTimes:{gold:180,silver:210,bronze:250},
   groups:[{id:1,nm:'I · mirrored Saved Slipstream'},{id:2,nm:'II · pearl halo'},{id:3,nm:'III · cloud eye'},

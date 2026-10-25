@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import * as source from '../src/levels/skystream';
 import { createSkystreamPilot } from './skystream-pilot.mjs';
+import { CONST } from '../src/tuning';
 
 const g:any=await new Promise(resolve=>{const poll=()=>{const game=(window as any).__game;if(game&&!game.gameFlow.blocksGameplay)resolve(game);else requestAnimationFrame(poll);};poll();});
 const panel=document.createElement('details');panel.open=true;panel.id='skystream-review-controls';
@@ -8,7 +9,7 @@ panel.style.cssText='position:fixed;left:8px;top:8px;z-index:999999;max-width:33
 const title=document.createElement('summary');title.textContent='Skystream review';panel.append(title);
 const controls=document.createElement('div'),status=document.createElement('pre');status.id='skystream-review-status';status.style.whiteSpace='pre-wrap';panel.append(controls,status);document.body.append(panel);
 const add=(name:string,action:()=>void)=>{const b=document.createElement('button');b.textContent=name;b.style.cssText='margin:3px;padding:6px';b.onclick=action;controls.append(b);};
-let pilot:any=null,frame=0,finished=false,failed:string|null=null;
+let pilot:any=null,frame=0,finished=false,failed:string|null=null,reviewMode:'route'|'fall'='route';
 const p=g.player,realStep=p.step.bind(p),realCommit=p.commitRenderStep.bind(p);
 p.step=(dt:any,input:any,level:any)=>{
  if(!pilot||finished||failed){realStep(dt,input,level);return;}
@@ -21,10 +22,31 @@ p.step=(dt:any,input:any,level:any)=>{
  realStep(dt,sample,level);
 };
 p.commitRenderStep=(...args:any[])=>{realCommit(...args);if(!pilot||finished||failed)return;
- frame++;pilot.observe(p,g.getLevel());finished=p.state==='finished';
+ frame++;pilot.observe(p,g.getLevel());
+ if(reviewMode==='fall'){
+  const evidence=pilot.evidence;
+  if(evidence.departure===null&&!p.grounded&&p.state==='air')evidence.departure=frame;
+  if(evidence.death===null&&p.state==='dead'){evidence.death=frame;evidence.deathY=p.pos.y;}
+  if(evidence.death!==null&&p.state!=='dead'&&!p.isBailing&&p.grounded){
+   evidence.fallSeconds=(evidence.death-evidence.departure)*CONST.fixedStep;
+   evidence.returnSeconds=(frame-evidence.departure)*CONST.fixedStep;
+   finished=true;if(evidence.returnSeconds>5)failed='Fall recovery exceeded five seconds';
+  }
+  if(frame>900)failed='Fall recovery timed out';
+  return;
+ }
+ finished=p.state==='finished';
  if(p.isBailing||['dead','gameover'].includes(p.state))failed='Route failed at '+JSON.stringify(p.pos.toArray());
 };
-add('Run full route',()=>{g.gameFlow.hide();g.switchLevel('skystream');p.respawn(g.getLevel(),true);pilot=createSkystreamPilot(source);frame=0;finished=false;failed=null;});
+add('Run full route',()=>{g.gameFlow.hide();g.switchLevel('skystream');p.respawn(g.getLevel(),true);reviewMode='route';pilot=createSkystreamPilot(source);frame=0;finished=false;failed=null;});
+add('Test fall recovery',()=>{
+ g.gameFlow.hide();g.switchLevel('skystream');p.respawn(g.getLevel(),true);reviewMode='fall';frame=0;finished=false;failed=null;
+ pilot={evidence:{departure:null,death:null},observe:()=>{},sample:()=>{
+  if(pilot.evidence.death!==null)return {};
+  const direction=p.courseInputDirection(g.getLevel())??p.camDir,length=Math.hypot(direction.x,direction.z)||1;
+  return {moveX:-direction.z/length,moveY:direction.x/length,jumpHeld:true};
+ }};
+});
 add('Stop pilot',()=>{pilot=null;});
 for(const [i,cp]of source.SKYSTREAM_CHECKPOINTS.entries())add(`Sanctuary ${i+1}`,()=>{pilot=null;g.gameFlow.hide();p.respawn(g.getLevel(),true,false,{position:new THREE.Vector3(...cp).add(new THREE.Vector3(0,.1,0)),heading:new THREE.Vector3(0,0,-1)});});
 add('Hide controls',()=>{panel.open=false;});
@@ -43,6 +65,6 @@ add('Make loop preview',async()=>{
  let image=document.getElementById('skystream-preview') as HTMLImageElement|null;
  if(!image){image=document.createElement('img');image.id='skystream-preview';image.style.cssText='position:fixed;right:10px;top:10px;width:640px;z-index:999999';document.body.append(image);}image.src=download.href;
 });
-function report(){panel.style.setProperty('display','block','important');panel.style.setProperty('visibility','visible','important');panel.inert=false;panel.removeAttribute('aria-hidden');status.textContent=JSON.stringify({frame,finished,failed,index:pilot?.index,
+function report(){panel.style.setProperty('display','block','important');panel.style.setProperty('visibility','visible','important');panel.inert=false;panel.removeAttribute('aria-hidden');status.textContent=JSON.stringify({reviewMode,frame,finished,failed,index:pilot?.index,
  position:p.pos.toArray().map((n:number)=>Math.round(n*100)/100),speed:Math.round(p.speed*10)/10,grounded:p.grounded,loop:p.loopStatus,evidence:pilot?.evidence},null,2);requestAnimationFrame(report);}
 report();

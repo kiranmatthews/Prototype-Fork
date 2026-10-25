@@ -8,6 +8,7 @@ import {addWaterparkFlumeLook, createShallowSlideWater} from './waterparkFlume';
 import { isGraphicsReset } from './lostGraphicsResources';
 import { validSkateRace } from './race/schema';
 import { createRaceFinish } from './race/finish';
+import { RaceCourse } from './race/course';
 import type { SkateRaceData } from './race/types';
 import {custardPoolMaterial,custardFoamMaterial,addCustardPoolBedLook,attachCustardPoolReflection,CustardFinalePresentation} from './custardPool';
 import { NightworksBackdrop } from './nightworksBackdrop';
@@ -1114,6 +1115,8 @@ export interface CustomLevelData {
   /** False keeps an authored arrival on its own supported floor, without a warp pad. */
   startWarpPad?: boolean;
   killY: number;
+  /** Tall courses may end a fall this far below its apex once no lower road is reachable. */
+  fallRecoveryDrop?: number;
   /** Source-authored boss, retained by editor copy/export/import. */
   encounter?: 'crab-chief';
   /** Continuous park: rider-relative skating/chase camera, no automatic run-mode pickups. */
@@ -2685,7 +2688,7 @@ const MAX_LEVEL_LABEL_LENGTH = 120;
 const FORBIDDEN_JSON_KEYS = new Set(["__proto__", "prototype", "constructor"]);
 const LEVEL_DATA_KEYS = new Set([
   'encounter',
-  "minefields", "v", "skateRace", "edgeGrindingRevision", "name", "spawn", "startWarpPad", "killY", "hudMode", "ledgeAssist", "relicTime",
+  "minefields", "v", "skateRace", "edgeGrindingRevision", "name", "spawn", "startWarpPad", "killY", "fallRecoveryDrop", "hudMode", "ledgeAssist", "relicTime",
   "medalTimes", "ocean", "unitySand", "shoreFoam", "sky", "jungleAtmosphere", "jungleDepthFade", "jungleStyle", "atmosphere",
   "components", "layers", "groups", "allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "skateReference", "hugeDropBail", "alwaysSkate", "warehouseArt", "skateCollectathon", "cameraAirLift", "secretComboGem", "cameraLookAhead", "cameraRig", "boulderChase",
 ]);
@@ -2942,6 +2945,8 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
   }
   if (source.cameraAirLift !== undefined && (typeof source.cameraAirLift !== "number" ||
       !Number.isFinite(source.cameraAirLift) || source.cameraAirLift < 0 || source.cameraAirLift > 1)) return null;
+  if (source.fallRecoveryDrop !== undefined && (typeof source.fallRecoveryDrop !== "number" ||
+      !Number.isFinite(source.fallRecoveryDrop) || source.fallRecoveryDrop < 8 || source.fallRecoveryDrop > 120)) return null;
   if (source.relicTime !== undefined && !validRelicTime(source.relicTime)) return null;
   if (source.medalTimes !== undefined && !validMedalTimes(source.medalTimes)) return null;
   if (
@@ -4316,6 +4321,16 @@ export class Level {
   private wallPathByBox = new Map<THREE.Box3, WallPathRuntime>();
   private wallPathSegmentByBox = new Map<THREE.Box3, number>();
   killY = -48; // per-level death height (every builder authors its own)
+  fallRecoveryDrop?: number;
+  private fallRecoveryCourse?: RaceCourse;
+
+  /** The lane proposes candidates; live floor collision confirms each catch.
+   * A generous corridor includes banked road edges and wide landing courts. */
+  hasReachableFallLanding(position: THREE.Vector3, verticalSpeed: number, travelSpeed: number, gravity: number, terminal: number): boolean {
+    if (this.lanePts.length < 2) return true;
+    this.fallRecoveryCourse ??= new RaceCourse(this.lanePts.map(p => [p.x, p.y, p.z, 32]));
+    return this.fallRecoveryCourse.hasReachableLanding(this, position, verticalSpeed, travelSpeed, gravity, terminal);
+  }
   // Authored per-level accessibility without changing the shared movement
   // tuning. One source course can widen its ledge catch envelope while every
   // other level retains the exact global grab feel.
@@ -7257,6 +7272,7 @@ export class Level {
       name: `${this.name} (copy)`,
       spawn: (this.startWarpOriginalSpawn??this.spawnPos).toArray().map(r2) as [number,number,number],
       killY: r2(this.killY),
+      fallRecoveryDrop: this.fallRecoveryDrop,
       hudMode: this.hudMode === "bonus" ? "bonus" : undefined,
       allBalanceCrates: this.allBalanceCrates || undefined,
       perfectGrindBoost: this.perfectGrindBoost || undefined,
@@ -7426,6 +7442,7 @@ export class Level {
     this.cameraRig = data.cameraRig ? {...data.cameraRig} : undefined;
     this.minefields = data.minefields?.length ? new Minefields(data.minefields) : null;
     this.killY = data.killY;
+    this.fallRecoveryDrop = data.fallRecoveryDrop;
     this.ledgeAssist = data.ledgeAssist ?? 0;
     this.finishZ = -1e9; // endless playground: no finish gate
     this.endWallZ = -1e9;
@@ -9504,6 +9521,7 @@ export class Level {
 
   /** Rebuild the arc-length table. Called wherever lanePts is assigned. */
   private measureLane(): void {
+    this.fallRecoveryCourse = undefined;
     this.laneArc = [0];
     for (let i = 1; i < this.lanePts.length; i++) {
       const a = this.lanePts[i - 1];

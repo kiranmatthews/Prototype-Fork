@@ -1,0 +1,199 @@
+{
+  "recordedAt": "2026-10-25T04:02:25Z",
+  "policy": {
+    "level": "skystream",
+    "dropMetres": 24,
+    "requiresNoReachableLowerRoad": true,
+    "nativeDeathPresentationUnchanged": true
+  },
+  "nativeFalls": [
+    {
+      "name": "Old whole-level kill plane",
+      "fallSeconds": 11.783333333333333,
+      "returnSeconds": 14,
+      "deathY": -430.16478250372785
+    },
+    {
+      "name": "Cloudhead departure",
+      "fallSeconds": 1.0833333333333333,
+      "returnSeconds": 3.3,
+      "deathY": 126.2352174962739
+    },
+    {
+      "name": "Middle sanctuary",
+      "fallSeconds": 1.2666666666666666,
+      "returnSeconds": 3.4833333333333334,
+      "deathY": -130.02263088465082
+    },
+    {
+      "name": "Aureole runout",
+      "fallSeconds": 1.3666666666666667,
+      "returnSeconds": 3.5833333333333335,
+      "deathY": -352.5218891648398
+    },
+    {
+      "name": "Finish court",
+      "fallSeconds": 0.85,
+      "returnSeconds": 3.0666666666666664,
+      "deathY": -372.3886559253744
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Pearl halo \u00b7 round right-hand descent",
+      "landed": [
+        25.036441348014606,
+        -49.77888832585974,
+        -1001.5238303107925
+      ]
+    },
+    {
+      "name": "Cloud eye \u00b7 wide left oval",
+      "landed": [
+        41.293387790573505,
+        -107.33827246667497,
+        -1189.6081903321058
+      ]
+    },
+    {
+      "name": "Seraph coil \u00b7 tall oval quarter-turn exit",
+      "landed": [
+        -112.09708908102189,
+        -167.5051577271492,
+        -1430.2833859360528
+      ]
+    },
+    {
+      "name": "Last halo \u00b7 oblique return",
+      "landed": [
+        85.75261872018055,
+        -225,
+        -1634.9759094648366
+      ]
+    }
+  ],
+  "nativeRoute": {
+    "gaps": [
+      {
+        "index": 0,
+        "takeoff": [
+          -4.889182467271228,
+          6.97263694121299,
+          -734.7413108610114
+        ],
+        "landed": [
+          -8.190777888945538,
+          0.6815187232937512,
+          -768.4954658552573
+        ],
+        "aired": true
+      },
+      {
+        "index": 1,
+        "takeoff": [
+          30.758661751942576,
+          -108.10007620970823,
+          -1216.6039609983384
+        ],
+        "landed": [
+          17.00587710074476,
+          -114.37013811053355,
+          -1241.4111287021656
+        ],
+        "aired": true
+      },
+      {
+        "index": 2,
+        "takeoff": [
+          73.63572903482394,
+          -221.76393822314796,
+          -1616.9852281762544
+        ],
+        "landed": [
+          80.40641449000718,
+          -225,
+          -1635.3571870521491
+        ],
+        "aired": true
+      },
+      {
+        "index": 3,
+        "takeoff": [
+          128.31539603977666,
+          -328.40852327675617,
+          -1826.6049096291479
+        ],
+        "landed": [
+          128.090888196159,
+          -338.596110117029,
+          -1856.3763525042236
+        ],
+        "aired": true
+      }
+    ],
+    "inverted": true,
+    "loopEntrySpeed": 66.4193753451934,
+    "finished": true,
+    "checkpoints": [
+      0,
+      1,
+      2,
+      3,
+      5,
+      6
+    ]
+  },
+  "browserLite": {
+    "reviewMode": "fall",
+    "frame": 294,
+    "finished": true,
+    "failed": null,
+    "position": [
+      0,
+      150.74,
+      18
+    ],
+    "speed": 0,
+    "grounded": true,
+    "loop": {
+      "active": false,
+      "progress": 0,
+      "pressure": 0,
+      "completed": 0
+    },
+    "evidence": {
+      "departure": 96,
+      "death": 161,
+      "deathY": 126.2352174962739,
+      "fallSeconds": 1.0833333333333333,
+      "returnSeconds": 3.3
+    }
+  },
+  "browserFull": {
+    "reviewMode": "fall",
+    "frame": 294,
+    "finished": true,
+    "failed": null,
+    "position": [
+      0,
+      150.74,
+      18
+    ],
+    "speed": 0,
+    "grounded": true,
+    "loop": {
+      "active": false,
+      "progress": 0,
+      "pressure": 0,
+      "completed": 0
+    },
+    "evidence": {
+      "departure": 96,
+      "death": 161,
+      "deathY": 126.2352174962739,
+      "fallSeconds": 1.0833333333333333,
+      "returnSeconds": 3.3
+    }
+  },
+  "browserConsoleErrors": []
+}
