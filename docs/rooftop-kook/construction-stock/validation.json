@@ -1,0 +1,19 @@
+{
+  "sourceGeometry": "Original Meshy board variants, unchanged positions/UVs/indices",
+  "stockBoards": 65,
+  "nativeVertexProbes": 42662,
+  "longestBoardMetres": 5.453762780779217,
+  "minimumEnvelopeGapMetres": 0.016963907659979682,
+  "overlaps": 0,
+  "productionBuild": "10-25 15:32 UTC",
+  "publishedLevelsValidated": 11,
+  "releaseBytes": 999654276,
+  "browser": "Actual player landing, non-solid collapse and 10-second return pass in lite/full; errors and failed assets empty",
+  "budget": "Actual instance count covered; bounded narrow-deck fixture accepted; excessive wide-deck fixture rejected",
+  "supplementalSecurityAudit": {
+    "baselineCommit": "6472418aa008a92be68d614455c8cb0caf8ad618",
+    "baselineAndChangedAssertion": "world-map coordinate exceeded its allocation bound",
+    "line": 79,
+    "result": "same pre-existing failure"
+  }
+}

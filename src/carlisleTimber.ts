@@ -62,6 +62,9 @@ function freezeBoardFaces(root: THREE.Group, planks: THREE.Group): void {
   }
 }
 export const MAX_CARLISLE_TIMBER_LENGTH = 20_000;
+// Long building decks use staggered stock lengths, with a fixed upper bound
+// on instances even for unusually large editor-authored surfaces.
+const timberSections = (width: number) => width > 8 ? Math.min(8, Math.ceil(width / 4)) : 1;
 const sampling = (length: number, moving: boolean) => ({
   plankSpacing: Math.max(.67, length / 320),
   bentSpacing: Math.max(moving ? Math.max(1.7, Math.min(3.2, length * .46)) : 6.8, length / 40),
@@ -69,12 +72,13 @@ const sampling = (length: number, moving: boolean) => ({
 
 /** Conservative authoring work, including member instances, frame samples
  * and support resolution. Direct callers also receive bounded subdivisions. */
-export function estimateCarlisleTimberWork(depth: number, moving: boolean): number {
-  if (!Number.isFinite(depth) || depth < 0 || depth > MAX_CARLISLE_TIMBER_LENGTH) return Infinity;
+export function estimateCarlisleTimberWork(depth: number, moving: boolean, width = 8): number {
+  if (!Number.isFinite(depth + width) || depth < 0 || width < 0 ||
+    depth > MAX_CARLISLE_TIMBER_LENGTH || width > MAX_CARLISLE_TIMBER_LENGTH) return Infinity;
   if (depth === 0) return 0;
   const spacing = sampling(depth, moving);
   const planks = Math.ceil(depth / spacing.plankSpacing), bays = Math.ceil(depth / spacing.bentSpacing);
-  return 2 * planks + 7 * (bays + 1) + (moving ? 2 : 8) * bays;
+  return 2 * planks * timberSections(width) + 7 * (bays + 1) + (moving ? 2 : 8) * bays;
 }
 
 /** Dress the actual native local envelope, preserving its collider and motion.
@@ -138,6 +142,23 @@ export function dressCarlisleTimberDeck(mesh: THREE.Mesh, component: CustomCompo
     poleVariantWeights: WOOD_PATH_POLE_WEIGHTS,
     fallbackBaseY: top - pierDepth, includeSupports: !suspended, includeHandrails: false,
   });
+  const sections = suspended ? 1 : timberSections(width);
+  if (sections > 1) {
+    layout.planks = layout.planks.flatMap(board => {
+      const span = board.size[0], pitch = span / sections;
+      const edges = Array.from({length: sections + 1}, (_, i) =>
+        -span / 2 + i * pitch + (i > 0 && i < sections && board.index % 2 ? pitch * .35 : 0));
+      return Array.from({length: sections}, (_, i) => {
+        const left = edges[i] + (i ? .018 : 0), right = edges[i + 1] - (i < sections - 1 ? .018 : 0);
+        const offset = (left + right) / 2;
+        return {...board, index: board.index * 8 + i,
+          center: board.center.map((v, axis) => v + board.basis.right[axis] * offset) as [number, number, number],
+          size: [right - left, board.size[1], board.size[2]] as [number, number, number],
+          variantIndex: (board.variantIndex + i) % WOOD_PATH_PLANK_WEIGHTS.length,
+          tonalBucket: (board.tonalBucket + i) % profile.tonalBucketCount};
+      });
+    });
+  }
   if(moving&&component.tex==='creek-raft'){
     // Three hewn floats and transverse ties make a ferry hull from the same
     // shared kit. Every member stays below the original walkable deck.

@@ -3449,7 +3449,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
       ['platform','crumble','mover'].includes(component.t)&&!component.pts){
       const depth=component.s?.[2]??(component.t==='platform'?8:component.t==='mover'?6:3);
       if(depth>MAX_PATH_LENGTH)return null;
-      aggregateSamples+=estimateCarlisleTimberWork(depth,component.t!=='platform'||component.tex==='bridge-timber'||component.tex==='bridge-ice')*(component.tex==='bridge-ice'?2:1);
+      aggregateSamples+=estimateCarlisleTimberWork(depth,component.t!=='platform'||component.tex==='bridge-timber'||component.tex==='bridge-ice',component.s?.[0]??8)*(component.tex==='bridge-ice'?2:1);
     }
     if (aggregateSamples > MAX_GENERATED_SAMPLES) return null;
     // Polygon walls and spun slabs use the complete scanline collider below.

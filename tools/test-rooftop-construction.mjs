@@ -5,7 +5,8 @@ const out=process.env.ROOFTOP_OUTPUT||'docs/rooftop-kook/construction-seams';
 const empty={v:1,name:'Timber check',spawn:[0,.1,0],killY:-20,components:[{t:'platform',p:[0,-.5,0],s:[8,1,8]},{t:'gate',p:[0,0,-3]}]};
 await withSkateRuntime(async({server,THREE,Level})=>{
  const {ROOFTOP_RELAY_LEVEL}=await server.ssrLoadModule('/src/levels/codex-lab.ts');
- const {dressCarlisleTimberDeck,disposeCarlisleTimberDeck}=await server.ssrLoadModule('/src/carlisleTimber.ts');
+ const {dressCarlisleTimberDeck,disposeCarlisleTimberDeck,estimateCarlisleTimberWork}=await server.ssrLoadModule('/src/carlisleTimber.ts');
+ const {normalizeCustomLevelData}=await server.ssrLoadModule('/src/level.ts');
  const components=ROOFTOP_RELAY_LEVEL.components.filter(c=>c.t==='crumble');assert.ok(components.length>0);
  const data={...empty,spawn:[...components[0].p],components:[...components,{t:'gate',p:[0,0,-3]}]},level=new Level(new THREE.Scene(),{id:'roof-timber',name:data.name,data}),report={decks:[],motion:[]};
  try{
@@ -13,6 +14,7 @@ await withSkateRuntime(async({server,THREE,Level})=>{
   for(const [index,crumble]of level.crumbles.entries()){
    const mesh=crumble.mesh,c=components[index],owner=dressCarlisleTimberDeck(mesh,c,true),bounds=[];
    assert.ok(owner);assert.ok(level.groundMeshes.includes(mesh));assert.equal(mesh.material.visible,false);
+   assert.ok(estimateCarlisleTimberWork(c.s[2],true,c.s[0])>=owner.layout.planks.length*2+owner.layout.poles.length,'Authoring budget must include every rendered stock-length board');
    const inverse=mesh.matrixWorld.clone().invert();let vertices=0;
    owner.root.traverse(part=>{
     if(!part.isInstancedMesh||part.userData.woodPathMeshFamily!=='plank')return;
@@ -25,9 +27,16 @@ await withSkateRuntime(async({server,THREE,Level})=>{
     }
    });
    bounds.sort((a,b)=>a.min[2]-b.min[2]);assert.equal(bounds.length,owner.layout.planks.length);
-   const gaps=bounds.slice(1).map((b,i)=>b.min[2]-bounds[i].max[2]);
+   // Independently compare all actual transformed envelopes in both deck axes.
+   // Stock-length boards share rows but have real end seams along X.
+   const gaps=[];for(let i=0;i<bounds.length;i++)for(let j=i+1;j<bounds.length;j++){
+    const a=bounds[i],b=bounds[j];gaps.push(Math.max(a.min[0]-b.max[0],b.min[0]-a.max[0],a.min[2]-b.max[2],b.min[2]-a.max[2]));
+   }
    assert.ok(bounds.every(b=>Math.abs(b.max[1]-c.s[1]/2)<.00001),'Native board tops must keep their original collider height');
-   report.decks.push({name:c.nm,width:c.s[0],boards:bounds.length,vertices,minimumGap:Math.min(...gaps),overlaps:gaps.filter(g=>g<0).length,yaw:owner.layout.profile.plankYawJitterDegrees,scaleJitter:owner.layout.profile.plankScaleJitter});
+   const maximumBoardLength=Math.max(...bounds.map(b=>b.max[0]-b.min[0]));
+   assert.ok(maximumBoardLength<6,'Construction stock must not stretch across an entire 20-metre roof');
+   assert.ok(new Set(owner.layout.planks.map(b=>b.variantIndex)).size>1,'Reuse multiple native chipped-board variants');
+   report.decks.push({name:c.nm,width:c.s[0],boards:bounds.length,vertices,maximumBoardLength,minimumGap:Math.min(...gaps),overlaps:gaps.filter(g=>g<0).length,yaw:owner.layout.profile.plankYawJitterDegrees,scaleJitter:owner.layout.profile.plankScaleJitter});
   }
   level.crumbles.forEach((_,i)=>level.touchCrumble(i));
   for(let tick=0;tick<780;tick++){
@@ -39,6 +48,9 @@ await withSkateRuntime(async({server,THREE,Level})=>{
   const narrow=new THREE.Mesh(new THREE.BoxGeometry(4,.45,8.2),new THREE.MeshLambertMaterial()),small=dressCarlisleTimberDeck(narrow,{t:'crumble',p:[0,0,0],s:[4,.45,8.2]},true);
   assert.equal(small.layout.profile.plankYawJitterDegrees,1.65);assert.equal(small.layout.profile.plankScaleJitter,.038);
   disposeCarlisleTimberDeck(narrow);narrow.geometry.dispose();narrow.material.dispose();
+  const large=width=>({...empty,components:[...Array.from({length:100},()=>({t:'crumble',p:[0,0,0],s:[width,.45,20000]})),{t:'gate',p:[0,0,-3]}]});
+  assert.ok(normalizeCustomLevelData(large(4)),'Existing bounded narrow-deck pack remains accepted');
+  assert.equal(normalizeCustomLevelData(large(20000)),null,'Large wide-deck pack must charge its additional native instances');
   await mkdir(out,{recursive:true});await writeFile(out+'/geometry.json',JSON.stringify(report,null,2)+'\n');
   for(const deck of report.decks){assert.equal(deck.overlaps,0,deck.name+' has overlapping board envelopes');assert.ok(deck.minimumGap>.009,'A visible seam must survive all native board extrema');}
   console.log('PASS original native planks have separated envelopes, unchanged contact heights, collapse/return timing and narrow-deck layout',JSON.stringify(report.decks));
