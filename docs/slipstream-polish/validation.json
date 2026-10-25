@@ -1,0 +1,43 @@
+{
+  "startedAt": "2026-10-25T01:15:53+00:00",
+  "validatedAt": "2026-10-25T01:57:50.731922+00:00",
+  "promptToValidatedMinutes": 42,
+  "screenshots": 15,
+  "paintovers": 7,
+  "meshyCredits": 0,
+  "meshyBudget": 300,
+  "physics": {
+    "components": 1600,
+    "sha256": "f13e6ea68bde1d8e522f4ca275c46bb3d0078a11b44aeb4c7eb5de7005245534"
+  },
+  "coordinateComparisonMetres": 1e-06,
+  "baselineCommit": "18cbf33e",
+  "baselineRuntimes": [
+    "v22.23.3",
+    "v24.19.0"
+  ],
+  "tests": {
+    "levelChecks": "pass",
+    "build": "pass",
+    "stockSnapshot": "pass",
+    "physicalComponents": 1600,
+    "editorMeshTriangles": 95444,
+    "gardenProps": 177,
+    "cliffAnchors": 74,
+    "propFootProbes": 344,
+    "trestleFootProbes": 48,
+    "tunnelRays": 528,
+    "columnProbes": 3075
+  },
+  "browser": {
+    "race": "lite",
+    "allRacersFinished": 8,
+    "playerRaceSeconds": 157.1,
+    "playerFalls": 0,
+    "playerDeaths": 0,
+    "fullRenderSections": 7,
+    "postCleanupFullRenderSections": 3,
+    "errors": []
+  },
+  "capturesNote": "The seven after captures precede the final lighter sandstone and render-only terrace depth bias. Subsequent full-render checks take no screenshots."
+}

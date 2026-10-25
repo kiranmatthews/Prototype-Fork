@@ -1,0 +1,134 @@
+{
+  "base": "http://127.0.0.1:5350",
+  "lite": false,
+  "screenshots": 15,
+  "reports": [
+    {
+      "name": "entrance",
+      "s": 0,
+      "position": [
+        0,
+        936,
+        16.415277777777778
+      ],
+      "camera": [
+        -7.83773951454306e-16,
+        942.3,
+        22.815277777777776
+      ],
+      "grounded": true,
+      "state": "ride",
+      "falls": 0,
+      "render": {
+        "frame": 3139,
+        "calls": 844,
+        "triangles": 1480578,
+        "points": 0,
+        "lines": 0
+      },
+      "assets": {
+        "components": 619,
+        "placements": 619,
+        "ready": 232,
+        "skipped": 0,
+        "draws": 189,
+        "triangles": 361060,
+        "allLodTriangles": 844349,
+        "cells": 490,
+        "residentCells": 180,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 3,
+        "textureMiB": 143.34,
+        "errors": [],
+        "windTime": 1.2342333333094921
+      },
+      "stamp": "Codex/sol fork · build 10-25 01:51 UTC"
+    },
+    {
+      "name": "ruined-reservoir",
+      "s": 1580,
+      "position": [
+        40.12837036577001,
+        768.7204951713828,
+        -1177.4836145706486
+      ],
+      "camera": [
+        44.06302720021425,
+        773.9137949935449,
+        -1174.473529430276
+      ],
+      "grounded": true,
+      "state": "ride",
+      "falls": 0,
+      "render": {
+        "frame": 4163,
+        "calls": 312,
+        "triangles": 774945,
+        "points": 0,
+        "lines": 0
+      },
+      "assets": {
+        "components": 619,
+        "placements": 619,
+        "ready": 367,
+        "skipped": 0,
+        "draws": 309,
+        "triangles": 802992,
+        "allLodTriangles": 1760759,
+        "cells": 490,
+        "residentCells": 291,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 7,
+        "textureMiB": 164.01,
+        "errors": [],
+        "windTime": 1.8175666666428234
+      },
+      "stamp": "Codex/sol fork · build 10-25 01:51 UTC"
+    },
+    {
+      "name": "coastal-finish",
+      "s": 3980,
+      "position": [
+        35.33073091391205,
+        179.45860435315723,
+        -2771.2988351826807
+      ],
+      "camera": [
+        35.08374321490552,
+        185.75860435315724,
+        -2764.90360281188
+      ],
+      "grounded": true,
+      "state": "ride",
+      "falls": 0,
+      "render": {
+        "frame": 5663,
+        "calls": 246,
+        "triangles": 617865,
+        "points": 0,
+        "lines": 0
+      },
+      "assets": {
+        "components": 619,
+        "placements": 619,
+        "ready": 211,
+        "skipped": 0,
+        "draws": 174,
+        "triangles": 298193,
+        "allLodTriangles": 516266,
+        "cells": 490,
+        "residentCells": 167,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 9,
+        "textureMiB": 165.68,
+        "errors": [],
+        "windTime": 2.4008999999761547
+      },
+      "stamp": "Codex/sol fork · build 10-25 01:51 UTC"
+    }
+  ],
+  "errors": []
+}

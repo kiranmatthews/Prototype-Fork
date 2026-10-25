@@ -4723,7 +4723,7 @@ export class Level {
       this.surfTexCache.set(kind,texture);return texture;
     }
     if(isCountryClubTexture(kind)){const texture=Level.finishTex(this.surfaceImage(countryClubTextureFile(kind)),true);this.surfTexCache.set(kind,texture);return texture;}
-    if(kind==='waterslide-fiberglass'){const texture=Level.finishTex(this.surfaceImage('waterslide/fiberglass.webp'),true);this.surfTexCache.set(kind,texture);return texture;}
+    if(kind==='waterslide-fiberglass'){const texture=Level.finishTex(this.surfaceImage('waterslide/fiberglass-polished.webp'),true);this.surfTexCache.set(kind,texture);return texture;}
     if (isCrownTexture(kind)) {
       const texture=Level.finishTex(this.surfaceImage(crownTextureFile(kind)),kind!=="crown-canvas");
       this.surfTexCache.set(kind,texture);return texture;
@@ -16157,6 +16157,8 @@ export class Level {
           c.s?.[1] ?? 1.6,
           c.s?.[2] ?? 2.4,
           THREE.MathUtils.degToRad(c.yaw ?? 0),
+          c.color,
+          c.tex,
         );
       case "log": {
         const half = (c.len ?? 13) / 2;
@@ -16720,14 +16722,18 @@ export class Level {
     h: number,
     d: number,
     yaw = 0,
+    color?: string,
+    tex = 'stone',
   ): void {
     this.noteDecor("ruinblock", x, y, z, {
       s: [w, h, d],
       yaw: THREE.MathUtils.radToDeg(yaw),
+      ...(color?{color}:{}),
+      ...(tex!=='stone'?{tex}:{}),
     });
     const m = new THREE.Mesh(
       new THREE.BoxGeometry(w, h, d),
-      this.baseMat("ruin", 0x8f9488, "stone", Math.max(1, w / 3), Math.max(1, h / 3)),
+      this.baseMat(`ruin:${color??'default'}:${tex}`, color?new THREE.Color(color).getHex():0x8f9488, tex, Math.max(1, w / 3), Math.max(1, h / 3)),
     );
     m.position.set(x, y + h / 2, z);
     m.rotation.y = yaw;

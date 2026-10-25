@@ -19,7 +19,7 @@ try{
  const compact=compactPublishedLevels(pack,api.BUILTIN_LEVELS,certificates);
  // These editor snapshots differ from the current authored source and must
  // survive compaction, even when the built-in registry has the same ID.
- const overrides=new Set(['flats','bonus-jungle-terraces','slipstream-race']);
+ const overrides=new Set(['flats','bonus-jungle-terraces']);
  const expectedStock=pack.levels.filter(e=>!overrides.has(e.id)).map(e=>e.id),diagnostics=[];
  for(const id of expectedStock.filter(id=>!compact.sourceBacked.includes(id))){
   const snapshot=pack.levels.find(e=>e.id===id),source=JSON.parse(JSON.stringify(api.BUILTIN_LEVELS.find(e=>e.id===id)));

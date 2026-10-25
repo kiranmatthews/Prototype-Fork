@@ -7,7 +7,7 @@ export function addWaterparkFlumeLook(material:THREE.MeshPhongMaterial|THREE.Mes
  if(!material.map)return;
  const previous=material.onBeforeCompile,key=material.customProgramCacheKey();
  if(material instanceof THREE.MeshPhongMaterial){material.specular.set('#577b76');material.shininess=42;}
- else material.roughness=.46;
+ else material.roughness=.34;
  // The enclosed liner's authored bounce light must retain its chipped paint.
  if(material.emissive.getHex()!==0)material.emissiveMap=material.map;
  material.onBeforeCompile=(shader,renderer)=>{
@@ -16,11 +16,11 @@ export function addWaterparkFlumeLook(material:THREE.MeshPhongMaterial|THREE.Mes
    #ifdef USE_MAP
     vec3 flumeWear=texture2D(map,vMapUv*.173+vec2(.31,.73)).rgb;
     float flumeLuma=dot(flumeWear,vec3(.2126,.7152,.0722));
-    diffuseColor.rgb*=mix(vec3(.66,.81,.68),vec3(1.08,1.04,.97),smoothstep(.12,.52,flumeLuma));
+    diffuseColor.rgb*=mix(vec3(.84,.94,.87),vec3(1.06,1.04,.99),smoothstep(.12,.52,flumeLuma));
    #endif
   `);
  };
- material.customProgramCacheKey=()=>key+'|weathered-waterpark-fiberglass-v2';material.needsUpdate=true;
+ material.customProgramCacheKey=()=>key+'|weathered-waterpark-fiberglass-v3';material.needsUpdate=true;
 }
 
 /** UV.x stores metres to the existing floor below each horizontal pocket.

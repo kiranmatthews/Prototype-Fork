@@ -1,0 +1,53 @@
+{
+  "base": "http://127.0.0.1:5350",
+  "lite": true,
+  "screenshots": 0,
+  "reports": [
+    {
+      "name": "entrance",
+      "s": 0,
+      "position": [
+        0,
+        936,
+        16.415277777777778
+      ],
+      "camera": [
+        -7.83773951454306e-16,
+        942.3,
+        22.815277777777776
+      ],
+      "grounded": true,
+      "state": "ride",
+      "falls": 0,
+      "render": {
+        "frame": 959,
+        "calls": 517,
+        "triangles": 725236,
+        "points": 0,
+        "lines": 0
+      },
+      "assets": {
+        "components": 442,
+        "placements": 442,
+        "ready": 195,
+        "skipped": 25,
+        "draws": 159,
+        "triangles": 289014,
+        "allLodTriangles": 629832,
+        "cells": 321,
+        "residentCells": 152,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 0,
+        "textureMiB": 128.01,
+        "errors": [],
+        "windTime": 1.1658666667143516
+      },
+      "stamp": "Codex/sol fork · build 10-24 19:29 UTC"
+    }
+  ],
+  "errors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+  ]
+}

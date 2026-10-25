@@ -1,0 +1,77 @@
+{
+  "generator": "Built-in image_gen",
+  "createdAt": "2026-10-25T01:25:55.108Z",
+  "guidance": "Concept paintovers only. Latest user steering: ignore distant/skybox matching; prioritize overall quality and cohesion.",
+  "concepts": [
+    {
+      "name": "entrance",
+      "prompt": "Edit target: the supplied actual Slipstream race gameplay screenshot. Make a production-polished environment paintover in a Crash Bandicoot 4-inspired stylized 3D art direction: an abandoned tropical volcanic island waterslide park, sculpted appealing shapes, rich hand-painted surfaces, chipped turquoise fiberglass, warm ivory rolled coping, restrained rust/coral accents, exuberant broadleaf foliage, palms and hibiscus, warm honey sunlight against cool teal shade, humid layered depth. Preserve the exact camera, player and skateboard, HUD, track route, lane widths, all jumps and gaps, and all gameplay objects. Improve materials, prop composition, shadows, landscape and sky only. Keep the racing corridor readable. Natural irregular foliage silhouettes, real rooted 3D foreground plants, carefully merged distant scenery, no visible matte borders or rectangular cutouts, no texture seams, no repeating identical trees. Crisp console-game-quality rendering, not photorealism. No new text, logos, arrows, labels, UI or border. This is a concept paintover, not implementation evidence. Section-specific direction: Entrance: retain the huge old aqua arch, make it an iconic welcoming ruin with beautiful cream trim, draping vines and coral flowers; compose palms and lush planters around the boarded ticket kiosk, sun-bleached apron paving, sweeping slide ahead and an airy distant island skyline.",
+      "input": "docs/slipstream-polish/before/entrance.png",
+      "output": "concepts/entrance.png",
+      "source": "/Users/kiki/.codex/generated_images/01a170a0-d966-7501-a978-95688b3a3324/exec-d302e36f-e432-4883-8409-a492421c9f89.png"
+    },
+    {
+      "name": "enclosed-flume",
+      "prompt": "Edit target: the supplied actual Slipstream race gameplay screenshot. Make a production-polished environment paintover in a Crash Bandicoot 4-inspired stylized 3D art direction: an abandoned tropical volcanic island waterslide park, sculpted appealing shapes, rich hand-painted surfaces, chipped turquoise fiberglass, warm ivory rolled coping, restrained rust/coral accents, exuberant broadleaf foliage, palms and hibiscus, warm honey sunlight against cool teal shade, humid layered depth. Preserve the exact camera, player and skateboard, HUD, track route, lane widths, all jumps and gaps, and all gameplay objects. Improve materials, prop composition, shadows, landscape and sky only. Keep the racing corridor readable. Natural irregular foliage silhouettes, real rooted 3D foreground plants, carefully merged distant scenery, no visible matte borders or rectangular cutouts, no texture seams, no repeating identical trees. Crisp console-game-quality rendering, not photorealism. No new text, logos, arrows, labels, UI or border. This is a concept paintover, not implementation evidence. Section-specific direction: Enclosed flume: retain the complete roof and curve. Beautiful rich teal bounce lighting, sculpted ivory expansion collars seated continuously in the shell, soft reflected water highlights, algae low at the edges, weathered panel details. Use the far exit light as a subtle focal point. No ceiling holes or new obstacles.",
+      "input": "docs/slipstream-polish/before/enclosed-flume.png",
+      "output": "concepts/enclosed-flume.png",
+      "source": "/Users/kiki/.codex/generated_images/01a170a0-d966-7501-a978-95688b3a3324/exec-3ded55f1-d046-4507-a7fa-0693150a458b.png"
+    },
+    {
+      "name": "forest-bend",
+      "prompt": "Edit target: the supplied actual Slipstream race gameplay screenshot. Make a production-polished environment paintover in a Crash Bandicoot 4-inspired stylized 3D art direction: an abandoned tropical volcanic island waterslide park, sculpted appealing shapes, rich hand-painted surfaces, chipped turquoise fiberglass, warm ivory rolled coping, restrained rust/coral accents, exuberant broadleaf foliage, palms and hibiscus, warm honey sunlight against cool teal shade, humid layered depth. Preserve the exact camera, player and skateboard, HUD, track route, lane widths, all jumps and gaps, and all gameplay objects. Improve materials, prop composition, shadows, landscape and sky only. Keep the racing corridor readable. Natural irregular foliage silhouettes, real rooted 3D foreground plants, carefully merged distant scenery, no visible matte borders or rectangular cutouts, no texture seams, no repeating identical trees. Crisp console-game-quality rendering, not photorealism. No new text, logos, arrows, labels, UI or border. This is a concept paintover, not implementation evidence. Section-specific direction: Forest bend: compose varied volumetric palms and big waxy leaves near the edges, rounded mossy rock shelves below the slide, a strong deep teal tunnel entrance with cream collar. Replace oversized mountain wallpaper with believable scale and light sea haze. Clean bright aqua race surface with restrained wear.",
+      "input": "docs/slipstream-polish/before/forest-bend.png",
+      "output": "concepts/forest-bend.png",
+      "source": "/Users/kiki/.codex/generated_images/01a170a0-d966-7501-a978-95688b3a3324/exec-699efadc-94b1-4bc2-8538-8ae3d1f8a9af.png"
+    },
+    {
+      "name": "ruined-reservoir",
+      "prompt": "Edit target: the supplied actual Slipstream race gameplay screenshot. Make a production-polished environment paintover in a Crash Bandicoot 4-inspired stylized 3D art direction: an abandoned tropical volcanic island waterslide park, sculpted appealing shapes, rich hand-painted surfaces, chipped turquoise fiberglass, warm ivory rolled coping, restrained rust/coral accents, exuberant broadleaf foliage, palms and hibiscus, warm honey sunlight against cool teal shade, humid layered depth. Preserve the exact camera, player and skateboard, HUD, track route, lane widths, all jumps and gaps, and all gameplay objects. Improve materials, prop composition, shadows, landscape and sky only. Keep the racing corridor readable. Natural irregular foliage silhouettes, real rooted 3D foreground plants, carefully merged distant scenery, no visible matte borders or rectangular cutouts, no texture seams, no repeating identical trees. Crisp console-game-quality rendering, not photorealism. No new text, logos, arrows, labels, UI or border. This is a concept paintover, not implementation evidence. Section-specific direction: Ruined reservoir: replace crude block-looking stone towers visually with beautiful worn ochre sandstone aqueduct ruins and greenery. Preserve their exact footprint and track relationship. Layer mossy ledges, ferns and palms around supported trestles; enrich warm/cool lighting and material breakup. Keep the split route readable.",
+      "input": "docs/slipstream-polish/before/ruined-reservoir.png",
+      "output": "concepts/ruined-reservoir.png",
+      "source": "/Users/kiki/.codex/generated_images/01a170a0-d966-7501-a978-95688b3a3324/exec-917ea4dc-9fad-4dbc-8c72-3ee2e86db49c.png"
+    },
+    {
+      "name": "broken-platform-pools",
+      "prompt": "Edit target: the supplied actual Slipstream race gameplay screenshot. Make a production-polished environment paintover in a Crash Bandicoot 4-inspired stylized 3D art direction: an abandoned tropical volcanic island waterslide park, sculpted appealing shapes, rich hand-painted surfaces, chipped turquoise fiberglass, warm ivory rolled coping, restrained rust/coral accents, exuberant broadleaf foliage, palms and hibiscus, warm honey sunlight against cool teal shade, humid layered depth. Preserve the exact camera, player and skateboard, HUD, track route, lane widths, all jumps and gaps, and all gameplay objects. Improve materials, prop composition, shadows, landscape and sky only. Keep the racing corridor readable. Natural irregular foliage silhouettes, real rooted 3D foreground plants, carefully merged distant scenery, no visible matte borders or rectangular cutouts, no texture seams, no repeating identical trees. Crisp console-game-quality rendering, not photorealism. No new text, logos, arrows, labels, UI or border. This is a concept paintover, not implementation evidence. Section-specific direction: Broken platform pools: preserve every rectangular stepping platform and its exact separation. Make the water clear with gentle sun caustics and naturally blended coping; frame the outside banks with flowered tropical gardens, leaning palms, eroded ochre rock and abandoned pool machinery. Bright readable landing tops, no vegetation in jumps or swimming exits.",
+      "input": "docs/slipstream-polish/before/broken-platform-pools.png",
+      "output": "concepts/broken-platform-pools.png",
+      "source": "/Users/kiki/.codex/generated_images/01a170a0-d966-7501-a978-95688b3a3324/exec-335b6868-3ba1-4909-9bba-4061b487fe7d.png"
+    },
+    {
+      "name": "falling-coils",
+      "prompt": "Edit target: the supplied actual Slipstream race gameplay screenshot. Make a production-polished environment paintover in a Crash Bandicoot 4-inspired stylized 3D art direction: an abandoned tropical volcanic island waterslide park, sculpted appealing shapes, rich hand-painted surfaces, chipped turquoise fiberglass, warm ivory rolled coping, restrained rust/coral accents, exuberant broadleaf foliage, palms and hibiscus, warm honey sunlight against cool teal shade, humid layered depth. Preserve the exact camera, player and skateboard, HUD, track route, lane widths, all jumps and gaps, and all gameplay objects. Improve materials, prop composition, shadows, landscape and sky only. Keep the racing corridor readable. Natural irregular foliage silhouettes, real rooted 3D foreground plants, carefully merged distant scenery, no visible matte borders or rectangular cutouts, no texture seams, no repeating identical trees. Crisp console-game-quality rendering, not photorealism. No new text, logos, arrows, labels, UI or border. This is a concept paintover, not implementation evidence. Section-specific direction: Falling coils: preserve the dizzying drop and all item crates. Replace the empty surrounding water wallpaper with a dramatic layered volcanic gorge, warm mossy sandstone spires and near palms framing the outer edge; a distant open turquoise sea reveals the height. The lower tunnel remains exactly aligned. Warm ivory slide edges, bright aqua interior, tropical coastal haze.",
+      "input": "docs/slipstream-polish/before/falling-coils.png",
+      "output": "concepts/falling-coils.png",
+      "source": "/Users/kiki/.codex/generated_images/01a170a0-d966-7501-a978-95688b3a3324/exec-4ec7aac8-bc70-49c2-82fb-2b995c1a9d8f.png"
+    },
+    {
+      "name": "coastal-finish",
+      "prompt": "Edit target: the supplied actual Slipstream race gameplay screenshot. Make a production-polished environment paintover in a Crash Bandicoot 4-inspired stylized 3D art direction: an abandoned tropical volcanic island waterslide park, sculpted appealing shapes, rich hand-painted surfaces, chipped turquoise fiberglass, warm ivory rolled coping, restrained rust/coral accents, exuberant broadleaf foliage, palms and hibiscus, warm honey sunlight against cool teal shade, humid layered depth. Preserve the exact camera, player and skateboard, HUD, track route, lane widths, all jumps and gaps, and all gameplay objects. Improve materials, prop composition, shadows, landscape and sky only. Keep the racing corridor readable. Natural irregular foliage silhouettes, real rooted 3D foreground plants, carefully merged distant scenery, no visible matte borders or rectangular cutouts, no texture seams, no repeating identical trees. Crisp console-game-quality rendering, not photorealism. No new text, logos, arrows, labels, UI or border. This is a concept paintover, not implementation evidence. Section-specific direction: Coastal finish: preserve the finish arch, timing banner and broad descending track. Make this a rewarding seaside arrival into an abandoned island resort, with a small lush headland on each side, near palms and hibiscus around the finish, decayed aqua ticket kiosk and ivory coping. Airy turquoise lagoon, tiny distant islands and soft cumulus with no duplicated/mirrored mountain-wall panorama.",
+      "input": "docs/slipstream-polish/before/coastal-finish.png",
+      "output": "concepts/coastal-finish.png",
+      "source": "/Users/kiki/.codex/generated_images/01a170a0-d966-7501-a978-95688b3a3324/exec-a626eb37-3188-4561-a107-58ece22359e3.png"
+    }
+  ],
+  "meshy": {
+    "budget": 300,
+    "spent": 0,
+    "approach": "Reuse the approved local Meshy library."
+  },
+  "assets": [
+    {
+      "file": "public/waterslide/fiberglass-polished.webp",
+      "source": "tools/waterslide-island/polish/fiberglass-source.png",
+      "sha256": "738d39cb0083741969e26a9f25150950a45be03b28d2531ca606afc33dc66f2a",
+      "prompt": "Edit target: supplied square fiberglass game texture. Make a seamless tileable production-quality albedo texture for a Crash 4-inspired abandoned tropical waterslide: rich luminous cyan/aqua enamel (#49bfc5 family), irregular warm ivory primer chips in medium sized flaked islands, subtle painterly variation and restrained moss staining only in small patches. Surface is mainly intact colorful paint (85 percent), crisp stylized chip shapes (15 percent), no photographic grit, no large dark stains, no straight cracks or long scratches, no directionally baked light or shadows, no glow. Top-down flat orthographic texture only, consistent brightness. Match all four edges seamlessly. No borders, grout grid, lettering, bolts, scenery, water, reflections or perspective. Keep a calm readable racing surface at 5 metre tile size, colors saturated but not neon. Square output.",
+      "method": "Built-in ImageGen edit, resized to 1024 square and encoded as WebP without changing artwork."
+    }
+  ],
+  "reuse": [
+    "Drowned Crown tropical palm",
+    "Sunny Beach hibiscus",
+    "Treehouse Trials ferns",
+    "Jungle broadleaf",
+    "Coastal Town flower vine"
+  ]
+}

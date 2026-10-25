@@ -28,6 +28,10 @@
     },
     "rooftop-relay": {
       "snapshotSha256": "c8ae403e9712f5bf0f0d20c7d5e9f0b161e0fd2d94dc16c82e63f2f77aed1643"
+    },
+    "slipstream-race": {
+      "snapshotSha256": "5cbcf8a3757ffb6fb30a18b5be6e9d91b49e4c9284d25c2d2aea7a36dac24aa7",
+      "authoringRuntime": "v22.23.3"
     }
   }
 }

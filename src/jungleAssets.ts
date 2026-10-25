@@ -62,6 +62,8 @@ export interface JungleAssetSpec {
   imageFallback?: string;
   alphaCutout?: boolean;
   edgeFade?: number;
+  /** Feather the upper edge too, even when a painting has an alpha silhouette. */
+  featherAllEdges?: boolean;
   windowGlow?: boolean;
   /** Soft additive environmental light card; shares the ordinary decor path. */
   shaft?: boolean;
@@ -583,10 +585,10 @@ export class JungleAssetKit {
         material.onBeforeCompile=shader=>{
           shader.uniforms.uMatteEdgeFade={value:spec.edgeFade};
           shader.fragmentShader='uniform float uMatteEdgeFade;\n'+shader.fragmentShader;
-          shader.fragmentShader=shader.fragmentShader.replace('#include <map_fragment>', `#include <map_fragment>\nfloat matteBorder = min(min(vMapUv.x, 1.0-vMapUv.x), ${spec.image?.includes('-alpha.')?'vMapUv.y':'min(vMapUv.y, 1.0-vMapUv.y)'});\ndiffuseColor.a *= smoothstep(0.0, uMatteEdgeFade, matteBorder);`);
+          shader.fragmentShader=shader.fragmentShader.replace('#include <map_fragment>', `#include <map_fragment>\nfloat matteBorder = min(min(vMapUv.x, 1.0-vMapUv.x), ${spec.image?.includes('-alpha.')&&!spec.featherAllEdges?'vMapUv.y':'min(vMapUv.y, 1.0-vMapUv.y)'});\ndiffuseColor.a *= smoothstep(0.0, uMatteEdgeFade, matteBorder);`);
         };
         if(spec.fadeWithFog){const compile=material.onBeforeCompile;material.onBeforeCompile=(shader,renderer)=>{compile.call(material,shader,renderer);shader.fragmentShader=shader.fragmentShader.replace('#include <fog_fragment>', '#include <fog_fragment>\n#ifdef USE_FOG\n gl_FragColor.a *= 1.0-smoothstep(fogNear,fogFar,vFogDepth);\n#endif');};}
-        material.customProgramCacheKey=()=>`painted-matte-soft-border-v3-${spec.image?.includes('-alpha.')}-${spec.fadeWithFog===true}`;
+        material.customProgramCacheKey=()=>`painted-matte-soft-border-v3-${spec.image?.includes('-alpha.')}-${spec.fadeWithFog===true}-${spec.featherAllEdges===true}`;
       }
       material.name=spec.label;material.userData.jungleAsset=true;material.userData.treehouseMatte=true;
       cache.set(kind,material);return material;

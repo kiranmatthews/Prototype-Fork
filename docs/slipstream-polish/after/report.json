@@ -1,0 +1,302 @@
+{
+  "base": "http://127.0.0.1:5350",
+  "lite": false,
+  "screenshots": 15,
+  "reports": [
+    {
+      "name": "entrance",
+      "s": 0,
+      "position": [
+        0,
+        936,
+        16.415277777777778
+      ],
+      "camera": [
+        -7.83773951454306e-16,
+        942.3,
+        22.815277777777776
+      ],
+      "grounded": true,
+      "state": "ride",
+      "falls": 0,
+      "render": {
+        "frame": 2963,
+        "calls": 844,
+        "triangles": 1480578,
+        "points": 0,
+        "lines": 0
+      },
+      "assets": {
+        "components": 619,
+        "placements": 619,
+        "ready": 232,
+        "skipped": 0,
+        "draws": 189,
+        "triangles": 361060,
+        "allLodTriangles": 844349,
+        "cells": 490,
+        "residentCells": 180,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 3,
+        "textureMiB": 144.34,
+        "errors": [],
+        "windTime": 1.2501000000238423
+      },
+      "stamp": "Codex/sol fork · build 10-25 01:37 UTC"
+    },
+    {
+      "name": "enclosed-flume",
+      "s": 260,
+      "position": [
+        -2.6388281526984096,
+        895.120152653608,
+        -199.02577248608665
+      ],
+      "camera": [
+        1.9570595146808367,
+        901.4201526536079,
+        -194.5718061021956
+      ],
+      "grounded": true,
+      "state": "ride",
+      "falls": 0,
+      "render": {
+        "frame": 6671,
+        "calls": 476,
+        "triangles": 955264,
+        "points": 0,
+        "lines": 0
+      },
+      "assets": {
+        "components": 619,
+        "placements": 619,
+        "ready": 268,
+        "skipped": 0,
+        "draws": 230,
+        "triangles": 641791,
+        "allLodTriangles": 1128169,
+        "cells": 490,
+        "residentCells": 210,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 7,
+        "textureMiB": 173.01,
+        "errors": [],
+        "windTime": 1.8334333333571735
+      },
+      "stamp": "Codex/sol fork · build 10-25 01:37 UTC"
+    },
+    {
+      "name": "forest-bend",
+      "s": 600,
+      "position": [
+        15.910076014236067,
+        854.3620996227241,
+        -325.37241552491105
+      ],
+      "camera": [
+        16.64715744329225,
+        860.6620996227241,
+        -319.01500166651385
+      ],
+      "grounded": true,
+      "state": "ride",
+      "falls": 0,
+      "render": {
+        "frame": 9323,
+        "calls": 566,
+        "triangles": 963620,
+        "points": 0,
+        "lines": 0
+      },
+      "assets": {
+        "components": 619,
+        "placements": 619,
+        "ready": 281,
+        "skipped": 0,
+        "draws": 238,
+        "triangles": 664022,
+        "allLodTriangles": 1254792,
+        "cells": 490,
+        "residentCells": 223,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 7,
+        "textureMiB": 173.01,
+        "errors": [],
+        "windTime": 2.416766666690505
+      },
+      "stamp": "Codex/sol fork · build 10-25 01:37 UTC"
+    },
+    {
+      "name": "ruined-reservoir",
+      "s": 1580,
+      "position": [
+        40.12837036577001,
+        768.7204951713828,
+        -1177.4836145706486
+      ],
+      "camera": [
+        44.06302720021425,
+        773.9137949935449,
+        -1174.473529430276
+      ],
+      "grounded": true,
+      "state": "ride",
+      "falls": 0,
+      "render": {
+        "frame": 12067,
+        "calls": 312,
+        "triangles": 774945,
+        "points": 0,
+        "lines": 0
+      },
+      "assets": {
+        "components": 619,
+        "placements": 619,
+        "ready": 367,
+        "skipped": 0,
+        "draws": 309,
+        "triangles": 802992,
+        "allLodTriangles": 1760759,
+        "cells": 490,
+        "residentCells": 291,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 7,
+        "textureMiB": 165.01,
+        "errors": [],
+        "windTime": 3.0001000000238363
+      },
+      "stamp": "Codex/sol fork · build 10-25 01:37 UTC"
+    },
+    {
+      "name": "broken-platform-pools",
+      "s": 2680,
+      "position": [
+        16,
+        699.3583333452543,
+        -2184.9349487165887
+      ],
+      "camera": [
+        16,
+        705.657500011921,
+        -2178.5349487165886
+      ],
+      "grounded": true,
+      "state": "ride",
+      "falls": 0,
+      "render": {
+        "frame": 14399,
+        "calls": 524,
+        "triangles": 1086157,
+        "points": 0,
+        "lines": 0
+      },
+      "assets": {
+        "components": 619,
+        "placements": 619,
+        "ready": 352,
+        "skipped": 0,
+        "draws": 297,
+        "triangles": 822024,
+        "allLodTriangles": 1588419,
+        "cells": 490,
+        "residentCells": 281,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 7,
+        "textureMiB": 165.01,
+        "errors": [],
+        "windTime": 3.5834333333571675
+      },
+      "stamp": "Codex/sol fork · build 10-25 01:37 UTC"
+    },
+    {
+      "name": "falling-coils",
+      "s": 3430,
+      "position": [
+        7.267503994331445,
+        466.7847191786571,
+        -2594.6203938983995
+      ],
+      "camera": [
+        5.206905318675421,
+        473.0847191786571,
+        -2588.5611915500795
+      ],
+      "grounded": true,
+      "state": "ride",
+      "falls": 0,
+      "render": {
+        "frame": 17815,
+        "calls": 266,
+        "triangles": 634230,
+        "points": 0,
+        "lines": 0
+      },
+      "assets": {
+        "components": 619,
+        "placements": 619,
+        "ready": 300,
+        "skipped": 0,
+        "draws": 249,
+        "triangles": 584925,
+        "allLodTriangles": 1145110,
+        "cells": 490,
+        "residentCells": 239,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 9,
+        "textureMiB": 182.68,
+        "errors": [],
+        "windTime": 4.166766666690499
+      },
+      "stamp": "Codex/sol fork · build 10-25 01:37 UTC"
+    },
+    {
+      "name": "coastal-finish",
+      "s": 3980,
+      "position": [
+        35.33073091391205,
+        179.45860435315723,
+        -2771.2988351826807
+      ],
+      "camera": [
+        35.08374321490552,
+        185.75860435315724,
+        -2764.90360281188
+      ],
+      "grounded": true,
+      "state": "ride",
+      "falls": 0,
+      "render": {
+        "frame": 20947,
+        "calls": 246,
+        "triangles": 617865,
+        "points": 0,
+        "lines": 0
+      },
+      "assets": {
+        "components": 619,
+        "placements": 619,
+        "ready": 229,
+        "skipped": 0,
+        "draws": 188,
+        "triangles": 345888,
+        "allLodTriangles": 636491,
+        "cells": 490,
+        "residentCells": 181,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 9,
+        "textureMiB": 166.68,
+        "errors": [],
+        "windTime": 4.7501000000238305
+      },
+      "stamp": "Codex/sol fork · build 10-25 01:37 UTC"
+    }
+  ],
+  "errors": []
+}

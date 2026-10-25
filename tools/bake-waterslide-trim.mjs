@@ -23,22 +23,27 @@ await withBlockworksRuntime(async r=>{
   row.indices.push(offset,offset+1,offset+2,offset+2,offset+1,offset+3);
  };
  let previous=null,sections=0,seams=0;
- for(let s=0;s<course.length-1;s+=2){
+ for(let s=0;s<course.length-1;s+=3){
   if(inGap(s)||!hit(s,0)){previous=null;continue;}
   const edges=[];
   for(const side of [-1,1]){
    let u=0;for(let next=.5;next<=28;next+=.5){if(!hit(s,next*side))break;u=next;}
    if(u<3){edges.push(null);continue;}
    let outside=u+.5;for(let i=0;i<6;i++){const middle=(u+outside)/2;if(hit(s,middle*side))u=middle;else outside=middle;}
-   edges.push({u:side*(u-.25),inner:hit(s,side*(u-.52)),outer:hit(s,side*(u-.1))});
+   edges.push({u:side*(u-.25),inner:hit(s,side*(u-.82)),outer:hit(s,side*(u-.08))});
   }
-  if(previous&&s-previous.s===2)for(let i=0;i<2;i++){
+  if(previous&&s-previous.s===3)for(let i=0;i<2;i++){
    const a=previous.edges[i],b=edges[i];
-   if(!a?.inner||!a.outer||!b?.inner||!b.outer||a.outer.distanceTo(b.outer)>6)continue;
-   quad(s,a.inner,a.outer,b.inner,b.outer);
-   quad(s,a.outer,a.outer.clone().addScaledVector(down,.48),b.outer,b.outer.clone().addScaledVector(down,.48));sections++;
+   if(!a?.inner||!a.outer||!b?.inner||!b.outer||a.outer.distanceTo(b.outer)>8)continue;
+   // Rounded ivory coping is seated on the measured lip, with its outer
+   // skirt closing below the old paper edge. Visual geometry only.
+   const profile=(edge)=>[[0,0],[.28,.2],[.72,.22],[1,0],[1,-.48]]
+    .map(([t,h])=>edge.inner.clone().lerp(edge.outer,t).addScaledVector(down,-h));
+   const pa=profile(a),pb=profile(b);
+   for(let k=0;k<pa.length-1;k++)quad(s,pa[k],pa[k+1],pb[k],pb[k+1]);
+   sections++;
   }
-  if(s%24===12&&edges.every(Boolean)){
+  if(s%48===12&&edges.every(Boolean)){
    for(let u=edges[0].u;u<edges[1].u;u+=.5){const v=Math.min(edges[1].u,u+.5);quad(s,hit(s-.12,u),hit(s-.12,v),hit(s+.12,u),hit(s+.12,v));}
    seams++;
   }

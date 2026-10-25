@@ -30,7 +30,7 @@ export const WATERPARK_ISLAND_LOOK:Pick<CustomLevelData,'sky'|'ocean'|'atmospher
  // Keep the detailed lagoon's fading edges inside the camera range. The
  // existing surrounding horizon supplies the sea beyond this coastal basin.
  ocean:{p:[-900,128,-2700],length:1800,width:1800,seaward:1,geometryVersion:2,sourceCoordinates:'three',look:'waterpark-island',horizonMode:'surround',shoreGeometry:'ground',longitudinalSegments:180,lateralSegments:96},
- atmosphere:{fogEnabled:true,fogNear:95,fogFar:480,fogColor:'#8ebbc5',ambientSky:'#b1d8d0',ambientGround:'#526b52',ambientIntensity:.78,sunColor:'#fff0ce',sunIntensity:1.9,sunDirection:[-.42,.72,.55],fillColor:'#a4d8df',fillIntensity:.32,shadowStrength:.85,drawDistance:2000,backdrop:'painted sky',fallbackRidges:false},
+ atmosphere:{fogEnabled:true,fogNear:95,fogFar:480,fogColor:'#8ebbc5',ambientSky:'#c1e0da',ambientGround:'#82754e',ambientIntensity:.94,sunColor:'#ffe4ad',sunIntensity:2.25,sunDirection:[-.42,.72,.55],fillColor:'#a5dadd',fillIntensity:.38,shadowStrength:.78,drawDistance:2000,backdrop:'painted sky',fallbackRidges:false},
 };
 
 /** Level data only: the race floor, movement model and jump gaps are unchanged. */
@@ -47,7 +47,7 @@ export function dressTropicalWaterpark(C:CustomComponent[],line:RaceKnot[]):void
  for(const c of C){
   if(c.nm?.startsWith('Waterpark hillside')||c.nm?.startsWith('Waterpark gorge')||c.nm?.startsWith('Waterpark valley'))c.invisible=true;
   if(c.nm==='Weathered fiberglass flanges'){
-   c.tex='solid';c.color='#bfbea2';c.scenerySolid=false;
+   c.tex='solid';c.color='#ecdfbb';c.scenerySolid=false;
    // Interior tube collars own the panel rhythm. Remove redundant underlying
    // flange triangles, then weld identical remaining positions losslessly.
    const source=c.vertices!,faces=c.indices!,vertices:number[]=[],indices:number[]=[],ids=new Map<string,number>(),anchor=course.project(V(c.p)).s;
@@ -58,7 +58,12 @@ export function dressTropicalWaterpark(C:CustomComponent[],line:RaceKnot[]):void
    }
    c.vertices=vertices;c.indices=indices;
   }
-  if(c.nm?.includes('maintenance apron')||c.nm==='Closed ticket forecourt'){c.tex='stone';c.color='#b4b7a1';}
+  if(c.nm?.includes('maintenance apron')||c.nm==='Closed ticket forecourt'){
+   c.tex='custard-sandstone';c.color='#fff1dc';
+   // These decks share a coplanar strip with the ride. The existing render
+   // bias places only the decorative surface behind it, retaining contacts.
+   c.depthBias=2;
+  }
  }
  for(let i=C.length-1;i>=0;i--)if(C[i].t==='mesh'&&C[i].vertices?.length===0)C.splice(i,1);
  // Long columns previously passed straight through lower coils. A column is
@@ -136,15 +141,22 @@ export function dressTropicalWaterpark(C:CustomComponent[],line:RaceKnot[]):void
     const s=start+(end-start)*j/rows,a=i/angular*Math.PI*2,point=arcPoint(s,a,offset).sub(origin);
     if(previous)arcLength+=point.distanceTo(previous);previous=point;
     vertices.push(...point.toArray().map(round));uvs.push(round(arcLength/5),round((s-WATERPARK_TUNNELS[index][0])/5));
-    const shade=skin==='inner'?.87+.12*Math.max(0,-Math.sin(a)):.95;
-    const col=new THREE.Color(skin==='collar'||skin==='inner-band'?'#b7c3a8':skin==='inner'?'#8fc8bf':'#82b9b3').multiplyScalar(shade);colors.push(col.r,col.g,col.b);
+    const shade=skin==='inner'?.9+.1*Math.max(0,-Math.sin(a)):.98;
+    const col=new THREE.Color(skin==='collar'||skin==='inner-band'?'#ebdfba':skin==='inner'?'#d4e8dd':'#c2dcd3').multiplyScalar(shade);colors.push(col.r,col.g,col.b);
     if(j&&i){const b=j*(angular+1)+i,c=b-(angular+1);if(skin==='inner'||skin==='inner-band')indices.push(c-1,c,b-1,b-1,c,b);else indices.push(c-1,b-1,c,c,b-1,b);}
    }
   }
-  add({t:'mesh',p:tuple(origin),vertices,indices,uvs,colors,tex:skin==='collar'||skin==='inner-band'?'solid':'waterslide-fiberglass',emissive:skin==='inner'?'#2b756b':skin==='inner-band'?'#244238':'#000000',solid:false,scenerySolid:skin==='inner',edgeGrinding:false,doubleSided:false,grp:434,nm:`Enclosed flume ${index+1} / ${skin}`});
+  add({t:'mesh',p:tuple(origin),vertices,indices,uvs,colors,tex:skin==='collar'||skin==='inner-band'?'solid':'waterslide-fiberglass',emissive:skin==='inner'?'#387c78':skin==='inner-band'?'#403d2e':'#000000',solid:false,scenerySolid:skin==='inner',edgeGrinding:false,doubleSided:false,grp:434,nm:`Enclosed flume ${index+1} / ${skin}`});
  };
  for(const [index,[a,b]] of WATERPARK_TUNNELS.entries()){
   for(let s=a;s<b;s+=36){shell(s,Math.min(b,s+36),'inner',index);shell(s,Math.min(b,s+36),'outer',index);}
+  // Compact climbing growth sits against the real liner, above the ride.
+  // Reuse the same flowers as the entrances and old aqueduct piers.
+  for(let s=a+45;s<b-15;s+=62){
+   const side=Math.floor(s/62)%2?1:-1,at=arcPoint(s,side>0?Math.PI*.23:Math.PI*.77,-.12);
+   at.y-=2.2;
+   add({t:'decor',dkind:'bayvine',p:tuple(at),w:.65,yaw:yawToward(at,course.sample(s)),scenerySolid:false,grp:436,nm:'Island garden / sheltered flume vine'});
+  }
   for(let s=a;s<=b;s+=24){shell(Math.max(a,s-.25),Math.min(b,s+.25),'collar',index);shell(Math.max(a,s-.18),Math.min(b,s+.18),'inner-band',index);}
   for(const s of [a,b]){
    const p=course.sample(s),f=course.tangent(s).setY(0).normalize(),half=course.width(s)/2;

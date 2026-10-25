@@ -1,0 +1,50 @@
+{
+  "base": "http://127.0.0.1:5349",
+  "lite": false,
+  "screenshots": 8,
+  "reports": [
+    {
+      "name": "forest-bend",
+      "s": 600,
+      "position": [
+        15.910076014236067,
+        854.3620996227241,
+        -325.37241552491105
+      ],
+      "camera": [
+        16.64715744329225,
+        860.6620996227241,
+        -319.01500166651385
+      ],
+      "grounded": true,
+      "state": "ride",
+      "falls": 0,
+      "render": {
+        "frame": 2690,
+        "calls": 561,
+        "triangles": 957942,
+        "points": 0,
+        "lines": 0
+      },
+      "assets": {
+        "components": 602,
+        "placements": 602,
+        "ready": 274,
+        "skipped": 0,
+        "draws": 230,
+        "triangles": 655095,
+        "allLodTriangles": 1226365,
+        "cells": 474,
+        "residentCells": 216,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 7,
+        "textureMiB": 173.01,
+        "errors": [],
+        "windTime": 1.2500000000000004
+      },
+      "stamp": "Codex/sol fork · build 10-25 01:17 UTC"
+    }
+  ],
+  "errors": []
+}
