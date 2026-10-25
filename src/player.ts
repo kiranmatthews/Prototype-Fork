@@ -498,6 +498,7 @@ interface GroundHit {
   crumbleId?: number; // standing on a crumble pad: it starts breaking
   slippy?: boolean; // an icy/slick plank: friction cut so you skate on and can't stop short
   iceGrip?: number; // authored multiplier; absence uses the shared surface default
+  iceWalk?: boolean; // presentation only; non-ice slicks keep ordinary locomotion
   vert?: boolean; // AUTHORED transition face: the level says "this is vert", overriding the normal.y guesswork
   finishPad?: boolean; // the warp pad's masonry: standing on it ends the run
   halfpipe?: Halfpipe; // the transition wall we're on (drives the pendulum + coping launch)
@@ -2111,7 +2112,7 @@ export class Player {
     // Ice owns a separate foot cycle while pushing against low traction or
     // coasting. Read self-propelled momentum, never platform carry or a new
     // movement state. All action and board owners have already taken priority.
-    if (this.state === 'ride' && this.worldMapBaseScale === null && this.groundHit?.slippy &&
+    if (this.state === 'ride' && this.worldMapBaseScale === null && this.groundHit?.slippy && this.groundHit.iceWalk !== false &&
         !this.slipping && !this.teetering && this.teeterPose < .01 &&
         (this.animationPlanarSpeed > RUN_ANIMATION_THRESHOLD ||
           Math.hypot(this.rawInput?.moveX ?? 0, this.rawInput?.moveY ?? 0) > .08))
@@ -17111,6 +17112,7 @@ export class Player {
       crumbleId: hit.object.userData.crumbleId as number | undefined,
       slippy: hit.object.userData.slippy as boolean | undefined,
       iceGrip: hit.object.userData.iceGrip as number | undefined,
+      iceWalk: hit.object.userData.iceWalk as boolean | undefined,
       vert: hit.object.userData.vert as boolean | undefined,
       finishPad: hit.object.userData.finishPad as boolean | undefined,
       trampolineBounce: hit.object.userData.trampolineBounce as number | undefined,

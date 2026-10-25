@@ -7559,6 +7559,9 @@ export class Level {
         if (surface.slip) {
           mesh.userData.slippy = true;
           mesh.userData.iceGrip = surface.iceGrip ?? ICE_SURFACE.grip;
+          // Wet roofs and other explicitly painted slicks share traction,
+          // but only ice owns the scrabbling on-foot animation.
+          mesh.userData.iceWalk = surface.tex === undefined || surface.tex === 'ice' || surface.tex === 'bridge-ice';
         }
         const old = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
         if(this.atmosphere?.rain&&surface.tex?.startsWith('kook-'))

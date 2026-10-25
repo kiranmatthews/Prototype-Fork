@@ -1,0 +1,70 @@
+{
+  "traction": [
+    {
+      "name": "dry",
+      "grip": null,
+      "footRelease": {
+        "distance": 0.8500000000000004,
+        "speed": 0,
+        "clip": "player.idle"
+      },
+      "brake": {
+        "distance": 8.751032021604939,
+        "speed": 11.537615740740744
+      },
+      "coast": {
+        "distance": 9.86950677669325,
+        "speed": 19.497266330258757
+      }
+    },
+    {
+      "name": "stone",
+      "grip": 0.94,
+      "footRelease": {
+        "distance": 1.4062287295350568,
+        "speed": 1.1051040167480135,
+        "clip": "player.run"
+      },
+      "brake": {
+        "distance": 8.825970100308641,
+        "speed": 12.045358796296293
+      },
+      "coast": {
+        "distance": 9.985154780459572,
+        "speed": 19.942565905378274
+      }
+    },
+    {
+      "name": "metal",
+      "grip": 0.84,
+      "footRelease": {
+        "distance": 1.5108841542683886,
+        "speed": 1.3291278511576603,
+        "clip": "player.run"
+      },
+      "brake": {
+        "distance": 8.950866898148147,
+        "speed": 12.891597222222222
+      },
+      "coast": {
+        "distance": 9.98673252299927,
+        "speed": 19.9486670041642
+      }
+    }
+  ],
+  "impacts": {
+    "visible": true,
+    "streaks": 2200,
+    "impactCapacity": 96,
+    "activeImpacts": 96,
+    "samples": 100,
+    "time": 0.016666666666666666,
+    "span": 68,
+    "intensity": 0.86,
+    "wind": [
+      5.5,
+      2.8
+    ]
+  },
+  "geometryUnchanged": true
+}

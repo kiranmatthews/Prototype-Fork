@@ -1,0 +1,220 @@
+{
+  "base": "http://127.0.0.1:5267",
+  "cases": [
+    {
+      "lite": true,
+      "initial": {
+        "position": [
+          -0.09307193374784212,
+          95.30000000596046,
+          -5.999157848252818
+        ],
+        "velocity": [
+          0,
+          0,
+          0
+        ],
+        "grounded": true,
+        "board": false,
+        "grip": 0.94,
+        "slippy": true,
+        "hint": "player.idle",
+        "active": "player.idle",
+        "time": 0.580099999904633,
+        "steps": 1,
+        "rain": true,
+        "buffer": [
+          1280,
+          720
+        ],
+        "stamp": "Codex/sol fork · build 10-25 15:48 UTC"
+      },
+      "walking": {
+        "position": [
+          -0.17543716987487465,
+          95.30000000596046,
+          -7.7737891682271645
+        ],
+        "velocity": [
+          -0.2700666429566537,
+          0,
+          -5.818822911307239
+        ],
+        "grounded": true,
+        "board": false,
+        "grip": 0.94,
+        "slippy": true,
+        "hint": "player.run",
+        "active": "player.run",
+        "time": 0.4988152969779268,
+        "steps": 48,
+        "rain": true,
+        "buffer": [
+          1280,
+          720
+        ],
+        "stamp": "Codex/sol fork · build 10-25 15:48 UTC"
+      },
+      "later": {
+        "position": [
+          -0.9588258617167028,
+          95.30000000596046,
+          -21.692182412590075
+        ],
+        "velocity": [
+          -0.6896753332479387,
+          0,
+          -8.961180578551481
+        ],
+        "grounded": true,
+        "board": false,
+        "grip": 0.94,
+        "slippy": true,
+        "hint": "player.run",
+        "active": "player.run",
+        "time": 0.2024811152107292,
+        "steps": 147,
+        "rain": true,
+        "buffer": [
+          1280,
+          720
+        ],
+        "stamp": "Codex/sol fork · build 10-25 15:48 UTC"
+      },
+      "coast": {
+        "position": [
+          -1.0562524287384791,
+          95.30000000596046,
+          -22.958078143729157
+        ],
+        "velocity": [
+          -0.3505463554645026,
+          0,
+          -4.554765178677488
+        ],
+        "grounded": true,
+        "board": false,
+        "grip": 0.94,
+        "slippy": true,
+        "hint": "player.run",
+        "active": "player.run-stop",
+        "time": 0.1966890572619735,
+        "steps": 159,
+        "rain": true,
+        "buffer": [
+          1280,
+          720
+        ],
+        "stamp": "Codex/sol fork · build 10-25 15:48 UTC"
+      }
+    },
+    {
+      "lite": false,
+      "initial": {
+        "position": [
+          -0.09307193374784212,
+          95.30000000596046,
+          -5.999157848252818
+        ],
+        "velocity": [
+          0,
+          0,
+          0
+        ],
+        "grounded": true,
+        "board": false,
+        "grip": 0.94,
+        "slippy": true,
+        "hint": "player.idle",
+        "active": "player.idle",
+        "time": 0.616433333476385,
+        "steps": 2,
+        "rain": true,
+        "buffer": [
+          2560,
+          1440
+        ],
+        "stamp": "Codex/sol fork · build 10-25 15:48 UTC"
+      },
+      "walking": {
+        "position": [
+          -0.1897185342010069,
+          95.30000000596046,
+          -8.081493700100662
+        ],
+        "velocity": [
+          -0.29297716444058686,
+          0,
+          -6.312450209596365
+        ],
+        "grounded": true,
+        "board": false,
+        "grip": 0.94,
+        "slippy": true,
+        "hint": "player.run",
+        "active": "player.run",
+        "time": 0.5575206612294524,
+        "steps": 52,
+        "rain": true,
+        "buffer": [
+          2560,
+          1440
+        ],
+        "stamp": "Codex/sol fork · build 10-25 15:48 UTC"
+      },
+      "later": {
+        "position": [
+          -0.5711797450811885,
+          95.30000000596046,
+          -15.882903505912735
+        ],
+        "velocity": [
+          -0.5014565315201285,
+          0,
+          -8.87797975652992
+        ],
+        "grounded": true,
+        "board": false,
+        "grip": 0.94,
+        "slippy": true,
+        "hint": "player.run",
+        "active": "player.run",
+        "time": 0.09996937570385656,
+        "steps": 109,
+        "rain": true,
+        "buffer": [
+          2560,
+          1440
+        ],
+        "stamp": "Codex/sol fork · build 10-25 15:48 UTC"
+      },
+      "coast": {
+        "position": [
+          -0.646032749660374,
+          95.30000000596046,
+          -17.20812995645858
+        ],
+        "velocity": [
+          -0.2409031352243918,
+          0,
+          -4.265041979457979
+        ],
+        "grounded": true,
+        "board": false,
+        "grip": 0.94,
+        "slippy": true,
+        "hint": "player.run",
+        "active": "player.run-stop",
+        "time": 0.2078372739554419,
+        "steps": 122,
+        "rain": true,
+        "buffer": [
+          2560,
+          1440
+        ],
+        "stamp": "Codex/sol fork · build 10-25 15:48 UTC"
+      }
+    }
+  ],
+  "errors": []
+}

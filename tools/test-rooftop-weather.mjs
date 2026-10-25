@@ -17,14 +17,15 @@ await withSkateRuntime(async({server,THREE,Level,Player,CONST,TUNING})=>{
  const stone=roof.components.find(c=>c.slip&&c.tex==='kook-paving').iceGrip;
  assert.ok(metal<stone&&stone<1);
  for(const [name,grip]of [['dry',null],['stone',stone],['metal',metal]]){
-  const data={...fixture,components:fixture.components.map(c=>c.t==='platform'?{...c,...(grip===null?{}:{slip:true,iceGrip:grip})}:c)};
+  const data={...fixture,components:fixture.components.map(c=>c.t==='platform'?{...c,tex:name==='stone'?'kook-paving':'kook-metal',...(grip===null?{}:{slip:true,iceGrip:grip})}:c)};
   const level=new Level(new THREE.Scene(),{id:'wet-probe',name:data.name,data});level.scene.updateMatrixWorld(true);
   const p=new Player(level.scene);
   const reset=()=>{p.enterLevel('wet-probe');p.respawn(level,true);p.step(CONST.fixedStep,makeInput(),level);assert.ok(p.grounded);};
   const step=(input,n)=>{for(let i=0;i<n;i++){p.step(CONST.fixedStep,makeInput(input),level);level.update(CONST.fixedStep);}};
   try{
    reset();p.walkVelocity.set(0,0,-6);p.speed=6;step({},30);
-   const footRelease={distance:-p.pos.z,speed:p.walkVelocity.length()};
+   const footRelease={distance:-p.pos.z,speed:p.walkVelocity.length(),clip:p.animationClipHint};
+   if(grip!==null)assert.equal(footRelease.clip,'player.run','Rain-slick roofs must use the ordinary foot cycle, not the ice walk');
    reset();p.freeSkate=true;p.speed=20;p.lastPlanar=20;p.axisF.set(0,0,-1);p.axisL.set(-1,0,0);step({grabHeld:true},30);
    const brake={distance:-p.pos.z,speed:p.speed};
    reset();p.freeSkate=true;p.speed=20;p.lastPlanar=20;p.axisF.set(0,0,-1);p.axisL.set(-1,0,0);step({},30);
