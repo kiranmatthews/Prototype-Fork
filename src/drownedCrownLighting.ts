@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { atmosphereColor, type ResolvedAtmosphere } from './levelAtmosphere';
-import { DROWNED_INTERIOR_OFFSET_X } from './levels/pirate-sets';
+import { DROWNED_INTERIOR_OFFSET_X, DROWNED_TREASURY_OFFSET } from './levels/pirate-sets';
 
 type Rig={hemi:THREE.HemisphereLight;sun:THREE.DirectionalLight;fill:THREE.DirectionalLight;fog:THREE.Fog|null;sky?:THREE.Object3D;mist?:THREE.Object3D;background?:THREE.Color};
 type Look={sky:THREE.Color;ground:THREE.Color;sun:THREE.Color;fill:THREE.Color;fog:THREE.Color;ambient:number;key:number;bounce:number;near:number;far:number};
@@ -43,7 +43,8 @@ export class DrownedCrownLighting {
    THREE.MathUtils.smoothstep(y,10.5,13.5)*(1-THREE.MathUtils.smoothstep(y,22,26))*(1-THREE.MathUtils.smoothstep(Math.abs(x),11,16))*
    THREE.MathUtils.smoothstep(z,-118,-106)*(1-THREE.MathUtils.smoothstep(z,-90,-84));
   const hold=stagedInterior?0:THREE.MathUtils.smoothstep(-z,167,179)*(1-THREE.MathUtils.smoothstep(-z,207,222))*(1-THREE.MathUtils.smoothstep(y,1,5))*(1-THREE.MathUtils.smoothstep(Math.abs(x),12,20));
-  const treasury=stagedInterior?THREE.MathUtils.smoothstep(-z,396,414):THREE.MathUtils.smoothstep(-z,278,296);
+  // Keep the original warm reveal at the same point within the moved vault.
+  const treasury=stagedInterior?THREE.MathUtils.smoothstep(-(z-DROWNED_TREASURY_OFFSET[2]),278,296):THREE.MathUtils.smoothstep(-z,278,296);
   const base=stagedInterior?SKATE_HOLD:this.exterior,entry=stagedInterior?ENTRY_GALLERY:CABIN,{hemi,sun,fill,fog}=this.rig;
   const color=(out:THREE.Color,key:'sky'|'ground'|'sun'|'fill'|'fog')=>out.copy(base[key]).lerp(MINE[key],mine).lerp(MOONPOOL[key],chamber).lerp(HOLD[key],hold).lerp(entry[key],cabin).lerp(TREASURY[key],treasury);
   const value=(key:'ambient'|'key'|'bounce'|'near'|'far')=>THREE.MathUtils.lerp(THREE.MathUtils.lerp(THREE.MathUtils.lerp(THREE.MathUtils.lerp(THREE.MathUtils.lerp(base[key],MINE[key],mine),MOONPOOL[key],chamber),HOLD[key],hold),entry[key],cabin),TREASURY[key],treasury);

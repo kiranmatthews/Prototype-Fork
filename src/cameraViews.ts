@@ -12,6 +12,8 @@ export interface CameraView {
   cameraAspect?: number;
   /** Translation-only follow distance; ordinary authored views retain the close limit. */
   cameraFollowDistance?: number;
+  /** Opt in to the authored scale in side views instead of the live close rig. */
+  cameraKeepDistance?: boolean;
   /** Relative target height keeps tall crate goals visible at a close lens. */
   cameraFollowTargetHeight?: number;
   /** Legacy authoring metadata; gameplay no longer starts with a distant establishing shot. */
@@ -123,7 +125,7 @@ export class CameraViewFraming {
         ? desiredSide : THREE.MathUtils.lerp(this.sideWeight, desiredSide, 1-Math.exp(-6*Math.max(0,sideFollow.dt)));
       this.sideView = view;
       const side = this.sideWeight;
-      const distance = THREE.MathUtils.lerp(authoredDistance,
+      const distance = view.cameraKeepDistance ? authoredDistance : THREE.MathUtils.lerp(authoredDistance,
         Math.min(authoredDistance, sideFollow?.distance ?? authoredDistance), side);
       // Bonus owns its lens without changing the parent's camera or controls.
       if(groundFollow){camera.fov=bonus ? shotFov : composed ? view.cameraFov??46 : 46;camera.updateProjectionMatrix();}

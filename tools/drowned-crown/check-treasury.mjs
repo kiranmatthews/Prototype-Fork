@@ -11,10 +11,12 @@ try{
  const rig={hemi:new THREE.HemisphereLight(),sun:new THREE.DirectionalLight(),fill:new THREE.DirectionalLight(),fog:new THREE.Fog(0,1,100)};
  const lighting=new DrownedCrownLighting(rig,base);
  const sample=(x,y,z)=>{lighting.update(x,y,z);return{sun:rig.sun.color.toArray(),fill:rig.fill.color.toArray(),ambient:rig.hemi.intensity,key:rig.sun.intensity,bounce:rig.fill.intensity,fog:rig.fog.color.toArray()};};
- const exterior=sample(-72,-5,205),treasury=sample(1032,20,-425);
+ const {DROWNED_TREASURY_OFFSET:d}=await server.ssrLoadModule('/src/levels/pirate-sets.ts');
+ const vault=(x,y,z)=>sample(1000+x+d[0],y+d[1],z+d[2]);
+ const exterior=sample(-72,-5,205),treasury=vault(32,12,-307);
  assert.ok(treasury.sun[0]>treasury.sun[2],'The treasury key should keep the gold warm');
  assert.ok(treasury.fill[2]>treasury.fill[0],'The stone should retain its cool fill');
- assert.deepEqual(sample(1032,27,-425),treasury,'Jumping must not flash the room lighting');
+ assert.deepEqual(vault(32,19,-307),treasury,'Jumping must not flash the room lighting');
  assert.notDeepEqual(sample(1000,16,-230),treasury,'The treasury look must stay out of the skate hold');
  assert.deepEqual(sample(-72,-5,205),exterior,'Returning outside restores the authored harbour look');
  const lanterns=data.components.filter(c=>c.t==='torch'&&['Treasury hoard lantern','Royal portal lantern'].includes(c.nm));

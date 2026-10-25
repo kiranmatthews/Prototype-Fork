@@ -5,6 +5,7 @@ import {join} from 'node:path';
 const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
 const base=process.argv.find(a=>/^http/.test(a))||'http://127.0.0.1:5178/';
 const full=process.argv.includes('--full'),capture=process.argv.includes('--capture'),noShots=process.argv.includes('--no-shots');
+const sideShots=process.argv.includes('--side-shots');
 const output=process.env.PIRATE_BROWSER_OUTPUT||join(tmpdir(),'pirate-browser');await mkdir(output,{recursive:true});
 const pilotSource=(await readFile(new URL('./pirate-wreck-pilot.mjs',import.meta.url),'utf8')).replace('export function* pirateJourney','return function* pirateJourney');
 const browser=await chromium.launch({headless:true,channel:'chrome'});
@@ -71,10 +72,10 @@ try{
   await page.waitForTimeout(250);const state=await page.evaluate(()=>window.pirateReview);
   if(!state)throw Error('The page reloaded during the journey; use a stable preview or deployed build');
   if(state.stage!==lastStage){lastStage=state.stage;console.log(JSON.stringify({stage:state.stage,frame:state.frame}));}
-  if(!noShots&&/wreck|hull|cargo|lookout|hoard|hold|fissure|rigging|escape/i.test(state.stage)&&!captured.has(state.stage)){
+  if((sideShots?/Broadside combat shelf|Broadside high landing|Broadside near timber landing/.test(state.stage):!noShots&&/wreck|cargo|gangway|lookout|hoard|sling|fissure|keystone|stern|collapse/i.test(state.stage))&&!captured.has(state.stage)){
    captured.add(state.stage);await page.screenshot({path:`${output}/${state.stage.replaceAll(' ','-')}-${full?'full':'lite'}.png`});
   }
-  if(state.done){state.resolution=await page.evaluate(()=>JSON.parse(document.querySelector('#render-diagnostics').textContent));if(full){assert.equal(state.resolution.settings.enabled,false);assert.deepEqual(state.resolution.drawingBuffer,{width:3840,height:2160});if(state.resolution.presentation){assert.equal(state.resolution.presentation.inputWidth,3840);assert.equal(state.resolution.presentation.inputHeight,2160);}}await writeFile(`${output}/report-${full?'full':'lite'}.json`,JSON.stringify({...state,errors},null,2));console.log(JSON.stringify({frame:state.frame,result:state.result,failure:state.failure,errors}));assert.equal(state.failure,null);assert.deepEqual(errors,[]);assert.equal(state.result.state,'finished');assert.equal(state.result.deaths,0);assert.equal(state.result.checkpoints,6);assert.equal(state.tuningUnchanged,true);assert.ok(state.largestStep<2.2);assert.equal(state.portalTransitions.length,state.result.boardingTransitions);assert.match(state.stamp,/Codex\/sol fork/);break;}
+  if(state.done){state.resolution=await page.evaluate(()=>JSON.parse(document.querySelector('#render-diagnostics').textContent));if(full){assert.equal(state.resolution.settings.enabled,false);assert.deepEqual(state.resolution.drawingBuffer,{width:3840,height:2160});if(state.resolution.presentation){assert.equal(state.resolution.presentation.inputWidth,3840);assert.equal(state.resolution.presentation.inputHeight,2160);}}await writeFile(`${output}/report-${full?'full':'lite'}.json`,JSON.stringify({...state,errors},null,2));console.log(JSON.stringify({frame:state.frame,result:state.result,failure:state.failure,errors}));assert.equal(state.failure,null);assert.deepEqual(errors,[]);assert.equal(state.result.state,'finished');assert.equal(state.result.deaths,0);assert.equal(state.result.checkpoints,17);assert.equal(state.tuningUnchanged,true);assert.ok(state.largestStep<2.2);assert.equal(state.portalTransitions.length,state.result.boardingTransitions);assert.match(state.stamp,/Codex\/sol fork/);break;}
   if(i===4799)throw Error('Browser journey timed out');
  }
  if(!noShots)await page.screenshot({path:`${output}/finish-${full?'full':'lite'}.png`});

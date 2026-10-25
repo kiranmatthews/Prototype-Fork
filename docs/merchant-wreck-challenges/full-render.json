@@ -1,0 +1,1059 @@
+{
+  "startedAt": "2026-10-25T04:54:13.420Z",
+  "launchSeconds": 12.893,
+  "mode": "full",
+  "url": "http://127.0.0.1:5432/?playtest&renderdiag&level=drowned-crown",
+  "stamp": "Codex/sol fork · build 10-25 04:52 UTC",
+  "spawn": {
+    "position": [
+      -72,
+      -5.448778950738333,
+      205
+    ],
+    "grounded": true,
+    "state": "ride",
+    "deaths": 0,
+    "spawn": [
+      -72,
+      -5.332112283848149,
+      205
+    ],
+    "checkpoints": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "views": [
+    {
+      "name": "harbour",
+      "position": [
+        -72,
+        -5.448778950738333,
+        205
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "spawn": [
+        -72,
+        -5.332112283848149,
+        205
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "render": {
+        "frame": 1426,
+        "calls": 1415,
+        "triangles": 4773812,
+        "points": 0,
+        "lines": 0,
+        "memory": {
+          "geometries": 582,
+          "textures": 187
+        },
+        "contextLosses": 0
+      }
+    },
+    {
+      "name": "opening-boardwalk",
+      "position": [
+        -56.5,
+        -6.069143742147362,
+        138
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "spawn": [
+        -72,
+        -5.332112283848149,
+        205
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "render": {
+        "frame": 1871,
+        "calls": 1316,
+        "triangles": 5163877,
+        "points": 0,
+        "lines": 0,
+        "memory": {
+          "geometries": 595,
+          "textures": 202
+        },
+        "contextLosses": 0
+      }
+    },
+    {
+      "name": "scenic-ship",
+      "position": [
+        -48,
+        -5.696375686499115,
+        -75
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "spawn": [
+        -72,
+        -5.332112283848149,
+        205
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "render": {
+        "frame": 2377,
+        "calls": 833,
+        "triangles": 3683923,
+        "points": 0,
+        "lines": 0,
+        "memory": {
+          "geometries": 598,
+          "textures": 202
+        },
+        "contextLosses": 0
+      }
+    },
+    {
+      "name": "cargo-zigzag",
+      "position": [
+        1000,
+        8,
+        -132
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "spawn": [
+        -72,
+        -5.332112283848149,
+        205
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "render": {
+        "frame": 2616,
+        "calls": 230,
+        "triangles": 646349,
+        "points": 0,
+        "lines": 0,
+        "memory": {
+          "geometries": 557,
+          "textures": 146
+        },
+        "contextLosses": 0
+      }
+    },
+    {
+      "name": "broken-gangways",
+      "position": [
+        1000,
+        9.9,
+        -177
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "spawn": [
+        -72,
+        -5.332112283848149,
+        205
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "render": {
+        "frame": 2741,
+        "calls": 262,
+        "triangles": 674004,
+        "points": 0,
+        "lines": 0,
+        "memory": {
+          "geometries": 560,
+          "textures": 154
+        },
+        "contextLosses": 0
+      }
+    },
+    {
+      "name": "cargo-ferries",
+      "position": [
+        1001,
+        10.499999904632567,
+        -233
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "spawn": [
+        -72,
+        -5.332112283848149,
+        205
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "render": {
+        "frame": 2856,
+        "calls": 283,
+        "triangles": 624402,
+        "points": 0,
+        "lines": 0,
+        "memory": {
+          "geometries": 563,
+          "textures": 161
+        },
+        "contextLosses": 0
+      }
+    },
+    {
+      "name": "loose-pallets",
+      "position": [
+        999,
+        11.8,
+        -277
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "spawn": [
+        -72,
+        -5.332112283848149,
+        205
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "render": {
+        "frame": 2971,
+        "calls": 293,
+        "triangles": 586907,
+        "points": 0,
+        "lines": 0,
+        "memory": {
+          "geometries": 571,
+          "textures": 182
+        },
+        "contextLosses": 0
+      }
+    },
+    {
+      "name": "broken-stern",
+      "position": [
+        1000,
+        13.4,
+        -319
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "spawn": [
+        -72,
+        -5.332112283848149,
+        205
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "render": {
+        "frame": 3090,
+        "calls": 284,
+        "triangles": 625560,
+        "points": 0,
+        "lines": 0,
+        "memory": {
+          "geometries": 571,
+          "textures": 182
+        },
+        "contextLosses": 0
+      }
+    },
+    {
+      "name": "cargo-combs",
+      "position": [
+        1000,
+        16,
+        -363
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "spawn": [
+        -72,
+        -5.332112283848149,
+        205
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "render": {
+        "frame": 3208,
+        "calls": 302,
+        "triangles": 857330,
+        "points": 0,
+        "lines": 0,
+        "memory": {
+          "geometries": 571,
+          "textures": 182
+        },
+        "contextLosses": 0
+      }
+    },
+    {
+      "name": "stamping-machinery",
+      "position": [
+        1000,
+        18.4,
+        -418
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "spawn": [
+        -72,
+        -5.332112283848149,
+        205
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "render": {
+        "frame": 3331,
+        "calls": 328,
+        "triangles": 948384,
+        "points": 0,
+        "lines": 0,
+        "memory": {
+          "geometries": 572,
+          "textures": 182
+        },
+        "contextLosses": 0
+      }
+    },
+    {
+      "name": "high-shelves",
+      "position": [
+        1000,
+        20.4,
+        -469
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "spawn": [
+        -72,
+        -5.332112283848149,
+        205
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "render": {
+        "frame": 3448,
+        "calls": 316,
+        "triangles": 1046980,
+        "points": 0,
+        "lines": 0,
+        "memory": {
+          "geometries": 572,
+          "textures": 182
+        },
+        "contextLosses": 0
+      }
+    },
+    {
+      "name": "broadside-stair",
+      "position": [
+        1000,
+        16,
+        -618
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "spawn": [
+        -72,
+        -5.332112283848149,
+        205
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "render": {
+        "frame": 3574,
+        "calls": 183,
+        "triangles": 657536,
+        "points": 0,
+        "lines": 0,
+        "memory": {
+          "geometries": 574,
+          "textures": 182
+        },
+        "contextLosses": 0
+      }
+    },
+    {
+      "name": "broadside-hoist",
+      "position": [
+        1047,
+        19.6,
+        -618
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "spawn": [
+        -72,
+        -5.332112283848149,
+        205
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "cameraDistance": 18.000000000000032,
+      "render": {
+        "frame": 3694,
+        "calls": 241,
+        "triangles": 993471,
+        "points": 0,
+        "lines": 0,
+        "memory": {
+          "geometries": 582,
+          "textures": 182
+        },
+        "contextLosses": 0
+      }
+    },
+    {
+      "name": "broadside-timber",
+      "position": [
+        1105,
+        18.6,
+        -618
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "spawn": [
+        -72,
+        -5.332112283848149,
+        205
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "cameraDistance": 18.000000000000032,
+      "render": {
+        "frame": 3924,
+        "calls": 269,
+        "triangles": 1430516,
+        "points": 0,
+        "lines": 0,
+        "memory": {
+          "geometries": 582,
+          "textures": 182
+        },
+        "contextLosses": 0
+      }
+    },
+    {
+      "name": "treasury",
+      "position": [
+        1180,
+        19.603623994707416,
+        -681
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "spawn": [
+        -72,
+        -5.332112283848149,
+        205
+      ],
+      "checkpoints": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "render": {
+        "frame": 4208,
+        "calls": 233,
+        "triangles": 1792372,
+        "points": 0,
+        "lines": 0,
+        "memory": {
+          "geometries": 582,
+          "textures": 182
+        },
+        "contextLosses": 0
+      }
+    }
+  ],
+  "publishedLevel": {
+    "source": "bundled source",
+    "components": 1446,
+    "oldBowl": false,
+    "ferries": 2,
+    "crumbles": 4,
+    "boardwalks": 8,
+    "enemies": 13,
+    "checkpoints": 17
+  },
+  "pitRespawn": {
+    "position": [
+      -72,
+      -5.448778950738333,
+      205
+    ],
+    "grounded": true,
+    "state": "ride",
+    "deaths": 1,
+    "spawn": [
+      -72,
+      -5.332112283848149,
+      205
+    ],
+    "checkpoints": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "checkpoint": {
+    "position": [
+      1004,
+      8,
+      -127.8
+    ],
+    "grounded": true,
+    "state": "ride",
+    "deaths": 0,
+    "spawn": [
+      1004,
+      8.1,
+      -129
+    ],
+    "checkpoints": [
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "checkpointRespawn": {
+    "position": [
+      1004,
+      8,
+      -129
+    ],
+    "grounded": true,
+    "state": "ride",
+    "deaths": 1,
+    "spawn": [
+      1004,
+      8.1,
+      -129
+    ],
+    "checkpoints": [
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "resolution": {
+    "levelId": "drowned-crown",
+    "bonusPlatform": {
+      "x": 1009.5,
+      "y": 11.8,
+      "z": -278,
+      "laneFraction": 0.5,
+      "topY": 12.850000000000001,
+      "radius": 1.6,
+      "modelReady": true
+    },
+    "settings": {
+      "enabled": false,
+      "baseHeight": 1080,
+      "outputMultiplier": 1,
+      "fixed60": true
+    },
+    "active": false,
+    "sizes": {
+      "viewportWidth": 1440,
+      "viewportHeight": 900,
+      "inputWidth": 1728,
+      "inputHeight": 1080,
+      "outputWidth": 1728,
+      "outputHeight": 1080
+    },
+    "drawingBuffer": {
+      "width": 1440,
+      "height": 900
+    },
+    "presentation": {
+      "mode": "native",
+      "inputWidth": 1440,
+      "inputHeight": 900,
+      "outputWidth": 1440,
+      "outputHeight": 900,
+      "scaleX": 1,
+      "scaleY": 1
+    },
+    "ocean": {
+      "shoreContourSegments": 240,
+      "shoreFieldBuildMs": 42.10000002384186,
+      "occludedPassFrames": 1578,
+      "primaryReuseRenders": 0,
+      "primaryReuseFallbacks": 2141,
+      "primaryReuseFallbackReason": "primary target is not compatible linear HDR plus depth",
+      "verts": 33063,
+      "tris": 64640,
+      "shoreSamples": 321,
+      "sceneWidth": 1440,
+      "sceneHeight": 900,
+      "nativeDrawingBufferWidth": 1440,
+      "nativeDrawingBufferHeight": 900,
+      "preCrtSizeOverride": false,
+      "reflectionWidth": 432,
+      "reflectionHeight": 270,
+      "prepassWidth": 1440,
+      "prepassHeight": 900,
+      "reflectionRenders": 563,
+      "prepassRenders": 563,
+      "quality": "full"
+    },
+    "jungle": {
+      "components": 488,
+      "placements": 488,
+      "ready": 256,
+      "skipped": 0,
+      "draws": 60,
+      "triangles": 1296942,
+      "allLodTriangles": 1610328,
+      "cells": 200,
+      "residentCells": 59,
+      "pendingCells": 0,
+      "retryingCells": 0,
+      "compressedTextures": 9,
+      "textureMiB": 185.33,
+      "errors": [],
+      "windTime": 37.91676666668964
+    },
+    "sceneDraw": {
+      "frame": 4208,
+      "calls": 233,
+      "triangles": 1792372,
+      "points": 0,
+      "lines": 0
+    },
+    "frameTiming": {
+      "gameplay": true,
+      "samples": 134,
+      "averageMs": 16.634328358208954,
+      "medianMs": 16.699999928474426,
+      "p95Ms": 17.5
+    },
+    "islandFoam": null,
+    "hud": {
+      "width": 1,
+      "height": 1,
+      "textureWidth": 1,
+      "textureHeight": 1,
+      "uploadedPixels": 0,
+      "canvasFrames": 0,
+      "textureUploads": 0,
+      "textureReallocations": 0,
+      "compositeDraws": 0,
+      "primitives": 0,
+      "lastCanvasMs": 0,
+      "lifeFaceReady": true,
+      "rooFontReady": true,
+      "rooAtlasReady": true,
+      "disposed": false
+    },
+    "assets": {
+      "activeSky": "pirate",
+      "cachedSkies": [
+        "pirate"
+      ],
+      "pendingSkies": [],
+      "bonusParallax": null
+    },
+    "rendererMemory": {
+      "geometries": 582,
+      "textures": 182,
+      "programs": 160
+    },
+    "gameplayPost": {
+      "resident": true,
+      "suspended": false,
+      "createCount": 1,
+      "suspendCount": 1,
+      "resumeCount": 1
+    },
+    "gameFlowVortex": {
+      "active": false,
+      "resident": false,
+      "context": null,
+      "renderedFrames": 309,
+      "targetFps": 60,
+      "cadenceOwner": "gameplay-render-loop",
+      "reducedMotion": false,
+      "maskVisible": false,
+      "maskPartsLoaded": 0,
+      "targetWidth": 0,
+      "targetHeight": 0,
+      "scenePasses": 309,
+      "compositePasses": 0,
+      "maskPasses": 0,
+      "createCount": 1,
+      "disposeCount": 1
+    },
+    "gameFlowSurface": {
+      "active": false,
+      "resident": false,
+      "dirty": true,
+      "width": 0,
+      "height": 0,
+      "screen": null,
+      "revision": 339,
+      "paintedRevision": 0,
+      "canvasFrames": 0,
+      "textureUploads": 0,
+      "textureReallocations": 0,
+      "compositeDraws": 0,
+      "primitiveCount": 0,
+      "releaseCount": 0,
+      "lastCanvasMs": 0,
+      "disposed": false,
+      "composited": false
+    },
+    "interfaceSurface": {
+      "composited": false,
+      "cursorDrawn": false,
+      "competition": {
+        "selected": null,
+        "active": false,
+        "paints": 0,
+        "width": 0,
+        "height": 0
+      },
+      "surface": null
+    },
+    "frameLimiter": {
+      "acceptedFrames": 2457,
+      "skippedFrames": 0,
+      "targetFps": 60,
+      "lastTimestampMs": 50627.6,
+      "budgetMs": 16.400000000000293
+    },
+    "renderedFrames": 2107
+  },
+  "loading": {
+    "phase": null,
+    "pending": [],
+    "failed": [],
+    "revision": 840
+  },
+  "contextLosses": 0,
+  "errors": []
+}

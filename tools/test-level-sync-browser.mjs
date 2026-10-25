@@ -30,7 +30,7 @@ try{
    components:g.getLevel().builtFromData.components.length,grounded:g.player.grounded,contextLosses:window.syncContextLosses,
    loading:g.getLoadingDiagnostics(),pulled:localStorage.getItem('solProtoCloudPulled'),saved:localStorage.getItem('solProtoUserLevels')?.length,
    userIds:JSON.parse(localStorage.getItem('solProtoUserLevels')??'[]').map(e=>e.id),stamp:document.querySelector('.hud-build')?.textContent};});
-  assert.equal(state.components,6144);assert.equal(state.contextLosses,0);assert.deepEqual(state.loading.failed,[]);assert.deepEqual(state.loading.pending,[]);
+  assert.equal(state.components,1446);assert.equal(state.contextLosses,0);assert.deepEqual(state.loading.failed,[]);assert.deepEqual(state.loading.pending,[]);
   assert.match(state.stamp,/Codex\/sol fork/);return state;
  };
  await page.goto(new URL(`?playtest&renderdiag&level=drowned-crown${full?'':'&lite'}`,base).href,{waitUntil:'domcontentloaded',timeout:120000});
@@ -66,11 +66,11 @@ try{
   report.checks.push('successful restore and reload retain the complete edited level');
  }
  if(full){
-  for(const [name,position]of [['harbour',[-72,-5.3,205]],['exterior-ship',[-48,-6.1,-75]],['bowl-overlook',[1000,16.1,-165]]]){
+  for(const [name,position]of [['harbour',[-72,-5.3,205]],['exterior-ship',[-48,-6.1,-75]],['broken-gangways',[1000,10,-177]]]){
    await page.evaluate(async position=>{const g=window.__game;g.player.respawn(g.getLevel(),true,false,{position:g.player.pos.clone().set(...position),heading:g.player.camDir.clone().set(0,0,-1)});await g.getLevel().prepareJungleAssets();await g.getLevel().prepareSurfaceImages();},position);
    await page.waitForFunction(()=>window.__game.player.grounded);await page.waitForTimeout(1000);
    const view=await page.evaluate(()=>{const g=window.__game,l=g.getLevel();return{scenery:(l.jungleAssets?.cells??[]).filter(c=>c.mesh).map(c=>({kind:c.kind,count:c.mesh.count})),water:!!l.water,loading:g.getLoadingDiagnostics()};});
-   const kind=name==='harbour'?'crowncrashboardwalk':name==='exterior-ship'?'crowncrashexteriorship':'crownmeshyplankchipped';
+   const kind=name==='harbour'?'crowncrashboardwalk':name==='exterior-ship'?'crowncrashexteriorship':'crowncrashboardwalk';
    assert.ok(view.scenery.some(c=>c.kind===kind&&c.count>0));assert.deepEqual(view.loading.failed,[]);assert.deepEqual(view.loading.pending,[]);
    await page.screenshot({path:path.join(out,name+'.png')});report.views.push({name,...view});
   }

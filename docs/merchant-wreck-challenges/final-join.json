@@ -1,0 +1,146 @@
+{
+  "result": {
+    "state": "finished",
+    "deaths": 0,
+    "boardingTransitions": 0,
+    "checkpoints": 1,
+    "position": [
+      1180.001571839999,
+      20.726666669150195,
+      -691.3897467626101
+    ],
+    "evidence": [
+      {
+        "name": "Broadside near timber takeoff",
+        "position": [
+          1107.3895777777775,
+          18.6,
+          -618
+        ],
+        "ground": "platform"
+      },
+      {
+        "name": "Broadside near timber landing",
+        "position": [
+          1112.8562444444483,
+          17.35476710203357,
+          -618
+        ],
+        "ground": "Wreck boardwalk \u00b7 broadside near jetty \u00b7 sampled Meshy deck support"
+      },
+      {
+        "name": "Broadside near timber edge",
+        "position": [
+          1123.396688888893,
+          17.670418043678403,
+          -618
+        ],
+        "ground": "Wreck boardwalk \u00b7 broadside near jetty \u00b7 sampled Meshy deck support"
+      },
+      {
+        "name": "Broadside far timber landing",
+        "position": [
+          1130.4466888888974,
+          16.504929121343054,
+          -618
+        ],
+        "ground": "Wreck boardwalk \u00b7 broadside far jetty \u00b7 sampled Meshy deck support"
+      },
+      {
+        "name": "Broadside far timber edge",
+        "position": [
+          1139.4076333333417,
+          16.76947166377044,
+          -618
+        ],
+        "ground": "Wreck boardwalk \u00b7 broadside far jetty \u00b7 sampled Meshy deck support"
+      },
+      {
+        "name": "Treasury departure landing",
+        "position": [
+          1144.957633333345,
+          16,
+          -618
+        ],
+        "ground": "platform"
+      },
+      {
+        "name": "Escape bridge approach",
+        "position": [
+          1150.9046428750498,
+          16,
+          -620.95565977168
+        ],
+        "ground": "platform"
+      },
+      {
+        "name": "Escape bridge near bank",
+        "position": [
+          1153.948193815842,
+          16.3932502574983,
+          -625.9160499394966
+        ],
+        "ground": "Bow escape landing"
+      },
+      {
+        "name": "Broken bridge takeoff",
+        "position": [
+          1163.6189456549637,
+          17.024956505113657,
+          -633.6838461367578
+        ],
+        "ground": "Rope bridge near bank"
+      },
+      {
+        "name": "Broken bridge jump",
+        "position": [
+          1167.3255629062728,
+          17.33991751641223,
+          -636.7218258167267
+        ],
+        "ground": "Rope bridge far bank"
+      },
+      {
+        "name": "Treasure tunnel",
+        "position": [
+          1177.9211063954597,
+          18,
+          -643.9509735135309
+        ],
+        "ground": "wood"
+      },
+      {
+        "name": "Treasure checkpoint",
+        "position": [
+          1179.9730502947702,
+          18,
+          -651.696676172729
+        ],
+        "ground": "wood"
+      },
+      {
+        "name": "Enter the hoard",
+        "position": [
+          1180.0009290873897,
+          18.095192145504075,
+          -667.8937380374188
+        ],
+        "ground": "Worn royal vault terrace"
+      },
+      {
+        "name": "Climb the treasure dais",
+        "position": [
+          1180.001571839999,
+          19.590249065023528,
+          -680.8897467626088
+        ],
+        "ground": "Worn royal vault terrace"
+      }
+    ]
+  },
+  "frames": 2205,
+  "seconds": 36.75,
+  "largestStep": 0.7267317601342013,
+  "tuningUnchanged": true,
+  "components": 579
+}

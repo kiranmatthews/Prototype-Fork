@@ -1,0 +1,542 @@
+{
+  "result": {
+    "state": "finished",
+    "deaths": 0,
+    "boardingTransitions": 0,
+    "checkpoints": 6,
+    "position": [
+      1032.0050886361703,
+      20.726666669150195,
+      -435.38925983052326
+    ],
+    "evidence": [
+      {
+        "name": "Boarding room",
+        "position": [
+          1004,
+          8,
+          -123.90544444444427
+        ],
+        "ground": "platform"
+      },
+      {
+        "name": "Ship checkpoint",
+        "position": [
+          1004,
+          8,
+          -127.7024555555553
+        ],
+        "ground": "platform"
+      },
+      {
+        "name": "Cargo zigzag takeoff",
+        "position": [
+          998.8662910107621,
+          8,
+          -134.51524814048815
+        ],
+        "ground": "platform"
+      },
+      {
+        "name": "Port cargo jump",
+        "position": [
+          996.7584558025939,
+          8.7,
+          -141.16654833254185
+        ],
+        "ground": "platform"
+      },
+      {
+        "name": "Across the clipped cargo",
+        "position": [
+          998.3509803808545,
+          8.7,
+          -143.71954952835424
+        ],
+        "ground": "platform"
+      },
+      {
+        "name": "Starboard cargo jump",
+        "position": [
+          1000.1822119610162,
+          9.29999990463257,
+          -150.47572549751945
+        ],
+        "ground": "platform"
+      },
+      {
+        "name": "Pass the crab on the open left lane",
+        "position": [
+          1000.1042119610172,
+          9.29999990463257,
+          -155.50693660863038
+        ],
+        "ground": "platform"
+      },
+      {
+        "name": "Turtle elbow jump",
+        "position": [
+          996.5317594953169,
+          9.899999809265138,
+          -161.53107213903007
+        ],
+        "ground": "platform"
+      },
+      {
+        "name": "Pass the turtle on the outside elbow",
+        "position": [
+          996.2099884965352,
+          9.899999809265138,
+          -165.90604578496462
+        ],
+        "ground": "platform"
+      },
+      {
+        "name": "Lookout landing",
+        "position": [
+          998.094631400042,
+          9.9,
+          -172.82948072143753
+        ],
+        "ground": "platform"
+      },
+      {
+        "name": "Broken gangways checkpoint",
+        "position": [
+          1002.7105595708357,
+          9.9,
+          -175.74076429058033
+        ],
+        "ground": "platform"
+      },
+      {
+        "name": "First boardwalk join",
+        "position": [
+          1000.0469700283521,
+          9.9,
+          -180.90901134940367
+        ],
+        "ground": "platform"
+      },
+      {
+        "name": "First broken gangway takeoff",
+        "position": [
+          1000.000732362906,
+          9.801627282361645,
+          -192.3060516620049
+        ],
+        "ground": "Wreck boardwalk \u00b7 near jetty \u00b7 sampled Meshy deck support"
+      },
+      {
+        "name": "Offset boardwalk jump",
+        "position": [
+          998.6701083247149,
+          10.37132216911238,
+          -199.16927038529283
+        ],
+        "ground": "Wreck boardwalk \u00b7 offset middle jetty \u00b7 sampled Meshy deck support"
+      },
+      {
+        "name": "Second broken gangway takeoff",
+        "position": [
+          998.6956083247143,
+          10.653946602701565,
+          -207.69221482973722
+        ],
+        "ground": "Wreck boardwalk \u00b7 offset middle jetty \u00b7 sampled Meshy deck support"
+      },
+      {
+        "name": "Far boardwalk jump",
+        "position": [
+          1001.268664341876,
+          10.662768114249157,
+          -214.30625500203277
+        ],
+        "ground": "Wreck boardwalk \u00b7 far jetty \u00b7 sampled Meshy deck support"
+      },
+      {
+        "name": "Read the gangway crab",
+        "position": [
+          1001.2953643418755,
+          10.458323928201452,
+          -219.49549944647717
+        ],
+        "ground": "Wreck boardwalk \u00b7 far jetty \u00b7 sampled Meshy deck support"
+      },
+      {
+        "name": "Spin through the gangway crab",
+        "position": [
+          1001.2953643418755,
+          10.365247166290104,
+          -222.6942105575881
+        ],
+        "ground": "Wreck boardwalk \u00b7 far jetty \u00b7 sampled Meshy deck support"
+      },
+      {
+        "name": "Crane dock landing",
+        "position": [
+          1000.7718493059917,
+          10.499999904632567,
+          -229.80825334850613
+        ],
+        "ground": "platform"
+      },
+      {
+        "name": "Cargo ferry checkpoint",
+        "position": [
+          1003.6193418909246,
+          10.499999904632567,
+          -231.74712900441048
+        ],
+        "ground": "platform"
+      },
+      {
+        "name": "Crosswise ferry waiting edge",
+        "position": [
+          1000.0507662350203,
+          10.499999904632567,
+          -236.7290549226766
+        ],
+        "ground": "platform"
+      },
+      {
+        "name": "Board the crosswise cargo sling",
+        "position": [
+          1001.7147358262038,
+          10.499999994039536,
+          -243.14305852335855
+        ],
+        "ground": "moving platform"
+      },
+      {
+        "name": "Cargo sling takeoff",
+        "position": [
+          1002.0454236673111,
+          10.499999994039536,
+          -245.9000985245787
+        ],
+        "ground": "moving platform"
+      },
+      {
+        "name": "Crane elbow landing",
+        "position": [
+          1002.295579566438,
+          11,
+          -251.25537173189522
+        ],
+        "ground": "platform"
+      },
+      {
+        "name": "Fore-and-aft ferry waiting edge",
+        "position": [
+          1002.295579566438,
+          11,
+          -257.09308284300624
+        ],
+        "ground": "platform"
+      },
+      {
+        "name": "Board the fore-and-aft cargo sling",
+        "position": [
+          1003.8139546783982,
+          10.999999994039536,
+          -263.63921279043154
+        ],
+        "ground": "moving platform"
+      },
+      {
+        "name": "Fore-and-aft sling takeoff",
+        "position": [
+          1002.6065897713569,
+          10.999999994039536,
+          -266.5715224770072
+        ],
+        "ground": "moving platform"
+      },
+      {
+        "name": "Sorting island landing",
+        "position": [
+          999.7109067250265,
+          11.8,
+          -273.0066016932112
+        ],
+        "ground": "platform"
+      },
+      {
+        "name": "Loose cargo checkpoint",
+        "position": [
+          1001.7224630425058,
+          11.8,
+          -274.7344493464628
+        ],
+        "ground": "platform"
+      },
+      {
+        "name": "Collapsing pallets takeoff",
+        "position": [
+          998.066754053268,
+          11.8,
+          -279.61344193139547
+        ],
+        "ground": "platform"
+      },
+      {
+        "name": "First loose cargo pallet",
+        "position": [
+          998.0009931226174,
+          12.19166667262713,
+          -284.4924787215819
+        ],
+        "ground": "crumble pad"
+      },
+      {
+        "name": "Quick step across the loose pallet",
+        "position": [
+          998.0009931226174,
+          12.012500005960463,
+          -286.5189787215819
+        ],
+        "ground": "crumble pad"
+      },
+      {
+        "name": "Linked collapsing cargo jump",
+        "position": [
+          1001.9976659269752,
+          12.591666672627131,
+          -291.898263471899
+        ],
+        "ground": "crumble pad"
+      },
+      {
+        "name": "Quick step across the loose pallet",
+        "position": [
+          1002.0015095470577,
+          12.412500005960464,
+          -293.92476544393554
+        ],
+        "ground": "crumble pad"
+      },
+      {
+        "name": "Linked collapsing cargo jump",
+        "position": [
+          997.9937114997173,
+          12.991666672627131,
+          -299.3042910369528
+        ],
+        "ground": "crumble pad"
+      },
+      {
+        "name": "Quick step across the loose pallet",
+        "position": [
+          997.9986448330507,
+          12.812500005960464,
+          -301.3307910369528
+        ],
+        "ground": "crumble pad"
+      },
+      {
+        "name": "Linked collapsing cargo jump",
+        "position": [
+          1001.0024344395302,
+          13.391666672627132,
+          -306.704054558754
+        ],
+        "ground": "crumble pad"
+      },
+      {
+        "name": "Final loose cargo edge",
+        "position": [
+          1000.9982908194476,
+          13.200000005960463,
+          -309.0230565307905
+        ],
+        "ground": "crumble pad"
+      },
+      {
+        "name": "Last safe muster landing",
+        "position": [
+          999.9952712343573,
+          13.4,
+          -315.0249460346749
+        ],
+        "ground": "platform"
+      },
+      {
+        "name": "Broken stern checkpoint",
+        "position": [
+          1002.6094390968364,
+          13.4,
+          -316.7393372796016
+        ],
+        "ground": "platform"
+      },
+      {
+        "name": "Stern ascent takeoff",
+        "position": [
+          998.0811494460235,
+          13.4,
+          -320.82498493285334
+        ],
+        "ground": "platform"
+      },
+      {
+        "name": "Stern battlement jump",
+        "position": [
+          995.4209401031511,
+          14.4,
+          -327.26549176296686
+        ],
+        "ground": "platform"
+      },
+      {
+        "name": "Read the stern crab",
+        "position": [
+          995.2111691043697,
+          14.4,
+          -330.2949987422347
+        ],
+        "ground": "platform"
+      },
+      {
+        "name": "Spin across the stern battlement",
+        "position": [
+          997.7218369668485,
+          14.4,
+          -331.9476899871618
+        ],
+        "ground": "platform"
+      },
+      {
+        "name": "Stern cross-deck jump",
+        "position": [
+          1000.0320607267803,
+          15.2,
+          -338.5926451490665
+        ],
+        "ground": "platform"
+      },
+      {
+        "name": "Pass the hopper with landing room",
+        "position": [
+          1000.0950607267796,
+          15.2,
+          -342.59535626017754
+        ],
+        "ground": "platform"
+      },
+      {
+        "name": "High keystone jump",
+        "position": [
+          997.9893468389549,
+          16,
+          -349.2466564522315
+        ],
+        "ground": "platform"
+      },
+      {
+        "name": "High keystone takeoff",
+        "position": [
+          997.9953468389548,
+          16,
+          -352.89226756334244
+        ],
+        "ground": "platform"
+      },
+      {
+        "name": "Treasury departure landing",
+        "position": [
+          999.9915092822414,
+          16,
+          -358.3758806514436
+        ],
+        "ground": "platform"
+      },
+      {
+        "name": "Treasure bridge refuge",
+        "position": [
+          999.9987469476885,
+          16,
+          -362.8940876307116
+        ],
+        "ground": "platform"
+      },
+      {
+        "name": "Escape bridge approach",
+        "position": [
+          1002.912372865955,
+          16,
+          -364.9383966199493
+        ],
+        "ground": "platform"
+      },
+      {
+        "name": "Escape bridge near bank",
+        "position": [
+          1005.9477564350976,
+          16.39321578309645,
+          -369.9157247907429
+        ],
+        "ground": "Bow escape landing"
+      },
+      {
+        "name": "Broken bridge takeoff",
+        "position": [
+          1015.6200312642936,
+          17.025027218042126,
+          -377.68472673678366
+        ],
+        "ground": "Rope bridge near bank"
+      },
+      {
+        "name": "Broken bridge jump",
+        "position": [
+          1019.3266445659586,
+          17.339986029459475,
+          -380.72271125396986
+        ],
+        "ground": "Rope bridge far bank"
+      },
+      {
+        "name": "Treasure tunnel",
+        "position": [
+          1029.920463044242,
+          18,
+          -387.9508165532113
+        ],
+        "ground": "wood"
+      },
+      {
+        "name": "Treasure checkpoint",
+        "position": [
+          1031.9725669142292,
+          18,
+          -395.6964778576029
+        ],
+        "ground": "wood"
+      },
+      {
+        "name": "Enter the hoard",
+        "position": [
+          1032.0047066199227,
+          18.09504250054713,
+          -411.8933409982959
+        ],
+        "ground": "Worn royal vault terrace"
+      },
+      {
+        "name": "Climb the treasure dais",
+        "position": [
+          1032.0050886361703,
+          19.5903416695759,
+          -424.8892598305219
+        ],
+        "ground": "Worn royal vault terrace"
+      }
+    ]
+  },
+  "frames": 6878,
+  "seconds": 114.63333333333333,
+  "largestStep": 0.7267316013195209,
+  "tuningUnchanged": true,
+  "components": 1186
+}

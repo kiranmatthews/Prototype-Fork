@@ -15,7 +15,7 @@ import { DROWNED_CROWN_ARCH_MODELS } from '../drownedCrownArch.generated';
 import { pirateBoardwalkModule } from './pirate-boardwalk-modules';
 
 const C:CustomComponent[]=PIRATE_HARBOUR_COMPONENTS.map(c=>c.t==='camnode'&&c.cameraView?{...c,grp:12}:c),M=pirateMeshes(C);
-const groups:CustomGroup[]=['Smugglers tunnels','Moonpool cavern','The Drowned Crown · hull','Broken upper decks','Flooded cargo hold','Captains quarterdeck','Treasure passage','Port Royal · customs quay','Port Royal · broken cargo jetty','Port Royal · fort sea gate','Camera · movement spine','Camera · framing views'].map((nm,i)=>({id:i+1,nm,editorOnly:true}));
+const groups:CustomGroup[]=['Smugglers tunnels','Moonpool cavern','The Drowned Crown · hull','Cargo stepping islands','Moving freight and collapsing pallets','Captain’s optional consignment','Treasure passage','Port Royal · customs quay','Port Royal · broken cargo jetty','Port Royal · fort sea gate','Camera · movement spine','Camera · framing views'].map((nm,i)=>({id:i+1,nm,editorOnly:true}));
 let grp=1;const section=(n:number)=>{grp=n;M.setGroup(n);};
 const add=(c:CustomComponent)=>C.push({grp,...c});
 function prop(kind:keyof typeof PIRATE_PROPS,p:P,size:number,yaw=0){

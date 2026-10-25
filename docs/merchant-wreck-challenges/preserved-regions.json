@@ -1,0 +1,25 @@
+{
+  "baseline": "60d366ae",
+  "regions": [
+    {
+      "name": "Opening and scenic exterior",
+      "components": 706,
+      "allArtGeometryMaterialsAndCameraFieldsPreserved": true,
+      "sourceSha256": "3f044ea3048ec5c74e5c8a43f89b9174872acdad27019eca974fde1038b46b0a"
+    },
+    {
+      "name": "Treasure bridge and finale",
+      "components": 302,
+      "allArtGeometryMaterialsAndCameraFieldsPreserved": true,
+      "sourceSha256": "33d5512428dc0e1d55261134edb907cbe29b14117868502dfb50086883cdffc9"
+    }
+  ],
+  "treasuryRigidTranslation": [
+    148,
+    0,
+    -256
+  ],
+  "changedMetadata": [
+    "groups"
+  ]
+}

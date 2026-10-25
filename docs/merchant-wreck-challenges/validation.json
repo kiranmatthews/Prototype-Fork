@@ -1,0 +1,25 @@
+{
+  "checkLevels": "passed",
+  "productionBuild": "passed",
+  "cameraRig": "passed",
+  "treasuryLighting": "passed",
+  "enemyPatrols": 13,
+  "optionalRoutesAndRecovery": "passed",
+  "fullRenderViews": 15,
+  "consoleErrors": [],
+  "fullSuiteRun": false,
+  "buildStamp": "Codex/sol fork \u00b7 build 10-25 05:06 UTC",
+  "finalJoin": "passed: 2205 native input frames, zero deaths",
+  "finalFullRenderViews": [
+    "broadside-timber",
+    "escape-bridge",
+    "treasury"
+  ],
+  "continuousBrowser": {
+    "frames": 21536,
+    "checkpoints": 17,
+    "deaths": 0,
+    "consoleErrors": []
+  },
+  "totalDistinctFullRenderViews": 16
+}

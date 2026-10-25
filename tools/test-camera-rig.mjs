@@ -199,6 +199,17 @@ try {
   near(camera.position.distanceTo(subject.clone().add(new THREE.Vector3(0,1.3,0))),14.5,'restart restored a distant establishing shot');
   follower.restore(camera);
 
+  // The broadside cargo course needs the next landing visible at its authored
+  // scale. The opt-in must not change legacy side views or the underlying rig.
+  const broadside={...tracking,cameraPosition:[0,8,25],cameraTarget:[0,3,0],cameraFollowDistance:18,cameraKeepDistance:true};
+  const sideSubject=new THREE.Vector3(0,0,0),sideTarget=new THREE.Vector3(0,1.3,0);
+  follower.apply(camera,{view:broadside,weight:1},sideSubject,true,undefined,{travel:{x:1,z:0},distance:6});
+  near(camera.position.distanceTo(sideTarget),18,'authored broadside scale was lost');
+  follower.restore(camera);
+  follower.apply(camera,{view:{...broadside,cameraKeepDistance:false},weight:1},sideSubject,true,undefined,{travel:{x:1,z:0},distance:6});
+  near(camera.position.distanceTo(sideTarget),6,'legacy side view changed scale');
+  follower.restore(camera);
+
   const legacy = { camDist: 3.8, camHeight: 5.1, camTilt: 3.3, camOffset: -1.25 };
   near(legacyCameraRigTuning(legacy).camDist, 5.05, 'legacy offset was not folded into distance');
   near(legacyCameraRigTuning(legacy).camPitch, saved.camPitch, 'default shot changed', 0.005);

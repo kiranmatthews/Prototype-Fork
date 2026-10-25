@@ -111,9 +111,9 @@ try {
   shadows.render([sun],scene,new THREE.PerspectiveCamera());assert.equal(draws,1);assert.deepEqual(state(),before);
   kit.cells.length=0;kit.dispose();kit.withLowDetailShadows(()=>assert.deepEqual(state(),before),[sun]);
   assert.deepEqual(data,original,'source and editor capture remain unchanged');
-  // Current full source roof must pass the same strict triangle/field guards.
+  // The new cutaway blockout deliberately leaves the hold open overhead.
   const pack=JSON.parse(await readFile(new URL('../public/levels.json',import.meta.url),'utf8'));
-  assert.ok(createHoldShadowOccluder(pack.levels.find(l=>l.id==='drowned-crown').data),'current authored ceiling accepted');
+  assert.equal(createHoldShadowOccluder(pack.levels.find(l=>l.id==='drowned-crown').data),undefined,'the open greybox hold has no ceiling shadow occluder');
   cell.dispose();far.dispose();cell.geometry.dispose();cell.material.dispose();owner.geometry.dispose();owner.material.dispose();
   console.log('Planar shadow occlusion: geometry, holes, cache invalidation, light/ceiling guards, actual shadow scope and source integrity passed.');
 } finally {await server.close();await rm(cacheDir,{recursive:true,force:true});}

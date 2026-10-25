@@ -1,0 +1,73 @@
+{
+  "cases": [
+    {
+      "name": "Bilge death and banked checkpoint respawn",
+      "position": [
+        1004,
+        8.1,
+        -129
+      ],
+      "deaths": 1
+    },
+    {
+      "name": "Solid cargo collision",
+      "position": [
+        1004.345,
+        8,
+        -118
+      ],
+      "deaths": 0
+    },
+    {
+      "name": "Raised crystal route",
+      "position": [
+        986.3840857814303,
+        13.8,
+        -279.133264983781
+      ],
+      "deaths": 0
+    },
+    {
+      "name": "Crystal loop returns to the refuge",
+      "position": [
+        996.355,
+        11.8,
+        -278.979570135856
+      ],
+      "deaths": 0
+    },
+    {
+      "name": "Deliberate bonus landing",
+      "position": [
+        1009.4892062561311,
+        12.849999998658896,
+        -277.9604335295474
+      ],
+      "deaths": 0
+    },
+    {
+      "name": "Loose cargo actually collapses",
+      "position": [
+        998,
+        11.837500005960463,
+        -285.5
+      ],
+      "deaths": 0
+    }
+  ],
+  "enemies": [
+    "Wreck encounter · crab beyond the first landing",
+    "Wreck encounter · turtle guards the right of the elbow",
+    "Wreck encounter · single crab on the far gangway",
+    "Wreck encounter · turtle leaves the left lane open",
+    "Wreck encounter · stern crab beyond touchdown",
+    "Wreck encounter · stern hopper on the far right",
+    "Wreck encounter · crab at the end of the cargo tongue",
+    "Wreck encounter · turtle on the stamp bed shoulder",
+    "Wreck encounter · turtle on the alternate high shelf",
+    "Wreck encounter · hopper beyond the diamond landing",
+    "Wreck encounter · turtle guards the last jetty departure",
+    "Wreck encounter · broadside crab beyond touchdown",
+    "Wreck encounter · broadside hopper guards the far ledge"
+  ]
+}

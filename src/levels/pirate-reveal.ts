@@ -54,8 +54,8 @@ export function stageDrownedReveal(source:CustomComponent[]):CustomComponent[]{
   }else out.push(c);
  }
  for(const c of [...PIRATE_INTERIOR_COMPONENTS,...PIRATE_INTERIOR_SCENERY])out.push(shifted(c));
- for(const p of [[0,16,-376],[30,18,-387],[32,18,-406],[32,20,-438]] as P[])
-  out.push({t:'camnode',p:[p[0]+OFFSET,p[1],p[2]],radius:5,grp:11,nm:'New ship interior · treasury approach spine'});
+ for(const p of [[0,8,-258],[30,10,-269],[32,10,-288],[32,12,-320]] as P[])
+  out.push(vault({t:'camnode',p,radius:5,grp:11,nm:'New ship interior · treasury approach spine'}));
  const prop=(dkind:NonNullable<CustomComponent['dkind']>,p:P,s:P,yaw=0,nm='Boarding passage')=>out.push({t:'decor',dkind,p,s,yaw,scenerySolid:false,grp:2,nm});
  // The boarding camera looks across the north end of the cave shell.
  // Close its exposed water horizon with one uniformly scaled native rock.
