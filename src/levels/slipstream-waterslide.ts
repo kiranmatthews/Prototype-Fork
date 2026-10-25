@@ -7,6 +7,7 @@ import trim from './slipstream-waterslide-trim.json';
 import shallowPools from './slipstream-shallow-pools.json';
 import {dressTropicalWaterpark} from './slipstream-island';
 import {polishSlipstream} from './slipstream-polish';
+import {buildSlipstreamMidground} from './slipstream-midground';
 
 type Pool={start:RacePoint;end:RacePoint;width:number;surface:number;floor:number;landing:RacePoint;takeoff:RacePoint};
 type Asset=keyof typeof WATERSLIDE_ASSETS;
@@ -89,6 +90,7 @@ export function dressSlipstreamWaterslide(components:CustomComponent[],line:Race
   components.push(...trim as CustomComponent[]);
   dressTropicalWaterpark(components,line);
   polishSlipstream(components,line);
+ components.push(...buildSlipstreamMidground(line,components));
   // Measured horizontal rainwater pockets; the ride and its eight swim-out
   // catch pools retain their original collision and traction.
   components.push(...structuredClone(shallowPools) as CustomComponent[]);

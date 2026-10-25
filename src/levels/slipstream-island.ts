@@ -9,6 +9,14 @@ import supportExclusions from './slipstream-support-exclusions.json';
 
 // Intervals measured against the course's other legs and its actual jump gaps.
 export const WATERPARK_TUNNELS = [[180,400],[680,890],[1210,1365],[1870,2050],[2320,2460],[3140,3310],[3500,3700]] as const;
+// Corroded upper panels only. The original floor and lower riding walls stay intact.
+export const WATERPARK_SKYLIGHTS=WATERPARK_TUNNELS.flatMap(([a,b],tunnel)=>
+ Array.from({length:Math.floor((b-a-25)/52)},(_,i)=>({tunnel,s:a+25+i*52,length:18+(i%2)*6,angle:Math.PI*(i%2?.42:.58),arc:Math.PI*.22})));
+export const waterparkRoofOpening=(s:number,angle:number,tunnel:number)=>WATERPARK_SKYLIGHTS.some(g=>{
+ if(g.tunnel!==tunnel||angle<.1*Math.PI||angle>.9*Math.PI)return false;
+ const x=(s-g.s)/(g.length/2),y=(angle-g.angle)/g.arc;
+ return x*x+y*y<1+.14*Math.sin(s*1.3+angle*21);
+});
 const V=(p:RacePoint)=>new THREE.Vector3(...p);
 const round=(x:number)=>Math.round(x*10000)/10000;
 const tuple=(p:THREE.Vector3)=>p.toArray().map(round) as RacePoint;
@@ -25,12 +33,12 @@ export const WATERPARK_ISLAND_OCEAN_LOOK:Partial<UnityOceanParams>={
 };
 
 export const WATERPARK_ISLAND_LOOK:Pick<CustomLevelData,'sky'|'ocean'|'atmosphere'|'cameraRig'|'keepPlayFog'>={
- sky:'coast',keepPlayFog:true,
+ sky:'waterslide-island',keepPlayFog:true,
  cameraRig:{camDist:6.4,camHeight:6.3,camPitch:21,camFov:54},
  // Keep the detailed lagoon's fading edges inside the camera range. The
  // existing surrounding horizon supplies the sea beyond this coastal basin.
  ocean:{p:[-900,128,-2700],length:1800,width:1800,seaward:1,geometryVersion:2,sourceCoordinates:'three',look:'waterpark-island',horizonMode:'surround',shoreGeometry:'ground',longitudinalSegments:180,lateralSegments:96},
- atmosphere:{fogEnabled:true,fogNear:95,fogFar:480,fogColor:'#8ebbc5',ambientSky:'#c1e0da',ambientGround:'#82754e',ambientIntensity:.94,sunColor:'#ffe4ad',sunIntensity:2.25,sunDirection:[-.42,.72,.55],fillColor:'#a5dadd',fillIntensity:.38,shadowStrength:.78,drawDistance:2000,backdrop:'painted sky',fallbackRidges:false},
+ atmosphere:{fogEnabled:true,fogNear:120,fogFar:620,fogColor:'#9bc9cc',ambientSky:'#b9dbdf',ambientGround:'#73704b',ambientIntensity:.72,sunColor:'#ffe3ad',sunIntensity:2.65,sunDirection:[-.42,.82,.38],fillColor:'#8fcbd4',fillIntensity:.26,shadowStrength:.9,drawDistance:2000,backdrop:'painted sky',fallbackRidges:false},
 };
 
 /** Level data only: the race floor, movement model and jump gaps are unchanged. */
@@ -90,13 +98,10 @@ export function dressTropicalWaterpark(C:CustomComponent[],line:RaceKnot[]):void
   }
   add({t:'mesh',p,vertices,indices,colors,tex:'solid',solid:true,outOfBounds:true,edgeGrinding:false,doubleSided:true,grp:432,nm:'Tropical forest / sculpted understory floor'});
  }
- // Mattes stay outside the complete route footprint. Near plants provide
- // parallax and cast actual shadows; the paintings establish distant depth.
+ // Existing near cliff gardens are retained; the new midground is all 3D.
  for(let s=60;s<3060;s+=74){
   const p=course.sample(s),f=course.tangent(s).setY(0).normalize(),right=new THREE.Vector3(-f.z,0,f.x);
   for(const side of [-1,1]){
-   const q=p.clone().addScaledVector(right,side*(42+noise(s+side)*9));q.y=forestHeight(q.x,q.z)-5;
-   if(safeScenery(q,4,44))add({t:'decor',dkind:'waterslidecanopymatte',p:tuple(q),w:.9+noise(s)*.2,yaw:yawToward(q,p),scenerySolid:false,grp:432,nm:'Tropical forest / layered canopy'});
    const groveSize=WATERSLIDE_ASSETS.waterslidetropicalgrove.size,cliffSize=WATERSLIDE_ASSETS.waterslideplantedcliff.size;
    for(const [kind,size,scale,forward] of [
     ['waterslideplantedcliff',cliffSize,1.45+noise(s+side)*.45,0],
@@ -108,11 +113,7 @@ export function dressTropicalWaterpark(C:CustomComponent[],line:RaceKnot[]):void
    }
   }
  }
- for(let s=120;s<3060;s+=360){const p=course.sample(s);for(const side of [-1,1]){
-  const at=new THREE.Vector3(side*(210+(Math.floor(s/360)%2)*12),p.y-110,p.z);add({t:'decor',dkind:'waterslidecoastmatte',p:tuple(at),s:[420,210,.02],yaw:side>0?-90:90,scenerySolid:false,grp:433,nm:'Tropical island / distant coast'});
- }}
- // A distant island vista behind the finish, seen beyond the final open run.
- const end=course.sample(course.length);add({t:'decor',dkind:'waterslidecoastmatte',p:[end.x,end.y-105,end.z-200],s:[500,250,.02],scenerySolid:false,grp:433,nm:'Tropical island / lagoon beyond the finish'});
+ const end=course.sample(course.length);
 
  const profileCache=new Map<number,{left:number;right:number;heights:number[]}>();
  const profileAt=(s:number)=>{
@@ -135,6 +136,15 @@ export function dressTropicalWaterpark(C:CustomComponent[],line:RaceKnot[]):void
  const shell=(start:number,end:number,skin:'inner'|'outer'|'collar'|'inner-band',index:number)=>{
   const origin=course.sample(start),vertices:number[]=[],indices:number[]=[],uvs:number[]=[],colors:number[]=[];
   const angular=32,rows=Math.max(1,Math.ceil((end-start)/4)),offset=skin==='outer'?.45:skin==='collar'?.68:skin==='inner-band'?-.08:0;
+  const ds=(end-start)/rows,da=Math.PI*2/angular,rimVertices:number[]=[],rimIndices:number[]=[],rimColors:number[]=[];
+  const rim=(s0:number,a0:number,s1:number,a1:number)=>{
+   const n=rimVertices.length/3;
+   for(const [s,a,t]of [[s0,a0,-.035],[s1,a1,-.035],[s0,a0,.48],[s1,a1,.48]]){
+    rimVertices.push(...arcPoint(s,a,t).sub(origin).toArray().map(round));
+    const c=new THREE.Color('#713d20').lerp(new THREE.Color('#d78b42'),noise(s+a)*.7);rimColors.push(c.r,c.g,c.b);
+   }
+   rimIndices.push(n,n+1,n+2,n+2,n+1,n+3);
+  };
   for(let j=0;j<=rows;j++){
    let arcLength=0,previous:THREE.Vector3|undefined;
    for(let i=0;i<=angular;i++){
@@ -142,24 +152,46 @@ export function dressTropicalWaterpark(C:CustomComponent[],line:RaceKnot[]):void
     if(previous)arcLength+=point.distanceTo(previous);previous=point;
     vertices.push(...point.toArray().map(round));uvs.push(round(arcLength/5),round((s-WATERPARK_TUNNELS[index][0])/5));
     const shade=skin==='inner'?.9+.1*Math.max(0,-Math.sin(a)):.98;
-    const col=new THREE.Color(skin==='collar'||skin==='inner-band'?'#ebdfba':skin==='inner'?'#d4e8dd':'#c2dcd3').multiplyScalar(shade);colors.push(col.r,col.g,col.b);
-    if(j&&i){const b=j*(angular+1)+i,c=b-(angular+1);if(skin==='inner'||skin==='inner-band')indices.push(c-1,c,b-1,b-1,c,b);else indices.push(c-1,b-1,c,c,b-1,b);}
+    const col=new THREE.Color(skin==='collar'||skin==='inner-band'?'#ebdfba':skin==='inner'?'#bdcfbf':'#c2dcd3').multiplyScalar(shade);
+    if(waterparkRoofOpening(s,a,index)||waterparkRoofOpening(s-3,a,index)||waterparkRoofOpening(s+3,a,index)||waterparkRoofOpening(s,a-.14,index)||waterparkRoofOpening(s,a+.14,index))col.lerp(new THREE.Color('#9f572a'),.74+noise(s+a)*.2);
+    colors.push(col.r,col.g,col.b);
+    if(j&&i){
+     const midS=s-ds/2,midA=a-da/2;if(waterparkRoofOpening(midS,midA,index))continue;
+     const b=j*(angular+1)+i,c=b-(angular+1);if(skin==='inner'||skin==='inner-band')indices.push(c-1,c,b-1,b-1,c,b);else indices.push(c-1,b-1,c,c,b-1,b);
+     if(skin==='inner'){
+      if(waterparkRoofOpening(midS-ds,midA,index))rim(s-ds,a-da,s-ds,a);
+      if(waterparkRoofOpening(midS+ds,midA,index))rim(s,a-da,s,a);
+      if(waterparkRoofOpening(midS,midA-da,index))rim(s-ds,a-da,s,a-da);
+      if(waterparkRoofOpening(midS,midA+da,index))rim(s-ds,a,s,a);
+     }
+    }
    }
   }
-  add({t:'mesh',p:tuple(origin),vertices,indices,uvs,colors,tex:skin==='collar'||skin==='inner-band'?'solid':'waterslide-fiberglass',emissive:skin==='inner'?'#387c78':skin==='inner-band'?'#403d2e':'#000000',solid:false,scenerySolid:skin==='inner',edgeGrinding:false,doubleSided:false,grp:434,nm:`Enclosed flume ${index+1} / ${skin}`});
+  if(indices.length)add({t:'mesh',p:tuple(origin),vertices,indices,uvs,colors,tex:skin==='collar'||skin==='inner-band'?'solid':'waterslide-fiberglass',emissive:skin==='inner'?'#173d38':skin==='inner-band'?'#28271d':'#000000',solid:false,scenerySolid:skin==='inner',edgeGrinding:false,doubleSided:false,grp:434,nm:`Enclosed flume ${index+1} / ${skin}`});
+  if(rimIndices.length)add({t:'mesh',p:tuple(origin),vertices:rimVertices,indices:rimIndices,colors:rimColors,tex:'solid',solid:false,scenerySolid:false,doubleSided:true,grp:434,nm:`Enclosed flume ${index+1} / corroded broken panel edges`});
  };
  for(const [index,[a,b]] of WATERPARK_TUNNELS.entries()){
   for(let s=a;s<b;s+=36){shell(s,Math.min(b,s+36),'inner',index);shell(s,Math.min(b,s+36),'outer',index);}
   // Compact climbing growth sits against the real liner, above the ride.
   // Reuse the same flowers as the entrances and old aqueduct piers.
-  for(let s=a+45;s<b-15;s+=62){
-   const side=Math.floor(s/62)%2?1:-1,at=arcPoint(s,side>0?Math.PI*.23:Math.PI*.77,-.12);
-   at.y-=2.2;
-   add({t:'decor',dkind:'bayvine',p:tuple(at),w:.65,yaw:yawToward(at,course.sample(s)),scenerySolid:false,grp:436,nm:'Island garden / sheltered flume vine'});
+  for(let s=a+10;s<b-5;s+=18){
+   const side=Math.floor(s/18)%2?1:-1,at=arcPoint(s,side>0?Math.PI*.13:Math.PI*.87,-.09);
+   at.y-=2.8;
+   add({t:'decor',dkind:'bayvine',p:tuple(at),s:[3.4,5.7,1.6],yaw:yawToward(at,course.sample(s)),scenerySolid:false,grp:436,nm:'Island garden / sheltered flume vine'});
+   if(Math.floor(s/18)%3===1){const p=at.clone();p.y+=1.5;
+    add({t:'decor',dkind:'sunnyhibiscus',p:tuple(p),w:1.15,yaw:s*1.13,scenerySolid:false,grp:436,nm:'Island garden / upper-wall hibiscus'});
+   }
+  }
+  const sun=new THREE.Vector3(...WATERPARK_ISLAND_LOOK.atmosphere!.sunDirection!).normalize();
+  for(const g of WATERPARK_SKYLIGHTS.filter(g=>g.tunnel===index)){
+   const top=arcPoint(g.s,g.angle,-.15),length=Math.max(6,(top.y-course.sample(g.s).y-2)/sun.y),base=top.clone().addScaledVector(sun,-length);
+   add({t:'decor',dkind:'treehousetrialssunshaft',p:tuple(base),s:[4.5,length,.02],yaw:Math.atan2(sun.z,-sun.x)*180/Math.PI,amp:Math.acos(sun.y)*180/Math.PI,color:'#ffe4ad',scenerySolid:false,castShadow:false,grp:434,nm:`Enclosed flume ${index+1} / daylight through broken panel`});
+   const lip=arcPoint(g.s+g.length*.35,g.angle,.42);lip.y-=3.8;
+   add({t:'decor',dkind:'bayvine',p:tuple(lip),s:[2.2,4.3,1.1],yaw:g.s,scenerySolid:false,grp:436,nm:'Island garden / skylight trailing vine'});
   }
   for(let s=a;s<=b;s+=24){shell(Math.max(a,s-.25),Math.min(b,s+.25),'collar',index);shell(Math.max(a,s-.18),Math.min(b,s+.18),'inner-band',index);}
   for(const s of [a,b]){
-   const p=course.sample(s),f=course.tangent(s).setY(0).normalize(),half=course.width(s)/2;
+   const f=course.tangent(s).setY(0).normalize();
    const outward=f.clone().multiplyScalar(s===a?-1:1);
    const rightFoot=arcPoint(s,0),leftFoot=arcPoint(s,Math.PI),centre=rightFoot.clone().add(leftFoot).multiplyScalar(.5);
    const radius=rightFoot.clone().sub(leftFoot).setY(0).length()/2;
@@ -167,10 +199,10 @@ export function dressTropicalWaterpark(C:CustomComponent[],line:RaceKnot[]):void
     rise:arcPoint(s,Math.PI/2).y-centre.y,bank:(rightFoot.y-leftFoot.y)/2*(s===a?1:-1),
     yaw:Math.atan2(outward.x,outward.z)*180/Math.PI,seed:s,
     solid:false,scenerySolid:false,edgeGrinding:false,castShadow:true,grp:434,nm:`Enclosed flume ${index+1}`});
-   const vine=p.clone().addScaledVector(f,s===a?-.75:.75);vine.y+=7;
-   add({t:'decor',dkind:'waterslideportalvines',p:tuple(vine),s:[(half+6)*2,12,.02],yaw:Math.atan2(-f.x,-f.z)*180/Math.PI+(s===b?180:0),scenerySolid:false,grp:434,nm:'Tunnel portal / hanging garden'});
    for(const side of [-1,1]){const at=arcPoint(s,side>0?Math.PI*.22:Math.PI*.78,.45);
     if(safeScenery(at,3,6))add({t:'decor',dkind:'waterslidetropicalgrove',p:tuple(at),w:.45,yaw:s*1.13,scenerySolid:false,grp:434,nm:'Tunnel portal / roof-rooted banana leaves'});
+    const hanging=at.clone();hanging.y-=4.8;
+    add({t:'decor',dkind:'bayvine',p:tuple(hanging),s:[4.7,6.5,1.6],yaw:Math.atan2(outward.x,outward.z)*180/Math.PI,scenerySolid:false,grp:436,nm:'Island garden / three-dimensional portal vines'});
    }
   }
  }
@@ -200,10 +232,6 @@ export function dressTropicalWaterpark(C:CustomComponent[],line:RaceKnot[]):void
     if(row&&k){const b=row*13+k,c=b-13;indices.push(c-1,b-1,c,c,b-1,b);}
    }
    add({t:'mesh',p:tuple(bottom),vertices,indices,colors,tex:'solid',solid:false,scenerySolid:false,doubleSided:true,grp:432,nm:'Tropical gorge / continuous cliff root'});
-   const toward=p.clone().sub(at).setY(0).normalize();
-   for(let y=bottom.y;y<at.y-12;y+=radius*2.9){const t=(y-bottom.y)/(at.y-bottom.y),skin=radius*(1.25-.25*t)*1.05+.8;const garden=at.clone().addScaledVector(toward,skin);garden.y=y;
-    add({t:'decor',dkind:'waterslidecliffmatte',p:tuple(garden),s:[radius*2.2,radius*3.3,.02],yaw:yawToward(garden,p),color:'#c3c9b2',scenerySolid:false,grp:432,nm:'Tropical gorge / rooted cliff garden'});
-   }
 
   }
  }
@@ -266,5 +294,10 @@ export function dressTropicalWaterpark(C:CustomComponent[],line:RaceKnot[]):void
    add({t:'decor',dkind:'block',p:tuple(foot.clone().setY(bottom+height/2)),s:[width,height,width],tex:'metal',color:'#799591',scenerySolid:false,grp:430,nm:'Weathered structural column'});
   }
  }
+
+ // The former cylindrical visual skirts looked like flat walls from the coils.
+ // Their replacement is the independently grounded, textured island geology.
+ // Keep the earlier terrain-root calculation identical before retiring them.
+ for(let i=C.length-1;i>=0;i--)if(C[i].nm==='Tropical gorge / continuous cliff root'||C[i].nm==='Tropical gorge / planted volcanic wall')C.splice(i,1);
 
 }

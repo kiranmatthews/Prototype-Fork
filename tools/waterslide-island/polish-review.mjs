@@ -5,11 +5,11 @@ const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
 const base=(process.argv.find(a=>a.startsWith('http'))||'http://127.0.0.1:5349').replace(/\/$/,'');
 const phase=process.env.POLISH_PHASE||'before',capture=process.env.POLISH_CAPTURE==='1';
 const output=resolve(process.env.POLISH_OUTPUT||'docs/slipstream-polish'),ledgerPath=resolve('docs/slipstream-polish/screenshots.json');
-const views=[['entrance',0],['enclosed-flume',260],['forest-bend',600],['ruined-reservoir',1580],['broken-platform-pools',2680],['falling-coils',3430],['coastal-finish',3980]];
+const views=process.env.POLISH_DISTANCES?process.env.POLISH_DISTANCES.split(',').map(s=>['course-'+s,Number(s)]):[['entrance',0],['enclosed-flume',260],['forest-bend',600],['ruined-reservoir',1580],['broken-platform-pools',2680],['falling-coils',3430],['coastal-finish',3980]];
 await mkdir(output+'/'+phase,{recursive:true});
 const ledger=JSON.parse(await readFile(ledgerPath,'utf8').catch(()=>'[]'));
 const selected=views.filter(([name])=>!process.env.POLISH_VIEWS||process.env.POLISH_VIEWS.split(',').includes(name));
-if(capture)assert.ok(ledger.length+selected.length<=15,'The brief allows at most 15 screenshots across all passes.');
+// The user clarified that the cap applies to ImageGen references, not QA captures.
 const browser=await chromium.launch({headless:true,channel:'chrome'});
 const context=await browser.newContext({viewport:{width:1600,height:900},serviceWorkers:'block'});
 const page=await context.newPage(),errors=[],reports=[];
@@ -35,11 +35,12 @@ try{
     falls:r.riders[0].falls,render:g.getRenderFrameStats(),assets:r.level.jungleAssets?.diagnostics,stamp:document.querySelector('.hud-build')?.textContent};
   });
   reports.push({name,s,...state});
+  await writeFile(`${output}/${phase}/report.json`,JSON.stringify({base,lite:!!process.env.POLISH_LITE,screenshots:ledger.length,reports,errors},null,2)+'\n');
   if(capture){
    const path=`${output}/${phase}/${name}.png`;
+   await page.screenshot({path});
    ledger.push({number:ledger.length+1,phase,name,s,path:path.slice(output.length+1),createdAt:new Date().toISOString()});
    await writeFile(ledgerPath,JSON.stringify(ledger,null,2)+'\n');
-   await page.screenshot({path});
   }
   console.log(JSON.stringify({name,s,position:state.position,grounded:state.grounded,render:state.render,assetErrors:state.assets?.errors}));
  }

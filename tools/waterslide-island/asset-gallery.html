@@ -1,0 +1,16 @@
+<!doctype html><html><head><style>body{margin:0;background:#243b45;color:white;font:16px sans-serif}main{display:grid;grid-template-columns:repeat(3,1fr)}section{position:relative;height:420px}span{position:absolute;bottom:12px;left:16px}canvas{width:100%;height:100%}</style></head><body><main></main><script type="module">
+import * as THREE from '/node_modules/three/build/three.module.js';
+import {GLTFLoader} from '/node_modules/three/examples/jsm/loaders/GLTFLoader.js';
+import {JUNGLE_ASSETS} from '/src/jungleAssets.ts';
+const kinds=['waterslideislandheadland','coastspire','coastcliff','crowncrashheadland','crowncrashcavernrock','crownheroheadland'];
+const far=new URLSearchParams(location.search).has('far');
+await Promise.all(kinds.map(async kind=>{
+ const section=document.createElement('section');section.innerHTML='<span>'+kind+'</span>';document.querySelector('main').append(section);
+ const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setSize(533,420);renderer.setPixelRatio(1);section.append(renderer.domElement);
+ const scene=new THREE.Scene();scene.background=new THREE.Color('#97b8b8');scene.add(new THREE.HemisphereLight('#d1ebed','#83774b',1));const sun=new THREE.DirectionalLight('#ffe0ad',2.1);sun.position.set(-4,7,6);scene.add(sun);
+ const gltf=await new GLTFLoader().loadAsync('/jungle-kit/'+JUNGLE_ASSETS[kind].file+'.glb');gltf.scene.traverse(o=>{if((far?/LOD0/i:/LOD[1-9]/i).test(o.name))o.visible=false;});
+ const bounds=new THREE.Box3().setFromObject(gltf.scene),size=bounds.getSize(new THREE.Vector3()),center=bounds.getCenter(new THREE.Vector3());
+ gltf.scene.position.sub(center);const group=new THREE.Group();group.add(gltf.scene);group.scale.setScalar(25/Math.max(size.x,size.y,size.z));scene.add(group);
+ const camera=new THREE.PerspectiveCamera(38,533/420,.1,200);camera.position.set(20,14,33);camera.lookAt(0,0,0);renderer.render(scene,camera);
+}));window.ready=true;
+</script></body></html>

@@ -1,0 +1,134 @@
+{
+  "base": "http://127.0.0.1:5349",
+  "lite": false,
+  "screenshots": 26,
+  "reports": [
+    {
+      "name": "forest-bend",
+      "s": 600,
+      "position": [
+        15.910076014236067,
+        854.3620996227241,
+        -325.37241552491105
+      ],
+      "camera": [
+        16.64715744329225,
+        860.6620996227241,
+        -319.01500166651385
+      ],
+      "grounded": true,
+      "state": "ride",
+      "falls": 0,
+      "render": {
+        "frame": 2160,
+        "calls": 934,
+        "triangles": 2725551,
+        "points": 0,
+        "lines": 0
+      },
+      "assets": {
+        "components": 2046,
+        "placements": 2046,
+        "ready": 730,
+        "skipped": 0,
+        "draws": 652,
+        "triangles": 2982610,
+        "allLodTriangles": 6529067,
+        "cells": 1629,
+        "residentCells": 572,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 9,
+        "textureMiB": 202.67,
+        "errors": [],
+        "windTime": 1.3547999999523164
+      },
+      "stamp": "Codex/sol fork · build 10-25 01:17 UTC"
+    },
+    {
+      "name": "broken-platform-pools",
+      "s": 2680,
+      "position": [
+        16,
+        699.3583333452543,
+        -2184.9349487165887
+      ],
+      "camera": [
+        16,
+        705.657500011921,
+        -2178.5349487165886
+      ],
+      "grounded": true,
+      "state": "ride",
+      "falls": 0,
+      "render": {
+        "frame": 3627,
+        "calls": 885,
+        "triangles": 2665553,
+        "points": 0,
+        "lines": 0
+      },
+      "assets": {
+        "components": 2046,
+        "placements": 2046,
+        "ready": 971,
+        "skipped": 0,
+        "draws": 844,
+        "triangles": 3180689,
+        "allLodTriangles": 8041118,
+        "cells": 1629,
+        "residentCells": 774,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 11,
+        "textureMiB": 196.33,
+        "errors": [],
+        "windTime": 1.9381333332856476
+      },
+      "stamp": "Codex/sol fork · build 10-25 01:17 UTC"
+    },
+    {
+      "name": "falling-coils",
+      "s": 3430,
+      "position": [
+        7.267503994331445,
+        466.7847191786571,
+        -2594.6203938983995
+      ],
+      "camera": [
+        5.206905318675421,
+        473.0847191786571,
+        -2588.5611915500795
+      ],
+      "grounded": true,
+      "state": "ride",
+      "falls": 0,
+      "render": {
+        "frame": 5024,
+        "calls": 459,
+        "triangles": 1406352,
+        "points": 0,
+        "lines": 0
+      },
+      "assets": {
+        "components": 2046,
+        "placements": 2046,
+        "ready": 833,
+        "skipped": 0,
+        "draws": 721,
+        "triangles": 2130035,
+        "allLodTriangles": 6668819,
+        "cells": 1629,
+        "residentCells": 673,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 13,
+        "textureMiB": 214,
+        "errors": [],
+        "windTime": 2.521466666618979
+      },
+      "stamp": "Codex/sol fork · build 10-25 01:17 UTC"
+    }
+  ],
+  "errors": []
+}

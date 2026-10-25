@@ -1098,7 +1098,7 @@ export interface CustomGroup {
 // ---- TIME OF DAY ----------------------------------------------------------
 // Authored sky selection and shared lighting presets. Each painting declares
 // its own horizon geometry in levelAtmosphere.ts.
-export const SKY_PRESETS = ["day", "sunset", "night", "coast", "clouds", "carlisle", "haunted", "coastal-town", "pirate", "country-club"] as const;
+export const SKY_PRESETS = ["day", "sunset", "night", "coast", "clouds", "carlisle", "haunted", "coastal-town", "pirate", "country-club", "waterslide-island"] as const;
 export type SkyPreset = (typeof SKY_PRESETS)[number];
 export const DEFAULT_SKY: SkyPreset = "sunset";
 export function asSkyPreset(v: unknown): SkyPreset {
@@ -6419,7 +6419,7 @@ export class Level {
       addJungleDapple(material,this.jungleTime,canvasCloth,canvasCloth);
     }
     if(c.tex==='custard-pool-bed')addCustardPoolBedLook(material,this.standingWaterClock);
-    if(c.tex==='waterslide-fiberglass'&&material instanceof THREE.MeshStandardMaterial)addWaterparkFlumeLook(material);
+    if(c.tex==='waterslide-fiberglass'&&material instanceof THREE.MeshStandardMaterial)addWaterparkFlumeLook(material,this.standingWaterClock);
     if(c.tex==='treehouse-beach'&&this.jungleStyle==='painterly'){
       const previous=material.onBeforeCompile,key=material.customProgramCacheKey.bind(material);
       const forestLoam=this.surfaceTexture('treehouse-loam');
@@ -15318,7 +15318,7 @@ export class Level {
     const spine = vertRampSpine(c);
     if (spine.length < 2) return null;
     if((c.tex==='coast-bedrock'||c.tex==='custard-sandstone'||c.tex==='crown-bilge-paint'||c.tex==='waterslide-fiberglass')&&mat.map)mat.map.repeat.set(1,1);
-    if(c.tex==='waterslide-fiberglass')addWaterparkFlumeLook(mat);
+    if(c.tex==='waterslide-fiberglass')addWaterparkFlumeLook(mat,this.standingWaterClock);
     if(c.tex==='custard-sandstone'){mat.bumpMap=mat.map;mat.bumpScale=.045;}
     if(c.tex==='skystream-marble'&&mat.map){mat.map.repeat.set(1,1);mat.bumpMap=mat.map;mat.bumpScale=.025;}
     const vr = buildVertRampGeometry(spine, {

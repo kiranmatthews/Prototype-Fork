@@ -2,14 +2,18 @@ import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {withBlockworksRuntime} from './blockworks-runner.mjs';
 import {physicalFingerprint} from './waterslide-island/polish-invariants.mjs';
-const expected=JSON.parse(await readFile('docs/slipstream-polish/physics-baseline.json','utf8'));
+const expected=JSON.parse(await readFile('docs/slipstream-polish/corrective/ride-physics-baseline.json','utf8'));
 await withBlockworksRuntime(async r=>{
  const {normalizeCustomLevelData}=await r.server.ssrLoadModule('/src/level.ts');
  const {WATERSLIDE_ASSETS}=await r.server.ssrLoadModule('/src/waterslideAssets.ts');
- assert.deepEqual(physicalFingerprint(r.source),expected,'the art pass must preserve every original physical component and the race');
+ assert.deepEqual(physicalFingerprint({...r.source,components:r.source.components.filter(c=>c.grp!==434)}),expected,'the requested roof openings may change group 434; every original ride/return surface and race rule must remain exact');
  assert.ok(normalizeCustomLevelData(r.source),'the entire level must remain inside the portable editor budget');
  const gardens=r.source.components.filter(c=>c.grp===436);
  assert.ok(gardens.length>100);assert.ok(gardens.every(c=>c.scenerySolid===false));
+ const {JUNGLE_ASSETS}=await r.server.ssrLoadModule('/src/jungleAssets.ts');
+ assert.equal(r.source.components.filter(c=>JUNGLE_ASSETS[c.dkind]?.matte).length,0,'No scenery painting may cross this winding, vertically stacked race');
+ assert.equal(r.source.sky,'waterslide-island');
+ assert.ok(r.source.components.filter(c=>c.grp===437).length>150,'The major sections have actual midground rock masses');
  for(const spec of Object.values(WATERSLIDE_ASSETS).filter(s=>s.matte)){
   assert.equal(spec.featherAllEdges,true);assert.ok(spec.edgeFade>=.04&&spec.fog,'all four painting borders blend in the real level atmosphere');
  }

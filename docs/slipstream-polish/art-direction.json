@@ -65,6 +65,12 @@
       "sha256": "738d39cb0083741969e26a9f25150950a45be03b28d2531ca606afc33dc66f2a",
       "prompt": "Edit target: supplied square fiberglass game texture. Make a seamless tileable production-quality albedo texture for a Crash 4-inspired abandoned tropical waterslide: rich luminous cyan/aqua enamel (#49bfc5 family), irregular warm ivory primer chips in medium sized flaked islands, subtle painterly variation and restrained moss staining only in small patches. Surface is mainly intact colorful paint (85 percent), crisp stylized chip shapes (15 percent), no photographic grit, no large dark stains, no straight cracks or long scratches, no directionally baked light or shadows, no glow. Top-down flat orthographic texture only, consistent brightness. Match all four edges seamlessly. No borders, grout grid, lettering, bolts, scenery, water, reflections or perspective. Keep a calm readable racing surface at 5 metre tile size, colors saturated but not neon. Square output.",
       "method": "Built-in ImageGen edit, resized to 1024 square and encoded as WebP without changing artwork."
+    },
+    {
+      "file": "public/waterslide/island-sky.webp",
+      "source": "/Users/kiki/.codex/generated_images/01a170a0-d966-7501-a978-95688b3a3324/exec-bb3cd84f-dfe3-4e33-b6b5-ad510fe74dee.png",
+      "sha256": "6c7164eed215f89ea444b1c905463e03c23a86874ea5b31d8b6bb4e38a7cb2e2",
+      "method": "Previously generated tropical sky, converted to WebP; dedicated Slipstream preset uses the existing horizon and seam-blending runtime"
     }
   ],
   "reuse": [
@@ -72,6 +78,22 @@
     "Sunny Beach hibiscus",
     "Treehouse Trials ferns",
     "Jungle broadleaf",
-    "Coastal Town flower vine"
-  ]
+    "Coastal Town flower vine",
+    "Drowned Crown uncut coastal headland",
+    "Carlisle Coast mossy cliff",
+    "Carlisle Coast canyon spire",
+    "Custard Creek bank shrub"
+  ],
+  "correctivePass": {
+    "requested": "Visible midground transformation, changed sky, remove clipping mattes, corroded tunnel skylights",
+    "referenceLimit": 15,
+    "referencesGenerated": 7,
+    "verificationScreenshots": "unlimited per user clarification",
+    "newImageGenReferences": 0,
+    "meshyCreditsUsed": 0,
+    "geology": "Existing uncut Drowned Crown commissioned Meshy coastal headland plus intact Carlisle cliff and spire geometry",
+    "placement": "Rotated full-bounds clearance against every stacked route leg; plants rooted by rays onto LOD0 triangles",
+    "matteTreatment": "All flat scenery paintings removed from Slipstream; real 3D cliff and foliage layers replace them",
+    "lodTreatment": "Slipstream aliases use intact near meshes at all distances because donor reduced meshes have open triangular silhouettes"
+  }
 }

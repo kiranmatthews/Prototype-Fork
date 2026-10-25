@@ -3,7 +3,7 @@ import type {CustomComponent} from './level';
 
 /** Reuse the painted fiberglass at two scales: readable chips close to the
  * rider and broad mineral variation along the old flume. No additional map. */
-export function addWaterparkFlumeLook(material:THREE.MeshPhongMaterial|THREE.MeshStandardMaterial):void {
+export function addWaterparkFlumeLook(material:THREE.MeshPhongMaterial|THREE.MeshStandardMaterial,clock={value:0}):void {
  if(!material.map)return;
  const previous=material.onBeforeCompile,key=material.customProgramCacheKey();
  if(material instanceof THREE.MeshPhongMaterial){material.specular.set('#577b76');material.shininess=42;}
@@ -12,6 +12,10 @@ export function addWaterparkFlumeLook(material:THREE.MeshPhongMaterial|THREE.Mes
  if(material.emissive.getHex()!==0)material.emissiveMap=material.map;
  material.onBeforeCompile=(shader,renderer)=>{
   previous.call(material,shader,renderer);
+  shader.uniforms.uFlumeTime=clock;
+  shader.vertexShader='varying vec3 vFlumeWorld;\n'+shader.vertexShader;
+  shader.vertexShader=shader.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\nvFlumeWorld=(modelMatrix*vec4(position,1.0)).xyz;');
+  shader.fragmentShader='varying vec3 vFlumeWorld; uniform float uFlumeTime;\n'+shader.fragmentShader;
   shader.fragmentShader=shader.fragmentShader.replace('#include <map_fragment>',`#include <map_fragment>
    #ifdef USE_MAP
     vec3 flumeWear=texture2D(map,vMapUv*.173+vec2(.31,.73)).rgb;
@@ -19,8 +23,21 @@ export function addWaterparkFlumeLook(material:THREE.MeshPhongMaterial|THREE.Mes
     diffuseColor.rgb*=mix(vec3(.84,.94,.87),vec3(1.06,1.04,.99),smoothstep(.12,.52,flumeLuma));
    #endif
   `);
+  // A thin moving water film follows the existing surface. It adds no
+  // geometry, collision, swimming volume or change to traction.
+  shader.fragmentShader=shader.fragmentShader.replace('#include <normal_fragment_maps>',`#include <normal_fragment_maps>
+   vec3 flumeWorldNormal=inverseTransformDirection(normal,viewMatrix);
+   float flumeWet=smoothstep(.15,.72,flumeWorldNormal.y);
+   vec2 flumeP=vFlumeWorld.xz;
+   vec2 flumeRipple=vec2(cos(flumeP.x*2.8+flumeP.y*.67-uFlumeTime*1.7),sin(flumeP.y*3.1-flumeP.x*.42+uFlumeTime*1.3));
+   flumeRipple+=.36*vec2(sin(flumeP.y*7.3+uFlumeTime*2.1),cos(flumeP.x*6.7-uFlumeTime*1.4));
+   normal=normalize(normal+(viewMatrix*vec4(flumeRipple.x,0.,flumeRipple.y,0.)).xyz*.045*flumeWet);
+  `);
+  if(material instanceof THREE.MeshStandardMaterial)shader.fragmentShader=shader.fragmentShader.replace('#include <roughnessmap_fragment>',`#include <roughnessmap_fragment>
+   roughnessFactor=mix(roughnessFactor,.18,smoothstep(.2,.85,inverseTransformDirection(normalize(vNormal),viewMatrix).y));
+  `);
  };
- material.customProgramCacheKey=()=>key+'|weathered-waterpark-fiberglass-v3';material.needsUpdate=true;
+ material.customProgramCacheKey=()=>key+'|weathered-waterpark-fiberglass-v4';material.needsUpdate=true;
 }
 
 /** UV.x stores metres to the existing floor below each horizontal pocket.
