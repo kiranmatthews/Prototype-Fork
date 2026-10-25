@@ -31,12 +31,12 @@ export function buildSlipstreamMidground(line:RaceKnot[],terrain:CustomComponent
    return Math.hypot(dx,dz)>w/2+6;
   });
  };
- const prop=(kind:CustomComponent['dkind'],p:THREE.Vector3,size:RacePoint,yaw:number,name:string)=>{
+ const prop=(kind:CustomComponent['dkind'],p:THREE.Vector3,size:RacePoint,yaw:number,name:string,forestRoot=false)=>{
   p=p.clone();size=[...size];
   // The high forest ends here; a shelf beyond its edge would float above
   // the descending coils. Sea-rooted towers own the lower transition.
-  if(p.z < -2370 && p.y > 500 && !name.includes('crown'))return false;
-  if(p.y>650){
+  if(forestRoot && p.z < -2370 && p.y > 500)return false;
+  if(forestRoot&&p.y>650){
    const top=p.y+size[1],roots=[new THREE.Vector3(0,0,0),new THREE.Vector3(-.35,0,-.35),new THREE.Vector3(.35,0,.35),new THREE.Vector3(-.35,0,.35),new THREE.Vector3(.35,0,-.35)];
    for(const q of roots){q.multiply(new THREE.Vector3(size[0],1,size[2])).applyAxisAngle(up,yaw*Math.PI/180).add(p);const h=ground(q.x,q.z);if(h!==null)p.y=Math.min(p.y,h-4);}
    size[1]=top-p.y;
@@ -54,12 +54,12 @@ export function buildSlipstreamMidground(line:RaceKnot[],terrain:CustomComponent
   const size:RacePoint=[width,height,depth],kind=i%3===0?'waterslideislandcliff':'waterslideislandheadland';
   for(let d=course.width(s)/2+depth/2+11;d<110;d+=8){
    const p=at.clone().addScaledVector(right,side*d);p.y-=height*.83;
-   if(prop(kind,p,size,yaw,'overlapping jungle escarpment'))break;
+   if(prop(kind,p,size,yaw,'overlapping jungle escarpment',true))break;
   }
   // An upper, offset ridge gives the palm silhouettes a second depth plane.
   if(i%3===1){const size:RacePoint=[95+noise(i)*35,65+noise(i+1)*35,60];
    for(let d=85;d<190;d+=12){const p=at.clone().addScaledVector(right,side*d).addScaledVector(f,18);p.y-=42;
-    if(prop('waterslideislandheadland',p,size,yaw+side*18,'layered headland behind the gorge'))break;
+    if(prop('waterslideislandheadland',p,size,yaw+side*18,'layered headland behind the gorge',true))break;
    }
   }
  }
@@ -70,29 +70,34 @@ export function buildSlipstreamMidground(line:RaceKnot[],terrain:CustomComponent
   const p=course.sample(s),f=course.tangent(s).setY(0).normalize(),right=new THREE.Vector3(-f.z,0,f.x);
   for(const side of [-1,1]){
    const q=p.clone().addScaledVector(right,side*(course.width(s)/2+15));q.y-=23;
-   prop('waterslideislandcliff',q,[14,27,11],Math.atan2(-side*right.x,-side*right.z)*180/Math.PI,'planted flume-side ledge');
+   prop('waterslideislandcliff',q,[14,27,11],Math.atan2(-side*right.x,-side*right.z)*180/Math.PI,'planted flume-side ledge',true);
   }
  }
  // The spiral opens onto a real archipelago of near rock towers. These span
  // sea level to their crown; no floating skirts or flat vertical paintings.
- const towers: Array<[number,number,number,number,number,number,number]>=[
-  [160,-2405,116,185,600,160,-15],
-  [-260,-2580,116,205,430,180,38], [170,-2680,116,150,270,130,-48],
-  [-195,-2770,116,180,260,150,28], [275,-2500,116,245,545,205,-65],
-  [-420,-2630,116,260,410,210,56], [315,-2810,116,200,280,170,-35],
-  [-135,-2900,116,110,145,95,15], [155,-2940,116,145,120,120,-38],
-  [-300,-2920,116,200,215,165,76], [435,-2585,116,230,360,185,-38],
-  [-96,-2805,116,85,180,75,29], [113,-2800,116,82,155,72,-12],
-  [-90,-2945,116,95,125,85,38],
-  [200,-2930,116,180,430,150,-28], [-125,-2830,116,130,420,110,32],
-  [40,-3050,116,150,330,130,-12],
+ const islands: Array<[number,number,number,number,number,number,CustomComponent['dkind']]>=[
+  [285,-2460,390,500,300,-32,'waterslideislandheadland'],
+  [-300,-2580,320,365,250,41,'waterslideislandbuttress'],
+  [200,-2725,205,235,180,-58,'waterslideislandheadland'],
+  [-225,-2770,210,200,175,15,'waterslideislandheadland'],
+  [440,-2580,310,295,260,74,'waterslideislandbuttress'],
+  [-480,-2670,330,250,275,-37,'waterslideislandbuttress'],
+  [340,-2845,245,180,200,46,'waterslideislandheadland'],
+  [-180,-2910,205,110,165,-28,'waterslideislandheadland'],
+  [210,-2995,265,135,215,36,'waterslideislandheadland'],
+  [-340,-2980,290,145,230,-63,'waterslideislandheadland'],
+  [-100,-2795,90,57,78,29,'waterslideislandheadland'],
+  [125,-2820,105,62,87,-18,'waterslideislandheadland'],
+  [-100,-2950,115,60,95,38,'waterslideislandheadland'],
+  [60,-3105,245,110,190,-15,'waterslideislandheadland'],
+  [310,-3000,340,420,270,-25,'waterslideislandheadland'],
+  [-280,-2900,275,380,230,38,'waterslideislandheadland'],
  ];
- for(const [i,[x,z,y,w,h,d,yaw]]of towers.entries()){
-  const p=new THREE.Vector3(x,y,z);
-  if(!prop('waterslideislandspire',p,[w,h,d],yaw,'lagoon sea-cliff tower'))continue;
-  // A broad, jagged headland crowns the tall rock's existing upper ledges.
-  const crown=p.clone().add(new THREE.Vector3(i%2?7:-6,h*.68,0));
-  prop('waterslideislandheadland',crown,[w*1.16,h*.34,d*1.12],yaw+27,'lagoon headland crown');
+ for(const [x,z,w,h,d,yaw,kind]of islands){
+  // One continuous, sea-rooted model per mass. The broad proportions keep
+  // the donor's rock detail intact, with low planted shelves by the finish.
+  prop(kind,new THREE.Vector3(x,116,z),[w,h,d],yaw,
+   kind==='waterslideislandheadland'?'low lagoon headland':'continuous lagoon buttress');
  }
  // Foothills read during the final low approach and conceal the tower bases.
  for(const [i,[s,side]]of [[3820,-1],[3885,1],[3950,-1],[4020,1],[4110,-1]].entries()){

@@ -1,9 +1,10 @@
 import assert from 'node:assert/strict';
-import {writeFile,mkdir} from 'node:fs/promises';
+import {readFile,writeFile,mkdir} from 'node:fs/promises';
+import {createServer} from 'vite';
+import * as THREE from 'three';
 import {dirname,join} from 'node:path';
 import {tmpdir} from 'node:os';
-import {withBlockworksRuntime} from '../blockworks-runner.mjs';
-await withBlockworksRuntime(async r=>{
+async function audit(r){
  const {RaceCourse}=await r.server.ssrLoadModule('/src/race/course.ts'),{WATERPARK_TUNNELS}=await r.server.ssrLoadModule('/src/levels/slipstream-island.ts'),{normalizeCustomLevelData}=await r.server.ssrLoadModule('/src/level.ts');
  assert.ok(normalizeCustomLevelData(r.source));const course=new RaceCourse(r.source.skateRace.line),ray=new r.THREE.Raycaster(),down=new r.THREE.Vector3(0,-1,0);
  const original=r.l.groundMeshes.filter(m=>{const c=r.source.components[m.userData.editorIdx];return c&&c.grp<420&&['mesh','platform','vertramp','terrain','ramp'].includes(c.t)&&c.solid!==false;});
@@ -36,4 +37,18 @@ await withBlockworksRuntime(async r=>{
  assert.ok(r.source.components.filter(c=>/^Waterpark (hillside|gorge|valley)/.test(c.nm??'')).every(c=>c.invisible),'Retired broad tiled landscape must not draw');
  assert.equal(r.source.components.filter(c=>c.swimDepth).length,8);assert.equal(r.source.skateRace.jumps.length,18);
  const report={tunnels:reports,rays,columnProbes,columns:columns.length,trestles:trestles.length,issues};const output=process.env.ISLAND_AUDIT_OUTPUT||join(tmpdir(),'waterslide-island-audit.json');await mkdir(dirname(output),{recursive:true});await writeFile(output,JSON.stringify(report,null,2));console.log(JSON.stringify(report));assert.deepEqual(issues,[]);
-},{modulePath:'/src/levels/slipstream.ts',source:m=>m.SLIPSTREAM_LEVEL,levelId:'slipstream-race'});
+ }
+// This is a geometry audit: build the real Level without a player, watcher,
+// dependency crawler or dev-server plugins. Rendering is checked in Chrome.
+const fixture=await readFile(new URL('../test-crouch-jump-slam.mjs',import.meta.url),'utf8');
+const dom=fixture.slice(fixture.indexOf('function installHeadlessDom()'),fixture.indexOf('\nconst held'));
+new Function('noop',dom+'\ninstallHeadlessDom();')(()=>{});
+const server=await createServer({configFile:false,appType:'custom',logLevel:'silent',optimizeDeps:{noDiscovery:true},server:{middlewareMode:true,hmr:false,ws:false,watch:null}});
+let level;
+try{
+ const {Level}=await server.ssrLoadModule('/src/level.ts');
+ const {SLIPSTREAM_LEVEL:source}=await server.ssrLoadModule('/src/levels/slipstream.ts');
+ const scene=new THREE.Scene();level=new Level(scene,{id:'slipstream-race',name:source.name,data:source});
+ level.update(0);scene.updateMatrixWorld(true);
+ await audit({server,source,scene,l:level,THREE});
+}finally{level?.dispose();await server.close();}

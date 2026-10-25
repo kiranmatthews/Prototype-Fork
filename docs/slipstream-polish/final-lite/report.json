@@ -1,0 +1,176 @@
+{
+  "base": "http://127.0.0.1:5351",
+  "lite": true,
+  "screenshots": 84,
+  "reports": [
+    {
+      "name": "course-0",
+      "s": 0,
+      "position": [
+        0,
+        936,
+        16.415277777777778
+      ],
+      "camera": [
+        -7.83773951454306e-16,
+        942.3,
+        22.815277777777776
+      ],
+      "grounded": true,
+      "state": "ride",
+      "falls": 0,
+      "render": {
+        "frame": 1015,
+        "calls": 842,
+        "triangles": 3412467,
+        "points": 0,
+        "lines": 0
+      },
+      "assets": {
+        "components": 2048,
+        "placements": 2048,
+        "ready": 360,
+        "skipped": 1010,
+        "draws": 299,
+        "triangles": 2973178,
+        "allLodTriangles": 4123838,
+        "cells": 790,
+        "residentCells": 284,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 3,
+        "textureMiB": 162,
+        "errors": [],
+        "windTime": 1.150000000000001
+      },
+      "stamp": "Codex/sol fork · build 10-25 06:49 UTC"
+    },
+    {
+      "name": "course-260",
+      "s": 260,
+      "position": [
+        -2.6388281526984096,
+        895.120152653608,
+        -199.02577248608665
+      ],
+      "camera": [
+        1.9570595146808367,
+        901.4201526536079,
+        -194.5718061021956
+      ],
+      "grounded": true,
+      "state": "ride",
+      "falls": 0,
+      "render": {
+        "frame": 1327,
+        "calls": 381,
+        "triangles": 2265079,
+        "points": 0,
+        "lines": 0
+      },
+      "assets": {
+        "components": 2048,
+        "placements": 2048,
+        "ready": 429,
+        "skipped": 1010,
+        "draws": 377,
+        "triangles": 3817066,
+        "allLodTriangles": 4913332,
+        "cells": 790,
+        "residentCells": 343,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 3,
+        "textureMiB": 170,
+        "errors": [],
+        "windTime": 1.7333333333333323
+      },
+      "stamp": "Codex/sol fork · build 10-25 06:49 UTC"
+    },
+    {
+      "name": "course-3430",
+      "s": 3430,
+      "position": [
+        7.267503994331445,
+        466.7847191786571,
+        -2594.6203938983995
+      ],
+      "camera": [
+        5.206905318675421,
+        473.0847191786571,
+        -2588.5611915500795
+      ],
+      "grounded": true,
+      "state": "ride",
+      "falls": 0,
+      "render": {
+        "frame": 1639,
+        "calls": 147,
+        "triangles": 997719,
+        "points": 0,
+        "lines": 0
+      },
+      "assets": {
+        "components": 2048,
+        "placements": 2048,
+        "ready": 494,
+        "skipped": 1010,
+        "draws": 375,
+        "triangles": 3403990,
+        "allLodTriangles": 4729368,
+        "cells": 790,
+        "residentCells": 358,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 5,
+        "textureMiB": 176.67,
+        "errors": [],
+        "windTime": 2.3166666666666638
+      },
+      "stamp": "Codex/sol fork · build 10-25 06:49 UTC"
+    },
+    {
+      "name": "course-3980",
+      "s": 3980,
+      "position": [
+        35.33073091391205,
+        179.45860435315723,
+        -2771.2988351826807
+      ],
+      "camera": [
+        35.08374321490552,
+        185.75860435315724,
+        -2764.90360281188
+      ],
+      "grounded": true,
+      "state": "ride",
+      "falls": 0,
+      "render": {
+        "frame": 1929,
+        "calls": 77,
+        "triangles": 608244,
+        "points": 0,
+        "lines": 0
+      },
+      "assets": {
+        "components": 2048,
+        "placements": 2048,
+        "ready": 420,
+        "skipped": 1010,
+        "draws": 309,
+        "triangles": 2540464,
+        "allLodTriangles": 3826016,
+        "cells": 790,
+        "residentCells": 300,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 5,
+        "textureMiB": 176.67,
+        "errors": [],
+        "windTime": 2.899999999999995
+      },
+      "stamp": "Codex/sol fork · build 10-25 06:49 UTC"
+    }
+  ],
+  "errors": []
+}

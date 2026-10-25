@@ -3,6 +3,7 @@ export const WATERSLIDE_ASSETS = {
   // The donor's LOD1 drops faces. Use its small, intact 6k-triangle LOD0 at
   // every distance in this course, without changing other levels' assets.
   waterslideislandcliff:{file:'../carlisle-coast/cliff-bay',label:'Slipstream intact mossy cliff',size:[16,12.381,9.877],wind:false,normalStrength:.12,cellSize:48,lod:true,doubleSided:false},
+  waterslideislandbuttress:{file:'../carlisle-coast-fidelity/canyon-buttress',label:'Slipstream continuous sandstone buttress',size:[14,12.975,14],wind:false,normalStrength:.18,cellSize:64,lod:true,doubleSided:false},
   waterslideislandspire:{file:'../carlisle-coast/canyon-spire',label:'Slipstream intact lagoon spire',size:[9,13.943,6.832],wind:false,normalStrength:.12,cellSize:64,lod:true,doubleSided:false},
   waterslideislandheadland:{file:'../waterslide/island-headland',label:'Slipstream reused coastal headland',size:[180,72.993532,117.854465],wind:false,normalStrength:.2,cellSize:48,lod:true,doubleSided:false},
   waterslidebrokenflume:{file:'../waterslide/broken-flume',label:'Waterpark / broken flume',size:[4.457472085952759, 2.9749040603637695, 8.0],wind:false,normalStrength:.2,lod:false,distanceLod:true,doubleSided:true,cellSize:70},

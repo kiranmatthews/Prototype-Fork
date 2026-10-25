@@ -3,10 +3,11 @@
     "components": 1562,
     "sha256": "5c3a2ab6f95be9d91e96d1dee8ece1685b62b6f7d5ea3c21d97554182e1fcdf2"
   },
-  "components": 3895,
+  "components": 3888,
   "meshTriangles": 92824,
-  "rocks": 249,
-  "plants": 1208,
+  "rocks": 230,
+  "plants": 1220,
+  "roofOpenings": 17,
   "mattePlanes": 0,
-  "snapshotSha256": "2e4197a8ed1d5cc3f9fe7f5f42ae5b7fad7fd30dd31e2eee34182aba9c6e78a3"
+  "snapshotSha256": "0afa927708bb67f40983be362376f3d446f534a9ad7a64da70dcda6222357f61"
 }

@@ -1,8 +1,8 @@
 {
   "v": 2,
   "authoringRuntime": "v24.19.0",
-  "sourceNumericTolerance": 1e-09,
-  "sourceYawToleranceDegrees": 1e-08,
+  "sourceNumericTolerance": 1e-9,
+  "sourceYawToleranceDegrees": 1e-8,
   "method": "Exact complete JSON equality at certification; unrounded saved-snapshot hash plus complete source-data comparison with bounded runtime-only roundoff at build time.",
   "levels": {
     "sky": {
@@ -31,7 +31,7 @@
       "snapshotSha256": "c8ae403e9712f5bf0f0d20c7d5e9f0b161e0fd2d94dc16c82e63f2f77aed1643"
     },
     "slipstream-race": {
-      "snapshotSha256": "2e4197a8ed1d5cc3f9fe7f5f42ae5b7fad7fd30dd31e2eee34182aba9c6e78a3",
+      "snapshotSha256": "0afa927708bb67f40983be362376f3d446f534a9ad7a64da70dcda6222357f61",
       "authoringRuntime": "v22.23.3"
     }
   }

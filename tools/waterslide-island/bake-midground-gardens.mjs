@@ -42,14 +42,15 @@ try{
  const owners=level.components.filter(c=>c.grp===437&&c.t==='decor');
  for(const [i,c]of owners.entries()){
   const mesh=await template(c.dkind);mesh.position.fromArray(c.p);mesh.rotation.y=c.yaw*Math.PI/180;mesh.scale.fromArray(c.s);mesh.updateMatrixWorld(true);
-  const count=c.s[0]>90?9:c.s[0]<20?4:6;
+  const lagoon=/lagoon/.test(c.nm??'');
+  const count=lagoon&&c.s[0]>180?24:c.s[0]>90?9:c.s[0]<20?4:6;
   for(let j=0;j<count;j++){
    const x=(noise(i*17+j*13)-.5)*.78,z=(noise(i*31+j*7)-.5)*.76;
    const start=mesh.localToWorld(new THREE.Vector3(x,1.05,z));ray.set(start,down);ray.far=c.s[1]*1.1;
    const hit=ray.intersectObject(mesh,false).find(h=>h.face.normal.clone().applyNormalMatrix(new THREE.Matrix3().getNormalMatrix(mesh.matrixWorld)).y>.45);
    if(!hit)continue;
    const kind=j%4===0?'crowntropicalpalm':j%4===1?'custardbankshrub':j%4===2?'jungleleaf':'sunnyhibiscus';
-   const scale=kind==='crowntropicalpalm'?(c.s[0]>90?1.15:.85)+noise(i)*.35:kind==='custardbankshrub'?.65+noise(i+j)*.4:kind==='jungleleaf'?1.2+noise(i)*.6:1.8;
+   const scale=kind==='crowntropicalpalm'?(lagoon&&c.s[0]>180?2:c.s[0]>90?1.15:.85)+noise(i)*.35:kind==='custardbankshrub'?.65+noise(i+j)*.4:kind==='jungleleaf'?1.2+noise(i)*.6:1.8;
    const size=JUNGLE_ASSETS[kind].size,radius=Math.hypot(size[0],size[2])*scale/2,at=hit.point.clone();at.y-=.07;
    if(!clear(at,radius,size[1]*scale))continue;
    plants.push({t:'decor',dkind:kind,p:at.toArray().map(round),w:round(scale),yaw:round(noise(i*101+j)*360),scenerySolid:false,castShadow:true,grp:438,nm:'Island midground garden / rooted '+kind});

@@ -38,7 +38,7 @@ export const WATERPARK_ISLAND_LOOK:Pick<CustomLevelData,'sky'|'ocean'|'atmospher
  // Keep the detailed lagoon's fading edges inside the camera range. The
  // existing surrounding horizon supplies the sea beyond this coastal basin.
  ocean:{p:[-900,128,-2700],length:1800,width:1800,seaward:1,geometryVersion:2,sourceCoordinates:'three',look:'waterpark-island',horizonMode:'surround',shoreGeometry:'ground',longitudinalSegments:180,lateralSegments:96},
- atmosphere:{fogEnabled:true,fogNear:120,fogFar:620,fogColor:'#9bc9cc',ambientSky:'#b9dbdf',ambientGround:'#73704b',ambientIntensity:.72,sunColor:'#ffe3ad',sunIntensity:2.65,sunDirection:[-.42,.82,.38],fillColor:'#8fcbd4',fillIntensity:.26,shadowStrength:.9,drawDistance:2000,backdrop:'painted sky',fallbackRidges:false},
+ atmosphere:{fogEnabled:true,fogNear:160,fogFar:900,fogColor:'#9bc9cc',ambientSky:'#b9dbdf',ambientGround:'#73704b',ambientIntensity:.72,sunColor:'#ffe3ad',sunIntensity:2.65,sunDirection:[-.42,.82,.38],fillColor:'#8fcbd4',fillIntensity:.26,shadowStrength:.9,drawDistance:2000,backdrop:'painted sky',fallbackRidges:false},
 };
 
 /** Level data only: the race floor, movement model and jump gaps are unchanged. */

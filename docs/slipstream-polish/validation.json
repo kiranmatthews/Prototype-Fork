@@ -1,6 +1,9 @@
 {
-  "status": "Final production review pending",
-  "correctionStartedAt": "2026-10-25T03:47:43Z",
+  "status": "Locally complete and validated; publication delegated to the release coordinator",
+  "correctionStartedAt": "2026-10-25T03:47:43+00:00",
+  "validatedAt": "2026-10-25T07:02:06.983742+00:00",
+  "elapsedWallClockMinutes": 194.4,
+  "elapsedNote": "Includes the earlier corrective iterations and the coordination pause.",
   "references": 7,
   "referenceLimit": 15,
   "verificationScreenshotLimit": null,
@@ -11,24 +14,102 @@
       "components": 1562,
       "sha256": "5c3a2ab6f95be9d91e96d1dee8ece1685b62b6f7d5ea3c21d97554182e1fcdf2"
     },
-    "components": 3895,
+    "components": 3888,
     "meshTriangles": 92824,
-    "rocks": 249,
-    "plants": 1208,
+    "rocks": 230,
+    "plants": 1220,
+    "roofOpenings": 17,
     "mattePlanes": 0,
-    "snapshotSha256": "2e4197a8ed1d5cc3f9fe7f5f42ae5b7fad7fd30dd31e2eee34182aba9c6e78a3"
+    "snapshotSha256": "0afa927708bb67f40983be362376f3d446f534a9ad7a64da70dcda6222357f61"
   },
   "tests": {
-    "levelChecks": "pass",
-    "sourceFingerprint": "pass",
-    "exactStockSnapshot": "pass"
+    "npm run check:levels": "pass on final scenery",
+    "node tools/test-slipstream-polish.mjs": "pass on final scenery",
+    "node tools/waterslide-island/sync-polish.mjs": "pass: exact protected gameplay fingerprint, editor budget, zero matte placements and source-backed stock snapshot",
+    "node tools/waterslide-island/audit.mjs": "pass: 528 roof/floor rays and 3075 column probes across all seven tunnels",
+    "npm run build": "pass: TypeScript, Vite and release packaging",
+    "fullSuiteRun": false
+  },
+  "build": {
+    "runtime": "v22.23.3",
+    "stamp": "Codex/sol fork \u00b7 build 10-25 06:49 UTC",
+    "offlineVersion": "3246dc2733b84522b493",
+    "files": 1681,
+    "packageMiB": 897.1,
+    "levelSyncKiB": 39.2
+  },
+  "browserProduction": {
+    "report": "final-production/report.json",
+    "views": [
+      0,
+      260,
+      600,
+      750,
+      1280,
+      1580,
+      1950,
+      2390,
+      2680,
+      3210,
+      3360,
+      3430,
+      3590,
+      3790,
+      3980
+    ],
+    "allGrounded": true,
+    "assetErrors": [],
+    "consoleErrors": [],
+    "visuallyReviewed": true
+  },
+  "browserLite": {
+    "report": "final-lite/report.json",
+    "views": [
+      0,
+      260,
+      3430,
+      3980
+    ],
+    "allGrounded": true,
+    "assetErrors": [],
+    "consoleErrors": []
+  },
+  "finalFullSmoke": {
+    "report": "final-full-smoke/report.json",
+    "views": [
+      3980
+    ],
+    "allGrounded": true,
+    "assetErrors": [],
+    "consoleErrors": []
   },
   "browserRace": {
+    "report": "corrective/motion/report.json",
     "mode": "full",
     "allRacersFinished": 8,
     "playerSeconds": 158.63333333335171,
     "playerFalls": 0,
     "deaths": 0,
-    "errors": []
+    "errors": [],
+    "scope": "Completed before the final visual-only headland/foliage/haze changes. The protected gameplay fingerprint is identical in the final source.",
+    "timeTrialTransition": "pass"
+  },
+  "visualReview": {
+    "gallery": "review.html",
+    "accepted": "Continuous sea-rooted rock masses replace repeated three-piece towers; low planted headlands frame the finish; every scenery matte plane is removed; rusted openings and sunlight are visible in the enclosed ride.",
+    "superseded": [
+      "after",
+      "corrective-final",
+      "corrective-reviewed",
+      "tier-review",
+      "continuous-review",
+      "islands-review",
+      "headland-review"
+    ]
+  },
+  "publication": {
+    "performedHere": false,
+    "owner": "Remap treehouse stair controls coordinator",
+    "remaining": "Integrate the local commit, build the combined release and verify the deployed page."
   }
 }

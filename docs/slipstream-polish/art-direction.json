@@ -81,8 +81,8 @@
     "Coastal Town flower vine",
     "Drowned Crown uncut coastal headland",
     "Carlisle Coast mossy cliff",
-    "Carlisle Coast canyon spire",
-    "Custard Creek bank shrub"
+    "Custard Creek bank shrub",
+    "Carlisle Coast continuous sandstone buttress"
   ],
   "correctivePass": {
     "requested": "Visible midground transformation, changed sky, remove clipping mattes, corroded tunnel skylights",
@@ -91,9 +91,10 @@
     "verificationScreenshots": "unlimited per user clarification",
     "newImageGenReferences": 0,
     "meshyCreditsUsed": 0,
-    "geology": "Existing uncut Drowned Crown commissioned Meshy coastal headland plus intact Carlisle cliff and spire geometry",
+    "geology": "Uncut Drowned Crown commissioned Meshy coastal headland, intact Carlisle cliff, and continuous Carlisle sandstone buttress. No repeated three-piece sea stacks.",
     "placement": "Rotated full-bounds clearance against every stacked route leg; plants rooted by rays onto LOD0 triangles",
     "matteTreatment": "All flat scenery paintings removed from Slipstream; real 3D cliff and foliage layers replace them",
-    "lodTreatment": "Slipstream aliases use intact near meshes at all distances because donor reduced meshes have open triangular silhouettes"
+    "lodTreatment": "Slipstream aliases use intact near meshes at all distances because donor reduced meshes have open triangular silhouettes",
+    "composition": "Varied sea-rooted headlands, open lagoon views, planted ledges and larger rooted palms; mid-distance haze begins at 160 m and ends at 900 m."
   }
 }

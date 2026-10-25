@@ -1,0 +1,50 @@
+{
+  "base": "http://127.0.0.1:5351",
+  "lite": false,
+  "screenshots": 84,
+  "reports": [
+    {
+      "name": "course-3980",
+      "s": 3980,
+      "position": [
+        35.33073091391205,
+        179.45860435315723,
+        -2771.2988351826807
+      ],
+      "camera": [
+        35.08374321490552,
+        185.75860435315724,
+        -2764.90360281188
+      ],
+      "grounded": true,
+      "state": "ride",
+      "falls": 0,
+      "render": {
+        "frame": 3145,
+        "calls": 370,
+        "triangles": 1905725,
+        "points": 0,
+        "lines": 0
+      },
+      "assets": {
+        "components": 2048,
+        "placements": 2048,
+        "ready": 811,
+        "skipped": 0,
+        "draws": 660,
+        "triangles": 3057675,
+        "allLodTriangles": 5730527,
+        "cells": 1626,
+        "residentCells": 640,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 13,
+        "textureMiB": 218,
+        "errors": [],
+        "windTime": 1.24063333328565
+      },
+      "stamp": "Codex/sol fork · build 10-25 06:49 UTC"
+    }
+  ],
+  "errors": []
+}

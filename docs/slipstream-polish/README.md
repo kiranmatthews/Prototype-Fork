@@ -21,8 +21,11 @@ flowering vines hang from the roof and portals. A dedicated tropical sky,
 warm sun, cool fill, aqua enamel and ivory coping unify the route. Far scenery
 is not matched literally to the ImageGen references.
 
-The new midground contains 249 rock placements and 1,208 fitted or lip-anchored plants, on top
-of the existing park props and gardens. `corrective/midground-anchors.json`
+The new midground contains 230 rock placements and 1,220 fitted or lip-anchored plants, on top
+of the existing park props and gardens. The descending coils use continuous
+sea-rooted masses with varied heights, low planted headlands and open water
+between them. Three-piece repeating rock towers and floating crowns were
+rejected during full-render review and removed. `corrective/midground-anchors.json`
 records the roots. `public/waterslide/island-headland.provenance.json` records
 the reused Meshy commission and geometry preservation. Meshy spend remains
 **0 / 300 credits**; no new generation was needed.
@@ -38,10 +41,16 @@ The full browser race completed all eight riders with no console errors,
 zero player falls and zero deaths. The player finished in 158.63 game seconds.
 `corrective/motion/report.json` records that run; `validation.json` records the
 final build, level checks and section review. The race run precedes the final
-visual-only removal of cliff skirts and repositioning of sea stacks.
+visual-only cliff and headland adjustments. The final production section
+review is in `final-production/`, with an additional lite smoke check in
+`final-lite/`. Every final view uses the packaged game, not an ImageGen image.
 
 Open [the comparison gallery](review.html) for original gameplay, the seven
-references and corrected gameplay. Earlier `after/` and `corrective-pass*/`
+references and corrected gameplay. Earlier `after/`, `corrective-*`, `tier-review/`, `continuous-review/`,
+`islands-review/` and `headland-review/`
 images are retained as iteration history, not final evidence. Regenerate the
 new foliage with `tools/waterslide-island/bake-midground-gardens.mjs`, then
-publish the level entry with `tools/sync-slipstream.mjs`.
+synchronize and certify only the Slipstream entry with
+`tools/waterslide-island/sync-polish.mjs`. This verifies the protected physics
+fingerprint before writing. The final local commits are handed to the
+release coordinator; deployment is intentionally handled by that chat.
