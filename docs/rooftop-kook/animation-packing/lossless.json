@@ -1,0 +1,25 @@
+{
+  "reports": [
+    {
+      "name": "karen-rain",
+      "sourceBytes": 2457886,
+      "packedBytes": 356388,
+      "savedBytes": 2101498,
+      "clips": 3,
+      "tracks": 198,
+      "interpolatedSamples": 1584,
+      "sha256": "0878cfa388737db67fcc7df2a7d98e7f109255d6862c7303195d54e9ae1912ab"
+    },
+    {
+      "name": "kook-rain",
+      "sourceBytes": 314074,
+      "packedBytes": 49287,
+      "savedBytes": 264787,
+      "clips": 1,
+      "tracks": 66,
+      "interpolatedSamples": 528,
+      "sha256": "ba69ab647035774b619e9a0a1ea1ffaeb2b45ce418500a96780e703523ba9542"
+    }
+  ],
+  "savedBytes": 2366285
+}

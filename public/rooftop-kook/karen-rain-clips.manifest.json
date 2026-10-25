@@ -1,0 +1,28 @@
+{
+  "encoding": "gzip",
+  "sourceBytes": 2457886,
+  "packedBytes": 356388,
+  "sourceSha256": "0878cfa388737db67fcc7df2a7d98e7f109255d6862c7303195d54e9ae1912ab",
+  "packedSha256": "883999b44bfa840496d400d1980fe5bce9062221c897703bbfab0a9ca545e03a",
+  "clips": [
+    {
+      "name": "idle",
+      "duration": 4.0333333,
+      "tracks": 66,
+      "keyframes": 7986
+    },
+    {
+      "name": "shout",
+      "duration": 7.1999998,
+      "tracks": 66,
+      "keyframes": 14256
+    },
+    {
+      "name": "angry",
+      "duration": 20.8333321,
+      "tracks": 66,
+      "keyframes": 41250
+    }
+  ],
+  "exactRoundTrip": true
+}

@@ -1,6 +1,7 @@
 """Keep official animation tracks, without shipping six duplicate character meshes."""
 from pathlib import Path
 import json,struct,sys
+from pack_clips import SOURCES,pack_character
 ROOT=Path(__file__).resolve().parents[2];WORK=ROOT/'.img2threejs/rooftop-kook'
 characters={'karen':['idle','shout','angry'],'kook':['idle','aim','shoot'],'karen-rain':['idle','shout','angry'],'kook-rain':['idle']}
 for character in sys.argv[1:] or ['karen','kook']:
@@ -22,4 +23,6 @@ for character in sys.argv[1:] or ['karen','kook']:
    tracks.append({'name':bone+'.'+{'rotation':'quaternion','translation':'position','scale':'scale'}[path],
     'type':'quaternion' if path=='rotation' else 'vector','times':times,'values':value})
   clips.append({'name':name,'duration':duration,'tracks':tracks});print(character,name,duration,len(tracks))
- out=ROOT/'public/rooftop-kook'/(character+'-clips.json');out.write_text(json.dumps(clips,separators=(',',':'))+'\n')
+ SOURCES.mkdir(parents=True,exist_ok=True)
+ out=SOURCES/(character+'-clips.json');out.write_text(json.dumps(clips,separators=(',',':'))+'\n')
+ pack_character(character)

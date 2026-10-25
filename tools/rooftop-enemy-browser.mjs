@@ -1,19 +1,26 @@
 import assert from 'node:assert/strict';
-import {mkdir,writeFile} from 'node:fs/promises';
+import {mkdir,readFile,writeFile} from 'node:fs/promises';
+import {createHash} from 'node:crypto';
 const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
 const base=process.argv[2]||'http://127.0.0.1:5267',out=process.env.ROOFTOP_OUTPUT||'docs/rooftop-kook/enemies';await mkdir(out,{recursive:true});
-const browser=await chromium.launch({headless:true,channel:'chrome'}),page=await browser.newPage({viewport:{width:2560,height:1440},deviceScaleFactor:1}),errors=[];
-page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
+const browser=await chromium.launch({headless:true,channel:'chrome'}),page=await browser.newPage({viewport:{width:2560,height:1440},deviceScaleFactor:1,serviceWorkers:'block'}),errors=[];
+const animationRequests=[];
+page.on('response',response=>{const name=new URL(response.url()).pathname.split('/').at(-1);if(/^(karen|kook)-rain-clips\.bin$/.test(name))animationRequests.push((async()=>{
+ const body=await response.body(),source=await readFile('public/rooftop-kook/'+name);assert.equal(response.status(),200);assert.deepEqual(body,source,'Browser must receive the exact compressed animation payload');
+ return {name,bytes:body.length,sha256:createHash('sha256').update(body).digest('hex')};})());});
+page.on('pageerror',e=>{errors.push(e.message);console.error(e.message);});page.on('console',m=>{if(m.type()==='error'){errors.push(m.text());console.error(m.text());}});
 try{
- await page.goto(base+'/?playtest&level=rooftop-relay',{timeout:180000});await page.waitForFunction(()=>window.__game?.getCurrentLevel().id==='rooftop-relay'&&!window.__game.gameFlow.blocksGameplay,null,{timeout:180000});
+ await page.goto(base+'/?playtest&level=rooftop-relay',{waitUntil:'domcontentloaded',timeout:180000});console.log('Rooftop document loaded');await page.waitForFunction(()=>window.__game?.getCurrentLevel().id==='rooftop-relay'&&!window.__game.gameFlow.blocksGameplay,null,{timeout:180000});console.log('Rooftop gameplay ready');
  const initial=await page.evaluate(async()=>{
-  const g=window.__game,l=g.getLevel();g.renderQualitySettings.setRegularResolution(null);g.crtGuestSettings.setEnabled(false);await Promise.all(l.enemies.map(e=>e.visual.ready));
+  const g=window.__game,l=g.getLevel();g.renderQualitySettings.setRegularResolution(null);g.crtGuestSettings.setEnabled(false);
+  let deadline;try{await Promise.race([Promise.all(l.enemies.map(e=>e.visual.ready)),new Promise((_,reject)=>{deadline=setTimeout(()=>reject(Error('Enemy load deadline: '+JSON.stringify(l.enemies.map(e=>e.visual.diagnostics)))),90000);})]);}finally{clearTimeout(deadline);}
   const karen=l.enemies.find(e=>e.kook?.role==='lookout'),gunner=l.enemies.find(e=>e.kook?.role==='gunner'&&e.kook.group===karen.kook.group);
   const marker=window.kookReview={shots:0,alarms:0,group:karen.kook.group};const fire=l.spawnProjectile.bind(l);l.spawnProjectile=(e,...args)=>{if(e===gunner)marker.shots++;return fire(e,...args);};
   const pos=karen.group.position.clone(),yaw=karen.kook.bearing;pos.x+=Math.sin(yaw)*12;pos.z+=Math.cos(yaw)*12;pos.y+=.12;
   g.player.respawn(l,true,false,{position:pos,heading:pos.clone().set(-Math.sin(yaw),0,-Math.cos(yaw))});g.player.invulnTimer=25;
   return l.enemies.filter(e=>e.kook).map(e=>{let weapon=null;e.visual.body.traverse(o=>{if(o.userData.nativeWeapon)weapon=o.userData.nativeWeapon;});return {role:e.kook.role,group:e.kook.group,status:e.visual.diagnostics.status,url:e.visual.diagnostics.url,weapon,meshes:e.visual.diagnostics.meshes,skinned:e.visual.diagnostics.skinnedMeshes};});
  });
+ console.log('All wet-weather Meshy enemies loaded');
  assert.equal(initial.length,7);for(const e of initial){assert.equal(e.status,'ready');assert.ok(e.url.endsWith(e.role==='lookout'?'karen-rain.glb':'kook-rain.glb'));if(e.role==='gunner')assert.equal(e.weapon,'heirloom-shotgun');}
  await page.waitForTimeout(1400);await page.screenshot({path:out+'/alarm.png'});
  await page.waitForFunction(()=>window.kookReview.shots>0,null,{timeout:12000});
@@ -32,5 +39,7 @@ try{
  const after=await page.evaluate(()=>window.kookReview.shots);assert.equal(after,cover.before);await page.screenshot({path:out+'/cover.png'});
  const diagnostics=await page.evaluate(()=>window.__game.getLevel().enemies.filter(e=>e.kook).map(e=>{const bounds=[];e.visual.body.traverse(o=>{if(o.isSkinnedMesh){o.computeBoundingBox();const b=o.boundingBox.clone().applyMatrix4(o.matrixWorld);bounds.push({bottom:b.min.y-e.baseY,top:b.max.y-e.baseY});}});return {role:e.kook.role,state:e.state,hands:e.group.userData.kookHandErrors,feet:e.group.userData.kookFootErrors,bounds,status:e.visual.diagnostics.status};}));
  for(const e of diagnostics){assert.equal(e.status,'ready');assert.ok([...(e.hands??[]),...e.feet].every(v=>v<.03),'Enemy contacts must remain planted on a translated rooftop');assert.ok(e.bounds.length>0);for(const b of e.bounds){assert.ok(Math.abs(b.bottom)<.25,'Enemy feet must align with the roof');assert.ok(b.top>2&&b.top<3,'Enemy artwork must stay around its gameplay collider');}}
- await writeFile(out+'/browser.json',JSON.stringify({base,initial,firing,cover,shotsBehindCover:after-cover.before,diagnostics,errors},null,2)+'\n');assert.deepEqual(errors,[]);console.log('PASS',JSON.stringify({firing,cover,diagnostics,errors}));
+ const downloads=await Promise.all(animationRequests);assert.deepEqual([...new Set(downloads.map(d=>d.name))].sort(),['karen-rain-clips.bin','kook-rain-clips.bin']);
+ const render=await page.evaluate(()=>{const g=window.__game;return {buffer:[g.renderer.domElement.width,g.renderer.domElement.height],stamp:document.querySelector('.hud-build')?.textContent};});assert.deepEqual(render.buffer,[2560,1440]);
+ await writeFile(out+'/browser.json',JSON.stringify({base,render,downloads,initial,firing,cover,shotsBehindCover:after-cover.before,diagnostics,errors},null,2)+'\n');assert.deepEqual(errors,[]);console.log('PASS',JSON.stringify({render,downloads,firing,cover,diagnostics,errors}));
 }finally{await browser.close();}

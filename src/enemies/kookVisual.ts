@@ -8,6 +8,7 @@ import {sampleEnemyElasticity,enemyElasticPulse,type EnemyElasticityProfile} fro
 import type {EnemyAnimationFrame,EnemyKind,EnemyVisual,EnemyVisualDiagnostics} from './types';
 import type {KookRole} from './kookBehavior';
 import {rigKookGrip,poseKookGrip} from './kookGrip';
+import {decodeKookAnimation} from './kookAnimation';
 
 export const KOOK_ELASTICITY:EnemyElasticityProfile={idle:.65,walk:1,anticipation:1.5,rebound:1.3,landing:1,defeat:1.4};
 type Asset={scene:THREE.Group;clips:THREE.AnimationClip[]};
@@ -16,7 +17,7 @@ const textures=(m:THREE.Material)=>Object.values(m).filter((v):v is THREE.Textur
 const cache=new AssetCache<string,Asset>(async(name,_dependency,wanted)=>{
  const [gltf,json]=await Promise.all([
   sceneryLoads.run(()=>new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).loadAsync(base+name+'.glb'),wanted),
-  fetch(base+name+'-clips.json').then(r=>{if(!r.ok)throw Error('Kook animation load '+r.status);return r.json();}),
+  fetch(base+name+'-clips.bin').then(async r=>{if(!r.ok)throw Error('Kook animation load '+r.status);return decodeKookAnimation(await r.arrayBuffer());}),
  ]);
  if(name==='kook-rain')rigKookGrip(gltf.scene);
  gltf.scene.traverse(o=>{const m=o as THREE.Mesh;if(!m.isMesh)return;m.geometry.userData.shared=true;

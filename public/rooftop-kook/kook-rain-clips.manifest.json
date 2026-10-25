@@ -1,0 +1,16 @@
+{
+  "encoding": "gzip",
+  "sourceBytes": 314074,
+  "packedBytes": 49287,
+  "sourceSha256": "ba69ab647035774b619e9a0a1ea1ffaeb2b45ce418500a96780e703523ba9542",
+  "packedSha256": "33217d24ca49e3ddca0e7a6453473a33671e27b6b7934195156cb12a5c058448",
+  "clips": [
+    {
+      "name": "idle",
+      "duration": 4.0333333,
+      "tracks": 66,
+      "keyframes": 7986
+    }
+  ],
+  "exactRoundTrip": true
+}

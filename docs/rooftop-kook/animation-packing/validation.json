@@ -1,0 +1,20 @@
+{
+  "sourceBytes": 2771960,
+  "packedBytes": 405675,
+  "savedAssetBytes": 2366285,
+  "decodedBytes": "exact original JSON",
+  "tracks": 264,
+  "interpolatedSamples": 2112,
+  "productionBuild": "10-25 15:41 UTC",
+  "localBuild": "10-25 15:48 UTC",
+  "releaseBytes": 997292292,
+  "nativeBrowser": [
+    2560,
+    1440
+  ],
+  "enemies": 7,
+  "alarmsAndGroupIsolation": "PASS",
+  "firingAndCover": "PASS",
+  "consoleErrors": [],
+  "localCacheRepair": "Fresh isolated Vite cache at /private/tmp/rooftop-vite-5267; same playable port 5267"
+}
