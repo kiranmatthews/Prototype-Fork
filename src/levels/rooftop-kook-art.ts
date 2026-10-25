@@ -89,6 +89,17 @@ export function dressKookRooftops(components:CustomComponent[],groups:CustomGrou
    if(c.blocked(r,mid,u,3.4,6))continue;
    asset('kookhydrangea',roofPoint(r,mid,u,c.surface(r,mid,u)+.02),1,yaw+90,d,{s:[5.8,2.3,3.15]});
   }
+  // Lanterns and potted flowers frame the atrium galleries. Keep these on
+  // the outside margin: the curved skating line and the void stay readable.
+  if(r.kind==='atrium'){
+   const neck=Math.min(24,r.depth*.28);
+   for(const side of [-1,1])for(const s of [r.a+neck+3,r.b-neck-3]){
+    const u=side*(r.width/2-1);
+    if(c.blocked(r,s,u,2.2,4))continue;
+    asset('baylamp',roofPoint(r,s,u,r.top),.72,c.yaw(s)+side*90,d);
+    asset('baypot',roofPoint(r,s+1.7,u,r.top),.7,c.yaw(s)+side*35,d);
+   }
+  }
   if(r.kind==='slalom')for(const [t,side] of [[.32,-1],[.68,1]]){
    const s=r.a+r.depth*t,u=side*r.width*.2;
    if(!c.blocked(r,s,u,r.width*.38,4))asset('kookhydrangea',roofPoint(r,s,u,r.top+.1),1,c.yaw(s),d,{s:[r.width*.36,2.5,3.3]});
@@ -126,7 +137,15 @@ export function dressKookRooftops(components:CustomComponent[],groups:CustomGrou
     asset('kookcupola',c.world(mid,r.top+.35,u),1.32,yaw,d);
    }
   }
-  if(r.route>=0)continue;
+  if(r.route>=0){
+   // The optional line is marked by its turquoise roof and a small coastal
+   // lantern where it separates. Nothing spans the player's camera lane.
+   if(!c.roofs.some(previous=>previous.route===r.route&&previous.a<r.a)){
+    const s=r.a+Math.min(30,r.depth*.6),side=c.branch(s,r.route)<0?-1:1;
+    asset('baylamp',roofPoint(r,s,side*(c.width(r,s)/2-.55),c.surface(r,s)),.66,c.yaw(s),d);
+   }
+   continue;
+  }
   // Homes and trees are true 3D silhouettes, with full depth in a moving view.
   const side=r.index%2?-1:1,scale=.94+(r.index%4)*.13;
   let u=side*(62+(r.index%3)*8);

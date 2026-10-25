@@ -1,0 +1,167 @@
+{
+  "base": "http://127.0.0.1:5267",
+  "lite": false,
+  "native": true,
+  "scenes": [
+    {
+      "id": "1-vista",
+      "s": 477.29,
+      "grounded": true,
+      "position": [
+        -212.94905434547934,
+        79.30000000596046,
+        -419.1089289502211
+      ],
+      "state": "ride",
+      "camera": [
+        -210.35051019104435,
+        86.30000000596046,
+        -407.9063592326317
+      ],
+      "assets": {
+        "components": 1493,
+        "placements": 1493,
+        "ready": 710,
+        "skipped": 0,
+        "draws": 260,
+        "triangles": 4706750,
+        "allLodTriangles": 4706750,
+        "cells": 548,
+        "residentCells": 260,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 7,
+        "textureMiB": 147,
+        "errors": [],
+        "windTime": 2.648999999999996
+      },
+      "meshDetail": {
+        "native": 260,
+        "reduced": 0,
+        "automaticLod": 0
+      },
+      "buffer": [
+        2560,
+        1440
+      ],
+      "resolution": "max",
+      "crt": false,
+      "render": {
+        "frame": 1668,
+        "calls": 533,
+        "triangles": 3870192,
+        "points": 0,
+        "lines": 0
+      },
+      "stamp": "Codex/sol fork · build 10-25 08:45 UTC"
+    },
+    {
+      "id": "fork-1-split",
+      "s": 410.12,
+      "route": "fork-1",
+      "grounded": true,
+      "position": [
+        -181.94029775639194,
+        79.30000000596046,
+        -357.9665078170937
+      ],
+      "state": "ride",
+      "camera": [
+        -177.35232548919134,
+        86.30000000596046,
+        -347.4213425516558
+      ],
+      "assets": {
+        "components": 1493,
+        "placements": 1493,
+        "ready": 710,
+        "skipped": 0,
+        "draws": 260,
+        "triangles": 4706750,
+        "allLodTriangles": 4706750,
+        "cells": 548,
+        "residentCells": 260,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 7,
+        "textureMiB": 147,
+        "errors": [],
+        "windTime": 5.2823333333333204
+      },
+      "meshDetail": {
+        "native": 260,
+        "reduced": 0,
+        "automaticLod": 0
+      },
+      "buffer": [
+        2560,
+        1440
+      ],
+      "resolution": "max",
+      "crt": false,
+      "render": {
+        "frame": 3015,
+        "calls": 567,
+        "triangles": 4158742,
+        "points": 0,
+        "lines": 0
+      },
+      "stamp": "Codex/sol fork · build 10-25 08:45 UTC"
+    },
+    {
+      "id": "fork-3-split",
+      "s": 1220.2999999999997,
+      "route": "fork-3",
+      "grounded": true,
+      "position": [
+        19.4955358251058,
+        58.250000005960445,
+        -1022.5091766408582
+      ],
+      "state": "ride",
+      "camera": [
+        26.949507336246274,
+        65.25000000596044,
+        -1013.7519905225262
+      ],
+      "assets": {
+        "components": 1493,
+        "placements": 1493,
+        "ready": 878,
+        "skipped": 0,
+        "draws": 306,
+        "triangles": 5480738,
+        "allLodTriangles": 5480738,
+        "cells": 548,
+        "residentCells": 306,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 6,
+        "textureMiB": 145.67,
+        "errors": [],
+        "windTime": 8.332333333333327
+      },
+      "meshDetail": {
+        "native": 306,
+        "reduced": 0,
+        "automaticLod": 0
+      },
+      "buffer": [
+        2560,
+        1440
+      ],
+      "resolution": "max",
+      "crt": false,
+      "render": {
+        "frame": 4516,
+        "calls": 588,
+        "triangles": 4336897,
+        "points": 10,
+        "lines": 0
+      },
+      "stamp": "Codex/sol fork · build 10-25 08:45 UTC"
+    }
+  ],
+  "errors": [],
+  "failed": []
+}

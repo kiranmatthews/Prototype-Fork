@@ -4,6 +4,7 @@ import {createServer} from 'vite';
 const server=await createServer({server:{middlewareMode:true,hmr:false},appType:'custom'});
 try{
  const {HeightFog}=await server.ssrLoadModule('/src/heightFog.ts');
+ const {validAtmosphere}=await server.ssrLoadModule('/src/levelAtmosphere.ts');
  const material=new THREE.MeshStandardMaterial(),mesh=new THREE.Mesh(new THREE.BoxGeometry(),material),root=new THREE.Group();root.add(mesh);
  let inherited=0;material.onBeforeCompile=()=>inherited++;
  const compile=()=>{const shader={uniforms:{},vertexShader:'#include <worldpos_vertex>',fragmentShader:'#include <fog_fragment>'};material.onBeforeCompile(shader,{});return shader;};
@@ -21,5 +22,12 @@ try{
  assert.equal(uniforms.uHeightFogProfile.value.y,.12,'disposing an old level cannot disable its successor');
  successor.update(root,camera,profile,color,false);assert.equal(uniforms.uHeightFogProfile.value.y,0,'inspection disables the extra haze');
  successor.update(root,camera,profile,color,true);successor.disable();assert.equal(uniforms.uHeightFogProfile.value.y,0,'removing the profile clears its live uniforms');
+ const contour=[[-900,52],[-400,64],[0,86]];
+ assert.ok(validAtmosphere({heightFog:{...profile,contour}}));
+ for(const invalid of [[],[[0,1]],[[0,0],[0,2]],[[1,0],[0,0]],[[0,0],[1,2]],[[0,0],[NaN,0]],Array.from({length:17},(_,i)=>[i,0])])
+  assert.equal(validAtmosphere({heightFog:{...profile,contour:invalid}}),false,'reject malformed or excessive fog contours');
+ successor.update(root,camera,{...profile,contour},color,true);
+ assert.equal(uniforms.uHeightFogCount.value,3);assert.deepEqual(uniforms.uHeightFogContour.value.slice(0,3).map(p=>p.toArray()),contour);
+ successor.update(root,camera,profile,color,true);assert.equal(uniforms.uHeightFogCount.value,0,'reusing the same material can restore planar fog');
  successor.dispose();mesh.geometry.dispose();material.dispose();console.log('PASS height fog: shared material reuse, level exit, successor ownership and inspection');
 }finally{await server.close();}

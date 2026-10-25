@@ -13,7 +13,10 @@ export interface CustomAtmosphereData {
   fogNear?: number;
   fogFar?: number;
   fogColor?: AtmosphereColor;
-  heightFog?: {height:number;density:number;falloff:number;slope?:[number,number]};
+  heightFog?: {height:number;density:number;falloff:number;slope?:[number,number];
+    /** Optional [world Z, fog datum Y] contour, sorted by Z. The end slopes
+     * extend beyond the knots; density remains a continuous volume. */
+    contour?:[number,number][]};
   rain?: RainProfile;
   ambientSky?: AtmosphereColor;
   ambientGround?: AtmosphereColor;
@@ -74,11 +77,17 @@ export function validAtmosphere(value: unknown): value is CustomAtmosphereData {
   }
   if(data.heightFog!==undefined){
     const fog=data.heightFog as Record<string,unknown>;
-    if(!fog||typeof fog!=='object'||Array.isArray(fog)||Object.keys(fog).some(k=>!['height','density','falloff','slope'].includes(k))||
+    if(!fog||typeof fog!=='object'||Array.isArray(fog)||Object.keys(fog).some(k=>!['height','density','falloff','slope','contour'].includes(k))||
       typeof fog.height!=='number'||!Number.isFinite(fog.height)||Math.abs(fog.height)>10000||
       typeof fog.density!=='number'||!Number.isFinite(fog.density)||fog.density<0||fog.density>1||
       typeof fog.falloff!=='number'||!Number.isFinite(fog.falloff)||fog.falloff<.001||fog.falloff>2)return false;
     if(fog.slope!==undefined&&(!Array.isArray(fog.slope)||fog.slope.length!==2||fog.slope.some(v=>typeof v!=='number'||!Number.isFinite(v)||Math.abs(v)>.5)))return false;
+    if(fog.contour!==undefined){
+      if(!Array.isArray(fog.contour)||fog.contour.length<2||fog.contour.length>16)return false;
+      const knots=fog.contour;
+      if(knots.some((p,i)=>!Array.isArray(p)||p.length!==2||p.some(v=>typeof v!=='number'||!Number.isFinite(v)||Math.abs(v)>10000)||
+        i>0&&(p[0]-knots[i-1][0]<.01||Math.abs((p[1]-knots[i-1][1])/(p[0]-knots[i-1][0]))>.5)))return false;
+    }
   }
   if(data.sunDirection!==undefined&&(!Array.isArray(data.sunDirection)||data.sunDirection.length!==3||
     !data.sunDirection.every(v=>typeof v==='number'&&Number.isFinite(v)&&Math.abs(v)<=1)||

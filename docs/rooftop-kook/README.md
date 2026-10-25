@@ -12,7 +12,8 @@ References combine [Netflix’s Outer Banks location guide](https://www.netflix.
 - Roof UVs follow each roof’s pitch and longitudinal direction. An ImageGen height map gives standing seams a light-responsive bump surface. Branch materials use depth bias to prevent coplanar flashes at merges.
 - Supplies occupy terrace margins, masks precede later challenges, and rewards follow large transfers. Metal catering cases provide actual bullet cover while leaving the centre lane and branch junctions open.
 - Three courtyard encounters contain three Karen lookouts and four Kook gunners. Lookouts require sustained sight, visibly wind up, then screech. Alarms wake only their own courtyard’s gunners. Gunners wake, aim, commit to a target, fire a visible projectile, and reload. Cover, interrupting the lookout, and spinning or stomping enemies provide counterplay. Defeating a gunner clears its shots; resets restore the encounter.
-- Meshy characters retain native geometry, PBR maps and skeletons. Imported gestures blend with individual spine elasticity and planted hand/foot contacts. Gun and tracer meshes are original code-authored assets. Alerts and gun cues are original synthesized audio.
+- New Meshy wet-weather characters retain native geometry, PBR maps and skeletons. Imported gestures blend with individual spine elasticity and planted hand/foot contacts. The heirloom shotgun is also a native Meshy asset; supplemental finger joints curl the original hand surface around it. Alerts, gun cues and the rain loop are original synthesized audio.
+- Wind-driven rain, roof splashes, restrained camera beads and wet metal/paving traction support the brewing cyclone. Native 2560×1440 review includes continuous three-angle enemy motion and actual alarm, firing and cover interactions.
 
 ## Global rendering policy
 

@@ -1,0 +1,45 @@
+{
+  "samples": [
+    {
+      "name": "planar",
+      "expected": 0.1264369428156541,
+      "actual": 0.12549019607843137
+    },
+    {
+      "name": "across three grades",
+      "expected": 0.9516411487299867,
+      "actual": 0.9529411764705882
+    },
+    {
+      "name": "clear roof ray",
+      "expected": 0.30391899127147703,
+      "actual": 0.30196078431372547
+    },
+    {
+      "name": "reverse direction",
+      "expected": 0.3039189912714735,
+      "actual": 0.30196078431372547
+    },
+    {
+      "name": "parallel at knot",
+      "expected": 0.5481706086085985,
+      "actual": 0.5490196078431373
+    },
+    {
+      "name": "below fog datum",
+      "expected": 1,
+      "actual": 1
+    },
+    {
+      "name": "past final knot",
+      "expected": 0.2576904035613248,
+      "actual": 0.25882352941176473
+    },
+    {
+      "name": "before first knot",
+      "expected": 0.3607221351101094,
+      "actual": 0.3607843137254902
+    }
+  ],
+  "errors": []
+}

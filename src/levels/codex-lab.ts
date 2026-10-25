@@ -716,7 +716,6 @@ export const ROOFTOP_RELAY_LEVEL:CustomLevelData=(()=>{
    const neck=Math.min(24,r.depth*.28),walk=6.4;
    plate(r,r.a,r.a+neck,r.width,0,'atrium entry');plate(r,r.b-neck,r.b,r.width,0,'atrium exit');
    for(const side of [-1,1])plate(r,r.a+neck-.05,r.b-neck+.05,walk,side*(r.width/2-walk/2),'atrium gallery');
-   for(const side of [-1,1])for(const s of [r.a+neck+3,r.b-neck-3]){if(crossesBranch(r,s,side*(r.width/2-1),3,3))continue;localBox(r,s,side*(r.width/2-1),r.top+1.2,[1.2,2.4,1.2],'#486b60');localBox(r,s,side*(r.width/2-1),r.top+2.6,[3,1.2,3],'#789568');}
    // The opening is a real unfilled void, with a lower visible interior.
    localBox(r,mid,0,1,[Math.max(2,r.width-14),2,Math.max(2,r.depth-24)],'#354b52');
   }else if(r.kind==='crumble'){
@@ -795,9 +794,6 @@ export const ROOFTOP_RELAY_LEVEL:CustomLevelData=(()=>{
   if(c.index===ROOFTOP_DISTRICTS[r.district].last)components.push({t:'crate',p:rooftopWorld(c.s+4,p[1],2.4),kind:r.district%3===2?'life':'mask',grp:300+r.district,nm:'Refuge supply'});
  }
  for(const f of ROOFTOP_FORKS){
-  const p=rooftopWorld(f.a-3,f.top);
-  for(const side of [-1,1]){box(f.index,rooftopWorld(f.a-3,f.top+2,side*4),[.25,4,.25],'#53646b',rooftopYaw(f.a));}
-  box(f.index,[p[0],f.top+4,p[2]],[9,.6,.5],'#8ae4d4',rooftopYaw(f.a));
   components.push({t:'crate',p:rooftopWorld(f.b-8,f.top,roofForkOffset(f.b-8,f.index)+2.4),kind:'mystery',grp:300+f.index,nm:`${f.name} reward`});
  }
  const crystalFork=ROOFTOP_FORKS.find(f=>f.crystal)!,crystalRoofs=ROOFTOP_BRANCH_ROOFS.filter(r=>r.route===crystalFork.index),crystalRoof=crystalRoofs[Math.floor(crystalRoofs.length/2)],crystalS=(crystalRoof.a+crystalRoof.b)/2;
@@ -823,9 +819,13 @@ export const ROOFTOP_RELAY_LEVEL:CustomLevelData=(()=>{
  components.push({t:'gate',p:rooftopPoint(finish),yaw:rooftopYaw(finish),grp:300+last.district,nm:'The Kook Club finish'});
  components.push({t:'clock',p:rooftopWorld(12,rooftopPoint(12)[1],5),grp:300,nm:'City relay time trial'});
  const spawn=rooftopPoint(6);spawn[1]+=.12;
+ // The district plateaus descend at different rates. A continuous fog datum
+ // follows those changes, keeping roof-level contrast and hiding the bases.
+ const fogContour:[number,number][]=ROOFTOP_DISTRICTS.map(d=>[rooftopWorld(d.a,0)[2],ROOFTOP_ROOFS[d.first].top-10]);
+ fogContour.push([rooftopWorld(ROOFTOP_LENGTH,0)[2],last.top-10]);fogContour.reverse();
  return {v:1,name:'Rooftop Relay',spawn,startWarpPad:false,killY:ROOFTOP_LOWEST_Y-24,sky:'clouds',keepPlayFog:true,cameraAirLift:1,cameraLookAhead:15,
   cameraRig:{camDist:11.5,camHeight:7,camPitch:30,camFov:66},
-  atmosphere:{backdrop:'fog',fogEnabled:true,fogNear:55,fogFar:380,fogColor:'#aebdca',heightFog:{height:ROOFTOP_ROOFS[0].top-9,density:.12,falloff:.22,slope:[0,(ROOFTOP_ROOFS[0].top-last.top)/-rooftopWorld(ROOFTOP_LENGTH,0)[2]]},rain:{intensity:.86,wind:[5.5,2.8],lens:.82},ambientSky:'#c7d8e8',ambientGround:'#87939b',ambientIntensity:1.22,sunColor:'#e3edf2',sunIntensity:1.35,sunDirection:[-.65,.58,.48],fillColor:'#9fbdd5',fillIntensity:.55,drawDistance:680,shadowStrength:.48,fallbackTop:'#677d94',fallbackBottom:'#bdc9d1',fallbackFog:'#aebdca',fallbackSunColor:null,fallbackSunU:.77,fallbackSunV:.23},
+  atmosphere:{backdrop:'fog',fogEnabled:true,fogNear:55,fogFar:380,fogColor:'#aebdca',heightFog:{height:ROOFTOP_ROOFS[0].top-10,density:.16,falloff:.3,contour:fogContour},rain:{intensity:.86,wind:[5.5,2.8],lens:.82},ambientSky:'#c7d8e8',ambientGround:'#87939b',ambientIntensity:1.22,sunColor:'#e3edf2',sunIntensity:1.35,sunDirection:[-.65,.58,.48],fillColor:'#9fbdd5',fillIntensity:.55,drawDistance:680,shadowStrength:.48,fallbackTop:'#677d94',fallbackBottom:'#bdc9d1',fallbackFog:'#aebdca',fallbackSunColor:null,fallbackSunU:.77,fallbackSunV:.23},
   medalTimes:{gold:135,silver:210,bronze:340},components,groups};
 })();
 
