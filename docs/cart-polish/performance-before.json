@@ -1,0 +1,90 @@
+{
+  "calm": {
+    "frame": {
+      "meanMs": 16.66568047337278,
+      "p50Ms": 16.700000000000728,
+      "p95Ms": 16.700000000000728
+    },
+    "raceStep": {
+      "meanMs": 1.0305555582046508,
+      "p50Ms": 1,
+      "p95Ms": 1.2000000476837158
+    },
+    "cartPresentation": {
+      "meanMs": 0.3255555510520935,
+      "p50Ms": 0.30000007152557373,
+      "p95Ms": 0.40000009536743164
+    },
+    "fleetPresentation": {
+      "meanMs": 0.3111111044883728,
+      "p50Ms": 0.2999999523162842,
+      "p95Ms": 0.40000009536743164
+    },
+    "render": {
+      "frame": 4057,
+      "calls": 674,
+      "triangles": 662112,
+      "points": 0,
+      "lines": 0
+    },
+    "fleet": {
+      "count": 20,
+      "scale": 1,
+      "cartTriangles": 8086,
+      "fleetTriangles": 138402,
+      "fleetDrawCalls": 76,
+      "geometryBuffers": 20,
+      "steps": 540,
+      "droppedTime": 0,
+      "activeDebris": 0
+    },
+    "flames": 140,
+    "stamp": "Codex/sol fork · build 10-25 12:09 UTC"
+  },
+  "fires": {
+    "frame": {
+      "meanMs": 28.40118343195266,
+      "p50Ms": 33.29999999999927,
+      "p95Ms": 33.400000000001455
+    },
+    "raceStep": {
+      "meanMs": 7.382736155963488,
+      "p50Ms": 7.300000071525574,
+      "p95Ms": 10
+    },
+    "cartPresentation": {
+      "meanMs": 0.2966666671964857,
+      "p50Ms": 0.2999999523162842,
+      "p95Ms": 0.40000009536743164
+    },
+    "fleetPresentation": {
+      "meanMs": 0.2883333338631524,
+      "p50Ms": 0.2999999523162842,
+      "p95Ms": 0.40000009536743164
+    },
+    "render": {
+      "frame": 4993,
+      "calls": 1007,
+      "triangles": 2116127,
+      "points": 0,
+      "lines": 0
+    },
+    "fleet": {
+      "count": 20,
+      "scale": 1,
+      "cartTriangles": 6248,
+      "fleetTriangles": 124960,
+      "fleetDrawCalls": 20,
+      "geometryBuffers": 20,
+      "steps": 1342,
+      "droppedTime": 0,
+      "activeDebris": 0
+    },
+    "flames": 140,
+    "stamp": "Codex/sol fork · build 10-25 12:09 UTC"
+  },
+  "resources": {
+    "objects": 101
+  },
+  "errors": []
+}

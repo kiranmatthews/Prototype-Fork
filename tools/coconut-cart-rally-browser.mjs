@@ -17,7 +17,7 @@ try{
  else{
  await page.getByRole('button',{name:'RACE',exact:true}).click();
  await page.waitForFunction(()=>window.__game.getSkateRace().phase==='running',null,{timeout:30000});
- await page.keyboard.down('ArrowUp');await page.waitForTimeout(1500);await page.keyboard.up('ArrowUp');
+ await page.keyboard.down('ArrowUp');await page.keyboard.down('Space');await page.waitForTimeout(1500);await page.keyboard.up('ArrowUp');await page.keyboard.up('Space');await page.waitForTimeout(1800);
  const drive=await page.evaluate(()=>({speed:window.__game.player.speed,s:window.__game.getSkateRace().riders[0].progress,yaw:window.__game.getSkateRace().carts.fleet.physics.carts[0].yaw}));assert.ok(drive.speed>5,'Real throttle accelerates');
  await page.keyboard.down('ArrowRight');await page.waitForTimeout(300);await page.keyboard.up('ArrowRight');
  const steering=await page.evaluate(()=>window.__game.getSkateRace().carts.fleet.physics.carts[0].yaw);assert.ok(Math.abs(steering-drive.yaw)>.03,'Real steering turns the cart');
@@ -67,9 +67,9 @@ try{
  await page.waitForFunction(()=>window.__game.getSkateRace().mode==='time-trial'&&window.__game.getSkateRace().phase==='running',null,{timeout:30000});
  assert.equal(await page.evaluate(()=>window.__game.getSkateRace().carts.cartForRacer.length),1);
  await page.evaluate(()=>{const g=window.__game,r=g.getSkateRace(),cp=g.getLevel().checkpoints[2];g.player.resetRacePosition(g.getLevel(),cp.spawnPos.clone(),r.course.tangent(r.course.project(cp.spawnPos).s));});
- await page.keyboard.down('ArrowUp');await page.keyboard.down('ArrowRight');
+ await page.keyboard.down('ArrowUp');await page.keyboard.down('ArrowRight');await page.keyboard.down('Space');
  await page.waitForFunction(()=>window.__game.getSkateRace().riders[0].falls>0,null,{timeout:25000});
- await page.keyboard.up('ArrowUp');await page.keyboard.up('ArrowRight');
+ await page.keyboard.up('ArrowUp');await page.keyboard.up('ArrowRight');await page.keyboard.up('Space');
  await page.waitForFunction(()=>window.__game.player.grounded&&Math.abs(window.__game.player.speed)<1,null,{timeout:10000});
  const recovery=await page.evaluate(()=>{const g=window.__game,r=g.getSkateRace();return {pos:g.player.pos.toArray(),anchor:r.riders[0].anchor.toArray(),falls:r.riders[0].falls,clock:g.player.ttTime,supported:r.carts.ground(g.player.pos.x,g.player.pos.z).safe};});
  assert.ok(recovery.supported&&recovery.clock>0);await page.screenshot({path:out+'/recovery.png'});

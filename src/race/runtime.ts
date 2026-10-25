@@ -120,7 +120,7 @@ export class SkateRace {
       const start=level.spawnPos.clone().addScaledVector(right,(r.id%2?1:-1)*2.2)
         .addScaledVector(forward,-Math.floor(r.id/2)*3.5);
       if(mode==='time-trial')start.copy(level.spawnPos);
-      r.player.enterLevel(this.levelId);r.player.raceHooks={onFoot:()=>!!this.carts&&!this.carts.isDriving(r.id),canCollectItem:()=>!r.item&&r.finish===null&&!r.recovery,hazard:(cause,origin)=>this.hazard(r,cause,origin),unrecoverableFall:()=>this.unrecoverableFall(r),fallStarted:()=>{r.falls++;r.recovery=1;r.boost=0;},respawn:()=>this.recover(r)};
+      r.player.enterLevel(this.levelId);r.player.raceHooks={groundCandidates:(x,z)=>this.carts?.groundCandidates(x,z)??level.groundMeshes,onFoot:()=>!!this.carts&&!this.carts.isDriving(r.id),canCollectItem:()=>!r.item&&r.finish===null&&!r.recovery,hazard:(cause,origin)=>this.hazard(r,cause,origin),unrecoverableFall:()=>this.unrecoverableFall(r),fallStarted:()=>{r.falls++;r.recovery=1;r.boost=0;},respawn:()=>this.recover(r)};
       r.player.racePresentationInterval=r.id===0?0:1/15;
       r.player.resetRacePosition(level,start,this.course.tangent(0));
       r.player.hasCrystal=false;r.player.gemEarned=false;r.player.cratesBroken=0;r.player.bonusCrates=0;
@@ -236,8 +236,8 @@ export class SkateRace {
   order():Rider[] {return this.riders.slice(0,this.count).sort((a,b)=>a.finish!==null&&b.finish!==null?a.finish-b.finish:a.finish!==null?-1:b.finish!==null?1:b.progress-a.progress||a.id-b.id);}
   rank(id=0):number {return this.order().findIndex(r=>r.id===id)+1;}
   /** Rivals use normal device inputs, with reaction time and imperfect pace. */
-  drive(id:number):Input {
-    if(this.carts){const input=this.carts.drive(id),r=this.riders[id];if(r.item&&r.itemCooldown<=0){input.itemPressed=true;r.itemCooldown=3;}return input;}
+  drive(id:number,reuseCartInput=false):Input {
+    if(this.carts){const input=reuseCartInput?this.carts.inputFor(id):this.carts.drive(id),r=this.riders[id];if(r.item&&r.itemCooldown<=0){input.itemPressed=true;r.itemCooldown=3;}return input;}
     const r=this.riders[id],p=r.player,c=this.course!,input=blankInput();
     if(r.finish!==null||r.recovery>0||p.state==='dead'||p.skateCameraBailing)return input;
     const look=THREE.MathUtils.clamp(Math.abs(p.speed)*.5,7,21);
@@ -328,7 +328,7 @@ export class SkateRace {
     for(const r of this.riders.slice(0,this.count)){
       const p=r.player;r.previousProgress=r.progress;r.shield=Math.max(0,r.shield-dt);r.star=Math.max(0,r.star-dt);r.knockGrace=Math.max(0,r.knockGrace-dt);r.itemCooldown-=dt;r.attackCooldown-=dt;r.think-=dt;r.parry=Math.max(0,r.parry-dt);r.dodge=Math.max(0,r.dodge-dt);
       if(r.finish!==null){this.finishRollout(r,dt);this.placeMarker(r);continue;}
-      level.raceActorId=r.id;const device=r.id===0?input:this.drive(r.id);
+      level.raceActorId=r.id;const device=r.id===0?input:this.drive(r.id,true);
       if(device.itemPressed)this.useItem(r.id,device.moveY<-.5);
       const previousPosition=cartPrevious?.[r.id]??p.pos.clone();
       if(r.boost>0){r.boost=Math.max(0,r.boost-dt);if(!this.carts&&p.boardRolling&&p.speed<42){p.speed=Math.min(42,Math.max(0,p.speed)+dt*20);p.registerSkateBoost();}}
@@ -630,7 +630,7 @@ export class SkateRace {
    * retaining vertical reflection coverage and all simulation/interaction work. */
   updateView(camera:THREE.Camera):void {
     if(!this.active)return;
-    camera.updateMatrixWorld(true);this.effects.updateView(camera);camera.getWorldPosition(this.viewOrigin);camera.getWorldDirection(this.viewForward).setY(0).normalize();
+    camera.updateMatrixWorld(true);this.effects.updateView(camera);this.carts?.updateView(camera);camera.getWorldPosition(this.viewOrigin);camera.getWorldDirection(this.viewForward).setY(0).normalize();
     const spread=1/Math.max(.01,Math.abs(camera.projectionMatrix.elements[0])),margin=10;
     const far=(camera instanceof THREE.PerspectiveCamera?camera.far:400)+margin;
     for(const r of this.riders)if(r.scene){

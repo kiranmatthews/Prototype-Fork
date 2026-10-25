@@ -1,5 +1,5 @@
 import type { MedalTimes, TimeMedal } from '../campaign';
-import type { Vector3 } from 'three';
+import type { Object3D, Vector3 } from 'three';
 import type { WipeoutCause } from '../character/wipeoutPolicy';
 
 export type RacePoint = [number, number, number];
@@ -18,10 +18,23 @@ export interface SkateRaceData {
 }
 export type RaceItem = 'banana' | 'green-shell' | 'red-shell' | 'blue-shell' | 'shock-shell' | 'mushroom' | 'shield' | 'horn' | 'water-bomb' | 'boomerang' | 'star' | 'tidal-wave';
 export const RALLY_ITEM_NAMES:Partial<Record<RaceItem,string>>={banana:'BANANA BOMB TRIO','green-shell':'TRIPLE COCONUT CANNON','red-shell':'HOMING COCONUT','blue-shell':'CLUB PRESIDENT ERASER','shock-shell':'BAD WEATHER POLICY','water-bomb':'POOL PARTY MORTAR',horn:'FOURTEEN FORE!',mushroom:'QUESTIONABLE ENERGY DRINK',boomerang:'RETURN TO SENDER',star:'LIABILITY WAIVER','tidal-wave':'TSUNAMI TEE TIME'};
+export const RALLY_ITEM_DESCRIPTIONS:Partial<Record<RaceItem,string>>={
+  banana:'Drop three explosive peels behind your kart; the splash catches nearby rivals',
+  'green-shell':'Fire three ricocheting coconuts; hold back to fire behind you',
+  'red-shell':'A homing coconut tracks the racer ahead; spin, dodge or shield to counter',
+  'blue-shell':'Marks the leader for a huge blast; leave the ring before it hits',
+  'shock-shell':'Lightning damages every grounded rival after a warning; jump or shield',
+  'water-bomb':'A giant pool-party splash; get out of the marked circle',
+  horn:'Shunt every rival within 13 metres and clear nearby projectiles',
+  mushroom:'Four seconds of extra kart power; save it for a straight or a jump approach',
+  star:'Six seconds of protection and extra kart power; falls still count',
+};
 export type RacePhase = 'grid' | 'countdown' | 'running' | 'finished';
 export type RaceMode = 'race' | 'time-trial';
 export interface RacePlayerHooks {
   onFoot?: () => boolean;
+  /** Exact static candidates for vertical probes, supplied only by the kart course. */
+  groundCandidates?: (x:number,z:number) => Object3D[];
   canCollectItem?: () => boolean;
   hazard: (cause: WipeoutCause, origin?: Vector3) => void;
   unrecoverableFall?: () => boolean;
@@ -34,7 +47,7 @@ export interface RaceThreat {
 }
 export interface RaceHudState {
   vehicle?: 'golf-cart'; crystalReward?:boolean;
-  cart?: {health:number|null;onFoot:boolean;target:string;distance:number|null;notice:string;charge:number;spinReady:boolean};
+  cart?: {onFoot:boolean;target:string;distance:number|null;notice:string;actionReady:boolean;bearing:number|null};
   title:string; sections:readonly string[]; medalTimes:MedalTimes; medal:TimeMedal|null;
   phase: RacePhase; mode: RaceMode; countdown: number; runTime: number; elapsed: number; freeze: number;
   rank: number; item: RaceItem | null; shield: number; star: number; recovering: number;

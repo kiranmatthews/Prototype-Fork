@@ -46,7 +46,7 @@ await withBlockworksRuntime(async r=>{
  const cp=r.l.checkpoints[2];r.p.resetRacePosition(r.l,cp.spawnPos.clone(),race.course.tangent(race.course.project(cp.spawnPos).s));
  let fell=false,fallAt=-1;
  for(let f=0;f<1000;f++){
-  race.step(r.dt,fell?{moveX:0,moveY:0}:{moveX:1,moveY:1});
+  race.step(r.dt,fell?{moveX:0,moveY:0}:{moveX:1,moveY:1,jumpHeld:true});
   if(!fell&&race.riders[0].falls>0){fell=true;fallAt=f;}
   if(fell&&f>fallAt+60)break;
  }

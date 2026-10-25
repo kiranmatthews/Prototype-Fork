@@ -14,6 +14,20 @@ await withBlockworksRuntime(async r=>{
  controls.sample(.3,{jumpHeld:true});assert.equal(controls.sample(.01,{jumpCancelled:true,jumpHeld:false}).hop,false,'focus cancellation cannot jump');
  assert.equal(controls.sample(.01,{grindHeld:true}).handbrake,false,'Triangle never handbrakes');
  assert.equal(controls.sample(.01,{transferHeld:true}).handbrake,true,'R2 drifts');
+ const pedal=new GolfCartPhysics(flat,[{x:0,z:0,yaw:0}]),buttons=new RallyControls();
+ for(let i=0;i<120;i++)pedal.advance(1/60,w=>w.inputs[0]=buttons.sample(1/60,{moveY:1}));
+ assert.equal(pedal.carts[0].speed,0,'direction alone is not an accelerator');
+ for(let i=0;i<120;i++)pedal.advance(1/60,w=>w.inputs[0]=buttons.sample(1/60,{moveY:1,jumpHeld:true}));
+ assert.ok(pedal.carts[0].speed>8,'holding X accelerates the real vehicle');assert.equal(pedal.carts[0].airborneCount,0);
+ assert.equal(buttons.sample(1/60,{moveY:1,jumpHeld:true,grabHeld:true}).throttle,0,'Circle wins over acceleration');
+ assert.equal(buttons.sample(1/60,{moveY:-1,jumpHeld:true},{yaw:0,speed:12,forward:{x:0,z:-1}}).brake,1,'pull-back brakes like skating');
+ assert.equal(buttons.sample(1/60,{moveY:1,jumpHeld:true},{yaw:0,speed:-4,forward:{x:0,z:-1}}).throttle,1,'forward intent leaves reverse through the physical brake');
+ const speed=pedal.carts[0].speed;pedal.advance(1/60,w=>w.inputs[0]=buttons.sample(1/60,{jumpReleased:true}));assert.ok(pedal.carts[0].speed<=speed,'release coasts and hops');assert.equal(pedal.carts[0].airborneCount,1);
+ for(const yaw of [0,Math.PI/2,-Math.PI/2,Math.PI]){
+  const forward={x:-Math.sin(yaw),z:-Math.cos(yaw)};
+  assert.ok(buttons.sample(1/60,{moveX:1,jumpHeld:true},{yaw,speed:8,forward}).steer<0,'screen-right is a right turn at every course heading');
+  assert.ok(Math.abs(buttons.sample(1/60,{moveY:1,jumpHeld:true},{yaw,speed:8,forward}).steer)<1e-8,'screen-forward follows the lane');
+ }
  const legacy=new GolfCartPhysics(flat,[{x:0,z:0,yaw:0}]);
  for(let i=0;i<80;i++)for(const w of [physics,legacy]){w.carts[0].cooldown=0;w.damage(0,15,0,-1);}
  assert.equal(physics.carts[0].health,0,'repeated hits to a saturated panel still accumulate');assert.ok(legacy.carts[0].health>0,'country-club traffic retains its original rules');
@@ -38,7 +52,7 @@ await withBlockworksRuntime(async r=>{
  tick({},60);const beforeJump=r.p.pos.y;tick({jumpHeld:true},24);tick({jumpReleased:true},1);tick({},8);assert.ok(r.p.pos.y>beforeJump+.2,'on-foot charge jump works');assert.equal(r.p.boardRolling,false);
  tick({},240);assert.equal(carts.isDriving(0),false,'no automatic new kart after destruction');
  // Return to a healthy parked loaner using the real interaction edge.
- const spare=carts.count;setupNear(0,spare,2.8);tick({grindHeld:true});assert.equal(carts.cartForRacer[0],spare);assert.equal(carts.burning[vehicle],true);
+ const spare=carts.fleet.physics.carts.findIndex((c,i)=>i>=carts.count&&carts.driverForCart[i]<0&&!carts.burning[i]&&!c.tumbling&&carts.locked[i]===0);assert.ok(spare>=0,'an available parked loaner exists');setupNear(0,spare,2.8);tick({grindHeld:true});assert.equal(carts.cartForRacer[0],spare);assert.equal(carts.burning[vehicle],true);
  // An on-foot rival uses exactly the same steal action, including the human target.
  carts.locked[spare]=0;carts.actionCooldown[1]=0;setupNear(1,spare,2.2);race.riders[1].recovery=0;
  race.riders[1].player.resetRacePosition(r.l,race.riders[1].player.pos.clone(),race.course.tangent(0),true);
@@ -54,7 +68,7 @@ await withBlockworksRuntime(async r=>{
  race.start('time-trial',0);assert.equal(race.count,1);assert.equal(race.carts.cartForRacer.length,1);assert.ok(race.carts.fleet.models.length>1,'solo rescue loaners remain available');
  assert.equal(race.carts.stats.wrecks,0);assert.ok(race.carts.fleet.physics.carts.every(c=>c.health===1),'restart resets damage');
  assert.equal(JSON.stringify(r.TUNING),tuning);
- await writeFile(process.env.CART_MAYHEM_REPORT??'docs/cart-mayhem/mechanics.json',JSON.stringify({passed:true,controls:'release hop / Circle brake / R2 drift / Square shunt / Triangle steal',ownership:true,damage:true,burnout:true,footMovement:true,onFootFinish:true,rivalTheft:true,loaners:race.carts.fleet.models.length-1,tuningUnchanged:true},null,2)+'\n');
+ await writeFile(process.env.CART_MAYHEM_REPORT??'docs/cart-mayhem/mechanics.json',JSON.stringify({passed:true,controls:'X acceleration / directional steering / release hop / Circle brake / R2 drift / Square shunt / Triangle steal',ownership:true,damage:true,burnout:true,footMovement:true,onFootFinish:true,rivalTheft:true,loaners:race.carts.fleet.models.length-1,tuningUnchanged:true},null,2)+'\n');
  race.attach({skateRace:null},'flats');assert.equal(r.p.group.visible,true);assert.equal(r.p.raceHooks,null);
  console.log('PASS rally controls, accumulating damage, ejection, foot jump/movement, two-way theft, weapon spreads, solo restart and cleanup');
 },{modulePath:'/src/levels/coconut-cart-rally.ts',source:m=>m.COCONUT_CART_RALLY_LEVEL,levelId:'coconut-cart-rally'});

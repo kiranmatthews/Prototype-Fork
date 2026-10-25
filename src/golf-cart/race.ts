@@ -4,7 +4,7 @@ import type { Input } from '../input';
 import type { Player } from '../player';
 import { RaceCourse } from '../race/course';
 import { RACE_ROSTER } from '../race/types';
-import { GolfCartFleet } from './fleet';
+import { GolfCartFleet, type FleetPose } from './fleet';
 import { NO_CART_INPUT, type GroundSample, type CartInput } from './physics';
 import { RallyControls } from './controls';
 import { CartMayhemEffects } from './mayhemEffects';
@@ -17,8 +17,8 @@ interface Racer {
 }
 const clamp=THREE.MathUtils.clamp;
 
-/** The existing cart solver owns all eight vehicles. Players are camera/HUD
- * adapters only; neither AI nor the race clock moves a vehicle along a spline. */
+/** The cart solver owns vehicle movement; ejected racers use the normal foot motor.
+ * Ownership changes preserve the vehicle, damage, momentum and race progress. */
 export class GolfCartRace {
   readonly fleet:GolfCartFleet;
   readonly cartForRacer:number[]=[];
@@ -33,15 +33,21 @@ export class GolfCartRace {
   private locked:number[]=[];
   private spareTime:number[]=[];
   private loanWait:number[]=[];
+  private footStill:number[]=[];private footLast:THREE.Vector3[]=[];private footJump:boolean[]=[];
   private homes:{x:number;z:number;yaw:number}[]=[];
   private effects:CartMayhemEffects;
   private jumpRanges:{a:number;b:number}[]=[];
   private notice='';private noticeTime=0;
-  private previous:{x:number;y:number;z:number;yaw:number}[]=[];
+  private previous:FleetPose[]=[];
+  private renderPoses:FleetPose[]=[];
+  private navigation:{x:number;y:number;z:number;s:number;height:number}[]=[];
+  private takeRay=new THREE.Ray();private takeEnd=new THREE.Vector3();private takeHit=new THREE.Vector3();
+  private humanTarget=-1;private targetMarker=-1;private sampledInputs:Input[]=[];
   private respawns:number[]=[];
   private stun:number[]=[];
   private cache=new Map<string,GroundSample>();
   private cells=new Map<string,THREE.Object3D[]>();
+  private emptyGround:THREE.Object3D[]=[];
   private ray=new THREE.Raycaster(new THREE.Vector3(),new THREE.Vector3(0,-1,0),0,10000);
   private high=100;
   private point=new THREE.Vector3();
@@ -65,7 +71,7 @@ export class GolfCartRace {
     this.homes=spawns.map(s=>({...s}));
     const obstacles=level.walls.filter(b=>b.max.y-b.min.y>1&&b.max.x-b.min.x<9&&b.max.z-b.min.z<9)
       .map((b,i)=>({x:(b.min.x+b.max.x)/2,z:(b.min.z+b.max.z)/2,radius:Math.max(b.max.x-b.min.x,b.max.z-b.min.z)/2,height:b.max.y-b.min.y,id:`rally-barrier-${i}`}));
-    this.fleet=new GolfCartFleet({ground:(x,z)=>this.ground(x,z),spawns,obstacles,
+    this.fleet=new GolfCartFleet({damageVisuals:true,ground:(x,z)=>this.ground(x,z),spawns,obstacles,
       physics:{topSpeed:38,engine:23,speedLimit:44,maxLaunchVelocity:17,airRecoveryDelay:6,damageCapacity:8}});
     this.racerStyles=[...this.fleet.driverStyles];
     this.fleet.models.forEach((m,i)=>{
@@ -73,15 +79,16 @@ export class GolfCartRace {
       this.driverForCart[i]=i<count?i:-1;this.burning[i]=false;this.locked[i]=0;this.spareTime[i]=0;
       if(i>=count)this.fleet.setDriver(i,null);
     });
-    for(let i=0;i<count;i++){this.cartForRacer[i]=i;this.controls[i]=new RallyControls();this.actionCooldown[i]=0;this.spinCooldown[i]=0;this.spinTime[i]=0;this.loanWait[i]=0;}
+    for(let i=0;i<count;i++){this.cartForRacer[i]=i;this.controls[i]=new RallyControls();this.actionCooldown[i]=0;this.spinCooldown[i]=0;this.spinTime[i]=0;this.loanWait[i]=0;this.footStill[i]=0;this.footLast[i]=racers[i].player.pos.clone();this.footJump[i]=false;}
     this.effects=new CartMayhemEffects(this.fleet);
-    this.previous=this.fleet.physics.carts.map(c=>({...c}));this.respawns=spawns.map(()=>0);this.stun=spawns.map(()=>0);
+    this.previous=this.fleet.physics.carts.map(c=>({x:c.x,y:c.y,z:c.z,yaw:c.yaw}));this.renderPoses=this.previous.map(p=>({...p}));this.respawns=spawns.map(()=>0);this.stun=spawns.map(()=>0);
     this.sync();
   }
+  groundCandidates(x:number,z:number):THREE.Object3D[]{return this.cells.get(`${Math.floor(x/16)},${Math.floor(z/16)}`)??this.emptyGround;}
   private probe(x:number,z:number):GroundSample {
     const key=`${x},${z}`,cached=this.cache.get(key);if(cached)return cached;
     this.ray.ray.origin.set(x,this.high,z);
-    const hit=this.ray.intersectObjects(this.cells.get(`${Math.floor(x/16)},${Math.floor(z/16)}`)??[],false)
+    const hit=this.ray.intersectObjects(this.groundCandidates(x,z),false)
       .find(h=>h.face&&h.face.normal.y>.04&&!h.object.userData.lethal&&!h.object.userData.outOfBounds);
     const sand=hit?.object.name==='Sand trap';
     const sample={height:hit?.point.y??this.level.killY-10,grip:sand?.58:1,drag:sand?5:.08,safe:!!hit,supported:!!hit};
@@ -95,25 +102,37 @@ export class GolfCartRace {
     return {...q[0],height:THREE.MathUtils.lerp(THREE.MathUtils.lerp(q[0].height,q[1].height,tx),THREE.MathUtils.lerp(q[2].height,q[3].height,tx),tz)};
   }
   isDriving(id:number){return (this.cartForRacer[id]??-1)>=0;}
+  private cartProgress(index:number){
+    const c=this.fleet.physics.carts[index],saved=this.navigation[index];
+    if(saved&&saved.x===c.x&&saved.y===c.y&&saved.z===c.z)return saved;
+    const s=this.course.project(this.point.set(c.x,c.y,c.z)).s,height=this.course.sample(s,0,this.point).y;
+    return this.navigation[index]={x:c.x,y:c.y,z:c.z,s,height};
+  }
   private canTake(id:number,index:number,navigate=false){
     const c=this.fleet.physics.carts[index],p=this.racers[id].player,owner=this.driverForCart[index];
     if(index===this.cartForRacer[id]||this.burning[index]||c.tumbling||this.locked[index]>0||owner>=0&&this.racers[owner].finish!==null)return false;
     if(navigate){
-      const progress=this.course.project(new THREE.Vector3(c.x,c.y,c.z)).s;
+      const nav=this.cartProgress(index),progress=nav.s;
       const next=this.jumpRanges.find(j=>j.b>this.racers[id].progress+2);
-      const previous=this.jumpRanges.filter(j=>j.b<=this.racers[id].progress+2).slice(-1)[0];
-      return (!next||progress<next.a-3)&&(!previous||progress>previous.b+3)&&Math.abs(c.y-this.course.sample(progress).y)<5;
+      let previous:typeof next;for(const jump of this.jumpRanges){if(jump.b>this.racers[id].progress+2)break;previous=jump;}
+      return (!next||progress<next.a-3)&&(!previous||progress>previous.b+3)&&Math.abs(c.y-nav.height)<5;
     }
     if(Math.abs(p.pos.y-c.y)>3)return false;
-    const from=p.pos.clone().setY(p.pos.y+.9),to=new THREE.Vector3(c.x,c.y+.9,c.z),distance=from.distanceTo(to);
-    const ray=new THREE.Ray(from,to.sub(from).normalize()),hit=new THREE.Vector3();
-    return !this.level.walls.some(w=>ray.intersectBox(w,hit)&&hit.distanceTo(from)<distance);
+    const from=this.takeRay.origin.copy(p.pos);from.y+=.9;this.takeEnd.set(c.x,c.y+.9,c.z);const distance=from.distanceTo(this.takeEnd);
+    this.takeRay.direction.copy(this.takeEnd).sub(from).normalize();
+    return !this.level.walls.some(w=>this.takeRay.intersectBox(w,this.takeHit)&&this.takeHit.distanceToSquared(from)<distance*distance);
   }
   nearest(id:number,range=4.8){
     let found=-1,best=range*range;const p=this.racers[id].player;
     for(const [i,c]of this.fleet.physics.carts.entries()){
       const d=(c.x-p.pos.x)**2+(c.z-p.pos.z)**2;
       if(d<best&&this.canTake(id,i,range>5)){found=i;best=d;}
+    }
+    // A small preference band keeps the ring and Triangle prompt on one target in a crowd.
+    if(id===0&&range===4.8){
+      const old=this.humanTarget,c=this.fleet.physics.carts[old];
+      if(old!==found&&c&&this.canTake(id,old)){const distance=Math.hypot(c.x-p.pos.x,c.z-p.pos.z);if(distance<range&&distance<Math.sqrt(best)+.75)found=old;}
+      this.humanTarget=found;
     }
     return found;
   }
@@ -157,7 +176,7 @@ export class GolfCartRace {
     if(this.burning[index])return;
     const c=this.fleet.physics.carts[index],owner=this.driverForCart[index];
     this.burning[index]=true;c.health=0;this.stats.wrecks++;
-    this.fleet.models[index].setPalette({paint:'#493a32',cream:'#736657',cargo:'#5e4939'});
+    this.fleet.models[index].setScorched(true);
     if(owner>=0){this.exit(owner,true);if(!owner)this.announce('KART TOAST! RUN. STEAL. REPEAT.');}
     puffs.burst('boomTnt',c.x,c.y+1,c.z,{strength:1.5,count:12});
     sfx.withGain(Math.max(.05,1-this.racers[0].player.pos.distanceTo(new THREE.Vector3(c.x,c.y,c.z))/65),()=>sfx.play('tntBoom',.7,.7));
@@ -168,13 +187,14 @@ export class GolfCartRace {
       const p=r.player,target=this.nearest(id,350),ahead=target>=0?new THREE.Vector3(this.fleet.physics.carts[target].x,p.pos.y,this.fleet.physics.carts[target].z):this.course.sample(r.progress+8);
       if(target<0){const gap=this.jumpRanges.find(j=>j.b>r.progress);if(gap)this.course.sample(Math.min(r.progress+8,gap.a-12),0,ahead);}
       if(target>=0&&p.pos.distanceTo(ahead)>20){
-        const targetProgress=this.course.project(ahead).s;
+        const targetProgress=this.cartProgress(target).s;
         this.course.sample(r.progress+Math.sign(targetProgress-r.progress)*9,0,ahead);
       }
       if(r.progress>this.course.length-20)ahead.addScaledVector(this.course.tangent(this.course.length),25);
       const dx=ahead.x-p.pos.x,dz=ahead.z-p.pos.z,n=Math.hypot(dx,dz)||1,basis=p.raceInputBasis(this.level),bn=Math.hypot(basis.x,basis.z)||1;
+      const stuck=this.footStill[id]>1.1,jumpHeld=stuck&&this.fleet.physics.time%1.2<.55,jumpPressed=jumpHeld&&!this.footJump[id],jumpReleased=this.footJump[id]&&!jumpHeld;this.footJump[id]=jumpHeld;
       return {moveX:clamp((-basis.z*dx+basis.x*dz)/bn/n,-1,1),moveY:clamp((basis.x*dx+basis.z*dz)/bn/n,-1,1),grindPressed:this.nearest(id)>=0,
-        jumpHeld:false,jumpPressed:false,spinPressed:false,itemPressed:false} as Input;
+        jumpHeld,jumpPressed,jumpReleased,spinPressed:stuck&&p.grounded,itemPressed:false} as Input;
     }
     const c=this.fleet.physics.carts[index],look=clamp(Math.abs(c.speed)*.55,9,22);
     let offset=id===0?0:(id%2?1:-1)*(2.2+Math.floor(id/2)*1.1);
@@ -186,22 +206,25 @@ export class GolfCartRace {
     if(r.progress>this.course.length-25)ahead.addScaledVector(this.course.tangent(this.course.length),40);
     const bearing=Math.atan2(-(ahead.x-c.x),-(ahead.z-c.z)),angle=Math.atan2(Math.sin(bearing-c.yaw),Math.cos(bearing-c.yaw));
     const desired=(id===0?34:31.5+(id%3)*.65)/(1+Math.abs(angle)*.65),target=this.nearest(id);
-    return {moveX:-clamp(angle*1.9,-1,1),moveY:clamp((desired-c.speed)*.24+.2,0,1),grabHeld:c.speed>desired+2,
+    const dx=ahead.x-c.x,dz=ahead.z-c.z,n=Math.hypot(dx,dz)||1,basis=r.player.raceInputBasis(this.level),bn=Math.hypot(basis.x,basis.z)||1;
+    return {moveX:clamp((-basis.z*dx+basis.x*dz)/bn/n,-1,1),moveY:clamp((basis.x*dx+basis.z*dz)/bn/n,-1,1),grabHeld:c.speed>desired+2,
       grindPressed:c.health<.35&&target>=0&&this.fleet.physics.carts[target].health>c.health+.2,
-      jumpHeld:false,jumpPressed:false,itemPressed:false} as Input;
+      jumpHeld:true,jumpPressed:false,itemPressed:false} as Input;
   }
+  inputFor(id:number):Input{return this.sampledInputs[id]??this.drive(id);}
   step(dt:number,input:Input){
     const world=this.fleet.physics;this.noticeTime=Math.max(0,this.noticeTime-dt);
-    const samples=this.racers.slice(0,this.count).map((_,i)=>i===0?input:this.drive(i));
+    const samples=this.sampledInputs=this.racers.slice(0,this.count).map((_,i)=>i===0?input:this.drive(i));
     for(let i=0;i<this.count;i++){
       const rider=this.racers[i],foot=rider.player;
-      this.loanWait[i]=!this.isDriving(i)&&this.nearest(i,350)<0?this.loanWait[i]+dt:0;
+      if(this.isDriving(i)||foot.pos.distanceToSquared(this.footLast[i])>1){this.footStill[i]=0;this.footLast[i].copy(foot.pos);}else this.footStill[i]+=dt;
+      this.loanWait[i]=!this.isDriving(i)&&(this.nearest(i,350)<0||i>0&&this.footStill[i]>4)?this.loanWait[i]+dt:0;
       if(this.loanWait[i]>2.5&&rider.finish===null){
-        const next=this.jumpRanges.find(j=>j.a>rider.progress),at=next?next.a-62:rider.progress+12;
-        const bay=this.course.sample(at,10),heading=this.course.tangent(at);
-        const reserve=world.carts.findIndex((c,index)=>index>=this.count&&this.driverForCart[index]<0&&this.racers.slice(0,this.count).every(r=>r.player.pos.distanceTo(new THREE.Vector3(c.x,c.y,c.z))>30));
-        if(reserve>=0&&this.ground(bay.x,bay.z).supported){
-          const home={x:bay.x,z:bay.z,yaw:Math.atan2(-heading.x,-heading.z)};this.homes[reserve]=home;Object.assign(world.spawns[reserve],home);world.reset(reserve);this.burning[reserve]=false;this.fleet.models[reserve].setPalette({paint:'#95ee65',cream:'#f5e8ca',cargo:'#f16a45'});this.previous[reserve]={...world.carts[reserve]};this.respawns[reserve]=0;this.loanWait[i]=0;
+        const reserve=world.carts.findIndex((c,index)=>index>=this.count&&this.driverForCart[index]<0&&this.racers.slice(0,this.count).every(r=>(r.player.pos.x-c.x)**2+(r.player.pos.z-c.z)**2>900));
+        const delivery=reserve>=0?this.loanerBay(rider.progress,reserve,this.footStill[i]>4):null;
+        if(delivery){
+          const {bay,heading}=delivery;
+          const home={x:bay.x,z:bay.z,yaw:Math.atan2(-heading.x,-heading.z)};this.homes[reserve]=home;Object.assign(world.spawns[reserve],home);world.reset(reserve);this.burning[reserve]=false;this.fleet.models[reserve].setScorched(false);this.fleet.models[reserve].setPalette({paint:'#95ee65',cream:'#f5e8ca',cargo:'#f16a45'});this.previous[reserve]={...world.carts[reserve]};this.respawns[reserve]=0;this.loanWait[i]=0;
           if(i===0)this.announce('THE CLUB HAS SENT ANOTHER LOANER');
         }
       }
@@ -218,9 +241,9 @@ export class GolfCartRace {
         sfx.withGain(i===0?1:.12,()=>sfx.play('woosh2',.6,.6));
       }
     }
-    const controls=samples.map((s,i)=>this.controls[i].sample(dt,s));
+    const controls=samples.map((s,i)=>{const c=world.carts[this.cartForRacer[i]];return this.controls[i].sample(dt,s,c?{yaw:c.yaw,speed:c.speed,forward:this.racers[i].player.raceInputBasis(this.level)}:undefined);});
     for(const [index,c]of world.carts.entries()){
-      this.previous[index]={x:c.x,y:c.y,z:c.z,yaw:c.yaw};this.locked[index]=Math.max(0,this.locked[index]-dt);this.stun[index]=Math.max(0,this.stun[index]-dt);
+      Object.assign(this.previous[index],{x:c.x,y:c.y,z:c.z,yaw:c.yaw});this.locked[index]=Math.max(0,this.locked[index]-dt);this.stun[index]=Math.max(0,this.stun[index]-dt);
       const owner=this.driverForCart[index],r=owner>=0?this.racers[owner]:null;
       if(r&&r.player.pos.distanceToSquared(this.point.set(c.x,c.y,c.z))>36){
         Object.assign(world.spawns[index],{x:r.player.pos.x,z:r.player.pos.z,yaw:Math.atan2(-r.player.raceHeading.x,-r.player.raceHeading.z)});world.reset(index,false);
@@ -257,8 +280,8 @@ export class GolfCartRace {
         // Loaners are replenished at their marked bay, never under a driver.
         const home=this.homes[index];
         this.spareTime[index]=index>=this.count&&(this.burning[index]||Math.hypot(c.x-home.x,c.z-home.z)>45)?this.spareTime[index]+dt:0;
-        if(this.spareTime[index]>18&&this.racers.slice(0,this.count).every(r=>r.player.pos.distanceTo(new THREE.Vector3(c.x,c.y,c.z))>18&&Math.hypot(r.player.pos.x-home.x,r.player.pos.z-home.z)>8)){
-          Object.assign(world.spawns[index],home);world.reset(index);this.burning[index]=false;this.fleet.models[index].setPalette({paint:'#95ee65',cream:'#f5e8ca',cargo:'#f16a45'});this.spareTime[index]=0;this.previous[index]={...c};this.respawns[index]=0;
+        if(this.spareTime[index]>18&&this.racers.slice(0,this.count).every(r=>(r.player.pos.x-c.x)**2+(r.player.pos.z-c.z)**2>324)&&this.clearBay(home.x,home.z,index)){
+          Object.assign(world.spawns[index],home);world.reset(index);this.burning[index]=false;this.fleet.models[index].setScorched(false);this.fleet.models[index].setPalette({paint:'#95ee65',cream:'#f5e8ca',cargo:'#f16a45'});this.spareTime[index]=0;this.previous[index]={...c};this.respawns[index]=0;
         }
         continue;
       }
@@ -271,7 +294,24 @@ export class GolfCartRace {
       if(r.finish===null)for(const box of this.level.crates)if(box.alive&&Math.abs(box.mesh.position.y-c.y)<2.8&&Math.hypot(box.mesh.position.x-c.x,box.mesh.position.z-c.z)<2.15)this.level.breakCrate(box,true);
       if(owner===0&&r.finish===null&&!this.level.runMode)for(const cp of this.level.checkpoints)if(Math.abs(cp.spawnPos.y-c.y)<3&&Math.hypot(cp.spawnPos.x-c.x,cp.spawnPos.z-c.z)<10){r.boxes.add(cp);r.player.cratesBroken=r.boxes.size;if(!cp.active)this.level.activateCheckpoint(cp,r.player.cratesBroken);}
     }
-    this.sync();this.effects.update(dt,this.burning,this.nearest(0));
+    this.sync();this.targetMarker=this.nearest(0);this.effects.update(dt,this.burning);
+  }
+  private loanerBay(progress:number,reserve:number,near=false){
+    const next=this.jumpRanges.find(j=>j.a>progress),at=next?Math.min(next.a-62,near?progress+16:Infinity):Math.min(this.course.length-12,progress+20);
+    let minimum=4;for(const jump of this.jumpRanges){if(jump.b>progress)break;minimum=jump.b+8;}
+    // A burning pile can block the usual parking bay. Search supported spaces
+    // on this road segment, keeping the jump's acceleration runway intact.
+    for(const back of [0,8,16,24,32])for(const offset of [10,-10,6,-6]){
+      const s=at-back;if(s<minimum)continue;
+      const bay=this.course.sample(s,offset),ground=this.ground(bay.x,bay.z);
+      if(!ground.supported||!ground.safe||Math.abs(ground.height-bay.y)>5||!this.clearBay(bay.x,bay.z,reserve))continue;
+      return {bay,heading:this.course.tangent(s)};
+    }
+    return null;
+  }
+  private clearBay(x:number,z:number,except:number){
+    return this.racers.slice(0,this.count).every(r=>(r.player.pos.x-x)**2+(r.player.pos.z-z)**2>64)&&
+      this.fleet.physics.carts.every((c,i)=>i===except||(c.x-x)**2+(c.z-z)**2>16);
   }
   private sync(){
     for(let i=0;i<this.count;i++){
@@ -289,14 +329,20 @@ export class GolfCartRace {
   hud(){
     const index=this.cartForRacer[0],target=this.nearest(0),near=target>=0?target:index<0?this.nearest(0,250):-1;
     const owner=near>=0?this.driverForCart[near]:-1,c=near>=0?this.fleet.physics.carts[near]:null;
-    return {health:index>=0?this.fleet.physics.carts[index].health:null,onFoot:index<0,charge:this.controls[0].charge,spinReady:this.spinCooldown[0]===0,
-      target:target>=0?(owner>=0?`STEAL ${RACE_ROSTER[owner].name}'S KART`:'TAKE KART'):index>=0?'BAIL OUT':near>=0?'LOANER / RIVAL KART':'FIND A KART',
+    return {onFoot:index<0,actionReady:this.actionCooldown[0]===0,
+      bearing:c?Math.atan2(-(c.x-this.racers[0].player.pos.x),-(c.z-this.racers[0].player.pos.z))-Math.atan2(-this.racers[0].player.raceHeading.x,-this.racers[0].player.raceHeading.z):null,
+      target:target>=0?(owner>=0?`STEAL ${RACE_ROSTER[owner].name}'S KART`:'TAKE KART'):index>=0?'BAIL OUT':near>=0?(owner>=0?`${RACE_ROSTER[owner].name}'S KART`:'GREEN LOANER'):'LOANER ON THE WAY',
       distance:c?Math.round(Math.hypot(c.x-this.racers[0].player.pos.x,c.z-this.racers[0].player.pos.z)):null,notice:this.noticeTime>0?this.notice:''};
   }
+  updateView(camera:THREE.Camera){this.fleet.updateView(camera);this.effects.present(this.burning,this.targetMarker);}
   present(alpha=1){
-    const carts=this.fleet.physics.carts,poses=carts.map(c=>({x:c.x,y:c.y,z:c.z,yaw:c.yaw}));
-    carts.forEach((c,i)=>{const p=this.previous[i],q=poses[i],owner=this.driverForCart[i];c.x=THREE.MathUtils.lerp(p.x,q.x,alpha);c.y=THREE.MathUtils.lerp(p.y,q.y,alpha);c.z=THREE.MathUtils.lerp(p.z,q.z,alpha);c.yaw=p.yaw+Math.atan2(Math.sin(q.yaw-p.yaw),Math.cos(q.yaw-p.yaw))*alpha+(owner>=0&&this.spinTime[owner]>0?Math.PI*2*(1-this.spinTime[owner]/.5):0);});
-    this.fleet.present(0);carts.forEach((c,i)=>Object.assign(c,poses[i]));
+    const carts=this.fleet.physics.carts;alpha=clamp(alpha,0,1);
+    for(let i=0;i<carts.length;i++){
+      const p=this.previous[i],q=carts[i],pose=this.renderPoses[i],owner=this.driverForCart[i];
+      pose.x=THREE.MathUtils.lerp(p.x,q.x,alpha);pose.y=THREE.MathUtils.lerp(p.y,q.y,alpha);pose.z=THREE.MathUtils.lerp(p.z,q.z,alpha);
+      pose.yaw=p.yaw+Math.atan2(Math.sin(q.yaw-p.yaw),Math.cos(q.yaw-p.yaw))*alpha+(owner>=0&&this.spinTime[owner]>0?Math.PI*2*(1-this.spinTime[owner]/.5):0);
+    }
+    this.fleet.present(0,this.renderPoses);this.effects.present(this.burning,this.targetMarker);
     for(let i=0;i<this.count;i++)this.racers[i].player.group.visible=!this.isDriving(i);
   }
   dispose(){this.effects.dispose();this.fleet.dispose();this.cache.clear();this.cells.clear();this.racers.forEach(r=>r.player.group.visible=true);}

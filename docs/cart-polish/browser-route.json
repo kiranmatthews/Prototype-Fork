@@ -1,0 +1,219 @@
+{
+  "done": true,
+  "drive": {
+    "speed": 21.57755489766213,
+    "s": 60.589354050528584,
+    "yaw": -0.43957870912049335
+  },
+  "steering": -0.7464316547773759,
+  "braking": 7.426889258282594,
+  "result": {
+    "level": "coconut-cart-rally",
+    "stamp": "Codex/sol fork \u00b7 build 10-25 12:45 UTC",
+    "frames": 11747,
+    "air": 2511,
+    "maxHeight": 13.523608872113492,
+    "checkpoints": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "hud": {
+      "vehicle": "golf-cart",
+      "crystalReward": false,
+      "title": "Coconut Cart Rally",
+      "sections": [
+        "Lagoon launchways",
+        "Palm canyon",
+        "Coral half pipes",
+        "Seaside sprint"
+      ],
+      "medalTimes": {
+        "gold": 125,
+        "silver": 150,
+        "bronze": 185
+      },
+      "medal": null,
+      "phase": "finished",
+      "mode": "race",
+      "countdown": 0,
+      "runTime": 192.6166666667121,
+      "elapsed": 156.5666666666834,
+      "freeze": 0,
+      "rank": 3,
+      "item": null,
+      "shield": 0,
+      "star": 0,
+      "cart": {
+        "onFoot": false,
+        "actionReady": true,
+        "bearing": null,
+        "target": "BAIL OUT",
+        "distance": null,
+        "notice": ""
+      },
+      "recovering": 0,
+      "threats": [],
+      "boxes": 9,
+      "totalBoxes": 24,
+      "won": false,
+      "timeTrialUnlocked": true,
+      "racers": [
+        {
+          "id": 2,
+          "name": "MOSS",
+          "color": "#79d887",
+          "x": -10.26928552553005,
+          "y": 18.87201603271521,
+          "z": -2346.4108933185553,
+          "progress": 1,
+          "finish": 149.16666666667751
+        },
+        {
+          "id": 4,
+          "name": "MONDO",
+          "color": "#f2a14c",
+          "x": -9.81670296956768,
+          "y": 18.676246358712984,
+          "z": -2341.92217534521,
+          "progress": 1,
+          "finish": 155.8166666666828
+        },
+        {
+          "id": 0,
+          "name": "YOU",
+          "color": "#fff4c7",
+          "x": -6.609176826096189,
+          "y": 18.907469949485474,
+          "z": -2348.7667901919085,
+          "progress": 1,
+          "finish": 156.5666666666834
+        },
+        {
+          "id": 5,
+          "name": "PIP",
+          "color": "#d9b9ff",
+          "x": 0.22976766938639404,
+          "y": 18.60438110783356,
+          "z": -2344.2911379745938,
+          "progress": 1,
+          "finish": 160.76666666668675
+        },
+        {
+          "id": 3,
+          "name": "NOVA",
+          "color": "#70d9f4",
+          "x": 0.15704777873974884,
+          "y": 18.533127838217872,
+          "z": -2342.5938988847693,
+          "progress": 1,
+          "finish": 161.65000000002078
+        },
+        {
+          "id": 1,
+          "name": "ROXY",
+          "color": "#ef79b5",
+          "x": -3.041972081015938,
+          "y": 18.544269210100374,
+          "z": -2341.5666321172084,
+          "progress": 1,
+          "finish": 178.1666666667006
+        },
+        {
+          "id": 6,
+          "name": "SOL",
+          "color": "#f1dc68",
+          "x": -5.980539086146232,
+          "y": 18.369468731487114,
+          "z": -2336.368744284841,
+          "progress": 1,
+          "finish": 189.81666666670986
+        },
+        {
+          "id": 7,
+          "name": "VOSS",
+          "color": "#e46b5e",
+          "x": 7.853883318235313,
+          "y": 17.634708233482517,
+          "z": -2325.5085972761794,
+          "progress": 1,
+          "finish": 192.6166666667121
+        }
+      ],
+      "visible": true
+    },
+    "carts": {
+      "count": 20,
+      "presented": 12,
+      "scale": 1,
+      "cartTriangles": 6416,
+      "fleetTriangles": 141762,
+      "fleetDrawCalls": 79,
+      "geometryBuffers": 23,
+      "steps": 23132,
+      "droppedTime": 0,
+      "activeDebris": 0
+    },
+    "riders": [
+      {
+        "id": 0,
+        "finish": 156.5666666666834,
+        "falls": 1
+      },
+      {
+        "id": 1,
+        "finish": 178.1666666667006,
+        "falls": 3
+      },
+      {
+        "id": 2,
+        "finish": 149.16666666667751,
+        "falls": 1
+      },
+      {
+        "id": 3,
+        "finish": 161.65000000002078,
+        "falls": 1
+      },
+      {
+        "id": 4,
+        "finish": 155.8166666666828,
+        "falls": 1
+      },
+      {
+        "id": 5,
+        "finish": 160.76666666668675,
+        "falls": 0
+      },
+      {
+        "id": 6,
+        "finish": 189.81666666670986,
+        "falls": 4
+      },
+      {
+        "id": 7,
+        "finish": 192.6166666667121,
+        "falls": 4
+      }
+    ]
+  },
+  "recovery": {
+    "pos": [
+      12.950039823086227,
+      16.297832745678548,
+      -782.7114096830219
+    ],
+    "anchor": [
+      12.950039823086227,
+      16.297832745678548,
+      -782.7114096830219
+    ],
+    "falls": 1,
+    "clock": 3.7999999999999914,
+    "supported": true
+  },
+  "errors": []
+}

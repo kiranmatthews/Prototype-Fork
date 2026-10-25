@@ -1,0 +1,71 @@
+{
+  "passed": true,
+  "immutableInterpolation": true,
+  "exactGroundProbes": 925,
+  "stableTheftTarget": true,
+  "clearLoanerBays": true,
+  "reflectionGeometryPreserved": true,
+  "noIdleUploads": true,
+  "scenarios": [
+    {
+      "seed": 11,
+      "seconds": 206,
+      "finishes": [
+        155.233333333349,
+        157.733333333351,
+        180.08333333336878,
+        171.28333333336178,
+        138.93333333333604,
+        194.98333333338064,
+        206.00000000005608,
+        188.08333333337515
+      ],
+      "falls": [
+        1,
+        0,
+        2,
+        0,
+        1,
+        4,
+        5,
+        2
+      ],
+      "stats": {
+        "steals": 11,
+        "ejections": 25,
+        "wrecks": 14,
+        "spins": 0
+      }
+    },
+    {
+      "seed": 741,
+      "seconds": 210.66666666666666,
+      "finishes": [
+        190.50000000004374,
+        173.03333333336317,
+        207.91666666672427,
+        206.26666666672295,
+        149.90000000001143,
+        210.66666666672646,
+        181.2333333333697,
+        201.51666666671917
+      ],
+      "falls": [
+        3,
+        1,
+        4,
+        1,
+        1,
+        4,
+        2,
+        2
+      ],
+      "stats": {
+        "steals": 18,
+        "ejections": 35,
+        "wrecks": 18,
+        "spins": 2
+      }
+    }
+  ]
+}

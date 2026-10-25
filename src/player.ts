@@ -17002,7 +17002,7 @@ export class Player {
       crateContact = null;
     this.raycaster.set(new THREE.Vector3(cx, this.pos.y + 2.5, cz), DOWN);
     this.raycaster.far = 12;
-    const hits = this.raycaster.intersectObjects(level.groundMeshes, false);
+    const hits = this.raycaster.intersectObjects(this.raceHooks?.groundCandidates?.(cx,cz)??level.groundMeshes, false);
     // A box standing on nothing (a level with no floor under it) is still a
     // floor: answer with the lid rather than falling through it.
     if (hits.length === 0) {
@@ -17211,7 +17211,7 @@ export class Player {
   private queryShadowGround(level: Level, includeCrates = false): number | null {
     this.raycaster.set(new THREE.Vector3(this.pos.x, this.pos.y + 2.5, this.pos.z), DOWN);
     this.raycaster.far = 120;
-    const hits = this.raycaster.intersectObjects(level.groundMeshes, false);
+    const hits = this.raycaster.intersectObjects(this.raceHooks?.groundCandidates?.(this.pos.x,this.pos.z)??level.groundMeshes, false);
     let groundY: number | null = null;
     let fatal = false;
     for (const hit of hits) {

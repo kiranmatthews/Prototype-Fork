@@ -8,7 +8,7 @@ import { installRooMenuText } from '../roo-type/menu';
 import { updateMenuPngFocus } from '../menuPngFocus';
 import type { ResultsViewport } from '../resultsPresentation';
 import { MENU_THEME } from '../menuTheme';
-import { RACE_ITEMS, RALLY_ITEM_NAMES, type RaceHudState, type RaceMode } from './types';
+import { RACE_ITEMS, RALLY_ITEM_NAMES, RALLY_ITEM_DESCRIPTIONS, type RaceHudState, type RaceMode } from './types';
 
 const time = (seconds:number) => {const n=Math.round(seconds*100);return `${Math.floor(n/6000)}:${String(Math.floor(n/100)%60).padStart(2,'0')}.${String(n%100).padStart(2,'0')}`;};
 const SVG='http://www.w3.org/2000/svg';
@@ -86,17 +86,15 @@ export class RaceHud {
       this.setText('[data-race-rank]',s.mode==='race'?`${s.rank} / 8`:'TIME TRIAL');
       this.setText('[data-race-clock]',time(s.elapsed));
       this.setText('[data-race-boxes]',`${s.boxes} / ${s.totalBoxes} BOXES`);
-      this.setText('[data-race-status]',s.freeze>0?`FROZEN ${Math.ceil(s.freeze)}s`:s.recovering>0?(s.vehicle?'BACK IN THE CART':'BACK ON BOARD'):s.star>0?`STAR ${Math.ceil(s.star)}`:s.shield>0?`SHIELD ${Math.ceil(s.shield)}`:'');
+      this.setText('[data-race-status]',s.freeze>0?`FROZEN ${Math.ceil(s.freeze)}s`:s.recovering>0?(s.cart?.onFoot?'BACK ON YOUR FEET':s.vehicle?'BACK IN THE CART':'BACK ON BOARD'):s.star>0?`STAR ${Math.ceil(s.star)}`:s.shield>0?`SHIELD ${Math.ceil(s.shield)}`:'');
       if(s.cart){
-        const c=s.cart,health=c.health===null?0:Math.ceil(c.health*100);
-        this.setText('[data-cart-health]',c.onFoot?'ON FOOT · GRAB A KART':`KART ${health}%${health<30?' · SMOKING HOT':health<55?' · ENGINE SMOKING':''}`);
-        const bar=this.element.querySelector<SVGRectElement>('[data-cart-health-bar]');
-        if(bar){bar.setAttribute('width',String(health*2));bar.setAttribute('fill',health<30?'#ff7547':health<55?'#ffd34f':'#aaff67');}
+        const c=s.cart;
+        const bearing=c.bearing===null?0:Math.atan2(Math.sin(c.bearing),Math.cos(c.bearing));
+        const direction=Math.abs(bearing)<.65?'AHEAD':Math.abs(bearing)>2.5?'BEHIND':bearing>0?'LEFT':'RIGHT';
         const action=this.element.querySelector<HTMLElement>('[data-cart-action]');
-        const label=`{grind} ${c.target}${c.onFoot&&c.distance!==null?` · ${c.distance}m`:''}`;
+        const label=`{grind} ${c.target}${c.onFoot&&c.distance!==null&&c.distance>5?` · ${c.distance}m ${direction}`:''}${!c.actionReady?' · WAIT':''}`;
         if(action&&action.dataset.label!==label){action.dataset.label=label;setPromptText(action,label);}
-        this.setText('[data-cart-notice]',c.notice||(!c.onFoot&&c.charge>0?'SPRINGS LOADED · RELEASE TO HOP':!c.onFoot&&c.spinReady?'SPIN SHUNT READY':''));
-        this.setText('[data-cart-item]',s.item?RALLY_ITEM_NAMES[s.item]??RACE_ITEMS[s.item].name:'');
+        this.setText('[data-cart-notice]',c.notice);
       }
       const item=this.element.querySelector<HTMLButtonElement>('[data-race-action="item"]')!;
       const key=s.item??'empty';
@@ -108,7 +106,7 @@ export class RaceHud {
           item.append(rewardSlot(s.item,true),hint);
         }
         item.setAttribute('aria-label',s.item?`Use ${s.cart?RALLY_ITEM_NAMES[s.item]??RACE_ITEMS[s.item].name:RACE_ITEMS[s.item].name}`:'No item held');
-        item.title=s.item?RACE_ITEMS[s.item].description:'';
+        item.title=s.item?(s.cart?RALLY_ITEM_DESCRIPTIONS[s.item]??RACE_ITEMS[s.item].description:RACE_ITEMS[s.item].description):'';
       }
     }
     if(s.phase==='finished'){
@@ -161,7 +159,7 @@ export class RaceHud {
         '<div class="comp-run-hud" style="left:auto;right:5vw;top:max(64px,12vh)"><button class="game-menu-button game-results-medal" data-race-action="item" style="pointer-events:auto;width:clamp(96px,14vw,152px);height:clamp(72px,12vh,112px);display:flex;align-items:center"></button></div>'+
         '<div class="comp-run-hud" data-race-threats style="top:max(86px,19vh);left:5vw;display:flex;gap:12px" role="status" aria-label="Incoming weapons"></div>'+
         '<div class="comp-run-hud" style="left:auto;right:5vw;top:max(138px,30vh);width:clamp(90px,18vw,180px);height:46vh;display:block"><svg data-race-map viewBox="0 0 180 360" style="width:100%;height:100%" role="img" aria-label="All racers on the course"></svg></div>';
-      if(s.vehicle)this.element.insertAdjacentHTML('beforeend','<div class="comp-run-hud" data-cart-hud style="top:auto;bottom:12vh;left:5vw;max-width:66vw;display:flex;flex-direction:column;align-items:flex-start;text-align:left;gap:5px;font-size:clamp(12px,2vw,20px)"><small data-cart-health style="font-size:clamp(16px,2.4vw,24px)"></small><svg width="204" height="10" viewBox="0 0 204 10" aria-label="Kart durability"><rect width="204" height="10" rx="4" fill="#24313b"/><rect data-cart-health-bar x="2" y="2" width="200" height="6" rx="2" fill="#aaff67"/></svg><small data-cart-action></small><small data-cart-notice role="status"></small><small data-cart-item></small></div>');
+      if(s.vehicle)this.element.insertAdjacentHTML('beforeend','<div class="comp-run-hud" data-cart-hud style="top:auto;bottom:12vh;left:5vw;max-width:66vw;display:flex;flex-direction:column;align-items:flex-start;text-align:left;gap:5px;font-size:clamp(12px,2vw,20px)"><small data-cart-action></small><small data-cart-notice role="status"></small></div>');
     }else if(s.phase==='countdown'){
       this.element.innerHTML=`<div class="comp-countdown" style="position:absolute;left:50%;top:12vh;transform:translateX(-50%)"><strong>${Math.max(1,Math.ceil(s.countdown))}</strong></div>`;
     }else if(s.phase==='grid'){
@@ -178,7 +176,7 @@ export class RaceHud {
       for(const [label,slot] of slots){const row=document.createElement('div');row.className='comp-cup game-results-medal';const caption=document.createElement('strong');caption.textContent=label;if(label==='BOX GEM'){const count=document.createElement('small');count.textContent=`${s.boxes} / ${s.totalBoxes}`;caption.append(document.createElement('br'),count);}row.append(slot,caption);awards.append(row);}
     }
     const controls=this.element.querySelector<HTMLElement>('[data-cart-controls]');
-    if(controls){setPromptText(controls,'{up}{down} Drive · {left}{right} Steer · Hold/release {jump} Hop · {grab} Brake · {transfer} Drift · {spin} Spin shunt · {grind} Steal / bail · {inventory} Weapon');const note=document.createElement('p');note.textContent='Dents stick. Engines burn. Keep running and steal a ride. Green loaners wait before the big jumps.';controls.after(note);}
+    if(controls){setPromptText(controls,'Hold {jump} Accelerate · Release {jump} Hop · {up}{down}{left}{right} Steer · {grab} Brake · {transfer} Drift · {spin} Spin shunt · {grind} Steal / bail · {inventory} Weapon');const note=document.createElement('p');note.textContent='Dents stick. Engines burn. Keep running and steal a ride. Green loaners wait before the big jumps.';controls.after(note);}
     this.element.setAttribute('aria-label',s.vehicle?'Golf cart race':'Skate race');
     this.surface.invalidate();
   }
