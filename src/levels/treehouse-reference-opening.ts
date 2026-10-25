@@ -2,11 +2,10 @@ import * as THREE from 'three';
 import {mergeGeometries} from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import type {CustomComponent} from '../level';
 import {TREEHOUSE_CLEARING_ROUTE,TREEHOUSE_HALFPIPE} from './treehouse-opening';
-import {treehouseTrialPoint} from './treehouse-trials-continuity';
+import {treehouseTrialPoint,treehouseShoreZ as shoreZ} from './treehouse-trials-continuity';
 
 type P=[number,number,number];
 const round=(n:number)=>+n.toFixed(5);
-const shoreZ=(x:number)=>16+x*.07+Math.sin(x*.1)*1.4;
 
 /** Reference composition, applied after the long-course transform. The beach,
  * cabin and halfpipe share the native course's collision and asset pipeline. */
@@ -59,14 +58,17 @@ export function referenceTreehouseOpening(source:CustomComponent[]):CustomCompon
     if(c.t==='decor'&&/bush|fern|groundcover|thicket/.test(c.dkind??'')&&c.p[2]>-25&&c.p[2]<16&&pathDistance(c.p[0],c.p[2])<3.8)continue;
     if(c.nm==='Separate canopy above the treehouse roof')c={...c,p:[-20,20.8,-15],s:[31,8,22],color:'#879e8b'};
     if(c.t==='clock')c={...c,p:treehouseTrialPoint([35,0,-22])};
-    if(c.nm==='Treehouse fitted course-edge safety perimeter')c={...c,pts:c.pts!.map(p=>p[1]>10?[p[0],shoreZ(p[0])+5.8,...p.slice(2)] as typeof p:p)};
+    // Keep the foundation below the dry clearing: its old 80m rectangle
+    // intercepted swimmers at y=-1.25, above the visible seabed.
+    if(c.nm==='Opening safety foundation')c={...c,p:[1,-2.25,-15],s:[70,2,50]};
+    if(c.nm==='Treehouse fitted course-edge safety perimeter')c={...c,pts:c.pts!.map(p=>{
+      if(p[0]===-32&&p[1]===-8)return [-50,-8,...p.slice(2)] as typeof p;
+      if(p[0]===-31&&p[1]===10)return [-45,shoreZ(-35)+10,...p.slice(2)] as typeof p;
+      if(p[0]===48&&p[1]===8)return [52,shoreZ(52)+14,...p.slice(2)] as typeof p;
+      return p[1]>10?[p[0],shoreZ(p[0])+14,...p.slice(2)] as typeof p:p;
+    })};
     if(c.nm?.startsWith('Continuous painted opening ground')||c.nm?.includes('continuous curved sandy shore')||c.nm?.includes('western sandy shelf')){
       const colors:number[]=[],uvs:number[]=[];
-      if(c.nm?.includes('continuous curved sandy shore')){
-        const vertices=c.vertices!.slice();
-        for(let i=0;i<vertices.length;i+=3){const offshore=vertices[i+2]-shoreZ(vertices[i]);vertices[i+1]-=Math.max(0,offshore-4.4)*.23;}
-        c={...c,vertices};
-      }
       for(let i=0;i<c.vertices!.length;i+=3){
         const x=c.vertices![i]+c.p[0],z=c.vertices![i+2]+c.p[2],distance=pathDistance(x,z);
         const px=Math.abs(x-TREEHOUSE_HALFPIPE.p[0])-pipeHalfWidth,pz=Math.abs(z-TREEHOUSE_HALFPIPE.p[2])-pipeHalfLength;

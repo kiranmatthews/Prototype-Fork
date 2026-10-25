@@ -1,0 +1,316 @@
+{
+  "base": "http://127.0.0.1:5441/",
+  "reports": [
+    {
+      "mode": "lite",
+      "spawn": {
+        "position": [
+          -16.97026,
+          8.400000000372529,
+          -0.40991
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0,
+        "camera": [
+          -16.97026,
+          13.758146755890412,
+          14.051428992077703
+        ],
+        "assets": [],
+        "glError": 0,
+        "stamp": "Codex/sol fork · build 10-25 06:46 UTC"
+      },
+      "swims": [
+        {
+          "x": 0,
+          "entry": {
+            "position": [
+              0.00005551437312820333,
+              -2.2251799720466687,
+              24.55666666646275
+            ],
+            "state": "swim",
+            "grounded": false,
+            "deaths": 0,
+            "camera": [
+              0.00005547186190035802,
+              -0.46380539500774276,
+              30.854037023040622
+            ],
+            "assets": [],
+            "glError": 0,
+            "stamp": "Codex/sol fork · build 10-25 06:46 UTC"
+          },
+          "wall": {
+            "position": [
+              1.8172772754237216,
+              -2.3893977907042743,
+              29.444732168989624
+            ],
+            "state": "swim",
+            "grounded": false,
+            "deaths": 0,
+            "camera": [
+              1.8160702419038746,
+              -0.6281430340599488,
+              35.74770563132616
+            ],
+            "assets": [],
+            "glError": 0,
+            "stamp": "Codex/sol fork · build 10-25 06:46 UTC"
+          },
+          "returned": {
+            "position": [
+              1.9656032093403955,
+              -0.08805797796346004,
+              17.933017869733497
+            ],
+            "state": "ride",
+            "grounded": true,
+            "deaths": 0,
+            "camera": [
+              1.9656033041090897,
+              1.6724699873422209,
+              24.249074893339927
+            ],
+            "assets": [],
+            "glError": 0,
+            "stamp": "Codex/sol fork · build 10-25 06:46 UTC"
+          }
+        },
+        {
+          "x": 30,
+          "entry": {
+            "position": [
+              30.000055857205577,
+              -2.3725621710621527,
+              26.90090134441197
+            ],
+            "state": "swim",
+            "grounded": false,
+            "deaths": 0,
+            "camera": [
+              29.14325389782243,
+              3.660172164730901,
+              40.263062424593485
+            ],
+            "assets": [],
+            "glError": 0,
+            "stamp": "Codex/sol fork · build 10-25 06:46 UTC"
+          },
+          "wall": {
+            "position": [
+              29.506276960902085,
+              -2.475330101899873,
+              31.491019076281308
+            ],
+            "state": "swim",
+            "grounded": false,
+            "deaths": 0,
+            "camera": [
+              28.990518079655654,
+              1.9961977344682684,
+              42.18028383506033
+            ],
+            "assets": [],
+            "glError": 0,
+            "stamp": "Codex/sol fork · build 10-25 06:46 UTC"
+          },
+          "returned": {
+            "position": [
+              36.49321270486143,
+              -0.22101005178703037,
+              20.17408701372318
+            ],
+            "state": "ride",
+            "grounded": true,
+            "deaths": 0,
+            "camera": [
+              35.603689640741756,
+              4.39258773452268,
+              31.23799886973025
+            ],
+            "assets": [],
+            "glError": 0,
+            "stamp": "Codex/sol fork · build 10-25 06:46 UTC"
+          }
+        }
+      ],
+      "final": {
+        "position": [
+          30,
+          -0.48722821681827977,
+          22
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0,
+        "camera": [
+          29.668625295263894,
+          4.603821516023983,
+          33.96777478078645
+        ],
+        "assets": [],
+        "glError": 0,
+        "stamp": "Codex/sol fork · build 10-25 06:46 UTC"
+      }
+    },
+    {
+      "mode": "full",
+      "spawn": {
+        "position": [
+          -16.97026,
+          8.400000000372529,
+          -0.40991
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0,
+        "camera": [
+          -16.97026,
+          13.758146755890412,
+          14.051428992077707
+        ],
+        "assets": [],
+        "glError": 0,
+        "stamp": "Codex/sol fork · build 10-25 06:46 UTC"
+      },
+      "swims": [
+        {
+          "x": 0,
+          "entry": {
+            "position": [
+              0.00006841956705787389,
+              -2.2195853978786486,
+              26.31333333308204
+            ],
+            "state": "swim",
+            "grounded": false,
+            "deaths": 0,
+            "camera": [
+              0.00006841501228294078,
+              -0.45838609151791054,
+              32.61587035632644
+            ],
+            "assets": [],
+            "glError": 0,
+            "stamp": "Codex/sol fork · build 10-25 06:46 UTC"
+          },
+          "wall": {
+            "position": [
+              2.272076946082191,
+              -2.461624347860521,
+              29.51389636889645
+            ],
+            "state": "swim",
+            "grounded": false,
+            "deaths": 0,
+            "camera": [
+              2.2712845466138916,
+              -0.7001971090845878,
+              35.81693288719868
+            ],
+            "assets": [],
+            "glError": 0,
+            "stamp": "Codex/sol fork · build 10-25 06:46 UTC"
+          },
+          "returned": {
+            "position": [
+              2.393033994318504,
+              -0.02742652284300995,
+              16.942467402332994
+            ],
+            "state": "ride",
+            "grounded": true,
+            "deaths": 0,
+            "camera": [
+              2.393034685697332,
+              1.7283706601408153,
+              23.339735536833764
+            ],
+            "assets": [],
+            "glError": 0,
+            "stamp": "Codex/sol fork · build 10-25 06:46 UTC"
+          }
+        },
+        {
+          "x": 30,
+          "entry": {
+            "position": [
+              26.408463637511975,
+              -2.459427707329651,
+              27.3057353631006
+            ],
+            "state": "swim",
+            "grounded": false,
+            "deaths": 0,
+            "camera": [
+              26.190277600096472,
+              2.251786291170286,
+              39.407522056917685
+            ],
+            "assets": [],
+            "glError": 0,
+            "stamp": "Codex/sol fork · build 10-25 06:46 UTC"
+          },
+          "wall": {
+            "position": [
+              18.565472717463532,
+              -2.326936766190803,
+              31.93958533837937
+            ],
+            "state": "swim",
+            "grounded": false,
+            "deaths": 0,
+            "camera": [
+              18.573846588758254,
+              -0.38826838909217365,
+              38.64315525670988
+            ],
+            "assets": [],
+            "glError": 0,
+            "stamp": "Codex/sol fork · build 10-25 06:46 UTC"
+          },
+          "returned": {
+            "position": [
+              18.222555850481232,
+              -0.11586973885526808,
+              19.568618454286995
+            ],
+            "state": "ride",
+            "grounded": true,
+            "deaths": 0,
+            "camera": [
+              18.22255589676362,
+              2.0099351809647326,
+              26.706775137734045
+            ],
+            "assets": [],
+            "glError": 0,
+            "stamp": "Codex/sol fork · build 10-25 06:46 UTC"
+          }
+        }
+      ],
+      "final": {
+        "position": [
+          30,
+          -0.4872282168182793,
+          22
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0,
+        "camera": [
+          29.668625295263894,
+          4.603821516023983,
+          33.96777478078645
+        ],
+        "assets": [],
+        "glError": 0,
+        "stamp": "Codex/sol fork · build 10-25 06:46 UTC"
+      }
+    }
+  ],
+  "errors": []
+}

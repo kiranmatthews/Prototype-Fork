@@ -1,0 +1,101 @@
+{
+  "base": "http://127.0.0.1:5441/",
+  "rows": [],
+  "lifecycle": {
+    "checkpoint": {
+      "label": "checkpoint",
+      "position": [
+        32.4,
+        -1.7000000476837156,
+        -67
+      ],
+      "grounded": true,
+      "state": "ride",
+      "board": false,
+      "deaths": 0,
+      "lives": 4,
+      "snap": 2,
+      "currentSpawn": [
+        32.9,
+        -1.6000000476837148,
+        -67
+      ],
+      "at": null,
+      "watch": {
+        "mounted": false,
+        "bailed": false,
+        "maxOffset": 0,
+        "frames": 15
+      },
+      "stamp": "Codex/sol fork · build 10-25 06:46 UTC"
+    },
+    "respawn": {
+      "label": "checkpoint respawn",
+      "position": [
+        32.9,
+        -1.7000000476837158,
+        -67
+      ],
+      "grounded": true,
+      "state": "ride",
+      "board": false,
+      "deaths": 0,
+      "lives": 3,
+      "snap": 3,
+      "currentSpawn": [
+        32.9,
+        -1.6000000476837148,
+        -67
+      ],
+      "at": null,
+      "watch": {
+        "mounted": false,
+        "bailed": true,
+        "maxOffset": 0,
+        "frames": 151
+      },
+      "stamp": "Codex/sol fork · build 10-25 06:46 UTC"
+    },
+    "finish": {
+      "label": "finish gate",
+      "position": [
+        55,
+        -6.463333333556851,
+        -666
+      ],
+      "grounded": true,
+      "state": "finished",
+      "board": false,
+      "deaths": 0,
+      "lives": 4,
+      "snap": 4,
+      "currentSpawn": [
+        -16.97026,
+        8.55,
+        -0.40991
+      ],
+      "at": null,
+      "watch": {
+        "mounted": false,
+        "bailed": true,
+        "maxOffset": 0,
+        "frames": 152
+      },
+      "stamp": "Codex/sol fork · build 10-25 06:46 UTC"
+    }
+  },
+  "errors": [],
+  "finalState": {
+    "position": [
+      55,
+      -6.463333333556851,
+      -666
+    ],
+    "watch": {
+      "mounted": false,
+      "bailed": true,
+      "maxOffset": 0,
+      "frames": 152
+    }
+  }
+}

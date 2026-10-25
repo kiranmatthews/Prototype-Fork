@@ -95,17 +95,42 @@ function landscapeSkirts():CustomComponent[]{
   strip(-444,-500,-7,77,true,'Sunlit forest earth beyond the finish');
   return result.map(stretchComponent);
 }
-const shoreZ=(x:number)=>16+x*.07+Math.sin(x*.1)*1.4;
-const shoreline=Array.from({length:81},(_,i)=>{
-  const x=-35+i*1.25,slope=.07+.14*Math.cos(x*.1),length=Math.hypot(1,slope);
+export const treehouseShoreZ=(x:number)=>16+x*.07+Math.sin(x*.1)*1.4;
+const shoreZ=treehouseShoreZ;
+const shoreline=Array.from({length:51},(_,i)=>{
+  const x=-35+i*2,slope=.07+.14*Math.cos(x*.1),length=Math.hypot(1,slope);
   return [x,shoreZ(x),-slope/length,1/length] as [number,number,number,number];
+});
+const BEACH_ROWS=[0,1.6,4.4,8.2,13,22];
+const beachProfile=(x:number,row:number):[number,number]=>{
+  const reach=BEACH_ROWS[row]*(1+.17*Math.sin(x*.21))+.24*Math.sin(x*.39)*row/4;
+  const relief=row&&row<4?Math.sin(x*.24+row*.7)*.045:0;
+  return [reach,[0,-.14,-.62,-1.3,-2.8,-4][row]+relief-Math.max(0,reach-4.4)*.23];
+};
+// The water ribbon starts just beyond the beach's actual sea-level contour.
+// Broad lite triangles must not carry raised swash across the dry clearing.
+const wetShoreZ=(x:number)=>{
+  const [a,ay]=beachProfile(x,2),[b,by]=beachProfile(x,3);
+  return shoreZ(x)+a+(-.85-ay)/(by-ay)*(b-a)+.65;
+};
+const cornerZ=shoreZ(-35),cornerWaterRadius=wetShoreZ(-35)-cornerZ+1.2;
+const waterCorner=Array.from({length:9},(_,i)=>{
+  const a=Math.PI-i*Math.PI/16,nx=Math.cos(a),nz=Math.sin(a);
+  return [-35+nx*cornerWaterRadius,cornerZ+nz*cornerWaterRadius,nx,nz] as [number,number,number,number];
+});
+const waterline=shoreline.map(([x])=>{
+  const slope=(wetShoreZ(x+.05)-wetShoreZ(x-.05))/.1,length=Math.hypot(1,slope);
+  return [x,wetShoreZ(x),-slope/length,1/length] as [number,number,number,number];
 });
 export const TREEHOUSE_TRIALS_OPENING_OCEAN:CustomOceanData={
   // The trail descends to -14m inland; its opening sea must stay beyond this coast.
-  horizonMode:"shoreline",
-  p:[0,-.85,0],geometryVersion:2,length:100,seaward:1,width:180,overlap:8,
+  horizonMode:"shoreline",shoreGeometry:'ground',
+  // Both ocean layers follow the submerged contour. The narrower detailed
+  // ribbon resolves the beach in lite mode's fixed 64 lateral segments.
+  swimBounds:[-55,-12,55,44],
+  p:[0,-.85,0],geometryVersion:2,length:100,seaward:1,width:80,overlap:0,
   longitudinalSegments:96,lateralSegments:128,sourceCoordinates:'unity',extendTails:false,shore:[
-    [-48,-96,-1,0],[-48,-63,-1,0],[-45,-30,-1,0],[-42,-6,-.95,.31],[-35,shoreZ(-35),-.7,.7],...shoreline.slice(1),
+    [-48,-96,-1,0],[-48,-63,-1,0],[-35-cornerWaterRadius,-28,-1,0],...waterCorner,...waterline.slice(1),
   ],
 };
 
@@ -143,17 +168,15 @@ function clipOpening(c:CustomComponent):CustomComponent {
 }
 
 function openingCoast():CustomComponent[] {
-  const v:number[]=[],ix:number[]=[],uv:number[]=[],colors:number[]=[],rows=[0,1.6,4.4,8.2,13];
+  const v:number[]=[],ix:number[]=[],uv:number[]=[],colors:number[]=[],rows=BEACH_ROWS;
   for(let row=0;row<rows.length;row++)for(const [x,z] of shoreline){
-    const y=[0,-.14,-.62,-1.3,-2.8][row];
-    const reach=rows[row]*(1+.17*Math.sin(x*.21))+.24*Math.sin(x*.39)*row/4;
-    const relief=row&&row<4?Math.sin(x*.24+row*.7)*.045:0;
-    v.push(x,y+relief,z+reach);uv.push(x/6.5,(z+reach)/6.5);
+    const [reach,y]=beachProfile(x,row);
+    v.push(x,y,z+reach);uv.push(x/6.5,(z+reach)/6.5);
     const color=new THREE.Color('#f1dfb5').lerp(new THREE.Color('#b6a681'),row/(rows.length-1)*.32);
     colors.push(color.r,color.g,color.b);
   }
-  for(let row=0;row<rows.length-1;row++)for(let col=0;col<80;col++){
-    const a=row*81+col,b=a+1,c=a+81,d=c+1;ix.push(a,c,b,b,c,d);
+  for(let row=0;row<rows.length-1;row++)for(let col=0;col<shoreline.length-1;col++){
+    const a=row*shoreline.length+col,b=a+1,c=a+shoreline.length,d=c+1;ix.push(a,c,b,b,c,d);
   }
   const coast:CustomComponent[]=[{t:'mesh',p:[0,0,0],vertices:v.map(r),indices:ix,uvs:uv.map(r),colors:colors.map(r),
     tex:'sand',materialStyle:'unity-sand',color:'#ffffff',edgeGrinding:false,nm:'Opening ocean · continuous curved sandy shore',grp:10},
@@ -162,17 +185,29 @@ function openingCoast():CustomComponent[] {
   for(const [x,z,w,h,yaw] of [[-30,14,5.4,2.1,28],[-24,16.4,3.3,1.4,-18],[-6,19,4.1,1.5,32],[32,22.5,5.2,1.9,17]] as const)
     coast.push({t:'decor',dkind:'treehousemossrock',p:[x,-1.15,z],s:[w,h,w*.8],yaw,
       nm:'Opening ocean · rounded shore rock partly submerged in the tide',grp:10});
-  const west:number[]=[],wu:number[]=[],wc:number[]=[],wi:number[]=[];
-  for(let row=0;row<=24;row++)for(let col=0;col<=4;col++){
-    const z=-28+42*row/24,x=-35-col*2.8,y=[0,-.12,-.5,-1.05,-2.25][col];
+  const west:number[]=[],wu:number[]=[],wc:number[]=[],wi:number[]=[],cols=rows.length;
+  for(let row=0;row<=24;row++)for(let col=0;col<cols;col++){
+    const [reach,y]=beachProfile(-35,col),z=-28+(cornerZ+28)*row/24,x=-35-reach;
     west.push(x,y,z);wu.push(x/6.5,z/6.5);
-    const color=new THREE.Color('#e7d5ad').lerp(new THREE.Color('#b9ac87'),col/4*.3);wc.push(color.r,color.g,color.b);
+    const color=new THREE.Color('#e7d5ad').lerp(new THREE.Color('#b9ac87'),col/(cols-1)*.3);wc.push(color.r,color.g,color.b);
   }
-  for(let row=0;row<24;row++)for(let col=0;col<4;col++){
-    const a=row*5+col,b=a+1,c=a+5,d=c+1;wi.push(a,b,c,b,d,c);
+  for(let row=0;row<24;row++)for(let col=0;col<cols-1;col++){
+    const a=row*cols+col,b=a+1,c=a+cols,d=c+1;wi.push(a,b,c,b,d,c);
   }
   coast.push({t:'mesh',p:[0,0,0],vertices:west.map(r),indices:wi,uvs:wu.map(r),colors:wc.map(r),
     tex:'sand',materialStyle:'unity-sand',color:'#ffffff',edgeGrinding:false,nm:'Opening ocean · western sandy shelf below the host trees',grp:10});
+  // Close the old open corner with the same shelf profile on both sides.
+  const cv:number[]=[],ci:number[]=[],cu:number[]=[],cc:number[]=[];
+  for(let row=0;row<rows.length;row++)for(let i=0;i<=12;i++){
+    const [reach,y]=beachProfile(-35,row),a=i*Math.PI/24;
+    const x=-35-Math.cos(a)*reach,z=cornerZ+Math.sin(a)*reach;
+    cv.push(x,y,z);cu.push(x/6.5,z/6.5);cc.push(1,1,1);
+  }
+  for(let row=0;row<rows.length-1;row++)for(let i=0;i<12;i++){
+    const a=row*13+i,b=a+1,c=a+13,d=c+1;if(row)ci.push(a,c,b);ci.push(b,c,d);
+  }
+  coast.push({t:'mesh',p:[0,0,0],vertices:cv.map(r),indices:ci,uvs:cu.map(r),colors:cc,
+    tex:'sand',materialStyle:'unity-sand',color:'#ffffff',edgeGrinding:false,nm:'Opening ocean · continuous curved sandy shore corner',grp:10});
   return coast;
 }
 

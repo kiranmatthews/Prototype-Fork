@@ -1,0 +1,25 @@
+{
+  "baseCommit": "8b8fc220a474e315bed3b055e480c907f146733c",
+  "scope": "Treehouse opening beach, western shelf, water contour and swimming containment",
+  "promptUtc": "2026-10-25T06:41:28Z",
+  "validatedPlayableUtc": "2026-10-25T07:05:35Z",
+  "promptToValidatedPlayableSeconds": 1447,
+  "checks": {
+    "native": "10 input-driven beach-to-swim-to-wall-to-shore journeys; zero deaths; 4.50\u20137.04 metres of swimming",
+    "drySand": "1001 sample points; neither detailed water nor the far-sea fill overlaps dry sand",
+    "ocean": "1269 inland coverage probes in each of lite/full; near/far coast remains visible; editor roundtrip and legacy validation pass",
+    "browser": "4 real-keyboard swim-and-return journeys across lite/full; 7.2-second shoreline wave review in each mode; clean console, no failed assets or WebGL errors",
+    "typecheck": "tsc --noEmit passed",
+    "combinedRelease": "Coordinator owns required check:levels, production build, publication and public verification; no check:all run here",
+    "lifecycle": "Full-render Chrome checkpoint activation, fall-respawn and finish-gate smoke passed with a clean console"
+  },
+  "referenceNotes": "Inspected the supplied 5.13.25pm clipping screenshot and 5.17.55pm later-coast screenshot. Read replay metadata (2027 frames). Playback was not used as validation. Cabin relocation and the later coastal settlement remain coordinator work.",
+  "delivery": "Local commit only, for coordinator cherry-pick; no push or CI actions",
+  "authoringBudget": {
+    "components": 1827,
+    "bytes": 4740919,
+    "meshVertices": 84039,
+    "meshTriangles": 99863,
+    "meshTriangleLimit": 100000
+  }
+}
