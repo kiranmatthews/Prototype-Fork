@@ -1,7 +1,7 @@
 import type { CustomComponent, CustomLevelData } from '../level';
 import type { RaceKnot } from '../race/types';
 import { lazySourceField } from './lazy-source';
-import { CART_RALLY_LENGTH,CART_RALLY_JUMPS,CART_RALLY_SUPPLY_ROWS,CART_RALLY_CORNERS,STADIUM,cartRallyPoint,cartRallyFrame,stadiumPoint,stadiumStandQuad,stadiumSections,stadiumBoundaryPaths,rallyMudWetness } from './cart-stadium-layout';
+import { CART_RALLY_LENGTH,CART_RALLY_JUMPS,CART_RALLY_SUPPLY_ROWS,CART_RALLY_CORNERS,STADIUM,cartRallyPoint,cartRallyFrame,stadiumPoint,stadiumStandQuad,stadiumSections,stadiumBoundaryPaths,rallyMudWetness,rallySurfacePoint } from './cart-stadium-layout';
 export { CART_RALLY_LENGTH,CART_RALLY_JUMPS,CART_RALLY_PIPES,CART_RALLY_SUPPLY_ROWS,cartRallyPoint } from './cart-stadium-layout';
 const line:RaceKnot[]=[];
 for(let s=18;s<=CART_RALLY_LENGTH;s+=2)line.push([...cartRallyPoint(s),34]);
@@ -18,21 +18,21 @@ function build():CustomComponent[]{
   const strip=(name:string,a:number,b:number,profile:number[],color:string,soft=false,lift=0,solid=true)=>{
     const vertices:number[]=[],indices:number[]=[],uvs:number[]=[],normals:number[]=[],colors:number[]=[],rows=Math.max(1,Math.ceil((b-a)/2)),cols=profile.length-1;
     for(let j=0;j<=rows;j++)for(let i=0;i<=cols;i++){
-      const s=a+(b-a)*j/rows,u=profile[i];vertices.push(...cartRallyPoint(s,u,lift));uvs.push(Math.round(u/5*1e5)/1e5,Math.round(s/5*1e5)/1e5);
-      const left=cartRallyPoint(s,u-.01),right=cartRallyPoint(s,u+.01),back=cartRallyPoint(s-.01,u),front=cartRallyPoint(s+.01,u);
+      const s=a+(b-a)*j/rows,u=profile[i];vertices.push(...rallySurfacePoint(s,u,lift));uvs.push(Math.round(u/5*1e5)/1e5,Math.round(s/5*1e5)/1e5);
+      const left=rallySurfacePoint(s,u-.01),right=rallySurfacePoint(s,u+.01),back=rallySurfacePoint(s-.01,u),front=rallySurfacePoint(s+.01,u);
       const x=right.map((v,k)=>v-left[k]),z=front.map((v,k)=>v-back[k]);
       const n=[x[1]*z[2]-x[2]*z[1],x[2]*z[0]-x[0]*z[2],x[0]*z[1]-x[1]*z[0]],length=Math.hypot(...n)||1;normals.push(...n.map(v=>Math.round(v/length*1e6)/1e6));
       const wet=rallyMudWetness(s,u),rut=(.91+.08*Math.sin(u*2.7+s*.047)*Math.sin(u*.6+s*.13))*(1-.38*wet);
       colors.push(...[rut,rut*(1-.035*wet),rut*(1-.085*wet)].map(v=>Math.round(v*1000)/1000));
     }
     for(let j=0;j<rows;j++)for(let i=0;i<cols;i++){const p=j*(cols+1)+i,q=p+cols+1;indices.push(p,p+1,q,p+1,q+1,q);}
-    add({t:'mesh',nm:name,p:[0,0,0],vertices,indices,uvs,normals,colors,solid,color,tex:'dirt',smoothCollision:true,...(soft?{groundSpeedLimit:7}:{}),castShadow:false});
+    add({t:'mesh',nm:name,p:[0,0,0],vertices,indices,uvs,normals,colors,solid,color,tex:name==='Painted dirt launch marks'?'dirt':'rally-mud',smoothCollision:true,...(soft?{groundSpeedLimit:7}:{}),castShadow:false});
   };
   for(let s=-8;s<CART_RALLY_LENGTH+48;s+=24){
     const end=Math.min(s+24,CART_RALLY_LENGTH+48),cuts=[s,end,...CART_RALLY_JUMPS.flatMap(j=>[j.start+8,j.end+4]).filter(v=>v>s&&v<end)].sort((a,b)=>a-b);
     for(let i=0;i<cuts.length-1;i++){
       const a=cuts[i],b=cuts[i+1],soft=CART_RALLY_JUMPS.some(j=>(a+b)/2>j.start+8&&(a+b)/2<j.end+4);
-      strip(soft?'Soft dirt landing trough':'Packed stadium dirt',a,b,[-14,-10,-6,-2,2,6,10,14],soft?'#655039':'#a07c52',soft);
+      strip(soft?'Soft dirt landing trough':'Packed stadium dirt',a,b,Array.from({length:15},(_,i)=>-14+i*2),soft?'#655039':'#a07c52',soft);
       for(const side of [-1,1]){
         strip('Loose dirt runoff',a,b,(side<0?[-17,-14]:[14,17]),'#8e6946',true);
         const profile=[17,19,21,23,24.5,25.5,26.2,26.65,27,27.4].map(u=>u*side).sort((x,y)=>x-y);
@@ -59,9 +59,20 @@ function build():CustomComponent[]{
       for(let s=start;s<end;s+=STADIUM.standSegmentLength){const b=Math.min(end,s+STADIUM.standSegmentLength);quad(...stadiumStandQuad(s,b,side,row),row%2?.84:1);quad(stadiumPoint(s,lo,y-.85),stadiumPoint(s,lo,y),stadiumPoint(b,lo,y-.85),stadiumPoint(b,lo,y),.7);}
     }
     add({t:'mesh',nm:'Stepped stadium grandstand',p:[0,0,0],vertices,indices,colors,doubleSided:true,color:'#a59b7a',tex:'solid',solid:false});
-    // Broad team-colour panels break up the rim; the large geometry stays at every distance.
-    const mid=(start+end)/2,p=stadiumPoint(mid,side*27.15,10.6),yaw=-Math.atan(cartRallyFrame(mid).dx)*180/Math.PI;
-    add({t:'platform',nm:'Coconut stadium team banner',p,s:[.22,2.0,Math.max(1,end-start-4)],yaw,color:Math.floor(start/48)%2?'#c2a465':'#a95d3d',tex:'solid',solid:false});
+    const mid=(start+end)/2,yaw=-Math.atan(cartRallyFrame(mid).dx)*180/Math.PI;
+    const boardV:number[]=[],boardI:number[]=[],boardUV:number[]=[];
+    for(let at=start+2,board=0;at<end-4;at+=22,board++){
+      const finish=Math.min(at+20,end-2),brand=(Math.floor((start+8)/48)+board+(side>0?1:0))%4;
+      for(let t=at;t<finish;t+=4){
+        const next=Math.min(t+4,finish),n=boardV.length/3;
+        for(const [along,h]of [[t,10.05],[next,10.05],[t,14.5],[next,14.5]]){
+          boardV.push(...stadiumPoint(along,side*27.23,h));
+          const x=(along-at)/(finish-at);boardUV.push(side>0?1-x:x,(brand+(h>12?1:0))/4);
+        }
+        boardI.push(n,n+1,n+2,n+1,n+3,n+2);
+      }
+    }
+    add({t:'mesh',nm:'Stadium sponsor hoarding',p:[0,0,0],vertices:boardV,indices:boardI,uvs:boardUV,doubleSided:true,color:'#ffffff',tex:'rally-sponsors',solid:false,castShadow:false});
     if(Math.floor((start+8)/48)%3===0){
       const q=stadiumPoint(mid,side*42,13);add({t:'platform',nm:'Stadium floodlight mast',p:[q[0],q[1]+10,q[2]],s:[.6,20,.6],color:'#647477',tex:'metal',solid:false});
       add({t:'platform',nm:'Floodlight head',p:[q[0],q[1]+20,q[2]],s:[1.3,2.6,7],yaw,color:'#fff1c2',emissive:'#ffcb71',tex:'solid',solid:false});
@@ -89,6 +100,7 @@ function build():CustomComponent[]{
       const at=s+side*12,u=side*47,roof:number[]=[];
       for(const [ds,du,h]of [[-5,-5,26],[-5,5,26],[5,-5,26],[5,5,26],[0,0,29]])roof.push(...stadiumPoint(at+ds,u+du,h));
       add({t:'mesh',nm:'Mud festival pit canopy',p:[0,0,0],vertices:roof,indices:[0,1,4,1,3,4,3,2,4,2,0,4],doubleSided:true,color:cloth[(span+(side>0?1:0))%cloth.length],tex:'solid',solid:false});
+      add({t:'platform',nm:'Raised festival pit deck',p:stadiumPoint(at,u,17.7),s:[10.5,.6,10.5],yaw:-Math.atan(cartRallyFrame(at).dx)*180/Math.PI,color:'#71634e',tex:'wood',solid:false});
       for(const ds of [-4.8,4.8])for(const du of [-4.8,4.8])add({t:'platform',nm:'Festival canopy pole',p:stadiumPoint(at+ds,u+du,22),s:[.14,8,.14],color:'#897a5d',tex:'metal',solid:false});
     }
   }
@@ -120,7 +132,7 @@ function build():CustomComponent[]{
 export const COCONUT_CART_RALLY_LEVEL:CustomLevelData={
   v:1,name:'Coconut Cart Rally',spawn:cartRallyPoint(18,0,.12),startWarpPad:false,killY:-45,
   sky:'sunset',keepPlayFog:true,cameraLookAhead:14,cameraAirLift:.8,cameraRig:{camDist:13,camHeight:7.5,camPitch:18,camFov:68},
-  atmosphere:{fogEnabled:true,fogNear:110,fogFar:420,fogColor:'#bca77e',ambientSky:'#dfd6b4',ambientGround:'#806347',ambientIntensity:1.0,sunColor:'#ffd69a',sunIntensity:2.5,sunDirection:[-.72,.34,.60],fillColor:'#b3baa0',fillIntensity:.36,shadowStrength:.78,backdrop:'painted sky',drawDistance:600,fallbackTop:'#a8ab8a',fallbackBottom:'#e1c28e',fallbackRidges:false,fallbackStars:false},
+  atmosphere:{fogEnabled:true,fogNear:110,fogFar:420,fogColor:'#c3b59a',ambientSky:'#c5d1d3',ambientGround:'#806347',ambientIntensity:1.0,sunColor:'#ffdfae',sunIntensity:2.8,sunDirection:[-.18,.16,-.97],fillColor:'#b3baa0',fillIntensity:.36,shadowStrength:.78,backdrop:'painted sky',drawDistance:600,fallbackTop:'#a8ab8a',fallbackBottom:'#e1c28e',fallbackRidges:false,fallbackStars:false},
   medalTimes:{gold:125,silver:150,bronze:185},
   skateRace:{v:1,racers:8,vehicle:'golf-cart',seed:251026,stages:['Stadium stampede','Mud-bowl mayhem','Dirt double trouble','Grandstand sprint'],line,jumps:CART_RALLY_JUMPS.map(j=>({takeoff:cartRallyPoint(j.start),landing:cartRallyPoint(j.end)})),finishWidth:34,originalLength:CART_RALLY_LENGTH},components:[],
 };

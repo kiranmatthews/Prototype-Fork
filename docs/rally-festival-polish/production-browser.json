@@ -1,0 +1,149 @@
+{
+  "grid": {
+    "look": {
+      "bloom": {
+        "active": false,
+        "mipCount": 0,
+        "sizes": [],
+        "drawCount": 0,
+        "estimatedBytes": 0
+      },
+      "lut": {
+        "dirty": true,
+        "rebuildCount": 0,
+        "width": 1024,
+        "height": 32
+      },
+      "rain": {
+        "enabled": false,
+        "amount": 0,
+        "time": 0
+      },
+      "mud": {
+        "enabled": true,
+        "splats": 0,
+        "sun": [
+          0.1683092878645953,
+          0.9149238822872242,
+          1,
+          0
+        ]
+      }
+    },
+    "mud": {
+      "time": 0,
+      "bursts": 0,
+      "emitted": 0,
+      "groundClods": 3840,
+      "deposits": [],
+      "clods": 0,
+      "splats": 0
+    },
+    "crowd": 32958,
+    "sky": "sunset"
+  },
+  "motion": {
+    "review": {
+      "pilot": true,
+      "landings": 1,
+      "wasGrounded": true,
+      "peakSplats": 5,
+      "peakClods": 16
+    },
+    "mud": {
+      "time": 6.933333333333314,
+      "bursts": 2,
+      "emitted": 113,
+      "groundClods": 3840,
+      "deposits": [
+        0.07031571704091634
+      ],
+      "clods": 9,
+      "splats": 4
+    },
+    "look": {
+      "bloom": {
+        "active": false,
+        "mipCount": 0,
+        "sizes": [],
+        "drawCount": 0,
+        "estimatedBytes": 0
+      },
+      "lut": {
+        "dirty": true,
+        "rebuildCount": 0,
+        "width": 1024,
+        "height": 32
+      },
+      "rain": {
+        "enabled": false,
+        "amount": 0,
+        "time": 0
+      },
+      "mud": {
+        "enabled": true,
+        "splats": 4,
+        "sun": [
+          0.31085618778298085,
+          0.85430103276056,
+          1,
+          0
+        ]
+      }
+    },
+    "progress": 193.68747864987523
+  },
+  "cleared": {
+    "time": 11.750000000000163,
+    "bursts": 2,
+    "emitted": 126,
+    "groundClods": 3840,
+    "deposits": [
+      0.0764106599824122
+    ],
+    "clods": 0,
+    "splats": 0
+  },
+  "pauseFrozen": true,
+  "other": {
+    "look": {
+      "bloom": {
+        "active": false,
+        "mipCount": 0,
+        "sizes": [],
+        "drawCount": 0,
+        "estimatedBytes": 0
+      },
+      "lut": {
+        "dirty": true,
+        "rebuildCount": 0,
+        "width": 1024,
+        "height": 32
+      },
+      "rain": {
+        "enabled": false,
+        "amount": 0,
+        "time": 0
+      },
+      "mud": {
+        "enabled": false,
+        "splats": 0,
+        "sun": [
+          0.3674640937753785,
+          0.8870796934352748,
+          0,
+          0
+        ]
+      }
+    },
+    "gl": 0,
+    "loading": {
+      "phase": null,
+      "pending": [],
+      "failed": [],
+      "revision": 400
+    },
+    "stamp": "Codex/sol fork · build 10-26 12:06 UTC"
+  },
+  "errors": []
+}

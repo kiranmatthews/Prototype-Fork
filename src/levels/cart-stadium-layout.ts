@@ -85,3 +85,23 @@ export function stadiumBoundaryPaths():RallyPoint[][] {
   for(const s of [-8,CART_RALLY_LENGTH+48])paths.push([stadiumPoint(s,-STADIUM.wallOffset,0),stadiumPoint(s,STADIUM.wallOffset,0)]);
   return paths;
 }
+
+/** Sub-metre corrugations and changing crossfall, independent of the original
+ * route/mound envelope. Lips, landing crests, start grid and containment join
+ * at their exact authored heights; this never lowers a jump. */
+export function rallyMicroHeight(s:number,u:number){
+  let envelope=smooth((s-35)/25)*(1-smooth((s-(CART_RALLY_LENGTH-45))/25));
+  envelope*=1-smooth((Math.abs(u)-14)/11);
+  for(const j of CART_RALLY_JUMPS){
+    envelope*=smooth((Math.abs(s-j.start)-12)/14);
+    envelope*=smooth((Math.abs(s-j.end)-6)/12);
+    envelope*=smooth((Math.abs(s-j.end-12)-6)/12);
+  }
+  const lean=.22*Math.sin(s*.037)*u/14;
+  const rolling=.14*Math.sin(s*.21+u*.23)+.075*Math.sin(s*.47-u*.51);
+  const rut=-.09*Math.pow(.5+.5*Math.cos(u*2.1+Math.sin(s*.033)),6);
+  return envelope*(lean+rolling+rut);
+}
+export function rallySurfacePoint(s:number,u=0,up=0):RallyPoint {
+  const p=cartRallyPoint(s,u,up);p[1]=round(p[1]+rallyMicroHeight(s,u));return p;
+}

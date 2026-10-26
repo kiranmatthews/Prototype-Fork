@@ -798,6 +798,7 @@ function syncSkyBackdropVisibility(): void {
   sky.visible = !LITE && !fogBackdrop;
   skyMist.visible =
     skyCache.has(activeSky) &&
+    level.skateRace?.vehicle!=='golf-cart' &&
     !level.water &&
     !LITE &&
     !preset.seaHorizon &&
@@ -1142,7 +1143,7 @@ function drawPrimaryScene(
     coastPostResumeCount++;
   }
   const mud=skateRace.carts?.mud;
-  coastPost?.setMud(!editorViewActive&&!gameFlow.blocksGameplay&&!split2p&&mud?mud.lens:null);
+  coastPost?.setMud(!editorViewActive&&!gameFlow.blocksGameplay&&!split2p&&mud?mud.lens:null,camera);
   const rain=level.rainPresentation;
   coastPost?.setRain(editorViewActive||gameFlow.blocksGameplay||split2p?0:rain.amount,rain.time);
   const storm=stormSquall.update(level,rain.time,

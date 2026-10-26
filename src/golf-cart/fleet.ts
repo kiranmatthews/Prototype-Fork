@@ -1,26 +1,28 @@
+import {installCartWear} from './wear';
 import * as THREE from 'three';
 import { GolfCartKit, CART_PALETTES, CART_DIMENSIONS, type GolfCartModel } from './model';
 import { GolfDriverKit, DRIVER_STYLES, type DriverStyle } from './driver';
 import { GolfCartPhysics, CartAutopilot, CART_PHYSICS, type CartGround, type CartSpawn, type CartObstacle, type CartRoute, type CartInput, type CartPhysicsOptions, type CartImpact } from './physics';
 
-export interface FleetOptions {damageVisuals?:boolean;onImpact?:(hit:CartImpact)=>void;ground:CartGround;spawns:readonly CartSpawn[];routes?:readonly CartRoute[];obstacles?:readonly CartObstacle[];physics?:CartPhysicsOptions}
+export interface FleetOptions {sponsorTexture?:THREE.Texture;damageVisuals?:boolean;onImpact?:(hit:CartImpact)=>void;ground:CartGround;spawns:readonly CartSpawn[];routes?:readonly CartRoute[];obstacles?:readonly CartObstacle[];physics?:CartPhysicsOptions}
 export interface FleetPose {x:number;y:number;z:number;yaw:number}
 interface Chip {x:number;y:number;z:number;vx:number;vy:number;vz:number;life:number;spin:number}
 /** Fleet owns meshes/materials/drivers; kit buffers are disposed exactly once on unload. */
 export class GolfCartFleet {
   readonly root=new THREE.Group();readonly kit:GolfCartKit;readonly drivers=new GolfDriverKit();readonly models:GolfCartModel[];
   readonly physics:GolfCartPhysics;readonly pilots:CartAutopilot[];readonly driverStyles:DriverStyle[];
+  readonly mudAmounts:number[]=[];
   selected=-1;input:CartInput={throttle:0,steer:0,brake:0,handbrake:false};
   private chips:Chip[]=Array.from({length:48},()=>({x:0,y:0,z:0,vx:0,vy:0,vz:0,life:0,spin:0}));
   private chipMesh=new THREE.InstancedMesh(new THREE.BoxGeometry(.08,.035,.13),new THREE.MeshStandardMaterial({color:'#ffe2a4',roughness:.9}),48);
   private nextChip=0;private dummy=new THREE.Object3D();private disposed=false;
-  private batches:{mesh:THREE.InstancedMesh;sources:{mesh:THREE.Mesh;cart:number}[]}[]=[];
+  private batches:{mesh:THREE.InstancedMesh;wear?:THREE.InstancedBufferAttribute;sources:{mesh:THREE.Mesh;cart:number}[]}[]=[];
   private visible:boolean[]=[];
   private viewBounds=new THREE.Box2();private viewPoint=new THREE.Vector3();
   private poses:readonly FleetPose[]|undefined;
   private inverseRoot=new THREE.Matrix4();private instanceMatrix=new THREE.Matrix4();
   constructor(private options:FleetOptions){
-    this.kit=new GolfCartKit(options.damageVisuals);this.root.name='GolfCartFleet';this.physics=new GolfCartPhysics(options.ground,options.spawns,options.obstacles,options.physics);
+    this.kit=new GolfCartKit(options.damageVisuals,options.sponsorTexture);this.root.name='GolfCartFleet';this.physics=new GolfCartPhysics(options.ground,options.spawns,options.obstacles,options.physics);
     this.pilots=(options.routes??[]).map(r=>new CartAutopilot(r));this.driverStyles=options.spawns.map((_,i)=>DRIVER_STYLES[i%3]);
     this.models=options.spawns.map((_,i)=>{const model=this.kit.create(CART_PALETTES[i%CART_PALETTES.length]);model.setDriver(this.drivers.create(this.driverStyles[i]));model.root.name=`GolfCart-${i+1}`;model.root.scale.setScalar(this.physics.scale);this.root.add(model.root);return model;});
     // Batch identical component geometry across the fleet, including all wheels.
@@ -30,7 +32,7 @@ export class GolfCartFleet {
     this.visible=this.models.map(()=>true);
     this.models.forEach((model,cart)=>model.root.traverse(o=>{if(o instanceof THREE.Mesh&&kitGeometry.has(o.geometry)){const list=groups.get(o.geometry)??[];list.push({mesh:o,cart});groups.set(o.geometry,list);o.layers.set(31);}}));
     groups.forEach((sources,geometry)=>{const material=(sources[0].mesh.material as THREE.MeshStandardMaterial).clone();material.color.set('#ffffff');if(options.damageVisuals)material.emissive.set('#000000');
-      const mesh=new THREE.InstancedMesh(geometry,material,sources.length);mesh.name=`Fleet-${sources[0].mesh.name}`;mesh.castShadow=sources[0].mesh.castShadow;mesh.receiveShadow=true;mesh.frustumCulled=false;mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);this.root.add(mesh);this.batches.push({mesh,sources});});
+      const mesh=new THREE.InstancedMesh(geometry,material,sources.length);mesh.name=`Fleet-${sources[0].mesh.name}`;mesh.castShadow=sources[0].mesh.castShadow;mesh.receiveShadow=true;mesh.frustumCulled=false;mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);this.root.add(mesh);const wear=options.damageVisuals&&!/headlights|tail-lamps|windscreen|nozzle-charge-rings/i.test(mesh.name)&&!mesh.name.includes('ring')?installCartWear(mesh,mesh.name.includes('WheelSpin')):undefined;this.batches.push({mesh,sources,wear});});
     this.chipMesh.name='BoundedImpactChips';this.chipMesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);this.chipMesh.frustumCulled=false;this.root.add(this.chipMesh);this.present(0);
   }
   setDriver(index:number,style:DriverStyle|null){const previous=this.models[index].setDriver(style?this.drivers.create(style):null);previous?.dispose();if(style)this.driverStyles[index]=style;}
@@ -73,15 +75,17 @@ export class GolfCartFleet {
       m.root.position.set(p.x,p.y+lift*this.physics.scale,p.z);m.root.rotation.set(0,p.yaw,angle,'YXZ');m.update({time:this.physics.time,steer:c.steer,roll:c.roll,pitch:c.pitch,impact:c.impact,speed:c.speed,wheelTravel:c.travel/this.physics.scale,suspension:c.wheels,landingCompression:c.landingCompression,damage:c.damage,health:c.health});
       m.root.updateWorldMatrix(false,true);
     });
-    for(const {mesh,sources} of this.batches){let count=0,colorsChanged=false;
+    for(const {mesh,sources,wear} of this.batches){let count=0,colorsChanged=false;
       for(const {mesh:source,cart} of sources){if(!this.visible[cart])continue;
         let visible=true;for(let o:THREE.Object3D|null=source;o&&o!==this.root;o=o.parent)if(!o.visible){visible=false;break;}
         if(!visible)continue;
         this.instanceMatrix.multiplyMatrices(this.inverseRoot,source.matrixWorld);mesh.setMatrixAt(count,this.instanceMatrix);
         const color=(source.material as THREE.MeshStandardMaterial).color,buffer=mesh.instanceColor;
-        if(!buffer||buffer.getX(count)!==Math.fround(color.r)||buffer.getY(count)!==Math.fround(color.g)||buffer.getZ(count)!==Math.fround(color.b)){mesh.setColorAt(count,color);colorsChanged=true;}count++;
+        if(!buffer||buffer.getX(count)!==Math.fround(color.r)||buffer.getY(count)!==Math.fround(color.g)||buffer.getZ(count)!==Math.fround(color.b)){mesh.setColorAt(count,color);colorsChanged=true;}
+        if(wear){const c=this.physics.carts[cart];wear.setXYZW(count,this.mudAmounts[cart]??0,1-c.health,c.health<=0?1:0,cart);}
+        count++;
       }
-      mesh.count=count;mesh.visible=count>0;if(count)mesh.instanceMatrix.needsUpdate=true;if(colorsChanged&&mesh.instanceColor)mesh.instanceColor.needsUpdate=true;
+      if(wear&&count)wear.needsUpdate=true;mesh.count=count;mesh.visible=count>0;if(count)mesh.instanceMatrix.needsUpdate=true;if(colorsChanged&&mesh.instanceColor)mesh.instanceColor.needsUpdate=true;
     }
     this.updateChips(dt);
   }

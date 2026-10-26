@@ -85,10 +85,11 @@ export class GolfCartRace {
     const obstacles=level.walls.filter(b=>b.max.y-b.min.y>1&&b.max.x-b.min.x<9&&b.max.z-b.min.z<9)
       .map((b,i)=>({x:(b.min.x+b.max.x)/2,z:(b.min.z+b.max.z)/2,radius:Math.max(b.max.x-b.min.x,b.max.z-b.min.z)/2,height:b.max.y-b.min.y,id:`rally-barrier-${i}`}));
     const stadium=level.groundMeshes.some(m=>m.name==='Packed stadium dirt');
-    this.fleet=new GolfCartFleet({damageVisuals:true,ground:(x,z)=>this.ground(x,z),spawns,obstacles,
+    const sponsor=level.pickRoot.getObjectByName('Stadium sponsor hoarding') as THREE.Mesh|undefined;
+    this.fleet=new GolfCartFleet({damageVisuals:true,sponsorTexture:(sponsor?.material as THREE.MeshStandardMaterial|undefined)?.map??undefined,ground:(x,z)=>this.ground(x,z),spawns,obstacles,
       onImpact:hit=>this.audio.impact(hit,this.racers[0].player.pos),
-      physics:{boundary:stadium?createStadiumBoundary():undefined,scale:1.25,topSpeed:38,engine:23,speedLimit:44,maxLaunchVelocity:9,airRecoveryDelay:6,damageCapacity:8,gravity:24,stableLandings:true}});
-    this.mud=stadium?new CartMud():null;if(this.mud)this.fleet.root.add(this.mud.root);
+      physics:{boundary:stadium?createStadiumBoundary():undefined,scale:1.25,topSpeed:38,engine:23,speedLimit:44,maxLaunchVelocity:9,airRecoveryDelay:6,damageCapacity:16,gravity:24,stableLandings:true}});
+    this.mud=stadium?new CartMud(this.fleet.mudAmounts):null;if(this.mud)this.fleet.root.add(this.mud.root);
     this.crowd=stadium?new StadiumCrowd():null;if(this.crowd)this.fleet.root.add(this.crowd.root);
     this.fleet.models.forEach((m,i)=>{
       m.setPalette({paint:i<count?RACE_ROSTER[i].color:'#95ee65',cream:i===0?'#ef8058':'#f5e8ca'});
@@ -375,7 +376,7 @@ export class GolfCartRace {
         const delivery=reserve>=0?this.loanerBay(rider.progress,reserve,this.footStill[i]>4):null;
         if(delivery){
           const {bay,heading}=delivery;
-          const home={x:bay.x,z:bay.z,yaw:Math.atan2(-heading.x,-heading.z)};this.homes[reserve]=home;Object.assign(world.spawns[reserve],home);world.reset(reserve);this.burning[reserve]=false;this.fleet.models[reserve].setScorched(false);this.fleet.models[reserve].setPalette({paint:'#95ee65',cream:'#f5e8ca',cargo:'#f16a45'});this.previous[reserve]={...world.carts[reserve]};this.respawns[reserve]=0;this.loanWait[i]=0;
+          const home={x:bay.x,z:bay.z,yaw:Math.atan2(-heading.x,-heading.z)};this.homes[reserve]=home;Object.assign(world.spawns[reserve],home);world.reset(reserve);this.fleet.mudAmounts[reserve]=0;this.burning[reserve]=false;this.fleet.models[reserve].setScorched(false);this.fleet.models[reserve].setPalette({paint:'#95ee65',cream:'#f5e8ca',cargo:'#f16a45'});this.previous[reserve]={...world.carts[reserve]};this.respawns[reserve]=0;this.loanWait[i]=0;
           if(i===0)this.announce('THE CLUB HAS SENT ANOTHER LOANER');
         }
       }
@@ -439,7 +440,7 @@ export class GolfCartRace {
         const home=this.homes[index];
         this.spareTime[index]=index>=this.count&&(this.burning[index]||Math.hypot(c.x-home.x,c.z-home.z)>45)?this.spareTime[index]+dt:0;
         if(!this.reserved(index)&&this.spareTime[index]>18&&this.racers.slice(0,this.count).every(r=>(r.player.pos.x-c.x)**2+(r.player.pos.z-c.z)**2>324)&&this.clearBay(home.x,home.z,index)){
-          Object.assign(world.spawns[index],home);world.reset(index);this.burning[index]=false;this.fleet.models[index].setScorched(false);this.fleet.models[index].setPalette({paint:'#95ee65',cream:'#f5e8ca',cargo:'#f16a45'});this.spareTime[index]=0;this.previous[index]={...c};this.respawns[index]=0;
+          Object.assign(world.spawns[index],home);world.reset(index);this.fleet.mudAmounts[index]=0;this.burning[index]=false;this.fleet.models[index].setScorched(false);this.fleet.models[index].setPalette({paint:'#95ee65',cream:'#f5e8ca',cargo:'#f16a45'});this.spareTime[index]=0;this.previous[index]={...c};this.respawns[index]=0;
         }
         continue;
       }
@@ -484,7 +485,7 @@ export class GolfCartRace {
   hit(id:number,origin?:THREE.Vector3,power=.24){
     const index=this.cartForRacer[id],c=this.fleet.physics.carts[index];if(!c||this.burning[index])return;
     this.stun[index]=.55;const dx=c.x-(origin?.x??c.x-1),dz=c.z-(origin?.z??c.z),n=Math.hypot(dx,dz)||1;
-    this.fleet.physics.kick(index,dx/n*9,dz/n*9,12);c.health=Math.max(0,c.health-power);c.vy=Math.max(c.vy,4.5+power*8);c.grounded=false;
+    this.fleet.physics.kick(index,dx/n*9,dz/n*9,12);c.health=Math.max(0,c.health-power*.5);c.vy=Math.max(c.vy,4.5+power*8);c.grounded=false;
     if(c.health<=0)this.wreck(index);
   }
   hud(){

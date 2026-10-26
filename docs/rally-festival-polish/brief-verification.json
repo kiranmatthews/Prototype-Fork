@@ -1,0 +1,106 @@
+{
+  "previousTurnClassification": "progress: muddy atmosphere and desktop decoder fix were implemented, deployed and verified in 299c98b4",
+  "build": "Codex/sol fork \u00b7 build 10-26 12:06 UTC",
+  "releaseBytes": 999062889,
+  "releaseBudgetBytes": 1000000000,
+  "checks": {
+    "focusedPassed": 33,
+    "focusedFailed": 0,
+    "startupCases": [
+      "preparation-failure with keyboard reload recovery",
+      "lite",
+      "full-mobile",
+      "full-4x3"
+    ],
+    "browser": "Chrome production drive and native/normal screenshots; actual in-app browser title and rally launch, no warnings/errors"
+  },
+  "fullSuitePriorTurn": {
+    "passed": 162,
+    "failed": 39,
+    "report": "../cart-festival-validation/full-suite.json",
+    "note": "The earlier explicitly requested full suite was run to completion. Its unrelated failures are not represented as fixed by this visual brief."
+  },
+  "objectiveEvidence": [
+    {
+      "item": "Polish the mudder festival aesthetic",
+      "evidence": [
+        "race-native.png",
+        "race-normal.png"
+      ],
+      "implementation": "Wet loam material, restrained colour grade, weathered sponsor hoardings, existing bunting/pit awnings/crowd, 3840 static instanced ground clumps."
+    },
+    {
+      "item": "Subtle blurred realistic camera splashes",
+      "evidence": [
+        "production-browser.json",
+        "race-native.png"
+      ],
+      "implementation": "Irregular soft blobs with falling smear tails, refraction and five scene samples, protected centre, finite fade, real wheel/landing/rival events; pause freezes state."
+    },
+    {
+      "item": "Microbumps, dips, slopes and leans in existing track",
+      "evidence": [
+        "mechanics.json"
+      ],
+      "implementation": "Shallow rolling relief, tyre grooves and changing crossfall; -0.445 to +0.381 metres over sampled surface. All 12 original jump lips/landing crests and original route retained. 2240 support samples; all 12 full-speed doubles zero rolls/respawns."
+    },
+    {
+      "item": "Double durability",
+      "evidence": [
+        "mechanics.json"
+      ],
+      "implementation": "Collision capacity 8 to 16; direct weapon health cost halved, including impact component. Same hits remove exactly half the previous health; driving controls unchanged."
+    },
+    {
+      "item": "PNG sponsor decals on karts and upper course walls",
+      "evidence": [
+        "cart-clean-native.png",
+        "race-native.png"
+      ],
+      "implementation": "One 1024x1024 four-brand PNG atlas; curved hoarding meshes follow upper walls; three shared fleet decal batches preserve atlas UVs."
+    },
+    {
+      "item": "No island parts visible in sky",
+      "evidence": [
+        "sky-native.png",
+        "detail-browser.json"
+      ],
+      "implementation": "Rally sky branch never samples panorama; separate painted island mist disabled for golf-cart races and restored normally on level switch."
+    },
+    {
+      "item": "Bloomed sun and resource-efficient realistic lens flares",
+      "evidence": [
+        "race-native.png",
+        "sky-native.png",
+        "production-browser.json"
+      ],
+      "implementation": "Analytic HDR sun disk, corona and atmospheric halo in existing sky shader; three faint sun ghosts in existing lens pass, brightness occlusion and offscreen/behind-camera gating. No new render target or sun draw pass."
+    },
+    {
+      "item": "Carts scratched and muddy",
+      "evidence": [
+        "cart-clean-native.png",
+        "cart-worn-native.png",
+        "mechanics.json"
+      ],
+      "implementation": "Per-cart accumulated mud, lower-body bias, wear-revealed paint scratches/chips, retained dents and glass cracks. Four-float instance attribute; driver changes retain dirt, repaired replacement loaners reset it. Ready rings remain legible."
+    },
+    {
+      "item": "Periodic screenshot-to-ImageGen inspiration",
+      "evidence": [
+        "imagegen-studies.json"
+      ],
+      "implementation": "Two built-in ImageGen paintovers of actual successive game screenshots, reviewed and used to direct wet grooves, warm/cool sky balance, sponsor boards and restrained lens grime."
+    }
+  ],
+  "reviewCaveat": "Close-up wear screenshot is a staged review: 60 seconds of production mud updates on the same kart plus health .45 to inspect scratches. Gameplay screenshots use actual driving and landings.",
+  "resourceEvidence": {
+    "groundClumps": 3840,
+    "clumpDrawsAtGrid": 7,
+    "extraGridTriangles": 22400,
+    "clumpInstanceBufferBytes": 291840,
+    "sponsorPngBytes": 181276,
+    "extraFlareRenderTargets": 0,
+    "extraFlareDrawPasses": 0
+  }
+}

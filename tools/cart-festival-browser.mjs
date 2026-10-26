@@ -12,7 +12,7 @@ try{
  await page.evaluate(()=>window.__game.renderQualitySettings.setRegularResolution(null));
  await page.waitForTimeout(200);
  const grid=await page.evaluate(()=>{const g=window.__game,c=g.getSkateRace().carts;return {look:g.getLookDiagnostics(),mud:c.mud.diagnostics,crowd:c.crowd.count,sky:g.getLevel().skyPreset};});
- assert.equal(grid.look.mud.enabled,true);assert.equal(grid.mud.bursts,0);assert.equal(grid.crowd,32958);assert.equal(grid.sky,'sunset');
+ assert.equal(grid.look.mud.enabled,true);assert.ok(grid.mud.groundClods>3000);assert.equal(grid.mud.bursts,0);assert.equal(grid.crowd,32958);assert.equal(grid.sky,'sunset');
  await page.getByRole('button',{name:'RACE',exact:true}).click();
  await page.waitForFunction(()=>window.__game.getSkateRace().phase==='countdown');await page.screenshot({path:out+'/festival-grid-native.png'});
  await page.waitForFunction(()=>window.__game.getSkateRace().phase==='running',null,{timeout:30000});
@@ -25,7 +25,7 @@ try{
  await page.waitForFunction(()=>window.festivalReview.landings>0&&window.__game.getSkateRace().carts.mud.diagnostics.splats>0,null,{timeout:70000});
  await page.waitForTimeout(180);await page.screenshot({path:out+'/mud-camera-native.png'});
  const motion=await page.evaluate(()=>({review:window.festivalReview,mud:window.__game.getSkateRace().carts.mud.diagnostics,look:window.__game.getLookDiagnostics(),progress:window.__game.getSkateRace().riders[0].progress}));
- assert.ok(motion.review.peakClods>0&&motion.review.peakClods<=192);assert.ok(motion.review.peakSplats>0&&motion.review.peakSplats<=12);assert.ok(motion.progress>100);
+ assert.ok(motion.review.peakClods>0&&motion.review.peakClods<=192);assert.ok(motion.review.peakSplats>0&&motion.review.peakSplats<=12);assert.ok(motion.progress>100);assert.ok(motion.mud.deposits[0]>0);assert.equal(motion.look.mud.sun[2],1,'Low afternoon sun remains in the driving view');
  await page.evaluate(()=>{window.festivalReview.pilot=false;window.__game.renderQualitySettings.setRegularResolution(720);});await page.waitForTimeout(100);await page.screenshot({path:out+'/mud-camera-normal.png'});
  await page.waitForFunction(()=>window.__game.getSkateRace().carts.mud.diagnostics.splats===0,null,{timeout:14000});
  const cleared=await page.evaluate(()=>window.__game.getSkateRace().carts.mud.diagnostics);assert.equal(cleared.splats,0);

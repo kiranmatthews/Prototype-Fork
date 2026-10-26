@@ -29,8 +29,8 @@ export function coloured(g:THREE.BufferGeometry,color:THREE.ColorRepresentation)
   for(let i=0;i<a.length;i+=3){a[i]=c.r;a[i+1]=c.g;a[i+2]=c.b;}
   g.setAttribute('color',new THREE.BufferAttribute(a,3));g.deleteAttribute('uv');return g;
 }
-export function merged(parts:THREE.BufferGeometry[]):THREE.BufferGeometry {
-  const prepared=parts.map(g=>{g.deleteAttribute('uv');if(g.index){const f=g.toNonIndexed();g.dispose();return f;}return g;});
+export function merged(parts:THREE.BufferGeometry[],preserveUv=false):THREE.BufferGeometry {
+  const prepared=parts.map(g=>{if(!preserveUv)g.deleteAttribute('uv');if(g.index){const f=g.toNonIndexed();g.dispose();return f;}return g;});
   const geometry=mergeGeometries(prepared,false);if(!geometry)throw new Error('Cart geometry attributes do not match');
   prepared.forEach(g=>g.dispose());geometry.computeBoundingSphere();return geometry;
 }

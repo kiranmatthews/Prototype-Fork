@@ -1,0 +1,17 @@
+{
+  "tool": "Built-in image_gen via imagegen skill",
+  "purpose": "Preview-only concept paintovers, not gameplay evidence or textures",
+  "studies": [
+    {
+      "input": "/Users/kiki/.codex/worktrees/kart-mayhem-release/Prototype Fork/docs/cart-festival-validation/mud-camera-native.png",
+      "supportingReference": "/Users/kiki/.codex/attachments/92a594e4-5404-4a02-b798-10ca81231bc4/image-1.png",
+      "output": "/Users/kiki/.codex/generated_images/01a1729c-24cf-75e2-9f0d-71d30058a524/exec-c5ec94dc-34d3-4b30-a718-9a8663904532.png",
+      "prompt": "Style-transfer development concept paintover. Preserve the actual camera, kart silhouette/size, complete route and mound dimensions. Apply a gritty mud-bog festival: wet tyre ruts, shallow puddles, irregular compacted dirt, faded fictional sponsor boards/decals, mud and scraped paint, warm afternoon sun with delicate photographic bloom and tiny lens ghosts, dusty pale blue sky/wispy clouds without any islands/castles/mountains. Soft translucent out-of-focus lens mud around edges; central road clear. No new route, buildings or HUD; inspiration, not claimed gameplay."
+    },
+    {
+      "input": "/private/tmp/rally-polish-second/mud-camera-native.png",
+      "output": "/Users/kiki/.codex/generated_images/01a1729c-24cf-75e2-9f0d-71d30058a524/exec-254b4765-a2cc-4fb8-a844-7d7e1deb1d32.png",
+      "prompt": "Targeted style-transfer paintover of the newest actual screenshot. Preserve exact camera, kart geometry/size, stands, sponsors and course. Break overly regular parallel ruts into interrupted overlapping grooves, varied wet loam and shallow reflective pools; reduce high-frequency visual noise. Add subdued out-of-focus lens mud at outer edges, protect central view. Low warm sun above distant stands, natural optical bloom, dusty haze and muted blue upper sky, no floating islands or extra objects/route/HUD. Practical stylized game target, inspiration only."
+    }
+  ]
+}

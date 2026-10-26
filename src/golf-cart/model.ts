@@ -16,7 +16,7 @@ export interface DriverMotion { time:number; steer:number; roll:number; pitch:nu
 export interface CartDriver { root:THREE.Object3D; update(motion:DriverMotion):void; dispose():void }
 export const CART_DIMENSIONS = Object.freeze({length:3.13,width:1.95,height:2.18,wheelbase:1.72,track:1.48,wheelRadius:.41});
 export interface CartPose extends DriverMotion { wheelTravel:number; suspension:readonly number[]; damage:readonly number[]; health?:number;landingCompression?:number }
-type MaterialKey=keyof CartPalette|NozzleMaterial|'lamp'|'red'|'metal'|'glass'|'wheel'|'canopyArt'|'bagArt'|'bagDetail';
+type MaterialKey=keyof CartPalette|NozzleMaterial|'lamp'|'red'|'metal'|'glass'|'wheel'|'canopyArt'|'bagArt'|'bagDetail'|'sponsor';
 type Part={name:string;geometry:THREE.BufferGeometry;material:MaterialKey;parent:string};
 const pt=(w:number,h:number,d:number,p:XYZ,r:XYZ=[0,0,0],cut?:number)=>placed(bevelBox(w,h,d,cut),p,r);
 
@@ -29,10 +29,10 @@ export class GolfCartKit {
   private disposed=false;
   readonly steeringPosition:THREE.Vector3;
   readonly cabinRise:number;
-  constructor(damageVisuals=false){
+  constructor(damageVisuals=false,readonly sponsorTexture?:THREE.Texture){
     this.steeringPosition=new THREE.Vector3(-.34,damageVisuals?1.43:1.23,damageVisuals?-.20:-.28);
     const cabinRise=this.cabinRise=damageVisuals?.60:0;
-    const add=(name:string,material:MaterialKey,parts:THREE.BufferGeometry[],parent='body')=>this.parts.push({name,material,geometry:merged(parts),parent});
+    const add=(name:string,material:MaterialKey,parts:THREE.BufferGeometry[],parent='body')=>this.parts.push({name,material,geometry:merged(parts,material==='sponsor'),parent});
     add('chassis','trim',[
       pt(1.35,.18,2.7,[0,.47,0]),pt(1.62,.10,1.35,[0,.52,.05]),pt(1.65,.17,.18,[0,.4,-.85]),pt(1.65,.17,.18,[0,.4,.87]),
       pt(1.26,.10,.58,[0,.58,1.15]),pt(1.12,.33,.15,[0,.93,-.49],[.16,0,0]),
@@ -57,6 +57,14 @@ export class GolfCartKit {
     add('windscreen','glass',[pt(1.20,.30,.016,[0,1.28,-.666],[.18,0,0],.006)],'roof');
     if(damageVisuals){
       for(const part of createTripleNozzleParts())this.parts.push({...part,parent:'body'});
+      const decal=(w:number,h:number,p:XYZ,r:XYZ,brand:number)=>{
+        const g=new THREE.PlaneGeometry(w,h),uv=g.getAttribute('uv');
+        for(let i=0;i<uv.count;i++)uv.setY(i,(uv.getY(i)*.90+.05+brand)/4);
+        return placed(g,p,r);
+      };
+      add('rear-sponsor-decal','sponsor',[decal(.86,.25,[0,.84,1.158],[0,0,0],1)]);
+      add('side-sponsor-decals','sponsor',[-1,1].map(side=>decal(.53,.21,[side*.851,.82,.85],[0,side*Math.PI/2,0],0)));
+      add('hood-sponsor-decal','sponsor',[decal(.65,.21,[.0,1.065,-1.08],[-Math.PI/2-.26,0,0],3)],'nose');
       // Actual fracture/scuff geometry follows the original damaged body groups.
       const crack=(a:XYZ,b:XYZ)=>strut(a,b,.006,3);
       add('windscreen-cracks','metal',[
@@ -97,8 +105,9 @@ export class GolfCartModel {
   constructor(kit:GolfCartKit,palette:CartPalette){
     this.palette={...palette};this.root.name='GolfCart';this.body.name='SuspendedBody';this.root.add(this.body);
     const mat=(name:string,color:string,roughness=.72)=>{const m=new THREE.MeshStandardMaterial({color,roughness,flatShading:true});m.name=name;return m;};
-    this.materials={nozzleRing:mat('Nozzle charge rings','#eaa03a',.4),nozzleCream:mat('Nozzle cream housing','#f2dfb5',.68),nozzleBrass:mat('Nozzle brass lips','#c39543',.35),nozzleSoot:mat('Nozzle dark interior','#282b2e',.8),nozzleOrange:mat('Nozzle cooling fins','#e87729',.52),paint:mat('Paint · recolour',palette.paint,.48),cream:mat('Canopy & stripe · recolour',palette.cream),seat:mat('Upholstery · recolour',palette.seat),trim:mat('Frame & bumpers · recolour',palette.trim),cargo:mat('Golf bag · recolour',palette.cargo),lamp:mat('Warm headlamps','#fff1b1',.35),red:mat('Rear lights','#ec5945',.4),metal:mat('Metal','#9eacb5',.45),glass:mat('Windscreen','#93d8e1',.2),wheel:mat('Tyres & hubs','#ffffff'),canopyArt:mat('Sculpted canopy · recolour',palette.cream),bagArt:mat('Sculpted bag · recolour',palette.cargo),bagDetail:mat('Bag piping & straps','#ffffff')};
+    this.materials={sponsor:mat('Weathered sponsor decals','#ffffff',.86),nozzleRing:mat('Nozzle charge rings','#eaa03a',.4),nozzleCream:mat('Nozzle cream housing','#f2dfb5',.68),nozzleBrass:mat('Nozzle brass lips','#c39543',.35),nozzleSoot:mat('Nozzle dark interior','#282b2e',.8),nozzleOrange:mat('Nozzle cooling fins','#e87729',.52),paint:mat('Paint · recolour',palette.paint,.48),cream:mat('Canopy & stripe · recolour',palette.cream),seat:mat('Upholstery · recolour',palette.seat),trim:mat('Frame & bumpers · recolour',palette.trim),cargo:mat('Golf bag · recolour',palette.cargo),lamp:mat('Warm headlamps','#fff1b1',.35),red:mat('Rear lights','#ec5945',.4),metal:mat('Metal','#9eacb5',.45),glass:mat('Windscreen','#93d8e1',.2),wheel:mat('Tyres & hubs','#ffffff'),canopyArt:mat('Sculpted canopy · recolour',palette.cream),bagArt:mat('Sculpted bag · recolour',palette.cargo),bagDetail:mat('Bag piping & straps','#ffffff')};
     for(const [key,map] of [['wheel',kit.textures.wheel],['canopyArt',kit.textures.canopy],['bagArt',kit.textures.bagPaint],['bagDetail',kit.textures.bag]] as const){const material=this.materials[key];material.map=map;material.flatShading=false;material.roughness=.85;}this.materials.glass.transparent=true;this.materials.glass.opacity=.22;this.materials.glass.depthWrite=false;
+    this.materials.sponsor.map=kit.sponsorTexture??null;this.materials.sponsor.polygonOffset=true;this.materials.sponsor.polygonOffsetFactor=-2;this.materials.sponsor.polygonOffsetUnits=-2;
     this.materials.nozzleBrass.metalness=.7;this.materials.nozzleSoot.metalness=.15;
     this.materials.lamp.emissive.set('#ffbb55');this.materials.lamp.emissiveIntensity=.2;
     this.modules.body=this.body;

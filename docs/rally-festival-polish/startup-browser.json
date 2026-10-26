@@ -1,0 +1,463 @@
+{
+  "base": "http://127.0.0.1:5498/",
+  "entry": "/assets/index-hiey4JAF.js",
+  "main": "/assets/main-CYaWcbl3.js",
+  "rows": [
+    {
+      "name": "preparation-failure",
+      "status": "The game couldn’t start. Reload to try again.",
+      "visible": true,
+      "failed": true,
+      "link": {
+        "x": 576.890625,
+        "y": 370,
+        "width": 126.21875,
+        "height": 44,
+        "top": 370,
+        "right": 703.109375,
+        "bottom": 414,
+        "left": 576.890625
+      },
+      "viewport": [
+        1280,
+        720
+      ],
+      "animation": "startup-spin",
+      "paint": [
+        {
+          "name": "first-paint",
+          "ms": 60
+        },
+        {
+          "name": "first-contentful-paint",
+          "ms": 60
+        }
+      ],
+      "game": true,
+      "keyboardRecovery": true,
+      "injectedErrors": [
+        "Game startup failed. Error: Injected preparation failure\n    at game.gameFlow.prepareMenuPresentation (<anonymous>:4:301)\n    at ek (http://127.0.0.1:5498/assets/main-CYaWcbl3.js:2733:129551)"
+      ],
+      "errors": [],
+      "external": []
+    },
+    {
+      "name": "lite",
+      "initial": {
+        "status": "Loading game…",
+        "visible": true,
+        "failed": false,
+        "link": {
+          "x": 576.890625,
+          "y": 380,
+          "width": 126.21875,
+          "height": 44,
+          "top": 380,
+          "right": 703.109375,
+          "bottom": 424,
+          "left": 576.890625
+        },
+        "viewport": [
+          1280,
+          720
+        ],
+        "animation": "startup-spin",
+        "paint": [
+          {
+            "name": "first-paint",
+            "ms": 40
+          },
+          {
+            "name": "first-contentful-paint",
+            "ms": 40
+          }
+        ],
+        "game": false
+      },
+      "final": {
+        "samples": [
+          {
+            "ms": 24.300000071525574,
+            "state": "status",
+            "loading": null,
+            "frames": 0,
+            "context": null,
+            "font": null
+          },
+          {
+            "ms": 4424.300000071526,
+            "state": "status",
+            "loading": true,
+            "frames": 0,
+            "context": "warp",
+            "font": false
+          },
+          {
+            "ms": 4521.5,
+            "state": "hidden",
+            "loading": true,
+            "frames": 1,
+            "context": "warp",
+            "font": false
+          },
+          {
+            "ms": 8722.800000071526,
+            "state": "hidden",
+            "loading": true,
+            "frames": 227,
+            "context": "warp",
+            "font": true
+          },
+          {
+            "ms": 13339.600000023842,
+            "state": "hidden",
+            "loading": true,
+            "frames": 469,
+            "context": null,
+            "font": true
+          },
+          {
+            "ms": 14156.100000023842,
+            "state": "removed",
+            "loading": false,
+            "frames": 469,
+            "context": null,
+            "font": true
+          }
+        ],
+        "tasks": [
+          {
+            "start": 465.10000002384186,
+            "ms": 3954
+          },
+          {
+            "start": 4419.400000095367,
+            "ms": 87
+          },
+          {
+            "start": 4657.800000071526,
+            "ms": 388
+          },
+          {
+            "start": 9639.5,
+            "ms": 55
+          },
+          {
+            "start": 11589.5,
+            "ms": 59
+          },
+          {
+            "start": 11956.100000023842,
+            "ms": 89
+          },
+          {
+            "start": 12089.100000023842,
+            "ms": 71
+          },
+          {
+            "start": 13006.200000047684,
+            "ms": 331
+          },
+          {
+            "start": 14156,
+            "ms": 121
+          },
+          {
+            "start": 14277.300000071526,
+            "ms": 138
+          }
+        ],
+        "stamp": "Codex/sol fork · build 10-26 12:06 UTC",
+        "font": {
+          "cap": 128,
+          "revision": 1,
+          "ready": true,
+          "degraded": false,
+          "decodedBytes": 12435456
+        },
+        "loading": {
+          "phase": null,
+          "pending": [],
+          "failed": [],
+          "revision": 328
+        },
+        "context": null,
+        "screen": null,
+        "pendingLabels": 0,
+        "paint": [
+          {
+            "name": "first-paint",
+            "ms": 40
+          },
+          {
+            "name": "first-contentful-paint",
+            "ms": 40
+          }
+        ],
+        "gl": 0
+      },
+      "errors": [],
+      "external": []
+    },
+    {
+      "name": "full-mobile",
+      "initial": {
+        "status": "Loading game…",
+        "visible": true,
+        "failed": false,
+        "link": {
+          "x": 131.890625,
+          "y": 442,
+          "width": 126.21875,
+          "height": 44,
+          "top": 442,
+          "right": 258.109375,
+          "bottom": 486,
+          "left": 131.890625
+        },
+        "viewport": [
+          390,
+          844
+        ],
+        "animation": "none",
+        "paint": [
+          {
+            "name": "first-paint",
+            "ms": 44
+          },
+          {
+            "name": "first-contentful-paint",
+            "ms": 44
+          }
+        ],
+        "game": false
+      },
+      "final": {
+        "samples": [
+          {
+            "ms": 16.700000047683716,
+            "state": "status",
+            "loading": null,
+            "frames": 0,
+            "context": null,
+            "font": null
+          },
+          {
+            "ms": 4290.400000095367,
+            "state": "status",
+            "loading": true,
+            "frames": 0,
+            "context": "menu",
+            "font": false
+          },
+          {
+            "ms": 4414.100000023842,
+            "state": "hidden",
+            "loading": true,
+            "frames": 1,
+            "context": "menu",
+            "font": false
+          },
+          {
+            "ms": 8240.5,
+            "state": "hidden",
+            "loading": true,
+            "frames": 226,
+            "context": "menu",
+            "font": true
+          },
+          {
+            "ms": 8282.900000095367,
+            "state": "hidden",
+            "loading": false,
+            "frames": 229,
+            "context": "menu",
+            "font": true
+          },
+          {
+            "ms": 8436.900000095367,
+            "state": "removed",
+            "loading": false,
+            "frames": 240,
+            "context": "menu",
+            "font": true
+          }
+        ],
+        "tasks": [
+          {
+            "start": 423.3000000715256,
+            "ms": 3864
+          },
+          {
+            "start": 4287.5,
+            "ms": 104
+          },
+          {
+            "start": 4492.700000047684,
+            "ms": 89
+          }
+        ],
+        "stamp": "Codex/sol fork · build 10-26 12:06 UTC",
+        "font": {
+          "cap": 128,
+          "revision": 1,
+          "ready": true,
+          "degraded": false,
+          "decodedBytes": 12435456
+        },
+        "loading": {
+          "phase": null,
+          "pending": [],
+          "failed": [],
+          "revision": 884
+        },
+        "context": "menu",
+        "screen": "launch",
+        "pendingLabels": 0,
+        "paint": [
+          {
+            "name": "first-paint",
+            "ms": 44
+          },
+          {
+            "name": "first-contentful-paint",
+            "ms": 44
+          }
+        ],
+        "gl": 0
+      },
+      "errors": [],
+      "external": []
+    },
+    {
+      "name": "full-4x3",
+      "initial": {
+        "status": "Loading game…",
+        "visible": true,
+        "failed": false,
+        "link": {
+          "x": 416.890625,
+          "y": 380,
+          "width": 126.21875,
+          "height": 44,
+          "top": 380,
+          "right": 543.109375,
+          "bottom": 424,
+          "left": 416.890625
+        },
+        "viewport": [
+          960,
+          720
+        ],
+        "animation": "startup-spin",
+        "paint": [
+          {
+            "name": "first-paint",
+            "ms": 32
+          },
+          {
+            "name": "first-contentful-paint",
+            "ms": 32
+          }
+        ],
+        "game": false
+      },
+      "final": {
+        "samples": [
+          {
+            "ms": 21.899999976158142,
+            "state": "status",
+            "loading": null,
+            "frames": 0,
+            "context": null,
+            "font": null
+          },
+          {
+            "ms": 4363.600000023842,
+            "state": "status",
+            "loading": true,
+            "frames": 0,
+            "context": "menu",
+            "font": false
+          },
+          {
+            "ms": 4460.799999952316,
+            "state": "hidden",
+            "loading": true,
+            "frames": 1,
+            "context": "menu",
+            "font": false
+          },
+          {
+            "ms": 8278.199999928474,
+            "state": "hidden",
+            "loading": true,
+            "frames": 226,
+            "context": "menu",
+            "font": true
+          },
+          {
+            "ms": 8327.799999952316,
+            "state": "hidden",
+            "loading": false,
+            "frames": 229,
+            "context": "menu",
+            "font": true
+          },
+          {
+            "ms": 8461.600000023842,
+            "state": "removed",
+            "loading": false,
+            "frames": 238,
+            "context": "menu",
+            "font": true
+          }
+        ],
+        "tasks": [
+          {
+            "start": 415.6999999284744,
+            "ms": 3944
+          },
+          {
+            "start": 4363.600000023842,
+            "ms": 81
+          },
+          {
+            "start": 4527.100000023842,
+            "ms": 89
+          }
+        ],
+        "stamp": "Codex/sol fork · build 10-26 12:06 UTC",
+        "font": {
+          "cap": 128,
+          "revision": 1,
+          "ready": true,
+          "degraded": false,
+          "decodedBytes": 12435456
+        },
+        "loading": {
+          "phase": null,
+          "pending": [],
+          "failed": [],
+          "revision": 898
+        },
+        "context": "menu",
+        "screen": "launch",
+        "pendingLabels": 0,
+        "paint": [
+          {
+            "name": "first-paint",
+            "ms": 32
+          },
+          {
+            "name": "first-contentful-paint",
+            "ms": 32
+          }
+        ],
+        "gl": 0
+      },
+      "errors": [],
+      "external": []
+    }
+  ]
+}

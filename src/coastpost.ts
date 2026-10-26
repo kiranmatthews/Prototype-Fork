@@ -623,7 +623,7 @@ export class CoastPostRenderer {
   }
 
   setFrozenScene(key:string|null):void {this.renderPass.setFrozen(key);}
-  setMud(state:MudLensState|null):void {this.mudLensPass.setMud(this.liteState?null:state);}
+  setMud(state:MudLensState|null,camera?:THREE.Camera):void {this.mudLensPass.setMud(this.liteState?null:state);this.mudLensPass.setSun(camera);}
 
   setRain(amount:number,time:number):void {this.rainLensPass.setWeather(this.liteState?0:amount,time);}
 

@@ -1,0 +1,124 @@
+{
+  "passed": true,
+  "durability": {
+    "oldLoss": 0.43679999999999986,
+    "newLoss": 0.21839999999999993,
+    "weaponLoss": [
+      {
+        "power": 0.14,
+        "loss": 0.09729999999999994,
+        "previous": 0.19460000000000002
+      },
+      {
+        "power": 0.24,
+        "loss": 0.1473,
+        "previous": 0.2946
+      },
+      {
+        "power": 0.4,
+        "loss": 0.22730000000000006,
+        "previous": 0.4546
+      }
+    ]
+  },
+  "terrain": {
+    "min": -0.4448243819123648,
+    "max": 0.38131507757962146,
+    "changed": 1285,
+    "maxGradient": 0.07161429422186172,
+    "supportedSamples": 2240,
+    "jumpsPreserved": 12,
+    "fastJumps": [
+      {
+        "start": 150,
+        "flights": 2,
+        "rolls": 0,
+        "respawns": 0,
+        "z": -214.0632254773143
+      },
+      {
+        "start": 310,
+        "flights": 2,
+        "rolls": 0,
+        "respawns": 0,
+        "z": -378.06029092762765
+      },
+      {
+        "start": 470,
+        "flights": 1,
+        "rolls": 0,
+        "respawns": 0,
+        "z": -542.1760349932284
+      },
+      {
+        "start": 690,
+        "flights": 2,
+        "rolls": 0,
+        "respawns": 0,
+        "z": -754.0490227753028
+      },
+      {
+        "start": 850,
+        "flights": 1,
+        "rolls": 0,
+        "respawns": 0,
+        "z": -918.1008693436033
+      },
+      {
+        "start": 1010,
+        "flights": 1,
+        "rolls": 0,
+        "respawns": 0,
+        "z": -1082.1924576003714
+      },
+      {
+        "start": 1230,
+        "flights": 2,
+        "rolls": 0,
+        "respawns": 0,
+        "z": -1294.089884355774
+      },
+      {
+        "start": 1390,
+        "flights": 3,
+        "rolls": 0,
+        "respawns": 0,
+        "z": -1458.180825755599
+      },
+      {
+        "start": 1550,
+        "flights": 2,
+        "rolls": 0,
+        "respawns": 0,
+        "z": -1622.0704479941217
+      },
+      {
+        "start": 1770,
+        "flights": 1,
+        "rolls": 0,
+        "respawns": 0,
+        "z": -1834.0704279890037
+      },
+      {
+        "start": 1930,
+        "flights": 1,
+        "rolls": 0,
+        "respawns": 0,
+        "z": -1998.0979131322645
+      },
+      {
+        "start": 2090,
+        "flights": 1,
+        "rolls": 0,
+        "respawns": 0,
+        "z": -2162.0608709885846
+      }
+    ]
+  },
+  "wear": {
+    "deposited": 1,
+    "wearMeshes": 33,
+    "decals": 3
+  },
+  "spectators": 32958
+}

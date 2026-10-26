@@ -1,3 +1,4 @@
+import {createRallyDirt} from './rallyMaterials';
 import { authoredMovingGeometry } from './authoredMovingSurface';
 import {RainWeather} from './rainWeather';
 import {addWetRooftopLook} from './wetRooftop';
@@ -1044,7 +1045,7 @@ export const DECOR_LABELS: Record<DecorKind, string> = {
 export const TEX_KINDS = [
   'skystream-marble',
   'cardboard',
-  'waterslide-fiberglass',
+  'waterslide-fiberglass','rally-mud','rally-sponsors',
   'waterslide-shallows',
   'sunny-sand',
   ...CROWN_TEXTURE_KINDS,
@@ -4765,8 +4766,10 @@ export class Level {
   private surfaceTexture(kind: string): THREE.Texture {
     if (kind === "checker") return this.checkerTexture();
     if(kind==='nightworks-caldera-rim'||kind==='nightworks-caldera-terraces')return this.surfaceTexture('nightworks-caldera');
+    if(kind==='rally-mud')return this.surfaceTexture('dirt');
     const cached = this.surfTexCache.get(kind);
     if (cached) return cached;
+    if(kind==='rally-sponsors'){const t=Level.finishTex(this.surfaceImage('rally/sponsors.png'));t.wrapS=t.wrapT=THREE.ClampToEdgeWrapping;this.surfTexCache.set(kind,t);return t;}
     if(kind==='skystream-marble'){
       const texture=Level.finishTex(this.surfaceImage('skystream/ivory-marble.webp'));
       this.surfTexCache.set(kind,texture);return texture;
@@ -6429,6 +6432,8 @@ export class Level {
         alphaTest: roomArt(c.tex)?.cutout ? .25 : 0, fog: c.fog !== false,
       });
     } else if(isCountryClubTexture(c.tex))material=createCountryClubSurface(c,this.surfaceTexture(c.tex!),this.surfaceTexture('country-sand'));
+    else if(c.tex==='rally-mud')material=createRallyDirt(this.surfaceTexture('dirt'),c.color??'#a07c52',!!c.colors);
+    else if(c.tex==='rally-sponsors')material=new THREE.MeshStandardMaterial({map:this.surfaceTexture(c.tex),color:c.color??'#ffffff',roughness:.9,side:THREE.DoubleSide});
     else if(c.tex==='waterslide-fiberglass')material=new THREE.MeshStandardMaterial({map:this.surfaceTexture(c.tex),color:c.color??'#ffffff',emissive:c.emissive??'#000000',vertexColors:!!c.colors,roughness:.58,metalness:.02,side:c.doubleSided?THREE.DoubleSide:THREE.FrontSide,fog:c.fog!==false});
     else if(isCrownTexture(c.tex))material=createCrownSurface(c,this.surfaceTexture(c.tex));
     else if(isCastleTexture(c.tex))material=createCastleMaterial(c);

@@ -1,3 +1,4 @@
+import {RALLY_NOISE,RALLY_SUN} from './rallyMaterials';
 import * as THREE from 'three';
 import { createSeaSkyGeometry, seaBackdropRadius } from './seaBackdrop';
 
@@ -23,6 +24,7 @@ export function installSkyProjection(
   const poleColor = { value: new THREE.Color() };
   const hazeElevation = { value: .26 };
   const dustHaze = { value: 0 };
+  const rallySun={value:new THREE.Vector3(...RALLY_SUN).normalize()};
   const stormGlow = { value: new THREE.Vector4(0,.27,-1,0) };
   let lastMap: THREE.Texture | null = null;
   sky.name = 'Distant sky backdrop';
@@ -65,7 +67,7 @@ export function installSkyProjection(
       uSkyHazeColor: hazeColor, uSkyHazeStrength: hazeStrength,
       uSkyOpaqueBackdrop: opaque, uSkySea: sea, uSkyPoleColor: poleColor,
       uSkyHazeElevation:hazeElevation,
-      uSkyStorm:stormGlow,uSkyDust:dustHaze,
+      uSkyStorm:stormGlow,uSkyDust:dustHaze,uRallySun:rallySun,
     });
     shader.vertexShader = 'uniform mat4 uSkyCameraWorld; uniform float uSkySea; varying vec3 vSkyRay;\n' + shader.vertexShader;
     shader.vertexShader = shader.vertexShader.replace('#include <project_vertex>', `
@@ -93,10 +95,12 @@ export function installSkyProjection(
       uniform mat3 uSkyTextureTransform;
       uniform vec3 uSkyHazeColor, uSkyPoleColor;
       uniform float uSkyHazeStrength, uSkyOpaqueBackdrop, uSkySea,uSkyHazeElevation;
-      uniform vec4 uSkyStorm;uniform float uSkyDust;
+      uniform vec4 uSkyStorm;uniform float uSkyDust;uniform vec3 uRallySun;
+      ${RALLY_NOISE}
     ` + shader.fragmentShader;
     shader.fragmentShader = shader.fragmentShader.replace('#include <map_fragment>', `
       vec3 skyRay = normalize(vSkyRay);
+      if(uSkyDust<.5){
       #ifdef USE_MAP
         // Analytic longitude/latitude prevents a low-poly dome from bending
         // the waterline or pinching it at its triangle boundaries.
@@ -119,11 +123,21 @@ export function installSkyProjection(
         diffuseColor.rgb = mix(diffuseColor.rgb, uSkyPoleColor,
           smoothstep(0.6, 0.96, skyRay.y));
       #endif
-      // Airborne dirt filters the existing cloud painting into warm, muted
-      // late-afternoon light without an additional panorama or draw pass.
-      float skyLuma=dot(diffuseColor.rgb,vec3(.2126,.7152,.0722));
-      vec3 dustySky=mix(vec3(.39,.34,.21),vec3(.78,.65,.38),clamp(skyLuma,0.0,1.0));
-      diffuseColor.rgb=mix(diffuseColor.rgb,dustySky,uSkyDust);
+      }else{
+        // The rally uses a clean analytic atmosphere. Do not sample the island
+        // panorama at all: recolouring it still leaves islands in the clouds.
+        float altitude=max(0.0,skyRay.y);
+        vec3 clearSky=mix(vec3(.72,.57,.36),vec3(.23,.37,.49),pow(altitude,.42));
+        vec2 cloudUv=skyRay.xz/(.22+abs(skyRay.y))*.85;
+        float cloud=rallyNoise(cloudUv*2.0)*.62+rallyNoise(cloudUv*5.4)*.27+rallyNoise(cloudUv*13.0)*.11;
+        float wisps=smoothstep(.51,.71,cloud)*(1.0-smoothstep(.62,.97,altitude));
+        clearSky=mix(clearSky,vec3(.84,.77,.62),wisps*.44);
+        float sunDistance=length(skyRay-uRallySun);
+        float disc=1.0-smoothstep(.008,.011,sunDistance);
+        float corona=exp(-sunDistance*sunDistance*420.0);
+        float hazeGlow=exp(-sunDistance*sunDistance*12.0);
+        diffuseColor=vec4(clearSky+vec3(5.5,4.6,3.0)*disc+vec3(.7,.42,.17)*corona+vec3(.14,.075,.024)*hazeGlow,1.0);
+      }
       float stormCone=pow(max(0.0,dot(skyRay,normalize(uSkyStorm.xyz))),10.0);
       float stormCloud=smoothstep(.035,.18,skyRay.y)*(1.0-smoothstep(.55,.9,skyRay.y));
       diffuseColor.rgb+=vec3(.22,.28,.36)*uSkyStorm.w*stormCone*stormCloud*(1.0-uSkySea);
@@ -137,7 +151,7 @@ export function installSkyProjection(
 
     `);
   };
-  material.customProgramCacheKey = () => 'sea-level-hemisphere-v6';
+  material.customProgramCacheKey = () => 'sea-level-hemisphere-v7-rally';
   return {setDustHaze(amount){dustHaze.value=THREE.MathUtils.clamp(amount,0,1);},setStormGlow(strength,azimuth){stormGlow.value.set(Math.sin(azimuth),.27,Math.cos(azimuth),THREE.MathUtils.clamp(strength,0,1));},setHazeElevation(elevation){hazeElevation.value=THREE.MathUtils.clamp(elevation,.02,1);},setSeaLevel(height) {
     const enabled = height !== null;
     seaLevel = height; sea.value = enabled ? 1 : 0;
