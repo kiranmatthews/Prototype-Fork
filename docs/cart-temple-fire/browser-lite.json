@@ -1,0 +1,30 @@
+{
+  "full": false,
+  "sequence": [
+    {
+      "jets": 0,
+      "emitted": 906,
+      "embers": 0
+    },
+    {
+      "jets": 0,
+      "emitted": 1548,
+      "embers": 0
+    }
+  ],
+  "burning": {
+    "flames": 91,
+    "embers": 9,
+    "gouraud": true,
+    "stamp": "Codex/sol fork · build 10-26 03:56 UTC",
+    "frame": {
+      "frame": 1870,
+      "calls": 83,
+      "triangles": 752341,
+      "points": 0,
+      "lines": 0
+    },
+    "glError": 0
+  },
+  "errors": []
+}

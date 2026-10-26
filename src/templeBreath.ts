@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { puffs, type PuffPreset } from './puffs';
+import {createTempleFlameGeometry,createTempleFlameMaterial,createTempleFlameSample,sampleTempleFlame,writeTempleFlame,TEMPLE_FLAME_STEP} from './templeFlame';
 
 export interface TikiPhase { yaw:number; warning:number; fire:number; phase:'cool'|'warn'|'fire'; }
 export function templeTikiPhase(time:number,cycle=7.8,phase=0,arc=28):TikiPhase {
@@ -13,14 +14,13 @@ export function templeTikiPhase(time:number,cycle=7.8,phase=0,arc=28):TikiPhase 
   return {yaw:THREE.MathUtils.degToRad(arc)*turn,warning,fire,phase:firing?'fire':warning>0?'warn':'cool'};
 }
 
-const COUNT=32, SIDES=8, FAN_VERTS=2+SIDES*2, FANS=2, SPARKS=24;
+const COUNT=32,SPARKS=24;
 // Ruination PS1 reference: the first idol at 1:03:44–1:03:45 in
 // https://www.youtube.com/watch?v=8V-bSpKcBJ4&t=3824s
 // Close overlapping orange lobes, yellow restricted to the mouth, and a
 // short travelling tail after cutoff. These are original procedural shapes.
-const STEP=.016, TRAVEL=.26;
+const STEP=TEMPLE_FLAME_STEP;
 const hash=(n:number)=>{const v=Math.sin(n*127.1+311.7)*43758.5453;return v-Math.floor(v);};
-const smooth=(a:number,b:number,x:number)=>THREE.MathUtils.smoothstep(x,a,b);
 const SMOKE:PuffPreset={
   blend:'alpha',orient:'billboard',ring:[7,8],multiCentre:0,halo:.42,haloAlpha:.55,
   size:[.23,.35],aspect:[.7,1.1],grow:[2.1,3.1],growY:[2.6,3.5],growCurve:.65,
@@ -41,11 +41,10 @@ export class TempleBreath extends THREE.Group {
   readonly boxes=Array.from({length:COUNT},()=>new THREE.Box3().makeEmpty());
   readonly flames:THREE.Mesh<THREE.BufferGeometry,THREE.MeshBasicMaterial>;
   readonly embers:THREE.Mesh<THREE.BufferGeometry,THREE.MeshBasicMaterial>;
-  private hot=new THREE.Color('#fff348');
   private gold=new THREE.Color('#ffbd1f');
   private orange=new THREE.Color('#f36509');
-  private red=new THREE.Color('#b92d03');
   private color=new THREE.Color();
+  private flameSample=createTempleFlameSample();
   private point=new THREE.Vector3();
   private half=new THREE.Vector3();
   private smokePoint=new THREE.Vector3();
@@ -56,21 +55,9 @@ export class TempleBreath extends THREE.Group {
   readonly diagnostics={flames:0,embers:0,smokeEmissions:0,hotContacts:0};
   constructor(readonly range:number,readonly cycle:number,readonly phase:number,readonly arc:number){
     super();this.name='Advected tiki flames and cooling embers';
-    const geometry=new THREE.BufferGeometry(),indices:number[]=[];
-    geometry.setAttribute('position',new THREE.Float32BufferAttribute(new Float32Array(COUNT*FANS*FAN_VERTS*3),3).setUsage(THREE.DynamicDrawUsage));
-    geometry.setAttribute('color',new THREE.Float32BufferAttribute(new Float32Array(COUNT*FANS*FAN_VERTS*4),4).setUsage(THREE.DynamicDrawUsage));
-    for(let n=0;n<COUNT*FANS;n++){
-      const base=n*FAN_VERTS;
-      for(let s=0;s<SIDES;s++){
-        const next=(s+1)%SIDES,owner=s<4?0:1,nextOwner=next<4?0:1;
-        indices.push(base+owner,base+2+s,base+2+next);
-        if(owner!==nextOwner)indices.push(base+owner,base+nextOwner,base+2+next);
-        indices.push(base+2+s,base+2+SIDES+s,base+2+SIDES+next,base+2+s,base+2+SIDES+next,base+2+next);
-      }
-    }
-    geometry.setIndex(indices);
+    const geometry=createTempleFlameGeometry(COUNT);
     geometry.boundingSphere=new THREE.Sphere(new THREE.Vector3(0,1,range*.5),range*.6+3);
-    this.flames=new THREE.Mesh(geometry,new THREE.MeshBasicMaterial({vertexColors:true,transparent:true,depthWrite:false,side:THREE.DoubleSide,forceSinglePass:true,toneMapped:false}));
+    this.flames=new THREE.Mesh(geometry,createTempleFlameMaterial());
     this.flames.name='Gouraud flame tongues: hot centres / orange body / transparent torn rim';
     this.flames.renderOrder=5;this.add(this.flames);
     // Cache the previous rendered view in local space. The two loose layers
@@ -99,41 +86,12 @@ export class TempleBreath extends THREE.Group {
       const ordinal=last-slot,seed=ordinal+Math.floor(start/this.cycle)*131+this.phase*17;
       const born=ordinal*STEP+(hash(seed+8)-.5)*STEP*.44,age=elapsed-born;
       if(born<0||born>duration||age<0)continue;
-      const life=.27+hash(seed+3)*.055;if(age>=life)continue;
-      const distance=age*this.range/TRAVEL*(.94+hash(seed+4)*.12),travel=distance/this.range;
-      const heat=smooth(0,.009,age)*(1-smooth(.72,1.06,travel))*(.91+.09*Math.sin(age*38+seed*.7));
-      if(heat<=.006)continue;
+      if(!sampleTempleFlame(age,seed,this.range,this.flameSample))continue;
+      const {heat,radius,length,x,y,z}=this.flameSample;
       const yaw=templeTikiPhase(start+born,this.cycle,this.phase,this.arc).yaw+(hash(seed+15)-.5)*.035;
-      const sn=Math.sin(yaw),cs=Math.cos(yaw),wave=age*22+seed*2.4;
-      const radius=(.43+.28*smooth(0,.055,age)-.15*smooth(.6,1,travel))*(.9+hash(seed+6)*.2);
-      const length=Math.min(.88+hash(seed+7)*.34,Math.max(.08,(this.range-distance)*.8));
-      const x=Math.sin(wave*.67)*age*.32,y=1.03+age*age*1.1+Math.sin(wave)*age*.2,z=1.08+distance;
-      const yellow=1-smooth(.12,.38,travel);
+      const sn=Math.sin(yaw),cs=Math.cos(yaw);
       this.diagnostics.flames++;
-      for(let fan=0;fan<FANS;fan++){
-        const viewX=this.viewPoint.x*cs-this.viewPoint.z*sn-x,viewY=this.viewPoint.y-y;
-        const phi=Math.atan2(viewX,-viewY)+(fan-.5)*.22+(hash(seed+20)-.5)*.18;
-        const rx=Math.cos(phi),ry=Math.sin(phi),layer=fan===0?1:.88,base=(slot*FANS+fan)*FAN_VERTS;
-        const density=(1-.58*smooth(.14,.72,travel))*(fan===0?1:.52);
-        for(let v=0;v<FAN_VERTS;v++){
-          let along:number,radial:number,alpha:number;
-          if(v<2){along=(v===0?-.12:.18)*length;radial=(v===0?.09:-.075)*radius;
-            this.color.copy(this.orange).lerp(v===0?this.hot:this.gold,yellow).lerp(this.red,Math.max(0,travel-.35)*.45);alpha=heat*density*(v===0?.86:.7);
-          }else{
-            const ring=v>=2+SIDES?1:0,j=(v-2)%SIDES,angle=j/SIDES*Math.PI*2+(hash(seed+j+90)-.5)*.21;
-            const ragged=1+.17*Math.sin(wave+j*2.6)+.1*Math.sin(wave*1.7-j);
-            const fraction=ring?1:.45;
-            along=Math.cos(angle)*length*fraction*(Math.cos(angle)>0?1:.65);
-            radial=Math.sin(angle)*radius*fraction*ragged;
-            this.color.copy(ring?this.red:this.orange).lerp(this.hot,ring?0:yellow*.85).lerp(this.red,travel*.3);
-            alpha=ring?0:heat*density*.58;
-          }
-          const curl=smooth(.03,.2,age)*(.12+hash(seed+30)*.2);
-          const px=x+radial*rx*layer,py=y+radial*ry*layer+Math.max(0,along)/length*curl+fan*age*.3,pz=z+along*layer;
-          positions.setXYZ(base+v,px*cs+pz*sn,py,pz*cs-px*sn);
-          colors.setXYZW(base+v,this.color.r,this.color.g,this.color.b,alpha);
-        }
-      }
+      writeTempleFlame(this.flameSample,this.viewPoint,positions as THREE.BufferAttribute,colors as THREE.BufferAttribute,slot,yaw);
       if(state.phase==='fire'&&heat>.22&&age>.012){
         this.point.set(x*cs+z*sn,y,z*cs-x*sn);this.localToWorld(this.point);
         const worldYaw=(this.parent?.rotation.y??0)+yaw,c=Math.abs(Math.cos(worldYaw)),s=Math.abs(Math.sin(worldYaw));

@@ -3,6 +3,8 @@ import { SIDE_NOZZLE } from './sideNozzle';
 import { puffs } from '../puffs';
 import type { GolfCartFleet } from './fleet';
 import { CartGouraudFire } from './gouraudFire';
+import { CartTempleJets } from './templeJets';
+import { TEMPLE_FLAME_STEP } from '../templeFlame';
 
 const hash=(n:number)=>{const v=Math.sin(n*127.1+311.7)*43758.5453;return v-Math.floor(v);};
 const FIRE_SOURCES=[[-.48,.76,.62],[.48,.76,.62],[-.5,.85,-.38],[.5,.85,-.38],[0,.9,.9]];
@@ -11,7 +13,7 @@ const UP=new THREE.Vector3(0,1,0);
 /** Bounded fire geometry; the shared puff pool owns all smoke. No asset swaps. */
 export class CartMayhemEffects {
   private flames:CartGouraudFire;
-  private jets:CartGouraudFire;
+  private jets:CartTempleJets;
   private embers:CartGouraudFire;
   private inverse=new THREE.Matrix4();
   private point=new THREE.Vector3();private direction=new THREE.Vector3();
@@ -25,7 +27,7 @@ export class CartMayhemEffects {
     this.burnAge=fleet.models.map(()=>0);
     this.nextFire=fleet.models.map(()=>0);this.nextJet=fleet.models.map(()=>0);
     this.flames=new CartGouraudFire(fleet.models.length*120,'Rally wreck · rising Gouraud fire');
-    this.jets=new CartGouraudFire(fleet.models.length*130,'Six side nozzles · advected Gouraud fire');
+    this.jets=new CartTempleJets(fleet.models.length*6*24);
     this.embers=new CartGouraudFire(fleet.models.length*24,'Rally cooling embers');
     fleet.root.add(this.flames,this.jets,this.embers,this.target);
     this.target.rotation.x=-Math.PI/2;this.target.visible=false;
@@ -72,7 +74,7 @@ export class CartMayhemEffects {
       if(shown&&owner>=0&&thrust[owner]>0&&!burning[i]){
         this.nextJet[i]=Math.max(this.nextJet[i],time-.05);
         while(this.nextJet[i]<=time){
-          const born=this.nextJet[i],tick=Math.round(born*60);
+          const born=this.nextJet[i],tick=Math.round(born/TEMPLE_FLAME_STEP);
           for(const side of [-1,1])for(const mouth of [-1,0,1]){
             const seed=tick*11+i*83+mouth*17+side*29;
             this.point.set(side*SIDE_NOZZLE.x,SIDE_NOZZLE.y,SIDE_NOZZLE.z+mouth*SIDE_NOZZLE.spacing)
@@ -80,13 +82,12 @@ export class CartMayhemEffects {
             this.direction.set(side,0,0).transformDirection(matrix).transformDirection(this.inverse);
             const speed=13.5+hash(seed)*4;
             this.velocity.copy(this.direction).multiplyScalar(speed).add(this.inherited);
-            this.jets.emit(born,this.point,this.velocity,this.direction,(.085+hash(seed+1)*.015)*scale,
-              (.29+hash(seed+2)*.12)*scale,(.29+hash(seed+3)*.025)*15.5/speed,seed,'jet',.84);
+            this.jets.emit(born,this.point,this.inherited,this.direction,scale,seed);
             if(mouth===0&&tick%7===0){
               this.embers.emit(born,this.point,this.velocity,this.direction,.016*scale,.065*scale,.36,seed,'ember',.8);
             }
           }
-          this.nextJet[i]+=1/60;
+          this.nextJet[i]+=TEMPLE_FLAME_STEP;
         }
       }else this.nextJet[i]=time;
     }

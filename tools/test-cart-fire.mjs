@@ -23,5 +23,19 @@ try{
   let geometries=0,materials=0,batches=0;
   fire.geometry.addEventListener('dispose',()=>geometries++);fire.material.addEventListener('dispose',()=>materials++);fire.addEventListener('dispose',()=>batches++);
   fire.destroy();assert.deepEqual([geometries,materials,batches],[1,1,1]);
-  console.log(JSON.stringify({passed:true,travellingTail:[early,late],pauseStable:true,bounded:true,reusedBuffers:true,disposed:true}));
+  const {CartTempleJets}=await server.ssrLoadModule('/src/golf-cart/templeJets.ts');
+  const jets=new CartTempleJets(4),mouth=new THREE.Vector3(2,3,4),carry=new THREE.Vector3(0,0,12),axis=new THREE.Vector3(1,0,0);
+  const positionArray=jets.geometry.attributes.position.array,colorArray=jets.geometry.attributes.color.array;
+  const extent=()=>{const p=jets.geometry.attributes.position,c=jets.geometry.attributes.color;let min=Infinity,max=-Infinity;for(let i=0;i<jets.count*36;i++)if(c.getW(i)>.01){min=Math.min(min,p.getX(i));max=Math.max(max,p.getX(i));}return {min,max};};
+  jets.emit(0,mouth,carry,axis,1.25,7);mouth.set(100,100,100);axis.set(-1,0,0);carry.set(100,100,100);
+  jets.present(.03);const templeEarly=extent();assert.equal(jets.count,1);assert.ok(templeEarly.min>1&&templeEarly.max<4,'Temple flame starts at the original nozzle');
+  const jetVersion=jets.geometry.attributes.position.version;jets.present(.03);assert.equal(jets.geometry.attributes.position.version,jetVersion,'Paused Temple jets reuse their buffers');
+  jets.present(.21);const templeLate=extent();assert.ok(templeLate.min>templeEarly.min+2,'Temple fire retains its birth direction and travels outward after cutoff');
+  assert.equal(jets.material.map,null);assert.equal(jets.material.userData.gouraud,true);assert.equal(jets.diagnostics.source,'Temple of Embers');
+  jets.present(.34);assert.equal(jets.count,0);assert.equal(jets.geometry.drawRange.count,0);assert.equal(jets.visible,false);
+  for(let i=0;i<20;i++)jets.emit(1,mouth,carry,axis,1.25,i);
+  jets.present(1.1);assert.equal(jets.count,4,'Fixed jet pool bounds over-emission');assert.equal(jets.geometry.attributes.position.array,positionArray);assert.equal(jets.geometry.attributes.color.array,colorArray);
+  for(const attr of Object.values(jets.geometry.attributes))assert.ok([...attr.array].every(Number.isFinite));
+  let jetGeometries=0,jetMaterials=0;jets.geometry.addEventListener('dispose',()=>jetGeometries++);jets.material.addEventListener('dispose',()=>jetMaterials++);jets.destroy();assert.deepEqual([jetGeometries,jetMaterials],[1,1]);
+  console.log(JSON.stringify({passed:true,travellingTail:[early,late],templeTail:[templeEarly,templeLate],pauseStable:true,bounded:true,reusedBuffers:true,disposed:true}));
 }finally{await server.close();}
