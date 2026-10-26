@@ -30,6 +30,7 @@ try{
  assert.ok(driving.speed>5);assert.equal(driving.hiddenSkateState,true,'Fixture exercises the hidden rider state that caused the leak');
  assert.ok(driving.rate>idle.rate);assert.ok(!driving.loops.some(v=>['skate','grind','wallride'].includes(v.id)));
  await page.keyboard.up('Space');await page.keyboard.up('ArrowUp');await page.keyboard.down('KeyT');await page.waitForFunction(()=>window.__game.sfx.loops.has('rally-skid'),null,{timeout:10000});await page.keyboard.up('KeyT');
+ await page.waitForFunction(()=>window.__game.getSkateRace().carts.thrustCooldown[0]===0,null,{timeout:12000});
  await page.keyboard.press('KeyF');await page.waitForFunction(()=>window.__game.sfx.loops.has('rally-thruster'),null,{timeout:3000});
  await page.waitForFunction(()=>!window.__game.sfx.loops.has('rally-thruster'),null,{timeout:3000});
  console.log('PASS engine pitch, kart skid/flames, and no skateboard loops while driving');

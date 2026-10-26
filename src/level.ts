@@ -4539,6 +4539,8 @@ export class Level {
     raceOwner?: number;
   }[] = [];
   raceActorId = 0;
+  // A stable human listener: playerPos is temporarily overwritten by rival steps.
+  raceAudioListener: THREE.Vector3 | null = null;
   onRaceCrateBreak: ((crate: Crate, actor: number) => void) | null = null;
 
   private scene: THREE.Scene;
@@ -10683,6 +10685,15 @@ export class Level {
     this.settleFalling = falling;
   }
 
+  private playCrateSound(crate:Crate,name:string,volume:number,rate=1):void {
+    if(!this.skateRace){sfx.play(name,volume,rate);return;}
+    const distance=crate.mesh.position.distanceTo(this.raceAudioListener??this.playerPos);
+    const gain=Math.max(0,1-Math.max(0,distance-3)/52)**2;
+    // The box owns its sound, including delayed/chain breaks. Replace any
+    // actor scope and share one debounce so a pack cannot stack eight impacts.
+    sfx.withGain(gain,()=>sfx.play(name,volume*.5,rate),'race-crates');
+  }
+
   breakCrate(crate: Crate, force = false): void {
     this.crateRailsDirty = true; // the ledge this box was part of just changed
     // Ordinary attacks leave metal-family crates intact: the '!' switch fires instead, the
@@ -10709,9 +10720,9 @@ export class Level {
     // the gable and interpolated feet to reach the lid together before pop.
     this.pops.push({ obj: crate.mesh, t: 0.12 + (crate.carton ? CONST.fixedStep : 0) });
     if(force&&(crate.metal||crate.metalBounce||crate.bang||crate.nitroBang)){
-      sfx.play('crunch',.9,.65);const p=crate.mesh.position;
+      this.playCrateSound(crate,'crunch',.9,.65);const p=crate.mesh.position;
       puffs.burst('dustLandHeavy',p.x,p.y+.3,p.z,{surface:'metal',strength:1.4,count:8});
-    }else sfx.play(Math.random() < 0.5 ? "crateBreak1" : "crateBreak2", 0.8);
+    }else this.playCrateSound(crate,Math.random() < 0.5 ? "crateBreak1" : "crateBreak2", 0.8);
   }
 
   private smashChaseHazard(object:THREE.Object3D,box:THREE.Box3):void {
@@ -10774,13 +10785,13 @@ export class Level {
     this.setCrateFace(crate, this.metalPlainTexture(), 0.8);
     if (crate.nitroBang) {
       for (const c of this.crates) if (c.alive && c.nitro) this.detonate(c, true);
-      sfx.play("crateBreak1", 0.6, 1.2);
+      this.playCrateSound(crate,"crateBreak1", 0.6, 1.2);
       return;
     }
     this.activateOutlines(
       crate.groupIds && crate.groupIds.length > 0 ? crate.groupIds : null,
     );
-    sfx.play("crateBreak1", 0.6, 1.4);
+    this.playCrateSound(crate,"crateBreak1", 0.6, 1.4);
   }
 
   // Swap outline ghosts for the real crates. `filter` = group ids that count
@@ -10839,7 +10850,7 @@ export class Level {
     const ex = { center, t: 0, radius, safe: this.skateRace ? false : safe, raceOwner };
     if(this.skateRace)this.onRaceCrateBreak?.(c,raceOwner!);
     this.explosions.push(ex);
-    sfx.play("tntBoom", 0.9);
+    this.playCrateSound(c,"tntBoom", 0.9);
     // The puff cloud carries the crate's temperament: TNT goes up fiery
     // yellow-into-red, nitro in the same bang gone radioactive green. Chained
     // crates each fire their own burst, so a stack reads as a rolling series.

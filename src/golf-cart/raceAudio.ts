@@ -5,10 +5,11 @@ import type {CartImpact,CartState,GolfCartPhysics} from './physics';
 /** A bounded local mix through the game's SFX bus; pause/navigation own its loops. */
 export class CartRaceAudio {
   private crashAt:number[]=[];
+  private engines=new Map<number,{gain:number;rate:number}>();
   private clock=0;
   private thrustWas=false;
   private stops=new Map<string,()=>void>();
-  private gain(c:{x:number;y:number;z:number},listener:Vector3){return Math.max(0,1-Math.hypot(c.x-listener.x,c.y-listener.y,c.z-listener.z)/55);}
+  private gain(c:{x:number;y:number;z:number},listener:Vector3){return Math.max(0,1-Math.max(0,Math.hypot(c.x-listener.x,c.y-listener.y,c.z-listener.z)-3)/67)**2;}
   impact(hit:CartImpact,listener:Vector3){
     if(hit.strength<1.2||this.clock-(this.crashAt[hit.cart]??-10)<.18)return;
     this.crashAt[hit.cart]=this.clock;
@@ -23,11 +24,25 @@ export class CartRaceAudio {
   }
   update(dt:number,world:GolfCartPhysics,owners:readonly number[],humanCart:number,burning:readonly boolean[],burnAge:readonly number[],thrust:readonly number[],listener:Vector3){
     this.clock+=dt;
-    const candidates=world.carts.map((c,i)=>({c,i,gain:this.gain(c,listener)})).filter(v=>owners[v.i]>=0&&!burning[v.i]&&v.gain>0).sort((a,b)=>(a.i===humanCart?-1:b.i===humanCart?1:b.gain-a.gain)).slice(0,4);
-    for(let slot=0;slot<4;slot++){
-      const v=candidates[slot],own=v?.i===humanCart,input=v?world.inputs[v.i]:null;
-      const speed=v?Math.min(1,Math.abs(v.c.speed)/38):0,gas=Math.abs(input?.throttle??0);
-      sfx.setLoop(`rally-engine-${slot}`,'kartEngine',!!v,(own?.25:.075)*(v?.gain??0)*(.55+gas*.45),.72+speed*.82+gas*.10);
+    // Stable channels follow each physical kart, including after a theft. At
+    // most the eight occupied carts run engines; empty loaners stay silent.
+    const blend=1-Math.exp(-dt/0.12);
+    for(let i=0;i<world.carts.length;i++){
+      const c=world.carts[i],distanceGain=this.gain(c,listener),own=i===humanCart;
+      if(owners[i]<0||burning[i]||distanceGain<=.001){
+        if(this.engines.delete(i))sfx.setLoop(`rally-engine-${i}`,'kartEngine',false,0);
+        continue;
+      }
+      const speed=Math.min(1,Math.abs(c.speed)/38),gas=Math.abs(world.inputs[i]?.throttle??0);
+      const gain=(own?.32+gas*.13+speed*.03:.115+gas*.065+speed*.015)*distanceGain;
+      // The source loop has a ~44 Hz fundamental. The old .72 idle put it
+      // below laptop-speaker range (~32 Hz). Keep the hum audible, then rev
+      // freely when the wheels unload in the air. This affects sound only.
+      const rate=2.15+speed*1.25+gas*.3+(c.grounded?0:.45+gas*.2)+(i%7-3)*.018;
+      const voice=this.engines.get(i)??{gain,rate};
+      voice.gain+=(gain-voice.gain)*blend;voice.rate+=(rate-voice.rate)*blend;
+      this.engines.set(i,voice);
+      sfx.setLoop(`rally-engine-${i}`,'kartEngine',true,voice.gain,voice.rate);
     }
     let skid=0,fire=0,jet=0,skidRate=1;
     for(let i=0;i<world.carts.length;i++){
@@ -44,5 +59,5 @@ export class CartRaceAudio {
     if(this.thrustWas&&jet<=.005)this.shot('thrust-end','kartThrusterEnd',.25,1);
     this.thrustWas=jet>.005;
   }
-  dispose(){for(let i=0;i<4;i++)sfx.setLoop(`rally-engine-${i}`,'kartEngine',false,0);for(const id of ['skid','fire','thruster'])sfx.setLoop(`rally-${id}`,'kartEngine',false,0);for(const stop of this.stops.values())stop();this.stops.clear();}
+  dispose(){for(const i of this.engines.keys())sfx.setLoop(`rally-engine-${i}`,'kartEngine',false,0);this.engines.clear();for(const id of ['skid','fire','thruster'])sfx.setLoop(`rally-${id}`,'kartEngine',false,0);for(const stop of this.stops.values())stop();this.stops.clear();}
 }

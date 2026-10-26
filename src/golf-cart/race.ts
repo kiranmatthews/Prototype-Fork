@@ -449,8 +449,10 @@ export class GolfCartRace {
       if(r.finish===null)for(const box of this.level.crates)if(box.alive&&(!box.mystery||r.player.raceHooks?.canCollectItem?.()!==false)&&Math.abs(box.mesh.position.y-c.y)<2.8&&Math.hypot(box.mesh.position.x-c.x,box.mesh.position.z-c.z)<2.15)this.level.breakCrate(box,true);
     }
     this.advanceInteractions(dt);this.sync();this.targetMarker=this.nearest(0);this.effects.update(dt,this.burning);
-    this.audio.update(dt,world,this.driverForCart,this.cartForRacer[0],this.burning,this.effects.burnAges,this.thrustTime,this.racers[0].player.pos);
+    this.updateAudio(dt);
   }
+  /** Also runs on the grid/countdown, without advancing physics or recharge. */
+  updateAudio(dt:number){this.audio.update(dt,this.fleet.physics,this.driverForCart,this.cartForRacer[0],this.burning,this.effects.burnAges,this.thrustTime,this.racers[0].player.pos);}
   private loanerBay(progress:number,reserve:number,near=false){
     const next=this.jumpRanges.find(j=>j.a>progress),at=next?Math.min(next.a-62,near?progress+16:Infinity):Math.min(this.course.length-12,progress+20);
     let minimum=4;for(const jump of this.jumpRanges){if(jump.b>progress)break;minimum=jump.b+8;}
@@ -495,6 +497,8 @@ export class GolfCartRace {
     this.crowd?.update(this.fleet.physics.time);
     const carts=this.fleet.physics.carts;alpha=clamp(alpha,0,1);
     for(let i=0;i<carts.length;i++){
+      const owner=this.driverForCart[i];
+      this.fleet.models[i].setFlameReady(owner>=0&&!this.burning[i]&&this.thrustCooldown[owner]===0);
       const p=this.previous[i],q=carts[i],pose=this.renderPoses[i];
       pose.x=THREE.MathUtils.lerp(p.x,q.x,alpha);pose.y=THREE.MathUtils.lerp(p.y,q.y,alpha);pose.z=THREE.MathUtils.lerp(p.z,q.z,alpha);
       pose.yaw=p.yaw+Math.atan2(Math.sin(q.yaw-p.yaw),Math.cos(q.yaw-p.yaw))*alpha;

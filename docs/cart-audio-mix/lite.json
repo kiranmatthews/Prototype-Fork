@@ -1,0 +1,255 @@
+{
+  "full": false,
+  "grid": {
+    "ctx": "running",
+    "loops": [
+      "rally-engine-0",
+      "rally-engine-1",
+      "rally-engine-2",
+      "rally-engine-3",
+      "rally-engine-4",
+      "rally-engine-5",
+      "rally-engine-6",
+      "rally-engine-7"
+    ],
+    "raw": {
+      "rms": 0.1413694641855905,
+      "peak": 0.25952303409576416
+    },
+    "speakerBand": {
+      "rms": 0.10476162770103152,
+      "peak": 0.1989702433347702
+    },
+    "master": {
+      "rms": 0.07765059438175873,
+      "peak": 0.15264596045017242
+    },
+    "peakHz": 91.51611328125
+  },
+  "startingRings": [
+    {
+      "ring": "eaa03a",
+      "mount": "c39543"
+    },
+    {
+      "ring": "eaa03a",
+      "mount": "c39543"
+    },
+    {
+      "ring": "eaa03a",
+      "mount": "c39543"
+    },
+    {
+      "ring": "eaa03a",
+      "mount": "c39543"
+    },
+    {
+      "ring": "eaa03a",
+      "mount": "c39543"
+    },
+    {
+      "ring": "eaa03a",
+      "mount": "c39543"
+    },
+    {
+      "ring": "eaa03a",
+      "mount": "c39543"
+    },
+    {
+      "ring": "eaa03a",
+      "mount": "c39543"
+    }
+  ],
+  "readyRings": [
+    {
+      "ring": "62f06b",
+      "mount": "c39543"
+    },
+    {
+      "ring": "62f06b",
+      "mount": "c39543"
+    },
+    {
+      "ring": "62f06b",
+      "mount": "c39543"
+    },
+    {
+      "ring": "62f06b",
+      "mount": "c39543"
+    },
+    {
+      "ring": "62f06b",
+      "mount": "c39543"
+    },
+    {
+      "ring": "62f06b",
+      "mount": "c39543"
+    },
+    {
+      "ring": "62f06b",
+      "mount": "c39543"
+    },
+    {
+      "ring": "62f06b",
+      "mount": "c39543"
+    }
+  ],
+  "spentRings": [
+    {
+      "ring": "eaa03a",
+      "mount": "c39543"
+    },
+    {
+      "ring": "62f06b",
+      "mount": "c39543"
+    },
+    {
+      "ring": "62f06b",
+      "mount": "c39543"
+    },
+    {
+      "ring": "62f06b",
+      "mount": "c39543"
+    },
+    {
+      "ring": "62f06b",
+      "mount": "c39543"
+    },
+    {
+      "ring": "62f06b",
+      "mount": "c39543"
+    },
+    {
+      "ring": "62f06b",
+      "mount": "c39543"
+    },
+    {
+      "ring": "62f06b",
+      "mount": "c39543"
+    }
+  ],
+  "burnt": [
+    {
+      "ring": "181a1c",
+      "mount": "181a1c"
+    },
+    {
+      "ring": "62f06b",
+      "mount": "c39543"
+    },
+    {
+      "ring": "62f06b",
+      "mount": "c39543"
+    },
+    {
+      "ring": "62f06b",
+      "mount": "c39543"
+    },
+    {
+      "ring": "62f06b",
+      "mount": "c39543"
+    },
+    {
+      "ring": "62f06b",
+      "mount": "c39543"
+    },
+    {
+      "ring": "62f06b",
+      "mount": "c39543"
+    },
+    {
+      "ring": "62f06b",
+      "mount": "c39543"
+    }
+  ],
+  "idle": {
+    "speed": 0,
+    "gain": 0.3199999928474426,
+    "rate": 2.0959999561309814,
+    "grounded": true
+  },
+  "throttle": {
+    "speed": 18.30911910989296,
+    "gain": 0.46336057782173157,
+    "rate": 2.953155517578125,
+    "grounded": true
+  },
+  "proximity": [
+    {
+      "distance": 4,
+      "gain": 0.11159277707338333,
+      "sameSource": true
+    },
+    {
+      "distance": 20,
+      "gain": 0.06404544413089752,
+      "sameSource": true
+    },
+    {
+      "distance": 45,
+      "gain": 0.01601136475801468,
+      "sameSource": true
+    },
+    {
+      "distance": 85,
+      "gain": 0,
+      "sameSource": false
+    }
+  ],
+  "crateShots": [
+    {
+      "distance": 80,
+      "shots": [
+        {
+          "name": "crateBreak1",
+          "volume": 0.4,
+          "gain": 0,
+          "channel": "race-crates",
+          "effective": 0,
+          "played": false
+        }
+      ]
+    },
+    {
+      "distance": 4,
+      "shots": [
+        {
+          "name": "crateBreak1",
+          "volume": 0.4,
+          "gain": 0.9619082840236686,
+          "channel": "race-crates",
+          "effective": 0.38476331360946747,
+          "played": true
+        }
+      ]
+    },
+    {
+      "distance": 25,
+      "shots": [
+        {
+          "name": "crateBreak2",
+          "volume": 0.4,
+          "gain": 0.33284023668639046,
+          "channel": "race-crates",
+          "effective": 0.1331360946745562,
+          "played": true
+        }
+      ]
+    }
+  ],
+  "packPlayed": 2,
+  "flight": {
+    "samples": 351,
+    "groundRate": 3.5092153549194336,
+    "airRate": 4.127067565917969
+  },
+  "bus": {
+    "muted": 0
+  },
+  "pauseSilence": true,
+  "runtime": {
+    "stamp": "Codex/sol fork · build 10-26 06:51 UTC",
+    "glError": 0
+  },
+  "errors": []
+}

@@ -3,7 +3,7 @@ import { bevelBox,placed,merged } from './geometry';
 /** One compact shared housing, three outward sockets. Source image proportions
  * are interpreted as a stylized game prop; rear mounting detail is inferred. */
 export const SIDE_NOZZLE={x:1.225,y:.75,z:.18,spacing:.25} as const;
-export type NozzleMaterial='nozzleCream'|'nozzleBrass'|'nozzleSoot'|'nozzleOrange';
+export type NozzleMaterial='nozzleCream'|'nozzleBrass'|'nozzleRing'|'nozzleSoot'|'nozzleOrange';
 export interface NozzlePart {name:string;material:NozzleMaterial;geometry:THREE.BufferGeometry}
 function panel(w:number,h:number,r:number,depth:number){
   const s=new THREE.Shape(),x=-w/2,y=-h/2;
@@ -30,7 +30,7 @@ export function createTripleNozzleParts():NozzlePart[]{
       cups.push(placed(cup.rotateZ(-side*Math.PI/2),[side*1.21,.75,z]));
       for(const n of [-1,1])fins.push(placed(bevelBox(.17,.052,.047,.013),[side*1.04,.922,z+n*.051]));
     }
-    add('brass-lips','nozzleBrass',lips);add('inner-cups','nozzleSoot',cups);add('cooling-fins','nozzleOrange',fins);
+    add('brass-lips','nozzleRing',lips);add('inner-cups','nozzleSoot',cups);add('cooling-fins','nozzleOrange',fins);
     add('mount-fastener','nozzleBrass',[placed(new THREE.CylinderGeometry(.033,.033,.014,10).rotateZ(Math.PI/2),[side*1.037,.55,.18])]);
   }
   return result;

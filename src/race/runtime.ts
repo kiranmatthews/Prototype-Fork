@@ -91,7 +91,7 @@ export class SkateRace {
     if(this.attachedLevel===level)return;
     this.carts?.dispose();this.carts=null;
     this.attachedLevel=level;
-    if(this.level)this.level.onRaceCrateBreak=null;
+    if(this.level){this.level.onRaceCrateBreak=null;this.level.raceAudioListener=null;}
     for(const r of this.riders){
       r.player.raceHooks=null;r.boxes.clear();
       if(r.scene){r.scene.visible=false;r.scene.removeFromParent();r.player.releaseRaceLevel();}
@@ -106,6 +106,7 @@ export class SkateRace {
     this.levelId=id;this.allocate();this.course=new RaceCourse(level.skateRace!.line);
     this.jumps=level.skateRace!.jumps.map(j=>({s:this.course!.project(vec().fromArray(j.takeoff)).s,end:this.course!.project(vec().fromArray(j.landing)).s}));
     this.homes=new Map(level.crates.map(c=>[c,c.mesh.position.clone()]));
+    level.raceAudioListener=this.human.pos;
     level.onRaceCrateBreak=(crate,id)=>this.crateBroken(crate,id);
     this.reset('race',false);
   }
@@ -316,7 +317,7 @@ export class SkateRace {
     if(this.phase==='grid'||this.phase==='countdown'){
       if(this.phase==='grid'&&input.jumpPressed){this.start(this.mode,input.raceSeed);input.raceSeed=this.runSeed;}
       else if(this.phase==='countdown'){const before=Math.ceil(this.countdown);this.countdown=Math.max(0,this.countdown-dt);if(this.countdown>0&&Math.ceil(this.countdown)<before)sfx.countdownBeep();if(this.countdown===0){this.phase='running';if(!this.carts)sfx.play('skateTransition',.7,1.1);}}
-      for(const r of this.riders.slice(0,this.count)){if(!this.carts?.isDriving(r.id))r.player.prepareStartPresentation(level,dt);this.placeMarker(r);}this.carts?.present();return;
+      for(const r of this.riders.slice(0,this.count)){if(!this.carts?.isDriving(r.id))r.player.prepareStartPresentation(level,dt);this.placeMarker(r);}this.carts?.updateAudio(dt);this.carts?.present();return;
     }
     const allFinished=this.riders.slice(0,this.count).every(r=>r.finish!==null);
     if(!allFinished)this.elapsed+=dt;
