@@ -1,0 +1,28 @@
+{
+  "passed": true,
+  "spectators": 32958,
+  "sections": 100,
+  "exactCornerBits": true,
+  "people": {
+    "corners": 1224,
+    "vertices": 505,
+    "beforeBytes": 63648,
+    "afterBytes": 28708,
+    "triangles": 408
+  },
+  "seats": {
+    "corners": 72,
+    "vertices": 48,
+    "beforeBytes": 1728,
+    "afterBytes": 1296
+  },
+  "staticInstanceBuffers": true,
+  "bunting": {
+    "spans": 12,
+    "pennants": 336,
+    "seams": 1680,
+    "freeVertices": 12096,
+    "triangles": 20832
+  },
+  "sharedGeometryDisposals": 2
+}

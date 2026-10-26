@@ -51,3 +51,62 @@ export function createRallyDirt(map:THREE.Texture,color:string,vertexColors:bool
  };
  m.customProgramCacheKey=()=> 'rally-wet-loam-v2';return m;
 }
+
+
+/** Hanging canvas shares the level clock. No CPU cloth simulation, extra draw
+ * passes or textures. The upper seam and rope never leave their authored anchors. */
+export function createRallyCloth(clock:{value:number}){
+ const m=new THREE.MeshStandardMaterial({vertexColors:true,roughness:.94,side:THREE.DoubleSide,flatShading:true});
+ m.name='Festival canvas · pinned seams and wind';
+ m.onBeforeCompile=s=>{
+  s.uniforms.uRallyClothTime=clock;
+  s.vertexShader='uniform float uRallyClothTime;varying vec2 vRallyClothUv;\n'+s.vertexShader;
+  s.vertexShader=s.vertexShader.replace('#include <begin_vertex>',/* glsl */`
+   #include <begin_vertex>
+   vRallyClothUv=uv;
+   float freeLength=max(uv.y,0.0),flex=freeLength*freeLength;
+   float gust=sin(uRallyClothTime*1.7+position.x*.15-position.z*.06);
+   float ripple=sin(uRallyClothTime*4.6+uv.y*7.0+position.x*1.3);
+   transformed.z+=flex*(.22+.32*gust+.13*ripple);
+   transformed.y+=flex*.08*(1.0+gust);
+  `);
+  s.fragmentShader='varying vec2 vRallyClothUv;\n'+s.fragmentShader;
+  s.fragmentShader=s.fragmentShader.replace('#include <color_fragment>',/* glsl */`
+   #include <color_fragment>
+   if(vRallyClothUv.y>=0.0){
+    vec2 cloth=vRallyClothUv;
+    float footprint=max(fwidth(cloth.x),fwidth(cloth.y));
+    float edge=min(min(cloth.x,1.0-cloth.x)*(1.0-cloth.y),cloth.y);
+    float hem=1.0-smoothstep(.012,.027+footprint,edge);
+    float band=smoothstep(.12,.12+footprint,cloth.y)*(1.0-smoothstep(.27,.27+footprint,cloth.y));
+    float checks=mod(floor(cloth.x*6.0)+floor((cloth.y-.12)*13.333),2.0);
+    checks=mix(checks,.5,smoothstep(.04,.14,footprint));
+    diffuseColor.rgb=mix(diffuseColor.rgb,diffuseColor.rgb*.55,band*(1.0-checks));
+    diffuseColor.rgb=mix(diffuseColor.rgb,vec3(.92,.79,.51),max(hem*.82,band*checks*.85));
+    diffuseColor.rgb*=.91+.09*sin(cloth.y*3.141593);
+   }
+  `);
+ };
+ m.customProgramCacheKey=()=> 'rally-pinned-canvas-v1';return m;
+}
+
+
+export function createRallyLamp(glow=false){
+ const m=new THREE.MeshBasicMaterial({color:'#edf6ff',toneMapped:false,side:THREE.DoubleSide,
+  ...(glow?{transparent:true,opacity:.30,depthWrite:false,blending:THREE.AdditiveBlending}:{})});
+ m.name=glow?'Floodlight optical halo':'Floodlight luminous optic';
+ if(glow){
+  m.onBeforeCompile=s=>{
+   s.vertexShader='varying vec2 vLampUv;\n'+s.vertexShader;
+   s.vertexShader=s.vertexShader.replace('#include <uv_vertex>','#include <uv_vertex>\nvLampUv=uv;');
+   s.fragmentShader='varying vec2 vLampUv;\n'+s.fragmentShader;
+   s.fragmentShader=s.fragmentShader.replace('#include <color_fragment>',`#include <color_fragment>
+    vec2 p=vLampUv*2.0-1.0;float r2=dot(p,p);
+    diffuseColor.a*=max(0.0,exp(-r2*3.5)-exp(-3.5));
+    if(diffuseColor.a<.004)discard;
+   `);
+  };
+  m.customProgramCacheKey=()=> 'stadium-lamp-halo-v1';
+ }
+ return m;
+}

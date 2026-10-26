@@ -1,0 +1,138 @@
+{
+  "passed": true,
+  "grid": {
+    "look": {
+      "bloom": {
+        "active": false,
+        "mipCount": 0,
+        "sizes": [],
+        "drawCount": 0,
+        "estimatedBytes": 0
+      },
+      "lut": {
+        "dirty": true,
+        "rebuildCount": 0,
+        "width": 1024,
+        "height": 32
+      },
+      "rain": {
+        "enabled": false,
+        "amount": 0,
+        "time": 0
+      },
+      "mud": {
+        "enabled": true,
+        "splats": 0,
+        "sun": [
+          0.1683092878645953,
+          0.9149238822872242,
+          1,
+          0
+        ]
+      }
+    },
+    "render": {
+      "frame": 799,
+      "calls": 600,
+      "triangles": 4875762,
+      "points": 0,
+      "lines": 0
+    }
+  },
+  "detail": {
+    "crowd": {
+      "count": 32958,
+      "vertices": 505,
+      "triangles": 408,
+      "sections": 100
+    },
+    "flags": [
+      {
+        "count": 1260,
+        "triangles": 1736,
+        "material": "Festival canvas · pinned seams and wind",
+        "shader": "rally-pinned-canvas-v1"
+      },
+      {
+        "count": 1260,
+        "triangles": 1736,
+        "material": "Festival canvas · pinned seams and wind",
+        "shader": "rally-pinned-canvas-v1"
+      },
+      {
+        "count": 1260,
+        "triangles": 1736,
+        "material": "Festival canvas · pinned seams and wind",
+        "shader": "rally-pinned-canvas-v1"
+      },
+      {
+        "count": 1260,
+        "triangles": 1736,
+        "material": "Festival canvas · pinned seams and wind",
+        "shader": "rally-pinned-canvas-v1"
+      },
+      {
+        "count": 1260,
+        "triangles": 1736,
+        "material": "Festival canvas · pinned seams and wind",
+        "shader": "rally-pinned-canvas-v1"
+      },
+      {
+        "count": 1260,
+        "triangles": 1736,
+        "material": "Festival canvas · pinned seams and wind",
+        "shader": "rally-pinned-canvas-v1"
+      },
+      {
+        "count": 1260,
+        "triangles": 1736,
+        "material": "Festival canvas · pinned seams and wind",
+        "shader": "rally-pinned-canvas-v1"
+      },
+      {
+        "count": 1260,
+        "triangles": 1736,
+        "material": "Festival canvas · pinned seams and wind",
+        "shader": "rally-pinned-canvas-v1"
+      },
+      {
+        "count": 1260,
+        "triangles": 1736,
+        "material": "Festival canvas · pinned seams and wind",
+        "shader": "rally-pinned-canvas-v1"
+      },
+      {
+        "count": 1260,
+        "triangles": 1736,
+        "material": "Festival canvas · pinned seams and wind",
+        "shader": "rally-pinned-canvas-v1"
+      },
+      {
+        "count": 1260,
+        "triangles": 1736,
+        "material": "Festival canvas · pinned seams and wind",
+        "shader": "rally-pinned-canvas-v1"
+      },
+      {
+        "count": 1260,
+        "triangles": 1736,
+        "material": "Festival canvas · pinned seams and wind",
+        "shader": "rally-pinned-canvas-v1"
+      }
+    ],
+    "render": {
+      "frame": 1767,
+      "calls": 534,
+      "triangles": 4279984,
+      "points": 0,
+      "lines": 0
+    },
+    "memory": {
+      "geometries": 533,
+      "textures": 83
+    },
+    "gl": 0
+  },
+  "errors": [],
+  "review": "Staged camera and clock phases only; production geometry/materials, native then 720p."
+}

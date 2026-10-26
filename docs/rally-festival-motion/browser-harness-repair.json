@@ -1,0 +1,36 @@
+{
+  "initialRun": {
+    "started": "2026-10-26T20:26:53.975Z",
+    "rows": [
+      {
+        "file": "cart-festival-browser.mjs",
+        "code": 1,
+        "seconds": 37.511
+      },
+      {
+        "file": "rally-resource-browser.mjs",
+        "code": 0,
+        "seconds": 15.754
+      },
+      {
+        "file": "cart-flames-browser.mjs",
+        "code": 0,
+        "seconds": 151.914
+      },
+      {
+        "file": "rally-festival-motion-browser.mjs",
+        "code": 0,
+        "seconds": 17.893
+      },
+      {
+        "file": "rally-detail-browser.mjs",
+        "code": 0,
+        "seconds": 17.53
+      }
+    ],
+    "finished": "2026-10-26T20:30:54.585Z"
+  },
+  "failure": "New level-switch assertion referenced an undefined local g in the test callback; the game emitted no errors. Replaced that test reference with window.__game and reran the entire drive/landing/pause/switch flow.",
+  "rerun": "drive-browser.json",
+  "gameCodeChangedForRepair": false
+}

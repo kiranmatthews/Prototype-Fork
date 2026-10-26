@@ -1,4 +1,5 @@
 import type { CustomComponent, CustomLevelData } from '../level';
+import { stadiumBunting } from './stadium-bunting';
 import { stadiumFloodlight } from './stadium-floodlights';
 import type { RaceKnot } from '../race/types';
 import { lazySourceField } from './lazy-source';
@@ -82,19 +83,7 @@ function build():CustomComponent[]{
   // silhouettes stay intact; the route, mounds and containment are untouched.
   const cloth=['#efc75e','#d76239','#399788','#82b86a'];
   for(let s=70,span=0;s<CART_RALLY_LENGTH;s+=190,span++){
-    const vertices:number[]=[],indices:number[]=[],colors:number[]=[];
-    const point=(u:number,down=0)=>stadiumPoint(s,u,21-4.5*(1-(u/28)**2)-down);
-    const face=(points:number[][],colour:string)=>{
-      const n=vertices.length/3,r=parseInt(colour.slice(1,3),16)/255,g=parseInt(colour.slice(3,5),16)/255,b=parseInt(colour.slice(5,7),16)/255;
-      points.forEach(p=>{vertices.push(...p);colors.push(r*r,g*g,b*b);});
-      indices.push(n,n+1,n+2);if(points.length===4)indices.push(n,n+2,n+3);
-    };
-    for(let u=-28,i=0;u<28;u+=2,i++){
-      face([point(u),point(u+2),point(u+2,.055),point(u,.055)],'#72664a');
-      const a=point(u+.22),b=point(u+1.75),tip=point(u+.97,1.55+(i%3)*.15);tip[2]+=.38*Math.sin(i*1.7+span);
-      face([a,b,tip],cloth[(i+span)%cloth.length]);
-    }
-    add({t:'mesh',nm:'Faded festival bunting',p:[0,0,0],vertices,indices,colors,doubleSided:true,color:'#ffffff',tex:'solid',solid:false,castShadow:false});
+    add(stadiumBunting(s,span));
     for(const side of [-1,1]){
       const post=stadiumPoint(s,side*28,17);add({t:'platform',nm:'Festival bunting mast',p:post,s:[.15,8,.15],color:'#877b5f',tex:'metal',solid:false});
       const at=s+side*12,u=side*47,roof:number[]=[];

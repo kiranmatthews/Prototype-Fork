@@ -1,0 +1,78 @@
+{
+  "started": "2026-10-26T20:12:37.523Z",
+  "rows": [
+    {
+      "file": "test-cart-mud.mjs",
+      "code": 0,
+      "seconds": 0.468,
+      "log": "/private/tmp/rally-pass4-focused/test-cart-mud.mjs.log"
+    },
+    {
+      "file": "test-rally-mud-tracks.mjs",
+      "code": 0,
+      "seconds": 0.514,
+      "log": "/private/tmp/rally-pass4-focused/test-rally-mud-tracks.mjs.log"
+    },
+    {
+      "file": "test-cart-stadium.mjs",
+      "code": 0,
+      "seconds": 20.517,
+      "log": "/private/tmp/rally-pass4-focused/test-cart-stadium.mjs.log"
+    },
+    {
+      "file": "test-cart-crowd-placement.mjs",
+      "code": 0,
+      "seconds": 2.281,
+      "log": "/private/tmp/rally-pass4-focused/test-cart-crowd-placement.mjs.log"
+    },
+    {
+      "file": "test-cart-landings.mjs",
+      "code": 0,
+      "seconds": 0.403,
+      "log": "/private/tmp/rally-pass4-focused/test-cart-landings.mjs.log"
+    },
+    {
+      "file": "test-cart-mayhem.mjs",
+      "code": 0,
+      "seconds": 26.029,
+      "log": "/private/tmp/rally-pass4-focused/test-cart-mayhem.mjs.log"
+    },
+    {
+      "file": "test-cart-drivers.mjs",
+      "code": 0,
+      "seconds": 14.56,
+      "log": "/private/tmp/rally-pass4-focused/test-cart-drivers.mjs.log"
+    },
+    {
+      "file": "test-cart-flames.mjs",
+      "code": 0,
+      "seconds": 19.561,
+      "log": "/private/tmp/rally-pass4-focused/test-cart-flames.mjs.log"
+    },
+    {
+      "file": "test-cart-interactions.mjs",
+      "code": 0,
+      "seconds": 19.637,
+      "log": "/private/tmp/rally-pass4-focused/test-cart-interactions.mjs.log"
+    },
+    {
+      "file": "test-fixed-render-pipeline.mjs",
+      "code": 0,
+      "seconds": 0.042,
+      "log": "/private/tmp/rally-pass4-focused/test-fixed-render-pipeline.mjs.log"
+    },
+    {
+      "file": "test-audio-loops.mjs",
+      "code": 0,
+      "seconds": 0.326,
+      "log": "/private/tmp/rally-pass4-focused/test-audio-loops.mjs.log"
+    },
+    {
+      "file": "test-rally-festival-polish.mjs",
+      "code": 0,
+      "seconds": 16.057,
+      "log": "/private/tmp/rally-pass4-focused/test-rally-festival-polish.mjs.log"
+    }
+  ],
+  "finished": "2026-10-26T20:14:37.927Z"
+}

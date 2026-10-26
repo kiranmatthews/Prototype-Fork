@@ -1,0 +1,126 @@
+{
+  "passed": true,
+  "lighting": {
+    "fixtures": 34,
+    "pool": 6,
+    "shadowMaps": 0,
+    "lights": [
+      {
+        "position": [
+          -30.60363,
+          58.28812,
+          -33.71915
+        ],
+        "target": [
+          11.10225,
+          25.28812,
+          -14.31246
+        ],
+        "intensity": 7500,
+        "range": 135
+      },
+      {
+        "position": [
+          45.55493,
+          58.28812,
+          1.71915
+        ],
+        "target": [
+          3.84905,
+          25.28812,
+          -17.68754
+        ],
+        "intensity": 7500,
+        "range": 135
+      },
+      {
+        "position": [
+          20.30012,
+          59.686099999999996,
+          -170.09502
+        ],
+        "target": [
+          64.9516,
+          26.6861,
+          -159.03857
+        ],
+        "intensity": 5407.05561581845,
+        "range": 135
+      },
+      {
+        "position": [
+          101.8376,
+          59.686099999999996,
+          -149.90498
+        ],
+        "target": [
+          57.18612,
+          26.6861,
+          -160.96143
+        ],
+        "intensity": 5157.89169323057,
+        "range": 135
+      },
+      {
+        "position": [
+          107.73869,
+          58.80578,
+          -309.74121
+        ],
+        "target": [
+          62.17049,
+          25.80578,
+          -303.45322
+        ],
+        "intensity": 0,
+        "range": 135
+      },
+      {
+        "position": [
+          24.52719,
+          58.80578,
+          -298.25879
+        ],
+        "target": [
+          70.09539,
+          25.80578,
+          -304.54678
+        ],
+        "intensity": 0,
+        "range": 135
+      }
+    ]
+  },
+  "gpu": {
+    "available": true,
+    "lightsExcluded": {
+      "samples": 40,
+      "meanMs": 7.758820375000001,
+      "p50Ms": 7.468958,
+      "p95Ms": 16.737249
+    },
+    "sixSpotlights": {
+      "samples": 40,
+      "meanMs": 7.5307942,
+      "p50Ms": 7.251666,
+      "p95Ms": 10.085374
+    },
+    "scope": "GPU main scene only; native 1600x900, frozen race pose; no FPS claim"
+  },
+  "state": {
+    "gl": 0,
+    "render": {
+      "frame": 3505,
+      "calls": 600,
+      "triangles": 4875762,
+      "points": 0,
+      "lines": 0
+    },
+    "memory": {
+      "geometries": 532,
+      "textures": 83
+    }
+  },
+  "errors": [],
+  "comparison": "Same production scene and pose; comparison disables only the six spotlight intensities. Luminous fixture faces are retained."
+}

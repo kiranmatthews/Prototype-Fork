@@ -1,0 +1,131 @@
+{
+  "passed": true,
+  "restarts": [
+    {
+      "marks": {
+        "segments": 148,
+        "emitted": 148,
+        "capacity": 24576,
+        "chunks": 24,
+        "bytes": 3833856
+      },
+      "disposed": 24,
+      "oldRootDetached": true,
+      "newTracks": {
+        "segments": 0,
+        "emitted": 0,
+        "capacity": 24576,
+        "chunks": 24,
+        "bytes": 3833856
+      },
+      "gpu": {
+        "memory": {
+          "geometries": 532,
+          "textures": 83
+        },
+        "gl": 0
+      }
+    },
+    {
+      "marks": {
+        "segments": 148,
+        "emitted": 148,
+        "capacity": 24576,
+        "chunks": 24,
+        "bytes": 3833856
+      },
+      "disposed": 24,
+      "oldRootDetached": true,
+      "newTracks": {
+        "segments": 0,
+        "emitted": 0,
+        "capacity": 24576,
+        "chunks": 24,
+        "bytes": 3833856
+      },
+      "gpu": {
+        "memory": {
+          "geometries": 532,
+          "textures": 83
+        },
+        "gl": 0
+      }
+    },
+    {
+      "marks": {
+        "segments": 148,
+        "emitted": 148,
+        "capacity": 24576,
+        "chunks": 24,
+        "bytes": 3833856
+      },
+      "disposed": 24,
+      "oldRootDetached": true,
+      "newTracks": {
+        "segments": 0,
+        "emitted": 0,
+        "capacity": 24576,
+        "chunks": 24,
+        "bytes": 3833856
+      },
+      "gpu": {
+        "memory": {
+          "geometries": 532,
+          "textures": 83
+        },
+        "gl": 0
+      }
+    },
+    {
+      "marks": {
+        "segments": 148,
+        "emitted": 148,
+        "capacity": 24576,
+        "chunks": 24,
+        "bytes": 3833856
+      },
+      "disposed": 24,
+      "oldRootDetached": true,
+      "newTracks": {
+        "segments": 0,
+        "emitted": 0,
+        "capacity": 24576,
+        "chunks": 24,
+        "bytes": 3833856
+      },
+      "gpu": {
+        "memory": {
+          "geometries": 532,
+          "textures": 83
+        },
+        "gl": 0
+      }
+    },
+    {
+      "marks": {
+        "segments": 148,
+        "emitted": 148,
+        "capacity": 24576,
+        "chunks": 24,
+        "bytes": 3833856
+      },
+      "disposed": 24,
+      "oldRootDetached": true,
+      "newTracks": {
+        "segments": 0,
+        "emitted": 0,
+        "capacity": 24576,
+        "chunks": 24,
+        "bytes": 3833856
+      },
+      "gpu": {
+        "memory": {
+          "geometries": 532,
+          "textures": 83
+        },
+        "gl": 0
+      }
+    }
+  ],
+  "errors": []
+}

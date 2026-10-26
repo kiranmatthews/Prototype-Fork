@@ -1,0 +1,272 @@
+{
+  "started": "2026-10-26T20:12:34.434Z",
+  "commands": 202,
+  "rows": [
+    {
+      "index": 1,
+      "command": "node tools/test-level-select.mjs",
+      "seconds": 11.063,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-pass4-full-suite/001.log"
+    },
+    {
+      "index": 2,
+      "command": "node tools/test-swim-controls.mjs",
+      "seconds": 21.931,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-pass4-full-suite/002.log"
+    },
+    {
+      "index": 3,
+      "command": "node tools/test-swimming.mjs",
+      "seconds": 21.206,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-pass4-full-suite/003.log"
+    },
+    {
+      "index": 4,
+      "command": "node tools/test-swim-death-polish.mjs",
+      "seconds": 12.644,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-pass4-full-suite/004.log"
+    },
+    {
+      "index": 5,
+      "command": "node tools/test-death-performance.mjs",
+      "seconds": 10.602,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-pass4-full-suite/005.log"
+    },
+    {
+      "index": 6,
+      "command": "node tools/test-hud-visibility.mjs",
+      "seconds": 0.372,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-pass4-full-suite/006.log"
+    },
+    {
+      "index": 7,
+      "command": "node tools/test-wood-crate-assets.mjs",
+      "seconds": 0.05,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-pass4-full-suite/007.log"
+    },
+    {
+      "index": 8,
+      "command": "node tools/test-bare-spins.mjs",
+      "seconds": 10.33,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-pass4-full-suite/008.log"
+    },
+    {
+      "index": 9,
+      "command": "node tools/test-milk.mjs",
+      "seconds": 0.295,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-pass4-full-suite/009.log"
+    },
+    {
+      "index": 10,
+      "command": "node tools/test-milk-depth-isolation.mjs",
+      "seconds": 9.72,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-pass4-full-suite/010.log"
+    },
+    {
+      "index": 11,
+      "command": "node tools/test-pickup-visual-batch.mjs",
+      "seconds": 7.144,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-pass4-full-suite/011.log"
+    },
+    {
+      "index": 12,
+      "command": "node tools/validate-levels.mjs",
+      "seconds": 0.548,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-pass4-full-suite/012.log"
+    },
+    {
+      "index": 13,
+      "command": "node tools/test-lazy-source.mjs",
+      "seconds": 1.7,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-pass4-full-suite/013.log"
+    },
+    {
+      "index": 14,
+      "command": "node tools/test-tropical-plants.mjs",
+      "seconds": 0.331,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-pass4-full-suite/014.log"
+    },
+    {
+      "index": 15,
+      "command": "node tools/test-jungle-assets.mjs",
+      "seconds": 12.71,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-pass4-full-suite/015.log"
+    },
+    {
+      "index": 16,
+      "command": "node tools/test-crown-quartz.mjs",
+      "seconds": 8.23,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-pass4-full-suite/016.log"
+    },
+    {
+      "index": 17,
+      "command": "node tools/test-jungle-stream.mjs",
+      "seconds": 7.892,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-pass4-full-suite/017.log"
+    },
+    {
+      "index": 18,
+      "command": "node tools/test-custard-pool.mjs",
+      "seconds": 0.286,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-pass4-full-suite/018.log"
+    },
+    {
+      "index": 19,
+      "command": "node tools/test-jungle-enclosure.mjs",
+      "seconds": 80.585,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-pass4-full-suite/019.log"
+    },
+    {
+      "index": 20,
+      "command": "node tools/test-map-landscape-assets.mjs",
+      "seconds": 0.171,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-pass4-full-suite/020.log"
+    },
+    {
+      "index": 21,
+      "command": "node tools/test-world-map-save.mjs",
+      "seconds": 7.809,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-pass4-full-suite/021.log"
+    },
+    {
+      "index": 22,
+      "command": "node tools/test-map-clay-geometry.mjs",
+      "seconds": 0.39,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-pass4-full-suite/022.log"
+    },
+    {
+      "index": 23,
+      "command": "node tools/test-hollowwake-assets.mjs",
+      "seconds": 49.975,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-pass4-full-suite/023.log"
+    },
+    {
+      "index": 24,
+      "command": "node tools/test-scenery-normals.mjs",
+      "seconds": 0.307,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-pass4-full-suite/024.log"
+    },
+    {
+      "index": 25,
+      "command": "node tools/test-waterslide-scenery-lod.mjs",
+      "seconds": 0.294,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-pass4-full-suite/025.log"
+    },
+    {
+      "index": 26,
+      "command": "node tools/test-waterslide-ocean-look.mjs",
+      "seconds": 9.055,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-pass4-full-suite/026.log"
+    },
+    {
+      "index": 27,
+      "command": "node tools/test-waterslide-shallows.mjs",
+      "seconds": 9.461,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-pass4-full-suite/027.log"
+    },
+    {
+      "index": 28,
+      "command": "node tools/test-waterpark-decks.mjs",
+      "seconds": 7.7,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-pass4-full-suite/028.log"
+    },
+    {
+      "index": 29,
+      "command": "node tools/test-waterpark-portals.mjs",
+      "seconds": 9.694,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-pass4-full-suite/029.log"
+    },
+    {
+      "index": 30,
+      "command": "node tools/test-waterslide-forest.mjs",
+      "seconds": 10.106,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-pass4-full-suite/030.log"
+    },
+    {
+      "index": 31,
+      "command": "node tools/test-hollowwake-tunnel-build.mjs",
+      "seconds": 0.772,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-pass4-full-suite/031.log"
+    },
+    {
+      "index": 32,
+      "command": "node tools/test-nightworks.mjs",
+      "seconds": 13.338,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-pass4-full-suite/032.log"
+    },
+    {
+      "index": 33,
+      "command": "node tools/test-local-game-data-reset.mjs",
+      "seconds": 0.28,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-pass4-full-suite/033.log"
+    }
+  ],
+  "interrupted": "2026-10-26T20:19:35.177679+00:00",
+  "reason": "User added actual floodlight illumination; interrupted this partial run and will rerun the complete suite after the lighting change."
+}

@@ -1,0 +1,11 @@
+{
+  "passed": true,
+  "fixtures": 34,
+  "realSpotlights": 6,
+  "allFixturesVisited": 34,
+  "samples": 4848,
+  "maxSwapIntensity": 0,
+  "stableLightObjects": true,
+  "newShadowPasses": 0,
+  "disposed": 6
+}

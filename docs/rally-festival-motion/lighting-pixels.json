@@ -1,0 +1,20 @@
+{
+  "track_and_cart": {
+    "onMean": 125.97575760086579,
+    "offMean": 74.8941727974026,
+    "meanIncrease": 51.08158480346321,
+    "pixelsBrighterBy10": 0.9928939393939394
+  },
+  "left_stands": {
+    "onMean": 85.69305733333333,
+    "offMean": 53.976275763285024,
+    "meanIncrease": 31.71678157004831,
+    "pixelsBrighterBy10": 0.9839492753623188
+  },
+  "right_stands": {
+    "onMean": 120.18825803009258,
+    "offMean": 102.10592675462962,
+    "meanIncrease": 18.082331275462963,
+    "pixelsBrighterBy10": 0.9003240740740741
+  }
+}

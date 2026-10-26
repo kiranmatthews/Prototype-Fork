@@ -1,0 +1,66 @@
+{
+  "date": "2026-10-26T20:49:24.341255+00:00",
+  "passes": [
+    3,
+    4
+  ],
+  "goal": "Continue alternating visual and performance/stability passes until the user asks to stop. The goal remains active.",
+  "firstNativePlayableMinutes": 5,
+  "firstNativeIlluminatedReviewMinutesFromPairStart": 16,
+  "visual": {
+    "crowd": "Eight richer jersey colours, varied skin tones and matching caps; all 32958 seated spectator anchors retained.",
+    "bunting": "336 folded pennants with fixed top seams, pale hems and chequered bands; wind uses the level clock. Full cloth topology at every distance.",
+    "floodlights": "All 34 six-lamp fixtures have luminous optics and depth-tested halos. Six real pooled spotlights illuminate the actual track, karts and stands; housings aim down at the illuminated area."
+  },
+  "performance": {
+    "crowdVertices": [
+      1224,
+      505
+    ],
+    "crowdTrianglesUnchanged": 408,
+    "crowdGeometryBytes": [
+      63648,
+      28708
+    ],
+    "exactFloat32CornerData": true,
+    "perFrameCrowdInstanceUploads": 0,
+    "pooledSpotlights": 6,
+    "newShadowPasses": 0,
+    "lightSwapIntensity": 0,
+    "lightSelectionSamples": 4848,
+    "gpuComparison": "lighting-browser.json; GPU scene timings overlap measurement variation, not a frame-rate improvement claim.",
+    "steadyRestartGpuResources": {
+      "geometries": 532,
+      "textures": 83
+    }
+  },
+  "preserved": [
+    "Skating controls; X accelerates and release coasts",
+    "Square flames damage, never boost",
+    "Exit before stealing",
+    "Original winding route and twelve full-height mounds",
+    "Durability remains at 70% of its earlier value",
+    "Visual-only damage; no meter",
+    "Temple flames, sun/sky effects, wet mud, tyre histories and lens splatters"
+  ],
+  "validation": {
+    "build": true,
+    "releaseBytes": 999076177,
+    "releaseBudget": 1000000000,
+    "fullSuiteCommands": 203,
+    "fullSuitePassed": 164,
+    "fullSuiteFailed": 39,
+    "newFailedCommands": [],
+    "focusedChecks": 12,
+    "allSpectatorAnchorsSupported": 32958,
+    "productionStartupScenarios": 13,
+    "allEightRaceFinish": true,
+    "raceFalls": 0,
+    "rivalFlameShooters": 7,
+    "flameBursts": 31,
+    "damagingContacts": 17,
+    "wreckRecoveries": 7,
+    "chromeAndInAppBrowserErrors": []
+  },
+  "scopeNote": "The partial full run was interrupted when actual illumination was requested. full-suite.json is the complete rerun after that implementation. The complete drive flow passed after correcting the test-only variable reference."
+}

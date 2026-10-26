@@ -1,4 +1,4 @@
-import {createRallyDirt} from './rallyMaterials';
+import {createRallyDirt,createRallyCloth,createRallyLamp} from './rallyMaterials';
 import { authoredMovingGeometry } from './authoredMovingSurface';
 import {RainWeather} from './rainWeather';
 import {addWetRooftopLook} from './wetRooftop';
@@ -16,6 +16,7 @@ import type { SkateRaceData } from './race/types';
 import {custardPoolMaterial,custardFoamMaterial,addCustardPoolBedLook,attachCustardPoolReflection,CustardFinalePresentation} from './custardPool';
 import { NightworksBackdrop } from './nightworksBackdrop';
 import { NightworksLighting } from './nightworksLighting';
+import { StadiumLighting } from './stadiumLighting';
 import { NightworksPlume } from './nightworksPlume';
 import { NightworksFogVisibility } from './nightworksFog';
 import { addNightworksStoneLook, createNightworksMagma, NIGHTWORKS_VOLCANO_TEXTURES } from './nightworksMagma';
@@ -1045,7 +1046,7 @@ export const DECOR_LABELS: Record<DecorKind, string> = {
 export const TEX_KINDS = [
   'skystream-marble',
   'cardboard',
-  'waterslide-fiberglass','rally-mud','rally-sponsors',
+  'waterslide-fiberglass','rally-mud','rally-sponsors','rally-cloth','rally-lamp','rally-lamp-glow',
   'waterslide-shallows',
   'sunny-sand',
   ...CROWN_TEXTURE_KINDS,
@@ -6348,6 +6349,7 @@ export class Level {
     geometry.computeBoundingBox();
     geometry.computeBoundingSphere();
     if(canvasCloth){geometry.boundingBox?.expandByScalar(.3);if(geometry.boundingSphere)geometry.boundingSphere.radius+=.3;}
+    if(c.tex==='rally-cloth'){geometry.boundingBox?.expandByScalar(1);if(geometry.boundingSphere)geometry.boundingSphere.radius+=1;}
     let material: THREE.MeshLambertMaterial | THREE.MeshStandardMaterial | THREE.MeshPhongMaterial | THREE.MeshBasicMaterial;
     const standingWater=isStandingWater(c);
     const jungleStream=c.materialStyle==='jungle-stream';
@@ -6433,6 +6435,8 @@ export class Level {
       });
     } else if(isCountryClubTexture(c.tex))material=createCountryClubSurface(c,this.surfaceTexture(c.tex!),this.surfaceTexture('country-sand'));
     else if(c.tex==='rally-mud')material=createRallyDirt(this.surfaceTexture('dirt'),c.color??'#a07c52',!!c.colors);
+    else if(c.tex==='rally-cloth')material=createRallyCloth(this.standingWaterClock);
+    else if(c.tex==='rally-lamp'||c.tex==='rally-lamp-glow')material=createRallyLamp(c.tex==='rally-lamp-glow');
     else if(c.tex==='rally-sponsors')material=new THREE.MeshStandardMaterial({map:this.surfaceTexture(c.tex),color:c.color??'#ffffff',roughness:.9,side:THREE.DoubleSide});
     else if(c.tex==='waterslide-fiberglass')material=new THREE.MeshStandardMaterial({map:this.surfaceTexture(c.tex),color:c.color??'#ffffff',emissive:c.emissive??'#000000',vertexColors:!!c.colors,roughness:.58,metalness:.02,side:c.doubleSided?THREE.DoubleSide:THREE.FrontSide,fog:c.fog!==false});
     else if(isCrownTexture(c.tex))material=createCrownSurface(c,this.surfaceTexture(c.tex));
@@ -6511,6 +6515,10 @@ export class Level {
     mesh.scale.set(...(c.s ?? [1, 1, 1]));
     mesh.name = c.nm ?? "triangle surface";
     if(c.tex==='custard-foam')mesh.renderOrder=3;
+    if(c.tex==='rally-lamp-glow')mesh.renderOrder=2;
+    if(c.tex==='rally-lamp'&&!this.stadiumLighting){
+      this.stadiumLighting=new StadiumLighting(this.builtFromData?.components??[]);this.root.add(this.stadiumLighting.root);
+    }
     if(c.tex?.startsWith('nightworks-caldera')){
       this.nightworksBackdrop??=new NightworksBackdrop();this.nightworksBackdrop.add(mesh);
     }
@@ -8749,6 +8757,7 @@ export class Level {
     this.nightworksBackdrop?.dispose();this.nightworksBackdrop=undefined;
     this.nightworksPlume?.dispose();this.nightworksPlume=undefined;
     this.nightworksLighting?.dispose();this.nightworksLighting=undefined;
+    this.stadiumLighting?.dispose();this.stadiumLighting=undefined;
     this.heightFog?.dispose();this.heightFog=undefined;
     this.rainWeather?.dispose();this.rainWeather=undefined;
     this.hollowwakeTunnels?.dispose();this.hollowwakeTunnels=null;
@@ -16071,6 +16080,8 @@ export class Level {
   get rainDiagnostics(){return this.rainWeather?.diagnostics??null;}
   private nightworksPlume:NightworksPlume|undefined;
   private nightworksLighting:NightworksLighting|undefined;
+  private stadiumLighting:StadiumLighting|undefined;
+  get stadiumLightingDiagnostics(){return this.stadiumLighting?.diagnostics??null;}
   private nightworksBackdrop:NightworksBackdrop|undefined;
   /** Keep native colour/collision geometry while opted-in scenery fills shadows. */
   withLowDetailShadows(draw:()=>void,lights?:readonly THREE.Light[]):void {
@@ -16091,6 +16102,7 @@ export class Level {
     this.custardFinale?.update(camera);
     this.nightworksPlume?.render(camera);
     this.nightworksLighting?.update(camera);
+    this.stadiumLighting?.update(camera);
     if(this.nightworksBackdrop)this.jungleAssets?.setCalderaBackdrop(this.nightworksBackdrop.texture,this.nightworksBackdrop.viewport);
     const far=(camera as THREE.PerspectiveCamera).far??400;
     // Use the authored fog horizon; the theme's inherited 150 m jungle limit

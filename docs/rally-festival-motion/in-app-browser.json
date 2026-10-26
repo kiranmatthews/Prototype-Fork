@@ -1,0 +1,14 @@
+{
+  "url": "http://127.0.0.1:5498/?playtest&level=coconut-cart-rally&v=lit-pass4",
+  "stamp": "Codex/sol fork \u00b7 build 10-26 20:24 UTC",
+  "actions": [
+    "Open production rally",
+    "Click RACE",
+    "Accelerate with Space",
+    "Review illuminated track and lamps"
+  ],
+  "warnings": [],
+  "errors": [],
+  "screenshot": "race-in-app-browser.png",
+  "temporaryTabClosed": true
+}
