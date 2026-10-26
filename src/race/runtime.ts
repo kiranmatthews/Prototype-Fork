@@ -4,9 +4,11 @@ import { medalForTime } from '../campaign';
 import * as THREE from 'three';
 import { Player } from '../player';
 import { sfx } from '../audio';
-import { createRaceItemModel, createRallyItemModel, disposeRaceItemModel } from './items';
+import { puffs } from '../puffs';
+import { prepareExplosiveBundles } from '../explosiveBundle';
+import { createRaceItemModel, createRallyItemModel, disposeRaceItemModel, updateRaceExplosiveModel } from './items';
 import type { Input } from '../input';
-import type { Crate, Checkpoint, Level } from '../level';
+import type { Crate, Level } from '../level';
 import type { WipeoutCause } from '../character/wipeoutPolicy';
 import { RaceCourse } from './course';
 import { prepareRaceItemPictures } from './itemPictures';
@@ -18,7 +20,7 @@ export interface RaceResult { mode:RaceMode; rank:number; time:number; won:boole
 interface Rider {
   id:number; player:Player; scene:THREE.Scene|null; progress:number; previousProgress:number;
   finish:number|null; rollout:{time:number; speed:number; duration:number; heading:THREE.Vector3}|null; item:RaceItem|null; shield:number; star:number; ultraUsed:boolean; starModel:THREE.Group; boost:number; itemCooldown:number;
-  boxes:Set<Crate|Checkpoint>; anchor:THREE.Vector3; anchorProgress:number; recovery:number; falls:number;
+  boxes:Set<Crate>; anchor:THREE.Vector3; anchorProgress:number; recovery:number; falls:number;
   braking:boolean; oldJump:boolean; jumped:number; knockGrace:number; marker:THREE.Mesh; bubble:THREE.Object3D;
   deck:RaceItemDeck; itemProgress:number; parry:number; dodge:number; velocity:THREE.Vector3; threats:RaceThreat[];
   targetRing:ReturnType<typeof raceTargetRing>; storm:THREE.Group;
@@ -65,7 +67,7 @@ export class SkateRace {
   get active():boolean{return !!this.level;}
   get count():number{return this.mode==='race'?8:1;}
   async preparePresentationAssets():Promise<void> {
-    if(this.active)await Promise.all([prepareRaceItemPictures(),...this.riders.slice(1,this.count).map(r=>r.player.preparePresentationAssets())]);
+    if(this.active)await Promise.all([prepareRaceItemPictures(),prepareExplosiveBundles(),...this.riders.slice(1,this.count).map(r=>r.player.preparePresentationAssets())]);
   }
   private allocate():void {
     if(this.riders.length)return;
@@ -153,7 +155,7 @@ export class SkateRace {
       const lead=this.order()[0],fresh=r.progress>r.itemProgress+12;
       const heavy=fresh&&this.elapsed>=this.heavyAt&&!this.riders.some(a=>a.item==='blue-shell'||a.item==='shock-shell'||a.item==='tidal-wave')&&
         !this.projectiles.some(p=>p.type==='blue-shell'||p.type==='shock-shell'||p.type==='tidal-wave');
-      r.item=this.mode==='time-trial'?'mushroom':r.deck.draw(this.rank(r.id),Math.max(0,lead.progress-r.progress),heavy,this.elapsed>=30&&!r.ultraUsed,!!this.carts);
+      r.item=this.mode==='time-trial'?'mushroom':c.raceItem??r.deck.draw(this.rank(r.id),Math.max(0,lead.progress-r.progress),heavy,this.elapsed>=30&&!r.ultraUsed,!!this.carts);
       r.itemProgress=Math.max(r.itemProgress,r.progress);
       if(r.item==='star'||r.item==='tidal-wave')r.ultraUsed=true;
       if(r.item==='blue-shell'||r.item==='shock-shell'||r.item==='tidal-wave')this.heavyAt=this.elapsed+(this.carts?10:r.item==='tidal-wave'?45:25);
@@ -214,10 +216,12 @@ export class SkateRace {
     if(item==='blue-shell')this.heavyAt=Math.max(this.heavyAt,this.elapsed+(this.carts?10:25));
     const order=this.order().filter(a=>a.finish===null),index=order.indexOf(r);
     const target=item==='blue-shell'?order.find(a=>a!==r):index>0?order[index-1]:null;
-    const mesh=this.carts?createRallyItemModel(item):createRaceItemModel(item);mesh.scale.setScalar(this.carts?(item==='banana'?1.7:1.25):item==='banana'?.72:.6);
+    const explosive=item==='tnt'||item==='nitro';
+    const mesh=this.carts?createRallyItemModel(item):createRaceItemModel(item);mesh.scale.setScalar(explosive?(this.carts?1.15:.85):this.carts?(item==='banana'?1.7:1.25):item==='banana'?.72:.6);
     mesh.position.copy(r.player.pos).y+=item==='banana'?.05:.7;
     const direction=r.player.raceHeading;if((item==='green-shell'||item==='water-bomb'||item==='boomerang')&&backwards)direction.negate();
-    if(item==='banana')mesh.position.addScaledVector(direction,-2.2);
+    if(item==='banana'||explosive)mesh.position.addScaledVector(direction,explosive&&this.carts?-4.2:-2.2);
+    if(explosive)updateRaceExplosiveModel(mesh,item==='tnt'?CONST.tntFuse:undefined,this.elapsed);
     if(item==='water-bomb')mesh.position.y+=.6;
     if(item==='boomerang'){const grade=this.course!.tangent(r.progress);direction.y=direction.dot(grade.clone().setY(0).normalize())*grade.y/Math.max(.1,Math.hypot(grade.x,grade.z));direction.normalize();}
     if(item==='tidal-wave'){mesh.children[0].rotation.y=-Math.PI/2;mesh.scale.set(this.course!.width(r.progress)/.6,1.35,1.4);mesh.rotation.y=Math.atan2(direction.x,direction.z);}
@@ -253,7 +257,7 @@ export class SkateRace {
       lateral=THREE.MathUtils.clamp(lateral,-Math.min(5,c.width(r.progress)*.3),Math.min(5,c.width(r.progress)*.3));
       c.sample(r.progress+look,lateral,r.aim);
       // Read hazards at the same delayed reaction sample as the road.
-      if(id===0||this.random()>.12)for(const box of this.level!.crates)if(box.alive&&(box.tnt||box.nitro)&&box.mesh.position.distanceTo(r.aim)<3.2){
+      if(id===0||this.random()>.12)for(const box of this.projectiles)if(box.time<90&&(box.type==='tnt'||box.type==='nitro')&&box.owner!==id&&box.mesh.position.distanceTo(r.aim)<3.2){
         c.sample(r.progress+look,lateral+(lateral<0?2.5:-2.5),r.aim);break;
       }
       if(r.progress>c.length-25)r.aim.addScaledVector(c.tangent(c.length),30);
@@ -430,11 +434,44 @@ export class SkateRace {
     this.ray.set(from,this.a.copy(to).sub(from).normalize());
     return this.level!.walls.some(box=>this.ray.intersectBox(box,this.wallHit)!==null&&this.wallHit.distanceTo(from)<=length);
   }
+  private explosiveRadius(p:Projectile):number {return this.carts?(p.type==='nitro'?8:7):p.type==='nitro'?5.5:4.5;}
+  private explodeItem(p:Projectile):void {
+    if(p.time>=90)return;p.time=99;
+    const at=p.mesh.position,radius=this.explosiveRadius(p);
+    this.effects.burst(p.type,at);this.effects.pulse(at,RACE_ITEMS[p.type].color,radius);
+    puffs.burst(p.type==='nitro'?'boomNitro':'boomTnt',at.x,at.y,at.z,{});
+    sfx.withGain(this.soundGain(this.riders[p.owner]),()=>sfx.play('tntBoom',.8),p.owner?'race-rivals':'');
+    for(const r of this.riders.slice(0,this.count))if(r.id!==p.owner&&r.finish===null&&!r.recovery&&
+      Math.hypot(r.player.pos.x-at.x,r.player.pos.z-at.z)<radius&&Math.abs(r.player.pos.y-at.y)<(this.carts?3.5:2))
+      this.hit(r,at,this.carts?(p.type==='nitro'?.42:.35):.24);
+    // Mark the source spent before chaining, so overlapping traps resolve once.
+    for(const other of this.projectiles)if(other.time<90&&(other.type==='tnt'||other.type==='nitro')&&other.mesh.position.distanceTo(at)<radius)this.explodeItem(other);
+  }
   private updateItems(dt:number):void {
     const c=this.course!,level=this.level!;
     for(const p of this.projectiles){
       if(p.time>=90)continue;
       p.time+=dt;p.phaseTime+=dt;p.previous.copy(p.mesh.position);
+      if(p.type==='tnt'||p.type==='nitro'){
+        const half=.7*p.mesh.scale.y;
+        p.velocityY-=24*dt;p.mesh.position.y+=p.velocityY*dt;
+        const ground=c.supportAt(level,p.mesh.position,this.a,3,Math.max(8,-p.velocityY*dt+3));
+        if(ground&&p.mesh.position.y<=ground.y+half){p.mesh.position.y=ground.y+half;p.velocityY=0;}
+        updateRaceExplosiveModel(p.mesh,p.type==='tnt'?Math.max(0,CONST.tntFuse-p.time):undefined,this.elapsed);
+        if(p.type==='tnt'){
+          if(Math.floor(p.time)!==Math.floor(p.time-dt)&&p.time<CONST.tntFuse)
+            sfx.withGain(this.soundGain(this.riders[p.owner]),()=>sfx.play('tntCount2',.55),p.owner?'race-rivals':'');
+          if(p.time>=CONST.tntFuse)this.explodeItem(p);
+        }else if(p.time>=.55){
+          for(const r of this.riders.slice(0,this.count)){
+            if(r.id===p.owner||r.finish!==null||r.recovery)continue;
+            const centre=r.player.pos.clone().add(new THREE.Vector3(0,this.carts?.8:.65,0));
+            const previous=centre.clone().addScaledVector(r.velocity,-dt);
+            if(this.nearSegment(p.mesh.position,previous,centre,this.carts?2:1.15)){this.explodeItem(p);break;}
+          }
+        }
+        continue;
+      }
       if(p.type==='shock-shell'){
         p.mesh.rotation.y+=dt*2;p.mesh.position.copy(this.riders[p.owner].player.pos).y+=4;
         if(p.time>=1.6){
@@ -535,6 +572,10 @@ export class SkateRace {
         const ground=c.supportAt(level,p.mesh.position,this.a,3,8);if(ground)p.mesh.position.y=ground.y+.025;
       }
       if(p.type==='red-shell'||p.type==='green-shell'||p.type==='boomerang'){
+        for(const trap of this.projectiles)if(trap.time<90&&(trap.type==='tnt'||trap.type==='nitro')&&this.nearSegment(trap.mesh.position,p.previous,p.mesh.position,1.5)){
+          p.time=99;this.explodeItem(trap);break;
+        }
+        if(p.time>=90)continue;
         for(const trap of this.projectiles)if(trap!==p&&trap.time<90&&!(this.carts&&trap.owner===p.owner&&Math.abs(trap.time-p.time)<.1)&&(trap.type==='banana'||trap.type==='green-shell'||trap.type==='boomerang'||p.type==='green-shell'&&trap.type==='red-shell')&&this.nearSegment(trap.mesh.position,p.previous,p.mesh.position,1.6)){
           p.time=trap.time=99;this.effects.burst('banana',trap.mesh.position);break;
         }
@@ -557,7 +598,7 @@ export class SkateRace {
       }
     }
     this.projectiles=this.projectiles.filter(p=>{
-      const life=p.type==='banana'?22:p.type==='blue-shell'||p.type==='tidal-wave'?75:p.type==='boomerang'?4:12;
+      const life=p.type==='banana'||p.type==='nitro'?22:p.type==='tnt'?CONST.tntFuse+.1:p.type==='blue-shell'||p.type==='tidal-wave'?75:p.type==='boomerang'?4:12;
       if(p.time<life&&p.mesh.position.y>level.killY&&p.bounces<7)return true;
       disposeRaceItemModel(p.mesh);return false;
     });
@@ -573,9 +614,14 @@ export class SkateRace {
       if(r.finish!==null||r.recovery)continue;
       const forward=this.viewForward.lengthSq()>.1?this.viewForward:r.player.raceHeading;
       for(const p of this.projectiles){
-        if(p.owner===r.id||p.type==='banana')continue;
+        if(p.time>=90||p.owner===r.id||p.type==='banana')continue;
         let seconds=Infinity;
-        if(p.type==='shock-shell')seconds=1.6-p.time;
+        if(p.type==='tnt'){
+          if(p.mesh.position.distanceTo(r.player.pos)>this.explosiveRadius(p)+3)continue;
+          seconds=CONST.tntFuse-p.time;
+        }else if(p.type==='nitro'){
+          seconds=this.approachingTime(p,r,0,2);if(!Number.isFinite(seconds))continue;
+        }else if(p.type==='shock-shell')seconds=1.6-p.time;
         else if(p.type==='water-bomb'){
           if(p.phase!=='windup'||p.locked.distanceTo(r.player.pos)>9)continue;seconds=.7-p.phaseTime;
         }else if(p.type==='tidal-wave'){

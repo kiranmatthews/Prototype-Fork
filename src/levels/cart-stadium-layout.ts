@@ -3,7 +3,7 @@ export type RallyPoint = [number,number,number];
 export const CART_RALLY_LENGTH=2320;
 export const CART_RALLY_JUMPS=[150,310,470,690,850,1010,1230,1390,1550,1770,1930,2090].map((s,i)=>({start:s,end:s+26+(i%3)*4,name:['Dirt double','Mud bowl','Coconut kicker'][i%3]}));
 export const CART_RALLY_PIPES=[[540,640],[1080,1180],[1620,1720],[2160,2260]] as const;
-export const CART_RALLY_CHECKPOINTS=[80,410,790,1190,1710,2030];
+export const CART_RALLY_SUPPLY_ROWS=[80,410,790,1190,1710,2030];
 export const STADIUM={bankStart:17,bankRadius:10,wallOffset:27.4,wallTop:15,standStart:30,rows:9,rowDepth:1.25,rowRise:.85,sectionLength:48,seatSpacing:1.15} as const;
 const smooth=(x:number)=>{const t=Math.max(0,Math.min(1,x));return t*t*(3-2*t);};
 const round=(x:number)=>Math.round(x*1e5)/1e5;

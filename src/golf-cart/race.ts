@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import type { Level, Crate, Checkpoint } from '../level';
+import type { Level, Crate } from '../level';
 import type { Input } from '../input';
 import type { Player } from '../player';
 import { RaceCourse } from '../race/course';
@@ -18,7 +18,7 @@ import { createStadiumBoundary } from './stadiumBoundary';
 
 interface Racer {
   id:number;player:Player;progress:number;anchor:THREE.Vector3;anchorProgress:number;
-  finish:number|null;falls:number;recovery:number;boost:number;knockGrace:number;boxes:Set<Crate|Checkpoint>;
+  finish:number|null;falls:number;recovery:number;boost:number;knockGrace:number;boxes:Set<Crate>;
 }
 interface CartInteraction {kind:'exit'|'enter'|'steal';id:number;cart:number;victim:number;age:number;duration:number;side:number;actor:CartInteractionActor;passenger:CartInteractionActor|null;foot:THREE.Vector3;from:THREE.Vector3;victimFoot:THREE.Vector3;released:boolean;approach:number;path:THREE.Vector3[];pathLength:number}
 const clamp=THREE.MathUtils.clamp;
@@ -403,8 +403,7 @@ export class GolfCartRace {
         if(!nearJump&&Math.abs(projected.offset)<10){r.anchor.set(c.x,c.y,c.z);r.anchorProgress=projected.s;Object.assign(world.spawns[index],{x:c.x,z:c.z,yaw:Math.atan2(-this.course.tangent(projected.s).x,-this.course.tangent(projected.s).z)});}
       }
       this.level.raceActorId=owner;
-      if(r.finish===null)for(const box of this.level.crates)if(box.alive&&Math.abs(box.mesh.position.y-c.y)<2.8&&Math.hypot(box.mesh.position.x-c.x,box.mesh.position.z-c.z)<2.15)this.level.breakCrate(box,true);
-      if(owner===0&&r.finish===null&&!this.level.runMode)for(const cp of this.level.checkpoints)if(Math.abs(cp.spawnPos.y-c.y)<3&&Math.hypot(cp.spawnPos.x-c.x,cp.spawnPos.z-c.z)<10){r.boxes.add(cp);r.player.cratesBroken=r.boxes.size;if(!cp.active)this.level.activateCheckpoint(cp,r.player.cratesBroken);}
+      if(r.finish===null)for(const box of this.level.crates)if(box.alive&&(!box.mystery||r.player.raceHooks?.canCollectItem?.()!==false)&&Math.abs(box.mesh.position.y-c.y)<2.8&&Math.hypot(box.mesh.position.x-c.x,box.mesh.position.z-c.z)<2.15)this.level.breakCrate(box,true);
     }
     this.advanceInteractions(dt);this.sync();this.targetMarker=this.nearest(0);this.effects.update(dt,this.burning);
     this.audio.update(dt,world,this.driverForCart,this.cartForRacer[0],this.burning,this.effects.burnAges,this.thrustTime,this.racers[0].player.pos);

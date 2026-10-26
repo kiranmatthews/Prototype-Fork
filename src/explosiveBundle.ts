@@ -47,6 +47,9 @@ function template(nitro:boolean):Promise<Template>{
     return {geometry,material};
   });templates.set(nitro,pending);}return pending;
 }
+/** Preload the shared authored assets before a race can award either item. */
+export async function prepareExplosiveBundles():Promise<void>{await Promise.all([template(false),template(true)]);}
+
 function bundleMaterial(base:THREE.MeshStandardMaterial,pulse:{value:number},nitro:boolean):THREE.MeshStandardMaterial{
   const material=base.clone();material.userData.shared=false;material.userData.levelDepthFade=false;
   material.onBeforeCompile=shader=>{

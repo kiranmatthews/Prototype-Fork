@@ -33,8 +33,7 @@ await withBlockworksRuntime(async r=>{
  assert.equal(gapFlights.size,12,'Every dirt double offers genuine flight');
  assert.ok(air[0].max>3,'Large jumps produce meaningful height');
  assert.equal(report.tuningUnchanged,true);
- report.checkpoints=r.l.checkpoints.map(cp=>cp.active);assert.ok(report.checkpoints.every(Boolean));
- assert.ok(report.result.boxes>=r.l.checkpoints.length,'Checkpoint crates count toward the obtainable box gem');
+ report.checkpoints=r.l.checkpoints.length;assert.equal(report.checkpoints,0,'Race courses contain no checkpoints');
  console.log('PASS golf-cart race',JSON.stringify(report.riders));
  // A solo restart owns exactly one cart and retains the shared clock/items.
  race.start('time-trial',0);assert.equal(race.carts.cartForRacer.length,1);assert.ok(race.carts.fleet.models.length>1);
@@ -43,7 +42,7 @@ await withBlockworksRuntime(async r=>{
  assert.equal(race.riders[0].falls,0,'Solo line lands every jump');
  report.solo={time:race.riders[0].finish,falls:race.riders[0].falls,boxes:race.riders[0].boxes.size,rolls:race.carts.fleet.physics.carts.reduce((n,c)=>n+c.rolls,0)};
  assert.equal(report.solo.rolls,0,'Solo jumps and landings do not roll the kart');
- assert.ok(r.l.checkpoints.every(cp=>!race.riders[0].boxes.has(cp)),'Hidden checkpoint crates are excluded from time trials');
+ assert.equal(r.l.checkpoints.length,0,'Solo race trials also contain no checkpoints');
  console.log('PASS solo route',JSON.stringify(report.solo));
  race.start('time-trial',0);race.phase='running';
  // Deliberately drive out toward the rim. The bank and physical wall must

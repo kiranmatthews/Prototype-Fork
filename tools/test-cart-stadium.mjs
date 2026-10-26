@@ -19,7 +19,7 @@ await withBlockworksRuntime(async r=>{
  const coast=(drag,air)=>{const w=new GolfCartPhysics(()=>({height:0,safe:true,supported:true,grip:1,drag}),[{x:0,z:0,yaw:0}]);Object.assign(w.carts[0],{vz:-20,speed:20,y:air?20:0,grounded:!air,vy:air?10:0});for(let i=0;i<60;i++)w.advance(1/120);return Math.abs(w.carts[0].vz);};
  const dry=coast(.08,false),mud=coast(14,false),dryAir=coast(.08,true),mudAir=coast(14,true);assert.ok(dry-mud>6);assert.equal(dryAir,mudAir);
  race.start('race',0);race.phase='running';race.carts.drive=()=>({moveX:0,moveY:0});
- for(const cp of r.l.checkpoints){const at=race.course.project(cp.spawnPos).s,heading=race.course.tangent(at);r.p.resetRacePosition(r.l,cp.spawnPos.clone().addScaledVector(heading,-8),heading);for(let i=0;i<90&&!cp.active;i++)race.step(r.dt,{moveX:0,moveY:0,jumpHeld:true});assert.ok(cp.active,'Each checkpoint is supported and reachable by driving');assert.ok(race.riders[0].boxes.has(cp));}
+ assert.equal(r.l.checkpoints.length,0,'Race recovery never needs physical checkpoint crates');
  let disposed=0;race.carts.crowd.sections[0].geometry.addEventListener('dispose',()=>disposed++);race.carts.crowd.dispose();assert.equal(disposed,1);assert.equal(race.carts.crowd.root.children.length,0);
  const report={passed:true,spectators:rally.crowd.count,sections:100,sharedGeometry:true,gpuOnlyCheering:true,slowMisses:slow,drag:{dry,mud,dryAir,mudAir},disposed};await writeFile(process.env.CART_STADIUM_REPORT??'/private/tmp/cart-stadium.json',JSON.stringify(report,null,2)+'\n');console.log('PASS stadium',JSON.stringify({spectators:report.spectators,slowMisses:slow.length,drag:report.drag}));
 },{modulePath:'/src/levels/coconut-cart-rally.ts',source:m=>m.COCONUT_CART_RALLY_LEVEL,levelId:'coconut-cart-rally'});

@@ -1,8 +1,8 @@
 import type { CustomComponent, CustomLevelData } from '../level';
 import type { RaceKnot } from '../race/types';
 import { lazySourceField } from './lazy-source';
-import { CART_RALLY_LENGTH,CART_RALLY_JUMPS,CART_RALLY_CHECKPOINTS,STADIUM,cartRallyPoint,cartRallyFrame,stadiumPoint,stadiumSections,stadiumBoundaryPaths } from './cart-stadium-layout';
-export { CART_RALLY_LENGTH,CART_RALLY_JUMPS,CART_RALLY_PIPES,CART_RALLY_CHECKPOINTS,cartRallyPoint } from './cart-stadium-layout';
+import { CART_RALLY_LENGTH,CART_RALLY_JUMPS,CART_RALLY_SUPPLY_ROWS,STADIUM,cartRallyPoint,cartRallyFrame,stadiumPoint,stadiumSections,stadiumBoundaryPaths } from './cart-stadium-layout';
+export { CART_RALLY_LENGTH,CART_RALLY_JUMPS,CART_RALLY_PIPES,CART_RALLY_SUPPLY_ROWS,cartRallyPoint } from './cart-stadium-layout';
 const line:RaceKnot[]=[];
 for(let s=18;s<=CART_RALLY_LENGTH;s+=2)line.push([...cartRallyPoint(s),34]);
 function build():CustomComponent[]{
@@ -76,7 +76,7 @@ function build():CustomComponent[]{
     for(const side of [-1,1]){const p=cartRallyPoint(j.start-1,side*16);add({t:'platform',nm:`Dirt jump ${i+1} flagpole`,p:[p[0],p[1]+3,p[2]],s:[.14,6,.14],tex:'solid',color:'#e3c28e',solid:false});add({t:'platform',nm:'Dirt launch flag',p:[p[0],p[1]+5.4,p[2]],s:[1.8,.9,.08],tex:'solid',color:i%2?'#ed8152':'#5ac9b7',solid:false});}
   }
   for(let s=65;s<CART_RALLY_LENGTH-70;s+=115){if(CART_RALLY_JUMPS.some(j=>s>j.start-45&&s<j.start+70))continue;for(const u of [-9,-3,3,9])add({t:'crate',kind:'mystery',p:cartRallyPoint(s,u),nm:'Rally item row'});}
-  for(const s of CART_RALLY_CHECKPOINTS){add({t:'checkpoint',p:cartRallyPoint(s),nm:'Rally recovery checkpoint'});for(const u of [-6,0,6])add({t:'crate',kind:'empty',p:cartRallyPoint(s+8,u),nm:'Rally box gem crate'});}
+  for(const s of CART_RALLY_SUPPLY_ROWS){for(const u of [-6,0,6])add({t:'crate',kind:'empty',p:cartRallyPoint(s+8,u),nm:'Rally box gem crate'});}
   for(let s=0;s<=CART_RALLY_LENGTH+35;s+=16)add({t:'camnode',p:cartRallyPoint(s),nm:'Rally chase camera'});
   add({t:'gate',p:cartRallyPoint(CART_RALLY_LENGTH),yaw:-Math.atan(cartRallyFrame(CART_RALLY_LENGTH).dx)*180/Math.PI,nm:'Coconut Cart Rally finish'});
   add({t:'pit',p:[0,-35,-CART_RALLY_LENGTH/2],s:[600,1,CART_RALLY_LENGTH+160],invisible:true,nm:'Stadium emergency recovery'});

@@ -1,7 +1,8 @@
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import * as THREE from 'three';
+import { createExplosiveBundle, disposeExplosiveBundle, updateExplosiveBundle, type ExplosiveBundle } from '../explosiveBundle';
 
-/** Fixed, textureless asset cache: twelve silhouettes, one opaque draw per item.
+/** Textureless sculpt cache; TNT/Nitro reuse the shared authored explosive bundles.
  * Instances never mutate these buffers; removing a projectile cannot dispose a
  * second rider's model. The bounded cache lives as long as the other game assets. */
 const models = new Map<string, THREE.BufferGeometry>();
@@ -158,6 +159,10 @@ function sculpt(kind:string):THREE.BufferGeometry {
 /** Same asset for the moving projectile, world aura and baked inventory image. */
 export function createRaceItemModel(kind:string):THREE.Group {
   const root=new THREE.Group();root.name=`race item / ${kind}`;
+  if(kind==='tnt'||kind==='nitro'){
+    const bundle=createExplosiveBundle(kind==='nitro',1.4);
+    root.userData.explosiveBundle=bundle;root.add(bundle.body);return root;
+  }
   let geometry=models.get(kind);if(!geometry){geometry=sculpt(kind);models.set(kind,geometry);}
   root.add(new THREE.Mesh(geometry,enamel));
   if(kind==='shield'){
@@ -167,13 +172,19 @@ export function createRaceItemModel(kind:string):THREE.Group {
   root.updateMatrixWorld(true);return root;
 }
 
+export function updateRaceExplosiveModel(root:THREE.Group,remaining:number|undefined,clock:number):void {
+  const bundle=root.userData.explosiveBundle as ExplosiveBundle|undefined;
+  if(bundle)updateExplosiveBundle(bundle,remaining,clock);
+}
+
 /** Rally projectiles share the normal lifecycle and keep other courses' art intact. */
 export function createRallyItemModel(kind:string):THREE.Group {
   return createRaceItemModel(kind.endsWith('-shell')&&kind!=='shock-shell'?`rally-coconut-${kind.split('-')[0]}`:kind);
 }
 
 export function disposeRaceItemModel(root:THREE.Object3D):void {
+  const bundle=root.userData.explosiveBundle as ExplosiveBundle|undefined;if(bundle)disposeExplosiveBundle(bundle);
   const geometry=new Set<THREE.BufferGeometry>(),materials=new Set<THREE.Material>();
-  root.traverse(object=>{if(object instanceof THREE.Mesh){geometry.add(object.geometry);for(const m of Array.isArray(object.material)?object.material:[object.material])materials.add(m);}});
-  root.removeFromParent();for(const g of geometry)if(!shared.has(g))g.dispose();for(const m of materials)if(!shared.has(m))m.dispose();
+  root.traverse(object=>{if(object instanceof THREE.Mesh||object instanceof THREE.LineSegments||object instanceof THREE.Sprite){if('geometry' in object)geometry.add(object.geometry);for(const m of Array.isArray(object.material)?object.material:[object.material])materials.add(m);}});
+  root.removeFromParent();for(const g of geometry)if(!shared.has(g)&&!g.userData.shared)g.dispose();for(const m of materials)if(!shared.has(m)&&!m.userData.shared)m.dispose();
 }

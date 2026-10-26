@@ -16,7 +16,7 @@ export interface SkateRaceData {
   finishWidth: number;
   originalLength: number;
 }
-export type RaceItem = 'banana' | 'green-shell' | 'red-shell' | 'blue-shell' | 'shock-shell' | 'mushroom' | 'shield' | 'horn' | 'water-bomb' | 'boomerang' | 'star' | 'tidal-wave';
+export type RaceItem = 'tnt' | 'nitro' | 'banana' | 'green-shell' | 'red-shell' | 'blue-shell' | 'shock-shell' | 'mushroom' | 'shield' | 'horn' | 'water-bomb' | 'boomerang' | 'star' | 'tidal-wave';
 export const RALLY_ITEM_NAMES:Partial<Record<RaceItem,string>>={banana:'BANANA BOMB TRIO','green-shell':'TRIPLE COCONUT CANNON','red-shell':'HOMING COCONUT','blue-shell':'CLUB PRESIDENT ERASER','shock-shell':'BAD WEATHER POLICY','water-bomb':'POOL PARTY MORTAR',horn:'FOURTEEN FORE!',mushroom:'QUESTIONABLE ENERGY DRINK',boomerang:'RETURN TO SENDER',star:'LIABILITY WAIVER','tidal-wave':'TSUNAMI TEE TIME'};
 export const RALLY_ITEM_DESCRIPTIONS:Partial<Record<RaceItem,string>>={
   banana:'Drop three explosive peels behind your kart; the splash catches nearby rivals',
@@ -42,7 +42,7 @@ export interface RacePlayerHooks {
   respawn?: () => void;
 }
 export interface RaceThreat {
-  item: 'green-shell' | 'red-shell' | 'blue-shell' | 'shock-shell' | 'water-bomb' | 'boomerang' | 'tidal-wave';
+  item: 'tnt' | 'nitro' | 'green-shell' | 'red-shell' | 'blue-shell' | 'shock-shell' | 'water-bomb' | 'boomerang' | 'tidal-wave';
   seconds:number; bearing:number; urgent:boolean;
 }
 export interface RaceHudState {
@@ -63,6 +63,8 @@ export const RACE_ROSTER = [
   { name: 'SOL', color: '#f1dc68' }, { name: 'VOSS', color: '#e46b5e' },
 ] as const;
 export const RACE_ITEMS: Record<RaceItem,{name:string;color:string;description:string}> = {
+  tnt: {name:'TNT',color:'#ff5535',description:'Drop lit TNT behind you; its three-second fuse gives rivals time to escape'},
+  nitro: {name:'NITRO',color:'#8cee36',description:'Drop a contact mine behind you; jump over it, shield or clear it with a shell'},
   banana: {name:'BANANA PEEL',color:'#ffda39',description:'Drop behind you to trap a rival or block a shell'},
   'green-shell': {name:'GREEN SHELL',color:'#48b457',description:'Ricochets along the road; hold back when firing to defend behind'},
   'red-shell': {name:'RED SHELL',color:'#e95447',description:'Tracks the next racer, then commits; jump, sidestep, spin or block it'},

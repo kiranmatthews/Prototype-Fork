@@ -257,6 +257,7 @@ export interface Crate {
   alive: boolean;
   empty?: boolean;
   raceOwner?: number;
+  raceItem?: 'tnt'|'nitro'; // race-only ammo pickup; never a live course hazard
   nitro?: boolean; // green, bobbing, touch = instant detonation
   concealed?: boolean; // buried nitro: authored below ground, revealed only in the editor
   bouncy?: boolean; // WOOD arrow crate: stomp = super bounce; spin/slam breaks it
@@ -1294,7 +1295,8 @@ export function migrateCustomLevel(d: CustomLevelData): CustomLevelData {
   migrateDrownedCamera(d);
   // Boss retries bank phase progress in the encounter and start on the pier.
   // Old editor copies must not restore the retired physical checkpoint crate.
-  if (d.encounter === 'crab-chief')
+  // Races recover to their latest supported position, without checkpoint objects.
+  if (d.encounter === 'crab-chief' || d.skateRace)
     d.components = d.components.filter(component => component.t !== 'checkpoint');
   // Retired vehicles must not return through saved libraries or shared files.
   // Leave the road geometry, groups and other enemies available for editing.
@@ -6977,7 +6979,7 @@ export class Level {
       // finish gate. Capturing it would freeze an old gate-relative position
       // into a hand-built level copy, then leave stale duplicates after edits.
       if (cr.systemicEndNitroBang) continue;
-      const kind = cr.empty ? "empty" : cr.nitroBang
+      const kind = cr.raceItem ?? (cr.empty ? "empty" : cr.nitroBang
         ? "nitrobang"
         : cr.nitro
           ? "nitro"
@@ -6999,7 +7001,7 @@ export class Level {
                           ? "mystery"
                           : cr.bang
                             ? "bang"
-                            : "wood";
+                            : "wood");
       const gids = cr.groupIds ?? [];
       for (let gi = 0; gi < gids.length; gi++) {
         if (!seenGroups.has(gids[gi])) {
@@ -7011,7 +7013,7 @@ export class Level {
         t: "crate",
         p: [
           r2(cr.mesh.position.x),
-          r2((cr.homeY ?? cr.mesh.position.y) - 0.48),
+          r2((cr.homeY ?? cr.mesh.position.y) - (this.skateRace && cr.mystery ? 1.86 : .48)),
           r2(cr.mesh.position.z),
         ],
         kind: kind === "wood" ? "wood" : (kind as CustomComponent["kind"]),
@@ -10823,6 +10825,7 @@ export class Level {
   // anything it CHAINS detonates unsafe, so popping a stack up close is a risk.
   detonate(c: Crate, safe = false): void {
     if (!c.alive) return;
+    if(c.raceItem){this.breakCrate(c);return;}
     this.minefields?.triggerAt(c.mesh.position);
     this.crateRailsDirty = true;
     this.cartonStacksDirty = true;
@@ -17164,8 +17167,9 @@ export class Level {
       | "nitrobang",
     opts?: { outline?: boolean; groupIds?: number[]; noAuto?: boolean; concealed?: boolean },
   ): void {
-    const concealed = kind === "nitro" && opts?.concealed === true;
-    const raceItem=!!this.skateRace&&kind==='mystery';
+    const ammo=this.skateRace&&(kind==='tnt'||kind==='nitro')?kind:undefined;
+    const concealed = !ammo && kind === "nitro" && opts?.concealed === true;
+    const raceItem=!!this.skateRace&&(kind==='mystery'||!!ammo);
     const size = raceItem ? 1.92 : 0.96;
     // ARROW CRATES get a per-face material list: the arrow reads on the four
     // SIDES and the lid/floor stay blank. An arrow drawn on the top face is
@@ -17312,17 +17316,18 @@ export class Level {
       box,
       alive: true,
       empty: kind === "empty",
-      nitro: kind === "nitro",
+      raceItem: ammo,
+      nitro: !ammo && kind === "nitro",
       concealed: concealed || undefined,
       bouncy: kind === "bouncy",
       metalBounce: kind === "metalbounce",
       metal: kind === "metal",
-      tnt: kind === "tnt",
+      tnt: !ammo && kind === "tnt",
       mask: kind === "mask",
       life: kind === "life",
       multiHit: kind === "multihit",
       hitsRemaining: kind === "multihit" ? 5 : undefined,
-      mystery: kind === "mystery",
+      mystery: kind === "mystery" || !!ammo,
       bang: kind === "bang",
       nitroBang: kind === "nitrobang",
       groupIds: opts?.groupIds,
@@ -19328,6 +19333,7 @@ export class Level {
   // stomp it (bumping is a wall) to bank the checkpoint; its trigger matches
   // the box, so it can be dodged rather than being an unmissable gate.
   private checkpoint(deckY: number, z: number, x = 0): void {
+    if(this.skateRace)return;
     const size = 0.96; // same footprint as every other crate now
     const gy = this.floorY(x, z, deckY);
     const mesh = new THREE.Mesh(

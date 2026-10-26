@@ -13,14 +13,14 @@ export class RaceItemDeck {
   reset(seed:number):void {this.seed=seed||1;this.recent=[];}
   draw(rank:number,gap:number,heavy:boolean,ultra=false,rally=false):RaceItem {
     const weights:Partial<Record<RaceItem,number>>=rank<=2?
-      {banana:18,'green-shell':14,shield:21,mushroom:17,horn:13,boomerang:10,'water-bomb':7}:
-      rank<=5?{banana:7,'green-shell':9,'red-shell':21,shield:17,mushroom:24,horn:7,boomerang:8,'water-bomb':7}:
-      {'green-shell':4,'red-shell':20,shield:16,mushroom:40,horn:8,boomerang:7,'water-bomb':5};
+      {tnt:12,nitro:10,banana:18,'green-shell':14,shield:21,mushroom:17,horn:13,boomerang:10,'water-bomb':7}:
+      rank<=5?{tnt:10,nitro:8,banana:7,'green-shell':9,'red-shell':21,shield:17,mushroom:24,horn:7,boomerang:8,'water-bomb':7}:
+      {tnt:5,nitro:4,'green-shell':4,'red-shell':20,shield:16,mushroom:40,horn:8,boomerang:7,'water-bomb':5};
     if(rank>2&&gap>70)weights.mushroom!+=15;
     if(rank>=5&&gap>45&&heavy){weights['blue-shell']=7;if(rank>=6&&gap>90)weights['shock-shell']=4;}
     if(ultra){weights.star=.06;if(heavy&&rank>=5&&gap>70)weights['tidal-wave']=.04;}
     if(rally){
-      Object.assign(weights,{'green-shell':20,banana:12,'red-shell':20,'water-bomb':20,horn:20,boomerang:12,mushroom:25,shield:14,star:8});
+      Object.assign(weights,{tnt:18,nitro:16,'green-shell':20,banana:12,'red-shell':20,'water-bomb':20,horn:20,boomerang:12,mushroom:25,shield:14,star:8});
       if(heavy)Object.assign(weights,{'blue-shell':9,'shock-shell':7,'tidal-wave':7});
     }
     // The last two draws cannot repeat, including across rank changes.

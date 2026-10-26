@@ -18,7 +18,7 @@ await withBlockworksRuntime(async r=>{
  for(const kind of Object.keys(RACE_ITEMS)){
   const model=createRaceItemModel(kind);let meshes=0;model.traverse(o=>{if(o.isMesh)meshes++;});
   const size=new r.THREE.Box3().setFromObject(model).getSize(new r.THREE.Vector3());assert.ok(size.toArray().every(v=>Number.isFinite(v)&&v>0&&v<5));
-  if(kind!=='shield')assert.equal(meshes,1,'Solid items share one draw in world and HUD');models.push({kind,meshes});disposeRaceItemModel(model);
+  if(!['shield','tnt','nitro'].includes(kind))assert.equal(meshes,1,'Solid items share one draw in world and HUD');models.push({kind,meshes});disposeRaceItemModel(model);
  }
  reset();place(1,0,5);fire('green-shell');until(()=>race.riders[1].player.skateCameraBailing);assert.equal(race.riders[2].player.skateCameraBailing,false);
  reset();place(0,27,30);r.p.applyRaceImpulse(new r.THREE.Vector3(1,0,0),0);fire('green-shell');tick(5);

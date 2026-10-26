@@ -60,7 +60,7 @@ try{
  const result=await page.evaluate(()=>{const g=window.__game,r=g.getSkateRace();return {level:g.getCurrentLevel().id,stamp:document.querySelector('.hud-build')?.textContent,...window.cartReview,checkpoints:g.getLevel().checkpoints.map(cp=>cp.active),hud:r.hud(),carts:r.carts.fleet.stats,riders:r.riders.map(r=>({id:r.id,finish:r.finish,falls:r.falls}))};});
  await page.screenshot({path:out+'/results.png'});await writeFile(out+'/report.json',JSON.stringify({done,drive,steering,braking,result,errors},null,2));
  if(preview)await writeFile(out+'/preview.jpg',Buffer.from(preview.split(',')[1],'base64'));console.log(JSON.stringify({done,riders:result.riders,errors}));
- assert.ok(done);assert.deepEqual(errors,[]);assert.match(result.stamp,/Codex\/sol fork/);assert.ok(result.carts.count>8);assert.ok(result.checkpoints.filter(Boolean).length>=4,'The full race earns reachable checkpoints; collisions may miss individual checkpoint crates');assert.ok(result.hud.boxes>=6,'Earned checkpoint crates count toward the gem');
+ assert.ok(done);assert.deepEqual(errors,[]);assert.match(result.stamp,/Codex\/sol fork/);assert.ok(result.carts.count>8);assert.equal(result.checkpoints.length,0,'Race levels have no checkpoint objects');
  await page.evaluate(()=>window.stopCartPilot());
  // A losing race correctly keeps the trial locked. Use an explicit test
  // fixture for solo recovery without manufacturing a campaign win.
@@ -69,7 +69,7 @@ try{
  else await page.evaluate(()=>{const r=window.__game.getSkateRace();r.canStartTimeTrial=()=>true;r.start('time-trial',0);});
  await page.waitForFunction(()=>window.__game.getSkateRace().mode==='time-trial'&&window.__game.getSkateRace().phase==='running',null,{timeout:30000});
  assert.equal(await page.evaluate(()=>window.__game.getSkateRace().carts.cartForRacer.length),1);
- await page.evaluate(()=>{const g=window.__game,r=g.getSkateRace(),cp=g.getLevel().checkpoints[2];g.player.resetRacePosition(g.getLevel(),cp.spawnPos.clone(),r.course.tangent(r.course.project(cp.spawnPos).s));});
+ await page.evaluate(()=>{const g=window.__game,r=g.getSkateRace(),at=r.course.length*.35;g.player.resetRacePosition(g.getLevel(),r.course.support(g.getLevel(),at),r.course.tangent(at));});
  await page.keyboard.down('ArrowUp');await page.keyboard.down('ArrowRight');await page.keyboard.down('Space');
  await page.waitForTimeout(6500);
  assert.equal(await page.evaluate(()=>window.__game.getSkateRace().riders[0].falls),0,'Tall stadium banks keep steering mistakes inside');
