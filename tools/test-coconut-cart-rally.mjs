@@ -6,7 +6,7 @@ await withBlockworksRuntime(async r=>{
  const {normalizeCustomLevelData}=await r.server.ssrLoadModule('/src/level.ts');
  assert.ok(normalizeCustomLevelData(r.source),'Source passes the editor/save contract');
  const race=new SkateRace(r.scene,r.p,false,()=>true);race.attach(r.l,'coconut-cart-rally');race.start('race',0);
- assert.equal(race.carts.fleet.physics.stableLandings,true);assert.equal(race.carts.fleet.physics.gravity,11.5);
+ assert.equal(race.carts.fleet.physics.stableLandings,true);assert.equal(race.carts.fleet.physics.gravity,24);
  const gapFlights=new Set(),jumpSpans=r.source.skateRace.jumps.map(j=>[race.course.project(new r.p.pos.constructor(...j.takeoff)).s,race.course.project(new r.p.pos.constructor(...j.landing)).s]);
  const pipeChecks=r.sourceModule.CART_RALLY_PIPES.map(([a,b])=>{const centre=r.sourceModule.cartRallyPoint((a+b)/2),edge=r.sourceModule.cartRallyPoint((a+b)/2,26.8);const height=race.carts.ground(edge[0],edge[2]).height-race.carts.ground(centre[0],centre[2]).height;assert.ok(height>6,'Actual half-pipe collision climbs above the trough');return height;});
  const tuning=JSON.stringify(r.TUNING),samples=[],air=race.riders.map(()=>({frames:0,max:0,jumps:0})),wasAir=race.riders.map(()=>false);
@@ -31,7 +31,7 @@ await withBlockworksRuntime(async r=>{
  assert.ok(report.riders[0].falls<=5,'The mayhem race stays recoverable after weapon hits');
  assert.ok(report.riders.every(a=>a.falls<=8),'Rivals recover from racing collisions without a failure loop');
  assert.equal(gapFlights.size,12,'Every dirt double offers genuine flight');
- assert.ok(air[0].max>3,'Large jumps produce meaningful height');
+ assert.ok(air[0].max>1,'Dirt jumps still lift the kart clear of the track');
  assert.equal(report.tuningUnchanged,true);
  report.checkpoints=r.l.checkpoints.length;assert.equal(report.checkpoints,0,'Race courses contain no checkpoints');
  console.log('PASS golf-cart race',JSON.stringify(report.riders));

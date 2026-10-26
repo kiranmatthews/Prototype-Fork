@@ -80,7 +80,7 @@ export class GolfCartPhysics {
       const wasGrounded=c.grounded,terrainVelocity=clamp((floor-c.supportHeight)/dt,-Math.max(10,this.maxLaunchVelocity+2),Math.max(10,this.maxLaunchVelocity+2));
       // Explicit finite road samples also release a chassis over a lower floor.
       if(wasGrounded&&(!supported||g.supported!==undefined&&floor<c.y-.45)){c.vy=Math.max(0,Math.min(this.maxLaunchVelocity,c.supportVelocity));c.grounded=false;c.airborneCount++;}
-      else if(this.crestLaunch&&wasGrounded&&c.landingTime===0&&c.supportVelocity>1.2&&terrainVelocity<c.supportVelocity-.6&&Math.abs(forward)>5){c.vy=Math.min(this.maxLaunchVelocity,c.supportVelocity*1.65+1.0);c.grounded=false;c.airborneCount++;}
+      else if(this.crestLaunch&&wasGrounded&&c.landingTime===0&&c.supportVelocity>1.2&&terrainVelocity<c.supportVelocity-.6&&Math.abs(forward)>5){c.vy=Math.min(this.maxLaunchVelocity,c.supportVelocity*(this.stableLandings?1.05:1.65)+(this.stableLandings?.3:1.0));c.grounded=false;c.airborneCount++;}
       if(c.grounded){c.y=floor;c.vy=0;}else{
         c.vy-=this.gravity*dt;c.y+=c.vy*dt;c.airTime+=dt;
         if(supported&&c.y<=floor+.005&&c.vy<=0){
@@ -155,7 +155,13 @@ export class GolfCartPhysics {
     const impulse=-(1+CART_PHYSICS.restitution)*relative/(inv*(b?2:1)+ca*ca*invI+(b?cb*cb*invI:0));
     a.vx+=nx*impulse*inv;a.vz+=nz*impulse*inv;a.yawRate=clamp(a.yawRate+ca*impulse*invI,-3,3);
     if(b){b.vx-=nx*impulse*inv;b.vz-=nz*impulse*inv;b.yawRate=clamp(b.yawRate-cb*impulse*invI,-3,3);}
-    if(damage&&-relative>2.1){this.damage(ia,-relative,x,z,undefined,ib);if(ib!==null)this.damage(ib,-relative,x,z,undefined,ia);}
+    if(damage&&-relative>2.1){
+      // The planar contact solver sees landing overlaps as side hits. They still
+      // shunt/dent the cars, but cannot turn a descending chassis into a barrel roll.
+      const landing=(c:CartState)=>c.landingTime>0||(!c.grounded&&c.airTime>.08&&c.vy<-1);
+      const reaction=!this.stableLandings||!!b&&!landing(a)&&!landing(b);
+      this.damage(ia,-relative,x,z,undefined,ib,reaction);if(ib!==null)this.damage(ib,-relative,x,z,undefined,ia,reaction);
+    }
   }
   damage(index:number,strength:number,x:number,z:number,panel?:0|1|2,other:number|null=null,collisionReaction=true){
     const c=this.carts[index];if(c.cooldown>0||!Number.isFinite(strength))return;
@@ -167,7 +173,7 @@ export class GolfCartPhysics {
     if(!collisionReaction)return;
     const localX=(x-c.x)*Math.cos(c.yaw)-(z-c.z)*Math.sin(c.yaw);
     if(strength>CART_PHYSICS.rollImpact&&Math.abs(localX)>.5&&Math.abs(localX)>Math.abs(localZ)*1.25)this.rollover(index,-Math.sign(localX),strength);
-    else if(strength>6.5&&c.grounded&&!c.tumbling){c.vy=Math.min(3.6,strength*.21);c.grounded=false;c.airborneCount++;}
+    else if(!this.stableLandings&&strength>6.5&&c.grounded&&!c.tumbling){c.vy=Math.min(3.6,strength*.21);c.grounded=false;c.airborneCount++;}
   }
   private rollover(index:number,sign:number,strength:number){const c=this.carts[index];if(c.tumbling||c.rollCooldown>0)return;c.tumbling=true;c.tumbleAngle=sign*.05;c.tumbleVelocity=sign*(4.2+Math.min(strength,16)*.14);c.tumbleTime=0;c.rollCooldown=7;c.rolls++;c.vy=Math.max(c.vy,2.8);c.grounded=false;c.vx*=.85;c.vz*=.85;}
   /** Controlled external impulse for player attacks; bounded to preserve solver stability. */

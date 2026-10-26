@@ -48,8 +48,8 @@ try{
  }
  const report=await page.evaluate(()=>{const g=window.__game,r=g.getSkateRace(),w=r.carts.fleet.physics;return {...window.cartLandingReview,stamp:document.querySelector('.hud-build')?.textContent,gravity:w.gravity,stableLandings:w.stableLandings,mode:r.mode,racers:r.carts.cartForRacer.length,falls:r.riders[0].falls,frame:g.getRenderFrameStats(),glError:g.renderer.getContext().getError()};});
  await writeFile(`${out}/report.json`,JSON.stringify({...report,errors},null,2));
- assert.equal(report.mode,'time-trial');assert.equal(report.racers,1);assert.equal(report.stableLandings,true);assert.equal(report.gravity,11.5);assert.equal(report.rebounds,0);assert.equal(report.falls,0);
- assert.ok(report.landed-report.takeoff>1.5,'Full-render dirt jump has floaty airtime');
+ assert.equal(report.mode,'time-trial');assert.equal(report.racers,1);assert.equal(report.stableLandings,true);assert.equal(report.gravity,24);assert.equal(report.rebounds,0);assert.equal(report.falls,0);
+ assert.ok(report.landed-report.takeoff>.35&&report.landed-report.takeoff<1.6,'Full-render dirt jump has a short airtime');
  assert.ok(report.samples.every(s=>s.rolls===0));assert.ok(report.samples[1].compression>.06,'Heavy touchdown compresses the suspension');
  assert.ok(report.samples[2].compression<.006,'Suspension settles in a quarter second');
  assert.match(report.stamp,/Codex\/sol fork/);assert.equal(report.glError,0);assert.deepEqual(errors,[]);

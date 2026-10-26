@@ -1,7 +1,7 @@
 import type { CustomComponent, CustomLevelData } from '../level';
 import type { RaceKnot } from '../race/types';
 import { lazySourceField } from './lazy-source';
-import { CART_RALLY_LENGTH,CART_RALLY_JUMPS,CART_RALLY_SUPPLY_ROWS,STADIUM,cartRallyPoint,cartRallyFrame,stadiumPoint,stadiumSections,stadiumBoundaryPaths } from './cart-stadium-layout';
+import { CART_RALLY_LENGTH,CART_RALLY_JUMPS,CART_RALLY_SUPPLY_ROWS,CART_RALLY_CORNERS,STADIUM,cartRallyPoint,cartRallyFrame,stadiumPoint,stadiumSections,stadiumBoundaryPaths } from './cart-stadium-layout';
 export { CART_RALLY_LENGTH,CART_RALLY_JUMPS,CART_RALLY_PIPES,CART_RALLY_SUPPLY_ROWS,cartRallyPoint } from './cart-stadium-layout';
 const line:RaceKnot[]=[];
 for(let s=18;s<=CART_RALLY_LENGTH;s+=2)line.push([...cartRallyPoint(s),34]);
@@ -66,10 +66,19 @@ function build():CustomComponent[]{
       add({t:'platform',nm:'Floodlight head',p:[q[0],q[1]+20,q[2]],s:[1.3,2.6,7],yaw,color:'#fff1c2',emissive:'#ffcb71',tex:'solid',solid:false});
     }
   }
-  for(const [index,s]of [90,390,760,920,1300,1470,1830,2020].entries()){
+  for(const [index,s]of [70,670,1230,1790,2250].entries()){
     const side=index%2?1:-1,p=cartRallyPoint(s,side*10);
-    add({t:'wall',nm:'Stadium tyre-colour chicane',p,s:[4,1.5,3],yaw:0,color:'#4b5351',tex:'solid'});
+    add({t:'wall',nm:'Stadium tyre-colour chicane',p,s:[4,1.5,3],yaw:-Math.atan(cartRallyFrame(s).dx)*180/Math.PI,color:'#4b5351',tex:'solid'});
     strip('Soft dirt chicane',s-9,s+14,side>0?[-14,-10,-6,-3]:[3,6,10,14],'#805235',true,.04);
+  }
+  for(const [i,s]of CART_RALLY_CORNERS.entries()){
+    const side=i%2?-1:1;
+    // Chunky repeated chevrons follow each outside wall and show the turn early.
+    for(let d=-60;d<=60;d+=12){
+      const at=s+d,p=stadiumPoint(at,side*27.05,11.8),f=cartRallyFrame(at);
+      const vertices=[[-1.5,-1],[-.6,-1],[.8,0],[-.6,1],[-1.5,1],[-.1,0]].flatMap(([along,y])=>[along*f.dx/f.n,y,-along/f.n]);
+      add({t:'mesh',nm:'Sharp turn chevron',p,vertices,indices:[0,1,5,1,2,5,2,3,5,3,4,5],doubleSided:true,color:'#fff2b5',emissive:'#5a4114',tex:'solid',solid:false});
+    }
   }
   for(const [i,j]of CART_RALLY_JUMPS.entries()){
     for(let s=j.start-16;s<j.start-3;s+=5)strip('Painted dirt launch marks',s,s+.9,[-12,0,12],'#e9c688',false,.045,false);
@@ -79,7 +88,7 @@ function build():CustomComponent[]{
   for(const s of CART_RALLY_SUPPLY_ROWS){for(const u of [-6,0,6])add({t:'crate',kind:'empty',p:cartRallyPoint(s+8,u),nm:'Rally box gem crate'});}
   for(let s=0;s<=CART_RALLY_LENGTH+35;s+=16)add({t:'camnode',p:cartRallyPoint(s),nm:'Rally chase camera'});
   add({t:'gate',p:cartRallyPoint(CART_RALLY_LENGTH),yaw:-Math.atan(cartRallyFrame(CART_RALLY_LENGTH).dx)*180/Math.PI,nm:'Coconut Cart Rally finish'});
-  add({t:'pit',p:[0,-35,-CART_RALLY_LENGTH/2],s:[600,1,CART_RALLY_LENGTH+160],invisible:true,nm:'Stadium emergency recovery'});
+  add({t:'pit',p:[240,-35,-CART_RALLY_LENGTH/2],s:[850,1,CART_RALLY_LENGTH+160],invisible:true,nm:'Stadium emergency recovery'});
   return c;
 }
 export const COCONUT_CART_RALLY_LEVEL:CustomLevelData={

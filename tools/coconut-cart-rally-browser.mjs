@@ -74,7 +74,10 @@ try{
  await page.waitForTimeout(6500);
  assert.equal(await page.evaluate(()=>window.__game.getSkateRace().riders[0].falls),0,'Tall stadium banks keep steering mistakes inside');
  await page.keyboard.up('ArrowUp');await page.keyboard.up('ArrowRight');await page.keyboard.up('Space');
+ // Coasting is intentionally slow; use the real brake before inspecting support.
+ await page.keyboard.down('KeyQ');
  await page.waitForFunction(()=>window.__game.player.grounded&&Math.abs(window.__game.player.speed)<1,null,{timeout:10000});
+ await page.keyboard.up('KeyQ');
  const recovery=await page.evaluate(()=>{const g=window.__game,r=g.getSkateRace();return {pos:g.player.pos.toArray(),anchor:r.riders[0].anchor.toArray(),falls:r.riders[0].falls,clock:g.player.ttTime,supported:r.carts.ground(g.player.pos.x,g.player.pos.z).safe};});
  assert.ok(recovery.supported&&recovery.clock>0);await page.screenshot({path:out+'/recovery.png'});
  await writeFile(out+'/report.json',JSON.stringify({done,drive,steering,braking,result,recovery,errors},null,2));assert.deepEqual(errors,[]);console.log('PASS keyboard drive/steer/brake/coast, complete race, trial restart and supported stadium containment');

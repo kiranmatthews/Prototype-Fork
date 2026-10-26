@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { STADIUM,stadiumSections,stadiumPoint,cartRallyFrame } from '../levels/cart-stadium-layout';
 import { coloured,merged,strut,placed } from './geometry';
+import { characterElasticityAmplitudes } from '../animation/elasticity';
 
 /** Static instance buffers + one GPU time uniform. No per-spectator objects,
  * skeletons, CPU animation, billboards or distance-dependent geometry swaps. */
@@ -17,31 +18,90 @@ export class StadiumCrowd {
   constructor(){
     this.root.name='Stadium crowd · GPU cheering';
     const parts:THREE.BufferGeometry[]=[];
-    const part=(g:THREE.BufferGeometry,color:string,cloth=0,arm=0)=>{
-      g=coloured(g,color);g.setAttribute('crowdCloth',new THREE.Float32BufferAttribute(new Array(g.attributes.position.count).fill(cloth),1));g.setAttribute('crowdArm',new THREE.Float32BufferAttribute(new Array(g.attributes.position.count).fill(arm),1));parts.push(g);
+    const part=(g:THREE.BufferGeometry,color:string,cloth=0,arm=0,segment=0)=>{
+      g=coloured(g,color);g.setAttribute('crowdCloth',new THREE.Float32BufferAttribute(new Array(g.attributes.position.count).fill(cloth),1));g.setAttribute('crowdArm',new THREE.Float32BufferAttribute(new Array(g.attributes.position.count).fill(arm),1));g.setAttribute('crowdSegment',new THREE.Float32BufferAttribute(new Array(g.attributes.position.count).fill(segment),1));parts.push(g);
     };
     part(placed(new THREE.CylinderGeometry(.23,.19,.55,6),[0,.79,0]),'#ffffff',1);
-    part(placed(new THREE.IcosahedronGeometry(.205,1).scale(.84,1.13,.88),[0,1.27,-.04]),'#d9ac84');
-    part(placed(new THREE.SphereGeometry(.21,8,4,0,Math.PI*2,0,Math.PI/2).scale(.9,.7,.95),[0,1.37,-.02]),'#403a33');
+    part(placed(new THREE.IcosahedronGeometry(.205,1).scale(.84,1.13,.88),[0,1.27,-.04]),'#d9ac84',0,0,1);
+    part(placed(new THREE.SphereGeometry(.21,8,4,0,Math.PI*2,0,Math.PI/2).scale(.9,.7,.95),[0,1.37,-.02]),'#403a33',0,0,1);
     for(const side of [-1,1]){
-      part(strut([side*.12,.51,0],[side*.14,.47,-.28],.085,5),'#3e4551');
-      part(strut([side*.14,.47,-.28],[side*.14,.10,-.32],.068,5),'#3e4551');
-      part(placed(new THREE.BoxGeometry(.16,.12,.28),[side*.14,.065,-.38]),'#e9dfc5');
-      part(strut([side*.22,1.02,0],[side*.39,1.30,-.02],.07,5),'#ffffff',1,side);
-      part(strut([side*.39,1.30,-.02],[side*.43,1.59,-.07],.058,5),'#d9ac84',0,side);
-      part(placed(new THREE.IcosahedronGeometry(.085,0),[side*.43,1.63,-.07]),'#d9ac84',0,side);
-      part(placed(new THREE.BoxGeometry(.035,.038,.025),[side*.07,1.30,-.211]),'#302b2a');
+      part(strut([side*.12,.51,0],[side*.14,.47,-.28],.085,5),'#3e4551',0,0,4);
+      part(strut([side*.14,.47,-.28],[side*.14,.10,-.32],.068,5),'#3e4551',0,0,5);
+      part(placed(new THREE.BoxGeometry(.16,.12,.28),[side*.14,.065,-.38]),'#e9dfc5',0,0,6);
+      part(strut([side*.22,1.02,0],[side*.39,1.30,-.02],.07,5),'#ffffff',1,side,2);
+      part(strut([side*.39,1.30,-.02],[side*.43,1.59,-.07],.058,5),'#d9ac84',0,side,3);
+      part(placed(new THREE.IcosahedronGeometry(.085,0),[side*.43,1.63,-.07]),'#d9ac84',0,side,3);
+      part(placed(new THREE.BoxGeometry(.035,.038,.025),[side*.07,1.30,-.211]),'#302b2a',0,0,1);
     }
-    this.geometry=merged(parts);this.geometry.boundingSphere=new THREE.Sphere(new THREE.Vector3(0,.9,0),1.2);
+    this.geometry=merged(parts);this.geometry.boundingSphere=new THREE.Sphere(new THREE.Vector3(0,1.25,0),1.9);
     this.material=new THREE.MeshLambertMaterial({vertexColors:true});
+    const elasticity=characterElasticityAmplitudes('jump');
     this.material.onBeforeCompile=shader=>{
       shader.uniforms.crowdTime=this.time;
-      shader.vertexShader=shader.vertexShader.replace('#include <common>',`#include <common>\nuniform float crowdTime; attribute float crowdCloth; attribute float crowdArm;`)
-        .replace('#include <color_vertex>',`#include <color_vertex>\n#ifdef USE_INSTANCING_COLOR\nvColor.rgb = color * mix(vec3(1.0), instanceColor, crowdCloth);\n#endif`)
-        .replace('#include <beginnormal_vertex>',`#include <beginnormal_vertex>\nfloat crowdPhase = dot(instanceMatrix[3].xz, vec2(.731,.193));\nfloat cheer = (.25*sin(crowdTime*3.4+crowdPhase)+.12*sin(crowdTime*5.1+crowdPhase*1.7))*abs(crowdArm);\nmat2 cheerRotation = mat2(cos(cheer),sin(cheer),-sin(cheer),cos(cheer));\nobjectNormal.xy = cheerRotation*objectNormal.xy;`)
-        .replace('#include <begin_vertex>',`#include <begin_vertex>\nvec2 shoulder = vec2(crowdArm*.22,1.02);\ntransformed.xy = shoulder + cheerRotation*(transformed.xy-shoulder);`);
+      shader.uniforms.crowdElasticity={value:new THREE.Vector3(...elasticity.slice(0,3) as [number,number,number])};
+      shader.vertexShader=shader.vertexShader.replace('#include <common>',`#include <common>
+        uniform float crowdTime; uniform vec3 crowdElasticity;
+        attribute float crowdCloth; attribute float crowdArm; attribute float crowdSegment;
+        mat2 crowdTurn(float a){return mat2(cos(a),sin(a),-sin(a),cos(a));}
+        void crowdPose(inout vec3 p,inout vec3 n){
+          float seed=fract(sin(dot(instanceMatrix[3].xz,vec2(.731,.193)))*43758.5453);
+          float phase=seed*6.283185;
+          float wave=pow(max(0.0,sin(crowdTime*2.3+instanceMatrix[3].z*.035)),4.0);
+          // Each cheer has anticipation, a big hop, compression and a finite rest.
+          float beat=fract(crowdTime*(.65+seed*.18)+seed);
+          float crouch=sin(clamp(beat/.16,0.0,1.0)*3.141593);
+          float flight=clamp((beat-.16)/.43,0.0,1.0);
+          float hop=4.0*flight*(1.0-flight)*(.36+.30*wave);
+          float settle=sin(clamp((beat-.59)/.17,0.0,1.0)*3.141593);
+          float strain=-crouch+.65*sin(flight*3.141593)-.7*settle;
+          float hipY=.51+.14*wave-.065*(crouch+settle);
+          float stretch=1.0+crowdElasticity.x*strain;
+          if(crowdSegment<3.5){
+            if(crowdSegment<.5){p.y=.51+(p.y-.51)*stretch;n.y/=stretch;}
+            else if(crowdSegment<1.5){p.y+=.55*(stretch-1.0);}
+            else{
+              vec2 shoulder=vec2(crowdArm*.22,1.02);
+              vec2 elbow=vec2(crowdArm*.39,1.30);
+              float armStretch=1.0+crowdElasticity.y*strain;
+              if(crowdSegment>2.5){
+                float forearmStretch=1.0+crowdElasticity.z*strain;
+                mat2 flex=crowdTurn(crowdArm*(.25+.65*sin(crowdTime*6.2+phase)));
+                p.xy=elbow+flex*(p.xy-elbow)*forearmStretch;
+                n.xy=flex*n.xy/forearmStretch;
+              }
+              mat2 cheer=crowdTurn(crowdArm*(.15+1.1*sin(crowdTime*4.7+phase)+.35*wave));
+              p.xy=shoulder+cheer*(p.xy-shoulder)*armStretch;
+              n.xy=cheer*n.xy/armStretch;
+              p.y+=.51*(stretch-1.0);
+            }
+            mat2 sway=crowdTurn(.22*sin(crowdTime*2.8+phase));
+            p.xy=vec2(0,.51)+sway*(p.xy-vec2(0,.51));n.xy=sway*n.xy;
+            p.y+=hipY-.51;
+          }else if(crowdSegment<5.5){
+            // Two-segment leg IK: soles stay on the step during anticipation and
+            // landing; only the cheer's actual hop lifts them off the concrete.
+            vec2 hip=vec2(hipY,0),ankle=vec2(.10,-.32),delta=ankle-hip;
+            float distance=length(delta),upper=length(vec2(-.04,-.28)),lower=length(vec2(-.37,-.04));
+            vec2 axis=delta/distance;
+            float along=(upper*upper-lower*lower+distance*distance)/(2.0*distance);
+            vec2 knee=hip+axis*along+vec2(-axis.y,axis.x)*sqrt(max(0.0,upper*upper-along*along));
+            vec2 origin=crowdSegment<4.5?vec2(.51,0):vec2(.47,-.28);
+            vec2 bind=crowdSegment<4.5?vec2(-.04,-.28):vec2(-.37,-.04);
+            vec2 target=crowdSegment<4.5?knee-hip:ankle-knee;
+            mat2 bend=crowdTurn(atan(target.y,target.x)-atan(bind.y,bind.x));
+            p.yz=(crowdSegment<4.5?hip:knee)+bend*(p.yz-origin);n.yz=bend*n.yz;
+          }
+          p.y+=hop;
+        }`)
+        .replace('#include <color_vertex>',`#include <color_vertex>
+#ifdef USE_INSTANCING_COLOR
+vColor.rgb = color * mix(vec3(1.0), instanceColor, crowdCloth);
+#endif`)
+        .replace('#include <beginnormal_vertex>',`#include <beginnormal_vertex>
+vec3 crowdPosition=position;crowdPose(crowdPosition,objectNormal);`)
+        .replace('#include <begin_vertex>',`vec3 transformed=crowdPosition;`);
     };
-    this.material.customProgramCacheKey=()=> 'stadium-spectators-v1';
+    this.material.customProgramCacheKey=()=> 'stadium-spectators-v2';
     this.seatGeometry=merged([placed(new THREE.BoxGeometry(.67,.11,.5),[0,.45,.02]),placed(new THREE.BoxGeometry(.67,.48,.11),[0,.69,.26])]);
     const dummy=new THREE.Object3D(),palette=['#ed754a','#4bafb4','#edc35b','#799cda','#eee3c4','#a16dba','#e4979d'],color=new THREE.Color();let total=0;
     for(const {start,end,side}of stadiumSections()){
@@ -60,7 +120,7 @@ export class StadiumCrowd {
       people.computeBoundingSphere();seats.computeBoundingSphere();people.castShadow=false;seats.castShadow=false;
       this.root.add(people,seats);this.sections.push(people);this.seats.push(seats);total+=positions.length;
     }
-    this.count=total;this.root.userData={spectators:total,sections:this.sections.length,animation:'GPU vertex arms',cpuPerFrame:'one time uniform',lod:false};
+    this.count=total;this.root.userData={spectators:total,sections:this.sections.length,animation:'GPU cheering hops, planted-leg IK, elastic arms and travelling stadium waves',cpuPerFrame:'one time uniform',lod:false};
   }
   update(time:number){this.time.value=time;}
   dispose(){for(const mesh of [...this.sections,...this.seats])mesh.dispose();this.geometry.dispose();this.material.dispose();this.seatGeometry.dispose();this.seatMaterial.dispose();this.root.clear();this.root.removeFromParent();}

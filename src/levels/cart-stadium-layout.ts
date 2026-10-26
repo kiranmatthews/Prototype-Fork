@@ -1,19 +1,24 @@
 /** Shared authored course frame for the dirt, safety walls and instanced spectators. */
 export type RallyPoint = [number,number,number];
 export const CART_RALLY_LENGTH=2320;
-export const CART_RALLY_JUMPS=[150,310,470,690,850,1010,1230,1390,1550,1770,1930,2090].map((s,i)=>({start:s,end:s+26+(i%3)*4,name:['Dirt double','Mud bowl','Coconut kicker'][i%3]}));
-export const CART_RALLY_PIPES=[[540,640],[1080,1180],[1620,1720],[2160,2260]] as const;
+export const CART_RALLY_JUMPS=[150,280,410,710,840,970,1270,1400,1530,1830,1970,2110].map((s,i)=>({start:s,end:s+26+(i%3)*4,name:['Dirt double','Mud bowl','Coconut kicker'][i%3]}));
+export const CART_RALLY_CORNERS=[570,1130,1690] as const;
+export const CART_RALLY_PIPES=CART_RALLY_CORNERS.map(s=>[s-88,s+88] as const);
 export const CART_RALLY_SUPPLY_ROWS=[80,410,790,1190,1710,2030];
 export const STADIUM={bankStart:17,bankRadius:10,wallOffset:27.4,wallTop:15,standStart:30,rows:9,rowDepth:1.25,rowRise:.85,sectionLength:48,seatSpacing:1.15} as const;
 const smooth=(x:number)=>{const t=Math.max(0,Math.min(1,x));return t*t*(3-2*t);};
 const round=(x:number)=>Math.round(x*1e5)/1e5;
-function centreX(s:number){return 60*Math.sin(s/240)+24*Math.sin(s/110);}
+// Three 90-degree elbows, with straight takeoff/landing lanes between them.
+// Integrating a smooth heading change keeps the inside banks/stands from folding:
+// minimum centre radius is 58.7m, beyond the outermost 42m grandstand edge.
 function routeX(s:number){
-  const jump=CART_RALLY_JUMPS.find(j=>s>j.start-55&&s<j.start+115);
-  if(!jump)return centreX(s);
-  const at=jump.start,dx=(centreX(at+.1)-centreX(at-.1))/.2;
-  const blend=smooth((s-at+55)/20)*smooth((at+115-s)/30);
-  return centreX(s)*(1-blend)+(centreX(at)+dx*(s-at))*blend;
+  let x=s;
+  for(const [i,centre]of CART_RALLY_CORNERS.entries()){
+    const start=centre-88,t=Math.max(0,Math.min(1,(s-start)/176));
+    const integral=176*(t*t*t-.5*t*t*t*t)+Math.max(0,s-start-176);
+    x+=(i%2?2:-2)*integral;
+  }
+  return x;
 }
 export function cartRallyFrame(s:number){const dx=(routeX(s+.05)-routeX(s-.05))/.1,n=Math.hypot(1,dx);return {x:routeX(s),dx,n,nx:1/n,nz:dx/n};}
 export function stadiumBase(s:number){return 25+1.5*Math.sin(s/210)+.8*Math.sin(s/73);}
