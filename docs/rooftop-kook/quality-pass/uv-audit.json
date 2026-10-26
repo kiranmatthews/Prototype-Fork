@@ -1,0 +1,777 @@
+{
+  "polygons": [
+    {
+      "name": "Coral Cove / 1 · building mass",
+      "wall": true,
+      "triangles": 44,
+      "minRatio": 0.999999805933926,
+      "maxRatio": 1.0000002891424453,
+      "samples": 1650
+    },
+    {
+      "name": "RR:0 roof",
+      "wall": false,
+      "sections": 6,
+      "triangles": 44,
+      "minRatio": 0.9454565408925568,
+      "maxRatio": 1.0618471963355949,
+      "samples": 1650
+    },
+    {
+      "name": "Coral Cove / 2 · building mass",
+      "wall": true,
+      "triangles": 20,
+      "minRatio": 0.9999998056555244,
+      "maxRatio": 1.0000002965893693,
+      "samples": 575
+    },
+    {
+      "name": "Coral Cove / 3 · building mass",
+      "wall": true,
+      "triangles": 36,
+      "minRatio": 0.9999997400954157,
+      "maxRatio": 1.0000029936012353,
+      "samples": 1833
+    },
+    {
+      "name": "Coral Cove / 4 · building mass",
+      "wall": true,
+      "triangles": 28,
+      "minRatio": 0.9999972050838193,
+      "maxRatio": 1.0000001344026475,
+      "samples": 1050
+    },
+    {
+      "name": "Coral Cove / 5 · building mass",
+      "wall": true,
+      "triangles": 28,
+      "minRatio": 0.9999983662769857,
+      "maxRatio": 1.000000146122072,
+      "samples": 1444
+    },
+    {
+      "name": "RR:4 roof",
+      "wall": false,
+      "sections": 4,
+      "triangles": 28,
+      "minRatio": 0.9597657288301494,
+      "maxRatio": 1.044434355508396,
+      "samples": 1444
+    },
+    {
+      "name": "Coral Cove / 6 · building mass",
+      "wall": true,
+      "triangles": 36,
+      "minRatio": 0.9999996118303673,
+      "maxRatio": 1.0000004632657025,
+      "samples": 1369
+    },
+    {
+      "name": "Coral Cove / 7 · building mass",
+      "wall": true,
+      "triangles": 28,
+      "minRatio": 0.9999997111521572,
+      "maxRatio": 1.0000036719885308,
+      "samples": 1634
+    },
+    {
+      "name": "RR:6 roof",
+      "wall": false,
+      "sections": 4,
+      "triangles": 28,
+      "minRatio": 0.9677226370294143,
+      "maxRatio": 1.0348535728994372,
+      "samples": 1634
+    },
+    {
+      "name": "Hydrangea Heights / 1 · building mass",
+      "wall": true,
+      "triangles": 44,
+      "minRatio": 0.9999997062401549,
+      "maxRatio": 1.000002436989045,
+      "samples": 2862
+    },
+    {
+      "name": "RR:7 roof",
+      "wall": false,
+      "sections": 6,
+      "triangles": 44,
+      "minRatio": 0.942675424910462,
+      "maxRatio": 1.065343668160916,
+      "samples": 2862
+    },
+    {
+      "name": "Hydrangea Heights / 2 · building mass",
+      "wall": true,
+      "triangles": 44,
+      "minRatio": 0.9999971733223849,
+      "maxRatio": 1.0000005996213706,
+      "samples": 2332
+    },
+    {
+      "name": "RR:8 roof",
+      "wall": false,
+      "sections": 6,
+      "triangles": 44,
+      "minRatio": 0.9515353818915637,
+      "maxRatio": 1.0541473225447717,
+      "samples": 2332
+    },
+    {
+      "name": "Hydrangea Heights / 3 · building mass",
+      "wall": true,
+      "triangles": 20,
+      "minRatio": 0.9999997128185725,
+      "maxRatio": 1.0000000955970985,
+      "samples": 600
+    },
+    {
+      "name": "RR:9 atrium entry",
+      "wall": false,
+      "sections": 3,
+      "triangles": 20,
+      "minRatio": 0.9680455598563413,
+      "maxRatio": 1.0342360715374357,
+      "samples": 600
+    },
+    {
+      "name": "Hydrangea Heights / 3 · building mass",
+      "wall": true,
+      "triangles": 20,
+      "minRatio": 0.9999999360056994,
+      "maxRatio": 1.0000000729229432,
+      "samples": 522
+    },
+    {
+      "name": "RR:9 atrium exit",
+      "wall": false,
+      "sections": 3,
+      "triangles": 20,
+      "minRatio": 0.980084181736331,
+      "maxRatio": 1.0207799560561328,
+      "samples": 522
+    },
+    {
+      "name": "Hydrangea Heights / 3 · building mass",
+      "wall": true,
+      "triangles": 20,
+      "minRatio": 0.9999997344611233,
+      "maxRatio": 1.000000102116929,
+      "samples": 253
+    },
+    {
+      "name": "RR:9 atrium gallery",
+      "wall": false,
+      "sections": 3,
+      "triangles": 20,
+      "minRatio": 0.9937608880817453,
+      "maxRatio": 1.0065230574308102,
+      "samples": 253
+    },
+    {
+      "name": "Hydrangea Heights / 3 · building mass",
+      "wall": true,
+      "triangles": 20,
+      "minRatio": 0.9999998649578125,
+      "maxRatio": 1.000000896185596,
+      "samples": 242
+    },
+    {
+      "name": "RR:9 atrium gallery",
+      "wall": false,
+      "sections": 3,
+      "triangles": 20,
+      "minRatio": 0.9934526093096185,
+      "maxRatio": 1.0068403995580533,
+      "samples": 242
+    },
+    {
+      "name": "Hydrangea Heights / 4 · building mass",
+      "wall": true,
+      "triangles": 36,
+      "minRatio": 0.9999994601734926,
+      "maxRatio": 1.0000011718278008,
+      "samples": 672
+    },
+    {
+      "name": "Hydrangea Heights / 5 · building mass",
+      "wall": true,
+      "triangles": 36,
+      "minRatio": 0.9999996377523264,
+      "maxRatio": 1.0000004184500206,
+      "samples": 1128
+    },
+    {
+      "name": "RR:11 roof",
+      "wall": false,
+      "sections": 5,
+      "triangles": 36,
+      "minRatio": 0.9325849772278799,
+      "maxRatio": 1.0800563147567301,
+      "samples": 1128
+    },
+    {
+      "name": "Hydrangea Heights / 6 · building mass",
+      "wall": true,
+      "triangles": 36,
+      "minRatio": 0.9999994281582518,
+      "maxRatio": 1.0000004765770827,
+      "samples": 1140
+    },
+    {
+      "name": "RR:12 roof",
+      "wall": false,
+      "sections": 5,
+      "triangles": 36,
+      "minRatio": 0.9345088782067362,
+      "maxRatio": 1.0771747982260427,
+      "samples": 1140
+    },
+    {
+      "name": "Hydrangea Heights / 7 · building mass",
+      "wall": true,
+      "triangles": 44,
+      "minRatio": 0.999999741329711,
+      "maxRatio": 1.000001169873298,
+      "samples": 3024
+    },
+    {
+      "name": "RR:13 roof",
+      "wall": false,
+      "sections": 6,
+      "triangles": 44,
+      "minRatio": 0.9222014989494002,
+      "maxRatio": 1.0937463119154083,
+      "samples": 3024
+    },
+    {
+      "name": "Hydrangea Heights / 8 · building mass",
+      "wall": true,
+      "triangles": 28,
+      "minRatio": 0.9999997118194885,
+      "maxRatio": 1.000002266871917,
+      "samples": 1292
+    },
+    {
+      "name": "Regatta Row / 1 · building mass",
+      "wall": true,
+      "triangles": 44,
+      "minRatio": 0.9999979770350155,
+      "maxRatio": 1.000003674508084,
+      "samples": 2640
+    },
+    {
+      "name": "RR:15 roof",
+      "wall": false,
+      "sections": 6,
+      "triangles": 44,
+      "minRatio": 0.9652528701781395,
+      "maxRatio": 1.0376543577965966,
+      "samples": 2640
+    },
+    {
+      "name": "Regatta Row / 2 · building mass",
+      "wall": true,
+      "triangles": 36,
+      "minRatio": 0.9999995903735686,
+      "maxRatio": 1.0000004427903668,
+      "samples": 1496
+    },
+    {
+      "name": "Regatta Row / 3 · building mass",
+      "wall": true,
+      "triangles": 28,
+      "minRatio": 0.9999999007676337,
+      "maxRatio": 1.0000018263011947,
+      "samples": 768
+    },
+    {
+      "name": "Regatta Row / 4 · building mass",
+      "wall": true,
+      "triangles": 36,
+      "minRatio": 0.9999997874941025,
+      "maxRatio": 1.000008240609851,
+      "samples": 1976
+    },
+    {
+      "name": "Regatta Row / 5 · building mass",
+      "wall": true,
+      "triangles": 36,
+      "minRatio": 0.9999993727040607,
+      "maxRatio": 1.0000002515148667,
+      "samples": 1444
+    },
+    {
+      "name": "Regatta Row / 6 · building mass",
+      "wall": true,
+      "triangles": 28,
+      "minRatio": 0.9999996895179418,
+      "maxRatio": 1.0000002197798452,
+      "samples": 540
+    },
+    {
+      "name": "Regatta Row / 7 · building mass",
+      "wall": true,
+      "triangles": 36,
+      "minRatio": 0.9999997189517983,
+      "maxRatio": 1.0000007913617934,
+      "samples": 1936
+    },
+    {
+      "name": "Pelican Point / 1 · building mass",
+      "wall": true,
+      "triangles": 44,
+      "minRatio": 0.9999997882819838,
+      "maxRatio": 1.0000004729920506,
+      "samples": 2397
+    },
+    {
+      "name": "RR:22 roof",
+      "wall": false,
+      "sections": 6,
+      "triangles": 44,
+      "minRatio": 0.9526492726828502,
+      "maxRatio": 1.0528940941147176,
+      "samples": 2397
+    },
+    {
+      "name": "Pelican Point / 2 · building mass",
+      "wall": true,
+      "triangles": 44,
+      "minRatio": 0.9999993225694747,
+      "maxRatio": 1.0000012024708602,
+      "samples": 2856
+    },
+    {
+      "name": "RR:23 roof",
+      "wall": false,
+      "sections": 6,
+      "triangles": 44,
+      "minRatio": 0.9508048460239267,
+      "maxRatio": 1.055070142771046,
+      "samples": 2856
+    },
+    {
+      "name": "Pelican Point / 3 · building mass",
+      "wall": true,
+      "triangles": 28,
+      "minRatio": 0.9999990259216972,
+      "maxRatio": 1.0000006454149601,
+      "samples": 945
+    },
+    {
+      "name": "RR:24 roof",
+      "wall": false,
+      "sections": 4,
+      "triangles": 28,
+      "minRatio": 0.9847504960695838,
+      "maxRatio": 1.0160437041915877,
+      "samples": 945
+    },
+    {
+      "name": "Pelican Point / 4 · building mass",
+      "wall": true,
+      "triangles": 44,
+      "minRatio": 0.9999997318586087,
+      "maxRatio": 1.000003223928073,
+      "samples": 2745
+    },
+    {
+      "name": "RR:25 roof",
+      "wall": false,
+      "sections": 6,
+      "triangles": 44,
+      "minRatio": 0.9831087607751654,
+      "maxRatio": 1.0175780861977446,
+      "samples": 2745
+    },
+    {
+      "name": "Pelican Point / 5 · building mass",
+      "wall": true,
+      "triangles": 28,
+      "minRatio": 0.9999998399067648,
+      "maxRatio": 1.0000002888258461,
+      "samples": 560
+    },
+    {
+      "name": "RR:26 roof",
+      "wall": false,
+      "sections": 4,
+      "triangles": 28,
+      "minRatio": 0.9864543215356171,
+      "maxRatio": 1.0142130099395996,
+      "samples": 560
+    },
+    {
+      "name": "Pelican Point / 6 · building mass",
+      "wall": true,
+      "triangles": 36,
+      "minRatio": 0.999999740999564,
+      "maxRatio": 1.0000003867304443,
+      "samples": 2346
+    },
+    {
+      "name": "RR:27 roof",
+      "wall": false,
+      "sections": 5,
+      "triangles": 36,
+      "minRatio": 0.9058403857938169,
+      "maxRatio": 1.1192656038123643,
+      "samples": 2346
+    },
+    {
+      "name": "Pelican Point / 7 · building mass",
+      "wall": true,
+      "triangles": 28,
+      "minRatio": 0.9999993569855155,
+      "maxRatio": 1.000000700573074,
+      "samples": 690
+    },
+    {
+      "name": "RR:28 roof",
+      "wall": false,
+      "sections": 4,
+      "triangles": 28,
+      "minRatio": 0.9333242311687507,
+      "maxRatio": 1.0775871698702781,
+      "samples": 690
+    },
+    {
+      "name": "Pelican Point / 8 · building mass",
+      "wall": true,
+      "triangles": 44,
+      "minRatio": 0.9999994852329319,
+      "maxRatio": 1.0000004765992143,
+      "samples": 1568
+    },
+    {
+      "name": "RR:29 roof",
+      "wall": false,
+      "sections": 6,
+      "triangles": 44,
+      "minRatio": 0.8916945741993588,
+      "maxRatio": 1.1431666180688398,
+      "samples": 1568
+    },
+    {
+      "name": "Pelican Point / 9 · building mass",
+      "wall": true,
+      "triangles": 28,
+      "minRatio": 0.9999997791904014,
+      "maxRatio": 1.0000002370853638,
+      "samples": 1184
+    },
+    {
+      "name": "Sailmaker Terrace / 1 · building mass",
+      "wall": true,
+      "triangles": 44,
+      "minRatio": 0.9999977406706615,
+      "maxRatio": 1.000000581489395,
+      "samples": 2600
+    },
+    {
+      "name": "RR:31 roof",
+      "wall": false,
+      "sections": 6,
+      "triangles": 44,
+      "minRatio": 0.9496942436085007,
+      "maxRatio": 1.0566088080861924,
+      "samples": 2600
+    },
+    {
+      "name": "Sailmaker Terrace / 2 · building mass",
+      "wall": true,
+      "triangles": 28,
+      "minRatio": 0.9999999357986636,
+      "maxRatio": 1.0000011680747811,
+      "samples": 750
+    },
+    {
+      "name": "Sailmaker Terrace / 3 · building mass",
+      "wall": true,
+      "triangles": 20,
+      "minRatio": 0.9999998129242688,
+      "maxRatio": 1.0000001601237258,
+      "samples": 528
+    },
+    {
+      "name": "RR:33 roof",
+      "wall": false,
+      "sections": 3,
+      "triangles": 20,
+      "minRatio": 0.9729953915107954,
+      "maxRatio": 1.0287376520993015,
+      "samples": 528
+    },
+    {
+      "name": "Sailmaker Terrace / 3 · building mass",
+      "wall": true,
+      "triangles": 20,
+      "minRatio": 0.9999998293829916,
+      "maxRatio": 1.0000002557884358,
+      "samples": 528
+    },
+    {
+      "name": "RR:33 roof",
+      "wall": false,
+      "sections": 3,
+      "triangles": 20,
+      "minRatio": 0.9835832824436586,
+      "maxRatio": 1.0170447186118072,
+      "samples": 528
+    },
+    {
+      "name": "Sailmaker Terrace / 4 · building mass",
+      "wall": true,
+      "triangles": 28,
+      "minRatio": 0.9999986538610188,
+      "maxRatio": 1.0000000383279364,
+      "samples": 1131
+    },
+    {
+      "name": "Sailmaker Terrace / 5 · building mass",
+      "wall": true,
+      "triangles": 52,
+      "minRatio": 0.9999986411530225,
+      "maxRatio": 1.0000006578837426,
+      "samples": 3445
+    },
+    {
+      "name": "RR:35 roof",
+      "wall": false,
+      "sections": 7,
+      "triangles": 52,
+      "minRatio": 0.9051331551933358,
+      "maxRatio": 1.1198779158446799,
+      "samples": 3445
+    },
+    {
+      "name": "Sailmaker Terrace / 6 · building mass",
+      "wall": true,
+      "triangles": 36,
+      "minRatio": 0.9999998087499028,
+      "maxRatio": 1.0000010653507838,
+      "samples": 1107
+    },
+    {
+      "name": "Sailmaker Terrace / 7 · building mass",
+      "wall": true,
+      "triangles": 36,
+      "minRatio": 0.9999996430821275,
+      "maxRatio": 1.0000007823171027,
+      "samples": 874
+    },
+    {
+      "name": "The Kook Club / 1 · building mass",
+      "wall": true,
+      "triangles": 44,
+      "minRatio": 0.9999994215584002,
+      "maxRatio": 1.000000287202458,
+      "samples": 1887
+    },
+    {
+      "name": "RR:38 roof",
+      "wall": false,
+      "sections": 6,
+      "triangles": 44,
+      "minRatio": 0.9478912605739572,
+      "maxRatio": 1.0589035659170116,
+      "samples": 1887
+    },
+    {
+      "name": "The Kook Club / 2 · building mass",
+      "wall": true,
+      "triangles": 28,
+      "minRatio": 0.9999988590113342,
+      "maxRatio": 1.0000002145382532,
+      "samples": 928
+    },
+    {
+      "name": "The Kook Club / 3 · building mass",
+      "wall": true,
+      "triangles": 28,
+      "minRatio": 0.9999996304807854,
+      "maxRatio": 1.000001437120528,
+      "samples": 1225
+    },
+    {
+      "name": "The Kook Club / 4 · building mass",
+      "wall": true,
+      "triangles": 28,
+      "minRatio": 0.9999999484219948,
+      "maxRatio": 1.000041280467612,
+      "samples": 837
+    },
+    {
+      "name": "RR:41 roof",
+      "wall": false,
+      "sections": 4,
+      "triangles": 28,
+      "minRatio": 0.9947858691535584,
+      "maxRatio": 1.00531858591969,
+      "samples": 837
+    },
+    {
+      "name": "The Kook Club / 5 · building mass",
+      "wall": true,
+      "triangles": 36,
+      "minRatio": 0.9999993929425486,
+      "maxRatio": 1.0000002292185743,
+      "samples": 1974
+    },
+    {
+      "name": "The Kook Club / 6 · building mass",
+      "wall": true,
+      "triangles": 52,
+      "minRatio": 0.9999990341787691,
+      "maxRatio": 1.0000007929855446,
+      "samples": 2961
+    },
+    {
+      "name": "RR:43 roof",
+      "wall": false,
+      "sections": 7,
+      "triangles": 52,
+      "minRatio": 0.9037888515999993,
+      "maxRatio": 1.120535232025965,
+      "samples": 2961
+    },
+    {
+      "name": "Garden island line / 1 · building mass",
+      "wall": true,
+      "triangles": 52,
+      "minRatio": 0.999999529402008,
+      "maxRatio": 1.0000006010406477,
+      "samples": 2968
+    },
+    {
+      "name": "RR:210 roof",
+      "wall": false,
+      "sections": 7,
+      "triangles": 52,
+      "minRatio": 0.9922027326659489,
+      "maxRatio": 1.2020771308457767,
+      "samples": 2968
+    },
+    {
+      "name": "Garden island line / 2 · building mass",
+      "wall": true,
+      "triangles": 36,
+      "minRatio": 0.9999993963165925,
+      "maxRatio": 1.000000403789758,
+      "samples": 630
+    },
+    {
+      "name": "RR:211 roof",
+      "wall": false,
+      "sections": 5,
+      "triangles": 36,
+      "minRatio": 0.9939155950725317,
+      "maxRatio": 1.00628908539987,
+      "samples": 630
+    },
+    {
+      "name": "Garden island line / 3 · building mass",
+      "wall": true,
+      "triangles": 52,
+      "minRatio": 0.9999994444178,
+      "maxRatio": 1.0000019381003353,
+      "samples": 884
+    },
+    {
+      "name": "Garden island line / 4 · building mass",
+      "wall": true,
+      "triangles": 44,
+      "minRatio": 0.9999994714888121,
+      "maxRatio": 1.0000027486176934,
+      "samples": 2115
+    },
+    {
+      "name": "RR:213 roof",
+      "wall": false,
+      "sections": 6,
+      "triangles": 44,
+      "minRatio": 0.9860254619932061,
+      "maxRatio": 1.2499235644556597,
+      "samples": 2115
+    },
+    {
+      "name": "Belvedere crystal line / 1 · building mass",
+      "wall": true,
+      "triangles": 44,
+      "minRatio": 0.999999696390208,
+      "maxRatio": 1.0000012953575759,
+      "samples": 1728
+    },
+    {
+      "name": "RR:230 roof",
+      "wall": false,
+      "sections": 6,
+      "triangles": 44,
+      "minRatio": 0.9999986736211769,
+      "maxRatio": 1.2489624466794886,
+      "samples": 1728
+    },
+    {
+      "name": "Belvedere crystal line / 2 · building mass",
+      "wall": true,
+      "triangles": 36,
+      "minRatio": 0.9999990022885272,
+      "maxRatio": 1.0000025047942793,
+      "samples": 962
+    },
+    {
+      "name": "RR:231 roof",
+      "wall": false,
+      "sections": 5,
+      "triangles": 36,
+      "minRatio": 0.9949398010902454,
+      "maxRatio": 1.0052591756684508,
+      "samples": 962
+    },
+    {
+      "name": "Belvedere crystal line / 3 · building mass",
+      "wall": true,
+      "triangles": 36,
+      "minRatio": 0.999996974226447,
+      "maxRatio": 1.0000594117648591,
+      "samples": 1260
+    },
+    {
+      "name": "Belvedere crystal line / 4 · building mass",
+      "wall": true,
+      "triangles": 28,
+      "minRatio": 0.9999995801485839,
+      "maxRatio": 1.0000002136427188,
+      "samples": 580
+    },
+    {
+      "name": "RR:233 roof",
+      "wall": false,
+      "sections": 4,
+      "triangles": 28,
+      "minRatio": 0.97908618480259,
+      "maxRatio": 1.0155820385102268,
+      "samples": 580
+    },
+    {
+      "name": "Belvedere crystal line / 5 · building mass",
+      "wall": true,
+      "triangles": 44,
+      "minRatio": 0.9999972195130807,
+      "maxRatio": 1.0000006778391226,
+      "samples": 1593
+    },
+    {
+      "name": "RR:234 roof",
+      "wall": false,
+      "sections": 6,
+      "triangles": 44,
+      "minRatio": 0.9999995778853337,
+      "maxRatio": 1.2989921720443693,
+      "samples": 1593
+    }
+  ],
+  "meshFaces": 12640,
+  "unchangedGameplay": true
+}

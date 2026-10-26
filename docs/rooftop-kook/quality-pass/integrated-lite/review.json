@@ -1,0 +1,253 @@
+{
+  "base": "http://127.0.0.1:5369",
+  "lite": true,
+  "native": false,
+  "scenes": [
+    {
+      "id": "roof-9",
+      "s": 493.19,
+      "route": "main",
+      "grounded": true,
+      "position": [
+        -218.85116567188138,
+        79.30000000596046,
+        -434.42055900907695
+      ],
+      "state": "ride",
+      "camera": [
+        -216.53364930051407,
+        86.30000000596046,
+        -423.15649589364455
+      ],
+      "assets": {
+        "components": 1493,
+        "placements": 1493,
+        "ready": 643,
+        "skipped": 140,
+        "draws": 204,
+        "triangles": 2335983,
+        "allLodTriangles": 2335983,
+        "cells": 433,
+        "residentCells": 204,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 7,
+        "textureMiB": 136.33,
+        "errors": [],
+        "windTime": 2.3833333333333298,
+        "weatherWind": {
+          "wind": [
+            5.5,
+            2.8
+          ],
+          "intensity": 0.86,
+          "time": 2.3833333333333298
+        }
+      },
+      "meshDetail": {
+        "native": 204,
+        "reduced": 0,
+        "automaticLod": 0
+      },
+      "buffer": [
+        720,
+        450
+      ],
+      "resolution": 720,
+      "crt": true,
+      "render": {
+        "frame": 458,
+        "calls": 406,
+        "triangles": 3640172,
+        "points": 0,
+        "lines": 0
+      },
+      "stamp": "Codex/sol fork · build 10-26 02:54 UTC"
+    },
+    {
+      "id": "roof-11",
+      "s": 610.9300000000001,
+      "route": "main",
+      "grounded": true,
+      "position": [
+        -222.60752608838453,
+        79.30000000596046,
+        -553.4667779816782
+      ],
+      "state": "ride",
+      "camera": [
+        -223.32191027284804,
+        86.30000000596046,
+        -541.9889883322296
+      ],
+      "assets": {
+        "components": 1493,
+        "placements": 1493,
+        "ready": 714,
+        "skipped": 140,
+        "draws": 225,
+        "triangles": 2617788,
+        "allLodTriangles": 2617788,
+        "cells": 433,
+        "residentCells": 225,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 7,
+        "textureMiB": 136.33,
+        "errors": [],
+        "windTime": 4.0666666666666575,
+        "weatherWind": {
+          "wind": [
+            5.5,
+            2.8
+          ],
+          "intensity": 0.86,
+          "time": 4.0666666666666575
+        }
+      },
+      "meshDetail": {
+        "native": 225,
+        "reduced": 0,
+        "automaticLod": 0
+      },
+      "buffer": [
+        720,
+        450
+      ],
+      "resolution": 720,
+      "crt": true,
+      "render": {
+        "frame": 666,
+        "calls": 408,
+        "triangles": 3731410,
+        "points": 0,
+        "lines": 0
+      },
+      "stamp": "Codex/sol fork · build 10-26 02:54 UTC"
+    },
+    {
+      "id": "roof-212",
+      "s": 576.1783,
+      "route": "fork-1",
+      "grounded": true,
+      "position": [
+        -252.26010320973015,
+        81.9840445974367,
+        -514.946798510952
+      ],
+      "state": "ride",
+      "camera": [
+        -251.12545298647106,
+        88.9840445974367,
+        -503.502910671985
+      ],
+      "assets": {
+        "components": 1493,
+        "placements": 1493,
+        "ready": 714,
+        "skipped": 140,
+        "draws": 225,
+        "triangles": 2617788,
+        "allLodTriangles": 2617788,
+        "cells": 433,
+        "residentCells": 225,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 7,
+        "textureMiB": 136.33,
+        "errors": [],
+        "windTime": 5.716666666666652,
+        "weatherWind": {
+          "wind": [
+            5.5,
+            2.8
+          ],
+          "intensity": 0.86,
+          "time": 5.716666666666652
+        }
+      },
+      "meshDetail": {
+        "native": 225,
+        "reduced": 0,
+        "automaticLod": 0
+      },
+      "buffer": [
+        720,
+        450
+      ],
+      "resolution": 720,
+      "crt": true,
+      "render": {
+        "frame": 775,
+        "calls": 375,
+        "triangles": 3663571,
+        "points": 0,
+        "lines": 0
+      },
+      "stamp": "Codex/sol fork · build 10-26 02:54 UTC"
+    },
+    {
+      "id": "roof-234",
+      "s": 1474.7284000000002,
+      "route": "fork-3",
+      "grounded": true,
+      "position": [
+        -162.0422290958415,
+        58.250000005960445,
+        -1193.031683758821
+      ],
+      "state": "ride",
+      "camera": [
+        -156.15377076824956,
+        65.25000000596044,
+        -1183.1536243074806
+      ],
+      "assets": {
+        "components": 1493,
+        "placements": 1493,
+        "ready": 811,
+        "skipped": 140,
+        "draws": 261,
+        "triangles": 3047717,
+        "allLodTriangles": 3047717,
+        "cells": 433,
+        "residentCells": 261,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 6,
+        "textureMiB": 263,
+        "errors": [],
+        "windTime": 7.366666666666646,
+        "weatherWind": {
+          "wind": [
+            5.5,
+            2.8
+          ],
+          "intensity": 0.86,
+          "time": 7.366666666666646
+        }
+      },
+      "meshDetail": {
+        "native": 261,
+        "reduced": 0,
+        "automaticLod": 0
+      },
+      "buffer": [
+        720,
+        450
+      ],
+      "resolution": 720,
+      "crt": true,
+      "render": {
+        "frame": 870,
+        "calls": 243,
+        "triangles": 4052896,
+        "points": 10,
+        "lines": 0
+      },
+      "stamp": "Codex/sol fork · build 10-26 02:54 UTC"
+    }
+  ],
+  "errors": [],
+  "failed": []
+}

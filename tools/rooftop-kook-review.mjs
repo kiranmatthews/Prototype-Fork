@@ -15,8 +15,8 @@ await page.route('**/rooftop-kook-fixture.js',r=>r.fulfill({contentType:'applica
 try{
  await page.goto(`${base}/?playtest&level=rooftop-relay${lite?'&lite':''}`,{waitUntil:'domcontentloaded',timeout:180000});
  await page.waitForFunction(()=>window.__game?.getCurrentLevel().id==='rooftop-relay'&&!window.__game.gameFlow.blocksGameplay,null,{timeout:180000});
- if(native)await page.evaluate(()=>{window.__game.renderQualitySettings.setRegularResolution(null);window.__game.crtGuestSettings.setEnabled(false);});
- const scenes=await page.evaluate(async()=>{const m=await import('/rooftop-kook-fixture.js');return m.ROOFTOP_DISTRICTS.flatMap(d=>[{id:`${d.index}-arrival`,s:d.a+6},{id:`${d.index}-vista`,s:m.ROOFTOP_ROOFS[d.first+2].a+12}]).concat(m.ROOFTOP_FORKS.flatMap(f=>[{id:`fork-${f.index}-split`,s:f.a+2,route:`fork-${f.index}`},{id:`fork-${f.index}-merge`,s:f.b-2,route:`fork-${f.index}`}]),[{id:'finish',s:m.ROOFTOP_LENGTH-28}]);});
+ await page.evaluate(native=>{window.__game.renderQualitySettings.setRegularResolution(native?null:720);window.__game.crtGuestSettings.setEnabled(!native);},native);
+ const scenes=await page.evaluate(async all=>{const m=await import('/rooftop-kook-fixture.js');const roofs=all?[...m.ROOFTOP_ROOFS,...m.ROOFTOP_BRANCH_ROOFS].map(r=>({id:`roof-${r.index}`,s:r.a+r.depth*.45,route:r.route<0?'main':`fork-${r.route}`})):m.ROOFTOP_DISTRICTS.flatMap(d=>[{id:`${d.index}-arrival`,s:d.a+6},{id:`${d.index}-vista`,s:m.ROOFTOP_ROOFS[d.first+2].a+12}]);return roofs.concat(m.ROOFTOP_FORKS.flatMap(f=>[{id:`fork-${f.index}-split`,s:f.a+2,route:`fork-${f.index}`},{id:`fork-${f.index}-merge`,s:f.b-2,route:`fork-${f.index}`}]),[{id:'finish',s:m.ROOFTOP_LENGTH-28}]);},process.argv.includes('--all-roofs'));
  const report={base,lite,native,scenes:[],errors,failed};
  for(const scene of scenes){
   if(process.env.ROOF_SCENES&&!process.env.ROOF_SCENES.split(',').includes(scene.id))continue;
