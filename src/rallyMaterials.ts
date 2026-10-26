@@ -29,9 +29,9 @@ export function createRallyDirt(map:THREE.Texture,color:string,vertexColors:bool
    float puddle=wetPatch*mix(.72,1.0,smoothstep(.19,.64,trackWide+.2*gravel));
    float shoulder=smoothstep(14.0,21.0,abs(soil.x));
    puddle*=1.0-shoulder;
-   float grain=(gravel-.5)*.14+(grit-.5)*.035;
-   diffuseColor.rgb*=mix(.88,1.23,broad)*(1.0+grain)*(1.0-track*.22);
-   diffuseColor.rgb=mix(diffuseColor.rgb,diffuseColor.rgb*vec3(.48,.49,.46),puddle*.78);
+   float grain=(gravel-.5)*.09+(grit-.5)*.018;
+   diffuseColor.rgb*=mix(.92,1.28,broad)*(1.0+grain)*(1.0-track*.22);
+   diffuseColor.rgb=mix(diffuseColor.rgb,diffuseColor.rgb*vec3(.53,.49,.43),puddle*.72);
    float soilHeight=(grain*.10-track*.035)*(1.0-puddle*.92);
   `);
   s.fragmentShader=s.fragmentShader.replace('#include <roughnessmap_fragment>',/* glsl */`
@@ -49,5 +49,5 @@ export function createRallyDirt(map:THREE.Texture,color:string,vertexColors:bool
    normal=normalize(abs(determinant)*normal-gradient);
   `);
  };
- m.customProgramCacheKey=()=> 'rally-wet-loam-v1';return m;
+ m.customProgramCacheKey=()=> 'rally-wet-loam-v2';return m;
 }

@@ -1,0 +1,95 @@
+{
+  "scope": "One visual pass, followed by one performance/stability pass with the complete check:all suite.",
+  "visualPass": {
+    "firstNativePlayableMinutes": 12.7,
+    "firstDrivingValidationMinutes": 14.9,
+    "palette": "Warmer orange loam, brighter blue sky and cool fill, saturated teal/gold festival cloth and structures. Wet reflections, fire, sun corona/lens ghosts and soft camera mud remain.",
+    "screenshots": [
+      "race-native.png",
+      "race-normal.png",
+      "cart-muddy-native.png",
+      "floodlights-native.png"
+    ],
+    "styleReference": "https://blog.activision.com/crash-bandicoot/2020-07/Crash-Bandicoot-4-Hands-On"
+  },
+  "requirements": {
+    "cartoonStyleNudge": {
+      "status": "verified visually at native 1600x900 and normal 720p",
+      "evidence": [
+        "production-browser.json",
+        "detail-browser.json"
+      ]
+    },
+    "mudTracks": {
+      "status": "verified",
+      "details": "Two real tyre histories per occupied grounded cart; no marks in air, at rest, during a rollover or across respawns. Course-local bounded pools retain trails for up to 110 seconds.",
+      "evidence": "mud-tracks.json"
+    },
+    "moreDirtBuildup": {
+      "status": "verified",
+      "details": "Faster accumulated mud; broader, lighter loam patches collect on lower panels and wheels, preserving green charge rings. Sixty-second driving fixture reaches full mud coverage.",
+      "evidence": [
+        "mechanics.json",
+        "cart-muddy-native.png"
+      ]
+    },
+    "thirtyPercentLessDurability": {
+      "status": "verified against published 714fc07a values",
+      "details": "Collision capacity 16 -> 11.2; direct weapon health loss 0.5 * power -> (0.5 / 0.7) * power. Both scale to 70% of previous durability.",
+      "evidence": "mechanics.json"
+    },
+    "bigStadiumLights": {
+      "status": "verified",
+      "details": "34 six-lamp towers, recessed silver reflectors, brass rims/visors, warm lenses, teal bracing and access ladders. No added real-time light or shadow passes.",
+      "evidence": "floodlights-native.png"
+    },
+    "performanceAndStabilityPass": {
+      "status": "verified",
+      "details": "Changed-range tyre uploads, hidden expired histories, shared floodlight vertices, single wetness sample per cart, no unchanged wear uploads. Five restarts retain 524 GPU geometries and 83 textures; all 24 history buffers disposed each time.",
+      "evidence": [
+        "mud-tracks.json",
+        "resource-lifecycle.json",
+        "simulation-before.json",
+        "simulation-after.json"
+      ]
+    },
+    "fullSuiteOnSecondPass": {
+      "status": "executed completely; not green",
+      "details": "201 commands: 161 passed, 40 failed. All 39 previous failures recur. One additional skate replay failure passes unchanged on isolated rerun.",
+      "evidence": "full-suite.json"
+    },
+    "desktopLoading": {
+      "status": "verified",
+      "details": "All 13 Chrome production startup/recovery scenarios pass; actual in-app browser title screen, rally grid, countdown and driving run with no warnings/errors.",
+      "evidence": [
+        "startup-browser.json",
+        "in-app-browser.json"
+      ]
+    },
+    "preserveHandlingMoundsAndEffects": {
+      "status": "verified",
+      "details": "All twelve full-height doubles passed with zero rolls/respawns; 2240 support samples pass. All eight racers finish full-render combat with zero falls; every rival fires. Controls, existing route and mound profiles unchanged.",
+      "evidence": [
+        "mechanics.json",
+        "focused-checks.json",
+        "full-race.json",
+        "lite-race.json"
+      ]
+    }
+  },
+  "performance": {
+    "tyreUploadBytes": 192,
+    "previousFullChunkUploadBytes": 98304,
+    "maxTrackAttributeBytes": 3833856,
+    "lightTriangleCount": 45288,
+    "lightVerticesBeforeIndexing": 135864,
+    "lightVerticesAfterIndexing": 36108,
+    "reviewedGridDrawCallsBefore": 576,
+    "reviewedGridDrawCallsAfter": 584,
+    "reviewedGridTrianglesBefore": 4858498,
+    "reviewedGridTrianglesAfter": 4868962,
+    "releaseBytes": 999069480,
+    "releaseByteLimit": 1000000000
+  },
+  "delivery": "Commit and Pages verification recorded in deployment.json after publication."
+}

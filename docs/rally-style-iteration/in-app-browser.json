@@ -1,0 +1,8 @@
+{
+  "base": "http://127.0.0.1:5498",
+  "titleScreen": "NEW GAME / LOAD GAME / OPTIONS",
+  "rally": "grid, race countdown, acceleration and active race observed",
+  "consoleWarnings": [],
+  "consoleErrors": [],
+  "screenshot": "race-in-app-browser.png"
+}

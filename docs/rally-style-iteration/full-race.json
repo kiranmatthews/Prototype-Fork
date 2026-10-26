@@ -1,0 +1,1117 @@
+{
+  "full": true,
+  "seed": 47531,
+  "starting": [
+    4.306401978675277,
+    5.803550358568319,
+    5.129267296751496,
+    1.5920159655250607,
+    3.056282569861505,
+    2.299290403267369,
+    1.1248994317185135,
+    3.5350690853456035
+  ],
+  "shots": [
+    {
+      "id": 3,
+      "time": 1.6166666666666658
+    },
+    {
+      "id": 6,
+      "time": 1.8999999999999981
+    },
+    {
+      "id": 5,
+      "time": 2.3166666666666633
+    },
+    {
+      "id": 4,
+      "time": 3.0833333333333273
+    },
+    {
+      "id": 0,
+      "time": 6.433333333333316
+    },
+    {
+      "id": 7,
+      "time": 7.98333333333331
+    },
+    {
+      "id": 1,
+      "time": 12.716666666666878
+    },
+    {
+      "id": 5,
+      "time": 12.783333333333548
+    },
+    {
+      "id": 3,
+      "time": 12.83333333333355
+    },
+    {
+      "id": 7,
+      "time": 21.883333333333372
+    },
+    {
+      "id": 0,
+      "time": 21.916666666666703
+    },
+    {
+      "id": 6,
+      "time": 23.583333333333275
+    },
+    {
+      "id": 4,
+      "time": 26.899999999999753
+    },
+    {
+      "id": 5,
+      "time": 27.2666666666664
+    },
+    {
+      "id": 1,
+      "time": 33.34999999999939
+    },
+    {
+      "id": 5,
+      "time": 33.63333333333271
+    },
+    {
+      "id": 6,
+      "time": 36.41666666666588
+    },
+    {
+      "id": 0,
+      "time": 44.9166666666654
+    },
+    {
+      "id": 2,
+      "time": 44.933333333332065
+    },
+    {
+      "id": 1,
+      "time": 47.1999999999986
+    },
+    {
+      "id": 4,
+      "time": 56.21666666666476
+    },
+    {
+      "id": 1,
+      "time": 59.766666666664555
+    },
+    {
+      "id": 0,
+      "time": 59.966666666664544
+    },
+    {
+      "id": 6,
+      "time": 61.96666666666443
+    },
+    {
+      "id": 3,
+      "time": 71.56666666666389
+    },
+    {
+      "id": 0,
+      "time": 80.7999999999967
+    },
+    {
+      "id": 1,
+      "time": 81.98333333332997
+    },
+    {
+      "id": 5,
+      "time": 82.13333333332996
+    },
+    {
+      "id": 3,
+      "time": 82.16666666666329
+    },
+    {
+      "id": 3,
+      "time": 94.88333333332923
+    },
+    {
+      "id": 0,
+      "time": 96.58333333332914
+    },
+    {
+      "id": 1,
+      "time": 96.58333333332914
+    },
+    {
+      "id": 3,
+      "time": 100.91666666666222
+    }
+  ],
+  "hits": [
+    {
+      "from": 3,
+      "id": 0,
+      "time": 1.6166666666666658,
+      "damage": 0.09999999999999998
+    },
+    {
+      "from": 6,
+      "id": 4,
+      "time": 2.2166666666666637,
+      "damage": 0.139
+    },
+    {
+      "from": 6,
+      "id": 0,
+      "time": 2.2999999999999967,
+      "damage": 0
+    },
+    {
+      "from": 5,
+      "id": 2,
+      "time": 2.3166666666666633,
+      "damage": 0.09999999999999998
+    },
+    {
+      "from": 5,
+      "id": 7,
+      "time": 2.8166666666666615,
+      "damage": 0.139
+    },
+    {
+      "from": 4,
+      "id": 6,
+      "time": 3.0833333333333273,
+      "damage": 0.139
+    },
+    {
+      "from": 0,
+      "id": 6,
+      "time": 6.799999999999981,
+      "damage": 0.139
+    },
+    {
+      "from": 7,
+      "id": 0,
+      "time": 8.18333333333332,
+      "damage": 0.139
+    },
+    {
+      "from": 1,
+      "id": 5,
+      "time": 12.916666666666888,
+      "damage": 0.139
+    },
+    {
+      "from": 3,
+      "id": 1,
+      "time": 13.03333333333356,
+      "damage": 0.139
+    },
+    {
+      "from": 5,
+      "id": 1,
+      "time": 13.183333333333568,
+      "damage": 0
+    },
+    {
+      "from": 0,
+      "id": 7,
+      "time": 22.183333333333355,
+      "damage": 0.13899999999999996
+    },
+    {
+      "from": 6,
+      "id": 7,
+      "time": 23.583333333333275,
+      "damage": 0.1
+    },
+    {
+      "from": 4,
+      "id": 2,
+      "time": 27.2666666666664,
+      "damage": 0.13900000000000004
+    },
+    {
+      "from": 5,
+      "id": 2,
+      "time": 27.549999999999716,
+      "damage": 0
+    },
+    {
+      "from": 6,
+      "id": 0,
+      "time": 36.716666666665866,
+      "damage": 0.13900000000000004
+    },
+    {
+      "from": 0,
+      "id": 2,
+      "time": 45.08333333333206,
+      "damage": 0.139
+    },
+    {
+      "from": 2,
+      "id": 0,
+      "time": 45.283333333332045,
+      "damage": 0.139
+    },
+    {
+      "from": 4,
+      "id": 3,
+      "time": 56.43333333333141,
+      "damage": 0.13900000000000004
+    },
+    {
+      "from": 1,
+      "id": 0,
+      "time": 60.1333333333312,
+      "damage": 0.139
+    },
+    {
+      "from": 6,
+      "id": 7,
+      "time": 62.14999999999775,
+      "damage": 0.139
+    },
+    {
+      "from": 3,
+      "id": 4,
+      "time": 71.9999999999972,
+      "damage": 0.029687138082978973
+    },
+    {
+      "from": 1,
+      "id": 4,
+      "time": 82.41666666666328,
+      "damage": null
+    },
+    {
+      "from": 3,
+      "id": 5,
+      "time": 82.66666666666326,
+      "damage": 0.139
+    },
+    {
+      "from": 5,
+      "id": 3,
+      "time": 82.66666666666326,
+      "damage": 0.0994953502740097
+    },
+    {
+      "from": 3,
+      "id": 0,
+      "time": 95.11666666666255,
+      "damage": 0.139
+    },
+    {
+      "from": 3,
+      "id": 0,
+      "time": 100.99999999999555,
+      "damage": 0.139
+    }
+  ],
+  "samples": [
+    {
+      "time": 3.516666666666659,
+      "finished": 0,
+      "shots": 4,
+      "damageHits": 5
+    },
+    {
+      "time": 4.533333333333323,
+      "finished": 0,
+      "shots": 4,
+      "damageHits": 5
+    },
+    {
+      "time": 5.549999999999986,
+      "finished": 0,
+      "shots": 4,
+      "damageHits": 5
+    },
+    {
+      "time": 6.566666666666649,
+      "finished": 0,
+      "shots": 5,
+      "damageHits": 5
+    },
+    {
+      "time": 7.583333333333312,
+      "finished": 0,
+      "shots": 5,
+      "damageHits": 6
+    },
+    {
+      "time": 8.600000000000007,
+      "finished": 0,
+      "shots": 6,
+      "damageHits": 7
+    },
+    {
+      "time": 9.633333333333391,
+      "finished": 0,
+      "shots": 6,
+      "damageHits": 7
+    },
+    {
+      "time": 10.633333333333441,
+      "finished": 0,
+      "shots": 6,
+      "damageHits": 7
+    },
+    {
+      "time": 11.633333333333491,
+      "finished": 0,
+      "shots": 6,
+      "damageHits": 7
+    },
+    {
+      "time": 12.650000000000208,
+      "finished": 0,
+      "shots": 6,
+      "damageHits": 7
+    },
+    {
+      "time": 13.666666666666925,
+      "finished": 0,
+      "shots": 9,
+      "damageHits": 9
+    },
+    {
+      "time": 14.683333333333643,
+      "finished": 0,
+      "shots": 9,
+      "damageHits": 9
+    },
+    {
+      "time": 15.683333333333692,
+      "finished": 0,
+      "shots": 9,
+      "damageHits": 9
+    },
+    {
+      "time": 16.700000000000333,
+      "finished": 0,
+      "shots": 9,
+      "damageHits": 9
+    },
+    {
+      "time": 17.700000000000276,
+      "finished": 0,
+      "shots": 9,
+      "damageHits": 9
+    },
+    {
+      "time": 18.716666666666885,
+      "finished": 0,
+      "shots": 9,
+      "damageHits": 9
+    },
+    {
+      "time": 19.733333333333494,
+      "finished": 0,
+      "shots": 9,
+      "damageHits": 9
+    },
+    {
+      "time": 20.750000000000103,
+      "finished": 0,
+      "shots": 9,
+      "damageHits": 9
+    },
+    {
+      "time": 21.766666666666712,
+      "finished": 0,
+      "shots": 9,
+      "damageHits": 9
+    },
+    {
+      "time": 22.78333333333332,
+      "finished": 0,
+      "shots": 11,
+      "damageHits": 10
+    },
+    {
+      "time": 23.79999999999993,
+      "finished": 0,
+      "shots": 12,
+      "damageHits": 11
+    },
+    {
+      "time": 24.799999999999873,
+      "finished": 0,
+      "shots": 12,
+      "damageHits": 11
+    },
+    {
+      "time": 25.81666666666648,
+      "finished": 0,
+      "shots": 12,
+      "damageHits": 11
+    },
+    {
+      "time": 26.849999999999756,
+      "finished": 0,
+      "shots": 12,
+      "damageHits": 11
+    },
+    {
+      "time": 27.8499999999997,
+      "finished": 0,
+      "shots": 14,
+      "damageHits": 12
+    },
+    {
+      "time": 28.86666666666631,
+      "finished": 0,
+      "shots": 14,
+      "damageHits": 12
+    },
+    {
+      "time": 29.883333333332917,
+      "finished": 0,
+      "shots": 14,
+      "damageHits": 12
+    },
+    {
+      "time": 30.899999999999526,
+      "finished": 0,
+      "shots": 14,
+      "damageHits": 12
+    },
+    {
+      "time": 31.916666666666135,
+      "finished": 0,
+      "shots": 14,
+      "damageHits": 12
+    },
+    {
+      "time": 32.91666666666608,
+      "finished": 0,
+      "shots": 14,
+      "damageHits": 12
+    },
+    {
+      "time": 33.949999999999356,
+      "finished": 0,
+      "shots": 16,
+      "damageHits": 12
+    },
+    {
+      "time": 34.966666666665965,
+      "finished": 0,
+      "shots": 16,
+      "damageHits": 12
+    },
+    {
+      "time": 35.983333333332574,
+      "finished": 0,
+      "shots": 16,
+      "damageHits": 12
+    },
+    {
+      "time": 36.98333333333252,
+      "finished": 0,
+      "shots": 17,
+      "damageHits": 13
+    },
+    {
+      "time": 37.999999999999126,
+      "finished": 0,
+      "shots": 17,
+      "damageHits": 13
+    },
+    {
+      "time": 38.99999999999907,
+      "finished": 0,
+      "shots": 17,
+      "damageHits": 13
+    },
+    {
+      "time": 40.01666666666568,
+      "finished": 0,
+      "shots": 17,
+      "damageHits": 13
+    },
+    {
+      "time": 41.03333333333229,
+      "finished": 0,
+      "shots": 17,
+      "damageHits": 13
+    },
+    {
+      "time": 42.03333333333223,
+      "finished": 0,
+      "shots": 17,
+      "damageHits": 13
+    },
+    {
+      "time": 43.04999999999884,
+      "finished": 0,
+      "shots": 17,
+      "damageHits": 13
+    },
+    {
+      "time": 44.06666666666545,
+      "finished": 0,
+      "shots": 17,
+      "damageHits": 13
+    },
+    {
+      "time": 45.08333333333206,
+      "finished": 0,
+      "shots": 19,
+      "damageHits": 14
+    },
+    {
+      "time": 46.099999999998666,
+      "finished": 0,
+      "shots": 19,
+      "damageHits": 15
+    },
+    {
+      "time": 47.116666666665274,
+      "finished": 0,
+      "shots": 19,
+      "damageHits": 15
+    },
+    {
+      "time": 48.13333333333188,
+      "finished": 0,
+      "shots": 20,
+      "damageHits": 15
+    },
+    {
+      "time": 49.14999999999849,
+      "finished": 0,
+      "shots": 20,
+      "damageHits": 15
+    },
+    {
+      "time": 50.149999999998435,
+      "finished": 0,
+      "shots": 20,
+      "damageHits": 15
+    },
+    {
+      "time": 51.166666666665044,
+      "finished": 0,
+      "shots": 20,
+      "damageHits": 15
+    },
+    {
+      "time": 52.18333333333165,
+      "finished": 0,
+      "shots": 20,
+      "damageHits": 15
+    },
+    {
+      "time": 53.19999999999826,
+      "finished": 0,
+      "shots": 20,
+      "damageHits": 15
+    },
+    {
+      "time": 54.21666666666487,
+      "finished": 0,
+      "shots": 20,
+      "damageHits": 15
+    },
+    {
+      "time": 55.23333333333148,
+      "finished": 0,
+      "shots": 20,
+      "damageHits": 15
+    },
+    {
+      "time": 56.23333333333142,
+      "finished": 0,
+      "shots": 21,
+      "damageHits": 15
+    },
+    {
+      "time": 57.24999999999803,
+      "finished": 0,
+      "shots": 21,
+      "damageHits": 16
+    },
+    {
+      "time": 58.26666666666464,
+      "finished": 0,
+      "shots": 21,
+      "damageHits": 16
+    },
+    {
+      "time": 59.28333333333125,
+      "finished": 0,
+      "shots": 21,
+      "damageHits": 16
+    },
+    {
+      "time": 60.29999999999786,
+      "finished": 0,
+      "shots": 23,
+      "damageHits": 17
+    },
+    {
+      "time": 61.31666666666447,
+      "finished": 0,
+      "shots": 23,
+      "damageHits": 17
+    },
+    {
+      "time": 62.31666666666441,
+      "finished": 0,
+      "shots": 24,
+      "damageHits": 18
+    },
+    {
+      "time": 63.33333333333102,
+      "finished": 0,
+      "shots": 24,
+      "damageHits": 18
+    },
+    {
+      "time": 64.33333333333097,
+      "finished": 0,
+      "shots": 24,
+      "damageHits": 18
+    },
+    {
+      "time": 65.34999999999758,
+      "finished": 0,
+      "shots": 24,
+      "damageHits": 18
+    },
+    {
+      "time": 66.34999999999752,
+      "finished": 0,
+      "shots": 24,
+      "damageHits": 18
+    },
+    {
+      "time": 67.36666666666413,
+      "finished": 0,
+      "shots": 24,
+      "damageHits": 18
+    },
+    {
+      "time": 68.36666666666407,
+      "finished": 0,
+      "shots": 24,
+      "damageHits": 18
+    },
+    {
+      "time": 69.38333333333068,
+      "finished": 0,
+      "shots": 24,
+      "damageHits": 18
+    },
+    {
+      "time": 70.39999999999729,
+      "finished": 0,
+      "shots": 24,
+      "damageHits": 18
+    },
+    {
+      "time": 71.39999999999723,
+      "finished": 0,
+      "shots": 24,
+      "damageHits": 18
+    },
+    {
+      "time": 72.41666666666384,
+      "finished": 0,
+      "shots": 25,
+      "damageHits": 19
+    },
+    {
+      "time": 73.43333333333045,
+      "finished": 0,
+      "shots": 25,
+      "damageHits": 19
+    },
+    {
+      "time": 74.44999999999706,
+      "finished": 0,
+      "shots": 25,
+      "damageHits": 19
+    },
+    {
+      "time": 75.46666666666367,
+      "finished": 0,
+      "shots": 25,
+      "damageHits": 19
+    },
+    {
+      "time": 76.48333333333028,
+      "finished": 0,
+      "shots": 25,
+      "damageHits": 19
+    },
+    {
+      "time": 77.49999999999689,
+      "finished": 0,
+      "shots": 25,
+      "damageHits": 19
+    },
+    {
+      "time": 78.49999999999683,
+      "finished": 0,
+      "shots": 25,
+      "damageHits": 19
+    },
+    {
+      "time": 79.51666666666344,
+      "finished": 0,
+      "shots": 25,
+      "damageHits": 19
+    },
+    {
+      "time": 80.53333333333005,
+      "finished": 0,
+      "shots": 25,
+      "damageHits": 19
+    },
+    {
+      "time": 81.54999999999666,
+      "finished": 0,
+      "shots": 26,
+      "damageHits": 19
+    },
+    {
+      "time": 82.56666666666327,
+      "finished": 0,
+      "shots": 29,
+      "damageHits": 19
+    },
+    {
+      "time": 83.58333333332988,
+      "finished": 0,
+      "shots": 29,
+      "damageHits": 21
+    },
+    {
+      "time": 84.59999999999648,
+      "finished": 0,
+      "shots": 29,
+      "damageHits": 21
+    },
+    {
+      "time": 85.6166666666631,
+      "finished": 0,
+      "shots": 29,
+      "damageHits": 21
+    },
+    {
+      "time": 86.6333333333297,
+      "finished": 0,
+      "shots": 29,
+      "damageHits": 21
+    },
+    {
+      "time": 87.63333333332965,
+      "finished": 0,
+      "shots": 29,
+      "damageHits": 21
+    },
+    {
+      "time": 88.64999999999625,
+      "finished": 0,
+      "shots": 29,
+      "damageHits": 21
+    },
+    {
+      "time": 89.66666666666286,
+      "finished": 0,
+      "shots": 29,
+      "damageHits": 21
+    },
+    {
+      "time": 90.68333333332947,
+      "finished": 0,
+      "shots": 29,
+      "damageHits": 21
+    },
+    {
+      "time": 91.69999999999608,
+      "finished": 0,
+      "shots": 29,
+      "damageHits": 21
+    },
+    {
+      "time": 92.69999999999602,
+      "finished": 0,
+      "shots": 29,
+      "damageHits": 21
+    },
+    {
+      "time": 93.71666666666263,
+      "finished": 0,
+      "shots": 29,
+      "damageHits": 21
+    },
+    {
+      "time": 94.73333333332924,
+      "finished": 0,
+      "shots": 29,
+      "damageHits": 21
+    },
+    {
+      "time": 95.74999999999585,
+      "finished": 0,
+      "shots": 30,
+      "damageHits": 22
+    },
+    {
+      "time": 96.7499999999958,
+      "finished": 0,
+      "shots": 32,
+      "damageHits": 22
+    },
+    {
+      "time": 97.7666666666624,
+      "finished": 0,
+      "shots": 32,
+      "damageHits": 22
+    },
+    {
+      "time": 98.78333333332901,
+      "finished": 0,
+      "shots": 32,
+      "damageHits": 22
+    },
+    {
+      "time": 99.79999999999562,
+      "finished": 1,
+      "shots": 32,
+      "damageHits": 22
+    },
+    {
+      "time": 100.81666666666223,
+      "finished": 1,
+      "shots": 32,
+      "damageHits": 22
+    },
+    {
+      "time": 101.83333333332884,
+      "finished": 1,
+      "shots": 33,
+      "damageHits": 23
+    },
+    {
+      "time": 102.84999999999545,
+      "finished": 1,
+      "shots": 33,
+      "damageHits": 23
+    },
+    {
+      "time": 103.86666666666206,
+      "finished": 1,
+      "shots": 33,
+      "damageHits": 23
+    },
+    {
+      "time": 104.88333333332866,
+      "finished": 1,
+      "shots": 33,
+      "damageHits": 23
+    },
+    {
+      "time": 105.89999999999527,
+      "finished": 2,
+      "shots": 33,
+      "damageHits": 23
+    },
+    {
+      "time": 106.91666666666188,
+      "finished": 2,
+      "shots": 33,
+      "damageHits": 23
+    },
+    {
+      "time": 107.93333333332849,
+      "finished": 2,
+      "shots": 33,
+      "damageHits": 23
+    },
+    {
+      "time": 108.9499999999951,
+      "finished": 2,
+      "shots": 33,
+      "damageHits": 23
+    },
+    {
+      "time": 109.96666666666171,
+      "finished": 2,
+      "shots": 33,
+      "damageHits": 23
+    },
+    {
+      "time": 110.98333333332832,
+      "finished": 3,
+      "shots": 33,
+      "damageHits": 23
+    },
+    {
+      "time": 111.98333333332826,
+      "finished": 3,
+      "shots": 33,
+      "damageHits": 23
+    },
+    {
+      "time": 112.99999999999487,
+      "finished": 3,
+      "shots": 33,
+      "damageHits": 23
+    },
+    {
+      "time": 113.99999999999481,
+      "finished": 3,
+      "shots": 33,
+      "damageHits": 23
+    },
+    {
+      "time": 115.01666666666142,
+      "finished": 4,
+      "shots": 33,
+      "damageHits": 23
+    },
+    {
+      "time": 116.03333333332803,
+      "finished": 5,
+      "shots": 33,
+      "damageHits": 23
+    },
+    {
+      "time": 117.04999999999464,
+      "finished": 6,
+      "shots": 33,
+      "damageHits": 23
+    },
+    {
+      "time": 118.06666666666125,
+      "finished": 6,
+      "shots": 33,
+      "damageHits": 23
+    },
+    {
+      "time": 119.06666666666119,
+      "finished": 6,
+      "shots": 33,
+      "damageHits": 23
+    },
+    {
+      "time": 120.0833333333278,
+      "finished": 6,
+      "shots": 33,
+      "damageHits": 23
+    },
+    {
+      "time": 121.09999999999441,
+      "finished": 6,
+      "shots": 33,
+      "damageHits": 23
+    },
+    {
+      "time": 122.11666666666102,
+      "finished": 6,
+      "shots": 33,
+      "damageHits": 23
+    },
+    {
+      "time": 123.11666666666096,
+      "finished": 6,
+      "shots": 33,
+      "damageHits": 23
+    },
+    {
+      "time": 124.14999999999424,
+      "finished": 6,
+      "shots": 33,
+      "damageHits": 23
+    },
+    {
+      "time": 125.14999999999418,
+      "finished": 6,
+      "shots": 33,
+      "damageHits": 23
+    },
+    {
+      "time": 126.16666666666079,
+      "finished": 7,
+      "shots": 33,
+      "damageHits": 23
+    },
+    {
+      "time": 127.16666666666073,
+      "finished": 7,
+      "shots": 33,
+      "damageHits": 23
+    },
+    {
+      "time": 128.18333333332748,
+      "finished": 7,
+      "shots": 33,
+      "damageHits": 23
+    },
+    {
+      "time": 129.03333333332816,
+      "finished": 8,
+      "shots": 33,
+      "damageHits": 23
+    }
+  ],
+  "stamp": "Codex/sol fork · build 10-26 17:38 UTC",
+  "glError": 0,
+  "stats": {
+    "steals": 0,
+    "ejections": 8,
+    "wrecks": 8,
+    "thrusters": 33,
+    "exits": 0,
+    "entries": 8
+  },
+  "riders": [
+    {
+      "id": 0,
+      "finish": 114.86666666666143,
+      "falls": 0
+    },
+    {
+      "id": 1,
+      "finish": 110.599999999995,
+      "falls": 0
+    },
+    {
+      "id": 2,
+      "finish": 99.34999999999565,
+      "falls": 0
+    },
+    {
+      "id": 3,
+      "finish": 115.03333333332809,
+      "falls": 0
+    },
+    {
+      "id": 4,
+      "finish": 116.0499999999947,
+      "falls": 0
+    },
+    {
+      "id": 5,
+      "finish": 105.38333333332864,
+      "falls": 0
+    },
+    {
+      "id": 6,
+      "finish": 125.94999999999413,
+      "falls": 0
+    },
+    {
+      "id": 7,
+      "finish": 129.03333333332816,
+      "falls": 0
+    }
+  ],
+  "errors": []
+}

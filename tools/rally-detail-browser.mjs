@@ -9,7 +9,7 @@ try{
  await page.evaluate(()=>{
   const g=window.__game,r=g.getSkateRace(),fleet=r.carts.fleet,c=fleet.physics.carts[0];window.detailReview={stage:'clean',render:g.renderer.render.bind(g.renderer)};
   g.renderer.render=(scene,camera)=>{
-   if(scene===g.scene){const stage=window.detailReview.stage;if(stage==='sky'){camera.position.set(c.x,c.y+4,c.z);camera.lookAt(c.x-.18*100,c.y+4+.16*100,c.z-.97*100);}else {const sn=Math.sin(c.yaw),cs=Math.cos(c.yaw);camera.position.set(c.x+cs*4.0+sn*4.1,c.y+3.0,c.z-sn*4.0+cs*4.1);camera.lookAt(c.x,c.y+1.45,c.z);}camera.updateMatrixWorld();}
+   if(scene===g.scene){const stage=window.detailReview.stage;if(stage==='lights'){const lamp=g.scene.getObjectByName('Floodlight warm lenses');lamp.geometry.computeBoundingBox();const at=lamp.geometry.boundingBox.getCenter(g.player.pos.clone()).applyMatrix4(lamp.matrixWorld);camera.position.copy(at).add({x:12,y:-4,z:9});camera.lookAt(at);}else if(stage==='sky'){camera.position.set(c.x,c.y+4,c.z);camera.lookAt(c.x-.18*100,c.y+4+.16*100,c.z-.97*100);}else {const sn=Math.sin(c.yaw),cs=Math.cos(c.yaw);camera.position.set(c.x+cs*4.0+sn*4.1,c.y+3.0,c.z-sn*4.0+cs*4.1);camera.lookAt(c.x,c.y+1.45,c.z);}camera.updateMatrixWorld();}
    return window.detailReview.render(scene,camera);
   };
  });await page.waitForTimeout(200);await page.screenshot({path:out+'/cart-clean-native.png'});
@@ -20,5 +20,6 @@ try{
  });await page.waitForTimeout(200);await page.screenshot({path:out+'/cart-muddy-scratched-native.png'});
  await page.evaluate(()=>{window.detailReview.stage='sky';});await page.waitForTimeout(200);await page.screenshot({path:out+'/clean-sky-sun-native.png'});
  const sky=await page.evaluate(()=>{const g=window.__game;return {look:g.getLookDiagnostics(),islandMist:g.scene.children.filter(o=>o.isMesh&&o.geometry.type==='SphereGeometry'&&o.renderOrder===6).map(o=>o.visible),gl:g.renderer.getContext().getError()};});
+ await page.evaluate(()=>{window.detailReview.stage='lights';});await page.waitForTimeout(200);await page.screenshot({path:out+'/floodlights-native.png'});
  assert.ok(wear.deposits[0]>.4);assert.ok(sky.islandMist.every(v=>!v));assert.equal(sky.gl,0);assert.deepEqual(errors,[]);await writeFile(out+'/report.json',JSON.stringify({grid,wear,sky,errors,stagedReview:'Wear: sixty seconds of production mud update; damage state .45 to review scratches. Closeup camera only.'},null,2));console.log('PASS detail review',JSON.stringify({grid,wear,sky}));
 }finally{await browser.close();}

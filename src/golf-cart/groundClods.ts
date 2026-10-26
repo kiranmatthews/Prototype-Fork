@@ -5,7 +5,7 @@ import {CART_RALLY_LENGTH,rallySurfacePoint,rallyMudWetness} from '../levels/car
 export class RallyGroundClods {
  readonly root=new THREE.Group();
  private geometry=new THREE.IcosahedronGeometry(1,0);
- private material=new THREE.MeshStandardMaterial({color:'#8a6845',roughness:.97,flatShading:true});
+ private material=new THREE.MeshStandardMaterial({color:'#b17b40',roughness:.97,flatShading:true});
  private chunks:THREE.InstancedMesh[]=[];
  readonly count:number;
  constructor(){

@@ -88,7 +88,7 @@ export class GolfCartRace {
     const sponsor=level.pickRoot.getObjectByName('Stadium sponsor hoarding') as THREE.Mesh|undefined;
     this.fleet=new GolfCartFleet({damageVisuals:true,sponsorTexture:(sponsor?.material as THREE.MeshStandardMaterial|undefined)?.map??undefined,ground:(x,z)=>this.ground(x,z),spawns,obstacles,
       onImpact:hit=>this.audio.impact(hit,this.racers[0].player.pos),
-      physics:{boundary:stadium?createStadiumBoundary():undefined,scale:1.25,topSpeed:38,engine:23,speedLimit:44,maxLaunchVelocity:9,airRecoveryDelay:6,damageCapacity:16,gravity:24,stableLandings:true}});
+      physics:{boundary:stadium?createStadiumBoundary():undefined,scale:1.25,topSpeed:38,engine:23,speedLimit:44,maxLaunchVelocity:9,airRecoveryDelay:6,damageCapacity:16*.7,gravity:24,stableLandings:true}});
     this.mud=stadium?new CartMud(this.fleet.mudAmounts):null;if(this.mud)this.fleet.root.add(this.mud.root);
     this.crowd=stadium?new StadiumCrowd():null;if(this.crowd)this.fleet.root.add(this.crowd.root);
     this.fleet.models.forEach((m,i)=>{
@@ -485,7 +485,7 @@ export class GolfCartRace {
   hit(id:number,origin?:THREE.Vector3,power=.24){
     const index=this.cartForRacer[id],c=this.fleet.physics.carts[index];if(!c||this.burning[index])return;
     this.stun[index]=.55;const dx=c.x-(origin?.x??c.x-1),dz=c.z-(origin?.z??c.z),n=Math.hypot(dx,dz)||1;
-    this.fleet.physics.kick(index,dx/n*9,dz/n*9,12);c.health=Math.max(0,c.health-power*.5);c.vy=Math.max(c.vy,4.5+power*8);c.grounded=false;
+    this.fleet.physics.kick(index,dx/n*9,dz/n*9,12);c.health=Math.max(0,c.health-power*(.5/.7));c.vy=Math.max(c.vy,4.5+power*8);c.grounded=false;
     if(c.health<=0)this.wreck(index);
   }
   hud(){

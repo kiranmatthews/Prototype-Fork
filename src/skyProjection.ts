@@ -127,11 +127,11 @@ export function installSkyProjection(
         // The rally uses a clean analytic atmosphere. Do not sample the island
         // panorama at all: recolouring it still leaves islands in the clouds.
         float altitude=max(0.0,skyRay.y);
-        vec3 clearSky=mix(vec3(.72,.57,.36),vec3(.23,.37,.49),pow(altitude,.42));
+        vec3 clearSky=mix(vec3(.88,.63,.32),vec3(.075,.32,.54),pow(altitude,.34));
         vec2 cloudUv=skyRay.xz/(.22+abs(skyRay.y))*.85;
         float cloud=rallyNoise(cloudUv*2.0)*.62+rallyNoise(cloudUv*5.4)*.27+rallyNoise(cloudUv*13.0)*.11;
         float wisps=smoothstep(.51,.71,cloud)*(1.0-smoothstep(.62,.97,altitude));
-        clearSky=mix(clearSky,vec3(.84,.77,.62),wisps*.44);
+        clearSky=mix(clearSky,vec3(1.0,.87,.67),wisps*.60);
         float sunDistance=length(skyRay-uRallySun);
         float disc=1.0-smoothstep(.008,.011,sunDistance);
         float corona=exp(-sunDistance*sunDistance*420.0);

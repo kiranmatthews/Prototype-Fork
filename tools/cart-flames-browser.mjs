@@ -16,9 +16,12 @@ try{
   if(seed!==null){const r=window.__game.getSkateRace(),start=r.start.bind(r);r.start=mode=>start(mode,seed);}
  },process.env.CART_FLAME_SEED?Number(process.env.CART_FLAME_SEED):null);
  await page.getByRole('button',{name:'RACE',exact:true}).click();
+ // The button queues input for the next simulation tick. Observe the reset
+ // before hooking this race's fleet, especially when lite renders quickly.
+ await page.waitForFunction(()=>window.__game.getSkateRace().phase==='countdown');
  const starting=await page.evaluate(()=>{
   const r=window.__game.getSkateRace(),c=r.carts;
-  window.flameReview={seed:r.runSeed,starting:[...c.thrustCooldown],shots:[],hits:[],samples:[]};
+  window.flameReviewObservedCart=c;window.flameReview={seed:r.runSeed,starting:[...c.thrustCooldown],shots:[],hits:[],samples:[]};
   const fire=c.audio.thrust.bind(c.audio);c.audio.thrust=(body,index,listener)=>{
    window.flameReview.shots.push({id:c.driverForCart[index],time:r.elapsed});return fire(body,index,listener);
   };
@@ -50,7 +53,9 @@ try{
   if(state.finished===8){finished=true;break;}
   if(state.time>=seconds)break;
  }
- const report=await page.evaluate(()=>{const g=window.__game,r=g.getSkateRace();return {...window.flameReview,stamp:document.querySelector('.hud-build')?.textContent,glError:g.renderer.getContext().getError(),stats:r.carts.stats,riders:r.riders.map(r=>({id:r.id,finish:r.finish,falls:r.falls}))};});
+ const report=await page.evaluate(()=>{const g=window.__game,r=g.getSkateRace();return {...window.flameReview,observedCurrentFleet:window.flameReviewObservedCart===r.carts,stamp:document.querySelector('.hud-build')?.textContent,glError:g.renderer.getContext().getError(),stats:r.carts.stats,riders:r.riders.map(r=>({id:r.id,finish:r.finish,falls:r.falls}))};});
+ assert.equal(report.observedCurrentFleet,true,'Measurement must observe the active race fleet');
+ assert.equal(report.shots.length,report.stats.thrusters,'Every burst must reach the observer');
  const rivals=new Set(report.shots.filter(s=>s.id>0).map(s=>s.id));
  assert.ok(rivals.size>=4,'too few rivals found firing opportunities');
  assert.ok(report.hits.some(h=>h.from>0&&h.damage>0),'rival flames did not damage any actual cart');

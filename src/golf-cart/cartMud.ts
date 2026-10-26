@@ -1,3 +1,4 @@
+import {RallyMudTracks} from './mudTracks';
 import {RallyGroundClods} from './groundClods';
 import * as THREE from 'three';
 import type { CartState } from './physics';
@@ -13,10 +14,11 @@ const clamp=THREE.MathUtils.clamp;
 export class CartMud {
   readonly root=new THREE.Group();
   readonly groundClods=new RallyGroundClods();
+  readonly tracks=new RallyMudTracks();
   readonly lens:MudLensState={time:0,splats:Array.from({length:12},()=>({x:0,y:0,radius:0,age:10,life:0,seed:0}))};
   private readonly clods:Clod[]=Array.from({length:192},()=>({x:0,y:0,z:0,vx:0,vy:0,vz:0,floor:0,radius:0,age:2,life:0}));
   private readonly geometry=new THREE.IcosahedronGeometry(1,0);
-  private readonly material=new THREE.MeshLambertMaterial({color:'#60422a'});
+  private readonly material=new THREE.MeshLambertMaterial({color:'#89512b'});
   private readonly mesh=new THREE.InstancedMesh(this.geometry,this.material,this.clods.length);
   private readonly dummy=new THREE.Object3D();
   private readonly emission:number[]=[];
@@ -28,7 +30,7 @@ export class CartMud {
   constructor(readonly deposits:number[]=[]){
     this.root.name='Rally wheel mud';this.mesh.name='Pooled mud roost';this.mesh.count=0;
     this.mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);this.mesh.frustumCulled=false;
-    this.root.add(this.mesh,this.groundClods.root);
+    this.root.add(this.mesh,this.groundClods.root,this.tracks.root);
   }
   private random(){let x=this.seed;x^=x<<13;x^=x>>>17;x^=x<<5;this.seed=x;return (x>>>0)/4294967296;}
   private wetness(c:CartState){
@@ -56,7 +58,7 @@ export class CartMud {
     }
   }
   update(dt:number,carts:readonly CartState[],owners:readonly number[],humanCart:number,listener:THREE.Vector3){
-    this.lens.time+=dt;this.cooldown=Math.max(0,this.cooldown-dt);
+    this.lens.time+=dt;this.tracks.update(this.lens.time,carts,owners);this.cooldown=Math.max(0,this.cooldown-dt);
     for(const p of this.lens.splats)p.age=Math.min(p.life+1,p.age+dt);
     for(let i=0;i<carts.length;i++){
       const c=carts[i],speed=Math.abs(c.speed),near=(c.x-listener.x)**2+(c.z-listener.z)**2<3600;
@@ -64,11 +66,11 @@ export class CartMud {
       this.wasGrounded[i]=c.grounded;this.lastVy[i]=c.vy;
       // Accumulation follows every occupied moving cart, even outside the
       // particle visibility radius. Dirt persists when a racer exits/steals it.
-      if(owners[i]>=0&&c.health>0&&c.grounded&&speed>5){
-        const wet=this.wetness(c);this.deposits[i]=Math.min(1,(this.deposits[i]??0)+dt*(.004+wet*.016)*Math.min(1.5,speed/20));
+      const moving=owners[i]>=0&&c.health>0&&c.grounded&&speed>5,wet=moving?this.wetness(c):0;
+      if(moving){
+        this.deposits[i]=Math.min(1,(this.deposits[i]??0)+dt*(.009+wet*.029)*Math.min(1.5,speed/20));
       }
       if(!near||owners[i]<0||c.health<=0||!c.grounded||speed<5){this.emission[i]=0;continue;}
-      const wet=this.wetness(c);
       this.emission[i]=(this.emission[i]??0)+dt*(10+speed*.45)*(.45+wet);
       for(let n=0;n<3&&this.emission[i]>=1;n++,this.emission[i]--)this.clod(c,this.random()>.5?1:-1);
       if(landed){for(let n=0;n<10;n++)this.clod(c,n%2?1:-1,2);if(i===humanCart&&speed>9)this.splash(1.2);}
@@ -93,6 +95,6 @@ export class CartMud {
     }
     this.mesh.count=visible;this.mesh.instanceMatrix.needsUpdate=true;
   }
-  get diagnostics(){return {time:this.lens.time,bursts:this.bursts,emitted:this.emitted,groundClods:this.groundClods.count,deposits:[...this.deposits],clods:this.mesh.count,splats:this.lens.splats.filter(p=>p.age<p.life).length};}
-  dispose(){this.groundClods.dispose();this.root.removeFromParent();this.geometry.dispose();this.material.dispose();this.mesh.dispose();}
+  get diagnostics(){return {time:this.lens.time,tracks:this.tracks.diagnostics,bursts:this.bursts,emitted:this.emitted,groundClods:this.groundClods.count,deposits:[...this.deposits],clods:this.mesh.count,splats:this.lens.splats.filter(p=>p.age<p.life).length};}
+  dispose(){this.tracks.dispose();this.groundClods.dispose();this.root.removeFromParent();this.geometry.dispose();this.material.dispose();this.mesh.dispose();}
 }

@@ -1,4 +1,5 @@
 import type { CustomComponent, CustomLevelData } from '../level';
+import { stadiumFloodlight } from './stadium-floodlights';
 import type { RaceKnot } from '../race/types';
 import { lazySourceField } from './lazy-source';
 import { CART_RALLY_LENGTH,CART_RALLY_JUMPS,CART_RALLY_SUPPLY_ROWS,CART_RALLY_CORNERS,STADIUM,cartRallyPoint,cartRallyFrame,stadiumPoint,stadiumStandQuad,stadiumSections,stadiumBoundaryPaths,rallyMudWetness,rallySurfacePoint } from './cart-stadium-layout';
@@ -22,7 +23,7 @@ function build():CustomComponent[]{
       const left=rallySurfacePoint(s,u-.01),right=rallySurfacePoint(s,u+.01),back=rallySurfacePoint(s-.01,u),front=rallySurfacePoint(s+.01,u);
       const x=right.map((v,k)=>v-left[k]),z=front.map((v,k)=>v-back[k]);
       const n=[x[1]*z[2]-x[2]*z[1],x[2]*z[0]-x[0]*z[2],x[0]*z[1]-x[1]*z[0]],length=Math.hypot(...n)||1;normals.push(...n.map(v=>Math.round(v/length*1e6)/1e6));
-      const wet=rallyMudWetness(s,u),rut=(.91+.08*Math.sin(u*2.7+s*.047)*Math.sin(u*.6+s*.13))*(1-.38*wet);
+      const wet=rallyMudWetness(s,u),rut=(.91+.08*Math.sin(u*2.7+s*.047)*Math.sin(u*.6+s*.13))*(1-.24*wet);
       colors.push(...[rut,rut*(1-.035*wet),rut*(1-.085*wet)].map(v=>Math.round(v*1000)/1000));
     }
     for(let j=0;j<rows;j++)for(let i=0;i<cols;i++){const p=j*(cols+1)+i,q=p+cols+1;indices.push(p,p+1,q,p+1,q+1,q);}
@@ -32,11 +33,11 @@ function build():CustomComponent[]{
     const end=Math.min(s+24,CART_RALLY_LENGTH+48),cuts=[s,end,...CART_RALLY_JUMPS.flatMap(j=>[j.start+8,j.end+4]).filter(v=>v>s&&v<end)].sort((a,b)=>a-b);
     for(let i=0;i<cuts.length-1;i++){
       const a=cuts[i],b=cuts[i+1],soft=CART_RALLY_JUMPS.some(j=>(a+b)/2>j.start+8&&(a+b)/2<j.end+4);
-      strip(soft?'Soft dirt landing trough':'Packed stadium dirt',a,b,Array.from({length:15},(_,i)=>-14+i*2),soft?'#655039':'#a07c52',soft);
+      strip(soft?'Soft dirt landing trough':'Packed stadium dirt',a,b,Array.from({length:15},(_,i)=>-14+i*2),soft?'#81522e':'#bd8245',soft);
       for(const side of [-1,1]){
-        strip('Loose dirt runoff',a,b,(side<0?[-17,-14]:[14,17]),'#8e6946',true);
+        strip('Loose dirt runoff',a,b,(side<0?[-17,-14]:[14,17]),'#b5743e',true);
         const profile=[17,19,21,23,24.5,25.5,26.2,26.65,27,27.4].map(u=>u*side).sort((x,y)=>x-y);
-        strip('Tall dirt quarter-pipe bank',a,b,profile,'#a07b51');
+        strip('Tall dirt quarter-pipe bank',a,b,profile,'#c58a4c');
       }
     }
   }
@@ -46,7 +47,7 @@ function build():CustomComponent[]{
     const vertices:number[]=[],indices:number[]=[];
     for(const p of path)vertices.push(p[0],p[1]+(index<2?9.5:0),p[2],p[0],p[1]+STADIUM.wallTop,p[2]);
     for(let i=0;i<path.length-1;i++){const n=i*2;indices.push(n,n+1,n+2,n+1,n+3,n+2);}
-    add({t:'mesh',nm:'Stadium upper crash wall',p:[0,0,0],vertices,indices,doubleSided:true,color:'#676651',tex:'metal',solid:false});
+    add({t:'mesh',nm:'Stadium upper crash wall',p:[0,0,0],vertices,indices,doubleSided:true,color:'#395b59',tex:'metal',solid:false});
     add({t:'coastwall',nm:'Continuous stadium containment',p:[0,18,0],pts:path.map(p=>[p[0],p[2]]),w:.65,rise:24});
   }
   // Each grandstand is one authored stepped mesh. Individual seats and people
@@ -58,8 +59,8 @@ function build():CustomComponent[]{
       const lo=side*(STADIUM.standStart+row*STADIUM.rowDepth),y=15.5+row*STADIUM.rowRise;
       for(let s=start;s<end;s+=STADIUM.standSegmentLength){const b=Math.min(end,s+STADIUM.standSegmentLength);quad(...stadiumStandQuad(s,b,side,row),row%2?.84:1);quad(stadiumPoint(s,lo,y-.85),stadiumPoint(s,lo,y),stadiumPoint(b,lo,y-.85),stadiumPoint(b,lo,y),.7);}
     }
-    add({t:'mesh',nm:'Stepped stadium grandstand',p:[0,0,0],vertices,indices,colors,doubleSided:true,color:'#a59b7a',tex:'solid',solid:false});
-    const mid=(start+end)/2,yaw=-Math.atan(cartRallyFrame(mid).dx)*180/Math.PI;
+    add({t:'mesh',nm:'Stepped stadium grandstand',p:[0,0,0],vertices,indices,colors,doubleSided:true,color:'#99aca0',tex:'solid',solid:false});
+    const mid=(start+end)/2;
     const boardV:number[]=[],boardI:number[]=[],boardUV:number[]=[];
     for(let at=start+2,board=0;at<end-4;at+=22,board++){
       const finish=Math.min(at+20,end-2),brand=(Math.floor((start+8)/48)+board+(side>0?1:0))%4;
@@ -74,13 +75,12 @@ function build():CustomComponent[]{
     }
     add({t:'mesh',nm:'Stadium sponsor hoarding',p:[0,0,0],vertices:boardV,indices:boardI,uvs:boardUV,doubleSided:true,color:'#ffffff',tex:'rally-sponsors',solid:false,castShadow:false});
     if(Math.floor((start+8)/48)%3===0){
-      const q=stadiumPoint(mid,side*42,13);add({t:'platform',nm:'Stadium floodlight mast',p:[q[0],q[1]+10,q[2]],s:[.6,20,.6],color:'#647477',tex:'metal',solid:false});
-      add({t:'platform',nm:'Floodlight head',p:[q[0],q[1]+20,q[2]],s:[1.3,2.6,7],yaw,color:'#fff1c2',emissive:'#ffcb71',tex:'solid',solid:false});
+      for(const fixture of stadiumFloodlight(mid,side))add(fixture);
     }
   }
   // High festival bunting and pit awnings are visual-only meshes. Their
   // silhouettes stay intact; the route, mounds and containment are untouched.
-  const cloth=['#c9b786','#aa6344','#7b8971','#cf9c56'];
+  const cloth=['#efc75e','#d76239','#399788','#82b86a'];
   for(let s=70,span=0;s<CART_RALLY_LENGTH;s+=190,span++){
     const vertices:number[]=[],indices:number[]=[],colors:number[]=[];
     const point=(u:number,down=0)=>stadiumPoint(s,u,21-4.5*(1-(u/28)**2)-down);
@@ -120,7 +120,7 @@ function build():CustomComponent[]{
   }
   for(const [i,j]of CART_RALLY_JUMPS.entries()){
     for(let s=j.start-16;s<j.start-3;s+=5)strip('Painted dirt launch marks',s,s+.9,[-12,0,12],'#ceb68a',false,.045,false);
-    for(const side of [-1,1]){const p=cartRallyPoint(j.start-1,side*16);add({t:'platform',nm:`Dirt jump ${i+1} flagpole`,p:[p[0],p[1]+3,p[2]],s:[.14,6,.14],tex:'solid',color:'#e3c28e',solid:false});add({t:'platform',nm:'Dirt launch flag',p:[p[0],p[1]+5.4,p[2]],s:[1.8,.9,.08],tex:'solid',color:i%2?'#ba6e46':'#9a9d7b',solid:false});}
+    for(const side of [-1,1]){const p=cartRallyPoint(j.start-1,side*16);add({t:'platform',nm:`Dirt jump ${i+1} flagpole`,p:[p[0],p[1]+3,p[2]],s:[.14,6,.14],tex:'solid',color:'#e3c28e',solid:false});add({t:'platform',nm:'Dirt launch flag',p:[p[0],p[1]+5.4,p[2]],s:[1.8,.9,.08],tex:'solid',color:i%2?'#ee7838':'#56bfa0',solid:false});}
   }
   for(let s=65;s<CART_RALLY_LENGTH-70;s+=115){if(CART_RALLY_JUMPS.some(j=>s>j.start-45&&s<j.start+70))continue;for(const u of [-9,-3,3,9])add({t:'crate',kind:'mystery',p:cartRallyPoint(s,u),nm:'Rally item row'});}
   for(const s of CART_RALLY_SUPPLY_ROWS){for(const u of [-6,0,6])add({t:'crate',kind:'empty',p:cartRallyPoint(s+8,u),nm:'Rally box gem crate'});}
@@ -132,7 +132,7 @@ function build():CustomComponent[]{
 export const COCONUT_CART_RALLY_LEVEL:CustomLevelData={
   v:1,name:'Coconut Cart Rally',spawn:cartRallyPoint(18,0,.12),startWarpPad:false,killY:-45,
   sky:'sunset',keepPlayFog:true,cameraLookAhead:14,cameraAirLift:.8,cameraRig:{camDist:13,camHeight:7.5,camPitch:18,camFov:68},
-  atmosphere:{fogEnabled:true,fogNear:110,fogFar:420,fogColor:'#c3b59a',ambientSky:'#c5d1d3',ambientGround:'#806347',ambientIntensity:1.0,sunColor:'#ffdfae',sunIntensity:2.8,sunDirection:[-.18,.16,-.97],fillColor:'#b3baa0',fillIntensity:.36,shadowStrength:.78,backdrop:'painted sky',drawDistance:600,fallbackTop:'#a8ab8a',fallbackBottom:'#e1c28e',fallbackRidges:false,fallbackStars:false},
+  atmosphere:{fogEnabled:true,fogNear:110,fogFar:420,fogColor:'#c4c4ac',ambientSky:'#b8d9ed',ambientGround:'#96704a',ambientIntensity:1.15,sunColor:'#ffe1a6',sunIntensity:2.8,sunDirection:[-.18,.16,-.97],fillColor:'#83bfb4',fillIntensity:.48,shadowStrength:.78,backdrop:'painted sky',drawDistance:600,fallbackTop:'#a8ab8a',fallbackBottom:'#e1c28e',fallbackRidges:false,fallbackStars:false},
   medalTimes:{gold:125,silver:150,bronze:185},
   skateRace:{v:1,racers:8,vehicle:'golf-cart',seed:251026,stages:['Stadium stampede','Mud-bowl mayhem','Dirt double trouble','Grandstand sprint'],line,jumps:CART_RALLY_JUMPS.map(j=>({takeoff:cartRallyPoint(j.start),landing:cartRallyPoint(j.end)})),finishWidth:34,originalLength:CART_RALLY_LENGTH},components:[],
 };

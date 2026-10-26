@@ -44,10 +44,10 @@ export class MudLensPass extends Pass {
         vec3 softened=(texture2D(tScene,uv+blur).rgb+texture2D(tScene,uv-blur).rgb+texture2D(tScene,uv+vec2(blur.x,-blur.y)).rgb+texture2D(tScene,uv+vec2(-blur.x,blur.y)).rgb)*.25;
         vec3 colour=mix(original,softened,mask*.7);
         float luma=dot(colour,vec3(.2126,.7152,.0722));
-        colour=mix(colour,vec3(luma),.045)*vec3(1.035,1.01,.96);
+        colour=mix(vec3(luma),colour,1.12)*vec3(1.025,1.01,.98);
         colour+=vec3(.018,.010,.002)*smoothstep(.15,.9,luma);
         float vignette=smoothstep(.3,.95,length((vUv-.5)*vec2(1.0,.85)));
-        colour*=1.0-vignette*.18;
+        colour*=1.0-vignette*.13;
         vec3 mud=vec3(.072,.047,.023)+vec3(.035,.027,.015)*edge;
         colour=mix(colour,mud,mask)+edge*centreClear*vec3(.028,.017,.005);
         // Three weak lens ghosts reuse this pass. Sampling the rendered sun

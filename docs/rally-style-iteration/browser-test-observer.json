@@ -1,0 +1,6 @@
+{
+  "initialLiteAttempt": "failed: observer was installed before queued Race input replaced the grid fleet; no runtime errors",
+  "repair": "Wait for countdown before attaching observers; assert observed fleet identity and every burst captured",
+  "retry": "passed, 18 observed bursts and 14 damaging contacts, six rival shooters",
+  "fullRenderRace": "passed, eight finishers, zero falls, 33 bursts, 23 damaging contacts"
+}

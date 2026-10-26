@@ -1,0 +1,72 @@
+{
+  "started": "2026-10-26T17:43:01.330Z",
+  "rows": [
+    {
+      "file": "test-cart-mud.mjs",
+      "code": 0,
+      "seconds": 0.455,
+      "log": "/private/tmp/rally-style-focused/test-cart-mud.mjs.log"
+    },
+    {
+      "file": "test-rally-mud-tracks.mjs",
+      "code": 0,
+      "seconds": 0.335,
+      "log": "/private/tmp/rally-style-focused/test-rally-mud-tracks.mjs.log"
+    },
+    {
+      "file": "test-cart-stadium.mjs",
+      "code": 0,
+      "seconds": 15.097,
+      "log": "/private/tmp/rally-style-focused/test-cart-stadium.mjs.log"
+    },
+    {
+      "file": "test-cart-crowd-placement.mjs",
+      "code": 0,
+      "seconds": 1.473,
+      "log": "/private/tmp/rally-style-focused/test-cart-crowd-placement.mjs.log"
+    },
+    {
+      "file": "test-cart-landings.mjs",
+      "code": 0,
+      "seconds": 0.286,
+      "log": "/private/tmp/rally-style-focused/test-cart-landings.mjs.log"
+    },
+    {
+      "file": "test-cart-mayhem.mjs",
+      "code": 0,
+      "seconds": 29.721,
+      "log": "/private/tmp/rally-style-focused/test-cart-mayhem.mjs.log"
+    },
+    {
+      "file": "test-cart-drivers.mjs",
+      "code": 0,
+      "seconds": 29.66,
+      "log": "/private/tmp/rally-style-focused/test-cart-drivers.mjs.log"
+    },
+    {
+      "file": "test-cart-flames.mjs",
+      "code": 0,
+      "seconds": 23.747,
+      "log": "/private/tmp/rally-style-focused/test-cart-flames.mjs.log"
+    },
+    {
+      "file": "test-cart-interactions.mjs",
+      "code": 0,
+      "seconds": 22.058,
+      "log": "/private/tmp/rally-style-focused/test-cart-interactions.mjs.log"
+    },
+    {
+      "file": "test-fixed-render-pipeline.mjs",
+      "code": 0,
+      "seconds": 0.044,
+      "log": "/private/tmp/rally-style-focused/test-fixed-render-pipeline.mjs.log"
+    },
+    {
+      "file": "test-audio-loops.mjs",
+      "code": 0,
+      "seconds": 0.344,
+      "log": "/private/tmp/rally-style-focused/test-audio-loops.mjs.log"
+    }
+  ],
+  "finished": "2026-10-26T17:45:04.559Z"
+}

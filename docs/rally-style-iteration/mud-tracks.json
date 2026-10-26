@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "driven": 96,
+  "final": {
+    "segments": 1120,
+    "emitted": 3728,
+    "capacity": 24576,
+    "chunks": 24,
+    "bytes": 3833856
+  },
+  "vertices": 4480,
+  "longest": 1.8981349332938957,
+  "minNormal": 0.4372752979397774,
+  "disposed": 24,
+  "uploadBytes": 192,
+  "fullUploadBytes": 98304
+}

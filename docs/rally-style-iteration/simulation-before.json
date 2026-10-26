@@ -1,0 +1,44 @@
+{
+  "commit": "714fc07a22eaccf232066e7a5d506fd378be01d5",
+  "racing": {
+    "total": {
+      "meanMs": 8.855784078888982,
+      "p50Ms": 8.634833000000071,
+      "p95Ms": 10.385540999999648,
+      "samples": 900
+    },
+    "cartStep": {
+      "meanMs": 2.9542957933333653,
+      "p50Ms": 2.7481669999979204,
+      "p95Ms": 3.9752499999995052,
+      "samples": 900
+    },
+    "targetSearch": {
+      "meanMs": 0.0009771227777623103,
+      "p50Ms": 0.0007500000028812792,
+      "p95Ms": 0.002624999999170541,
+      "samples": 1800
+    },
+    "fleetPresentation": {
+      "meanMs": 5.319386381111084,
+      "p50Ms": 5.287666999996873,
+      "p95Ms": 5.788582999999562,
+      "samples": 900
+    },
+    "effectsUpdate": {
+      "meanMs": 0.0007914277776985223,
+      "p50Ms": 0.0006250000005820766,
+      "p95Ms": 0.0015000000003055902,
+      "samples": 900
+    },
+    "effectsPresentation": {
+      "meanMs": 0.2657876566666932,
+      "p50Ms": 0.10770899999988615,
+      "p95Ms": 1.1055410000008123,
+      "samples": 900
+    },
+    "flameInstances": 0,
+    "flameVisible": false
+  },
+  "note": "Node simulation/presentation benchmark, no GPU; before this visual/stability pair."
+}

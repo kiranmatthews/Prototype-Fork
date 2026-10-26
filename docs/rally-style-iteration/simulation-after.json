@@ -1,0 +1,43 @@
+{
+  "racing": {
+    "total": {
+      "meanMs": 8.746977768888883,
+      "p50Ms": 8.573166000000128,
+      "p95Ms": 10.215833999998722,
+      "samples": 900
+    },
+    "cartStep": {
+      "meanMs": 2.9169302944444158,
+      "p50Ms": 2.727999999999156,
+      "p95Ms": 3.974292000000787,
+      "samples": 900
+    },
+    "targetSearch": {
+      "meanMs": 0.0010325499999978799,
+      "p50Ms": 0.000875000001542503,
+      "p95Ms": 0.002082999999402091,
+      "samples": 1800
+    },
+    "fleetPresentation": {
+      "meanMs": 5.129933196666678,
+      "p50Ms": 5.103791999998066,
+      "p95Ms": 5.565667000000758,
+      "samples": 900
+    },
+    "effectsUpdate": {
+      "meanMs": 0.0056176099999275825,
+      "p50Ms": 0.0006670000002486631,
+      "p95Ms": 0.04641700000138371,
+      "samples": 900
+    },
+    "effectsPresentation": {
+      "meanMs": 0.39124885333334736,
+      "p50Ms": 0.17195899999933317,
+      "p95Ms": 1.1610419999997248,
+      "samples": 900
+    },
+    "flameInstances": 0,
+    "flameVisible": false
+  },
+  "note": "900 Node simulation/presentation samples after the full suite ended; no concurrent browser checks. This is not a GPU/FPS measurement. Combat states may differ because durability changed; treat small timing differences as noise."
+}

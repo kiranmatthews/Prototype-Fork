@@ -75,17 +75,19 @@ export class GolfCartFleet {
       m.root.position.set(p.x,p.y+lift*this.physics.scale,p.z);m.root.rotation.set(0,p.yaw,angle,'YXZ');m.update({time:this.physics.time,steer:c.steer,roll:c.roll,pitch:c.pitch,impact:c.impact,speed:c.speed,wheelTravel:c.travel/this.physics.scale,suspension:c.wheels,landingCompression:c.landingCompression,damage:c.damage,health:c.health});
       m.root.updateWorldMatrix(false,true);
     });
-    for(const {mesh,sources,wear} of this.batches){let count=0,colorsChanged=false;
+    for(const {mesh,sources,wear} of this.batches){let count=0,colorsChanged=false,wearChanged=false;
       for(const {mesh:source,cart} of sources){if(!this.visible[cart])continue;
         let visible=true;for(let o:THREE.Object3D|null=source;o&&o!==this.root;o=o.parent)if(!o.visible){visible=false;break;}
         if(!visible)continue;
         this.instanceMatrix.multiplyMatrices(this.inverseRoot,source.matrixWorld);mesh.setMatrixAt(count,this.instanceMatrix);
         const color=(source.material as THREE.MeshStandardMaterial).color,buffer=mesh.instanceColor;
         if(!buffer||buffer.getX(count)!==Math.fround(color.r)||buffer.getY(count)!==Math.fround(color.g)||buffer.getZ(count)!==Math.fround(color.b)){mesh.setColorAt(count,color);colorsChanged=true;}
-        if(wear){const c=this.physics.carts[cart];wear.setXYZW(count,this.mudAmounts[cart]??0,1-c.health,c.health<=0?1:0,cart);}
+        if(wear){const c=this.physics.carts[cart],mud=Math.fround(this.mudAmounts[cart]??0),damage=Math.fround(1-c.health),burnt=c.health<=0?1:0;
+          if(wear.getX(count)!==mud||wear.getY(count)!==damage||wear.getZ(count)!==burnt||wear.getW(count)!==cart){wear.setXYZW(count,mud,damage,burnt,cart);wearChanged=true;}
+        }
         count++;
       }
-      if(wear&&count)wear.needsUpdate=true;mesh.count=count;mesh.visible=count>0;if(count)mesh.instanceMatrix.needsUpdate=true;if(colorsChanged&&mesh.instanceColor)mesh.instanceColor.needsUpdate=true;
+      if(wear&&wearChanged)wear.needsUpdate=true;mesh.count=count;mesh.visible=count>0;if(count)mesh.instanceMatrix.needsUpdate=true;if(colorsChanged&&mesh.instanceColor)mesh.instanceColor.needsUpdate=true;
     }
     this.updateChips(dt);
   }

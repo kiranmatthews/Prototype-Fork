@@ -1,0 +1,97 @@
+{
+  "grid": {
+    "look": {
+      "bloom": {
+        "active": false,
+        "mipCount": 0,
+        "sizes": [],
+        "drawCount": 0,
+        "estimatedBytes": 0
+      },
+      "lut": {
+        "dirty": true,
+        "rebuildCount": 0,
+        "width": 1024,
+        "height": 32
+      },
+      "rain": {
+        "enabled": false,
+        "amount": 0,
+        "time": 0
+      },
+      "mud": {
+        "enabled": true,
+        "splats": 0,
+        "sun": [
+          0.1683092878645953,
+          0.9149238822872242,
+          1,
+          0
+        ]
+      }
+    },
+    "render": {
+      "frame": 788,
+      "calls": 584,
+      "triangles": 4868962,
+      "points": 0,
+      "lines": 0
+    }
+  },
+  "wear": {
+    "deposits": [
+      1
+    ],
+    "health": 0.45,
+    "geometry": {
+      "count": 13,
+      "presented": 6,
+      "scale": 1.25,
+      "cartTriangles": 115058,
+      "fleetTriangles": 304082,
+      "fleetDrawCalls": 111,
+      "geometryBuffers": 40,
+      "steps": 0,
+      "droppedTime": 0,
+      "activeDebris": 0
+    }
+  },
+  "sky": {
+    "look": {
+      "bloom": {
+        "active": false,
+        "mipCount": 0,
+        "sizes": [],
+        "drawCount": 0,
+        "estimatedBytes": 0
+      },
+      "lut": {
+        "dirty": true,
+        "rebuildCount": 0,
+        "width": 1024,
+        "height": 32
+      },
+      "rain": {
+        "enabled": false,
+        "amount": 0,
+        "time": 0
+      },
+      "mud": {
+        "enabled": true,
+        "splats": 0,
+        "sun": [
+          0.16830928786459565,
+          0.9149238822872211,
+          1,
+          0
+        ]
+      }
+    },
+    "islandMist": [
+      false
+    ],
+    "gl": 0
+  },
+  "errors": [],
+  "stagedReview": "Wear: sixty seconds of production mud update; damage state .45 to review scratches. Closeup camera only."
+}
