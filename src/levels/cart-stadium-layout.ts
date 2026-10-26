@@ -1,24 +1,40 @@
 /** Shared authored course frame for the dirt, safety walls and instanced spectators. */
 export type RallyPoint = [number,number,number];
 export const CART_RALLY_LENGTH=2320;
-export const CART_RALLY_JUMPS=[150,280,410,710,840,970,1270,1400,1530,1830,1970,2110].map((s,i)=>({start:s,end:s+26+(i%3)*4,name:['Dirt double','Mud bowl','Coconut kicker'][i%3]}));
-export const CART_RALLY_CORNERS=[570,1130,1690] as const;
-export const CART_RALLY_PIPES=CART_RALLY_CORNERS.map(s=>[s-88,s+88] as const);
+export const CART_RALLY_JUMPS=[150,310,470,690,850,1010,1230,1390,1550,1770,1930,2090].map((s,i)=>({start:s,end:s+26+(i%3)*4,name:['Dirt double','Mud bowl','Coconut kicker'][i%3]}));
+export const CART_RALLY_PIPES=[[540,640],[1080,1180],[1620,1720],[2160,2260]] as const;
+// Local additions only: keep every original takeoff/landing and the winding
+// route outside these two connectors exactly where it was authored.
+export const CART_RALLY_CORNER_PATCHES=[{start:510,end:690,radius:80,side:1},{start:1590,end:1770,radius:95,side:-1}] as const;
+export const CART_RALLY_CORNERS=CART_RALLY_CORNER_PATCHES.map(p=>(p.start+p.end)/2);
 export const CART_RALLY_SUPPLY_ROWS=[80,410,790,1190,1710,2030];
 export const STADIUM={bankStart:17,bankRadius:10,wallOffset:27.4,wallTop:15,standStart:30,rows:9,rowDepth:1.25,rowRise:.85,sectionLength:48,seatSpacing:1.15} as const;
 const smooth=(x:number)=>{const t=Math.max(0,Math.min(1,x));return t*t*(3-2*t);};
 const round=(x:number)=>Math.round(x*1e5)/1e5;
-// Three 90-degree elbows, with straight takeoff/landing lanes between them.
-// Integrating a smooth heading change keeps the inside banks/stands from folding:
-// minimum centre radius is 58.7m, beyond the outermost 42m grandstand edge.
+function centreX(s:number){return 60*Math.sin(s/240)+24*Math.sin(s/110);}
+function authoredRouteX(s:number){
+  const jump=CART_RALLY_JUMPS.find(j=>s>j.start-55&&s<j.start+115);
+  if(!jump)return centreX(s);
+  const at=jump.start,dx=(centreX(at+.1)-centreX(at-.1))/.2;
+  const blend=smooth((s-at+55)/20)*smooth((at+115-s)/30);
+  return centreX(s)*(1-blend)+(centreX(at)+dx*(s-at))*blend;
+}
+const cornerShapes=CART_RALLY_CORNER_PATCHES.map(p=>({...p,
+  x0:authoredRouteX(p.start),x1:authoredRouteX(p.end),
+  m0:(authoredRouteX(p.start+.1)-authoredRouteX(p.start-.1))/.2,
+  m1:(authoredRouteX(p.end+.1)-authoredRouteX(p.end-.1))/.2,
+}));
 function routeX(s:number){
-  let x=s;
-  for(const [i,centre]of CART_RALLY_CORNERS.entries()){
-    const start=centre-88,t=Math.max(0,Math.min(1,(s-start)/176));
-    const integral=176*(t*t*t-.5*t*t*t*t)+Math.max(0,s-start-176);
-    x+=(i%2?2:-2)*integral;
-  }
-  return x;
+  const p=cornerShapes.find(p=>s>p.start&&s<p.end);if(!p)return authoredRouteX(s);
+  const length=p.end-p.start,t=(s-p.start)/length,t2=t*t,t3=t2*t,t4=t3*t,t5=t4*t;
+  // Match both original positions and headings; the original jump lanes join
+  // without a kink. Four circular arcs add a compact, tighter bend between them.
+  const blend=10*t3-15*t4+6*t5;
+  const baseline=p.x0*(1-blend)+p.x1*blend+p.m0*length*(t-6*t3+8*t4-3*t5)+p.m1*length*(-4*t3+7*t4-3*t5);
+  const quarter=length/4,u=Math.min(s-p.start,p.end-s),r=p.radius;
+  const rise=r-Math.sqrt(r*r-quarter*quarter);
+  const bend=u<quarter?r-Math.sqrt(r*r-u*u):2*rise-r+Math.sqrt(r*r-(2*quarter-u)**2);
+  return baseline+p.side*bend;
 }
 export function cartRallyFrame(s:number){const dx=(routeX(s+.05)-routeX(s-.05))/.1,n=Math.hypot(1,dx);return {x:routeX(s),dx,n,nx:1/n,nz:dx/n};}
 export function stadiumBase(s:number){return 25+1.5*Math.sin(s/210)+.8*Math.sin(s/73);}

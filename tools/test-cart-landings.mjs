@@ -2,8 +2,8 @@ import assert from 'node:assert/strict';
 import {build} from 'esbuild';
 import {writeFile} from 'node:fs/promises';
 
-const bundle=await build({stdin:{contents:`export * from './src/golf-cart/physics';export * from './src/golf-cart/fleet';`,resolveDir:process.cwd()},bundle:true,platform:'node',format:'esm',write:false});
-const {GolfCartPhysics,GolfCartFleet,NO_CART_INPUT}=await import('data:text/javascript;base64,'+Buffer.from(bundle.outputFiles[0].text).toString('base64'));
+const bundle=await build({stdin:{contents:`export * from './src/golf-cart/physics';export * from './src/golf-cart/fleet';export {dirtHeight,CART_RALLY_JUMPS} from './src/levels/cart-stadium-layout';`,resolveDir:process.cwd()},bundle:true,platform:'node',format:'esm',write:false});
+const {GolfCartPhysics,GolfCartFleet,NO_CART_INPUT,dirtHeight,CART_RALLY_JUMPS}=await import('data:text/javascript;base64,'+Buffer.from(bundle.outputFiles[0].text).toString('base64'));
 const flat=()=>({height:0,grip:1,drag:0,safe:true,supported:true});
 const options={scale:1.25,topSpeed:38,engine:23,speedLimit:44,maxLaunchVelocity:9,airRecoveryDelay:6,damageCapacity:8,gravity:24,stableLandings:true};
 const spawn={x:0,z:0,yaw:0},dt=1/120,report={landings:[]};
@@ -42,6 +42,21 @@ const flight=hz=>{
 };
 report.flights=[30,60,144].map(hz=>({hz,...flight(hz)}));
 for(const f of report.flights.slice(1))f.state.forEach((v,i)=>assert.ok(Math.abs(v-report.flights[0].state[i])<1e-8,'Identical fixed-step outcome at 30/60/144 Hz'));
+
+// Landing on the uphill face of a dirt double must not launch another hop at
+// its crest a fraction of a second later. Keep every full-height mound intact.
+report.dirtDoubles=[];
+for(const jump of CART_RALLY_JUMPS){
+ const w=new GolfCartPhysics((x,z)=>({...flat(),height:dirtHeight(-z)}),[{x:0,z:-(jump.start-40),yaw:0}],[],options),c=w.carts[0];c.vz=-34;
+ let touched=false,relifts=0;
+ for(let i=0;i<120*8&&-c.z<jump.end+50;i++){
+  w.advance(dt,world=>world.inputs[0]={...NO_CART_INPUT,throttle:1});
+  if(c.airborneCount>0&&c.grounded)touched=true;
+  if(touched&&!c.grounded)relifts++;
+ }
+ assert.ok(touched,'The complete full-height double is traversed');assert.equal(relifts,0,'The landing-mound crest cannot cause a second hop');
+ assert.equal(c.airborneCount,1);assert.equal(c.rolls,0);report.dirtDoubles.push({start:jump.start,flights:c.airborneCount,relifts,rolls:c.rolls});
+}
 
 // Supporting terrain below a flying cart must not tip it toward a bank it has not touched.
 const bank=new GolfCartPhysics((x,z)=>({...flat(),height:x*.4}),[spawn],[],options),bankCart=bank.carts[0];

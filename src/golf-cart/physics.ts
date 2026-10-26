@@ -93,7 +93,8 @@ export class GolfCartPhysics {
           }
           if(this.stableLandings&&!c.tumbling){
             // Tyres bite immediately; the body absorbs the hit and settles in about 0.2 seconds.
-            c.landingTime=.18;c.landingCompression=Math.min(.14,impact*.012);c.rollV*=.25;
+            // Stay planted through the landing mound's crest as well as the impact.
+            c.landingTime=.45;c.landingCompression=Math.min(.14,impact*.012);c.rollV*=.25;
           }
           if(!this.stableLandings&&longFlight&&Math.abs(forward)>9&&(Math.abs(lateral)>4.2||Math.abs(c.roll)>.245+.08*(this.scale-1)))this.rollover(index,Math.sign(lateral||c.roll||1),impact);
           if(!this.stableLandings&&!c.tumbling&&impact>4.5){c.vy=Math.min(2.6,impact*.30);c.grounded=false;}else if(!c.tumbling)c.vy=0;

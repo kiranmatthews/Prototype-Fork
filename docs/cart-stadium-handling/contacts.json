@@ -336,7 +336,7 @@
         2.4,
         -73.33447599198537,
         0,
-        -0.004451519711498317,
+        -0.0044515200383574375,
         0
       ]
     },
@@ -350,7 +350,7 @@
         2.4,
         -73.33447599198537,
         0,
-        -0.004451519711498317,
+        -0.0044515200383574375,
         0
       ]
     },
@@ -364,9 +364,83 @@
         2.4,
         -73.33447599198537,
         0,
-        -0.004451519711498317,
+        -0.0044515200383574375,
         0
       ]
+    }
+  ],
+  "dirtDoubles": [
+    {
+      "start": 150,
+      "flights": 1,
+      "relifts": 0,
+      "rolls": 0
+    },
+    {
+      "start": 310,
+      "flights": 1,
+      "relifts": 0,
+      "rolls": 0
+    },
+    {
+      "start": 470,
+      "flights": 1,
+      "relifts": 0,
+      "rolls": 0
+    },
+    {
+      "start": 690,
+      "flights": 1,
+      "relifts": 0,
+      "rolls": 0
+    },
+    {
+      "start": 850,
+      "flights": 1,
+      "relifts": 0,
+      "rolls": 0
+    },
+    {
+      "start": 1010,
+      "flights": 1,
+      "relifts": 0,
+      "rolls": 0
+    },
+    {
+      "start": 1230,
+      "flights": 1,
+      "relifts": 0,
+      "rolls": 0
+    },
+    {
+      "start": 1390,
+      "flights": 1,
+      "relifts": 0,
+      "rolls": 0
+    },
+    {
+      "start": 1550,
+      "flights": 1,
+      "relifts": 0,
+      "rolls": 0
+    },
+    {
+      "start": 1770,
+      "flights": 1,
+      "relifts": 0,
+      "rolls": 0
+    },
+    {
+      "start": 1930,
+      "flights": 1,
+      "relifts": 0,
+      "rolls": 0
+    },
+    {
+      "start": 2090,
+      "flights": 1,
+      "relifts": 0,
+      "rolls": 0
     }
   ],
   "contacts": [

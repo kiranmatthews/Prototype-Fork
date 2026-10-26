@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {writeFile} from 'node:fs/promises';
+import {readFile,writeFile} from 'node:fs/promises';
 import {withBlockworksRuntime} from './blockworks-runner.mjs';
 await withBlockworksRuntime(async r=>{
  const {SkateRace}=await r.server.ssrLoadModule('/src/race/runtime.ts'),{GolfCartPhysics}=await r.server.ssrLoadModule('/src/golf-cart/physics.ts');
@@ -8,16 +8,23 @@ await withBlockworksRuntime(async r=>{
  const geometry=rally.crowd.sections[0].geometry,mat=rally.crowd.sections[0].material;
  assert.ok(rally.crowd.sections.every(m=>m.geometry===geometry&&m.material===mat&&m.frustumCulled));
  const matrixVersions=rally.crowd.sections.map(m=>m.instanceMatrix.version);rally.crowd.update(55);assert.deepEqual(rally.crowd.sections.map(m=>m.instanceMatrix.version),matrixVersions,'Cheering does not upload instance transforms');
+ const original=JSON.parse(await readFile('tools/fixtures/cart-rally-original-route.json','utf8'));
+ let unchanged=0;
+ for(const [s,...p]of original.points)if(!layout.CART_RALLY_CORNER_PATCHES.some(c=>s>c.start&&s<c.end)){
+  assert.deepEqual(layout.cartRallyPoint(s),p,'Preserve the original winding route outside the two local corners');unchanged++;
+ }
+ assert.ok(unchanged/original.points.length>.84,'At least 84% of the original route remains exactly authored');
+ assert.deepEqual(layout.CART_RALLY_JUMPS.map(j=>({start:j.start,end:j.end,takeoff:layout.cartRallyPoint(j.start),landing:layout.cartRallyPoint(j.end)})),original.jumps,'All twelve original jump locations and heights are unchanged');
  const corners=[];
- for(const centre of layout.CART_RALLY_CORNERS){
-  const before=layout.cartRallyFrame(centre-88),after=layout.cartRallyFrame(centre+88);
-  const turn=Math.abs(Math.atan(after.dx)-Math.atan(before.dx));assert.ok(turn>Math.PI*.49,'Each bend changes heading by 90 degrees');
-  for(let s=centre-88;s<=centre+88;s+=4){
-   const f=layout.cartRallyFrame(s),curvature=Math.abs((layout.cartRallyFrame(s+.1).dx-layout.cartRallyFrame(s-.1).dx)/.2)/(f.n**3);
-   assert.ok(curvature*42<.73,'Outer grandstands and inner banks cannot fold over themselves');
+ for(const {start,end}of layout.CART_RALLY_CORNER_PATCHES){
+  const headings=[];
+  for(let s=start;s<=end;s+=1){
+   const f=layout.cartRallyFrame(s),curvature=Math.abs((layout.cartRallyFrame(s+.1).dx-layout.cartRallyFrame(s-.1).dx)/.2)/(f.n**3);headings.push(Math.atan(f.dx));
+   assert.ok(curvature*42<.73,'The tighter local bends leave room for the complete banks and grandstands');
    for(const u of [-26,-13,0,13,26]){const p=layout.cartRallyPoint(s,u);assert.ok(ground(p[0],p[2]).supported,'The full sharp bend has real support');}
   }
-  corners.push({centre,degrees:turn*180/Math.PI});
+  const degrees=(Math.max(...headings)-Math.min(...headings))*180/Math.PI;assert.ok(degrees>40,'The local corner adds a clear steering change');
+  corners.push({start,end,degrees});
  }
  for(const jump of layout.CART_RALLY_JUMPS){
   assert.ok(Math.abs(layout.dirtHeight(jump.start)-layout.stadiumBase(jump.start)-6)<1e-8,'Keep the original six-metre takeoff mounds');
@@ -34,5 +41,5 @@ await withBlockworksRuntime(async r=>{
  race.start('race',0);race.phase='running';race.carts.drive=()=>({moveX:0,moveY:0});
  assert.equal(r.l.checkpoints.length,0,'Race recovery never needs physical checkpoint crates');
  let disposed=0;race.carts.crowd.sections[0].geometry.addEventListener('dispose',()=>disposed++);race.carts.crowd.dispose();assert.equal(disposed,1);assert.equal(race.carts.crowd.root.children.length,0);
- const report={passed:true,corners,spectators:rally.crowd.count,sections:100,sharedGeometry:true,gpuOnlyCheering:true,slowMisses:slow,drag:{dry,mud,dryAir,mudAir},disposed};await writeFile(process.env.CART_STADIUM_REPORT??'/private/tmp/cart-stadium.json',JSON.stringify(report,null,2)+'\n');console.log('PASS stadium',JSON.stringify({spectators:report.spectators,slowMisses:slow.length,drag:report.drag}));
+ const report={passed:true,corners,originalRoutePreserved:{unchanged,total:original.points.length,allJumpPositions:true},spectators:rally.crowd.count,sections:100,sharedGeometry:true,gpuOnlyCheering:true,slowMisses:slow,drag:{dry,mud,dryAir,mudAir},disposed};await writeFile(process.env.CART_STADIUM_REPORT??'/private/tmp/cart-stadium.json',JSON.stringify(report,null,2)+'\n');console.log('PASS stadium',JSON.stringify({spectators:report.spectators,slowMisses:slow.length,drag:report.drag}));
 },{modulePath:'/src/levels/coconut-cart-rally.ts',source:m=>m.COCONUT_CART_RALLY_LEVEL,levelId:'coconut-cart-rally'});

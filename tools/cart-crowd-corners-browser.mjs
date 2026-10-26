@@ -36,5 +36,5 @@ try{
  }
  const report=await page.evaluate(()=>{const g=window.__game,c=g.getSkateRace().carts.crowd;return {stamp:document.querySelector('.hud-build')?.textContent,spectators:c.count,sections:c.sections.length,animation:c.root.userData,glError:g.renderer.getContext().getError(),frames:window.crowdReview.samples};});
  assert.equal(report.glError,0);assert.ok(report.spectators>30000);assert.match(report.stamp,/Codex\/sol fork/);assert.deepEqual(errors,[]);
- await writeFile(`${out}/report.json`,JSON.stringify({...report,lite,errors},null,2));console.log('PASS crowd motion, native/normal views, three supported sharp corners and clean shader compilation',JSON.stringify({spectators:report.spectators,stamp:report.stamp,errors}));
+ await writeFile(`${out}/report.json`,JSON.stringify({...report,cornerCount:layout.CART_RALLY_CORNERS.length,lite,errors},null,2));console.log('PASS crowd motion, native/normal views, supported local corner additions and clean shader compilation',JSON.stringify({spectators:report.spectators,stamp:report.stamp,errors}));
 }finally{await context.close();await browser.close();}

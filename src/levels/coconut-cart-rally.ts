@@ -66,7 +66,7 @@ function build():CustomComponent[]{
       add({t:'platform',nm:'Floodlight head',p:[q[0],q[1]+20,q[2]],s:[1.3,2.6,7],yaw,color:'#fff1c2',emissive:'#ffcb71',tex:'solid',solid:false});
     }
   }
-  for(const [index,s]of [70,670,1230,1790,2250].entries()){
+  for(const [index,s]of [90,390,780,950,1300,1470,1860,2020].entries()){
     const side=index%2?1:-1,p=cartRallyPoint(s,side*10);
     add({t:'wall',nm:'Stadium tyre-colour chicane',p,s:[4,1.5,3],yaw:-Math.atan(cartRallyFrame(s).dx)*180/Math.PI,color:'#4b5351',tex:'solid'});
     strip('Soft dirt chicane',s-9,s+14,side>0?[-14,-10,-6,-3]:[3,6,10,14],'#805235',true,.04);
@@ -88,7 +88,7 @@ function build():CustomComponent[]{
   for(const s of CART_RALLY_SUPPLY_ROWS){for(const u of [-6,0,6])add({t:'crate',kind:'empty',p:cartRallyPoint(s+8,u),nm:'Rally box gem crate'});}
   for(let s=0;s<=CART_RALLY_LENGTH+35;s+=16)add({t:'camnode',p:cartRallyPoint(s),nm:'Rally chase camera'});
   add({t:'gate',p:cartRallyPoint(CART_RALLY_LENGTH),yaw:-Math.atan(cartRallyFrame(CART_RALLY_LENGTH).dx)*180/Math.PI,nm:'Coconut Cart Rally finish'});
-  add({t:'pit',p:[240,-35,-CART_RALLY_LENGTH/2],s:[850,1,CART_RALLY_LENGTH+160],invisible:true,nm:'Stadium emergency recovery'});
+  add({t:'pit',p:[0,-35,-CART_RALLY_LENGTH/2],s:[600,1,CART_RALLY_LENGTH+160],invisible:true,nm:'Stadium emergency recovery'});
   return c;
 }
 export const COCONUT_CART_RALLY_LEVEL:CustomLevelData={
