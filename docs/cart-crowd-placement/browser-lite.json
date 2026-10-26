@@ -1,0 +1,19 @@
+{
+  "stamp": "Codex/sol fork · build 10-26 06:51 UTC",
+  "spectators": 32958,
+  "sections": 100,
+  "glError": 0,
+  "resolution": "max",
+  "canvas": [
+    800,
+    450
+  ],
+  "frame": {
+    "frame": 837,
+    "calls": 185,
+    "triangles": 1286767,
+    "points": 0,
+    "lines": 0
+  },
+  "errors": []
+}

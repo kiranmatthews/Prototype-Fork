@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { STADIUM,stadiumSections,stadiumPoint,cartRallyFrame } from '../levels/cart-stadium-layout';
+import { STADIUM,stadiumSections,stadiumSeatPose } from '../levels/cart-stadium-layout';
 import { coloured,merged,strut,placed } from './geometry';
 import { characterElasticityAmplitudes } from '../animation/elasticity';
 
@@ -110,8 +110,8 @@ vec3 crowdPosition=position;crowdPose(crowdPosition,objectNormal);`)
       const people=new THREE.InstancedMesh(this.geometry,this.material,positions.length),seats=new THREE.InstancedMesh(this.seatGeometry,this.seatMaterial,positions.length);
       people.name=`Cheering section ${side}:${start}`;seats.name=`Grandstand seats ${side}:${start}`;
       for(const [index,{s,row,column}]of positions.entries()){
-        const f=cartRallyFrame(s),p=stadiumPoint(s,side*(STADIUM.standStart+(row+.5)*STADIUM.rowDepth),15.5+row*STADIUM.rowRise);
-        dummy.position.set(...p);dummy.rotation.set(0,Math.atan2(side*f.nx,side*f.nz),0);dummy.scale.setScalar(1);dummy.updateMatrix();seats.setMatrixAt(index,dummy.matrix);
+        const pose=stadiumSeatPose({start,end,side},s,row);
+        dummy.position.set(...pose.position);dummy.rotation.set(0,pose.yaw,0);dummy.scale.setScalar(1);dummy.updateMatrix();seats.setMatrixAt(index,dummy.matrix);
         const seed=Math.abs(Math.sin(s*12.989+row*78.233)*43758.5453)%1;
         dummy.scale.setScalar(.92+seed*.15);dummy.updateMatrix();people.setMatrixAt(index,dummy.matrix);people.setColorAt(index,color.set(palette[(column*3+row*5+Math.floor(seed*11))%palette.length]));
       }

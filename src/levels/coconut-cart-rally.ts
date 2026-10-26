@@ -1,7 +1,7 @@
 import type { CustomComponent, CustomLevelData } from '../level';
 import type { RaceKnot } from '../race/types';
 import { lazySourceField } from './lazy-source';
-import { CART_RALLY_LENGTH,CART_RALLY_JUMPS,CART_RALLY_SUPPLY_ROWS,CART_RALLY_CORNERS,STADIUM,cartRallyPoint,cartRallyFrame,stadiumPoint,stadiumSections,stadiumBoundaryPaths } from './cart-stadium-layout';
+import { CART_RALLY_LENGTH,CART_RALLY_JUMPS,CART_RALLY_SUPPLY_ROWS,CART_RALLY_CORNERS,STADIUM,cartRallyPoint,cartRallyFrame,stadiumPoint,stadiumStandQuad,stadiumSections,stadiumBoundaryPaths } from './cart-stadium-layout';
 export { CART_RALLY_LENGTH,CART_RALLY_JUMPS,CART_RALLY_PIPES,CART_RALLY_SUPPLY_ROWS,cartRallyPoint } from './cart-stadium-layout';
 const line:RaceKnot[]=[];
 for(let s=18;s<=CART_RALLY_LENGTH;s+=2)line.push([...cartRallyPoint(s),34]);
@@ -54,8 +54,8 @@ function build():CustomComponent[]{
     const vertices:number[]=[],indices:number[]=[],colors:number[]=[],{start,end,side}=section;
     const quad=(a:number[],b:number[],d:number[],e:number[],shade:number)=>{const n=vertices.length/3;vertices.push(...a,...b,...d,...e);indices.push(n,n+1,n+2,n+1,n+3,n+2);for(let k=0;k<4;k++)colors.push(shade,shade,shade);};
     for(let row=0;row<STADIUM.rows;row++){
-      const lo=side*(STADIUM.standStart+row*STADIUM.rowDepth),hi=side*(STADIUM.standStart+(row+1)*STADIUM.rowDepth),y=15.5+row*STADIUM.rowRise;
-      for(let s=start;s<end;s+=8){const b=Math.min(end,s+8);quad(stadiumPoint(s,lo,y),stadiumPoint(s,hi,y),stadiumPoint(b,lo,y),stadiumPoint(b,hi,y),row%2?.84:1);quad(stadiumPoint(s,lo,y-.85),stadiumPoint(s,lo,y),stadiumPoint(b,lo,y-.85),stadiumPoint(b,lo,y),.7);}
+      const lo=side*(STADIUM.standStart+row*STADIUM.rowDepth),y=15.5+row*STADIUM.rowRise;
+      for(let s=start;s<end;s+=STADIUM.standSegmentLength){const b=Math.min(end,s+STADIUM.standSegmentLength);quad(...stadiumStandQuad(s,b,side,row),row%2?.84:1);quad(stadiumPoint(s,lo,y-.85),stadiumPoint(s,lo,y),stadiumPoint(b,lo,y-.85),stadiumPoint(b,lo,y),.7);}
     }
     add({t:'mesh',nm:'Stepped stadium grandstand',p:[0,0,0],vertices,indices,colors,doubleSided:true,color:'#b6ad97',tex:'solid',solid:false});
     // Broad team-colour panels break up the rim; the large geometry stays at every distance.

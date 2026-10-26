@@ -8,7 +8,7 @@ export const CART_RALLY_PIPES=[[540,640],[1080,1180],[1620,1720],[2160,2260]] as
 export const CART_RALLY_CORNER_PATCHES=[{start:510,end:690,radius:80,side:1},{start:1590,end:1770,radius:95,side:-1}] as const;
 export const CART_RALLY_CORNERS=CART_RALLY_CORNER_PATCHES.map(p=>(p.start+p.end)/2);
 export const CART_RALLY_SUPPLY_ROWS=[80,410,790,1190,1710,2030];
-export const STADIUM={bankStart:17,bankRadius:10,wallOffset:27.4,wallTop:15,standStart:30,rows:9,rowDepth:1.25,rowRise:.85,sectionLength:48,seatSpacing:1.15} as const;
+export const STADIUM={bankStart:17,bankRadius:10,wallOffset:27.4,wallTop:15,standStart:30,rows:9,rowDepth:1.25,rowRise:.85,sectionLength:48,standSegmentLength:8,seatSpacing:1.15} as const;
 const smooth=(x:number)=>{const t=Math.max(0,Math.min(1,x));return t*t*(3-2*t);};
 const round=(x:number)=>Math.round(x*1e5)/1e5;
 function centreX(s:number){return 60*Math.sin(s/240)+24*Math.sin(s/110);}
@@ -58,6 +58,23 @@ export function cartRallyPoint(s:number,u=0,up=0):RallyPoint {
   return [round(f.x+u*f.nx),round(stadiumBase(s)+mound+bank+up),round(-s+u*f.nz)];
 }
 export function stadiumPoint(s:number,u:number,height:number):RallyPoint {const f=cartRallyFrame(s);return [round(f.x+u*f.nx),round(stadiumBase(s)+height),round(-s+u*f.nz)];}
+/** The exact four corners used by each rendered grandstand tread. */
+export function stadiumStandQuad(start:number,end:number,side:number,row:number):[RallyPoint,RallyPoint,RallyPoint,RallyPoint] {
+  const lo=side*(STADIUM.standStart+row*STADIUM.rowDepth),hi=side*(STADIUM.standStart+(row+1)*STADIUM.rowDepth),y=15.5+row*STADIUM.rowRise;
+  return [stadiumPoint(start,lo,y),stadiumPoint(start,hi,y),stadiumPoint(end,lo,y),stadiumPoint(end,hi,y)];
+}
+/** Seat roots follow the rendered triangles, not a separately sampled curve.
+ * At abrupt changes of heading the latter can put an entire column in mid-air. */
+export function stadiumSeatPose(section:{start:number;end:number;side:number},s:number,row:number) {
+  const start=section.start+Math.floor((s-section.start)/STADIUM.standSegmentLength)*STADIUM.standSegmentLength;
+  const end=Math.min(section.end,start+STADIUM.standSegmentLength),t=(s-start)/(end-start);
+  const [a,b,d,e]=stadiumStandQuad(start,end,section.side,row);
+  // Across the middle of a row, with the same b--d diagonal as the mesh.
+  const points=t<=.5?[a,b,d]:[b,e,d],weights=t<=.5?[.5-t,.5,t]:[1-t,t-.5,.5];
+  const position=([0,1,2] as const).map(i=>points.reduce((sum,p,j)=>sum+p[i]*weights[j],0)) as RallyPoint;
+  const outwardX=(b[0]-a[0])*(1-t)+(e[0]-d[0])*t,outwardZ=(b[2]-a[2])*(1-t)+(e[2]-d[2])*t;
+  return {position,yaw:Math.atan2(outwardX,outwardZ)};
+}
 export function stadiumSections(){const result:{start:number;end:number;side:number}[]=[];for(let s=-8;s<CART_RALLY_LENGTH+48;s+=STADIUM.sectionLength)for(const side of [-1,1])result.push({start:s,end:Math.min(s+STADIUM.sectionLength,CART_RALLY_LENGTH+48),side});return result;}
 /** Segment endpoints are also used verbatim by the editor-native coastwall. */
 export function stadiumBoundaryPaths():RallyPoint[][] {
