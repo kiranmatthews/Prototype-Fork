@@ -93,20 +93,27 @@ export function createRallyCloth(clock:{value:number}){
 
 export function createRallyLamp(glow=false){
  const m=new THREE.MeshBasicMaterial({color:'#edf6ff',toneMapped:false,side:THREE.DoubleSide,
-  ...(glow?{transparent:true,opacity:.30,depthWrite:false,blending:THREE.AdditiveBlending}:{})});
+  ...(glow?{transparent:true,opacity:.82,depthWrite:false,blending:THREE.AdditiveBlending}:{})});
  m.name=glow?'Floodlight optical halo':'Floodlight luminous optic';
+ // HDR white cores feed bloom where enabled. The local feathered glow keeps
+ // the lamp visibly luminous even with the optional post stack turned off.
+ m.color.multiplyScalar(glow?3.4:6);
  if(glow){
+  // Each halo is a single plane: drawing its back and front separately adds
+  // a redundant pass. DoubleSide still keeps both viewing directions visible.
+  m.forceSinglePass=true;
   m.onBeforeCompile=s=>{
    s.vertexShader='varying vec2 vLampUv;\n'+s.vertexShader;
    s.vertexShader=s.vertexShader.replace('#include <uv_vertex>','#include <uv_vertex>\nvLampUv=uv;');
    s.fragmentShader='varying vec2 vLampUv;\n'+s.fragmentShader;
    s.fragmentShader=s.fragmentShader.replace('#include <color_fragment>',`#include <color_fragment>
     vec2 p=vLampUv*2.0-1.0;float r2=dot(p,p);
-    diffuseColor.a*=max(0.0,exp(-r2*3.5)-exp(-3.5));
+    float core=exp(-r2*8.0),bloom=exp(-r2*2.1)-exp(-2.1);
+    diffuseColor.a*=max(0.0,core*.5+bloom*.35);
     if(diffuseColor.a<.004)discard;
    `);
   };
-  m.customProgramCacheKey=()=> 'stadium-lamp-halo-v1';
+  m.customProgramCacheKey=()=> 'stadium-lamp-halo-v2';
  }
  return m;
 }

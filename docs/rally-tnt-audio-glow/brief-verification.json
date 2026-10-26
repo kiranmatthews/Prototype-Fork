@@ -1,0 +1,82 @@
+{
+  "status": "validated; publication pending",
+  "baseline": "74270d8ea513efd48c12137a230ad562b5a31de2",
+  "started": "2026-10-26T21:00:49Z",
+  "latestSteering": [
+    "glowing/blooming floodlight optics",
+    "green loaded top fins; orange outlets",
+    "different midrange-rich engine loop",
+    "audible nearby burning kart",
+    "unlit TNT attaches and passes by contact"
+  ],
+  "build": {
+    "typecheck": true,
+    "production": true,
+    "releaseBytes": 999320296,
+    "limit": 1000000000,
+    "stamp": "Codex/sol fork \u00b7 build 10-26 21:27 UTC"
+  },
+  "scope": {
+    "controlsAndHandlingUnchanged": true,
+    "allTwelveFullHeightMoundsPreserved": true,
+    "completeRoutePreserved": true,
+    "damageHudAdded": false
+  },
+  "performance": {
+    "haloMainSceneCalls": {
+      "front": [
+        151,
+        150
+      ],
+      "back": [
+        187,
+        185
+      ],
+      "startingGrid": [
+        591,
+        583
+      ]
+    },
+    "fixturePixelsIdentical": true,
+    "geometryOrTextureReduction": false,
+    "mudDrawsRemoved": 8
+  },
+  "audioSources": {
+    "engine": {
+      "url": "https://opengameart.org/content/car-engine-loop-96khz-4s",
+      "author": "Iwan Gabovitch (qubodup)",
+      "license": "CC BY 3.0"
+    },
+    "fire": {
+      "url": "https://opengameart.org/content/fire-crackling",
+      "author": "AntumDeluge",
+      "license": "CC0 1.0"
+    }
+  },
+  "tests": {
+    "focused": 13,
+    "allFocusedPassed": true,
+    "startup": 13,
+    "allStartupPassed": true,
+    "tntRealBrowsers": [
+      "slipstream-race",
+      "country-club",
+      "coconut-cart-rally"
+    ],
+    "onFootExitAndPassRegression": true,
+    "inAppBrowserConsoleErrors": [],
+    "productionLiteAudioAndIndicators": true,
+    "fullSuite": {
+      "commands": 203,
+      "passed": 164,
+      "failed": 39,
+      "newFailures": []
+    }
+  },
+  "completed": "2026-10-26T21:55:46Z",
+  "elapsedMinutes": {
+    "firstNativePlayable": 6.17,
+    "latestRequestsNativeReviewed": 25.35,
+    "completeFullSuite": 54.95
+  }
+}

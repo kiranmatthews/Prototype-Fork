@@ -1,0 +1,84 @@
+{
+  "started": "2026-10-26T21:27:04.640Z",
+  "rows": [
+    {
+      "file": "test-cart-mud.mjs",
+      "code": 0,
+      "seconds": 0.565,
+      "output": "PASS cart mud: idle, wheel spray, landing, nearby rival, distance, finite fade, pool bounds, unchanged physics, disposal\n"
+    },
+    {
+      "file": "test-rally-mud-tracks.mjs",
+      "code": 0,
+      "seconds": 0.368,
+      "output": "PASS rally wheel histories {\"passed\":true,\"driven\":96,\"final\":{\"segments\":1120,\"emitted\":3728,\"capacity\":24576,\"chunks\":24,\"bytes\":3833856},\"vertices\":4480,\"longest\":1.8981349332938957,\"minNormal\":0.4372752979397774,\"disposed\":24,\"uploadBytes\":192,\"fullUploadBytes\":98304}\n"
+    },
+    {
+      "file": "test-cart-stadium.mjs",
+      "code": 0,
+      "seconds": 20.701,
+      "output": "PASS stadium {\"spectators\":32958,\"slowMisses\":12,\"drag\":{\"dry\":19.6814119023627,\"mud\":12.752120778751513,\"dryAir\":19.721235414567378,\"mudAir\":19.721235414567378}}\n"
+    },
+    {
+      "file": "test-cart-crowd-placement.mjs",
+      "code": 0,
+      "seconds": 2.202,
+      "output": "PASS crowd placement {\"passed\":true,\"checked\":32958,\"sections\":100,\"unsupported\":0,\"maxAnchorError\":0.0008435078886961378,\"courseGeometryUnchanged\":true,\"gpuOnlyAnimation\":true}\n"
+    },
+    {
+      "file": "test-cart-landings.mjs",
+      "code": 0,
+      "seconds": 0.492,
+      "output": "PASS 36 sideways/steering landings, short ramp flight at 30/60/144 Hz, planted tyres, rapid suspension settle, and collision-driven rolls {\"flights\":[{\"hz\":30,\"apex\":3.072393311726034,\"air\":0.49999999999999994,\"firstLanding\":0.9,\"state\":[0,2.4,-73.33447599198537,0,-0.0044515200383574375,0]},{\"hz\":60,\"apex\":3.072393311726034,\"air\":0.5166666666666666,\"firstLanding\":0.9166666666666666,\"state\":[0,2.4,-73.33447599198537,0,-0.0044515200383574375,0]},{\"hz\":144,\"apex\":3.072393311726034,\"air\":0.5208333333333325,\"firstLanding\":0.9305555555555556,\"state\":[0,2.4,-73.33447599198537,0,-0.0044515200383574375,0]}],\"contacts\":[{\"speed\":5,\"rolls\":0,\"recoveries\":0,\"maxAngle\":0},{\"speed\":16,\"rolls\":1,\"recoveries\":1,\"maxAngle\":7.213242478407329},{\"speed\":24,\"rolls\":1,\"recoveries\":1,\"maxAngle\":7.859827492882484}],\"compression\":-0.12458344793832334}\n"
+    },
+    {
+      "file": "test-cart-mayhem.mjs",
+      "code": 0,
+      "seconds": 42.729,
+      "output": "PASS rally controls, accumulating damage, ejection, foot jump/movement, two-way theft, weapon spreads, solo restart and cleanup\n"
+    },
+    {
+      "file": "test-cart-drivers.mjs",
+      "code": 0,
+      "seconds": 27.587,
+      "output": "PASS full-size original drivers, roof/hand/foot clearance, exit restoration, zero flame propulsion and side-only damage\n"
+    },
+    {
+      "file": "test-cart-flames.mjs",
+      "code": 0,
+      "seconds": 21.535,
+      "output": "PASS {\"passed\":true,\"recharge\":6,\"burst\":0.7,\"startingPhases\":[4.306401978675277,5.803550358568319,5.129267296751496,1.5920159655250607,3.056282569861505,2.299290403267369,1.1248994317185135,3.5350690853456035],\"seededStagger\":true,\"predictiveSides\":true,\"flanking\":true,\"jumpLinePreserved\":true,\"protectedTargets\":true,\"aiShots\":[{\"id\":1,\"time\":0.7499999999999998},{\"id\":1,\"time\":6.78333333333346},{\"id\":1,\"time\":12.81666666666658}],\"oneHitPerBurst\":true,\"humanRecharge\":true,\"onFootRecharge\":true,\"cartSwapKeepsRecharge\":true,\"restart\":true}\n"
+    },
+    {
+      "file": "test-cart-interactions.mjs",
+      "code": 0,
+      "seconds": 65.662,
+      "output": "PASS {\"passed\":true,\"onFootOnly\":true,\"timedOwnership\":true,\"reservation\":true,\"fullSize\":true,\"restart\":true,\"wreckCancellation\":true,\"pullContacts\":{\"hands\":[0.00015430769350317276,0.006245998981453791],\"feet\":[0.0018450016654931996,0.0018450016654922052]}}\n"
+    },
+    {
+      "file": "test-cart-fire.mjs",
+      "code": 0,
+      "seconds": 0.833,
+      "output": "{\"passed\":true,\"travellingTail\":[2.7427704334259033,4.606029033660889],\"templeTail\":[{\"min\":2.339205503463745,\"max\":2.7484781742095947},{\"min\":5.3413567543029785,\"max\":5.750629425048828}],\"pauseStable\":true,\"bounded\":true,\"reusedBuffers\":true,\"disposed\":true}\n"
+    },
+    {
+      "file": "test-cart-steering.mjs",
+      "code": 0,
+      "seconds": 0.724,
+      "output": "PASS backward coasting, spin recovery, reverse/brake controls and 30/60/144 Hz steering {\"coasting\":64,\"accelerating\":9,\"reverse\":3,\"maxError\":0.0003075035017827687}\n"
+    },
+    {
+      "file": "test-race-explosives.mjs",
+      "code": 0,
+      "seconds": 135.907,
+      "output": "PASS skate: pickups, full slot, respawn, deck, TNT unlit persistence/attachment/relay/no fuse reset/owner damage/shield/star, Nitro contact/air dodge, chain, interception, horn, cleanup, trials, campaign unchanged\nPASS golf-cart: pickups, full slot, respawn, deck, TNT unlit persistence/attachment/relay/no fuse reset/owner damage/shield/star, Nitro contact/air dodge, chain, interception, horn, cleanup, trials, campaign unchanged\n"
+    },
+    {
+      "file": "test-skate-race-counterplay.mjs",
+      "code": 0,
+      "seconds": 29.668,
+      "output": "{\"leaderDraws\":{\"banana\":1356,\"boomerang\":923,\"shield\":1527,\"tnt\":1061,\"water-bomb\":654,\"mushroom\":1302,\"nitro\":891,\"green-shell\":1141,\"horn\":1145},\"heavyCooldown\":true,\"fullSlotPreservesBox\":true,\"redWarningSeconds\":1.266666666666667,\"peelInterceptsRed\":true,\"backwardShellInterceptsRed\":true,\"normalSpinParriesRed\":true,\"shieldBlocks\":true,\"wallStopsRed\":true,\"noRecedingWarnings\":true,\"noDodgedRedWarning\":true,\"noOtherTargetWarnings\":true,\"blueOrbitSeconds\":1.0999999999999988,\"timedBoostDodgesBlue\":true,\"hornDestroysBlue\":true,\"onFootSidestepDodgesBlue\":true,\"normalJumpDodgesLightning\":true,\"shieldBlocksLightning\":true,\"lightningHitsGrounded\":true,\"resetClearsThreats\":true}\n"
+    }
+  ],
+  "finished": "2026-10-26T21:32:53.642Z"
+}

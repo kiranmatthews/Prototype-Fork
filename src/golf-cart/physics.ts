@@ -27,6 +27,8 @@ function spring(value:number,velocity:number,target:number,dt:number,k=65,dampin
 /** Constant fixed step, bounded catch-up, two-circle rounded chassis contacts. */
 export class GolfCartPhysics {
   readonly carts:CartState[];readonly inputs:CartInput[];readonly impacts:CartImpact[]=[];
+  private readonly contacts=new Set<number>();
+  contacted(a:number,b:number){return this.contacts.has(Math.min(a,b)*this.carts.length+Math.max(a,b));}
   time=0;steps=0;droppedTime=0;private accumulator=0;
   readonly scale:number;readonly topSpeed:number;readonly engine:number;readonly speedLimit:number;readonly crestLaunch:boolean;
   readonly maxLaunchVelocity:number;readonly airRecoveryDelay:number;readonly gravity:number;readonly stableLandings:boolean;
@@ -43,6 +45,7 @@ export class GolfCartPhysics {
   reset(index:number,repair=true){const old=this.carts[index],fresh=createCartState(this.spawns[index],this.ground);if(!repair){fresh.damage=[...old.damage];fresh.health=old.health;fresh.respawns=old.respawns+1;fresh.hits=old.hits;fresh.rolls=old.rolls;fresh.recoveries=old.recoveries;fresh.airborneCount=old.airborneCount;}Object.assign(old,fresh);this.inputs[index]={...NO_CART_INPUT};}
   /** Controls are sampled at simulation frequency, keeping AI reproducible across render rates. */
   advance(dt:number,control?:(world:GolfCartPhysics)=>void){
+    this.contacts.clear();
     if(!Number.isFinite(dt)||dt<=0)return;const admitted=Math.min(dt,.2);this.droppedTime+=Math.max(0,dt-admitted);this.accumulator+=admitted;let n=0;
     while(this.accumulator+1e-10>=CART_PHYSICS.step&&n<CART_PHYSICS.maxSteps){control?.(this);this.step(CART_PHYSICS.step);this.accumulator-=CART_PHYSICS.step;n++;}
   }
@@ -147,6 +150,7 @@ export class GolfCartPhysics {
     }
   }
   private resolve(ia:number,ib:number|null,nx:number,nz:number,depth:number,x:number,z:number,damage:boolean){
+    if(ib!==null)this.contacts.add(Math.min(ia,ib)*this.carts.length+Math.max(ia,ib));
     const a=this.carts[ia],b=ib===null?null:this.carts[ib],share=b?.5:1;
     const push=Math.max(0,depth-.001)*.82;a.x+=nx*push*share;a.z+=nz*push*share;if(b){b.x-=nx*push*share;b.z-=nz*push*share;}
     const arx=x-a.x,arz=z-a.z,brx=b?x-b.x:0,brz=b?z-b.z:0;

@@ -1,0 +1,118 @@
+{
+  "passed": true,
+  "patch": {
+    "patches": [
+      {
+        "vertices": 52,
+        "triangles": 72,
+        "color": "655039"
+      },
+      {
+        "vertices": 52,
+        "triangles": 72,
+        "color": "655039"
+      },
+      {
+        "vertices": 52,
+        "triangles": 72,
+        "color": "655039"
+      },
+      {
+        "vertices": 52,
+        "triangles": 72,
+        "color": "655039"
+      },
+      {
+        "vertices": 52,
+        "triangles": 72,
+        "color": "655039"
+      },
+      {
+        "vertices": 52,
+        "triangles": 72,
+        "color": "655039"
+      },
+      {
+        "vertices": 52,
+        "triangles": 72,
+        "color": "655039"
+      },
+      {
+        "vertices": 52,
+        "triangles": 72,
+        "color": "655039"
+      }
+    ],
+    "view": {
+      "patch": {
+        "x": 48.52012062072754,
+        "y": 26.3085298538208,
+        "z": -89.24484634399414
+      },
+      "lamp": {
+        "x": -30.644214981441497,
+        "y": 58.32007571899414,
+        "z": -33.738034897232055
+      },
+      "camera": {
+        "x": 40.52012062072754,
+        "y": 42.3085298538208,
+        "z": -71.24484634399414
+      }
+    },
+    "render": {
+      "frame": 1369,
+      "calls": 299,
+      "triangles": 2387812,
+      "points": 0,
+      "lines": 0
+    },
+    "gl": 0
+  },
+  "lamps": [
+    {
+      "stage": "front",
+      "single": false,
+      "calls": 151,
+      "geometries": 537,
+      "textures": 83
+    },
+    {
+      "stage": "front",
+      "single": true,
+      "calls": 150,
+      "geometries": 537,
+      "textures": 83
+    },
+    {
+      "stage": "back",
+      "single": false,
+      "calls": 187,
+      "geometries": 542,
+      "textures": 83
+    },
+    {
+      "stage": "back",
+      "single": true,
+      "calls": 185,
+      "geometries": 542,
+      "textures": 83
+    },
+    {
+      "stage": "grid",
+      "single": false,
+      "calls": 591,
+      "geometries": 542,
+      "textures": 83
+    },
+    {
+      "stage": "grid",
+      "single": true,
+      "calls": 583,
+      "geometries": 542,
+      "textures": 83
+    }
+  ],
+  "errors": [],
+  "review": "Production materials and complete geometry. Fixed crowd/cloth clock; camera-only views. Lamp comparison changes only forceSinglePass."
+}

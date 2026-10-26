@@ -43,7 +43,7 @@ export interface RacePlayerHooks {
 }
 export interface RaceThreat {
   item: 'tnt' | 'nitro' | 'green-shell' | 'red-shell' | 'blue-shell' | 'shock-shell' | 'water-bomb' | 'boomerang' | 'tidal-wave';
-  seconds:number; bearing:number; urgent:boolean;
+  seconds:number; bearing:number; urgent:boolean; attached?:boolean;
 }
 export interface RaceHudState {
   vehicle?: 'golf-cart'; crystalReward?:boolean;
@@ -63,7 +63,7 @@ export const RACE_ROSTER = [
   { name: 'SOL', color: '#f1dc68' }, { name: 'VOSS', color: '#e46b5e' },
 ] as const;
 export const RACE_ITEMS: Record<RaceItem,{name:string;color:string;description:string}> = {
-  tnt: {name:'TNT',color:'#ff5535',description:'Drop lit TNT behind you; its three-second fuse gives rivals time to escape'},
+  tnt: {name:'TNT',color:'#ff5535',description:'Drop unlit TNT; contact sticks it to a racer and starts a three-second fuse. Bump another racer to pass it on'},
   nitro: {name:'NITRO',color:'#8cee36',description:'Drop a contact mine behind you; jump over it, shield or clear it with a shell'},
   banana: {name:'BANANA PEEL',color:'#ffda39',description:'Drop behind you to trap a rival or block a shell'},
   'green-shell': {name:'GREEN SHELL',color:'#48b457',description:'Ricochets along the road; hold back when firing to defend behind'},

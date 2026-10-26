@@ -34,11 +34,10 @@ export class CartRaceAudio {
         continue;
       }
       const speed=Math.min(1,Math.abs(c.speed)/38),gas=Math.abs(world.inputs[i]?.throttle??0);
-      const gain=(own?.32+gas*.13+speed*.03:.115+gas*.065+speed*.015)*distanceGain;
-      // The source loop has a ~44 Hz fundamental. The old .72 idle put it
-      // below laptop-speaker range (~32 Hz). Keep the hum audible, then rev
-      // freely when the wheels unload in the air. This affects sound only.
-      const rate=2.15+speed*1.25+gas*.3+(c.grounded?0:.45+gas*.2)+(i%7-3)*.018;
+      const gain=(own?.38+gas*.18+speed*.03:.10+gas*.06+speed*.015)*distanceGain;
+      // A real four-second engine recording retains piston rattle and intake
+      // harmonics in the laptop-speaker band. The unloaded motor revs in air.
+      const rate=.95+speed*.85+gas*.18+(c.grounded?0:.28+gas*.12)+(i%7-3)*.009;
       const voice=this.engines.get(i)??{gain,rate};
       voice.gain+=(gain-voice.gain)*blend;voice.rate+=(rate-voice.rate)*blend;
       this.engines.set(i,voice);
@@ -50,11 +49,11 @@ export class CartRaceAudio {
       const lateral=Math.abs(c.vx*Math.cos(c.yaw)-c.vz*Math.sin(c.yaw));
       const slide=c.grounded&&!burning[i]&&Math.abs(c.speed)>4?Math.max(input.handbrake?.8:0,input.brake*.65,Math.min(1,Math.max(0,lateral-1.5)/4)):0;
       const volume=slide*g*(i===humanCart?.30:.12);if(volume>skid){skid=volume;skidRate=.85+Math.min(1,Math.abs(c.speed)/38)*.3;}
-      if(burning[i]&&burnAge[i]<12)fire=Math.max(fire,g*.32*Math.min(1,(12-burnAge[i])/3));
+      if(burning[i]&&burnAge[i]<12)fire=Math.max(fire,g*.78*Math.min(1,(12-burnAge[i])/3));
       if(owner>=0&&thrust[owner]>0)jet=Math.max(jet,g*(i===humanCart?.4:.14));
     }
     sfx.setLoop('rally-skid','kartSkid',skid>.005,skid,skidRate);
-    sfx.setLoop('rally-fire','kartFire',fire>.005,fire,.9);
+    sfx.setLoop('rally-fire','kartFire',fire>.005,fire,1);
     sfx.setLoop('rally-thruster','kartThrusterLoop',jet>.005,jet,1);
     if(this.thrustWas&&jet<=.005)this.shot('thrust-end','kartThrusterEnd',.25,1);
     this.thrustWas=jet>.005;

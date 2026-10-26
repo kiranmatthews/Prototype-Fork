@@ -23,8 +23,29 @@ try{for(const id of (process.env.RACE_LEVELS??'slipstream-race,country-club,coco
   await page.waitForFunction(item=>window.__game.getSkateRace().projectiles.some(p=>p.type===item),item,{timeout:5000});
   const model=await page.evaluate(async item=>{const r=window.__game.getSkateRace(),p=r.projectiles.find(p=>p.type===item);await p.mesh.userData.explosiveBundle.ready;for(let i=0;i<40;i++)window.testStep(1/60,{moveX:0,moveY:0});window.trapFocus.copy(p.mesh.position);window.trapCamera={x:5,y:3,z:6};return {item,loaded:p.mesh.userData.explosiveBundle.loaded,remaining:p.mesh.userData.explosiveBundle.remaining,positions:p.mesh.children[0].children[0].children[0].geometry.attributes.position.count};},item);
   await page.waitForTimeout(100);await page.screenshot({path:`${out}/${id}-${item}-native.png`});assert.equal(model.loaded,true);models.push(model);
-  await page.evaluate(item=>{const r=window.__game.getSkateRace(),p=r.projectiles.find(p=>p.type===item);if(item==='tnt')for(let i=0;i<137;i++)window.testStep(1/60,{moveX:0,moveY:0});const s=r.course.project(p.mesh.position).s;window.place(1,s,0);const victim=r.riders[1];victim.player.pos.x=p.mesh.position.x;victim.player.pos.z=p.mesh.position.z;if(r.carts){const v=r.carts.fleet.physics.carts[r.carts.cartForRacer[1]];v.x=p.mesh.position.x;v.z=p.mesh.position.z;r.carts.sync();}for(let i=0;i<(item==='tnt'?7:2);i++)window.testStep(1/60,{moveX:0,moveY:0});},item);
-  const hit=await page.evaluate(()=>{const r=window.__game.getSkateRace();return r.carts?r.carts.fleet.physics.carts[r.carts.cartForRacer[1]]?.health<1||!r.carts.isDriving(1):r.riders[1].player.skateCameraBailing;});if(!hit)console.log('Miss diagnostics',await page.evaluate(()=>{const r=window.__game.getSkateRace(),a=r.riders[1];return {position:a.player.pos.toArray(),speed:a.player.speed,invuln:a.player.invulnTimer,grace:a.knockGrace,recovery:a.recovery,state:a.player.state,projectiles:r.projectiles.map(p=>({type:p.type,time:p.time,position:p.mesh.position.toArray()}))};}));assert.ok(hit,`${id} ${item} damages its target`);
+  const contact=await page.evaluate(item=>{
+   const r=window.__game.getSkateRace(),p=r.projectiles.find(p=>p.type===item),tick=n=>{for(let i=0;i<n;i++)window.testStep(1/60,{moveX:0,moveY:0});};
+   if(item==='tnt'){tick(240);if(p.tnt.remaining!==null)throw Error('TNT must wait unlit');}
+   const s=r.course.project(p.mesh.position).s;window.place(1,s,0);const victim=r.riders[1];victim.player.pos.x=p.mesh.position.x;victim.player.pos.z=p.mesh.position.z;
+   if(r.carts){const v=r.carts.fleet.physics.carts[r.carts.cartForRacer[1]];v.x=p.mesh.position.x;v.z=p.mesh.position.z;r.carts.sync();}
+   tick(2);
+   if(item==='tnt'){
+    if(p.tnt.carrier!==1)throw Error('TNT did not attach on contact');const before=p.tnt.remaining;tick(25);
+    const at=victim.player.pos.clone(),gap=r.carts?r.carts.fleet.physics.radius*2-.03:1.05;window.place(0,s,0);r.riders[0].player.pos.set(at.x+gap,at.y,at.z);
+    if(r.carts){const body=r.carts.fleet.physics.carts[r.carts.cartForRacer[0]];Object.assign(body,{x:at.x+gap,y:at.y,z:at.z});r.carts.sync();}
+    tick(2);if(p.tnt.carrier!==0||p.tnt.remaining>=before-.3)throw Error('Bump did not pass the live fuse');
+    window.place(1,s+30,8);window.trapFocus.copy(p.mesh.position);window.trapCamera={x:7,y:5,z:9};
+    return {carrier:p.tnt.carrier,remaining:p.tnt.remaining,before};
+   }
+   return null;
+  },item);
+  if(item==='tnt'){
+   await page.waitForTimeout(100);await page.screenshot({path:`${out}/${id}-tnt-attached-native.png`});
+   await page.evaluate(()=>window.__game.renderQualitySettings.setRegularResolution(720));await page.waitForTimeout(100);await page.screenshot({path:`${out}/${id}-tnt-attached-normal.png`});
+   await page.evaluate(()=>{window.__game.renderQualitySettings.setRegularResolution(null);for(let i=0;i<180;i++)window.testStep(1/60,{moveX:0,moveY:0});});
+   model.relay=contact;
+  }
+  const hit=await page.evaluate(item=>{const r=window.__game.getSkateRace(),id=item==='tnt'?0:1;return r.carts?r.carts.fleet.physics.carts[r.carts.cartForRacer[id]]?.health<1||!r.carts.isDriving(id):r.riders[id].player.skateCameraBailing;},item);assert.ok(hit,`${id} ${item} damages its current carrier/target`);
   await page.waitForTimeout(60);await page.screenshot({path:`${out}/${id}-${item}-blast.png`});
  }
  const report=await page.evaluate(()=>{const g=window.__game,r=g.getSkateRace();return {stamp:document.querySelector('.hud-build')?.textContent,checkpoints:r.level.checkpoints.length,glError:g.renderer.getContext().getError(),items:r.riders.map(a=>a.item)};});

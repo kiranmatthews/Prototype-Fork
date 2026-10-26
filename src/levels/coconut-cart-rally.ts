@@ -5,6 +5,7 @@ import type { RaceKnot } from '../race/types';
 import { lazySourceField } from './lazy-source';
 import { CART_RALLY_LENGTH,CART_RALLY_JUMPS,CART_RALLY_SUPPLY_ROWS,CART_RALLY_CORNERS,STADIUM,cartRallyPoint,cartRallyFrame,stadiumPoint,stadiumStandQuad,stadiumSections,stadiumBoundaryPaths,rallyMudWetness,rallySurfacePoint } from './cart-stadium-layout';
 export { CART_RALLY_LENGTH,CART_RALLY_JUMPS,CART_RALLY_PIPES,CART_RALLY_SUPPLY_ROWS,cartRallyPoint } from './cart-stadium-layout';
+const CHICANES=[90,390,780,950,1300,1470,1860,2020] as const;
 const line:RaceKnot[]=[];
 for(let s=18;s<=CART_RALLY_LENGTH;s+=2)line.push([...cartRallyPoint(s),34]);
 function build():CustomComponent[]{
@@ -19,16 +20,31 @@ function build():CustomComponent[]{
   };
   const strip=(name:string,a:number,b:number,profile:number[],color:string,soft=false,lift=0,solid=true)=>{
     const vertices:number[]=[],indices:number[]=[],uvs:number[]=[],normals:number[]=[],colors:number[]=[],rows=Math.max(1,Math.ceil((b-a)/2)),cols=profile.length-1;
+    const patches=name==='Packed stadium dirt'||name==='Soft dirt landing trough'
+      ?CHICANES.flatMap((at,index)=>at+14>=a&&at-9<=b?[{at,lo:index%2?-14:3,hi:index%2?-3:14}]:[]):[];
     for(let j=0;j<=rows;j++)for(let i=0;i<=cols;i++){
       const s=a+(b-a)*j/rows,u=profile[i];vertices.push(...rallySurfacePoint(s,u,lift));uvs.push(Math.round(u/5*1e5)/1e5,Math.round(s/5*1e5)/1e5);
       const left=rallySurfacePoint(s,u-.01),right=rallySurfacePoint(s,u+.01),back=rallySurfacePoint(s-.01,u),front=rallySurfacePoint(s+.01,u);
       const x=right.map((v,k)=>v-left[k]),z=front.map((v,k)=>v-back[k]);
       const n=[x[1]*z[2]-x[2]*z[1],x[2]*z[0]-x[0]*z[2],x[0]*z[1]-x[1]*z[0]],length=Math.hypot(...n)||1;normals.push(...n.map(v=>Math.round(v/length*1e6)/1e6));
       const wet=rallyMudWetness(s,u),rut=(.91+.08*Math.sin(u*2.7+s*.047)*Math.sin(u*.6+s*.13))*(1-.24*wet);
-      colors.push(...[rut,rut*(1-.035*wet),rut*(1-.085*wet)].map(v=>Math.round(v*1000)/1000));
+      // Tint the real dirt surface. The existing soft-ground collision mesh
+      // keeps its contact heights but is invisible, so no raised colour mat
+      // can intersect the microterrain and reveal hard-edged holes.
+      let mud=0;
+      for(const patch of patches){
+        const edge=Math.min(s-patch.at+9,patch.at+14-s,u-patch.lo,patch.hi-u);
+        if(edge<=0)continue;
+        const ragged=.35*Math.sin(s*.73+u*.9)+.22*Math.sin(s*.21-u*1.3);
+        const feather=Math.max(0,Math.min(1,(edge-.45-ragged)/2.6));
+        mud=Math.max(mud,feather*feather*(3-2*feather));
+      }
+      // Linear RGB ratios of the original dark loam to the packed-dirt base.
+      const tint=[.255731,.359363,.687521];
+      colors.push(...[rut,rut*(1-.035*wet),rut*(1-.085*wet)].map((v,k)=>Math.round(v*(1+(tint[k]-1)*mud)*1000)/1000));
     }
     for(let j=0;j<rows;j++)for(let i=0;i<cols;i++){const p=j*(cols+1)+i,q=p+cols+1;indices.push(p,p+1,q,p+1,q+1,q);}
-    add({t:'mesh',nm:name,p:[0,0,0],vertices,indices,uvs,normals,colors,solid,color,tex:name==='Painted dirt launch marks'?'dirt':'rally-mud',smoothCollision:true,...(soft?{groundSpeedLimit:7}:{}),castShadow:false});
+    add({t:'mesh',nm:name,p:[0,0,0],vertices,indices,uvs,normals,colors,solid,color,tex:name==='Painted dirt launch marks'?'dirt':'rally-mud',smoothCollision:true,...(soft?{groundSpeedLimit:7}:{}),...(name==='Soft dirt chicane'?{invisible:true}:{}),castShadow:false});
   };
   for(let s=-8;s<CART_RALLY_LENGTH+48;s+=24){
     const end=Math.min(s+24,CART_RALLY_LENGTH+48),cuts=[s,end,...CART_RALLY_JUMPS.flatMap(j=>[j.start+8,j.end+4]).filter(v=>v>s&&v<end)].sort((a,b)=>a-b);
@@ -93,7 +109,7 @@ function build():CustomComponent[]{
       for(const ds of [-4.8,4.8])for(const du of [-4.8,4.8])add({t:'platform',nm:'Festival canopy pole',p:stadiumPoint(at+ds,u+du,22),s:[.14,8,.14],color:'#897a5d',tex:'metal',solid:false});
     }
   }
-  for(const [index,s]of [90,390,780,950,1300,1470,1860,2020].entries()){
+  for(const [index,s]of CHICANES.entries()){
     const side=index%2?1:-1,p=cartRallyPoint(s,side*10);
     add({t:'wall',nm:'Stadium tyre-colour chicane',p,s:[4,1.5,3],yaw:-Math.atan(cartRallyFrame(s).dx)*180/Math.PI,color:'#4b5351',tex:'solid'});
     strip('Soft dirt chicane',s-9,s+14,side>0?[-14,-10,-6,-3]:[3,6,10,14],'#655039',true,.04);

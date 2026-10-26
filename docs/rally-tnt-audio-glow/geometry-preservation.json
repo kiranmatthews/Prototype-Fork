@@ -1,0 +1,22 @@
+{
+  "courseDataIdentical": true,
+  "allNonHaloGeometryIdentical": true,
+  "componentCount": 1447,
+  "changes": [
+    {
+      "name": "Packed stadium dirt",
+      "fields": "colors",
+      "count": 16
+    },
+    {
+      "name": "Floodlight lens glow",
+      "fields": "vertices",
+      "count": 34
+    },
+    {
+      "name": "Soft dirt chicane",
+      "fields": "invisible",
+      "count": 8
+    }
+  ]
+}

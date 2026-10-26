@@ -26,11 +26,13 @@ interface Rider {
   targetRing:ReturnType<typeof raceTargetRing>; storm:THREE.Group;
   think:number; aim:THREE.Vector3; attackCooldown:number; wasSwimming:boolean;
 }
+interface TntRelay {carrier:number;remaining:number|null;blocked:Set<number>}
 interface Projectile {
   type:Exclude<RaceItem,'shield'|'mushroom'|'horn'|'star'>; owner:number; target:number;
   direction:THREE.Vector3; mesh:THREE.Group; previous:THREE.Vector3;
   phase:'travel'|'windup'|'strike'; phaseTime:number; locked:THREE.Vector3;
   progress:number; offset:number; velocityY:number; bounces:number; time:number; hit:Set<number>;
+  tnt?:TntRelay;
 }
 const vec = () => new THREE.Vector3();
 const blankInput = ():Input => ({moveX:0,moveY:0,jumpHeld:false,grindHeld:false,spinHeld:false,grabHeld:false,transferHeld:false,
@@ -222,14 +224,15 @@ export class SkateRace {
     mesh.position.copy(r.player.pos).y+=item==='banana'?.05:.7;
     const direction=r.player.raceHeading;if((item==='green-shell'||item==='water-bomb'||item==='boomerang')&&backwards)direction.negate();
     if(item==='banana'||explosive)mesh.position.addScaledVector(direction,explosive&&this.carts?-4.2:-2.2);
-    if(explosive)updateRaceExplosiveModel(mesh,item==='tnt'?CONST.tntFuse:undefined,this.elapsed);
+    if(explosive)updateRaceExplosiveModel(mesh,undefined,this.elapsed);
     if(item==='water-bomb')mesh.position.y+=.6;
     if(item==='boomerang'){const grade=this.course!.tangent(r.progress);direction.y=direction.dot(grade.clone().setY(0).normalize())*grade.y/Math.max(.1,Math.hypot(grade.x,grade.z));direction.normalize();}
     if(item==='tidal-wave'){mesh.children[0].rotation.y=-Math.PI/2;mesh.scale.set(this.course!.width(r.progress)/.6,1.35,1.4);mesh.rotation.y=Math.atan2(direction.x,direction.z);}
     this.root.add(mesh);
     const projected=this.course!.project(mesh.position,r.progress,40);
     const projectile:Projectile={phase:'travel',phaseTime:0,locked:vec(),type:item,owner:id,target:target?.id??-1,direction,mesh,previous:mesh.position.clone(),
-      progress:projected.s,offset:projected.offset,velocityY:item==='water-bomb'?10:0,bounces:0,time:0,hit:new Set()};
+      progress:projected.s,offset:projected.offset,velocityY:item==='water-bomb'?10:0,bounces:0,time:0,hit:new Set(),
+      ...(item==='tnt'?{tnt:{carrier:-1,remaining:null,blocked:new Set<number>()}}:{})};
     this.projectiles.push(projectile);
     if(this.carts&&(item==='green-shell'||item==='banana'))for(const side of [-1,1]){
       const extra=createRallyItemModel(item);extra.scale.copy(mesh.scale);extra.position.copy(mesh.position).addScaledVector(new THREE.Vector3(-direction.z,0,direction.x),side*2.4);this.root.add(extra);
@@ -435,16 +438,98 @@ export class SkateRace {
     this.ray.set(from,this.a.copy(to).sub(from).normalize());
     return this.level!.walls.some(box=>this.ray.intersectBox(box,this.wallHit)!==null&&this.wallHit.distanceTo(from)<=length);
   }
+  /** Use the same rounded chassis contacts as driving, including contacts
+   * resolved earlier in this fixed step. Walking racers use body contact. */
+  private tntContact(a:Rider,b:Rider):boolean {
+    const fleet=this.carts?.fleet,ia=this.carts?.cartForRacer[a.id]??-1,ib=this.carts?.cartForRacer[b.id]??-1;
+    if(fleet&&ia>=0&&ib>=0){
+      const w=fleet.physics,x=w.carts[ia],y=w.carts[ib];
+      if(w.contacted(ia,ib))return true;
+      if(Math.abs(x.y-y.y)>1.4*w.scale)return false;
+      for(const sa of [-1,1])for(const sb of [-1,1])if(Math.hypot(
+        x.x+Math.sin(x.yaw)*w.probeOffset*sa-y.x-Math.sin(y.yaw)*w.probeOffset*sb,
+        x.z+Math.cos(x.yaw)*w.probeOffset*sa-y.z-Math.cos(y.yaw)*w.probeOffset*sb)<=2*w.radius+.025)return true;
+      return false;
+    }
+    if(Math.abs(a.player.pos.y-b.player.pos.y)>1.5)return false;
+    if(fleet&&(ia>=0||ib>=0)){
+      const w=fleet.physics,body=w.carts[ia>=0?ia:ib],foot=ia>=0?b.player:a.player;
+      return [-1,1].some(sign=>Math.hypot(body.x+Math.sin(body.yaw)*w.probeOffset*sign-foot.pos.x,body.z+Math.cos(body.yaw)*w.probeOffset*sign-foot.pos.z)<w.radius+.5);
+    }
+    return a.player.pos.distanceToSquared(b.player.pos)<1.2*1.2;
+  }
+  private mountTnt(p:Projectile,render=false):void {
+    const id=p.tnt?.carrier??-1;if(id<0)return;
+    const r=this.riders[id],index=this.carts?.cartForRacer[id]??-1,half=.7*p.mesh.scale.y;
+    if(render&&this.carts&&index>=0){
+      const model=this.carts.fleet.models[index];
+      model.modules.roof.localToWorld(p.mesh.position.set(0,2.18+this.carts.fleet.kit.cabinRise+half/this.carts.fleet.physics.scale,.12));
+      model.modules.roof.getWorldQuaternion(p.mesh.quaternion);
+    }else{
+      const roof=index>=0&&this.carts?(2.18+this.carts.fleet.kit.cabinRise)*this.carts.fleet.physics.scale:2.1;
+      p.mesh.position.copy(render?r.player.renderPosition:r.player.pos).y+=roof+half;
+      p.mesh.rotation.set(0,Math.atan2(r.player.raceHeading.x,r.player.raceHeading.z),0);
+    }
+  }
+  private carryTnt(p:Projectile,r:Rider):boolean {
+    if(r.star>0||r.shield>0){
+      if(r.shield>0)r.shield=0;
+      this.effects.burst('shield',r.player.pos);p.time=99;return false;
+    }
+    const relay=p.tnt!;relay.carrier=r.id;relay.remaining??=CONST.tntFuse;
+    // A fresh bump is required. Remaining in the same pile-up cannot ping-pong
+    // the bundle each simulation tick, and transfers never restart its fuse.
+    relay.blocked=new Set(this.riders.slice(0,this.count).filter(other=>other!==r&&this.tntContact(r,other)).map(other=>other.id));
+    p.velocityY=0;this.mountTnt(p);this.effects.pulse(r.player.pos,0xff7840,1.8);
+    sfx.withGain(this.soundGain(r),()=>sfx.play('tntCount',.65),r.id?'race-rivals':'');return true;
+  }
+  private updateTnt(p:Projectile,dt:number):void {
+    const relay=p.tnt!,carrier=relay.carrier>=0?this.riders[relay.carrier]:null;
+    if(carrier){
+      if(carrier.finish!==null||carrier.recovery){relay.carrier=-1;p.mesh.rotation.set(0,0,0);}
+      else{
+        this.mountTnt(p);
+        if(carrier.star>0||carrier.shield>0){this.carryTnt(p,carrier);return;}
+        for(const id of relay.blocked)if(!this.tntContact(carrier,this.riders[id]))relay.blocked.delete(id);
+        for(const next of this.riders.slice(0,this.count))if(next!==carrier&&next.finish===null&&!next.recovery&&!relay.blocked.has(next.id)&&
+          !this.projectiles.some(other=>other!==p&&other.time<90&&other.tnt?.carrier===next.id)&&this.tntContact(carrier,next)){
+          this.carryTnt(p,next);break;
+        }
+      }
+    }
+    if(p.time>=90)return;
+    if(relay.carrier<0){
+      const half=.7*p.mesh.scale.y;p.velocityY-=24*dt;p.mesh.position.y+=p.velocityY*dt;
+      const ground=this.course!.supportAt(this.level!,p.mesh.position,this.a,3,Math.max(8,-p.velocityY*dt+3));
+      if(ground&&p.mesh.position.y<=ground.y+half){p.mesh.position.y=ground.y+half;p.velocityY=0;}
+      if(p.time>=.55)for(const r of this.riders.slice(0,this.count)){
+        if(r.finish!==null||r.recovery||this.projectiles.some(other=>other!==p&&other.time<90&&other.tnt?.carrier===r.id))continue;
+        const centre=r.player.pos.clone().add(new THREE.Vector3(0,this.carts?.isDriving(r.id)?.8:.65,0)),previous=centre.clone().addScaledVector(r.velocity,-dt);
+        if(this.nearSegment(p.mesh.position,previous,centre,this.carts?.isDriving(r.id)?2:1.15)){this.carryTnt(p,r);break;}
+      }
+    }
+    if(p.time>=90)return;
+    if(relay.remaining!==null){
+      const before=relay.remaining,remaining=Math.max(0,before-dt);relay.remaining=remaining;
+      if(Math.ceil(before)!==Math.ceil(relay.remaining)&&relay.remaining>0){const listener=this.riders[relay.carrier>=0?relay.carrier:p.owner];sfx.withGain(this.soundGain(listener),()=>sfx.play(Math.ceil(remaining)%2?'tntCount':'tntCount2',.7),listener.id?'race-rivals':'');}
+      if(relay.remaining<=0){this.explodeItem(p);return;}
+    }
+    updateRaceExplosiveModel(p.mesh,relay.remaining??undefined,this.elapsed);
+  }
   private explosiveRadius(p:Projectile):number {return this.carts?(p.type==='nitro'?8:7):p.type==='nitro'?5.5:4.5;}
   private explodeItem(p:Projectile):void {
     if(p.time>=90)return;p.time=99;
     const at=p.mesh.position,radius=this.explosiveRadius(p);
     this.effects.burst(p.type,at);this.effects.pulse(at,RACE_ITEMS[p.type].color,radius);
     puffs.burst(p.type==='nitro'?'boomNitro':'boomTnt',at.x,at.y,at.z,{});
-    sfx.withGain(this.soundGain(this.riders[p.owner]),()=>sfx.play('tntBoom',.8),p.owner?'race-rivals':'');
-    for(const r of this.riders.slice(0,this.count))if(r.id!==p.owner&&r.finish===null&&!r.recovery&&
-      Math.hypot(r.player.pos.x-at.x,r.player.pos.z-at.z)<radius&&Math.abs(r.player.pos.y-at.y)<(this.carts?3.5:2))
+    sfx.withGain(Math.max(0,1-at.distanceTo(this.human.pos)/55)**2,()=>sfx.play('tntBoom',.8),'race-explosives');
+    const blastY=p.tnt&&p.tnt.carrier>=0?this.riders[p.tnt.carrier].player.pos.y+.7:at.y;
+    for(const r of this.riders.slice(0,this.count))if((p.type==='tnt'||r.id!==p.owner)&&r.finish===null&&!r.recovery&&
+      Math.hypot(r.player.pos.x-at.x,r.player.pos.z-at.z)<radius&&Math.abs(r.player.pos.y-blastY)<(this.carts?3.5:2)){
+      // A last-moment ram cannot make the attached bomb harmless via hit grace.
+      if(p.tnt?.carrier===r.id)r.knockGrace=0;
       this.hit(r,at,this.carts?(p.type==='nitro'?.42:.35):.24);
+    }
     // Mark the source spent before chaining, so overlapping traps resolve once.
     for(const other of this.projectiles)if(other.time<90&&(other.type==='tnt'||other.type==='nitro')&&other.mesh.position.distanceTo(at)<radius)this.explodeItem(other);
   }
@@ -452,18 +537,15 @@ export class SkateRace {
     const c=this.course!,level=this.level!;
     for(const p of this.projectiles){
       if(p.time>=90)continue;
-      p.time+=dt;p.phaseTime+=dt;p.previous.copy(p.mesh.position);
-      if(p.type==='tnt'||p.type==='nitro'){
+      p.time=p.type==='tnt'?Math.min(60,p.time+dt):p.time+dt;p.phaseTime+=dt;p.previous.copy(p.mesh.position);
+      if(p.type==='tnt'){this.updateTnt(p,dt);continue;}
+      if(p.type==='nitro'){
         const half=.7*p.mesh.scale.y;
         p.velocityY-=24*dt;p.mesh.position.y+=p.velocityY*dt;
         const ground=c.supportAt(level,p.mesh.position,this.a,3,Math.max(8,-p.velocityY*dt+3));
         if(ground&&p.mesh.position.y<=ground.y+half){p.mesh.position.y=ground.y+half;p.velocityY=0;}
-        updateRaceExplosiveModel(p.mesh,p.type==='tnt'?Math.max(0,CONST.tntFuse-p.time):undefined,this.elapsed);
-        if(p.type==='tnt'){
-          if(Math.floor(p.time)!==Math.floor(p.time-dt)&&p.time<CONST.tntFuse)
-            sfx.withGain(this.soundGain(this.riders[p.owner]),()=>sfx.play('tntCount2',.55),p.owner?'race-rivals':'');
-          if(p.time>=CONST.tntFuse)this.explodeItem(p);
-        }else if(p.time>=.55){
+        updateRaceExplosiveModel(p.mesh,undefined,this.elapsed);
+        if(p.time>=.55){
           for(const r of this.riders.slice(0,this.count)){
             if(r.id===p.owner||r.finish!==null||r.recovery)continue;
             const centre=r.player.pos.clone().add(new THREE.Vector3(0,this.carts?.8:.65,0));
@@ -599,7 +681,7 @@ export class SkateRace {
       }
     }
     this.projectiles=this.projectiles.filter(p=>{
-      const life=p.type==='banana'||p.type==='nitro'?22:p.type==='tnt'?CONST.tntFuse+.1:p.type==='blue-shell'||p.type==='tidal-wave'?75:p.type==='boomerang'?4:12;
+      const life=p.type==='banana'||p.type==='nitro'?22:p.type==='tnt'?90:p.type==='blue-shell'||p.type==='tidal-wave'?75:p.type==='boomerang'?4:12;
       if(p.time<life&&p.mesh.position.y>level.killY&&p.bounces<7)return true;
       disposeRaceItemModel(p.mesh);return false;
     });
@@ -615,11 +697,11 @@ export class SkateRace {
       if(r.finish!==null||r.recovery)continue;
       const forward=this.viewForward.lengthSq()>.1?this.viewForward:r.player.raceHeading;
       for(const p of this.projectiles){
-        if(p.time>=90||p.owner===r.id||p.type==='banana')continue;
+        if(p.time>=90||p.owner===r.id&&p.type!=='tnt'||p.type==='banana')continue;
         let seconds=Infinity;
         if(p.type==='tnt'){
-          if(p.mesh.position.distanceTo(r.player.pos)>this.explosiveRadius(p)+3)continue;
-          seconds=CONST.tntFuse-p.time;
+          if(p.tnt?.remaining===null||!p.tnt||p.mesh.position.distanceTo(r.player.pos)>this.explosiveRadius(p)+3)continue;
+          seconds=p.tnt.remaining;
         }else if(p.type==='nitro'){
           seconds=this.approachingTime(p,r,0,2);if(!Number.isFinite(seconds))continue;
         }else if(p.type==='shock-shell')seconds=1.6-p.time;
@@ -639,7 +721,7 @@ export class SkateRace {
           seconds=this.approachingTime(p,r,p.type==='boomerang'?40:43,2.5);if(!Number.isFinite(seconds))continue;
         }
         const dx=p.mesh.position.x-r.player.pos.x,dz=p.mesh.position.z-r.player.pos.z;
-        r.threats.push({item:p.type,seconds:Math.max(0,seconds),bearing:Math.atan2(-dx*forward.z+dz*forward.x,dx*forward.x+dz*forward.z),urgent:seconds<.8});
+        r.threats.push({item:p.type,attached:p.tnt?.carrier===r.id,seconds:Math.max(0,seconds),bearing:Math.atan2(-dx*forward.z+dz*forward.x,dx*forward.x+dz*forward.z),urgent:seconds<.8});
       }
       r.threats.sort((a,b)=>a.seconds-b.seconds);r.threats.length=Math.min(2,r.threats.length);
       const threat=r.threats[0];if(!threat)continue;
@@ -671,8 +753,8 @@ export class SkateRace {
   private placeMarker(r:Rider,position=r.player.pos):void {r.starModel.visible=r.star>0&&r.finish===null&&!r.recovery;r.starModel.position.copy(position).add(new THREE.Vector3(Math.sin(this.elapsed*5)*1.8,2.2,Math.cos(this.elapsed*5)*1.8));r.starModel.rotation.y=this.elapsed*6;r.marker.visible=this.phase==='running'&&position.distanceTo(this.viewOrigin)>7&&r.id>0&&r.id<this.count&&!r.recovery&&r.finish===null;r.marker.position.copy(position).y+=this.carts?.isDriving(r.id)?4.1:3.4;r.bubble.position.copy(position).y+=1.2;r.bubble.rotation.set(Math.sin(this.elapsed*.9)*.14,this.elapsed*.6,Math.cos(this.elapsed*.7)*.12);r.bubble.visible=r.shield>0&&r.recovery===0&&r.id<this.count&&r.finish===null;}
   /** The shared frame loop captures the hero; race owns only its extra riders. */
   commitRenderStep():void {if(this.level)for(const r of this.riders.slice(1,this.count))r.player.commitRenderStep(this.level);}
-  applyRenderInterpolation(alpha:number):void {for(const r of this.riders.slice(0,this.count)){if(r.id)r.player.applyRenderInterpolation(alpha);this.placeMarker(r,r.player.renderPosition);}this.carts?.present(alpha);}
-  restoreRenderPose():void {for(const r of this.riders.slice(1,this.count))r.player.restoreRenderPose();}
+  applyRenderInterpolation(alpha:number):void {for(const r of this.riders.slice(0,this.count)){if(r.id)r.player.applyRenderInterpolation(alpha);this.placeMarker(r,r.player.renderPosition);}this.carts?.present(alpha);for(const p of this.projectiles)if((p.tnt?.carrier??-1)>=0)this.mountTnt(p,true);}
+  restoreRenderPose():void {for(const r of this.riders.slice(1,this.count))r.player.restoreRenderPose();for(const p of this.projectiles)if((p.tnt?.carrier??-1)>=0)this.mountTnt(p);}
   /** Skin meshes cannot use static bounds. Cull the actor conservatively in X/Z,
    * retaining vertical reflection coverage and all simulation/interaction work. */
   updateView(camera:THREE.Camera):void {

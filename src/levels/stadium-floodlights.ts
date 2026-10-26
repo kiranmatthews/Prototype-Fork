@@ -54,7 +54,7 @@ export function stadiumFloodlight(s:number,side:number):CustomComponent[]{
  const vertices:number[]=[],indices:number[]=[],uvs:number[]=[];
  for(let row=0;row<2;row++)for(let col=0;col<3;col++){
   const x=(col-1)*2.32,y=(row-.5)*2.12,n=vertices.length/3;
-  for(const [u,v]of [[0,0],[1,0],[0,1],[1,1]]){vertices.push(...world([x+(u-.5)*3.3,y+(v-.5)*3.3,.39],true));uvs.push(u,v);}
+  for(const [u,v]of [[0,0],[1,0],[0,1],[1,1]]){vertices.push(...world([x+(u-.5)*4.8,y+(v-.5)*4.8,.39],true));uvs.push(u,v);}
   indices.push(n,n+1,n+2,n+1,n+3,n+2);
  }
  fixtures.push({t:'mesh',nm:'Floodlight lens glow',p:origin,vertices,indices,uvs,tex:'rally-lamp-glow',solid:false,castShadow:false,doubleSided:true});

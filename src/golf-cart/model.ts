@@ -105,7 +105,7 @@ export class GolfCartModel {
   constructor(kit:GolfCartKit,palette:CartPalette){
     this.palette={...palette};this.root.name='GolfCart';this.body.name='SuspendedBody';this.root.add(this.body);
     const mat=(name:string,color:string,roughness=.72)=>{const m=new THREE.MeshStandardMaterial({color,roughness,flatShading:true});m.name=name;return m;};
-    this.materials={sponsor:mat('Weathered sponsor decals','#ffffff',.86),nozzleRing:mat('Nozzle charge rings','#eaa03a',.4),nozzleCream:mat('Nozzle cream housing','#f2dfb5',.68),nozzleBrass:mat('Nozzle brass lips','#c39543',.35),nozzleSoot:mat('Nozzle dark interior','#282b2e',.8),nozzleOrange:mat('Nozzle cooling fins','#e87729',.52),paint:mat('Paint · recolour',palette.paint,.48),cream:mat('Canopy & stripe · recolour',palette.cream),seat:mat('Upholstery · recolour',palette.seat),trim:mat('Frame & bumpers · recolour',palette.trim),cargo:mat('Golf bag · recolour',palette.cargo),lamp:mat('Warm headlamps','#fff1b1',.35),red:mat('Rear lights','#ec5945',.4),metal:mat('Metal','#9eacb5',.45),glass:mat('Windscreen','#93d8e1',.2),wheel:mat('Tyres & hubs','#ffffff'),canopyArt:mat('Sculpted canopy · recolour',palette.cream),bagArt:mat('Sculpted bag · recolour',palette.cargo),bagDetail:mat('Bag piping & straps','#ffffff')};
+    this.materials={sponsor:mat('Weathered sponsor decals','#ffffff',.86),nozzleRing:mat('Nozzle outlet rings','#eaa03a',.4),nozzleCream:mat('Nozzle cream housing','#f2dfb5',.68),nozzleBrass:mat('Nozzle brass lips','#c39543',.35),nozzleSoot:mat('Nozzle dark interior','#282b2e',.8),nozzleOrange:mat('Flame chamber charge fins','#e87729',.52),paint:mat('Paint · recolour',palette.paint,.48),cream:mat('Canopy & stripe · recolour',palette.cream),seat:mat('Upholstery · recolour',palette.seat),trim:mat('Frame & bumpers · recolour',palette.trim),cargo:mat('Golf bag · recolour',palette.cargo),lamp:mat('Warm headlamps','#fff1b1',.35),red:mat('Rear lights','#ec5945',.4),metal:mat('Metal','#9eacb5',.45),glass:mat('Windscreen','#93d8e1',.2),wheel:mat('Tyres & hubs','#ffffff'),canopyArt:mat('Sculpted canopy · recolour',palette.cream),bagArt:mat('Sculpted bag · recolour',palette.cargo),bagDetail:mat('Bag piping & straps','#ffffff')};
     for(const [key,map] of [['wheel',kit.textures.wheel],['canopyArt',kit.textures.canopy],['bagArt',kit.textures.bagPaint],['bagDetail',kit.textures.bag]] as const){const material=this.materials[key];material.map=map;material.flatShading=false;material.roughness=.85;}this.materials.glass.transparent=true;this.materials.glass.opacity=.22;this.materials.glass.depthWrite=false;
     this.materials.sponsor.map=kit.sponsorTexture??null;this.materials.sponsor.polygonOffset=true;this.materials.sponsor.polygonOffsetFactor=-2;this.materials.sponsor.polygonOffsetUnits=-2;
     this.materials.nozzleBrass.metalness=.7;this.materials.nozzleSoot.metalness=.15;
@@ -125,8 +125,8 @@ export class GolfCartModel {
   /** Previous driver is returned, detached, for reuse or disposal by its owner. */
   setDriver(next:CartDriver|null){const old=this.driver;if(old)this.socket.remove(old.root);this.driver=next;if(next)this.socket.add(next.root);return old;}
   setModule(name:'roof'|'cargo',visible:boolean){this.modules[name].visible=visible;}
-  /** The six outlet rings show the chamber, independently of the brass mounts. */
-  setFlameReady(ready:boolean){if(!this.scorched)this.materials.nozzleRing.color.set(ready?'#62f06b':'#eaa03a');}
+  /** Orange top fins turn green when loaded; the side outlets stay orange. */
+  setFlameReady(ready:boolean){if(!this.scorched)this.materials.nozzleOrange.color.set(ready?'#62f06b':'#e87729');}
   setScorched(value:boolean){
     if(this.scorched===value)return;this.scorched=value;
     if(value){for(const material of Object.values(this.materials)){this.originalColors.set(material,material.color.clone());material.color.set('#181a1c');}}

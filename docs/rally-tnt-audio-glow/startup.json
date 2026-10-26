@@ -1,0 +1,799 @@
+{
+  "base": "http://127.0.0.1:5498/",
+  "entry": "/assets/index-BbmXX4Gn.js",
+  "main": "/assets/main-VZkoOi2Q.js",
+  "rows": [
+    {
+      "name": "delayed-entry",
+      "status": "Loading game…",
+      "visible": true,
+      "failed": false,
+      "link": {
+        "x": 576.890625,
+        "y": 380,
+        "width": 126.21875,
+        "height": 44,
+        "top": 380,
+        "right": 703.109375,
+        "bottom": 424,
+        "left": 576.890625
+      },
+      "viewport": [
+        1280,
+        720
+      ],
+      "animation": "startup-spin",
+      "paint": [
+        {
+          "name": "first-paint",
+          "ms": 204
+        },
+        {
+          "name": "first-contentful-paint",
+          "ms": 204
+        }
+      ],
+      "game": false,
+      "errors": [],
+      "external": []
+    },
+    {
+      "name": "missing-entry",
+      "status": "Loading game…",
+      "visible": true,
+      "failed": false,
+      "link": {
+        "x": 576.890625,
+        "y": 380,
+        "width": 126.21875,
+        "height": 44,
+        "top": 380,
+        "right": 703.109375,
+        "bottom": 424,
+        "left": 576.890625
+      },
+      "viewport": [
+        1280,
+        720
+      ],
+      "animation": "startup-spin",
+      "paint": [
+        {
+          "name": "first-paint",
+          "ms": 44
+        },
+        {
+          "name": "first-contentful-paint",
+          "ms": 44
+        }
+      ],
+      "game": false,
+      "nativeReloadRecovered": true,
+      "errors": [
+        "Failed to load resource: net::ERR_FAILED"
+      ],
+      "external": []
+    },
+    {
+      "name": "no-javascript",
+      "instructionsVisible": true,
+      "errors": [],
+      "external": []
+    },
+    {
+      "name": "missing-main",
+      "failed": {
+        "status": "The game couldn’t start. Reload to try again.",
+        "visible": true,
+        "failed": true,
+        "link": {
+          "x": 576.890625,
+          "y": 370,
+          "width": 126.21875,
+          "height": 44,
+          "top": 370,
+          "right": 703.109375,
+          "bottom": 414,
+          "left": 576.890625
+        },
+        "viewport": [
+          1280,
+          720
+        ],
+        "animation": "startup-spin",
+        "paint": [
+          {
+            "name": "first-paint",
+            "ms": 136
+          },
+          {
+            "name": "first-contentful-paint",
+            "ms": 136
+          }
+        ],
+        "game": false
+      },
+      "recovered": {
+        "url": "http://127.0.0.1:5498/?playtest&level=slipstream-race&lite",
+        "saved": "keep me",
+        "level": "slipstream-race"
+      },
+      "errors": [],
+      "external": []
+    },
+    {
+      "name": "missing-style",
+      "failed": {
+        "status": "The game couldn’t start. Reload to try again.",
+        "visible": true,
+        "failed": true,
+        "link": {
+          "x": 576.890625,
+          "y": 370,
+          "width": 126.21875,
+          "height": 44,
+          "top": 370,
+          "right": 703.109375,
+          "bottom": 414,
+          "left": 576.890625
+        },
+        "viewport": [
+          1280,
+          720
+        ],
+        "animation": "startup-spin",
+        "paint": [
+          {
+            "name": "first-paint",
+            "ms": 184
+          },
+          {
+            "name": "first-contentful-paint",
+            "ms": 184
+          }
+        ],
+        "game": false
+      },
+      "errors": [
+        "Failed to load resource: net::ERR_FAILED",
+        "Game startup failed. Error: Unable to preload CSS for http://127.0.0.1:5498/assets/main-B47IAd7i.css\n    at HTMLLinkElement.<anonymous> (http://127.0.0.1:5498/assets/preload-helper-C1FmrZbK.js:1:842)"
+      ],
+      "external": []
+    },
+    {
+      "name": "strict-csp",
+      "failed": {
+        "status": "The game couldn’t start. Reload to try again.",
+        "visible": true,
+        "failed": true,
+        "link": {
+          "x": 576.890625,
+          "y": 370,
+          "width": 126.21875,
+          "height": 44,
+          "top": 370,
+          "right": 703.109375,
+          "bottom": 414,
+          "left": 576.890625
+        },
+        "viewport": [
+          1280,
+          720
+        ],
+        "animation": "startup-spin",
+        "paint": [
+          {
+            "name": "first-paint",
+            "ms": 128
+          },
+          {
+            "name": "first-contentful-paint",
+            "ms": 128
+          }
+        ],
+        "game": false
+      },
+      "errors": [
+        "Failed to load resource: net::ERR_FAILED",
+        "Game startup failed. TypeError: Failed to fetch dynamically imported module: http://127.0.0.1:5498/assets/main-VZkoOi2Q.js"
+      ],
+      "external": []
+    },
+    {
+      "name": "webgl-failure",
+      "status": "The game couldn’t start. Reload to try again.",
+      "visible": true,
+      "failed": true,
+      "link": {
+        "x": 576.890625,
+        "y": 370,
+        "width": 126.21875,
+        "height": 44,
+        "top": 370,
+        "right": 703.109375,
+        "bottom": 414,
+        "left": 576.890625
+      },
+      "viewport": [
+        1280,
+        720
+      ],
+      "animation": "startup-spin",
+      "paint": [
+        {
+          "name": "first-paint",
+          "ms": 88
+        },
+        {
+          "name": "first-contentful-paint",
+          "ms": 88
+        }
+      ],
+      "game": false,
+      "injectedErrors": [
+        "THREE.WebGLRenderer: Error creating WebGL context.",
+        "Game startup failed. Error: Error creating WebGL context.\n    at new E0 (http://127.0.0.1:5498/assets/three.module-BCNMbwQl.js:3818:20165)\n    at http://127.0.0.1:5498/assets/main-VZkoOi2Q.js:2750:34968"
+      ],
+      "errors": [
+        "THREE.WebGLRenderer: Error creating WebGL context.",
+        "Game startup failed. Error: Error creating WebGL context.\n    at new E0 (http://127.0.0.1:5498/assets/three.module-BCNMbwQl.js:3818:20165)\n    at http://127.0.0.1:5498/assets/main-VZkoOi2Q.js:2750:34968"
+      ],
+      "external": []
+    },
+    {
+      "name": "preparation-failure",
+      "status": "The game couldn’t start. Reload to try again.",
+      "visible": true,
+      "failed": true,
+      "link": {
+        "x": 576.890625,
+        "y": 370,
+        "width": 126.21875,
+        "height": 44,
+        "top": 370,
+        "right": 703.109375,
+        "bottom": 414,
+        "left": 576.890625
+      },
+      "viewport": [
+        1280,
+        720
+      ],
+      "animation": "startup-spin",
+      "paint": [
+        {
+          "name": "first-paint",
+          "ms": 44
+        },
+        {
+          "name": "first-contentful-paint",
+          "ms": 44
+        }
+      ],
+      "game": true,
+      "keyboardRecovery": true,
+      "injectedErrors": [
+        "Game startup failed. Error: Injected preparation failure\n    at game.gameFlow.prepareMenuPresentation (<anonymous>:4:301)\n    at nk (http://127.0.0.1:5498/assets/main-VZkoOi2Q.js:2750:129551)"
+      ],
+      "errors": [],
+      "external": []
+    },
+    {
+      "name": "frame-failure",
+      "status": "The game couldn’t start. Reload to try again.",
+      "visible": true,
+      "failed": true,
+      "link": {
+        "x": 576.890625,
+        "y": 370,
+        "width": 126.21875,
+        "height": 44,
+        "top": 370,
+        "right": 703.109375,
+        "bottom": 414,
+        "left": 576.890625
+      },
+      "viewport": [
+        1280,
+        720
+      ],
+      "animation": "startup-spin",
+      "paint": [
+        {
+          "name": "first-paint",
+          "ms": 124
+        },
+        {
+          "name": "first-contentful-paint",
+          "ms": 124
+        }
+      ],
+      "game": true,
+      "injectedErrors": [
+        "Injected startup frame failure"
+      ],
+      "errors": [
+        "Injected startup frame failure"
+      ],
+      "external": []
+    },
+    {
+      "name": "lite",
+      "initial": {
+        "status": "Loading game…",
+        "visible": true,
+        "failed": false,
+        "link": {
+          "x": 576.890625,
+          "y": 380,
+          "width": 126.21875,
+          "height": 44,
+          "top": 380,
+          "right": 703.109375,
+          "bottom": 424,
+          "left": 576.890625
+        },
+        "viewport": [
+          1280,
+          720
+        ],
+        "animation": "startup-spin",
+        "paint": [
+          {
+            "name": "first-paint",
+            "ms": 80
+          },
+          {
+            "name": "first-contentful-paint",
+            "ms": 80
+          }
+        ],
+        "game": false
+      },
+      "final": {
+        "samples": [
+          {
+            "ms": 59.700000047683716,
+            "state": "status",
+            "loading": null,
+            "frames": 0,
+            "context": null,
+            "font": null
+          },
+          {
+            "ms": 8068.399999976158,
+            "state": "status",
+            "loading": true,
+            "frames": 0,
+            "context": "warp",
+            "font": false
+          },
+          {
+            "ms": 8356.800000071526,
+            "state": "hidden",
+            "loading": true,
+            "frames": 1,
+            "context": "warp",
+            "font": false
+          },
+          {
+            "ms": 14385.300000071526,
+            "state": "hidden",
+            "loading": true,
+            "frames": 304,
+            "context": "warp",
+            "font": true
+          },
+          {
+            "ms": 20418.300000071526,
+            "state": "hidden",
+            "loading": true,
+            "frames": 582,
+            "context": null,
+            "font": true
+          },
+          {
+            "ms": 21468,
+            "state": "removed",
+            "loading": false,
+            "frames": 582,
+            "context": null,
+            "font": true
+          }
+        ],
+        "tasks": [
+          {
+            "start": 1350.1000000238419,
+            "ms": 6705
+          },
+          {
+            "start": 8068.200000047684,
+            "ms": 275
+          },
+          {
+            "start": 8965.399999976158,
+            "ms": 57
+          },
+          {
+            "start": 9043.200000047684,
+            "ms": 584
+          },
+          {
+            "start": 10296.899999976158,
+            "ms": 197
+          },
+          {
+            "start": 15301.100000023842,
+            "ms": 129
+          },
+          {
+            "start": 15834.700000047684,
+            "ms": 64
+          },
+          {
+            "start": 15934.899999976158,
+            "ms": 51
+          },
+          {
+            "start": 16101.600000023842,
+            "ms": 61
+          },
+          {
+            "start": 16251.100000023842,
+            "ms": 52
+          },
+          {
+            "start": 16634.800000071526,
+            "ms": 104
+          },
+          {
+            "start": 17318.899999976158,
+            "ms": 97
+          },
+          {
+            "start": 18118.300000071526,
+            "ms": 122
+          },
+          {
+            "start": 18618.5,
+            "ms": 140
+          },
+          {
+            "start": 18801.300000071526,
+            "ms": 128
+          },
+          {
+            "start": 19785.300000071526,
+            "ms": 616
+          }
+        ],
+        "stamp": "Codex/sol fork · build 10-26 21:27 UTC",
+        "font": {
+          "cap": 128,
+          "revision": 1,
+          "ready": true,
+          "degraded": false,
+          "decodedBytes": 12435456
+        },
+        "loading": {
+          "phase": null,
+          "pending": [],
+          "failed": [],
+          "revision": 328
+        },
+        "context": null,
+        "screen": null,
+        "pendingLabels": 0,
+        "paint": [
+          {
+            "name": "first-paint",
+            "ms": 80
+          },
+          {
+            "name": "first-contentful-paint",
+            "ms": 80
+          }
+        ],
+        "gl": 0
+      },
+      "errors": [],
+      "external": []
+    },
+    {
+      "name": "full-mobile",
+      "initial": {
+        "status": "Loading game…",
+        "visible": true,
+        "failed": false,
+        "link": {
+          "x": 131.890625,
+          "y": 442,
+          "width": 126.21875,
+          "height": 44,
+          "top": 442,
+          "right": 258.109375,
+          "bottom": 486,
+          "left": 131.890625
+        },
+        "viewport": [
+          390,
+          844
+        ],
+        "animation": "none",
+        "paint": [
+          {
+            "name": "first-paint",
+            "ms": 76
+          },
+          {
+            "name": "first-contentful-paint",
+            "ms": 76
+          }
+        ],
+        "game": false
+      },
+      "final": {
+        "samples": [
+          {
+            "ms": 53.699999928474426,
+            "state": "status",
+            "loading": null,
+            "frames": 0,
+            "context": null,
+            "font": null
+          },
+          {
+            "ms": 11824.100000023842,
+            "state": "status",
+            "loading": true,
+            "frames": 0,
+            "context": "menu",
+            "font": false
+          },
+          {
+            "ms": 12041.799999952316,
+            "state": "hidden",
+            "loading": true,
+            "frames": 1,
+            "context": "menu",
+            "font": false
+          },
+          {
+            "ms": 19938,
+            "state": "hidden",
+            "loading": true,
+            "frames": 432,
+            "context": "menu",
+            "font": true
+          },
+          {
+            "ms": 24197.699999928474,
+            "state": "hidden",
+            "loading": false,
+            "frames": 685,
+            "context": "menu",
+            "font": true
+          },
+          {
+            "ms": 24320.899999976158,
+            "state": "removed",
+            "loading": false,
+            "frames": 694,
+            "context": "menu",
+            "font": true
+          }
+        ],
+        "tasks": [
+          {
+            "start": 3270,
+            "ms": 8545
+          },
+          {
+            "start": 11815.5,
+            "ms": 212
+          },
+          {
+            "start": 12699.699999928474,
+            "ms": 96
+          },
+          {
+            "start": 13043.100000023842,
+            "ms": 285
+          },
+          {
+            "start": 13539.600000023842,
+            "ms": 162
+          },
+          {
+            "start": 13753.299999952316,
+            "ms": 166
+          },
+          {
+            "start": 16470.799999952316,
+            "ms": 66
+          },
+          {
+            "start": 24137.899999976158,
+            "ms": 59
+          }
+        ],
+        "stamp": "Codex/sol fork · build 10-26 21:27 UTC",
+        "font": {
+          "cap": 128,
+          "revision": 1,
+          "ready": true,
+          "degraded": false,
+          "decodedBytes": 12435456
+        },
+        "loading": {
+          "phase": null,
+          "pending": [],
+          "failed": [],
+          "revision": 884
+        },
+        "context": "menu",
+        "screen": "launch",
+        "pendingLabels": 0,
+        "paint": [
+          {
+            "name": "first-paint",
+            "ms": 76
+          },
+          {
+            "name": "first-contentful-paint",
+            "ms": 76
+          }
+        ],
+        "gl": 0
+      },
+      "errors": [],
+      "external": []
+    },
+    {
+      "name": "full-4x3",
+      "initial": {
+        "status": "Loading game…",
+        "visible": true,
+        "failed": false,
+        "link": {
+          "x": 416.890625,
+          "y": 380,
+          "width": 126.21875,
+          "height": 44,
+          "top": 380,
+          "right": 543.109375,
+          "bottom": 424,
+          "left": 416.890625
+        },
+        "viewport": [
+          960,
+          720
+        ],
+        "animation": "startup-spin",
+        "paint": [
+          {
+            "name": "first-paint",
+            "ms": 68
+          },
+          {
+            "name": "first-contentful-paint",
+            "ms": 68
+          }
+        ],
+        "game": false
+      },
+      "final": {
+        "samples": [
+          {
+            "ms": 44.800000071525574,
+            "state": "status",
+            "loading": null,
+            "frames": 0,
+            "context": null,
+            "font": null
+          },
+          {
+            "ms": 10006.600000023842,
+            "state": "status",
+            "loading": true,
+            "frames": 0,
+            "context": "menu",
+            "font": false
+          },
+          {
+            "ms": 10123,
+            "state": "hidden",
+            "loading": true,
+            "frames": 1,
+            "context": "menu",
+            "font": false
+          },
+          {
+            "ms": 14513.5,
+            "state": "hidden",
+            "loading": true,
+            "frames": 257,
+            "context": "menu",
+            "font": true
+          },
+          {
+            "ms": 14571.600000023842,
+            "state": "hidden",
+            "loading": false,
+            "frames": 260,
+            "context": "menu",
+            "font": true
+          },
+          {
+            "ms": 14696.800000071526,
+            "state": "removed",
+            "loading": false,
+            "frames": 269,
+            "context": "menu",
+            "font": true
+          }
+        ],
+        "tasks": [
+          {
+            "start": 4400.300000071526,
+            "ms": 5602
+          },
+          {
+            "start": 10006.399999976158,
+            "ms": 111
+          },
+          {
+            "start": 10207.5,
+            "ms": 107
+          }
+        ],
+        "stamp": "Codex/sol fork · build 10-26 21:27 UTC",
+        "font": {
+          "cap": 128,
+          "revision": 1,
+          "ready": true,
+          "degraded": false,
+          "decodedBytes": 12435456
+        },
+        "loading": {
+          "phase": null,
+          "pending": [],
+          "failed": [],
+          "revision": 898
+        },
+        "context": "menu",
+        "screen": "launch",
+        "pendingLabels": 0,
+        "paint": [
+          {
+            "name": "first-paint",
+            "ms": 68
+          },
+          {
+            "name": "first-contentful-paint",
+            "ms": 68
+          }
+        ],
+        "gl": 0
+      },
+      "errors": [],
+      "external": []
+    },
+    {
+      "name": "missing-optional-art",
+      "font": {
+        "cap": 128,
+        "revision": 1,
+        "ready": true,
+        "degraded": true,
+        "decodedBytes": 10362880
+      },
+      "screen": "launch",
+      "pending": 0,
+      "errors": [
+        "Failed to load resource: net::ERR_FAILED"
+      ],
+      "external": []
+    }
+  ]
+}

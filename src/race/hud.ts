@@ -118,13 +118,13 @@ export class RaceHud {
   }
   private updateThreats(s:RaceHudState):void {
     const row=this.element.querySelector<HTMLElement>('[data-race-threats]');if(!row)return;
-    const threats=s.threats??[],key=threats.map(t=>t.item).join('|');row.hidden=!threats.length;
+    const threats=s.threats??[],key=threats.map(t=>`${t.item}:${!!t.attached}`).join('|');row.hidden=!threats.length;
     if(row.dataset.threats!==key){
       row.dataset.threats=key;row.replaceChildren();
       for(const threat of threats){
         const alert=document.createElement('div');alert.className='game-results-medal';alert.dataset.threat=threat.item;
         alert.style.cssText='display:flex;flex-direction:column;align-items:center;width:90px;position:relative';
-        const label=document.createElement('small');label.textContent=threat.item==='shock-shell'?'LIGHTNING':'INCOMING';
+        const label=document.createElement('small');label.textContent=threat.attached?'BUMP TO PASS':threat.item==='shock-shell'?'LIGHTNING':'INCOMING';
         const picture=rewardSlot(threat.item,true);picture.style.cssText='width:64px;height:64px;flex:0 0 64px';
         const clock=document.createElement('small');clock.dataset.threatTime='';
         const ring=document.createElementNS(SVG,'svg');ring.setAttribute('viewBox','0 0 80 80');ring.style.cssText='position:absolute;left:5px;top:20px;width:80px;height:80px';

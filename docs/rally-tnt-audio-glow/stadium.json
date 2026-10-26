@@ -1,0 +1,106 @@
+{
+  "passed": true,
+  "softSamples": 58,
+  "corners": [
+    {
+      "start": 510,
+      "end": 690,
+      "degrees": 63.74768524150444
+    },
+    {
+      "start": 1590,
+      "end": 1770,
+      "degrees": 45.50621179690955
+    }
+  ],
+  "originalRoutePreserved": {
+    "unchanged": 252,
+    "total": 298,
+    "allJumpPositions": true
+  },
+  "spectators": 32958,
+  "sections": 100,
+  "sharedGeometry": true,
+  "gpuOnlyCheering": true,
+  "slowMisses": [
+    {
+      "jump": 150,
+      "z": -193.0020621711343,
+      "respawns": 0,
+      "maxHeight": 0.167021043097499
+    },
+    {
+      "jump": 310,
+      "z": -357.0080998477787,
+      "respawns": 0,
+      "maxHeight": 0.17317299814141052
+    },
+    {
+      "jump": 470,
+      "z": -521.0592387481611,
+      "respawns": 0,
+      "maxHeight": 0.17288810050961345
+    },
+    {
+      "jump": 690,
+      "z": -733.0085721986114,
+      "respawns": 0,
+      "maxHeight": 0.17572610272871714
+    },
+    {
+      "jump": 850,
+      "z": -897.0089880119305,
+      "respawns": 0,
+      "maxHeight": 0.16888214958563452
+    },
+    {
+      "jump": 1010,
+      "z": -1061.0577791330124,
+      "respawns": 0,
+      "maxHeight": 0.16104350500856413
+    },
+    {
+      "jump": 1230,
+      "z": -1273.0502381311958,
+      "respawns": 0,
+      "maxHeight": 0.1723830535731743
+    },
+    {
+      "jump": 1390,
+      "z": -1437.0396671382398,
+      "respawns": 0,
+      "maxHeight": 0.14819444637302226
+    },
+    {
+      "jump": 1550,
+      "z": -1601.0138261187674,
+      "respawns": 0,
+      "maxHeight": 0.17173159644646674
+    },
+    {
+      "jump": 1770,
+      "z": -1813.0324543441557,
+      "respawns": 0,
+      "maxHeight": 0.1738806632880241
+    },
+    {
+      "jump": 1930,
+      "z": -1977.0446368164205,
+      "respawns": 0,
+      "maxHeight": 0.17598711337968354
+    },
+    {
+      "jump": 2090,
+      "z": -2141.0386594556,
+      "respawns": 0,
+      "maxHeight": 0.17492502931564857
+    }
+  ],
+  "drag": {
+    "dry": 19.6814119023627,
+    "mud": 12.752120778751513,
+    "dryAir": 19.721235414567378,
+    "mudAir": 19.721235414567378
+  },
+  "disposed": 1
+}

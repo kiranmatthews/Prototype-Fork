@@ -1,0 +1,107 @@
+[
+  {
+    "id": "slipstream-race",
+    "full": true,
+    "models": [
+      {
+        "item": "tnt",
+        "loaded": true,
+        "positions": 9912,
+        "relay": {
+          "carrier": 0,
+          "remaining": 2.5166666666666684,
+          "before": 2.966666666666667
+        }
+      },
+      {
+        "item": "nitro",
+        "loaded": true,
+        "positions": 9912
+      }
+    ],
+    "stamp": "Codex/sol fork · build 10-26 06:51 UTC",
+    "checkpoints": 0,
+    "glError": 0,
+    "items": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "errors": []
+  },
+  {
+    "id": "country-club",
+    "full": true,
+    "models": [
+      {
+        "item": "tnt",
+        "loaded": true,
+        "positions": 9912,
+        "relay": {
+          "carrier": 0,
+          "remaining": 2.5166666666666684,
+          "before": 2.966666666666667
+        }
+      },
+      {
+        "item": "nitro",
+        "loaded": true,
+        "positions": 9912
+      }
+    ],
+    "stamp": "Codex/sol fork · build 10-26 06:51 UTC",
+    "checkpoints": 0,
+    "glError": 0,
+    "items": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "errors": []
+  },
+  {
+    "id": "coconut-cart-rally",
+    "full": true,
+    "models": [
+      {
+        "item": "tnt",
+        "loaded": true,
+        "positions": 9912,
+        "relay": {
+          "carrier": 0,
+          "remaining": 2.5166666666666684,
+          "before": 2.966666666666667
+        }
+      },
+      {
+        "item": "nitro",
+        "loaded": true,
+        "positions": 9912
+      }
+    ],
+    "stamp": "Codex/sol fork · build 10-26 06:51 UTC",
+    "checkpoints": 0,
+    "glError": 0,
+    "items": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "errors": []
+  }
+]

@@ -1,0 +1,31 @@
+{
+  "front": {
+    "meanChannelDifference": 0.04164166666666667,
+    "changedPixels": 16360,
+    "totalPixels": 1440000,
+    "maxDifference": 52
+  },
+  "back": {
+    "meanChannelDifference": 0.024325925925925924,
+    "changedPixels": 14753,
+    "totalPixels": 1440000,
+    "maxDifference": 42
+  },
+  "grid": {
+    "meanChannelDifference": 0.05749791666666667,
+    "changedPixels": 15939,
+    "totalPixels": 1440000,
+    "maxDifference": 95
+  },
+  "fixtureCrop": {
+    "rectangle": [
+      570,
+      280,
+      470,
+      340
+    ],
+    "frontChangedPixels": 0,
+    "backChangedPixels": 0,
+    "note": "Whole-frame differences are outside this fixture crop; no pixel-identity claim is made for animated background scenery."
+  }
+}

@@ -34,6 +34,20 @@ await withBlockworksRuntime(async r=>{
   for(let i=0;i<7200&&-world.carts[0].z<jump.end+17;i++)world.advance(1/120,w=>{const c=w.carts[0],at=-c.z,target=layout.cartRallyPoint(at+5),angle=Math.atan2(-(target[0]-c.x),-(target[2]-c.z))-c.yaw;w.inputs[0]={throttle:1,steer:Math.max(-1,Math.min(1,Math.atan2(Math.sin(angle),Math.cos(angle))*2)),brake:0,handbrake:false};maxHeight=Math.max(maxHeight,c.y-ground(c.x,c.z).height);});
   const c=world.carts[0];assert.ok(-c.z>=jump.end+17,`Slow kart drives out of dirt double ${jump.start}`);assert.equal(c.respawns,0);assert.ok(c.health>0);slow.push({jump:jump.start,z:c.z,respawns:c.respawns,maxHeight});
  }
+ // Rendering the mud through the underlying dirt must not remove its
+ // original contact heights or slow surface (including on-foot raycasts).
+ const patches=r.l.groundMeshes.filter(m=>m.name==='Soft dirt chicane');assert.equal(patches.length,8);let softSamples=0;
+ for(const patch of patches){
+  assert.equal(patch.visible,false);patch.geometry.computeBoundingBox();const bounds=patch.geometry.boundingBox;
+  for(const u of [.25,.5,.75])for(const v of [.25,.5,.75]){
+   const at=new r.THREE.Vector3(bounds.min.x+(bounds.max.x-bounds.min.x)*u,bounds.max.y+10,bounds.min.z+(bounds.max.z-bounds.min.z)*v).applyMatrix4(patch.matrixWorld);
+   const ray=new r.THREE.Raycaster(at,new r.THREE.Vector3(0,-1,0));
+   rally.cache.clear();const hidden=ground(at.x,at.z),footHidden=ray.intersectObjects(r.l.groundMeshes,false)[0]?.point.y;
+   patch.visible=true;rally.cache.clear();const shown=ground(at.x,at.z),footShown=ray.intersectObjects(r.l.groundMeshes,false)[0]?.point.y;patch.visible=false;
+   assert.deepEqual(hidden,shown);assert.equal(footHidden,footShown);if(hidden.drag===14)softSamples++;
+  }
+ }
+ assert.ok(softSamples>20,'The chicanes retain their slowing mud contact');
  // Dirt drag must penalize a missed jump, while an airborne kart retains its
  // momentum above the same soil. Compare identical states and controls.
  const coast=(drag,air)=>{const w=new GolfCartPhysics(()=>({height:0,safe:true,supported:true,grip:1,drag}),[{x:0,z:0,yaw:0}]);Object.assign(w.carts[0],{vz:-20,speed:20,y:air?20:0,grounded:!air,vy:air?10:0});for(let i=0;i<60;i++)w.advance(1/120);return Math.abs(w.carts[0].vz);};
@@ -41,5 +55,5 @@ await withBlockworksRuntime(async r=>{
  race.start('race',0);race.phase='running';race.carts.drive=()=>({moveX:0,moveY:0});
  assert.equal(r.l.checkpoints.length,0,'Race recovery never needs physical checkpoint crates');
  let disposed=0;race.carts.crowd.sections[0].geometry.addEventListener('dispose',()=>disposed++);race.carts.crowd.dispose();assert.equal(disposed,1);assert.equal(race.carts.crowd.root.children.length,0);
- const report={passed:true,corners,originalRoutePreserved:{unchanged,total:original.points.length,allJumpPositions:true},spectators:rally.crowd.count,sections:100,sharedGeometry:true,gpuOnlyCheering:true,slowMisses:slow,drag:{dry,mud,dryAir,mudAir},disposed};await writeFile(process.env.CART_STADIUM_REPORT??'/private/tmp/cart-stadium.json',JSON.stringify(report,null,2)+'\n');console.log('PASS stadium',JSON.stringify({spectators:report.spectators,slowMisses:slow.length,drag:report.drag}));
+ const report={passed:true,softSamples,corners,originalRoutePreserved:{unchanged,total:original.points.length,allJumpPositions:true},spectators:rally.crowd.count,sections:100,sharedGeometry:true,gpuOnlyCheering:true,slowMisses:slow,drag:{dry,mud,dryAir,mudAir},disposed};await writeFile(process.env.CART_STADIUM_REPORT??'/private/tmp/cart-stadium.json',JSON.stringify(report,null,2)+'\n');console.log('PASS stadium',JSON.stringify({spectators:report.spectators,slowMisses:slow.length,drag:report.drag}));
 },{modulePath:'/src/levels/coconut-cart-rally.ts',source:m=>m.COCONUT_CART_RALLY_LEVEL,levelId:'coconut-cart-rally'});
