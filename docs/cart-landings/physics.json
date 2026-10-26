@@ -1,0 +1,393 @@
+{
+  "landings": [
+    {
+      "height": 0.6,
+      "lateral": -9,
+      "steer": -0.8,
+      "touchdown": 0.24166666666666667,
+      "compression": 0.04649999999999996,
+      "rebound": 0,
+      "rolls": 0
+    },
+    {
+      "height": 0.6,
+      "lateral": -9,
+      "steer": 0,
+      "touchdown": 0.24166666666666667,
+      "compression": 0.04649999999999996,
+      "rebound": 0,
+      "rolls": 0
+    },
+    {
+      "height": 0.6,
+      "lateral": -9,
+      "steer": 0.8,
+      "touchdown": 0.24166666666666667,
+      "compression": 0.04649999999999996,
+      "rebound": 0,
+      "rolls": 0
+    },
+    {
+      "height": 0.6,
+      "lateral": 0,
+      "steer": -0.8,
+      "touchdown": 0.24166666666666667,
+      "compression": 0.04649999999999996,
+      "rebound": 0,
+      "rolls": 0
+    },
+    {
+      "height": 0.6,
+      "lateral": 0,
+      "steer": 0,
+      "touchdown": 0.24166666666666667,
+      "compression": 0.04649999999999996,
+      "rebound": 0,
+      "rolls": 0
+    },
+    {
+      "height": 0.6,
+      "lateral": 0,
+      "steer": 0.8,
+      "touchdown": 0.24166666666666667,
+      "compression": 0.04649999999999996,
+      "rebound": 0,
+      "rolls": 0
+    },
+    {
+      "height": 0.6,
+      "lateral": 9,
+      "steer": -0.8,
+      "touchdown": 0.24166666666666667,
+      "compression": 0.04649999999999996,
+      "rebound": 0,
+      "rolls": 0
+    },
+    {
+      "height": 0.6,
+      "lateral": 9,
+      "steer": 0,
+      "touchdown": 0.24166666666666667,
+      "compression": 0.04649999999999996,
+      "rebound": 0,
+      "rolls": 0
+    },
+    {
+      "height": 0.6,
+      "lateral": 9,
+      "steer": 0.8,
+      "touchdown": 0.24166666666666667,
+      "compression": 0.04649999999999996,
+      "rebound": 0,
+      "rolls": 0
+    },
+    {
+      "height": 2,
+      "lateral": -9,
+      "steer": -0.8,
+      "touchdown": 0.5,
+      "compression": 0.08214999999999992,
+      "rebound": 0,
+      "rolls": 0
+    },
+    {
+      "height": 2,
+      "lateral": -9,
+      "steer": 0,
+      "touchdown": 0.5,
+      "compression": 0.08214999999999992,
+      "rebound": 0,
+      "rolls": 0
+    },
+    {
+      "height": 2,
+      "lateral": -9,
+      "steer": 0.8,
+      "touchdown": 0.5,
+      "compression": 0.08214999999999992,
+      "rebound": 0,
+      "rolls": 0
+    },
+    {
+      "height": 2,
+      "lateral": 0,
+      "steer": -0.8,
+      "touchdown": 0.5,
+      "compression": 0.08214999999999992,
+      "rebound": 0,
+      "rolls": 0
+    },
+    {
+      "height": 2,
+      "lateral": 0,
+      "steer": 0,
+      "touchdown": 0.5,
+      "compression": 0.08214999999999992,
+      "rebound": 0,
+      "rolls": 0
+    },
+    {
+      "height": 2,
+      "lateral": 0,
+      "steer": 0.8,
+      "touchdown": 0.5,
+      "compression": 0.08214999999999992,
+      "rebound": 0,
+      "rolls": 0
+    },
+    {
+      "height": 2,
+      "lateral": 9,
+      "steer": -0.8,
+      "touchdown": 0.5,
+      "compression": 0.08214999999999992,
+      "rebound": 0,
+      "rolls": 0
+    },
+    {
+      "height": 2,
+      "lateral": 9,
+      "steer": 0,
+      "touchdown": 0.5,
+      "compression": 0.08214999999999992,
+      "rebound": 0,
+      "rolls": 0
+    },
+    {
+      "height": 2,
+      "lateral": 9,
+      "steer": 0.8,
+      "touchdown": 0.5,
+      "compression": 0.08214999999999992,
+      "rebound": 0,
+      "rolls": 0
+    },
+    {
+      "height": 6,
+      "lateral": -9,
+      "steer": -0.8,
+      "touchdown": 0.9333333333333333,
+      "compression": 0.14,
+      "rebound": 0,
+      "rolls": 0
+    },
+    {
+      "height": 6,
+      "lateral": -9,
+      "steer": 0,
+      "touchdown": 0.9333333333333333,
+      "compression": 0.14,
+      "rebound": 0,
+      "rolls": 0
+    },
+    {
+      "height": 6,
+      "lateral": -9,
+      "steer": 0.8,
+      "touchdown": 0.9333333333333333,
+      "compression": 0.14,
+      "rebound": 0,
+      "rolls": 0
+    },
+    {
+      "height": 6,
+      "lateral": 0,
+      "steer": -0.8,
+      "touchdown": 0.9333333333333333,
+      "compression": 0.14,
+      "rebound": 0,
+      "rolls": 0
+    },
+    {
+      "height": 6,
+      "lateral": 0,
+      "steer": 0,
+      "touchdown": 0.9333333333333333,
+      "compression": 0.14,
+      "rebound": 0,
+      "rolls": 0
+    },
+    {
+      "height": 6,
+      "lateral": 0,
+      "steer": 0.8,
+      "touchdown": 0.9333333333333333,
+      "compression": 0.14,
+      "rebound": 0,
+      "rolls": 0
+    },
+    {
+      "height": 6,
+      "lateral": 9,
+      "steer": -0.8,
+      "touchdown": 0.9333333333333333,
+      "compression": 0.14,
+      "rebound": 0,
+      "rolls": 0
+    },
+    {
+      "height": 6,
+      "lateral": 9,
+      "steer": 0,
+      "touchdown": 0.9333333333333333,
+      "compression": 0.14,
+      "rebound": 0,
+      "rolls": 0
+    },
+    {
+      "height": 6,
+      "lateral": 9,
+      "steer": 0.8,
+      "touchdown": 0.9333333333333333,
+      "compression": 0.14,
+      "rebound": 0,
+      "rolls": 0
+    },
+    {
+      "height": 12,
+      "lateral": -9,
+      "steer": -0.8,
+      "touchdown": 1.35,
+      "compression": 0.14,
+      "rebound": 0,
+      "rolls": 0
+    },
+    {
+      "height": 12,
+      "lateral": -9,
+      "steer": 0,
+      "touchdown": 1.35,
+      "compression": 0.14,
+      "rebound": 0,
+      "rolls": 0
+    },
+    {
+      "height": 12,
+      "lateral": -9,
+      "steer": 0.8,
+      "touchdown": 1.35,
+      "compression": 0.14,
+      "rebound": 0,
+      "rolls": 0
+    },
+    {
+      "height": 12,
+      "lateral": 0,
+      "steer": -0.8,
+      "touchdown": 1.35,
+      "compression": 0.14,
+      "rebound": 0,
+      "rolls": 0
+    },
+    {
+      "height": 12,
+      "lateral": 0,
+      "steer": 0,
+      "touchdown": 1.35,
+      "compression": 0.14,
+      "rebound": 0,
+      "rolls": 0
+    },
+    {
+      "height": 12,
+      "lateral": 0,
+      "steer": 0.8,
+      "touchdown": 1.35,
+      "compression": 0.14,
+      "rebound": 0,
+      "rolls": 0
+    },
+    {
+      "height": 12,
+      "lateral": 9,
+      "steer": -0.8,
+      "touchdown": 1.35,
+      "compression": 0.14,
+      "rebound": 0,
+      "rolls": 0
+    },
+    {
+      "height": 12,
+      "lateral": 9,
+      "steer": 0,
+      "touchdown": 1.35,
+      "compression": 0.14,
+      "rebound": 0,
+      "rolls": 0
+    },
+    {
+      "height": 12,
+      "lateral": 9,
+      "steer": 0.8,
+      "touchdown": 1.35,
+      "compression": 0.14,
+      "rebound": 0,
+      "rolls": 0
+    }
+  ],
+  "flights": [
+    {
+      "hz": 30,
+      "apex": 7.820105375120186,
+      "air": 1.9666666666666694,
+      "firstLanding": 2.3666666666666667,
+      "state": [
+        0,
+        2.4,
+        -73.33447599198537,
+        0,
+        -0.004449798023284151,
+        0
+      ]
+    },
+    {
+      "hz": 60,
+      "apex": 7.820105375120186,
+      "air": 1.9666666666666646,
+      "firstLanding": 2.3666666666666667,
+      "state": [
+        0,
+        2.4,
+        -73.33447599198537,
+        0,
+        -0.004449798023284151,
+        0
+      ]
+    },
+    {
+      "hz": 144,
+      "apex": 7.820436123269311,
+      "air": 1.9722222222222163,
+      "firstLanding": 2.3819444444444446,
+      "state": [
+        0,
+        2.4,
+        -73.33447599198537,
+        0,
+        -0.004449798023284151,
+        0
+      ]
+    }
+  ],
+  "contacts": [
+    {
+      "speed": 5,
+      "rolls": 0,
+      "recoveries": 0,
+      "maxAngle": 0
+    },
+    {
+      "speed": 16,
+      "rolls": 1,
+      "recoveries": 1,
+      "maxAngle": 9.276652811871188
+    },
+    {
+      "speed": 24,
+      "rolls": 1,
+      "recoveries": 1,
+      "maxAngle": 12.538219188821877
+    }
+  ],
+  "compression": -0.12458344793832334
+}

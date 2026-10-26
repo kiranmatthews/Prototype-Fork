@@ -8,12 +8,12 @@ export interface CartImpact {cart:number;other:number|null;x:number;y:number;z:n
 export interface CartState extends CartSpawn {
   y:number;vx:number;vz:number;vy:number;yawRate:number;steer:number;speed:number;travel:number;
   roll:number;pitch:number;rollV:number;pitchV:number;impact:number;damage:number[];health:number;
-  wheels:number[];grounded:boolean;respawns:number;unsafeTime:number;cooldown:number;hits:number;
+  wheels:number[];landingCompression:number;landingTime:number;grounded:boolean;respawns:number;unsafeTime:number;cooldown:number;hits:number;
   supportHeight:number;supportVelocity:number;airTime:number;airborneCount:number;hopCooldown:number;hopLatch:boolean;
   tumbling:boolean;tumbleAngle:number;tumbleVelocity:number;tumbleTime:number;rollCooldown:number;rolls:number;recoveries:number;
 }
 export type CartBoundary=(x:number,y:number,z:number,radius:number)=>{nx:number;nz:number;depth:number;x:number;z:number}|null;
-export interface CartPhysicsOptions {boundary?:CartBoundary;scale?:number;topSpeed?:number;engine?:number;speedLimit?:number;crestLaunch?:boolean;maxLaunchVelocity?:number;airRecoveryDelay?:number;damageCapacity?:number}
+export interface CartPhysicsOptions {boundary?:CartBoundary;scale?:number;topSpeed?:number;engine?:number;speedLimit?:number;crestLaunch?:boolean;maxLaunchVelocity?:number;airRecoveryDelay?:number;damageCapacity?:number;gravity?:number;stableLandings?:boolean}
 export const CART_PHYSICS=Object.freeze({step:1/120,maxSteps:24,mass:340,inertia:230,topSpeed:17,reverseSpeed:6,engine:8.4,brake:17,grip:7.7,wheelbase:1.72,radius:.78,probeOffset:.72,restitution:.38,gravity:13.5,hopVelocity:5.8,hopCooldown:1.0,rollImpact:10.5});
 const clamp=(v:number,a:number,b:number)=>Math.max(a,Math.min(b,v));
 const finite=(v:number)=>Number.isFinite(v)?v:0;
@@ -21,7 +21,7 @@ const wrap=(a:number)=>Math.atan2(Math.sin(a),Math.cos(a));
 export const NO_CART_INPUT:CartInput=Object.freeze({throttle:0,steer:0,brake:0,handbrake:false});
 export function createCartState(spawn:CartSpawn,ground:CartGround):CartState {
   const height=ground(spawn.x,spawn.z).height;
-  return {...spawn,y:height,vx:0,vz:0,vy:0,yawRate:0,steer:0,speed:0,travel:0,roll:0,pitch:0,rollV:0,pitchV:0,impact:0,damage:[0,0,0],health:1,wheels:[0,0,0,0],grounded:true,respawns:0,unsafeTime:0,cooldown:0,hits:0,supportHeight:height,supportVelocity:0,airTime:0,airborneCount:0,hopCooldown:0,hopLatch:false,tumbling:false,tumbleAngle:0,tumbleVelocity:0,tumbleTime:0,rollCooldown:0,rolls:0,recoveries:0};
+  return {...spawn,y:height,vx:0,vz:0,vy:0,yawRate:0,steer:0,speed:0,travel:0,roll:0,pitch:0,rollV:0,pitchV:0,impact:0,damage:[0,0,0],health:1,wheels:[0,0,0,0],landingCompression:0,landingTime:0,grounded:true,respawns:0,unsafeTime:0,cooldown:0,hits:0,supportHeight:height,supportVelocity:0,airTime:0,airborneCount:0,hopCooldown:0,hopLatch:false,tumbling:false,tumbleAngle:0,tumbleVelocity:0,tumbleTime:0,rollCooldown:0,rolls:0,recoveries:0};
 }
 function spring(value:number,velocity:number,target:number,dt:number,k=65,damping=12):[number,number]{velocity+=(target-value)*k*dt-velocity*damping*dt;return [value+velocity*dt,velocity];}
 /** Constant fixed step, bounded catch-up, two-circle rounded chassis contacts. */
@@ -29,7 +29,7 @@ export class GolfCartPhysics {
   readonly carts:CartState[];readonly inputs:CartInput[];readonly impacts:CartImpact[]=[];
   time=0;steps=0;droppedTime=0;private accumulator=0;
   readonly scale:number;readonly topSpeed:number;readonly engine:number;readonly speedLimit:number;readonly crestLaunch:boolean;
-  readonly maxLaunchVelocity:number;readonly airRecoveryDelay:number;
+  readonly maxLaunchVelocity:number;readonly airRecoveryDelay:number;readonly gravity:number;readonly stableLandings:boolean;
   private readonly damageCapacity:number;
   private readonly boundary?:CartBoundary;
   get radius(){return CART_PHYSICS.radius*this.scale;}
@@ -37,7 +37,7 @@ export class GolfCartPhysics {
   constructor(readonly ground:CartGround,readonly spawns:readonly CartSpawn[],readonly obstacles:readonly CartObstacle[]=[],options:CartPhysicsOptions={}){
     this.scale=options.scale??1;this.topSpeed=options.topSpeed??CART_PHYSICS.topSpeed;this.engine=options.engine??CART_PHYSICS.engine;this.speedLimit=options.speedLimit??24;this.crestLaunch=options.crestLaunch??true;
     this.maxLaunchVelocity=options.maxLaunchVelocity??7.5;this.airRecoveryDelay=options.airRecoveryDelay??1.1;
-    this.damageCapacity=options.damageCapacity??0;this.boundary=options.boundary;
+    this.damageCapacity=options.damageCapacity??0;this.boundary=options.boundary;this.gravity=options.gravity??CART_PHYSICS.gravity;this.stableLandings=options.stableLandings??false;
     this.carts=spawns.map(s=>createCartState(s,ground));this.inputs=spawns.map(()=>({...NO_CART_INPUT}));
   }
   reset(index:number,repair=true){const old=this.carts[index],fresh=createCartState(this.spawns[index],this.ground);if(!repair){fresh.damage=[...old.damage];fresh.health=old.health;fresh.respawns=old.respawns+1;fresh.hits=old.hits;fresh.rolls=old.rolls;fresh.recoveries=old.recoveries;fresh.airborneCount=old.airborneCount;}Object.assign(old,fresh);this.inputs[index]={...NO_CART_INPUT};}
@@ -50,6 +50,7 @@ export class GolfCartPhysics {
     this.time+=dt;this.steps++;
     for(let index=0;index<this.carts.length;index++){
       const c=this.carts[index],input=this.inputs[index],g=this.ground(c.x,c.z);
+      c.landingTime=Math.max(0,c.landingTime-dt);c.landingCompression*=Math.exp(-14*dt);
       c.hopCooldown=Math.max(0,c.hopCooldown-dt);c.rollCooldown=Math.max(0,c.rollCooldown-dt);
       if(input.hop&&!c.hopLatch&&c.grounded&&!c.tumbling&&c.hopCooldown===0){c.vy=CART_PHYSICS.hopVelocity+(input.hopCharge===undefined?0:clamp(input.hopCharge,0,1)*2)+Math.min(1.4,Math.abs(c.speed)*.09);c.grounded=false;c.airborneCount++;c.hopCooldown=CART_PHYSICS.hopCooldown;c.pitchV=1.3;c.impact=.9;}
       c.hopLatch=!!input.hop;
@@ -79,22 +80,35 @@ export class GolfCartPhysics {
       const wasGrounded=c.grounded,terrainVelocity=clamp((floor-c.supportHeight)/dt,-Math.max(10,this.maxLaunchVelocity+2),Math.max(10,this.maxLaunchVelocity+2));
       // Explicit finite road samples also release a chassis over a lower floor.
       if(wasGrounded&&(!supported||g.supported!==undefined&&floor<c.y-.45)){c.vy=Math.max(0,Math.min(this.maxLaunchVelocity,c.supportVelocity));c.grounded=false;c.airborneCount++;}
-      else if(this.crestLaunch&&wasGrounded&&c.supportVelocity>1.2&&terrainVelocity<c.supportVelocity-.6&&Math.abs(forward)>5){c.vy=Math.min(this.maxLaunchVelocity,c.supportVelocity*1.65+1.0);c.grounded=false;c.airborneCount++;}
+      else if(this.crestLaunch&&wasGrounded&&c.landingTime===0&&c.supportVelocity>1.2&&terrainVelocity<c.supportVelocity-.6&&Math.abs(forward)>5){c.vy=Math.min(this.maxLaunchVelocity,c.supportVelocity*1.65+1.0);c.grounded=false;c.airborneCount++;}
       if(c.grounded){c.y=floor;c.vy=0;}else{
-        c.vy-=CART_PHYSICS.gravity*dt;c.y+=c.vy*dt;c.airTime+=dt;
+        c.vy-=this.gravity*dt;c.y+=c.vy*dt;c.airTime+=dt;
         if(supported&&c.y<=floor+.005&&c.vy<=0){
           const impact=-c.vy,longFlight=c.airTime>.30;c.y=floor;c.grounded=true;
-          if(impact>2.8){if(impact>8.3)this.damage(index,impact*.65,c.x,c.z,2);c.pitchV-=Math.min(2.2,impact*.22);c.impact=Math.max(c.impact,Math.min(1.2,impact*.12));}
-          if(longFlight&&Math.abs(forward)>9&&(Math.abs(lateral)>4.2||Math.abs(c.roll)>.245+.08*(this.scale-1)))this.rollover(index,Math.sign(lateral||c.roll||1),impact);
-          if(!c.tumbling&&impact>4.5){c.vy=Math.min(2.6,impact*.30);c.grounded=false;}else if(!c.tumbling)c.vy=0;
+          if(impact>2.8){
+            // A hard landing can dent the chassis, but must not apply a collision's launch impulse.
+            if(impact>8.3)this.damage(index,impact*.65,c.x,c.z,2,null,!this.stableLandings);
+            c.pitchV-=Math.min(this.stableLandings?.8:2.2,impact*(this.stableLandings?.08:.22));
+            c.impact=Math.max(c.impact,Math.min(1.2,impact*.12));
+          }
+          if(this.stableLandings&&!c.tumbling){
+            // Tyres bite immediately; the body absorbs the hit and settles in about 0.2 seconds.
+            c.landingTime=.18;c.landingCompression=Math.min(.14,impact*.012);c.rollV*=.25;
+          }
+          if(!this.stableLandings&&longFlight&&Math.abs(forward)>9&&(Math.abs(lateral)>4.2||Math.abs(c.roll)>.245+.08*(this.scale-1)))this.rollover(index,Math.sign(lateral||c.roll||1),impact);
+          if(!this.stableLandings&&!c.tumbling&&impact>4.5){c.vy=Math.min(2.6,impact*.30);c.grounded=false;}else if(!c.tumbling)c.vy=0;
           c.airTime=0;
         }
       }
       c.supportHeight=floor;c.supportVelocity=supported?terrainVelocity:c.supportVelocity;
       const front=(heights[0]+heights[1])/2,back=(heights[2]+heights[3])/2,left=(heights[0]+heights[2])/2,right=(heights[1]+heights[3])/2;
       const terrainPitch=Math.atan2(front-back,1.72*this.scale),terrainRoll=Math.atan2(right-left,1.48*this.scale);
-      const rollTarget=clamp((supported?terrainRoll:0)-forward*c.yawRate*.013/this.scale,-.28,.28),pitchTarget=clamp((supported?terrainPitch:Math.atan2(c.vy,Math.max(1,Math.abs(forward))))+(forward-previous)/dt*.008,-.22,.24);
-      [c.roll,c.rollV]=spring(c.roll,c.rollV,rollTarget,dt);[c.pitch,c.pitchV]=spring(c.pitch,c.pitchV,pitchTarget,dt);
+      // In flight, follow the trajectory rather than terrain several metres below the wheels.
+      const alignToGround=supported&&(!this.stableLandings||c.grounded),airLean=this.stableLandings&&!c.grounded?.45:1;
+      const rollTarget=clamp((alignToGround?terrainRoll:0)-forward*c.yawRate*.013/this.scale*airLean,-.28,.28),pitchTarget=clamp((alignToGround?terrainPitch:Math.atan2(c.vy,Math.max(1,Math.abs(forward))))+(forward-previous)/dt*.008,-.22,.24);
+      const firmLanding=this.stableLandings&&c.grounded&&c.landingTime>0;
+      [c.roll,c.rollV]=spring(c.roll,c.rollV,rollTarget,dt,firmLanding?160:65,firmLanding?26:12);
+      [c.pitch,c.pitchV]=spring(c.pitch,c.pitchV,pitchTarget,dt,firmLanding?160:65,firmLanding?26:12);
       c.roll=clamp(c.roll,-.38,.38);c.pitch=clamp(c.pitch,-.35,.35);
       if(c.tumbling){
         c.tumbleTime+=dt;
@@ -143,13 +157,14 @@ export class GolfCartPhysics {
     if(b){b.vx-=nx*impulse*inv;b.vz-=nz*impulse*inv;b.yawRate=clamp(b.yawRate-cb*impulse*invI,-3,3);}
     if(damage&&-relative>2.1){this.damage(ia,-relative,x,z,undefined,ib);if(ib!==null)this.damage(ib,-relative,x,z,undefined,ia);}
   }
-  damage(index:number,strength:number,x:number,z:number,panel?:0|1|2,other:number|null=null){
+  damage(index:number,strength:number,x:number,z:number,panel?:0|1|2,other:number|null=null,collisionReaction=true){
     const c=this.carts[index];if(c.cooldown>0||!Number.isFinite(strength))return;
     strength=clamp(strength,0,22);const localZ=(x-c.x)*Math.sin(c.yaw)+(z-c.z)*Math.cos(c.yaw);
     const hit=panel??(localZ<-.25?0:localZ>.25?1:2),amount=clamp((strength-1.6)*.042,0,.55);if(amount<=0)return;
-    c.damage[hit]=clamp(c.damage[hit]+amount,0,1);c.health=this.damageCapacity>0?Math.max(0,c.health-amount/this.damageCapacity):Math.max(.15,1-c.damage.reduce((a,b)=>a+b,0)*.25);c.impact=Math.min(1.4,strength*.12);c.pitchV+=localZ<0?-strength*.11:strength*.11;c.rollV+=(x-c.x)*strength*.08;c.cooldown=.18;c.hits++;
+    c.damage[hit]=clamp(c.damage[hit]+amount,0,1);c.health=this.damageCapacity>0?Math.max(0,c.health-amount/this.damageCapacity):Math.max(.15,1-c.damage.reduce((a,b)=>a+b,0)*.25);c.impact=Math.min(1.4,strength*.12);if(collisionReaction){c.pitchV+=localZ<0?-strength*.11:strength*.11;c.rollV+=(x-c.x)*strength*.08;}c.cooldown=.18;c.hits++;
     if(this.impacts.length===64)this.impacts.shift();
     this.impacts.push({cart:index,other,x,y:c.y+.75*this.scale,z,strength,panel:hit});
+    if(!collisionReaction)return;
     const localX=(x-c.x)*Math.cos(c.yaw)-(z-c.z)*Math.sin(c.yaw);
     if(strength>CART_PHYSICS.rollImpact&&Math.abs(localX)>.5&&Math.abs(localX)>Math.abs(localZ)*1.25)this.rollover(index,-Math.sign(localX),strength);
     else if(strength>6.5&&c.grounded&&!c.tumbling){c.vy=Math.min(3.6,strength*.21);c.grounded=false;c.airborneCount++;}

@@ -6,17 +6,20 @@ await withBlockworksRuntime(async r=>{
  const {normalizeCustomLevelData}=await r.server.ssrLoadModule('/src/level.ts');
  assert.ok(normalizeCustomLevelData(r.source),'Source passes the editor/save contract');
  const race=new SkateRace(r.scene,r.p,false,()=>true);race.attach(r.l,'coconut-cart-rally');race.start('race',0);
+ assert.equal(race.carts.fleet.physics.stableLandings,true);assert.equal(race.carts.fleet.physics.gravity,11.5);
  const gapFlights=new Set(),jumpSpans=r.source.skateRace.jumps.map(j=>[race.course.project(new r.p.pos.constructor(...j.takeoff)).s,race.course.project(new r.p.pos.constructor(...j.landing)).s]);
  const pipeChecks=r.sourceModule.CART_RALLY_PIPES.map(([a,b])=>{const centre=r.sourceModule.cartRallyPoint((a+b)/2),edge=r.sourceModule.cartRallyPoint((a+b)/2,26.8);const height=race.carts.ground(edge[0],edge[2]).height-race.carts.ground(centre[0],centre[2]).height;assert.ok(height>6,'Actual half-pipe collision climbs above the trough');return height;});
- const tuning=JSON.stringify(r.TUNING),samples=[],air=race.riders.map(()=>({frames:0,max:0,jumps:0}));
+ const tuning=JSON.stringify(r.TUNING),samples=[],air=race.riders.map(()=>({frames:0,max:0,jumps:0})),wasAir=race.riders.map(()=>false);
  let result;race.onFinish=v=>result=v;
  for(let f=0;f<18000;f++){
   const input=race.phase==='running'?race.drive(0):{moveX:0,moveY:0};
   race.step(r.dt,input);
   jumpSpans.forEach(([a,b],i)=>{if(race.riders[0].progress>a+3&&race.riders[0].progress<b-3&&!r.p.grounded)gapFlights.add(i);});
-  for(const [i,c]of race.carts.fleet.physics.carts.slice(0,8).entries()){
-   if(!c.grounded){air[i].frames++;air[i].max=Math.max(air[i].max,c.y-race.course.sample(race.riders[i].progress).y);}
-   air[i].jumps=c.airborneCount;
+  for(const [i,rider]of race.riders.slice(0,race.count).entries()){
+   // Ownership changes after theft and wrecks; follow the racer, not their abandoned starting kart.
+   const c=race.carts.fleet.physics.carts[race.carts.cartForRacer[i]],flying=!!c&&!c.grounded;
+   if(flying){air[i].frames++;air[i].max=Math.max(air[i].max,c.y-race.course.sample(rider.progress).y);if(!wasAir[i])air[i].jumps++;}
+   wasAir[i]=flying;
   }
   if(f%600===0){const sample={f,phase:race.phase,riders:race.riders.slice(0,race.count).map(a=>({id:a.id,s:+a.progress.toFixed(1),p:a.player.pos.toArray().map(v=>+v.toFixed(1)),speed:+a.player.speed.toFixed(1),falls:a.falls,finish:a.finish}))};samples.push(sample);console.log(JSON.stringify(sample));}
   if(race.riders.slice(0,race.count).every(r=>r.finish!==null))break;
@@ -38,7 +41,8 @@ await withBlockworksRuntime(async r=>{
  for(let f=0;f<12000&&race.riders[0].finish===null;f++)race.step(r.dt,race.phase==='running'?race.drive(0):{moveX:0,moveY:0});
  assert.ok(race.riders[0].finish!==null,'Solo trial traverses the entire route');
  assert.equal(race.riders[0].falls,0,'Solo line lands every jump');
- report.solo={time:race.riders[0].finish,falls:race.riders[0].falls,boxes:race.riders[0].boxes.size};
+ report.solo={time:race.riders[0].finish,falls:race.riders[0].falls,boxes:race.riders[0].boxes.size,rolls:race.carts.fleet.physics.carts.reduce((n,c)=>n+c.rolls,0)};
+ assert.equal(report.solo.rolls,0,'Solo jumps and landings do not roll the kart');
  assert.ok(r.l.checkpoints.every(cp=>!race.riders[0].boxes.has(cp)),'Hidden checkpoint crates are excluded from time trials');
  console.log('PASS solo route',JSON.stringify(report.solo));
  race.start('time-trial',0);race.phase='running';

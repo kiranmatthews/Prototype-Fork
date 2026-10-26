@@ -1,0 +1,12 @@
+{
+  "before": {
+    "cases": 36,
+    "rolled": 24,
+    "bounced": 33
+  },
+  "after": {
+    "cases": 36,
+    "rolled": 0,
+    "bounced": 0
+  }
+}

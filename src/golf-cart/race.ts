@@ -81,7 +81,7 @@ export class GolfCartRace {
     const stadium=level.groundMeshes.some(m=>m.name==='Packed stadium dirt');
     this.fleet=new GolfCartFleet({damageVisuals:true,ground:(x,z)=>this.ground(x,z),spawns,obstacles,
       onImpact:hit=>this.audio.impact(hit,this.racers[0].player.pos),
-      physics:{boundary:stadium?createStadiumBoundary():undefined,scale:1.25,topSpeed:38,engine:23,speedLimit:44,maxLaunchVelocity:17,airRecoveryDelay:6,damageCapacity:8}});
+      physics:{boundary:stadium?createStadiumBoundary():undefined,scale:1.25,topSpeed:38,engine:23,speedLimit:44,maxLaunchVelocity:17,airRecoveryDelay:6,damageCapacity:8,gravity:11.5,stableLandings:true}});
     this.crowd=stadium?new StadiumCrowd():null;if(this.crowd)this.fleet.root.add(this.crowd.root);
     this.fleet.models.forEach((m,i)=>{
       m.setPalette({paint:i<count?RACE_ROSTER[i].color:'#95ee65',cream:i===0?'#ef8058':'#f5e8ca'});

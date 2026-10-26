@@ -10,7 +10,7 @@ await withBlockworksRuntime(async r=>{
  const matrixVersions=rally.crowd.sections.map(m=>m.instanceMatrix.version);rally.crowd.update(55);assert.deepEqual(rally.crowd.sections.map(m=>m.instanceMatrix.version),matrixVersions,'Cheering does not upload instance transforms');
  for(const jump of layout.CART_RALLY_JUMPS){
   for(let s=jump.start-8;s<=jump.end+44;s+=1)for(const u of [-13,0,13]){const p=layout.cartRallyPoint(s,u);assert.ok(ground(p[0],p[2]).supported,`Continuous dirt support at ${s},${u}`);}
-  const start=jump.start-5,p=layout.cartRallyPoint(start),f=layout.cartRallyFrame(start),world=new GolfCartPhysics(ground,[{x:p[0],z:p[2],yaw:Math.atan2(-f.dx,1)}],[],{scale:1.25,topSpeed:8,engine:23,maxLaunchVelocity:17,airRecoveryDelay:6});let maxHeight=0;
+  const start=jump.start-5,p=layout.cartRallyPoint(start),f=layout.cartRallyFrame(start),world=new GolfCartPhysics(ground,[{x:p[0],z:p[2],yaw:Math.atan2(-f.dx,1)}],[],{scale:1.25,topSpeed:8,engine:23,maxLaunchVelocity:17,airRecoveryDelay:6,gravity:rally.fleet.physics.gravity,stableLandings:rally.fleet.physics.stableLandings});let maxHeight=0;
   for(let i=0;i<7200&&-world.carts[0].z<jump.end+17;i++)world.advance(1/120,w=>{const c=w.carts[0],at=-c.z,target=layout.cartRallyPoint(at+5),angle=Math.atan2(-(target[0]-c.x),-(target[2]-c.z))-c.yaw;w.inputs[0]={throttle:1,steer:Math.max(-1,Math.min(1,Math.atan2(Math.sin(angle),Math.cos(angle))*2)),brake:0,handbrake:false};maxHeight=Math.max(maxHeight,c.y-ground(c.x,c.z).height);});
   const c=world.carts[0];assert.ok(-c.z>=jump.end+17,`Slow kart drives out of dirt double ${jump.start}`);assert.equal(c.respawns,0);assert.ok(c.health>0);slow.push({jump:jump.start,z:c.z,respawns:c.respawns,maxHeight});
  }

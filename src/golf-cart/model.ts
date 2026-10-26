@@ -15,7 +15,7 @@ export interface DriverMotion { time:number; steer:number; roll:number; pitch:nu
 /** Root origin is the seated hip; local forward -Z. Attachment never transfers resource ownership. */
 export interface CartDriver { root:THREE.Object3D; update(motion:DriverMotion):void; dispose():void }
 export const CART_DIMENSIONS = Object.freeze({length:3.13,width:1.95,height:2.18,wheelbase:1.72,track:1.48,wheelRadius:.41});
-export interface CartPose extends DriverMotion { wheelTravel:number; suspension:readonly number[]; damage:readonly number[]; health?:number }
+export interface CartPose extends DriverMotion { wheelTravel:number; suspension:readonly number[]; damage:readonly number[]; health?:number;landingCompression?:number }
 type MaterialKey=keyof CartPalette|NozzleMaterial|'lamp'|'red'|'metal'|'glass'|'wheel'|'canopyArt'|'bagArt'|'bagDetail';
 type Part={name:string;geometry:THREE.BufferGeometry;material:MaterialKey;parent:string};
 const pt=(w:number,h:number,d:number,p:XYZ,r:XYZ=[0,0,0],cut?:number)=>placed(bevelBox(w,h,d,cut),p,r);
@@ -122,7 +122,7 @@ export class GolfCartModel {
     else{for(const [material,color]of this.originalColors)material.color.copy(color);this.originalColors.clear();}
   }
   update(pose:CartPose){
-    this.body.position.y=Math.max(-.10,Math.min(.10,pose.suspension.reduce((a,b)=>a+b,0)/4));
+    this.body.position.y=Math.max(-.10,Math.min(.10,pose.suspension.reduce((a,b)=>a+b,0)/4))-(pose.landingCompression??0);
     this.body.rotation.set(pose.pitch,0,pose.roll);
     const steer=pose.steer*.48;
     for(let i=0;i<4;i++){this.wheels[i].position.y=.41+(pose.suspension[i]||0);this.wheels[i].rotation.y=i<2?steer*(i===(steer>0?1:0)?1.12:.90):0;this.wheelMeshes[i].rotation.x=-pose.wheelTravel/.41;}
