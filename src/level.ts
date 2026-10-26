@@ -4770,7 +4770,7 @@ export class Level {
     if(kind==='rally-mud')return this.surfaceTexture('dirt');
     const cached = this.surfTexCache.get(kind);
     if (cached) return cached;
-    if(kind==='rally-sponsors'){const t=Level.finishTex(this.surfaceImage('rally/sponsors-v2.webp'));t.wrapS=t.wrapT=THREE.ClampToEdgeWrapping;this.surfTexCache.set(kind,t);return t;}
+    if(kind==='rally-sponsors'){const t=Level.finishTex(this.surfaceImage('rally/sponsors-v3.webp'));t.wrapS=t.wrapT=THREE.ClampToEdgeWrapping;this.surfTexCache.set(kind,t);return t;}
     if(kind==='skystream-marble'){
       const texture=Level.finishTex(this.surfaceImage('skystream/ivory-marble.webp'));
       this.surfTexCache.set(kind,texture);return texture;

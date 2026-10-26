@@ -1,0 +1,38 @@
+{
+  "passed": true,
+  "finite": true,
+  "vertices": 25188,
+  "boards": 198,
+  "straightenedBoards": 4,
+  "minimumForwardSegmentProgress": 0.08585755218319845,
+  "minimumStickerDistanceOutsideWallEnvelope": 0.04999999999984084,
+  "maxOutwardShiftRelativeToFoldedWall": 2.6693950386516327,
+  "maxMainTiles": 2,
+  "affected": [
+    {
+      "at": 234,
+      "finish": 254,
+      "side": -1,
+      "width": 4.70092821665753
+    },
+    {
+      "at": 256,
+      "finish": 276,
+      "side": 1,
+      "width": 11.629262982148077
+    },
+    {
+      "at": 1312,
+      "finish": 1332,
+      "side": 1,
+      "width": 6.127744488874896
+    },
+    {
+      "at": 1338,
+      "finish": 1358,
+      "side": -1,
+      "width": 14.102338065710455
+    }
+  ],
+  "violations": []
+}

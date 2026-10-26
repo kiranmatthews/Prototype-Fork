@@ -1,0 +1,24 @@
+{
+  "status": "validated locally; publish verification follows commit",
+  "requirements": {
+    "defaultBillboard": "Supplied CCR source retained byte-identical; 125 of 204 main signs. Only CCR repeats adjacently.",
+    "crustyCreme": "19.28% larger, centred horizontally and vertically in its backing.",
+    "weatheredBoards": "Neutral charcoal metal with rust, scratches, seams and rivets.",
+    "smallStickers": "Milk, Uga Beach and Fleshy Fred overlays vary their off-centre position and rotation.",
+    "trackClearance": "Four folded billboard spans corrected outside the physical wall envelope; 26 decorative wall stations moved behind boards.",
+    "smallCrates": "All 18 blank gem crates removed; 28 mystery weapon pickups retained.",
+    "directionArrows": "All 22 billboard direction chevrons removed.",
+    "gem": "Only first place in the race earns the Coconut Cart Rally gem. Losses, time trials and stale all-boxes payloads do not award it."
+  },
+  "validation": {
+    "focusedCommands": 25,
+    "focusedFailures": 0,
+    "finalLevelAndCrowdRecheck": "passed after final visual-wall correction",
+    "productionBrowser": "passed full and lite; native/MAX and normal resolution; GL error 0 and no game errors",
+    "build": "type-check, production bundle and release size passed",
+    "releaseBytes": 999454067,
+    "releaseLimitBytes": 1000000000,
+    "priorFullSuite": "203 commands: 164 passed, 39 existing failures. Not a new full-suite run for this visual pass."
+  },
+  "preserved": "Complete route, all twelve full-height mounds, physical collision walls, kart controls/physics and weapon pickups. 1303 other authored components unchanged."
+}

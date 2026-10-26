@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "componentsBefore": 1447,
+  "componentsAfter": 1407,
+  "removed": {
+    "Rally box gem crate": 18,
+    "Sharp turn chevron": 22
+  },
+  "unchangedOtherComponents": 1303,
+  "routeAndJumpsUnchanged": true,
+  "jumpCount": 12,
+  "gemReward": "win",
+  "smallCratesRemaining": 0,
+  "mysteryPickups": 28,
+  "ccrSourceSha256": "1591385eb5ee6961ab3d02f1b066445fadbea80544a75ff9173579b11947f9b9",
+  "visualWallCorrections": "26 stations, with vertex and triangle counts preserved; see visual-wall.json"
+}

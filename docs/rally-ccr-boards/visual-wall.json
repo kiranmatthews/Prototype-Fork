@@ -1,0 +1,51 @@
+{
+  "passed": true,
+  "changedStations": 26,
+  "corrections": [
+    {
+      "at": 234,
+      "finish": 254,
+      "side": -1,
+      "changedStations": 7,
+      "minCoreProgress": 1.1225282624218844,
+      "minSeamProgress": 0.8899809790238276,
+      "minWallBehindBoard": 0.18999614807968612,
+      "maxWallBehindBoard": 0.19000415569875884
+    },
+    {
+      "at": 256,
+      "finish": 276,
+      "side": 1,
+      "changedStations": 6,
+      "minCoreProgress": 2.405851704570818,
+      "minSeamProgress": 2.1752491279002983,
+      "minWallBehindBoard": 0.18999640987544808,
+      "maxWallBehindBoard": 0.1900049377491655
+    },
+    {
+      "at": 1312,
+      "finish": 1332,
+      "side": 1,
+      "changedStations": 6,
+      "minCoreProgress": 1.305546676586439,
+      "minSeamProgress": 1.305546676586439,
+      "minWallBehindBoard": 0.18999502930171275,
+      "maxWallBehindBoard": 0.19000538096213404
+    },
+    {
+      "at": 1338,
+      "finish": 1358,
+      "side": -1,
+      "changedStations": 7,
+      "minCoreProgress": 2.9713764390426385,
+      "minSeamProgress": 2.9713764390426385,
+      "minWallBehindBoard": 0.18999530008090915,
+      "maxWallBehindBoard": 0.19000412497121033
+    }
+  ],
+  "visualWallVertexCountsPreserved": true,
+  "visualWallIndicesUnchanged": true,
+  "collisionPathsUnchanged": true,
+  "dirtUnchanged": true,
+  "routeAndJumpsUnchanged": true
+}

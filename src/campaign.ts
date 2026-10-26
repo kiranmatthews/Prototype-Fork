@@ -91,6 +91,8 @@ export interface CampaignLevelDefinition {
   /** An ordinary course can omit its bonus detour while keeping its crystal. */
   bonus?: boolean;
   skateRace?: boolean;
+  /** A first-place race finish awards this course's clear gem. */
+  gemReward?: 'win';
   /** Reserved map destination; never loads a substitute gameplay course. */
   placeholder?: boolean;
   previewKey?: string;
@@ -384,7 +386,7 @@ const ASSIGNMENTS: Record<string, Partial<CampaignLevelDefinition> & { name: str
   'secret-3': {name:'The Ancient Gates',levelId:'jungle-gate-run',previewKey:'jungle-gate',secretRequirement:'medals-10'},
   'secret-4': {name:'Rolling Bones',levelId:'rolling-bones',previewKey:'rolling-bones',relicTime:118,secretRequirement:'gems-15'},
   'secret-5': {name:'The Skystream',levelId:'skystream',previewKey:'skystream',relicTime:180,secretRequirement:'medals-20'},
-  'secret-6': {name:'Coconut Cart Rally',levelId:'coconut-cart-rally',previewKey:'coconut-cart-rally',skateRace:true,bonus:false,relicTime:125,secretRequirement:'main-medals'},
+  'secret-6': {name:'Coconut Cart Rally',levelId:'coconut-cart-rally',previewKey:'coconut-cart-rally',skateRace:true,gemReward:'win',bonus:false,relicTime:125,secretRequirement:'main-medals'},
 };
 
 /** Hand-placed coastal loops, in progression order. Coordinates are island-local. */
@@ -1228,14 +1230,14 @@ export class CampaignStore {
     this.noteWorkingChange();
   }
 
-  /** Crossing the race line completes the course; only first place awards its crystal. */
+  /** Crossing the race line completes the course; first place awards its authored winner reward. */
   commitRaceResult(levelId:string,rewards:{won:boolean;boxGem:boolean}):CampaignLevelProgress|null {
     const progress=this.levelProgress(levelId);
     if(!progress||!campaignLevelById(levelId)?.skateRace||campaignLevelById(levelId)?.placeholder)return null;
     const before=JSON.stringify(progress),finishedChanged=this.updateLastFinishedLevel(levelId);
     progress.cleared=true;
     if(rewards.won){progress.crystal=levelAllowsCrystal(levelId);progress.raceWon=true;}
-    progress.boxGem ||= rewards.boxGem;
+    progress.boxGem ||= campaignLevelById(levelId)?.gemReward==='win' ? rewards.won : rewards.boxGem;
     if(JSON.stringify(progress)!==before||finishedChanged)this.noteWorkingChange();
     return progress;
   }

@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-import {RALLY_SPONSORS} from './rallySponsors';
 
 // Shared procedural detail: no additional texture fetches, reflection cameras,
 // time-driven noise, or distance-dependent geometry. UVs are course metres / 5.
@@ -119,16 +118,54 @@ export function createRallyLamp(glow=false){
  return m;
 }
 
-/** The same alpha artwork sits on solid hoardings and becomes cutout decals. */
+/** Backing and cutout artwork share one atlas, material and draw call. Negative
+ * U encodes the metal backing's local coordinates; positive U samples artwork. */
 export function createRallySponsorMaterial(map:THREE.Texture){
- const m=new THREE.MeshStandardMaterial({map,color:'#ffffff',roughness:.9,side:THREE.DoubleSide});m.name='Supplied festival sponsors';
- m.onBeforeCompile=s=>{s.fragmentShader=s.fragmentShader.replace('#include <map_fragment>',`#include <map_fragment>
-  #ifdef USE_MAP
-   vec2 boardUv=vec2(vMapUv.x,fract(vMapUv.y*${RALLY_SPONSORS.length.toFixed(1)}));
-   float edge=min(min(boardUv.x,1.0-boardUv.x),min(boardUv.y,1.0-boardUv.y));
-   float pinstripe=step(.012,edge)*(1.0-step(.020,edge));
-   vec3 backing=mix(vec3(.045,.073,.054),vec3(.57,.48,.25),pinstripe);
-   diffuseColor.rgb=mix(backing,diffuseColor.rgb,diffuseColor.a);diffuseColor.a=1.0;
-  #endif
- `);};m.customProgramCacheKey=()=> 'rally-supplied-sponsor-v1';return m;
+ const m=new THREE.MeshStandardMaterial({map,color:'#ffffff',roughness:.92,metalness:0,alphaTest:.035,side:THREE.DoubleSide});
+ m.name='Festival sponsors on weathered dark metal';
+ m.onBeforeCompile=s=>{
+  s.fragmentShader=RALLY_NOISE+s.fragmentShader;
+  s.fragmentShader=s.fragmentShader.replace('#include <map_fragment>',/* glsl */`
+   #include <map_fragment>
+   float rallyBoard=0.0,rallyRust=0.0;
+   #ifdef USE_MAP
+    if(vMapUv.x<0.0){
+     rallyBoard=1.0;
+     vec2 boardUv=vec2(-1.0-vMapUv.x,vMapUv.y);
+     vec2 metalUv=boardUv*vec2(20.0,5.0);
+     float footprint=max(length(dFdx(metalUv)),length(dFdy(metalUv)));
+     float fine=1.0-smoothstep(.018,.075,footprint);
+     float patina=rallyNoise(metalUv*vec2(.61,1.17));
+     float streak=rallyNoise(metalUv*vec2(2.4,.15));
+     float grain=mix(.5,rallyNoise(metalUv*31.0),fine);
+     float edge=min(min(metalUv.x,20.0-metalUv.x),min(metalUv.y,5.0-metalUv.y));
+     rallyRust=smoothstep(.57,.86,patina*.7+streak*.3)*( .13+.27*(1.0-smoothstep(.0,.8,edge)) );
+     vec3 metal=vec3(.058,.057,.055)*(.78+.34*patina+.13*streak+(grain-.5)*.10);
+     metal=mix(metal,vec3(.13,.063,.029),rallyRust);
+     // Broad scuffs remain readable. Subpixel scratches fade before they shimmer.
+     float scuff=smoothstep(.67,.85,rallyNoise(metalUv*vec2(.17,4.1)));
+     metal+=vec3(.010,.010,.009)*scuff;
+     vec2 scratchUv=metalUv*vec2(.55,22.0);
+     float scratchLine=1.0-smoothstep(.018,.035+fwidth(scratchUv.y),abs(fract(scratchUv.y)-.5));
+     float scratches=step(.94,rallyHash(floor(scratchUv)))*scratchLine*fine;
+     metal+=vec3(.035)*scratches;
+     float seamDistance=min(fract(boardUv.x*5.0),1.0-fract(boardUv.x*5.0));
+     float seam=1.0-smoothstep(.002,.007+fwidth(boardUv.x*5.0),seamDistance);
+     metal*=1.0-seam*.28;
+     // Small dull fasteners along the upper/lower edges, without a coloured frame.
+     vec2 rivet=vec2((fract(boardUv.x*5.0)-.5)*4.0,min(metalUv.y,5.0-metalUv.y)-.20);
+     float rivetBody=1.0-smoothstep(.035,.055+footprint,length(rivet));
+     metal=mix(metal,vec3(.115,.111,.105),rivetBody*.68);
+     diffuseColor.rgb=metal;diffuseColor.a=1.0;
+    }
+   #endif
+  `);
+  s.fragmentShader=s.fragmentShader.replace('#include <roughnessmap_fragment>',`#include <roughnessmap_fragment>
+   roughnessFactor=mix(roughnessFactor,.81+rallyRust*.16,rallyBoard);
+  `);
+  s.fragmentShader=s.fragmentShader.replace('#include <metalnessmap_fragment>',`#include <metalnessmap_fragment>
+   metalnessFactor=mix(metalnessFactor,.28*(1.0-rallyRust),rallyBoard);
+  `);
+ };
+ m.customProgramCacheKey=()=> 'rally-weathered-metal-sponsors-v2';return m;
 }

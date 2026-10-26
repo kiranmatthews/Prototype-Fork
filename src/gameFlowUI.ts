@@ -1407,7 +1407,7 @@ export class GameFlowUI {
     const medal = earnedTimeMedal(progress);
     if (definition.competition) rewards.append(rewardSlot('cup', !!progress?.cup));
     else {
-      const entries = [['crystal', !!progress?.crystal, 'CRYSTAL'], ['gem', !!progress?.boxGem, 'ALL BOXES'], ['medal', !!medal, 'TIME TRIAL']] as const;
+      const entries = [['crystal', !!progress?.crystal, 'CRYSTAL'], ['gem', !!progress?.boxGem, definition.gemReward==='win'?'WIN RACE':'ALL BOXES'], ['medal', !!medal, 'TIME TRIAL']] as const;
       for (const [kind, earned, label] of entries) {
         if (kind === 'crystal' && !levelAllowsCrystal(definition.levelId)) continue;
         if (kind === 'medal' && !campaignHasTimeTrial(definition)) continue;

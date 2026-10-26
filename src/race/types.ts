@@ -8,6 +8,8 @@ export interface SkateRaceData {
   v: 1;
   racers: 8;
   vehicle?: 'golf-cart';
+  /** Win-only courses award the clear gem for first place, never crate completion. */
+  gemReward?: 'win';
   seed: number;
   stages?: string[];
   /** Ordered world-space racing guide, with rideable width at each knot. */
@@ -46,7 +48,7 @@ export interface RaceThreat {
   seconds:number; bearing:number; urgent:boolean; attached?:boolean;
 }
 export interface RaceHudState {
-  vehicle?: 'golf-cart'; crystalReward?:boolean;
+  vehicle?: 'golf-cart'; crystalReward?:boolean; gemReward?:'win';
   cart?: {onFoot:boolean;target:string;distance:number|null;notice:string;actionReady:boolean;bearing:number|null};
   title:string; sections:readonly string[]; medalTimes:MedalTimes; medal:TimeMedal|null;
   phase: RacePhase; mode: RaceMode; countdown: number; runTime: number; elapsed: number; freeze: number;
