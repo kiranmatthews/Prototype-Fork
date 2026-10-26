@@ -118,7 +118,7 @@ export class SkateRace {
     for(const r of this.riders){
       const forward=this.course.tangent(0).setY(0).normalize(),right=vec().set(-forward.z,0,forward.x);
       const start=level.spawnPos.clone().addScaledVector(right,(r.id%2?1:-1)*2.2)
-        .addScaledVector(forward,-Math.floor(r.id/2)*3.5);
+        .addScaledVector(forward,-Math.floor(r.id/2)*(level.skateRace?.vehicle==='golf-cart'?4.6:3.5));
       if(mode==='time-trial')start.copy(level.spawnPos);
       r.player.enterLevel(this.levelId);r.player.raceHooks={groundCandidates:(x,z)=>this.carts?.groundCandidates(x,z)??level.groundMeshes,onFoot:()=>!!this.carts&&!this.carts.isDriving(r.id),canCollectItem:()=>!r.item&&r.finish===null&&!r.recovery,hazard:(cause,origin)=>this.hazard(r,cause,origin),unrecoverableFall:()=>this.unrecoverableFall(r),fallStarted:()=>{r.falls++;r.recovery=1;r.boost=0;},respawn:()=>this.recover(r)};
       r.player.racePresentationInterval=r.id===0?0:1/15;
@@ -312,7 +312,7 @@ export class SkateRace {
     if(this.phase==='grid'||this.phase==='countdown'){
       if(this.phase==='grid'&&input.jumpPressed){this.start(this.mode,input.raceSeed);input.raceSeed=this.runSeed;}
       else if(this.phase==='countdown'){const before=Math.ceil(this.countdown);this.countdown=Math.max(0,this.countdown-dt);if(this.countdown>0&&Math.ceil(this.countdown)<before)sfx.countdownBeep();if(this.countdown===0){this.phase='running';sfx.play('skateTransition',.7,1.1);}}
-      for(const r of this.riders.slice(0,this.count)){r.player.prepareStartPresentation(level,dt);this.placeMarker(r);}this.carts?.present();return;
+      for(const r of this.riders.slice(0,this.count)){if(!this.carts?.isDriving(r.id))r.player.prepareStartPresentation(level,dt);this.placeMarker(r);}this.carts?.present();return;
     }
     const allFinished=this.riders.slice(0,this.count).every(r=>r.finish!==null);
     if(!allFinished)this.elapsed+=dt;
@@ -621,7 +621,7 @@ export class SkateRace {
       this.effects.wake(p.type,p.mesh.position,this.a,this.elapsed,p.owner);
     }
   }
-  private placeMarker(r:Rider,position=r.player.pos):void {r.starModel.visible=r.star>0&&r.finish===null&&!r.recovery;r.starModel.position.copy(position).add(new THREE.Vector3(Math.sin(this.elapsed*5)*1.8,2.2,Math.cos(this.elapsed*5)*1.8));r.starModel.rotation.y=this.elapsed*6;r.marker.visible=this.phase==='running'&&position.distanceTo(this.viewOrigin)>7&&r.id>0&&r.id<this.count&&!r.recovery&&r.finish===null;r.marker.position.copy(position).y+=3.4;r.bubble.position.copy(position).y+=1.2;r.bubble.rotation.set(Math.sin(this.elapsed*.9)*.14,this.elapsed*.6,Math.cos(this.elapsed*.7)*.12);r.bubble.visible=r.shield>0&&r.recovery===0&&r.id<this.count&&r.finish===null;}
+  private placeMarker(r:Rider,position=r.player.pos):void {r.starModel.visible=r.star>0&&r.finish===null&&!r.recovery;r.starModel.position.copy(position).add(new THREE.Vector3(Math.sin(this.elapsed*5)*1.8,2.2,Math.cos(this.elapsed*5)*1.8));r.starModel.rotation.y=this.elapsed*6;r.marker.visible=this.phase==='running'&&position.distanceTo(this.viewOrigin)>7&&r.id>0&&r.id<this.count&&!r.recovery&&r.finish===null;r.marker.position.copy(position).y+=this.carts?.isDriving(r.id)?4.1:3.4;r.bubble.position.copy(position).y+=1.2;r.bubble.rotation.set(Math.sin(this.elapsed*.9)*.14,this.elapsed*.6,Math.cos(this.elapsed*.7)*.12);r.bubble.visible=r.shield>0&&r.recovery===0&&r.id<this.count&&r.finish===null;}
   /** The shared frame loop captures the hero; race owns only its extra riders. */
   commitRenderStep():void {if(this.level)for(const r of this.riders.slice(1,this.count))r.player.commitRenderStep(this.level);}
   applyRenderInterpolation(alpha:number):void {for(const r of this.riders.slice(0,this.count)){if(r.id)r.player.applyRenderInterpolation(alpha);this.placeMarker(r,r.player.renderPosition);}this.carts?.present(alpha);}

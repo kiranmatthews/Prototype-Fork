@@ -26,13 +26,17 @@ export class GolfCartKit {
   readonly textures={wheel:sculptedTexture('wheel'),canopy:sculptedTexture('canopy'),bag:sculptedTexture('bag'),bagPaint:sculptedTexture('bag',true)};
   readonly steering=merged([new THREE.TorusGeometry(.205,.028,5,12).rotateX(-.65),strut([-.19,0,0],[.19,0,0],.018),strut([0,0,0],[0,-.14,.10],.018)]);
   private disposed=false;
+  readonly steeringPosition:THREE.Vector3;
+  readonly cabinRise:number;
   constructor(damageVisuals=false){
+    this.steeringPosition=new THREE.Vector3(-.34,damageVisuals?1.43:1.23,damageVisuals?-.20:-.28);
+    const cabinRise=this.cabinRise=damageVisuals?.60:0;
     const add=(name:string,material:MaterialKey,parts:THREE.BufferGeometry[],parent='body')=>this.parts.push({name,material,geometry:merged(parts),parent});
     add('chassis','trim',[
       pt(1.35,.18,2.7,[0,.47,0]),pt(1.62,.10,1.35,[0,.52,.05]),pt(1.65,.17,.18,[0,.4,-.85]),pt(1.65,.17,.18,[0,.4,.87]),
       pt(1.26,.10,.58,[0,.58,1.15]),pt(1.12,.33,.15,[0,.93,-.49],[.16,0,0]),
       ...[-1,1].flatMap(s=>[pt(.11,.14,1.2,[s*.76,.62,.08]),strut([s*.73,.70,.20],[s*.73,1.02,.2],.038),strut([s*.73,1.02,.2],[s*.73,1.02,.61],.038)]),
-      strut([-.34,.78,-.43],[-.34,1.19,-.29],.035),
+      strut([-.34,.78,-.43],[-.34,this.steeringPosition.y-.04,this.steeringPosition.z-.01],.035),
     ]);
     add('rear-body','paint',[
       pt(1.43,.40,.66,[0,.80,.80],[.035,0,0],.12),
@@ -48,9 +52,15 @@ export class GolfCartKit {
     add('tail-lamps','red',[-1,1].map(s=>pt(.21,.12,.04,[s*.59,.88,1.14])));
     add('bench-seat','seat',[-1,1].flatMap(s=>[pt(.58,.18,.52,[s*.32,.94,.36],[0,0,0],.06),pt(.58,.48,.15,[s*.32,1.23,.66],[-.14,0,0],.065)]));
     add('seat-piping','cream',[-1,1].map(s=>pt(.49,.026,.022,[s*.32,1.08,.105])));
-    add('roof-posts','trim',[-1,1].flatMap(s=>[strut([s*.64,1.03,-.70],[s*.66,1.98,-.53],.031),strut([s*.64,.85,.84],[s*.66,1.98,.78],.033)]),'roof');
+    add('roof-posts','trim',[-1,1].flatMap(s=>[strut([s*.64,1.03,-.70],[s*.66,1.98+cabinRise,-.53],.031),strut([s*.64,.85,.84],[s*.66,1.98+cabinRise,.78],.033)]),'roof');
     add('windscreen','glass',[pt(1.20,.30,.016,[0,1.28,-.666],[.18,0,0],.006)],'roof');
     if(damageVisuals){
+      // Twin outward-facing flame pods; all original cabin and chassis geometry remains.
+      add('thruster-pods','metal',[-1,1].flatMap(side=>[
+        placed(new THREE.CylinderGeometry(.21,.25,.82,12).rotateZ(Math.PI/2),[side*1.05,.73,.30]),
+        pt(.13,.26,.42,[side*.89,.73,.30]),
+      ]));
+      add('thruster-nozzles','trim',[-1,1].map(side=>placed(new THREE.TorusGeometry(.19,.055,6,12).rotateY(Math.PI/2),[side*1.47,.73,.30])));
       // Actual fracture/scuff geometry follows the original damaged body groups.
       const crack=(a:XYZ,b:XYZ)=>strut(a,b,.006,3);
       add('windscreen-cracks','metal',[
@@ -69,7 +79,7 @@ export class GolfCartKit {
       ]);
     }
     // Keep the authored chassis/damage groups; replace only detachable art modules.
-    this.parts.push({name:'canopy',material:'canopyArt',geometry:sculptedGeometry('canopy'),parent:'roof'});
+    this.parts.push({name:'canopy',material:'canopyArt',geometry:sculptedGeometry('canopy').translate(0,cabinRise,0),parent:'roof'});
     this.parts.push({name:'golf-bag',material:'bagArt',geometry:sculptedGeometry('bag'),parent:'cargo'});
     this.parts.push({name:'bag-straps',material:'bagDetail',geometry:sculptedGeometry('bag','detail'),parent:'cargo'});
     add('golf-clubs','metal',[-.1,0,.10].flatMap((x,i)=>[strut([.3+x,1.2,1.14],[.35+x,1.65+i*.08,1.24],.015),pt(.15,.065,.07,[.40+x,1.65+i*.08,1.24],[0,0,-.35])]),'cargo');
@@ -83,7 +93,7 @@ export class GolfCartModel {
   readonly root=new THREE.Group();readonly body=new THREE.Group();
   readonly socket=new THREE.Group();readonly wheels:THREE.Group[]=[];
   readonly modules:Record<string,THREE.Group>={};readonly materials:Record<MaterialKey,THREE.MeshStandardMaterial>;
-  private driver:CartDriver|null=null;private steering:THREE.Mesh;private wheelMeshes:THREE.Mesh[]=[];private lastImpact=0;private disposed=false;
+  private driver:CartDriver|null=null;readonly steering:THREE.Mesh;private wheelMeshes:THREE.Mesh[]=[];private lastImpact=0;private disposed=false;
   private damageMarks:THREE.Mesh[]=[];
   private originalColors=new Map<THREE.MeshStandardMaterial,THREE.Color>();
   private scorched=false;
@@ -101,7 +111,7 @@ export class GolfCartModel {
       const pivot=new THREE.Group();pivot.name=['FrontLeft','FrontRight','RearLeft','RearRight'][i];pivot.position.set(i%2?.74:-.74,.41,i<2?-.86:.86);
       const mesh=new THREE.Mesh(kit.wheel,this.materials.wheel);mesh.castShadow=true;mesh.name='WheelSpin';pivot.add(mesh);this.root.add(pivot);this.wheels.push(pivot);this.wheelMeshes.push(mesh);
     }
-    this.steering=new THREE.Mesh(kit.steering,this.materials.trim);this.steering.position.set(-.34,1.23,-.28);this.steering.name='SteeringWheel';this.body.add(this.steering);
+    this.steering=new THREE.Mesh(kit.steering,this.materials.trim);this.steering.position.copy(kit.steeringPosition);this.steering.name='SteeringWheel';this.body.add(this.steering);
     this.socket.name='DriverSocket';this.socket.position.set(-.33,1.035,.32);this.body.add(this.socket);
     this.root.userData={asset:'sol-golf-cart',revision:2,units:'metres',forward:'-Z',driverOrigin:'seated hip',modules:Object.keys(this.modules),palette:{...palette}};
   }

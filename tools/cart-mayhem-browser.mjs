@@ -21,10 +21,10 @@ try{
  const hop=await page.evaluate(()=>window.__game.getSkateRace().carts.fleet.physics.carts[0].airborneCount);
  await page.keyboard.down('Space');await page.waitForTimeout(600);
  assert.equal(await page.evaluate(()=>window.__game.getSkateRace().carts.fleet.physics.carts[0].airborneCount),hop);
- await page.keyboard.up('Space');await page.waitForFunction(n=>window.__game.getSkateRace().carts.fleet.physics.carts[0].airborneCount>n,hop,{timeout:8000});await shot('hop');
+ await page.keyboard.up('Space');await page.waitForTimeout(150);assert.equal(await page.evaluate(()=>window.__game.getSkateRace().carts.fleet.physics.carts[0].airborneCount),hop,'releasing X does not jump');await shot('release-coast');
  await page.waitForTimeout(1800);
  await page.keyboard.down('KeyT');await page.waitForTimeout(100);assert.equal(await page.evaluate(()=>window.__game.getSkateRace().carts.fleet.physics.inputs[0].handbrake),true);await page.keyboard.up('KeyT');
- await page.keyboard.press('KeyF');await page.waitForTimeout(150);assert.equal(await page.evaluate(()=>window.__game.getSkateRace().carts.stats.spins),1);
+ await page.keyboard.press('KeyF');await page.waitForTimeout(150);assert.equal(await page.evaluate(()=>window.__game.getSkateRace().carts.stats.thrusters),1);await shot('side-flames');
  await page.evaluate(()=>{const r=window.__game.getSkateRace(),c=r.carts,a=c.fleet.physics.carts[0],b=c.fleet.physics.carts[1];Object.assign(b,{x:a.x+3.2,y:a.y,z:a.z,vx:0,vz:0,health:.55,tumbling:false});c.sync();});
  await page.keyboard.press('KeyE');await page.waitForFunction(()=>window.__game.getSkateRace().carts.cartForRacer[0]===1,null,{timeout:8000});await shot('stolen');
  await page.evaluate(()=>{const c=window.__game.getSkateRace().carts,v=c.fleet.physics.carts[c.cartForRacer[0]];v.health=.32;});await page.waitForTimeout(1800);await shot('damaged-smoke');

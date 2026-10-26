@@ -2993,6 +2993,19 @@ export class Player {
     };
   }
 
+  get vehicleVisualRoot():THREE.Group {return this.bodyGroup;}
+
+  /** Vehicle presentation borrows this same rig; it never changes character size or physics. */
+  presentVehicleDriver(pose: PlayerAnimationOverlay): void {
+    this.clearCharacterAppearance();
+    this.playerAnimationBridge.applyDeformations({});
+    pose({rig:this.animationRig,deltaSeconds:0,
+      applyDeformations:values=>this.playerAnimationBridge.applyDeformations(values)});
+    if(this.gloveLeft)setCartoonGlovePose(this.gloveLeft,CARTOON_GLOVE_POSES.grab);
+    if(this.gloveRight)setCartoonGlovePose(this.gloveRight,CARTOON_GLOVE_POSES.grab);
+    this.syncCharacterAppearance({upperArmRestAngleWeight:0});
+  }
+
   /** Let the active animation document claim the complete low-pose parent
    * composition. The resolver stays document-aware so edited legacy clips and
    * missing/disabled fallbacks retain their established outer shaping. */

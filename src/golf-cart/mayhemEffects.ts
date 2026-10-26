@@ -5,6 +5,8 @@ import type { GolfCartFleet } from './fleet';
 /** Bounded fire geometry; the shared puff pool owns all smoke. No asset swaps. */
 export class CartMayhemEffects {
   private flames:THREE.InstancedMesh;
+  private jets:THREE.InstancedMesh;
+  private jetMatrix=new THREE.Matrix4();private inverse=new THREE.Matrix4();
   private dummy=new THREE.Object3D();
   private smoke=0;
   private burnAge:number[]=[];
@@ -14,18 +16,23 @@ export class CartMayhemEffects {
     this.flames=new THREE.InstancedMesh(new THREE.LatheGeometry([[0,0],[.4,.12],[.55,.5],[.3,1],[.12,1.4],[0,2]].map(([x,y])=>new THREE.Vector2(x,y)),12),new THREE.MeshBasicMaterial({color:0xffffff,toneMapped:false}),fleet.models.length*7);
     this.flames.name='Rally engine flames';this.flames.instanceMatrix.setUsage(THREE.DynamicDrawUsage);this.flames.frustumCulled=false;
     for(let i=0;i<this.flames.count;i++)this.flames.setColorAt(i,new THREE.Color([0xff4b12,0xffa322,0xffe989][i%3]));
+    this.jets=new THREE.InstancedMesh(this.flames.geometry,new THREE.MeshBasicMaterial({color:0xffffff,toneMapped:false,transparent:true,opacity:.82,depthWrite:false}),fleet.models.length*4);
+    this.jets.name='Twin side thruster flames';this.jets.instanceMatrix.setUsage(THREE.DynamicDrawUsage);this.jets.frustumCulled=false;
+    for(let i=0;i<this.jets.count;i++)this.jets.setColorAt(i,new THREE.Color(i%2?'#fff0b2':'#ff6c17'));
+    this.jets.count=0;this.jets.visible=false;fleet.root.add(this.jets);
     this.flames.count=0;this.flames.visible=false;fleet.root.add(this.flames,this.target);this.target.rotation.x=-Math.PI/2;this.target.visible=false;
   }
+  get burnAges():readonly number[]{return this.burnAge;}
   update(dt:number,burning:readonly boolean[]){
     for(let i=0;i<burning.length;i++)this.burnAge[i]=burning[i]?this.burnAge[i]+dt:0;
     this.smoke-=dt;if(this.smoke>0)return;this.smoke=.16;
     if(!this.fleet.root.visible)return;
     this.fleet.physics.carts.forEach((c,i)=>{
-      if(c.health<.5&&this.burnAge[i]<16&&this.fleet.isPresented(i))puffs.burst('smokeDark',c.x+Math.sin(c.yaw)*.9,c.y+1.2,c.z+Math.cos(c.yaw)*.9,{count:burning[i]?2:1,strength:burning[i]?2.8:2.2,ambient:true});
+      if(c.health<.5&&this.burnAge[i]<16&&this.fleet.isPresented(i))puffs.burst('smokeDark',c.x+Math.sin(c.yaw)*.9*this.fleet.physics.scale,c.y+1.2*this.fleet.physics.scale,c.z+Math.cos(c.yaw)*.9*this.fleet.physics.scale,{count:burning[i]?2:1,strength:burning[i]?2.8:2.2,ambient:true});
     });
   }
   /** Use interpolated chassis positions so flames and the selection ring stay attached. */
-  present(burning:readonly boolean[],target:number){
+  present(burning:readonly boolean[],target:number,owners:readonly number[]=[],thrust:readonly number[]=[]){
     const time=this.fleet.physics.time;let count=0;
     for(let i=0;i<burning.length;i++){
       if(!burning[i]||this.burnAge[i]>=12||!this.fleet.isPresented(i))continue;
@@ -39,8 +46,20 @@ export class CartMayhemEffects {
       }
     }
     this.flames.count=count;this.flames.visible=count>0;if(count)this.flames.instanceMatrix.needsUpdate=true;
+    let jets=0;this.inverse.copy(this.fleet.root.matrixWorld).invert();
+    for(let i=0;i<owners.length;i++){
+      const owner=owners[i];if(owner<0||!(thrust[owner]>0)||burning[i]||!this.fleet.isPresented(i))continue;
+      const pulse=(.9+.1*Math.sin(time*49+i))*Math.min(1,thrust[owner]/.1);
+      for(const side of [-1,1])for(let core=0;core<2;core++){
+        this.dummy.position.set(side*(1.48+core*.025),.73,.30);this.dummy.rotation.set(0,0,-side*Math.PI/2);
+        this.dummy.scale.set(core?.25:.43,(core?1.05:1.6)*pulse,core?.25:.43);this.dummy.updateMatrix();
+        this.jetMatrix.multiplyMatrices(this.fleet.models[i].body.matrixWorld,this.dummy.matrix).premultiply(this.inverse);
+        this.jets.setMatrixAt(jets++,this.jetMatrix);
+      }
+    }
+    this.jets.count=jets;this.jets.visible=jets>0;if(jets)this.jets.instanceMatrix.needsUpdate=true;
     this.target.visible=target>=0&&this.fleet.isPresented(target);
-    if(this.target.visible){const position=this.fleet.models[target].root.position;this.target.position.copy(position);this.target.position.y+=.12;this.target.scale.setScalar(1+Math.sin(time*6)*.06);}
+    if(this.target.visible){const position=this.fleet.models[target].root.position;this.target.position.copy(position);this.target.position.y+=.12;this.target.scale.setScalar(this.fleet.physics.scale*(1+Math.sin(time*6)*.06));}
   }
-  dispose(){this.flames.geometry.dispose();(this.flames.material as THREE.Material).dispose();this.flames.dispose();this.flames.removeFromParent();this.target.geometry.dispose();this.target.material.dispose();this.target.removeFromParent();}
+  dispose(){(this.jets.material as THREE.Material).dispose();this.jets.dispose();this.jets.removeFromParent();this.flames.geometry.dispose();(this.flames.material as THREE.Material).dispose();this.flames.dispose();this.flames.removeFromParent();this.target.geometry.dispose();this.target.material.dispose();this.target.removeFromParent();}
 }

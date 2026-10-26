@@ -26,8 +26,8 @@ try{
  await page.evaluate(()=>window.__game.getSkateRace().start('race',0));
  await page.waitForFunction(()=>window.__game.getSkateRace().phase==='running',null,{timeout:30000});
  const beforeHop=await page.evaluate(()=>window.__game.getSkateRace().carts.fleet.physics.carts[0].airborneCount);
- await page.keyboard.down('Space');await page.waitForTimeout(400);await page.keyboard.up('Space');await page.waitForFunction(n=>window.__game.getSkateRace().carts.fleet.physics.carts[0].airborneCount>n,beforeHop,{timeout:5000});await page.keyboard.up('Space');
- assert.ok(await page.evaluate(n=>window.__game.getSkateRace().carts.fleet.physics.carts[0].airborneCount>n,beforeHop),'Real hop leaves the ground');
+ await page.keyboard.down('Space');await page.waitForTimeout(400);await page.keyboard.up('Space');await page.waitForTimeout(150);
+ assert.equal(await page.evaluate(()=>window.__game.getSkateRace().carts.fleet.physics.carts[0].airborneCount),beforeHop,'X release keeps the kart grounded');
  await page.evaluate(()=>{
   const g=window.__game,r=g.getSkateRace(),step=r.step.bind(r),update=g.input.update.bind(g.input),poll=g.input.pollGamepad.bind(g.input);let sample={};
   window.stopCartPilot=()=>{r.step=step;g.input.pollGamepad=poll;};
@@ -73,6 +73,6 @@ try{
  await page.waitForFunction(()=>window.__game.player.grounded&&Math.abs(window.__game.player.speed)<1,null,{timeout:10000});
  const recovery=await page.evaluate(()=>{const g=window.__game,r=g.getSkateRace();return {pos:g.player.pos.toArray(),anchor:r.riders[0].anchor.toArray(),falls:r.riders[0].falls,clock:g.player.ttTime,supported:r.carts.ground(g.player.pos.x,g.player.pos.z).safe};});
  assert.ok(recovery.supported&&recovery.clock>0);await page.screenshot({path:out+'/recovery.png'});
- await writeFile(out+'/report.json',JSON.stringify({done,drive,steering,braking,result,recovery,errors},null,2));assert.deepEqual(errors,[]);console.log('PASS keyboard drive/steer/brake/hop, complete race, trial unlock and supported fall recovery');
+ await writeFile(out+'/report.json',JSON.stringify({done,drive,steering,braking,result,recovery,errors},null,2));assert.deepEqual(errors,[]);console.log('PASS keyboard drive/steer/brake/coast, complete race, trial unlock and supported fall recovery');
  }
 }catch(error){console.log('BROWSER ERRORS',JSON.stringify(errors));await page.screenshot({path:out+'/failure.png'}).catch(()=>{});throw error;}finally{await browser.close();}

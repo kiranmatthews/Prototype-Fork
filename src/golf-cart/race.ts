@@ -10,6 +10,8 @@ import { RallyControls } from './controls';
 import { CartMayhemEffects } from './mayhemEffects';
 import { puffs } from '../puffs';
 import { sfx } from '../audio';
+import { RallyDriver } from './rallyDriver';
+import { CartRaceAudio } from './raceAudio';
 
 interface Racer {
   id:number;player:Player;progress:number;anchor:THREE.Vector3;anchorProgress:number;
@@ -24,12 +26,14 @@ export class GolfCartRace {
   readonly cartForRacer:number[]=[];
   readonly driverForCart:number[]=[];
   readonly burning:boolean[]=[];
-  readonly stats={steals:0,ejections:0,wrecks:0,spins:0};
-  private racerStyles:GolfCartFleet['driverStyles']=[];
+  readonly stats={steals:0,ejections:0,wrecks:0,thrusters:0};
+  private audio=new CartRaceAudio();
+  private nativeDrivers:(RallyDriver|null)[]=[];
   private controls:RallyControls[]=[];
   private actionCooldown:number[]=[];
-  private spinCooldown:number[]=[];
-  private spinTime:number[]=[];
+  private thrustCooldown:number[]=[];
+  private thrustTime:number[]=[];
+  private thrustHits:Set<number>[]=[];
   private locked:number[]=[];
   private spareTime:number[]=[];
   private loanWait:number[]=[];
@@ -72,17 +76,22 @@ export class GolfCartRace {
     const obstacles=level.walls.filter(b=>b.max.y-b.min.y>1&&b.max.x-b.min.x<9&&b.max.z-b.min.z<9)
       .map((b,i)=>({x:(b.min.x+b.max.x)/2,z:(b.min.z+b.max.z)/2,radius:Math.max(b.max.x-b.min.x,b.max.z-b.min.z)/2,height:b.max.y-b.min.y,id:`rally-barrier-${i}`}));
     this.fleet=new GolfCartFleet({damageVisuals:true,ground:(x,z)=>this.ground(x,z),spawns,obstacles,
-      physics:{topSpeed:38,engine:23,speedLimit:44,maxLaunchVelocity:17,airRecoveryDelay:6,damageCapacity:8}});
-    this.racerStyles=[...this.fleet.driverStyles];
+      onImpact:hit=>this.audio.impact(hit,this.racers[0].player.pos),
+      physics:{scale:1.25,topSpeed:38,engine:23,speedLimit:44,maxLaunchVelocity:17,airRecoveryDelay:6,damageCapacity:8}});
     this.fleet.models.forEach((m,i)=>{
       m.setPalette({paint:i<count?RACE_ROSTER[i].color:'#95ee65',cream:i===0?'#ef8058':'#f5e8ca'});
       this.driverForCart[i]=i<count?i:-1;this.burning[i]=false;this.locked[i]=0;this.spareTime[i]=0;
-      if(i>=count)this.fleet.setDriver(i,null);
+      this.fleet.setDriver(i,null);
     });
-    for(let i=0;i<count;i++){this.cartForRacer[i]=i;this.controls[i]=new RallyControls();this.actionCooldown[i]=0;this.spinCooldown[i]=0;this.spinTime[i]=0;this.loanWait[i]=0;this.footStill[i]=0;this.footLast[i]=racers[i].player.pos.clone();this.footJump[i]=false;}
+    for(let i=0;i<count;i++){this.cartForRacer[i]=i;this.controls[i]=new RallyControls();this.actionCooldown[i]=0;this.thrustCooldown[i]=0;this.thrustTime[i]=0;this.thrustHits[i]=new Set();this.loanWait[i]=0;this.footStill[i]=0;this.footLast[i]=racers[i].player.pos.clone();this.footJump[i]=false;}
+    for(let i=0;i<count;i++)this.seatDriver(i,i);
     this.effects=new CartMayhemEffects(this.fleet);
     this.previous=this.fleet.physics.carts.map(c=>({x:c.x,y:c.y,z:c.z,yaw:c.yaw}));this.renderPoses=this.previous.map(p=>({...p}));this.respawns=spawns.map(()=>0);this.stun=spawns.map(()=>0);
     this.sync();
+  }
+  private seatDriver(id:number,index:number){
+    const model=this.fleet.models[index],driver=new RallyDriver(this.racers[id].player,model,this.fleet.physics.scale);
+    model.setDriver(driver)?.dispose();this.nativeDrivers[id]=driver;
   }
   groundCandidates(x:number,z:number):THREE.Object3D[]{return this.cells.get(`${Math.floor(x/16)},${Math.floor(z/16)}`)??this.emptyGround;}
   private probe(x:number,z:number):GroundSample {
@@ -147,7 +156,7 @@ export class GolfCartRace {
     if(this.isDriving(id))this.exit(id,false);
     if(previous>=0)this.exit(previous,true);
     this.cartForRacer[id]=target;this.driverForCart[target]=id;this.locked[target]=3;this.actionCooldown[id]=1.2;this.controls[id].reset();
-    this.fleet.setDriver(target,this.racerStyles[id]);
+    this.seatDriver(id,target);
     r.knockGrace=1.4;r.player.group.visible=false;
     const c=this.fleet.physics.carts[target];
     r.player.resetRacePosition(this.level,new THREE.Vector3(c.x,c.y,c.z),new THREE.Vector3(-Math.sin(c.yaw),0,-Math.cos(c.yaw)));
@@ -159,12 +168,12 @@ export class GolfCartRace {
   private exit(id:number,thrown:boolean){
     const index=this.cartForRacer[id];if(index<0)return;
     const c=this.fleet.physics.carts[index],r=this.racers[id],p=r.player;
-    this.cartForRacer[id]=-1;this.driverForCart[index]=-1;this.fleet.setDriver(index,null);this.controls[id].reset();this.actionCooldown[id]=1.1;
+    this.cartForRacer[id]=-1;this.driverForCart[index]=-1;this.fleet.setDriver(index,null);this.nativeDrivers[id]=null;this.thrustTime[id]=0;this.controls[id].reset();this.actionCooldown[id]=1.1;
     const forward=new THREE.Vector3(-Math.sin(c.yaw),0,-Math.cos(c.yaw));
     let at=new THREE.Vector3(c.x,c.y+.25,c.z);
     // Choose the supported side of the car; at a jump, preserve the real fall.
     for(const side of [1,-1]){
-      const q=new THREE.Vector3(c.x+Math.cos(c.yaw)*2.4*side,c.y,c.z-Math.sin(c.yaw)*2.4*side),g=this.ground(q.x,q.z);
+      const q=new THREE.Vector3(c.x+Math.cos(c.yaw)*3.0*side,c.y,c.z-Math.sin(c.yaw)*3.0*side),g=this.ground(q.x,q.z);
       if(g.supported&&Math.abs(g.height-c.y)<2&&!this.level.walls.some(w=>w.containsPoint(q.clone().setY(g.height+.8)))){at=q.setY(g.height+.15);break;}
     }
     p.resetRacePosition(this.level,at,forward,true);p.group.visible=true;
@@ -179,7 +188,7 @@ export class GolfCartRace {
     this.fleet.models[index].setScorched(true);
     if(owner>=0){this.exit(owner,true);if(!owner)this.announce('KART TOAST! RUN. STEAL. REPEAT.');}
     puffs.burst('boomTnt',c.x,c.y+1,c.z,{strength:1.5,count:12});
-    sfx.withGain(Math.max(.05,1-this.racers[0].player.pos.distanceTo(new THREE.Vector3(c.x,c.y,c.z))/65),()=>sfx.play('tntBoom',.7,.7));
+    this.audio.explosion(c,this.racers[0].player.pos);
   }
   drive(id:number):Input {
     const r=this.racers[id],index=this.cartForRacer[id];
@@ -231,14 +240,21 @@ export class GolfCartRace {
       if(!this.isDriving(i)&&rider.finish===null&&foot.grounded&&foot.pos.y<this.course.sample(rider.progress).y-9){
         rider.falls++;rider.progress=rider.anchorProgress;foot.resetRacePosition(this.level,rider.anchor,this.course.tangent(rider.anchorProgress),true);rider.knockGrace=2;
       }
-      this.actionCooldown[i]=Math.max(0,this.actionCooldown[i]-dt);this.spinCooldown[i]=Math.max(0,this.spinCooldown[i]-dt);this.spinTime[i]=Math.max(0,this.spinTime[i]-dt);
+      this.actionCooldown[i]=Math.max(0,this.actionCooldown[i]-dt);this.thrustCooldown[i]=Math.max(0,this.thrustCooldown[i]-dt);this.thrustTime[i]=Math.max(0,this.thrustTime[i]-dt);
       if(samples[i].grindPressed)this.interact(i);
       const index=this.cartForRacer[i],r=this.racers[i];
-      if(index>=0&&samples[i].spinPressed&&this.spinCooldown[i]===0&&r.finish===null){
-        this.spinCooldown[i]=1.8;this.spinTime[i]=.5;this.stats.spins++;
-        puffs.burst('dustLandHeavy',r.player.pos.x,r.player.pos.y+.2,r.player.pos.z,{strength:2,count:8});
-        for(const victim of this.racers.slice(0,this.count))if(victim.id!==i&&victim.player.pos.distanceTo(r.player.pos)<5.5)this.attack(victim.id,r.player.pos,.14);
-        sfx.withGain(i===0?1:.12,()=>sfx.play('woosh2',.6,.6));
+      if(index>=0&&samples[i].spinPressed&&this.thrustCooldown[i]===0&&r.finish===null&&!this.burning[index]){
+        this.thrustCooldown[i]=1.8;this.thrustTime[i]=.7;this.stats.thrusters++;
+        this.thrustHits[i].clear();this.audio.thrust(world.carts[index],index,this.racers[0].player.pos);
+      }
+      if(index>=0&&this.thrustTime[i]>0&&!this.burning[index]){
+        const c=world.carts[index];
+        // Side-facing flamethrowers damage neighbours. They exert no driving impulse.
+        for(const victim of this.racers.slice(0,this.count))if(victim.id!==i&&!this.thrustHits[i].has(victim.id)){
+          const dx=victim.player.pos.x-c.x,dz=victim.player.pos.z-c.z;
+          const along=Math.abs(dx*Math.sin(c.yaw)+dz*Math.cos(c.yaw)),side=Math.abs(dx*Math.cos(c.yaw)-dz*Math.sin(c.yaw));
+          if(side>1.2&&side<5.8&&along<2.1&&Math.abs(victim.player.pos.y-c.y)<3){this.thrustHits[i].add(victim.id);this.attack(victim.id,r.player.pos,.14);}
+        }
       }
     }
     const controls=samples.map((s,i)=>{const c=world.carts[this.cartForRacer[i]];return this.controls[i].sample(dt,s,c?{yaw:c.yaw,speed:c.speed,forward:this.racers[i].player.raceInputBasis(this.level)}:undefined);});
@@ -295,6 +311,7 @@ export class GolfCartRace {
       if(owner===0&&r.finish===null&&!this.level.runMode)for(const cp of this.level.checkpoints)if(Math.abs(cp.spawnPos.y-c.y)<3&&Math.hypot(cp.spawnPos.x-c.x,cp.spawnPos.z-c.z)<10){r.boxes.add(cp);r.player.cratesBroken=r.boxes.size;if(!cp.active)this.level.activateCheckpoint(cp,r.player.cratesBroken);}
     }
     this.sync();this.targetMarker=this.nearest(0);this.effects.update(dt,this.burning);
+    this.audio.update(dt,world,this.driverForCart,this.cartForRacer[0],this.burning,this.effects.burnAges,this.thrustTime,this.racers[0].player.pos);
   }
   private loanerBay(progress:number,reserve:number,near=false){
     const next=this.jumpRanges.find(j=>j.a>progress),at=next?Math.min(next.a-62,near?progress+16:Infinity):Math.min(this.course.length-12,progress+20);
@@ -334,16 +351,16 @@ export class GolfCartRace {
       target:target>=0?(owner>=0?`STEAL ${RACE_ROSTER[owner].name}'S KART`:'TAKE KART'):index>=0?'BAIL OUT':near>=0?(owner>=0?`${RACE_ROSTER[owner].name}'S KART`:'GREEN LOANER'):'LOANER ON THE WAY',
       distance:c?Math.round(Math.hypot(c.x-this.racers[0].player.pos.x,c.z-this.racers[0].player.pos.z)):null,notice:this.noticeTime>0?this.notice:''};
   }
-  updateView(camera:THREE.Camera){this.fleet.updateView(camera);this.effects.present(this.burning,this.targetMarker);}
+  updateView(camera:THREE.Camera){this.fleet.updateView(camera);this.effects.present(this.burning,this.targetMarker,this.driverForCart,this.thrustTime);}
   present(alpha=1){
     const carts=this.fleet.physics.carts;alpha=clamp(alpha,0,1);
     for(let i=0;i<carts.length;i++){
-      const p=this.previous[i],q=carts[i],pose=this.renderPoses[i],owner=this.driverForCart[i];
+      const p=this.previous[i],q=carts[i],pose=this.renderPoses[i];
       pose.x=THREE.MathUtils.lerp(p.x,q.x,alpha);pose.y=THREE.MathUtils.lerp(p.y,q.y,alpha);pose.z=THREE.MathUtils.lerp(p.z,q.z,alpha);
-      pose.yaw=p.yaw+Math.atan2(Math.sin(q.yaw-p.yaw),Math.cos(q.yaw-p.yaw))*alpha+(owner>=0&&this.spinTime[owner]>0?Math.PI*2*(1-this.spinTime[owner]/.5):0);
+      pose.yaw=p.yaw+Math.atan2(Math.sin(q.yaw-p.yaw),Math.cos(q.yaw-p.yaw))*alpha;
     }
-    this.fleet.present(0,this.renderPoses);this.effects.present(this.burning,this.targetMarker);
+    this.fleet.present(0,this.renderPoses);this.effects.present(this.burning,this.targetMarker,this.driverForCart,this.thrustTime);
     for(let i=0;i<this.count;i++)this.racers[i].player.group.visible=!this.isDriving(i);
   }
-  dispose(){this.effects.dispose();this.fleet.dispose();this.cache.clear();this.cells.clear();this.racers.forEach(r=>r.player.group.visible=true);}
+  dispose(){this.audio.dispose();this.effects.dispose();this.fleet.dispose();this.cache.clear();this.cells.clear();this.racers.forEach(r=>r.player.group.visible=true);}
 }

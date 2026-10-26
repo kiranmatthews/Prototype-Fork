@@ -1,0 +1,92 @@
+{
+  "calm": {
+    "frame": {
+      "meanMs": 16.96272189349113,
+      "p50Ms": 16.69999999999891,
+      "p95Ms": 16.799999999999272
+    },
+    "raceStep": {
+      "meanMs": 0.9336956512668858,
+      "p50Ms": 0.8999999761581421,
+      "p95Ms": 1.100000023841858
+    },
+    "cartPresentation": {
+      "meanMs": 5.319444449742635,
+      "p50Ms": 5.399999976158142,
+      "p95Ms": 5.800000071525574
+    },
+    "fleetPresentation": {
+      "meanMs": 5.312777784135607,
+      "p50Ms": 5.399999976158142,
+      "p95Ms": 5.800000071525574
+    },
+    "render": {
+      "frame": 3995,
+      "calls": 1007,
+      "triangles": 1940273,
+      "points": 0,
+      "lines": 0
+    },
+    "fleet": {
+      "count": 20,
+      "presented": 14,
+      "scale": 1.3,
+      "cartTriangles": 106226,
+      "fleetTriangles": 694960,
+      "fleetDrawCalls": 614,
+      "geometryBuffers": 25,
+      "steps": 534,
+      "droppedTime": 0,
+      "activeDebris": 0
+    },
+    "flames": 0,
+    "stamp": "Codex/sol fork · build 10-26 01:02 UTC"
+  },
+  "fires": {
+    "frame": {
+      "meanMs": 17.060355029585782,
+      "p50Ms": 16.700000000000728,
+      "p95Ms": 16.799999999999272
+    },
+    "raceStep": {
+      "meanMs": 5.0391304311545,
+      "p50Ms": 5.400000095367432,
+      "p95Ms": 6.5
+    },
+    "cartPresentation": {
+      "meanMs": 0.15944443808661568,
+      "p50Ms": 0.19999992847442627,
+      "p95Ms": 0.20000004768371582
+    },
+    "fleetPresentation": {
+      "meanMs": 0.14666666057374741,
+      "p50Ms": 0.10000002384185791,
+      "p95Ms": 0.20000004768371582
+    },
+    "render": {
+      "frame": 5087,
+      "calls": 1024,
+      "triangles": 1969329,
+      "points": 0,
+      "lines": 0
+    },
+    "fleet": {
+      "count": 20,
+      "presented": 14,
+      "scale": 1.3,
+      "cartTriangles": 6920,
+      "fleetTriangles": 138400,
+      "fleetDrawCalls": 25,
+      "geometryBuffers": 25,
+      "steps": 1118,
+      "droppedTime": 0,
+      "activeDebris": 0
+    },
+    "flames": 56,
+    "stamp": "Codex/sol fork · build 10-26 01:02 UTC"
+  },
+  "resources": {
+    "objects": 101
+  },
+  "errors": []
+}
