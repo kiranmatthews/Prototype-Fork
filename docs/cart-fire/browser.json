@@ -1,0 +1,29 @@
+{
+  "full": true,
+  "sequence": [
+    {
+      "jets": 0,
+      "emitted": 876,
+      "embers": 0
+    },
+    {
+      "jets": 0,
+      "emitted": 1494,
+      "embers": 0
+    }
+  ],
+  "burning": {
+    "flames": 89,
+    "embers": 10,
+    "gouraud": true,
+    "frame": {
+      "frame": 3334,
+      "calls": 155,
+      "triangles": 924781,
+      "points": 0,
+      "lines": 0
+    },
+    "glError": 0
+  },
+  "errors": []
+}

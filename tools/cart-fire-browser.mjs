@@ -23,8 +23,8 @@ try{
  await page.waitForTimeout(1600);
  for(let i=0;i<3;i++){await page.screenshot({path:`${out}/wreck-${i}.png`});await page.waitForTimeout(140);}
  await page.evaluate(()=>window.__game.renderQualitySettings.setRegularResolution(720));await page.waitForTimeout(180);await page.screenshot({path:`${out}/wreck-normal.png`});
- const burning=await page.evaluate(()=>{const g=window.__game,e=g.getSkateRace().carts.effects;return {flames:e.flames.count,embers:e.embers.count,gouraud:e.flames.material.userData.gouraud,frame:g.getRenderFrameStats(),glError:g.renderer.getContext().getError()};});
- assert.ok(burning.flames>20);assert.ok(burning.embers>0);assert.equal(burning.glError,0);assert.ok(sequence.every(s=>s.jets===0),'emitted tail finishes after cutoff');
+ const burning=await page.evaluate(()=>{const g=window.__game,e=g.getSkateRace().carts.effects;return {flames:e.flames.count,embers:e.embers.count,gouraud:e.flames.material.userData.gouraud,stamp:document.querySelector('.hud-build')?.textContent,frame:g.getRenderFrameStats(),glError:g.renderer.getContext().getError()};});
+ assert.match(burning.stamp,/Codex\/sol fork/);assert.ok(burning.flames>20);assert.ok(burning.embers>0);assert.equal(burning.glError,0);assert.ok(sequence.every(s=>s.jets===0),'emitted tail finishes after cutoff');
  await page.waitForTimeout(11000);await page.screenshot({path:`${out}/husk.png`});
  assert.equal(await page.evaluate(()=>window.__game.getSkateRace().carts.effects.flames.count),0);
  assert.deepEqual(errors,[]);await writeFile(`${out}/report.json`,JSON.stringify({full,sequence,burning,errors},null,2));console.log('PASS',JSON.stringify({full,sequence,burning,errors}));
