@@ -663,7 +663,8 @@ export const ROOFTOP_RELAY_LEVEL:CustomLevelData=(()=>{
  // and its winding. Preserve smooth normals across material-only seams.
  const unwrapRoof=(mesh:CustomComponent,r:RooftopRoof,samples:{s:number;u:number}[],longitudinal=false)=>{
   const vertices=mesh.vertices!,indices=mesh.indices!,smooth=Array(vertices.length).fill(0) as number[];
-  for(let i=0;i<indices.length;i+=3){
+  const topIndices=(mesh.grindTopTriangles??indices.length/3)*3;
+  for(let i=0;i<topIndices;i+=3){
    const [a,b,c]=indices.slice(i,i+3).map(k=>k*3),ab=[0,1,2].map(k=>vertices[b+k]-vertices[a+k]),ac=[0,1,2].map(k=>vertices[c+k]-vertices[a+k]);
    const normal=[ab[1]*ac[2]-ab[2]*ac[1],ab[2]*ac[0]-ab[0]*ac[2],ab[0]*ac[1]-ab[1]*ac[0]];
    for(const id of [a,b,c])for(let k=0;k<3;k++)smooth[id+k]+=normal[k];
@@ -672,12 +673,15 @@ export const ROOFTOP_RELAY_LEVEL:CustomLevelData=(()=>{
   for(let i=0;i<indices.length;i+=3){
    const face=indices.slice(i,i+3),s=face.reduce((sum,k)=>sum+samples[k].s,0)/3,u=face.reduce((sum,k)=>sum+samples[k].u,0)/3;
    const ds=(rooftopSurfaceY(r,s+.1,u)-rooftopSurfaceY(r,s-.1,u))/.2,du=(rooftopSurfaceY(r,s,u+.1)-rooftopSurfaceY(r,s,u-.1))/.2;
-   const crossSlope=!longitudinal&&(r.shape==='gable'||r.shape==='hip'&&Math.abs(du)>=Math.abs(ds));
+   const crossSlope=!longitudinal&&(r.shape==='gable'||r.shape==='hip'&&Math.abs(du)>=Math.abs(ds)),fascia=i>=topIndices;
+   const endFace=face.every(k=>Math.abs(samples[k].s-samples[face[0]].s)<1e-6);
+   const [a,b,c]=face.map(k=>k*3),ab=[0,1,2].map(k=>vertices[b+k]-vertices[a+k]),ac=[0,1,2].map(k=>vertices[c+k]-vertices[a+k]);
+   const faceNormal=[ab[1]*ac[2]-ab[2]*ac[1],ab[2]*ac[0]-ab[0]*ac[2],ab[0]*ac[1]-ab[1]*ac[0]];
    for(const id of face){
-    const sample=samples[id],normal=smooth.slice(id*3,id*3+3),length=Math.hypot(...normal)||1;
+    const sample=samples[id],normal=fascia?faceNormal:smooth.slice(id*3,id*3+3),length=Math.hypot(...normal)||1;
     mesh.indices.push(mesh.vertices.length/3);mesh.vertices.push(...vertices.slice(id*3,id*3+3));mesh.normals.push(...normal.map(v=>v/length));
     const crossDistance=Math.sign(sample.u)*Math.hypot(sample.u,rooftopSurfaceY(r,sample.s,sample.u)-rooftopSurfaceY(r,sample.s,0));
-    mesh.uvs.push(...(crossSlope?[(sample.s-r.a)/4,crossDistance/4]:[sample.u/4,(sample.s-r.a)/4]));
+    mesh.uvs.push(...(fascia?[(endFace?sample.u:sample.s-r.a)/4,vertices[id*3+1]/4]:crossSlope?[(sample.s-r.a)/4,crossDistance/4]:[sample.u/4,(sample.s-r.a)/4]));
    }
   }
  };
@@ -744,8 +748,8 @@ export const ROOFTOP_RELAY_LEVEL:CustomLevelData=(()=>{
    solidProp(r,s,u,3.4,.8,6,'#fff0d5','Garden terrace planter');
   }
   if(r.kind==='works'&&r.width>17)solidProp(r,mid,r.width/2-3,3,2,8,'#e7dbc1','Freight service block');
-  // Branch decks are visibly different structures with open steel trestles.
-  if(r.route>=0)for(const side of [-1,1])localBox(r,mid,side*r.width*.4,r.top-3,[.45,6,Math.max(3,r.depth-6)],'#f6e7ca');
+  // Curved branch masses and their fitted fascia own the visible supports.
+  // Straight full-length panels cut across the bends and protruded as fins.
   // Two genuinely different paths are visible before the choice. Gold marks
   // the broad city route; turquoise marks the thinner optional roof chain.
   for(let s=r.a+10;s<r.b-5;s+=16){const p=rooftopPoint(s,r.route<0?'main':`fork-${r.route}`);components.push({t:'wumpa',p:[p[0],p[1]+1,p[2]],grp});}

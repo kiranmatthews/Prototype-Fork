@@ -61,15 +61,45 @@ export function dressKookRooftops(components:CustomComponent[],groups:CustomGrou
 
  for(const r of c.roofs){
   const d=r.district,mid=(r.a+r.b)/2,yaw=c.yaw(mid);
-  // Continuous white fascia follows the actual roof contour and pitched lips.
-  for(const side of [-1,1])for(let s=r.a;s<r.b-.01;s+=6){
-   const end=Math.min(r.b,s+6),u0=side*(c.width(r,s)/2+.10),u1=side*(c.width(r,end)/2+.10);
-   for(const [drop,thick] of [[.28,.55],[1.1,.28]])beam(d,roofPoint(r,s,u0,c.surface(r,s,u0)-drop),roofPoint(r,end,u1,c.surface(r,end,u1)-drop),.46,thick,IVORY);
-   if(r.route<0)for(const drop of [6.8,13.2])beam(d,roofPoint(r,s,u0,r.top-drop),roofPoint(r,end,u1,r.top-drop),.32,.22,IVORY);
+  // Fit fascia to the actual slab perimeter, including the atrium opening
+  // and construction break. A separately sampled curve left exposed wedges.
+  if(r.shape==='flat'){
+   for(const deck of components.filter(q=>q.t==='platform'&&q.pts&&q.nm?.startsWith(`RR:${r.index} `))){
+    const y=deck.p[1]+(deck.s?.[1]??.4)/2,pts=deck.pts!;
+    for(let i=0;i<pts.length;i++){
+     const a=pts[i],b=pts[(i+1)%pts.length];
+     for(const [drop,thick]of [[.30,.55],[1.1,.28],...(r.route<0?[[6.8,.22],[13.2,.22]]:[])])
+      beam(d,[deck.p[0]+a[0],y-drop,deck.p[2]+a[1]],[deck.p[0]+b[0],y-drop,deck.p[2]+b[1]],drop>2?.32:.46,thick,IVORY);
+    }
+   }
+  }else{
+   const stations=[r.a,r.a+2,r.a+r.depth*.25,mid,r.a+r.depth*.75,r.b-2,r.b];
+   for(let s=r.a+1;s<r.b;s++)stations.push(s);
+   const rows=[...new Set(stations)].sort((a,b)=>a-b);
+   for(const side of [-1,1])for(let i=1;i<rows.length;i++){
+    const s=rows[i-1],end=rows[i],u0=side*c.width(r,s)/2,u1=side*c.width(r,end)/2;
+    for(const [drop,thick]of [[.30,.55],[1.1,.28]])beam(d,roofPoint(r,s,u0,c.surface(r,s,u0)-drop),roofPoint(r,end,u1,c.surface(r,end,u1)-drop),.46,thick,IVORY);
+   }
+   for(const s of [r.a,r.b])for(const side of [-1,1]){
+    const u=side*c.width(r,s)/2;
+    beam(d,roofPoint(r,s,0,c.surface(r,s,0)-.3),roofPoint(r,s,u,c.surface(r,s,u)-.3),.5,.55,IVORY);
+   }
   }
-  for(const s of [r.a,r.b])for(const side of [-1,1]){
-   const u=side*c.width(r,s)/2;
-   beam(d,roofPoint(r,s,0,c.surface(r,s,0)-.3),roofPoint(r,s,u,c.surface(r,s,u)-.3),.5,.55,IVORY);
+  // Narrow folded flashing makes the grindable spine read as real roofing.
+  // This is visual-only, just above the existing safe landing/grind surface.
+  if(['gable','hip','aframe'].includes(r.shape)){
+   const transverse=r.shape==='aframe',a=transverse?-c.width(r,mid)/2+.12:r.a+.12,b=transverse?c.width(r,mid)/2-.12:r.b-.12;
+   const capPoint=(along:number,across:number)=>{const s=transverse?mid+across:along,u=transverse?along:across;return roofPoint(r,s,u,c.surface(r,s,u)+(across===0?.055:.025));};
+   for(let along=a;along<b-.001;along+=2){
+    const end=Math.min(b,along+2);
+    for(const side of [-1,1]){
+     let pts=[capPoint(along,side*.24),capPoint(along,0),capPoint(end,0),capPoint(end,side*.24)];
+     let uv=[side*.06,(along-a)/4,0,(along-a)/4,0,(end-a)/4,side*.06,(end-a)/4];
+     const [p,q,t]=pts,up=(q[2]-p[2])*(t[0]-p[0])-(q[0]-p[0])*(t[2]-p[2]);
+     if(up<0){pts=pts.reverse();uv=pts.flatMap((_,i)=>uv.slice((3-i)*2,(4-i)*2));}
+     face(d,pts,'#b5c4bc','kook-metal',uv);
+    }
+   }
   }
   // Separate Meshy shutter windows, balconies and hanging flower boxes.
   if(r.route<0){
@@ -87,6 +117,14 @@ export function dressKookRooftops(components:CustomComponent[],groups:CustomGrou
   if(['terrace','garden','court'].includes(r.kind)&&r.width>18)for(const side of [-1,1]){
    const u=side*(r.width/2-3.2);
    if(c.blocked(r,mid,u,3.4,6))continue;
+   if(r.shape!=='flat'){
+    // Level planting troughs need a fitted masonry footing at a pitched
+    // crown; otherwise their flat bases visibly hover over both roof faces.
+    const y=c.surface(r,mid,u);
+    cuboid(d,[[-1,-1,-1],[1,-1,-1],[1,1,-1],[-1,1,-1],[-1,-1,1],[1,-1,1],[1,1,1],[-1,1,1]].map(([x,h,z])=>{
+     const s=mid+z*3.05,v=u+x*1.75;return roofPoint(r,s,v,h>0?y+.025:c.surface(r,s,v)-.04);
+    }), '#d8d5ca','kook-paving');
+   }
    asset('kookhydrangea',roofPoint(r,mid,u,c.surface(r,mid,u)+.02),1,yaw+90,d,{s:[5.8,2.3,3.15]});
   }
   // Lanterns and potted flowers frame the atrium galleries. Keep these on
