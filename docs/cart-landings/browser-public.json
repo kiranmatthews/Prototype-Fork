@@ -1,0 +1,61 @@
+{
+  "paused": true,
+  "target": "settled",
+  "stage": "settled",
+  "samples": [
+    {
+      "stage": "apex",
+      "time": 6.899999999999981,
+      "x": 72.27043941514833,
+      "y": 44.67548458420249,
+      "z": -196.10485737298353,
+      "vy": -0.15416666666666468,
+      "rolls": 0,
+      "grounded": false,
+      "compression": 0,
+      "bodyY": 0
+    },
+    {
+      "stage": "landing",
+      "time": 8.683333333333344,
+      "x": 86.73035110429481,
+      "y": 26.20573553637069,
+      "z": -248.23841428369937,
+      "vy": 0,
+      "rolls": 0,
+      "grounded": true,
+      "compression": 0.12458344793832334,
+      "bodyY": -0.12458344793832334
+    },
+    {
+      "stage": "settled",
+      "time": 8.933333333333357,
+      "x": 86.46420358997652,
+      "y": 26.17466728103328,
+      "z": -254.21710993691576,
+      "vy": 0,
+      "rolls": 0,
+      "grounded": true,
+      "compression": 0.0037620941454680015,
+      "bodyY": -0.0037620941454665803
+    }
+  ],
+  "takeoff": 5.416666666666653,
+  "landed": 8.683333333333344,
+  "rebounds": 0,
+  "stamp": "Codex/sol fork · build 10-26 03:41 UTC",
+  "gravity": 11.5,
+  "stableLandings": true,
+  "mode": "time-trial",
+  "racers": 1,
+  "falls": 0,
+  "frame": {
+    "frame": 5839,
+    "calls": 457,
+    "triangles": 4396066,
+    "points": 0,
+    "lines": 0
+  },
+  "glError": 0,
+  "errors": []
+}

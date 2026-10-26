@@ -11,8 +11,12 @@ try{
  await page.goto(`${base}/?playtest&level=coconut-cart-rally`,{timeout:180000});
  await page.waitForFunction(()=>window.__game?.getSkateRace()?.carts&&!window.__game.gameFlow.blocksGameplay,null,{timeout:180000});
  await page.getByRole('button',{name:'RACE',exact:true}).click();
+ // The public build may still be completing the asynchronous race-start transition.
+ await page.waitForFunction(()=>window.__game.getSkateRace().phase==='running',null,{timeout:30000});
+ await page.evaluate(()=>{const r=window.__game.getSkateRace();r.canStartTimeTrial=()=>true;r.start('time-trial',0);});
+ await page.waitForFunction(()=>{const r=window.__game.getSkateRace();return r.mode==='time-trial'&&r.phase==='running';},null,{timeout:30000});
  await page.evaluate(()=>{
-  const g=window.__game,r=g.getSkateRace();r.canStartTimeTrial=()=>true;r.start('time-trial',0);g.renderQualitySettings.setRegularResolution(null);
+  const g=window.__game,r=g.getSkateRace();g.renderQualitySettings.setRegularResolution(null);
   // Clear the landing lane of parked loaners so this fixture measures ground impact.
   // Hard kart-to-kart contact is covered separately by test-cart-landings.mjs.
   const rally=r.carts,world=rally.fleet.physics;
@@ -42,9 +46,9 @@ try{
   }
   if(stage!=='settled')await page.evaluate(next=>{window.cartLandingReview.target=next;window.cartLandingReview.paused=false;},stage==='apex'?'landing':'settled');
  }
- const report=await page.evaluate(()=>{const g=window.__game,r=g.getSkateRace(),w=r.carts.fleet.physics;return {...window.cartLandingReview,stamp:document.querySelector('.hud-build')?.textContent,gravity:w.gravity,stableLandings:w.stableLandings,falls:r.riders[0].falls,frame:g.getRenderFrameStats(),glError:g.renderer.getContext().getError()};});
+ const report=await page.evaluate(()=>{const g=window.__game,r=g.getSkateRace(),w=r.carts.fleet.physics;return {...window.cartLandingReview,stamp:document.querySelector('.hud-build')?.textContent,gravity:w.gravity,stableLandings:w.stableLandings,mode:r.mode,racers:r.carts.cartForRacer.length,falls:r.riders[0].falls,frame:g.getRenderFrameStats(),glError:g.renderer.getContext().getError()};});
  await writeFile(`${out}/report.json`,JSON.stringify({...report,errors},null,2));
- assert.equal(report.stableLandings,true);assert.equal(report.gravity,11.5);assert.equal(report.rebounds,0);assert.equal(report.falls,0);
+ assert.equal(report.mode,'time-trial');assert.equal(report.racers,1);assert.equal(report.stableLandings,true);assert.equal(report.gravity,11.5);assert.equal(report.rebounds,0);assert.equal(report.falls,0);
  assert.ok(report.landed-report.takeoff>1.5,'Full-render dirt jump has floaty airtime');
  assert.ok(report.samples.every(s=>s.rolls===0));assert.ok(report.samples[1].compression>.06,'Heavy touchdown compresses the suspension');
  assert.ok(report.samples[2].compression<.006,'Suspension settles in a quarter second');
