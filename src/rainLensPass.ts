@@ -15,13 +15,16 @@ export class RainLensPass extends Pass {
    float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
    vec4 beads(vec2 uv,float scale,float seed){
     vec2 p=uv*vec2(uAspect,1.0)*scale,cell=floor(p),local=fract(p)-.5;
-    float h=hash(cell+seed),age=fract(uTime*(.035+h*.025)+h*9.0);
-    float exists=step(h,.09*uAmount)*smoothstep(.0,.07,age)*(1.0-smoothstep(.84,1.0,age));
-    float slide=smoothstep(.3,.9,age);
-    vec2 centre=vec2((hash(cell+seed+19.0)-.5)*.5,.2-slide*.43);
-    centre.x+=sin(age*9.0+h*21.0)*.015*slide;
+    // Staggered 4.5–9 second lives. Renew the occupancy, position and size only
+    // while the old bead is invisible, so the lens never repeats a fixed mask.
+    float h=hash(cell+seed),phase=uTime/(4.5+h*4.5)+h*9.0,age=fract(phase);
+    vec2 life=cell+seed+floor(phase)*vec2(17.13,43.71);
+    float exists=step(hash(life+101.0),.09*uAmount)*smoothstep(.0,.06,age)*(1.0-smoothstep(.75,1.0,age));
+    float slide=smoothstep(.12,.87,age);
+    vec2 centre=vec2((hash(life+19.0)-.5)*.5,.22+(hash(life+67.0)-.5)*.10-slide*.44);
+    centre.x+=sin(age*9.0+hash(life+83.0)*21.0)*.025*slide;
     vec2 q=local-centre;
-    float radius=.055+hash(cell+seed+43.0)*.075;
+    float radius=.055+hash(life+43.0)*.075;
     q.y/=1.0+slide*.35;
     q.x*=1.0+smoothstep(-radius,radius,q.y)*.26;
     float r=length(q)/radius,inside=1.0-smoothstep(.88,1.0,r);
