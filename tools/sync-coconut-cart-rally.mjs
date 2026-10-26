@@ -1,0 +1,11 @@
+import {build} from 'esbuild';
+import {readFile,writeFile} from 'node:fs/promises';
+import {levelSnapshotHash} from './release-levels.mjs';
+const compiled=await build({entryPoints:['src/levels/coconut-cart-rally.ts'],bundle:true,format:'esm',write:false});
+const {COCONUT_CART_RALLY_LEVEL:data}=await import('data:text/javascript;base64,'+Buffer.from(compiled.outputFiles[0].text).toString('base64'));
+const path='public/levels.json',pack=JSON.parse(await readFile(path,'utf8')),entry={id:'coconut-cart-rally',name:data.name,data};
+const i=pack.levels.findIndex(e=>e.id===entry.id);if(i<0)pack.levels.push(entry);else pack.levels[i]=entry;
+await writeFile(path,JSON.stringify(pack)+'\n');
+const file='tools/fixtures/stock-level-snapshots.json',cert=JSON.parse(await readFile(file,'utf8'));
+cert.levels[entry.id]={snapshotSha256:levelSnapshotHash(entry),authoringRuntime:process.version};await writeFile(file,JSON.stringify(cert,null,2)+'\n');
+console.log(`Synced Coconut Cart Rally: ${data.components.length} components.`);

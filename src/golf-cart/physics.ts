@@ -12,7 +12,8 @@ export interface CartState extends CartSpawn {
   supportHeight:number;supportVelocity:number;airTime:number;airborneCount:number;hopCooldown:number;hopLatch:boolean;
   tumbling:boolean;tumbleAngle:number;tumbleVelocity:number;tumbleTime:number;rollCooldown:number;rolls:number;recoveries:number;
 }
-export interface CartPhysicsOptions {scale?:number;topSpeed?:number;engine?:number;speedLimit?:number;crestLaunch?:boolean;maxLaunchVelocity?:number;airRecoveryDelay?:number;damageCapacity?:number}
+export type CartBoundary=(x:number,y:number,z:number,radius:number)=>{nx:number;nz:number;depth:number;x:number;z:number}|null;
+export interface CartPhysicsOptions {boundary?:CartBoundary;scale?:number;topSpeed?:number;engine?:number;speedLimit?:number;crestLaunch?:boolean;maxLaunchVelocity?:number;airRecoveryDelay?:number;damageCapacity?:number}
 export const CART_PHYSICS=Object.freeze({step:1/120,maxSteps:24,mass:340,inertia:230,topSpeed:17,reverseSpeed:6,engine:8.4,brake:17,grip:7.7,wheelbase:1.72,radius:.78,probeOffset:.72,restitution:.38,gravity:13.5,hopVelocity:5.8,hopCooldown:1.0,rollImpact:10.5});
 const clamp=(v:number,a:number,b:number)=>Math.max(a,Math.min(b,v));
 const finite=(v:number)=>Number.isFinite(v)?v:0;
@@ -30,12 +31,13 @@ export class GolfCartPhysics {
   readonly scale:number;readonly topSpeed:number;readonly engine:number;readonly speedLimit:number;readonly crestLaunch:boolean;
   readonly maxLaunchVelocity:number;readonly airRecoveryDelay:number;
   private readonly damageCapacity:number;
+  private readonly boundary?:CartBoundary;
   get radius(){return CART_PHYSICS.radius*this.scale;}
   get probeOffset(){return CART_PHYSICS.probeOffset*this.scale;}
   constructor(readonly ground:CartGround,readonly spawns:readonly CartSpawn[],readonly obstacles:readonly CartObstacle[]=[],options:CartPhysicsOptions={}){
     this.scale=options.scale??1;this.topSpeed=options.topSpeed??CART_PHYSICS.topSpeed;this.engine=options.engine??CART_PHYSICS.engine;this.speedLimit=options.speedLimit??24;this.crestLaunch=options.crestLaunch??true;
     this.maxLaunchVelocity=options.maxLaunchVelocity??7.5;this.airRecoveryDelay=options.airRecoveryDelay??1.1;
-    this.damageCapacity=options.damageCapacity??0;
+    this.damageCapacity=options.damageCapacity??0;this.boundary=options.boundary;
     this.carts=spawns.map(s=>createCartState(s,ground));this.inputs=spawns.map(()=>({...NO_CART_INPUT}));
   }
   reset(index:number,repair=true){const old=this.carts[index],fresh=createCartState(this.spawns[index],this.ground);if(!repair){fresh.damage=[...old.damage];fresh.health=old.health;fresh.respawns=old.respawns+1;fresh.hits=old.hits;fresh.rolls=old.rolls;fresh.recoveries=old.recoveries;fresh.airborneCount=old.airborneCount;}Object.assign(old,fresh);this.inputs[index]={...NO_CART_INPUT};}
@@ -61,7 +63,7 @@ export class GolfCartPhysics {
       // Opposite pedal brakes first, then engages reverse at walking pace.
       if(throttle*forward<-.5)acceleration=throttle*CART_PHYSICS.brake;
       if(c.grounded&&!c.tumbling)forward+=acceleration*dt;
-      const resistance=(.20+Math.abs(forward)*.018+g.drag+brake*CART_PHYSICS.brake+(input.handbrake?3.8:0))*dt;
+      const resistance=(.20+Math.abs(forward)*.018+(c.grounded?g.drag:0)+brake*CART_PHYSICS.brake+(input.handbrake?3.8:0))*dt;
       forward=Math.sign(forward)*Math.max(0,Math.abs(forward)-resistance);
       if(c.tumbling){forward*=Math.exp(-1.1*dt);lateral*=Math.exp(-.8*dt);}
       if(c.grounded)lateral*=Math.exp(-CART_PHYSICS.grip*grip*dt);else lateral*=Math.exp(-.15*dt);
@@ -108,6 +110,10 @@ export class GolfCartPhysics {
     for(let iteration=0;iteration<3;iteration++){
       for(let i=0;i<this.carts.length;i++){
         const a=this.carts[i];
+        if(this.boundary)for(const side of [-1,1]){
+          const ax=a.x+Math.sin(a.yaw)*this.probeOffset*side,az=a.z+Math.cos(a.yaw)*this.probeOffset*side,hit=this.boundary(ax,a.y,az,this.radius);
+          if(hit)this.resolve(i,null,hit.nx,hit.nz,hit.depth,hit.x,hit.z,iteration===0);
+        }
         for(const obstacle of this.obstacles)for(const side of [-1,1]){
           const ax=a.x+Math.sin(a.yaw)*this.probeOffset*side,az=a.z+Math.cos(a.yaw)*this.probeOffset*side;
           const dx=ax-obstacle.x,dz=az-obstacle.z,r=this.radius+obstacle.radius,d=Math.hypot(dx,dz);

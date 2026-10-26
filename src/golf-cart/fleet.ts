@@ -1,9 +1,9 @@
 import * as THREE from 'three';
 import { GolfCartKit, CART_PALETTES, CART_DIMENSIONS, type GolfCartModel } from './model';
 import { GolfDriverKit, DRIVER_STYLES, type DriverStyle } from './driver';
-import { GolfCartPhysics, CartAutopilot, CART_PHYSICS, type CartGround, type CartSpawn, type CartObstacle, type CartRoute, type CartInput, type CartPhysicsOptions } from './physics';
+import { GolfCartPhysics, CartAutopilot, CART_PHYSICS, type CartGround, type CartSpawn, type CartObstacle, type CartRoute, type CartInput, type CartPhysicsOptions, type CartImpact } from './physics';
 
-export interface FleetOptions {damageVisuals?:boolean;ground:CartGround;spawns:readonly CartSpawn[];routes?:readonly CartRoute[];obstacles?:readonly CartObstacle[];physics?:CartPhysicsOptions}
+export interface FleetOptions {damageVisuals?:boolean;onImpact?:(hit:CartImpact)=>void;ground:CartGround;spawns:readonly CartSpawn[];routes?:readonly CartRoute[];obstacles?:readonly CartObstacle[];physics?:CartPhysicsOptions}
 export interface FleetPose {x:number;y:number;z:number;yaw:number}
 interface Chip {x:number;y:number;z:number;vx:number;vy:number;vz:number;life:number;spin:number}
 /** Fleet owns meshes/materials/drivers; kit buffers are disposed exactly once on unload. */
@@ -19,7 +19,7 @@ export class GolfCartFleet {
   private viewBounds=new THREE.Box2();private viewPoint=new THREE.Vector3();
   private poses:readonly FleetPose[]|undefined;
   private inverseRoot=new THREE.Matrix4();private instanceMatrix=new THREE.Matrix4();
-  constructor(options:FleetOptions){
+  constructor(private options:FleetOptions){
     this.kit=new GolfCartKit(options.damageVisuals);this.root.name='GolfCartFleet';this.physics=new GolfCartPhysics(options.ground,options.spawns,options.obstacles,options.physics);
     this.pilots=(options.routes??[]).map(r=>new CartAutopilot(r));this.driverStyles=options.spawns.map((_,i)=>DRIVER_STYLES[i%3]);
     this.models=options.spawns.map((_,i)=>{const model=this.kit.create(CART_PALETTES[i%CART_PALETTES.length]);model.setDriver(this.drivers.create(this.driverStyles[i]));model.root.name=`GolfCart-${i+1}`;model.root.scale.setScalar(this.physics.scale);this.root.add(model.root);return model;});
@@ -37,6 +37,7 @@ export class GolfCartFleet {
   update(dt:number,control?:(world:GolfCartPhysics)=>void,present=true){
     this.physics.advance(dt,control??(world=>{world.carts.forEach((c,i)=>{world.inputs[i]=i===this.selected?this.input:this.pilots[i]?.sample(c,CART_PHYSICS.step)??{throttle:0,steer:0,brake:0,handbrake:false};});}));
     for(const hit of this.physics.impacts){
+      this.options.onImpact?.(hit);
       const n=Math.min(8,Math.ceil(hit.strength));for(let i=0;i<n;i++){
         const chip=this.chips[this.nextChip++%this.chips.length],a=(this.nextChip*2.39996323)% (Math.PI*2);
         Object.assign(chip,{x:hit.x,y:hit.y,z:hit.z,vx:Math.sin(a)*hit.strength*.24,vy:2+i*.27,vz:Math.cos(a)*hit.strength*.24,life:.8+(i%3)*.2,spin:a});
@@ -68,7 +69,7 @@ export class GolfCartFleet {
     this.root.updateWorldMatrix(true,false);this.inverseRoot.copy(this.root.matrixWorld).invert();
     this.models.forEach((m,i)=>{if(!this.visible[i])return;const c=this.physics.carts[i],p=poses?.[i]??c,angle=c.tumbleAngle;
       // Rotate the whole vehicle, wheels and driver around the rounded support envelope.
-      const lift=Math.max(1-Math.cos(angle),.96*Math.abs(Math.sin(angle))+CART_DIMENSIONS.height*Math.max(0,-Math.cos(angle)));
+      const lift=Math.max(1-Math.cos(angle),.96*Math.abs(Math.sin(angle))+(CART_DIMENSIONS.height+this.kit.cabinRise)*Math.max(0,-Math.cos(angle)));
       m.root.position.set(p.x,p.y+lift*this.physics.scale,p.z);m.root.rotation.set(0,p.yaw,angle,'YXZ');m.update({time:this.physics.time,steer:c.steer,roll:c.roll,pitch:c.pitch,impact:c.impact,speed:c.speed,wheelTravel:c.travel/this.physics.scale,suspension:c.wheels,damage:c.damage,health:c.health});
       m.root.updateWorldMatrix(false,true);
     });

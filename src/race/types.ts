@@ -21,9 +21,9 @@ export const RALLY_ITEM_NAMES:Partial<Record<RaceItem,string>>={banana:'BANANA B
 export const RALLY_ITEM_DESCRIPTIONS:Partial<Record<RaceItem,string>>={
   banana:'Drop three explosive peels behind your kart; the splash catches nearby rivals',
   'green-shell':'Fire three ricocheting coconuts; hold back to fire behind you',
-  'red-shell':'A homing coconut tracks the racer ahead; spin, dodge or shield to counter',
+  'red-shell':'A homing coconut tracks the racer ahead; use a shield or outrun it',
   'blue-shell':'Marks the leader for a huge blast; leave the ring before it hits',
-  'shock-shell':'Lightning damages every grounded rival after a warning; jump or shield',
+  'shock-shell':'Lightning damages every grounded rival after a warning; get airborne or shield',
   'water-bomb':'A giant pool-party splash; get out of the marked circle',
   horn:'Shunt every rival within 13 metres and clear nearby projectiles',
   mushroom:'Four seconds of extra kart power; save it for a straight or a jump approach',

@@ -4,6 +4,9 @@
 // audio must never break the sim, so everything is wrapped in try/catch.
 
 const FILES: Record<string, string> = {
+  kartEngine:'karts/engine.wav', kartSkid:'karts/skid.m4a', kartCrash:'karts/crash.wav',
+  kartExplosion:'karts/explosion.m4a', kartFire:'karts/fire.m4a',
+  kartThrusterStart:'karts/thruster-start.wav', kartThrusterLoop:'karts/thruster-loop.wav', kartThrusterEnd:'karts/thruster-end.wav',
   ollie: 'ollie.wav',
   railLand: 'rail-land.wav',
   grindLoop: 'grinding-loop.wav',

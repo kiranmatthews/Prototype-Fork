@@ -34,6 +34,10 @@
     "slipstream-race": {
       "snapshotSha256": "0afa927708bb67f40983be362376f3d446f534a9ad7a64da70dcda6222357f61",
       "authoringRuntime": "v22.23.3"
+    },
+    "coconut-cart-rally": {
+      "snapshotSha256": "fd4f46d09e39c0c97c853636cdfe799cf94c2dadb028d48f6500492a1d534a04",
+      "authoringRuntime": "v24.19.0"
     }
   }
 }
