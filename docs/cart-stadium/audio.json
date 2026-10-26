@@ -1,0 +1,53 @@
+{
+  "buffers": [
+    {
+      "key": "kartEngine",
+      "duration": 0.8540362811791383,
+      "rate": 44100
+    },
+    {
+      "key": "kartSkid",
+      "duration": 2.99,
+      "rate": 44100
+    },
+    {
+      "key": "kartCrash",
+      "duration": 0.5839002267573696,
+      "rate": 44100
+    },
+    {
+      "key": "kartExplosion",
+      "duration": 5.538458049886621,
+      "rate": 44100
+    },
+    {
+      "key": "kartThrusterStart",
+      "duration": 0.5983673469387755,
+      "rate": 44100
+    },
+    {
+      "key": "kartFire",
+      "duration": 2.8605668934240365,
+      "rate": 44100
+    },
+    {
+      "key": "kartThrusterLoop",
+      "duration": 0.5883673469387755,
+      "rate": 44100
+    },
+    {
+      "key": "kartThrusterEnd",
+      "duration": 0.5983673469387755,
+      "rate": 44100
+    }
+  ],
+  "idleRate": 0.7200000286102295,
+  "engineRate": 1.1629786491394043,
+  "thrusterStartStop": true,
+  "skidding": true,
+  "impact": true,
+  "explosion": true,
+  "fire": true,
+  "pauseSilence": true,
+  "errors": []
+}
