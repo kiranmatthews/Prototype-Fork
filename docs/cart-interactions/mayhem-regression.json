@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "controls": "X acceleration / directional steering / release coasts / Circle brake / R2 drift / Square side flames / Triangle steal",
+  "ownership": true,
+  "damage": true,
+  "burnout": true,
+  "footMovement": true,
+  "onFootFinish": true,
+  "rivalTheft": true,
+  "loaners": 12,
+  "tuningUnchanged": true
+}

@@ -33,13 +33,16 @@ await withBlockworksRuntime(async r=>{
  assert.equal(physics.carts[0].health,0,'repeated hits to a saturated panel still accumulate');assert.ok(legacy.carts[0].health>0,'country-club traffic retains its original rules');
  const race=new SkateRace(r.scene,r.p,false,()=>true);race.attach(r.l,'coconut-cart-rally');
  const start=()=>{race.start('race',0);race.phase='running';return race.carts;};
- let carts=start();
+ let carts=start();carts.drive=()=>({moveX:0,moveY:0});
  const tick=(sample={},n=1)=>{let old={};for(let i=0;i<n;i++){const input=normalizeGameInput(sample,old);race.step(r.dt,input);old=input;}};
+ const completeAction=(id=0)=>{for(let n=0;n<600&&carts.isAnimating(id);n++)tick();assert.equal(carts.isAnimating(id),false);};
  const setupNear=(id,cartId,offset=3.2)=>{const c=carts.fleet.physics.carts[cartId];race.riders[id].player.resetRacePosition(r.l,new r.p.pos.constructor(c.x+offset,c.y+.1,c.z),race.course.tangent(0),!carts.isDriving(id));};
  const oldCart=carts.cartForRacer[0],victimCart=carts.cartForRacer[1];
  carts.fleet.physics.carts[victimCart].health=.57;
  race.riders[0].item='mushroom';race.riders[1].item='shield';
  setupNear(0,victimCart);tick({grindHeld:true});
+ assert.equal(carts.cartForRacer[0],oldCart);assert.equal(carts.cartForRacer[1],victimCart);assert.equal(carts.stats.steals,0);
+ tick({},70);assert.equal(carts.cartForRacer[0],-1,'first Triangle only exits');setupNear(0,victimCart);carts.actionCooldown[0]=0;tick({grindHeld:true});completeAction();
  assert.equal(carts.cartForRacer[0],victimCart);assert.equal(carts.cartForRacer[1],-1);assert.equal(carts.driverForCart[oldCart],-1);
  assert.ok(carts.fleet.physics.carts[victimCart].health<=.57,'theft preserves dents');
  assert.equal(race.riders[0].item,'mushroom');assert.equal(race.riders[1].item,'shield');assert.equal(carts.stats.steals,1);
@@ -52,11 +55,11 @@ await withBlockworksRuntime(async r=>{
  tick({},60);const beforeJump=r.p.pos.y;tick({jumpHeld:true},24);tick({jumpReleased:true},1);tick({},8);assert.ok(r.p.pos.y>beforeJump+.2,'on-foot charge jump works');assert.equal(r.p.boardRolling,false);
  tick({},240);assert.equal(carts.isDriving(0),false,'no automatic new kart after destruction');
  // Return to a healthy parked loaner using the real interaction edge.
- const spare=carts.fleet.physics.carts.findIndex((c,i)=>i>=carts.count&&carts.driverForCart[i]<0&&!carts.burning[i]&&!c.tumbling&&carts.locked[i]===0);assert.ok(spare>=0,'an available parked loaner exists');setupNear(0,spare,2.8);tick({grindHeld:true});assert.equal(carts.cartForRacer[0],spare);assert.equal(carts.burning[vehicle],true);
+ const spare=carts.fleet.physics.carts.findIndex((c,i)=>i>=carts.count&&carts.driverForCart[i]<0&&!carts.burning[i]&&!c.tumbling&&carts.locked[i]===0);assert.ok(spare>=0,'an available parked loaner exists');setupNear(0,spare,2.8);tick({grindHeld:true});completeAction();assert.equal(carts.cartForRacer[0],spare);assert.equal(carts.burning[vehicle],true);
  // An on-foot rival uses exactly the same steal action, including the human target.
  carts.locked[spare]=0;carts.actionCooldown[1]=0;setupNear(1,spare,2.2);race.riders[1].recovery=0;
  race.riders[1].player.resetRacePosition(r.l,race.riders[1].player.pos.clone(),race.course.tangent(0),true);
- assert.equal(carts.interact(1),true);assert.equal(carts.cartForRacer[1],spare);assert.equal(carts.cartForRacer[0],-1);
+ assert.equal(carts.interact(1),true);completeAction(1);assert.equal(carts.cartForRacer[1],spare);assert.equal(carts.cartForRacer[0],-1);
  carts=start();race.riders[0].item='green-shell';assert.equal(race.useItem(),true);assert.equal(race.projectiles.length,3,'coconut cannon fires a spread');
  race.clearItems();race.riders[0].item='banana';race.useItem();assert.equal(race.projectiles.length,3,'banana bomb trio');
  const active=carts.cartForRacer[0];tick({spinHeld:true});assert.equal(carts.stats.thrusters,1);tick({spinHeld:true},30);assert.equal(carts.stats.thrusters,1);

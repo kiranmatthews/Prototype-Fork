@@ -329,11 +329,11 @@ export class SkateRace {
       const p=r.player;r.previousProgress=r.progress;r.shield=Math.max(0,r.shield-dt);r.star=Math.max(0,r.star-dt);r.knockGrace=Math.max(0,r.knockGrace-dt);r.itemCooldown-=dt;r.attackCooldown-=dt;r.think-=dt;r.parry=Math.max(0,r.parry-dt);r.dodge=Math.max(0,r.dodge-dt);
       if(r.finish!==null){this.finishRollout(r,dt);this.placeMarker(r);continue;}
       level.raceActorId=r.id;const device=r.id===0?input:this.drive(r.id,true);
-      if(device.itemPressed)this.useItem(r.id,device.moveY<-.5);
+      if(device.itemPressed&&!this.carts?.isAnimating(r.id))this.useItem(r.id,device.moveY<-.5);
       const previousPosition=cartPrevious?.[r.id]??p.pos.clone();
       if(r.boost>0){r.boost=Math.max(0,r.boost-dt);if(!this.carts&&p.boardRolling&&p.speed<42){p.speed=Math.min(42,Math.max(0,p.speed)+dt*20);p.registerSkateBoost();}}
       p.racePresentationInterval=r.id===0?0:p.pos.distanceToSquared(this.human.pos)<1600?1/30:1/10;
-      if(!this.carts?.isDriving(r.id))sfx.withGain(this.soundGain(r),()=>p.step(dt,this.carts?{...device,grindHeld:false,grindPressed:false} as Input:device,level),r.id?'race-rivals':'');
+      if(!this.carts?.isDriving(r.id)&&!this.carts?.isAnimating(r.id))sfx.withGain(this.soundGain(r),()=>p.step(dt,this.carts?{...device,grindHeld:false,grindPressed:false} as Input:device,level),r.id?'race-rivals':'');
       r.velocity.copy(p.pos).sub(previousPosition).divideScalar(Math.max(.001,dt));if(r.velocity.length()>80)r.velocity.setLength(80);
       if(device.spinPressed&&p.spinning)r.parry=.28;
       r.recovery=p.state==='dead'?1:0;

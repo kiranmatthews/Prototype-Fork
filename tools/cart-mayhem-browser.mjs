@@ -26,6 +26,9 @@ try{
  await page.keyboard.down('KeyT');await page.waitForTimeout(100);assert.equal(await page.evaluate(()=>window.__game.getSkateRace().carts.fleet.physics.inputs[0].handbrake),true);await page.keyboard.up('KeyT');
  await page.keyboard.press('KeyF');await page.waitForTimeout(150);assert.equal(await page.evaluate(()=>window.__game.getSkateRace().carts.stats.thrusters),1);await shot('side-flames');await page.waitForTimeout(750); // Let the active burst end before placing a theft target inside its damage volume.
  await page.evaluate(()=>{const r=window.__game.getSkateRace(),c=r.carts,a=c.fleet.physics.carts[0],b=c.fleet.physics.carts[1];Object.assign(b,{x:a.x+3.2,y:a.y,z:a.z,vx:0,vz:0,health:.55,tumbling:false});c.sync();});
+ await page.keyboard.press('KeyE');await page.waitForFunction(()=>!window.__game.getSkateRace().carts.isDriving(0)&&!window.__game.getSkateRace().carts.isAnimating(0),null,{timeout:8000});
+ assert.equal(await page.evaluate(()=>window.__game.getSkateRace().carts.stats.steals),0);
+ await page.evaluate(()=>{const r=window.__game.getSkateRace(),c=r.carts,p=r.riders[0].player;c.actionCooldown[0]=0;p.resetRacePosition(r.level,c.exitPoint(1,-1),p.raceHeading,true);});
  await page.keyboard.press('KeyE');await page.waitForFunction(()=>window.__game.getSkateRace().carts.cartForRacer[0]===1,null,{timeout:8000});await shot('stolen');
  await page.evaluate(()=>{const c=window.__game.getSkateRace().carts,v=c.fleet.physics.carts[c.cartForRacer[0]];v.health=.32;});await page.waitForTimeout(1800);await shot('damaged-smoke');
  await page.evaluate(()=>{const r=window.__game.getSkateRace(),c=r.carts,w=c.fleet.physics,i=c.cartForRacer[0],v=w.carts[i];for(let n=0;n<32;n++){v.cooldown=0;w.damage(i,18,v.x,v.z-1);}});

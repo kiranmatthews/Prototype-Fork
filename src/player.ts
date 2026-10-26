@@ -3652,9 +3652,15 @@ export class Player {
   }
 
   /** An intact, finite fall-and-get-up using the shared authored recovery. */
-  beginRaceStun(pop=4,side=1):boolean {
-    if(!this.beginPvpKnockdown(pop,side))return false;
-    this.throwBoard(true);this.freeSkate=false;return true;
+  beginRaceStun(pop=4,side=1,forcedEjection=false):boolean {
+    // Leaving a destroyed/stolen seat follows resetRacePosition, which grants
+    // spawn protection. That protection must not swallow the visible fall.
+    const protection=this.invulnTimer,uber=this.uberTimer,hadBoard=this.freeSkate||this.airFromSkate;
+    if(forcedEjection){this.invulnTimer=0;this.uberTimer=0;}
+    const started=this.beginPvpKnockdown(pop,side);
+    this.uberTimer=uber;this.invulnTimer=Math.max(protection,this.invulnTimer);
+    if(!started)return false;
+    if(hadBoard)this.throwBoard(true);this.freeSkate=false;return true;
   }
 
   get raceHeading():THREE.Vector3 {return this.axisF.clone();}
