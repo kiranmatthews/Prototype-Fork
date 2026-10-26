@@ -1,0 +1,130 @@
+{
+  "full": false,
+  "buffers": [
+    {
+      "key": "kartEngine",
+      "duration": 0.8540362811791383,
+      "rate": 44100
+    },
+    {
+      "key": "kartSkid",
+      "duration": 2.99,
+      "rate": 44100
+    },
+    {
+      "key": "kartCrash",
+      "duration": 0.5839002267573696,
+      "rate": 44100
+    },
+    {
+      "key": "kartExplosion",
+      "duration": 5.538458049886621,
+      "rate": 44100
+    },
+    {
+      "key": "kartThrusterStart",
+      "duration": 0.5983673469387755,
+      "rate": 44100
+    },
+    {
+      "key": "kartFire",
+      "duration": 2.8605668934240365,
+      "rate": 44100
+    },
+    {
+      "key": "kartThrusterLoop",
+      "duration": 0.5883673469387755,
+      "rate": 44100
+    },
+    {
+      "key": "kartThrusterEnd",
+      "duration": 0.5983673469387755,
+      "rate": 44100
+    }
+  ],
+  "idle": {
+    "loops": [
+      {
+        "id": "rally-engine-0",
+        "name": "kartEngine"
+      },
+      {
+        "id": "rally-engine-1",
+        "name": "kartEngine"
+      },
+      {
+        "id": "rally-engine-2",
+        "name": "kartEngine"
+      },
+      {
+        "id": "rally-engine-3",
+        "name": "kartEngine"
+      }
+    ],
+    "rate": 0.7200000286102295,
+    "state": "running"
+  },
+  "driving": {
+    "speed": 17.13933439944942,
+    "hiddenSkateState": true,
+    "loops": [
+      {
+        "id": "rally-engine-0",
+        "name": "kartEngine"
+      },
+      {
+        "id": "rally-engine-1",
+        "name": "kartEngine"
+      },
+      {
+        "id": "rally-engine-2",
+        "name": "kartEngine"
+      },
+      {
+        "id": "rally-engine-3",
+        "name": "kartEngine"
+      }
+    ],
+    "rate": 1.189848780632019
+  },
+  "foot": {
+    "board": false,
+    "shots": [
+      {
+        "name": "footstep1",
+        "phase": "on-foot",
+        "owned": false,
+        "state": "running"
+      },
+      {
+        "name": "footstep2",
+        "phase": "on-foot",
+        "owned": false,
+        "state": "running"
+      }
+    ]
+  },
+  "isolation": {
+    "loopLeaks": [],
+    "footLeaks": 0,
+    "skateShots": [],
+    "steals": 1
+  },
+  "skating": {
+    "name": "skateLoop",
+    "state": "running",
+    "kartLoops": [],
+    "start": true
+  },
+  "runtime": {
+    "stamp": "Codex/sol fork · build 10-26 06:51 UTC",
+    "glError": 0
+  },
+  "thrusterStartStop": true,
+  "skidding": true,
+  "impact": true,
+  "explosion": true,
+  "fire": true,
+  "pauseSilence": true,
+  "errors": []
+}

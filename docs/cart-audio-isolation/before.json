@@ -1,0 +1,30 @@
+{
+  "driving": true,
+  "speed": 22.61257175585549,
+  "skateState": true,
+  "loops": [
+    {
+      "id": "rally-engine-0",
+      "name": "kartEngine"
+    },
+    {
+      "id": "rally-engine-1",
+      "name": "kartEngine"
+    },
+    {
+      "id": "rally-engine-2",
+      "name": "kartEngine"
+    },
+    {
+      "id": "rally-engine-3",
+      "name": "kartEngine"
+    },
+    {
+      "id": "skate",
+      "name": "skateLoop"
+    }
+  ],
+  "shots": [
+    "skateTransition"
+  ]
+}

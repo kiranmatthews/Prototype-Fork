@@ -228,7 +228,7 @@ export class GolfCartRace {
       this.presentInteraction(a,true);
       if(a.kind==='steal'&&!a.released&&a.age>=a.approach+CART_INTERACTION_TIMING.pull){
         a.passenger!.dispose();a.passenger=null;a.released=true;this.putOnFoot(a.victim,a.cart,a.victimFoot,true);
-        sfx.withGain(a.id===0||a.victim===0?1:.15,()=>sfx.play('railLand',.6,.8));
+        sfx.withGain(a.id===0||a.victim===0?1:.15,()=>sfx.play('kartCrash',.28,1.15));
       }
       if(a.age<a.duration)continue;
       a.actor.dispose();this.interactions=this.interactions.filter(other=>other!==a);

@@ -4887,7 +4887,11 @@ function updateAudio(): void {
   const speedAbs = Math.abs(player.speed);
   // Use the fixed-step audio contact policy: tiny floor-contact gaps must not
   // restart the loop, while actual jumps, stops and stowed boards stay silent.
-  const skatingNow = player.skateSoundRolling;
+  // The hidden racer retains skate state for race bookkeeping while the kart
+  // owns movement. Its board/foot foley must not layer over vehicle audio.
+  const carts = skateRace.carts;
+  const vehicleOwnsMovement = !!carts && (carts.isDriving(0) || carts.isAnimating(0));
+  const skatingNow = !vehicleOwnsMovement && player.skateSoundRolling;
   sfx.setLoop(
     "skate",
     "skateLoop",
@@ -4895,9 +4899,9 @@ function updateAudio(): void {
     Math.min(0.55, 0.15 + speedAbs / 90),
     0.85 + speedAbs / 120,
   );
-  sfx.setLoop("grind", "grindLoop", player.state === "grind", 0.55, 1);
+  sfx.setLoop("grind", "grindLoop", !vehicleOwnsMovement && player.state === "grind", 0.55, 1);
   // Wallride: the skating loop while stuck to a wall, pitched up a touch.
-  sfx.setLoop("wallride", "wallrideLoop", player.wallriding, 0.5, 1.15);
+  sfx.setLoop("wallride", "wallrideLoop", !vehicleOwnsMovement && player.wallriding, 0.5, 1.15);
   // Triple-mask invincibility gets its theme music for the whole ride.
   sfx.setLoop("uber", "uberMusic", player.uberTimer > 0, 0.65, 1);
   // Boulder rumble: the grind loop pitched way down, louder as it closes in.
@@ -4911,7 +4915,7 @@ function updateAudio(): void {
     0.3,
   );
 
-  player.updateFootstepAudio();
+  if (!vehicleOwnsMovement) player.updateFootstepAudio();
   if (split2p && p2 && current.id !== 'warproom' && !level.isCampaignMap) p2.updateFootstepAudio();
 }
 
