@@ -1,7 +1,7 @@
 {
   "passed": true,
   "landing": {
-    "masterPeak": 0.49402374029159546,
+    "masterPeak": 0.4798777997493744,
     "events": [
       {
         "cart": 0,
@@ -25,7 +25,7 @@
     ],
     "grounded": true,
     "rolls": 0,
-    "progress": 204.48722169509878,
+    "progress": 203.91696947165107,
     "buffer": {
       "duration": 0.7199773242630385,
       "rms": 0.2076157393964638,
@@ -149,6 +149,32 @@
       1792
     ]
   },
+  "simultaneous": [
+    {
+      "key": "rally-landing-0",
+      "name": "kartLanding",
+      "gain": 0.38199999999999995,
+      "rate": 0.966,
+      "played": true,
+      "buffer": true
+    },
+    {
+      "key": "rally-landing-7",
+      "name": "kartLanding",
+      "gain": 0.7639999999999999,
+      "rate": 0.916,
+      "played": true,
+      "buffer": true
+    },
+    {
+      "key": "rally-landing-1",
+      "name": "kartLanding",
+      "gain": 0.38199999999999995,
+      "rate": 0.896,
+      "played": false,
+      "buffer": true
+    }
+  ],
   "gl": 0,
   "errors": []
 }

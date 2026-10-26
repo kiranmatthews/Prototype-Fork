@@ -20,7 +20,9 @@ export class CartRaceAudio {
     const force=Math.min(1,Math.max(0,(hit.strength-2.8)/19));
     const gain=this.gain(hit,listener)*(.30+force*.58)*(hit.cart===humanCart?1:.5);
     const variation=((hit.cart*37+Math.floor(this.clock*17))%11)/100;
-    this.shot(`landing-${hit.cart}`,'kartLanding',gain,1.04-force*.18+variation);
+    // A nearby rival landing in this frame must not consume the driver's cue.
+    // Rivals still share one short debounce to keep a pack landing bounded.
+    sfx.withGain(1,()=>this.shot(`landing-${hit.cart}`,'kartLanding',gain,1.04-force*.18+variation),hit.cart===humanCart?'rally-player-landing':'rally-rival-landing');
   }
   explosion(c:CartState,listener:Vector3){this.shot('explosion','kartExplosion',this.gain(c,listener)*.75,.94);}
   thrust(c:CartState,index:number,listener:Vector3){this.shot(`thrust-${index}`,'kartThrusterStart',this.gain(c,listener)*.55,1);}

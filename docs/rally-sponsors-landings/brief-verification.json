@@ -22,12 +22,15 @@
     "independentOfDamage": true,
     "realRampVerified": true,
     "noRollover": true,
-    "outputPeak": 0.49402374029159546
+    "outputPeak": 0.4798777997493744,
+    "playerSurvivesSimultaneousRival": true,
+    "packVoicesBounded": true,
+    "managedVoiceCleanupPassed": true
   },
   "finishLabelRemovedFromAllRaceGates": true,
   "finishTriggerAndGeometryPreserved": true,
   "buildAndTypeCheckPassed": true,
-  "releaseBytes": 999420786,
+  "releaseBytes": 999420860,
   "focusedChecks": {
     "passed": 27,
     "failed": 0
@@ -41,5 +44,6 @@
     "evidence": "../rally-tnt-audio-glow/full-suite.json"
   },
   "timing": "BONES follow-up to full production browser verification: approximately 10 minutes. The sponsor/landing/finish brief was prepared during pass 6 without mutating that full-suite source state.",
-  "lightweightProductionPassed": true
+  "lightweightProductionPassed": true,
+  "additionalAudioLifecycleRegressionPassed": true
 }

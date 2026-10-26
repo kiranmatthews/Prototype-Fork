@@ -68,6 +68,15 @@ try{
  for(let brand=0;brand<7;brand++){
   await page.evaluate(brand=>{window.sponsorReview.stage='board';window.sponsorReview.brand=brand;},brand);await page.waitForTimeout(180);await page.screenshot({path:`${out}/board-${brand}-native.png`});
  }
+ // Same-frame pack touchdown, with the player in a stolen higher-index kart.
+ // The actual managed Web Audio path must start the player even after a rival.
+ await page.waitForTimeout(60);
+ const simultaneous=await page.evaluate(()=>{
+  const g=window.__game,c=g.getSkateRace().carts,q=window.sponsorReview,start=q.shots.length,listener=g.player.pos;
+  for(const cart of [0,7,1])c.audio.landing({cart,x:listener.x,y:listener.y,z:listener.z,strength:18,airTime:.7},listener,7);
+  return q.shots.slice(start);
+ });
+ assert.equal(simultaneous.filter(s=>s.played).length,2);assert.equal(simultaneous.find(s=>s.key==='rally-landing-7').played,true);assert.equal(simultaneous.find(s=>s.key==='rally-landing-1').played,false);
  const gl=await page.evaluate(()=>window.__game.renderer.getContext().getError());assert.equal(gl,0);assert.deepEqual(errors,[]);
- const report={passed:true,landing,layout,gl,errors};await writeFile(out+'/report.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report));
+ const report={passed:true,landing,layout,simultaneous,gl,errors};await writeFile(out+'/report.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report));
 }catch(error){console.log('ERRORS',errors);await page.screenshot({path:out+'/failure.png'}).catch(()=>{});throw error;}finally{await browser.close();}

@@ -46,5 +46,8 @@
   ],
   "independentOfDamage": true,
   "exactlyOnePerLanding": true,
-  "unchangedPlantedLanding": true
+  "unchangedPlantedLanding": true,
+  "simultaneousRivalAndPlayer": true,
+  "packVoiceLimit": true,
+  "landingTeardown": true
 }
