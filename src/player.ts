@@ -1,3 +1,4 @@
+import type { AnimationClip } from './animation/types';
 import { createRaceRivalHead, createRaceRivalShirt, attachRaceRivalShorts, type RaceRivalShirt } from './character/raceRival';
 import type { RacePlayerHooks } from './race/types';
 import { surfaceGrip } from './surfaceBehavior';
@@ -2994,6 +2995,15 @@ export class Player {
   }
 
   get vehicleVisualRoot():THREE.Group {return this.bodyGroup;}
+
+  private authoredClipSource:((id:string)=>AnimationClip|null)|null=null;
+  /** Temporary presentations borrow the live document's clips without taking
+   * over the ordinary gameplay animation clock or its overlay. */
+  setAuthoredClipSource(source:(id:string)=>AnimationClip|null):()=>void {
+    this.authoredClipSource=source;
+    return ()=>{if(this.authoredClipSource===source)this.authoredClipSource=null;};
+  }
+  authoredClip(id:string):AnimationClip|null {return this.authoredClipSource?.(id)??null;}
 
   /** Vehicle presentation borrows this same rig; it never changes character size or physics. */
   presentVehicleDriver(pose: PlayerAnimationOverlay): void {

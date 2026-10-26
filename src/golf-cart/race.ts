@@ -246,7 +246,7 @@ export class GolfCartRace {
       for(let i=1;i<a.path.length;i++){const length=a.path[i].distanceTo(a.path[i-1]);from=a.path[i-1];if(distance<=length){at.lerpVectors(from,a.path[i],length?distance/length:1);break;}distance-=length;at.copy(a.path[i]);}
       if(at.distanceToSquared(from)<1e-8)from=at.clone().sub(a.path[1].clone().sub(at));
       const support=this.ground(at.x,at.z);if(support.supported)at.y=support.height;
-      a.actor.present('walk',a.age/a.approach,model,at,a.side,from);a.passenger?.present('yanked',0,model,a.victimFoot,a.side);
+      a.actor.present('run',a.age/a.approach,model,at,a.side,from,undefined,a.age);a.passenger?.present('yanked',0,model,a.victimFoot,a.side);
     }else if(a.kind==='steal'&&age<CART_INTERACTION_TIMING.pull){
       const t=age/CART_INTERACTION_TIMING.pull;a.passenger?.present('yanked',t,model,a.victimFoot,a.side);
       a.actor.present('pull',t,model,a.foot,a.side,a.approach?a.foot:a.from,a.passenger??undefined);

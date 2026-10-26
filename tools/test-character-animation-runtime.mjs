@@ -149,6 +149,7 @@ try {
   let verticalVelocity = -3;
   let actionProgress = 0.4;
   let motionInputs = { balance: 0.75, charge: 0.2, travelSign: 1 };
+  let clipSource = null;
   let overlay = null;
   let overlayRemoved = 0;
   let lowPoseOuterOwnership = null;
@@ -190,6 +191,10 @@ try {
         lowPoseOuterOwnershipRemoved++;
       };
     },
+    setAuthoredClipSource(next) {
+      clipSource = next;
+      return () => { if (clipSource === next) clipSource = null; };
+    },
     setAuthoredPoseOverlay(next) {
       overlay = next;
       return () => {
@@ -211,6 +216,8 @@ try {
 
   const runtime = createCharacterAnimationRuntime(fakePlayer, suite);
   assert.equal(runtime.binding.root, root);
+  assert.equal(clipSource('player.run'), suite.clips.find(c => c.id === 'player.run'));
+  assert.equal(clipSource('missing'), null);
   assert.equal(typeof lowPoseOuterOwnership, 'function');
   assert.equal(lowPoseOuterOwnership(0.016), 0,
     'ordinary test clips unexpectedly claimed Unity low-pose outer ownership');
@@ -832,6 +839,7 @@ try {
 
   runtime.dispose();
   assert.equal(overlay, null);
+  assert.equal(clipSource, null);
   assert.equal(overlayRemoved, 1);
   assert.equal(lowPoseOuterOwnership, null);
   assert.equal(lowPoseOuterOwnershipRemoved, 1);

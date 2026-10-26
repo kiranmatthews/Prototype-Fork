@@ -32,7 +32,8 @@ try {
   assert.equal(idle.metadata.sourceAnimation.sourceClip, 'Idle_Loop');
   assert.equal(idle.playbackSpeed, 2);
   assert.equal(idle.tracks.filter(track => track.kind === 'quaternion').length, 22);
-  assert.equal(idle.proceduralDrivers.length, 0);
+  assert.ok(idle.proceduralDrivers.every(driver => driver.target.kind === 'scalar' &&
+    driver.target.target.startsWith('deform.')), 'idle has procedural joint motion over its imported clip');
   for (const track of idle.tracks) assert.deepEqual(track.keys[0].value, track.keys.at(-1).value);
   const saved = structuredClone(suite);
   saved.metadata.playerStarterCatalogVersion = 25;

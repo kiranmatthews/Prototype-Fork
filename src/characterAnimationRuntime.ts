@@ -255,6 +255,7 @@ export class CharacterAnimationRuntime {
 
   private animationDocument: AnimationSuiteDocument;
   private removeOverlay: (() => void) | null = null;
+  private removeClipSource: (() => void) | null = null;
   private removeLowPoseOuterOwnership: (() => void) | null = null;
   private runtimeEnabled: boolean;
   private runtimeSpeed: number;
@@ -320,6 +321,7 @@ export class CharacterAnimationRuntime {
   ) {
     this.animationDocument = document;
     this.binding = RigBinding.fromSculptRuntime(player.animationRig.root);
+    this.removeClipSource = player.setAuthoredClipSource(id => this.findPlayableClip(id));
     this.runtimeEnabled = options.enabled !== false;
     this.runtimeSpeed = finitePlaybackMultiplier(options.playbackSpeedMultiplier);
     this.manualClipId = options.manualClipId ?? null;
@@ -438,6 +440,8 @@ export class CharacterAnimationRuntime {
     this.disposed = true;
     this.removeOverlay?.();
     this.removeOverlay = null;
+    this.removeClipSource?.();
+    this.removeClipSource = null;
     this.removeLowPoseOuterOwnership?.();
     this.removeLowPoseOuterOwnership = null;
     this.cancelTransient();

@@ -1,0 +1,11 @@
+{
+  "passed": true,
+  "source": "Jog_Fwd_Loop",
+  "samples": 80,
+  "maxJointErrorRadians": 4.2146848510894035e-8,
+  "liveEdits": true,
+  "fallback": true,
+  "fixedCadence": true,
+  "gameplayClockUnchanged": true,
+  "fullSize": true
+}
