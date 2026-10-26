@@ -2,9 +2,9 @@ import {installCartWear} from './wear';
 import * as THREE from 'three';
 import { GolfCartKit, CART_PALETTES, CART_DIMENSIONS, type GolfCartModel } from './model';
 import { GolfDriverKit, DRIVER_STYLES, type DriverStyle } from './driver';
-import { GolfCartPhysics, CartAutopilot, CART_PHYSICS, type CartGround, type CartSpawn, type CartObstacle, type CartRoute, type CartInput, type CartPhysicsOptions, type CartImpact } from './physics';
+import { GolfCartPhysics, CartAutopilot, CART_PHYSICS, type CartGround, type CartSpawn, type CartObstacle, type CartRoute, type CartInput, type CartPhysicsOptions, type CartImpact, type CartLanding } from './physics';
 
-export interface FleetOptions {sponsorTexture?:THREE.Texture;damageVisuals?:boolean;onImpact?:(hit:CartImpact)=>void;ground:CartGround;spawns:readonly CartSpawn[];routes?:readonly CartRoute[];obstacles?:readonly CartObstacle[];physics?:CartPhysicsOptions}
+export interface FleetOptions {sponsorTexture?:THREE.Texture;damageVisuals?:boolean;onImpact?:(hit:CartImpact)=>void;onLanding?:(hit:CartLanding)=>void;ground:CartGround;spawns:readonly CartSpawn[];routes?:readonly CartRoute[];obstacles?:readonly CartObstacle[];physics?:CartPhysicsOptions}
 export interface FleetPose {x:number;y:number;z:number;yaw:number}
 interface Chip {x:number;y:number;z:number;vx:number;vy:number;vz:number;life:number;spin:number}
 /** Fleet owns meshes/materials/drivers; kit buffers are disposed exactly once on unload. */
@@ -38,6 +38,7 @@ export class GolfCartFleet {
   setDriver(index:number,style:DriverStyle|null){const previous=this.models[index].setDriver(style?this.drivers.create(style):null);previous?.dispose();if(style)this.driverStyles[index]=style;}
   update(dt:number,control?:(world:GolfCartPhysics)=>void,present=true){
     this.physics.advance(dt,control??(world=>{world.carts.forEach((c,i)=>{world.inputs[i]=i===this.selected?this.input:this.pilots[i]?.sample(c,CART_PHYSICS.step)??{throttle:0,steer:0,brake:0,handbrake:false};});}));
+    for(const hit of this.physics.landings)this.options.onLanding?.(hit);
     for(const hit of this.physics.impacts){
       this.options.onImpact?.(hit);
       const n=Math.min(8,Math.ceil(hit.strength));for(let i=0;i<n;i++){

@@ -1,0 +1,199 @@
+{
+  "started": "2026-10-26T22:06:56.703Z",
+  "commands": 27,
+  "rows": [
+    {
+      "command": "node tools/validate-levels.mjs",
+      "seconds": 2.284,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-pass7-focused/001.log"
+    },
+    {
+      "command": "node tools/test-lazy-source.mjs",
+      "seconds": 1.893,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-pass7-focused/002.log"
+    },
+    {
+      "command": "node tools/test-tropical-plants.mjs",
+      "seconds": 0.364,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-pass7-focused/003.log"
+    },
+    {
+      "command": "node tools/test-jungle-assets.mjs",
+      "seconds": 10.853,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-pass7-focused/004.log"
+    },
+    {
+      "command": "node tools/test-crown-quartz.mjs",
+      "seconds": 7.576,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-pass7-focused/005.log"
+    },
+    {
+      "command": "node tools/test-jungle-stream.mjs",
+      "seconds": 7.736,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-pass7-focused/006.log"
+    },
+    {
+      "command": "node tools/test-custard-pool.mjs",
+      "seconds": 0.289,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-pass7-focused/007.log"
+    },
+    {
+      "command": "node tools/test-jungle-enclosure.mjs",
+      "seconds": 84.056,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-pass7-focused/008.log"
+    },
+    {
+      "command": "node tools/test-map-landscape-assets.mjs",
+      "seconds": 0.16,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-pass7-focused/009.log"
+    },
+    {
+      "command": "node tools/test-world-map-save.mjs",
+      "seconds": 7.191,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-pass7-focused/010.log"
+    },
+    {
+      "command": "node tools/test-map-clay-geometry.mjs",
+      "seconds": 0.359,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-pass7-focused/011.log"
+    },
+    {
+      "command": "node tools/test-hollowwake-assets.mjs",
+      "seconds": 49.124,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-pass7-focused/012.log"
+    },
+    {
+      "command": "node tools/test-scenery-normals.mjs",
+      "seconds": 0.275,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-pass7-focused/013.log"
+    },
+    {
+      "command": "node tools/test-waterslide-scenery-lod.mjs",
+      "seconds": 0.269,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-pass7-focused/014.log"
+    },
+    {
+      "command": "node tools/test-waterslide-ocean-look.mjs",
+      "seconds": 8.326,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-pass7-focused/015.log"
+    },
+    {
+      "command": "node tools/test-waterslide-shallows.mjs",
+      "seconds": 9.642,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-pass7-focused/016.log"
+    },
+    {
+      "command": "node tools/test-waterpark-decks.mjs",
+      "seconds": 7.765,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-pass7-focused/017.log"
+    },
+    {
+      "command": "node tools/test-waterpark-portals.mjs",
+      "seconds": 11.015,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-pass7-focused/018.log"
+    },
+    {
+      "command": "node tools/test-waterslide-forest.mjs",
+      "seconds": 10.793,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-pass7-focused/019.log"
+    },
+    {
+      "command": "node tools/test-hollowwake-tunnel-build.mjs",
+      "seconds": 0.765,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-pass7-focused/020.log"
+    },
+    {
+      "command": "node tools/test-cart-landing-audio.mjs",
+      "seconds": 0.296,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-pass7-focused/021.log"
+    },
+    {
+      "command": "node tools/test-cart-landings.mjs",
+      "seconds": 0.276,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-pass7-focused/022.log"
+    },
+    {
+      "command": "node tools/test-rally-festival-polish.mjs",
+      "seconds": 14.742,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-pass7-focused/023.log"
+    },
+    {
+      "command": "node tools/test-cart-stadium.mjs",
+      "seconds": 14.554,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-pass7-focused/024.log"
+    },
+    {
+      "command": "node tools/test-race-explosives.mjs",
+      "seconds": 27.113,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-pass7-focused/025.log"
+    },
+    {
+      "command": "node tools/test-skate-race-finish.mjs",
+      "seconds": 11.038,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-pass7-focused/026.log"
+    },
+    {
+      "command": "node tools/test-skate-race-finish-visual.mjs",
+      "seconds": 0.351,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-pass7-focused/027.log"
+    }
+  ],
+  "finished": "2026-10-26T22:11:45.822Z",
+  "failed": [],
+  "passed": 27,
+  "description": "All twenty check:levels commands plus seven focused landing/stadium/TNT/finish regressions. All passed."
+}

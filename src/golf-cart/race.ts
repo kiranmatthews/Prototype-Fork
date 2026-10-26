@@ -87,7 +87,7 @@ export class GolfCartRace {
     const stadium=level.groundMeshes.some(m=>m.name==='Packed stadium dirt');
     const sponsor=level.pickRoot.getObjectByName('Stadium sponsor hoarding') as THREE.Mesh|undefined;
     this.fleet=new GolfCartFleet({damageVisuals:true,sponsorTexture:(sponsor?.material as THREE.MeshStandardMaterial|undefined)?.map??undefined,ground:(x,z)=>this.ground(x,z),spawns,obstacles,
-      onImpact:hit=>this.audio.impact(hit,this.racers[0].player.pos),
+      onImpact:hit=>this.audio.impact(hit,this.racers[0].player.pos),onLanding:hit=>this.audio.landing(hit,this.racers[0].player.pos,this.cartForRacer[0]),
       physics:{boundary:stadium?createStadiumBoundary():undefined,scale:1.25,topSpeed:38,engine:23,speedLimit:44,maxLaunchVelocity:9,airRecoveryDelay:6,damageCapacity:16*.7,gravity:24,stableLandings:true}});
     this.mud=stadium?new CartMud(this.fleet.mudAmounts):null;if(this.mud)this.fleet.root.add(this.mud.root);
     this.crowd=stadium?new StadiumCrowd():null;if(this.crowd)this.fleet.root.add(this.crowd.root);

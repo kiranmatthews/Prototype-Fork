@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import {RALLY_SPONSORS} from './rallySponsors';
 
 // Shared procedural detail: no additional texture fetches, reflection cameras,
 // time-driven noise, or distance-dependent geometry. UVs are course metres / 5.
@@ -116,4 +117,18 @@ export function createRallyLamp(glow=false){
   m.customProgramCacheKey=()=> 'stadium-lamp-halo-v2';
  }
  return m;
+}
+
+/** The same alpha artwork sits on solid hoardings and becomes cutout decals. */
+export function createRallySponsorMaterial(map:THREE.Texture){
+ const m=new THREE.MeshStandardMaterial({map,color:'#ffffff',roughness:.9,side:THREE.DoubleSide});m.name='Supplied festival sponsors';
+ m.onBeforeCompile=s=>{s.fragmentShader=s.fragmentShader.replace('#include <map_fragment>',`#include <map_fragment>
+  #ifdef USE_MAP
+   vec2 boardUv=vec2(vMapUv.x,fract(vMapUv.y*${RALLY_SPONSORS.length.toFixed(1)}));
+   float edge=min(min(boardUv.x,1.0-boardUv.x),min(boardUv.y,1.0-boardUv.y));
+   float pinstripe=step(.012,edge)*(1.0-step(.020,edge));
+   vec3 backing=mix(vec3(.045,.073,.054),vec3(.57,.48,.25),pinstripe);
+   diffuseColor.rgb=mix(backing,diffuseColor.rgb,diffuseColor.a);diffuseColor.a=1.0;
+  #endif
+ `);};m.customProgramCacheKey=()=> 'rally-supplied-sponsor-v1';return m;
 }

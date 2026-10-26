@@ -1,4 +1,4 @@
-import {createRallyDirt,createRallyCloth,createRallyLamp} from './rallyMaterials';
+import {createRallyDirt,createRallyCloth,createRallyLamp,createRallySponsorMaterial} from './rallyMaterials';
 import { authoredMovingGeometry } from './authoredMovingSurface';
 import {RainWeather} from './rainWeather';
 import {addWetRooftopLook} from './wetRooftop';
@@ -4770,7 +4770,7 @@ export class Level {
     if(kind==='rally-mud')return this.surfaceTexture('dirt');
     const cached = this.surfTexCache.get(kind);
     if (cached) return cached;
-    if(kind==='rally-sponsors'){const t=Level.finishTex(this.surfaceImage('rally/sponsors.png'));t.wrapS=t.wrapT=THREE.ClampToEdgeWrapping;this.surfTexCache.set(kind,t);return t;}
+    if(kind==='rally-sponsors'){const t=Level.finishTex(this.surfaceImage('rally/sponsors-v2.webp'));t.wrapS=t.wrapT=THREE.ClampToEdgeWrapping;this.surfTexCache.set(kind,t);return t;}
     if(kind==='skystream-marble'){
       const texture=Level.finishTex(this.surfaceImage('skystream/ivory-marble.webp'));
       this.surfTexCache.set(kind,texture);return texture;
@@ -6437,7 +6437,7 @@ export class Level {
     else if(c.tex==='rally-mud')material=createRallyDirt(this.surfaceTexture('dirt'),c.color??'#a07c52',!!c.colors);
     else if(c.tex==='rally-cloth')material=createRallyCloth(this.standingWaterClock);
     else if(c.tex==='rally-lamp'||c.tex==='rally-lamp-glow')material=createRallyLamp(c.tex==='rally-lamp-glow');
-    else if(c.tex==='rally-sponsors')material=new THREE.MeshStandardMaterial({map:this.surfaceTexture(c.tex),color:c.color??'#ffffff',roughness:.9,side:THREE.DoubleSide});
+    else if(c.tex==='rally-sponsors')material=createRallySponsorMaterial(this.surfaceTexture(c.tex));
     else if(c.tex==='waterslide-fiberglass')material=new THREE.MeshStandardMaterial({map:this.surfaceTexture(c.tex),color:c.color??'#ffffff',emissive:c.emissive??'#000000',vertexColors:!!c.colors,roughness:.58,metalness:.02,side:c.doubleSided?THREE.DoubleSide:THREE.FrontSide,fog:c.fog!==false});
     else if(isCrownTexture(c.tex))material=createCrownSurface(c,this.surfaceTexture(c.tex));
     else if(isCastleTexture(c.tex))material=createCastleMaterial(c);
@@ -19828,7 +19828,6 @@ export class Level {
     );
     if(this.skateRace){
       const line=createRaceFinish(this.skateRace.finishWidth);
-      const label=this.worldRooLabel('FINISH',12);label.position.set(0,8.7,0);line.add(label);
       line.position.set(cx,deckY,z);line.rotation.y=yawR;this.root.add(line);
       this.finishBox.setFromCenterAndSize(new THREE.Vector3(cx,deckY+4,z),new THREE.Vector3(this.skateRace.finishWidth,8,3));
       this.finishGlow.copy(this.finishBox);return;

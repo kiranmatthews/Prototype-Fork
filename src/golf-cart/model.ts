@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { RALLY_SPONSORS } from '../rallySponsors';
 import { createTripleNozzleParts, type NozzleMaterial } from './sideNozzle';
 import { sculptedGeometry, sculptedTexture } from './sculpted';
 import { bevelBox, loft, placed, merged, strut, type XYZ } from './geometry';
@@ -58,13 +59,13 @@ export class GolfCartKit {
     if(damageVisuals){
       for(const part of createTripleNozzleParts())this.parts.push({...part,parent:'body'});
       const decal=(w:number,h:number,p:XYZ,r:XYZ,brand:number)=>{
-        const g=new THREE.PlaneGeometry(w,h),uv=g.getAttribute('uv');
-        for(let i=0;i<uv.count;i++)uv.setY(i,(uv.getY(i)*.90+.05+brand)/4);
+        const art=RALLY_SPONSORS[brand],height=Math.min(h,w/art.aspect),g=new THREE.PlaneGeometry(height*art.aspect,height),uv=g.getAttribute('uv');
+        for(let i=0;i<uv.count;i++)uv.setXY(i,art.uv[0]+uv.getX(i)*(art.uv[2]-art.uv[0]),art.uv[1]+uv.getY(i)*(art.uv[3]-art.uv[1]));
         return placed(g,p,r);
       };
-      add('rear-sponsor-decal','sponsor',[decal(.86,.25,[0,.84,1.158],[0,0,0],1)]);
-      add('side-sponsor-decals','sponsor',[-1,1].map(side=>decal(.53,.21,[side*.851,.82,.85],[0,side*Math.PI/2,0],0)));
-      add('hood-sponsor-decal','sponsor',[decal(.65,.21,[.0,1.065,-1.08],[-Math.PI/2-.26,0,0],3)],'nose');
+      add('rear-sponsor-decal','sponsor',[decal(.62,.25,[-.13,.84,1.158],[0,0,0],1),decal(.15,.21,[.37,.84,1.159],[0,0,0],3)]);
+      add('side-sponsor-decals','sponsor',[-1,1].map(side=>decal(.53,.27,[side*.851,.82,.85],[0,side*Math.PI/2,0],side<0?0:4)));
+      add('hood-sponsor-decal','sponsor',[decal(.65,.27,[-.1,1.065,-1.08],[-Math.PI/2-.26,0,0],2),decal(.21,.22,[.40,1.065,-1.08],[-Math.PI/2-.26,0,0],5),decal(.40,.14,[0,.766,-1.492],[0,Math.PI,0],6)],'nose');
       // Actual fracture/scuff geometry follows the original damaged body groups.
       const crack=(a:XYZ,b:XYZ)=>strut(a,b,.006,3);
       add('windscreen-cracks','metal',[
@@ -107,7 +108,7 @@ export class GolfCartModel {
     const mat=(name:string,color:string,roughness=.72)=>{const m=new THREE.MeshStandardMaterial({color,roughness,flatShading:true});m.name=name;return m;};
     this.materials={sponsor:mat('Weathered sponsor decals','#ffffff',.86),nozzleRing:mat('Nozzle outlet rings','#eaa03a',.4),nozzleCream:mat('Nozzle cream housing','#f2dfb5',.68),nozzleBrass:mat('Nozzle brass lips','#c39543',.35),nozzleSoot:mat('Nozzle dark interior','#282b2e',.8),nozzleOrange:mat('Flame chamber charge fins','#e87729',.52),paint:mat('Paint · recolour',palette.paint,.48),cream:mat('Canopy & stripe · recolour',palette.cream),seat:mat('Upholstery · recolour',palette.seat),trim:mat('Frame & bumpers · recolour',palette.trim),cargo:mat('Golf bag · recolour',palette.cargo),lamp:mat('Warm headlamps','#fff1b1',.35),red:mat('Rear lights','#ec5945',.4),metal:mat('Metal','#9eacb5',.45),glass:mat('Windscreen','#93d8e1',.2),wheel:mat('Tyres & hubs','#ffffff'),canopyArt:mat('Sculpted canopy · recolour',palette.cream),bagArt:mat('Sculpted bag · recolour',palette.cargo),bagDetail:mat('Bag piping & straps','#ffffff')};
     for(const [key,map] of [['wheel',kit.textures.wheel],['canopyArt',kit.textures.canopy],['bagArt',kit.textures.bagPaint],['bagDetail',kit.textures.bag]] as const){const material=this.materials[key];material.map=map;material.flatShading=false;material.roughness=.85;}this.materials.glass.transparent=true;this.materials.glass.opacity=.22;this.materials.glass.depthWrite=false;
-    this.materials.sponsor.map=kit.sponsorTexture??null;this.materials.sponsor.polygonOffset=true;this.materials.sponsor.polygonOffsetFactor=-2;this.materials.sponsor.polygonOffsetUnits=-2;
+    this.materials.sponsor.map=kit.sponsorTexture??null;this.materials.sponsor.transparent=true;this.materials.sponsor.alphaTest=.02;this.materials.sponsor.depthWrite=false;this.materials.sponsor.polygonOffset=true;this.materials.sponsor.polygonOffsetFactor=-2;this.materials.sponsor.polygonOffsetUnits=-2;
     this.materials.nozzleBrass.metalness=.7;this.materials.nozzleSoot.metalness=.15;
     this.materials.lamp.emissive.set('#ffbb55');this.materials.lamp.emissiveIntensity=.2;
     this.modules.body=this.body;

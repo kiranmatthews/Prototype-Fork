@@ -1,0 +1,50 @@
+{
+  "passed": true,
+  "drops": [
+    {
+      "cart": 0,
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "strength": 5.800000000000002,
+      "airTime": 0.2750000000000001
+    },
+    {
+      "cart": 0,
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "strength": 18.39999999999997,
+      "airTime": 0.5500000000000006
+    }
+  ],
+  "shots": [
+    {
+      "key": "rally-landing-0",
+      "name": "kartLanding",
+      "gain": 0.7762105263157886,
+      "rate": 0.8922105263157898
+    },
+    {
+      "key": "rally-landing-0",
+      "name": "kartLanding",
+      "gain": 0.3915789473684211,
+      "rate": 1.0115789473684211
+    },
+    {
+      "key": "rally-landing-1",
+      "name": "kartLanding",
+      "gain": 0.17507533033966044,
+      "rate": 0.9322105263157898
+    },
+    {
+      "key": "rally-impact-0",
+      "name": "kartCrash",
+      "gain": 0.7,
+      "rate": 1.15
+    }
+  ],
+  "independentOfDamage": true,
+  "exactlyOnePerLanding": true,
+  "unchangedPlantedLanding": true
+}

@@ -2,6 +2,7 @@ import type { CustomComponent, CustomLevelData } from '../level';
 import { stadiumBunting } from './stadium-bunting';
 import { stadiumFloodlight } from './stadium-floodlights';
 import type { RaceKnot } from '../race/types';
+import { RALLY_SPONSORS } from '../rallySponsors';
 import { lazySourceField } from './lazy-source';
 import { CART_RALLY_LENGTH,CART_RALLY_JUMPS,CART_RALLY_SUPPLY_ROWS,CART_RALLY_CORNERS,STADIUM,cartRallyPoint,cartRallyFrame,stadiumPoint,stadiumStandQuad,stadiumSections,stadiumBoundaryPaths,rallyMudWetness,rallySurfacePoint } from './cart-stadium-layout';
 export { CART_RALLY_LENGTH,CART_RALLY_JUMPS,CART_RALLY_PIPES,CART_RALLY_SUPPLY_ROWS,cartRallyPoint } from './cart-stadium-layout';
@@ -80,12 +81,12 @@ function build():CustomComponent[]{
     const mid=(start+end)/2;
     const boardV:number[]=[],boardI:number[]=[],boardUV:number[]=[];
     for(let at=start+2,board=0;at<end-4;at+=22,board++){
-      const finish=Math.min(at+20,end-2),brand=(Math.floor((start+8)/48)+board+(side>0?1:0))%4;
+      const finish=Math.min(at+20,end-2),brand=(Math.floor((start+8)/48)+board+(side>0?1:0))%RALLY_SPONSORS.length;
       for(let t=at;t<finish;t+=4){
         const next=Math.min(t+4,finish),n=boardV.length/3;
         for(const [along,h]of [[t,10.05],[next,10.05],[t,14.5],[next,14.5]]){
           boardV.push(...stadiumPoint(along,side*27.23,h));
-          const x=(along-at)/(finish-at);boardUV.push(side>0?1-x:x,(brand+(h>12?1:0))/4);
+          const x=(along-at)/(finish-at);boardUV.push(side>0?1-x:x,1-(brand+1-(h>12?1:0))/RALLY_SPONSORS.length);
         }
         boardI.push(n,n+1,n+2,n+1,n+3,n+2);
       }

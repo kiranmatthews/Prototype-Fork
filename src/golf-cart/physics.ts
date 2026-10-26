@@ -4,7 +4,8 @@ export interface GroundSample { height:number; grip:number; drag:number; safe:bo
 export type CartGround=(x:number,z:number)=>GroundSample;
 export interface CartObstacle {x:number;z:number;radius:number;id:string;height?:number}
 export interface CartSpawn {x:number;z:number;yaw:number}
-export interface CartImpact {cart:number;other:number|null;x:number;y:number;z:number;strength:number;panel:0|1|2}
+export interface CartImpact {cart:number;other:number|null;x:number;y:number;z:number;strength:number;panel:0|1|2;landing?:boolean}
+export interface CartLanding {cart:number;x:number;y:number;z:number;strength:number;airTime:number}
 export interface CartState extends CartSpawn {
   y:number;vx:number;vz:number;vy:number;yawRate:number;steer:number;speed:number;travel:number;
   roll:number;pitch:number;rollV:number;pitchV:number;impact:number;damage:number[];health:number;
@@ -26,7 +27,7 @@ export function createCartState(spawn:CartSpawn,ground:CartGround):CartState {
 function spring(value:number,velocity:number,target:number,dt:number,k=65,damping=12):[number,number]{velocity+=(target-value)*k*dt-velocity*damping*dt;return [value+velocity*dt,velocity];}
 /** Constant fixed step, bounded catch-up, two-circle rounded chassis contacts. */
 export class GolfCartPhysics {
-  readonly carts:CartState[];readonly inputs:CartInput[];readonly impacts:CartImpact[]=[];
+  readonly carts:CartState[];readonly inputs:CartInput[];readonly impacts:CartImpact[]=[];readonly landings:CartLanding[]=[];
   private readonly contacts=new Set<number>();
   contacted(a:number,b:number){return this.contacts.has(Math.min(a,b)*this.carts.length+Math.max(a,b));}
   time=0;steps=0;droppedTime=0;private accumulator=0;
@@ -45,7 +46,7 @@ export class GolfCartPhysics {
   reset(index:number,repair=true){const old=this.carts[index],fresh=createCartState(this.spawns[index],this.ground);if(!repair){fresh.damage=[...old.damage];fresh.health=old.health;fresh.respawns=old.respawns+1;fresh.hits=old.hits;fresh.rolls=old.rolls;fresh.recoveries=old.recoveries;fresh.airborneCount=old.airborneCount;}Object.assign(old,fresh);this.inputs[index]={...NO_CART_INPUT};}
   /** Controls are sampled at simulation frequency, keeping AI reproducible across render rates. */
   advance(dt:number,control?:(world:GolfCartPhysics)=>void){
-    this.contacts.clear();
+    this.contacts.clear();this.landings.length=0;
     if(!Number.isFinite(dt)||dt<=0)return;const admitted=Math.min(dt,.2);this.droppedTime+=Math.max(0,dt-admitted);this.accumulator+=admitted;let n=0;
     while(this.accumulator+1e-10>=CART_PHYSICS.step&&n<CART_PHYSICS.maxSteps){control?.(this);this.step(CART_PHYSICS.step);this.accumulator-=CART_PHYSICS.step;n++;}
   }
@@ -88,9 +89,10 @@ export class GolfCartPhysics {
         c.vy-=this.gravity*dt;c.y+=c.vy*dt;c.airTime+=dt;
         if(supported&&c.y<=floor+.005&&c.vy<=0){
           const impact=-c.vy,longFlight=c.airTime>.30;c.y=floor;c.grounded=true;
+          if(impact>2.8&&c.airTime>.1&&this.landings.length<64)this.landings.push({cart:index,x:c.x,y:c.y,z:c.z,strength:impact,airTime:c.airTime});
           if(impact>2.8){
             // A hard landing can dent the chassis, but must not apply a collision's launch impulse.
-            if(impact>8.3)this.damage(index,impact*.65,c.x,c.z,2,null,!this.stableLandings);
+            if(impact>8.3)this.damage(index,impact*.65,c.x,c.z,2,null,!this.stableLandings,true);
             c.pitchV-=Math.min(this.stableLandings?.8:2.2,impact*(this.stableLandings?.08:.22));
             c.impact=Math.max(c.impact,Math.min(1.2,impact*.12));
           }
@@ -168,13 +170,13 @@ export class GolfCartPhysics {
       this.damage(ia,-relative,x,z,undefined,ib,reaction);if(ib!==null)this.damage(ib,-relative,x,z,undefined,ia,reaction);
     }
   }
-  damage(index:number,strength:number,x:number,z:number,panel?:0|1|2,other:number|null=null,collisionReaction=true){
+  damage(index:number,strength:number,x:number,z:number,panel?:0|1|2,other:number|null=null,collisionReaction=true,landing=false){
     const c=this.carts[index];if(c.cooldown>0||!Number.isFinite(strength))return;
     strength=clamp(strength,0,22);const localZ=(x-c.x)*Math.sin(c.yaw)+(z-c.z)*Math.cos(c.yaw);
     const hit=panel??(localZ<-.25?0:localZ>.25?1:2),amount=clamp((strength-1.6)*.042,0,.55);if(amount<=0)return;
     c.damage[hit]=clamp(c.damage[hit]+amount,0,1);c.health=this.damageCapacity>0?Math.max(0,c.health-amount/this.damageCapacity):Math.max(.15,1-c.damage.reduce((a,b)=>a+b,0)*.25);c.impact=Math.min(1.4,strength*.12);if(collisionReaction){c.pitchV+=localZ<0?-strength*.11:strength*.11;c.rollV+=(x-c.x)*strength*.08;}c.cooldown=.18;c.hits++;
     if(this.impacts.length===64)this.impacts.shift();
-    this.impacts.push({cart:index,other,x,y:c.y+.75*this.scale,z,strength,panel:hit});
+    this.impacts.push({cart:index,other,x,y:c.y+.75*this.scale,z,strength,panel:hit,...(landing?{landing:true}:{})});
     if(!collisionReaction)return;
     const localX=(x-c.x)*Math.cos(c.yaw)-(z-c.z)*Math.sin(c.yaw);
     if(strength>CART_PHYSICS.rollImpact&&Math.abs(localX)>.5&&Math.abs(localX)>Math.abs(localZ)*1.25)this.rollover(index,-Math.sign(localX),strength);

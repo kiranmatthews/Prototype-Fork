@@ -1,0 +1,10 @@
+{
+  "source": "Crash Collision by Iwan Gabovitch (qubodup), CC0 1.0",
+  "sourceUrl": "https://opengameart.org/content/crash-collision",
+  "file": "kart-landing-crunch-v1.wav",
+  "seconds": 0.72,
+  "rms": 0.20808776143784116,
+  "peak": 0.91,
+  "adaptation": "Transient compression; short pitch-shifted chassis-rattle layers at 65/137 ms; 160 ms synthesized suspension thud; edge fades; 24 kHz mono PCM16",
+  "sha256": "99d374666770fee00fca6e3abc07f566cd1e5ce0fb1557e6fc98697d9398f12f"
+}

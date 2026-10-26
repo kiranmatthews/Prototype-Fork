@@ -1,6 +1,6 @@
 import {sfx} from '../audio';
 import type {Vector3} from 'three';
-import type {CartImpact,CartState,GolfCartPhysics} from './physics';
+import type {CartImpact,CartLanding,CartState,GolfCartPhysics} from './physics';
 
 /** A bounded local mix through the game's SFX bus; pause/navigation own its loops. */
 export class CartRaceAudio {
@@ -11,10 +11,16 @@ export class CartRaceAudio {
   private stops=new Map<string,()=>void>();
   private gain(c:{x:number;y:number;z:number},listener:Vector3){return Math.max(0,1-Math.max(0,Math.hypot(c.x-listener.x,c.y-listener.y,c.z-listener.z)-3)/67)**2;}
   impact(hit:CartImpact,listener:Vector3){
-    if(hit.strength<1.2||this.clock-(this.crashAt[hit.cart]??-10)<.18)return;
+    if(hit.landing||hit.strength<1.2||this.clock-(this.crashAt[hit.cart]??-10)<.18)return;
     this.crashAt[hit.cart]=this.clock;
     const gain=this.gain(hit,listener)*Math.min(.7,.12+hit.strength*.045);
     this.shot(`impact-${hit.cart}`,'kartCrash',gain,.8+Math.min(.35,hit.strength*.025));
+  }
+  landing(hit:CartLanding,listener:Vector3,humanCart:number){
+    const force=Math.min(1,Math.max(0,(hit.strength-2.8)/19));
+    const gain=this.gain(hit,listener)*(.30+force*.58)*(hit.cart===humanCart?1:.5);
+    const variation=((hit.cart*37+Math.floor(this.clock*17))%11)/100;
+    this.shot(`landing-${hit.cart}`,'kartLanding',gain,1.04-force*.18+variation);
   }
   explosion(c:CartState,listener:Vector3){this.shot('explosion','kartExplosion',this.gain(c,listener)*.75,.94);}
   thrust(c:CartState,index:number,listener:Vector3){this.shot(`thrust-${index}`,'kartThrusterStart',this.gain(c,listener)*.55,1);}

@@ -1,0 +1,45 @@
+{
+  "status": "validated; publication pending",
+  "sponsors": [
+    "Pisupo Pete\u2019s",
+    "Crusty Creme",
+    "Trashed",
+    "Milk",
+    "Uga Beach",
+    "Fleshy Fred\u2019s",
+    "BONES"
+  ],
+  "sourceImagesUnchanged": true,
+  "atlas": {
+    "bytes": 244356,
+    "width": 1024,
+    "height": 1792,
+    "sharedBetweenBoardsAndCarts": true,
+    "kartDrawBatches": 3
+  },
+  "nativeAndNormalReview": true,
+  "landing": {
+    "independentOfDamage": true,
+    "realRampVerified": true,
+    "noRollover": true,
+    "outputPeak": 0.49402374029159546
+  },
+  "finishLabelRemovedFromAllRaceGates": true,
+  "finishTriggerAndGeometryPreserved": true,
+  "buildAndTypeCheckPassed": true,
+  "releaseBytes": 999420786,
+  "focusedChecks": {
+    "passed": 27,
+    "failed": 0
+  },
+  "latestCompleteSuite": {
+    "pass": 6,
+    "commands": 203,
+    "passed": 164,
+    "failed": 39,
+    "newFailures": 0,
+    "evidence": "../rally-tnt-audio-glow/full-suite.json"
+  },
+  "timing": "BONES follow-up to full production browser verification: approximately 10 minutes. The sponsor/landing/finish brief was prepared during pass 6 without mutating that full-suite source state.",
+  "lightweightProductionPassed": true
+}
