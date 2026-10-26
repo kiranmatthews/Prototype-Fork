@@ -45,8 +45,8 @@ const FILES: Record<string, string> = {
   moaSquawk: 'moa-caw.wav', // CC0 crow recording fitted to the original two mouth beats
   moaPeck: 'moa-caw-peck.wav',
   enemyDown: 'unsure.wav',
-  karenNotice: 'enemies/karen-notice.wav',
-  karenScreech: 'enemies/karen-screech.wav',
+  karenNotice: 'enemies/goose-inhale.wav',
+  karenScreech: 'enemies/goose-squawk.wav',
   kookCock: 'enemies/kook-cock.wav',
   kookShot: 'enemies/kook-shot.wav',
   rooftopRain: 'weather/rooftop-rain.wav',

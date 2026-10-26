@@ -1,0 +1,159 @@
+{
+  "name": "bulldog-guard",
+  "height": 2.5,
+  "sourceSha256": "df6f37f3da1ebd28bf399544529546859e13b70a36b716e635fc8c015a6f67ec",
+  "sourceTriangles": 1362932,
+  "triangles": 1362932,
+  "components": {
+    "coat-and-pelvis": 407184,
+    "head": 321580,
+    "sleeve-left": 45241,
+    "paw-left": 76883,
+    "leg-left": 37711,
+    "boot-left": 93295,
+    "sleeve-right": 43168,
+    "paw-right": 79938,
+    "leg-right": 34650,
+    "boot-right": 90067,
+    "neck": 133215
+  },
+  "joints": 22,
+  "skinBones": 33,
+  "allNativeTrianglesPreserved": true,
+  "originalNormalsUVsAndTextures": false,
+  "weightsNormalized": true,
+  "segments": {
+    "spine": "chest",
+    "chest": "neck",
+    "neck": "head",
+    "shoulder-left": "elbow-left",
+    "elbow-left": "wrist-left",
+    "hip-left": "knee-left",
+    "knee-left": "ankle-left",
+    "shoulder-right": "elbow-right",
+    "elbow-right": "wrist-right",
+    "hip-right": "knee-right",
+    "knee-right": "ankle-right"
+  },
+  "restJoints": {
+    "hips": [
+      0,
+      0.75,
+      0
+    ],
+    "spine": [
+      0,
+      1.125,
+      0
+    ],
+    "chest": [
+      0,
+      1.6,
+      0
+    ],
+    "neck": [
+      0,
+      1.7999999999999998,
+      0.0125
+    ],
+    "head": [
+      0,
+      1.975,
+      0.0375
+    ],
+    "jaw": [
+      0,
+      2,
+      0.375
+    ],
+    "clavicle-left": [
+      0.3,
+      1.6,
+      0
+    ],
+    "shoulder-left": [
+      0.55,
+      1.6,
+      0
+    ],
+    "elbow-left": [
+      0.775,
+      1.3250000000000002,
+      0
+    ],
+    "wrist-left": [
+      0.9875,
+      1.1125,
+      0.0375
+    ],
+    "hip-left": [
+      0.3625,
+      0.725,
+      0
+    ],
+    "knee-left": [
+      0.38,
+      0.5,
+      0.0125
+    ],
+    "ankle-left": [
+      0.4,
+      0.21250000000000002,
+      0.05
+    ],
+    "toe-left": [
+      0.4,
+      0.125,
+      0.3
+    ],
+    "clavicle-right": [
+      -0.3,
+      1.6,
+      0
+    ],
+    "shoulder-right": [
+      -0.55,
+      1.6,
+      0
+    ],
+    "elbow-right": [
+      -0.775,
+      1.3250000000000002,
+      0
+    ],
+    "wrist-right": [
+      -0.9875,
+      1.1125,
+      0.0375
+    ],
+    "hip-right": [
+      -0.3625,
+      0.725,
+      0
+    ],
+    "knee-right": [
+      -0.38,
+      0.5,
+      0.0125
+    ],
+    "ankle-right": [
+      -0.4,
+      0.21250000000000002,
+      0.05
+    ],
+    "toe-right": [
+      -0.4,
+      0.125,
+      0.3
+    ]
+  },
+  "bytes": 16571280,
+  "sha256": "cf42872a339f585d08da493a769a503d64bb8ffba0e0484e8d0c0c9905417768",
+  "compression": "lossless position/topology meshopt, 12-bit normal and 16-bit UV encoding, native-resolution WebP 96 atlases",
+  "accessorsVerified": true,
+  "allOrientedSourceTrianglesVerified": true,
+  "vertexCacheReorderOnly": true,
+  "nativePositionsVerified": true,
+  "maxNormalComponentError": 0.0002724117953203514,
+  "maxUvError": 0.000007629499124695016
+}

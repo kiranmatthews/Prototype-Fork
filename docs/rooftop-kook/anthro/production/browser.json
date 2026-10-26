@@ -1,0 +1,251 @@
+{
+  "base": "http://127.0.0.1:5369",
+  "errors": [],
+  "loaded": [
+    {
+      "role": "lookout",
+      "status": "ready",
+      "components": 12,
+      "rig": "bone-man semantic humanoid",
+      "position": [
+        -183.19791396629884,
+        79.30000000596046,
+        -373.62379374400206
+      ]
+    },
+    {
+      "role": "gunner",
+      "status": "ready",
+      "components": 11,
+      "rig": "bone-man semantic humanoid",
+      "position": [
+        -188.14180082942212,
+        79.30000000596046,
+        -392.73601788543965
+      ]
+    },
+    {
+      "role": "lookout",
+      "status": "ready",
+      "components": 12,
+      "rig": "bone-man semantic humanoid",
+      "position": [
+        5.939822201148286,
+        58.250000005960445,
+        -1030.4439415637646
+      ]
+    },
+    {
+      "role": "gunner",
+      "status": "ready",
+      "components": 11,
+      "rig": "bone-man semantic humanoid",
+      "position": [
+        -9.139560810021935,
+        58.250000005960445,
+        -1043.1674818469246
+      ]
+    },
+    {
+      "role": "lookout",
+      "status": "ready",
+      "components": 12,
+      "rig": "bone-man semantic humanoid",
+      "position": [
+        -61.64240086815736,
+        41.300000005960456,
+        -1857.5337135789302
+      ]
+    },
+    {
+      "role": "gunner",
+      "status": "ready",
+      "components": 11,
+      "rig": "bone-man semantic humanoid",
+      "position": [
+        -80.42299967412067,
+        41.300000005960456,
+        -1877.5121099340479
+      ]
+    },
+    {
+      "role": "gunner",
+      "status": "ready",
+      "components": 11,
+      "rig": "bone-man semantic humanoid",
+      "position": [
+        -61.93591619294283,
+        41.300000005960456,
+        -1875.0734106819152
+      ]
+    }
+  ],
+  "patrol": [
+    {
+      "moved": 2.4150000000012826,
+      "state": "patrol",
+      "feet": [
+        2.842170943040401e-14,
+        2.842170943040401e-14
+      ]
+    },
+    {
+      "moved": 2.0700000000007273,
+      "state": "patrol",
+      "feet": [
+        0,
+        0
+      ],
+      "hand": [
+        0,
+        0
+      ]
+    },
+    {
+      "moved": 2.4149999999983316,
+      "state": "patrol",
+      "feet": [
+        1.517719948885615e-14,
+        2.929642751054232e-14
+      ]
+    },
+    {
+      "moved": 2.0700000000035352,
+      "state": "patrol",
+      "feet": [
+        8.149974737360183e-14,
+        1.4238583238573986e-14
+      ],
+      "hand": [
+        1.7511536188654722e-13,
+        8.881784197001252e-16
+      ]
+    },
+    {
+      "moved": 2.4149999999938383,
+      "state": "patrol",
+      "feet": [
+        5.728578676879116e-14,
+        7.140866117879973e-14
+      ]
+    },
+    {
+      "moved": 2.0700000000050545,
+      "state": "patrol",
+      "feet": [
+        7.105427357601002e-14,
+        2.842170943040401e-14
+      ],
+      "hand": [
+        1.4210854715202004e-14,
+        2.842170943040401e-14
+      ]
+    },
+    {
+      "moved": 2.070000000011369,
+      "state": "patrol",
+      "feet": [
+        7.105427357601002e-15,
+        5.684341886080802e-14
+      ],
+      "hand": [
+        1.4210854715202004e-14,
+        0
+      ]
+    }
+  ],
+  "squawk": {
+    "state": "shriek",
+    "active": true,
+    "length": 18,
+    "origin": [
+      -183.16135185785387,
+      82.48242277085473,
+      -372.97037698451044
+    ],
+    "direction": [
+      0.0630731858004145,
+      -0.17239995860162058,
+      0.9830056090924131
+    ]
+  },
+  "independent": {
+    "before": 2
+  },
+  "finished": {
+    "shots": 3,
+    "gunners": [
+      {
+        "state": "reload",
+        "shots": 1,
+        "hand": [
+          0,
+          0
+        ]
+      },
+      {
+        "state": "patrol",
+        "shots": 0,
+        "hand": [
+          5.376231353587555e-14,
+          1.7763568394002505e-15
+        ]
+      },
+      {
+        "state": "patrol",
+        "shots": 0,
+        "hand": [
+          0,
+          2.842170943040401e-14
+        ]
+      },
+      {
+        "state": "patrol",
+        "shots": 0,
+        "hand": [
+          1.4210854715202004e-14,
+          3.552713678800501e-14
+        ]
+      }
+    ],
+    "buffer": [
+      2560,
+      1440
+    ],
+    "render": {
+      "frame": 6630,
+      "calls": 540,
+      "triangles": 6956607,
+      "points": 0,
+      "lines": 0
+    },
+    "memory": {
+      "geometries": 316,
+      "textures": 71
+    },
+    "stamp": "Codex/sol fork · build 10-26 00:08 UTC"
+  },
+  "reentry": [
+    {
+      "memory": {
+        "geometries": 311,
+        "textures": 70
+      },
+      "ready": 7
+    },
+    {
+      "memory": {
+        "geometries": 310,
+        "textures": 70
+      },
+      "ready": 7
+    },
+    {
+      "memory": {
+        "geometries": 311,
+        "textures": 70
+      },
+      "ready": 7
+    }
+  ]
+}

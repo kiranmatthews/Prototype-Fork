@@ -66,6 +66,7 @@ import { SentryFireball, SENTRY_FIREBALL_SPEED } from "./enemies/fireball";
 import {createKookState,resetKook,stepKook,type KookRole,type KookState} from './enemies/kookBehavior';
 import {createKookVisual} from './enemies/kookVisual';
 import {KookBullet} from './enemies/kookBullet';
+import type {KookSquawk} from './enemies/kookSquawk';
 import {playEnemySound,resetEnemySounds,updateEnemySounds} from "./enemies/sounds";
 import { stepMoa, updateMoaAttack } from "./enemies/moaBehavior";
 import { GhostTrainAssetKit, GHOST_DECOR_KINDS, GHOST_DECOR_LABELS, createGhostEnemyVisual } from './ghostTrain';
@@ -18770,7 +18771,7 @@ export class Level {
     group.position.set(gx, gy, gz);
     group.userData.baseY = gy;
     // sentry/spinner are stationary — collapse the patrol span so they hold post
-    if (kind === "sentry" || kind === "spinner") {
+    if (!kookRole && (kind === "sentry" || kind === "spinner")) {
       a0 = a1 = mid;
     }
     this.enemies.push({
@@ -18916,7 +18917,7 @@ export class Level {
           cue:(owner,cue)=>{const distance=owner.group.position.distanceTo(this.playerPos),gain=Math.max(0,1-distance/55)**2;
             sfx.play(cue==='screech'?'karenScreech':cue==='shot'?'kookShot':cue==='wake'?'kookCock':'karenNotice',gain*.8,1,.05);},
         });
-        boxW=1.05*e.body.scale.x;boxH=e.group.userData.kookHeight;cy=boxH/2;
+        boxW=(e.kook.role==='lookout'?.95:1.45)*e.body.scale.x;boxH=e.group.userData.kookHeight;cy=boxH/2;
       }else if(goblin){
         boxW=GOBLIN.width;boxH=GOBLIN.height;cy=boxH/2;
         e.touchHurt=e.state!=="stagger";
@@ -18974,12 +18975,13 @@ export class Level {
         // At unsupported patrol ends turn back instead of walking over a gap.
         const lift=e.group.position.y-e.baseY;
         const floor=this.nearbyFloorY(e.group.position.x,e.group.position.z,e.baseY);
-        if(floor===null){e.group.position.x=beforeX;e.group.position.z=beforeZ;e.dir*=-1;this.faceDir(e,e.dir);}
+        if(floor===null){e.group.position.x=beforeX;e.group.position.z=beforeZ;e.dir*=-1;if(!e.kook)this.faceDir(e,e.dir);}
         else e.baseY=floor;
         e.group.position.y=e.baseY+lift;
       }
-      this.updateEnemyVisual(e, dt, dt > 0 ? (goblin ? Math.hypot(e.group.position.x-beforeX,e.group.position.z-beforeZ) : Math.abs(this.enemyAlong(e) - beforeAlong)) / dt : 0);
+      this.updateEnemyVisual(e, dt, dt > 0 ? (goblin||e.kook ? Math.hypot(e.group.position.x-beforeX,e.group.position.z-beforeZ) : Math.abs(this.enemyAlong(e) - beforeAlong)) / dt : 0);
       if(e.kind==='moa')updateMoaAttack(e);
+      if(e.kook)(e.group.userData.kookSquawk as KookSquawk|undefined)?.clip((a,b)=>this.projectilePathBlocked(a,b));
       if(e.group.userData.ghostSkin==='ghostknight'){boxH=e.group.userData.ghostHeight??3.05;boxW=1.35*boxH/2.62;cy=boxH/2;}
       else if(e.group.userData.ghostSkin==='ghostfood'||e.group.userData.ghostSkin==='ghostcake'){boxH=e.group.userData.ghostHeight??1.8;boxW=1.05*boxH;cy=boxH/2;}
       e.box.setFromCenterAndSize(
@@ -18997,6 +18999,7 @@ export class Level {
     e.visual.update(dt, {
       kind: e.kind, state: e.state, stateTime: e.stateT, time: this.time,
       speed, verticalVelocity: e.vy,
+      attackTarget:e.kook?.target,
       locomotionTime: e.group.userData.goblinMotion?.clock,
       grounded: e.kind !== "floater" && e.group.position.y <= e.baseY + 0.06,
       alive: e.alive, flung: e.flungT !== undefined,
@@ -19204,7 +19207,7 @@ export class Level {
     }
   }
 
-  private projectilePathBlocked(
+  projectilePathBlocked(
     from: THREE.Vector3,
     to: THREE.Vector3,
   ): boolean {

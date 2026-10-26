@@ -1,0 +1,450 @@
+{
+  "report": [
+    {
+      "name": "front",
+      "result": [
+        {
+          "diagnostic": {
+            "kind": "grunt",
+            "status": "ready",
+            "url": "/rooftop-kook/goose-matron.glb",
+            "clips": [
+              "stroll",
+              "inhale",
+              "squawk",
+              "aim",
+              "recoil",
+              "recover"
+            ],
+            "activeClip": "stroll",
+            "mappedNodes": {
+              "torso": "spine",
+              "head": "head",
+              "jaw": "jaw"
+            },
+            "skinnedMeshes": 12,
+            "meshes": 12,
+            "animationTime": 1,
+            "gaitPhase": 0.8173076923076925,
+            "state": "patrol",
+            "plantedFeet": {
+              "hindLeft": false,
+              "hindRight": true
+            }
+          },
+          "feet": [
+            0,
+            0
+          ],
+          "elasticity": {
+            "torso": 1.050898730875635,
+            "neck": 1
+          },
+          "bottom": -0.014058206062458112,
+          "top": 2.3190379954037326
+        },
+        {
+          "diagnostic": {
+            "kind": "sentry",
+            "status": "ready",
+            "url": "/rooftop-kook/bulldog-guard.glb",
+            "clips": [
+              "stroll",
+              "inhale",
+              "squawk",
+              "aim",
+              "recoil",
+              "recover"
+            ],
+            "activeClip": "stroll",
+            "mappedNodes": {
+              "torso": "spine",
+              "head": "head",
+              "jaw": "jaw"
+            },
+            "skinnedMeshes": 11,
+            "meshes": 11,
+            "animationTime": 1,
+            "gaitPhase": 0.8854166666666661,
+            "state": "patrol",
+            "plantedFeet": {
+              "hindLeft": false,
+              "hindRight": true
+            }
+          },
+          "hands": [
+            3.552713678800501e-15,
+            0.0016846824042548556
+          ],
+          "feet": [
+            0,
+            0
+          ],
+          "elasticity": {
+            "torso": 1.067418250573419,
+            "neck": 1
+          },
+          "bottom": 0.001998106809338651,
+          "top": 2.4941835969426904
+        }
+      ]
+    },
+    {
+      "name": "quarter",
+      "result": [
+        {
+          "diagnostic": {
+            "kind": "grunt",
+            "status": "ready",
+            "url": "/rooftop-kook/goose-matron.glb",
+            "clips": [
+              "stroll",
+              "inhale",
+              "squawk",
+              "aim",
+              "recoil",
+              "recover"
+            ],
+            "activeClip": "stroll",
+            "mappedNodes": {
+              "torso": "spine",
+              "head": "head",
+              "jaw": "jaw"
+            },
+            "skinnedMeshes": 12,
+            "meshes": 12,
+            "animationTime": 1,
+            "gaitPhase": 0.8173076923076925,
+            "state": "patrol",
+            "plantedFeet": {
+              "hindLeft": false,
+              "hindRight": true
+            }
+          },
+          "feet": [
+            1.464821375527116e-14,
+            0
+          ],
+          "elasticity": {
+            "torso": 1.050898730875635,
+            "neck": 1
+          },
+          "bottom": -0.014058206062443901,
+          "top": 2.3190379954037468
+        },
+        {
+          "diagnostic": {
+            "kind": "sentry",
+            "status": "ready",
+            "url": "/rooftop-kook/bulldog-guard.glb",
+            "clips": [
+              "stroll",
+              "inhale",
+              "squawk",
+              "aim",
+              "recoil",
+              "recover"
+            ],
+            "activeClip": "stroll",
+            "mappedNodes": {
+              "torso": "spine",
+              "head": "head",
+              "jaw": "jaw"
+            },
+            "skinnedMeshes": 11,
+            "meshes": 11,
+            "animationTime": 1,
+            "gaitPhase": 0.8854166666666661,
+            "state": "patrol",
+            "plantedFeet": {
+              "hindLeft": false,
+              "hindRight": true
+            }
+          },
+          "hands": [
+            3.552713678800501e-15,
+            0.0016846824042412026
+          ],
+          "feet": [
+            0,
+            3.552713678800501e-15
+          ],
+          "elasticity": {
+            "torso": 1.067418250573419,
+            "neck": 1
+          },
+          "bottom": 0.001998106809352862,
+          "top": 2.4941835969427046
+        }
+      ]
+    },
+    {
+      "name": "rear",
+      "result": [
+        {
+          "diagnostic": {
+            "kind": "grunt",
+            "status": "ready",
+            "url": "/rooftop-kook/goose-matron.glb",
+            "clips": [
+              "stroll",
+              "inhale",
+              "squawk",
+              "aim",
+              "recoil",
+              "recover"
+            ],
+            "activeClip": "stroll",
+            "mappedNodes": {
+              "torso": "spine",
+              "head": "head",
+              "jaw": "jaw"
+            },
+            "skinnedMeshes": 12,
+            "meshes": 12,
+            "animationTime": 1,
+            "gaitPhase": 0.8173076923076925,
+            "state": "patrol",
+            "plantedFeet": {
+              "hindLeft": false,
+              "hindRight": true
+            }
+          },
+          "feet": [
+            0,
+            0
+          ],
+          "elasticity": {
+            "torso": 1.050898730875635,
+            "neck": 1
+          },
+          "bottom": -0.014058206062458112,
+          "top": 2.3190379954037326
+        },
+        {
+          "diagnostic": {
+            "kind": "sentry",
+            "status": "ready",
+            "url": "/rooftop-kook/bulldog-guard.glb",
+            "clips": [
+              "stroll",
+              "inhale",
+              "squawk",
+              "aim",
+              "recoil",
+              "recover"
+            ],
+            "activeClip": "stroll",
+            "mappedNodes": {
+              "torso": "spine",
+              "head": "head",
+              "jaw": "jaw"
+            },
+            "skinnedMeshes": 11,
+            "meshes": 11,
+            "animationTime": 1,
+            "gaitPhase": 0.8854166666666661,
+            "state": "patrol",
+            "plantedFeet": {
+              "hindLeft": false,
+              "hindRight": true
+            }
+          },
+          "hands": [
+            3.552713678800501e-15,
+            0.0016846824042548556
+          ],
+          "feet": [
+            0,
+            0
+          ],
+          "elasticity": {
+            "torso": 1.067418250573419,
+            "neck": 1
+          },
+          "bottom": 0.001998106809338651,
+          "top": 2.4941835969426904
+        }
+      ]
+    },
+    {
+      "name": "alarm",
+      "result": [
+        {
+          "diagnostic": {
+            "kind": "grunt",
+            "status": "ready",
+            "url": "/rooftop-kook/goose-matron.glb",
+            "clips": [
+              "stroll",
+              "inhale",
+              "squawk",
+              "aim",
+              "recoil",
+              "recover"
+            ],
+            "activeClip": "shriek",
+            "mappedNodes": {
+              "torso": "spine",
+              "head": "head",
+              "jaw": "jaw"
+            },
+            "skinnedMeshes": 12,
+            "meshes": 12,
+            "animationTime": 0.55,
+            "gaitPhase": 0,
+            "state": "shriek",
+            "plantedFeet": {
+              "hindLeft": true,
+              "hindRight": true
+            }
+          },
+          "feet": [
+            0,
+            0
+          ],
+          "elasticity": {
+            "torso": 0.9783690375355394,
+            "neck": 1
+          },
+          "bottom": -6.198888513608836e-9,
+          "top": 2.3438474566078042
+        },
+        {
+          "diagnostic": {
+            "kind": "sentry",
+            "status": "ready",
+            "url": "/rooftop-kook/bulldog-guard.glb",
+            "clips": [
+              "stroll",
+              "inhale",
+              "squawk",
+              "aim",
+              "recoil",
+              "recover"
+            ],
+            "activeClip": "fire",
+            "mappedNodes": {
+              "torso": "spine",
+              "head": "head",
+              "jaw": "jaw"
+            },
+            "skinnedMeshes": 11,
+            "meshes": 11,
+            "animationTime": 0.55,
+            "gaitPhase": 0,
+            "state": "fire",
+            "plantedFeet": {
+              "hindLeft": true,
+              "hindRight": true
+            }
+          },
+          "hands": [
+            0,
+            0
+          ],
+          "feet": [
+            1.4210854715202004e-14,
+            1.4210854715202004e-14
+          ],
+          "elasticity": {
+            "torso": 0.9815981756324792,
+            "neck": 1
+          },
+          "bottom": -5.960473004051892e-9,
+          "top": 2.4895980251542795
+        }
+      ]
+    },
+    {
+      "name": "aim",
+      "result": [
+        {
+          "diagnostic": {
+            "kind": "grunt",
+            "status": "ready",
+            "url": "/rooftop-kook/goose-matron.glb",
+            "clips": [
+              "stroll",
+              "inhale",
+              "squawk",
+              "aim",
+              "recoil",
+              "recover"
+            ],
+            "activeClip": "windup",
+            "mappedNodes": {
+              "torso": "spine",
+              "head": "head",
+              "jaw": "jaw"
+            },
+            "skinnedMeshes": 12,
+            "meshes": 12,
+            "animationTime": 0.5,
+            "gaitPhase": 0,
+            "state": "windup",
+            "plantedFeet": {
+              "hindLeft": true,
+              "hindRight": true
+            }
+          },
+          "feet": [
+            1.4210854715202004e-14,
+            1.4210854715202004e-14
+          ],
+          "elasticity": {
+            "torso": 0.8979486085101215,
+            "neck": 0.8834019204389575
+          },
+          "bottom": -6.198902724463551e-9,
+          "top": 2.2252475838188843
+        },
+        {
+          "diagnostic": {
+            "kind": "sentry",
+            "status": "ready",
+            "url": "/rooftop-kook/bulldog-guard.glb",
+            "clips": [
+              "stroll",
+              "inhale",
+              "squawk",
+              "aim",
+              "recoil",
+              "recover"
+            ],
+            "activeClip": "aim",
+            "mappedNodes": {
+              "torso": "spine",
+              "head": "head",
+              "jaw": "jaw"
+            },
+            "skinnedMeshes": 11,
+            "meshes": 11,
+            "animationTime": 0.5,
+            "gaitPhase": 0,
+            "state": "aim",
+            "plantedFeet": {
+              "hindLeft": true,
+              "hindRight": true
+            }
+          },
+          "hands": [
+            0,
+            7.105427357601002e-15
+          ],
+          "feet": [
+            1.4210854715202004e-14,
+            1.4210854715202004e-14
+          ],
+          "elasticity": {
+            "torso": 0.9828880158952855,
+            "neck": 1
+          },
+          "bottom": -5.960473004051892e-9,
+          "top": 2.4903351839279537
+        }
+      ]
+    }
+  ],
+  "errors": []
+}

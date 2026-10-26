@@ -17,8 +17,8 @@
   "sourceGeometryPreserved": true,
   "originalUVsPreserved": true,
   "role": "editable modular scenery; per-placement collision policy",
-  "bytes": 16363688,
-  "sha256": "1e2fa74b6ac07420f2e4620f97dbc1566f9fa93fe25886a4db21274fed56d430",
+  "bytes": 12819008,
+  "sha256": "d933fcc7529dd165b7d3384983a879bac429f89fc1ae3854a4227fc3a69119c6",
   "triangles": 77950,
   "nativeGeometryPreserved": true,
   "skinAndUVsPreserved": true,
@@ -40,5 +40,6 @@
   "geometryCompression": "lossless EXT_meshopt_compression",
   "allVertexAndSkinValuesVerified": true,
   "orientedTrianglesVerified": true,
-  "texturePacking": "4K base colour, 2K PBR; WebP quality 94 colour/roughness, original packed normal map"
+  "texturePacking": "4K base colour, 2K PBR; WebP quality 94 colour/roughness, native-size WebP quality 98 normal map",
+  "normalMapPacking": "Native dimensions, WebP 98; all vertex values and colour/roughness atlas bytes verified unchanged"
 }

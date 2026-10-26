@@ -7,6 +7,7 @@ import { sampleTeeterMotion, probeTeeterEdge } from './teeterMotion';
 import { SkateBalanceArms, SKATE_UNDER_RAIL_DEPTH, SKATE_UNDER_RAIL_TRANSITION, sampleUnderRailMotion, SKATE_REVERT_DURATION, sampleSkateRevert } from './skateBodyMotion';
 import { skateGrabTweakElasticity, skateUnderRailElasticity, skate900Elasticity, skateBackflipElasticity, skateFootFlipElasticity, skateImpossibleElasticity, skateRevertElasticity, skateVertElasticity, SKATE_UNDER_RAIL_ARM_LIMIT } from './animation/elasticity';
 import { ICE_WALK_CLIP_ID } from './animation/iceWalk';
+import { kookSquawkHits } from './enemies/kookSquawk';
 // Authored fake-physics board movement. No rigidbody, no forces: just a
 // heading, a scalar speed, a vertical velocity, and hand-tuned numbers from
 // tuning.ts. Ground following is a single downward raycast; slopes only exist
@@ -13465,6 +13466,10 @@ export class Player {
         // fall through and take the hit below.
       }
       const bodyContact = this.playerBox.intersectsBox(e.box);
+      if(e.kook?.role==='lookout'&&this.invulnTimer<=0&&this.uberTimer<=0&&
+        kookSquawkHits(e,this.playerBox,(a,b)=>level.projectilePathBlocked(a,b))){
+        this.die('contact',e.group.position);return;
+      }
       if (crabStomp || bodyContact || e.attackBox?.intersectsBox(this.playerBox)) {
         const validStomp = crabStomp || (bodyContact && this.isStomping(e.box) && e.stompKill);
         const rescueStomp =
@@ -16299,6 +16304,11 @@ export class Player {
     if (!hit) for (const cr of level.crushers) if (cr.crushing && cr.box.intersectsBox(HANG_BOX)) {
       if(level.boulder?.course){this.die('crush',cr.box.getCenter(BLAST_AT));return true;}
       hit = true; cause = 'crush'; origin = cr.box.getCenter(BLAST_AT); break;
+    }
+    if(this.invulnTimer<=0&&this.uberTimer<=0)for(const e of level.enemies){
+      if(e.kook?.role==='lookout'&&kookSquawkHits(e,HANG_BOX,(a,b)=>level.projectilePathBlocked(a,b))){
+        this.die('contact',e.group.position);return true;
+      }
     }
     if (!hit) for (const e of level.enemies) if (e.alive && e.touchHurt && (e.box.intersectsBox(HANG_BOX) || e.attackBox?.intersectsBox(HANG_BOX))) {
       hit = true; origin = e.group.position;

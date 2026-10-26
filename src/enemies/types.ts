@@ -53,6 +53,8 @@ export interface EnemyAnimationFrame {
   crabCarcassYaw?: number;
   /** Nearby-player presentation only; never changes hitboxes or attack rules. */
   alert?: number;
+  /** Locked world-space aim for articulated rooftop attacks. */
+  attackTarget?: THREE.Vector3;
   /** Optional cycle [0,1); otherwise the active walk clip supplies the phase. */
   gaitPhase?: number;
   /** Authored locomotion clock, independent of imported walk clips. */

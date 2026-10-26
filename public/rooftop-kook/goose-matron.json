@@ -1,0 +1,160 @@
+{
+  "name": "goose-matron",
+  "height": 2.35,
+  "sourceSha256": "422b7e0c5fa3155e81207964c24b6597801465b387718ca5a7cbde62cc0e9837",
+  "sourceTriangles": 738404,
+  "triangles": 738404,
+  "components": {
+    "coat-and-pelvis": 260789,
+    "head": 166149,
+    "jaw": 6664,
+    "sleeve-left": 33475,
+    "paw-left": 23175,
+    "leg-left": 35550,
+    "boot-left": 42208,
+    "sleeve-right": 33360,
+    "paw-right": 23596,
+    "leg-right": 36537,
+    "boot-right": 42954,
+    "neck": 33947
+  },
+  "joints": 22,
+  "skinBones": 33,
+  "allNativeTrianglesPreserved": true,
+  "originalNormalsUVsAndTextures": false,
+  "weightsNormalized": true,
+  "segments": {
+    "spine": "chest",
+    "chest": "neck",
+    "neck": "head",
+    "shoulder-left": "elbow-left",
+    "elbow-left": "wrist-left",
+    "hip-left": "knee-left",
+    "knee-left": "ankle-left",
+    "shoulder-right": "elbow-right",
+    "elbow-right": "wrist-right",
+    "hip-right": "knee-right",
+    "knee-right": "ankle-right"
+  },
+  "restJoints": {
+    "hips": [
+      0,
+      0.7285,
+      0
+    ],
+    "spine": [
+      0,
+      1.0105,
+      0
+    ],
+    "chest": [
+      0,
+      1.3512499999999998,
+      0
+    ],
+    "neck": [
+      0,
+      1.5157500000000002,
+      0.01175
+    ],
+    "head": [
+      0,
+      1.8565000000000003,
+      0.03525
+    ],
+    "jaw": [
+      0,
+      1.8870500000000001,
+      0.141
+    ],
+    "clavicle-left": [
+      0.22325,
+      1.3512499999999998,
+      0
+    ],
+    "shoulder-left": [
+      0.32900000000000007,
+      1.3512499999999998,
+      0
+    ],
+    "elbow-left": [
+      0.517,
+      1.2220000000000002,
+      0
+    ],
+    "wrist-left": [
+      0.6815,
+      1.09275,
+      0.03525
+    ],
+    "hip-left": [
+      0.19035000000000002,
+      0.6815,
+      0
+    ],
+    "knee-left": [
+      0.19975,
+      0.50525,
+      0.01175
+    ],
+    "ankle-left": [
+      0.22325,
+      0.19975,
+      0.047
+    ],
+    "toe-left": [
+      0.22325,
+      0.11750000000000001,
+      0.282
+    ],
+    "clavicle-right": [
+      -0.22325,
+      1.3512499999999998,
+      0
+    ],
+    "shoulder-right": [
+      -0.32900000000000007,
+      1.3512499999999998,
+      0
+    ],
+    "elbow-right": [
+      -0.517,
+      1.2220000000000002,
+      0
+    ],
+    "wrist-right": [
+      -0.6815,
+      1.09275,
+      0.03525
+    ],
+    "hip-right": [
+      -0.19035000000000002,
+      0.6815,
+      0
+    ],
+    "knee-right": [
+      -0.19975,
+      0.50525,
+      0.01175
+    ],
+    "ankle-right": [
+      -0.22325,
+      0.19975,
+      0.047
+    ],
+    "toe-right": [
+      -0.22325,
+      0.11750000000000001,
+      0.282
+    ]
+  },
+  "bytes": 9533272,
+  "sha256": "dae2f0ea02a733777b77a174c076b9be31bda492f8f7ad60a7350c573d31b833",
+  "compression": "lossless position/topology meshopt, 12-bit normal and 16-bit UV encoding, native-resolution WebP 96 atlases",
+  "accessorsVerified": true,
+  "allOrientedSourceTrianglesVerified": true,
+  "vertexCacheReorderOnly": true,
+  "nativePositionsVerified": true,
+  "maxNormalComponentError": 0.0002724080700300391,
+  "maxUvError": 0.000007629510948348184
+}

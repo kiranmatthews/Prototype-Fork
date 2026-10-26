@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "provider": "Meshy",
+  "budgetCredits": 180,
+  "scope": "User authorized anthro enemy replacements, native Meshy surfaces and articulated components",
+  "tasks": {
+    "goose-matron": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "2cbf9873-74a0-4505-ab17-2d61c09632bf",
+      "createdAt": "2026-10-25T23:15:47.313636+00:00",
+      "estimatedCredits": 35,
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/rooftop-anthro-assets/references/goose-matron.png",
+        "ai_model": "meshy-7.1",
+        "geometry_resolution": "4k",
+        "should_remesh": false,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "pose_mode": "a-pose",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 156,
+      "reference": "tools/rooftop-anthro-assets/references/goose-matron.png",
+      "referenceSha256": "b0e9b7704cb31bf6fec5d8da3a6a04a36a6f9a0a6c5e542e22efe2b5b3ebb780",
+      "id": "01a17559-48fe-7597-8640-5799da92a081",
+      "checkedAt": "2026-10-25T23:20:51.657494+00:00",
+      "progress": 100,
+      "consumedCredits": 35,
+      "finishedAt": 1792970289722,
+      "expiresAt": 1793229489722,
+      "downloads": [
+        {
+          "path": ".img2threejs/rooftop-anthro/goose-matron/downloads/model.glb",
+          "bytes": 28159136,
+          "sha256": "422b7e0c5fa3155e81207964c24b6597801465b387718ca5a7cbde62cc0e9837"
+        }
+      ]
+    },
+    "bulldog-guard": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "a78a9cc5-31b7-4bfc-861a-e86aae783f49",
+      "createdAt": "2026-10-25T23:15:51.110480+00:00",
+      "estimatedCredits": 35,
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/rooftop-anthro-assets/references/bulldog-guard.png",
+        "ai_model": "meshy-7.1",
+        "geometry_resolution": "4k",
+        "should_remesh": false,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "pose_mode": "a-pose",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 121,
+      "reference": "tools/rooftop-anthro-assets/references/bulldog-guard.png",
+      "referenceSha256": "1a49a99c54737ae1317e04b427fe84b3ec0a705929e8ccad31563d0c5a3fba21",
+      "id": "01a17559-57d0-70d6-96a3-2bd4f83a8e3b",
+      "checkedAt": "2026-10-25T23:20:55.429614+00:00",
+      "progress": 100,
+      "consumedCredits": 35,
+      "finishedAt": 1792970407353,
+      "expiresAt": 1793229607353,
+      "downloads": [
+        {
+          "path": ".img2threejs/rooftop-anthro/bulldog-guard/downloads/model.glb",
+          "bytes": 47474456,
+          "sha256": "df6f37f3da1ebd28bf399544529546859e13b70a36b716e635fc8c015a6f67ec"
+        }
+      ]
+    }
+  }
+}

@@ -777,14 +777,15 @@ export const ROOFTOP_RELAY_LEVEL:CustomLevelData=(()=>{
   // The first twelve metres of each receiver remain completely open.
   supply(r,r.a+16,(index===35?-1:1)*Math.min(r.width/2-2,4.8),'mystery',0,'Reward after the long roof transfer');
  }
- // Three courtyard encounters escalate from one lookout and one gunner to
- // a final crossfire. Landing strips and the centre traversal lane stay open.
+ // Animal residents stroll along the roof, escalating to a final crossfire.
+ // Their short supported patrols leave landing strips and the middle lane open.
  for(const [index,lookoutSide,gunnerSides]of [[8,5,[7]],[23,-5,[-7]],[43,7,[-8,10]]] as [number,number,number[]][]){
   const r=ROOFTOP_ROOFS[index],alertGroup=r.district;
   const foe=(offset:number,u:number,role:'lookout'|'gunner')=>{
    const s=r.a+offset;components.push({t:'enemy',p:rooftopWorld(s,rooftopSurfaceY(r,s,u),u),
-    range:0,speed:0,s:[1,(role==='lookout'?2.35:2.5)*1.7,1],foe:role==='lookout'?'grunt':'sentry',kookRole:role,alertGroup,yaw:rooftopYaw(s),
-    grp:300+r.district,nm:role==='lookout'?'Courtyard Karen · alarm lookout':'Kook club gunner · sleeps until alarm'});
+    range:role==='lookout'?3:3.5,speed:role==='lookout'?1.05:.9,terrainSupports:true,
+    s:[1,(role==='lookout'?2.35:2.5)*1.7,1],foe:role==='lookout'?'grunt':'sentry',kookRole:role,alertGroup,yaw:rooftopYaw(s),
+    grp:300+r.district,nm:role==='lookout'?'Goose matron · lethal squawk':'Bulldog guard · independent patrol'});
   };
   foe(index===43?27:23,lookoutSide,'lookout');
   gunnerSides.forEach((u,i)=>foe(index===43?50-i*5:43,u,'gunner'));

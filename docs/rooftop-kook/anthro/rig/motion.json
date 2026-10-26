@@ -1,0 +1,104 @@
+{
+  "motion": [
+    {
+      "name": "front",
+      "angle": 0,
+      "frames": 664,
+      "seconds": 12,
+      "maxHandError": 0.014144744778103617,
+      "maxFootError": 1.7404671430534633e-14,
+      "minBottom": -0.015059182934521687,
+      "maxBottom": 0.00003955978610292732,
+      "minTop": 2.271463703404166,
+      "maxTop": 2.5161047789347606,
+      "states": [
+        [
+          "patrol",
+          "windup",
+          "shriek",
+          "recover"
+        ],
+        [
+          "patrol",
+          "aim",
+          "fire",
+          "reload"
+        ]
+      ],
+      "nonFinite": 0,
+      "maxRootScaleError": 0,
+      "maxJointScaleError": 0,
+      "minTorso": 0.78,
+      "maxTorso": 1.1573374490511963,
+      "minNeck": 0.8001220887869817,
+      "maxNeck": 1.2065090341647453
+    },
+    {
+      "name": "forty",
+      "angle": 0.6981317007977318,
+      "frames": 665,
+      "seconds": 12,
+      "maxHandError": 0.014143735149167395,
+      "maxFootError": 1.7763568394002505e-14,
+      "minBottom": -0.014631845435530977,
+      "maxBottom": 0.001998106809338651,
+      "minTop": 2.2727195588987286,
+      "maxTop": 2.5096041011184553,
+      "states": [
+        [
+          "patrol",
+          "windup",
+          "shriek",
+          "recover"
+        ],
+        [
+          "patrol",
+          "aim",
+          "fire",
+          "reload"
+        ]
+      ],
+      "nonFinite": 0,
+      "maxRootScaleError": 0,
+      "maxJointScaleError": 0,
+      "minTorso": 0.78,
+      "maxTorso": 1.1578184805334044,
+      "minNeck": 0.800044806282574,
+      "maxNeck": 1.2069109336084252
+    },
+    {
+      "name": "side",
+      "angle": 1.5707963267948966,
+      "frames": 659,
+      "seconds": 12,
+      "maxHandError": 0.01413048891050386,
+      "maxFootError": 1.7404671430534633e-14,
+      "minBottom": -0.013691982686466986,
+      "maxBottom": 0.001998106809352862,
+      "minTop": 2.271962025495384,
+      "maxTop": 2.509651420559834,
+      "states": [
+        [
+          "patrol",
+          "windup",
+          "shriek",
+          "recover"
+        ],
+        [
+          "patrol",
+          "aim",
+          "fire",
+          "reload"
+        ]
+      ],
+      "nonFinite": 0,
+      "maxRootScaleError": 0,
+      "maxJointScaleError": 0,
+      "minTorso": 0.78,
+      "maxTorso": 1.1577860827777404,
+      "minNeck": 0.8000170059853537,
+      "maxNeck": 1.2066961869302826
+    }
+  ],
+  "errors": []
+}
