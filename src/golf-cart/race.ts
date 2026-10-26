@@ -15,10 +15,11 @@ import { CartInteractionActor, CART_INTERACTION_TIMING } from './interactionMoti
 import { CartRaceAudio } from './raceAudio';
 import { StadiumCrowd } from './stadiumCrowd';
 import { createStadiumBoundary } from './stadiumBoundary';
+import { CART_FLAMES,initialFlameRecharge,sideFlameContact,type FlameBody } from './flameTactics';
 
 interface Racer {
   id:number;player:Player;progress:number;anchor:THREE.Vector3;anchorProgress:number;
-  finish:number|null;falls:number;recovery:number;boost:number;knockGrace:number;boxes:Set<Crate>;
+  finish:number|null;falls:number;recovery:number;boost:number;knockGrace:number;star:number;velocity:THREE.Vector3;boxes:Set<Crate>;
 }
 interface CartInteraction {kind:'exit'|'enter'|'steal';id:number;cart:number;victim:number;age:number;duration:number;side:number;actor:CartInteractionActor;passenger:CartInteractionActor|null;foot:THREE.Vector3;from:THREE.Vector3;victimFoot:THREE.Vector3;released:boolean;approach:number;path:THREE.Vector3[];pathLength:number}
 const clamp=THREE.MathUtils.clamp;
@@ -61,7 +62,7 @@ export class GolfCartRace {
   private ray=new THREE.Raycaster(new THREE.Vector3(),new THREE.Vector3(0,-1,0),0,10000);
   private high=100;
   private point=new THREE.Vector3();
-  constructor(private level:Level,private course:RaceCourse,private racers:readonly Racer[],private count:number,private attack:(id:number,origin:THREE.Vector3,power:number)=>void){
+  constructor(private level:Level,private course:RaceCourse,private racers:readonly Racer[],private count:number,private attack:(id:number,origin:THREE.Vector3,power:number)=>void,seed=1){
     for(const mesh of level.groundMeshes)mesh.updateWorldMatrix(true,false);
     for(const mesh of level.groundMeshes){
       const box=new THREE.Box3().setFromObject(mesh);this.high=Math.max(this.high,box.max.y+20);
@@ -91,7 +92,8 @@ export class GolfCartRace {
       this.driverForCart[i]=i<count?i:-1;this.burning[i]=false;this.locked[i]=0;this.spareTime[i]=0;
       this.fleet.setDriver(i,null);
     });
-    for(let i=0;i<count;i++){this.cartForRacer[i]=i;this.controls[i]=new RallyControls();this.actionCooldown[i]=0;this.thrustCooldown[i]=0;this.thrustTime[i]=0;this.thrustHits[i]=new Set();this.loanWait[i]=0;this.footStill[i]=0;this.footLast[i]=racers[i].player.pos.clone();this.footJump[i]=false;}
+    this.thrustCooldown=initialFlameRecharge(count,seed);
+    for(let i=0;i<count;i++){this.cartForRacer[i]=i;this.controls[i]=new RallyControls();this.actionCooldown[i]=0;this.thrustTime[i]=0;this.thrustHits[i]=new Set();this.loanWait[i]=0;this.footStill[i]=0;this.footLast[i]=racers[i].player.pos.clone();this.footJump[i]=false;}
     for(let i=0;i<count;i++)this.seatDriver(i,i);
     this.effects=new CartMayhemEffects(this.fleet);
     this.previous=this.fleet.physics.carts.map(c=>({x:c.x,y:c.y,z:c.z,yaw:c.yaw}));this.renderPoses=this.previous.map(p=>({...p}));this.respawns=spawns.map(()=>0);this.stun=spawns.map(()=>0);
@@ -285,6 +287,46 @@ export class GolfCartRace {
     puffs.burst('boomTnt',c.x,c.y+1,c.z,{strength:1.5,count:12});
     this.audio.explosion(c,this.racers[0].player.pos);
   }
+  private flameBody(id:number):FlameBody {
+    const c=this.fleet.physics.carts[this.cartForRacer[id]];
+    if(c)return c;
+    const r=this.racers[id],p=r.player.pos,v=r.velocity;
+    return {x:p.x,y:p.y,z:p.z,vx:v.x,vy:v.y,vz:v.z};
+  }
+  private canFireFlames(id:number):boolean {
+    const index=this.cartForRacer[id],c=this.fleet.physics.carts[index],r=this.racers[id];
+    return !!c&&c.health>0&&!c.tumbling&&!this.burning[index]&&this.stun[index]===0&&
+      this.thrustCooldown[id]===0&&!this.isAnimating(id)&&r.finish===null&&!r.recovery&&!r.player.skateCameraBailing;
+  }
+  private shouldFireFlames(id:number):boolean {
+    if(!this.canFireFlames(id))return false;
+    const source=this.fleet.physics.carts[this.cartForRacer[id]];
+    for(const target of this.racers.slice(0,this.count)){
+      if(target.id===id||target.finish!==null||target.recovery||target.star>0||this.isAnimating(target.id))continue;
+      const contact=sideFlameContact(source,this.flameBody(target.id),CART_FLAMES.prediction);
+      // Save the burst during post-hit protection. Shields can still be stripped.
+      if(contact!==null&&target.knockGrace<=contact)return true;
+    }
+    return false;
+  }
+  private flameLane(id:number,normal:number):number {
+    const r=this.racers[id],c=this.fleet.physics.carts[this.cartForRacer[id]];
+    if(id===0||!c||!c.grounded||c.tumbling||Math.abs(c.speed)<5||this.thrustCooldown[id]>1.2||
+      this.jumpRanges.some(j=>r.progress>j.a-24&&r.progress<j.b+14))return normal;
+    let target:Racer|null=null,best=Infinity;
+    for(const other of this.racers.slice(0,this.count)){
+      const kart=this.fleet.physics.carts[this.cartForRacer[other.id]],gap=other.progress-r.progress;
+      if(other.id===id||!kart||other.finish!==null||other.recovery||other.star>0||this.isAnimating(other.id)||
+        Math.abs(kart.y-c.y)>2.5||gap<-8||gap>14||Math.hypot(kart.x-c.x,kart.z-c.z)>18)continue;
+      const score=Math.abs(gap)+(gap<0?2:0);if(score<best){best=score;target=other;}
+    }
+    if(!target)return normal;
+    const mine=this.course.project(r.player.pos,r.progress,40).offset;
+    const theirs=this.course.project(target.player.pos,target.progress,40).offset;
+    const side=Math.abs(mine-theirs)>.7?Math.sign(mine-theirs):(id<target.id?-1:1);
+    // Draw alongside without ramming or abandoning the supported racing lane.
+    return clamp(theirs+side*3.8,Math.max(-8.5,normal-2.5),Math.min(8.5,normal+2.5));
+  }
   drive(id:number):Input {
     if(this.isAnimating(id))return {moveX:0,moveY:0} as Input;
     const r=this.racers[id],index=this.cartForRacer[id];
@@ -303,6 +345,7 @@ export class GolfCartRace {
     }
     const c=this.fleet.physics.carts[index],look=clamp(Math.abs(c.speed)*.55,9,22);
     let offset=id===0?0:(id%2?1:-1)*(2.2+Math.floor(id/2)*1.1);
+    offset=this.flameLane(id,offset);
     const ahead=this.course.sample(r.progress+look,offset);
     for(const obstacle of this.fleet.physics.obstacles)if(Math.hypot(ahead.x-obstacle.x,ahead.z-obstacle.z)<obstacle.radius+5){
       const side=this.course.project(new THREE.Vector3(obstacle.x,ahead.y,obstacle.z),r.progress,60).offset;
@@ -313,7 +356,7 @@ export class GolfCartRace {
     const desired=(id===0?34:31.5+(id%3)*.65)/(1+Math.abs(angle)*.65);
     const dx=ahead.x-c.x,dz=ahead.z-c.z,n=Math.hypot(dx,dz)||1,basis=r.player.raceInputBasis(this.level),bn=Math.hypot(basis.x,basis.z)||1;
     return {moveX:clamp((-basis.z*dx+basis.x*dz)/bn/n,-1,1),moveY:clamp((basis.x*dx+basis.z*dz)/bn/n,-1,1),grabHeld:c.speed>desired+2,
-      grindPressed:false,
+      grindPressed:false,spinPressed:this.shouldFireFlames(id),
       jumpHeld:true,jumpPressed:false,itemPressed:false} as Input;
   }
   inputFor(id:number):Input{return this.sampledInputs[id]??this.drive(id);}
@@ -339,17 +382,17 @@ export class GolfCartRace {
       this.actionCooldown[i]=Math.max(0,this.actionCooldown[i]-dt);this.thrustCooldown[i]=Math.max(0,this.thrustCooldown[i]-dt);this.thrustTime[i]=Math.max(0,this.thrustTime[i]-dt);
       if(samples[i].grindPressed)this.interact(i);
       const index=this.cartForRacer[i],r=this.racers[i];
-      if(index>=0&&!this.isAnimating(i)&&samples[i].spinPressed&&this.thrustCooldown[i]===0&&r.finish===null&&!this.burning[index]){
-        this.thrustCooldown[i]=1.8;this.thrustTime[i]=.7;this.stats.thrusters++;
+      if(samples[i].spinPressed&&this.canFireFlames(i)){
+        this.thrustCooldown[i]=CART_FLAMES.recharge;this.thrustTime[i]=CART_FLAMES.burst;this.stats.thrusters++;
         this.thrustHits[i].clear();this.audio.thrust(world.carts[index],index,this.racers[0].player.pos);
+      }else if(i===0&&index>=0&&!this.isAnimating(i)&&samples[i].spinPressed&&this.thrustCooldown[i]>0){
+        this.announce('FLAMES RECHARGING');this.noticeTime=Math.min(1.2,this.thrustCooldown[i]);
       }
       if(index>=0&&this.thrustTime[i]>0&&!this.burning[index]){
         const c=world.carts[index];
         // Side-facing flamethrowers damage neighbours. They exert no driving impulse.
         for(const victim of this.racers.slice(0,this.count))if(victim.id!==i&&!this.thrustHits[i].has(victim.id)){
-          const dx=victim.player.pos.x-c.x,dz=victim.player.pos.z-c.z;
-          const along=Math.abs(dx*Math.sin(c.yaw)+dz*Math.cos(c.yaw)),side=Math.abs(dx*Math.cos(c.yaw)-dz*Math.sin(c.yaw));
-          if(side>1.2&&side<5.8&&along<2.1&&Math.abs(victim.player.pos.y-c.y)<3){this.thrustHits[i].add(victim.id);this.attack(victim.id,r.player.pos,.14);}
+          if(sideFlameContact(c,this.flameBody(victim.id))!==null){this.thrustHits[i].add(victim.id);this.attack(victim.id,r.player.pos,.14);}
         }
       }
     }

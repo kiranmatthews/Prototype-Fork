@@ -132,7 +132,7 @@ export class SkateRace {
       if(r.scene){r.scene.visible=r.id<this.count;if(r.id<this.count&&r.scene.parent!==this.scene)this.scene.add(r.scene);else if(r.id>=this.count)r.scene.removeFromParent();}
       r.marker.visible=r.id<this.count;r.player.prepareStartPresentation(level);this.placeMarker(r);
     }
-    if(level.skateRace?.vehicle==='golf-cart'){this.carts=new GolfCartRace(level,this.course,this.riders,this.count,(id,origin,power)=>this.hit(this.riders[id],origin,power));this.root.add(this.carts.fleet.root);this.heavyAt=8;}
+    if(level.skateRace?.vehicle==='golf-cart'){this.carts=new GolfCartRace(level,this.course,this.riders,this.count,(id,origin,power)=>this.hit(this.riders[id],origin,power),this.runSeed);this.root.add(this.carts.fleet.root);this.heavyAt=8;}
   }
   start(mode:RaceMode=this.mode,seed?:number):void {
     if(!this.level||mode==='time-trial'&&!this.canStartTimeTrial(this.levelId))return;

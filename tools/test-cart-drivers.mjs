@@ -19,13 +19,14 @@ await withBlockworksRuntime(async e=>{
  }
  c.exit(0,false);assert.equal(e.p.vehicleVisualRoot,visuals[0]);assert.equal(e.p.vehicleVisualRoot.parent,e.p.group);
  assert.deepEqual(e.p.vehicleVisualRoot.getWorldScale(new T.Vector3()).toArray(),scales[0]);assert.equal(e.p.vehicleVisualRoot.getObjectByName('skateboard-scale-compensation').visible,true);
- const oneRun=flame=>{race.start('time-trial',0);race.phase='running';c=race.carts;for(let i=0;i<40;i++)race.step(e.dt,normalizeGameInput({jumpHeld:true}));race.step(e.dt,normalizeGameInput({jumpHeld:true,spinPressed:flame}));return Object.fromEntries(['x','y','z','vx','vy','vz','yaw','speed','roll','pitch'].map(k=>[k,c.fleet.physics.carts[0][k]]));};
+ const oneRun=flame=>{race.start('time-trial',0);race.phase='running';c=race.carts;c.thrustCooldown[0]=0;for(let i=0;i<40;i++)race.step(e.dt,normalizeGameInput({jumpHeld:true}));race.step(e.dt,normalizeGameInput({jumpHeld:true,spinPressed:flame}));return Object.fromEntries(['x','y','z','vx','vy','vz','yaw','speed','roll','pitch'].map(k=>[k,c.fleet.physics.carts[0][k]]));};
  const baseline=oneRun(false),firing=oneRun(true);assert.deepEqual(firing,baseline,'Square never adds speed, lift, steering or a chassis spin');
  c.present(1);assert.ok(c.effects.jets.count>=6,'all six side nozzles emit Gouraud flame tongues');
  const m=c.fleet.models[0],w=c.fleet.physics.carts[0];assert.ok(Math.abs(m.root.rotation.y-w.yaw)<1e-8,'rendered kart does not spin');
  race.start('race',0);race.phase='running';c=race.carts;c.drive=()=>({moveX:0,moveY:0});
  const a=c.fleet.physics.carts[0],b=c.fleet.physics.carts[1],d=c.fleet.physics.carts[2];
  Object.assign(a,{yaw:0,vx:0,vz:0});Object.assign(b,{x:a.x+4.2,y:a.y,z:a.z+10,vx:0,vz:0});Object.assign(d,{x:a.x,y:a.y,z:a.z-4.5,vx:0,vz:0});c.sync();
+ c.thrustCooldown[0]=0; // This fixture exercises an already-recharged burst.
  let hits=[];c.attack=(id,origin,power)=>{hits.push(id);c.hit(id,origin,power);};
  c.step(e.dt,normalizeGameInput({spinPressed:true}));assert.equal(hits.includes(1),false);
  Object.assign(b,{x:a.x+4.2,y:a.y,z:a.z,vx:0,vz:0});c.sync();

@@ -1,0 +1,39 @@
+{
+  "passed": true,
+  "recharge": 6,
+  "burst": 0.7,
+  "startingPhases": [
+    4.306401978675277,
+    5.803550358568319,
+    5.129267296751496,
+    1.5920159655250607,
+    3.056282569861505,
+    2.299290403267369,
+    1.1248994317185135,
+    3.5350690853456035
+  ],
+  "seededStagger": true,
+  "predictiveSides": true,
+  "flanking": true,
+  "jumpLinePreserved": true,
+  "protectedTargets": true,
+  "aiShots": [
+    {
+      "id": 1,
+      "time": 0.7499999999999998
+    },
+    {
+      "id": 1,
+      "time": 6.78333333333346
+    },
+    {
+      "id": 1,
+      "time": 12.81666666666658
+    }
+  ],
+  "oneHitPerBurst": true,
+  "humanRecharge": true,
+  "onFootRecharge": true,
+  "cartSwapKeepsRecharge": true,
+  "restart": true
+}

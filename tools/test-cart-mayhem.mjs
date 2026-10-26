@@ -62,7 +62,7 @@ await withBlockworksRuntime(async r=>{
  assert.equal(carts.interact(1),true);completeAction(1);assert.equal(carts.cartForRacer[1],spare);assert.equal(carts.cartForRacer[0],-1);
  carts=start();race.riders[0].item='green-shell';assert.equal(race.useItem(),true);assert.equal(race.projectiles.length,3,'coconut cannon fires a spread');
  race.clearItems();race.riders[0].item='banana';race.useItem();assert.equal(race.projectiles.length,3,'banana bomb trio');
- const active=carts.cartForRacer[0];tick({spinHeld:true});assert.equal(carts.stats.thrusters,1);tick({spinHeld:true},30);assert.equal(carts.stats.thrusters,1);
+ const active=carts.cartForRacer[0];carts.thrustCooldown[0]=0;tick({spinHeld:true});assert.equal(carts.stats.thrusters,1);tick({spinHeld:true},30);assert.equal(carts.stats.thrusters,1);
  carts=start();carts.exit(0,false);
  const at=race.course.length-14,finishStart=race.course.sample(at);finishStart.y+=.12;
  r.p.resetRacePosition(r.l,finishStart,race.course.tangent(at),true);race.riders[0].progress=race.riders[0].anchorProgress=at;race.riders[0].anchor.copy(finishStart);
