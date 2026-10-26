@@ -1,0 +1,254 @@
+{
+  "lite": true,
+  "runtime": {
+    "stamp": "Codex/sol fork · build 10-26 06:51 UTC",
+    "level": "coconut-cart-rally",
+    "gravity": 24,
+    "stableLandings": true,
+    "spectators": 32958,
+    "checkpoints": 0,
+    "glError": 0
+  },
+  "reports": [
+    {
+      "scenario": {
+        "name": "backwards-facing-coast",
+        "yaw": 3.141592653589793,
+        "speed": -8,
+        "x": 0,
+        "y": 1,
+        "seconds": 3,
+        "device": "keyboard"
+      },
+      "last": {
+        "time": 3.016666666666661,
+        "speed": -6.75482551375277,
+        "yaw": 2.746313511890293,
+        "error": 0.0037375050176829405,
+        "steer": -0.005231999208165494,
+        "input": [
+          0,
+          1
+        ],
+        "grounded": true,
+        "rolls": 0,
+        "falls": 0,
+        "position": [
+          31.694001824299335,
+          26.14938509804152,
+          -70.27243920034782
+        ],
+        "ground": {
+          "height": 26.149466363307305,
+          "grip": 1,
+          "drag": 0.08,
+          "safe": true,
+          "supported": true
+        },
+        "throttle": 0
+      },
+      "tailSteer": 0.005235891986180571
+    },
+    {
+      "scenario": {
+        "name": "reverse-coast-right",
+        "yaw": 0,
+        "speed": -8,
+        "x": 1,
+        "y": 0,
+        "seconds": 3.5,
+        "device": "keyboard"
+      },
+      "last": {
+        "time": 3.516666666666659,
+        "speed": -1.4047155036535222,
+        "yaw": 1.1475493695529715,
+        "error": 0.00793315169255604,
+        "steer": -0.005979408695105707,
+        "input": [
+          1,
+          0
+        ],
+        "grounded": true,
+        "rolls": 0,
+        "falls": 0,
+        "position": [
+          33.7267106602323,
+          25.751710180055248,
+          -36.95533968871294
+        ],
+        "ground": {
+          "height": 25.751726337968893,
+          "grip": 0.58,
+          "drag": 14,
+          "safe": true,
+          "supported": true
+        },
+        "throttle": 0
+      },
+      "tailSteer": 0.011194768133502595
+    },
+    {
+      "scenario": {
+        "name": "spin-recovery-from-rest",
+        "yaw": 3.141592653589793,
+        "speed": 0,
+        "x": 0,
+        "y": 1,
+        "throttle": true,
+        "seconds": 3.5,
+        "device": "keyboard"
+      },
+      "last": {
+        "time": 3.516666666666659,
+        "speed": 23.25425632421246,
+        "yaw": -0.3141586842590317,
+        "error": 0.004151670576934274,
+        "steer": -0.13086770683732332,
+        "input": [
+          0,
+          1
+        ],
+        "grounded": true,
+        "rolls": 0,
+        "falls": 0,
+        "position": [
+          46.78509678036224,
+          26.20448552122248,
+          -69.17959940546338
+        ],
+        "ground": {
+          "height": 26.20452990644108,
+          "grip": 0.58,
+          "drag": 14,
+          "safe": true,
+          "supported": true
+        },
+        "throttle": 1
+      },
+      "tailSteer": 0.1724080801506436
+    },
+    {
+      "scenario": {
+        "name": "controller-reverse-diagonal",
+        "yaw": 3.141592653589793,
+        "speed": -8,
+        "x": -0.7,
+        "y": 0.7,
+        "seconds": 3.5,
+        "device": "controller"
+      },
+      "last": {
+        "time": 3.516666666666659,
+        "speed": -5.7626673459982936,
+        "yaw": -2.753537100001584,
+        "error": 0.000952365008977718,
+        "steer": -0.0005343034737128259,
+        "input": [
+          -0.7,
+          0.7
+        ],
+        "grounded": true,
+        "rolls": 0,
+        "falls": 0,
+        "position": [
+          17.606802380246254,
+          26.096653757085168,
+          -71.51826157520077
+        ],
+        "ground": {
+          "height": 26.096706028940684,
+          "grip": 1,
+          "drag": 0.08,
+          "safe": true,
+          "supported": true
+        },
+        "throttle": 0
+      },
+      "tailSteer": 0.007250791510899624
+    },
+    {
+      "scenario": {
+        "name": "controller-spin-recovery",
+        "offset": 6,
+        "yaw": 3.0915926535897933,
+        "speed": 8,
+        "x": 0,
+        "y": 1,
+        "throttle": true,
+        "seconds": 3,
+        "device": "controller"
+      },
+      "last": {
+        "time": 3.016666666666661,
+        "speed": 27.222597624153313,
+        "yaw": -0.4370849474032265,
+        "error": 0.0025247656018803077,
+        "steer": 0.08121762749555239,
+        "input": [
+          0,
+          1
+        ],
+        "grounded": true,
+        "rolls": 0,
+        "falls": 0,
+        "position": [
+          24.68432130209183,
+          26.193009397460422,
+          -77.13397617887065
+        ],
+        "ground": {
+          "height": 26.193100069721318,
+          "grip": 1,
+          "drag": 0.08,
+          "safe": true,
+          "supported": true
+        },
+        "throttle": 1
+      },
+      "tailSteer": 0.18472595632561062
+    },
+    {
+      "scenario": {
+        "name": "controller-brake-in-reverse",
+        "yaw": 0,
+        "speed": -8,
+        "x": 0,
+        "y": 0,
+        "throttle": true,
+        "brake": true,
+        "seconds": 1.5,
+        "device": "controller"
+      },
+      "last": {
+        "time": 1.5166666666666662,
+        "speed": 0,
+        "yaw": -0.4144271771837797,
+        "error": 1.9852235039786763,
+        "steer": 0,
+        "input": [
+          0,
+          0
+        ],
+        "grounded": true,
+        "rolls": 0,
+        "falls": 0,
+        "position": [
+          22.156827904237083,
+          25.831938027792056,
+          -48.20417906469306
+        ],
+        "ground": {
+          "height": 25.832001689766773,
+          "grip": 1,
+          "drag": 0.08,
+          "safe": true,
+          "supported": true
+        },
+        "throttle": 0
+      },
+      "tailSteer": 0
+    }
+  ],
+  "errors": []
+}

@@ -13,10 +13,15 @@ export class RallyControls {
     const pullback=intent.intent==='pullback-brake';
     // Pull back to stop; X plus back from rest can reverse the physical car.
     const reverse=pullback&&frame.speed<.6&&held;
-    const steering=reverse?solveSkateSteering(-fx,-fz,frame.forward.x,frame.forward.z,x,y,CONST.carveBrakeAngle):intent;
-    const brake=!!input.grabHeld||pullback&&!reverse;
+    // A collision or a released reverse pedal can leave the car rolling
+    // backwards. Resolve the stick against that travel direction, then invert
+    // the wheel angle: reverse motion already inverts the physical yaw response.
+    // Near rest, use the selected pedal so starting reverse is stable too.
+    const direction=Math.abs(frame.speed)>.1?Math.sign(frame.speed):(reverse?-1:1);
+    const steering=direction<0?solveSkateSteering(-fx,-fz,frame.forward.x,frame.forward.z,x,y,CONST.carveBrakeAngle):intent;
+    const brake=!!input.grabHeld||steering.intent==='pullback-brake'&&!reverse;
     return {throttle:held&&!brake?(reverse?-1:1):0,
-      steer:brake?0:Math.max(-1,Math.min(1,steering.angle*(reverse?-1:1)*1.9)),
+      steer:brake?0:Math.max(-1,Math.min(1,steering.angle*direction*1.9)),
       brake:brake?1:0,handbrake:!!input.transferHeld,hop:false};
   }
   reset(){}
