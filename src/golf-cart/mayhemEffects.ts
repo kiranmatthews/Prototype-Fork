@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { SIDE_NOZZLE } from './sideNozzle';
 import { puffs } from '../puffs';
 import type { GolfCartFleet } from './fleet';
 
@@ -16,8 +17,8 @@ export class CartMayhemEffects {
     this.flames=new THREE.InstancedMesh(new THREE.LatheGeometry([[0,0],[.4,.12],[.55,.5],[.3,1],[.12,1.4],[0,2]].map(([x,y])=>new THREE.Vector2(x,y)),12),new THREE.MeshBasicMaterial({color:0xffffff,toneMapped:false}),fleet.models.length*7);
     this.flames.name='Rally engine flames';this.flames.instanceMatrix.setUsage(THREE.DynamicDrawUsage);this.flames.frustumCulled=false;
     for(let i=0;i<this.flames.count;i++)this.flames.setColorAt(i,new THREE.Color([0xff4b12,0xffa322,0xffe989][i%3]));
-    this.jets=new THREE.InstancedMesh(this.flames.geometry,new THREE.MeshBasicMaterial({color:0xffffff,toneMapped:false,transparent:true,opacity:.82,depthWrite:false}),fleet.models.length*4);
-    this.jets.name='Twin side thruster flames';this.jets.instanceMatrix.setUsage(THREE.DynamicDrawUsage);this.jets.frustumCulled=false;
+    this.jets=new THREE.InstancedMesh(this.flames.geometry,new THREE.MeshBasicMaterial({color:0xffffff,toneMapped:false,transparent:true,opacity:.82,depthWrite:false}),fleet.models.length*12);
+    this.jets.name='Six side nozzle flames';this.jets.instanceMatrix.setUsage(THREE.DynamicDrawUsage);this.jets.frustumCulled=false;
     for(let i=0;i<this.jets.count;i++)this.jets.setColorAt(i,new THREE.Color(i%2?'#fff0b2':'#ff6c17'));
     this.jets.count=0;this.jets.visible=false;fleet.root.add(this.jets);
     this.flames.count=0;this.flames.visible=false;fleet.root.add(this.flames,this.target);this.target.rotation.x=-Math.PI/2;this.target.visible=false;
@@ -50,9 +51,9 @@ export class CartMayhemEffects {
     for(let i=0;i<owners.length;i++){
       const owner=owners[i];if(owner<0||!(thrust[owner]>0)||burning[i]||!this.fleet.isPresented(i))continue;
       const pulse=(.9+.1*Math.sin(time*49+i))*Math.min(1,thrust[owner]/.1);
-      for(const side of [-1,1])for(let core=0;core<2;core++){
-        this.dummy.position.set(side*(1.48+core*.025),.73,.30);this.dummy.rotation.set(0,0,-side*Math.PI/2);
-        this.dummy.scale.set(core?.25:.43,(core?1.05:1.6)*pulse,core?.25:.43);this.dummy.updateMatrix();
+      for(const side of [-1,1])for(const mouth of [-1,0,1])for(let core=0;core<2;core++){
+        this.dummy.position.set(side*(SIDE_NOZZLE.x+core*.008),SIDE_NOZZLE.y,SIDE_NOZZLE.z+mouth*SIDE_NOZZLE.spacing);this.dummy.rotation.set(0,0,-side*Math.PI/2);
+        this.dummy.scale.set(core?.10:.18,(core?1.05:1.6)*pulse*(.96+.04*Math.sin(time*37+mouth*2)),core?.10:.18);this.dummy.updateMatrix();
         this.jetMatrix.multiplyMatrices(this.fleet.models[i].body.matrixWorld,this.dummy.matrix).premultiply(this.inverse);
         this.jets.setMatrixAt(jets++,this.jetMatrix);
       }

@@ -1,7 +1,11 @@
 # Compact triple-nozzle side module
 
-`references/triple-nozzle.png` is the newly generated, single connected three-nozzle reference. `reference.json` contains its exact built-in ImageGen prompt. The earlier single-nozzle task is retained in the ledger as superseded and must not be assembled into this replacement.
+The user approved a procedural implementation after the new Meshy job could not start with the available credit balance. No replacement Meshy generation was submitted and no further credits were spent.
 
-The prepared Meshy request uses 15 existing credits for one textured Smart Topology model with 1,600 authored triangles. The balance check on 26 October 2026 returned 1 credit, so the triple-nozzle request has not been submitted. No credit purchase was made.
+`references/triple-nozzle.png` is the new built-in ImageGen reference; `reference.json` preserves its exact prompt. The earlier single-nozzle task and its scripts remain provenance of the superseded route, not the active runtime asset.
 
-Once credits are available, run `meshy_jobs.py create`, then use the official CLI-backed `wait` and `download` commands. Review all three openings and the source orientation before running `bake.py` in Blender. Bake retains every triangle and the original UV surface. Fit one complete module to each kart side, roughly one-third the earlier hardware size, with its three outlets facing outward. Hook the flame emitters to those three actual openings. Square is damage-only and must never add propulsion or chassis spin.
+The active factory is `src/golf-cart/sideNozzle.ts`. One continuous cream housing carries three recessed, brass-rimmed mouths, six orange fins and one mounting bracket. Each side module is approximately 0.27m deep × 0.32m high × 0.82m long before the cart scale. Hidden rear detail and surface wear are stylized interpretations. The actual bell interiors are geometry, with corrected inward-facing normals and a closed rear.
+
+Both modules share the fleet's full geometry buffers at every viewing distance. The three emitters on each side are anchored to the actual mouths. Square deals sideways damage and never adds acceleration, lift or chassis rotation. Bone Man and the other racers retain their full world size while seated and on foot.
+
+Browser reviews and focused model/control checks are recorded in `docs/cart-stadium/`; no credit top-up is pending.

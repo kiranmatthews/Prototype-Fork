@@ -7,7 +7,7 @@ await withBlockworksRuntime(async r=>{
  assert.ok(normalizeCustomLevelData(r.source),'Source passes the editor/save contract');
  const race=new SkateRace(r.scene,r.p,false,()=>true);race.attach(r.l,'coconut-cart-rally');race.start('race',0);
  const gapFlights=new Set(),jumpSpans=r.source.skateRace.jumps.map(j=>[race.course.project(new r.p.pos.constructor(...j.takeoff)).s,race.course.project(new r.p.pos.constructor(...j.landing)).s]);
- const pipeChecks=r.sourceModule.CART_RALLY_PIPES.map(([a,b])=>{const centre=r.sourceModule.cartRallyPoint((a+b)/2),edge=r.sourceModule.cartRallyPoint((a+b)/2,14);const height=race.carts.ground(edge[0],edge[2]).height-race.carts.ground(centre[0],centre[2]).height;assert.ok(height>6,'Actual half-pipe collision climbs above the trough');return height;});
+ const pipeChecks=r.sourceModule.CART_RALLY_PIPES.map(([a,b])=>{const centre=r.sourceModule.cartRallyPoint((a+b)/2),edge=r.sourceModule.cartRallyPoint((a+b)/2,26.8);const height=race.carts.ground(edge[0],edge[2]).height-race.carts.ground(centre[0],centre[2]).height;assert.ok(height>6,'Actual half-pipe collision climbs above the trough');return height;});
  const tuning=JSON.stringify(r.TUNING),samples=[],air=race.riders.map(()=>({frames:0,max:0,jumps:0}));
  let result;race.onFinish=v=>result=v;
  for(let f=0;f<18000;f++){
@@ -27,7 +27,7 @@ await withBlockworksRuntime(async r=>{
  assert.ok(report.riders.every(a=>a.finish!==null),'All cart rivals finish');
  assert.ok(report.riders[0].falls<=5,'The mayhem race stays recoverable after weapon hits');
  assert.ok(report.riders.every(a=>a.falls<=8),'Rivals recover from racing collisions without a failure loop');
- assert.equal(gapFlights.size,12,'Every authored gap is crossed in genuine flight');
+ assert.equal(gapFlights.size,12,'Every dirt double offers genuine flight');
  assert.ok(air[0].max>3,'Large jumps produce meaningful height');
  assert.equal(report.tuningUnchanged,true);
  report.checkpoints=r.l.checkpoints.map(cp=>cp.active);assert.ok(report.checkpoints.every(Boolean));
@@ -42,19 +42,16 @@ await withBlockworksRuntime(async r=>{
  assert.ok(r.l.checkpoints.every(cp=>!race.riders[0].boxes.has(cp)),'Hidden checkpoint crates are excluded from time trials');
  console.log('PASS solo route',JSON.stringify(report.solo));
  race.start('time-trial',0);race.phase='running';
- // An explicit test setup starts the fall at an earned course checkpoint.
- const cp=r.l.checkpoints[2];r.p.resetRacePosition(r.l,cp.spawnPos.clone(),race.course.tangent(race.course.project(cp.spawnPos).s));
- let fell=false,fallAt=-1;
- for(let f=0;f<1000;f++){
-  race.step(r.dt,fell?{moveX:0,moveY:0}:{moveX:1,moveY:1,jumpHeld:true});
-  if(!fell&&race.riders[0].falls>0){fell=true;fallAt=f;}
-  if(fell&&f>fallAt+60)break;
- }
- assert.ok(fell,'Steering off the island triggers a real fall/recovery');
- assert.ok(r.p.grounded,'Recovery returns to supported road');
- assert.ok(race.carts.ground(r.p.pos.x,r.p.pos.z).safe);
- assert.ok(r.p.ttTime>0,'Falls keep the time-trial clock running');
- report.recovery={position:r.p.pos.toArray(),falls:race.riders[0].falls,clock:r.p.ttTime,cartCount:race.carts.fleet.models.length};
+ // Deliberately drive out toward the rim. The bank and physical wall must
+ // keep a fully accelerated cart inside without a checkpoint reset.
+ const c=race.carts.fleet.physics.carts[0],at=r.sourceModule.cartRallyPoint(600,20),frame=(await r.server.ssrLoadModule('/src/levels/cart-stadium-layout.ts')).cartRallyFrame(600);
+ Object.assign(c,{x:at[0],y:at[1],z:at[2],yaw:Math.atan2(-frame.nx,-frame.nz),vx:frame.nx*35,vz:frame.nz*35,grounded:true,supportHeight:at[1],supportVelocity:0});
+ race.carts.sync();race.riders[0].progress=race.course.project(r.p.pos).s;race.riders[0].anchor.copy(r.p.pos);race.riders[0].anchorProgress=race.riders[0].progress;
+ const before=c.respawns;
+ for(let f=0;f<900;f++)race.step(r.dt,{moveX:0,moveY:0,jumpHeld:true});
+ assert.equal(race.riders[0].falls,0,'A deliberate rim collision does not send the racer off the course');
+ assert.equal(c.respawns,before);assert.ok(race.carts.ground(c.x,c.z).safe);assert.ok(c.hits>0,'The upper rim produces a real impact');
+ report.containment={position:[c.x,c.y,c.z],falls:race.riders[0].falls,hits:c.hits,clock:r.p.ttTime};
  await writeFile(process.env.CART_REPORT??'docs/coconut-cart-rally/validation.json',JSON.stringify(report,null,2)+'\n');
- console.log('PASS solo restart and input-driven checkpoint fall recovery');
+ console.log('PASS solo restart and physical stadium containment');
 }, {modulePath:'/src/levels/coconut-cart-rally.ts',source:m=>m.COCONUT_CART_RALLY_LEVEL,levelId:'coconut-cart-rally'});

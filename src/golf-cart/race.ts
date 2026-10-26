@@ -12,6 +12,8 @@ import { puffs } from '../puffs';
 import { sfx } from '../audio';
 import { RallyDriver } from './rallyDriver';
 import { CartRaceAudio } from './raceAudio';
+import { StadiumCrowd } from './stadiumCrowd';
+import { createStadiumBoundary } from './stadiumBoundary';
 
 interface Racer {
   id:number;player:Player;progress:number;anchor:THREE.Vector3;anchorProgress:number;
@@ -23,6 +25,7 @@ const clamp=THREE.MathUtils.clamp;
  * Ownership changes preserve the vehicle, damage, momentum and race progress. */
 export class GolfCartRace {
   readonly fleet:GolfCartFleet;
+  readonly crowd:StadiumCrowd|null;
   readonly cartForRacer:number[]=[];
   readonly driverForCart:number[]=[];
   readonly burning:boolean[]=[];
@@ -65,7 +68,7 @@ export class GolfCartRace {
     }
     const spawns=racers.slice(0,count).map(r=>({x:r.player.pos.x,z:r.player.pos.z,yaw:Math.atan2(-r.player.raceHeading.x,-r.player.raceHeading.z)}));
     this.jumpRanges=level.skateRace!.jumps.map(j=>({a:course.project(new THREE.Vector3(...j.takeoff)).s,b:course.project(new THREE.Vector3(...j.landing)).s}));
-    // A parked loaner before each sea jump keeps a wrecked field recoverable.
+    // A parked loaner before each dirt double keeps a wrecked field recoverable.
     // These are real colliding carts. Only abandoned loaners return to their bay.
     for(const jump of level.skateRace!.jumps){
       const at=course.project(new THREE.Vector3(...jump.takeoff)).s-62;
@@ -75,9 +78,11 @@ export class GolfCartRace {
     this.homes=spawns.map(s=>({...s}));
     const obstacles=level.walls.filter(b=>b.max.y-b.min.y>1&&b.max.x-b.min.x<9&&b.max.z-b.min.z<9)
       .map((b,i)=>({x:(b.min.x+b.max.x)/2,z:(b.min.z+b.max.z)/2,radius:Math.max(b.max.x-b.min.x,b.max.z-b.min.z)/2,height:b.max.y-b.min.y,id:`rally-barrier-${i}`}));
+    const stadium=level.groundMeshes.some(m=>m.name==='Packed stadium dirt');
     this.fleet=new GolfCartFleet({damageVisuals:true,ground:(x,z)=>this.ground(x,z),spawns,obstacles,
       onImpact:hit=>this.audio.impact(hit,this.racers[0].player.pos),
-      physics:{scale:1.25,topSpeed:38,engine:23,speedLimit:44,maxLaunchVelocity:17,airRecoveryDelay:6,damageCapacity:8}});
+      physics:{boundary:stadium?createStadiumBoundary():undefined,scale:1.25,topSpeed:38,engine:23,speedLimit:44,maxLaunchVelocity:17,airRecoveryDelay:6,damageCapacity:8}});
+    this.crowd=stadium?new StadiumCrowd():null;if(this.crowd)this.fleet.root.add(this.crowd.root);
     this.fleet.models.forEach((m,i)=>{
       m.setPalette({paint:i<count?RACE_ROSTER[i].color:'#95ee65',cream:i===0?'#ef8058':'#f5e8ca'});
       this.driverForCart[i]=i<count?i:-1;this.burning[i]=false;this.locked[i]=0;this.spareTime[i]=0;
@@ -99,8 +104,8 @@ export class GolfCartRace {
     this.ray.ray.origin.set(x,this.high,z);
     const hit=this.ray.intersectObjects(this.groundCandidates(x,z),false)
       .find(h=>h.face&&h.face.normal.y>.04&&!h.object.userData.lethal&&!h.object.userData.outOfBounds);
-    const sand=hit?.object.name==='Sand trap';
-    const sample={height:hit?.point.y??this.level.killY-10,grip:sand?.58:1,drag:sand?5:.08,safe:!!hit,supported:!!hit};
+    const sand=hit?.object.name==='Sand trap'||!!hit?.object.userData.groundSpeedLimit;
+    const sample={height:hit?.point.y??this.level.killY-10,grip:sand?.58:1,drag:sand?14:.08,safe:!!hit,supported:!!hit};
     if(this.cache.size>=100000)this.cache.clear();this.cache.set(key,sample);return sample;
   }
   ground(x:number,z:number):GroundSample {
@@ -353,6 +358,7 @@ export class GolfCartRace {
   }
   updateView(camera:THREE.Camera){this.fleet.updateView(camera);this.effects.present(this.burning,this.targetMarker,this.driverForCart,this.thrustTime);}
   present(alpha=1){
+    this.crowd?.update(this.fleet.physics.time);
     const carts=this.fleet.physics.carts;alpha=clamp(alpha,0,1);
     for(let i=0;i<carts.length;i++){
       const p=this.previous[i],q=carts[i],pose=this.renderPoses[i];
@@ -362,5 +368,5 @@ export class GolfCartRace {
     this.fleet.present(0,this.renderPoses);this.effects.present(this.burning,this.targetMarker,this.driverForCart,this.thrustTime);
     for(let i=0;i<this.count;i++)this.racers[i].player.group.visible=!this.isDriving(i);
   }
-  dispose(){this.audio.dispose();this.effects.dispose();this.fleet.dispose();this.cache.clear();this.cells.clear();this.racers.forEach(r=>r.player.group.visible=true);}
+  dispose(){this.crowd?.dispose();this.audio.dispose();this.effects.dispose();this.fleet.dispose();this.cache.clear();this.cells.clear();this.racers.forEach(r=>r.player.group.visible=true);}
 }

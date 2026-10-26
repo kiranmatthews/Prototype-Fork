@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { createTripleNozzleParts, type NozzleMaterial } from './sideNozzle';
 import { sculptedGeometry, sculptedTexture } from './sculpted';
 import { bevelBox, loft, placed, merged, strut, type XYZ } from './geometry';
 
@@ -15,7 +16,7 @@ export interface DriverMotion { time:number; steer:number; roll:number; pitch:nu
 export interface CartDriver { root:THREE.Object3D; update(motion:DriverMotion):void; dispose():void }
 export const CART_DIMENSIONS = Object.freeze({length:3.13,width:1.95,height:2.18,wheelbase:1.72,track:1.48,wheelRadius:.41});
 export interface CartPose extends DriverMotion { wheelTravel:number; suspension:readonly number[]; damage:readonly number[]; health?:number }
-type MaterialKey=keyof CartPalette|'lamp'|'red'|'metal'|'glass'|'wheel'|'canopyArt'|'bagArt'|'bagDetail';
+type MaterialKey=keyof CartPalette|NozzleMaterial|'lamp'|'red'|'metal'|'glass'|'wheel'|'canopyArt'|'bagArt'|'bagDetail';
 type Part={name:string;geometry:THREE.BufferGeometry;material:MaterialKey;parent:string};
 const pt=(w:number,h:number,d:number,p:XYZ,r:XYZ=[0,0,0],cut?:number)=>placed(bevelBox(w,h,d,cut),p,r);
 
@@ -55,12 +56,7 @@ export class GolfCartKit {
     add('roof-posts','trim',[-1,1].flatMap(s=>[strut([s*.64,1.03,-.70],[s*.66,1.98+cabinRise,-.53],.031),strut([s*.64,.85,.84],[s*.66,1.98+cabinRise,.78],.033)]),'roof');
     add('windscreen','glass',[pt(1.20,.30,.016,[0,1.28,-.666],[.18,0,0],.006)],'roof');
     if(damageVisuals){
-      // Twin outward-facing flame pods; all original cabin and chassis geometry remains.
-      add('thruster-pods','metal',[-1,1].flatMap(side=>[
-        placed(new THREE.CylinderGeometry(.21,.25,.82,12).rotateZ(Math.PI/2),[side*1.05,.73,.30]),
-        pt(.13,.26,.42,[side*.89,.73,.30]),
-      ]));
-      add('thruster-nozzles','trim',[-1,1].map(side=>placed(new THREE.TorusGeometry(.19,.055,6,12).rotateY(Math.PI/2),[side*1.47,.73,.30])));
+      for(const part of createTripleNozzleParts())this.parts.push({...part,parent:'body'});
       // Actual fracture/scuff geometry follows the original damaged body groups.
       const crack=(a:XYZ,b:XYZ)=>strut(a,b,.006,3);
       add('windscreen-cracks','metal',[
@@ -101,8 +97,9 @@ export class GolfCartModel {
   constructor(kit:GolfCartKit,palette:CartPalette){
     this.palette={...palette};this.root.name='GolfCart';this.body.name='SuspendedBody';this.root.add(this.body);
     const mat=(name:string,color:string,roughness=.72)=>{const m=new THREE.MeshStandardMaterial({color,roughness,flatShading:true});m.name=name;return m;};
-    this.materials={paint:mat('Paint · recolour',palette.paint,.48),cream:mat('Canopy & stripe · recolour',palette.cream),seat:mat('Upholstery · recolour',palette.seat),trim:mat('Frame & bumpers · recolour',palette.trim),cargo:mat('Golf bag · recolour',palette.cargo),lamp:mat('Warm headlamps','#fff1b1',.35),red:mat('Rear lights','#ec5945',.4),metal:mat('Metal','#9eacb5',.45),glass:mat('Windscreen','#93d8e1',.2),wheel:mat('Tyres & hubs','#ffffff'),canopyArt:mat('Sculpted canopy · recolour',palette.cream),bagArt:mat('Sculpted bag · recolour',palette.cargo),bagDetail:mat('Bag piping & straps','#ffffff')};
+    this.materials={nozzleCream:mat('Nozzle cream housing','#f2dfb5',.68),nozzleBrass:mat('Nozzle brass lips','#c39543',.35),nozzleSoot:mat('Nozzle dark interior','#282b2e',.8),nozzleOrange:mat('Nozzle cooling fins','#e87729',.52),paint:mat('Paint · recolour',palette.paint,.48),cream:mat('Canopy & stripe · recolour',palette.cream),seat:mat('Upholstery · recolour',palette.seat),trim:mat('Frame & bumpers · recolour',palette.trim),cargo:mat('Golf bag · recolour',palette.cargo),lamp:mat('Warm headlamps','#fff1b1',.35),red:mat('Rear lights','#ec5945',.4),metal:mat('Metal','#9eacb5',.45),glass:mat('Windscreen','#93d8e1',.2),wheel:mat('Tyres & hubs','#ffffff'),canopyArt:mat('Sculpted canopy · recolour',palette.cream),bagArt:mat('Sculpted bag · recolour',palette.cargo),bagDetail:mat('Bag piping & straps','#ffffff')};
     for(const [key,map] of [['wheel',kit.textures.wheel],['canopyArt',kit.textures.canopy],['bagArt',kit.textures.bagPaint],['bagDetail',kit.textures.bag]] as const){const material=this.materials[key];material.map=map;material.flatShading=false;material.roughness=.85;}this.materials.glass.transparent=true;this.materials.glass.opacity=.22;this.materials.glass.depthWrite=false;
+    this.materials.nozzleBrass.metalness=.7;this.materials.nozzleSoot.metalness=.15;
     this.materials.lamp.emissive.set('#ffbb55');this.materials.lamp.emissiveIntensity=.2;
     this.modules.body=this.body;
     for(const name of ['nose','frontBumper','rearBumper','roof','cargo']){const g=new THREE.Group();g.name=name;this.modules[name]=g;this.body.add(g);}

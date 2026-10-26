@@ -21,7 +21,7 @@ await withBlockworksRuntime(async e=>{
  assert.deepEqual(e.p.vehicleVisualRoot.getWorldScale(new T.Vector3()).toArray(),scales[0]);assert.equal(e.p.vehicleVisualRoot.getObjectByName('skateboard-scale-compensation').visible,true);
  const oneRun=flame=>{race.start('time-trial',0);race.phase='running';c=race.carts;for(let i=0;i<40;i++)race.step(e.dt,normalizeGameInput({jumpHeld:true}));race.step(e.dt,normalizeGameInput({jumpHeld:true,spinPressed:flame}));return Object.fromEntries(['x','y','z','vx','vy','vz','yaw','speed','roll','pitch'].map(k=>[k,c.fleet.physics.carts[0][k]]));};
  const baseline=oneRun(false),firing=oneRun(true);assert.deepEqual(firing,baseline,'Square never adds speed, lift, steering or a chassis spin');
- c.present(1);assert.equal(c.effects.jets.count,4,'two side jets have flame and hot cores');
+ c.present(1);assert.equal(c.effects.jets.count,12,'six side nozzles each have a flame and hot core');
  const m=c.fleet.models[0],w=c.fleet.physics.carts[0];assert.ok(Math.abs(m.root.rotation.y-w.yaw)<1e-8,'rendered kart does not spin');
  race.start('race',0);race.phase='running';c=race.carts;c.drive=()=>({moveX:0,moveY:0});
  const a=c.fleet.physics.carts[0],b=c.fleet.physics.carts[1],d=c.fleet.physics.carts[2];
