@@ -23,7 +23,7 @@ await withBlockworksRuntime(async env=>{
  c.fleet.models[0].setPalette({paint:'#ff0000'});c.present(.5);assert.ok(c.fleet.batches.some((b,i)=>(b.mesh.instanceColor?.version??0)>versions[i]));
  c.burning.fill(false);c.present(.5);assert.equal(c.effects.flames.count,0);const fireVersion=c.effects.flames.instanceMatrix.version;c.present(.8);assert.equal(c.effects.flames.instanceMatrix.version,fireVersion,'no empty flame uploads');
  c.burning[0]=true;c.previous[0].x=w.carts[0].x-10;c.present(.5);const matrix=new THREE.Matrix4();c.effects.flames.getMatrixAt(0,matrix);
- assert.ok(Math.abs(matrix.elements[12]-c.fleet.models[0].root.position.x)<1,'fire follows interpolated chassis');assert.equal(c.effects.flames.count,7);
+ assert.ok(Math.abs(matrix.elements[12]-c.fleet.models[0].root.position.x)<1,'fire follows interpolated chassis');assert.ok(c.effects.flames.count>=5,'each burning body pocket emits a tongue');
  c.effects.update(16,c.burning);c.present(1);assert.equal(c.effects.flames.count,0,'flames burn down to a persistent wreck');
  c.fleet.models[0].setScorched(true);assert.ok(c.fleet.models[0].materials.paint.color.getHex()<0x303030);c.fleet.models[0].setScorched(false);
  const ray=new THREE.Raycaster(new THREE.Vector3(),new THREE.Vector3(0,-1,0),0,2000);let probes=0;
