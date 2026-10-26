@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "provider": "Meshy",
+  "budgetCredits": 30,
+  "scope": "User requested a new ImageGen reference and one compact triple-nozzle Meshy model; original single nozzle superseded",
+  "tasks": {
+    "flame-nozzle": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "b0478eff-0e0b-40c3-8310-305f09cc16ac",
+      "createdAt": "2026-10-26T01:26:37.075561+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "tools/golf-cart/flame-nozzle/references/nozzle.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 1200,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ],
+        "texture_prompt": "Match the reference cream-painted shell, dark metal hollow nozzle, brass lip, small orange heat fins and sculpted rounded game-prop material."
+      },
+      "balanceBefore": 16,
+      "reference": "tools/golf-cart/flame-nozzle/references/nozzle.png",
+      "referenceSha256": "46d23fc675c062edc10c9498065f42a662f07b76d6d416094dfaec9d63deca04",
+      "id": "01a175d1-106c-70ae-ba55-4659d6f4a7ce",
+      "checkedAt": "2026-10-26T01:28:20.204713+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1792978022571,
+      "expiresAt": 1793237222571,
+      "supersededBy": "triple-nozzle"
+    }
+  }
+}
