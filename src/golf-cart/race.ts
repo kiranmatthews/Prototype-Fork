@@ -14,6 +14,7 @@ import { RallyDriver } from './rallyDriver';
 import { CartInteractionActor, CART_INTERACTION_TIMING } from './interactionMotion';
 import { CartRaceAudio } from './raceAudio';
 import { StadiumCrowd } from './stadiumCrowd';
+import { CartMud } from './cartMud';
 import { createStadiumBoundary } from './stadiumBoundary';
 import { CART_FLAMES,initialFlameRecharge,sideFlameContact,type FlameBody } from './flameTactics';
 
@@ -29,6 +30,7 @@ const clamp=THREE.MathUtils.clamp;
 export class GolfCartRace {
   readonly fleet:GolfCartFleet;
   readonly crowd:StadiumCrowd|null;
+  readonly mud:CartMud|null;
   readonly cartForRacer:number[]=[];
   readonly driverForCart:number[]=[];
   readonly burning:boolean[]=[];
@@ -86,6 +88,7 @@ export class GolfCartRace {
     this.fleet=new GolfCartFleet({damageVisuals:true,ground:(x,z)=>this.ground(x,z),spawns,obstacles,
       onImpact:hit=>this.audio.impact(hit,this.racers[0].player.pos),
       physics:{boundary:stadium?createStadiumBoundary():undefined,scale:1.25,topSpeed:38,engine:23,speedLimit:44,maxLaunchVelocity:9,airRecoveryDelay:6,damageCapacity:8,gravity:24,stableLandings:true}});
+    this.mud=stadium?new CartMud():null;if(this.mud)this.fleet.root.add(this.mud.root);
     this.crowd=stadium?new StadiumCrowd():null;if(this.crowd)this.fleet.root.add(this.crowd.root);
     this.fleet.models.forEach((m,i)=>{
       m.setPalette({paint:i<count?RACE_ROSTER[i].color:'#95ee65',cream:i===0?'#ef8058':'#f5e8ca'});
@@ -449,6 +452,7 @@ export class GolfCartRace {
       if(r.finish===null)for(const box of this.level.crates)if(box.alive&&(!box.mystery||r.player.raceHooks?.canCollectItem?.()!==false)&&Math.abs(box.mesh.position.y-c.y)<2.8&&Math.hypot(box.mesh.position.x-c.x,box.mesh.position.z-c.z)<2.15)this.level.breakCrate(box,true);
     }
     this.advanceInteractions(dt);this.sync();this.targetMarker=this.nearest(0);this.effects.update(dt,this.burning);
+    this.mud?.update(dt,world.carts,this.driverForCart,this.cartForRacer[0],this.racers[0].player.pos);
     this.updateAudio(dt);
   }
   /** Also runs on the grid/countdown, without advancing physics or recharge. */
@@ -507,5 +511,5 @@ export class GolfCartRace {
     this.presentInteractions();
     for(let i=0;i<this.count;i++)this.racers[i].player.group.visible=!this.isDriving(i)&&!this.isAnimating(i);
   }
-  dispose(){for(const a of this.interactions){a.actor.dispose();a.passenger?.dispose();}this.interactions.length=0;this.crowd?.dispose();this.audio.dispose();this.effects.dispose();this.fleet.dispose();this.cache.clear();this.cells.clear();this.racers.forEach(r=>r.player.group.visible=true);}
+  dispose(){for(const a of this.interactions){a.actor.dispose();a.passenger?.dispose();}this.interactions.length=0;this.crowd?.dispose();this.mud?.dispose();this.audio.dispose();this.effects.dispose();this.fleet.dispose();this.cache.clear();this.cells.clear();this.racers.forEach(r=>r.player.group.visible=true);}
 }

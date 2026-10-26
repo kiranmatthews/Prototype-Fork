@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js';
 import { CAMPAIGN_ISLANDS, type CampaignLevelDefinition, type CampaignIslandDefinition } from './campaign';
 import { AssetCache, disposeTextures } from './assetLifetime';
 import { sceneryLoads } from './assetLoadQueue';
@@ -45,7 +46,7 @@ function releaseModel(root:THREE.Group):void {
   geometry.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());disposeTextures(textures);
 }
 const models=new AssetCache<string,THREE.Group>(async(asset,_dependency,wanted)=>{
-  const gltf=await sceneryLoads.run(()=>new GLTFLoader().loadAsync(import.meta.env.BASE_URL+`map-landmarks/${asset}.glb`),wanted);
+  const gltf=await sceneryLoads.run(()=>new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).loadAsync(import.meta.env.BASE_URL+`map-landmarks/${asset}.glb`),wanted);
   try{await prepareMapRockMaterials(gltf.scene,asset);}catch(error){releaseModel(gltf.scene);throw error;}
   gltf.scene.traverse(o=>{const mesh=o as THREE.Mesh;if(!mesh.isMesh)return;
     mesh.castShadow=true;mesh.receiveShadow=true;mesh.userData.visualOnly=true;mesh.geometry.userData.shared=true;

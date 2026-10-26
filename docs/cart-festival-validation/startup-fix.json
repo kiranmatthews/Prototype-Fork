@@ -1,0 +1,11 @@
+{
+  "confirmedCause": "Title-screen map scenery used GLTFLoader without MeshoptDecoder, but release-native-geometry packs map-landmarks/oak.glb and ship.glb with EXT_meshopt_compression. Direct kart playtests bypass those map assets.",
+  "observedError": "THREE.GLTFLoader: setMeshoptDecoder must be called before loading compressed files",
+  "failedAssets": [
+    "map-landmarks/ship.glb",
+    "map-landmarks/oak.glb"
+  ],
+  "fix": "Register the existing MeshoptDecoder on the map scenery loader.",
+  "chromeProductionScenariosPassed": 13,
+  "inAppBrowser": "Normal production title screen reached, NEW GAME/LOAD GAME/OPTIONS visible, no warning/error logs."
+}

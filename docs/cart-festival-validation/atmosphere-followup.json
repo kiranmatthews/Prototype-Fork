@@ -1,0 +1,9 @@
+{
+  "before": "378/435 assertions passed",
+  "after": "379/435 assertions passed",
+  "newFailingCases": [],
+  "resolvedCases": [
+    "actual editor atmosphere commit/undo/redo reaches renderer and saved JSON"
+  ],
+  "status": "still fails; existing editor-atmosphere failures remain"
+}

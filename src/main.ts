@@ -869,6 +869,7 @@ function applyTheme(): void {
   skyOpaqueBackdrop.value=atmosphere.backdrop==='painted sky'?1:0;
   skyProjection.setHazeElevation(SKY_PRESETS[skyPreset].hazeElevation??.26);
   skyProjection.setStormGlow(0,Math.PI);stormSquall.stop();
+  skyProjection.setDustHaze(level.skateRace?.vehicle==='golf-cart'?1:0);
   scene.fog = editorViewActive || !atmosphere.fogEnabled ? null :
     new THREE.Fog(sceneFogColor, atmosphere.fogNear, atmosphere.fogFar);
   scene.background = sceneFogColor.clone();
@@ -1140,6 +1141,8 @@ function drawPrimaryScene(
     coastPost.resumeFromGameFlow();
     coastPostResumeCount++;
   }
+  const mud=skateRace.carts?.mud;
+  coastPost?.setMud(!editorViewActive&&!gameFlow.blocksGameplay&&!split2p&&mud?mud.lens:null);
   const rain=level.rainPresentation;
   coastPost?.setRain(editorViewActive||gameFlow.blocksGameplay||split2p?0:rain.amount,rain.time);
   const storm=stormSquall.update(level,rain.time,

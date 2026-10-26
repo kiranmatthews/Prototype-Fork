@@ -12,7 +12,7 @@ export function installSkyProjection(
   hazeStrength: Scalar,
   opaque: Scalar,
   sea: Scalar,
-): { setSeaLevel: (height: number | null) => void;setHazeElevation:(elevation:number)=>void;setStormGlow:(strength:number,azimuth:number)=>void } {
+): { setSeaLevel: (height: number | null) => void;setHazeElevation:(elevation:number)=>void;setDustHaze:(amount:number)=>void;setStormGlow:(strength:number,azimuth:number)=>void } {
   const flatGeometry = sky.geometry;
   const seaGeometry = createSeaSkyGeometry();
   let seaLevel: number | null = null;
@@ -22,6 +22,7 @@ export function installSkyProjection(
   const textureTransform = { value: new THREE.Matrix3() };
   const poleColor = { value: new THREE.Color() };
   const hazeElevation = { value: .26 };
+  const dustHaze = { value: 0 };
   const stormGlow = { value: new THREE.Vector4(0,.27,-1,0) };
   let lastMap: THREE.Texture | null = null;
   sky.name = 'Distant sky backdrop';
@@ -64,7 +65,7 @@ export function installSkyProjection(
       uSkyHazeColor: hazeColor, uSkyHazeStrength: hazeStrength,
       uSkyOpaqueBackdrop: opaque, uSkySea: sea, uSkyPoleColor: poleColor,
       uSkyHazeElevation:hazeElevation,
-      uSkyStorm:stormGlow,
+      uSkyStorm:stormGlow,uSkyDust:dustHaze,
     });
     shader.vertexShader = 'uniform mat4 uSkyCameraWorld; uniform float uSkySea; varying vec3 vSkyRay;\n' + shader.vertexShader;
     shader.vertexShader = shader.vertexShader.replace('#include <project_vertex>', `
@@ -92,7 +93,7 @@ export function installSkyProjection(
       uniform mat3 uSkyTextureTransform;
       uniform vec3 uSkyHazeColor, uSkyPoleColor;
       uniform float uSkyHazeStrength, uSkyOpaqueBackdrop, uSkySea,uSkyHazeElevation;
-      uniform vec4 uSkyStorm;
+      uniform vec4 uSkyStorm;uniform float uSkyDust;
     ` + shader.fragmentShader;
     shader.fragmentShader = shader.fragmentShader.replace('#include <map_fragment>', `
       vec3 skyRay = normalize(vSkyRay);
@@ -118,6 +119,11 @@ export function installSkyProjection(
         diffuseColor.rgb = mix(diffuseColor.rgb, uSkyPoleColor,
           smoothstep(0.6, 0.96, skyRay.y));
       #endif
+      // Airborne dirt filters the existing cloud painting into warm, muted
+      // late-afternoon light without an additional panorama or draw pass.
+      float skyLuma=dot(diffuseColor.rgb,vec3(.2126,.7152,.0722));
+      vec3 dustySky=mix(vec3(.39,.34,.21),vec3(.78,.65,.38),clamp(skyLuma,0.0,1.0));
+      diffuseColor.rgb=mix(diffuseColor.rgb,dustySky,uSkyDust);
       float stormCone=pow(max(0.0,dot(skyRay,normalize(uSkyStorm.xyz))),10.0);
       float stormCloud=smoothstep(.035,.18,skyRay.y)*(1.0-smoothstep(.55,.9,skyRay.y));
       diffuseColor.rgb+=vec3(.22,.28,.36)*uSkyStorm.w*stormCone*stormCloud*(1.0-uSkySea);
@@ -131,8 +137,8 @@ export function installSkyProjection(
 
     `);
   };
-  material.customProgramCacheKey = () => 'sea-level-hemisphere-v5';
-  return {setStormGlow(strength,azimuth){stormGlow.value.set(Math.sin(azimuth),.27,Math.cos(azimuth),THREE.MathUtils.clamp(strength,0,1));},setHazeElevation(elevation){hazeElevation.value=THREE.MathUtils.clamp(elevation,.02,1);},setSeaLevel(height) {
+  material.customProgramCacheKey = () => 'sea-level-hemisphere-v6';
+  return {setDustHaze(amount){dustHaze.value=THREE.MathUtils.clamp(amount,0,1);},setStormGlow(strength,azimuth){stormGlow.value.set(Math.sin(azimuth),.27,Math.cos(azimuth),THREE.MathUtils.clamp(strength,0,1));},setHazeElevation(elevation){hazeElevation.value=THREE.MathUtils.clamp(elevation,.02,1);},setSeaLevel(height) {
     const enabled = height !== null;
     seaLevel = height; sea.value = enabled ? 1 : 0;
     sky.name = enabled ? 'Sea-level sky backdrop' : 'Distant sky backdrop';

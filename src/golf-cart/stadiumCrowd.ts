@@ -14,7 +14,7 @@ export class StadiumCrowd {
   private geometry:THREE.BufferGeometry;
   private seats:THREE.InstancedMesh[]=[];
   private seatGeometry:THREE.BufferGeometry;
-  private seatMaterial=new THREE.MeshLambertMaterial({color:'#426d72'});
+  private seatMaterial=new THREE.MeshLambertMaterial({color:'#6b7057'});
   constructor(){
     this.root.name='Stadium crowd · GPU cheering';
     const parts:THREE.BufferGeometry[]=[];
@@ -103,7 +103,7 @@ vec3 crowdPosition=position;crowdPose(crowdPosition,objectNormal);`)
     };
     this.material.customProgramCacheKey=()=> 'stadium-spectators-v2';
     this.seatGeometry=merged([placed(new THREE.BoxGeometry(.67,.11,.5),[0,.45,.02]),placed(new THREE.BoxGeometry(.67,.48,.11),[0,.69,.26])]);
-    const dummy=new THREE.Object3D(),palette=['#ed754a','#4bafb4','#edc35b','#799cda','#eee3c4','#a16dba','#e4979d'],color=new THREE.Color();let total=0;
+    const dummy=new THREE.Object3D(),palette=['#b47940','#7c9478','#cba262','#65736b','#dfd1ae','#975e4d','#bd8864'],color=new THREE.Color();let total=0;
     for(const {start,end,side}of stadiumSections()){
       const positions:{s:number;row:number;column:number}[]=[];
       for(let row=0;row<STADIUM.rows;row++)for(let col=0;col<Math.floor((end-start-2)/STADIUM.seatSpacing);col++)if(col%13!==12)positions.push({s:start+1+col*STADIUM.seatSpacing,row,column:col});

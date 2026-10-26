@@ -29,6 +29,8 @@ import {
 } from "./crt-guest/luts";
 import type { CrtGuestSettings } from "./crt-guest/settings";
 import {RainLensPass} from './rainLensPass';
+import {MudLensPass} from './mudLensPass';
+import type {MudLensState} from './golf-cart/cartMud';
 
 export const BEACHFRONT_POST_PROFILE = UNITY_POST_PROFILE;
 
@@ -147,6 +149,7 @@ export class CoastPostRenderer {
   private readonly bloomPass: UnityBloomPass;
   private readonly unityPostPass: UnityPostPass;
   private readonly rainLensPass=new RainLensPass();
+  private readonly mudLensPass=new MudLensPass();
   private readonly preCrtOverlayPass: PreCrtOverlayPass;
   private readonly crtPass: CrtGuestPass | null;
   private readonly crtSettings: CrtGuestSettings | null;
@@ -266,6 +269,7 @@ export class CoastPostRenderer {
     this.composer.addPass(this.bloomPass);
     this.composer.addPass(this.unityPostPass);
     this.composer.addPass(this.rainLensPass);
+    this.composer.addPass(this.mudLensPass);
     this.composer.addPass(this.preCrtOverlayPass);
     if (this.crtPass) this.composer.addPass(this.crtPass);
     this.composer.addPass(this.outputPass);
@@ -307,7 +311,7 @@ export class CoastPostRenderer {
       (
         this.resolutionMode === "fixed" ||
         this.enabledState ||
-        this.rainLensPass.enabled ||
+        this.rainLensPass.enabled || this.mudLensPass.enabled ||
         (this.crtPass?.active ?? false)
       )
     );
@@ -345,6 +349,7 @@ export class CoastPostRenderer {
       bloom: this.bloomPass.diagnostics,
       lut: this.unityPostPass.lutDiagnostics,
       rain: this.rainLensPass.diagnostics,
+      mud: this.mudLensPass.diagnostics,
     };
   }
 
@@ -618,6 +623,8 @@ export class CoastPostRenderer {
   }
 
   setFrozenScene(key:string|null):void {this.renderPass.setFrozen(key);}
+  setMud(state:MudLensState|null):void {this.mudLensPass.setMud(this.liteState?null:state);}
+
   setRain(amount:number,time:number):void {this.rainLensPass.setWeather(this.liteState?0:amount,time);}
 
   dispose(): void {
@@ -628,6 +635,7 @@ export class CoastPostRenderer {
     this.bloomPass.dispose();
     this.unityPostPass.dispose();
     this.rainLensPass.dispose();
+    this.mudLensPass.dispose();
     this.crtPass?.dispose();
     this.releaseGameFlowInputTarget();
     if (this.crtLuts) {
@@ -837,7 +845,7 @@ export class CoastPostRenderer {
     // MSAA. Keep Unity SMAA High in front of either authored post path.
     this.smaaPass.enabled =
       !this.noSmaa &&
-      (this.resolutionMode === "fixed" || this.enabledState || this.rainLensPass.enabled || crtActive);
+      (this.resolutionMode === "fixed" || this.enabledState || this.rainLensPass.enabled || this.mudLensPass.enabled || crtActive);
     this.bloomPass.setPresentationEnabled(unityPostActive);
     this.unityPostPass.enabled = unityPostActive;
     if (this.crtPass) this.crtPass.enabled = crtActive;

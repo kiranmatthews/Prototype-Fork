@@ -1,0 +1,175 @@
+{
+  "base": "http://127.0.0.1:5498/",
+  "entry": "/assets/index-CnA72cIu.js",
+  "main": "/assets/main-CKoPr42B.js",
+  "rows": [
+    {
+      "name": "preparation-failure",
+      "status": "The game couldn’t start. Reload to try again.",
+      "visible": true,
+      "failed": true,
+      "link": {
+        "x": 576.890625,
+        "y": 370,
+        "width": 126.21875,
+        "height": 44,
+        "top": 370,
+        "right": 703.109375,
+        "bottom": 414,
+        "left": 576.890625
+      },
+      "viewport": [
+        1280,
+        720
+      ],
+      "animation": "startup-spin",
+      "paint": [
+        {
+          "name": "first-paint",
+          "ms": 140
+        },
+        {
+          "name": "first-contentful-paint",
+          "ms": 140
+        }
+      ],
+      "game": true,
+      "keyboardRecovery": true,
+      "injectedErrors": [
+        "Game startup failed. Error: Injected preparation failure\n    at game.gameFlow.prepareMenuPresentation (<anonymous>:4:301)\n    at KS (http://127.0.0.1:5498/assets/main-CKoPr42B.js:2699:129472)"
+      ],
+      "errors": [],
+      "external": []
+    },
+    {
+      "name": "full-4x3",
+      "initial": {
+        "status": "Loading game…",
+        "visible": true,
+        "failed": false,
+        "link": {
+          "x": 416.890625,
+          "y": 380,
+          "width": 126.21875,
+          "height": 44,
+          "top": 380,
+          "right": 543.109375,
+          "bottom": 424,
+          "left": 416.890625
+        },
+        "viewport": [
+          960,
+          720
+        ],
+        "animation": "startup-spin",
+        "paint": [
+          {
+            "name": "first-paint",
+            "ms": 52
+          },
+          {
+            "name": "first-contentful-paint",
+            "ms": 52
+          }
+        ],
+        "game": false
+      },
+      "final": {
+        "samples": [
+          {
+            "ms": 40.60000002384186,
+            "state": "status",
+            "loading": null,
+            "frames": 0,
+            "context": null,
+            "font": null
+          },
+          {
+            "ms": 4435.800000071526,
+            "state": "status",
+            "loading": true,
+            "frames": 0,
+            "context": "menu",
+            "font": false
+          },
+          {
+            "ms": 4574.700000047684,
+            "state": "hidden",
+            "loading": true,
+            "frames": 1,
+            "context": "menu",
+            "font": false
+          },
+          {
+            "ms": 8414.200000047684,
+            "state": "hidden",
+            "loading": true,
+            "frames": 227,
+            "context": "menu",
+            "font": true
+          },
+          {
+            "ms": 8469.5,
+            "state": "hidden",
+            "loading": false,
+            "frames": 230,
+            "context": "menu",
+            "font": true
+          },
+          {
+            "ms": 8597.700000047684,
+            "state": "removed",
+            "loading": false,
+            "frames": 239,
+            "context": "menu",
+            "font": true
+          }
+        ],
+        "tasks": [
+          {
+            "start": 492.10000002384186,
+            "ms": 3940
+          },
+          {
+            "start": 4432.600000023842,
+            "ms": 124
+          },
+          {
+            "start": 4655.399999976158,
+            "ms": 97
+          }
+        ],
+        "stamp": "Codex/sol fork · build 10-26 11:06 UTC",
+        "font": {
+          "cap": 128,
+          "revision": 1,
+          "ready": true,
+          "degraded": false,
+          "decodedBytes": 12435456
+        },
+        "loading": {
+          "phase": null,
+          "pending": [],
+          "failed": [],
+          "revision": 898
+        },
+        "context": "menu",
+        "screen": "launch",
+        "pendingLabels": 0,
+        "paint": [
+          {
+            "name": "first-paint",
+            "ms": 52
+          },
+          {
+            "name": "first-contentful-paint",
+            "ms": 52
+          }
+        ],
+        "gl": 0
+      },
+      "errors": [],
+      "external": []
+    }
+  ]
+}

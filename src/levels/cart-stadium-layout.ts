@@ -36,6 +36,8 @@ function routeX(s:number){
   const bend=u<quarter?r-Math.sqrt(r*r-u*u):2*rise-r+Math.sqrt(r*r-(2*quarter-u)**2);
   return baseline+p.side*bend;
 }
+/** The same broad wet patches tint the dirt and drive wheel/lens spray. */
+export function rallyMudWetness(s:number,u:number){return smooth((Math.sin(s*.051+u*.13)+.35)/1.1)*(.65+.35*Math.sin(u*.57+s*.018)**2);}
 export function cartRallyFrame(s:number){const dx=(routeX(s+.05)-routeX(s-.05))/.1,n=Math.hypot(1,dx);return {x:routeX(s),dx,n,nx:1/n,nz:dx/n};}
 export function stadiumBase(s:number){return 25+1.5*Math.sin(s/210)+.8*Math.sin(s/73);}
 export function dirtHeight(s:number){

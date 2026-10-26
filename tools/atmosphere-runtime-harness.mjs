@@ -26,7 +26,7 @@ export function atmosphereRenderer(mainSource, atmosphereModule, lightingClass) 
     const sky=new THREE.Mesh(new THREE.BufferGeometry(),new THREE.MeshBasicMaterial());
     const skyMist=new THREE.Mesh(new THREE.BufferGeometry(),new THREE.MeshBasicMaterial());
     const skyHazeColor={value:new THREE.Color()},skyHazeStrength={value:0},skyOpaqueBackdrop={value:0};
-    const skyProjection={setHazeElevation(){},setStormGlow(){}};
+    const skyProjection={setHazeElevation(){},setStormGlow(){},setDustHaze(){}};
     const stormSquall={stop(){}};
     const skyCache=new Map(settings.painted===false?[]:['day','sunset','night','coast'].map(k=>[k,{bg:new THREE.Texture(),mist:new THREE.Texture()}]));
     const releaseBonusParallax=()=>{},retainOnlyActiveSky=()=>{},loadSky=()=>{},configureCoastPost=()=>{};

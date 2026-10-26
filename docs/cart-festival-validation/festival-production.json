@@ -1,0 +1,126 @@
+{
+  "grid": {
+    "look": {
+      "bloom": {
+        "active": false,
+        "mipCount": 0,
+        "sizes": [],
+        "drawCount": 0,
+        "estimatedBytes": 0
+      },
+      "lut": {
+        "dirty": true,
+        "rebuildCount": 0,
+        "width": 1024,
+        "height": 32
+      },
+      "rain": {
+        "enabled": false,
+        "amount": 0,
+        "time": 0
+      },
+      "mud": {
+        "enabled": true,
+        "splats": 0
+      }
+    },
+    "mud": {
+      "time": 0,
+      "bursts": 0,
+      "emitted": 0,
+      "clods": 0,
+      "splats": 0
+    },
+    "crowd": 32958,
+    "sky": "sunset"
+  },
+  "motion": {
+    "review": {
+      "pilot": true,
+      "landings": 1,
+      "wasGrounded": true,
+      "peakSplats": 5,
+      "peakClods": 16
+    },
+    "mud": {
+      "time": 6.833333333333314,
+      "bursts": 2,
+      "emitted": 112,
+      "clods": 15,
+      "splats": 4
+    },
+    "look": {
+      "bloom": {
+        "active": false,
+        "mipCount": 0,
+        "sizes": [],
+        "drawCount": 0,
+        "estimatedBytes": 0
+      },
+      "lut": {
+        "dirty": true,
+        "rebuildCount": 0,
+        "width": 1024,
+        "height": 32
+      },
+      "rain": {
+        "enabled": false,
+        "amount": 0,
+        "time": 0
+      },
+      "mud": {
+        "enabled": true,
+        "splats": 4
+      }
+    },
+    "progress": 190.30902665268266
+  },
+  "cleared": {
+    "time": 11.750000000000163,
+    "bursts": 2,
+    "emitted": 125,
+    "clods": 0,
+    "splats": 0
+  },
+  "pauseFrozen": true,
+  "other": {
+    "look": {
+      "bloom": {
+        "active": false,
+        "mipCount": 0,
+        "sizes": [],
+        "drawCount": 0,
+        "estimatedBytes": 0
+      },
+      "lut": {
+        "dirty": true,
+        "rebuildCount": 0,
+        "width": 1024,
+        "height": 32
+      },
+      "rain": {
+        "enabled": false,
+        "amount": 0,
+        "time": 0
+      },
+      "mud": {
+        "enabled": false,
+        "splats": 0
+      }
+    },
+    "gl": 0,
+    "loading": {
+      "phase": null,
+      "pending": [
+        "./jungle-kit/../custard-creek/moss-boulder.glb",
+        "./jungle-kit/../waterslide/flume-support.glb",
+        "./jungle-kit/../custard-creek/../__shared_textures/4e0fdaee142069bc6ab13d56b9dd93861497bf7345e5c7fe974393339951487c.jpg",
+        "./jungle-kit/../custard-creek/../__shared_textures/385a5f12290c3507230036da961013e16ff7bfff39c267bccc538c926148d332.jpg"
+      ],
+      "failed": [],
+      "revision": 221
+    },
+    "stamp": "Codex/sol fork · build 10-26 11:06 UTC"
+  },
+  "errors": []
+}

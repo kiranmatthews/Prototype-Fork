@@ -1,0 +1,1336 @@
+{
+  "suite": "package.json check:all",
+  "initialCommit": "44abd37750290effcf02b9f9c4bcec206ba6a79b",
+  "node": "v24.19.0",
+  "started": "2026-10-26T10:32:30.423Z",
+  "finished": "2026-10-26T10:55:34.955Z",
+  "total": 201,
+  "passed": 162,
+  "failed": 39,
+  "execution": "Expanded the npm script tree and ran all 201 leaf commands sequentially with the bundled Node runtime. Continued after failures so every command was exercised. Final festival changes received separate affected-feature tests and production browser checks.",
+  "rows": [
+    {
+      "index": 1,
+      "command": "node tools/test-level-select.mjs",
+      "seconds": 7.416,
+      "code": 0
+    },
+    {
+      "index": 2,
+      "command": "node tools/test-swim-controls.mjs",
+      "seconds": 14.885,
+      "code": 0
+    },
+    {
+      "index": 3,
+      "command": "node tools/test-swimming.mjs",
+      "seconds": 22.796,
+      "code": 0
+    },
+    {
+      "index": 4,
+      "command": "node tools/test-swim-death-polish.mjs",
+      "seconds": 11.592,
+      "code": 0
+    },
+    {
+      "index": 5,
+      "command": "node tools/test-death-performance.mjs",
+      "seconds": 9.037,
+      "code": 0
+    },
+    {
+      "index": 6,
+      "command": "node tools/test-hud-visibility.mjs",
+      "seconds": 0.331,
+      "code": 0
+    },
+    {
+      "index": 7,
+      "command": "node tools/test-wood-crate-assets.mjs",
+      "seconds": 0.042,
+      "code": 0
+    },
+    {
+      "index": 8,
+      "command": "node tools/test-bare-spins.mjs",
+      "seconds": 9.704,
+      "code": 0
+    },
+    {
+      "index": 9,
+      "command": "node tools/test-milk.mjs",
+      "seconds": 0.297,
+      "code": 0
+    },
+    {
+      "index": 10,
+      "command": "node tools/test-milk-depth-isolation.mjs",
+      "seconds": 9.638,
+      "code": 0
+    },
+    {
+      "index": 11,
+      "command": "node tools/test-pickup-visual-batch.mjs",
+      "seconds": 6.974,
+      "code": 0
+    },
+    {
+      "index": 12,
+      "command": "node tools/validate-levels.mjs",
+      "seconds": 0.51,
+      "code": 0
+    },
+    {
+      "index": 13,
+      "command": "node tools/test-lazy-source.mjs",
+      "seconds": 1.59,
+      "code": 0
+    },
+    {
+      "index": 14,
+      "command": "node tools/test-tropical-plants.mjs",
+      "seconds": 0.306,
+      "code": 0
+    },
+    {
+      "index": 15,
+      "command": "node tools/test-jungle-assets.mjs",
+      "seconds": 10.948,
+      "code": 0
+    },
+    {
+      "index": 16,
+      "command": "node tools/test-crown-quartz.mjs",
+      "seconds": 6.989,
+      "code": 0
+    },
+    {
+      "index": 17,
+      "command": "node tools/test-jungle-stream.mjs",
+      "seconds": 7.379,
+      "code": 0
+    },
+    {
+      "index": 18,
+      "command": "node tools/test-custard-pool.mjs",
+      "seconds": 0.289,
+      "code": 0
+    },
+    {
+      "index": 19,
+      "command": "node tools/test-jungle-enclosure.mjs",
+      "seconds": 80.022,
+      "code": 0
+    },
+    {
+      "index": 20,
+      "command": "node tools/test-map-landscape-assets.mjs",
+      "seconds": 0.155,
+      "code": 0
+    },
+    {
+      "index": 21,
+      "command": "node tools/test-world-map-save.mjs",
+      "seconds": 7.051,
+      "code": 0
+    },
+    {
+      "index": 22,
+      "command": "node tools/test-map-clay-geometry.mjs",
+      "seconds": 0.346,
+      "code": 0
+    },
+    {
+      "index": 23,
+      "command": "node tools/test-hollowwake-assets.mjs",
+      "seconds": 61.204,
+      "code": 0
+    },
+    {
+      "index": 24,
+      "command": "node tools/test-scenery-normals.mjs",
+      "seconds": 0.363,
+      "code": 0
+    },
+    {
+      "index": 25,
+      "command": "node tools/test-waterslide-scenery-lod.mjs",
+      "seconds": 0.331,
+      "code": 0
+    },
+    {
+      "index": 26,
+      "command": "node tools/test-waterslide-ocean-look.mjs",
+      "seconds": 10.617,
+      "code": 0
+    },
+    {
+      "index": 27,
+      "command": "node tools/test-waterslide-shallows.mjs",
+      "seconds": 14.27,
+      "code": 0
+    },
+    {
+      "index": 28,
+      "command": "node tools/test-waterpark-decks.mjs",
+      "seconds": 11.763,
+      "code": 0
+    },
+    {
+      "index": 29,
+      "command": "node tools/test-waterpark-portals.mjs",
+      "seconds": 11.295,
+      "code": 0
+    },
+    {
+      "index": 30,
+      "command": "node tools/test-waterslide-forest.mjs",
+      "seconds": 10.581,
+      "code": 0
+    },
+    {
+      "index": 31,
+      "command": "node tools/test-hollowwake-tunnel-build.mjs",
+      "seconds": 0.78,
+      "code": 0
+    },
+    {
+      "index": 32,
+      "command": "node tools/test-nightworks.mjs",
+      "seconds": 13.843,
+      "code": 0
+    },
+    {
+      "index": 33,
+      "command": "node tools/test-local-game-data-reset.mjs",
+      "seconds": 0.296,
+      "code": 0
+    },
+    {
+      "index": 34,
+      "command": "node tools/test-audio-loops.mjs",
+      "seconds": 0.355,
+      "code": 0
+    },
+    {
+      "index": 35,
+      "command": "node tools/test-skate-audio-replay.mjs",
+      "seconds": 17.719,
+      "code": 0
+    },
+    {
+      "index": 36,
+      "command": "node tools/test-footstep-audio.mjs",
+      "seconds": 14.471,
+      "code": 0
+    },
+    {
+      "index": 37,
+      "command": "node tools/test-chimeworks.mjs",
+      "seconds": 9.085,
+      "code": 1,
+      "failure": "AssertionError [ERR_ASSERTION]: Chimeworks must be included in the continuous Slipstream\n    at file:///Users/kiki/.codex/worktrees/kart-mayhem-release/Prototype%20Fork/tools/test-chimeworks.mjs:165:10 {\n  generatedMessage: false,\n  code: 'ERR_ASSERTION',\n  actual: false,\n  expected: true,\n  operator: '==',\n  diff: 'simple'\n}\n\nNode.js v24.19.0\n",
+      "status": "unresolved",
+      "fullLogSha256": "bcc55e50eff40802f3b6f4617b7f5890bed2855047388bf66794f3b0fdabfc62"
+    },
+    {
+      "index": 38,
+      "command": "node tools/test-six-island-campaign.mjs",
+      "seconds": 0.287,
+      "code": 1,
+      "failure": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n... Skipped lines\n\n  [\n    [\n      'treehouse-trail',\n      'Treehouse Trail'\n    ],\n...\n    ],\n+   [\n+     'coconut-cart-rally',\n+     'Coconut Cart Rally'\n+   ]\n  ]\n\n    at file:///Users/kiki/.codex/worktrees/kart-mayhem-release/Prototype%20Fork/tools/test-six-island-campaign.mjs:18:8 {\n  generatedMessage: true,\n  code: 'ERR_ASSERTION',\n  actual: [\n    [ 'treehouse-trail', 'Treehouse Trail' ],\n    [ 'beachfront', 'Banana Bay' ],\n    [ 'jungle', 'Jungle Ruins' ],\n    [ 'rumblewater-run', 'Ripcord River' ],\n    [ 'coastal-street-run', 'Beach Street' ],\n    [ 'jungle-cup', 'Motu Beach Invitational' ],\n    [ 'custard-creek', 'Sunset Safari' ],\n    [ 'test', 'Uga Ambush' ],\n    [ 'drowned-crown', 'The Merchant Wreck' ],\n    [ 'crab-chief', 'High Chief Uga Ha ku' ],\n    [ 'waterpark', 'Deadwater Pa",
+      "status": "unresolved",
+      "fullLogSha256": "42389ba901e994c344ad2b23123b98a0c3c99e2db62b44e84c21e8acbae6e793"
+    },
+    {
+      "index": 39,
+      "command": "node tools/test-secret-course-roster.mjs",
+      "seconds": 9.361,
+      "code": 0
+    },
+    {
+      "index": 40,
+      "command": "node tools/test-map-archipelago.mjs",
+      "seconds": 0.357,
+      "code": 0
+    },
+    {
+      "index": 41,
+      "command": "node tools/test-playtest-level-flow.mjs",
+      "seconds": 0.337,
+      "code": 0
+    },
+    {
+      "index": 42,
+      "command": "node tools/test-campaign-flow.mjs",
+      "seconds": 0.293,
+      "code": 0
+    },
+    {
+      "index": 43,
+      "command": "node tools/test-secret-combo-gems.mjs",
+      "seconds": 9.13,
+      "code": 0
+    },
+    {
+      "index": 44,
+      "command": "node tools/test-save-slot-previews.mjs",
+      "seconds": 0.289,
+      "code": 0
+    },
+    {
+      "index": 45,
+      "command": "node tools/test-time-medals.mjs",
+      "seconds": 0.324,
+      "code": 0
+    },
+    {
+      "index": 46,
+      "command": "node tools/test-map-level-presentation.mjs",
+      "seconds": 0.256,
+      "code": 0
+    },
+    {
+      "index": 47,
+      "command": "node tools/test-collectible-specular.mjs",
+      "seconds": 0.255,
+      "code": 0
+    },
+    {
+      "index": 48,
+      "command": "node tools/test-campaign-death-flow.mjs",
+      "seconds": 11.529,
+      "code": 0
+    },
+    {
+      "index": 49,
+      "command": "node tools/test-campaign-collectible-visibility.mjs",
+      "seconds": 0.518,
+      "code": 0
+    },
+    {
+      "index": 50,
+      "command": "node tools/test-campaign-performance.mjs",
+      "seconds": 0.26,
+      "code": 0
+    },
+    {
+      "index": 51,
+      "command": "node tools/test-warp-room-return.mjs",
+      "seconds": 10.338,
+      "code": 1,
+      "failure": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n0.18 !== 0.32\n\n    at file:///Users/kiki/.codex/worktrees/kart-mayhem-release/Prototype%20Fork/tools/test-warp-room-return.mjs:471:10 {\n  generatedMessage: true,\n  code: 'ERR_ASSERTION',\n  actual: 0.18,\n  expected: 0.32,\n  operator: 'strictEqual',\n  diff: 'simple'\n}\n\nNode.js v24.19.0\n",
+      "status": "unresolved",
+      "fullLogSha256": "cca9c8ec649e8d58b5f9737223e9ec795768324ef58142d2e79edbdd3acd972f"
+    },
+    {
+      "index": 52,
+      "command": "node tools/test-gouraud-context-presets.mjs",
+      "seconds": 0.322,
+      "code": 0
+    },
+    {
+      "index": 53,
+      "command": "node tools/test-game-flow-surface.mjs",
+      "seconds": 0.043,
+      "code": 0
+    },
+    {
+      "index": 54,
+      "command": "node tools/test-game-flow-results.mjs",
+      "seconds": 7.886,
+      "code": 0
+    },
+    {
+      "index": 55,
+      "command": "node tools/test-results-presentation.mjs",
+      "seconds": 27.237,
+      "code": 0
+    },
+    {
+      "index": 56,
+      "command": "node tools/test-game-flow-interaction.mjs",
+      "seconds": 0.054,
+      "code": 0
+    },
+    {
+      "index": 57,
+      "command": "node tools/test-game-flow-vortex.mjs",
+      "seconds": 0.043,
+      "code": 0
+    },
+    {
+      "index": 58,
+      "command": "node tools/test-presentation-loading.mjs",
+      "seconds": 0.275,
+      "code": 0
+    },
+    {
+      "index": 59,
+      "command": "node tools/test-bonus-polish.mjs",
+      "seconds": 8.102,
+      "code": 0
+    },
+    {
+      "index": 60,
+      "command": "node tools/test-park-tuning.mjs",
+      "seconds": 8.704,
+      "code": 1,
+      "failure": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert.ok(Math.abs(charge.at(-1)-23)<.002)\n\n    at file:///Users/kiki/.codex/worktrees/kart-mayhem-release/Prototype%20Fork/tools/test-park-tuning.mjs:14:108\n    at async withSkateRuntime (file:///Users/kiki/.codex/worktrees/kart-mayhem-release/Prototype%20Fork/tools/jungle-cup-harness.mjs:43:5)\n    at async file:///Users/kiki/.codex/worktrees/kart-mayhem-release/Prototype%20Fork/tools/test-park-tuning.mjs:3:1 {\n  generatedMessage: true,\n  code: 'ERR_ASSERTION',\n  actual: false,\n  expected: true,\n  operator: '==',\n  diff: 'simple'\n}\n\nNode.js v24.19.0\n",
+      "status": "unresolved",
+      "fullLogSha256": "9f0d28fd8d3f363c7c1a6861371a02a00518e1f492985e5437a1690ed7871362"
+    },
+    {
+      "index": 61,
+      "command": "node tools/test-park-camera-framing.mjs",
+      "seconds": 8.823,
+      "code": 0
+    },
+    {
+      "index": 62,
+      "command": "node tools/test-jungle-cup.mjs",
+      "seconds": 0.316,
+      "code": 1,
+      "failure": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at file:///Users/kiki/.codex/worktrees/kart-mayhem-release/Prototype%20Fork/tools/test-jungle-cup.mjs:88:8 {\n  generatedMessage: true,\n  code: 'ERR_ASSERTION',\n  actual: false,\n  expected: true,\n  operator: 'strictEqual',\n  diff: 'simple'\n}\n\nNode.js v24.19.0\n",
+      "status": "unresolved",
+      "fullLogSha256": "99413f236b9a1740e92198dbe09f894ea5600ec6b8bec3ed3940f1888d7ed7d7"
+    },
+    {
+      "index": 63,
+      "command": "node tools/test-competition-judging.mjs",
+      "seconds": 8.194,
+      "code": 0
+    },
+    {
+      "index": 64,
+      "command": "node tools/test-jungle-cup-runtime.mjs",
+      "seconds": 9.395,
+      "code": 1,
+      "failure": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n-31 !== -47\n\n    at file:///Users/kiki/.codex/worktrees/kart-mayhem-release/Prototype%20Fork/tools/test-jungle-cup-runtime.mjs:71:10\n    at async withSkateRuntime (file:///Users/kiki/.codex/worktrees/kart-mayhem-release/Prototype%20Fork/tools/jungle-cup-harness.mjs:43:5)\n    at async file:///Users/kiki/.codex/worktrees/kart-mayhem-release/Prototype%20Fork/tools/test-jungle-cup-runtime.mjs:3:1 {\n  generatedMessage: true,\n  code: 'ERR_ASSERTION',\n  actual: -31,\n  expected: -47,\n  operator: 'strictEqual',\n  diff: 'simple'\n}\n\nNode.js v24.19.0\n",
+      "status": "unresolved",
+      "fullLogSha256": "bc7248ec4ea39b14b135077bf951a8c6737af7be41ac393f796d60e9ddc07718"
+    },
+    {
+      "index": 65,
+      "command": "node tools/test-jungle-cup-skating.mjs",
+      "seconds": 8.955,
+      "code": 1,
+      "failure": "AssertionError [ERR_ASSERTION]: charged target differs from platforming\n    at file:///Users/kiki/.codex/worktrees/kart-mayhem-release/Prototype%20Fork/tools/test-jungle-cup-skating.mjs:46:10\n    at async withSkateRuntime (file:///Users/kiki/.codex/worktrees/kart-mayhem-release/Prototype%20Fork/tools/jungle-cup-harness.mjs:43:5)\n    at async file:///Users/kiki/.codex/worktrees/kart-mayhem-release/Prototype%20Fork/tools/test-jungle-cup-skating.mjs:4:1 {\n  generatedMessage: false,\n  code: 'ERR_ASSERTION',\n  actual: false,\n  expected: true,\n  operator: '==',\n  diff: 'simple'\n}\n\nNode.js v24.19.0\n",
+      "status": "unresolved",
+      "fullLogSha256": "981702be59aa016fae668aaf7ef93f6f05005975b1f1a500d7eb9a9c6174abd2"
+    },
+    {
+      "index": 66,
+      "command": "node tools/test-jungle-cup-overtime.mjs",
+      "seconds": 8.509,
+      "code": 0
+    },
+    {
+      "index": 67,
+      "command": "node tools/test-jungle-cup-grind-camera.mjs",
+      "seconds": 9.628,
+      "code": 0
+    },
+    {
+      "index": 68,
+      "command": "node tools/test-grind-head-stability.mjs",
+      "seconds": 30.469,
+      "code": 0
+    },
+    {
+      "index": 69,
+      "command": "node tools/test-grind-catch-buffer.mjs",
+      "seconds": 12.298,
+      "code": 0
+    },
+    {
+      "index": 70,
+      "command": "node tools/test-grind-trick-speed.mjs",
+      "seconds": 17.758,
+      "code": 0
+    },
+    {
+      "index": 71,
+      "command": "node tools/test-grind-drop-in.mjs",
+      "seconds": 11.022,
+      "code": 0
+    },
+    {
+      "index": 72,
+      "command": "node tools/test-jungle-cup-lip-recovery.mjs",
+      "seconds": 9.924,
+      "code": 0
+    },
+    {
+      "index": 73,
+      "command": "node tools/test-jungle-cup-layout.mjs",
+      "seconds": 9.396,
+      "code": 1,
+      "failure": "AssertionError [ERR_ASSERTION]: rhythm line interrupted the planned jump/grind sequence\n\ntrue !== false\n\n    at file:///Users/kiki/.codex/worktrees/kart-mayhem-release/Prototype%20Fork/tools/test-jungle-cup-layout.mjs:102:12\n    at async withSkateRuntime (file:///Users/kiki/.codex/worktrees/kart-mayhem-release/Prototype%20Fork/tools/jungle-cup-harness.mjs:43:5)\n    at async file:///Users/kiki/.codex/worktrees/kart-mayhem-release/Prototype%20Fork/tools/test-jungle-cup-layout.mjs:4:1 {\n  generatedMessage: false,\n  code: 'ERR_ASSERTION',\n  actual: true,\n  expected: false,\n  operator: 'strictEqual',\n  diff: 'simple'\n}\n\nNode.js v24.19.0\n",
+      "status": "unresolved",
+      "fullLogSha256": "3569f917adb81da1ab28c5dc87be4582022cdb056f60d2cd46df89660b89db04"
+    },
+    {
+      "index": 74,
+      "command": "node tools/test-jungle-cup-ui.mjs",
+      "seconds": 8.018,
+      "code": 0
+    },
+    {
+      "index": 75,
+      "command": "node tools/test-skate-tricks.mjs",
+      "seconds": 14.905,
+      "code": 0
+    },
+    {
+      "index": 76,
+      "command": "node tools/test-skate-input-polish.mjs",
+      "seconds": 9.982,
+      "code": 0
+    },
+    {
+      "index": 77,
+      "command": "node tools/test-jungle-cup-surface-layers.mjs",
+      "seconds": 8.419,
+      "code": 0
+    },
+    {
+      "index": 78,
+      "command": "node tools/test-balance-dynamics.mjs",
+      "seconds": 9.571,
+      "code": 0
+    },
+    {
+      "index": 79,
+      "command": "node tools/test-balance-sliders.mjs",
+      "seconds": 9.001,
+      "code": 0
+    },
+    {
+      "index": 80,
+      "command": "node tools/test-balance-reentry.mjs",
+      "seconds": 8.65,
+      "code": 0
+    },
+    {
+      "index": 81,
+      "command": "node tools/test-skate-run-finish.mjs",
+      "seconds": 8.231,
+      "code": 0
+    },
+    {
+      "index": 82,
+      "command": "node tools/test-unity-level-ports.mjs",
+      "seconds": 0.288,
+      "code": 1,
+      "failure": "TypeError [ERR_UNSUPPORTED_RESOLVE_REQUEST]: Failed to resolve module specifier \"./coastal-town-art\" from \"data:text/javascript;base64,[bundled module omitted]\": Invalid relative URL or base scheme is not hierarchical.\n    at moduleResolve (node:internal/modules/esm/resolve:843:21)\n    at defaultResolve (node:internal/modules/esm/resolve:992:11)\n    ... 6 lines matching cause stack trace ...\n    at ModuleJob.link (node:internal/modules/esm/module_job:253:17)\n    at new ModuleJob (node:internal/modules/esm/module_job:232:26) {\n  code: 'ERR_UNSUPPORTED_RESOLVE_REQUEST',\n  cause: TypeError: Invalid URL\n      at new URL (node:internal/url:840:25)\n      at moduleResolve (node:internal/modules/esm/resolve:841:18)\n      at defaultResolve (node:internal/modules/esm/resolve:992:11)\n      at #cachedDefaultResolve (node:internal/modules/esm/loader:701:20)\n      at #resolveAndMaybeBlockOnLoaderThrea",
+      "status": "unresolved",
+      "fullLogSha256": "b5d28188c3a27070636ec0d2deffbe6ad8fe326b75ebdfd49435a0d69d3966b4"
+    },
+    {
+      "index": 83,
+      "command": "node tools/test-beachside-merge.mjs",
+      "seconds": 0.254,
+      "code": 0
+    },
+    {
+      "index": 84,
+      "command": "node tools/test-beachfront-cliff.mjs",
+      "seconds": 0.264,
+      "code": 0
+    },
+    {
+      "index": 85,
+      "command": "node tools/test-wood-path-kit.mjs",
+      "seconds": 0.234,
+      "code": 0
+    },
+    {
+      "index": 86,
+      "command": "node tools/test-island-shelf.mjs",
+      "seconds": 0.233,
+      "code": 0
+    },
+    {
+      "index": 87,
+      "command": "node tools/test-island-shore-foam.mjs",
+      "seconds": 0.269,
+      "code": 0
+    },
+    {
+      "index": 88,
+      "command": "node tools/test-crate-rest-surface.mjs",
+      "seconds": 0.201,
+      "code": 0
+    },
+    {
+      "index": 89,
+      "command": "node tools/test-coastal-street-kit.mjs",
+      "seconds": 0.225,
+      "code": 0
+    },
+    {
+      "index": 90,
+      "command": "node tools/test-unity-sand-material.mjs",
+      "seconds": 0.236,
+      "code": 0
+    },
+    {
+      "index": 91,
+      "command": "node tools/validate-ground-acceleration.mjs",
+      "seconds": 26.004,
+      "code": 0
+    },
+    {
+      "index": 92,
+      "command": "node tools/test-crouch-jump-slam.mjs",
+      "seconds": 11.919,
+      "code": 0
+    },
+    {
+      "index": 93,
+      "command": "node tools/test-crouch-stance.mjs",
+      "seconds": 11.463,
+      "code": 0
+    },
+    {
+      "index": 94,
+      "command": "node tools/test-quaternius-crouch.mjs",
+      "seconds": 8.029,
+      "code": 1,
+      "failure": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\ntrue !== false\n\n    at file:///Users/kiki/.codex/worktrees/kart-mayhem-release/Prototype%20Fork/tools/test-quaternius-crouch.mjs:51:12 {\n  generatedMessage: true,\n  code: 'ERR_ASSERTION',\n  actual: true,\n  expected: false,\n  operator: 'strictEqual',\n  diff: 'simple'\n}\n\nNode.js v24.19.0\n",
+      "status": "unresolved",
+      "fullLogSha256": "01f3047a40c23cd9006f05765d433168f7672c46a2794777902afcf284cd6053"
+    },
+    {
+      "index": 95,
+      "command": "node tools/test-slide-jump.mjs",
+      "seconds": 9.359,
+      "code": 0
+    },
+    {
+      "index": 96,
+      "command": "node tools/test-halfpipe-contact.mjs",
+      "seconds": 0.263,
+      "code": 0
+    },
+    {
+      "index": 97,
+      "command": "node tools/validate-halfpipe-safety.mjs",
+      "seconds": 8.043,
+      "code": 0
+    },
+    {
+      "index": 98,
+      "command": "node tools/test-vert-ollie-sequence.mjs tools/fixtures/vert-ollie-release-edge-replay.json",
+      "seconds": 16.487,
+      "code": 1,
+      "failure": "AssertionError [ERR_ASSERTION]: supplied edge case must still land\n\n'air' !== 'ride'\n\n    at file:///Users/kiki/.codex/worktrees/kart-mayhem-release/Prototype%20Fork/tools/test-vert-ollie-sequence.mjs:923:14 {\n  generatedMessage: false,\n  code: 'ERR_ASSERTION',\n  actual: 'air',\n  expected: 'ride',\n  operator: 'strictEqual',\n  diff: 'simple'\n}\n\nNode.js v24.19.0\n",
+      "status": "unresolved",
+      "fullLogSha256": "12bad72702a6b3c3e352d1158fa358947d3e084210a72f4bab4c5214aac11b51"
+    },
+    {
+      "index": 99,
+      "command": "node tools/validate-ledge-traversal.mjs",
+      "seconds": 16.535,
+      "code": 1,
+      "failure": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n'ride' !== 'hang'\n\n    at file:///Users/kiki/.codex/worktrees/kart-mayhem-release/Prototype%20Fork/tools/validate-ledge-traversal.mjs:783:10 {\n  generatedMessage: true,\n  code: 'ERR_ASSERTION',\n  actual: 'ride',\n  expected: 'hang',\n  operator: 'strictEqual',\n  diff: 'simple'\n}\n\nNode.js v24.19.0\n",
+      "status": "unresolved",
+      "fullLogSha256": "a71a8d0226b85a18fe826cab609e9e928fb0ada42e80ac30f05a24968318c0d2"
+    },
+    {
+      "index": 100,
+      "command": "node tools/test-rope-board-transfer.mjs",
+      "seconds": 8.566,
+      "code": 0
+    },
+    {
+      "index": 101,
+      "command": "node tools/test-rope-limb-mapping.mjs",
+      "seconds": 9.812,
+      "code": 0
+    },
+    {
+      "index": 102,
+      "command": "node tools/test-rail-air-transfer.mjs",
+      "seconds": 15.677,
+      "code": 0
+    },
+    {
+      "index": 103,
+      "command": "node tools/validate-landing-indicator.mjs",
+      "seconds": 31.612,
+      "code": 1,
+      "failure": "AssertionError [ERR_ASSERTION]: fixed simulation loop was not inspected\n\nfalse !== true\n\n    at file:///Users/kiki/.codex/worktrees/kart-mayhem-release/Prototype%20Fork/tools/validate-landing-indicator.mjs:310:10 {\n  generatedMessage: false,\n  code: 'ERR_ASSERTION',\n  actual: false,\n  expected: true,\n  operator: 'strictEqual',\n  diff: 'simple'\n}\n\nNode.js v24.19.0\n",
+      "status": "unresolved",
+      "fullLogSha256": "d08253386f6929ee7a2eaea905bb913331788e14b84882a2eee53dcd61f1f520"
+    },
+    {
+      "index": 104,
+      "command": "node tools/test-run-facing.mjs",
+      "seconds": 0.247,
+      "code": 1,
+      "failure": "AssertionError [ERR_ASSERTION]: legacy gait still reads world/platform displacement\n    at file:///Users/kiki/.codex/worktrees/kart-mayhem-release/Prototype%20Fork/tools/test-run-facing.mjs:96:10 {\n  generatedMessage: false,\n  code: 'ERR_ASSERTION',\n  actual: \"import type { AnimationClip } from './animation/types';\\n\" +\n    \"import { createRaceRivalHead, createRaceRivalShirt, attachRaceRivalShorts, type RaceRivalShirt } from './character/raceRival';\\n\" +\n    \"import type { RacePlayerHooks } from './race/types';\\n\" +\n    \"import { surfaceGrip } from './surfaceBehavior';\\n\" +\n    \"import type { LoopCameraFrame, LoopFallCameraFrame } from './loopCamera';\\n\" +\n    \"import { LOOP_TURN, loopContactPressure, sampleLoop, stepLoopMotion, type LoopShape } from './loopRide';\\n\" +\n    \"import { sampleTeeterMotion, probeTeeterEdge } from './teeterMotion';\\n\" +\n    \"import { SkateBalanceArms, SKATE_UN",
+      "status": "unresolved",
+      "fullLogSha256": "876e90219c6adf9ebd98c7fcc146028aa935cfa9c456e61bdc41d0f6b2050ce9"
+    },
+    {
+      "index": 105,
+      "command": "node tools/test-locomotion-replays.mjs",
+      "seconds": 20.818,
+      "code": 1,
+      "failure": "Error: fetch for \"\" responded with 404: \n    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {\n  response: Response {\n    status: 404,\n    statusText: '',\n    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },\n    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },\n    bodyUsed: false,\n    ok: false,\n    redirected: false,\n    type: 'default',\n    url: ''\n  }\n}\nnode:internal/modules/run_main:107\n    triggerUncaughtException(\n    ^\n\nAssertionError [ERR_ASSERTION]: test-course: replay missed the reported grounded recovery\n    at file:///Users/kiki/.codex/worktrees/kart-mayhem-release/Prototype%20Fork/tools/test-locomotion-replays.mjs:125:14 {\n  generatedMessage: false,\n  code: 'ERR_ASSERTION',\n  actual: false,\n  expected: true,\n  operator: '==',\n  diff: 'simple",
+      "status": "unresolved",
+      "fullLogSha256": "42f68cd5882f8253de22ff5ab9669b25dfcb8741128acc5d3f569eb58da137ed"
+    },
+    {
+      "index": 106,
+      "command": "node tools/test-locomotion-idle.mjs",
+      "seconds": 9.138,
+      "code": 0
+    },
+    {
+      "index": 107,
+      "command": "node tools/test-run-inertia-presentation.mjs",
+      "seconds": 9.25,
+      "code": 0
+    },
+    {
+      "index": 108,
+      "command": "node tools/test-idle-recovery-charge.mjs",
+      "seconds": 8.859,
+      "code": 0
+    },
+    {
+      "index": 109,
+      "command": "node tools/test-world-map-locomotion.mjs",
+      "seconds": 10.457,
+      "code": 0
+    },
+    {
+      "index": 110,
+      "command": "node tools/test-carve-grip.mjs",
+      "seconds": 0.349,
+      "code": 0
+    },
+    {
+      "index": 111,
+      "command": "node tools/test-halfpipe-steering.mjs",
+      "seconds": 9.146,
+      "code": 0
+    },
+    {
+      "index": 112,
+      "command": "node tools/test-skate-overdrive.mjs",
+      "seconds": 8.171,
+      "code": 0
+    },
+    {
+      "index": 113,
+      "command": "node tools/test-speed-pad-air-carry.mjs",
+      "seconds": 23.951,
+      "code": 0
+    },
+    {
+      "index": 114,
+      "command": "node tools/test-trick-landing-speed.mjs",
+      "seconds": 10.143,
+      "code": 0
+    },
+    {
+      "index": 115,
+      "command": "node tools/test-surface-friction.mjs",
+      "seconds": 0.539,
+      "code": 1,
+      "failure": "AssertionError [ERR_ASSERTION]: The Descent beach sand did not opt into full surface drag\n    at file:///Users/kiki/.codex/worktrees/kart-mayhem-release/Prototype%20Fork/tools/test-surface-friction.mjs:167:10 {\n  generatedMessage: false,\n  code: 'ERR_ASSERTION',\n  actual: \"import { authoredMovingGeometry } from './authoredMovingSurface';\\n\" +\n    \"import {RainWeather} from './rainWeather';\\n\" +\n    \"import {addWetRooftopLook} from './wetRooftop';\\n\" +\n    \"import {COUNTRY_CLUB_TEXTURES,isCountryClubTexture,countryClubTextureFile,createCountryClubSurface} from './countryClubMaterials';\\n\" +\n    '\\n' +\n    \"import {Minefields,validMinefields,type MinefieldData} from './minefields';\\n\" +\n    \"import {addWaterparkDeckLook} from './waterparkDeck';\\n\" +\n    \"import {createWaterparkPortal,WATERPARK_PORTAL_WORK} from './waterparkPortal';\\n\" +\n    \"import {addWaterparkFlumeLook, createShallowSlid",
+      "status": "unresolved",
+      "fullLogSha256": "cd2faf154da16e4ef4bde538f4c7d52fb7ee9bfbaed35074244354b7e41baa60"
+    },
+    {
+      "index": 116,
+      "command": "node tools/test-camera-speed-effect.mjs",
+      "seconds": 0.415,
+      "code": 1,
+      "failure": "ReferenceError: THREE is not defined\n    at eval (eval at <anonymous> (file:///Users/kiki/.codex/worktrees/kart-mayhem-release/Prototype%20Fork/tools/test-camera-speed-effect.mjs:115:21), <anonymous>:3:1)\n    at file:///Users/kiki/.codex/worktrees/kart-mayhem-release/Prototype%20Fork/tools/test-camera-speed-effect.mjs:117:12\n\nNode.js v24.19.0\n",
+      "status": "unresolved",
+      "fullLogSha256": "4a1efac07ba3aabb50fa6ce7404c4c355e4303caa6c75a43c283ac4b209e2d70"
+    },
+    {
+      "index": 117,
+      "command": "node tools/test-camera-look.mjs",
+      "seconds": 0.244,
+      "code": 1,
+      "failure": "AssertionError [ERR_ASSERTION]: touch look does not clear when the app backgrounds\n    at file:///Users/kiki/.codex/worktrees/kart-mayhem-release/Prototype%20Fork/tools/test-camera-look.mjs:182:10 {\n  generatedMessage: false,\n  code: 'ERR_ASSERTION',\n  actual: '// Mobile touch controls: an 8-way D-pad, face-button diamond, visible\\n' +\n    '// R2/L2 controls, pause and a gentle camera peek. Legacy vertical flicks in\\n' +\n    '// empty right-hand space remain available alongside the explicit triggers.\\n' +\n    \"// Active only on coarse-pointer devices (or force-enabled with '?touch' for\\n\" +\n    '// testing) \u2014 desktop keeps keyboard/gamepad\\n' +\n    '// untouched. The same class also flips the HUD into its compact phone layout\\n' +\n    '// via the body.tc-on styles below.\\n' +\n    '//\\n' +\n    '// Input flow: Input.update() polls this object every render frame and merges\\n' +\n    '// it e",
+      "status": "unresolved",
+      "fullLogSha256": "8a0323fb98f0b39ef8687340cf603cacb636da96b519f039846c2881a777cd2f"
+    },
+    {
+      "index": 118,
+      "command": "node tools/test-camera-rig.mjs",
+      "seconds": 0.365,
+      "code": 0
+    },
+    {
+      "index": 119,
+      "command": "node tools/test-camera-level-switch.mjs",
+      "seconds": 0.681,
+      "code": 0
+    },
+    {
+      "index": 120,
+      "command": "node tools/test-camera-portrait.mjs",
+      "seconds": 0.403,
+      "code": 0
+    },
+    {
+      "index": 121,
+      "command": "node tools/test-camera-landing-forecast.mjs",
+      "seconds": 7.892,
+      "code": 0
+    },
+    {
+      "index": 122,
+      "command": "node tools/test-camera-fall-replay.mjs",
+      "seconds": 18.218,
+      "code": 1,
+      "failure": "AssertionError [ERR_ASSERTION]: real fatal falls lost their hold\n    at withBlockworksRuntime.modulePath (file:///Users/kiki/.codex/worktrees/kart-mayhem-release/Prototype%20Fork/tools/test-camera-fall-replay.mjs:33:10)\n    at async withBlockworksRuntime (file:///Users/kiki/.codex/worktrees/kart-mayhem-release/Prototype%20Fork/tools/blockworks-runner.mjs:221:12)\n    at async file:///Users/kiki/.codex/worktrees/kart-mayhem-release/Prototype%20Fork/tools/test-camera-fall-replay.mjs:7:1 {\n  generatedMessage: false,\n  code: 'ERR_ASSERTION',\n  actual: false,\n  expected: true,\n  operator: '==',\n  diff: 'simple'\n}\n\nNode.js v24.19.0\n",
+      "status": "unresolved",
+      "fullLogSha256": "3e81b504f178a8e08e918a798e4798027f2e791681b9e4e5bfc3244a2ad640a1"
+    },
+    {
+      "index": 123,
+      "command": "node tools/test-ragdoll-recovery.mjs",
+      "seconds": 11.069,
+      "code": 0
+    },
+    {
+      "index": 124,
+      "command": "node tools/test-break-apart.mjs",
+      "seconds": 10.378,
+      "code": 0
+    },
+    {
+      "index": 125,
+      "command": "node tools/test-wipeout-policy.mjs",
+      "seconds": 8.337,
+      "code": 0
+    },
+    {
+      "index": 126,
+      "command": "node tools/test-board-abandon-tuning.mjs",
+      "seconds": 0.483,
+      "code": 0
+    },
+    {
+      "index": 127,
+      "command": "node tools/test-board-abandon-steering.mjs",
+      "seconds": 8.933,
+      "code": 0
+    },
+    {
+      "index": 128,
+      "command": "node tools/test-air-rescue.mjs",
+      "seconds": 11.971,
+      "code": 1,
+      "failure": "AssertionError [ERR_ASSERTION]: side contact was misclassified as a rescue stomp\n\nfalse !== true\n\n    at file:///Users/kiki/.codex/worktrees/kart-mayhem-release/Prototype%20Fork/tools/test-air-rescue.mjs:427:12 {\n  generatedMessage: false,\n  code: 'ERR_ASSERTION',\n  actual: false,\n  expected: true,\n  operator: 'strictEqual',\n  diff: 'simple'\n}\n\nNode.js v24.19.0\n",
+      "status": "unresolved",
+      "fullLogSha256": "0b68e09e40e865724b2c47681b1764cb1bb566c1cec3a60f78583d280020ac44"
+    },
+    {
+      "index": 129,
+      "command": "node tools/test-life-multihit-crates.mjs",
+      "seconds": 10.154,
+      "code": 0
+    },
+    {
+      "index": 130,
+      "command": "node tools/test-nitro-clear-switch.mjs",
+      "seconds": 43.692,
+      "code": 0
+    },
+    {
+      "index": 131,
+      "command": "node tools/test-explosive-bundles.mjs",
+      "seconds": 7.255,
+      "code": 0
+    },
+    {
+      "index": 132,
+      "command": "node tools/test-crate-jump-parity.mjs",
+      "seconds": 8.723,
+      "code": 0
+    },
+    {
+      "index": 133,
+      "command": "python3 -B tools/test_iga_igz_layout.py",
+      "seconds": 0.175,
+      "code": 0
+    },
+    {
+      "index": 134,
+      "command": "node tools/validate-editor-roundtrip.mjs",
+      "seconds": 8.833,
+      "code": 1,
+      "failure": "Error: fetch for \"\" responded with 404: \n    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {\n  response: Response {\n    status: 404,\n    statusText: '',\n    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },\n    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },\n    bodyUsed: false,\n    ok: false,\n    redirected: false,\n    type: 'default',\n    url: ''\n  }\n}\n[bonus] GLB stone platform failed HttpError: fetch for \"\" responded with 404: \n    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {\n  response: Response {\n    status: 404,\n    statusText: '',\n    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },\n    body: ReadableStream { locked: false, state: 'c",
+      "status": "unresolved",
+      "fullLogSha256": "e262deac3ed259821d66625f39430ef40fce96f0632cb0935b5538222b3995c3"
+    },
+    {
+      "index": 135,
+      "command": "node tools/test-level-security.mjs",
+      "seconds": 7.109,
+      "code": 1,
+      "failure": "AssertionError [ERR_ASSERTION]: world-map coordinate exceeded its allocation bound\n+ actual - expected\n\n+ {\n+   components: [\n+     {\n+       p: [\n+         0,\n+         0,\n+         0\n+       ],\n+       pts: [\n+         [\n+           -512.01,\n+           149,\n+           0,\n+           3\n+         ],\n+         [\n+           -155,\n+           -146,\n+           0,\n+           3\n+         ],\n+         [\n+           -71,\n+           22,\n+           0,\n+           6\n+         ],\n+         [\n+           82,\n+           -195,\n+           0,\n+           2.5\n+         ],\n+         [\n+           6,\n+           211,\n+           0,\n+           3\n+         ],\n+         [\n+           -173,\n+           153,\n+           0,\n+           2\n+         ],\n+         [\n+           -131,\n+           79,\n+           0,\n+           2.4\n+         ],\n+         [\n+           86,\n+           14,\n+           0,\n+     ",
+      "status": "unresolved",
+      "fullLogSha256": "2949da9502b87efae0c4f5f2aa2c74a091f8a56232baa23b05b49649d2c61ce9"
+    },
+    {
+      "index": 136,
+      "command": "node tools/test-editor-ux.mjs",
+      "seconds": 8.344,
+      "code": 0
+    },
+    {
+      "index": 137,
+      "command": "node tools/test-editor-environment.mjs",
+      "seconds": 0.311,
+      "code": 0
+    },
+    {
+      "index": 138,
+      "command": "node tools/test-editor-transactions.mjs",
+      "seconds": 9.74,
+      "code": 0
+    },
+    {
+      "index": 139,
+      "command": "node tools/test-editor-pointers.mjs",
+      "seconds": 8.039,
+      "code": 0
+    },
+    {
+      "index": 140,
+      "command": "node tools/test-terrain-support-budget.mjs",
+      "seconds": 13.976,
+      "code": 1,
+      "failure": "Error: fetch for \"\" responded with 404: \n    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {\n  response: Response {\n    status: 404,\n    statusText: '',\n    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },\n    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },\n    bodyUsed: false,\n    ok: false,\n    redirected: false,\n    type: 'default',\n    url: ''\n  }\n}\n[bonus] GLB stone platform failed HttpError: fetch for \"\" responded with 404: \n    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {\n  response: Response {\n    status: 404,\n    statusText: '',\n    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },\n    body: ReadableStream { locked: false, state: 'c",
+      "status": "unresolved",
+      "fullLogSha256": "1e611883f251b3e3f263691b560b3d6acdc95012d3a04b9a225fc0875c22d464"
+    },
+    {
+      "index": 141,
+      "command": "node tools/test-legacy-scenery-capture.mjs",
+      "seconds": 9.181,
+      "code": 1,
+      "failure": "FAIL lite: complete source export stays within existing interchange budgets: AssertionError [ERR_ASSERTION]: native roadside pine placements were lost\n\n0 !== 214\n\n    at file:///Users/kiki/.codex/worktrees/kart-mayhem-release/Prototype%20Fork/tools/test-legacy-scenery-capture.mjs:94:16\n    at check (file:///Users/kiki/.codex/worktrees/kart-mayhem-release/Prototype%20Fork/tools/test-legacy-scenery-capture.mjs:21:9)\n    at file:///Users/kiki/.codex/worktrees/kart-mayhem-release/Prototype%20Fork/tools/test-legacy-scenery-capture.mjs:88:7\nFAIL lite: every native scenery owner has editable components and a declared group: AssertionError [ERR_ASSERTION]: missing source role centre line\n    at file:///Users/kiki/.codex/worktrees/kart-mayhem-release/Prototype%20Fork/tools/test-legacy-scenery-capture.mjs:105:50\n    at check (file:///Users/kiki/.codex/worktrees/kart-mayhem-release/Prototype%20Fork",
+      "status": "unresolved",
+      "fullLogSha256": "c65d309567b742d10ba1a1f966c10d859bd7231c9a9d4ab4d9c87ea660d50fd6"
+    },
+    {
+      "index": 142,
+      "command": "node tools/test-level-switch-transactions.mjs",
+      "seconds": 9.607,
+      "code": 1,
+      "failure": "Error: fetch for \"\" responded with 404: \n    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {\n  response: Response {\n    status: 404,\n    statusText: '',\n    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },\n    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },\n    bodyUsed: false,\n    ok: false,\n    redirected: false,\n    type: 'default',\n    url: ''\n  }\n}\nnode:internal/modules/run_main:107\n    triggerUncaughtException(\n    ^\n\nAssertionError [ERR_ASSERTION]: quiet course marker disappeared during the switch\n    at file:///Users/kiki/.codex/worktrees/kart-mayhem-release/Prototype%20Fork/tools/test-level-switch-transactions.mjs:217:10 {\n  generatedMessage: false,\n  code: 'ERR_ASSERTION',\n  actual: undefined,\n  expected: true,\n  operator: '==',\n  diff: 'sim",
+      "status": "unresolved",
+      "fullLogSha256": "a56069b4469719467265c4f0faa86acd9808a47fbee2722e61c1803ef7fa94ae"
+    },
+    {
+      "index": 143,
+      "command": "node tools/test-editor-motion-transforms.mjs",
+      "seconds": 15.614,
+      "code": 0
+    },
+    {
+      "index": 144,
+      "command": "node tools/test-editor-material-fidelity.mjs",
+      "seconds": 10.417,
+      "code": 1,
+      "failure": "Error: fetch for \"\" responded with 404: \n    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {\n  response: Response {\n    status: 404,\n    statusText: '',\n    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },\n    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },\n    bodyUsed: false,\n    ok: false,\n    redirected: false,\n    type: 'default',\n    url: ''\n  }\n}\nWood crate GLB load failed; retaining playable wood fallback HttpError: fetch for \"\" responded with 404: \n    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {\n  response: Response {\n    status: 404,\n    statusText: '',\n    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },\n    body: ReadableStream",
+      "status": "unresolved",
+      "fullLogSha256": "60827f2a640931dce5384b4239598eb96277f1f1108cd8ff52b29833ec0f8417"
+    },
+    {
+      "index": 145,
+      "command": "node tools/test-editor-atmosphere.mjs",
+      "seconds": 26.215,
+      "code": 1,
+      "failure": "FAIL jungle ?lite true: native and copied effective renderer state: AssertionError [ERR_ASSERTION]: capture changed effective fog, lights or backdrop under a different ID\n+ actual - expected\n\n  {\n    ambientGround: [\n+     0.18777917471958977,\n+     0.17332196602618025,\n+     0.1541323843592471\n-     0.21486634817524602,\n-     0.18622849962831442,\n-     0.1648857788307322\n    ],\n+   ambientIntensity: 1.38,\n-   ambientIntensity: 1.196,\n    ambientSky: [\n+     0.5317913815074256,\n+     0.7921349221155581,\n+     0.7010260627438663\n-     0.5548592937120609,\n-     0.7515233663828247,\n-     0.7467137189518562\n    ],\n    background: [\n+     0.158960835050774,\n+     0.4232676699760063,\n+     0.20863687013464577\n-     0.08650046202808521,\n-     0.20507873637973145,\n-     0.16202937562896222\n    ],\n    drawDistance: 175,\n    fallback: null,\n    fillColor: [\n+     0.5026432015448599,\n+     0.760524",
+      "status": "unresolved",
+      "fullLogSha256": "002b671f322998fe20b6107aedc9401e2e4a3f38ce9a542d7d41e62a6a078833"
+    },
+    {
+      "index": 146,
+      "command": "node tools/test-editor-thorns.mjs",
+      "seconds": 7.491,
+      "code": 0
+    },
+    {
+      "index": 147,
+      "command": "node tools/test-editor-current-components.mjs",
+      "seconds": 7.278,
+      "code": 1,
+      "failure": "FAIL mesh ride flags can be edited and converted to scenery without rejected transactions: AssertionError [ERR_ASSERTION]: missing walkable collision\n    at inputFor (file:///Users/kiki/.codex/worktrees/kart-mayhem-release/Prototype%20Fork/tools/test-editor-current-components.mjs:53:12)\n    at changeBoolean (file:///Users/kiki/.codex/worktrees/kart-mayhem-release/Prototype%20Fork/tools/test-editor-current-components.mjs:56:67)\n    at file:///Users/kiki/.codex/worktrees/kart-mayhem-release/Prototype%20Fork/tools/test-editor-current-components.mjs:102:5\n    at check (file:///Users/kiki/.codex/worktrees/kart-mayhem-release/Prototype%20Fork/tools/test-editor-current-components.mjs:58:11)\n    at file:///Users/kiki/.codex/worktrees/kart-mayhem-release/Prototype%20Fork/tools/test-editor-current-components.mjs:97:3\nPASS analytic loops resize mesh and ride profile together and reject circular-pro",
+      "status": "unresolved",
+      "fullLogSha256": "6a880dafbf108f3d6c078b2fd2085dddeb17b09d5cd3b5453aca263d43816dcc"
+    },
+    {
+      "index": 148,
+      "command": "node tools/test-editor-runtime-integration.mjs",
+      "seconds": 7.253,
+      "code": 1,
+      "failure": "TypeError: this.jungleAssets?.setWeatherWind is not a function\n    at Object.updateSceneryView (eval at instantiateModule (file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/vite@5.4.21/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:53012:24), <anonymous>:13426:24)\n    at file:///Users/kiki/.codex/worktrees/kart-mayhem-release/Prototype%20Fork/tools/test-editor-runtime-integration.mjs:143:41\n\nNode.js v24.19.0\n",
+      "status": "unresolved",
+      "fullLogSha256": "71ebaa9221c7367a87dacd3badce2f083f8355ebd85f3894a247d63a629bfea8"
+    },
+    {
+      "index": 149,
+      "command": "node tools/validate-render-interpolation.mjs",
+      "seconds": 0.253,
+      "code": 0
+    },
+    {
+      "index": 150,
+      "command": "node tools/test-animation-suite.mjs",
+      "seconds": 0.583,
+      "code": 1,
+      "failure": "AssertionError [ERR_ASSERTION]: $.clips[13].tracks[24].target: unknown joint \"tail\"\n\nfalse !== true\n\n    at file:///Users/kiki/.codex/worktrees/kart-mayhem-release/Prototype%20Fork/tools/test-animation-suite.mjs:325:10 {\n  generatedMessage: false,\n  code: 'ERR_ASSERTION',\n  actual: false,\n  expected: true,\n  operator: 'strictEqual',\n  diff: 'simple'\n}\n\nNode.js v24.19.0\n",
+      "status": "unresolved",
+      "fullLogSha256": "df1883e3ca048ad17aeb8ea7ec714085527bab9dc44a181eab2f795968274ebc"
+    },
+    {
+      "index": 151,
+      "command": "node tools/test-animation-ik.mjs",
+      "seconds": 0.264,
+      "code": 0
+    },
+    {
+      "index": 152,
+      "command": "node tools/test-character-animation-runtime.mjs",
+      "seconds": 0.575,
+      "code": 0
+    },
+    {
+      "index": 153,
+      "command": "node tools/test-procedural-leg-rig.mjs",
+      "seconds": 0.235,
+      "code": 0
+    },
+    {
+      "index": 154,
+      "command": "node tools/test-jump-arms.mjs",
+      "seconds": 8.619,
+      "code": 0
+    },
+    {
+      "index": 155,
+      "command": "node tools/test-skate-charge-ollie.mjs",
+      "seconds": 12.541,
+      "code": 0
+    },
+    {
+      "index": 156,
+      "command": "node tools/test-character-elasticity.mjs",
+      "seconds": 8.395,
+      "code": 0
+    },
+    {
+      "index": 157,
+      "command": "node tools/test-character-head-profile-settings.mjs",
+      "seconds": 0.239,
+      "code": 0
+    },
+    {
+      "index": 158,
+      "command": "node tools/test-character-lab.mjs",
+      "seconds": 0.38,
+      "code": 1,
+      "failure": "AssertionError [ERR_ASSERTION]: The input did not match the regular expression /label: \"CHARACTER\"/. Input:\n\n'import { presentStartupFrame, finishStartup, failStartup, startupFailed } from \"./startupScreen\";\\n' +\n  \"import { CountryClubCarts } from './golf-cart/course';\\n\" +\n  \"import { SkateRace } from './race/runtime';\\n\" +\n  \"import {BoulderChaseCamera} from './boulderChase';\\n\" +\n  \"import {CrackedDisplay} from './crackedDisplay';\\n\" +\n  \"import {CarlisleSceneryCamera} from './carlisleSceneryCollision';\\n\" +\n  'import { requestedTool } from \"./toolRoutes\";\\n' +\n  'import { createSecondaryTextPanel } from \"./secondaryTextPanel\";\\n' +\n  'import { startOfflineCache } from \"./offline\";\\n' +\n  \"import { stabilityReport } from './stabilityReport';\\n\" +\n  \"import { rooAtlasDiagnostics } from './roo-type/atlas';\\n\" +\n  \"import { menuAssetsReady } from './roo-type/menuAssets';\\n\" +\n  \"import ",
+      "status": "unresolved",
+      "fullLogSha256": "6045c1d115828a12a5e79cf6935795b74f3c38c6c4e011a52ad0859cc70fde92"
+    },
+    {
+      "index": 159,
+      "command": "node tools/test-cartoon-glove.mjs",
+      "seconds": 8.027,
+      "code": 1,
+      "failure": "AssertionError [ERR_ASSERTION]: 9.085 is not within 1e-8 of 2.765\n    at near (file:///Users/kiki/.codex/worktrees/kart-mayhem-release/Prototype%20Fork/tools/test-cartoon-glove.mjs:90:10)\n    at file:///Users/kiki/.codex/worktrees/kart-mayhem-release/Prototype%20Fork/tools/test-cartoon-glove.mjs:446:3 {\n  generatedMessage: false,\n  code: 'ERR_ASSERTION',\n  actual: false,\n  expected: true,\n  operator: '==',\n  diff: 'simple'\n}\n\nNode.js v24.19.0\n",
+      "status": "unresolved",
+      "fullLogSha256": "526f5b5acabc797116f4e95faf41f59459a629d281ac6a3eb936b08333e7caa1"
+    },
+    {
+      "index": 160,
+      "command": "node tools/test-rigged-cartoon-hand.mjs",
+      "seconds": 0.393,
+      "code": 0
+    },
+    {
+      "index": 161,
+      "command": "node tools/test-stretchable-bone.mjs",
+      "seconds": 0.425,
+      "code": 1,
+      "failure": "AssertionError [ERR_ASSERTION]: The input did not match the regular expression /upperLegBone\\.root\\.visible = false/. Input:\n\n\"import type { AnimationClip } from './animation/types';\\n\" +\n  \"import { createRaceRivalHead, createRaceRivalShirt, attachRaceRivalShorts, type RaceRivalShirt } from './character/raceRival';\\n\" +\n  \"import type { RacePlayerHooks } from './race/types';\\n\" +\n  \"import { surfaceGrip } from './surfaceBehavior';\\n\" +\n  \"import type { LoopCameraFrame, LoopFallCameraFrame } from './loopCamera';\\n\" +\n  \"import { LOOP_TURN, loopContactPressure, sampleLoop, stepLoopMotion, type LoopShape } from './loopRide';\\n\" +\n  \"import { sampleTeeterMotion, probeTeeterEdge } from './teeterMotion';\\n\" +\n  \"import { SkateBalanceArms, SKATE_UNDER_RAIL_DEPTH, SKATE_UNDER_RAIL_TRANSITION, sampleUnderRailMotion, SKATE_REVERT_DURATION, sampleSkateRevert } from './skateBodyMotion';\\n\" +\n  \"imp",
+      "status": "unresolved",
+      "fullLogSha256": "d78380f867db771cd8e315b25ac0e504412f88e9aca7f618dabf7385ea4265a5"
+    },
+    {
+      "index": 162,
+      "command": "node tools/test-meshy-torso.mjs",
+      "seconds": 0.414,
+      "code": 0
+    },
+    {
+      "index": 163,
+      "command": "node tools/test-meshy-head.mjs",
+      "seconds": 0.445,
+      "code": 1,
+      "failure": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert.ok(finalOverlayIndex >= 0 && finalAppearanceIndex > finalOverlayIndex)\n\n    at file:///Users/kiki/.codex/worktrees/kart-mayhem-release/Prototype%20Fork/tools/test-meshy-head.mjs:257:10 {\n  generatedMessage: true,\n  code: 'ERR_ASSERTION',\n  actual: false,\n  expected: true,\n  operator: '==',\n  diff: 'simple'\n}\n\nNode.js v24.19.0\n",
+      "status": "unresolved",
+      "fullLogSha256": "7b5ff917f939c2ca368b55bc8a9c07977d1d523295f9c783c3455d08b8f8b1c8"
+    },
+    {
+      "index": 164,
+      "command": "node tools/test-roo-painted-blink.mjs",
+      "seconds": 0.254,
+      "code": 0
+    },
+    {
+      "index": 165,
+      "command": "node tools/test-meshy-shorts.mjs",
+      "seconds": 0.422,
+      "code": 0
+    },
+    {
+      "index": 166,
+      "command": "node tools/test-procedural-footwear.mjs",
+      "seconds": 11.791,
+      "code": 1,
+      "failure": "AssertionError [ERR_ASSERTION]: 1.7907269101630572e-8 is not within 1e-8 of 0\n    at near (file:///Users/kiki/.codex/worktrees/kart-mayhem-release/Prototype%20Fork/tools/test-procedural-footwear.mjs:71:10)\n    at file:///Users/kiki/.codex/worktrees/kart-mayhem-release/Prototype%20Fork/tools/test-procedural-footwear.mjs:388:7 {\n  generatedMessage: false,\n  code: 'ERR_ASSERTION',\n  actual: false,\n  expected: true,\n  operator: '==',\n  diff: 'simple'\n}\n\nNode.js v24.19.0\n",
+      "status": "unresolved",
+      "fullLogSha256": "a55138eab5b5da7c155792d134514be8705b8662ea8d163f02c4847bc106b087"
+    },
+    {
+      "index": 167,
+      "command": "node tools/test-character-interactions.mjs",
+      "seconds": 8.244,
+      "code": 0
+    },
+    {
+      "index": 168,
+      "command": "node tools/test-shore-field.mjs",
+      "seconds": 0.325,
+      "code": 0
+    },
+    {
+      "index": 169,
+      "command": "node tools/test-shore-field-crown-regression.mjs",
+      "seconds": 0.459,
+      "code": 0
+    },
+    {
+      "index": 170,
+      "command": "node tools/validate-ocean-port.mjs",
+      "seconds": 0.053,
+      "code": 1,
+      "failure": "Error: Continuous Unity coast collision missing: coastReviewQuery.has(\"coastphysics\")\n    at file:///Users/kiki/.codex/worktrees/kart-mayhem-release/Prototype%20Fork/tools/validate-ocean-port.mjs:90:11\n    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)\n    at async node:internal/modules/esm/loader:643:26\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)\n\nNode.js v24.19.0\n",
+      "status": "unresolved",
+      "fullLogSha256": "95ae57062034a3d0492e5ffa78e8e582cb55d5eb7b2c19c5a203fc3ca86836dd"
+    },
+    {
+      "index": 171,
+      "command": "node tools/test-ocean-formulas.mjs",
+      "seconds": 0.302,
+      "code": 0
+    },
+    {
+      "index": 172,
+      "command": "node tools/test-ocean-tuning.mjs",
+      "seconds": 0.337,
+      "code": 0
+    },
+    {
+      "index": 173,
+      "command": "node tools/test-unity-post.mjs",
+      "seconds": 0.238,
+      "code": 0
+    },
+    {
+      "index": 174,
+      "command": "node tools/test-unity-smaa.mjs",
+      "seconds": 0.039,
+      "code": 0
+    },
+    {
+      "index": 175,
+      "command": "node tools/test-ocean-resources.mjs",
+      "seconds": 0.309,
+      "code": 0
+    },
+    {
+      "index": 176,
+      "command": "node tools/test-waterslide-shore-field.mjs",
+      "seconds": 8.795,
+      "code": 0
+    },
+    {
+      "index": 177,
+      "command": "node tools/test-crt-optimizer.mjs",
+      "seconds": 0.289,
+      "code": 0
+    },
+    {
+      "index": 178,
+      "command": "node tools/audit-crt-guest-parameters.mjs",
+      "seconds": 0.057,
+      "code": 0
+    },
+    {
+      "index": 179,
+      "command": "node tools/test-crt-guest-settings.mjs",
+      "seconds": 0.253,
+      "code": 0
+    },
+    {
+      "index": 180,
+      "command": "node tools/test-crt-guest-panel-semantics.mjs",
+      "seconds": 0.248,
+      "code": 0
+    },
+    {
+      "index": 181,
+      "command": "node tools/test-crt-guest-web.mjs",
+      "seconds": 0.049,
+      "code": 0
+    },
+    {
+      "index": 182,
+      "command": "node tools/test-render-quality-settings.mjs",
+      "seconds": 0.226,
+      "code": 0
+    },
+    {
+      "index": 183,
+      "command": "node tools/test-fixed-render-pipeline.mjs",
+      "seconds": 0.044,
+      "code": 0
+    },
+    {
+      "index": 184,
+      "command": "node tools/test-hud-visibility.mjs",
+      "seconds": 0.333,
+      "code": 0
+    },
+    {
+      "index": 185,
+      "command": "node tools/test-wood-crate-assets.mjs",
+      "seconds": 0.042,
+      "code": 0
+    },
+    {
+      "index": 186,
+      "command": "node tools/test-mobile-ui-layout.mjs",
+      "seconds": 0.241,
+      "code": 0
+    },
+    {
+      "index": 187,
+      "command": "node tools/test-input-prompts.mjs",
+      "seconds": 0.284,
+      "code": 0
+    },
+    {
+      "index": 188,
+      "command": "node tools/test-debug-shortcuts.mjs",
+      "seconds": 0.282,
+      "code": 0
+    },
+    {
+      "index": 189,
+      "command": "node tools/test-touch-release.mjs",
+      "seconds": 0.294,
+      "code": 0
+    },
+    {
+      "index": 190,
+      "command": "node tools/test-balance-meter-pointer.mjs",
+      "seconds": 0.238,
+      "code": 0
+    },
+    {
+      "index": 191,
+      "command": "node tools/test-visual-treatment.mjs",
+      "seconds": 0.235,
+      "code": 1,
+      "failure": "AssertionError [ERR_ASSERTION]: Sky Bridge still exposes the painted distance dome\n    at file:///Users/kiki/.codex/worktrees/kart-mayhem-release/Prototype%20Fork/tools/test-visual-treatment.mjs:526:8\n    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)\n    at async node:internal/modules/esm/loader:643:26\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {\n  generatedMessage: false,\n  code: 'ERR_ASSERTION',\n  actual: 'import { presentStartupFrame, finishStartup, failStartup, startupFailed } from \"./startupScreen\";\\n' +\n    \"import { CountryClubCarts } from './golf-cart/course';\\n\" +\n    \"import { SkateRace } from './race/runtime';\\n\" +\n    \"import {BoulderChaseCamera} from './boulderChase';\\n\" +\n    \"import {CrackedDisplay} from './crackedDisplay';\\n\" +\n    \"import {CarlisleSceneryCamera} from './carlisleSceneryCollision';\\n\" +\n    'import ",
+      "status": "unresolved",
+      "fullLogSha256": "2cd129ea195b118448669a9453f63fe2c58af96cbfa46711a7f9b3cd80d9367b"
+    },
+    {
+      "index": 192,
+      "command": "node tools/test-factory-defaults.mjs",
+      "seconds": 0.27,
+      "code": 1,
+      "failure": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n... Skipped lines\n\n  {\n    airControl: 0,\n    arrowBoostMult: 1.25,\n    arrowBounce: 16,\n    bailFriction: 14,\n...\n    grindSpeed: 5,\n+   grindTransferSpeed: 4.8,\n+   grindTrickBoost: 3,\n    groundGravity: 45,\n    hangLateral: 0.8,\n    hangLaunch: 2.5,\n    hangSnapAngle: 6,\n    heavyDrag: 0.005,\n...\n    pipeSmooth: 25,\n+   pipeTurnRate: 104,\n    ragBounce: 0.42,\n    ragFlail: 1,\n    ragFlailJumpChance: 0.38,\n    ragFlailJumpVelocity: 6.2,\n    ragFlailSteerChance: 0.3,\n...\n    teeterCatchSpeed: 6,\n+   teeterEdgeDistance: 0.35,\n    tntRadius: 2.75,\n+   trickLandBoost: 1.25,\n+   trickLandBoostHold: 4,\n+   trickLandBoostMax: 5,\n    tripCarryMax: 0.72,\n    tripCarryMin: 0.58,\n    tripLiftBase: 3.8,\n    tripLiftMax: 8.5,\n    tripLiftPerSpeed: 0.16,\n\n    at file:///Users/kiki/.codex/worktrees/kart-may",
+      "status": "unresolved",
+      "fullLogSha256": "6523424f990c43dedd6dc800bce60b42b76f209d2e63d1aa52a6fcf43584de0e"
+    },
+    {
+      "index": 193,
+      "command": "node tools/test-skateboard-port.mjs",
+      "seconds": 0.313,
+      "code": 0
+    },
+    {
+      "index": 194,
+      "command": "node tools/test-discarded-boards.mjs",
+      "seconds": 0.692,
+      "code": 0
+    },
+    {
+      "index": 195,
+      "command": "node tools/test-map-skateboard-profile.mjs",
+      "seconds": 8.107,
+      "code": 0
+    },
+    {
+      "index": 196,
+      "command": "node tools/test-special-system.mjs",
+      "seconds": 0.23,
+      "code": 1,
+      "failure": "AssertionError [ERR_ASSERTION]: death must revoke the triple-mask SPECIAL override immediately\n    at file:///Users/kiki/.codex/worktrees/kart-mayhem-release/Prototype%20Fork/tools/test-special-system.mjs:168:8 {\n  generatedMessage: false,\n  code: 'ERR_ASSERTION',\n  actual: \"import type { AnimationClip } from './animation/types';\\n\" +\n    \"import { createRaceRivalHead, createRaceRivalShirt, attachRaceRivalShorts, type RaceRivalShirt } from './character/raceRival';\\n\" +\n    \"import type { RacePlayerHooks } from './race/types';\\n\" +\n    \"import { surfaceGrip } from './surfaceBehavior';\\n\" +\n    \"import type { LoopCameraFrame, LoopFallCameraFrame } from './loopCamera';\\n\" +\n    \"import { LOOP_TURN, loopContactPressure, sampleLoop, stepLoopMotion, type LoopShape } from './loopRide';\\n\" +\n    \"import { sampleTeeterMotion, probeTeeterEdge } from './teeterMotion';\\n\" +\n    \"import { SkateBalanc",
+      "status": "unresolved",
+      "fullLogSha256": "cb48880cef6133205b1135603b7011a9b57ec6d30292686c2a982c87d2dd41ce"
+    },
+    {
+      "index": 197,
+      "command": "node tools/test-modern-life-hud.mjs",
+      "seconds": 0.317,
+      "code": 0
+    },
+    {
+      "index": 198,
+      "command": "node tools/test-combo-hud-parity.mjs",
+      "seconds": 0.358,
+      "code": 0
+    },
+    {
+      "index": 199,
+      "command": "node tools/test-spin-effects-port.mjs",
+      "seconds": 0.294,
+      "code": 0
+    },
+    {
+      "index": 200,
+      "command": "node tools/test-spin-smear.mjs",
+      "seconds": 0.258,
+      "code": 0
+    },
+    {
+      "index": 201,
+      "command": "node tools/test-spin-arm-pose.mjs",
+      "seconds": 8.329,
+      "code": 0
+    }
+  ]
+}
