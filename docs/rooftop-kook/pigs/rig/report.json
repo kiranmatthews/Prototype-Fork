@@ -1,0 +1,450 @@
+{
+  "report": [
+    {
+      "name": "front",
+      "result": [
+        {
+          "diagnostic": {
+            "kind": "grunt",
+            "status": "ready",
+            "url": "/rooftop-kook/pig-matron.glb",
+            "clips": [
+              "stroll",
+              "inhale",
+              "squawk",
+              "aim",
+              "recoil",
+              "recover"
+            ],
+            "activeClip": "stroll",
+            "mappedNodes": {
+              "torso": "spine",
+              "head": "head",
+              "jaw": "jaw"
+            },
+            "skinnedMeshes": 12,
+            "meshes": 12,
+            "animationTime": 1,
+            "gaitPhase": 0.8173076923076925,
+            "state": "patrol",
+            "plantedFeet": {
+              "hindLeft": false,
+              "hindRight": true
+            }
+          },
+          "feet": [
+            3.552713678800501e-15,
+            3.552713678800501e-15
+          ],
+          "elasticity": {
+            "torso": 1.050898730875635,
+            "neck": 1
+          },
+          "bottom": 0.004959219519051317,
+          "top": 2.313685652050765
+        },
+        {
+          "diagnostic": {
+            "kind": "sentry",
+            "status": "ready",
+            "url": "/rooftop-kook/pig-guard.glb",
+            "clips": [
+              "stroll",
+              "inhale",
+              "squawk",
+              "aim",
+              "recoil",
+              "recover"
+            ],
+            "activeClip": "stroll",
+            "mappedNodes": {
+              "torso": "spine",
+              "head": "head",
+              "jaw": "jaw"
+            },
+            "skinnedMeshes": 11,
+            "meshes": 11,
+            "animationTime": 1,
+            "gaitPhase": 0.8854166666666661,
+            "state": "patrol",
+            "plantedFeet": {
+              "hindLeft": false,
+              "hindRight": true
+            }
+          },
+          "hands": [
+            7.105427357601002e-15,
+            0
+          ],
+          "feet": [
+            0,
+            3.552713678800501e-15
+          ],
+          "elasticity": {
+            "torso": 1.067418250573419,
+            "neck": 1
+          },
+          "bottom": -2.9802293965985882e-9,
+          "top": 2.4972963939435004
+        }
+      ]
+    },
+    {
+      "name": "quarter",
+      "result": [
+        {
+          "diagnostic": {
+            "kind": "grunt",
+            "status": "ready",
+            "url": "/rooftop-kook/pig-matron.glb",
+            "clips": [
+              "stroll",
+              "inhale",
+              "squawk",
+              "aim",
+              "recoil",
+              "recover"
+            ],
+            "activeClip": "stroll",
+            "mappedNodes": {
+              "torso": "spine",
+              "head": "head",
+              "jaw": "jaw"
+            },
+            "skinnedMeshes": 12,
+            "meshes": 12,
+            "animationTime": 1,
+            "gaitPhase": 0.8173076923076925,
+            "state": "patrol",
+            "plantedFeet": {
+              "hindLeft": false,
+              "hindRight": true
+            }
+          },
+          "feet": [
+            1.5888218580782548e-14,
+            3.552713678800501e-15
+          ],
+          "elasticity": {
+            "torso": 1.050898730875635,
+            "neck": 1
+          },
+          "bottom": 0.0049592195190655275,
+          "top": 2.313685652050779
+        },
+        {
+          "diagnostic": {
+            "kind": "sentry",
+            "status": "ready",
+            "url": "/rooftop-kook/pig-guard.glb",
+            "clips": [
+              "stroll",
+              "inhale",
+              "squawk",
+              "aim",
+              "recoil",
+              "recover"
+            ],
+            "activeClip": "stroll",
+            "mappedNodes": {
+              "torso": "spine",
+              "head": "head",
+              "jaw": "jaw"
+            },
+            "skinnedMeshes": 11,
+            "meshes": 11,
+            "animationTime": 1,
+            "gaitPhase": 0.8854166666666661,
+            "state": "patrol",
+            "plantedFeet": {
+              "hindLeft": false,
+              "hindRight": true
+            }
+          },
+          "hands": [
+            7.105427357601002e-15,
+            0
+          ],
+          "feet": [
+            3.552713678800501e-15,
+            0
+          ],
+          "elasticity": {
+            "torso": 1.067418250573419,
+            "neck": 1
+          },
+          "bottom": -2.980215185743873e-9,
+          "top": 2.4972963939435147
+        }
+      ]
+    },
+    {
+      "name": "rear",
+      "result": [
+        {
+          "diagnostic": {
+            "kind": "grunt",
+            "status": "ready",
+            "url": "/rooftop-kook/pig-matron.glb",
+            "clips": [
+              "stroll",
+              "inhale",
+              "squawk",
+              "aim",
+              "recoil",
+              "recover"
+            ],
+            "activeClip": "stroll",
+            "mappedNodes": {
+              "torso": "spine",
+              "head": "head",
+              "jaw": "jaw"
+            },
+            "skinnedMeshes": 12,
+            "meshes": 12,
+            "animationTime": 1,
+            "gaitPhase": 0.8173076923076925,
+            "state": "patrol",
+            "plantedFeet": {
+              "hindLeft": false,
+              "hindRight": true
+            }
+          },
+          "feet": [
+            3.552713678800501e-15,
+            3.552713678800501e-15
+          ],
+          "elasticity": {
+            "torso": 1.050898730875635,
+            "neck": 1
+          },
+          "bottom": 0.004959219519051317,
+          "top": 2.313685652050765
+        },
+        {
+          "diagnostic": {
+            "kind": "sentry",
+            "status": "ready",
+            "url": "/rooftop-kook/pig-guard.glb",
+            "clips": [
+              "stroll",
+              "inhale",
+              "squawk",
+              "aim",
+              "recoil",
+              "recover"
+            ],
+            "activeClip": "stroll",
+            "mappedNodes": {
+              "torso": "spine",
+              "head": "head",
+              "jaw": "jaw"
+            },
+            "skinnedMeshes": 11,
+            "meshes": 11,
+            "animationTime": 1,
+            "gaitPhase": 0.8854166666666661,
+            "state": "patrol",
+            "plantedFeet": {
+              "hindLeft": false,
+              "hindRight": true
+            }
+          },
+          "hands": [
+            3.552713678800501e-15,
+            0
+          ],
+          "feet": [
+            0,
+            3.552713678800501e-15
+          ],
+          "elasticity": {
+            "torso": 1.067418250573419,
+            "neck": 1
+          },
+          "bottom": -2.9802293965985882e-9,
+          "top": 2.4972963939435004
+        }
+      ]
+    },
+    {
+      "name": "alarm",
+      "result": [
+        {
+          "diagnostic": {
+            "kind": "grunt",
+            "status": "ready",
+            "url": "/rooftop-kook/pig-matron.glb",
+            "clips": [
+              "stroll",
+              "inhale",
+              "squawk",
+              "aim",
+              "recoil",
+              "recover"
+            ],
+            "activeClip": "shriek",
+            "mappedNodes": {
+              "torso": "spine",
+              "head": "head",
+              "jaw": "jaw"
+            },
+            "skinnedMeshes": 12,
+            "meshes": 12,
+            "animationTime": 0.55,
+            "gaitPhase": 0,
+            "state": "shriek",
+            "plantedFeet": {
+              "hindLeft": true,
+              "hindRight": true
+            }
+          },
+          "feet": [
+            1.4210854715202004e-14,
+            1.464821375527116e-14
+          ],
+          "elasticity": {
+            "torso": 0.9783690375355394,
+            "neck": 1
+          },
+          "bottom": 6.437318234020495e-9,
+          "top": 2.3391438509411415
+        },
+        {
+          "diagnostic": {
+            "kind": "sentry",
+            "status": "ready",
+            "url": "/rooftop-kook/pig-guard.glb",
+            "clips": [
+              "stroll",
+              "inhale",
+              "squawk",
+              "aim",
+              "recoil",
+              "recover"
+            ],
+            "activeClip": "fire",
+            "mappedNodes": {
+              "torso": "spine",
+              "head": "head",
+              "jaw": "jaw"
+            },
+            "skinnedMeshes": 11,
+            "meshes": 11,
+            "animationTime": 0.55,
+            "gaitPhase": 0,
+            "state": "fire",
+            "plantedFeet": {
+              "hindLeft": true,
+              "hindRight": true
+            }
+          },
+          "hands": [
+            0,
+            0
+          ],
+          "feet": [
+            0,
+            0
+          ],
+          "elasticity": {
+            "torso": 0.9815981756324792,
+            "neck": 1
+          },
+          "bottom": -2.9802293965985882e-9,
+          "top": 2.4864399817248284
+        }
+      ]
+    },
+    {
+      "name": "aim",
+      "result": [
+        {
+          "diagnostic": {
+            "kind": "grunt",
+            "status": "ready",
+            "url": "/rooftop-kook/pig-matron.glb",
+            "clips": [
+              "stroll",
+              "inhale",
+              "squawk",
+              "aim",
+              "recoil",
+              "recover"
+            ],
+            "activeClip": "windup",
+            "mappedNodes": {
+              "torso": "spine",
+              "head": "head",
+              "jaw": "jaw"
+            },
+            "skinnedMeshes": 12,
+            "meshes": 12,
+            "animationTime": 0.5,
+            "gaitPhase": 0,
+            "state": "windup",
+            "plantedFeet": {
+              "hindLeft": true,
+              "hindRight": true
+            }
+          },
+          "feet": [
+            0,
+            0
+          ],
+          "elasticity": {
+            "torso": 0.8979486085101215,
+            "neck": 0.8834019204389575
+          },
+          "bottom": 6.43730402316578e-9,
+          "top": 2.3054796532016155
+        },
+        {
+          "diagnostic": {
+            "kind": "sentry",
+            "status": "ready",
+            "url": "/rooftop-kook/pig-guard.glb",
+            "clips": [
+              "stroll",
+              "inhale",
+              "squawk",
+              "aim",
+              "recoil",
+              "recover"
+            ],
+            "activeClip": "aim",
+            "mappedNodes": {
+              "torso": "spine",
+              "head": "head",
+              "jaw": "jaw"
+            },
+            "skinnedMeshes": 11,
+            "meshes": 11,
+            "animationTime": 0.5,
+            "gaitPhase": 0,
+            "state": "aim",
+            "plantedFeet": {
+              "hindLeft": true,
+              "hindRight": true
+            }
+          },
+          "hands": [
+            3.552713678800501e-15,
+            0
+          ],
+          "feet": [
+            0,
+            0
+          ],
+          "elasticity": {
+            "torso": 0.9828880158952855,
+            "neck": 1
+          },
+          "bottom": -2.9802293965985882e-9,
+          "top": 2.487344125891795
+        }
+      ]
+    }
+  ],
+  "errors": []
+}

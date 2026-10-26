@@ -1,0 +1,45 @@
+{
+  "report": {
+    "enemies": [
+      {
+        "url": "/rooftop-kook/pig-matron.glb",
+        "status": "ready"
+      },
+      {
+        "url": "/rooftop-kook/pig-guard.glb",
+        "status": "ready"
+      },
+      {
+        "url": "/rooftop-kook/pig-matron.glb",
+        "status": "ready"
+      },
+      {
+        "url": "/rooftop-kook/pig-guard.glb",
+        "status": "ready"
+      },
+      {
+        "url": "/rooftop-kook/pig-matron.glb",
+        "status": "ready"
+      },
+      {
+        "url": "/rooftop-kook/pig-guard.glb",
+        "status": "ready"
+      },
+      {
+        "url": "/rooftop-kook/pig-guard.glb",
+        "status": "ready"
+      }
+    ],
+    "sounds": [
+      {
+        "name": "pigOink",
+        "duration": 0.7434920634920635
+      },
+      {
+        "name": "pigSqueal",
+        "duration": 0.84
+      }
+    ]
+  },
+  "errors": []
+}

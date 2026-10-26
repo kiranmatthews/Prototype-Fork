@@ -6,22 +6,24 @@ page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()
 const report={base,errors};
 try{
  await page.goto(base+'/?playtest&level=rooftop-relay',{timeout:180000});await page.waitForFunction(()=>window.__game?.getCurrentLevel().id==='rooftop-relay'&&!window.__game.gameFlow.blocksGameplay,null,{timeout:180000});
- report.loaded=await page.evaluate(async()=>{const g=window.__game,l=g.getLevel();g.renderQualitySettings.setRegularResolution(null);g.crtGuestSettings.setEnabled(false);await Promise.all(l.enemies.map(e=>e.visual.ready));g.player.invulnTimer=999;window.anthroReview={start:l.enemies.map(e=>e.group.position.clone()),shots:0};return l.enemies.map(e=>({role:e.kook.role,status:e.visual.diagnostics.status,components:e.group.userData.meshyComponents,rig:e.group.userData.rigContract,position:e.group.position.toArray()}));});
- assert.equal(report.loaded.length,7);for(const e of report.loaded){assert.equal(e.status,'ready');assert.ok(e.components>=10);assert.equal(e.rig,'bone-man semantic humanoid');}
+ report.loaded=await page.evaluate(async()=>{const g=window.__game,l=g.getLevel();g.renderQualitySettings.setRegularResolution(null);g.crtGuestSettings.setEnabled(false);await Promise.all(l.enemies.map(e=>e.visual.ready));g.player.invulnTimer=999;window.anthroReview={start:l.enemies.map(e=>e.group.position.clone()),shots:0};return l.enemies.map(e=>({role:e.kook.role,asset:e.visual.diagnostics.url,status:e.visual.diagnostics.status,components:e.group.userData.meshyComponents,rig:e.group.userData.rigContract,position:e.group.position.toArray()}));});
+ assert.equal(report.loaded.length,7);for(const e of report.loaded){assert.equal(e.status,'ready');assert.ok(e.asset.endsWith((e.role==='lookout'?'pig-matron':'pig-guard')+'.glb'));assert.ok(e.components>=10);assert.equal(e.rig,'bone-man semantic humanoid');}
+ report.audio=await page.evaluate(async()=>{const sound=window.__game.sfx;await sound.prepare();window.anthroReview.voices=[];const play=sound.play.bind(sound);sound.play=(name,volume,rate,...rest)=>{if(name.startsWith('pig'))window.anthroReview.voices.push({name,volume,rate});return play(name,volume,rate,...rest);};return ['pigOink','pigSqueal'].map(name=>{const b=sound.buffers.get(name);if(!b)throw Error('Missing pig buffer '+name);let peak=0;for(const v of b.getChannelData(0))peak=Math.max(peak,Math.abs(v));return {name,duration:b.duration,channels:b.numberOfChannels,peak};});});
+ for(const sound of report.audio){assert.equal(sound.channels,1);assert.ok(sound.duration>.65&&sound.duration<.9);assert.ok(sound.peak>.8&&sound.peak<.9);}
  await page.waitForTimeout(2300);
  report.patrol=await page.evaluate(()=>{const l=window.__game.getLevel();return l.enemies.map((e,i)=>({moved:e.group.position.distanceTo(window.anthroReview.start[i]),state:e.state,feet:e.group.userData.kookFootErrors,hand:e.group.userData.kookHandErrors}));});
  assert.ok(report.patrol.every(e=>e.moved>.15),'Every animal strolls');
  await page.evaluate(()=>{
-  const g=window.__game,l=g.getLevel(),goose=l.enemies.find(e=>e.kook.role==='lookout');window.anthroReview.goose=goose;const p=goose.group.position.clone();p.z+=12;p.y+=.1;
+  const g=window.__game,l=g.getLevel(),matron=l.enemies.find(e=>e.kook.role==='lookout');window.anthroReview.matron=matron;const p=matron.group.position.clone();p.z+=12;p.y+=.1;
   g.player.respawn(l,true,false,{position:p,heading:p.clone().set(0,0,-1)});g.player.invulnTimer=999;
   const original=l.spawnProjectile.bind(l);l.spawnProjectile=(...a)=>{window.anthroReview.shots++;return original(...a);};
  });
- await page.waitForFunction(()=>window.anthroReview.goose.state==='shriek'&&window.anthroReview.goose.stateT>.2,null,{timeout:20000});
- report.squawk=await page.evaluate(()=>{const e=window.anthroReview.goose,b=e.group.userData.kookSquawk;return {state:e.state,active:b.active,length:b.length,origin:b.origin.toArray(),direction:b.direction.toArray()};});assert.equal(report.squawk.active,true);assert.ok(report.squawk.length>2);
+ await page.waitForFunction(()=>window.anthroReview.matron.state==='shriek'&&window.anthroReview.matron.stateT>.2,null,{timeout:20000});
+ report.squawk=await page.evaluate(()=>{const e=window.anthroReview.matron,b=e.group.userData.kookSquawk;return {state:e.state,active:b.active,length:b.length,origin:b.origin.toArray(),direction:b.direction.toArray()};});assert.equal(report.squawk.active,true);assert.ok(report.squawk.length>2);
  await page.screenshot({path:out+'/native-squawk.png'});
  await page.evaluate(()=>{const g=window.__game;g.crtGuestSettings.setEnabled(true);g.renderQualitySettings.setRegularResolution(480);});
- await page.waitForFunction(()=>window.anthroReview.goose.state==='shriek'&&window.anthroReview.goose.stateT>.2,null,{timeout:20000});await page.screenshot({path:out+'/crt-squawk.png'});
- // Every goose is disabled: independently acquiring gunners must still shoot.
+ await page.waitForFunction(()=>window.anthroReview.matron.state==='shriek'&&window.anthroReview.matron.stateT>.2,null,{timeout:20000});await page.screenshot({path:out+'/crt-squawk.png'});
+ // Every matron is disabled: independently acquiring gunners must still shoot.
  report.independent=await page.evaluate(()=>{
   const g=window.__game,l=g.getLevel();for(const e of l.enemies)if(e.kook.role==='lookout'){e.alive=false;e.group.visible=false;}
   const e=l.enemies.find(e=>e.kook.role==='gunner');window.anthroReview.gunner=e;e.state='patrol';e.stateT=0;e.kook.exposure=0;
@@ -35,6 +37,7 @@ try{
  await page.waitForFunction(()=>window.anthroReview.gunner.kook.shots>0,null,{timeout:15000});await page.screenshot({path:out+'/native-gunner.png'});
  report.finished=await page.evaluate(()=>{const g=window.__game,l=g.getLevel();return {shots:window.anthroReview.shots,gunners:l.enemies.filter(e=>e.kook.role==='gunner').map(e=>({state:e.state,shots:e.kook.shots,hand:e.group.userData.kookHandErrors})),buffer:[g.renderer.domElement.width,g.renderer.domElement.height],render:g.renderer.info.render,memory:g.renderer.info.memory,stamp:document.querySelector('.hud-build')?.textContent};});
  assert.deepEqual(report.finished.buffer,[2560,1440]);assert.ok(report.finished.shots>report.independent.before);assert.deepEqual(errors,[]);
+ report.voices=await page.evaluate(()=>window.anthroReview.voices);assert.ok(report.voices.some(v=>v.name==='pigSqueal'&&v.volume>0));assert.ok(report.voices.some(v=>v.name==='pigOink'&&v.rate<1&&v.volume>0),'The boar also oinks on acquisition');assert.ok(report.voices.some(v=>v.name==='pigOink'&&v.rate>1&&v.volume>0),'The matron oinks before squealing');
  if(process.env.ANTHRO_LIFECYCLE){
   report.reentry=[];
   for(let cycle=0;cycle<3;cycle++){

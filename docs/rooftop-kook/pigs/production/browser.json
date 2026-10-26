@@ -1,0 +1,309 @@
+{
+  "base": "http://127.0.0.1:5369",
+  "errors": [],
+  "loaded": [
+    {
+      "role": "lookout",
+      "asset": "./rooftop-kook/pig-matron.glb",
+      "status": "ready",
+      "components": 12,
+      "rig": "bone-man semantic humanoid",
+      "position": [
+        -183.19791396629884,
+        79.30000000596046,
+        -373.62379374400206
+      ]
+    },
+    {
+      "role": "gunner",
+      "asset": "./rooftop-kook/pig-guard.glb",
+      "status": "ready",
+      "components": 11,
+      "rig": "bone-man semantic humanoid",
+      "position": [
+        -188.14180082942212,
+        79.30000000596046,
+        -392.73601788543965
+      ]
+    },
+    {
+      "role": "lookout",
+      "asset": "./rooftop-kook/pig-matron.glb",
+      "status": "ready",
+      "components": 12,
+      "rig": "bone-man semantic humanoid",
+      "position": [
+        5.939822201148286,
+        58.250000005960445,
+        -1030.4439415637646
+      ]
+    },
+    {
+      "role": "gunner",
+      "asset": "./rooftop-kook/pig-guard.glb",
+      "status": "ready",
+      "components": 11,
+      "rig": "bone-man semantic humanoid",
+      "position": [
+        -9.139560810021935,
+        58.250000005960445,
+        -1043.1674818469246
+      ]
+    },
+    {
+      "role": "lookout",
+      "asset": "./rooftop-kook/pig-matron.glb",
+      "status": "ready",
+      "components": 12,
+      "rig": "bone-man semantic humanoid",
+      "position": [
+        -61.64240086815736,
+        41.300000005960456,
+        -1857.5337135789302
+      ]
+    },
+    {
+      "role": "gunner",
+      "asset": "./rooftop-kook/pig-guard.glb",
+      "status": "ready",
+      "components": 11,
+      "rig": "bone-man semantic humanoid",
+      "position": [
+        -80.42299967412067,
+        41.300000005960456,
+        -1877.5121099340479
+      ]
+    },
+    {
+      "role": "gunner",
+      "asset": "./rooftop-kook/pig-guard.glb",
+      "status": "ready",
+      "components": 11,
+      "rig": "bone-man semantic humanoid",
+      "position": [
+        -61.93591619294283,
+        41.300000005960456,
+        -1875.0734106819152
+      ]
+    }
+  ],
+  "audio": [
+    {
+      "name": "pigOink",
+      "duration": 0.7434920634920635,
+      "channels": 1,
+      "peak": 0.8712962865829468
+    },
+    {
+      "name": "pigSqueal",
+      "duration": 0.84,
+      "channels": 1,
+      "peak": 0.8693566918373108
+    }
+  ],
+  "patrol": [
+    {
+      "moved": 2.5375000000013492,
+      "state": "patrol",
+      "feet": [
+        2.842170943040401e-14,
+        4.263256414560601e-14
+      ]
+    },
+    {
+      "moved": 2.1750000000007628,
+      "state": "patrol",
+      "feet": [
+        0,
+        1.4210854715202004e-14
+      ],
+      "hand": [
+        0,
+        0
+      ]
+    },
+    {
+      "moved": 2.537499999998247,
+      "state": "patrol",
+      "feet": [
+        6.01080938469374e-14,
+        3.102273850532274e-14
+      ]
+    },
+    {
+      "moved": 2.175000000003769,
+      "state": "patrol",
+      "feet": [
+        4.5496934130773415e-14,
+        0
+      ],
+      "hand": [
+        8.290563953791488e-14,
+        1.0048591735576161e-14
+      ]
+    },
+    {
+      "moved": 2.5374999999935257,
+      "state": "patrol",
+      "feet": [
+        1.139086659085919e-13,
+        7.105427357601002e-15
+      ]
+    },
+    {
+      "moved": 2.1750000000053107,
+      "state": "patrol",
+      "feet": [
+        2.842170943040401e-14,
+        7.105427357601002e-14
+      ],
+      "hand": [
+        4.322062729257126e-14,
+        2.391691492634157e-13
+      ]
+    },
+    {
+      "moved": 2.1750000000119454,
+      "state": "patrol",
+      "feet": [
+        7.105427357601002e-15,
+        2.842170943040401e-14
+      ],
+      "hand": [
+        7.105427357601002e-15,
+        1.5888218580782548e-14
+      ]
+    }
+  ],
+  "squawk": {
+    "state": "shriek",
+    "active": true,
+    "length": 18,
+    "origin": [
+      -183.1591789028107,
+      82.21397077153145,
+      -372.9687321388486
+    ],
+    "direction": [
+      0.06631386026783867,
+      -0.15202962798428127,
+      0.9861488042640109
+    ]
+  },
+  "independent": {
+    "before": 2
+  },
+  "finished": {
+    "shots": 3,
+    "gunners": [
+      {
+        "state": "reload",
+        "shots": 1,
+        "hand": [
+          0,
+          0
+        ]
+      },
+      {
+        "state": "patrol",
+        "shots": 0,
+        "hand": [
+          3.884701934109998e-14,
+          2.3365845670431234e-13
+        ]
+      },
+      {
+        "state": "patrol",
+        "shots": 0,
+        "hand": [
+          2.929642751054232e-14,
+          2.0097183471152322e-14
+        ]
+      },
+      {
+        "state": "patrol",
+        "shots": 0,
+        "hand": [
+          2.929642751054232e-14,
+          7.105427357601002e-15
+        ]
+      }
+    ],
+    "buffer": [
+      2560,
+      1440
+    ],
+    "render": {
+      "frame": 6926,
+      "calls": 540,
+      "triangles": 5806761,
+      "points": 0,
+      "lines": 0
+    },
+    "memory": {
+      "geometries": 316,
+      "textures": 71
+    },
+    "stamp": "Codex/sol fork · build 10-26 01:01 UTC"
+  },
+  "voices": [
+    {
+      "name": "pigOink",
+      "volume": 0.4355828663960535,
+      "rate": 1.08
+    },
+    {
+      "name": "pigOink",
+      "volume": 0.11650352253574275,
+      "rate": 0.82
+    },
+    {
+      "name": "pigSqueal",
+      "volume": 0.4355828663960535,
+      "rate": 1
+    },
+    {
+      "name": "pigOink",
+      "volume": 0.11650352253574275,
+      "rate": 0.82
+    },
+    {
+      "name": "pigOink",
+      "volume": 0.4355828663960535,
+      "rate": 1.08
+    },
+    {
+      "name": "pigSqueal",
+      "volume": 0.4355828663960535,
+      "rate": 1
+    },
+    {
+      "name": "pigOink",
+      "volume": 0.6093223140495869,
+      "rate": 0.82
+    }
+  ],
+  "reentry": [
+    {
+      "memory": {
+        "geometries": 312,
+        "textures": 70
+      },
+      "ready": 7
+    },
+    {
+      "memory": {
+        "geometries": 310,
+        "textures": 70
+      },
+      "ready": 7
+    },
+    {
+      "memory": {
+        "geometries": 312,
+        "textures": 70
+      },
+      "ready": 7
+    }
+  ]
+}

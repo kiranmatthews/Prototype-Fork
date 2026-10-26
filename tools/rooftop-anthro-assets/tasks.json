@@ -75,6 +75,78 @@
           "sha256": "df6f37f3da1ebd28bf399544529546859e13b70a36b716e635fc8c015a6f67ec"
         }
       ]
+    },
+    "pig-matron": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "4770b43d-2f91-42ac-a643-5f0a7c0164d1",
+      "createdAt": "2026-10-26T00:39:35.668770+00:00",
+      "estimatedCredits": 35,
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/rooftop-anthro-assets/references/pig-matron.png",
+        "ai_model": "meshy-7.1",
+        "geometry_resolution": "4k",
+        "should_remesh": false,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "pose_mode": "a-pose",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 86,
+      "reference": "tools/rooftop-anthro-assets/references/pig-matron.png",
+      "referenceSha256": "63d9f47d9086f72b1f7e87201d4df8613ba30f7c252162a2cb6177a5ef216766",
+      "id": "01a175a6-032f-753a-a754-52aea9f63a31",
+      "checkedAt": "2026-10-26T00:44:42.993512+00:00",
+      "progress": 100,
+      "consumedCredits": 35,
+      "finishedAt": 1792975382539,
+      "expiresAt": 1793234582539,
+      "downloads": [
+        {
+          "path": ".img2threejs/rooftop-anthro/pig-matron/downloads/model.glb",
+          "bytes": 40174348,
+          "sha256": "032d361315967bb67535822caf5551b8abda324c62c238b5cbe6eb0ea9c044cc"
+        }
+      ]
+    },
+    "pig-guard": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "891d9cf7-dc16-43c0-9e9c-53b401e184b0",
+      "createdAt": "2026-10-26T00:39:39.442888+00:00",
+      "estimatedCredits": 35,
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/rooftop-anthro-assets/references/pig-guard.png",
+        "ai_model": "meshy-7.1",
+        "geometry_resolution": "4k",
+        "should_remesh": false,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "pose_mode": "a-pose",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 51,
+      "reference": "tools/rooftop-anthro-assets/references/pig-guard.png",
+      "referenceSha256": "eee3581f403ad5014f75d19b07a3ad66864e348ace97594d085639fbeb829ee4",
+      "id": "01a175a6-11bd-7414-b8e3-c0187176ea3e",
+      "checkedAt": "2026-10-26T00:44:50.074323+00:00",
+      "progress": 100,
+      "consumedCredits": 35,
+      "finishedAt": 1792975380497,
+      "expiresAt": 1793234580497,
+      "downloads": [
+        {
+          "path": ".img2threejs/rooftop-anthro/pig-guard/downloads/model.glb",
+          "bytes": 35047156,
+          "sha256": "3cc7ad994e3f6eebf6bdf6ee67c933886ce85ef68e44f379b3694d2b749e6137"
+        }
+      ]
     }
   }
 }

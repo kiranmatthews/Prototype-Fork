@@ -18915,7 +18915,8 @@ export class Level {
           blocked:(from,to)=>this.projectilePathBlocked(from,to),
           fire:(owner,target)=>{this.updateEnemyVisual(owner,0,0);if(!owner.visual.getMuzzlePosition(SENTRY_MUZZLE))SENTRY_MUZZLE.copy(owner.group.position).add(new THREE.Vector3(0,1.6,0));this.spawnProjectile(owner,SENTRY_MUZZLE,target);},
           cue:(owner,cue)=>{const distance=owner.group.position.distanceTo(this.playerPos),gain=Math.max(0,1-distance/55)**2;
-            sfx.play(cue==='screech'?'karenScreech':cue==='shot'?'kookShot':cue==='wake'?'kookCock':'karenNotice',gain*.8,1,.05);},
+            if(cue==='notice'||cue==='wake')sfx.play('pigOink',gain*.8,owner.kook?.role==='lookout'?1.08:.82,.035);
+            if(cue!=='notice')sfx.play(cue==='screech'?'pigSqueal':cue==='shot'?'kookShot':'kookCock',gain*.8,1,cue==='screech'?.015:.05);},
         });
         boxW=(e.kook.role==='lookout'?.95:1.45)*e.body.scale.x;boxH=e.group.userData.kookHeight;cy=boxH/2;
       }else if(goblin){

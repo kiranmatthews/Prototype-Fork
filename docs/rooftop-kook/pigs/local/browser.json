@@ -1,0 +1,291 @@
+{
+  "base": "http://127.0.0.1:5267",
+  "errors": [],
+  "loaded": [
+    {
+      "role": "lookout",
+      "asset": "/rooftop-kook/pig-matron.glb",
+      "status": "ready",
+      "components": 12,
+      "rig": "bone-man semantic humanoid",
+      "position": [
+        -183.19791396629884,
+        79.30000000596046,
+        -373.62379374400206
+      ]
+    },
+    {
+      "role": "gunner",
+      "asset": "/rooftop-kook/pig-guard.glb",
+      "status": "ready",
+      "components": 11,
+      "rig": "bone-man semantic humanoid",
+      "position": [
+        -188.14180082942212,
+        79.30000000596046,
+        -392.73601788543965
+      ]
+    },
+    {
+      "role": "lookout",
+      "asset": "/rooftop-kook/pig-matron.glb",
+      "status": "ready",
+      "components": 12,
+      "rig": "bone-man semantic humanoid",
+      "position": [
+        5.939822201148286,
+        58.250000005960445,
+        -1030.4439415637646
+      ]
+    },
+    {
+      "role": "gunner",
+      "asset": "/rooftop-kook/pig-guard.glb",
+      "status": "ready",
+      "components": 11,
+      "rig": "bone-man semantic humanoid",
+      "position": [
+        -9.139560810021935,
+        58.250000005960445,
+        -1043.1674818469246
+      ]
+    },
+    {
+      "role": "lookout",
+      "asset": "/rooftop-kook/pig-matron.glb",
+      "status": "ready",
+      "components": 12,
+      "rig": "bone-man semantic humanoid",
+      "position": [
+        -61.64240086815736,
+        41.300000005960456,
+        -1857.5337135789302
+      ]
+    },
+    {
+      "role": "gunner",
+      "asset": "/rooftop-kook/pig-guard.glb",
+      "status": "ready",
+      "components": 11,
+      "rig": "bone-man semantic humanoid",
+      "position": [
+        -80.42299967412067,
+        41.300000005960456,
+        -1877.5121099340479
+      ]
+    },
+    {
+      "role": "gunner",
+      "asset": "/rooftop-kook/pig-guard.glb",
+      "status": "ready",
+      "components": 11,
+      "rig": "bone-man semantic humanoid",
+      "position": [
+        -61.93591619294283,
+        41.300000005960456,
+        -1875.0734106819152
+      ]
+    }
+  ],
+  "audio": [
+    {
+      "name": "pigOink",
+      "duration": 0.7434920634920635,
+      "channels": 1,
+      "peak": 0.8712962865829468
+    },
+    {
+      "name": "pigSqueal",
+      "duration": 0.84,
+      "channels": 1,
+      "peak": 0.8693566918373108
+    }
+  ],
+  "patrol": [
+    {
+      "moved": 2.485000000001327,
+      "state": "patrol",
+      "feet": [
+        0,
+        0
+      ]
+    },
+    {
+      "moved": 2.130000000000749,
+      "state": "patrol",
+      "feet": [
+        0,
+        1.4210854715202004e-14
+      ],
+      "hand": [
+        2.842170943040401e-14,
+        0
+      ]
+    },
+    {
+      "moved": 2.4849999999982826,
+      "state": "patrol",
+      "feet": [
+        3.30540822551633e-14,
+        1.6304788408914756e-14
+      ]
+    },
+    {
+      "moved": 2.1300000000036388,
+      "state": "patrol",
+      "feet": [
+        7.588599744428075e-15,
+        9.565974336450907e-14
+      ],
+      "hand": [
+        3.730349362740526e-14,
+        1.5888218580782548e-14
+      ]
+    },
+    {
+      "moved": 2.4849999999936587,
+      "state": "patrol",
+      "feet": [
+        7.246142549764705e-14,
+        5.859285502108464e-14
+      ]
+    },
+    {
+      "moved": 2.1300000000052006,
+      "state": "patrol",
+      "feet": [
+        5.684341886080802e-14,
+        5.684341886080802e-14
+      ],
+      "hand": [
+        1.4210854715202004e-14,
+        6.07087979554246e-14
+      ]
+    },
+    {
+      "moved": 2.130000000011698,
+      "state": "patrol",
+      "feet": [
+        7.105427357601002e-15,
+        2.842170943040401e-14
+      ],
+      "hand": [
+        1.4210854715202004e-14,
+        4.4938668397781776e-14
+      ]
+    }
+  ],
+  "squawk": {
+    "state": "shriek",
+    "active": true,
+    "length": 18,
+    "origin": [
+      -183.16133079801546,
+      82.22228027942161,
+      -372.9895455741566
+    ],
+    "direction": [
+      0.06517689545494143,
+      -0.15292786238833364,
+      0.9860857169659191
+    ]
+  },
+  "independent": {
+    "before": 2
+  },
+  "finished": {
+    "shots": 3,
+    "gunners": [
+      {
+        "state": "reload",
+        "shots": 1,
+        "hand": [
+          6.355287432313019e-14,
+          0
+        ]
+      },
+      {
+        "state": "patrol",
+        "shots": 0,
+        "hand": [
+          5.376231353587555e-14,
+          2.2061894264123476e-14
+        ]
+      },
+      {
+        "state": "patrol",
+        "shots": 0,
+        "hand": [
+          2.929642751054232e-14,
+          0
+        ]
+      },
+      {
+        "state": "patrol",
+        "shots": 0,
+        "hand": [
+          2.929642751054232e-14,
+          7.105427357601002e-15
+        ]
+      }
+    ],
+    "buffer": [
+      2560,
+      1440
+    ],
+    "render": {
+      "frame": 6344,
+      "calls": 538,
+      "triangles": 5806757,
+      "points": 0,
+      "lines": 0
+    },
+    "memory": {
+      "geometries": 316,
+      "textures": 71
+    },
+    "stamp": "Codex/sol fork · build 10-25 21:52 UTC"
+  },
+  "voices": [
+    {
+      "name": "pigOink",
+      "volume": 0.4366536406330176,
+      "rate": 1.08
+    },
+    {
+      "name": "pigOink",
+      "volume": 0.11707411484633945,
+      "rate": 0.82
+    },
+    {
+      "name": "pigSqueal",
+      "volume": 0.4366536406330176,
+      "rate": 1
+    },
+    {
+      "name": "pigOink",
+      "volume": 0.11707411484633945,
+      "rate": 0.82
+    },
+    {
+      "name": "pigOink",
+      "volume": 0.4366536406330176,
+      "rate": 1.08
+    },
+    {
+      "name": "pigSqueal",
+      "volume": 0.4366536406330176,
+      "rate": 1
+    },
+    {
+      "name": "pigOink",
+      "volume": 0.11707411484633945,
+      "rate": 0.82
+    },
+    {
+      "name": "pigOink",
+      "volume": 0.6093223140495869,
+      "rate": 0.82
+    }
+  ]
+}

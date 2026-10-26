@@ -785,7 +785,7 @@ export const ROOFTOP_RELAY_LEVEL:CustomLevelData=(()=>{
    const s=r.a+offset;components.push({t:'enemy',p:rooftopWorld(s,rooftopSurfaceY(r,s,u),u),
     range:role==='lookout'?3:3.5,speed:role==='lookout'?1.05:.9,terrainSupports:true,
     s:[1,(role==='lookout'?2.35:2.5)*1.7,1],foe:role==='lookout'?'grunt':'sentry',kookRole:role,alertGroup,yaw:rooftopYaw(s),
-    grp:300+r.district,nm:role==='lookout'?'Goose matron · lethal squawk':'Bulldog guard · independent patrol'});
+    grp:300+r.district,nm:role==='lookout'?'Pig matron · lethal squeal':'Boar guard · independent patrol'});
   };
   foe(index===43?27:23,lookoutSide,'lookout');
   gunnerSides.forEach((u,i)=>foe(index===43?50-i*5:43,u,'gunner'));

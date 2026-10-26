@@ -67,8 +67,9 @@ export class KookArticulation {
   this.bone('chest').rotation.y=-sway*.07;this.bone('chest').rotation.x=inhale*-.16+release*.17;
   this.bone('head').rotation.x=inhale*-.23+release*.22+Math.sin(frame.time*2.3)*.018;
   this.bone('head').rotation.z=-sway*.055+settle*.06;
-  // The source has an open bill. Close it at rest and open on the squawk.
-  if(this.role==='lookout')this.bone('jaw').rotation.x=frame.state==='shriek'?.25+Math.sin(frame.stateTime*48)*.045:-.19-inhale*.05;
+  // The Meshy pig's lower lip/chin closes during anticipation and trembles
+  // during the recorded squeal; the snout and upper face stay on the head.
+  if(this.role==='lookout')this.bone('jaw').rotation.x=frame.state==='shriek'?.16+Math.sin(frame.stateTime*48)*.045:-.30-inhale*.05;
   for(const [side,sign]of [['left',1],['right',-1]] as const){
    const leg=side==='left'?elastic.legs.hindLeft:elastic.legs.hindRight;
    this.length('hip-'+side,'knee-'+side,leg.upper);this.length('knee-'+side,'ankle-'+side,leg.lower);
@@ -107,11 +108,11 @@ export class KookArticulation {
  }
  grip(side:'left'|'right',target:THREE.Vector3,orientation:THREE.Quaternion):number {
   const pole=this.model.localToWorld(new THREE.Vector3(side==='left'?1.5:-1.5,.8,.1));
-  const error=this.solve('shoulder-'+side,'elbow-'+side,'wrist-'+side,target,pole),hand=this.bone('wrist-'+side);
+  const error=this.solve('shoulder-'+side,'elbow-'+side,'wrist-'+side,target,pole,true),hand=this.bone('wrist-'+side);
   hand.quaternion.copy(hand.parent!.getWorldQuaternion(new THREE.Quaternion()).invert().multiply(orientation));return error;
  }
  mouth(target:THREE.Vector3):void {
-  const head=this.bone('head');target.set(0,this.role==='lookout'?.025:.10,this.role==='lookout'?.34:.46);head.localToWorld(target);
+  const head=this.bone('head');target.set(0,this.role==='lookout'?.113:.10,this.role==='lookout'?.341:.46);head.localToWorld(target);
  }
  reset():void {this.phase=this.movement=this.defeatTime=0;this.contacts.clear();}
 }

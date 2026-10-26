@@ -31,7 +31,7 @@ function makeGun(){
   if(disposed)return;const model=asset.clone(true);model.rotation.y=Math.PI/2;model.scale.setScalar(1.4/1.903805971);model.position.set(0,-.09,.37);
   model.traverse(o=>{const m=o as THREE.Mesh;if(m.isMesh)m.castShadow=m.receiveShadow=true;});group.add(model);group.userData.nativeWeapon='heirloom-shotgun';
  });
- muzzle.position.set(0,.04,1.07);right.position.set(-.055,-.30,.23);left.position.set(.24,-.08,.32);group.add(muzzle,right,left);
+ muzzle.position.set(0,.04,1.07);right.position.set(-.055,-.12,.23);left.position.set(.10,-.08,.58);group.add(muzzle,right,left);
  const flash=new THREE.Mesh(new THREE.SphereGeometry(.18,16,12),new THREE.MeshBasicMaterial({color:0xffe9ac,toneMapped:false}));
  flash.position.set(0,.05,1.08);flash.scale.set(.6,.6,2);flash.visible=false;group.add(flash);
  return {group,muzzle,right,left,flash,ready,dispose(){disposed=true;flash.geometry.dispose();flash.material.dispose();lease.release();group.removeFromParent();}};
@@ -40,9 +40,9 @@ function makeGun(){
 /** Meshy component surfaces on a semantic bone-man rig. Each actor clones only
  * its pose, sharing complete native geometry and atlases across the level. */
 export function createKookVisual(kind:EnemyKind,role:KookRole,height=role==='lookout'?2.35:2.5):EnemyVisual {
- const assetName=role==='lookout'?'goose-matron':'bulldog-guard',baseHeight=role==='lookout'?2.35:2.5;
+ const assetName=role==='lookout'?'pig-matron':'pig-guard',baseHeight=role==='lookout'?2.35:2.5;
  const group=new THREE.Group(),body=new THREE.Group();group.add(body);body.scale.setScalar(height/baseHeight);
- group.name=role==='lookout'?'Goose matron':'Bulldog estate guard';group.userData.kookRole=role;group.userData.kookHeight=height;
+ group.name=role==='lookout'?'Pig matron':'Boar estate guard';group.userData.kookRole=role;group.userData.kookHeight=height;
  const diagnostic:EnemyVisualDiagnostics={kind,status:'loading',url:base+assetName+'.glb',clips:['stroll','inhale','squawk','aim','recoil','recover'],activeClip:null,mappedNodes:{torso:'spine',head:'head',jaw:'jaw'},skinnedMeshes:0,meshes:0,animationTime:0,gaitPhase:0,state:'patrol'};
  const lease=weaponCache.acquire(assetName),gun=role==='gunner'?makeGun():null;
  const beam=role==='lookout'?new KookSquawk():null;if(beam){group.add(beam);group.userData.kookSquawk=beam;}
@@ -77,15 +77,17 @@ export function createKookVisual(kind:EnemyKind,role:KookRole,height=role==='loo
    const aimed=['aim','fire','reload'].includes(frame.state);
    gunAim=THREE.MathUtils.damp(gunAim,aimed?1:0,12,dt);
    const recoil=frame.state==='fire'?Math.sin(Math.min(1,frame.stateTime/.18)*Math.PI)*.10:0;
-   gun.group.position.set(-.10,1.45+gunAim*.12,.28-recoil);
+   gun.group.position.set(-.10,1.52+gunAim*.12,.50-recoil);
    const desired=new THREE.Quaternion().setFromEuler(new THREE.Euler(.35*(1-gunAim),0,0));
    if(aimed&&frame.attackTarget){const aim=body.worldToLocal(frame.attackTarget.clone()).sub(gun.group.position).normalize();
     aim.y=THREE.MathUtils.clamp(aim.y,-.5,.4);aim.normalize();desired.setFromUnitVectors(new THREE.Vector3(0,0,1),aim);}
    gun.group.quaternion.slerp(desired,dt>0?1-Math.exp(-dt*14):1);gun.flash.visible=frame.alive&&frame.state==='fire'&&frame.stateTime<.075;
    group.updateWorldMatrix(true,true);const errors=[];
    for(const [side,socket,sign]of [['right',gun.right,-1],['left',gun.left,1]] as const){
-    orientation.copy(gun.group.getWorldQuaternion(new THREE.Quaternion())).multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(.15,sign*.55,-sign*.32)));
-    const palm=new THREE.Vector3(sign*.105,-.14,.045),contact=socket.getWorldPosition(grip).clone();
+    // Right hoof wraps the stock; left palm faces upward under the fore-end.
+    const handPose=side==='left'?new THREE.Euler(-1.25,.1,-.1):new THREE.Euler(.5,1.1,.12);
+    orientation.copy(gun.group.getWorldQuaternion(new THREE.Quaternion())).multiply(new THREE.Quaternion().setFromEuler(handPose));
+    const palm=new THREE.Vector3(sign*.035,-.20,.05),contact=socket.getWorldPosition(grip).clone();
     const wrist=contact.clone().sub(palm.clone().multiplyScalar(body.scale.y).applyQuaternion(orientation));
     rig.grip(side,wrist,orientation);group.updateWorldMatrix(true,true);
     errors.push(rig.bones.get('wrist-'+side)!.localToWorld(palm).distanceTo(contact));

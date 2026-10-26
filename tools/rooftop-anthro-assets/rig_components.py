@@ -28,7 +28,7 @@ def build(name):
   if kind=='VEC3':out.update(min=a.min(0).tolist(),max=a.max(0).tolist())
   access.append(out);return len(access)-1
  primitive=doc['meshes'][0]['primitives'][0];attrs=primitive['attributes'];p=read(attrs['POSITION']);indices=read(primitive['indices']).reshape(-1,3)
- goose=name=='goose-matron';height=2.35 if goose else 2.5
+ goose=name=='goose-matron';pig=name in ('pig-matron','pig-guard');matron=name=='pig-matron';height=2.35 if goose or matron else 2.5
  lo=p.min(0);hi=p.max(0);factor=height/(hi[1]-lo[1]);center=(lo+hi)/2
  p=(p-np.array([center[0],lo[1],center[2]]))*factor;f=p/height;x,y,z=f.T;ax=np.abs(x)
  joints=[];positions={};parents={}
@@ -49,6 +49,21 @@ def build(name):
   sj('knee',[.085 if goose else .152,.215 if goose else .20,.005],'hip-'+side)
   sj('ankle',[.095 if goose else .16,.085,.02],'knee-'+side)
   sj('toe',[.095 if goose else .16,.05,.12],'ankle-'+side)
+ if pig:
+  # Measured against each native Meshy front/side surface, in height units.
+  # The matron's short porcine neck must not inherit the former goose neck.
+  measured={'hips':[0,.31,0],'spine':[0,.43,.015],'chest':[0,.57 if matron else .65,0],
+    'neck':[0,.635 if matron else .72,0],'head':[0,.69 if matron else .765,.015],
+    'jaw':[0,.735 if matron else .765,.065 if matron else .12]}
+  for side,sign in [('left',1),('right',-1)]:
+   for n,v in {'clavicle':[.1,.58 if matron else .66,0],
+     'shoulder':[.18 if matron else .225,.58 if matron else .66,-.015 if matron else -.045],
+     'elbow':[.275 if matron else .315,.475 if matron else .53,-.01 if matron else -.04],
+     'wrist':[.32 if matron else .35,.435,.04 if matron else .03],
+     'hip':[.13 if matron else .15,.29,0], 'knee':[.14 if matron else .16,.205,-.015],
+     'ankle':[.14 if matron else .16,.08,-.025],'toe':[.14 if matron else .16,.04,.07]}.items():
+    measured[n+'-'+side]=[v[0]*sign,v[1],v[2]]
+  for n,v in measured.items():positions[n]=np.array(v)*height
  segments={'spine':'chest','chest':'neck','neck':'head'}
  for side in ['left','right']:
   for a,b in [('shoulder','elbow'),('elbow','wrist'),('hip','knee'),('knee','ankle')]:segments[a+'-'+side]=b+'-'+side
@@ -71,6 +86,7 @@ def build(name):
  def add(n,w):weights[:,ids[n]]+=w
  # Torso and long neck use endpoint-weighted spans. Art stays continuous.
  stops=[('hips',.32 if goose else .29),('spine-surface',.43 if goose else .44),('chest-surface',.58 if goose else .64),('neck-surface',.69 if goose else .735),('head',.795 if goose else .79)]
+ if pig:stops=[('hips',.29),('spine-surface',.43),('chest-surface',.57 if matron else .64),('neck-surface',.62 if matron else .715),('head',.68 if matron else .76)]
  torso=np.zeros_like(weights)
  for j,(n,at) in enumerate(stops):
   left=1 if j==0 else smooth((y-stops[j-1][1])/(at-stops[j-1][1]))
@@ -83,15 +99,25 @@ def build(name):
  # keeping the wide pelvis below it on the torso rather than the elbow.
  boundary=.23-np.maximum(0,y-.42)*.58 if goose else .30-np.maximum(0,y-.43)*.40
  arm_amount=smooth((ax-boundary)/(.043 if goose else .04))*(1-smooth((y-(.60 if goose else .68))/.06))*smooth((y-(.32 if goose else .26))/.07)
+ if pig:
+  boundary=.25+np.maximum(0,.37-y)*.4-np.maximum(0,y-.43)*.36 if matron else .26+np.maximum(0,.36-y)*.4-np.maximum(0,y-.46)*.30
+  arm_amount=smooth((ax-boundary)/.025)*(1-smooth((y-(.625 if matron else .70))/.055))*smooth((y-.235)/.045)
  for side,sign in [('left',1),('right',-1)]:
   amount=arm_amount*(x*sign>0);weights*=1-amount[:,None]
   shoulder=.14 if goose else .22;elbow=.22 if goose else .31;wrist=.29 if goose else .395
   elbow_y=.52 if goose else .53;wrist_y=.465 if goose else .445
   fore=smooth(((ax-elbow)*.7-(y-elbow_y)*.7+.023)/.055)
   hand=smooth(((ax-wrist)*.7-(y-wrist_y)*.7+.012)/.04) if goose else smooth(((ax-.375)*.7-(y-.46)*.7+.045)/.05)
+  if pig:
+   elbow=positions['elbow-'+side]/height;wrist=positions['wrist-'+side]/height
+   fore=smooth(((ax-abs(elbow[0]))*.6-(y-elbow[1])*.8+.022)/.055)
+   # The entire broad hoof-palm belongs to the wrist, including its inner
+   # thumb and nail. Blend inside the cuff, not through the spread fingers.
+   hand=smooth((ax*.6-y*.8+(.202 if matron else .205))/.035)
   add('shoulder-'+side+'-surface',amount*(1-fore));add('elbow-'+side+'-surface',amount*fore*(1-hand));add('wrist-'+side,amount*fore*hand)
  # Hems stay at the pelvis. Boot soles and paws remain rigid contact pieces.
  leg_amount=(1-smooth((y-(.265 if goose else .255))/.055))*smooth((ax-.02)/.045)
+ if pig:leg_amount=(1-smooth((y-.205)/.035))*smooth((ax-.02)/.045)
  for side,sign in [('left',1),('right',-1)]:
   amount=leg_amount*(x*sign>0);weights*=1-amount[:,None]
   shin=1-smooth((y-(.21 if goose else .195))/.05);foot=1-smooth((y-.10)/.09)
@@ -101,6 +127,12 @@ def build(name):
  if goose:
   jaw=smooth((z-.052)/.016)*(1-smooth((y-(.800-.1*np.maximum(0,z-.06)))/.008))*smooth((y-.738)/.018)
   jaw*=1-smooth((ax-.075)/.035)
+  weights*=1-jaw[:,None];add('jaw',jaw)
+ if matron:
+  # Only the lower lip/chin and tongue hinge. Snout, cheeks and pearls stay
+  # on their anatomical controls; a soft geometric seam avoids texture noise.
+  jaw=smooth((z-.055)/.045)*(1-smooth((y-(.722-.12*np.maximum(0,z-.08)))/.015))*smooth((y-.65)/.022)
+  jaw*=1-smooth((ax-.075)/.055)
   weights*=1-jaw[:,None];add('jaw',jaw)
  order=np.argsort(weights,axis=1)[:,-4:];best=np.take_along_axis(weights,order,axis=1);best/=best.sum(1,keepdims=True)
  quant=np.rint(best*255).astype(np.int32);quant[:,-1]+=255-quant.sum(1)
@@ -136,4 +168,4 @@ def build(name):
  report={'name':name,'height':height,'sourceSha256':hashlib.sha256(raw).hexdigest(),'sourceTriangles':len(indices),'triangles':sum(counts.values()),'components':counts,'joints':len(joints),'skinBones':len(world),'allNativeTrianglesPreserved':sum(counts.values())==len(indices),'originalNormalsUVsAndTextures':True,'weightsNormalized':True,'segments':segments,'restJoints':{n:p.tolist()for n,p in positions.items()}}
  (OUT/(name+'.json')).write_text(json.dumps(report,indent=2)+'\n');print(json.dumps({k:v for k,v in report.items()if k not in ('restJoints','segments')}))
 
-for name in sys.argv[1:] or ['goose-matron','bulldog-guard']:build(name)
+for name in sys.argv[1:] or ['pig-matron','pig-guard']:build(name)

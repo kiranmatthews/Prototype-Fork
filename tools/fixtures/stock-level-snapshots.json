@@ -28,7 +28,7 @@
       "snapshotSha256": "97ddaf2e2dcbf83e616b753122ec9fd52b81bcedeecb71b1075f8d943a4c7c6e"
     },
     "rooftop-relay": {
-      "snapshotSha256": "9a5a3dcb1ad00e9e6b715ad4b5d92bc531235b8c8879124c566adc8d35c2ec7d",
+      "snapshotSha256": "37ef2360b3cd69909a82bd384a429f3abc1d64fdfb48be0dc53c257c0a2c0b9d",
       "authoringRuntime": "v24.19.0"
     },
     "slipstream-race": {

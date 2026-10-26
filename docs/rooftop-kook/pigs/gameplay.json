@@ -1,0 +1,12 @@
+{
+  "animals": 7,
+  "independentShooting": true,
+  "allPatrol": true,
+  "aimLock": true,
+  "squawkCone": true,
+  "telegraphSafe": true,
+  "sidestep": true,
+  "coverClipsVisualAndDamage": true,
+  "reset": true,
+  "authoredSizeMultiplier": 1.7
+}

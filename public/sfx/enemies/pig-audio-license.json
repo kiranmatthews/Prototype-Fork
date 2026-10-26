@@ -1,0 +1,40 @@
+{
+  "sources": [
+    {
+      "file": "pig-oink.wav",
+      "title": "Pig Oink",
+      "author": "qubodup",
+      "originalAuthor": "Jofae (formerly josepharaoh99)",
+      "source": "https://freesound.org/people/qubodup/sounds/442906/",
+      "originalSource": "https://freesound.org/people/Jofae/sounds/352698/",
+      "preview": "https://cdn.freesound.org/previews/442/442906_71257-hq.mp3",
+      "start": 0,
+      "duration": 0.7435,
+      "fadeOut": 0.045,
+      "license": "CC0 1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "verified": "2026-10-26",
+      "changes": "Excerpt, mono 32 kHz PCM, DC removal, 12 ms fade-in, stated fade-out, peak normalized to 0.86. Pitch variation is applied at playback.",
+      "sourceSha256": "44317a5549d54185e9dc3f096dccd2b5874be4e99f968b8212b5041855566419",
+      "sha256": "dc465dddb8802b3927fb4e9662c26861d378b65b10b114debf042aad9d2770fc",
+      "bytes": 47628
+    },
+    {
+      "file": "pig-squeal.wav",
+      "title": "Pig Squealing.mp3",
+      "author": "TheAcidRomance",
+      "source": "https://freesound.org/people/TheAcidRomance/sounds/260640/",
+      "preview": "https://cdn.freesound.org/previews/260/260640_2362629-hq.mp3",
+      "start": 0.45,
+      "duration": 0.84,
+      "fadeOut": 0.09,
+      "license": "CC0 1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "verified": "2026-10-26",
+      "changes": "Excerpt, mono 32 kHz PCM, DC removal, 12 ms fade-in, stated fade-out, peak normalized to 0.86. Pitch variation is applied at playback.",
+      "sourceSha256": "db777879e136105d26309f110297931d022a564f7b098d26683907fe019ec2a2",
+      "sha256": "da540e5f4e26728707d59be3d80f47dea97f6313ab051804813545a51b27716d",
+      "bytes": 53804
+    }
+  ]
+}

@@ -1,0 +1,104 @@
+{
+  "motion": [
+    {
+      "name": "front",
+      "angle": 0,
+      "frames": 656,
+      "seconds": 12,
+      "maxHandError": 1.5888218580782548e-14,
+      "maxFootError": 2.2748467065386707e-14,
+      "minBottom": -2.9802293965985882e-9,
+      "maxBottom": 0.004959219519051317,
+      "minTop": 2.276307847676776,
+      "maxTop": 2.509845209493335,
+      "states": [
+        [
+          "patrol",
+          "windup",
+          "shriek",
+          "recover"
+        ],
+        [
+          "patrol",
+          "aim",
+          "fire",
+          "reload"
+        ]
+      ],
+      "nonFinite": 0,
+      "maxRootScaleError": 0,
+      "maxJointScaleError": 0,
+      "minTorso": 0.78,
+      "maxTorso": 1.1577907758943362,
+      "minNeck": 0.8000177206313779,
+      "maxNeck": 1.206708551801303
+    },
+    {
+      "name": "forty",
+      "angle": 0.6981317007977318,
+      "frames": 645,
+      "seconds": 12,
+      "maxHandError": 1.7763568394002505e-14,
+      "maxFootError": 2.0097183471152322e-14,
+      "minBottom": -2.9802578183080186e-9,
+      "maxBottom": 0.004959219519037106,
+      "minTop": 2.301279406300239,
+      "maxTop": 2.522189268069212,
+      "states": [
+        [
+          "patrol",
+          "windup",
+          "shriek",
+          "recover"
+        ],
+        [
+          "patrol",
+          "aim",
+          "fire",
+          "reload"
+        ]
+      ],
+      "nonFinite": 0,
+      "maxRootScaleError": 0,
+      "maxJointScaleError": 0,
+      "minTorso": 0.78,
+      "maxTorso": 1.1572376541885143,
+      "minNeck": 0.8001968093585734,
+      "maxNeck": 1.205707935611056
+    },
+    {
+      "name": "side",
+      "angle": 1.5707963267948966,
+      "frames": 666,
+      "seconds": 12,
+      "maxHandError": 1.5888218580782548e-14,
+      "maxFootError": 1.9131948672901813e-14,
+      "minBottom": -2.9802436074533034e-9,
+      "maxBottom": 0.002830314909175513,
+      "minTop": 2.2822072119188164,
+      "maxTop": 2.5173289289874106,
+      "states": [
+        [
+          "patrol",
+          "windup",
+          "shriek",
+          "recover"
+        ],
+        [
+          "patrol",
+          "aim",
+          "fire",
+          "reload"
+        ]
+      ],
+      "nonFinite": 0,
+      "maxRootScaleError": 0,
+      "maxJointScaleError": 0,
+      "minTorso": 0.78,
+      "maxTorso": 1.1573374490663295,
+      "minNeck": 0.8001220887851852,
+      "maxNeck": 1.2065090341812117
+    }
+  ],
+  "errors": []
+}
