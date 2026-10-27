@@ -9,7 +9,7 @@ await withBlockworksRuntime(async r=>{
  const {SkateRace}=await r.server.ssrLoadModule('/src/race/runtime.ts');
  const source=r.sourceModule.SPAGHETTI_RAILS_LEVEL;
  assert.ok(registry.normalizeCustomLevelData(source),'The full editor/save contract accepts the race');
- assert.equal(r.l.raceCheckpoints.length,7,'Editor migration retains all authored rail-race retries');
+ assert.equal(r.l.raceCheckpoints.length,source.components.filter(c=>c.t==='checkpoint').length,'Editor migration retains all authored rail-race retries');
  const race=new SkateRace(r.scene,r.p,false,()=>true);
  race.attach(r.l,'spaghetti-rails');race.start(solo?'time-trial':'race',seed);
  const traced=Number(process.env.SPAGHETTI_TRACE_RIDER??0),lastInputs=[],drive=race.drive.bind(race);
@@ -20,7 +20,7 @@ await withBlockworksRuntime(async r=>{
  let frames=0,lastProgress=0,stalledAt=0;
  for(;frames<maxFrames&&race.riders.slice(0,race.count).some(a=>a.finish===null);frames++){
   r.scene.updateMatrixWorld(true);
-  const input=race.phase==='running'?race.drive(0):{moveX:0,moveY:0};
+  const input=race.phase==='running'?race.drive(0,false,process.env.SPAGHETTI_CHOICE===undefined?undefined:Number(process.env.SPAGHETTI_CHOICE)):{moveX:0,moveY:0};
   race.step(r.dt,input);r.l.update(r.dt);r.p.commitRenderStep(r.l);race.commitRenderStep();
   for(const a of race.riders.slice(0,race.count)){
    const s=stats[a.id],p=a.player;
@@ -39,7 +39,7 @@ await withBlockworksRuntime(async r=>{
   if(lead>lastProgress+10){lastProgress=lead;stalledAt=frames;}
   if(frames-stalledAt>12000)break;
  }
- const report={at:new Date().toISOString(),solo,seed,frames,length:race.course.length,seconds:race.elapsed,tuningUnchanged:tuning===JSON.stringify(r.TUNING),riders:race.riders.slice(0,race.count).map((a,i)=>({id:a.id,finish:a.finish,falls:a.falls,deaths:a.player.totalDeaths,progress:a.progress,...stats[i],rails:[...stats[i].rails]})),records};
+ const report={at:new Date().toISOString(),choice:process.env.SPAGHETTI_CHOICE??'default',solo,seed,frames,length:race.course.length,seconds:race.elapsed,tuningUnchanged:tuning===JSON.stringify(r.TUNING),riders:race.riders.slice(0,race.count).map((a,i)=>({id:a.id,finish:a.finish,falls:a.falls,deaths:a.player.totalDeaths,progress:a.progress,...stats[i],rails:[...stats[i].rails]})),records};
  await writeFile(`${output}/${solo?'solo':'race'}-${seed}.json`,JSON.stringify(report,null,2));
  await writeFile(`${output}/${solo?'solo':'race'}-${seed}-trace.json`,JSON.stringify(trace));
  console.log(JSON.stringify({...report,records:undefined}));

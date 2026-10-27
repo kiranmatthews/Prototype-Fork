@@ -14,6 +14,7 @@ import { isGraphicsReset } from './lostGraphicsResources';
 import { validSkateRace } from './race/schema';
 import { createRaceFinish } from './race/finish';
 import { RaceCourse } from './race/course';
+import { RailChoices, type RailChoiceCursor } from './race/railChoices';
 import type { SkateRaceData } from './race/types';
 import {custardPoolMaterial,custardFoamMaterial,addCustardPoolBedLook,attachCustardPoolReflection,CustardFinalePresentation} from './custardPool';
 import { NightworksBackdrop } from './nightworksBackdrop';
@@ -2383,7 +2384,7 @@ export const COMBO_GEM_TINT = 0x46e882;
  * between two players in split-screen would have them yanking each other's
  * camera around.
  */
-export interface LaneCursor {
+export interface LaneCursor extends RailChoiceCursor {
   s: number;
 }
 
@@ -4238,6 +4239,11 @@ export class Level {
   readonly isBossLevel: boolean;
   readonly allowsCrystal: boolean;
   readonly skateRace: SkateRaceData | null;
+  private railChoiceNavigation:RailChoices|null=null;
+  get railChoices():RailChoices|null {
+    if(!this.skateRace?.railChoices?.length)return null;
+    return this.railChoiceNavigation??=new RailChoices(new RaceCourse(this.skateRace.line),this.skateRace,this.rails);
+  }
   readonly allowsBonus: boolean;
   boss: CrabChiefEncounter | null = null;
   groundMeshes: THREE.Mesh[] = [];
@@ -4303,6 +4309,7 @@ export class Level {
   /** The lane proposes candidates; live floor collision confirms each catch.
    * A generous corridor includes banked road edges and wide landing courts. */
   hasReachableFallLanding(position: THREE.Vector3, verticalSpeed: number, travelSpeed: number, gravity: number, terminal: number): boolean {
+    if(this.railChoices?.paths.some(path=>path.course.hasReachableLanding(this,position,verticalSpeed,travelSpeed,gravity,terminal)))return true;
     if (this.lanePts.length < 2) return true;
     this.fallRecoveryCourse ??= new RaceCourse(this.lanePts.map(p => [p.x, p.y, p.z, 32]));
     return this.fallRecoveryCourse.hasReachableLanding(this, position, verticalSpeed, travelSpeed, gravity, terminal);
@@ -8215,6 +8222,7 @@ export class Level {
               (this.blockworksSurfaces??=new BlockworksSurfaces(this.root,!EDITOR_BUILD)).fitRail(rail.points,rail.object,postHeights);
             }
             this.rails[this.rails.length-1].coping = c.coping === true;
+            this.rails[this.rails.length-1].object.userData.sourceName = c.nm;
             if(c.dkind === "citydeck" || c.dkind === "cityutilitypole"){const rail=this.rails[this.rails.length-1];rail.object.traverse(o=>{const mesh=o as THREE.Mesh;if(mesh.isMesh){mesh.geometry.dispose();}});rail.object.clear();rail.object.userData.cityRail=true;rail.object.add(cityRailVisual(rail.points,c.dkind === "cityutilitypole"));}
             if (c.dkind === "nightrockridge") {
               const rail = this.rails[this.rails.length-1];
@@ -9573,6 +9581,7 @@ export class Level {
   /** Rebuild the arc-length table. Called wherever lanePts is assigned. */
   private measureLane(): void {
     this.fallRecoveryCourse = undefined;
+    this.railChoiceNavigation = null;
     this.laneArc = [0];
     for (let i = 1; i < this.lanePts.length; i++) {
       const a = this.lanePts[i - 1];
@@ -9616,6 +9625,12 @@ export class Level {
     // inside its rectangle the zone owns the course frame (side-scroll /
     // run-at-camera), and the lane resumes where the zone ends
     if (this.zoneAt(x, z)) return null;
+    if(this.railChoices){
+      const at=cursor??{s:-1},point=new THREE.Vector3(x,y,z);
+      this.railChoices.update(point,at);
+      const direction=this.railChoices.tangent(at),length=Math.hypot(direction.x,direction.z)||1;
+      return {x:direction.x/length,z:direction.z/length};
+    }
     const pts = this.lanePts;
     if (pts.length < 2) return null;
     let best = Infinity;
@@ -9685,6 +9700,7 @@ export class Level {
 
   /** Sample the same ordered branch selected by the camera, without moving its cursor. */
   cameraLanePointAhead(cursor: LaneCursor, distance: number, target: THREE.Vector3): THREE.Vector3 | null {
+    if(this.railChoices&&cursor.s>=0)return this.railChoices.ahead(cursor,distance,target);
     if (cursor.s < 0 || this.lanePts.length < 2) return null;
     const last = this.laneArc.length - 1;
     const s = THREE.MathUtils.clamp(cursor.s + distance, 0, this.laneArc[last]);

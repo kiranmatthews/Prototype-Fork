@@ -21,10 +21,10 @@ for(const [index,run]of runs.entries())for(const lane of run.lanes)for(const ent
   minimum=Math.min(minimum,speed);if(speed<12)slowSeconds+=CONST.fixedStep;
   s+=speed*CONST.fixedStep;seconds+=CONST.fixedStep;
  }
- rows.push({section:index,name:run.name,lane,entrySpeed,length:rail.totalLength,seconds,minimum,exitSpeed:speed,slowSeconds});
+ rows.push({section:index,choice:run.choice,name:run.name,lane,entrySpeed,length:rail.totalLength,seconds,minimum,exitSpeed:speed,slowSeconds});
 }
-const totals=[-3.6,0,3.6].map(lane=>({lane,seconds:rows.filter(r=>r.lane===lane&&r.entrySpeed===TUNING.downhillMax).reduce((sum,r)=>sum+r.seconds,0)}));
+const totals=[0,1,2].map(choice=>({choice,seconds:rows.filter(r=>r.choice===choice&&r.entrySpeed===TUNING.downhillMax).reduce((sum,r)=>sum+r.seconds,0)}));
 const report={at:new Date().toISOString(),scope:'Forward-grind momentum estimate only; excludes catches, jumps, combat and balance. Native playtests remain authoritative.',
  tuning:{gravity:TUNING.groundGravity,cap:TUNING.downhillMax,minimum:CONST.grindMinSpeed,drag:TUNING.grindDrag,step:CONST.fixedStep},totals,rows};
 await writeFile(output+'/report.json',JSON.stringify(report,null,2));
-console.log(JSON.stringify({totals,loom:rows.filter(r=>r.section===13||r.section===14)},null,2));
+console.log(JSON.stringify({totals,slowest:[...rows].sort((a,b)=>a.minimum-b.minimum).slice(0,8)},null,2));

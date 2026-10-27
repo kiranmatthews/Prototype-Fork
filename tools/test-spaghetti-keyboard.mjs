@@ -4,7 +4,7 @@ const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
 const base=process.argv.find(a=>a.startsWith('http'))||'http://127.0.0.1:5237';
 const output=process.env.SPAGHETTI_OUTPUT??'docs/spaghetti-rails/evidence/keyboard';
 const settings={items:process.env.SPAGHETTI_ITEMS==='1',trial:process.env.SPAGHETTI_TRIAL==='1',cues:process.env.SPAGHETTI_CUES==='1',
- lane:Number(process.env.SPAGHETTI_LANE??0),defend:process.env.SPAGHETTI_DEFEND==='1',route:process.env.SPAGHETTI_ROUTE??'fixed',camera:process.env.SPAGHETTI_CAMERA==='1',
+ choice:Number(process.env.SPAGHETTI_CHOICE??1),lane:Number(process.env.SPAGHETTI_LANE??0),defend:process.env.SPAGHETTI_DEFEND==='1',route:process.env.SPAGHETTI_ROUTE??'fixed',camera:process.env.SPAGHETTI_CAMERA==='1',
  seed:process.env.SPAGHETTI_SEED?Number(process.env.SPAGHETTI_SEED):null};
 await mkdir(output,{recursive:true});
 const browser=await chromium.launch({headless:true,channel:'chrome'});
@@ -31,7 +31,7 @@ try{
  await page.evaluate(settings=>{
   const g=window.__game,nativeUpdate=g.input.update.bind(g.input),held=new Set();
   const update=()=>{nativeUpdate();if(settings.seed!==null&&(g.input.raceStartPressed||g.input.raceTrialStartPressed))g.input.raceSeed=settings.seed;};
-  const q=window.spaghettiKeyboard={tuning:JSON.stringify(g.TUNING),rails:new Set(),jumps:[],lastRail:null,releasedAt:-Infinity,lastFall:0,rejoining:false,nextControl:0,stopped:false,itemPresses:0,lastItem:-Infinity,spinPresses:0,lastSpin:-Infinity,cues:[],lastCue:-1,camera:[],lastCamera:-Infinity,loomShot:-1};
+  const q=window.spaghettiKeyboard={cursor:{s:0},tuning:JSON.stringify(g.TUNING),rails:new Set(),jumps:[],lastRail:null,releasedAt:-Infinity,lastFall:0,rejoining:false,nextControl:0,stopped:false,itemPresses:0,lastItem:-Infinity,spinPresses:0,lastSpin:-Infinity,cues:[],lastCue:-1,camera:[],lastCamera:-Infinity,loomShot:-1};
   const event=(code,down)=>document.body.dispatchEvent(new KeyboardEvent(down?'keydown':'keyup',{code,key:code==='Space'?' ':code.slice(-1).toLowerCase(),bubbles:true}));
   q.stop=()=>{q.stopped=true;for(const code of held)event(code,false);held.clear();};
   // Sample at a human-scale 20 Hz in the browser. Cross-process logging and
@@ -42,13 +42,16 @@ try{
    if(q.stopped||now<q.nextControl){update();return;}q.nextControl=now+50;
    if(a.falls!==q.lastFall){q.lastFall=a.falls;q.lastRail=null;q.releasedAt=-Infinity;q.rejoining=true;}
    if(q.rejoining&&p.state==='grind'&&railIndex>=0)q.rejoining=false;
+   const network=l.railChoices,stage=network.paths.find(path=>a.progress<path.end)?.section??5;
+   const choice=settings.route==='mixed'?[0,2,1,2,0,1][stage]:settings.choice;
+   const path=network.guide(p.pos,q.cursor,choice,p.state==='grind'?p.grindRail:null,p.state==='grind'?p.grindT:undefined);
+   const span=path?.rails.findIndex(span=>span.rail===p.grindRail)??-1,gap=p.state==='grind'&&span>=0&&span<path.rails.length-1;
    if(r.phase==='running'&&a.finish===null&&!a.recovery&&p.state!=='dead'&&!p.skateCameraBailing){
     keys.push('KeyW');
     if(p.state==='grind'){
      keys.pop(); // rail travel is automatic; use the full digital balance axis
      q.rails.add(railIndex);
-     const end=r.course.project(p.grindRail.pointAt(p.grindRail.totalLength),a.progress,60).s;
-     const gap=r.jumps.some(j=>Math.abs(j.s-end)<7),remaining=p.grindRail.totalLength-p.grindT;
+     const remaining=p.grindRail.totalLength-p.grindT;
      if(q.lastRail!==railIndex){q.lastRail=railIndex;q.releasedAt=-Infinity;}
      if(gap&&remaining<=4.5){
       if(!Number.isFinite(q.releasedAt)){q.releasedAt=now;q.jumps.push({time:r.elapsed,rail:railIndex,remaining,speed:p.grindVel});}
@@ -62,10 +65,9 @@ try{
      if(now-q.releasedAt>80)keys.push('KeyE');
     }else{
      keys.push('Space');
-     const strand=r.grinds.find(v=>a.progress>=v.s-28&&a.progress<v.end+3);
-     if(strand&&a.progress>=strand.s-4)keys.push('KeyE');
-     const section=r.grinds.indexOf(strand),lane=a.falls>0||settings.route==='inside-coils'&&(section===13||section===14)?0:settings.lane;
-     const aim=r.course.sample(a.progress+15,lane),basis=p.raceInputBasis(l),dx=aim.x-p.pos.x,dz=aim.z-p.pos.z;
+     const next=path?.rails.find(span=>span.end>q.cursor.along+1);
+     if(next&&next.start-q.cursor.along<4)keys.push('KeyE');
+     const aim=network.ahead(q.cursor,15),basis=p.raceInputBasis(l),dx=aim.x-p.pos.x,dz=aim.z-p.pos.z;
      const angle=Math.atan2(dx*-basis.z+dz*basis.x,dx*basis.x+dz*basis.z);
      // A retry already faces down its launch strip. Keep the stick neutral
      // until catching: steering relative to the still-settling camera can
@@ -80,20 +82,22 @@ try{
      if(r.rank(0)===1&&['green-shell','water-bomb','boomerang'].includes(a.item)&&p.state==='grind')keys.push('KeyS');
     }
     // Keep a last-moment attack from queuing a deck flip across the catch.
-    const nearTakeoff=r.jumps.some(j=>j.s-a.progress>=-1&&j.s-a.progress<8);
+    const nearTakeoff=gap&&p.grindRail.totalLength-p.grindT<12;
     if(settings.defend&&!q.rejoining&&p.state!=='air'&&!nearTakeoff&&(neighbour||threat&&threat.item!=='shock-shell'&&threat.seconds<.3)&&r.elapsed-q.lastSpin>1.3){keys.push('KeyF');q.spinPresses++;q.lastSpin=r.elapsed;}
-    if(settings.cues&&p.state==='grind'){
-     const index=r.jumps.findIndex(j=>j.s-a.progress>=18&&j.s-a.progress<23);
-     if(index>=0&&!q.cues.some(c=>c.index===index)){
-      const markers=g.getCurrentLevel().data.components.filter(c=>c.nm?.startsWith(`Jump ${index+1} / takeoff chevron`));
+    if(settings.cues&&gap){
+     const remaining=p.grindRail.totalLength-p.grindT;
+     if(remaining>=22&&remaining<27&&!q.cues.some(c=>c.rail===railIndex)){
+      const target=p.grindRail.pointAt(p.grindRail.totalLength-4),groups=new Map();
+      for(const c of g.getCurrentLevel().data.components.filter(c=>c.nm?.includes('/ takeoff chevron'))){const id=Number(c.nm.match(/Jump (\d+)/)[1]),list=groups.get(id)??[];list.push(c);groups.set(id,list);}
+      const [id,markers]=[...groups].sort((a,b)=>{const d=([,list])=>Math.hypot(list.reduce((n,c)=>n+c.p[0],0)/list.length-target.x,list.reduce((n,c)=>n+c.p[2],0)/list.length-target.z);return d(a)-d(b);})[0];
       const projected=markers.map(c=>{const at=p.pos.clone().set(c.p[0],c.p[1]+1.5,c.p[2]).project(g.camera);return {x:at.x,y:at.y,z:at.z,visible:Math.abs(at.x)<.95&&Math.abs(at.y)<.95&&at.z>-1&&at.z<1};});
-      q.cues.push({index,time:r.elapsed,metresBefore:r.jumps[index].s-a.progress,projected});q.lastCue=index;
+      q.cues.push({index:id-1,rail:railIndex,time:r.elapsed,metresBefore:remaining-4,projected});q.lastCue=id-1;
      }
     }
     if(settings.camera&&r.elapsed-q.lastCamera>.5){
      const feet=p.pos.clone().project(g.camera),head=p.pos.clone().add({x:0,y:1.6,z:0}).project(g.camera);
      q.camera.push({time:r.elapsed,progress:a.progress,rail:railIndex,feet:feet.toArray(),head:head.toArray(),visible:[feet,head].every(v=>Math.abs(v.x)<.95&&Math.abs(v.y)<.95&&v.z>-1&&v.z<1)});q.lastCamera=r.elapsed;
-     if(railIndex>=39&&railIndex<=44)q.loomShot=Math.floor((a.progress-2070)/45);
+     if(railIndex>=0)q.loomShot=Math.floor(a.progress/150);
     }
    }
    q.state={time:r.elapsed,phase:r.phase,s:a.progress,position:p.pos.toArray(),state:p.state,rail:railIndex,balance:p.balance,
@@ -125,7 +129,7 @@ try{
  console.log(JSON.stringify({finish,rails:result.rails.length,jumps:result.jumps.length,riders:result.riders,errors}));
  assert.ok(result.tuningUnchanged);assert.deepEqual(errors,[]);
  assert.ok(finish!==null,'Independent keyboard pilot must reach the finish');
- if(settings.cues){assert.equal(result.cues.length,14);assert.ok(result.cues.every(c=>c.projected.length===2&&c.projected.every(p=>p.visible)),'Both takeoff cues are in the camera frame at least eighteen metres before each jump');}
+ if(settings.cues){assert.equal(result.cues.length,new Set(result.jumps.map(j=>j.rail)).size);assert.ok(result.cues.every(c=>c.projected.length===2&&c.projected.every(p=>p.visible)),'Both takeoff cues are in the camera frame at least eighteen metres before each jump');}
  if(settings.camera)assert.ok(result.camera.every(c=>c.visible),'The live follow camera keeps the rider in frame through the complete course');
  if(process.env.SPAGHETTI_REQUIRE_WIN){
   assert.equal(result.rank,1,'A real keyboard/item run can win the race');

@@ -17,6 +17,9 @@ export interface SkateRaceData {
   jumps: { takeoff: RacePoint; landing: RacePoint }[];
   /** Optional rail-first sections. Rival inputs aim at these real, editable strands. */
   grinds?: { start: RacePoint; end: RacePoint; lanes: number[] }[];
+  /** Alternative chains of native named rails between shared platform junctions.
+   * The rails remain the editor's source of shape, curvature and height. */
+  railChoices?: { from: RacePoint; to: RacePoint; paths: string[][] }[];
   finishWidth: number;
   originalLength: number;
 }
@@ -52,6 +55,8 @@ export interface RaceThreat {
 export interface RaceHudState {
   /** Present only when the race is built around editable rail transfers. */
   railTransfers?: number;
+  railChoices?: number;
+  railMap?: readonly (readonly RaceKnot[])[];
   vehicle?: 'golf-cart'; crystalReward?:boolean; gemReward?:'win';
   cart?: {onFoot:boolean;target:string;distance:number|null;notice:string;actionReady:boolean;bearing:number|null};
   title:string; sections:readonly string[]; medalTimes:MedalTimes; medal:TimeMedal|null;

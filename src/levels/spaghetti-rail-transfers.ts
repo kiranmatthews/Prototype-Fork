@@ -16,17 +16,18 @@ export function splitSpaghettiRun(run:SpaghettiRun,fractions:readonly number[]):
     const t=(s-arc[i])/(arc[i+1]-arc[i]||1);
     return points[i].map((v,k)=>v+(points[i+1][k]-v)*t) as P;
   };
-  const cuts=fractions.map(t=>{
+ const gap=run.gap??10;
+ const cuts=fractions.map(t=>{
     const at=length*t,a=sample(at),lo=sample(at-.2),hi=sample(at+.2),n=Math.hypot(hi[0]-lo[0],hi[2]-lo[2]);
     const f=[(hi[0]-lo[0])/n,(hi[2]-lo[2])/n];
     const point=(d:number,y:number):P=>[a[0]+f[0]*d,y,a[2]+f[1]*d];
-    const receivingY=Math.min(a[1]+.8,sample(at+40)[1]);
-    return {at,before:point(-22,a[1]),end:a,start:point(10,receivingY),after:point(39,receivingY)};
+    const receivingY=Math.min(a[1]+.8,sample(at+gap+30)[1]);
+    return {at,before:point(-22,a[1]),end:a,start:point(gap,receivingY),after:point(gap+29,receivingY)};
   });
   return Array.from({length:cuts.length+1},(_,i)=>{
     const previous=cuts[i-1],next=cuts[i],nodes:P[]=[];
     if(previous)nodes.push(previous.start,previous.after);
-    const from=previous?previous.at+55:0,to=next?next.at-35:length;
+    const from=previous?previous.at+gap+45:0,to=next?next.at-35:length;
     // Keep a real span before the final sample. A sub-metre remainder makes
     // the parallel strand's offset bisector fold back into a tiny cusp.
     for(let s=from;s<to-4;s+=12)nodes.push(sample(s));
