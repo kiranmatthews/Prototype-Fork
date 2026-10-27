@@ -4,7 +4,24 @@ The active race is the seven-island layout: 168×112 m decision platforms, 288 m
 
 `spaghetti-rails-platforming` independently preserves the rejected compact layout: 54 rails, 79 platforms, 41 ordinary checkpoints, fruit, crystal and a normal finish, with no race or rivals. Its complete editor save is `spaghetti-rails-platforming.level.json`. Geometry SHA-256: `1a135128a3c2418d4c51cd8d035e8fb87f90a5cd48a6fc904339d6ba4c031fa8`. The copy imports no geometry from the replacement race.
 
-Current curated evidence is under `evidence/validated/islands/`. Other files in `evidence/validated/` are historical evidence of the superseded parallel-rail design. Exploratory failures stay locally under ignored evidence directories and are not represented as passes.
+Complete-race evidence is under `evidence/validated/islands/`; the subsequent camera fix is under `evidence/validated/opening-camera/`. Top-level files in `evidence/validated/` are historical evidence of the superseded parallel-rail design. Exploratory failures stay locally under ignored evidence directories and are not represented as passes.
+
+## Opening camera follow-up — 27 October 2026 UTC
+
+The starting deck previously projected the player onto an outgoing branch before they chose one. A full-render keyboard reproduction holding only forward and jump charge rotated the view **52.124°**, changed the input basis by **61.587° in one sample**, and sent the rider left across the platform.
+
+Seven south-facing travel zones now hold the view and controls steady across the seven decision islands. Each volume matches its platform footprint and uses the existing zone component. Beyond the rim, native rail navigation resumes. This changes only level data: all geometry, rail nodes, art, movement, tuning and the separately saved platformer remain unchanged.
+
+New evidence is in `evidence/validated/opening-camera/`:
+
+- `before.json` preserves the reproduced failure. `browser.json` verifies the actual 2560×1440/MAX drawing buffer and real KeyboardEvents. Forward traversal now has **0° camera rotation and 0° input-basis change**, with no falls. A separate left-choice run catches **Lace into the eye** and rides 110 m through its opening bends, with the camera following that selected rail. Both runs have clean consoles and unchanged tuning; neither uses the rival driver or player placement.
+- `native.json` covers 63 deck samples, 20,637 samples across all 48 native rails, and all eight starting entrances with zero falls. Only 1,077 samples on short supported ends enter the deck volumes; no loop on another storey is captured. Rounded leads can start just inside the rim: the largest direction difference at a supported end is 33.044°, and the transition uses the existing camera damping. Curved rail navigation beyond the decks retains a minimum tangent alignment of 0.921.
+- `forward-native.png` and `chosen-rail-native.png` are full-render native captures. This focused follow-up verifies the opening and all camera fields; it does not claim a new complete race traversal.
+- `normal-browser.json` repeats both KeyboardEvent runs with the actual 1280×720 game buffer: steady forward view, successful chosen-rail entry, no falls and a clean console. `forward-normal.png` records that presentation. Set `SPAGHETTI_MAX=0` to reproduce it.
+
+Reproduce with `tools/test-spaghetti-opening-camera.mjs` and `tools/test-spaghetti-island-entries.mjs`, using the shared heavy-job guard. Source hashes distinguish this increment from the earlier complete-race evidence.
+
+All twenty required `check:levels` commands pass (205.64 s), as does the exact production `build` script, including type-checking (54.12 s). No `check:all` was run. npm is absent in this environment, so the unchanged package scripts ran through `/bin/sh` with the existing local executables on PATH.
 
 ## Completed evidence
 

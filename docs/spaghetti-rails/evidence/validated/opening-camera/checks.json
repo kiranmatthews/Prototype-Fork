@@ -1,0 +1,27 @@
+[
+  {
+    "job": "native",
+    "exit": 0,
+    "seconds": 29.71302580833435
+  },
+  {
+    "job": "browser",
+    "exit": 0,
+    "seconds": 45.372411012649536
+  },
+  {
+    "job": "check-levels",
+    "exit": 0,
+    "seconds": 205.64279675483704
+  },
+  {
+    "job": "build",
+    "exit": 0,
+    "seconds": 54.12056088447571
+  },
+  {
+    "job": "normal-browser",
+    "exit": 0,
+    "seconds": 45.58889126777649
+  }
+]

@@ -1,0 +1,12 @@
+{
+  "parent": "65817c4fdfb796e1e30bdc22fefa28f19c463bbc",
+  "unchanged": {
+    "src/level.ts": true,
+    "src/main.ts": true,
+    "src/player.ts": true,
+    "src/tuning.ts": true,
+    "public/levels.json": true,
+    "src/levels/spaghetti-rails-platforming.ts": true,
+    "docs/spaghetti-rails/spaghetti-rails-platforming.level.json": true
+  }
+}

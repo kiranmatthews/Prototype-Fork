@@ -9,6 +9,8 @@ The platformer is the rejected compact course saved independently. Its original 
 
 The new race gives you a wide planning island before each of six huge chasms. Every whole rail reaches the next island. Missing a shortcut can cost time without ending the run: stay balanced and follow that thread to supported ground.
 
+The camera holds a steady forward view on each island while you choose an entrance. It follows your chosen rail's curves beyond the platform edge. Holding forward across the starting deck keeps the same heading; use left or right to pick your line.
+
 At the first island, the mint arrow is the second entrance from the left. It starts **Lace into the eye**, the fast combo's opening thread. The layout mirrors at some later islands, so follow the mint colour instead of memorising left or right. The source route names are useful in the editor; they are not a left-to-right numbering system.
 
 Use the paired gold chevrons to spot the two deliberate transfer windows. Charge the jump while grinding, aim toward the nearby lower parallel thread, release the jump and catch again. The first switch reaches **Pretzel heart**; the second reaches **Needle-thread escape**. This skips the long loops that make those intact routes slower. Land on the next wide island, choose the mint entrance again, and repeat. The race's control panel shows the active device's grind, charge and balance controls.

@@ -101,6 +101,10 @@ export function createSpaghettiRailsGreybox():CustomLevelData {
  const append=(p:P,width=16)=>{if(distance(p,line[line.length-1].slice(0,3) as P)>.02)line.push([...p,width]);};
  for(const [i,d]of SPAGHETTI_DOCKS.entries()){
   C.push({t:'platform',p:[d.p[0],d.p[1]-3,d.p[2]],s:[d.width,6,d.depth],tex:'checker',color:'#949ba4',grp:2,nm:d.name});
+  // A decision deck has no chosen branch yet. Keep the view and controls
+  // facing the mouths; the actual rail resumes ownership beyond the rim.
+  // Only supported rail ends enter these XZ-only travel volumes.
+  C.push({t:'zone',p:[...d.p],s:[d.width,1,d.depth],dir:'S',grp:1,nm:`Steady choice camera / ${d.name}`});
   if(i>0&&i<6)C.push({t:'checkpoint',p:[d.p[0],d.p[1],d.p[2]+15],grp:2,nm:`Retry / ${d.name}`});
   if(i<6){
    C.push({t:'speedpad',p:[d.p[0],d.p[1]+.04,d.p[2]-15],s:[148,.1,7],speed:42,cycle:.9,edgeGrinding:false,grp:2,nm:`Island launch strip / ${d.name}`});

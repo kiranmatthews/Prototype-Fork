@@ -1,0 +1,12 @@
+{
+  "src/levels/spaghetti-rails-network.ts": "81447e9f5bbc6b63e85b64763a3703797e80e079627af5899ae034eb0ec93109",
+  "tools/test-spaghetti-island-entries.mjs": "c5d2552eac893d03a3b7032a8d8a8b6c8c016de08d53e99e8e65f411f40515d1",
+  "tools/test-spaghetti-opening-camera.mjs": "c928f7628e8587a3d2b1f8fe5f51e511968892912ec4ac21ee19b2f58e481bce",
+  "src/level.ts": "c3ea13af5d6cb43ba406534854ace24ba5a13c18dfc1abdcd982bf0a7c8bcb63",
+  "src/main.ts": "beefe84a79bd48b77fa51b3410c46c004949d497f2f0f72d15d0a49a24a0c54a",
+  "src/player.ts": "c5776904f9f5904fca302f1d5f87da6754d425198876805f381acd98d694504b",
+  "src/tuning.ts": "1aca3b5fe4b5d026d8b9e36dcf30444081bec7d2acfd4181294f6aacaca61bd6",
+  "public/levels.json": "b4dadf99843b27ab826c83e3d2fa4770ece9274a76be5ffeb0dd5aa4c27333a8",
+  "src/levels/spaghetti-rails-platforming.ts": "23e110f8e610d568f4cff63235ee2aaee2704ddd0bd4e49af1aef8bb4f942ee4",
+  "docs/spaghetti-rails/spaghetti-rails-platforming.level.json": "4f1b7adb8e30235e96b8666ddc4303dc9d90c51a88101cf0d71e362ffb8e3c07"
+}
