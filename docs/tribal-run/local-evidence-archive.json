@@ -1,0 +1,574 @@
+{
+  "scope": "Task-local, ignored raw historical traces and supplementary screenshots. Selected evidence is committed beside this manifest.",
+  "archivedAt": "2026-10-27T08:24:30.409367+00:00",
+  "files": [
+    {
+      "original": "docs/tribal-run/greybox/evidence/tribal-run-full-checkpoint-6.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/greybox/tribal-run-full-checkpoint-6.png",
+      "bytes": 276435,
+      "sha256": "029d6dd788e33daaf5db87a336d07bb56d5b7a0822f6ae422f60c44b842d4cb1"
+    },
+    {
+      "original": "docs/tribal-run/greybox/evidence/tribal-run-full-journey-skate-to-173.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/greybox/tribal-run-full-journey-skate-to-173.png",
+      "bytes": 205725,
+      "sha256": "bf5973f2fe62c9744bceda3e2f4fa5d1af7f2024c79df3f34586c985067dd004"
+    },
+    {
+      "original": "docs/tribal-run/greybox/evidence/bonus-tribal-run-lite-journey.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/greybox/bonus-tribal-run-lite-journey.png",
+      "bytes": 5848,
+      "sha256": "2b268b517759594de54f662ef2bf903882763489f0d7be03e58a708579cf305e"
+    },
+    {
+      "original": "docs/tribal-run/greybox/evidence/tribal-run-full-checkpoint-7.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/greybox/tribal-run-full-checkpoint-7.png",
+      "bytes": 196114,
+      "sha256": "2866fa3cff6187be93711196a824f382d994c9ba0260a8c5516315aa5db5fd70"
+    },
+    {
+      "original": "docs/tribal-run/greybox/evidence/tribal-run-full-loom-flyover.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/greybox/tribal-run-full-loom-flyover.png",
+      "bytes": 304937,
+      "sha256": "c0cd6743121998636864c4c6bcbc87d1c81460cbe5024281c3e6b135aba61d6f"
+    },
+    {
+      "original": "docs/tribal-run/greybox/evidence/tribal-run-full-checkpoint-5.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/greybox/tribal-run-full-checkpoint-5.png",
+      "bytes": 175815,
+      "sha256": "3b0211e41c7f91714efdfc3192badd7582395f233e42cb29ce034195f5cbc78b"
+    },
+    {
+      "original": "docs/tribal-run/greybox/evidence/tribal-run-full-journey-hop-to-2074.1.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/greybox/tribal-run-full-journey-hop-to-2074.1.png",
+      "bytes": 256985,
+      "sha256": "b02729a32ce378cde179951d3a91605b79f9e12244bb6bf98f4fc4d5e76455aa"
+    },
+    {
+      "original": "docs/tribal-run/greybox/evidence/tribal-run-full-checkpoint-4.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/greybox/tribal-run-full-checkpoint-4.png",
+      "bytes": 207419,
+      "sha256": "21ce5d9550b1281047744df38a7df4de3ef2beb2ab4e0160c15dcb5122945aa7"
+    },
+    {
+      "original": "docs/tribal-run/greybox/evidence/tribal-run-lite-journey-walk-to-914.3.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/greybox/tribal-run-lite-journey-walk-to-914.3.png",
+      "bytes": 95827,
+      "sha256": "0323b055f0ef659f2b309564aadba43c77d686a96302f571aa7d7be18451a97d"
+    },
+    {
+      "original": "docs/tribal-run/greybox/evidence/tribal-run-full-echo-beaters.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/greybox/tribal-run-full-echo-beaters.png",
+      "bytes": 203366,
+      "sha256": "be650472021e916af8b0ff0581cb50c4a545a5ffe451545ee095cc5d2b0117fc"
+    },
+    {
+      "original": "docs/tribal-run/greybox/evidence/tribal-run-full-checkpoint-1.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/greybox/tribal-run-full-checkpoint-1.png",
+      "bytes": 259465,
+      "sha256": "f616c4b3323b81b518e257736f534b00d1fc538449d433dc0610e617db24bae5"
+    },
+    {
+      "original": "docs/tribal-run/greybox/evidence/tribal-run-full-journey-skate-to-1405.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/greybox/tribal-run-full-journey-skate-to-1405.png",
+      "bytes": 286134,
+      "sha256": "7d9ef7b48bf037cbd66e343b11eac5b906728f7ff0f650d8046ecfe942ca6a9f"
+    },
+    {
+      "original": "docs/tribal-run/greybox/evidence/tribal-run-full-bonus-detour-journey-echo-stepping-stone-takeoff.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/greybox/tribal-run-full-bonus-detour-journey-echo-stepping-stone-takeoff.png",
+      "bytes": 1083491,
+      "sha256": "bd318e9e2420c4419c010bab0aed22767f3046ef8865aa03d020a963006acd95"
+    },
+    {
+      "original": "docs/tribal-run/greybox/evidence/tribal-run-full-checkpoint-3.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/greybox/tribal-run-full-checkpoint-3.png",
+      "bytes": 229563,
+      "sha256": "28eaeeefbdfa6890368115d77a43aec15d0e18f0fa18a5d87475b41efabc1031"
+    },
+    {
+      "original": "docs/tribal-run/greybox/evidence/tribal-run-full-checkpoint-2.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/greybox/tribal-run-full-checkpoint-2.png",
+      "bytes": 218241,
+      "sha256": "ebf7a2d7a3de1b9e83825867ab6ae522705fe24ecd19e2ff416638bad1d47920"
+    },
+    {
+      "original": "docs/tribal-run/greybox/evidence/tribal-run-full-upper-loom-journey-walk-to-914.3.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/greybox/tribal-run-full-upper-loom-journey-walk-to-914.3.png",
+      "bytes": 198038,
+      "sha256": "7137d164b1f0257d5e147952d6e2ae2dfb3d584b2128755b023bb61e998c594e"
+    },
+    {
+      "original": "docs/tribal-run/greybox/evidence/tribal-run-full-bonus-detour-journey-cross-the-breakaway-gallery-lip.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/greybox/tribal-run-full-bonus-detour-journey-cross-the-breakaway-gallery-lip.png",
+      "bytes": 1076197,
+      "sha256": "82adc4a450f6ba98c2e40af44f475a225b0faa57c2f4f702b8df0a74ef9b1969"
+    },
+    {
+      "original": "docs/tribal-run/greybox/evidence/bonus-tribal-run-lite-journey.json",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/greybox/bonus-tribal-run-lite-journey.json",
+      "bytes": 404772,
+      "sha256": "556e78455e495aa0d2e325b34d121113f84d263d7d50dd7c571fe8263047e671"
+    },
+    {
+      "original": "docs/tribal-run/greybox/evidence/tribal-run-lite-journey-skate-to-2048.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/greybox/tribal-run-lite-journey-skate-to-2048.png",
+      "bytes": 94667,
+      "sha256": "6c337f6276e3bbfca38b891950d57f7a1f03d5e7c73e41006adc3149659de328"
+    },
+    {
+      "original": "docs/tribal-run/greybox/evidence/tribal-run-lite-journey-skate-to-1227.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/greybox/tribal-run-lite-journey-skate-to-1227.png",
+      "bytes": 102096,
+      "sha256": "2309fafe6e2d8f5aabfcc7ac79699c55ecfb4f9419201e5c649e8bf2b81abf15"
+    },
+    {
+      "original": "docs/tribal-run/greybox/evidence/bonus-physics.json",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/greybox/bonus-physics.json",
+      "bytes": 2174121,
+      "sha256": "78c2b0b3ea7e70eb2833d9e9a290c6f0138561dab8639e65010940ef211bcdbc"
+    },
+    {
+      "original": "docs/tribal-run/greybox/evidence/tribal-run-lite-journey-walk-to-310.3.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/greybox/tribal-run-lite-journey-walk-to-310.3.png",
+      "bytes": 157593,
+      "sha256": "a83a836bf130136cb5ee01579f0690056086e17d300052ceaf075b0fa2046b2c"
+    },
+    {
+      "original": "docs/tribal-run/greybox/evidence/tribal-run-full-variants-journey.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/greybox/tribal-run-full-variants-journey.png",
+      "bytes": 287417,
+      "sha256": "be77a78b582d6b9226518b0af71a32c734db43118c02f181338df40e933b26fe"
+    },
+    {
+      "original": "docs/tribal-run/greybox/evidence/tribal-run-lite-variants-journey.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/greybox/tribal-run-lite-variants-journey.png",
+      "bytes": 79511,
+      "sha256": "822ec0cdcdbfbf0d45a7cbd5eeb32365966b379251eabc96d1ceec47244a33b0"
+    },
+    {
+      "original": "docs/tribal-run/greybox/evidence/tribal-run-full-loom-journey.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/greybox/tribal-run-full-loom-journey.png",
+      "bytes": 179028,
+      "sha256": "9f752e9fb785e381e371dbc01708ca6f3f590cd67c9a003f8d382e2bdb96a3a9"
+    },
+    {
+      "original": "docs/tribal-run/greybox/evidence/tribal-run-lite-journey.json",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/greybox/tribal-run-lite-journey.json",
+      "bytes": 1287894,
+      "sha256": "5b5dc20dcfe352add3b0b63da1e62c3e569bcd0a6e6b76ba4f13937969faa515"
+    },
+    {
+      "original": "docs/tribal-run/greybox/evidence/tribal-run-full-journey-skate-to-673.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/greybox/tribal-run-full-journey-skate-to-673.png",
+      "bytes": 259754,
+      "sha256": "8f4b33a610ba41964a4110a259ab499fc86378a2a9ab1ed6323a0cbd5a31c529"
+    },
+    {
+      "original": "docs/tribal-run/greybox/evidence/route-metrics.json",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/greybox/route-metrics.json",
+      "bytes": 2818,
+      "sha256": "9bf863118f66717a19c0660e84498f7fff936e637bb8f4232412e4127db5f15e"
+    },
+    {
+      "original": "docs/tribal-run/greybox/evidence/tribal-run-full-court-low-line.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/greybox/tribal-run-full-court-low-line.png",
+      "bytes": 206739,
+      "sha256": "e5fcbc065cb9a11017d41d593f2359fe763e6edc19e1d02c12d581185d4c588d"
+    },
+    {
+      "original": "docs/tribal-run/greybox/evidence/tribal-run-full-loom-journey.json",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/greybox/tribal-run-full-loom-journey.json",
+      "bytes": 257525,
+      "sha256": "d22bede602422b8b48a8a30d6033bafe42a6332c355f913547ea10fb7fa45522"
+    },
+    {
+      "original": "docs/tribal-run/greybox/evidence/tribal-run-full-journey-walk-to-914.3.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/greybox/tribal-run-full-journey-walk-to-914.3.png",
+      "bytes": 237770,
+      "sha256": "eb31118ef99c68c41fcf97015cfb5f5ea12537873fddb1b473cf0d9070ade6b4"
+    },
+    {
+      "original": "docs/tribal-run/greybox/evidence/tribal-run-full-journey-walk-to-1421.3.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/greybox/tribal-run-full-journey-walk-to-1421.3.png",
+      "bytes": 172673,
+      "sha256": "2fe9744acd8c048e2293ad2eead204ae4f75691db64e935c9aec0ca68df81a22"
+    },
+    {
+      "original": "docs/tribal-run/greybox/evidence/tribal-run-full-journey-skate-to-1242.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/greybox/tribal-run-full-journey-skate-to-1242.png",
+      "bytes": 250377,
+      "sha256": "f90c3031a402c831717dcd8615a8b3c3993084b56c3a2d9b692e4bb1f45ff3d4"
+    },
+    {
+      "original": "docs/tribal-run/greybox/evidence/tribal-run-lite-journey-skate-to-673.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/greybox/tribal-run-lite-journey-skate-to-673.png",
+      "bytes": 108921,
+      "sha256": "5539a627c10109e57df8379f37e975522dd0626f4e5d1de731fdacdff50cc6fe"
+    },
+    {
+      "original": "docs/tribal-run/greybox/evidence/main-all-native.json",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/greybox/main-all-native.json",
+      "bytes": 8224031,
+      "sha256": "247eb84f3515cb9b10055447409db7d1fab073f1437a7eb00463ceea1b54f3ac"
+    },
+    {
+      "original": "docs/tribal-run/greybox/evidence/tribal-run-full-bonus-detour-journey.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/greybox/tribal-run-full-bonus-detour-journey.png",
+      "bytes": 231841,
+      "sha256": "0f71d0080066e19fb8fa04fc2af5c19446f3e98f4c1925baf87963508734ddb0"
+    },
+    {
+      "original": "docs/tribal-run/greybox/evidence/tribal-run-full-upper-loom-journey.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/greybox/tribal-run-full-upper-loom-journey.png",
+      "bytes": 222728,
+      "sha256": "d3d3ab38d2831f0a023609d56ed56d0ed50bf09d84e9a2580f7d7e1fea7b705e"
+    },
+    {
+      "original": "docs/tribal-run/greybox/evidence/tribal-run-full-journey-skate-to-2048.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/greybox/tribal-run-full-journey-skate-to-2048.png",
+      "bytes": 227830,
+      "sha256": "baa32a5f9e2bbfd84504b1729473c484a030b5d8a9e8a2194d4d31554fce80d8"
+    },
+    {
+      "original": "docs/tribal-run/greybox/evidence/main-loom-upper-native.json",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/greybox/main-loom-upper-native.json",
+      "bytes": 1196084,
+      "sha256": "a715a5da4cb8fb7e7fd84a447ead201d0674e66606c4c7c9b07b853ea946e6b8"
+    },
+    {
+      "original": "docs/tribal-run/greybox/evidence/tribal-run-lite-variants-journey.json",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/greybox/tribal-run-lite-variants-journey.json",
+      "bytes": 303779,
+      "sha256": "dc443d9535a168e0c05f1f07d5eebde78d767360431438b7f2819ccc838d0433"
+    },
+    {
+      "original": "docs/tribal-run/greybox/evidence/tribal-run-full-bonus-detour-journey-first-listening-takeoff.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/greybox/tribal-run-full-bonus-detour-journey-first-listening-takeoff.png",
+      "bytes": 1031214,
+      "sha256": "07ab27499a37fafb101e342812f80f502999f37fa829b707209b7d89cbcfa5ba"
+    },
+    {
+      "original": "docs/tribal-run/greybox/evidence/tribal-run-full-upper-loom-journey-skate-to-1159.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/greybox/tribal-run-full-upper-loom-journey-skate-to-1159.png",
+      "bytes": 240204,
+      "sha256": "1026b9e3ceaa0c9aedcc11bd4900fffe0c3605cc4afc5923c7475a99dff71d50"
+    },
+    {
+      "original": "docs/tribal-run/greybox/evidence/tribal-run-lite-journey-walk-to-1421.3.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/greybox/tribal-run-lite-journey-walk-to-1421.3.png",
+      "bytes": 114709,
+      "sha256": "e075e3b64c14c7d94b3da5593d1380085e284a831b3f1b7d4c600a7c21cc3c7d"
+    },
+    {
+      "original": "docs/tribal-run/greybox/evidence/route-plan.svg",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/greybox/route-plan.svg",
+      "bytes": 51631,
+      "sha256": "e1787033ff6dbe7fd56dd96e83d25dd9e01fa1a0d1377b2ab966b21fae9abbd3"
+    },
+    {
+      "original": "docs/tribal-run/greybox/evidence/tribal-run-full-journey.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/greybox/tribal-run-full-journey.png",
+      "bytes": 462121,
+      "sha256": "729cbf1181771cae3af906fa6bd073240f7944fa07bf3854f2e28b8597b59c82"
+    },
+    {
+      "original": "docs/tribal-run/greybox/evidence/tribal-run-lite-journey-skate-to-173.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/greybox/tribal-run-lite-journey-skate-to-173.png",
+      "bytes": 121348,
+      "sha256": "08553dc03b223132fd09585a1d34e42863013e7b7ef1669368e348474bf5b237"
+    },
+    {
+      "original": "docs/tribal-run/greybox/evidence/tribal-run-full-spawn.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/greybox/tribal-run-full-spawn.png",
+      "bytes": 191942,
+      "sha256": "992d9c1503101467eaaf4568dafc435c4f1f4fb9961ac77881ba5653baf3de7d"
+    },
+    {
+      "original": "docs/tribal-run/greybox/evidence/tribal-run-full-checkpoint-9.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/greybox/tribal-run-full-checkpoint-9.png",
+      "bytes": 259854,
+      "sha256": "e7f6657211beaefa2ac126b2d97623a2a704f84b1c485efed6cce2ffd43ebf65"
+    },
+    {
+      "original": "docs/tribal-run/greybox/evidence/tribal-run-full-checkpoint-8.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/greybox/tribal-run-full-checkpoint-8.png",
+      "bytes": 268220,
+      "sha256": "ad32be478903bb59ae3535198900a86d4088acadb608940c6b030515a3b65a5f"
+    },
+    {
+      "original": "docs/tribal-run/greybox/evidence/tribal-run-full-loom-journey-walk-to-914.3.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/greybox/tribal-run-full-loom-journey-walk-to-914.3.png",
+      "bytes": 198343,
+      "sha256": "3692bc6951617f10f9984f5dcaf580e567d0e51c507314ca65fbda34cdbb2750"
+    },
+    {
+      "original": "docs/tribal-run/greybox/evidence/tribal-run-full-recovery-lane.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/greybox/tribal-run-full-recovery-lane.png",
+      "bytes": 129959,
+      "sha256": "a21f972e0485cbaa5fae2e192a9b20bfc0d7d469d47da3c081527e91fe140b6f"
+    },
+    {
+      "original": "docs/tribal-run/greybox/evidence/tribal-run-full-journey-walk-to-310.3.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/greybox/tribal-run-full-journey-walk-to-310.3.png",
+      "bytes": 354765,
+      "sha256": "46fdfc8a6ed12953c536818dcfac315db47b0cee2910915e22ec0de86b993201"
+    },
+    {
+      "original": "docs/tribal-run/greybox/evidence/tribal-run-full-upper-loom-journey-skate-to-1405.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/greybox/tribal-run-full-upper-loom-journey-skate-to-1405.png",
+      "bytes": 356507,
+      "sha256": "780f263a561a87b74d211a61f53c36ae55953cec430dd3bf47f21e257cb02afe"
+    },
+    {
+      "original": "docs/tribal-run/greybox/evidence/tribal-run-lite-journey.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/greybox/tribal-run-lite-journey.png",
+      "bytes": 113290,
+      "sha256": "d132db7059db72cf8ca5c758ab3c58c85edc5d98dda7edde35ad49eabd8cc262"
+    },
+    {
+      "original": "docs/tribal-run/art/evidence/tribal-run-full-checkpoint-6.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/art/tribal-run-full-checkpoint-6.png",
+      "bytes": 1770045,
+      "sha256": "087c202634b674727d6d0bf4f0f3f7171f734aaeee89bd338b4b38f0db2bb132"
+    },
+    {
+      "original": "docs/tribal-run/art/evidence/tribal-run-full-journey-skate-to-173.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/art/tribal-run-full-journey-skate-to-173.png",
+      "bytes": 1900454,
+      "sha256": "2c2396d5bd94f77b3015636f252da4591105d016af00e563de9ab7f4f759a741"
+    },
+    {
+      "original": "docs/tribal-run/art/evidence/tribal-run-full-checkpoint-7.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/art/tribal-run-full-checkpoint-7.png",
+      "bytes": 1864723,
+      "sha256": "8df0829d99b880d4d00a969f52314949175594f1918287048242b6f210c1d928"
+    },
+    {
+      "original": "docs/tribal-run/art/evidence/tribal-run-full-checkpoint-5.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/art/tribal-run-full-checkpoint-5.png",
+      "bytes": 1820508,
+      "sha256": "90ff3611ed2132258aebab10f84c2c9456b92e3163137f86df3010ab59a220fc"
+    },
+    {
+      "original": "docs/tribal-run/art/evidence/tribal-run-full-journey-hop-to-2074.1.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/art/tribal-run-full-journey-hop-to-2074.1.png",
+      "bytes": 1747399,
+      "sha256": "08e0ab94ee795cc6c13fbfe1a5aab3d6ae085431736df2dd96201b51dbccbd03"
+    },
+    {
+      "original": "docs/tribal-run/art/evidence/tribal-run-full-bonus-detour-journey-steer-the-drum-bounce-onto-the-echo-gallery.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/art/tribal-run-full-bonus-detour-journey-steer-the-drum-bounce-onto-the-echo-gallery.png",
+      "bytes": 1952475,
+      "sha256": "7ff99742d97302cc459ece73e89da9b611e62b246ab1981ea87727860bde61eb"
+    },
+    {
+      "original": "docs/tribal-run/art/evidence/tribal-run-full-checkpoint-4.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/art/tribal-run-full-checkpoint-4.png",
+      "bytes": 1846454,
+      "sha256": "2187b38f75e81840c8a46db4fc8921868e2fbeb532e551dec5d25cf04964c0f4"
+    },
+    {
+      "original": "docs/tribal-run/art/evidence/tribal-run-full-checkpoint-1.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/art/tribal-run-full-checkpoint-1.png",
+      "bytes": 1782575,
+      "sha256": "bdb0fcfab699fa8f297985776ce0d31ff6eadaee51dbda8f7b1280ca8a501dd4"
+    },
+    {
+      "original": "docs/tribal-run/art/evidence/tribal-run-full-journey-skate-to-1405.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/art/tribal-run-full-journey-skate-to-1405.png",
+      "bytes": 1561439,
+      "sha256": "61d3b29cf119c04a5b62fbab2ed6befad06d01cd92610e4a43e51c4e62d18593"
+    },
+    {
+      "original": "docs/tribal-run/art/evidence/tribal-run-full-bonus-detour-journey-echo-stepping-stone-takeoff.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/art/tribal-run-full-bonus-detour-journey-echo-stepping-stone-takeoff.png",
+      "bytes": 1649604,
+      "sha256": "5b8c0cc9169c6857fe94414e7ab964888dfe8c130a69fca51858109ae9bfdaa5"
+    },
+    {
+      "original": "docs/tribal-run/art/evidence/tribal-run-full-checkpoint-3.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/art/tribal-run-full-checkpoint-3.png",
+      "bytes": 1835723,
+      "sha256": "4c008b0d625b4bc0d1bed55a5e3019c7a5fa7f87c00e95cd64c3a03ef483e2a3"
+    },
+    {
+      "original": "docs/tribal-run/art/evidence/tribal-run-full-upper-loom-journey-walk-to-914.3.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/art/tribal-run-full-upper-loom-journey-walk-to-914.3.png",
+      "bytes": 1954314,
+      "sha256": "f15aa7c0253b40ed9e70b4b6dd13e5b4bc6ed2ce97d6d6e10033d665cd902c2d"
+    },
+    {
+      "original": "docs/tribal-run/art/evidence/tribal-run-full-bonus-detour-journey-cross-the-breakaway-gallery-lip.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/art/tribal-run-full-bonus-detour-journey-cross-the-breakaway-gallery-lip.png",
+      "bytes": 1652521,
+      "sha256": "6898acfe668fb4e34a22eab6ec5a410791fb2305fc0b9a9e713e0a9966631145"
+    },
+    {
+      "original": "docs/tribal-run/art/evidence/route-metrics-command.txt",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/art/route-metrics-command.txt",
+      "bytes": 1737,
+      "sha256": "60004863a72ee7a6eeacb56bce5df00e669a6faaa236150ce98ea3eef78f36fb"
+    },
+    {
+      "original": "docs/tribal-run/art/evidence/tribal-run-full-variants-journey.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/art/tribal-run-full-variants-journey.png",
+      "bytes": 1709633,
+      "sha256": "faa85667a4b70779e89866790c8cf93f28a1b940370bf4ea1fec1c8445a02507"
+    },
+    {
+      "original": "docs/tribal-run/art/evidence/tribal-run-full-journey-skate-to-673.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/art/tribal-run-full-journey-skate-to-673.png",
+      "bytes": 1923283,
+      "sha256": "de87ddbb68504a9d99f9444b0355fd27abf9fe9c3b7a21ed4dee0a44d99af1bc"
+    },
+    {
+      "original": "docs/tribal-run/art/evidence/tribal-run-full-journey-walk-to-914.3.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/art/tribal-run-full-journey-walk-to-914.3.png",
+      "bytes": 2034593,
+      "sha256": "ba9acb24521b3f98f7558844fd81029da0f76af4fcf60cbc12b1c7cd8da2d300"
+    },
+    {
+      "original": "docs/tribal-run/art/evidence/tribal-run-full-journey-walk-to-1421.3.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/art/tribal-run-full-journey-walk-to-1421.3.png",
+      "bytes": 1799418,
+      "sha256": "486918a2e39597169675249ddbe8737a3f993bfb48d6b809172d43dd6949223d"
+    },
+    {
+      "original": "docs/tribal-run/art/evidence/tribal-run-full-journey-skate-to-1242.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/art/tribal-run-full-journey-skate-to-1242.png",
+      "bytes": 1855475,
+      "sha256": "c9d97819c2173638219a3842069a86c255f5d71ccec398de80258709635ee7f6"
+    },
+    {
+      "original": "docs/tribal-run/art/evidence/tribal-run-full-bonus-detour-journey.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/art/tribal-run-full-bonus-detour-journey.png",
+      "bytes": 1861890,
+      "sha256": "7610bc3f437841cfc6bde51f7945e046f54812c4397b9777b724eac6db764cb2"
+    },
+    {
+      "original": "docs/tribal-run/art/evidence/tribal-run-full-upper-loom-journey.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/art/tribal-run-full-upper-loom-journey.png",
+      "bytes": 1812035,
+      "sha256": "18d25107fe774175b8d6c6f7c5c937191a911075a2267b21506239da83394d00"
+    },
+    {
+      "original": "docs/tribal-run/art/evidence/tribal-run-full-journey-skate-to-2048.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/art/tribal-run-full-journey-skate-to-2048.png",
+      "bytes": 1837981,
+      "sha256": "491ab5335c2a4455339de7ef3ddcd3670c4276d738b3e45c80302fb3c5232c00"
+    },
+    {
+      "original": "docs/tribal-run/art/evidence/tribal-run-full-bonus-detour-journey-first-listening-takeoff.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/art/tribal-run-full-bonus-detour-journey-first-listening-takeoff.png",
+      "bytes": 1870794,
+      "sha256": "81fb0cd5a26da759294659c999754412b7876a330d2ce2af7f0014ab8ff41140"
+    },
+    {
+      "original": "docs/tribal-run/art/evidence/tribal-run-full-upper-loom-journey-skate-to-1159.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/art/tribal-run-full-upper-loom-journey-skate-to-1159.png",
+      "bytes": 1925447,
+      "sha256": "ca2072b2286ff31f9a612ad3095fbf6ca84d1c89415f7525e4499f26d694b3bc"
+    },
+    {
+      "original": "docs/tribal-run/art/evidence/tribal-run-full-journey.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/art/tribal-run-full-journey.png",
+      "bytes": 1702101,
+      "sha256": "2f9ed23a83c10ad95f33ea96915d9168def7344f7da6061886261986f53b25c7"
+    },
+    {
+      "original": "docs/tribal-run/art/evidence/source-art-sightlines.json",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/art/source-art-sightlines.json",
+      "bytes": 626,
+      "sha256": "dccf9f1f911fd2ad9924043954060e0eb77ba91254317147defe9c5ea3bbf9d9"
+    },
+    {
+      "original": "docs/tribal-run/art/evidence/tribal-run-full-checkpoint-8.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/art/tribal-run-full-checkpoint-8.png",
+      "bytes": 1842744,
+      "sha256": "552936f7f5e50fbb56386dc28df1b254abf769cb0b18710f72e50536c6583bf8"
+    },
+    {
+      "original": "docs/tribal-run/art/evidence/tribal-run-full-recovery-lane.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/art/tribal-run-full-recovery-lane.png",
+      "bytes": 1549715,
+      "sha256": "e8fe39eea4ed29c3b97c22a71e7c9e4d2bbba2386cdbdb6eec886c60f5e3533b"
+    },
+    {
+      "original": "docs/tribal-run/art/evidence/tribal-run-full-journey-walk-to-310.3.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/art/tribal-run-full-journey-walk-to-310.3.png",
+      "bytes": 1961587,
+      "sha256": "4922bbbfae0a92a8b3988bed89e46b04a7fc4b661e3f4538a1eab6a86264bd0f"
+    },
+    {
+      "original": "docs/tribal-run/art/evidence/tribal-run-full-upper-loom-journey-skate-to-1405.png",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/art/tribal-run-full-upper-loom-journey-skate-to-1405.png",
+      "bytes": 1514578,
+      "sha256": "48dd95152137443aa4d36b867837e86a3bcedefb643eadce229eaf9efc448152"
+    },
+    {
+      "original": "docs/tribal-run/greybox/evidence/tribal-run-full-journey.json",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/greybox/tribal-run-full-journey.json",
+      "bytes": 1250557,
+      "sha256": "3fb8f19aaf5dcd3a7359b5cfd0ee27dc8882131cef86d589ab0e98e9038dd3b4",
+      "committedSummary": "docs/tribal-run/greybox/evidence/tribal-run-full-journey.json",
+      "committedTrace": "docs/tribal-run/greybox/evidence/tribal-run-full-journey.trace.json.gz"
+    },
+    {
+      "original": "docs/tribal-run/greybox/evidence/tribal-run-full-upper-loom-journey.json",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/greybox/tribal-run-full-upper-loom-journey.json",
+      "bytes": 259819,
+      "sha256": "e5c3aff52e21e1b2491d2034b8fb8987d9b642b153a9394f5e4ff98553c4a9f5",
+      "committedSummary": "docs/tribal-run/greybox/evidence/tribal-run-full-upper-loom-journey.json",
+      "committedTrace": "docs/tribal-run/greybox/evidence/tribal-run-full-upper-loom-journey.trace.json.gz"
+    },
+    {
+      "original": "docs/tribal-run/greybox/evidence/tribal-run-full-variants-journey.json",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/greybox/tribal-run-full-variants-journey.json",
+      "bytes": 499309,
+      "sha256": "1771c6541ca93a554deced63d8fc720dac52248e4e42a077bbbabf59a3c37b66",
+      "committedSummary": "docs/tribal-run/greybox/evidence/tribal-run-full-variants-journey.json",
+      "committedTrace": "docs/tribal-run/greybox/evidence/tribal-run-full-variants-journey.trace.json.gz"
+    },
+    {
+      "original": "docs/tribal-run/greybox/evidence/tribal-run-full-bonus-detour-journey.json",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/greybox/tribal-run-full-bonus-detour-journey.json",
+      "bytes": 406474,
+      "sha256": "9201acadef52219b2e717aecbb3dc0247bae533b924dd5d2f381d9fa80aab5a9",
+      "committedSummary": "docs/tribal-run/greybox/evidence/tribal-run-full-bonus-detour-journey.json",
+      "committedTrace": "docs/tribal-run/greybox/evidence/tribal-run-full-bonus-detour-journey.trace.json.gz"
+    },
+    {
+      "original": "docs/tribal-run/art/evidence/tribal-run-full-journey.json",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/art/tribal-run-full-journey.json",
+      "bytes": 1250245,
+      "sha256": "52984db20c75eba07fa402a56128bb09d06d0708e46c8ad45584aa337d4d3ecb",
+      "committedSummary": "docs/tribal-run/art/evidence/tribal-run-full-journey.json",
+      "committedTrace": "docs/tribal-run/art/evidence/tribal-run-full-journey.trace.json.gz"
+    },
+    {
+      "original": "docs/tribal-run/art/evidence/tribal-run-full-upper-loom-journey.json",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/art/tribal-run-full-upper-loom-journey.json",
+      "bytes": 259821,
+      "sha256": "1d90b4a16f6156655a891f4525bd0157d444f2eeb08cda6188babe3b4d98f8fa",
+      "committedSummary": "docs/tribal-run/art/evidence/tribal-run-full-upper-loom-journey.json",
+      "committedTrace": "docs/tribal-run/art/evidence/tribal-run-full-upper-loom-journey.trace.json.gz"
+    },
+    {
+      "original": "docs/tribal-run/art/evidence/tribal-run-full-variants-journey.json",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/art/tribal-run-full-variants-journey.json",
+      "bytes": 499202,
+      "sha256": "4f5ff1f5037c5524a2788b9de2d3e55613b076c16ebe5b724e3e96e5edd38c07",
+      "committedSummary": "docs/tribal-run/art/evidence/tribal-run-full-variants-journey.json",
+      "committedTrace": "docs/tribal-run/art/evidence/tribal-run-full-variants-journey.trace.json.gz"
+    },
+    {
+      "original": "docs/tribal-run/art/evidence/tribal-run-full-bonus-detour-journey.json",
+      "localArchive": ".release-queue/tribal-run-evidence/raw/art/tribal-run-full-bonus-detour-journey.json",
+      "bytes": 406553,
+      "sha256": "442f6af87522e9871a0c2500476d4f0f4b81b8630cc58860aad0a607be98579a",
+      "committedSummary": "docs/tribal-run/art/evidence/tribal-run-full-bonus-detour-journey.json",
+      "committedTrace": "docs/tribal-run/art/evidence/tribal-run-full-bonus-detour-journey.trace.json.gz"
+    }
+  ]
+}

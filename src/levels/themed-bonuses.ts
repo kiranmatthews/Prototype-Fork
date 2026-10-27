@@ -7,6 +7,7 @@ import { EASY_BONUS_LEVEL } from './bonus-easy';
 import {RUMBLEWATER_BONUS_LEVEL} from './rumblewater-bonus';
 import {ROLLING_BONES_BONUS_LEVEL} from './rolling-bones-bonus';
 import { CUSTARD_BONUS_LEVEL } from './custard-bonus';
+import { TRIBAL_RUN_BONUS_LEVEL } from './tribal-run-bonus';
 import { makeBonusCourse, type BonusPattern } from './bonus-course-kit';
 import { BONUS_LAYOUT_REPLACEMENTS, replaceBonusLayout } from './puzzle-bonus';
 import { dressJungleBonus } from './jungle-bonus';
@@ -102,6 +103,9 @@ export const BONUS_LEVEL_ENTRIES: LevelEntry[] = THEMED_BONUS_COURSES.map(({id,d
 BONUS_LEVEL_ENTRIES.push({id:'bonus-custard-creek',name:CUSTARD_BONUS_LEVEL.name,data:CUSTARD_BONUS_LEVEL});
 const BONUS_BY_PARENT_ID=new Map(THEMED_BONUS_COURSES.map(course=>[course.parentId,course.data]));
 const BONUS_BY_KEY=new Map(THEMED_BONUS_COURSES.map(course=>[course.progressKey,course.data]));
+BONUS_BY_PARENT_ID.set('tribal-run',TRIBAL_RUN_BONUS_LEVEL);
+BONUS_BY_KEY.set('tribal-run',TRIBAL_RUN_BONUS_LEVEL);
+BONUS_LEVEL_ENTRIES.push({id:'bonus-tribal-run',name:TRIBAL_RUN_BONUS_LEVEL.name,data:TRIBAL_RUN_BONUS_LEVEL});
 BONUS_BY_KEY.set('custard-creek',CUSTARD_BONUS_LEVEL);
 BONUS_BY_KEY.set('rumblewater-run',RUMBLEWATER_BONUS_LEVEL);
 BONUS_BY_PARENT_ID.set('rolling-bones',ROLLING_BONES_BONUS_LEVEL);

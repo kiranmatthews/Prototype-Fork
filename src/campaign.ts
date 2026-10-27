@@ -356,7 +356,7 @@ const ASSIGNMENTS: Record<string, Partial<CampaignLevelDefinition> & { name: str
   coastal: {name:'Beach Street'},
   'jungle-cup': {name:'Motu Beach Invitational',boss:true,competition:true},
   'custard-creek': {name:'Sunset Safari'},
-  'tribal-run': {name:'Tribal Run',placeholder:true},
+  'tribal-run': {name:'Tribal Run',levelId:'tribal-run',previewKey:'tribal-run',relicTime:185},
   'waterfall-climb': {name:'Waterfall Climb',levelId:'waterfall-climb',previewKey:'waterfall-climb',relicTime:480},
   'test-course': {name:'Uga Ambush',fallbackLevelId:undefined},
   'drowned-crown': {name:'The Merchant Wreck'},

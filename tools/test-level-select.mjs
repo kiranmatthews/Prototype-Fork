@@ -42,6 +42,8 @@ try {
  ui.showMapSection('level-select');ui.changeLevelSelectIsland(1);
  assert.deepEqual(rowKeys(),['custard-creek']);
  campaign.commitClear('custard-creek',{crystal:false,boxGem:false,comboGem:false});
+ ui.render();assert.deepEqual(rowKeys(),['custard-creek','tribal-run']);
+ campaign.commitClear('tribal-run',{crystal:true,boxGem:false,comboGem:false});
  ui.render();assert.deepEqual(rowKeys(),['custard-creek','tribal-run','waterfall-climb','test-course']);
  // Secret discovery is per slot: five clear gems reveal slot 2, not slot 1.
  campaign.startEphemeral();
@@ -110,8 +112,10 @@ try {
  input.consumeEdges();pad.buttons[17].pressed=false;input.update();document.body.classList.remove('world-map-active');pad.buttons[17].pressed=true;input.update();assert.equal(input.mapLevelSelectPressed,false,'map shortcut leaks into gameplay');
  // Touch an unlocked planned row to inspect it, then touch a built course to launch.
  inputPrompts.update(null,true);calls.length=0;ui.showMapSection('level-select');ui.changeLevelSelectIsland(1);
- const planned=ui.navButtons.find(b=>b.dataset.levelKey==='tribal-run');planned.click();
- assert.equal(ui.levelSelectKey,'tribal-run');assert.match(ui.levelSelectDetail.textContent,/COMING SOON/);assert.deepEqual(calls,[]);
+ const planned=ui.navButtons.find(b=>b.dataset.levelKey==='waterfall-climb');planned.click();
+ assert.equal(ui.levelSelectKey,'waterfall-climb');assert.match(ui.levelSelectDetail.textContent,/COMING SOON/);assert.deepEqual(calls,[]);
+ ui.navButtons.find(b=>b.dataset.levelKey==='tribal-run').click();assert.deepEqual(calls,['tribal-run']);
+ calls.length=0;ui.showMapSection('level-select');ui.changeLevelSelectIsland(1);
  ui.navButtons.find(b=>b.dataset.levelKey==='test-course').click();assert.deepEqual(calls,['test']);
  ui.showMapSection('level-select');ui.panel.querySelector('.game-map-close').click();assert.equal(calls.at(-1),'resume');
  ui.levelSelectKey='nightworks';ui.levelSelectIsland='island-5';campaign.startEphemeral();ui.playSelectedLevel();assert.equal(calls.at(-1),'resume','stale completion launched a locked level after replacing save');

@@ -1,0 +1,1160 @@
+{
+  "id": "tribal-run",
+  "lite": false,
+  "errors": [],
+  "failed": [],
+  "scenes": [
+    {
+      "name": "spawn",
+      "p": [
+        0,
+        0.1201171875,
+        0
+      ],
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "camera": [
+        -0.06673785048868247,
+        5.1,
+        5.049558996517631
+      ],
+      "stamp": "Codex/sol fork · build 10-27 06:10 UTC",
+      "quality": {
+        "enabled": false,
+        "baseHeight": 720,
+        "outputMultiplier": 1,
+        "fixed60": true
+      },
+      "sizes": {
+        "viewportWidth": 1440,
+        "viewportHeight": 900,
+        "inputWidth": 1152,
+        "inputHeight": 720,
+        "outputWidth": 1152,
+        "outputHeight": 720
+      },
+      "drawingBuffer": [
+        1440,
+        900
+      ],
+      "render": {
+        "frame": 742,
+        "calls": 255,
+        "triangles": 993043,
+        "points": 0,
+        "lines": 0
+      },
+      "assets": {
+        "components": 654,
+        "placements": 654,
+        "ready": 274,
+        "skipped": 0,
+        "draws": 250,
+        "triangles": 1192993,
+        "allLodTriangles": 1192993,
+        "cells": 606,
+        "residentCells": 250,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 19,
+        "textureMiB": 51.67,
+        "errors": [],
+        "windTime": 1.6832333333337048,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      }
+    },
+    {
+      "name": "checkpoint-1",
+      "p": [
+        -68.83349609375,
+        0.1,
+        -228.432861328125
+      ],
+      "position": [
+        -69.83349609375,
+        0,
+        -228.432861328125
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "camera": [
+        -66.56999351450591,
+        5.1,
+        -224.57837805823047
+      ],
+      "stamp": "Codex/sol fork · build 10-27 06:10 UTC",
+      "quality": {
+        "enabled": false,
+        "baseHeight": 720,
+        "outputMultiplier": 1,
+        "fixed60": true
+      },
+      "sizes": {
+        "viewportWidth": 1440,
+        "viewportHeight": 900,
+        "inputWidth": 1152,
+        "inputHeight": 720,
+        "outputWidth": 1152,
+        "outputHeight": 720
+      },
+      "drawingBuffer": [
+        1440,
+        900
+      ],
+      "render": {
+        "frame": 819,
+        "calls": 208,
+        "triangles": 752334,
+        "points": 0,
+        "lines": 0
+      },
+      "assets": {
+        "components": 654,
+        "placements": 654,
+        "ready": 366,
+        "skipped": 0,
+        "draws": 338,
+        "triangles": 1563488,
+        "allLodTriangles": 1563488,
+        "cells": 606,
+        "residentCells": 338,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 22,
+        "textureMiB": 57.67,
+        "errors": [],
+        "windTime": 2.966566666667034,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      }
+    },
+    {
+      "name": "checkpoint-2",
+      "p": [
+        -31.09716796875,
+        0.1,
+        -431.384033203125
+      ],
+      "position": [
+        -32.09716796875,
+        0,
+        -431.384033203125
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "camera": [
+        -37.305458016269405,
+        5.182465048621956,
+        -430.30244801538464
+      ],
+      "stamp": "Codex/sol fork · build 10-27 06:10 UTC",
+      "quality": {
+        "enabled": false,
+        "baseHeight": 720,
+        "outputMultiplier": 1,
+        "fixed60": true
+      },
+      "sizes": {
+        "viewportWidth": 1440,
+        "viewportHeight": 900,
+        "inputWidth": 1152,
+        "inputHeight": 720,
+        "outputWidth": 1152,
+        "outputHeight": 720
+      },
+      "drawingBuffer": [
+        1440,
+        900
+      ],
+      "render": {
+        "frame": 877,
+        "calls": 338,
+        "triangles": 1190907,
+        "points": 0,
+        "lines": 0
+      },
+      "assets": {
+        "components": 654,
+        "placements": 654,
+        "ready": 484,
+        "skipped": 0,
+        "draws": 453,
+        "triangles": 2055543,
+        "allLodTriangles": 2055543,
+        "cells": 606,
+        "residentCells": 453,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 22,
+        "textureMiB": 57.67,
+        "errors": [],
+        "windTime": 3.9999000000003635,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      }
+    },
+    {
+      "name": "checkpoint-3",
+      "p": [
+        200.865966796875,
+        0.1,
+        -280.976318359375
+      ],
+      "position": [
+        199.865966796875,
+        0,
+        -280.976318359375
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "camera": [
+        196.50938166223372,
+        5.105970000029832,
+        -284.7739468210913
+      ],
+      "stamp": "Codex/sol fork · build 10-27 06:10 UTC",
+      "quality": {
+        "enabled": false,
+        "baseHeight": 720,
+        "outputMultiplier": 1,
+        "fixed60": true
+      },
+      "sizes": {
+        "viewportWidth": 1440,
+        "viewportHeight": 900,
+        "inputWidth": 1152,
+        "inputHeight": 720,
+        "outputWidth": 1152,
+        "outputHeight": 720
+      },
+      "drawingBuffer": [
+        1440,
+        900
+      ],
+      "render": {
+        "frame": 957,
+        "calls": 180,
+        "triangles": 684501,
+        "points": 0,
+        "lines": 0
+      },
+      "assets": {
+        "components": 654,
+        "placements": 654,
+        "ready": 458,
+        "skipped": 0,
+        "draws": 428,
+        "triangles": 1912961,
+        "allLodTriangles": 1912961,
+        "cells": 606,
+        "residentCells": 428,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 22,
+        "textureMiB": 57.67,
+        "errors": [],
+        "windTime": 5.349900000000359,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      }
+    },
+    {
+      "name": "checkpoint-4",
+      "p": [
+        344.224853515625,
+        0.1,
+        -427.9189453125
+      ],
+      "position": [
+        343.224853515625,
+        0,
+        -427.9189453125
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "camera": [
+        343.6791390064606,
+        5.1,
+        -422.8889702575763
+      ],
+      "stamp": "Codex/sol fork · build 10-27 06:10 UTC",
+      "quality": {
+        "enabled": false,
+        "baseHeight": 720,
+        "outputMultiplier": 1,
+        "fixed60": true
+      },
+      "sizes": {
+        "viewportWidth": 1440,
+        "viewportHeight": 900,
+        "inputWidth": 1152,
+        "inputHeight": 720,
+        "outputWidth": 1152,
+        "outputHeight": 720
+      },
+      "drawingBuffer": [
+        1440,
+        900
+      ],
+      "render": {
+        "frame": 1034,
+        "calls": 279,
+        "triangles": 908109,
+        "points": 0,
+        "lines": 0
+      },
+      "assets": {
+        "components": 654,
+        "placements": 654,
+        "ready": 481,
+        "skipped": 0,
+        "draws": 450,
+        "triangles": 2001314,
+        "allLodTriangles": 2001314,
+        "cells": 606,
+        "residentCells": 450,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 20,
+        "textureMiB": 56,
+        "errors": [],
+        "windTime": 6.616566666667021,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      }
+    },
+    {
+      "name": "checkpoint-5",
+      "p": [
+        169.098876953125,
+        0.1,
+        -638.26611328125
+      ],
+      "position": [
+        168.098876953125,
+        0,
+        -638.26611328125
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "camera": [
+        172.88497478278686,
+        5.1,
+        -636.653963969065
+      ],
+      "stamp": "Codex/sol fork · build 10-27 06:10 UTC",
+      "quality": {
+        "enabled": false,
+        "baseHeight": 720,
+        "outputMultiplier": 1,
+        "fixed60": true
+      },
+      "sizes": {
+        "viewportWidth": 1440,
+        "viewportHeight": 900,
+        "inputWidth": 1152,
+        "inputHeight": 720,
+        "outputWidth": 1152,
+        "outputHeight": 720
+      },
+      "drawingBuffer": [
+        1440,
+        900
+      ],
+      "render": {
+        "frame": 1111,
+        "calls": 220,
+        "triangles": 739051,
+        "points": 0,
+        "lines": 0
+      },
+      "assets": {
+        "components": 654,
+        "placements": 654,
+        "ready": 532,
+        "skipped": 0,
+        "draws": 499,
+        "triangles": 2265657,
+        "allLodTriangles": 2265657,
+        "cells": 606,
+        "residentCells": 499,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 20,
+        "textureMiB": 56,
+        "errors": [],
+        "windTime": 7.89990000000035,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      }
+    },
+    {
+      "name": "checkpoint-6",
+      "p": [
+        72.484130859375,
+        4.900048828125,
+        -708.942626953125
+      ],
+      "position": [
+        71.484130859375,
+        4.800048828125,
+        -708.942626953125
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "camera": [
+        72.72310676555628,
+        9.900048828125,
+        -704.0475597213358
+      ],
+      "stamp": "Codex/sol fork · build 10-27 06:10 UTC",
+      "quality": {
+        "enabled": false,
+        "baseHeight": 720,
+        "outputMultiplier": 1,
+        "fixed60": true
+      },
+      "sizes": {
+        "viewportWidth": 1440,
+        "viewportHeight": 900,
+        "inputWidth": 1152,
+        "inputHeight": 720,
+        "outputWidth": 1152,
+        "outputHeight": 720
+      },
+      "drawingBuffer": [
+        1440,
+        900
+      ],
+      "render": {
+        "frame": 1189,
+        "calls": 205,
+        "triangles": 729513,
+        "points": 0,
+        "lines": 0
+      },
+      "assets": {
+        "components": 654,
+        "placements": 654,
+        "ready": 524,
+        "skipped": 0,
+        "draws": 491,
+        "triangles": 2228721,
+        "allLodTriangles": 2228721,
+        "cells": 606,
+        "residentCells": 491,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 20,
+        "textureMiB": 56,
+        "errors": [],
+        "windTime": 9.199900000000408,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      }
+    },
+    {
+      "name": "checkpoint-7",
+      "p": [
+        100.9384765625,
+        -0.9,
+        -840.776611328125
+      ],
+      "position": [
+        99.9384765625,
+        -1,
+        -840.776611328125
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "camera": [
+        96.34918907858255,
+        4.113410187567715,
+        -837.163215058882
+      ],
+      "stamp": "Codex/sol fork · build 10-27 06:10 UTC",
+      "quality": {
+        "enabled": false,
+        "baseHeight": 720,
+        "outputMultiplier": 1,
+        "fixed60": true
+      },
+      "sizes": {
+        "viewportWidth": 1440,
+        "viewportHeight": 900,
+        "inputWidth": 1152,
+        "inputHeight": 720,
+        "outputWidth": 1152,
+        "outputHeight": 720
+      },
+      "drawingBuffer": [
+        1440,
+        900
+      ],
+      "render": {
+        "frame": 1263,
+        "calls": 260,
+        "triangles": 1032100,
+        "points": 0,
+        "lines": 0
+      },
+      "assets": {
+        "components": 654,
+        "placements": 654,
+        "ready": 468,
+        "skipped": 0,
+        "draws": 440,
+        "triangles": 2027398,
+        "allLodTriangles": 2027398,
+        "cells": 606,
+        "residentCells": 440,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 19,
+        "textureMiB": 51.67,
+        "errors": [],
+        "windTime": 10.44990000000047,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      }
+    },
+    {
+      "name": "checkpoint-8",
+      "p": [
+        394.38525390625,
+        -0.9,
+        -972.4658203125
+      ],
+      "position": [
+        393.38525390625,
+        -1,
+        -972.4658203125
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "camera": [
+        391.1219494216273,
+        4.106043911032928,
+        -967.929006345817
+      ],
+      "stamp": "Codex/sol fork · build 10-27 06:10 UTC",
+      "quality": {
+        "enabled": false,
+        "baseHeight": 720,
+        "outputMultiplier": 1,
+        "fixed60": true
+      },
+      "sizes": {
+        "viewportWidth": 1440,
+        "viewportHeight": 900,
+        "inputWidth": 1152,
+        "inputHeight": 720,
+        "outputWidth": 1152,
+        "outputHeight": 720
+      },
+      "drawingBuffer": [
+        1440,
+        900
+      ],
+      "render": {
+        "frame": 1339,
+        "calls": 220,
+        "triangles": 795166,
+        "points": 0,
+        "lines": 0
+      },
+      "assets": {
+        "components": 654,
+        "placements": 654,
+        "ready": 348,
+        "skipped": 0,
+        "draws": 325,
+        "triangles": 1441333,
+        "allLodTriangles": 1441333,
+        "cells": 606,
+        "residentCells": 325,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 19,
+        "textureMiB": 51.67,
+        "errors": [],
+        "windTime": 11.7165666666672,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      }
+    },
+    {
+      "name": "checkpoint-9",
+      "p": [
+        371.764404296875,
+        0.1,
+        -1180.58544921875
+      ],
+      "position": [
+        370.764404296875,
+        0,
+        -1180.58544921875
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "camera": [
+        374.6999259013039,
+        5.1,
+        -1177.4195114648628
+      ],
+      "stamp": "Codex/sol fork · build 10-27 06:10 UTC",
+      "quality": {
+        "enabled": false,
+        "baseHeight": 720,
+        "outputMultiplier": 1,
+        "fixed60": true
+      },
+      "sizes": {
+        "viewportWidth": 1440,
+        "viewportHeight": 900,
+        "inputWidth": 1152,
+        "inputHeight": 720,
+        "outputWidth": 1152,
+        "outputHeight": 720
+      },
+      "drawingBuffer": [
+        1440,
+        900
+      ],
+      "render": {
+        "frame": 1402,
+        "calls": 178,
+        "triangles": 650143,
+        "points": 10,
+        "lines": 0
+      },
+      "assets": {
+        "components": 654,
+        "placements": 654,
+        "ready": 237,
+        "skipped": 0,
+        "draws": 218,
+        "triangles": 1030570,
+        "allLodTriangles": 1030570,
+        "cells": 606,
+        "residentCells": 218,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 17,
+        "textureMiB": 50,
+        "errors": [],
+        "windTime": 12.84990000000059,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      }
+    },
+    {
+      "name": "offbeat-crowns",
+      "p": [
+        -107.674072265625,
+        0.1201171875,
+        -274.231689453125
+      ],
+      "position": [
+        -107.674072265625,
+        0,
+        -274.231689453125
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "camera": [
+        -105.07206090217196,
+        5.1,
+        -269.90363713545815
+      ],
+      "stamp": "Codex/sol fork · build 10-27 06:10 UTC",
+      "quality": {
+        "enabled": false,
+        "baseHeight": 720,
+        "outputMultiplier": 1,
+        "fixed60": true
+      },
+      "sizes": {
+        "viewportWidth": 1440,
+        "viewportHeight": 900,
+        "inputWidth": 1152,
+        "inputHeight": 720,
+        "outputWidth": 1152,
+        "outputHeight": 720
+      },
+      "drawingBuffer": [
+        1440,
+        900
+      ],
+      "render": {
+        "frame": 1476,
+        "calls": 211,
+        "triangles": 678685,
+        "points": 0,
+        "lines": 0
+      },
+      "assets": {
+        "components": 654,
+        "placements": 654,
+        "ready": 399,
+        "skipped": 0,
+        "draws": 371,
+        "triangles": 1724945,
+        "allLodTriangles": 1724945,
+        "cells": 606,
+        "residentCells": 371,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 22,
+        "textureMiB": 57.67,
+        "errors": [],
+        "windTime": 14.083233333333984,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      }
+    },
+    {
+      "name": "recovery-lane",
+      "p": [
+        -109.270263671875,
+        -4.3798828125,
+        -345.22216796875
+      ],
+      "position": [
+        -109.270263671875,
+        -4.5,
+        -345.22216796875
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "camera": [
+        -110.04407353085,
+        0.5999999999999996,
+        -340.23180542659406
+      ],
+      "stamp": "Codex/sol fork · build 10-27 06:10 UTC",
+      "quality": {
+        "enabled": false,
+        "baseHeight": 720,
+        "outputMultiplier": 1,
+        "fixed60": true
+      },
+      "sizes": {
+        "viewportWidth": 1440,
+        "viewportHeight": 900,
+        "inputWidth": 1152,
+        "inputHeight": 720,
+        "outputWidth": 1152,
+        "outputHeight": 720
+      },
+      "drawingBuffer": [
+        1440,
+        900
+      ],
+      "render": {
+        "frame": 1551,
+        "calls": 229,
+        "triangles": 865305,
+        "points": 0,
+        "lines": 0
+      },
+      "assets": {
+        "components": 654,
+        "placements": 654,
+        "ready": 415,
+        "skipped": 0,
+        "draws": 385,
+        "triangles": 1747520,
+        "allLodTriangles": 1747520,
+        "cells": 606,
+        "residentCells": 385,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 22,
+        "textureMiB": 57.67,
+        "errors": [],
+        "windTime": 15.333233333334046,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      }
+    },
+    {
+      "name": "court-low-line",
+      "p": [
+        293.06787109375,
+        0.1201171875,
+        -292.300048828125
+      ],
+      "position": [
+        293.06787109375,
+        0,
+        -292.300048828125
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "camera": [
+        289.2869319209642,
+        5.1,
+        -288.9523632138993
+      ],
+      "stamp": "Codex/sol fork · build 10-27 06:10 UTC",
+      "quality": {
+        "enabled": false,
+        "baseHeight": 720,
+        "outputMultiplier": 1,
+        "fixed60": true
+      },
+      "sizes": {
+        "viewportWidth": 1440,
+        "viewportHeight": 900,
+        "inputWidth": 1152,
+        "inputHeight": 720,
+        "outputWidth": 1152,
+        "outputHeight": 720
+      },
+      "drawingBuffer": [
+        1440,
+        900
+      ],
+      "render": {
+        "frame": 1625,
+        "calls": 260,
+        "triangles": 924006,
+        "points": 0,
+        "lines": 0
+      },
+      "assets": {
+        "components": 654,
+        "placements": 654,
+        "ready": 441,
+        "skipped": 0,
+        "draws": 411,
+        "triangles": 1851055,
+        "allLodTriangles": 1851055,
+        "cells": 606,
+        "residentCells": 411,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 22,
+        "textureMiB": 57.67,
+        "errors": [],
+        "windTime": 16.583233333334046,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      }
+    },
+    {
+      "name": "loom-underpass",
+      "p": [
+        307.9775390625,
+        0.1201171875,
+        -543.0400390625
+      ],
+      "position": [
+        307.9775390625,
+        0,
+        -543.0400390625
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "camera": [
+        310.9972442769248,
+        5.1,
+        -538.9923384290569
+      ],
+      "stamp": "Codex/sol fork · build 10-27 06:10 UTC",
+      "quality": {
+        "enabled": false,
+        "baseHeight": 720,
+        "outputMultiplier": 1,
+        "fixed60": true
+      },
+      "sizes": {
+        "viewportWidth": 1440,
+        "viewportHeight": 900,
+        "inputWidth": 1152,
+        "inputHeight": 720,
+        "outputWidth": 1152,
+        "outputHeight": 720
+      },
+      "drawingBuffer": [
+        1440,
+        900
+      ],
+      "render": {
+        "frame": 1697,
+        "calls": 323,
+        "triangles": 1022778,
+        "points": 0,
+        "lines": 0
+      },
+      "assets": {
+        "components": 654,
+        "placements": 654,
+        "ready": 524,
+        "skipped": 0,
+        "draws": 491,
+        "triangles": 2236810,
+        "allLodTriangles": 2236810,
+        "cells": 606,
+        "residentCells": 491,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 20,
+        "textureMiB": 56,
+        "errors": [],
+        "windTime": 17.799900000000644,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      }
+    },
+    {
+      "name": "loom-flyover",
+      "p": [
+        307.9775390625,
+        7.320068359375,
+        -543.0400390625
+      ],
+      "position": [
+        307.9775390625,
+        7.199951171875,
+        -543.0400390625
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "camera": [
+        310.9972442769248,
+        12.299951171875,
+        -538.9923384290569
+      ],
+      "stamp": "Codex/sol fork · build 10-27 06:10 UTC",
+      "quality": {
+        "enabled": false,
+        "baseHeight": 720,
+        "outputMultiplier": 1,
+        "fixed60": true
+      },
+      "sizes": {
+        "viewportWidth": 1440,
+        "viewportHeight": 900,
+        "inputWidth": 1152,
+        "inputHeight": 720,
+        "outputWidth": 1152,
+        "outputHeight": 720
+      },
+      "drawingBuffer": [
+        1440,
+        900
+      ],
+      "render": {
+        "frame": 1771,
+        "calls": 363,
+        "triangles": 1084567,
+        "points": 0,
+        "lines": 0
+      },
+      "assets": {
+        "components": 654,
+        "placements": 654,
+        "ready": 524,
+        "skipped": 0,
+        "draws": 491,
+        "triangles": 2236810,
+        "allLodTriangles": 2236810,
+        "cells": 606,
+        "residentCells": 491,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 20,
+        "textureMiB": 56,
+        "errors": [],
+        "windTime": 19.033233333333907,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      }
+    },
+    {
+      "name": "echo-beaters",
+      "p": [
+        222.2412109375,
+        0.1201171875,
+        -904.013671875
+      ],
+      "position": [
+        222.2412109375,
+        0.3460171894595496,
+        -904.013671875
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "camera": [
+        217.19159101365395,
+        5.44601718945955,
+        -904.0756285106179
+      ],
+      "stamp": "Codex/sol fork · build 10-27 06:10 UTC",
+      "quality": {
+        "enabled": false,
+        "baseHeight": 720,
+        "outputMultiplier": 1,
+        "fixed60": true
+      },
+      "sizes": {
+        "viewportWidth": 1440,
+        "viewportHeight": 900,
+        "inputWidth": 1152,
+        "inputHeight": 720,
+        "outputWidth": 1152,
+        "outputHeight": 720
+      },
+      "drawingBuffer": [
+        1440,
+        900
+      ],
+      "render": {
+        "frame": 1847,
+        "calls": 234,
+        "triangles": 882535,
+        "points": 0,
+        "lines": 0
+      },
+      "assets": {
+        "components": 654,
+        "placements": 654,
+        "ready": 402,
+        "skipped": 0,
+        "draws": 378,
+        "triangles": 1697567,
+        "allLodTriangles": 1697567,
+        "cells": 606,
+        "residentCells": 378,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 19,
+        "textureMiB": 51.67,
+        "errors": [],
+        "windTime": 20.299900000000502,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      }
+    }
+  ]
+}

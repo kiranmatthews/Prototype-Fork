@@ -1,0 +1,48 @@
+{
+  "id": "bonus-tribal-run",
+  "stage": "Resonance Vault return",
+  "frame": 3461,
+  "done": true,
+  "failed": null,
+  "result": {
+    "completionScope": "complete-stage",
+    "activeStageCrates": 20,
+    "bonusCrateTotal": 0,
+    "bonusCrates": 0,
+    "gemEarned": true,
+    "state": "finished",
+    "cratesBroken": 20,
+    "totalCrates": 20,
+    "deaths": 0
+  },
+  "end": {
+    "frame": 3461,
+    "position": [
+      111.42557777628289,
+      0.7266666691501935,
+      -0.0009098822081068408
+    ],
+    "state": "finished",
+    "grounded": true,
+    "bailing": false,
+    "deaths": 0,
+    "lives": 5,
+    "speed": 0,
+    "verticalSpeed": 0,
+    "crates": 20,
+    "crystal": false,
+    "gem": true,
+    "camera": [
+      111.42557777628289,
+      8.35149116617971,
+      25.819399985466358
+    ]
+  },
+  "rawTrace": {
+    "path": ".release-queue/tribal-run-evidence/raw/greybox/bonus-tribal-run-lite-journey.json",
+    "sha256": "556e78455e495aa0d2e325b34d121113f84d263d7d50dd7c571fe8263047e671",
+    "bytes": 404772
+  },
+  "errors": [],
+  "failedRequests": []
+}

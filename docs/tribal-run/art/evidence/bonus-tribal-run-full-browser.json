@@ -1,0 +1,224 @@
+{
+  "id": "bonus-tribal-run",
+  "lite": false,
+  "errors": [],
+  "failed": [],
+  "scenes": [
+    {
+      "name": "spawn",
+      "p": [
+        -12,
+        0.12,
+        0
+      ],
+      "position": [
+        -12,
+        0,
+        0
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "camera": [
+        -12,
+        8.35149116617971,
+        25.820309867674464
+      ],
+      "stamp": "Codex/sol fork · build 10-27 06:10 UTC",
+      "quality": {
+        "enabled": false,
+        "baseHeight": 720,
+        "outputMultiplier": 1,
+        "fixed60": true
+      },
+      "sizes": {
+        "viewportWidth": 1440,
+        "viewportHeight": 900,
+        "inputWidth": 1152,
+        "inputHeight": 720,
+        "outputWidth": 1152,
+        "outputHeight": 720
+      },
+      "drawingBuffer": [
+        1440,
+        900
+      ],
+      "render": {
+        "frame": 857,
+        "calls": 175,
+        "triangles": 334722,
+        "points": 0,
+        "lines": 0
+      },
+      "assets": {
+        "components": 126,
+        "placements": 126,
+        "ready": 126,
+        "skipped": 0,
+        "draws": 30,
+        "triangles": 108189,
+        "allLodTriangles": 108189,
+        "cells": 30,
+        "residentCells": 30,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 4,
+        "textureMiB": 18.67,
+        "errors": [],
+        "windTime": 1.5672666666662936,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      }
+    },
+    {
+      "name": "resonance-drum",
+      "p": [
+        29.5,
+        2.52,
+        0
+      ],
+      "position": [
+        29.5,
+        2.4,
+        0
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "camera": [
+        29.5,
+        10.751491166179708,
+        25.820309867674464
+      ],
+      "stamp": "Codex/sol fork · build 10-27 06:10 UTC",
+      "quality": {
+        "enabled": false,
+        "baseHeight": 720,
+        "outputMultiplier": 1,
+        "fixed60": true
+      },
+      "sizes": {
+        "viewportWidth": 1440,
+        "viewportHeight": 900,
+        "inputWidth": 1152,
+        "inputHeight": 720,
+        "outputWidth": 1152,
+        "outputHeight": 720
+      },
+      "drawingBuffer": [
+        1440,
+        900
+      ],
+      "render": {
+        "frame": 1085,
+        "calls": 207,
+        "triangles": 381355,
+        "points": 0,
+        "lines": 0
+      },
+      "assets": {
+        "components": 126,
+        "placements": 126,
+        "ready": 126,
+        "skipped": 0,
+        "draws": 30,
+        "triangles": 108189,
+        "allLodTriangles": 108189,
+        "cells": 30,
+        "residentCells": 30,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 4,
+        "textureMiB": 18.67,
+        "errors": [],
+        "windTime": 2.833933333332956,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      }
+    },
+    {
+      "name": "reveal-gallery",
+      "p": [
+        52,
+        6.92,
+        0
+      ],
+      "position": [
+        52,
+        6.8,
+        0
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "camera": [
+        52,
+        15.151491166179706,
+        25.820309867674464
+      ],
+      "stamp": "Codex/sol fork · build 10-27 06:10 UTC",
+      "quality": {
+        "enabled": false,
+        "baseHeight": 720,
+        "outputMultiplier": 1,
+        "fixed60": true
+      },
+      "sizes": {
+        "viewportWidth": 1440,
+        "viewportHeight": 900,
+        "inputWidth": 1152,
+        "inputHeight": 720,
+        "outputWidth": 1152,
+        "outputHeight": 720
+      },
+      "drawingBuffer": [
+        1440,
+        900
+      ],
+      "render": {
+        "frame": 1307,
+        "calls": 212,
+        "triangles": 380247,
+        "points": 0,
+        "lines": 0
+      },
+      "assets": {
+        "components": 126,
+        "placements": 126,
+        "ready": 126,
+        "skipped": 0,
+        "draws": 30,
+        "triangles": 108189,
+        "allLodTriangles": 108189,
+        "cells": 30,
+        "residentCells": 30,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 4,
+        "textureMiB": 18.67,
+        "errors": [],
+        "windTime": 4.067266666666285,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "mode": "built-in image_gen",
+  "generatedAfter": "2026-10-27T07:29:01Z",
+  "prompts": [
+    {
+      "asset": "sunstone.webp",
+      "prompt": "Use case: stylized-concept\nAsset type: seamless square albedo texture for the playable stone drum terraces in the 3D platform/skating level Tribal Run.\nCreate a beautifully hand-painted, perfectly top-down flat material swatch of sun-baked apricot sandstone paving. Large gently irregular stone pieces fitted tightly together, soft rounded worn corners, subtle shallow carved concentric wave marks on a few stones, very fine mineral flecks, subtle warm cream weathering. The main playing surface must read calm and light, with restrained tonal variation and thin ochre seams. Warm pale peach, honey sandstone, dusty ivory; no green grass. High-quality animated adventure-game material, rich tactile brushwork without photoreal noise. Seamless tile on all four edges, uniform orthographic lighting with no directional shadows, no perspective, no border, no objects, no text, no logo, no watermark. Fill the square edge to edge. This is a usable flat texture, not a scene or mockup."
+    },
+    {
+      "asset": "festival-weave.webp",
+      "prompt": "Use case: stylized-concept\nAsset type: square game-ready woven festival textile albedo for bridge banners, drum skirts and shaded awnings in Tribal Run, a joyful imaginary island platform-skating level.\nCreate a flat orthographic fabric design filling the square edge to edge. Handwoven cream flax with broad beautiful alternating bands of deep jade, petrol teal, warm coral, honey gold and ivory. Invent a bold playful rhythm of nested semicircles, interlaced loops and broad stepped chevrons, like ripples and musical call-and-response; original fantasy ornament, not copied cultural or religious symbols. Restrained tactile threads, slight hand-painted irregularity, clean readable large shapes at game distance. Pattern repeats seamlessly on all four edges. Even neutral light, no folds, no shadows, no perspective, no objects, no tassels, no border outside the pattern, no text, no logo, no watermark. Rich animated adventure game art, not a photo or scene."
+    },
+    {
+      "asset": "resonance-fresco.webp",
+      "prompt": "Use case: stylized-concept\nAsset type: wide 3:2 painted wall mural texture for the Resonance Vault bonus room in Tribal Run.\nCreate a richly tactile hand-painted fantasy acoustic fresco, viewed perfectly straight-on with no perspective. A large ivory-and-gold sun disc in the central upper half, elegant nested arcs radiating like sound waves, jade leaves and looping river motifs, small repeating circular drum symbols, all carved and painted into deep petrol-teal plaster. The lower third is quieter dark jade stone. Broad readable shapes and warm tiny glints, subtle chipped pigments and brush texture. A welcoming lantern-lit island music sanctuary, no people, no faces, no real-world religious or cultural emblems. Wide composition, a calm balanced rhythm that can sit behind a side-scrolling platform game. Fill image edge to edge, no frames, no scenery perspective, no dramatic baked shadows, no letters, no numbers, no logos, no watermark. Actual game texture, not a mockup."
+    }
+  ]
+}

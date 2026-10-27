@@ -1,0 +1,80 @@
+{
+  "id": "tribal-run",
+  "lite": false,
+  "errors": [],
+  "failed": [],
+  "scenes": [
+    {
+      "name": "spawn",
+      "p": [
+        0,
+        0.1201171875,
+        0
+      ],
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "camera": [
+        -0.06673785048868247,
+        5.1000599163960665,
+        5.049558996517631
+      ],
+      "stamp": "Codex/sol fork · build 10-27 06:10 UTC",
+      "quality": {
+        "enabled": true,
+        "baseHeight": 720,
+        "outputMultiplier": 1,
+        "fixed60": true
+      },
+      "sizes": {
+        "viewportWidth": 1440,
+        "viewportHeight": 900,
+        "inputWidth": 1152,
+        "inputHeight": 720,
+        "outputWidth": 1152,
+        "outputHeight": 720
+      },
+      "drawingBuffer": [
+        1152,
+        720
+      ],
+      "render": {
+        "frame": 1115,
+        "calls": 261,
+        "triangles": 993050,
+        "points": 0,
+        "lines": 0
+      },
+      "assets": {
+        "components": 654,
+        "placements": 654,
+        "ready": 274,
+        "skipped": 0,
+        "draws": 250,
+        "triangles": 1192993,
+        "allLodTriangles": 1192993,
+        "cells": 606,
+        "residentCells": 250,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 19,
+        "textureMiB": 51.67,
+        "errors": [],
+        "windTime": 1.5665666666670386,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      }
+    }
+  ]
+}

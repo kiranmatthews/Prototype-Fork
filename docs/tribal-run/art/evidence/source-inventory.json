@@ -1,0 +1,69 @@
+{
+  "checkedAt": "2026-10-27T08:15:58.230Z",
+  "scope": "Source data inventory; full Meshy geometry is exercised in the accompanying real-browser captures.",
+  "levels": [
+    {
+      "id": "tribal-run",
+      "sourceSha256": "4aede93c3b0d53c74aa993425665c86ef81337f534042a54163d282b2ba3f49d",
+      "components": 1513,
+      "gameplayComponents": 494,
+      "artComponents": 1019,
+      "existingMeshyPlacements": {
+        "coastv2ledge": 71,
+        "stonefrieze": 28,
+        "coastcliff": 38,
+        "trialsv2treeb": 38,
+        "junglefern": 112,
+        "coastfoliage": 56,
+        "coastv2buttress": 78,
+        "junglepalmtree": 74,
+        "coastbeachrock": 48,
+        "jungleleaf": 48,
+        "coastpillar": 18,
+        "stoneshaft": 32,
+        "trialsv2crownb": 2,
+        "coastarch": 1,
+        "stonebase": 4,
+        "trialsv2porchhut": 4,
+        "stonecapital": 2
+      },
+      "artTriangles": 62538,
+      "serializedBytes": 7295872
+    },
+    {
+      "id": "tribal-run-bonus",
+      "sourceSha256": "7eb6ce1360bf719597850138e85271c420ad9794bd8a52c91f23c9a20ba15835",
+      "components": 273,
+      "gameplayComponents": 54,
+      "artComponents": 219,
+      "existingMeshyPlacements": {
+        "stonebase": 19,
+        "stoneshaft": 84,
+        "stonecapital": 12,
+        "stonelintel": 6,
+        "junglefern": 5
+      },
+      "artTriangles": 17652,
+      "serializedBytes": 855683
+    }
+  ],
+  "assets": [
+    {
+      "path": "public/tribal-run/sunstone.webp",
+      "bytes": 428018,
+      "sha256": "24384a6a036962d307d52a791434d14381b9092090f9a0a99852398c9f2adea1"
+    },
+    {
+      "path": "public/tribal-run/festival-weave.webp",
+      "bytes": 644348,
+      "sha256": "1b66405b6b2fb195fe964922155aaa105d4c5b41badfca2c08acc05b8ad924e0"
+    },
+    {
+      "path": "public/tribal-run/resonance-fresco.webp",
+      "bytes": 574486,
+      "sha256": "7317018ce9fff11cb31239c53d91b3249e88620d2ffdea49396fd190436ac6b5"
+    }
+  ],
+  "newRasterBytes": 1646852,
+  "precisionCorrectionEvidence": "source-precision-equivalence.json"
+}

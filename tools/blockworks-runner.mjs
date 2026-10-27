@@ -53,7 +53,8 @@ export async function withBlockworksRuntime(run, options = {}) {
   const fixture = await readFile(new URL('./test-crouch-jump-slam.mjs', import.meta.url), 'utf8');
   const dom = fixture.slice(fixture.indexOf('function installHeadlessDom()'), fixture.indexOf('\nconst held'));
   new Function('noop', dom + '\ninstallHeadlessDom();')(() => {});
-  const server = await createServer({ appType: 'custom', logLevel: 'silent', server: { middlewareMode: true } });
+  const server = await createServer({ appType: 'custom', logLevel: 'silent', server: { middlewareMode: true },
+    ...(options.optimizeDeps ? { optimizeDeps: options.optimizeDeps } : {}) });
   const warn = console.warn, error = console.error;
   console.warn = (...a) => { if (!/failed|GLB|procedural skateboard/i.test(String(a[0]))) warn(...a); };
   console.error = (...a) => { if (!/failed|GLB/i.test(String(a[0]))) error(...a); };

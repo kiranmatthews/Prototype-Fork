@@ -1,0 +1,708 @@
+{
+  "journey": {
+    "id": "tribal-run",
+    "phase": "all",
+    "sourceSha256": "abfdee8d9dca83c71d1f2bc3d310f12cc1b6c4af9768df3a41e9ef13970e2bde",
+    "stage": "echo-grind end landing",
+    "frame": 3984,
+    "done": true,
+    "failed": null,
+    "actions": [
+      {
+        "label": "miss the crown into its recovery court",
+        "first": 51,
+        "last": 98
+      },
+      {
+        "label": "skate to 515",
+        "first": 98,
+        "last": 651
+      },
+      {
+        "label": "skate to 1070",
+        "first": 675,
+        "last": 1154
+      },
+      {
+        "label": "bank checkpoint with an attack",
+        "first": 1178,
+        "last": 1277
+      },
+      {
+        "label": "fall into the visible basin",
+        "first": 1277,
+        "last": 1347
+      },
+      {
+        "label": "native checkpoint return",
+        "first": 1347,
+        "last": 1480
+      },
+      {
+        "label": "skate to 296",
+        "first": 1504,
+        "last": 1678
+      },
+      {
+        "label": "ollie over the rail start",
+        "first": 1679,
+        "last": 1688
+      },
+      {
+        "label": "offbeat-grind catch",
+        "first": 1688,
+        "last": 1689
+      },
+      {
+        "label": "offbeat-grind full ride",
+        "first": 1689,
+        "last": 2235
+      },
+      {
+        "label": "offbeat-grind end landing",
+        "first": 2235,
+        "last": 2257
+      },
+      {
+        "label": "skate to 706",
+        "first": 2281,
+        "last": 2400
+      },
+      {
+        "label": "ollie over the rail start",
+        "first": 2401,
+        "last": 2411
+      },
+      {
+        "label": "crescent-grind catch",
+        "first": 2411,
+        "last": 2412
+      },
+      {
+        "label": "crescent-grind full ride",
+        "first": 2412,
+        "last": 2732
+      },
+      {
+        "label": "crescent-grind end landing",
+        "first": 2732,
+        "last": 2754
+      },
+      {
+        "label": "skate to 1142",
+        "first": 2778,
+        "last": 2971
+      },
+      {
+        "label": "ollie over the rail start",
+        "first": 2972,
+        "last": 2983
+      },
+      {
+        "label": "loom-grind catch",
+        "first": 2983,
+        "last": 2984
+      },
+      {
+        "label": "loom-grind full ride",
+        "first": 2984,
+        "last": 3501
+      },
+      {
+        "label": "loom-grind end landing",
+        "first": 3501,
+        "last": 3520
+      },
+      {
+        "label": "skate to 1819",
+        "first": 3544,
+        "last": 3653
+      },
+      {
+        "label": "ollie over the rail start",
+        "first": 3654,
+        "last": 3664
+      },
+      {
+        "label": "echo-grind catch",
+        "first": 3664,
+        "last": 3665
+      },
+      {
+        "label": "echo-grind full ride",
+        "first": 3665,
+        "last": 3965
+      },
+      {
+        "label": "echo-grind end landing",
+        "first": 3965,
+        "last": 3984
+      }
+    ],
+    "evidence": [
+      {
+        "action": "scenario setup before input",
+        "station": 309.9,
+        "point": [
+          -107.563720703125,
+          0.1201171875,
+          -274.064697265625
+        ],
+        "heading": [
+          -0.5524165593094499,
+          0,
+          -0.8335682005695211
+        ],
+        "frame": 0
+      },
+      {
+        "action": "recovery catch",
+        "frame": 98,
+        "s": 313.0509424908714,
+        "position": [
+          -105.93378745872565,
+          -4.5,
+          -278.7742685951662
+        ],
+        "state": "ride",
+        "grounded": true,
+        "bailing": false,
+        "lives": 4,
+        "speed": 4.009295449327725,
+        "rail": -1
+      },
+      {
+        "action": "scenario setup before input",
+        "station": 902,
+        "point": [
+          271.873779296875,
+          0.1201171875,
+          -275.43017578125
+        ],
+        "heading": [
+          0.9556132960720939,
+          0,
+          -0.2946238761034631
+        ],
+        "frame": 651
+      },
+      {
+        "action": "scenario setup before input",
+        "station": 237,
+        "point": [
+          -61.052001953125,
+          0.1201171875,
+          -218.0283203125
+        ],
+        "heading": [
+          -0.5619086021599318,
+          0,
+          -0.827199324720875
+        ],
+        "frame": 1154
+      },
+      {
+        "action": "pit death",
+        "frame": 1347,
+        "s": 263.1380526860187,
+        "position": [
+          -66.26518599071925,
+          -10.869274909115667,
+          -248.3312388460083
+        ],
+        "state": "dead",
+        "grounded": false,
+        "bailing": true,
+        "lives": 3,
+        "speed": 20.299999999999986,
+        "rail": -1
+      },
+      {
+        "action": "scenario setup before input",
+        "station": 260,
+        "point": [
+          -78.302734375,
+          0.1201171875,
+          -233.4208984375
+        ],
+        "heading": [
+          -0.6601491547777547,
+          0,
+          -0.7511345375138969
+        ],
+        "frame": 1480
+      },
+      {
+        "action": "offbeat-grind caught",
+        "frame": 1689,
+        "s": 299.85826479520864,
+        "position": [
+          -104.80754259877155,
+          1.2374999999999996,
+          -263.44946819887457
+        ],
+        "state": "grind",
+        "grounded": false,
+        "bailing": false,
+        "lives": 4,
+        "speed": 23.029791448796857,
+        "rail": 0
+      },
+      {
+        "action": "scenario setup before input",
+        "station": 689,
+        "point": [
+          127.325927734375,
+          -2.8798828125,
+          -389.08447265625
+        ],
+        "heading": [
+          0.8199608183544103,
+          0,
+          0.5724196505742669
+        ],
+        "frame": 2257
+      },
+      {
+        "action": "crescent-grind caught",
+        "frame": 2412,
+        "s": 709.7020351176828,
+        "position": [
+          143.04173263255075,
+          -1.4439796231890532,
+          -376.96787557758586
+        ],
+        "state": "grind",
+        "grounded": false,
+        "bailing": false,
+        "lives": 4,
+        "speed": 18.083691577784716,
+        "rail": 1
+      },
+      {
+        "action": "scenario setup before input",
+        "station": 1102,
+        "point": [
+          340.472900390625,
+          0.1201171875,
+          -441.55517578125
+        ],
+        "heading": [
+          -0.12289186383888871,
+          0,
+          -0.9924200672105558
+        ],
+        "frame": 2754
+      },
+      {
+        "action": "loom-grind caught",
+        "frame": 2984,
+        "s": 1145.7952324251999,
+        "position": [
+          326.8121806943384,
+          7.459109449680941,
+          -482.65966852629793
+        ],
+        "state": "grind",
+        "grounded": false,
+        "bailing": false,
+        "lives": 4,
+        "speed": 17.700975331794584,
+        "rail": 2
+      },
+      {
+        "action": "scenario setup before input",
+        "station": 1805,
+        "point": [
+          237.59521484375,
+          1.320068359375,
+          -909.784423828125
+        ],
+        "heading": [
+          0.9982897233972069,
+          0,
+          0.058460483743535116
+        ],
+        "frame": 3520
+      },
+      {
+        "action": "echo-grind caught",
+        "frame": 3665,
+        "s": 1822.7178670000537,
+        "position": [
+          255.47779282306593,
+          1.5202307485132598,
+          -908.3563840406426
+        ],
+        "state": "grind",
+        "grounded": false,
+        "bailing": false,
+        "lives": 4,
+        "speed": 18.884284964618075,
+        "rail": 3
+      }
+    ],
+    "scenarios": [
+      {
+        "name": "offbeat-recovery",
+        "pass": true,
+        "first": 0,
+        "last": 651,
+        "end": {
+          "frame": 651,
+          "s": 515.0353034087831,
+          "position": [
+            -33.98895524251675,
+            0,
+            -430.72999549351056
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "lives": 4,
+          "speed": 23.199,
+          "rail": -1
+        }
+      },
+      {
+        "name": "court-lower-line",
+        "pass": true,
+        "first": 651,
+        "last": 1154,
+        "end": {
+          "frame": 1154,
+          "s": 1070.1313976239896,
+          "position": [
+            344.9356186306746,
+            0,
+            -410.0666344289556
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "lives": 4,
+          "speed": 23.199,
+          "rail": -1
+        }
+      },
+      {
+        "name": "checkpoint-pit-return",
+        "pass": true,
+        "first": 1154,
+        "last": 1480,
+        "end": {
+          "frame": 1480,
+          "s": 250,
+          "position": [
+            -68.83349609375,
+            0.1,
+            -228.432861328125
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "lives": 3,
+          "speed": 0,
+          "rail": -1
+        }
+      },
+      {
+        "name": "offbeat-grind",
+        "pass": true,
+        "first": 1480,
+        "last": 2257,
+        "end": {
+          "frame": 2257,
+          "s": 427.5207557388074,
+          "position": [
+            -110.67610602474998,
+            3.8695656371326344,
+            -388.99926870256064
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "lives": 4,
+          "speed": 12.996789959005513,
+          "rail": -1
+        }
+      },
+      {
+        "name": "crescent-grind",
+        "pass": true,
+        "first": 2257,
+        "last": 2754,
+        "end": {
+          "frame": 2754,
+          "s": 796.452277740062,
+          "position": [
+            181.82742576017927,
+            0.05084823471867672,
+            -302.33273751422075
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "lives": 4,
+          "speed": 10.045069555504295,
+          "rail": -1
+        }
+      },
+      {
+        "name": "loom-grind",
+        "pass": true,
+        "first": 2754,
+        "last": 3520,
+        "end": {
+          "frame": 3520,
+          "s": 1298.3337620632165,
+          "position": [
+            239.64849220594988,
+            0,
+            -597.5349383950572
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "lives": 4,
+          "speed": 29.275900111797846,
+          "rail": -1
+        }
+      },
+      {
+        "name": "echo-grind",
+        "pass": true,
+        "first": 3520,
+        "last": 3984,
+        "end": {
+          "frame": 3984,
+          "s": 1929.4821176769608,
+          "position": [
+            351.6655874347007,
+            0.29527679896264925,
+            -925.7884619760589
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "lives": 4,
+          "speed": 19.67753837713726,
+          "rail": -1
+        }
+      }
+    ],
+    "result": {
+      "scenarios": [
+        {
+          "name": "offbeat-recovery",
+          "pass": true,
+          "first": 0,
+          "last": 651,
+          "end": {
+            "frame": 651,
+            "s": 515.0353034087831,
+            "position": [
+              -33.98895524251675,
+              0,
+              -430.72999549351056
+            ],
+            "state": "ride",
+            "grounded": true,
+            "bailing": false,
+            "lives": 4,
+            "speed": 23.199,
+            "rail": -1
+          }
+        },
+        {
+          "name": "court-lower-line",
+          "pass": true,
+          "first": 651,
+          "last": 1154,
+          "end": {
+            "frame": 1154,
+            "s": 1070.1313976239896,
+            "position": [
+              344.9356186306746,
+              0,
+              -410.0666344289556
+            ],
+            "state": "ride",
+            "grounded": true,
+            "bailing": false,
+            "lives": 4,
+            "speed": 23.199,
+            "rail": -1
+          }
+        },
+        {
+          "name": "checkpoint-pit-return",
+          "pass": true,
+          "first": 1154,
+          "last": 1480,
+          "end": {
+            "frame": 1480,
+            "s": 250,
+            "position": [
+              -68.83349609375,
+              0.1,
+              -228.432861328125
+            ],
+            "state": "ride",
+            "grounded": true,
+            "bailing": false,
+            "lives": 3,
+            "speed": 0,
+            "rail": -1
+          }
+        },
+        {
+          "name": "offbeat-grind",
+          "pass": true,
+          "first": 1480,
+          "last": 2257,
+          "end": {
+            "frame": 2257,
+            "s": 427.5207557388074,
+            "position": [
+              -110.67610602474998,
+              3.8695656371326344,
+              -388.99926870256064
+            ],
+            "state": "ride",
+            "grounded": true,
+            "bailing": false,
+            "lives": 4,
+            "speed": 12.996789959005513,
+            "rail": -1
+          }
+        },
+        {
+          "name": "crescent-grind",
+          "pass": true,
+          "first": 2257,
+          "last": 2754,
+          "end": {
+            "frame": 2754,
+            "s": 796.452277740062,
+            "position": [
+              181.82742576017927,
+              0.05084823471867672,
+              -302.33273751422075
+            ],
+            "state": "ride",
+            "grounded": true,
+            "bailing": false,
+            "lives": 4,
+            "speed": 10.045069555504295,
+            "rail": -1
+          }
+        },
+        {
+          "name": "loom-grind",
+          "pass": true,
+          "first": 2754,
+          "last": 3520,
+          "end": {
+            "frame": 3520,
+            "s": 1298.3337620632165,
+            "position": [
+              239.64849220594988,
+              0,
+              -597.5349383950572
+            ],
+            "state": "ride",
+            "grounded": true,
+            "bailing": false,
+            "lives": 4,
+            "speed": 29.275900111797846,
+            "rail": -1
+          }
+        },
+        {
+          "name": "echo-grind",
+          "pass": true,
+          "first": 3520,
+          "last": 3984,
+          "end": {
+            "frame": 3984,
+            "s": 1929.4821176769608,
+            "position": [
+              351.6655874347007,
+              0.29527679896264925,
+              -925.7884619760589
+            ],
+            "state": "ride",
+            "grounded": true,
+            "bailing": false,
+            "lives": 4,
+            "speed": 19.67753837713726,
+            "rail": -1
+          }
+        }
+      ],
+      "state": "ride"
+    },
+    "end": {
+      "frame": 3984,
+      "position": [
+        351.6655874347007,
+        0.29527679896264925,
+        -925.7884619760589
+      ],
+      "state": "ride",
+      "grounded": true,
+      "bailing": false,
+      "deaths": 0,
+      "lives": 4,
+      "speed": 19.67753837713726,
+      "verticalSpeed": 0,
+      "crates": 0,
+      "crystal": false,
+      "gem": false,
+      "camera": [
+        345.8283388240591,
+        5.607200157781256,
+        -921.0458292277664
+      ],
+      "progress": 1929.4821176769608
+    }
+  },
+  "stamp": "Codex/sol fork \u00b7 build 10-27 06:10 UTC",
+  "quality": {
+    "enabled": false,
+    "baseHeight": 720,
+    "outputMultiplier": 1,
+    "fixed60": true
+  },
+  "sizes": {
+    "viewportWidth": 1440,
+    "viewportHeight": 900,
+    "inputWidth": 1152,
+    "inputHeight": 720,
+    "outputWidth": 1152,
+    "outputHeight": 720
+  },
+  "drawingBuffer": [
+    1440,
+    900
+  ],
+  "render": {
+    "frame": 5982,
+    "calls": 104,
+    "triangles": 186320,
+    "points": 0,
+    "lines": 0
+  },
+  "contextLost": false,
+  "errors": [],
+  "failedRequests": [],
+  "continuousEvidence": {
+    "path": "tribal-run-full-variants-journey.trace.json.gz",
+    "encoding": "gzip JSON",
+    "traceSamples": 664,
+    "sha256": "bbca39bd04399d040912d86be0a567e85d7e6784d5412e0ef22b750b2a956a4f",
+    "uncompressedSha256": "9f2a2c303cb40afe8ccf4cc47b6969a418482fa760f5a181bb7c51027115d8b0",
+    "tuningUnchanged": true
+  }
+}

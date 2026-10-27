@@ -145,7 +145,8 @@ import { JUNGLE_CUP_LEVEL } from "./levels/jungle-cup";
 import { JUNGLE_TERRACES_LEVEL } from "./levels/jungle-sequels";
 import { PIRATE_WRECK_LEVEL } from './levels/pirate-wreck';
 import { CROWN_TEXTURE_KINDS, isCrownTexture, crownTextureFile, createCrownSurface, createCrownQuartz, isCrownWater, crownWaterReflectionFile, createCrownWater, createDrownedHarbourOceanLook } from './drownedCrownAssets';
-import { CAVE_COLLAPSE_LEVEL, CODEX_LAB_LEVEL, WAREHOUSE_REFERENCE_LEVEL, SCHOOL_MIAMI_LEVEL, WAREHOUSE_PARK_LEVEL, ROOFTOP_RELAY_LEVEL, WATERFALL_CLIMB_LEVEL } from "./levels/codex-lab";
+import { CAVE_COLLAPSE_LEVEL, CODEX_LAB_LEVEL, TRIBAL_RUN_LEVEL, WAREHOUSE_REFERENCE_LEVEL, SCHOOL_MIAMI_LEVEL, WAREHOUSE_PARK_LEVEL, ROOFTOP_RELAY_LEVEL, WATERFALL_CLIMB_LEVEL } from "./levels/codex-lab";
+import { TRIBAL_RUN_TEXTURES } from './levels/tribal-run-textures';
 import { JUNGLE_MINEFIELD_LEVEL } from "./levels/jungle-minefield";
 import { COUNTRY_CLUB_LEVEL } from "./levels/country-club";
 import { isPreviousCountryClubStock } from "./levels/country-club-stock";
@@ -1047,6 +1048,7 @@ export const DECOR_LABELS: Record<DecorKind, string> = {
 // Every paintable surface kind the texture system offers. The editor's
 // texture dropdown is built from this list; 'checker' is the classic default.
 export const TEX_KINDS = [
+  ...Object.keys(TRIBAL_RUN_TEXTURES),
   'skystream-marble',
   'cardboard',
   'waterslide-fiberglass','rally-mud','rally-sponsors','rally-cloth','rally-lamp','rally-lamp-glow',
@@ -2600,6 +2602,7 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
   { id: SLIPSTREAM_COURSE_ID, name: SLIPSTREAM_LEVEL.name, data: SLIPSTREAM_LEVEL },
   {id:"test",name:CARLISLE_COAST_LEVEL.name,data:CARLISLE_COAST_LEVEL},
   {id:"custard-creek",name:CUSTARD_CREEK_LEVEL.name,data:CUSTARD_CREEK_LEVEL},
+  {id:'tribal-run',name:TRIBAL_RUN_LEVEL.name,data:TRIBAL_RUN_LEVEL},
   {id:"rumblewater-run",name:RIPCORD_RIVER_LEVEL.name,data:RIPCORD_RIVER_LEVEL},
   {id:"rolling-bones",name:ROLLING_BONES_LEVEL.name,data:ROLLING_BONES_LEVEL},
   {id:"hollowwake-descent",name:HOLLOWWAKE_LEVEL.name,data:HOLLOWWAKE_LEVEL},
@@ -4778,6 +4781,8 @@ export class Level {
     if(kind==='rally-mud')return this.surfaceTexture('dirt');
     const cached = this.surfTexCache.get(kind);
     if (cached) return cached;
+    const tribal=TRIBAL_RUN_TEXTURES[kind];
+    if(tribal){const texture=Level.finishTex(this.surfaceImage(tribal.file),tribal.repeat);this.surfTexCache.set(kind,texture);return texture;}
     if(kind==='rally-sponsors'){const t=Level.finishTex(this.surfaceImage('rally/sponsors-v3.webp'));t.wrapS=t.wrapT=THREE.ClampToEdgeWrapping;this.surfTexCache.set(kind,t);return t;}
     if(kind==='skystream-marble'){
       const texture=Level.finishTex(this.surfaceImage('skystream/ivory-marble.webp'));
@@ -6460,6 +6465,11 @@ export class Level {
     else if(c.tex==='custard-foam')material=custardFoamMaterial(this.standingWaterClock,c);
     else if(c.tex==='waterfall-cascade')material=createWaterfallClimbCurtain(this.standingWaterClock,this.surfaceTexture(c.tex),c.color??'#ccefe5');
     else if(c.tex==='custard-cascade')material=custardWaterfallMaterial(this.standingWaterClock,c.color??'#91c5b1');
+    else if(c.tex==='tribal-sunstone')material=new THREE.MeshStandardMaterial({
+      color:c.color??'#ffffff',vertexColors:!!c.colors,roughness:.88,metalness:0,
+      map:this.surfaceTexture(c.tex),bumpMap:this.surfaceTexture(c.tex),bumpScale:.025,
+      side:c.doubleSided?THREE.DoubleSide:THREE.FrontSide,fog:c.fog!==false,
+    });
     else if(c.tex==='custard-sandstone'||c.tex==='custard-pool-bed')material=new THREE.MeshStandardMaterial({
       color:c.color??'#ffffff',vertexColors:!!c.colors,roughness:.87,metalness:0,
       map:this.surfaceTexture('custard-sandstone'),bumpMap:this.surfaceTexture('custard-sandstone'),bumpScale:.045,
@@ -15423,12 +15433,12 @@ export class Level {
     // ---- swept mesh: any path, any bank, any arc ----
     const spine = vertRampSpine(c);
     if (spine.length < 2) return null;
-    if((c.tex==='coast-bedrock'||c.tex==='custard-sandstone'||c.tex==='crown-bilge-paint'||c.tex==='waterslide-fiberglass')&&mat.map)mat.map.repeat.set(1,1);
+    if((c.tex==='coast-bedrock'||c.tex==='custard-sandstone'||c.tex==='tribal-sunstone'||c.tex==='crown-bilge-paint'||c.tex==='waterslide-fiberglass')&&mat.map)mat.map.repeat.set(1,1);
     if(c.tex==='waterslide-fiberglass')addWaterparkFlumeLook(mat,this.standingWaterClock);
     if(c.tex==='custard-sandstone'){mat.bumpMap=mat.map;mat.bumpScale=.045;}
     if(c.tex==='skystream-marble'&&mat.map){mat.map.repeat.set(1,1);mat.bumpMap=mat.map;mat.bumpScale=.025;}
     const vr = buildVertRampGeometry(spine, {
-      uvTileMetres:c.tex==='crown-bilge-paint'?6:c.tex==='waterslide-fiberglass'?5:c.tex==='coast-bedrock'||c.tex==='custard-sandstone'?3.1:undefined,
+      uvTileMetres:c.tex==='crown-bilge-paint'?6:c.tex==='waterslide-fiberglass'?5:c.tex==='coast-bedrock'||c.tex==='custard-sandstone'||c.tex==='tribal-sunstone'?3.1:undefined,
       radius: R,
       flatHalf: F,
       kind: vkind,

@@ -1,5 +1,6 @@
 export { CAVE_COLLAPSE_LEVEL } from './cave-collapse';
 export { WATERFALL_CLIMB_LEVEL } from './waterfall-climb';
+export { TRIBAL_RUN_LEVEL } from './tribal-run';
 import {dressKookRooftops} from './rooftop-kook-art';
 import {warehouseRibbon,warehouseIsland,warehouseBeam,type WarehousePoint} from './warehouse-geometry';
 import {warehouseDressing} from './warehouse-dressing';

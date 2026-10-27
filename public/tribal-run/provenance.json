@@ -1,0 +1,41 @@
+{
+  "provider": "OpenAI built-in image_gen",
+  "generated": "2026-10-27",
+  "promptFile": "docs/tribal-run/imagegen-prompts.json",
+  "processing": "WebP encoding at native generated dimensions, quality 90; no image repainting or geometry substitution",
+  "assets": [
+    {
+      "name": "sunstone",
+      "file": "public/tribal-run/sunstone.webp",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "sourceSha256": "8652838ca62372cee14c57259cba1e5989201970df791d45b1a656270c7efb1b",
+      "sha256": "24384a6a036962d307d52a791434d14381b9092090f9a0a99852398c9f2adea1",
+      "bytes": 428018
+    },
+    {
+      "name": "festival-weave",
+      "file": "public/tribal-run/festival-weave.webp",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "sourceSha256": "87b7f4528d07a4c8425f77faa74c9cbb5d29da293987dcd46f4fea5dc383b1a7",
+      "sha256": "1b66405b6b2fb195fe964922155aaa105d4c5b41badfca2c08acc05b8ad924e0",
+      "bytes": 644348
+    },
+    {
+      "name": "resonance-fresco",
+      "file": "public/tribal-run/resonance-fresco.webp",
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "sourceSha256": "2c581f68340fa51d924c4088e7f41b007912b616ffa64528c87fc1a814c8e049",
+      "sha256": "7317018ce9fff11cb31239c53d91b3249e88620d2ffdea49396fd190436ac6b5",
+      "bytes": 574486
+    }
+  ]
+}

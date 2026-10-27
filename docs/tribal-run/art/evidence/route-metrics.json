@@ -1,0 +1,161 @@
+{
+  "length": 2320,
+  "footprint": [
+    536.737060546875,
+    1238.341064453125
+  ],
+  "sections": [
+    {
+      "a": 0,
+      "b": 260,
+      "name": "Gathering Ground",
+      "verb": "Pump the first beat",
+      "grp": 10
+    },
+    {
+      "a": 260,
+      "b": 530,
+      "name": "Offbeat Steps",
+      "verb": "Hop across the drum crowns",
+      "grp": 11
+    },
+    {
+      "a": 530,
+      "b": 830,
+      "name": "Crescent Basins",
+      "verb": "Carve the two sweeping bowls",
+      "grp": 12
+    },
+    {
+      "a": 830,
+      "b": 1110,
+      "name": "Great Drum Court",
+      "verb": "Explore the high and low terraces",
+      "grp": 13
+    },
+    {
+      "a": 1110,
+      "b": 1390,
+      "name": "Canopy Loom",
+      "verb": "Choose a woven line",
+      "grp": 14
+    },
+    {
+      "a": 1390,
+      "b": 1660,
+      "name": "Sunken Stair",
+      "verb": "Climb, commit, then drop in",
+      "grp": 15
+    },
+    {
+      "a": 1660,
+      "b": 2010,
+      "name": "Echo Bowls",
+      "verb": "Pump through the hanging beaters",
+      "grp": 16
+    },
+    {
+      "a": 2010,
+      "b": 2330,
+      "name": "Last Chorus",
+      "verb": "Bring the rhythm home",
+      "grp": 17
+    }
+  ],
+  "checkpoints": [
+    {
+      "s": 250,
+      "y": 0,
+      "u": 0,
+      "name": "Gathering Ground · safe restart"
+    },
+    {
+      "s": 518,
+      "y": 0,
+      "u": 0,
+      "name": "Offbeat Steps · safe restart"
+    },
+    {
+      "s": 824,
+      "y": 0,
+      "u": 0,
+      "name": "Crescent Basins · safe restart"
+    },
+    {
+      "s": 1088,
+      "y": 0,
+      "u": 0,
+      "name": "Great Drum Court · safe restart"
+    },
+    {
+      "s": 1380,
+      "y": 0,
+      "u": 0,
+      "name": "Canopy Loom · safe restart"
+    },
+    {
+      "s": 1508,
+      "y": 4.8,
+      "u": 0,
+      "name": "Sunken Stair · safe restart"
+    },
+    {
+      "s": 1650,
+      "y": -1,
+      "u": 0,
+      "name": "Sunken Stair · safe restart"
+    },
+    {
+      "s": 1994,
+      "y": -1,
+      "u": 0,
+      "name": "Echo Bowls · safe restart"
+    },
+    {
+      "s": 2218,
+      "y": 0,
+      "u": 0,
+      "name": "Last Chorus · safe restart"
+    }
+  ],
+  "gaps": [
+    {
+      "a": 176,
+      "b": 182,
+      "top": 0,
+      "u": 0,
+      "name": "First beat · six-metre hop"
+    },
+    {
+      "a": 676,
+      "b": 683,
+      "top": -3,
+      "u": 0,
+      "name": "Crescent lip transfer"
+    },
+    {
+      "a": 1162,
+      "b": 1170,
+      "top": 7.2,
+      "u": -5.2,
+      "name": "Upper woven leap"
+    },
+    {
+      "a": 1245,
+      "b": 1250,
+      "top": 0,
+      "u": -5.2,
+      "name": "Lower woven hop"
+    },
+    {
+      "a": 2235,
+      "b": 2243,
+      "top": 0,
+      "u": 0,
+      "name": "Last chorus flight"
+    }
+  ],
+  "components": 1513,
+  "geometryVertices": 87368,
+  "countedCrates": 59
+}

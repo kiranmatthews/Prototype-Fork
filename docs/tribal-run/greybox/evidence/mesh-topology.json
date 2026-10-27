@@ -1,0 +1,8 @@
+{
+  "sourceSha256": "282a93e60c82978c27189bfcc834f558a2dc7b5e8d42f030fbb3cf84de9cc208",
+  "triangles": 16064,
+  "minArea": 0.5997811633620633,
+  "maxArea": 69.99996397377262,
+  "finite": true,
+  "degenerate": 0
+}

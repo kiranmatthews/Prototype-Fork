@@ -1,0 +1,55 @@
+{
+  "id": "tribal-run",
+  "stage": "finish gate",
+  "frame": 10588,
+  "done": true,
+  "failed": null,
+  "result": {
+    "frame": 10588,
+    "s": 2308.594712246986,
+    "p": [
+      296.89620337117566,
+      0.7366666664431492,
+      -1231.486132162629
+    ],
+    "state": "finished",
+    "grounded": true,
+    "bailing": false,
+    "deaths": 0,
+    "speed": 0,
+    "checkpoints": 9,
+    "checkpointTotal": 9,
+    "crystal": true
+  },
+  "end": {
+    "frame": 10588,
+    "position": [
+      296.89620337117566,
+      0.7366666664431492,
+      -1231.486132162629
+    ],
+    "state": "finished",
+    "grounded": true,
+    "bailing": false,
+    "deaths": 0,
+    "lives": 4,
+    "speed": 0,
+    "verticalSpeed": 0,
+    "crates": 23,
+    "crystal": true,
+    "gem": false,
+    "camera": [
+      300.9497799315979,
+      5.578664466788951,
+      -1228.473885599505
+    ],
+    "progress": 2308.594712246986
+  },
+  "rawTrace": {
+    "path": ".release-queue/tribal-run-evidence/raw/greybox/tribal-run-lite-journey.json",
+    "sha256": "5b5dc20dcfe352add3b0b63da1e62c3e569bcd0a6e6b76ba4f13937969faa515",
+    "bytes": 1287894
+  },
+  "errors": [],
+  "failedRequests": []
+}

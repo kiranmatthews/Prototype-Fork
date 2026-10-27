@@ -1,0 +1,277 @@
+{
+  "journey": {
+    "id": "tribal-run",
+    "phase": "loom",
+    "initialStation": 902,
+    "sourceSha256": "d959f8bf7b379ab38acdab4fd54a15d1239b8509eafbd4c73039473a9f110624",
+    "stage": "skate to 1405",
+    "frame": 2079,
+    "done": true,
+    "failed": null,
+    "actions": [
+      {
+        "label": "brake to walking",
+        "first": 24,
+        "last": 24
+      },
+      {
+        "label": "settle the released charge",
+        "first": 26,
+        "last": 26
+      },
+      {
+        "label": "walk to 914.3",
+        "first": 50,
+        "last": 225
+      },
+      {
+        "label": "hop to 918.1",
+        "first": 270,
+        "last": 306
+      },
+      {
+        "label": "walk to 931.35",
+        "first": 306,
+        "last": 492
+      },
+      {
+        "label": "hop to 935.1",
+        "first": 537,
+        "last": 573
+      },
+      {
+        "label": "walk to 949.35",
+        "first": 573,
+        "last": 769
+      },
+      {
+        "label": "hop to 953.1",
+        "first": 814,
+        "last": 850
+      },
+      {
+        "label": "skate to 1070",
+        "first": 850,
+        "last": 1216
+      },
+      {
+        "label": "skate to 1159",
+        "first": 1216,
+        "last": 1460
+      },
+      {
+        "label": "upper woven leap",
+        "first": 1461,
+        "last": 1497
+      },
+      {
+        "label": "skate to 1405",
+        "first": 1497,
+        "last": 2079
+      }
+    ],
+    "evidence": [
+      {
+        "action": "drum hop",
+        "before": {
+          "frame": 243,
+          "s": 914.1553001960646,
+          "p": [
+            285.0121120645517,
+            0,
+            -273.96931035578797
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "speed": 0
+        },
+        "after": {
+          "frame": 306,
+          "s": 917.9737532624554,
+          "p": [
+            288.47067568100044,
+            1.10009765625,
+            -275.58666866346687
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "speed": 6.3639610306789285
+        }
+      },
+      {
+        "action": "drum hop",
+        "before": {
+          "frame": 510,
+          "s": 931.20882532766,
+          "p": [
+            299.70929701421505,
+            1.10009765625,
+            -282.540054742155
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "speed": 0
+        },
+        "after": {
+          "frame": 573,
+          "s": 935.0276340546684,
+          "p": [
+            302.6779211773977,
+            2.199951171875,
+            -284.93998438555116
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "speed": 6.3639610306789285
+        }
+      },
+      {
+        "action": "drum hop",
+        "before": {
+          "frame": 787,
+          "s": 949.2199515246219,
+          "p": [
+            312.18972411042864,
+            2.199951171875,
+            -295.438579037591
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "speed": 0
+        },
+        "after": {
+          "frame": 850,
+          "s": 953.0383784376604,
+          "p": [
+            314.4304483371834,
+            3.300048828125,
+            -298.5297351381033
+          ],
+          "state": "ride",
+          "grounded": true,
+          "bailing": false,
+          "deaths": 0,
+          "speed": 6.3639610306789285
+        }
+      },
+      {
+        "chapter": "Great Drum Court upper gallery",
+        "frame": 1216,
+        "s": 1070.0703692384777,
+        "p": [
+          344.8886575242965,
+          0,
+          -410.0054390344924
+        ],
+        "state": "ride",
+        "grounded": true,
+        "bailing": false,
+        "deaths": 0,
+        "speed": 23.29979657944138
+      },
+      {
+        "chapter": "Great Drum Court and Canopy Loom",
+        "frame": 2079,
+        "s": 1405.2797194916946,
+        "p": [
+          144.99863416198065,
+          0,
+          -645.8849394056051
+        ],
+        "state": "ride",
+        "grounded": true,
+        "bailing": false,
+        "deaths": 0,
+        "speed": 24.785531357589853
+      }
+    ],
+    "result": {
+      "frame": 2079,
+      "s": 1405.2797194916946,
+      "p": [
+        144.99863416198065,
+        0,
+        -645.8849394056051
+      ],
+      "state": "ride",
+      "grounded": true,
+      "bailing": false,
+      "deaths": 0,
+      "speed": 24.785531357589853,
+      "checkpoints": 2,
+      "checkpointTotal": 9,
+      "crystal": false
+    },
+    "end": {
+      "frame": 2079,
+      "position": [
+        144.99863416198065,
+        0,
+        -645.8849394056051
+      ],
+      "state": "ride",
+      "grounded": true,
+      "bailing": false,
+      "deaths": 0,
+      "lives": 4,
+      "speed": 24.785531357589853,
+      "verticalSpeed": 0,
+      "crates": 6,
+      "crystal": false,
+      "gem": false,
+      "camera": [
+        152.67825421535264,
+        5.100000000002728,
+        -643.5400530696285
+      ],
+      "progress": 1405.2797194916946
+    }
+  },
+  "stamp": "Codex/sol fork \u00b7 build 10-27 06:10 UTC",
+  "quality": {
+    "enabled": false,
+    "baseHeight": 720,
+    "outputMultiplier": 1,
+    "fixed60": true
+  },
+  "sizes": {
+    "viewportWidth": 1440,
+    "viewportHeight": 900,
+    "inputWidth": 1152,
+    "inputHeight": 720,
+    "outputWidth": 1152,
+    "outputHeight": 720
+  },
+  "drawingBuffer": [
+    1440,
+    900
+  ],
+  "render": {
+    "frame": 3411,
+    "calls": 226,
+    "triangles": 690458,
+    "points": 0,
+    "lines": 0
+  },
+  "contextLost": false,
+  "errors": [],
+  "failedRequests": [],
+  "continuousEvidence": {
+    "path": "tribal-run-full-upper-loom-journey.trace.json.gz",
+    "encoding": "gzip JSON",
+    "traceSamples": 346,
+    "sha256": "10094e9ac0826988df2f5036ac81db7c43539bd002010967f6533a4a309e166d",
+    "uncompressedSha256": "505427bdd1ad3d0d165739619cf2d701827ad5def1200287c152452257545259",
+    "tuningUnchanged": true
+  }
+}

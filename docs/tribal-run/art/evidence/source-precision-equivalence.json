@@ -1,0 +1,28 @@
+{
+  "pass": true,
+  "checkedAt": "2026-10-27T08:21:40.099Z",
+  "rows": [
+    {
+      "id": "tribal-run",
+      "browserValidatedSourceSha256": "6bbda49188cc61f8dfdbad668add6175c1038b65b1f5d56a6b345389ce842d71",
+      "finalSourceSha256": "4aede93c3b0d53c74aa993425665c86ef81337f534042a54163d282b2ba3f49d",
+      "serializedBytes": 7295872,
+      "maximumSceneryValueDelta": 5.000000555810402e-7,
+      "unchangedMeshCount": 365,
+      "unchangedSceneryVertices": 59052,
+      "unchangedSceneryTriangles": 62538,
+      "gameplayComponentsIdentical": true
+    },
+    {
+      "id": "tribal-run-bonus",
+      "browserValidatedSourceSha256": "554ec2f73835f99b11245961eab097f4ca04420a664cb8e5ea570e24f78a1b7a",
+      "finalSourceSha256": "7eb6ce1360bf719597850138e85271c420ad9794bd8a52c91f23c9a20ba15835",
+      "serializedBytes": 855683,
+      "maximumSceneryValueDelta": 4.987087249830324e-7,
+      "unchangedMeshCount": 93,
+      "unchangedSceneryVertices": 11933,
+      "unchangedSceneryTriangles": 17652,
+      "gameplayComponentsIdentical": true
+    }
+  ]
+}

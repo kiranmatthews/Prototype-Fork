@@ -1,0 +1,10 @@
+{
+  "tribal-run": {
+    "sha256": "1f964403c6a687ed74f4cdc1091ab4bdb454e158b1afa0772443401ec8cf5322",
+    "components": 494
+  },
+  "tribal-run-bonus": {
+    "sha256": "7706123fcf185e50a838d12fe9796a18f0df08003c20f03005fe67793e0d7c79",
+    "components": 54
+  }
+}

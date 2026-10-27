@@ -10,13 +10,13 @@ const {CampaignStore,CAMPAIGN_LEVELS:levels,CAMPAIGN_ISLANDS:islands,CAMPAIGN_BO
 assert.deepEqual(islands.map(i=>[i.name,i.levelKeys.length]),[['Motu Motu',6],['The Uga Isles',6],['Spooky Shores',6],['Maynard Quay',6],['Quagmire Caverns',6],['Secret Island',8]]);
 const expected=[
  ['treehouse-trail','Treehouse Trail'],['beachfront','Banana Bay'],['jungle','Jungle Ruins'],['rumblewater-run','Ripcord River'],['coastal-street-run','Beach Street'],['jungle-cup','Motu Beach Invitational'],
- ['custard-creek','Sunset Safari'],['test','Uga Ambush'],['drowned-crown','The Merchant Wreck'],['crab-chief','High Chief Uga Ha ku'],
+ ['custard-creek','Sunset Safari'],['tribal-run','Tribal Run'],['test','Uga Ambush'],['drowned-crown','The Merchant Wreck'],['crab-chief','High Chief Uga Ha ku'],
  ['waterpark','Deadwater Park'],['codex-lab','Haunted Hassle'],['ghost-train','Ghost Train'],['hollowwake-descent','Tunnelbore Tracks'],['slipstream-race','Slipstream'],['waterpark-cup','Deadwater Cup'],
  ['country-club','Country Club Circuit'],['rooftop-relay','Hogsworth Harbour'],['warehouse','Factory Fuss'],['jungle-minefield','Nightmare Grove'],['nightworks-after-hours','Guptus Eruptus'],['dark','Torchlight Trouble'],
- ['sky','Sky Bridge'],['jungle-terraces','Temple of Embers'],['jungle-gate-run','The Ancient Gates'],['rolling-bones','Rolling Bones'],['skystream','The Skystream'],
+ ['sky','Sky Bridge'],['jungle-terraces','Temple of Embers'],['jungle-gate-run','The Ancient Gates'],['rolling-bones','Rolling Bones'],['skystream','The Skystream'],['coconut-cart-rally','Coconut Cart Rally'],
 ];
 assert.deepEqual(levels.filter(d=>!d.placeholder).map(d=>[d.levelId,d.name]),expected);
-assert.equal(levels.length,38);assert.equal(levels.filter(d=>d.placeholder).length,11);
+assert.equal(levels.length,38);assert.equal(levels.filter(d=>d.placeholder).length,9);
 assert.equal(new Set(levels.map(d=>d.levelId)).size,38);assert.equal(new Set(levels.map(d=>d.progressKey)).size,38);
 assert.deepEqual(c.validateCampaignMapGraph(),[]);assert.equal(c.CAMPAIGN_MAP_EDGES.length,37);
 assert.deepEqual(bosses.map(d=>d.progressKey),['jungle-cup','crab-chief','slipstream','waterpark-cup','maynard-boss','quagmire-race','quagmire-boss']);
@@ -49,7 +49,10 @@ assert.equal(fresh.levelPlayable('jungle-cup'),true);assert.equal(fresh.levelPla
 fresh.recordLevelFinished('jungle-cup');assert.equal(fresh.levelPlayable('custard-creek'),false,'losing cup unlocked next island');
 fresh.commitCompetitionWin('jungle-cup');assert.equal(fresh.levelPlayable('custard-creek'),true);
 fresh.commitClear('custard-creek',{crystal:false,boxGem:false,comboGem:false});
-assert.equal(fresh.levelUnlocked('tribal-run'),true);assert.equal(fresh.levelPlayable('tribal-run'),false);assert.equal(fresh.levelPlayable('test'),true,'unbuilt ordinary slots strand the existing route');
+assert.equal(fresh.levelUnlocked('tribal-run'),true);assert.equal(fresh.levelPlayable('tribal-run'),true);
+assert.equal(fresh.levelPlayable('test'),false,'Tribal Run must be cleared before Uga Ambush');
+fresh.commitClear('tribal-run',{crystal:true,boxGem:false,comboGem:false});
+assert.equal(fresh.levelPlayable('test'),true,'the remaining unbuilt ordinary slot strands the existing route');
 for(const def of levels.filter(d=>d.placeholder)){
  assert.equal(fresh.levelPlayable(def.progressKey),false);
  assert.equal(fresh.commitClear(def.levelId,{crystal:true,boxGem:true,comboGem:true}),null);
@@ -63,7 +66,7 @@ fresh.saveActive();const reload=new CampaignStore();reload.load(1);
 assert.equal(reload.levelProgress('test').crystal,true);assert.equal(reload.levelProgress('test').timeMedal,'silver');
 assert.equal(reload.levelPlayable('test'),true);assert.equal(reload.levelPlayable('carlisle-coast'),false,'new Carlisle inherited Uga Ambush save');
 assert.deepEqual(reload.active.levels['sky-bridge'],{cleared:true,crystal:false,boxGem:true,comboGem:true,timeRelic:true,timeMedal:'gold',bestTime:42,trialTimes:[42]},'Secret Island migration should retain gems and medals');
-assert.equal(reload.totals().maxLevels,27);assert.equal(reload.runModesUnlocked('warehouse'),false);
+assert.equal(reload.totals().maxLevels,29);assert.equal(reload.runModesUnlocked('warehouse'),false);
 assert.deepEqual(reload.levelProgress('sky'),reload.active.levels['sky-bridge'],'reassigned Sky Bridge lost its older rewards');
 assert.equal(reload.levelPlayable('sky'),false,'old completion bypassed the secret-island boss gate');
 for(const [key,id,requirement] of [['secret-1','sky','medals-5'],['secret-2','jungle-terraces','gems-5'],['secret-3','jungle-gate-run','medals-10'],['secret-4','rolling-bones','gems-15'],['secret-5','skystream','medals-20']]){
@@ -151,13 +154,14 @@ console.log('PASS secret-course save migration preserves rewards, strongest meda
 const secretRewards=new CampaignStore();secretRewards.startEphemeral({unlockAll:true});
 for(const def of levels.filter(level=>level.islandId==='hidden-shores'&&!level.placeholder)){
  assert.equal(secretRewards.runModesUnlocked(def.levelId),false);
- secretRewards.commitClear(def.levelId,{crystal:true,boxGem:true,comboGem:true});
+ if(def.skateRace)secretRewards.commitRaceResult(def.levelId,{won:true,boxGem:true});
+ else secretRewards.commitClear(def.levelId,{crystal:true,boxGem:true,comboGem:true});
  assert.equal(secretRewards.runModesUnlocked(def.levelId),true,'A secret-course clear must unlock its medals without a crystal');
  secretRewards.commitTimeTrial(def.levelId,{time:42,medal:'gold'});
  const progress=secretRewards.levelProgress(def.levelId);
  assert.equal(progress.crystal,false);assert.equal(progress.boxGem,true);assert.equal(progress.timeMedal,'gold');
 }
 assert.equal(secretRewards.totals().crystals,0);
-assert.equal(secretRewards.totals().gems,5);assert.equal(secretRewards.totals().relics,5);
+assert.equal(secretRewards.totals().gems,6);assert.equal(secretRewards.totals().relics,6);
 assert.equal(secretRewards.totals().maxCrystals,levels.filter(d=>d.islandId!=='hidden-shores'&&!d.placeholder&&(!d.boss||d.skateRace)&&!d.competition).length);
 console.log('PASS Secret Island awards and counts gems and medals only.');

@@ -1,0 +1,30 @@
+{
+  "stage": "finish gate",
+  "phase": "all",
+  "upper": false,
+  "sourceSha256": "855087e1ebd590ed1c6c038526b762bb614e135c00cb0fdccc8ed5f391f42469",
+  "result": {
+    "frame": 10593,
+    "s": 2308.6015970650255,
+    "p": [
+      296.8907731992125,
+      0.7366666664431492,
+      -1231.4903713625872
+    ],
+    "state": "finished",
+    "grounded": true,
+    "bailing": false,
+    "deaths": 0,
+    "speed": 0,
+    "checkpoints": 9,
+    "checkpointTotal": 9,
+    "crystal": true
+  },
+  "seconds": 176.55,
+  "maxStep": 0.8399475644271798,
+  "rawTrace": {
+    "path": ".release-queue/tribal-run-evidence/raw/greybox/main-all-native.json",
+    "sha256": "247eb84f3515cb9b10055447409db7d1fab073f1437a7eb00463ceea1b54f3ac",
+    "bytes": 8224031
+  }
+}

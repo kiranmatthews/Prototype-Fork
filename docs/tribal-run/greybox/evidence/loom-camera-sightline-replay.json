@@ -1,0 +1,7 @@
+{
+  "scope": "Geometry-only replay of the recorded lower-route camera sightlines against the refined flyover. A new live traversal remains required.",
+  "recordedSourceSha256": "98d7dbac18d00949c12665f2aae3ffbd077a5938ddb88801924ae4825fd05a05",
+  "currentSourceSha256": "f930c3041f5c95b58519d929c27b03fbe64a3fe2dc651e85a999a865d9ffff94",
+  "sampleCount": 52,
+  "blocked": []
+}

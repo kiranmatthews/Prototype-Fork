@@ -1,0 +1,19 @@
+{
+  "stage": "Resonance Vault return",
+  "result": {
+    "completionScope": "complete-stage",
+    "activeStageCrates": 20,
+    "bonusCrateTotal": 0,
+    "bonusCrates": 0,
+    "gemEarned": true,
+    "state": "finished",
+    "cratesBroken": 20,
+    "totalCrates": 20,
+    "deaths": 0
+  },
+  "rawTrace": {
+    "path": ".release-queue/tribal-run-evidence/raw/greybox/bonus-physics.json",
+    "sha256": "78c2b0b3ea7e70eb2833d9e9a290c6f0138561dab8639e65010940ef211bcdbc",
+    "bytes": 2174121
+  }
+}

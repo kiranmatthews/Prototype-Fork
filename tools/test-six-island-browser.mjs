@@ -32,7 +32,7 @@ try{
   await page.waitForTimeout(220);
   assert.equal(await page.locator('.game-level-select-layout').getAttribute('data-island'),island.id);
   assert.deepEqual(await page.locator('.game-level-row').evaluateAll(rows=>rows.map(r=>r.dataset.levelKey)),island.levelKeys.filter(key=>key!=='secret-8'));
-  const key=index===1?'tribal-run':index===3?'maynard-course-4':index===4?'quagmire-boss':index===5?'secret-7':island.levelKeys[1];
+  const key=index===1?'waterfall-climb':index===3?'maynard-course-4':index===4?'quagmire-boss':index===5?'secret-7':island.levelKeys[1];
   await page.locator(`[data-level-key="${key}"]`).click();await page.waitForTimeout(150);
   if(await page.evaluate(()=>window.__game.gameFlow.levelSelectPlay.disabled)){
    const old=await page.evaluate(()=>window.__game.getCurrentLevel().id);await page.keyboard.press('Enter');await page.waitForTimeout(80);assert.equal(await page.evaluate(()=>window.__game.getCurrentLevel().id),old);

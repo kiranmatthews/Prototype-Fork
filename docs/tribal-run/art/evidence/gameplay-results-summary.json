@@ -1,0 +1,399 @@
+{
+  "scope": "Final art gameplay evidence before scenery-only numeric serialization; see source-precision-equivalence.json.",
+  "runs": [
+    {
+      "sourceSha256": "d959f8bf7b379ab38acdab4fd54a15d1239b8509eafbd4c73039473a9f110624",
+      "frame": 10263,
+      "done": true,
+      "failed": null,
+      "result": {
+        "frame": 10263,
+        "s": 2308.61427823928,
+        "p": [
+          296.8865928646775,
+          0.7366666664431492,
+          -1231.5062273514475
+        ],
+        "state": "finished",
+        "grounded": true,
+        "bailing": false,
+        "deaths": 0,
+        "speed": 0,
+        "checkpoints": 9,
+        "checkpointTotal": 9,
+        "crystal": true
+      },
+      "end": {
+        "frame": 10263,
+        "position": [
+          296.8865928646775,
+          0.7366666664431492,
+          -1231.5062273514475
+        ],
+        "state": "finished",
+        "grounded": true,
+        "bailing": false,
+        "deaths": 0,
+        "lives": 4,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "crates": 23,
+        "crystal": true,
+        "gem": false,
+        "camera": [
+          300.939768667217,
+          5.578664466788983,
+          -1228.4934193122633
+        ],
+        "progress": 2308.61427823928
+      },
+      "report": "tribal-run-full-journey.json",
+      "drawingBuffer": [
+        1440,
+        900
+      ],
+      "contextLost": false,
+      "errors": [],
+      "failedRequests": [],
+      "headlessRafMs": {
+        "median": 16.69999999999709,
+        "p95": 16.70000000001164,
+        "scope": "Headless Chrome on the shared authoring Mac, not a hardware performance guarantee."
+      }
+    },
+    {
+      "sourceSha256": "d959f8bf7b379ab38acdab4fd54a15d1239b8509eafbd4c73039473a9f110624",
+      "frame": 2079,
+      "done": true,
+      "failed": null,
+      "result": {
+        "frame": 2079,
+        "s": 1405.2797194916946,
+        "p": [
+          144.99863416198065,
+          0,
+          -645.8849394056051
+        ],
+        "state": "ride",
+        "grounded": true,
+        "bailing": false,
+        "deaths": 0,
+        "speed": 24.785531357589853,
+        "checkpoints": 2,
+        "checkpointTotal": 9,
+        "crystal": false
+      },
+      "end": {
+        "frame": 2079,
+        "position": [
+          144.99863416198065,
+          0,
+          -645.8849394056051
+        ],
+        "state": "ride",
+        "grounded": true,
+        "bailing": false,
+        "deaths": 0,
+        "lives": 4,
+        "speed": 24.785531357589853,
+        "verticalSpeed": 0,
+        "crates": 6,
+        "crystal": false,
+        "gem": false,
+        "camera": [
+          152.67825421535264,
+          5.100000000002728,
+          -643.5400530696285
+        ],
+        "progress": 1405.2797194916946
+      },
+      "report": "tribal-run-full-upper-loom-journey.json",
+      "drawingBuffer": [
+        1440,
+        900
+      ],
+      "contextLost": false,
+      "errors": [],
+      "failedRequests": [],
+      "headlessRafMs": {
+        "median": 16.69999999999709,
+        "p95": 16.700000000004366,
+        "scope": "Headless Chrome on the shared authoring Mac, not a hardware performance guarantee."
+      }
+    },
+    {
+      "sourceSha256": "d959f8bf7b379ab38acdab4fd54a15d1239b8509eafbd4c73039473a9f110624",
+      "frame": 3984,
+      "done": true,
+      "failed": null,
+      "result": {
+        "scenarios": [
+          {
+            "name": "offbeat-recovery",
+            "pass": true,
+            "first": 0,
+            "last": 651,
+            "end": {
+              "frame": 651,
+              "s": 515.0353034087831,
+              "position": [
+                -33.98895524251675,
+                0,
+                -430.72999549351056
+              ],
+              "state": "ride",
+              "grounded": true,
+              "bailing": false,
+              "lives": 4,
+              "speed": 23.199,
+              "rail": -1
+            }
+          },
+          {
+            "name": "court-lower-line",
+            "pass": true,
+            "first": 651,
+            "last": 1154,
+            "end": {
+              "frame": 1154,
+              "s": 1070.1313976239896,
+              "position": [
+                344.9356186306746,
+                0,
+                -410.0666344289556
+              ],
+              "state": "ride",
+              "grounded": true,
+              "bailing": false,
+              "lives": 4,
+              "speed": 23.199,
+              "rail": -1
+            }
+          },
+          {
+            "name": "checkpoint-pit-return",
+            "pass": true,
+            "first": 1154,
+            "last": 1480,
+            "end": {
+              "frame": 1480,
+              "s": 250,
+              "position": [
+                -68.83349609375,
+                0.1,
+                -228.432861328125
+              ],
+              "state": "ride",
+              "grounded": true,
+              "bailing": false,
+              "lives": 3,
+              "speed": 0,
+              "rail": -1
+            }
+          },
+          {
+            "name": "offbeat-grind",
+            "pass": true,
+            "first": 1480,
+            "last": 2257,
+            "end": {
+              "frame": 2257,
+              "s": 427.5207557388074,
+              "position": [
+                -110.67610602474998,
+                3.8695656371326344,
+                -388.99926870256064
+              ],
+              "state": "ride",
+              "grounded": true,
+              "bailing": false,
+              "lives": 4,
+              "speed": 12.996789959005513,
+              "rail": -1
+            }
+          },
+          {
+            "name": "crescent-grind",
+            "pass": true,
+            "first": 2257,
+            "last": 2754,
+            "end": {
+              "frame": 2754,
+              "s": 796.452277740062,
+              "position": [
+                181.82742576017927,
+                0.05084823471867672,
+                -302.33273751422075
+              ],
+              "state": "ride",
+              "grounded": true,
+              "bailing": false,
+              "lives": 4,
+              "speed": 10.045069555504295,
+              "rail": -1
+            }
+          },
+          {
+            "name": "loom-grind",
+            "pass": true,
+            "first": 2754,
+            "last": 3520,
+            "end": {
+              "frame": 3520,
+              "s": 1298.3337620632165,
+              "position": [
+                239.64849220594988,
+                0,
+                -597.5349383950572
+              ],
+              "state": "ride",
+              "grounded": true,
+              "bailing": false,
+              "lives": 4,
+              "speed": 29.275900111797846,
+              "rail": -1
+            }
+          },
+          {
+            "name": "echo-grind",
+            "pass": true,
+            "first": 3520,
+            "last": 3984,
+            "end": {
+              "frame": 3984,
+              "s": 1929.4821176769608,
+              "position": [
+                351.6655874347007,
+                0.29527679896264925,
+                -925.7884619760589
+              ],
+              "state": "ride",
+              "grounded": true,
+              "bailing": false,
+              "lives": 4,
+              "speed": 19.67753837713726,
+              "rail": -1
+            }
+          }
+        ],
+        "state": "ride"
+      },
+      "end": {
+        "frame": 3984,
+        "position": [
+          351.6655874347007,
+          0.29527679896264925,
+          -925.7884619760589
+        ],
+        "state": "ride",
+        "grounded": true,
+        "bailing": false,
+        "deaths": 0,
+        "lives": 4,
+        "speed": 19.67753837713726,
+        "verticalSpeed": 0,
+        "crates": 0,
+        "crystal": false,
+        "gem": false,
+        "camera": [
+          345.89833835748254,
+          5.596917855010535,
+          -921.0984585044347
+        ],
+        "progress": 1929.4821176769608
+      },
+      "report": "tribal-run-full-variants-journey.json",
+      "drawingBuffer": [
+        1440,
+        900
+      ],
+      "contextLost": false,
+      "errors": [],
+      "failedRequests": [],
+      "headlessRafMs": {
+        "median": 16.69999999999709,
+        "p95": 16.70000000001164,
+        "scope": "Headless Chrome on the shared authoring Mac, not a hardware performance guarantee."
+      }
+    },
+    {
+      "sourceSha256": "554ec2f73835f99b11245961eab097f4ca04420a664cb8e5ea570e24f78a1b7a",
+      "frame": 3461,
+      "done": true,
+      "failed": null,
+      "result": {
+        "completionScope": "bonus-detour",
+        "activeStageCrates": 20,
+        "bonusCrateTotal": 0,
+        "bonusCrates": 0,
+        "gemEarned": false,
+        "state": "finished",
+        "cratesBroken": 20,
+        "totalCrates": 20,
+        "deaths": 0
+      },
+      "end": {
+        "frame": 3461,
+        "position": [
+          111.42557777628289,
+          0.7266666691501935,
+          -0.0009098822081068408
+        ],
+        "state": "finished",
+        "grounded": true,
+        "bailing": false,
+        "deaths": 0,
+        "lives": 1,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "crates": 20,
+        "crystal": false,
+        "gem": false,
+        "camera": [
+          111.14897777628703,
+          8.35149116617971,
+          25.81940201748342
+        ]
+      },
+      "report": "tribal-run-full-bonus-detour-journey.json",
+      "drawingBuffer": [
+        1440,
+        900
+      ],
+      "contextLost": false,
+      "errors": [],
+      "failedRequests": [],
+      "headlessRafMs": {
+        "median": 16.69999999999709,
+        "p95": 16.70000000001164,
+        "scope": "Headless Chrome on the shared authoring Mac, not a hardware performance guarantee."
+      },
+      "detour": {
+        "entrySetup": {
+          "station": 983,
+          "point": [
+            335.219482421875,
+            0.1201171875,
+            -322.23046875
+          ],
+          "scope": "initial approach placement; entry itself uses keyboard jump"
+        },
+        "sameParent": true,
+        "position": [
+          341.7314453125,
+          0,
+          -340.791748046875
+        ],
+        "expectedReturn": [
+          341.7314453125,
+          0.1201171875,
+          -340.791748046875
+        ],
+        "bonusCompleted": true,
+        "state": "ride",
+        "grounded": true
+      },
+      "bonusBanked": 20
+    }
+  ]
+}

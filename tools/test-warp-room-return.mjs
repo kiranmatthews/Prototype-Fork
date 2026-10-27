@@ -869,7 +869,11 @@ try {
   for(const key of ["tribal-run","waterfall-climb","test-course"]){
     const edge=CAMPAIGN_MAP_EDGES.find(edge=>edge.from===controller.selectedKey&&edge.to===key);
     assert.equal(controller.navigate(...directionVector[edge.fromDirection]),true);settle();assert.equal(controller.selectedKey,key);
-    if(key!=="test-course")assert.equal(controller.enterSelected(),false,"placeholder launched a gameplay substitute");
+    if(key==="tribal-run"){
+      assert.equal(controller.enterSelected(),true,"authored Tribal Run failed to launch");
+      assert.equal(entered.at(-1),"tribal-run");
+      controllerStore.commitClear("tribal-run",{crystal:true});controller.refresh();
+    }else if(key!=="test-course")assert.equal(controller.enterSelected(),false,"placeholder launched a gameplay substitute");
   }
   controller.activate(warpLevel,"treehouse-trail");assert.equal(controller.travelTo("test-course"),true);
   assert.equal(controller.enterSelected(),false,"queued touch travel entered a course mid-route");settle();
