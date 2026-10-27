@@ -1,0 +1,37 @@
+{
+  "passed": true,
+  "requestedAtApprox": "2026-10-27T07:38:00Z",
+  "completedAt": "2026-10-27T08:05:35.207006+00:00",
+  "baseRevision": "7eb40c5eea433fbdabbcd5a4d53aabcbd5b13a80",
+  "sourceSha256": {
+    "src/levels/coconut-cart-rally.ts": "4cb451c6f4c3ad9e31269943a3d011cff4df9382e558390f37594233893c9259",
+    "public/levels.json": "964d91e025334ebbd1004e2bfe626b8d179eddbd7293255d96d51217798c4859",
+    "tools/fixtures/stock-level-snapshots.json": "e637f39dcb885d2c6302a76699663ac43ede4c6decfd010b09520d25e7a46e0f"
+  },
+  "buildStamp": "Codex/sol fork \u00b7 build 10-27 07:51 UTC",
+  "offlineVersion": "710db0662b59fdc479f6",
+  "releaseBytes": 999464520,
+  "changedPickups": 4,
+  "otherComponentsUnchanged": 1475,
+  "otherLevelsUnchanged": 11,
+  "allItems": 28,
+  "oldStation": 1345,
+  "newStation": 1350,
+  "spanMetres": 18.000002892555358,
+  "sourceApproachErrorDegrees": 0.5561949877806135,
+  "runtimeApproachErrorDegrees": 0.15093715921171988,
+  "nearestRockClearanceMetres": 17.40980706244856,
+  "checks": {
+    "allTwentyLevelChecks": true,
+    "exactPublishedSync": true,
+    "onlyFourPickupPositionsChanged": true,
+    "build": true,
+    "typecheck": true,
+    "releaseSize": true,
+    "liteBrowser": true,
+    "fullBrowser": true,
+    "nativeAndNormalReviewed": true,
+    "fullRace": true
+  },
+  "pending": []
+}

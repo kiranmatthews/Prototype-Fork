@@ -125,7 +125,7 @@ export class SkateRace {
       const start=level.spawnPos.clone().addScaledVector(right,(r.id%2?1:-1)*2.2)
         .addScaledVector(forward,-Math.floor(r.id/2)*(level.skateRace?.vehicle==='golf-cart'?4.6:3.5));
       if(mode==='time-trial')start.copy(level.spawnPos);
-      r.player.enterLevel(this.levelId);r.player.raceHooks={groundCandidates:(x,z)=>this.carts?.groundCandidates(x,z)??level.groundMeshes,onFoot:()=>!!this.carts&&!this.carts.isDriving(r.id),canCollectItem:()=>!r.item&&r.finish===null&&!r.recovery,hazard:(cause,origin)=>this.hazard(r,cause,origin),unrecoverableFall:()=>this.unrecoverableFall(r),fallStarted:()=>{r.falls++;r.recovery=1;r.boost=0;},respawn:()=>this.recover(r)};
+      r.player.enterLevel(this.levelId);r.player.raceHooks={groundCandidates:(x,z)=>this.carts?.groundCandidates(x,z)??level.groundMeshes,canCollectItem:()=>!r.item&&r.finish===null&&!r.recovery,hazard:(cause,origin)=>this.hazard(r,cause,origin),unrecoverableFall:()=>this.unrecoverableFall(r),fallStarted:()=>{r.falls++;r.recovery=1;r.boost=0;},respawn:()=>this.recover(r)};
       r.player.racePresentationInterval=r.id===0?0:1/15;
       r.player.resetRacePosition(level,start,this.course.tangent(0));
       r.player.hasCrystal=false;r.player.gemEarned=false;r.player.cratesBroken=0;r.player.bonusCrates=0;
@@ -349,9 +349,9 @@ export class SkateRace {
       level.raceActorId=r.id;const device=r.id===0?input:this.drive(r.id,true);
       if(device.itemPressed&&!this.carts?.isAnimating(r.id))this.useItem(r.id,device.moveY<-.5);
       const previousPosition=cartPrevious?.[r.id]??p.pos.clone();
-      if(r.boost>0){r.boost=Math.max(0,r.boost-dt);if(!this.carts&&p.boardRolling&&p.speed<42){p.speed=Math.min(42,Math.max(0,p.speed)+dt*20);p.registerSkateBoost();}}
+      if(r.boost>0){r.boost=Math.max(0,r.boost-dt);if((!this.carts||!this.carts.isDriving(r.id)&&!this.carts.isAnimating(r.id))&&p.boardRolling&&p.speed<42){p.speed=Math.min(42,Math.max(0,p.speed)+dt*20);p.registerSkateBoost();}}
       p.racePresentationInterval=r.id===0?0:p.pos.distanceToSquared(this.human.pos)<1600?1/30:1/10;
-      if(!this.carts?.isDriving(r.id)&&!this.carts?.isAnimating(r.id))sfx.withGain(this.soundGain(r),()=>p.step(dt,this.carts?{...device,grindHeld:false,grindPressed:false} as Input:device,level),r.id?'race-rivals':'');
+      if(!this.carts?.isDriving(r.id)&&!this.carts?.isAnimating(r.id))sfx.withGain(this.soundGain(r),()=>p.step(dt,device,level),r.id?'race-rivals':'');
       r.velocity.copy(p.pos).sub(previousPosition).divideScalar(Math.max(.001,dt));if(r.velocity.length()>80)r.velocity.setLength(80);
       if(device.spinPressed&&p.spinning)r.parry=.28;
       r.recovery=p.state==='dead'?1:0;

@@ -1,0 +1,39 @@
+{
+  "passed": true,
+  "full": false,
+  "stamp": "Codex/sol fork · build 10-27 07:51 UTC",
+  "skating": {
+    "board": true,
+    "speed": 14.000000000000021,
+    "pos": [
+      10.410213705962509,
+      25.463694832618067,
+      -26.74734958500002
+    ],
+    "driving": false,
+    "loops": [
+      "skate"
+    ]
+  },
+  "ollie": {
+    "state": "air",
+    "vy": 11.25422001602377,
+    "speed": 16.400000000000023
+  },
+  "entering": {
+    "board": false,
+    "loops": []
+  },
+  "driving": {
+    "speed": 14.206922827366519,
+    "loops": [
+      "rally-engine-0"
+    ],
+    "physics": {
+      "topSpeed": 46,
+      "speedLimit": 54
+    }
+  },
+  "skatingAfterReentry": true,
+  "errors": []
+}

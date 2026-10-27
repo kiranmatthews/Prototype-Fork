@@ -1,0 +1,128 @@
+{
+  "passed": true,
+  "dt": 0.016666666666666666,
+  "onFootOllie": {
+    "speed": 23.0555325,
+    "height": 1.3291666666666662
+  },
+  "nativeSkating": [
+    {
+      "seconds": 10,
+      "speed": 25.528279056684045,
+      "z": -309.3862886961261,
+      "skating": true
+    },
+    {
+      "seconds": 20,
+      "speed": 28.001629701008017,
+      "z": -578.1296377383676,
+      "skating": true
+    },
+    {
+      "seconds": 30,
+      "speed": 29.65623143110088,
+      "z": -867.1506682230679,
+      "skating": true
+    },
+    {
+      "seconds": 40,
+      "speed": 30.76311326021353,
+      "z": -1169.7368949220493,
+      "skating": true
+    },
+    {
+      "seconds": 50,
+      "speed": 31.50358594396385,
+      "z": -1481.397854787834,
+      "skating": true
+    },
+    {
+      "seconds": 60,
+      "speed": 31.99894125738511,
+      "z": -1799.129554858768,
+      "skating": true
+    },
+    {
+      "seconds": 70,
+      "speed": 32.33031997252136,
+      "z": -2120.922408680569,
+      "skating": true
+    },
+    {
+      "seconds": 80,
+      "speed": 32.55200297433861,
+      "z": -2445.4320596689126,
+      "skating": true
+    },
+    {
+      "seconds": 90,
+      "speed": 32.70030264190931,
+      "z": -2771.759171235389,
+      "skating": true
+    }
+  ],
+  "rallySkating": [
+    {
+      "seconds": 10,
+      "speed": 25.528279056684045,
+      "z": -309.3862886961261,
+      "skating": true
+    },
+    {
+      "seconds": 20,
+      "speed": 28.001629701008017,
+      "z": -578.1296377383676,
+      "skating": true
+    },
+    {
+      "seconds": 30,
+      "speed": 29.65623143110088,
+      "z": -867.1506682230679,
+      "skating": true
+    },
+    {
+      "seconds": 40,
+      "speed": 30.76311326021353,
+      "z": -1169.7368949220493,
+      "skating": true
+    },
+    {
+      "seconds": 50,
+      "speed": 31.50358594396385,
+      "z": -1481.397854787834,
+      "skating": true
+    },
+    {
+      "seconds": 60,
+      "speed": 31.99894125738511,
+      "z": -1799.129554858768,
+      "skating": true
+    },
+    {
+      "seconds": 70,
+      "speed": 32.33031997252136,
+      "z": -2120.922408680569,
+      "skating": true
+    },
+    {
+      "seconds": 80,
+      "speed": 32.55200297433861,
+      "z": -2445.4320596689126,
+      "skating": true
+    },
+    {
+      "seconds": 90,
+      "speed": 32.70030264190931,
+      "z": -2771.759171235389,
+      "skating": true
+    }
+  ],
+  "boostedSkating": 34.11312402210251,
+  "kartSpeeds": {
+    "healthy": 44.23173876029793,
+    "damaged": 36.45854318846494
+  },
+  "triangleGrind": true,
+  "skateStealDriveExit": true,
+  "runtimeErrors": []
+}

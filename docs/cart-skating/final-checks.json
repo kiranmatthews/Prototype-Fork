@@ -1,0 +1,152 @@
+[
+  {
+    "name": "balance",
+    "exitCode": 0,
+    "seconds": 10.65
+  },
+  {
+    "name": "mayhem",
+    "exitCode": 0,
+    "seconds": 21.24
+  },
+  {
+    "name": "validate-levels",
+    "exitCode": 0,
+    "seconds": 0.54
+  },
+  {
+    "name": "test-lazy-source",
+    "exitCode": 0,
+    "seconds": 1.63
+  },
+  {
+    "name": "test-tropical-plants",
+    "exitCode": 0,
+    "seconds": 0.3
+  },
+  {
+    "name": "test-jungle-assets",
+    "exitCode": 0,
+    "seconds": 10.28
+  },
+  {
+    "name": "test-crown-quartz",
+    "exitCode": 0,
+    "seconds": 7.0
+  },
+  {
+    "name": "test-jungle-stream",
+    "exitCode": 0,
+    "seconds": 7.14
+  },
+  {
+    "name": "test-custard-pool",
+    "exitCode": 0,
+    "seconds": 0.23
+  },
+  {
+    "name": "test-jungle-enclosure",
+    "exitCode": 0,
+    "seconds": 59.68
+  },
+  {
+    "name": "test-map-landscape-assets",
+    "exitCode": 0,
+    "seconds": 0.15
+  },
+  {
+    "name": "test-world-map-save",
+    "exitCode": 0,
+    "seconds": 7.25
+  },
+  {
+    "name": "test-map-clay-geometry",
+    "exitCode": 0,
+    "seconds": 0.33
+  },
+  {
+    "name": "test-hollowwake-assets",
+    "exitCode": 0,
+    "seconds": 48.93
+  },
+  {
+    "name": "test-scenery-normals",
+    "exitCode": 0,
+    "seconds": 0.27
+  },
+  {
+    "name": "test-waterslide-scenery-lod",
+    "exitCode": 0,
+    "seconds": 0.27
+  },
+  {
+    "name": "test-waterslide-ocean-look",
+    "exitCode": 0,
+    "seconds": 8.19
+  },
+  {
+    "name": "test-waterslide-shallows",
+    "exitCode": 0,
+    "seconds": 9.05
+  },
+  {
+    "name": "test-waterpark-decks",
+    "exitCode": 0,
+    "seconds": 7.32
+  },
+  {
+    "name": "test-waterpark-portals",
+    "exitCode": 0,
+    "seconds": 9.04
+  },
+  {
+    "name": "test-waterslide-forest",
+    "exitCode": 0,
+    "seconds": 9.82
+  },
+  {
+    "name": "test-hollowwake-tunnel-build",
+    "exitCode": 0,
+    "seconds": 0.78
+  },
+  {
+    "name": "typecheck",
+    "exitCode": 0,
+    "seconds": 13.49
+  },
+  {
+    "name": "build",
+    "exitCode": 0,
+    "seconds": 47.36
+  },
+  {
+    "name": "release-size",
+    "exitCode": 0,
+    "seconds": 0.09
+  },
+  {
+    "name": "skating-lite",
+    "exitCode": 0,
+    "seconds": 28.34
+  },
+  {
+    "name": "row-lite",
+    "exitCode": 0,
+    "seconds": 22.32
+  },
+  {
+    "name": "skating-full",
+    "exitCode": 0,
+    "seconds": 28.35
+  },
+  {
+    "name": "row-full",
+    "exitCode": 0,
+    "seconds": 22.68
+  },
+  {
+    "name": "full-race",
+    "exitCode": 0,
+    "seconds": 153.09
+  }
+]

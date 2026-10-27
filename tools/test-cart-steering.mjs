@@ -2,10 +2,10 @@ import assert from 'node:assert/strict';
 import {build} from 'esbuild';
 import {writeFile} from 'node:fs/promises';
 
-const bundle=await build({stdin:{contents:"export * from './src/golf-cart/controls';export * from './src/golf-cart/physics';",resolveDir:process.cwd()},bundle:true,platform:'node',format:'esm',write:false});
-const {RallyControls,GolfCartPhysics}=await import('data:text/javascript;base64,'+Buffer.from(bundle.outputFiles[0].text).toString('base64'));
+const bundle=await build({stdin:{contents:"export * from './src/golf-cart/controls';export * from './src/golf-cart/physics';export {RALLY_CART_PACE} from './src/golf-cart/balance';",resolveDir:process.cwd()},bundle:true,platform:'node',format:'esm',write:false});
+const {RallyControls,GolfCartPhysics,RALLY_CART_PACE}=await import('data:text/javascript;base64,'+Buffer.from(bundle.outputFiles[0].text).toString('base64'));
 const dt=1/120,flat=()=>({height:0,grip:1,drag:.08,safe:true,supported:true});
-const options={scale:1.25,topSpeed:38,engine:23,speedLimit:44,stableLandings:true};
+const options={scale:1.25,...RALLY_CART_PACE,stableLandings:true};
 const angle=(x,z)=>Math.atan2(-x,-z),wrap=a=>Math.atan2(Math.sin(a),Math.cos(a));
 const report={coasting:[],accelerating:[],reverse:[]};
 function run({basis=0,yaw=basis,speed=0,input,seconds=5,hz=120}){

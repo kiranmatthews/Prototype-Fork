@@ -1,0 +1,61 @@
+{
+  "passed": true,
+  "requestedAt": "2026-10-27T06:49:23Z",
+  "completedAt": "2026-10-27T08:05:35.207006+00:00",
+  "baseRevision": "7eb40c5eea433fbdabbcd5a4d53aabcbd5b13a80",
+  "sourceSha256": {
+    "src/golf-cart/balance.ts": "ef0de670b69317d26899cb4eaed953ee30d69d9d482656f18a69529b4229adc1",
+    "src/golf-cart/race.ts": "4e828baa18780e0e18898c6196ea6fc3df365d324cb1d4b079fb1f1f737ea846",
+    "src/race/runtime.ts": "c1898fc94168fe1adc92764fdc8d65b0d27ab0ffde31e35bbf039fc2c592a6d4",
+    "src/race/hud.ts": "832053d52ea5d5cbb3b4bba7ca6edd25151ff4bc0ae0d842668914bfb09c0e8c",
+    "src/levels/coconut-cart-rally.ts": "4cb451c6f4c3ad9e31269943a3d011cff4df9382e558390f37594233893c9259",
+    "public/levels.json": "964d91e025334ebbd1004e2bfe626b8d179eddbd7293255d96d51217798c4859",
+    "tools/fixtures/stock-level-snapshots.json": "e637f39dcb885d2c6302a76699663ac43ede4c6decfd010b09520d25e7a46e0f"
+  },
+  "unchangedNativePlayer": true,
+  "buildStamp": "Codex/sol fork \u00b7 build 10-27 07:51 UTC",
+  "offlineVersion": "710db0662b59fdc479f6",
+  "releaseBytes": 999464520,
+  "releaseLimitBytes": 1000000000,
+  "typecheck": true,
+  "productionBuild": true,
+  "allTwentyLevelChecks": true,
+  "nativeMovement": true,
+  "landings": true,
+  "steering": true,
+  "balance": true,
+  "mayhem": true,
+  "browserSkating": {
+    "lite": true,
+    "full": true,
+    "mount": true,
+    "ollie": true,
+    "animatedStowing": true,
+    "reentry": true,
+    "audioSwitching": true,
+    "stationarySilence": true,
+    "repeatExitSkate": true
+  },
+  "pace": {
+    "nativeSkateTraceUnchanged": true,
+    "seconds": 90,
+    "skating": 32.70030264190931,
+    "healthy": 44.23173876029793,
+    "damaged": 36.45854318846494
+  },
+  "fullRace": {
+    "finishes": 8,
+    "firstSeconds": 84.03333333332985,
+    "lastSeconds": 108.9499999999951,
+    "falls": 0,
+    "engineFrames": 6434,
+    "parkedEngineLoops": [],
+    "errors": []
+  },
+  "testFixtureCorrections": [
+    "Wait for the queued UI Race start before starting the isolated solo browser fixture; nearby rival engines were correct game behavior.",
+    "The faster driver cleanly avoids the obstacle, so its recovery test asserts physical forward escape without a respawn or wreck, not an unnecessary reverse maneuver. Reverse/coasting controls retain their separate steering regression."
+  ],
+  "pending": [],
+  "publication": "Local validated increment; release coordinator owns integration and publishing."
+}

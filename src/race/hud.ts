@@ -176,7 +176,7 @@ export class RaceHud {
       for(const [label,slot] of slots){const row=document.createElement('div');row.className='comp-cup game-results-medal';const caption=document.createElement('strong');caption.textContent=label;if(label==='BOX GEM'){const count=document.createElement('small');count.textContent=`${s.boxes} / ${s.totalBoxes}`;caption.append(document.createElement('br'),count);}row.append(slot,caption);awards.append(row);}
     }
     const controls=this.element.querySelector<HTMLElement>('[data-cart-controls]');
-    if(controls){setPromptText(controls,'Hold {jump} Accelerate · {up}{down}{left}{right} Steer · {grab} Brake · {transfer} Drift · {spin} Flame thrusters · {grind} Steal / bail · {inventory} Weapon');const note=document.createElement('p');note.textContent='Dents stick. Engines burn. Keep running and steal a ride. Green loaners wait before the big jumps.';controls.after(note);}
+    if(controls){setPromptText(controls,'Hold {jump} Accelerate · {up}{down}{left}{right} Steer · {grab} Brake · {transfer} Drift · {spin} Flame thrusters · {grind} Steal / bail · {inventory} Weapon');const note=document.createElement('p');setPromptText(note,'Dents stick. Engines burn. On foot, hold {jump} + a direction to skate. Grab a green loaner or steal a ride.');controls.after(note);}
     this.element.setAttribute('aria-label',s.vehicle?'Golf cart race':'Skate race');
     this.surface.invalidate();
   }

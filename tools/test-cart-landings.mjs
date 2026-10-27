@@ -2,16 +2,16 @@ import assert from 'node:assert/strict';
 import {build} from 'esbuild';
 import {writeFile} from 'node:fs/promises';
 
-const bundle=await build({stdin:{contents:`export * from './src/golf-cart/physics';export * from './src/golf-cart/fleet';export {dirtHeight,CART_RALLY_JUMPS} from './src/levels/cart-stadium-layout';`,resolveDir:process.cwd()},bundle:true,platform:'node',format:'esm',write:false});
-const {GolfCartPhysics,GolfCartFleet,NO_CART_INPUT,dirtHeight,CART_RALLY_JUMPS}=await import('data:text/javascript;base64,'+Buffer.from(bundle.outputFiles[0].text).toString('base64'));
+const bundle=await build({stdin:{contents:`export * from './src/golf-cart/physics';export {RALLY_CART_PACE} from './src/golf-cart/balance';export * from './src/golf-cart/fleet';export {dirtHeight,CART_RALLY_JUMPS} from './src/levels/cart-stadium-layout';`,resolveDir:process.cwd()},bundle:true,platform:'node',format:'esm',write:false});
+const {GolfCartPhysics,GolfCartFleet,NO_CART_INPUT,dirtHeight,CART_RALLY_JUMPS,RALLY_CART_PACE}=await import('data:text/javascript;base64,'+Buffer.from(bundle.outputFiles[0].text).toString('base64'));
 const flat=()=>({height:0,grip:1,drag:0,safe:true,supported:true});
-const options={scale:1.25,topSpeed:38,engine:23,speedLimit:44,maxLaunchVelocity:9,airRecoveryDelay:6,damageCapacity:8,gravity:24,stableLandings:true};
+const options={scale:1.25,...RALLY_CART_PACE,maxLaunchVelocity:9,airRecoveryDelay:6,damageCapacity:8,gravity:24,stableLandings:true};
 const spawn={x:0,z:0,yaw:0},dt=1/120,report={landings:[]};
 
 // Sideways momentum and steering at touchdown used to turn ordinary jumps into rolls.
 for(const height of [.6,2,6,12])for(const lateral of [-9,0,9])for(const steer of [-.8,0,.8]){
  const world=new GolfCartPhysics(flat,[spawn],[],options),c=world.carts[0];
- Object.assign(c,{y:height,vx:lateral,vz:-28,vy:-1,grounded:false,roll:.3,airTime:.4});
+ Object.assign(c,{y:height,vx:lateral,vz:-RALLY_CART_PACE.speedLimit,vy:-1,grounded:false,roll:.3,airTime:.4});
  let touch=-1,compression=0,rebound=0;
  for(let i=0;i<120*4;i++){
   world.advance(dt,w=>w.inputs[0]={...NO_CART_INPUT,steer,handbrake:steer!==0});

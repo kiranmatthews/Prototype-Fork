@@ -16,7 +16,7 @@ await withBlockworksRuntime(async e=>{
  const speed=(health,maxDamageSpeedLoss)=>{const w=new GolfCartPhysics(()=>({height:0,grip:1,drag:.4,safe:true,supported:true}),[{x:0,z:0,yaw:0}],[],{topSpeed:38,engine:23,speedLimit:44,crestLaunch:false,maxDamageSpeedLoss});w.carts[0].health=health;w.inputs[0]={...NO_CART_INPUT,throttle:1};for(let i=0;i<1200;i++)w.advance(1/60);assert.equal(w.carts[0].health,health,'Pace tuning never repairs damage');return {speed:w.carts[0].speed,z:w.carts[0].z};};
  const healthyBefore=speed(1,.35),healthyAfter=speed(1,.18),damagedBefore=speed(.3,.35),damagedAfter=speed(.3,.18);assert.deepEqual(healthyAfter,healthyBefore,'Clean driving keeps exactly the same physical pace');assert.ok(damagedAfter.speed>damagedBefore.speed+2);assert.ok(damagedAfter.speed<healthyAfter.speed-2,'Damage still costs pace');assert.deepEqual(speed(.65,.18),speed(.65,.35),'Ordinary damage retains the previous pace penalty');assert.deepEqual(speed(.3),damagedBefore,'Other kart levels retain the previous damage penalty');
  const race=new SkateRace(e.scene,e.p,false,()=>true);race.attach(e.l,'balance-fixture');race.start('race',42);race.phase='running';const c=race.carts,v=c.fleet.physics.carts[1],r=race.riders[1];
- v.x=2.2;v.z=-300;v.yaw=0;v.speed=38;v.vx=0;v.vz=-38;v.grounded=true;v.steer=0;r.progress=400;c.sync();assert.equal(c.drive(1).grabHeld,true);assert.ok(c.drive(1).moveX>0,'AI selects the available box nearest its existing lane');r.boost=2;assert.equal(c.drive(1).grabHeld,false,'AI does not brake away its straight-line boost');v.yaw=Math.PI/2;assert.equal(c.drive(1).grabHeld,true,'Boost still brakes for a sharp corner');r.boost=0;
+ v.x=2.2;v.z=-300;v.yaw=0;v.speed=c.fleet.physics.topSpeed;v.vx=0;v.vz=-v.speed;v.grounded=true;v.steer=0;r.progress=400;c.sync();assert.equal(c.drive(1).grabHeld,true);assert.ok(c.drive(1).moveX>0,'AI selects the available box nearest its existing lane');r.boost=2;assert.equal(c.drive(1).grabHeld,false,'AI does not brake away its straight-line boost');v.yaw=Math.PI/2;assert.equal(c.drive(1).grabHeld,true,'Boost still brakes for a sharp corner');r.boost=0;
  r.item='mushroom';r.itemCooldown=0;assert.equal(race.drive(1).itemPressed,false,'AI holds a boost while pointed across the track');v.yaw=0;assert.equal(race.drive(1).itemPressed,true,'AI spends the boost on a supported straight');r.itemCooldown=0;v.grounded=false;assert.equal(race.drive(1).itemPressed,false,'AI saves power while airborne');v.grounded=true;c.cartForRacer[1]=-1;assert.equal(race.drive(1).itemPressed,false,'AI saves driving power while on foot');c.cartForRacer[1]=1;
  r.item=null;race.crateBroken(e.l.crates[1],1);assert.equal(race.returns.get(e.l.crates[1]),1.2,'Shared item rows return quickly enough for the chasing pack');
  race.riders[0].item='mushroom';assert.equal(race.useItem(0),true,'Human item use stays immediate');assert.equal(race.riders[0].boost,4);
@@ -25,8 +25,23 @@ await withBlockworksRuntime(async e=>{
  race.riders[0].progress=100;race.riders[1].progress=500;race.step(e.dt,{});assert.equal(c.paceAssist[0],.04,'The same capped help applies to the human racer');assert.equal(c.paceAssist[1],0);
  r.knockGrace=0;r.shield=0;r.star=0;v.health=1;assert.equal(race.hit(r,undefined,.1),true);const afterHit=v.health;assert.equal(r.knockGrace,2.2);assert.equal(race.hit(r,undefined,.1),false);assert.equal(v.health,afterHit,'Consecutive weapon hits cannot immediately pile on extra damage');r.knockGrace=0;assert.equal(race.hit(r,undefined,.1),true,'Weapon vulnerability returns after the recovery window');
  race.start('time-trial',42);assert.equal(race.count,1);race.phase='running';e.l.raceActorId=0;e.l.breakCrate(e.l.crates[0]);assert.equal(race.riders[0].item,'mushroom');race.step(e.dt,{});assert.equal(race.carts.paceAssist[0],0);
- // A blocked driver must reverse using physical controls rather than remain at the rock forever.
- race.start('time-trial',42);race.phase='running';const solo=race.carts,world=solo.fleet.physics;Object.assign(world.spawns[0],{x:0,z:-300,yaw:0});world.reset(0);world.obstacles.push({x:0,z:-303,radius:2,height:4,id:'balance-ram-trap'});solo.sync();race.riders[0].progress=race.course.project(e.p.pos).s;const start=race.riders[0].progress;let reversed=false;for(let i=0;i<900&&race.riders[0].progress<start+30;i++){race.step(e.dt,race.drive(0));reversed ||=world.carts[0].speed<-.5;}assert.ok(reversed,'A trapped driver uses reverse');assert.ok(race.riders[0].progress>start+30,'The driver escapes and resumes racing');
+ // A driver must physically clear a rock approach. Faster steering may find
+ // a clean way around without needing the reverse escape used at the old pace.
+ race.start('time-trial',42);race.phase='running';
+ const solo=race.carts,world=solo.fleet.physics;
+ Object.assign(world.spawns[0],{x:0,z:-300,yaw:0});world.reset(0);
+ world.obstacles.push({x:0,z:-305,radius:4,height:4,id:'balance-ram-trap'});
+ solo.sync();race.riders[0].progress=race.course.project(e.p.pos).s;
+ const start=race.riders[0].progress;let reversed=false,reverseRequested=false,minSpeed=0;
+ for(let i=0;i<900&&race.riders[0].progress<start+30;i++){
+  race.step(e.dt,race.drive(0));reversed ||=world.carts[0].speed<-.5;
+  reverseRequested ||=solo.reverseTime[0]>0;minSpeed=Math.min(minSpeed,world.carts[0].speed);
+ }
+ const escape={progress:race.riders[0].progress-start,hits:world.carts[0].hits,reversed,reverseRequested,minSpeed};
+ assert.ok(escape.progress>30,`The driver clears the obstruction and resumes racing: ${JSON.stringify(escape)}`);
+ assert.equal(world.carts[0].respawns,0,'The obstacle approach never teleports the driver');
+ assert.ok(world.carts[0].health>0,'The driver gets through in a functioning kart');
+
  // Compare physical pursuit on the same straight using identical controls,
  // without items, contact, AI skill differences or a finish crossing.
  const pursuit=(gap,humanChases=false,boost=0)=>{
@@ -46,5 +61,5 @@ await withBlockworksRuntime(async e=>{
  assert.deepEqual(humanPursuit,distantPursuit,'Human and AI drivers receive identical physical help');
  const boostedClose=pursuit(15,false,2),boostedFar=pursuit(150,false,2);assert.equal(boostedFar.chaserSpeed,boostedClose.chaserSpeed,'Chase assistance does not stack on a boost');
  race.attach({skateRace:null},'flats');
- const report={passed:true,assist,drawsPerCase:50000,leader,close,chase,second,healthyBefore,healthyAfter,damagedBefore,damagedAfter,closePursuit,distantPursuit,humanPursuit,boostedClose,boostedFar,hitRecovery:true,aiBoost:true,humanItemsImmediate:true,trialBoosts:true,heavyCooldown:true};await writeFile(process.env.RALLY_BALANCE_CHECK??'/private/tmp/rally-balance-check.json',JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report));
+ const report={passed:true,assist,drawsPerCase:50000,leader,close,chase,second,healthyBefore,healthyAfter,damagedBefore,damagedAfter,closePursuit,distantPursuit,humanPursuit,boostedClose,boostedFar,hitRecovery:true,aiBoost:true,humanItemsImmediate:true,trialBoosts:true,heavyCooldown:true,escape};await writeFile(process.env.RALLY_BALANCE_CHECK??'/private/tmp/rally-balance-check.json',JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report));
 },{modulePath:'/src/levels/coconut-cart-rally.ts',source:()=>fixture,levelId:'balance-fixture'});

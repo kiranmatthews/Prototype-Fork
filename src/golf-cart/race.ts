@@ -7,7 +7,7 @@ import { RACE_ROSTER } from '../race/types';
 import { GolfCartFleet, type FleetPose } from './fleet';
 import { NO_CART_INPUT, type GroundSample, type CartInput } from './physics';
 import { RallyControls } from './controls';
-import { rallyChasePace } from './balance';
+import { rallyChasePace,RALLY_CART_PACE } from './balance';
 import { CartMayhemEffects } from './mayhemEffects';
 import { puffs } from '../puffs';
 import { sfx } from '../audio';
@@ -96,7 +96,7 @@ export class GolfCartRace {
     const sponsor=level.pickRoot.getObjectByName('Stadium sponsor hoarding') as THREE.Mesh|undefined;
     this.fleet=new GolfCartFleet({damageVisuals:true,sponsorTexture:(sponsor?.material as THREE.MeshStandardMaterial|undefined)?.map??undefined,ground:(x,z)=>this.ground(x,z),spawns,obstacles,
       onImpact:hit=>this.audio.impact(hit,this.racers[0].player.pos),onLanding:hit=>this.audio.landing(hit,this.racers[0].player.pos,this.cartForRacer[0]),
-      physics:{boundary:stadium?createStadiumBoundary():undefined,scale:1.25,topSpeed:38,engine:23,speedLimit:44,maxLaunchVelocity:9,airRecoveryDelay:6,damageCapacity:16*.7,maxDamageSpeedLoss:.18,gravity:24,stableLandings:true}});
+      physics:{boundary:stadium?createStadiumBoundary():undefined,scale:1.25,...RALLY_CART_PACE,maxLaunchVelocity:9,airRecoveryDelay:6,damageCapacity:16*.7,maxDamageSpeedLoss:.18,gravity:24,stableLandings:true}});
     this.mud=stadium?new CartMud(this.fleet.mudAmounts):null;if(this.mud)this.fleet.root.add(this.mud.root);
     this.crowd=stadium?new StadiumCrowd():null;if(this.crowd)this.fleet.root.add(this.crowd.root);
     this.fleet.models.forEach((m,i)=>{
@@ -328,7 +328,7 @@ export class GolfCartRace {
     for(const a of [...this.interactions])if(a.cart===index&&!a.bail)this.cancelInteraction(a);
     this.burning[index]=true;c.health=0;this.stats.wrecks++;
     this.fleet.models[index].setScorched(true);
-    if(owner>=0){this.exit(owner,true);if(!owner)this.announce('KART TOAST! RUN. STEAL. REPEAT.');}
+    if(owner>=0){this.exit(owner,true);if(!owner)this.announce('KART TOAST! SKATE. STEAL. REPEAT.');}
     puffs.burst('boomTnt',c.x,c.y+1,c.z,{strength:1.5,count:12});
     this.audio.explosion(c,this.racers[0].player.pos);
   }
@@ -429,7 +429,7 @@ export class GolfCartRace {
       const yaw=c.yaw+clamp(angle,-.5,.5),dx=Math.sin(yaw),dz=Math.cos(yaw),basis=r.player.raceInputBasis(this.level),bn=Math.hypot(basis.x,basis.z)||1;
       return {moveX:(-basis.z*dx+basis.x*dz)/bn,moveY:(basis.x*dx+basis.z*dz)/bn,jumpHeld:true,spinPressed:this.shouldFireFlames(id),itemPressed:false} as Input;
     }
-    const pace=(id===0?34:31.5+(id%3)*.65)*(1+this.paceAssist[id])+(r.boost>0?8:0);
+    const pace=(id===0?42:39.5+(id%3)*.65)*(1+this.paceAssist[id])+(r.boost>0?8:0);
     const desired=pace/(1+Math.abs(angle)*.65);
     const dx=ahead.x-c.x,dz=ahead.z-c.z,n=Math.hypot(dx,dz)||1,basis=r.player.raceInputBasis(this.level),bn=Math.hypot(basis.x,basis.z)||1;
     return {moveX:clamp((-basis.z*dx+basis.x*dz)/bn/n,-1,1),moveY:clamp((basis.x*dx+basis.z*dz)/bn/n,-1,1),grabHeld:c.speed>desired+2,
@@ -471,7 +471,8 @@ export class GolfCartRace {
         rider.falls++;rider.progress=rider.anchorProgress;foot.resetRacePosition(this.level,rider.anchor,this.course.tangent(rider.anchorProgress),true);rider.knockGrace=2;
       }
       this.actionCooldown[i]=Math.max(0,this.actionCooldown[i]-dt);this.thrustCooldown[i]=Math.max(0,this.thrustCooldown[i]-dt);this.thrustTime[i]=Math.max(0,this.thrustTime[i]-dt);
-      if(samples[i].grindPressed)this.interact(i);
+      // Triangle enters a nearby cart; elsewhere it keeps normal skate grinds.
+      if(samples[i].grindPressed&&(this.isDriving(i)||this.nearest(i)>=0))this.interact(i);
       const index=this.cartForRacer[i],r=this.racers[i];
       if(samples[i].spinPressed&&this.canFireFlames(i)){
         this.thrustCooldown[i]=CART_FLAMES.recharge;this.thrustTime[i]=CART_FLAMES.burst;this.stats.thrusters++;
