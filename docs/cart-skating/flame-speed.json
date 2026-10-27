@@ -1,0 +1,29 @@
+{
+  "passed": true,
+  "sourceSha256": {
+    "src/golf-cart/flameTactics.ts": "fab02d9261ae0596aa43b856cac8357f2ed2286a95749f6189d8deb6b5498bbc",
+    "src/golf-cart/balance.ts": "ef0de670b69317d26899cb4eaed953ee30d69d9d482656f18a69529b4229adc1"
+  },
+  "pace": {
+    "topSpeed": 46,
+    "engine": 28,
+    "speedLimit": 54
+  },
+  "scenarios": 3200,
+  "predictedContacts": 1280,
+  "sampledSweeps": 12800,
+  "minimumSamples": 2,
+  "heightsRejected": true,
+  "orientations": 16,
+  "rates": [
+    60,
+    120
+  ],
+  "framePhases": [
+    0,
+    0.25,
+    0.5,
+    0.75,
+    0.99
+  ]
+}
