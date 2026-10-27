@@ -377,7 +377,7 @@ const ASSIGNMENTS: Record<string, Partial<CampaignLevelDefinition> & { name: str
   'jungle-minefield': {name:'Nightmare Grove',levelId:'jungle-minefield',previewKey:'jungle-minefield'},
   'nightworks-after-hours': {name:'Guptus Eruptus'},
   nightworks: {name:'Torchlight Trouble'},
-  'quagmire-race': {name:'Skate Race',placeholder:true,boss:true,skateRace:true},
+  'quagmire-race': {name:'Spaghetti Rails',levelId:'spaghetti-rails',previewKey:'spaghetti-rails',boss:true,skateRace:true,gemReward:'win',bonus:false,relicTime:115},
   'quagmire-boss': {name:'Monster Final Boss',placeholder:true,boss:true},
   ...Object.fromEntries((Object.keys(SECRET_REQUIREMENT_LABELS) as SecretRequirement[]).map((requirement,index) =>
     [`secret-${index+1}`, {name:['5 Medals','5 Clear Gems','10 Medals','15 Clear Gems','20 Medals','All Main Medals','All Clear Gems','All Gems & Medals'][index],placeholder:true,secretRequirement:requirement}])),

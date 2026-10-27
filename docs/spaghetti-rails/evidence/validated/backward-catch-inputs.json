@@ -1,0 +1,50 @@
+{
+  "at": "2026-10-27T07:41:19.578Z",
+  "tuningUnchanged": true,
+  "results": [
+    {
+      "rail": 12,
+      "caughtAt": 0,
+      "leftAt": 63,
+      "returnedAt": 290,
+      "frames": 343,
+      "anchor": 251.80831902378017,
+      "progress": 292.28903519796705,
+      "falls": 1,
+      "deaths": 0
+    },
+    {
+      "rail": 37,
+      "caughtAt": 0,
+      "leftAt": 65,
+      "returnedAt": 335,
+      "frames": 386,
+      "anchor": 1058.7506231633809,
+      "progress": 1099.222869062868,
+      "falls": 1,
+      "deaths": 0
+    },
+    {
+      "rail": 38,
+      "caughtAt": 0,
+      "leftAt": 65,
+      "returnedAt": 340,
+      "frames": 391,
+      "anchor": 1058.7506231633809,
+      "progress": 1099.222869062868,
+      "falls": 1,
+      "deaths": 0
+    },
+    {
+      "rail": 41,
+      "caughtAt": 0,
+      "leftAt": 65,
+      "returnedAt": 293,
+      "frames": 344,
+      "anchor": 2055.9053997811056,
+      "progress": 2096.343626911659,
+      "falls": 1,
+      "deaths": 0
+    }
+  ]
+}

@@ -1,0 +1,155 @@
+{
+  "at": "2026-10-27T07:50:12.286Z",
+  "frames": 9300,
+  "finish": 151.98333333334642,
+  "falls": 8,
+  "deaths": 0,
+  "injected": 8,
+  "events": [
+    {
+      "anchor": 0,
+      "position": [
+        0,
+        32.08,
+        32
+      ],
+      "at": 389,
+      "from": 60.20735465713999,
+      "falls": 0,
+      "returnedAt": 523,
+      "returned": [
+        0,
+        32,
+        32
+      ],
+      "ground": "platform"
+    },
+    {
+      "anchor": 252,
+      "position": [
+        0,
+        36.06,
+        -188
+      ],
+      "at": 1223,
+      "from": 312.06940978669604,
+      "falls": 1,
+      "returnedAt": 1357,
+      "returned": [
+        0,
+        36,
+        -188
+      ],
+      "ground": "platform"
+    },
+    {
+      "anchor": 737,
+      "position": [
+        -72,
+        47.06,
+        -205
+      ],
+      "at": 2472,
+      "from": 797.6596839966502,
+      "falls": 2,
+      "returnedAt": 2606,
+      "returned": [
+        -72,
+        47,
+        -205
+      ],
+      "ground": "platform"
+    },
+    {
+      "anchor": 1059,
+      "position": [
+        -116,
+        52.06,
+        -366
+      ],
+      "at": 3390,
+      "from": 1119.0281015910246,
+      "falls": 3,
+      "returnedAt": 3524,
+      "returned": [
+        -116,
+        52,
+        -366
+      ],
+      "ground": "platform"
+    },
+    {
+      "anchor": 1477,
+      "position": [
+        -146,
+        56.60000000074506,
+        -577
+      ],
+      "at": 4477,
+      "from": 1537.169245649325,
+      "falls": 4,
+      "returnedAt": 4611,
+      "returned": [
+        -146,
+        56.54000000074506,
+        -577
+      ],
+      "ground": "speedpad"
+    },
+    {
+      "anchor": 2056,
+      "position": [
+        -116,
+        62.06,
+        -675
+      ],
+      "at": 6105,
+      "from": 2116.277376661541,
+      "falls": 5,
+      "returnedAt": 6239,
+      "returned": [
+        -116,
+        62,
+        -675
+      ],
+      "ground": "platform"
+    },
+    {
+      "anchor": 2393,
+      "position": [
+        -116,
+        59.06,
+        -965
+      ],
+      "at": 7003,
+      "from": 2453.5531115577055,
+      "falls": 6,
+      "returnedAt": 7137,
+      "returned": [
+        -116,
+        59,
+        -965
+      ],
+      "ground": "platform"
+    },
+    {
+      "anchor": 2900,
+      "position": [
+        -192,
+        30.06,
+        -1022
+      ],
+      "at": 8223,
+      "from": 2960.7427321474925,
+      "falls": 7,
+      "returnedAt": 8357,
+      "returned": [
+        -192,
+        30,
+        -1022
+      ],
+      "ground": "platform"
+    }
+  ],
+  "tuningUnchanged": true
+}

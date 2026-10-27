@@ -15,6 +15,8 @@ export interface SkateRaceData {
   /** Ordered world-space racing guide, with rideable width at each knot. */
   line: RaceKnot[];
   jumps: { takeoff: RacePoint; landing: RacePoint }[];
+  /** Optional rail-first sections. Rival inputs aim at these real, editable strands. */
+  grinds?: { start: RacePoint; end: RacePoint; lanes: number[] }[];
   finishWidth: number;
   originalLength: number;
 }
@@ -48,6 +50,8 @@ export interface RaceThreat {
   seconds:number; bearing:number; urgent:boolean; attached?:boolean;
 }
 export interface RaceHudState {
+  /** Present only when the race is built around editable rail transfers. */
+  railTransfers?: number;
   vehicle?: 'golf-cart'; crystalReward?:boolean; gemReward?:'win';
   cart?: {onFoot:boolean;target:string;distance:number|null;notice:string;actionReady:boolean;bearing:number|null};
   title:string; sections:readonly string[]; medalTimes:MedalTimes; medal:TimeMedal|null;

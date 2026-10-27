@@ -1,3 +1,5 @@
+import { roundCorners } from './pathNodes';
+export { roundCorners } from './pathNodes';
 import {createRallyDirt,createRallyCloth,createRallyLamp,createRallySponsorMaterial} from './rallyMaterials';
 import { authoredMovingGeometry } from './authoredMovingSurface';
 import {RainWeather} from './rainWeather';
@@ -143,7 +145,7 @@ import { JUNGLE_CUP_LEVEL } from "./levels/jungle-cup";
 import { JUNGLE_TERRACES_LEVEL } from "./levels/jungle-sequels";
 import { PIRATE_WRECK_LEVEL } from './levels/pirate-wreck';
 import { CROWN_TEXTURE_KINDS, isCrownTexture, crownTextureFile, createCrownSurface, createCrownQuartz, isCrownWater, crownWaterReflectionFile, createCrownWater, createDrownedHarbourOceanLook } from './drownedCrownAssets';
-import { CAVE_COLLAPSE_LEVEL, CODEX_LAB_LEVEL, WAREHOUSE_REFERENCE_LEVEL, SCHOOL_MIAMI_LEVEL, WAREHOUSE_PARK_LEVEL, ROOFTOP_RELAY_LEVEL } from "./levels/codex-lab";
+import { SPAGHETTI_RAILS_LEVEL, CAVE_COLLAPSE_LEVEL, CODEX_LAB_LEVEL, WAREHOUSE_REFERENCE_LEVEL, SCHOOL_MIAMI_LEVEL, WAREHOUSE_PARK_LEVEL, ROOFTOP_RELAY_LEVEL } from "./levels/codex-lab";
 import { JUNGLE_MINEFIELD_LEVEL } from "./levels/jungle-minefield";
 import { COUNTRY_CLUB_LEVEL } from "./levels/country-club";
 import { isPreviousCountryClubStock } from "./levels/country-club-stock";
@@ -1297,8 +1299,9 @@ export function migrateCustomLevel(d: CustomLevelData): CustomLevelData {
   migrateDrownedCamera(d);
   // Boss retries bank phase progress in the encounter and start on the pier.
   // Old editor copies must not restore the retired physical checkpoint crate.
-  // Races recover to their latest supported position, without checkpoint objects.
-  if (d.encounter === 'crab-chief' || d.skateRace)
+  // Road races recover to their latest supported position. Rail races keep
+  // authored retry locations as data; their checkpoint crates remain hidden.
+  if (d.encounter === 'crab-chief' || d.skateRace && !d.skateRace.grinds?.length)
     d.components = d.components.filter(component => component.t !== 'checkpoint');
   // Retired vehicles must not return through saved libraries or shared files.
   // Leave the road geometry, groups and other enemies available for editing.
@@ -2471,68 +2474,6 @@ export function simplifyPath<T extends { x: number; y: number; z: number }>(
   return pts.filter((_, i) => keep[i]);
 }
 
-export function roundCorners(
-  pts: readonly (readonly number[])[],
-  closed: boolean,
-): { x: number; z: number; y: number; i: number }[] {
-  const n = pts.length;
-  const out: { x: number; z: number; y: number; i: number }[] = [];
-  const push = (x: number, z: number, y: number, i: number): void => {
-    const last = out[out.length - 1];
-    if (
-      last &&
-      (last.x - x) * (last.x - x) + (last.z - z) * (last.z - z) < 4e-4
-    )
-      return;
-    out.push({ x, z, y, i });
-  };
-  const yOf = (k: number): number => pts[((k % n) + n) % n][3] ?? 0;
-  for (let i = 0; i < n; i++) {
-    const r = pts[i][2] ?? 0;
-    const px = pts[i][0];
-    const pz = pts[i][1];
-    const py = yOf(i);
-    if (r <= 0.01 || n < 3 || (!closed && (i === 0 || i === n - 1))) {
-      push(px, pz, py, i);
-      continue;
-    }
-    const A = pts[(i - 1 + n) % n];
-    const B = pts[(i + 1) % n];
-    const inX = px - A[0];
-    const inZ = pz - A[1];
-    const outX = B[0] - px;
-    const outZ = B[1] - pz;
-    const inL = Math.hypot(inX, inZ);
-    const outL = Math.hypot(outX, outZ);
-    if (inL < 1e-4 || outL < 1e-4) {
-      push(px, pz, py, i);
-      continue;
-    }
-    const t = Math.min(r, inL * 0.49, outL * 0.49);
-    const ax = px - (inX / inL) * t;
-    const az = pz - (inZ / inL) * t;
-    const bx = px + (outX / outL) * t;
-    const bz = pz + (outZ / outL) * t;
-    // heights at the trim points sit on the straight edges' slopes
-    const ay = py + (yOf(i - 1) - py) * (t / inL);
-    const by = py + (yOf(i + 1) - py) * (t / outL);
-    const SEGS = 6;
-    for (let k = 0; k <= SEGS; k++) {
-      const u = k / SEGS;
-      const w0 = (1 - u) * (1 - u);
-      const w1 = 2 * u * (1 - u);
-      const w2 = u * u;
-      push(
-        w0 * ax + w1 * px + w2 * bx,
-        w0 * az + w1 * pz + w2 * bz,
-        w0 * ay + w1 * py + w2 * by,
-        i,
-      );
-    }
-  }
-  return out;
-}
-
 export function rectCorners(
   w: number,
   d: number,
@@ -2599,6 +2540,7 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
   {id:"hollowwake-descent",name:HOLLOWWAKE_LEVEL.name,data:HOLLOWWAKE_LEVEL},
   { id: "dark", name: "The Nightworks" }, // cycling platforms, phase rocks and torch-lit ferries
   { id: "nightworks-after-hours", name: NIGHTWORKS_AFTER_HOURS_LEVEL.name, data: NIGHTWORKS_AFTER_HOURS_LEVEL },
+  { id: 'spaghetti-rails', name: SPAGHETTI_RAILS_LEVEL.name, data: SPAGHETTI_RAILS_LEVEL },
   { id: "warproom", name: "Island World Map" }, // legacy id, graph-driven map runtime
   { id: "beachfront", name: "Beachside Run" },
   ...UNITY_PORT_LEVELS,
@@ -4322,6 +4264,8 @@ export class Level {
   projectiles: Projectile[] = []; // sentry orbs in flight
   stones: Stone[] = [];
   checkpoints: Checkpoint[] = [];
+  /** Authored checkpoint positions retained when race mode hides their crates. */
+  readonly raceCheckpoints: THREE.Vector3[] = [];
   pickups: Pickup[] = [];
   private pickupVisualBatch: PickupVisualBatch | null = null;
   rails: Rail[] = [];
@@ -19361,7 +19305,7 @@ export class Level {
   // stomp it (bumping is a wall) to bank the checkpoint; its trigger matches
   // the box, so it can be dodged rather than being an unmissable gate.
   private checkpoint(deckY: number, z: number, x = 0): void {
-    if(this.skateRace)return;
+    if(this.skateRace){this.raceCheckpoints.push(new THREE.Vector3(x,deckY+.1,z));return;}
     const size = 0.96; // same footprint as every other crate now
     const gy = this.floorY(x, z, deckY);
     const mesh = new THREE.Mesh(
