@@ -26,6 +26,7 @@ export class KiteTowVisual {
   stepFlyaway(dt:number): void {
     if (!this.flyingAway) return;
     this.deathAge += dt;
+    if (this.deathAge >= 5) { this.flyingAway = false; this.root.visible = false; return; }
     this.root.position.z -= (8 + this.deathAge * 18) * dt;
     this.root.position.y += (2 + this.deathAge * 4) * dt;
     this.root.position.x += Math.sin(this.deathAge * 2) * dt;
@@ -77,13 +78,15 @@ export class KiteTowVisual {
     this.root.visible = false;
   }
 
-  pose(pos: THREE.Vector3, time: number, steer: number, lift: number, wind: number, left: Arm | null, right: Arm | null): void {
+  pose(pos: THREE.Vector3, time: number, steer: number, lift: number, wind: number, left: Arm | null, right: Arm | null, aspect = 1.6): void {
     this.root.position.copy(pos);
     this.root.rotation.set(0, 0, 0);
     // The canopy stays in the wind as the rider rises toward it. Shortening
     // the flying lines also keeps the whole foil in frame through a jump.
-    this.sail.position.set(1.2 + steer * .65 + wind * 2.8 + Math.sin(time * 1.4) * .15, 4.7 - lift * .75 + Math.sin(time*1.8)*.12, -16.5);
-    this.sail.rotation.set(.38 + wind * .04, -.08 * steer, -.10 * steer - wind * .25);
+    // More flying-line length in narrow views keeps gusts from cropping a tip.
+    const setback = 16.5 * Math.max(1, 1.6 / Math.max(.35, aspect));
+    this.sail.position.set(1.2 + steer * .65 + wind * 3.8 + Math.sin(time * 1.4) * .15, 4.35 - lift * .75 + Math.sin(time*1.8)*.12, -setback);
+    this.sail.rotation.set(.38 + wind * .06, -.08 * steer, -.10 * steer - wind * .34);
     // Shoulder-relative bar placement works for the editable character's size.
     const arms = [left, right];
     this.bar.position.set(0, 1.3, -.55);

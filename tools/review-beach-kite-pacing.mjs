@@ -2,6 +2,8 @@
 import assert from 'node:assert/strict';
 import {readFile,writeFile} from 'node:fs/promises';
 import ts from 'typescript';
+import {resolve} from 'node:path';
+import {pathToFileURL} from 'node:url';
 const load=async file=>{
  const js=ts.transpileModule(await readFile(new URL(file,import.meta.url),'utf8'),
   {compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2020}}).outputText;
@@ -9,7 +11,7 @@ const load=async file=>{
 };
 const {KITE_TOW}=await load('../src/kiteTow.ts');
 const {BEACH_KITE_BEATS:beats}=await load('../src/levels/beach-street-gameplay.ts');
-const out=new URL('../docs/beach-street/kite-controls/',import.meta.url);
+const out=pathToFileURL(resolve(process.env.BEACH_OUTPUT??'docs/beach-street/wind-finish')+'/');
 const native=JSON.parse(await readFile(new URL('native.json',out),'utf8'));
 const speed=23; // Full normal charge; the connected run exercises this pace.
 const shifts=[];

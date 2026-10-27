@@ -9,7 +9,7 @@ try{module=require.resolve('playwright');}catch{module=homedir()+'/.cache/codex-
 const {chromium}=await import(pathToFileURL(module).href);
 const code=ts.transpileModule(await readFile(new URL('../src/levels/beach-street-gameplay.ts',import.meta.url),'utf8'),{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2020}}).outputText;
 const {BEACH_KITE_BEATS:beats,BEACH_KITE_JUMPS:jumps}=await import('data:text/javascript;base64,'+Buffer.from(code).toString('base64'));
-const base=process.env.BEACH_BASE??'http://127.0.0.1:5287',out=process.env.BEACH_OUTPUT??'docs/beach-street/kite-controls';
+const base=process.env.BEACH_BASE??'http://127.0.0.1:5288',out=process.env.BEACH_OUTPUT??'docs/beach-street/wind-finish';
 const lite=process.argv.includes('--lite'),preview=process.argv.includes('--preview');
 await mkdir(out,{recursive:true});
 const browser=await chromium.launch({channel:'chrome',headless:true});
@@ -39,6 +39,23 @@ try{
    if(p.state==='dead'||p.state==='gameover'){state.crashes.push(snap());state.done=true;}
    if(p.state==='finished'||preview&&z>215)state.done=true;
    if(state.done){for(const c of [...keys])key(c,false);state.final=snap();return;}
+   if(p.kiteReleased){
+    if(!state.release){state.release={...snap(),at:p.runTime};for(const c of [...keys])key(c,false);}
+    const elapsed=p.runTime-state.release.at,walking=elapsed>=6.4;
+    if(elapsed>=3)state.waitingAtFinish??=snap();
+    if(elapsed>=3.8)state.walkedRight??=snap();
+    if(!walking){
+     key('ArrowRight',elapsed>=3&&elapsed<3.8);key('ArrowLeft',elapsed>=3.8&&elapsed<4.6);
+     key('ArrowDown',elapsed>=4.6&&elapsed<5.4);
+    }
+    if(walking){
+     state.walkedBack??=snap();key('ArrowDown',false);
+     key('ArrowLeft',p.pos.x>.1);key('ArrowRight',p.pos.x<-.1);key('ArrowUp',true);
+     if(z>=3000.5&&state.finishJumpAt===undefined)state.finishJumpAt=p.runTime;
+     key('Space',state.finishJumpAt!==undefined&&p.runTime-state.finishJumpAt<.10);
+    }
+    requestAnimationFrame(run);return;
+   }
    let target=line(z+2);
    // The optional pad now catches a straight approach. Choose its outer side
    // after collecting the preceding exit rewards. Entry/return is tested separately.
@@ -52,7 +69,7 @@ try{
    const checkpoint=l.currentSpawn.toArray().join(',');if(cp!==checkpoint){cp=checkpoint;state.checkpoints.push({spawn:l.currentSpawn.toArray(),...snap()});}
    if(Math.floor(z/30)>lastTrace){lastTrace=Math.floor(z/30);state.trace.push(snap());}
    state.maxGripError=Math.max(state.maxGripError,...(p.kiteVisual?.gripErrors??[0]));
-   if(z>20&&p.kiteVisual?.root.visible&&frame++%6===0){
+   if(z>20&&p.kiteTowing&&p.kiteVisual?.root.visible&&frame++%6===0){
     const box=p.playerBox.clone().setFromObject(p.kiteVisual.sail),v=p.pos.clone();let clips=false;
     for(const x of [box.min.x,box.max.x])for(const y of [box.min.y,box.max.y])for(const z of [box.min.z,box.max.z]){
      v.set(x,y,z).project(g.camera);const b=state.canopyBounds;
@@ -77,10 +94,22 @@ try{
   report.captures.push(await page.evaluate(name=>{const g=window.__game;return {name,z:-g.player.pos.z,buffer:[g.renderer.domElement.width,g.renderer.domElement.height],kiteVisible:g.player.kiteVisual?.root.visible,gripErrors:g.player.kiteVisual?.gripErrors,stamp:document.querySelector('.hud-build')?.textContent};},name));
   if(!preview&&!lite)await page.evaluate(()=>{const g=window.__game;g.renderQualitySettings.setRegularResolution(480);g.crtGuestSettings.setEnabled(true);});
  }
+ if(!preview){
+  await page.waitForFunction(()=>window.__kitePilot.release||window.__kitePilot.done,null,{timeout:240000});
+  assert.deepEqual(await page.evaluate(()=>window.__kitePilot.crashes),[]);
+  if(!lite){await page.evaluate(()=>{window.__game.renderQualitySettings.setRegularResolution(null);window.__game.crtGuestSettings.setEnabled(false);});
+   await page.waitForFunction(()=>window.__game.player.runTime-window.__kitePilot.release.at>=.65);
+   await page.screenshot({path:`${out}/native-kite-release.png`});
+   await page.waitForFunction(()=>window.__game.player.runTime-window.__kitePilot.release.at>=5.9);
+   await page.screenshot({path:`${out}/native-walking-finish.png`});}
+ }
  await page.waitForFunction(()=>window.__kitePilot.done,null,{timeout:300000});
  report.journey=await page.evaluate(()=>window.__kitePilot);
  assert.deepEqual(report.journey.crashes,[]);
  if(!preview){assert.equal(report.journey.final.state,'finished');assert.equal(report.journey.jumps.length,jumps.length);assert.ok(report.journey.checkpoints.length>=10);
+  assert.ok(report.journey.release&&report.journey.waitingAtFinish);assert.equal(report.journey.waitingAtFinish.state,'ride');assert.equal(report.journey.waitingAtFinish.speed,0);assert.ok(report.journey.waitingAtFinish.z<3000);
+  assert.ok(report.journey.walkedRight.x>report.journey.release.x+2,'On-foot side exploration');
+  assert.ok(report.journey.walkedBack.z<report.journey.release.z-2,'On-foot backward exploration');
   assert.equal(report.journey.final.crates,report.journey.final.totalCrates-report.journey.final.bonusCrates,'All main-course rewards remain reachable when bypassing the optional pad');
   assert.ok(report.journey.final.crystal);assert.equal(report.journey.final.gem,report.journey.final.bonusCrates===0,'The gem still requires any linked bonus boxes');}
  assert.ok(report.captures.every(c=>c.kiteVisible));
@@ -91,4 +120,8 @@ try{
  assert.deepEqual(report.errors,[]);assert.deepEqual(report.failed,[]);
  report.pass=true;
 }catch(e){report.pass=false;report.error=e.stack;report.journey=await page.evaluate(()=>window.__kitePilot).catch(()=>null);await page.screenshot({path:`${out}/failure.png`}).catch(()=>{});throw e;}
-finally{report.finished=new Date().toISOString();await writeFile(`${out}/browser-${lite?'lite':'full'}${preview?'-preview':''}.json`,JSON.stringify(report,null,2)+'\n');await browser.close();console.log(JSON.stringify({pass:report.pass,final:report.journey?.final,errors:report.errors,error:report.error}));}
+finally{
+ const keys=report.journey?.keys;
+ if(keys){report.journey.keyEventCount=keys.length;report.journey.keyCounts={};for(const {code,down}of keys){const k=`${code}:${down?'down':'up'}`;report.journey.keyCounts[k]=(report.journey.keyCounts[k]??0)+1;}delete report.journey.keys;}
+ report.finished=new Date().toISOString();await writeFile(`${out}/browser-${lite?'lite':'full'}${preview?'-preview':''}.json`,JSON.stringify(report,null,2)+'\n');await browser.close();console.log(JSON.stringify({pass:report.pass,final:report.journey?.final,errors:report.errors,error:report.error}));
+}

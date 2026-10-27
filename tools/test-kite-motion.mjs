@@ -36,11 +36,11 @@ m.reset(7);step({...idle,spinPressed:true,moveY:-1});
 for(let i=0;i<60;i++)step({...idle,moveY:-1});
 assert.equal(m.speed,KITE_TOW.brakeFloor,'Starting with brake held still receives forward pull');
 assert.equal(m.reserve,0,'Starting slowly does not manufacture stored energy');
-const wind=seed=>{const w=new KiteTowMotion(seed);let prev=0,maxDelta=0,lo=1,hi=-1,x=0;const samples=[];
- for(let i=0;i<3600;i++){const r=w.step(1/60,500,true,{...idle,spinPressed:i===0},tuning);x+=r.dx;lo=Math.min(lo,w.wind);hi=Math.max(hi,w.wind);maxDelta=Math.max(maxDelta,Math.abs(w.wind-prev));prev=w.wind;if(i%60===0)samples.push(w.wind);}
- return {seed,lo,hi,maxDelta,x,samples};};
+const wind=seed=>{const w=new KiteTowMotion(seed);let prev=0,maxDelta=0,lo=1,hi=-1,x=0,magnitude=0;const samples=[];
+ for(let i=0;i<3600;i++){const r=w.step(1/60,500,true,{...idle,spinPressed:i===0},tuning);x+=r.dx;magnitude+=Math.abs(w.wind);lo=Math.min(lo,w.wind);hi=Math.max(hi,w.wind);maxDelta=Math.max(maxDelta,Math.abs(w.wind-prev));prev=w.wind;if(i%60===0)samples.push(w.wind);}
+ return {seed,lo,hi,maxDelta,x,meanAbsoluteDrift:magnitude/3600*KITE_TOW.windDrift,samples};};
 const winds=[wind(1),wind(92)];assert.notDeepEqual(winds[0].samples,winds[1].samples);
-for(const w of winds){assert.ok(w.lo<-.2&&w.hi>.2);assert.ok(w.maxDelta<.05);assert.ok(Math.abs(w.x)>1);}
+for(const w of winds){assert.ok(w.lo<-.65&&w.hi>.65);assert.ok(w.maxDelta<.06);assert.ok(w.meanAbsoluteDrift>1.25);assert.ok(Math.abs(w.x)>1);}
 m.reset();for(let i=0;i<180;i++)assert.equal(step({...idle,jumpHeld:true}).dz,0,'Held input from death cannot restart');
 // Review boundary inputs separately from the connected route: a late release
 // may use coyote time or a landing buffer, but cancellation/reset must erase it.
@@ -66,5 +66,6 @@ for(const button of ['jumpPressed','spinPressed','grindPressed','grabPressed']){
  m.reset(53);assert.equal(step().dz,0);assert.ok(step({...idle,[button]:true}).dz<0);
 }edges.push('each fresh face-button edge starts the tow');
 const report={pass:true,chargeSeconds:tuning.jumpChargeTime,chargeAcceleration:tuning.chargeBoost,storedBrakeEnergy:stored,maxReturnSpeedDelta:maxDelta,winds,edgeReview:edges};
-await mkdir('docs/beach-street/kite-controls',{recursive:true});await writeFile('docs/beach-street/kite-controls/motion.json',JSON.stringify(report,null,2)+'\n');
+const out=process.env.BEACH_OUTPUT??'docs/beach-street/wind-finish';
+await mkdir(out,{recursive:true});await writeFile(`${out}/motion.json`,JSON.stringify(report,null,2)+'\n');
 console.log('PASS wait/start, release charge, normal acceleration, stored braking, seeded wind and seven input-edge cases');

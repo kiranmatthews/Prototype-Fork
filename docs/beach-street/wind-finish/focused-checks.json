@@ -1,0 +1,30 @@
+{
+  "pass": true,
+  "commands": [
+    {
+      "command": "node tools/test-kite-motion.mjs",
+      "result": "motion.json"
+    },
+    {
+      "command": "node tools/test-kite-finish.mjs",
+      "result": "native-finish.json"
+    },
+    {
+      "command": "node tools/test-beach-kite.mjs",
+      "result": "native.json"
+    },
+    {
+      "command": "node tools/review-beach-kite-pacing.mjs",
+      "result": "pacing-review.json"
+    },
+    {
+      "command": "node tools/test-kite-controls.mjs",
+      "result": "native-controls.json"
+    },
+    {
+      "command": "node tools/test-skate-run-finish.mjs",
+      "exit": 0,
+      "evidence": "Task execution session 49635: PASS shared dismount, support, input lock, tally and retry cleanup."
+    }
+  ]
+}

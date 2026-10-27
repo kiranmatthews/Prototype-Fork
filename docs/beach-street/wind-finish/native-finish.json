@@ -1,0 +1,201 @@
+{
+  "started": "2026-10-27T20:21:09.256Z",
+  "release": {
+    "position": [
+      1.600721235902807,
+      0,
+      -80.26944444444445
+    ],
+    "state": "ride",
+    "grounded": true,
+    "speed": 8.666666666666666,
+    "released": true,
+    "skating": false,
+    "board": false,
+    "diagnostics": {
+      "started": true,
+      "released": true,
+      "releaseAge": 0,
+      "wind": 0.7732679359145868,
+      "windTarget": 0.8643720832187682,
+      "reserve": 0,
+      "charge": 0,
+      "gripErrors": [
+        0.000009106050150350651,
+        0.000014954259197921179
+      ],
+      "dock": null,
+      "flyaway": true
+    }
+  },
+  "idle": {
+    "position": [
+      1.600721235902807,
+      0,
+      -82.075
+    ],
+    "state": "ride",
+    "grounded": true,
+    "speed": 0,
+    "released": true,
+    "skating": false,
+    "board": false,
+    "diagnostics": {
+      "started": true,
+      "released": true,
+      "releaseAge": 1.9999999999999978,
+      "wind": 0.7732679359145868,
+      "windTarget": 0.8643720832187682,
+      "reserve": 0,
+      "charge": 0,
+      "gripErrors": [
+        0.000009106050150350651,
+        0.000014954259197921179
+      ],
+      "dock": null,
+      "flyaway": true
+    }
+  },
+  "walk": {
+    "position": [
+      7.000721235902803,
+      0,
+      -76.67500000000001
+    ],
+    "state": "ride",
+    "grounded": true,
+    "speed": 0,
+    "released": true,
+    "skating": false,
+    "board": false,
+    "diagnostics": {
+      "started": true,
+      "released": true,
+      "releaseAge": 5.516666666666652,
+      "wind": 0.7732679359145868,
+      "windTarget": 0.8643720832187682,
+      "reserve": 0,
+      "charge": 0,
+      "gripErrors": [
+        0.000009106050150350651,
+        0.000014954259197921179
+      ],
+      "dock": null,
+      "flyaway": false
+    }
+  },
+  "walkUp": {
+    "position": [
+      4.287993899075748e-8,
+      0,
+      -118.37500000000145
+    ],
+    "state": "ride",
+    "grounded": true,
+    "speed": 9,
+    "released": true,
+    "skating": false,
+    "board": false,
+    "diagnostics": {
+      "started": true,
+      "released": true,
+      "releaseAge": 10.516666666666769,
+      "wind": 0.7732679359145868,
+      "windTarget": 0.8643720832187682,
+      "reserve": 0,
+      "charge": 0,
+      "gripErrors": [
+        0.000009106050150350651,
+        0.000014954259197921179
+      ],
+      "dock": null,
+      "flyaway": false
+    }
+  },
+  "jump": {
+    "position": [
+      4.287993899075748e-8,
+      0,
+      -97.07500000000057
+    ],
+    "state": "air",
+    "grounded": false,
+    "speed": 9,
+    "released": true,
+    "skating": false,
+    "board": false,
+    "diagnostics": {
+      "started": true,
+      "released": true,
+      "releaseAge": 15.866666666667035,
+      "wind": 0.7732679359145868,
+      "windTarget": 0.8643720832187682,
+      "reserve": 0,
+      "charge": 0,
+      "gripErrors": [
+        0.000009106050150350651,
+        0.000014954259197921179
+      ],
+      "dock": null,
+      "flyaway": false
+    }
+  },
+  "finish": {
+    "position": [
+      4.287993899075748e-8,
+      1.3366666666666664,
+      -98.27500000000062
+    ],
+    "state": "finished",
+    "grounded": false,
+    "speed": 9,
+    "released": true,
+    "skating": false,
+    "board": false,
+    "diagnostics": {
+      "started": true,
+      "released": true,
+      "releaseAge": 16.000000000000373,
+      "wind": 0.7732679359145868,
+      "windTarget": 0.8643720832187682,
+      "reserve": 0,
+      "charge": 0,
+      "gripErrors": [
+        0.000009106050150350651,
+        0.000014954259197921179
+      ],
+      "dock": null,
+      "flyaway": false
+    }
+  },
+  "reset": {
+    "position": [
+      0.00025911633427953135,
+      0,
+      -73.00277777777778
+    ],
+    "state": "ride",
+    "grounded": true,
+    "speed": 0.16666666666666666,
+    "released": false,
+    "skating": true,
+    "board": true,
+    "diagnostics": {
+      "started": true,
+      "released": false,
+      "releaseAge": -1,
+      "wind": 0.025546055735095205,
+      "windTarget": 0.8643720832187682,
+      "reserve": 0,
+      "charge": 0,
+      "gripErrors": [
+        0.000009106050150350651,
+        0.000014954259197921179
+      ],
+      "dock": null,
+      "flyaway": false
+    }
+  },
+  "pass": true,
+  "finished": "2026-10-27T20:21:17.790Z"
+}

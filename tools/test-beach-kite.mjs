@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import {mkdir,writeFile} from 'node:fs/promises';
 import {withSkateRuntime,makeInput} from './jungle-cup-harness.mjs';
-const out=process.env.BEACH_OUTPUT??'docs/beach-street/kite-controls';
+const out=process.env.BEACH_OUTPUT??'docs/beach-street/wind-finish';
 await mkdir(out,{recursive:true});
 const empty={v:1,name:'Kite isolation fixture',spawn:[0,.12,0],killY:-10,components:[{t:'platform',p:[0,-.5,0],s:[20,1,40]},{t:'gate',p:[0,0,-18]}]};
 const report={trace:[],jumps:[],checkpoints:[],failures:[],started:new Date().toISOString()};
@@ -10,6 +10,7 @@ try{
   const {COASTAL_STREET_RUN_LEVEL:source}=await server.ssrLoadModule('/src/levels/coastal-street-run.ts');
   const {BEACH_KITE_BEATS:beats,BEACH_KITE_JUMPS:jumps,beachKiteLine:line}=await server.ssrLoadModule('/src/levels/beach-street-gameplay.ts');
   const {normalizeCustomLevelData}=await server.ssrLoadModule('/src/level.ts');
+  const {KITE_TOW}=await server.ssrLoadModule('/src/kiteTow.ts');
   assert.equal(normalizeCustomLevelData(source)?.kiteTow,true,'Explicit mode survives editor normalization');
   assert.equal(normalizeCustomLevelData({...source,kiteTow:'yes'}),null,'Mode flag rejects invalid data');
   for(let i=0;i<180;i++)ordinaryPlayer.step(1/60,makeInput(),ordinary);
@@ -32,13 +33,25 @@ try{
    }
    report.stairGuideClearance=stairClearance;assert.ok(stairClearance>=.25,`Stair clearance ${stairClearance}`);
    p.kiteMotion.reset(17);
-   const used=new Set();let releaseFrames=0,lastCp='',airStart=null,heldLast=false;
+   const used=new Set();let releaseFrames=0,lastCp='',airStart=null,heldLast=false,exitFrames=0,finishCharge=-1;
    for(let i=0;i<14000&&p.state!=='finished';i++){
     const z=-p.pos.z;
+    if(p.kiteReleased){
+     report.release??=snap();exitFrames++;
+     if(exitFrames<=120){tick({ ...makeInput(),jumpHeld:exitFrames<90,jumpReleased:exitFrames===90 });assert.equal(p.state,'ride');}
+     else {
+      report.waitingAtFinish??=snap();
+      if(z>=3000.5&&finishCharge<0)finishCharge=0;
+      tick(makeInput({moveX:Math.max(-1,Math.min(1,-p.pos.x*3)),moveY:1,
+       jumpPressed:finishCharge===0,jumpHeld:finishCharge>=0&&finishCharge<6,jumpReleased:finishCharge===6}));
+      if(finishCharge>=0)finishCharge++;
+     }
+     assert.notEqual(p.state,'dead');continue;
+    }
     const next=jumps.find(j=>!used.has(j.name)&&z>=j.at);
     if(next){used.add(next.name);releaseFrames=6;report.jumps.push({name:next.name,takeoff:snap()});}
     const held=releaseFrames===0;
-    const input=makeInput({moveX:Math.max(-1,Math.min(1,((line(z+2)-p.pos.x)*5-p.kiteMotion.wind*2.2)/9)),
+    const input=makeInput({moveX:Math.max(-1,Math.min(1,((line(z+2)-p.pos.x)*5-p.kiteMotion.wind*KITE_TOW.windDrift)/KITE_TOW.steeringSpeed)),
       jumpPressed:held&&!heldLast,jumpReleased:!held&&heldLast,jumpHeld:held});
     releaseFrames=Math.max(0,releaseFrames-1);heldLast=held;tick(input);
     if(!p.grounded&&airStart===null)airStart={i,y:p.pos.y,peak:p.pos.y};
@@ -50,7 +63,8 @@ try{
       throw Error('Connected kite journey crashed: '+JSON.stringify(report.collision));
     }
    }
-   assert.equal(p.state,'finished','Whole course completes without teleport, invulnerability or forward input');
+   assert.equal(p.state,'finished','Whole course clears, then walking and a deliberate jump finish');
+   assert.ok(report.release&&report.waitingAtFinish);assert.ok(report.waitingAtFinish.p[2]>-3000);assert.equal(report.waitingAtFinish.speed,0);
    assert.equal(used.size,jumps.length);assert.ok(report.checkpoints.length>=10);
    report.finish={...snap(),crates:p.cratesBroken,totalCrates:l.totalCrates,crystal:p.hasCrystal,gem:p.gemEarned};report.gripErrors=p.kiteVisual?.gripErrors;
    assert.equal(p.cratesBroken,l.totalCrates,'The suggested line collects every crate/checkpoint');
@@ -62,10 +76,10 @@ try{
     p.respawn(l,true,false,{position:new THREE.Vector3(x,y+.12,-z),heading:new THREE.Vector3(0,0,-1)});p.lives=10;p.kiteMotion.reset(17);
    };
    for(const [name,x,z] of [['planter',0,52],['missed hurdle',0,165],['missed canal',0,405]]){
-    resetAt(x,z);tick(makeInput({spinPressed:true}));for(let i=0;i<480&&p.state!=='dead';i++)tick(makeInput({moveX:Math.max(-1,Math.min(1,((x-p.pos.x)*5-p.kiteMotion.wind*2.2)/9))}));
+    resetAt(x,z);tick(makeInput({spinPressed:true}));for(let i=0;i<480&&p.state!=='dead';i++)tick(makeInput({moveX:Math.max(-1,Math.min(1,((x-p.pos.x)*5-p.kiteMotion.wind*KITE_TOW.windDrift)/KITE_TOW.steeringSpeed))}));
     assert.equal(p.state,'dead',name+' is fatal');assert.equal(p.lives,9);report.failures.push({name,...snap()});
    }
-   resetAt(0,350);tick(makeInput({spinPressed:true}));for(let i=0;i<240&&!l.activeCheckpoint;i++)tick(makeInput({moveX:Math.max(-1,Math.min(1,(-p.pos.x*5-p.kiteMotion.wind*2.2)/9))}));
+   resetAt(0,350);tick(makeInput({spinPressed:true}));for(let i=0;i<240&&!l.activeCheckpoint;i++)tick(makeInput({moveX:Math.max(-1,Math.min(1,(-p.pos.x*5-p.kiteMotion.wind*KITE_TOW.windDrift)/KITE_TOW.steeringSpeed))}));
    assert.ok(l.activeCheckpoint,'Checkpoint is collected by normal kite contact: '+JSON.stringify({...snap(),cp:l.checkpoints[0].mesh.position.toArray(),active:l.checkpoints[0].active}));
    const spawn=l.currentSpawn.clone();p.bail(false,p.speed,'wall');assert.equal(p.state,'dead');
    for(let i=0;i<360&&p.state==='dead';i++)tick();

@@ -622,13 +622,16 @@ export class Player {
   private readonly kiteMotion = new KiteTowMotion();
   private kiteVisual: KiteTowVisual | null = null;
   private kiteDock: KiteBonusDock | null = null;
+  private kiteReleaseT = -1;
+  private kiteFinishJump = false;
+  get kiteReleased(): boolean { return this.kiteReleaseT >= 0; }
   get kiteBonusDocked(): boolean { return this.kiteDock !== null; }
-  get kiteDiagnostics() { return {started:this.kiteMotion.started,wind:this.kiteMotion.wind,
+  get kiteDiagnostics() { return {started:this.kiteMotion.started,released:this.kiteReleased,releaseAge:this.kiteReleaseT,wind:this.kiteMotion.wind,
     windTarget:this.kiteMotion.windTarget,reserve:this.kiteMotion.reserve,charge:this.kiteMotion.charge,
     gripErrors:this.kiteVisual?.gripErrors,dock:this.kiteDock?{elapsed:this.kiteDock.elapsed,
       errors:this.kiteDock.errors,normalErrors:this.kiteDock.normalErrors}:null,
     flyaway:this.kiteVisual?.flyingAway,fragments:this.breakApart?.tetherDiagnostics}; }
-  get kiteTowing(): boolean { return !!this.runLevel?.kiteTow && (this.state === 'ride' || this.state === 'air' || this.state === 'grind'); }
+  get kiteTowing(): boolean { return !!this.runLevel?.kiteTow && !this.kiteReleased && (this.state === 'ride' || this.state === 'air' || this.state === 'grind'); }
   readonly swimVelocity = new THREE.Vector3();
   private swimEffects: SwimEffects | null = null;
   private swimFast = false; // legacy replay only
@@ -1600,7 +1603,7 @@ export class Player {
   private rawInput!: Input; // pre-remap stick (see step): slam/grab-spin/balance
   private readonly treehouseStairInput = new TreehouseStairInput();
   private treehouseBoardBlocked = false;
-  private get boardMountBlocked(): boolean { return this.treehouseBoardBlocked || this.raceHooks?.onFoot?.() === true; }
+  private get boardMountBlocked(): boolean { return this.kiteReleased || this.treehouseBoardBlocked || this.raceHooks?.onFoot?.() === true; }
   // Travel axes, latched across zone boundaries: the course usually runs
   // along -Z ('S'), but turned stretches run along +X ('E') / -X ('W').
   private travelDir: 'S' | 'E' | 'W' | 'N' = 'S';
@@ -1963,7 +1966,7 @@ export class Player {
     const board = this.airGrav === 'board';
     const flatG = board ? (this.parkControls ? TUNING.boardRiseGravity
       : this.floatAir ? TUNING.rampFallGravity : TUNING.boardFallGravity) : TUNING.fallGravity;
-    const gravity = level.kiteTow ? KITE_TOW.fallGravity : this.vertAir || this.pipeHang ? TUNING.pipeAirGravity : flatG;
+    const gravity = this.kiteTowing ? KITE_TOW.fallGravity : this.vertAir || this.pipeHang ? TUNING.pipeAirGravity : flatG;
     const from = this.fallCameraFrom.copy(this.pos), to = this.fallCameraTo;
     // A small sole/contact allowance; the forecast never grants physical support.
     from.y += .12;
@@ -3696,6 +3699,7 @@ export class Player {
   private settle(level: Level, facing?: THREE.Vector3): void {
     this.runLevel = level;
     this.kiteDock = null; this.kiteMotion.reset(); this.kiteVisual?.reset();
+    this.kiteReleaseT = -1; this.kiteFinishJump = false;
     this.racePresentationElapsed=0;this.racePresentationPose='';
     this.breakApart?.reset();
     this.competitionFinishT = -1;
@@ -4032,6 +4036,7 @@ export class Player {
   // One deterministic fixed step.
   step(dt: number, input: Input, level: Level): void {
     this.runLevel = level;
+    if (this.kiteReleased) this.kiteReleaseT += dt;
     if (this.kiteVisual) this.kiteVisual.root.visible = this.kiteTowing || this.kiteVisual.flyingAway;
     // Detached sockets are a final presentation layer. Never let them enter
     // the authored-pose baseline, interaction bounds or movement simulation.
@@ -4204,6 +4209,25 @@ export class Player {
     this.group.position.copy(this.pos); this.refreshCharacterBounds();
   }
 
+  /** Hand the final promenade back to ordinary feet, after the last rewards. */
+  private releaseKite(input: Input): void {
+    const carry = Math.min(Math.max(0, this.speed), TUNING.walkSpeed);
+    this.cancelWipeoutActions();
+    this.kiteReleaseT = 0; this.kiteFinishJump = false;
+    this.kiteMotion.charge = this.kiteMotion.reserve = 0;
+    this.kiteMotion.charging = false;
+    this.kiteVisual?.beginFlyaway();
+    this.freeSkate = this.skateOn = this.airFromSkate = this.boardOllieAir = false;
+    this.skateMountT = -1; this.stepOff = true;
+    this.speed = carry; this.lastPlanar = 0;
+    this.walkVelocity.copy(this.axisF).multiplyScalar(carry);
+    this.walkIntent.set(0, 0, 0); this.walkRamp = 0;
+    this.airGrav = 'foot'; this.airMomentum = false;
+    // Releasing the charge held through the tow is not a new finish jump.
+    this.jumpReleaseRearmRequired = input.jumpHeld;
+    sfx.play('woosh2', .45, 1.15);
+  }
+
   prepareKiteBonusDeparture(level:Level,dt:number):void {
     this.kiteMotion.age+=dt;
     this.prepareStartPresentation(level,dt);
@@ -4262,9 +4286,10 @@ export class Player {
       level.strikeChaseLightning(this.pos);this.die('lightning');
     }
     if (this.stepDeathOnly(dt, input, level)) return;
-    if (level.kiteTow && this.state !== 'finished') {
-      this.stepKiteTow(dt, input, level);
-      return;
+    if (level.kiteTow && !this.kiteReleased && this.state !== 'finished') {
+      const releaseZ = (level.finishBox.min.z + level.finishBox.max.z) * .5 + KITE_TOW.releaseDistance;
+      if (this.state === 'ride' && this.grounded && this.pos.z <= releaseZ) this.releaseKite(input);
+      else { this.stepKiteTow(dt, input, level); return; }
     }
     this.returnPortalCoolT = Math.max(0, this.returnPortalCoolT - dt);
     this.trickGateHintT = Math.max(0, this.trickGateHintT - dt);
@@ -5779,6 +5804,7 @@ export class Player {
   // jumpVelocity. The jump's IDENTITY is decided here, at release, from the
   // state and speed you're carrying — not from how X was pressed.
   private chargedJump(dt: number): void {
+    if (this.kiteReleased) this.kiteFinishJump = true;
     this.gravityTrackAir = this.freeSkate && (!!this.groundHit?.gravityTrack || !this.grounded&&this.gravityTrackAir);
     const airborneRelaunch = this.state === 'air' && !this.grounded;
     resetVertBoardRelease(this.vertBoardRelease);
@@ -11054,7 +11080,7 @@ export class Player {
   }
 
   private bail(masked = false, impactSpeed = this.speed, cause: WipeoutCause = 'balance', impact = Math.abs(impactSpeed)): void {
-    if (this.runLevel?.kiteTow) { this.die(cause); return; }
+    if (this.kiteTowing) { this.die(cause); return; }
     if(this.runLevel?.skateRace){if(this.raceHooks)this.raceHooks.hazard(cause);else this.beginRaceStun();return;}
     this.trickSpeedBoost=this.trickSpeedBoostHold=0;
     this.tripObstacle = null;
@@ -12276,7 +12302,7 @@ export class Player {
   // sideSign ±1 = the needle pegged that way: the stumble EJECTS toward that
   // side (heading tips hard off the rail), so you fall where you failed.
   private bailFromRail(sideSign = 0): void {
-    if (this.runLevel?.kiteTow) { this.die('balance'); return; }
+    if (this.kiteTowing) { this.die('balance'); return; }
     const rail = this.grindRail;
     if (sideSign !== 0 && rail) {
       const t = rail.tangentAt(this.grindT);
@@ -13016,7 +13042,7 @@ export class Player {
     }
     const center = new THREE.Vector3(this.pos.x, this.pos.y + half.y, this.pos.z);
     this.playerBox.setFromCenterAndSize(center, new THREE.Vector3(half.x * 2, half.y * 2, half.z * 2));
-    if (level.kiteTow) {
+    if (this.kiteTowing) {
       // No mask, wallride or ledge catch can turn a kite crash into a stop.
       const wall = level.walls.find(w => w.max.y > this.pos.y + .15 && this.playerBox.intersectsBox(w));
       const load = level.crushers.find(c => this.playerBox.intersectsBox(c.box));
@@ -13562,7 +13588,7 @@ export class Player {
             this.smashCrate(level, c);
             this.vVel = Math.min(this.vVel, 2);
           }
-        } else if (level.kiteTow || Math.abs(crateContactSpeed) >= TUNING.smashSpeed) {
+        } else if (this.kiteTowing || Math.abs(crateContactSpeed) >= TUNING.smashSpeed) {
           // Fast skating plows straight through plain crates — barely
           // breaking stride. TNT and nitro stay dangerous; this is only
           // the everyday wood. Kite tension also breaks reward boxes at
@@ -14003,7 +14029,7 @@ export class Player {
         if (this.isBailing) {
           // tumbling body: no banking, no bounce — scenery
           if (this.grounded) this.pushOutOf(cp.box);
-        } else if (this.sliding || level.kiteTow) {
+        } else if (this.sliding || this.kiteTowing) {
           this.bankCheckpoint(level, cp);
         } else if (this.isStomping(cp.box)) {
           this.bankCheckpoint(level, cp);
@@ -14132,7 +14158,9 @@ export class Player {
     // no touchdown required. The column's box starts above head height for
     // someone on the deck, so rolling past its shoulder still does nothing.
     const onPad = this.grounded && !!this.groundHit?.finishPad;
-    const touchingFinish = onPad || this.playerBox.intersectsBox(level.finishGlow);
+    if (this.kiteReleased && this.grounded && !onPad) this.kiteFinishJump = false;
+    const finishReady = !level.kiteTow || this.kiteReleased && this.kiteFinishJump;
+    const touchingFinish = finishReady && (onPad || this.playerBox.intersectsBox(level.finishGlow));
     const loopGoalsComplete = !level.loopMeshes?.some(mesh => mesh.userData.loopRequired && !this.completedLoops.has(mesh));
     const parkGoalsComplete = !level.skateCollectathon || level.skateCollectathon.complete;
     if (touchingFinish && !parkGoalsComplete && !this.loopGateHintShown) {
@@ -16978,7 +17006,7 @@ export class Player {
       return;
     }
     if(this.runLevel?.boulder?.course)this.runLevel.boulder.course.recordDeath(this.runLevel.currentSpawn);
-    const kiteDeath = !!this.runLevel?.kiteTow && cause !== 'water';
+    const kiteDeath = this.kiteTowing && cause !== 'water';
     const style = kiteDeath ? 'kite-collapse' : selectWipeoutStyle(cause, 0, true);
     if (style || this.breakApart?.active) {
       this.captureWipeoutVelocity(BAIL_TARGET);
@@ -18136,8 +18164,10 @@ export class Player {
         if (this.skateMountT >= SKATE_MOUNT_DURATION) this.skateMountT = -1;
       }
     }
-    const mountPose = sampleSkateMount(this.competitionFinishT >= 0
-      ? this.competitionFinishT / SKATE_DISMOUNT_DURATION * SKATE_MOUNT_DURATION : this.skateMountT);
+    const dismountT = this.competitionFinishT >= 0 ? this.competitionFinishT
+      : this.kiteReleased && this.grounded && this.state === 'ride' ? this.kiteReleaseT : -1;
+    const mountPose = sampleSkateMount(dismountT >= 0
+      ? dismountT / SKATE_DISMOUNT_DURATION * SKATE_MOUNT_DURATION : this.skateMountT);
     const characterShape = characterProportionSettings.value;
     this.upperLegLengthR = PROCEDURAL_THIGH_LENGTH * characterShape.thighLength;
     this.upperLegLengthL = PROCEDURAL_THIGH_LENGTH * characterShape.thighLength;
@@ -18831,7 +18861,7 @@ export class Player {
     // finger tracks run afterward and therefore remain the final authority.
     const gloveOpen = THREE.MathUtils.clamp(Math.max(crawlMove, crouchW * 0.35), 0, 1);
     const gloveGrip = THREE.MathUtils.clamp(
-      Math.max(this.grabPose, ledgeW, underW, this.grindArmPose, this.kiteTowing || this.kiteVisual?.flyingAway ? 1 : 0),
+      Math.max(this.grabPose, ledgeW, underW, this.grindArmPose, this.kiteTowing || this.kiteVisual?.flyingAway && !this.kiteReleased ? 1 : 0),
       0,
       1,
     );
@@ -19808,7 +19838,8 @@ export class Player {
       this.kiteVisual.pose(this.pos, this.kiteMotion.age, this.kiteMotion.lateral / KITE_TOW.steeringSpeed,
         this.grounded ? 0 : Math.max(0, this.pos.y - this.lastGroundY), this.kiteMotion.wind,
         this.armL && this.elbowL && this.wristL ? {root: this.armL, mid: this.elbowL, end: this.wristL, grip: this.gloveRight?.gripSocket} : null,
-        this.armR && this.elbowR && this.wristR ? {root: this.armR, mid: this.elbowR, end: this.wristR, grip: this.gloveLeft?.gripSocket} : null);
+        this.armR && this.elbowR && this.wristR ? {root: this.armR, mid: this.elbowR, end: this.wristR, grip: this.gloveLeft?.gripSocket} : null,
+        this.cam?.aspect ?? 1.6);
     } else if (this.kiteVisual) this.kiteVisual.root.visible = this.kiteVisual.flyingAway;
     // Apply lift AFTER deck planting; otherwise the contact solver cancels
     // the hop. The skateboard and physics point remain on their exact path.

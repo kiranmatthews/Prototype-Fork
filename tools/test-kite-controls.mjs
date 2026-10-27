@@ -8,7 +8,7 @@ const data={v:1,name:'Kite control fixture',kiteTow:true,startWarpPad:false,spaw
  {t:'bonusplatform',p:[3,0,-100],to:[-3,.12,-105]},
  {t:'crate',p:[-5,0,-130],kind:'wood'},
  {t:'gate',p:[0,0,-215]}]};
-const out='docs/beach-street/kite-controls',report={started:new Date().toISOString()};await mkdir(out,{recursive:true});
+const out=process.env.BEACH_OUTPUT??'docs/beach-street/kite-controls',report={started:new Date().toISOString()};await mkdir(out,{recursive:true});
 try{
  await withSkateRuntime(async({THREE,Level,Player,scene,TUNING})=>{
   const l=new Level(scene,{id:'kite-controls',name:data.name,data}),p=new Player(scene);p.rawInput=makeInput();

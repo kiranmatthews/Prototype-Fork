@@ -1,0 +1,418 @@
+{
+  "method": "Authored timing review alongside native collision tests. Steering assumes full opposite velocity and maximum sustained adverse wind; landing uses measured native airtime at full charged speed (23 m/s).",
+  "shifts": [
+    {
+      "from": "Find the wind",
+      "to": "Steer right",
+      "metres": 3.8,
+      "availableSeconds": 1.826086956521739,
+      "worstReversalSeconds": 0.7500000000000007,
+      "spareSeconds": 1.0760869565217384
+    },
+    {
+      "from": "Steer right",
+      "to": "Return left",
+      "metres": 7.6,
+      "availableSeconds": 1.9565217391304348,
+      "worstReversalSeconds": 1.35,
+      "spareSeconds": 0.6065217391304347
+    },
+    {
+      "from": "Return left",
+      "to": "First hop",
+      "metres": 3.8,
+      "availableSeconds": 2.3043478260869565,
+      "worstReversalSeconds": 0.7500000000000007,
+      "spareSeconds": 1.5543478260869559
+    },
+    {
+      "from": "First hop",
+      "to": "Left then right",
+      "metres": 3.8,
+      "availableSeconds": 2.1739130434782608,
+      "worstReversalSeconds": 0.7500000000000007,
+      "spareSeconds": 1.42391304347826
+    },
+    {
+      "from": "Left then right",
+      "to": "Complete the S",
+      "metres": 7.6,
+      "availableSeconds": 1.7391304347826086,
+      "worstReversalSeconds": 1.35,
+      "spareSeconds": 0.38913043478260856
+    },
+    {
+      "from": "Complete the S",
+      "to": "Stair overlook",
+      "metres": 3.8,
+      "availableSeconds": 1.3043478260869565,
+      "worstReversalSeconds": 0.7500000000000007,
+      "spareSeconds": 0.5543478260869559
+    },
+    {
+      "from": "Canal approach",
+      "to": "First canal",
+      "metres": 3.15,
+      "availableSeconds": 1.6956521739130435,
+      "worstReversalSeconds": 0.6500000000000004,
+      "spareSeconds": 1.045652173913043
+    },
+    {
+      "from": "First canal",
+      "to": "Harbour landing",
+      "metres": 3.15,
+      "availableSeconds": 1.826086956521739,
+      "worstReversalSeconds": 0.6500000000000004,
+      "spareSeconds": 1.1760869565217387
+    },
+    {
+      "from": "Harbour landing",
+      "to": "Freight right",
+      "metres": 3.8,
+      "availableSeconds": 1.6521739130434783,
+      "worstReversalSeconds": 0.7500000000000007,
+      "spareSeconds": 0.9021739130434776
+    },
+    {
+      "from": "Freight right",
+      "to": "Freight left",
+      "metres": 7.6,
+      "availableSeconds": 1.6521739130434783,
+      "worstReversalSeconds": 1.35,
+      "spareSeconds": 0.3021739130434782
+    },
+    {
+      "from": "Freight left",
+      "to": "Hop after the weave",
+      "metres": 3.8,
+      "availableSeconds": 1.9130434782608696,
+      "worstReversalSeconds": 0.7500000000000007,
+      "spareSeconds": 1.163043478260869
+    },
+    {
+      "from": "Hop after the weave",
+      "to": "Crab crossing",
+      "metres": 3.8,
+      "availableSeconds": 3.0434782608695654,
+      "worstReversalSeconds": 0.7500000000000007,
+      "spareSeconds": 2.2934782608695645
+    },
+    {
+      "from": "Crab crossing",
+      "to": "Set up the canal",
+      "metres": 7.6,
+      "availableSeconds": 2.1739130434782608,
+      "worstReversalSeconds": 1.35,
+      "spareSeconds": 0.8239130434782607
+    },
+    {
+      "from": "Set up the canal",
+      "to": "Cliff approach",
+      "metres": 3.8,
+      "availableSeconds": 2.1739130434782608,
+      "worstReversalSeconds": 0.7500000000000007,
+      "spareSeconds": 1.42391304347826
+    },
+    {
+      "from": "Cliff approach",
+      "to": "Second canal",
+      "metres": 3.15,
+      "availableSeconds": 1.2608695652173914,
+      "worstReversalSeconds": 0.6500000000000004,
+      "spareSeconds": 0.610869565217391
+    },
+    {
+      "from": "Second canal",
+      "to": "Cliff landing",
+      "metres": 3.15,
+      "availableSeconds": 2.260869565217391,
+      "worstReversalSeconds": 0.6500000000000004,
+      "spareSeconds": 1.6108695652173908
+    },
+    {
+      "from": "Cliff landing",
+      "to": "Cliff right",
+      "metres": 3.8,
+      "availableSeconds": 1.7391304347826086,
+      "worstReversalSeconds": 0.7500000000000007,
+      "spareSeconds": 0.989130434782608
+    },
+    {
+      "from": "Balcony breath",
+      "to": "Cliff cutback",
+      "metres": 7.6,
+      "availableSeconds": 1.7391304347826086,
+      "worstReversalSeconds": 1.35,
+      "spareSeconds": 0.38913043478260856
+    },
+    {
+      "from": "Turtle crossing",
+      "to": "Surf approach",
+      "metres": 3.8,
+      "availableSeconds": 2.391304347826087,
+      "worstReversalSeconds": 0.7500000000000007,
+      "spareSeconds": 1.6413043478260863
+    },
+    {
+      "from": "Surf hop",
+      "to": "Surf right",
+      "metres": 3.8,
+      "availableSeconds": 2.391304347826087,
+      "worstReversalSeconds": 0.7500000000000007,
+      "spareSeconds": 1.6413043478260863
+    },
+    {
+      "from": "Surf right",
+      "to": "Surf left",
+      "metres": 7.6,
+      "availableSeconds": 1.7391304347826086,
+      "worstReversalSeconds": 1.35,
+      "spareSeconds": 0.38913043478260856
+    },
+    {
+      "from": "Surf left",
+      "to": "Hop out of the S",
+      "metres": 3.8,
+      "availableSeconds": 2.1739130434782608,
+      "worstReversalSeconds": 0.7500000000000007,
+      "spareSeconds": 1.42391304347826
+    },
+    {
+      "from": "Hop out of the S",
+      "to": "Spiny crossing",
+      "metres": 3.8,
+      "availableSeconds": 2.8260869565217392,
+      "worstReversalSeconds": 0.7500000000000007,
+      "spareSeconds": 2.0760869565217384
+    },
+    {
+      "from": "Spiny crossing",
+      "to": "Festival approach",
+      "metres": 3.8,
+      "availableSeconds": 2.391304347826087,
+      "worstReversalSeconds": 0.7500000000000007,
+      "spareSeconds": 1.6413043478260863
+    },
+    {
+      "from": "Festival approach",
+      "to": "Third canal",
+      "metres": 3.15,
+      "availableSeconds": 1.2608695652173914,
+      "worstReversalSeconds": 0.6500000000000004,
+      "spareSeconds": 0.610869565217391
+    },
+    {
+      "from": "Third canal",
+      "to": "Festival landing",
+      "metres": 3.15,
+      "availableSeconds": 1.1304347826086956,
+      "worstReversalSeconds": 0.6500000000000004,
+      "spareSeconds": 0.4804347826086952
+    },
+    {
+      "from": "Festival landing",
+      "to": "Festival freight right",
+      "metres": 3.8,
+      "availableSeconds": 2,
+      "worstReversalSeconds": 0.7500000000000007,
+      "spareSeconds": 1.2499999999999993
+    },
+    {
+      "from": "Festival freight right",
+      "to": "Festival freight left",
+      "metres": 7.6,
+      "availableSeconds": 1.7391304347826086,
+      "worstReversalSeconds": 1.35,
+      "spareSeconds": 0.38913043478260856
+    },
+    {
+      "from": "Festival freight left",
+      "to": "Uphill hop",
+      "metres": 3.8,
+      "availableSeconds": 2.1739130434782608,
+      "worstReversalSeconds": 0.7500000000000007,
+      "spareSeconds": 1.42391304347826
+    },
+    {
+      "from": "Uphill hop",
+      "to": "Festival cutback",
+      "metres": 3.8,
+      "availableSeconds": 2.1739130434782608,
+      "worstReversalSeconds": 0.7500000000000007,
+      "spareSeconds": 1.42391304347826
+    },
+    {
+      "from": "Terrace breath",
+      "to": "Festival crossing",
+      "metres": 7.6,
+      "availableSeconds": 1.7391304347826086,
+      "worstReversalSeconds": 1.35,
+      "spareSeconds": 0.38913043478260856
+    },
+    {
+      "from": "Festival crossing",
+      "to": "Lighthouse approach",
+      "metres": 3.8,
+      "availableSeconds": 1.7391304347826086,
+      "worstReversalSeconds": 0.7500000000000007,
+      "spareSeconds": 0.989130434782608
+    },
+    {
+      "from": "Quay hop",
+      "to": "Lighthouse right",
+      "metres": 3.8,
+      "availableSeconds": 2.608695652173913,
+      "worstReversalSeconds": 0.7500000000000007,
+      "spareSeconds": 1.8586956521739124
+    },
+    {
+      "from": "Lighthouse right",
+      "to": "Lighthouse left",
+      "metres": 7.6,
+      "availableSeconds": 1.7391304347826086,
+      "worstReversalSeconds": 1.35,
+      "spareSeconds": 0.38913043478260856
+    },
+    {
+      "from": "Lighthouse left",
+      "to": "Low quay hop",
+      "metres": 3.8,
+      "availableSeconds": 2.1739130434782608,
+      "worstReversalSeconds": 0.7500000000000007,
+      "spareSeconds": 1.42391304347826
+    },
+    {
+      "from": "Low quay hop",
+      "to": "Last crossing",
+      "metres": 3.8,
+      "availableSeconds": 2.1739130434782608,
+      "worstReversalSeconds": 0.7500000000000007,
+      "spareSeconds": 1.42391304347826
+    },
+    {
+      "from": "Last crossing",
+      "to": "Final canal approach",
+      "metres": 3.8,
+      "availableSeconds": 2.1739130434782608,
+      "worstReversalSeconds": 0.7500000000000007,
+      "spareSeconds": 1.42391304347826
+    },
+    {
+      "from": "Final canal approach",
+      "to": "Last canal",
+      "metres": 3.15,
+      "availableSeconds": 1.2608695652173914,
+      "worstReversalSeconds": 0.6500000000000004,
+      "spareSeconds": 0.610869565217391
+    },
+    {
+      "from": "Last canal",
+      "to": "Home stretch",
+      "metres": 3.15,
+      "availableSeconds": 1.391304347826087,
+      "worstReversalSeconds": 0.6500000000000004,
+      "spareSeconds": 0.7413043478260866
+    },
+    {
+      "from": "Home stretch",
+      "to": "Final left",
+      "metres": 3.8,
+      "availableSeconds": 1.9565217391304348,
+      "worstReversalSeconds": 0.7500000000000007,
+      "spareSeconds": 1.2065217391304341
+    },
+    {
+      "from": "Last stair overlook",
+      "to": "Final right",
+      "metres": 7.6,
+      "availableSeconds": 1.7391304347826086,
+      "worstReversalSeconds": 1.35,
+      "spareSeconds": 0.38913043478260856
+    },
+    {
+      "from": "Final right",
+      "to": "Final hop",
+      "metres": 3.8,
+      "availableSeconds": 2.1739130434782608,
+      "worstReversalSeconds": 0.7500000000000007,
+      "spareSeconds": 1.42391304347826
+    }
+  ],
+  "landings": [
+    {
+      "jump": "First hop",
+      "next": "Left then right",
+      "landingBy": 208.80250000000004,
+      "secondsUntilNextApproach": 1.0520652173913028
+    },
+    {
+      "jump": "First canal",
+      "next": "Freight right",
+      "landingBy": 463.63954166666235,
+      "secondsUntilNextApproach": 2.9287155797103326
+    },
+    {
+      "jump": "Hop after the weave",
+      "next": "Crab crossing",
+      "landingBy": 671.6849999999921,
+      "secondsUntilNextApproach": 1.7963043478264304
+    },
+    {
+      "jump": "Second canal",
+      "next": "Cliff right",
+      "landingBy": 931.8811249999876,
+      "secondsUntilNextApproach": 3.5269076086961912
+    },
+    {
+      "jump": "Rising hop",
+      "next": "Cliff cutback",
+      "landingBy": 1112.3320000000017,
+      "secondsUntilNextApproach": 4.81165217391297
+    },
+    {
+      "jump": "Surf hop",
+      "next": "Surf right",
+      "landingBy": 1463.3813750000993,
+      "secondsUntilNextApproach": 1.2877663043435088
+    },
+    {
+      "jump": "Hop out of the S",
+      "next": "Spiny crossing",
+      "landingBy": 1638.8695000001478,
+      "secondsUntilNextApproach": 1.7013260869500952
+    },
+    {
+      "jump": "Third canal",
+      "next": "Festival freight right",
+      "landingBy": 1843.8732083335353,
+      "secondsUntilNextApproach": 2.5707300724549857
+    },
+    {
+      "jump": "Uphill hop",
+      "next": "Festival cutback",
+      "landingBy": 2049.2353333335946,
+      "secondsUntilNextApproach": 1.033246376800237
+    },
+    {
+      "jump": "Quay hop",
+      "next": "Lighthouse right",
+      "landingBy": 2348.537958333517,
+      "secondsUntilNextApproach": 1.4983496376731715
+    },
+    {
+      "jump": "Low quay hop",
+      "next": "Last crossing",
+      "landingBy": 2528.6260833334773,
+      "secondsUntilNextApproach": 1.0597355072401193
+    },
+    {
+      "jump": "Last canal",
+      "next": "Final left",
+      "landingBy": 2712.9308750001055,
+      "secondsUntilNextApproach": 2.8290923912997603
+    }
+  ],
+  "minimumSteeringSpare": 0.3021739130434782,
+  "minimumLandingBreath": 1.033246376800237,
+  "pass": true
+}

@@ -5373,3 +5373,40 @@ retry views were reviewed, with no console errors or failed requests. Build
 version `87da199e80bb276d664e`. No geometry, level pack or tuning edits; no
 check:all or unrelated audit reruns. Evidence and hashes are in
 [the bonus retry review](beach-street/bonus-retry/README.md).
+
+## 2026-10-28 — Beach Street: stronger gusts and a walking finish
+
+The brief began around 20:13 UTC on 27 October. The first native release,
+walking and deliberate finish-jump pass completed at 20:21 UTC, about eight
+minutes to playable. Full-course browser review completed at 20:34 UTC.
+
+Gusts now sustain a stronger pull and change more quickly without snapping.
+Two seeded samples measure roughly 2.5–2.8 times the previous average absolute
+sideways drift. Steering responds faster, and the full canopy sways and rolls
+more visibly. Twenty metres before the finish, after the last rewards, the
+rider releases the kite and steps off the board. The kite flies upward and
+away while the intact rider can stop, explore on foot and choose a fresh jump
+onto the end platform. Held tow charge cannot accidentally trigger that jump.
+Respawn restores the normal kite start. The approved contrast, solid islands
+and entire authored layout remain unchanged.
+
+Focused motion, native controls, finish/rearm, connected course and pacing
+checks pass. The shared competition dismount regression passes. Lite and full
+production Chrome each clear the three kilometres with no crashes, 13 authored
+jumps, ten checkpoints, all 24 main boxes and the crystal; the gem still needs
+the linked 36 bonus boxes. Both runs then stop, walk sideways/backwards and
+finish on a deliberate foot jump. Full-render bonus failures, return, re-entry,
+bypass and the completed-return branch also pass in the stronger wind. No
+console errors or failed requests. MAX/native and normal CRT views reviewed.
+
+The narrow visible preview exposed a gust cropping a kite tip. Narrow views
+now extend the flying lines while retaining the complete canopy geometry and
+the same wind force. The final framing review and production build are indexed
+in [the wind/finish evidence](beach-street/wind-finish/README.md). No global
+tuning, level data or pack edits; no unrelated audits or check:all.
+
+Final build `Codex/sol fork · build 10-27 20:35 UTC` passes type checking and
+bundling, version `dc2c6603b0dd0b9c9ca2`. All 16 full-mesh framing cases pass
+across wide, narrow and portrait views; the visible preview was reloaded and
+its final stamp verified. The final change is presentation-only at aspects
+below 1.6:1, so the complete 1600×1000 course and bonus evidence remains valid.
