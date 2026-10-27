@@ -1,0 +1,1 @@
+PASS unlock-based level/island discovery, independent secret slots, save-switch concealment, unlocked placeholders, reward previews, launch guards, remembered pages, controller and touch entry.

@@ -13,6 +13,10 @@ if(art)cases.splice(1,0,['bonus sanctuary visual review','tribal-run-browser.mjs
 if(art)cases.push(['normal presentation','tribal-run-browser.mjs',['--full','--spawn-only'],{TRIBAL_OUTPUT:(process.env.TRIBAL_OUTPUT||'docs/tribal-run/art/evidence')+'/normal'}],
  ['actual campaign thumbnail and menu launch','tribal-run-preview.mjs',[],{}]);
 if(staticOnly)cases=cases.filter(c=>c[1]==='tribal-run-browser.mjs');
+if(process.argv.includes('--handoff'))cases=[
+ ['campaign preview, runtime geometry and menu launch','tribal-run-preview.mjs',[],{}],
+ ['focused checks and production build','tribal-run-validate.mjs',[],{}],
+];
 for(const [label,file,args,env]of cases){
  console.log(JSON.stringify({review:label,status:'starting'}));
  const child=spawn(process.execPath,['tools/'+file,...args],{stdio:'inherit',env:{...process.env,TRIBAL_PHASE:'all',...env}});

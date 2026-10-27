@@ -22,7 +22,11 @@ Use a local Vite server, set `TRIBAL_URL` if its port differs from 5247, and set
 
 `node tools/tribal-run-gameplay-fingerprint.mjs` checks the art against the completed greybox contract. `node tools/tribal-run-native.mjs --audit` combines runtime support, seam, crate and camera-heading probes with the input pilot. `node tools/tribal-run-bonus-physics.mjs` checks a native all-crate bonus clear. Native jobs use a bounded Node heap on this shared Mac.
 
-Focused campaign checks are `tools/test-six-island-campaign.mjs`, `tools/test-level-select.mjs`, `tools/test-save-slot-previews.mjs` and `tools/test-warp-room-return.mjs`. Run `npm run check:levels` and `npm run build` before handoff. The release coordinator owns integration and publication.
+Focused campaign checks are `tools/test-six-island-campaign.mjs`, `tools/test-level-select.mjs`, `tools/test-save-slot-previews.mjs` and `tools/tribal-run-campaign.mjs`. The last uses actual world-map geometry and the production controller to travel from Sunset Safari through Tribal Run to Uga Ambush and back. The campaign fixture also preserves completed Uga progress from saves made before Tribal Run became playable.
+
+`node tools/tribal-run-validate.mjs` runs these checks, gameplay preservation, `check:levels`, build and release-size validation serially. The initial broader warp-return check stopped on an unrelated water baseline (caustics strength 0.18 versus expected 0.32), before reaching its Tribal case. That failure is retained in `validation/initial-validation.json` and `validation/warp-return.txt`; no map-water code or baseline was changed. The release coordinator owns integration and publication.
+
+On a host without npm, `--local-scripts` executes the exact three package.json script bodies using the already-installed dependencies. It does not install packages or approve lifecycle hooks. The bundled pnpm wrapper attempted an install before running `check:levels` and stopped at the existing esbuild approval policy; that attempt is retained in `validation/package-manager-attempt.txt`.
 
 Final browser evidence and check results are retained in the adjacent `art/evidence/` and `validation/` directories. Greybox decisions and timing are recorded in `greybox/playtest-notes.md`.
 

@@ -65,6 +65,13 @@ fresh.active.levels['sky-bridge']={cleared:true,crystal:true,boxGem:true,comboGe
 fresh.saveActive();const reload=new CampaignStore();reload.load(1);
 assert.equal(reload.levelProgress('test').crystal,true);assert.equal(reload.levelProgress('test').timeMedal,'silver');
 assert.equal(reload.levelPlayable('test'),true);assert.equal(reload.levelPlayable('carlisle-coast'),false,'new Carlisle inherited Uga Ambush save');
+// Activating the former Tribal Run placeholder must preserve old Uga clears.
+const savedSlots=memory.get('solProtoCampaignSavesV1'),beforeTribal=JSON.parse(savedSlots);
+delete beforeTribal[0].levels['tribal-run'];memory.set('solProtoCampaignSavesV1',JSON.stringify(beforeTribal));
+const oldUgaSave=new CampaignStore();oldUgaSave.load(1);
+assert.equal(oldUgaSave.levelPlayable('test'),true,'new Tribal Run prerequisite relocked a completed Uga Ambush');
+assert.equal(oldUgaSave.levelProgress('tribal-run').cleared,false,'migration invented a Tribal Run clear');
+assert.equal(oldUgaSave.levelProgress('test').timeMedal,'silver');memory.set('solProtoCampaignSavesV1',savedSlots);
 assert.deepEqual(reload.active.levels['sky-bridge'],{cleared:true,crystal:false,boxGem:true,comboGem:true,timeRelic:true,timeMedal:'gold',bestTime:42,trialTimes:[42]},'Secret Island migration should retain gems and medals');
 assert.equal(reload.totals().maxLevels,29);assert.equal(reload.runModesUnlocked('warehouse'),false);
 assert.deepEqual(reload.levelProgress('sky'),reload.active.levels['sky-bridge'],'reassigned Sky Bridge lost its older rewards');

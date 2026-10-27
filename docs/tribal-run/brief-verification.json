@@ -1,0 +1,99 @@
+{
+  "checkedAt": "2026-10-27T09:24:56.451970+00:00",
+  "overallStatus": "Gameplay, visuals and actual map-controller route verified; required level checks and build pending host capacity.",
+  "requirements": [
+    {
+      "requirement": "Distinct medium-difficulty platform/skating course, not a chase",
+      "evidence": [
+        "src/levels/tribal-run.ts",
+        "greybox/brief.md",
+        "greybox/playtest-notes.md",
+        "art/evidence/gameplay-results-summary.json"
+      ],
+      "result": "Eight chapters, low stepped drums, alternating skating bowls, crossing upper/lower Loom, four optional rails and nine checkpoints. No pursuer or forced timer. Full main and separate recovery/grind runs pass. Fun and difficulty remain design judgments supported by playthroughs."
+    },
+    {
+      "requirement": "Length similar to Uga Ambush",
+      "evidence": [
+        "art/evidence/route-metrics.json",
+        "tools/carlisle-coast/original-course.json"
+      ],
+      "result": "2,320 metres authored route; original Uga spawn-to-gate reference is about 2,300 metres. Tested main line takes 171.05 seconds without the bonus."
+    },
+    {
+      "requirement": "First two productive hours on main/bonus greybox before art",
+      "evidence": [
+        "greybox/playtest-notes.md",
+        "imagegen-prompts.json"
+      ],
+      "result": "Prompt 02:56:13 UTC; recorded crash/access compensation 2:32:28; earliest permitted art 07:28:41; first imagegen 07:29:01. Greybox main, bonus and route refinements preceded art integration."
+    },
+    {
+      "requirement": "Playable bonus",
+      "evidence": [
+        "art/evidence/tribal-run-full-bonus-detour-journey.json",
+        "greybox/evidence/bonus-physics-summary.json"
+      ],
+      "result": "Actual parent jump-pad entry, bounce drum, reveal switch, breakaway lip, 20/20 crates and supported parent return validated."
+    },
+    {
+      "requirement": "Beautify with existing Meshy geometry and new imagegen runs",
+      "evidence": [
+        "art/review-notes.md",
+        "imagegen-prompts.json",
+        "public/tribal-run/provenance.json",
+        "art/evidence/source-inventory.json",
+        "art/evidence/tribal-run-full-browser.json",
+        "art/evidence/bonus-tribal-run-full-browser.json"
+      ],
+      "result": "Three new native-size imagegen textures; existing full Meshy models; MAX/native 1440x900 and normal presentation reviewed. No distance mesh substitutions."
+    },
+    {
+      "requirement": "Keep authored movement and ordinary surface grinding",
+      "evidence": [
+        "greybox/gameplay-fingerprint.json",
+        "validation/gameplay-preservation.txt",
+        "art/evidence/source-precision-equivalence.json",
+        "art/evidence/preview-and-menu.json"
+      ],
+      "result": "Player/tuning source unchanged; gameplay fingerprint preserved through art. 988 ordinary surface edges and four authored rails remain; actual final collision probes pass."
+    },
+    {
+      "requirement": "Use isolated local worktree and hand off validated commits",
+      "evidence": [
+        "validation/checks.json"
+      ],
+      "result": "Own codex/tribal-run worktree; candidate c7806ff652716c5541598e9b178a18a53b856eaf committed locally. Final validation increment and READY handoff pending."
+    }
+  ],
+  "currentSourceMatchesSuccessfulChecks": true,
+  "sourceSha256": {
+    "src/level.ts": "d14ea445da9eb4387a5a82c5c79759085059cce02373650150c525727a52d473",
+    "src/campaign.ts": "423ed98b64bbc7798444da2cb30cc9f47536e9e43fb45ac51aed533b254ce9ed",
+    "src/levels/codex-lab.ts": "f66f189c1b5b5c13756b07481c59b505ffdf36acdf71157885193c58ce453e61",
+    "src/levels/themed-bonuses.ts": "fe83b857b3618f161edca72c3dc311f647402e016f7cede1ab17edfcbe243a3c",
+    "src/levels/tribal-run.ts": "6524dc10f6310fde6ee4aa08ed93e34158a792bcddd55d57bbdb011e755227ef",
+    "src/levels/tribal-run-route.ts": "8b4a31d8d067ba6fd2246265f09bcbc0b19a17d92ea3890787738879e74a163b",
+    "src/levels/tribal-run-bonus.ts": "7d20bdb0a5f9e400148d0376b16405408753b8c4a137a80d70844462466d3fb8",
+    "src/levels/tribal-run-art.ts": "2b39695be31f2e4c8043ffc07b52a87e3843a2a1084a97dd98242e94d1b6c777",
+    "src/levels/tribal-run-textures.ts": "c8a9b306a08c68e2f1ddedfdd463cd3dbd980f41ef1f330b979fdcc7a08dcf44",
+    "public/level-previews/tribal-run.jpg": "1051ffb3562c340fae07ad7434b075aaa825db2f78f3191937ebd836f2d1d6b9"
+  },
+  "geometry": {
+    "supportProbes": 2787,
+    "maxHeightError": 0.019372373327681575,
+    "openGaps": 5,
+    "headingProbes": 580,
+    "minHeadingDot": 0.9998998057633499,
+    "checkpoints": 9,
+    "authoredRails": 4,
+    "surfaceEdges": 988
+  },
+  "ordinaryCrateSeats": 59,
+  "newRasterBytes": 1646852,
+  "limitations": [
+    "Full main all-box completion has not been claimed; the continuous main pilot collected 23 boxes, with all 59 ordinary seats and optional paths audited separately.",
+    "The legacy warp-return suite stops before its Tribal case on a pre-existing water assertion; the focused actual map-controller route passed at 09:29:41 UTC. Its initial static-direction fixture error and correction are retained separately.",
+    "No deployment is claimed. The coordinator owns integration and publishing."
+  ]
+}

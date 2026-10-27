@@ -1,0 +1,19 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+false !== true
+
+    at visit (file:///Users/kiki/.codex/worktrees/tribal-run/Prototype%20Fork/tools/tribal-run-campaign.mjs:28:10)
+    at file:///Users/kiki/.codex/worktrees/tribal-run/Prototype%20Fork/tools/tribal-run-campaign.mjs:34:45 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

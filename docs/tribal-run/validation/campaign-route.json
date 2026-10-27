@@ -1,0 +1,45 @@
+{
+  "pass": true,
+  "checkedAt": "2026-10-27T09:29:41.627Z",
+  "visits": [
+    {
+      "from": "custard-creek",
+      "key": "tribal-run",
+      "direction": "left",
+      "frames": 100,
+      "position": [
+        -222,
+        3,
+        -110
+      ]
+    },
+    {
+      "from": "tribal-run",
+      "key": "waterfall-climb",
+      "direction": "left",
+      "frames": 100,
+      "position": [
+        -197,
+        4.5,
+        -144
+      ]
+    },
+    {
+      "from": "waterfall-climb",
+      "key": "test-course",
+      "direction": "left",
+      "frames": 100,
+      "position": [
+        -155,
+        3,
+        -146
+      ]
+    }
+  ],
+  "returnFrames": 200,
+  "entered": [
+    "tribal-run",
+    "test",
+    "tribal-run"
+  ]
+}

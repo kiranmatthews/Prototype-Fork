@@ -1,0 +1,3 @@
+PASS six-island assignments, stable save keys, placeholders, boss victories, threshold boundaries, independent secret openings, circularity prevention and old-save preservation.
+PASS secret-course save migration preserves rewards, strongest medals, best runs and remembered course identities.
+PASS Secret Island awards and counts gems and medals only.
