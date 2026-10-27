@@ -1,0 +1,841 @@
+{
+  "result": {
+    "deaths": 0,
+    "frames": 5621,
+    "cratesBroken": 28,
+    "totalCrates": 28,
+    "state": "finished",
+    "completionScope": "complete-stage",
+    "activeStageCrates": 28,
+    "bonusCrateTotal": 0,
+    "bonusCrates": 0,
+    "gemEarned": true
+  },
+  "report": {
+    "stage": "return with the complete Gatekeeper’s Hoard",
+    "actions": [
+      {
+        "name": "approach Gatekeeper welcome",
+        "firstFrame": 20,
+        "lastFrame": 110
+      },
+      {
+        "name": "Gatekeeper welcome",
+        "firstFrame": 130,
+        "lastFrame": 130
+      },
+      {
+        "name": "hoard approach",
+        "firstFrame": 152,
+        "lastFrame": 308
+      },
+      {
+        "name": "preserve the jade arrow outward",
+        "firstFrame": 353,
+        "lastFrame": 392
+      },
+      {
+        "name": "approach First sealed offering",
+        "firstFrame": 392,
+        "lastFrame": 615
+      },
+      {
+        "name": "First sealed offering",
+        "firstFrame": 635,
+        "lastFrame": 635
+      },
+      {
+        "name": "approach Jade gallery seal",
+        "firstFrame": 657,
+        "lastFrame": 780
+      },
+      {
+        "name": "Jade gallery seal",
+        "firstFrame": 800,
+        "lastFrame": 800
+      },
+      {
+        "name": "return to the conserved jade arrow",
+        "firstFrame": 822,
+        "lastFrame": 1117
+      },
+      {
+        "name": "jade gallery ascent takeoff",
+        "firstFrame": 1135,
+        "lastFrame": 1155
+      },
+      {
+        "name": "jade gallery ascent arrow contact",
+        "firstFrame": 1200,
+        "lastFrame": 1237
+      },
+      {
+        "name": "jade gallery ascent apex outside the shelf",
+        "firstFrame": 1240,
+        "lastFrame": 1273
+      },
+      {
+        "name": "jade gallery ascent rise above the shelf",
+        "firstFrame": 1275,
+        "lastFrame": 1275
+      },
+      {
+        "name": "jade gallery ascent",
+        "firstFrame": 1275,
+        "lastFrame": 1306
+      },
+      {
+        "name": "approach Revealed jade cache",
+        "firstFrame": 1306,
+        "lastFrame": 1402
+      },
+      {
+        "name": "Revealed jade cache",
+        "firstFrame": 1422,
+        "lastFrame": 1422
+      },
+      {
+        "name": "gallery return edge",
+        "firstFrame": 1444,
+        "lastFrame": 1549
+      },
+      {
+        "name": "return before collecting the jade arrow",
+        "firstFrame": 1594,
+        "lastFrame": 1664
+      },
+      {
+        "name": "approach Keep the jade arrow",
+        "firstFrame": 1664,
+        "lastFrame": 1728
+      },
+      {
+        "name": "Keep the jade arrow",
+        "firstFrame": 1748,
+        "lastFrame": 1748
+      },
+      {
+        "name": "hoard approach",
+        "firstFrame": 1770,
+        "lastFrame": 2083
+      },
+      {
+        "name": "clear the spent jade seal",
+        "firstFrame": 2128,
+        "lastFrame": 2167
+      },
+      {
+        "name": "approach Three-stone causeway seal",
+        "firstFrame": 2167,
+        "lastFrame": 2261
+      },
+      {
+        "name": "Three-stone causeway seal",
+        "firstFrame": 2281,
+        "lastFrame": 2281
+      },
+      {
+        "name": "clear the spent causeway seal",
+        "firstFrame": 2330,
+        "lastFrame": 2369
+      },
+      {
+        "name": "restored causeway stone 1",
+        "firstFrame": 2396,
+        "lastFrame": 2455
+      },
+      {
+        "name": "restored causeway stone 2",
+        "firstFrame": 2482,
+        "lastFrame": 2541
+      },
+      {
+        "name": "restored causeway stone 3",
+        "firstFrame": 2568,
+        "lastFrame": 2669
+      },
+      {
+        "name": "causeway far landing",
+        "firstFrame": 2696,
+        "lastFrame": 2759
+      },
+      {
+        "name": "approach Copper store parcel",
+        "firstFrame": 2759,
+        "lastFrame": 2845
+      },
+      {
+        "name": "Copper store parcel",
+        "firstFrame": 2865,
+        "lastFrame": 2865
+      },
+      {
+        "name": "approach Copper fruit chest",
+        "firstFrame": 2887,
+        "lastFrame": 2986
+      },
+      {
+        "name": "Copper fruit chest",
+        "firstFrame": 3006,
+        "lastFrame": 3006
+      },
+      {
+        "name": "approach Copper store cache",
+        "firstFrame": 3028,
+        "lastFrame": 3135
+      },
+      {
+        "name": "Copper store cache",
+        "firstFrame": 3155,
+        "lastFrame": 3155
+      },
+      {
+        "name": "hoard approach",
+        "firstFrame": 3177,
+        "lastFrame": 3291
+      },
+      {
+        "name": "steel relay anchor 1",
+        "firstFrame": 3336,
+        "lastFrame": 3412
+      },
+      {
+        "name": "steel relay anchor 2",
+        "firstFrame": 3439,
+        "lastFrame": 3479
+      },
+      {
+        "name": "steel relay anchor 3",
+        "firstFrame": 3506,
+        "lastFrame": 3546
+      },
+      {
+        "name": "steel relay anchor 4",
+        "firstFrame": 3573,
+        "lastFrame": 3613
+      },
+      {
+        "name": "steel relay anchor 5",
+        "firstFrame": 3640,
+        "lastFrame": 3680
+      },
+      {
+        "name": "steel relay exit",
+        "firstFrame": 3707,
+        "lastFrame": 3748
+      },
+      {
+        "name": "finite treasury approach",
+        "firstFrame": 3748,
+        "lastFrame": 3838
+      },
+      {
+        "name": "spend one upper treasury bounce",
+        "firstFrame": 3883,
+        "lastFrame": 3916
+      },
+      {
+        "name": "treasury rebound apex",
+        "firstFrame": 3916,
+        "lastFrame": 3941
+      },
+      {
+        "name": "crown before finite supports",
+        "firstFrame": 3943,
+        "lastFrame": 3945
+      },
+      {
+        "name": "treasury safe descent",
+        "firstFrame": 3945,
+        "lastFrame": 3967
+      },
+      {
+        "name": "approach Treasury upper finite chest",
+        "firstFrame": 3967,
+        "lastFrame": 4026
+      },
+      {
+        "name": "Treasury upper finite chest",
+        "firstFrame": 4046,
+        "lastFrame": 4046
+      },
+      {
+        "name": "approach Treasury exit cache",
+        "firstFrame": 4068,
+        "lastFrame": 4214
+      },
+      {
+        "name": "Treasury exit cache",
+        "firstFrame": 4234,
+        "lastFrame": 4234
+      },
+      {
+        "name": "last offering shelf takeoff",
+        "firstFrame": 4256,
+        "lastFrame": 4351
+      },
+      {
+        "name": "last offering shelf arrow contact",
+        "firstFrame": 4396,
+        "lastFrame": 4433
+      },
+      {
+        "name": "last offering shelf apex outside the shelf",
+        "firstFrame": 4436,
+        "lastFrame": 4469
+      },
+      {
+        "name": "last offering shelf rise above the shelf",
+        "firstFrame": 4471,
+        "lastFrame": 4471
+      },
+      {
+        "name": "last offering shelf",
+        "firstFrame": 4471,
+        "lastFrame": 4503
+      },
+      {
+        "name": "approach Last shelf life",
+        "firstFrame": 4503,
+        "lastFrame": 4598
+      },
+      {
+        "name": "Last shelf life",
+        "firstFrame": 4618,
+        "lastFrame": 4618
+      },
+      {
+        "name": "hoard approach",
+        "firstFrame": 4640,
+        "lastFrame": 4741
+      },
+      {
+        "name": "return from the last shelf",
+        "firstFrame": 4786,
+        "lastFrame": 4855
+      },
+      {
+        "name": "approach Final hoard arrow",
+        "firstFrame": 4855,
+        "lastFrame": 4919
+      },
+      {
+        "name": "Final hoard arrow",
+        "firstFrame": 4939,
+        "lastFrame": 4939
+      },
+      {
+        "name": "hoard approach",
+        "firstFrame": 4961,
+        "lastFrame": 5169
+      },
+      {
+        "name": "last hoard opening",
+        "firstFrame": 5214,
+        "lastFrame": 5275
+      },
+      {
+        "name": "approach Departure offering",
+        "firstFrame": 5275,
+        "lastFrame": 5354
+      },
+      {
+        "name": "Departure offering",
+        "firstFrame": 5374,
+        "lastFrame": 5374
+      },
+      {
+        "name": "approach Gatekeeper farewell",
+        "firstFrame": 5396,
+        "lastFrame": 5511
+      },
+      {
+        "name": "Gatekeeper farewell",
+        "firstFrame": 5531,
+        "lastFrame": 5531
+      },
+      {
+        "name": "return with the complete Gatekeeper’s Hoard",
+        "firstFrame": 5555,
+        "lastFrame": 5621
+      }
+    ],
+    "evidence": [
+      {
+        "action": "Gatekeeper welcome",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "preserve the jade arrow outward",
+        "launch": [
+          4.124755555555567,
+          0,
+          0
+        ],
+        "landing": [
+          8.962255555555576,
+          0,
+          0
+        ],
+        "double": false
+      },
+      {
+        "action": "First sealed offering",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "Jade gallery seal",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": true
+        }
+      },
+      {
+        "action": "jade gallery ascent",
+        "contact": {
+          "frame": 1237,
+          "position": [
+            6.0312555555556155,
+            0.98,
+            0
+          ],
+          "state": "air",
+          "grounded": false,
+          "bailing": false,
+          "speed": 0,
+          "verticalSpeed": 20,
+          "deaths": 0,
+          "ground": "Hoard arrival and return court"
+        },
+        "landing": [
+          11.767255555555629,
+          6.4,
+          0
+        ],
+        "launcherAlive": true
+      },
+      {
+        "action": "Revealed jade cache",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "return before collecting the jade arrow",
+        "launch": [
+          10.57048888888896,
+          6.4,
+          0
+        ],
+        "landing": [
+          3.5339888888889446,
+          0,
+          0
+        ],
+        "double": true
+      },
+      {
+        "action": "Keep the jade arrow",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "clear the spent jade seal",
+        "launch": [
+          37.12497777777798,
+          0,
+          0
+        ],
+        "landing": [
+          41.46597777777795,
+          0,
+          0
+        ],
+        "double": false
+      },
+      {
+        "action": "Three-stone causeway seal",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": true
+        }
+      },
+      {
+        "action": "clear the spent causeway seal",
+        "launch": [
+          45.82908888888913,
+          0,
+          0
+        ],
+        "landing": [
+          50.53049999999997,
+          0,
+          0
+        ],
+        "double": false
+      },
+      {
+        "action": "restored causeway stone 1",
+        "launch": [
+          50.53049999999997,
+          0,
+          0
+        ],
+        "landing": [
+          57.96866666666658,
+          1,
+          0
+        ],
+        "double": true
+      },
+      {
+        "action": "restored causeway stone 2",
+        "launch": [
+          57.96866666666658,
+          1,
+          0
+        ],
+        "landing": [
+          65.95016666666656,
+          2,
+          0
+        ],
+        "double": true
+      },
+      {
+        "action": "restored causeway stone 3",
+        "launch": [
+          65.95016666666656,
+          2,
+          0
+        ],
+        "landing": [
+          73.96811111111127,
+          1.2,
+          0
+        ],
+        "double": true
+      },
+      {
+        "action": "causeway far landing",
+        "launch": [
+          73.96811111111127,
+          1.2,
+          0
+        ],
+        "landing": [
+          81.46511111111153,
+          0,
+          0
+        ],
+        "double": true
+      },
+      {
+        "action": "Copper store parcel",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "Copper fruit chest",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "Copper store cache",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "steel relay anchor 1",
+        "launch": [
+          102.7317888888886,
+          0,
+          0
+        ],
+        "landing": [
+          107.96528888888875,
+          0.98,
+          0
+        ],
+        "double": false
+      },
+      {
+        "action": "steel relay anchor 2",
+        "launch": [
+          107.96528888888875,
+          0.98,
+          0
+        ],
+        "landing": [
+          112.4727888888889,
+          0.98,
+          0
+        ],
+        "double": false
+      },
+      {
+        "action": "steel relay anchor 3",
+        "launch": [
+          112.4727888888889,
+          0.98,
+          0
+        ],
+        "landing": [
+          116.97278888888904,
+          0.98,
+          0
+        ],
+        "double": false
+      },
+      {
+        "action": "steel relay anchor 4",
+        "launch": [
+          116.97278888888904,
+          0.98,
+          0
+        ],
+        "landing": [
+          121.47278888888918,
+          0.98,
+          0
+        ],
+        "double": false
+      },
+      {
+        "action": "steel relay anchor 5",
+        "launch": [
+          121.47278888888918,
+          0.98,
+          0
+        ],
+        "landing": [
+          125.97278888888933,
+          0.98,
+          0
+        ],
+        "double": false
+      },
+      {
+        "action": "steel relay exit",
+        "launch": [
+          125.97278888888933,
+          0.98,
+          0
+        ],
+        "landing": [
+          131.42828888888948,
+          0,
+          0
+        ],
+        "double": false
+      },
+      {
+        "action": "Treasury upper finite chest",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "Treasury exit cache",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "last offering shelf",
+        "contact": {
+          "frame": 4433,
+          "position": [
+            152.97203333333346,
+            0.98,
+            0
+          ],
+          "state": "air",
+          "grounded": false,
+          "bailing": false,
+          "speed": 0,
+          "verticalSpeed": 20,
+          "deaths": 0,
+          "ground": "Five-bounce treasury"
+        },
+        "landing": [
+          159.36503333333366,
+          6,
+          0
+        ],
+        "launcherAlive": true
+      },
+      {
+        "action": "Last shelf life",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "return from the last shelf",
+        "launch": [
+          158.57000000000033,
+          6,
+          0
+        ],
+        "landing": [
+          150.53150000000005,
+          0,
+          0
+        ],
+        "double": true
+      },
+      {
+        "action": "Final hoard arrow",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "last hoard opening",
+        "launch": [
+          170.72768888888905,
+          0,
+          0
+        ],
+        "landing": [
+          179.39318888888934,
+          0,
+          0
+        ],
+        "double": true
+      },
+      {
+        "action": "Departure offering",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "Gatekeeper farewell",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "all Gatekeeper offerings",
+        "totalCrates": 28,
+        "activeStageCrates": 28,
+        "bonusCrateTotal": 0,
+        "cratesBroken": 28,
+        "remaining": 0
+      }
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "mainLength": 1396,
+  "originalLength": 448,
+  "bonusLength": 209,
+  "enemyTypes": [
+    "charger",
+    "floater",
+    "grunt",
+    "hopper",
+    "moa",
+    "spiker",
+    "spinner",
+    "turtle"
+  ],
+  "enemies": 16,
+  "checkpoints": 11,
+  "mainBoxes": 26,
+  "bonusBoxes": 28,
+  "mainGeometrySha256": "b6ec2ffb1d3a90c94eba1bfe78c162ca3799e40fa18df80ea589533e3480a6ef",
+  "bonusGeometrySha256": "f518a23fae5a6db0e41b7838cef20e4547ddb87c5adbc81f78bcb7ba76d2e9d0"
+}

@@ -1,0 +1,25 @@
+{
+  "unchangedPublishedLevels": [
+    "flats",
+    "sky",
+    "test",
+    "custard-creek",
+    "bonus-custard-creek",
+    "jungle-terraces",
+    "bonus-jungle-terraces",
+    "drowned-crown",
+    "slipstream-race",
+    "country-club",
+    "rooftop-relay",
+    "coconut-cart-rally"
+  ],
+  "ownedLevelIds": [
+    "jungle-gate-run",
+    "bonus-jungle-gate"
+  ],
+  "unchangedSharedRuntime": [
+    "src/tuning.ts",
+    "src/player.ts",
+    "src/level.ts"
+  ]
+}

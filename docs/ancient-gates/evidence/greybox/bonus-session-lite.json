@@ -1,0 +1,40 @@
+{
+  "parentBefore": {
+    "deaths": 0,
+    "returnPoint": [
+      1137,
+      8.12,
+      0
+    ],
+    "switchUsed": true
+  },
+  "failedReturn": {
+    "sameParent": true,
+    "position": [
+      1137,
+      8.000000023841858,
+      0
+    ],
+    "grounded": true,
+    "deaths": 0,
+    "crates": 0,
+    "bonusCrates": 0,
+    "completed": false,
+    "switchUsed": true
+  },
+  "successfulReturn": {
+    "sameParent": true,
+    "position": [
+      1137,
+      8.000000023841858,
+      0
+    ],
+    "grounded": true,
+    "deaths": 0,
+    "crates": 0,
+    "bonusCrates": 28,
+    "completed": true,
+    "switchUsed": true
+  },
+  "errors": []
+}

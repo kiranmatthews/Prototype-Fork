@@ -1,0 +1,33 @@
+{
+  "mode": "built-in image_gen",
+  "intent": "generate",
+  "greyboxCompletedAfter": "2026-10-27T07:34:27Z",
+  "assets": [
+    {
+      "prompt": "Use case: stylized-concept\nAsset type: wide background matte painting for a playable side-scrolling jungle platformer, landscape 3:2 composition.\nPrimary request: the monumental tropical timber-and-stone gate atmosphere of The Great Gate from Crash Bandicoot 1, rendered with the lush, sculpted, colorful painterly environment quality of Crash Bandicoot 4.\nScene: an immense ancient gate civilization deep in a tropical ravine. Layered turquoise jungle canopies and towering ochre sandstone gate towers, distant broken aqueduct arches, huge twisted banyan trees, long waterfalls, tendrils of atmospheric mist. Several organically staggered silhouettes rather than one centered symmetrical building.\nComposition: distant scenery only, seen approximately straight-on from across the ravine. Fill the entire frame. Broad readable shapes; distant structures and greenery with excellent depth. The bottom half is dark teal jungle and cool shadowed cliffs; the upper half opens to luminous apricot sky and soft sunlit haze. The sides taper to foliage and mist, with no abrupt frame or border. No foreground platform, no playable walkway, no close-up objects.\nStyle: premium hand-painted 3D animation environment, bold bevels, warm sunlit sandstone, deep violet-blue shadow notes, vibrant emerald foliage, sophisticated lighting. Detailed but readable, playful adventurous shapes.\nConstraints: no characters, no UI, no lettering, no logos, no watermark. This is a real background texture, not a screenshot or concept-art presentation board.",
+      "original": "/Users/kiki/.codex/generated_images/01a17b4e-922f-7c92-a8d1-a21b6064c1b8/exec-c99c6dc0-dbb7-41a5-bdf7-f605dc9acc99.png",
+      "runtime": "public/ancient-gates/gate-valley.webp",
+      "sourceSha256": "37107997ac2fee53f264d0603f310441ed33496ca2564cd307d8ca09bced1253",
+      "runtimeSha256": "fb036629587ebfa70f9e0886afc1913a8f56b641c48b6808180009b07269c77b",
+      "bytes": 410620,
+      "width": 1536,
+      "height": 1024,
+      "conversion": "WebP quality 91, no resampling or creative edits",
+      "generatedFileTimestamp": "2026-10-27T07:36:59.319Z"
+    },
+    {
+      "prompt": "Use case: stylized-concept\nAsset type: wide interior background matte painting for a side-scrolling platformer bonus room, landscape 3:2 composition.\nPrimary request: a hidden Gatekeeper's Hoard beneath an ancient tropical gate, with the rich stylized art direction and sculpted painterly materials of Crash Bandicoot 4 and the Great Gate temple atmosphere.\nScene: an ancient jade-and-copper reliquary hall, immense thick ochre stone piers carved with abstract spiral and sun motifs, timber ceiling braces, hanging jungle roots and small vines, clusters of softly glowing amber lanterns, restrained stacks of ancient gold treasures in deep wall niches, misty emerald light through distant openings. The chamber stretches horizontally.\nComposition: straight-on view of distant interior architecture, full bleed. No foreground floor or platforms; the lower half falls into deep teal shadow, allowing bright playable platforms to be placed in front. Rhythm and depth without rigid symmetry. Dark muted teal and plum behind the action, golden highlights on upper carvings, no bright center spotlight.\nStyle: premium animated adventure environment, chunky sculpted shapes, hand-painted texture richness, beautiful golden bounced light and cool jungle shade. Warm and mysterious, not scary.\nConstraints: no characters, no game crates, no UI, no lettering, no logos, no watermark. No frame, no presentation border.",
+      "original": "/Users/kiki/.codex/generated_images/01a17b4e-922f-7c92-a8d1-a21b6064c1b8/exec-b9d21428-b291-4b2f-9750-c52edf32282c.png",
+      "runtime": "public/ancient-gates/gatekeeper-hoard.webp",
+      "sourceSha256": "54625b09a22c7052b50a641f55acdac615ff3430677f18a8d4d75ecc13809a27",
+      "runtimeSha256": "8386748e9a11ad026c9861dcb41f215f2f65488e0ad6b9f11ccbf981033b0eba",
+      "bytes": 338120,
+      "width": 1536,
+      "height": 1024,
+      "conversion": "WebP quality 91, no resampling or creative edits",
+      "generatedFileTimestamp": "2026-10-27T07:36:35.600Z"
+    }
+  ],
+  "shippedImageBytes": 748740,
+  "provenanceRecordedAt": "2026-10-27T07:57:25.523Z"
+}

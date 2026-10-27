@@ -1,0 +1,335 @@
+{
+  "report": {
+    "stage": "automatic checkpoint respawn",
+    "actions": [
+      {
+        "name": "approach Gatehouse guardian mask",
+        "firstFrame": 20,
+        "lastFrame": 180
+      },
+      {
+        "name": "Gatehouse guardian mask",
+        "firstFrame": 200,
+        "lastFrame": 200
+      },
+      {
+        "name": "approach",
+        "firstFrame": 222,
+        "lastFrame": 377
+      },
+      {
+        "name": "root tooth one",
+        "firstFrame": 422,
+        "lastFrame": 458
+      },
+      {
+        "name": "approach First root offering",
+        "firstFrame": 458,
+        "lastFrame": 545
+      },
+      {
+        "name": "First root offering",
+        "firstFrame": 565,
+        "lastFrame": 565
+      },
+      {
+        "name": "approach",
+        "firstFrame": 587,
+        "lastFrame": 673
+      },
+      {
+        "name": "rising root tooth",
+        "firstFrame": 718,
+        "lastFrame": 775
+      },
+      {
+        "name": "approach",
+        "firstFrame": 775,
+        "lastFrame": 864
+      },
+      {
+        "name": "falling root tooth",
+        "firstFrame": 909,
+        "lastFrame": 972
+      },
+      {
+        "name": "approach Low root offering",
+        "firstFrame": 972,
+        "lastFrame": 1038
+      },
+      {
+        "name": "Low root offering",
+        "firstFrame": 1058,
+        "lastFrame": 1058
+      },
+      {
+        "name": "approach",
+        "firstFrame": 1080,
+        "lastFrame": 1166
+      },
+      {
+        "name": "long rising root gap",
+        "firstFrame": 1211,
+        "lastFrame": 1268
+      },
+      {
+        "name": "read the first crab safe approach",
+        "firstFrame": 1268,
+        "lastFrame": 1343
+      },
+      {
+        "name": "read the first crab spin",
+        "firstFrame": 1361,
+        "lastFrame": 1400
+      },
+      {
+        "name": "approach",
+        "firstFrame": 1400,
+        "lastFrame": 1491
+      },
+      {
+        "name": "Bristle landing",
+        "firstFrame": 1536,
+        "lastFrame": 1597
+      },
+      {
+        "name": "spin the Bristleback safe approach",
+        "firstFrame": 1597,
+        "lastFrame": 1681
+      },
+      {
+        "name": "spin the Bristleback spin",
+        "firstFrame": 1699,
+        "lastFrame": 1709
+      },
+      {
+        "name": "read first split timber gate",
+        "firstFrame": 1709,
+        "lastFrame": 1862
+      },
+      {
+        "name": "wait for first split timber gate",
+        "firstFrame": 1881,
+        "lastFrame": 1922
+      },
+      {
+        "name": "cross first split timber gate",
+        "firstFrame": 1922,
+        "lastFrame": 2062
+      },
+      {
+        "name": "checkpoint 105 approach",
+        "firstFrame": 2080,
+        "lastFrame": 2202
+      },
+      {
+        "name": "bank checkpoint 105",
+        "firstFrame": 2221,
+        "lastFrame": 2222
+      },
+      {
+        "name": "return over the banked timber bridge to test a missed gap",
+        "firstFrame": 2240,
+        "lastFrame": 2568
+      },
+      {
+        "name": "intentional missed Root Steps gap",
+        "firstFrame": 2586,
+        "lastFrame": 2654
+      },
+      {
+        "name": "automatic checkpoint respawn",
+        "firstFrame": 2654,
+        "lastFrame": 2787
+      }
+    ],
+    "evidence": [
+      {
+        "action": "Gatehouse guardian mask",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "root tooth one",
+        "launch": [
+          4.9328888888888764,
+          2.384185793236071e-8,
+          0
+        ],
+        "landing": [
+          10.332888888888888,
+          1.0000000238418578,
+          0
+        ],
+        "double": false,
+        "ground": "platform"
+      },
+      {
+        "action": "First root offering",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "rising root tooth",
+        "launch": [
+          17.132011111111154,
+          1.0000000238418578,
+          0
+        ],
+        "landing": [
+          24.371011111111095,
+          2.600000023841858,
+          0
+        ],
+        "double": true,
+        "ground": "platform"
+      },
+      {
+        "action": "falling root tooth",
+        "launch": [
+          28.12202222222224,
+          2.600000023841858,
+          0
+        ],
+        "landing": [
+          36.468022222222174,
+          1.200000023841858,
+          0
+        ],
+        "double": true,
+        "ground": "platform"
+      },
+      {
+        "action": "Low root offering",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "long rising root gap",
+        "launch": [
+          41.135311111111164,
+          1.200000023841858,
+          0
+        ],
+        "landing": [
+          49.68531111111108,
+          3.000000023841858,
+          0
+        ],
+        "double": true,
+        "ground": "platform"
+      },
+      {
+        "action": "read the first crab",
+        "kind": "grunt",
+        "alive": false,
+        "position": [
+          54.33135555555555,
+          3.000000023841858,
+          0
+        ]
+      },
+      {
+        "action": "Bristle landing",
+        "launch": [
+          61.0358,
+          3.000000023841858,
+          0
+        ],
+        "landing": [
+          69.43730000000015,
+          3.000000023841858,
+          0
+        ],
+        "double": true,
+        "ground": "platform"
+      },
+      {
+        "action": "spin the Bristleback",
+        "kind": "spiker",
+        "alive": false,
+        "position": [
+          72.71051111111107,
+          3.000000023841858,
+          0
+        ]
+      },
+      {
+        "action": "first split timber gate",
+        "deployed": true
+      },
+      {
+        "action": "checkpoint",
+        "x": 105,
+        "active": true
+      },
+      {
+        "action": "section complete",
+        "section": 0,
+        "position": [
+          103.83617777777697,
+          3.000000023841858,
+          0
+        ],
+        "frame": 2240
+      }
+    ],
+    "section": 0,
+    "result": {
+      "before": {
+        "deaths": 0,
+        "crates": 4,
+        "masks": 1,
+        "spawn": [
+          105,
+          3.100000023841857,
+          0
+        ]
+      },
+      "death": {
+        "position": [
+          62.38189999999975,
+          -18.135833309491485,
+          0
+        ],
+        "deaths": 1
+      },
+      "after": {
+        "deaths": 1,
+        "crates": 4,
+        "masks": 1,
+        "position": [
+          105,
+          3.000000023841858,
+          0
+        ],
+        "bridge": true
+      },
+      "frames": 2817
+    }
+  }
+}

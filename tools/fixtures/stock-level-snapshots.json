@@ -38,6 +38,14 @@
     "coconut-cart-rally": {
       "snapshotSha256": "2d955056b4b1ff5ef3b7ea112a0c7ceabca23b3e21ecc5d77aa81c71828299a2",
       "authoringRuntime": "v24.19.0"
+    },
+    "jungle-gate-run": {
+      "snapshotSha256": "47c043b1df2c6985e4a198b49e49c0d7ca9590213844bfa1e279040c1cecbaed",
+      "authoringRuntime": "v24.19.0"
+    },
+    "bonus-jungle-gate": {
+      "snapshotSha256": "1086521e7059a5e89c656d8f1904176245575530c062c5f376059a52e1ff0611",
+      "authoringRuntime": "v24.19.0"
     }
   }
 }

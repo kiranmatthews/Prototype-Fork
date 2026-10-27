@@ -1,0 +1,31 @@
+{
+  "reports": [
+    {
+      "id": "jungle-gate-run",
+      "scenery": 2202,
+      "explicitlyNonColliding": true,
+      "conservativeBodyOverlaps": []
+    },
+    {
+      "id": "bonus-jungle-gate",
+      "scenery": 405,
+      "explicitlyNonColliding": true,
+      "conservativeBodyOverlaps": []
+    }
+  ],
+  "shippedImageBytes": 748740,
+  "images": [
+    {
+      "path": "public/ancient-gates/gate-valley.webp",
+      "bytes": 410620,
+      "width": 1536,
+      "height": 1024
+    },
+    {
+      "path": "public/ancient-gates/gatekeeper-hoard.webp",
+      "bytes": 338120,
+      "width": 1536,
+      "height": 1024
+    }
+  ]
+}

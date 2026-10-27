@@ -1,0 +1,46 @@
+{
+  "phase": "greybox",
+  "capturedAt": "2026-10-27T07:02:47.349Z",
+  "sources": {
+    "src/levels/ancient-gates-route.ts": "914591481b3dfb7c48ad2be50cabbda4510e16411ef39e9786ab5c3b6512ef6a",
+    "src/levels/ancient-gates-bonus.ts": "acdaf0cefc34622fa087ff045791d5a22e49e067dd03b1562d56e9d77dec8abc",
+    "src/tuning.ts": "1aca3b5fe4b5d026d8b9e36dcf30444081bec7d2acfd4181294f6aacaca61bd6"
+  },
+  "reports": {
+    "main-native": {
+      "path": "main-native.json",
+      "source": "/private/tmp/ancient-gates-native/journey--1-11.json",
+      "traceRetainedLocally": true
+    },
+    "bonus-native": {
+      "path": "bonus-native.json",
+      "source": "/private/tmp/ancient-gates-native/bonus.json",
+      "traceRetainedLocally": true
+    },
+    "main-browser-lite": {
+      "path": "main-browser-lite.json",
+      "source": "/private/tmp/ancient-gates-browser/lite--1-11.json",
+      "traceRetainedLocally": false
+    },
+    "bonus-session-lite": {
+      "path": "bonus-session-lite.json",
+      "source": "/private/tmp/ancient-gates-bonus-browser/lite-session.json",
+      "traceRetainedLocally": false
+    },
+    "recovery": {
+      "path": "recovery.json",
+      "source": "/private/tmp/ancient-gates-native/recovery.json",
+      "traceRetainedLocally": true
+    }
+  },
+  "snapshotCertificates": {
+    "jungle-gate-run": {
+      "snapshotSha256": "2143586522259c66d31d90c5ce157010bd73330508edc4e255fc978e3bc0b142",
+      "authoringRuntime": "v24.19.0"
+    },
+    "bonus-jungle-gate": {
+      "snapshotSha256": "09aaed0871b103713af6b6bbc73184982212782c3bf82cf029d862e835303578",
+      "authoringRuntime": "v24.19.0"
+    }
+  }
+}

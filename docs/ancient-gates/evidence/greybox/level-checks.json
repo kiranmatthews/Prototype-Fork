@@ -1,0 +1,34 @@
+{
+  "phase": "greybox",
+  "command": "npm run check:levels",
+  "startedAt": "2026-10-27T07:02:52Z",
+  "completedBy": "2026-10-27T07:19:08Z",
+  "exitCode": 0,
+  "checks": [
+    "node tools/validate-levels.mjs",
+    "node tools/test-lazy-source.mjs",
+    "node tools/test-tropical-plants.mjs",
+    "node tools/test-jungle-assets.mjs",
+    "node tools/test-crown-quartz.mjs",
+    "node tools/test-jungle-stream.mjs",
+    "node tools/test-custard-pool.mjs",
+    "node tools/test-jungle-enclosure.mjs",
+    "node tools/test-map-landscape-assets.mjs",
+    "node tools/test-world-map-save.mjs",
+    "node tools/test-map-clay-geometry.mjs",
+    "node tools/test-hollowwake-assets.mjs",
+    "node tools/test-scenery-normals.mjs",
+    "node tools/test-waterslide-scenery-lod.mjs",
+    "node tools/test-waterslide-ocean-look.mjs",
+    "node tools/test-waterslide-shallows.mjs",
+    "node tools/test-waterpark-decks.mjs",
+    "node tools/test-waterpark-portals.mjs",
+    "node tools/test-waterslide-forest.mjs",
+    "node tools/test-hollowwake-tunnel-build.mjs"
+  ],
+  "notes": [
+    "Executed before the host slot policy; completed usefully without parallel heavy work in this task.",
+    "Mocked native DOM crate-loader 404 warnings were emitted by existing asset tests; actual Chrome gameplay reports have no console errors.",
+    "No check:all run."
+  ]
+}

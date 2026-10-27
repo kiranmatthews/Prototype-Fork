@@ -18,6 +18,7 @@ import { dressDrownedCrownBonus } from './drowned-crown-bonus';
 import { ROOFTOP_PORCH_BONUS } from './rooftop-porch-bonus';
 import { dressBananaBayBonus } from './banana-bay-bonus';
 import { WATERFALL_CLIMB_BONUS } from './waterfall-climb-bonus';
+import { ANCIENT_GATES_BONUS } from './ancient-gates-bonus';
 
 interface BonusRecipe {
   parentId: string;
@@ -107,6 +108,8 @@ BONUS_BY_PARENT_ID.set('rolling-bones',ROLLING_BONES_BONUS_LEVEL);
 BONUS_BY_PARENT_ID.set('rooftop-relay',ROOFTOP_PORCH_BONUS);
 BONUS_BY_PARENT_ID.set('waterfall-climb',WATERFALL_CLIMB_BONUS);
 BONUS_LEVEL_ENTRIES.push({id:'bonus-waterfall-climb',name:WATERFALL_CLIMB_BONUS.name,data:WATERFALL_CLIMB_BONUS});
+BONUS_BY_PARENT_ID.set('jungle-gate-run',ANCIENT_GATES_BONUS);
+BONUS_LEVEL_ENTRIES.push({id:'bonus-jungle-gate',name:ANCIENT_GATES_BONUS.name,data:ANCIENT_GATES_BONUS});
 BONUS_LEVEL_ENTRIES.push({id:'bonus-rooftop-relay',name:ROOFTOP_PORCH_BONUS.name,data:ROOFTOP_PORCH_BONUS});
 BONUS_LEVEL_ENTRIES.push({id:'bonus-rumblewater-run',name:RUMBLEWATER_BONUS_LEVEL.name,data:RUMBLEWATER_BONUS_LEVEL});
 BONUS_LEVEL_ENTRIES.push({id:'bonus-rolling-bones',name:ROLLING_BONES_BONUS_LEVEL.name,data:ROLLING_BONES_BONUS_LEVEL});
