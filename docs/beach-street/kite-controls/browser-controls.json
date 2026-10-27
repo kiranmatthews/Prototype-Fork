@@ -1,0 +1,725 @@
+{
+  "started": "2026-10-27T19:52:39.442Z",
+  "base": "http://127.0.0.1:5288",
+  "errors": [],
+  "failed": [],
+  "captures": [
+    {
+      "name": "waiting-course",
+      "position": [
+        0,
+        12.000000011920928,
+        15
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "diagnostics": {
+        "started": false,
+        "wind": -0.21166685939619326,
+        "windTarget": -0.2225836610165067,
+        "reserve": 0,
+        "charge": 0,
+        "gripErrors": [
+          0.000008911619225973689,
+          0.000012954113997027912
+        ],
+        "dock": null,
+        "flyaway": false
+      },
+      "stamp": "Codex/sol fork · build 10-27 19:44 UTC"
+    },
+    {
+      "name": "grip-front",
+      "position": [
+        0,
+        12.000000011920928,
+        15
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "diagnostics": {
+        "started": false,
+        "wind": -0.21993831193231345,
+        "windTarget": -0.2225836610165067,
+        "reserve": 0,
+        "charge": 0,
+        "gripErrors": [
+          0.000009573295774108676,
+          0.000013811614966439876
+        ],
+        "dock": null,
+        "flyaway": false
+      },
+      "stamp": "Codex/sol fork · build 10-27 19:44 UTC"
+    },
+    {
+      "name": "grip-side",
+      "position": [
+        0,
+        12.000000011920928,
+        15
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "diagnostics": {
+        "started": false,
+        "wind": -0.20690835576600158,
+        "windTarget": -0.15633646624737188,
+        "reserve": 0,
+        "charge": 0,
+        "gripErrors": [
+          0.000008322581473180352,
+          0.000011857210975725344
+        ],
+        "dock": null,
+        "flyaway": false
+      },
+      "stamp": "Codex/sol fork · build 10-27 19:44 UTC"
+    },
+    {
+      "name": "charged-flip",
+      "position": [
+        -0.5218863225143152,
+        15.676666678587589,
+        5.928231144656031
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 11.877145145386132,
+      "diagnostics": {
+        "started": true,
+        "wind": -0.1638064728184899,
+        "windTarget": -0.15633646624737188,
+        "reserve": 0,
+        "charge": 0,
+        "gripErrors": [
+          0.0000020864903416617647,
+          1.267554554440046e-7
+        ],
+        "dock": null,
+        "flyaway": false
+      },
+      "stamp": "Codex/sol fork · build 10-27 19:44 UTC"
+    },
+    {
+      "name": "grind",
+      "position": [
+        7.2,
+        13.1,
+        8.332777777777771
+      ],
+      "state": "grind",
+      "grounded": false,
+      "speed": 10.883333333333347,
+      "diagnostics": {
+        "started": true,
+        "wind": 0.0402812656674853,
+        "windTarget": 0.049423737891262746,
+        "reserve": 0,
+        "charge": 0.4,
+        "gripErrors": [
+          0.000011896092143724917,
+          0.00001836551786259348
+        ],
+        "dock": null,
+        "flyaway": false
+      },
+      "stamp": "Codex/sol fork · build 10-27 19:44 UTC"
+    },
+    {
+      "name": "pad-planted",
+      "position": [
+        2.7,
+        8.755367606572753,
+        -1493.3256003875001
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "diagnostics": {
+        "started": true,
+        "wind": 0.25213153202313426,
+        "windTarget": 0.29360234844964916,
+        "reserve": 0,
+        "charge": 0,
+        "gripErrors": [
+          4.514820797960723e-10,
+          0.00004380808436654226
+        ],
+        "dock": {
+          "elapsed": 0.850000000000001,
+          "errors": [
+            0.0000010458207778796275,
+            0.0000021990010772687335
+          ],
+          "normalErrors": [
+            0.0013445368450502038,
+            0.0018925896272344866
+          ]
+        },
+        "flyaway": false
+      },
+      "stamp": "Codex/sol fork · build 10-27 19:44 UTC"
+    },
+    {
+      "name": "pad-side",
+      "position": [
+        2.7,
+        8.755367606572753,
+        -1493.3256003875001
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "diagnostics": {
+        "started": true,
+        "wind": 0.25213153202313426,
+        "windTarget": 0.29360234844964916,
+        "reserve": 0,
+        "charge": 0,
+        "gripErrors": [
+          1.9386660137627936e-10,
+          0.000055520897249803905
+        ],
+        "dock": {
+          "elapsed": 0.850000000000001,
+          "errors": [
+            0.000001014640267742629,
+            0.000001917110011020616
+          ],
+          "normalErrors": [
+            0.0014158748820420897,
+            0.0018684778773545574
+          ]
+        },
+        "flyaway": false
+      },
+      "stamp": "Codex/sol fork · build 10-27 19:44 UTC"
+    },
+    {
+      "name": "death-release",
+      "position": [
+        -0.00357054510648656,
+        12.000000011920928,
+        -70.45423565444767
+      ],
+      "state": "dead",
+      "grounded": true,
+      "speed": 0,
+      "diagnostics": {
+        "started": true,
+        "wind": 0.5154366496214543,
+        "windTarget": 0.574928738986569,
+        "reserve": 0,
+        "charge": 0,
+        "gripErrors": [
+          0.000008728456799582472,
+          0.00001277299559723981
+        ],
+        "dock": null,
+        "flyaway": true,
+        "fragments": [
+          {
+            "name": "wrist-left",
+            "position": [
+              0.15110187220215401,
+              16.33063987090351,
+              -82.42049069003221
+            ]
+          },
+          {
+            "name": "wrist-right",
+            "position": [
+              0.868285045761,
+              16.332073823906693,
+              -82.4327579452343
+            ]
+          }
+        ]
+      },
+      "stamp": "Codex/sol fork · build 10-27 19:44 UTC"
+    },
+    {
+      "name": "death-flyaway",
+      "position": [
+        -0.00357054510648656,
+        12.000000011920928,
+        -70.45423565444767
+      ],
+      "state": "dead",
+      "grounded": true,
+      "speed": 0,
+      "diagnostics": {
+        "started": true,
+        "wind": 0.5154366496214543,
+        "windTarget": 0.574928738986569,
+        "reserve": 0,
+        "charge": 0,
+        "gripErrors": [
+          0.000008728456799582472,
+          0.00001277299559723981
+        ],
+        "dock": null,
+        "flyaway": true,
+        "fragments": [
+          {
+            "name": "wrist-left",
+            "position": [
+              0.7248301417541122,
+              25.86347326768863,
+              -123.92049069003221
+            ]
+          },
+          {
+            "name": "wrist-right",
+            "position": [
+              1.4332719276446904,
+              25.751830996745554,
+              -123.93275794523433
+            ]
+          }
+        ]
+      },
+      "stamp": "Codex/sol fork · build 10-27 19:44 UTC"
+    },
+    {
+      "name": "normal-presentation",
+      "position": [
+        0,
+        12.000000011920928,
+        15
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "diagnostics": {
+        "started": false,
+        "wind": -0.3573876971965391,
+        "windTarget": -0.40768748811486616,
+        "reserve": 0,
+        "charge": 0,
+        "gripErrors": [
+          0.00000826938466233416,
+          0.000011227777624245513
+        ],
+        "dock": null,
+        "flyaway": false,
+        "fragments": []
+      },
+      "stamp": "Codex/sol fork · build 10-27 19:44 UTC"
+    }
+  ],
+  "waiting": {
+    "position": [
+      0,
+      12.000000011920928,
+      15
+    ],
+    "state": "ride",
+    "grounded": true,
+    "speed": 0,
+    "diagnostics": {
+      "started": false,
+      "wind": -0.1938576495406619,
+      "windTarget": -0.2225836610165067,
+      "reserve": 0,
+      "charge": 0,
+      "gripErrors": [
+        0.000008176637301118573,
+        0.000011709733348979901
+      ],
+      "dock": null,
+      "flyaway": false
+    },
+    "stamp": "Codex/sol fork · build 10-27 19:44 UTC"
+  },
+  "arms": [
+    {
+      "shoulder": [
+        0.37131570376355977,
+        13.742294056133133,
+        14.833101220261153
+      ],
+      "grip": [
+        0.44554660701729254,
+        13.666648437605108,
+        14.347755816323359
+      ]
+    },
+    {
+      "shoulder": [
+        -0.16020329813149325,
+        13.825378388341747,
+        14.822394644434343
+      ],
+      "grip": [
+        -0.23443528086469326,
+        13.661021733552202,
+        14.347759355393704
+      ]
+    }
+  ],
+  "held": {
+    "position": [
+      -0.24698608826138616,
+      12.000000011920928,
+      12.95
+    ],
+    "state": "ride",
+    "grounded": true,
+    "speed": 6.0000000000000036,
+    "diagnostics": {
+      "started": true,
+      "wind": -0.17644000544024033,
+      "windTarget": -0.15633646624737188,
+      "reserve": 0,
+      "charge": 0.4,
+      "gripErrors": [
+        0.000009832685064593278,
+        0.000001620834384026987
+      ],
+      "dock": null,
+      "flyaway": false
+    },
+    "stamp": "Codex/sol fork · build 10-27 19:44 UTC"
+  },
+  "released": {
+    "position": [
+      -0.2923649155485992,
+      13.006666678587594,
+      12.174166666666665
+    ],
+    "state": "air",
+    "grounded": false,
+    "speed": 7.150000000000006,
+    "diagnostics": {
+      "started": true,
+      "wind": -0.1735104536513087,
+      "windTarget": -0.15633646624737188,
+      "reserve": 0,
+      "charge": 0,
+      "gripErrors": [
+        7.565144359150187e-7,
+        0.00000228120616383981
+      ],
+      "dock": null,
+      "flyaway": false
+    },
+    "stamp": "Codex/sol fork · build 10-27 19:44 UTC"
+  },
+  "flip": {
+    "name": "Kickflip",
+    "t": 0.2733333333333334,
+    "special": null
+  },
+  "braking": {
+    "position": [
+      3.9019892191247,
+      12.000000011920928,
+      -27.51361111111113
+    ],
+    "state": "ride",
+    "grounded": true,
+    "speed": 4.5,
+    "diagnostics": {
+      "started": true,
+      "wind": 0.3022721807605948,
+      "windTarget": 0.33908583660246483,
+      "reserve": 254.37500000000003,
+      "charge": 0.4,
+      "gripErrors": [
+        2.7112999961613104e-7,
+        0.000001063254707298652
+      ],
+      "dock": null,
+      "flyaway": false
+    },
+    "stamp": "Codex/sol fork · build 10-27 19:44 UTC"
+  },
+  "boost": {
+    "position": [
+      3.7703140303919107,
+      12.000000011920928,
+      -37.64361111111113
+    ],
+    "state": "ride",
+    "grounded": true,
+    "speed": 23,
+    "diagnostics": {
+      "started": true,
+      "wind": 0.32540674018031834,
+      "windTarget": 0.33908583660246483,
+      "reserve": 0,
+      "charge": 0.4,
+      "gripErrors": [
+        0.000007644178193182616,
+        8.422643200351191e-7
+      ],
+      "dock": null,
+      "flyaway": false
+    },
+    "stamp": "Codex/sol fork · build 10-27 19:44 UTC"
+  },
+  "grind": {
+    "position": [
+      7.2,
+      13.1,
+      13.554444444444442
+    ],
+    "state": "grind",
+    "grounded": false,
+    "speed": 5.033333333333334,
+    "diagnostics": {
+      "started": true,
+      "wind": 0.02743718942744612,
+      "windTarget": 0.049423737891262746,
+      "reserve": 0,
+      "charge": 0.4,
+      "gripErrors": [
+        0.000010542908692415943,
+        0.000017090826610327368
+      ],
+      "dock": null,
+      "flyaway": false
+    },
+    "stamp": "Codex/sol fork · build 10-27 19:44 UTC"
+  },
+  "grindBeforeRelease": {
+    "state": "grind",
+    "balance": -0.04946192999409102,
+    "charge": 0.4
+  },
+  "grindExit": {
+    "position": [
+      7.163464970492837,
+      13.698333333333332,
+      7.189166666666663
+    ],
+    "state": "air",
+    "grounded": false,
+    "speed": 11.850000000000012,
+    "diagnostics": {
+      "started": true,
+      "wind": 0.0414358144371825,
+      "windTarget": 0.049423737891262746,
+      "reserve": 0,
+      "charge": 0,
+      "gripErrors": [
+        0.000001724204846167179,
+        0.0000014817473083859315
+      ],
+      "dock": null,
+      "flyaway": false
+    },
+    "stamp": "Codex/sol fork · build 10-27 19:44 UTC",
+    "launch": 11.166666666666663
+  },
+  "padDefinition": {
+    "x": 2.7,
+    "y": 8.800000011920929,
+    "z": -1494.841365803701,
+    "laneFraction": 0.5,
+    "topY": 9.85000001192093,
+    "radius": 1.6,
+    "modelReady": true,
+    "tilt": 1.2566370614359172
+  },
+  "pad": {
+    "position": [
+      2.7,
+      8.755367606572753,
+      -1493.3256003875001
+    ],
+    "state": "ride",
+    "grounded": true,
+    "speed": 0,
+    "diagnostics": {
+      "started": true,
+      "wind": 0.25213153202313426,
+      "windTarget": 0.29360234844964916,
+      "reserve": 0,
+      "charge": 0,
+      "gripErrors": [
+        2.908993563315686e-10,
+        0.00005229903136621709
+      ],
+      "dock": {
+        "elapsed": 0.850000000000001,
+        "errors": [
+          8.602237034684379e-7,
+          0.000001436737917822651
+        ],
+        "normalErrors": [
+          0.0014568315757501615,
+          0.0018232032965243006
+        ]
+      },
+      "flyaway": false
+    },
+    "stamp": "Codex/sol fork · build 10-27 19:44 UTC"
+  },
+  "bonusEntered": true,
+  "bonusReturn": {
+    "position": [
+      0,
+      7.000000011920929,
+      -1497.241365803701
+    ],
+    "state": "ride",
+    "grounded": true,
+    "speed": 0,
+    "diagnostics": {
+      "started": false,
+      "wind": 0.04192595610832882,
+      "windTarget": 0.28770957557628873,
+      "reserve": 0,
+      "charge": 0,
+      "gripErrors": [
+        0.000016651145381029105,
+        0.000018651082410079647
+      ],
+      "dock": null,
+      "flyaway": false
+    },
+    "stamp": "Codex/sol fork · build 10-27 19:44 UTC"
+  },
+  "bonusReturnExit": {
+    "position": [
+      3.8010484749549005,
+      7.000000011920929,
+      -1512.5038658037013
+    ],
+    "state": "ride",
+    "grounded": true,
+    "speed": 16.50000000000002,
+    "diagnostics": {
+      "started": true,
+      "wind": 0.2670236912056004,
+      "windTarget": 0.28770957557628873,
+      "reserve": 0,
+      "charge": 0.4,
+      "gripErrors": [
+        0.000004552162662135207,
+        0.0000016877047146435755
+      ],
+      "dock": null,
+      "flyaway": false
+    },
+    "stamp": "Codex/sol fork · build 10-27 19:44 UTC"
+  },
+  "spin": true,
+  "deathStart": {
+    "position": [
+      -0.00357054510648656,
+      12.000000011920928,
+      -70.45423565444767
+    ],
+    "state": "dead",
+    "grounded": true,
+    "speed": 0,
+    "diagnostics": {
+      "started": true,
+      "wind": 0.5154366496214543,
+      "windTarget": 0.574928738986569,
+      "reserve": 0,
+      "charge": 0,
+      "gripErrors": [
+        0.000008728456799582472,
+        0.00001277299559723981
+      ],
+      "dock": null,
+      "flyaway": true,
+      "fragments": [
+        {
+          "name": "wrist-left",
+          "position": [
+            -0.22372477853391937,
+            13.722229010629277,
+            -71.3121573566989
+          ]
+        },
+        {
+          "name": "wrist-right",
+          "position": [
+            0.49183421775747904,
+            13.673968431648037,
+            -71.32442461190098
+          ]
+        }
+      ]
+    },
+    "stamp": "Codex/sol fork · build 10-27 19:44 UTC"
+  },
+  "deathLater": {
+    "position": [
+      -0.00357054510648656,
+      12.000000011920928,
+      -70.45423565444767
+    ],
+    "state": "dead",
+    "grounded": true,
+    "speed": 0,
+    "diagnostics": {
+      "started": true,
+      "wind": 0.5154366496214543,
+      "windTarget": 0.574928738986569,
+      "reserve": 0,
+      "charge": 0,
+      "gripErrors": [
+        0.000008728456799582472,
+        0.00001277299559723981
+      ],
+      "dock": null,
+      "flyaway": true,
+      "fragments": [
+        {
+          "name": "wrist-left",
+          "position": [
+            0.7117931082525958,
+            26.032375435319448,
+            -124.66382402336558
+          ]
+        },
+        {
+          "name": "wrist-right",
+          "position": [
+            1.4202161023830433,
+            25.920613983805907,
+            -124.67609127856767
+          ]
+        }
+      ]
+    },
+    "stamp": "Codex/sol fork · build 10-27 19:44 UTC"
+  },
+  "respawn": {
+    "position": [
+      0,
+      12.000000011920928,
+      15
+    ],
+    "state": "ride",
+    "grounded": true,
+    "speed": 0,
+    "diagnostics": {
+      "started": false,
+      "wind": -0.27533073918724704,
+      "windTarget": -0.40768748811486616,
+      "reserve": 0,
+      "charge": 0,
+      "gripErrors": [
+        0.000009986872582771254,
+        0.000014029842368571936
+      ],
+      "dock": null,
+      "flyaway": false,
+      "fragments": []
+    },
+    "stamp": "Codex/sol fork · build 10-27 19:44 UTC"
+  },
+  "pass": true,
+  "finished": "2026-10-27T19:53:23.346Z"
+}

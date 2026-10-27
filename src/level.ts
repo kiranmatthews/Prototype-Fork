@@ -52,6 +52,7 @@ import { CityAssetKit, CITY_ASSETS, CITY_ASSET_KINDS, CITY_ASSET_LABELS, isCityA
 import { createExplosiveBundle, updateExplosiveBundle, disposeExplosiveBundle, type ExplosiveBundle } from "./explosiveBundle";
 import { createWoodCrate, setWoodCrateState, disposeWoodCrate, woodCrateTexture, type WoodCrate } from "./woodCrate";
 import {attachBonusStone,BonusJumpGate,BONUS_PLATFORM_HEIGHT,BONUS_PLATFORM_RADIUS,BONUS_LANDING_RADIUS} from './bonusPlatform';
+import {KITE_BONUS_TILT,kiteBonusFrame,type KiteBonusFrame} from './kiteBonus';
 import { DECK_TRICKS, deckTrickInfo, type DeckTrickKind } from './skateTricks';
 import { createJungleCupTrophy } from "./competition/trophy";
 import { isCompetitionLevel } from './competition/courses';
@@ -4490,6 +4491,7 @@ export class Level {
   private capturedOceanSpec: CustomOceanData | null = null;
   private capturedCollisionComponents: CustomComponent[] = [];
   private bonusPlatform: {
+    basePoint: THREE.Vector3;
     group: THREE.Group;
     ground: THREE.Mesh;
     groundIndex: number;
@@ -4499,6 +4501,7 @@ export class Level {
     laneFraction: number;
     entry: BonusJumpGate;
   } | null = null;
+  private kiteBonusEntry = false;
   /** Main-level tally extension supplied by its linked bonus stage. */
   bonusCrateTotal = 0;
   /** Completion lock also serves competition cards, which have no walk-up pad. */
@@ -7079,7 +7082,7 @@ export class Level {
       const bonus = this.bonusPlatform;
       C.push({
         t: "bonusplatform",
-        p: bonus.group.position.toArray() as [number, number, number],
+        p: bonus.basePoint.toArray() as [number, number, number],
         to: bonus.returnPoint.toArray() as [number, number, number],
       });
     }
@@ -9120,17 +9123,35 @@ export class Level {
 
   consumeBonusLanding(position:THREE.Vector3,state:{enabled:boolean;grounded:boolean;jump:boolean;rising:boolean}):boolean {
     const platform=this.bonusPlatform;if(!platform)return false;
+    if(this.kiteTow){
+      const enter=this.kiteBonusEntry&&state.enabled&&!this.timeTrial&&!platform.locked&&platform.group.visible;
+      this.kiteBonusEntry=false;return enter;
+    }
     return platform.entry.step({...state,enabled:state.enabled&&!this.timeTrial&&!platform.locked&&platform.group.visible,
       near:Math.hypot(position.x-platform.group.position.x,position.z-platform.group.position.z)<7,
       landing:{x:position.x-platform.group.position.x,z:position.z-platform.group.position.z,height:position.y-platform.group.position.y-BONUS_PLATFORM_HEIGHT},
       onTop:this.bonusPlatformAt(position)});
   }
 
-  cancelBonusEntry():void {this.bonusPlatform?.entry.reset();}
+  cancelBonusEntry():void {this.bonusPlatform?.entry.reset();this.kiteBonusEntry=false;}
+
+  get kiteBonusPad():KiteBonusFrame|null {
+    const p=this.bonusPlatform;
+    return this.kiteTow&&p&&!p.locked&&!this.timeTrial&&p.group.visible?kiteBonusFrame(p.group):null;
+  }
+  catchKiteBonus(previous:THREE.Vector3,position:THREE.Vector3):KiteBonusFrame|null {
+    const pad=this.kiteBonusPad,p=this.bonusPlatform;if(!pad||!p)return null;
+    if(previous.z<pad.body.z||position.z>pad.body.z)return null;
+    const t=(previous.z-pad.body.z)/Math.max(.0001,previous.z-position.z);
+    const x=THREE.MathUtils.lerp(previous.x,position.x,t),y=THREE.MathUtils.lerp(previous.y,position.y,t);
+    return Math.abs(x-pad.center.x)<1.5&&y>=p.basePoint.y-.3&&y<=p.basePoint.y+2.1?pad:null;
+  }
+  armKiteBonusEntry():void {if(this.kiteBonusPad)this.kiteBonusEntry=true;}
 
   /** Steep circular sides block running without adding square invisible corners. */
   resolveBonusPlatformContact(previous:THREE.Vector3,position:THREE.Vector3,half:{x:number;y:number;z:number},normal:THREE.Vector3):boolean {
     const p=this.bonusPlatform;if(!p||this.timeTrial||!p.group.visible)return false;
+    if(this.kiteTow)return false; // automatic front contact is owned by the dock
     const center=p.group.position,top=center.y+BONUS_PLATFORM_HEIGHT;
     if(position.y>=top-.025||position.y+half.y*2<center.y)return false;
     let dx=position.x-center.x,dz=position.z-center.z,d=Math.hypot(dx,dz);
@@ -9152,6 +9173,7 @@ export class Level {
     topY: number;
     radius: number;
     modelReady: boolean;
+    tilt: number;
   } | null {
     const platform = this.bonusPlatform;
     if (!platform) return null;
@@ -9163,6 +9185,7 @@ export class Level {
       topY: platform.group.position.y+BONUS_PLATFORM_HEIGHT,
       radius: BONUS_PLATFORM_RADIUS,
       modelReady:platform.group.userData.bonusStoneReady===true,
+      tilt:platform.group.rotation.x,
     };
   }
 
@@ -9171,6 +9194,7 @@ export class Level {
     const platform = this.bonusPlatform;
     if (!platform || platform.locked === locked) return;
     platform.locked = locked;
+    this.kiteBonusEntry=false;
     platform.entry.reset();platform.group.userData.bonusLocked=locked;
     platform.group.name = locked ? "bonus platform locked" : "bonus platform";
     platform.group.traverse((object) => {
@@ -11984,6 +12008,7 @@ export class Level {
     const group = new THREE.Group();
     group.name = "bonus platform";
     group.position.set(x, deckY, z);
+    if(this.kiteTow){group.position.y+=1.8;group.rotation.x=KITE_BONUS_TILT;}
     const baseMaterial = new THREE.MeshLambertMaterial({visible:false});
     const base = new THREE.Mesh(
       new THREE.CylinderGeometry(1.52,1.52,.12,32),
@@ -11993,10 +12018,11 @@ export class Level {
     base.name = "bonus platform deck";
     base.userData.edgeGrinding = false;
     group.add(base);
-    this.groundMeshes.push(base);
+    if(!this.kiteTow)this.groundMeshes.push(base);
     this.root.add(group);
     attachBonusStone(group);
     this.bonusPlatform = {
+      basePoint:new THREE.Vector3(x,deckY,z),
       group,
       ground: base,
       groundIndex: this.groundMeshes.indexOf(base),
@@ -18440,6 +18466,7 @@ export class Level {
   setTimeTrial(on: boolean): void {
     if (this.timeTrial === on) return;
     this.timeTrial = on;
+    this.kiteBonusEntry=false;
     const bonus = this.bonusPlatform;
     if (bonus) {
       bonus.entry.reset();
@@ -18448,7 +18475,7 @@ export class Level {
       if (on && index >= 0) {
         bonus.groundIndex = index;
         this.groundMeshes.splice(index, 1);
-      } else if (!on && index < 0) {
+      } else if (!on && index < 0 && !this.kiteTow) {
         this.groundMeshes.splice(Math.min(bonus.groundIndex, this.groundMeshes.length), 0, bonus.ground);
       }
     }

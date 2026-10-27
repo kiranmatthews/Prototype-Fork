@@ -9,11 +9,12 @@ try{module=require.resolve('playwright');}catch{module=homedir()+'/.cache/codex-
 const {chromium}=await import(pathToFileURL(module).href);
 const code=ts.transpileModule(await readFile(new URL('../src/levels/beach-street-gameplay.ts',import.meta.url),'utf8'),{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2020}}).outputText;
 const {BEACH_KITE_BEATS:beats,BEACH_KITE_JUMPS:jumps}=await import('data:text/javascript;base64,'+Buffer.from(code).toString('base64'));
-const base=process.env.BEACH_BASE??'http://127.0.0.1:5287',out=process.env.BEACH_OUTPUT??'docs/beach-street/kite';
+const base=process.env.BEACH_BASE??'http://127.0.0.1:5287',out=process.env.BEACH_OUTPUT??'docs/beach-street/kite-controls';
 const lite=process.argv.includes('--lite'),preview=process.argv.includes('--preview');
 await mkdir(out,{recursive:true});
 const browser=await chromium.launch({channel:'chrome',headless:true});
 const page=await browser.newPage({viewport:{width:1600,height:1000},deviceScaleFactor:1,serviceWorkers:'block'});
+await page.addInitScript(()=>Object.defineProperty(navigator,'getGamepads',{value:()=>[]}));
 const report={base,lite,preview,errors:[],failed:[],captures:[],started:new Date().toISOString()};
 page.on('pageerror',e=>report.errors.push(e.message));page.on('console',m=>{if(m.type()==='error')report.errors.push(m.text());});
 page.on('response',r=>{if(r.status()>=400)report.failed.push({url:r.url(),status:r.status()});});
@@ -25,24 +26,29 @@ try{
  await page.evaluate(({beats,jumps,preview})=>{
   const g=window.__game,p=g.player,l=g.getLevel();p.respawn(l,true);p.lives=99;
   g.renderQualitySettings.setRegularResolution(preview?null:480);g.crtGuestSettings.setEnabled(!preview);
-  const keys=new Set(),used=new Set();let heldUntil=-1,cp='',lastTrace=-1;
+  const keys=new Set(),used=new Set();let releasedUntil=-1,cp='',lastTrace=-1;
+  const pad=l.bonusPlatformDiagnostics;
   const state=window.__kitePilot={done:false,crashes:[],trace:[],jumps:[],checkpoints:[],keys:[],maxGripError:0,canopyBounds:{minX:1,maxX:-1,minY:1,maxY:-1},canopyClips:[]};
   let frame=0;
   const key=(code,down)=>{if(keys.has(code)===down)return;if(down)keys.add(code);else keys.delete(code);document.body.dispatchEvent(new KeyboardEvent(down?'keydown':'keyup',{code,key:code==='Space'?' ':code,bubbles:true}));state.keys.push({z:-p.pos.z,code,down});};
   const line=z=>{let a={z:-15,lane:0,kind:'rest'};for(const b of beats){if(z<b.z+(b.kind==='gap'?25:7)){const leave=a.z+(a.kind==='gap'?25:7),arrive=b.z-(b.kind==='gap'?25:17),t=Math.max(0,Math.min(1,(z-leave)/Math.max(1,arrive-leave)));return a.lane+(b.lane-a.lane)*t*t*(3-2*t);}a=b;}return 0;};
-  const snap=()=>({z:-p.pos.z,x:p.pos.x,y:p.pos.y,state:p.state,grounded:p.grounded,lives:p.lives,speed:p.speed});
+  const snap=()=>({z:-p.pos.z,x:p.pos.x,y:p.pos.y,state:p.state,grounded:p.grounded,lives:p.lives,speed:p.speed,crates:p.cratesBroken,totalCrates:l.totalCrates,bonusCrates:l.bonusCrateTotal,crystal:p.hasCrystal,gem:p.gemEarned});
   const run=()=>{
    if(state.done)return;
    const z=-p.pos.z;
    if(p.state==='dead'||p.state==='gameover'){state.crashes.push(snap());state.done=true;}
    if(p.state==='finished'||preview&&z>215)state.done=true;
    if(state.done){for(const c of [...keys])key(c,false);state.final=snap();return;}
-   const error=line(z+2)-p.pos.x;
+   let target=line(z+2);
+   // The optional pad now catches a straight approach. Choose its outer side
+   // after collecting the preceding exit rewards. Entry/return is tested separately.
+   if(pad&&z>-pad.z-14&&z<-pad.z+1)target=pad.x-2.1;
+   const error=target-p.pos.x-(p.kiteMotion?.lateral??0)*.12;
    // Real DOM keyboard events: no teleports, velocity writes or invulnerability.
-   key('ArrowRight',error>.13);key('ArrowLeft',error<-.13);key('ArrowDown',z<35);
+   key('ArrowRight',error>.10);key('ArrowLeft',error<-.10);
    const jump=jumps.find(j=>!used.has(j.name)&&z>=j.at-.5);
-   if(jump){used.add(jump.name);heldUntil=p.runTime+.7;state.jumps.push({name:jump.name,...snap()});}
-   key('Space',p.runTime<heldUntil);
+   if(jump){used.add(jump.name);releasedUntil=p.runTime+.10;state.jumps.push({name:jump.name,...snap()});}
+   key('Space',p.runTime>=releasedUntil);
    const checkpoint=l.currentSpawn.toArray().join(',');if(cp!==checkpoint){cp=checkpoint;state.checkpoints.push({spawn:l.currentSpawn.toArray(),...snap()});}
    if(Math.floor(z/30)>lastTrace){lastTrace=Math.floor(z/30);state.trace.push(snap());}
    state.maxGripError=Math.max(state.maxGripError,...(p.kiteVisual?.gripErrors??[0]));
@@ -74,7 +80,9 @@ try{
  await page.waitForFunction(()=>window.__kitePilot.done,null,{timeout:300000});
  report.journey=await page.evaluate(()=>window.__kitePilot);
  assert.deepEqual(report.journey.crashes,[]);
- if(!preview){assert.equal(report.journey.final.state,'finished');assert.equal(report.journey.jumps.length,jumps.length);assert.ok(report.journey.checkpoints.length>=10);}
+ if(!preview){assert.equal(report.journey.final.state,'finished');assert.equal(report.journey.jumps.length,jumps.length);assert.ok(report.journey.checkpoints.length>=10);
+  assert.equal(report.journey.final.crates,report.journey.final.totalCrates-report.journey.final.bonusCrates,'All main-course rewards remain reachable when bypassing the optional pad');
+  assert.ok(report.journey.final.crystal);assert.equal(report.journey.final.gem,report.journey.final.bonusCrates===0,'The gem still requires any linked bonus boxes');}
  assert.ok(report.captures.every(c=>c.kiteVisible));
  assert.ok(report.journey.maxGripError<.08,'Both hands remain attached to the bar');
  assert.deepEqual(report.journey.canopyClips,[],'The complete canopy remains framed through the run');
@@ -82,5 +90,5 @@ try{
  assert.deepEqual(report.assets.errors,[]);assert.equal(report.assets.reduced,0);
  assert.deepEqual(report.errors,[]);assert.deepEqual(report.failed,[]);
  report.pass=true;
-}catch(e){report.pass=false;report.error=e.stack;await page.screenshot({path:`${out}/failure.png`}).catch(()=>{});throw e;}
+}catch(e){report.pass=false;report.error=e.stack;report.journey=await page.evaluate(()=>window.__kitePilot).catch(()=>null);await page.screenshot({path:`${out}/failure.png`}).catch(()=>{});throw e;}
 finally{report.finished=new Date().toISOString();await writeFile(`${out}/browser-${lite?'lite':'full'}${preview?'-preview':''}.json`,JSON.stringify(report,null,2)+'\n');await browser.close();console.log(JSON.stringify({pass:report.pass,final:report.journey?.final,errors:report.errors,error:report.error}));}

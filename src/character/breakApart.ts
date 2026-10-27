@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import {solidContact,type WorldSolids}from'../worldSolids';
 import { characterElasticityAmplitudes } from '../animation/elasticity';
 
-export type BreakApartStyle = 'head-pop' | 'waist-split' | 'loose-limbs' | 'yard-sale' | 'blast' | 'crush';
+export type BreakApartStyle = 'head-pop' | 'waist-split' | 'loose-limbs' | 'yard-sale' | 'blast' | 'crush' | 'kite-collapse';
 export interface BreakApartOptions {
   style?: BreakApartStyle;
   origin?: THREE.Vector3;
@@ -136,6 +136,22 @@ export class CharacterBreakApart {
 
   constructor(private readonly root: THREE.Object3D) {}
 
+  private tetherAnchor: THREE.Object3D | null = null;
+  private readonly tetherOffsets = new Map<string, THREE.Matrix4>();
+  /** Keep selected ORIGINAL fragments on a moving prop, without reparenting
+   * bones or duplicating skins. Other pieces retain their ordinary contacts. */
+  tetherTo(anchor: THREE.Object3D, names: readonly string[]): void {
+    anchor.updateWorldMatrix(true, false); this.root.updateWorldMatrix(true, true);
+    this.tetherAnchor = anchor; this.tetherOffsets.clear();
+    this.inverse.copy(anchor.matrixWorld).invert();
+    for (const p of this.parts) if (p.selected && names.includes(p.name))
+      this.tetherOffsets.set(p.name, new THREE.Matrix4().multiplyMatrices(this.inverse, p.node.matrixWorld));
+  }
+  get tetherDiagnostics() {
+    return [...this.tetherOffsets.keys()].map(name => ({name,
+      position: this.parts.find(p => p.name === name)!.node.getWorldPosition(new THREE.Vector3()).toArray()}));
+  }
+
   get active(): boolean { return this.pending || this.initialized; }
   get preparing(): boolean { return this.pending; }
   get diagnostics() {
@@ -206,7 +222,7 @@ export class CharacterBreakApart {
   }
 
   private selects(name: string): boolean {
-    return this.style === 'yard-sale' || this.style === 'blast' || this.style === 'crush' ||
+    return this.style === 'kite-collapse' || this.style === 'yard-sale' || this.style === 'blast' || this.style === 'crush' ||
       (this.style === 'head-pop' ? name === 'head' : this.style === 'waist-split'
         ? name === 'hips' || name === 'torso-root'
         : name === 'head' || name.startsWith('shoulder') || name.startsWith('knee'));
@@ -291,6 +307,7 @@ export class CharacterBreakApart {
     this.age = this.returnT = 0;
     this.candidates.length = this.walls.length = this.selectedCount = 0;
     this.groundSet.clear(); this.surfaceBounds.clear(); this.groundCount = -1;
+    this.tetherAnchor = null; this.tetherOffsets.clear();
     for (const p of this.parts) p.selected = false;
   }
 
@@ -317,6 +334,10 @@ export class CharacterBreakApart {
       p.angular.set((2.5 + this.random() * 5) * fz, (this.random() - .5) * 7, -(2.5 + this.random() * 5) * fx);
       if (this.style === 'head-pop') p.angular.multiplyScalar(1.4);
       if (splitLegs) p.angular.multiplyScalar(.25);
+      if (this.style === 'kite-collapse') {
+        p.velocity.set(fx * speed * .08 - fz * side * .3, .15, fz * speed * .08 + fx * side * .3);
+        p.angular.multiplyScalar(.28);
+      }
       if (this.style === 'blast') {
         // The source, not course forward, owns explosion direction. Low
         // fragments kick sideways; the upper pieces fan upward with mass cues.
@@ -425,10 +446,10 @@ export class CharacterBreakApart {
       // support transforms wake them directly. Round-robin prevents starvation.
       for (let n = 0; n < this.parts.length && this.lastProbes < 2; n++) {
         const p = this.parts[this.scan++ % this.parts.length];
-        if (!p.selected || p.sleeping) continue;
+        if (!p.selected || p.sleeping || this.tetherOffsets.has(p.name)) continue;
         this.probe(p, world);
       }
-      for (const p of this.parts) if (p.selected) this.integrate(p, dt, world);
+      for (const p of this.parts) if (p.selected && !this.tetherOffsets.has(p.name)) this.integrate(p, dt, world);
     }
     this.apply();
   }
@@ -584,6 +605,12 @@ export class CharacterBreakApart {
     }
     for (const p of this.parts) {
       if (!p.selected || !p.node.parent) continue;
+      const tether = this.tetherOffsets.get(p.name);
+      if (tether && this.tetherAnchor) {
+        this.tetherAnchor.updateWorldMatrix(true, false);
+        this.matrix.multiplyMatrices(this.tetherAnchor.matrixWorld, tether).decompose(this.point, p.rotation, p.scale);
+        p.position.copy(this.point).add(this.delta.copy(p.offset).multiply(p.scale).applyQuaternion(p.rotation));
+      }
       if (this.returning) {
         const t = this.returnT / this.returnDuration;
         const u = THREE.MathUtils.clamp((t - p.rank * .032) / (1 - p.rank * .032), 0, 1);
@@ -599,7 +626,7 @@ export class CharacterBreakApart {
       // A short compression/rebound uses the shared editable segment profile;
       // each detached semantic piece deforms independently, never the rig root.
       const beat = p.impactAge / .26;
-      if (!this.returning && beat < 1) {
+      if (!tether && !this.returning && beat < 1) {
         const pulse = Math.sin(beat * Math.PI * 2) * (1 - beat) * p.elasticity * p.impactStrength;
         this.visualScale.y *= 1 - pulse;
         this.visualScale.x *= 1 + pulse * .5; this.visualScale.z *= 1 + pulse * .5;

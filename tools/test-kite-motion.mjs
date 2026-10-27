@@ -1,23 +1,47 @@
 import assert from 'node:assert/strict';
-import {readFile} from 'node:fs/promises';
+import {mkdir,readFile,writeFile} from 'node:fs/promises';
 import ts from 'typescript';
 const js=ts.transpileModule(await readFile(new URL('../src/kiteTow.ts',import.meta.url),'utf8'),{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2020}}).outputText;
 const {KiteTowMotion,KITE_TOW}=await import('data:text/javascript;base64,'+Buffer.from(js).toString('base64'));
-const idle={moveX:0,jumpHeld:false,jumpPressed:false};
-const ride=new KiteTowMotion();let z=0;
-for(let i=0;i<300;i++)z+=ride.step(1/60,-z,true,idle).dz;
-assert.ok(z<-50);assert.equal(ride.speed,20);
-for(let i=0;i<60;i++)ride.step(1/60,300,true,{...idle,moveX:1,moveY:-1});
-assert.equal(ride.speed,20,'Backward input cannot brake the kite');assert.ok(ride.lateral>8.9);
-let jumps=0;
-for(let i=0;i<120;i++)if(ride.step(1/60,300,true,{...idle,jumpHeld:true,jumpPressed:i===0}).jump)jumps++;
-assert.equal(jumps,1,'Holding never repeats a jump');
-ride.step(1/60,300,false,idle);
-assert.ok(ride.step(1/60,300,false,{...idle,jumpPressed:true,jumpHeld:true}).jump,'Coyote press works');
-for(let i=0;i<30;i++)ride.step(1/60,300,false,idle);
-assert.equal(ride.step(1/60,300,false,{...idle,jumpPressed:true}).jump,false);
-assert.equal(ride.step(1/60,300,true,idle).jump,true,'Landing consumes a fresh buffered press');
-const arc=held=>{let y=0,v=KITE_TOW.launchSpeed,peak=0,t=0;do{v-=ride.gravity(v>0,held)/60;y+=v/60;peak=Math.max(peak,y);t+=1/60;}while(y>0);return {peak,t};};
-const tap=arc(false),hold=arc(true);assert.ok(hold.peak>tap.peak+.6);assert.ok(hold.t>tap.t+.15);assert.ok(hold.t<1.3);
-ride.reset();assert.equal(ride.speed,0);assert.equal(ride.lateral,0);assert.equal(ride.jumpBuffer,0);
-console.log('PASS pull, brake immunity, steering, single press, coyote, buffer and lift',JSON.stringify({tap,hold}));
+const tuning={cruiseSpeed:12,maxSpeed:23,chargeBoost:9,chargeDecay:10,jumpChargeTime:.4};
+const idle={moveX:0,moveY:0,jumpHeld:false,jumpPressed:false,jumpReleased:false};
+const m=new KiteTowMotion(1),step=(input=idle,grounded=true)=>m.step(1/60,300,grounded,input,tuning);
+for(let i=0;i<600;i++)assert.equal(step().dz,0);
+assert.equal(m.started,false);assert.ok(Math.abs(m.wind)>.01,'Waiting kite still reacts to wind');
+step({...idle,jumpPressed:true,jumpHeld:true});assert.equal(m.started,true);
+for(let i=0;i<45;i++)assert.equal(step({...idle,jumpHeld:true}).jumpCharge,null,'Holding never jumps');
+assert.equal(m.charge,.4);assert.equal(step({...idle,jumpReleased:true}).jumpCharge,.4);
+for(let i=0;i<30;i++)assert.equal(step(idle,false).jumpCharge,null);
+m.reset(7);m.started=true;m.speed=12;
+for(let i=0;i<20;i++)step({...idle,jumpHeld:true});
+assert.ok(Math.abs(m.speed-15)<1e-8,'Charge adds the live normal acceleration exactly');
+assert.ok(Math.abs(m.charge-20/60)<1e-8);
+// Braking stores removed kinetic energy, not an endlessly farmed timer bonus.
+m.speed=23;m.reserve=0;m.charging=false;m.charge=0;
+for(let i=0;i<240;i++)step({...idle,moveY:-1});
+assert.equal(m.speed,KITE_TOW.brakeFloor);
+const stored=m.reserve;assert.ok(Math.abs(stored-(23**2-4.5**2)/2)<1e-7);
+for(let i=0;i<240;i++)step({...idle,moveY:-1});assert.equal(m.reserve,stored);
+let maxDelta=0,previous=m.speed;
+for(let i=0;i<120;i++){step();maxDelta=Math.max(maxDelta,m.speed-previous);previous=m.speed;}
+assert.equal(m.reserve,0);assert.ok(m.speed>22);assert.ok(maxDelta<.61,'Stored speed returns smoothly');
+// Repeated pulls restore what was removed; they cannot manufacture overdrive.
+m.speed=23;
+for(let cycle=0;cycle<8;cycle++){
+ for(let i=0;i<65;i++)step({...idle,moveY:-1,jumpHeld:true});
+ for(let i=0;i<65;i++)step({...idle,jumpHeld:true});
+ assert.ok(m.speed<=23+1e-7);assert.equal(m.reserve,0);
+}
+m.reset(7);step({...idle,spinPressed:true,moveY:-1});
+for(let i=0;i<60;i++)step({...idle,moveY:-1});
+assert.equal(m.speed,KITE_TOW.brakeFloor,'Starting with brake held still receives forward pull');
+assert.equal(m.reserve,0,'Starting slowly does not manufacture stored energy');
+const wind=seed=>{const w=new KiteTowMotion(seed);let prev=0,maxDelta=0,lo=1,hi=-1,x=0;const samples=[];
+ for(let i=0;i<3600;i++){const r=w.step(1/60,500,true,{...idle,spinPressed:i===0},tuning);x+=r.dx;lo=Math.min(lo,w.wind);hi=Math.max(hi,w.wind);maxDelta=Math.max(maxDelta,Math.abs(w.wind-prev));prev=w.wind;if(i%60===0)samples.push(w.wind);}
+ return {seed,lo,hi,maxDelta,x,samples};};
+const winds=[wind(1),wind(92)];assert.notDeepEqual(winds[0].samples,winds[1].samples);
+for(const w of winds){assert.ok(w.lo<-.2&&w.hi>.2);assert.ok(w.maxDelta<.05);assert.ok(Math.abs(w.x)>1);}
+m.reset();for(let i=0;i<180;i++)assert.equal(step({...idle,jumpHeld:true}).dz,0,'Held input from death cannot restart');
+const report={pass:true,chargeSeconds:tuning.jumpChargeTime,chargeAcceleration:tuning.chargeBoost,storedBrakeEnergy:stored,maxReturnSpeedDelta:maxDelta,winds};
+await mkdir('docs/beach-street/kite-controls',{recursive:true});await writeFile('docs/beach-street/kite-controls/motion.json',JSON.stringify(report,null,2)+'\n');
+console.log('PASS wait/start, release charge, normal acceleration, stored braking and seeded smooth variable wind');

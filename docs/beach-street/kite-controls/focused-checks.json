@@ -1,0 +1,21 @@
+{
+  "pass": true,
+  "commands": [
+    "node tools/test-kite-motion.mjs",
+    "node tools/test-kite-controls.mjs",
+    "node tools/test-beach-kite.mjs",
+    "node tools/test-break-apart.mjs",
+    "node tools/test-bonus-polish.mjs",
+    "node tools/review-beach-kite-pacing.mjs"
+  ],
+  "results": {
+    "motion": "Normal charge/release, fresh input, brake energy conservation, continued tow under brake and smooth varying wind pass.",
+    "controls": "Live normal jump forces, ground spin, board flip, native grind/exit, pad contact and avoidance, editor/trial isolation, tethered collapse and reset pass.",
+    "journey": "Final authored layout: 13 jumps, ten checkpoints, 24/24 main crates, crystal and gem in the isolated native progression fixture; fatal planter, hurdle, canal and earned checkpoint retry pass. The registered level retains its linked bonus-box requirement. Retained stair guide clearance is at least 0.30 m beyond collision width.",
+    "ordinaryBreakApart": "Real intact collisions, finite fatal fragments, slow scrapes, fatal settle, removed floor, respawn cleanup, playground course and pit/respawn pass. Fatal parts 9, maximum probes per step 2.",
+    "ordinaryBonus": "Permanent reward support, two real-Player short jumps, preserved original course, mask/uber carry, rollover-safe payout and black-only routing pass.",
+    "pacing": "42 reversals with maximum adverse wind and 12 measured landings pass."
+  },
+  "scope": "Focused tests only; no check:all. Commands ran through shared run_heavy.py where scene/physics work is heavy. Final fresh-grab-button launch change was separately revalidated with native-controls; it does not affect ordinary modes or the charged connected journey. Final geometry was revalidated with the connected native course and stair footprint check at 19:40 UTC; release-checks.json records the subsequent exact level checks and build.",
+  "recordedAt": "2026-10-27T19:27:36.000931+00:00"
+}

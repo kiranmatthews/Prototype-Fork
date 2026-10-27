@@ -1,0 +1,157 @@
+{
+  "pass": true,
+  "recordedAt": "2026-10-27T19:56:52.446063+00:00",
+  "baseCommit": "a10a9dacdfa27939c8ab8803e1049a43abc3632e",
+  "delivery": "Local feature commit; coordinator owns integration and publishing.",
+  "preview": "http://127.0.0.1:5288/?playtest&level=coastal-street-run",
+  "buildStamp": "Codex/sol fork \u00b7 build 10-27 19:44 UTC",
+  "offlineVersion": "f08774337efae0ac61f1",
+  "promptToFirstPlayableMinutes": 34,
+  "finalBrowserFinished": "2026-10-27T19:55:48.965Z",
+  "sourceSha256": {
+    "src/kiteTow.ts": "274aadbd703ea9a1844a272e849ccd5198a6f101d44bb8e193b442eec887b89c",
+    "src/kiteTowVisual.ts": "1b0f01fc4de9e6b2678ba8bcf72d8320ca33c59786a7371fed0392fa649b284b",
+    "src/kiteBonus.ts": "c3d226774bf5f1c1bf66a93acf8f943f8bf3d022609909e613853503ae68df68",
+    "src/player.ts": "3959a01c05895809c64caf894d882aa2ba9c551e491199929308c88e4d270a73",
+    "src/level.ts": "b3738ccb825aa0ecfbb05fab6367c12e634117c331ed7ad7757c77866cfdd388",
+    "src/main.ts": "c79b9d3a7b715c42d16521c09bbba4dd22db06130a2d08d3b191496fe2f97119",
+    "src/character/breakApart.ts": "d124a6b8ac8ed169bb4aae378c9744a76f85fac1b6d2ddc831a562a7203ed618",
+    "src/levels/beach-street-gameplay.ts": "b1d7a79e7e7b75be13a1712d509d622dacda410f6592a6247c19b8d6844f60c1",
+    "tools/test-kite-motion.mjs": "263258d9e528c1848fb44d529deb9d8f30fe1947ff227b965dbde83e7b0dc908",
+    "tools/test-kite-controls.mjs": "aab39efed671281d24eb334b11af0bf105bfa2675f9efcfbb5cbcfaf2cc1b6ea",
+    "tools/test-beach-kite.mjs": "f7acf170d204bf26c9531ccb1b4e75db23a2b867f36eeea8aa83e3d9a51613d8",
+    "tools/kite-controls-browser.mjs": "5631c4cc0f8892444848f9dae4e2d1cc15506ae9bb56b3b5b12d8a60e03d9ddb",
+    "tools/beach-kite-browser.mjs": "0801dbfb78c35fb3c8c9537eb86d126e82931a74c3c38cc7c505eb2381e5db90",
+    "tools/review-beach-kite-pacing.mjs": "ac9f0c27049b0182cb36ce15bc55b4148f1558af03e1440e5182e0f59097aa12",
+    "tools/validate-beach-kite.mjs": "51cb488a73ae60689501ce34e4e45a4ebc0f3ccb77c2ed3578bee725b808432b"
+  },
+  "reportSha256": {
+    "motion.json": "3eb6bfffd97ba808eefe4a0644198d591b9ea441c9a72d54d52523e3fed87323",
+    "native-controls.json": "635858796cb2aada2bbce7145217fe44bde5432e4bf4ada400b33431eed98f9d",
+    "native.json": "d8d3e26fb035ce6ff547106e3cbba596a1b8f8db44509ffd697482fc7df25452",
+    "pacing-review.json": "b89ea6aed53611353c6bd5d29f916166303198245b1161db468f90f9bbfe642b",
+    "browser-controls.json": "38940c508372a0b36f4b412aefe75031f0226f3219435f067e94d58a1b22518a",
+    "browser-full.json": "7a8f7b5b0f2c0616a1a505633abbb61aaf38fa319cba1283616eb5d9ec9b22b9",
+    "release-checks.json": "3e7d912ecbc3a9f2f729e7b551ac5c6cee841975a2fcb24c4350e8dea66e503a",
+    "focused-checks.json": "6b3b4d78a972e9c06e06b2e998d6c38e53a5aaf2d463e947cd0618812ba7af99"
+  },
+  "imageSha256": {
+    "charged-flip.png": "0f6e369681c85f84645cd37191c179be37e790da814be70eff2720dd206a3916",
+    "death-flyaway.png": "7a019c5831f6302c223a2fa6d214e777eed48952a8d0c7cd36d82abe9d545ba6",
+    "death-release.png": "9db6779619376a72f3f61e571c971b05f09d072892daa3f7e31afb3f30ad3726",
+    "grind.png": "6f8ecf67708b0e2df9a97b10f859c291477d1c3d4ffd01d43778cbbe5dc35141",
+    "grip-front.png": "dde62fd49840b6d88a820e3e73ef826bffad96df979c8f7ceda436c16b56ecbc",
+    "grip-side.png": "f152dea5481cc74ce1c2f25538a3ac38f932a265a7a4fa673185798751e140fb",
+    "native-canal-flight.png": "48ce1a4023b2e364a2ca0e8cbc3ca30b8a5788dd70f0ac9276bc965eca37f5d3",
+    "native-cliff.png": "ad3a40d17689cd9e1a5a172b3d892a023690ee8aa3fed5ce00741950dde1eeb3",
+    "native-festival.png": "08c238f8644cbb9dad612c7bc949400c4949d8d6bb4f769eaadb193d603b531c",
+    "native-freight.png": "c19b0954864c88f1e2d520294aa3ac36a36741b8cff714284453d0926387c5e4",
+    "native-lighthouse.png": "6b70eafd2ed56c558d90a0bc3f833b99626fb9d7d3e09a80a4ae6ad3f50d29f3",
+    "native-tow.png": "04fe932877ee7f832e65a82abe7ebe7358c00bf6b8177047a1610da991f04d3a",
+    "normal-presentation.png": "65435261e64615c3058ee810e6483c7dd250b1b4b903fd2ed6139c39b48e7be6",
+    "pad-planted.png": "42e5ba7d7eac9b4c5bb18f89676827bbeb93fe12907441eda88564987694b09a",
+    "pad-side.png": "d0de2cb1c7607e0f9ee7a8e5132b7cdc12ed3261b4f9fd80f425afa6aa4b0259",
+    "presentation-festival.png": "8d43160fc1a094f53e0d7f453668944a0198b980a37aef2d7c611bcd7b009103",
+    "presentation-tow.png": "6347cf3f58beab8dc4f9b32424e7c3f244888747f5c96c2655cc837692b292d3",
+    "waiting-course.png": "b88b14daa898d8ad626c20cc867307ab387712d1094f75dd7618df56d6c7ac8e"
+  },
+  "validation": {
+    "requiredLevelChecksAndBuild": [
+      {
+        "name": "check-levels",
+        "command": "node tools/validate-levels.mjs && node tools/test-lazy-source.mjs && node tools/test-tropical-plants.mjs && node tools/test-jungle-assets.mjs && node tools/test-crown-quartz.mjs && node tools/test-jungle-stream.mjs && node tools/test-custard-pool.mjs && node tools/test-jungle-enclosure.mjs && node tools/test-map-landscape-assets.mjs && node tools/test-world-map-save.mjs && node tools/test-map-clay-geometry.mjs && node tools/test-hollowwake-assets.mjs && node tools/test-scenery-normals.mjs && node tools/test-waterslide-scenery-lod.mjs && node tools/test-waterslide-ocean-look.mjs && node tools/test-waterslide-shallows.mjs && node tools/test-waterpark-decks.mjs && node tools/test-waterpark-portals.mjs && node tools/test-waterslide-forest.mjs && node tools/test-hollowwake-tunnel-build.mjs",
+        "exit": 0,
+        "seconds": 234.171
+      },
+      {
+        "name": "build",
+        "command": "tsc --noEmit && vite build",
+        "exit": 0,
+        "seconds": 50.608
+      }
+    ],
+    "features": [
+      "Live normal charge speed and release-to-jump power with kite gravity",
+      "Native spin, board flips, grind balance and charged exits; no grabs/specials",
+      "Brake energy storage and smooth repayment without repeated-pull speed farming",
+      "Fresh face-button start; waiting and death retries keep kite aloft without new UI",
+      "Seeded smooth variable wind moves rider and canopy",
+      "Actual glove sockets forward and uncrossed on bar",
+      "Tilted automatic bonus contact with planted actual soles; avoidance and real bonus return",
+      "Fatal body collapse with original hands/occasional arm tethered to departing kite"
+    ],
+    "ordinaryRegressionCommands": [
+      "node tools/test-break-apart.mjs",
+      "node tools/test-bonus-polish.mjs"
+    ],
+    "browserInput": "Real DOM keyboard edges; physical gamepads isolated in automation only. No position/velocity edits or invulnerability in connected run after initial reset.",
+    "browserJourney": {
+      "z": 3003.6161805555616,
+      "x": -0.04193744547104988,
+      "y": 7.736666666443149,
+      "state": "finished",
+      "grounded": true,
+      "lives": 103,
+      "speed": 0,
+      "crates": 24,
+      "totalCrates": 60,
+      "bonusCrates": 36,
+      "crystal": true,
+      "gem": false
+    },
+    "jumpCount": 13,
+    "earnedCheckpoints": 10,
+    "crashes": [],
+    "maxHandErrorMetres": 0.00015771370256661152,
+    "completeCanopyScreenBounds": {
+      "minX": -0.4471771195138347,
+      "maxX": 0.6002866418019227,
+      "minY": 0.3176336208136377,
+      "maxY": 0.9531472239927768
+    },
+    "canopyClips": [],
+    "stairGuideClearanceBeyondBodyMetres": 0.30000000000000027,
+    "padSoleErrorsMetres": [
+      8.602237034684379e-07,
+      1.436737917822651e-06
+    ],
+    "bonusReturnExit": {
+      "position": [
+        3.8010484749549005,
+        7.000000011920929,
+        -1512.5038658037013
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 16.50000000000002,
+      "diagnostics": {
+        "started": true,
+        "wind": 0.2670236912056004,
+        "windTarget": 0.28770957557628873,
+        "reserve": 0,
+        "charge": 0.4,
+        "gripErrors": [
+          4.552162662135207e-06,
+          1.6877047146435755e-06
+        ],
+        "dock": null,
+        "flyaway": false
+      },
+      "stamp": "Codex/sol fork \u00b7 build 10-27 19:44 UTC"
+    },
+    "registeredRewardRule": "24 main boxes + 36 linked bonus boxes. Bypass journey earns the crystal and all main boxes, but correctly does not earn the all-boxes gem. Isolated native fixture has no linked bonus stage and earns its gem.",
+    "visualReview": "Full authored meshes at MAX/native 1600x1000 and normal 480-line CRT. Reviewed forward/uncrossed hands, pad contact, grind, flyaway, cliff stairs, festival and lighthouse. No reduced scenery meshes.",
+    "consoleErrors": [],
+    "failedRequests": [],
+    "sceneryAssets": {
+      "errors": [],
+      "reduced": 0
+    },
+    "exclusions": [
+      "No check:all",
+      "No global tuning change",
+      "No public/levels.json overwrite",
+      "No publishing or GitHub polling"
+    ]
+  }
+}

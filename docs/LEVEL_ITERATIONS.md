@@ -5287,3 +5287,64 @@ Prompt-to-playable was approximately eight minutes (request 18:43:38 UTC, local 
 Actual full-render 2560×1440 KeyboardEvents verify zero camera/input rotation across the opening deck and a deliberate left choice through 110 m of its curving rail, with no falls or console errors. The same runs pass at the normal 1280×720 game buffer; focused local validation completed approximately nineteen minutes after the request. Native checks cover all eight starting catches, 63 deck probes and 20,637 rail-camera samples across all 48 routes. The camera volumes only contain short supported rail ends; they do not capture loops on other storeys. This is focused opening/camera evidence, not a new full-course traversal claim.
 
 All twenty `check:levels` commands pass in 205.64 seconds, and the production build/type-check passes in 54.12 seconds. The exact existing package scripts ran with installed executables because npm is absent. No `check:all` run. [Validation and reproduction](spaghetti-rails/VALIDATION.md) and [before/after evidence](spaghetti-rails/evidence/validated/opening-camera/) accompany the new local increment; integration and publishing remain with the release coordinator.
+
+## 2026-10-28 — Beach Street: charge, wind, pad contact and tethered bails
+
+This eight-part follow-up started at 18:37 UTC on 27 October (28 October
+locally). Its first complete native/browser feature pass finished around
+19:11 UTC, approximately 34 minutes from request to verified playable behavior.
+Course completion, edge-case fixes and final production review followed in the
+same isolated worktree; integration and publishing remain coordinator-owned.
+
+X/Space now charges the live normal skating speed and jump curve; release
+launches into kite-specific float gravity. Native spin, board flips, grind
+balance and charged rail exits are restored. Grabs and specials are filtered.
+A fresh face-button edge starts each run; waiting and death retries keep the
+kite aloft without adding UI. Back/down stores the kinetic energy removed by
+braking and repays it on release, retaining a forward crawl and preventing
+unlimited speed from repeated pulls. Smoothly changing, independently seeded
+gusts affect steering and the canopy's position/roll.
+
+Both shoulders face the tow, and separate actual glove sockets grip the bar.
+The existing elastic skating pose still plants the feet on the deck. The
+optional bonus stone turns toward the camera at 72 degrees: a low straight
+approach automatically plants both soles against its face in a squat, holds
+the bar and enters the existing bonus transition. Steering around or jumping
+above it avoids entry. Ordinary bonus pads retain their rules. Editor capture
+stores the original pad base, and trial toggles cannot insert its upright
+collision into the ground list.
+
+Most fatal kite bails collapse the existing semantic body fragments while the
+hands, occasionally with an arm fragment, stay attached to the departing kite.
+Water preserves drowning. Native life loss and checkpoint restart remain in
+charge. Slow-speed tests exposed rewards becoming walls below the normal smash
+threshold; kite tension now opens wood and checkpoints while coasting/braking.
+The course's contrasting ramps, barriers, terraces and solid islands remain.
+Five small cue/obstacle/checkpoint spacing changes give strong adverse wind
+more reaction room; the worst full-speed reversal retains 0.319 seconds, and
+measured landings retain at least 1.033 seconds before the next approach.
+
+Focused native checks pass the normal jump powers, wait/restart, varying wind,
+stored braking, native spins/flips/grinds, automatic pad contact/avoidance,
+tethered collapse, trial/editor round-trip isolation and level switching. The
+connected native fixture clears all 13 jumps, ten checkpoints, 24/24 main crates,
+crystal and gem. The registered course still requires its 36 linked bonus boxes
+for the gem; bypassing that optional stage must not award it. Deliberate
+planter/hurdle/canal failures and earned-checkpoint retry pass.
+Ordinary break-apart and bonus regressions also pass. The exact `check:levels`
+package script and `tsc --noEmit && vite build` pass. No `check:all`, global
+tuning change or published-pack overwrite was used. Evidence is recorded in
+[the controls iteration](beach-street/kite-controls/README.md).
+
+Final production verification finished at 19:55 UTC with build
+`Codex/sol fork · build 10-27 19:44 UTC` (offline version
+`f08774337efae0ac61f1`). The real-keyboard connected run finishes all three
+kilometres with zero crashes, 13 jumps, ten earned checkpoints, all 24 main
+boxes and the crystal. Bypassing the 36 bonus boxes correctly withholds the
+gem. Actual bonus entry, return and the next planter clearance pass separately.
+The maximum hand-to-bar error is 0.158 mm, both pad sole contacts are within
+0.002 mm, and the complete canopy remains framed throughout. The final cliff
+planter placement preserves a 30 cm guide margin outside the retained stairs.
+MAX/native and normal CRT views were reviewed; console, request and asset
+error lists are empty. The visible preview was restarted and reloaded to this
+build. Source, report and screenshot hashes are in `verification.json`.

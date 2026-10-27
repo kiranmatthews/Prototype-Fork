@@ -3008,7 +3008,7 @@ function startBonusDeparture(kind:'enter'|'exit'|'level-exit',receipt?:BonusRece
     if(kind==='level-exit')updateCamera(1);
     document.body.classList.add('bonus-travel-active');
     const pad=level.bonusPlatformDiagnostics;
-    const origin=kind==='enter'&&pad?new THREE.Vector3(pad.x,pad.topY,pad.z)
+    const origin=kind==='enter'&&player.kiteBonusDocked?player.pos.clone():kind==='enter'&&pad?new THREE.Vector3(pad.x,pad.topY,pad.z)
       :new THREE.Vector3((level.finishBox.min.x+level.finishBox.max.x)/2,level.finishBox.min.y+WARP_PAD_TOP,(level.finishBox.min.z+level.finishBox.max.z)/2);
     const eye=camera.position.clone(),direction=camera.getWorldDirection(new THREE.Vector3()).negate();
     const focus=origin.clone().add(new THREE.Vector3(0,1.6,0));
@@ -3033,12 +3033,16 @@ function renderBonusDeparture(dt:number):void {
   if(travel.elapsed>=.62&&!travel.sounded){sfx.play('woosh2',.75,1.1,0);travel.sounded=true;}
   if(travel.receipt)ui.setBonusTransfer(bonusTransferFrame(travel.receipt,travel.elapsed-1.3,travel.reducedMotion));
   const alignment=bonusAlignmentPose(travel.elapsed,travel.alignmentDistance,travel.alignmentHeight,travel.reducedMotion);
-  if(align)player.prepareBonusAlignmentPresentation(level,dt,alignment);
+  const kiteDock=travel.kind==='enter'&&player.kiteBonusDocked;
+  if(kiteDock)player.prepareKiteBonusDeparture(level,dt);
+  else if(align)player.prepareBonusAlignmentPresentation(level,dt,alignment);
   else player.prepareStartPresentation(level, dt);
   const base=player.group.position.clone(),visible=player.group.visible;
   const center=align?alignment.progress:THREE.MathUtils.smoothstep(travel.elapsed,0,.3);
-  player.group.position.lerp(travel.origin,center);
-  player.group.position.y+=pose.offsetY+(align?alignment.offsetY:0);
+  if(!kiteDock){
+    player.group.position.lerp(travel.origin,center);
+    player.group.position.y+=pose.offsetY+(align?alignment.offsetY:0);
+  }
   player.group.visible=visible&&(!pose.complete||travel.reducedMotion&&travel.elapsed<1.15);
   try {
     level.updateSceneryPresentation(dt);

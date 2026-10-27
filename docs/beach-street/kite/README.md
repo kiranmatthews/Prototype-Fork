@@ -1,4 +1,8 @@
-# Beach Street kite run
+# Beach Street kite run — first iteration
+
+This directory preserves the first implementation and its evidence. The current
+charge/release controls, variable wind, pad contact and tethered deaths are
+documented in [the next iteration](../kite-controls/README.md).
 
 The kite owns forward speed. The player owns lateral position and jump timing.
 Left/right steers continuously; Jump presses launch immediately and holding adds

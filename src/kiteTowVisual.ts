@@ -18,6 +18,20 @@ export class KiteTowVisual {
   private readonly target = new THREE.Vector3();
   private readonly pole = new THREE.Vector3();
   readonly gripErrors = [0, 0];
+  flyingAway = false;
+  deathAge = 0;
+
+  reset(): void { this.flyingAway = false; this.deathAge = 0; this.root.visible = false; }
+  beginFlyaway(): void { this.flyingAway = true; this.deathAge = 0; this.root.visible = true; }
+  stepFlyaway(dt:number): void {
+    if (!this.flyingAway) return;
+    this.deathAge += dt;
+    this.root.position.z -= (8 + this.deathAge * 18) * dt;
+    this.root.position.y += (2 + this.deathAge * 4) * dt;
+    this.root.position.x += Math.sin(this.deathAge * 2) * dt;
+    this.root.rotation.z = Math.sin(this.deathAge * 2.3) * .08;
+    this.root.updateMatrixWorld(true);
+  }
 
   constructor() {
     this.root.name = 'Beach Street towing kite';
@@ -63,27 +77,31 @@ export class KiteTowVisual {
     this.root.visible = false;
   }
 
-  pose(pos: THREE.Vector3, time: number, steer: number, lift: number, left: Arm | null, right: Arm | null): void {
+  pose(pos: THREE.Vector3, time: number, steer: number, lift: number, wind: number, left: Arm | null, right: Arm | null): void {
     this.root.position.copy(pos);
+    this.root.rotation.set(0, 0, 0);
     // The canopy stays in the wind as the rider rises toward it. Shortening
     // the flying lines also keeps the whole foil in frame through a jump.
-    this.sail.position.set(1.2 + steer * 1.1 + Math.sin(time * 1.4) * .3, 4.7 - Math.min(4.5, lift) * .8 + Math.sin(time*1.8)*.12, -16.5);
-    this.sail.rotation.set(.38, -.08 * steer, -.10 * steer + Math.sin(time*1.4)*.025);
+    this.sail.position.set(1.2 + steer * .65 + wind * 2.8 + Math.sin(time * 1.4) * .15, 4.7 - lift * .75 + Math.sin(time*1.8)*.12, -16.5);
+    this.sail.rotation.set(.38 + wind * .04, -.08 * steer, -.10 * steer - wind * .25);
     // Shoulder-relative bar placement works for the editable character's size.
     const arms = [left, right];
     this.bar.position.set(0, 1.3, -.55);
+    let leftIndex = 0;
     if (left && right) {
       left.root.getWorldPosition(this.a); right.root.getWorldPosition(this.b);
+      leftIndex = this.a.x < this.b.x ? 0 : 1;
       this.bar.position.copy(this.a).add(this.b).multiplyScalar(.5).sub(pos);
-      this.bar.position.y -= .15; this.bar.position.z -= .27;
+      this.bar.position.y -= .12; this.bar.position.z -= .48;
     }
-    this.bar.rotation.z = -.11 * steer;
+    this.bar.rotation.z = -.07 * steer - wind * .04;
     this.root.updateMatrixWorld(true);
     for (let i = 0; i < 2; i++) {
       const arm = arms[i]; if (!arm) continue;
-      // Assign each shoulder its nearer grip, independent of the rig's names.
+      // The two shoulders define the two sides. Comparing each with the
+      // player's origin could assign BOTH hands to the same end while leaning.
       arm.root.getWorldPosition(this.a);
-      const side = this.a.x < pos.x ? -1 : 1;
+      const side = i === leftIndex ? -1 : 1;
       this.target.set(side * .34, 0, 0); this.bar.localToWorld(this.target);
       this.pole.copy(this.a).add(this.delta.set(side*.5, -.45, .05));
       for (let pass = 0; pass < 3; pass++) solveTwoBoneIk({root: arm.root, mid: arm.mid, end: arm.end,
