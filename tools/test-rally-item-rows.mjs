@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import {build} from 'esbuild';
 import {writeFile,readFile} from 'node:fs/promises';
+import {compactPublishedLevels} from './release-levels.mjs';
 const bundle=await build({stdin:{contents:"export {COCONUT_CART_RALLY_LEVEL} from './src/levels/coconut-cart-rally';export {cartRallyPoint} from './src/levels/cart-stadium-layout';",resolveDir:process.cwd()},bundle:true,platform:'node',format:'esm',write:false});
 const {COCONUT_CART_RALLY_LEVEL:level,cartRallyPoint}=await import('data:text/javascript;base64,'+Buffer.from(bundle.outputFiles[0].text).toString('base64'));
 const items=level.components.filter(c=>c.t==='crate'&&c.kind==='mystery'),walls=level.components.filter(c=>c.t==='wall'&&c.nm?.startsWith('Rally rock contact'));
@@ -17,6 +18,10 @@ for(let i=0;i<items.length;i+=4){
  rows.push({station,errorDegrees,span,rockClearance,points});
 }
 const pack=JSON.parse(await readFile('public/levels.json','utf8')),published=pack.levels.find(e=>e.id==='coconut-cart-rally');
-assert.deepEqual(published.data,JSON.parse(JSON.stringify(level)),'The synced level uses the same cross-track rows');
+// Keep the saved snapshot exact-hash protected while allowing the existing
+// cross-runtime numeric tolerance; a raw 12 MB diff can exhaust memory.
+const certificates=JSON.parse(await readFile('tools/fixtures/stock-level-snapshots.json','utf8')).levels;
+const synced=compactPublishedLevels({v:2,levels:[published]},[{id:'coconut-cart-rally',name:level.name,data:level}],certificates);
+assert.deepEqual(synced.sourceBacked,['coconut-cart-rally'],'The certified synced level uses the same cross-track rows');
 const report={passed:true,count:items.length,rows};if(process.env.RALLY_ITEM_ROW_REPORT)await writeFile(process.env.RALLY_ITEM_ROW_REPORT,JSON.stringify(report,null,2)+'\n');
 console.log('PASS',JSON.stringify(report));
