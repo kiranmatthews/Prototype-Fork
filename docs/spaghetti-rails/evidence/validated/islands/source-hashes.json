@@ -1,0 +1,162 @@
+{
+  "at": "2026-10-27T10:53:15.548007+00:00",
+  "base": "64cc94644f01fe25c02f7330aad43cd34a7dcec9",
+  "files": {
+    "docs/spaghetti-rails/spaghetti-rails-platforming.level.json": {
+      "sha256": "4f1b7adb8e30235e96b8666ddc4303dc9d90c51a88101cf0d71e362ffb8e3c07",
+      "bytes": 528101
+    },
+    "public/spaghetti-rails/basalt.webp": {
+      "sha256": "f0c25dae71f68eb78fc888335d1de8cf23eb1f9f4bb8705bfbbf17fda834b582",
+      "bytes": 363070
+    },
+    "public/spaghetti-rails/cavern.webp": {
+      "sha256": "52ff49ee211368a370a44be35a862d72043309b352835f66c34633f67d9a0ba6",
+      "bytes": 155754
+    },
+    "src/campaign.ts": {
+      "sha256": "f2270b3604edc9606fa17e382648fe518252bb86581f32cc49ebf5b4148be0c5",
+      "bytes": 61302
+    },
+    "src/level.ts": {
+      "sha256": "c3ea13af5d6cb43ba406534854ace24ba5a13c18dfc1abdcd982bf0a7c8bcb63",
+      "bytes": 857051
+    },
+    "src/levels/codex-lab.ts": {
+      "sha256": "b848b866ee1e9cf0eacaf38e91e303493921a4040ac040852a4da62075f9a1de",
+      "bytes": 88117
+    },
+    "src/levels/spaghetti-rail-cues.ts": {
+      "sha256": "04e10051b69e5b92124e290a3652a45a61a007a9796a89403428a20fac5a198e",
+      "bytes": 1280
+    },
+    "src/levels/spaghetti-rail-transfers.ts": {
+      "sha256": "c5552fa57338976a8a524e3429d11e308bee30572160c6ee1b9fe26c8d262246",
+      "bytes": 2327
+    },
+    "src/levels/spaghetti-rails-art.ts": {
+      "sha256": "c8f7711563304753fdc6b6c7c5cdc371573b1a46c3996a804f0239f99c4f2697",
+      "bytes": 6787
+    },
+    "src/levels/spaghetti-rails-height-beats.ts": {
+      "sha256": "0717111d09578b5f8f30e076d8aebd7f3a19cae41de7061a09e6a554d504e632",
+      "bytes": 907
+    },
+    "src/levels/spaghetti-rails-network.ts": {
+      "sha256": "4850e91f108a38faf3fe11a6fb30f289b62c4daadbed80578588856c18f9039d",
+      "bytes": 10050
+    },
+    "src/levels/spaghetti-rails-platforming.ts": {
+      "sha256": "23e110f8e610d568f4cff63235ee2aaee2704ddd0bd4e49af1aef8bb4f942ee4",
+      "bytes": 14803
+    },
+    "src/levels/spaghetti-rails.ts": {
+      "sha256": "eb7f5d5b89b91cacb56b493fa525adcc36fc08903bb6df0e2d04464bf3093f45",
+      "bytes": 383
+    },
+    "src/pathNodes.ts": {
+      "sha256": "5420860ba6e510381a04ddce4224738906e6c530bba30cb488db46d4fcf9ac1a",
+      "bytes": 1965
+    },
+    "src/race/hud.ts": {
+      "sha256": "e38805cfe2f4b94fe34ff888492fefbe6dda5779e1c6c87548467d42443b5439",
+      "bytes": 18910
+    },
+    "src/race/railChoices.ts": {
+      "sha256": "ea36b62da01d9d9f780d03ffd4234efe594cde32083577b408e6ca6136dd946e",
+      "bytes": 8209
+    },
+    "src/race/rivalGrind.ts": {
+      "sha256": "8d1773ba52c296a9358a91e66a554f56f3290273681738f0886a8a35f1f18ab2",
+      "bytes": 1374
+    },
+    "src/race/runtime.ts": {
+      "sha256": "54183375e2b382c1d70f5b4d326eacf1c6cf2e0dd3d32be08df74ad39cd9da0e",
+      "bytes": 71552
+    },
+    "src/race/schema.ts": {
+      "sha256": "f7e9e87658a9520ad79e07f19be846c0891834d42ee59605694f60edcabc89d9",
+      "bytes": 2717
+    },
+    "src/race/types.ts": {
+      "sha256": "a5c56e9bfa1029a39a88631d1e0168b834fb8e754bc73ea52c814e14d479bb0c",
+      "bytes": 6410
+    },
+    "tools/spaghetti-network-overview.mjs": {
+      "sha256": "4b3f65bb1c592053f26672028e951115fc0c1a18dacdd60acde557bc583b5d28",
+      "bytes": 2358
+    },
+    "tools/spaghetti-platforming-browser.mjs": {
+      "sha256": "480db46659500fa8532ac5913a087ab7e1b1165fe351da7eafe6e1e71fa22582",
+      "bytes": 1967
+    },
+    "tools/spaghetti-rails-browser.mjs": {
+      "sha256": "af0e68c586d606ab8e9fff505f840810312bfb5187bf66bd6b1d909ee6bd6e87",
+      "bytes": 4695
+    },
+    "tools/survey-spaghetti-momentum.mjs": {
+      "sha256": "6ae6e314da805805f138ee68148e3260feef04bc65072f2819637e5f45f84657",
+      "bytes": 2504
+    },
+    "tools/survey-spaghetti-network.mjs": {
+      "sha256": "fab93539ce8f0503f3b0c3105c57e76bc26a74669106ff6150738784564024ec",
+      "bytes": 7508
+    },
+    "tools/test-spaghetti-campaign.mjs": {
+      "sha256": "9128ea2d8dc3095b58fb2a5d56347c2f4dd8b579cb9410cb3730ca45c563bf39",
+      "bytes": 2352
+    },
+    "tools/test-spaghetti-editor.mjs": {
+      "sha256": "fcedf2efc1254c1365016af19d28bbf309a1e48c8e82384ade9d78ff28b92b01",
+      "bytes": 4586
+    },
+    "tools/test-spaghetti-island-entries.mjs": {
+      "sha256": "b9ad1dbc2b8ba046d7a313d0c11b7b8712bcee8a5c8bb9e2b27224aa143f4326",
+      "bytes": 1748
+    },
+    "tools/test-spaghetti-island-transfers.mjs": {
+      "sha256": "a090873a035a4be58e09d5d8c01b64f5af2edc4e12b21351463eb15abd7deb10",
+      "bytes": 4371
+    },
+    "tools/test-spaghetti-keyboard.mjs": {
+      "sha256": "5b7d5272cc8144d817bca9c3e37490fd145aa570948495f7a9e21d3b8c743aa7",
+      "bytes": 13995
+    },
+    "tools/test-spaghetti-network-transfers.mjs": {
+      "sha256": "8a11f7a60eff036d79803351018ae3f63a85e3e37bda47ebacbc6c69e36b4f73",
+      "bytes": 201
+    },
+    "tools/test-spaghetti-platforming.mjs": {
+      "sha256": "136d314bfb3fb48d7c8bf502838e289480f32f0907e522b8314eb335cfa7593e",
+      "bytes": 3299
+    },
+    "tools/test-spaghetti-rails.mjs": {
+      "sha256": "188979b53b0a7a9343d00f10e9c2589618d0ceda9e683f23b2158b5f9af7755b",
+      "bytes": 4863
+    },
+    "tools/test-spaghetti-recovery.mjs": {
+      "sha256": "9630281b7c96b9f66e27c0e98098f7f0c6a6a400ea9286056261cff8433fb43d",
+      "bytes": 3926
+    },
+    "tools/test-spaghetti-turnbacks.mjs": {
+      "sha256": "428f26cd1b7636a17be4daec8eb7cda70b3385240140443ac04ec1cc89bc1836",
+      "bytes": 3030
+    }
+  },
+  "protected": {
+    "src/player.ts": {
+      "unchangedFromBase": true,
+      "sha256": "c5776904f9f5904fca302f1d5f87da6754d425198876805f381acd98d694504b"
+    },
+    "src/tuning.ts": {
+      "unchangedFromBase": true,
+      "sha256": "1aca3b5fe4b5d026d8b9e36dcf30444081bec7d2acfd4181294f6aacaca61bd6"
+    },
+    "public/levels.json": {
+      "unchangedFromBase": true,
+      "sha256": "b4dadf99843b27ab826c83e3d2fa4770ece9274a76be5ffeb0dd5aa4c27333a8"
+    }
+  },
+  "newPublicAssetBytes": 518824,
+  "evidenceNote": "Active-course field, transfers, entries, keyboard and editor behavior is unchanged after evidence capture. The final attach cleanup additionally releases old retry-platform mesh references when leaving a race; the final build includes this cleanup."
+}

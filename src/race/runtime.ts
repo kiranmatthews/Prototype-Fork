@@ -12,6 +12,8 @@ import type { Crate, Level } from '../level';
 import type { WipeoutCause } from '../character/wipeoutPolicy';
 import { RaceCourse } from './course';
 import type { RailChoiceCursor } from './railChoices';
+import { RivalGrindControl } from './rivalGrind';
+import type { Rail } from '../rails';
 import { prepareRaceItemPictures } from './itemPictures';
 import { RaceItemDeck, freshRaceSeed } from './itemOdds';
 import { RaceItemEffects, raceTargetRing } from './effects';
@@ -58,7 +60,7 @@ export class SkateRace {
   private jumps:{s:number;end:number}[]=[];
   private sections:string[]=[];
   private grinds:{s:number;end:number;lanes:number[]}[]=[];
-  private railRetries:{s:number;position:THREE.Vector3}[]=[];
+  private railRetries:{s:number;position:THREE.Vector3;platform:THREE.Object3D|null}[]=[];
   private seed=1;private levelId='skate-race';
   private reported=false;
   private heavyAt=20; private warningBeep=0;
@@ -70,6 +72,9 @@ export class SkateRace {
   private cartStalls=new Map<number,{position:THREE.Vector3;since:number}>();
   private railTurnbacks=new Map<number,{since:number;released:boolean}>();
   private railChoiceCursors=new Map<number,RailChoiceCursor>();
+  private rivalGrindControls=new Map<number,RivalGrindControl>();
+  private railTransfers=new Map<Rail,{t:number;start:THREE.Vector3;end:THREE.Vector3;key:number}[]>();
+  private retryProbe=new THREE.Raycaster();
   constructor(private scene:THREE.Scene,private human:Player,private readonly fullRivals=false,
     private readonly canStartTimeTrial:(levelId:string)=>boolean=()=>false){scene.add(this.root);}
   get active():boolean{return !!this.level;}
@@ -108,13 +113,23 @@ export class SkateRace {
     // The characters are reusable, but crate tables and contacts belong to the
     // departed level. Inactive rivals must not keep a disposed course alive.
     this.homes.clear();this.returns.clear();
-    this.clearItems();this.level=level.skateRace?level:null;this.root.visible=!!this.level;
+    this.clearItems();this.railTransfers.clear();this.railRetries=[];this.level=level.skateRace?level:null;this.root.visible=!!this.level;
     if(!this.level){this.course=null;return;}
     this.sections=level.skateRace!.stages??[level.name];
     this.levelId=id;this.allocate();this.course=new RaceCourse(level.skateRace!.line);
     this.jumps=level.skateRace!.jumps.map(j=>({s:this.course!.project(vec().fromArray(j.takeoff)).s,end:this.course!.project(vec().fromArray(j.landing)).s}));
     this.grinds=(level.skateRace!.grinds??[]).map(g=>({s:this.course!.project(vec().fromArray(g.start)).s,end:this.course!.project(vec().fromArray(g.end)).s,lanes:g.lanes}));
-    this.railRetries=this.grinds.length?level.raceCheckpoints.map(position=>({s:level.railChoices?.project(position).s??this.course!.project(position).s,position:position.clone()})).sort((a,b)=>b.s-a.s):[];
+    if(level.railChoices)for(const [i,jump]of level.skateRace!.jumps.entries()){
+      const start=vec().fromArray(jump.takeoff),end=vec().fromArray(jump.landing);
+      const rail=level.rails.find(rail=>rail.object.userData.sourceName&&rail.closestDistance(start)<.15);
+      if(rail){const list=this.railTransfers.get(rail)??[];list.push({t:rail.closest(start).t,start,end,key:10000+i});this.railTransfers.set(rail,list);}
+    }
+    const retryRay=new THREE.Raycaster();
+    this.railRetries=this.grinds.length?level.raceCheckpoints.map(position=>{
+      retryRay.set(position.clone().add(new THREE.Vector3(0,2,0)),new THREE.Vector3(0,-1,0));retryRay.far=4;
+      const platform=retryRay.intersectObjects(level.groundMeshes,false).find(hit=>hit.face&&hit.face.normal.y>.1)?.object??null;
+      return {s:level.railChoices?.project(position).s??this.course!.project(position).s,position:position.clone(),platform};
+    }).sort((a,b)=>b.s-a.s):[];
     this.homes=new Map(level.crates.map(c=>[c,c.mesh.position.clone()]));
     level.raceAudioListener=this.human.pos;
     level.onRaceCrateBreak=(crate,id)=>this.crateBroken(crate,id);
@@ -126,6 +141,7 @@ export class SkateRace {
     this.carts?.dispose();this.carts=null;
     const level=this.level;this.mode=mode;this.phase='grid';this.countdown=3;this.elapsed=0;this.reported=false;
     this.runSeed=runSeed>>>0;this.seed=this.runSeed;this.cartStalls.clear();this.railTurnbacks.clear();this.railChoiceCursors.clear();this.returns.clear();this.clearItems();this.heavyAt=20;this.warningBeep=0;
+    this.rivalGrindControls.clear();
     if(resetWorld)level.reset(true);
     level.setTimeTrial(mode==='time-trial');
     for(const r of this.riders){
@@ -199,7 +215,12 @@ export class SkateRace {
     // road the rider could still reach, then let Player own the normal pit death.
     const gravity=Math.max(1,Math.min(TUNING.fallGravity,TUNING.boardFallGravity,TUNING.rampFallGravity,TUNING.pipeAirGravity));
     const travel=Math.max(42,Math.abs(p.speed),TUNING.maxSpeed,TUNING.downhillMax,TUNING.vertMax);
-    return !(this.level!.railChoices?.paths.some(path=>path.course.hasReachableLanding(this.level!,p.pos,p.vVel,travel,gravity,CONST.maxFallSpeed))||this.course!.hasReachableLanding(this.level!,p.pos,p.vVel,travel,gravity,CONST.maxFallSpeed));
+    return this.level!.railChoices?!this.level!.hasReachableFallLanding(p.pos,p.vVel,travel,gravity,CONST.maxFallSpeed):!this.course!.hasReachableLanding(this.level!,p.pos,p.vVel,travel,gravity,CONST.maxFallSpeed);
+  }
+  private onRetryPlatform(r:Rider,cp:{position:THREE.Vector3;platform:THREE.Object3D|null}):boolean {
+    if(!this.level!.railChoices||!r.player.grounded||!cp.platform||Math.abs(r.player.pos.y-cp.position.y)>1.5)return false;
+    this.a.copy(r.player.pos).y+=.5;this.retryProbe.set(this.a,new THREE.Vector3(0,-1,0));this.retryProbe.far=2;
+    return this.retryProbe.intersectObject(cp.platform,false).length>0;
   }
   private recover(r:Rider):void {
     this.railTurnbacks.delete(r.id);
@@ -360,9 +381,15 @@ export class SkateRace {
     if(r.finish!==null||r.recovery>0||p.state==='dead'||p.skateCameraBailing)return input;
     const cursor=this.railChoiceCursors.get(id)??{s:r.progress};this.railChoiceCursors.set(id,cursor);
     const caught=p.state==='grind'?network.caught(p.pos,cursor):null,rail=caught?.rail??null;
-    const path=network.guide(p.pos,cursor,preference??(id===0?1:(id-1)%3),rail,caught?.t);
+    const choices=this.level!.skateRace!.railChoices?.[0]?.paths.length??3;
+    const path=network.guide(p.pos,cursor,preference??(id===0?Math.floor((choices-1)/2):(id-1)%choices),rail,caught?.t);
     const look=THREE.MathUtils.clamp(Math.abs(p.speed)*.45,7,18);
     network.ahead(cursor,look,r.aim);
+    // Line up with the straight supported mouth before anticipating its first
+    // bend. Looking around that bend too early can catch the island rim.
+    const mouth=path?.rails[0];
+    if(p.grounded&&mouth&&(cursor.along??0)<mouth.start+18)
+      path!.course.sample(Math.min((cursor.along??0)+look,mouth.start+8),0,r.aim);
     if(r.progress>this.course!.length-25)r.aim.addScaledVector(this.course!.tangent(this.course!.length),30);
     const dx=r.aim.x-p.pos.x,dz=r.aim.z-p.pos.z,n=Math.hypot(dx,dz)||1,basis=p.raceInputBasis(this.level!);
     const bn=Math.hypot(basis.x,basis.z)||1,fx=basis.x/bn,fz=basis.z/bn;
@@ -373,10 +400,28 @@ export class SkateRace {
     if(reversing&&!turnback){turnback={since:this.elapsed,released:false};this.railTurnbacks.set(id,turnback);}
     if(p.grounded||!reversing&&!turnback?.released){this.railTurnbacks.delete(id);turnback=undefined;}
     const abandoning=!!turnback&&this.elapsed-turnback.since>.75;
-    if(p.state==='grind')input.moveX=THREE.MathUtils.clamp(-p.balance*3-p.balanceVel*.45,-1,1);
+    if(id>0){
+      let control=this.rivalGrindControls.get(id);
+      if(!control){control=new RivalGrindControl((this.runSeed^Math.imul(id,0x9e3779b9))>>>0);this.rivalGrindControls.set(id,control);}
+      const correction=control.sample(this.elapsed,p.state==='grind',p.balance,p.balanceVel);
+      if(p.state==='grind')input.moveX=correction;
+    }else if(p.state==='grind')input.moveX=THREE.MathUtils.clamp(-p.balance*3-p.balanceVel*.45,-1,1);
+    let transferAim=false;
     if(rail&&path){
       const index=path.rails.findIndex(span=>span.rail===rail),key=path.index*16+index;
       if(index>=0&&index<path.rails.length-1&&rail.totalLength-caught!.t<=4&&r.jumped!==key){input.jumpHeld=false;r.jumped=key;}
+      // A continuous island rail can offer an optional mid-rail shortcut.
+      // Aim sideways before release, exactly as the human grind-ollie input
+      // requires. Catching the next native rail then owns the route change.
+      if(path.rails.length===1)for(const {t,start,end,key}of this.railTransfers.get(rail)??[]){
+        if(r.jumped===key)continue;
+        const remaining=t-caught!.t;
+        if(remaining>2.2||remaining<-.8)continue;
+        const direction=rail.tangentAt(caught!.t),side=Math.sign((end.x-start.x)*-direction.z+(end.z-start.z)*direction.x),n=Math.hypot(direction.x,direction.z)||1;
+        const x=-direction.z/n*side,z=direction.x/n*side;
+        input.moveX=x*-fz+z*fx;input.moveY=x*fx+z*fz;transferAim=true;
+        if(remaining<=.35){input.jumpHeld=false;r.jumped=key;}break;
+      }
     }
     const next=path?.rails.find(span=>span.end>(cursor.along??0)+1);
     input.grindHeld=!!rail||!p.grounded||!!next&&next.start-(cursor.along??0)<4;
@@ -385,7 +430,7 @@ export class SkateRace {
     if(threat&&threat.item!=='shock-shell'&&threat.seconds<.3&&r.attackCooldown<=0&&this.random()>.25){input.spinPressed=input.spinHeld=true;r.attackCooldown=1.4;}
     if(abandoning){input.jumpHeld=!!rail&&this.elapsed-turnback!.since<1.05;input.moveX=rail?(Math.sign(p.balance)||1):0;input.moveY=0;input.grindHeld=false;}
     input.jumpPressed=input.jumpHeld&&!r.oldJump;input.jumpReleased=!input.jumpHeld&&r.oldJump;
-    if(rail&&input.jumpReleased){input.grindHeld=false;if(!abandoning){input.moveX=0;input.moveY=1;}else turnback!.released=true;}
+    if(rail&&input.jumpReleased){input.grindHeld=false;if(!abandoning&&!transferAim){input.moveX=0;input.moveY=1;}else if(abandoning)turnback!.released=true;}
     input.grindPressed=input.grindHeld&&!r.oldGrind;r.oldJump=input.jumpHeld;r.oldGrind=input.grindHeld;
     const victim=this.riders.slice(0,this.count).find(v=>v!==r&&v.finish===null&&!v.recovery&&v.player.pos.distanceTo(p.pos)<2.65);
     if(victim&&r.attackCooldown<=0){input.spinPressed=input.spinHeld=true;r.attackCooldown=1.1+this.random()*1.8;}
@@ -446,7 +491,7 @@ export class SkateRace {
         // floor anchor would otherwise end up on the dock's grindable rim,
         // leaving no supported runway after a stopped return.
         if(this.railRetries.length){
-          const retry=this.railRetries.find(cp=>cp.s<=r.progress&&cp.s>r.anchorProgress&&(!level.railChoices||p.pos.distanceToSquared(cp.position)<24*24&&p.pos.y>=cp.position.y-.3&&p.pos.y<cp.position.y+1.5));
+          const retry=this.railRetries.find(cp=>cp.s>r.anchorProgress&&(this.onRetryPlatform(r,cp)||cp.s<=r.progress&&(!level.railChoices||p.pos.distanceToSquared(cp.position)<24*24&&p.pos.y>=cp.position.y-.3&&p.pos.y<cp.position.y+1.5)));
           if(retry){const support=c.supportAt(level,retry.position,this.b);if(support){r.anchor.copy(support);r.anchorProgress=retry.s;}}
         }else{
         // A gap lip needs a small supported run-up after a normal stopped return.

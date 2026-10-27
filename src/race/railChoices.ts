@@ -52,6 +52,23 @@ export class RailChoices {
   private progress(path:RailChoicePath,along:number):number {
     return path.start+(path.end-path.start)*THREE.MathUtils.clamp(along/path.course.length,0,1);
   }
+  /** Leave time for a descending rider to catch a reachable lower thread.
+   * This is only a conservative early-fall test; native capture still decides
+   * whether the real board lands on that rail with the player's input. */
+  hasReachableRail(position:THREE.Vector3,verticalSpeed:number,travelSpeed:number,gravity:number):boolean {
+    for(const rail of this.bindings.keys()){
+      if(!rail.grindable||rail.distanceLowerBound(position)>90)continue;
+      for(let i=1;i<rail.points.length;i++){
+        const a=rail.points[i-1],b=rail.points[i],dx=b.x-a.x,dz=b.z-a.z;
+        const t=THREE.MathUtils.clamp(((position.x-a.x)*dx+(position.z-a.z)*dz)/(dx*dx+dz*dz||1),0,1);
+        const y=a.y+(b.y-a.y)*t,drop=position.y-y;
+        if(drop< -1.2||drop>45)continue;
+        const down=Math.max(0,-verticalSpeed),seconds=(Math.sqrt(down*down+2*gravity*Math.max(0,drop))-down)/gravity;
+        if(Math.hypot(position.x-a.x-dx*t,position.z-a.z-dz*t)<=travelSpeed*(seconds+.12)+2)return true;
+      }
+    }
+    return false;
+  }
   /** Identify a supported grind from public world position. The movement
    * model keeps ownership of its private attachment state. */
   caught(position:THREE.Vector3,cursor?:RailChoiceCursor):{rail:Rail;t:number}|null {

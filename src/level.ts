@@ -4316,6 +4316,7 @@ export class Level {
   /** The lane proposes candidates; live floor collision confirms each catch.
    * A generous corridor includes banked road edges and wide landing courts. */
   hasReachableFallLanding(position: THREE.Vector3, verticalSpeed: number, travelSpeed: number, gravity: number, terminal: number): boolean {
+    if(this.railChoices?.hasReachableRail(position,verticalSpeed,travelSpeed,gravity))return true;
     if(this.railChoices?.paths.some(path=>path.course.hasReachableLanding(this,position,verticalSpeed,travelSpeed,gravity,terminal)))return true;
     if (this.lanePts.length < 2) return true;
     this.fallRecoveryCourse ??= new RaceCourse(this.lanePts.map(p => [p.x, p.y, p.z, 32]));

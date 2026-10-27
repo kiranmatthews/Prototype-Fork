@@ -18,7 +18,7 @@ try{
  const before=await page.evaluate(()=>{
   const g=window.__game;g.openEditor();const e=g.editor;
   if(!e.active)throw Error('Level editor did not open');
-  const i=e.data.components.findIndex(c=>c.t==='rail'&&c.nm.includes('Widow’s overhand / thread 2'));
+  const i=e.data.components.findIndex(c=>c.t==='rail'&&c.nm.includes('Widow’s overhand / thread 1'));
   if(i<0)throw Error('The elevated knot branch is missing');
   const railIndex=e.data.components.slice(0,i).filter(c=>c.t==='rail').length;
   e.sel=[i];e.resizeIdx=i;e.selVtxs=new Set([3]);e.renderProps();e.onLevelRebuilt();e.focusOnItem(i);
@@ -27,7 +27,7 @@ try{
   return {rails:e.data.components.filter(c=>c.t==='rail').length,checkpoints:e.data.components.filter(c=>c.t==='checkpoint').length,
    retries:e.getLevel().raceCheckpoints.length,name:c.nm,node:c.pts[3],y:c.p[1]+c.pts[3][3],radius:c.pts[3][2],grinds:e.data.skateRace.grinds.length,paths:e.getLevel().railChoices.paths.length};
  });
- assert.equal(before.paths,18);assert.equal(before.checkpoints,before.retries);assert.equal(before.rails,before.grinds);
+ assert.equal(before.paths,48);assert.equal(before.checkpoints,before.retries);assert.equal(before.rails,before.grinds);
  await page.getByRole('spinbutton',{name:'node 4 · y',exact:true}).fill(String(before.y+1.25));
  await page.getByRole('spinbutton',{name:'node 4 · y',exact:true}).press('Enter');
  await page.getByRole('spinbutton',{name:'node 4 · radius',exact:true}).fill('6');

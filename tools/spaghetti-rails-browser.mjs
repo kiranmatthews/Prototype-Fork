@@ -42,7 +42,8 @@ try{
   await page.getByRole('button',{name:'RACE',exact:true}).click();
   await page.waitForFunction(()=>window.__game.getSkateRace().phase==='running',null,{timeout:30000});
   await page.screenshot({path:output+'/spawn.png'});
-  const state=await page.evaluate(()=>{const g=window.__game,l=g.getLevel(),r=g.getSkateRace();return {level:g.getCurrentLevel().id,rails:l.rails.length,line:r.course.length,spawn:g.player.pos.toArray(),buffer:[g.renderer.domElement.width,g.renderer.domElement.height],native:!g.renderQualitySettings.snapshot().enabled,stamp:document.querySelector('.hud-build')?.textContent};});
+  const state=await page.evaluate(()=>{const g=window.__game,l=g.getLevel(),r=g.getSkateRace();return {level:g.getCurrentLevel().id,rails:l.rails.length,line:r.course.length,spawn:g.player.pos.toArray(),grounded:g.player.grounded,buffer:[g.renderer.domElement.width,g.renderer.domElement.height],native:!g.renderQualitySettings.snapshot().enabled,stamp:document.querySelector('.hud-build')?.textContent};});
   console.log(JSON.stringify({state,errors}));await writeFile(output+'/inspect.json',JSON.stringify({state,errors},null,2));
+  assert.equal(state.level,'spaghetti-rails');assert.equal(state.rails,48);assert.equal(state.grounded,true);assert.deepEqual(errors,[]);
  }
 }finally{await browser.close();}

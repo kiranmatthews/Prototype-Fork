@@ -1,0 +1,45 @@
+{
+  "scope": "All eight starting-island entries, ordinary production controls and balance; not whole-course evidence.",
+  "cases": [
+    {
+      "choice": 0,
+      "passed": true,
+      "falls": 0
+    },
+    {
+      "choice": 1,
+      "passed": true,
+      "falls": 0
+    },
+    {
+      "choice": 2,
+      "passed": true,
+      "falls": 0
+    },
+    {
+      "choice": 3,
+      "passed": true,
+      "falls": 0
+    },
+    {
+      "choice": 4,
+      "passed": true,
+      "falls": 0
+    },
+    {
+      "choice": 5,
+      "passed": true,
+      "falls": 0
+    },
+    {
+      "choice": 6,
+      "passed": true,
+      "falls": 0
+    },
+    {
+      "choice": 7,
+      "passed": true,
+      "falls": 0
+    }
+  ]
+}

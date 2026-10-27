@@ -10,15 +10,14 @@ try{
  await page.waitForFunction(()=>window.__game?.getSkateRace()?.active&&!window.__game.gameFlow.blocksGameplay,null,{timeout:180000});
  await page.evaluate(()=>{const g=window.__game;g.renderQualitySettings.setRegularResolution(null);g.openEditor();});
  const views=[
-  {name:'whole-entanglement',target:[-50,84,-130],eye:[470,485,630]},
-  {name:'snarl-three-paths',target:[0,150,-32],eye:[160,295,200]},
-  {name:'hanging-pretzel',target:[-260,105,-275],eye:[-480,270,-30]},
-  {name:'cauldron-crossings',target:[-205,82,35],eye:[-410,210,280]},
-  {name:'final-tangle',target:[120,34,-290],eye:[350,210,-20]},
+  {name:'whole-island-course',target:[0,210,-1120],eye:[1900,1700,950]},
+  {name:'first-chasm-eight-choices',target:[25,382,-120],eye:[410,630,250]},
+  {name:'first-chasm-side',target:[25,382,-120],eye:[520,420,-60]},
+  {name:'combo-threads-close',target:[5,390,-132],eye:[160,485,10]},
  ];
  const pictures=[];
  for(const view of views){
-  await page.evaluate(view=>{const g=window.__game,e=g.editor;e.focusAnim=null;e.sel=[];e.camera.far=2000;e.camera.updateProjectionMatrix();e.camera.position.set(...view.eye);e.controls.target.set(...view.target);e.controls.update();g.gameFlow.requestGameplayFrame();},view);
+  await page.evaluate(view=>{const g=window.__game,e=g.editor;e.focusAnim=null;e.sel=[];e.camera.far=6000;e.camera.updateProjectionMatrix();e.camera.position.set(...view.eye);e.controls.target.set(...view.target);e.controls.update();g.gameFlow.requestGameplayFrame();},view);
   await page.waitForTimeout(300);
   const state=await page.evaluate(()=>{const g=window.__game;return {viewport:[innerWidth,innerHeight],buffer:[g.renderer.domElement.width,g.renderer.domElement.height],native:!g.renderQualitySettings.snapshot().enabled,rails:g.getLevel().rails.length,paths:g.getLevel().railChoices.paths.length};});
   await page.screenshot({path:`${output}/${view.name}.png`});pictures.push({...view,...state});

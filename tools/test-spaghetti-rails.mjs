@@ -15,7 +15,7 @@ await withBlockworksRuntime(async r=>{
  const traced=Number(process.env.SPAGHETTI_TRACE_RIDER??0),lastInputs=[],drive=race.drive.bind(race);
  race.drive=(id,...args)=>{const input=drive(id,...args);lastInputs[id]=input;return input;};
  const tuning=JSON.stringify(r.TUNING),records=[],trace=[];
- const stats=Array.from({length:race.count},()=>({grindFrames:0,airFrames:0,groundFrames:0,jumps:0,rails:new Set(),lastState:null}));
+ const stats=Array.from({length:race.count},()=>({grindFrames:0,airFrames:0,groundFrames:0,jumps:0,rails:new Set(),lastState:null,maxBalance:0,edgeFrames:0}));
  const maxFrames=Number(process.env.SPAGHETTI_FRAMES??54000);
  let frames=0,lastProgress=0,stalledAt=0;
  for(;frames<maxFrames&&race.riders.slice(0,race.count).some(a=>a.finish===null);frames++){
@@ -24,7 +24,7 @@ await withBlockworksRuntime(async r=>{
   race.step(r.dt,input);r.l.update(r.dt);r.p.commitRenderStep(r.l);race.commitRenderStep();
   for(const a of race.riders.slice(0,race.count)){
    const s=stats[a.id],p=a.player;
-   if(p.state==='grind'){s.grindFrames++;s.rails.add(r.l.rails.indexOf(p.grindRail));}
+   if(p.state==='grind'){s.grindFrames++;s.maxBalance=Math.max(s.maxBalance,Math.abs(p.balance));if(Math.abs(p.balance)>.65)s.edgeFrames++;s.rails.add(r.l.rails.indexOf(p.grindRail));}
    if(p.grounded)s.groundFrames++;
    if(p.state==='air'){s.airFrames++;if(s.lastState==='grind')s.jumps++;}
    s.lastState=p.state;
@@ -45,6 +45,6 @@ await withBlockworksRuntime(async r=>{
  console.log(JSON.stringify({...report,records:undefined}));
  assert.equal(report.tuningUnchanged,true);
  assert.ok(report.riders.every(a=>a.finish!==null),'Every active racer must finish using production controls');
- assert.ok(report.riders.every(a=>a.rails.length>=8),'The race must actually use the authored rails');
+ assert.ok(report.riders.every(a=>a.rails.length>=source.skateRace.railChoices.length),'The race must actually use the authored rails');
  if(solo)assert.equal(report.riders[0].falls,0,'The reference line must complete without a fall');
-},{modulePath:'/src/levels/spaghetti-rails.ts',source:m=>m.SPAGHETTI_RAILS_LEVEL,levelId:'spaghetti-rails'});
+},{modulePath:process.env.SPAGHETTI_MODULE??'/src/levels/spaghetti-rails.ts',source:m=>m.SPAGHETTI_RAILS_LEVEL,levelId:'spaghetti-rails'});

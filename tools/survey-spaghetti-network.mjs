@@ -3,8 +3,9 @@ import {build} from 'esbuild';
 import {mkdir,writeFile} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 const output=process.env.SPAGHETTI_OUTPUT??'docs/spaghetti-rails/evidence/network-survey';
+const sourceModule=process.env.SPAGHETTI_MODULE??'./src/levels/spaghetti-rails';
 await mkdir(output,{recursive:true});
-const built=await build({stdin:{contents:`export * from './src/levels/spaghetti-rails';export {Rail} from './src/rails';export {RailChoices} from './src/race/railChoices';export {RaceCourse} from './src/race/course';export {validSkateRace} from './src/race/schema';export {Vector3} from 'three';`,resolveDir:process.cwd(),loader:'ts'},bundle:true,write:false,format:'esm',platform:'node'});
+const built=await build({stdin:{contents:`export * from ${JSON.stringify(sourceModule)};export {Rail} from './src/rails';export {RailChoices} from './src/race/railChoices';export {RaceCourse} from './src/race/course';export {validSkateRace} from './src/race/schema';export {Vector3} from 'three';`,resolveDir:process.cwd(),loader:'ts'},bundle:true,write:false,format:'esm',platform:'node'});
 const {SPAGHETTI_RAILS_LEVEL:level,SPAGHETTI_PATHS:paths,spaghettiRail,spaghettiSamples,Rail,RailChoices,RaceCourse,validSkateRace,Vector3}=await import(`data:text/javascript;base64,${Buffer.from(built.outputFiles[0].text).toString('base64')}`);
 const rails=paths.flatMap(path=>path.runs.map(run=>{
  const component=spaghettiRail(run),points=spaghettiSamples(component),native=new Rail(points.map(p=>new Vector3(...p)),false);native.object.userData.sourceName=component.nm;
@@ -75,7 +76,8 @@ assert.equal(validSkateRace(level.skateRace),true,'The branching metadata surviv
 assert.ok(navigation.every(path=>path.wrongCamera===0&&path.minimumDot>.9),'Every route keeps its own camera and input tangent through the entanglement');
 assert.equal(report.platformContacts.length,0,'Platforms leave a rider-sized clear passage on every other rail');
 assert.equal(report.unsupported.length,0,'Every rail endpoint must have a real platform beneath it');
+assert.ok(crossings.every(c=>c.height>=4),'Over/under crossings leave full rider clearance');
 assert.ok(report.maxTurn<45,'All editable rail curves preserve the native corner margin');
-assert.equal(network.paths.length,18,'All eighteen distinct alternatives resolve from native editor names');
+assert.equal(network.paths.length,paths.length,'Every distinct alternative resolves from native editor names');
 assert.ok(navigation.every(p=>p.maxBackstep<1),'Rail progress remains ordered through each branch');
 assert.ok(reacquisition.length>0&&reacquisition.every(r=>r.passed),'Catching a different thread at a crossing gives that actual rail ownership of the camera');

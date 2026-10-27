@@ -5,7 +5,7 @@ import {mkdir,writeFile} from 'node:fs/promises';
 const output=process.env.SPAGHETTI_OUTPUT??'docs/spaghetti-rails/evidence/momentum';
 await mkdir(output,{recursive:true});
 const built=await build({stdin:{contents:`
- export {SPAGHETTI_RUNS,spaghettiRail,spaghettiSamples} from './src/levels/spaghetti-rails';
+ export {SPAGHETTI_RUNS,spaghettiRail,spaghettiSamples} from '${process.env.SPAGHETTI_MODULE??'./src/levels/spaghetti-rails'}';
  export {Rail} from './src/rails';
  export {TUNING,CONST} from './src/tuning';
  export {Vector3} from 'three';`,resolveDir:process.cwd(),loader:'ts'},bundle:true,write:false,format:'esm',platform:'node'});
@@ -23,7 +23,7 @@ for(const [index,run]of runs.entries())for(const lane of run.lanes)for(const ent
  }
  rows.push({section:index,choice:run.choice,name:run.name,lane,entrySpeed,length:rail.totalLength,seconds,minimum,exitSpeed:speed,slowSeconds});
 }
-const totals=[0,1,2].map(choice=>({choice,seconds:rows.filter(r=>r.choice===choice&&r.entrySpeed===TUNING.downhillMax).reduce((sum,r)=>sum+r.seconds,0)}));
+const totals=[...new Set(runs.map(r=>r.choice))].map(choice=>({choice,seconds:rows.filter(r=>r.choice===choice&&r.entrySpeed===TUNING.downhillMax).reduce((sum,r)=>sum+r.seconds,0)}));
 const report={at:new Date().toISOString(),scope:'Forward-grind momentum estimate only; excludes catches, jumps, combat and balance. Native playtests remain authoritative.',
  tuning:{gravity:TUNING.groundGravity,cap:TUNING.downhillMax,minimum:CONST.grindMinSpeed,drag:TUNING.grindDrag,step:CONST.fixedStep},totals,rows};
 await writeFile(output+'/report.json',JSON.stringify(report,null,2));

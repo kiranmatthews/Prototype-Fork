@@ -1,0 +1,20 @@
+{
+  "state": {
+    "level": "spaghetti-rails",
+    "rails": 48,
+    "line": 6958.8585836564225,
+    "spawn": [
+      -2.32594486457078,
+      420,
+      111.90296598043743
+    ],
+    "grounded": true,
+    "buffer": [
+      1280,
+      720
+    ],
+    "native": false,
+    "stamp": "Codex/sol fork · build 10-27 06:14 UTC"
+  },
+  "errors": []
+}

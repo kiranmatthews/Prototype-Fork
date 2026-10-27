@@ -1,0 +1,16 @@
+{
+  "at": "2026-10-27T10:29:45.268Z",
+  "nativeGameplayUnchanged": true,
+  "rails": 48,
+  "platforms": 7,
+  "noncollidingScenery": 136,
+  "existingMeshyKinds": [
+    "nightbasalt",
+    "nightdistantarch",
+    "ghostchandelier",
+    "ghostmonsterportal",
+    "ghosttrestle"
+  ],
+  "railSkin": "Existing node-driven citydeck upright beam, identical native rail centreline and contact height",
+  "newRasterBytes": 518824
+}
