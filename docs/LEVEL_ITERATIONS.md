@@ -5054,3 +5054,44 @@ Eight fitted transition ends close the halfpipe, wave wall and two channels. Two
 Final native validation passes 21,412 nondegenerate mesh triangles, 952 exact cap-fit points, 424 swept contacts across all eight ends, watertight raised bodies, 3,060 supported floor probes, all 1,351 crowd roots, original routes, recovery and editor reconstruction. The loop completes from rest in 295 frames at 8.399 m; the return route reaches all four ascent waypoints in 227 frames. Layout validates 38 rail catches and four pocket airs. Skating passes 24 vert returns, 24 terminal contacts, 3,117 replay frames, 19,200 stress frames and camera equivalence at 30/60/120 Hz. Repeated heat/ocean/sky/bloom lifecycle and preference-restoration checks pass.
 
 All twenty level checks, TypeScript/build and release-size checks pass: 1,838 files, 999,497,633 / 1,000,000,000 bytes, offline version df99459ba0c2e8f07ffc. Eight actual Player rides pass in both full and lightweight browsers. Final MAX/native and normal views verify the closures and all three looks; the packaged game accepts keyboard skating with an advancing timer and supported rider. Console warnings/errors are zero. No check:all was run. A blocked outside camera shortcut was removed from the local review tool after capture; validated runtime source is unchanged. Evidence and source fingerprints are in [the lighting and structure review](motu-beach-lighting/README.md). Task-owned browsers and servers are closed. The coordinator owns publication; the user's open-ended polish goal remains active.
+
+
+### 2026-10-27 — The Ancient Gates: marathon greybox and Gatekeeper's Hoard
+
+The first complete native route was playable in approximately 74 minutes, with
+the complete Chrome journey at 83 minutes. These prompt-to-playable figures
+exclude the coordinator's 150-minute Mac crash/access credit. Gameplay work
+continued through the requested two-hour greybox window; image generation
+started only after 07:34:25 UTC. This is the completed gameplay milestone; final
+art review and release validation remain pending.
+
+The main journey grows from 448 to 1,396 metres (3.12×), with twelve distinct
+sequences, sixteen enemies across eight types and eleven checkpoints. Variable
+root gaps lead into a split gate, enemy stair, ferry/lift transfer, crusher
+gallery, committed skate jump and grind, mixed enemy orchard, disappearing
+lantern stair, swinging bells, restored switchyard, launcher ascent and a tight
+crumbling finale. The 209-metre Gatekeeper's Hoard adds 28 boxes through upper
+galleries, conserved launchers, permanent steel anchors and ordered return
+paths. Movement tuning and shared player/level runtime stay unchanged.
+
+The continuous production-player route passes with zero deaths or masks spent,
+all 26 main boxes and all eleven checkpoints. Real Chrome lite repeats that
+clear in 374.95 simulated seconds with no console errors. The bonus passes
+28/28; an actual browser session verifies entry, deliberate failure, preserved
+parent state, retry, full collection and supported return. A deliberate main
+route pit death returns to the activated checkpoint with its banked inventory
+and deployed bridge. All twenty level checks passed before the art phase.
+
+The first art pass reuses existing full Meshy geometry and adds two original
+1536×1024 built-in ImageGen paintings, shipped as WebP files totaling 748,740
+bytes. Frozen gameplay fingerprints, source/snapshot synchronization and the
+scenery clearance audit pass. Native/MAX scene review, final full-render
+54-box journey, clock trial, post-art level checks and build are still pending
+the coordinator's host-validation capacity; these commits are not yet READY.
+
+Evidence: [gameplay notebook](ancient-gates/greybox-plan.md),
+[Chrome main route](ancient-gates/evidence/greybox/main-browser.json),
+[bonus session](ancient-gates/evidence/greybox/bonus-session.json),
+[recovery](ancient-gates/evidence/greybox/recovery.json),
+[art clearance](ancient-gates/evidence/art/clearance.json) and
+[image provenance/prompts](ancient-gates/imagegen-prompts.json).
