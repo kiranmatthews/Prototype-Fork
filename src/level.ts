@@ -1047,6 +1047,7 @@ export const DECOR_LABELS: Record<DecorKind, string> = {
 // Every paintable surface kind the texture system offers. The editor's
 // texture dropdown is built from this list; 'checker' is the classic default.
 export const TEX_KINDS = [
+  'spaghetti-basalt','spaghetti-cavern',
   'skystream-marble',
   'cardboard',
   'waterslide-fiberglass','rally-mud','rally-sponsors','rally-cloth','rally-lamp','rally-lamp-glow',
@@ -4721,6 +4722,10 @@ export class Level {
     if(kind==='rally-mud')return this.surfaceTexture('dirt');
     const cached = this.surfTexCache.get(kind);
     if (cached) return cached;
+    if(kind==='spaghetti-basalt'||kind==='spaghetti-cavern'){
+      const texture=Level.finishTex(this.surfaceImage(`spaghetti-rails/${kind==='spaghetti-basalt'?'basalt':'cavern'}.webp`),kind==='spaghetti-basalt');
+      this.surfTexCache.set(kind,texture);return texture;
+    }
     if(kind==='rally-sponsors'){const t=Level.finishTex(this.surfaceImage('rally/sponsors-v3.webp'));t.wrapS=t.wrapT=THREE.ClampToEdgeWrapping;this.surfTexCache.set(kind,t);return t;}
     if(kind==='skystream-marble'){
       const texture=Level.finishTex(this.surfaceImage('skystream/ivory-marble.webp'));
