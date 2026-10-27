@@ -40,8 +40,12 @@ try{
   assert.ok(player.renderPosition.distanceTo(position)<.01);visits.push({from,key,direction,frames,position:position.toArray()});
  };
  controller.activate(level,'custard-creek');visit('tribal-run');assert.equal(controller.enterSelected(),true);assert.equal(entered.at(-1),'tribal-run');
+ assert.equal(store.levelPlayable('waterfall-climb'),false,'Waterfall Climb unlocked before Tribal Run was cleared');
  assert.equal(store.levelPlayable('test'),false,'Uga Ambush unlocked before Tribal Run was cleared');
- store.commitClear('tribal-run',{crystal:true});controller.refresh();visit('waterfall-climb');assert.equal(controller.enterSelected(),false,'placeholder must not launch');
+ store.commitClear('tribal-run',{crystal:true});controller.refresh();visit('waterfall-climb');
+ assert.equal(controller.enterSelected(),true);assert.equal(entered.at(-1),'waterfall-climb');
+ assert.equal(store.levelPlayable('test'),false,'Uga Ambush unlocked before Waterfall Climb was cleared');
+ store.commitClear('waterfall-climb',{crystal:true});controller.refresh();
  visit('test-course');assert.equal(controller.enterSelected(),true);assert.equal(entered.at(-1),'test');
  assert.equal(controller.travelTo('tribal-run'),true);const returnFrames=settle();assert.equal(controller.selectedKey,'tribal-run');
  assert.equal(controller.enterSelected(),true);assert.equal(entered.at(-1),'tribal-run');controller.deactivate();assert.deepEqual(player.group.scale.toArray(),[1,1,1]);

@@ -44,6 +44,8 @@ try {
  campaign.commitClear('custard-creek',{crystal:false,boxGem:false,comboGem:false});
  ui.render();assert.deepEqual(rowKeys(),['custard-creek','tribal-run']);
  campaign.commitClear('tribal-run',{crystal:true,boxGem:false,comboGem:false});
+ ui.render();assert.deepEqual(rowKeys(),['custard-creek','tribal-run','waterfall-climb']);
+ campaign.commitClear('waterfall-climb',{crystal:true,boxGem:false,comboGem:false});
  ui.render();assert.deepEqual(rowKeys(),['custard-creek','tribal-run','waterfall-climb','test-course']);
  // Secret discovery is per slot: five clear gems reveal slot 2, not slot 1.
  campaign.startEphemeral();
@@ -110,13 +112,15 @@ try {
  input.armMenuReleaseGuard();input.update();assert.equal(input.mapLevelSelectPressed,false);
  pad.buttons[17].pressed=false;input.update();pad.buttons[17].pressed=true;input.update();assert.equal(input.mapLevelSelectPressed,true);
  input.consumeEdges();pad.buttons[17].pressed=false;input.update();document.body.classList.remove('world-map-active');pad.buttons[17].pressed=true;input.update();assert.equal(input.mapLevelSelectPressed,false,'map shortcut leaks into gameplay');
- // Touch an unlocked planned row to inspect it, then touch a built course to launch.
- inputPrompts.update(null,true);calls.length=0;ui.showMapSection('level-select');ui.changeLevelSelectIsland(1);
- const planned=ui.navButtons.find(b=>b.dataset.levelKey==='waterfall-climb');planned.click();
- assert.equal(ui.levelSelectKey,'waterfall-climb');assert.match(ui.levelSelectDetail.textContent,/COMING SOON/);assert.deepEqual(calls,[]);
- ui.navButtons.find(b=>b.dataset.levelKey==='tribal-run').click();assert.deepEqual(calls,['tribal-run']);
- calls.length=0;ui.showMapSection('level-select');ui.changeLevelSelectIsland(1);
- ui.navButtons.find(b=>b.dataset.levelKey==='test-course').click();assert.deepEqual(calls,['test']);
+ // Touch an unlocked planned row to inspect it, then launch each built Uga course.
+ inputPrompts.update(null,true);calls.length=0;ui.showMapSection('level-select');
+ for(let i=0;i<3;i++)ui.changeLevelSelectIsland(1);
+ const planned=ui.navButtons.find(b=>b.dataset.levelKey==='maynard-course-4');planned.click();
+ assert.equal(ui.levelSelectKey,'maynard-course-4');assert.match(ui.levelSelectDetail.textContent,/COMING SOON/);assert.deepEqual(calls,[]);
+ for(const [key,id] of [['tribal-run','tribal-run'],['waterfall-climb','waterfall-climb'],['test-course','test']]){
+  calls.length=0;ui.showMapSection('level-select');ui.changeLevelSelectIsland(1);
+  ui.navButtons.find(b=>b.dataset.levelKey===key).click();assert.deepEqual(calls,[id]);
+ }
  ui.showMapSection('level-select');ui.panel.querySelector('.game-map-close').click();assert.equal(calls.at(-1),'resume');
  ui.levelSelectKey='nightworks';ui.levelSelectIsland='island-5';campaign.startEphemeral();ui.playSelectedLevel();assert.equal(calls.at(-1),'resume','stale completion launched a locked level after replacing save');
  ui.render();assert.equal(ui.levelSelectIsland,'island-1');assert.deepEqual(rowKeys(),['treehouse-trail']);assert.equal(ui.levelSelectKey,'treehouse-trail');assert.match(ui.levelSelectPreview.src,/treehouse-trail.jpg$/);
