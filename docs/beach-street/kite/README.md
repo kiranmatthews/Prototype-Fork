@@ -40,6 +40,9 @@ placement or global tuning changes are involved.
   checkpoint retry, explicit schema and isolation when changing levels.
 - `node tools/test-kite-progression.mjs`: supported forward gem pickup in kite
   mode and exact preservation of ordinary side-of-gate gem placement.
+- `node tools/review-beach-kite-pacing.mjs`: light review of 42 lane transitions
+  and the measured landing-to-next-approach spacing. This supplements native
+  collision evidence; it does not simulate the complete scene.
 - `node tools/beach-kite-browser.mjs --lite`: connected keyboard journey with
   DOM key events, no position/velocity writes after the initial start reset.
 - `node tools/beach-kite-browser.mjs`: full-render journey, normal CRT play and

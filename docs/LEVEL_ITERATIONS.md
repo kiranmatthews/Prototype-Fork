@@ -5244,3 +5244,13 @@ were reviewed, plus the MAX first-hop view. Maximum hand-to-bar error is
 0.904 mm. Sampled complete-canopy bounds remain within the screen throughout
 the journey, including jumps; console, request and scenery-asset error lists
 are empty. All complete authored scenery meshes remain in use.
+
+The independent review after handoff checks 42 lane changes against the actual
+steering response, starting each with full velocity in the wrong direction.
+Every transition retains at least 0.304 seconds beyond that worst-case reversal.
+The twelve jumps followed by another obstacle retain at least 0.904 seconds
+after measured native landing before the next approach begins. This lightweight
+authoring calculation supplements the connected native/browser evidence; it
+does not replace collision simulation. No gameplay changes were needed and no
+build or browser run was repeated. See
+[pacing review](beach-street/kite/pacing-review.json).

@@ -120,5 +120,13 @@
     "No push or GitHub polling",
     "No check:all"
   ],
-  "resourceHandling": "All heavy jobs serialized through shared run_heavy.py; test Chrome instances close in finally."
+  "resourceHandling": "All heavy jobs serialized through shared run_heavy.py; test Chrome instances close in finally.",
+  "postHandoffReview": {
+    "report": "pacing-review.json",
+    "sha256": "7ed292d3c79955d7198b0c2f1bb2b2d0c016dd1ff687de681d28f1f897a0a6a8",
+    "result": true,
+    "sourceChanged": false,
+    "command": "node tools/review-beach-kite-pacing.mjs",
+    "coverage": "42 lane changes with worst-case lateral reversal; 12 landings before next obstacle approach."
+  }
 }
