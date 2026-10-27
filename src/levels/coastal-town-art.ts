@@ -137,16 +137,21 @@ function finish(data: CustomLevelData, art: TownArt) {
 }
 
 export function decorateCoastalTown(data: CustomLevelData, road: readonly RoadSegment[], heightAt: (z:number)=>number, gaps: readonly Gap[]) {
-  // All original physics, enemies, rails, collectibles and route cameras stay authoritative.
+  // Surface role must survive the art pass: the old all-white paving override
+  // erased every stair riser and launch ramp against the road.
   data.components = data.components.filter(c=>!(c.t==='decor'&&c.dkind==='coastalhouse')).map(c=>{
-    if (c.t==='platform'||c.t==='ramp'||c.t==='wallpath') return {...c,
-      tex:c.grp===2?'bay-terracotta':'bay-paving',color:'#ffffff'};
+    if (c.grp===11) return c;
+    if (c.t==='platform'||c.t==='ramp'||c.t==='wallpath') {
+      const role=c.grp;
+      return {...c,tex:role===2||role===3?'bay-terracotta':'bay-paving',
+        color:role===2?'#d86632':role===3?'#a64c35':role===4?'#206474':role===7?'#637e82':role===9?'#899b99':'#ffffff'};
+    }
     return c;
   });
   const art = new TownArt();
   art.groups.push({id:100,nm:'Coastal modular town',editorOnly:true},{id:101,nm:'Separate palms and flowers',editorOnly:true},
     {id:102,nm:'Festival dressing',editorOnly:true},{id:103,nm:'Landmark components',editorOnly:true},
-    {id:104,nm:'Distant painted town and headland',editorOnly:true});
+    {id:104,nm:'Spatial offshore islands and harbour landmarks',editorOnly:true});
   const safe = (z:number, margin=0) => !gaps.some(g=>z>g.start-margin&&z<g.end+margin);
   let building=0;
   for (let z=-38;z<3060;z+=14.5) {
@@ -194,9 +199,61 @@ export function decorateCoastalTown(data: CustomLevelData, road: readonly RoadSe
         [c.p[0]+b[0],c.p[1]+(b[3]??0),c.p[2]+b[1]],.085,TEAL,101);
     }
   }
-  for(let z=-80;z<3210;z+=210) {
-    art.asset(Math.floor((z+80)/210)%3===2?'bayheadlandmatte':'baytownmatte',
-      [165,-20.5,-z],1.3,-30,104);
+  // Separate real volumes, with open-water intervals. No alpha-card plane can
+  // intersect another shore, reveal a rectangular bottom, or repeat every 210m.
+  const islands = [
+    {x:115,z:210,w:78,d:110,h:19,seed:2},
+    {x:140,z:855,w:104,d:150,h:32,seed:5},
+    {x:110,z:1530,w:62,d:92,h:14,seed:9},
+    {x:155,z:2170,w:126,d:172,h:27,seed:13},
+    {x:128,z:2890,w:72,d:132,h:22,seed:17},
+  ];
+  for(const island of islands) {
+    const {x,z,w,d,h,seed}=island;
+    const sectors=96,rings=12,vertices:number[]=[],uvs:number[]=[],colors:number[]=[],indices:number[]=[];
+    const shade=new THREE.Color();
+    const point=(a:number,t:number):P=>{
+      const coast=1+.11*Math.sin(a*3+seed)+.07*Math.sin(a*5-seed*.7)+.04*Math.cos(a*9+seed);
+      const top=h*(1-Math.pow(t,5.2))*(.84+.1*Math.sin(a*2+seed)*t)+Math.sin(a*5+seed)*1.3*t*(1-t);
+      return [Math.cos(a)*w*.5*t*coast,top-4.5,Math.sin(a)*d*.5*t*coast];
+    };
+    for(let r=0;r<=rings;r++)for(let j=0;j<=sectors;j++) {
+      const a=j/sectors*Math.PI*2,t=r/rings;
+      vertices.push(...point(a,t));
+      uvs.push(j/sectors*12,t*6);
+      shade.set(t<.67?'#6a9266':t<.84?'#baad84':'#d0be9a');
+      shade.multiplyScalar(.9+.09*Math.sin(a*7+seed+t*9));colors.push(shade.r,shade.g,shade.b);
+      if(r<rings&&j<sectors){const k=r*(sectors+1)+j;indices.push(k,k+1,k+sectors+1,k+1,k+sectors+2,k+sectors+1);}
+    }
+    const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.Float32BufferAttribute(vertices,3));
+    geo.setAttribute('uv',new THREE.Float32BufferAttribute(uvs,2));geo.setIndex(indices);geo.computeVertexNormals();
+    art.put({t:'mesh',p:[x,0,-z],...geometryData(geo),colors,tex:'bay-stucco',color:'#ffffff',grp:104,nm:`Offshore island ${seed} continuous submerged shore`});
+    // Small native sandstone outcrops and palms give scale and parallax.
+    for(let i=0;i<3;i++)art.asset('bayrock',[x-w*(.3+i*.06),-4,-z+d*(.27-i*.2)],1.5+i*.38,seed*31+i*73,104);
+    for(let i=0;i<4;i++){
+      const p=point(i*2.4+seed,.24+i*.07);
+      art.palm([x+p[0],p[1]-.08,-z+p[2]],seed*19+i*67,.65+i*.12,104);
+    }
+    if(seed===2||seed===13)for(let i=0;i<2;i++){
+      const q=point(.8+i*2.8,.18),base:P=[x+q[0],q[1]-.3,-z+q[2]];
+      art.box('Island villa embedded foundation',[base[0],base[1]-1.3,base[2]],[9,1.5,9],CREAM,104);
+      art.building(base,-30+i*25,seed+i,104,{height:6.5+i*2.1,simple:true});
+    }
+  }
+  // Bright nosings describe stair height and deck boundaries in the normal
+  // low-resolution presentation as well as native resolution.
+  for(const c of data.components) {
+    if(c.grp===3&&c.t==='platform'&&c.s){
+      const top=c.p[1]+c.s[1]/2;
+      art.put({t:'decor',dkind:'block',p:[c.p[0],top+.016,c.p[2]-c.s[2]/2+.1],s:[c.s[0],.055,.22],tex:'solid',color:CREAM,grp:101,nm:`Stair cream nosing / ${c.nm}`});
+    }
+    if(c.grp===4&&c.t==='platform'&&c.s){
+      const top=c.p[1]+c.s[1]/2;
+      for(const side of [-1,1])art.put({t:'decor',dkind:'block',p:[c.p[0]+side*(c.s[0]/2-.065),top+.015,c.p[2]],s:[.13,.05,c.s[2]],tex:'solid',color:SAFFRON,grp:101,nm:`Ledge gold coping / ${c.nm}`});
+    }
+    if(c.grp===2&&c.t==='ramp'){
+      art.put({t:'decor',dkind:'block',p:[c.p[0],c.p[1]+(c.rise??0)+.025,c.p[2]-(c.len??0)/2+.18],s:[c.w??4.5,.06,.36],tex:'solid',color:CREAM,grp:101,nm:`Canal launch lip / ${c.nm}`});
+    }
   }
   for(let z=1850;z<2250;z+=38)art.bunting(-z,heightAt(z)+9);
   for(let z=2910;z<3020;z+=32)art.bunting(-z,heightAt(z)+9);
@@ -208,6 +265,9 @@ export function decorateCoastalTown(data: CustomLevelData, road: readonly RoadSe
   art.building([17,3,-2290],0,1,103,{height:16});
   art.clock([17,14.7,-2285.85]);
   finish(data,art);
+  // These placements are explicitly visual. The importer can account for the
+  // existing shared native assets instead of budgeting new procedural solids.
+  data.components=data.components.map(c=>c.t==='decor'&&c.solid===false?{...c,scenerySolid:false}:c);
   // The imported offshore slab was only 2 cm below sea level. Give the bay
   // real depth so the current shoreline shader does not cover it in foam.
   data.unitySand = data.unitySand?.map(s=>({...s,p:[s.p[0],-3.4,s.p[2]]}));

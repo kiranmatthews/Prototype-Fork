@@ -1,6 +1,7 @@
 import type { CustomComponent, CustomLevelData } from "../level";
 import { buildCoastalStreetKit } from "../coastalStreetKit";
 import { decorateCoastalTown } from './coastal-town-art';
+import { enhanceBeachStreet } from './beach-street-gameplay';
 
 /**
  * Unity's three-kilometre street is authored along native +Z. We keep every
@@ -496,30 +497,6 @@ boostDistances.forEach((unityZ, index) =>
   }),
 );
 
-const gruntDistances = [270, 315, 550, 620, 1040, 1105, 1380, 1518, 1950, 2164, 2295];
-gruntDistances.forEach((unityZ, index) =>
-  add({
-    t: "enemy",
-    p: [0, r2(heightAt(unityZ)), -unityZ],
-    foe: "grunt",
-    range: 3.45 + (index % 3) * 0.25,
-    speed: 2.6 + (index % 4) * 0.35,
-    grp: GROUP.actors,
-  }),
-);
-const crossingThreats = [470, 1080, 1860, 2390, 2810];
-crossingThreats.forEach((unityZ, index) =>
-  add({
-    t: "enemy",
-    p: [[-4, 3.25, -2, 4, 0][index], r2(heightAt(unityZ)), -unityZ],
-    foe: "spinner",
-    range: 0,
-    speed: 0,
-    nm: `street crossing threat ${index + 1}`,
-    grp: GROUP.actors,
-  }),
-);
-
 const lanePattern = [0, -3.4, 3.4, -1.7, 1.7];
 for (let index = 0; index < 52; index++) {
   const unityZ = resolveSafeActorZ(lerp(30, 2970, index / 51));
@@ -676,4 +653,5 @@ export const COASTAL_STREET_RUN_LEVEL: CustomLevelData = {
   components,
 };
 
+enhanceBeachStreet(COASTAL_STREET_RUN_LEVEL, heightAt);
 decorateCoastalTown(COASTAL_STREET_RUN_LEVEL, roadSegments, heightAt, gaps);

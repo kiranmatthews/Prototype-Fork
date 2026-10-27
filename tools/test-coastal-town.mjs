@@ -5,6 +5,7 @@ import {runInThisContext} from 'node:vm';
 const harness=await readFile(new URL('./validate-editor-roundtrip.mjs',import.meta.url),'utf8');
 runInThisContext(harness.slice(harness.indexOf('function installHeadlessDom()'),harness.indexOf('\nfunction round('))+'\ninstallHeadlessDom();');
 const server=await createServer({appType:'custom',logLevel:'silent',server:{middlewareMode:true,hmr:false,ws:false}});
+const mainOnly=process.argv.includes('--main');
 const gameplay=data=>({spawn:data.spawn,killY:data.killY,components:data.components.filter(c=>c.t!=='decor'&&c.solid!==false).map(c=>{
  const {color,tex,emissive,nm,grp,uvs,normals,colors,...physical}=c;return physical;
 })});
@@ -16,9 +17,13 @@ try{
  const bonus=resolveBonusLevel('coastal-street-run');
  const baseline=JSON.parse(await readFile(new URL('./coastal-town-assets/gameplay-baseline.json',import.meta.url),'utf8'));
  const stripVisual=x=>({...x,components:x.components.map(({uvs,normals,colors,...c})=>c)});
- assert.deepEqual(JSON.parse(JSON.stringify(gameplay(main))),stripVisual(baseline.main),'Main route physics/cameras/actors changed');
- assert.deepEqual(JSON.parse(JSON.stringify(gameplay(bonus))),stripVisual(baseline.bonus),'Bonus puzzle physics/cameras/actors changed');
- for(const level of [main,bonus]){
+ // Beach Street deliberately expands its encounters. The imported road,
+ // original stairs/rails/gaps, cameras and original collectibles stay intact.
+ const routeOnly=x=>({...x,components:x.components.filter(c=>c.t!=='enemy'&&!(c.t==='rail'&&c.pts?.length>2&&Math.abs(c.p[0])<7))});
+ const originalMain={...main,components:main.components.filter(c=>c.grp!==11&&!c.nm?.startsWith('street rail '))};
+ assert.deepEqual(routeOnly(JSON.parse(JSON.stringify(gameplay(originalMain)))),routeOnly(stripVisual(baseline.main)),'Original road, gap bridges, boundary/stair rails, cameras or collectibles changed');
+ if(!mainOnly)assert.deepEqual(JSON.parse(JSON.stringify(gameplay(bonus))),stripVisual(baseline.bonus),'Bonus puzzle physics/cameras/actors changed');
+ for(const level of mainOnly?[main]:[main,bonus]){
   assert.ok(level.components.length<9500,'Leave space under the editor limit for owner-added store signage');
   assert.ok(Buffer.byteLength(JSON.stringify(level))<MAX_LEVEL_FILE_BYTES*.8,'Leave space in the editor file budget');
   assert.ok(normalizeCustomLevelData(level),level.name+' remains editable and exportable');
@@ -28,7 +33,8 @@ try{
   assert.equal(level.components.filter(c=>c.t==='gate').length,1);
   assert.ok(level.components.some(c=>c.dkind==='bayroof'));
   assert.ok(level.components.some(c=>c.dkind==='bayawning'));
-  assert.ok(level.components.some(c=>c.dkind==='baytownmatte'));
+  if(level===main)assert.ok(!level.components.some(c=>c.dkind==='baytownmatte'||c.dkind==='bayheadlandmatte'),'Main street uses spatial islands, never repeated alpha cards');
+  else assert.ok(level.components.some(c=>c.dkind==='baytownmatte'));
   assert.ok(!level.components.some(c=>c.dkind==='coastalhouse'));
   const authored=level.components.filter(c=>(c.grp??0)>=100);
   assert.ok(authored.every(c=>c.solid===false),'Scenery must never create an invisible puzzle step');
@@ -52,5 +58,5 @@ try{
    assert.ok(p.attributes.NORMAL!==undefined,kind+' normals');
   }
  }
- console.log(`Coastal art: ${main.components.length} main / ${bonus.components.length} bonus components. Authored road and bonus puzzles unchanged; 16 separate textured Meshy components verified.`);
+ console.log(`Coastal art: ${main.components.length} main components. Original main road/cameras preserved; spatial offshore islands and 16 textured Meshy components verified.${mainOnly?' Bonus excluded from this main-course check.':' Bonus puzzle unchanged.'}`);
 }finally{await server.close();}
