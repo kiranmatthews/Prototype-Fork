@@ -86,7 +86,7 @@ approximately 2.3-kilometre route. The validated layout has 140 authored crossin
   teaching locks, and at least 2.71 seconds on the later jump-spin leaves. These
   are conservative margins measured from visible opening/crossing actions.
 
-## Greybox review and remaining validation
+## Greybox review and the validation plan
 
 The fixed side camera keeps both the takeoff and receiving ledge visible on
 all nine traverses. Three rising hops reverse each row; the middle hop moves
@@ -106,11 +106,12 @@ repeat activation, checkpoint recovery, and production type-check/build.
 The required `check:levels` script completed successfully at 07:25 UTC. The
 production build completed with 1,739 release files / 950.5 MiB.
 
-Still to complete after the full greybox block: scenery and generated artwork,
-normal presentation and MAX/native rendering, a combined river → bonus → climb
-journey with the actual 96-box clear gem, final focused checks/build, and local
-commits/handoff. A final fixture repeat also adds explicit grind-rim removal
-assertions to the already passing physical-expiry test.
+At the end of the greybox block, the remaining plan was scenery and generated
+artwork, normal presentation and MAX/native rendering, a combined river → bonus
+→ climb journey with the actual 96-box clear gem, final focused checks/build,
+and local commits/handoff. The final fixture repeat would add explicit grind-rim
+removal assertions to the already passing physical-expiry test. Completed
+results follow below.
 
 ## Scenery phase
 
@@ -163,3 +164,40 @@ assertions to the already passing physical-expiry test.
   capacity was reserved for other release work. The input pilot now routes
   checkpoint collection around the raised bonus stone as well as ordinary boxes;
   this changes only test navigation, not game geometry or player behavior.
+
+## Complete decorated journey
+
+- 09:06:54 UTC: resumed the consolidated final batch in the coordinator's
+  reserved slot. Actual capacity idle was 08:55:37–09:06:54 (11m17s), excluded
+  from productive work. No additional broad review or greybox rerun was needed.
+- The full-render Chrome journey passes from the actual source spawn, through
+  the real bonus entry and return, to the summit: **74 main + 22 bonus = 96/96
+  boxes**, **16/16 checkpoints**, **actual clear gem**, and finish. No position
+  writes or checkpoint warps occur during this journey. It uses 44,207 fixed
+  input frames / 736.78 simulation seconds, with zero deaths, bails, console
+  errors, or tuning changes. The raw browser report is hashed in
+  `complete-journey.json`; final bonus and finish images are retained here.
+- Final production-Player timer test passes all four rim states (closed,
+  deployed, expired, reopened), removes the expired floor and grind edges,
+  falls into the pit, restores the safe checkpoint, and opens again (602 frames).
+  The original permanently latched bridge passes physical crossing, banked
+  checkpoint restore, hard reset, and airborne spin contact (1,311-frame fixture
+  plus the returning-plank fixture).
+
+## Final handoff validation
+
+The final required `check:levels` sequence passes (244.35 s), followed by the
+production type-check and Vite build (73.64 s). No `check:all` was run. Build
+output contains all new textures and the preview byte-for-byte. Source and
+log hashes, exact commands, timings and the release dependency are recorded
+in `final-validation.json`.
+
+The old-base package measures 1,000,365,544 bytes / 1,843 files, 365,544 bytes
+above the 1 GB cap. The coordinator explicitly accepts the increment with this
+integration-size dependency: the newly verified shared release `7c1d733e` is
+992,401,777 bytes with 7,598,223 bytes remaining. This level adds 878,158 public
+asset bytes; the definitive cap check belongs to the combined current build.
+No authored assets or geometry were pruned to fit the old base.
+
+All feature work is complete locally. Publication remains with the coordinator.
+The complete final guarded batch released its slot and closed its test browser.

@@ -1,0 +1,49 @@
+{
+  "candidate": "ea637c135333473400f7636c2424271c8b7ea5a4",
+  "browser": "Chrome, full rendering, native 1920x1080, MAX",
+  "controlMethod": "Production input samples from source spawn; no checkpoint warp, position writes, movement tuning changes or geometry substitutions. The real bonus lifecycle switches/restores levels.",
+  "result": {
+    "state": "finished",
+    "deaths": 0,
+    "cratesBroken": 74,
+    "totalCrates": 96,
+    "activeCheckpoints": 16,
+    "position": [
+      65.5284571764316,
+      163.8766666691502,
+      -1165.0038226602717
+    ],
+    "frames": 44207,
+    "bonusCrates": 22,
+    "gemEarned": true
+  },
+  "bonusResult": {
+    "completionScope": "bonus-detour",
+    "activeStageCrates": 22,
+    "bonusCrateTotal": 0,
+    "bonusCrates": 0,
+    "gemEarned": false,
+    "deaths": 0,
+    "cratesBroken": 22,
+    "frames": 21013
+  },
+  "fixedFrames": 44207,
+  "simulationSeconds": 736.78,
+  "sourceMatches": true,
+  "tuningUnchanged": true,
+  "initialCheckpointWarp": false,
+  "withBonus": true,
+  "error": null,
+  "consoleErrors": [],
+  "deadOrBailingTraceSamples": 0,
+  "phases": [
+    "river",
+    "bonus",
+    "waterfall"
+  ],
+  "rawEvidence": {
+    "file": "docs/waterfall-climb/runs/complete-art/full-journey.json",
+    "sha256": "f7f95fcbf52d3ed282f1cf4866be6156d6e86657dfc91fa035c57f3b3c33361d"
+  },
+  "reproduce": "WATERFALL_MODE=full WATERFALL_WITH_BONUS=1 WATERFALL_OUTPUT=docs/waterfall-climb/runs/complete-art node tools/waterfall-climb-browser.mjs"
+}

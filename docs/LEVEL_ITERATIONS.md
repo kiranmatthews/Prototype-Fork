@@ -4995,3 +4995,50 @@ Exactly four pickup positions change; all 28 pickups remain, the other 1,475 com
 A lightweight verification pass checks the side-flame contact calculation against the new 46 m/s motor target and 54 m/s speed ceiling, ordinary skating pace, coasting and stationary targets. This is test-only work; no new playable change or retuning was needed. The standalone check completes in less than a second and does not allocate a level or browser.
 
 Across 3,200 combinations of sixteen orientations, five speeds for each body, both relative travel directions and both side jets, analytic approach times agree with the production prediction. All 12,800 sampled contact sweeps hit at 60 and 120 Hz across five frame phases; the shortest full pass still has two hit samples. Targets above the jet are rejected. This verifies the contact calculation, not a new full-render combat run. Existing combat/audio/browser evidence and the source-identical 07:51 production build remain applicable. The separate sixteen-case skater-to-replacement-kart probe remains queued for shared validation capacity. Evidence: [speed/contact verification](cart-skating/flame-speed.json); reproduce with `tools/test-cart-flame-speed.mjs`.
+
+## 2026-10-27 — Waterfall Climb and the Hidden Spillway
+
+**Prompt → playable:** ~23 minutes to the source-level browser smoke; ~63 productive
+minutes to the uninterrupted greybox main clear. The full two-hour gameplay and
+bonus block was completed before art began at 07:31 UTC. The coordinator's recorded
+2h30 crash/access credit moved the earliest art time to 07:30:54. Final decorated
+validation completed at 09:26:44 UTC, 6h25m50s after the 03:00:54 prompt; this includes
+the crash/access credit and the final 11m17s capacity wait, which are not authoring
+time. Clarifications: 0. Local worktree `codex/waterfall-climb`; publication belongs
+to **Coordinate local work and releases**.
+
+Added a 2,291 m upstream river course comparable to Uga Ambush, followed by a fixed
+side-view climb 152.4 m above its basin to the source-pool finish. It has 140 authored
+crossings, 16 checkpoints and 13 repeatable spin-timed timber leaves. The 22-box
+Hidden Spillway bonus adds three timed leaves, a high bounce-cache and a switch
+that reveals stepping stones. The existing permanent spinbridge remains the
+default; authored duration adds settling, four countdown lamps, automatic folding,
+physical support/rim expiry and safe reuse. Movement tuning is unchanged and
+ordinary platform/timber edges retain grinding.
+
+The art pass combines full existing Meshy cliffs, stones, willows and foliage with
+procedural banks, ruins, sluice wheels and four tall water curtains. Three new
+built-in imagegen runs supply basalt, timber and foam materials. All new scenery
+is non-colliding; both gameplay fingerprints remain identical to the greybox.
+Native model geometry is preserved at every viewing distance and in reflections.
+The new textures, provenance and actual-render level preview total 878,158 bytes.
+
+Validation passes 140/140 gaps plus 140/140 earlier-takeoff cases, continuous native
+main and bonus clears, real bonus failure/retry/payout, physical timer expiry and
+checkpoint recovery, and the original permanent-latch regression. The final
+uninterrupted full-render Chrome journey at MAX/native 1920×1080 collects all 96
+boxes and 16 checkpoints, earns the real clear gem and finishes at the summit:
+44,207 input frames / 736.78 simulation seconds, no deaths/bails/console errors,
+no position writes or tuning changes. All 16 supported checkpoint views, normal
+720-line CRT presentation, camera clearance, level checks and production build
+pass. No full suite was run.
+
+The local old-base release is 1,000,365,544 bytes, 365,544 above the cap. Per the
+coordinator's explicit direction this is an integration-size dependency against
+the newer 992,401,777-byte shared base; the combined release must pass its own cap.
+No push or GitHub polling was performed by this feature chat. Evidence and source
+hashes: [final validation](waterfall-climb/final-validation.json),
+[complete journey](waterfall-climb/complete-journey.json),
+[playtest record](waterfall-climb/PLAYTEST.md),
+[art prompts](waterfall-climb/imagegen-prompts.json), and
+[overview](waterfall-climb/overview.png).

@@ -1,0 +1,142 @@
+{
+  "validatedCandidate": "ea637c135333473400f7636c2424271c8b7ea5a4",
+  "baseCommit": "64cc94644f01fe25c02f7330aad43cd34a7dcec9",
+  "recordedAt": "2026-10-27T09:28:36.041740+00:00",
+  "functionalChecksPassed": true,
+  "fullSuiteRun": false,
+  "checks": [
+    {
+      "name": "complete-art",
+      "command": [
+        "node",
+        "tools/waterfall-climb-browser.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 756.48,
+      "evidence": {
+        "file": "docs/waterfall-climb/runs/final-complete-art.log",
+        "sha256": "67106265482085f7b2083178571015f499587666c12e7599a0d1cc4cd72f3dd4"
+      }
+    },
+    {
+      "name": "timed-floor",
+      "command": [
+        "node",
+        "tools/test-waterfall-platform-contact.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 14.75,
+      "evidence": {
+        "file": "docs/waterfall-climb/runs/final-timed-floor.log",
+        "sha256": "4db13dfd3d72822fce9cb7c756ddd7b127b582067dd84b264981d1b9288e9c7a"
+      }
+    },
+    {
+      "name": "legacy-spinbridge",
+      "command": [
+        "node",
+        "tools/test-spinbridge.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 19.5,
+      "evidence": {
+        "file": "docs/waterfall-climb/runs/final-legacy-spinbridge.log",
+        "sha256": "d4225ac668194630ed3355e8c25e089635090680c21f05ae73c20b7e2f025e3e"
+      }
+    },
+    {
+      "name": "levels",
+      "command": [
+        "/bin/zsh",
+        "-c",
+        "node tools/validate-levels.mjs && node tools/test-lazy-source.mjs && node tools/test-tropical-plants.mjs && node tools/test-jungle-assets.mjs && node tools/test-crown-quartz.mjs && node tools/test-jungle-stream.mjs && node tools/test-custard-pool.mjs && node tools/test-jungle-enclosure.mjs && node tools/test-map-landscape-assets.mjs && node tools/test-world-map-save.mjs && node tools/test-map-clay-geometry.mjs && node tools/test-hollowwake-assets.mjs && node tools/test-scenery-normals.mjs && node tools/test-waterslide-scenery-lod.mjs && node tools/test-waterslide-ocean-look.mjs && node tools/test-waterslide-shallows.mjs && node tools/test-waterpark-decks.mjs && node tools/test-waterpark-portals.mjs && node tools/test-waterslide-forest.mjs && node tools/test-hollowwake-tunnel-build.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 244.35,
+      "evidence": {
+        "file": "docs/waterfall-climb/runs/final-levels.log",
+        "sha256": "3d09973bfd2df4e1dfed4a901c2b08cf68d0a64b16aaf1ed7e2e8851ba8e12ae"
+      }
+    },
+    {
+      "name": "build",
+      "command": [
+        "/bin/zsh",
+        "-c",
+        "node node_modules/typescript/bin/tsc --noEmit && node node_modules/vite/bin/vite.js build"
+      ],
+      "exitCode": 0,
+      "seconds": 73.64,
+      "evidence": {
+        "file": "docs/waterfall-climb/runs/final-build.log",
+        "sha256": "0d43e2d02c7040118e461988141c7d43f0540196ccf0154439353c3aed791582"
+      }
+    },
+    {
+      "name": "release-size",
+      "command": [
+        "node",
+        "tools/check-release-size.mjs"
+      ],
+      "exitCode": 1,
+      "seconds": 0.28,
+      "evidence": {
+        "file": "docs/waterfall-climb/runs/final-release-size.log",
+        "sha256": "27a507fc2eaacae93c1d6c909453c04f7c74faaeb7cf9d2a510c32ce0259ceb5"
+      }
+    }
+  ],
+  "sourceHashes": {
+    "src/levels/waterfall-climb.ts": "cefbdb1cde678277749b01ffa20aadd11bb76fcd666cc6893491972d4c11d0b1",
+    "src/levels/waterfall-climb-bonus.ts": "b49ed403fed3fcf8ade02334b2bafd933e2660e721a9602c7c32f287f8353887",
+    "src/levels/waterfall-climb-art.ts": "b4b0969f629cddf289bfbf0a5bf253ab18ff0d610a23c04196a4fc3b1dde1160",
+    "src/waterfallClimbMaterials.ts": "f4db14dd5d7ee25b633415d60977b2c229b469b3f0439873ed44bbf34824eddb",
+    "src/spinBridge.ts": "5267566c582811eabfa06b850cd43bf95229f7bf58f54f9ce775b5298ecbbce9",
+    "src/level.ts": "cd7ff528244319cb300b8d0789802772195fd00fcd53035ea58598f7cbe2872f",
+    "src/editor.ts": "7478555aeab27f2e57016ce7bd86756c979a5d092102cee77e43d70e73a2149f",
+    "src/campaign.ts": "a51f9b3305c0471cf40981a99367253ba9a2b6711f5b8514a7c958ed0cd61fbb",
+    "src/levels/codex-lab.ts": "e8a9b83f7c5a18c1f952f4bd7ce5a3ce2129fb2932a3ca00195c2e42b10bfd0d",
+    "src/levels/themed-bonuses.ts": "5a2e0ce2ecf96ada3a6b400b213748183651aa3d568fa50257ddc686bc27620b"
+  },
+  "gameplayFingerprints": {
+    "main": {
+      "components": 779,
+      "sha256": "b0ff574773c3844d4631de7a9f3dace248a6738518ea7dee9f515565ece3b440"
+    },
+    "bonus": {
+      "components": 76,
+      "sha256": "ac7e1496cb1419d95b1a1c46514bfe5b3aa875e0cdb99c4c54f5826095822fa2"
+    }
+  },
+  "browserEvidence": "complete-journey.json",
+  "artEvidence": "art-validation.json",
+  "release": {
+    "bytes": 1000365544,
+    "files": 1843,
+    "limit": 1000000000,
+    "overBy": 365544,
+    "offlineManifestFiles": 1743,
+    "offlineVersion": "a31c290c16dbd94f584d",
+    "publicAssetIncrementBytes": 878158,
+    "emittedNewAssetsMatchSource": true,
+    "integrationDependency": "The old base is near the hosting cap. The coordinator explicitly accepts READY with this measured size limitation and will enforce the cap on the combined current release.",
+    "coordinatorVerifiedBase": "7c1d733e",
+    "coordinatorVerifiedBaseBytes": 992401777,
+    "coordinatorVerifiedHeadroomBytes": 7598223
+  },
+  "timing": {
+    "promptAt": "2026-10-27T03:00:54Z",
+    "firstBrowserPlayableAt": "2026-10-27T03:24:00Z",
+    "firstContinuousGreyboxAt": "2026-10-27T06:34:00Z",
+    "approvedCrashAccessDowntimeSeconds": 9000,
+    "greyboxMinimumSeconds": 7200,
+    "earliestArtAt": "2026-10-27T07:30:54Z",
+    "actualArtAt": "2026-10-27T07:31:00Z",
+    "finalCapacityIdleSeconds": 677,
+    "capacityIdleFrom": "2026-10-27T08:55:37Z",
+    "capacityResumedAt": "2026-10-27T09:06:54Z",
+    "finalPlayableValidationAt": "2026-10-27T09:26:44Z"
+  },
+  "remainingFeatureWork": [],
+  "publicationOwner": "Coordinate local work and releases; this branch is not pushed."
+}

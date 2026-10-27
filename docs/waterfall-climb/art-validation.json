@@ -1,5 +1,5 @@
 {
-  "phase": "Refined decorated camera review; continuous 96-box run still pending",
+  "phase": "Refined decorated camera review and complete combined 96-box journey passed",
   "typecheck": "passed before review",
   "browser": "Chrome, full renderer",
   "checkpointViews": 16,
@@ -33,6 +33,9 @@
     "overview.png",
     "river.png",
     "climb.png",
-    "summit.png"
-  ]
+    "summit.png",
+    "bonus.png",
+    "finish.png"
+  ],
+  "combinedJourney": "complete-journey.json"
 }
