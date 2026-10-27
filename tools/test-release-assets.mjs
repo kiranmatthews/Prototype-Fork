@@ -52,16 +52,31 @@ try{
  }
  assert.equal(localReviewAsset('drowned-crown/excellence/treasure-mound-hero.glb'),false);
  for(const file of LOCAL_REVIEW_FILES){
-  for(const base of [source,outDir])await writeFile(path.join(base,file),'original review page');
+  for(const base of [source,outDir]){
+   await mkdir(path.dirname(path.join(base,file)),{recursive:true});
+   await writeFile(path.join(base,file),'original local authoring asset');
+  }
   assert.equal(localReviewAsset(file),true);
   assert.equal(localReviewAsset(file+'.backup'),false);
+ }
+ const currentArtwork=[
+  'treehouse-trials/forest-depth-alpha.ktx2','treehouse-trials/forest-depth-alpha.webp',
+  'treehouse-trials/coast-depth-alpha.ktx2','treehouse-trials/coast-depth-alpha.webp',
+  'blockworks-art/sky-v2.png','custard-creek/waterfall-pool-v4.webp',
+  'custard-creek/waterfall-cliffs-v2.webp','custard-creek/waterfall-mist-alpha.webp',
+ ];
+ for(const file of currentArtwork){
+  assert.equal(localReviewAsset(file),false,'current and legacy registered artwork remains published');
+  for(const base of [source,outDir])await writeFile(path.join(base,file),'current runtime artwork');
  }
  const reviews=await pruneLocalReviewAssets({root,outDir});
  assert.equal(reviews.files.length,LOCAL_REVIEW_DIRECTORIES.length+LOCAL_REVIEW_FILES.length);
  for(const file of LOCAL_REVIEW_FILES){
-  assert.equal(await readFile(path.join(source,file),'utf8'),'original review page');
+  assert.equal(await readFile(path.join(source,file),'utf8'),'original local authoring asset');
   await assert.rejects(readFile(path.join(outDir,file)),/ENOENT/);
  }
+ for(const file of currentArtwork)for(const base of [source,outDir])
+  assert.equal(await readFile(path.join(base,file),'utf8'),'current runtime artwork');
  for(const directory of LOCAL_REVIEW_DIRECTORIES){
   assert.equal(await readFile(path.join(source,directory,'index.html'),'utf8'),'original local review');
   await assert.rejects(readFile(path.join(outDir,directory,'index.html')),/ENOENT/);

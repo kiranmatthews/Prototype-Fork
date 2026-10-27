@@ -10,7 +10,16 @@ export const LOCAL_REVIEW_DIRECTORIES = [
  'custard-creek/storyboard', 'sunny-beach/gallery', 'carlisle-bonus/review',
  'provenance/level-atlas',
 ];
-export const LOCAL_REVIEW_FILES = ['carlisle-bonus/storyboard.html'];
+export const LOCAL_REVIEW_FILES = [
+ 'carlisle-bonus/storyboard.html',
+ // Superseded painting sources: the registries retain the alpha Treehouse
+ // mattes, haunted sky-v2 and Custard pool-v4 / cliffs-v2 instead.
+ 'treehouse-trials/forest-depth.ktx2', 'treehouse-trials/forest-depth.webp',
+ 'treehouse-trials/coast-depth.ktx2', 'treehouse-trials/coast-depth.webp',
+ 'blockworks-art/sky.png',
+ 'custard-creek/waterfall-vista.webp', 'custard-creek/waterfall-vista-v3.webp',
+ 'custard-creek/waterfall-cliffs-cutout.webp',
+];
 export const localReviewAsset = file => LOCAL_REVIEW_FILES.includes(file) || LOCAL_REVIEW_DIRECTORIES.some(directory =>
  file === directory || file.startsWith(directory + '/'));
 
