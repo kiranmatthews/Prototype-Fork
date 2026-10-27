@@ -4,6 +4,24 @@ import type {CustomComponent} from './level';
 import {WarehouseMaterials,warehouseSurfaceUV} from './warehouseMaterials';
 import {StadiumCrowd,type CrowdSection} from './golf-cart/stadiumCrowd';
 import {MOTU_STANDS,MOTU_SUN,motuStandPoint} from './levels/motu-beach-art';
+import {MOTU_SIGNS,MOTU_PALETTE} from './levels/motu-festival';
+
+function festivalGraphic(key:string):THREE.CanvasTexture{
+  const art=MOTU_SIGNS[key]??MOTU_SIGNS.welcome,canvas=document.createElement('canvas');canvas.width=1536;canvas.height=384;
+  const ctx=canvas.getContext('2d')!;
+  ctx.fillStyle=art.color;ctx.fillRect(0,0,1536,384);
+  ctx.strokeStyle=MOTU_PALETTE.cream;ctx.lineWidth=5;ctx.strokeRect(14,14,1508,356);
+  // A sun stamp, surf stripes and asymmetric corners give every zone the
+  // same recognisable event identity, rather than floating default text.
+  ctx.fillStyle=MOTU_PALETTE.yellow;ctx.beginPath();ctx.arc(118,128,64,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle=art.color;for(let i=0;i<5;i++)ctx.fillRect(40,136+i*12,156,5);
+  ctx.fillStyle=MOTU_PALETTE.coral;ctx.beginPath();ctx.moveTo(1390,18);ctx.lineTo(1518,18);ctx.lineTo(1518,155);ctx.closePath();ctx.fill();
+  ctx.fillStyle=MOTU_PALETTE.cream;ctx.textAlign='center';ctx.font=`italic 900 ${key==='floor'?176:106}px sans-serif`;
+  ctx.fillText(art.title,818,211,1240);ctx.font='700 33px sans-serif';ctx.fillText(art.subtitle,818,285,1200);
+  ctx.strokeStyle=MOTU_PALETTE.cream;ctx.lineWidth=3;
+  for(let j=0;j<3;j++){ctx.beginPath();for(let i=0;i<=80;i++){const x=30+i*18.5,y=327+j*8+Math.sin(i*.22)*6;i?ctx.lineTo(x,y):ctx.moveTo(x,y);}ctx.stroke();}
+  const texture=new THREE.CanvasTexture(canvas);texture.colorSpace=THREE.SRGBColorSpace;texture.anisotropy=8;return texture;
+}
 
 export function motuCrowdLayout():CrowdSection[]{
   return MOTU_STANDS.map((stand,section)=>({name:`Motu ${section+1}`,seats:
@@ -34,6 +52,7 @@ export class MotuBeachPresentation {
   private readonly replaced:{mesh:THREE.Mesh;geometry:THREE.BufferGeometry;material:THREE.Material|THREE.Material[]}[]=[];
   private readonly geometries=new Set<THREE.BufferGeometry>();
   private marqueeTexture:THREE.CanvasTexture|undefined;
+  private readonly graphicTextures=new Map<string,THREE.CanvasTexture>();
   private readonly sun=new THREE.Group();
   private readonly direction=new THREE.Vector3(...MOTU_SUN).normalize();
   private readonly flare=new Lensflare();
@@ -45,6 +64,14 @@ export class MotuBeachPresentation {
     parent.traverse(object=>{
       const mesh=object as THREE.Mesh;if(!mesh.isMesh||(mesh as THREE.InstancedMesh).isInstancedMesh)return;
       const c=components[mesh.userData.editorIdx];
+      if(c?.nm?.startsWith('Motu / graphic sign / ')){
+        const key=c.nm.slice('Motu / graphic sign / '.length);let texture=this.graphicTextures.get(key);
+        if(!texture){texture=festivalGraphic(key);this.graphicTextures.set(key,texture);}
+        this.replaced.push({mesh,geometry:mesh.geometry,material:mesh.material});
+        const graphicOptions={map:texture,side:THREE.DoubleSide,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-1};
+        mesh.material=this.materials.own(key==='floor'?new THREE.MeshStandardMaterial({...graphicOptions,roughness:.85}):new THREE.MeshBasicMaterial(graphicOptions));
+        mesh.receiveShadow=key==='floor';return;
+      }
       if(c?.nm==='Motu / invitational marquee'){
         const canvas=document.createElement('canvas');canvas.width=1536;canvas.height=256;const ctx=canvas.getContext('2d')!;
         ctx.fillStyle='#123f49';ctx.fillRect(0,0,1536,256);ctx.strokeStyle='#dfb375';ctx.lineWidth=10;ctx.strokeRect(12,12,1512,232);
@@ -59,7 +86,11 @@ export class MotuBeachPresentation {
       const source=Array.isArray(mesh.material)?mesh.material[0]:mesh.material;
       const coping=c.t==='rail'||mesh.userData.grindRail!==undefined;
       const wood=c.tex==='plank'&&!coping;
-      const g=warehouseSurfaceUV(mesh,wood?2.4:4.5,mesh.userData.vertRampMesh?c:undefined);
+      const g=warehouseSurfaceUV(mesh,c.nm?.includes('ceramic floor')?.45:wood?2.4:4.5,mesh.userData.vertRampMesh?c:undefined);
+      const pos=g.getAttribute('position'),trim=new Float32Array(pos.count),v=new THREE.Vector3();
+      const pool=c.t==='vertramp'&&c.vkind==='quarter',lip=c.p[1]+(c.rise??0)*(1-Math.cos((c.arc??90)*Math.PI/180))+(c.lipRise??0);
+      for(let i=0;i<pos.count;i++)trim[i]=pool?v.fromBufferAttribute(pos,i).applyMatrix4(mesh.matrixWorld).y-lip+.65:-100;
+      g.setAttribute('motuTrim',new THREE.BufferAttribute(trim,1));
       this.replaced.push({mesh,geometry:mesh.geometry,material:mesh.material});
       this.geometries.add(g);mesh.geometry=g;
       const material=coping?this.materials.finish('#b7c6c4',source.side,.65,.3):
@@ -72,9 +103,9 @@ export class MotuBeachPresentation {
         if(!material.userData.motuFinish){
           material.userData.motuFinish=true;
           material.onBeforeCompile=shader=>{
-            shader.vertexShader='varying vec2 vMotuUv;\n'+shader.vertexShader;
-            shader.vertexShader=shader.vertexShader.replace('#include <uv_vertex>','#include <uv_vertex>\nvMotuUv=uv;');
-            shader.fragmentShader='varying vec2 vMotuUv;\n'+shader.fragmentShader;
+            shader.vertexShader='attribute float motuTrim; varying float vMotuTrim; varying vec2 vMotuUv;\n'+shader.vertexShader;
+            shader.vertexShader=shader.vertexShader.replace('#include <uv_vertex>','#include <uv_vertex>\nvMotuUv=uv;vMotuTrim=motuTrim;');
+            shader.fragmentShader='varying float vMotuTrim; varying vec2 vMotuUv;\n'+shader.fragmentShader;
             // The reconstruction scans include polished roughness patches.
             // Keep their variation in the dry concrete / sealed timber range
             // so the bowls never read as a mirror-finished metal shell.
@@ -85,10 +116,17 @@ export class MotuBeachPresentation {
               vec2 edge=abs(fract(cell+.5)-.5)/max(fwidth(cell),vec2(.0001));
               float seam=1.0-smoothstep(.35,1.3,min(edge.x,edge.y));
               float scuff=pow(max(0.0,sin(cell.x*37.0+sin(cell.y*9.0)*.18)),38.0)*pow(max(0.0,sin(cell.y*6.0)),12.0);
-              diffuseColor.rgb=min(vec3(.95),diffuseColor.rgb*${wood?'1.6':'2.2'});
-              diffuseColor.rgb*=1.0-.12*seam-.065*scuff;`);
+              vec3 scan=diffuseColor.rgb/max(diffuse,vec3(.001));
+              float grain=clamp(.68+dot(scan,vec3(.2126,.7152,.0722))*.95,.7,1.16);
+              diffuseColor.rgb=diffuse*grain;
+              diffuseColor.rgb*=1.0-.10*seam-.075*scuff;
+              vec2 tile=vMotuUv*${wood?'2.4':'4.5'}/.34;
+              float checker=mod(floor(tile.x)+floor(tile.y),2.0);
+              float band=step(0.0,vMotuTrim)*(1.0-step(.48,vMotuTrim));
+              diffuseColor.rgb=mix(diffuseColor.rgb,mix(vec3(.025,.13,.18),vec3(.91,.86,.7),checker),band);
+              diffuseColor.rgb=mix(diffuseColor.rgb,vec3(.87,.79,.62),step(.6,vMotuTrim));`);
           };
-          material.customProgramCacheKey=()=>`motu-surface-${wood?'plywood':'concrete'}-v2`;
+          material.customProgramCacheKey=()=>`motu-surface-${wood?'plywood':'concrete'}-v3`;
         }
       }
       mesh.material=material;mesh.receiveShadow=true;
@@ -105,11 +143,12 @@ export class MotuBeachPresentation {
   update(time:number){this.crowd.update(time);}
   view(camera:THREE.Camera){this.sun.position.copy(camera.position).addScaledVector(this.direction,350);}
   get diagnostics(){return {spectators:this.crowd.count,sections:this.crowd.sections.length,
-    surfaces:this.replaced.length,maps:this.materials.textures.size,errors:[...this.materials.errors],
+    surfaces:this.replaced.length,maps:this.materials.textures.size,graphics:this.graphicTextures.size,errors:[...this.materials.errors],
     sunDirection:this.direction.toArray(),sunOcclusion:'depth buffer',geometryLod:false};}
   dispose(){
     for(const r of this.replaced){r.mesh.geometry=r.geometry;r.mesh.material=r.material;}
     for(const g of this.geometries)g.dispose();this.geometries.clear();
+    for(const t of this.graphicTextures.values())t.dispose();this.graphicTextures.clear();
     this.materials.dispose();this.marqueeTexture?.dispose();this.crowd.dispose();this.flare.dispose();this.disc.geometry.dispose();this.disc.material.dispose();
     this.root.removeFromParent();this.root.clear();
   }

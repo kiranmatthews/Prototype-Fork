@@ -1,12 +1,13 @@
 import type { CustomComponent, CustomLevelData } from '../level';
 import {MOTU_BEACH_SCENERY,MOTU_SKATE_FEATURES,MOTU_SUN} from './motu-beach-art';
+import {MOTU_FESTIVAL,MOTU_PALETTE} from './motu-festival';
 
 // An open competition park inside ONE continuous transition. The toe, curved
 // corners, coping and outside deck belong to the same mesh: no overlapping
 // quarter-pipe ends, boundary pillars in the ride line, or holes below ramps.
 const components: CustomComponent[] = [];
 const add = (c: CustomComponent) => components.push(c);
-const stone = '#d2c9b5', jade = '#a8c7c0', gold = '#a9b7b3';
+const stone = '#f2e4c9', jade = '#64d1c1', gold = '#c8d5ce';
 const platform = (nm: string, p: [number, number, number], s: [number, number, number], color = stone) =>
   add({ t: 'platform', nm, p, s, color, tex: 'pavement' });
 const rail = (nm: string, x: number, y: number, z: number, len: number, yaw = 0) =>
@@ -37,7 +38,7 @@ const roundedRing = (radius: number): [number, number][] => {
   return points;
 };
 
-platform('Motu / continuous concrete apron', [0, -2, -60], [180, 4, 248], '#d7d4c7');
+platform('Motu / continuous concrete apron', [0, -2, -60], [180, 4, 248], '#efdfc4');
 // Transition toes, channel beds and stair landings join this floor at y=0.
 // The foundation is the visual underlay at those shared planes, without
 // lifting any ride surface or adding a lip to its collision geometry.
@@ -54,7 +55,7 @@ add({
   t: 'wallpath', nm: 'Outer deck parapet', p: [0, -6, -60],
   pts: roundedRing(28.5),
   closed: true, w: 1.5, rise: 11.6, collisionHeight: 44,
-  containment: true, color: '#d7c7a5', tex: 'pavement',
+  containment: true, color: '#f0dfbe', tex: 'pavement',
 });
 // Wide, four-way funbox: every main approach has a bank and a landing apron.
 hip('Temple funbox', -14, -44, 14, 10, 2.4, 8);
@@ -188,7 +189,15 @@ for (const [x, z, r, color] of [[0, 9, 2.8, '#d1b577'], [13, -40, 7.5, '#d2b483'
 }
 
 // Native authored surfaces plus the coast and festival kit remain editable.
-components.push(...MOTU_SKATE_FEATURES, ...MOTU_BEACH_SCENERY);
+components.push(...MOTU_SKATE_FEATURES, ...MOTU_BEACH_SCENERY.filter(c=>!['Motu / invitational marquee','Motu / marquee mast'].includes(c.nm??'')),...MOTU_FESTIVAL);
+// Colour defines the sessions even from the player's low camera. The original
+// collision, coping and continuous street connections retain their topology.
+for(const c of components){
+  if(c.nm==='Motu / lagoon kidney bowl'||c.nm==='Jade pocket bowl')c.color=MOTU_PALETTE.teal;
+  if(c.nm==='Temple funbox'||c.nm==='Sun wheel hip'||c.nm==='Motu / coral volcano hip')c.color=MOTU_PALETTE.coral;
+  if(c.nm?.startsWith('East rhythm roller'))c.color=MOTU_PALETTE.mint;
+  if(c.nm==='Motu / competition halfpipe')c.color='#e9bc7e';
+}
 
 export const JUNGLE_CUP_LEVEL: CustomLevelData = {
   v: 1, name: 'Motu Beach Invitational', spawn: [0, 0.1, 14], killY: -18,
@@ -196,9 +205,9 @@ export const JUNGLE_CUP_LEVEL: CustomLevelData = {
   ocean: {look:'sunny-beach',geometryVersion:2,p:[103,-5,-60],length:340,
     yaw:0,seaward:1,width:260,horizonMode:'shoreline',horizonOffset:22,shoreGeometry:'ground'},
   atmosphere: {backdrop:'painted sky',fogNear:260,fogFar:690,fogColor:'#c3dfe4',
-    ambientSky:'#cbe9f7',ambientGround:'#ebc99d',ambientIntensity:1.1,
-    sunColor:'#fff0cf',sunIntensity:2.25,sunDirection:MOTU_SUN,
-    fillColor:'#a6dfe8',fillIntensity:.36,drawDistance:720,shadowStrength:.7,
+    ambientSky:'#e0f5ff',ambientGround:'#f5dcad',ambientIntensity:1.8,
+    sunColor:'#fff3d8',sunIntensity:3,sunDirection:MOTU_SUN,
+    fillColor:'#c4eeef',fillIntensity:.6,drawDistance:720,shadowStrength:.58,
     fallbackTop:'#308fd0',fallbackBottom:'#f8dfb9',fallbackRidges:false,
     fallbackStars:false,fallbackSunColor:null},
   components,

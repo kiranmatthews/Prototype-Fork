@@ -13,6 +13,8 @@ const routes=[
   {name:'kidney west',p:[-42,.1,-134],h:[-1,0,0],pop:true},
   {name:'south perimeter',p:[0,.1,31],h:[0,0,1],pop:true},
   {name:'beach flat bar',p:[54,.86,-40],h:[0,0,-1],grind:true},
+  {name:'gravity roll-in and reef loop',p:[-59,6.4,25],h:[0,0,-1],loop:true},
+  {name:'coral wave wall',p:[0,.1,-138],h:[0,0,-1],pop:true},
 ];
 let review:any=null;
 const blank=()=>({moveX:0,moveY:0,jumpHeld:false,jumpPressed:false,jumpReleased:false,grindHeld:false,grindPressed:false,spinHeld:false,spinPressed:false,grabHeld:false,grabPressed:false,transferHeld:false,transferPressed:false,restartPressed:false});
@@ -22,31 +24,31 @@ g.player.step=(dt:number,input:any,level:any)=>{
   const route=routes[review.index],p=g.player;
   if(review.frame===0){
     p.respawn(level,true,true,{position:new THREE.Vector3().fromArray(route.p),heading:new THREE.Vector3().fromArray(route.h)});
-    p.axisF.fromArray(route.h).normalize();p.axisL.set(p.axisF.z,0,-p.axisF.x);p.speed=19;p.freeSkate=true;p.balanceBoostT=10;
+    p.axisF.fromArray(route.h).normalize();p.axisL.set(p.axisF.z,0,-p.axisF.x);p.speed=route.loop?0:19;p.freeSkate=true;p.balanceBoostT=10;
     p.groundHit=p.queryGround(level);p.rideNormal.copy(p.groundHit.normal);
     if(route.grind){p.pos.fromArray(route.p);p.prevPos.copy(p.pos);p.state='air';p.grounded=false;p.vVel=-1;}
   }
   const release=route.pop&&!review.released&&p.grounded&&p.rideNormal.y<.42;
   if(release)review.released=true;
-  const scripted={...blank(),jumpHeld:!review.released&&!route.grind,jumpPressed:review.frame===0&&!route.grind,jumpReleased:release,
+  const scripted={...blank(),moveY:route.loop?1:0,jumpHeld:!review.released&&!route.grind,jumpPressed:review.frame===0&&!route.grind,jumpReleased:release,
     grindHeld:!!route.grind,grindPressed:!!route.grind&&review.frame===0};
   playerStep(dt,scripted,level);review.frame++;review.air ||= p.vertAir||p.state==='air';review.grind ||= p.state==='grind';
   review.maxY=Math.max(review.maxY,p.pos.y);
   const failed=p.isBailing||p.pos.y<-.1||!p.pos.toArray().every(Number.isFinite);
-  const completed=route.grind?review.grind&&review.frame>45:review.air&&p.grounded;
+  const completed=route.loop?p.completedLoops.size>0:route.grind?review.grind&&review.frame>45:review.air&&p.grounded;
   if(failed||completed||review.frame>450){
-    review.results.push({name:route.name,passed:!failed&&completed,frames:review.frame,maxY:review.maxY,air:review.air,grind:review.grind,position:p.pos.toArray()});
+    review.results.push({name:route.name,passed:!failed&&completed,frames:review.frame,maxY:review.maxY,air:review.air,grind:review.grind,loop:!!p.completedLoops.size,position:p.pos.toArray()});
     review.index++;review.frame=0;review.air=false;review.grind=false;review.maxY=0;review.released=false;
     if(review.index===routes.length){review.done=true;review.passed=review.results.every((r:any)=>r.passed);eye=[156,145,137];target=[-3,0,-64];}
   }
   status.textContent=JSON.stringify(review,null,2);
 };
 g.getLevel().updateSceneryView=(camera:THREE.PerspectiveCamera,...args:any[])=>{
-  if(eye){camera.position.fromArray(eye);camera.fov=fov;camera.lookAt(new THREE.Vector3().fromArray(target));camera.updateProjectionMatrix();camera.updateMatrixWorld(true);}
+  if(eye){camera.position.fromArray(eye);camera.up.set(0,1,0);camera.fov=fov;camera.lookAt(new THREE.Vector3().fromArray(target));camera.updateProjectionMatrix();camera.updateMatrixWorld(true);}
   view(camera,...args);
 };
 g.renderer.render=(scene:THREE.Scene,camera:THREE.PerspectiveCamera)=>{
-  if(scene===g.scene&&camera===g.camera&&eye){camera.position.fromArray(eye);camera.fov=fov;camera.lookAt(new THREE.Vector3().fromArray(target));camera.updateProjectionMatrix();camera.updateMatrixWorld(true);view(camera);}
+  if(scene===g.scene&&camera===g.camera&&eye){camera.position.fromArray(eye);camera.up.set(0,1,0);camera.fov=fov;camera.lookAt(new THREE.Vector3().fromArray(target));camera.updateProjectionMatrix();camera.updateMatrixWorld(true);view(camera);}
   render(scene,camera);
 };
 const button=(name:string,fn:()=>void)=>{const b=document.createElement('button');b.textContent=name;b.style.margin='3px';b.onclick=fn;buttons.append(b);};
@@ -55,9 +57,14 @@ button('Overview',()=>shot([156,145,137],[-3,0,-64],53));
 button('Beach horizon',()=>shot([-65,17,48],[38,6,-75],63));
 button('Kidney bowl',()=>shot([-72,22,-103],[-42,1,-134],58));
 button('Halfpipe',()=>shot([70,19,-88],[43,2,-125],58));
+button('Reef loop',()=>shot([-29,16,-9],[-54,4,-30],60));
+button('Boardwalk',()=>shot([-76,15,48],[-49,3,10],60));
+button('Festival player view',()=>shot([-9,3.1,28],[0,4,-110],66));
+button('Wave wall',()=>shot([18,14,-125],[0,2,-150],60));
+button('Surf club',()=>shot([20,10,39],[40,6,62],62));
 button('Sponsors and crowd',()=>shot([-62,10,-27],[-89,8,-29],60));
 button('Street terrace',()=>shot([-44,9,45],[-20,1,27],59));
-button('Sun flare',()=>shot([0,5,-45],[65,47,-108],60));
+button('Sun flare',()=>shot([0,5,-45],[55,79,-84],60));
 button('Native MAX',()=>g.renderQualitySettings.setRegularResolution(null));
 button('Normal resolution',()=>g.renderQualitySettings.setRegularResolution(720));
 button('Play',()=>{eye=null;document.body.classList.remove('motu-review-clean');if(g.getCompetition()?.phase==='intro')g.competitionAction('start');});

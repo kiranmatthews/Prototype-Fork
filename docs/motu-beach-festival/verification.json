@@ -1,0 +1,145 @@
+{
+  "passed": true,
+  "level": "jungle-cup",
+  "increment": "expanded festival pass",
+  "reviewedAtUtc": "2026-10-27T07:36:37.989554+00:00",
+  "dependsOnCommit": "3949b5f278f36610fa3f0e9e4e6bb24009a71375",
+  "validatedSourceBlobs": {
+    "src/levels/motu-festival.ts": "f55a9f08879a0e2944270532a408c8513f83046b",
+    "src/levels/jungle-cup.ts": "9cf63e2408b4ac32ab22bf8542dd64832e0b0b92",
+    "src/levels/motu-beach-art.ts": "f5da4829c02f2d7ac3e721cacc193763e4d92454",
+    "src/motuBeachPresentation.ts": "d93da9148c519089199b4febb9657dbec73284c1",
+    "tools/motu-beach-review.ts": "cfe75be59fe750d3b1613a6b6dec38df5f6f95ed",
+    "tools/test-motu-festival.mjs": "6e81d5af2a93ba42934731a8778937c35b940e32",
+    "tools/test-motu-beach.mjs": "7f261faaf9c82837c1aabd83fefbf0d93344716b",
+    "tools/test-jungle-cup-skating.mjs": "05090ca82d1aa4b141cb11b048492cdbda835bf5"
+  },
+  "timing": {
+    "promptAtUtc": "2026-10-27T06:29:27Z",
+    "firstPlayableVisualAtUtc": "2026-10-27T06:49:42Z",
+    "promptToPlayableSeconds": 1215,
+    "note": "Later verification includes shared-capacity waiting; it is not all productive authoring time."
+  },
+  "requiredChecks": {
+    "check:levels": {
+      "passed": true,
+      "commands": 20
+    },
+    "build": {
+      "passed": true,
+      "includesTypeScript": true
+    },
+    "releaseSize": {
+      "passed": true,
+      "bytes": 999488149,
+      "budgetBytes": 1000000000,
+      "headroomBytes": 511851,
+      "files": 1838,
+      "offlineVersion": "62007f6f9c597cdc42bb"
+    }
+  },
+  "focusedChecks": [
+    "test-motu-festival.mjs",
+    "test-motu-beach.mjs",
+    "test-jungle-cup-layout.mjs",
+    "test-jungle-cup-skating.mjs"
+  ],
+  "newRoutes": {
+    "passed": true,
+    "triangles": 18300,
+    "graphics": 8,
+    "loop": {
+      "frames": 295,
+      "maxY": 8.399309977000268,
+      "maxSpeed": 32.19104304813031,
+      "exit": [
+        -49.95158145889253,
+        -3.477276266285153e-17,
+        -35.14197057750472
+      ]
+    },
+    "boardwalk": {
+      "frames": 227,
+      "maxY": 6.300000190734863,
+      "targets": [
+        [
+          -42,
+          4
+        ],
+        [
+          -43,
+          19
+        ],
+        [
+          -49,
+          27
+        ],
+        [
+          -58,
+          27
+        ]
+      ]
+    },
+    "wave": {
+      "air": true,
+      "land": true,
+      "maxY": 16.266443771441757
+    },
+    "movementChanged": false
+  },
+  "native": {
+    "floorProbes": 3060,
+    "spectatorSupports": 774,
+    "routes": 8,
+    "railCatches": 3,
+    "competitionRecovery": true,
+    "editorRoundtrip": true,
+    "finalSourceRechecked": true
+  },
+  "skating": {
+    "vertReturns": 24,
+    "terminalContacts": 24,
+    "replayFrames": 3117,
+    "stressFrames": 19200,
+    "movementChanges": false,
+    "testedFrequenciesHz": [
+      30,
+      60,
+      120
+    ]
+  },
+  "browser": {
+    "liteRides": 8,
+    "fullRides": 8,
+    "warnings": 0,
+    "errors": 0,
+    "reviewedResolutions": [
+      "native 1280x720",
+      "normal presentation"
+    ],
+    "scope": "Eight full rides preceded the final exterior kiosk placement and shadow-receiving floor logo. Eight lite rides, current-source native routes and a final full-render visual/production check validate those last changes.",
+    "finalFullViews": [
+      "seaside shop deck",
+      "sun bloom and flare",
+      "ground logo shadows"
+    ],
+    "productionSmoke": {
+      "passed": true,
+      "startedRun": 1,
+      "timerAdvances": true,
+      "keyboardSkating": true,
+      "supportedRider": true,
+      "warnings": 0,
+      "errors": 0,
+      "screenshot": "production-play.png"
+    }
+  },
+  "preservation": {
+    "newDownloadedRuntimeAssetBytes": 0,
+    "geometryLod": false,
+    "publishedLevelSnapshotChanged": false,
+    "sharedRuntimeFilesChangedInThisIncrement": false
+  },
+  "fullSuiteRun": false,
+  "deployment": "Local validated increment for the sole release coordinator; not claimed published."
+}

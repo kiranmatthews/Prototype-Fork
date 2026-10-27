@@ -49,7 +49,7 @@ await withSkateRuntime(async ({ THREE, server, player, level, step, TUNING, CONS
 
   // Start outside the new interior sessions when isolating perimeter vert.
   const cases=[
-    ['north',[0,.1,-145],[0,0,-1]],['south',[0,.1,20],[0,0,1]],
+    ['north',[21,.1,-145],[0,0,-1]],['south',[0,.1,20],[0,0,1]],
     ['west',[-53,.1,-70],[-1,0,0]],['east',[57,.1,-16],[1,0,0]],
     ['north-west',[-63,.1,-158],[-1,0,-1]],['north-east',[63,.1,-158],[1,0,-1]],
     ['south-west',[-63,.1,38],[-1,0,1]],['south-east',[63,.1,38],[1,0,1]],

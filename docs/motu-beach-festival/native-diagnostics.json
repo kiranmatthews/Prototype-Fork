@@ -1,0 +1,96 @@
+{
+  "motu": {
+    "spectators": 774,
+    "sections": 4,
+    "surfaces": 93,
+    "maps": 6,
+    "graphics": 8,
+    "errors": [],
+    "sunDirection": [
+      0.549395996423391,
+      0.7391873406423806,
+      -0.38957170655476814
+    ],
+    "sunOcclusion": "depth buffer",
+    "geometryLod": false
+  },
+  "assets": {
+    "sunnycliff": {
+      "instances": 38,
+      "triangles": 7149
+    },
+    "bayrock": {
+      "instances": 24,
+      "triangles": 4099
+    },
+    "baytrunk": {
+      "instances": 51,
+      "triangles": 1952
+    },
+    "sunnyhibiscus": {
+      "instances": 32,
+      "triangles": 5331
+    },
+    "baycrown": {
+      "instances": 51,
+      "triangles": 4249
+    },
+    "baybody": {
+      "instances": 3,
+      "triangles": 108
+    },
+    "bayroof": {
+      "instances": 3,
+      "triangles": 5265
+    },
+    "bayawning": {
+      "instances": 3,
+      "triangles": 2215
+    },
+    "baypot": {
+      "instances": 6,
+      "triangles": 2346
+    },
+    "bayvine": {
+      "instances": 16,
+      "triangles": 3250
+    }
+  },
+  "lights": [
+    {
+      "type": "HemisphereLight",
+      "intensity": 1.8,
+      "color": "e0f5ff"
+    },
+    {
+      "type": "DirectionalLight",
+      "intensity": 3,
+      "color": "fff3d8"
+    },
+    {
+      "type": "DirectionalLight",
+      "intensity": 0.6,
+      "color": "c4eeef"
+    }
+  ],
+  "render": {
+    "frame": 42496,
+    "calls": 1222,
+    "triangles": 5233033,
+    "points": 0,
+    "lines": 0
+  },
+  "sizes": {
+    "viewportWidth": 1280,
+    "viewportHeight": 720,
+    "inputWidth": 1280,
+    "inputHeight": 720,
+    "outputWidth": 1280,
+    "outputHeight": 720
+  },
+  "player": [
+    0.48333373462910867,
+    4.097566518548798,
+    -161.56709386894445
+  ]
+}

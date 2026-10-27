@@ -20,7 +20,7 @@ await withSkateRuntime(async({THREE,server,level,player,step,Level})=>{
   assert.ok(!data.components.some(c=>c.edgeGrinding===false),'ordinary exposed boundaries remain grindable');
   assert.equal(level.motuBeachDiagnostics.spectators,774);
   assert.equal(level.motuBeachDiagnostics.geometryLod,false);
-  const marquee=level.root.getObjectByName('Motu / invitational marquee');
+  const marquee=level.root.getObjectByName('Motu / graphic sign / welcome');
   assert.ok(marquee?.isMesh&&marquee.material.map?.isCanvasTexture,'the venue title survives source mesh batching');
   const ray=new THREE.Raycaster(),down=new THREE.Vector3(0,-1,0);
   const ground=(x,z)=>{ray.set(new THREE.Vector3(x,40,z),down);ray.far=65;return ray.intersectObjects(level.groundMeshes,false)[0];};

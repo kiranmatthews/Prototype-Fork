@@ -3,7 +3,7 @@ import {COASTAL_TOWN_ASSETS} from '../coastalTownAssets';
 import {RALLY_SPONSORS} from '../rallySponsors';
 
 type P=[number,number,number];
-export const MOTU_SUN:P=[.65,.42,-.63];
+export const MOTU_SUN:P=[.55,.74,-.39];
 /** Local -Z faces the park; +Z climbs the same treads used by the crowd. */
 export const MOTU_STANDS=[
   {p:[-86,7.3,-24] as P,yaw:-90,columns:30,rows:7},
@@ -27,6 +27,10 @@ for(let i=0;i<96;i++){
 features.push({t:'vertramp',nm:'Motu / lagoon kidney bowl',p:[-42,0,-134],pts:bowl,
   vkind:'quarter',closed:true,w:.35,rise:3.8,arc:82,arcSteps:40,deck:1.8,outerBank:5.5,
   color:'#9dc8c0',tex:'pavement'});
+features.push({t:'mesh',nm:'Motu / lagoon ceramic floor',p:[-42,.012,-134],
+  vertices:[0,0,0,...bowl.flatMap(p=>[p[0],0,p[1]])],
+  indices:bowl.flatMap((_,i)=>[0,1+(i+1)%bowl.length,1+i]),
+  solid:false,tex:'pavement',color:'#bce4df',castShadow:false});
 features.push({t:'vertramp',nm:'Motu / competition halfpipe',p:[43,0,-125],len:42,
   vkind:'half',w:6.5,rise:4.4,arc:90,arcSteps:40,lipRise:.45,deck:2.2,outerBank:5,
   color:'#d2ad7f',tex:'plank'});

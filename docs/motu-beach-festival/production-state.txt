@@ -1,0 +1,12 @@
+Browser tab: 4, Title: "BONEMAN", URL: "http://127.0.0.1:5520/?playtest&level=jungle-cup".
+1 AXWebArea BONEMAN, URL: 127.0.0.1:5520/?playtest&level=jungle-cup
+	2 container
+		3 container
+			4 container SCORE
+			5 container 0
+		6 level indicator Description: Special meter, Value: 0
+	7 container Motu Beach Invitational skate competition
+		8 container
+			9 text RUN 1/3 0:47
+
+The focused UI element is 1 AXWebArea BONEMAN, URL: 127.0.0.1:5520/?playtest&level=jungle-cup
