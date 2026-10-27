@@ -5189,3 +5189,58 @@ Geometry checks pass 260 surface contacts at five heights, 52 native rider-kerne
 Both full and lightweight browser passes complete ten palm contact/recovery cases and all eight existing routes without console warnings or errors. Native review uses 1920 × 1080 scene input / 3840 × 2160 output; normal review uses 1280 × 720. All 85 trunk and crown instances retain their authored triangle counts. Play now cancels review checks and returns control. A worktree-specific temporary Vite cache in tools/motu-preview.mjs fixes the observed shared-cache 504 Outdated Optimize Dep startup stall; a fresh full-render launch passes. The change is confined to the local preview launcher and does not alter production configuration.
 
 Required level checks, TypeScript/build and release-size validation pass: 1,838 files, 999,573,555 / 1,000,000,000 bytes, offline version c9a835ba5b8595e93955. No check:all was run. Evidence, source fingerprints and reproduction steps are in [the palm-contact review](motu-palm-contact/README.md). The shared validation lease is released and owned test tabs are closed. The validated commit is handed to the coordinator for integration; the user's request ends further polish work after this pass.
+## 2026-10-28 — Beach Street: build the kite-towed run
+
+The explicit implementation request arrived at 11:24:54 UTC on 27 October
+(28 October locally). The first complete connected keyboard run finished at
+11:51:19 UTC: approximately 27 minutes from prompt to playable. Production
+validation and visual refinement continued afterward in the isolated
+`codex/beach-street-excellence` worktree.
+
+Beach Street now has an actual curved, inflated kite, four flying lines and a
+control bar held by both hands. The wind supplies forward movement; the player
+steers left/right and presses Jump, holding for more lift. Wind rises from 20 to
+23 to 25 m/s across the districts. Crashes and missed canals use the existing
+fatal death and checkpoint flow. The brief explicitly changes this level's
+movement; global tuning remains untouched. Editable elastic skating animation
+and planted feet remain, with a final arm IK pass for the bar grip.
+
+The old encounter scatter is replaced by 52 authored beats: isolated steering
+and hopping lessons, S-turns, freight avoidance, paired patrols, clear landings
+and breathing spaces. Thirteen mandatory jump cues include the four original
+canals. Ten checkpoints divide the three-kilometre journey. Ten enemies use four
+readable species and leave a safe opposite lane at every patrol phase. Fruit
+anticipates decisions and follows jump arcs; exit crates are beyond landings.
+All-boxes reward placement uses the forward finish approach in kite mode. The
+approved coral/teal/cream contrast, solid offshore islands, original road grades
+and selected stair terraces remain. The coastal bonus and published level pack
+are unchanged.
+
+The connected native journey reaches the finish, activates all checkpoints,
+and collects all 24 crates, the crystal and gem without position/velocity
+overrides after the initial reset. Focused failures verify fatal planter,
+hurdle and canal impacts, checkpoint retry and mode isolation. A real Chrome
+keyboard journey completes all 13 jumps with no crashes or console/asset errors;
+holding brake cannot stop the tow. Motion checks cover press/hold arcs, input
+edges, coyote time, jump buffering and reset. A separate reward fixture confirms
+ordinary gem placement is unchanged. The coastal preservation check and complete
+`check:levels` package script pass. No `check:all` was run.
+
+The full-render preview exposed canopy clipping at jump height. The kite now
+stays aloft while the rider rises toward it, keeping the complete canopy in
+frame. Both glove sockets stay within a millimetre of the bar. Final production
+build and full-render review are recorded in
+[the verification index](beach-street/kite/verification.json), alongside
+[native progression](beach-street/kite/native.json),
+[keyboard traversal](beach-street/kite/browser-lite.json), and
+[required checks](beach-street/kite/checks.json). All heavy jobs use the shared
+two-slot guard. The coordinator owns integration and publication.
+
+Final production review completed at 12:13 UTC with build stamp
+`Codex/sol fork · build 10-27 12:09 UTC`. The connected full-render keyboard run
+finishes all three kilometres with zero crashes, 13 jumps and ten checkpoints.
+Six MAX/native 1600×1000 district captures and two 480-line CRT presentations
+were reviewed, plus the MAX first-hop view. Maximum hand-to-bar error is
+0.904 mm. Sampled complete-canopy bounds remain within the screen throughout
+the journey, including jumps; console, request and scenery-asset error lists
+are empty. All complete authored scenery meshes remain in use.

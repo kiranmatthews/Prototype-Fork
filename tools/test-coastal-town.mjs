@@ -17,12 +17,14 @@ try{
  const bonus=resolveBonusLevel('coastal-street-run');
  const baseline=JSON.parse(await readFile(new URL('./coastal-town-assets/gameplay-baseline.json',import.meta.url),'utf8'));
  const stripVisual=x=>({...x,components:x.components.map(({uvs,normals,colors,...c})=>c)});
- // Beach Street deliberately expands its encounters. The imported road,
- // original stairs/rails/gaps and cameras stay intact. Fruit keeps count and
- // lane/station; its height is separately checked against physical surfaces.
- const routeOnly=x=>({...x,components:x.components.filter(c=>c.t!=='enemy'&&!(c.t==='rail'&&c.pts?.length>2&&Math.abs(c.p[0])<7)).map(c=>c.t==='wumpa'?{...c,p:[c.p[0],0,c.p[2]]}:c)});
+ // The kite redesign owns obstacles and pickups, while preserving the imported
+ // street grades, canals, containment, camera lane and finish.
+ const routeOnly=x=>({...x,components:x.components.filter(c=>
+   c.t==='camnode'||c.t==='pit'||c.t==='gate'||c.t==='wallpath'||
+   c.t==='rail'&&Math.abs(c.p[0])===7.2||
+   c.t==='platform'&&c.s?.[0]>=12||c.t==='ramp'&&c.w>=12)});
  const originalMain={...main,components:main.components.filter(c=>c.grp!==11&&!c.nm?.startsWith('street rail '))};
- assert.deepEqual(routeOnly(JSON.parse(JSON.stringify(gameplay(originalMain)))),routeOnly(stripVisual(baseline.main)),'Original road, gap bridges, boundary/stair rails, cameras or collectibles changed');
+ assert.deepEqual(routeOnly(JSON.parse(JSON.stringify(gameplay(originalMain)))),routeOnly(stripVisual(baseline.main)),'Original road, canals, boundary rails, camera lane or finish changed');
  if(!mainOnly)assert.deepEqual(JSON.parse(JSON.stringify(gameplay(bonus))),stripVisual(baseline.bonus),'Bonus puzzle physics/cameras/actors changed');
  for(const level of mainOnly?[main]:[main,bonus]){
   assert.ok(level.components.length<9500,'Leave space under the editor limit for owner-added store signage');

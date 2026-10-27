@@ -1,0 +1,679 @@
+{
+  "base": "http://127.0.0.1:5287",
+  "lite": false,
+  "preview": true,
+  "errors": [],
+  "failed": [],
+  "captures": [
+    {
+      "name": "tow",
+      "z": 43.50000000000003,
+      "buffer": [
+        1600,
+        1000
+      ],
+      "kiteVisible": true,
+      "gripErrors": [
+        0.00003096303397238413,
+        0.00039157163931797807
+      ],
+      "stamp": "Codex/sol fork · build 10-27 11:42 UTC"
+    },
+    {
+      "name": "first-hop",
+      "z": 198.16666666666794,
+      "buffer": [
+        1600,
+        1000
+      ],
+      "kiteVisible": true,
+      "gripErrors": [
+        8.63571111763924e-7,
+        0.00002728149496295136
+      ],
+      "stamp": "Codex/sol fork · build 10-27 11:42 UTC"
+    }
+  ],
+  "started": "2026-10-27T12:04:12.904Z",
+  "journey": {
+    "done": true,
+    "crashes": [],
+    "trace": [
+      {
+        "z": 0.16666666666666252,
+        "x": 0,
+        "y": 12.000000011920928,
+        "state": "ride",
+        "grounded": true,
+        "lives": 99,
+        "speed": 17.333333333333318
+      },
+      {
+        "z": 30.16666666666662,
+        "x": 0.2003901212681078,
+        "y": 12.000000011920928,
+        "state": "ride",
+        "grounded": true,
+        "lives": 99,
+        "speed": 20
+      },
+      {
+        "z": 60.16666666666681,
+        "x": 3.834680663636882,
+        "y": 12.000000011920928,
+        "state": "ride",
+        "grounded": true,
+        "lives": 99,
+        "speed": 20
+      },
+      {
+        "z": 90.16666666666647,
+        "x": 1.0460058353862491,
+        "y": 12.000000011920928,
+        "state": "ride",
+        "grounded": true,
+        "lives": 99,
+        "speed": 20
+      },
+      {
+        "z": 120.16666666666605,
+        "x": -3.821952165034683,
+        "y": 11.193333333333358,
+        "state": "ride",
+        "grounded": true,
+        "lives": 99,
+        "speed": 20
+      },
+      {
+        "z": 150.16666666666657,
+        "x": -2.1736809980065424,
+        "y": 9.993333333333336,
+        "state": "ride",
+        "grounded": true,
+        "lives": 99,
+        "speed": 20
+      },
+      {
+        "z": 180.16666666666742,
+        "x": -0.07203163691040532,
+        "y": 9.153333333333304,
+        "state": "air",
+        "grounded": false,
+        "lives": 99,
+        "speed": 20
+      },
+      {
+        "z": 210.16666666666828,
+        "x": -1.3490341502613519,
+        "y": 7.593333333333269,
+        "state": "ride",
+        "grounded": true,
+        "lives": 99,
+        "speed": 20
+      }
+    ],
+    "jumps": [
+      {
+        "name": "First hop",
+        "z": 179.50000000000074,
+        "x": -0.0720471967242992,
+        "y": 8.81999999999997,
+        "state": "ride",
+        "grounded": true,
+        "lives": 99,
+        "speed": 20
+      }
+    ],
+    "checkpoints": [
+      {
+        "spawn": [
+          0,
+          12.12,
+          15
+        ],
+        "z": -15,
+        "x": 0,
+        "y": 12.12,
+        "state": "ride",
+        "grounded": true,
+        "lives": 99,
+        "speed": 0
+      }
+    ],
+    "keys": [
+      {
+        "z": -15,
+        "code": "ArrowDown",
+        "down": true
+      },
+      {
+        "z": 28.16666666666663,
+        "code": "ArrowRight",
+        "down": true
+      },
+      {
+        "z": 29.166666666666625,
+        "code": "ArrowRight",
+        "down": false
+      },
+      {
+        "z": 30.16666666666662,
+        "code": "ArrowRight",
+        "down": true
+      },
+      {
+        "z": 31.166666666666618,
+        "code": "ArrowRight",
+        "down": false
+      },
+      {
+        "z": 32.166666666666615,
+        "code": "ArrowRight",
+        "down": true
+      },
+      {
+        "z": 33.16666666666662,
+        "code": "ArrowRight",
+        "down": false
+      },
+      {
+        "z": 33.83333333333329,
+        "code": "ArrowRight",
+        "down": true
+      },
+      {
+        "z": 34.8333333333333,
+        "code": "ArrowRight",
+        "down": false
+      },
+      {
+        "z": 35.166666666666636,
+        "code": "ArrowDown",
+        "down": false
+      },
+      {
+        "z": 35.49999999999997,
+        "code": "ArrowRight",
+        "down": true
+      },
+      {
+        "z": 36.16666666666664,
+        "code": "ArrowRight",
+        "down": false
+      },
+      {
+        "z": 36.833333333333314,
+        "code": "ArrowRight",
+        "down": true
+      },
+      {
+        "z": 37.16666666666665,
+        "code": "ArrowRight",
+        "down": false
+      },
+      {
+        "z": 37.499999999999986,
+        "code": "ArrowRight",
+        "down": true
+      },
+      {
+        "z": 38.16666666666666,
+        "code": "ArrowRight",
+        "down": false
+      },
+      {
+        "z": 39.5,
+        "code": "ArrowRight",
+        "down": true
+      },
+      {
+        "z": 40.83333333333334,
+        "code": "ArrowRight",
+        "down": false
+      },
+      {
+        "z": 42.50000000000002,
+        "code": "ArrowRight",
+        "down": true
+      },
+      {
+        "z": 43.50000000000003,
+        "code": "ArrowRight",
+        "down": false
+      },
+      {
+        "z": 45.16666666666671,
+        "code": "ArrowRight",
+        "down": true
+      },
+      {
+        "z": 45.83333333333338,
+        "code": "ArrowRight",
+        "down": false
+      },
+      {
+        "z": 47.16666666666672,
+        "code": "ArrowRight",
+        "down": true
+      },
+      {
+        "z": 47.83333333333339,
+        "code": "ArrowRight",
+        "down": false
+      },
+      {
+        "z": 51.83333333333342,
+        "code": "ArrowRight",
+        "down": true
+      },
+      {
+        "z": 52.50000000000009,
+        "code": "ArrowRight",
+        "down": false
+      },
+      {
+        "z": 55.500000000000114,
+        "code": "ArrowLeft",
+        "down": true
+      },
+      {
+        "z": 55.83333333333345,
+        "code": "ArrowLeft",
+        "down": false
+      },
+      {
+        "z": 79.16666666666663,
+        "code": "ArrowLeft",
+        "down": true
+      },
+      {
+        "z": 80.16666666666661,
+        "code": "ArrowLeft",
+        "down": false
+      },
+      {
+        "z": 81.49999999999993,
+        "code": "ArrowLeft",
+        "down": true
+      },
+      {
+        "z": 82.83333333333324,
+        "code": "ArrowLeft",
+        "down": false
+      },
+      {
+        "z": 83.4999999999999,
+        "code": "ArrowLeft",
+        "down": true
+      },
+      {
+        "z": 84.16666666666656,
+        "code": "ArrowLeft",
+        "down": false
+      },
+      {
+        "z": 84.49999999999989,
+        "code": "ArrowLeft",
+        "down": true
+      },
+      {
+        "z": 85.49999999999987,
+        "code": "ArrowLeft",
+        "down": false
+      },
+      {
+        "z": 85.8333333333332,
+        "code": "ArrowLeft",
+        "down": true
+      },
+      {
+        "z": 86.49999999999986,
+        "code": "ArrowLeft",
+        "down": false
+      },
+      {
+        "z": 86.83333333333319,
+        "code": "ArrowLeft",
+        "down": true
+      },
+      {
+        "z": 88.49999999999983,
+        "code": "ArrowLeft",
+        "down": false
+      },
+      {
+        "z": 89.16666666666649,
+        "code": "ArrowLeft",
+        "down": true
+      },
+      {
+        "z": 92.49999999999977,
+        "code": "ArrowLeft",
+        "down": false
+      },
+      {
+        "z": 93.16666666666643,
+        "code": "ArrowLeft",
+        "down": true
+      },
+      {
+        "z": 95.83333333333306,
+        "code": "ArrowLeft",
+        "down": false
+      },
+      {
+        "z": 96.49999999999972,
+        "code": "ArrowLeft",
+        "down": true
+      },
+      {
+        "z": 97.83333333333303,
+        "code": "ArrowLeft",
+        "down": false
+      },
+      {
+        "z": 98.49999999999969,
+        "code": "ArrowLeft",
+        "down": true
+      },
+      {
+        "z": 99.833333333333,
+        "code": "ArrowLeft",
+        "down": false
+      },
+      {
+        "z": 100.83333333333299,
+        "code": "ArrowLeft",
+        "down": true
+      },
+      {
+        "z": 101.83333333333297,
+        "code": "ArrowLeft",
+        "down": false
+      },
+      {
+        "z": 103.16666666666629,
+        "code": "ArrowLeft",
+        "down": true
+      },
+      {
+        "z": 103.83333333333294,
+        "code": "ArrowLeft",
+        "down": false
+      },
+      {
+        "z": 105.83333333333292,
+        "code": "ArrowLeft",
+        "down": true
+      },
+      {
+        "z": 106.16666666666625,
+        "code": "ArrowLeft",
+        "down": false
+      },
+      {
+        "z": 136.16666666666617,
+        "code": "ArrowRight",
+        "down": true
+      },
+      {
+        "z": 136.83333333333286,
+        "code": "ArrowRight",
+        "down": false
+      },
+      {
+        "z": 139.4999999999996,
+        "code": "ArrowRight",
+        "down": true
+      },
+      {
+        "z": 140.1666666666663,
+        "code": "ArrowRight",
+        "down": false
+      },
+      {
+        "z": 142.16666666666634,
+        "code": "ArrowRight",
+        "down": true
+      },
+      {
+        "z": 142.83333333333303,
+        "code": "ArrowRight",
+        "down": false
+      },
+      {
+        "z": 144.49999999999974,
+        "code": "ArrowRight",
+        "down": true
+      },
+      {
+        "z": 145.16666666666643,
+        "code": "ArrowRight",
+        "down": false
+      },
+      {
+        "z": 146.4999999999998,
+        "code": "ArrowRight",
+        "down": true
+      },
+      {
+        "z": 147.1666666666665,
+        "code": "ArrowRight",
+        "down": false
+      },
+      {
+        "z": 148.8333333333332,
+        "code": "ArrowRight",
+        "down": true
+      },
+      {
+        "z": 149.83333333333323,
+        "code": "ArrowRight",
+        "down": false
+      },
+      {
+        "z": 151.8333333333333,
+        "code": "ArrowRight",
+        "down": true
+      },
+      {
+        "z": 152.49999999999997,
+        "code": "ArrowRight",
+        "down": false
+      },
+      {
+        "z": 153.83333333333334,
+        "code": "ArrowRight",
+        "down": true
+      },
+      {
+        "z": 154.50000000000003,
+        "code": "ArrowRight",
+        "down": false
+      },
+      {
+        "z": 155.8333333333334,
+        "code": "ArrowRight",
+        "down": true
+      },
+      {
+        "z": 156.16666666666674,
+        "code": "ArrowRight",
+        "down": false
+      },
+      {
+        "z": 156.50000000000009,
+        "code": "ArrowRight",
+        "down": true
+      },
+      {
+        "z": 156.83333333333343,
+        "code": "ArrowRight",
+        "down": false
+      },
+      {
+        "z": 158.1666666666668,
+        "code": "ArrowRight",
+        "down": true
+      },
+      {
+        "z": 158.50000000000014,
+        "code": "ArrowRight",
+        "down": false
+      },
+      {
+        "z": 159.16666666666683,
+        "code": "ArrowRight",
+        "down": true
+      },
+      {
+        "z": 159.50000000000017,
+        "code": "ArrowRight",
+        "down": false
+      },
+      {
+        "z": 160.83333333333354,
+        "code": "ArrowRight",
+        "down": true
+      },
+      {
+        "z": 161.50000000000023,
+        "code": "ArrowRight",
+        "down": false
+      },
+      {
+        "z": 164.5000000000003,
+        "code": "ArrowRight",
+        "down": true
+      },
+      {
+        "z": 165.166666666667,
+        "code": "ArrowRight",
+        "down": false
+      },
+      {
+        "z": 179.50000000000074,
+        "code": "Space",
+        "down": true
+      },
+      {
+        "z": 193.50000000000114,
+        "code": "Space",
+        "down": false
+      },
+      {
+        "z": 200.166666666668,
+        "code": "ArrowLeft",
+        "down": true
+      },
+      {
+        "z": 200.83333333333468,
+        "code": "ArrowLeft",
+        "down": false
+      },
+      {
+        "z": 202.5000000000014,
+        "code": "ArrowLeft",
+        "down": true
+      },
+      {
+        "z": 202.83333333333474,
+        "code": "ArrowLeft",
+        "down": false
+      },
+      {
+        "z": 203.16666666666808,
+        "code": "ArrowLeft",
+        "down": true
+      },
+      {
+        "z": 203.50000000000142,
+        "code": "ArrowLeft",
+        "down": false
+      },
+      {
+        "z": 204.8333333333348,
+        "code": "ArrowLeft",
+        "down": true
+      },
+      {
+        "z": 205.50000000000148,
+        "code": "ArrowLeft",
+        "down": false
+      },
+      {
+        "z": 207.1666666666682,
+        "code": "ArrowLeft",
+        "down": true
+      },
+      {
+        "z": 207.83333333333488,
+        "code": "ArrowLeft",
+        "down": false
+      },
+      {
+        "z": 208.8333333333349,
+        "code": "ArrowLeft",
+        "down": true
+      },
+      {
+        "z": 209.5000000000016,
+        "code": "ArrowLeft",
+        "down": false
+      },
+      {
+        "z": 210.83333333333496,
+        "code": "ArrowLeft",
+        "down": true
+      },
+      {
+        "z": 211.50000000000165,
+        "code": "ArrowLeft",
+        "down": false
+      },
+      {
+        "z": 212.83333333333502,
+        "code": "ArrowLeft",
+        "down": true
+      },
+      {
+        "z": 213.5000000000017,
+        "code": "ArrowLeft",
+        "down": false
+      },
+      {
+        "z": 214.83333333333508,
+        "code": "ArrowLeft",
+        "down": true
+      },
+      {
+        "z": 215.16666666666842,
+        "code": "ArrowLeft",
+        "down": false
+      }
+    ],
+    "maxGripError": 0.00039384963566575353,
+    "canopyBounds": {
+      "minX": -0.41318617008281183,
+      "maxX": 0.4724954189824796,
+      "minY": 0.4860419514837251,
+      "maxY": 0.8786723871230019
+    },
+    "canopyClips": [],
+    "final": {
+      "z": 215.16666666666842,
+      "x": -2.081172164930033,
+      "y": 7.393333333333263,
+      "state": "ride",
+      "grounded": true,
+      "lives": 99,
+      "speed": 20
+    }
+  },
+  "assets": {
+    "errors": [],
+    "reduced": 0
+  },
+  "pass": true,
+  "finished": "2026-10-27T12:04:38.158Z"
+}

@@ -1,0 +1,124 @@
+{
+  "completed": "2026-10-27T12:15:03.800929+00:00",
+  "baseCommit": "886ded9ae1ef53ed535e690195fb69d8d447c575",
+  "pass": true,
+  "localUrl": "http://127.0.0.1:5288/?playtest&level=coastal-street-run",
+  "buildStamp": "Codex/sol fork \u00b7 build 10-27 12:09 UTC",
+  "sources": {
+    "src/kiteTow.ts": "4b40cd704d9bb166c86abda025ef421c29dc916eb3d50a082b5d63ede01cde89",
+    "src/kiteTowVisual.ts": "ce5b289a4cf5e422e0a4e234791d875e4d36526b1d599f7087796f473a3e7788",
+    "src/player.ts": "61167cb062bca8d418c24444be8e984a10eea84fd874e01cab89bacaa16c3f18",
+    "src/level.ts": "b9b22bf6594c33441f1acfebfe106fb9978c598125189e667353935c99e5eac3",
+    "src/levels/beach-street-gameplay.ts": "5ee2a87f54cd7838405a4ffcae04b06f685cca4af1a7dce8c39eb4091ddc946b",
+    "src/levels/coastal-street-run.ts": "76051369497a8a26b058e5fdf8515b059ffb585efa3941a0ff24e4cdfef51fc8",
+    "src/levels/coastal-town-art.ts": "ddfb16f7ba2f86aae1773d15db2d1aec17f6c928f37422054fcdffd92f644382",
+    "tools/test-kite-motion.mjs": "903d3ab51ada7f16ee9f35ae152b723ea201a814006fd970f64ff113df1b8540",
+    "tools/test-kite-progression.mjs": "af43ca4726a03e727a55d1ba5f49c872a61fef5d33aed0db7b970dfa4995abc8",
+    "tools/test-beach-kite.mjs": "e6b6def4e3d6e46901e8c4bb81953d9c7ad38811ada1ace94a84d9885aaa754c",
+    "tools/beach-kite-browser.mjs": "7c95bc2e59e45617965715cde1ac4fa2843be28625ac28d5fee41d2387ccfcbc",
+    "tools/test-coastal-town.mjs": "dfe9cbade6296a2cb98c26eaca642f8610a6d76984a74106b416577ee48264af"
+  },
+  "reports": {
+    "checks.json": {
+      "pass": true,
+      "sha256": "48a1c66ab509ab683ac77959079a1f274ec0d183a54d985af25a7f93a92b3198"
+    },
+    "build-final.json": {
+      "pass": true,
+      "sha256": "8a090388e34d0e10457f4471f8f0ccac8abdb4af8deae49d153622fc3b28cbc0"
+    },
+    "native.json": {
+      "pass": true,
+      "sha256": "f8445bacbcdcc4a331561a1a2914e26bfa3e8f5b3cf1216156fdfc9d98e21ead"
+    },
+    "progression.json": {
+      "pass": true,
+      "sha256": "47835fd7a8a2a8eb8ee8a81190bfaf8245dc306ac003c90eede508974de8fc5c"
+    },
+    "browser-lite.json": {
+      "pass": true,
+      "sha256": "b5b741e82f8a685e9661edb2e78d3e9b1c7bfa15dea9242d8f3863f04b80acf9"
+    },
+    "browser-full-preview.json": {
+      "pass": true,
+      "sha256": "b5a605acdd9c61c458d49d7342c8b8bbc5cc015cb7d7f0f46849dd85974c66c0"
+    },
+    "browser-full.json": {
+      "pass": true,
+      "sha256": "f9c47e91ea3555241bee624b5626c90afb48a4083e92e6fef2634f87f77f4135"
+    }
+  },
+  "evidence": {
+    "connectedNative": {
+      "p": [
+        -1.4080270612230313e-09,
+        7.736666666443149,
+        -3003.724999999947
+      ],
+      "state": "finished",
+      "grounded": true,
+      "lives": 103,
+      "speed": 0,
+      "vy": 0,
+      "checkpoint": [
+        0,
+        4.242857142857133,
+        -2740
+      ],
+      "crates": 24,
+      "totalCrates": 24,
+      "crystal": true,
+      "gem": true
+    },
+    "connectedProduction": {
+      "z": 3003.7865738159585,
+      "x": 0.08136548816166542,
+      "y": 7.736666666443149,
+      "state": "finished",
+      "grounded": true,
+      "lives": 103,
+      "speed": 0
+    },
+    "jumpCount": 13,
+    "activatedCheckpoints": 10,
+    "consoleErrors": [],
+    "failedRequests": [],
+    "assetDiagnostics": {
+      "errors": [],
+      "reduced": 0
+    },
+    "maximumHandGripErrorMetres": 0.0009036943964606431,
+    "canopyBoundsNdc": {
+      "minX": -0.4417410154149384,
+      "maxX": 0.5697393400547405,
+      "minY": 0.3939657571749923,
+      "maxY": 0.9190229564901035
+    },
+    "canopyClips": [],
+    "nativeResolution": [
+      1600,
+      1000
+    ],
+    "normalPresentation": "480-line CRT",
+    "visualReview": [
+      "native-tow.png",
+      "native-first-hop.png",
+      "native-canal-flight.png",
+      "native-freight.png",
+      "native-cliff.png",
+      "native-festival.png",
+      "native-lighthouse.png",
+      "presentation-tow.png",
+      "presentation-festival.png"
+    ]
+  },
+  "validationReuse": "The required level chain, native progression and coastal preservation checks passed before final canopy lift compensation and closed-hand pose refinements. These final edits affect presentation only. The final type-check/build and connected production keyboard run exercise the final source. No global physics or level data changed after the successful required level checks.",
+  "exclusions": [
+    "public/levels.json unchanged",
+    "src/tuning.ts unchanged",
+    "coastal bonus unchanged",
+    "No push or GitHub polling",
+    "No check:all"
+  ],
+  "resourceHandling": "All heavy jobs serialized through shared run_heavy.py; test Chrome instances close in finally."
+}

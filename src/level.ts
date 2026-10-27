@@ -1160,6 +1160,8 @@ export interface CustomLevelData {
   skatepark?: boolean;
   /** Parks default to mounted skating; false enables normal walking, mounting and dismounting. */
   alwaysSkate?: boolean;
+  /** Beach Street: a forward-pulling kite, steering and floating jumps. */
+  kiteTow?: boolean;
   /** Derelict warehouse art owner; all native gameplay surfaces are retained. */
   warehouseArt?: boolean;
   /** Park-only objective: authored wumpa markers become exploration tokens. */
@@ -2670,7 +2672,7 @@ export const MAX_USER_LEVELS = 128;
 const MAX_LEVEL_LABEL_LENGTH = 120;
 const FORBIDDEN_JSON_KEYS = new Set(["__proto__", "prototype", "constructor"]);
 const LEVEL_DATA_KEYS = new Set([
-  'encounter',
+  'encounter', 'kiteTow',
   "minefields", "v", "skateRace", "railNavigation", "edgeGrindingRevision", "name", "spawn", "startWarpPad", "killY", "fallRecoveryDrop", "hudMode", "ledgeAssist", "relicTime",
   "medalTimes", "ocean", "unitySand", "shoreFoam", "sky", "jungleAtmosphere", "jungleDepthFade", "jungleStyle", "atmosphere",
   "components", "layers", "groups", "allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "skateReference", "hugeDropBail", "alwaysSkate", "warehouseArt", "skateCollectathon", "cameraAirLift", "secretComboGem", "cameraLookAhead", "cameraRig", "boulderChase", "caveCollapse",
@@ -2911,7 +2913,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
     return null;
   if (source.hudMode !== undefined && source.hudMode !== "bonus" && source.hudMode !== "hub") return null;
   if (source.skateReference !== undefined && (!source.skatepark || !validSkateReference(source.skateReference))) return null;
-  for (const key of ["allBalanceCrates", "perfectGrindBoost", "hugeDropBail", "keepPlayFog", "skatepark", "alwaysSkate", "warehouseArt", "skateCollectathon", "secretComboGem", "jungleDepthFade", "startWarpPad"] as const)
+  for (const key of ["kiteTow", "allBalanceCrates", "perfectGrindBoost", "hugeDropBail", "keepPlayFog", "skatepark", "alwaysSkate", "warehouseArt", "skateCollectathon", "secretComboGem", "jungleDepthFade", "startWarpPad"] as const)
     if (source[key] !== undefined && typeof source[key] !== "boolean") return null;
   if (source.skateCollectathon && (!source.skatepark || !source.components.some(c => c?.t === 'wumpa'))) return null;
   if (source.cameraLookAhead !== undefined && (typeof source.cameraLookAhead !== "number" ||
@@ -4342,6 +4344,7 @@ export class Level {
   cameraAirLift: number | undefined; // presentation only; does not change lane/input frames
   skatepark = false;
   get alwaysSkate(): boolean { return this.skatepark && this.builtFromData?.alwaysSkate !== false; }
+  get kiteTow(): boolean { return this.builtFromData?.kiteTow === true; }
   skateCollectathon: SkateCollectathon | null = null;
   skateReference: SkateReferenceData | undefined;
   skateReferencePhysics: SkateReferencePhysics | undefined;
@@ -18615,9 +18618,9 @@ export class Level {
       // one gem-width along the gate's own tangent, so it stands beside the
       // combo prize (which parks on the gate's normal) instead of inside it
       const finishDir = this.zoneAt(this.gateSpec.x, this.gateSpec.z)?.dir;
-      if (this.hudMode === 'bonus' || finishDir === 'E' || finishDir === 'W') {
-        // Side-view courses may confine depth to one line. Keep their earned
-        // prize on the supported approach, before touching the finish pad.
+      if (this.kiteTow || this.hudMode === 'bonus' || finishDir === 'E' || finishDir === 'W') {
+        // Side-view courses confine depth; the kite cannot stop and turn back.
+        // Keep their earned prize on the approach before the finish pad.
         let dx = pos.x - this.gateSpec.x, dz = pos.z - this.gateSpec.z;
         if (Math.hypot(dx, dz) < .01) {
           dx = this.spawnPos.x - this.gateSpec.x;

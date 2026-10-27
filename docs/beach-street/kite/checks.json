@@ -1,0 +1,37 @@
+{
+  "started": "2026-10-27T11:54:39.527Z",
+  "steps": [
+    {
+      "name": "motion",
+      "command": "node tools/test-kite-motion.mjs",
+      "exit": 0,
+      "seconds": 0.211
+    },
+    {
+      "name": "native",
+      "command": "node tools/test-beach-kite.mjs",
+      "exit": 0,
+      "seconds": 32.105
+    },
+    {
+      "name": "coastal-art",
+      "command": "node tools/test-coastal-town.mjs --main",
+      "exit": 0,
+      "seconds": 7.993
+    },
+    {
+      "name": "check-levels",
+      "command": "node tools/validate-levels.mjs && node tools/test-lazy-source.mjs && node tools/test-tropical-plants.mjs && node tools/test-jungle-assets.mjs && node tools/test-crown-quartz.mjs && node tools/test-jungle-stream.mjs && node tools/test-custard-pool.mjs && node tools/test-jungle-enclosure.mjs && node tools/test-map-landscape-assets.mjs && node tools/test-world-map-save.mjs && node tools/test-map-clay-geometry.mjs && node tools/test-hollowwake-assets.mjs && node tools/test-scenery-normals.mjs && node tools/test-waterslide-scenery-lod.mjs && node tools/test-waterslide-ocean-look.mjs && node tools/test-waterslide-shallows.mjs && node tools/test-waterpark-decks.mjs && node tools/test-waterpark-portals.mjs && node tools/test-waterslide-forest.mjs && node tools/test-hollowwake-tunnel-build.mjs",
+      "exit": 0,
+      "seconds": 230.731
+    },
+    {
+      "name": "build",
+      "command": "tsc --noEmit && vite build",
+      "exit": 0,
+      "seconds": 50.14
+    }
+  ],
+  "finished": "2026-10-27T12:00:00.712Z",
+  "pass": true
+}
