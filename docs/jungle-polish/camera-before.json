@@ -1,0 +1,3644 @@
+{
+  "base": "http://127.0.0.1:5418/",
+  "runs": [
+    {
+      "mode": "full-max",
+      "stamp": "Codex/sol fork · build 10-27 07:22 UTC",
+      "samples": [
+        {
+          "name": "turn",
+          "offset": 0,
+          "position": [
+            12.5,
+            0,
+            -1360
+          ],
+          "camera": [
+            12.5,
+            8.09134397164335,
+            -1343.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-1",
+          "offset": 0,
+          "position": [
+            22,
+            2.200000023841858,
+            -1360
+          ],
+          "camera": [
+            22,
+            10.291343995485208,
+            -1343.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-2",
+          "offset": 0,
+          "position": [
+            33,
+            4.400000023841859,
+            -1360
+          ],
+          "camera": [
+            33,
+            12.49134399548521,
+            -1343.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-3",
+          "offset": 0,
+          "position": [
+            44,
+            6.600000023841858,
+            -1360
+          ],
+          "camera": [
+            44,
+            14.691343995485209,
+            -1343.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [
+            {
+              "target": "body",
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 0.3619605730562572,
+              "point": [
+                44.00000000000006,
+                14.54629065473074,
+                -1343.661962289181
+              ]
+            },
+            {
+              "target": "head",
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 0.33047623487224687,
+              "point": [
+                44.00000000000006,
+                14.57142456490017,
+                -1343.6382886111464
+              ]
+            },
+            {
+              "target": "next-landing",
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 0.3318149400760608,
+              "point": [
+                44.116610233533514,
+                14.592554915321656,
+                -1343.624860741456
+              ]
+            }
+          ],
+          "foreground": [
+            {
+              "screen": [
+                -0.65,
+                -0.25
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 0.4771256476822656,
+              "point": [
+                43.79672800977715,
+                14.48427520730747,
+                -1343.7090879678833
+              ]
+            },
+            {
+              "screen": [
+                -0.65,
+                0
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 0.3614407041951989,
+              "point": [
+                43.845199856831215,
+                14.568113784821382,
+                -1343.6328116775956
+              ]
+            },
+            {
+              "screen": [
+                -0.65,
+                0.3
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 0.2831619254348846,
+              "point": [
+                43.879640647832765,
+                14.627683764129223,
+                -1343.5786149441958
+              ]
+            },
+            {
+              "screen": [
+                -0.65,
+                0.6
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 0.2367937755939049,
+              "point": [
+                43.90154537638031,
+                14.665570937692095,
+                -1343.5441452151695
+              ]
+            },
+            {
+              "screen": [
+                -0.325,
+                -0.25
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 0.4566794118505083,
+              "point": [
+                43.89533492727598,
+                14.478103895363759,
+                -1343.7203759420763
+              ]
+            },
+            {
+              "screen": [
+                -0.325,
+                0
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 0.34322364638745484,
+              "point": [
+                43.92085562309869,
+                14.56533664124425,
+                -1343.6396283027393
+              ]
+            },
+            {
+              "screen": [
+                -0.325,
+                0.3
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 0.26786934607418106,
+              "point": [
+                43.938771101967546,
+                14.626573859318249,
+                -1343.5829436168553
+              ]
+            },
+            {
+              "screen": [
+                -0.325,
+                0.6
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 0.22405078722391783,
+              "point": [
+                43.9500728396444,
+                14.665204530582837,
+                -1343.5471848489854
+              ]
+            },
+            {
+              "screen": [
+                0,
+                -0.25
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 0.4581788819955591,
+              "point": [
+                44.00000000000006,
+                14.471553433897409,
+                -1343.7323574203517
+              ]
+            },
+            {
+              "screen": [
+                0,
+                0
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 0.3416740523638487,
+              "point": [
+                44.00000000000006,
+                14.56243143905252,
+                -1343.6467592535737
+              ]
+            },
+            {
+              "screen": [
+                0,
+                0.3
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 0.265404988373333,
+              "point": [
+                44.00000000000006,
+                14.62542456578598,
+                -1343.5874259070858
+              ]
+            },
+            {
+              "screen": [
+                0,
+                0.6
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 0.22156705610399313,
+              "point": [
+                44.00000000000006,
+                14.664827555046326,
+                -1343.5503121561787
+              ]
+            },
+            {
+              "screen": [
+                0.325,
+                -0.25
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 0.48562581583350833,
+              "point": [
+                44.11129921781445,
+                14.464587774594332,
+                -1343.7450983388414
+              ]
+            },
+            {
+              "screen": [
+                0.325,
+                0
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 0.35942375456012693,
+              "point": [
+                44.08287998043735,
+                14.559389111723096,
+                -1343.6542267842913
+              ]
+            },
+            {
+              "screen": [
+                0.325,
+                0.3
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 0.2775473224791448,
+              "point": [
+                44.06344106541615,
+                14.62423374889223,
+                -1343.5920701400682
+              ]
+            },
+            {
+              "screen": [
+                0.325,
+                0.6
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 0.23060773632301276,
+              "point": [
+                44.05138830161378,
+                14.664439547147754,
+                -1343.5535309854522
+              ]
+            },
+            {
+              "screen": [
+                0.65,
+                -0.25
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 0.5395900429826447,
+              "point": [
+                44.229883978097526,
+                14.457166149762728,
+                -1343.7586732659124
+              ]
+            },
+            {
+              "screen": [
+                0.65,
+                0
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 0.39638529562638886,
+              "point": [
+                44.16976643693086,
+                14.556199716168795,
+                -1343.662055300652
+              ]
+            },
+            {
+              "screen": [
+                0.65,
+                0.3
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 0.3039993257660628,
+              "point": [
+                44.12921639041794,
+                14.622999116912293,
+                -1343.5968852536196
+              ]
+            },
+            {
+              "screen": [
+                0.65,
+                0.6
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 0.250859350346023,
+              "point": [
+                44.10430283844191,
+                14.664040015394537,
+                -1343.5568454141214
+              ]
+            }
+          ],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-4",
+          "offset": 0,
+          "position": [
+            56,
+            8.800000023841859,
+            -1360
+          ],
+          "camera": [
+            56,
+            16.891343995485208,
+            -1343.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [
+            {
+              "target": "body",
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 2.324295637094656,
+              "point": [
+                55.999999999999986,
+                15.959897666359417,
+                -1345.4598346348705
+              ]
+            },
+            {
+              "target": "head",
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 2.392405353111346,
+              "point": [
+                55.999999999999986,
+                16.023215345373618,
+                -1345.5596773413251
+              ]
+            },
+            {
+              "target": "next-landing",
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 5.91644732359089,
+              "point": [
+                59.05469376763922,
+                15.280037990227122,
+                -1348.134178474491
+              ]
+            }
+          ],
+          "foreground": [
+            {
+              "screen": [
+                -0.325,
+                -0.25
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 2.4517352956334117,
+              "point": [
+                55.43809366842744,
+                15.746540296554194,
+                -1345.42430307432
+              ]
+            },
+            {
+              "screen": [
+                -0.325,
+                0
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 2.554168527484195,
+              "point": [
+                55.41103103257474,
+                15.95363465692073,
+                -1345.6319877188062
+              ]
+            },
+            {
+              "screen": [
+                -0.325,
+                0.3
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 2.7347234023102724,
+              "point": [
+                55.374903837258366,
+                16.23009473444631,
+                -1345.9092357945815
+              ]
+            },
+            {
+              "screen": [
+                -0.325,
+                0.6
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 2.98846382638339,
+              "point": [
+                55.334054950104715,
+                16.542687129469893,
+                -1346.222719176334
+              ]
+            },
+            {
+              "screen": [
+                0,
+                -0.25
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 2.202309046539395,
+              "point": [
+                55.999999999999986,
+                15.834886002439745,
+                -1345.2627095497683
+              ]
+            },
+            {
+              "screen": [
+                0,
+                0
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 2.36566103128997,
+              "point": [
+                55.999999999999986,
+                15.998787451940633,
+                -1345.5211581310302
+              ]
+            },
+            {
+              "screen": [
+                0,
+                0.3
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 2.624719770570626,
+              "point": [
+                55.999999999999986,
+                16.23943450630509,
+                -1345.8728103149447
+              ]
+            },
+            {
+              "screen": [
+                0,
+                0.6
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 2.8695223843457707,
+              "point": [
+                55.999999999999986,
+                16.547928684876844,
+                -1346.1792363708432
+              ]
+            },
+            {
+              "screen": [
+                0.65,
+                0
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 5.586344516763826,
+              "point": [
+                58.39255546192803,
+                14.986726160108201,
+                -1348.0053085746188
+              ]
+            }
+          ],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-5",
+          "offset": 0,
+          "position": [
+            71,
+            11.000000023841858,
+            -1360
+          ],
+          "camera": [
+            71,
+            19.09134399548521,
+            -1343.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [
+            {
+              "target": "next-landing",
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 9.348992540751349,
+              "point": [
+                75.10777596418947,
+                16.420647661512056,
+                -1351.292574599666
+              ]
+            }
+          ],
+          "foreground": [
+            {
+              "screen": [
+                -0.65,
+                -0.25
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 1.5777545275660119,
+              "point": [
+                70.32782212723338,
+                18.406610907561735,
+                -1344.5827858683606
+              ]
+            },
+            {
+              "screen": [
+                -0.65,
+                0
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 2.4039619875951748,
+              "point": [
+                69.97041574030597,
+                18.2717330918966,
+                -1345.3421097420473
+              ]
+            },
+            {
+              "screen": [
+                -0.65,
+                0.3
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 11.14123640360696,
+              "point": [
+                66.26436333620629,
+                16.586580383796974,
+                -1353.0990146730333
+              ]
+            },
+            {
+              "screen": [
+                -0.65,
+                0.6
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 9.352123242710142,
+              "point": [
+                67.11155415045559,
+                18.07344218527907,
+                -1351.7746299117184
+              ]
+            },
+            {
+              "screen": [
+                -0.325,
+                -0.25
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 1.6379114032112472,
+              "point": [
+                70.62461168232211,
+                18.32654404491256,
+                -1344.7292365238347
+              ]
+            },
+            {
+              "screen": [
+                -0.325,
+                0
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 4.245604022086793,
+              "point": [
+                70.02100077184497,
+                17.532659634403185,
+                -1347.156199137713
+              ]
+            },
+            {
+              "screen": [
+                -0.325,
+                0.3
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 10.569417340692418,
+              "point": [
+                68.58406930057346,
+                16.535685386559763,
+                -1353.2975071751534
+              ]
+            },
+            {
+              "screen": [
+                -0.325,
+                0.6
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 8.673505771696542,
+              "point": [
+                69.06720824829601,
+                18.079426998857183,
+                -1351.7249811978327
+              ]
+            },
+            {
+              "screen": [
+                0,
+                -0.25
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 1.8054251343093808,
+              "point": [
+                71.00000000000003,
+                18.225273079151528,
+                -1344.9144716988558
+              ]
+            },
+            {
+              "screen": [
+                0,
+                0.3
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 10.28227737566069,
+              "point": [
+                71.00000000000003,
+                16.5375040516052,
+                -1353.2904143095482
+              ]
+            },
+            {
+              "screen": [
+                0,
+                0.6
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 7.656826079298594,
+              "point": [
+                71.00000000000003,
+                18.174999407744373,
+                -1350.932133246551
+              ]
+            },
+            {
+              "screen": [
+                0.325,
+                -0.25
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 3.667904919465602,
+              "point": [
+                71.84063683445957,
+                17.378666804513518,
+                -1346.4630030106491
+              ]
+            },
+            {
+              "screen": [
+                0.325,
+                0.3
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 9.73018428988686,
+              "point": [
+                73.22410093000228,
+                16.7386098337692,
+                -1352.5060938053828
+              ]
+            },
+            {
+              "screen": [
+                0.325,
+                0.6
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 7.248736647344588,
+              "point": [
+                72.61529821631999,
+                18.245651375845235,
+                -1350.346019860742
+              ]
+            },
+            {
+              "screen": [
+                0.65,
+                0
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 9.882337034045172,
+              "point": [
+                75.2324706928593,
+                15.722043138052186,
+                -1351.6004396287565
+              ]
+            },
+            {
+              "screen": [
+                0.65,
+                0.3
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 8.308049667854426,
+              "point": [
+                74.53137687653532,
+                17.223535097237324,
+                -1350.6148660990823
+              ]
+            },
+            {
+              "screen": [
+                0.65,
+                0.6
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 6.663435601301415,
+              "point": [
+                73.77053753839095,
+                18.36608375406959,
+                -1349.346939001999
+              ]
+            }
+          ],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-6",
+          "offset": 0,
+          "position": [
+            83,
+            13.200000023841858,
+            -1360
+          ],
+          "camera": [
+            83,
+            21.291343995485207,
+            -1343.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-7",
+          "offset": 0,
+          "position": [
+            94,
+            15.400000023841859,
+            -1360
+          ],
+          "camera": [
+            94,
+            23.49134399548521,
+            -1343.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-8",
+          "offset": 0,
+          "position": [
+            106,
+            17.600000023841858,
+            -1360
+          ],
+          "camera": [
+            106,
+            25.69134399548521,
+            -1343.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-9",
+          "offset": 0,
+          "position": [
+            121,
+            19.800000023841857,
+            -1360
+          ],
+          "camera": [
+            121,
+            27.891343995485208,
+            -1343.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-10",
+          "offset": 0,
+          "position": [
+            133,
+            22.000000023841856,
+            -1360
+          ],
+          "camera": [
+            133,
+            30.091343995485207,
+            -1343.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-11",
+          "offset": 0,
+          "position": [
+            144,
+            24.200000023841856,
+            -1360
+          ],
+          "camera": [
+            144,
+            32.29134399548521,
+            -1343.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-12",
+          "offset": 0,
+          "position": [
+            158,
+            26.400000023841855,
+            -1360
+          ],
+          "camera": [
+            158,
+            34.49134399548521,
+            -1343.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "summit",
+          "offset": 0,
+          "position": [
+            175,
+            26.400000023841855,
+            -1360
+          ],
+          "camera": [
+            175,
+            34.49134399548521,
+            -1343.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "turn",
+          "offset": 3,
+          "position": [
+            12.5,
+            0,
+            -1357
+          ],
+          "camera": [
+            12.5,
+            8.09134397164335,
+            -1340.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-1",
+          "offset": 3,
+          "position": [
+            22,
+            2.200000023841858,
+            -1357
+          ],
+          "camera": [
+            22,
+            10.291343995485208,
+            -1340.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-2",
+          "offset": 3,
+          "position": [
+            33,
+            4.400000023841859,
+            -1357
+          ],
+          "camera": [
+            33,
+            12.49134399548521,
+            -1340.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-3",
+          "offset": 3,
+          "position": [
+            44,
+            6.600000023841858,
+            -1357
+          ],
+          "camera": [
+            44,
+            14.691343995485209,
+            -1340.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [
+            {
+              "target": "head",
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 4.102107227548188,
+              "point": [
+                44.00000000000006,
+                13.202818313399927,
+                -1344.152846516953
+              ]
+            }
+          ],
+          "foreground": [
+            {
+              "screen": [
+                -0.65,
+                0.3
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 4.290295515435042,
+              "point": [
+                42.17638904647719,
+                13.726803283740459,
+                -1344.092084447499
+              ]
+            },
+            {
+              "screen": [
+                -0.65,
+                0.6
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 3.6787067195641288,
+              "point": [
+                42.47045943427545,
+                14.290946980616866,
+                -1343.6519442162255
+              ]
+            },
+            {
+              "screen": [
+                -0.325,
+                0.3
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 3.8407937677945116,
+              "point": [
+                43.12208106892938,
+                13.762649693673442,
+                -1343.9522820310365
+              ]
+            },
+            {
+              "screen": [
+                -0.325,
+                0.6
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 3.493300027446953,
+              "point": [
+                43.22155796548741,
+                14.283789107630053,
+                -1343.7113243762446
+              ]
+            },
+            {
+              "screen": [
+                0,
+                0.3
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 3.964009136512857,
+              "point": [
+                44.00000000000006,
+                13.706791206168763,
+                -1344.1701323415057
+              ]
+            },
+            {
+              "screen": [
+                0,
+                0.6
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 3.5858530997998543,
+              "point": [
+                44.00000000000006,
+                14.262200503599015,
+                -1343.8904187474793
+              ]
+            },
+            {
+              "screen": [
+                0.325,
+                0.3
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 4.332388927318722,
+              "point": [
+                44.990286510030046,
+                13.643783216833004,
+                -1344.4158659918785
+              ]
+            },
+            {
+              "screen": [
+                0.325,
+                0.6
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 3.7784418779890134,
+              "point": [
+                44.84198264096409,
+                14.250522295730875,
+                -1343.9872986241164
+              ]
+            },
+            {
+              "screen": [
+                0.65,
+                0.3
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 4.978155152494917,
+              "point": [
+                46.115989034267095,
+                13.572159245463126,
+                -1344.6952023129463
+              ]
+            },
+            {
+              "screen": [
+                0.65,
+                0.6
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 4.110258788131091,
+              "point": [
+                45.70897220989054,
+                14.243976082095518,
+                -1344.041604590973
+              ]
+            }
+          ],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-4",
+          "offset": 3,
+          "position": [
+            56,
+            8.800000023841859,
+            -1357
+          ],
+          "camera": [
+            56,
+            16.891343995485208,
+            -1340.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [
+            {
+              "target": "body",
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 4.262149843731389,
+              "point": [
+                56.00000000000006,
+                15.183315222049888,
+                -1344.2352778565394
+              ]
+            },
+            {
+              "target": "head",
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 4.387045236057616,
+              "point": [
+                56.00000000000006,
+                15.29942327276807,
+                -1344.4183632476238
+              ]
+            },
+            {
+              "target": "next-landing",
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 4.071093836901647,
+              "point": [
+                58.10192777707537,
+                15.782608028004685,
+                -1343.635849466833
+              ]
+            }
+          ],
+          "foreground": [
+            {
+              "screen": [
+                -0.325,
+                -0.25
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 4.436181405714932,
+              "point": [
+                54.9832840338371,
+                14.81993078401954,
+                -1344.1191686652687
+              ]
+            },
+            {
+              "screen": [
+                -0.325,
+                0
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 5.032937214817389,
+              "point": [
+                54.83944861013282,
+                15.04360678630766,
+                -1344.8656924921293
+              ]
+            },
+            {
+              "screen": [
+                0,
+                -0.25
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 4.0384583650856865,
+              "point": [
+                56.00000000000006,
+                14.954076550627747,
+                -1343.873802045436
+              ]
+            },
+            {
+              "screen": [
+                0,
+                0
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 4.33800314982201,
+              "point": [
+                56.00000000000006,
+                15.254628909901108,
+                -1344.3477290978544
+              ]
+            },
+            {
+              "screen": [
+                0,
+                0.3
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 4.850541726703929,
+              "point": [
+                56.00000000000006,
+                15.686600458762836,
+                -1345.028884964924
+              ]
+            },
+            {
+              "screen": [
+                0,
+                0.6
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 5.568122688370738,
+              "point": [
+                56.00000000000006,
+                16.22496878511437,
+                -1345.8584415709033
+              ]
+            },
+            {
+              "screen": [
+                0.325,
+                0
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 5.953731750770783,
+              "point": [
+                57.372878572359596,
+                14.705556408671455,
+                -1345.6954525099636
+              ]
+            },
+            {
+              "screen": [
+                0.65,
+                -0.25
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 3.9164948378209226,
+              "point": [
+                57.6685619485113,
+                15.191615959670582,
+                -1343.4393176532135
+              ]
+            },
+            {
+              "screen": [
+                0.65,
+                0
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 4.306175553104248,
+              "point": [
+                57.84427648683029,
+                15.423189151813322,
+                -1343.9339903222517
+              ]
+            },
+            {
+              "screen": [
+                0.65,
+                0.3
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 5.465623328793806,
+              "point": [
+                58.32318975099965,
+                15.662567050699675,
+                -1345.1226162068906
+              ]
+            }
+          ],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-5",
+          "offset": 3,
+          "position": [
+            71,
+            11.000000023841858,
+            -1357
+          ],
+          "camera": [
+            71,
+            19.09134399548521,
+            -1340.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [
+            {
+              "target": "body",
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 12.89689127047826,
+              "point": [
+                71.0000000000001,
+                13.922998867910394,
+                -1352.1463441712692
+              ]
+            },
+            {
+              "target": "head",
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 11.956358882616072,
+              "point": [
+                71.0000000000001,
+                14.752757441364487,
+                -1351.4717550480682
+              ]
+            },
+            {
+              "target": "next-landing",
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 5.780901890456725,
+              "point": [
+                73.54002233218691,
+                17.43993252856998,
+                -1345.2537462402734
+              ]
+            }
+          ],
+          "foreground": [
+            {
+              "screen": [
+                -0.65,
+                -0.25
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 3.977645423143553,
+              "point": [
+                69.30538579200082,
+                17.3650770853497,
+                -1343.4878600265656
+              ]
+            },
+            {
+              "screen": [
+                -0.65,
+                0.3
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 10.971766201262948,
+              "point": [
+                66.33639746909495,
+                16.624680535406643,
+                -1349.950422574896
+              ]
+            },
+            {
+              "screen": [
+                -0.65,
+                0.6
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 5.048680007771922,
+              "point": [
+                68.90084900375956,
+                18.541836639167105,
+                -1344.8889312306776
+              ]
+            },
+            {
+              "screen": [
+                -0.325,
+                -0.25
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 4.2434865005062665,
+              "point": [
+                70.02744723836057,
+                17.109906990113643,
+                -1343.9545927855156
+              ]
+            },
+            {
+              "screen": [
+                -0.325,
+                0.3
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 9.349319795485124,
+              "point": [
+                68.86295611341725,
+                16.830701913453108,
+                -1349.1469310523773
+              ]
+            },
+            {
+              "screen": [
+                -0.325,
+                0.6
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 2.9796004946158137,
+              "point": [
+                70.33603004241274,
+                18.74372119300756,
+                -1343.2141408097648
+              ]
+            },
+            {
+              "screen": [
+                0,
+                0
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 12.522128353021104,
+              "point": [
+                71.0000000000001,
+                14.366783945349987,
+                -1351.9269849199345
+              ]
+            },
+            {
+              "screen": [
+                0,
+                0.3
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 6.741328850204613,
+              "point": [
+                71.0000000000001,
+                17.41698001331558,
+                -1346.8604232756381
+              ]
+            },
+            {
+              "screen": [
+                0,
+                0.6
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 2.1242479881809446,
+              "point": [
+                71.0000000000001,
+                18.83712075378825,
+                -1342.4393183345567
+              ]
+            },
+            {
+              "screen": [
+                0.325,
+                -0.25
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 12.493278646003661,
+              "point": [
+                73.86329947029486,
+                13.257781281274706,
+                -1351.0005330954332
+              ]
+            },
+            {
+              "screen": [
+                0.325,
+                0
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 9.502864295446127,
+              "point": [
+                73.19127755723477,
+                15.602566924957515,
+                -1348.8936994245341
+              ]
+            },
+            {
+              "screen": [
+                0.325,
+                0.3
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 5.114681672079623,
+              "point": [
+                72.16910100822675,
+                17.854626792840687,
+                -1345.1535835265777
+              ]
+            },
+            {
+              "screen": [
+                0.325,
+                0.6
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 0.9339131059806283,
+              "point": [
+                71.20811187489367,
+                18.9823866061445,
+                -1341.2342243668218
+              ]
+            },
+            {
+              "screen": [
+                0.65,
+                -0.25
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 10.273519528448151,
+              "point": [
+                75.3768738303746,
+                14.632717113007917,
+                -1348.4856318350382
+              ]
+            },
+            {
+              "screen": [
+                0.65,
+                0
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 8.017222330027053,
+              "point": [
+                74.43366740408452,
+                16.357938528971307,
+                -1347.0396054874093
+              ]
+            },
+            {
+              "screen": [
+                0.65,
+                0.3
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 4.361047252704406,
+              "point": [
+                72.85368432320124,
+                18.110896936315857,
+                -1344.1541198315506
+              ]
+            },
+            {
+              "screen": [
+                0.65,
+                0.6
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 0.5025371235804522,
+              "point": [
+                71.20894596250673,
+                19.03664695669382,
+                -1340.7840922809012
+              ]
+            }
+          ],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-6",
+          "offset": 3,
+          "position": [
+            83,
+            13.200000023841858,
+            -1357
+          ],
+          "camera": [
+            83,
+            21.291343995485207,
+            -1340.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-7",
+          "offset": 3,
+          "position": [
+            94,
+            15.400000023841859,
+            -1357
+          ],
+          "camera": [
+            94,
+            23.49134399548521,
+            -1340.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-8",
+          "offset": 3,
+          "position": [
+            106,
+            17.600000023841858,
+            -1357
+          ],
+          "camera": [
+            106,
+            25.69134399548521,
+            -1340.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-9",
+          "offset": 3,
+          "position": [
+            121,
+            19.800000023841857,
+            -1357
+          ],
+          "camera": [
+            121,
+            27.891343995485208,
+            -1340.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-10",
+          "offset": 3,
+          "position": [
+            133,
+            22.000000023841856,
+            -1357
+          ],
+          "camera": [
+            133,
+            30.091343995485207,
+            -1340.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-11",
+          "offset": 3,
+          "position": [
+            144,
+            24.200000023841856,
+            -1357
+          ],
+          "camera": [
+            144,
+            32.29134399548521,
+            -1340.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-12",
+          "offset": 3,
+          "position": [
+            158,
+            26.400000023841855,
+            -1357
+          ],
+          "camera": [
+            158,
+            34.49134399548521,
+            -1340.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "summit",
+          "offset": 3,
+          "position": [
+            175,
+            26.400000023841855,
+            -1357
+          ],
+          "camera": [
+            175,
+            34.49134399548521,
+            -1340.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "turn",
+          "offset": -3,
+          "position": [
+            12.5,
+            0,
+            -1363
+          ],
+          "camera": [
+            12.5,
+            8.09134397164335,
+            -1346.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-1",
+          "offset": -3,
+          "position": [
+            22,
+            2.200000023841858,
+            -1363
+          ],
+          "camera": [
+            22,
+            10.291343995485208,
+            -1346.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-2",
+          "offset": -3,
+          "position": [
+            33,
+            4.400000023841859,
+            -1363
+          ],
+          "camera": [
+            33,
+            12.49134399548521,
+            -1346.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-3",
+          "offset": -3,
+          "position": [
+            44,
+            6.600000023841858,
+            -1363
+          ],
+          "camera": [
+            44,
+            14.691343995485209,
+            -1346.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-4",
+          "offset": -3,
+          "position": [
+            56,
+            8.800000023841859,
+            -1363
+          ],
+          "camera": [
+            56,
+            16.891343995485208,
+            -1346.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [
+            {
+              "target": "body",
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 0.103853496263436,
+              "point": [
+                55.999999999999986,
+                16.849725383671085,
+                -1346.4254870897635
+              ]
+            },
+            {
+              "target": "head",
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 0.10490636419000636,
+              "point": [
+                55.999999999999986,
+                16.85327677572496,
+                -1346.4280935062018
+              ]
+            },
+            {
+              "target": "next-landing",
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 0.10872477769747343,
+              "point": [
+                56.05613519104559,
+                16.861733508373113,
+                -1346.418616268275
+              ]
+            }
+          ],
+          "foreground": [
+            {
+              "screen": [
+                -0.65,
+                -0.25
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 0.12654199884263664,
+              "point": [
+                55.946088741872295,
+                16.836425760673826,
+                -1346.4307887123111
+              ]
+            },
+            {
+              "screen": [
+                -0.65,
+                0
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 0.12992723425103467,
+              "point": [
+                55.94435393072735,
+                16.847046382455215,
+                -1346.439068028858
+              ]
+            },
+            {
+              "screen": [
+                -0.65,
+                0.3
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 0.1361733378614125,
+              "point": [
+                55.9421188611347,
+                16.860729617583022,
+                -1346.4497348087639
+              ]
+            },
+            {
+              "screen": [
+                -0.65,
+                0.6
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 0.14503573464248126,
+              "point": [
+                55.939696731344235,
+                16.87555804688232,
+                -1346.4612943259547
+              ]
+            },
+            {
+              "screen": [
+                -0.325,
+                -0.25
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 0.11096532686493996,
+              "point": [
+                55.97456816816173,
+                16.839530279349376,
+                -1346.4251102233593
+              ]
+            },
+            {
+              "screen": [
+                -0.325,
+                0
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 0.1136319628429734,
+              "point": [
+                55.973797461247365,
+                16.84962640654356,
+                -1346.4327352424593
+              ]
+            },
+            {
+              "screen": [
+                -0.325,
+                0.3
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 0.11895911656709786,
+              "point": [
+                55.97280862582793,
+                16.8625799794032,
+                -1346.4425183244834
+              ]
+            },
+            {
+              "screen": [
+                -0.325,
+                0.6
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 0.12680824666373003,
+              "point": [
+                55.971742229768275,
+                16.876549583226844,
+                -1346.4530687557453
+              ]
+            },
+            {
+              "screen": [
+                0,
+                -0.25
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 0.10223250585747767,
+              "point": [
+                55.999999999999986,
+                16.842302582277554,
+                -1346.4200393917122
+              ]
+            },
+            {
+              "screen": [
+                0,
+                0
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 0.10448419243559091,
+              "point": [
+                55.999999999999986,
+                16.85192243490577,
+                -1346.4270995364793
+              ]
+            },
+            {
+              "screen": [
+                0,
+                0.3
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 0.10920906181524902,
+              "point": [
+                55.999999999999986,
+                16.864219414606076,
+                -1346.4361244623526
+              ]
+            },
+            {
+              "screen": [
+                0,
+                0.6
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 0.11631387016968453,
+              "point": [
+                55.999999999999986,
+                16.877423921513902,
+                -1346.445815435172
+              ]
+            },
+            {
+              "screen": [
+                0.325,
+                -0.25
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 1.2391402790137427,
+              "point": [
+                56.2839950828805,
+                16.312744675470505,
+                -1347.3886561202487
+              ]
+            },
+            {
+              "screen": [
+                0.325,
+                0
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 0.10177644059671034,
+              "point": [
+                56.02346875880799,
+                16.853978912576032,
+                -1346.4220518185614
+              ]
+            },
+            {
+              "screen": [
+                0.325,
+                0.3
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 0.10612993072393065,
+              "point": [
+                56.024258911300336,
+                16.865682044369386,
+                -1346.4304201484288
+              ]
+            },
+            {
+              "screen": [
+                0.325,
+                0.6
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 0.11265609013395055,
+              "point": [
+                56.025104123698256,
+                16.878200681192123,
+                -1346.4393716055492
+              ]
+            },
+            {
+              "screen": [
+                0.65,
+                -0.25
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 0.10207735331287707,
+              "point": [
+                56.04348847492354,
+                16.84704322491547,
+                -1346.4113682611255
+              ]
+            },
+            {
+              "screen": [
+                0.65,
+                0
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 0.10416010858435734,
+              "point": [
+                56.04461035941496,
+                16.85583147026422,
+                -1346.4175046315086
+              ]
+            },
+            {
+              "screen": [
+                0.65,
+                0.3
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 0.10830476692369621,
+              "point": [
+                56.04603546738688,
+                16.866995006797094,
+                -1346.4252995430331
+              ]
+            },
+            {
+              "screen": [
+                0.65,
+                0.6
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 0.11437391638750574,
+              "point": [
+                56.04755463213342,
+                16.878895333987717,
+                -1346.4336089167957
+              ]
+            }
+          ],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-5",
+          "offset": -3,
+          "position": [
+            71,
+            11.000000023841858,
+            -1363
+          ],
+          "camera": [
+            71,
+            19.09134399548521,
+            -1346.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [
+            {
+              "target": "head",
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 7.73270145144433,
+              "point": [
+                71.00000000000003,
+                16.285389869012427,
+                -1353.535980672216
+              ]
+            },
+            {
+              "target": "next-landing",
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 5.578284855344098,
+              "point": [
+                73.45099612073744,
+                17.49781347889885,
+                -1351.0811838104637
+              ]
+            }
+          ],
+          "foreground": [
+            {
+              "screen": [
+                -0.65,
+                0
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 8.621213570343224,
+              "point": [
+                67.3076513533538,
+                16.15201272449123,
+                -1353.5450597347697
+              ]
+            },
+            {
+              "screen": [
+                -0.65,
+                0.3
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 7.2282468907089354,
+              "point": [
+                67.92759854018423,
+                17.466295470145134,
+                -1352.6680910435787
+              ]
+            },
+            {
+              "screen": [
+                -0.65,
+                0.6
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 5.345226863635356,
+              "point": [
+                68.77755011633556,
+                18.50955994931172,
+                -1351.1566916410718
+              ]
+            },
+            {
+              "screen": [
+                -0.325,
+                0
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 7.931233151280818,
+              "point": [
+                69.1711268660413,
+                16.179558296045375,
+                -1353.4774478773186
+              ]
+            },
+            {
+              "screen": [
+                -0.325,
+                0.3
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 6.599634571031743,
+              "point": [
+                69.4914722116453,
+                17.495568905567648,
+                -1352.5539234876676
+              ]
+            },
+            {
+              "screen": [
+                -0.325,
+                0.6
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 4.441013518638583,
+              "point": [
+                70.01037083228323,
+                18.573221660635333,
+                -1350.628567907604
+              ]
+            },
+            {
+              "screen": [
+                0,
+                0
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 8.006817682635775,
+              "point": [
+                71.00000000000003,
+                16.070396606539855,
+                -1353.7453902061047
+              ]
+            },
+            {
+              "screen": [
+                0,
+                0.3
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 5.615760147776669,
+              "point": [
+                71.00000000000003,
+                17.69654087389364,
+                -1351.770124862763
+              ]
+            },
+            {
+              "screen": [
+                0,
+                0.6
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 3.902333071517963,
+              "point": [
+                71.00000000000003,
+                18.62432518735064,
+                -1350.2046241467292
+              ]
+            },
+            {
+              "screen": [
+                0.325,
+                0
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 7.434210537590821,
+              "point": [
+                72.71426405768912,
+                16.362029711427606,
+                -1353.0295634941076
+              ]
+            },
+            {
+              "screen": [
+                0.325,
+                0.3
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 5.123253637068673,
+              "point": [
+                72.17106036631654,
+                17.852554113201528,
+                -1351.1616670591447
+              ]
+            },
+            {
+              "screen": [
+                0.325,
+                0.6
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 3.6436096467598444,
+              "point": [
+                71.81193681736717,
+                18.666252846913455,
+                -1349.8568013872793
+              ]
+            },
+            {
+              "screen": [
+                0.65,
+                -0.25
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 7.494838354701457,
+              "point": [
+                74.19305976561816,
+                15.838642944442249,
+                -1352.2798675197728
+              ]
+            },
+            {
+              "screen": [
+                0.65,
+                0
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 6.722077044394292,
+              "point": [
+                73.8789742737499,
+                16.79950757345435,
+                -1351.9557541964055
+              ]
+            },
+            {
+              "screen": [
+                0.65,
+                0.3
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 4.78217672669564,
+              "point": [
+                73.03268745220686,
+                18.01621895408387,
+                -1350.5233677067656
+              ]
+            },
+            {
+              "screen": [
+                0.65,
+                0.6
+              ],
+              "asset": "junglebackdrop",
+              "instance": 0,
+              "anchor": [
+                56,
+                -8,
+                -1340
+              ],
+              "distance": 3.6049855473598478,
+              "point": [
+                72.49888861871301,
+                18.698970924772635,
+                -1349.5853793178499
+              ]
+            }
+          ],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-6",
+          "offset": -3,
+          "position": [
+            83,
+            13.200000023841858,
+            -1363
+          ],
+          "camera": [
+            83,
+            21.291343995485207,
+            -1346.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-7",
+          "offset": -3,
+          "position": [
+            94,
+            15.400000023841859,
+            -1363
+          ],
+          "camera": [
+            94,
+            23.49134399548521,
+            -1346.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-8",
+          "offset": -3,
+          "position": [
+            106,
+            17.600000023841858,
+            -1363
+          ],
+          "camera": [
+            106,
+            25.69134399548521,
+            -1346.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-9",
+          "offset": -3,
+          "position": [
+            121,
+            19.800000023841857,
+            -1363
+          ],
+          "camera": [
+            121,
+            27.891343995485208,
+            -1346.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-10",
+          "offset": -3,
+          "position": [
+            133,
+            22.000000023841856,
+            -1363
+          ],
+          "camera": [
+            133,
+            30.091343995485207,
+            -1346.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-11",
+          "offset": -3,
+          "position": [
+            144,
+            24.200000023841856,
+            -1363
+          ],
+          "camera": [
+            144,
+            32.29134399548521,
+            -1346.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-12",
+          "offset": -3,
+          "position": [
+            158,
+            26.400000023841855,
+            -1363
+          ],
+          "camera": [
+            158,
+            34.49134399548521,
+            -1346.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "summit",
+          "offset": -3,
+          "position": [
+            175,
+            26.400000023841855,
+            -1363
+          ],
+          "camera": [
+            175,
+            34.49134399548521,
+            -1346.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "failedAssets": []
+}

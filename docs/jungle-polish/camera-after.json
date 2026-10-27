@@ -1,0 +1,3175 @@
+{
+  "base": "http://127.0.0.1:5418/",
+  "runs": [
+    {
+      "mode": "full-max",
+      "stamp": "Codex/sol fork · build 10-27 10:50 UTC",
+      "samples": [
+        {
+          "name": "turn",
+          "offset": 0,
+          "position": [
+            12.5,
+            0,
+            -1360
+          ],
+          "camera": [
+            12.5,
+            8.09134397164335,
+            -1343.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-1",
+          "offset": 0,
+          "position": [
+            22,
+            2.200000023841858,
+            -1360
+          ],
+          "camera": [
+            22,
+            10.291343995485208,
+            -1343.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-2",
+          "offset": 0,
+          "position": [
+            33,
+            4.400000023841859,
+            -1360
+          ],
+          "camera": [
+            33,
+            12.49134399548521,
+            -1343.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-3",
+          "offset": 0,
+          "position": [
+            44,
+            6.600000023841858,
+            -1360
+          ],
+          "camera": [
+            44,
+            14.691343995485209,
+            -1343.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-4",
+          "offset": 0,
+          "position": [
+            56,
+            8.800000023841859,
+            -1360
+          ],
+          "camera": [
+            56,
+            16.891343995485208,
+            -1343.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-5",
+          "offset": 0,
+          "position": [
+            71,
+            11.000000023841858,
+            -1360
+          ],
+          "camera": [
+            71,
+            19.09134399548521,
+            -1343.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-6",
+          "offset": 0,
+          "position": [
+            83,
+            13.200000023841858,
+            -1360
+          ],
+          "camera": [
+            83,
+            21.291343995485207,
+            -1343.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-7",
+          "offset": 0,
+          "position": [
+            94,
+            15.400000023841859,
+            -1360
+          ],
+          "camera": [
+            94,
+            23.49134399548521,
+            -1343.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-8",
+          "offset": 0,
+          "position": [
+            106,
+            17.600000023841858,
+            -1360
+          ],
+          "camera": [
+            106,
+            25.69134399548521,
+            -1343.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-9",
+          "offset": 0,
+          "position": [
+            121,
+            19.800000023841857,
+            -1360
+          ],
+          "camera": [
+            121,
+            27.891343995485208,
+            -1343.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-10",
+          "offset": 0,
+          "position": [
+            133,
+            22.000000023841856,
+            -1360
+          ],
+          "camera": [
+            133,
+            30.091343995485207,
+            -1343.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-11",
+          "offset": 0,
+          "position": [
+            144,
+            24.200000023841856,
+            -1360
+          ],
+          "camera": [
+            144,
+            32.29134399548521,
+            -1343.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-12",
+          "offset": 0,
+          "position": [
+            158,
+            26.400000023841855,
+            -1360
+          ],
+          "camera": [
+            158,
+            34.49134399548521,
+            -1343.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "summit",
+          "offset": 0,
+          "position": [
+            175,
+            26.400000023841855,
+            -1360
+          ],
+          "camera": [
+            175,
+            34.49134399548521,
+            -1343.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "turn",
+          "offset": 3,
+          "position": [
+            12.5,
+            0,
+            -1357
+          ],
+          "camera": [
+            12.5,
+            8.09134397164335,
+            -1340.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-1",
+          "offset": 3,
+          "position": [
+            22,
+            2.200000023841858,
+            -1357
+          ],
+          "camera": [
+            22,
+            10.291343995485208,
+            -1340.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-2",
+          "offset": 3,
+          "position": [
+            33,
+            4.400000023841859,
+            -1357
+          ],
+          "camera": [
+            33,
+            12.49134399548521,
+            -1340.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-3",
+          "offset": 3,
+          "position": [
+            44,
+            6.600000023841858,
+            -1357
+          ],
+          "camera": [
+            44,
+            14.691343995485209,
+            -1340.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-4",
+          "offset": 3,
+          "position": [
+            56,
+            8.800000023841859,
+            -1357
+          ],
+          "camera": [
+            56,
+            16.891343995485208,
+            -1340.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-5",
+          "offset": 3,
+          "position": [
+            71,
+            11.000000023841858,
+            -1357
+          ],
+          "camera": [
+            71,
+            19.09134399548521,
+            -1340.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-6",
+          "offset": 3,
+          "position": [
+            83,
+            13.200000023841858,
+            -1357
+          ],
+          "camera": [
+            83,
+            21.291343995485207,
+            -1340.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-7",
+          "offset": 3,
+          "position": [
+            94,
+            15.400000023841859,
+            -1357
+          ],
+          "camera": [
+            94,
+            23.49134399548521,
+            -1340.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-8",
+          "offset": 3,
+          "position": [
+            106,
+            17.600000023841858,
+            -1357
+          ],
+          "camera": [
+            106,
+            25.69134399548521,
+            -1340.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-9",
+          "offset": 3,
+          "position": [
+            121,
+            19.800000023841857,
+            -1357
+          ],
+          "camera": [
+            121,
+            27.891343995485208,
+            -1340.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-10",
+          "offset": 3,
+          "position": [
+            133,
+            22.000000023841856,
+            -1357
+          ],
+          "camera": [
+            133,
+            30.091343995485207,
+            -1340.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-11",
+          "offset": 3,
+          "position": [
+            144,
+            24.200000023841856,
+            -1357
+          ],
+          "camera": [
+            144,
+            32.29134399548521,
+            -1340.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-12",
+          "offset": 3,
+          "position": [
+            158,
+            26.400000023841855,
+            -1357
+          ],
+          "camera": [
+            158,
+            34.49134399548521,
+            -1340.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "summit",
+          "offset": 3,
+          "position": [
+            175,
+            26.400000023841855,
+            -1357
+          ],
+          "camera": [
+            175,
+            34.49134399548521,
+            -1340.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "turn",
+          "offset": -3,
+          "position": [
+            12.5,
+            0,
+            -1363
+          ],
+          "camera": [
+            12.5,
+            8.09134397164335,
+            -1346.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-1",
+          "offset": -3,
+          "position": [
+            22,
+            2.200000023841858,
+            -1363
+          ],
+          "camera": [
+            22,
+            10.291343995485208,
+            -1346.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-2",
+          "offset": -3,
+          "position": [
+            33,
+            4.400000023841859,
+            -1363
+          ],
+          "camera": [
+            33,
+            12.49134399548521,
+            -1346.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-3",
+          "offset": -3,
+          "position": [
+            44,
+            6.600000023841858,
+            -1363
+          ],
+          "camera": [
+            44,
+            14.691343995485209,
+            -1346.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-4",
+          "offset": -3,
+          "position": [
+            56,
+            8.800000023841859,
+            -1363
+          ],
+          "camera": [
+            56,
+            16.891343995485208,
+            -1346.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-5",
+          "offset": -3,
+          "position": [
+            71,
+            11.000000023841858,
+            -1363
+          ],
+          "camera": [
+            71,
+            19.09134399548521,
+            -1346.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-6",
+          "offset": -3,
+          "position": [
+            83,
+            13.200000023841858,
+            -1363
+          ],
+          "camera": [
+            83,
+            21.291343995485207,
+            -1346.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-7",
+          "offset": -3,
+          "position": [
+            94,
+            15.400000023841859,
+            -1363
+          ],
+          "camera": [
+            94,
+            23.49134399548521,
+            -1346.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-8",
+          "offset": -3,
+          "position": [
+            106,
+            17.600000023841858,
+            -1363
+          ],
+          "camera": [
+            106,
+            25.69134399548521,
+            -1346.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-9",
+          "offset": -3,
+          "position": [
+            121,
+            19.800000023841857,
+            -1363
+          ],
+          "camera": [
+            121,
+            27.891343995485208,
+            -1346.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-10",
+          "offset": -3,
+          "position": [
+            133,
+            22.000000023841856,
+            -1363
+          ],
+          "camera": [
+            133,
+            30.091343995485207,
+            -1346.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-11",
+          "offset": -3,
+          "position": [
+            144,
+            24.200000023841856,
+            -1363
+          ],
+          "camera": [
+            144,
+            32.29134399548521,
+            -1346.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-12",
+          "offset": -3,
+          "position": [
+            158,
+            26.400000023841855,
+            -1363
+          ],
+          "camera": [
+            158,
+            34.49134399548521,
+            -1346.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "summit",
+          "offset": -3,
+          "position": [
+            175,
+            26.400000023841855,
+            -1363
+          ],
+          "camera": [
+            175,
+            34.49134399548521,
+            -1346.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": "max",
+          "buffer": [
+            1440,
+            900
+          ],
+          "glError": 0,
+          "assetErrors": []
+        }
+      ]
+    },
+    {
+      "mode": "full-720",
+      "stamp": "Codex/sol fork · build 10-27 10:50 UTC",
+      "samples": [
+        {
+          "name": "turn",
+          "offset": 0,
+          "position": [
+            12.5,
+            0,
+            -1360
+          ],
+          "camera": [
+            12.5,
+            8.09134397164335,
+            -1343.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            1152,
+            720
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-1",
+          "offset": 0,
+          "position": [
+            22,
+            2.200000023841858,
+            -1360
+          ],
+          "camera": [
+            22,
+            10.291343995485208,
+            -1343.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            1152,
+            720
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-2",
+          "offset": 0,
+          "position": [
+            33,
+            4.400000023841859,
+            -1360
+          ],
+          "camera": [
+            33,
+            12.49134399548521,
+            -1343.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            1152,
+            720
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-3",
+          "offset": 0,
+          "position": [
+            44,
+            6.600000023841858,
+            -1360
+          ],
+          "camera": [
+            44,
+            14.691343995485209,
+            -1343.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            1152,
+            720
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-4",
+          "offset": 0,
+          "position": [
+            56,
+            8.800000023841859,
+            -1360
+          ],
+          "camera": [
+            56,
+            16.891343995485208,
+            -1343.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            1152,
+            720
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-5",
+          "offset": 0,
+          "position": [
+            71,
+            11.000000023841858,
+            -1360
+          ],
+          "camera": [
+            71,
+            19.09134399548521,
+            -1343.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            1152,
+            720
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-6",
+          "offset": 0,
+          "position": [
+            83,
+            13.200000023841858,
+            -1360
+          ],
+          "camera": [
+            83,
+            21.291343995485207,
+            -1343.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            1152,
+            720
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-7",
+          "offset": 0,
+          "position": [
+            94,
+            15.400000023841859,
+            -1360
+          ],
+          "camera": [
+            94,
+            23.49134399548521,
+            -1343.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            1152,
+            720
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-8",
+          "offset": 0,
+          "position": [
+            106,
+            17.600000023841858,
+            -1360
+          ],
+          "camera": [
+            106,
+            25.69134399548521,
+            -1343.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            1152,
+            720
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-9",
+          "offset": 0,
+          "position": [
+            121,
+            19.800000023841857,
+            -1360
+          ],
+          "camera": [
+            121,
+            27.891343995485208,
+            -1343.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            1152,
+            720
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-10",
+          "offset": 0,
+          "position": [
+            133,
+            22.000000023841856,
+            -1360
+          ],
+          "camera": [
+            133,
+            30.091343995485207,
+            -1343.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            1152,
+            720
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-11",
+          "offset": 0,
+          "position": [
+            144,
+            24.200000023841856,
+            -1360
+          ],
+          "camera": [
+            144,
+            32.29134399548521,
+            -1343.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            1152,
+            720
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-12",
+          "offset": 0,
+          "position": [
+            158,
+            26.400000023841855,
+            -1360
+          ],
+          "camera": [
+            158,
+            34.49134399548521,
+            -1343.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            1152,
+            720
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "summit",
+          "offset": 0,
+          "position": [
+            175,
+            26.400000023841855,
+            -1360
+          ],
+          "camera": [
+            175,
+            34.49134399548521,
+            -1343.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            1152,
+            720
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "turn",
+          "offset": 3,
+          "position": [
+            12.5,
+            0,
+            -1357
+          ],
+          "camera": [
+            12.5,
+            8.09134397164335,
+            -1340.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            1152,
+            720
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-1",
+          "offset": 3,
+          "position": [
+            22,
+            2.200000023841858,
+            -1357
+          ],
+          "camera": [
+            22,
+            10.291343995485208,
+            -1340.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            1152,
+            720
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-2",
+          "offset": 3,
+          "position": [
+            33,
+            4.400000023841859,
+            -1357
+          ],
+          "camera": [
+            33,
+            12.49134399548521,
+            -1340.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            1152,
+            720
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-3",
+          "offset": 3,
+          "position": [
+            44,
+            6.600000023841858,
+            -1357
+          ],
+          "camera": [
+            44,
+            14.691343995485209,
+            -1340.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            1152,
+            720
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-4",
+          "offset": 3,
+          "position": [
+            56,
+            8.800000023841859,
+            -1357
+          ],
+          "camera": [
+            56,
+            16.891343995485208,
+            -1340.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            1152,
+            720
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-5",
+          "offset": 3,
+          "position": [
+            71,
+            11.000000023841858,
+            -1357
+          ],
+          "camera": [
+            71,
+            19.09134399548521,
+            -1340.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            1152,
+            720
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-6",
+          "offset": 3,
+          "position": [
+            83,
+            13.200000023841858,
+            -1357
+          ],
+          "camera": [
+            83,
+            21.291343995485207,
+            -1340.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            1152,
+            720
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-7",
+          "offset": 3,
+          "position": [
+            94,
+            15.400000023841859,
+            -1357
+          ],
+          "camera": [
+            94,
+            23.49134399548521,
+            -1340.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            1152,
+            720
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-8",
+          "offset": 3,
+          "position": [
+            106,
+            17.600000023841858,
+            -1357
+          ],
+          "camera": [
+            106,
+            25.69134399548521,
+            -1340.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            1152,
+            720
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-9",
+          "offset": 3,
+          "position": [
+            121,
+            19.800000023841857,
+            -1357
+          ],
+          "camera": [
+            121,
+            27.891343995485208,
+            -1340.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            1152,
+            720
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-10",
+          "offset": 3,
+          "position": [
+            133,
+            22.000000023841856,
+            -1357
+          ],
+          "camera": [
+            133,
+            30.091343995485207,
+            -1340.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            1152,
+            720
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-11",
+          "offset": 3,
+          "position": [
+            144,
+            24.200000023841856,
+            -1357
+          ],
+          "camera": [
+            144,
+            32.29134399548521,
+            -1340.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            1152,
+            720
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-12",
+          "offset": 3,
+          "position": [
+            158,
+            26.400000023841855,
+            -1357
+          ],
+          "camera": [
+            158,
+            34.49134399548521,
+            -1340.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            1152,
+            720
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "summit",
+          "offset": 3,
+          "position": [
+            175,
+            26.400000023841855,
+            -1357
+          ],
+          "camera": [
+            175,
+            34.49134399548521,
+            -1340.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            1152,
+            720
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "turn",
+          "offset": -3,
+          "position": [
+            12.5,
+            0,
+            -1363
+          ],
+          "camera": [
+            12.5,
+            8.09134397164335,
+            -1346.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            1152,
+            720
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-1",
+          "offset": -3,
+          "position": [
+            22,
+            2.200000023841858,
+            -1363
+          ],
+          "camera": [
+            22,
+            10.291343995485208,
+            -1346.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            1152,
+            720
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-2",
+          "offset": -3,
+          "position": [
+            33,
+            4.400000023841859,
+            -1363
+          ],
+          "camera": [
+            33,
+            12.49134399548521,
+            -1346.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            1152,
+            720
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-3",
+          "offset": -3,
+          "position": [
+            44,
+            6.600000023841858,
+            -1363
+          ],
+          "camera": [
+            44,
+            14.691343995485209,
+            -1346.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            1152,
+            720
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-4",
+          "offset": -3,
+          "position": [
+            56,
+            8.800000023841859,
+            -1363
+          ],
+          "camera": [
+            56,
+            16.891343995485208,
+            -1346.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            1152,
+            720
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-5",
+          "offset": -3,
+          "position": [
+            71,
+            11.000000023841858,
+            -1363
+          ],
+          "camera": [
+            71,
+            19.09134399548521,
+            -1346.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            1152,
+            720
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-6",
+          "offset": -3,
+          "position": [
+            83,
+            13.200000023841858,
+            -1363
+          ],
+          "camera": [
+            83,
+            21.291343995485207,
+            -1346.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            1152,
+            720
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-7",
+          "offset": -3,
+          "position": [
+            94,
+            15.400000023841859,
+            -1363
+          ],
+          "camera": [
+            94,
+            23.49134399548521,
+            -1346.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            1152,
+            720
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-8",
+          "offset": -3,
+          "position": [
+            106,
+            17.600000023841858,
+            -1363
+          ],
+          "camera": [
+            106,
+            25.69134399548521,
+            -1346.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            1152,
+            720
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-9",
+          "offset": -3,
+          "position": [
+            121,
+            19.800000023841857,
+            -1363
+          ],
+          "camera": [
+            121,
+            27.891343995485208,
+            -1346.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            1152,
+            720
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-10",
+          "offset": -3,
+          "position": [
+            133,
+            22.000000023841856,
+            -1363
+          ],
+          "camera": [
+            133,
+            30.091343995485207,
+            -1346.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            1152,
+            720
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-11",
+          "offset": -3,
+          "position": [
+            144,
+            24.200000023841856,
+            -1363
+          ],
+          "camera": [
+            144,
+            32.29134399548521,
+            -1346.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            1152,
+            720
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-12",
+          "offset": -3,
+          "position": [
+            158,
+            26.400000023841855,
+            -1363
+          ],
+          "camera": [
+            158,
+            34.49134399548521,
+            -1346.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            1152,
+            720
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "summit",
+          "offset": -3,
+          "position": [
+            175,
+            26.400000023841855,
+            -1363
+          ],
+          "camera": [
+            175,
+            34.49134399548521,
+            -1346.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            1152,
+            720
+          ],
+          "glError": 0,
+          "assetErrors": []
+        }
+      ]
+    },
+    {
+      "mode": "lite-720",
+      "stamp": "Codex/sol fork · build 10-27 10:50 UTC",
+      "samples": [
+        {
+          "name": "turn",
+          "offset": 0,
+          "position": [
+            12.5,
+            0,
+            -1360
+          ],
+          "camera": [
+            12.5,
+            8.09134397164335,
+            -1343.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            720,
+            450
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-1",
+          "offset": 0,
+          "position": [
+            22,
+            2.200000023841858,
+            -1360
+          ],
+          "camera": [
+            22,
+            10.291343995485208,
+            -1343.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            720,
+            450
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-2",
+          "offset": 0,
+          "position": [
+            33,
+            4.400000023841859,
+            -1360
+          ],
+          "camera": [
+            33,
+            12.49134399548521,
+            -1343.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            720,
+            450
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-3",
+          "offset": 0,
+          "position": [
+            44,
+            6.600000023841858,
+            -1360
+          ],
+          "camera": [
+            44,
+            14.691343995485209,
+            -1343.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            720,
+            450
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-4",
+          "offset": 0,
+          "position": [
+            56,
+            8.800000023841859,
+            -1360
+          ],
+          "camera": [
+            56,
+            16.891343995485208,
+            -1343.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            720,
+            450
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-5",
+          "offset": 0,
+          "position": [
+            71,
+            11.000000023841858,
+            -1360
+          ],
+          "camera": [
+            71,
+            19.09134399548521,
+            -1343.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            720,
+            450
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-6",
+          "offset": 0,
+          "position": [
+            83,
+            13.200000023841858,
+            -1360
+          ],
+          "camera": [
+            83,
+            21.291343995485207,
+            -1343.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            720,
+            450
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-7",
+          "offset": 0,
+          "position": [
+            94,
+            15.400000023841859,
+            -1360
+          ],
+          "camera": [
+            94,
+            23.49134399548521,
+            -1343.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            720,
+            450
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-8",
+          "offset": 0,
+          "position": [
+            106,
+            17.600000023841858,
+            -1360
+          ],
+          "camera": [
+            106,
+            25.69134399548521,
+            -1343.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            720,
+            450
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-9",
+          "offset": 0,
+          "position": [
+            121,
+            19.800000023841857,
+            -1360
+          ],
+          "camera": [
+            121,
+            27.891343995485208,
+            -1343.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            720,
+            450
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-10",
+          "offset": 0,
+          "position": [
+            133,
+            22.000000023841856,
+            -1360
+          ],
+          "camera": [
+            133,
+            30.091343995485207,
+            -1343.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            720,
+            450
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-11",
+          "offset": 0,
+          "position": [
+            144,
+            24.200000023841856,
+            -1360
+          ],
+          "camera": [
+            144,
+            32.29134399548521,
+            -1343.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            720,
+            450
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-12",
+          "offset": 0,
+          "position": [
+            158,
+            26.400000023841855,
+            -1360
+          ],
+          "camera": [
+            158,
+            34.49134399548521,
+            -1343.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            720,
+            450
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "summit",
+          "offset": 0,
+          "position": [
+            175,
+            26.400000023841855,
+            -1360
+          ],
+          "camera": [
+            175,
+            34.49134399548521,
+            -1343.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            720,
+            450
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "turn",
+          "offset": 3,
+          "position": [
+            12.5,
+            0,
+            -1357
+          ],
+          "camera": [
+            12.5,
+            8.09134397164335,
+            -1340.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            720,
+            450
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-1",
+          "offset": 3,
+          "position": [
+            22,
+            2.200000023841858,
+            -1357
+          ],
+          "camera": [
+            22,
+            10.291343995485208,
+            -1340.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            720,
+            450
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-2",
+          "offset": 3,
+          "position": [
+            33,
+            4.400000023841859,
+            -1357
+          ],
+          "camera": [
+            33,
+            12.49134399548521,
+            -1340.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            720,
+            450
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-3",
+          "offset": 3,
+          "position": [
+            44,
+            6.600000023841858,
+            -1357
+          ],
+          "camera": [
+            44,
+            14.691343995485209,
+            -1340.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            720,
+            450
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-4",
+          "offset": 3,
+          "position": [
+            56,
+            8.800000023841859,
+            -1357
+          ],
+          "camera": [
+            56,
+            16.891343995485208,
+            -1340.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            720,
+            450
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-5",
+          "offset": 3,
+          "position": [
+            71,
+            11.000000023841858,
+            -1357
+          ],
+          "camera": [
+            71,
+            19.09134399548521,
+            -1340.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            720,
+            450
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-6",
+          "offset": 3,
+          "position": [
+            83,
+            13.200000023841858,
+            -1357
+          ],
+          "camera": [
+            83,
+            21.291343995485207,
+            -1340.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            720,
+            450
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-7",
+          "offset": 3,
+          "position": [
+            94,
+            15.400000023841859,
+            -1357
+          ],
+          "camera": [
+            94,
+            23.49134399548521,
+            -1340.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            720,
+            450
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-8",
+          "offset": 3,
+          "position": [
+            106,
+            17.600000023841858,
+            -1357
+          ],
+          "camera": [
+            106,
+            25.69134399548521,
+            -1340.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            720,
+            450
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-9",
+          "offset": 3,
+          "position": [
+            121,
+            19.800000023841857,
+            -1357
+          ],
+          "camera": [
+            121,
+            27.891343995485208,
+            -1340.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            720,
+            450
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-10",
+          "offset": 3,
+          "position": [
+            133,
+            22.000000023841856,
+            -1357
+          ],
+          "camera": [
+            133,
+            30.091343995485207,
+            -1340.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            720,
+            450
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-11",
+          "offset": 3,
+          "position": [
+            144,
+            24.200000023841856,
+            -1357
+          ],
+          "camera": [
+            144,
+            32.29134399548521,
+            -1340.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            720,
+            450
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-12",
+          "offset": 3,
+          "position": [
+            158,
+            26.400000023841855,
+            -1357
+          ],
+          "camera": [
+            158,
+            34.49134399548521,
+            -1340.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            720,
+            450
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "summit",
+          "offset": 3,
+          "position": [
+            175,
+            26.400000023841855,
+            -1357
+          ],
+          "camera": [
+            175,
+            34.49134399548521,
+            -1340.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            720,
+            450
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "turn",
+          "offset": -3,
+          "position": [
+            12.5,
+            0,
+            -1363
+          ],
+          "camera": [
+            12.5,
+            8.09134397164335,
+            -1346.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            720,
+            450
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-1",
+          "offset": -3,
+          "position": [
+            22,
+            2.200000023841858,
+            -1363
+          ],
+          "camera": [
+            22,
+            10.291343995485208,
+            -1346.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            720,
+            450
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-2",
+          "offset": -3,
+          "position": [
+            33,
+            4.400000023841859,
+            -1363
+          ],
+          "camera": [
+            33,
+            12.49134399548521,
+            -1346.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            720,
+            450
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-3",
+          "offset": -3,
+          "position": [
+            44,
+            6.600000023841858,
+            -1363
+          ],
+          "camera": [
+            44,
+            14.691343995485209,
+            -1346.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            720,
+            450
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-4",
+          "offset": -3,
+          "position": [
+            56,
+            8.800000023841859,
+            -1363
+          ],
+          "camera": [
+            56,
+            16.891343995485208,
+            -1346.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            720,
+            450
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-5",
+          "offset": -3,
+          "position": [
+            71,
+            11.000000023841858,
+            -1363
+          ],
+          "camera": [
+            71,
+            19.09134399548521,
+            -1346.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            720,
+            450
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-6",
+          "offset": -3,
+          "position": [
+            83,
+            13.200000023841858,
+            -1363
+          ],
+          "camera": [
+            83,
+            21.291343995485207,
+            -1346.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            720,
+            450
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-7",
+          "offset": -3,
+          "position": [
+            94,
+            15.400000023841859,
+            -1363
+          ],
+          "camera": [
+            94,
+            23.49134399548521,
+            -1346.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            720,
+            450
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-8",
+          "offset": -3,
+          "position": [
+            106,
+            17.600000023841858,
+            -1363
+          ],
+          "camera": [
+            106,
+            25.69134399548521,
+            -1346.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            720,
+            450
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-9",
+          "offset": -3,
+          "position": [
+            121,
+            19.800000023841857,
+            -1363
+          ],
+          "camera": [
+            121,
+            27.891343995485208,
+            -1346.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            720,
+            450
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-10",
+          "offset": -3,
+          "position": [
+            133,
+            22.000000023841856,
+            -1363
+          ],
+          "camera": [
+            133,
+            30.091343995485207,
+            -1346.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            720,
+            450
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-11",
+          "offset": -3,
+          "position": [
+            144,
+            24.200000023841856,
+            -1363
+          ],
+          "camera": [
+            144,
+            32.29134399548521,
+            -1346.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            720,
+            450
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "ledge-12",
+          "offset": -3,
+          "position": [
+            158,
+            26.400000023841855,
+            -1363
+          ],
+          "camera": [
+            158,
+            34.49134399548521,
+            -1346.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            720,
+            450
+          ],
+          "glError": 0,
+          "assetErrors": []
+        },
+        {
+          "name": "summit",
+          "offset": -3,
+          "position": [
+            175,
+            26.400000023841855,
+            -1363
+          ],
+          "camera": [
+            175,
+            34.49134399548521,
+            -1346.330337524148
+          ],
+          "grounded": true,
+          "state": "ride",
+          "blocked": [],
+          "foreground": [],
+          "resolution": 720,
+          "buffer": [
+            720,
+            450
+          ],
+          "glError": 0,
+          "assetErrors": []
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "failedAssets": []
+}

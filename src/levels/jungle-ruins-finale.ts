@@ -155,7 +155,11 @@ export function jungleRuinsFinale(): { components: CustomComponent[]; groups: Cu
     prop(i%3===0?'trialsv2treeb':'junglecanopy',[side*23,treeY,z],
       i%3===0?[31,20,21]:[27,23,26],'Aqueduct canopy rooted on the measured rock crown',side*29+i*71,262,'#b5ceb0');
     if (i % 3 === 0) {
-      prop('junglebackdrop', [side * 56, -8, z - 12], [48, 39, 45], 'Ravine distant canopy', i * 61, 262, '#8fae99');
+      // The final right-hand crown surrounds the side camera on ledges 3–6.
+      // Keep its full mesh, but place it beyond the climbing route and lens.
+      const ascentCameraCorner=side>0&&z<RUINS_CLIMB_Z+40;
+      prop('junglebackdrop', [side * 56, -8, ascentCameraCorner?RUINS_CLIMB_Z-58:z-12],
+        [48, 39, 45], 'Ravine distant canopy', i * 61, 262, '#8fae99');
     }
   }
   for (const [i, z] of [-901, -1190].entries())

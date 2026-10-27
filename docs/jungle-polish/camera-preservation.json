@@ -1,0 +1,52 @@
+{
+  "baseCommit": "71ed93dfd4b34cb96303ea471c97ecacb6142add",
+  "unchangedGameplay": 164,
+  "unchangedComponentCount": 1347,
+  "changed": [
+    {
+      "index": 1056,
+      "before": {
+        "t": "decor",
+        "dkind": "junglebackdrop",
+        "p": [
+          56,
+          -8,
+          -1340
+        ],
+        "s": [
+          48,
+          39,
+          45
+        ],
+        "yaw": 1830,
+        "color": "#8fae99",
+        "solid": false,
+        "scenerySolid": false,
+        "castShadow": false,
+        "grp": 262,
+        "nm": "Ravine distant canopy"
+      },
+      "after": {
+        "t": "decor",
+        "dkind": "junglebackdrop",
+        "p": [
+          56,
+          -8,
+          -1418
+        ],
+        "s": [
+          48,
+          39,
+          45
+        ],
+        "yaw": 1830,
+        "color": "#8fae99",
+        "solid": false,
+        "scenerySolid": false,
+        "castShadow": false,
+        "grp": 262,
+        "nm": "Ravine distant canopy"
+      }
+    }
+  ]
+}

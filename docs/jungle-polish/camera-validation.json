@@ -1,0 +1,124 @@
+{
+  "completedAt": "2026-10-27T10:55:14.731Z",
+  "parentCommit": "71ed93dfd4b34cb96303ea471c97ecacb6142add",
+  "sources": {
+    "src/levels/jungle-ruins-finale.ts": {
+      "gitBlob": "2704d5f2f4d3c8c387ae8a1c50fbcc5803ebd6d1",
+      "sha256": "560bdf8400bb1dd50dcb7c63fbf22920d64c82439364617148c8c74da211e5ed"
+    },
+    "tools/jungle-ascent-camera-browser.mjs": {
+      "gitBlob": "f66b461bca22cb82e9929928f088f8bb91eae050",
+      "sha256": "fa23afe2ab5d24bfc581301a5ffd18c3d248e33608de72e336538bbe16357386"
+    }
+  },
+  "promptAt": "2026-10-27T10:27:33.000Z",
+  "productionPreviewAt": "2026-10-27T10:51:08.043Z",
+  "promptToPlayableMinutes": 23.6,
+  "checks": {
+    "levels": {
+      "command": "npm run check:levels",
+      "exitCode": 0,
+      "logSha256": "0bb7a039cfa1fb0ea5fc89f264b928840f88097518e79247bf6e285de454f11b",
+      "enclosure": "PASS Jungle enclosure: 164 full-detail rocks, 64 native canopies, 96 mesh-measured root placements, 112 real-Player side/air/corner/end probes, closed perimeter and capture/rebuild."
+    },
+    "build": {
+      "command": "npm run build",
+      "exitCode": 0,
+      "logSha256": "f936df3d8da96dc494a3f478454f4e632a465fe6cfca584c2e1b8a237ea4fc6d",
+      "offline": "Offline game: 1739 files, 950.5 MiB, version 83ccf851d23941374699"
+    },
+    "browser": {
+      "command": "node tools/jungle-ascent-camera-browser.mjs http://127.0.0.1:5418/",
+      "exitCode": 0,
+      "before": [
+        {
+          "mode": "full-max",
+          "stamp": "Codex/sol fork · build 10-27 07:22 UTC",
+          "viewpoints": 42,
+          "blockedViewpoints": 8,
+          "blockedRays": 19,
+          "foregroundRays": 119,
+          "allSupported": true,
+          "webglErrors": [],
+          "assetErrors": [],
+          "resolutions": [
+            "max"
+          ],
+          "buffers": [
+            "1440x900"
+          ]
+        }
+      ],
+      "after": [
+        {
+          "mode": "full-max",
+          "stamp": "Codex/sol fork · build 10-27 10:50 UTC",
+          "viewpoints": 42,
+          "blockedViewpoints": 0,
+          "blockedRays": 0,
+          "foregroundRays": 0,
+          "allSupported": true,
+          "webglErrors": [],
+          "assetErrors": [],
+          "resolutions": [
+            "max"
+          ],
+          "buffers": [
+            "1440x900"
+          ]
+        },
+        {
+          "mode": "full-720",
+          "stamp": "Codex/sol fork · build 10-27 10:50 UTC",
+          "viewpoints": 42,
+          "blockedViewpoints": 0,
+          "blockedRays": 0,
+          "foregroundRays": 0,
+          "allSupported": true,
+          "webglErrors": [],
+          "assetErrors": [],
+          "resolutions": [
+            720
+          ],
+          "buffers": [
+            "1152x720"
+          ]
+        },
+        {
+          "mode": "lite-720",
+          "stamp": "Codex/sol fork · build 10-27 10:50 UTC",
+          "viewpoints": 42,
+          "blockedViewpoints": 0,
+          "blockedRays": 0,
+          "foregroundRays": 0,
+          "allSupported": true,
+          "webglErrors": [],
+          "assetErrors": [],
+          "resolutions": [
+            720
+          ],
+          "buffers": [
+            "720x450"
+          ]
+        }
+      ],
+      "consoleErrors": [],
+      "failedAssets": []
+    }
+  },
+  "guard": {
+    "slot": 0,
+    "owner": "01a17b3a-19b3-74a0-b08e-6fa3f3e27a08",
+    "released": true,
+    "exitCode": 0
+  },
+  "reusedEvidence": {
+    "commit": "71ed93dfd4b34cb96303ea471c97ecacb6142add",
+    "reports": [
+      "finale.json",
+      "browser-smoke.json"
+    ],
+    "reason": "All 164 gameplay components are unchanged; exactly one decor position moved."
+  },
+  "publicAssetBytesAdded": 0
+}

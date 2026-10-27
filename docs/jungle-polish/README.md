@@ -94,3 +94,10 @@ original Jungle modules from `37b69e65` reproduces it. Fresh MAX and 720p sessio
 are clean; the ordinary gallery checks each presentation in a fresh renderer.
 The [comparison](renderer-resize.json) retains both results. Shared renderer
 changes are outside this scenery increment.
+
+### Side-camera follow-up
+
+The local preview exposed a canopy across the lower ascent's camera corridor.
+The [follow-up review](camera-followup.md) records its relocation, the reproduced
+obstruction and 126 clear ordinary-camera viewpoints after the fix. Earlier
+route evidence remains applicable; every gameplay component is unchanged.
