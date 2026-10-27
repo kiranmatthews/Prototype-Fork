@@ -11,6 +11,29 @@ This repository is the isolated browser prototype used to compare Codex/sol leve
 5. Record each completed brief in `docs/LEVEL_ITERATIONS.md`, including elapsed prompt-to-playable time. Do not include unrelated cleanup in a timed iteration.
 6. By default, commit and publish completed, validated changes through `origin/main` and the existing GitHub Pages workflow. Verify the deployment before handoff. Stage only task-owned changes and preserve unrelated work; follow any explicit request to keep a change local or use a different delivery workflow.
 
+## Concurrent release coordination
+
+The user has appointed **Coordinate local work and releases**
+(`01a17b2e-3553-70e0-abb3-0bcc400dcc1b`) as release coordinator. While this
+coordination is active, it overrides the default individual publishing step:
+feature chats work, test and commit locally; only the coordinator integrates,
+pushes to `origin/main`, follows GitHub runs and verifies the public deployment.
+
+- Read `docs/RELEASE_COORDINATION.md` before release work. The shared handoff inbox
+  is `/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/`.
+- Use a task worktree for new work. Never build concurrently in the same checkout,
+  reset/stash another chat's changes, or stage the primary checkout wholesale.
+- Write one handoff per chat to `.release-queue/<thread-id>.md` in that shared
+  inbox, containing status, checkout/branch, immutable commit SHA(s), owned files,
+  dependencies, completed checks/browser evidence and unfinished work. Mark it
+  `READY` only for a validated coherent increment. Commit before handing off.
+- Continue independent local work after handoff; do not poll GitHub, repeatedly
+  rebase for moving `main`, or wait for deployment. The coordinator owns release
+  validation and publication. Keep later changes in new commits.
+- Shared runtime files and `public/levels.json` need explicit ownership/dependency
+  notes. Resolve published level data by level ID; never overwrite the pack with
+  an older branch's complete copy.
+
 ## Guardrails
 
 - World units are approximately metres; Three.js is right-handed, Y-up, and the normal corridor direction is negative Z.

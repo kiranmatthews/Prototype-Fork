@@ -23,3 +23,6 @@ desktop/test-results/
 # Keep full-resolution golf-cart authoring references local; commit compact WebP copies.
 /tools/golf-cart/references/*.png
 /docs/golf-cart/concept-crash4-v2.png
+
+# Local multi-chat release handoffs and coordinator state.
+.release-queue/

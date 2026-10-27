@@ -1,3 +1,78 @@
+# Release coordination — 27 October 2026
+
+**Coordinate local work and releases** (`01a17b2e-3553-70e0-abb3-0bcc400dcc1b`)
+is the sole active release coordinator, as requested by the user. This section
+supersedes the ownership and pending statuses in the historical record below.
+Other chats keep working locally and hand off immutable, validated commits.
+They do not push to `origin/main`, dispatch duplicate workflows, or watch GitHub.
+
+## Shared inbox and ownership
+
+The live queue is local and ignored by Git:
+`/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/`.
+`coordinator.json` records the coordinator and current release state; each feature
+owner writes only `<thread-id>.md`, using `HANDOFF_TEMPLATE.md`. Use `WORKING`
+until a coherent increment is committed and tested, then `READY` with exact SHAs,
+branch/worktree, owned files, dependencies, validation evidence and exclusions.
+The coordinator records integrated/published SHAs in the state file. Updating a
+handoff must not erase a previous unpublished SHA; list the new increment after it.
+
+New work belongs in a task worktree. The original checkout contains old mixed
+work and must not be reset, stashed or committed wholesale. Each worktree has its
+own build output: `npm run build` prunes and rewrites `dist`, so simultaneous
+builds in one directory are unsafe. Shared files require ownership coordination,
+especially `src/main.ts`, `src/level.ts`, `src/player.ts`, `src/audio.ts`,
+`package.json`, `public/levels.json`, and the iteration log.
+
+## Integration and scheduling
+
+1. Discover active chats for this repository and onboard each once. Read compact
+   progress snapshots and local handoffs, not long histories or repeated logs.
+   Do not wake completed chats merely for acknowledgements.
+2. Integrate only `READY` immutable commits in a clean coordinator worktree based
+   on current `origin/main`. Check ancestry first so already published commits are
+   not applied again. Merge coherent branch history or cherry-pick declared
+   feature commits; preserve dependencies and review conflicts explicitly.
+3. Batch compatible increments that are ready together. Allow up to five minutes
+   to combine work that is explicitly near ready; do not hold a ready feature
+   indefinitely for unfinished work. Never push while a prior Pages deployment
+   is running. Continue local integration while GitHub works.
+4. Merge published level data by level ID or run the owner's focused synchronizer.
+   An old full `public/levels.json` copy must not replace newer levels. Keep the
+   iteration log append-only across feature owners.
+5. Reuse checks and browser evidence for unchanged commits. Run focused checks
+   for conflict resolutions/shared interactions, `npm run check:levels` when
+   level data changes, then `npm run build` and `npm run check:release` once on
+   the combined candidate. Smoke-test affected behavior in a real browser,
+   including full rendering; review changed visual work at MAX/native resolution.
+   Inspect console errors. Never run `check:all` unless the user requests it.
+6. Fetch/recheck `origin/main` before the single push. If it moved, integrate it
+   locally and repeat only invalidated checks. Push the validated candidate with
+   ordinary fast-forward semantics; never force-push `main`.
+7. Only the coordinator checks the matching workflow run. Poll with backoff or
+   bounded waits, once per batch, while doing useful local work. Preserve the
+   existing `pages` concurrency group and `cancel-in-progress: false`.
+8. Success means the matching run succeeded AND the public page serves the
+   expected release/build with `Codex/sol fork`, affected features work, and the
+   console is clean. Record the commit, run URL, public version/stamp and evidence.
+   Report failures once with the actionable cause; owners keep working locally.
+
+## Initial state
+
+- Current successful release: `37b69e6524faa1b448772b18107c818aac3a43f8`,
+  [Pages run 40433868942](https://github.com/kiranmatthews/Prototype-Fork/actions/runs/40433868942).
+- **Add chaotic golf kart controls** is working on kart bailout animation in
+  `codex/kart-drivers-thrusters`; local handoff requested. Earlier kart work is
+  already published. Do not import the primary checkout's duplicate old copies.
+- **Transform rooftop level with Crash 4** is idle and its completed roof/UV work
+  is already published. No release wait or acknowledgement is needed from it.
+- The existing Pages pipeline is already install → build → release-size check →
+  deploy. It needs no change for this coordination.
+
+---
+
+# Historical coordination record
+
 # Coordinated release — 25 October 2026
 
 The **Remap treehouse stair controls** chat owns integration, the single push to
