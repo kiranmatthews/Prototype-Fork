@@ -41,7 +41,7 @@ try{
  let mark=-1,done=false,jumpShot=false,pipeShot=false,preview=null;
  for(let i=0;i<2400;i++){
   await page.waitForTimeout(250);
-  const s=await page.evaluate(()=>{const r=window.__game.getSkateRace();return {phase:r.phase,time:r.elapsed,s:r.riders[0].progress,air:!r.riders[0].player.grounded,height:r.riders[0].player.pos.y-r.course.sample(r.riders[0].progress).y,finished:r.riders.filter(r=>r.finish!==null).length,falls:r.riders.map(r=>r.falls)};});
+  const s=await page.evaluate(()=>{const r=window.__game.getSkateRace();return {phase:r.phase,time:r.elapsed,s:r.riders[0].progress,air:!r.riders[0].player.grounded,height:r.riders[0].player.pos.y-r.course.sample(r.riders[0].progress).y,finished:r.riders.filter(r=>r.finish!==null).length,falls:r.riders.map(r=>r.falls),unfinished:r.riders.filter(v=>v.finish===null).map(v=>({id:v.id,s:v.progress,cart:r.carts.cartForRacer[v.id],pos:v.player.pos.toArray(),speed:v.player.speed}))};});
   if(i%80===0)console.log(JSON.stringify(s));
   const section=Math.floor(s.s/500);if(section!==mark){mark=section;await page.screenshot({path:`${out}/section-${section}.png`});}
   if(!jumpShot&&s.s>140&&s.s<250&&s.air&&s.height>5){jumpShot=true;await page.screenshot({path:out+'/big-jump.png'});}
@@ -56,8 +56,9 @@ try{
    });
   }
   if(s.finished===8){done=true;break;}
+  if(process.env.CART_MAX_RACE_SECONDS&&s.time>Number(process.env.CART_MAX_RACE_SECONDS))break;
  }
- const result=await page.evaluate(()=>{const g=window.__game,r=g.getSkateRace();return {level:g.getCurrentLevel().id,stamp:document.querySelector('.hud-build')?.textContent,...window.cartReview,checkpoints:g.getLevel().checkpoints.map(cp=>cp.active),hud:r.hud(),carts:r.carts.fleet.stats,riders:r.riders.map(r=>({id:r.id,finish:r.finish,falls:r.falls}))};});
+ const result=await page.evaluate(()=>{const g=window.__game,r=g.getSkateRace();return {level:g.getCurrentLevel().id,stamp:document.querySelector('.hud-build')?.textContent,...window.cartReview,checkpoints:g.getLevel().checkpoints.map(cp=>cp.active),hud:r.hud(),carts:r.carts.fleet.stats,riders:r.riders.map(v=>({id:v.id,finish:v.finish,falls:v.falls,s:v.progress,cart:r.carts.cartForRacer[v.id],pos:v.player.pos.toArray(),speed:v.player.speed}))};});
  await page.screenshot({path:out+'/results.png'});await writeFile(out+'/report.json',JSON.stringify({done,drive,steering,braking,result,errors},null,2));
  if(preview)await writeFile(out+'/preview.jpg',Buffer.from(preview.split(',')[1],'base64'));console.log(JSON.stringify({done,riders:result.riders,errors}));
  assert.ok(done);assert.deepEqual(errors,[]);assert.match(result.stamp,/Codex\/sol fork/);assert.ok(result.carts.count>8);assert.equal(result.checkpoints.length,0,'Race levels have no checkpoint objects');

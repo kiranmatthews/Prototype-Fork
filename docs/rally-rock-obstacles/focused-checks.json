@@ -1,0 +1,176 @@
+{
+  "started": "2026-10-26T23:48:51.065Z",
+  "commands": 24,
+  "rows": [
+    {
+      "command": "node tools/validate-levels.mjs",
+      "seconds": 0.717,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-rock-focused/001.log"
+    },
+    {
+      "command": "node tools/test-lazy-source.mjs",
+      "seconds": 2.27,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-rock-focused/002.log"
+    },
+    {
+      "command": "node tools/test-tropical-plants.mjs",
+      "seconds": 0.406,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-rock-focused/003.log"
+    },
+    {
+      "command": "node tools/test-jungle-assets.mjs",
+      "seconds": 13.849,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-rock-focused/004.log"
+    },
+    {
+      "command": "node tools/test-crown-quartz.mjs",
+      "seconds": 8.613,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-rock-focused/005.log"
+    },
+    {
+      "command": "node tools/test-jungle-stream.mjs",
+      "seconds": 8.593,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-rock-focused/006.log"
+    },
+    {
+      "command": "node tools/test-custard-pool.mjs",
+      "seconds": 0.316,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-rock-focused/007.log"
+    },
+    {
+      "command": "node tools/test-jungle-enclosure.mjs",
+      "seconds": 86.455,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-rock-focused/008.log"
+    },
+    {
+      "command": "node tools/test-map-landscape-assets.mjs",
+      "seconds": 0.155,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-rock-focused/009.log"
+    },
+    {
+      "command": "node tools/test-world-map-save.mjs",
+      "seconds": 7.087,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-rock-focused/010.log"
+    },
+    {
+      "command": "node tools/test-map-clay-geometry.mjs",
+      "seconds": 0.34,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-rock-focused/011.log"
+    },
+    {
+      "command": "node tools/test-hollowwake-assets.mjs",
+      "seconds": 49.382,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-rock-focused/012.log"
+    },
+    {
+      "command": "node tools/test-scenery-normals.mjs",
+      "seconds": 0.361,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-rock-focused/013.log"
+    },
+    {
+      "command": "node tools/test-waterslide-scenery-lod.mjs",
+      "seconds": 0.336,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-rock-focused/014.log"
+    },
+    {
+      "command": "node tools/test-waterslide-ocean-look.mjs",
+      "seconds": 10.097,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-rock-focused/015.log"
+    },
+    {
+      "command": "node tools/test-waterslide-shallows.mjs",
+      "seconds": 10.836,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-rock-focused/016.log"
+    },
+    {
+      "command": "node tools/test-waterpark-decks.mjs",
+      "seconds": 8.519,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-rock-focused/017.log"
+    },
+    {
+      "command": "node tools/test-waterpark-portals.mjs",
+      "seconds": 11.403,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-rock-focused/018.log"
+    },
+    {
+      "command": "node tools/test-waterslide-forest.mjs",
+      "seconds": 10.86,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-rock-focused/019.log"
+    },
+    {
+      "command": "node tools/test-hollowwake-tunnel-build.mjs",
+      "seconds": 0.814,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-rock-focused/020.log"
+    },
+    {
+      "command": "node tools/test-rally-festival-polish.mjs",
+      "seconds": 18.658,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-rock-focused/021.log"
+    },
+    {
+      "command": "node tools/test-cart-stadium.mjs",
+      "seconds": 16.363,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-rock-focused/022.log"
+    },
+    {
+      "command": "node tools/test-cart-crowd-placement.mjs",
+      "seconds": 1.609,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-rock-focused/023.log"
+    },
+    {
+      "command": "node tools/test-rally-win-gem.mjs",
+      "seconds": 10.452,
+      "code": 0,
+      "signal": null,
+      "log": "/private/tmp/rally-rock-focused/024.log"
+    }
+  ],
+  "finished": "2026-10-26T23:53:29.574Z",
+  "failed": []
+}

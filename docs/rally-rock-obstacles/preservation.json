@@ -1,0 +1,13 @@
+{
+  "passed": true,
+  "baseline": "30b9dd2bc9ca989f6b2fa727290b07298502ff6c",
+  "componentsBefore": 1407,
+  "componentsAfter": 1479,
+  "unchangedOtherComponents": 1299,
+  "otherPublishedLevelsUnchanged": true,
+  "routeAndRaceSettingsUnchanged": true,
+  "jumpsPreserved": 12,
+  "removedTyreColourChicanes": 8,
+  "addedFullGeometryMeshyRocks": 8,
+  "addedContactWalls": 72
+}

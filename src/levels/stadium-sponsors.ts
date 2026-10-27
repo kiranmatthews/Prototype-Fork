@@ -44,7 +44,7 @@ export function stadiumSponsorWallPoint(s:number,side:number){
 export function stadiumSponsors(start:number,end:number,side:number):CustomComponent{
  const vertices:number[]=[],indices:number[]=[],uvs:number[]=[];
  // CCR is the default and the only main design allowed in adjoining repeats.
- const wide=[7,7,0,7,1,7,6,7,2,7],stickers=[3,4,5],facing=side>0?-1:1;
+ const wide=[7,7,0,7,1,7,6,7],stickers=[3,2,4,5],facing=side>0?-1:1;
  // Follow the rendered wall's global four-metre stations exactly. Sampling
  // the analytic offset curve between them can expose heading discontinuities
  // which the authored wall never renders, sending an ad across the track.
@@ -104,20 +104,21 @@ export function stadiumSponsors(start:number,end:number,side:number):CustomCompo
   const finish=Math.min(at+20,end-2),metalArc=arcTable(at,finish,0),artArc=arcTable(at,finish,.035),stickerArc=arcTable(at,finish,.11);
   const tiles=Math.max(1,Math.round(metalArc.total/20)),tileWidth=metalArc.total/tiles;
   const ordinal=Math.floor((start+8)/48)*2+board,primary=wide[(ordinal+(side>0?3:0))%wide.length];
-  const boardHeight=primary===1?7.7:6.55,boardY=10.05+boardHeight/2;
-  patch(metalArc,metalArc.total/2,metalArc.total,boardHeight,0,boardY,0,-1);
+  const scale=Math.min(1,tileWidth/20),ccrHeight=(tileWidth-.44*scale)/RALLY_SPONSORS[7].aspect;
   for(let tile=0;tile<tiles;tile++){
    const centerS=metalArc.atDistance((tile+.5)*tileWidth);
    const seed=ordinal+tile+(side>0?3:0),stickerSeed=ordinal*2+tile+(side>0?1:0);
    const brand=tile===0?primary:7,sticker=stickers[stickerSeed%stickers.length];
-   const sign=seed%2?1:-1,scale=Math.min(1,tileWidth/20),height=(brand===1?7.3:6.12)*scale;
+   const boardHeight=brand===7?ccrHeight+.43*scale:brand===1?7.7:6.55,boardY=10.05+boardHeight/2;
+   patch(metalArc,metalArc.distanceAt(centerS),tileWidth,boardHeight,0,boardY,0,-1);
+   const sign=seed%2?1:-1,height=brand===7?ccrHeight:(brand===1?7.3:6.12)*scale;
    const mainWidth=Math.min(tileWidth-.44*scale,height*RALLY_SPONSORS[brand].aspect);
    const mainX=brand===1?0:RALLY_SPONSORS[brand].aspect<2.5?-sign*2.05*scale:0;
    patch(artArc,artArc.distanceAt(centerS),mainWidth,height,mainX,boardY,0,brand);
    // Smaller labels cross the main artwork and board edges, with varied tilt.
-   const stickerHeight=(sticker===3?3.5:sticker===4?3.1:3.4)*scale;
-   const stickerX=sign*(sticker===3?7.4:sticker===4?7.0:7.2)*scale;
-   const stickerY=sticker===4?11.85:14.8+(seed%3)*.12;
+   const stickerHeight=(sticker===2?2.8:sticker===3?3.5:sticker===4?3.1:3.4)*scale;
+   const stickerX=sign*(sticker===2?6.5:sticker===3?7.4:sticker===4?7.0:7.2)*scale;
+   const stickerY=boardY+(sticker===2?-1.225:sticker===4?-1.475:1.475+(seed%3)*.12)*Math.min(1,boardHeight/6.55);
    patch(stickerArc,stickerArc.distanceAt(centerS),stickerHeight*RALLY_SPONSORS[sticker].aspect,stickerHeight,stickerX,stickerY,sign*(.10+(seed%3)*.025),sticker);
   }
  }

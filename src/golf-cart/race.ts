@@ -55,6 +55,8 @@ export class GolfCartRace {
   private renderPoses:FleetPose[]=[];
   private navigation:{x:number;y:number;z:number;s:number;height:number}[]=[];
   private takeRay=new THREE.Ray();private takeEnd=new THREE.Vector3();private takeHit=new THREE.Vector3();
+  private footObstacles:{lo:number;hi:number;left:number;right:number}[]=[];
+  private footWall=new THREE.Box3();
   private humanTarget=-1;private targetMarker=-1;private sampledInputs:Input[]=[];
   private respawns:number[]=[];
   private stun:number[]=[];
@@ -78,12 +80,13 @@ export class GolfCartRace {
     // These are real colliding carts. Only abandoned loaners return to their bay.
     for(const jump of level.skateRace!.jumps){
       const at=course.project(new THREE.Vector3(...jump.takeoff)).s-62;
-      const pos=course.sample(at,10),f=course.tangent(at);
+      const pos=[10,-10,6,-6].map(offset=>course.sample(at,offset)).find(p=>this.bayOutsideWalls(p.x,p.y,p.z))??course.sample(at,10),f=course.tangent(at);
       spawns.push({x:pos.x,z:pos.z,yaw:Math.atan2(-f.x,-f.z)});
     }
     this.homes=spawns.map(s=>({...s}));
     const obstacles=level.walls.filter(b=>b.max.y-b.min.y>1&&b.max.x-b.min.x<9&&b.max.z-b.min.z<9)
       .map((b,i)=>({x:(b.min.x+b.max.x)/2,z:(b.min.z+b.max.z)/2,radius:Math.max(b.max.x-b.min.x,b.max.z-b.min.z)/2,height:b.max.y-b.min.y,id:`rally-barrier-${i}`}));
+    this.footObstacles=obstacles.map(o=>{const at=course.project(new THREE.Vector3(o.x,0,o.z)),radius=o.radius*Math.SQRT2;return {lo:at.s-radius,hi:at.s+radius,left:at.offset-radius,right:at.offset+radius};});
     const stadium=level.groundMeshes.some(m=>m.name==='Packed stadium dirt');
     const sponsor=level.pickRoot.getObjectByName('Stadium sponsor hoarding') as THREE.Mesh|undefined;
     this.fleet=new GolfCartFleet({damageVisuals:true,sponsorTexture:(sponsor?.material as THREE.MeshStandardMaterial|undefined)?.map??undefined,ground:(x,z)=>this.ground(x,z),spawns,obstacles,
@@ -331,6 +334,22 @@ export class GolfCartRace {
     // Draw alongside without ramming or abandoning the supported racing lane.
     return clamp(theirs+side*3.8,Math.max(-8.5,normal-2.5),Math.min(8.5,normal+2.5));
   }
+  /** Walk around solid masses when the direct route to a replacement cart is
+   * blocked. Back out to the entry corner before crossing to the open side. */
+  private footDetour(from:THREE.Vector3,to:THREE.Vector3,progress:number){
+    this.takeRay.origin.copy(from).y+=.8;this.takeEnd.copy(to).y+=.8;
+    const distance=this.takeRay.origin.distanceTo(this.takeEnd);if(distance<.1)return;
+    this.takeRay.direction.copy(this.takeEnd).sub(this.takeRay.origin).normalize();
+    if(!this.level.walls.some(w=>this.takeRay.intersectBox(this.footWall.copy(w).expandByScalar(.6),this.takeHit)&&this.takeHit.distanceToSquared(this.takeRay.origin)<distance*distance))return;
+    const target=this.course.project(to,progress,400),here=this.course.project(from,progress,40),dir=target.s>=progress?1:-1;
+    const blocks=this.footObstacles.filter(b=>b.hi>=Math.min(progress,target.s)-1&&b.lo<=Math.max(progress,target.s)+1);if(!blocks.length)return;
+    const left=Math.min(...blocks.map(b=>b.left))-1.2,right=Math.max(...blocks.map(b=>b.right))+1.2;
+    const choices=[left,right].filter(offset=>Math.abs(offset)<15);if(!choices.length)return;
+    choices.sort((a,b)=>(Math.abs(a-here.offset)+Math.abs(a-target.offset))-(Math.abs(b-here.offset)+Math.abs(b-target.offset)));
+    const offset=choices[0],entry=dir>0?Math.min(...blocks.map(b=>b.lo)):Math.max(...blocks.map(b=>b.hi));
+    const at=Math.abs(here.offset-offset)<.7?target.s:dir>0?Math.min(progress+2,entry-2):Math.max(progress-2,entry+2);
+    this.course.sample(at,offset,to);
+  }
   drive(id:number):Input {
     if(this.isAnimating(id))return {moveX:0,moveY:0} as Input;
     const r=this.racers[id],index=this.cartForRacer[id];
@@ -342,6 +361,7 @@ export class GolfCartRace {
         this.course.sample(r.progress+Math.sign(targetProgress-r.progress)*9,0,ahead);
       }
       if(r.progress>this.course.length-20)ahead.addScaledVector(this.course.tangent(this.course.length),25);
+      this.footDetour(p.pos,ahead,r.progress);
       const dx=ahead.x-p.pos.x,dz=ahead.z-p.pos.z,n=Math.hypot(dx,dz)||1,basis=p.raceInputBasis(this.level),bn=Math.hypot(basis.x,basis.z)||1;
       const stuck=this.footStill[id]>1.1,jumpHeld=stuck&&this.fleet.physics.time%1.2<.55,jumpPressed=jumpHeld&&!this.footJump[id],jumpReleased=this.footJump[id]&&!jumpHeld;this.footJump[id]=jumpHeld;
       return {moveX:clamp((-basis.z*dx+basis.x*dz)/bn/n,-1,1),moveY:clamp((basis.x*dx+basis.z*dz)/bn/n,-1,1),grindPressed:this.nearest(id)>=0,
@@ -471,8 +491,11 @@ export class GolfCartRace {
     }
     return null;
   }
+  private bayOutsideWalls(x:number,y:number,z:number){
+    return this.level.walls.every(w=>w.distanceToPoint(this.point.set(x,y+1,z))>2.8);
+  }
   private clearBay(x:number,z:number,except:number){
-    return this.racers.slice(0,this.count).every(r=>(r.player.pos.x-x)**2+(r.player.pos.z-z)**2>64)&&
+    return this.bayOutsideWalls(x,this.ground(x,z).height,z)&&this.racers.slice(0,this.count).every(r=>(r.player.pos.x-x)**2+(r.player.pos.z-z)**2>64)&&
       this.fleet.physics.carts.every((c,i)=>i===except||(c.x-x)**2+(c.z-z)**2>16);
   }
   private sync(){

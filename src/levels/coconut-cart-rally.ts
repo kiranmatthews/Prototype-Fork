@@ -1,5 +1,6 @@
 import type { CustomComponent, CustomLevelData } from '../level';
 import { stadiumBunting } from './stadium-bunting';
+import { rallyRockObstacles } from './rally-rock-obstacles';
 import { stadiumFloodlight } from './stadium-floodlights';
 import type { RaceKnot } from '../race/types';
 import { stadiumSponsors,stadiumSponsorWallPoint } from './stadium-sponsors';
@@ -99,10 +100,10 @@ function build():CustomComponent[]{
     }
   }
   for(const [index,s]of CHICANES.entries()){
-    const side=index%2?1:-1,p=cartRallyPoint(s,side*10);
-    add({t:'wall',nm:'Stadium tyre-colour chicane',p,s:[4,1.5,3],yaw:-Math.atan(cartRallyFrame(s).dx)*180/Math.PI,color:'#4b5351',tex:'solid'});
+    const side=index%2?1:-1;
     strip('Soft dirt chicane',s-9,s+14,side>0?[-14,-10,-6,-3]:[3,6,10,14],'#655039',true,.04);
   }
+  for(const rock of rallyRockObstacles())add(rock);
   for(const [i,j]of CART_RALLY_JUMPS.entries()){
     for(let s=j.start-16;s<j.start-3;s+=5)strip('Painted dirt launch marks',s,s+.9,[-12,0,12],'#ceb68a',false,.045,false);
     for(const side of [-1,1]){const p=cartRallyPoint(j.start-1,side*16);add({t:'platform',nm:`Dirt jump ${i+1} flagpole`,p:[p[0],p[1]+3,p[2]],s:[.14,6,.14],tex:'solid',color:'#e3c28e',solid:false});add({t:'platform',nm:'Dirt launch flag',p:[p[0],p[1]+5.4,p[2]],s:[1.8,.9,.08],tex:'solid',color:i%2?'#ee7838':'#56bfa0',solid:false});}

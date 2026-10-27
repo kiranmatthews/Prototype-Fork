@@ -1,0 +1,58 @@
+{
+  "passed": true,
+  "updated": "2026-10-27T00:25:20.441455+00:00",
+  "request": [
+    "Trashed as a small offset sticker",
+    "Reused large Meshy rocks alternating sides, with blocking collision and ramming opportunities",
+    "CCR art fills its backing with a slight border"
+  ],
+  "result": {
+    "rocks": 8,
+    "rockSource": "public/carlisle-coast-fidelity/canyon-buttress.glb",
+    "trianglesPerRock": 10720,
+    "uniformScales": [
+      1.5,
+      1.57
+    ],
+    "newAssetDownloads": 0,
+    "trashedStickerCount": 50,
+    "trashedMainBillboards": 0,
+    "ccrMainPanels": 130,
+    "ccrVerticalBorderRangeMetres": [
+      0.10449,
+      0.215
+    ],
+    "unchangedRoute": true,
+    "fullHeightMounds": 12
+  },
+  "validation": {
+    "focusedCommands": 26,
+    "focusedFailures": 0,
+    "finalBoardSnapshotAndStadiumRecheck": true,
+    "fullRaceFinished": 8,
+    "fullRaceFalls": 0,
+    "fullRaceFinishRange": [
+      104.56666666666202,
+      134.9666666666662
+    ],
+    "reproducedFootTrapRecoveredSeconds": 10.166666666666666,
+    "productionBrowserErrors": [],
+    "liteBrowserErrors": [],
+    "webglError": 0,
+    "builtInBrowser": "Loaded full production build, RACE, held Space, no warning/error logs",
+    "typecheck": true,
+    "build": true,
+    "releaseBytes": 999456068,
+    "releaseBudget": 1000000000
+  },
+  "resolvedDuringTesting": [
+    "Initial full race finished 7/8 because a wrecked racer ran directly into rock seven while seeking a spare. The exact regression now runs around the rock, enters cart 18 and advances 90m in 10.17s.",
+    "Initial spare-cart bays that overlapped rocks now select clear offsets; dynamic replacement deliveries reject solid walls.",
+    "Narrow CCR boards initially retained an oversized backing. Each CCR backing now follows the full-width artwork with a scaled narrow border."
+  ],
+  "fullSuite": "No new full-suite run for this focused pass; preceding full suite remains recorded as 164 passed / 39 existing failures.",
+  "timing": {
+    "promptToFirstPlayableMinutesApprox": 10,
+    "promptToFinalLocalValidationMinutesApprox": 51
+  }
+}

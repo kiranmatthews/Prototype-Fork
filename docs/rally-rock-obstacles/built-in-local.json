@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "url": "http://127.0.0.1:5498/?playtest&level=coconut-cart-rally",
+  "stamp": "Codex/sol fork \u00b7 build 10-27 00:20 UTC",
+  "raceStarted": true,
+  "throttleHeldSeconds": 7,
+  "warnings": [],
+  "errors": []
+}

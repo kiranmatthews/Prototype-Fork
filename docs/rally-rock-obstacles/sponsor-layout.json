@@ -1,0 +1,20 @@
+{
+  "passed": true,
+  "mainCount": 204,
+  "counts": {
+    "coconut-cart-rally": 130,
+    "crusty-creme": 25,
+    "pisupo-petes": 25,
+    "bones": 24
+  },
+  "adjacentNonCCRRepeats": [],
+  "crustyCentered": true,
+  "trashedStickerCount": 50,
+  "ccr": {
+    "count": 130,
+    "minWidth": 9.505845222632525,
+    "maxVerticalBorder": 0.2150000000000003,
+    "minVerticalBorder": 0.10448654002382374,
+    "largeBorders": []
+  }
+}
