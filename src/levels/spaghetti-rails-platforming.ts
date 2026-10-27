@@ -196,7 +196,7 @@ function createPlatformingVersion():CustomLevelData {
   if(c.t==='checkpoint'){const f=forward(c.yaw??0);c.p=move(c.p,[-f[2],0,f[0]],2.2);}
   return c;
  });
- data.components.push({t:'crystal',p:[15,21.6,-406],grp:2,nm:'Platforming crystal / final landing'});
+ data.components.push({t:'crystal',p:[15,20,-406],grp:2,nm:'Platforming crystal / final landing'});
  return data;
 }
 export const SPAGHETTI_RAILS_PLATFORMING_LEVEL=createPlatformingVersion();

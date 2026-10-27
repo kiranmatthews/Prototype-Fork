@@ -1,0 +1,21 @@
+{
+  "state": {
+    "id": "spaghetti-rails-platforming",
+    "race": false,
+    "paths": 18,
+    "checkpoints": 41,
+    "buffer": [
+      2560,
+      1440
+    ],
+    "position": [
+      0,
+      164,
+      108
+    ],
+    "grounded": true,
+    "flow": false,
+    "text": "4"
+  },
+  "errors": []
+}

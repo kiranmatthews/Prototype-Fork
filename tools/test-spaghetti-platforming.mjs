@@ -6,7 +6,7 @@ import {withBlockworksRuntime} from './blockworks-runner.mjs';
 const output=process.env.SPAGHETTI_OUTPUT??'docs/spaghetti-rails/evidence/platforming-native';await mkdir(output,{recursive:true});
 await withBlockworksRuntime(async r=>{
  const source=r.sourceModule.SPAGHETTI_RAILS_PLATFORMING_LEVEL;
- assert.deepEqual(JSON.parse(await readFile('docs/spaghetti-rails/spaghetti-rails-platforming.level.json','utf8')),source,'Independent saved editor file matches the platforming source');
+ assert.deepEqual(JSON.parse(await readFile('docs/spaghetti-rails/spaghetti-rails-platforming.level.json','utf8')),JSON.parse(JSON.stringify(source)),'Independent saved editor file matches the platforming source');
  assert.equal(r.l.skateRace,null);assert.equal(r.l.railChoices.paths.length,18);
  const geometry=source.components.filter(c=>['rail','platform','ramp','gate','pit'].includes(c.t));
  const hash=createHash('sha256').update(JSON.stringify(geometry)).digest('hex');
@@ -25,7 +25,8 @@ await withBlockworksRuntime(async r=>{
  for(let i=0;i<900&&(r.p.totalDeaths===deaths||!r.p.grounded);i++)r.tick({});
  assert.equal(r.p.totalDeaths,deaths+1);assert.ok(r.p.pos.distanceTo(new Vector3(...checkpoint))<2);
  r.p.respawn(r.l,true,false,{position:new Vector3(15,20.08,-400),heading:new Vector3(0,0,-1)});
- for(let i=0;i<600&&r.p.state!=='finished';i++)r.tick({moveY:1});
+ for(let i=0;i<600&&r.p.state!=='finished';i++)r.tick(r.steerToward(r.p.hasCrystal?[15,20,-430]:[15,20,-406]));
+ console.log(JSON.stringify({finishFixture:r.p.pos.toArray(),state:r.p.state,crystal:r.p.hasCrystal,pickup:r.l.crystalPickup?.box}));
  assert.ok(r.p.hasCrystal,'The separate platforming crystal is collectible');assert.equal(r.p.state,'finished','The normal finish gate works without race mode');
  const report={at:new Date().toISOString(),scope:'Saved geometry equality, supported spawn, normal checkpoint/pit recovery and crystal/finish local contact fixtures; not full traversal.',id:'spaghetti-rails-platforming',geometrySha256:hash,spawn,checkpoint,ordinaryDeaths:1,finish:r.p.pos.toArray(),race:false};
  await writeFile(output+'/report.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report));
