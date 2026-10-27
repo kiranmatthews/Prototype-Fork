@@ -1,0 +1,111 @@
+{
+  "evidence": [
+    {
+      "name": "bonus-arrival",
+      "target": [
+        2,
+        0.1,
+        0
+      ],
+      "top": 0,
+      "p": [
+        2,
+        0,
+        0
+      ],
+      "grounded": true,
+      "state": "ride",
+      "resolution": "max",
+      "enabled": false,
+      "sizes": {
+        "viewportWidth": 1600,
+        "viewportHeight": 1000,
+        "inputWidth": 1152,
+        "inputHeight": 720,
+        "outputWidth": 1152,
+        "outputHeight": 720
+      },
+      "drawingBuffer": [
+        1600,
+        1000
+      ],
+      "viewport": [
+        1600,
+        1000
+      ],
+      "dpr": 1
+    },
+    {
+      "name": "bonus-high-cargo",
+      "target": [
+        68,
+        0.1,
+        0
+      ],
+      "top": 1.399999976158142,
+      "p": [
+        68,
+        1.399999976158142,
+        0
+      ],
+      "grounded": true,
+      "state": "ride",
+      "resolution": "max",
+      "enabled": false,
+      "sizes": {
+        "viewportWidth": 1600,
+        "viewportHeight": 1000,
+        "inputWidth": 1152,
+        "inputHeight": 720,
+        "outputWidth": 1152,
+        "outputHeight": 720
+      },
+      "drawingBuffer": [
+        1600,
+        1000
+      ],
+      "viewport": [
+        1600,
+        1000
+      ],
+      "dpr": 1
+    },
+    {
+      "name": "bonus-wharf",
+      "target": [
+        132,
+        0.1,
+        0
+      ],
+      "top": 2.799999952316284,
+      "p": [
+        132,
+        2.799999952316284,
+        0
+      ],
+      "grounded": true,
+      "state": "ride",
+      "resolution": "max",
+      "enabled": false,
+      "sizes": {
+        "viewportWidth": 1600,
+        "viewportHeight": 1000,
+        "inputWidth": 1152,
+        "inputHeight": 720,
+        "outputWidth": 1152,
+        "outputHeight": 720
+      },
+      "drawingBuffer": [
+        1600,
+        1000
+      ],
+      "viewport": [
+        1600,
+        1000
+      ],
+      "dpr": 1
+    }
+  ],
+  "errors": [],
+  "failed": []
+}

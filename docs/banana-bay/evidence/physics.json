@@ -1,0 +1,991 @@
+[
+  {
+    "test": "native main structure",
+    "crates": 111,
+    "checkpoints": 14,
+    "enemies": 15,
+    "supports": 111,
+    "patrolSamples": 900,
+    "shoreProbes": 4,
+    "spawn": [
+      -2.125,
+      1.0374777757094265,
+      -1.625
+    ],
+    "finish": [
+      0,
+      1.05,
+      -1381
+    ]
+  },
+  {
+    "test": "bonus continuous input-only all-crate journey",
+    "completionScope": "complete-stage",
+    "activeStageCrates": 26,
+    "bonusCrateTotal": 0,
+    "bonusCrates": 0,
+    "gemEarned": true,
+    "id": "bonus-beachside-run",
+    "done": true,
+    "state": "finished",
+    "cratesBroken": 26,
+    "totalCrates": 26,
+    "deaths": 0,
+    "frames": 7370,
+    "seconds": 122.83333333333333,
+    "actions": [
+      {
+        "name": "approach opening protection",
+        "firstFrame": 20,
+        "lastFrame": 92
+      },
+      {
+        "name": "opening protection",
+        "firstFrame": 112,
+        "lastFrame": 112
+      },
+      {
+        "name": "finite two-support upper-first puzzle approach",
+        "firstFrame": 134,
+        "lastFrame": 244
+      },
+      {
+        "name": "finite two-support upper-first puzzle top support contact",
+        "firstFrame": 289,
+        "lastFrame": 322
+      },
+      {
+        "name": "finite two-support upper-first puzzle rebound apex",
+        "firstFrame": 322,
+        "lastFrame": 347
+      },
+      {
+        "name": "finite two-support upper-first puzzle upper claim",
+        "firstFrame": 349,
+        "lastFrame": 357
+      },
+      {
+        "name": "finite two-support upper-first puzzle clear landing",
+        "firstFrame": 357,
+        "lastFrame": 380
+      },
+      {
+        "name": "approach finite two-support upper-first puzzle clear conserved striped support",
+        "firstFrame": 400,
+        "lastFrame": 453
+      },
+      {
+        "name": "finite two-support upper-first puzzle clear conserved striped support",
+        "firstFrame": 473,
+        "lastFrame": 473
+      },
+      {
+        "name": "admission stepping box takeoff",
+        "firstFrame": 495,
+        "lastFrame": 621
+      },
+      {
+        "name": "stomp ordinary admission stepping box",
+        "firstFrame": 666,
+        "lastFrame": 703
+      },
+      {
+        "name": "ordinary crate rebound to admission perch",
+        "firstFrame": 703,
+        "lastFrame": 737
+      },
+      {
+        "name": "approach admission upper life",
+        "firstFrame": 757,
+        "lastFrame": 786
+      },
+      {
+        "name": "admission upper life",
+        "firstFrame": 806,
+        "lastFrame": 806
+      },
+      {
+        "name": "admission exit takeoff",
+        "firstFrame": 828,
+        "lastFrame": 906
+      },
+      {
+        "name": "raised balcony admission",
+        "firstFrame": 951,
+        "lastFrame": 993
+      },
+      {
+        "name": "first patrol safe approach",
+        "firstFrame": 993,
+        "lastFrame": 1049
+      },
+      {
+        "name": "first patrol spin",
+        "firstFrame": 1067,
+        "lastFrame": 1081
+      },
+      {
+        "name": "high gallery key ascent takeoff",
+        "firstFrame": 1081,
+        "lastFrame": 1183
+      },
+      {
+        "name": "high gallery key ascent arrow contact",
+        "firstFrame": 1228,
+        "lastFrame": 1265
+      },
+      {
+        "name": "high gallery key ascent apex outside the shelf",
+        "firstFrame": 1268,
+        "lastFrame": 1301
+      },
+      {
+        "name": "high gallery key ascent rise above the shelf",
+        "firstFrame": 1303,
+        "lastFrame": 1308
+      },
+      {
+        "name": "high gallery key ascent",
+        "firstFrame": 1308,
+        "lastFrame": 1367
+      },
+      {
+        "name": "approach first high bridge key",
+        "firstFrame": 1367,
+        "lastFrame": 1446
+      },
+      {
+        "name": "first high bridge key",
+        "firstFrame": 1466,
+        "lastFrame": 1466
+      },
+      {
+        "name": "return below high gallery",
+        "firstFrame": 1515,
+        "lastFrame": 1566
+      },
+      {
+        "name": "approach high gallery launcher last",
+        "firstFrame": 1566,
+        "lastFrame": 1619
+      },
+      {
+        "name": "high gallery launcher last",
+        "firstFrame": 1639,
+        "lastFrame": 1639
+      },
+      {
+        "name": "newly materialized first bridge",
+        "firstFrame": 1661,
+        "lastFrame": 1941
+      },
+      {
+        "name": "armor stomp lesson safe approach",
+        "firstFrame": 1959,
+        "lastFrame": 2022
+      },
+      {
+        "name": "armor stomp lesson stomp",
+        "firstFrame": 2067,
+        "lastFrame": 2104
+      },
+      {
+        "name": "armor stomp lesson rebound landing",
+        "firstFrame": 2104,
+        "lastFrame": 2146
+      },
+      {
+        "name": "spike spin lesson safe approach",
+        "firstFrame": 2146,
+        "lastFrame": 2208
+      },
+      {
+        "name": "spike spin lesson spin",
+        "firstFrame": 2226,
+        "lastFrame": 2243
+      },
+      {
+        "name": "pre-staircase checkpoint approach",
+        "firstFrame": 2243,
+        "lastFrame": 2357
+      },
+      {
+        "name": "crate stair takeoff",
+        "firstFrame": 2398,
+        "lastFrame": 2467
+      },
+      {
+        "name": "reward over permanent staircase anchor",
+        "firstFrame": 2512,
+        "lastFrame": 2550
+      },
+      {
+        "name": "reward over permanent staircase anchor",
+        "firstFrame": 2577,
+        "lastFrame": 2617
+      },
+      {
+        "name": "jump from final anchor onto workshop arrow",
+        "firstFrame": 2644,
+        "lastFrame": 2683
+      },
+      {
+        "name": "arrow into upper explosive workshop",
+        "firstFrame": 2683,
+        "lastFrame": 2738
+      },
+      {
+        "name": "TNT upper-first staging",
+        "firstFrame": 2758,
+        "lastFrame": 2856
+      },
+      {
+        "name": "wood on TNT rebound",
+        "firstFrame": 2901,
+        "lastFrame": 2934
+      },
+      {
+        "name": "TNT stack rebound apex",
+        "firstFrame": 2934,
+        "lastFrame": 2959
+      },
+      {
+        "name": "upper life before fuse support",
+        "firstFrame": 2961,
+        "lastFrame": 2969
+      },
+      {
+        "name": "TNT upper-first retreat",
+        "firstFrame": 2969,
+        "lastFrame": 2992
+      },
+      {
+        "name": "first workshop fuse takeoff",
+        "firstFrame": 3012,
+        "lastFrame": 3100
+      },
+      {
+        "name": "first workshop fuse stomp fuse",
+        "firstFrame": 3145,
+        "lastFrame": 3182
+      },
+      {
+        "name": "first workshop fuse leave blast radius",
+        "firstFrame": 3182,
+        "lastFrame": 3223
+      },
+      {
+        "name": "first workshop fuse complete countdown",
+        "firstFrame": 3243,
+        "lastFrame": 3402
+      },
+      {
+        "name": "approach workshop retreat reward",
+        "firstFrame": 3402,
+        "lastFrame": 3515
+      },
+      {
+        "name": "workshop retreat reward",
+        "firstFrame": 3535,
+        "lastFrame": 3535
+      },
+      {
+        "name": "second workshop fuse takeoff",
+        "firstFrame": 3557,
+        "lastFrame": 3644
+      },
+      {
+        "name": "second workshop fuse stomp fuse",
+        "firstFrame": 3689,
+        "lastFrame": 3726
+      },
+      {
+        "name": "second workshop fuse leave blast radius",
+        "firstFrame": 3726,
+        "lastFrame": 3767
+      },
+      {
+        "name": "second workshop fuse complete countdown",
+        "firstFrame": 3787,
+        "lastFrame": 3946
+      },
+      {
+        "name": "workshop blade window safe approach",
+        "firstFrame": 3946,
+        "lastFrame": 4068
+      },
+      {
+        "name": "workshop blade window attack opening",
+        "firstFrame": 4086,
+        "lastFrame": 4219
+      },
+      {
+        "name": "workshop blade window spin",
+        "firstFrame": 4219,
+        "lastFrame": 4234
+      },
+      {
+        "name": "workshop timber hinge approach",
+        "firstFrame": 4234,
+        "lastFrame": 4325
+      },
+      {
+        "name": "deploy permanent workshop crossing",
+        "firstFrame": 4344,
+        "lastFrame": 4377
+      },
+      {
+        "name": "cross stable workshop timber",
+        "firstFrame": 4377,
+        "lastFrame": 4488
+      },
+      {
+        "name": "deploy permanent workshop crossing",
+        "firstFrame": 4507,
+        "lastFrame": 4540
+      },
+      {
+        "name": "cross stable workshop timber",
+        "firstFrame": 4540,
+        "lastFrame": 4651
+      },
+      {
+        "name": "machinery checkpoint approach",
+        "firstFrame": 4669,
+        "lastFrame": 4725
+      },
+      {
+        "name": "pass the conserved launcher without attacking it",
+        "firstFrame": 4793,
+        "lastFrame": 4832
+      },
+      {
+        "name": "outward switch approach",
+        "firstFrame": 4832,
+        "lastFrame": 4952
+      },
+      {
+        "name": "outward return circuit key",
+        "firstFrame": 4972,
+        "lastFrame": 4972
+      },
+      {
+        "name": "conserved arrow to activated return row takeoff",
+        "firstFrame": 4994,
+        "lastFrame": 5117
+      },
+      {
+        "name": "conserved arrow to activated return row arrow contact",
+        "firstFrame": 5162,
+        "lastFrame": 5199
+      },
+      {
+        "name": "conserved arrow to activated return row apex outside the shelf",
+        "firstFrame": 5202,
+        "lastFrame": 5235
+      },
+      {
+        "name": "conserved arrow to activated return row rise above the shelf",
+        "firstFrame": 5237,
+        "lastFrame": 5250
+      },
+      {
+        "name": "conserved arrow to activated return row",
+        "firstFrame": 5250,
+        "lastFrame": 5259
+      },
+      {
+        "name": "approach activated upper return row",
+        "firstFrame": 5259,
+        "lastFrame": 5306
+      },
+      {
+        "name": "activated upper return row",
+        "firstFrame": 5326,
+        "lastFrame": 5326
+      },
+      {
+        "name": "approach activated upper return row",
+        "firstFrame": 5348,
+        "lastFrame": 5422
+      },
+      {
+        "name": "activated upper return row",
+        "firstFrame": 5442,
+        "lastFrame": 5442
+      },
+      {
+        "name": "approach activated upper return row",
+        "firstFrame": 5464,
+        "lastFrame": 5538
+      },
+      {
+        "name": "activated upper return row",
+        "firstFrame": 5558,
+        "lastFrame": 5558
+      },
+      {
+        "name": "return to clear conserved loop arrow",
+        "firstFrame": 5607,
+        "lastFrame": 5659
+      },
+      {
+        "name": "approach return-loop launcher last",
+        "firstFrame": 5699,
+        "lastFrame": 5768
+      },
+      {
+        "name": "return-loop launcher last",
+        "firstFrame": 5788,
+        "lastFrame": 5788
+      },
+      {
+        "name": "used second key obstacle approach",
+        "firstFrame": 5810,
+        "lastFrame": 5949
+      },
+      {
+        "name": "hop over used outward switch",
+        "firstFrame": 5994,
+        "lastFrame": 6033
+      },
+      {
+        "name": "newly materialized second bridge",
+        "firstFrame": 6033,
+        "lastFrame": 6249
+      },
+      {
+        "name": "charger telegraph and recovery safe approach",
+        "firstFrame": 6267,
+        "lastFrame": 6339
+      },
+      {
+        "name": "charger telegraph and recovery spin",
+        "firstFrame": 6357,
+        "lastFrame": 6358
+      },
+      {
+        "name": "approach clear later Nitro field",
+        "firstFrame": 6358,
+        "lastFrame": 6504
+      },
+      {
+        "name": "clear later Nitro field",
+        "firstFrame": 6524,
+        "lastFrame": 6524
+      },
+      {
+        "name": "Nitro cleanup resolved",
+        "firstFrame": 6546,
+        "lastFrame": 6546
+      },
+      {
+        "name": "hop over used Nitro clearing switch",
+        "firstFrame": 6573,
+        "lastFrame": 6612
+      },
+      {
+        "name": "crumble approach bank",
+        "firstFrame": 6612,
+        "lastFrame": 6730
+      },
+      {
+        "name": "finite footing first landing",
+        "firstFrame": 6775,
+        "lastFrame": 6814
+      },
+      {
+        "name": "finite footing finale",
+        "firstFrame": 6841,
+        "lastFrame": 6876
+      },
+      {
+        "name": "final armored stomp safe approach",
+        "firstFrame": 6876,
+        "lastFrame": 6939
+      },
+      {
+        "name": "final armored stomp stomp",
+        "firstFrame": 6984,
+        "lastFrame": 7021
+      },
+      {
+        "name": "final armored stomp rebound landing",
+        "firstFrame": 7021,
+        "lastFrame": 7063
+      },
+      {
+        "name": "final spike spin safe approach",
+        "firstFrame": 7063,
+        "lastFrame": 7149
+      },
+      {
+        "name": "final spike spin spin",
+        "firstFrame": 7167,
+        "lastFrame": 7189
+      },
+      {
+        "name": "approach final mastery reward",
+        "firstFrame": 7189,
+        "lastFrame": 7280
+      },
+      {
+        "name": "final mastery reward",
+        "firstFrame": 7300,
+        "lastFrame": 7300
+      },
+      {
+        "name": "finish plane crossing",
+        "firstFrame": 7324,
+        "lastFrame": 7370
+      }
+    ],
+    "evidence": [
+      {
+        "action": "opening protection",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "finite two-support upper-first puzzle clear conserved striped support",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "admission upper life",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "raised balcony admission",
+        "launch": [
+          19.134266666666743,
+          2.799999952316284,
+          0
+        ],
+        "landing": [
+          23.971766666666706,
+          1.399999976158142,
+          0
+        ],
+        "ground": "wood"
+      },
+      {
+        "action": "first patrol",
+        "kind": "spiker",
+        "alive": false,
+        "position": [
+          23.428288888888922,
+          1.399999976158142,
+          0
+        ]
+      },
+      {
+        "action": "high gallery key ascent",
+        "contact": {
+          "frame": 1265,
+          "position": [
+            31.971733333333397,
+            2.379999976158142,
+            0
+          ],
+          "state": "air",
+          "grounded": false,
+          "bailing": false,
+          "speed": 0,
+          "verticalSpeed": 20,
+          "deaths": 0,
+          "ground": "wood"
+        },
+        "landing": [
+          34.3732333333334,
+          9,
+          0
+        ],
+        "launcherAlive": true
+      },
+      {
+        "action": "first high bridge key",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": true
+        }
+      },
+      {
+        "action": "return below high gallery",
+        "launch": [
+          36.83021111111121,
+          9,
+          0
+        ],
+        "landing": [
+          30.050211111111267,
+          1.399999976158142,
+          0
+        ],
+        "ground": "wood"
+      },
+      {
+        "action": "high gallery launcher last",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "armor stomp lesson",
+        "kind": "turtle",
+        "alive": false,
+        "position": [
+          66.55934444444428,
+          1.399999976158142,
+          0
+        ]
+      },
+      {
+        "action": "spike spin lesson",
+        "kind": "spiker",
+        "alive": false,
+        "position": [
+          68.23372222222196,
+          1.399999976158142,
+          0
+        ]
+      },
+      {
+        "action": "pre-staircase checkpoint",
+        "x": 78,
+        "active": true
+      },
+      {
+        "action": "reward over permanent staircase anchor",
+        "launch": [
+          78.42534444444378,
+          1.399999976158142,
+          0
+        ],
+        "landing": [
+          81.77184444444387,
+          2.38,
+          0
+        ],
+        "ground": "crate"
+      },
+      {
+        "action": "reward over permanent staircase anchor",
+        "launch": [
+          81.77184444444387,
+          2.38,
+          0
+        ],
+        "landing": [
+          84.76434444444395,
+          2.38,
+          0
+        ],
+        "ground": "crate"
+      },
+      {
+        "action": "workshop retreat reward",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "workshop blade window",
+        "kind": "spinner",
+        "alive": false,
+        "position": [
+          113.33364444444332,
+          2.799999952316284,
+          0
+        ]
+      },
+      {
+        "action": "machinery checkpoint",
+        "x": 134,
+        "active": true
+      },
+      {
+        "action": "pass the conserved launcher without attacking it",
+        "launch": [
+          132.82552222222088,
+          2.799999952316284,
+          0
+        ],
+        "landing": [
+          138.10702222222108,
+          2.799999952316284,
+          0
+        ],
+        "ground": "wood"
+      },
+      {
+        "action": "outward return circuit key",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": true
+        }
+      },
+      {
+        "action": "conserved arrow to activated return row",
+        "contact": {
+          "frame": 5199,
+          "position": [
+            136.0280222222211,
+            3.779999952316284,
+            0
+          ],
+          "state": "air",
+          "grounded": false,
+          "bailing": false,
+          "speed": 0,
+          "verticalSpeed": 20,
+          "deaths": 0,
+          "ground": "wood"
+        },
+        "landing": [
+          138.23002222222112,
+          11.200000000000001,
+          0
+        ],
+        "launcherAlive": true
+      },
+      {
+        "action": "activated upper return row",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "activated upper return row",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "activated upper return row",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "return to clear conserved loop arrow",
+        "launch": [
+          142.819688888888,
+          11.200000000000001,
+          0
+        ],
+        "landing": [
+          134.8535,
+          2.799999952316284,
+          0
+        ],
+        "ground": "wood"
+      },
+      {
+        "action": "return-loop launcher last",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "hop over used outward switch",
+        "launch": [
+          144.92882222222238,
+          2.799999952316284,
+          0
+        ],
+        "landing": [
+          149.94632222222256,
+          2.799999952316284,
+          0
+        ],
+        "ground": "wood"
+      },
+      {
+        "action": "charger telegraph and recovery",
+        "kind": "charger",
+        "alive": false,
+        "position": [
+          171.72827777777812,
+          2.799999952316284,
+          0
+        ]
+      },
+      {
+        "action": "clear later Nitro field",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": true
+        }
+      },
+      {
+        "action": "hop over used Nitro clearing switch",
+        "launch": [
+          182.83138888888925,
+          2.799999952316284,
+          0
+        ],
+        "landing": [
+          187.44200000000018,
+          2.799999952316284,
+          0
+        ],
+        "ground": "wood"
+      },
+      {
+        "action": "finite footing first landing",
+        "launch": [
+          194.9149444444447,
+          2.799999952316284,
+          0
+        ],
+        "landing": [
+          198.9724444444448,
+          2.800000011920929,
+          0
+        ],
+        "ground": "crumble pad"
+      },
+      {
+        "action": "finite footing finale",
+        "launch": [
+          198.9724444444448,
+          2.800000011920929,
+          0
+        ],
+        "landing": [
+          203.7004444444449,
+          4,
+          0
+        ],
+        "ground": "wood"
+      },
+      {
+        "action": "final armored stomp",
+        "kind": "turtle",
+        "alive": false,
+        "position": [
+          209.60208888888968,
+          4,
+          0
+        ]
+      },
+      {
+        "action": "final spike spin",
+        "kind": "spiker",
+        "alive": false,
+        "position": [
+          213.7726333333342,
+          4,
+          0
+        ]
+      },
+      {
+        "action": "final mastery reward",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "Switchyard active-stage crate dependency route",
+        "totalCrates": 26,
+        "activeStageCrates": 26,
+        "bonusCrateTotal": 0,
+        "cratesBroken": 26,
+        "remaining": 0
+      }
+    ]
+  }
+]

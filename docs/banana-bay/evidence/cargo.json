@@ -1,0 +1,8107 @@
+{
+  "results": [
+    {
+      "case": "high parcel before launcher",
+      "frames": 110,
+      "rewardCollected": true,
+      "launcherCollected": true,
+      "deaths": 0
+    },
+    {
+      "case": "TNT cap then clear refuge",
+      "frames": 280,
+      "capCollected": true,
+      "tntCleared": true,
+      "refugeReward": true,
+      "position": [
+        -9.462948066905847,
+        2.1059999465942383,
+        -231.78076442801807
+      ],
+      "deaths": 0
+    }
+  ],
+  "end": {
+    "frame": 430,
+    "p": [
+      -9.462948066905847,
+      2.1059999465942383,
+      -231.78076442801807
+    ],
+    "state": "ride",
+    "grounded": true,
+    "speed": 0,
+    "vVel": 0,
+    "deaths": 0,
+    "cratesBroken": 3,
+    "masks": 0,
+    "ground": "wood",
+    "input": {}
+  },
+  "trace": [
+    {
+      "frame": 1,
+      "p": [
+        -13.894,
+        2.078000068664551,
+        -165.61599999999999
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 2,
+      "p": [
+        -13.894,
+        2.078000068664551,
+        -165.61599999999999
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 3,
+      "p": [
+        -13.894,
+        2.078000068664551,
+        -165.61599999999999
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 4,
+      "p": [
+        -13.894,
+        2.078000068664551,
+        -165.61599999999999
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 5,
+      "p": [
+        -13.894,
+        2.078000068664551,
+        -165.61599999999999
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 6,
+      "p": [
+        -13.894,
+        2.078000068664551,
+        -165.61599999999999
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 7,
+      "p": [
+        -13.894,
+        2.078000068664551,
+        -165.61599999999999
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 8,
+      "p": [
+        -13.894,
+        2.078000068664551,
+        -165.61599999999999
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 9,
+      "p": [
+        -13.894,
+        2.078000068664551,
+        -165.61599999999999
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 10,
+      "p": [
+        -13.894,
+        2.078000068664551,
+        -165.61599999999999
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 11,
+      "p": [
+        -13.894,
+        2.078000068664551,
+        -165.61599999999999
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 12,
+      "p": [
+        -13.894,
+        2.078000068664551,
+        -165.61599999999999
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 13,
+      "p": [
+        -13.894,
+        2.078000068664551,
+        -165.61599999999999
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 14,
+      "p": [
+        -13.894,
+        2.078000068664551,
+        -165.61599999999999
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 15,
+      "p": [
+        -13.894,
+        2.078000068664551,
+        -165.61599999999999
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 16,
+      "p": [
+        -13.894,
+        2.078000068664551,
+        -165.61599999999999
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 17,
+      "p": [
+        -13.894,
+        2.078000068664551,
+        -165.61599999999999
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 18,
+      "p": [
+        -13.894,
+        2.078000068664551,
+        -165.61599999999999
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 19,
+      "p": [
+        -13.894,
+        2.078000068664551,
+        -165.61599999999999
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 20,
+      "p": [
+        -13.894,
+        2.078000068664551,
+        -165.61599999999999
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 21,
+      "p": [
+        -13.894,
+        2.078000068664551,
+        -165.61599999999999
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 22,
+      "p": [
+        -13.894,
+        2.078000068664551,
+        -165.61599999999999
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 23,
+      "p": [
+        -13.894,
+        2.078000068664551,
+        -165.61599999999999
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 24,
+      "p": [
+        -13.894,
+        2.078000068664551,
+        -165.61599999999999
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 25,
+      "p": [
+        -13.894,
+        2.078000068664551,
+        -165.61599999999999
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 26,
+      "p": [
+        -13.894,
+        2.078000068664551,
+        -165.61599999999999
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 27,
+      "p": [
+        -13.894,
+        2.078000068664551,
+        -165.61599999999999
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 28,
+      "p": [
+        -13.894,
+        2.078000068664551,
+        -165.61599999999999
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 29,
+      "p": [
+        -13.894,
+        2.078000068664551,
+        -165.61599999999999
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 30,
+      "p": [
+        -13.894,
+        2.078000068664551,
+        -165.61599999999999
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 31,
+      "p": [
+        -13.894,
+        2.078000068664551,
+        -165.61599999999999
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 32,
+      "p": [
+        -13.894,
+        2.078000068664551,
+        -165.61599999999999
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 33,
+      "p": [
+        -13.894,
+        2.078000068664551,
+        -165.61599999999999
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 34,
+      "p": [
+        -13.894,
+        2.078000068664551,
+        -165.61599999999999
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 35,
+      "p": [
+        -13.894,
+        2.078000068664551,
+        -165.61599999999999
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 36,
+      "p": [
+        -13.894,
+        2.078000068664551,
+        -165.61599999999999
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 37,
+      "p": [
+        -13.894,
+        2.078000068664551,
+        -165.61599999999999
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 38,
+      "p": [
+        -13.894,
+        2.078000068664551,
+        -165.61599999999999
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 39,
+      "p": [
+        -13.894,
+        2.078000068664551,
+        -165.61599999999999
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 40,
+      "p": [
+        -13.894,
+        2.078000068664551,
+        -165.61599999999999
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 41,
+      "p": [
+        -13.894,
+        2.078000068664551,
+        -165.61599999999999
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 42,
+      "p": [
+        -13.894,
+        2.078000068664551,
+        -165.61599999999999
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 43,
+      "p": [
+        -13.894,
+        2.078000068664551,
+        -165.61599999999999
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 44,
+      "p": [
+        -13.894,
+        2.078000068664551,
+        -165.61599999999999
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 45,
+      "p": [
+        -13.894,
+        2.078000068664551,
+        -165.61599999999999
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 46,
+      "p": [
+        -13.894,
+        2.078000068664551,
+        -165.61599999999999
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 47,
+      "p": [
+        -13.894,
+        2.078000068664551,
+        -165.61599999999999
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": 14,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "jumpReleased": true
+      }
+    },
+    {
+      "frame": 48,
+      "p": [
+        -13.893945677823611,
+        2.3021667353312174,
+        -165.72153967049928
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 6.300321420372139,
+      "vVel": 13.45,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.10101079531260954,
+        "moveY": 0.9948853296889618,
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 49,
+      "p": [
+        -13.893890732555288,
+        2.5171667353312173,
+        -165.82707934067602
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 6.300321420372139,
+      "vVel": 12.899999999999999,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.10109415926212151,
+        "moveY": 0.9948768622111407,
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 50,
+      "p": [
+        -13.893834598486151,
+        2.7230000686645504,
+        -165.93261901022717
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 6.300321420372139,
+      "vVel": 12.349999999999998,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.10118077212435206,
+        "moveY": 0.9948680572580065,
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 51,
+      "p": [
+        -13.893776761551676,
+        2.919666735331217,
+        -166.03815867885885
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 6.300321420372139,
+      "vVel": 11.799999999999997,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.10127136223138022,
+        "moveY": 0.9948588398319637,
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 52,
+      "p": [
+        -13.893716754166899,
+        3.107166735331217,
+        -166.14369834627882
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 6.300321420372139,
+      "vVel": 11.249999999999996,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.10136679426625683,
+        "moveY": 0.9948491207314716,
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 53,
+      "p": [
+        -13.893654150578143,
+        3.2855000686645504,
+        -166.24923801219072
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 6.300321420372139,
+      "vVel": 10.699999999999996,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.10146811276020955,
+        "moveY": 0.9948387920124957,
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 54,
+      "p": [
+        -13.893588562679593,
+        3.454666735331217,
+        -166.35477767629018
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 6.300321420372139,
+      "vVel": 10.149999999999995,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.10157660180576893,
+        "moveY": 0.9948277207464581,
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 55,
+      "p": [
+        -13.893519636248245,
+        3.6146667353312165,
+        -166.4603173382621
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 6.300321420372139,
+      "vVel": 9.599999999999994,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.10169386869172323,
+        "moveY": 0.9948157402607333,
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 56,
+      "p": [
+        -13.893447047555387,
+        3.76550006866455,
+        -166.5658569977787
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 6.300321420372139,
+      "vVel": 9.049999999999994,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.10182196363147632,
+        "moveY": 0.9948026375730165,
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 57,
+      "p": [
+        -13.893370500316944,
+        3.9071667353312165,
+        -166.67139665449844
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 6.300321420372139,
+      "vVel": 8.499999999999993,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.1019635553639224,
+        "moveY": 0.9947881349199678,
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 58,
+      "p": [
+        -13.893289722948817,
+        4.039666735331217,
+        -166.7769363080653
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 6.300321420372139,
+      "vVel": 7.949999999999993,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.10212219581927992,
+        "moveY": 0.994771861846247,
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 59,
+      "p": [
+        -13.893202481325812,
+        4.16300006866455,
+        -166.88247595648664
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 6.300321420372139,
+      "vVel": 7.399999999999993,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.10248980242566519,
+        "moveY": 0.9947340551115901,
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 60,
+      "p": [
+        -13.893104286728388,
+        4.277166735331217,
+        -166.98801559528562
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 6.300321420372139,
+      "vVel": 6.849999999999993,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.10312108822147145,
+        "moveY": 0.9946688097874686,
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 61,
+      "p": [
+        -13.892991058138547,
+        4.382166735331216,
+        -167.09355521902611
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 6.300321420372139,
+      "vVel": 6.299999999999994,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.10380145389466924,
+        "moveY": 0.9945980384906019,
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 62,
+      "p": [
+        -13.892861494958503,
+        4.478000068664549,
+        -167.1990948239779
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 6.300321420372139,
+      "vVel": 5.749999999999994,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.10432580828026185,
+        "moveY": 0.9945431743904686,
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 63,
+      "p": [
+        -13.89271450329616,
+        4.564666735331216,
+        -167.304634406095
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 6.300321420372139,
+      "vVel": 5.199999999999994,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.10494214950685579,
+        "moveY": 0.9944783281986997,
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 64,
+      "p": [
+        -13.893091459277713,
+        4.642166735331216,
+        -167.40489834729115
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 5.982123368838192,
+      "vVel": 4.649999999999994,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.09932367639184886,
+        "moveY": 0.9353055356250795,
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 65,
+      "p": [
+        -13.893077465135885,
+        4.710500068664549,
+        -167.48806384376752
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 4.963889603929564,
+      "vVel": 4.099999999999994,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.08280583362557623,
+        "moveY": 0.7819392132401847,
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 66,
+      "p": [
+        -13.89340794258841,
+        4.769666735331215,
+        -167.55740460223362
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 4.136574669941304,
+      "vVel": 3.5499999999999945,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.06959707247688139,
+        "moveY": 0.6546758888272618,
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 67,
+      "p": [
+        -13.893761323361032,
+        4.819666735331215,
+        -167.61608594613463
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 3.5001785668734104,
+      "vVel": 2.9999999999999947,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.058055205794227197,
+        "moveY": 0.5486228329180453,
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 68,
+      "p": [
+        -13.888756693017728,
+        4.860500068664549,
+        -167.66461896247534
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 2.9274220741123074,
+      "vVel": 2.449999999999995,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.04817112369233432,
+        "moveY": 0.4588849452255237,
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 69,
+      "p": [
+        -13.884618197821872,
+        4.892166735331215,
+        -167.7047110172682
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 2.4183051916579927,
+      "vVel": 1.8999999999999948,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.04809910535001239,
+        "moveY": 0.38382211866277205,
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 70,
+      "p": [
+        -13.881129894909115,
+        4.914666735331215,
+        -167.73847241153427
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 2.0364675298172568,
+      "vVel": 1.3499999999999948,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.04804438422158546,
+        "moveY": 0.3218136892716372,
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 71,
+      "p": [
+        -13.878184136227103,
+        4.928000068664549,
+        -167.76695832920927
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 1.7182694782833108,
+      "vVel": 0.7999999999999947,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.0480021007353982,
+        "moveY": 0.2695960557707235,
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 72,
+      "p": [
+        -13.875672843946564,
+        4.932166735331215,
+        -167.7912239099994
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 1.4637110370561537,
+      "vVel": 0.24999999999999467,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.047969420225540786,
+        "moveY": 0.2255374178774039,
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 73,
+      "p": [
+        -13.873596837357649,
+        4.927166735331215,
+        -167.81126923854853
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 1.2091525958289964,
+      "vVel": -0.3000000000000054,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.04794395453539453,
+        "moveY": 0.18800597473685582,
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 74,
+      "p": [
+        -13.871847502136355,
+        4.88911117977566,
+        -167.8281493992789
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 1.0182337649086284,
+      "vVel": -2.2833333333333385,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.047924738782341963,
+        "moveY": 0.15700172721211622,
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 75,
+      "p": [
+        -13.870425339448122,
+        4.818000068664548,
+        -167.84186444405785
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0.8273149339882606,
+      "vVel": -4.266666666666672,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.0479100619005468,
+        "moveY": 0.1308928436611909,
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 76,
+      "p": [
+        -13.869221332881942,
+        4.713833401997881,
+        -167.85346941575918
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0.7000357133746821,
+      "vVel": -6.250000000000005,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.04789926833834334,
+        "moveY": 0.10967932455405799,
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 77,
+      "p": [
+        -13.86823576025561,
+        4.576611179775659,
+        -167.86296434317325
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0.5727564927611035,
+      "vVel": -8.233333333333338,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.047891007933755496,
+        "moveY": 0.091729367947506,
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 78,
+      "p": [
+        -13.867359308782541,
+        4.406333401997881,
+        -167.87140423848157
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0.5091168824543142,
+      "vVel": -10.216666666666672,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.04788491027915829,
+        "moveY": 0.07704297405953837,
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 79,
+      "p": [
+        -13.866701704311355,
+        4.203000068664548,
+        -167.87773413234794
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0.3818376618407357,
+      "vVel": -12.200000000000006,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.047879999203004314,
+        "moveY": 0.06398834069458119,
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 80,
+      "p": [
+        -13.866153497200264,
+        3.966611179775659,
+        -167.88300902276987
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0.3181980515339464,
+      "vVel": -14.18333333333334,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.04787670773253563,
+        "moveY": 0.054197270321935886,
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 81,
+      "p": [
+        -13.865605102792692,
+        3.6971667353312148,
+        -167.88828389372316
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0.3181980515339464,
+      "vVel": -16.166666666666675,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.04787424745273646,
+        "moveY": 0.046037960637387264,
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 82,
+      "p": [
+        -13.86516624864629,
+        3.3946667353312145,
+        -167.892503776072
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0.2545584412271571,
+      "vVel": -18.15000000000001,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.047871978312320124,
+        "moveY": 0.03787860927413098,
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 83,
+      "p": [
+        -13.86483701148388,
+        3.059111179775659,
+        -167.895668677791
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0.19091883092036785,
+      "vVel": -20.133333333333344,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.047870344215780423,
+        "moveY": 0.03135101867382098,
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 84,
+      "p": [
+        -13.864507684281543,
+        3.05800006866455,
+        -167.89883357014207
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0.19091883092036785,
+      "vVel": 20,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.04786926283245182,
+        "moveY": 0.026455188863205584,
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 85,
+      "p": [
+        -13.864507684281543,
+        3.3821667353312166,
+        -167.89883357014207
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": 19.45,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 86,
+      "p": [
+        -13.864507684281543,
+        3.6971667353312165,
+        -167.89883357014207
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": 18.9,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 87,
+      "p": [
+        -13.864507684281543,
+        4.00300006866455,
+        -167.89883357014207
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": 18.349999999999998,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 88,
+      "p": [
+        -13.864507684281543,
+        4.299666735331217,
+        -167.89883357014207
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": 17.799999999999997,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 89,
+      "p": [
+        -13.864507684281543,
+        4.587166735331216,
+        -167.89883357014207
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": 17.249999999999996,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 90,
+      "p": [
+        -13.864507684281543,
+        4.8655000686645495,
+        -167.89883357014207
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": 16.699999999999996,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 91,
+      "p": [
+        -13.864507684281543,
+        5.134666735331216,
+        -167.89883357014207
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": 16.149999999999995,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 92,
+      "p": [
+        -13.864507684281543,
+        5.394666735331215,
+        -167.89883357014207
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": 15.599999999999994,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 93,
+      "p": [
+        -13.864507684281543,
+        5.645500068664549,
+        -167.89883357014207
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": 15.049999999999994,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 94,
+      "p": [
+        -13.864507684281543,
+        5.887166735331215,
+        -167.89883357014207
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": 14.499999999999993,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 95,
+      "p": [
+        -13.864507684281543,
+        6.119666735331215,
+        -167.89883357014207
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": 13.949999999999992,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 96,
+      "p": [
+        -13.864507684281543,
+        6.343000068664549,
+        -167.89883357014207
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": 2,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 97,
+      "p": [
+        -13.866006553279487,
+        6.367166735331216,
+        -167.7923494004654
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": -6.3639610306789285,
+      "vVel": 1.45,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": 0.09081027103821543,
+        "moveY": -0.9958682114988741
+      }
+    },
+    {
+      "frame": 98,
+      "p": [
+        -13.867505244779183,
+        6.382166735331215,
+        -167.68586522829042
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": -6.3639610306789285,
+      "vVel": 0.8999999999999999,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": 0.09082933863593663,
+        "moveY": -0.9958664725970839
+      }
+    },
+    {
+      "frame": 99,
+      "p": [
+        -13.869003380377514,
+        6.388000068664549,
+        -167.579381048293
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": -6.3639610306789285,
+      "vVel": 0.34999999999999987,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": 0.09085435955922445,
+        "moveY": -0.9958641902132455
+      }
+    },
+    {
+      "frame": 100,
+      "p": [
+        -13.870500622079202,
+        6.384666735331216,
+        -167.47289685572298
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": -6.3639610306789285,
+      "vVel": -0.20000000000000018,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": 0.09088607143050627,
+        "moveY": -0.9958612965769525
+      }
+    },
+    {
+      "frame": 101,
+      "p": [
+        -13.8719966682561,
+        6.348277846442326,
+        -167.36641264634977
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": -6.3639610306789285,
+      "vVel": -2.1833333333333336,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": 0.09092540272759342,
+        "moveY": -0.9958577062707427
+      }
+    },
+    {
+      "frame": 102,
+      "p": [
+        -13.873490345433165,
+        6.278833401997882,
+        -167.25992840371975
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": -6.3639610306789285,
+      "vVel": -4.166666666666667,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": 0.09088893104738263,
+        "moveY": -0.9958610355933523
+      }
+    },
+    {
+      "frame": 103,
+      "p": [
+        -13.87497904618701,
+        6.176333401997882,
+        -167.15344409140067
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": -6.3639610306789285,
+      "vVel": -6.15,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": 0.09071688402638732,
+        "moveY": -0.9958767227687085
+      }
+    },
+    {
+      "frame": 104,
+      "p": [
+        -13.876460501429385,
+        6.040777846442326,
+        -167.0469596780325
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": -6.3639610306789285,
+      "vVel": -8.133333333333333,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": 0.0905618842093386,
+        "moveY": -0.9958908299248741
+      }
+    },
+    {
+      "frame": 105,
+      "p": [
+        -13.877930393657547,
+        5.8721667353312155,
+        -166.9404751044228
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": -6.3639610306789285,
+      "vVel": -10.116666666666667,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": 0.09020447923910098,
+        "moveY": -0.9959232660828858
+      }
+    },
+    {
+      "frame": 106,
+      "p": [
+        -13.879384843779729,
+        5.670500068664548,
+        -166.8339903187732
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": -6.3639610306789285,
+      "vVel": -12.100000000000001,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": 0.08985734942750381,
+        "moveY": -0.9959546459321647
+      }
+    },
+    {
+      "frame": 107,
+      "p": [
+        -13.88082223892735,
+        5.435777846442326,
+        -166.72750530153982
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": -6.3639610306789285,
+      "vVel": -14.083333333333336,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": 0.0896949183213615,
+        "moveY": -0.9959692874920012
+      }
+    },
+    {
+      "frame": 108,
+      "p": [
+        -13.882243653901666,
+        5.168000068664548,
+        -166.62102006979632
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": -6.3639610306789285,
+      "vVel": -16.06666666666667,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": 0.08977895574640513,
+        "moveY": -0.9959617156824278
+      }
+    },
+    {
+      "frame": 109,
+      "p": [
+        -13.88365007395834,
+        4.867166735331215,
+        -166.51453463894956
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": -6.3639610306789285,
+      "vVel": -18.050000000000004,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": 0.08987914126143488,
+        "moveY": -0.9959526795817698
+      }
+    },
+    {
+      "frame": 110,
+      "p": [
+        -13.885042403760869,
+        4.533277846442326,
+        -166.40804902293632
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": -6.3639610306789285,
+      "vVel": -20.03333333333334,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": 0.09000171163052163,
+        "moveY": -0.9959416106898918
+      }
+    },
+    {
+      "frame": 111,
+      "p": [
+        -13.886421475438842,
+        4.166333401997882,
+        -166.30156323439482
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": -6.3639610306789285,
+      "vVel": -22.016666666666673,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": 0.09015615612987914,
+        "moveY": -0.9959276417049008
+      }
+    },
+    {
+      "frame": 112,
+      "p": [
+        -13.887788055840483,
+        3.7663334019978816,
+        -166.19507728481457
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": -6.3639610306789285,
+      "vVel": -24.000000000000007,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": 0.09035775412839395,
+        "moveY": -0.99590937151373
+      }
+    },
+    {
+      "frame": 113,
+      "p": [
+        -13.889004376319999,
+        3.333277846442326,
+        -166.10030574074943
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": -5.663925317304246,
+      "vVel": -25.98333333333334,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": 0.08074843023476719,
+        "moveY": -0.8872726104126786
+      }
+    },
+    {
+      "frame": 114,
+      "p": [
+        -13.889640016993768,
+        2.8671667353312147,
+        -166.0214690680588
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": -4.709331162702407,
+      "vVel": -27.966666666666676,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": 0.06780814866909494,
+        "moveY": -0.7420336281720328
+      }
+    },
+    {
+      "frame": 115,
+      "p": [
+        -13.890023640512183,
+        2.3680000686645477,
+        -165.9554020351831
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": -3.9456558390209353,
+      "vVel": -29.95000000000001,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": 0.05648040111235879,
+        "moveY": -0.6212725716817166
+      }
+    },
+    {
+      "frame": 116,
+      "p": [
+        -13.895650155760116,
+        2.078000068664551,
+        -165.90053544857372
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": -3.3092597359530425,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": 0.04676759410958057,
+        "moveY": -0.5200943419218582
+      }
+    },
+    {
+      "frame": 117,
+      "p": [
+        -13.895647818993561,
+        2.078000068664551,
+        -165.903852240043
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0.198,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.10038506276860003,
+        "moveY": 0.9949486615765382,
+        "spinHeld": true
+      }
+    },
+    {
+      "frame": 118,
+      "p": [
+        -13.89564313077283,
+        2.078000068664551,
+        -165.91048582297117
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0.396,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.10038707838692397,
+        "moveY": 0.994948458209237,
+        "spinHeld": true
+      }
+    },
+    {
+      "frame": 119,
+      "p": [
+        -13.89563605437885,
+        2.078000068664551,
+        -165.9204361973322
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0.5939999999999999,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.100391115051083,
+        "moveY": 0.9949480509146194,
+        "spinHeld": true
+      }
+    },
+    {
+      "frame": 120,
+      "p": [
+        -13.895626531061067,
+        2.078000068664551,
+        -165.93370336308394
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0.7920000000000001,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.10039718741337549,
+        "moveY": 0.9949474381893164,
+        "spinHeld": true
+      }
+    },
+    {
+      "frame": 121,
+      "p": [
+        -13.895614480037393,
+        2.078000068664551,
+        -165.95028732016752
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0.9900000000000002,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.10040531975035827,
+        "moveY": 0.9949466175457999,
+        "spinHeld": true
+      }
+    },
+    {
+      "frame": 122,
+      "p": [
+        -13.89559979849412,
+        2.078000068664551,
+        -165.9701880685065
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 1.1880000000000002,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.10041554661600012,
+        "moveY": 0.9949455854456616,
+        "spinHeld": true
+      }
+    },
+    {
+      "frame": 123,
+      "p": [
+        -13.895582361585815,
+        2.078000068664551,
+        -165.99340560800573
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 1.3860000000000001,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.10042791378096674,
+        "moveY": 0.9949443372036463,
+        "spinHeld": true
+      }
+    },
+    {
+      "frame": 124,
+      "p": [
+        -13.895562022435191,
+        2.078000068664551,
+        -166.01993993854995
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 1.5840000000000003,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.10044247950589291,
+        "moveY": 0.9949428668575437,
+        "spinHeld": true
+      }
+    },
+    {
+      "frame": 125,
+      "p": [
+        -13.895538612132954,
+        2.078000068664551,
+        -166.0497910600022
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 1.7820000000000005,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.10045931621586064,
+        "moveY": 0.9949411669970452,
+        "spinHeld": true
+      }
+    },
+    {
+      "frame": 126,
+      "p": [
+        -13.89551193973762,
+        2.078000068664551,
+        -166.08295897220202
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 1.9800000000000006,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.10047851266852494,
+        "moveY": 0.9949392285420862,
+        "spinHeld": true
+      }
+    },
+    {
+      "frame": 127,
+      "p": [
+        -13.895481792275312,
+        2.078000068664551,
+        -166.11944367496324
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 2.1780000000000004,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.10050017674203858,
+        "moveY": 0.9949370404577463,
+        "spinHeld": true
+      }
+    },
+    {
+      "frame": 128,
+      "p": [
+        -13.89544793473954,
+        2.078000068664551,
+        -166.15924516807178
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 2.3759999999999994,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.10052443901493968,
+        "moveY": 0.994934589388032,
+        "spinHeld": true
+      }
+    },
+    {
+      "frame": 129,
+      "p": [
+        -13.895410110090946,
+        2.078000068664551,
+        -166.20236345128288
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 2.5739999999999994,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.10055145737412333,
+        "moveY": 0.9949318591843058,
+        "spinHeld": true
+      }
+    },
+    {
+      "frame": 130,
+      "p": [
+        -13.89536803925703,
+        2.078000068664551,
+        -166.2487985243185
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 2.7720000000000002,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.10058142297748715,
+        "moveY": 0.9949288302948227,
+        "spinHeld": true
+      }
+    },
+    {
+      "frame": 131,
+      "p": [
+        -8.335,
+        2.1059999465942383,
+        -222
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 132,
+      "p": [
+        -8.335,
+        2.1059999465942383,
+        -222
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 133,
+      "p": [
+        -8.335,
+        2.1059999465942383,
+        -222
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 134,
+      "p": [
+        -8.335,
+        2.1059999465942383,
+        -222
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 135,
+      "p": [
+        -8.335,
+        2.1059999465942383,
+        -222
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 136,
+      "p": [
+        -8.335,
+        2.1059999465942383,
+        -222
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 137,
+      "p": [
+        -8.335,
+        2.1059999465942383,
+        -222
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 138,
+      "p": [
+        -8.335,
+        2.1059999465942383,
+        -222
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 139,
+      "p": [
+        -8.335,
+        2.1059999465942383,
+        -222
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 140,
+      "p": [
+        -8.335,
+        2.1059999465942383,
+        -222
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 141,
+      "p": [
+        -8.335,
+        2.1059999465942383,
+        -222
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 142,
+      "p": [
+        -8.335,
+        2.1059999465942383,
+        -222
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 143,
+      "p": [
+        -8.335,
+        2.1059999465942383,
+        -222
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 144,
+      "p": [
+        -8.335,
+        2.1059999465942383,
+        -222
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 145,
+      "p": [
+        -8.335,
+        2.1059999465942383,
+        -222
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 146,
+      "p": [
+        -8.335,
+        2.1059999465942383,
+        -222
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 147,
+      "p": [
+        -8.335,
+        2.1059999465942383,
+        -222
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 148,
+      "p": [
+        -8.335,
+        2.1059999465942383,
+        -222
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 149,
+      "p": [
+        -8.335,
+        2.1059999465942383,
+        -222
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 150,
+      "p": [
+        -8.335,
+        2.1059999465942383,
+        -222
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 151,
+      "p": [
+        -8.335,
+        2.1059999465942383,
+        -222
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 152,
+      "p": [
+        -8.335,
+        2.1059999465942383,
+        -222
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 153,
+      "p": [
+        -8.335,
+        2.1059999465942383,
+        -222
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 154,
+      "p": [
+        -8.335,
+        2.1059999465942383,
+        -222
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 155,
+      "p": [
+        -8.335,
+        2.1059999465942383,
+        -222
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 156,
+      "p": [
+        -8.335,
+        2.1059999465942383,
+        -222
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 157,
+      "p": [
+        -8.335,
+        2.1059999465942383,
+        -222
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 158,
+      "p": [
+        -8.335,
+        2.1059999465942383,
+        -222
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 159,
+      "p": [
+        -8.335,
+        2.1059999465942383,
+        -222
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 160,
+      "p": [
+        -8.335,
+        2.1059999465942383,
+        -222
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 161,
+      "p": [
+        -8.335,
+        2.1059999465942383,
+        -222
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 162,
+      "p": [
+        -8.335,
+        2.1059999465942383,
+        -222
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 163,
+      "p": [
+        -8.335,
+        2.1059999465942383,
+        -222
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 164,
+      "p": [
+        -8.335,
+        2.1059999465942383,
+        -222
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 165,
+      "p": [
+        -8.335,
+        2.1059999465942383,
+        -222
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 166,
+      "p": [
+        -8.335,
+        2.1059999465942383,
+        -222
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 167,
+      "p": [
+        -8.335,
+        2.1059999465942383,
+        -222
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 168,
+      "p": [
+        -8.335,
+        2.1059999465942383,
+        -222
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 169,
+      "p": [
+        -8.335,
+        2.1059999465942383,
+        -222
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 170,
+      "p": [
+        -8.335,
+        2.1059999465942383,
+        -222
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 171,
+      "p": [
+        -8.335,
+        2.1059999465942383,
+        -222
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 172,
+      "p": [
+        -8.335,
+        2.1059999465942383,
+        -222
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 173,
+      "p": [
+        -8.335,
+        2.1059999465942383,
+        -222
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 174,
+      "p": [
+        -8.335,
+        2.1059999465942383,
+        -222
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 175,
+      "p": [
+        -8.335,
+        2.1059999465942383,
+        -222
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 176,
+      "p": [
+        -8.335,
+        2.1059999465942383,
+        -222
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "jumpHeld": true
+      }
+    },
+    {
+      "frame": 177,
+      "p": [
+        -8.335,
+        2.1059999465942383,
+        -222
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": 14,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "jumpReleased": true
+      }
+    },
+    {
+      "frame": 178,
+      "p": [
+        -8.185988923940668,
+        2.330166613260905,
+        -221.98280409317192
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": 13.45,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": 0.9999991012944566,
+        "moveY": -0.0013406753071456953
+      }
+    },
+    {
+      "frame": 179,
+      "p": [
+        -8.036977839346358,
+        2.5451666132609048,
+        -221.96560826030384
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": 12.899999999999999,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": 0.9999989424867054,
+        "moveY": -0.0014543127143615338
+      }
+    },
+    {
+      "frame": 180,
+      "p": [
+        -7.887966738880892,
+        2.750999946594238,
+        -221.94841256496835
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": 12.349999999999998,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": 0.9999987407698424,
+        "moveY": -0.0015869652577434042
+      }
+    },
+    {
+      "frame": 181,
+      "p": [
+        -7.738955616287027,
+        2.9476666132609046,
+        -221.9312170613899
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": 11.799999999999997,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": 0.9999984787926675,
+        "moveY": -0.0017442512292128393
+      }
+    },
+    {
+      "frame": 182,
+      "p": [
+        -7.589944466278558,
+        3.1351666132609046,
+        -221.91402179537994
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": 11.249999999999996,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": 0.9999981294544126,
+        "moveY": -0.001934189152105394
+      }
+    },
+    {
+      "frame": 183,
+      "p": [
+        -7.44093328444319,
+        3.313499946594238,
+        -221.8968268051785
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": 10.699999999999996,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": 0.9999976485016563,
+        "moveY": -0.0021686380882524094
+      }
+    },
+    {
+      "frame": 184,
+      "p": [
+        -7.357999999999999,
+        3.4826666132609043,
+        -221.8796321222117
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": 10.149999999999995,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": 0.9999969596251539,
+        "moveY": -0.0024659157423067703
+      }
+    },
+    {
+      "frame": 185,
+      "p": [
+        -7.357999999999999,
+        3.642666613260904,
+        -221.86243772018818
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": 9.599999999999994,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": 0.999988552585528,
+        "moveY": 0.004784840425893608
+      }
+    },
+    {
+      "frame": 186,
+      "p": [
+        -7.357999999999999,
+        3.7934999465942374,
+        -221.85238691356145
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0.12727922061357855,
+      "vVel": 9.049999999999994,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": 0.9997659176678414,
+        "moveY": 0.02163584686992307
+      }
+    },
+    {
+      "frame": 187,
+      "p": [
+        -7.252268365871349,
+        3.935166613260904,
+        -221.8433898838024
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0.19091883092036785,
+      "vVel": 8.499999999999993,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": 0.9995035192245944,
+        "moveY": 0.031507381002735126
+      }
+    },
+    {
+      "frame": 188,
+      "p": [
+        -7.1465367193412925,
+        4.067666613260904,
+        -221.83439299978383
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0.19091883092036785,
+      "vVel": 7.949999999999993,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": 0.9994980082587459,
+        "moveY": 0.03168172165145108
+      }
+    },
+    {
+      "frame": 189,
+      "p": [
+        -7.040805057705117,
+        4.190999946594237,
+        -221.8253962932946
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0.19091883092036785,
+      "vVel": 7.399999999999993,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": 0.9994909547944753,
+        "moveY": 0.0319034682131553
+      }
+    },
+    {
+      "frame": 190,
+      "p": [
+        -6.935073378709315,
+        4.305166613260904,
+        -221.81639979082263
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0.19091883092036785,
+      "vVel": 6.849999999999993,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": 0.9994816326951143,
+        "moveY": 0.03219419054905069
+      }
+    },
+    {
+      "frame": 191,
+      "p": [
+        -6.838824708672169,
+        4.410166613260904,
+        -221.80849766983644
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0.19091883092036785,
+      "vVel": 6.299999999999994,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": 0.905772572076804,
+        "moveY": 0.029535732359659658
+      }
+    },
+    {
+      "frame": 192,
+      "p": [
+        -6.758502644624432,
+        4.505999946594237,
+        -221.8013656275545
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0.12727922061357855,
+      "vVel": 5.749999999999994,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": 0.7572800578103419,
+        "moveY": 0.024643113630270785
+      }
+    },
+    {
+      "frame": 193,
+      "p": [
+        -6.691878280419723,
+        4.592666613260904,
+        -221.79581413277216
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0.12727922061357855,
+      "vVel": 5.199999999999994,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": 0.6332643843908193,
+        "moveY": 0.021380689650887977
+      }
+    },
+    {
+      "frame": 194,
+      "p": [
+        -6.635790610421882,
+        4.670166613260903,
+        -221.79147843511052
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0.12727922061357855,
+      "vVel": 4.649999999999994,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": 0.5304619226705607,
+        "moveY": 0.01811766331438436
+      }
+    },
+    {
+      "frame": 195,
+      "p": [
+        -6.589307533247808,
+        4.738499946594237,
+        -221.78718325916196
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0.06363961030678927,
+      "vVel": 4.099999999999994,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": 0.44397729902835864,
+        "moveY": 0.014854648430726243
+      }
+    },
+    {
+      "frame": 196,
+      "p": [
+        -6.5502001446229725,
+        4.797666613260903,
+        -221.78373911123452
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0.06363961030678927,
+      "vVel": 3.5499999999999945,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": 0.37217875578001175,
+        "moveY": 0.013223561714848852
+      }
+    },
+    {
+      "frame": 197,
+      "p": [
+        -6.517414776755382,
+        4.847666613260903,
+        -221.78102440060783
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0.06363961030678927,
+      "vVel": 2.9999999999999947,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": 0.31180270318335346,
+        "moveY": 0.011592386248027994
+      }
+    },
+    {
+      "frame": 198,
+      "p": [
+        -6.489897761074725,
+        4.888499946594236,
+        -221.77891754322525
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0.06363961030678927,
+      "vVel": 2.449999999999995,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": 0.26121735695754317,
+        "moveY": 0.009961124845369027
+      }
+    },
+    {
+      "frame": 199,
+      "p": [
+        -6.466595428252309,
+        4.9201666132609025,
+        -221.77729696152926
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0.06363961030678927,
+      "vVel": 1.8999999999999948,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": 0.21879093281007234,
+        "moveY": 0.00832978683553589
+      }
+    },
+    {
+      "frame": 200,
+      "p": [
+        -6.447507780064928,
+        4.9426666132609025,
+        -221.77616263940803
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0.06363961030678927,
+      "vVel": 1.3499999999999948,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": 0.18289164643813394,
+        "moveY": 0.006698386046961706
+      }
+    },
+    {
+      "frame": 201,
+      "p": [
+        -6.431581146158229,
+        4.955999946594236,
+        -221.7753930080664
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0.06363961030678927,
+      "vVel": 0.7999999999999947,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": 0.15351949841126172,
+        "moveY": 0.00506691315000083
+      }
+    },
+    {
+      "frame": 202,
+      "p": [
+        -6.412209618380056,
+        4.960166613260903,
+        -221.77315830192475
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": 0.24999999999999467,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": 0.12904270440758933,
+        "moveY": 0.0034353873522357976
+      }
+    },
+    {
+      "frame": 203,
+      "p": [
+        -6.397308440853964,
+        4.955166613260903,
+        -221.77143931724308
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": -0.3000000000000054,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": 0.09904270460948364,
+        "moveY": 0.0034357833819598535
+      }
+    },
+    {
+      "frame": 204,
+      "p": [
+        -6.3853874971799245,
+        4.917111057705347,
+        -221.77006414382842
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": -2.2833333333333385,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": 0.07596578124593469,
+        "moveY": 0.0034360691103688377
+      }
+    },
+    {
+      "frame": 205,
+      "p": [
+        -6.376446788370458,
+        4.845999946594236,
+        -221.76903277290373
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": -4.266666666666672,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": 0.05750424072184882,
+        "moveY": 0.0034363033847794678
+      }
+    },
+    {
+      "frame": 206,
+      "p": [
+        -6.376446788370458,
+        4.741833279927569,
+        -221.76903277290373
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": -6.250000000000005,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 207,
+      "p": [
+        -6.376446788370458,
+        4.6046110577053465,
+        -221.76903277290373
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": -8.233333333333338,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 208,
+      "p": [
+        -6.376446788370458,
+        4.434333279927569,
+        -221.76903277290373
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": -10.216666666666672,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 209,
+      "p": [
+        -6.376446788370458,
+        4.230999946594236,
+        -221.76903277290373
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": -12.200000000000006,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 210,
+      "p": [
+        -6.376446788370458,
+        4.045999946594238,
+        -221.76903277290373
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": 14,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 211,
+      "p": [
+        -6.376446788370458,
+        4.270166613260905,
+        -221.76903277290373
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": 13.45,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 212,
+      "p": [
+        -6.376446788370458,
+        4.485166613260905,
+        -221.76903277290373
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": 12.899999999999999,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 213,
+      "p": [
+        -6.376446788370458,
+        4.690999946594238,
+        -221.76903277290373
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": 12.349999999999998,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 214,
+      "p": [
+        -6.376446788370458,
+        4.887666613260905,
+        -221.76903277290373
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": 11.799999999999997,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 215,
+      "p": [
+        -6.376446788370458,
+        5.075166613260905,
+        -221.76903277290373
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": 11.249999999999996,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 216,
+      "p": [
+        -6.376446788370458,
+        5.253499946594238,
+        -221.76903277290373
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": 10.699999999999996,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 217,
+      "p": [
+        -6.376446788370458,
+        5.422666613260905,
+        -221.76903277290373
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": 10.149999999999995,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 218,
+      "p": [
+        -6.376446788370458,
+        5.582666613260905,
+        -221.76903277290373
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": 9.599999999999994,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 219,
+      "p": [
+        -6.376446788370458,
+        5.733499946594238,
+        -221.76903277290373
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": 9.049999999999994,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 220,
+      "p": [
+        -6.376446788370458,
+        5.875166613260904,
+        -221.76903277290373
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": 8.499999999999993,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 221,
+      "p": [
+        -6.376446788370458,
+        6.007666613260905,
+        -221.76903277290373
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": 7.949999999999993,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 222,
+      "p": [
+        -6.376446788370458,
+        6.130999946594238,
+        -221.76903277290373
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": 7.399999999999993,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 223,
+      "p": [
+        -6.376446788370458,
+        6.2451666132609045,
+        -221.76903277290373
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": 6.849999999999993,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 224,
+      "p": [
+        -6.376446788370458,
+        6.350166613260904,
+        -221.76903277290373
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": 6.299999999999994,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 225,
+      "p": [
+        -6.376446788370458,
+        6.445999946594237,
+        -221.76903277290373
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": 5.749999999999994,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 226,
+      "p": [
+        -6.376446788370458,
+        6.532666613260904,
+        -221.76903277290373
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": 5.199999999999994,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 227,
+      "p": [
+        -6.376446788370458,
+        6.610166613260904,
+        -221.76903277290373
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": 4.649999999999994,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 228,
+      "p": [
+        -6.376446788370458,
+        6.678499946594237,
+        -221.76903277290373
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": 4.099999999999994,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 229,
+      "p": [
+        -6.376446788370458,
+        6.737666613260903,
+        -221.76903277290373
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": 3.5499999999999945,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 230,
+      "p": [
+        -6.376446788370458,
+        6.787666613260903,
+        -221.76903277290373
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": 2.9999999999999947,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 231,
+      "p": [
+        -6.376446788370458,
+        6.828499946594237,
+        -221.76903277290373
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": 2.449999999999995,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 232,
+      "p": [
+        -6.376446788370458,
+        6.860166613260903,
+        -221.76903277290373
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": 1.8999999999999948,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 233,
+      "p": [
+        -6.376446788370458,
+        6.882666613260903,
+        -221.76903277290373
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": 1.3499999999999948,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 234,
+      "p": [
+        -6.376446788370458,
+        6.8959999465942365,
+        -221.76903277290373
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": 0.7999999999999947,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 235,
+      "p": [
+        -6.376446788370458,
+        6.900166613260903,
+        -221.76903277290373
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": 0.24999999999999467,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 236,
+      "p": [
+        -6.376446788370458,
+        6.895166613260903,
+        -221.76903277290373
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": -0.3000000000000054,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 237,
+      "p": [
+        -6.376446788370458,
+        6.857111057705348,
+        -221.76903277290373
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": -2.2833333333333385,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 238,
+      "p": [
+        -6.376446788370458,
+        6.785999946594236,
+        -221.76903277290373
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": -4.266666666666672,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 239,
+      "p": [
+        -6.376446788370458,
+        6.681833279927569,
+        -221.76903277290373
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": -6.250000000000005,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 240,
+      "p": [
+        -6.376446788370458,
+        6.544611057705347,
+        -221.76903277290373
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": -8.233333333333338,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 241,
+      "p": [
+        -6.376446788370458,
+        6.374333279927569,
+        -221.76903277290373
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": -10.216666666666672,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 242,
+      "p": [
+        -6.376446788370458,
+        6.170999946594236,
+        -221.76903277290373
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": -12.200000000000006,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 243,
+      "p": [
+        -6.376446788370458,
+        5.934611057705347,
+        -221.76903277290373
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": -14.18333333333334,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 244,
+      "p": [
+        -6.376446788370458,
+        5.665166613260902,
+        -221.76903277290373
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": -16.166666666666675,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 245,
+      "p": [
+        -6.376446788370458,
+        5.3626666132609015,
+        -221.76903277290373
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": -18.15000000000001,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 246,
+      "p": [
+        -6.376446788370458,
+        5.027111057705346,
+        -221.76903277290373
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": -20.133333333333344,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 247,
+      "p": [
+        -6.376446788370458,
+        4.658499946594235,
+        -221.76903277290373
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": -22.116666666666678,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 248,
+      "p": [
+        -6.376446788370458,
+        4.256833279927568,
+        -221.76903277290373
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": -24.100000000000012,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 249,
+      "p": [
+        -6.376446788370458,
+        3.822111057705345,
+        -221.76903277290373
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": -26.083333333333346,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 250,
+      "p": [
+        -6.376446788370458,
+        3.354333279927567,
+        -221.76903277290373
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": -28.06666666666668,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 251,
+      "p": [
+        -6.376446788370458,
+        3.0859999465942383,
+        -221.76903277290373
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 0,
+      "vVel": 14,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 252,
+      "p": [
+        -6.407412517443875,
+        3.310166613260905,
+        -221.87083220130563
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 5.854844148224615,
+      "vVel": 13.45,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.4021976007863473,
+        "moveY": 0.9155528875612299
+      }
+    },
+    {
+      "frame": 253,
+      "p": [
+        -6.438378409392356,
+        3.5251666132609047,
+        -221.97263158016344
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 5.854844148224615,
+      "vVel": 12.899999999999999,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.4021879564501378,
+        "moveY": 0.9155571242071474
+      }
+    },
+    {
+      "frame": 254,
+      "p": [
+        -6.469344933785875,
+        3.730999946594238,
+        -222.0744307666385
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 5.854844148224615,
+      "vVel": 12.349999999999998,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.40218242553860684,
+        "moveY": 0.9155595538182554
+      }
+    },
+    {
+      "frame": 255,
+      "p": [
+        -6.500312511772079,
+        3.9276666132609046,
+        -222.1762296326129
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 5.854844148224615,
+      "vVel": 11.799999999999997,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.402177811321635,
+        "moveY": 0.9155615807145576
+      }
+    },
+    {
+      "frame": 256,
+      "p": [
+        -6.5312815209163135,
+        4.115166613260905,
+        -222.2780280632129
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 5.854844148224615,
+      "vVel": 11.249999999999996,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.4021740977805926,
+        "moveY": 0.9155632119489984
+      }
+    },
+    {
+      "frame": 257,
+      "p": [
+        -6.562252299558065,
+        4.293499946594238,
+        -222.37982595548146
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 5.854844148224615,
+      "vVel": 10.699999999999996,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.40217127261116964,
+        "moveY": 0.915564452939449
+      }
+    },
+    {
+      "frame": 258,
+      "p": [
+        -6.593225150732105,
+        4.462666613260905,
+        -222.48162321718408
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 5.854844148224615,
+      "vVel": 10.149999999999995,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.4021693269876951,
+        "moveY": 0.9155653075724666
+      }
+    },
+    {
+      "frame": 259,
+      "p": [
+        -6.624200345697798,
+        4.622666613260905,
+        -222.5834197657348
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 5.854844148224615,
+      "vVel": 9.599999999999994,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.40216825535642037,
+        "moveY": 0.9155657782942592
+      }
+    },
+    {
+      "frame": 260,
+      "p": [
+        -6.655178127115702,
+        4.773499946594238,
+        -222.68521552723018
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 5.854844148224615,
+      "vVel": 9.049999999999994,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.40216805525556226,
+        "moveY": 0.9155658661898439
+      }
+    },
+    {
+      "frame": 261,
+      "p": [
+        -6.686158711906704,
+        4.915166613260904,
+        -222.7870104355803
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 5.854844148224615,
+      "vVel": 8.499999999999993,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.4021687271601523,
+        "moveY": 0.9155655710512399
+      }
+    },
+    {
+      "frame": 262,
+      "p": [
+        -6.71714229382538,
+        5.047666613260905,
+        -222.88880443172687
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 5.854844148224615,
+      "vVel": 7.949999999999993,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.402170274349979,
+        "moveY": 0.9155648914354803
+      }
+    },
+    {
+      "frame": 263,
+      "p": [
+        -6.748129045776149,
+        5.170999946594238,
+        -222.99059746293992
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 5.854844148224615,
+      "vVel": 7.399999999999993,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.40217270279912287,
+        "moveY": 0.9155638247130826
+      }
+    },
+    {
+      "frame": 264,
+      "p": [
+        -6.779119121897911,
+        5.2851666132609045,
+        -223.0923894821849
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 5.854844148224615,
+      "vVel": 6.849999999999993,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.40217602108578615,
+        "moveY": 0.915562367107564
+      }
+    },
+    {
+      "frame": 265,
+      "p": [
+        -6.810112659440302,
+        5.390166613260904,
+        -223.1941804475532
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 5.854844148224615,
+      "vVel": 6.299999999999994,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.4021802403213117,
+        "moveY": 0.9155605137264776
+      }
+    },
+    {
+      "frame": 266,
+      "p": [
+        -6.841109780452387,
+        5.485999946594237,
+        -223.29597032174982
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 5.854844148224615,
+      "vVel": 5.749999999999994,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.40218537409746663,
+        "moveY": 0.9155582585843902
+      }
+    },
+    {
+      "frame": 267,
+      "p": [
+        -6.872110593302546,
+        5.572666613260904,
+        -223.39775907163227
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 5.854844148224615,
+      "vVel": 5.199999999999994,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.40219143845123245,
+        "moveY": 0.915555594618114
+      }
+    },
+    {
+      "frame": 268,
+      "p": [
+        -6.903115194046408,
+        5.650166613260904,
+        -223.4995466677956
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 5.854844148224615,
+      "vVel": 4.649999999999994,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.4021984518465163,
+        "moveY": 0.9155525136944714
+      }
+    },
+    {
+      "frame": 269,
+      "p": [
+        -6.934123667658035,
+        5.718499946594237,
+        -223.60133308419915
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 5.854844148224615,
+      "vVel": 4.099999999999994,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.4022064351723378,
+        "moveY": 0.9155490066107658
+      }
+    },
+    {
+      "frame": 270,
+      "p": [
+        -6.965136089137961,
+        5.777666613260903,
+        -223.70311829783037
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 5.854844148224615,
+      "vVel": 3.5499999999999945,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.4022154117616316,
+        "moveY": 0.9155450630861494
+      }
+    },
+    {
+      "frame": 271,
+      "p": [
+        -6.996152524509396,
+        5.827666613260903,
+        -223.80490228840281
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 5.854844148224615,
+      "vVel": 2.9999999999999947,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.4022254075129319,
+        "moveY": 0.9155406717077378
+      }
+    },
+    {
+      "frame": 272,
+      "p": [
+        -7.027173031717173,
+        5.868499946594237,
+        -223.90668503808357
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 5.854844148224615,
+      "vVel": 2.449999999999995,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.40223645063058744,
+        "moveY": 0.9155358200442553
+      }
+    },
+    {
+      "frame": 273,
+      "p": [
+        -7.058197661435579,
+        5.900166613260903,
+        -224.00846653124827
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 5.854844148224615,
+      "vVel": 1.8999999999999948,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.4022485720093653,
+        "moveY": 0.9155304944765229
+      }
+    },
+    {
+      "frame": 274,
+      "p": [
+        -7.089226457795424,
+        5.922666613260903,
+        -224.1102467542607
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 5.854844148224615,
+      "vVel": 1.3499999999999948,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.40226180520302973,
+        "moveY": 0.9155246802106426
+      }
+    },
+    {
+      "frame": 275,
+      "p": [
+        -7.120259459038406,
+        5.935999946594237,
+        -224.2120256952743
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 5.854844148224615,
+      "vVel": 0.7999999999999947,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.40227618652104535,
+        "moveY": 0.9155183612348172
+      }
+    },
+    {
+      "frame": 276,
+      "p": [
+        -7.151296698106059,
+        5.940166613260903,
+        -224.31380334405367
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 5.854844148224615,
+      "vVel": 0.24999999999999467,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.4022917551431359,
+        "moveY": 0.9155115202682351
+      }
+    },
+    {
+      "frame": 277,
+      "p": [
+        -7.182338203169804,
+        5.935166613260903,
+        -224.41557969181375
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 5.854844148224615,
+      "vVel": -0.3000000000000054,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.4023085532525741,
+        "moveY": 0.915504138701634
+      }
+    },
+    {
+      "frame": 278,
+      "p": [
+        -7.213383998108008,
+        5.897111057705348,
+        -224.51735473107513
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 5.854844148224615,
+      "vVel": -2.2833333333333385,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.40232662618928605,
+        "moveY": 0.9154961965290441
+      }
+    },
+    {
+      "frame": 279,
+      "p": [
+        -7.24443409912722,
+        5.825999946594236,
+        -224.61912845669573
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 5.854844148224615,
+      "vVel": -4.266666666666672,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.4023463651770115,
+        "moveY": 0.9154875217220861
+      }
+    },
+    {
+      "frame": 280,
+      "p": [
+        -7.275488515529604,
+        5.721833279927569,
+        -224.720900865638
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 5.854844148224615,
+      "vVel": -6.250000000000005,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.40236782293045886,
+        "moveY": 0.9154780909831776
+      }
+    },
+    {
+      "frame": 281,
+      "p": [
+        -7.306547250403644,
+        5.584611057705347,
+        -224.8226719567593
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 5.854844148224615,
+      "vVel": -8.233333333333338,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.40239105642607503,
+        "moveY": 0.9154678791242798
+      }
+    },
+    {
+      "frame": 282,
+      "p": [
+        -7.337610301245774,
+        5.414333279927569,
+        -224.92444173062356
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 5.854844148224615,
+      "vVel": -10.216666666666672,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.40241612714181074,
+        "moveY": 0.9154568589596048
+      }
+    },
+    {
+      "frame": 283,
+      "p": [
+        -7.36867766051986,
+        5.210999946594236,
+        -225.02621018933124
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 5.854844148224615,
+      "vVel": -12.200000000000006,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.40244310133007377,
+        "moveY": 0.9154450011834856
+      }
+    },
+    {
+      "frame": 284,
+      "p": [
+        -7.399749316160726,
+        4.974611057705347,
+        -225.1279773363667
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 5.854844148224615,
+      "vVel": -14.18333333333334,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.4024720503266519,
+        "moveY": 0.915432274232158
+      }
+    },
+    {
+      "frame": 285,
+      "p": [
+        -7.430825252027337,
+        4.705166613260902,
+        -225.2297431764606
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 5.854844148224615,
+      "vVel": -16.166666666666675,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.4025030508988815,
+        "moveY": 0.9154186441279708
+      }
+    },
+    {
+      "frame": 286,
+      "p": [
+        -7.46190544831066,
+        4.402666613260902,
+        -225.33150771546605
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 5.854844148224615,
+      "vVel": -18.15000000000001,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.4025361856368584,
+        "moveY": 0.9154040743043088
+      }
+    },
+    {
+      "frame": 287,
+      "p": [
+        -7.4929898819007414,
+        4.067111057705346,
+        -225.43327096024717
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 5.854844148224615,
+      "vVel": -20.133333333333344,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.4025715433921152,
+        "moveY": 0.9153885254092333
+      }
+    },
+    {
+      "frame": 288,
+      "p": [
+        -7.524078526717074,
+        3.6984999465942345,
+        -225.53503291857876
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 5.854844148224615,
+      "vVel": -22.116666666666678,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.4026092197688666,
+        "moveY": 0.9153719550855295
+      }
+    },
+    {
+      "frame": 289,
+      "p": [
+        -7.555171354005932,
+        3.2968332799275677,
+        -225.63679359905598
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 5.854844148224615,
+      "vVel": -24.100000000000012,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.40264931767374856,
+        "moveY": 0.9153543177244889
+      }
+    },
+    {
+      "frame": 290,
+      "p": [
+        -7.586268375142069,
+        2.862111057705345,
+        -225.7385529980148
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 5.854844148224615,
+      "vVel": -26.083333333333346,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.40268812194407816,
+        "moveY": 0.9153372473821609
+      }
+    },
+    {
+      "frame": 291,
+      "p": [
+        -7.617369580895152,
+        2.394333279927567,
+        -225.84031111808736
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 5.854844148224615,
+      "vVel": -28.06666666666668,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.40273084704651574,
+        "moveY": 0.9153184499600104
+      }
+    },
+    {
+      "frame": 292,
+      "p": [
+        -7.648474959781383,
+        2.1059999465942383,
+        -225.94206796259593
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 5.854844148224615,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.4027761519414242,
+        "moveY": 0.9152985149268295
+      }
+    },
+    {
+      "frame": 293,
+      "p": [
+        -7.649453821089689,
+        2.1059999465942383,
+        -225.945265469869
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0.184,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.40282234168219455,
+        "moveY": 0.9152781877886489
+      }
+    },
+    {
+      "frame": 294,
+      "p": [
+        -7.651411552627676,
+        2.1059999465942383,
+        -225.951660481684
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0.36799999999999994,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.4028235406566057,
+        "moveY": 0.9152776601080546
+      }
+    },
+    {
+      "frame": 295,
+      "p": [
+        -7.654348176698745,
+        2.1059999465942383,
+        -225.96125299121306
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0.552,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.4028259460562651,
+        "moveY": 0.9152766014620255
+      }
+    },
+    {
+      "frame": 296,
+      "p": [
+        -7.65826372898823,
+        2.1059999465942383,
+        -225.97404298753142
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0.7360000000000002,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.40282957207654063,
+        "moveY": 0.9152750055915605
+      }
+    },
+    {
+      "frame": 297,
+      "p": [
+        -7.663158258563221,
+        2.1059999465942383,
+        -225.99003045561724
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0.9200000000000002,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.402834439784594,
+        "moveY": 0.9152728632071601
+      }
+    },
+    {
+      "frame": 298,
+      "p": [
+        -7.669031827872332,
+        2.1059999465942383,
+        -226.00921537635128
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 1.104,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.4028405773106549,
+        "moveY": 0.9152701619041332
+      }
+    },
+    {
+      "frame": 299,
+      "p": [
+        -7.67588451274539,
+        2.1059999465942383,
+        -226.0315977265165
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 1.2880000000000005,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.4028480201065767,
+        "moveY": 0.915266886048114
+      }
+    },
+    {
+      "frame": 300,
+      "p": [
+        -7.683716402393062,
+        2.1059999465942383,
+        -226.0571774787977
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 1.4719999999999998,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.40285681127617207,
+        "moveY": 0.9152630166287691
+      }
+    },
+    {
+      "frame": 301,
+      "p": [
+        -7.692527599406407,
+        2.1059999465942383,
+        -226.08595460178094
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 1.6560000000000006,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.4028670019831638,
+        "moveY": 0.9152585310791144
+      }
+    },
+    {
+      "frame": 302,
+      "p": [
+        -7.7023182197563616,
+        2.1059999465942383,
+        -226.11792905995284
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 1.84,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.40287865194409583,
+        "moveY": 0.9152534030571575
+      }
+    },
+    {
+      "frame": 303,
+      "p": [
+        -7.713088392793157,
+        2.1059999465942383,
+        -226.15310081369995
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 2.024,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.402891830015273,
+        "moveY": 0.9152476021858479
+      }
+    },
+    {
+      "frame": 304,
+      "p": [
+        -7.724838261245665,
+        2.1059999465942383,
+        -226.19146981930797
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 2.2079999999999997,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.4029066148848009,
+        "moveY": 0.9152410937463805
+      }
+    },
+    {
+      "frame": 305,
+      "p": [
+        -7.737567981220676,
+        2.1059999465942383,
+        -226.23303602896092
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 2.3920000000000003,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.4029230958831468,
+        "moveY": 0.9152338383188967
+      }
+    },
+    {
+      "frame": 306,
+      "p": [
+        -7.751277722202108,
+        2.1059999465942383,
+        -226.27779939074014
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 2.576,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.402941373928398,
+        "moveY": 0.9152257913633637
+      }
+    },
+    {
+      "frame": 307,
+      "p": [
+        -7.765967667050144,
+        2.1059999465942383,
+        -226.3257598486233
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 2.7600000000000002,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.4029615626257105,
+        "moveY": 0.9152169027319402
+      }
+    },
+    {
+      "frame": 308,
+      "p": [
+        -7.781638012000303,
+        2.1059999465942383,
+        -226.37691734248327
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 2.9440000000000004,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.40298378954444636,
+        "moveY": 0.9152071161023596
+      }
+    },
+    {
+      "frame": 309,
+      "p": [
+        -7.798288966662439,
+        2.1059999465942383,
+        -226.43127180808696
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 3.127999999999999,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.40300819770127017,
+        "moveY": 0.9151963683197032
+      }
+    },
+    {
+      "frame": 310,
+      "p": [
+        -7.815920754019673,
+        2.1059999465942383,
+        -226.48882317709405
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 3.3119999999999994,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.4030349472834062,
+        "moveY": 0.9151845886313111
+      }
+    },
+    {
+      "frame": 311,
+      "p": [
+        -7.834533610427251,
+        2.1059999465942383,
+        -226.54957137705563
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 3.4959999999999987,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.40306421765340067,
+        "moveY": 0.9151716977963489
+      }
+    },
+    {
+      "frame": 312,
+      "p": [
+        -7.854127785611342,
+        2.1059999465942383,
+        -226.61351633141282
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 3.679999999999999,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.4030962096856693,
+        "moveY": 0.9151576070475769
+      }
+    },
+    {
+      "frame": 313,
+      "p": [
+        -7.874703542667753,
+        2.1059999465942383,
+        -226.68065795949522
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 3.863999999999998,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.4031311484960904,
+        "moveY": 0.9151422168779141
+      }
+    },
+    {
+      "frame": 314,
+      "p": [
+        -7.896261158060583,
+        2.1059999465942383,
+        -226.75099617651932
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 4.047999999999999,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.40316928663966917,
+        "moveY": 0.9151254156182421
+      }
+    },
+    {
+      "frame": 315,
+      "p": [
+        -7.918800921620811,
+        2.1059999465942383,
+        -226.82453089358688
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 4.2319999999999975,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.4032109078685744,
+        "moveY": 0.9151070777651102
+      }
+    },
+    {
+      "frame": 316,
+      "p": [
+        -7.942323136544801,
+        2.1059999465942383,
+        -226.9012620176831
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 4.4159999999999995,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.40325633156464724,
+        "moveY": 0.9150870620072298
+      }
+    },
+    {
+      "frame": 317,
+      "p": [
+        -7.96682811939275,
+        2.1059999465942383,
+        -226.98118945167488
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 4.599999999999999,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.4033059179882363,
+        "moveY": 0.9150652088871404
+      }
+    },
+    {
+      "frame": 318,
+      "p": [
+        -7.992316200087059,
+        2.1059999465942383,
+        -227.06431309430886
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 4.783999999999999,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.4033600745207503,
+        "moveY": 0.9150413380184608
+      }
+    },
+    {
+      "frame": 319,
+      "p": [
+        -8.018787721910636,
+        2.1059999465942383,
+        -227.15063284020945
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 4.968000000000001,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.40341926312411897,
+        "moveY": 0.9150152447584646
+      }
+    },
+    {
+      "frame": 320,
+      "p": [
+        -8.046347844782554,
+        2.1059999465942383,
+        -227.23922114934882
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 5.095999999999999,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.4034840092998921,
+        "moveY": 0.9149866962089036
+      }
+    },
+    {
+      "frame": 321,
+      "p": [
+        -8.074895801941626,
+        2.1059999465942383,
+        -227.33097222398885
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 5.277999999999999,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.4034727228392652,
+        "moveY": 0.9149916731449907
+      }
+    },
+    {
+      "frame": 322,
+      "p": [
+        -8.104431968646033,
+        2.1059999465942383,
+        -227.42588594721374
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 5.46,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.40346135505908054,
+        "moveY": 0.9149966857720802
+      }
+    },
+    {
+      "frame": 323,
+      "p": [
+        -8.134840824262813,
+        2.1059999465942383,
+        -227.5249890100102
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 5.704000000000001,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.40344996422133717,
+        "moveY": 0.915001708397204
+      }
+    },
+    {
+      "frame": 324,
+      "p": [
+        -8.166354635671553,
+        2.1059999465942383,
+        -227.62622764844787
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 5.824000000000001,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.4035366466539014,
+        "moveY": 0.9149634827725773
+      }
+    },
+    {
+      "frame": 325,
+      "p": [
+        -8.19885786226595,
+        2.1059999465942383,
+        -227.73062855965534
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 6.006000000000002,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.40352818850026695,
+        "moveY": 0.9149672131206087
+      }
+    },
+    {
+      "frame": 326,
+      "p": [
+        -8.23235093157308,
+        2.1059999465942383,
+        -227.83819161029982
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 6.188000000000002,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.4035201980387604,
+        "moveY": 0.9149707371139033
+      }
+    },
+    {
+      "frame": 327,
+      "p": [
+        -8.266834284182613,
+        2.1059999465942383,
+        -227.94891666293785
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 6.370000000000001,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.4035128140872222,
+        "moveY": 0.9149739935470356
+      }
+    },
+    {
+      "frame": 328,
+      "p": [
+        -8.30230837374453,
+        2.1059999465942383,
+        -228.06280357601284
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 6.5520000000000005,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.4035062005957568,
+        "moveY": 0.9149769101353197
+      }
+    },
+    {
+      "frame": 329,
+      "p": [
+        -8.338773666966793,
+        2.1059999465942383,
+        -228.1798522038523
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 6.733999999999999,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.403500552561442,
+        "moveY": 0.9149794009061682
+      }
+    },
+    {
+      "frame": 330,
+      "p": [
+        -8.376230643612917,
+        2.1059999465942383,
+        -228.3000623966651
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 6.916,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.4034961036989822,
+        "moveY": 0.9149813628155167
+      }
+    },
+    {
+      "frame": 331,
+      "p": [
+        -8.414679796499504,
+        2.1059999465942383,
+        -228.42343400053855
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 7.098000000000002,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.4034931365069295,
+        "moveY": 0.9149826713068397
+      }
+    },
+    {
+      "frame": 332,
+      "p": [
+        -8.454121631493676,
+        2.1059999465942383,
+        -228.54996685743552
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 7.280000000000003,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.4034919956499656,
+        "moveY": 0.914983174406179
+      }
+    },
+    {
+      "frame": 333,
+      "p": [
+        -8.494556667510464,
+        2.1059999465942383,
+        -228.67966080519156
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 7.4620000000000015,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.4034931060055258,
+        "moveY": 0.9149826847574841
+      }
+    },
+    {
+      "frame": 334,
+      "p": [
+        -8.535985436510114,
+        2.1059999465942383,
+        -228.8125156775116
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 7.644000000000002,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.4034969973881206,
+        "moveY": 0.9149809687085143
+      }
+    },
+    {
+      "frame": 335,
+      "p": [
+        -8.578408483495322,
+        2.1059999465942383,
+        -228.94853130396697
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 7.826000000000002,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.4035043390232944,
+        "moveY": 0.9149777310893277
+      }
+    },
+    {
+      "frame": 336,
+      "p": [
+        -8.62182636650841,
+        2.1059999465942383,
+        -229.0877075099921
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 8.008,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.4035159885718751,
+        "moveY": 0.9149725935605189
+      }
+    },
+    {
+      "frame": 337,
+      "p": [
+        -8.666239656628422,
+        2.1059999465942383,
+        -229.23004411688123
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 8.19,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.4035330634110107,
+        "moveY": 0.914965063122153
+      }
+    },
+    {
+      "frame": 338,
+      "p": [
+        -8.710661779678158,
+        2.1059999465942383,
+        -229.37237796733064
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 8.190000000000001,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.40355704692522576,
+        "moveY": 0.9149544851395567
+      }
+    },
+    {
+      "frame": 339,
+      "p": [
+        -8.755094624380101,
+        2.1059999465942383,
+        -229.5147084711297
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 8.19,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.40357694045231624,
+        "moveY": 0.9149457104851345
+      }
+    },
+    {
+      "frame": 340,
+      "p": [
+        -8.799536310798413,
+        2.1059999465942383,
+        -229.6570362144136
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 8.19,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.4036179702849697,
+        "moveY": 0.9149276113786496
+      }
+    },
+    {
+      "frame": 341,
+      "p": [
+        -8.84398683852058,
+        2.1059999465942383,
+        -229.79936119670842
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 8.190000000000003,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.4036716188116278,
+        "moveY": 0.9149039425896034
+      }
+    },
+    {
+      "frame": 342,
+      "p": [
+        -8.88844620713398,
+        2.1059999465942383,
+        -229.94168341754022
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 8.190000000000001,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {
+        "moveX": -0.4037416676112122,
+        "moveY": 0.9148730326304941,
+        "spinHeld": true
+      }
+    },
+    {
+      "frame": 343,
+      "p": [
+        -8.931249046618671,
+        2.1059999465942383,
+        -230.07870279868214
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 7.885060836187327,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 344,
+      "p": [
+        -8.972395356974653,
+        2.1059999465942383,
+        -230.2104193401342
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 7.580097271556225,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 345,
+      "p": [
+        -9.01188513820193,
+        2.1059999465942383,
+        -230.33683304189634
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 7.2751102437263615,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 346,
+      "p": [
+        -9.049718390300496,
+        2.1059999465942383,
+        -230.4579439039686
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 6.970100689699174,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 347,
+      "p": [
+        -9.085895113270356,
+        2.1059999465942383,
+        -230.573751926351
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 6.665069545882259,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 348,
+      "p": [
+        -9.120415307111505,
+        2.1059999465942383,
+        -230.68425710904353
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 6.36001774811378,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 349,
+      "p": [
+        -9.15327897182395,
+        2.1059999465942383,
+        -230.78945945204617
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 6.0549462316868645,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 350,
+      "p": [
+        -9.184486107407684,
+        2.1059999465942383,
+        -230.88935895535892
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 5.749855931374057,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 351,
+      "p": [
+        -9.214036713862711,
+        2.1059999465942383,
+        -230.98395561898178
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 5.444747781451742,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 352,
+      "p": [
+        -9.24193079118903,
+        2.1059999465942383,
+        -231.07324944291474
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 5.139622715724586,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 353,
+      "p": [
+        -9.26816833938664,
+        2.1059999465942383,
+        -231.15724042715783
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 4.8344816675500155,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 354,
+      "p": [
+        -9.292749358455545,
+        2.1059999465942383,
+        -231.235928571711
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 4.5293255698626655,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 355,
+      "p": [
+        -9.31567384839574,
+        2.1059999465942383,
+        -231.30931387657435
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 4.224146109691794,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 356,
+      "p": [
+        -9.336941809207227,
+        2.1059999465942383,
+        -231.37739634174778
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 3.9189358402160983,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 357,
+      "p": [
+        -9.356553240890007,
+        2.1059999465942383,
+        -231.44017596723134
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 3.613719444944558,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 358,
+      "p": [
+        -9.374508143444078,
+        2.1059999465942383,
+        -231.49765275302502
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 3.3084973892495686,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 359,
+      "p": [
+        -9.390806516869441,
+        2.1059999465942383,
+        -231.5498266991288
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 3.003270138428525,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 360,
+      "p": [
+        -9.405448361166096,
+        2.1059999465942383,
+        -231.5966978055427
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 2.6980381577099415,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 361,
+      "p": [
+        -9.418433676334043,
+        2.1059999465942383,
+        -231.63826607226673
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 2.3928019122595816,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 362,
+      "p": [
+        -9.429762462373281,
+        2.1059999465942383,
+        -231.67453149930085
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 2.0875618671865808,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 363,
+      "p": [
+        -9.439434719283812,
+        2.1059999465942383,
+        -231.7054940866451
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 1.782318487549579,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 364,
+      "p": [
+        -9.447450447065636,
+        2.1059999465942383,
+        -231.73115383429945
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 1.477072238362845,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 365,
+      "p": [
+        -9.453809645718751,
+        2.1059999465942383,
+        -231.75151074226392
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 1.171823584602406,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 366,
+      "p": [
+        -9.458512315243157,
+        2.1059999465942383,
+        -231.7665648105385
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0.8665729912121773,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 367,
+      "p": [
+        -9.461558455638857,
+        2.1059999465942383,
+        -231.77631603912323
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0.5613209231100903,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 368,
+      "p": [
+        -9.462948066905847,
+        2.1059999465942383,
+        -231.78076442801807
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0.25606784519422254,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 369,
+      "p": [
+        -9.462948066905847,
+        2.1059999465942383,
+        -231.78076442801807
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 370,
+      "p": [
+        -9.462948066905847,
+        2.1059999465942383,
+        -231.78076442801807
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 371,
+      "p": [
+        -9.462948066905847,
+        2.1059999465942383,
+        -231.78076442801807
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 372,
+      "p": [
+        -9.462948066905847,
+        2.1059999465942383,
+        -231.78076442801807
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 373,
+      "p": [
+        -9.462948066905847,
+        2.1059999465942383,
+        -231.78076442801807
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 374,
+      "p": [
+        -9.462948066905847,
+        2.1059999465942383,
+        -231.78076442801807
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 375,
+      "p": [
+        -9.462948066905847,
+        2.1059999465942383,
+        -231.78076442801807
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 376,
+      "p": [
+        -9.462948066905847,
+        2.1059999465942383,
+        -231.78076442801807
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 377,
+      "p": [
+        -9.462948066905847,
+        2.1059999465942383,
+        -231.78076442801807
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 378,
+      "p": [
+        -9.462948066905847,
+        2.1059999465942383,
+        -231.78076442801807
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 379,
+      "p": [
+        -9.462948066905847,
+        2.1059999465942383,
+        -231.78076442801807
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 380,
+      "p": [
+        -9.462948066905847,
+        2.1059999465942383,
+        -231.78076442801807
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 381,
+      "p": [
+        -9.462948066905847,
+        2.1059999465942383,
+        -231.78076442801807
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 382,
+      "p": [
+        -9.462948066905847,
+        2.1059999465942383,
+        -231.78076442801807
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 383,
+      "p": [
+        -9.462948066905847,
+        2.1059999465942383,
+        -231.78076442801807
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 384,
+      "p": [
+        -9.462948066905847,
+        2.1059999465942383,
+        -231.78076442801807
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 385,
+      "p": [
+        -9.462948066905847,
+        2.1059999465942383,
+        -231.78076442801807
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 386,
+      "p": [
+        -9.462948066905847,
+        2.1059999465942383,
+        -231.78076442801807
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 387,
+      "p": [
+        -9.462948066905847,
+        2.1059999465942383,
+        -231.78076442801807
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 388,
+      "p": [
+        -9.462948066905847,
+        2.1059999465942383,
+        -231.78076442801807
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 389,
+      "p": [
+        -9.462948066905847,
+        2.1059999465942383,
+        -231.78076442801807
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 390,
+      "p": [
+        -9.462948066905847,
+        2.1059999465942383,
+        -231.78076442801807
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 391,
+      "p": [
+        -9.462948066905847,
+        2.1059999465942383,
+        -231.78076442801807
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 392,
+      "p": [
+        -9.462948066905847,
+        2.1059999465942383,
+        -231.78076442801807
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 393,
+      "p": [
+        -9.462948066905847,
+        2.1059999465942383,
+        -231.78076442801807
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 394,
+      "p": [
+        -9.462948066905847,
+        2.1059999465942383,
+        -231.78076442801807
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 395,
+      "p": [
+        -9.462948066905847,
+        2.1059999465942383,
+        -231.78076442801807
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 396,
+      "p": [
+        -9.462948066905847,
+        2.1059999465942383,
+        -231.78076442801807
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 397,
+      "p": [
+        -9.462948066905847,
+        2.1059999465942383,
+        -231.78076442801807
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 398,
+      "p": [
+        -9.462948066905847,
+        2.1059999465942383,
+        -231.78076442801807
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 399,
+      "p": [
+        -9.462948066905847,
+        2.1059999465942383,
+        -231.78076442801807
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 400,
+      "p": [
+        -9.462948066905847,
+        2.1059999465942383,
+        -231.78076442801807
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 401,
+      "p": [
+        -9.462948066905847,
+        2.1059999465942383,
+        -231.78076442801807
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 402,
+      "p": [
+        -9.462948066905847,
+        2.1059999465942383,
+        -231.78076442801807
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 403,
+      "p": [
+        -9.462948066905847,
+        2.1059999465942383,
+        -231.78076442801807
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 404,
+      "p": [
+        -9.462948066905847,
+        2.1059999465942383,
+        -231.78076442801807
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 405,
+      "p": [
+        -9.462948066905847,
+        2.1059999465942383,
+        -231.78076442801807
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 406,
+      "p": [
+        -9.462948066905847,
+        2.1059999465942383,
+        -231.78076442801807
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 407,
+      "p": [
+        -9.462948066905847,
+        2.1059999465942383,
+        -231.78076442801807
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 408,
+      "p": [
+        -9.462948066905847,
+        2.1059999465942383,
+        -231.78076442801807
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 409,
+      "p": [
+        -9.462948066905847,
+        2.1059999465942383,
+        -231.78076442801807
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 410,
+      "p": [
+        -9.462948066905847,
+        2.1059999465942383,
+        -231.78076442801807
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 411,
+      "p": [
+        -9.462948066905847,
+        2.1059999465942383,
+        -231.78076442801807
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 412,
+      "p": [
+        -9.462948066905847,
+        2.1059999465942383,
+        -231.78076442801807
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 413,
+      "p": [
+        -9.462948066905847,
+        2.1059999465942383,
+        -231.78076442801807
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 414,
+      "p": [
+        -9.462948066905847,
+        2.1059999465942383,
+        -231.78076442801807
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 415,
+      "p": [
+        -9.462948066905847,
+        2.1059999465942383,
+        -231.78076442801807
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 416,
+      "p": [
+        -9.462948066905847,
+        2.1059999465942383,
+        -231.78076442801807
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 417,
+      "p": [
+        -9.462948066905847,
+        2.1059999465942383,
+        -231.78076442801807
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 418,
+      "p": [
+        -9.462948066905847,
+        2.1059999465942383,
+        -231.78076442801807
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 419,
+      "p": [
+        -9.462948066905847,
+        2.1059999465942383,
+        -231.78076442801807
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 420,
+      "p": [
+        -9.462948066905847,
+        2.1059999465942383,
+        -231.78076442801807
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 421,
+      "p": [
+        -9.462948066905847,
+        2.1059999465942383,
+        -231.78076442801807
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 422,
+      "p": [
+        -9.462948066905847,
+        2.1059999465942383,
+        -231.78076442801807
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 423,
+      "p": [
+        -9.462948066905847,
+        2.1059999465942383,
+        -231.78076442801807
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 424,
+      "p": [
+        -9.462948066905847,
+        2.1059999465942383,
+        -231.78076442801807
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 425,
+      "p": [
+        -9.462948066905847,
+        2.1059999465942383,
+        -231.78076442801807
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 426,
+      "p": [
+        -9.462948066905847,
+        2.1059999465942383,
+        -231.78076442801807
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 427,
+      "p": [
+        -9.462948066905847,
+        2.1059999465942383,
+        -231.78076442801807
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 428,
+      "p": [
+        -9.462948066905847,
+        2.1059999465942383,
+        -231.78076442801807
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 429,
+      "p": [
+        -9.462948066905847,
+        2.1059999465942383,
+        -231.78076442801807
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    },
+    {
+      "frame": 430,
+      "p": [
+        -9.462948066905847,
+        2.1059999465942383,
+        -231.78076442801807
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "vVel": 0,
+      "deaths": 0,
+      "cratesBroken": 3,
+      "masks": 0,
+      "ground": "wood",
+      "input": {}
+    }
+  ]
+}

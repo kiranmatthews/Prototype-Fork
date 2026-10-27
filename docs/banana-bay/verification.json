@@ -1,0 +1,316 @@
+{
+  "verifiedAt": "2026-10-27T07:25:20.333Z",
+  "implementationCommit": "8ebc65f4d9d592227aa1dd5577c912695d26ce4e",
+  "baseCommit": "37b69e6524faa1b448772b18107c818aac3a43f8",
+  "branch": "codex/banana-bay",
+  "elapsed": {
+    "promptAt": "2026-10-27T02:38:45.000Z",
+    "firstSourcePlayableMinutesApprox": 20,
+    "promptToFinalVerificationWallSeconds": 17195,
+    "note": "Wall time includes the machine restart, access restoration and shared-machine validation delays."
+  },
+  "packageScripts": {
+    "check:levels": {
+      "exitCode": 0,
+      "commands": 20
+    },
+    "build": {
+      "exitCode": 0,
+      "typecheck": true
+    },
+    "check:release": {
+      "exitCode": 0,
+      "files": 1838,
+      "bytes": 999468526,
+      "limit": 1000000000,
+      "headroom": 531474
+    },
+    "execution": "Exact package script strings executed with the bundled Node and installed tool binaries; no install or check:all."
+  },
+  "native": [
+    {
+      "test": "native main structure",
+      "crates": 111,
+      "checkpoints": 14,
+      "enemies": 15,
+      "supports": 111,
+      "patrolSamples": 900,
+      "shoreProbes": 4,
+      "spawn": [
+        -2.125,
+        1.0374777757094265,
+        -1.625
+      ],
+      "finish": [
+        0,
+        1.05,
+        -1381
+      ]
+    },
+    {
+      "test": "bonus continuous input-only all-crate journey",
+      "completionScope": "complete-stage",
+      "activeStageCrates": 26,
+      "bonusCrateTotal": 0,
+      "bonusCrates": 0,
+      "gemEarned": true,
+      "id": "bonus-beachside-run",
+      "done": true,
+      "state": "finished",
+      "cratesBroken": 26,
+      "totalCrates": 26,
+      "deaths": 0,
+      "frames": 7370,
+      "seconds": 122.83333333333333
+    }
+  ],
+  "mainBrowser": {
+    "frame": 13654,
+    "state": "finished",
+    "frames": 13654,
+    "seconds": 227.56666666666666,
+    "deaths": 0,
+    "cratesBroken": 87,
+    "enemiesDefeated": 15,
+    "position": [
+      -0.0474055566281033,
+      1.7766666691501933,
+      -1379.5298839360669
+    ],
+    "completionScope": "continuous main-route traversal; optional cargo separately validated",
+    "consoleErrors": [],
+    "failedRequests": []
+  },
+  "bonusBrowser": {
+    "frames": 7357,
+    "completionScope": "complete-stage",
+    "activeStageCrates": 26,
+    "bonusCrateTotal": 0,
+    "bonusCrates": 0,
+    "gemEarned": true,
+    "done": true,
+    "state": "finished",
+    "cratesBroken": 26,
+    "totalCrates": 26,
+    "deaths": 0,
+    "consoleErrors": [],
+    "failedRequests": []
+  },
+  "cargo": [
+    {
+      "case": "high parcel before launcher",
+      "frames": 110,
+      "rewardCollected": true,
+      "launcherCollected": true,
+      "deaths": 0
+    },
+    {
+      "case": "TNT cap then clear refuge",
+      "frames": 280,
+      "capCollected": true,
+      "tntCleared": true,
+      "refugeReward": true,
+      "position": [
+        -9.462948066905847,
+        2.1059999465942383,
+        -231.78076442801807
+      ],
+      "deaths": 0
+    }
+  ],
+  "lifecycle": [
+    "supported spawn and keyboard movement",
+    "checkpoint hit with keyboard spin",
+    "walk into lagoon gap and recover at banked checkpoint",
+    "parent bonus entry and failed-bonus return preserve the parent"
+  ],
+  "fullRenderViews": [
+    {
+      "file": "beachfront-full-views.json",
+      "locations": [
+        "main-arrival",
+        "main-split-pier",
+        "main-high-parcel",
+        "main-cargo-lane",
+        "main-ferry",
+        "main-breakwater",
+        "main-finish"
+      ],
+      "nativeDrawingBuffer": [
+        1600,
+        1000
+      ],
+      "normalResolution": 720
+    },
+    {
+      "file": "bonus-beachside-run-full-views.json",
+      "locations": [
+        "bonus-arrival",
+        "bonus-high-cargo",
+        "bonus-wharf"
+      ],
+      "nativeDrawingBuffer": [
+        1600,
+        1000
+      ],
+      "normalResolution": 720
+    }
+  ],
+  "ferryPhases": {
+    "cases": [
+      {
+        "delaySeconds": 0,
+        "state": "finished",
+        "frames": 1828,
+        "seconds": 30.466666666666665,
+        "deaths": 0,
+        "cratesBroken": 11,
+        "enemiesDefeated": 1,
+        "position": [
+          -0.04728462039355041,
+          1.7766666691501933,
+          -1379.5298835221213
+        ],
+        "completionScope": "isolated ferry start"
+      },
+      {
+        "delaySeconds": 2.4,
+        "state": "finished",
+        "frames": 2142,
+        "seconds": 35.7,
+        "deaths": 0,
+        "cratesBroken": 11,
+        "enemiesDefeated": 1,
+        "position": [
+          -0.04736923119617851,
+          1.7766666691501933,
+          -1379.5298839313884
+        ],
+        "completionScope": "isolated ferry start"
+      },
+      {
+        "delaySeconds": 4.8,
+        "state": "finished",
+        "frames": 2142,
+        "seconds": 35.7,
+        "deaths": 0,
+        "cratesBroken": 11,
+        "enemiesDefeated": 1,
+        "position": [
+          -0.04736923119617851,
+          1.7766666691501933,
+          -1379.5298839313884
+        ],
+        "completionScope": "isolated ferry start"
+      },
+      {
+        "delaySeconds": 7.2,
+        "state": "finished",
+        "frames": 2408,
+        "seconds": 40.13333333333333,
+        "deaths": 0,
+        "cratesBroken": 11,
+        "enemiesDefeated": 1,
+        "position": [
+          -0.04747333350700783,
+          1.7766666691501933,
+          -1379.5299441509455
+        ],
+        "completionScope": "isolated ferry start"
+      }
+    ],
+    "scope": "Before the final visual raft skin; collider/motion parameters unchanged. Final full main Chrome journey verifies the dressed ferry and corrected shore shelves. A stopped redundant phase rerun is not counted."
+  },
+  "publishedIds": [
+    "flats",
+    "sky",
+    "test",
+    "custard-creek",
+    "bonus-custard-creek",
+    "jungle-terraces",
+    "bonus-jungle-terraces",
+    "drowned-crown",
+    "slipstream-race",
+    "country-club",
+    "rooftop-relay",
+    "coconut-cart-rally"
+  ],
+  "publishedPackChanged": false,
+  "newRuntimeMediaFiles": 0,
+  "sourceHashes": {
+    "docs/BANANA_BAY_DESIGN.md": "0e18bdeefc17554e8c24f18ac2120c1a7c22aaa8a5581cbd7fcfcf55b6885323",
+    "src/level.ts": "b68cbc1df68854933b2e003c8e328f08abd3a0be1974fa565a585c5dbe75eab8",
+    "src/levels/banana-bay-bonus.ts": "bcd0e52c73886399740d774df143a9618c404d8b6f0d575b828b9814a0c135ba",
+    "src/levels/banana-bay-route.ts": "758a1558cd4bb35d05a07ecf5bff50166d5dc038d8690dd17a8b526e2765f6bb",
+    "src/levels/banana-bay-theme.ts": "e26b3cbd8e0083d035fa6af74dc1f222eb3184581a0b2177c0b374e647c6ceb8",
+    "src/levels/sunny-beach.ts": "c0db23036099193e4ff91f0f227babfb50517c584e7ab116ea014538a422ecd2",
+    "src/levels/themed-bonuses.ts": "8325cacd81b8719d0e136e1186272d591c3cbc032113e89c5c322ce7c392d621",
+    "tools/banana-bay-browser.mjs": "b26a6aeb0fb6766bfebebc1ed44c2da06fc866d4e9d8528cb5cb776ebed26e99",
+    "tools/banana-bay-pilot.mjs": "ad851d98462e36525159fe4126f547720ec40c63ce5777bf42cdd0a7dc57cb8c",
+    "tools/banana-bay-runtime.mjs": "4be18b3bbec91bd9280858ce91ebff381d5f73cc99f81c020195922c758209fd",
+    "tools/puzzle-switchyard-pilot.mjs": "2aa01de487bd4e531e7b9d27194aa4c87e54f4a79fad47e96945b15b42cd4304",
+    "tools/test-banana-bay-cargo.mjs": "adc64a866333915567bedb20354e7bf6155e2931b08667dc130ad10e0e62a8fc",
+    "tools/test-banana-bay-route.mjs": "b04340106997c713fe02db9fa37f69275abc081c45cfbee00aff45cf31cf19ef",
+    "tools/test-banana-bay.mjs": "730e0ce3624dd29d359a6e34601645cb598a94fc166cd9974075a54e9b04042e",
+    "tools/test-sunny-beach.mjs": "b40835589652fb74bb5fa143237e0d7555e27193ec7e1fe8bac7dd79b2ee81d3"
+  },
+  "checkLogs": {
+    "level-checks.log": {
+      "sha256": "7978618bd420d819d6c88144d7fd89d7f4b845d0b0760a65a00ad7c2d8811a33",
+      "bytes": 129438,
+      "modifiedAt": "2026-10-27T07:16:46.226Z"
+    },
+    "build.log": {
+      "sha256": "fa6565da1c687b9f8323b7d6f2c152c3fcf752e57b409e8d75b0523a2a39455a",
+      "bytes": 6526,
+      "modifiedAt": "2026-10-27T07:21:37.683Z"
+    },
+    "release-size.log": {
+      "sha256": "307587c53c1a2d6afe011c5707cbabe424701f2419e2f043d3ba92611eb8b7c5",
+      "bytes": 113,
+      "modifiedAt": "2026-10-27T07:21:38.268Z"
+    },
+    "physics-checks.log": {
+      "sha256": "0930910460f5fd76f220e9df6a9b3e80bfc271424b2437f056186ebf66835ef1",
+      "bytes": 814,
+      "modifiedAt": "2026-10-27T07:01:38.271Z"
+    },
+    "browser-main.log": {
+      "sha256": "133b89bbfe9247a2a68f5ee7f4e6737af0a0615797216833c6b49beeee65c069",
+      "bytes": 1049,
+      "modifiedAt": "2026-10-27T06:50:13.248Z"
+    },
+    "browser-main-views.log": {
+      "sha256": "c09328b0b62ccc9ed2e56242992649c1e1d33e0196c74c5621eed9298013e4ea",
+      "bytes": 2607,
+      "modifiedAt": "2026-10-27T06:53:32.814Z"
+    },
+    "browser-bonus.log": {
+      "sha256": "07c913b29f591d5e8843bb0cba5f0d0a14c751ccecb1a8ed47c194ebc5e71dbe",
+      "bytes": 773,
+      "modifiedAt": "2026-10-27T06:37:43.794Z"
+    },
+    "browser-bonus-views.log": {
+      "sha256": "161fbcffb6902648a6af981e8cbc79fe550af4178098b12fcded3c43f46c5b10",
+      "bytes": 1058,
+      "modifiedAt": "2026-10-27T06:38:41.984Z"
+    },
+    "browser-smoke.log": {
+      "sha256": "d44896755e44e9351c91c7b831388f84adbba0d3f6db64c0a8edd40d0fe48d5a",
+      "bytes": 3209,
+      "modifiedAt": "2026-10-27T06:30:33.968Z"
+    },
+    "source-check.log": {
+      "sha256": "2461d51222bdc89bbad1d091bd0514a07cab86777fb0bcd0eba48773c8d4ef9f",
+      "bytes": 198,
+      "modifiedAt": "2026-10-27T06:35:32.560Z"
+    }
+  },
+  "reportFormatNote": "The recorded journey files use failed:[] for request failures. Both have completed result/end records and zero errors. The harness now writes failedRequests separately so it cannot overwrite a traversal failure; this output-only correction does not change replay inputs or game code.",
+  "limits": [
+    "Main-route clear is not an all-crate completion; optional cargo has separate scenarios.",
+    "Automated feasibility is not novice usability or a performance benchmark.",
+    "Full views declare isolated starts; traversal evidence is separate.",
+    "Local validation only; integration and publishing belong to the release coordinator."
+  ]
+}

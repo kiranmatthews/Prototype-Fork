@@ -1,0 +1,251 @@
+{
+  "evidence": [
+    {
+      "name": "main-arrival",
+      "target": [
+        -5.632,
+        0.442,
+        -5
+      ],
+      "top": 0.441699245834112,
+      "p": [
+        -5.632,
+        0.441699245834112,
+        -5
+      ],
+      "grounded": true,
+      "state": "ride",
+      "resolution": "max",
+      "enabled": false,
+      "sizes": {
+        "viewportWidth": 1600,
+        "viewportHeight": 1000,
+        "inputWidth": 1152,
+        "inputHeight": 720,
+        "outputWidth": 1152,
+        "outputHeight": 720
+      },
+      "drawingBuffer": [
+        1600,
+        1000
+      ],
+      "viewport": [
+        1600,
+        1000
+      ],
+      "dpr": 1
+    },
+    {
+      "name": "main-split-pier",
+      "target": [
+        -17.442,
+        0.307,
+        -135
+      ],
+      "top": 2.078000068664551,
+      "p": [
+        -17.442,
+        2.078000068664551,
+        -135
+      ],
+      "grounded": true,
+      "state": "ride",
+      "resolution": "max",
+      "enabled": false,
+      "sizes": {
+        "viewportWidth": 1600,
+        "viewportHeight": 1000,
+        "inputWidth": 1152,
+        "inputHeight": 720,
+        "outputWidth": 1152,
+        "outputHeight": 720
+      },
+      "drawingBuffer": [
+        1600,
+        1000
+      ],
+      "viewport": [
+        1600,
+        1000
+      ],
+      "dpr": 1
+    },
+    {
+      "name": "main-high-parcel",
+      "target": [
+        -15.495,
+        0.26,
+        -160
+      ],
+      "top": 2.078000068664551,
+      "p": [
+        -15.495,
+        2.078000068664551,
+        -160
+      ],
+      "grounded": true,
+      "state": "ride",
+      "resolution": "max",
+      "enabled": false,
+      "sizes": {
+        "viewportWidth": 1600,
+        "viewportHeight": 1000,
+        "inputWidth": 1152,
+        "inputHeight": 720,
+        "outputWidth": 1152,
+        "outputHeight": 720
+      },
+      "drawingBuffer": [
+        1600,
+        1000
+      ],
+      "viewport": [
+        1600,
+        1000
+      ],
+      "dpr": 1
+    },
+    {
+      "name": "main-cargo-lane",
+      "target": [
+        3.405,
+        0.343,
+        -428
+      ],
+      "top": 2.099999904632565,
+      "p": [
+        3.405,
+        2.0999999046325684,
+        -428
+      ],
+      "grounded": true,
+      "state": "ride",
+      "resolution": "max",
+      "enabled": false,
+      "sizes": {
+        "viewportWidth": 1600,
+        "viewportHeight": 1000,
+        "inputWidth": 1152,
+        "inputHeight": 720,
+        "outputWidth": 1152,
+        "outputHeight": 720
+      },
+      "drawingBuffer": [
+        1600,
+        1000
+      ],
+      "viewport": [
+        1600,
+        1000
+      ],
+      "dpr": 1
+    },
+    {
+      "name": "main-ferry",
+      "target": [
+        11.926,
+        1.05,
+        -1252
+      ],
+      "top": 1.0499999523162842,
+      "p": [
+        11.926,
+        1.0499999523162842,
+        -1252
+      ],
+      "grounded": true,
+      "state": "ride",
+      "resolution": "max",
+      "enabled": false,
+      "sizes": {
+        "viewportWidth": 1600,
+        "viewportHeight": 1000,
+        "inputWidth": 1152,
+        "inputHeight": 720,
+        "outputWidth": 1152,
+        "outputHeight": 720
+      },
+      "drawingBuffer": [
+        1600,
+        1000
+      ],
+      "viewport": [
+        1600,
+        1000
+      ],
+      "dpr": 1
+    },
+    {
+      "name": "main-breakwater",
+      "target": [
+        8.863,
+        1.05,
+        -1299
+      ],
+      "top": 1.0499999523162842,
+      "p": [
+        8.863,
+        1.0499999523162842,
+        -1299
+      ],
+      "grounded": true,
+      "state": "ride",
+      "resolution": "max",
+      "enabled": false,
+      "sizes": {
+        "viewportWidth": 1600,
+        "viewportHeight": 1000,
+        "inputWidth": 1152,
+        "inputHeight": 720,
+        "outputWidth": 1152,
+        "outputHeight": 720
+      },
+      "drawingBuffer": [
+        1600,
+        1000
+      ],
+      "viewport": [
+        1600,
+        1000
+      ],
+      "dpr": 1
+    },
+    {
+      "name": "main-finish",
+      "target": [
+        0.204,
+        1.05,
+        -1368
+      ],
+      "top": 1.0499999523162842,
+      "p": [
+        0.204,
+        1.0499999523162842,
+        -1368
+      ],
+      "grounded": true,
+      "state": "ride",
+      "resolution": "max",
+      "enabled": false,
+      "sizes": {
+        "viewportWidth": 1600,
+        "viewportHeight": 1000,
+        "inputWidth": 1152,
+        "inputHeight": 720,
+        "outputWidth": 1152,
+        "outputHeight": 720
+      },
+      "drawingBuffer": [
+        1600,
+        1000
+      ],
+      "viewport": [
+        1600,
+        1000
+      ],
+      "dpr": 1
+    }
+  ],
+  "errors": [],
+  "failed": []
+}

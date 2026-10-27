@@ -1,0 +1,205 @@
+{
+  "cases": [
+    {
+      "name": "supported spawn and keyboard movement",
+      "start": {
+        "id": "beachfront",
+        "p": [
+          -2.125,
+          1.037477775709427,
+          -1.625
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0,
+        "lives": 4,
+        "checkpoint": null,
+        "spawn": [
+          -2.125,
+          1.1541444425996108,
+          -1.625
+        ],
+        "bonusDone": false
+      },
+      "end": {
+        "id": "beachfront",
+        "p": [
+          -2.496656399488232,
+          0.31607619133745324,
+          -3.336216291335071
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0,
+        "lives": 4,
+        "checkpoint": null,
+        "spawn": [
+          -2.125,
+          1.1541444425996108,
+          -1.625
+        ],
+        "bonusDone": false
+      }
+    },
+    {
+      "name": "checkpoint hit with keyboard spin",
+      "end": {
+        "id": "beachfront",
+        "p": [
+          -18.108,
+          0.45899191716503207,
+          -97.8
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0,
+        "lives": 4,
+        "checkpoint": [
+          -18.108,
+          0.5529962786400858,
+          -99
+        ],
+        "spawn": [
+          -18.108,
+          0.5529962786400858,
+          -99
+        ],
+        "bonusDone": false
+      }
+    },
+    {
+      "name": "walk into lagoon gap and recover at banked checkpoint",
+      "start": {
+        "id": "beachfront",
+        "p": [
+          8.724,
+          1.0499999523162842,
+          -1300
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0,
+        "lives": 4,
+        "checkpoint": [
+          8.724,
+          1.1499999523162843,
+          -1300
+        ],
+        "spawn": [
+          8.724,
+          1.1499999523162843,
+          -1300
+        ],
+        "bonusDone": false
+      },
+      "fallen": {
+        "id": "beachfront",
+        "p": [
+          7.8314617196461285,
+          -3.4455556032392725,
+          -1306.236442732575
+        ],
+        "state": "dead",
+        "grounded": false,
+        "deaths": 0,
+        "lives": 3,
+        "checkpoint": [
+          8.724,
+          1.1499999523162843,
+          -1300
+        ],
+        "spawn": [
+          8.724,
+          1.1499999523162843,
+          -1300
+        ],
+        "bonusDone": false
+      },
+      "end": {
+        "id": "beachfront",
+        "p": [
+          8.724,
+          1.1499999523162843,
+          -1300
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0,
+        "lives": 3,
+        "checkpoint": [
+          8.724,
+          1.1499999523162843,
+          -1300
+        ],
+        "spawn": [
+          8.724,
+          1.1499999523162843,
+          -1300
+        ],
+        "bonusDone": false
+      }
+    },
+    {
+      "name": "parent bonus entry and failed-bonus return preserve the parent",
+      "before": {
+        "id": "beachfront",
+        "p": [
+          0.487,
+          0.39842725971640336,
+          -396.045
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0,
+        "lives": 4,
+        "checkpoint": null,
+        "spawn": [
+          -2.125,
+          1.1541444425996108,
+          -1.625
+        ],
+        "bonusDone": false
+      },
+      "entered": {
+        "id": "bonus:beachfront",
+        "p": [
+          -5,
+          0.12,
+          0
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0,
+        "lives": 0,
+        "checkpoint": null,
+        "spawn": [
+          -5,
+          0.12,
+          0
+        ],
+        "bonusDone": false
+      },
+      "returned": {
+        "id": "beachfront",
+        "p": [
+          0.487,
+          0.3984272597164029,
+          -396.045
+        ],
+        "state": "ride",
+        "grounded": true,
+        "deaths": 0,
+        "lives": 4,
+        "checkpoint": null,
+        "spawn": [
+          -2.125,
+          1.1541444425996108,
+          -1.625
+        ],
+        "bonusDone": false
+      }
+    }
+  ],
+  "errors": [],
+  "failed": []
+}

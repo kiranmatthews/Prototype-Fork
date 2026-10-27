@@ -120,7 +120,7 @@ try{
       if(s.done)break;
     }
     const report=await page.evaluate(()=>window.bayReview);
-    await writeFile(`${out}/${id}-${full?'full':'lite'}-journey.json`,JSON.stringify({...report,errors,failed},null,2));
+    await writeFile(`${out}/${id}-${full?'full':'lite'}-journey.json`,JSON.stringify({...report,errors,failedRequests:failed},null,2));
     await page.screenshot({path:`${out}/${id}-finish-${full?'full':'lite'}.jpg`,type:'jpeg',quality:85});
     console.log(JSON.stringify({done:report.done,failed:report.failed,result:report.result,errors,failedRequests:failed}));
     assert.ok(report.done);assert.equal(report.failed,null);assert.equal(report.end.state,'finished');

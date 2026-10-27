@@ -1,0 +1,4168 @@
+{
+  "frame": 7357,
+  "done": true,
+  "failed": [],
+  "stage": "finish plane crossing",
+  "actions": [
+    {
+      "name": "approach opening protection",
+      "firstFrame": 20,
+      "lastFrame": 92
+    },
+    {
+      "name": "opening protection",
+      "firstFrame": 112,
+      "lastFrame": 112
+    },
+    {
+      "name": "finite two-support upper-first puzzle approach",
+      "firstFrame": 134,
+      "lastFrame": 244
+    },
+    {
+      "name": "finite two-support upper-first puzzle top support contact",
+      "firstFrame": 289,
+      "lastFrame": 322
+    },
+    {
+      "name": "finite two-support upper-first puzzle rebound apex",
+      "firstFrame": 322,
+      "lastFrame": 347
+    },
+    {
+      "name": "finite two-support upper-first puzzle upper claim",
+      "firstFrame": 349,
+      "lastFrame": 356
+    },
+    {
+      "name": "finite two-support upper-first puzzle clear landing",
+      "firstFrame": 356,
+      "lastFrame": 379
+    },
+    {
+      "name": "approach finite two-support upper-first puzzle clear conserved striped support",
+      "firstFrame": 399,
+      "lastFrame": 452
+    },
+    {
+      "name": "finite two-support upper-first puzzle clear conserved striped support",
+      "firstFrame": 472,
+      "lastFrame": 472
+    },
+    {
+      "name": "admission stepping box takeoff",
+      "firstFrame": 494,
+      "lastFrame": 620
+    },
+    {
+      "name": "stomp ordinary admission stepping box",
+      "firstFrame": 665,
+      "lastFrame": 702
+    },
+    {
+      "name": "ordinary crate rebound to admission perch",
+      "firstFrame": 702,
+      "lastFrame": 736
+    },
+    {
+      "name": "approach admission upper life",
+      "firstFrame": 756,
+      "lastFrame": 785
+    },
+    {
+      "name": "admission upper life",
+      "firstFrame": 805,
+      "lastFrame": 805
+    },
+    {
+      "name": "admission exit takeoff",
+      "firstFrame": 827,
+      "lastFrame": 905
+    },
+    {
+      "name": "raised balcony admission",
+      "firstFrame": 950,
+      "lastFrame": 992
+    },
+    {
+      "name": "first patrol safe approach",
+      "firstFrame": 992,
+      "lastFrame": 1048
+    },
+    {
+      "name": "first patrol spin",
+      "firstFrame": 1066,
+      "lastFrame": 1075
+    },
+    {
+      "name": "high gallery key ascent takeoff",
+      "firstFrame": 1075,
+      "lastFrame": 1182
+    },
+    {
+      "name": "high gallery key ascent arrow contact",
+      "firstFrame": 1227,
+      "lastFrame": 1264
+    },
+    {
+      "name": "high gallery key ascent apex outside the shelf",
+      "firstFrame": 1267,
+      "lastFrame": 1300
+    },
+    {
+      "name": "high gallery key ascent rise above the shelf",
+      "firstFrame": 1302,
+      "lastFrame": 1307
+    },
+    {
+      "name": "high gallery key ascent",
+      "firstFrame": 1307,
+      "lastFrame": 1366
+    },
+    {
+      "name": "approach first high bridge key",
+      "firstFrame": 1366,
+      "lastFrame": 1445
+    },
+    {
+      "name": "first high bridge key",
+      "firstFrame": 1465,
+      "lastFrame": 1465
+    },
+    {
+      "name": "return below high gallery",
+      "firstFrame": 1514,
+      "lastFrame": 1565
+    },
+    {
+      "name": "approach high gallery launcher last",
+      "firstFrame": 1565,
+      "lastFrame": 1618
+    },
+    {
+      "name": "high gallery launcher last",
+      "firstFrame": 1638,
+      "lastFrame": 1638
+    },
+    {
+      "name": "newly materialized first bridge",
+      "firstFrame": 1660,
+      "lastFrame": 1940
+    },
+    {
+      "name": "armor stomp lesson safe approach",
+      "firstFrame": 1958,
+      "lastFrame": 2021
+    },
+    {
+      "name": "armor stomp lesson stomp",
+      "firstFrame": 2066,
+      "lastFrame": 2103
+    },
+    {
+      "name": "armor stomp lesson rebound landing",
+      "firstFrame": 2103,
+      "lastFrame": 2145
+    },
+    {
+      "name": "spike spin lesson safe approach",
+      "firstFrame": 2145,
+      "lastFrame": 2210
+    },
+    {
+      "name": "spike spin lesson spin",
+      "firstFrame": 2228,
+      "lastFrame": 2240
+    },
+    {
+      "name": "pre-staircase checkpoint approach",
+      "firstFrame": 2240,
+      "lastFrame": 2359
+    },
+    {
+      "name": "crate stair takeoff",
+      "firstFrame": 2400,
+      "lastFrame": 2469
+    },
+    {
+      "name": "reward over permanent staircase anchor",
+      "firstFrame": 2514,
+      "lastFrame": 2552
+    },
+    {
+      "name": "reward over permanent staircase anchor",
+      "firstFrame": 2579,
+      "lastFrame": 2619
+    },
+    {
+      "name": "jump from final anchor onto workshop arrow",
+      "firstFrame": 2646,
+      "lastFrame": 2685
+    },
+    {
+      "name": "arrow into upper explosive workshop",
+      "firstFrame": 2685,
+      "lastFrame": 2740
+    },
+    {
+      "name": "TNT upper-first staging",
+      "firstFrame": 2760,
+      "lastFrame": 2858
+    },
+    {
+      "name": "wood on TNT rebound",
+      "firstFrame": 2903,
+      "lastFrame": 2936
+    },
+    {
+      "name": "TNT stack rebound apex",
+      "firstFrame": 2936,
+      "lastFrame": 2961
+    },
+    {
+      "name": "upper life before fuse support",
+      "firstFrame": 2963,
+      "lastFrame": 2970
+    },
+    {
+      "name": "TNT upper-first retreat",
+      "firstFrame": 2970,
+      "lastFrame": 2993
+    },
+    {
+      "name": "first workshop fuse takeoff",
+      "firstFrame": 3013,
+      "lastFrame": 3101
+    },
+    {
+      "name": "first workshop fuse stomp fuse",
+      "firstFrame": 3146,
+      "lastFrame": 3183
+    },
+    {
+      "name": "first workshop fuse leave blast radius",
+      "firstFrame": 3183,
+      "lastFrame": 3224
+    },
+    {
+      "name": "first workshop fuse complete countdown",
+      "firstFrame": 3244,
+      "lastFrame": 3403
+    },
+    {
+      "name": "approach workshop retreat reward",
+      "firstFrame": 3403,
+      "lastFrame": 3516
+    },
+    {
+      "name": "workshop retreat reward",
+      "firstFrame": 3536,
+      "lastFrame": 3536
+    },
+    {
+      "name": "second workshop fuse takeoff",
+      "firstFrame": 3558,
+      "lastFrame": 3645
+    },
+    {
+      "name": "second workshop fuse stomp fuse",
+      "firstFrame": 3690,
+      "lastFrame": 3727
+    },
+    {
+      "name": "second workshop fuse leave blast radius",
+      "firstFrame": 3727,
+      "lastFrame": 3768
+    },
+    {
+      "name": "second workshop fuse complete countdown",
+      "firstFrame": 3788,
+      "lastFrame": 3947
+    },
+    {
+      "name": "workshop blade window safe approach",
+      "firstFrame": 3947,
+      "lastFrame": 4069
+    },
+    {
+      "name": "workshop blade window attack opening",
+      "firstFrame": 4087,
+      "lastFrame": 4206
+    },
+    {
+      "name": "workshop blade window spin",
+      "firstFrame": 4206,
+      "lastFrame": 4221
+    },
+    {
+      "name": "workshop timber hinge approach",
+      "firstFrame": 4221,
+      "lastFrame": 4312
+    },
+    {
+      "name": "deploy permanent workshop crossing",
+      "firstFrame": 4331,
+      "lastFrame": 4364
+    },
+    {
+      "name": "cross stable workshop timber",
+      "firstFrame": 4364,
+      "lastFrame": 4475
+    },
+    {
+      "name": "deploy permanent workshop crossing",
+      "firstFrame": 4494,
+      "lastFrame": 4527
+    },
+    {
+      "name": "cross stable workshop timber",
+      "firstFrame": 4527,
+      "lastFrame": 4638
+    },
+    {
+      "name": "machinery checkpoint approach",
+      "firstFrame": 4656,
+      "lastFrame": 4712
+    },
+    {
+      "name": "pass the conserved launcher without attacking it",
+      "firstFrame": 4780,
+      "lastFrame": 4819
+    },
+    {
+      "name": "outward switch approach",
+      "firstFrame": 4819,
+      "lastFrame": 4939
+    },
+    {
+      "name": "outward return circuit key",
+      "firstFrame": 4959,
+      "lastFrame": 4959
+    },
+    {
+      "name": "conserved arrow to activated return row takeoff",
+      "firstFrame": 4981,
+      "lastFrame": 5104
+    },
+    {
+      "name": "conserved arrow to activated return row arrow contact",
+      "firstFrame": 5149,
+      "lastFrame": 5186
+    },
+    {
+      "name": "conserved arrow to activated return row apex outside the shelf",
+      "firstFrame": 5189,
+      "lastFrame": 5222
+    },
+    {
+      "name": "conserved arrow to activated return row rise above the shelf",
+      "firstFrame": 5224,
+      "lastFrame": 5237
+    },
+    {
+      "name": "conserved arrow to activated return row",
+      "firstFrame": 5237,
+      "lastFrame": 5246
+    },
+    {
+      "name": "approach activated upper return row",
+      "firstFrame": 5246,
+      "lastFrame": 5293
+    },
+    {
+      "name": "activated upper return row",
+      "firstFrame": 5313,
+      "lastFrame": 5313
+    },
+    {
+      "name": "approach activated upper return row",
+      "firstFrame": 5335,
+      "lastFrame": 5409
+    },
+    {
+      "name": "activated upper return row",
+      "firstFrame": 5429,
+      "lastFrame": 5429
+    },
+    {
+      "name": "approach activated upper return row",
+      "firstFrame": 5451,
+      "lastFrame": 5525
+    },
+    {
+      "name": "activated upper return row",
+      "firstFrame": 5545,
+      "lastFrame": 5545
+    },
+    {
+      "name": "return to clear conserved loop arrow",
+      "firstFrame": 5594,
+      "lastFrame": 5646
+    },
+    {
+      "name": "approach return-loop launcher last",
+      "firstFrame": 5686,
+      "lastFrame": 5755
+    },
+    {
+      "name": "return-loop launcher last",
+      "firstFrame": 5775,
+      "lastFrame": 5775
+    },
+    {
+      "name": "used second key obstacle approach",
+      "firstFrame": 5797,
+      "lastFrame": 5936
+    },
+    {
+      "name": "hop over used outward switch",
+      "firstFrame": 5981,
+      "lastFrame": 6020
+    },
+    {
+      "name": "newly materialized second bridge",
+      "firstFrame": 6020,
+      "lastFrame": 6236
+    },
+    {
+      "name": "charger telegraph and recovery safe approach",
+      "firstFrame": 6254,
+      "lastFrame": 6326
+    },
+    {
+      "name": "charger telegraph and recovery spin",
+      "firstFrame": 6344,
+      "lastFrame": 6345
+    },
+    {
+      "name": "approach clear later Nitro field",
+      "firstFrame": 6345,
+      "lastFrame": 6491
+    },
+    {
+      "name": "clear later Nitro field",
+      "firstFrame": 6511,
+      "lastFrame": 6511
+    },
+    {
+      "name": "Nitro cleanup resolved",
+      "firstFrame": 6533,
+      "lastFrame": 6533
+    },
+    {
+      "name": "hop over used Nitro clearing switch",
+      "firstFrame": 6560,
+      "lastFrame": 6599
+    },
+    {
+      "name": "crumble approach bank",
+      "firstFrame": 6599,
+      "lastFrame": 6717
+    },
+    {
+      "name": "finite footing first landing",
+      "firstFrame": 6762,
+      "lastFrame": 6801
+    },
+    {
+      "name": "finite footing finale",
+      "firstFrame": 6828,
+      "lastFrame": 6863
+    },
+    {
+      "name": "final armored stomp safe approach",
+      "firstFrame": 6863,
+      "lastFrame": 6926
+    },
+    {
+      "name": "final armored stomp stomp",
+      "firstFrame": 6971,
+      "lastFrame": 7008
+    },
+    {
+      "name": "final armored stomp rebound landing",
+      "firstFrame": 7008,
+      "lastFrame": 7050
+    },
+    {
+      "name": "final spike spin safe approach",
+      "firstFrame": 7050,
+      "lastFrame": 7136
+    },
+    {
+      "name": "final spike spin spin",
+      "firstFrame": 7154,
+      "lastFrame": 7176
+    },
+    {
+      "name": "approach final mastery reward",
+      "firstFrame": 7176,
+      "lastFrame": 7267
+    },
+    {
+      "name": "final mastery reward",
+      "firstFrame": 7287,
+      "lastFrame": 7287
+    },
+    {
+      "name": "finish plane crossing",
+      "firstFrame": 7311,
+      "lastFrame": 7357
+    }
+  ],
+  "evidence": [
+    {
+      "action": "opening protection",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "finite two-support upper-first puzzle clear conserved striped support",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "admission upper life",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "raised balcony admission",
+      "launch": [
+        19.134266666258,
+        2.799999952316284,
+        -0.00018273501561395317
+      ],
+      "landing": [
+        23.971766666127458,
+        1.399999976158142,
+        -0.00021827327498859185
+      ],
+      "ground": "wood"
+    },
+    {
+      "action": "first patrol",
+      "kind": "spiker",
+      "alive": false,
+      "position": [
+        23.228288888369743,
+        1.399999976158142,
+        -0.00021281138225351246
+      ]
+    },
+    {
+      "action": "high gallery key ascent",
+      "contact": {
+        "frame": 1264,
+        "position": [
+          31.971733332578232,
+          2.379999976158142,
+          -0.00027704431176140066
+        ],
+        "state": "air",
+        "grounded": false,
+        "bailing": false,
+        "speed": 0,
+        "verticalSpeed": 20,
+        "deaths": 0,
+        "ground": "wood"
+      },
+      "landing": [
+        34.37323333251347,
+        9,
+        -0.00029468671587265516
+      ],
+      "launcherAlive": true
+    },
+    {
+      "action": "first high bridge key",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": true
+      }
+    },
+    {
+      "action": "return below high gallery",
+      "launch": [
+        36.83021111022487,
+        9,
+        -0.0003127366824968183
+      ],
+      "landing": [
+        30.050211110407727,
+        1.399999976158142,
+        -0.00026292802129577537
+      ],
+      "ground": "wood"
+    },
+    {
+      "action": "high gallery launcher last",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "armor stomp lesson",
+      "kind": "turtle",
+      "alive": false,
+      "position": [
+        66.3778444427606,
+        1.399999976158142,
+        -0.0005298057175989776
+      ]
+    },
+    {
+      "action": "spike spin lesson",
+      "kind": "spiker",
+      "alive": false,
+      "position": [
+        67.97775555382863,
+        1.399999976158142,
+        -0.0005415593209153654
+      ]
+    },
+    {
+      "action": "pre-staircase checkpoint",
+      "x": 78,
+      "active": true
+    },
+    {
+      "action": "reward over permanent staircase anchor",
+      "launch": [
+        78.42254444243584,
+        1.399999976158142,
+        -0.0006182910246149345
+      ],
+      "landing": [
+        81.77204444234549,
+        2.38,
+        -0.0006428978256020869
+      ],
+      "ground": "crate"
+    },
+    {
+      "action": "reward over permanent staircase anchor",
+      "launch": [
+        81.77204444234549,
+        2.38,
+        -0.0006428978256020869
+      ],
+      "landing": [
+        84.7645444422648,
+        2.38,
+        -0.0006648819581454677
+      ],
+      "ground": "crate"
+    },
+    {
+      "action": "workshop retreat reward",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "workshop blade window",
+      "kind": "spinner",
+      "alive": false,
+      "position": [
+        113.33364444408447,
+        2.799999952316284,
+        -0.0008772740236297358
+      ]
+    },
+    {
+      "action": "machinery checkpoint",
+      "x": 134,
+      "active": true
+    },
+    {
+      "action": "pass the conserved launcher without attacking it",
+      "launch": [
+        132.82552222133597,
+        2.799999952316284,
+        -0.0010204693534830481
+      ],
+      "landing": [
+        138.10702222119312,
+        2.799999952316284,
+        -0.0010592694189894393
+      ],
+      "ground": "wood"
+    },
+    {
+      "action": "outward return circuit key",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": true
+      }
+    },
+    {
+      "action": "conserved arrow to activated return row",
+      "contact": {
+        "frame": 5186,
+        "position": [
+          136.0280222212493,
+          3.779999952316284,
+          -0.0010439962321698271
+        ],
+        "state": "air",
+        "grounded": false,
+        "bailing": false,
+        "speed": 0,
+        "verticalSpeed": 20,
+        "deaths": 0,
+        "ground": "wood"
+      },
+      "landing": [
+        138.23002222118984,
+        11.200000000000001,
+        -0.001060173027444857
+      ],
+      "launcherAlive": true
+    },
+    {
+      "action": "activated upper return row",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "activated upper return row",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "activated upper return row",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "return to clear conserved loop arrow",
+      "launch": [
+        142.81968888773218,
+        11.200000000000001,
+        -0.0010938906014899465
+      ],
+      "landing": [
+        134.8535000000037,
+        2.799999952316284,
+        -0.0010366877784159115
+      ],
+      "ground": "wood"
+    },
+    {
+      "action": "return-loop launcher last",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "hop over used outward switch",
+      "launch": [
+        144.92882222195357,
+        2.799999952316284,
+        -0.001110705228424463
+      ],
+      "landing": [
+        149.94632222181787,
+        2.799999952316284,
+        -0.0011475658416363003
+      ],
+      "ground": "wood"
+    },
+    {
+      "action": "charger telegraph and recovery",
+      "kind": "charger",
+      "alive": false,
+      "position": [
+        171.72827777678503,
+        2.799999952316284,
+        -0.0013075850222502813
+      ]
+    },
+    {
+      "action": "clear later Nitro field",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": true
+      }
+    },
+    {
+      "action": "hop over used Nitro clearing switch",
+      "launch": [
+        182.83138888759623,
+        2.799999952316284,
+        -0.0013891530310424418
+      ],
+      "landing": [
+        187.44199999987956,
+        2.799999952316284,
+        -0.001426267095406408
+      ],
+      "ground": "wood"
+    },
+    {
+      "action": "finite footing first landing",
+      "launch": [
+        194.91494444412209,
+        2.799999952316284,
+        -0.0014811664107467531
+      ],
+      "landing": [
+        198.97244444401232,
+        2.800000011920929,
+        -0.0015109744701602115
+      ],
+      "ground": "crumble pad"
+    },
+    {
+      "action": "finite footing finale",
+      "launch": [
+        198.97244444401232,
+        2.800000011920929,
+        -0.0015109744701602115
+      ],
+      "landing": [
+        203.7004444438844,
+        4,
+        -0.001545708297617225
+      ],
+      "ground": "wood"
+    },
+    {
+      "action": "final armored stomp",
+      "kind": "turtle",
+      "alive": false,
+      "position": [
+        209.60208888816922,
+        4,
+        -0.0015890641985998753
+      ]
+    },
+    {
+      "action": "final spike spin",
+      "kind": "spiker",
+      "alive": false,
+      "position": [
+        213.77263333250096,
+        4,
+        -0.0016197027288738018
+      ]
+    },
+    {
+      "action": "final mastery reward",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "Switchyard active-stage crate dependency route",
+      "totalCrates": 26,
+      "activeStageCrates": 26,
+      "bonusCrateTotal": 0,
+      "cratesBroken": 26,
+      "remaining": 0
+    }
+  ],
+  "samples": [
+    {
+      "frame": 30,
+      "p": [
+        -4.905233333335891,
+        0,
+        -6.961948072495907e-7
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "ground": "wood"
+    },
+    {
+      "frame": 60,
+      "p": [
+        -3.993933333360483,
+        0,
+        -0.00000739097842856389
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "ground": "wood"
+    },
+    {
+      "frame": 90,
+      "p": [
+        -3.256100000047059,
+        0,
+        -0.000012811404759365744
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 0,
+      "ground": "wood"
+    },
+    {
+      "frame": 120,
+      "p": [
+        -3.1766555556047584,
+        0,
+        -0.000013395036236893538
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "ground": "wood"
+    },
+    {
+      "frame": 150,
+      "p": [
+        -2.7913222222818246,
+        0,
+        -0.000016225852969853533
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "ground": "wood"
+    },
+    {
+      "frame": 180,
+      "p": [
+        -0.1166555556873321,
+        0,
+        -0.00003587505146922291
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "ground": "wood"
+    },
+    {
+      "frame": 210,
+      "p": [
+        2.332844444246568,
+        0,
+        -0.00005387008327039639
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "ground": "wood"
+    },
+    {
+      "frame": 240,
+      "p": [
+        3.105344444225724,
+        0,
+        -0.00005954518515502862
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "ground": "wood"
+    },
+    {
+      "frame": 270,
+      "p": [
+        3.22978888866681,
+        0,
+        -0.00006045940509185539
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "ground": "wood"
+    },
+    {
+      "frame": 300,
+      "p": [
+        4.139999999995952,
+        1.961666666666666,
+        -0.00007258098193281728
+      ],
+      "state": "air",
+      "grounded": false,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "ground": "wood"
+    },
+    {
+      "frame": 330,
+      "p": [
+        4.967999999973609,
+        3.4766666666666657,
+        -0.00007866380958391816
+      ],
+      "state": "air",
+      "grounded": false,
+      "deaths": 0,
+      "cratesBroken": 1,
+      "ground": "wood"
+    },
+    {
+      "frame": 360,
+      "p": [
+        4.3679999999898005,
+        5.967499999999998,
+        -0.00007425596345993202
+      ],
+      "state": "air",
+      "grounded": false,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "ground": "wood"
+    },
+    {
+      "frame": 390,
+      "p": [
+        3.034500000025785,
+        0,
+        -0.00006445952544937277
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "ground": "wood"
+    },
+    {
+      "frame": 420,
+      "p": [
+        3.1932000000215024,
+        0,
+        -0.00006562540074916711
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "ground": "wood"
+    },
+    {
+      "frame": 450,
+      "p": [
+        3.7415333333400387,
+        0,
+        -0.00006965368234581005
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 2,
+      "ground": "wood"
+    },
+    {
+      "frame": 480,
+      "p": [
+        3.820977777782339,
+        0,
+        -0.00007023731382333785
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 4,
+      "ground": "wood"
+    },
+    {
+      "frame": 510,
+      "p": [
+        4.206311111105272,
+        0,
+        -0.00007306813055629783
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 4,
+      "ground": "wood"
+    },
+    {
+      "frame": 540,
+      "p": [
+        6.880977777699764,
+        0,
+        -0.00009271732905566721
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 4,
+      "ground": "wood"
+    },
+    {
+      "frame": 570,
+      "p": [
+        10.434477777603865,
+        0,
+        -0.00011882279772497506
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 4,
+      "ground": "wood"
+    },
+    {
+      "frame": 600,
+      "p": [
+        11.749977777568366,
+        0,
+        -0.00012848700035181468
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 4,
+      "ground": "wood"
+    },
+    {
+      "frame": 630,
+      "p": [
+        12.234422221999747,
+        0,
+        -0.0001320459279630332
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 4,
+      "ground": "wood"
+    },
+    {
+      "frame": 660,
+      "p": [
+        12.234422221999747,
+        0,
+        -0.0001320459279630332
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 4,
+      "ground": "wood"
+    },
+    {
+      "frame": 690,
+      "p": [
+        13.96842222195295,
+        2.8541666666666643,
+        -0.00014478460326135332
+      ],
+      "state": "air",
+      "grounded": false,
+      "deaths": 0,
+      "cratesBroken": 4,
+      "ground": "wood"
+    },
+    {
+      "frame": 720,
+      "p": [
+        16.413422221886968,
+        3.612499999999998,
+        -0.00016274657621659708
+      ],
+      "state": "air",
+      "grounded": false,
+      "deaths": 0,
+      "cratesBroken": 5,
+      "ground": "wood"
+    },
+    {
+      "frame": 750,
+      "p": [
+        16.57092222188272,
+        2.799999952316284,
+        -0.00016390363582414344
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 5,
+      "ground": "wood"
+    },
+    {
+      "frame": 780,
+      "p": [
+        16.720922221878677,
+        2.799999952316284,
+        -0.00016500559735513999
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 5,
+      "ground": "wood"
+    },
+    {
+      "frame": 810,
+      "p": [
+        16.800755555209854,
+        2.799999952316284,
+        -0.00016559208576997033
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 6,
+      "ground": "wood"
+    },
+    {
+      "frame": 840,
+      "p": [
+        16.997788888537873,
+        2.799999952316284,
+        -0.00016703957346101927
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 6,
+      "ground": "wood"
+    },
+    {
+      "frame": 870,
+      "p": [
+        18.205222221838618,
+        2.799999952316284,
+        -0.00017590987402486092
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 6,
+      "ground": "wood"
+    },
+    {
+      "frame": 900,
+      "p": [
+        18.987322221817518,
+        2.799999952316284,
+        -0.0001816555014474769
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 6,
+      "ground": "wood"
+    },
+    {
+      "frame": 930,
+      "p": [
+        19.134266666258,
+        2.799999952316284,
+        -0.00018273501561395317
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 6,
+      "ground": "wood"
+    },
+    {
+      "frame": 960,
+      "p": [
+        20.63426666621752,
+        4.62916661898295,
+        -0.00019375463092391866
+      ],
+      "state": "air",
+      "grounded": false,
+      "deaths": 0,
+      "cratesBroken": 6,
+      "ground": "wood"
+    },
+    {
+      "frame": 990,
+      "p": [
+        23.971766666127458,
+        2.1083332856496124,
+        -0.00021827327498859185
+      ],
+      "state": "air",
+      "grounded": false,
+      "deaths": 0,
+      "cratesBroken": 6,
+      "ground": "wood"
+    },
+    {
+      "frame": 1020,
+      "p": [
+        23.680766666135316,
+        1.399999976158142,
+        -0.00021613546961845857
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 6,
+      "ground": "wood"
+    },
+    {
+      "frame": 1050,
+      "p": [
+        23.084399999484734,
+        1.399999976158142,
+        -0.0002117543154515565
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 6,
+      "ground": "wood"
+    },
+    {
+      "frame": 1080,
+      "p": [
+        23.398288888365155,
+        1.399999976158142,
+        -0.00021406027198864186
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 6,
+      "ground": "wood"
+    },
+    {
+      "frame": 1110,
+      "p": [
+        25.905788888297476,
+        1.399999976158142,
+        -0.00023248139558180067
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 6,
+      "ground": "wood"
+    },
+    {
+      "frame": 1140,
+      "p": [
+        28.99728888821404,
+        1.399999976158142,
+        -0.00025519282273563944
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 6,
+      "ground": "wood"
+    },
+    {
+      "frame": 1170,
+      "p": [
+        29.973788888187695,
+        1.399999976158142,
+        -0.0002623665923024271
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 6,
+      "ground": "wood"
+    },
+    {
+      "frame": 1200,
+      "p": [
+        30.27823333262393,
+        1.399999976158142,
+        -0.00026460316607644977
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 6,
+      "ground": "wood"
+    },
+    {
+      "frame": 1230,
+      "p": [
+        30.728233332611786,
+        2.0449999761581417,
+        -0.00026790905066943933
+      ],
+      "state": "air",
+      "grounded": false,
+      "deaths": 0,
+      "cratesBroken": 6,
+      "ground": "wood"
+    },
+    {
+      "frame": 1260,
+      "p": [
+        31.971733332578232,
+        3.28861108726925,
+        -0.00027704431176140066
+      ],
+      "state": "air",
+      "grounded": false,
+      "deaths": 0,
+      "cratesBroken": 6,
+      "ground": "wood"
+    },
+    {
+      "frame": 1290,
+      "p": [
+        33.173233332545834,
+        7.829166642824806,
+        -0.00028587102362468287
+      ],
+      "state": "air",
+      "grounded": false,
+      "deaths": 0,
+      "cratesBroken": 6,
+      "ground": "wood"
+    },
+    {
+      "frame": 1320,
+      "p": [
+        34.34023333251436,
+        10.084166642824803,
+        -0.0002944442843358359
+      ],
+      "state": "air",
+      "grounded": false,
+      "deaths": 0,
+      "cratesBroken": 6,
+      "ground": "wood"
+    },
+    {
+      "frame": 1350,
+      "p": [
+        34.37323333251347,
+        12.834166666666665,
+        -0.00029468671587265516
+      ],
+      "state": "air",
+      "grounded": false,
+      "deaths": 0,
+      "cratesBroken": 7,
+      "ground": "wood"
+    },
+    {
+      "frame": 1380,
+      "p": [
+        34.61113333250706,
+        9,
+        -0.00029643442686081567
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 7,
+      "ground": "wood"
+    },
+    {
+      "frame": 1410,
+      "p": [
+        35.89426666580575,
+        9,
+        -0.0003058608506773001
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 7,
+      "ground": "wood"
+    },
+    {
+      "frame": 1440,
+      "p": [
+        36.68326666578441,
+        9,
+        -0.00031165716833034203
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 7,
+      "ground": "wood"
+    },
+    {
+      "frame": 1470,
+      "p": [
+        36.83021111022487,
+        9,
+        -0.0003127366824968183
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 7,
+      "ground": "wood"
+    },
+    {
+      "frame": 1500,
+      "p": [
+        36.83021111022487,
+        9,
+        -0.0003127366824968183
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 7,
+      "ground": "wood"
+    },
+    {
+      "frame": 1530,
+      "p": [
+        34.430211110289584,
+        11.486666666666665,
+        -0.00029510529800087396
+      ],
+      "state": "air",
+      "grounded": false,
+      "deaths": 0,
+      "cratesBroken": 7,
+      "ground": "wood"
+    },
+    {
+      "frame": 1560,
+      "p": [
+        30.185211110404087,
+        4.807499999999994,
+        -0.0002639197866736723
+      ],
+      "state": "air",
+      "grounded": false,
+      "deaths": 0,
+      "cratesBroken": 7,
+      "ground": "wood"
+    },
+    {
+      "frame": 1590,
+      "p": [
+        30.25877777706877,
+        1.399999976158142,
+        -0.00026446023758454085
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 7,
+      "ground": "wood"
+    },
+    {
+      "frame": 1620,
+      "p": [
+        30.82387777705352,
+        1.399999976158142,
+        -0.0002686116939923152
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 7,
+      "ground": "wood"
+    },
+    {
+      "frame": 1650,
+      "p": [
+        30.82998888816447,
+        1.399999976158142,
+        -0.00026865658872135583
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 8,
+      "ground": "wood"
+    },
+    {
+      "frame": 1680,
+      "p": [
+        31.42498888814841,
+        1.399999976158142,
+        -0.0002730277027943088
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 8,
+      "ground": "wood"
+    },
+    {
+      "frame": 1710,
+      "p": [
+        34.399988888068116,
+        1.399999976158142,
+        -0.00029488327315907334
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 8,
+      "ground": "wood"
+    },
+    {
+      "frame": 1740,
+      "p": [
+        38.22498888796488,
+        1.399999976158142,
+        -0.0003229832921994845
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 8,
+      "ground": "wood"
+    },
+    {
+      "frame": 1770,
+      "p": [
+        42.04998888786164,
+        1.4,
+        -0.00035108331123989564
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 8,
+      "ground": "Gallery bridge circuit outlined permanent bridge"
+    },
+    {
+      "frame": 1800,
+      "p": [
+        45.8749888877584,
+        1.4,
+        -0.0003791833302803068
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 8,
+      "ground": "Gallery bridge circuit outlined permanent bridge"
+    },
+    {
+      "frame": 1830,
+      "p": [
+        49.69998888765516,
+        1.4,
+        -0.00040728334932071795
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 8,
+      "ground": "Gallery bridge circuit outlined permanent bridge"
+    },
+    {
+      "frame": 1860,
+      "p": [
+        53.52498888755192,
+        1.4,
+        -0.0004353833683611291
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 8,
+      "ground": "Gallery bridge circuit outlined permanent bridge"
+    },
+    {
+      "frame": 1890,
+      "p": [
+        57.09798888745548,
+        1.399999976158142,
+        -0.0004616320920294662
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 8,
+      "ground": "wood"
+    },
+    {
+      "frame": 1920,
+      "p": [
+        58.4419888874192,
+        1.399999976158142,
+        -0.0004715056673471953
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 8,
+      "ground": "wood"
+    },
+    {
+      "frame": 1950,
+      "p": [
+        58.92643333185051,
+        1.399999976158142,
+        -0.00047506459495841384
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 8,
+      "ground": "wood"
+    },
+    {
+      "frame": 1980,
+      "p": [
+        59.18689999851016,
+        1.399999976158142,
+        -0.0004769780899369043
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 8,
+      "ground": "wood"
+    },
+    {
+      "frame": 2010,
+      "p": [
+        59.849899998492226,
+        1.399999976158142,
+        -0.00048184875990390906
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 8,
+      "ground": "wood"
+    },
+    {
+      "frame": 2040,
+      "p": [
+        60.13184444292903,
+        1.399999976158142,
+        -0.00048392003944828225
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 8,
+      "ground": "wood"
+    },
+    {
+      "frame": 2070,
+      "p": [
+        60.73184444291285,
+        2.2416666428248084,
+        -0.0004883278855722684
+      ],
+      "state": "air",
+      "grounded": false,
+      "deaths": 0,
+      "cratesBroken": 8,
+      "ground": "wood"
+    },
+    {
+      "frame": 2100,
+      "p": [
+        64.42184444281334,
+        3.019166642824805,
+        -0.0005154361392347829
+      ],
+      "state": "air",
+      "grounded": false,
+      "deaths": 0,
+      "cratesBroken": 8,
+      "ground": "wood"
+    },
+    {
+      "frame": 2130,
+      "p": [
+        66.3778444427606,
+        5.631111087269251,
+        -0.0005298057175989776
+      ],
+      "state": "air",
+      "grounded": false,
+      "deaths": 0,
+      "cratesBroken": 8,
+      "ground": "wood"
+    },
+    {
+      "frame": 2160,
+      "p": [
+        66.5259444427566,
+        1.399999976158142,
+        -0.0005308937209505814
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 8,
+      "ground": "wood"
+    },
+    {
+      "frame": 2190,
+      "p": [
+        67.23331110940418,
+        1.399999976158142,
+        -0.0005360903266504207
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 8,
+      "ground": "wood"
+    },
+    {
+      "frame": 2220,
+      "p": [
+        67.71775555383563,
+        1.399999976158142,
+        -0.0005396492542616381
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 8,
+      "ground": "wood"
+    },
+    {
+      "frame": 2250,
+      "p": [
+        68.47358888714858,
+        1.399999976158142,
+        -0.0005452019159761594
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 8,
+      "ground": "wood"
+    },
+    {
+      "frame": 2280,
+      "p": [
+        71.58175555373136,
+        1.399999976158142,
+        -0.0005680357833001092
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 10,
+      "ground": "wood"
+    },
+    {
+      "frame": 2310,
+      "p": [
+        75.0977555536365,
+        1.399999976158142,
+        -0.0005938657615866686
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 10,
+      "ground": "wood"
+    },
+    {
+      "frame": 2340,
+      "p": [
+        76.36825555360222,
+        1.399999976158142,
+        -0.0006031993757542091
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 10,
+      "ground": "wood"
+    },
+    {
+      "frame": 2370,
+      "p": [
+        76.83019999803427,
+        1.399999976158142,
+        -0.0006065930091357771
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 10,
+      "ground": "wood"
+    },
+    {
+      "frame": 2400,
+      "p": [
+        76.83019999803427,
+        1.399999976158142,
+        -0.0006065930091357771
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 11,
+      "ground": "wood"
+    },
+    {
+      "frame": 2430,
+      "p": [
+        77.41086666468527,
+        1.399999976158142,
+        -0.0006108588246624346
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 11,
+      "ground": "wood"
+    },
+    {
+      "frame": 2460,
+      "p": [
+        78.18559999799776,
+        1.399999976158142,
+        -0.0006165503335298608
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 11,
+      "ground": "wood"
+    },
+    {
+      "frame": 2490,
+      "p": [
+        78.42254444243584,
+        1.399999976158142,
+        -0.0006182910246149345
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 11,
+      "ground": "wood"
+    },
+    {
+      "frame": 2520,
+      "p": [
+        79.32254444241157,
+        2.6074999761581417,
+        -0.0006249027938009137
+      ],
+      "state": "air",
+      "grounded": false,
+      "deaths": 0,
+      "cratesBroken": 11,
+      "ground": "wood"
+    },
+    {
+      "frame": 2550,
+      "p": [
+        81.77204444234549,
+        2.3811110872692494,
+        -0.0006428978256020869
+      ],
+      "state": "air",
+      "grounded": false,
+      "deaths": 0,
+      "cratesBroken": 11
+    },
+    {
+      "frame": 2580,
+      "p": [
+        81.92204444234144,
+        2.6041666666666665,
+        -0.0006439997871330835
+      ],
+      "state": "air",
+      "grounded": false,
+      "deaths": 0,
+      "cratesBroken": 11
+    },
+    {
+      "frame": 2610,
+      "p": [
+        84.7645444422648,
+        4.70833333333333,
+        -0.0006648819581454677
+      ],
+      "state": "air",
+      "grounded": false,
+      "deaths": 0,
+      "cratesBroken": 11
+    },
+    {
+      "frame": 2640,
+      "p": [
+        84.7664888867092,
+        2.38,
+        -0.0006648962428319805
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 11,
+      "ground": "crate"
+    },
+    {
+      "frame": 2670,
+      "p": [
+        88.36648888661213,
+        5.229999999999998,
+        -0.0006913433195758971
+      ],
+      "state": "air",
+      "grounded": false,
+      "deaths": 0,
+      "cratesBroken": 11
+    },
+    {
+      "frame": 2700,
+      "p": [
+        91.22248888653513,
+        6.279999999999998,
+        -0.0007123246671260709
+      ],
+      "state": "air",
+      "grounded": false,
+      "deaths": 0,
+      "cratesBroken": 11
+    },
+    {
+      "frame": 2730,
+      "p": [
+        93.97198888646096,
+        7.032499999999991,
+        -0.0007325236219892372
+      ],
+      "state": "air",
+      "grounded": false,
+      "deaths": 0,
+      "cratesBroken": 11,
+      "ground": "wood"
+    },
+    {
+      "frame": 2760,
+      "p": [
+        93.97198888646096,
+        2.799999952316284,
+        -0.0007325236219892372
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 11,
+      "ground": "wood"
+    },
+    {
+      "frame": 2790,
+      "p": [
+        95.2894888864254,
+        2.799999952316284,
+        -0.0007422025174364902
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 11,
+      "ground": "wood"
+    },
+    {
+      "frame": 2820,
+      "p": [
+        97.76695555302523,
+        2.799999952316284,
+        -0.0007604030038431096
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 11,
+      "ground": "wood"
+    },
+    {
+      "frame": 2850,
+      "p": [
+        98.61745555300233,
+        2.799999952316284,
+        -0.0007666511257238592
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 11,
+      "ground": "wood"
+    },
+    {
+      "frame": 2880,
+      "p": [
+        98.83189999744101,
+        2.799999952316284,
+        -0.0007682265225792834
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 11,
+      "ground": "wood"
+    },
+    {
+      "frame": 2910,
+      "p": [
+        99.8818999974127,
+        4.17666661898295,
+        -0.0007759402532962591
+      ],
+      "state": "air",
+      "grounded": false,
+      "deaths": 0,
+      "cratesBroken": 11,
+      "ground": "wood"
+    },
+    {
+      "frame": 2940,
+      "p": [
+        100.96799999997361,
+        5.5816666189829505,
+        -0.0007864309270713461
+      ],
+      "state": "air",
+      "grounded": false,
+      "deaths": 0,
+      "cratesBroken": 12,
+      "ground": "wood"
+    },
+    {
+      "frame": 2970,
+      "p": [
+        100.96799999997361,
+        8.725833285649614,
+        -0.0007864309270713461
+      ],
+      "state": "air",
+      "grounded": false,
+      "deaths": 0,
+      "cratesBroken": 13,
+      "ground": "wood"
+    },
+    {
+      "frame": 3000,
+      "p": [
+        96.62355555564633,
+        2.799999952316284,
+        -0.0007545148560624839
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 13,
+      "ground": "wood"
+    },
+    {
+      "frame": 3030,
+      "p": [
+        96.11816666677107,
+        2.799999952316284,
+        -0.0007508020619708264
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 13,
+      "ground": "wood"
+    },
+    {
+      "frame": 3060,
+      "p": [
+        98.0594666667187,
+        2.799999952316284,
+        -0.0007650636481049837
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 13,
+      "ground": "wood"
+    },
+    {
+      "frame": 3090,
+      "p": [
+        98.99696666669345,
+        2.799999952316284,
+        -0.0007719509076737113
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 13,
+      "ground": "wood"
+    },
+    {
+      "frame": 3120,
+      "p": [
+        99.27891111113033,
+        2.799999952316284,
+        -0.0007740221872180839
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 13,
+      "ground": "wood"
+    },
+    {
+      "frame": 3150,
+      "p": [
+        99.87891111111415,
+        3.6416666189829505,
+        -0.00077843003334207
+      ],
+      "state": "air",
+      "grounded": false,
+      "deaths": 0,
+      "cratesBroken": 13,
+      "ground": "wood"
+    },
+    {
+      "frame": 3180,
+      "p": [
+        100.97091111108467,
+        4.419166618982947,
+        -0.0007864523132877247
+      ],
+      "state": "air",
+      "grounded": false,
+      "deaths": 0,
+      "cratesBroken": 13,
+      "ground": "wood"
+    },
+    {
+      "frame": 3210,
+      "p": [
+        97.18191111118685,
+        6.591111063427394,
+        -0.0007586167650147524
+      ],
+      "state": "air",
+      "grounded": false,
+      "deaths": 0,
+      "cratesBroken": 13,
+      "ground": "wood"
+    },
+    {
+      "frame": 3240,
+      "p": [
+        97.028911111191,
+        2.799999952316284,
+        -0.0007574927642531361
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 13,
+      "ground": "wood"
+    },
+    {
+      "frame": 3270,
+      "p": [
+        97.028911111191,
+        2.799999952316284,
+        -0.0007574927642531361
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 13,
+      "ground": "wood"
+    },
+    {
+      "frame": 3300,
+      "p": [
+        97.028911111191,
+        2.799999952316284,
+        -0.0007574927642531361
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 13,
+      "ground": "wood"
+    },
+    {
+      "frame": 3330,
+      "p": [
+        97.028911111191,
+        2.799999952316284,
+        -0.0007574927642531361
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 13,
+      "ground": "wood"
+    },
+    {
+      "frame": 3360,
+      "p": [
+        97.028911111191,
+        2.799999952316284,
+        -0.0007574927642531361
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 13,
+      "ground": "wood"
+    },
+    {
+      "frame": 3390,
+      "p": [
+        97.028911111191,
+        2.799999952316284,
+        -0.0007574927642531361
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 14,
+      "ground": "wood"
+    },
+    {
+      "frame": 3420,
+      "p": [
+        97.46241111117929,
+        2.799999952316284,
+        -0.0007606774330777161
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 14,
+      "ground": "wood"
+    },
+    {
+      "frame": 3450,
+      "p": [
+        100.21641111110496,
+        2.799999952316284,
+        -0.0007809094467868127
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 14,
+      "ground": "wood"
+    },
+    {
+      "frame": 3480,
+      "p": [
+        102.84591111103401,
+        2.799999952316284,
+        -0.0008002268324251822
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 14,
+      "ground": "wood"
+    },
+    {
+      "frame": 3510,
+      "p": [
+        103.65891111101213,
+        2.799999952316284,
+        -0.0008061994639231825
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 14,
+      "ground": "wood"
+    },
+    {
+      "frame": 3540,
+      "p": [
+        103.82835555545202,
+        2.799999952316284,
+        -0.0008074442723193079
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 15,
+      "ground": "wood"
+    },
+    {
+      "frame": 3570,
+      "p": [
+        104.04935555544606,
+        2.799999952316284,
+        -0.0008090678289749762
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 15,
+      "ground": "wood"
+    },
+    {
+      "frame": 3600,
+      "p": [
+        105.83238888873126,
+        2.799999952316284,
+        -0.000822166723253762
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 15,
+      "ground": "wood"
+    },
+    {
+      "frame": 3630,
+      "p": [
+        106.90825555536894,
+        2.799999952316284,
+        -0.0008300704811147492
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 15,
+      "ground": "wood"
+    },
+    {
+      "frame": 3660,
+      "p": [
+        107.2801999998034,
+        2.799999952316284,
+        -0.0008328029375777195
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 15,
+      "ground": "wood"
+    },
+    {
+      "frame": 3690,
+      "p": [
+        107.2801999998034,
+        2.799999952316284,
+        -0.0008328029375777195
+      ],
+      "state": "air",
+      "grounded": false,
+      "deaths": 0,
+      "cratesBroken": 15,
+      "ground": "wood"
+    },
+    {
+      "frame": 3720,
+      "p": [
+        108.97219999975775,
+        5.298611063427392,
+        -0.0008452330636473603
+      ],
+      "state": "air",
+      "grounded": false,
+      "deaths": 0,
+      "cratesBroken": 15,
+      "ground": "wood"
+    },
+    {
+      "frame": 3750,
+      "p": [
+        105.52219999985077,
+        6.616666618982949,
+        -0.0008198879484344403
+      ],
+      "state": "air",
+      "grounded": false,
+      "deaths": 0,
+      "cratesBroken": 15,
+      "ground": "wood"
+    },
+    {
+      "frame": 3780,
+      "p": [
+        105.0286999998641,
+        2.799999952316284,
+        -0.0008162624949974616
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 15,
+      "ground": "wood"
+    },
+    {
+      "frame": 3810,
+      "p": [
+        105.0286999998641,
+        2.799999952316284,
+        -0.0008162624949974616
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 15,
+      "ground": "wood"
+    },
+    {
+      "frame": 3840,
+      "p": [
+        105.0286999998641,
+        2.799999952316284,
+        -0.0008162624949974616
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 15,
+      "ground": "wood"
+    },
+    {
+      "frame": 3870,
+      "p": [
+        105.0286999998641,
+        2.799999952316284,
+        -0.0008162624949974616
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 15,
+      "ground": "wood"
+    },
+    {
+      "frame": 3900,
+      "p": [
+        105.0286999998641,
+        2.799999952316284,
+        -0.0008162624949974616
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 15,
+      "ground": "wood"
+    },
+    {
+      "frame": 3930,
+      "p": [
+        105.0286999998641,
+        2.799999952316284,
+        -0.0008162624949974616
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 16,
+      "ground": "wood"
+    },
+    {
+      "frame": 3960,
+      "p": [
+        105.28653333319048,
+        2.799999952316284,
+        -0.0008181566444290747
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 16,
+      "ground": "wood"
+    },
+    {
+      "frame": 3990,
+      "p": [
+        107.70903333312509,
+        2.799999952316284,
+        -0.0008359533231546688
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 16,
+      "ground": "wood"
+    },
+    {
+      "frame": 4020,
+      "p": [
+        111.21019999969727,
+        2.799999952316284,
+        -0.0008616743296898298
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 16,
+      "ground": "wood"
+    },
+    {
+      "frame": 4050,
+      "p": [
+        112.47169999966322,
+        2.799999952316284,
+        -0.0008709418261655104
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 16,
+      "ground": "wood"
+    },
+    {
+      "frame": 4080,
+      "p": [
+        112.93364444409526,
+        2.799999952316284,
+        -0.0008743354595470784
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 16,
+      "ground": "wood"
+    },
+    {
+      "frame": 4110,
+      "p": [
+        112.93364444409526,
+        2.799999952316284,
+        -0.0008743354595470784
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 16,
+      "ground": "wood"
+    },
+    {
+      "frame": 4140,
+      "p": [
+        112.93364444409526,
+        2.799999952316284,
+        -0.0008743354595470784
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 16,
+      "ground": "wood"
+    },
+    {
+      "frame": 4170,
+      "p": [
+        112.93364444409526,
+        2.799999952316284,
+        -0.0008743354595470784
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 16,
+      "ground": "wood"
+    },
+    {
+      "frame": 4200,
+      "p": [
+        112.93364444409526,
+        2.799999952316284,
+        -0.0008743354595470784
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 16,
+      "ground": "wood"
+    },
+    {
+      "frame": 4230,
+      "p": [
+        113.8436444440707,
+        2.799999952316284,
+        -0.000881020692835124
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 16,
+      "ground": "wood"
+    },
+    {
+      "frame": 4260,
+      "p": [
+        116.91464444398781,
+        2.799999952316284,
+        -0.0009035815185797267
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 16,
+      "ground": "wood"
+    },
+    {
+      "frame": 4290,
+      "p": [
+        118.39364444394788,
+        2.799999952316284,
+        -0.0009144468592753523
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 16,
+      "ground": "wood"
+    },
+    {
+      "frame": 4320,
+      "p": [
+        118.92308888837812,
+        2.799999952316284,
+        -0.0009183363753458686
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 16,
+      "ground": "wood"
+    },
+    {
+      "frame": 4350,
+      "p": [
+        118.92308888837812,
+        2.799999952316284,
+        -0.0009183363753458686
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 16,
+      "ground": "wood"
+    },
+    {
+      "frame": 4380,
+      "p": [
+        119.30842222170105,
+        2.799999952316284,
+        -0.0009211671920788287
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 16,
+      "ground": "wood"
+    },
+    {
+      "frame": 4410,
+      "p": [
+        121.98308888829553,
+        2.8000000017881392,
+        -0.0009408163905781982
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 16,
+      "ground": "Workshop entry drawbridge — permanently deployed"
+    },
+    {
+      "frame": 4440,
+      "p": [
+        124.50158888822756,
+        2.799999952316284,
+        -0.0009593183246836303
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 16,
+      "ground": "wood"
+    },
+    {
+      "frame": 4470,
+      "p": [
+        125.28608888820645,
+        2.799999952316284,
+        -0.0009650815834907412
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 16,
+      "ground": "wood"
+    },
+    {
+      "frame": 4500,
+      "p": [
+        125.43303333264694,
+        2.799999952316284,
+        -0.0009661610976572172
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 16,
+      "ground": "wood"
+    },
+    {
+      "frame": 4530,
+      "p": [
+        125.45003333264648,
+        2.799999952316284,
+        -0.0009662859866307301
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 16,
+      "ground": "wood"
+    },
+    {
+      "frame": 4560,
+      "p": [
+        127.02253333260404,
+        2.8000000017881392,
+        -0.0009778382166806773
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 16,
+      "ground": "Workshop exit drawbridge — permanently deployed"
+    },
+    {
+      "frame": 4590,
+      "p": [
+        130.28703333251593,
+        2.799999952316284,
+        -0.001001820572800265
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 16,
+      "ground": "wood"
+    },
+    {
+      "frame": 4620,
+      "p": [
+        131.49453333248331,
+        2.799999952316284,
+        -0.0010106913631247872
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 16,
+      "ground": "wood"
+    },
+    {
+      "frame": 4650,
+      "p": [
+        131.93397777691573,
+        2.799999952316284,
+        -0.0010139197022767058
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 16,
+      "ground": "wood"
+    },
+    {
+      "frame": 4680,
+      "p": [
+        132.15774444357632,
+        2.799999952316284,
+        -0.0010155635840006123
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 16,
+      "ground": "wood"
+    },
+    {
+      "frame": 4710,
+      "p": [
+        132.74607777689369,
+        2.799999952316284,
+        -0.0010198857220055204
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 16,
+      "ground": "wood"
+    },
+    {
+      "frame": 4740,
+      "p": [
+        132.82552222133597,
+        2.799999952316284,
+        -0.0010204693534830481
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 17,
+      "ground": "wood"
+    },
+    {
+      "frame": 4770,
+      "p": [
+        132.82552222133597,
+        2.799999952316284,
+        -0.0010204693534830481
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 17,
+      "ground": "wood"
+    },
+    {
+      "frame": 4800,
+      "p": [
+        135.8255222212548,
+        5.541666618982949,
+        -0.0010425085841029808
+      ],
+      "state": "air",
+      "grounded": false,
+      "deaths": 0,
+      "cratesBroken": 17,
+      "ground": "wood"
+    },
+    {
+      "frame": 4830,
+      "p": [
+        138.29402222118807,
+        2.799999952316284,
+        -0.0010606431976980816
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 17,
+      "ground": "wood"
+    },
+    {
+      "frame": 4860,
+      "p": [
+        140.54652222112728,
+        2.799999952316284,
+        -0.0010771909866885464
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 17,
+      "ground": "wood"
+    },
+    {
+      "frame": 4890,
+      "p": [
+        144.06352222103237,
+        2.799999952316284,
+        -0.0011030283113853108
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 17,
+      "ground": "wood"
+    },
+    {
+      "frame": 4920,
+      "p": [
+        145.35952222099735,
+        2.799999952316284,
+        -0.0011125492590131206
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 17,
+      "ground": "wood"
+    },
+    {
+      "frame": 4950,
+      "p": [
+        145.82146666542914,
+        2.799999952316284,
+        -0.0011159428923946887
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 17,
+      "ground": "wood"
+    },
+    {
+      "frame": 4980,
+      "p": [
+        145.82146666542914,
+        2.799999952316284,
+        -0.0011159428923946887
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 17,
+      "ground": "wood"
+    },
+    {
+      "frame": 5010,
+      "p": [
+        144.5889666654624,
+        2.799999952316284,
+        -0.0011068884418150005
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 17,
+      "ground": "wood"
+    },
+    {
+      "frame": 5040,
+      "p": [
+        141.10396666555647,
+        2.799999952316284,
+        -0.0010812862022448486
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 17,
+      "ground": "wood"
+    },
+    {
+      "frame": 5070,
+      "p": [
+        138.6274666656233,
+        2.799999952316284,
+        -0.0010630928173680962
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 17,
+      "ground": "wood"
+    },
+    {
+      "frame": 5100,
+      "p": [
+        137.85046666564446,
+        2.799999952316284,
+        -0.0010573846566375351
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 17,
+      "ground": "wood"
+    },
+    {
+      "frame": 5130,
+      "p": [
+        137.7260222212034,
+        2.799999952316284,
+        -0.0010564704367007085
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 17,
+      "ground": "wood"
+    },
+    {
+      "frame": 5160,
+      "p": [
+        136.2395222212436,
+        4.76166661898295,
+        -0.001045549997928532
+      ],
+      "state": "air",
+      "grounded": false,
+      "deaths": 0,
+      "cratesBroken": 17,
+      "ground": "wood"
+    },
+    {
+      "frame": 5190,
+      "p": [
+        136.62802222123307,
+        5.021666618982951,
+        -0.0010484040782938137
+      ],
+      "state": "air",
+      "grounded": false,
+      "deaths": 0,
+      "cratesBroken": 17,
+      "ground": "wood"
+    },
+    {
+      "frame": 5220,
+      "p": [
+        137.16802222121854,
+        9.659166618982946,
+        -0.0010523711398054013
+      ],
+      "state": "air",
+      "grounded": false,
+      "deaths": 0,
+      "cratesBroken": 17,
+      "ground": "wood"
+    },
+    {
+      "frame": 5250,
+      "p": [
+        138.23568888785636,
+        11.200000000000001,
+        -0.0010602146571026946
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 17,
+      "ground": "Return gallery appears only after the outward switch"
+    },
+    {
+      "frame": 5280,
+      "p": [
+        138.53222222118168,
+        11.200000000000001,
+        -0.0010623931126093047
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 17,
+      "ground": "Return gallery appears only after the outward switch"
+    },
+    {
+      "frame": 5310,
+      "p": [
+        138.83166666561806,
+        11.200000000000001,
+        -0.001064592954332294
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 17,
+      "ground": "Return gallery appears only after the outward switch"
+    },
+    {
+      "frame": 5340,
+      "p": [
+        138.8603666656173,
+        11.200000000000001,
+        -0.001064803796305225
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 18,
+      "ground": "Return gallery appears only after the outward switch"
+    },
+    {
+      "frame": 5370,
+      "p": [
+        139.74743333226,
+        11.200000000000001,
+        -0.0010713205519191982
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 18,
+      "ground": "Return gallery appears only after the outward switch"
+    },
+    {
+      "frame": 5400,
+      "p": [
+        140.5869333322372,
+        11.200000000000001,
+        -0.0010774878632876747
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 18,
+      "ground": "Return gallery appears only after the outward switch"
+    },
+    {
+      "frame": 5430,
+      "p": [
+        140.82387777667518,
+        11.200000000000001,
+        -0.0010792285543727484
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 19,
+      "ground": "Return gallery appears only after the outward switch"
+    },
+    {
+      "frame": 5460,
+      "p": [
+        140.90914444333956,
+        11.200000000000001,
+        -0.001079854958283035
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 19,
+      "ground": "Return gallery appears only after the outward switch"
+    },
+    {
+      "frame": 5490,
+      "p": [
+        141.8890777766464,
+        11.200000000000001,
+        -0.0010870539505248653
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 19,
+      "ground": "Return gallery appears only after the outward switch"
+    },
+    {
+      "frame": 5520,
+      "p": [
+        142.67274444329175,
+        11.200000000000001,
+        -0.0010928110873234705
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 19,
+      "ground": "Return gallery appears only after the outward switch"
+    },
+    {
+      "frame": 5550,
+      "p": [
+        142.81968888773218,
+        11.200000000000001,
+        -0.0010938906014899465
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 20,
+      "ground": "Return gallery appears only after the outward switch"
+    },
+    {
+      "frame": 5580,
+      "p": [
+        142.81968888773218,
+        11.200000000000001,
+        -0.0010938906014899465
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 20,
+      "ground": "Return gallery appears only after the outward switch"
+    },
+    {
+      "frame": 5610,
+      "p": [
+        140.41968888779712,
+        13.686666666666666,
+        -0.0010762592169940004
+      ],
+      "state": "air",
+      "grounded": false,
+      "deaths": 0,
+      "cratesBroken": 20,
+      "ground": "Return gallery appears only after the outward switch"
+    },
+    {
+      "frame": 5640,
+      "p": [
+        135.91968888791888,
+        7.007499999999994,
+        -0.0010432003710641015
+      ],
+      "state": "air",
+      "grounded": false,
+      "deaths": 0,
+      "cratesBroken": 20,
+      "ground": "wood"
+    },
+    {
+      "frame": 5670,
+      "p": [
+        133.2441666667138,
+        2.799999952316284,
+        -0.00102486495559002
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 20,
+      "ground": "wood"
+    },
+    {
+      "frame": 5700,
+      "p": [
+        133.39713333337636,
+        2.799999952316284,
+        -0.001025988711471296
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 20,
+      "ground": "wood"
+    },
+    {
+      "frame": 5730,
+      "p": [
+        134.22343333335408,
+        2.799999952316284,
+        -0.0010320590502250451
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 20,
+      "ground": "wood"
+    },
+    {
+      "frame": 5760,
+      "p": [
+        134.82637777778203,
+        2.799999952316284,
+        -0.00103648852744575
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 20,
+      "ground": "wood"
+    },
+    {
+      "frame": 5790,
+      "p": [
+        134.82637777778203,
+        2.799999952316284,
+        -0.00103648852744575
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 21,
+      "ground": "wood"
+    },
+    {
+      "frame": 5820,
+      "p": [
+        135.60837777776092,
+        2.799999952316284,
+        -0.0010422334202273454
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 21,
+      "ground": "wood"
+    },
+    {
+      "frame": 5850,
+      "p": [
+        138.77887777767535,
+        2.799999952316284,
+        -0.0010655252137875082
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 21,
+      "ground": "wood"
+    },
+    {
+      "frame": 5880,
+      "p": [
+        142.55587777757341,
+        2.799999952316284,
+        -0.0010932726051379991
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 21,
+      "ground": "wood"
+    },
+    {
+      "frame": 5910,
+      "p": [
+        144.29887777752634,
+        2.799999952316284,
+        -0.0011060773981281789
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 21,
+      "ground": "wood"
+    },
+    {
+      "frame": 5940,
+      "p": [
+        144.92882222195357,
+        2.799999952316284,
+        -0.001110705228424463
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 21,
+      "ground": "wood"
+    },
+    {
+      "frame": 5970,
+      "p": [
+        144.92882222195357,
+        2.799999952316284,
+        -0.001110705228424463
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 21,
+      "ground": "wood"
+    },
+    {
+      "frame": 6000,
+      "p": [
+        147.77882222187645,
+        5.491666618982949,
+        -0.001131642497513399
+      ],
+      "state": "air",
+      "grounded": false,
+      "deaths": 0,
+      "cratesBroken": 21,
+      "ground": "wood"
+    },
+    {
+      "frame": 6030,
+      "p": [
+        150.102155555147,
+        2.799999952316284,
+        -0.0011487106572268355
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 21,
+      "ground": "wood"
+    },
+    {
+      "frame": 6060,
+      "p": [
+        152.2696555550885,
+        2.8,
+        -0.0011646340013497355
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 21,
+      "ground": "Independent workshop circuit outlined permanent bridge"
+    },
+    {
+      "frame": 6090,
+      "p": [
+        156.06632222165268,
+        2.8,
+        -0.0011925258721009573
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 21,
+      "ground": "Independent workshop circuit outlined permanent bridge"
+    },
+    {
+      "frame": 6120,
+      "p": [
+        159.89132222154944,
+        2.8,
+        -0.0012206258911413668
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 21,
+      "ground": "Independent workshop circuit outlined permanent bridge"
+    },
+    {
+      "frame": 6150,
+      "p": [
+        163.7163222214462,
+        2.8,
+        -0.0012487259101817763
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 21,
+      "ground": "Independent workshop circuit outlined permanent bridge"
+    },
+    {
+      "frame": 6180,
+      "p": [
+        167.50382222134397,
+        2.8,
+        -0.001276550438839437
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 21,
+      "ground": "Independent workshop circuit outlined permanent bridge"
+    },
+    {
+      "frame": 6210,
+      "p": [
+        169.28282222129596,
+        2.799999952316284,
+        -0.0012896197025970562
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 21,
+      "ground": "wood"
+    },
+    {
+      "frame": 6240,
+      "p": [
+        169.9157666657231,
+        2.799999952316284,
+        -0.00129426957212396
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 21,
+      "ground": "wood"
+    },
+    {
+      "frame": 6270,
+      "p": [
+        170.13976666571708,
+        2.799999952316284,
+        -0.0012959151680102484
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 21,
+      "ground": "wood"
+    },
+    {
+      "frame": 6300,
+      "p": [
+        171.0934999990246,
+        2.799999952316284,
+        -0.001302921684304665
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 21,
+      "ground": "wood"
+    },
+    {
+      "frame": 6330,
+      "p": [
+        171.7249444434518,
+        2.799999952316284,
+        -0.001307560534216259
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 21,
+      "ground": "wood"
+    },
+    {
+      "frame": 6360,
+      "p": [
+        172.1107777767747,
+        2.799999952316284,
+        -0.0013103950241543224
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 21,
+      "ground": "wood"
+    },
+    {
+      "frame": 6390,
+      "p": [
+        174.7854444433692,
+        2.799999952316284,
+        -0.0013300442226536918
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 25,
+      "ground": "wood"
+    },
+    {
+      "frame": 6420,
+      "p": [
+        178.61044444326595,
+        2.799999952316284,
+        -0.0013581442416941013
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 25,
+      "ground": "wood"
+    },
+    {
+      "frame": 6450,
+      "p": [
+        181.61794444318477,
+        2.799999952316284,
+        -0.0013802385703905811
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 25,
+      "ground": "wood"
+    },
+    {
+      "frame": 6480,
+      "p": [
+        182.5494444431595,
+        2.799999952316284,
+        -0.0013870817514980691
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 25,
+      "ground": "wood"
+    },
+    {
+      "frame": 6510,
+      "p": [
+        182.83138888759623,
+        2.799999952316284,
+        -0.0013891530310424418
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 25,
+      "ground": "wood"
+    },
+    {
+      "frame": 6540,
+      "p": [
+        182.83138888759623,
+        2.799999952316284,
+        -0.0013891530310424418
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 25,
+      "ground": "wood"
+    },
+    {
+      "frame": 6570,
+      "p": [
+        183.88999999997566,
+        4.62916661898295,
+        -0.001400172646352408
+      ],
+      "state": "air",
+      "grounded": false,
+      "deaths": 0,
+      "cratesBroken": 25,
+      "ground": "wood"
+    },
+    {
+      "frame": 6600,
+      "p": [
+        187.4448333332128,
+        2.799999952316284,
+        -0.0014262879102353268
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 25,
+      "ground": "wood"
+    },
+    {
+      "frame": 6630,
+      "p": [
+        188.84733333317496,
+        2.799999952316284,
+        -0.0014365912505501445
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 25,
+      "ground": "wood"
+    },
+    {
+      "frame": 6660,
+      "p": [
+        192.3934999997459,
+        2.799999952316284,
+        -0.0014626428455446028
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 25,
+      "ground": "wood"
+    },
+    {
+      "frame": 6690,
+      "p": [
+        194.2534999996957,
+        2.799999952316284,
+        -0.00147630716852896
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 25,
+      "ground": "wood"
+    },
+    {
+      "frame": 6720,
+      "p": [
+        194.91466666634432,
+        2.799999952316284,
+        -0.0014811643700772513
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 25,
+      "ground": "wood"
+    },
+    {
+      "frame": 6750,
+      "p": [
+        194.91494444412209,
+        2.799999952316284,
+        -0.0014811664107467531
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 25,
+      "ground": "wood"
+    },
+    {
+      "frame": 6780,
+      "p": [
+        197.61494444404903,
+        5.432499952316283,
+        -0.0015010017183046925
+      ],
+      "state": "air",
+      "grounded": false,
+      "deaths": 0,
+      "cratesBroken": 25,
+      "ground": "crumble pad"
+    },
+    {
+      "frame": 6810,
+      "p": [
+        198.97244444401232,
+        2.7666666785875957,
+        -0.0015109744701602115
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 25,
+      "ground": "crumble pad"
+    },
+    {
+      "frame": 6840,
+      "p": [
+        200.77244444396362,
+        4.776666678587595,
+        -0.0015241980085321711
+      ],
+      "state": "air",
+      "grounded": false,
+      "deaths": 0,
+      "cratesBroken": 25,
+      "ground": "crumble pad"
+    },
+    {
+      "frame": 6870,
+      "p": [
+        203.73311111055023,
+        4,
+        -0.0015459482803506421
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 25,
+      "ground": "wood"
+    },
+    {
+      "frame": 6900,
+      "p": [
+        204.30454444386817,
+        4,
+        -0.001550146264023059
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 25,
+      "ground": "wood"
+    },
+    {
+      "frame": 6930,
+      "p": [
+        204.91908888829585,
+        4,
+        -0.001554660959602161
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 25,
+      "ground": "wood"
+    },
+    {
+      "frame": 6960,
+      "p": [
+        204.91908888829585,
+        4,
+        -0.001554660959602161
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 25,
+      "ground": "wood"
+    },
+    {
+      "frame": 6990,
+      "p": [
+        207.64608888822207,
+        6.6916666666666655,
+        -0.0015746946202356796
+      ],
+      "state": "air",
+      "grounded": false,
+      "deaths": 0,
+      "cratesBroken": 25,
+      "ground": "wood"
+    },
+    {
+      "frame": 7020,
+      "p": [
+        209.36058888817573,
+        7.505,
+        -0.0015872900405349709
+      ],
+      "state": "air",
+      "grounded": false,
+      "deaths": 0,
+      "cratesBroken": 25,
+      "ground": "wood"
+    },
+    {
+      "frame": 7050,
+      "p": [
+        209.60208888816922,
+        4,
+        -0.0015890641985998753
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 25,
+      "ground": "wood"
+    },
+    {
+      "frame": 7080,
+      "p": [
+        210.79572222147038,
+        4,
+        -0.0015978331187028651
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 25,
+      "ground": "wood"
+    },
+    {
+      "frame": 7110,
+      "p": [
+        212.29935555476314,
+        4,
+        -0.0016088794259699148
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 25,
+      "ground": "wood"
+    },
+    {
+      "frame": 7140,
+      "p": [
+        212.92929999919036,
+        4,
+        -0.001613507256266199
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 25,
+      "ground": "wood"
+    },
+    {
+      "frame": 7170,
+      "p": [
+        213.38263333251146,
+        4,
+        -0.0016168376288932108
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 25,
+      "ground": "wood"
+    },
+    {
+      "frame": 7200,
+      "p": [
+        216.11579999910438,
+        4,
+        -0.0016369165923896688
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 26,
+      "ground": "wood"
+    },
+    {
+      "frame": 7230,
+      "p": [
+        218.8127999990316,
+        4,
+        -0.001656729860716986
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 26,
+      "ground": "wood"
+    },
+    {
+      "frame": 7260,
+      "p": [
+        219.6392999990091,
+        4,
+        -0.0016628016687527762
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 26,
+      "ground": "wood"
+    },
+    {
+      "frame": 7290,
+      "p": [
+        219.8312444434483,
+        4,
+        -0.0016642117713785512
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 26,
+      "ground": "wood"
+    },
+    {
+      "frame": 7320,
+      "p": [
+        219.9812444434443,
+        4,
+        -0.0016653137329095478
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 26,
+      "ground": "wood"
+    },
+    {
+      "frame": 7350,
+      "p": [
+        222.43124444337815,
+        4,
+        -0.0016833124379158247
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "cratesBroken": 26,
+      "ground": "wood"
+    }
+  ],
+  "result": {
+    "completionScope": "complete-stage",
+    "activeStageCrates": 26,
+    "bonusCrateTotal": 0,
+    "bonusCrates": 0,
+    "gemEarned": true,
+    "done": true,
+    "state": "finished",
+    "cratesBroken": 26,
+    "totalCrates": 26,
+    "deaths": 0
+  },
+  "end": {
+    "frame": 7357,
+    "p": [
+      223.43124444335118,
+      4.726666669150194,
+      -0.0016906588481224684
+    ],
+    "state": "finished",
+    "grounded": true,
+    "deaths": 0,
+    "cratesBroken": 26,
+    "ground": "warp plinth rim"
+  },
+  "errors": []
+}
