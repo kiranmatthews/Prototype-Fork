@@ -74,7 +74,8 @@ export function dressAncientGates(source:CustomComponent[],decks:readonly Deck[]
      [step-.045,.27,.26],`${d.name} low lane coping`,wood?'#e3b478':'#f0dba9');
    }
    if(k%2===0){
-    prop('wornstoneblock',[x,d.y-5.2,1.8],[step-.08,4,2.6],`${d.name} rooted masonry`,STONE[(i+k+1)%4]);
+    for(let row=0;row<2;row++)prop('wornstoneblock',[x,d.y-5.2+row*2,1.8],
+     [step-.08,2,2.6],`${d.name} bonded masonry course`,STONE[(i+k+row+1)%4]);
     prop('stonefrieze',[x,d.y-2.05,3.25],[Math.min(step-.3,2.8),1.15,.35],`${d.name} carved face`,i%3===1?JADE[0]:STONE[0]);
    }
    if(k%3===1)prop('junglevine',[x,d.y-4.5,3.5],[3.5,3.5,.55],`${d.name} trailing vines`,'#bdd380');
@@ -174,7 +175,8 @@ export function dressAncientHoard(source:CustomComponent[]):CustomComponent[]{
   for(let x=a+3;x<b-2.6;x+=7.5){
    // The upper offering shelf has a real return passage beneath it.
    // Keep its scenery supports behind that passage, out of the body silhouette.
-   prop('wornstoneblock',[x,y-6.5,y>2?-5.2:1.7],[5,5.4,3.2],'Hoard masonry buttress',STONE[1]);
+   for(let row=0;row<3;row++)prop('wornstoneblock',[x,y-6.5+row*1.8,y>2?-5.2:1.7],
+    [5,1.8,3.2],'Hoard bonded buttress course',STONE[row]);
    prop('junglefern',[x,y-.25,-3.45],[3.8,1.5,3],'Hoard rooted fern','#c0d591',x*13);
   }
  }

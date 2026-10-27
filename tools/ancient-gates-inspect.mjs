@@ -5,8 +5,9 @@ const base=process.argv.find(a=>a.startsWith('http'))||'http://127.0.0.1:5278';
 const native=process.argv.includes('--native'),full=native||process.argv.includes('--full');
 const bonus=process.argv.includes('--bonus'),id=bonus?'bonus-jungle-gate':'jungle-gate-run';
 const tour=process.argv.includes('--tour'),views=[[17.2,1,0],[147,3,0],[245,5,0],[372.6,7,0],[473,14,0],[625,9,0],[733,8,0],[885.8,7.4,0],[984,11,0],[1117,8,0],[1195,8,0],[1292.8,24,0]];
+const bonusViews=[[4.2,0,0],[37.2,0,0],[50.6,0,0],[102.8,0,0],[135.3,0,0],[150.5,0,0],[170.8,0,0],[192,0,0]],selectedViews=bonus?bonusViews:views;
 const output=process.env.ANCIENT_GATES_OUTPUT||'/private/tmp/ancient-gates-inspect';await mkdir(output,{recursive:true});
-const tag=`${bonus?'bonus':tour?'tour':'main'}-${native?'native':full?'full':'lite'}`;
+const tag=`${bonus?tour?'bonus-tour':'bonus':tour?'tour':'main'}-${native?'native':full?'full':'lite'}`;
 const browser=await chromium.launch({headless:true,channel:'chrome'}),errors=[];
 try{
  const page=await browser.newPage({viewport:native?{width:2560,height:1440}:{width:1440,height:900},deviceScaleFactor:1,serviceWorkers:'block'});
@@ -15,8 +16,8 @@ try{
  await page.waitForFunction(id=>window.__game?.getCurrentLevel().id===id&&!window.__game.gameFlow.blocksGameplay,id,{timeout:240000});
  if(native)await page.evaluate(()=>{window.__game.renderQualitySettings.setRegularResolution(null);window.__game.crtGuestSettings.setEnabled(false);});
  const shots=[];
- for(let i=0;i<(bonus?1:12);i++){
-  if(tour&&!bonus)await page.evaluate(at=>{const g=window.__game;g.player.respawn(g.getLevel(),true,false,{position:g.player.pos.clone().set(at[0],at[1]+.12,at[2])});},views[i]);
+ for(let i=0;i<(tour?selectedViews.length:bonus?1:12);i++){
+  if(tour)await page.evaluate(at=>{const g=window.__game;g.player.respawn(g.getLevel(),true,false,{position:g.player.pos.clone().set(at[0],at[1]+.12,at[2])});},selectedViews[i]);
   else if(i)await page.evaluate(()=>{const g=window.__game;g.player.warpCheckpoint(g.getLevel(),1);});
   await page.waitForTimeout(full?2000:500);
   await page.evaluate(()=>window.__game.getLevel().prepareJungleAssets());
