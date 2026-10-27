@@ -1,0 +1,38 @@
+{
+  "phase": "Refined decorated camera review; continuous 96-box run still pending",
+  "typecheck": "passed before review",
+  "browser": "Chrome, full renderer",
+  "checkpointViews": 16,
+  "allCheckpointsSupported": true,
+  "nativeBuffer": [
+    1920,
+    1080
+  ],
+  "normalBuffer": [
+    1280,
+    720
+  ],
+  "normalCRT": true,
+  "consoleErrors": [],
+  "assetErrors": [],
+  "trianglesEqualFullAuthored": true,
+  "maximumVisibleMeshyTriangles": 3510498,
+  "sourceHashes": {
+    "src/levels/waterfall-climb.ts": "cefbdb1cde678277749b01ffa20aadd11bb76fcd666cc6893491972d4c11d0b1",
+    "src/levels/waterfall-climb-bonus.ts": "b49ed403fed3fcf8ade02334b2bafd933e2660e721a9602c7c32f287f8353887",
+    "src/levels/waterfall-climb-art.ts": "b4b0969f629cddf289bfbf0a5bf253ab18ff0d610a23c04196a4fc3b1dde1160",
+    "src/waterfallClimbMaterials.ts": "f4db14dd5d7ee25b633415d60977b2c229b469b3f0439873ed44bbf34824eddb",
+    "src/level.ts": "cd7ff528244319cb300b8d0789802772195fd00fcd53035ea58598f7cbe2872f",
+    "src/spinBridge.ts": "5267566c582811eabfa06b850cd43bf95229f7bf58f54f9ce775b5298ecbbce9"
+  },
+  "evidence": {
+    "file": "docs/waterfall-climb/runs/art-refined/full-review.json",
+    "sha256": "744c8ae1be9e42edca139650368af558a68c465ff1fd1bae663ac6e3b48573bb"
+  },
+  "selectedImages": [
+    "overview.png",
+    "river.png",
+    "climb.png",
+    "summit.png"
+  ]
+}

@@ -213,5 +213,5 @@ export const WATERFALL_CLIMB_LEVEL:CustomLevelData={v:1,name:'Waterfall Climb',s
   fallRecoveryDrop:10,startWarpPad:false,sky:'day',cameraAirLift:.5,hugeDropBail:false,
   medalTimes:{gold:480,silver:570,bronze:690},keepPlayFog:true,jungleAtmosphere:true,jungleStyle:'painterly',jungleDepthFade:false,
   atmosphere:{fogEnabled:true,fogNear:80,fogFar:460,fogColor:'#9abcb2',ambientSky:'#e1f2de',ambientGround:'#314d3d',
-    ambientIntensity:1.4,sunColor:'#ffe1a8',sunIntensity:1.8,fillColor:'#a2d6c7',fillIntensity:.55,drawDistance:560,shadowStrength:.65},
+    ambientIntensity:1.7,sunColor:'#ffe1a8',sunIntensity:1.8,fillColor:'#a2d6c7',fillIntensity:.85,drawDistance:560,shadowStrength:.65},
   components:C,groups};

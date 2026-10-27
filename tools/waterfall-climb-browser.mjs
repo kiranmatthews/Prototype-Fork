@@ -70,6 +70,10 @@ try{
    await page.waitForTimeout(1000);state=await page.evaluate(()=>({done:window.waterfallJourney.done,error:window.waterfallJourney.error,stage:window.waterfallJourney.stage,pose:window.waterfallJourney.pose}));
    const beat=state.pose?.beat??0,shot=`${state.pose?.phase??'route'}-${String(Math.floor(beat/12)).padStart(2,'0')}`;
    if(!shots.has(shot)){shots.add(shot);await page.screenshot({path:`${out}/${mode}-route-${String(shot).padStart(2,'0')}.png`});}
+   if(state.pose?.phase==='bonus'){
+    const detail=/bell|Last waterwheel|Treasury|Revealed spillway/i.exec(state.stage??'')?.[0].toLowerCase().replaceAll(' ','-');
+    if(detail&&!shots.has(detail)){shots.add(detail);await page.screenshot({path:`${out}/${mode}-bonus-${detail}.png`});}
+   }
    if(Date.now()-lastLog>30000){console.log('PROGRESS',JSON.stringify(state));lastLog=Date.now();await writeFile(`${out}/${mode}-progress.json`,JSON.stringify(state));}
   }while(!state.done&&Date.now()-began<2400000);
   const report=await page.evaluate(()=>window.waterfallJourney);

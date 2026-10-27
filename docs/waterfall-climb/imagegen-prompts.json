@@ -9,6 +9,11 @@
     {
       "file": "public/waterfall-climb/sluice-timber.webp",
       "prompt": "Use case: stylized-concept. Asset type: seamless square 1024x1024 albedo texture for the actual timed folding timber platforms in a lush waterfall platformer game. Primary request: richly hand-painted old river sluice planking in a polished colorful 3D platformer aesthetic. Orthographic top-down flat material filling the frame. Four broad parallel honey-brown hardwood boards running vertically, deeply weathered warm golden grain, rounded worn seams, small dark wooden pegs, faint remnants of turquoise paint as sparse curling water-flow carvings etched in the wood. Broad calm readable surfaces, tactile lovingly painted detail, strong warm contrast against a cool green waterfall gorge. Seamlessly tile on every side, even diffuse illumination, no perspective, no cast shadows, no border, no black voids, no words, no logos, no metal fittings, no unrelated objects."
+    },
+    {
+      "file": "public/waterfall-climb/flowing-water.webp",
+      "generatedAt": "2026-10-27T08:26:57.243615+00:00",
+      "prompt": "Use case: stylized-concept. Asset type: seamless square 1024x1024 game material texture for an animated very tall waterfall. Primary request: a beautiful hand-painted sheet of rushing aquamarine water and soft ivory-white foam, seen straight on as a flat diffuse material. Long loose vertical watery filaments, tiny twisting eddies, fine aerated spray, subtle translucent turquoise depths, varied widths of foamy streaks, organic broken lace rather than evenly spaced stripes. Polished colorful 3D platformer texture art, richly detailed but readable broad calm blue-green areas between the white foam. Continuous seamless repetition in both directions; the image will scroll vertically on a curved 3D waterfall surface. No scenery, no rocks, no banks, no waterfall silhouette, no perspective, no horizon, no objects, no text, no border, no cast shadows, no glow. Entire square is the water material."
     }
   ]
 }

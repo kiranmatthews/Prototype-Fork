@@ -1,6 +1,6 @@
 Waterfall Climb material art
 
-wet-basalt.webp and sluice-timber.webp were generated with OpenAI's built-in
+wet-basalt.webp, sluice-timber.webp and flowing-water.webp were generated with OpenAI's built-in
 image generation tool for this project on 27 October 2026. The exact prompts
 are retained in docs/waterfall-climb/imagegen-prompts.json. Runtime WebP files
 are 1024 x 1024; the generated source PNGs remain in the author's image library.
@@ -14,6 +14,7 @@ remain beside the original models. This level adds no downloaded models.
 
 The level's rock supports, gorge, water curtains, foam and sluice mechanisms
 are authored procedurally in src/levels/waterfall-climb-art.ts. Existing
-Three.js-based river/cascade shaders and scenery instancing are reused.
+Three.js-based river shaders and scenery instancing are reused; a level-scoped
+material scrolls two samples of the new foam texture over the waterfall.
 The same authored mesh geometry is retained at every viewing distance and in
 reflections. No character animation or movement tuning is changed.

@@ -15,6 +15,17 @@ export function* runWaterfallClimb(r,{collect=true,untilBeat=Infinity,fromBeat=0
   }
   return true;
  };
+ function* avoidBonus(target){
+  // The raised bonus stone has real circular side collision. Keep collection
+  // approaches on the open apron, including the checkpoint after bonus return.
+  const bonus=source.components.find(k=>k.t==='bonusplatform'&&Math.abs(k.p[1]-p.pos.y)<.1);
+  if(!bonus)return;
+  const dx=target[0]-p.pos.x,dz=target[2]-p.pos.z,d2=dx*dx+dz*dz;
+  if(d2<1e-6)return;
+  const t=Math.max(0,Math.min(1,((bonus.p[0]-p.pos.x)*dx+(bonus.p[2]-p.pos.z)*dz)/d2));
+  if(Math.hypot(p.pos.x+dx*t-bonus.p[0],p.pos.z+dz*t-bonus.p[2])<3.5)
+   yield* c.walk([bonus.p[0],p.pos.y,bonus.p[2]+4.8],'Walk around the raised bonus entrance');
+ }
  function* collectHere(){
   if(!collect)return;
   const candidates=source.components.filter(k=>['crate','checkpoint'].includes(k.t)&&!visited.has(k.nm)
@@ -25,20 +36,13 @@ export function* runWaterfallClimb(r,{collect=true,untilBeat=Infinity,fromBeat=0
    if(spec.t==='crate'){
     const crate=c.crateNamed(spec.nm);
     if(crate?.alive){
-     // The raised bonus stone has real circular side collision. Route around
-     // it on the basin, just as a player following the open apron would.
-     const bonus=source.components.find(k=>k.t==='bonusplatform'&&Math.abs(k.p[1]-p.pos.y)<.1);
-     if(bonus){
-      const dx=spec.p[0]-p.pos.x,dz=spec.p[2]-p.pos.z;
-      const t=Math.max(0,Math.min(1,((bonus.p[0]-p.pos.x)*dx+(bonus.p[2]-p.pos.z)*dz)/(dx*dx+dz*dz)));
-      if(Math.hypot(p.pos.x+dx*t-bonus.p[0],p.pos.z+dz*t-bonus.p[2])<3.5)
-       yield* c.walk([bonus.p[0],p.pos.y,bonus.p[2]+4.8],'Walk around the raised bonus entrance');
-     }
+     yield* avoidBonus(spec.p);
      yield* c.hit(crate,spec.nm);
     }
    }else{
     const cp=l.checkpoints.find(k=>Math.hypot(k.spawnPos.x-spec.p[0],k.spawnPos.z-spec.p[2])<.1&&Math.abs(k.spawnPos.y-.1-spec.p[1])<.1);
     if(cp&&!cp.active){
+     yield* avoidBonus([spec.p[0]-1.1,spec.p[1],spec.p[2]]);
      yield* c.walk([spec.p[0]-1.1,spec.p[1],spec.p[2]],spec.nm+' approach');
      yield* c.tick({});yield* c.tick({spinHeld:true});yield* c.stepFor(24);
      c.check(cp.active,spec.nm+' activated');

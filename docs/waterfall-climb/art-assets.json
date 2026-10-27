@@ -2,8 +2,15 @@
   "newRuntimeAssets": [
     {
       "file": "public/waterfall-climb/README.txt",
-      "bytes": 1161,
-      "sha256": "3b014f5a8788357b3d52a76eca2341d297ec788008a0319d691346dded911076"
+      "bytes": 1261,
+      "sha256": "b573061ce32f46fd8bd8878d00553ca153df241968f632cbb78d08ba65182ea0"
+    },
+    {
+      "file": "public/waterfall-climb/flowing-water.webp",
+      "bytes": 264652,
+      "sha256": "ac2952512d4a99636c5d64d7b773481dd232c6b935c9b687e9f663e50a1e581f",
+      "width": 1024,
+      "height": 1024
     },
     {
       "file": "public/waterfall-climb/sluice-timber.webp",
@@ -18,9 +25,17 @@
       "sha256": "45a9838b8e3938b787d5cf6abd44066b87ed192532b7111fdddf0aaa94bad4b3",
       "width": 1024,
       "height": 1024
+    },
+    {
+      "file": "public/level-previews/waterfall-climb.jpg",
+      "bytes": 57583,
+      "sha256": "60a4836d9588d46d5ce55017c7d59dae207ce7cc2ae3d06ac07d71f0ebfd778c",
+      "width": 640,
+      "height": 360
     }
   ],
-  "totalBytes": 555823,
+  "totalBytes": 878158,
   "newModelDownloads": 0,
-  "geometryPolicy": "Reuse the full authored source geometry at every distance and in reflections."
+  "geometryPolicy": "Reuse the full authored source geometry at every distance and in reflections.",
+  "previewSource": "Actual full-resolution Three.js scene render with a separate presentation camera; not a gameplay camera change."
 }

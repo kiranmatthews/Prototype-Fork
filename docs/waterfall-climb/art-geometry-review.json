@@ -3,10 +3,10 @@
   "traceFile": "docs/waterfall-climb/runs/greybox-full/full-journey.json",
   "levels": {
     "main": {
-      "components": 1581,
-      "noncollidingScenery": 802,
-      "authoredMeshVertices": 20618,
-      "authoredMeshTriangles": 31600,
+      "components": 1651,
+      "noncollidingScenery": 872,
+      "authoredMeshVertices": 16220,
+      "authoredMeshTriangles": 23948,
       "degenerateTriangles": 0,
       "cameraBodySamples": 332,
       "rejectedBroadBounds": 18,

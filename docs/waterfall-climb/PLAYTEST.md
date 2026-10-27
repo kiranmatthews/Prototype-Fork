@@ -140,3 +140,26 @@ assertions to the already passing physical-expiry test.
   conservative prop-bound checks now clear all 332 sampled camera-to-body rays.
   The final authored scenery has 31,600 main / 17,084 bonus mesh triangles,
   excluding unchanged Meshy source models.
+
+- 08:19 UTC: first full decorated review passes the 16 supported checkpoint
+  views, native 1920×1080, normal 720-line CRT presentation, and actual bonus
+  entry/failure/retry/all-box payout. No console or asset errors. Visual review
+  found the broad fall too uniform, so the next pass replaced it with four
+  separated streams, native Meshy cliff strata and sculpted rock undersides.
+- 08:27 UTC: a third built-in imagegen run produced a tiled aquamarine and ivory
+  foam texture. A small level-scoped material animates two drifting samples;
+  waterfall folds, crests and flared toes are still authored mesh geometry.
+- 08:33 UTC: refined full-render camera tour and type-check pass. All 16
+  checkpoint views are supported; generated materials compile without console
+  errors. MAX/native and normal CRT images were inspected. The camera audit
+  again clears all 332 sampled camera-to-body rays. Final source mesh counts are
+  23,948 main / 17,084 bonus triangles, excluding unchanged Meshy models.
+- Final art, all three textures, provenance and the actual-render 640×360 level
+  preview add 878,158 shipped asset bytes. The source models add zero new bytes.
+  Both protected gameplay hashes remain identical to the greybox lock.
+- The small timer-state check passes again at 30/60/120 Hz, including no timer
+  refresh, reuse, long updates, checkpoint resets and the original permanent latch.
+- The shared guard deferred the final combined river → bonus → climb run while
+  capacity was reserved for other release work. The input pilot now routes
+  checkpoint collection around the raised bonus stone as well as ordinary boxes;
+  this changes only test navigation, not game geometry or player behavior.

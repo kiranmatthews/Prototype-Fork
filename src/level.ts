@@ -41,6 +41,7 @@ import {SourceBouncyProps,validSourceBox,type SourceBoxData} from './sourceBounc
 import { CARLISLE_COAST_LEVEL } from "./levels/carlisle-coast";
 import { CUSTARD_CREEK_LEVEL } from "./levels/custard-creek";
 import { custardWaterfallMaterial } from './custardWaterfall';
+import {createWaterfallClimbCurtain} from './waterfallClimbMaterials';
 import { HazardVisuals } from './hazardVisuals';
 import { isOriginalTestCourse } from "./levels/carlisleLegacy";
 import { upgradeKnownEdgeDefaults } from './edgeGrindingMigration';
@@ -1062,6 +1063,7 @@ export const TEX_KINDS = [
   "custard-cascade",
   "waterfall-basalt",
   "waterfall-timber",
+  "waterfall-cascade",
 
   ...NIGHTWORKS_VOLCANO_TEXTURES,
   ...ROOM_TEXTURE_KINDS,
@@ -4830,8 +4832,8 @@ export class Level {
       return texture;
     }
     if(kind==='coast-terrain')return this.surfaceTexture('coast-bedrock');
-    if(kind==='waterfall-basalt'||kind==='waterfall-timber'){
-      const file=kind==='waterfall-basalt'?'wet-basalt':'sluice-timber';
+    if(kind==='waterfall-basalt'||kind==='waterfall-timber'||kind==='waterfall-cascade'){
+      const file=kind==='waterfall-basalt'?'wet-basalt':kind==='waterfall-timber'?'sluice-timber':'flowing-water';
       const texture=Level.finishTex(this.surfaceImage(`waterfall-climb/${file}.webp`));
       this.surfTexCache.set(kind,texture);return texture;
     }
@@ -6456,6 +6458,7 @@ export class Level {
     else if(isCastleTexture(c.tex))material=createCastleMaterial(c);
     else if(c.tex==='ice')material=createIceMaterial();
     else if(c.tex==='custard-foam')material=custardFoamMaterial(this.standingWaterClock,c);
+    else if(c.tex==='waterfall-cascade')material=createWaterfallClimbCurtain(this.standingWaterClock,this.surfaceTexture(c.tex),c.color??'#ccefe5');
     else if(c.tex==='custard-cascade')material=custardWaterfallMaterial(this.standingWaterClock,c.color??'#91c5b1');
     else if(c.tex==='custard-sandstone'||c.tex==='custard-pool-bed')material=new THREE.MeshStandardMaterial({
       color:c.color??'#ffffff',vertexColors:!!c.colors,roughness:.87,metalness:0,
