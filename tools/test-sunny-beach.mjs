@@ -8,11 +8,11 @@ try{
  const {BEACHFRONT_RUN_LEVEL:beach}=await server.ssrLoadModule('/src/levels/beachfront-run.ts');
  assert.equal(l.components.filter(c=>c.t==='gate').length,1);
  assert.equal(l.components.filter(c=>c.t==='crystal').length,1);
- assert.equal(l.components.filter(c=>c.t==='checkpoint').length,8);
+ assert.equal(l.components.filter(c=>c.t==='checkpoint').length,14);
  assert.equal(l.components.filter(c=>c.t==='rope').length,2);
  assert.deepEqual(l.spawn,beach.spawn);
  const copied=l.components.filter(c=>c.nm?.startsWith('Island Hopper /'));
- const expected=original.components.filter(c=>c.t!=='clock'&&c.t!=='decor');
+ const expected=original.components.filter(c=>!['clock','decor','gate','crystal'].includes(c.t));
  assert.equal(copied.length,expected.length);
  for(let i=0;i<copied.length;i++){
   const a=copied[i],b=expected[i];
@@ -22,7 +22,8 @@ try{
  }
  const knots=l.components.filter(c=>c.t==='camnode');
  for(let i=1;i<knots.length;i++)assert.ok(knots[i].p[2]<knots[i-1].p[2],`camera order ${i}`);
- assert.ok(l.components.find(c=>c.t==='gate').p[2]<-1120);
+ assert.ok(l.components.find(c=>c.t==='gate').p[2]<-1380);
+ assert.equal(l.components.filter(c=>c.t==='enemy').length,15);
  assert.ok(l.atmosphere.sunDirection[1]>.85&&l.atmosphere.sunIntensity>2);
  assert.equal(l.atmosphere.backdrop,'painted sky');
  for(const id of ['sunny-sandstone','sunny-hibiscus']){
@@ -32,5 +33,5 @@ try{
  }
  const ledger=JSON.parse(await readFile('tools/sunny-beach-assets/tasks.json'));
  assert.equal(Object.values(ledger.tasks).reduce((n,t)=>n+t.consumedCredits,0),30);
- console.log(`PASS: single finish, eight checkpoints, original island geometry/actors, camera order, daytime atmosphere, both Meshy assets and 30-credit ledger (${l.components.length} components).`);
+ console.log(`PASS: single extended finish, fourteen checkpoints, preserved island crossings, fifteen patrols, camera order, daytime atmosphere, both Meshy assets and original 30-credit ledger (${l.components.length} components).`);
 }finally{await server.close();}

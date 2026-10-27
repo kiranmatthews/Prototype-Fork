@@ -1,22 +1,16 @@
 import type { CustomComponent, CustomLevelData, DecorKind } from '../level';
-import type { CustomAtmosphereData } from '../levelAtmosphere';
 import { BEACHFRONT_RUN_LEVEL } from './beachfront-run';
 import { ISLAND_HOPPER_LEVEL } from './island-hopper';
 import { beachfrontPointAtDistance, beachfrontSandHeight, beachfrontYawAtDistance } from '../beachfrontCourse';
 import { COASTAL_TOWN_ASSETS } from '../coastalTownAssets';
+import { BAY_ATMOSPHERE, BAY_OCEAN_LOOK } from './banana-bay-theme';
+import { createBananaBayCoast, createBananaBayFinale, BAY_FINALE_END_Z } from './banana-bay-route';
 
 type P = [number,number,number];
 export const SUNNY_ISLAND_OFFSET: P = [0,0,-780];
-export const SUNNY_BEACH_OCEAN_LOOK={normalStrength:1.35,reflectionStrength:.38,causticsStrength:.4,
-  shallow:{r:.07,g:.82,b:.75,a:.7},deep:{r:.015,g:.42,b:.56,a:1},depthDistance:2.5,foamStrength:.48,intersectionWidth:.85};
-export const SUNNY_BEACH_ATMOSPHERE: CustomAtmosphereData = {
-  fogEnabled:true,fogNear:160,fogFar:620,fogColor:'#b8e7ed',
-  ambientSky:'#d5efff',ambientGround:'#ead2a0',ambientIntensity:1.4,
-  sunColor:'#fff9ec',sunIntensity:2.15,sunDirection:[.36,.91,.22],
-  fillColor:'#c7edff',fillIntensity:.42,shadowStrength:.62,drawDistance:720,backdrop:'painted sky',
-  fallbackTop:'#229de6',fallbackBottom:'#d7f5f3',fallbackRidges:false,
-  fallbackStars:false,fallbackSunColor:'#fffef5',fallbackSunU:.62,fallbackSunV:.12,
-};
+export const SUNNY_BEACH_OCEAN_LOOK=BAY_OCEAN_LOOK;
+export const SUNNY_BEACH_ATMOSPHERE=BAY_ATMOSPHERE;
+export const SUNNY_BEACH_END_Z=BAY_FINALE_END_Z;
 const r=(v:number)=>Math.round(v*1000)/1000;
 const translate=(p:readonly number[]):P=>p.map((v,i)=>r(v+SUNNY_ISLAND_OFFSET[i])) as P;
 const beachPoint=(d:number,lateral=0,y?:number):P=>{
@@ -29,10 +23,10 @@ export const sunnyIslandPoint=(d:number,lateral=0):P=>{
   return translate([p[0]-dz/n*lateral,p[1],p[2]+dx/n*lateral]);
 };
 
-// Keep both source courses intact. The append is a translation, preserving
-// the four authored water crossings and every actor's relationship to its deck.
-const beach=structuredClone(BEACHFRONT_RUN_LEVEL.components).filter(c=>c.t!=='gate'&&c.t!=='crystal');
-const islands=structuredClone(ISLAND_HOPPER_LEVEL.components).filter(c=>c.t!=='clock'&&c.t!=='decor').map(c=>{
+// Keep the Unity reference sources intact. Banana Bay owns the new coastal
+// encounters and finale; the four proven island crossings retain their reach.
+const beach=createBananaBayCoast();
+const islands=structuredClone(ISLAND_HOPPER_LEVEL.components).filter(c=>!['clock','decor','gate','crystal'].includes(c.t)).map(c=>{
   c.p=translate(c.p);c.grp=(c.grp??0)+40;
   c.nm=`Island Hopper / ${c.nm??c.t}`;
   if(c.supportBaseY!==undefined)c.supportBaseY+=SUNNY_ISLAND_OFFSET[1];
@@ -52,8 +46,20 @@ const components:CustomComponent[]=[...beach,connector,
   {t:'pit',p:[0,-2.9,-997],s:[260,1,550],invisible:true,nm:'Lagoon deep-water recovery',grp:30},
   {t:'checkpoint',p:[1,1.05,-738],nm:'Lagoon departure checkpoint',grp:30},
   ...[716,730].map(d=>({t:'camnode' as const,p:beachPoint(d,0,1.05),radius:10,grp:5})),
-  {t:'camnode',p:[1,1.05,-740],radius:8,grp:5},...islands];
+  {t:'camnode',p:[1,1.05,-740],radius:8,grp:5},...islands,
+  ...createBananaBayFinale()];
 for(let z=-716;z>=-752;z-=7)components.push({t:'wumpa',p:[r((z+752)/36*1.8),2.02,z],grp:30});
+// Landings preview their patrol from the approach. Cargo belongs on broad
+// island courts, never on a blind airborne receiver or sagging rope.
+for(const [i,d]of [22,112,200,284,352].entries()){
+  const p=sunnyIslandPoint(d);components.push({t:'enemy',p,foe:i%2?'turtle':'grunt',range:2.2,speed:1.4+i*.1,
+    terrainSupports:true,nm:`Lagoon island ${i+1} / patrol after the landing`,grp:73});
+  for(const side of [-1,1]){
+    const q=sunnyIslandPoint(d+7,side*1.7);
+    components.push({t:'crate',p:q,kind:'wood',nm:`Lagoon island ${i+1} / sorted cargo ${side}`,grp:72},
+      {t:'crate',p:[q[0],q[1]+.96,q[2]],kind:side===1?'mystery':'wood',nm:`Lagoon island ${i+1} / cargo cap ${side}`,grp:72});
+  }
+}
 
 // Fully editable scenery. A clear corridor surrounds every playable surface;
 // the original cliff boundary remains the only cliff gameplay proxy.
@@ -112,8 +118,11 @@ export const SUNNY_BEACH_LEVEL:CustomLevelData={
   cameraRig:{camDist:9.4,camHeight:5.6,camPitch:18,camFov:59},cameraLookAhead:6,
   atmosphere:SUNNY_BEACH_ATMOSPHERE,
   shoreFoam:ISLAND_HOPPER_LEVEL.shoreFoam?.map(o=>({...o,center:translate(o.center)})),
-  groups:[...(BEACHFRONT_RUN_LEVEL.groups??[]),{id:30,nm:'Beach to lagoon pier'},
+  groups:[{id:5,nm:'Coastal camera route'},{id:30,nm:'Beach to lagoon pier'},
     ...(ISLAND_HOPPER_LEVEL.groups??[]).map(g=>({...g,id:g.id+40,nm:`Island Hopper / ${g.nm}`})),
+    {id:71,nm:'Banana Bay coastal piers'},{id:72,nm:'Coastal cargo and checkpoints'},
+    {id:73,nm:'Readable beach and lagoon patrols'},{id:74,nm:'Salvage finale crossings'},
+    {id:75,nm:'Salvage cargo and rewards'},{id:76,nm:'Salvage patrols'},{id:77,nm:'Salvage camera route'},
     {id:80,nm:'Sunny sandstone, palms and hibiscus',editorOnly:true}],
   components,
 };

@@ -163,7 +163,7 @@ import { BONE_YARD_LEVEL } from "./levels/bone-yard";
 import { TREEHOUSE_TRAIL_LEVEL } from "./levels/treehouse-trail";
 import { BACKPORT_LAB_LEVEL } from "./levels/backport-lab";
 import { BEACHFRONT_RUN_LEVEL } from "./levels/beachfront-run";
-import { SUNNY_BEACH_LEVEL, SUNNY_BEACH_OCEAN_LOOK } from './levels/sunny-beach';
+import { SUNNY_BEACH_LEVEL, SUNNY_BEACH_OCEAN_LOOK, SUNNY_BEACH_END_Z } from './levels/sunny-beach';
 import { WATERPARK_ISLAND_OCEAN_LOOK } from './levels/slipstream-island';
 import { UNITY_PORT_LEVELS } from "./levels/unity-ports";
 import { EASY_BONUS_LEVEL } from "./levels/bonus-easy";
@@ -11587,7 +11587,7 @@ export class Level {
       const t=i/40,e=t*t*(3-2*t);
       shore.push({x:THREE.MathUtils.lerp(last.x,-106,e),z:last.z-90*t,sx:1,sz:0,beachSlope:0,bedSlope:0});
     }
-    for(let z=last.z-92;z>=-1220;z-=4)shore.push({x:-106,z,sx:1,sz:0,beachSlope:0,bedSlope:0});
+    for(let z=last.z-92;z>=SUNNY_BEACH_END_Z-90;z-=4)shore.push({x:-106,z,sx:1,sz:0,beachSlope:0,bedSlope:0});
     const firstShore = shore[0];
     this.rememberSourceOcean(shore, -0.36, "unity");
     if(this.capturedOceanSpec){this.capturedOceanSpec.width=300;this.capturedOceanSpec.shoreGeometry='ground';this.capturedOceanSpec.look='sunny-beach';}

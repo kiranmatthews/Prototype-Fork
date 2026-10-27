@@ -9,7 +9,7 @@ export function* runSwitchyardJourney(r) {
   const shelfTop = name => {
     const component = r.source.components.find(component => component.nm === name);
     c.check(component, `Missing receiving shelf ${name}`);
-    return component.p[1] + component.s[1] / 2;
+    return component.t==='woodpath' ? component.p[1] : component.p[1] + component.s[1] / 2;
   };
   function* grounded(target, label) {
     yield* c.until(() => p.grounded, () => c.steer(target), { label, limit: 240 });

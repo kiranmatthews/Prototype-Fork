@@ -16,6 +16,7 @@ import { dressBlockworksBonus } from './blockworks-bonus';
 import { decorateCoastalBonus } from './coastal-town-art';
 import { dressDrownedCrownBonus } from './drowned-crown-bonus';
 import { ROOFTOP_PORCH_BONUS } from './rooftop-porch-bonus';
+import { dressBananaBayBonus } from './banana-bay-bonus';
 
 interface BonusRecipe {
   parentId: string;
@@ -90,6 +91,7 @@ export const THEMED_BONUS_COURSES = THEMED_BONUS_RECIPES.filter(recipe => recipe
   }
   if (recipe.parentId === 'test') rebuildCarlisleBonus(course.data);
   if (recipe.parentId === 'jungle') dressJungleBonus(course.data);
+  if (recipe.parentId === 'beachfront') dressBananaBayBonus(course.data);
   if (recipe.theme === 'nightworks' || recipe.theme === 'afterhours') rebuildNightworksBonus(course.data);
   return {...course,layout,parentId:recipe.parentId,progressKey:recipe.key,id:`bonus-${recipe.key}`,theme:recipe.theme};
 });
