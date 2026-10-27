@@ -24,7 +24,7 @@ export class RaceHud {
   private readonly rewards=new MenuRewardsPresentation();
   private selected=0;private axisHeld=false;private blocked=false;private key='';
   private line:RaceHudState['line']|null=null;
-  private mapPath='';private mapBounds={x:0,z:0,w:1,h:1,top:0};
+  private mapPath='';private mapNetwork=false;private mapBounds={x:0,z:0,w:1,h:1,top:0};
   constructor(){
     this.element.className='competition-host race-interface';this.element.hidden=true;
     this.element.setAttribute('aria-label','Skate race');document.body.append(this.element);
@@ -163,7 +163,7 @@ export class RaceHud {
     }else if(s.phase==='countdown'){
       this.element.innerHTML=`<div class="comp-countdown" style="position:absolute;left:50%;top:12vh;transform:translateX(-50%)"><strong>${Math.max(1,Math.ceil(s.countdown))}</strong></div>`;
     }else if(s.phase==='grid'){
-      this.element.innerHTML=`<section class="timber-card comp-card comp-intro"><div class="comp-eyebrow">${s.vehicle?'GOLF CART RACE':'SKATE RACE'}</div><h1>${esc(s.title)}</h1><div class="comp-content"><div class="comp-intro-body"><div class="comp-cup"><svg data-race-map viewBox="0 0 180 360" role="img" aria-label="Complete race course"></svg></div><div><h2>FIRST TO THE FINISH</h2><div class="comp-rules"><b>8 RACERS</b><b>RACE ITEMS</b><b>1 FINISH</b></div><p>${s.gemReward==='win'?'Win the race to earn the gem. Finish to unlock time trials.':s.crystalReward===false?'Race to unlock time trials. Clear the blank crates for the gem.':'Win the crystal. Clear blank crates for the gem. Item pickups don’t count.'}</p>${s.vehicle?'<p data-cart-controls></p>':''}</div></div></div><div class="comp-actions">${action('RACE','race')}${trialAction}</div></section>`;
+      this.element.innerHTML=`<section class="timber-card comp-card comp-intro"><div class="comp-eyebrow">${s.vehicle?'GOLF CART RACE':'SKATE RACE'}</div><h1>${esc(s.title)}</h1><div class="comp-content"><div class="comp-intro-body"><div class="comp-cup"><svg data-race-map viewBox="0 0 180 360" role="img" aria-label="Complete race course"></svg></div><div><h2>FIRST TO THE FINISH</h2><div class="comp-rules"><b>8 RACERS</b><b>${s.railChoices?`${s.railChoices} ROUTES`:s.railTransfers===undefined?'RACE ITEMS':`${s.railTransfers} RAIL GAPS`}</b><b>1 FINISH</b></div><p>${s.railTransfers!==undefined?'Win the gem and unlock time trials.':s.gemReward==='win'?'Win the race to earn the gem. Finish to unlock time trials.':s.crystalReward===false?'Race to unlock time trials. Clear the blank crates for the gem.':'Win the crystal. Clear blank crates for the gem. Item pickups don’t count.'}</p>${s.vehicle?'<p data-cart-controls></p>':s.railTransfers!==undefined?'<p data-rail-controls></p>':''}</div></div></div><div class="comp-actions">${action('RACE','race')}${trialAction}</div></section>`;
     }else{
       const trial=s.mode==='time-trial';
       const heading=trial?'TIME TRIAL':s.won?'FIRST PLACE!':`${s.rank} / 8 FINISH`;
@@ -175,6 +175,8 @@ export class RaceHud {
         [...(s.crystalReward===false?[]:[['CRYSTAL',rewardSlot('crystal',s.won)] as const]),[s.gemReward==='win'?'GEM':'BOX GEM',rewardSlot('gem',s.gemReward==='win'?s.won:s.totalBoxes>0&&s.boxes===s.totalBoxes)] as const];
       for(const [label,slot] of slots){const row=document.createElement('div');row.className='comp-cup game-results-medal';const caption=document.createElement('strong');caption.textContent=label;if(label==='BOX GEM'){const count=document.createElement('small');count.textContent=`${s.boxes} / ${s.totalBoxes}`;caption.append(document.createElement('br'),count);}row.append(slot,caption);awards.append(row);}
     }
+    const railControls=this.element.querySelector<HTMLElement>('[data-rail-controls]');
+    if(railControls)setPromptText(railControls,(s.railChoices?'Choose your thread on each platform. ':'')+'Hold {jump}; release at amber marks. Press {grind} again to catch. {left}{right} Balance / aim.');
     const controls=this.element.querySelector<HTMLElement>('[data-cart-controls]');
     if(controls){setPromptText(controls,'Hold {jump} Accelerate · {up}{down}{left}{right} Steer · {grab} Brake · {transfer} Drift · {spin} Flame thrusters · {grind} Steal / bail · {inventory} Weapon');const note=document.createElement('p');setPromptText(note,'Dents stick. Engines burn. On foot, hold {jump} + a direction to skate. Grab a green loaner or steal a ride.');controls.after(note);}
     this.element.setAttribute('aria-label',s.vehicle?'Golf cart race':'Skate race');
@@ -184,16 +186,16 @@ export class RaceHud {
   private updateMap(s:RaceHudState):void {
     const svg=this.element.querySelector<SVGSVGElement>('[data-race-map]');if(!svg)return;
     if(this.line!==s.line){
-      this.line=s.line;const xs=s.line.map(p=>p[0]),zs=s.line.map(p=>-p[2]+(s.line[0][1]-p[1])*.2);
+      this.line=s.line;this.mapNetwork=!!s.railMap;const points=s.railMap?.flat()??s.line,xs=points.map(p=>p[0]),zs=points.map(p=>-p[2]+(s.line[0][1]-p[1])*.2);
       this.mapBounds={x:Math.min(...xs),z:Math.min(...zs),w:Math.max(...xs)-Math.min(...xs)||1,h:Math.max(...zs)-Math.min(...zs)||1,top:s.line[0][1]};
-      this.mapPath=s.line.map((p,i)=>{const q=this.mapPoint(p[0],p[1],p[2]);return `${i?'L':'M'}${q[0].toFixed(2)},${q[1].toFixed(2)}`;}).join(' ');
+      this.mapPath=(s.railMap??[s.line]).map(line=>line.map((p,i)=>{const q=this.mapPoint(p[0],p[1],p[2]);return `${i?'L':'M'}${q[0].toFixed(2)},${q[1].toFixed(2)}`;}).join(' ')).join(' ');
     }
-    if(!svg.children.length){const path=document.createElementNS(SVG,'path');path.setAttribute('d',this.mapPath);path.setAttribute('fill','none');path.setAttribute('stroke',MENU_THEME.rivet);path.setAttribute('stroke-width','3');svg.append(path);}
+    if(!svg.children.length){const path=document.createElementNS(SVG,'path');path.setAttribute('d',this.mapPath);path.setAttribute('fill','none');path.setAttribute('stroke',MENU_THEME.rivet);path.setAttribute('stroke-width',this.mapNetwork?'1.3':'3');svg.append(path);}
     for(const r of s.racers){
       let marker=svg.querySelector<SVGEllipseElement>(`[data-racer="${r.id}"]`);
       if(!marker){marker=document.createElementNS(SVG,'ellipse');marker.dataset.racer=String(r.id);marker.setAttribute('rx',r.id===0?'7':'5');marker.setAttribute('ry',r.id===0?'7':'5');marker.setAttribute('fill',r.color);marker.setAttribute('stroke',MENU_THEME.bottom);marker.setAttribute('stroke-width','2');svg.append(marker);}
       const p=this.mapPoint(r.x,r.y,r.z);marker.setAttribute('cx',p[0].toFixed(2));marker.setAttribute('cy',p[1].toFixed(2));
     }
   }
-  private mapPoint(x:number,y:number,z:number):[number,number]{const b=this.mapBounds;return [10+(x-b.x)/b.w*160,10+(-z+(b.top-y)*.2-b.z)/b.h*340];}
+  private mapPoint(x:number,y:number,z:number):[number,number]{const b=this.mapBounds;if(this.mapNetwork){const scale=Math.min(160/b.w,340/b.h);return [90+(x-b.x-b.w/2)*scale,180+(-z+(b.top-y)*.2-b.z-b.h/2)*scale];}return [10+(x-b.x)/b.w*160,10+(-z+(b.top-y)*.2-b.z)/b.h*340];}
 }

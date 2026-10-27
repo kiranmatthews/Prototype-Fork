@@ -11,6 +11,9 @@ import type { Input } from '../input';
 import type { Crate, Level } from '../level';
 import type { WipeoutCause } from '../character/wipeoutPolicy';
 import { RaceCourse } from './course';
+import type { RailChoiceCursor } from './railChoices';
+import { RivalGrindControl } from './rivalGrind';
+import type { Rail } from '../rails';
 import { prepareRaceItemPictures } from './itemPictures';
 import { RaceItemDeck, freshRaceSeed } from './itemOdds';
 import { RaceItemEffects, raceTargetRing } from './effects';
@@ -21,7 +24,7 @@ interface Rider {
   id:number; player:Player; scene:THREE.Scene|null; progress:number; previousProgress:number;
   finish:number|null; rollout:{time:number; speed:number; duration:number; heading:THREE.Vector3}|null; item:RaceItem|null; shield:number; star:number; ultraUsed:boolean; starModel:THREE.Group; boost:number; itemCooldown:number;
   boxes:Set<Crate>; anchor:THREE.Vector3; anchorProgress:number; recovery:number; falls:number;
-  braking:boolean; oldJump:boolean; jumped:number; knockGrace:number; marker:THREE.Mesh; bubble:THREE.Object3D;
+  braking:boolean; oldJump:boolean; oldGrind:boolean; jumped:number; knockGrace:number; marker:THREE.Mesh; bubble:THREE.Object3D;
   deck:RaceItemDeck; itemProgress:number; parry:number; dodge:number; velocity:THREE.Vector3; threats:RaceThreat[];
   targetRing:ReturnType<typeof raceTargetRing>; storm:THREE.Group;
   think:number; aim:THREE.Vector3; attackCooldown:number; wasSwimming:boolean;
@@ -33,6 +36,7 @@ interface Projectile {
   phase:'travel'|'windup'|'strike'; phaseTime:number; locked:THREE.Vector3;
   progress:number; offset:number; velocityY:number; bounces:number; time:number; hit:Set<number>;
   tnt?:TntRelay;
+  railRoute?:RailChoiceCursor;
 }
 const vec = () => new THREE.Vector3();
 const blankInput = ():Input => ({moveX:0,moveY:0,jumpHeld:false,grindHeld:false,spinHeld:false,grabHeld:false,transferHeld:false,
@@ -55,6 +59,8 @@ export class SkateRace {
   private returns=new Map<Crate,number>();
   private jumps:{s:number;end:number}[]=[];
   private sections:string[]=[];
+  private grinds:{s:number;end:number;lanes:number[]}[]=[];
+  private railRetries:{s:number;position:THREE.Vector3;platform:THREE.Object3D|null}[]=[];
   private seed=1;private levelId='skate-race';
   private reported=false;
   private heavyAt=20; private warningBeep=0;
@@ -64,6 +70,11 @@ export class SkateRace {
   private a=vec();private b=vec();
   private viewForward=vec();private viewOrigin=vec();
   private cartStalls=new Map<number,{position:THREE.Vector3;since:number}>();
+  private railTurnbacks=new Map<number,{since:number;released:boolean}>();
+  private railChoiceCursors=new Map<number,RailChoiceCursor>();
+  private rivalGrindControls=new Map<number,RivalGrindControl>();
+  private railTransfers=new Map<Rail,{t:number;start:THREE.Vector3;end:THREE.Vector3;key:number}[]>();
+  private retryProbe=new THREE.Raycaster();
   constructor(private scene:THREE.Scene,private human:Player,private readonly fullRivals=false,
     private readonly canStartTimeTrial:(levelId:string)=>boolean=()=>false){scene.add(this.root);}
   get active():boolean{return !!this.level;}
@@ -86,7 +97,7 @@ export class SkateRace {
       const storm=createRaceItemModel('shock-shell');storm.visible=false;storm.scale.setScalar(.8);this.root.add(storm);
       const starModel=createRaceItemModel('star');starModel.scale.setScalar(.6);starModel.visible=false;this.root.add(starModel);
       this.riders.push({id,player,scene:actorScene,progress:0,previousProgress:0,finish:null,rollout:null,item:null,shield:0,star:0,ultraUsed:false,starModel,boost:0,itemCooldown:0,
-        boxes:new Set(),anchor:vec(),anchorProgress:0,recovery:0,falls:0,braking:false,oldJump:false,jumped:-1,knockGrace:0,marker,bubble,think:0,aim:vec(),attackCooldown:0,wasSwimming:false,deck:new RaceItemDeck(),itemProgress:-Infinity,parry:0,dodge:0,velocity:vec(),threats:[],targetRing,storm});
+        boxes:new Set(),anchor:vec(),anchorProgress:0,recovery:0,falls:0,braking:false,oldJump:false,oldGrind:false,jumped:-1,knockGrace:0,marker,bubble,think:0,aim:vec(),attackCooldown:0,wasSwimming:false,deck:new RaceItemDeck(),itemProgress:-Infinity,parry:0,dodge:0,velocity:vec(),threats:[],targetRing,storm});
     }
   }
   attach(level:Level,id='skate-race'):void {
@@ -102,11 +113,23 @@ export class SkateRace {
     // The characters are reusable, but crate tables and contacts belong to the
     // departed level. Inactive rivals must not keep a disposed course alive.
     this.homes.clear();this.returns.clear();
-    this.clearItems();this.level=level.skateRace?level:null;this.root.visible=!!this.level;
+    this.clearItems();this.railTransfers.clear();this.railRetries=[];this.level=level.skateRace?level:null;this.root.visible=!!this.level;
     if(!this.level){this.course=null;return;}
     this.sections=level.skateRace!.stages??[level.name];
     this.levelId=id;this.allocate();this.course=new RaceCourse(level.skateRace!.line);
     this.jumps=level.skateRace!.jumps.map(j=>({s:this.course!.project(vec().fromArray(j.takeoff)).s,end:this.course!.project(vec().fromArray(j.landing)).s}));
+    this.grinds=(level.skateRace!.grinds??[]).map(g=>({s:this.course!.project(vec().fromArray(g.start)).s,end:this.course!.project(vec().fromArray(g.end)).s,lanes:g.lanes}));
+    if(level.railChoices)for(const [i,jump]of level.skateRace!.jumps.entries()){
+      const start=vec().fromArray(jump.takeoff),end=vec().fromArray(jump.landing);
+      const rail=level.rails.find(rail=>rail.object.userData.sourceName&&rail.closestDistance(start)<.15);
+      if(rail){const list=this.railTransfers.get(rail)??[];list.push({t:rail.closest(start).t,start,end,key:10000+i});this.railTransfers.set(rail,list);}
+    }
+    const retryRay=new THREE.Raycaster();
+    this.railRetries=this.grinds.length?level.raceCheckpoints.map(position=>{
+      retryRay.set(position.clone().add(new THREE.Vector3(0,2,0)),new THREE.Vector3(0,-1,0));retryRay.far=4;
+      const platform=retryRay.intersectObjects(level.groundMeshes,false).find(hit=>hit.face&&hit.face.normal.y>.1)?.object??null;
+      return {s:level.railChoices?.project(position).s??this.course!.project(position).s,position:position.clone(),platform};
+    }).sort((a,b)=>b.s-a.s):[];
     this.homes=new Map(level.crates.map(c=>[c,c.mesh.position.clone()]));
     level.raceAudioListener=this.human.pos;
     level.onRaceCrateBreak=(crate,id)=>this.crateBroken(crate,id);
@@ -117,7 +140,8 @@ export class SkateRace {
     if(mode==='time-trial'&&!this.canStartTimeTrial(this.levelId))mode='race';
     this.carts?.dispose();this.carts=null;
     const level=this.level;this.mode=mode;this.phase='grid';this.countdown=3;this.elapsed=0;this.reported=false;
-    this.runSeed=runSeed>>>0;this.seed=this.runSeed;this.cartStalls.clear();this.returns.clear();this.clearItems();this.heavyAt=20;this.warningBeep=0;
+    this.runSeed=runSeed>>>0;this.seed=this.runSeed;this.cartStalls.clear();this.railTurnbacks.clear();this.railChoiceCursors.clear();this.returns.clear();this.clearItems();this.heavyAt=20;this.warningBeep=0;
+    this.rivalGrindControls.clear();
     if(resetWorld)level.reset(true);
     level.setTimeTrial(mode==='time-trial');
     for(const r of this.riders){
@@ -131,7 +155,7 @@ export class SkateRace {
       r.player.hasCrystal=false;r.player.gemEarned=false;r.player.cratesBroken=0;r.player.bonusCrates=0;
       r.player.ttActive=mode==='time-trial';r.player.ttTime=0;r.player.ttFreeze=0;
       r.star=0;r.ultraUsed=false;r.starModel.visible=false;r.progress=r.previousProgress=0;r.finish=null;r.rollout=null;r.item=null;r.shield=r.boost=r.recovery=r.falls=r.knockGrace=0;
-      r.itemCooldown=3+r.id*.3;r.boxes.clear();r.anchor.copy(level.spawnPos);r.anchorProgress=0;r.braking=false;r.oldJump=false;r.jumped=-1;r.think=0;r.attackCooldown=.8+r.id*.17;r.aim.copy(start);r.wasSwimming=false;r.deck.reset((this.seed^Math.imul(r.id+1,0x9e3779b9))>>>0);r.itemProgress=-Infinity;r.parry=r.dodge=0;r.velocity.set(0,0,0);r.threats=[];r.targetRing.visible=r.storm.visible=false;
+      r.itemCooldown=3+r.id*.3;r.boxes.clear();r.anchor.copy(level.spawnPos);r.anchorProgress=0;r.braking=false;r.oldJump=false;r.oldGrind=false;r.jumped=-1;r.think=0;r.attackCooldown=.8+r.id*.17;r.aim.copy(start);r.wasSwimming=false;r.deck.reset((this.seed^Math.imul(r.id+1,0x9e3779b9))>>>0);r.itemProgress=-Infinity;r.parry=r.dodge=0;r.velocity.set(0,0,0);r.threats=[];r.targetRing.visible=r.storm.visible=false;
       if(r.scene){r.scene.visible=r.id<this.count;if(r.id<this.count&&r.scene.parent!==this.scene)this.scene.add(r.scene);else if(r.id>=this.count)r.scene.removeFromParent();}
       r.marker.visible=r.id<this.count;r.player.prepareStartPresentation(level);this.placeMarker(r);
     }
@@ -191,12 +215,21 @@ export class SkateRace {
     // road the rider could still reach, then let Player own the normal pit death.
     const gravity=Math.max(1,Math.min(TUNING.fallGravity,TUNING.boardFallGravity,TUNING.rampFallGravity,TUNING.pipeAirGravity));
     const travel=Math.max(42,Math.abs(p.speed),TUNING.maxSpeed,TUNING.downhillMax,TUNING.vertMax);
-    return !this.course!.hasReachableLanding(this.level!,p.pos,p.vVel,travel,gravity,CONST.maxFallSpeed);
+    return this.level!.railChoices?!this.level!.hasReachableFallLanding(p.pos,p.vVel,travel,gravity,CONST.maxFallSpeed):!this.course!.hasReachableLanding(this.level!,p.pos,p.vVel,travel,gravity,CONST.maxFallSpeed);
+  }
+  private onRetryPlatform(r:Rider,cp:{position:THREE.Vector3;platform:THREE.Object3D|null}):boolean {
+    if(!this.level!.railChoices||!r.player.grounded||!cp.platform||Math.abs(r.player.pos.y-cp.position.y)>1.5)return false;
+    this.a.copy(r.player.pos).y+=.5;this.retryProbe.set(this.a,new THREE.Vector3(0,-1,0));this.retryProbe.far=2;
+    return this.retryProbe.intersectObject(cp.platform,false).length>0;
   }
   private recover(r:Rider):void {
-    r.recovery=0;r.boost=0;r.jumped=-1;r.oldJump=false;r.think=0;r.braking=false;
+    this.railTurnbacks.delete(r.id);
+    this.railChoiceCursors.delete(r.id);
+    r.recovery=0;r.boost=0;r.jumped=-1;r.oldJump=false;r.oldGrind=false;r.think=0;r.braking=false;
     r.progress=r.previousProgress=r.anchorProgress;
-    r.player.resetRacePosition(this.level!,r.anchor,this.course!.tangent(r.anchorProgress),!!this.carts&&!this.carts.isDriving(r.id));
+    let heading=this.course!.tangent(r.anchorProgress);
+    if(this.level!.railChoices){const cursor={s:r.anchorProgress};this.level!.railChoices.update(r.anchor,cursor);heading=this.level!.railChoices.tangent(cursor);}
+    r.player.resetRacePosition(this.level!,r.anchor,heading,!!this.carts&&!this.carts.isDriving(r.id));
     r.knockGrace=1.5;
   }
   /** UI and replay both feed this one semantic item edge. */
@@ -226,12 +259,13 @@ export class SkateRace {
     if(item==='banana'||explosive)mesh.position.addScaledVector(direction,explosive&&this.carts?-4.2:-2.2);
     if(explosive)updateRaceExplosiveModel(mesh,undefined,this.elapsed);
     if(item==='water-bomb')mesh.position.y+=.6;
-    if(item==='boomerang'){const grade=this.course!.tangent(r.progress);direction.y=direction.dot(grade.clone().setY(0).normalize())*grade.y/Math.max(.1,Math.hypot(grade.x,grade.z));direction.normalize();}
+    if(item==='boomerang'){const cursor=this.railChoiceCursors.get(id),grade=cursor&&this.level!.railChoices?this.level!.railChoices.tangent(cursor):this.course!.tangent(r.progress);direction.y=direction.dot(grade.clone().setY(0).normalize())*grade.y/Math.max(.1,Math.hypot(grade.x,grade.z));direction.normalize();}
     if(item==='tidal-wave'){mesh.children[0].rotation.y=-Math.PI/2;mesh.scale.set(this.course!.width(r.progress)/.6,1.35,1.4);mesh.rotation.y=Math.atan2(direction.x,direction.z);}
     this.root.add(mesh);
     const projected=this.course!.project(mesh.position,r.progress,40);
     const projectile:Projectile={phase:'travel',phaseTime:0,locked:vec(),type:item,owner:id,target:target?.id??-1,direction,mesh,previous:mesh.position.clone(),
       progress:projected.s,offset:projected.offset,velocityY:item==='water-bomb'?10:0,bounces:0,time:0,hit:new Set(),
+      ...(this.level!.railChoices?{railRoute:{...this.level!.railChoices.project(r.player.pos,this.railChoiceCursors.get(id))}}:{}),
       ...(item==='tnt'?{tnt:{carrier:-1,remaining:null,blocked:new Set<number>()}}:{})};
     this.projectiles.push(projectile);
     if(this.carts&&(item==='green-shell'||item==='banana'))for(const side of [-1,1]){
@@ -244,7 +278,7 @@ export class SkateRace {
   order():Rider[] {return this.riders.slice(0,this.count).sort((a,b)=>a.finish!==null&&b.finish!==null?a.finish-b.finish:a.finish!==null?-1:b.finish!==null?1:b.progress-a.progress||a.id-b.id);}
   rank(id=0):number {return this.order().findIndex(r=>r.id===id)+1;}
   /** Rivals use normal device inputs, with reaction time and imperfect pace. */
-  drive(id:number,reuseCartInput=false):Input {
+  drive(id:number,reuseCartInput=false,railChoice?:number):Input {
     if(this.carts){
       const input=reuseCartInput?this.carts.inputFor(id):this.carts.drive(id),r=this.riders[id];
       let ready=r.item!=='mushroom'&&r.item!=='star'||this.carts.boostWindow(id);
@@ -256,9 +290,19 @@ export class SkateRace {
       }
       if(r.item&&r.itemCooldown<=0&&ready){input.itemPressed=true;r.itemCooldown=3;}return input;
     }
+    if(this.level?.railChoices)return this.driveRailChoices(id,railChoice);
     const r=this.riders[id],p=r.player,c=this.course!,input=blankInput();
     if(r.finish!==null||r.recovery>0||p.state==='dead'||p.skateCameraBailing)return input;
     const look=THREE.MathUtils.clamp(Math.abs(p.speed)*.5,7,21);
+    const strand=this.grinds.find(g=>r.progress>=g.s-28&&r.progress<g.end+3);
+    // A combat hit can leave a rider grinding the right strand backwards.
+    // Read actual travel, then use the normal charged side-hop and pit retry
+    // rather than balancing all the way back through an earlier section.
+    let turnback=this.railTurnbacks.get(id);
+    const reversing=!!strand&&p.state==='grind'&&r.velocity.dot(c.tangent(r.progress,this.a))<-1;
+    if(reversing&&!turnback){turnback={since:this.elapsed,released:false};this.railTurnbacks.set(id,turnback);}
+    if(p.grounded||!reversing&&!turnback?.released){this.railTurnbacks.delete(id);turnback=undefined;}
+    const abandoning=!!turnback&&this.elapsed-turnback.since>.75;
     const upcoming=this.jumps.find(j=>j.end>r.progress);
     const approach=!!upcoming&&r.progress>=upcoming.s-35&&r.progress<upcoming.end;
     const opponent=id===0?null:this.riders.slice(0,this.count).filter(v=>v!==r&&v.finish===null&&!v.recovery&&!v.player.skateCameraBailing&&
@@ -268,6 +312,7 @@ export class SkateRace {
       let lateral=id===0?0:((id%4)-1.5)*1.7+Math.sin(this.elapsed*.65+id*1.7)*.5;
       if(approach)lateral=id===0?0:(id%2?1:-1)*1.5;
       else if(opponent)lateral=c.project(opponent.player.pos,opponent.progress,20).offset+(id%2?-.65:.65);
+      if(strand)lateral=id===0?0:strand.lanes[(id-1)%strand.lanes.length];
       lateral=THREE.MathUtils.clamp(lateral,-Math.min(5,c.width(r.progress)*.3),Math.min(5,c.width(r.progress)*.3));
       c.sample(r.progress+look,lateral,r.aim);
       // Read hazards at the same delayed reaction sample as the road.
@@ -284,20 +329,22 @@ export class SkateRace {
     input.jumpHeld=true; // pace comes from honest braking; keep charge for uphill momentum
     for(let i=0;i<this.jumps.length;i++){
       const jump=this.jumps[i];
-      if(r.progress>=jump.s&&r.progress<jump.end&&r.jumped!==i&&p.grounded){
+      if(r.progress>=jump.s&&r.progress<jump.end&&r.jumped!==i&&(p.grounded||!!strand&&p.state==='grind')){
         input.jumpHeld=!r.oldJump;if(r.oldJump)r.jumped=i;break;
       }
       if(r.jumped===i&&r.progress<jump.end&&!p.grounded)input.jumpHeld=false;
     }
-    if(!p.grounded&&r.jumped>=0&&!p.swimming)input.jumpHeld=false;
-    if(r.progress>(this.jumps[this.jumps.length-1]?.end??0)+1)input.jumpHeld=!p.boardRolling;
+    if(!p.grounded&&(!strand||p.state!=='grind')&&r.jumped>=0&&!p.swimming)input.jumpHeld=false;
+    // Road run-out releases the pace charge. On a receiving rail that same
+    // release would create an unrequested second ollie after the last gap.
+    if(!strand&&r.progress>(this.jumps[this.jumps.length-1]?.end??0)+1)input.jumpHeld=!p.boardRolling;
     if(p.swimming)r.wasSwimming=true;
     else if(r.wasSwimming){input.jumpHeld=false;r.wasSwimming=false;}
     const pace=RIVAL_SPEED[id]+Math.sin(this.elapsed*.25+id)*1.2;
     const local=c.tangent(r.progress,this.a),ahead=c.tangent(r.progress+18,this.b);
     const bend=Math.abs(Math.atan2(local.x*ahead.z-local.z*ahead.x,local.x*ahead.x+local.z*ahead.z));
     // Braking locks the normal board's heading. Coast through a bend and brake on its straights.
-    r.braking=id>0&&!approach&&bend<.2&&p.grounded&&(r.braking?Math.abs(p.speed)>pace-1.5:Math.abs(p.speed)>pace+3);
+    r.braking=id>0&&!approach&&!strand&&bend<.2&&p.grounded&&(r.braking?Math.abs(p.speed)>pace-1.5:Math.abs(p.speed)>pace+3);
     input.grabHeld=r.braking;
     if(this.levelId==='country-club'&&id>0){
       // A cart knockdown can leave a rival leaning into a fairway bank.
@@ -310,12 +357,93 @@ export class SkateRace {
     const threat=r.threats[0];
     if(threat?.item==='shock-shell'&&threat.seconds<.5&&p.grounded)input.jumpHeld=false;
     if(threat&&threat.item!=='shock-shell'&&threat.seconds<.3&&r.attackCooldown<=0&&this.random()>.25){input.spinPressed=input.spinHeld=true;r.attackCooldown=1.4;}
+    if(abandoning)input.jumpHeld=p.state==='grind'&&this.elapsed-turnback!.since<1.05;
     input.jumpPressed=input.jumpHeld&&!r.oldJump;input.jumpReleased=!input.jumpHeld&&r.oldJump;r.oldJump=input.jumpHeld;
     if(p.state==='grind'){input.moveX=THREE.MathUtils.clamp(-p.balance*3-p.balanceVel*.45,-1,1);input.grindHeld=true;}
+    if(strand){
+      input.grindHeld=p.state==='grind'||!p.grounded||r.progress>=strand.s-4;
+      // Releasing the catch button on takeoff gives the next airborne press
+      // the same fresh-edge arming required from a human rail transfer.
+      if(p.state==='grind'&&input.jumpReleased){input.grindHeld=false;input.moveX=0;input.moveY=1;}
+      input.grindPressed=input.grindHeld&&!r.oldGrind;
+    }
+    if(abandoning){
+      input.moveX=p.state==='grind'?(Math.sign(c.project(p.pos,r.progress,30).offset)||1):0;input.moveY=0;
+      input.grindHeld=input.grindPressed=false;input.grabHeld=false;
+      if(input.jumpReleased)turnback!.released=true;
+    }
+    r.oldGrind=input.grindHeld;
     const victim=opponent??(id===0?this.riders.find(v=>v!==r&&v.id<this.count&&v.player.pos.distanceTo(p.pos)<2.5):null);
     if(victim&&r.attackCooldown<=0&&victim.player.pos.distanceTo(p.pos)<2.65){
       input.spinPressed=input.spinHeld=true;r.attackCooldown=1.1+this.random()*1.8;
     }
+    if(r.item){
+      const defensive=r.item==='shield'||r.item==='horn'||r.item==='banana';
+      const defend=!!threat&&threat.seconds<(r.item==='horn'?.65:1.25)&&!(r.item==='horn'&&threat.item==='shock-shell');
+      if(defend||r.itemCooldown<=0&&(!defensive||!threat&&this.rank(id)>2)){input.itemPressed=true;r.itemCooldown=2.8+this.random()*2.2;}
+    }
+    return input;
+  }
+  /** Distinct branch shapes need their own tangent and takeoff, rather than
+   * steering three riders as lateral offsets of a single course guide. */
+  private driveRailChoices(id:number,preference?:number):Input {
+    const r=this.riders[id],p=r.player,network=this.level!.railChoices!,input=blankInput();
+    if(r.finish!==null||r.recovery>0||p.state==='dead'||p.skateCameraBailing)return input;
+    const cursor=this.railChoiceCursors.get(id)??{s:r.progress};this.railChoiceCursors.set(id,cursor);
+    const caught=p.state==='grind'?network.caught(p.pos,cursor):null,rail=caught?.rail??null;
+    const choices=this.level!.skateRace!.railChoices?.[0]?.paths.length??3;
+    const path=network.guide(p.pos,cursor,preference??(id===0?Math.floor((choices-1)/2):(id-1)%choices),rail,caught?.t);
+    const look=THREE.MathUtils.clamp(Math.abs(p.speed)*.45,7,18);
+    network.ahead(cursor,look,r.aim);
+    // Line up with the straight supported mouth before anticipating its first
+    // bend. Looking around that bend too early can catch the island rim.
+    const mouth=path?.rails[0];
+    if(p.grounded&&mouth&&(cursor.along??0)<mouth.start+18)
+      path!.course.sample(Math.min((cursor.along??0)+look,mouth.start+8),0,r.aim);
+    if(r.progress>this.course!.length-25)r.aim.addScaledVector(this.course!.tangent(this.course!.length),30);
+    const dx=r.aim.x-p.pos.x,dz=r.aim.z-p.pos.z,n=Math.hypot(dx,dz)||1,basis=p.raceInputBasis(this.level!);
+    const bn=Math.hypot(basis.x,basis.z)||1,fx=basis.x/bn,fz=basis.z/bn;
+    input.moveX=THREE.MathUtils.clamp((dx*-fz+dz*fx)/n,-1,1);input.moveY=THREE.MathUtils.clamp((dx*fx+dz*fz)/n,-1,1);
+    input.jumpHeld=p.grounded||p.state==='grind';
+    let turnback=this.railTurnbacks.get(id);
+    const reversing=!!caught&&r.velocity.dot(caught.rail.tangentAt(caught.t))<-1;
+    if(reversing&&!turnback){turnback={since:this.elapsed,released:false};this.railTurnbacks.set(id,turnback);}
+    if(p.grounded||!reversing&&!turnback?.released){this.railTurnbacks.delete(id);turnback=undefined;}
+    const abandoning=!!turnback&&this.elapsed-turnback.since>.75;
+    if(id>0){
+      let control=this.rivalGrindControls.get(id);
+      if(!control){control=new RivalGrindControl((this.runSeed^Math.imul(id,0x9e3779b9))>>>0);this.rivalGrindControls.set(id,control);}
+      const correction=control.sample(this.elapsed,p.state==='grind',p.balance,p.balanceVel);
+      if(p.state==='grind')input.moveX=correction;
+    }else if(p.state==='grind')input.moveX=THREE.MathUtils.clamp(-p.balance*3-p.balanceVel*.45,-1,1);
+    let transferAim=false;
+    if(rail&&path){
+      const index=path.rails.findIndex(span=>span.rail===rail),key=path.index*16+index;
+      if(index>=0&&index<path.rails.length-1&&rail.totalLength-caught!.t<=4&&r.jumped!==key){input.jumpHeld=false;r.jumped=key;}
+      // A continuous island rail can offer an optional mid-rail shortcut.
+      // Aim sideways before release, exactly as the human grind-ollie input
+      // requires. Catching the next native rail then owns the route change.
+      if(path.rails.length===1)for(const {t,start,end,key}of this.railTransfers.get(rail)??[]){
+        if(r.jumped===key)continue;
+        const remaining=t-caught!.t;
+        if(remaining>2.2||remaining<-.8)continue;
+        const direction=rail.tangentAt(caught!.t),side=Math.sign((end.x-start.x)*-direction.z+(end.z-start.z)*direction.x),n=Math.hypot(direction.x,direction.z)||1;
+        const x=-direction.z/n*side,z=direction.x/n*side;
+        input.moveX=x*-fz+z*fx;input.moveY=x*fx+z*fz;transferAim=true;
+        if(remaining<=.35){input.jumpHeld=false;r.jumped=key;}break;
+      }
+    }
+    const next=path?.rails.find(span=>span.end>(cursor.along??0)+1);
+    input.grindHeld=!!rail||!p.grounded||!!next&&next.start-(cursor.along??0)<4;
+    const threat=r.threats[0];
+    if(threat?.item==='shock-shell'&&threat.seconds<.5&&p.grounded)input.jumpHeld=false;
+    if(threat&&threat.item!=='shock-shell'&&threat.seconds<.3&&r.attackCooldown<=0&&this.random()>.25){input.spinPressed=input.spinHeld=true;r.attackCooldown=1.4;}
+    if(abandoning){input.jumpHeld=!!rail&&this.elapsed-turnback!.since<1.05;input.moveX=rail?(Math.sign(p.balance)||1):0;input.moveY=0;input.grindHeld=false;}
+    input.jumpPressed=input.jumpHeld&&!r.oldJump;input.jumpReleased=!input.jumpHeld&&r.oldJump;
+    if(rail&&input.jumpReleased){input.grindHeld=false;if(!abandoning&&!transferAim){input.moveX=0;input.moveY=1;}else if(abandoning)turnback!.released=true;}
+    input.grindPressed=input.grindHeld&&!r.oldGrind;r.oldJump=input.jumpHeld;r.oldGrind=input.grindHeld;
+    const victim=this.riders.slice(0,this.count).find(v=>v!==r&&v.finish===null&&!v.recovery&&v.player.pos.distanceTo(p.pos)<2.65);
+    if(victim&&r.attackCooldown<=0){input.spinPressed=input.spinHeld=true;r.attackCooldown=1.1+this.random()*1.8;}
     if(r.item){
       const defensive=r.item==='shield'||r.item==='horn'||r.item==='banana';
       const defend=!!threat&&threat.seconds<(r.item==='horn'?.65:1.25)&&!(r.item==='horn'&&threat.item==='shock-shell');
@@ -356,20 +484,31 @@ export class SkateRace {
       if(device.spinPressed&&p.spinning)r.parry=.28;
       r.recovery=p.state==='dead'?1:0;
       if(r.recovery){this.placeMarker(r);continue;}
-      let projected=c.project(p.pos,r.progress,80);
-      if(p.grounded||p.state==='grind'){
+      const choiceCursor=this.railChoiceCursors.get(r.id)??{s:r.progress};
+      if(level.railChoices)this.railChoiceCursors.set(r.id,choiceCursor);
+      const caught=level.railChoices&&p.state==='grind'?level.railChoices.caught(p.pos,choiceCursor):null;
+      let projected=level.railChoices?level.railChoices.update(p.pos,choiceCursor,caught?.rail,caught?.t):c.project(p.pos,r.progress,80);
+      if(!level.railChoices&&(p.grounded||p.state==='grind')){
         const landed=c.project(p.pos);
         if(landed.distance<c.width(landed.s)/2+3&&Math.abs(landed.s-projected.s)>40){
           projected=landed;p.laneCursor.s=-1;p.snapRenderInterpolation();
         }
       }
       r.progress=projected.s;
-      const centre=c.sample(r.progress,0,this.a);
+      const centre=level.railChoices?level.railChoices.ahead(choiceCursor,0,this.a):c.sample(r.progress,0,this.a);
       if(!this.carts?.isDriving(r.id)&&(p.grounded||p.state==='grind')){
+        // Rail races bank the existing checkpoint decks. A continuously moving
+        // floor anchor would otherwise end up on the dock's grindable rim,
+        // leaving no supported runway after a stopped return.
+        if(this.railRetries.length){
+          const retry=this.railRetries.find(cp=>cp.s>r.anchorProgress&&(this.onRetryPlatform(r,cp)||cp.s<=r.progress&&(!level.railChoices||p.pos.distanceToSquared(cp.position)<24*24&&p.pos.y>=cp.position.y-.3&&p.pos.y<cp.position.y+1.5)));
+          if(retry){const support=c.supportAt(level,retry.position,this.b);if(support){r.anchor.copy(support);r.anchorProgress=retry.s;}}
+        }else{
         // A gap lip needs a small supported run-up after a normal stopped return.
         const lip=this.jumps.find(j=>r.progress>j.s-12&&r.progress<j.end);
         const at=lip?lip.s-30:r.progress,support=c.support(level,at,this.b);
         if(support&&Math.abs(p.pos.y-centre.y)<8){r.anchor.copy(support);r.anchorProgress=at;}
+        }
       }
       const finish=c.knots[c.knots.length-1],heading=c.tangent(c.length,this.b);
       const crossed=(p.pos.x-finish[0])*heading.x+(p.pos.z-finish[2])*heading.z>=0;
@@ -595,6 +734,17 @@ export class SkateRace {
         continue;
       }
       if(p.type==='tidal-wave'){
+        if(level.railChoices&&p.railRoute){
+          if(p.time<1){Object.assign(p.railRoute,level.railChoices.project(this.riders[p.owner].player.pos,this.railChoiceCursors.get(p.owner)));p.mesh.position.copy(this.riders[p.owner].player.pos).y+=.7;p.mesh.scale.y=Math.max(.2,p.time*1.35);continue;}
+          level.railChoices.advance(p.railRoute,dt*68);p.progress=p.railRoute.s;
+          level.railChoices.ahead(p.railRoute,0,p.mesh.position).y+=.7;
+          level.railChoices.tangent(p.railRoute,p.direction);p.mesh.rotation.y=Math.atan2(p.direction.x,p.direction.z);p.mesh.scale.set(20,1.35,1.4);
+          for(const other of this.riders.slice(0,this.count))if(other.id!==p.owner&&!p.hit.has(other.id)&&other.finish===null&&!other.recovery){
+            const dx=other.player.pos.x-p.mesh.position.x,dz=other.player.pos.z-p.mesh.position.z;
+            if(Math.abs(dx*p.direction.x+dz*p.direction.z)<3&&Math.abs(-dx*p.direction.z+dz*p.direction.x)<6&&Math.abs(other.player.pos.y-p.mesh.position.y+.7)<1.5){this.hit(other,p.mesh.position);p.hit.add(other.id);}
+          }
+          if(p.progress>=c.length)p.time=99;continue;
+        }
         if(p.time<1){p.progress=this.riders[p.owner].progress;p.mesh.position.copy(this.riders[p.owner].player.pos).y+=.7;p.mesh.scale.y=Math.max(.2,p.time*1.35);continue;}p.mesh.scale.y=1.35;
         p.progress+=dt*68;c.sample(p.progress,0,p.mesh.position).y+=.7;
         const forward=c.tangent(p.progress);p.direction.copy(forward);p.mesh.rotation.y=Math.atan2(forward.x,forward.z);p.mesh.scale.x=c.width(p.progress)/.6;
@@ -620,9 +770,15 @@ export class SkateRace {
         if(p.phase==='travel'){
           const speed=blue?76:51;
           p.progress=Math.min(target.progress,p.progress+dt*speed);
+          if(level.railChoices){
+            // Flying homing items pursue the actual chosen rail in 3D; the
+            // warning and committed strike phases remain exactly the same.
+            this.a.copy(point);this.a.y+=blue?2.8:.7;
+          }else{
           const offset=c.project(point,target.progress,25).offset;
           p.offset+=(offset-p.offset)*Math.min(1,dt*5);
           c.sample(p.progress,THREE.MathUtils.clamp(p.offset,-c.width(p.progress)*.35,c.width(p.progress)*.35),this.a);this.a.y+=blue?2.8:.7;
+          }
           this.b.copy(this.a).sub(p.mesh.position);p.mesh.position.addScaledVector(this.b,Math.min(1,dt*speed/Math.max(.01,this.b.length())));
           if(p.time>=.6&&Math.abs(target.progress-p.progress)<(blue?18:12)&&p.mesh.position.distanceTo(point)<(blue?22:16)){p.phase='windup';p.phaseTime=0;}
         }else if(p.phase==='windup'){
@@ -651,7 +807,7 @@ export class SkateRace {
         p.mesh.position.addScaledVector(p.direction,dt*43);
         const q=c.project(p.mesh.position,p.progress,55);p.progress=q.s;p.offset=q.offset;
         const limit=c.width(q.s)/2-.8;
-        if(Math.abs(q.offset)>limit&&q.distance<limit+5){
+        if(!level.railChoices&&Math.abs(q.offset)>limit&&q.distance<limit+5){
           const tangent=c.tangent(q.s,this.a);this.b.set(-tangent.z,0,tangent.x).normalize();
           const out=p.direction.dot(this.b)*Math.sign(q.offset);
           if(out>0){p.direction.addScaledVector(this.b,-2*p.direction.dot(this.b)).normalize();p.bounces++;}
@@ -781,7 +937,7 @@ export class SkateRace {
   setVisible(visible:boolean):void {this.root.visible=visible&&this.active;for(const r of this.riders)if(r.scene){r.scene.visible=visible&&this.active&&r.id<this.count;if(r.scene.visible&&r.scene.parent!==this.scene)this.scene.add(r.scene);else if(!r.scene.visible)r.scene.removeFromParent();}}
   hud():RaceHudState|undefined {
     if(!this.level||!this.course)return;
-    const h=this.riders[0];return {vehicle:this.level.skateRace?.vehicle,crystalReward:this.level.allowsCrystal,gemReward:this.level.skateRace?.gemReward,title:this.level.name,sections:this.sections,medalTimes:this.level.medalTimes,medal:this.mode==='time-trial'&&h.finish!==null?medalForTime(h.finish,this.level.medalTimes):null,phase:this.phase,mode:this.mode,countdown:this.countdown,runTime:this.elapsed,elapsed:h.finish??(this.mode==='time-trial'?this.human.ttTime:this.elapsed),freeze:this.mode==='time-trial'?this.human.ttFreeze:0,rank:this.rank(),item:h.item,shield:h.shield,star:h.star,
+    const h=this.riders[0];return {railTransfers:this.grinds.length?this.jumps.length:undefined,railChoices:this.level.railChoices?.paths.length,railMap:this.level.railChoices?.mapLines,vehicle:this.level.skateRace?.vehicle,crystalReward:this.level.allowsCrystal,gemReward:this.level.skateRace?.gemReward,title:this.level.name,sections:this.sections,medalTimes:this.level.medalTimes,medal:this.mode==='time-trial'&&h.finish!==null?medalForTime(h.finish,this.level.medalTimes):null,phase:this.phase,mode:this.mode,countdown:this.countdown,runTime:this.elapsed,elapsed:h.finish??(this.mode==='time-trial'?this.human.ttTime:this.elapsed),freeze:this.mode==='time-trial'?this.human.ttFreeze:0,rank:this.rank(),item:h.item,shield:h.shield,star:h.star,
       cart:this.carts?.hud(),recovering:h.recovery,threats:h.threats,boxes:h.boxes.size,totalBoxes:this.level.totalCrates,won:h.finish!==null&&this.rank()===1&&this.mode==='race',
       timeTrialUnlocked:this.canStartTimeTrial(this.levelId),
       racers:this.order().map(r=>({id:r.id,...RACE_ROSTER[r.id],x:r.player.pos.x,y:r.player.pos.y,z:r.player.pos.z,progress:r.progress/this.course!.length,finish:r.finish})),line:this.level.skateRace!.line,visible:true};

@@ -1,0 +1,23 @@
+{
+  "job": "build",
+  "packageScript": "build",
+  "command": "tsc --noEmit && vite build",
+  "exit": 0,
+  "seconds": 61.081953048706055,
+  "scope": "Exact package.json build script, using existing local executables; no package installation required.",
+  "outputTail": [
+    "- Using dynamic import() to code-split the application",
+    "- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks",
+    "- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.",
+    "\u2713 built in 16.49s",
+    "Level sync: 2 overrides, 10 exact source copies omitted; 39.2 KiB download.",
+    "Release assets: kept active fonts; omitted 72 historical files (401.3 MiB) from generated output.",
+    "Local review galleries: 398 files (201.4 MiB) kept in the authoring library.",
+    "Font export: 1 on-demand archive(s), 34.8 MiB less hosted data.",
+    "Reviewed textures: 423 reviewed images in 271 models, 402.0 MiB less hosted data; original art retained.",
+    "Shared textures: 131 exact images reused across 134 models, 33.7 MiB less hosted data.",
+    "Native geometry: 18 complete models packed losslessly, 15.5 MiB less hosted data.",
+    "Offline game: 1741 files, 951.0 MiB, version 119397f2a0ca157ec8b2"
+  ],
+  "fullLogSha256": "5f496e443b5c55fda03c656fcc8610fe14b5be10c5e94cf4775b48e883563950"
+}

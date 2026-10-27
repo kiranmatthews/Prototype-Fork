@@ -1,0 +1,386 @@
+{
+  "at": "2026-10-27T08:35:09.780Z",
+  "cases": 18,
+  "passed": 17,
+  "baseline": 6,
+  "baselinePassed": 6,
+  "tuningUnchanged": true,
+  "results": [
+    {
+      "jump": 9,
+      "from": "06 / Loom, first sweep",
+      "to": "07 / Loom, second sweep",
+      "lane": -1,
+      "approachSpeed": 24,
+      "timingOffset": -2,
+      "caughtSource": true,
+      "launched": true,
+      "exitSpeed": 17.416823201926263,
+      "frames": 140,
+      "passed": false,
+      "position": [
+        -127.71705540772597,
+        47.7127235204849,
+        -824.1195577239841
+      ],
+      "state": "air"
+    },
+    {
+      "jump": 9,
+      "from": "06 / Loom, first sweep",
+      "to": "07 / Loom, second sweep",
+      "lane": -1,
+      "approachSpeed": 24,
+      "timingOffset": 0,
+      "caughtSource": true,
+      "launched": true,
+      "exitSpeed": 17.416823201926263,
+      "frames": 127,
+      "caughtRail": 42,
+      "expectedRun": 14,
+      "passed": true,
+      "position": [
+        -127.68336539355938,
+        60.852962718677134,
+        -820.0557719580097
+      ],
+      "landingSpeed": 20.416653587866854
+    },
+    {
+      "jump": 9,
+      "from": "06 / Loom, first sweep",
+      "to": "07 / Loom, second sweep",
+      "lane": -1,
+      "approachSpeed": 24,
+      "timingOffset": 2,
+      "caughtSource": true,
+      "launched": true,
+      "exitSpeed": 17.416823201926263,
+      "frames": 131,
+      "caughtRail": 42,
+      "expectedRun": 14,
+      "passed": true,
+      "position": [
+        -127.69299111189275,
+        62.030139746990315,
+        -821.216853605431
+      ],
+      "landingSpeed": 20.416653587866854
+    },
+    {
+      "jump": 9,
+      "from": "06 / Loom, first sweep",
+      "to": "07 / Loom, second sweep",
+      "lane": -1,
+      "approachSpeed": 30.5,
+      "timingOffset": -2,
+      "caughtSource": true,
+      "launched": true,
+      "exitSpeed": 25.405937565780157,
+      "frames": 96,
+      "caughtRail": 42,
+      "expectedRun": 14,
+      "passed": true,
+      "position": [
+        -127.70811141602627,
+        62.383643200872484,
+        -823.0407078908777
+      ],
+      "landingSpeed": 25.405690149580675
+    },
+    {
+      "jump": 9,
+      "from": "06 / Loom, first sweep",
+      "to": "07 / Loom, second sweep",
+      "lane": -1,
+      "approachSpeed": 30.5,
+      "timingOffset": 0,
+      "caughtSource": true,
+      "launched": true,
+      "exitSpeed": 25.405937565780157,
+      "frames": 100,
+      "caughtRail": 42,
+      "expectedRun": 14,
+      "passed": true,
+      "position": [
+        -127.72215246106461,
+        62.383643200872484,
+        -824.7343788606728
+      ],
+      "landingSpeed": 25.405690149580675
+    },
+    {
+      "jump": 9,
+      "from": "06 / Loom, first sweep",
+      "to": "07 / Loom, second sweep",
+      "lane": -1,
+      "approachSpeed": 30.5,
+      "timingOffset": 2,
+      "caughtSource": true,
+      "launched": true,
+      "exitSpeed": 25.405937565780157,
+      "frames": 105,
+      "caughtRail": 42,
+      "expectedRun": 14,
+      "passed": true,
+      "position": [
+        -127.73970376736253,
+        62.383643200872484,
+        -826.8514675729168
+      ],
+      "landingSpeed": 25.405690149580675
+    },
+    {
+      "jump": 9,
+      "from": "06 / Loom, first sweep",
+      "to": "07 / Loom, second sweep",
+      "lane": 0,
+      "approachSpeed": 24,
+      "timingOffset": -2,
+      "caughtSource": true,
+      "launched": true,
+      "exitSpeed": 22.20607527765173,
+      "frames": 105,
+      "caughtRail": 43,
+      "expectedRun": 14,
+      "passed": true,
+      "position": [
+        -124,
+        62.030139746990315,
+        -820.8769972092897
+      ],
+      "landingSpeed": 22.20607527765173
+    },
+    {
+      "jump": 9,
+      "from": "06 / Loom, first sweep",
+      "to": "07 / Loom, second sweep",
+      "lane": 0,
+      "approachSpeed": 24,
+      "timingOffset": 0,
+      "caughtSource": true,
+      "launched": true,
+      "exitSpeed": 22.20607527765173,
+      "frames": 109,
+      "caughtRail": 43,
+      "expectedRun": 14,
+      "passed": true,
+      "position": [
+        -124,
+        62.383643200872484,
+        -822.3574022277999
+      ],
+      "landingSpeed": 22.20607527765173
+    },
+    {
+      "jump": 9,
+      "from": "06 / Loom, first sweep",
+      "to": "07 / Loom, second sweep",
+      "lane": 0,
+      "approachSpeed": 24,
+      "timingOffset": 2,
+      "caughtSource": true,
+      "launched": true,
+      "exitSpeed": 22.20607527765173,
+      "frames": 115,
+      "caughtRail": 43,
+      "expectedRun": 14,
+      "passed": true,
+      "position": [
+        -124,
+        62.383643200872484,
+        -824.5780097555651
+      ],
+      "landingSpeed": 22.20607527765173
+    },
+    {
+      "jump": 9,
+      "from": "06 / Loom, first sweep",
+      "to": "07 / Loom, second sweep",
+      "lane": 0,
+      "approachSpeed": 30.5,
+      "timingOffset": -2,
+      "caughtSource": true,
+      "launched": true,
+      "exitSpeed": 29.089091179641155,
+      "frames": 90,
+      "caughtRail": 43,
+      "expectedRun": 14,
+      "passed": true,
+      "position": [
+        -124,
+        62.383643200872484,
+        -825.3852398746765
+      ],
+      "landingSpeed": 29.089091179641155
+    },
+    {
+      "jump": 9,
+      "from": "06 / Loom, first sweep",
+      "to": "07 / Loom, second sweep",
+      "lane": 0,
+      "approachSpeed": 30.5,
+      "timingOffset": 0,
+      "caughtSource": true,
+      "launched": true,
+      "exitSpeed": 29.089091179641155,
+      "frames": 95,
+      "caughtRail": 43,
+      "expectedRun": 14,
+      "passed": true,
+      "position": [
+        -124,
+        62.383643200872484,
+        -827.8093308063133
+      ],
+      "landingSpeed": 29.089091179641155
+    },
+    {
+      "jump": 9,
+      "from": "06 / Loom, first sweep",
+      "to": "07 / Loom, second sweep",
+      "lane": 0,
+      "approachSpeed": 30.5,
+      "timingOffset": 2,
+      "caughtSource": true,
+      "launched": true,
+      "exitSpeed": 29.089091179641155,
+      "frames": 99,
+      "caughtRail": 43,
+      "expectedRun": 14,
+      "passed": true,
+      "position": [
+        -124,
+        62.383643200872484,
+        -829.7486035516226
+      ],
+      "landingSpeed": 29.089091179641155
+    },
+    {
+      "jump": 9,
+      "from": "06 / Loom, first sweep",
+      "to": "07 / Loom, second sweep",
+      "lane": 1,
+      "approachSpeed": 24,
+      "timingOffset": -2,
+      "caughtSource": true,
+      "launched": true,
+      "exitSpeed": 28.216132645400833,
+      "frames": 94,
+      "caughtRail": 44,
+      "expectedRun": 14,
+      "passed": true,
+      "position": [
+        -120.26284056830447,
+        62.383643200872484,
+        -824.806164709498
+      ],
+      "landingSpeed": 28.21579002081434
+    },
+    {
+      "jump": 9,
+      "from": "06 / Loom, first sweep",
+      "to": "07 / Loom, second sweep",
+      "lane": 1,
+      "approachSpeed": 24,
+      "timingOffset": 0,
+      "caughtSource": true,
+      "launched": true,
+      "exitSpeed": 28.216132645400833,
+      "frames": 99,
+      "caughtRail": 44,
+      "expectedRun": 14,
+      "passed": true,
+      "position": [
+        -120.24105942315832,
+        62.383643200872484,
+        -827.1574082121028
+      ],
+      "landingSpeed": 28.21579002081434
+    },
+    {
+      "jump": 9,
+      "from": "06 / Loom, first sweep",
+      "to": "07 / Loom, second sweep",
+      "lane": 1,
+      "approachSpeed": 24,
+      "timingOffset": 2,
+      "caughtSource": true,
+      "launched": true,
+      "exitSpeed": 28.216132645400833,
+      "frames": 103,
+      "caughtRail": 44,
+      "expectedRun": 14,
+      "passed": true,
+      "position": [
+        -120.22363450704141,
+        62.383643200872484,
+        -829.0384030141867
+      ],
+      "landingSpeed": 28.21579002081434
+    },
+    {
+      "jump": 9,
+      "from": "06 / Loom, first sweep",
+      "to": "07 / Loom, second sweep",
+      "lane": 1,
+      "approachSpeed": 30.5,
+      "timingOffset": -2,
+      "caughtSource": true,
+      "launched": true,
+      "exitSpeed": 30.5,
+      "frames": 89,
+      "caughtRail": 44,
+      "expectedRun": 14,
+      "passed": true,
+      "position": [
+        -120.24530298289405,
+        62.383643200872484,
+        -826.6993220008569
+      ],
+      "landingSpeed": 30.49962964272888
+    },
+    {
+      "jump": 9,
+      "from": "06 / Loom, first sweep",
+      "to": "07 / Loom, second sweep",
+      "lane": 1,
+      "approachSpeed": 30.5,
+      "timingOffset": 0,
+      "caughtSource": true,
+      "launched": true,
+      "exitSpeed": 30.5,
+      "frames": 93,
+      "caughtRail": 44,
+      "expectedRun": 14,
+      "passed": true,
+      "position": [
+        -120.22646766097928,
+        62.383643200872484,
+        -828.7325680939535
+      ],
+      "landingSpeed": 30.49962964272888
+    },
+    {
+      "jump": 9,
+      "from": "06 / Loom, first sweep",
+      "to": "07 / Loom, second sweep",
+      "lane": 1,
+      "approachSpeed": 30.5,
+      "timingOffset": 2,
+      "caughtSource": true,
+      "launched": true,
+      "exitSpeed": 30.5,
+      "frames": 97,
+      "caughtRail": 44,
+      "expectedRun": 14,
+      "passed": true,
+      "position": [
+        -120.2076323390645,
+        62.383643200872484,
+        -830.7658141870501
+      ],
+      "landingSpeed": 30.49962964272888
+    }
+  ]
+}

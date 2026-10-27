@@ -1,0 +1,3 @@
+# Keep exploratory runs locally; commit the curated, validated evidence bundle.
+evidence/*
+!evidence/validated/

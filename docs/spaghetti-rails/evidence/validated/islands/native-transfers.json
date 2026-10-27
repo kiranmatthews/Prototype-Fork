@@ -1,0 +1,1353 @@
+{
+  "at": "2026-10-27T10:39:16.076Z",
+  "scope": "Fixture entry 24 m before each optional transfer; all catch/charge/side-input/release/landing steps use production movement with unchanged tuning.",
+  "cases": [
+    {
+      "index": 0,
+      "stage": 0,
+      "from": "1.3 / Lace into the eye / thread 1",
+      "to": "1.4 / Pretzel heart / thread 1",
+      "speed": 24,
+      "offset": -2,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 1.8785021792361205
+    },
+    {
+      "index": 0,
+      "stage": 0,
+      "from": "1.3 / Lace into the eye / thread 1",
+      "to": "1.4 / Pretzel heart / thread 1",
+      "speed": 24,
+      "offset": 0,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 1.8817327356806435
+    },
+    {
+      "index": 0,
+      "stage": 0,
+      "from": "1.3 / Lace into the eye / thread 1",
+      "to": "1.4 / Pretzel heart / thread 1",
+      "speed": 24,
+      "offset": 2,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 1.8857711453165258
+    },
+    {
+      "index": 0,
+      "stage": 0,
+      "from": "1.3 / Lace into the eye / thread 1",
+      "to": "1.4 / Pretzel heart / thread 1",
+      "speed": 30.5,
+      "offset": -2,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 1.9358217219219078
+    },
+    {
+      "index": 0,
+      "stage": 0,
+      "from": "1.3 / Lace into the eye / thread 1",
+      "to": "1.4 / Pretzel heart / thread 1",
+      "speed": 30.5,
+      "offset": 0,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 1.9358217219219076
+    },
+    {
+      "index": 0,
+      "stage": 0,
+      "from": "1.3 / Lace into the eye / thread 1",
+      "to": "1.4 / Pretzel heart / thread 1",
+      "speed": 30.5,
+      "offset": 2,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 1.9358217219219078
+    },
+    {
+      "index": 1,
+      "stage": 0,
+      "from": "1.4 / Pretzel heart / thread 1",
+      "to": "1.6 / Needle-thread escape / thread 1",
+      "speed": 24,
+      "offset": -2,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 1.8725153125272995
+    },
+    {
+      "index": 1,
+      "stage": 0,
+      "from": "1.4 / Pretzel heart / thread 1",
+      "to": "1.6 / Needle-thread escape / thread 1",
+      "speed": 24,
+      "offset": 0,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 1.876500385198926
+    },
+    {
+      "index": 1,
+      "stage": 0,
+      "from": "1.4 / Pretzel heart / thread 1",
+      "to": "1.6 / Needle-thread escape / thread 1",
+      "speed": 24,
+      "offset": 2,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 1.8796885343747853
+    },
+    {
+      "index": 1,
+      "stage": 0,
+      "from": "1.4 / Pretzel heart / thread 1",
+      "to": "1.6 / Needle-thread escape / thread 1",
+      "speed": 30.5,
+      "offset": -2,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 1.9462580562136407
+    },
+    {
+      "index": 1,
+      "stage": 0,
+      "from": "1.4 / Pretzel heart / thread 1",
+      "to": "1.6 / Needle-thread escape / thread 1",
+      "speed": 30.5,
+      "offset": 0,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 1.946258056213641
+    },
+    {
+      "index": 1,
+      "stage": 0,
+      "from": "1.4 / Pretzel heart / thread 1",
+      "to": "1.6 / Needle-thread escape / thread 1",
+      "speed": 30.5,
+      "offset": 2,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 1.9462580562136418
+    },
+    {
+      "index": 2,
+      "stage": 1,
+      "from": "2.3 / Lace into the eye / thread 1",
+      "to": "2.4 / Pretzel heart / thread 1",
+      "speed": 24,
+      "offset": -2,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 1.8029997915947271
+    },
+    {
+      "index": 2,
+      "stage": 1,
+      "from": "2.3 / Lace into the eye / thread 1",
+      "to": "2.4 / Pretzel heart / thread 1",
+      "speed": 24,
+      "offset": 0,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 1.80608248559804
+    },
+    {
+      "index": 2,
+      "stage": 1,
+      "from": "2.3 / Lace into the eye / thread 1",
+      "to": "2.4 / Pretzel heart / thread 1",
+      "speed": 24,
+      "offset": 2,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 1.809935853264631
+    },
+    {
+      "index": 2,
+      "stage": 1,
+      "from": "2.3 / Lace into the eye / thread 1",
+      "to": "2.4 / Pretzel heart / thread 1",
+      "speed": 30.5,
+      "offset": -2,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 1.8632544972559544
+    },
+    {
+      "index": 2,
+      "stage": 1,
+      "from": "2.3 / Lace into the eye / thread 1",
+      "to": "2.4 / Pretzel heart / thread 1",
+      "speed": 30.5,
+      "offset": 0,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 1.8632544972559544
+    },
+    {
+      "index": 2,
+      "stage": 1,
+      "from": "2.3 / Lace into the eye / thread 1",
+      "to": "2.4 / Pretzel heart / thread 1",
+      "speed": 30.5,
+      "offset": 2,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 1.8632544972559544
+    },
+    {
+      "index": 3,
+      "stage": 1,
+      "from": "2.4 / Pretzel heart / thread 1",
+      "to": "2.6 / Needle-thread escape / thread 1",
+      "speed": 24,
+      "offset": -2,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 1.813378335859186
+    },
+    {
+      "index": 3,
+      "stage": 1,
+      "from": "2.4 / Pretzel heart / thread 1",
+      "to": "2.6 / Needle-thread escape / thread 1",
+      "speed": 24,
+      "offset": 0,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 1.8171548414841037
+    },
+    {
+      "index": 3,
+      "stage": 1,
+      "from": "2.4 / Pretzel heart / thread 1",
+      "to": "2.6 / Needle-thread escape / thread 1",
+      "speed": 24,
+      "offset": 2,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 1.8201760547594803
+    },
+    {
+      "index": 3,
+      "stage": 1,
+      "from": "2.4 / Pretzel heart / thread 1",
+      "to": "2.6 / Needle-thread escape / thread 1",
+      "speed": 30.5,
+      "offset": -2,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 1.8865934569416543
+    },
+    {
+      "index": 3,
+      "stage": 1,
+      "from": "2.4 / Pretzel heart / thread 1",
+      "to": "2.6 / Needle-thread escape / thread 1",
+      "speed": 30.5,
+      "offset": 0,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 1.886593456941711
+    },
+    {
+      "index": 3,
+      "stage": 1,
+      "from": "2.4 / Pretzel heart / thread 1",
+      "to": "2.6 / Needle-thread escape / thread 1",
+      "speed": 30.5,
+      "offset": 2,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 1.886593456941711
+    },
+    {
+      "index": 4,
+      "stage": 2,
+      "from": "3.3 / Lace into the eye / thread 1",
+      "to": "3.4 / Pretzel heart / thread 1",
+      "speed": 24,
+      "offset": -2,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 1.916346070506286
+    },
+    {
+      "index": 4,
+      "stage": 2,
+      "from": "3.3 / Lace into the eye / thread 1",
+      "to": "3.4 / Pretzel heart / thread 1",
+      "speed": 24,
+      "offset": 0,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 1.9191326462686433
+    },
+    {
+      "index": 4,
+      "stage": 2,
+      "from": "3.3 / Lace into the eye / thread 1",
+      "to": "3.4 / Pretzel heart / thread 1",
+      "speed": 24,
+      "offset": 2,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 1.9226166504444773
+    },
+    {
+      "index": 4,
+      "stage": 2,
+      "from": "3.3 / Lace into the eye / thread 1",
+      "to": "3.4 / Pretzel heart / thread 1",
+      "speed": 30.5,
+      "offset": -2,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 1.9720585323875388
+    },
+    {
+      "index": 4,
+      "stage": 2,
+      "from": "3.3 / Lace into the eye / thread 1",
+      "to": "3.4 / Pretzel heart / thread 1",
+      "speed": 30.5,
+      "offset": 0,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 1.9720585323875084
+    },
+    {
+      "index": 4,
+      "stage": 2,
+      "from": "3.3 / Lace into the eye / thread 1",
+      "to": "3.4 / Pretzel heart / thread 1",
+      "speed": 30.5,
+      "offset": 2,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 1.9720585323875288
+    },
+    {
+      "index": 5,
+      "stage": 2,
+      "from": "3.4 / Pretzel heart / thread 1",
+      "to": "3.6 / Needle-thread escape / thread 1",
+      "speed": 24,
+      "offset": -2,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 1.8983753965853989
+    },
+    {
+      "index": 5,
+      "stage": 2,
+      "from": "3.4 / Pretzel heart / thread 1",
+      "to": "3.6 / Needle-thread escape / thread 1",
+      "speed": 24,
+      "offset": 0,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 1.9018411124194936
+    },
+    {
+      "index": 5,
+      "stage": 2,
+      "from": "3.4 / Pretzel heart / thread 1",
+      "to": "3.6 / Needle-thread escape / thread 1",
+      "speed": 24,
+      "offset": 2,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 1.9046141661005376
+    },
+    {
+      "index": 5,
+      "stage": 2,
+      "from": "3.4 / Pretzel heart / thread 1",
+      "to": "3.6 / Needle-thread escape / thread 1",
+      "speed": 30.5,
+      "offset": -2,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 1.967577925451234
+    },
+    {
+      "index": 5,
+      "stage": 2,
+      "from": "3.4 / Pretzel heart / thread 1",
+      "to": "3.6 / Needle-thread escape / thread 1",
+      "speed": 30.5,
+      "offset": 0,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 1.9675779254512156
+    },
+    {
+      "index": 5,
+      "stage": 2,
+      "from": "3.4 / Pretzel heart / thread 1",
+      "to": "3.6 / Needle-thread escape / thread 1",
+      "speed": 30.5,
+      "offset": 2,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 1.9675779254512054
+    },
+    {
+      "index": 6,
+      "stage": 3,
+      "from": "4.3 / Lace into the eye / thread 1",
+      "to": "4.4 / Pretzel heart / thread 1",
+      "speed": 24,
+      "offset": -2,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 1.9597251931341118
+    },
+    {
+      "index": 6,
+      "stage": 3,
+      "from": "4.3 / Lace into the eye / thread 1",
+      "to": "4.4 / Pretzel heart / thread 1",
+      "speed": 24,
+      "offset": 0,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 1.9632354475952218
+    },
+    {
+      "index": 6,
+      "stage": 3,
+      "from": "4.3 / Lace into the eye / thread 1",
+      "to": "4.4 / Pretzel heart / thread 1",
+      "speed": 24,
+      "offset": 2,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 1.9660437949117202
+    },
+    {
+      "index": 6,
+      "stage": 3,
+      "from": "4.3 / Lace into the eye / thread 1",
+      "to": "4.4 / Pretzel heart / thread 1",
+      "speed": 30.5,
+      "offset": -2,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 2.0189377111218
+    },
+    {
+      "index": 6,
+      "stage": 3,
+      "from": "4.3 / Lace into the eye / thread 1",
+      "to": "4.4 / Pretzel heart / thread 1",
+      "speed": 30.5,
+      "offset": 0,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 2.0189377111217945
+    },
+    {
+      "index": 6,
+      "stage": 3,
+      "from": "4.3 / Lace into the eye / thread 1",
+      "to": "4.4 / Pretzel heart / thread 1",
+      "speed": 30.5,
+      "offset": 2,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 2.0189377111218003
+    },
+    {
+      "index": 7,
+      "stage": 3,
+      "from": "4.4 / Pretzel heart / thread 1",
+      "to": "4.6 / Needle-thread escape / thread 1",
+      "speed": 24,
+      "offset": -2,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 1.957751950024226
+    },
+    {
+      "index": 7,
+      "stage": 3,
+      "from": "4.4 / Pretzel heart / thread 1",
+      "to": "4.6 / Needle-thread escape / thread 1",
+      "speed": 24,
+      "offset": 0,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 1.9612171905095044
+    },
+    {
+      "index": 7,
+      "stage": 3,
+      "from": "4.4 / Pretzel heart / thread 1",
+      "to": "4.6 / Needle-thread escape / thread 1",
+      "speed": 24,
+      "offset": 2,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 1.963989464684504
+    },
+    {
+      "index": 7,
+      "stage": 3,
+      "from": "4.4 / Pretzel heart / thread 1",
+      "to": "4.6 / Needle-thread escape / thread 1",
+      "speed": 30.5,
+      "offset": -2,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 2.0290387454549914
+    },
+    {
+      "index": 7,
+      "stage": 3,
+      "from": "4.4 / Pretzel heart / thread 1",
+      "to": "4.6 / Needle-thread escape / thread 1",
+      "speed": 30.5,
+      "offset": 0,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 2.029038745454988
+    },
+    {
+      "index": 7,
+      "stage": 3,
+      "from": "4.4 / Pretzel heart / thread 1",
+      "to": "4.6 / Needle-thread escape / thread 1",
+      "speed": 30.5,
+      "offset": 2,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 2.0290387454549914
+    },
+    {
+      "index": 8,
+      "stage": 4,
+      "from": "5.3 / Lace into the eye / thread 1",
+      "to": "5.4 / Pretzel heart / thread 1",
+      "speed": 24,
+      "offset": -2,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 1.9443625320530795
+    },
+    {
+      "index": 8,
+      "stage": 4,
+      "from": "5.3 / Lace into the eye / thread 1",
+      "to": "5.4 / Pretzel heart / thread 1",
+      "speed": 24,
+      "offset": 0,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 1.9482596276881883
+    },
+    {
+      "index": 8,
+      "stage": 4,
+      "from": "5.3 / Lace into the eye / thread 1",
+      "to": "5.4 / Pretzel heart / thread 1",
+      "speed": 24,
+      "offset": 2,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 1.9513773585186136
+    },
+    {
+      "index": 8,
+      "stage": 4,
+      "from": "5.3 / Lace into the eye / thread 1",
+      "to": "5.4 / Pretzel heart / thread 1",
+      "speed": 30.5,
+      "offset": -2,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 2.0053911105827753
+    },
+    {
+      "index": 8,
+      "stage": 4,
+      "from": "5.3 / Lace into the eye / thread 1",
+      "to": "5.4 / Pretzel heart / thread 1",
+      "speed": 30.5,
+      "offset": 0,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 2.0053911105827766
+    },
+    {
+      "index": 8,
+      "stage": 4,
+      "from": "5.3 / Lace into the eye / thread 1",
+      "to": "5.4 / Pretzel heart / thread 1",
+      "speed": 30.5,
+      "offset": 2,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 2.0053911105827793
+    },
+    {
+      "index": 9,
+      "stage": 4,
+      "from": "5.4 / Pretzel heart / thread 1",
+      "to": "5.6 / Needle-thread escape / thread 1",
+      "speed": 24,
+      "offset": -2,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 1.963429085739263
+    },
+    {
+      "index": 9,
+      "stage": 4,
+      "from": "5.4 / Pretzel heart / thread 1",
+      "to": "5.6 / Needle-thread escape / thread 1",
+      "speed": 24,
+      "offset": 0,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 1.9672332462483346
+    },
+    {
+      "index": 9,
+      "stage": 4,
+      "from": "5.4 / Pretzel heart / thread 1",
+      "to": "5.6 / Needle-thread escape / thread 1",
+      "speed": 24,
+      "offset": 2,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 1.970276676931219
+    },
+    {
+      "index": 9,
+      "stage": 4,
+      "from": "5.4 / Pretzel heart / thread 1",
+      "to": "5.6 / Needle-thread escape / thread 1",
+      "speed": 30.5,
+      "offset": -2,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 2.036293270277569
+    },
+    {
+      "index": 9,
+      "stage": 4,
+      "from": "5.4 / Pretzel heart / thread 1",
+      "to": "5.6 / Needle-thread escape / thread 1",
+      "speed": 30.5,
+      "offset": 0,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 2.0362932702775716
+    },
+    {
+      "index": 9,
+      "stage": 4,
+      "from": "5.4 / Pretzel heart / thread 1",
+      "to": "5.6 / Needle-thread escape / thread 1",
+      "speed": 30.5,
+      "offset": 2,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 2.036293270277572
+    },
+    {
+      "index": 10,
+      "stage": 5,
+      "from": "6.3 / Lace into the eye / thread 1",
+      "to": "6.4 / Pretzel heart / thread 1",
+      "speed": 24,
+      "offset": -2,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 1.8878785681834303
+    },
+    {
+      "index": 10,
+      "stage": 5,
+      "from": "6.3 / Lace into the eye / thread 1",
+      "to": "6.4 / Pretzel heart / thread 1",
+      "speed": 24,
+      "offset": 0,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 1.891206118724686
+    },
+    {
+      "index": 10,
+      "stage": 5,
+      "from": "6.3 / Lace into the eye / thread 1",
+      "to": "6.4 / Pretzel heart / thread 1",
+      "speed": 24,
+      "offset": 2,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 1.8945337356189313
+    },
+    {
+      "index": 10,
+      "stage": 5,
+      "from": "6.3 / Lace into the eye / thread 1",
+      "to": "6.4 / Pretzel heart / thread 1",
+      "speed": 30.5,
+      "offset": -2,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 1.9456570484582518
+    },
+    {
+      "index": 10,
+      "stage": 5,
+      "from": "6.3 / Lace into the eye / thread 1",
+      "to": "6.4 / Pretzel heart / thread 1",
+      "speed": 30.5,
+      "offset": 0,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 1.9456570484582463
+    },
+    {
+      "index": 10,
+      "stage": 5,
+      "from": "6.3 / Lace into the eye / thread 1",
+      "to": "6.4 / Pretzel heart / thread 1",
+      "speed": 30.5,
+      "offset": 2,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 1.9456570484582407
+    },
+    {
+      "index": 11,
+      "stage": 5,
+      "from": "6.4 / Pretzel heart / thread 1",
+      "to": "6.6 / Needle-thread escape / thread 1",
+      "speed": 24,
+      "offset": -2,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 1.8861025578285788
+    },
+    {
+      "index": 11,
+      "stage": 5,
+      "from": "6.4 / Pretzel heart / thread 1",
+      "to": "6.6 / Needle-thread escape / thread 1",
+      "speed": 24,
+      "offset": 0,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 1.8901969211368683
+    },
+    {
+      "index": 11,
+      "stage": 5,
+      "from": "6.4 / Pretzel heart / thread 1",
+      "to": "6.6 / Needle-thread escape / thread 1",
+      "speed": 24,
+      "offset": 2,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 1.8934724377218572
+    },
+    {
+      "index": 11,
+      "stage": 5,
+      "from": "6.4 / Pretzel heart / thread 1",
+      "to": "6.6 / Needle-thread escape / thread 1",
+      "speed": 30.5,
+      "offset": -2,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 1.9605778291317337
+    },
+    {
+      "index": 11,
+      "stage": 5,
+      "from": "6.4 / Pretzel heart / thread 1",
+      "to": "6.6 / Needle-thread escape / thread 1",
+      "speed": 30.5,
+      "offset": 0,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 1.96057782913172
+    },
+    {
+      "index": 11,
+      "stage": 5,
+      "from": "6.4 / Pretzel heart / thread 1",
+      "to": "6.6 / Needle-thread escape / thread 1",
+      "speed": 30.5,
+      "offset": 2,
+      "caught": true,
+      "launched": true,
+      "passed": true,
+      "nearest": 1.9605778291317133
+    }
+  ],
+  "support": [
+    {
+      "name": "1.1 / Serpent\u2019s crown / thread 1",
+      "at": 0,
+      "height": 0.839999999999975
+    },
+    {
+      "name": "1.1 / Serpent\u2019s crown / thread 1",
+      "at": 753.9087108088768,
+      "height": 0.839999999999975
+    },
+    {
+      "name": "1.2 / Widow\u2019s overhand / thread 1",
+      "at": 0,
+      "height": 0.839999999999975
+    },
+    {
+      "name": "1.2 / Widow\u2019s overhand / thread 1",
+      "at": 786.0953106803328,
+      "height": 0.839999999999975
+    },
+    {
+      "name": "1.3 / Lace into the eye / thread 1",
+      "at": 0,
+      "height": 0.839999999999975
+    },
+    {
+      "name": "1.3 / Lace into the eye / thread 1",
+      "at": 731.2596376156496,
+      "height": 0.839999999999975
+    },
+    {
+      "name": "1.4 / Pretzel heart / thread 1",
+      "at": 0,
+      "height": 0.839999999999975
+    },
+    {
+      "name": "1.4 / Pretzel heart / thread 1",
+      "at": 1019.1111910549965,
+      "height": 0.839999999999975
+    },
+    {
+      "name": "1.5 / The fourfold braid / thread 1",
+      "at": 0,
+      "height": 0.839999999999975
+    },
+    {
+      "name": "1.5 / The fourfold braid / thread 1",
+      "at": 836.6276205176405,
+      "height": 0.839999999999975
+    },
+    {
+      "name": "1.6 / Needle-thread escape / thread 1",
+      "at": 0,
+      "height": 0.839999999999975
+    },
+    {
+      "name": "1.6 / Needle-thread escape / thread 1",
+      "at": 879.021690778526,
+      "height": 0.839999999999975
+    },
+    {
+      "name": "1.7 / Low broken eight / thread 1",
+      "at": 0,
+      "height": 0.839999999999975
+    },
+    {
+      "name": "1.7 / Low broken eight / thread 1",
+      "at": 807.3930066111266,
+      "height": 0.839999999999975
+    },
+    {
+      "name": "1.8 / Hangman\u2019s undercut / thread 1",
+      "at": 0,
+      "height": 0.839999999999975
+    },
+    {
+      "name": "1.8 / Hangman\u2019s undercut / thread 1",
+      "at": 830.6307407532927,
+      "height": 0.839999999999975
+    },
+    {
+      "name": "2.1 / Serpent\u2019s crown / thread 1",
+      "at": 0,
+      "height": 0.839999999999975
+    },
+    {
+      "name": "2.1 / Serpent\u2019s crown / thread 1",
+      "at": 811.8439104679906,
+      "height": 0.839999999999975
+    },
+    {
+      "name": "2.2 / Widow\u2019s overhand / thread 1",
+      "at": 0,
+      "height": 0.839999999999975
+    },
+    {
+      "name": "2.2 / Widow\u2019s overhand / thread 1",
+      "at": 846.676134739817,
+      "height": 0.839999999999975
+    },
+    {
+      "name": "2.3 / Lace into the eye / thread 1",
+      "at": 0,
+      "height": 0.839999999999975
+    },
+    {
+      "name": "2.3 / Lace into the eye / thread 1",
+      "at": 775.5376958742709,
+      "height": 0.839999999999975
+    },
+    {
+      "name": "2.4 / Pretzel heart / thread 1",
+      "at": 0,
+      "height": 0.839999999999975
+    },
+    {
+      "name": "2.4 / Pretzel heart / thread 1",
+      "at": 1100.1581772179961,
+      "height": 0.839999999999975
+    },
+    {
+      "name": "2.5 / The fourfold braid / thread 1",
+      "at": 0,
+      "height": 0.839999999999975
+    },
+    {
+      "name": "2.5 / The fourfold braid / thread 1",
+      "at": 894.8002948211113,
+      "height": 0.839999999999975
+    },
+    {
+      "name": "2.6 / Needle-thread escape / thread 1",
+      "at": 0,
+      "height": 0.839999999999975
+    },
+    {
+      "name": "2.6 / Needle-thread escape / thread 1",
+      "at": 955.9535849531235,
+      "height": 0.839999999999975
+    },
+    {
+      "name": "2.7 / Low broken eight / thread 1",
+      "at": 0,
+      "height": 0.839999999999975
+    },
+    {
+      "name": "2.7 / Low broken eight / thread 1",
+      "at": 860.0936075008796,
+      "height": 0.839999999999975
+    },
+    {
+      "name": "2.8 / Hangman\u2019s undercut / thread 1",
+      "at": 0,
+      "height": 0.839999999999975
+    },
+    {
+      "name": "2.8 / Hangman\u2019s undercut / thread 1",
+      "at": 903.9310134994089,
+      "height": 0.839999999999975
+    },
+    {
+      "name": "3.1 / Serpent\u2019s crown / thread 1",
+      "at": 0,
+      "height": 0.839999999999975
+    },
+    {
+      "name": "3.1 / Serpent\u2019s crown / thread 1",
+      "at": 746.1241920101137,
+      "height": 0.839999999999975
+    },
+    {
+      "name": "3.2 / Widow\u2019s overhand / thread 1",
+      "at": 0,
+      "height": 0.839999999999975
+    },
+    {
+      "name": "3.2 / Widow\u2019s overhand / thread 1",
+      "at": 774.1300089563551,
+      "height": 0.839999999999975
+    },
+    {
+      "name": "3.3 / Lace into the eye / thread 1",
+      "at": 0,
+      "height": 0.839999999999975
+    },
+    {
+      "name": "3.3 / Lace into the eye / thread 1",
+      "at": 744.2218972713275,
+      "height": 0.839999999999975
+    },
+    {
+      "name": "3.4 / Pretzel heart / thread 1",
+      "at": 0,
+      "height": 0.839999999999975
+    },
+    {
+      "name": "3.4 / Pretzel heart / thread 1",
+      "at": 1022.4262715003654,
+      "height": 0.839999999999975
+    },
+    {
+      "name": "3.5 / The fourfold braid / thread 1",
+      "at": 0,
+      "height": 0.839999999999975
+    },
+    {
+      "name": "3.5 / The fourfold braid / thread 1",
+      "at": 818.6425406639767,
+      "height": 0.839999999999975
+    },
+    {
+      "name": "3.6 / Needle-thread escape / thread 1",
+      "at": 0,
+      "height": 0.839999999999975
+    },
+    {
+      "name": "3.6 / Needle-thread escape / thread 1",
+      "at": 879.7936455607609,
+      "height": 0.839999999999975
+    },
+    {
+      "name": "3.7 / Low broken eight / thread 1",
+      "at": 0,
+      "height": 0.839999999999975
+    },
+    {
+      "name": "3.7 / Low broken eight / thread 1",
+      "at": 799.5798685577153,
+      "height": 0.839999999999975
+    },
+    {
+      "name": "3.8 / Hangman\u2019s undercut / thread 1",
+      "at": 0,
+      "height": 0.839999999999975
+    },
+    {
+      "name": "3.8 / Hangman\u2019s undercut / thread 1",
+      "at": 827.1077644570958,
+      "height": 0.839999999999975
+    },
+    {
+      "name": "4.1 / Serpent\u2019s crown / thread 1",
+      "at": 0,
+      "height": 0.8400000000000034
+    },
+    {
+      "name": "4.1 / Serpent\u2019s crown / thread 1",
+      "at": 788.561435005585,
+      "height": 0.8400000000000034
+    },
+    {
+      "name": "4.2 / Widow\u2019s overhand / thread 1",
+      "at": 0,
+      "height": 0.8400000000000034
+    },
+    {
+      "name": "4.2 / Widow\u2019s overhand / thread 1",
+      "at": 836.0053770550819,
+      "height": 0.8400000000000034
+    },
+    {
+      "name": "4.3 / Lace into the eye / thread 1",
+      "at": 0,
+      "height": 0.8400000000000034
+    },
+    {
+      "name": "4.3 / Lace into the eye / thread 1",
+      "at": 755.4106056800781,
+      "height": 0.8400000000000034
+    },
+    {
+      "name": "4.4 / Pretzel heart / thread 1",
+      "at": 0,
+      "height": 0.8400000000000034
+    },
+    {
+      "name": "4.4 / Pretzel heart / thread 1",
+      "at": 1048.380960661669,
+      "height": 0.8400000000000034
+    },
+    {
+      "name": "4.5 / The fourfold braid / thread 1",
+      "at": 0,
+      "height": 0.8400000000000034
+    },
+    {
+      "name": "4.5 / The fourfold braid / thread 1",
+      "at": 903.9871396976313,
+      "height": 0.8400000000000034
+    },
+    {
+      "name": "4.6 / Needle-thread escape / thread 1",
+      "at": 0,
+      "height": 0.8400000000000034
+    },
+    {
+      "name": "4.6 / Needle-thread escape / thread 1",
+      "at": 887.3653572307518,
+      "height": 0.8400000000000034
+    },
+    {
+      "name": "4.7 / Low broken eight / thread 1",
+      "at": 0,
+      "height": 0.8400000000000034
+    },
+    {
+      "name": "4.7 / Low broken eight / thread 1",
+      "at": 853.5355309212192,
+      "height": 0.8400000000000034
+    },
+    {
+      "name": "4.8 / Hangman\u2019s undercut / thread 1",
+      "at": 0,
+      "height": 0.8400000000000034
+    },
+    {
+      "name": "4.8 / Hangman\u2019s undercut / thread 1",
+      "at": 861.2340184404517,
+      "height": 0.8400000000000034
+    },
+    {
+      "name": "5.1 / Serpent\u2019s crown / thread 1",
+      "at": 0,
+      "height": 0.8400000000000034
+    },
+    {
+      "name": "5.1 / Serpent\u2019s crown / thread 1",
+      "at": 821.7597431134379,
+      "height": 0.8400000000000034
+    },
+    {
+      "name": "5.2 / Widow\u2019s overhand / thread 1",
+      "at": 0,
+      "height": 0.8400000000000034
+    },
+    {
+      "name": "5.2 / Widow\u2019s overhand / thread 1",
+      "at": 870.5099233882246,
+      "height": 0.8400000000000034
+    },
+    {
+      "name": "5.3 / Lace into the eye / thread 1",
+      "at": 0,
+      "height": 0.8400000000000034
+    },
+    {
+      "name": "5.3 / Lace into the eye / thread 1",
+      "at": 767.9382415834573,
+      "height": 0.8400000000000034
+    },
+    {
+      "name": "5.4 / Pretzel heart / thread 1",
+      "at": 0,
+      "height": 0.8400000000000034
+    },
+    {
+      "name": "5.4 / Pretzel heart / thread 1",
+      "at": 1082.4543435804148,
+      "height": 0.8400000000000034
+    },
+    {
+      "name": "5.5 / The fourfold braid / thread 1",
+      "at": 0,
+      "height": 0.8400000000000034
+    },
+    {
+      "name": "5.5 / The fourfold braid / thread 1",
+      "at": 944.1247517915161,
+      "height": 0.8400000000000034
+    },
+    {
+      "name": "5.6 / Needle-thread escape / thread 1",
+      "at": 0,
+      "height": 0.8400000000000034
+    },
+    {
+      "name": "5.6 / Needle-thread escape / thread 1",
+      "at": 931.2731399758512,
+      "height": 0.8400000000000034
+    },
+    {
+      "name": "5.7 / Low broken eight / thread 1",
+      "at": 0,
+      "height": 0.8400000000000034
+    },
+    {
+      "name": "5.7 / Low broken eight / thread 1",
+      "at": 888.3881515016703,
+      "height": 0.8400000000000034
+    },
+    {
+      "name": "5.8 / Hangman\u2019s undercut / thread 1",
+      "at": 0,
+      "height": 0.8400000000000034
+    },
+    {
+      "name": "5.8 / Hangman\u2019s undercut / thread 1",
+      "at": 904.3788463153157,
+      "height": 0.8400000000000034
+    },
+    {
+      "name": "6.1 / Serpent\u2019s crown / thread 1",
+      "at": 0,
+      "height": 0.8400000000000034
+    },
+    {
+      "name": "6.1 / Serpent\u2019s crown / thread 1",
+      "at": 757.4556914093248,
+      "height": 0.8400000000000056
+    },
+    {
+      "name": "6.2 / Widow\u2019s overhand / thread 1",
+      "at": 0,
+      "height": 0.8400000000000034
+    },
+    {
+      "name": "6.2 / Widow\u2019s overhand / thread 1",
+      "at": 792.987598010059,
+      "height": 0.8400000000000056
+    },
+    {
+      "name": "6.3 / Lace into the eye / thread 1",
+      "at": 0,
+      "height": 0.8400000000000034
+    },
+    {
+      "name": "6.3 / Lace into the eye / thread 1",
+      "at": 728.922072920137,
+      "height": 0.8400000000000056
+    },
+    {
+      "name": "6.4 / Pretzel heart / thread 1",
+      "at": 0,
+      "height": 0.8400000000000034
+    },
+    {
+      "name": "6.4 / Pretzel heart / thread 1",
+      "at": 1018.9510172695865,
+      "height": 0.8400000000000056
+    },
+    {
+      "name": "6.5 / The fourfold braid / thread 1",
+      "at": 0,
+      "height": 0.8400000000000034
+    },
+    {
+      "name": "6.5 / The fourfold braid / thread 1",
+      "at": 847.8925554539053,
+      "height": 0.8400000000000056
+    },
+    {
+      "name": "6.6 / Needle-thread escape / thread 1",
+      "at": 0,
+      "height": 0.8400000000000034
+    },
+    {
+      "name": "6.6 / Needle-thread escape / thread 1",
+      "at": 878.5132323090336,
+      "height": 0.8400000000000056
+    },
+    {
+      "name": "6.7 / Low broken eight / thread 1",
+      "at": 0,
+      "height": 0.8400000000000034
+    },
+    {
+      "name": "6.7 / Low broken eight / thread 1",
+      "at": 813.9576721534286,
+      "height": 0.8400000000000056
+    },
+    {
+      "name": "6.8 / Hangman\u2019s undercut / thread 1",
+      "at": 0,
+      "height": 0.8400000000000034
+    },
+    {
+      "name": "6.8 / Hangman\u2019s undercut / thread 1",
+      "at": 837.0261300751262,
+      "height": 0.8400000000000056
+    }
+  ],
+  "tuningUnchanged": true
+}

@@ -1,0 +1,251 @@
+{
+  "at": "2026-10-27T08:43:34.246Z",
+  "frames": 9106,
+  "finish": 148.75000000001052,
+  "falls": 8,
+  "deaths": 0,
+  "injected": 8,
+  "events": [
+    {
+      "anchor": 0,
+      "name": "Starting grid",
+      "position": [
+        0,
+        32.08,
+        32
+      ],
+      "at": 389,
+      "from": 60.20735465713999,
+      "falls": 0,
+      "returnedAt": 523,
+      "returned": [
+        0,
+        32,
+        32
+      ],
+      "ground": "platform",
+      "firstRail": {
+        "index": 1,
+        "entry": 0,
+        "length": 97.94587768947278,
+        "speed": 30.5
+      },
+      "departure": {
+        "speed": 48,
+        "boost": true,
+        "type": "Grind Exit"
+      }
+    },
+    {
+      "anchor": 252,
+      "name": "Retry · Spiral entry / retry",
+      "position": [
+        0,
+        36.06,
+        -188
+      ],
+      "at": 1224,
+      "from": 312.06940978669604,
+      "falls": 1,
+      "returnedAt": 1358,
+      "returned": [
+        0,
+        36,
+        -188
+      ],
+      "ground": "platform",
+      "firstRail": {
+        "index": 7,
+        "entry": 0,
+        "length": 145.08639451063524,
+        "speed": 30.5
+      },
+      "departure": {
+        "speed": 48,
+        "boost": true,
+        "type": "Grind Exit"
+      }
+    },
+    {
+      "anchor": 737,
+      "name": "Retry · Spiral crown / retry",
+      "position": [
+        -72,
+        47.06,
+        -205
+      ],
+      "at": 2481,
+      "from": 797.6596839966502,
+      "falls": 2,
+      "returnedAt": 2615,
+      "returned": [
+        -72,
+        47,
+        -205
+      ],
+      "ground": "platform",
+      "firstRail": {
+        "index": 16,
+        "entry": 0,
+        "length": 145.24981259193999,
+        "speed": 30.5
+      },
+      "departure": {
+        "speed": 48,
+        "boost": true,
+        "type": "Grind Exit"
+      }
+    },
+    {
+      "anchor": 1059,
+      "name": "Retry · Knot entry / retry",
+      "position": [
+        -116,
+        52.06,
+        -366
+      ],
+      "at": 3399,
+      "from": 1119.0281015910246,
+      "falls": 3,
+      "returnedAt": 3533,
+      "returned": [
+        -116,
+        52,
+        -366
+      ],
+      "ground": "platform",
+      "firstRail": {
+        "index": 22,
+        "entry": 0,
+        "length": 189.69529258380086,
+        "speed": 30.5
+      },
+      "departure": {
+        "speed": 48,
+        "boost": true,
+        "type": "Grind Exit"
+      }
+    },
+    {
+      "anchor": 1466,
+      "name": "Retry · Overhand catch / retry",
+      "position": [
+        -146,
+        56.60000000074506,
+        -566
+      ],
+      "at": 4470,
+      "from": 1525.904085852219,
+      "falls": 4,
+      "returnedAt": 4604,
+      "returned": [
+        -146,
+        56.54000000074506,
+        -566
+      ],
+      "ground": "speedpad",
+      "firstRail": {
+        "index": 28,
+        "entry": 7,
+        "length": 128.19977776457915,
+        "speed": 30.5
+      },
+      "departure": {
+        "speed": 48,
+        "boost": true,
+        "type": "Grind Exit"
+      }
+    },
+    {
+      "anchor": 2056,
+      "name": "Retry · Loom entry / retry",
+      "position": [
+        -116,
+        62.06,
+        -675
+      ],
+      "at": 5904,
+      "from": 2116.1936228844697,
+      "falls": 5,
+      "returnedAt": 6038,
+      "returned": [
+        -116,
+        62,
+        -675
+      ],
+      "ground": "platform",
+      "firstRail": {
+        "index": 40,
+        "entry": 0,
+        "length": 140.4810445763152,
+        "speed": 30.5
+      },
+      "departure": {
+        "speed": 48,
+        "boost": true,
+        "type": "Grind Exit"
+      }
+    },
+    {
+      "anchor": 2394,
+      "name": "Retry · Corkscrew entry / retry",
+      "position": [
+        -116,
+        59.06,
+        -965
+      ],
+      "at": 6809,
+      "from": 2453.8636190720104,
+      "falls": 6,
+      "returnedAt": 6943,
+      "returned": [
+        -116,
+        59,
+        -965
+      ],
+      "ground": "platform",
+      "firstRail": {
+        "index": 46,
+        "entry": 0,
+        "length": 156.75022165077132,
+        "speed": 30.5
+      },
+      "departure": {
+        "speed": 48,
+        "boost": true,
+        "type": "Grind Exit"
+      }
+    },
+    {
+      "anchor": 2901,
+      "name": "Retry · Final braid / retry",
+      "position": [
+        -192,
+        30.06,
+        -1022
+      ],
+      "at": 8029,
+      "from": 2961.0532396617973,
+      "falls": 7,
+      "returnedAt": 8163,
+      "returned": [
+        -192,
+        30,
+        -1022
+      ],
+      "ground": "platform",
+      "firstRail": {
+        "index": 55,
+        "entry": 0,
+        "length": 167.7506963187287,
+        "speed": 30.5
+      },
+      "departure": {
+        "speed": 48,
+        "boost": true,
+        "type": "Grind Exit"
+      }
+    }
+  ],
+  "tuningUnchanged": true
+}

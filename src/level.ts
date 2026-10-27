@@ -1,3 +1,5 @@
+import { roundCorners } from './pathNodes';
+export { roundCorners } from './pathNodes';
 import {createRallyDirt,createRallyCloth,createRallyLamp,createRallySponsorMaterial} from './rallyMaterials';
 import { authoredMovingGeometry } from './authoredMovingSurface';
 import {RainWeather} from './rainWeather';
@@ -9,10 +11,11 @@ import {addWaterparkDeckLook} from './waterparkDeck';
 import {createWaterparkPortal,WATERPARK_PORTAL_WORK} from './waterparkPortal';
 import {addWaterparkFlumeLook, createShallowSlideWater} from './waterparkFlume';
 import { isGraphicsReset } from './lostGraphicsResources';
-import { validSkateRace } from './race/schema';
+import { validRailNavigation, validSkateRace } from './race/schema';
 import { createRaceFinish } from './race/finish';
 import { RaceCourse } from './race/course';
-import type { SkateRaceData } from './race/types';
+import { RailChoices, type RailChoiceCursor } from './race/railChoices';
+import type { RailNavigationData, SkateRaceData } from './race/types';
 import {custardPoolMaterial,custardFoamMaterial,addCustardPoolBedLook,attachCustardPoolReflection,CustardFinalePresentation} from './custardPool';
 import { NightworksBackdrop } from './nightworksBackdrop';
 import { NightworksLighting } from './nightworksLighting';
@@ -145,7 +148,7 @@ import { JUNGLE_CUP_LEVEL } from "./levels/jungle-cup";
 import { JUNGLE_TERRACES_LEVEL } from "./levels/jungle-sequels";
 import { PIRATE_WRECK_LEVEL } from './levels/pirate-wreck';
 import { CROWN_TEXTURE_KINDS, isCrownTexture, crownTextureFile, createCrownSurface, createCrownQuartz, isCrownWater, crownWaterReflectionFile, createCrownWater, createDrownedHarbourOceanLook } from './drownedCrownAssets';
-import { CAVE_COLLAPSE_LEVEL, CODEX_LAB_LEVEL, TRIBAL_RUN_LEVEL, WAREHOUSE_REFERENCE_LEVEL, SCHOOL_MIAMI_LEVEL, WAREHOUSE_PARK_LEVEL, ROOFTOP_RELAY_LEVEL, WATERFALL_CLIMB_LEVEL } from "./levels/codex-lab";
+import { SPAGHETTI_RAILS_LEVEL, SPAGHETTI_RAILS_PLATFORMING_LEVEL, CAVE_COLLAPSE_LEVEL, CODEX_LAB_LEVEL, TRIBAL_RUN_LEVEL, WAREHOUSE_REFERENCE_LEVEL, SCHOOL_MIAMI_LEVEL, WAREHOUSE_PARK_LEVEL, ROOFTOP_RELAY_LEVEL, WATERFALL_CLIMB_LEVEL } from "./levels/codex-lab";
 import { TRIBAL_RUN_TEXTURES } from './levels/tribal-run-textures';
 import { JUNGLE_MINEFIELD_LEVEL } from "./levels/jungle-minefield";
 import { COUNTRY_CLUB_LEVEL } from "./levels/country-club";
@@ -1049,6 +1052,7 @@ export const DECOR_LABELS: Record<DecorKind, string> = {
 // texture dropdown is built from this list; 'checker' is the classic default.
 export const TEX_KINDS = [
   ...Object.keys(TRIBAL_RUN_TEXTURES),
+  'spaghetti-basalt','spaghetti-cavern',
   'skystream-marble',
   'cardboard',
   'waterslide-fiberglass','rally-mud','rally-sponsors','rally-cloth','rally-lamp','rally-lamp-glow',
@@ -1142,6 +1146,8 @@ export interface CustomLevelData {
   caveCollapse?: CaveCollapseData;
   /** Eight-rider point-to-point race, sharing the normal board physics. */
   skateRace?: SkateRaceData;
+  /** Branch-aware camera/input guide for ordinary platforming, with no race. */
+  railNavigation?: RailNavigationData;
   spawn: [number, number, number];
   /** False keeps an authored arrival on its own supported floor, without a warp pad. */
   startWarpPad?: boolean;
@@ -1305,8 +1311,9 @@ export function migrateCustomLevel(d: CustomLevelData): CustomLevelData {
   migrateDrownedCamera(d);
   // Boss retries bank phase progress in the encounter and start on the pier.
   // Old editor copies must not restore the retired physical checkpoint crate.
-  // Races recover to their latest supported position, without checkpoint objects.
-  if (d.encounter === 'crab-chief' || d.skateRace)
+  // Road races recover to their latest supported position. Rail races keep
+  // authored retry locations as data; their checkpoint crates remain hidden.
+  if (d.encounter === 'crab-chief' || d.skateRace && !d.skateRace.grinds?.length)
     d.components = d.components.filter(component => component.t !== 'checkpoint');
   // Retired vehicles must not return through saved libraries or shared files.
   // Leave the road geometry, groups and other enemies available for editing.
@@ -2388,7 +2395,7 @@ export const COMBO_GEM_TINT = 0x46e882;
  * between two players in split-screen would have them yanking each other's
  * camera around.
  */
-export interface LaneCursor {
+export interface LaneCursor extends RailChoiceCursor {
   s: number;
 }
 
@@ -2479,68 +2486,6 @@ export function simplifyPath<T extends { x: number; y: number; z: number }>(
   return pts.filter((_, i) => keep[i]);
 }
 
-export function roundCorners(
-  pts: readonly (readonly number[])[],
-  closed: boolean,
-): { x: number; z: number; y: number; i: number }[] {
-  const n = pts.length;
-  const out: { x: number; z: number; y: number; i: number }[] = [];
-  const push = (x: number, z: number, y: number, i: number): void => {
-    const last = out[out.length - 1];
-    if (
-      last &&
-      (last.x - x) * (last.x - x) + (last.z - z) * (last.z - z) < 4e-4
-    )
-      return;
-    out.push({ x, z, y, i });
-  };
-  const yOf = (k: number): number => pts[((k % n) + n) % n][3] ?? 0;
-  for (let i = 0; i < n; i++) {
-    const r = pts[i][2] ?? 0;
-    const px = pts[i][0];
-    const pz = pts[i][1];
-    const py = yOf(i);
-    if (r <= 0.01 || n < 3 || (!closed && (i === 0 || i === n - 1))) {
-      push(px, pz, py, i);
-      continue;
-    }
-    const A = pts[(i - 1 + n) % n];
-    const B = pts[(i + 1) % n];
-    const inX = px - A[0];
-    const inZ = pz - A[1];
-    const outX = B[0] - px;
-    const outZ = B[1] - pz;
-    const inL = Math.hypot(inX, inZ);
-    const outL = Math.hypot(outX, outZ);
-    if (inL < 1e-4 || outL < 1e-4) {
-      push(px, pz, py, i);
-      continue;
-    }
-    const t = Math.min(r, inL * 0.49, outL * 0.49);
-    const ax = px - (inX / inL) * t;
-    const az = pz - (inZ / inL) * t;
-    const bx = px + (outX / outL) * t;
-    const bz = pz + (outZ / outL) * t;
-    // heights at the trim points sit on the straight edges' slopes
-    const ay = py + (yOf(i - 1) - py) * (t / inL);
-    const by = py + (yOf(i + 1) - py) * (t / outL);
-    const SEGS = 6;
-    for (let k = 0; k <= SEGS; k++) {
-      const u = k / SEGS;
-      const w0 = (1 - u) * (1 - u);
-      const w1 = 2 * u * (1 - u);
-      const w2 = u * u;
-      push(
-        w0 * ax + w1 * px + w2 * bx,
-        w0 * az + w1 * pz + w2 * bz,
-        w0 * ay + w1 * py + w2 * by,
-        i,
-      );
-    }
-  }
-  return out;
-}
-
 export function rectCorners(
   w: number,
   d: number,
@@ -2608,6 +2553,8 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
   {id:"hollowwake-descent",name:HOLLOWWAKE_LEVEL.name,data:HOLLOWWAKE_LEVEL},
   { id: "dark", name: "The Nightworks" }, // cycling platforms, phase rocks and torch-lit ferries
   { id: "nightworks-after-hours", name: NIGHTWORKS_AFTER_HOURS_LEVEL.name, data: NIGHTWORKS_AFTER_HOURS_LEVEL },
+  { id: 'spaghetti-rails', name: SPAGHETTI_RAILS_LEVEL.name, data: SPAGHETTI_RAILS_LEVEL },
+  { id: 'spaghetti-rails-platforming', name: SPAGHETTI_RAILS_PLATFORMING_LEVEL.name, data: SPAGHETTI_RAILS_PLATFORMING_LEVEL },
   { id: "warproom", name: "Island World Map" }, // legacy id, graph-driven map runtime
   { id: "beachfront", name: "Beachside Run" },
   ...UNITY_PORT_LEVELS,
@@ -2724,7 +2671,7 @@ const MAX_LEVEL_LABEL_LENGTH = 120;
 const FORBIDDEN_JSON_KEYS = new Set(["__proto__", "prototype", "constructor"]);
 const LEVEL_DATA_KEYS = new Set([
   'encounter',
-  "minefields", "v", "skateRace", "edgeGrindingRevision", "name", "spawn", "startWarpPad", "killY", "fallRecoveryDrop", "hudMode", "ledgeAssist", "relicTime",
+  "minefields", "v", "skateRace", "railNavigation", "edgeGrindingRevision", "name", "spawn", "startWarpPad", "killY", "fallRecoveryDrop", "hudMode", "ledgeAssist", "relicTime",
   "medalTimes", "ocean", "unitySand", "shoreFoam", "sky", "jungleAtmosphere", "jungleDepthFade", "jungleStyle", "atmosphere",
   "components", "layers", "groups", "allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "skateReference", "hugeDropBail", "alwaysSkate", "warehouseArt", "skateCollectathon", "cameraAirLift", "secretComboGem", "cameraLookAhead", "cameraRig", "boulderChase", "caveCollapse",
 ]);
@@ -2971,6 +2918,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
       !Number.isFinite(source.cameraLookAhead) || source.cameraLookAhead < 0 || source.cameraLookAhead > 30)) return null;
   if(source.minefields!==undefined&&!validMinefields(source.minefields))return null;
   if(source.skateRace!==undefined&&!validSkateRace(source.skateRace))return null;
+  if(source.railNavigation!==undefined&&!validRailNavigation(source.railNavigation))return null;
   if(source.boulderChase!==undefined&&!validBoulderChase(source.boulderChase))return null;
   if(source.caveCollapse!==undefined&&!validCaveCollapse(source.caveCollapse))return null;
   if(source.cameraRig!==undefined){
@@ -4307,6 +4255,13 @@ export class Level {
   readonly isBossLevel: boolean;
   readonly allowsCrystal: boolean;
   readonly skateRace: SkateRaceData | null;
+  readonly railNavigation: RailNavigationData | null;
+  private railChoiceNavigation:RailChoices|null=null;
+  get railChoices():RailChoices|null {
+    const authored=this.skateRace??this.railNavigation;
+    if(!authored?.railChoices?.length)return null;
+    return this.railChoiceNavigation??=new RailChoices(new RaceCourse(authored.line),authored,this.rails);
+  }
   readonly allowsBonus: boolean;
   boss: CrabChiefEncounter | null = null;
   groundMeshes: THREE.Mesh[] = [];
@@ -4333,6 +4288,8 @@ export class Level {
   projectiles: Projectile[] = []; // sentry orbs in flight
   stones: Stone[] = [];
   checkpoints: Checkpoint[] = [];
+  /** Authored checkpoint positions retained when race mode hides their crates. */
+  readonly raceCheckpoints: THREE.Vector3[] = [];
   pickups: Pickup[] = [];
   private pickupVisualBatch: PickupVisualBatch | null = null;
   rails: Rail[] = [];
@@ -4370,6 +4327,8 @@ export class Level {
   /** The lane proposes candidates; live floor collision confirms each catch.
    * A generous corridor includes banked road edges and wide landing courts. */
   hasReachableFallLanding(position: THREE.Vector3, verticalSpeed: number, travelSpeed: number, gravity: number, terminal: number): boolean {
+    if(this.railChoices?.hasReachableRail(position,verticalSpeed,travelSpeed,gravity))return true;
+    if(this.railChoices?.paths.some(path=>path.course.hasReachableLanding(this,position,verticalSpeed,travelSpeed,gravity,terminal)))return true;
     if (this.lanePts.length < 2) return true;
     this.fallRecoveryCourse ??= new RaceCourse(this.lanePts.map(p => [p.x, p.y, p.z, 32]));
     return this.fallRecoveryCourse.hasReachableLanding(this, position, verticalSpeed, travelSpeed, gravity, terminal);
@@ -4783,6 +4742,10 @@ export class Level {
     if (cached) return cached;
     const tribal=TRIBAL_RUN_TEXTURES[kind];
     if(tribal){const texture=Level.finishTex(this.surfaceImage(tribal.file),tribal.repeat);this.surfTexCache.set(kind,texture);return texture;}
+    if(kind==='spaghetti-basalt'||kind==='spaghetti-cavern'){
+      const texture=Level.finishTex(this.surfaceImage(`spaghetti-rails/${kind==='spaghetti-basalt'?'basalt':'cavern'}.webp`),kind==='spaghetti-basalt');
+      this.surfTexCache.set(kind,texture);return texture;
+    }
     if(kind==='rally-sponsors'){const t=Level.finishTex(this.surfaceImage('rally/sponsors-v3.webp'));t.wrapS=t.wrapT=THREE.ClampToEdgeWrapping;this.surfTexCache.set(kind,t);return t;}
     if(kind==='skystream-marble'){
       const texture=Level.finishTex(this.surfaceImage('skystream/ivory-marble.webp'));
@@ -5466,6 +5429,7 @@ export class Level {
     };
     this.name = entry.name;
     this.skateRace = entry.data?.skateRace ?? null;
+    this.railNavigation = entry.data?.railNavigation ?? null;
     const campaignDefinition = campaignLevelById(entry.id);
     this.isBossLevel = !!campaignDefinition?.placeholder || (!!campaignDefinition?.boss && !campaignDefinition.skateRace) || !!entry.data?.encounter || isCompetitionLevel(entry.id);
     this.allowsCrystal = !this.isBossLevel && levelAllowsCrystal(entry.id);
@@ -8297,6 +8261,7 @@ export class Level {
               (this.blockworksSurfaces??=new BlockworksSurfaces(this.root,!EDITOR_BUILD)).fitRail(rail.points,rail.object,postHeights);
             }
             this.rails[this.rails.length-1].coping = c.coping === true;
+            this.rails[this.rails.length-1].object.userData.sourceName = c.nm;
             if(c.dkind === "citydeck" || c.dkind === "cityutilitypole"){const rail=this.rails[this.rails.length-1];rail.object.traverse(o=>{const mesh=o as THREE.Mesh;if(mesh.isMesh){mesh.geometry.dispose();}});rail.object.clear();rail.object.userData.cityRail=true;rail.object.add(cityRailVisual(rail.points,c.dkind === "cityutilitypole"));}
             if (c.dkind === "nightrockridge") {
               const rail = this.rails[this.rails.length-1];
@@ -9656,6 +9621,7 @@ export class Level {
   /** Rebuild the arc-length table. Called wherever lanePts is assigned. */
   private measureLane(): void {
     this.fallRecoveryCourse = undefined;
+    this.railChoiceNavigation = null;
     this.laneArc = [0];
     for (let i = 1; i < this.lanePts.length; i++) {
       const a = this.lanePts[i - 1];
@@ -9699,6 +9665,12 @@ export class Level {
     // inside its rectangle the zone owns the course frame (side-scroll /
     // run-at-camera), and the lane resumes where the zone ends
     if (this.zoneAt(x, z)) return null;
+    if(this.railChoices){
+      const at=cursor??{s:-1},point=new THREE.Vector3(x,y,z);
+      this.railChoices.update(point,at);
+      const direction=this.railChoices.tangent(at),length=Math.hypot(direction.x,direction.z)||1;
+      return {x:direction.x/length,z:direction.z/length};
+    }
     const pts = this.lanePts;
     if (pts.length < 2) return null;
     let best = Infinity;
@@ -9768,6 +9740,7 @@ export class Level {
 
   /** Sample the same ordered branch selected by the camera, without moving its cursor. */
   cameraLanePointAhead(cursor: LaneCursor, distance: number, target: THREE.Vector3): THREE.Vector3 | null {
+    if(this.railChoices&&cursor.s>=0)return this.railChoices.ahead(cursor,distance,target);
     if (cursor.s < 0 || this.lanePts.length < 2) return null;
     const last = this.laneArc.length - 1;
     const s = THREE.MathUtils.clamp(cursor.s + distance, 0, this.laneArc[last]);
@@ -19395,7 +19368,7 @@ export class Level {
   // stomp it (bumping is a wall) to bank the checkpoint; its trigger matches
   // the box, so it can be dodged rather than being an unmissable gate.
   private checkpoint(deckY: number, z: number, x = 0): void {
-    if(this.skateRace)return;
+    if(this.skateRace){this.raceCheckpoints.push(new THREE.Vector3(x,deckY+.1,z));return;}
     const size = 0.96; // same footprint as every other crate now
     const gy = this.floorY(x, z, deckY);
     const mesh = new THREE.Mesh(

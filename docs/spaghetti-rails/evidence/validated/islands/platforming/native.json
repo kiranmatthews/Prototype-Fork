@@ -1,0 +1,23 @@
+{
+  "at": "2026-10-27T10:26:28.130Z",
+  "scope": "Saved geometry equality, supported spawn, normal checkpoint/pit recovery and crystal/finish local contact fixtures; not full traversal.",
+  "id": "spaghetti-rails-platforming",
+  "geometrySha256": "1a135128a3c2418d4c51cd8d035e8fb87f90a5cd48a6fc904339d6ba4c031fa8",
+  "spawn": [
+    0,
+    164,
+    108
+  ],
+  "checkpoint": [
+    2.2,
+    140.1,
+    -146
+  ],
+  "ordinaryDeaths": 1,
+  "finish": [
+    15,
+    20.726666669150195,
+    -418.4499999999976
+  ],
+  "race": false
+}

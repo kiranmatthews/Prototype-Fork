@@ -4,7 +4,12 @@ import type { WipeoutCause } from '../character/wipeoutPolicy';
 
 export type RacePoint = [number, number, number];
 export type RaceKnot = [number, number, number, number];
-export interface SkateRaceData {
+export interface RailNavigationData {
+  /** Ordered world guide plus optional alternatives made of native rails. */
+  line: RaceKnot[];
+  railChoices?: { from: RacePoint; to: RacePoint; paths: string[][] }[];
+}
+export interface SkateRaceData extends RailNavigationData {
   v: 1;
   racers: 8;
   vehicle?: 'golf-cart';
@@ -12,9 +17,9 @@ export interface SkateRaceData {
   gemReward?: 'win';
   seed: number;
   stages?: string[];
-  /** Ordered world-space racing guide, with rideable width at each knot. */
-  line: RaceKnot[];
   jumps: { takeoff: RacePoint; landing: RacePoint }[];
+  /** Optional rail-first sections. Rival inputs aim at these real, editable strands. */
+  grinds?: { start: RacePoint; end: RacePoint; lanes: number[] }[];
   finishWidth: number;
   originalLength: number;
 }
@@ -48,6 +53,10 @@ export interface RaceThreat {
   seconds:number; bearing:number; urgent:boolean; attached?:boolean;
 }
 export interface RaceHudState {
+  /** Present only when the race is built around editable rail transfers. */
+  railTransfers?: number;
+  railChoices?: number;
+  railMap?: readonly (readonly RaceKnot[])[];
   vehicle?: 'golf-cart'; crystalReward?:boolean; gemReward?:'win';
   cart?: {onFoot:boolean;target:string;distance:number|null;notice:string;actionReady:boolean;bearing:number|null};
   title:string; sections:readonly string[]; medalTimes:MedalTimes; medal:TimeMedal|null;

@@ -1,0 +1,1511 @@
+{
+  "at": "2026-10-27T08:42:56.351Z",
+  "gameplayFingerprint": "2b84a2249914b3a55feb12d62cbc1d2d5fd670f0c4e598d6c8e86d201a332941",
+  "length": 3389.209169774303,
+  "rails": 63,
+  "maxTurn": 22.96468408778088,
+  "retryLegs": [
+    {
+      "from": "Starting grid",
+      "to": "Retry · Spiral entry / retry",
+      "metres": 251.83027024329238
+    },
+    {
+      "from": "Retry · Spiral entry / retry",
+      "to": "Retry · Spiral crown / retry",
+      "metres": 485.64353155291667
+    },
+    {
+      "from": "Retry · Spiral crown / retry",
+      "to": "Retry · Knot entry / retry",
+      "metres": 321.3055561557285
+    },
+    {
+      "from": "Retry · Knot entry / retry",
+      "to": "Retry · Overhand catch / retry",
+      "metres": 407.0884051733524
+    },
+    {
+      "from": "Retry · Overhand catch / retry",
+      "to": "Retry · Loom entry / retry",
+      "metres": 590.0595878753279
+    },
+    {
+      "from": "Retry · Loom entry / retry",
+      "to": "Retry · Corkscrew entry / retry",
+      "metres": 337.68597556236136
+    },
+    {
+      "from": "Retry · Corkscrew entry / retry",
+      "to": "Retry · Final braid / retry",
+      "metres": 507.20539840109905
+    },
+    {
+      "from": "Retry · Final braid / retry",
+      "to": "Finish",
+      "metres": 488.39044481022484
+    }
+  ],
+  "maxRetryLeg": 590.0595878753279,
+  "medalTimes": {
+    "gold": 115,
+    "silver": 135,
+    "bronze": 165
+  },
+  "transfers": [
+    {
+      "from": "01 / Three-needle weave / thread 1 / centre strand",
+      "to": "01 / Three-needle weave / thread 2 / centre strand",
+      "gap": 10.000856863289261,
+      "height": 0.0799999999999983,
+      "lateral": 0.0009266984461238081
+    },
+    {
+      "from": "02 / Rising triple spiral / thread 1 / centre strand",
+      "to": "02 / Rising triple spiral / thread 2 / centre strand",
+      "gap": 10.0318160369895,
+      "height": 0.7999999999999972,
+      "lateral": 0.000370166509841674
+    },
+    {
+      "from": "02 / Rising triple spiral / thread 2 / centre strand",
+      "to": "02 / Rising triple spiral / thread 3 / centre strand",
+      "gap": 10.031101335347003,
+      "height": 0.7999999999999972,
+      "lateral": 0.0008073037121802962
+    },
+    {
+      "from": "03 / Crown switchback / thread 1 / centre strand",
+      "to": "03 / Crown switchback / thread 2 / centre strand",
+      "gap": 10.002891481966618,
+      "height": 0.23499999999999943,
+      "lateral": 0.00015796327670658528
+    },
+    {
+      "from": "04 / Overhand, lower loop / thread 1 / centre strand",
+      "to": "04 / Overhand, lower loop / thread 2 / centre strand",
+      "gap": 10.010926880164499,
+      "height": 0.46399999999999864,
+      "lateral": 0.0011971506593431158
+    },
+    {
+      "from": "04 / Overhand, lower loop / thread 2 / centre strand",
+      "to": "05 / Overhand, suspended return / thread 1 / centre strand",
+      "gap": 8.075270893288968,
+      "height": 1.1000000000000014,
+      "lateral": 0
+    },
+    {
+      "from": "05 / Overhand, suspended return / thread 1 / centre strand",
+      "to": "05 / Overhand, suspended return / thread 2 / centre strand",
+      "gap": 10.031813046503666,
+      "height": 0.7999999999999972,
+      "lateral": 0.0008528025475387224
+    },
+    {
+      "from": "05 / Overhand, suspended return / thread 2 / centre strand",
+      "to": "05 / Overhand, suspended return / thread 3 / centre strand",
+      "gap": 10.009946153701343,
+      "height": 0.43300000000000693,
+      "lateral": 0.0005305082422282226
+    },
+    {
+      "from": "05 / Overhand, suspended return / thread 3 / centre strand",
+      "to": "05 / Overhand, suspended return / thread 4 / centre strand",
+      "gap": 10.088083762538755,
+      "height": -1.3330000000000055,
+      "lateral": 0.000352795575408571
+    },
+    {
+      "from": "06 / Loom, first sweep / centre strand",
+      "to": "07 / Loom, second sweep / centre strand",
+      "gap": 12.257650672131263,
+      "height": -2.5,
+      "lateral": 0
+    },
+    {
+      "from": "08 / Falling blackwater coil / thread 1 / centre strand",
+      "to": "08 / Falling blackwater coil / thread 2 / centre strand",
+      "gap": 10.515763120192421,
+      "height": -3.2560000000000002,
+      "lateral": 0.00005158032407681645
+    },
+    {
+      "from": "08 / Falling blackwater coil / thread 2 / centre strand",
+      "to": "08 / Falling blackwater coil / thread 3 / centre strand",
+      "gap": 10.517380757584116,
+      "height": -3.2560000000000002,
+      "lateral": 0.00018282092812804684
+    },
+    {
+      "from": "09 / Last thread, outward braid / thread 1 / centre strand",
+      "to": "09 / Last thread, outward braid / thread 2 / centre strand",
+      "gap": 10.123366732466174,
+      "height": -1.5730000000000004,
+      "lateral": 0.0002523293553178263
+    },
+    {
+      "from": "09 / Last thread, outward braid / thread 2 / centre strand",
+      "to": "10 / Last thread, hanging needle / centre strand",
+      "gap": 13.152946437965904,
+      "height": -2,
+      "lateral": 0
+    }
+  ],
+  "lowest": 21.9,
+  "highest": 68,
+  "crossings": [
+    {
+      "rails": [
+        11,
+        12
+      ],
+      "names": [
+        "02 / Rising triple spiral / thread 2 / right strand",
+        "02 / Rising triple spiral / thread 3 / left strand"
+      ],
+      "p": [
+        -68.4,
+        -227.64986997800784
+      ],
+      "clearance": 6.4535361216625775
+    },
+    {
+      "rails": [
+        40,
+        41
+      ],
+      "names": [
+        "06 / Loom, first sweep / centre strand",
+        "06 / Loom, first sweep / right strand"
+      ],
+      "p": [
+        -99.0541665470449,
+        -768.3744169891363
+      ],
+      "clearance": 6.472714335671806
+    },
+    {
+      "rails": [
+        39,
+        40
+      ],
+      "names": [
+        "06 / Loom, first sweep / left strand",
+        "06 / Loom, first sweep / centre strand"
+      ],
+      "p": [
+        -98.85563408121222,
+        -768.166965219699
+      ],
+      "clearance": 6.475065462541794
+    },
+    {
+      "rails": [
+        40,
+        41
+      ],
+      "names": [
+        "06 / Loom, first sweep / centre strand",
+        "06 / Loom, first sweep / right strand"
+      ],
+      "p": [
+        -95.86631017974621,
+        -735.9587078095631
+      ],
+      "clearance": 6.483220215578011
+    },
+    {
+      "rails": [
+        42,
+        43
+      ],
+      "names": [
+        "07 / Loom, second sweep / left strand",
+        "07 / Loom, second sweep / centre strand"
+      ],
+      "p": [
+        -143.46511898011056,
+        -874.6644690525698
+      ],
+      "clearance": 6.483434748213026
+    },
+    {
+      "rails": [
+        43,
+        44
+      ],
+      "names": [
+        "07 / Loom, second sweep / centre strand",
+        "07 / Loom, second sweep / right strand"
+      ],
+      "p": [
+        -143.57640699863413,
+        -874.7461935364015
+      ],
+      "clearance": 6.48353833714322
+    },
+    {
+      "rails": [
+        39,
+        40
+      ],
+      "names": [
+        "06 / Loom, first sweep / left strand",
+        "06 / Loom, first sweep / centre strand"
+      ],
+      "p": [
+        -95.67497807074207,
+        -736.2663662477505
+      ],
+      "clearance": 6.48591291389634
+    },
+    {
+      "rails": [
+        43,
+        44
+      ],
+      "names": [
+        "07 / Loom, second sweep / centre strand",
+        "07 / Loom, second sweep / right strand"
+      ],
+      "p": [
+        -146.3425640421916,
+        -911.0091205016549
+      ],
+      "clearance": 6.499600584720396
+    },
+    {
+      "rails": [
+        42,
+        43
+      ],
+      "names": [
+        "07 / Loom, second sweep / left strand",
+        "07 / Loom, second sweep / centre strand"
+      ],
+      "p": [
+        -146.25495740607803,
+        -911.1067138071309
+      ],
+      "clearance": 6.4999670456047225
+    },
+    {
+      "rails": [
+        10,
+        12
+      ],
+      "names": [
+        "02 / Rising triple spiral / thread 2 / centre strand",
+        "02 / Rising triple spiral / thread 3 / left strand"
+      ],
+      "p": [
+        -68.4,
+        -231.43599771328056
+      ],
+      "clearance": 6.535767818929372
+    },
+    {
+      "rails": [
+        11,
+        13
+      ],
+      "names": [
+        "02 / Rising triple spiral / thread 2 / right strand",
+        "02 / Rising triple spiral / thread 3 / centre strand"
+      ],
+      "p": [
+        -72,
+        -229.75332972161135
+      ],
+      "clearance": 6.570803723671522
+    },
+    {
+      "rails": [
+        9,
+        12
+      ],
+      "names": [
+        "02 / Rising triple spiral / thread 2 / left strand",
+        "02 / Rising triple spiral / thread 3 / left strand"
+      ],
+      "p": [
+        -68.4,
+        -235.0542450999418
+      ],
+      "clearance": 6.628996025703455
+    },
+    {
+      "rails": [
+        10,
+        13
+      ],
+      "names": [
+        "02 / Rising triple spiral / thread 2 / centre strand",
+        "02 / Rising triple spiral / thread 3 / centre strand"
+      ],
+      "p": [
+        -72,
+        -233.41868900615654
+      ],
+      "clearance": 6.660990299271862
+    },
+    {
+      "rails": [
+        11,
+        14
+      ],
+      "names": [
+        "02 / Rising triple spiral / thread 2 / right strand",
+        "02 / Rising triple spiral / thread 3 / right strand"
+      ],
+      "p": [
+        -75.6,
+        -231.85678946521483
+      ],
+      "clearance": 6.688963593875033
+    },
+    {
+      "rails": [
+        9,
+        13
+      ],
+      "names": [
+        "02 / Rising triple spiral / thread 2 / left strand",
+        "02 / Rising triple spiral / thread 3 / centre strand"
+      ],
+      "p": [
+        -71.9992938369753,
+        -236.90103976420778
+      ],
+      "clearance": 6.761539269675345
+    },
+    {
+      "rails": [
+        10,
+        14
+      ],
+      "names": [
+        "02 / Rising triple spiral / thread 2 / centre strand",
+        "02 / Rising triple spiral / thread 3 / right strand"
+      ],
+      "p": [
+        -75.6,
+        -235.40138029903255
+      ],
+      "clearance": 6.7865320579278325
+    },
+    {
+      "rails": [
+        6,
+        11
+      ],
+      "names": [
+        "02 / Rising triple spiral / thread 1 / left strand",
+        "02 / Rising triple spiral / thread 2 / right strand"
+      ],
+      "p": [
+        -3.6,
+        -230.7069122653097
+      ],
+      "clearance": 6.824093465645602
+    },
+    {
+      "rails": [
+        7,
+        14
+      ],
+      "names": [
+        "02 / Rising triple spiral / thread 1 / centre strand",
+        "02 / Rising triple spiral / thread 3 / right strand"
+      ],
+      "p": [
+        -56.94615890764885,
+        -286.6267557981129
+      ],
+      "clearance": 6.875487949869517
+    },
+    {
+      "rails": [
+        6,
+        13
+      ],
+      "names": [
+        "02 / Rising triple spiral / thread 1 / left strand",
+        "02 / Rising triple spiral / thread 3 / centre strand"
+      ],
+      "p": [
+        -55.09812173638537,
+        -283.5625408779262
+      ],
+      "clearance": 6.876459518649927
+    },
+    {
+      "rails": [
+        9,
+        14
+      ],
+      "names": [
+        "02 / Rising triple spiral / thread 2 / left strand",
+        "02 / Rising triple spiral / thread 3 / right strand"
+      ],
+      "p": [
+        -75.59599514794358,
+        -238.74650420554295
+      ],
+      "clearance": 6.893420222737288
+    },
+    {
+      "rails": [
+        7,
+        14
+      ],
+      "names": [
+        "02 / Rising triple spiral / thread 1 / centre strand",
+        "02 / Rising triple spiral / thread 3 / right strand"
+      ],
+      "p": [
+        -47.17012347617626,
+        -291.29906339979226
+      ],
+      "clearance": 6.933811490686805
+    },
+    {
+      "rails": [
+        6,
+        13
+      ],
+      "names": [
+        "02 / Rising triple spiral / thread 1 / left strand",
+        "02 / Rising triple spiral / thread 3 / centre strand"
+      ],
+      "p": [
+        -45.91473053739552,
+        -287.9566786234665
+      ],
+      "clearance": 6.963796397548404
+    },
+    {
+      "rails": [
+        10,
+        14
+      ],
+      "names": [
+        "02 / Rising triple spiral / thread 2 / centre strand",
+        "02 / Rising triple spiral / thread 3 / right strand"
+      ],
+      "p": [
+        -74.16201886309776,
+        -261.1323951743836
+      ],
+      "clearance": 7.003731378579892
+    },
+    {
+      "rails": [
+        9,
+        13
+      ],
+      "names": [
+        "02 / Rising triple spiral / thread 2 / left strand",
+        "02 / Rising triple spiral / thread 3 / centre strand"
+      ],
+      "p": [
+        -70.6923129135016,
+        -260.2802494486645
+      ],
+      "clearance": 7.005158784611618
+    },
+    {
+      "rails": [
+        6,
+        10
+      ],
+      "names": [
+        "02 / Rising triple spiral / thread 1 / left strand",
+        "02 / Rising triple spiral / thread 2 / centre strand"
+      ],
+      "p": [
+        -3.6,
+        -235.26370680842362
+      ],
+      "clearance": 7.043155201518426
+    },
+    {
+      "rails": [
+        7,
+        11
+      ],
+      "names": [
+        "02 / Rising triple spiral / thread 1 / centre strand",
+        "02 / Rising triple spiral / thread 2 / right strand"
+      ],
+      "p": [
+        0,
+        -234.05423635725566
+      ],
+      "clearance": 7.104757057450109
+    },
+    {
+      "rails": [
+        9,
+        14
+      ],
+      "names": [
+        "02 / Rising triple spiral / thread 2 / left strand",
+        "02 / Rising triple spiral / thread 3 / right strand"
+      ],
+      "p": [
+        -75.17740338983052,
+        -254.3001288135593
+      ],
+      "clearance": 7.151264783427494
+    },
+    {
+      "rails": [
+        8,
+        14
+      ],
+      "names": [
+        "02 / Rising triple spiral / thread 1 / right strand",
+        "02 / Rising triple spiral / thread 3 / right strand"
+      ],
+      "p": [
+        -40.18001303426763,
+        -293.86029014883485
+      ],
+      "clearance": 7.1694255975285754
+    },
+    {
+      "rails": [
+        7,
+        13
+      ],
+      "names": [
+        "02 / Rising triple spiral / thread 1 / centre strand",
+        "02 / Rising triple spiral / thread 3 / centre strand"
+      ],
+      "p": [
+        -39.72841888086988,
+        -290.33073574318956
+      ],
+      "clearance": 7.211275635051544
+    },
+    {
+      "rails": [
+        6,
+        12
+      ],
+      "names": [
+        "02 / Rising triple spiral / thread 1 / left strand",
+        "02 / Rising triple spiral / thread 3 / left strand"
+      ],
+      "p": [
+        -39.289418080858454,
+        -286.7712446343898
+      ],
+      "clearance": 7.259126441673503
+    },
+    {
+      "rails": [
+        6,
+        9
+      ],
+      "names": [
+        "02 / Rising triple spiral / thread 1 / left strand",
+        "02 / Rising triple spiral / thread 2 / left strand"
+      ],
+      "p": [
+        -3.600935881532051,
+        -239.80618723839103
+      ],
+      "clearance": 7.312380852578438
+    },
+    {
+      "rails": [
+        8,
+        13
+      ],
+      "names": [
+        "02 / Rising triple spiral / thread 1 / right strand",
+        "02 / Rising triple spiral / thread 3 / centre strand"
+      ],
+      "p": [
+        -32.914177991989476,
+        -292.81839917473064
+      ],
+      "clearance": 7.327132073842035
+    },
+    {
+      "rails": [
+        8,
+        12
+      ],
+      "names": [
+        "02 / Rising triple spiral / thread 1 / right strand",
+        "02 / Rising triple spiral / thread 3 / left strand"
+      ],
+      "p": [
+        -26.851165532499525,
+        -291.7009217644918
+      ],
+      "clearance": 7.351636090086269
+    },
+    {
+      "rails": [
+        7,
+        10
+      ],
+      "names": [
+        "02 / Rising triple spiral / thread 1 / centre strand",
+        "02 / Rising triple spiral / thread 2 / centre strand"
+      ],
+      "p": [
+        -0.0015520190069482724,
+        -239.0819572536186
+      ],
+      "clearance": 7.359452452503125
+    },
+    {
+      "rails": [
+        7,
+        12
+      ],
+      "names": [
+        "02 / Rising triple spiral / thread 1 / centre strand",
+        "02 / Rising triple spiral / thread 3 / left strand"
+      ],
+      "p": [
+        -33.087201691144585,
+        -289.2305956190232
+      ],
+      "clearance": 7.365329964613211
+    },
+    {
+      "rails": [
+        8,
+        11
+      ],
+      "names": [
+        "02 / Rising triple spiral / thread 1 / right strand",
+        "02 / Rising triple spiral / thread 2 / right strand"
+      ],
+      "p": [
+        3.598861203914435,
+        -238.27304032770735
+      ],
+      "clearance": 7.396936818709696
+    },
+    {
+      "rails": [
+        8,
+        12
+      ],
+      "names": [
+        "02 / Rising triple spiral / thread 1 / right strand",
+        "02 / Rising triple spiral / thread 3 / left strand"
+      ],
+      "p": [
+        -9.192109824499134,
+        -281.9552555839953
+      ],
+      "clearance": 7.4896244127563705
+    },
+    {
+      "rails": [
+        7,
+        12
+      ],
+      "names": [
+        "02 / Rising triple spiral / thread 1 / centre strand",
+        "02 / Rising triple spiral / thread 3 / left strand"
+      ],
+      "p": [
+        -7.957061099159231,
+        -275.2515019093996
+      ],
+      "clearance": 7.674051801425698
+    },
+    {
+      "rails": [
+        8,
+        13
+      ],
+      "names": [
+        "02 / Rising triple spiral / thread 1 / right strand",
+        "02 / Rising triple spiral / thread 3 / centre strand"
+      ],
+      "p": [
+        -4.908574766082053,
+        -277.10692057143143
+      ],
+      "clearance": 7.684467466486012
+    },
+    {
+      "rails": [
+        24,
+        35
+      ],
+      "names": [
+        "04 / Overhand, lower loop / thread 2 / left strand",
+        "05 / Overhand, suspended return / thread 3 / right strand"
+      ],
+      "p": [
+        -186.09321926584073,
+        -504.905807742637
+      ],
+      "clearance": 9.991623394013684
+    },
+    {
+      "rails": [
+        24,
+        34
+      ],
+      "names": [
+        "04 / Overhand, lower loop / thread 2 / left strand",
+        "05 / Overhand, suspended return / thread 3 / centre strand"
+      ],
+      "p": [
+        -189.19208908911475,
+        -500.94883343373107
+      ],
+      "clearance": 10.146061559411969
+    },
+    {
+      "rails": [
+        25,
+        35
+      ],
+      "names": [
+        "04 / Overhand, lower loop / thread 2 / centre strand",
+        "05 / Overhand, suspended return / thread 3 / right strand"
+      ],
+      "p": [
+        -185.49726954535168,
+        -499.9003228660409
+      ],
+      "clearance": 10.18031681340273
+    },
+    {
+      "rails": [
+        24,
+        33
+      ],
+      "names": [
+        "04 / Overhand, lower loop / thread 2 / left strand",
+        "05 / Overhand, suspended return / thread 3 / left strand"
+      ],
+      "p": [
+        -192.3606804404998,
+        -496.231745883755
+      ],
+      "clearance": 10.312468010149303
+    },
+    {
+      "rails": [
+        25,
+        34
+      ],
+      "names": [
+        "04 / Overhand, lower loop / thread 2 / centre strand",
+        "05 / Overhand, suspended return / thread 3 / centre strand"
+      ],
+      "p": [
+        -188.66711649199536,
+        -495.45077965634636
+      ],
+      "clearance": 10.338018879021964
+    },
+    {
+      "rails": [
+        26,
+        35
+      ],
+      "names": [
+        "04 / Overhand, lower loop / thread 2 / right strand",
+        "05 / Overhand, suspended return / thread 3 / right strand"
+      ],
+      "p": [
+        -184.9705865946348,
+        -494.6219119272032
+      ],
+      "clearance": 10.3671084506758
+    },
+    {
+      "rails": [
+        25,
+        33
+      ],
+      "names": [
+        "04 / Overhand, lower loop / thread 2 / centre strand",
+        "05 / Overhand, suspended return / thread 3 / left strand"
+      ],
+      "p": [
+        -191.5560054539186,
+        -489.35614042709074
+      ],
+      "clearance": 10.562397191156498
+    },
+    {
+      "rails": [
+        26,
+        34
+      ],
+      "names": [
+        "04 / Overhand, lower loop / thread 2 / right strand",
+        "05 / Overhand, suspended return / thread 3 / centre strand"
+      ],
+      "p": [
+        -187.87843673724836,
+        -489.1107503345304
+      ],
+      "clearance": 10.579603616206473
+    },
+    {
+      "rails": [
+        26,
+        33
+      ],
+      "names": [
+        "04 / Overhand, lower loop / thread 2 / right strand",
+        "05 / Overhand, suspended return / thread 3 / left strand"
+      ],
+      "p": [
+        -189.5753262448729,
+        -481.67307980591323
+      ],
+      "clearance": 10.880706770983585
+    },
+    {
+      "rails": [
+        39,
+        41
+      ],
+      "names": [
+        "06 / Loom, first sweep / left strand",
+        "06 / Loom, first sweep / right strand"
+      ],
+      "p": [
+        -98.98464588955657,
+        -768.2483884505517
+      ],
+      "clearance": 12.947522187851908
+    },
+    {
+      "rails": [
+        42,
+        44
+      ],
+      "names": [
+        "07 / Loom, second sweep / left strand",
+        "07 / Loom, second sweep / right strand"
+      ],
+      "p": [
+        -143.509259066056,
+        -874.7155381054949
+      ],
+      "clearance": 12.966899835559436
+    },
+    {
+      "rails": [
+        39,
+        41
+      ],
+      "names": [
+        "06 / Loom, first sweep / left strand",
+        "06 / Loom, first sweep / right strand"
+      ],
+      "p": [
+        -95.8131112192167,
+        -736.1347171364214
+      ],
+      "clearance": 12.9688189994132
+    },
+    {
+      "rails": [
+        42,
+        44
+      ],
+      "names": [
+        "07 / Loom, second sweep / left strand",
+        "07 / Loom, second sweep / right strand"
+      ],
+      "p": [
+        -146.28691937116653,
+        -911.0486011433335
+      ],
+      "clearance": 12.99965657865618
+    },
+    {
+      "rails": [
+        49,
+        53
+      ],
+      "names": [
+        "08 / Falling blackwater coil / thread 2 / centre strand",
+        "08 / Falling blackwater coil / thread 3 / right strand"
+      ],
+      "p": [
+        -188.45963978616285,
+        -1074.7542960868882
+      ],
+      "clearance": 17.300107312589354
+    },
+    {
+      "rails": [
+        48,
+        52
+      ],
+      "names": [
+        "08 / Falling blackwater coil / thread 2 / left strand",
+        "08 / Falling blackwater coil / thread 3 / centre strand"
+      ],
+      "p": [
+        -185.56590094206945,
+        -1072.6714367226184
+      ],
+      "clearance": 17.317633449683957
+    },
+    {
+      "rails": [
+        50,
+        51
+      ],
+      "names": [
+        "08 / Falling blackwater coil / thread 2 / right strand",
+        "08 / Falling blackwater coil / thread 3 / left strand"
+      ],
+      "p": [
+        -188.4,
+        -1030.8532627737227
+      ],
+      "clearance": 17.583155717761564
+    },
+    {
+      "rails": [
+        48,
+        53
+      ],
+      "names": [
+        "08 / Falling blackwater coil / thread 2 / left strand",
+        "08 / Falling blackwater coil / thread 3 / right strand"
+      ],
+      "p": [
+        -191.5575954265512,
+        -1068.851844640525
+      ],
+      "clearance": 17.800631375327917
+    },
+    {
+      "rails": [
+        49,
+        51
+      ],
+      "names": [
+        "08 / Falling blackwater coil / thread 2 / centre strand",
+        "08 / Falling blackwater coil / thread 3 / left strand"
+      ],
+      "p": [
+        -188.39828868670446,
+        -1036.715448540582
+      ],
+      "clearance": 17.856648667047708
+    },
+    {
+      "rails": [
+        50,
+        52
+      ],
+      "names": [
+        "08 / Falling blackwater coil / thread 2 / right strand",
+        "08 / Falling blackwater coil / thread 3 / centre strand"
+      ],
+      "p": [
+        -191.99928718108328,
+        -1035.652206128921
+      ],
+      "clearance": 17.912163739600775
+    },
+    {
+      "rails": [
+        45,
+        50
+      ],
+      "names": [
+        "08 / Falling blackwater coil / thread 1 / left strand",
+        "08 / Falling blackwater coil / thread 2 / right strand"
+      ],
+      "p": [
+        -119.6,
+        -1027.3339621430155
+      ],
+      "clearance": 18.03259375691831
+    },
+    {
+      "rails": [
+        48,
+        51
+      ],
+      "names": [
+        "08 / Falling blackwater coil / thread 2 / left strand",
+        "08 / Falling blackwater coil / thread 3 / left strand"
+      ],
+      "p": [
+        -188.37391665407833,
+        -1042.2567658925323
+      ],
+      "clearance": 18.0481790646315
+    },
+    {
+      "rails": [
+        49,
+        52
+      ],
+      "names": [
+        "08 / Falling blackwater coil / thread 2 / centre strand",
+        "08 / Falling blackwater coil / thread 3 / centre strand"
+      ],
+      "p": [
+        -191.9780214734228,
+        -1041.3515955709795
+      ],
+      "clearance": 18.088713148180183
+    },
+    {
+      "rails": [
+        50,
+        53
+      ],
+      "names": [
+        "08 / Falling blackwater coil / thread 2 / right strand",
+        "08 / Falling blackwater coil / thread 3 / right strand"
+      ],
+      "p": [
+        -195.58174587672084,
+        -1040.5341394243512
+      ],
+      "clearance": 18.12594300093406
+    },
+    {
+      "rails": [
+        46,
+        53
+      ],
+      "names": [
+        "08 / Falling blackwater coil / thread 1 / centre strand",
+        "08 / Falling blackwater coil / thread 3 / right strand"
+      ],
+      "p": [
+        -162.60664127436303,
+        -1092.8727551845375
+      ],
+      "clearance": 18.126433750428202
+    },
+    {
+      "rails": [
+        45,
+        52
+      ],
+      "names": [
+        "08 / Falling blackwater coil / thread 1 / left strand",
+        "08 / Falling blackwater coil / thread 3 / centre strand"
+      ],
+      "p": [
+        -161.9414079747947,
+        -1089.3454186170732
+      ],
+      "clearance": 18.138635613808663
+    },
+    {
+      "rails": [
+        46,
+        53
+      ],
+      "names": [
+        "08 / Falling blackwater coil / thread 1 / centre strand",
+        "08 / Falling blackwater coil / thread 3 / right strand"
+      ],
+      "p": [
+        -154.23322152163246,
+        -1094.1751056983414
+      ],
+      "clearance": 18.23478949152922
+    },
+    {
+      "rails": [
+        48,
+        52
+      ],
+      "names": [
+        "08 / Falling blackwater coil / thread 2 / left strand",
+        "08 / Falling blackwater coil / thread 3 / centre strand"
+      ],
+      "p": [
+        -191.92756404288465,
+        -1046.5767843473461
+      ],
+      "clearance": 18.243024908183163
+    },
+    {
+      "rails": [
+        49,
+        53
+      ],
+      "names": [
+        "08 / Falling blackwater coil / thread 2 / centre strand",
+        "08 / Falling blackwater coil / thread 3 / right strand"
+      ],
+      "p": [
+        -195.530591854314,
+        -1045.9484785873271
+      ],
+      "clearance": 18.276540683870273
+    },
+    {
+      "rails": [
+        45,
+        52
+      ],
+      "names": [
+        "08 / Falling blackwater coil / thread 1 / left strand",
+        "08 / Falling blackwater coil / thread 3 / centre strand"
+      ],
+      "p": [
+        -153.80169075943772,
+        -1090.6436720692734
+      ],
+      "clearance": 18.30490261880048
+    },
+    {
+      "rails": [
+        48,
+        53
+      ],
+      "names": [
+        "08 / Falling blackwater coil / thread 2 / left strand",
+        "08 / Falling blackwater coil / thread 3 / right strand"
+      ],
+      "p": [
+        -195.37631993519537,
+        -1050.7692906573025
+      ],
+      "clearance": 18.393800969982056
+    },
+    {
+      "rails": [
+        45,
+        49
+      ],
+      "names": [
+        "08 / Falling blackwater coil / thread 1 / left strand",
+        "08 / Falling blackwater coil / thread 2 / centre strand"
+      ],
+      "p": [
+        -119.6,
+        -1031.517467396478
+      ],
+      "clearance": 18.562245121370772
+    },
+    {
+      "rails": [
+        46,
+        50
+      ],
+      "names": [
+        "08 / Falling blackwater coil / thread 1 / centre strand",
+        "08 / Falling blackwater coil / thread 2 / right strand"
+      ],
+      "p": [
+        -116,
+        -1030.208398544131
+      ],
+      "clearance": 18.69755777979982
+    },
+    {
+      "rails": [
+        47,
+        53
+      ],
+      "names": [
+        "08 / Falling blackwater coil / thread 1 / right strand",
+        "08 / Falling blackwater coil / thread 3 / right strand"
+      ],
+      "p": [
+        -147.27704114405526,
+        -1095.0925940426512
+      ],
+      "clearance": 18.958352594263772
+    },
+    {
+      "rails": [
+        46,
+        52
+      ],
+      "names": [
+        "08 / Falling blackwater coil / thread 1 / centre strand",
+        "08 / Falling blackwater coil / thread 3 / centre strand"
+      ],
+      "p": [
+        -147.72717653944412,
+        -1091.5644529823135
+      ],
+      "clearance": 19.044907231458527
+    },
+    {
+      "rails": [
+        45,
+        51
+      ],
+      "names": [
+        "08 / Falling blackwater coil / thread 1 / left strand",
+        "08 / Falling blackwater coil / thread 3 / left strand"
+      ],
+      "p": [
+        -148.19037336570074,
+        -1088.005196801471
+      ],
+      "clearance": 19.152675065415252
+    },
+    {
+      "rails": [
+        45,
+        48
+      ],
+      "names": [
+        "08 / Falling blackwater coil / thread 1 / left strand",
+        "08 / Falling blackwater coil / thread 2 / left strand"
+      ],
+      "p": [
+        -119.6015456090414,
+        -1036.7242838300049
+      ],
+      "clearance": 19.235416019499162
+    },
+    {
+      "rails": [
+        46,
+        49
+      ],
+      "names": [
+        "08 / Falling blackwater coil / thread 1 / centre strand",
+        "08 / Falling blackwater coil / thread 2 / centre strand"
+      ],
+      "p": [
+        -116.00116204139425,
+        -1036.260219545676
+      ],
+      "clearance": 19.33019662691949
+    },
+    {
+      "rails": [
+        47,
+        50
+      ],
+      "names": [
+        "08 / Falling blackwater coil / thread 1 / right strand",
+        "08 / Falling blackwater coil / thread 2 / right strand"
+      ],
+      "p": [
+        -112.40072125053793,
+        -1035.8402680282368
+      ],
+      "clearance": 19.405344035179617
+    },
+    {
+      "rails": [
+        47,
+        52
+      ],
+      "names": [
+        "08 / Falling blackwater coil / thread 1 / right strand",
+        "08 / Falling blackwater coil / thread 3 / centre strand"
+      ],
+      "p": [
+        -141.74090338607584,
+        -1092.4797711112712
+      ],
+      "clearance": 19.590346333941405
+    },
+    {
+      "rails": [
+        46,
+        51
+      ],
+      "names": [
+        "08 / Falling blackwater coil / thread 1 / centre strand",
+        "08 / Falling blackwater coil / thread 3 / left strand"
+      ],
+      "p": [
+        -142.6960118191847,
+        -1089.0143461497562
+      ],
+      "clearance": 19.67815073300474
+    },
+    {
+      "rails": [
+        47,
+        51
+      ],
+      "names": [
+        "08 / Falling blackwater coil / thread 1 / right strand",
+        "08 / Falling blackwater coil / thread 3 / left strand"
+      ],
+      "p": [
+        -136.88070069718418,
+        -1090.0850589394154
+      ],
+      "clearance": 19.941051992217712
+    },
+    {
+      "rails": [
+        47,
+        51
+      ],
+      "names": [
+        "08 / Falling blackwater coil / thread 1 / right strand",
+        "08 / Falling blackwater coil / thread 3 / left strand"
+      ],
+      "p": [
+        -121.9037849518134,
+        -1078.110542209385
+      ],
+      "clearance": 20.866803250125322
+    },
+    {
+      "rails": [
+        46,
+        51
+      ],
+      "names": [
+        "08 / Falling blackwater coil / thread 1 / centre strand",
+        "08 / Falling blackwater coil / thread 3 / left strand"
+      ],
+      "p": [
+        -121.47940545266324,
+        -1071.0368665151364
+      ],
+      "clearance": 21.35176691642716
+    },
+    {
+      "rails": [
+        47,
+        52
+      ],
+      "names": [
+        "08 / Falling blackwater coil / thread 1 / right strand",
+        "08 / Falling blackwater coil / thread 3 / centre strand"
+      ],
+      "p": [
+        -118.24991663945222,
+        -1072.5433391604538
+      ],
+      "clearance": 21.37131954390508
+    }
+  ],
+  "sections": [
+    {
+      "name": "01 / Three-needle weave / thread 1 / centre strand",
+      "length": 97.94601436471663,
+      "climb": 5.505000000000003
+    },
+    {
+      "name": "01 / Three-needle weave / thread 2 / centre strand",
+      "length": 91.77496225673332,
+      "climb": 0
+    },
+    {
+      "name": "02 / Rising triple spiral / thread 1 / centre strand",
+      "length": 145.08650356584707,
+      "climb": 3.0660000000000025
+    },
+    {
+      "name": "02 / Rising triple spiral / thread 2 / centre strand",
+      "length": 149.36975187468607,
+      "climb": 3.865000000000002
+    },
+    {
+      "name": "02 / Rising triple spiral / thread 3 / centre strand",
+      "length": 152.0151056766046,
+      "climb": 2.5260000000000034
+    },
+    {
+      "name": "03 / Crown switchback / thread 1 / centre strand",
+      "length": 145.24965190530796,
+      "climb": 6.215000000000003
+    },
+    {
+      "name": "03 / Crown switchback / thread 2 / centre strand",
+      "length": 148.89202207068962,
+      "climb": 0
+    },
+    {
+      "name": "04 / Overhand, lower loop / thread 1 / centre strand",
+      "length": 189.69526567630308,
+      "climb": 1.6360000000000028
+    },
+    {
+      "name": "04 / Overhand, lower loop / thread 2 / centre strand",
+      "length": 177.2799659799554,
+      "climb": 1.2999999999999972
+    },
+    {
+      "name": "05 / Overhand, suspended return / thread 1 / centre strand",
+      "length": 128.19980456922065,
+      "climb": 4.242000000000004
+    },
+    {
+      "name": "05 / Overhand, suspended return / thread 2 / centre strand",
+      "length": 151.6922694381925,
+      "climb": 5.124999999999993
+    },
+    {
+      "name": "05 / Overhand, suspended return / thread 3 / centre strand",
+      "length": 133.04409264870736,
+      "climb": 0
+    },
+    {
+      "name": "05 / Overhand, suspended return / thread 4 / centre strand",
+      "length": 149.8935782564629,
+      "climb": 0
+    },
+    {
+      "name": "06 / Loom, first sweep / centre strand",
+      "length": 140.48129691651587,
+      "climb": 0.10000000000000142
+    },
+    {
+      "name": "07 / Loom, second sweep / centre strand",
+      "length": 161.86958640504122,
+      "climb": 0
+    },
+    {
+      "name": "08 / Falling blackwater coil / thread 1 / centre strand",
+      "length": 156.7504843139694,
+      "climb": 0
+    },
+    {
+      "name": "08 / Falling blackwater coil / thread 2 / centre strand",
+      "length": 164.57300265807027,
+      "climb": 0
+    },
+    {
+      "name": "08 / Falling blackwater coil / thread 3 / centre strand",
+      "length": 143.74312072390015,
+      "climb": 0
+    },
+    {
+      "name": "09 / Last thread, outward braid / thread 1 / centre strand",
+      "length": 167.75069022310694,
+      "climb": 0.0470000000000006
+    },
+    {
+      "name": "09 / Last thread, outward braid / thread 2 / centre strand",
+      "length": 105.28326907025037,
+      "climb": 0
+    },
+    {
+      "name": "10 / Last thread, hanging needle / centre strand",
+      "length": 162.02622085915294,
+      "climb": 1.7609999999999992
+    }
+  ]
+}

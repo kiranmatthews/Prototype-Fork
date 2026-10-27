@@ -1,0 +1,102 @@
+{
+  "scope": "Full-render native-resolution editor overview; not traversal evidence.",
+  "pictures": [
+    {
+      "name": "whole-island-course",
+      "target": [
+        0,
+        210,
+        -1120
+      ],
+      "eye": [
+        1900,
+        1700,
+        950
+      ],
+      "viewport": [
+        2560,
+        1440
+      ],
+      "buffer": [
+        2560,
+        1440
+      ],
+      "native": true,
+      "rails": 48,
+      "paths": 48
+    },
+    {
+      "name": "first-chasm-eight-choices",
+      "target": [
+        25,
+        382,
+        -120
+      ],
+      "eye": [
+        410,
+        630,
+        250
+      ],
+      "viewport": [
+        2560,
+        1440
+      ],
+      "buffer": [
+        2560,
+        1440
+      ],
+      "native": true,
+      "rails": 48,
+      "paths": 48
+    },
+    {
+      "name": "first-chasm-side",
+      "target": [
+        25,
+        382,
+        -120
+      ],
+      "eye": [
+        520,
+        420,
+        -60
+      ],
+      "viewport": [
+        2560,
+        1440
+      ],
+      "buffer": [
+        2560,
+        1440
+      ],
+      "native": true,
+      "rails": 48,
+      "paths": 48
+    },
+    {
+      "name": "combo-threads-close",
+      "target": [
+        5,
+        390,
+        -132
+      ],
+      "eye": [
+        160,
+        485,
+        10
+      ],
+      "viewport": [
+        2560,
+        1440
+      ],
+      "buffer": [
+        2560,
+        1440
+      ],
+      "native": true,
+      "rails": 48,
+      "paths": 48
+    }
+  ],
+  "errors": []
+}

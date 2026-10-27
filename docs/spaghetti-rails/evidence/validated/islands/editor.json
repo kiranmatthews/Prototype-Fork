@@ -1,0 +1,40 @@
+{
+  "before": {
+    "rails": 48,
+    "checkpoints": 5,
+    "retries": 5,
+    "name": "1.2 / Widow’s overhand / thread 1",
+    "node": [
+      61.8,
+      -52.8,
+      14,
+      1.976
+    ],
+    "y": 422.876,
+    "radius": 14,
+    "grinds": 48,
+    "paths": 48
+  },
+  "changed": {
+    "node": [
+      61.8,
+      -52.8,
+      6,
+      3.225999999999999
+    ],
+    "previewChanged": true,
+    "routeChanged": true,
+    "retries": 5
+  },
+  "restored": {
+    "data": true,
+    "geometry": true
+  },
+  "playable": {
+    "id": "spaghetti-rails",
+    "rails": 48,
+    "retries": 5,
+    "active": true
+  },
+  "errors": []
+}

@@ -1,0 +1,68 @@
+{
+  "at": "2026-10-27T08:35:21.563Z",
+  "cases": 4,
+  "passed": 4,
+  "tuningUnchanged": true,
+  "results": [
+    {
+      "receiver": 14,
+      "fromLane": -1,
+      "toLane": 0,
+      "caughtSource": true,
+      "launched": true,
+      "frames": 107,
+      "caughtRail": 43,
+      "passed": true,
+      "position": [
+        -124.26577165345272,
+        62.383643200872484,
+        -822.7584790441664
+      ]
+    },
+    {
+      "receiver": 14,
+      "fromLane": 0,
+      "toLane": -1,
+      "caughtSource": true,
+      "launched": true,
+      "frames": 99,
+      "caughtRail": 42,
+      "passed": true,
+      "position": [
+        -127.43999999999993,
+        62.383643200872484,
+        -825.5026171015274
+      ]
+    },
+    {
+      "receiver": 14,
+      "fromLane": 0,
+      "toLane": 1,
+      "caughtSource": true,
+      "launched": true,
+      "frames": 99,
+      "caughtRail": 44,
+      "passed": true,
+      "position": [
+        -120.56000000000007,
+        62.383643200872484,
+        -825.5026171015274
+      ]
+    },
+    {
+      "receiver": 14,
+      "fromLane": 1,
+      "toLane": 0,
+      "caughtSource": true,
+      "launched": true,
+      "frames": 93,
+      "caughtRail": 43,
+      "passed": true,
+      "position": [
+        -123.66911825808792,
+        62.383643200872484,
+        -828.4464399226154
+      ]
+    }
+  ]
+}
