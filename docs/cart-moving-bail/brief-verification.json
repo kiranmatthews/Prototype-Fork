@@ -1,0 +1,42 @@
+{
+  "passed": true,
+  "brief": "Head-first moving kart bail reusing the full existing skateboard-abandon landing animation.",
+  "sourceClip": "player.roll-land",
+  "motionCases": 9,
+  "productionVisualCases": 5,
+  "maxLoadedSoleErrorMetres": 0.049923309668067906,
+  "focusedChecks": {
+    "cart-mayhem": "PASS rally controls, accumulating damage, ejection, foot jump/movement, two-way theft, weapon spreads, solo restart and cleanup",
+    "cart-interactions": "PASS {\"passed\":true,\"onFootOnly\":true,\"timedOwnership\":true,\"reservation\":true,\"fullSize\":true,\"restart\":true,\"wreckCancellation\":true,\"pullContacts\":{\"hands\":[0.00015430769350317276,0.006245998981453791],\"feet\":[0.0018450016654931996,0.0018450016654922052]}}",
+    "cart-run-motion": "PASS {\"passed\":true,\"source\":\"Jog_Fwd_Loop\",\"samples\":80,\"maxJointErrorRadians\":4.2146848510894035e-8,\"liveEdits\":true,\"fallback\":true,\"fixedCadence\":true,\"gameplayClockUnchanged\":true,\"fullSize\":true}"
+  },
+  "fullRace": {
+    "allFinished": 8,
+    "rangeSeconds": [
+      93.2,
+      166.73333333335816
+    ],
+    "playerFalls": 0,
+    "rivalRecoveredFalls": 1,
+    "errors": [],
+    "testedBeforeFinalSoleSocketCorrection": true
+  },
+  "build": {
+    "typecheck": "passed",
+    "viteAndAssetPreparation": "passed",
+    "releaseSizeBytes": 999461692,
+    "limitBytes": 1000000000,
+    "offlineVersion": "b876344ade14fc32d050",
+    "productionStamp": "Codex/sol fork \u00b7 build 10-27 02:37 UTC"
+  },
+  "sourceSHA256": {
+    "src/golf-cart/bailMotion.ts": "e7e9a5c86eb5116f4dc8ac3aea18c34318a397ff85e61d5797e2f5c337acbadd",
+    "src/golf-cart/fleet.ts": "d271b8f00abeeeeeddc1d57888e68dacba439651d97194cb98b06235ad4b5678",
+    "src/golf-cart/interactionMotion.ts": "f19d1466f7b52b7273dbeaa7f49ebc7f77217b9a940d6f356fe67b065432edbe",
+    "src/golf-cart/race.ts": "c35214d24e046b48e013c9bb7adb1e8858d209b3ae1dd614e8d4aa29bedb4e0f",
+    "tools/test-cart-bail-motion.mjs": "28a2f287aea21f910671da3df88f4028670f2ddcc81ab8d232842b10314face0",
+    "tools/cart-bail-browser.mjs": "499b90577d058661e3ee5d67c67d177fbc15f902cd5461e18a77408fc81b04d7",
+    "tools/test-cart-mayhem.mjs": "bf80be65a32bbe2373f855093a30c5543be8b3129b3c7a130f909392d431ed8c"
+  },
+  "publishing": "Local immutable handoff to release coordinator; no push by this feature chat."
+}

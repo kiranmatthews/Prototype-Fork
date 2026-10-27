@@ -70,12 +70,7 @@ export class GolfCartFleet {
   present(dt:number,poses?:readonly FleetPose[]){
     this.poses=poses;
     this.root.updateWorldMatrix(true,false);this.inverseRoot.copy(this.root.matrixWorld).invert();
-    this.models.forEach((m,i)=>{if(!this.visible[i])return;const c=this.physics.carts[i],p=poses?.[i]??c,angle=c.tumbleAngle;
-      // Rotate the whole vehicle, wheels and driver around the rounded support envelope.
-      const lift=Math.max(1-Math.cos(angle),.96*Math.abs(Math.sin(angle))+(CART_DIMENSIONS.height+this.kit.cabinRise)*Math.max(0,-Math.cos(angle)));
-      m.root.position.set(p.x,p.y+lift*this.physics.scale,p.z);m.root.rotation.set(0,p.yaw,angle,'YXZ');m.update({time:this.physics.time,steer:c.steer,roll:c.roll,pitch:c.pitch,impact:c.impact,speed:c.speed,wheelTravel:c.travel/this.physics.scale,suspension:c.wheels,landingCompression:c.landingCompression,damage:c.damage,health:c.health});
-      m.root.updateWorldMatrix(false,true);
-    });
+    this.models.forEach((_,i)=>{if(this.visible[i])this.presentCart(i,poses?.[i]);});
     for(const {mesh,sources,wear} of this.batches){let count=0,colorsChanged=false,wearChanged=false;
       for(const {mesh:source,cart} of sources){if(!this.visible[cart])continue;
         let visible=true;for(let o:THREE.Object3D|null=source;o&&o!==this.root;o=o.parent)if(!o.visible){visible=false;break;}
@@ -91,6 +86,14 @@ export class GolfCartFleet {
       if(wear&&wearChanged)wear.needsUpdate=true;mesh.count=count;mesh.visible=count>0;if(count)mesh.instanceMatrix.needsUpdate=true;if(colorsChanged&&mesh.instanceColor)mesh.instanceColor.needsUpdate=true;
     }
     this.updateChips(dt);
+  }
+  /** Interactions need current seat sockets even when rendering culled the kart. */
+  presentCart(index:number,pose?:FleetPose){
+    const m=this.models[index],c=this.physics.carts[index],p=pose??c,angle=c.tumbleAngle;
+    // Rotate the whole vehicle, wheels and driver around the rounded support envelope.
+    const lift=Math.max(1-Math.cos(angle),.96*Math.abs(Math.sin(angle))+(CART_DIMENSIONS.height+this.kit.cabinRise)*Math.max(0,-Math.cos(angle)));
+    m.root.position.set(p.x,p.y+lift*this.physics.scale,p.z);m.root.rotation.set(0,p.yaw,angle,'YXZ');m.update({time:this.physics.time,steer:c.steer,roll:c.roll,pitch:c.pitch,impact:c.impact,speed:c.speed,wheelTravel:c.travel/this.physics.scale,suspension:c.wheels,landingCompression:c.landingCompression,damage:c.damage,health:c.health});
+    m.root.updateWorldMatrix(false,true);
   }
   private updateChips(dt:number){
     let alive=0;

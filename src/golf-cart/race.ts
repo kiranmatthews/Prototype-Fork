@@ -12,6 +12,7 @@ import { puffs } from '../puffs';
 import { sfx } from '../audio';
 import { RallyDriver } from './rallyDriver';
 import { CartInteractionActor, CART_INTERACTION_TIMING } from './interactionMotion';
+import { CartBailMotion,CART_BAIL } from './bailMotion';
 import { CartRaceAudio } from './raceAudio';
 import { StadiumCrowd } from './stadiumCrowd';
 import { CartMud } from './cartMud';
@@ -22,7 +23,7 @@ interface Racer {
   id:number;player:Player;progress:number;anchor:THREE.Vector3;anchorProgress:number;
   finish:number|null;falls:number;recovery:number;boost:number;knockGrace:number;star:number;velocity:THREE.Vector3;boxes:Set<Crate>;
 }
-interface CartInteraction {kind:'exit'|'enter'|'steal';id:number;cart:number;victim:number;age:number;duration:number;side:number;actor:CartInteractionActor;passenger:CartInteractionActor|null;foot:THREE.Vector3;from:THREE.Vector3;victimFoot:THREE.Vector3;released:boolean;approach:number;path:THREE.Vector3[];pathLength:number}
+interface CartInteraction {kind:'exit'|'enter'|'steal';id:number;cart:number;victim:number;age:number;duration:number;side:number;actor:CartInteractionActor;passenger:CartInteractionActor|null;foot:THREE.Vector3;from:THREE.Vector3;victimFoot:THREE.Vector3;released:boolean;approach:number;path:THREE.Vector3[];pathLength:number;bail?:CartBailMotion}
 const clamp=THREE.MathUtils.clamp;
 
 /** The cart solver owns vehicle movement; ejected racers use the normal foot motor.
@@ -188,7 +189,7 @@ export class GolfCartRace {
   }
   private detachDriver(id:number,index:number){this.fleet.setDriver(index,null);this.nativeDrivers[id]=null;this.thrustTime[id]=0;this.controls[id].reset();}
   private beginInteraction(id:number,index:number,kind:CartInteraction['kind']){
-    this.present(1);
+    this.present(1);this.fleet.presentCart(index);
     const c=this.fleet.physics.carts[index],p=this.racers[id].player,victim=kind==='steal'?this.driverForCart[index]:-1;
     const choices=[-1,1].map(side=>({side,at:this.exitPoint(index,side)}));
     const safe=choices.filter(q=>this.ground(q.at.x,q.at.z).supported&&!this.level.walls.some(w=>w.containsPoint(q.at.clone().add(new THREE.Vector3(0,.8,0)))));
@@ -205,8 +206,16 @@ export class GolfCartRace {
     if(kind==='exit')this.detachDriver(id,index);
     if(victim>=0)this.detachDriver(victim,index);
     const actor=new CartInteractionActor(p,this.fleet.root),passenger=victim>=0?new CartInteractionActor(this.racers[victim].player,this.fleet.root):null;
-    const duration=CART_INTERACTION_TIMING[kind]+approach;
-    this.interactions.push({kind,id,cart:index,victim,age:0,duration,side:choice.side,actor,passenger,foot:choice.at,from:p.pos.clone(),victimFoot:this.exitPoint(index,choice.side,1.8),released:false,approach,path,pathLength});
+    const movingExit=kind==='exit'&&(Math.hypot(c.vx,c.vz)>=CART_BAIL.minSpeed||!c.grounded);
+    const duration=movingExit?CART_BAIL.maxDuration:CART_INTERACTION_TIMING[kind]+approach;
+    const action:CartInteraction={kind,id,cart:index,victim,age:0,duration,side:choice.side,actor,passenger,foot:choice.at,from:p.pos.clone(),victimFoot:this.exitPoint(index,choice.side,1.8),released:false,approach,path,pathLength};
+    if(movingExit){
+      actor.present('exit',0,this.fleet.models[index],choice.at,choice.side);actor.beginBail();
+      action.bail=new CartBailMotion(actor.groundPosition,c,choice.side);
+      // Release the seat at launch; a later wreck cannot pull the airborne racer back.
+      this.cartForRacer[id]=-1;this.driverForCart[index]=-1;
+    }
+    this.interactions.push(action);
     this.locked[index]=duration+1.5;this.actionCooldown[id]=duration+.25;this.racers[id].knockGrace=duration+.5;
     if(victim>=0){this.actionCooldown[victim]=duration+.8;this.racers[victim].knockGrace=duration+.5;}
     this.presentInteractions(true);return true;
@@ -234,7 +243,21 @@ export class GolfCartRace {
     // Only active interactions need a fixed-step pose; ordinary driving remains render-interpolated.
     this.fleet.present(0);
     for(const a of [...this.interactions]){
-      const c=this.fleet.physics.carts[a.cart];
+      const c=this.fleet.physics.carts[a.cart];this.fleet.presentCart(a.cart);
+      if(a.bail){
+        const b=a.bail;a.age+=dt;const hit=b.step(dt,(x,z)=>this.ground(x,z),this.level.walls);
+        if(hit){const gain=a.id===0?1:.3*Math.max(0,1-b.position.distanceTo(this.racers[0].player.pos)/55)**2;
+          sfx.withGain(gain,()=>sfx.play('kartLanding',hit===1?.32:.16,hit===1?1.65:1.95),a.id?'race-rivals':'');
+          puffs.burst('dust',b.position.x,b.position.y+.1,b.position.z,{count:hit===1?7:3,strength:hit===1?.65:.3});
+        }
+        this.presentInteraction(a,true);
+        if(b.phase!=='done'&&a.age<a.duration&&b.position.y>this.level.killY)continue;
+        a.actor.dispose();this.interactions=this.interactions.filter(other=>other!==a);this.putOnFoot(a.id,a.cart,b.position,false);
+        const p=this.racers[a.id].player,speed=Math.hypot(b.velocity.x,b.velocity.z);
+        if(speed>.01)p.applyRaceImpulse(this.point.copy(b.velocity).setY(0),Math.min(9,speed));
+        if(!b.grounded){p.pos.copy(b.position);p.grounded=false;p.state='air';p.vVel=b.velocity.y;}
+        p.snapRenderInterpolation();this.locked[a.cart]=Math.min(this.locked[a.cart],1.5);this.stats.exits++;continue;
+      }
       if(this.burning[a.cart]||c.health<=0||c.tumbling){this.cancelInteraction(a);if(a.kind==='exit'&&c.tumbling&&c.health>0)this.exit(a.id,true);continue;}
       a.age=Math.min(a.duration,a.age+dt);const delta=this.exitPoint(a.cart,a.side).sub(a.foot);a.foot.add(delta);
       if(a.approach){for(let i=1;i<a.path.length;i++)a.path[i].add(delta);a.pathLength=0;for(let i=1;i<a.path.length;i++)a.pathLength+=a.path[i].distanceTo(a.path[i-1]);}
@@ -254,6 +277,11 @@ export class GolfCartRace {
     }
   }
   private presentInteraction(a:CartInteraction,updatePosition=false){
+    if(a.bail){
+      a.actor.presentBail(a.bail);
+      if(updatePosition){const p=this.racers[a.id].player;p.pos.copy(a.bail.position);p.grounded=a.bail.grounded;p.state=p.grounded?'ride':'air';p.vVel=a.bail.velocity.y;}
+      return;
+    }
     const model=this.fleet.models[a.cart],age=Math.max(0,a.age-a.approach);
     if(a.age<a.approach){
       let distance=a.age/a.approach*a.pathLength;const at=a.path[0].clone();let from=a.path[0];
@@ -276,6 +304,7 @@ export class GolfCartRace {
   private exit(id:number,thrown:boolean){
     const index=this.cartForRacer[id];if(index<0)return;
     const c=this.fleet.physics.carts[index],r=this.racers[id],p=r.player;
+    if((Math.hypot(c.vx,c.vz)>=CART_BAIL.minSpeed||!c.grounded)&&this.beginInteraction(id,index,'exit')){if(thrown)this.stats.ejections++;return;}
     this.cartForRacer[id]=-1;this.driverForCart[index]=-1;this.fleet.setDriver(index,null);this.nativeDrivers[id]=null;this.thrustTime[id]=0;this.controls[id].reset();this.actionCooldown[id]=1.1;
     const forward=new THREE.Vector3(-Math.sin(c.yaw),0,-Math.cos(c.yaw));
     let at=new THREE.Vector3(c.x,c.y+.25,c.z);
@@ -292,7 +321,7 @@ export class GolfCartRace {
   private wreck(index:number){
     if(this.burning[index])return;
     const c=this.fleet.physics.carts[index],owner=this.driverForCart[index];
-    for(const a of [...this.interactions])if(a.cart===index)this.cancelInteraction(a);
+    for(const a of [...this.interactions])if(a.cart===index&&!a.bail)this.cancelInteraction(a);
     this.burning[index]=true;c.health=0;this.stats.wrecks++;
     this.fleet.models[index].setScorched(true);
     if(owner>=0){this.exit(owner,true);if(!owner)this.announce('KART TOAST! RUN. STEAL. REPEAT.');}
@@ -439,6 +468,7 @@ export class GolfCartRace {
         const owner=this.driverForCart[index],r=owner>=0?this.racers[owner]:null;
         let control:CartInput=owner>=0?controls[owner]:{...NO_CART_INPUT,brake:1};
         if(!r||this.reserved(index)||r.finish!==null||this.stun[index]>0||this.burning[index])control={...NO_CART_INPUT,brake:1};
+        if(!this.burning[index]&&this.interactions.some(a=>a.cart===index&&a.bail))control={...NO_CART_INPUT};
         physics.inputs[index]=control;
         if(r&&!this.reserved(index)&&r.boost>0&&c.grounded&&r.finish===null&&!this.burning[index]){const gain=20/120;c.vx-=Math.sin(c.yaw)*gain;c.vz-=Math.cos(c.yaw)*gain;}
       }

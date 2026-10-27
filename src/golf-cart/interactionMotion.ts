@@ -4,9 +4,12 @@ import { characterElasticityAmplitudes, ELASTIC_LENGTH_CONTROLS } from '../anima
 import { solveTwoBoneIk } from '../animation/ik';
 import {
   RigBinding, createPlayerStarterClips, clipTimeAt, sampleComposedClip,
-  createProceduralMotionContext, blendPoses, type AnimationClip,
+  createProceduralMotionContext, blendPoses, type AnimationClip, type PoseBuffer,
 } from '../animation';
 import type { GolfCartModel } from './model';
+import { CharacterInteractionBounds } from '../character/interactionBounds';
+import { ROLL_LANDING_CLIP_ID,ROLL_LANDING_DURATION,ROLL_RUN_BLEND_START } from '../animation/rollLanding';
+import type { CartBailMotion } from './bailMotion';
 
 export const CART_INTERACTION_TIMING={exit:.95,enter:1.0,steal:1.85,pull:.88};
 export const CART_INTERACTION_ELASTICITY={step:characterElasticityAmplitudes('climb'),pull:characterElasticityAmplitudes('rope-release'),settle:characterElasticityAmplitudes('land')};
@@ -23,6 +26,9 @@ export class CartInteractionActor {
   private readonly rig;
   private readonly binding:RigBinding;
   private locomotionClips:AnimationClip[]|null=null;
+  private bailStart:PoseBuffer|null=null;private bailOrientation=new THREE.Quaternion();
+  private readonly bailSurface=new CharacterInteractionBounds();
+  private readonly bailFoot=new THREE.Vector3();private bailFootPlanted=false;
   readonly locomotion={clipId:'player.run',seconds:0,weight:0};
   private readonly limbPose=Array.from({length:6},()=>new THREE.Quaternion());
   private readonly parent:THREE.Object3D;
@@ -47,6 +53,50 @@ export class CartInteractionActor {
     this.root.name='Animated kart interaction';scene.add(this.root);this.root.add(body);player.resetRenderInterpolation();
   }
   private reset(){for(const joint of this.rig.joints){joint.node.position.fromArray(joint.rest.position);joint.node.quaternion.fromArray(joint.rest.quaternion);joint.node.scale.fromArray(joint.rest.scale);}}
+  private sample(id:string,seconds:number,grounded=true){
+    const clip=this.player.authoredClip(id)??(this.locomotionClips??=createPlayerStarterClips(this.binding.definition)).find(c=>c.id===id)!;
+    return sampleComposedClip(clip,clipTimeAt(clip,seconds),createProceduralMotionContext({normalizedSpeed:1,grounded,inputs:{locomotionWalkBlend:0}}));
+  }
+  beginBail(){this.bailStart=this.binding.capturePose();this.bailOrientation.copy(this.root.quaternion);}
+  presentBail(b:CartBailMotion){
+    if(this.disposed)return;
+    const progress=b.progress,seconds=progress*ROLL_LANDING_DURATION;
+    const recover=ease(ROLL_RUN_BLEND_START,.96,progress);
+    // The complete board-abandon shoulder-roll clip owns root rotation,
+    // tuck, shoulder contact, foot plant and rebound. Start its catch in air
+    // so the head leads the leap, then continue the same clip on contact.
+    let pose=this.sample(ROLL_LANDING_CLIP_ID,seconds,b.grounded);
+    const runSeconds=Math.max(0,progress-ROLL_RUN_BLEND_START)*ROLL_LANDING_DURATION;
+    if(recover)pose=blendPoses(pose,this.sample('player.run',runSeconds),recover);
+    if(this.bailStart)pose=blendPoses(this.bailStart,pose,ease(0,.075,b.age));
+    const body=this.player.vehicleVisualRoot;
+    this.player.presentVehicleDriver(({applyDeformations})=>{
+      this.reset();body.position.set(0,-this.height,0);body.rotation.set(0,0,0);this.binding.applyPose(pose,{resetUnspecified:false});
+      applyDeformations(Object.fromEntries(ELASTIC_LENGTH_CONTROLS.map(([key])=>[key,pose.scalars[key]??1])));
+    });
+    this.root.position.copy(b.position);this.root.position.y+=this.standingHeight;
+    const yaw=Math.atan2(b.velocity.x,b.velocity.z);
+    this.orientation.setFromAxisAngle(UP,yaw);this.root.quaternion.copy(this.bailOrientation).slerp(this.orientation,ease(0,.12,b.age));
+    this.groundPosition.copy(b.position);Object.assign(this.locomotion,{clipId:recover?'player.run':ROLL_LANDING_CLIP_ID,seconds:recover?runSeconds:seconds,weight:recover});
+    this.contacts.hands.fill(0);this.contacts.feet.fill(0);this.root.updateWorldMatrix(true,true);
+    const rider=this.rig.jointsById.get('root')!.node;
+    const support=()=>{this.root.updateMatrixWorld(true);return this.bailSurface.sampledPlaneDistance(rider,UP,b.position);};
+    const clearance=support();
+    if(Number.isFinite(clearance))this.root.position.y+=(.025-clearance)*(1-recover)*ease(0,.10,b.age);
+    this.root.updateWorldMatrix(true,true);
+    // Keep the source roll's trailing-foot contact fixed while its body
+    // travels over it, after independent segment elasticity has been applied.
+    if(b.grounded&&progress>=.62&&progress<=.76){
+      const leg=this.rig.jointsById.get('hipRight')!.node,knee=this.rig.jointsById.get('kneeRight')!.node,ankle=this.rig.jointsById.get('ankleRight')!.node;
+      const sole=ankle.getObjectByName('socket-foot-right')??ankle;
+      if(!this.bailFootPlanted){sole.getWorldPosition(this.bailFoot);this.bailFoot.y=b.position.y+.025;this.bailFootPlanted=true;}
+      leg.getWorldPosition(this.pole);this.pole.add(this.point.set(.4,.1,.2).applyAxisAngle(UP,yaw));
+      solveTwoBoneIk({root:leg,mid:knee,end:ankle,effector:sole,target:this.bailFoot,pole:this.pole,weight:ease(.62,.645,progress)*(1-ease(.735,.76,progress)),accountForParentScale:true,tolerance:.002});
+      this.contacts.feet[1]=sole.getWorldPosition(this.point).distanceTo(this.bailFoot);
+      this.root.updateWorldMatrix(true,true);const gap=support();if(Number.isFinite(gap)&&gap<.006)this.root.position.y+=.006-gap;
+    }
+    body.updateWorldMatrix(true,true);
+  }
   present(mode:CartMotion,t:number,cart:GolfCartModel,foot:THREE.Vector3,side:number,from=foot,victim?:CartInteractionActor,seconds?:number){
     if(this.disposed)return;t=THREE.MathUtils.clamp(t,0,1);
     const body=this.player.vehicleVisualRoot,yaw=cart.root.rotation.y,running=mode==='run',runYaw=Math.atan2(foot.x-from.x,foot.z-from.z),exit=mode==='exit'||mode==='enter',u=mode==='enter'?1-t:t;
@@ -56,16 +106,10 @@ export class CartInteractionActor {
     const load=Math.sin(Math.PI*t),rebound=Math.sin(Math.PI*2*t)*load;
     const runWeight=running?1:exit?ease(.40,.78,u):0;
     const elapsed=seconds??t*(mode==='exit'?CART_INTERACTION_TIMING.exit:CART_INTERACTION_TIMING.enter);
-    const motion=createProceduralMotionContext({normalizedSpeed:1,grounded:true,inputs:{locomotionWalkBlend:0}});
     // Reuse the editable run, including its authored tempo and segment elasticity.
-    // Rivals without a live animation document use the same starter clips.
-    const sample=(id:string)=>{
-      const clip=this.player.authoredClip(id)??
-        (this.locomotionClips??=createPlayerStarterClips(this.binding.definition)).find(c=>c.id===id)!;
-      return sampleComposedClip(clip,clipTimeAt(clip,elapsed),motion);
-    };
+    const sample=(id:string)=>this.sample(id,elapsed);
     const runPose=runWeight?running?sample('player.run'):blendPoses(sample('player.run'),sample('player.idle'),ease(.86,1,u)):null;
-    Object.assign(this.locomotion,{seconds:elapsed,weight:runWeight});
+    Object.assign(this.locomotion,{clipId:'player.run',seconds:elapsed,weight:runWeight});
     const profile=mode==='pull'||mode==='yanked'?CART_INTERACTION_ELASTICITY.pull:CART_INTERACTION_ELASTICITY.step;
     this.player.presentVehicleDriver(({applyDeformations})=>{
       this.reset();body.position.set(0,-this.height,0);body.rotation.set(0,0,0);

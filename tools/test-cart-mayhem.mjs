@@ -48,7 +48,7 @@ await withBlockworksRuntime(async r=>{
  assert.equal(race.riders[0].item,'mushroom');assert.equal(race.riders[1].item,'shield');assert.equal(carts.stats.steals,1);
  tick({grindHeld:true},30);assert.equal(carts.stats.steals,1,'holding Triangle cannot repeat theft');
  const vehicle=carts.cartForRacer[0];carts.fleet.physics.carts[vehicle].health=.1;race.riders[0].knockGrace=0;race.riders[0].shield=0;
- carts.hit(0,undefined,.4);assert.equal(carts.burning[vehicle],true);assert.equal(carts.cartForRacer[0],-1);assert.equal(carts.driverForCart[vehicle],-1);assert.equal(r.p.group.visible,true);
+ carts.hit(0,undefined,.4);assert.equal(carts.burning[vehicle],true);assert.equal(carts.cartForRacer[0],-1);assert.equal(carts.driverForCart[vehicle],-1);for(let body=r.p.vehicleVisualRoot;body;body=body.parent)assert.equal(body.visible,true,'the ejected racer remains visible during a borrowed bailout pose');
  assert.equal(carts.nearest(0)===vehicle,false,'burning wreck cannot be stolen');
  tick({},360);const footStart=r.p.pos.clone();tick({moveY:1},90);
  assert.ok(r.p.pos.distanceTo(footStart)>3,'ejected player continues using the production foot motor');assert.equal(r.p.boardRolling,false);
