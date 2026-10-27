@@ -178,7 +178,7 @@ export class RaceHud {
     const railControls=this.element.querySelector<HTMLElement>('[data-rail-controls]');
     if(railControls)setPromptText(railControls,(s.railChoices?'Choose your thread on each platform. ':'')+'Hold {jump}; release at amber marks. Press {grind} again to catch. {left}{right} Balance / aim.');
     const controls=this.element.querySelector<HTMLElement>('[data-cart-controls]');
-    if(controls){setPromptText(controls,'Hold {jump} Accelerate · {up}{down}{left}{right} Steer · {grab} Brake · {transfer} Drift · {spin} Flame thrusters · {grind} Steal / bail · {inventory} Weapon');const note=document.createElement('p');setPromptText(note,'Dents stick. Engines burn. On foot, hold {jump} + a direction to skate. Grab a green loaner or steal a ride.');controls.after(note);}
+    if(controls){setPromptText(controls,'Hold {jump} Accelerate · {up}{down}{left}{right} Steer · {grab} Brake · {transfer} Drift · {spin} Flame thrusters · {grind} Steal / bail · {inventory} Weapon');const note=document.createElement('p');setPromptText(note,'Dents stick. Engines burn. On foot, hold {jump} + a direction to skate. Green loaners parachute in. Grab one or steal a ride.');controls.after(note);}
     this.element.setAttribute('aria-label',s.vehicle?'Golf cart race':'Skate race');
     this.surface.invalidate();
   }

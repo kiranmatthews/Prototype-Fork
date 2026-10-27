@@ -1,0 +1,2677 @@
+{
+  "passed": true,
+  "full": false,
+  "stamp": "Codex/sol fork · build 10-27 10:56 UTC",
+  "opening": {
+    "count": 1,
+    "delivered": 12,
+    "landed": 12,
+    "active": 0,
+    "health": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ]
+  },
+  "airborne": {
+    "hud": {
+      "onFoot": true,
+      "actionReady": false,
+      "bearing": -0.5688185147013239,
+      "target": "LOANER INCOMING",
+      "distance": 19,
+      "notice": "LOOK UP! LOANER INCOMING"
+    },
+    "canTake": false,
+    "height": 15.916666666666668
+  },
+  "delivery": {
+    "target": 1,
+    "dispatched": 1,
+    "landed": 1,
+    "frames": [
+      {
+        "age": 0.016666666666666666,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 15.96166666666667,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 0.03333333333333333,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 15.916666666666668,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 0.05,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 15.865000000000006,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 0.06666666666666667,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 15.806666666666668,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 0.08333333333333333,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 15.74166666666667,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 0.09999999999999999,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 15.670000000000005,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 0.11666666666666665,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 15.591666666666672,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 0.13333333333333333,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 15.506666666666671,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 0.15,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 15.415000000000003,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 0.16666666666666666,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 15.316666666666674,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 0.18333333333333332,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 15.21166666666667,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 0.19999999999999998,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 15.105,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 0.21666666666666665,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 14.998333333333331,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 0.2333333333333333,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 14.891666666666662,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 0.24999999999999997,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 14.784999999999993,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 0.26666666666666666,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 14.678333333333324,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 0.2833333333333333,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 14.571666666666655,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 0.3,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 14.464999999999986,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 0.31666666666666665,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 14.358333333333317,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 0.3333333333333333,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 14.251666666666647,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 0.35,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 14.144999999999978,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 0.36666666666666664,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 14.03833333333331,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 0.3833333333333333,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 13.93166666666664,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 0.39999999999999997,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 13.82499999999997,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 0.41666666666666663,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 13.718333333333302,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 0.4333333333333333,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 13.611666666666633,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 0.44999999999999996,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 13.504999999999963,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 0.4666666666666666,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 13.398333333333294,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 0.4833333333333333,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 13.291666666666625,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 0.49999999999999994,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 13.184999999999956,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 0.5166666666666666,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 13.078333333333287,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 0.5333333333333333,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 12.971666666666618,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 0.55,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 12.864999999999949,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 0.5666666666666668,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 12.75833333333328,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 0.5833333333333335,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 12.65166666666661,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 0.6000000000000002,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 12.544999999999941,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 0.6166666666666669,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 12.438333333333272,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 0.6333333333333336,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 12.331666666666603,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 0.6500000000000004,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 12.224999999999934,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 0.6666666666666671,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 12.118333333333265,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 0.6833333333333338,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 12.011666666666596,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 0.7000000000000005,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 11.904999999999927,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 0.7166666666666672,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 11.798333333333257,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 0.733333333333334,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 11.691666666666588,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 0.7500000000000007,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 11.58499999999992,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 0.7666666666666674,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 11.47833333333325,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 0.7833333333333341,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 11.37166666666658,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 0.8000000000000008,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 11.264999999999912,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 0.8166666666666675,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 11.158333333333243,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 0.8333333333333343,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 11.051666666666573,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 0.850000000000001,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 10.944999999999904,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 0.8666666666666677,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 10.838333333333235,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 0.8833333333333344,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 10.731666666666566,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 0.9000000000000011,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 10.624999999999897,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 0.9166666666666679,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 10.518333333333228,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 0.9333333333333346,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 10.411666666666559,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 0.9500000000000013,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 10.30499999999989,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 0.966666666666668,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 10.19833333333322,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 0.9833333333333347,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 10.091666666666551,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 1.0000000000000013,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 9.984999999999882,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 1.016666666666668,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 9.878333333333213,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 1.0333333333333345,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 9.771666666666544,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 1.0500000000000012,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 9.664999999999875,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 1.0666666666666678,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 9.558333333333206,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 1.0833333333333344,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 9.451666666666537,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 1.100000000000001,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 9.344999999999867,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 1.1166666666666676,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 9.238333333333198,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 1.1333333333333342,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 9.13166666666653,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 1.1500000000000008,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 9.02499999999986,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 1.1666666666666674,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 8.918333333333191,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 1.183333333333334,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 8.811666666666522,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 1.2000000000000006,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 8.704999999999853,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 1.2166666666666672,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 8.598333333333184,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 1.2333333333333338,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 8.491666666666514,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 1.2500000000000004,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 8.384999999999845,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 1.266666666666667,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 8.278333333333176,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 1.2833333333333337,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 8.171666666666507,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 1.3000000000000003,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 8.064999999999838,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 1.3166666666666669,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 7.958333333333169,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 1.3333333333333335,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 7.8516666666665,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 1.35,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 7.7449999999998305,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 1.3666666666666667,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 7.638333333333161,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 1.3833333333333333,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 7.531666666666492,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 1.4,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 7.424999999999823,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 1.4166666666666665,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 7.318333333333154,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 1.4333333333333331,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 7.211666666666485,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 1.4499999999999997,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 7.104999999999816,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 1.4666666666666663,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 6.9983333333331466,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 1.483333333333333,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 6.891666666666477,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 1.4999999999999996,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 6.784999999999808,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 1.5166666666666662,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 6.678333333333139,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 1.5333333333333328,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 6.57166666666647,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 1.5499999999999994,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 6.464999999999801,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 1.566666666666666,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 6.358333333333132,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 1.5833333333333326,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 6.251666666666463,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 1.5999999999999992,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 6.1449999999997935,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 1.6166666666666658,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 6.038333333333124,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 1.6333333333333324,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 5.931666666666455,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 1.649999999999999,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 5.824999999999786,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 1.6666666666666656,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 5.718333333333117,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 1.6833333333333322,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 5.611666666666448,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 1.6999999999999988,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 5.504999999999779,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 1.7166666666666655,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 5.39833333333311,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 1.733333333333332,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 5.2916666666664405,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 1.7499999999999987,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 5.184999999999771,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 1.7666666666666653,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 5.078333333333102,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 1.7833333333333319,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 4.971666666666433,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 1.7999999999999985,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 4.864999999999764,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 1.816666666666665,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 4.758333333333095,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 1.8333333333333317,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 4.651666666666426,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 1.8499999999999983,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 4.544999999999757,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 1.866666666666665,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 4.438333333333087,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 1.8833333333333315,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 4.331666666666418,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 1.8999999999999981,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 4.224999999999749,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 1.9166666666666647,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 4.11833333333308,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 1.9333333333333313,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 4.011666666666411,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 1.949999999999998,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 3.904999999999742,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 1.9666666666666646,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 3.7983333333330727,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 1.9833333333333312,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 3.6916666666664035,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 1.9999999999999978,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 3.5849999999997344,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 2.0166666666666644,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 3.4783333333330653,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 2.033333333333331,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 3.371666666666396,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 2.0499999999999976,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 3.264999999999727,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 2.066666666666664,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 3.158333333333058,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 2.083333333333331,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 3.0516666666663887,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 2.0999999999999974,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 2.9449999999997196,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 2.116666666666664,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 2.8383333333330505,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 2.1333333333333306,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 2.7316666666663814,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 2.1499999999999972,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 2.6249999999997122,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 2.166666666666664,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 2.518333333333043,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 2.1833333333333305,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 2.411666666666374,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 2.199999999999997,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 2.304999999999705,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 2.2166666666666637,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 2.1983333333330357,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 2.2333333333333303,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 2.0916666666663666,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 2.249999999999997,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 1.9849999999996975,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 2.2666666666666635,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 1.8783333333330283,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 2.28333333333333,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 1.7716666666663592,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 2.2999999999999967,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 1.66499999999969,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 2.3166666666666633,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 1.558333333333021,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 2.33333333333333,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 1.4516666666663518,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 2.3499999999999965,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 1.3449999999996827,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 2.366666666666663,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 1.2383333333330135,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 2.3833333333333298,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 1.1316666666663444,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 2.3999999999999964,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 1.0249999999996753,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 2.416666666666663,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 0.9183333333330062,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 2.4333333333333296,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 0.811666666666337,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 2.449999999999996,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 0.7049999999996679,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 2.466666666666663,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 0.5983333333329988,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 2.4833333333333294,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 0.49166666666632963,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 2.499999999999996,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 0.3849999999996605,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 2.5166666666666626,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 0.2783333333329914,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 2.533333333333329,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 0.17166666666632224,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 2.549999999999996,
+        "released": -1,
+        "grounded": false,
+        "health": 1,
+        "height": 0.06499999999965311,
+        "rolls": 0,
+        "compression": 0,
+        "loops": []
+      },
+      {
+        "age": 2.5666666666666624,
+        "released": 0,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 0.07680000000000001,
+        "loops": []
+      },
+      {
+        "age": 2.583333333333329,
+        "released": 0.016666666666666666,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 0.060817118694664836,
+        "loops": []
+      },
+      {
+        "age": 2.5999999999999956,
+        "released": 0.03333333333333333,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 0.04816044174897071,
+        "loops": []
+      },
+      {
+        "age": 2.6166666666666623,
+        "released": 0.05,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 0.03813775133118025,
+        "loops": []
+      },
+      {
+        "age": 2.633333333333329,
+        "released": 0.06666666666666667,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 0.030200887362708345,
+        "loops": []
+      },
+      {
+        "age": 2.6499999999999955,
+        "released": 0.08333333333333333,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 0.0239157675966411,
+        "loops": []
+      },
+      {
+        "age": 2.666666666666662,
+        "released": 0.09999999999999999,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 0.018938646830715375,
+        "loops": []
+      },
+      {
+        "age": 2.6833333333333287,
+        "released": 0.11666666666666665,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 0.014997316825780661,
+        "loops": []
+      },
+      {
+        "age": 2.6999999999999953,
+        "released": 0.13333333333333333,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 0.011876218717382767,
+        "loops": []
+      },
+      {
+        "age": 2.716666666666662,
+        "released": 0.15,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 0.009404653689829007,
+        "loops": []
+      },
+      {
+        "age": 2.7333333333333285,
+        "released": 0.16666666666666666,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 0.007447447131986306,
+        "loops": []
+      },
+      {
+        "age": 2.749999999999995,
+        "released": 0.18333333333333332,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 0.005897555679664743,
+        "loops": []
+      },
+      {
+        "age": 2.7666666666666617,
+        "released": 0.19999999999999998,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 0.004670212809616737,
+        "loops": []
+      },
+      {
+        "age": 2.7833333333333283,
+        "released": 0.21666666666666665,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 0.0036982927965078806,
+        "loops": []
+      },
+      {
+        "age": 2.799999999999995,
+        "released": 0.2333333333333333,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 0.002928639478813069,
+        "loops": []
+      },
+      {
+        "age": 2.8166666666666615,
+        "released": 0.24999999999999997,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 0.002319159046834059,
+        "loops": []
+      },
+      {
+        "age": 2.833333333333328,
+        "released": 0.26666666666666666,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 0.0018365178518634467,
+        "loops": []
+      },
+      {
+        "age": 2.8499999999999948,
+        "released": 0.2833333333333333,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 0.0014543193252819027,
+        "loops": []
+      },
+      {
+        "age": 2.8666666666666614,
+        "released": 0.3,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 0.0011516602998126867,
+        "loops": []
+      },
+      {
+        "age": 2.883333333333328,
+        "released": 0.31666666666666665,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 0.0009119877753859564,
+        "loops": []
+      },
+      {
+        "age": 2.8999999999999946,
+        "released": 0.3333333333333333,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 0.0007221936039548311,
+        "loops": []
+      },
+      {
+        "age": 2.916666666666661,
+        "released": 0.35,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 0.0005718975798469886,
+        "loops": []
+      },
+      {
+        "age": 2.933333333333328,
+        "released": 0.36666666666666664,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 0.00045287972649408673,
+        "loops": []
+      },
+      {
+        "age": 2.9499999999999944,
+        "released": 0.3833333333333333,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 0.0003586307302161226,
+        "loops": []
+      },
+      {
+        "age": 2.966666666666661,
+        "released": 0.39999999999999997,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 0.00028399593342588866,
+        "loops": []
+      },
+      {
+        "age": 2.9833333333333276,
+        "released": 0.41666666666666663,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 0.00022489341656203645,
+        "loops": []
+      },
+      {
+        "age": 2.9999999999999942,
+        "released": 0.4333333333333333,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 0.00017809075011330822,
+        "loops": []
+      },
+      {
+        "age": 3.016666666666661,
+        "released": 0.44999999999999996,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 0.0001410282068758198,
+        "loops": []
+      },
+      {
+        "age": 3.0333333333333274,
+        "released": 0.4666666666666666,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 0.00011167876558414687,
+        "loops": []
+      },
+      {
+        "age": 3.049999999999994,
+        "released": 0.4833333333333333,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 0.00008843724924745717,
+        "loops": []
+      },
+      {
+        "age": 3.0666666666666607,
+        "released": 0.49999999999999994,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 0.00007003253495458671,
+        "loops": []
+      },
+      {
+        "age": 3.0833333333333273,
+        "released": 0.5166666666666666,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 0.000055458033734653176,
+        "loops": []
+      },
+      {
+        "age": 3.099999999999994,
+        "released": 0.5333333333333333,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 0.00004391663828402511,
+        "loops": []
+      },
+      {
+        "age": 3.1166666666666605,
+        "released": 0.55,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 0.00003477712764570595,
+        "loops": []
+      },
+      {
+        "age": 3.133333333333327,
+        "released": 0.5666666666666668,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 0.000027539644529796987,
+        "loops": []
+      },
+      {
+        "age": 3.1499999999999937,
+        "released": 0.5833333333333335,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 0.000021808357163770055,
+        "loops": []
+      },
+      {
+        "age": 3.1666666666666603,
+        "released": 0.6000000000000002,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 0.000017269810496935513,
+        "loops": []
+      },
+      {
+        "age": 3.183333333333327,
+        "released": 0.6166666666666669,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 0.000013675782745136664,
+        "loops": []
+      },
+      {
+        "age": 3.1999999999999935,
+        "released": 0.6333333333333336,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 0.000010829709667362313,
+        "loops": []
+      },
+      {
+        "age": 3.21666666666666,
+        "released": 0.6500000000000004,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 0.000008575934092040794,
+        "loops": []
+      },
+      {
+        "age": 3.2333333333333267,
+        "released": 0.6666666666666671,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 0.000006791192729079005,
+        "loops": []
+      },
+      {
+        "age": 3.2499999999999933,
+        "released": 0.6833333333333338,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 0.000005377874665139878,
+        "loops": []
+      },
+      {
+        "age": 3.26666666666666,
+        "released": 0.7000000000000005,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 0.000004258682836391182,
+        "loops": []
+      },
+      {
+        "age": 3.2833333333333266,
+        "released": 0.7166666666666672,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 0.0000033724065044757085,
+        "loops": []
+      },
+      {
+        "age": 3.299999999999993,
+        "released": 0.733333333333334,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 0.0000026705735243406106,
+        "loops": []
+      },
+      {
+        "age": 3.3166666666666598,
+        "released": 0.7500000000000007,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 0.0000021147993100605767,
+        "loops": []
+      },
+      {
+        "age": 3.3333333333333264,
+        "released": 0.7666666666666674,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 0.000001674687508533195,
+        "loops": []
+      },
+      {
+        "age": 3.349999999999993,
+        "released": 0.7833333333333341,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 0.000001326167564881977,
+        "loops": []
+      },
+      {
+        "age": 3.3666666666666596,
+        "released": 0.8000000000000008,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 0.0000010501782578442944,
+        "loops": []
+      },
+      {
+        "age": 3.383333333333326,
+        "released": 0.8166666666666675,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 8.316252051806351e-7,
+        "loops": []
+      },
+      {
+        "age": 3.399999999999993,
+        "released": 0.8333333333333343,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 6.585553230852302e-7,
+        "loops": []
+      },
+      {
+        "age": 3.4166666666666594,
+        "released": 0.850000000000001,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 5.21503089206742e-7,
+        "loops": []
+      },
+      {
+        "age": 3.433333333333326,
+        "released": 0.8666666666666677,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 4.1297285515521885e-7,
+        "loops": []
+      },
+      {
+        "age": 3.4499999999999926,
+        "released": 0.8833333333333344,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 3.270288951777288e-7,
+        "loops": []
+      },
+      {
+        "age": 3.4666666666666592,
+        "released": 0.9000000000000011,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 2.5897076998188846e-7,
+        "loops": []
+      },
+      {
+        "age": 3.483333333333326,
+        "released": 0.9166666666666679,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 2.050762507348601e-7,
+        "loops": []
+      },
+      {
+        "age": 3.4999999999999925,
+        "released": 0.9333333333333346,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 1.6239774326040145e-7,
+        "loops": []
+      },
+      {
+        "age": 3.516666666666659,
+        "released": 0.9500000000000013,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 1.286010784845513e-7,
+        "loops": []
+      },
+      {
+        "age": 3.5333333333333257,
+        "released": 0.966666666666668,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 1.0183785227157374e-7,
+        "loops": []
+      },
+      {
+        "age": 3.5499999999999923,
+        "released": 0.9833333333333347,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 8.064433267200576e-8,
+        "loops": []
+      },
+      {
+        "age": 3.566666666666659,
+        "released": 1.0000000000000013,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 6.386140562715379e-8,
+        "loops": []
+      },
+      {
+        "age": 3.5833333333333255,
+        "released": 1.016666666666668,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 5.057118080774412e-8,
+        "loops": []
+      },
+      {
+        "age": 3.599999999999992,
+        "released": 1.0333333333333345,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 4.004679043898347e-8,
+        "loops": []
+      },
+      {
+        "age": 3.6166666666666587,
+        "released": 1.0500000000000012,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 3.171263551390659e-8,
+        "loops": []
+      },
+      {
+        "age": 3.6333333333333253,
+        "released": 1.0666666666666678,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 2.5112905184503907e-8,
+        "loops": []
+      },
+      {
+        "age": 3.649999999999992,
+        "released": 1.0833333333333344,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 1.9886647596013514e-8,
+        "loops": []
+      },
+      {
+        "age": 3.6666666666666585,
+        "released": 1.100000000000001,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 1.5748028740699543e-8,
+        "loops": []
+      },
+      {
+        "age": 3.683333333333325,
+        "released": 1.1166666666666676,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 1.2470699650131734e-8,
+        "loops": []
+      },
+      {
+        "age": 3.6999999999999917,
+        "released": 1.1333333333333342,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 9.875416937859074e-9,
+        "loops": []
+      },
+      {
+        "age": 3.7166666666666583,
+        "released": 1.1500000000000008,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 7.82023963631613e-9,
+        "loops": []
+      },
+      {
+        "age": 3.733333333333325,
+        "released": 1.1666666666666674,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 6.192766174252091e-9,
+        "loops": []
+      },
+      {
+        "age": 3.7499999999999916,
+        "released": 1.183333333333334,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 4.9039869201535786e-9,
+        "loops": []
+      },
+      {
+        "age": 3.766666666666658,
+        "released": 1.2000000000000006,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 3.883416075521666e-9,
+        "loops": []
+      },
+      {
+        "age": 3.7833333333333248,
+        "released": 1.2166666666666672,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 3.0752366719501388e-9,
+        "loops": []
+      },
+      {
+        "age": 3.7999999999999914,
+        "released": 1.2333333333333338,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 2.435247834533563e-9,
+        "loops": []
+      },
+      {
+        "age": 3.816666666666658,
+        "released": 1.2500000000000004,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 1.92844735161137e-9,
+        "loops": []
+      },
+      {
+        "age": 3.8333333333333246,
+        "released": 1.266666666666667,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 1.5271173369708428e-9,
+        "loops": []
+      },
+      {
+        "age": 3.849999999999991,
+        "released": 1.2833333333333337,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 1.2093082857192215e-9,
+        "loops": []
+      },
+      {
+        "age": 3.866666666666658,
+        "released": 1.3000000000000003,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 9.576386139456712e-10,
+        "loops": []
+      },
+      {
+        "age": 3.8833333333333244,
+        "released": 1.3166666666666669,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 7.583440267047941e-10,
+        "loops": []
+      },
+      {
+        "age": 3.899999999999991,
+        "released": 1.3333333333333335,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 6.005247224413481e-10,
+        "loops": []
+      },
+      {
+        "age": 3.9166666666666576,
+        "released": 1.35,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 4.755492620285953e-10,
+        "loops": []
+      },
+      {
+        "age": 3.9333333333333242,
+        "released": 1.3666666666666667,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 3.7658249887960085e-10,
+        "loops": []
+      },
+      {
+        "age": 3.949999999999991,
+        "released": 1.3833333333333333,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 2.982117517277887e-10,
+        "loops": []
+      },
+      {
+        "age": 3.9666666666666575,
+        "released": 1.4,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 2.3615077475225056e-10,
+        "loops": []
+      },
+      {
+        "age": 3.983333333333324,
+        "released": 1.4166666666666665,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 1.870053346086547e-10,
+        "loops": []
+      },
+      {
+        "age": 3.9999999999999907,
+        "released": 1.4333333333333331,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 1.480875733259123e-10,
+        "loops": []
+      },
+      {
+        "age": 4.016666666666658,
+        "released": 1.4499999999999997,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 1.1726900422092306e-10,
+        "loops": []
+      },
+      {
+        "age": 4.033333333333324,
+        "released": 1.4666666666666663,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 9.286410089725297e-11,
+        "loops": []
+      },
+      {
+        "age": 4.049999999999991,
+        "released": 1.483333333333333,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 7.353811258778079e-11,
+        "loops": []
+      },
+      {
+        "age": 4.0666666666666575,
+        "released": 1.4999999999999996,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 5.823406408636314e-11,
+        "loops": []
+      },
+      {
+        "age": 4.083333333333324,
+        "released": 1.5166666666666662,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 4.611494775537846e-11,
+        "loops": []
+      },
+      {
+        "age": 4.099999999999991,
+        "released": 1.5333333333333328,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 3.651794597964999e-11,
+        "loops": []
+      },
+      {
+        "age": 4.116666666666657,
+        "released": 1.5499999999999994,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 2.8918180405335045e-11,
+        "loops": []
+      },
+      {
+        "age": 4.133333333333324,
+        "released": 1.566666666666666,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 2.2900005340429586e-11,
+        "loops": []
+      },
+      {
+        "age": 4.149999999999991,
+        "released": 1.5833333333333326,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 1.8134275298142765e-11,
+        "loops": []
+      },
+      {
+        "age": 4.166666666666657,
+        "released": 1.5999999999999992,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 1.4360343401678087e-11,
+        "loops": []
+      },
+      {
+        "age": 4.183333333333324,
+        "released": 1.6166666666666658,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 1.1371806108802123e-11,
+        "loops": []
+      },
+      {
+        "age": 4.19999999999999,
+        "released": 1.6333333333333324,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 9.005214607965278e-12,
+        "loops": []
+      },
+      {
+        "age": 4.216666666666657,
+        "released": 1.649999999999999,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 7.131135490671275e-12,
+        "loops": []
+      },
+      {
+        "age": null,
+        "released": null,
+        "grounded": true,
+        "health": 1,
+        "height": -0.009427230843556345,
+        "rolls": 0,
+        "compression": 5.647071791196509e-12,
+        "loops": []
+      }
+    ],
+    "sounds": [
+      {
+        "id": "rally-landing-1",
+        "name": "kartLanding",
+        "gain": 0.23890348764585062,
+        "rate": 1.0658947368421055,
+        "started": true
+      }
+    ],
+    "audioState": "running",
+    "falls": 0
+  },
+  "keyboardEntryAndDrive": true,
+  "views": [
+    {
+      "stage": "descent",
+      "age": 0.6500000000000004,
+      "released": -1,
+      "canopyScale": [
+        1,
+        1,
+        1
+      ],
+      "cords": true,
+      "health": 1,
+      "drawBuffer": [
+        800,
+        450
+      ],
+      "gl": 0
+    },
+    {
+      "stage": "low",
+      "age": 2.2166666666666637,
+      "released": -1,
+      "canopyScale": [
+        1,
+        1,
+        1
+      ],
+      "cords": true,
+      "health": 1,
+      "drawBuffer": [
+        800,
+        450
+      ],
+      "gl": 0
+    },
+    {
+      "stage": "touchdown",
+      "age": 2.5666666666666624,
+      "released": 0,
+      "canopyScale": [
+        1,
+        1,
+        1
+      ],
+      "cords": true,
+      "health": 1,
+      "drawBuffer": [
+        800,
+        450
+      ],
+      "gl": 0
+    },
+    {
+      "stage": "collapse",
+      "age": 3.3666666666666596,
+      "released": 0.8000000000000008,
+      "canopyScale": [
+        0.767272727272727,
+        0.5636363636363632,
+        0.767272727272727
+      ],
+      "cords": true,
+      "health": 1,
+      "drawBuffer": [
+        800,
+        450
+      ],
+      "gl": 0
+    },
+    {
+      "stage": "clear",
+      "cords": true,
+      "health": 1,
+      "drawBuffer": [
+        800,
+        450
+      ],
+      "gl": 0
+    }
+  ],
+  "errors": []
+}

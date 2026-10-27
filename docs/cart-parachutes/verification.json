@@ -1,0 +1,79 @@
+{
+  "status": "validated",
+  "promptAt": "2026-10-27T10:16:08Z",
+  "nativePlayableAt": "2026-10-27T10:44:17Z",
+  "promptToNativePlayableMinutes": 28.15,
+  "scope": "Procedural parachuting opening/replacement/replenished loaners; touchdown availability, sound/dust and finite canopy release.",
+  "sourceSha256": {
+    "src/golf-cart/loanerDrops.ts": "4e4df40cd64f675493699a464339b04a141c7e8ea5fae05e1754e4a88c18cd79",
+    "src/golf-cart/race.ts": "bbec8dcd54fba9f818519690498315ce9dfa1d6919223dea8338d1cff75f312e",
+    "src/race/hud.ts": "86e50dfc3403e9d637b46f0ede4d751cfcad6470375973c0f4dbd9c330215f64"
+  },
+  "checks": {
+    "typecheck": "passed",
+    "isolatedDescent": "motion.json",
+    "nativeDelivery": "delivery.json",
+    "mayhem": "mayhem.json",
+    "entryClearance": "entry-clearance.json",
+    "productionBuild": "passed",
+    "releaseBytes": 999469862,
+    "releaseBudget": 1000000000,
+    "offlineVersion": "a07466d74833d4e20532",
+    "browserLite": "lite/report.json",
+    "browserFull": "full/report.json",
+    "reviewedImages": [
+      "full/descent-native.png",
+      "full/descent-normal.png",
+      "full/touchdown-native.png",
+      "full/collapse-native.png"
+    ],
+    "nativeDrawBuffer": [
+      1600,
+      900
+    ],
+    "browserErrors": [],
+    "fullRace": "full-race/report.json"
+  },
+  "remaining": [],
+  "unchanged": [
+    "kart/player movement physics",
+    "track geometry",
+    "shared race/runtime.ts",
+    "public/levels.json",
+    "media assets"
+  ],
+  "delivery": "Local commit and release coordinator handoff after validation; no direct push.",
+  "capacityOnlyIdle": {
+    "from": "2026-10-27T10:49:00Z",
+    "to": "2026-10-27T10:55:10Z",
+    "approximate": true
+  },
+  "buildStamp": "Codex/sol fork \u00b7 build 10-27 10:56 UTC",
+  "fullRace": {
+    "finished": 8,
+    "finishRangeSeconds": [
+      84.03333333332985,
+      106.0833333333286
+    ],
+    "falls": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "browserErrors": [],
+    "parkedEngineLoops": [],
+    "movingEngineFrames": 6182
+  },
+  "limitations": [
+    "One complete race is a playability check, not a universal balance result.",
+    "Lite intentionally renders at 800x450; full-render native review used 1600x900.",
+    "Inspection stills use a fixed camera and paused simulation after a separate uninterrupted natural rescue pass.",
+    "Publication is owned by the release coordinator."
+  ],
+  "sourceBase": "b5efceca61e3e6eaa7387a2a8ec2595f1725cd3a"
+}

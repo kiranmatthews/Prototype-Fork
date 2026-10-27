@@ -17,6 +17,7 @@ import { CartBailMotion,CART_BAIL } from './bailMotion';
 import { CartRaceAudio } from './raceAudio';
 import { StadiumCrowd } from './stadiumCrowd';
 import { CartMud } from './cartMud';
+import { LoanerDrops } from './loanerDrops';
 import { createStadiumBoundary } from './stadiumBoundary';
 import { CART_FLAMES,initialFlameRecharge,sideFlameContact,type FlameBody } from './flameTactics';
 
@@ -36,9 +37,10 @@ export class GolfCartRace {
   readonly cartForRacer:number[]=[];
   readonly driverForCart:number[]=[];
   readonly burning:boolean[]=[];
-  readonly stats={steals:0,ejections:0,wrecks:0,thrusters:0,exits:0,entries:0};
+  readonly stats={steals:0,ejections:0,wrecks:0,thrusters:0,exits:0,entries:0,loanerDrops:0,loanerLandings:0};
   private interactions:CartInteraction[]=[];
   private audio=new CartRaceAudio();
+  private drops=new LoanerDrops();
   private nativeDrivers:(RallyDriver|null)[]=[];
   private controls:RallyControls[]=[];
   private actionCooldown:number[]=[];private paceAssist:number[]=[];
@@ -80,8 +82,8 @@ export class GolfCartRace {
     }
     const spawns=racers.slice(0,count).map(r=>({x:r.player.pos.x,z:r.player.pos.z,yaw:Math.atan2(-r.player.raceHeading.x,-r.player.raceHeading.z)}));
     this.jumpRanges=level.skateRace!.jumps.map(j=>({a:course.project(new THREE.Vector3(...j.takeoff)).s,b:course.project(new THREE.Vector3(...j.landing)).s}));
-    // A parked loaner before each dirt double keeps a wrecked field recoverable.
-    // These are real colliding carts. Only abandoned loaners return to their bay.
+    // A parachuted loaner before each dirt double keeps a wrecked field recoverable.
+    // These remain real colliding carts throughout descent and touchdown.
     for(const jump of level.skateRace!.jumps){
       const at=course.project(new THREE.Vector3(...jump.takeoff)).s-62;
       const pos=[10,-10,6,-6].map(offset=>course.sample(at,offset)).find(p=>this.bayOutsideWalls(p.x,p.y,p.z))??course.sample(at,10),f=course.tangent(at);
@@ -95,7 +97,7 @@ export class GolfCartRace {
     const stadium=level.groundMeshes.some(m=>m.name==='Packed stadium dirt');
     const sponsor=level.pickRoot.getObjectByName('Stadium sponsor hoarding') as THREE.Mesh|undefined;
     this.fleet=new GolfCartFleet({damageVisuals:true,sponsorTexture:(sponsor?.material as THREE.MeshStandardMaterial|undefined)?.map??undefined,ground:(x,z)=>this.ground(x,z),spawns,obstacles,
-      onImpact:hit=>this.audio.impact(hit,this.racers[0].player.pos),onLanding:hit=>this.audio.landing(hit,this.racers[0].player.pos,this.cartForRacer[0]),
+      onImpact:hit=>this.audio.impact(hit,this.racers[0].player.pos),onLanding:hit=>this.audio.landing(hit,this.racers[0].player.pos,this.drops.isDescending(hit.cart)?hit.cart:this.cartForRacer[0]),
       physics:{boundary:stadium?createStadiumBoundary():undefined,scale:1.25,...RALLY_CART_PACE,maxLaunchVelocity:9,airRecoveryDelay:6,damageCapacity:16*.7,maxDamageSpeedLoss:.18,gravity:24,stableLandings:true}});
     this.mud=stadium?new CartMud(this.fleet.mudAmounts):null;if(this.mud)this.fleet.root.add(this.mud.root);
     this.crowd=stadium?new StadiumCrowd():null;if(this.crowd)this.fleet.root.add(this.crowd.root);
@@ -109,6 +111,8 @@ export class GolfCartRace {
     for(let i=0;i<count;i++)this.seatDriver(i,i);
     this.effects=new CartMayhemEffects(this.fleet);
     this.previous=this.fleet.physics.carts.map(c=>({x:c.x,y:c.y,z:c.z,yaw:c.yaw}));this.renderPoses=this.previous.map(p=>({...p}));this.respawns=spawns.map(()=>0);this.stun=spawns.map(()=>0);
+    this.fleet.root.add(this.drops.root);
+    for(let index=count;index<spawns.length;index++)this.dropLoaner(index,this.homes[index]);
     this.sync();
   }
   private seatDriver(id:number,index:number){
@@ -134,7 +138,7 @@ export class GolfCartRace {
   }
   isDriving(id:number){return (this.cartForRacer[id]??-1)>=0;}
   isAnimating(id:number){return this.interactions.some(a=>a.id===id||!a.released&&a.victim===id);}
-  private reserved(index:number){return this.interactions.some(a=>a.cart===index);}
+  private reserved(index:number){return this.drops.isDescending(index)||this.interactions.some(a=>a.cart===index);}
   private cartProgress(index:number){
     const c=this.fleet.physics.carts[index],saved=this.navigation[index];
     if(saved&&saved.x===c.x&&saved.y===c.y&&saved.z===c.z)return saved;
@@ -182,7 +186,7 @@ export class GolfCartRace {
     if(this.isDriving(id))return this.beginInteraction(id,this.cartForRacer[id],'exit');
     if(!r.player.grounded)return false;
     const target=this.nearest(id);
-    if(target<0){if(!id)this.announce('GET CLOSER TO A GREEN RING');return false;}
+    if(target<0){if(!id)this.announce(this.drops.nearest(r.player.pos,this.fleet.physics,80)>=0?'LOANER INCOMING · WAIT FOR TOUCHDOWN':'GET CLOSER TO A GREEN RING');return false;}
     return this.beginInteraction(id,target,this.driverForCart[target]>=0?'steal':'enter');
   }
   private exitPoint(index:number,side:number,back=.8){
@@ -457,14 +461,14 @@ export class GolfCartRace {
       if(this.driveStill[i]>1.6){this.reverseTime[i]=1.25;this.driveStill[i]=0;}
 
       if(this.isDriving(i)||this.isAnimating(i)||foot.pos.distanceToSquared(this.footLast[i])>1){this.footStill[i]=0;this.footLast[i].copy(foot.pos);}else this.footStill[i]+=dt;
-      this.loanWait[i]=!this.isDriving(i)&&!this.isAnimating(i)&&(this.nearest(i,65)<0||i>0&&this.footStill[i]>4)?this.loanWait[i]+dt:0;
+      this.loanWait[i]=!this.isDriving(i)&&!this.isAnimating(i)&&this.drops.nearest(foot.pos,world,80)<0&&(this.nearest(i,65)<0||i>0&&this.footStill[i]>4)?this.loanWait[i]+dt:0;
       if(this.loanWait[i]>2.5&&rider.finish===null){
         const reserve=world.carts.findIndex((c,index)=>index>=this.count&&this.driverForCart[index]<0&&!this.reserved(index)&&this.racers.slice(0,this.count).every(r=>(r.player.pos.x-c.x)**2+(r.player.pos.z-c.z)**2>900));
         const delivery=reserve>=0?this.loanerBay(rider.progress,reserve,true):null;
         if(delivery){
           const {bay,heading}=delivery;
-          const home={x:bay.x,z:bay.z,yaw:Math.atan2(-heading.x,-heading.z)};this.homes[reserve]=home;Object.assign(world.spawns[reserve],home);world.reset(reserve);this.fleet.mudAmounts[reserve]=0;this.burning[reserve]=false;this.fleet.models[reserve].setScorched(false);this.fleet.models[reserve].setPalette({paint:'#95ee65',cream:'#f5e8ca',cargo:'#f16a45'});this.previous[reserve]={...world.carts[reserve]};this.respawns[reserve]=0;this.loanWait[i]=0;
-          if(i===0)this.announce('THE CLUB HAS SENT ANOTHER LOANER');
+          this.dropLoaner(reserve,{x:bay.x,z:bay.z,yaw:Math.atan2(-heading.x,-heading.z)});this.loanWait[i]=0;
+          if(i===0)this.announce('LOOK UP! LOANER INCOMING');
         }
       }
       if(!this.isDriving(i)&&!this.isAnimating(i)&&rider.finish===null&&foot.grounded&&foot.pos.y<this.course.sample(rider.progress).y-9){
@@ -498,6 +502,7 @@ export class GolfCartRace {
       }
     }
     this.fleet.update(dt,physics=>{
+      this.drops.control(physics);
       for(const [index,c]of physics.carts.entries()){
         const owner=this.driverForCart[index],r=owner>=0?this.racers[owner]:null;
         let control:CartInput=owner>=0?controls[owner]:{...NO_CART_INPUT,brake:1};
@@ -513,6 +518,9 @@ export class GolfCartRace {
 
       }
     },false);
+    for(const index of this.drops.update(dt,world)){
+      const c=world.carts[index];this.stats.loanerLandings++;puffs.burst('dust',c.x,c.y+.15,c.z,{count:12,strength:1.1});
+    }
     for(const [index,c]of world.carts.entries()){
       if(c.health<=0)this.wreck(index);
       const owner=this.driverForCart[index],r=owner>=0?this.racers[owner]:null;
@@ -535,7 +543,7 @@ export class GolfCartRace {
         const home=this.homes[index];
         this.spareTime[index]=index>=this.count&&(this.burning[index]||Math.hypot(c.x-home.x,c.z-home.z)>45)?this.spareTime[index]+dt:0;
         if(!this.reserved(index)&&this.spareTime[index]>18&&this.racers.slice(0,this.count).every(r=>(r.player.pos.x-c.x)**2+(r.player.pos.z-c.z)**2>324)&&this.clearBay(home.x,home.z,index)){
-          Object.assign(world.spawns[index],home);world.reset(index);this.fleet.mudAmounts[index]=0;this.burning[index]=false;this.fleet.models[index].setScorched(false);this.fleet.models[index].setPalette({paint:'#95ee65',cream:'#f5e8ca',cargo:'#f16a45'});this.spareTime[index]=0;this.previous[index]={...c};this.respawns[index]=0;
+          this.dropLoaner(index,home);
         }
         continue;
       }
@@ -553,6 +561,13 @@ export class GolfCartRace {
   }
   /** Also runs on the grid/countdown, without advancing physics or recharge. */
   updateAudio(dt:number){this.audio.update(dt,this.fleet.physics,this.driverForCart,this.cartForRacer[0],this.burning,this.effects.burnAges,this.thrustTime,this.racers[0].player.pos);}
+  private dropLoaner(index:number,home:{x:number;z:number;yaw:number}){
+    const world=this.fleet.physics;this.homes[index]={...home};Object.assign(world.spawns[index],home);world.reset(index);
+    this.fleet.mudAmounts[index]=0;this.burning[index]=false;this.fleet.models[index].setScorched(false);
+    this.fleet.models[index].setPalette({paint:'#95ee65',cream:'#f5e8ca',cargo:'#f16a45'});
+    this.spareTime[index]=0;this.locked[index]=0;this.respawns[index]=0;this.drops.start(index,world);this.previous[index]={...world.carts[index]};this.stats.loanerDrops++;
+    if(world.time>0){const gain=Math.max(0,1-this.racers[0].player.pos.distanceTo(this.point.set(home.x,world.carts[index].y,home.z))/70)**2;sfx.withGain(gain,()=>sfx.play('woosh3',.5,.65),'rally-delivery');}
+  }
   private loanerBay(progress:number,reserve:number,near=false){
     const next=this.jumpRanges.find(j=>j.a>progress),at=next?Math.min(next.a-62,near?progress+16:Infinity):Math.min(this.course.length-12,progress+20);
     let minimum=4;for(const jump of this.jumpRanges){if(jump.b>progress)break;minimum=jump.b+8;}
@@ -587,15 +602,16 @@ export class GolfCartRace {
     if(c.health<=0)this.wreck(index);
   }
   hud(){
-    const index=this.cartForRacer[0],target=this.nearest(0),near=target>=0?target:index<0?this.nearest(0,250):-1;
+    const index=this.cartForRacer[0],target=this.nearest(0),incoming=index<0?this.drops.nearest(this.racers[0].player.pos,this.fleet.physics,80):-1,near=target>=0?target:incoming>=0?incoming:index<0?this.nearest(0,250):-1;
+    const descending=near>=0&&this.drops.isDescending(near);
     const owner=near>=0?this.driverForCart[near]:-1,c=near>=0?this.fleet.physics.carts[near]:null;
     const action=this.interactions.find(a=>a.id===0||!a.released&&a.victim===0);
-    return {onFoot:index<0,actionReady:!action&&this.actionCooldown[0]===0,
+    return {onFoot:index<0,actionReady:!action&&!descending&&this.actionCooldown[0]===0,
       bearing:c?Math.atan2(-(c.x-this.racers[0].player.pos.x),-(c.z-this.racers[0].player.pos.z))-Math.atan2(-this.racers[0].player.raceHeading.x,-this.racers[0].player.raceHeading.z):null,
-      target:action?(action.id!==0?'YANKED OUT!':action.kind==='exit'?'GETTING OUT':action.age<action.approach?'GOING TO DRIVER SIDE':action.kind==='steal'&&!action.released?'PULLING DRIVER OUT':'GETTING IN'):target>=0?(owner>=0?`STEAL ${RACE_ROSTER[owner].name}'S KART`:'TAKE KART'):index>=0?'BAIL OUT':near>=0?(owner>=0?`${RACE_ROSTER[owner].name}'S KART`:'GREEN LOANER'):'LOANER ON THE WAY',
+      target:action?(action.id!==0?'YANKED OUT!':action.kind==='exit'?'GETTING OUT':action.age<action.approach?'GOING TO DRIVER SIDE':action.kind==='steal'&&!action.released?'PULLING DRIVER OUT':'GETTING IN'):target>=0?(owner>=0?`STEAL ${RACE_ROSTER[owner].name}'S KART`:'TAKE KART'):index>=0?'BAIL OUT':descending?'LOANER INCOMING':near>=0?(owner>=0?`${RACE_ROSTER[owner].name}'S KART`:'GREEN LOANER'):'LOANER ON THE WAY',
       distance:c?Math.round(Math.hypot(c.x-this.racers[0].player.pos.x,c.z-this.racers[0].player.pos.z)):null,notice:this.noticeTime>0?this.notice:''};
   }
-  updateView(camera:THREE.Camera){this.fleet.updateView(camera);this.effects.present(this.burning,this.targetMarker,this.driverForCart,this.thrustTime);}
+  updateView(camera:THREE.Camera){this.fleet.updateView(camera);this.drops.updateView(this.fleet);this.effects.present(this.burning,this.targetMarker,this.driverForCart,this.thrustTime);}
   present(alpha=1){
     this.crowd?.update(this.fleet.physics.time);
     const carts=this.fleet.physics.carts;alpha=clamp(alpha,0,1);
@@ -606,9 +622,9 @@ export class GolfCartRace {
       pose.x=THREE.MathUtils.lerp(p.x,q.x,alpha);pose.y=THREE.MathUtils.lerp(p.y,q.y,alpha);pose.z=THREE.MathUtils.lerp(p.z,q.z,alpha);
       pose.yaw=p.yaw+Math.atan2(Math.sin(q.yaw-p.yaw),Math.cos(q.yaw-p.yaw))*alpha;
     }
-    this.fleet.present(0,this.renderPoses);this.effects.present(this.burning,this.targetMarker,this.driverForCart,this.thrustTime);
+    this.fleet.present(0,this.renderPoses);this.drops.present(this.fleet,this.renderPoses);this.effects.present(this.burning,this.targetMarker,this.driverForCart,this.thrustTime);
     this.presentInteractions();
     for(let i=0;i<this.count;i++)this.racers[i].player.group.visible=!this.isDriving(i)&&!this.isAnimating(i);
   }
-  dispose(){for(const a of this.interactions){a.actor.dispose();a.passenger?.dispose();}this.interactions.length=0;this.crowd?.dispose();this.mud?.dispose();this.audio.dispose();this.effects.dispose();this.fleet.dispose();this.cache.clear();this.cells.clear();this.racers.forEach(r=>r.player.group.visible=true);}
+  dispose(){for(const a of this.interactions){a.actor.dispose();a.passenger?.dispose();}this.interactions.length=0;this.crowd?.dispose();this.mud?.dispose();this.audio.dispose();this.effects.dispose();this.drops.dispose();this.fleet.dispose();this.cache.clear();this.cells.clear();this.racers.forEach(r=>r.player.group.visible=true);}
 }

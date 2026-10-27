@@ -1,0 +1,13 @@
+{
+  "passed": true,
+  "openingLoaners": 12,
+  "realInitialLandings": true,
+  "replacementDelivery": 1,
+  "landingSeconds": 2.55,
+  "airborneEntryBlocked": true,
+  "noDuplicateDispatch": true,
+  "animatedEntryAfterLanding": true,
+  "falls": 0,
+  "recycledBayDrop": true,
+  "restartCleanup": true
+}

@@ -1,0 +1,59 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "rock": 1,
+      "seconds": 7.466666666666667,
+      "cart": 9,
+      "falls": 0
+    },
+    {
+      "rock": 2,
+      "seconds": 4.983333333333333,
+      "cart": 9,
+      "falls": 0
+    },
+    {
+      "rock": 3,
+      "seconds": 7.85,
+      "cart": 9,
+      "falls": 0
+    },
+    {
+      "rock": 4,
+      "seconds": 5.183333333333334,
+      "cart": 9,
+      "falls": 0
+    },
+    {
+      "rock": 5,
+      "seconds": 4.966666666666667,
+      "cart": 9,
+      "falls": 0
+    },
+    {
+      "rock": 6,
+      "seconds": 7.316666666666666,
+      "cart": 9,
+      "falls": 0
+    },
+    {
+      "rock": 7,
+      "seconds": 7.716666666666667,
+      "cart": 9,
+      "falls": 0
+    },
+    {
+      "rock": 8,
+      "seconds": 7.45,
+      "cart": 9,
+      "falls": 0
+    }
+  ],
+  "human": {
+    "blockedTargetRejected": true,
+    "blockedEntryRejected": true,
+    "reopensWhenMoved": true,
+    "animatedEntryCompletes": true
+  }
+}
