@@ -1,0 +1,1 @@
+PASS release size budget, fonts, original source retention, current export member identity, attribution, bounded fetching, failure handling and output-only deletion

@@ -1,5 +1,6 @@
 {
-  "startedAt": "2026-10-27T09:29:31.953Z",
+  "startedAt": "2026-10-27T10:01:23.799Z",
+  "localScripts": true,
   "checks": [
     {
       "name": "gameplay-preservation",
@@ -53,14 +54,39 @@
     },
     {
       "name": "levels",
-      "command": "pnpm",
+      "command": "sh",
       "args": [
-        "run",
-        "check:levels"
+        "-c",
+        "node tools/validate-levels.mjs && node tools/test-lazy-source.mjs && node tools/test-tropical-plants.mjs && node tools/test-jungle-assets.mjs && node tools/test-crown-quartz.mjs && node tools/test-jungle-stream.mjs && node tools/test-custard-pool.mjs && node tools/test-jungle-enclosure.mjs && node tools/test-map-landscape-assets.mjs && node tools/test-world-map-save.mjs && node tools/test-map-clay-geometry.mjs && node tools/test-hollowwake-assets.mjs && node tools/test-scenery-normals.mjs && node tools/test-waterslide-scenery-lod.mjs && node tools/test-waterslide-ocean-look.mjs && node tools/test-waterslide-shallows.mjs && node tools/test-waterpark-decks.mjs && node tools/test-waterpark-portals.mjs && node tools/test-waterslide-forest.mjs && node tools/test-hollowwake-tunnel-build.mjs"
       ],
-      "exitCode": 1,
-      "seconds": 1.6,
+      "nodeOptions": "--max-old-space-size=768",
+      "exitCode": 0,
+      "seconds": 277.501,
       "log": "docs/tribal-run/validation/levels.txt"
+    },
+    {
+      "name": "build",
+      "command": "sh",
+      "args": [
+        "-c",
+        "tsc --noEmit && vite build"
+      ],
+      "nodeOptions": "--max-old-space-size=2048",
+      "exitCode": 0,
+      "seconds": 64.256,
+      "log": "docs/tribal-run/validation/build.txt"
+    },
+    {
+      "name": "release-size",
+      "command": "sh",
+      "args": [
+        "-c",
+        "node tools/check-release-size.mjs"
+      ],
+      "nodeOptions": "--max-old-space-size=768",
+      "exitCode": 0,
+      "seconds": 0.155,
+      "log": "docs/tribal-run/validation/release-size.txt"
     }
   ],
   "sourceSha256": {
@@ -75,7 +101,7 @@
     "src/levels/tribal-run-textures.ts": "c8a9b306a08c68e2f1ddedfdd463cd3dbd980f41ef1f330b979fdcc7a08dcf44",
     "public/level-previews/tribal-run.jpg": "1051ffb3562c340fae07ad7434b075aaa825db2f78f3191937ebd836f2d1d6b9"
   },
-  "reusedPrefixFrom": "2026-10-27T09:27:10.180Z",
-  "completedAt": "2026-10-27T09:29:43.590Z",
-  "pass": false
+  "reusedPrefixFrom": "2026-10-27T09:51:18.336Z",
+  "completedAt": "2026-10-27T10:02:28.219Z",
+  "pass": true
 }

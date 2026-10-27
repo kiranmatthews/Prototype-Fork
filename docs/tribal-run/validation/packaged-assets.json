@@ -1,0 +1,37 @@
+{
+  "pass": true,
+  "checkedAt": "2026-10-27T10:06:16.946259+00:00",
+  "assets": [
+    {
+      "source": "public/tribal-run/festival-weave.webp",
+      "built": "dist/tribal-run/festival-weave.webp",
+      "bytes": 644348,
+      "sha256": "1b66405b6b2fb195fe964922155aaa105d4c5b41badfca2c08acc05b8ad924e0"
+    },
+    {
+      "source": "public/tribal-run/provenance.json",
+      "built": "dist/tribal-run/provenance.json",
+      "bytes": 1326,
+      "sha256": "45ea61bd7a737637840e0121c331de276bdfecdf14c605ee77c1abc4f388983f"
+    },
+    {
+      "source": "public/tribal-run/resonance-fresco.webp",
+      "built": "dist/tribal-run/resonance-fresco.webp",
+      "bytes": 574486,
+      "sha256": "7317018ce9fff11cb31239c53d91b3249e88620d2ffdea49396fd190436ac6b5"
+    },
+    {
+      "source": "public/tribal-run/sunstone.webp",
+      "built": "dist/tribal-run/sunstone.webp",
+      "bytes": 428018,
+      "sha256": "24384a6a036962d307d52a791434d14381b9092090f9a0a99852398c9f2adea1"
+    },
+    {
+      "source": "public/level-previews/tribal-run.jpg",
+      "built": "dist/level-previews/tribal-run.jpg",
+      "bytes": 65172,
+      "sha256": "1051ffb3562c340fae07ad7434b075aaa825db2f78f3191937ebd836f2d1d6b9"
+    }
+  ],
+  "newPublicBytes": 1713350
+}

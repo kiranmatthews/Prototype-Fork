@@ -1,0 +1,12 @@
+{
+  "files": [
+    {
+      "log": "levels.txt",
+      "normalization": "Trailing horizontal whitespace only; no lines omitted.",
+      "rawArchive": "levels.raw.txt.gz",
+      "rawSha256": "7978618bd420d819d6c88144d7fd89d7f4b845d0b0760a65a00ad7c2d8811a33",
+      "archiveSha256": "9f74d61a8a06c00ff8cb3949f6c93bfe99e353f5e94c4fe2c3a4186f664abbe8",
+      "displaySha256": "8a086cb30968816ec6740348e3a810979f1fbf51381abfb283dfae32c2875c5f"
+    }
+  ]
+}

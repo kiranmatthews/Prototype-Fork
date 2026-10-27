@@ -30,4 +30,6 @@ On a host without npm, `--local-scripts` executes the exact three package.json s
 
 Final browser evidence and check results are retained in the adjacent `art/evidence/` and `validation/` directories. Greybox decisions and timing are recorded in `greybox/playtest-notes.md`.
 
+Final local validation passed all twenty level checks, the focused campaign checks, TypeScript/Vite build and release-size gate. The package is 994,082,297 / 1,000,000,000 bytes. Packaging uses the coordinator's existing `c49c075b` dependency (local equivalent `3c9c7ded`), which preserves the source library while excluding eight superseded paintings from releases. The coordinator already owns that dependency; it needs no duplicate integration. `brief-verification.json` records the complete requirement audit and current source hashes.
+
 Committed browser reports contain readable results and action boundaries; their complete sampled traces, frame timings and tuning snapshots are in adjacent `.trace.json.gz` files with SHA-256 references. Supplementary captures and historical raw traces remain in this worktree's ignored `.release-queue/tribal-run-evidence/raw/` archive, indexed by `local-evidence-archive.json`.

@@ -1,0 +1,10 @@
+Release output: 1843 files, 1,001,201,080 bytes / 1,000,000,000 byte budget.
+Release is 1,201,080 bytes over budget. Reduce generated output before uploading to GitHub Pages.
+  202.3 MiB  blockworks-art
+  98.9 MiB  drowned-crown
+  66.4 MiB  rooftop-kook
+  65.0 MiB  map-landmarks
+  64.0 MiB  treehouse-trials-v2
+  49.8 MiB  fonts
+  45.4 MiB  treehouse-trail
+  39.9 MiB  treehouse-trials

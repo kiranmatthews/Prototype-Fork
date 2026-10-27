@@ -1,6 +1,6 @@
 {
-  "checkedAt": "2026-10-27T09:24:56.451970+00:00",
-  "overallStatus": "Gameplay, visuals and actual map-controller route verified; required level checks and build pending host capacity.",
+  "checkedAt": "2026-10-27T10:06:16.946259+00:00",
+  "overallStatus": "Local gameplay, artwork, campaign integration, required level checks, production build and release-size validation passed. Final immutable delivery is recorded in the shared READY inbox.",
   "requirements": [
     {
       "requirement": "Distinct medium-difficulty platform/skating course, not a chase",
@@ -63,7 +63,7 @@
       "evidence": [
         "validation/checks.json"
       ],
-      "result": "Own codex/tribal-run worktree; candidate c7806ff652716c5541598e9b178a18a53b856eaf committed locally. Final validation increment and READY handoff pending."
+      "result": "Own codex/tribal-run worktree. Feature c7806ff652716c5541598e9b178a18a53b856eaf and integration proof ad330535513c8d597dcdc6f2851333f7f727338e are committed locally; final evidence commit is identified in the shared READY inbox. No push or publication is performed here."
     }
   ],
   "currentSourceMatchesSuccessfulChecks": true,
@@ -95,5 +95,85 @@
     "Full main all-box completion has not been claimed; the continuous main pilot collected 23 boxes, with all 59 ordinary seats and optional paths audited separately.",
     "The legacy warp-return suite stops before its Tribal case on a pre-existing water assertion; the focused actual map-controller route passed at 09:29:41 UTC. Its initial static-direction fixture error and correction are retained separately.",
     "No deployment is claimed. The coordinator owns integration and publishing."
-  ]
+  ],
+  "validation": {
+    "pass": true,
+    "completedAt": "2026-10-27T10:02:28.219Z",
+    "checkGroups": [
+      {
+        "name": "gameplay-preservation",
+        "exitCode": 0
+      },
+      {
+        "name": "campaign",
+        "exitCode": 0
+      },
+      {
+        "name": "level-select",
+        "exitCode": 0
+      },
+      {
+        "name": "save-previews",
+        "exitCode": 0
+      },
+      {
+        "name": "tribal-map-route",
+        "exitCode": 0
+      },
+      {
+        "name": "levels",
+        "exitCode": 0
+      },
+      {
+        "name": "build",
+        "exitCode": 0
+      },
+      {
+        "name": "release-size",
+        "exitCode": 0
+      }
+    ],
+    "requiredLevelChecks": 20,
+    "packageFiles": 1835,
+    "packageBytes": 994082297,
+    "packageBudgetBytes": 1000000000,
+    "offlineVersion": "efa551e155bb6018654d",
+    "packagedAssets": "validation/packaged-assets.json",
+    "exactSourceSha256": {
+      "src/level.ts": "d14ea445da9eb4387a5a82c5c79759085059cce02373650150c525727a52d473",
+      "src/campaign.ts": "423ed98b64bbc7798444da2cb30cc9f47536e9e43fb45ac51aed533b254ce9ed",
+      "src/levels/codex-lab.ts": "f66f189c1b5b5c13756b07481c59b505ffdf36acdf71157885193c58ce453e61",
+      "src/levels/themed-bonuses.ts": "fe83b857b3618f161edca72c3dc311f647402e016f7cede1ab17edfcbe243a3c",
+      "src/levels/tribal-run.ts": "6524dc10f6310fde6ee4aa08ed93e34158a792bcddd55d57bbdb011e755227ef",
+      "src/levels/tribal-run-route.ts": "8b4a31d8d067ba6fd2246265f09bcbc0b19a17d92ea3890787738879e74a163b",
+      "src/levels/tribal-run-bonus.ts": "7d20bdb0a5f9e400148d0376b16405408753b8c4a137a80d70844462466d3fb8",
+      "src/levels/tribal-run-art.ts": "2b39695be31f2e4c8043ffc07b52a87e3843a2a1084a97dd98242e94d1b6c777",
+      "src/levels/tribal-run-textures.ts": "c8a9b306a08c68e2f1ddedfdd463cd3dbd980f41ef1f330b979fdcc7a08dcf44",
+      "public/level-previews/tribal-run.jpg": "1051ffb3562c340fae07ad7434b075aaa825db2f78f3191937ebd836f2d1d6b9"
+    }
+  },
+  "packagingDependency": {
+    "originalCoordinatorCommit": "c49c075b9af13ccb1142888490e053b3e1daa2b9",
+    "localEquivalentCommit": "3c9c7ded78e9d2a9ef29d40ba88f3e974dd839d1",
+    "identicalFiles": [
+      "tools/release-assets.mjs",
+      "tools/test-release-assets.mjs"
+    ],
+    "effect": "Existing policy excludes eight superseded paintings from generated releases; originals and current runtime assets remain. No authored asset reduction.",
+    "beforeBytes": 1001201080,
+    "afterBytes": 994082297,
+    "policyTest": "validation/packaging-dependency.txt"
+  },
+  "timing": {
+    "prompt": "2026-10-27T02:56:13Z",
+    "crashAccessCompensationSeconds": 9148,
+    "firstRetainedNativeMainClear": "2026-10-27T06:23:35Z",
+    "promptToFirstRetainedClearWallSeconds": 12442,
+    "compensatedPromptToFirstRetainedClearSeconds": 3294,
+    "artNotBefore": "2026-10-27T07:28:41Z",
+    "imagegenStarted": "2026-10-27T07:29:01Z",
+    "recordedLaterCapacityIdleSeconds": 1747.859,
+    "finalLocalValidation": "2026-10-27T10:02:28.219Z"
+  },
+  "handoffInbox": "/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/01a17b46-89e7-78d3-97a1-4bcfa843cf0d.md"
 }

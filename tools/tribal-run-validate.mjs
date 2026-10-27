@@ -40,11 +40,15 @@ if(resume){
 for(const [name,command,args]of checks.slice(first)){
  const start=Date.now(),logPath=`${out}/${name}.txt`,log=createWriteStream(logPath);
  console.log(JSON.stringify({check:name,status:'starting'}));
- const child=spawn(command,args,{env:{...process.env,PATH:[path.dirname(process.execPath),path.resolve('node_modules/.bin'),process.env.PATH].join(path.delimiter)},stdio:['ignore','pipe','pipe']});
+ const env={...process.env,PATH:[path.dirname(process.execPath),path.resolve('node_modules/.bin'),process.env.PATH].join(path.delimiter)};
+ // The full-project TypeScript compiler needs more heap than the small native
+ // fixtures. Keep the larger budget local to this guarded build subprocess.
+ if(name==='build')env.NODE_OPTIONS=[(env.NODE_OPTIONS||'').replace(/(?:^|\s)--max-old-space-size(?:=|\s+)\d+/g,'').trim(),'--max-old-space-size=2048'].filter(Boolean).join(' ');
+ const child=spawn(command,args,{env,stdio:['ignore','pipe','pipe']});
  child.stdout.pipe(log,{end:false});child.stderr.pipe(log,{end:false});
  const code=await new Promise((resolve,reject)=>{child.once('error',reject);child.once('close',(code,signal)=>resolve(signal?128:code));});
  await new Promise(resolve=>log.end(resolve));
- const result={name,command:path.basename(command),args,exitCode:code,seconds:(Date.now()-start)/1000,log:logPath};
+ const result={name,command:path.basename(command),args,nodeOptions:env.NODE_OPTIONS,exitCode:code,seconds:(Date.now()-start)/1000,log:logPath};
  report.checks.push(result);await writeFile(`${out}/checks.json`,JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(result));
  if(code!==0){console.error((await readFile(logPath,'utf8')).slice(-5000));break;}
 }
