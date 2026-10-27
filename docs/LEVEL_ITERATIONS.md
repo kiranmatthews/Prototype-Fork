@@ -5090,8 +5090,8 @@ scenery clearance audit pass. Native/MAX scene review, final full-render
 the coordinator's host-validation capacity; these commits are not yet READY.
 
 Evidence: [gameplay notebook](ancient-gates/greybox-plan.md),
-[Chrome main route](ancient-gates/evidence/greybox/main-browser.json),
-[bonus session](ancient-gates/evidence/greybox/bonus-session.json),
+[Chrome main route](ancient-gates/evidence/greybox/main-browser-lite.json),
+[bonus session](ancient-gates/evidence/greybox/bonus-session-lite.json),
 [recovery](ancient-gates/evidence/greybox/recovery.json),
 [art clearance](ancient-gates/evidence/art/clearance.json) and
 [image provenance/prompts](ancient-gates/imagegen-prompts.json).
