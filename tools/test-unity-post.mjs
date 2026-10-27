@@ -153,7 +153,7 @@ for (const literal of [
   "this.upsampleMaterial.dispose()",
   "this.compositeMaterial.dispose()",
   "this.fsQuad.dispose()",
-  "visualTreatmentActivity(value).bloom",
+  "visualTreatmentActivity(this.userSettings).bloom",
   "setPresentationEnabled(enabled: boolean)",
   "this.enabled = this.presentationEnabled && this.lookActive",
   "const linearTint = tint.map(unityGammaToLinear)",

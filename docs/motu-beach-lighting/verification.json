@@ -1,0 +1,123 @@
+{
+  "startedAt": "2026-10-27T09:30:46.038889+00:00",
+  "files": {
+    "src/levels/jungle-cup.ts": "d4466fc35ef663606747d0587df7c6f3c99c6aa329661ec98445b2ba050c69cd",
+    "src/levels/motu-beach-art.ts": "7ec26b00d2a8381c1cb5766524df6c0e13a68aa1244a308d8e27f8fc22e5cebb",
+    "src/levels/motu-festival.ts": "a65f36998c8591c1fe2bec6e7da8b0d9879781145e571b68f7281185f1bd8a09",
+    "src/levels/motu-solid-structures.ts": "2ef3fd54ba0392dc205f7f258c33c1e323e87c8d40cc73ac9b7f65bc6852ff88",
+    "src/motuBeachPresentation.ts": "9b0e57a14433cce3c04ea66e927786123d568dae781ea36afe04cef3cc85718b",
+    "src/motuLighting.ts": "b63d7bbb7e5a4c1996ea444f0fcb737e11a58e8c81a53a2cba682c6bd1058bb3",
+    "src/motuSky.ts": "bf595dc632b258248306099137cec487a6d2e5b587c3fb319348b6b8e41ed6b4",
+    "src/main.ts": "11c0ccb68b47d7fc5d613f477f1e5905f3a585c81d807a0fb03192e845f24e13",
+    "src/level.ts": "3024056d560530adf6a8a144c0f05a32b4617d1051e488e22fc4c35893f20a2b",
+    "src/coastpost.ts": "ed64d14291ef7a169bd62ff9aa583dc39b1cfe7f24d4d6f46fa881b376ef55e2",
+    "src/unityBloom.ts": "81a2f49fdfff8103daf247c16848bac5b630d065b840a44c0ffe4e110181fafb",
+    "src/unityOcean.ts": "78ce914cf653dfc57625e5df653d2d5d42456497a989042c12584c3f1cf3bc65",
+    "tools/test-motu-festival.mjs": "b9291fdfab86d7ba2abe07537c999b367967974ae9c2c512151770e369574161",
+    "tools/test-motu-lighting.mjs": "d81bc81112e5fc59815cf88eac9824db837cc1c47996b3c712f31cb048e6dc0f",
+    "tools/test-motu-beach.mjs": "53a5caa193df98c20a3fb123c93e07585075daedfc419a61f5d8a4a00f221ebd",
+    "tools/motu-beach-review.ts": "c918946b4bdd7884931a8724f8816a3ba0cccaf225ffd62237d1dbd6c0679614"
+  },
+  "checks": [
+    {
+      "name": "structure",
+      "exitCode": 0,
+      "seconds": 10.67,
+      "log": "/private/tmp/motu-final-structure.log"
+    },
+    {
+      "name": "native",
+      "exitCode": 0,
+      "seconds": 11.71,
+      "log": "/private/tmp/motu-final-native.log"
+    },
+    {
+      "name": "lighting",
+      "exitCode": 0,
+      "seconds": 11.47,
+      "log": "/private/tmp/motu-final-lighting.log"
+    },
+    {
+      "name": "layout",
+      "exitCode": 0,
+      "seconds": 13.63,
+      "log": "/private/tmp/motu-final-layout.log"
+    },
+    {
+      "name": "skating",
+      "exitCode": 0,
+      "seconds": 51.7,
+      "log": "/private/tmp/motu-final-skating.log"
+    },
+    {
+      "name": "levels",
+      "exitCode": 0,
+      "seconds": 251.63,
+      "log": "/private/tmp/motu-final-levels.log"
+    },
+    {
+      "name": "build",
+      "exitCode": 0,
+      "seconds": 72.73,
+      "log": "/private/tmp/motu-final-build.log"
+    },
+    {
+      "name": "release",
+      "exitCode": 0,
+      "seconds": 0.14,
+      "log": "/private/tmp/motu-final-release.log"
+    }
+  ],
+  "finishedAt": "2026-10-27T09:37:49.735002+00:00",
+  "postValidationChange": {
+    "file": "tools/motu-beach-review.ts",
+    "sha256": "8c570b076461499cc4696dbfcda49173bc5324d13b9e574df97724fc1cd0689c",
+    "reason": "Removed one unused local-only camera button whose low outside position was blocked by the perimeter; existing captured views and production code are unchanged."
+  },
+  "runtimeSourceMatchesValidatedBuild": true,
+  "browser": {
+    "completedAt": "2026-10-27T09:43:07Z",
+    "fullRides": 8,
+    "liteRides": 8,
+    "allRidesPassed": true,
+    "modes": [
+      "daylight",
+      "sunset",
+      "moonlight"
+    ],
+    "nativeInput": [
+      1920,
+      1080
+    ],
+    "nativeOutput": [
+      3840,
+      2160
+    ],
+    "normalInput": [
+      1280,
+      720
+    ],
+    "productionKeyboardMovement": true,
+    "productionTimer": [
+      "0:43",
+      "0:41"
+    ],
+    "consoleWarnings": 0,
+    "consoleErrors": 0,
+    "rendererClosed": true,
+    "leaseReleased": true
+  },
+  "release": {
+    "files": 1838,
+    "bytes": 999497633,
+    "budget": 1000000000,
+    "offlineVersion": "df99459ba0c2e8f07ffc",
+    "publication": "release coordinator"
+  },
+  "timing": {
+    "goalStartedAt": "2026-10-27T08:13:44Z",
+    "idleStartedAt": "2026-10-27T09:14:58Z",
+    "resumedAt": "2026-10-27T09:30:45Z",
+    "leaseReleasedAt": "2026-10-27T09:43:07Z"
+  }
+}

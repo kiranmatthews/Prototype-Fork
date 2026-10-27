@@ -1,6 +1,7 @@
 import type {CustomComponent, DecorKind} from '../level';
 import {COASTAL_TOWN_ASSETS} from '../coastalTownAssets';
 import {RALLY_SPONSORS} from '../rallySponsors';
+import {MOTU_FLOODS} from '../motuLighting';
 
 type P=[number,number,number];
 export const MOTU_SUN:P=[.55,.74,-.39];
@@ -10,6 +11,10 @@ export const MOTU_STANDS=[
   {p:[-86,7.3,-85] as P,yaw:-90,columns:30,rows:7},
   {p:[84,7.3,-118] as P,yaw:90,columns:26,rows:6},
   {p:[0,7.3,-182] as P,yaw:180,columns:36,rows:7},
+  {p:[86,7.3,-33] as P,yaw:90,columns:28,rows:6},
+  {p:[-36,7.3,66] as P,yaw:0,columns:30,rows:6},
+  {p:[10,7.3,66] as P,yaw:0,columns:24,rows:6},
+  {p:[-86,7.3,-145] as P,yaw:-90,columns:24,rows:5},
 ];
 export function motuStandPoint(stand:typeof MOTU_STANDS[number],x:number,y:number,z:number):P {
   const a=stand.yaw*Math.PI/180,c=Math.cos(a),s=Math.sin(a);
@@ -67,19 +72,6 @@ function palm(p:P,k:number,yaw:number){
   asset('baytrunk',p,COASTAL_TOWN_ASSETS.baytrunk.size.map(v=>v*k) as P,yaw);
   const a=yaw*Math.PI/180;
   asset('baycrown',[p[0]+Math.cos(a)*.65*k,p[1]+7*k,p[2]-Math.sin(a)*.65*k],COASTAL_TOWN_ASSETS.baycrown.size.map(v=>v*k) as P,yaw);
-}
-// Close the halfpipe's construction ends under each curved bank, retaining
-// the open flat bed. The coping, transition and outside bank are unchanged.
-{
-  const vertices:number[]=[],indices:number[]=[],profile:[number,number][]=[];
-  for(let i=0;i<=40;i++){const a=i/40*Math.PI/2;profile.push([6.5+4.4*Math.sin(a),4.4*(1-Math.cos(a))]);}
-  profile.push([10.9,4.85],[13.1,4.85],[18.1,0]);
-  for(const z of [-146,-104])for(const side of [-1,1])for(let i=0;i<profile.length-1;i++){
-    const [x,y]=profile[i],[xx,yy]=profile[i+1];if(Math.abs(x-xx)<1e-8)continue;
-    const n=vertices.length/3;vertices.push(43+side*x,0,z,43+side*xx,0,z,43+side*x,y,z,43+side*xx,yy,z);
-    if(y>1e-8)indices.push(n,n+1,n+2);if(yy>1e-8)indices.push(n+1,n+3,n+2);
-  }
-  add({t:'mesh',nm:'Motu / halfpipe closed end fascia',p:[0,0,0],vertices,indices,solid:false,doubleSided:true,tex:'plank',color:'#b29470'});
 }
 // A sand shelf makes the complete concrete venue read as a built beach park.
 {
@@ -150,6 +142,17 @@ for(const [index,stand] of MOTU_STANDS.entries()){
       box(poles,poleIndices,[x,-1.3,z],[.24,19,.24],stand);
     add({t:'mesh',nm:'Motu / canopy steel columns',p:[0,0,0],vertices:poles,indices:poleIndices,solid:false,tex:'solid',color:'#728c87'});
   }
+}
+
+// Four complete floodlight towers match the fixed warm lighting sources.
+for(const [i,flood] of MOTU_FLOODS.entries()){
+  const vertices:number[]=[],indices:number[]=[],frame={p:[0,0,0] as P,yaw:0,columns:0,rows:0};
+  box(vertices,indices,[flood.p[0],(flood.p[1]-3.2)/2,flood.p[2]],[.32,flood.p[1]+3.2,.32],frame);
+  box(vertices,indices,[flood.p[0],flood.p[1]-.3,flood.p[2]],[4.8,.25,.3],frame);
+  add({t:'mesh',nm:`Motu / floodlight tower ${i}`,p:[0,0,0],vertices,indices,solid:false,tex:'solid',color:'#284e59'});
+  const glass:number[]=[],glassIx:number[]=[];
+  for(const x of [-1.65,-.55,.55,1.65])box(glass,glassIx,[flood.p[0]+x,flood.p[1],flood.p[2]],[.82,.55,.44],frame);
+  add({t:'mesh',nm:'Motu / warm floodlight glass',p:[0,0,0],vertices:glass,indices:glassIx,solid:false,tex:'solid',color:'#fff0cb',castShadow:false});
 }
 
 // Shared cutout atlas: preserve every brand's aspect. One mesh holds panels

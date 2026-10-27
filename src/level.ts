@@ -16101,6 +16101,9 @@ export class Level {
   private stadiumLighting:StadiumLighting|undefined;
   private motuBeach:MotuBeachPresentation|undefined;
   get motuBeachDiagnostics(){return this.motuBeach?.diagnostics??null;}
+  setMotuHeat(runNumber:number):void {this.motuBeach?.setHeat(runNumber);}
+  motuSkyTexture(source:THREE.Texture):THREE.Texture {return this.motuBeach?.skyTexture(source)??source;}
+  applyMotuOceanLook():void {if(this.water)this.motuBeach?.applyOcean(this.water);}
   get stadiumLightingDiagnostics(){return this.stadiumLighting?.diagnostics??null;}
   private nightworksBackdrop:NightworksBackdrop|undefined;
   /** Keep native colour/collision geometry while opted-in scenery fills shadows. */

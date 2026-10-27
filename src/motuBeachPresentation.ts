@@ -5,6 +5,9 @@ import {WarehouseMaterials,warehouseSurfaceUV} from './warehouseMaterials';
 import {StadiumCrowd,type CrowdSection} from './golf-cart/stadiumCrowd';
 import {MOTU_STANDS,MOTU_SUN,motuStandPoint} from './levels/motu-beach-art';
 import {MOTU_SIGNS,MOTU_PALETTE} from './levels/motu-festival';
+import {MOTU_FLOODS,motuHeatLook,type MotuHeatLook} from './motuLighting';
+import {MotuSky} from './motuSky';
+import type {CoastWater,OceanColor} from './water';
 
 function festivalGraphic(key:string):THREE.CanvasTexture{
   const art=MOTU_SIGNS[key]??MOTU_SIGNS.welcome,canvas=document.createElement('canvas');canvas.width=1536;canvas.height=384;
@@ -43,11 +46,27 @@ function glowTexture(ring=false):THREE.DataTexture {
   const t=new THREE.DataTexture(data,size,size);t.needsUpdate=true;t.minFilter=t.magFilter=THREE.LinearFilter;return t;
 }
 
+function moonTexture():THREE.DataTexture {
+  const width=256,height=128,data=new Uint8Array(width*height*4);
+  const craters=Array.from({length:24},(_,i)=>({u:(i*.61803398875)%1,v:.16+((i*.41421356)%1)*.68,r:.012+(i%5)*.007}));
+  for(let y=0;y<height;y++)for(let x=0;x<width;x++){
+    const u=x/width,v=y/height;let value=.83+.035*Math.sin(u*173+Math.sin(v*91)*2);
+    for(const c of craters){const du=Math.min(Math.abs(u-c.u),1-Math.abs(u-c.u)),d=Math.hypot(du*2,v-c.v)/c.r;
+      value-=.23*Math.exp(-d*d*2);value+=.12*Math.exp(-(((d-.9)*7)**2));}
+    const k=(y*width+x)*4,n=Math.round(THREE.MathUtils.clamp(value,.35,1)*255);
+    data[k]=n;data[k+1]=n;data[k+2]=Math.min(255,n+6);data[k+3]=255;
+  }
+  const texture=new THREE.DataTexture(data,width,height);texture.colorSpace=THREE.SRGBColorSpace;
+  texture.minFilter=texture.magFilter=THREE.LinearFilter;texture.needsUpdate=true;return texture;
+}
+
 /** Scoped art owner: no movement changes, new downloads, geometry LODs or
  * reflection substitutes. Native collision meshes retain their full topology. */
 export class MotuBeachPresentation {
   readonly root=new THREE.Group();
   readonly materials=new WarehouseMaterials();
+  private readonly sky=new MotuSky();
+  private readonly oceanColors=new Map<string,{base:OceanColor;applied:OceanColor;mode:string}>();
   readonly crowd=new StadiumCrowd(motuCrowdLayout());
   private readonly replaced:{mesh:THREE.Mesh;geometry:THREE.BufferGeometry;material:THREE.Material|THREE.Material[]}[]=[];
   private readonly geometries=new Set<THREE.BufferGeometry>();
@@ -56,6 +75,15 @@ export class MotuBeachPresentation {
   private readonly sun=new THREE.Group();
   private readonly direction=new THREE.Vector3(...MOTU_SUN).normalize();
   private readonly flare=new Lensflare();
+  private readonly flareElements:LensflareElement[]=[];
+  private readonly moonMap=moonTexture();
+  private look:MotuHeatLook|undefined;
+  private readonly lampMaterial=this.materials.own(new THREE.MeshStandardMaterial({color:'#fff1c9',emissive:'#ffbd6d',roughness:.32}));
+  private readonly floodlights=MOTU_FLOODS.map(fixture=>{
+    const light=new THREE.SpotLight('#ffd098',0,170,.95,.8,2);
+    light.name='Motu / warm floodlight illumination';
+    light.position.fromArray(fixture.p);light.target.position.fromArray(fixture.target);light.castShadow=false;return light;
+  });
   private readonly disc=new THREE.Mesh(new THREE.SphereGeometry(2.15,32,20),
     new THREE.MeshBasicMaterial({color:new THREE.Color(3.2,2.8,1.9),toneMapped:false,fog:false,depthWrite:false}));
   constructor(parent:THREE.Group,components:readonly CustomComponent[]){
@@ -64,6 +92,9 @@ export class MotuBeachPresentation {
     parent.traverse(object=>{
       const mesh=object as THREE.Mesh;if(!mesh.isMesh||(mesh as THREE.InstancedMesh).isInstancedMesh)return;
       const c=components[mesh.userData.editorIdx];
+      if(c?.nm==='Motu / warm floodlight glass'){
+        this.replaced.push({mesh,geometry:mesh.geometry,material:mesh.material});mesh.material=this.lampMaterial;return;
+      }
       if(c?.nm?.startsWith('Motu / graphic sign / ')){
         const key=c.nm.slice('Motu / graphic sign / '.length);let texture=this.graphicTextures.get(key);
         if(!texture){texture=festivalGraphic(key);this.graphicTextures.set(key,texture);}
@@ -133,22 +164,52 @@ export class MotuBeachPresentation {
     });
     this.sun.name='Motu / sun disc, bloom and depth-occluded lens flare';
     this.disc.renderOrder=2;
-    this.flare.addElement(new LensflareElement(glowTexture(),380,0,new THREE.Color('#fff1ce')));
-    this.flare.addElement(new LensflareElement(glowTexture(true),110,.42,new THREE.Color('#a8dddc')));
-    this.flare.addElement(new LensflareElement(glowTexture(),70,.65,new THREE.Color('#f0bc7c')));
-    this.flare.addElement(new LensflareElement(glowTexture(true),190,.92,new THREE.Color('#f6ca91')));
+    for(const [size,distance,ring]of [[270,0,false],[88,.42,true],[55,.65,false],[155,.92,true]] as const){
+      const element=new LensflareElement(glowTexture(ring),size,distance,new THREE.Color('#ffe6b8'));
+      this.flareElements.push(element);this.flare.addElement(element);
+    }
+    for(const light of this.floodlights)this.root.add(light,light.target);
     this.sun.add(this.disc,this.flare);this.root.add(this.sun,this.crowd.root);parent.add(this.root);
+    this.setHeat(1);
     this.root.userData.visualOnly=true;
+  }
+  setHeat(runNumber:number){
+    const look=motuHeatLook(runNumber);if(this.look===look)return;this.look=look;
+    this.direction.fromArray(look.sunOffset).normalize();this.disc.scale.setScalar(look.discScale);
+    this.disc.material.color.setRGB(...look.discColor);
+    const map=look.name==='moonlight'?this.moonMap:null;
+    if(this.disc.material.map!==map){this.disc.material.map=map;this.disc.material.needsUpdate=true;}
+    this.flare.visible=look.name!=='moonlight';
+    for(const element of this.flareElements)element.color.set(look.name==='sunset'?'#ffc185':'#ffe5b5');
+    this.lampMaterial.emissiveIntensity=.18+look.lampPower*5;
+    for(const light of this.floodlights)light.intensity=3200*look.lampPower;
+  }
+  skyTexture(source:THREE.Texture){return this.sky.texture(source,this.look??motuHeatLook(1));}
+  applyOcean(water:CoastWater){
+    const look=this.look??motuHeatLook(1),night=look.name==='moonlight',sunset=look.name==='sunset';
+    const tint=night?[.19,.26,.40]:sunset?[.75,.56,.44]:[1,1,1];
+    for(const key of ['shallow','deep','peak','intersection','specular','shadow'] as const){
+      const current=water.params[key],saved=this.oceanColors.get(key);
+      if(saved?.applied===current&&saved.mode===look.name)continue;
+      const base=saved?.applied===current?saved.base:{...current};
+      const gain=key==='specular'?(night?[.38,.53,.78]:sunset?[1.5,.88,.38]:[1,1,1]):tint;
+      const applied={r:base.r*gain[0],g:base.g*gain[1],b:base.b*gain[2],a:base.a};
+      water.params[key]=applied;this.oceanColors.set(key,{base,applied,mode:look.name});
+    }
+    water.setMainLightDirection(this.direction);
   }
   update(time:number){this.crowd.update(time);}
   view(camera:THREE.Camera){this.sun.position.copy(camera.position).addScaledVector(this.direction,350);}
   get diagnostics(){return {spectators:this.crowd.count,sections:this.crowd.sections.length,
     surfaces:this.replaced.length,maps:this.materials.textures.size,graphics:this.graphicTextures.size,errors:[...this.materials.errors],
-    sunDirection:this.direction.toArray(),sunOcclusion:'depth buffer',geometryLod:false};}
+    sunDirection:this.direction.toArray(),sunOcclusion:'depth buffer',geometryLod:false,
+    lighting:{mode:this.look?.name,skyVariants:this.sky.count,moon:this.disc.material.map===this.moonMap,flare:this.flare.visible,
+      warmFloodlights:this.floodlights.length,floodPower:this.floodlights[0].intensity,extraShadowMaps:0,bloom:this.look?.bloom}};}
   dispose(){
     for(const r of this.replaced){r.mesh.geometry=r.geometry;r.mesh.material=r.material;}
     for(const g of this.geometries)g.dispose();this.geometries.clear();
     for(const t of this.graphicTextures.values())t.dispose();this.graphicTextures.clear();
+    this.sky.dispose();this.oceanColors.clear();this.moonMap.dispose();for(const light of this.floodlights)light.dispose();
     this.materials.dispose();this.marqueeTexture?.dispose();this.crowd.dispose();this.flare.dispose();this.disc.geometry.dispose();this.disc.material.dispose();
     this.root.removeFromParent();this.root.clear();
   }

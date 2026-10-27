@@ -1,0 +1,47 @@
+{
+  "passed": true,
+  "triangles": 21412,
+  "graphics": 4,
+  "closedRampEnds": 8,
+  "fittedPoints": 952,
+  "sideContacts": 424,
+  "watertightRaisedRamps": 2,
+  "loop": {
+    "frames": 295,
+    "maxY": 8.399309977000268,
+    "maxSpeed": 32.19104304813031,
+    "exit": [
+      -49.95158145889253,
+      -3.477276266285153e-17,
+      -35.14197057750472
+    ]
+  },
+  "boardwalk": {
+    "frames": 227,
+    "maxY": 6.300000190734863,
+    "targets": [
+      [
+        -42,
+        4
+      ],
+      [
+        -43,
+        19
+      ],
+      [
+        -49,
+        27
+      ],
+      [
+        -58,
+        27
+      ]
+    ]
+  },
+  "wave": {
+    "air": true,
+    "land": true,
+    "maxY": 16.266443771441757
+  },
+  "movementChanged": false
+}

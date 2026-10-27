@@ -2242,6 +2242,11 @@ export class UnityOcean {
     return this.prepassRenderTarget;
   }
 
+  /** Optional authored light direction; the original ocean default is unchanged. */
+  setMainLightDirection(direction:THREE.Vector3):void {
+    (this.oceanMaterial.uniforms.uMainLightDirection.value as THREE.Vector3).copy(direction).normalize();
+  }
+
   /** Fallback colour follows the atmosphere when no visible sky is available. */
   setSkyUrl(url: string, fogColor: THREE.ColorRepresentation, _horizonV = 1 - 600 / 887): void {
     this.currentSkyUrl = url;

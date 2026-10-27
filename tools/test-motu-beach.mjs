@@ -18,7 +18,7 @@ await withSkateRuntime(async({THREE,server,level,player,step,Level})=>{
   assert.equal(data.components.filter(c=>c.t==='gate'||c.t==='checkpoint').length,0,'timed competition retains its event finish/recovery');
   assert.equal(data.components.filter(c=>c.t==='vertramp'&&c.arcSteps===40).length,4);
   assert.ok(!data.components.some(c=>c.edgeGrinding===false),'ordinary exposed boundaries remain grindable');
-  assert.equal(level.motuBeachDiagnostics.spectators,774);
+  assert.equal(level.motuBeachDiagnostics.spectators,1351);
   assert.equal(level.motuBeachDiagnostics.geometryLod,false);
   const marquee=level.root.getObjectByName('Motu / graphic sign / welcome');
   assert.ok(marquee?.isMesh&&marquee.material.map?.isCanvasTexture,'the venue title survives source mesh batching');

@@ -1,6 +1,7 @@
 import type { CustomComponent, CustomLevelData } from '../level';
 import {MOTU_BEACH_SCENERY,MOTU_SKATE_FEATURES,MOTU_SUN} from './motu-beach-art';
 import {MOTU_FESTIVAL,MOTU_PALETTE} from './motu-festival';
+import {motuRampEndCaps,motuSolidBank} from './motu-solid-structures';
 
 // An open competition park inside ONE continuous transition. The toe, curved
 // corners, coping and outside deck belong to the same mesh: no overlapping
@@ -198,6 +199,9 @@ for(const c of components){
   if(c.nm?.startsWith('East rhythm roller'))c.color=MOTU_PALETTE.mint;
   if(c.nm==='Motu / competition halfpipe')c.color='#e9bc7e';
 }
+// Closed construction follows the exact riding profiles and remains editable.
+for(let i=0;i<components.length;i++)if(components[i].t==='ramp')components[i]=motuSolidBank(components[i]);
+components.push(...components.flatMap(motuRampEndCaps));
 
 export const JUNGLE_CUP_LEVEL: CustomLevelData = {
   v: 1, name: 'Motu Beach Invitational', spawn: [0, 0.1, 14], killY: -18,

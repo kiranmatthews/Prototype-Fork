@@ -3,15 +3,12 @@ import type {CustomComponent,DecorKind} from '../level';
 import {COASTAL_TOWN_ASSETS} from '../coastalTownAssets';
 import {createLoopMeshData,sampleLoop} from '../loopRide';
 import {warehouseBeam,warehouseRibbon,type WarehousePoint as P} from './warehouse-geometry';
+import {motuGroundedRibbon} from './motu-solid-structures';
 
 export const MOTU_PALETTE={cream:'#f2e4c9',teal:'#25b8b2',navy:'#174d60',coral:'#ed7857',yellow:'#efbc52',mint:'#bce4cf'};
 export const MOTU_LOOP={entry:[-59,0,-35] as P,radius:4.2,width:6.5,offset:9};
 export const MOTU_SIGNS:Record<string,{title:string;subtitle:string;color:string}>={
   welcome:{title:'MOTU BEACH',subtitle:'INVITATIONAL  /  SKATE • SURF • SUN',color:MOTU_PALETTE.navy},
-  lagoon:{title:'LAGOON BOWL',subtitle:'DEEP END  /  FIND YOUR FLOW',color:MOTU_PALETTE.teal},
-  vert:{title:'TIDELINE VERT',subtitle:'42 METRES  /  GO BIG',color:MOTU_PALETTE.coral},
-  loop:{title:'THE REEF LOOP',subtitle:'DROP IN  /  HOLD YOUR CHARGE',color:MOTU_PALETTE.navy},
-  street:{title:'PALM STREET',subtitle:'LEDGES  /  RAILS  /  GOOD TIMES',color:MOTU_PALETTE.coral},
   surf:{title:'MOTU SURF CLUB',subtitle:'BOARDS • WAX • COLD DRINKS',color:MOTU_PALETTE.teal},
   judges:{title:'THE BREAK',subtitle:'JUDGES  /  CREW  /  BEACH RADIO',color:MOTU_PALETTE.navy},
   floor:{title:'MOTU',subtitle:'BEACH INVITATIONAL',color:MOTU_PALETTE.teal},
@@ -67,23 +64,26 @@ add({t:'mesh',nm:'Motu / reef loop riding surface',p:MOTU_LOOP.entry,...createLo
   loopRadius:MOTU_LOOP.radius,loopOffset:MOTU_LOOP.offset,loopRequired:false,w:MOTU_LOOP.width,
   tex:'pavement',color:MOTU_PALETTE.teal,doubleSided:true});
 const drop=warehouseRibbon('Motu / reef loop gravity roll-in',[[-59,6.3,27],[-59,6.3,21],[-59,4.6,12],[-59,1,-3],[-59,0,-13],[-59,0,-23]],7,.45);
-Object.assign(drop,{tex:'plank',color:'#e8bd83',gravityTrack:true});add(drop);
+Object.assign(drop,{tex:'plank',color:'#e8bd83',gravityTrack:true});add(motuGroundedRibbon(drop));
 const walk=warehouseRibbon('Motu / elevated palm boardwalk',[[-59,6.3,27],[-49,6.3,27],[-43,4.7,19],[-42,1.3,4],[-42,0,-7]],5.4,.4);
-Object.assign(walk,{tex:'plank',color:'#e8bd83',gravityTrack:true});add(walk);
-// Visible timber piles and diagonal braces sit strictly beneath the decks.
-for(const [x,z,y]of [[-59,24,6.3],[-59,12,4.6],[-49,27,6.3],[-43,19,4.7],[-42,8,2.4]])for(const side of [-1,1]){
-  const xx=x+side*2.4;beam([xx,-.15,z],[xx,y-.3,z],.3,.3,'#875d3e');
-  beam([xx,0,z-2.5],[xx,y-.35,z+2.5],.18,.2,'#b88a58');
+Object.assign(walk,{tex:'plank',color:'#e8bd83',gravityTrack:true});add(motuGroundedRibbon(walk));
+// Continuous outer skin closes the loop's thickness; its central opening and
+// native inner riding surface remain clear. Coloured rims meet both skins.
+for(let i=0;i<192;i++){
+  const p=(angle:number,side:number,depth:number):P=>{
+    const q=sampleLoop(MOTU_LOOP,angle,side*MOTU_LOOP.width/2);
+    return q.point.map((v,k)=>v+MOTU_LOOP.entry[k]-q.normal[k]*depth) as P;
+  };
+  const a=i/192*Math.PI*2,b=(i+1)/192*Math.PI*2;
+  quad([p(a,-1,.38),p(a,1,.38),p(b,1,.38),p(b,-1,.38)],MOTU_PALETTE.teal,'pavement');
+  if(i===0||i===191){const angle=i===0?a:b;quad([p(angle,-1,0),p(angle,1,0),p(angle,1,.38),p(angle,-1,.38)],MOTU_PALETTE.cream);}
 }
-// Thick coloured shell, polished rims and six complete structural ribs.
 for(let i=0;i<192;i++)for(const side of [-1,1]){
   const a=sampleLoop(MOTU_LOOP,i/192*Math.PI*2,side*MOTU_LOOP.width/2),b=sampleLoop(MOTU_LOOP,(i+1)/192*Math.PI*2,side*MOTU_LOOP.width/2);
   const p=(q:typeof a,d:number):P=>q.point.map((v,k)=>v+MOTU_LOOP.entry[k]-q.normal[k]*d) as P;
-  quad([p(a,.02),p(b,.02),p(b,.38),p(a,.38)],i%24<12?MOTU_PALETTE.cream:MOTU_PALETTE.coral);
+  quad([p(a,0),p(b,0),p(b,.38),p(a,.38)],i%24<12?MOTU_PALETTE.cream:MOTU_PALETTE.coral);
   if(i%32===0)beam(p(a,.4),[p(a,.4)[0],0,p(a,.4)[2]],.13,.13,MOTU_PALETTE.navy);
 }
-sign('loop',[-52,10.3,-35],15,2.2);
-for(const x of [-61,-44])beam([x,0,-35],[x,11.7,-35],.22,.22,MOTU_PALETTE.navy);
 
 // A tall open horseshoe supplies a distinct vertical transfer landmark.
 add({t:'vertramp',nm:'Motu / coral wave wall',p:[0,0,-149],pts:Array.from({length:73},(_,i)=>{
@@ -132,15 +132,10 @@ for(const [i,[x,z]]of [[40,62],[53,-91],[-13,-174]].entries()){
   for(const side of [-1,1]){beam(q(side*3.1,0,4),q(side*3.1,3.7,4),.15,.15,MOTU_PALETTE.navy);asset('baypot',q(side*4.2,0,3),1,side*43);}
   sign(i===2?'judges':'surf',q(0,4.1,3.38),6,1.4,yaw);
 }
-// The front of the vert deck now has cladding, a fascia graphic and sheet joints.
-sign('vert',[43,9.2,-103.93],28,2.3);
-for(const x of [25.8,60.2]){
-  beam([x,0,-102.8],[x,10.5,-102.8],.2,.2,MOTU_PALETTE.navy);
-  for(let k=0;k<5;k++)box([x,1+k*.7,-103.8],[1.15,.42,.18],k%2?MOTU_PALETTE.coral:MOTU_PALETTE.cream);
+// Low fascia accents remain as construction details, without obstacle labels.
+for(const x of [30.5,55.5]){
+  for(let k=0;k<5;k++)box([x,1+k*.7,-103.955],[1.15,.42,.09],k%2?MOTU_PALETTE.coral:MOTU_PALETTE.cream);
 }
-sign('lagoon',[-42,7.1,-165],19,2.8);for(const x of [-50,-34])beam([x,0,-165],[x,8.6,-165],.22,.22,MOTU_PALETTE.navy);
-sign('street',[-24,4.1,35.1],16,2.4);
-for(const x of [-32.5,-15.5])beam([x,1.1,35.2],[x,5.5,35.2],.17,.17,MOTU_PALETTE.navy);
 // Low-backed street benches are real grindable objects, clear of approaches.
 for(const [x,z,yaw]of [[-35,3,0],[48,-56,0],[8,-105,90]]){
   add({t:'platform',nm:'Motu / timber skate bench',p:[x,.6,z],s:[1.8,.22,7],yaw,tex:'plank',color:'#e8bd83'});
@@ -178,6 +173,27 @@ for(let i=0;i<16;i++){
   const x=i%2?89:-94,z=46-Math.floor(i/2)*29;
   palm([x,-3,z],1.15+(i%3)*.12,i*41);asset('bayvine',[x,-1,z+3],1.25,i*29);
 }
+// Dense perimeter groves frame every viewing direction. The deck palms sit
+// in the clear gaps between spectator bays; beach roots remain on the sand.
+for(const [i,[x,y,z,k]]of [
+  [-76,4.4,37,1.3],[-77,4.4,-57,1.25],[-77,4.4,-115,1.3],[-68,4.4,-176,1.35],
+  [76,4.4,20,1.3],[77,4.4,-72,1.25],[73,4.4,-158,1.3],[62,4.4,-177,1.35],
+  [-71,-3,82,1.9],[-56,-3,88,2.1],[-42,-3,89,1.85],[-25,-3,92,2.2],[-8,-3,91,1.95],
+  [9,-3,89,2.15],[26,-3,88,1.9],[44,-3,84,2.1],[62,-3,80,1.95],[82,-3,72,2.05],
+  [108,-3,42,1.75],[112,-3,20,1.9],[112,-3,-5,1.8],[115,-3,-29,2],
+  [114,-3,-53,1.8],[111,-3,-78,1.95],[108,-3,-103,1.85],[102,-3,-143,2.05],
+  [-104,-3,23,1.75],[-107,-3,-5,1.9],[-108,-3,-38,1.8],[-106,-3,-71,2],
+  [-107,-3,-101,1.8],[-105,-3,-139,1.95],[-91,-3,-183,1.85],[86,-3,-181,2.05],
+].entries())palm([x,y,z],k,27+i*43);
+
+// Additional continuous grind lines use the native rail path contract.
+// Flat approaches and low rail heights leave the existing transition returns open.
+add({t:'rail',nm:'Motu / west promenade rail',p:[-64,.72,-83],len:22,color:MOTU_PALETTE.navy});
+add({t:'rail',nm:'Motu / east return rail',p:[61,.72,-74],len:20,color:MOTU_PALETTE.coral});
+add({t:'rail',nm:'Motu / south festival flatbar',p:[12,.68,31],len:14,yaw:90,color:MOTU_PALETTE.teal});
+add({t:'rail',nm:'Motu / palm crescent rail',p:[-46,.78,-103],pts:[[-10,6],[-7,1,2],[0,-2,2],[7,1,2],[10,6]],color:MOTU_PALETTE.teal});
+add({t:'rail',nm:'Motu / east surf kink rail',p:[39,.78,-82],pts:[[-4,8],[0,0,2],[4,-8,2],[4,-13]],color:MOTU_PALETTE.coral});
+
 // Layered headlands break the old straight cliff-wall silhouette. All islands
 // reuse complete Meshy meshes, with rooted palms at their exposed shoulders.
 for(const [i,[x,z,k]]of [[-137,-18,3.2],[-143,-70,4.1],[-134,-128,3.5],[-42,-230,2.8],[17,-234,3.3],[164,-148,2.2],[180,-166,3.1],[191,-140,1.9]].entries()){

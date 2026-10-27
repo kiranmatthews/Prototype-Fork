@@ -20,6 +20,7 @@ import { FrozenScenePass, type SceneRenderCallback } from './frozenScenePass';
 export type { SceneRenderCallback } from './frozenScenePass';
 import { UNITY_POST_PROFILE, UnityPostPass } from "./unityPost";
 import { UnityBloomPass } from "./unityBloom";
+import type {VisualBloomValue} from "./visual-treatment/settings";
 import { UnitySmaaPass } from "./unitySmaa";
 import { CrtGuestPass } from "./crt-guest/pass";
 import {
@@ -418,6 +419,8 @@ export class CoastPostRenderer {
     if (this.resolutionMode === "fixed" && !this.suspendedForGameFlow)
       this.applyCrtResolution();
   }
+
+  setLevelBloom(settings:Readonly<VisualBloomValue>|null):void {this.bloomPass.setLevelSettings(settings);}
 
   setEnabled(enabled: boolean): void {
     if (enabled === this.enabledState) return;

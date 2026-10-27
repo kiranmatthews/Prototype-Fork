@@ -64,7 +64,18 @@ button('Wave wall',()=>shot([18,14,-125],[0,2,-150],60));
 button('Surf club',()=>shot([20,10,39],[40,6,62],62));
 button('Sponsors and crowd',()=>shot([-62,10,-27],[-89,8,-29],60));
 button('Street terrace',()=>shot([-44,9,45],[-20,1,27],59));
-button('Sun flare',()=>shot([0,5,-45],[55,79,-84],60));
+button('Sun flare',()=>{
+  const d=g.getLevel().motuBeachDiagnostics.sunDirection;shot([0,5,-45],[d[0]*100,5+d[1]*100,-45+d[2]*100],60);
+});
+button('South stands',()=>shot([6,11,32],[-17,11,68],65));
+button('East stands',()=>shot([45,10,-28],[87,10,-33],65));
+button('Halfpipe ends',()=>shot([44,5.5,-83],[43,2,-113],61));
+button('Loop shell',()=>shot([-75,10,-47],[-54,4,-35],60));
+button('Channel ends',()=>shot([22,3.4,-4],[14,.5,-15],62));
+for(const [run,label]of [[1,'Daylight'],[2,'Sunset'],[3,'Moonlight']] as const)button(label,()=>{
+  const cup=g.getCompetition();cup.runs=Array.from({length:run-1},()=>({gameplayScore:0,bails:0,judges:[50,50,50],score:50,inactivityPenalty:0,longestIdleSeconds:0}));
+  cup.phase='standings';g.competitionAction('start');cup.phase='running';cup.stepRun=()=>false;
+});
 button('Native MAX',()=>g.renderQualitySettings.setRegularResolution(null));
 button('Normal resolution',()=>g.renderQualitySettings.setRegularResolution(720));
 button('Play',()=>{eye=null;document.body.classList.remove('motu-review-clean');if(g.getCompetition()?.phase==='intro')g.competitionAction('start');});
@@ -74,7 +85,11 @@ button('Report',()=>{
   const assets:Record<string,{instances:number;triangles:number}>= {};
   g.scene.traverse((o:any)=>{const k=o.userData.jungleAsset;if(!k||!o.isInstancedMesh)return;assets[k]??={instances:0,triangles:0};assets[k].instances+=o.count;assets[k].triangles=(o.geometry.index?.count??o.geometry.attributes.position.count)/3;});
   const lights:any[]=[];g.scene.traverse((o:any)=>{if(o.isLight)lights.push({type:o.type,intensity:o.intensity,color:o.color.getHexString()});});
-  status.textContent=JSON.stringify({motu:g.getLevel().motuBeachDiagnostics,assets,lights,render:g.getRenderFrameStats(),sizes:g.getRenderQualitySizes(),player:g.player.pos.toArray()},null,2);
+  const sky=(g.scene.getObjectByName('Sea-level sky backdrop')??g.scene.getObjectByName('Distant sky backdrop')).material.map,water=g.getLevel().water;
+  status.textContent=JSON.stringify({motu:g.getLevel().motuBeachDiagnostics,assets,lights,
+    sky:{texture:sky.uuid,width:sky.image.width,height:sky.image.height,waterTexture:water.horizonMaterial.uniforms.uHorizonSky.value.uuid},
+    water:{shallow:water.params.shallow,deep:water.params.deep,specular:water.params.specular},
+    render:g.getRenderFrameStats(),sizes:g.getRenderQualitySizes(),post:g.getLookDiagnostics(),player:g.player.pos.toArray()},null,2);
 });
 status.textContent='Local visual review. Native MAX and normal presentation; all scenery retains native geometry.';
 shot([156,145,137],[-3,0,-64]);

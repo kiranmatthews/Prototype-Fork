@@ -38,6 +38,7 @@ import { SEA_SKY_ART, SEA_SKY_CONTENT_FRACTION } from "./seaBackdrop";
 import { SKY_PRESETS, resolveLevelAtmosphere, atmosphereColor, atmosphereColorHex } from "./levelAtmosphere";
 import { DrownedCrownLighting } from "./drownedCrownLighting";
 import { MapIslandLighting } from "./mapIslandLighting";
+import {motuHeatLook} from "./motuLighting";
 import {configureBlockworksAssetRenderer} from './blockworksModelLoader';
 import { configureJungleAssetRenderer } from "./jungleAssets";
 import { installSceneryShadowPass } from "./sceneryShadowPass";
@@ -288,8 +289,8 @@ function updateSunShadow(focusX: number, focusY: number, focusZ: number): void {
   }
   if(!level.isCampaignMap&&level.atmosphere?.sunDirection)
     offset=authoredSunOffset.fromArray(level.atmosphere.sunDirection).normalize().multiplyScalar(90);
-  const heatSun = competition && isCompetitionLevel(current.id) && !editorViewActive &&
-    !(current.id==='jungle-cup'&&level.atmosphere?.sunDirection) ? competition.heatLook.sunOffset : null;
+  const heatSun = competition && isCompetitionLevel(current.id) && !editorViewActive
+    ? (current.id==='jungle-cup'?motuHeatLook(competition.runNumber):competition.heatLook).sunOffset : null;
   sun.target.position.set(focusX, focusY, focusZ);
   sun.target.updateMatrixWorld();
   sun.position.set(
@@ -836,10 +837,11 @@ let levelPostEnabled = false;
 
 function applyTheme(): void {
   const t = level.theme;
-  // Motu's authored coastal light owns all three runs; generic heat palettes
-  // otherwise replace its horizon and point the real light away from its sun.
-  const heat = competition && isCompetitionLevel(current.id) && !editorViewActive &&
-    !(current.id==='jungle-cup'&&level.atmosphere?.sunDirection) ? competition.heatLook : null;
+  // Motu's three coastal looks keep the sun/moon, actual light and venue lamps
+  // synchronized with the heat. Other competitions retain their existing looks.
+  const heat = competition && isCompetitionLevel(current.id) && !editorViewActive
+    ? (current.id==='jungle-cup'?motuHeatLook(competition.runNumber):competition.heatLook) : null;
+  level.setMotuHeat(current.id==='jungle-cup'&&!editorViewActive?competition?.runNumber??1:1);
   const skyPreset = heat?.sky ?? level.skyPreset;
   const atmosphere = resolveLevelAtmosphere(heat ? { theme: level.theme, skyPreset,
     jungleAtmosphere: level.jungleAtmosphere, isCampaignMap: level.isCampaignMap, skyBackdrop: level.skyBackdrop,
@@ -850,7 +852,7 @@ function applyTheme(): void {
   // background, not a fog-immune painted dome visible behind the last plank.
   // The editor deliberately restores the dome alongside its fog-free lens.
   syncSkyBackdropVisibility();
-  levelPostEnabled = skyPreset === "coast" && !NO_COAST_POST;
+  levelPostEnabled = (skyPreset === "coast" || current.id==='jungle-cup') && !NO_COAST_POST;
   // On initial campaign boot and during fade-backed level travel, the private
   // game-flow renderer owns the framebuffer. Do not allocate the much larger
   // gameplay composer behind it; renderPrimaryScene creates that scope for the
@@ -927,8 +929,9 @@ function applyTheme(): void {
     mat.transparent = transparent;
     mat.depthTest = mat.transparent;
     mat.userData.skyArtwork='painted';
-    if (mat.map !== layers.bg) {
-      mat.map = layers.bg;
+    const backdrop=level.motuSkyTexture(layers.bg);
+    if (mat.map !== backdrop) {
+      mat.map = backdrop;
       mat.needsUpdate = true;
     }
     if (mistMat.map !== layers.mist) {
@@ -1024,6 +1027,7 @@ function updateWaterPresentation(dt: number): void {
   }
   level.water.setQuality((level.skyPreset === "coast" || level.hasAuthoredOcean || (level.hasSwimmableWater && player.pos.z > -12)) && !split2p && !LITE_RENDER && !NO_OCEAN_PASSES ? "full" : "lite");
   oceanTuning.apply(level.water, (current.id === "warproom" || level.isCampaignMap) ? "map" : "level");
+  level.applyMotuOceanLook();
   level.water.setSkyUrl(import.meta.env.BASE_URL + SEA_SKY_ART[activeSky],
     scene.background as THREE.Color, presetHorizonV(activeSky));
   level.water.update(dt, camera);
@@ -1054,6 +1058,7 @@ let renderQualitySizes: RenderQualitySizes =
   );
 function configureCoastPost(enabled: boolean): void {
   if (coastPost) {
+    coastPost.setLevelBloom(current.id==='jungle-cup'&&!editorViewActive?motuHeatLook(competition?.runNumber??1).bloom:null);
     coastPost.setEnabled(enabled);
     syncPostResolution();
     return;
@@ -1076,6 +1081,7 @@ function configureCoastPost(enabled: boolean): void {
     pixelRatio: renderer.getPixelRatio(),
     multisample: false,
   });
+  coastPost.setLevelBloom(current.id==='jungle-cup'&&!editorViewActive?motuHeatLook(competition?.runNumber??1).bloom:null);
   coastPostCreateCount++;
 }
 

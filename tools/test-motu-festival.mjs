@@ -11,9 +11,47 @@ await withSkateRuntime(async({THREE,server,player:p,level:l,step})=>{
     const a=new THREE.Vector3().fromArray(c.vertices,c.indices[i]*3),b=new THREE.Vector3().fromArray(c.vertices,c.indices[i+1]*3),d=new THREE.Vector3().fromArray(c.vertices,c.indices[i+2]*3);
     assert.ok(b.sub(a).cross(d.sub(a)).lengthSq()>1e-12,`${c.nm}: degenerate triangle`);triangles++;
   }
-  assert.equal(l.loopMeshes.length,1);assert.equal(l.motuBeachDiagnostics.graphics,8);
+  assert.equal(l.loopMeshes.length,1);assert.equal(l.motuBeachDiagnostics.graphics,4);
   assert.equal(data.components.filter(c=>c.gravityTrack).length,2);
   assert.ok(data.components.some(c=>c.nm==='Motu / coral wave wall'&&c.arcSteps===48));
+  for(const key of ['lagoon','vert','loop','street'])assert.ok(!data.components.some(c=>c.nm===`Motu / graphic sign / ${key}`),'individual obstacle labels are removed');
+  assert.ok(data.components.some(c=>c.nm==='Motu / sponsor boards and pasted stickers'),'sponsors remain');
+  const closures=data.components.filter(c=>c.nm?.startsWith('Motu / closed ramp end / '));
+  assert.equal(closures.length,8,'both ends of the four open transitions are closed');
+  let fittedPoints=0,sideContacts=0;
+  const {MeshSideCollisions}=await server.ssrLoadModule('/src/meshSideCollisions.ts');
+  for(const c of closures){
+    const sourceName=c.nm.slice('Motu / closed ramp end / '.length).replace(/ \/ [12]$/,''),sourceIndex=data.components.findIndex(c=>c.nm===sourceName);
+    const source=l.groundMeshes.find(m=>m.userData.editorIdx===sourceIndex&&m.userData.vertRampMesh);
+    assert.ok(source,sourceName);
+    const positions=source.geometry.getAttribute('position'),surface=[];
+    for(let i=0;i<positions.count;i++)surface.push(new THREE.Vector3().fromBufferAttribute(positions,i).applyMatrix4(source.matrixWorld));
+    const mesh=l.groundMeshes.find(m=>m.userData.editorIdx===data.components.indexOf(c)),sides=new MeshSideCollisions();
+    assert.ok(mesh&&mesh.userData.solidSides);sides.add(mesh,()=>true);
+    const beforeContacts=sideContacts;
+    for(let i=0;i<c.vertices.length;i+=12){
+      const a=new THREE.Vector3().fromArray(c.vertices,i),b=new THREE.Vector3().fromArray(c.vertices,i+3);
+      for(const point of [a,b]){assert.ok(surface.some(v=>v.distanceTo(point)<.0001),`${c.nm}: cap fits the native surface`);fittedPoints++;}
+      if(Math.min(a.y,b.y)<.36)continue;
+      const point=a.clone().add(b).multiplyScalar(.5);point.y=.015;
+      const normal=b.clone().sub(a);normal.set(-normal.z,0,normal.x).normalize();
+      for(const sign of [-1,1]){
+        const from=point.clone().addScaledVector(normal,sign*.9),to=point.clone().addScaledVector(normal,-sign*.9),contact=new THREE.Vector3();
+        assert.ok(sides.resolve(from,to,{x:.2,y:.3,z:.2},contact),`${c.nm}: swept side contact`);sideContacts++;
+      }
+    }
+    assert.ok(sideContacts>beforeContacts,`${c.nm}: end has blocking construction`);
+    sides.dispose();
+  }
+  // Every indexed ribbon edge belongs to two faces, including the apron cap.
+  for(const c of data.components.filter(c=>c.gravityTrack)){
+    const edges=new Map();
+    for(let i=0;i<c.indices.length;i+=3)for(const [a,b]of [[0,1],[1,2],[2,0]]){
+      const ids=[c.indices[i+a],c.indices[i+b]].sort((a,b)=>a-b),key=ids.join(':');edges.set(key,(edges.get(key)??0)+1);
+    }
+    assert.ok([...edges.values()].every(n=>n===2),`${c.nm}: watertight body`);
+    for(let i=0;i<c.vertices.length/3;i++)if(i%4>=2)assert.equal(c.vertices[i*3+1],-.06);
+  }
   const place=(point,heading,speed=0)=>{
     p.respawn(l,true,true,{position:new THREE.Vector3(...point),heading:new THREE.Vector3(...heading)});
     p.freeSkate=true;p.speed=speed;p.axisF.set(...heading);p.axisL.set(p.axisF.z,0,-p.axisF.x);
@@ -51,6 +89,7 @@ await withSkateRuntime(async({THREE,server,player:p,level:l,step})=>{
     if(air&&p.grounded){land=true;break;}
   }
   assert.ok(air&&land,'coral wave returns to supported ground');
-  const report={passed:true,triangles,graphics:8,loop,boardwalk:{frames:walkFrames,maxY:walkMaxY,targets},wave:{air,land,maxY:waveMaxY},movementChanged:false};
+  const report={passed:true,triangles,graphics:4,closedRampEnds:closures.length,fittedPoints,sideContacts,watertightRaisedRamps:2,
+    loop,boardwalk:{frames:walkFrames,maxY:walkMaxY,targets},wave:{air,land,maxY:waveMaxY},movementChanged:false};
   await writeFile(process.env.MOTU_FESTIVAL_REPORT??'/private/tmp/motu-festival-native.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report));
 });

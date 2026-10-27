@@ -7,6 +7,7 @@ import {
   visualTreatmentActivity,
   visualTreatmentSettings,
   type VisualBloomValue,
+  type VisualTreatmentValue,
 } from "./visual-treatment/settings";
 
 export const UNITY_BLOOM_MAX_DIMENSION = 960;
@@ -284,6 +285,9 @@ function normalizedTint(tint: readonly number[]): THREE.Vector3 {
 
 export interface UnityBloomDiagnostics {
   active: boolean;
+  source: "level" | "user";
+  intensity: number;
+  threshold: number;
   mipCount: number;
   sizes: Array<{ width: number; height: number }>;
   drawCount: number;
@@ -323,6 +327,8 @@ export class UnityBloomPass extends Pass {
   private sourceWidth = 1;
   private sourceHeight = 1;
   private settings: Readonly<VisualBloomValue> = visualTreatmentSettings.value.bloom;
+  private userSettings: Readonly<VisualTreatmentValue> = visualTreatmentSettings.value;
+  private levelSettings: Readonly<VisualBloomValue> | null = null;
   private currentSpec: BloomPyramidSpec | null = null;
   private targetsDirty = true;
   private readonly tint = normalizedTint(this.settings.tint);
@@ -339,18 +345,23 @@ export class UnityBloomPass extends Pass {
     this.needsSwap = true;
     this.setSize(width, height);
     this.unsubscribe = visualTreatmentSettings.subscribe((value) => {
-      const next = value.bloom;
-      if (
-        next.downscale !== this.settings.downscale ||
-        next.maxIterations !== this.settings.maxIterations
-      ) {
-        this.targetsDirty = true;
-      }
-      this.settings = next;
-      this.tint.copy(normalizedTint(next.tint));
-      this.lookActive = visualTreatmentActivity(value).bloom;
-      this.syncEnabled();
+      this.userSettings=value;this.applySettings();
     }, true);
+  }
+
+  /** A level-local authored look never writes to the user's saved settings.
+   * Clearing it immediately restores the current user value, including edits
+   * made while that level was active. Allocation caps and disable gates apply. */
+  setLevelSettings(settings:Readonly<VisualBloomValue>|null):void {
+    if(this.levelSettings===settings)return;
+    this.levelSettings=settings;this.applySettings();
+  }
+  private applySettings():void {
+    const next=this.levelSettings??this.userSettings.bloom;
+    if(next.downscale!==this.settings.downscale||next.maxIterations!==this.settings.maxIterations)this.targetsDirty=true;
+    this.settings=next;this.tint.copy(normalizedTint(next.tint));
+    this.lookActive=this.levelSettings?next.intensity>0:visualTreatmentActivity(this.userSettings).bloom;
+    this.syncEnabled();
   }
 
   /** Gates bloom with the owning presentation stack (including ?nopost). */
@@ -364,6 +375,8 @@ export class UnityBloomPass extends Pass {
     const sizes = this.currentSpec?.sizes.map((size) => ({ ...size })) ?? [];
     return {
       active: this.enabled && !this.disposed,
+      source: this.levelSettings ? "level" : "user",
+      intensity: this.settings.intensity,threshold: this.settings.threshold,
       mipCount: sizes.length,
       sizes,
       drawCount: this.lastDrawCount,
