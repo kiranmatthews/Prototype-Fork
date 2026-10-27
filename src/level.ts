@@ -1070,6 +1070,7 @@ export const TEX_KINDS = [
   "waterfall-basalt",
   "waterfall-timber",
   "waterfall-cascade",
+  "waterfall-bark",
 
   ...NIGHTWORKS_VOLCANO_TEXTURES,
   ...ROOM_TEXTURE_KINDS,
@@ -4803,8 +4804,8 @@ export class Level {
       return texture;
     }
     if(kind==='coast-terrain')return this.surfaceTexture('coast-bedrock');
-    if(kind==='waterfall-basalt'||kind==='waterfall-timber'||kind==='waterfall-cascade'){
-      const file=kind==='waterfall-basalt'?'wet-basalt':kind==='waterfall-timber'?'sluice-timber':'flowing-water';
+    if(kind==='waterfall-basalt'||kind==='waterfall-timber'||kind==='waterfall-cascade'||kind==='waterfall-bark'){
+      const file=kind==='waterfall-basalt'?'wet-basalt-v2':kind==='waterfall-timber'?'sluice-timber':kind==='waterfall-bark'?'cedar-bark-v2':'flowing-water';
       const texture=Level.finishTex(this.surfaceImage(`waterfall-climb/${file}.webp`));
       this.surfTexCache.set(kind,texture);return texture;
     }

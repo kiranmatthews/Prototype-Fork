@@ -1,0 +1,608 @@
+{
+  "recordedUTC": "2026-10-27T12:12:42.146855+00:00",
+  "design": "Second design; supersedes all first-design route metrics and screenshots",
+  "mainNative": {
+    "state": "finished",
+    "deaths": 0,
+    "cratesBroken": 27,
+    "totalCrates": 49,
+    "activeCheckpoints": 10,
+    "position": [
+      66.43119082261244,
+      156.1266666691502,
+      -1112.035798210885
+    ],
+    "frames": 23447,
+    "metrics": {
+      "skateFrames": 2650,
+      "skateMetres": 778.5752265179106,
+      "grindFrames": 1567,
+      "grindMetres": 136.05170448772063,
+      "moverRides": 5,
+      "drumLaunches": 4
+    }
+  },
+  "bonusNative": {
+    "completionScope": "complete-stage",
+    "activeStageCrates": 22,
+    "bonusCrateTotal": 0,
+    "bonusCrates": 0,
+    "gemEarned": true,
+    "deaths": 0,
+    "cratesBroken": 22,
+    "frames": 4264
+  },
+  "combinedChromeLite": {
+    "state": "finished",
+    "deaths": 0,
+    "cratesBroken": 27,
+    "totalCrates": 49,
+    "activeCheckpoints": 10,
+    "position": [
+      66.4265881744442,
+      156.1266666691502,
+      -1112.037969152239
+    ],
+    "frames": 27681,
+    "metrics": {
+      "skateFrames": 2650,
+      "skateMetres": 778.5978093268573,
+      "grindFrames": 1567,
+      "grindMetres": 136.04934562695962,
+      "moverRides": 5,
+      "drumLaunches": 4
+    },
+    "bonusCrates": 22,
+    "gemEarned": true
+  },
+  "consoleErrors": [],
+  "tuningUnchanged": true,
+  "sourceMatches": true,
+  "checkpointRecovery": [
+    {
+      "checkpoint": 0,
+      "before": {
+        "frame": 43,
+        "time": 0.7166666666666667,
+        "position": [
+          -7.1,
+          1.2,
+          -94
+        ],
+        "heading": [
+          0,
+          0,
+          -1
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "Cedar root bank",
+          "y": 1.2,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      },
+      "after": {
+        "frame": 382,
+        "time": 6.366666666666666,
+        "position": [
+          -6,
+          1.2,
+          -94
+        ],
+        "heading": [
+          0,
+          0,
+          -1
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "Cedar root bank",
+          "y": 1.2,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "checkpoint": 4,
+      "before": {
+        "frame": 425,
+        "time": 7.083333333333333,
+        "position": [
+          -1.1,
+          12,
+          -1090
+        ],
+        "heading": [
+          1,
+          0,
+          0
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "Thunder basin breathing bank",
+          "y": 12,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      },
+      "after": {
+        "frame": 2141,
+        "time": 35.68333333333333,
+        "position": [
+          0,
+          12,
+          -1090
+        ],
+        "heading": [
+          1,
+          0,
+          0
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "Thunder basin breathing bank",
+          "y": 12,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "checkpoint": 6,
+      "before": {
+        "frame": 2184,
+        "time": 36.4,
+        "position": [
+          -30.1,
+          53.4,
+          -1118
+        ],
+        "heading": [
+          1,
+          0,
+          0
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "Waterwheel upper dock",
+          "y": 53.4,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      },
+      "after": {
+        "frame": 2590,
+        "time": 43.166666666666664,
+        "position": [
+          -29,
+          53.4,
+          -1118
+        ],
+        "heading": [
+          1,
+          0,
+          0
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "Waterwheel upper dock",
+          "y": 53.4,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "checkpoint": 8,
+      "before": {
+        "frame": 2633,
+        "time": 43.88333333333333,
+        "position": [
+          -37.1,
+          119.4,
+          -1110
+        ],
+        "heading": [
+          1,
+          0,
+          0
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "Cloud rest balcony",
+          "y": 119.4,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      },
+      "after": {
+        "frame": 3152,
+        "time": 52.53333333333333,
+        "position": [
+          -36,
+          119.4,
+          -1110
+        ],
+        "heading": [
+          1,
+          0,
+          0
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "Cloud rest balcony",
+          "y": 119.4,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "checkpoint": 9,
+      "before": {
+        "frame": 3195,
+        "time": 53.25,
+        "position": [
+          32.9,
+          141.4,
+          -1110
+        ],
+        "heading": [
+          1,
+          0,
+          0
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "Counterweight upper dock",
+          "y": 141.4,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      },
+      "after": {
+        "frame": 3663,
+        "time": 61.05,
+        "position": [
+          34,
+          141.4,
+          -1110
+        ],
+        "heading": [
+          1,
+          0,
+          0
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "Counterweight upper dock",
+          "y": 141.4,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    }
+  ],
+  "isolatedCrossings": {
+    "passed": 29,
+    "total": 29
+  },
+  "sha256": {
+    "src/levels/waterfall-climb.ts": "1ad949ded48e7528e4213313aef17a6717295ddeab3bddaf14e1324a73677098",
+    "src/levels/waterfall-climb-bonus.ts": "d0a8e31f0dd310ef5c602e09b68bde8f281bc3ea11154f54087ca719484c24d9",
+    "src/levels/waterfall-climb-geometry.ts": "ce7767439df022bce50b7fc8cf7aff2245a187f2f105756b14a3175f6fb35af5",
+    "tools/waterfall-climb-pilot.mjs": "0cfa72f84e85200b31f08061e3582d679d40f7a365639209a2f7bd62f8c1a148",
+    "docs/waterfall-climb/runs/redesign-greybox-browser/lite-journey.json": "7be300f2be87a09e611bf74cf2949041367cb0b704037b44aebc70c55a40f29d",
+    "docs/waterfall-climb/runs/main-physics.json": "cfbe767d55e54b9f69bcc1cc91aa057a45bbf2c30265d3453f450aeb3e3831c3",
+    "docs/waterfall-climb/runs/bonus-physics.json": "b52412946cc623dd5acadb6ac8c68240437b4da040e909f661ff2867e4241d68",
+    "docs/waterfall-climb/runs/redesign-recovery.json": "5e25d0aeba92cf436f5678c4131b4a1832bfd43a12f955392e90313f23a1e9fa",
+    "docs/waterfall-climb/runs/redesign-gaps.json": "e4140280937c7f794416cb76e933f53d151679c59eee76a2ca9db93735879753"
+  },
+  "limits": [
+    "Native bonus run uses its standalone gallery entry. Actual detour return and clear-gem accounting are verified by the combined Chrome run.",
+    "Focused starts are debugging fixtures; continuous completion evidence starts at the source spawn and uses no checkpoint warp or position writes.",
+    "Lite rendering is the geometry pass. Final full-render, normal presentation and MAX/native art reviews remain required."
+  ]
+}

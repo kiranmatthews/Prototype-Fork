@@ -1,0 +1,10 @@
+{
+  "main": {
+    "components": 224,
+    "sha256": "ef25831eecbb9d1ab9089e580eb062ebf2dd39a285452cc1afb71c87f5da0cbb"
+  },
+  "bonus": {
+    "components": 53,
+    "sha256": "2f2d44de481624b89c1280972f87edaed798af123e675b1acd3dbfd59c3e6db8"
+  }
+}

@@ -18,3 +18,10 @@ Three.js-based river shaders and scenery instancing are reused; a level-scoped
 material scrolls two samples of the new foam texture over the waterfall.
 The same authored mesh geometry is retained at every viewing distance and in
 reflections. No character animation or movement tuning is changed.
+
+Second-design materials: wet-basalt-v2.webp and cedar-bark-v2.webp were generated
+with the built-in OpenAI image tool on 27 October 2026 UTC (28 October NZDT).
+Both are 1024-square WebP conversions of the original generated PNGs. Prompts
+and hashes are recorded in docs/waterfall-climb/redesign-image-*.json.
+The original first-design basalt remains preserved; the revised material loader
+uses the new broad natural strata rather than the first design paving texture.

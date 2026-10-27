@@ -5254,3 +5254,20 @@ authoring calculation supplements the connected native/browser evidence; it
 does not replace collision simulation. No gameplay changes were needed and no
 build or browser run was repeated. See
 [pacing review](beach-street/kite/pacing-review.json).
+
+
+## 2026-10-27 — Waterfall Climb replacement: river variety and a skateable ascent
+
+The user rejected the first published layout's repeated river modules and climbing rows. This increment replaces those generators with twelve authored places informed by original PS1 Upstream, Up the Creek, Great Gate and Native Fortress footage. It supersedes the earlier Waterfall iteration's 140-gap/96-box metrics and screenshots.
+
+**Revision prompt → continuously playable:** 10:12:55–12:12:42 UTC, **1h59m47s**, including the actual bonus detour and summit in Chrome. The replacement greybox was frozen before dressing was enabled at 12:21 UTC. Final validation completed after the 12:58 production build and 13:01 production browser smoke. New material images were prepared during the unavailable native-test slot but were applied only after the gameplay lock.
+
+The approximately 1.1 km river now changes between offset stones, a narrow branch, a drifting leaf, a curved cedar skate ride and grind, a timed sluice, fragile stones, a ferry, and a banked millrace with an ollie. The side-view climb rises 143.4 m from its basin through unequal gatehouse shelves, a tall waterwheel lift, a curved skating aqueduct and second grind, drum transfers and paired counterweights. There are 29 authored gap/spin crossings and ten checkpoints. The rebuilt 22-box Hidden Spillway combines a timed wheel, high bounce cache, ferry, fragile beams and switch-revealed stones. Player and tuning files are unchanged.
+
+After gameplay validation, existing complete Meshy assets and new generated basalt/bark materials dress connected river banks, an eroded cliff face, open arches, aqueduct piers, corbels and four animated falling-water curtains. Native geometry remains intact at every distance/reflection. The art pass preserves both gameplay fingerprints. The final camera audit clears 1,152 rays from the actual full-render journey; the final rendered inspection also covers normal 720 + CRT and MAX/native 1920×1080.
+
+The continuous full-render input run collects all **49/49** combined boxes and all ten checkpoints, earns the real clear gem and finishes at the summit in **27,667 frames / 461.12 seconds**, with no deaths, bails or console errors. It measures **778.6 m skating, 136.0 m of authored grinds, five moving-platform rides and four drum launches**. Native main/bonus, all 29 isolated crossings, five deliberate checkpoint recoveries, actual free bonus failure/retry/payout and the supported return all pass. The final two corbel adjustments and four foliage removals are scenery-only and covered by the final visual audit. The exact `check:levels` package script and equivalent TypeScript/Vite build pass through bundled Node (npm is unavailable); no `check:all` was run. Built Chrome smoke reports `Codex/sol fork · build 10-27 12:58 UTC` and a clean console.
+
+The old-base package measures **1,000,868,907 bytes**, 868,907 above the hosting cap, a 503,363-byte increase from the previous task build. The coordinator's existing current-base integration/size dependency remains; no unrelated content was pruned. Work remains local for **Coordinate local work and releases**, with no main push or GitHub polling.
+
+Evidence: [design/reference notes](waterfall-climb/REDESIGN.md), [replacement playtest](waterfall-climb/REDESIGN_PLAYTEST.md), [final validation](waterfall-climb/redesign-final-validation.json), [continuous journey](waterfall-climb/redesign-complete-journey.json), [climb](waterfall-climb/redesign-climb.jpg), and [overview](waterfall-climb/redesign-overview.jpg).

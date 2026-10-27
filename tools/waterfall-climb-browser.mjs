@@ -5,7 +5,7 @@ const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
 const fromBeat=Number(process.env.WATERFALL_FROM_BEAT||0),withBonus=process.env.WATERFALL_WITH_BONUS==='1';
 const base=(process.argv[2]||'http://127.0.0.1:5274').replace(/\/$/,''),mode=process.env.WATERFALL_MODE||'lite';
 const out=process.env.WATERFALL_OUTPUT||'docs/waterfall-climb/runs/browser';await mkdir(out,{recursive:true});
-const bundle=await build({stdin:{contents:"export {WATERFALL_CLIMB_LEVEL as source,WATERFALL_BEATS as route} from './src/levels/waterfall-climb';export {WATERFALL_CLIMB_BONUS as bonus} from './src/levels/waterfall-climb-bonus';export {runWaterfallClimb,runWaterfallBonus} from './tools/waterfall-climb-pilot.mjs';export {puzzleControls} from './tools/puzzle-controls.mjs';",resolveDir:process.cwd()},bundle:true,format:'esm',write:false});
+const bundle=await build({stdin:{contents:"export {WATERFALL_CLIMB_LEVEL as source,WATERFALL_ACTIONS as route} from './src/levels/waterfall-climb';export {WATERFALL_CLIMB_BONUS as bonus} from './src/levels/waterfall-climb-bonus';export {runWaterfallClimb,runWaterfallBonus} from './tools/waterfall-climb-pilot.mjs';export {puzzleControls} from './tools/puzzle-controls.mjs';",resolveDir:process.cwd()},bundle:true,format:'esm',write:false});
 const browser=await chromium.launch({headless:true,channel:'chrome'});
 const page=await browser.newPage({viewport:{width:1920,height:1080},deviceScaleFactor:1,serviceWorkers:'block'}),errors=[];
 page.on('pageerror',error=>errors.push(error.message));page.on('console',message=>{if(message.type()==='error')errors.push(message.text());});
@@ -17,7 +17,7 @@ try{
   return {id:g.getCurrentLevel().id,position:g.player.pos.toArray(),grounded:g.player.grounded,resolution:g.renderQualitySettings.regularResolution,buffer:[g.renderer.domElement.width,g.renderer.domElement.height],stamp:document.querySelector('.hud-build')?.textContent};});
  console.log('READY',mode,JSON.stringify(start));assert.match(start.stamp,/Codex\/sol fork/);if(mode==='full')assert.deepEqual(start.buffer,[1920,1080]);
  await page.screenshot({path:`${out}/${mode}-arrival.png`});
- if(fromBeat){await page.keyboard.press('m');for(let i=0;i<7;i++){await page.keyboard.press('l');await page.waitForTimeout(180);}await page.keyboard.press('m');await page.waitForTimeout(600);}
+ if(fromBeat){await page.keyboard.press('m');for(let i=0;i<5;i++){await page.keyboard.press('l');await page.waitForTimeout(180);}await page.keyboard.press('m');await page.waitForTimeout(600);}
  if(process.env.WATERFALL_SMOKE==='1'){
   await page.keyboard.down('ArrowUp');await page.waitForTimeout(1200);await page.keyboard.up('ArrowUp');await page.waitForTimeout(600);
   const moved=await page.evaluate(()=>({position:window.__game.player.pos.toArray(),grounded:window.__game.player.grounded,state:window.__game.player.state}));
@@ -29,7 +29,7 @@ try{
    const report=window.waterfallJourney={frame:0,done:false,error:null,actions:[],evidence:[],trace:[],tuning:JSON.stringify(g.TUNING),sourceMatches:JSON.stringify(m.source)===JSON.stringify(g.getCurrentLevel().data)};
    const context={p,l,source:m.source,route:m.route,report,get frame(){return report.frame;}};
    function* completeLevel(){
-    report.phase='river';yield* m.runWaterfallClimb(context,{untilBeat:42});
+    const split=m.route.findIndex(a=>a.kind==='bonus');report.phase='river';report.riverResult=yield* m.runWaterfallClimb(context,{untilBeat:split});
     const c=m.puzzleControls(context),b=l.bonusPlatformDiagnostics;
     yield* c.walk([b.x+5,b.y,b.z],'Find the hidden spillway');yield* c.hop([b.x,b.topY,b.z],'Jump into the hidden spillway',{tolerance:1.6});
     while(g.getCurrentLevel().id!=='bonus:waterfall-climb')yield {};
@@ -37,10 +37,10 @@ try{
     report.bonusResult=yield* m.runWaterfallBonus(bonusContext);
     while(g.getCurrentLevel().id!=='waterfall-climb')yield {};
     c.check(g.getLevel()===l,'Bonus restored the same suspended parent');c.check(p.bonusCrates===22,'All bonus boxes returned');
-    report.phase='waterfall';const result=yield* m.runWaterfallClimb(context,{fromBeat:42});
+    report.phase='waterfall';const result=yield* m.runWaterfallClimb(context,{fromBeat:split+1});
     c.check(p.cratesBroken+p.bonusCrates===l.totalCrates,'Combined all-box denominator');
     c.check(p.gemEarned,'Complete river, bonus and ascent earned the real clear gem');
-    return {...result,bonusCrates:p.bonusCrates,gemEarned:p.gemEarned};
+    const metrics=Object.fromEntries(Object.keys(result.metrics).map(k=>[k,result.metrics[k]+report.riverResult.metrics[k]]));return {...result,metrics,bonusCrates:p.bonusCrates,gemEarned:p.gemEarned};
    }
    const pilot=withBonus?completeLevel():m.runWaterfallClimb(context,{fromBeat});report.fromBeat=fromBeat;report.initialCheckpointWarp=fromBeat>0;report.withBonus=withBonus;
    let next=pilot.next(),last={},advanced=false;
@@ -59,7 +59,7 @@ try{
    p.commitRenderStep=(...args)=>{
     commit(...args);if(!advanced||report.done)return;advanced=false;report.frame++;
     const pose={frame:report.frame,position:p.pos.toArray(),grounded:p.grounded,state:p.state,deaths:p.totalDeaths,crates:p.cratesBroken,
-      camera:g.camera.position.toArray(),ground:p.groundHit?.name,beat:report.beat,phase:report.phase};
+      camera:g.camera.position.toArray(),ground:p.groundHit?.name,beat:report.beat,phase:report.phase,freeSkate:p.freeSkate,speed:p.speed,rail:p.grindRail?g.getLevel().rails.indexOf(p.grindRail):null,mover:p.groundHit?.moverId??null};
     report.pose=pose;if(report.frame%24===0)report.trace.push(pose);
     try{next=pilot.next();if(next.done){report.done=true;report.result=next.value;report.tuningUnchanged=JSON.stringify(g.TUNING)===report.tuning;}}
     catch(error){report.done=true;report.error=String(error);}
@@ -70,6 +70,9 @@ try{
    await page.waitForTimeout(1000);state=await page.evaluate(()=>({done:window.waterfallJourney.done,error:window.waterfallJourney.error,stage:window.waterfallJourney.stage,pose:window.waterfallJourney.pose}));
    const beat=state.pose?.beat??0,shot=`${state.pose?.phase??'route'}-${String(Math.floor(beat/12)).padStart(2,'0')}`;
    if(!shots.has(shot)){shots.add(shot);await page.screenshot({path:`${out}/${mode}-route-${String(shot).padStart(2,'0')}.png`});}
+   if(mode==='full'&&state.pose?.phase==='waterfall'&&beat===64&&state.pose.position[2]<-1138&&!shots.has('aqueduct-underpass')){
+    shots.add('aqueduct-underpass');await page.screenshot({path:`${out}/full-aqueduct-underpass.png`});
+   }
    if(state.pose?.phase==='bonus'){
     const detail=/bell|Last waterwheel|Treasury|Revealed spillway/i.exec(state.stage??'')?.[0].toLowerCase().replaceAll(' ','-');
     if(detail&&!shots.has(detail)){shots.add(detail);await page.screenshot({path:`${out}/${mode}-bonus-${detail}.png`});}

@@ -1,0 +1,14 @@
+{
+  "tool": "Built-in image_gen",
+  "dateUTC": "2026-10-27",
+  "assets": [
+    {
+      "file": "public/waterfall-climb/wet-basalt-v2.webp",
+      "prompt": "Create one square seamless tileable albedo texture for the native stone islands and carved cliff shelves of a lush waterfall platform game. Edge-to-edge natural water-worn basalt, broad uneven interlocking plates with gently layered mineral strata, cool slate grey and muted teal stone, soft fresh moss concentrated in a few crevices, occasional pale worn exposed edges. Hand-painted stylized game material with broad readable shapes and restrained fine detail. The rock is a continuous natural formation, not cobblestone pavement, masonry blocks, pebbles, or a grid. Uniform diffuse illumination only: no directional lighting, cast shadow, black occlusion, reflections, horizon, perspective, border, typography, objects, vegetation tufts, or water. Orthographic surface viewed straight down. The four edges must tile invisibly. Maintain good midtone brightness so the level's real lighting supplies the shadows. Intended as a repeating texture on actual 3D geometry; do not render a scene or an isolated 3D rock."
+    },
+    {
+      "file": "public/waterfall-climb/cedar-bark-v2.webp",
+      "prompt": "One square seamless repeating albedo texture for the bark of a gigantic fallen cedar used as a rideable root in a lush stylized 3D waterfall platform game. Hand-painted warm reddish umber cedar bark with broad twisting longitudinal ridges running vertically, soft rounded worn raised areas, darker muted brown grooves, sparse moss deep in a few grooves, weathered golden exposed wood scars. Bold medium-scale readable forms with subtle painterly brushwork, quiet matte diffuse shading. No planks, board seams, masonry, nails, grid, lettering, knots rendered as holes, leaves, branches, objects, scenery, perspective, horizon or lighting gradients. Orthographic surface fills the full square. Seamless left-right and top-bottom edges. Keep the midtones warm and clear so the real game lights provide directional shadows. This is a flat material texture for actual curved 3D trunk geometry, not a picture of a tree or a log."
+    }
+  ]
+}

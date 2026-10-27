@@ -4,7 +4,7 @@ import {build} from 'esbuild';
 const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
 const base=process.argv[2]||'http://127.0.0.1:5274',mode=process.env.WATERFALL_MODE||'lite';
 const out=process.env.WATERFALL_OUTPUT||'docs/waterfall-climb/runs/review';await mkdir(out,{recursive:true});
-const bundle=await build({stdin:{contents:"export {WATERFALL_CLIMB_LEVEL as source,WATERFALL_BEATS as route} from './src/levels/waterfall-climb';export {WATERFALL_CLIMB_BONUS as bonus} from './src/levels/waterfall-climb-bonus';export {runWaterfallBonus} from './tools/waterfall-climb-pilot.mjs';export {puzzleControls} from './tools/puzzle-controls.mjs';",resolveDir:process.cwd()},bundle:true,format:'esm',write:false});
+const bundle=await build({stdin:{contents:"export {WATERFALL_CLIMB_LEVEL as source,WATERFALL_ACTIONS as route} from './src/levels/waterfall-climb';export {WATERFALL_CLIMB_BONUS as bonus} from './src/levels/waterfall-climb-bonus';export {runWaterfallBonus} from './tools/waterfall-climb-pilot.mjs';export {puzzleControls} from './tools/puzzle-controls.mjs';",resolveDir:process.cwd()},bundle:true,format:'esm',write:false});
 const browser=await chromium.launch({headless:true,channel:'chrome'}),page=await browser.newPage({viewport:{width:1920,height:1080},deviceScaleFactor:1,serviceWorkers:'block'}),errors=[],evidence=[];
 page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
 await page.route('**/waterfall-review-fixture.js',r=>r.fulfill({contentType:'application/javascript',body:bundle.outputFiles[0].text}));
@@ -49,22 +49,23 @@ try{
  await page.evaluate(()=>{const g=window.__game;g.renderQualitySettings.setRegularResolution(null);g.crtGuestSettings.setEnabled(false);});
  if(process.env.WATERFALL_REVIEW!=='bonus'){
   await snapshot('river-start');
-  for(let i=0;i<16;i++){
+  for(let i=0;i<10;i++){
    await page.keyboard.press('m');await page.keyboard.press('l');await page.keyboard.press('m');await page.waitForTimeout(800);
    const state=await page.evaluate(()=>({grounded:window.__game.player.grounded,state:window.__game.player.state}));assert.ok(state.grounded);assert.equal(state.state,'ride');
    await snapshot(`checkpoint-${String(i).padStart(2,'0')}`);
-  }
-  if(mode==='full'){
-   await page.evaluate(()=>{const g=window.__game;g.renderQualitySettings.setRegularResolution(720);g.crtGuestSettings.setEnabled(true);});
-   await page.waitForTimeout(800);await snapshot('summit-normal');
-   await page.evaluate(()=>{const g=window.__game;g.renderQualitySettings.setRegularResolution(null);g.crtGuestSettings.setEnabled(false);});
+   if(mode==='full'&&[1,6,9].includes(i)){
+    await page.evaluate(()=>{const g=window.__game;g.renderQualitySettings.setRegularResolution(720);g.crtGuestSettings.setEnabled(true);});
+    await page.waitForTimeout(450);await snapshot(`checkpoint-${String(i).padStart(2,'0')}-normal`);
+    await page.evaluate(()=>{const g=window.__game;g.renderQualitySettings.setRegularResolution(null);g.crtGuestSettings.setEnabled(false);});
+    await page.waitForTimeout(250);
+   }
   }
   if(mode==='full'){
    await page.waitForTimeout(500);
    const overview=await page.evaluate(async()=>{
     const g=window.__game,l=g.getLevel(),r=g.renderer,camera=g.camera.clone();
     camera.aspect=16/9;camera.fov=48;camera.near=.1;camera.far=1500;
-    camera.position.set(85,95,-947);camera.lookAt(0,82,-1180);camera.updateProjectionMatrix();camera.updateMatrixWorld(true);
+    camera.position.set(118,105,-855);camera.lookAt(0,78,-1143);camera.updateProjectionMatrix();camera.updateMatrixWorld(true);
     l.updateSceneryView(camera);await l.jungleAssets?.ready();g.scene.updateMatrixWorld(true);
     const old=r.getRenderTarget(),visible=g.player.group.visible;
     try{
@@ -81,7 +82,7 @@ try{
  }
  if(process.env.WATERFALL_REVIEW!=='camera'){
   if(process.env.WATERFALL_REVIEW!=='bonus'){await page.evaluate(()=>window.__game.switchLevel('waterfall-climb'));await ready('waterfall-climb');}
-  await page.keyboard.press('m');for(let i=0;i<7;i++){await page.keyboard.press('l');await page.waitForTimeout(180);}await page.keyboard.press('m');
+  await page.keyboard.press('m');for(let i=0;i<5;i++){await page.keyboard.press('l');await page.waitForTimeout(180);}await page.keyboard.press('m');
   await page.waitForTimeout(500);const parent=await snapshot('bonus-parent-before');
   await page.evaluate(()=>{const g=window.__game;window.waterfallParent=g.getLevel();window.waterfallParentTuning=JSON.stringify(g.TUNING);});
   await pilot('enter');await ready('bonus:waterfall-climb');await snapshot('bonus-first-entry');

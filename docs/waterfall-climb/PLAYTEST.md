@@ -1,5 +1,7 @@
 # Waterfall Climb authoring record
 
+> Historical first-design record. The user rejected this layout for repeated river modules and climbing rows. The replacement design and its current evidence are in [REDESIGN.md](REDESIGN.md) and [REDESIGN_PLAYTEST.md](REDESIGN_PLAYTEST.md); the numbers and images below describe the superseded version.
+
 Prompt start: 2026-10-27 03:00:54 UTC (16:00:54 NZDT).
 The original gameplay-only block ended at 05:00:54 UTC (18:00:54 NZDT).
 The release coordinator recorded 2h30 of crash/access downtime in the shared

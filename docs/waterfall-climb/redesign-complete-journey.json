@@ -1,0 +1,53 @@
+{
+  "recordedUTC": "2026-10-27T12:50:03.565508+00:00",
+  "design": "Second design, source spawn through actual bonus and waterfall summit",
+  "render": "Chrome full, MAX/native 1920x1080, CRT disabled for native review",
+  "result": {
+    "state": "finished",
+    "deaths": 0,
+    "cratesBroken": 27,
+    "totalCrates": 49,
+    "activeCheckpoints": 10,
+    "position": [
+      66.4265881744442,
+      156.1266666691502,
+      -1112.037969152239
+    ],
+    "frames": 27667,
+    "metrics": {
+      "skateFrames": 2650,
+      "skateMetres": 778.5978081542717,
+      "grindFrames": 1567,
+      "grindMetres": 136.0494095104274,
+      "moverRides": 5,
+      "drumLaunches": 4
+    },
+    "bonusCrates": 22,
+    "gemEarned": true
+  },
+  "simulationSeconds": 461.1166666666667,
+  "consoleErrors": [],
+  "sourceMatches": true,
+  "tuningUnchanged": true,
+  "initialCheckpointWarp": false,
+  "rawTrace": "docs/waterfall-climb/runs/redesign-full-browser/full-journey.json",
+  "rawSha256": "638647a57eede00de9fee6b0033b7bc29b1efd78824f21d646c33b6fa715fb36",
+  "gameplayFingerprint": {
+    "main": {
+      "components": 224,
+      "sha256": "ef25831eecbb9d1ab9089e580eb062ebf2dd39a285452cc1afb71c87f5da0cbb"
+    },
+    "bonus": {
+      "components": 53,
+      "sha256": "2f2d44de481624b89c1280972f87edaed798af123e675b1acd3dbfd59c3e6db8"
+    }
+  },
+  "postJourneyVisualChanges": [
+    "Four unrooted foliage placements removed.",
+    "Two corbels narrowed or moved to clear the complete full-render camera trace."
+  ],
+  "limitations": [
+    "Ordinary production inputs are supplied by the pilot; no position, velocity, state or checkpoint writes during the journey.",
+    "Completion is reachability and accounting evidence, not a first-time player timing or quality verdict."
+  ]
+}

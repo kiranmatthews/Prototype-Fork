@@ -1,0 +1,18 @@
+[
+  {
+    "file": "public/waterfall-climb/wet-basalt-v2.webp",
+    "source": "/Users/kiki/.codex/generated_images/01a17b4a-9009-7b30-9838-1b5ef8002df1/exec-9b9fddf7-fa0c-4ec3-bae3-ac8d63189491.png",
+    "bytes": 244504,
+    "sha256": "dc081e1e6f1a3ad4885316ba6dcbb8c240e2ab67417584c2417fdc94b9601140",
+    "width": 1024,
+    "height": 1024
+  },
+  {
+    "file": "public/waterfall-climb/cedar-bark-v2.webp",
+    "source": "/Users/kiki/.codex/generated_images/01a17b4a-9009-7b30-9838-1b5ef8002df1/exec-ff63faad-a6a0-48b3-8137-86535f6e2854.png",
+    "bytes": 263024,
+    "sha256": "3922f4eeb5e0a10a990e391dd11ae99eebd50e8998178b7f891c057a8d148bd6",
+    "width": 1024,
+    "height": 1024
+  }
+]

@@ -1,0 +1,1377 @@
+{
+  "recordedUTC": "2026-10-27T13:05:53.277650+00:00",
+  "design": "Second design; supersedes the first published Waterfall Climb layout and its screenshots",
+  "worktree": "/Users/kiki/.codex/worktrees/waterfall-climb/Prototype Fork",
+  "branch": "codex/waterfall-climb",
+  "parentCommit": "a5bd8e6b1d010fd4e99c6fe2037986b1c8ca339e",
+  "scope": "Local committed increment and handoff; no push or GitHub polling",
+  "timing": {
+    "revisionPromptUTC": "2026-10-27T10:12:55Z",
+    "continuousGreyboxPlayableUTC": "2026-10-27T12:12:42Z",
+    "promptToContinuousGreyboxSeconds": 7187,
+    "artEnabledUTC": "2026-10-27T12:21:00Z",
+    "finalValidationUTC": "2026-10-27T13:05:53.277650+00:00"
+  },
+  "layout": {
+    "riverMetresApprox": 1091,
+    "summitY": 155.4,
+    "basinY": 12,
+    "climbMetres": 143.4,
+    "sections": 12,
+    "crossings": 29,
+    "checkpoints": 10,
+    "mainCrates": 27,
+    "bonusCrates": 22,
+    "totalCrates": 49
+  },
+  "fullJourney": {
+    "recordedUTC": "2026-10-27T12:50:03.565508+00:00",
+    "design": "Second design, source spawn through actual bonus and waterfall summit",
+    "render": "Chrome full, MAX/native 1920x1080, CRT disabled for native review",
+    "result": {
+      "state": "finished",
+      "deaths": 0,
+      "cratesBroken": 27,
+      "totalCrates": 49,
+      "activeCheckpoints": 10,
+      "position": [
+        66.4265881744442,
+        156.1266666691502,
+        -1112.037969152239
+      ],
+      "frames": 27667,
+      "metrics": {
+        "skateFrames": 2650,
+        "skateMetres": 778.5978081542717,
+        "grindFrames": 1567,
+        "grindMetres": 136.0494095104274,
+        "moverRides": 5,
+        "drumLaunches": 4
+      },
+      "bonusCrates": 22,
+      "gemEarned": true
+    },
+    "simulationSeconds": 461.1166666666667,
+    "consoleErrors": [],
+    "sourceMatches": true,
+    "tuningUnchanged": true,
+    "initialCheckpointWarp": false,
+    "rawTrace": "docs/waterfall-climb/runs/redesign-full-browser/full-journey.json",
+    "rawSha256": "638647a57eede00de9fee6b0033b7bc29b1efd78824f21d646c33b6fa715fb36",
+    "gameplayFingerprint": {
+      "main": {
+        "components": 224,
+        "sha256": "ef25831eecbb9d1ab9089e580eb062ebf2dd39a285452cc1afb71c87f5da0cbb"
+      },
+      "bonus": {
+        "components": 53,
+        "sha256": "2f2d44de481624b89c1280972f87edaed798af123e675b1acd3dbfd59c3e6db8"
+      }
+    },
+    "postJourneyVisualChanges": [
+      "Four unrooted foliage placements removed.",
+      "Two corbels narrowed or moved to clear the complete full-render camera trace."
+    ],
+    "limitations": [
+      "Ordinary production inputs are supplied by the pilot; no position, velocity, state or checkpoint writes during the journey.",
+      "Completion is reachability and accounting evidence, not a first-time player timing or quality verdict."
+    ]
+  },
+  "finalVisualReview": {
+    "evidence": [
+      {
+        "label": "river-start",
+        "id": "waterfall-climb",
+        "position": [
+          0,
+          0,
+          9
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "lives": 4,
+        "crates": 0,
+        "bonusCrates": 0,
+        "bonusComplete": false,
+        "bonusMode": false,
+        "camera": [
+          0,
+          5.122211153268993,
+          14.05
+        ],
+        "resolution": "max",
+        "buffer": [
+          1920,
+          1080
+        ],
+        "size": {
+          "viewportWidth": 1920,
+          "viewportHeight": 1080,
+          "inputWidth": 1280,
+          "inputHeight": 720,
+          "outputWidth": 1280,
+          "outputHeight": 720
+        },
+        "assets": {
+          "components": 435,
+          "placements": 435,
+          "ready": 191,
+          "skipped": 0,
+          "draws": 183,
+          "triangles": 1113147,
+          "allLodTriangles": 1113147,
+          "cells": 405,
+          "residentCells": 183,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 2,
+          "textureMiB": 113.67,
+          "errors": [],
+          "windTime": 0.6848333333333338,
+          "weatherWind": {
+            "wind": [
+              0,
+              0
+            ],
+            "intensity": 0,
+            "time": 0
+          }
+        }
+      },
+      {
+        "label": "checkpoint-00",
+        "id": "waterfall-climb",
+        "position": [
+          -6,
+          1.2,
+          -94
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "lives": 4,
+        "crates": 0,
+        "bonusCrates": 0,
+        "bonusComplete": false,
+        "bonusMode": false,
+        "camera": [
+          -6,
+          6.3,
+          -88.95
+        ],
+        "resolution": "max",
+        "buffer": [
+          1920,
+          1080
+        ],
+        "size": {
+          "viewportWidth": 1920,
+          "viewportHeight": 1080,
+          "inputWidth": 1280,
+          "inputHeight": 720,
+          "outputWidth": 1280,
+          "outputHeight": 720
+        },
+        "assets": {
+          "components": 435,
+          "placements": 435,
+          "ready": 224,
+          "skipped": 0,
+          "draws": 216,
+          "triangles": 1321809,
+          "allLodTriangles": 1321809,
+          "cells": 405,
+          "residentCells": 216,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 2,
+          "textureMiB": 113.67,
+          "errors": [],
+          "windTime": 2.2348333333333303,
+          "weatherWind": {
+            "wind": [
+              0,
+              0
+            ],
+            "intensity": 0,
+            "time": 0
+          }
+        }
+      },
+      {
+        "label": "checkpoint-01",
+        "id": "waterfall-climb",
+        "position": [
+          -4,
+          7,
+          -365
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "lives": 4,
+        "crates": 0,
+        "bonusCrates": 0,
+        "bonusComplete": false,
+        "bonusMode": false,
+        "camera": [
+          -4,
+          12.1,
+          -359.95
+        ],
+        "resolution": "max",
+        "buffer": [
+          1920,
+          1080
+        ],
+        "size": {
+          "viewportWidth": 1920,
+          "viewportHeight": 1080,
+          "inputWidth": 1280,
+          "inputHeight": 720,
+          "outputWidth": 1280,
+          "outputHeight": 720
+        },
+        "assets": {
+          "components": 435,
+          "placements": 435,
+          "ready": 312,
+          "skipped": 0,
+          "draws": 304,
+          "triangles": 1829345,
+          "allLodTriangles": 1829345,
+          "cells": 405,
+          "residentCells": 304,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 2,
+          "textureMiB": 113.67,
+          "errors": [],
+          "windTime": 3.8014999999999914,
+          "weatherWind": {
+            "wind": [
+              0,
+              0
+            ],
+            "intensity": 0,
+            "time": 0
+          }
+        }
+      },
+      {
+        "label": "checkpoint-01-normal",
+        "id": "waterfall-climb",
+        "position": [
+          -4,
+          7,
+          -365
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "lives": 4,
+        "crates": 0,
+        "bonusCrates": 0,
+        "bonusComplete": false,
+        "bonusMode": false,
+        "camera": [
+          -4,
+          12.1,
+          -359.95
+        ],
+        "resolution": 720,
+        "buffer": [
+          1280,
+          720
+        ],
+        "size": {
+          "viewportWidth": 1920,
+          "viewportHeight": 1080,
+          "inputWidth": 1280,
+          "inputHeight": 720,
+          "outputWidth": 1280,
+          "outputHeight": 720
+        },
+        "assets": {
+          "components": 435,
+          "placements": 435,
+          "ready": 312,
+          "skipped": 0,
+          "draws": 304,
+          "triangles": 1829345,
+          "allLodTriangles": 1829345,
+          "cells": 405,
+          "residentCells": 304,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 2,
+          "textureMiB": 113.67,
+          "errors": [],
+          "windTime": 4.934833333333321,
+          "weatherWind": {
+            "wind": [
+              0,
+              0
+            ],
+            "intensity": 0,
+            "time": 0
+          }
+        }
+      },
+      {
+        "label": "checkpoint-02",
+        "id": "waterfall-climb",
+        "position": [
+          -5,
+          7,
+          -466
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "lives": 4,
+        "crates": 0,
+        "bonusCrates": 0,
+        "bonusComplete": false,
+        "bonusMode": false,
+        "camera": [
+          -5,
+          12.10001896373146,
+          -460.95
+        ],
+        "resolution": "max",
+        "buffer": [
+          1920,
+          1080
+        ],
+        "size": {
+          "viewportWidth": 1920,
+          "viewportHeight": 1080,
+          "inputWidth": 1280,
+          "inputHeight": 720,
+          "outputWidth": 1280,
+          "outputHeight": 720
+        },
+        "assets": {
+          "components": 435,
+          "placements": 435,
+          "ready": 345,
+          "skipped": 0,
+          "draws": 337,
+          "triangles": 2039887,
+          "allLodTriangles": 2039887,
+          "cells": 405,
+          "residentCells": 337,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 2,
+          "textureMiB": 113.67,
+          "errors": [],
+          "windTime": 6.784833333333315,
+          "weatherWind": {
+            "wind": [
+              0,
+              0
+            ],
+            "intensity": 0,
+            "time": 0
+          }
+        }
+      },
+      {
+        "label": "checkpoint-03",
+        "id": "waterfall-climb",
+        "position": [
+          5,
+          9,
+          -781
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "lives": 4,
+        "crates": 0,
+        "bonusCrates": 0,
+        "bonusComplete": false,
+        "bonusMode": false,
+        "camera": [
+          5,
+          14.082049654333904,
+          -775.95
+        ],
+        "resolution": "max",
+        "buffer": [
+          1920,
+          1080
+        ],
+        "size": {
+          "viewportWidth": 1920,
+          "viewportHeight": 1080,
+          "inputWidth": 1280,
+          "inputHeight": 720,
+          "outputWidth": 1280,
+          "outputHeight": 720
+        },
+        "assets": {
+          "components": 435,
+          "placements": 435,
+          "ready": 371,
+          "skipped": 0,
+          "draws": 341,
+          "triangles": 2308687,
+          "allLodTriangles": 2308687,
+          "cells": 405,
+          "residentCells": 341,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 2,
+          "textureMiB": 169.67,
+          "errors": [],
+          "windTime": 8.301499999999992,
+          "weatherWind": {
+            "wind": [
+              0,
+              0
+            ],
+            "intensity": 0,
+            "time": 0
+          }
+        }
+      },
+      {
+        "label": "checkpoint-04",
+        "id": "waterfall-climb",
+        "position": [
+          0,
+          12,
+          -1090
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "lives": 4,
+        "crates": 0,
+        "bonusCrates": 0,
+        "bonusComplete": false,
+        "bonusMode": false,
+        "camera": [
+          0,
+          15.897524075291114,
+          -1072.1884063408609
+        ],
+        "resolution": "max",
+        "buffer": [
+          1920,
+          1080
+        ],
+        "size": {
+          "viewportWidth": 1920,
+          "viewportHeight": 1080,
+          "inputWidth": 1280,
+          "inputHeight": 720,
+          "outputWidth": 1280,
+          "outputHeight": 720
+        },
+        "assets": {
+          "components": 435,
+          "placements": 435,
+          "ready": 266,
+          "skipped": 0,
+          "draws": 242,
+          "triangles": 1705784,
+          "allLodTriangles": 1705784,
+          "cells": 405,
+          "residentCells": 242,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 2,
+          "textureMiB": 169.67,
+          "errors": [],
+          "windTime": 9.851500000000069,
+          "weatherWind": {
+            "wind": [
+              0,
+              0
+            ],
+            "intensity": 0,
+            "time": 0
+          }
+        }
+      },
+      {
+        "label": "checkpoint-05",
+        "id": "waterfall-climb",
+        "position": [
+          -3,
+          25.4,
+          -1118.3
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "lives": 4,
+        "crates": 0,
+        "bonusCrates": 0,
+        "bonusComplete": false,
+        "bonusMode": false,
+        "camera": [
+          -3,
+          29.297524075291115,
+          -1100.4884063408608
+        ],
+        "resolution": "max",
+        "buffer": [
+          1920,
+          1080
+        ],
+        "size": {
+          "viewportWidth": 1920,
+          "viewportHeight": 1080,
+          "inputWidth": 1280,
+          "inputHeight": 720,
+          "outputWidth": 1280,
+          "outputHeight": 720
+        },
+        "assets": {
+          "components": 435,
+          "placements": 435,
+          "ready": 253,
+          "skipped": 0,
+          "draws": 231,
+          "triangles": 1617554,
+          "allLodTriangles": 1617554,
+          "cells": 405,
+          "residentCells": 231,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 2,
+          "textureMiB": 169.67,
+          "errors": [],
+          "windTime": 11.384833333333479,
+          "weatherWind": {
+            "wind": [
+              0,
+              0
+            ],
+            "intensity": 0,
+            "time": 0
+          }
+        }
+      },
+      {
+        "label": "checkpoint-06",
+        "id": "waterfall-climb",
+        "position": [
+          -29,
+          53.4,
+          -1118
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "lives": 4,
+        "crates": 0,
+        "bonusCrates": 0,
+        "bonusComplete": false,
+        "bonusMode": false,
+        "camera": [
+          -29,
+          57.29752407529111,
+          -1100.1884063408609
+        ],
+        "resolution": "max",
+        "buffer": [
+          1920,
+          1080
+        ],
+        "size": {
+          "viewportWidth": 1920,
+          "viewportHeight": 1080,
+          "inputWidth": 1280,
+          "inputHeight": 720,
+          "outputWidth": 1280,
+          "outputHeight": 720
+        },
+        "assets": {
+          "components": 435,
+          "placements": 435,
+          "ready": 251,
+          "skipped": 0,
+          "draws": 229,
+          "triangles": 1605562,
+          "allLodTriangles": 1605562,
+          "cells": 405,
+          "residentCells": 229,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 2,
+          "textureMiB": 169.67,
+          "errors": [],
+          "windTime": 12.918166666666888,
+          "weatherWind": {
+            "wind": [
+              0,
+              0
+            ],
+            "intensity": 0,
+            "time": 0
+          }
+        }
+      },
+      {
+        "label": "checkpoint-06-normal",
+        "id": "waterfall-climb",
+        "position": [
+          -29,
+          53.4,
+          -1118
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "lives": 4,
+        "crates": 0,
+        "bonusCrates": 0,
+        "bonusComplete": false,
+        "bonusMode": false,
+        "camera": [
+          -29,
+          57.29752407529111,
+          -1100.1884063408609
+        ],
+        "resolution": 720,
+        "buffer": [
+          1280,
+          720
+        ],
+        "size": {
+          "viewportWidth": 1920,
+          "viewportHeight": 1080,
+          "inputWidth": 1280,
+          "inputHeight": 720,
+          "outputWidth": 1280,
+          "outputHeight": 720
+        },
+        "assets": {
+          "components": 435,
+          "placements": 435,
+          "ready": 251,
+          "skipped": 0,
+          "draws": 229,
+          "triangles": 1605562,
+          "allLodTriangles": 1605562,
+          "cells": 405,
+          "residentCells": 229,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 2,
+          "textureMiB": 169.67,
+          "errors": [],
+          "windTime": 14.051500000000278,
+          "weatherWind": {
+            "wind": [
+              0,
+              0
+            ],
+            "intensity": 0,
+            "time": 0
+          }
+        }
+      },
+      {
+        "label": "checkpoint-07",
+        "id": "waterfall-climb",
+        "position": [
+          61,
+          77.4,
+          -1123
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "lives": 4,
+        "crates": 0,
+        "bonusCrates": 0,
+        "bonusComplete": false,
+        "bonusMode": false,
+        "camera": [
+          61,
+          81.29752407529112,
+          -1105.1884063408609
+        ],
+        "resolution": "max",
+        "buffer": [
+          1920,
+          1080
+        ],
+        "size": {
+          "viewportWidth": 1920,
+          "viewportHeight": 1080,
+          "inputWidth": 1280,
+          "inputHeight": 720,
+          "outputWidth": 1280,
+          "outputHeight": 720
+        },
+        "assets": {
+          "components": 435,
+          "placements": 435,
+          "ready": 249,
+          "skipped": 0,
+          "draws": 227,
+          "triangles": 1594538,
+          "allLodTriangles": 1594538,
+          "cells": 405,
+          "residentCells": 227,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 2,
+          "textureMiB": 169.67,
+          "errors": [],
+          "windTime": 15.951500000000372,
+          "weatherWind": {
+            "wind": [
+              0,
+              0
+            ],
+            "intensity": 0,
+            "time": 0
+          }
+        }
+      },
+      {
+        "label": "checkpoint-08",
+        "id": "waterfall-climb",
+        "position": [
+          -36,
+          119.4,
+          -1110
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "lives": 4,
+        "crates": 0,
+        "bonusCrates": 0,
+        "bonusComplete": false,
+        "bonusMode": false,
+        "camera": [
+          -36,
+          123.29752407529112,
+          -1092.1884063408609
+        ],
+        "resolution": "max",
+        "buffer": [
+          1920,
+          1080
+        ],
+        "size": {
+          "viewportWidth": 1920,
+          "viewportHeight": 1080,
+          "inputWidth": 1280,
+          "inputHeight": 720,
+          "outputWidth": 1280,
+          "outputHeight": 720
+        },
+        "assets": {
+          "components": 435,
+          "placements": 435,
+          "ready": 249,
+          "skipped": 0,
+          "draws": 227,
+          "triangles": 1594538,
+          "allLodTriangles": 1594538,
+          "cells": 405,
+          "residentCells": 227,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 2,
+          "textureMiB": 169.67,
+          "errors": [],
+          "windTime": 17.468166666666956,
+          "weatherWind": {
+            "wind": [
+              0,
+              0
+            ],
+            "intensity": 0,
+            "time": 0
+          }
+        }
+      },
+      {
+        "label": "checkpoint-09",
+        "id": "waterfall-climb",
+        "position": [
+          34,
+          141.4,
+          -1110
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "lives": 4,
+        "crates": 0,
+        "bonusCrates": 0,
+        "bonusComplete": false,
+        "bonusMode": false,
+        "camera": [
+          34,
+          145.29752407529114,
+          -1092.1884063408609
+        ],
+        "resolution": "max",
+        "buffer": [
+          1920,
+          1080
+        ],
+        "size": {
+          "viewportWidth": 1920,
+          "viewportHeight": 1080,
+          "inputWidth": 1280,
+          "inputHeight": 720,
+          "outputWidth": 1280,
+          "outputHeight": 720
+        },
+        "assets": {
+          "components": 435,
+          "placements": 435,
+          "ready": 249,
+          "skipped": 0,
+          "draws": 227,
+          "triangles": 1594538,
+          "allLodTriangles": 1594538,
+          "cells": 405,
+          "residentCells": 227,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 2,
+          "textureMiB": 169.67,
+          "errors": [],
+          "windTime": 19.001500000000203,
+          "weatherWind": {
+            "wind": [
+              0,
+              0
+            ],
+            "intensity": 0,
+            "time": 0
+          }
+        }
+      },
+      {
+        "label": "checkpoint-09-normal",
+        "id": "waterfall-climb",
+        "position": [
+          34,
+          141.4,
+          -1110
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "lives": 4,
+        "crates": 0,
+        "bonusCrates": 0,
+        "bonusComplete": false,
+        "bonusMode": false,
+        "camera": [
+          34,
+          145.29752407529114,
+          -1092.1884063408609
+        ],
+        "resolution": 720,
+        "buffer": [
+          1280,
+          720
+        ],
+        "size": {
+          "viewportWidth": 1920,
+          "viewportHeight": 1080,
+          "inputWidth": 1280,
+          "inputHeight": 720,
+          "outputWidth": 1280,
+          "outputHeight": 720
+        },
+        "assets": {
+          "components": 435,
+          "placements": 435,
+          "ready": 249,
+          "skipped": 0,
+          "draws": 227,
+          "triangles": 1594538,
+          "allLodTriangles": 1594538,
+          "cells": 405,
+          "residentCells": 227,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 2,
+          "textureMiB": 169.67,
+          "errors": [],
+          "windTime": 20.13483333333347,
+          "weatherWind": {
+            "wind": [
+              0,
+              0
+            ],
+            "intensity": 0,
+            "time": 0
+          }
+        }
+      },
+      {
+        "label": "art-overview",
+        "camera": [
+          118,
+          105,
+          -855
+        ],
+        "assets": {
+          "components": 435,
+          "placements": 435,
+          "ready": 319,
+          "skipped": 0,
+          "draws": 289,
+          "triangles": 1989607,
+          "allLodTriangles": 1989607,
+          "cells": 405,
+          "residentCells": 289,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 2,
+          "textureMiB": 169.67,
+          "errors": [],
+          "windTime": 21.401500000000066,
+          "weatherWind": {
+            "wind": [
+              0,
+              0
+            ],
+            "intensity": 0,
+            "time": 0
+          }
+        },
+        "note": "Separate presentation camera; gameplay camera remains unchanged."
+      },
+      {
+        "label": "bonus-parent-before",
+        "id": "waterfall-climb",
+        "position": [
+          0,
+          12,
+          -1090
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "lives": 4,
+        "crates": 0,
+        "bonusCrates": 0,
+        "bonusComplete": false,
+        "bonusMode": false,
+        "camera": [
+          0,
+          15.897524075291114,
+          -1072.1884063408609
+        ],
+        "resolution": "max",
+        "buffer": [
+          1920,
+          1080
+        ],
+        "size": {
+          "viewportWidth": 1920,
+          "viewportHeight": 1080,
+          "inputWidth": 1280,
+          "inputHeight": 720,
+          "outputWidth": 1280,
+          "outputHeight": 720
+        },
+        "assets": {
+          "components": 435,
+          "placements": 435,
+          "ready": 266,
+          "skipped": 0,
+          "draws": 242,
+          "triangles": 1705784,
+          "allLodTriangles": 1705784,
+          "cells": 405,
+          "residentCells": 242,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 2,
+          "textureMiB": 169.67,
+          "errors": [],
+          "windTime": 1.9666666666666646,
+          "weatherWind": {
+            "wind": [
+              0,
+              0
+            ],
+            "intensity": 0,
+            "time": 0
+          }
+        }
+      },
+      {
+        "label": "bonus-first-entry",
+        "id": "bonus:waterfall-climb",
+        "position": [
+          -10,
+          2.384185793236071e-08,
+          0
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "lives": 0,
+        "crates": 0,
+        "bonusCrates": 0,
+        "bonusComplete": false,
+        "bonusMode": true,
+        "camera": [
+          -10,
+          8.360039285890634,
+          25.820309867674464
+        ],
+        "resolution": "max",
+        "buffer": [
+          1920,
+          1080
+        ],
+        "size": {
+          "viewportWidth": 1920,
+          "viewportHeight": 1080,
+          "inputWidth": 1280,
+          "inputHeight": 720,
+          "outputWidth": 1280,
+          "outputHeight": 720
+        },
+        "assets": {
+          "components": 30,
+          "placements": 30,
+          "ready": 30,
+          "skipped": 0,
+          "draws": 21,
+          "triangles": 107939,
+          "allLodTriangles": 107939,
+          "cells": 21,
+          "residentCells": 21,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 2,
+          "textureMiB": 57.67,
+          "errors": [],
+          "windTime": 0.800100000001491,
+          "weatherWind": {
+            "wind": [
+              0,
+              0
+            ],
+            "intensity": 0,
+            "time": 0
+          }
+        }
+      },
+      {
+        "label": "bonus-failure-return",
+        "id": "waterfall-climb",
+        "position": [
+          -19,
+          12,
+          -1086
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "lives": 4,
+        "crates": 0,
+        "bonusCrates": 0,
+        "bonusComplete": false,
+        "bonusMode": false,
+        "camera": [
+          -19,
+          15.897524075291114,
+          -1068.1884063408609
+        ],
+        "resolution": "max",
+        "buffer": [
+          1920,
+          1080
+        ],
+        "size": {
+          "viewportWidth": 1920,
+          "viewportHeight": 1080,
+          "inputWidth": 1280,
+          "inputHeight": 720,
+          "outputWidth": 1280,
+          "outputHeight": 720
+        },
+        "assets": {
+          "components": 435,
+          "placements": 435,
+          "ready": 265,
+          "skipped": 0,
+          "draws": 241,
+          "triangles": 1701212,
+          "allLodTriangles": 1701212,
+          "cells": 405,
+          "residentCells": 241,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 2,
+          "textureMiB": 169.67,
+          "errors": [],
+          "windTime": 9.934033333332604,
+          "weatherWind": {
+            "wind": [
+              0,
+              0
+            ],
+            "intensity": 0,
+            "time": 0
+          }
+        }
+      },
+      {
+        "label": "bonus-success-return",
+        "id": "waterfall-climb",
+        "position": [
+          -19,
+          12,
+          -1086
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0,
+        "lives": 6,
+        "crates": 0,
+        "bonusCrates": 22,
+        "bonusComplete": true,
+        "bonusMode": false,
+        "camera": [
+          -19,
+          15.897524075291114,
+          -1068.1884063408609
+        ],
+        "resolution": "max",
+        "buffer": [
+          1920,
+          1080
+        ],
+        "size": {
+          "viewportWidth": 1920,
+          "viewportHeight": 1080,
+          "inputWidth": 1280,
+          "inputHeight": 720,
+          "outputWidth": 1280,
+          "outputHeight": 720
+        },
+        "assets": {
+          "components": 435,
+          "placements": 435,
+          "ready": 265,
+          "skipped": 0,
+          "draws": 241,
+          "triangles": 1701212,
+          "allLodTriangles": 1701212,
+          "cells": 405,
+          "residentCells": 241,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 2,
+          "textureMiB": 169.67,
+          "errors": [],
+          "windTime": 14.698533333329024,
+          "weatherWind": {
+            "wind": [
+              0,
+              0
+            ],
+            "intensity": 0,
+            "time": 0
+          }
+        }
+      }
+    ],
+    "errors": []
+  },
+  "productionSmoke": {
+    "start": {
+      "id": "waterfall-climb",
+      "position": [
+        0,
+        0,
+        9
+      ],
+      "grounded": true,
+      "resolution": "max",
+      "buffer": [
+        1920,
+        1080
+      ],
+      "stamp": "Codex/sol fork \u00b7 build 10-27 12:58 UTC"
+    },
+    "moved": {
+      "position": [
+        0,
+        0,
+        -0.6000000000000025
+      ],
+      "grounded": true,
+      "state": "ride"
+    },
+    "errors": []
+  },
+  "geometryReview": {
+    "method": "Source mesh triangle intersections and conservative full prop bounds against a recorded real-camera journey; not a replacement for rendered review.",
+    "traceFile": "docs/waterfall-climb/runs/redesign-full-browser/full-journey.json",
+    "levels": {
+      "main": {
+        "components": 863,
+        "noncollidingScenery": 639,
+        "authoredMeshVertices": 14892,
+        "authoredMeshTriangles": 23976,
+        "degenerateTriangles": 0,
+        "cameraBodySamples": 975,
+        "rejectedBroadBounds": 165,
+        "cameraBodyHits": []
+      },
+      "bonus": {
+        "components": 149,
+        "noncollidingScenery": 96,
+        "authoredMeshVertices": 11430,
+        "authoredMeshTriangles": 19564,
+        "degenerateTriangles": 0,
+        "cameraBodySamples": 177,
+        "rejectedBroadBounds": 0,
+        "cameraBodyHits": []
+      }
+    }
+  },
+  "greyboxSummary": {
+    "nativeMain": {
+      "state": "finished",
+      "deaths": 0,
+      "cratesBroken": 27,
+      "totalCrates": 49,
+      "activeCheckpoints": 10,
+      "position": [
+        66.43119082261244,
+        156.1266666691502,
+        -1112.035798210885
+      ],
+      "frames": 23447,
+      "metrics": {
+        "skateFrames": 2650,
+        "skateMetres": 778.5752265179106,
+        "grindFrames": 1567,
+        "grindMetres": 136.05170448772063,
+        "moverRides": 5,
+        "drumLaunches": 4
+      }
+    },
+    "nativeBonus": {
+      "completionScope": "complete-stage",
+      "activeStageCrates": 22,
+      "bonusCrateTotal": 0,
+      "bonusCrates": 0,
+      "gemEarned": true,
+      "deaths": 0,
+      "cratesBroken": 22,
+      "frames": 4264
+    },
+    "crossings": {
+      "passed": 29,
+      "total": 29
+    },
+    "deliberateRecoveryCheckpoints": [
+      0,
+      4,
+      6,
+      8,
+      9
+    ]
+  },
+  "checks": [
+    {
+      "name": "levels",
+      "command": "node tools/validate-levels.mjs && node tools/test-lazy-source.mjs && node tools/test-tropical-plants.mjs && node tools/test-jungle-assets.mjs && node tools/test-crown-quartz.mjs && node tools/test-jungle-stream.mjs && node tools/test-custard-pool.mjs && node tools/test-jungle-enclosure.mjs && node tools/test-map-landscape-assets.mjs && node tools/test-world-map-save.mjs && node tools/test-map-clay-geometry.mjs && node tools/test-hollowwake-assets.mjs && node tools/test-scenery-normals.mjs && node tools/test-waterslide-scenery-lod.mjs && node tools/test-waterslide-ocean-look.mjs && node tools/test-waterslide-shallows.mjs && node tools/test-waterpark-decks.mjs && node tools/test-waterpark-portals.mjs && node tools/test-waterslide-forest.mjs && node tools/test-hollowwake-tunnel-build.mjs",
+      "startedUTC": "2026-10-27T12:54:45.020706+00:00",
+      "finishedUTC": "2026-10-27T12:57:58.949590+00:00",
+      "exitCode": 0,
+      "log": "docs/waterfall-climb/runs/redesign-levels.log",
+      "note": "Equivalent package script; npm is unavailable in the bundled runtime."
+    },
+    {
+      "name": "build",
+      "command": "node node_modules/typescript/bin/tsc --noEmit && node node_modules/vite/bin/vite.js build",
+      "startedUTC": "2026-10-27T12:57:58.951046+00:00",
+      "finishedUTC": "2026-10-27T12:58:47.190741+00:00",
+      "exitCode": 0,
+      "log": "docs/waterfall-climb/runs/redesign-build.log",
+      "note": "Equivalent package script; npm is unavailable in the bundled runtime."
+    }
+  ],
+  "releaseSize": {
+    "bytes": 1000868907,
+    "budget": 1000000000,
+    "overBudget": 868907,
+    "files": 1845,
+    "exitCode": 1,
+    "previousTaskBuildBytes": 1000365544,
+    "incrementalBuildDeltaBytes": 503363,
+    "publicAssetDeltaBytes": 488159,
+    "integrationDependency": "This old-base checkout already exceeded the release cap. The coordinator explicitly owns current-base integration and the combined cap check; do not prune unrelated assets or publish this worktree.",
+    "offlineVersion": "382a3ec8d37f3f329d2e"
+  },
+  "sourceSha256": {
+    "src/level.ts": "05a353dcf3e271ef55ac723da58d7fa85a567d45693624df6deadd33ff28b610",
+    "src/levels/waterfall-climb.ts": "8f9ffcb3166f371f31d95a0a5efcd58d6201e342fc090fb6e6d7691b35b84f15",
+    "src/levels/waterfall-climb-bonus.ts": "b0edf5e1a33f66864f7eb8dd2db2bbc3d7b05393eb9fc8c3338a03206136c6a0",
+    "src/levels/waterfall-climb-geometry.ts": "ce7767439df022bce50b7fc8cf7aff2245a187f2f105756b14a3175f6fb35af5",
+    "src/levels/waterfall-climb-art.ts": "a965f6d56e184e3acd5407d9a3cefce247df0b528097c3cf87fcbfd80a26bd4a",
+    "src/spinBridge.ts": "5267566c582811eabfa06b850cd43bf95229f7bf58f54f9ce775b5298ecbbce9",
+    "src/player.ts": "c5776904f9f5904fca302f1d5f87da6754d425198876805f381acd98d694504b",
+    "src/tuning.ts": "1aca3b5fe4b5d026d8b9e36dcf30444081bec7d2acfd4181294f6aacaca61bd6",
+    "src/waterfallClimbMaterials.ts": "f4db14dd5d7ee25b633415d60977b2c229b469b3f0439873ed44bbf34824eddb",
+    "tools/waterfall-climb-pilot.mjs": "0cfa72f84e85200b31f08061e3582d679d40f7a365639209a2f7bd62f8c1a148",
+    "tools/waterfall-climb-browser.mjs": "022f36335c9ea56f9af447c98c0e37c9db550b8ee478e3eda7000bf8eeccd20b",
+    "tools/waterfall-climb-review.mjs": "898a3dd6e2f6ec3d93c6bfeb037185b6bcf27c6b1b321a5b1104913f457e60bb",
+    "tools/test-waterfall-gaps.mjs": "209458b3874439a3eaff6fb141f95b9ca693165b44edf6e087b784842961d0f8",
+    "tools/test-waterfall-recovery.mjs": "34a3544871529aa29e57954715356a985e67ccf7d5454d3878777e346cc56f0c",
+    "tools/test-waterfall-layout.mjs": "11120016cd0087bdce9b356c00d33b0a375227bdbff51034a057d8f7d36289cc",
+    "tools/waterfall-art-clearance.mjs": "9775da440a8eebb5cf1180d0d2c80374f206d6c1f89ab01b1b2f9f2dc1f096f8",
+    "tools/waterfall-gameplay-snapshot.mjs": "99f99215771edbbd9ecef368bfbbf8661e53184096206ed646c0e96b4bd593bd",
+    "public/level-previews/waterfall-climb.jpg": "942f4b827a6b1306a52419ab318bd240d625f0ca3a963184f043dba8bb9f6e54",
+    "public/waterfall-climb/wet-basalt-v2.webp": "dc081e1e6f1a3ad4885316ba6dcbb8c240e2ab67417584c2417fdc94b9601140",
+    "public/waterfall-climb/cedar-bark-v2.webp": "3922f4eeb5e0a10a990e391dd11ae99eebd50e8998178b7f891c057a8d148bd6"
+  },
+  "evidenceSha256": {
+    "docs/waterfall-climb/runs/redesign-full-browser/full-journey.json": "638647a57eede00de9fee6b0033b7bc29b1efd78824f21d646c33b6fa715fb36",
+    "docs/waterfall-climb/runs/redesign-final-review/full-review.json": "1603d2fa18bf7113bd1691d180081032593f7b8aa7ed3a0b75e789054320ae1e",
+    "docs/waterfall-climb/runs/redesign-final-review/full-bonus-pilot.json": "2b213c2ff437a41cb4f05d727a436ffa0a535f44f67c5b3ec1f521cb552cd0e8",
+    "docs/waterfall-climb/runs/redesign-production-smoke/full-smoke.json": "a47099b1c805be3c5685a5aa65985ab83a97a48cfd1292701d6381c0d89ff01b",
+    "docs/waterfall-climb/runs/redesign-levels.log": "3d09973bfd2df4e1dfed4a901c2b08cf68d0a64b16aaf1ed7e2e8851ba8e12ae",
+    "docs/waterfall-climb/runs/redesign-build.log": "826a2cb560c5f12988b21686ff54eba48d456d2e10e23fe64a6b54c4015f303e",
+    "docs/waterfall-climb/runs/redesign-release-size.log": "8c84d4e9ef965793a088a596082e2a37987c65cb17ae98a96da4a3d5d0085198"
+  },
+  "screenshots": {
+    "redesign-underpass.jpg": "17f38100c9b9570a0574bfb457fe25ac9398cda09c16577dbec8542cda955ae0",
+    "redesign-overview.jpg": "bbc1a2d5bd0abd5c48e48922eba263497ea5181cf58db8c40a33c01c99b89b82",
+    "redesign-crown.jpg": "b886fe7cf1c9c1cc7f7839b78f30fa616a835133309becfdbabb90c70d669ccc",
+    "redesign-climb.jpg": "323eb18b1c6fbb8ab1a1d01ed0c29d768fa27428b29924f21a13f9f486798079",
+    "redesign-skate.jpg": "74fb0d4b0a98a6dcf2a6ac6a7e637012fc0c6937f92aabedeebf5c7df30555a5",
+    "redesign-bonus.jpg": "3c5e6e3f8c8ce4e25bec9f27a7e9a88008edbc201c59c16db4fbb2188cd56b2f",
+    "redesign-normal.jpg": "0400f2d57c072813c19bf5793fc976a9bcbe2c7ad6d9e5863ec3ecc353aec5b0",
+    "redesign-finish.jpg": "1a33b54e013dcc966b235e63e088e44e2839c707a2ac50cf4b9d158905d95e34",
+    "redesign-river.jpg": "5b923c1e981d1cb5e1553aba848430976aeedec2b0ed9c4ab13cec71558cbe55"
+  },
+  "limits": [
+    "Continuous full-render run precedes four decorative foliage removals and two corbel clearance adjustments; the unchanged physical fingerprint and final visual review cover those cosmetic changes.",
+    "The exact package scripts were run through bundled Node because npm is not installed; all level checks and the TypeScript/Vite build exited 0.",
+    "Production smoke covers the built entry, keyboard movement, current fork stamp and clean console. Continuous main/bonus and detailed native/normal reviews use the same final gameplay source in the development server.",
+    "Required full check:all was not requested and was not run.",
+    "Enjoyment and first-time player timing are not established by the input pilot."
+  ]
+}

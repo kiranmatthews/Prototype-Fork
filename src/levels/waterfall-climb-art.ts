@@ -82,13 +82,38 @@ function kit(C:CustomComponent[]){
   }
   box('Stone wheel spindle',[x,y,z+.1],[.72,.72,1.5],'waterfall-basalt','#b8d0ba',103);
  };
- return {mesh,prop,box,pillar,sheet,foam,cascade,wheel};
+ const arch=(nm:string,x:number,y:number,z:number,rx:number,ry:number,depth=3)=>{
+  const v:number[]=[],ix:number[]=[],uv:number[]=[],n=28,t=1.6;
+  for(let k=0;k<=n;k++)for(let j=0;j<4;j++){
+   const angle=k/n*Math.PI,inside=j===1||j===2;
+   v.push(Math.cos(angle)*(rx-(inside?t:0)),Math.sin(angle)*(ry-(inside?t:0)),j<2?depth/2:-depth/2);uv.push(k/n*rx/3,j%2*.5);
+   if(k){const a=(k-1)*4+j,b=k*4+j,next=(j+1)%4;ix.push(a,(k-1)*4+next,b,b,(k-1)*4+next,k*4+next);}
+  }
+  for(const k of [0,n]){const b=k*4;ix.push(b,b+1,b+2,b,b+2,b+3);}
+  mesh(nm,[x,y,z],v,ix,uv,'waterfall-basalt','#b2c3a5',100,{flatShading:true,doubleSided:true});
+ };
+ const buttress=(nm:string,p:P,w:number,d:number,rearZ:number,drop=16)=>{
+  const [x,y,z]=p,front=z+d*.23,back=Math.min(z-d*.6-3,rearZ),fw=w*.42,bw=w*.60;
+  const v=[-fw,-1.65,front-z,fw,-1.65,front-z,-bw,-2.2,back-z,bw,-2.2,back-z,
+    -fw*.72,-3.6,front-z-.7,fw*.72,-3.6,front-z-.7,-bw*.85,-drop,back-z,bw*.85,-drop,back-z];
+  const vertices:number[]=[],indices:number[]=[],uv:number[]=[];
+  const faces=[[0,2,3,1],[4,5,7,6],[0,1,5,4],[2,6,7,3],[0,4,6,2],[1,3,7,5]];
+  for(const face of faces){
+   const points=face.map(i=>v.slice(i*3,i*3+3)),ab=points[1].map((n,i)=>n-points[0][i]),ac=points[2].map((n,i)=>n-points[0][i]);
+   const normal=[ab[1]*ac[2]-ab[2]*ac[1],ab[2]*ac[0]-ab[0]*ac[2],ab[0]*ac[1]-ab[1]*ac[0]],dropAxis=normal.map(Math.abs).indexOf(Math.max(...normal.map(Math.abs))),axes=[0,1,2].filter(i=>i!==dropAxis),base=vertices.length/3;
+   for(const p of points){vertices.push(...p);uv.push(p[axes[0]]/5,p[axes[1]]/5);}indices.push(base,base+1,base+2,base,base+2,base+3);
+  }
+  mesh(nm,[x,y,z],vertices,indices,uv,'waterfall-basalt','#a8bb9f',100,{flatShading:true});
+ };
+ return {mesh,prop,box,pillar,sheet,foam,cascade,wheel,arch,buttress};
 }
 
 function surfaceLook(C:CustomComponent[]){
  for(let i=C.length-1;i>=0;i--)if(C[i].t==='mesh'&&C[i].nm?.startsWith('Greybox'))C.splice(i,1);
  for(const c of C){
-  if(c.t==='platform'){c.tex='waterfall-basalt';c.color=stone;}
+  if(c.t==='mesh'&&c.solid!==false&&c.tex==='coast-bedrock'){c.tex='waterfall-basalt';c.color='#e3ead3';}
+  if(c.t==='mesh'&&c.solid!==false&&c.tex==='wood'){c.tex='waterfall-bark';c.color='#c6d1ba';}
+  if(c.t==='platform'){const timber=c.tex==='waterfall-timber';c.tex=timber?'waterfall-timber':'waterfall-basalt';c.color=timber?'#dfc994':stone;}
   if(c.t==='crumble'){c.tex='waterfall-basalt';c.color='#d4a777';}
   if(c.t==='spinbridge'){c.tex='waterfall-timber';c.color='#f0dfbf';}
  }
@@ -100,18 +125,23 @@ export function dressWaterfallClimb(C:CustomComponent[],groups:CustomGroup[],o:{
   {id:101,nm:'Living river, waterfall curtains and impact foam',editorOnly:true},
   {id:102,nm:'Existing Meshy willows, ferns and shoreline stones',editorOnly:true},
   {id:103,nm:'Riverkeeper sluice mechanisms',editorOnly:true});
- // Each river chapter owns a continuous lower water reach and natural banks.
+ // Water follows the authored terrain height without creating hidden support.
+ const waterProfile=[[24,-1],[-100,-1],[-170,1.5],[-260,5.4],[-474,5.4],[-542,0],[-575,-1],[-612,.4],[-680,2],[-770,6.5],[-790,7.4],[-849,10],[-892,10.5],[-965,13.4],[-1040,10],[-1082,9.7]];
+ const riverWater=(z:number)=>{for(let i=1;i<waterProfile.length;i++){const [az,ay]=waterProfile[i-1],[bz,by]=waterProfile[i];if(z>=bz){const t=Math.max(0,Math.min(1,(az-z)/(az-bz)));return ay+(by-ay)*t;}}return waterProfile[waterProfile.length-1][1];};
+ // Each river chapter owns one connected, sloping water reach and rooted banks.
  const rivers=C.filter(c=>c.t==='pit'&&c.nm?.endsWith('river contact'));
  const mouthFlare=(z:number)=>70*Math.max(0,Math.min(1,(riverEnd+65-z)/65));
  for(const [chapter,pit]of rivers.entries()){
   const [x,y,z]=pit.p,depth=pit.s![2]+1;
-  a.sheet('Upstream river reach '+(chapter+1),[x,y+.18,z],54,depth);
+  const waterVertices:number[]=[],waterIndices:number[]=[],waterUV:number[]=[],waterRows=Math.ceil(depth/7);
+  for(let row=0;row<=waterRows;row++){const zz=z+depth/2-row/waterRows*depth;for(const xx of [-27,27]){waterVertices.push(xx,riverWater(zz),zz-z);waterUV.push((xx+27)/7,zz/7);}if(row){const k=(row-1)*2;waterIndices.push(k,k+3,k+1,k,k+2,k+3);}}
+  a.mesh('Upstream river reach '+(chapter+1),[x,0,z],waterVertices,waterIndices,waterUV,'custard-water','#69bfc2',101,{doubleSided:true,materialStyle:'jungle-stream'});
   a.sheet('Submerged basalt riverbed '+(chapter+1),[x,y-1.7,z],58,depth,'waterfall-basalt','#527e6d');
   for(const side of [-1,1]){
    const v:number[]=[],ix:number[]=[],uv:number[]=[],rows=Math.ceil(depth/9);
    for(let row=0;row<=rows;row++)for(let j=0;j<5;j++){
     const q=row/rows,zz=z+depth/2-q*depth,wiggle=1.8*Math.sin(zz*.024+chapter)+.8*Math.sin(zz*.12);
-    const xx=side*([14,19,27,40,64][j]+wiggle+mouthFlare(zz)),yy=y+[-.3,2.8,6,9,18][j]+(j?1.1*Math.sin(zz*.035+j):0);
+    const xx=side*([14,19,27,40,64][j]+wiggle+mouthFlare(zz)),yy=riverWater(zz)+[-.3,1.8,3.5,6,13][j]+(j?1.1*Math.sin(zz*.035+j):0);
     v.push(xx-x,yy-y,zz-z);uv.push(xx/7,zz/7);
     if(row&&j<4){const k=(row-1)*5+j,b=row*5+j;ix.push(k,b,k+1,k+1,b,b+1);}
    }
@@ -129,73 +159,106 @@ export function dressWaterfallClimb(C:CustomComponent[],groups:CustomGroup[],o:{
    };
    for(let station=0;station<depth-12;station+=29){
     const zz=z+depth/2-station-8,seed=chapter*19+station+side*3,treeX=side*(31+hash(seed+3)*10+mouthFlare(zz-4));
-    a.prop('custardshoreboulder',[side*(19+hash(seed)*4+mouthFlare(zz)),y+.5,zz],9+hash(seed+1)*5,seed,'Water-worn bank footing','#b6ceb1');
+    a.prop('custardshoreboulder',[side*(26+hash(seed)*4+mouthFlare(zz)),riverWater(zz)+.5,zz],9+hash(seed+1)*5,seed,'Water-worn bank footing','#b6ceb1');
     a.prop('custardwillow',[treeX,rootHeight(treeX,zz-4),zz-4],17+hash(seed+4)*13,seed*3,'Willow roots embedded in the gorge bank');
+    const reedX=side*(21+mouthFlare(zz+4));a.prop('coastfern',[reedX,rootHeight(reedX,zz+4),zz+4],2.5,seed*9,'Waterline fern rooted above the stream');
     a.prop('custardbankshrub',[side*(25+mouthFlare(zz+7)),rootHeight(side*(25+mouthFlare(zz+7)),zz+7),zz+7],6+hash(seed+6)*4,seed*7);
-    if(station%58===0)a.prop('custardgorgecliff',[side*(55+mouthFlare(zz-8)),y+7,zz-8],40+hash(seed+8)*13,side*24,'Outer gorge shoulder','#acc5a4');
+    if(station%58===0)a.prop('custardgorgecliff',[side*(55+mouthFlare(zz-8)),riverWater(zz-8)+7,zz-8],40+hash(seed+8)*13,side*24,'Outer gorge shoulder','#acc5a4');
    }
   }
- }
- for(let i=1;i<rivers.length;i++){
-  const low=rivers[i-1],high=rivers[i],rise=high.p[1]-low.p[1];
-  if(rise>.5)a.cascade('Rapids joining river reaches '+i,[0,low.p[1]+.18,high.p[2]+high.s![2]/2],48,rise,i+10);
  }
  // Shape only the undersides. The exact flat takeoff rims remain unobscured.
  for(const [i,pad]of landings.entries()){
   if(pad.kind!=='stone')continue;
   const [x,y,z]=pad.p,[w,d]=pad.size,river=pad.section<20;
   if(pad.section===20){a.pillar('Thunder basin foundation',[x,y-1.1,z],w*.98,d*.98,12,800);continue;}
-  if(!/turning step 3|return balcony/.test(pad.name)){
-   if(river)a.pillar('Eroded landing underside '+i,[x,y-1.12,z],w*.98,d*.97,5.2,i,'#83a282');
-   else{
-    const width=Math.min(w*.88,d*.95),height=width/assets.custardboulder.size[0]*assets.custardboulder.size[1];
-    a.prop('custardboulder',[x,y-1.05-height,z-.2],width,i*47,'Full Meshy rock beneath the carved landing','#a8b89e');
-   }
-  }
-  if(!river&&pad.section<40)a.box('Stone cantilever into the waterfall face',[x,y-2.2,z-10.5],[Math.min(w*.52,4.5),1.2,21],'waterfall-basalt','#a7b394');
+  if(river){
+   const bottom=Math.min(riverWater(z)-1.6,y-6.4);
+   a.pillar('Eroded landing rooted into riverbed '+i,[x,y-1.12,z],w*.98,d*.97,y-1.12-bottom,i,'#83a282');
+  }else if(pad.name==='Bell tower landing'){
+   // Leave the aqueduct underpass open; this balcony bears on its end corbels.
+   for(const side of [-1,1])a.buttress('Bell balcony end corbel',[x+side*(w/2+.2),y,z],2.5,d,faceZ-48,15);
+  }else if(pad.name==='Counterweight upper dock')a.buttress('Upper dock right corbel',[x+4.5,y,z],3,d,faceZ-48,15);
+  else if(pad.name==='Crown hinge refuge')a.buttress('Crown refuge right corbel',[x+2.7,y,z],2.3,d,faceZ-48,15);
+  else a.buttress('Cliff-rooted carved landing '+i,[x,y,z],w,d,faceZ-48,pad.section===24?13:22);
   if(i%2===0&&d>5){
    a.prop('coastfern',[x+w*.32,y-.09,z-d*.34],river?1.8:1.6,i*31,'Fern rooted in the rear paving seam');
    if(river)a.prop('coastv2grass',[x-w*.42,y-.06,z+d*.2],1.7,i*19,'Low grass at the safe outer rim');
   }
-  if(river&&i%4===0)a.foam('Current curling around the stone pier',[x,y-4.77,z],w*.58,Math.min(d*.58,11));
+  if(river&&i%4===0)a.foam('Current curling around the stone pier',[x,riverWater(z)+.04,z],w*.58,Math.min(d*.58,11));
  }
- // The whole face is a vertical composition, not a stack of distant billboards.
- for(let i=0;i<13;i++){
-  const x=-108+i*18,shoulder=Math.abs(x)>68,h=summitY+(shoulder?16+9*hash(i+900):-2-2*hash(i+900)),width=25+hash(i+22)*9;
-  a.pillar('Full-height basalt cliff column '+i,[x,h,faceZ-44-hash(i+33)*7],width,55,h+18,i+900,'#5d8377');
-  a.prop('custardgorgecliff',[x,h-12,faceZ-42],28+hash(i+3)*12,i*19,'Weathered summit crown','#9ab59a');
-  a.prop('custardwillow',[x,shoulder?h-.14:summitY+1.86,shoulder?faceZ-45:faceZ-66],18+hash(i+18)*14,i*37,'Trees rooted above the waterfall crown');
+ // An irregular continuous rock mass anchors every layer; full Meshy strata
+ // sit within it rather than forming detached rows of repeated blocks.
+ const cliffV:number[]=[],cliffI:number[]=[],cliffUV:number[]=[],cols=68,rows=44;
+ for(let row=0;row<=rows;row++)for(let col=0;col<=cols;col++){
+  const x=-142+col/cols*284,t=row/rows,shoulder=Math.max(0,(Math.abs(x)-72)/70),top=summitY-1.8+shoulder*(18+8*Math.sin(x*.07)),y=-12+t*(top+12);
+  const stream=[[-53,17],[-20,37],[20,13],[51,25]].some(([cx,w])=>Math.abs(x-cx)<w*.5+2);
+  const strata=2.6*Math.sin(y*.19+x*.018)+1.5*Math.sin(y*.47+x*.045),grooves=2.8*Math.sin(x*.21)+1.1*Math.sin(x*.53+y*.05);
+  const z=faceZ-(stream?56:42)+strata+grooves;
+  cliffV.push(x,y,z);cliffUV.push(x/11,y/11);
+  if(row&&col<cols){const a=(row-1)*(cols+1)+col,b=row*(cols+1)+col;cliffI.push(a,a+1,b,a+1,b+1,b);}
  }
- // Overlapping native Meshy cliff strata give the fall a sculpted rock face.
- // Dry ribs between the four streams remain visible behind every traverse.
- for(let column=0;column<8;column++)for(let row=0;row<(column===0||column===7?9:8);row++){
-  const x=-98+column*28,seed=column*23+row*17,topRow=row===7&&column>0&&column<7;
-  a.prop('custardgorgecliff',[x+2*Math.sin(row*1.8+column),baseY-8+row*20.5,faceZ-27-hash(seed)*3],
-   topRow?28:40+hash(seed+1)*5,-8+hash(seed+3)*16,'Full Meshy cliff strata behind the falls',row%2?'#aebfa2':'#bac5a7');
+ a.mesh('Continuous eroded basalt escarpment',[0,0,0],cliffV,cliffI,cliffUV,'waterfall-basalt','#8ca68f',100,{doubleSided:true,flatShading:true});
+ for(const [i,x]of [-128,-94,-70,-42,2,32,78,111,137].entries()){
+  const shoulder=Math.abs(x)>75,h=summitY+(shoulder?12+12*hash(i+900):-3),width=31+hash(i+22)*12;
+  a.pillar('Deep continuous basalt spine '+i,[x,h,faceZ-78],width,58,h+20,i+900,'#779682');
+  a.prop('custarderodedcliff',[x,h-10,faceZ-82],32+hash(i+3)*12,i*19,'Eroded summit crown embedded in the cliff','#b5c6b0');
+  a.prop('custardwillow',[x,h+.4,faceZ-85],19+hash(i+18)*12,i*37,'Willows rooted on the summit skyline');
  }
  for(const side of [-1,1]){
-  a.prop('custardgorgecliff',[side*170,40,faceZ-100],156,side*22,'Distant jungle gorge shoulder','#a6b69e');
-  a.prop('custardgorgecliff',[side*195,87,faceZ-112],124,-side*14,'High irregular waterfall escarpment','#b5c0a6');
+  a.pillar('Rooted outer gorge buttress',[side*127,summitY+8,faceZ-42],48,64,summitY+22,side+819,'#8ba78f');
+  for(let row=0;row<5;row++){
+   const y=baseY-14+row*34,x=side*(118+hash(row+51)*8);
+   a.prop('custarderodedcliff',[x,y,faceZ-41],64+hash(row)*12,side*(16+row*4),'Overlapping full Meshy weathered cliff shoulders','#b1c2a4');
+   a.prop('custardclifffoliage',[x-side*12,y+23,faceZ-26],11+hash(row+5)*7,row*17,'Vegetation rooted in shoulder fissures');
+  }
+  a.prop('custarderodedcliff',[side*183,baseY-25,faceZ-91],180,side*22,'Distant rooted jungle gorge shoulder','#a6b69e');
+  a.prop('custarderodedcliff',[side*180,baseY+37,faceZ-96],163,-side*14,'High overlapping waterfall escarpment','#b5c0a6');
  }
- for(const [i,x,w,top]of [[0,-48,24,summitY-1.2],[1,-17,27,summitY-.12],[2,17,26,summitY-3.5],[3,49,22,summitY-2.1]])
-  a.cascade('Skywater falling curtain '+(i+1),[x,baseY-5.3,faceZ-11],w,top-baseY+5.3,i);
- a.sheet('Great plunge basin',[0,baseY-5.1,faceZ+16],160,72);
- for(const x of [-42,0,40])a.foam('Skywater thunder impact',[x,baseY-5.04,faceZ],20,10);
- for(const side of [-1,1])for(let row=0;row<9;row++){
-  const y=baseY+row*17.5+10,x=side*(72+4*hash(row+51));
-  a.prop('custardboulder',[x,y-5,faceZ-18],12+hash(row)*5,row*23,'Mossy cliff shoulder','#a7c9ae');
-  a.prop('custardclifffoliage',[x,y+3,faceZ-20],10+hash(row+5)*5,row*17,'Trailing vegetation on the waterfall shoulders');
+ for(const [i,x,w,top]of [[0,-53,17,summitY-1.2],[1,-20,37,summitY-.12],[2,20,13,summitY-3.5],[3,51,25,summitY-2.1]])
+  a.cascade('Skywater falling curtain '+(i+1),[x,baseY-5.3,faceZ-44],w,top-baseY+5.3,i);
+ a.sheet('Great plunge basin',[0,baseY-2.3,faceZ-16],180,100);
+ for(const x of [-53,-20,20,51])a.foam('Skywater thunder impact',[x,baseY-2.24,faceZ-36],16,9);
+ for(const [i,x,y]of [[0,-77,30],[1,-42,67],[2,6,39],[3,32,105],[4,76,87],[5,-75,118],[6,5,133],[7,77,145],[8,-42,151]]){
+  a.prop('custardclifffoliage',[x,y,faceZ-39],8.5+hash(i+30)*4.5,i*29,'Greenery rooted in dry basalt fissures');
  }
+ // Specific architecture explains each gameplay place; it is deliberately not
+ // another stack of interchangeable supports across the whole waterfall.
+ a.arch('Western gatehouse open arch',-25.5,20,faceZ-18,15.5,15.5,5);
+ a.arch('Eastern gatehouse open arch',7.5,20,faceZ-18,17.5,15.5,5);
+ for(const x of [-41,-10,25]){
+  a.pillar('Gatehouse carved jamb',[x,35,faceZ-14],3.2,4,25,x+99,'#b3ba91');
+  a.box('Gatehouse worn capital',[x,35.4,faceZ-14],[5.8,1,5],'waterfall-basalt','#b9c397');
+ }
+ a.box('Gatehouse broken lintel',[-6,36.5,faceZ-16],[75,1.8,6],'waterfall-basalt','#b8bd93');
+ a.wheel(-12,39.4,faceZ-21,14.5,.3);
+ for(const x of [-18.2,-5.8])a.box('Waterwheel lift guide',[x,39.4,faceZ-12],[.6,34,1.1],'waterfall-timber','#a98a58',103);
+ a.box('Waterwheel overhead truss',[-12,56.8,faceZ-15],[19,1.4,5],'waterfall-timber','#cfb782',103);
+ for(const [x,y,rx]of [[-13,39,14],[15,44,14],[43,51,14]])a.arch('Aqueduct tall load-bearing arch',x,y,faceZ-23,rx,13.2,3.5);
+ for(const [x,y]of [[-27,52.2],[1,57.2],[29,64.2],[57,64.2]]){
+  a.pillar('Aqueduct foundation pier',[x,y,faceZ-23],4.5,5.5,y-9,x+130,'#a4b38b');
+  a.buttress('Aqueduct stone cantilever',[x,y+1,faceZ+5],6,5,faceZ-48,16);
+ }
+ for(const c of C.filter(c=>c.t==='trampoline')){
+  a.wheel(c.p[0],c.p[1]+3.1,c.p[2]-8,2.7,c.p[1]);
+  a.box('Bell drum rear bracket',[c.p[0],c.p[1]+.6,c.p[2]-7],[5,.8,4],'waterfall-timber','#d1ad6d',103);
+ }
+ for(const c of C.filter(c=>c.t==='mover'&&c.axis==='y'&&c.nm?.startsWith('Crown'))){
+  for(const side of [-1,1])a.box('Upper counterweight guide',[c.p[0]+side*3.7,c.p[1],c.p[2]-2.5],[.45,(c.amp??4)*2+5,.6],'waterfall-timber','#cdb27d',103);
+  a.wheel(c.p[0],c.p[1]+(c.amp??4)+2,c.p[2]-4,1.4,c.p[0]);
+ }
+
  // Warm sluice mechanisms frame the cool water. Nothing is placed in a jump.
  for(const [i,b]of C.filter(c=>c.t==='spinbridge'&&c.p[2]>riverEnd).entries()){
   a.wheel(11.5,b.p[1]+3.3,b.p[2]-4.5,3.6,i*.47);
   a.box('Sluice wheel stone footing',[11.5,b.p[1]-2,b.p[2]-4.5],[4,9,3]);
  }
- a.box('Forest bank behind the river source',[0,summitY-3,faceZ-66],[170,10,18],'coast-bedrock','#8caa7b');
- a.sheet('The river source at the summit',[0,summitY-.15,faceZ-33],150,42);
- a.foam('Quiet source pool rim',[24,summitY-.08,faceZ-30],37,13);
- for(const x of [-55,-25,5,35,78])a.prop('custardshoreboulder',[x,summitY-.8,faceZ-56],13, x*5,'Source pool shoreline rock','#d0d9ad');
- a.pillar('Rooted summit garden',[84,summitY,faceZ-16],21,21,9,707,'#9bb997');
+ a.box('Forest bank behind the river source',[0,summitY-3,faceZ-96],[170,10,18],'coast-bedrock','#8caa7b');
+ a.sheet('The river source at the summit',[0,summitY-.15,faceZ-69],150,42);
+ a.foam('Quiet source pool rim',[24,summitY-.08,faceZ-69],37,13);
+ for(const x of [-55,-25,5,35,78])a.prop('custardshoreboulder',[x,summitY-.8,faceZ-91],13, x*5,'Source pool shoreline rock','#d0d9ad');
+ a.buttress('Cliff-rooted summit garden',[84,summitY,faceZ-16],21,21,faceZ-68,25);
+ a.pillar('Rooted summit garden',[84,summitY,faceZ-16],21,21,5,707,'#9bb997');
  a.prop('custardwillow',[84,summitY-.2,faceZ-16],22,35,'Summit tree framing the finish');
  for(const x of [54,71]){
   a.pillar('Summit ceremonial column',[x,summitY+8,faceZ-7],2.8,2.8,9,x,'#c2ccb0');
@@ -211,10 +274,10 @@ export function dressWaterfallBonus(C:CustomComponent[]){
   const top=c.p[1]+c.s![1]/2;a.pillar('Spillway island foundation',[c.p[0],top-1.1,0],c.s![0],5.8,9,i+100,'#789a85');
   for(let x=c.p[0]-c.s![0]/2+2;x<c.p[0]+c.s![0]/2;x+=7)a.prop('coastfern',[x,top-.1,-2.6],1.7,x*13,'Fern at the spillway rear seam');
  }
- a.sheet('Hidden spillway millpond',[67,-4.75,-7],210,42);
- a.sheet('Submerged treasury foundations',[67,-6.5,-7],215,43,'waterfall-basalt','#5c7f67');
- a.box('Recessed rear stone wall',[68,4,-17],[205,31,8],'waterfall-basalt','#648878');
- for(let x=-16;x<161;x+=18){
+ a.sheet('Hidden spillway millpond',[84,-4.75,-7],240,42);
+ a.sheet('Submerged treasury foundations',[84,-6.5,-7],245,43,'waterfall-basalt','#5c7f67');
+ a.box('Recessed rear stone wall',[84,4,-17],[240,31,8],'waterfall-basalt','#648878');
+ for(let x=-16;x<185;x+=18){
   a.pillar('Ancient spillway buttress',[x,18,-10],4.6,5.8,25,x+20,'#9bb79a');
   a.box('Spillway architrave',[x+8,16,-11],[15,2.1,6],'waterfall-basalt','#a8bea1');
   a.prop('custardclifffoliage',[x+4,15,-12],7.5,x*11,'Trailing ferns rooted above the spillway');
@@ -223,5 +286,5 @@ export function dressWaterfallBonus(C:CustomComponent[]){
  }
  for(const [i,b]of C.filter(c=>c.t==='spinbridge').entries())a.wheel(b.p[0]+3.5,b.p[1]+5.6,-6,3.8,i*.5);
  a.box('High bell stone header',[39,12.8,-7],[8,1.5,4],'waterfall-basalt','#c6d1aa');
- a.prop('custardbankshrub',[146,5.1,-9],8,10,'Treasury garden behind the return gate');
+ a.prop('custardbankshrub',[173,6.5,-9],8,10,'Treasury garden behind the return gate');
 }

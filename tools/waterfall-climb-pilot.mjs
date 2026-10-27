@@ -1,86 +1,128 @@
 import {puzzleControls} from './puzzle-controls.mjs';
 
-/** One continuous journey using only production device samples. */
-export function* runWaterfallClimb(r,{collect=true,untilBeat=Infinity,fromBeat=0}={}){
- const c=puzzleControls(r),{p,l,source}=r,route=r.route??r.sourceModule.WATERFALL_BEATS;
- const deaths=p.totalDeaths,visited=new Set();
- const passageButtons=collect?{}:{get spinHeld(){return p.spinning||r.frame%14===0;}};
- yield* c.stepFor(20);c.check(p.grounded,'Waterfall source spawn is supported');
- const sameFloor=(a,b)=>{
-  const d=Math.hypot(a[0]-b[0],a[2]-b[2]),n=Math.max(2,Math.ceil(d/.6));
-  for(let i=0;i<=n;i++){
-   const t=i/n,x=a[0]+(b[0]-a[0])*t,z=a[2]+(b[2]-a[2])*t;
-   if(!source.components.some(k=>k.t==='platform'&&Math.abs(k.p[1]+k.s[1]/2-a[1])<.05
-    &&Math.abs(x-k.p[0])<k.s[0]/2-.18&&Math.abs(z-k.p[2])<k.s[2]/2-.18))return false;
-  }
-  return true;
- };
- function* avoidBonus(target){
-  // The raised bonus stone has real circular side collision. Keep collection
-  // approaches on the open apron, including the checkpoint after bonus return.
-  const bonus=source.components.find(k=>k.t==='bonusplatform'&&Math.abs(k.p[1]-p.pos.y)<.1);
-  if(!bonus)return;
-  const dx=target[0]-p.pos.x,dz=target[2]-p.pos.z,d2=dx*dx+dz*dz;
-  if(d2<1e-6)return;
-  const t=Math.max(0,Math.min(1,((bonus.p[0]-p.pos.x)*dx+(bonus.p[2]-p.pos.z)*dz)/d2));
-  if(Math.hypot(p.pos.x+dx*t-bonus.p[0],p.pos.z+dz*t-bonus.p[2])<3.5)
-   yield* c.walk([bonus.p[0],p.pos.y,bonus.p[2]+4.8],'Walk around the raised bonus entrance');
+/** The second route deliberately exercises distinct movement verbs. Every
+ * yielded value is a normal production input sample; geometry is never moved. */
+export function* runWaterfallClimb(r,{collect=true,untilBeat=Infinity,fromBeat=0}={}) {
+ const c=puzzleControls(r),{p,l,source}=r,route=r.route??r.sourceModule.WATERFALL_ACTIONS;
+ const deaths=p.totalDeaths,metrics={skateFrames:0,skateMetres:0,grindFrames:0,grindMetres:0,moverRides:0,drumLaunches:0};
+ yield* c.stepFor(20);c.check(p.grounded,'Waterfall spawn is supported');
+ function* brake(label='Brake onto the safe bank'){
+  yield* c.until(()=>p.grounded&&Math.abs(p.speed)<.07&&!p.freeSkate,{grabHeld:true,jumpHeld:true},{label,limit:300});
+  yield* c.tick({});
+  if(!p.grounded)yield* c.until(()=>p.grounded,{}, {label:label+' release the held charge',limit:180});
+  yield* c.stepFor(8);
  }
- function* collectHere(){
-  if(!collect)return;
-  const candidates=source.components.filter(k=>['crate','checkpoint'].includes(k.t)&&!visited.has(k.nm)
-   &&Math.abs(k.p[1]-p.pos.y)<.1&&Math.hypot(k.p[0]-p.pos.x,k.p[2]-p.pos.z)<45
-   &&sameFloor(p.pos.toArray(),k.p));
-  candidates.sort((a,b)=>Math.hypot(a.p[0]-p.pos.x,a.p[2]-p.pos.z)-Math.hypot(b.p[0]-p.pos.x,b.p[2]-p.pos.z));
-  for(const spec of candidates){
-   if(spec.t==='crate'){
-    const crate=c.crateNamed(spec.nm);
-    if(crate?.alive){
-     yield* avoidBonus(spec.p);
-     yield* c.hit(crate,spec.nm);
-    }
-   }else{
-    const cp=l.checkpoints.find(k=>Math.hypot(k.spawnPos.x-spec.p[0],k.spawnPos.z-spec.p[2])<.1&&Math.abs(k.spawnPos.y-.1-spec.p[1])<.1);
-    if(cp&&!cp.active){
-     yield* avoidBonus([spec.p[0]-1.1,spec.p[1],spec.p[2]]);
-     yield* c.walk([spec.p[0]-1.1,spec.p[1],spec.p[2]],spec.nm+' approach');
-     yield* c.tick({});yield* c.tick({spinHeld:true});yield* c.stepFor(24);
-     c.check(cp.active,spec.nm+' activated');
-    }
-   }
-   visited.add(spec.nm);
+ function* skate(action){
+  const points=action.points;let index=0,braking=false;
+  const max=action.section>=20?15:23;
+  for(let n=0;n<10000&&index<points.length;n++){
+   const target=points[index],dist=c.distance(target),last=index===points.length-1;
+   if(!last){const next=points[index+1],passed=(p.pos.x-target[0])*(next[0]-target[0])+(p.pos.z-target[2])*(next[2]-target[2]);if(passed>0&&dist<Math.max(5,p.speed*.6)){index++;continue;}}
+   if(last&&action.stop&&dist<Math.max(12,p.speed*1.45)){index++;break;}
+   if(dist<(last&&!action.stop?1.5:3)){index++;continue;}
+   if(p.speed>max)braking=true;else if(p.speed<max-2.5)braking=false;
+   const before=p.pos.clone();yield* c.tick({...c.steer(target),jumpHeld:true,grabHeld:braking});c.live(action.name);
+   if(p.freeSkate){metrics.skateFrames++;metrics.skateMetres+=p.pos.distanceTo(before);}
   }
+  c.check(index===points.length,action.name+' followed its whole curve');
+  if(action.stop){yield* brake(action.name+' dismount');yield* c.walk(points[points.length-1],action.name+' bank arrival',{settle:0});}
+ }
+ function* spin(action){
+  const b=l.spinBridges.find(b=>b.component.nm===action.target),q=b.component;
+  const a=(q.yaw??0)*Math.PI/180,dir=[Math.cos(a),0,-Math.sin(a)];
+  yield* c.walk(action.from,action.name+' takeoff',{settle:0});
+  if(q.p[1]>p.pos.y+.4){
+   yield* c.hop([q.p[0]+dir[0]*2,q.p[1],q.p[2]+dir[2]*2],action.name+' air activation',{airButtons:{spinHeld:true}});
+  }else{
+   yield* c.tick({});yield* c.tick({spinHeld:true});
+   yield* c.until(()=>b.deployed,{}, {label:action.name+' opens',limit:100});
+  }
+  c.check(b.deployed,action.name+' is physically open');
+  const end=[q.p[0]+dir[0]*(q.s[0]-.8),q.p[1],q.p[2]+dir[2]*(q.s[0]-.8)];
+  yield* c.walk(end,action.name+' cross the timed leaf',{settle:0});
+  yield* c.hop(action.to,action.name+' leave the leaf');
+  r.report.evidence.push({action:action.name,verb:'timed spin',remaining:b.remaining});
+ }
+ function* moving(action){
+  const spec=source.components.find(q=>q.nm===action.target&&q.t==='mover');
+  const m=l.movers[source.components.filter(q=>q.t==='mover').indexOf(spec)];c.check(m,action.name+' moving platform exists');
+  const top=()=>m.mesh.position.y+spec.s[1]/2;
+  const nearest=(point,margin=.9)=>action.target==='Drifting lily'?[m.mesh.position.x,top(),m.mesh.position.z+Math.sign(point[2]-m.mesh.position.z)*(spec.s[2]/2-1.2)]:[Math.max(m.mesh.position.x-spec.s[0]/2+margin,Math.min(m.mesh.position.x+spec.s[0]/2-margin,point[0])),top(),
+   Math.max(m.mesh.position.z-spec.s[2]/2+margin,Math.min(m.mesh.position.z+spec.s[2]/2-margin,point[2]))];
+  yield* c.walk(action.from,action.name+' boarding point');
+  yield* c.until(()=>Math.abs(top()-action.from[1])<.35&&c.distance(nearest(action.from))<5.6,{}, {label:action.name+' arrives',limit:1600});
+  yield* c.hop(()=>nearest(action.from),action.name+' board',{heightTolerance:.5,tolerance:1});
+  c.check(p.groundHit?.mesh===m.mesh||p.groundHit?.moverId===l.movers.indexOf(m),action.name+' actually carries the player');
+  metrics.moverRides++;
+  yield* c.walk(()=>[m.mesh.position.x,top(),m.mesh.position.z],action.name+' stand on the moving deck',{settle:0,tolerance:.3});
+  const clear=()=>{const q=nearest(action.to);return Math.abs(top()-action.to[1])<.55&&Math.hypot(q[0]-action.to[0],q[2]-action.to[2])<(action.target==='Drifting lily'?4.1:6.1)&&(spec.axis!=='x'||(action.to[0]-m.mesh.position.x)*m.lastDelta.x>-.001)&&(spec.axis!=='y'||m.lastDelta.y>0);};
+  yield* c.walk(()=>nearest(action.to),action.name+' exit edge',{settle:0,tolerance:.2});
+  yield* c.until(clear,{}, {label:action.name+' reach the exit',limit:1800});
+  yield* c.hop(action.to,action.name+' disembark');
+ }
+ function* grind(action){
+  const end=action.points[action.points.length-1],next=action.points[1],first=action.points[0],dx=next[0]-first[0],dz=next[2]-first[2],length=Math.hypot(dx,dz);
+  yield* c.walk([action.from[0]+dz/length*1.25,action.from[1],action.from[2]-dx/length*1.25],action.name+' mount');
+  yield* c.charge(26);yield* c.tick({...c.steer(next),jumpReleased:true});
+  yield* c.stepFor(6,()=>c.steer(next));
+  yield* c.until(()=>p.state==='grind',{grindHeld:true},{label:action.name+' rail contact',limit:100});
+  const rail=p.grindRail;c.check(l.rails.includes(rail),action.name+' caught the authored rail instead of a deck rim');let last=p.pos.clone();
+  yield* c.until(()=>c.distance(end)<2.5,()=>{
+   c.check(p.state==='grind'&&p.grindRail===rail,action.name+' retain the authored rail');
+   metrics.grindFrames++;metrics.grindMetres+=p.pos.distanceTo(last);last=p.pos.clone();
+   return {moveX:Math.max(-1,Math.min(1,-p.balance*8-p.balanceVel*1.3)),grindHeld:true};
+  },{label:action.name+' full grind',limit:2400});
+  yield* c.tick({...c.steer(action.to),jumpHeld:true});yield* c.tick({...c.steer(action.to),jumpReleased:true});
+  // Board airs retain their travel vector; a sideways stick is a spin trick.
+  yield* c.until(()=>p.grounded,{}, {label:action.name+' dismount landing',limit:180});
+  yield* brake(action.name+' safe bank stop');
+  c.check(Math.abs(p.pos.y-action.to[1])<.35,action.name+' stayed on its receiving balcony');
+ }
+ function* bounce(action){
+  const q=action.from,to=action.to,side=Math.sign(p.pos.x-q[0])||1;
+  yield* c.walk([q[0]+side*3.2,q[1],q[2]],action.name+' rim approach');
+  yield* c.charge(26);yield* c.tick({jumpReleased:true});
+  yield* c.until(()=>!p.grounded&&p.vVel>30,()=>({...c.steer(q),jumpHeld:true}),{label:action.name+' spring contact',limit:200});
+  metrics.drumLaunches++;
+  yield* c.until(()=>p.pos.y>to[1]+.6,{jumpHeld:true},{label:action.name+' clear the receiving shelf',limit:100});
+  yield* c.until(()=>p.grounded,()=>({...c.steer(to),jumpHeld:true}),{label:action.name+' high landing',limit:160});
+  c.check(Math.abs(p.pos.y-to[1])<.2&&c.distance(to)<1.5,action.name+' reached its high shelf');
+  yield* c.stepFor(4);
  }
  for(let index=fromBeat;index<Math.min(route.length,untilBeat);index++){
-  const beat=route[index];r.report.beat=index;
-  yield* collectHere();
-  // Fragile and timed receivers are crossed promptly; permanent ledges have
-  // room to release the controls and inspect the next jump.
-  const temporary=l.spinBridges.some(b=>b.deployed&&p.groundHit?.mesh===b.mesh)||p.groundHit?.crumbleId!==undefined;
-  yield* c.walk(beat.from,beat.name+' takeoff',{settle:temporary?0:8,buttons:passageButtons});
-  const jumpSpin=beat.bridge&&l.spinBridges.find(b=>b.component.nm===beat.bridge).component.p[1]>beat.from[1]+.4;
-  if(beat.bridge&&!jumpSpin){
-   const bridge=l.spinBridges.find(b=>b.component.nm===beat.bridge);c.check(bridge,beat.name+' bridge exists');
-   yield* c.tick({});yield* c.tick({spinHeld:true});
-   yield* c.until(()=>bridge.deployed,{}, {label:beat.name+' deploy',limit:100});
-   r.report.evidence.push({action:beat.name+' spin',remaining:bridge.remaining,state:bridge.state});
-   if(Math.abs(beat.to[2]-beat.from[2])>8){
-    // River lock: walk the long lowered leaf, then hop the exposed seam.
-    yield* c.walk([beat.from[0],beat.from[1],bridge.component.p[2]-bridge.component.s[0]+.8],beat.name+' cross open timber',{settle:0,buttons:passageButtons});
-   }
+  const action=route[index];r.report.beat=index;r.report.stage=action.name;
+  if(action.kind==='cache') {if(collect){const box=c.crateNamed(action.target);if(box?.alive)yield* c.hit(box,action.name);}}
+  else if(action.kind==='checkpoint'){
+   const cp=l.checkpoints.find(q=>Math.hypot(q.spawnPos.x-action.to[0],q.spawnPos.z-action.to[2])<.1&&Math.abs(q.spawnPos.y-.1-action.to[1])<.1);
+   yield* c.walk([action.to[0]+(p.pos.x>action.to[0]?1.1:-1.1),action.to[1],action.to[2]],action.name+' approach');yield* c.tick({});yield* c.tick({spinHeld:true});yield* c.stepFor(23);c.check(cp.active,action.name+' activates');
   }
-  yield* c.hop(beat.to,beat.name,{chargeFrames:26,...jumpSpin?{airButtons:{spinHeld:true}}:{}});
-  if(jumpSpin)c.check(l.spinBridges.find(b=>b.component.nm===beat.bridge).deployed,beat.name+' opened in the jump');
-  r.report.evidence.push({action:'beat complete',index,name:beat.name,position:p.pos.toArray()});
+  else if(action.kind==='walk')yield* c.walk(action.to,action.name);
+  else if(action.kind==='jump'){yield* c.walk(action.from,action.name+' takeoff',{settle:0});yield* c.hop(action.to,action.name,{tolerance:1.1});}
+  else if(action.kind==='spin')yield* spin(action);
+  else if(action.kind==='skate')yield* skate(action);
+  else if(action.kind==='ollie'){
+   yield* c.tick({moveY:1,jumpReleased:true});c.check(p.state==='air',action.name+' launches on the board');
+   yield* c.until(()=>p.grounded,{moveY:1},{label:action.name+' landing',limit:180});c.check(p.freeSkate,action.name+' lands skating');
+   r.report.evidence.push({action:action.name,verb:'ollie',position:p.pos.toArray(),speed:p.speed});
+  }
+  else if(action.kind==='grind')yield* grind(action);
+  else if(action.kind==='mover')yield* moving(action);
+  else if(action.kind==='bounce')yield* bounce(action);
+  else if(action.kind==='enemy'){
+   const spec=source.components.find(q=>q.nm===action.target&&q.t==='enemy');
+   const foe=l.enemies.find(q=>Math.abs((q.x0+q.x1)/2-spec.p[0])<.1&&Math.abs(q.baseY-spec.p[1])<.1&&Math.abs(q.group.position.z-spec.p[2])<.1);
+   c.check(foe,action.name+' exists');
+   yield* c.walk([spec.p[0]-spec.range-2.2,spec.p[1],spec.p[2]],action.name+' safe approach');
+   let spinHeld=false;
+   yield* c.until(()=>!foe.alive,()=>{const target=[foe.group.position.x,spec.p[1],spec.p[2]],d=c.distance(target);spinHeld=p.spinning||(d<2.4&&p.spinCd<=0&&!spinHeld);return {...((d>2.2||p.spinning)?c.steer(target,.5):{}),spinHeld};},{label:action.name+' defeat',limit:400});yield* c.stepFor(24);
+  }
+  r.report.evidence.push({action:'action complete',index,name:action.name,kind:action.kind,position:p.pos.toArray()});
  }
- if(untilBeat<route.length)return {deaths:p.totalDeaths-deaths,beat:r.report.beat,position:p.pos.toArray()};
- yield* collectHere();
- if(collect&&fromBeat===0)yield* c.clearAll('Every river and waterfall checkpoint/cache');
- yield* c.walk([62,p.pos.y,route.at(-1).to[2]],'Reach the summit crystal');
- yield* c.until(()=>p.state==='finished',{moveX:1},{label:'Cross the summit finish gate',limit:220});
- c.check(p.totalDeaths===deaths,'Waterfall traversal concealed a death');
- return {state:p.state,deaths:p.totalDeaths-deaths,cratesBroken:p.cratesBroken,totalCrates:l.totalCrates,
-  activeCheckpoints:l.checkpoints.filter(k=>k.active).length,position:p.pos.toArray(),frames:r.frame};
+ if(untilBeat<route.length)return {deaths:p.totalDeaths-deaths,beat:r.report.beat,position:p.pos.toArray(),metrics};
+ if(collect&&fromBeat===0)yield* c.clearAll('All Waterfall Climb caches and checkpoints');
+ yield* c.until(()=>p.state==='finished',{moveX:1},{label:'Cross the summit finish gate',limit:240});
+ c.check(p.totalDeaths===deaths,'The continuous route concealed a death');
+ return {state:p.state,deaths:p.totalDeaths-deaths,cratesBroken:p.cratesBroken,totalCrates:l.totalCrates,activeCheckpoints:l.checkpoints.filter(q=>q.active).length,position:p.pos.toArray(),frames:r.frame,metrics};
 }
 
 export function* runWaterfallBonus(r){
@@ -99,16 +141,34 @@ export function* runWaterfallBonus(r){
  for(const name of ['First receiver cache','First receiver pair','First receiver cap'])yield* hit(name);
  yield* c.walk([30.2,1.2,0],'Bell balcony takeoff');yield* c.hop([34.9,2.4,0],'Bell balcony jump');
  yield* c.highArrowBox(c.crateNamed('Bell rope launcher'),c.crateNamed('High bell cache'),'Keeper bell cache above the launcher');
- yield* hit('Bell keeper provisions');yield* wheel(1,[51.2,2.4,0],[67,2.4,0]);yield* hit('Safe island cache');
- yield* wheel(2,[71.2,2.4,0],[86.9,3.6,0]);
+ yield* hit('Bell keeper provisions');
+ yield* c.walk([51.1,2.4,0],'Ferry boarding sill');
+ const ferry=l.movers[0],near=()=>ferry.mesh.position.x-7.5/2+.9;
+ yield* c.until(()=>near()<55.8,{}, {label:'Wait for the bell keeper ferry',limit:900});
+ yield* c.hop(()=>[near(),2.4,0],'Board the moving keeper ferry',{tolerance:1});
+ c.check(p.groundHit?.moverId===0,'Keeper ferry actually carries the player');
+ yield* c.walk(()=>[ferry.mesh.position.x,2.4,0],'Stand on the ferry',{settle:0});
+ yield* c.until(()=>ferry.mesh.position.x>69,{}, {label:'Ride toward the treasury bank',limit:900});
+ yield* c.walk(()=>[ferry.mesh.position.x+2.6,2.4,0],'Ferry exit rim',{settle:0});
+ yield* c.hop([79,2.4,0],'Leave the moving ferry');
+ for(const name of ['Ferry shore pair','Ferry shore pair cap'])yield* hit(name);
+ yield* c.walk([89.1,2.4,0],'First rotten beam takeoff');
+ yield* c.hop([94,3.1,0],'Reach the first rotten beam',{airButtons:{spinHeld:true}});
+ yield* c.tick({});yield* c.tick({spinHeld:true});
+ yield* c.walk([98,3.1,0],'Cross the first rotten beam',{settle:0,buttons:{spinHeld:true}});
+ yield* c.hop([102,3.8,0],'Transfer before the beam falls',{airButtons:{spinHeld:true}});
+ yield* c.tick({});yield* c.tick({spinHeld:true});
+ yield* c.walk([106,3.8,0],'Cross the second rotten beam',{settle:0,buttons:{spinHeld:true}});
+ yield* c.hop([111,4.5,0],'Reach the safe treasury terrace');
  for(const name of ['Treasury pair','Treasury pair cap','Sluice seal switch'])yield* hit(name);
- yield* c.hop([97.5,3.6,0],'Clear the spent switch');yield* c.walk([99.3,3.6,0],'Revealed stones takeoff');
- for(const [index,[x,y]]of [[103.5,4.2],[109,4.8],[114.5,5.4]].entries()){
-  yield* c.hop([x,y,0],`Revealed spillway leap ${index+1}`,{airButtons:{spinHeld:true}});
+ yield* c.hop([124,4.5,0],'Clear the spent seal switch');yield* c.walk([127,4.5,0],'Revealed stones takeoff');
+ for(const [index,[x,y]]of [[133.5,5.2],[141.5,6]].entries()){
+  yield* c.hop([x-1.1,y,0],`Revealed spillway leap ${index+1}`,{airButtons:{spinHeld:true}});
   yield* hit(`Revealed spillway parcel ${index+1}`);
+  yield* c.walk([x+1.5,y,0],`Revealed spillway exit ${index+1}`,{settle:0});
  }
- yield* c.hop([120,5.4,0],'Treasury landing');
- for(const name of ['Treasury lower','Treasury middle','Treasury crown','Lost river cache','Keeper life','Last spillway parcel'])yield* hit(name);
+ yield* c.hop([149,6.8,0],'Treasury landing');
+ for(const name of ['Treasury lower','Treasury crown','Keeper life','Last spillway parcel'])yield* hit(name);
  yield* c.clearAll('Every Hidden Spillway cache');const finish=yield* c.finish('Return from the Hidden Spillway',{limit:240});
  c.check(p.totalDeaths===deaths,'Bonus traversal concealed a death');return {...finish,deaths:0,cratesBroken:p.cratesBroken,frames:r.frame};
 }
