@@ -1,0 +1,74 @@
+{
+  "passed": true,
+  "supported": 3060,
+  "crowdRoots": 1351,
+  "catches": 3,
+  "rides": [
+    {
+      "name": "halfpipe east",
+      "air": true,
+      "land": true,
+      "maxY": 15.196985542210067,
+      "maxStep": 0.4616639636278067,
+      "bails": 0
+    },
+    {
+      "name": "halfpipe west",
+      "air": true,
+      "land": true,
+      "maxY": 15.196985542210067,
+      "maxStep": 0.4616639636278067,
+      "bails": 0
+    },
+    {
+      "name": "kidney east",
+      "air": true,
+      "land": true,
+      "maxY": 15.696238835189721,
+      "maxStep": 0.47885928354053153,
+      "bails": 0
+    },
+    {
+      "name": "kidney west",
+      "air": true,
+      "land": true,
+      "maxY": 15.404185298270942,
+      "maxStep": 0.4715061804047939,
+      "bails": 0
+    },
+    {
+      "name": "volcano",
+      "air": false,
+      "land": false,
+      "maxY": 2.0999999046325684,
+      "maxStep": 0.4094780031011638,
+      "bails": 0
+    },
+    {
+      "name": "street roll-in",
+      "air": true,
+      "land": false,
+      "maxY": 11.109986985418644,
+      "maxStep": 0.39253911170029926,
+      "bails": 0
+    },
+    {
+      "name": "perimeter south",
+      "air": true,
+      "land": true,
+      "maxY": 15.75353868832179,
+      "maxStep": 0.4755270665089399,
+      "bails": 0
+    },
+    {
+      "name": "perimeter east",
+      "air": true,
+      "land": true,
+      "maxY": 15.716094752880402,
+      "maxStep": 0.47844625306204025,
+      "bails": 0
+    }
+  ],
+  "roundtrip": true,
+  "competitionRecovery": true
+}

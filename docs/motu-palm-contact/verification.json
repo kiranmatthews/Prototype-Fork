@@ -1,0 +1,86 @@
+{
+  "base": "f428d84f20d0089d11a7fde6cbd247c20318bcd0",
+  "sourceSha256": {
+    "src/levels/jungle-cup.ts": "ef9fda6b846e7fae327386afda47de873f785f73e6cf6b2308ce79b4e6a22bfd",
+    "src/levels/motu-palm-contact.ts": "a5d97cc9d6db6b1f7f1e4ffb89fada7d94d1648e7102c517f553c291396f4711",
+    "src/carlisleContacts.generated.ts": "f9104ddf7a9837346e3bc770105d6ab43aaade81e090983f8d41f92192546df9",
+    "src/carlisleSceneryCollision.ts": "8d8d9a23740bbbac35cec15f98d3c64c74308e961913011a07fd43855078f547",
+    "tools/bake-carlisle-contacts.mjs": "2ddf4a01620e82c60aa9c2e2e318aff26d60675b97038657a15104b236922b62",
+    "tools/carlisle-bonus-assets/contact-manifest.json": "d762ae8805977ac330e9797ca8a9ccb8aa137e6269ff32f3add782f2e1f1e00a",
+    "tools/motu-beach-review.ts": "18de7d551d7a035d465d5f5564a2bdb7f7012a9caff90a267f3ca6cce5d000d6",
+    "tools/motu-palm-review.ts": "6eda83096d90846cf1ab534d314aff91480fb9a8bae70f53f33ac9eee72d748f",
+    "tools/motu-preview.mjs": "ef7b0bcbccda16b98da3f7d7b8b545eb56ed6ecd1386f45f59795d21b73f6f15",
+    "tools/test-motu-beach.mjs": "4285633040d4e52d14bd88a3f48cc2c4b14f7158bfda91e55041de8735146734",
+    "tools/test-motu-palm-contact.mjs": "482215c3072e18483c10dfb157b02e60e95ba4b9a302d51783ac40b04f967ff0",
+    "tools/test-motu-palm-player.mjs": "c2fdb8f01ae30a4a05c401fa8b3f6a23185293b5ef29e33322fe08af4c080766"
+  },
+  "browser": {
+    "fullContacts": 10,
+    "liteContacts": 10,
+    "fullRides": 8,
+    "liteRides": 8,
+    "nativeInput": [
+      1920,
+      1080
+    ],
+    "nativeOutput": [
+      3840,
+      2160
+    ],
+    "normalInput": [
+      1280,
+      720
+    ],
+    "normalOutput": [
+      1280,
+      720
+    ],
+    "consoleWarnings": 0,
+    "consoleErrors": 0,
+    "previewLauncher": true,
+    "playCancelsChecks": true
+  },
+  "native": {
+    "surfaceContacts": 260,
+    "riderKernelContacts": 52,
+    "playerApproaches": 40,
+    "recoveries": 5,
+    "clearRoutes": 5,
+    "editorPreserved": true
+  },
+  "requiredChecks": [
+    {
+      "check": "festival",
+      "exitCode": 0,
+      "seconds": 10.24
+    },
+    {
+      "check": "beach",
+      "exitCode": 0,
+      "seconds": 11.26
+    },
+    {
+      "check": "levels",
+      "exitCode": 0,
+      "seconds": 228.53
+    },
+    {
+      "check": "build",
+      "exitCode": 0,
+      "seconds": 60.63
+    },
+    {
+      "check": "release",
+      "exitCode": 0,
+      "seconds": 0.18
+    }
+  ],
+  "passed": true,
+  "completedAt": "2026-10-27T11:19:24Z",
+  "release": {
+    "files": 1838,
+    "bytes": 999573555,
+    "budget": 1000000000,
+    "offlineVersion": "c9a835ba5b8595e93955"
+  }
+}

@@ -5,7 +5,8 @@ import * as THREE from 'three';
 const specs={coastv2ledge:'carlisle-coast-fidelity/ledge-root',coastv2buttress:'carlisle-coast-fidelity/canyon-buttress',
  coastv2cavewall:'treehouse-trials-v2/cavewall-b',coastv2earthbank:'treehouse-trials-v2/earthbank-b',
  coastcliff:'carlisle-coast/cliff-bay',coastspire:'carlisle-coast/canyon-spire',coastshelf:'carlisle-coast/moss-shelf',
- coastpillar:'carlisle-coast/tiki-pillar',coastarch:'carlisle-coast/temple-lintel',coastbeachrock:'beachfront/stonecliff-bastion'};
+ coastpillar:'carlisle-coast/tiki-pillar',coastarch:'carlisle-coast/temple-lintel',coastbeachrock:'beachfront/stonecliff-bastion',
+ baytrunk:'coastal-town/palm-trunk'};
 const surfaces={},manifest=[];
 for(const [kind,file] of Object.entries(specs)){
  const bytes=await fs.readFile(new URL(`../public/${file}.glb`,import.meta.url));

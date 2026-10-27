@@ -4,7 +4,7 @@ import type {CustomComponent} from './level';
 import {CARLISLE_CONTACTS} from './carlisleContacts.generated';
 import {WorldSolids,solidContact} from './worldSolids';
 
-// Ten immutable, process-bounded geometry/BVH templates, shared by every
+// Immutable, process-bounded geometry/BVH templates, shared by every
 // placement and level. No texture, LOD swap or camera cutaway owns collision.
 const templates=new Map<string,THREE.BufferGeometry>();
 const material=new THREE.MeshBasicMaterial({side:THREE.FrontSide});

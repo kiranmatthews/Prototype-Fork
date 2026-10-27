@@ -1,5 +1,6 @@
 // Local review controls; never imported by the production application.
 import * as THREE from 'three';
+import {MotuPalmReview} from './motu-palm-review';
 const g:any=await new Promise(resolve=>{const ready=()=>{const game=(window as any).__game;if(game&&!game.gameFlow.blocksGameplay)resolve(game);else requestAnimationFrame(ready);};ready();});
 const event=g.getCompetition();event.startRun();event.phase='running';event.stepRun=()=>false;
 const panel=document.createElement('section');panel.style.cssText='position:fixed;z-index:2147483646;left:12px;top:12px;padding:10px;background:#11262eea;color:white;font:12px monospace;max-width:430px';
@@ -17,9 +18,13 @@ const routes=[
   {name:'coral wave wall',p:[0,.1,-138],h:[0,0,-1],pop:true},
 ];
 let review:any=null;
+let palmReview:MotuPalmReview|null=null;
 const blank=()=>({moveX:0,moveY:0,jumpHeld:false,jumpPressed:false,jumpReleased:false,grindHeld:false,grindPressed:false,spinHeld:false,spinPressed:false,grabHeld:false,grabPressed:false,transferHeld:false,transferPressed:false,restartPressed:false});
 g.player.step=(dt:number,input:any,level:any)=>{
   if(eye)return;
+  if(palmReview&&!palmReview.report.done){
+    palmReview.step(dt);status.textContent=JSON.stringify(palmReview.report,null,2);return;
+  }
   if(!review||review.done){playerStep(dt,input,level);return;}
   const route=routes[review.index],p=g.player;
   if(review.frame===0){
@@ -72,14 +77,16 @@ button('East stands',()=>shot([45,10,-28],[87,10,-33],65));
 button('Halfpipe ends',()=>shot([44,5.5,-83],[43,2,-113],61));
 button('Loop shell',()=>shot([-75,10,-47],[-54,4,-35],60));
 button('Channel ends',()=>shot([22,3.4,-4],[14,.5,-15],62));
+button('Palm garden',()=>shot([-43,5.7,-56],[-50,2,-66],59));
 for(const [run,label]of [[1,'Daylight'],[2,'Sunset'],[3,'Moonlight']] as const)button(label,()=>{
   const cup=g.getCompetition();cup.runs=Array.from({length:run-1},()=>({gameplayScore:0,bails:0,judges:[50,50,50],score:50,inactivityPenalty:0,longestIdleSeconds:0}));
   cup.phase='standings';g.competitionAction('start');cup.phase='running';cup.stepRun=()=>false;
 });
 button('Native MAX',()=>g.renderQualitySettings.setRegularResolution(null));
 button('Normal resolution',()=>g.renderQualitySettings.setRegularResolution(720));
-button('Play',()=>{eye=null;document.body.classList.remove('motu-review-clean');if(g.getCompetition()?.phase==='intro')g.competitionAction('start');});
-button('Ride checks',()=>{eye=null;review={index:0,frame:0,air:false,grind:false,maxY:0,released:false,done:false,results:[]};document.body.classList.add('motu-review-clean');});
+button('Play',()=>{eye=null;review=null;palmReview?.cancel();palmReview=null;status.textContent='Free skate. Scripted checks stopped; normal controls are active.';document.body.classList.remove('motu-review-clean');if(g.getCompetition()?.phase==='intro')g.competitionAction('start');});
+button('Ride checks',()=>{eye=null;palmReview?.cancel();palmReview=null;review={index:0,frame:0,air:false,grind:false,maxY:0,released:false,done:false,results:[]};document.body.classList.add('motu-review-clean');});
+button('Palm contact checks',()=>{eye=null;review=null;palmReview?.cancel();palmReview=new MotuPalmReview(g.player,g.getLevel(),playerStep);document.body.classList.add('motu-review-clean');});
 button('Hide review',()=>panel.style.opacity=panel.style.opacity==='0'?'1':'0');
 button('Report',()=>{
   const assets:Record<string,{instances:number;triangles:number}>= {};

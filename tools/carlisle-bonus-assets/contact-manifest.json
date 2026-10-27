@@ -71,6 +71,13 @@
       "sha256": "a0c437610c97bc43feb6f54af44213de08df273839fadb19ce741d45d13f86bb",
       "vertices": 2994,
       "triangles": 2270
+    },
+    {
+      "kind": "baytrunk",
+      "file": "coastal-town/palm-trunk.glb",
+      "sha256": "b97f136c3edc21ee31ce24cfaef85f6c8f6ba3c63f3e385f1ded4bd92d8599b9",
+      "vertices": 1866,
+      "triangles": 1952
     }
   ]
 }

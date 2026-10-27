@@ -2,6 +2,7 @@ import type { CustomComponent, CustomLevelData } from '../level';
 import {MOTU_BEACH_SCENERY,MOTU_SKATE_FEATURES,MOTU_SUN} from './motu-beach-art';
 import {MOTU_FESTIVAL,MOTU_PALETTE} from './motu-festival';
 import {motuRampEndCaps,motuSolidBank} from './motu-solid-structures';
+import {withMotuPalmContact} from './motu-palm-contact';
 
 // An open competition park inside ONE continuous transition. The toe, curved
 // corners, coping and outside deck belong to the same mesh: no overlapping
@@ -214,5 +215,5 @@ export const JUNGLE_CUP_LEVEL: CustomLevelData = {
     fillColor:'#c4eeef',fillIntensity:.6,drawDistance:720,shadowStrength:.58,
     fallbackTop:'#308fd0',fallbackBottom:'#f8dfb9',fallbackRidges:false,
     fallbackStars:false,fallbackSunColor:null},
-  components,
+  components:withMotuPalmContact(components),
 };

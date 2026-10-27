@@ -1,0 +1,190 @@
+{
+  "kind": "palm contact",
+  "done": true,
+  "passed": true,
+  "index": 10,
+  "phase": "recovery",
+  "frame": 87,
+  "results": [
+    {
+      "palm": [
+        -50,
+        0.72,
+        -66
+      ],
+      "speed": 6,
+      "passed": true,
+      "reason": "wood contact",
+      "hits": 1,
+      "phase": "approach",
+      "frames": 14,
+      "position": [
+        -50.22933074959684,
+        0.7578963158546084,
+        -64.4376224470747
+      ]
+    },
+    {
+      "palm": [
+        -50,
+        0.72,
+        -66
+      ],
+      "speed": 18,
+      "passed": true,
+      "reason": "wood contact and steering recovery",
+      "hits": 1,
+      "phase": "recovery",
+      "frames": 90,
+      "position": [
+        -50.69589977805675,
+        0,
+        -60.43678508545523
+      ]
+    },
+    {
+      "palm": [
+        -55,
+        0.72,
+        -86
+      ],
+      "speed": 6,
+      "passed": true,
+      "reason": "wood contact",
+      "hits": 1,
+      "phase": "approach",
+      "frames": 7,
+      "position": [
+        -55.081382318290245,
+        0.7251433375266756,
+        -84.00313193757282
+      ]
+    },
+    {
+      "palm": [
+        -55,
+        0.72,
+        -86
+      ],
+      "speed": 18,
+      "passed": true,
+      "reason": "wood contact and steering recovery",
+      "hits": 1,
+      "phase": "recovery",
+      "frames": 87,
+      "position": [
+        -55.75086278138246,
+        0,
+        -80.82288304313214
+      ]
+    },
+    {
+      "palm": [
+        55,
+        0.72,
+        -76
+      ],
+      "speed": 6,
+      "passed": true,
+      "reason": "wood contact",
+      "hits": 1,
+      "phase": "approach",
+      "frames": 6,
+      "position": [
+        55.09029888648846,
+        0.752462635231367,
+        -73.93141063949741
+      ]
+    },
+    {
+      "palm": [
+        55,
+        0.72,
+        -76
+      ],
+      "speed": 18,
+      "passed": true,
+      "reason": "wood contact and steering recovery",
+      "hits": 1,
+      "phase": "recovery",
+      "frames": 90,
+      "position": [
+        55.71763097583564,
+        0,
+        -70.6137869500139
+      ]
+    },
+    {
+      "palm": [
+        9,
+        0.72,
+        -122
+      ],
+      "speed": 6,
+      "passed": true,
+      "reason": "wood contact",
+      "hits": 1,
+      "phase": "approach",
+      "frames": 9,
+      "position": [
+        9.206867768907262,
+        0.7326650746333737,
+        -120.21130107752607
+      ]
+    },
+    {
+      "palm": [
+        9,
+        0.72,
+        -122
+      ],
+      "speed": 18,
+      "passed": true,
+      "reason": "wood contact and steering recovery",
+      "hits": 1,
+      "phase": "recovery",
+      "frames": 83,
+      "position": [
+        9.711528515361758,
+        0,
+        -116.83839782394253
+      ]
+    },
+    {
+      "palm": [
+        -5,
+        0.72,
+        34
+      ],
+      "speed": 6,
+      "passed": true,
+      "reason": "wood contact",
+      "hits": 1,
+      "phase": "approach",
+      "frames": 9,
+      "position": [
+        -4.9002440133907195,
+        0.7378451096511996,
+        35.574657154797734
+      ]
+    },
+    {
+      "palm": [
+        -5,
+        0.72,
+        34
+      ],
+      "speed": 18,
+      "passed": true,
+      "reason": "wood contact and steering recovery",
+      "hits": 1,
+      "phase": "recovery",
+      "frames": 87,
+      "position": [
+        -6.1919008276622645,
+        0,
+        38.62271131891406
+      ]
+    }
+  ]
+}
