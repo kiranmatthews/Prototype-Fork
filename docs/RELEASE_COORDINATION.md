@@ -40,10 +40,13 @@ especially `src/main.ts`, `src/level.ts`, `src/player.ts`, `src/audio.ts`,
 4. Merge published level data by level ID or run the owner's focused synchronizer.
    An old full `public/levels.json` copy must not replace newer levels. Keep the
    iteration log append-only across feature owners.
-5. Reuse checks and browser evidence for unchanged commits. Run focused checks
-   for conflict resolutions/shared interactions, `npm run check:levels` when
-   level data changes, then `npm run build` and `npm run check:release` once on
-   the combined candidate. Smoke-test affected behavior in a real browser,
+5. Reuse checks and browser evidence for unchanged commits. Feature owners run
+   `npm run check:levels` after changing level data. The coordinator may reuse
+   that result when the final level sources, registry and exercised shared paths
+   match the validated source; record exact commit/blob evidence. Rerun the
+   invalidated checks for semantic conflicts or changed shared behavior. Run
+   `npm run build` and `npm run check:release` on the final combined candidate.
+   Smoke-test affected behavior in a real browser,
    including full rendering; review changed visual work at MAX/native resolution.
    Inspect console errors. Never run `check:all` unless the user requests it.
 6. Fetch/recheck `origin/main` before the single push. If it moved, integrate it
@@ -56,6 +59,22 @@ especially `src/main.ts`, `src/level.ts`, `src/player.ts`, `src/audio.ts`,
    expected release/build with `Codex/sol fork`, affected features work, and the
    console is clean. Record the commit, run URL, public version/stamp and evidence.
    Report failures once with the actionable cause; owners keep working locally.
+
+## Shared Mac validation capacity
+
+During this local coordination, use the ignored shared helper
+`/Users/kiki/Documents/ChatGPT/Prototype Fork/.release-queue/run_heavy.py`
+for new production builds, large native scene/physics checks and full-render
+browser checks. Invoke it with `python3 <helper> --owner <chat-id> -- <command>`.
+It allows two heavy foreground jobs across chats and releases their leases when
+they exit. Keep light authoring, source review and small checks independent.
+
+If the helper returns exit 75, continue independent work and note the required
+job in your handoff; do not poll or spin. The coordinator schedules available
+capacity. Close finished task-owned test browsers and preserve evidence in the
+worktree. Idle resource waits do not count as productive greybox time. Do not
+stop another chat's processes or the user's browser. This local limit addresses
+the confirmed memory-pressure crash and does not change runtime asset fidelity.
 
 ## Initial state
 
