@@ -11,11 +11,11 @@ import {addWaterparkDeckLook} from './waterparkDeck';
 import {createWaterparkPortal,WATERPARK_PORTAL_WORK} from './waterparkPortal';
 import {addWaterparkFlumeLook, createShallowSlideWater} from './waterparkFlume';
 import { isGraphicsReset } from './lostGraphicsResources';
-import { validSkateRace } from './race/schema';
+import { validRailNavigation, validSkateRace } from './race/schema';
 import { createRaceFinish } from './race/finish';
 import { RaceCourse } from './race/course';
 import { RailChoices, type RailChoiceCursor } from './race/railChoices';
-import type { SkateRaceData } from './race/types';
+import type { RailNavigationData, SkateRaceData } from './race/types';
 import {custardPoolMaterial,custardFoamMaterial,addCustardPoolBedLook,attachCustardPoolReflection,CustardFinalePresentation} from './custardPool';
 import { NightworksBackdrop } from './nightworksBackdrop';
 import { NightworksLighting } from './nightworksLighting';
@@ -146,7 +146,7 @@ import { JUNGLE_CUP_LEVEL } from "./levels/jungle-cup";
 import { JUNGLE_TERRACES_LEVEL } from "./levels/jungle-sequels";
 import { PIRATE_WRECK_LEVEL } from './levels/pirate-wreck';
 import { CROWN_TEXTURE_KINDS, isCrownTexture, crownTextureFile, createCrownSurface, createCrownQuartz, isCrownWater, crownWaterReflectionFile, createCrownWater, createDrownedHarbourOceanLook } from './drownedCrownAssets';
-import { SPAGHETTI_RAILS_LEVEL, CAVE_COLLAPSE_LEVEL, CODEX_LAB_LEVEL, WAREHOUSE_REFERENCE_LEVEL, SCHOOL_MIAMI_LEVEL, WAREHOUSE_PARK_LEVEL, ROOFTOP_RELAY_LEVEL } from "./levels/codex-lab";
+import { SPAGHETTI_RAILS_LEVEL, SPAGHETTI_RAILS_PLATFORMING_LEVEL, CAVE_COLLAPSE_LEVEL, CODEX_LAB_LEVEL, WAREHOUSE_REFERENCE_LEVEL, SCHOOL_MIAMI_LEVEL, WAREHOUSE_PARK_LEVEL, ROOFTOP_RELAY_LEVEL } from "./levels/codex-lab";
 import { JUNGLE_MINEFIELD_LEVEL } from "./levels/jungle-minefield";
 import { COUNTRY_CLUB_LEVEL } from "./levels/country-club";
 import { isPreviousCountryClubStock } from "./levels/country-club-stock";
@@ -1138,6 +1138,8 @@ export interface CustomLevelData {
   caveCollapse?: CaveCollapseData;
   /** Eight-rider point-to-point race, sharing the normal board physics. */
   skateRace?: SkateRaceData;
+  /** Branch-aware camera/input guide for ordinary platforming, with no race. */
+  railNavigation?: RailNavigationData;
   spawn: [number, number, number];
   /** False keeps an authored arrival on its own supported floor, without a warp pad. */
   startWarpPad?: boolean;
@@ -2543,6 +2545,7 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
   { id: "dark", name: "The Nightworks" }, // cycling platforms, phase rocks and torch-lit ferries
   { id: "nightworks-after-hours", name: NIGHTWORKS_AFTER_HOURS_LEVEL.name, data: NIGHTWORKS_AFTER_HOURS_LEVEL },
   { id: 'spaghetti-rails', name: SPAGHETTI_RAILS_LEVEL.name, data: SPAGHETTI_RAILS_LEVEL },
+  { id: 'spaghetti-rails-platforming', name: SPAGHETTI_RAILS_PLATFORMING_LEVEL.name, data: SPAGHETTI_RAILS_PLATFORMING_LEVEL },
   { id: "warproom", name: "Island World Map" }, // legacy id, graph-driven map runtime
   { id: "beachfront", name: "Beachside Run" },
   ...UNITY_PORT_LEVELS,
@@ -2658,7 +2661,7 @@ const MAX_LEVEL_LABEL_LENGTH = 120;
 const FORBIDDEN_JSON_KEYS = new Set(["__proto__", "prototype", "constructor"]);
 const LEVEL_DATA_KEYS = new Set([
   'encounter',
-  "minefields", "v", "skateRace", "edgeGrindingRevision", "name", "spawn", "startWarpPad", "killY", "fallRecoveryDrop", "hudMode", "ledgeAssist", "relicTime",
+  "minefields", "v", "skateRace", "railNavigation", "edgeGrindingRevision", "name", "spawn", "startWarpPad", "killY", "fallRecoveryDrop", "hudMode", "ledgeAssist", "relicTime",
   "medalTimes", "ocean", "unitySand", "shoreFoam", "sky", "jungleAtmosphere", "jungleDepthFade", "jungleStyle", "atmosphere",
   "components", "layers", "groups", "allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "skateReference", "hugeDropBail", "alwaysSkate", "warehouseArt", "skateCollectathon", "cameraAirLift", "secretComboGem", "cameraLookAhead", "cameraRig", "boulderChase", "caveCollapse",
 ]);
@@ -2905,6 +2908,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
       !Number.isFinite(source.cameraLookAhead) || source.cameraLookAhead < 0 || source.cameraLookAhead > 30)) return null;
   if(source.minefields!==undefined&&!validMinefields(source.minefields))return null;
   if(source.skateRace!==undefined&&!validSkateRace(source.skateRace))return null;
+  if(source.railNavigation!==undefined&&!validRailNavigation(source.railNavigation))return null;
   if(source.boulderChase!==undefined&&!validBoulderChase(source.boulderChase))return null;
   if(source.caveCollapse!==undefined&&!validCaveCollapse(source.caveCollapse))return null;
   if(source.cameraRig!==undefined){
@@ -4240,10 +4244,12 @@ export class Level {
   readonly isBossLevel: boolean;
   readonly allowsCrystal: boolean;
   readonly skateRace: SkateRaceData | null;
+  readonly railNavigation: RailNavigationData | null;
   private railChoiceNavigation:RailChoices|null=null;
   get railChoices():RailChoices|null {
-    if(!this.skateRace?.railChoices?.length)return null;
-    return this.railChoiceNavigation??=new RailChoices(new RaceCourse(this.skateRace.line),this.skateRace,this.rails);
+    const authored=this.skateRace??this.railNavigation;
+    if(!authored?.railChoices?.length)return null;
+    return this.railChoiceNavigation??=new RailChoices(new RaceCourse(authored.line),authored,this.rails);
   }
   readonly allowsBonus: boolean;
   boss: CrabChiefEncounter | null = null;
@@ -5404,6 +5410,7 @@ export class Level {
     };
     this.name = entry.name;
     this.skateRace = entry.data?.skateRace ?? null;
+    this.railNavigation = entry.data?.railNavigation ?? null;
     const campaignDefinition = campaignLevelById(entry.id);
     this.isBossLevel = !!campaignDefinition?.placeholder || (!!campaignDefinition?.boss && !campaignDefinition.skateRace) || !!entry.data?.encounter || isCompetitionLevel(entry.id);
     this.allowsCrystal = !this.isBossLevel && levelAllowsCrystal(entry.id);

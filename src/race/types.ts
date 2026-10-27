@@ -4,7 +4,12 @@ import type { WipeoutCause } from '../character/wipeoutPolicy';
 
 export type RacePoint = [number, number, number];
 export type RaceKnot = [number, number, number, number];
-export interface SkateRaceData {
+export interface RailNavigationData {
+  /** Ordered world guide plus optional alternatives made of native rails. */
+  line: RaceKnot[];
+  railChoices?: { from: RacePoint; to: RacePoint; paths: string[][] }[];
+}
+export interface SkateRaceData extends RailNavigationData {
   v: 1;
   racers: 8;
   vehicle?: 'golf-cart';
@@ -12,14 +17,9 @@ export interface SkateRaceData {
   gemReward?: 'win';
   seed: number;
   stages?: string[];
-  /** Ordered world-space racing guide, with rideable width at each knot. */
-  line: RaceKnot[];
   jumps: { takeoff: RacePoint; landing: RacePoint }[];
   /** Optional rail-first sections. Rival inputs aim at these real, editable strands. */
   grinds?: { start: RacePoint; end: RacePoint; lanes: number[] }[];
-  /** Alternative chains of native named rails between shared platform junctions.
-   * The rails remain the editor's source of shape, curvature and height. */
-  railChoices?: { from: RacePoint; to: RacePoint; paths: string[][] }[];
   finishWidth: number;
   originalLength: number;
 }

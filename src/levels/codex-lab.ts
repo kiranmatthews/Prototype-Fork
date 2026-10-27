@@ -1,4 +1,5 @@
 export { SPAGHETTI_RAILS_LEVEL } from './spaghetti-rails';
+export { SPAGHETTI_RAILS_PLATFORMING_LEVEL } from './spaghetti-rails-platforming';
 export { CAVE_COLLAPSE_LEVEL } from './cave-collapse';
 import {dressKookRooftops} from './rooftop-kook-art';
 import {warehouseRibbon,warehouseIsland,warehouseBeam,type WarehousePoint} from './warehouse-geometry';

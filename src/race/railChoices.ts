@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import type { Rail } from '../rails';
 import { RaceCourse } from './course';
-import type { RaceKnot, SkateRaceData } from './types';
+import type { RaceKnot, RailNavigationData } from './types';
 
 export interface RailChoiceCursor { s:number; route?:number; along?:number }
 export interface RailChoicePath {
@@ -21,7 +21,7 @@ export class RailChoices {
   readonly mapLines:(readonly RaceKnot[])[]=[];
   private bindings=new Map<Rail,{path:RailChoicePath;start:number}[]>();
   private position=new THREE.Vector3();
-  constructor(readonly course:RaceCourse,data:SkateRaceData,rails:readonly Rail[]) {
+  constructor(readonly course:RaceCourse,data:RailNavigationData,rails:readonly Rail[]) {
     const byName=new Map(rails.map(rail=>[rail.object.userData.sourceName as string,rail]));
     for(const [section,group]of (data.railChoices??[]).entries()) {
       const start=course.project(new THREE.Vector3(...group.from)).s,end=course.project(new THREE.Vector3(...group.to)).s;
