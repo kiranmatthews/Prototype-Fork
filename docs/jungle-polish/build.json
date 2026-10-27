@@ -1,0 +1,18 @@
+{
+  "command": "npm run build",
+  "exitCode": 0,
+  "node": "22.23.3",
+  "completedAt": "2026-10-27T07:32:07.116Z",
+  "results": [
+    "✓ 826 modules transformed.",
+    "✓ built in 23.27s",
+    "Level sync: 2 overrides, 10 exact source copies omitted; 39.2 KiB download.",
+    "Release assets: kept active fonts; omitted 72 historical files (401.3 MiB) from generated output.",
+    "Local review galleries: 398 files (201.4 MiB) kept in the authoring library.",
+    "Font export: 1 on-demand archive(s), 34.8 MiB less hosted data.",
+    "Reviewed textures: 423 reviewed images in 271 models, 402.0 MiB less hosted data; original art retained.",
+    "Shared textures: 131 exact images reused across 134 models, 33.7 MiB less hosted data.",
+    "Native geometry: 18 complete models packed losslessly, 15.5 MiB less hosted data.",
+    "Offline game: 1739 files, 950.5 MiB, version 0194e0289538aafacf31"
+  ]
+}

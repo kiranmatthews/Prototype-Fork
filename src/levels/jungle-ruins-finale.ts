@@ -3,6 +3,9 @@ import type { JungleAssemblyKind } from '../jungleAssemblies';
 
 type Point = [number, number, number];
 const STONE = '#d8cfac', GOLD = '#d8b45c';
+// Downward rays at the normalized centres of the native Treehouse meshes.
+// Rock bounds include uneven peaks; their maximum is not a planting surface.
+const ROCK_CROWN={trialsv2cavewalla:.9379323883,trialsv2cavewallb:.7366333292} as const;
 export const RUINS_CLIMB_Z = -1360;
 export const RUINS_SKATE_GAPS = [
   { near: -840, far: -866, runway: -718, speed: 48, name: 'The broken aqueduct' },
@@ -39,6 +42,31 @@ export function jungleRuinsFinale(): { components: CustomComponent[]; groups: Cu
     add({ t: 'platform', p: [p[0], p[1] - s[1] / 2, p[2]], s, tex: 'jungle', color: STONE, artProxy: true, grp, nm });
     const h = grp === 260 ? .4 : s[1];
     assembly('templeplatform', [p[0], p[1] - h - .025, p[2]], [s[0], h, s[2]], nm + ' · bonded masonry', 0, grp);
+    if(grp===260){
+      // Retain the light, earth-jointed deck. Give its exposed underside real
+      // stone courses instead of leaving a paper-thin slab above the ravine.
+      // Broad foundation blocks are direct native-mesh instances, keeping
+      // the complete course inside the editor's assembly-work limit.
+      const rows=2,course=(s[1]-.37)/rows;
+      for(const side of [-1,1])for(let row=0;row<rows;row++){
+        for(const alongZ of [true,false]){
+          const length=alongZ?s[2]:s[0]-2.2,count=Math.ceil(length/3.8),span=length/count;
+          for(let n=0;n<count;n++){
+            const along=-length/2+(n+.5)*span;
+            prop((n+row)%4===0?'wornstoneblock':'stoneblock',
+              [p[0]+(alongZ?side*(s[0]/2-.55):along),p[1]-s[1]+row*course,
+                p[2]+(alongZ?along:side*(s[2]/2-.55))],
+              [span+.025,course+.012,1.1],nm+' · weathered retaining courses',
+              (alongZ?90:0)+((n+row)%2)*180,grp,'#e0ddc3');
+          }
+        }
+      }
+    }else{
+      const count=Math.ceil(s[0]/3),span=s[0]/count;
+      for(let i=0;i<count;i++)prop('stonecornice',
+        [p[0]-s[0]/2+(i+.5)*span,p[1]-.38,p[2]+s[2]/2-.5],
+        [span+.015,.35,1.05],nm+' · carved terrace lip',0,grp,'#e7e2ca');
+    }
   };
   const fruit = (p: Point, nm: string) => add({ t: 'wumpa', p, grp: 261, nm });
   const checkpoint = (p: Point, nm: string) => add({ t: 'checkpoint', p, grp: 266, nm });
@@ -55,8 +83,16 @@ export function jungleRuinsFinale(): { components: CustomComponent[]; groups: Cu
   for (const [i, gap] of RUINS_SKATE_GAPS.entries()) {
     const toe = gap.near + 22, flatMid = (gap.runway + toe) / 2;
     slab([0, 0, flatMid], [16, 2.4, gap.runway - toe], `${gap.name} · long run-up`);
-    add({ t: 'ramp', p: [0, 0, (toe + gap.near) / 2], len: 22, rise: 4.2, w: 16,
-      tex: 'jungle', color: STONE, grp: 260, nm: `${gap.name} · launch bank` });
+    const mid=(toe+gap.near)/2,angle=Math.atan2(4.2,22),thickness=2.4;
+    add({ t: 'ramp', p: [0, 0, mid], len: 22, rise: 4.2, w: 16,
+      tex: 'jungle', color: STONE, artProxy:true, grp: 260, nm: `${gap.name} · launch bank` });
+    add({t:'decor',dkind:'templeplatform',
+      p:[0,2.1-thickness*Math.cos(angle)-.025,mid-thickness*Math.sin(angle)],
+      // The aqueduct's broad launch stones are twice the ordinary paving
+      // module size. This is one fixed authored scale, with native geometry.
+      s:[Math.hypot(22,4.2)/2,thickness/2,8],w:2,yaw:90,amp:angle*180/Math.PI,
+      solid:false,scenerySolid:false,castShadow:false,seed:Math.abs(gap.near),grp:260,
+      nm:`${gap.name} · fitted stone launch paving`});
     add({ t: 'speedpad', p: [0, .025, toe + 6], s: [8, .1, 5], speed: gap.speed, cycle: 5,
       color: '#75ab8b', grp: 261, nm: `${gap.name} · jade acceleration stone` });
     for (const dz of [-2.25, 2.25]) add({ t: 'decor', dkind: 'block', p: [0, .04, toe + 6 + dz],
@@ -104,13 +140,21 @@ export function jungleRuinsFinale(): { components: CustomComponent[]; groups: Cu
   // A deep, planted ravine follows the aqueduct. Broad crowns live behind
   // the shoulders, never in the player's trajectory or across a landing.
   for (let z = -728, i = 0; z > -1340; z -= 20, i++) for (const side of [-1, 1]) {
-    const n = Math.sin(i * 2.399 + side), x = side * (15 + n);
-    prop('junglecliff', [side * 24, -15, z], [28, 20 + (i % 3) * 3, 25], 'Aqueduct ravine shoulders', side * 9);
-    prop(i % 2 ? 'trialsv2groundcovera' : 'trialsv2groundcoverb', [side * 10.8, -.25, z], [5, 1.2, 4], 'Moss on ravine rim', i * 91);
-    prop(i % 3 ? 'junglefern' : 'jungleleaf', [x, -.2, z - 4], [7, 4, 6], 'Layered ravine planting', i * 73);
-    prop('junglecanopy', [side * 24, -1, z - 5], [27, 23, 26], 'Aqueduct high canopy', side * 29 + i * 71, 262, '#b5ceb0');
+    const rock=i%2?'trialsv2cavewalla':'trialsv2cavewallb',rockHeight=20+(i%3)*2;
+    prop(rock, [side * 23, -17, z],
+      [29,rockHeight,22], 'Aqueduct eroded ravine shoulders', side*90+(i%3-1)*7,262,'#dde4ca');
+    // Each planted pocket has its own buried mossy rock. Keep them behind
+    // the 16 m deck and away from the jump lips, where the old clumps floated.
+    const gapNearby=RUINS_SKATE_GAPS.some(g=>z<g.near+5&&z>g.far-5);
+    if(!gapNearby){
+      prop('treehousemossrock',[side*15.8,-3.6,z-4],[8,4,7],'Rooted aqueduct rock pocket',side*23+i*61);
+      prop(i % 2 ? 'trialsv2groundcovera' : 'trialsv2groundcoverb', [side*15.8,-.15,z-4], [4.5,1.1,3.7], 'Moss rooted in ravine rock', i*91);
+      prop(i%3?'trialsv2ferna':'trialsv2fernb',[side*16,-.15,z-4],[3.9,2.4,3.5],'Fern rooted in ravine rock',i*73);
+    }
+    const treeY=-17+rockHeight*ROCK_CROWN[rock]-.25;
+    prop(i%3===0?'trialsv2treeb':'junglecanopy',[side*23,treeY,z],
+      i%3===0?[31,20,21]:[27,23,26],'Aqueduct canopy rooted on the measured rock crown',side*29+i*71,262,'#b5ceb0');
     if (i % 3 === 0) {
-      prop('trialsv2treeb', [side * 36, -3, z], [31, 20, 21], 'Rooted ancient tree', i * 37);
       prop('junglebackdrop', [side * 56, -8, z - 12], [48, 39, 45], 'Ravine distant canopy', i * 61, 262, '#8fae99');
     }
   }
@@ -126,7 +170,9 @@ export function jungleRuinsFinale(): { components: CustomComponent[]; groups: Cu
     const pierHeight = y + 6.7, courses = Math.ceil(pierHeight / 4);
     for (let n = 0; n < courses; n++) prop('stoneshaft', [x, -10 + n * pierHeight / courses, RUINS_CLIMB_Z - 2.8],
       [Math.min(w - 3, 5), pierHeight / courses, 3.2], `Ancient terrace pier ${i + 1}`, n % 2 * 180, 264);
-    prop('junglevine', [x + w / 2 - 1, y - .3, RUINS_CLIMB_Z + 4.6], [3.8, 4.5, .8], 'Vines down terrace face', 0, 264, '#a8bb7e');
+    // Native vine bounds start at their lowest point: bury the upper ends in
+    // the coping and let the loops hang below the face rather than above it.
+    prop('junglevine', [x + w / 2 - 2.2, y - 4.4, RUINS_CLIMB_Z + 4.6], [3.8, 4.5, .8], 'Vines down terrace face', 0, 264, '#a8bb7e');
     prop('trialsv2groundcovera', [x - w / 2 + 1, y - .08, RUINS_CLIMB_Z - 3.8], [2.8, .65, 2], 'Moss in terrace joints', i * 59, 264);
     fruit([x, y + 1.25, RUINS_CLIMB_Z], 'Sunward ascent landing guide');
     if (landing && i < 11) {
@@ -147,14 +193,23 @@ export function jungleRuinsFinale(): { components: CustomComponent[]; groups: Cu
   // Layered rear architecture reads in profile. Foreground remains low so
   // every takeoff, vertical face and receiving lip survives the side camera.
   add({t:'wallpath',p:[-12,-30,RUINS_CLIMB_Z-25],pts:[[0,0],[42,0,0,3],[90,0,0,14],[150,0,0,26],[220,0,0,26]],
-    w:28,rise:28,curve:'spline',solid:false,tex:'grass',color:'#92a67b',grp:265,nm:'Rooted bank behind the climbing terraces'});
+    w:28,rise:28,curve:'spline',solid:false,invisible:true,tex:'grass',color:'#92a67b',grp:265,nm:'Rooted bank behind the climbing terraces'});
   for (let x = -10, i = 0; x < 210; x += 19, i++) {
     const y = Math.max(0, Math.min(26.4, (x - 15) * .19));
-    prop('junglecliff', [x, -12, RUINS_CLIMB_Z - 37], [26, y + 13, 25], 'Sunward rear cliff', i * 17, 265, '#acbba3');
-    prop('junglecanopy', [x, y - 2, RUINS_CLIMB_Z - 26], [27, 24, 26], 'Sunward layered canopy', i * 73, 265, '#bad2ab');
-    prop('trialsv3thicket', [x, y - 2, RUINS_CLIMB_Z - 13], [10, 6, 7], 'Terrace rooted understory', i * 57, 265);
-    prop('junglefern', [x, y - 3, RUINS_CLIMB_Z + 11], [8, 3.5, 6], 'Low foreground fern', i * 39, 265, '#789d71');
-    if (i === 4) assembly('roofedtemple', [x, y + 1, RUINS_CLIMB_Z - 21], [14, 15, 12], 'Lost sanctuary behind the ascent', 0, 265);
+    const rock=i%2?'trialsv2cavewallb':'trialsv2cavewalla',rockHeight=(y+12)/ROCK_CROWN[rock],plantedY=y-2.18;
+    prop(rock,[x,-14,RUINS_CLIMB_Z-24],
+      [28,rockHeight,24], 'Sunward eroded rear cliff', (i%3-1)*8,265,'#dce3c8');
+    // Leave the lost sanctuary's footprint clear of trunks and dense shrubs.
+    if(i!==4){
+      prop('junglecanopy',[x,plantedY,RUINS_CLIMB_Z-24],[27,24,26],'Sunward layered canopy',i*73,265,'#bad2ab');
+      prop('trialsv3thicket',[x,plantedY-.12,RUINS_CLIMB_Z-24],[10,6,7],'Terrace rooted understory',i*57,265);
+    }
+    // Low foreground growth emerges from a real outcrop rather than hanging
+    // beside the climbing columns. The face stays below the readable ledges.
+    prop('trialsv2cavewallb',[x,-14,RUINS_CLIMB_Z+17],[20,y+11.2,14],'Sunward foreground rock footing',(i%3-1)*8,265,'#d1ddba');
+    prop('trialsv2ferna',[x,-14+(y+11.2)*ROCK_CROWN.trialsv2cavewallb-.18,RUINS_CLIMB_Z+17],
+      [5,2.6,4.5],'Rooted low foreground fern',i*39,265,'#c2d2a4');
+    if (i === 4) assembly('roofedtemple', [x,plantedY-1.2,RUINS_CLIMB_Z-24], [14,15,12], 'Lost sanctuary behind the ascent',0,265);
     if(i%2===0)prop('junglebackdrop',[x,y-7,RUINS_CLIMB_Z-46],[46,33,35],'Deep forest behind the terraces',i*53,265,'#96b5a2');
     if(i%4===0)prop('treehouserepairgrove',[x+18,y-6,RUINS_CLIMB_Z-64],[84,35.08,.02],'Painted canopy beyond the summit',0,265,'#b1c8b5');
   }

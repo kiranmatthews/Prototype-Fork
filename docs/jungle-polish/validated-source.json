@@ -1,0 +1,27 @@
+{
+  "base": "37b69e6524faa1b448772b18107c818aac3a43f8",
+  "branch": "codex/jungle-ruins-polish",
+  "unchangedSharedRuntime": true,
+  "files": [
+    {
+      "path": "src/levels/jungle-ruins-art.ts",
+      "gitBlob": "3f46b5fc5d45c0b7ef205bce97a5a655c9e3e93d",
+      "sha256": "27fa3cbdbb747131d1a1d07dad8bcea67ce8c7f154c95f4c7d4eae3fa9511b36"
+    },
+    {
+      "path": "src/levels/jungle-ruins-finale.ts",
+      "gitBlob": "4739697ce220830b2b3384c840d1b41b59c432cf",
+      "sha256": "ff53e9cbb903acceef9c61f767de26eaddfbd37246abd139e721134614f42928"
+    },
+    {
+      "path": "src/levels/jungle-ruins-forest.ts",
+      "gitBlob": "042cbf1df0bcd95a281870f56656a3523fad8d3d",
+      "sha256": "9327e8edb270260fbe593658f7d9151ecfe9bf530df92cbe34d18632a4322cfa"
+    },
+    {
+      "path": "src/levels/jungle-shore.ts",
+      "gitBlob": "2893e0b9da0f6e61afc71787974533e3b3612290",
+      "sha256": "2672f62a82cb93e578a9c513dc86dda4b84d334a1cdfd8bef50e22c534c9f0ee"
+    }
+  ]
+}

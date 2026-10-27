@@ -1,0 +1,491 @@
+{
+  "stage": "cross the summit finish",
+  "seconds": 75.41666666666667,
+  "events": [
+    {
+      "name": "The broken aqueduct",
+      "width": 26,
+      "launch": {
+        "frame": 457,
+        "position": [
+          0,
+          4.09813033562437,
+          -839.4663969961276
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 37.322390873839815,
+        "deaths": 0
+      },
+      "landing": {
+        "frame": 533,
+        "position": [
+          0,
+          4.768371586472142e-8,
+          -886.4063912923556
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 37.06654218758054,
+        "deaths": 0
+      }
+    },
+    {
+      "name": "Twin guardian chasm",
+      "width": 30,
+      "launch": {
+        "frame": 668,
+        "position": [
+          0,
+          4.086429030397519,
+          -969.4051044449394
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 39.327326660283,
+        "deaths": 0
+      },
+      "landing": {
+        "frame": 746,
+        "position": [
+          0,
+          4.768371586472142e-8,
+          -1020.1698903440965
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 39.05871849883663,
+        "deaths": 0
+      }
+    },
+    {
+      "name": "The hanging gardens",
+      "width": 32,
+      "launch": {
+        "frame": 881,
+        "position": [
+          0,
+          4.10464121839677,
+          -1105.5005016201737
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 40.96476438160258,
+        "deaths": 0
+      },
+      "landing": {
+        "frame": 958,
+        "position": [
+          0,
+          4.768371586472142e-8,
+          -1157.7011953058575
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 40.68523849397287,
+        "deaths": 0
+      }
+    },
+    {
+      "name": "Sun gate leap",
+      "width": 34,
+      "launch": {
+        "frame": 1090,
+        "position": [
+          0,
+          4.110230972047324,
+          -1243.5297812821527
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 43.01582198051416,
+        "deaths": 0
+      },
+      "landing": {
+        "frame": 1147,
+        "position": [
+          0,
+          4.768371586472142e-8,
+          -1284.103040655208
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 42.721990110722956,
+        "deaths": 0
+      }
+    },
+    {
+      "name": "ledge 1",
+      "launch": {
+        "frame": 1872,
+        "position": [
+          14.529216886637837,
+          0,
+          -1359.996160896282
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "deaths": 0
+      },
+      "landing": {
+        "frame": 1931,
+        "position": [
+          18.615612989705724,
+          2.200000023841858,
+          -1359.996160896282
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "deaths": 0
+      }
+    },
+    {
+      "name": "ledge 2",
+      "launch": {
+        "frame": 2055,
+        "position": [
+          25.55198663564046,
+          2.200000023841858,
+          -1360.000398561729
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "deaths": 0
+      },
+      "landing": {
+        "frame": 2114,
+        "position": [
+          29.601986635640422,
+          4.400000023841859,
+          -1360.000398561729
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "deaths": 0
+      }
+    },
+    {
+      "name": "ledge 3",
+      "launch": {
+        "frame": 2238,
+        "position": [
+          36.55026441341821,
+          4.400000023841859,
+          -1360.000398561729
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "deaths": 0
+      },
+      "landing": {
+        "frame": 2297,
+        "position": [
+          40.600264413418174,
+          6.600000023841858,
+          -1360.000398561729
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "deaths": 0
+      }
+    },
+    {
+      "name": "ledge 4",
+      "launch": {
+        "frame": 2421,
+        "position": [
+          47.54854219119597,
+          6.600000023841858,
+          -1360.000398561729
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "deaths": 0
+      },
+      "landing": {
+        "frame": 2480,
+        "position": [
+          50.56999999999998,
+          8.800000023841859,
+          -1360.000398561729
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": -6.3639610306789285,
+        "deaths": 0
+      }
+    },
+    {
+      "name": "ledge 5",
+      "launch": {
+        "frame": 2704,
+        "position": [
+          61.530922222222294,
+          8.800000023841859,
+          -1360.000398561729
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "deaths": 0
+      },
+      "landing": {
+        "frame": 2763,
+        "position": [
+          66.33092222222236,
+          11.000000023841858,
+          -1360.000398561729
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 9,
+        "deaths": 0
+      }
+    },
+    {
+      "name": "ledge 6",
+      "launch": {
+        "frame": 2906,
+        "position": [
+          75.55170000000022,
+          11.000000023841858,
+          -1360.000398561729
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "deaths": 0
+      },
+      "landing": {
+        "frame": 2965,
+        "position": [
+          79.60170000000038,
+          13.200000023841858,
+          -1360.000398561729
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "deaths": 0
+      }
+    },
+    {
+      "name": "ledge 7",
+      "launch": {
+        "frame": 3089,
+        "position": [
+          86.54997777777817,
+          13.200000023841858,
+          -1360.000398561729
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "deaths": 0
+      },
+      "landing": {
+        "frame": 3148,
+        "position": [
+          90.59997777777832,
+          15.400000023841859,
+          -1360.000398561729
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "deaths": 0
+      }
+    },
+    {
+      "name": "ledge 8",
+      "launch": {
+        "frame": 3272,
+        "position": [
+          97.54825555555611,
+          15.400000023841859,
+          -1360.000398561729
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "deaths": 0
+      },
+      "landing": {
+        "frame": 3331,
+        "position": [
+          100.57000000000008,
+          17.600000023841858,
+          -1360.000398561729
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": -6.3639610306789285,
+        "deaths": 0
+      }
+    },
+    {
+      "name": "ledge 9",
+      "launch": {
+        "frame": 3558,
+        "position": [
+          111.5364222222221,
+          17.600000023841858,
+          -1360.000398561729
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "deaths": 0
+      },
+      "landing": {
+        "frame": 3617,
+        "position": [
+          116.33642222222228,
+          19.800000023841857,
+          -1360.000398561729
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 9,
+        "deaths": 0
+      }
+    },
+    {
+      "name": "ledge 10",
+      "launch": {
+        "frame": 3760,
+        "position": [
+          125.55120000000018,
+          19.800000023841857,
+          -1360.000398561729
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "deaths": 0
+      },
+      "landing": {
+        "frame": 3819,
+        "position": [
+          129.60120000000032,
+          22.000000023841856,
+          -1360.000398561729
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "deaths": 0
+      }
+    },
+    {
+      "name": "ledge 11",
+      "launch": {
+        "frame": 3943,
+        "position": [
+          136.54947777777812,
+          22.000000023841856,
+          -1360.000398561729
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "deaths": 0
+      },
+      "landing": {
+        "frame": 4002,
+        "position": [
+          140.59947777777828,
+          24.200000023841856,
+          -1360.000398561729
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "deaths": 0
+      }
+    },
+    {
+      "name": "ledge 12",
+      "launch": {
+        "frame": 4126,
+        "position": [
+          147.54775555555608,
+          24.200000023841856,
+          -1360.000398561729
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "deaths": 0
+      },
+      "landing": {
+        "frame": 4185,
+        "position": [
+          150.57000000000008,
+          26.400000023841855,
+          -1360.000398561729
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": -6.3639610306789285,
+        "deaths": 0
+      }
+    },
+    {
+      "name": "finish",
+      "frame": 4525,
+      "position": [
+        181.33227777777878,
+        27.381111134952967,
+        -1360.000398561729
+      ],
+      "state": "finished",
+      "grounded": false,
+      "speed": 9,
+      "deaths": 0
+    }
+  ],
+  "recovery": [
+    {
+      "name": "aqueduct pit",
+      "seconds": 2.6333333333333333,
+      "spawn": [
+        107,
+        17.70000002384186,
+        -1360
+      ],
+      "returned": [
+        107,
+        17.70000002384186,
+        -1360
+      ]
+    },
+    {
+      "name": "climbing pit",
+      "seconds": 2.8333333333333335,
+      "spawn": [
+        107,
+        17.70000002384186,
+        -1360
+      ],
+      "returned": [
+        107,
+        17.70000002384186,
+        -1360
+      ]
+    }
+  ],
+  "result": "pass",
+  "routeDeaths": 0,
+  "finish": "finished",
+  "gaps": 4,
+  "ledges": 12,
+  "earnedFinaleCheckpoints": 5
+}

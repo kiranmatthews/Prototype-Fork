@@ -101,23 +101,37 @@ export function jungleRuinsDressing(gx: (z: number) => number, gy: (z: number) =
     for(const side of [-1,1])add("stonefrieze",[side*8.15,y+2.2,z],[2.4,1.8,.35],side<0?90:-90,"#d7e2cd");
   }
 
+  // Fit dressed coping to the five original climb blocks. The chipped native
+  // cornices sit below the collider lip and cover the exposed earth core.
+  for(const [i,cx] of [-2.6,2.6,-2.6,2.6,0].entries()){
+    const top=2.3*(i+1),z=-332-i*12,depth=i===4?14:10;
+    for(let n=0;n<3;n++)out.push({t:'decor',dkind:'stonecornice',
+      p:[cx-4+(n+.5)*8/3,top-.38,z+depth/2-.5],s:[8/3+.015,.35,1.05],
+      solid:false,scenerySolid:false,castShadow:false,color:'#e7e2ca',grp:200,nm:'Climbing block · dressed chipped lip'});
+    for(const side of [-1,1])out.push({t:'decor',dkind:'trialsv2groundcovera',
+      p:[cx+side*3.25,top-.13,z-depth/2+1],s:[1.7,.42,1.8],yaw:i*73+side*31,
+      solid:false,scenerySolid:false,castShadow:false,grp:200,nm:'Climbing block · moss rooted in a rear joint'});
+  }
+
   // Roofline planting and occasional ruined pedestals give the temple a human scale.
   for (let z = -304; z >= -482; z -= 17) {
     const top = z > -386 ? 0 : z > -444 ? 11.5 : 11.5 - ((-444 - z) / 42) * 11.1;
     for (const side of [-1, 1]) {
       add("junglefern", [side * 7.3, top - 0.05, z], [3.8, 1.65, 3.4], side * 65);
-      if (z > -325 || z < -390) add("templeplatform", [side * 7.6, top - 0.1, z - 6], [2.8, 1.3, 2.8], side * 8);
+      // The descent falls another 1.6 m over six metres: don't seat a
+      // pedestal there using the height of the fern farther up the ramp.
+      if (z > -325 || (z < -390 && z > -438)) add("templeplatform", [side * 7.6, top - 0.1, z - 6], [2.8, 1.3, 2.8], side * 8);
     }
   }
-  // A second, simpler wall of scenery closes the sky gaps behind the existing
-  // planting. The cliff modules are 80 triangles; the trees share the far mesh.
+  // Full-detail eroded Treehouse rock faces close the sky gaps behind the
+  // planting. Their broad axis follows the corridor; roots bury their feet.
   const outerGroup=group("Outer jungle and rock faces");
   for(let z=22,i=0;z>-746;z-=22,i++)for(const side of [-1,1]) {
     const r=rnd(i*137+(side<0?11:71));
     const temple=z<-300&&z>-486,base=temple?16:0,inset=temple?48:41;
-    out.push({t:"decor",dkind:"junglecliff",p:[gx(z)+side*(inset+r*3),base+gy(z)-4,z],
-      s:[27+r*5,(i%5===2?24:32)+r*8,33+r*4],yaw:side*12+(r-.5)*12,
-      color:["#b9c5b5","#a4b8a9","#b9c0aa"][i%3],solid:false,grp:outerGroup,nm:"Outer rock face"});
+    out.push({t:"decor",dkind:i%2?'trialsv2cavewalla':'trialsv2cavewallb',p:[gx(z)+side*(inset+r*3-3),base+gy(z)-5,z],
+      s:[36+r*4,(i%5===2?25:32)+r*5,22+r*3],yaw:side*90+(r-.5)*14,
+      color:["#e0e6cf","#cbdac8","#e4e0c7"][i%3],solid:false,scenerySolid:false,castShadow:false,grp:outerGroup,nm:"Outer eroded rock face"});
     if(i%2===0)out.push({t:"decor",dkind:"junglebackdrop",
       p:[gx(z)+side*(temple?56:48),base+gy(z)-9,z-8+side*3],
       s:[43+r*5,39+r*6,46+r*4],yaw:r*360,color:side<0?"#89a796":"#98af93",

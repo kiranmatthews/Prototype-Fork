@@ -1,0 +1,12 @@
+{
+  "base": "37b69e6524faa1b448772b18107c818aac3a43f8",
+  "scope": "Finale authored non-decor components",
+  "unchangedComponents": 164,
+  "unchangedGaps": 4,
+  "unchangedLedges": 12,
+  "excludedRenderFlags": [
+    "artProxy",
+    "invisible"
+  ],
+  "result": "pass"
+}

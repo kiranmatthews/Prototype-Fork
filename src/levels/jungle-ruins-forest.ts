@@ -65,11 +65,14 @@ export function jungleRuinsForest(gx:(z:number)=>number,gy:(z:number)=>number,fl
   // Local planting grows out of the elevated masonry instead of hovering at
   // the jungle's raised 16 m bank datum beside the temple cutting.
   for(const [i,z]of [-308,-330,-355,-381,-399,-426,-453,-477].entries()){
-    const y=z>-324?0:z>-386?Math.min(11.5,(-324-z)/62*11.5):z>=-444?11.5:11.5-(-444-z)/42*11.1;
+    // The five climbing blocks zigzag inside |x| <= 6.6. These edge plants
+    // stand on the original floor, not an imaginary slope between the steps.
+    const surface=(at:number)=>at>-386?0:at>=-444?11.5:11.5-(-444-at)/42*11.1;
+    const y=surface(z);
     for(const side of [-1,1]){
       prop(i%2?'trialsv2groundcovera':'trialsv2groundcoverb',[side*7.35,y-.08,z],
         [2.0,.75,3.1],'moss in the outer temple joints',side*82+i*23);
-      if(i%2===0)prop('trialsv2ferna',[side*7.65,y-.05,z-2],
+      if(i%2===0)prop('trialsv2ferna',[side*7.65,surface(z-2)-.05,z-2],
         [2.35,1.5,2.2],'fern rooted behind the temple kerb',side*61+i*17);
     }
   }

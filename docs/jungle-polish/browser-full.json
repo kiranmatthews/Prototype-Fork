@@ -1,0 +1,321 @@
+{
+  "base": "http://127.0.0.1:5418/",
+  "mode": "full",
+  "normalOnly": false,
+  "liveResize": false,
+  "views": [
+    {
+      "name": "cove",
+      "resolution": "max",
+      "buffer": [
+        1440,
+        900
+      ],
+      "frame": {
+        "frame": 2747,
+        "calls": 1180,
+        "triangles": 4178214,
+        "points": 10,
+        "lines": 0
+      },
+      "assetErrors": [],
+      "position": [
+        4,
+        1.7392960786819458,
+        13
+      ],
+      "grounded": true,
+      "glError": 0
+    },
+    {
+      "name": "shore",
+      "resolution": "max",
+      "buffer": [
+        1440,
+        900
+      ],
+      "frame": {
+        "frame": 3098,
+        "calls": 1767,
+        "triangles": 6863227,
+        "points": 30,
+        "lines": 0
+      },
+      "assetErrors": [],
+      "position": [
+        4,
+        0.938898985148505,
+        22
+      ],
+      "grounded": true,
+      "glError": 0
+    },
+    {
+      "name": "temple",
+      "resolution": "max",
+      "buffer": [
+        1440,
+        900
+      ],
+      "frame": {
+        "frame": 3267,
+        "calls": 925,
+        "triangles": 9065057,
+        "points": 0,
+        "lines": 0
+      },
+      "assetErrors": [],
+      "position": [
+        0,
+        0,
+        -314
+      ],
+      "grounded": true,
+      "glError": 0
+    },
+    {
+      "name": "terrace",
+      "resolution": "max",
+      "buffer": [
+        1440,
+        900
+      ],
+      "frame": {
+        "frame": 3519,
+        "calls": 861,
+        "triangles": 7549353,
+        "points": 0,
+        "lines": 0
+      },
+      "assetErrors": [],
+      "position": [
+        0,
+        11.5,
+        -406
+      ],
+      "grounded": true,
+      "glError": 0
+    },
+    {
+      "name": "aqueduct",
+      "resolution": "max",
+      "buffer": [
+        1440,
+        900
+      ],
+      "frame": {
+        "frame": 3785,
+        "calls": 471,
+        "triangles": 1977543,
+        "points": 0,
+        "lines": 0
+      },
+      "assetErrors": [],
+      "position": [
+        0,
+        4.768371586472142e-8,
+        -774
+      ],
+      "grounded": true,
+      "glError": 0
+    },
+    {
+      "name": "takeoff",
+      "resolution": "max",
+      "buffer": [
+        1440,
+        900
+      ],
+      "frame": {
+        "frame": 3947,
+        "calls": 421,
+        "triangles": 1729788,
+        "points": 0,
+        "lines": 0
+      },
+      "assetErrors": [],
+      "position": [
+        0,
+        2.8636363636363744,
+        -833
+      ],
+      "grounded": true,
+      "glError": 0
+    },
+    {
+      "name": "ascent",
+      "resolution": "max",
+      "buffer": [
+        1440,
+        900
+      ],
+      "frame": {
+        "frame": 4185,
+        "calls": 182,
+        "triangles": 893505,
+        "points": 0,
+        "lines": 0
+      },
+      "assetErrors": [],
+      "position": [
+        83,
+        13.200000023841858,
+        -1360
+      ],
+      "grounded": true,
+      "glError": 0
+    },
+    {
+      "name": "summit",
+      "resolution": "max",
+      "buffer": [
+        1440,
+        900
+      ],
+      "frame": {
+        "frame": 4342,
+        "calls": 180,
+        "triangles": 794731,
+        "points": 10,
+        "lines": 0
+      },
+      "assetErrors": [],
+      "position": [
+        175,
+        26.400000023841855,
+        -1360
+      ],
+      "grounded": true,
+      "glError": 0
+    }
+  ],
+  "normalViews": [
+    {
+      "name": "shore-720",
+      "resolution": 720,
+      "frame": {
+        "frame": 2070,
+        "calls": 1119,
+        "triangles": 3944575,
+        "points": 10,
+        "lines": 0
+      },
+      "glError": 0
+    },
+    {
+      "name": "play-aqueduct",
+      "resolution": 720,
+      "frame": {
+        "frame": 3141,
+        "calls": 492,
+        "triangles": 2026615,
+        "points": 0,
+        "lines": 0
+      },
+      "glError": 0
+    },
+    {
+      "name": "play-ascent",
+      "resolution": 720,
+      "frame": {
+        "frame": 4176,
+        "calls": 185,
+        "triangles": 812650,
+        "points": 0,
+        "lines": 0
+      },
+      "glError": 0
+    }
+  ],
+  "swims": [
+    {
+      "offset": -6,
+      "before": {
+        "position": [
+          -1.428050394462998,
+          1.4645015646948403,
+          18
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0
+      },
+      "entry": {
+        "position": [
+          -0.41905891442677456,
+          -0.6037122593838704,
+          28.160021466178723
+        ],
+        "grounded": false,
+        "state": "swim",
+        "deaths": 0
+      },
+      "deep": {
+        "position": [
+          -0.020798810161741788,
+          -0.8977345991966434,
+          32.17029438573799
+        ],
+        "grounded": false,
+        "state": "swim",
+        "deaths": 0
+      },
+      "returned": {
+        "position": [
+          -1.3403497634618287,
+          1.3311416997889998,
+          18.883099918284007
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0
+      }
+    },
+    {
+      "offset": 6,
+      "before": {
+        "position": [
+          10.571949605537002,
+          1.7290990948711393,
+          18
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0
+      },
+      "entry": {
+        "position": [
+          11.945930494610199,
+          -1.0250507536701297,
+          31.835275721655716
+        ],
+        "grounded": false,
+        "state": "swim",
+        "deaths": 0
+      },
+      "deep": {
+        "position": [
+          12.344190598875201,
+          -1.0936365537900412,
+          35.84554864121511
+        ],
+        "grounded": false,
+        "state": "swim",
+        "deaths": 0
+      },
+      "returned": {
+        "position": [
+          10.668019267288384,
+          1.6507572401407151,
+          18.967371722116116
+        ],
+        "grounded": true,
+        "state": "ride",
+        "deaths": 0
+      }
+    }
+  ],
+  "errors": [],
+  "failedAssets": [],
+  "stamp": "Codex/sol fork · build 10-27 07:22 UTC"
+}

@@ -51,21 +51,46 @@ try {
   assert.deepEqual(copy.containmentWalls.map(b=>b.toArray?.()??[b.min.toArray(),b.max.toArray()]),
     level.containmentWalls.map(b=>[b.min.toArray(),b.max.toArray()]));
   copy.dispose();
-  const {createJungleAssetScope}=await server.ssrLoadModule('/src/jungleAssets.ts');
+  const {createJungleAssetScope,jungleAssetMatrix}=await server.ssrLoadModule('/src/jungleAssets.ts');
   const nativeScope=createJungleAssetScope(),nativeCanopy=await nativeScope.load('junglecanopy');
   const canopyTriangles=(nativeCanopy.geometry.index?.count??nativeCanopy.geometry.attributes.position.count)/3;
+  const rockTriangles=new Map(),rockGeometry=new Map();
+  for(const kind of ['trialsv2cavewalla','trialsv2cavewallb']){
+    const rock=await nativeScope.load(kind);
+    rockGeometry.set(kind,rock.geometry);
+    rockTriangles.set(kind,(rock.geometry.index?.count??rock.geometry.attributes.position.count)/3);
+    assert.ok(rockTriangles.get(kind)>1000,'eroded cliffs retain actual detailed asset geometry');
+  }
+  assert.ok(!data.components.some(c=>c.dkind==='junglecliff'),'Ruins contain no polygon placeholder cliffs');
   let cliffs=0,trees=0;const textures=new Set();
   level.root.traverse(o=>{
     if(!o.isMesh)return;
-    if(o.userData.jungleAsset==='junglecliff'){
-      cliffs+=o.count??1;assert.ok((o.geometry.index?.count??o.geometry.attributes.position.count)/3<=80);
-      assert.ok(!o.castShadow && !o.receiveShadow);
+    if(rockTriangles.has(o.userData.jungleAsset)){
+      cliffs+=o.count??1;
+      assert.equal((o.geometry.index?.count??o.geometry.attributes.position.count)/3,rockTriangles.get(o.userData.jungleAsset),'full native cliff silhouette');
+      assert.ok(!o.castShadow);
     }
     if(o.userData.jungleAsset==='junglebackdrop'){
       trees+=o.count??1;assert.equal((o.geometry.index?.count??o.geometry.attributes.position.count)/3,canopyTriangles,'backdrop retains the full native canopy');assert.ok(!o.castShadow);
     }
     if(o.material.map)textures.add(o.material.map);
   });
+  // Check root seating against the actual native asset triangles. Bounds
+  // maxima on the asymmetric rock B previously left trees/ferns in midair.
+  const rockMaterial=new THREE.MeshBasicMaterial({side:THREE.DoubleSide});
+  const rockMeshes=data.components.filter(c=>rockGeometry.has(c.dkind)).map(c=>{
+    const m=new THREE.Mesh(rockGeometry.get(c.dkind),rockMaterial);m.applyMatrix4(jungleAssetMatrix(c));m.updateMatrixWorld(true);return m;
+  });
+  const plantedNames=new Set(['Aqueduct canopy rooted on the measured rock crown','Sunward layered canopy','Terrace rooted understory','Rooted low foreground fern']);
+  let planted=0;
+  for(const c of data.components.filter(c=>plantedNames.has(c.nm))){
+    const ray=new THREE.Raycaster(new THREE.Vector3(c.p[0],c.p[1]+2,c.p[2]),new THREE.Vector3(0,-1,0));
+    const hit=ray.intersectObjects(rockMeshes,false)[0];
+    assert.ok(hit,`${c.nm}: rock beneath roots`);
+    const burial=hit.point.y-c.p[1];
+    assert.ok(burial>=.05&&burial<=.5,`${c.nm}: root burial ${burial} at ${c.p}`);planted++;
+  }
+  assert.ok(planted>90,'aqueduct and ascent canopy/understory/foreground seating');rockMaterial.dispose();
   nativeScope.dispose();
   assert.ok(cliffs>60&&trees>30,'large continuous background layer');
   assert.ok(level.containmentWalls.length>300,'continuous sides and both end caps');
@@ -117,6 +142,6 @@ try {
     probe(-442,side,1,air,true);probe(-675,side,1,air,true);
   }
   }
-  console.log(`PASS Jungle enclosure: ${cliffs} low-poly cliff placements, ${trees} far-mesh canopies, ${probes} real-Player side/air/corner/end probes, closed perimeter and capture/rebuild.`);
+  console.log(`PASS Jungle enclosure: ${cliffs} full-detail rocks, ${trees} native canopies, ${planted} mesh-measured root placements, ${probes} real-Player side/air/corner/end probes, closed perimeter and capture/rebuild.`);
   level.dispose();
 } finally {await server.close();}

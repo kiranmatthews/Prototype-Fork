@@ -1,0 +1,103 @@
+{
+  "issue": "Live MAX-to-720p resize after the camera gallery reports WebGL INVALID_FRAMEBUFFER_OPERATION (1286).",
+  "baselineCommit": "37b69e6524faa1b448772b18107c818aac3a43f8",
+  "baselineMethod": "Vite pre-loads the four original Jungle data modules directly from git show; all shared runtime remains unchanged.",
+  "baseline": {
+    "base": "http://127.0.0.1:5419/",
+    "stamp": "Codex/sol fork · build 10-27 06:53 UTC",
+    "views": [
+      {
+        "name": "play-aqueduct",
+        "resolution": 720,
+        "frame": {
+          "frame": 8006,
+          "calls": 437,
+          "triangles": 1863641,
+          "points": 0,
+          "lines": 0
+        },
+        "glError": 1286
+      },
+      {
+        "name": "play-ascent",
+        "resolution": 720,
+        "frame": {
+          "frame": 9634,
+          "calls": 184,
+          "triangles": 877488,
+          "points": 0,
+          "lines": 0
+        },
+        "glError": 1286
+      }
+    ],
+    "consoleErrors": [],
+    "failedAssets": []
+  },
+  "edited": {
+    "base": "http://127.0.0.1:5418/",
+    "stamp": "Codex/sol fork · build 10-27 06:31 UTC",
+    "views": [
+      {
+        "name": "play-aqueduct",
+        "resolution": 720,
+        "frame": {
+          "frame": 10558,
+          "calls": 492,
+          "triangles": 2026615,
+          "points": 0,
+          "lines": 0
+        },
+        "glError": 1286
+      },
+      {
+        "name": "play-ascent",
+        "resolution": 720,
+        "frame": {
+          "frame": 14425,
+          "calls": 187,
+          "triangles": 819668,
+          "points": 0,
+          "lines": 0
+        },
+        "glError": 1286
+      }
+    ],
+    "consoleErrors": [],
+    "failedAssets": []
+  },
+  "freshNormal": {
+    "base": "http://127.0.0.1:5418/",
+    "stamp": "Codex/sol fork · build 10-27 06:31 UTC",
+    "views": [
+      {
+        "name": "play-aqueduct",
+        "resolution": 720,
+        "frame": {
+          "frame": 5351,
+          "calls": 492,
+          "triangles": 2026615,
+          "points": 0,
+          "lines": 0
+        },
+        "glError": 0
+      },
+      {
+        "name": "play-ascent",
+        "resolution": 720,
+        "frame": {
+          "frame": 9573,
+          "calls": 187,
+          "triangles": 819668,
+          "points": 0,
+          "lines": 0
+        },
+        "glError": 0
+      }
+    ],
+    "consoleErrors": [],
+    "failedAssets": []
+  },
+  "conclusion": "The same issue predates the art pass. Fresh 720p and MAX sessions render cleanly. This level-only increment leaves the shared renderer unchanged.",
+  "reproduce": "JUNGLE_POLISH_GALLERY_ONLY=1 JUNGLE_POLISH_LIVE_RESIZE=1 node tools/jungle-polish-browser.mjs <local preview URL>"
+}
