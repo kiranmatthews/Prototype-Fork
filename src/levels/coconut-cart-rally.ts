@@ -1,6 +1,6 @@
 import type { CustomComponent, CustomLevelData } from '../level';
 import { stadiumBunting } from './stadium-bunting';
-import { rallyRockObstacles } from './rally-rock-obstacles';
+import { rallyRockObstacles,RALLY_ROCK_STATIONS } from './rally-rock-obstacles';
 import { stadiumFloodlight } from './stadium-floodlights';
 import type { RaceKnot } from '../race/types';
 import { stadiumSponsors,stadiumSponsorWallPoint } from './stadium-sponsors';
@@ -108,7 +108,13 @@ function build():CustomComponent[]{
     for(let s=j.start-16;s<j.start-3;s+=5)strip('Painted dirt launch marks',s,s+.9,[-12,0,12],'#ceb68a',false,.045,false);
     for(const side of [-1,1]){const p=cartRallyPoint(j.start-1,side*16);add({t:'platform',nm:`Dirt jump ${i+1} flagpole`,p:[p[0],p[1]+3,p[2]],s:[.14,6,.14],tex:'solid',color:'#e3c28e',solid:false});add({t:'platform',nm:'Dirt launch flag',p:[p[0],p[1]+5.4,p[2]],s:[1.8,.9,.08],tex:'solid',color:i%2?'#ee7838':'#56bfa0',solid:false});}
   }
-  for(let s=65;s<CART_RALLY_LENGTH-70;s+=115){if(CART_RALLY_JUMPS.some(j=>s>j.start-45&&s<j.start+70))continue;for(const u of [-9,-3,3,9])add({t:'crate',kind:'mystery',p:cartRallyPoint(s,u),nm:'Rally item row'});}
+  for(let s=65;s<CART_RALLY_LENGTH-70;s+=115){
+    if(CART_RALLY_JUMPS.some(j=>s>j.start-45&&s<j.start+70))continue;
+    // Keep the full four-item row in open dirt beside each rock section.
+    const rock=RALLY_ROCK_STATIONS.find(at=>Math.abs(s-at)<19);
+    const at=rock===undefined?s:rock+(s<rock?-19:19);
+    for(const u of [-9,-3,3,9])add({t:'crate',kind:'mystery',p:cartRallyPoint(at,u),nm:'Rally item row'});
+  }
   for(let s=0;s<=CART_RALLY_LENGTH+35;s+=16)add({t:'camnode',p:cartRallyPoint(s),nm:'Rally chase camera'});
   add({t:'gate',p:cartRallyPoint(CART_RALLY_LENGTH),yaw:-Math.atan(cartRallyFrame(CART_RALLY_LENGTH).dx)*180/Math.PI,nm:'Coconut Cart Rally finish'});
   add({t:'pit',p:[0,-35,-CART_RALLY_LENGTH/2],s:[600,1,CART_RALLY_LENGTH+160],invisible:true,nm:'Stadium emergency recovery'});

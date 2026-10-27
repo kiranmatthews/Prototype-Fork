@@ -1,0 +1,509 @@
+{
+  "passed": true,
+  "results": [
+    {
+      "index": 0,
+      "position": [
+        21.13117,
+        27.701970554040695,
+        -68.4997
+      ],
+      "collected": true,
+      "broken": [
+        0
+      ],
+      "finalDistance": 1.9725665355447208,
+      "item": "mushroom",
+      "seconds": 0.36666666666666664,
+      "hits": 0,
+      "falls": 0,
+      "rolls": 0
+    },
+    {
+      "index": 1,
+      "position": [
+        26.65896,
+        27.984062545698173,
+        -66.16657
+      ],
+      "collected": true,
+      "broken": [
+        1
+      ],
+      "finalDistance": 2.1352408670449603,
+      "item": "mushroom",
+      "seconds": 0.38333333333333336,
+      "hits": 0,
+      "falls": 0,
+      "rolls": 0
+    },
+    {
+      "index": 2,
+      "position": [
+        32.18675,
+        28.07605569367778,
+        -63.83343
+      ],
+      "collected": true,
+      "broken": [
+        2
+      ],
+      "finalDistance": 1.972566535544713,
+      "item": "mushroom",
+      "seconds": 0.36666666666666664,
+      "hits": 0,
+      "falls": 0,
+      "rolls": 0
+    },
+    {
+      "index": 3,
+      "position": [
+        37.71455,
+        28.059154960287692,
+        -61.5003
+      ],
+      "collected": true,
+      "broken": [
+        3
+      ],
+      "finalDistance": 1.9725665355447144,
+      "item": "mushroom",
+      "seconds": 0.36666666666666664,
+      "hits": 0,
+      "falls": 0,
+      "rolls": 0
+    },
+    {
+      "index": 4,
+      "position": [
+        34.8103,
+        27.72608704991407,
+        -420.4779
+      ],
+      "collected": true,
+      "broken": [
+        4
+      ],
+      "finalDistance": 1.9727624176725123,
+      "item": "mushroom",
+      "seconds": 0.36666666666666664,
+      "hits": 0,
+      "falls": 0,
+      "rolls": 0
+    },
+    {
+      "index": 5,
+      "position": [
+        40.56989,
+        27.825577363969774,
+        -422.1593
+      ],
+      "collected": true,
+      "broken": [
+        5
+      ],
+      "finalDistance": 1.9727637775627263,
+      "item": "mushroom",
+      "seconds": 0.36666666666666664,
+      "hits": 0,
+      "falls": 0,
+      "rolls": 0
+    },
+    {
+      "index": 6,
+      "position": [
+        46.32948,
+        28.000704947968828,
+        -423.8407
+      ],
+      "collected": true,
+      "broken": [
+        6
+      ],
+      "finalDistance": 1.9726452053437271,
+      "item": "mushroom",
+      "seconds": 0.36666666666666664,
+      "hits": 0,
+      "falls": 0,
+      "rolls": 0
+    },
+    {
+      "index": 7,
+      "position": [
+        52.08907,
+        27.847225176095442,
+        -425.5221
+      ],
+      "collected": true,
+      "broken": [
+        7
+      ],
+      "finalDistance": 1.9726452053437271,
+      "item": "mushroom",
+      "seconds": 0.36666666666666664,
+      "hits": 0,
+      "falls": 0,
+      "rolls": 0
+    },
+    {
+      "index": 8,
+      "position": [
+        25.35025,
+        27.63931965357779,
+        -635.50382
+      ],
+      "collected": true,
+      "broken": [
+        8
+      ],
+      "finalDistance": 1.8721850686145294,
+      "item": "mushroom",
+      "seconds": 0.4,
+      "hits": 0,
+      "falls": 0,
+      "rolls": 0
+    },
+    {
+      "index": 9,
+      "position": [
+        30.54787,
+        27.71208435424807,
+        -638.50127
+      ],
+      "collected": true,
+      "broken": [
+        9
+      ],
+      "finalDistance": 1.9725666673315194,
+      "item": "mushroom",
+      "seconds": 0.36666666666666664,
+      "hits": 0,
+      "falls": 0,
+      "rolls": 0
+    },
+    {
+      "index": 10,
+      "position": [
+        35.7455,
+        27.392254732350185,
+        -641.49873
+      ],
+      "collected": true,
+      "broken": [
+        10
+      ],
+      "finalDistance": 1.972729371989773,
+      "item": "mushroom",
+      "seconds": 0.36666666666666664,
+      "hits": 0,
+      "falls": 0,
+      "rolls": 0
+    },
+    {
+      "index": 11,
+      "position": [
+        40.94312,
+        27.263593932381525,
+        -644.49618
+      ],
+      "collected": true,
+      "broken": [
+        11
+      ],
+      "finalDistance": 1.939963518810687,
+      "item": "mushroom",
+      "seconds": 0.38333333333333336,
+      "hits": 1,
+      "falls": 0,
+      "rolls": 0
+    },
+    {
+      "index": 12,
+      "position": [
+        -85.19418,
+        26.072048630255182,
+        -1098.1586
+      ],
+      "collected": true,
+      "broken": [
+        12
+      ],
+      "finalDistance": 1.9726320816156775,
+      "item": "mushroom",
+      "seconds": 0.36666666666666664,
+      "hits": 0,
+      "falls": 0,
+      "rolls": 0
+    },
+    {
+      "index": 13,
+      "position": [
+        -79.32111,
+        25.90304128879339,
+        -1099.3862
+      ],
+      "collected": true,
+      "broken": [
+        13
+      ],
+      "finalDistance": 1.9726320816156775,
+      "item": "mushroom",
+      "seconds": 0.36666666666666664,
+      "hits": 0,
+      "falls": 0,
+      "rolls": 0
+    },
+    {
+      "index": 14,
+      "position": [
+        -73.44803,
+        25.96017068332072,
+        -1100.6138
+      ],
+      "collected": true,
+      "broken": [
+        14
+      ],
+      "finalDistance": 1.9726320816156775,
+      "item": "mushroom",
+      "seconds": 0.36666666666666664,
+      "hits": 0,
+      "falls": 0,
+      "rolls": 0
+    },
+    {
+      "index": 15,
+      "position": [
+        -67.57496,
+        26.109464806825173,
+        -1101.8414
+      ],
+      "collected": true,
+      "broken": [
+        15
+      ],
+      "finalDistance": 1.9726320816156775,
+      "item": "mushroom",
+      "seconds": 0.36666666666666664,
+      "hits": 0,
+      "falls": 0,
+      "rolls": 0
+    },
+    {
+      "index": 16,
+      "position": [
+        -48.81385,
+        26.397746652737204,
+        -1336.44842
+      ],
+      "collected": true,
+      "broken": [
+        16
+      ],
+      "finalDistance": 1.9735165577792266,
+      "item": "mushroom",
+      "seconds": 0.36666666666666664,
+      "hits": 0,
+      "falls": 0,
+      "rolls": 0
+    },
+    {
+      "index": 17,
+      "position": [
+        -46.94356,
+        26.538486139238977,
+        -1342.14947
+      ],
+      "collected": true,
+      "broken": [
+        17
+      ],
+      "finalDistance": 1.9735165577792266,
+      "item": "mushroom",
+      "seconds": 0.36666666666666664,
+      "hits": 0,
+      "falls": 0,
+      "rolls": 0
+    },
+    {
+      "index": 18,
+      "position": [
+        -45.07328,
+        26.67664154161413,
+        -1347.85053
+      ],
+      "collected": true,
+      "broken": [
+        18
+      ],
+      "finalDistance": 1.9732211206995658,
+      "item": "mushroom",
+      "seconds": 0.36666666666666664,
+      "hits": 0,
+      "falls": 0,
+      "rolls": 0
+    },
+    {
+      "index": 19,
+      "position": [
+        -43.203,
+        27.008357457323342,
+        -1353.55158
+      ],
+      "collected": true,
+      "broken": [
+        19
+      ],
+      "finalDistance": 2.0472888031606775,
+      "item": "mushroom",
+      "seconds": 0.38333333333333336,
+      "hits": 0,
+      "falls": 0,
+      "rolls": 0
+    },
+    {
+      "index": 20,
+      "position": [
+        23.01543,
+        27.68766905999491,
+        -1673.96686
+      ],
+      "collected": true,
+      "broken": [
+        20
+      ],
+      "finalDistance": 1.9733548172022517,
+      "item": "mushroom",
+      "seconds": 0.36666666666666664,
+      "hits": 0,
+      "falls": 0,
+      "rolls": 0
+    },
+    {
+      "index": 21,
+      "position": [
+        28.97577,
+        27.615065486530902,
+        -1674.65562
+      ],
+      "collected": true,
+      "broken": [
+        21
+      ],
+      "finalDistance": 1.9733577109910128,
+      "item": "mushroom",
+      "seconds": 0.36666666666666664,
+      "hits": 0,
+      "falls": 0,
+      "rolls": 0
+    },
+    {
+      "index": 22,
+      "position": [
+        34.93611,
+        27.74470174616679,
+        -1675.34438
+      ],
+      "collected": true,
+      "broken": [
+        22
+      ],
+      "finalDistance": 1.9733606358490545,
+      "item": "mushroom",
+      "seconds": 0.36666666666666664,
+      "hits": 0,
+      "falls": 0,
+      "rolls": 0
+    },
+    {
+      "index": 23,
+      "position": [
+        40.89645,
+        27.697435281497,
+        -1676.03314
+      ],
+      "collected": true,
+      "broken": [
+        23
+      ],
+      "finalDistance": 1.9733635911734537,
+      "item": "mushroom",
+      "seconds": 0.36666666666666664,
+      "hits": 0,
+      "falls": 0,
+      "rolls": 0
+    },
+    {
+      "index": 24,
+      "position": [
+        27.65282,
+        27.193036346898918,
+        -2009.09768
+      ],
+      "collected": true,
+      "broken": [
+        24
+      ],
+      "finalDistance": 1.9727897071696316,
+      "item": "mushroom",
+      "seconds": 0.36666666666666664,
+      "hits": 0,
+      "falls": 0,
+      "rolls": 0
+    },
+    {
+      "index": 25,
+      "position": [
+        33.65247,
+        27.26172531299087,
+        -2009.03256
+      ],
+      "collected": true,
+      "broken": [
+        25
+      ],
+      "finalDistance": 1.972789706656323,
+      "item": "mushroom",
+      "seconds": 0.36666666666666664,
+      "hits": 0,
+      "falls": 0,
+      "rolls": 0
+    },
+    {
+      "index": 26,
+      "position": [
+        39.65211,
+        27.302825932917635,
+        -2008.96744
+      ],
+      "collected": true,
+      "broken": [
+        26
+      ],
+      "finalDistance": 1.9727897065722246,
+      "item": "mushroom",
+      "seconds": 0.36666666666666664,
+      "hits": 0,
+      "falls": 0,
+      "rolls": 0
+    },
+    {
+      "index": 27,
+      "position": [
+        45.65176,
+        27.080441410331822,
+        -2008.90232
+      ],
+      "collected": true,
+      "broken": [
+        27
+      ],
+      "finalDistance": 1.972789706396782,
+      "item": "mushroom",
+      "seconds": 0.36666666666666664,
+      "hits": 0,
+      "falls": 0,
+      "rolls": 0
+    }
+  ]
+}

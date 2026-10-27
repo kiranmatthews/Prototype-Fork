@@ -1,0 +1,315 @@
+{
+  "passed": true,
+  "count": 28,
+  "items": [
+    {
+      "index": 0,
+      "position": [
+        21.13117,
+        27.701970554040695,
+        -68.4997
+      ],
+      "wallDistance": 17.188388540171026,
+      "obstacleDistance": 18.33510944315214,
+      "clear": true
+    },
+    {
+      "index": 1,
+      "position": [
+        26.65896,
+        27.984062545698173,
+        -66.16657
+      ],
+      "wallDistance": 17.43710970893121,
+      "obstacleDistance": 18.461745680068926,
+      "clear": true
+    },
+    {
+      "index": 2,
+      "position": [
+        32.18675,
+        28.07605569367778,
+        -63.83343
+      ],
+      "wallDistance": 19.00955301044167,
+      "obstacleDistance": 19.23018887368449,
+      "clear": true
+    },
+    {
+      "index": 3,
+      "position": [
+        37.71455,
+        28.059154960287692,
+        -61.5003
+      ],
+      "wallDistance": 21.342683010441668,
+      "obstacleDistance": 21.454220862504233,
+      "clear": true
+    },
+    {
+      "index": 4,
+      "position": [
+        34.8103,
+        27.72608704991407,
+        -420.4779
+      ],
+      "wallDistance": 15.605250460903774,
+      "obstacleDistance": 16.940540275051838,
+      "clear": true
+    },
+    {
+      "index": 5,
+      "position": [
+        40.56989,
+        27.825577363969774,
+        -422.1593
+      ],
+      "wallDistance": 12.121359839798655,
+      "obstacleDistance": 13.603323783774258,
+      "clear": true
+    },
+    {
+      "index": 6,
+      "position": [
+        46.32948,
+        28.000704947968828,
+        -423.8407
+      ],
+      "wallDistance": 11.060327872193993,
+      "obstacleDistance": 11.956184284197754,
+      "clear": true
+    },
+    {
+      "index": 7,
+      "position": [
+        52.08907,
+        27.847225176095442,
+        -425.5221
+      ],
+      "wallDistance": 10.761036769180372,
+      "obstacleDistance": 11.594150063889296,
+      "clear": true
+    },
+    {
+      "index": 8,
+      "position": [
+        25.35025,
+        27.63931965357779,
+        -635.50382
+      ],
+      "wallDistance": 140.5060623086056,
+      "obstacleDistance": 141.02104805627795,
+      "clear": true
+    },
+    {
+      "index": 9,
+      "position": [
+        30.54787,
+        27.71208435424807,
+        -638.50127
+      ],
+      "wallDistance": 138.4045983462632,
+      "obstacleDistance": 138.97708967510266,
+      "clear": true
+    },
+    {
+      "index": 10,
+      "position": [
+        35.7455,
+        27.392254732350185,
+        -641.49873
+      ],
+      "wallDistance": 136.37720752786495,
+      "obstacleDistance": 136.93800259524338,
+      "clear": true
+    },
+    {
+      "index": 11,
+      "position": [
+        40.94312,
+        27.263593932381525,
+        -644.49618
+      ],
+      "wallDistance": 134.3554309124075,
+      "obstacleDistance": 135.02286161532203,
+      "clear": true
+    },
+    {
+      "index": 12,
+      "position": [
+        -85.19418,
+        26.072048630255182,
+        -1098.1586
+      ],
+      "wallDistance": 149.59097150554945,
+      "obstacleDistance": 150.82169726116405,
+      "clear": true
+    },
+    {
+      "index": 13,
+      "position": [
+        -79.32111,
+        25.90304128879339,
+        -1099.3862
+      ],
+      "wallDistance": 148.20434593660264,
+      "obstacleDistance": 149.3695479484092,
+      "clear": true
+    },
+    {
+      "index": 14,
+      "position": [
+        -73.44803,
+        25.96017068332072,
+        -1100.6138
+      ],
+      "wallDistance": 147.049639131981,
+      "obstacleDistance": 148.14090864987702,
+      "clear": true
+    },
+    {
+      "index": 15,
+      "position": [
+        -67.57496,
+        26.109464806825173,
+        -1101.8414
+      ],
+      "wallDistance": 146.1323567755236,
+      "obstacleDistance": 147.14125282023298,
+      "clear": true
+    },
+    {
+      "index": 16,
+      "position": [
+        -48.81385,
+        26.397746652737204,
+        -1336.44842
+      ],
+      "wallDistance": 8.226973461432403,
+      "obstacleDistance": 9.143761780988823,
+      "clear": true
+    },
+    {
+      "index": 17,
+      "position": [
+        -46.94356,
+        26.538486139238977,
+        -1342.14947
+      ],
+      "wallDistance": 12.27212641690618,
+      "obstacleDistance": 13.715862865823482,
+      "clear": true
+    },
+    {
+      "index": 18,
+      "position": [
+        -45.07328,
+        26.67664154161413,
+        -1347.85053
+      ],
+      "wallDistance": 17.479331031349904,
+      "obstacleDistance": 18.96711504155965,
+      "clear": true
+    },
+    {
+      "index": 19,
+      "position": [
+        -43.203,
+        27.008357457323342,
+        -1353.55158
+      ],
+      "wallDistance": 23.07484850165312,
+      "obstacleDistance": 24.51956396123025,
+      "clear": true
+    },
+    {
+      "index": 20,
+      "position": [
+        23.01543,
+        27.68766905999491,
+        -1673.96686
+      ],
+      "wallDistance": 176.58005337513487,
+      "obstacleDistance": 176.60156415280457,
+      "clear": true
+    },
+    {
+      "index": 21,
+      "position": [
+        28.97577,
+        27.615065486530902,
+        -1674.65562
+      ],
+      "wallDistance": 176.21575583838467,
+      "obstacleDistance": 176.26702681063742,
+      "clear": true
+    },
+    {
+      "index": 22,
+      "position": [
+        34.93611,
+        27.74470174616679,
+        -1675.34438
+      ],
+      "wallDistance": 175.65406051561774,
+      "obstacleDistance": 175.82257126579603,
+      "clear": true
+    },
+    {
+      "index": 23,
+      "position": [
+        40.89645,
+        27.697435281497,
+        -1676.03314
+      ],
+      "wallDistance": 175.29605081707288,
+      "obstacleDistance": 175.49648577241018,
+      "clear": true
+    },
+    {
+      "index": 24,
+      "position": [
+        27.65282,
+        27.193036346898918,
+        -2009.09768
+      ],
+      "wallDistance": 13.241067565297389,
+      "obstacleDistance": 14.719508738196822,
+      "clear": true
+    },
+    {
+      "index": 25,
+      "position": [
+        33.65247,
+        27.26172531299087,
+        -2009.03256
+      ],
+      "wallDistance": 10.489100683914282,
+      "obstacleDistance": 11.485461454572413,
+      "clear": true
+    },
+    {
+      "index": 26,
+      "position": [
+        39.65211,
+        27.302825932917635,
+        -2008.96744
+      ],
+      "wallDistance": 9.449531166573768,
+      "obstacleDistance": 10.239724661971158,
+      "clear": true
+    },
+    {
+      "index": 27,
+      "position": [
+        45.65176,
+        27.080441410331822,
+        -2008.90232
+      ],
+      "wallDistance": 8.553167800045003,
+      "obstacleDistance": 9.072973469783198,
+      "clear": true
+    }
+  ],
+  "blocked": []
+}

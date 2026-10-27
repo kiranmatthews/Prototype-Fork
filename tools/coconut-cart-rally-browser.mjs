@@ -36,7 +36,9 @@ try{
   window.stopCartPilot=()=>{r.step=step;g.input.pollGamepad=poll;};
   r.start('race',0);window.cartReview={frames:0,air:0,maxHeight:0};
   g.input.pollGamepad=()=>{const x=sample.moveX||0,y=sample.moveY||0,n=Math.hypot(x,y),raw=n?.22+.78*Math.min(1,n):0;return {id:'Rally validation controller',index:0,connected:true,mapping:'standard',axes:n?[x/n*raw,-y/n*raw,0,0]:[0,0,0,0],buttons:Array.from({length:18},(_,i)=>{const held={0:!!sample.jumpHeld,1:!!sample.grabHeld,2:!!(sample.spinHeld||sample.spinPressed),3:!!(sample.grindHeld||sample.grindPressed),6:!!sample.itemPressed,7:!!sample.transferHeld};return {pressed:!!held[i],value:held[i]?1:0};})};};
-  r.step=(dt,input)=>{sample=r.phase==='running'?r.drive(0):{};update();step(dt,input);window.cartReview.frames++;if(!g.player.grounded){window.cartReview.air++;window.cartReview.maxHeight=Math.max(window.cartReview.maxHeight,g.player.pos.y-r.course.sample(r.riders[0].progress).y);}};
+  // AI requests are semantic taps. A physical controller must release Triangle
+  // between attempts, including an attempt during the normal entry cooldown.
+  r.step=(dt,input)=>{sample=r.phase==='running'?r.drive(0):{};if(sample.grindPressed)sample.grindPressed=window.cartReview.frames%18===0;update();step(dt,input);window.cartReview.frames++;if(!g.player.grounded){window.cartReview.air++;window.cartReview.maxHeight=Math.max(window.cartReview.maxHeight,g.player.pos.y-r.course.sample(r.riders[0].progress).y);}};
  });
  let mark=-1,done=false,jumpShot=false,pipeShot=false,preview=null;
  for(let i=0;i<2400;i++){

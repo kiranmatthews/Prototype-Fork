@@ -1,0 +1,19 @@
+{
+  "passed": true,
+  "changedItemPositions": 12,
+  "totalPickups": 28,
+  "embeddedBefore": 6,
+  "nearRockBefore": 3,
+  "allIndividuallyCollected": true,
+  "collectionFalls": 0,
+  "collectionRolls": 0,
+  "collectionSpareCartContacts": 1,
+  "levelChecks": 20,
+  "rewardChecks": 1,
+  "build": true,
+  "releaseBytes": 999456316,
+  "fullRaceFinishers": 8,
+  "fullRaceFalls": 0,
+  "fullRaceBrowserErrors": [],
+  "controllerFixture": "Old held Triangle fails after cooldown; repeated taps enter cart. Only the test controller changed."
+}

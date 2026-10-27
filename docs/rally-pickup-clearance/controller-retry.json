@@ -1,0 +1,57 @@
+{
+  "result": [
+    {
+      "retry": false,
+      "spare": 1,
+      "initialTarget": 1,
+      "events": [
+        {
+          "time": 0,
+          "cooldown": 1,
+          "target": 1
+        }
+      ],
+      "cart": -1,
+      "animating": false,
+      "cooldown": 0,
+      "target": 1
+    },
+    {
+      "retry": true,
+      "spare": 1,
+      "initialTarget": 1,
+      "events": [
+        {
+          "time": 0,
+          "cooldown": 1,
+          "target": 1
+        },
+        {
+          "time": 0.3,
+          "cooldown": 0.6999999999999991,
+          "target": 1
+        },
+        {
+          "time": 0.6000000000000002,
+          "cooldown": 0.3999999999999985,
+          "target": 1
+        },
+        {
+          "time": 0.9000000000000011,
+          "cooldown": 0.09999999999999859,
+          "target": 1
+        },
+        {
+          "time": 1.2000000000000006,
+          "cooldown": 0,
+          "target": 1
+        }
+      ],
+      "cart": 1,
+      "animating": false,
+      "cooldown": 0,
+      "target": -1
+    }
+  ],
+  "errors": []
+}
