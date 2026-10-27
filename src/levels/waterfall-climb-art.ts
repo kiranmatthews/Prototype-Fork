@@ -198,7 +198,14 @@ export function dressWaterfallClimb(C:CustomComponent[],groups:CustomGroup[],o:{
   cliffV.push(x,y,z);cliffUV.push(x/11,y/11);
   if(row&&col<cols){const a=(row-1)*(cols+1)+col,b=row*(cols+1)+col;cliffI.push(a,a+1,b,a+1,b+1,b);}
  }
- a.mesh('Continuous eroded basalt escarpment',[0,0,0],cliffV,cliffI,cliffUV,'waterfall-basalt','#8ca68f',100,{doubleSided:true,flatShading:true});
+ // Keep each editable mesh within the schema's index limit. The shared border
+ // is duplicated; every authored triangle and UV remains in its original order.
+ for(let firstRow=0;firstRow<rows;firstRow+=22){
+  const lastRow=Math.min(rows,firstRow+22),firstVertex=firstRow*(cols+1),endVertex=(lastRow+1)*(cols+1);
+  a.mesh('Continuous eroded basalt escarpment '+(firstRow/22+1),[0,0,0],
+   cliffV.slice(firstVertex*3,endVertex*3),cliffI.slice(firstRow*cols*6,lastRow*cols*6).map(i=>i-firstVertex),
+   cliffUV.slice(firstVertex*2,endVertex*2),'waterfall-basalt','#8ca68f',100,{doubleSided:true,flatShading:true});
+ }
  for(const [i,x]of [-128,-94,-70,-42,2,32,78,111,137].entries()){
   const shoulder=Math.abs(x)>75,h=summitY+(shoulder?12+12*hash(i+900):-3),width=31+hash(i+22)*12;
   a.pillar('Deep continuous basalt spine '+i,[x,h,faceZ-78],width,58,h+20,i+900,'#779682');

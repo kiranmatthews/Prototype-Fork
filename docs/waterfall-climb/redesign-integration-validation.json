@@ -1,0 +1,39 @@
+{
+  "recordedUTC": "2026-10-27T13:20:45.645349+00:00",
+  "ownerCommit": "f771761d595b261fd1362788cc98610b1f082385",
+  "issue": "The final decorative escarpment had17952 indices, exceeding the unchanged12288-index per-mesh import limit.",
+  "repair": "Split at row22 into two meshes without removing any triangle, changing winding, UVs or flat-shading/collision flags.",
+  "proof": {
+    "passed": true,
+    "originalIntegratedCommit": "65ddf28aa4efd0aba52d8963b8d99616012b711f",
+    "originalComponents": 863,
+    "components": 864,
+    "cliffTriangles": 5984,
+    "indicesPerPart": [
+      8976,
+      8976
+    ],
+    "expandedPositionSha256": "58f17553edfad76eac91f54d994966cc85bf5cfcf46e427d484d7b0d150b37ef",
+    "expandedUvSha256": "12255b5bbfc184565f3db8d16b891bb26ead832a16f6f8385269463167ec5b4d",
+    "unchanged": "Every triangle position/UV and all rendering/collision flags, other main data and the complete bonus are exactly equal. Flat shading remains enabled."
+  },
+  "artSourceSha256": "a4bae24d0af435d4cf3253c3620e44f625dcd4511321e6deedd8a240d2686a00",
+  "checks": [
+    {
+      "name": "schema",
+      "exitCode": 0,
+      "logSha256": "623e2a38bf8544363312ab100d0642adec97b7815f5d276ce596f61ef0c13cdd"
+    },
+    {
+      "name": "cliff-equivalence",
+      "exitCode": 0,
+      "logSha256": "5a9d6d7762c06fdd332e9818fe8946c8b1b54dcc5311283604705a6c083e29c5"
+    },
+    {
+      "name": "gameplay-fingerprint",
+      "exitCode": 0,
+      "logSha256": "20c2364e97aece7e7a641fa08f444f345bd795bb0ef7656d9cf5ed5ece4cb30e"
+    }
+  ],
+  "scope": "All other main data and all bonus data are exactly unchanged. Full owner route/recovery evidence remains applicable; public native/normal views will cover the integrated render."
+}

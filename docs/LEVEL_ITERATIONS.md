@@ -5271,3 +5271,11 @@ The continuous full-render input run collects all **49/49** combined boxes and a
 The old-base package measures **1,000,868,907 bytes**, 868,907 above the hosting cap, a 503,363-byte increase from the previous task build. The coordinator's existing current-base integration/size dependency remains; no unrelated content was pruned. Work remains local for **Coordinate local work and releases**, with no main push or GitHub polling.
 
 Evidence: [design/reference notes](waterfall-climb/REDESIGN.md), [replacement playtest](waterfall-climb/REDESIGN_PLAYTEST.md), [final validation](waterfall-climb/redesign-final-validation.json), [continuous journey](waterfall-climb/redesign-complete-journey.json), [climb](waterfall-climb/redesign-climb.jpg), and [overview](waterfall-climb/redesign-overview.jpg).
+
+
+## Waterfall Climb — preserve full cliff in editable mesh limits (2026-10-27 13:19 UTC)
+
+- Coordinator normalization caught a decorative escarpment with 17,952 indices above the existing 12,288-index per-mesh limit. Split it at row 22 into two 8,976-index meshes; no source geometry was reduced.
+- Exact comparison preserves all 5,984 triangle positions and UVs, material/collision flags, the rest of the main level and the complete bonus. Main component count is now 864; gameplay fingerprints remain exactly unchanged.
+- Focused normalization, triangle/UV equivalence and gameplay fingerprint checks passed. The existing complete-route evidence is reused; required level checks, combined build/size and public smoke are handled by the release coordinator.
+- Repair elapsed approximately six minutes from failed schema check to validated geometry-preserving fix.
