@@ -63,6 +63,7 @@ await withSkateRuntime(async ({ THREE, Level, Player, scene, server }) => {
       context.level = bonus;
       player.bonusMode = true; player.lives = 1; player.fruit = 25; player.cratesBroken = 1; player.masks = 1;
       context.returnFromBonus(completed); await context.transition;
+      assert.deepEqual(player.pos.toArray(), returnPoint.toArray(), 'ordinary bonus return keeps its authored point on success and failure');
       if (!completed) {
         assert.equal(parent.activeCheckpoint, previous, 'failure overwrites the earlier checkpoint');
         assert.deepEqual(parent.currentSpawn.toArray(), previousSpawn.toArray());

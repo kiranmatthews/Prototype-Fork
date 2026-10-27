@@ -1,0 +1,55 @@
+{
+  "pass": true,
+  "recordedAt": "2026-10-27T20:11:08.912638+00:00",
+  "baseCommit": "2829ec5e09110520a00dec0d156550ed0b0763d8",
+  "buildStamp": "Codex/sol fork \u00b7 build 10-27 20:03 UTC",
+  "offlineVersion": "87da199e80bb276d664e",
+  "preview": "http://127.0.0.1:5288/?playtest&level=coastal-street-run",
+  "sourceSha256": {
+    "src/level.ts": "3f631a2b96688b11e46e7e41b613f49ee6caba5d4ce9c7782919c3934a825b61",
+    "src/main.ts": "fee3ee7535ba0d863b8d3e315db8c8b8ee8dfd52e2ed751e832ae1226abeeb16",
+    "tools/kite-bonus-retry-browser.mjs": "8a6a9c20c8ad841bd0d833e9fe5f9af22d9791f06f1af0bfba7a58c6c8784bee",
+    "tools/kite-controls-browser.mjs": "30c82ca207a0913f7aad13d5f6d201b429e08b2fc089bbe7e50b65d91658ed22",
+    "tools/test-bonus-checkpoint.mjs": "1eb9b010037e09f1c8e7adcd64548ab9a85b20c30f56b8389dd252665dbaf215"
+  },
+  "reportSha256": {
+    "browser-lite.json": "72e3038508bc686cca088e45f5e5d01a5cf43a100423fc4466a6a40f42aeb09d",
+    "browser-full.json": "73192fa0fd6b8fcc3340640ddb2840f8e5acf2d0c89708ebc84904b457ddb03d",
+    "build-final.json": "f545481dc479a1edad06b5630c31e02d4776524ee435ff16442199ac1fdc3ff8"
+  },
+  "imageSha256": {
+    "lite-retry-ready.png": "fe99bd62a1c1cc091fae5e897f42e99b41dcfa1388dd4afa1a18b9ceaac64285",
+    "full-retry-ready.png": "507903bfeb8f77a8e71257152457a3fa23395c38242130ff41f0abeda6534a0e"
+  },
+  "validation": {
+    "ordinaryReturnRegression": {
+      "command": "node tools/test-bonus-checkpoint.mjs",
+      "pass": true,
+      "scope": "Production bonus success/failure return position, durable inventory, checkpoint restore, crate/bridge state and fresh-run reset."
+    },
+    "browserScope": "Actual bonus entry and two kill-plane failures use production death timers and return flow. Real DOM keys re-enter the pad, then bypass it and the next planter. Separate completed-return fixture invokes the existing completion branch, without claiming all bonus boxes. Live wind; physical gamepads isolated in automation only.",
+    "retryRunupMetres": 16,
+    "returnPosition": [
+      2.7,
+      7.000000011920929,
+      -1478.841365803701
+    ],
+    "completedPosition": [
+      0,
+      7.000000011920929,
+      -1497.241365803701
+    ],
+    "visualReview": "Supported stationary retry with visible pad ahead, inspected full-render MAX/native 1600x1000. Full authored geometry retained.",
+    "consoleErrors": [],
+    "failedRequests": [],
+    "build": [
+      {
+        "name": "build",
+        "command": "tsc --noEmit && vite build",
+        "exit": 0,
+        "seconds": 48.729
+      }
+    ],
+    "exclusions": "No level data or public pack changes; check:levels not repeated. No check:all. No tuning, push, deployment or GitHub wait."
+  }
+}

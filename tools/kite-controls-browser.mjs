@@ -20,6 +20,7 @@ const wait=async ms=>page.waitForTimeout(ms);
 // Real digital steering corrects the changing wind; fixtures never zero it.
 const steerTo=async x=>page.evaluate(x=>{
  clearInterval(window.kiteGuide);
+ for(const code of ['ArrowLeft','ArrowRight'])document.body.dispatchEvent(new KeyboardEvent('keyup',{code,key:code,bubbles:true}));
  const down=new Set();
  window.kiteGuide=setInterval(()=>{
   const p=window.__game.player,error=p.state==='grind'?-(p.balance+p.balanceVel*.18)*8:x-p.pos.x-(p.kiteMotion?.lateral??0)*.15;
@@ -88,8 +89,12 @@ try{
  await page.evaluate(()=>window.__game.returnFromBonus(false));await page.waitForFunction(()=>window.__game.getCurrentLevel().id==='coastal-street-run'&&!window.__game.gameFlow.blocksGameplay&&!window.__game.getBonusDeparture(),null,{timeout:120000});
  await wait(100);
  report.bonusReturn=await snapshot();assert.equal(report.bonusReturn.diagnostics.started,false);
- await steerTo(3.8);await key('Space',true);
- await page.waitForFunction(z=>window.__game.player.pos.z<z-15||window.__game.player.state==='dead',report.bonusReturn.position[2]);
+ assert.ok(report.bonusReturn.position[2]>pad.z+14,'Failed bonus returns before the entrance for a retry');
+ await steerTo(pad.x-2.1);await key('Space',true);
+ await page.waitForFunction(z=>window.__game.player.pos.z<z-1||window.__game.player.state==='dead',pad.z);
+ assert.equal(await page.evaluate(()=>window.__game.player.kiteBonusDocked),false,'Retry can still be declined');
+ await steerTo(3.8);
+ await page.waitForFunction(z=>window.__game.player.pos.z<z-17||window.__game.player.state==='dead',pad.z);
  report.bonusReturnExit=await snapshot();assert.notEqual(report.bonusReturnExit.state,'dead','The bonus return has room to steer past the next planter');
  await reset([0,12.12,-50]);await steerTo(0);await key('KeyF',true);await page.waitForFunction(()=>window.__game.player.spinning);
  report.spin=await page.evaluate(()=>window.__game.player.spinning);assert.equal(report.spin,true);await key('KeyF',false);

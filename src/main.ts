@@ -3134,6 +3134,7 @@ function returnFromBonus(completed: boolean): void {
   const session = bonusSession;
   if (!session || bonusDeparture || gameFlow.loadingPhase) return;
   const bonusLevel = level;
+  const returnPoint = completed ? session.returnPoint : session.parentLevel.bonusReturnPoint(false);
   if (completed) player.bankFlyingFruit();
   if (bonusLevel.clockLocked) session.parentLevel.lockTrialClock();
   const bonusBoxes = completed ? Math.min(bonusLevel.totalCrates, player.cratesBroken) : 0;
@@ -3171,7 +3172,7 @@ function returnFromBonus(completed: boolean): void {
       // though its crate/checkpoint state is resumed rather than reset.
       level.discardedBoards.clear();
     }
-    player.resumeSuspendedLevel(level, session.returnPoint, state);
+    player.resumeSuspendedLevel(level, returnPoint, state);
     competition = session.parentCompetition;
     player.bonusMode = session.parentBonusMode;
     player.hubMode = session.parentHubMode;

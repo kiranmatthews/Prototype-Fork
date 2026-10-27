@@ -5354,3 +5354,22 @@ motion review passed seven release/coyote/landing-buffer/cancellation/reset
 cases, including fresh starts from every face button. This is a separate
 test/evidence increment: no runtime or level changes, so the production
 build and complete-browser evidence remain valid.
+
+## 2026-10-28 — Beach Street: failed bonus retry approach
+
+The brief began around 20:01 UTC on 27 October. The first actual browser
+failure/return/re-entry was verified by 20:07 UTC, about six minutes to playable;
+final lite/full review finished at 20:09 UTC. A failed kite bonus now returns
+16 metres before the pad, aligned with it and waiting for fresh input, so the
+player can retry or steer around it. Completed bonuses retain their authored
+exit beyond the entrance. Ordinary bonus returns, inventory and checkpoints
+keep their existing rules.
+
+The production bonus checkpoint regression passes. Lite and full Chrome each
+pass actual entry, two kill-plane failures, stationary supported return, second
+entry, bypass/next-planter clearance and the completed-return branch. MAX/native
+retry views were reviewed, with no console errors or failed requests. Build
+`Codex/sol fork · build 10-27 20:03 UTC` passes type-checking and bundling; offline
+version `87da199e80bb276d664e`. No geometry, level pack or tuning edits; no
+check:all or unrelated audit reruns. Evidence and hashes are in
+[the bonus retry review](beach-street/bonus-retry/README.md).

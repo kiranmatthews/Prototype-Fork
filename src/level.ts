@@ -9161,7 +9161,11 @@ export class Level {
     normal.set(dx/d,0,dz/d);position.x=center.x+normal.x*(radius+.002);position.z=center.z+normal.z*(radius+.002);return true;
   }
 
-  bonusReturnPoint(): THREE.Vector3 {
+  bonusReturnPoint(completed = true): THREE.Vector3 {
+    // Forward-only kite travel needs a new approach after a failed bonus.
+    // Align with the pad, with room to start the tow or steer around it again.
+    if (!completed && this.kiteTow && this.bonusPlatform)
+      return this.bonusPlatform.basePoint.clone().add(new THREE.Vector3(0, .1, 16));
     return this.bonusPlatform?.returnPoint.clone() ?? this.spawnPos.clone();
   }
 
