@@ -139,6 +139,10 @@ export class GolfCartRace {
   private canTake(id:number,index:number,navigate=false){
     const c=this.fleet.physics.carts[index],p=this.racers[id].player,owner=this.driverForCart[index];
     if(this.isDriving(id)||this.isAnimating(id)||this.reserved(index)||c.health<=0||Math.abs(c.speed)>9||index===this.cartForRacer[id]||this.burning[index]||c.tumbling||this.locked[index]>0||owner>=0&&this.racers[owner].finish!==null)return false;
+    // A nearby kart is useless if a rock seals the driver's doorway. Skip it
+    // for both the target ring and AI navigation before committing an approach.
+    const doorway=this.exitPoint(index,-1);this.point.copy(doorway).y+=.8;
+    if(!this.ground(doorway.x,doorway.z).supported||this.level.walls.some(w=>w.containsPoint(this.point)))return false;
     if(navigate){
       const nav=this.cartProgress(index),progress=nav.s;
       const next=this.jumpRanges.find(j=>j.b>this.racers[id].progress+2);
@@ -178,7 +182,8 @@ export class GolfCartRace {
   }
   private exitPoint(index:number,side:number,back=.8){
     const c=this.fleet.physics.carts[index],at=new THREE.Vector3(c.x+Math.cos(c.yaw)*1.85*side+Math.sin(c.yaw)*back,c.y,c.z-Math.sin(c.yaw)*1.85*side+Math.cos(c.yaw)*back),g=this.ground(at.x,at.z);
-    if(g.supported&&Math.abs(g.height-c.y)<2&&!this.level.walls.some(w=>w.containsPoint(at.clone().setY(g.height+.8))))at.y=g.height;
+    this.point.set(at.x,g.height+.8,at.z);
+    if(g.supported&&Math.abs(g.height-c.y)<2&&!this.level.walls.some(w=>w.containsPoint(this.point)))at.y=g.height;
     return at;
   }
   private detachDriver(id:number,index:number){this.fleet.setDriver(index,null);this.nativeDrivers[id]=null;this.thrustTime[id]=0;this.controls[id].reset();}

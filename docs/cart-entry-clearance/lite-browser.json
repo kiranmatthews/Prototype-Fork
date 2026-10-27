@@ -1,0 +1,21 @@
+{
+  "passed": true,
+  "initial": {
+    "doorBlocked": true,
+    "selected": 9,
+    "position": [
+      51.62756010602036,
+      26.364874982346265,
+      -85.33327923633267
+    ]
+  },
+  "result": {
+    "stamp": "Codex/sol fork · build 10-27 00:45 UTC",
+    "seconds": 8.333333333333327,
+    "cart": 9,
+    "falls": 0,
+    "driver": 5,
+    "gl": 0
+  },
+  "errors": []
+}

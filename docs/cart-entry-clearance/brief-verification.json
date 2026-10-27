@@ -1,0 +1,55 @@
+{
+  "passed": true,
+  "updated": "2026-10-27T00:54:27.356587+00:00",
+  "baseline": "c0c62b8ab9b656b0a663a75062f4f312b8b84a9d",
+  "problem": "After wrecking, an AI racer repeatedly tried to enter the closest kart even when a rock sealed its driver doorway and another usable spare was nearby.",
+  "change": "The shared target eligibility checks supported driver-door clearance before advertising a target or planning an AI approach. Eligibility updates immediately when the kart moves. The exit-point probe also reuses a vector instead of cloning for every wall.",
+  "before": {
+    "blockedDoorCases": 8,
+    "recovered": 0,
+    "timeoutSeconds": 30
+  },
+  "after": {
+    "blockedDoorCases": 8,
+    "recovered": 8,
+    "worstTotalRecoverySeconds": 8.833333333333332,
+    "human": {
+      "blockedTargetRejected": true,
+      "blockedEntryRejected": true,
+      "reopensWhenMoved": true,
+      "animatedEntryCompletes": true
+    }
+  },
+  "validation": {
+    "focusedChecks": [
+      "tools/test-cart-entry-clearance.mjs",
+      "tools/test-cart-interactions.mjs",
+      "tools/test-rally-rock-obstacles.mjs"
+    ],
+    "focusedPassed": 3,
+    "fullRaceFinished": 8,
+    "fullRaceFalls": 0,
+    "browserModes": [
+      "lite",
+      "full native/MAX",
+      "full normal resolution"
+    ],
+    "browserErrors": [],
+    "typecheck": true,
+    "build": true,
+    "releaseBytes": 999456240,
+    "releaseBudget": 1000000000
+  },
+  "preserved": [
+    "All course geometry and mounds",
+    "Skating controls and kart handling",
+    "Run, enter, exit and yank animations",
+    "Sponsor layout and complete Meshy models"
+  ],
+  "otherEvidence": "Sixteen front/rear recovery cases passed on the baseline before the blocked-door scenario was added; recorded in both-directions.json.",
+  "elapsedMinutesApprox": {
+    "firstPlayable": 7,
+    "localValidation": 18
+  },
+  "fullSuite": "Only focused checks were run for this runtime fix. The preceding full-suite result remains 164 passed / 39 existing failures."
+}

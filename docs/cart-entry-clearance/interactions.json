@@ -1,0 +1,19 @@
+{
+  "passed": true,
+  "onFootOnly": true,
+  "timedOwnership": true,
+  "reservation": true,
+  "fullSize": true,
+  "restart": true,
+  "wreckCancellation": true,
+  "pullContacts": {
+    "hands": [
+      0.00015430769350317276,
+      0.006245998981453791
+    ],
+    "feet": [
+      0.0018450016654931996,
+      0.0018450016654922052
+    ]
+  }
+}
