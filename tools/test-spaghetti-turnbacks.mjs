@@ -8,14 +8,16 @@ await withBlockworksRuntime(async r=>{
  const {SkateRace}=await r.server.ssrLoadModule('/src/race/runtime.ts');
  const race=new SkateRace(r.scene,r.p,false,()=>true);race.attach(r.l,'spaghetti-rails');
  const tuning=JSON.stringify(r.TUNING),results=[];
- for(const index of [12,37,38,41]){
+ for(const [stage,choice]of [[0,2],[2,1],[4,0],[5,2]]){
+  const name=r.sourceModule.SPAGHETTI_PATHS.find(p=>p.stage===stage&&p.choice===choice).runs.at(-1).name;
+  const index=r.l.rails.findIndex(rail=>rail.object.userData.sourceName===name);
   race.start('time-trial',270328);race.phase='running';
   const rail=r.l.rails[index],at=rail.totalLength*.6,point=rail.pointAt(at),heading=rail.tangentAt(at).setY(0).normalize().negate();
   point.y+=r.CONST.railRideHeight;
   // Fixture: a low-speed backward catch like the observed combat outcome.
   // After this setup, only the production rival driver and physics run.
   r.p.resetRacePosition(r.l,point,heading);r.p.state='air';r.p.grounded=false;r.p.vVel=0;r.p.speed=7;
-  const rider=race.riders[0];rider.progress=race.course.project(point).s;
+  const rider=race.riders[0];rider.progress=r.l.railChoices.project(point,undefined,rail,at).s;
   let caughtAt=null,leftAt=null,returnedAt=null,anchor=null,frames=0;
   for(;frames<1800;frames++){
    r.scene.updateMatrixWorld(true);
@@ -26,7 +28,7 @@ await withBlockworksRuntime(async r=>{
    if(leftAt!==null&&rider.falls===1&&r.p.grounded&&rider.recovery===0){returnedAt=frames;assert.ok(race.course.supportAt(r.l,r.p.pos));}
    if(returnedAt!==null&&rider.progress>anchor+40&&r.p.state==='grind')break;
   }
-  const result={rail:index,caughtAt,leftAt,returnedAt,frames,anchor,progress:rider.progress,falls:rider.falls,deaths:r.p.totalDeaths};
+  const result={rail:index,name,stage,choice,caughtAt,leftAt,returnedAt,frames,anchor,progress:rider.progress,falls:rider.falls,deaths:r.p.totalDeaths};
   results.push(result);console.log(JSON.stringify(result));
   assert.notEqual(caughtAt,null,'Fixture must reproduce a real backward grind');
   assert.ok(leftAt!==null&&(leftAt-caughtAt)*r.dt<2,'Input-only driver abandons the backward catch promptly');

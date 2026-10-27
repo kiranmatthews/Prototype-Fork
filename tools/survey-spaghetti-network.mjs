@@ -59,11 +59,18 @@ for(const path of network.paths){
  }
  navigation.push({stage:path.section,choice:path.choice,length:path.course.length,minimumDot,maxBackstep,wrongCamera});
 }
+const reacquisition=[];
+for(const crossing of crossings.filter(c=>c.stages[0]===c.stages[1]&&c.choices[0]!==c.choices[1]&&c.height<15))for(const [a,b]of [[0,1],[1,0]]){
+ const from=rails[crossing.rails[a]].native,to=rails[crossing.rails[b]].native;
+ const s1=from.totalLength*crossing.fractions[a],s2=to.totalLength*crossing.fractions[b],p1=from.pointAt(s1),p2=to.pointAt(s2);p1.y+=.12;p2.y+=.12;
+ const cursor=network.project(p1,undefined,from,s1),expected=network.project(p2,undefined,to,s2),actual=network.update(p2,cursor);
+ reacquisition.push({from:from.object.userData.sourceName,to:to.object.userData.sourceName,height:crossing.height,expected:expected.route,actual:actual.route,passed:expected.route===actual.route});
+}
 const report={at:new Date().toISOString(),fingerprint:createHash('sha256').update(JSON.stringify(level)).digest('hex'),rails:rails.length,paths:paths.length,junctions:level.skateRace.railChoices.length,platforms:platforms.length,unsupported:endpoints.filter(e=>!e.platforms.length),endpoints,
- height:[Math.min(...rails.flatMap(r=>r.points.map(p=>p[1]))),Math.max(...rails.flatMap(r=>r.points.map(p=>p[1])))],maxTurn:Math.max(...rails.map(r=>r.maxTurn)),platformContacts,crossings,navigation};
+ height:[Math.min(...rails.flatMap(r=>r.points.map(p=>p[1]))),Math.max(...rails.flatMap(r=>r.points.map(p=>p[1])))],maxTurn:Math.max(...rails.map(r=>r.maxTurn)),platformContacts,crossings,navigation,reacquisition};
 await writeFile(output+'/geometry.json',JSON.stringify(report,null,2));
 await writeFile(output+'/source.json',JSON.stringify({level,rails:rails.map(({native,...rest})=>rest)}));
-console.log(JSON.stringify({...report,endpoints:undefined,crossings:crossings.slice(0,16)},null,2));
+console.log(JSON.stringify({...report,endpoints:undefined,crossings:crossings.slice(0,16),reacquisition:{cases:reacquisition.length,failures:reacquisition.filter(r=>!r.passed)}},null,2));
 assert.equal(validSkateRace(level.skateRace),true,'The branching metadata survives the editor/save contract');
 assert.ok(navigation.every(path=>path.wrongCamera===0&&path.minimumDot>.9),'Every route keeps its own camera and input tangent through the entanglement');
 assert.equal(report.platformContacts.length,0,'Platforms leave a rider-sized clear passage on every other rail');
@@ -71,3 +78,4 @@ assert.equal(report.unsupported.length,0,'Every rail endpoint must have a real p
 assert.ok(report.maxTurn<45,'All editable rail curves preserve the native corner margin');
 assert.equal(network.paths.length,18,'All eighteen distinct alternatives resolve from native editor names');
 assert.ok(navigation.every(p=>p.maxBackstep<1),'Rail progress remains ordered through each branch');
+assert.ok(reacquisition.length>0&&reacquisition.every(r=>r.passed),'Catching a different thread at a crossing gives that actual rail ownership of the camera');

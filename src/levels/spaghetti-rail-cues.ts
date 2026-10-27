@@ -1,8 +1,8 @@
 import type {CustomComponent} from '../level';
 import type {SpaghettiPoint as P} from './spaghetti-rails';
 
-/** Greybox jump language: amber takeoff chevrons, pale receiving brackets.
- * Both sit outside the three strands and have no collision or grind line. */
+/** Jump language: amber takeoff chevrons, pale receiving brackets.
+ * These flank the supported rail ends without collision or a grind line. */
 export function spaghettiJumpCues(takeoff:P,landing:P,forward:P,index:number):CustomComponent[] {
  const n=Math.hypot(forward[0],forward[2])||1,fx=forward[0]/n,fz=forward[2]/n;
  const yaw=Math.atan2(-fx,-fz)*180/Math.PI,result:CustomComponent[]=[];

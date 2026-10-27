@@ -54,17 +54,23 @@ export class RailChoices {
   }
   /** Identify a supported grind from public world position. The movement
    * model keeps ownership of its private attachment state. */
-  caught(position:THREE.Vector3,cursor:RailChoiceCursor):{rail:Rail;t:number}|null {
+  caught(position:THREE.Vector3,cursor?:RailChoiceCursor):{rail:Rail;t:number}|null {
     let best=1.25,winner:Rail|null=null;
     for(const [rail,bindings]of this.bindings){
-      if(!bindings.some(({path})=>cursor.s>=path.start-80&&cursor.s<=path.end+80)||rail.distanceLowerBound(position)>best)continue;
-      const distance=rail.closestDistance(position);if(distance<best){best=distance;winner=rail;}
+      if(rail.distanceLowerBound(position)>best)continue;
+      const distance=rail.closestDistance(position);
+      if(distance<best||Math.abs(distance-best)<1e-4&&bindings.some(({path})=>path.index===cursor?.route)){best=distance;winner=rail;}
     }
     return winner?{rail:winner,t:winner.closest(position).t}:null;
   }
   project(position:THREE.Vector3,cursor?:RailChoiceCursor,rail?:Rail|null,railT?:number):RailChoiceProjection {
     const previous=cursor&&cursor.s>=0?cursor.s:undefined;
-    const binding=rail?this.bindings.get(rail)?.find(({path})=>previous===undefined||previous>=path.start-80&&previous<=path.end+80):undefined;
+    // A close native rail is stronger evidence than the old route's progress.
+    // This lets a real catch across an over/under crossing move the camera and
+    // progress onto that thread, even halfway through a different alternative.
+    if(!rail){const near=this.caught(position,cursor);if(near){rail=near.rail;railT=near.t;}}
+    const bindings=rail?this.bindings.get(rail):undefined;
+    const binding=bindings?.find(({path})=>previous===undefined||previous>=path.start-80&&previous<=path.end+80)??bindings?.[0];
     if(binding){
       const along=binding.start+(railT??rail!.closest(position).t),path=binding.path;
       return {s:this.progress(path,along),distance:rail!.closestDistance(position),offset:0,route:path.index,along};
