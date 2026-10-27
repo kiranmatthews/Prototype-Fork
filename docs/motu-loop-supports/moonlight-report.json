@@ -1,0 +1,219 @@
+{
+  "motu": {
+    "spectators": 1351,
+    "sections": 8,
+    "surfaces": 129,
+    "maps": 6,
+    "graphics": 4,
+    "errors": [],
+    "sunDirection": [
+      -0.3487813939627198,
+      0.657702057186843,
+      -0.6676672398714922
+    ],
+    "sunOcclusion": "depth buffer",
+    "geometryLod": false,
+    "lighting": {
+      "mode": "moonlight",
+      "skyVariants": 2,
+      "moon": true,
+      "flare": false,
+      "warmFloodlights": 4,
+      "floodPower": 3200,
+      "extraShadowMaps": 0,
+      "bloom": {
+        "intensity": 0.38,
+        "threshold": 1.05,
+        "tint": [
+          1,
+          0.91,
+          0.77
+        ],
+        "scatter": 0.58,
+        "clamp": 12,
+        "highQuality": true,
+        "downscale": 2,
+        "maxIterations": 5
+      }
+    }
+  },
+  "assets": {
+    "sunnycliff": {
+      "instances": 38,
+      "triangles": 7149
+    },
+    "bayrock": {
+      "instances": 24,
+      "triangles": 4099
+    },
+    "baytrunk": {
+      "instances": 85,
+      "triangles": 1952
+    },
+    "sunnyhibiscus": {
+      "instances": 32,
+      "triangles": 5331
+    },
+    "baycrown": {
+      "instances": 85,
+      "triangles": 4249
+    },
+    "baybody": {
+      "instances": 3,
+      "triangles": 108
+    },
+    "bayroof": {
+      "instances": 3,
+      "triangles": 5265
+    },
+    "bayawning": {
+      "instances": 3,
+      "triangles": 2215
+    },
+    "baypot": {
+      "instances": 6,
+      "triangles": 2346
+    },
+    "bayvine": {
+      "instances": 16,
+      "triangles": 3250
+    }
+  },
+  "lights": [
+    {
+      "type": "HemisphereLight",
+      "intensity": 0.84,
+      "color": "8daacf"
+    },
+    {
+      "type": "DirectionalLight",
+      "intensity": 0.88,
+      "color": "c8dfff"
+    },
+    {
+      "type": "DirectionalLight",
+      "intensity": 0.32,
+      "color": "819fd0"
+    },
+    {
+      "type": "SpotLight",
+      "intensity": 3200,
+      "color": "ffd098"
+    },
+    {
+      "type": "SpotLight",
+      "intensity": 3200,
+      "color": "ffd098"
+    },
+    {
+      "type": "SpotLight",
+      "intensity": 3200,
+      "color": "ffd098"
+    },
+    {
+      "type": "SpotLight",
+      "intensity": 3200,
+      "color": "ffd098"
+    }
+  ],
+  "sky": {
+    "texture": "141e2638-f6c8-4af5-870c-e3c7ff435b56",
+    "width": 1774,
+    "height": 519,
+    "waterTexture": "141e2638-f6c8-4af5-870c-e3c7ff435b56"
+  },
+  "water": {
+    "shallow": {
+      "r": 0.013300000000000001,
+      "g": 0.2132,
+      "b": 0.30000000000000004,
+      "a": 0.7
+    },
+    "deep": {
+      "r": 0.00285,
+      "g": 0.1092,
+      "b": 0.22400000000000003,
+      "a": 1
+    },
+    "specular": {
+      "r": 5.4226,
+      "g": 11.992522000000001,
+      "b": 19.2348,
+      "a": 1
+    }
+  },
+  "render": {
+    "frame": 287414,
+    "calls": 558,
+    "triangles": 2311700,
+    "points": 0,
+    "lines": 0
+  },
+  "sizes": {
+    "viewportWidth": 1920,
+    "viewportHeight": 1080,
+    "inputWidth": 1280,
+    "inputHeight": 720,
+    "outputWidth": 1280,
+    "outputHeight": 720
+  },
+  "post": {
+    "bloom": {
+      "active": true,
+      "source": "level",
+      "intensity": 0.38,
+      "threshold": 1.05,
+      "mipCount": 5,
+      "sizes": [
+        {
+          "width": 640,
+          "height": 360
+        },
+        {
+          "width": 320,
+          "height": 180
+        },
+        {
+          "width": 160,
+          "height": 90
+        },
+        {
+          "width": 80,
+          "height": 45
+        },
+        {
+          "width": 40,
+          "height": 22
+        }
+      ],
+      "drawCount": 14,
+      "estimatedBytes": 4910080
+    },
+    "lut": {
+      "dirty": false,
+      "rebuildCount": 1,
+      "width": 1024,
+      "height": 32
+    },
+    "rain": {
+      "enabled": false,
+      "amount": 0,
+      "time": 0
+    },
+    "mud": {
+      "enabled": false,
+      "splats": 0,
+      "sun": [
+        -10,
+        -10,
+        0,
+        0
+      ]
+    }
+  },
+  "player": [
+    0,
+    0.1,
+    14
+  ]
+}

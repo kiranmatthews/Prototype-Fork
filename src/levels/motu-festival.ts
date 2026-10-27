@@ -82,7 +82,37 @@ for(let i=0;i<192;i++)for(const side of [-1,1]){
   const a=sampleLoop(MOTU_LOOP,i/192*Math.PI*2,side*MOTU_LOOP.width/2),b=sampleLoop(MOTU_LOOP,(i+1)/192*Math.PI*2,side*MOTU_LOOP.width/2);
   const p=(q:typeof a,d:number):P=>q.point.map((v,k)=>v+MOTU_LOOP.entry[k]-q.normal[k]*d) as P;
   quad([p(a,0),p(b,0),p(b,.38),p(a,.38)],i%24<12?MOTU_PALETTE.cream:MOTU_PALETTE.coral);
-  if(i%32===0)beam(p(a,.4),[p(a,.4)[0],0,p(a,.4)[2]],.13,.13,MOTU_PALETTE.navy);
+}
+// Curved steel ribs carry the upper arc to four exterior buttresses. Nothing
+// crosses the central opening: every support lies outside the riding radius.
+for(const side of [-1,1]){
+  const section=(angle:number):P[]=>{
+    const q=sampleLoop(MOTU_LOOP,angle,side*(MOTU_LOOP.width/2+.015));
+    return [[0,.36],[.24,.36],[.24,.66],[0,.66]].map(([x,depth])=>
+      q.point.map((v,k)=>v+MOTU_LOOP.entry[k]-q.normal[k]*depth+(k===0?side*x:0)) as P);
+  };
+  for(let i=0;i<192;i++){
+    const a=section(i/192*Math.PI*2),b=section((i+1)/192*Math.PI*2);
+    for(let j=0;j<4;j++)quad([a[j],b[j],b[(j+1)%4],a[(j+1)%4]],MOTU_PALETTE.navy);
+    if(i===0)quad(a,MOTU_PALETTE.navy);
+    if(i===191)quad(b,MOTU_PALETTE.navy);
+  }
+  for(const angle of [Math.PI/2,Math.PI*1.5]){
+    const q=sampleLoop(MOTU_LOOP,angle,side*(MOTU_LOOP.width/2+.135)),outward=-Math.sin(angle);
+    const x=q.point[0]+MOTU_LOOP.entry[0],z=q.point[2]+MOTU_LOOP.entry[2]+outward*.54,y=MOTU_LOOP.radius;
+    const heel=z+outward*1.8;
+    // Closed native solids give the visible footings and uprights contact.
+    for(const footZ of [z,heel]){
+      add({t:'platform',nm:'Motu / loop buttress footing',p:[x,.08,footZ],s:[.86,.16,.9],color:MOTU_PALETTE.cream,tex:'pavement'});
+      box([x,.185,footZ],[.58,.05,.62],MOTU_PALETTE.navy);
+      for(const dx of [-.21,.21])for(const dz of [-.22,.22])box([x+dx,.23,footZ+dz],[.065,.04,.065],MOTU_PALETTE.cream);
+    }
+    add({t:'platform',nm:'Motu / loop exterior upright',p:[x,(y+.2)/2,z],s:[.26,y-.2,.3],color:MOTU_PALETTE.navy,tex:'solid'});
+    const brace=warehouseBeam('Motu / loop exterior brace',[x,.22,heel],[x,y-.16,z],.18,.22,MOTU_PALETTE.navy);
+    // Structural diagonals are blocking steel, not an additional grind line.
+    Object.assign(brace,{solid:true,solidSides:true,vert:false});add(brace);
+    box([x,y-.28,z],[.34,.4,.38],MOTU_PALETTE.navy);
+  }
 }
 
 // A tall open horseshoe supplies a distinct vertical transfer landmark.

@@ -1,0 +1,68 @@
+{
+  "startedAt": "2026-10-27T10:08:54.635872+00:00",
+  "files": {
+    "src/levels/motu-festival.ts": "d906a96dfcb0ee4f554ef1d8ab4895066d49e0bca9d1be17b2f618934d0f0d19",
+    "tools/test-motu-festival.mjs": "5cf333201b000cd042aa79884113795a59a2406c24f3c3ee353fa1ce332f624a"
+  },
+  "checks": [
+    {
+      "name": "native",
+      "exitCode": 0,
+      "seconds": 10.46,
+      "log": "/private/tmp/motu-support-native.log"
+    },
+    {
+      "name": "levels",
+      "exitCode": 0,
+      "seconds": 198.38,
+      "log": "/private/tmp/motu-support-levels.log"
+    },
+    {
+      "name": "build",
+      "exitCode": 0,
+      "seconds": 65.79,
+      "log": "/private/tmp/motu-support-build.log"
+    },
+    {
+      "name": "release",
+      "exitCode": 0,
+      "seconds": 0.13,
+      "log": "/private/tmp/motu-support-release.log"
+    }
+  ],
+  "finishedAt": "2026-10-27T10:39:06.915892+00:00",
+  "browser": {
+    "fullRides": 8,
+    "liteRides": 8,
+    "consoleErrors": 0,
+    "fullResolutionInput": [
+      1920,
+      1080
+    ],
+    "fullResolutionOutput": [
+      3840,
+      2160
+    ],
+    "normalInput": [
+      1280,
+      720
+    ],
+    "finishedWithFullRender": true
+  },
+  "unfinished": [],
+  "status": "VALIDATED \u2014 ready to commit the support increment",
+  "resumedAt": "2026-10-27T10:34:42.643656+00:00",
+  "release": {
+    "files": 1838,
+    "bytes": 999498661,
+    "budget": 1000000000,
+    "offlineVersion": "52cc6b15700a60fa3cfd"
+  },
+  "timing": {
+    "authoringBegan": "2026-10-27T09:52:00Z",
+    "nativePlayable": "2026-10-27T10:09:05Z",
+    "elapsedMinutesToNativePlayable": 17.08,
+    "includesQueueWaitAndUserPreview": true
+  },
+  "resourceState": "All validation processes terminal; browser override restored. User preview to be reopened separately."
+}

@@ -52,6 +52,26 @@ await withSkateRuntime(async({THREE,server,player:p,level:l,step})=>{
     assert.ok([...edges.values()].every(n=>n===2),`${c.nm}: watertight body`);
     for(let i=0;i<c.vertices.length/3;i++)if(i%4>=2)assert.equal(c.vertices[i*3+1],-.06);
   }
+  const {MOTU_LOOP}=await server.ssrLoadModule('/src/levels/motu-festival.ts');
+  const supports=data.components.filter(c=>c.nm?.startsWith('Motu / loop exterior '));
+  assert.equal(supports.length,8,'four exterior uprights and four braces');
+  assert.equal(data.components.filter(c=>c.nm==='Motu / loop buttress footing').length,8);
+  let braceContacts=0;
+  for(const c of supports){
+    const points=c.vertices?Array.from({length:c.vertices.length/3},(_,i)=>c.vertices.slice(i*3,i*3+3)):
+      [-1,1].flatMap(x=>[-1,1].flatMap(y=>[-1,1].map(z=>[c.p[0]+x*c.s[0]/2,c.p[1]+y*c.s[1]/2,c.p[2]+z*c.s[2]/2])));
+    assert.ok(points.every(v=>Math.hypot(v[1]-MOTU_LOOP.radius,v[2]-MOTU_LOOP.entry[2])>MOTU_LOOP.radius+.3),`${c.nm}: outside the loop opening`);
+    if(c.t!=='mesh')continue;
+    const mesh=l.groundMeshes.find(m=>m.userData.editorIdx===data.components.indexOf(c));
+    assert.ok(mesh?.userData.solidSides,`${c.nm}: visible brace has native contact`);
+    const sides=new MeshSideCollisions();sides.add(mesh,()=>true);
+    const center=new THREE.Box3().setFromObject(mesh).getCenter(new THREE.Vector3());center.y-=.15;
+    for(const sign of [-1,1]){
+      const from=center.clone().add(new THREE.Vector3(sign*1.2,0,0)),to=center.clone().add(new THREE.Vector3(-sign*1.2,0,0));
+      assert.ok(sides.resolve(from,to,{x:.2,y:.3,z:.2},new THREE.Vector3()),`${c.nm}: side sweep`);braceContacts++;
+    }
+    sides.dispose();
+  }
   const place=(point,heading,speed=0)=>{
     p.respawn(l,true,true,{position:new THREE.Vector3(...point),heading:new THREE.Vector3(...heading)});
     p.freeSkate=true;p.speed=speed;p.axisF.set(...heading);p.axisL.set(p.axisF.z,0,-p.axisF.x);
@@ -89,7 +109,7 @@ await withSkateRuntime(async({THREE,server,player:p,level:l,step})=>{
     if(air&&p.grounded){land=true;break;}
   }
   assert.ok(air&&land,'coral wave returns to supported ground');
-  const report={passed:true,triangles,graphics:4,closedRampEnds:closures.length,fittedPoints,sideContacts,watertightRaisedRamps:2,
+  const report={passed:true,triangles,graphics:4,closedRampEnds:closures.length,fittedPoints,sideContacts,watertightRaisedRamps:2,exteriorSupports:supports.length,braceContacts,
     loop,boardwalk:{frames:walkFrames,maxY:walkMaxY,targets},wave:{air,land,maxY:waveMaxY},movementChanged:false};
   await writeFile(process.env.MOTU_FESTIVAL_REPORT??'/private/tmp/motu-festival-native.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report));
 });
