@@ -34,6 +34,18 @@ await withSkateRuntime(async({server,THREE,Level,Player})=>{
    report.cover.push({sentry:e.cross,cover:cover.nm,blocked:true,flankBlocked:l.projectilePathBlocked(from,flank)});
   }
   const islands=source.components.filter(c=>c.nm?.includes('continuous submerged shore'));
+  report.pickups={crates:0,fruit:0,minFruitClearance:Infinity};
+  for(const c of source.components.filter(c=>c.t==='crate'||c.t==='wumpa')){
+   const y=floor(c.p[0],c.p[1],c.p[2]);
+   assert.ok(!Number.isFinite(y)||y<=c.p[1]+(c.t==='crate'?.12:-.55),`Buried pickup ${c.nm??c.t} at ${c.p}: floor ${y}`);
+   report.pickups[c.t==='crate'?'crates':'fruit']++;
+   if(c.t==='wumpa'&&Number.isFinite(y))report.pickups.minFruitClearance=Math.min(report.pickups.minFruitClearance,c.p[1]-y);
+  }
+  for(const c of source.components.filter(c=>c.grp===11&&c.t==='ramp')){
+   const lip=source.components.find(t=>t.nm===c.nm+' lip'),y=floor(c.p[0],c.p[1]+c.rise,c.p[2]-c.len/2+.1);
+   assert.ok(lip.p[1]>y&&lip.p[1]-y<.12,`Readable trim hugs ${c.nm}`);
+  }
+  assert.ok(l.crushers.every(c=>c.frame&&c.cables?.length===2),'Every cargo load has a winch frame and two moving cables');
   for(const rail of source.components.filter(c=>c.t==='rail'&&c.nm?.startsWith('street rail '))){
    const start=-rail.p[2],end=-(rail.p[2]+rail.pts.at(-1)[1]);
    for(const o of source.components.filter(c=>c.grp===11&&['platform','wall','ramp'].includes(c.t))){
@@ -52,6 +64,7 @@ await withSkateRuntime(async({server,THREE,Level,Player})=>{
   assert.ok(p.grounded,'Supported spawn');report.spawn=p.pos.toArray();
   for(let i=0;i<300;i++){l.update(1/60);if(i%30===0)report.motion.push({crushers:l.crushers.map(c=>c.mesh.position.y),spinners:l.enemies.filter(e=>e.kind==='spinner').map(e=>e.state)});}
   assert.ok(report.motion.some(s=>s.spinners.includes('out'))&&report.motion.some(s=>s.spinners.includes('in')),'Timing windows remain live');
+  assert.ok(report.motion.every(s=>s.crushers.every(Number.isFinite))&&Math.max(...report.motion.map(s=>s.crushers[0]))-Math.min(...report.motion.map(s=>s.crushers[0]))>4,'Cargo loads retain their full physical stroke');
   const all=source.components;
   assert.ok(all.filter(c=>c.grp===3&&c.t==='platform').every(c=>c.color==='#a64c35'),'Stairs contrast with the paving');
   assert.ok(all.filter(c=>c.grp===4&&c.t==='platform').every(c=>c.color==='#206474'),'Ledges contrast with the paving');

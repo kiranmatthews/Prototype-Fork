@@ -1,0 +1,27 @@
+{
+  "baseCommit": "64cc94644f01fe25c02f7330aad43cd34a7dcec9",
+  "firstIncrement": "f825fe373bd8e7b29ccf13e553a49cc5176e6633",
+  "buildStamp": "Codex/sol fork \u00b7 build 10-27 07:01 UTC",
+  "offlineVersion": "6cbc95eaae44baa8a318",
+  "sourceSHA256": {
+    "src/levels/beach-street-gameplay.ts": "dcc7e8e653aa78df97aae8bf37dbc21f847f3f7f6c067c3c590e05d1a17dac7c",
+    "src/levels/coastal-street-run.ts": "76051369497a8a26b058e5fdf8515b059ffb585efa3941a0ff24e4cdfef51fc8",
+    "src/levels/coastal-town-art.ts": "ddfb16f7ba2f86aae1773d15db2d1aec17f6c928f37422054fcdffd92f644382"
+  },
+  "checks": {
+    "build": 0,
+    "finalLevelValidator": 0,
+    "physicalPickupAndObstacleAudit": 0,
+    "mainEditorCompatibility": 0,
+    "fullProductionGameplay": "pass",
+    "finalProductionNativeAndCRTReview": "pass",
+    "checkLevels": 0
+  },
+  "scopeNotes": [
+    "No shared runtime, movement tuning, public level pack, stock certificate or bonus changes.",
+    "Final cargo appearance reuses the existing complete coastal body asset; collision and timing match the full-production gameplay pass.",
+    "Final level validator and focused checks were rerun after the last cosmetic asset substitution.",
+    "Host memory pressure caused validation pauses; no other chat processes or user browser were stopped."
+  ],
+  "completedUTC": "2026-10-27T07:21:31.393292+00:00"
+}

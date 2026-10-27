@@ -33,9 +33,10 @@ try{
  report.source=await page.evaluate(()=>{const l=window.__game.getLevel();return {components:l.builtFromData.components.length,enemies:l.enemies.length,kinds:[...new Set(l.enemies.map(e=>e.kind))],mattes:l.builtFromData.components.filter(c=>c.dkind?.endsWith('matte')).length};});
  assert.equal(report.source.enemies,41);assert.equal(report.source.mattes,0);
  if(full)await page.evaluate(()=>{const g=window.__game;g.renderQualitySettings.setRegularResolution(null);g.crtGuestSettings.setEnabled(false);});
- for(const [name,z] of process.argv.includes('--smoke')?[]:[['market',112],['stairs',330],['cargo',523],['climb',710],['surf',1540],['festival',1988],['lighthouse',2655]]){
+ const scenes=process.argv.includes('--polish')?[['cargo',523],['transfer',796],['surf',1540],['gap-approach',415],['stairs',330]]:[['market',112],['stairs',330],['cargo',523],['climb',710],['surf',1540],['festival',1988],['lighthouse',2655]];
+ for(const [name,z] of process.argv.includes('--smoke')?[]:scenes){
   await place(0,z);await page.evaluate(()=>window.__game.getLevel().prepareJungleAssets());await page.waitForTimeout(500);
-  if(full&&['market','stairs','climb'].includes(name)){
+  if(full&&['market','stairs','climb','cargo','surf'].includes(name)){
    await page.evaluate(()=>{const g=window.__game;g.renderQualitySettings.setRegularResolution(480);g.crtGuestSettings.setEnabled(true);});await page.waitForTimeout(200);
    await page.screenshot({path:`${out}/presentation-${name}.png`});
    await page.evaluate(()=>{const g=window.__game;g.renderQualitySettings.setRegularResolution(null);g.crtGuestSettings.setEnabled(false);});await page.waitForTimeout(200);
@@ -84,6 +85,15 @@ try{
   await page.waitForFunction(()=>window.__game.player.grounded&&window.__game.player.groundHit?.crumbleId===0&&window.__game.getLevel().crumbles[0].state==='shake',null,{timeout:10000});report.crumbleContact=await snapshot();
   await page.waitForFunction(top=>{const g=window.__game;return g.getLevel().crumbles[0].state==='gone'&&g.player.grounded&&g.player.pos.y<top-.7;},crumbleTop,{timeout:15000});
   report.crumbleRecovery=await snapshot();assert.equal(report.crumbleRecovery.lives,report.crumbleContact.lives);console.log('Bank, crumble contact and safe street recovery passed');
+  // Confirm the freight load is a live hazard, then weave through both safe
+  // opposite lanes with protection disabled and ordinary keyboard movement.
+  await place(-3.5,531);await page.evaluate(()=>{window.__game.player.invulnTimer=0;});
+  await page.waitForFunction(()=>window.__game.player.lives<99,null,{timeout:12000});report.cargoHit=await snapshot();
+  await place(3.4,520);await page.evaluate(()=>{window.__game.player.invulnTimer=0;});await page.keyboard.down('ArrowUp');
+  await page.waitForFunction(()=>window.__game.player.pos.z<-536,null,{timeout:12000});await page.keyboard.down('ArrowLeft');
+  await page.waitForFunction(()=>window.__game.player.pos.x<-1.5,null,{timeout:10000});await page.keyboard.up('ArrowLeft');
+  await page.waitForFunction(()=>window.__game.player.pos.z<-550,null,{timeout:12000});await page.keyboard.up('ArrowUp');
+  report.cargoWeave=await snapshot();assert.equal(report.cargoWeave.lives,99,'Freight lanes offer a safe keyboard route');console.log('Live cargo hazard and safe weave passed');
   await place(-3.5,508);await page.keyboard.down('KeyF');await page.keyboard.down('ArrowUp');
   await page.waitForFunction(()=>!!window.__game.getLevel().activeCheckpoint,null,{timeout:10000});await page.keyboard.up('ArrowUp');await page.keyboard.up('KeyF');
   report.checkpoint=await snapshot();
@@ -94,4 +104,4 @@ try{
  }
  assert.deepEqual(report.errors,[]);assert.deepEqual(report.failed,[]);report.pass=true;
 }catch(e){report.pass=false;report.failure=e.stack;report.last=await snapshot().catch(()=>null);throw e;}
-finally{for(const key of ['ArrowUp','ArrowRight','Space','KeyF'])await page.keyboard.up(key).catch(()=>{});report.finished=new Date().toISOString();await writeFile(`${out}/browser-${full?'native':'lite'}${visual?'-visual':''}.json`,JSON.stringify(report,null,2)+'\n');await browser.close();console.log(JSON.stringify({pass:report.pass,source:report.source,failure:report.failure,last:report.last,errors:report.errors,failed:report.failed}));}
+finally{for(const key of ['ArrowUp','ArrowRight','ArrowLeft','Space','KeyF'])await page.keyboard.up(key).catch(()=>{});if(report.pass)for(const gap of report.gaps??[])gap.trace=gap.trace.filter((_,i)=>i%6===0);report.finished=new Date().toISOString();await writeFile(`${out}/browser-${full?'native':'lite'}${visual?'-visual':''}.json`,JSON.stringify(report,null,2)+'\n');await browser.close();console.log(JSON.stringify({pass:report.pass,source:report.source,failure:report.failure,last:report.last,errors:report.errors,failed:report.failed}));}

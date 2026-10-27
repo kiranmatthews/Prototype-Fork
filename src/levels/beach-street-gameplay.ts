@@ -59,12 +59,13 @@ export function enhanceBeachStreet(data: CustomLevelData, heightAt: (z:number)=>
   const crate = (x:number,z:number,kind:CustomComponent['kind']='wood',y=0) => put({t:'crate',p:at(x,z,y),kind,nm:`Beach Street ${kind} reward ${z}`});
   const fruit = (x:number,z:number,y=0) => put({t:'wumpa',p:at(x,z,y+.85),nm:`Beach Street route fruit ${z}`});
   const bank = (name:string,x:number,z:number,length=8,rise=1.2,width=3.4) => {
+    const base=heightAt(z);
     put({t:'ramp',p:at(x,z),len:length,rise,w:width,color:CORAL,tex:'bay-terracotta',nm:name});
     // The lip and rails are above the actual sloping deck, never another floor.
-    trim(`${name} lip`,at(x,z+length/2,rise+.025),[width,.045,.22]);
-    for(const side of [-1,1])put({t:'rail',p:at(x+side*(width/2-.1),z-length/2,.07),
+    trim(`${name} lip`,[x,base+rise+.025,-(z+length/2)],[width,.045,.22]);
+    for(const side of [-1,1])put({t:'rail',p:[x+side*(width/2-.1),base+.07,-(z-length/2)],
       pts:[[0,0,0,0],[0,-length,0,rise]],nm:`${name} coping`});
-    fruit(x,z+length/2,rise);
+    put({t:'wumpa',p:[x,base+rise+.85,-(z+length/2)],nm:`${name} lip reward`});
   };
   const planter = (name:string,x:number,z:number,width=5.6) => {
     const y=heightAt(z);
@@ -87,14 +88,14 @@ export function enhanceBeachStreet(data: CustomLevelData, heightAt: (z:number)=>
     // route earns fruit above the pressure lane; no hidden full-width trap.
     for(let i=0;i<2;i++) {
       const x=(i? -side:side)*3.5, station=z+i*15;
-      put({t:'crusher',p:at(x,station),s:[3.7,1,3.4],cycle:3.4,phase:i*1.7,nm:`${name} cargo drop ${i+1}`});
+      put({t:'crusher',p:at(x,station),s:[3.7,2.4,3.4],dkind:'baybody',color:'#526779',supports:true,cycle:3.4,phase:i*1.7,nm:`${name} cargo drop ${i+1}`});
       for(const dz of [-2,2])trim(`${name} warning threshold`,at(x,station+dz,.035),[3.9,.06,.45],CORAL);
     }
   };
   const transfer = (name:string,z:number,x:number) => {
     bank(`${name} launch`,x,z,8,1.5,3.3);
     put({t:'platform',p:at(x,z+7,1.15),s:[3.3,.7,6],color:TEAL,tex:'bay-paving',nm:`${name} landing`});
-    trim(`${name} landing edge`,at(x,z+9.8,1.53),[3.3,.055,.25]);
+    trim(`${name} landing edge`,[x,heightAt(z+7)+1.53,-(z+9.8)],[3.3,.055,.25]);
     put({t:'crumble',p:at(x,z+14,1.5),s:[3.2,.55,4.5],shake:.85,color:CORAL,tex:'wood',nm:`${name} loose boardwalk`});
     put({t:'platform',p:at(x,z+21,1.15),s:[3.3,.7,6],color:TEAL,tex:'bay-paving',nm:`${name} reward deck`});
     crate(x,z+20,'mystery',1.5);fruit(x,z+14,1.5);
@@ -142,6 +143,21 @@ export function enhanceBeachStreet(data: CustomLevelData, heightAt: (z:number)=>
     put({t:'enemy',p:at(x,z),foe,range,speed,nm:name});
   // Masks give two recovery opportunities before the denser second half.
   crate(3.6,587,'mask');crate(-3.6,1836,'mask');
+  // Route fruit keeps its original station/lane, but clears the real surface.
+  // The imported gap approach fruit used road height inside the launch ramp;
+  // a few stair/climb pickups had the same problem.
+  const surfaces=out.filter(c=>c.solid!==false&&(c.t==='platform'||c.t==='ramp'));
+  for(const [i,c] of out.entries())if(c.t==='wumpa'){
+    let top=-Infinity;
+    for(const s of surfaces){
+      const a=(s.yaw??0)*Math.PI/180,dx=c.p[0]-s.p[0],dz=c.p[2]-s.p[2];
+      const x=dx*Math.cos(a)-dz*Math.sin(a),z=dx*Math.sin(a)+dz*Math.cos(a);
+      const w=s.s?.[0]??s.w??0,d=s.s?.[2]??s.len??0;
+      if(Math.abs(x)>w/2||Math.abs(z)>d/2)continue;
+      top=Math.max(top,s.t==='platform'?s.p[1]+s.s![1]/2:s.p[1]+s.rise!*(.5-z/d));
+    }
+    if(c.p[1]<top+.6)out[i]={...c,p:[c.p[0],top+.85,c.p[2]]};
+  }
   // A new planter or bank must not swallow an old grind line. Cut only the
   // affected freestanding spans: the visible rail ends advertise an ollie
   // transfer, while boundary rails, gap bridges and stair handrails stay exact.

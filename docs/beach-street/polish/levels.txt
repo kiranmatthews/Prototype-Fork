@@ -1,0 +1,2981 @@
+Validated 12 published level(s).
+┌─────────┬─────────────────────────┬────────────┬───────────────────┐
+│ (index) │ id                      │ components │ span              │
+├─────────┼─────────────────────────┼────────────┼───────────────────┤
+│ 0       │ 'flats'                 │ 332        │ '128.0 × 468.0'   │
+│ 1       │ 'sky'                   │ 304        │ '59.0 × 246.0'    │
+│ 2       │ 'test'                  │ 4082       │ '205.6 × 2363.4'  │
+│ 3       │ 'custard-creek'         │ 3961       │ '982.7 × 806.6'   │
+│ 4       │ 'bonus-custard-creek'   │ 314        │ '107.0 × 77.4'    │
+│ 5       │ 'jungle-terraces'       │ 5732       │ '340.4 × 209.5'   │
+│ 6       │ 'bonus-jungle-terraces' │ 132        │ '129.0 × 38.8'    │
+│ 7       │ 'drowned-crown'         │ 1446       │ '1404.0 × 1129.0' │
+│ 8       │ 'slipstream-race'       │ 3888       │ '1156.2 × 3244.3' │
+│ 9       │ 'country-club'          │ 3750       │ '1130.6 × 1520.6' │
+│ 10      │ 'rooftop-relay'         │ 2216       │ '650.1 × 1998.3'  │
+│ 11      │ 'coconut-cart-rally'    │ 1479       │ '257.7 × 2353.7'  │
+└─────────┴─────────────────────────┴────────────┴───────────────────┘
+Lazy source data: metadata deferral, shared first use, failure retry, writable replacement, pre-build translation, structured clone and real course serialization passed.
+Validated five reusable tropical species, real monstera leaf holes, vertex shading attributes, batched reuse, paused wind clock, and resource ownership.
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Explosive bundle GLB load failed; retaining playable fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Explosive bundle GLB load failed; retaining playable fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Explosive bundle GLB load failed; retaining playable fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Explosive bundle GLB load failed; retaining playable fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+[bonus] GLB stone platform failed HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Explosive bundle GLB load failed; retaining playable fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Explosive bundle GLB load failed; retaining playable fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Explosive bundle GLB load failed; retaining playable fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Explosive bundle GLB load failed; retaining playable fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Explosive bundle GLB load failed; retaining playable fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Explosive bundle GLB load failed; retaining playable fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Explosive bundle GLB load failed; retaining playable fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Explosive bundle GLB load failed; retaining playable fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Validated 17 original modules and 5 optional editor assets, compressed textures/LODs, 806 roof rays, arch joints, grass-edged dirt, invisible death volumes, black depth fade, wind, collision, disposal and editor reconstruction.
+Faceted quartz: play/editor source and harvested round trips preserve renamed, moved geometry, material and authoring choices.
+PASS clear stream contacts/shore alpha/shared clock, exact topology/collision, portable editor style and scoped twelve-tap soft shadows.
+PASS Custard pool: actual reflected camera, hidden-water restoration, render-target/viewport/XR/shadow state, paused reuse, moving camera, failure cleanup, one-time disposal, lite fallback and bounded/restored finale lighting.
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Wood crate GLB load failed; retaining playable wood fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Explosive bundle GLB load failed; retaining playable fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Explosive bundle GLB load failed; retaining playable fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Explosive bundle GLB load failed; retaining playable fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Explosive bundle GLB load failed; retaining playable fallback HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+[bonus] GLB stone platform failed HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+PASS Jungle enclosure: 152 low-poly cliff placements, 64 far-mesh canopies, 112 real-Player side/air/corner/end probes, closed perimeter and capture/rebuild.
+skull mask failed to load (mask stays a box): HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+crossbones failed to load (2nd mask stays skull-only): HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+Using procedural skateboard trucks HttpError: fetch for "" responded with 404: 
+    at file:///Users/kiki/Documents/ChatGPT/Prototype%20Fork/node_modules/.pnpm/three@0.166.1/node_modules/three/build/three.module.js:44151:12 {
+  response: Response {
+    status: 404,
+    statusText: '',
+    headers: Headers { 'content-type': 'text/plain;charset=UTF-8' },
+    body: ReadableStream { locked: false, state: 'closed', supportsBYOB: true },
+    bodyUsed: false,
+    ok: false,
+    redirected: false,
+    type: 'default',
+    url: ''
+  }
+}
+PASS retained clay exports and campaign Meshy foliage: valid legacy geometry; no retired campaign props
+PASS elevated six-island map JSON round-trip and bounded editable hub coordinates.
+CLAY mapbroadleaf near {"triangles":4896,"degenerate":0,"duplicates":0,"boundaries":0,"winding":0,"components":[{"vertices":182,"faces":360,"euler":2,"volume":0.005622454445845362},{"vertices":182,"faces":360,"euler":2,"volume":0.0004869362459546373},{"vertices":134,"faces":264,"euler":2,"volume":0.004705556295902337},{"vertices":134,"faces":264,"euler":2,"volume":0.004705556093449875},{"vertices":134,"faces":264,"euler":2,"volume":0.004705556024198862},{"vertices":182,"faces":360,"euler":2,"volume":0.00061750919349812},{"vertices":134,"faces":264,"euler":2,"volume":0.0047055559404274375},{"vertices":134,"faces":264,"euler":2,"volume":0.004705555881080345},{"vertices":134,"faces":264,"euler":2,"volume":0.004705555836430584},{"vertices":182,"faces":360,"euler":2,"volume":0.0007711267124419931},{"vertices":134,"faces":264,"euler":2,"volume":0.0050742873907205},{"vertices":134,"faces":264,"euler":2,"volume":0.00507428738953232},{"vertices":134,"faces":264,"euler":2,"volume":0.005074287353209927},{"vertices":182,"faces":360,"euler":2,"volume":0.00014489113277204118},{"vertices":182,"faces":360,"euler":2,"volume":0.00014489113009210502},{"vertices":182,"faces":360,"euler":2,"volume":0.00014489113016627207}],"volumes":[0.005622454445845362,0.0004869362459546373,0.004705556295902337,0.004705556093449875,0.004705556024198862,0.00061750919349812,0.0047055559404274375,0.004705555881080345,0.004705555836430584,0.0007711267124419931,0.0050742873907205,0.00507428738953232,0.005074287353209927,0.00014489113277204118,0.00014489113009210502,0.00014489113016627207]}
+CLAY mapbroadleaf far {"triangles":1504,"degenerate":0,"duplicates":0,"boundaries":0,"winding":0,"components":[{"vertices":58,"faces":112,"euler":2,"volume":0.005325288974942213},{"vertices":58,"faces":112,"euler":2,"volume":0.0004622220762251511},{"vertices":42,"faces":80,"euler":2,"volume":0.004302003671087545},{"vertices":42,"faces":80,"euler":2,"volume":0.00430200343027866},{"vertices":42,"faces":80,"euler":2,"volume":0.004302003220682591},{"vertices":58,"faces":112,"euler":2,"volume":0.0005858050185703619},{"vertices":42,"faces":80,"euler":2,"volume":0.004302003828424893},{"vertices":42,"faces":80,"euler":2,"volume":0.00430200411240186},{"vertices":42,"faces":80,"euler":2,"volume":0.004302003888122808},{"vertices":58,"faces":112,"euler":2,"volume":0.0007320115982156182},{"vertices":42,"faces":80,"euler":2,"volume":0.00464505479951989},{"vertices":42,"faces":80,"euler":2,"volume":0.004645055114104098},{"vertices":42,"faces":80,"euler":2,"volume":0.004645054959770022},{"vertices":58,"faces":112,"euler":2,"volume":0.00013746599382343368},{"vertices":58,"faces":112,"euler":2,"volume":0.00013746598800441247},{"vertices":58,"faces":112,"euler":2,"volume":0.00013746598860580884}],"volumes":[0.005325288974942213,0.0004622220762251511,0.004302003671087545,0.00430200343027866,0.004302003220682591,0.0005858050185703619,0.004302003828424893,0.00430200411240186,0.004302003888122808,0.0007320115982156182,0.00464505479951989,0.004645055114104098,0.004645054959770022,0.00013746599382343368,0.00013746598800441247,0.00013746598860580884]}
+CLAY mappalm near {"triangles":3780,"degenerate":0,"duplicates":0,"boundaries":0,"winding":0,"components":[{"vertices":182,"faces":360,"euler":2,"volume":0.0032915540785247925},{"vertices":134,"faces":264,"euler":2,"volume":0.004161278722628395},{"vertices":134,"faces":264,"euler":2,"volume":0.004263234284614288},{"vertices":134,"faces":264,"euler":2,"volume":0.004161278660552227},{"vertices":134,"faces":264,"euler":2,"volume":0.004263234332580341},{"vertices":134,"faces":264,"euler":2,"volume":0.004161278256843821},{"vertices":134,"faces":264,"euler":2,"volume":0.004263234382422863},{"vertices":128,"faces":252,"euler":2,"volume":0.00034146180001727626},{"vertices":128,"faces":252,"euler":2,"volume":0.00034146180464245904},{"vertices":128,"faces":252,"euler":2,"volume":0.0003414618074460406},{"vertices":182,"faces":360,"euler":2,"volume":0.00007032555636386209},{"vertices":182,"faces":360,"euler":2,"volume":0.00007032556010504464},{"vertices":182,"faces":360,"euler":2,"volume":0.00007032556011288727}],"volumes":[0.0032915540785247925,0.004161278722628395,0.004263234284614288,0.004161278660552227,0.004263234332580341,0.004161278256843821,0.004263234382422863,0.00034146180001727626,0.00034146180464245904,0.0003414618074460406,0.00007032555636386209,0.00007032556010504464,0.00007032556011288727]}
+CLAY mappalm far {"triangles":1168,"degenerate":0,"duplicates":0,"boundaries":0,"winding":0,"components":[{"vertices":58,"faces":112,"euler":2,"volume":0.0031164961133406137},{"vertices":42,"faces":80,"euler":2,"volume":0.0037819015901615024},{"vertices":42,"faces":80,"euler":2,"volume":0.003873781738975995},{"vertices":42,"faces":80,"euler":2,"volume":0.0037819013141830817},{"vertices":42,"faces":80,"euler":2,"volume":0.00387378192606519},{"vertices":42,"faces":80,"euler":2,"volume":0.0037819011173529362},{"vertices":42,"faces":80,"euler":2,"volume":0.0038737816859620057},{"vertices":42,"faces":80,"euler":2,"volume":0.00030660790978545116},{"vertices":42,"faces":80,"euler":2,"volume":0.00030660790878948976},{"vertices":42,"faces":80,"euler":2,"volume":0.0003066079089843713},{"vertices":58,"faces":112,"euler":2,"volume":0.00006679981357414673},{"vertices":58,"faces":112,"euler":2,"volume":0.0000667998128342928},{"vertices":58,"faces":112,"euler":2,"volume":0.00006679981281414845}],"volumes":[0.0031164961133406137,0.0037819015901615024,0.003873781738975995,0.0037819013141830817,0.00387378192606519,0.0037819011173529362,0.0038737816859620057,0.00030660790978545116,0.00030660790878948976,0.0003066079089843713,0.00006679981357414673,0.0000667998128342928,0.00006679981281414845]}
+CLAY mapbanana near {"triangles":1680,"degenerate":0,"duplicates":0,"boundaries":0,"winding":0,"components":[{"vertices":182,"faces":360,"euler":2,"volume":0.0008399707945701044},{"vertices":134,"faces":264,"euler":2,"volume":0.006896147152841204},{"vertices":134,"faces":264,"euler":2,"volume":0.0068961467611262425},{"vertices":134,"faces":264,"euler":2,"volume":0.006896147352464985},{"vertices":134,"faces":264,"euler":2,"volume":0.0068961472001965955},{"vertices":134,"faces":264,"euler":2,"volume":0.006896146807277147}],"volumes":[0.0008399707945701044,0.006896147152841204,0.0068961467611262425,0.006896147352464985,0.0068961472001965955,0.006896146807277147]}
+CLAY mapbanana far {"triangles":512,"degenerate":0,"duplicates":0,"boundaries":0,"winding":0,"components":[{"vertices":58,"faces":112,"euler":2,"volume":0.0007914321126321448},{"vertices":42,"faces":80,"euler":2,"volume":0.006188137820889114},{"vertices":42,"faces":80,"euler":2,"volume":0.006188137228296819},{"vertices":42,"faces":80,"euler":2,"volume":0.0061881378713598105},{"vertices":42,"faces":80,"euler":2,"volume":0.006188138244907696},{"vertices":42,"faces":80,"euler":2,"volume":0.006188138176277632}],"volumes":[0.0007914321126321448,0.006188137820889114,0.006188137228296819,0.0061881378713598105,0.006188138244907696,0.006188138176277632]}
+CLAY mapgroundleaf near {"triangles":792,"degenerate":0,"duplicates":0,"boundaries":0,"winding":0,"components":[{"vertices":134,"faces":264,"euler":2,"volume":0.028196454501466156},{"vertices":134,"faces":264,"euler":2,"volume":0.02819645445199542},{"vertices":134,"faces":264,"euler":2,"volume":0.028196455392856208}],"volumes":[0.028196454501466156,0.02819645445199542,0.028196455392856208]}
+CLAY mapgroundleaf far {"triangles":240,"degenerate":0,"duplicates":0,"boundaries":0,"winding":0,"components":[{"vertices":42,"faces":80,"euler":2,"volume":0.025534185808357805},{"vertices":42,"faces":80,"euler":2,"volume":0.02553418780936923},{"vertices":42,"faces":80,"euler":2,"volume":0.025534188459198814}],"volumes":[0.025534185808357805,0.02553418780936923,0.025534188459198814]}
+CLAY maparch near {"triangles":1076,"degenerate":0,"duplicates":0,"boundaries":0,"winding":0,"components":[{"vertices":540,"faces":1076,"euler":2,"volume":0.604298645962031}],"volumes":[0.604298645962031]}
+CLAY maparch far {"triangles":308,"degenerate":0,"duplicates":0,"boundaries":0,"winding":0,"components":[{"vertices":156,"faces":308,"euler":2,"volume":0.6015886653628365}],"volumes":[0.6015886653628365]}
+{"meshes":685,"triangles":6832336,"vertices":6727654,"closedRims":538638,"openEdges":0,"sightlines":[{"at":0,"hits":[]},{"at":180,"hits":[]},{"at":200,"hits":[]},{"at":220,"hits":[]},{"at":270,"hits":[]},{"at":364,"hits":[]},{"at":610,"hits":[]},{"at":1400,"hits":[]},{"at":2470,"hits":[]}],"forkStripHits":0,"diagnostics":{"bores":365,"ready":365,"visible":55,"lamps":76,"failures":[]},"pass":true}
+[{"name":"planted-cliff","lod":0,"repaired":1342},{"name":"planted-cliff","lod":1,"repaired":0},{"name":"tropical-grove","lod":0,"repaired":20},{"name":"tropical-grove","lod":1,"repaired":0}]
+PASS finite scenery normals, preserved authored normals/geometry/UVs, opposite-face fallback and no-op repeat loads.
+[
+  {
+    "name": "tropical-grove",
+    "nearTriangles": 10223,
+    "farTriangles": 2138,
+    "maxSilhouetteDifference": 0.07003257328990228,
+    "addedBytes": 155144
+  },
+  {
+    "name": "planted-cliff",
+    "nearTriangles": 10078,
+    "farTriangles": 3580,
+    "maxSilhouetteDifference": 0.07450980392156863,
+    "addedBytes": 270568
+  }
+]
+PASS approved close-up bytes, shared maps, finite LOD geometry, bounded silhouettes and provenance.
+PASS island ocean: portable scoped palette, lite/full materials, 640 identical physical surface samples, independent edits, reset and legacy data.
+{
+  "pools": [
+    {
+      "name": "Shallow slide pool / Ribbon runout",
+      "triangles": 62,
+      "maxDepth": 0.21999566738668364,
+      "probes": 248
+    },
+    {
+      "name": "Shallow slide pool / Reservoir",
+      "triangles": 28,
+      "maxDepth": 0.21999896144848208,
+      "probes": 112
+    },
+    {
+      "name": "Shallow slide pool / Broken sluice",
+      "triangles": 30,
+      "maxDepth": 0.2200021215662673,
+      "probes": 120
+    },
+    {
+      "name": "Shallow slide pool / Last spillway",
+      "triangles": 28,
+      "maxDepth": 0.22000313719343012,
+      "probes": 112
+    },
+    {
+      "name": "Shallow slide pool / Garden dip",
+      "triangles": 106,
+      "maxDepth": 0.11489208918055738,
+      "probes": 424
+    },
+    {
+      "name": "Shallow slide pool / Upper pool approach",
+      "triangles": 162,
+      "maxDepth": 0.11452587690769178,
+      "probes": 648
+    },
+    {
+      "name": "Shallow slide pool / Skyfall approach",
+      "triangles": 138,
+      "maxDepth": 0.13832955744055653,
+      "probes": 552
+    }
+  ],
+  "totalTriangles": 554
+}
+PASS shallow water fits the unchanged ride surface, closes at every shoreline, remains non-solid/non-swimming, round-trips and disposes correctly.
+PASS pool deck shader composition, metric box bounds, unchanged geometry/tints, editor capture, moving/falling ownership, default grind edges and texture retirement.
+{"portals":14,"reports":[{"editing":false,"work":3020,"clearOpeningRays":9},{"editing":true,"work":3020,"clearOpeningRays":9}]}
+PASS compact portals remain saveable, bounded, editable, closed, non-colliding and disposable.
+{"cells":16,"buriedCells":4,"visibleTriangles":7584,"hiddenTriangles":96,"contactRays":96,"maxSlope":1.9286076486316417,"visibilityWrappers":1759,"unchangedCourseSupports":512}
+PASS forest tops and distant-fog visibility: exact return contacts, course support, transforms, editor data, secondary view and clear inspection.
+PASS 188 exact tunnel meshes, 66408 vertices and 92005 triangles across common/split/merged bores and authored gaps

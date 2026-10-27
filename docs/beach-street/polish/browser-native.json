@@ -1,0 +1,2955 @@
+{
+  "base": "http://127.0.0.1:5288",
+  "full": true,
+  "visual": false,
+  "started": "2026-10-27T06:43:35.266Z",
+  "errors": [],
+  "failed": [],
+  "captures": [
+    {
+      "name": "cargo",
+      "camera": [
+        0,
+        9.319999990463256,
+        -515.8
+      ],
+      "buffer": [
+        1920,
+        1080
+      ],
+      "resolution": "max",
+      "assets": {
+        "components": 3907,
+        "placements": 3907,
+        "ready": 1358,
+        "skipped": 0,
+        "draws": 464,
+        "triangles": 2975877,
+        "allLodTriangles": 2975877,
+        "cells": 1338,
+        "residentCells": 464,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 15,
+        "textureMiB": 26.67,
+        "errors": [],
+        "windTime": 10.716666666666779,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "reduced": 0
+    },
+    {
+      "name": "transfer",
+      "camera": [
+        0,
+        13.800000011920927,
+        -788.8
+      ],
+      "buffer": [
+        1920,
+        1080
+      ],
+      "resolution": "max",
+      "assets": {
+        "components": 3907,
+        "placements": 3907,
+        "ready": 1373,
+        "skipped": 0,
+        "draws": 462,
+        "triangles": 3006186,
+        "allLodTriangles": 3006186,
+        "cells": 1338,
+        "residentCells": 462,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 15,
+        "textureMiB": 26.67,
+        "errors": [],
+        "windTime": 14.5000000000003,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "reduced": 0
+    },
+    {
+      "name": "surf",
+      "camera": [
+        0,
+        11.415384615384616,
+        -1532.8
+      ],
+      "buffer": [
+        1920,
+        1080
+      ],
+      "resolution": "max",
+      "assets": {
+        "components": 3907,
+        "placements": 3907,
+        "ready": 1373,
+        "skipped": 0,
+        "draws": 452,
+        "triangles": 3008697,
+        "allLodTriangles": 3008697,
+        "cells": 1338,
+        "residentCells": 452,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 15,
+        "textureMiB": 26.67,
+        "errors": [],
+        "windTime": 20.13333333333347,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "reduced": 0
+    },
+    {
+      "name": "gap-approach",
+      "camera": [
+        0,
+        8.800000011920929,
+        -407.8
+      ],
+      "buffer": [
+        1920,
+        1080
+      ],
+      "resolution": "max",
+      "assets": {
+        "components": 3907,
+        "placements": 3907,
+        "ready": 1267,
+        "skipped": 0,
+        "draws": 433,
+        "triangles": 2782489,
+        "allLodTriangles": 2782489,
+        "cells": 1338,
+        "residentCells": 433,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 15,
+        "textureMiB": 26.67,
+        "errors": [],
+        "windTime": 22.416666666666675,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "reduced": 0
+    },
+    {
+      "name": "stairs",
+      "camera": [
+        0,
+        8.800000011920929,
+        -322.8
+      ],
+      "buffer": [
+        1920,
+        1080
+      ],
+      "resolution": "max",
+      "assets": {
+        "components": 3907,
+        "placements": 3907,
+        "ready": 1203,
+        "skipped": 0,
+        "draws": 414,
+        "triangles": 2636130,
+        "allLodTriangles": 2636130,
+        "cells": 1338,
+        "residentCells": 414,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 15,
+        "textureMiB": 26.67,
+        "errors": [],
+        "windTime": 26.816666666666425,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "reduced": 0
+    }
+  ],
+  "spawn": {
+    "position": [
+      0,
+      12.736666678364077,
+      15
+    ],
+    "grounded": true,
+    "lives": 4,
+    "deaths": 0,
+    "state": "ride",
+    "checkpoint": false,
+    "spawn": [
+      0,
+      12.85333334525426,
+      15
+    ],
+    "stamp": "Codex/sol fork · build 10-27 06:38 UTC"
+  },
+  "source": {
+    "components": 6416,
+    "enemies": 41,
+    "kinds": [
+      "grunt",
+      "turtle",
+      "hopper",
+      "spiker",
+      "spinner",
+      "sentry",
+      "charger",
+      "floater"
+    ],
+    "mattes": 0
+  },
+  "chicane": {
+    "position": [
+      2.0220534073319785,
+      10.015486666666618,
+      -149.61283333333455
+    ],
+    "grounded": true,
+    "lives": 99,
+    "deaths": 0,
+    "state": "ride",
+    "checkpoint": false,
+    "spawn": [
+      0,
+      12.85333334525426,
+      15
+    ],
+    "stamp": "Codex/sol fork · build 10-27 06:38 UTC"
+  },
+  "combat": {
+    "position": [
+      0.9166666666666663,
+      12.000000011920928,
+      -91.0111111111111
+    ],
+    "grounded": true,
+    "lives": 99,
+    "deaths": 0,
+    "state": "ride",
+    "checkpoint": false,
+    "spawn": [
+      0,
+      12.85333334525426,
+      15
+    ],
+    "stamp": "Codex/sol fork · build 10-27 06:38 UTC"
+  },
+  "gaps": [
+    {
+      "start": 430,
+      "end": 441,
+      "takeoff": {
+        "p": [
+          -3.2199999999999998,
+          5.940170823976144,
+          -427.8741249234412
+        ],
+        "speed": 19.213638734469853,
+        "charge": 0.4,
+        "skating": true
+      },
+      "trace": [
+        {
+          "p": [
+            -3.2199999999999998,
+            4.000000011920929,
+            -389
+          ],
+          "speed": 0,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            -3.2199999999999998,
+            4.000000011920929,
+            -389.04999999999995
+          ],
+          "speed": 1,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            -3.2199999999999998,
+            4.000000011920929,
+            -389.2199999999999
+          ],
+          "speed": 2.2,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            -3.2199999999999998,
+            4.000000011920929,
+            -389.51
+          ],
+          "speed": 3.399999999999999,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            -3.2199999999999998,
+            4.000000011920929,
+            -389.91999999999996
+          ],
+          "speed": 4.599999999999998,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            -3.2199999999999998,
+            4.000000011920929,
+            -390.4499999999999
+          ],
+          "speed": 5.799999999999999,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            -3.2199999999999998,
+            4.000000011920929,
+            -391.09999999999997
+          ],
+          "speed": 7.000000000000001,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            -3.2199999999999998,
+            4.000000011920929,
+            -391.86999999999995
+          ],
+          "speed": 8.200000000000003,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            -3.2199999999999998,
+            4.000000011920929,
+            -392.74999999999983
+          ],
+          "speed": 9,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            -3.2199999999999998,
+            4.000000011920929,
+            -393.6499999999997
+          ],
+          "speed": 9,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            -3.2199999999999998,
+            4.000000011920929,
+            -394.54999999999956
+          ],
+          "speed": 9,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            -3.2199999999999998,
+            4.000000011920929,
+            -395.4499999999994
+          ],
+          "speed": 9,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            -3.2199999999999998,
+            4.000000011920929,
+            -396.3499999999993
+          ],
+          "speed": 9,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            -3.2199999999999998,
+            4.000000011920929,
+            -397.24999999999915
+          ],
+          "speed": 9,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            -3.2199999999999998,
+            4.000000011920929,
+            -398.149999999999
+          ],
+          "speed": 9,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.06666666666666667,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            -3.2199999999999998,
+            4.000000011920929,
+            -399.0499999999989
+          ],
+          "speed": 9,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.16666666666666666,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            -3.2199999999999998,
+            4.000000011920929,
+            -399.94999999999874
+          ],
+          "speed": 9,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.26666666666666666,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            -3.2199999999999998,
+            4.000000011920929,
+            -400.8499999999986
+          ],
+          "speed": 9,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.36666666666666664,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            -3.2199999999999998,
+            4.000000011920929,
+            -401.74999999999847
+          ],
+          "speed": 9,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            -3.2199999999999998,
+            4.000000011920929,
+            -402.6524999999983
+          ],
+          "speed": 9.15,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            -3.2199999999999998,
+            4.000000011920929,
+            -403.6199999999984
+          ],
+          "speed": 10.050000000000002,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            -3.2199999999999998,
+            4.000000011920929,
+            -404.6774999999985
+          ],
+          "speed": 10.950000000000005,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            -3.2199999999999998,
+            4.000000011920929,
+            -405.82499999999845
+          ],
+          "speed": 11.850000000000007,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            -3.2199999999999998,
+            4.000000011920929,
+            -407.06249999999835
+          ],
+          "speed": 12.750000000000009,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            -3.2199999999999998,
+            4.000000011920929,
+            -408.3899999999984
+          ],
+          "speed": 13.650000000000011,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            -3.2199999999999998,
+            4.000000011920929,
+            -409.80749999999847
+          ],
+          "speed": 14.550000000000013,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            -3.2199999999999998,
+            4.000000011920929,
+            -411.31499999999846
+          ],
+          "speed": 15.450000000000015,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            -3.2199999999999998,
+            4.11090212425691,
+            -412.90738101664743
+          ],
+          "speed": 16.17892656711478,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            -3.2199999999999998,
+            4.310052706338777,
+            -414.5367948700445
+          ],
+          "speed": 16.557177878131238,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            -3.2199999999999998,
+            4.51344373532375,
+            -416.2009032890125
+          ],
+          "speed": 16.91219299161171,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            -3.2199999999999998,
+            4.72112776566423,
+            -417.9001362645255
+          ],
+          "speed": 17.266293086763024,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            -3.2199999999999998,
+            4.933107161181728,
+            -419.6345131369414
+          ],
+          "speed": 17.620357130615396,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            -3.2199999999999998,
+            5.149382019383215,
+            -421.4040347040445
+          ],
+          "speed": 17.974419754032976,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            -3.2199999999999998,
+            5.3699523442713595,
+            -423.2087009985839
+          ],
+          "speed": 18.328482321484845,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            -3.2199999999999998,
+            5.594818136010186,
+            -425.0485120219015
+          ],
+          "speed": 18.682544886731645,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            -3.2199999999999998,
+            5.823979394606413,
+            -426.9234677740524
+          ],
+          "speed": 19.036607451891562,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            -3.2199999999999998,
+            6.396244831155487,
+            -428.8353847635727
+          ],
+          "speed": 19.272649161995925,
+          "grounded": false,
+          "state": "air",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            -3.2199999999999998,
+            7.427559512180822,
+            -430.76264967977244
+          ],
+          "speed": 19.272649161995925,
+          "grounded": false,
+          "state": "air",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            -3.2199999999999998,
+            8.128874193206157,
+            -432.6899145959722
+          ],
+          "speed": 19.272649161995925,
+          "grounded": false,
+          "state": "air",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            -3.2199999999999998,
+            8.503868436337385,
+            -434.61717951217196
+          ],
+          "speed": 19.272649161995925,
+          "grounded": false,
+          "state": "air",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            -3.2199999999999998,
+            8.599892944242558,
+            -436.5444444283717
+          ],
+          "speed": 19.272649161995925,
+          "grounded": false,
+          "state": "air",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            -3.2199999999999998,
+            8.431100325801799,
+            -438.4717093445715
+          ],
+          "speed": 19.272649161995925,
+          "grounded": false,
+          "state": "air",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            -3.2199999999999998,
+            7.910629491977402,
+            -440.39897426077124
+          ],
+          "speed": 19.272649161995925,
+          "grounded": false,
+          "state": "air",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            -3.2199999999999998,
+            6.991453655324224,
+            -442.326239176971
+          ],
+          "speed": 19.272649161995925,
+          "grounded": false,
+          "state": "air",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            -3.2199999999999998,
+            5.672277818671048,
+            -444.25350409317076
+          ],
+          "speed": 19.272649161995925,
+          "grounded": false,
+          "state": "air",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            -3.2199999999999998,
+            4.000000011920929,
+            -446.1807690093705
+          ],
+          "speed": 19.272649161995925,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            -3.2199999999999998,
+            4.000000011920929,
+            -448.10234300348486
+          ],
+          "speed": 19.1751686495786,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        }
+      ],
+      "position": [
+        -3.2199999999999998,
+        4.000000011920929,
+        -447.462900586446
+      ],
+      "grounded": true,
+      "lives": 99,
+      "deaths": 0,
+      "state": "ride",
+      "checkpoint": false,
+      "spawn": [
+        0,
+        12.85333334525426,
+        15
+      ],
+      "stamp": "Codex/sol fork · build 10-27 06:38 UTC"
+    },
+    {
+      "start": 900,
+      "end": 912,
+      "takeoff": {
+        "p": [
+          3.15,
+          7.000608177112806,
+          -897.5749643162368
+        ],
+        "speed": 21.484906826038355,
+        "charge": 0.4,
+        "skating": true
+      },
+      "trace": [
+        {
+          "p": [
+            3.15,
+            6.6400000000000015,
+            -859
+          ],
+          "speed": 0,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            3.15,
+            6.638,
+            -859.05
+          ],
+          "speed": 1,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            3.15,
+            6.631200000000009,
+            -859.2199999999998
+          ],
+          "speed": 2.2,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            3.15,
+            6.6196000000000215,
+            -859.5099999999995
+          ],
+          "speed": 3.399999999999999,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            3.15,
+            6.603200000000012,
+            -859.9199999999997
+          ],
+          "speed": 4.599999999999998,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            3.15,
+            6.5820000000000025,
+            -860.4499999999999
+          ],
+          "speed": 5.799999999999999,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            3.15,
+            6.555999999999997,
+            -861.1
+          ],
+          "speed": 7.000000000000001,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            3.15,
+            6.525199999999998,
+            -861.87
+          ],
+          "speed": 8.200000000000003,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            3.15,
+            6.490000000000007,
+            -862.7499999999999
+          ],
+          "speed": 9,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            3.15,
+            6.454000000000008,
+            -863.6499999999997
+          ],
+          "speed": 9,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            3.15,
+            6.418000000000017,
+            -864.5499999999996
+          ],
+          "speed": 9,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            3.15,
+            6.382000000000021,
+            -865.4499999999995
+          ],
+          "speed": 9,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            3.15,
+            6.346000000000026,
+            -866.3499999999993
+          ],
+          "speed": 9,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            3.15,
+            6.310000000000031,
+            -867.2499999999992
+          ],
+          "speed": 9,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            3.15,
+            6.274000000000039,
+            -868.1499999999991
+          ],
+          "speed": 9,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.09999999999999999,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            3.15,
+            6.238000000000044,
+            -869.0499999999989
+          ],
+          "speed": 9,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.19999999999999998,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            3.15,
+            6.202000000000048,
+            -869.9499999999988
+          ],
+          "speed": 9,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.3,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            3.15,
+            6.166000000000057,
+            -870.8499999999987
+          ],
+          "speed": 9,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.39999999999999997,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            3.15,
+            6.130000000000058,
+            -871.7499999999985
+          ],
+          "speed": 9,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            3.15,
+            6.093280095885017,
+            -872.6679976028746
+          ],
+          "speed": 9.539928086284963,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            3.15,
+            6.052600719137209,
+            -873.6849820215698
+          ],
+          "speed": 10.619784258854889,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            3.15,
+            6.007601917699131,
+            -874.8099520575217
+          ],
+          "speed": 11.699640431424815,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            3.15,
+            5.958283691570764,
+            -876.0429077107309
+          ],
+          "speed": 12.77949660399474,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            3.15,
+            5.904646040752127,
+            -877.3838489811968
+          ],
+          "speed": 13.859352776564666,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            3.15,
+            5.846688965243196,
+            -878.8327758689201
+          ],
+          "speed": 14.939208949134592,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            3.15,
+            5.784412465044005,
+            -880.3896883739
+          ],
+          "speed": 16.019065121704518,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            3.15,
+            5.724488223015718,
+            -882.0545864961372
+          ],
+          "speed": 17.098921294274422,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            3.15,
+            5.868510307928231,
+            -883.8062064477758
+          ],
+          "speed": 17.76116355678623,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            3.15,
+            6.017126651759851,
+            -885.6137025214036
+          ],
+          "speed": 18.29724224193989,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            3.15,
+            6.170119913838982,
+            -887.4744313845282
+          ],
+          "speed": 18.828677087046486,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            3.15,
+            6.327481536312123,
+            -889.3882889551473
+          ],
+          "speed": 19.359928976621458,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            3.15,
+            6.4892111820060165,
+            -891.3552711325055
+          ],
+          "speed": 19.89117365769455,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            3.15,
+            6.655308837635901,
+            -893.3753777550312
+          ],
+          "speed": 20.422418054749738,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            3.15,
+            6.82577450267837,
+            -895.4486088163585
+          ],
+          "speed": 20.953662440614497,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            3.15,
+            7.000608177112806,
+            -897.5749643162368
+          ],
+          "speed": 21.484906826038355,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            3.15,
+            7.956659381408153,
+            -899.7323090719307
+          ],
+          "speed": 21.573447556939627,
+          "grounded": false,
+          "state": "air",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            3.15,
+            8.765944490580052,
+            -901.8896538276246
+          ],
+          "speed": 21.573447556939627,
+          "grounded": false,
+          "state": "air",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            3.15,
+            9.245609002214337,
+            -904.0469985833184
+          ],
+          "speed": 21.573447556939627,
+          "grounded": false,
+          "state": "air",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            3.15,
+            9.425100453870794,
+            -906.2043433390123
+          ],
+          "speed": 21.573447556939627,
+          "grounded": false,
+          "state": "air",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            3.15,
+            9.350713529563112,
+            -908.3616880947062
+          ],
+          "speed": 21.573447556939627,
+          "grounded": false,
+          "state": "air",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            3.15,
+            8.955127186979668,
+            -910.5190328504001
+          ],
+          "speed": 21.573447556939627,
+          "grounded": false,
+          "state": "air",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            3.15,
+            8.167126389848423,
+            -912.676377606094
+          ],
+          "speed": 21.573447556939627,
+          "grounded": false,
+          "state": "air",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            3.15,
+            6.97912559271718,
+            -914.8337223617879
+          ],
+          "speed": 21.573447556939627,
+          "grounded": false,
+          "state": "air",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            3.15,
+            5.391124795585936,
+            -916.9910671174817
+          ],
+          "speed": 21.573447556939627,
+          "grounded": false,
+          "state": "air",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            3.15,
+            5.000000011920929,
+            -919.1453093285537
+          ],
+          "speed": 21.499026593563134,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        }
+      ],
+      "position": [
+        3.15,
+        5.000000011920929,
+        -919.1453093285537
+      ],
+      "grounded": true,
+      "lives": 99,
+      "deaths": 0,
+      "state": "ride",
+      "checkpoint": false,
+      "spawn": [
+        0,
+        12.85333334525426,
+        15
+      ],
+      "stamp": "Codex/sol fork · build 10-27 06:38 UTC"
+    },
+    {
+      "start": 1810,
+      "end": 1823,
+      "takeoff": {
+        "p": [
+          -3.15,
+          3.939763416569598,
+          -1807.870791590115
+        ],
+        "speed": 19.213638734469853,
+        "charge": 0.4,
+        "skating": true
+      },
+      "trace": [
+        {
+          "p": [
+            -3.15,
+            2.4399999988079073,
+            -1769
+          ],
+          "speed": 0,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            -3.15,
+            2.4399999988079073,
+            -1769.07
+          ],
+          "speed": 1.2,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            -3.15,
+            2.4399999988079073,
+            -1769.2599999999998
+          ],
+          "speed": 2.4,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            -3.15,
+            2.4399999988079073,
+            -1769.5699999999995
+          ],
+          "speed": 3.5999999999999988,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            -3.15,
+            2.4399999988079073,
+            -1769.999999999999
+          ],
+          "speed": 4.799999999999998,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            -3.15,
+            2.000000011920929,
+            -1770.9966666666662
+          ],
+          "speed": 6,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            -3.15,
+            2.000000011920929,
+            -1771.6666666666656
+          ],
+          "speed": 7.200000000000001,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            -3.15,
+            2.000000011920929,
+            -1772.456666666666
+          ],
+          "speed": 8.400000000000004,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            -3.15,
+            2.000000011920929,
+            -1773.3466666666666
+          ],
+          "speed": 9,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            -3.15,
+            2.000000011920929,
+            -1774.2466666666671
+          ],
+          "speed": 9,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            -3.15,
+            2.000000011920929,
+            -1775.1466666666677
+          ],
+          "speed": 9,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            -3.15,
+            2.000000011920929,
+            -1776.0466666666682
+          ],
+          "speed": 9,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            -3.15,
+            2.000000011920929,
+            -1776.9466666666688
+          ],
+          "speed": 9,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            -3.15,
+            2.000000011920929,
+            -1777.8466666666693
+          ],
+          "speed": 9,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.03333333333333333,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            -3.15,
+            2.000000011920929,
+            -1778.7466666666699
+          ],
+          "speed": 9,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.13333333333333333,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            -3.15,
+            2.000000011920929,
+            -1779.6466666666704
+          ],
+          "speed": 9,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.2333333333333333,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            -3.15,
+            2.000000011920929,
+            -1780.546666666671
+          ],
+          "speed": 9,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.3333333333333333,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            -3.15,
+            2.000000011920929,
+            -1781.4466666666715
+          ],
+          "speed": 9,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            -3.15,
+            2.000000011920929,
+            -1782.346666666672
+          ],
+          "speed": 9,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            -3.15,
+            2.000000011920929,
+            -1783.284166666672
+          ],
+          "speed": 9.750000000000002,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            -3.15,
+            2.000000011920929,
+            -1784.311666666672
+          ],
+          "speed": 10.650000000000004,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            -3.15,
+            2.000000011920929,
+            -1785.429166666672
+          ],
+          "speed": 11.550000000000006,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            -3.15,
+            2.000000011920929,
+            -1786.636666666672
+          ],
+          "speed": 12.450000000000008,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            -3.15,
+            2.000000011920929,
+            -1787.9341666666721
+          ],
+          "speed": 13.35000000000001,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            -3.15,
+            2.000000011920929,
+            -1789.321666666672
+          ],
+          "speed": 14.250000000000012,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            -3.15,
+            2.000000011920929,
+            -1790.799166666672
+          ],
+          "speed": 15.150000000000015,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            -3.15,
+            2.044737446986332,
+            -1792.3660336571609
+          ],
+          "speed": 16.01201942932892,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            -3.15,
+            2.2427986539076787,
+            -1793.9865344410628
+          ],
+          "speed": 16.437234378668688,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            -3.15,
+            2.4447626915367215,
+            -1795.6389674762095
+          ],
+          "speed": 16.794096389688516,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            -3.15,
+            2.651015100772403,
+            -1797.326487188138
+          ],
+          "speed": 17.148269247262505,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            -3.15,
+            2.86156268227119,
+            -1799.0491492185824
+          ],
+          "speed": 17.5023361579748,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            -3.15,
+            3.0764057185258156,
+            -1800.8069558788475
+          ],
+          "speed": 17.856398894347823,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            -3.15,
+            3.2955442211419896,
+            -1802.5999072638888
+          ],
+          "speed": 18.210461466250184,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            -3.15,
+            3.5189781905954916,
+            -1804.4280033775995
+          ],
+          "speed": 18.564524031672335,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            -3.15,
+            3.746707626905848,
+            -1806.2912442201387
+          ],
+          "speed": 18.91858659683916,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            -3.15,
+            3.978732530073851,
+            -1808.1896297915132
+          ],
+          "speed": 19.272649161995925,
+          "grounded": false,
+          "state": "air",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            -3.15,
+            5.120047211099187,
+            -1810.1168947077126
+          ],
+          "speed": 19.272649161995925,
+          "grounded": false,
+          "state": "air",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            -3.15,
+            5.931361892124522,
+            -1812.044159623912
+          ],
+          "speed": 19.272649161995925,
+          "grounded": false,
+          "state": "air",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            -3.15,
+            6.41304150551662,
+            -1813.9714245401115
+          ],
+          "speed": 19.272649161995925,
+          "grounded": false,
+          "state": "air",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            -3.15,
+            6.594204708898527,
+            -1815.8986894563109
+          ],
+          "speed": 19.272649161995925,
+          "grounded": false,
+          "state": "air",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            -3.15,
+            6.521321986591738,
+            -1817.8259543725103
+          ],
+          "speed": 19.272649161995925,
+          "grounded": false,
+          "state": "air",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            -3.15,
+            6.127725141233044,
+            -1819.7532192887097
+          ],
+          "speed": 19.272649161995925,
+          "grounded": false,
+          "state": "air",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            -3.15,
+            5.341882637913199,
+            -1821.6804842049091
+          ],
+          "speed": 19.272649161995925,
+          "grounded": false,
+          "state": "air",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            -3.15,
+            4.156040134593355,
+            -1823.6077491211086
+          ],
+          "speed": 19.272649161995925,
+          "grounded": false,
+          "state": "air",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            -3.15,
+            2.570197631273512,
+            -1825.535014037308
+          ],
+          "speed": 19.272649161995925,
+          "grounded": false,
+          "state": "air",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            -3.15,
+            2.000000011920929,
+            -1827.4595672531168
+          ],
+          "speed": 19.20759966988258,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        }
+      ],
+      "position": [
+        -3.15,
+        2.000000011920929,
+        -1828.0990096701555
+      ],
+      "grounded": true,
+      "lives": 99,
+      "deaths": 0,
+      "state": "ride",
+      "checkpoint": false,
+      "spawn": [
+        0,
+        12.85333334525426,
+        15
+      ],
+      "stamp": "Codex/sol fork · build 10-27 06:38 UTC"
+    },
+    {
+      "start": 2680,
+      "end": 2694,
+      "takeoff": {
+        "p": [
+          3.15,
+          4.458504157310839,
+          -2678.0241249234523
+        ],
+        "speed": 19.213638734469853,
+        "charge": 0.4,
+        "skating": true
+      },
+      "trace": [
+        {
+          "p": [
+            3.15,
+            2.500000011920929,
+            -2639
+          ],
+          "speed": 0,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            3.15,
+            2.500000011920929,
+            -2639.0500000000006
+          ],
+          "speed": 1,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            3.15,
+            2.500000011920929,
+            -2639.220000000001
+          ],
+          "speed": 2.2,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            3.15,
+            2.500000011920929,
+            -2639.5100000000016
+          ],
+          "speed": 3.399999999999999,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            3.15,
+            2.500000011920929,
+            -2639.920000000002
+          ],
+          "speed": 4.599999999999998,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            3.15,
+            2.500000011920929,
+            -2640.450000000002
+          ],
+          "speed": 5.799999999999999,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            3.15,
+            2.500000011920929,
+            -2641.100000000002
+          ],
+          "speed": 7.000000000000001,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            3.15,
+            2.500000011920929,
+            -2641.870000000002
+          ],
+          "speed": 8.200000000000003,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            3.15,
+            2.500000011920929,
+            -2642.7500000000023
+          ],
+          "speed": 9,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            3.15,
+            2.500000011920929,
+            -2643.650000000003
+          ],
+          "speed": 9,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            3.15,
+            2.500000011920929,
+            -2644.5500000000034
+          ],
+          "speed": 9,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            3.15,
+            2.500000011920929,
+            -2645.450000000004
+          ],
+          "speed": 9,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            3.15,
+            2.500000011920929,
+            -2646.3500000000045
+          ],
+          "speed": 9,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            3.15,
+            2.500000011920929,
+            -2647.250000000005
+          ],
+          "speed": 9,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            3.15,
+            2.500000011920929,
+            -2648.1500000000055
+          ],
+          "speed": 9,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.05,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            3.15,
+            2.500000011920929,
+            -2649.050000000006
+          ],
+          "speed": 9,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.15,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            3.15,
+            2.500000011920929,
+            -2649.9500000000066
+          ],
+          "speed": 9,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.24999999999999997,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            3.15,
+            2.500000011920929,
+            -2650.850000000007
+          ],
+          "speed": 9,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.35,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            3.15,
+            2.500000011920929,
+            -2651.7500000000077
+          ],
+          "speed": 9,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            3.15,
+            2.500000011920929,
+            -2652.6500000000083
+          ],
+          "speed": 9,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            3.15,
+            2.500000011920929,
+            -2653.602500000008
+          ],
+          "speed": 9.900000000000002,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            3.15,
+            2.500000011920929,
+            -2654.645000000008
+          ],
+          "speed": 10.800000000000004,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            3.15,
+            2.500000011920929,
+            -2655.7775000000083
+          ],
+          "speed": 11.700000000000006,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            3.15,
+            2.500000011920929,
+            -2657.000000000008
+          ],
+          "speed": 12.600000000000009,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            3.15,
+            2.500000011920929,
+            -2658.312500000008
+          ],
+          "speed": 13.50000000000001,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            3.15,
+            2.500000011920929,
+            -2659.7150000000083
+          ],
+          "speed": 14.400000000000013,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            3.15,
+            2.500000011920929,
+            -2661.207500000008
+          ],
+          "speed": 15.300000000000015,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            3.15,
+            2.5962783849547186,
+            -2662.7877322405384
+          ],
+          "speed": 16.101915002495534,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            3.15,
+            2.7949037054888226,
+            -2664.412848499454
+          ],
+          "speed": 16.497459126360738,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            3.15,
+            2.9975806184555296,
+            -2666.0711141509996
+          ],
+          "speed": 16.853154657372507,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            3.15,
+            3.2045488121150174,
+            -2667.764490280941
+          ],
+          "speed": 17.20728155970339,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            3.15,
+            3.415812299548514,
+            -2669.493009723579
+          ],
+          "speed": 17.561346659767267,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            3.15,
+            3.631371246732481,
+            -2671.256673836902
+          ],
+          "speed": 17.91540932480001,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            3.15,
+            3.851225660482805,
+            -2673.0554826766775
+          ],
+          "speed": 18.269471893891534,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            3.15,
+            4.075375541078819,
+            -2674.8894362451906
+          ],
+          "speed": 18.623534459202936,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            3.15,
+            4.3038208885321705,
+            -2676.758534542536
+          ],
+          "speed": 18.977597024365398,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0.4,
+          "jumpHeld": true
+        },
+        {
+          "p": [
+            3.15,
+            4.710609050985951,
+            -2678.664173944217
+          ],
+          "speed": 19.272649161995925,
+          "grounded": false,
+          "state": "air",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            3.15,
+            5.796923732011287,
+            -2680.5914388604165
+          ],
+          "speed": 19.272649161995925,
+          "grounded": false,
+          "state": "air",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            3.15,
+            6.553238413036621,
+            -2682.518703776616
+          ],
+          "speed": 19.272649161995925,
+          "grounded": false,
+          "state": "air",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            3.15,
+            6.981024409796188,
+            -2684.4459686928153
+          ],
+          "speed": 19.272649161995925,
+          "grounded": false,
+          "state": "air",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            3.15,
+            7.118687853922313,
+            -2686.3732336090147
+          ],
+          "speed": 19.272649161995925,
+          "grounded": false,
+          "state": "air",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            3.15,
+            6.9994131814610245,
+            -2688.300498525214
+          ],
+          "speed": 19.272649161995925,
+          "grounded": false,
+          "state": "air",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            3.15,
+            6.543269909198725,
+            -2690.2277634414136
+          ],
+          "speed": 19.272649161995925,
+          "grounded": false,
+          "state": "air",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            3.15,
+            5.690760739212213,
+            -2692.155028357613
+          ],
+          "speed": 19.272649161995925,
+          "grounded": false,
+          "state": "air",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            3.15,
+            4.438251569225703,
+            -2694.0822932738124
+          ],
+          "speed": 19.272649161995925,
+          "grounded": false,
+          "state": "air",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            3.15,
+            2.785742399239193,
+            -2696.009558190012
+          ],
+          "speed": 19.272649161995925,
+          "grounded": false,
+          "state": "air",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        },
+        {
+          "p": [
+            3.15,
+            2.6402169020183783,
+            -2697.926073256515
+          ],
+          "speed": 19.05778964834931,
+          "grounded": true,
+          "state": "ride",
+          "lives": 99,
+          "charge": 0,
+          "jumpHeld": false
+        }
+      ],
+      "position": [
+        3.15,
+        2.6515353192902746,
+        -2698.2429889401283
+      ],
+      "grounded": true,
+      "lives": 99,
+      "deaths": 0,
+      "state": "ride",
+      "checkpoint": false,
+      "spawn": [
+        0,
+        12.85333334525426,
+        15
+      ],
+      "stamp": "Codex/sol fork · build 10-27 06:38 UTC"
+    }
+  ],
+  "bank": {
+    "position": [
+      3.5,
+      10.059999994039536,
+      -813.9444444444422
+    ],
+    "grounded": true,
+    "lives": 99,
+    "deaths": 0,
+    "state": "ride",
+    "checkpoint": false,
+    "spawn": [
+      0,
+      12.85333334525426,
+      15
+    ],
+    "stamp": "Codex/sol fork · build 10-27 06:38 UTC"
+  },
+  "crumbleContact": {
+    "position": [
+      3.5,
+      9.742500005960464,
+      -818
+    ],
+    "grounded": true,
+    "lives": 99,
+    "deaths": 0,
+    "state": "ride",
+    "checkpoint": false,
+    "spawn": [
+      0,
+      12.85333334525426,
+      15
+    ],
+    "stamp": "Codex/sol fork · build 10-27 06:38 UTC"
+  },
+  "crumbleRecovery": {
+    "position": [
+      3.5,
+      8.279999999999998,
+      -818
+    ],
+    "grounded": true,
+    "lives": 99,
+    "deaths": 0,
+    "state": "ride",
+    "checkpoint": false,
+    "spawn": [
+      0,
+      12.85333334525426,
+      15
+    ],
+    "stamp": "Codex/sol fork · build 10-27 06:38 UTC"
+  },
+  "cargoHit": {
+    "position": [
+      -3.5,
+      4.000000011920929,
+      -531
+    ],
+    "grounded": true,
+    "lives": 98,
+    "deaths": 0,
+    "state": "dead",
+    "checkpoint": false,
+    "spawn": [
+      0,
+      12.85333334525426,
+      15
+    ],
+    "stamp": "Codex/sol fork · build 10-27 06:38 UTC"
+  },
+  "cargoWeave": {
+    "position": [
+      -2.244500000000001,
+      4.000000011920929,
+      -550.6778333333294
+    ],
+    "grounded": true,
+    "lives": 99,
+    "deaths": 0,
+    "state": "ride",
+    "checkpoint": false,
+    "spawn": [
+      0,
+      12.85333334525426,
+      15
+    ],
+    "stamp": "Codex/sol fork · build 10-27 06:38 UTC"
+  },
+  "checkpoint": {
+    "position": [
+      -3.5,
+      4.000000011920929,
+      -508.48111111111103
+    ],
+    "grounded": true,
+    "lives": 99,
+    "deaths": 0,
+    "state": "ride",
+    "checkpoint": true,
+    "spawn": [
+      -3.5,
+      4.10000001192093,
+      -510
+    ],
+    "stamp": "Codex/sol fork · build 10-27 06:38 UTC"
+  },
+  "pitRespawn": {
+    "position": [
+      -3.5,
+      4.000000011920929,
+      -510
+    ],
+    "grounded": true,
+    "lives": 98,
+    "deaths": 0,
+    "state": "ride",
+    "checkpoint": true,
+    "spawn": [
+      -3.5,
+      4.10000001192093,
+      -510
+    ],
+    "stamp": "Codex/sol fork · build 10-27 06:38 UTC"
+  },
+  "finish": {
+    "position": [
+      0,
+      7.726666669150194,
+      -3003.4000000000033
+    ],
+    "grounded": true,
+    "lives": 99,
+    "deaths": 0,
+    "state": "finished",
+    "checkpoint": false,
+    "spawn": [
+      0,
+      12.85333334525426,
+      15
+    ],
+    "stamp": "Codex/sol fork · build 10-27 06:38 UTC"
+  },
+  "pass": true,
+  "finished": "2026-10-27T06:44:59.955Z"
+}

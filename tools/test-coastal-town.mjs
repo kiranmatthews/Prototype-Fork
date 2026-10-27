@@ -18,8 +18,9 @@ try{
  const baseline=JSON.parse(await readFile(new URL('./coastal-town-assets/gameplay-baseline.json',import.meta.url),'utf8'));
  const stripVisual=x=>({...x,components:x.components.map(({uvs,normals,colors,...c})=>c)});
  // Beach Street deliberately expands its encounters. The imported road,
- // original stairs/rails/gaps, cameras and original collectibles stay intact.
- const routeOnly=x=>({...x,components:x.components.filter(c=>c.t!=='enemy'&&!(c.t==='rail'&&c.pts?.length>2&&Math.abs(c.p[0])<7))});
+ // original stairs/rails/gaps and cameras stay intact. Fruit keeps count and
+ // lane/station; its height is separately checked against physical surfaces.
+ const routeOnly=x=>({...x,components:x.components.filter(c=>c.t!=='enemy'&&!(c.t==='rail'&&c.pts?.length>2&&Math.abs(c.p[0])<7)).map(c=>c.t==='wumpa'?{...c,p:[c.p[0],0,c.p[2]]}:c)});
  const originalMain={...main,components:main.components.filter(c=>c.grp!==11&&!c.nm?.startsWith('street rail '))};
  assert.deepEqual(routeOnly(JSON.parse(JSON.stringify(gameplay(originalMain)))),routeOnly(stripVisual(baseline.main)),'Original road, gap bridges, boundary/stair rails, cameras or collectibles changed');
  if(!mainOnly)assert.deepEqual(JSON.parse(JSON.stringify(gameplay(bonus))),stripVisual(baseline.bonus),'Bonus puzzle physics/cameras/actors changed');

@@ -1,0 +1,19 @@
+Validated 12 published level(s).
+┌─────────┬─────────────────────────┬────────────┬───────────────────┐
+│ (index) │ id                      │ components │ span              │
+├─────────┼─────────────────────────┼────────────┼───────────────────┤
+│ 0       │ 'flats'                 │ 332        │ '128.0 × 468.0'   │
+│ 1       │ 'sky'                   │ 304        │ '59.0 × 246.0'    │
+│ 2       │ 'test'                  │ 4082       │ '205.6 × 2363.4'  │
+│ 3       │ 'custard-creek'         │ 3961       │ '982.7 × 806.6'   │
+│ 4       │ 'bonus-custard-creek'   │ 314        │ '107.0 × 77.4'    │
+│ 5       │ 'jungle-terraces'       │ 5732       │ '340.4 × 209.5'   │
+│ 6       │ 'bonus-jungle-terraces' │ 132        │ '129.0 × 38.8'    │
+│ 7       │ 'drowned-crown'         │ 1446       │ '1404.0 × 1129.0' │
+│ 8       │ 'slipstream-race'       │ 3888       │ '1156.2 × 3244.3' │
+│ 9       │ 'country-club'          │ 3750       │ '1130.6 × 1520.6' │
+│ 10      │ 'rooftop-relay'         │ 2216       │ '650.1 × 1998.3'  │
+│ 11      │ 'coconut-cart-rally'    │ 1479       │ '257.7 × 2353.7'  │
+└─────────┴─────────────────────────┴────────────┴───────────────────┘
+PASS Beach Street patrol support, physical obstacle tops, sentry cover, safe checkpoints, live timing windows and spatial shoreline {"components":6415,"enemies":41,"crushers":8,"crumbles":3,"pendulums":3,"islands":5}
+Coastal art: 6415 main components. Original main road/cameras preserved; spatial offshore islands and 16 textured Meshy components verified. Bonus excluded from this main-course check.

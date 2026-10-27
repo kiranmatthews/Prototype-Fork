@@ -1,0 +1,240 @@
+{
+  "base": "http://127.0.0.1:5288",
+  "full": true,
+  "visual": true,
+  "started": "2026-10-27T07:07:35.748Z",
+  "errors": [],
+  "failed": [],
+  "captures": [
+    {
+      "name": "cargo",
+      "camera": [
+        0,
+        9.319999990463256,
+        -515.8
+      ],
+      "buffer": [
+        1920,
+        1080
+      ],
+      "resolution": "max",
+      "assets": {
+        "components": 3907,
+        "placements": 3907,
+        "ready": 1358,
+        "skipped": 0,
+        "draws": 464,
+        "triangles": 2975877,
+        "allLodTriangles": 2975877,
+        "cells": 1338,
+        "residentCells": 464,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 15,
+        "textureMiB": 26.67,
+        "errors": [],
+        "windTime": 14.416666666666963,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "reduced": 0
+    },
+    {
+      "name": "transfer",
+      "camera": [
+        0,
+        13.800000011920927,
+        -788.8
+      ],
+      "buffer": [
+        1920,
+        1080
+      ],
+      "resolution": "max",
+      "assets": {
+        "components": 3907,
+        "placements": 3907,
+        "ready": 1373,
+        "skipped": 0,
+        "draws": 462,
+        "triangles": 3006186,
+        "allLodTriangles": 3006186,
+        "cells": 1338,
+        "residentCells": 462,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 15,
+        "textureMiB": 26.67,
+        "errors": [],
+        "windTime": 19.08333333333353,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "reduced": 0
+    },
+    {
+      "name": "surf",
+      "camera": [
+        0,
+        11.415384615384616,
+        -1532.8
+      ],
+      "buffer": [
+        1920,
+        1080
+      ],
+      "resolution": "max",
+      "assets": {
+        "components": 3907,
+        "placements": 3907,
+        "ready": 1373,
+        "skipped": 0,
+        "draws": 452,
+        "triangles": 3008697,
+        "allLodTriangles": 3008697,
+        "cells": 1338,
+        "residentCells": 452,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 15,
+        "textureMiB": 26.67,
+        "errors": [],
+        "windTime": 26.24999999999979,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "reduced": 0
+    },
+    {
+      "name": "gap-approach",
+      "camera": [
+        0,
+        8.800000011920929,
+        -407.8
+      ],
+      "buffer": [
+        1920,
+        1080
+      ],
+      "resolution": "max",
+      "assets": {
+        "components": 3907,
+        "placements": 3907,
+        "ready": 1267,
+        "skipped": 0,
+        "draws": 433,
+        "triangles": 2782489,
+        "allLodTriangles": 2782489,
+        "cells": 1338,
+        "residentCells": 433,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 15,
+        "textureMiB": 26.67,
+        "errors": [],
+        "windTime": 30.633333333332875,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "reduced": 0
+    },
+    {
+      "name": "stairs",
+      "camera": [
+        0,
+        8.800000011920929,
+        -322.8
+      ],
+      "buffer": [
+        1920,
+        1080
+      ],
+      "resolution": "max",
+      "assets": {
+        "components": 3907,
+        "placements": 3907,
+        "ready": 1203,
+        "skipped": 0,
+        "draws": 414,
+        "triangles": 2636130,
+        "allLodTriangles": 2636130,
+        "cells": 1338,
+        "residentCells": 414,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 15,
+        "textureMiB": 26.67,
+        "errors": [],
+        "windTime": 40.48333333333232,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "reduced": 0
+    }
+  ],
+  "spawn": {
+    "position": [
+      0,
+      12.736666678364077,
+      15
+    ],
+    "grounded": true,
+    "lives": 4,
+    "deaths": 0,
+    "state": "ride",
+    "checkpoint": false,
+    "spawn": [
+      0,
+      12.85333334525426,
+      15
+    ],
+    "stamp": "Codex/sol fork · build 10-27 07:01 UTC"
+  },
+  "source": {
+    "components": 6416,
+    "enemies": 41,
+    "kinds": [
+      "grunt",
+      "turtle",
+      "hopper",
+      "spiker",
+      "spinner",
+      "sentry",
+      "charger",
+      "floater"
+    ],
+    "mattes": 0
+  },
+  "pass": true,
+  "finished": "2026-10-27T07:08:49.830Z"
+}

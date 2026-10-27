@@ -1,0 +1,1 @@
+PASS Beach Street patrol support, physical obstacle tops, sentry cover, safe checkpoints, live timing windows and spatial shoreline {"components":6415,"enemies":41,"crushers":8,"crumbles":3,"pendulums":3,"islands":5}
