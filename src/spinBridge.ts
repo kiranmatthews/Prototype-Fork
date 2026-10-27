@@ -1,7 +1,8 @@
 import * as THREE from 'three';
 import type { CustomComponent } from './level';
 
-/** A Great Gate-style timber plank adapted to latch after its first spin.
+/** A spin-operated timber. Existing courses latch it after their first spin;
+ * an authored hold time makes it a repeatable opening/hold/folding cycle.
  * p is the hinge at deployed deck height; s is [span, thickness, width].
  * Local +X is the receiving direction, rotated by the authored yaw.
  */
@@ -16,11 +17,22 @@ export class SpinBridge {
   private progress = 0;
   private readonly duration: number;
   private readonly leaf = new THREE.Group();
+  private readonly hold: number | null;
+  private holdRemaining = 0;
+  private closing = false;
+  private readonly lamps: THREE.Mesh<THREE.BoxGeometry, THREE.MeshLambertMaterial>[] = [];
+
+  get remaining(): number { return this.holdRemaining; }
+  get timed(): boolean { return this.hold !== null; }
+  get state(): 'closed' | 'opening' | 'open' | 'closing' {
+    return !this.activated ? 'closed' : this.closing ? 'closing' : this.deployed ? 'open' : 'opening';
+  }
 
   constructor(parent: THREE.Group, component: CustomComponent, material: THREE.Material) {
     this.component = JSON.parse(JSON.stringify(component));
     const [span, thickness, width] = component.s ?? [5, .36, 1.2];
     this.duration = Math.max(.15, Math.min(2, component.cycle ?? .55));
+    this.hold = component.hold === undefined ? null : Math.max(1, Math.min(60, component.hold));
     this.pivot.position.set(...component.p);
     this.pivot.rotation.y = THREE.MathUtils.degToRad(component.yaw ?? 0);
     this.pivot.name = component.nm ?? 'Spin-deploying timber bridge';
@@ -41,12 +53,19 @@ export class SpinBridge {
     target.rotation.x = Math.PI / 2;
     target.position.set(-span / 2 + .8, 0, width / 2 + .025);
     this.mesh.add(target);
+    if (this.hold !== null) for (let i = 0; i < 4; i++) {
+      const lamp = new THREE.Mesh(new THREE.BoxGeometry(.2, .035, Math.min(width * .55, 1.8)),
+        new THREE.MeshLambertMaterial({color:'#71d2b1',emissive:'#123e32'}));
+      lamp.position.set(-span/2 + .65 + i * .36, thickness / 2 + .025, 0);
+      this.mesh.add(lamp); this.lamps.push(lamp);
+    }
     parent.add(this.pivot); this.restore(false);
   }
 
   trigger(hitBox: THREE.Box3): boolean {
     if (this.activated || !hitBox.intersectsBox(this.hitBox)) return false;
     this.activated = true;
+    this.holdRemaining = this.hold ?? 0;
     // The moving leaf is not a stable support. Its receiving floor becomes
     // available only once it has visibly settled into the horizontal pose.
     this.wallBox.makeEmpty();
@@ -54,23 +73,57 @@ export class SpinBridge {
   }
 
   update(dt: number): void {
-    if (!this.activated || this.deployed) return;
-    this.progress = Math.min(1, this.progress + Math.max(0, dt) / this.duration);
+    if (!this.activated || this.deployed && this.hold === null) return;
+    let elapsed = Math.max(0, Number.isFinite(dt) ? dt : 0);
+    if (!this.deployed && !this.closing) {
+      const used = Math.min(elapsed, (1 - this.progress) * this.duration);
+      this.progress = Math.min(1, this.progress + used / this.duration);
+      elapsed -= used;
+      if (this.progress >= 1 - 1e-9) { this.progress = 1; this.deployed = true; }
+    }
+    if (this.deployed && this.hold !== null) {
+      const used = Math.min(elapsed, this.holdRemaining);
+      this.holdRemaining = Math.max(0, this.holdRemaining - used);
+      elapsed -= used;
+      if (this.holdRemaining <= 1e-9) {
+        this.holdRemaining = 0; this.deployed = false; this.closing = true;
+      }
+    }
+    if (this.closing) {
+      this.progress = Math.max(0, this.progress - elapsed / this.duration);
+      if (this.progress <= 1e-9) { this.restore(false); return; }
+    }
     const t = this.progress * this.progress * (3 - 2 * this.progress);
     this.leaf.rotation.z = Math.PI / 2 * (1 - t);
     this.pivot.updateMatrixWorld(true);
     this.hitBox.setFromObject(this.mesh);
-    this.deployed = this.progress === 1;
+    this.updateLamps();
   }
 
-  /** Checkpoints bank the latch, so restoring an in-flight activation settles it. */
+  private updateLamps(): void {
+    if (this.hold === null) return;
+    const fraction = this.deployed ? this.holdRemaining / this.hold : this.activated ? 0 : 1;
+    const warning = this.deployed && this.holdRemaining <= Math.min(1.4, this.hold * .35);
+    const pulse = warning && Math.sin(this.holdRemaining * 22) > 0;
+    this.lamps.forEach((lamp, index) => {
+      const lit = fraction > index / this.lamps.length;
+      lamp.material.color.set(lit ? warning ? '#efb64f' : '#71d2b1' : '#435750');
+      lamp.material.emissive.set(lit ? pulse ? '#b34516' : '#123e32' : '#000000');
+    });
+  }
+
+  /** Permanent latches are banked. Timed bridges restart closed at safe checkpoints. */
   restore(activated: boolean): void {
+    if (this.hold !== null) activated = false;
     this.activated = this.deployed = activated;
+    this.closing = false;
+    this.holdRemaining = 0;
     this.progress = activated ? 1 : 0;
     this.leaf.rotation.z = activated ? 0 : Math.PI / 2;
     this.pivot.updateMatrixWorld(true);
     this.hitBox.setFromObject(this.mesh);
     if (activated) this.wallBox.makeEmpty();
     else this.wallBox.copy(this.hitBox);
+    this.updateLamps();
   }
 }

@@ -8724,9 +8724,10 @@ export class Editor {
       sizeRow(2, "width");
       num("yaw °", () => c.yaw ?? 0, value => { c.yaw = value; }, 15);
       num("opening time (s)", () => c.cycle ?? 0.55, value => { c.cycle = Math.max(0.15, Math.min(2, value)); }, 0.05);
+      num("open duration (s; 0 = latched)", () => c.hold ?? 0, value => { if (value <= 0) delete c.hold; else c.hold = Math.max(1, Math.min(60, value)); }, 0.5);
       colorRow();
       const note = document.createElement("div"); note.className = "ed-dim";
-      note.textContent = "Spin the raised timber to lower it. Its position is the hinge at the deployed deck height.";
+      note.textContent = "Spin the raised timber to lower it. A duration adds countdown lamps and automatic folding; 0 keeps a permanent latch. Position is the hinge at deployed deck height.";
       this.propsEl.appendChild(note);
     } else if (c.t === "crumble") {
       sizeRow(1, "thickness");

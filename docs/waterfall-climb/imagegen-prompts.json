@@ -1,0 +1,14 @@
+{
+  "tool": "Built-in image_gen",
+  "generatedAt": "2026-10-27 07:31 UTC",
+  "assets": [
+    {
+      "file": "public/waterfall-climb/wet-basalt.webp",
+      "prompt": "Use case: stylized-concept. Asset type: seamless square 1024x1024 albedo texture for the actual walkable stone platforms and carved cliff terraces of a lush waterfall climbing game. Primary request: create a richly hand-painted wet basalt paving material, bold readable large stone forms in a polished colorful 3D platformer aesthetic. Orthographic directly overhead, surface fills the entire image. Broad rounded weathered grey basalt slabs, muted warm grey flat centers, deep cool teal crevices, restrained emerald moss tucked into cracks, occasional tiny lichen flecks. The stones feel ancient, washed smooth by river water; edges softly chipped, tactile painted detail, balanced contrast and visible broad planes. Seamlessly tile on every side, evenly distributed pattern, flat diffuse lighting, no cast shadows, no perspective, no border, no objects, no text, no symbols, no water surface, no black voids. This will repeat on gameplay platforms, so keep the central stone faces calm and bright enough to read player silhouettes."
+    },
+    {
+      "file": "public/waterfall-climb/sluice-timber.webp",
+      "prompt": "Use case: stylized-concept. Asset type: seamless square 1024x1024 albedo texture for the actual timed folding timber platforms in a lush waterfall platformer game. Primary request: richly hand-painted old river sluice planking in a polished colorful 3D platformer aesthetic. Orthographic top-down flat material filling the frame. Four broad parallel honey-brown hardwood boards running vertically, deeply weathered warm golden grain, rounded worn seams, small dark wooden pegs, faint remnants of turquoise paint as sparse curling water-flow carvings etched in the wood. Broad calm readable surfaces, tactile lovingly painted detail, strong warm contrast against a cool green waterfall gorge. Seamlessly tile on every side, even diffuse illumination, no perspective, no cast shadows, no border, no black voids, no words, no logos, no metal fittings, no unrelated objects."
+    }
+  ]
+}

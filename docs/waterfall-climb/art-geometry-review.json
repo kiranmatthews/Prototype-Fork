@@ -1,0 +1,23 @@
+{
+  "method": "Source mesh triangle intersections and conservative full prop bounds against a recorded real-camera journey; not a replacement for rendered review.",
+  "traceFile": "docs/waterfall-climb/runs/greybox-full/full-journey.json",
+  "levels": {
+    "main": {
+      "components": 1581,
+      "noncollidingScenery": 802,
+      "authoredMeshVertices": 20618,
+      "authoredMeshTriangles": 31600,
+      "degenerateTriangles": 0,
+      "cameraBodySamples": 332,
+      "rejectedBroadBounds": 18,
+      "cameraBodyHits": []
+    },
+    "bonus": {
+      "components": 176,
+      "noncollidingScenery": 100,
+      "authoredMeshVertices": 10016,
+      "authoredMeshTriangles": 17084,
+      "degenerateTriangles": 0
+    }
+  }
+}

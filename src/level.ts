@@ -144,7 +144,7 @@ import { JUNGLE_CUP_LEVEL } from "./levels/jungle-cup";
 import { JUNGLE_TERRACES_LEVEL } from "./levels/jungle-sequels";
 import { PIRATE_WRECK_LEVEL } from './levels/pirate-wreck';
 import { CROWN_TEXTURE_KINDS, isCrownTexture, crownTextureFile, createCrownSurface, createCrownQuartz, isCrownWater, crownWaterReflectionFile, createCrownWater, createDrownedHarbourOceanLook } from './drownedCrownAssets';
-import { CAVE_COLLAPSE_LEVEL, CODEX_LAB_LEVEL, WAREHOUSE_REFERENCE_LEVEL, SCHOOL_MIAMI_LEVEL, WAREHOUSE_PARK_LEVEL, ROOFTOP_RELAY_LEVEL } from "./levels/codex-lab";
+import { CAVE_COLLAPSE_LEVEL, CODEX_LAB_LEVEL, WAREHOUSE_REFERENCE_LEVEL, SCHOOL_MIAMI_LEVEL, WAREHOUSE_PARK_LEVEL, ROOFTOP_RELAY_LEVEL, WATERFALL_CLIMB_LEVEL } from "./levels/codex-lab";
 import { JUNGLE_MINEFIELD_LEVEL } from "./levels/jungle-minefield";
 import { COUNTRY_CLUB_LEVEL } from "./levels/country-club";
 import { isPreviousCountryClubStock } from "./levels/country-club-stock";
@@ -757,7 +757,7 @@ export interface CustomComponent {
     | "enemy" // patrols along X around p, range each way
     | "crusher" // stomping block: p = [x, deckY, z], s = [w,-,d], cycle seconds, phase
     | "mover" // moving platform: p = [x, topY, z], s = [w,-,d], axis x/y/z, amp = travel each way, speed, phase
-    | "spinbridge" // spin-deployed timber: p = hinge/deployed deck height, s = [span,thickness,width], local +X before yaw, cycle = opening seconds; latches until reset
+    | "spinbridge" // spin-deployed timber: p = hinge/deployed deck height, s = [span,thickness,width], local +X before yaw, cycle = opening seconds; hold = optional deployed seconds before folding, otherwise latches until reset
     | "firetiki" // turning carved head: yaw base direction, amp sweep degrees, range fire reach, cycle/phase seconds
     | "torch" // fire on a bracket: p = base of the post, rise = post height, w = flame scale. THE light source in a dark level — it burns, flickers, throws embers and lights what's around it
     | "phasepad" // platform that FLIPS between solid+burning and ghost+dark: p = top center, s = [w,-,d], cycle = seconds for a full on/off round, phase offsets it, amp = the on-share of that round (0.5 = half lit). Runs a warning pulse before it goes
@@ -875,6 +875,7 @@ export interface CustomComponent {
   scenerySolid?: boolean; // explicit hard/soft override for rendered scenery; native gameplay support remains authored
   solid?: boolean; // wallpath: false makes a visual-only scenery sweep (earth banks/backdrops)
   cycle?: number;
+  hold?: number; // spinbridge only: deployed seconds before it folds closed; absent keeps a permanent latch
   phase?: number;
   amp?: number;
   seed?: number; // rock: shapes the jitter deterministically
@@ -1059,6 +1060,8 @@ export const TEX_KINDS = [
   "custard-pool-bed",
   "custard-foam",
   "custard-cascade",
+  "waterfall-basalt",
+  "waterfall-timber",
 
   ...NIGHTWORKS_VOLCANO_TEXTURES,
   ...ROOM_TEXTURE_KINDS,
@@ -2614,6 +2617,7 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
     data: CODEX_LAB_LEVEL,
   }, // source-owned long course for fast, isolated geometry iterations
   { id: "cave-collapse", name: CAVE_COLLAPSE_LEVEL.name, data: CAVE_COLLAPSE_LEVEL },
+  { id: 'waterfall-climb', name: WATERFALL_CLIMB_LEVEL.name, data: WATERFALL_CLIMB_LEVEL },
   { id: "jungle-minefield", name: JUNGLE_MINEFIELD_LEVEL.name, data: JUNGLE_MINEFIELD_LEVEL },
   { id: "rooftop-relay", name: ROOFTOP_RELAY_LEVEL.name, data: ROOFTOP_RELAY_LEVEL },
   { id: 'mall', name: MALL_LEVEL.name, data: MALL_LEVEL },
@@ -2724,7 +2728,7 @@ const COMPONENT_DATA_KEYS = new Set([
   "edgeGrinding", "ridgeGrinding", "flatShading", "grindTopTriangles", "cameraView", "cameraPresentationOnly", "cameraPosition", "cameraTarget", "cameraFov", "cameraAspect", "cameraFollowDistance", "cameraKeepDistance", "cameraFollowTargetHeight", "cameraIntroDistance", "cameraCutaway", "len", "rise", "w", "yaw", "axis", "travelSign", "travelPhase", "vkind", "arc", "arcSteps", "deck",
   "closed", "bank", "curve", "vert", "lipRise", "outerBank", "depthBias", "shake", "kind", "dkind", "vr", "tn",
   "lit", "berms", "n", "outline", "range", "speed", "foe", "kookRole", "alertGroup", "invisible", "solid", "scenerySolid", "solidSides", "hangLock",
-  "cycle", "phase", "amp", "seed", "scaffold", "supports", "rails", "coping", "spacing",
+  "cycle", "hold", "phase", "amp", "seed", "scaffold", "supports", "rails", "coping", "spacing",
   "baySpacing", "supportDepth", "supportBaseY", "terrainSupports", "structureStyle",
   "plankPalette", "polePalette", "shoreProfile", "shoreSeaLevel", "shorePhase",
   "trick", "exitYaw", "airOnly", "coverage", "radius", "color", "tex", "dir",
@@ -2939,7 +2943,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
   const numericKeys: (keyof CustomComponent)[] = [
     "minefieldTrap", "loopRadius", "loopOffset",
     "len", "rise", "w", "yaw", "arc", "arcSteps", "deck", "lipRise", "outerBank", "depthBias", "bank", "shake", "range",
-    "speed", "cycle", "phase", "travelPhase", "amp", "seed", "n", "vr", "tn", "spacing",
+    "speed", "cycle", "hold", "phase", "travelPhase", "amp", "seed", "n", "vr", "tn", "spacing",
     "baySpacing", "supportDepth", "exitYaw", "coverage", "radius",
     "collisionHeight", "supportBaseY", "shoreSeaLevel", "shorePhase", "cameraFollowDistance", "cameraFollowTargetHeight", "cameraIntroDistance", "iceGrip", "groundSpeedLimit",
   ];
@@ -3154,6 +3158,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
       component.pts.some(p => (p[2] ?? 0) !== 0) || component.collisionHeight !== undefined ||
       Math.hypot(component.pts[1][0] - component.pts[0][0], component.pts[1][1] - component.pts[0][1]) < .02
     )) return null;
+    if (component.hold !== undefined && (component.t !== 'spinbridge' || component.hold < 1 || component.hold > 60)) return null;
     if (component.t === 'spinbridge' && (component.s?.some(value => value <= 0) ||
       component.outline || component.solid === false ||
       (component.cycle !== undefined && component.cycle <= 0))) return null;
@@ -4825,6 +4830,11 @@ export class Level {
       return texture;
     }
     if(kind==='coast-terrain')return this.surfaceTexture('coast-bedrock');
+    if(kind==='waterfall-basalt'||kind==='waterfall-timber'){
+      const file=kind==='waterfall-basalt'?'wet-basalt':'sluice-timber';
+      const texture=Level.finishTex(this.surfaceImage(`waterfall-climb/${file}.webp`));
+      this.surfTexCache.set(kind,texture);return texture;
+    }
     if(kind==='custard-sandstone'){
       const texture=Level.finishTex(this.surfaceImage('custard-creek/sandstone-albedo.webp'));
       this.surfTexCache.set(kind,texture);return texture;

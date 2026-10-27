@@ -1,0 +1,26 @@
+{
+  "newRuntimeAssets": [
+    {
+      "file": "public/waterfall-climb/README.txt",
+      "bytes": 1161,
+      "sha256": "3b014f5a8788357b3d52a76eca2341d297ec788008a0319d691346dded911076"
+    },
+    {
+      "file": "public/waterfall-climb/sluice-timber.webp",
+      "bytes": 310936,
+      "sha256": "3aba677629cfed4f6d3cd16c1b2c199c16bcc5d7ed32b7d7ab4eb070afdabb7f",
+      "width": 1024,
+      "height": 1024
+    },
+    {
+      "file": "public/waterfall-climb/wet-basalt.webp",
+      "bytes": 243726,
+      "sha256": "45a9838b8e3938b787d5cf6abd44066b87ed192532b7111fdddf0aaa94bad4b3",
+      "width": 1024,
+      "height": 1024
+    }
+  ],
+  "totalBytes": 555823,
+  "newModelDownloads": 0,
+  "geometryPolicy": "Reuse the full authored source geometry at every distance and in reflections."
+}
