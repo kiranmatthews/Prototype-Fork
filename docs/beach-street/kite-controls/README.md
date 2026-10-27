@@ -73,3 +73,9 @@ queue's `run_heavy.py` guard. Do not run `check:all` for this increment.
 
 The feature branch is local. The appointed coordinator owns integration and
 publishing. No global tuning or published level-pack snapshot is changed.
+
+The independent review after handoff passes seven input-edge cases: coyote
+release, single consumption, landing buffer, expired buffer, cancellation
+overriding release, reset discarding pending charge, and each fresh face-button
+start. This extends `motion.json` without changing gameplay or invalidating the
+production build/browser evidence.

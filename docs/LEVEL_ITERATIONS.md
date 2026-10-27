@@ -5348,3 +5348,9 @@ planter placement preserves a 30 cm guide margin outside the retained stairs.
 MAX/native and normal CRT views were reviewed; console, request and asset
 error lists are empty. The visible preview was restarted and reloaded to this
 build. Source, report and screenshot hashes are in `verification.json`.
+
+After handing off gameplay commit `91e97b24`, the independent lightweight
+motion review passed seven release/coyote/landing-buffer/cancellation/reset
+cases, including fresh starts from every face button. This is a separate
+test/evidence increment: no runtime or level changes, so the production
+build and complete-browser evidence remain valid.

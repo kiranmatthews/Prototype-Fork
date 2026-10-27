@@ -143,5 +143,14 @@
         0.3971928022706691
       ]
     }
+  ],
+  "edgeReview": [
+    "release within coyote window",
+    "release consumed once",
+    "air release buffers through a near landing",
+    "expired buffer cannot jump on landing",
+    "cancel overrides simultaneous release",
+    "reset discards pending charge and buffer",
+    "each fresh face-button edge starts the tow"
   ]
 }

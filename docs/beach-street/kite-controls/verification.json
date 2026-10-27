@@ -17,7 +17,7 @@
     "src/main.ts": "c79b9d3a7b715c42d16521c09bbba4dd22db06130a2d08d3b191496fe2f97119",
     "src/character/breakApart.ts": "d124a6b8ac8ed169bb4aae378c9744a76f85fac1b6d2ddc831a562a7203ed618",
     "src/levels/beach-street-gameplay.ts": "b1d7a79e7e7b75be13a1712d509d622dacda410f6592a6247c19b8d6844f60c1",
-    "tools/test-kite-motion.mjs": "263258d9e528c1848fb44d529deb9d8f30fe1947ff227b965dbde83e7b0dc908",
+    "tools/test-kite-motion.mjs": "110271d506cee884062d395e24fbaa0a778d058876afb957359dba13c13f1ca9",
     "tools/test-kite-controls.mjs": "aab39efed671281d24eb334b11af0bf105bfa2675f9efcfbb5cbcfaf2cc1b6ea",
     "tools/test-beach-kite.mjs": "f7acf170d204bf26c9531ccb1b4e75db23a2b867f36eeea8aa83e3d9a51613d8",
     "tools/kite-controls-browser.mjs": "5631c4cc0f8892444848f9dae4e2d1cc15506ae9bb56b3b5b12d8a60e03d9ddb",
@@ -26,7 +26,7 @@
     "tools/validate-beach-kite.mjs": "51cb488a73ae60689501ce34e4e45a4ebc0f3ccb77c2ed3578bee725b808432b"
   },
   "reportSha256": {
-    "motion.json": "3eb6bfffd97ba808eefe4a0644198d591b9ea441c9a72d54d52523e3fed87323",
+    "motion.json": "0c356a3a499fbe8eded1aff3069f0b7b1706b59991e7ad33a6d113c236b3b7b1",
     "native-controls.json": "635858796cb2aada2bbce7145217fe44bde5432e4bf4ada400b33431eed98f9d",
     "native.json": "d8d3e26fb035ce6ff547106e3cbba596a1b8f8db44509ffd697482fc7df25452",
     "pacing-review.json": "b89ea6aed53611353c6bd5d29f916166303198245b1161db468f90f9bbfe642b",
@@ -153,5 +153,21 @@
       "No public/levels.json overwrite",
       "No publishing or GitHub polling"
     ]
+  },
+  "gameplayCommit": "91e97b24d2bf64e576d7b9e44857749692a4fb54",
+  "independentReview": {
+    "completedAt": "2026-10-27T19:59:36.143803+00:00",
+    "pass": true,
+    "command": "node tools/test-kite-motion.mjs",
+    "cases": [
+      "release within coyote window",
+      "release consumed once",
+      "air release buffers through a near landing",
+      "expired buffer cannot jump on landing",
+      "cancel overrides simultaneous release",
+      "reset discards pending charge and buffer",
+      "each fresh face-button edge starts the tow"
+    ],
+    "scope": "Test/evidence only after gameplay handoff. Runtime and level hashes unchanged; existing production build/browser evidence remains valid."
   }
 }

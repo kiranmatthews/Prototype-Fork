@@ -42,6 +42,29 @@ const wind=seed=>{const w=new KiteTowMotion(seed);let prev=0,maxDelta=0,lo=1,hi=
 const winds=[wind(1),wind(92)];assert.notDeepEqual(winds[0].samples,winds[1].samples);
 for(const w of winds){assert.ok(w.lo<-.2&&w.hi>.2);assert.ok(w.maxDelta<.05);assert.ok(Math.abs(w.x)>1);}
 m.reset();for(let i=0;i<180;i++)assert.equal(step({...idle,jumpHeld:true}).dz,0,'Held input from death cannot restart');
-const report={pass:true,chargeSeconds:tuning.jumpChargeTime,chargeAcceleration:tuning.chargeBoost,storedBrakeEnergy:stored,maxReturnSpeedDelta:maxDelta,winds};
+// Review boundary inputs separately from the connected route: a late release
+// may use coyote time or a landing buffer, but cancellation/reset must erase it.
+const edges=[];
+const prepare=()=>{m.reset(53);step({...idle,jumpPressed:true,jumpHeld:true});for(let i=0;i<30;i++)step({...idle,jumpHeld:true});};
+prepare();for(let i=0;i<4;i++)step({...idle,jumpHeld:true},false);
+assert.equal(step({...idle,jumpReleased:true},false).jumpCharge,.4);edges.push('release within coyote window');
+assert.equal(step(idle,false).jumpCharge,null,'A release is consumed once');edges.push('release consumed once');
+prepare();for(let i=0;i<12;i++)step({...idle,jumpHeld:true},false);
+assert.equal(step({...idle,jumpReleased:true},false).jumpCharge,null);
+for(let i=0;i<4;i++)step(idle,false);
+assert.equal(step().jumpCharge,.4);edges.push('air release buffers through a near landing');
+prepare();for(let i=0;i<12;i++)step({...idle,jumpHeld:true},false);
+step({...idle,jumpReleased:true},false);for(let i=0;i<12;i++)step(idle,false);
+assert.equal(step().jumpCharge,null);edges.push('expired buffer cannot jump on landing');
+prepare();assert.equal(step({...idle,jumpCancelled:true,jumpReleased:true}).jumpCharge,null);
+assert.equal(m.charge,0);assert.equal(m.charging,false);edges.push('cancel overrides simultaneous release');
+prepare();for(let i=0;i<12;i++)step({...idle,jumpHeld:true},false);
+step({...idle,jumpReleased:true},false);m.reset(53);
+assert.equal(step({...idle,jumpReleased:true}).jumpCharge,null);assert.equal(m.started,false);
+assert.equal(step({...idle,spinPressed:true}).jumpCharge,null);edges.push('reset discards pending charge and buffer');
+for(const button of ['jumpPressed','spinPressed','grindPressed','grabPressed']){
+ m.reset(53);assert.equal(step().dz,0);assert.ok(step({...idle,[button]:true}).dz<0);
+}edges.push('each fresh face-button edge starts the tow');
+const report={pass:true,chargeSeconds:tuning.jumpChargeTime,chargeAcceleration:tuning.chargeBoost,storedBrakeEnergy:stored,maxReturnSpeedDelta:maxDelta,winds,edgeReview:edges};
 await mkdir('docs/beach-street/kite-controls',{recursive:true});await writeFile('docs/beach-street/kite-controls/motion.json',JSON.stringify(report,null,2)+'\n');
-console.log('PASS wait/start, release charge, normal acceleration, stored braking and seeded smooth variable wind');
+console.log('PASS wait/start, release charge, normal acceleration, stored braking, seeded wind and seven input-edge cases');
