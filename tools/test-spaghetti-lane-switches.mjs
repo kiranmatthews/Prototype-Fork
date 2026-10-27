@@ -9,7 +9,8 @@ await withBlockworksRuntime(async r=>{
  const race=new SkateRace(r.scene,r.p,false,()=>true);race.attach(r.l,'spaghetti-rails');
  const runs=r.sourceModule.SPAGHETTI_RUNS,receivers=runs.map((run,i)=>run.jumpEntry?i:-1).filter(i=>i>=0);
  const tuning=JSON.stringify(r.TUNING),results=[];
- for(const receiver of receivers)for(const [fromLane,toLane]of [[0,1],[1,0],[1,2],[2,1]]){
+ const selected=process.env.SPAGHETTI_RECEIVERS?.split(',').map(Number);
+ for(const receiver of receivers.filter(receiver=>!selected||selected.includes(receiver)))for(const [fromLane,toLane]of [[0,1],[1,0],[1,2],[2,1]]){
   race.start('time-trial',270327);race.phase='running';
   const source=r.l.rails[(receiver-1)*3+fromLane],target=r.l.rails[receiver*3+toLane];
   const at=Math.max(0,source.totalLength-28),point=source.pointAt(at),heading=source.tangentAt(at).setY(0).normalize();

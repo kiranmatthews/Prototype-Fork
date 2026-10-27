@@ -7,7 +7,7 @@ import { spaghettiJumpCues } from './spaghetti-rail-cues';
 export type SpaghettiPoint = RacePoint;
 type P = SpaghettiPoint;
 export interface SpaghettiRun { name:string; stage:number; nodes:P[]; radius:number; lanes:number[]; dock?:number; jumpEntry?:boolean; braidHeight?:number; }
-export interface SpaghettiDock { name:string; p:P; width:number; depth:number; yaw:number; launchLead?:number; }
+export interface SpaghettiDock { name:string; p:P; width:number; depth:number; yaw:number; launchLead?:number; retryLead?:number; }
 const r=(v:number)=>Math.round(v*1000)/1000;
 const distance=(a:P,b:P)=>Math.hypot(a[0]-b[0],a[1]-b[1],a[2]-b[2]);
 const mix=(a:P,b:P,t:number):P=>a.map((v,i)=>r(v+(b[i]-v)*t)) as P;
@@ -23,7 +23,7 @@ export const SPAGHETTI_DOCKS:SpaghettiDock[]=[
  {name:'Spiral entry / retry',p:[0,36,-188],width:23,depth:48,yaw:0},
  {name:'Spiral crown / retry',p:[-72,47,-205],width:24,depth:48,yaw:180},
  {name:'Knot entry / retry',p:[-116,52,-366],width:24,depth:48,yaw:0},
- {name:'Overhand catch / retry',p:[-146,56.5,-577],width:21,depth:26,yaw:0,launchLead:0},
+ {name:'Overhand catch / retry',p:[-146,56.5,-577],width:21,depth:26,yaw:0,launchLead:-11,retryLead:-11},
  {name:'Loom entry / retry',p:[-116,62,-675],width:25,depth:48,yaw:0},
  {name:'Corkscrew entry / retry',p:[-116,59,-965],width:24,depth:48,yaw:0},
  {name:'Final braid / retry',p:[-192,30,-1022],width:25,depth:48,yaw:180},
@@ -43,8 +43,8 @@ const CONTINUOUS_SKETCH:SpaghettiRun[]=[
  {name:'03 / Crown switchback',stage:1,radius:18,lanes:LANES,nodes:[[-72,47.9,-191],[-72,47.9,-170],[-103,50,-147],[-146,52,-172],[-156,54.5,-221],[-155,54.2,-291],[-116,52.9,-336],[-116,52.9,-363]]},
  {name:'04 / Overhand, lower loop',stage:2,radius:19,lanes:LANES,nodes:[[-116,52.9,-381],[-116,52.9,-405],[-73,53,-435],[-54,53.5,-470],[-82,54,-496],[-123,54.5,-474],[-153,55,-438],[-185,55.5,-452],[-198,56,-486],[-171,56.3,-517],[-146,56.3,-534],[-146,56.3,-551]]},
  {name:'05 / Overhand, suspended return',stage:2,radius:18,lanes:LANES,nodes:[[-146,57.4,-559],[-146,57.4,-604],[-107,60,-638],[-67,62,-616],[-58,64,-557],[-91,66,-520],[-128,68,-491],[-161,68,-458],[-187,67,-475],[-193,65,-546],[-165,63,-598],[-116,62.9,-644],[-116,62.9,-671]]},
- {name:'06 / Loom, first sweep',stage:3,radius:16,lanes:LANES,braidHeight:9.25,nodes:[[-116,62.9,-690],[-116,62.9,-713],[-91,64,-740],[-91,64,-762],[-124,63,-790],[-124,63,-810]]},
- {name:'07 / Loom, second sweep',stage:3,radius:17,lanes:LANES,braidHeight:-9.25,nodes:[[-124,60.5,-822],[-124,60.5,-862],[-155,60,-882],[-155,60,-902],[-116,59.9,-943],[-116,59.9,-957]]},
+ {name:'06 / Loom, first sweep',stage:3,radius:16,lanes:LANES,braidHeight:6.5,nodes:[[-116,62.9,-690],[-116,62.9,-713],[-91,63,-740],[-91,63,-762],[-124,63,-790],[-124,63,-810]]},
+ {name:'07 / Loom, second sweep',stage:3,radius:17,lanes:LANES,braidHeight:-6.5,nodes:[[-124,60.5,-822],[-124,60.5,-862],[-155,60,-882],[-155,60,-902],[-116,59.9,-943],[-116,59.9,-957]]},
  {name:'08 / Falling blackwater coil',stage:4,radius:9,lanes:LANES,nodes:[[-116,59.9,-981],[-116,59.9,-1005],...helix(-154,-1053,38,59.9,30.9,1.5),[-192,30.9,-1034],[-192,30.9,-1027]]},
  {name:'09 / Last thread, outward braid',stage:5,radius:17,lanes:LANES,nodes:[[-192,30.9,-1007],[-192,30.9,-986],[-225,31,-962],[-265,29,-991],[-294,27,-1045],[-294,25,-1095],[-260,24,-1127],[-260,24,-1149]]},
  {name:'10 / Last thread, hanging needle',stage:5,radius:16,lanes:LANES,nodes:[[-260,22,-1162],[-260,22,-1202],[-232,23,-1230],[-242,24,-1250],[-278,22,-1280],[-278,21.9,-1299]]},
@@ -58,7 +58,7 @@ export const SPAGHETTI_RUNS:SpaghettiRun[]=CONTINUOUS_SKETCH.flatMap((run,i)=>
 
 export function spaghettiRail(run:SpaghettiRun,offset=0):CustomComponent {
  let source=run.nodes;
- if(run.braidHeight&&offset){
+ if(run.braidHeight){
   // The loom is a genuine three-storey weave, still authored entirely as
   // editable rail nodes. Keep twenty metres at each end flat and aligned.
   const base=spaghettiSamples(spaghettiRail({...run,braidHeight:undefined},0)),arc=[0];
@@ -76,9 +76,13 @@ export function spaghettiRail(run:SpaghettiRun,offset=0):CustomComponent {
  const nodes=source.map((p,i)=>{
   const a=source[Math.max(0,i-1)],b=source[Math.min(source.length-1,i+1)];
   const dx=b[0]-a[0],dz=b[2]-a[2],n=Math.hypot(dx,dz)||1;
-  const t=Math.max(0,Math.min(1,(arc[i]-20)/(total-40))),weaving=!!run.braidHeight&&offset!==0;
-  const lane=weaving?offset*Math.cos(t*Math.PI*2):offset;
-  const lift=weaving?Math.sign(offset)*run.braidHeight!*Math.sin(t*Math.PI):0;
+  const t=Math.max(0,Math.min(1,(arc[i]-20)/(total-40))),weaving=!!run.braidHeight;
+  // Delay the crossings toward the high/low part of each strand. This keeps
+  // six metres of clearance without making the climb bleed down to a crawl.
+  const phase=t*t*(3-2*t);
+  const lane=weaving?offset*Math.cos(phase*Math.PI*2):offset;
+  const envelope=Math.sin(Math.min(1,Math.min(t,1-t)/.28)*Math.PI/2);
+  const lift=weaving?(Math.sign(offset)*run.braidHeight!-2)*envelope:0;
   return[r(p[0]-dz/n*lane),r(p[1]+lift),r(p[2]+dx/n*lane)] as P;
  });
  const p=nodes[0];
@@ -94,10 +98,12 @@ export function createSpaghettiRailsGreybox():CustomLevelData {
  const line:RaceKnot[]=[[0,32,32,24]],grinds:NonNullable<SkateRaceData['grinds']>=[],jumps:SkateRaceData['jumps']=[];
  const append=(p:P,width=10.8)=>{const old=line[line.length-1];if(Math.hypot(old[0]-p[0],old[1]-p[1],old[2]-p[2])>.02)line.push([...p,width]);};
  for(const [i,d]of SPAGHETTI_DOCKS.entries()){
+  const rad=d.yaw*Math.PI/180,forward=[-Math.sin(rad),-Math.cos(rad)];
   C.push({t:'platform',p:[d.p[0],d.p[1]-1.25,d.p[2]],s:[d.width,2.5,d.depth],yaw:d.yaw,tex:'checker',color:'#91969c',grp:2,nm:d.name});
-  if(i>0&&i<SPAGHETTI_DOCKS.length-1)C.push({t:'checkpoint',p:[...d.p],yaw:d.yaw,grp:2,nm:`Retry · ${d.name}`});
+  // Start the mid-knot retry near the receiving end of its existing gantry.
+  // Enough rail remains to earn the ordinary end-to-end launch reward.
+  if(i>0&&i<SPAGHETTI_DOCKS.length-1)C.push({t:'checkpoint',p:[d.p[0]+forward[0]*(d.retryLead??0),d.p[1],d.p[2]+forward[1]*(d.retryLead??0)],yaw:d.yaw,grp:2,nm:`Retry · ${d.name}`});
   if(i<SPAGHETTI_DOCKS.length-1){
-   const rad=d.yaw*Math.PI/180,forward=[-Math.sin(rad),-Math.cos(rad)];
    // These thin boost markings deliberately have no grind rim. The actual
    // gantry boundaries retain their ordinary edge-grinding behaviour.
    const lead=d.launchLead??(i===0?19:3);
@@ -119,7 +125,15 @@ export function createSpaghettiRailsGreybox():CustomLevelData {
    C.push(...spaghettiJumpCues(takeoff,samples[0],end.map((v,k)=>v-before[k]) as P,jumps.length-1));
   }
   grinds.push({start:samples[0],end:samples[samples.length-1],lanes:[...run.lanes]});
-  for(const offset of run.lanes)C.push(spaghettiRail(run,offset));
+  for(const offset of run.lanes){
+   const rail=spaghettiRail(run,offset);C.push(rail);
+   if(run.braidHeight&&offset){
+    // The woven routes trade time and exposure for an extra item pickup.
+    // Race mystery boxes already behave as non-blocking native pickups.
+    const path=spaghettiSamples(rail),length=path.slice(1).reduce((sum,p,k)=>sum+distance(p,path[k]),0),at=beforeEnd(path,length*.5);
+    C.push({t:'crate',kind:'mystery',p:[at[0],r(at[1]-.9),at[2]],grp:3,nm:`${run.name} / woven-route item / ${offset<0?'left':'right'}`});
+   }
+  }
   for(const p of samples)append(p);
  }
  const finish:P=[-278,21,-1314];append(finish,26);

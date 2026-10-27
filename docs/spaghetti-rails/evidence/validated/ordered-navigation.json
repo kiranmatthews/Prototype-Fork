@@ -1,0 +1,642 @@
+{
+  "at": "2026-10-27T08:08:13.231Z",
+  "scope": "Production path projection only, not a physics or browser playtest.",
+  "samples": 12361,
+  "rails": 63,
+  "minimumForwardDot": 0.934600472035362,
+  "maxBackstep": 0.03735188532709799,
+  "maxGlobalCorrection": 0,
+  "outsideSamples": 0,
+  "rows": [
+    {
+      "section": 0,
+      "name": "01 / Three-needle weave / thread 1",
+      "lane": -3.6,
+      "minDirection": 0.9876321657840775,
+      "maxBackstep": 0,
+      "maxGlobalCorrection": 0,
+      "maxDeviation": 3.6019994447528725,
+      "outside": 0
+    },
+    {
+      "section": 0,
+      "name": "01 / Three-needle weave / thread 1",
+      "lane": 0,
+      "minDirection": 0.9986460833993622,
+      "maxBackstep": 0,
+      "maxGlobalCorrection": 0,
+      "maxDeviation": 0.11999999999999744,
+      "outside": 0
+    },
+    {
+      "section": 0,
+      "name": "01 / Three-needle weave / thread 1",
+      "lane": 3.6,
+      "minDirection": 0.9847327235199098,
+      "maxBackstep": 0,
+      "maxGlobalCorrection": 0,
+      "maxDeviation": 3.6019994447528725,
+      "outside": 0
+    },
+    {
+      "section": 1,
+      "name": "01 / Three-needle weave / thread 2",
+      "lane": -3.6,
+      "minDirection": 0.969530301534073,
+      "maxBackstep": 0,
+      "maxGlobalCorrection": 0,
+      "maxDeviation": 3.6987750190712627,
+      "outside": 0
+    },
+    {
+      "section": 1,
+      "name": "01 / Three-needle weave / thread 2",
+      "lane": 0,
+      "minDirection": 0.9756097560975611,
+      "maxBackstep": 0,
+      "maxGlobalCorrection": 0,
+      "maxDeviation": 0.11999999999999744,
+      "outside": 0
+    },
+    {
+      "section": 1,
+      "name": "01 / Three-needle weave / thread 2",
+      "lane": 3.6,
+      "minDirection": 0.9658200321936133,
+      "maxBackstep": 0,
+      "maxGlobalCorrection": 0,
+      "maxDeviation": 3.7149947619239194,
+      "outside": 0
+    },
+    {
+      "section": 2,
+      "name": "02 / Rising triple spiral / thread 1",
+      "lane": -3.6,
+      "minDirection": 0.9783724219965836,
+      "maxBackstep": 0,
+      "maxGlobalCorrection": 0,
+      "maxDeviation": 3.602271492768011,
+      "outside": 0
+    },
+    {
+      "section": 2,
+      "name": "02 / Rising triple spiral / thread 1",
+      "lane": 0,
+      "minDirection": 0.9968151933197252,
+      "maxBackstep": 0,
+      "maxGlobalCorrection": 0,
+      "maxDeviation": 0.11999999999999744,
+      "outside": 0
+    },
+    {
+      "section": 2,
+      "name": "02 / Rising triple spiral / thread 1",
+      "lane": 3.6,
+      "minDirection": 0.9842776982266849,
+      "maxBackstep": 0,
+      "maxGlobalCorrection": 0,
+      "maxDeviation": 3.6271152350474116,
+      "outside": 0
+    },
+    {
+      "section": 3,
+      "name": "02 / Rising triple spiral / thread 2",
+      "lane": -3.6,
+      "minDirection": 0.9504454660729283,
+      "maxBackstep": 0,
+      "maxGlobalCorrection": 0,
+      "maxDeviation": 3.7038377267358475,
+      "outside": 0
+    },
+    {
+      "section": 3,
+      "name": "02 / Rising triple spiral / thread 2",
+      "lane": 0,
+      "minDirection": 0.9968147361867727,
+      "maxBackstep": 0,
+      "maxGlobalCorrection": 0,
+      "maxDeviation": 0.11999999999999744,
+      "outside": 0
+    },
+    {
+      "section": 3,
+      "name": "02 / Rising triple spiral / thread 2",
+      "lane": 3.6,
+      "minDirection": 0.9434042978397432,
+      "maxBackstep": 0,
+      "maxGlobalCorrection": 0,
+      "maxDeviation": 3.6942728606528576,
+      "outside": 0
+    },
+    {
+      "section": 4,
+      "name": "02 / Rising triple spiral / thread 3",
+      "lane": -3.6,
+      "minDirection": 0.9481742785290745,
+      "maxBackstep": 0,
+      "maxGlobalCorrection": 0,
+      "maxDeviation": 3.706443895740017,
+      "outside": 0
+    },
+    {
+      "section": 4,
+      "name": "02 / Rising triple spiral / thread 3",
+      "lane": 0,
+      "minDirection": 0.9841833239736953,
+      "maxBackstep": 0,
+      "maxGlobalCorrection": 0,
+      "maxDeviation": 0.11999999999999744,
+      "outside": 0
+    },
+    {
+      "section": 4,
+      "name": "02 / Rising triple spiral / thread 3",
+      "lane": 3.6,
+      "minDirection": 0.9416066561898565,
+      "maxBackstep": 0,
+      "maxGlobalCorrection": 0,
+      "maxDeviation": 3.6947744508373237,
+      "outside": 0
+    },
+    {
+      "section": 5,
+      "name": "03 / Crown switchback / thread 1",
+      "lane": -3.6,
+      "minDirection": 0.9958448645064439,
+      "maxBackstep": 0,
+      "maxGlobalCorrection": 0,
+      "maxDeviation": 3.602399001264091,
+      "outside": 0
+    },
+    {
+      "section": 5,
+      "name": "03 / Crown switchback / thread 1",
+      "lane": 0,
+      "minDirection": 0.9968013165731853,
+      "maxBackstep": 0,
+      "maxGlobalCorrection": 0,
+      "maxDeviation": 0.11999999999999744,
+      "outside": 0
+    },
+    {
+      "section": 5,
+      "name": "03 / Crown switchback / thread 1",
+      "lane": 3.6,
+      "minDirection": 0.9979661503843689,
+      "maxBackstep": 0.0192459867952266,
+      "maxGlobalCorrection": 0,
+      "maxDeviation": 3.602398559387605,
+      "outside": 0
+    },
+    {
+      "section": 6,
+      "name": "03 / Crown switchback / thread 2",
+      "lane": -3.6,
+      "minDirection": 0.9578262559513563,
+      "maxBackstep": 0,
+      "maxGlobalCorrection": 0,
+      "maxDeviation": 3.6023998945147704,
+      "outside": 0
+    },
+    {
+      "section": 6,
+      "name": "03 / Crown switchback / thread 2",
+      "lane": 0,
+      "minDirection": 0.9578262852211514,
+      "maxBackstep": 0,
+      "maxGlobalCorrection": 0,
+      "maxDeviation": 0.11999999999999744,
+      "outside": 0
+    },
+    {
+      "section": 6,
+      "name": "03 / Crown switchback / thread 2",
+      "lane": 3.6,
+      "minDirection": 0.9578262574137413,
+      "maxBackstep": 0,
+      "maxGlobalCorrection": 0,
+      "maxDeviation": 3.602399889662343,
+      "outside": 0
+    },
+    {
+      "section": 7,
+      "name": "04 / Overhand, lower loop / thread 1",
+      "lane": -3.6,
+      "minDirection": 0.9961548520422034,
+      "maxBackstep": 0,
+      "maxGlobalCorrection": 0,
+      "maxDeviation": 3.6026123787229323,
+      "outside": 0
+    },
+    {
+      "section": 7,
+      "name": "04 / Overhand, lower loop / thread 1",
+      "lane": 0,
+      "minDirection": 0.9989252840059087,
+      "maxBackstep": 0,
+      "maxGlobalCorrection": 0,
+      "maxDeviation": 0.11999999999999744,
+      "outside": 0
+    },
+    {
+      "section": 7,
+      "name": "04 / Overhand, lower loop / thread 1",
+      "lane": 3.6,
+      "minDirection": 0.9959464793172526,
+      "maxBackstep": 0,
+      "maxGlobalCorrection": 0,
+      "maxDeviation": 3.602613222291452,
+      "outside": 0
+    },
+    {
+      "section": 8,
+      "name": "04 / Overhand, lower loop / thread 2",
+      "lane": -3.6,
+      "minDirection": 0.9906622455360211,
+      "maxBackstep": 0,
+      "maxGlobalCorrection": 0,
+      "maxDeviation": 3.602617104272916,
+      "outside": 0
+    },
+    {
+      "section": 8,
+      "name": "04 / Overhand, lower loop / thread 2",
+      "lane": 0,
+      "minDirection": 0.9906788398452958,
+      "maxBackstep": 0,
+      "maxGlobalCorrection": 0,
+      "maxDeviation": 0.11999999999999744,
+      "outside": 0
+    },
+    {
+      "section": 8,
+      "name": "04 / Overhand, lower loop / thread 2",
+      "lane": 3.6,
+      "minDirection": 0.9906672195562314,
+      "maxBackstep": 0,
+      "maxGlobalCorrection": 0,
+      "maxDeviation": 3.60261710427263,
+      "outside": 0
+    },
+    {
+      "section": 9,
+      "name": "05 / Overhand, suspended return / thread 1",
+      "lane": -3.6,
+      "minDirection": 0.9920604325973235,
+      "maxBackstep": 0,
+      "maxGlobalCorrection": 0,
+      "maxDeviation": 3.6019994447528663,
+      "outside": 0
+    },
+    {
+      "section": 9,
+      "name": "05 / Overhand, suspended return / thread 1",
+      "lane": 0,
+      "minDirection": 0.9968151884759828,
+      "maxBackstep": 0,
+      "maxGlobalCorrection": 0,
+      "maxDeviation": 0.11999999999999744,
+      "outside": 0
+    },
+    {
+      "section": 9,
+      "name": "05 / Overhand, suspended return / thread 1",
+      "lane": 3.6,
+      "minDirection": 0.991987004882168,
+      "maxBackstep": 0,
+      "maxGlobalCorrection": 0,
+      "maxDeviation": 3.6019994447528663,
+      "outside": 0
+    },
+    {
+      "section": 10,
+      "name": "05 / Overhand, suspended return / thread 2",
+      "lane": -3.6,
+      "minDirection": 0.9658874571607104,
+      "maxBackstep": 0,
+      "maxGlobalCorrection": 0,
+      "maxDeviation": 3.6822958359335516,
+      "outside": 0
+    },
+    {
+      "section": 10,
+      "name": "05 / Overhand, suspended return / thread 2",
+      "lane": 0,
+      "minDirection": 0.999063977542546,
+      "maxBackstep": 0,
+      "maxGlobalCorrection": 0,
+      "maxDeviation": 0.12000000000000455,
+      "outside": 0
+    },
+    {
+      "section": 10,
+      "name": "05 / Overhand, suspended return / thread 2",
+      "lane": 3.6,
+      "minDirection": 0.9701861182757932,
+      "maxBackstep": 0,
+      "maxGlobalCorrection": 0,
+      "maxDeviation": 3.6797141805422577,
+      "outside": 0
+    },
+    {
+      "section": 11,
+      "name": "05 / Overhand, suspended return / thread 3",
+      "lane": -3.6,
+      "minDirection": 0.9912289519133326,
+      "maxBackstep": 0,
+      "maxGlobalCorrection": 0,
+      "maxDeviation": 3.6023464575190376,
+      "outside": 0
+    },
+    {
+      "section": 11,
+      "name": "05 / Overhand, suspended return / thread 3",
+      "lane": 0,
+      "minDirection": 0.9912315829455953,
+      "maxBackstep": 0,
+      "maxGlobalCorrection": 0,
+      "maxDeviation": 0.12000000000000455,
+      "outside": 0
+    },
+    {
+      "section": 11,
+      "name": "05 / Overhand, suspended return / thread 3",
+      "lane": 3.6,
+      "minDirection": 0.9927534850876722,
+      "maxBackstep": 0,
+      "maxGlobalCorrection": 0,
+      "maxDeviation": 3.602346455808228,
+      "outside": 0
+    },
+    {
+      "section": 12,
+      "name": "05 / Overhand, suspended return / thread 4",
+      "lane": -3.6,
+      "minDirection": 0.9756097560975611,
+      "maxBackstep": 0.015872191763037335,
+      "maxGlobalCorrection": 0,
+      "maxDeviation": 3.657708579128241,
+      "outside": 0
+    },
+    {
+      "section": 12,
+      "name": "05 / Overhand, suspended return / thread 4",
+      "lane": 0,
+      "minDirection": 0.9756097560975611,
+      "maxBackstep": 0.015856331466466145,
+      "maxGlobalCorrection": 0,
+      "maxDeviation": 0.11999999999999744,
+      "outside": 0
+    },
+    {
+      "section": 12,
+      "name": "05 / Overhand, suspended return / thread 4",
+      "lane": 3.6,
+      "minDirection": 0.9756097560975611,
+      "maxBackstep": 0.015840471169894954,
+      "maxGlobalCorrection": 0,
+      "maxDeviation": 3.6620048655162103,
+      "outside": 0
+    },
+    {
+      "section": 13,
+      "name": "06 / Loom, first sweep",
+      "lane": -3.6,
+      "minDirection": 0.9490795840873159,
+      "maxBackstep": 0,
+      "maxGlobalCorrection": 0,
+      "maxDeviation": 7.142525998879273,
+      "outside": 0
+    },
+    {
+      "section": 13,
+      "name": "06 / Loom, first sweep",
+      "lane": 0,
+      "minDirection": 0.9789804197376049,
+      "maxBackstep": 0,
+      "maxGlobalCorrection": 0,
+      "maxDeviation": 0.11999999999999744,
+      "outside": 0
+    },
+    {
+      "section": 13,
+      "name": "06 / Loom, first sweep",
+      "lane": 3.6,
+      "minDirection": 0.934600472035362,
+      "maxBackstep": 0,
+      "maxGlobalCorrection": 0,
+      "maxDeviation": 7.357335327437236,
+      "outside": 0
+    },
+    {
+      "section": 14,
+      "name": "07 / Loom, second sweep",
+      "lane": -3.6,
+      "minDirection": 0.9560406089288052,
+      "maxBackstep": 0.024474510493291746,
+      "maxGlobalCorrection": 0,
+      "maxDeviation": 7.388222530700608,
+      "outside": 0
+    },
+    {
+      "section": 14,
+      "name": "07 / Loom, second sweep",
+      "lane": 0,
+      "minDirection": 0.978980419737605,
+      "maxBackstep": 0.024474510493291746,
+      "maxGlobalCorrection": 0,
+      "maxDeviation": 0.11999999999999744,
+      "outside": 0
+    },
+    {
+      "section": 14,
+      "name": "07 / Loom, second sweep",
+      "lane": 3.6,
+      "minDirection": 0.9656610697892176,
+      "maxBackstep": 0.024474510493291746,
+      "maxGlobalCorrection": 0,
+      "maxDeviation": 7.173509633559449,
+      "outside": 0
+    },
+    {
+      "section": 15,
+      "name": "08 / Falling blackwater coil / thread 1",
+      "lane": -3.6,
+      "minDirection": 0.9506835600306957,
+      "maxBackstep": 0,
+      "maxGlobalCorrection": 0,
+      "maxDeviation": 3.6020956400405826,
+      "outside": 0
+    },
+    {
+      "section": 15,
+      "name": "08 / Falling blackwater coil / thread 1",
+      "lane": 0,
+      "minDirection": 0.9508569881479192,
+      "maxBackstep": 0,
+      "maxGlobalCorrection": 0,
+      "maxDeviation": 0.11999999999999744,
+      "outside": 0
+    },
+    {
+      "section": 15,
+      "name": "08 / Falling blackwater coil / thread 1",
+      "lane": 3.6,
+      "minDirection": 0.98271758179302,
+      "maxBackstep": 0,
+      "maxGlobalCorrection": 0,
+      "maxDeviation": 3.602095634582825,
+      "outside": 0
+    },
+    {
+      "section": 16,
+      "name": "08 / Falling blackwater coil / thread 2",
+      "lane": -3.6,
+      "minDirection": 0.94970680010879,
+      "maxBackstep": 0.0369847623564965,
+      "maxGlobalCorrection": 0,
+      "maxDeviation": 3.6999166373455523,
+      "outside": 0
+    },
+    {
+      "section": 16,
+      "name": "08 / Falling blackwater coil / thread 2",
+      "lane": 0,
+      "minDirection": 0.9508569878925913,
+      "maxBackstep": 0.03715564867070498,
+      "maxGlobalCorrection": 0,
+      "maxDeviation": 0.11999999999999744,
+      "outside": 0
+    },
+    {
+      "section": 16,
+      "name": "08 / Falling blackwater coil / thread 2",
+      "lane": 3.6,
+      "minDirection": 0.9472991330424492,
+      "maxBackstep": 0.03732653498491345,
+      "maxGlobalCorrection": 0,
+      "maxDeviation": 3.6914744833015996,
+      "outside": 0
+    },
+    {
+      "section": 17,
+      "name": "08 / Falling blackwater coil / thread 3",
+      "lane": -3.6,
+      "minDirection": 0.9497130734399335,
+      "maxBackstep": 0.03735188532709799,
+      "maxGlobalCorrection": 0,
+      "maxDeviation": 3.6989665202110213,
+      "outside": 0
+    },
+    {
+      "section": 17,
+      "name": "08 / Falling blackwater coil / thread 3",
+      "lane": 0,
+      "minDirection": 0.9508724935461409,
+      "maxBackstep": 0.03714993390531163,
+      "maxGlobalCorrection": 0,
+      "maxDeviation": 0.120000000000001,
+      "outside": 0
+    },
+    {
+      "section": 17,
+      "name": "08 / Falling blackwater coil / thread 3",
+      "lane": 3.6,
+      "minDirection": 0.9472940955418754,
+      "maxBackstep": 0.03694798248307052,
+      "maxGlobalCorrection": 0,
+      "maxDeviation": 3.692619763718783,
+      "outside": 0
+    },
+    {
+      "section": 18,
+      "name": "09 / Last thread, outward braid / thread 1",
+      "lane": -3.6,
+      "minDirection": 0.9878486440458457,
+      "maxBackstep": 0,
+      "maxGlobalCorrection": 0,
+      "maxDeviation": 3.60210063712828,
+      "outside": 0
+    },
+    {
+      "section": 18,
+      "name": "09 / Last thread, outward braid / thread 1",
+      "lane": 0,
+      "minDirection": 0.9878542882664657,
+      "maxBackstep": 0,
+      "maxGlobalCorrection": 0,
+      "maxDeviation": 0.120000000000001,
+      "outside": 0
+    },
+    {
+      "section": 18,
+      "name": "09 / Last thread, outward braid / thread 1",
+      "lane": 3.6,
+      "minDirection": 0.9960317959292782,
+      "maxBackstep": 0.019764455940276093,
+      "maxGlobalCorrection": 0,
+      "maxDeviation": 3.6083272742786887,
+      "outside": 0
+    },
+    {
+      "section": 19,
+      "name": "09 / Last thread, outward braid / thread 2",
+      "lane": -3.6,
+      "minDirection": 0.9860800400076215,
+      "maxBackstep": 0.018515283003580407,
+      "maxGlobalCorrection": 0,
+      "maxDeviation": 3.667470639048118,
+      "outside": 0
+    },
+    {
+      "section": 19,
+      "name": "09 / Last thread, outward braid / thread 2",
+      "lane": 0,
+      "minDirection": 0.9878542885299914,
+      "maxBackstep": 0.018645970751549612,
+      "maxGlobalCorrection": 0,
+      "maxDeviation": 0.120000000000001,
+      "outside": 0
+    },
+    {
+      "section": 19,
+      "name": "09 / Last thread, outward braid / thread 2",
+      "lane": 3.6,
+      "minDirection": 0.9878041441927822,
+      "maxBackstep": 0.018776658499518817,
+      "maxGlobalCorrection": 0,
+      "maxDeviation": 3.6761880706409764,
+      "outside": 0
+    },
+    {
+      "section": 20,
+      "name": "10 / Last thread, hanging needle",
+      "lane": -3.6,
+      "minDirection": 0.9759333205710791,
+      "maxBackstep": 0.018246862110572692,
+      "maxGlobalCorrection": 0,
+      "maxDeviation": 3.634728479096218,
+      "outside": 0
+    },
+    {
+      "section": 20,
+      "name": "10 / Last thread, hanging needle",
+      "lane": 0,
+      "minDirection": 0.9883716976506172,
+      "maxBackstep": 0.018246862110572692,
+      "maxGlobalCorrection": 0,
+      "maxDeviation": 0.120000000000001,
+      "outside": 0
+    },
+    {
+      "section": 20,
+      "name": "10 / Last thread, hanging needle",
+      "lane": 3.6,
+      "minDirection": 0.98120170155208,
+      "maxBackstep": 0.018246862110572692,
+      "maxGlobalCorrection": 0,
+      "maxDeviation": 3.6359067329166126,
+      "outside": 0
+    }
+  ]
+}

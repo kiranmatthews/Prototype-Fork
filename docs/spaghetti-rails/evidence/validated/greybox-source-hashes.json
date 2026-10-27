@@ -1,0 +1,12 @@
+{
+  "src/levels/spaghetti-rails.ts": "477263ee2e778363882e82c13857228d1903a0f830fa85128050ea733d8aedba",
+  "src/levels/spaghetti-rail-transfers.ts": "576f4077fa7c469974b56b68ad1469cf179d9615897095dfbb5f54d6341a273a",
+  "src/levels/spaghetti-rail-cues.ts": "7540d7ae0963520b088785bd56ca32448657062d19c45817f73c3208e7a4174f",
+  "src/pathNodes.ts": "5420860ba6e510381a04ddce4224738906e6c530bba30cb488db46d4fcf9ac1a",
+  "src/race/runtime.ts": "556414bd84b658f67df90c2a6f4215e736ae7120baf5ca1df6bd1164d095ab76",
+  "src/race/types.ts": "61e38df459bee97e912503ca5c2a6cd78da30d06d900fc34f5bba3175767532f",
+  "src/race/schema.ts": "edfd6d232c24db30377b881afd65519676cb38a161913f598eb901940279b924",
+  "src/race/hud.ts": "55df15940e707d7fa302670a1d69abd9c1c004f0f616e6b1c8de45de8984550b",
+  "src/campaign.ts": "f2270b3604edc9606fa17e382648fe518252bb86581f32cc49ebf5b4148be0c5",
+  "src/level.ts": "daa7352612bfad5b2be5427e2e3146bf4cb5565096af059079ec7f3665a11200"
+}

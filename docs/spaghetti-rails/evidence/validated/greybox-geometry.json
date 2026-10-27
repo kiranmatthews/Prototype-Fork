@@ -1,7 +1,7 @@
 {
-  "at": "2026-10-27T07:50:37.783Z",
-  "gameplayFingerprint": "79e6218140b247c7e0883378cd352160964141c8eae77e01b8af72a08e9baedf",
-  "length": 3388.898662259998,
+  "at": "2026-10-27T08:42:56.351Z",
+  "gameplayFingerprint": "2b84a2249914b3a55feb12d62cbc1d2d5fd670f0c4e598d6c8e86d201a332941",
+  "length": 3389.209169774303,
   "rails": 63,
   "maxTurn": 22.96468408778088,
   "retryLegs": [
@@ -23,22 +23,22 @@
     {
       "from": "Retry · Knot entry / retry",
       "to": "Retry · Overhand catch / retry",
-      "metres": 418.0884051733526
+      "metres": 407.0884051733524
     },
     {
       "from": "Retry · Overhand catch / retry",
       "to": "Retry · Loom entry / retry",
-      "metres": 579.0595878753277
+      "metres": 590.0595878753279
     },
     {
       "from": "Retry · Loom entry / retry",
       "to": "Retry · Corkscrew entry / retry",
-      "metres": 337.375468048057
+      "metres": 337.68597556236136
     },
     {
       "from": "Retry · Corkscrew entry / retry",
       "to": "Retry · Final braid / retry",
-      "metres": 507.2053984010986
+      "metres": 507.20539840109905
     },
     {
       "from": "Retry · Final braid / retry",
@@ -46,7 +46,7 @@
       "metres": 488.39044481022484
     }
   ],
-  "maxRetryLeg": 579.0595878753277,
+  "maxRetryLeg": 590.0595878753279,
   "medalTimes": {
     "gold": 115,
     "silver": 135,
@@ -153,38 +153,8 @@
     }
   ],
   "lowest": 21.9,
-  "highest": 73.126,
+  "highest": 68,
   "crossings": [
-    {
-      "rails": [
-        43,
-        44
-      ],
-      "names": [
-        "07 / Loom, second sweep / centre strand",
-        "07 / Loom, second sweep / right strand"
-      ],
-      "p": [
-        -133.80655011781982,
-        -867.8097846509122
-      ],
-      "clearance": 6.086739529254016
-    },
-    {
-      "rails": [
-        40,
-        41
-      ],
-      "names": [
-        "06 / Loom, first sweep / centre strand",
-        "06 / Loom, first sweep / right strand"
-      ],
-      "p": [
-        -100.52079984519045,
-        -729.71735092077
-      ],
-      "clearance": 6.4157874315488135
-    },
     {
       "rails": [
         11,
@@ -210,10 +180,10 @@
         "06 / Loom, first sweep / right strand"
       ],
       "p": [
-        -104.60293251829943,
-        -773.5417325338733
+        -99.0541665470449,
+        -768.3744169891363
       ],
-      "clearance": 6.46939269584174
+      "clearance": 6.472714335671806
     },
     {
       "rails": [
@@ -225,25 +195,25 @@
         "06 / Loom, first sweep / centre strand"
       ],
       "p": [
-        -104.53087619813354,
-        -773.480588539076
+        -98.85563408121222,
+        -768.166965219699
       ],
-      "clearance": 6.469403588349645
+      "clearance": 6.475065462541794
     },
     {
       "rails": [
-        43,
-        44
+        40,
+        41
       ],
       "names": [
-        "07 / Loom, second sweep / centre strand",
-        "07 / Loom, second sweep / right strand"
+        "06 / Loom, first sweep / centre strand",
+        "06 / Loom, first sweep / right strand"
       ],
       "p": [
-        -139.92206879096273,
-        -917.8517451830162
+        -95.86631017974621,
+        -735.9587078095631
       ],
-      "clearance": 6.486065919845095
+      "clearance": 6.483220215578011
     },
     {
       "rails": [
@@ -255,10 +225,25 @@
         "07 / Loom, second sweep / centre strand"
       ],
       "p": [
-        -139.90991529751247,
-        -917.8645218532693
+        -143.46511898011056,
+        -874.6644690525698
       ],
-      "clearance": 6.486162657231441
+      "clearance": 6.483434748213026
+    },
+    {
+      "rails": [
+        43,
+        44
+      ],
+      "names": [
+        "07 / Loom, second sweep / centre strand",
+        "07 / Loom, second sweep / right strand"
+      ],
+      "p": [
+        -143.57640699863413,
+        -874.7461935364015
+      ],
+      "clearance": 6.48353833714322
     },
     {
       "rails": [
@@ -270,10 +255,40 @@
         "06 / Loom, first sweep / centre strand"
       ],
       "p": [
-        -100.0428458258821,
-        -730.2335641599092
+        -95.67497807074207,
+        -736.2663662477505
       ],
-      "clearance": 6.5349246414941105
+      "clearance": 6.48591291389634
+    },
+    {
+      "rails": [
+        43,
+        44
+      ],
+      "names": [
+        "07 / Loom, second sweep / centre strand",
+        "07 / Loom, second sweep / right strand"
+      ],
+      "p": [
+        -146.3425640421916,
+        -911.0091205016549
+      ],
+      "clearance": 6.499600584720396
+    },
+    {
+      "rails": [
+        42,
+        43
+      ],
+      "names": [
+        "07 / Loom, second sweep / left strand",
+        "07 / Loom, second sweep / centre strand"
+      ],
+      "p": [
+        -146.25495740607803,
+        -911.1067138071309
+      ],
+      "clearance": 6.4999670456047225
     },
     {
       "rails": [
@@ -319,21 +334,6 @@
         -235.0542450999418
       ],
       "clearance": 6.628996025703455
-    },
-    {
-      "rails": [
-        42,
-        43
-      ],
-      "names": [
-        "07 / Loom, second sweep / left strand",
-        "07 / Loom, second sweep / centre strand"
-      ],
-      "p": [
-        -136.67586739654791,
-        -870.0038973653722
-      ],
-      "clearance": 6.655057417564544
     },
     {
       "rails": [
@@ -885,10 +885,25 @@
         "06 / Loom, first sweep / right strand"
       ],
       "p": [
-        -100.36205000000001,
-        -729.9956785714285
+        -98.98464588955657,
+        -768.2483884505517
       ],
-      "clearance": 12.937980059523797
+      "clearance": 12.947522187851908
+    },
+    {
+      "rails": [
+        42,
+        44
+      ],
+      "names": [
+        "07 / Loom, second sweep / left strand",
+        "07 / Loom, second sweep / right strand"
+      ],
+      "p": [
+        -143.509259066056,
+        -874.7155381054949
+      ],
+      "clearance": 12.966899835559436
     },
     {
       "rails": [
@@ -900,10 +915,10 @@
         "06 / Loom, first sweep / right strand"
       ],
       "p": [
-        -104.57387943836338,
-        -773.5037667561082
+        -95.8131112192167,
+        -736.1347171364214
       ],
-      "clearance": 12.938792012720578
+      "clearance": 12.9688189994132
     },
     {
       "rails": [
@@ -915,25 +930,10 @@
         "07 / Loom, second sweep / right strand"
       ],
       "p": [
-        -135.93542615971378,
-        -869.1447998107797
+        -146.28691937116653,
+        -911.0486011433335
       ],
-      "clearance": 12.966518138544783
-    },
-    {
-      "rails": [
-        42,
-        44
-      ],
-      "names": [
-        "07 / Loom, second sweep / left strand",
-        "07 / Loom, second sweep / right strand"
-      ],
-      "p": [
-        -139.9148113580999,
-        -917.8570864799025
-      ],
-      "clearance": 12.972214372716206
+      "clearance": 12.99965657865618
     },
     {
       "rails": [
@@ -1469,12 +1469,12 @@
     },
     {
       "name": "06 / Loom, first sweep / centre strand",
-      "length": 140.51104967167123,
-      "climb": 1.1000000000000014
+      "length": 140.48129691651587,
+      "climb": 0.10000000000000142
     },
     {
       "name": "07 / Loom, second sweep / centre strand",
-      "length": 161.52932613558062,
+      "length": 161.86958640504122,
       "climb": 0
     },
     {

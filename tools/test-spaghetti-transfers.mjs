@@ -11,7 +11,8 @@ await withBlockworksRuntime(async r=>{
  const originals=race.jumps.map(j=>({...j})),tuning=JSON.stringify(r.TUNING),cases=[];
  const speeds=(process.env.SPAGHETTI_SPEEDS??'24,30.5').split(',').map(Number);
  const timing=(process.env.SPAGHETTI_TIMING??'-2,0,2').split(',').map(Number);
- for(const [jumpIndex,receiver]of transfers.entries())for(const lane of [0,1,2])for(const speed of speeds)for(const offset of timing){
+ const selected=process.env.SPAGHETTI_RECEIVERS?.split(',').map(Number);
+ for(const [jumpIndex,receiver]of [...transfers.entries()].filter(([,receiver])=>!selected||selected.includes(receiver)))for(const lane of [0,1,2])for(const speed of speeds)for(const offset of timing){
   race.start('time-trial',270327);race.phase='running';
   race.jumps=originals.map((j,i)=>({...j,s:j.s+(i===jumpIndex?offset:0)}));
   const rail=r.l.rails[(receiver-1)*3+lane],start=Math.max(0,rail.totalLength-28),point=rail.pointAt(start),heading=rail.tangentAt(start).setY(0).normalize();

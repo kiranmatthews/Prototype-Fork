@@ -9,8 +9,9 @@ await withBlockworksRuntime(async r=>{
  const race=new SkateRace(r.scene,r.p,false,()=>true);race.attach(r.l,'spaghetti-rails');race.start('time-trial');
  const rider=race.riders[0],tuning=JSON.stringify(r.TUNING),injected=new Set(),events=[];
  assert.equal(r.l.raceCheckpoints.length,7,'The seven retry decks retain their authored checkpoint positions');
- let frames=0,pending=null;
+ let frames=0,pending=null,observingReturn=null;
  for(;frames<30000&&rider.finish===null;frames++){
+  const previousState=r.p.state;
   r.scene.updateMatrixWorld(true);
   race.step(r.dt,race.phase==='running'?race.drive(0):{moveX:0,moveY:0});
   r.l.update(r.dt);r.p.commitRenderStep(r.l);race.commitRenderStep();
@@ -18,12 +19,19 @@ await withBlockworksRuntime(async r=>{
    pending.returnedAt=frames;pending.returned=r.p.pos.toArray();pending.ground=r.p.groundHit?.name;
    assert.ok(r.p.pos.distanceTo(rider.anchor)<2,'The pit returns to the supported checkpoint deck');
    assert.ok(race.course.supportAt(r.l,r.p.pos),'Recovery has real floor collision');
-   events.push(pending);pending=null;
+   events.push(pending);observingReturn=pending;pending=null;
+  }
+  if(observingReturn&&r.p.state==='grind'&&!observingReturn.firstRail){
+   observingReturn.firstRail={index:r.l.rails.indexOf(r.p.grindRail),entry:r.p.grindEntryT,length:r.p.grindRail.totalLength,speed:r.p.grindVel};
+  }
+  if(observingReturn?.firstRail&&previousState==='grind'&&r.p.state==='air'){
+   observingReturn.departure={speed:r.p.speed,boost:r.p.grindBoostT>0,type:r.p.lastJumpType};observingReturn=null;
   }
   const key=Math.round(rider.anchorProgress);
   if(!pending&&race.phase==='running'&&r.p.state==='grind'&&rider.progress>rider.anchorProgress+60&&!injected.has(key)){
    assert.ok(race.course.supportAt(r.l,rider.anchor),'The banked checkpoint is supported before the fall');
-   injected.add(key);pending={anchor:key,position:rider.anchor.toArray(),at:frames,from:rider.progress,falls:rider.falls};
+   const checkpoint=r.sourceModule.SPAGHETTI_RAILS_LEVEL.components.find(c=>c.t==='checkpoint'&&Math.hypot(c.p[0]-rider.anchor.x,c.p[2]-rider.anchor.z)<.2);
+   injected.add(key);pending={anchor:key,name:checkpoint?.nm??'Starting grid',position:rider.anchor.toArray(),at:frames,from:rider.progress,falls:rider.falls};
    // Explicit fault injection only: traversal before and after uses real inputs.
    r.p.pos.y=r.l.killY-3;r.p.prevPos.copy(r.p.pos);r.p.state='air';r.p.grounded=false;r.p.vVel=-5;
   }
@@ -36,6 +44,8 @@ await withBlockworksRuntime(async r=>{
  assert.ok(rider.finish!==null,'The full course remains playable after every stopped retry');
  assert.equal(events.length,8,'The grid and every retry gantry were exercised');
  assert.equal(rider.falls,injected.size,'No additional fall occurs after any retry');
+ const knotReturn=events.find(e=>e.name.includes('Overhand catch'));
+ assert.ok(knotReturn?.departure?.boost,'The mid-knot retry retains enough rail to earn the normal end-to-end exit boost');
  assert.equal(r.p.totalDeaths,0,'Race recovery does not consume adventure lives');
  assert.equal(report.tuningUnchanged,true);
 },{modulePath:'/src/levels/spaghetti-rails.ts',source:m=>m.SPAGHETTI_RAILS_LEVEL,levelId:'spaghetti-rails'});

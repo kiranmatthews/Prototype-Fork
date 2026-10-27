@@ -1,0 +1,38 @@
+{
+  "before": {
+    "rails": 63,
+    "checkpoints": 7,
+    "retries": 7,
+    "name": "06 / Loom, first sweep / right strand",
+    "node": [
+      10.78,
+      -34.333,
+      16,
+      4.109
+    ],
+    "y": 67.009,
+    "radius": 16,
+    "grinds": 21
+  },
+  "changed": {
+    "node": [
+      10.78,
+      -34.333,
+      6,
+      5.359000000000002
+    ],
+    "previewChanged": true,
+    "retries": 7
+  },
+  "restored": {
+    "data": true,
+    "geometry": true
+  },
+  "playable": {
+    "id": "spaghetti-rails",
+    "rails": 63,
+    "retries": 7,
+    "active": true
+  },
+  "errors": []
+}

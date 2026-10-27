@@ -8,7 +8,7 @@ const settings={items:process.env.SPAGHETTI_ITEMS==='1',trial:process.env.SPAGHE
  seed:process.env.SPAGHETTI_SEED?Number(process.env.SPAGHETTI_SEED):null};
 await mkdir(output,{recursive:true});
 const browser=await chromium.launch({headless:true,channel:'chrome'});
-const page=await browser.newPage({viewport:{width:1440,height:900},serviceWorkers:'block'});
+const page=await browser.newPage({viewport:process.env.SPAGHETTI_FULL?{width:2560,height:1440}:{width:1440,height:900},serviceWorkers:'block'});
 await page.addInitScript(()=>{const Native=WebSocket;window.WebSocket=new Proxy(Native,{construct(Target,args){
  if(args[1]==='vite-hmr')return Object.assign(new EventTarget(),{readyState:0,send(){},close(){}});
  return Reflect.construct(Target,args);
@@ -19,13 +19,19 @@ try{
  await page.goto(`${base}/?playtest&level=spaghetti-rails${process.env.SPAGHETTI_FULL?'':'&lite'}`,{timeout:180000});
  await page.waitForFunction(()=>window.__game?.getSkateRace()?.active&&!window.__game.gameFlow.blocksGameplay,null,{timeout:180000});
  if(process.env.SPAGHETTI_MAX)await page.evaluate(()=>{window.__game.renderQualitySettings.setRegularResolution(null);window.__game.gameFlow.requestGameplayFrame();});
+ const presentation=await page.evaluate(()=>{const g=window.__game;return {settings:g.renderQualitySettings.snapshot(),viewport:[innerWidth,innerHeight],
+  drawingBuffer:[g.renderer.domElement.width,g.renderer.domElement.height],devicePixelRatio:Math.min(devicePixelRatio||1,2)};});
+ if(process.env.SPAGHETTI_FULL&&process.env.SPAGHETTI_MAX){
+  assert.equal(presentation.settings.enabled,false,'MAX uses the native rendering path');
+  assert.deepEqual(presentation.drawingBuffer,presentation.viewport.map(v=>Math.floor(v*presentation.devicePixelRatio)),'Verify the actual canvas buffer, not the cached fixed-preset dimensions');
+ }
  if(settings.trial)await page.evaluate(()=>{const g=window.__game;g.campaign.startEphemeral();g.campaign.commitRaceResult('spaghetti-rails',{won:true,boxGem:false});g.gameFlow.requestGameplayFrame();});
  // This pilot reads geometry and balance but never calls the rival driver,
  // injects a device snapshot, changes tuning, or moves a player directly.
  await page.evaluate(settings=>{
   const g=window.__game,nativeUpdate=g.input.update.bind(g.input),held=new Set();
   const update=()=>{nativeUpdate();if(settings.seed!==null&&(g.input.raceStartPressed||g.input.raceTrialStartPressed))g.input.raceSeed=settings.seed;};
-  const q=window.spaghettiKeyboard={tuning:JSON.stringify(g.TUNING),rails:new Set(),jumps:[],lastRail:null,releasedAt:-Infinity,lastFall:0,nextControl:0,stopped:false,itemPresses:0,lastItem:-Infinity,spinPresses:0,lastSpin:-Infinity,cues:[],lastCue:-1,camera:[],lastCamera:-Infinity,loomShot:-1};
+  const q=window.spaghettiKeyboard={tuning:JSON.stringify(g.TUNING),rails:new Set(),jumps:[],lastRail:null,releasedAt:-Infinity,lastFall:0,rejoining:false,nextControl:0,stopped:false,itemPresses:0,lastItem:-Infinity,spinPresses:0,lastSpin:-Infinity,cues:[],lastCue:-1,camera:[],lastCamera:-Infinity,loomShot:-1};
   const event=(code,down)=>document.body.dispatchEvent(new KeyboardEvent(down?'keydown':'keyup',{code,key:code==='Space'?' ':code.slice(-1).toLowerCase(),bubbles:true}));
   q.stop=()=>{q.stopped=true;for(const code of held)event(code,false);held.clear();};
   // Sample at a human-scale 20 Hz in the browser. Cross-process logging and
@@ -34,7 +40,8 @@ try{
    const r=g.getSkateRace(),p=g.player,l=g.getLevel(),a=r.riders[0],keys=[];
    const railIndex=l.rails.indexOf(p.grindRail),now=performance.now();
    if(q.stopped||now<q.nextControl){update();return;}q.nextControl=now+50;
-   if(a.falls!==q.lastFall){q.lastFall=a.falls;q.lastRail=null;q.releasedAt=-Infinity;}
+   if(a.falls!==q.lastFall){q.lastFall=a.falls;q.lastRail=null;q.releasedAt=-Infinity;q.rejoining=true;}
+   if(q.rejoining&&p.state==='grind'&&railIndex>=0)q.rejoining=false;
    if(r.phase==='running'&&a.finish===null&&!a.recovery&&p.state!=='dead'&&!p.skateCameraBailing){
     keys.push('KeyW');
     if(p.state==='grind'){
@@ -60,11 +67,21 @@ try{
      const section=r.grinds.indexOf(strand),lane=a.falls>0||settings.route==='inside-coils'&&(section===13||section===14)?0:settings.lane;
      const aim=r.course.sample(a.progress+15,lane),basis=p.raceInputBasis(l),dx=aim.x-p.pos.x,dz=aim.z-p.pos.z;
      const angle=Math.atan2(dx*-basis.z+dz*basis.x,dx*basis.x+dz*basis.z);
-     if(angle>.10)keys.push('KeyD');else if(angle<-.10)keys.push('KeyA');
+     // A retry already faces down its launch strip. Keep the stick neutral
+     // until catching: steering relative to the still-settling camera can
+     // turn a digital-key pilot sideways into the gantry's ordinary rim.
+     if(q.rejoining){keys.splice(keys.indexOf('KeyW'),1);}
+     else if(angle>.10)keys.push('KeyD');else if(angle<-.10)keys.push('KeyA');
     }
-    if(settings.items&&a.item&&r.elapsed-q.lastItem>3){keys.push('KeyI');q.itemPresses++;q.lastItem=r.elapsed;}
     const threat=a.threats[0],neighbour=r.riders.slice(1,r.count).some(other=>other.finish===null&&other.player.pos.distanceTo(p.pos)<2.65);
-    if(settings.defend&&(neighbour||threat&&threat.item!=='shock-shell'&&threat.seconds<.3)&&r.elapsed-q.lastSpin>1.3){keys.push('KeyF');q.spinPresses++;q.lastSpin=r.elapsed;}
+    const defensive=a.item==='shield'||a.item==='horn',useDefense=!!threat&&threat.seconds<(a.item==='horn'?.65:1.25);
+    if(settings.items&&a.item&&r.elapsed-q.lastItem>1&&(!defensive||useDefense)){
+     keys.push('KeyI');q.itemPresses++;q.lastItem=r.elapsed;
+     if(r.rank(0)===1&&['green-shell','water-bomb','boomerang'].includes(a.item)&&p.state==='grind')keys.push('KeyS');
+    }
+    // Keep a last-moment attack from queuing a deck flip across the catch.
+    const nearTakeoff=r.jumps.some(j=>j.s-a.progress>=-1&&j.s-a.progress<8);
+    if(settings.defend&&!q.rejoining&&p.state!=='air'&&!nearTakeoff&&(neighbour||threat&&threat.item!=='shock-shell'&&threat.seconds<.3)&&r.elapsed-q.lastSpin>1.3){keys.push('KeyF');q.spinPresses++;q.lastSpin=r.elapsed;}
     if(settings.cues&&p.state==='grind'){
      const index=r.jumps.findIndex(j=>j.s-a.progress>=18&&j.s-a.progress<23);
      if(index>=0&&!q.cues.some(c=>c.index===index)){
@@ -104,7 +121,7 @@ try{
  const result=await page.evaluate(()=>{const g=window.__game,r=g.getSkateRace(),q=window.spaghettiKeyboard;return {seed:r.runSeed,mode:r.mode,rank:r.rank(0),rails:[...q.rails],jumps:q.jumps,cues:q.cues,itemPresses:q.itemPresses,spinPresses:q.spinPresses,camera:q.camera,
   tuningUnchanged:q.tuning===JSON.stringify(g.TUNING),riders:r.riders.slice(0,r.count).map(a=>({id:a.id,s:a.progress,finish:a.finish,falls:a.falls})),hud:r.hud(),campaign:g.campaign.levelProgress('spaghetti-rails'),quality:g.getRenderQualitySizes()};});
  await page.screenshot({path:output+'/result.png'});
- await writeFile(output+'/report.json',JSON.stringify({at:new Date().toISOString(),settings,finish,wallSeconds:(Date.now()-start)/1000,result,errors,trace},null,2));
+ await writeFile(output+'/report.json',JSON.stringify({at:new Date().toISOString(),settings,presentation,finish,wallSeconds:(Date.now()-start)/1000,result,errors,trace},null,2));
  console.log(JSON.stringify({finish,rails:result.rails.length,jumps:result.jumps.length,riders:result.riders,errors}));
  assert.ok(result.tuningUnchanged);assert.deepEqual(errors,[]);
  assert.ok(finish!==null,'Independent keyboard pilot must reach the finish');

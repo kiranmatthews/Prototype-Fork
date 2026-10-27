@@ -5,7 +5,7 @@ const base=process.argv.find(a=>a.startsWith('http'))||'http://127.0.0.1:5237';
 const output=process.env.SPAGHETTI_OUTPUT||'/private/tmp/spaghetti-rails-browser';
 await mkdir(output,{recursive:true});
 const browser=await chromium.launch({headless:true,channel:'chrome'});
-const context=await browser.newContext({viewport:{width:1440,height:900},serviceWorkers:'block'}),page=await context.newPage();
+const context=await browser.newContext({viewport:process.env.SPAGHETTI_FULL?{width:2560,height:1440}:{width:1440,height:900},serviceWorkers:'block'}),page=await context.newPage();
 // A long playtest keeps its loaded revision even while the next local draft
 // is authored. Only Vite's development reload socket is suppressed.
 await page.addInitScript(()=>{const Native=WebSocket;window.WebSocket=new Proxy(Native,{construct(Target,args){
