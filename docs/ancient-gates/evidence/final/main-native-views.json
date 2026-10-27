@@ -1,0 +1,617 @@
+{
+  "shots": [
+    {
+      "position": [
+        17.2,
+        1.0000000238418578,
+        0
+      ],
+      "grounded": true,
+      "ground": "platform",
+      "camera": [
+        17.2,
+        7.6689499002889,
+        17.180639604630535
+      ],
+      "buffer": [
+        2560,
+        1440
+      ],
+      "assets": {
+        "components": 2477,
+        "placements": 3330,
+        "ready": 681,
+        "skipped": 0,
+        "draws": 216,
+        "triangles": 670424,
+        "allLodTriangles": 670424,
+        "cells": 949,
+        "residentCells": 216,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 22,
+        "textureMiB": 74,
+        "errors": [],
+        "windTime": 2.816766666666289,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "render": {
+        "frame": 977,
+        "calls": 278,
+        "triangles": 913093,
+        "points": 0,
+        "lines": 0
+      },
+      "stamp": "Codex/sol fork · build 10-27 06:28 UTC"
+    },
+    {
+      "position": [
+        147,
+        3.000000023841858,
+        0
+      ],
+      "grounded": true,
+      "ground": "platform",
+      "camera": [
+        147,
+        9.6689499002889,
+        17.180639604630535
+      ],
+      "buffer": [
+        2560,
+        1440
+      ],
+      "assets": {
+        "components": 2477,
+        "placements": 3330,
+        "ready": 891,
+        "skipped": 0,
+        "draws": 281,
+        "triangles": 880098,
+        "allLodTriangles": 880098,
+        "cells": 949,
+        "residentCells": 281,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 22,
+        "textureMiB": 74,
+        "errors": [],
+        "windTime": 5.816766666666279,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "render": {
+        "frame": 1185,
+        "calls": 339,
+        "triangles": 1116601,
+        "points": 0,
+        "lines": 0
+      },
+      "stamp": "Codex/sol fork · build 10-27 06:28 UTC"
+    },
+    {
+      "position": [
+        245,
+        5.000000023841858,
+        0
+      ],
+      "grounded": true,
+      "ground": "platform",
+      "camera": [
+        245,
+        11.6689499002889,
+        17.180639604630535
+      ],
+      "buffer": [
+        2560,
+        1440
+      ],
+      "assets": {
+        "components": 2477,
+        "placements": 3330,
+        "ready": 1161,
+        "skipped": 0,
+        "draws": 357,
+        "triangles": 1129436,
+        "allLodTriangles": 1129436,
+        "cells": 949,
+        "residentCells": 357,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 23,
+        "textureMiB": 78.33,
+        "errors": [],
+        "windTime": 8.783433333332978,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "render": {
+        "frame": 1503,
+        "calls": 324,
+        "triangles": 1092052,
+        "points": 0,
+        "lines": 0
+      },
+      "stamp": "Codex/sol fork · build 10-27 06:28 UTC"
+    },
+    {
+      "position": [
+        372.6,
+        7.000000023841858,
+        0
+      ],
+      "grounded": true,
+      "ground": "platform",
+      "camera": [
+        372.6,
+        13.6689499002889,
+        17.180639604630535
+      ],
+      "buffer": [
+        2560,
+        1440
+      ],
+      "assets": {
+        "components": 2477,
+        "placements": 3330,
+        "ready": 1319,
+        "skipped": 0,
+        "draws": 400,
+        "triangles": 1277772,
+        "allLodTriangles": 1277772,
+        "cells": 949,
+        "residentCells": 400,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 23,
+        "textureMiB": 78.33,
+        "errors": [],
+        "windTime": 11.783433333333127,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "render": {
+        "frame": 1856,
+        "calls": 333,
+        "triangles": 1114784,
+        "points": 0,
+        "lines": 0
+      },
+      "stamp": "Codex/sol fork · build 10-27 06:28 UTC"
+    },
+    {
+      "position": [
+        473,
+        14.000000023841858,
+        0
+      ],
+      "grounded": true,
+      "ground": "platform",
+      "camera": [
+        473,
+        20.6689499002889,
+        17.180639604630535
+      ],
+      "buffer": [
+        2560,
+        1440
+      ],
+      "assets": {
+        "components": 2477,
+        "placements": 3330,
+        "ready": 1363,
+        "skipped": 0,
+        "draws": 415,
+        "triangles": 1328931,
+        "allLodTriangles": 1328931,
+        "cells": 949,
+        "residentCells": 415,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 23,
+        "textureMiB": 78.33,
+        "errors": [],
+        "windTime": 14.916766666666616,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "render": {
+        "frame": 2071,
+        "calls": 369,
+        "triangles": 1221646,
+        "points": 0,
+        "lines": 0
+      },
+      "stamp": "Codex/sol fork · build 10-27 06:28 UTC"
+    },
+    {
+      "position": [
+        625,
+        9.000000023841858,
+        0
+      ],
+      "grounded": true,
+      "ground": "platform",
+      "camera": [
+        625,
+        15.6689499002889,
+        17.180639604630535
+      ],
+      "buffer": [
+        2560,
+        1440
+      ],
+      "assets": {
+        "components": 2477,
+        "placements": 3330,
+        "ready": 1392,
+        "skipped": 0,
+        "draws": 426,
+        "triangles": 1363684,
+        "allLodTriangles": 1363684,
+        "cells": 949,
+        "residentCells": 426,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 23,
+        "textureMiB": 78.33,
+        "errors": [],
+        "windTime": 17.900099999999895,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "render": {
+        "frame": 2250,
+        "calls": 370,
+        "triangles": 1238105,
+        "points": 0,
+        "lines": 0
+      },
+      "stamp": "Codex/sol fork · build 10-27 06:28 UTC"
+    },
+    {
+      "position": [
+        733,
+        8.000000023841858,
+        0
+      ],
+      "grounded": true,
+      "ground": "platform",
+      "camera": [
+        733,
+        14.6689499002889,
+        17.180639604630535
+      ],
+      "buffer": [
+        2560,
+        1440
+      ],
+      "assets": {
+        "components": 2477,
+        "placements": 3330,
+        "ready": 1325,
+        "skipped": 0,
+        "draws": 415,
+        "triangles": 1297116,
+        "allLodTriangles": 1297116,
+        "cells": 949,
+        "residentCells": 415,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 23,
+        "textureMiB": 78.33,
+        "errors": [],
+        "windTime": 20.88343333333306,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "render": {
+        "frame": 2569,
+        "calls": 350,
+        "triangles": 1221690,
+        "points": 0,
+        "lines": 0
+      },
+      "stamp": "Codex/sol fork · build 10-27 06:28 UTC"
+    },
+    {
+      "position": [
+        885.8,
+        7.400000023841859,
+        0
+      ],
+      "grounded": true,
+      "ground": "platform",
+      "camera": [
+        885.8,
+        14.068949900288901,
+        17.180639604630535
+      ],
+      "buffer": [
+        2560,
+        1440
+      ],
+      "assets": {
+        "components": 2477,
+        "placements": 3330,
+        "ready": 1326,
+        "skipped": 0,
+        "draws": 417,
+        "triangles": 1300173,
+        "allLodTriangles": 1300173,
+        "cells": 949,
+        "residentCells": 417,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 23,
+        "textureMiB": 78.33,
+        "errors": [],
+        "windTime": 23.900099999999554,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "render": {
+        "frame": 2908,
+        "calls": 379,
+        "triangles": 1145971,
+        "points": 0,
+        "lines": 36
+      },
+      "stamp": "Codex/sol fork · build 10-27 06:28 UTC"
+    },
+    {
+      "position": [
+        984,
+        11.000000023841858,
+        0
+      ],
+      "grounded": true,
+      "ground": "platform",
+      "camera": [
+        984,
+        17.6689499002889,
+        17.180639604630535
+      ],
+      "buffer": [
+        2560,
+        1440
+      ],
+      "assets": {
+        "components": 2477,
+        "placements": 3330,
+        "ready": 1370,
+        "skipped": 0,
+        "draws": 427,
+        "triangles": 1342568,
+        "allLodTriangles": 1342568,
+        "cells": 949,
+        "residentCells": 427,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 23,
+        "textureMiB": 78.33,
+        "errors": [],
+        "windTime": 26.883433333332718,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "render": {
+        "frame": 3256,
+        "calls": 389,
+        "triangles": 1151978,
+        "points": 0,
+        "lines": 108
+      },
+      "stamp": "Codex/sol fork · build 10-27 06:28 UTC"
+    },
+    {
+      "position": [
+        1117,
+        8.000000023841858,
+        0
+      ],
+      "grounded": true,
+      "ground": "platform",
+      "camera": [
+        1117,
+        14.6689499002889,
+        17.180639604630535
+      ],
+      "buffer": [
+        2560,
+        1440
+      ],
+      "assets": {
+        "components": 2477,
+        "placements": 3330,
+        "ready": 1540,
+        "skipped": 0,
+        "draws": 430,
+        "triangles": 1438319,
+        "allLodTriangles": 1438319,
+        "cells": 949,
+        "residentCells": 430,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 28,
+        "textureMiB": 105.33,
+        "errors": [],
+        "windTime": 29.80009999999922,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "render": {
+        "frame": 3592,
+        "calls": 383,
+        "triangles": 1166631,
+        "points": 0,
+        "lines": 180
+      },
+      "stamp": "Codex/sol fork · build 10-27 06:28 UTC"
+    },
+    {
+      "position": [
+        1195,
+        8.000000023841858,
+        0
+      ],
+      "grounded": true,
+      "ground": "platform",
+      "camera": [
+        1195,
+        14.6689499002889,
+        17.180639604630535
+      ],
+      "buffer": [
+        2560,
+        1440
+      ],
+      "assets": {
+        "components": 2477,
+        "placements": 3330,
+        "ready": 1562,
+        "skipped": 0,
+        "draws": 413,
+        "triangles": 1412132,
+        "allLodTriangles": 1412132,
+        "cells": 949,
+        "residentCells": 413,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 29,
+        "textureMiB": 109.67,
+        "errors": [],
+        "windTime": 32.816766666665714,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "render": {
+        "frame": 3807,
+        "calls": 357,
+        "triangles": 1145488,
+        "points": 0,
+        "lines": 108
+      },
+      "stamp": "Codex/sol fork · build 10-27 06:28 UTC"
+    },
+    {
+      "position": [
+        1292.8,
+        24.000000023841856,
+        0
+      ],
+      "grounded": true,
+      "ground": "platform",
+      "camera": [
+        1292.8,
+        30.6689499002889,
+        17.180639604630535
+      ],
+      "buffer": [
+        2560,
+        1440
+      ],
+      "assets": {
+        "components": 2477,
+        "placements": 3330,
+        "ready": 1345,
+        "skipped": 0,
+        "draws": 346,
+        "triangles": 1201057,
+        "allLodTriangles": 1201057,
+        "cells": 949,
+        "residentCells": 346,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 29,
+        "textureMiB": 109.67,
+        "errors": [],
+        "windTime": 35.766766666665546,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "render": {
+        "frame": 4114,
+        "calls": 355,
+        "triangles": 1303547,
+        "points": 0,
+        "lines": 0
+      },
+      "stamp": "Codex/sol fork · build 10-27 06:28 UTC"
+    }
+  ],
+  "errors": []
+}

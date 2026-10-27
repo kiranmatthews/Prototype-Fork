@@ -1,0 +1,14 @@
+{
+  "standaloneBase": "64cc94644f01fe25c02f7330aad43cd34a7dcec9",
+  "files": 1840,
+  "bytes": 1000231306,
+  "limit": 1000000000,
+  "withinBudget": false,
+  "overBy": 231306,
+  "newRuntimeImageBytes": 748740,
+  "baseRecordedBytes": 999461692,
+  "growthFromRecordedBaseBytes": 769614,
+  "integrationDependency": "Integrate atop the coordinator current reduced release base; measure the combined candidate before publication. Do not publish this older standalone branch directly.",
+  "coordinatorCandidateBytesObserved": 993305628,
+  "coordinatorCandidateObservationIsNotCombinedReleaseProof": true
+}

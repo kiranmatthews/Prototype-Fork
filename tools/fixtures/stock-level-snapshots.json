@@ -40,11 +40,11 @@
       "authoringRuntime": "v24.19.0"
     },
     "jungle-gate-run": {
-      "snapshotSha256": "3978a2391a18efd88a9dc83f51093f87ea829384c3d57e47f72663f50e0ceefa",
+      "snapshotSha256": "8c2a3887ce5d4d6e8c7aa9e4fc0201c0debc7ffc4f9bfd43ba7b2c4eeb558f2f",
       "authoringRuntime": "v24.19.0"
     },
     "bonus-jungle-gate": {
-      "snapshotSha256": "d5a0cf2b0e6adb0a7633d0d91fb83160ef5b93fbc263522bce71f4f32de2cb66",
+      "snapshotSha256": "931874b0e57b339f93d2c9be28a1e1ef0393308141501d1e1732d32a821550e1",
       "authoringRuntime": "v24.19.0"
     }
   }

@@ -1,0 +1,40 @@
+{
+  "report": {
+    "done": true,
+    "failure": "Error: real clock contact starts the trial: {\"frame\":217,\"position\":[-16.07317329436545,2.384185793236071e-8,-2.2958697205545486],\"state\":\"ride\",\"grounded\":true,\"bailing\":false,\"speed\":0,\"verticalSpeed\":0,\"deaths\":0,\"ground\":\"platform\"}",
+    "frame": 217,
+    "stage": "touch the Ancient Gates trial clock",
+    "actions": [
+      {
+        "name": "choose the optional clock alcove",
+        "firstFrame": 20,
+        "lastFrame": 98
+      },
+      {
+        "name": "touch the Ancient Gates trial clock",
+        "firstFrame": 116,
+        "lastFrame": 199
+      }
+    ],
+    "evidence": [],
+    "maskHits": 0,
+    "sourceMatches": true,
+    "stamp": "Codex/sol fork · build 10-27 09:03 UTC",
+    "position": [
+      -16.07317329436545,
+      2.384185793236071e-8,
+      -2.2958697205545486
+    ],
+    "state": "ride",
+    "deaths": 0
+  },
+  "errors": [],
+  "display": {
+    "buffer": [
+      720,
+      450
+    ],
+    "resolution": 720,
+    "crt": false
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "verifiedAt": "2026-10-27T09:34:59.567200+00:00",
+  "base": "64cc94644f01fe25c02f7330aad43cd34a7dcec9",
+  "ownedLevelIds": [
+    "bonus-jungle-gate",
+    "jungle-gate-run"
+  ],
+  "unchangedPublishedLevels": [
+    "flats",
+    "sky",
+    "test",
+    "custard-creek",
+    "bonus-custard-creek",
+    "jungle-terraces",
+    "bonus-jungle-terraces",
+    "drowned-crown",
+    "slipstream-race",
+    "country-club",
+    "rooftop-relay",
+    "coconut-cart-rally"
+  ],
+  "unchangedSharedRuntime": [
+    "src/level.ts",
+    "src/player.ts",
+    "src/tuning.ts"
+  ],
+  "sharedRegistryChange": "src/jungleAssets.ts: only import/spread of src/ancientGatesAssets.ts",
+  "runtimeImageBytes": 748740,
+  "sourcePublicPayloadDelta": 1400132
+}

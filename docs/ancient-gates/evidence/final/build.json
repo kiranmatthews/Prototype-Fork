@@ -1,0 +1,8 @@
+{
+  "command": "npm run build",
+  "exitCode": 0,
+  "productionStamp": "Codex/sol fork \u00b7 build 10-27 09:03 UTC",
+  "sourceEditsAfterBuild": "test fixtures and evidence only",
+  "log": "build-output.txt",
+  "logSha256": "ed93c22ef54dd17c1dee2268a1889c06e65bfb64ca9666eab4d2b22514a02b85"
+}

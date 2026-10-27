@@ -1,0 +1,15 @@
+{
+  "clock": {
+    "failure": "Fresh browser save had not cleared the campaign level, so its clock was correctly hidden.",
+    "fix": "Test-only pre-run completed-save fixture, normal level reload, then real input-only clock collection.",
+    "scoredSeconds": 370.34999999999184,
+    "medal": "silver",
+    "gameRuntimeChanged": false
+  },
+  "assetLoad": {
+    "failure": "Native DOM image stub did not dispatch load events for the new ancient-gates image directory.",
+    "fix": "Added ancient-gates to the existing test-jungle-assets.mjs image-directory whitelist.",
+    "gameRuntimeChanged": false,
+    "levelChecksStatus": "passed; all 20 commands accounted for"
+  }
+}

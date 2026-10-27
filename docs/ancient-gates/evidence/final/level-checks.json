@@ -1,0 +1,128 @@
+{
+  "command": "npm run check:levels",
+  "status": "passed",
+  "checks": [
+    {
+      "command": "node tools/validate-levels.mjs",
+      "status": "passed",
+      "evidence": "initial prefix"
+    },
+    {
+      "command": "node tools/test-lazy-source.mjs",
+      "status": "passed",
+      "evidence": "initial prefix"
+    },
+    {
+      "command": "node tools/test-tropical-plants.mjs",
+      "status": "passed",
+      "evidence": "initial prefix"
+    },
+    {
+      "command": "node tools/test-jungle-assets.mjs",
+      "status": "passed",
+      "evidence": "resumed continuation"
+    },
+    {
+      "command": "node tools/test-crown-quartz.mjs",
+      "status": "passed",
+      "evidence": "resumed continuation"
+    },
+    {
+      "command": "node tools/test-jungle-stream.mjs",
+      "status": "passed",
+      "evidence": "resumed continuation"
+    },
+    {
+      "command": "node tools/test-custard-pool.mjs",
+      "status": "passed",
+      "evidence": "resumed continuation"
+    },
+    {
+      "command": "node tools/test-jungle-enclosure.mjs",
+      "status": "passed",
+      "evidence": "resumed continuation"
+    },
+    {
+      "command": "node tools/test-map-landscape-assets.mjs",
+      "status": "passed",
+      "evidence": "resumed continuation"
+    },
+    {
+      "command": "node tools/test-world-map-save.mjs",
+      "status": "passed",
+      "evidence": "resumed continuation"
+    },
+    {
+      "command": "node tools/test-map-clay-geometry.mjs",
+      "status": "passed",
+      "evidence": "resumed continuation"
+    },
+    {
+      "command": "node tools/test-hollowwake-assets.mjs",
+      "status": "passed",
+      "evidence": "resumed continuation"
+    },
+    {
+      "command": "node tools/test-scenery-normals.mjs",
+      "status": "passed",
+      "evidence": "resumed continuation"
+    },
+    {
+      "command": "node tools/test-waterslide-scenery-lod.mjs",
+      "status": "passed",
+      "evidence": "resumed continuation"
+    },
+    {
+      "command": "node tools/test-waterslide-ocean-look.mjs",
+      "status": "passed",
+      "evidence": "resumed continuation"
+    },
+    {
+      "command": "node tools/test-waterslide-shallows.mjs",
+      "status": "passed",
+      "evidence": "resumed continuation"
+    },
+    {
+      "command": "node tools/test-waterpark-decks.mjs",
+      "status": "passed",
+      "evidence": "resumed continuation"
+    },
+    {
+      "command": "node tools/test-waterpark-portals.mjs",
+      "status": "passed",
+      "evidence": "resumed continuation"
+    },
+    {
+      "command": "node tools/test-waterslide-forest.mjs",
+      "status": "passed",
+      "evidence": "resumed continuation"
+    },
+    {
+      "command": "node tools/test-hollowwake-tunnel-build.mjs",
+      "status": "passed",
+      "evidence": "resumed continuation"
+    }
+  ],
+  "prefixLog": {
+    "path": "docs/ancient-gates/evidence/final/asset-stub-levels.txt",
+    "sha256": "d2a40b9b551baea098725e1b0ccbc80a1089c4c7bc11d58dccc599976dcefaba"
+  },
+  "resumedRun": {
+    "job": "levels",
+    "startedAt": "2026-10-27T09:51:10.776763+00:00",
+    "command": [
+      "python3",
+      "/private/tmp/ancient-gates-resume-levels.py"
+    ],
+    "log": "/private/tmp/ancient-gates-production/levels.log",
+    "exitCode": 0,
+    "elapsedSeconds": 257.79,
+    "endedAt": "2026-10-27T09:55:28.568928+00:00"
+  },
+  "resumedLogSha256": "84f4bc80b9e872f69c9814e6b6aa68f6702defa9972b5b5f47ddcbfc01c2e0fe",
+  "notes": [
+    "The initial three checks passed before the native image stub was corrected; only the failed check and subsequent commands were resumed.",
+    "The native DOM emits existing mocked crate-loader 404 warnings; actual production/browser console errors are empty.",
+    "No check:all run."
+  ]
+}

@@ -2,13 +2,13 @@
   "reports": [
     {
       "id": "jungle-gate-run",
-      "scenery": 2337,
+      "scenery": 2488,
       "explicitlyNonColliding": true,
       "conservativeBodyOverlaps": []
     },
     {
       "id": "bonus-jungle-gate",
-      "scenery": 447,
+      "scenery": 591,
       "explicitlyNonColliding": true,
       "conservativeBodyOverlaps": []
     }

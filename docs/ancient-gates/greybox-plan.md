@@ -135,3 +135,34 @@ screenshots remain in the task-specific `/private/tmp/ancient-gates-*` folders.
 Final validation will include a full-render journey through the main route,
 failed bonus attempt, retry, all 28 bonus boxes, parent return and the 54-box gem,
 plus native/MAX visual views. No movement or animation tuning was changed.
+
+## Native art review
+
+Native/MAX review resumed at 08:49:38 UTC after the coordinator reserved host
+capacity. The initial twelve main and eight bonus views loaded all scenery
+without console/asset errors. The review exposed visible red pit trays beneath
+the ravine and the top edge of the bonus painting. The final art pass hides only
+the pit pool/rim through the existing invisible flag, keeps their identical kill
+volumes, enlarges the bonus matte proportionately, and adds fitted stone paving.
+The corrected 20-view MAX tour passes at 2560×1440 with grounded receivers and
+clean assets/console. The frozen gameplay hashes remain unchanged.
+
+The production type-check/build passes. Final production journey and clock
+checks follow without source edits; unchanged greybox traversal/recovery proofs
+remain reusable through the protected gameplay fingerprints.
+
+Production full-render evidence now includes the complete main route, actual
+bonus entry, deliberate bonus failure, unchanged parent state, retry and all
+28 bonus boxes, supported return, and the final 54-box gem. Main-course deaths
+and masks spent remain zero; the console is clean. The clock trial scores
+370.35 seconds (silver). Its initial fresh-save fixture had not unlocked trials;
+a completed-save prerequisite fixes that test without altering game behavior.
+The final native asset check required the new image-directory name in its
+existing DOM load-event whitelist; runtime loading was already verified.
+
+Final validation completed: all 20 level checks pass, retaining the three
+successful prefix checks and resuming the corrected asset check plus the
+remaining sixteen. Build and production/native browser proofs pass. The older
+standalone release is 231,306 bytes over 1GB; the coordinator accepted a combined
+size dependency on its validated 993,305,628-byte base. No asset-quality or
+geometry reductions were made to compensate for obsolete-base packaging.

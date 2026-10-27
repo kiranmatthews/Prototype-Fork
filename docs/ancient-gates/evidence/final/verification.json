@@ -1,0 +1,98 @@
+{
+  "capturedAt": "2026-10-27T10:02:19.884580+00:00",
+  "functionalValidation": "passed",
+  "mainLengthMetres": 1396,
+  "originalLengthMetres": 448,
+  "sections": 12,
+  "enemies": 16,
+  "enemyTypes": 8,
+  "checkpoints": 11,
+  "bonusLengthMetres": 209,
+  "mainBoxes": 26,
+  "bonusBoxes": 28,
+  "totalBoxes": 54,
+  "completeProductionRun": {
+    "sourceMatches": true,
+    "mainDeaths": 0,
+    "masksSpent": 0,
+    "bonusFailureAndRetry": true,
+    "bonusReturnSupported": true,
+    "gemEarned": true,
+    "consoleErrors": []
+  },
+  "clockTrial": {
+    "physicalClockContact": true,
+    "completedSaveFixture": true,
+    "scoredSeconds": 370.34999999999184,
+    "medal": "silver",
+    "deaths": 0,
+    "consoleErrors": []
+  },
+  "nativeViews": {
+    "main": 12,
+    "bonus": 8,
+    "buffer": [
+      2560,
+      1440
+    ],
+    "assetErrors": []
+  },
+  "build": "passed",
+  "levelChecksPassed": 20,
+  "releaseSize": {
+    "standaloneBase": "64cc94644f01fe25c02f7330aad43cd34a7dcec9",
+    "files": 1840,
+    "bytes": 1000231306,
+    "limit": 1000000000,
+    "withinBudget": false,
+    "overBy": 231306,
+    "newRuntimeImageBytes": 748740,
+    "baseRecordedBytes": 999461692,
+    "growthFromRecordedBaseBytes": 769614,
+    "integrationDependency": "Integrate atop the coordinator current reduced release base; measure the combined candidate before publication. Do not publish this older standalone branch directly.",
+    "coordinatorCandidateBytesObserved": 993305628,
+    "coordinatorCandidateObservationIsNotCombinedReleaseProof": true
+  },
+  "reusedGreyboxProofs": [
+    "../greybox/recovery.json",
+    "../greybox/main-native.json",
+    "../greybox/bonus-native.json"
+  ],
+  "sourceHashes": {
+    "src/levels/ancient-gates-art.ts": "2f89595c606c5b1e52afb8eefbe9d607fc5b823dbb1f3a7322e403875313e3a1",
+    "src/levels/ancient-gates-route.ts": "0da2b0e57c1529d6d0742c7fcd4e7f2780a9016df12eec192fe5bc4f3511f869",
+    "src/levels/ancient-gates-bonus.ts": "85d092f64595d9271f57108682d6e4dfb851090b76961a6d9fe47e206439639e",
+    "src/ancientGatesAssets.ts": "39999860fd439b98908b2b112a300ff7e03bc45e44610ed96121703357767356",
+    "src/jungleAssets.ts": "2df351fd85f48ebcd0f05a603c5ab1486ebfc1264982521eaeaa9e2c502691fc",
+    "src/levels/themed-bonuses.ts": "0c29174ffadaafe9aa574c8cbb1650811ae4475206f4605ea986503b517de015",
+    "src/level.ts": "dfcc5680d0b61a2c7ce2f3b8b67323625aa6ecedbbdb4c9683550811c46c9f8b",
+    "src/player.ts": "c5776904f9f5904fca302f1d5f87da6754d425198876805f381acd98d694504b",
+    "src/tuning.ts": "1aca3b5fe4b5d026d8b9e36dcf30444081bec7d2acfd4181294f6aacaca61bd6",
+    "public/levels.json": "14f80f588e23ed4b21c39226b49575a54f885849199a799445135f705a4356d6",
+    "tools/fixtures/stock-level-snapshots.json": "2672f862dec2a839afa0eb1869b7af7eeb18d687223d6ca23ae36d89f549ce68"
+  },
+  "artifactHashes": {
+    "production-gem-clear.webp": "ec8721cb54ce012127ff62cdcf70280eb9ca46d20856171f0438a92c64581bba",
+    "full-complete-course-session.json": "9ffcb62fcbb35018ce57604344d44d8892fcece61700fbf7b0125a11a5fc7567",
+    "ownership.json": "38ebfe21c6ed69e344e548005cbadf243384fd70b6533219164a03aa33916182",
+    "resolved-test-fixtures.json": "28b1258338565c5013e031ddbac42f91775ca6e14952afe981370ee0c3c12f52",
+    "clock-trial.json": "a42b0711743352e9353d741e5a7a77cc6c6ac94d52a6feb422de6c65fc42fb55",
+    "locked-save-lite-trial--1-11.json": "e9f49cce3abce3094a36427d2d67fa752260a74ebb22d4d2ec07205f502ecdd9",
+    "gatekeeper-hoard-native.webp": "6a5cf6bf09643f4a227f31dc0c5792137a735b387e06287a9ec83bc592797799",
+    "production-failed-return.webp": "afde11b5394b6c6b78fc22394a739931aacf9b1aa55b2ddba28f10ae746dde73",
+    "visual-review.json": "0413c73654def4507a855595cf109bcd69d456dfb35bf7fd223c3839555c7fef",
+    "bonus-native-views.json": "333a8baf3462313a133d27f628e44a99801f6edff30e935703af194d418e3afa",
+    "release-size.json": "07402074d0911efb1dadd4819a075f265db7d69910ede627d74df4b9a363e8b3",
+    "mossback-stair-native.webp": "fd394b138b7caa231008c62322c32748fe9fd00e35cc1fb4a74f01ab41736f72",
+    "build-output.txt": "ed93c22ef54dd17c1dee2268a1889c06e65bfb64ca9666eab4d2b22514a02b85",
+    "full-complete-course-journeys.json": "791f8740435ae7c9f0127b6ffeb99c24ffbb6960fa2954b6262ad589e525796a",
+    "main-native-views.json": "b2d70e0ce082df68286767f86c9fd5f7ae2818607ec697e3f860b36b97d9532c",
+    "production-complete-return.webp": "557e3f6c42ef891b792196c6bd7e04b71232ed2c7ac3bc115dd8af0f5f4206e5",
+    "root-steps-native.webp": "47fe16900bfc3fb3671dbd90d53f338e47b909dcc4e97c6a1c75aab11a07c24a",
+    "production-entered.webp": "61d7f21f6e3b71e003217f0fe4c05c2a7a0f563224af57bee2806116d709d4ff",
+    "asset-stub-levels.txt": "d2a40b9b551baea098725e1b0ccbc80a1089c4c7bc11d58dccc599976dcefaba",
+    "build.json": "5dcd2813d80a1a3ca0d119e675527544353bb55d93e7c0cfd622ba57ce1bc9bc",
+    "level-checks.json": "7521a753819052d0510113b14af52f4c6733ca8a899111e337cfd9166d918afa",
+    "aqueduct-native.webp": "9bb2d6f03d67659f35b321c296c2319e72484a91e9204bff0ca112c73a4e405d"
+  }
+}

@@ -5062,8 +5062,8 @@ The first complete native route was playable in approximately 74 minutes, with
 the complete Chrome journey at 83 minutes. These prompt-to-playable figures
 exclude the coordinator's 150-minute Mac crash/access credit. Gameplay work
 continued through the requested two-hour greybox window; image generation
-started only after 07:34:25 UTC. This is the completed gameplay milestone; final
-art review and release validation remain pending.
+started only after 07:34:25 UTC. The later 08:11–08:49:38 validation-capacity
+wait is recorded separately from that completed gameplay phase.
 
 The main journey grows from 448 to 1,396 metres (3.12×), with twelve distinct
 sequences, sixteen enemies across eight types and eleven checkpoints. Variable
@@ -5072,26 +5072,45 @@ gallery, committed skate jump and grind, mixed enemy orchard, disappearing
 lantern stair, swinging bells, restored switchyard, launcher ascent and a tight
 crumbling finale. The 209-metre Gatekeeper's Hoard adds 28 boxes through upper
 galleries, conserved launchers, permanent steel anchors and ordered return
-paths. Movement tuning and shared player/level runtime stay unchanged.
+paths. Movement tuning and shared player/level runtime remain unchanged.
 
-The continuous production-player route passes with zero deaths or masks spent,
-all 26 main boxes and all eleven checkpoints. Real Chrome lite repeats that
-clear in 374.95 simulated seconds with no console errors. The bonus passes
-28/28; an actual browser session verifies entry, deliberate failure, preserved
-parent state, retry, full collection and supported return. A deliberate main
-route pit death returns to the activated checkpoint with its banked inventory
-and deployed bridge. All twenty level checks passed before the art phase.
+The Great Gate-inspired art reuses complete Meshy geometry, with fitted carved
+masonry, timber, layered foliage, hanging roots, gate towers, amber braziers and
+two original built-in ImageGen paintings. Both paintings retain their original
+1536×1024 dimensions; shipped WebP files total 748,740 bytes. Native review
+caught visible pit trays and the bonus backdrop's top edge. The final pass
+hides only the pit pool/rim, preserves its kill volume, enlarges the background
+card proportionately and adds fitted paving. Frozen gameplay fingerprints and
+source/snapshot synchronization remain exact; scenery is explicitly non-colliding.
 
-The first art pass reuses existing full Meshy geometry and adds two original
-1536×1024 built-in ImageGen paintings, shipped as WebP files totaling 748,740
-bytes. Frozen gameplay fingerprints, source/snapshot synchronization and the
-scenery clearance audit pass. Native/MAX scene review, final full-render
-54-box journey, clock trial, post-art level checks and build are still pending
-the coordinator's host-validation capacity; these commits are not yet READY.
+A continuous full-render production session reaches the actual bonus, tests a
+deliberate failed attempt, preserves the same parent and restored stair, retries
+for 28/28, returns to supported ground and finishes with all 54 boxes and the
+course gem. Main-course deaths and masks spent are zero; the console is clean.
+The real-clock trial scores 370.35 seconds, earning silver against authored
+330/390/450-second targets. Its first fresh-save test had not unlocked trials;
+a pre-run completed-save fixture resolves that test without changing the game.
+The earlier deliberate main-route pit recovery remains valid through the
+unchanged collision fingerprint.
 
-Evidence: [gameplay notebook](ancient-gates/greybox-plan.md),
-[Chrome main route](ancient-gates/evidence/greybox/main-browser-lite.json),
-[bonus session](ancient-gates/evidence/greybox/bonus-session-lite.json),
-[recovery](ancient-gates/evidence/greybox/recovery.json),
-[art clearance](ancient-gates/evidence/art/clearance.json) and
-[image provenance/prompts](ancient-gates/imagegen-prompts.json).
+Twelve main and eight bonus MAX/native views pass at 2560×1440, alongside normal
+production presentation. Type-check/build and all twenty level checks pass.
+The native image stub needed only the new ancient-gates directory in its
+existing load-event whitelist. The final suite retains its three passed prefix
+checks and resumes the remaining seventeen; no check:all was run.
+
+This older standalone base measures 1,000,231,306 bytes, 231,306 over the hosting
+cap. The coordinator's validated current base measures 993,305,628 bytes; the
+feature is handed off with an explicit combined-size dependency, preserving
+asset quality and geometry. Only the two Ancient Gates level IDs/certificates
+may be merged into the current pack. The coordinator owns integration and
+publication; no feature push or GitHub wait was performed.
+
+Evidence: [final verification](ancient-gates/evidence/final/verification.json),
+[production journey](ancient-gates/evidence/final/full-complete-course-session.json),
+[clock trial](ancient-gates/evidence/final/clock-trial.json),
+[main native view](ancient-gates/evidence/final/mossback-stair-native.webp),
+[bonus native view](ancient-gates/evidence/final/gatekeeper-hoard-native.webp),
+[level checks](ancient-gates/evidence/final/level-checks.json),
+[size dependency](ancient-gates/evidence/final/release-size.json) and
+[image prompts/provenance](ancient-gates/imagegen-prompts.json).

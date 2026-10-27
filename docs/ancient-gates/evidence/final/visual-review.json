@@ -1,0 +1,49 @@
+{
+  "reviewedAt": "2026-10-27T09:16:58.568Z",
+  "mode": "real Chrome; MAX/native 2560x1440, CRT disabled",
+  "mainViews": 12,
+  "bonusViews": 8,
+  "sourceHashes": {
+    "src/levels/ancient-gates-art.ts": "2f89595c606c5b1e52afb8eefbe9d607fc5b823dbb1f3a7322e403875313e3a1",
+    "src/levels/ancient-gates-route.ts": "0da2b0e57c1529d6d0742c7fcd4e7f2780a9016df12eec192fe5bc4f3511f869",
+    "src/levels/ancient-gates-bonus.ts": "85d092f64595d9271f57108682d6e4dfb851090b76961a6d9fe47e206439639e",
+    "src/ancientGatesAssets.ts": "39999860fd439b98908b2b112a300ff7e03bc45e44610ed96121703357767356"
+  },
+  "observations": [
+    "All sampled supported positions remained grounded; no console or asset errors.",
+    "Native Meshy geometry retained with no distance-decimated substitute.",
+    "Red pool/rim surfaces hidden through the existing pit-only invisible flag; kill volumes retained.",
+    "Fitted paving keeps gap edges and lower bonus return passage readable.",
+    "Proportionate bonus matte card enlarged to cover the visible ceiling without stretching the image."
+  ],
+  "screenshots": [
+    {
+      "file": "root-steps-native.webp",
+      "original": "/private/tmp/ancient-gates-art-v2/tour-native-00.png",
+      "width": 2560,
+      "height": 1440,
+      "conversion": "WebP quality91, no resampling"
+    },
+    {
+      "file": "mossback-stair-native.webp",
+      "original": "/private/tmp/ancient-gates-art-v2/tour-native-02.png",
+      "width": 2560,
+      "height": 1440,
+      "conversion": "WebP quality91, no resampling"
+    },
+    {
+      "file": "aqueduct-native.webp",
+      "original": "/private/tmp/ancient-gates-art-v2/tour-native-05.png",
+      "width": 2560,
+      "height": 1440,
+      "conversion": "WebP quality91, no resampling"
+    },
+    {
+      "file": "gatekeeper-hoard-native.webp",
+      "original": "/private/tmp/ancient-gates-art-v2/bonus-tour-native-05.png",
+      "width": 2560,
+      "height": 1440,
+      "conversion": "WebP quality91, no resampling"
+    }
+  ]
+}

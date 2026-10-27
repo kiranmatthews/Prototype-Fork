@@ -16,6 +16,15 @@ try{
  page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
  await page.goto(`${base}/?playtest&level=jungle-gate-run${full?'':'&lite'}`,{timeout:240000});
  await page.waitForFunction(()=>window.__game?.getCurrentLevel().id==='jungle-gate-run'&&!window.__game.gameFlow.blocksGameplay,null,{timeout:240000});
+ if(trial)await page.evaluate(()=>{
+  // Time trials unlock only after a normal clear. Seed that pre-run save
+  // prerequisite; the pilot still reaches and collects the actual clock.
+  const g=window.__game,id='jungle-gate-run',before={...g.campaign.levelProgress(id)};
+  g.campaign.commitClear(id,{crystal:true,boxGem:true,comboGem:false});
+  if(!g.campaign.runModesUnlocked(id))throw Error('Completed-save trial fixture did not unlock the clock');
+  if(!g.switchLevel(id))throw Error('Trial fixture level reload failed');
+  window.ancientTrialFixture={kind:'pre-run completed campaign save',before,after:{...g.campaign.levelProgress(id)}};
+ });
  await page.addScriptTag({content:fixture.outputFiles[0].text});
  if(native)await page.evaluate(()=>{window.__game.renderQualitySettings.setRegularResolution(null);window.__game.crtGuestSettings.setEnabled(false);});
  if(section>0)await page.evaluate(section=>{
@@ -25,6 +34,7 @@ try{
  await page.evaluate(({section,to,trial})=>{
   const r=window.ancientReview.installAncientPilot('main',{from:Math.max(0,section),to,trial});
   r.stamp=document.querySelector('.hud-build')?.textContent;
+  if(trial)r.trialUnlockSetup=window.ancientTrialFixture;
  },{section,to,trial});
  const shots=new Set();let prior='';
  for(let i=0;i<3600;i++){

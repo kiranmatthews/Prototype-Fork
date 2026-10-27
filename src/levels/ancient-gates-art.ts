@@ -56,6 +56,7 @@ export function dressAncientGates(source:CustomComponent[],decks:readonly Deck[]
   }else if(c.t==='mover'||c.t==='spinbridge'||c.t==='crumble'){
    c.tex='bridge-timber';c.color=c.t==='crumble'?'#e8b16a':'#d7ac71';
   }else if(c.t==='crusher'){c.tex='crown-limestone';c.color='#c0ac88';}
+  else if(c.t==='pit')c.invisible=true; // retain the kill box without a floating lava tray
  }
  const heightAt=(x:number)=>decks.reduce((a,b)=>Math.abs((a.a+a.b)/2-x)<Math.abs((b.a+b.b)/2-x)?a:b).y;
 
@@ -81,7 +82,7 @@ export function dressAncientGates(source:CustomComponent[],decks:readonly Deck[]
    if(k%3===1)prop('junglevine',[x,d.y-4.5,3.5],[3.5,3.5,.55],`${d.name} trailing vines`,'#bdd380');
   }
   // Larger stones are kept on the non-playable shoulders, never over the lip.
-  for(let x=d.a+1.7;x<d.b-1.3;x+=3.5)for(const z of [-2.25,2.25])
+  for(let x=d.a+1.7;x<d.b-1.3;x+=3.5)for(const z of wood?[-2.25,2.25]:[-2.25,0,2.25])
    prop('stonepaver',[x,d.y-.14,z],[Math.min(3.25,span-1),.19,1.6],`${d.name} shoulder paving`,STONE[(i+Math.floor(x))&3],(i%2)*180);
   for(let x=d.a+2.5,j=0;x<d.b-1.5;x+=8.7,j++){
    prop((i+j)%3?'junglefern':'jungleleaf',[x,d.y-.35,-3.45],[4.7,1.7,3.3],`${d.name} back-edge planting`,(i+j)%2?'#cfdd99':'#b1d4a4',random(x)*360);
@@ -157,15 +158,18 @@ export function dressAncientGates(source:CustomComponent[],decks:readonly Deck[]
 
 export function dressAncientHoard(source:CustomComponent[]):CustomComponent[]{
  const {out,prop,torch,column,arch}=workshop();
- for(const c of source)if(c.t==='mesh'){
-  c.tex='crown-limestone';c.color=c.outline?'#b6d8b2':'#d6c592';
+ for(const c of source){
+  if(c.t==='mesh'){c.tex='crown-limestone';c.color=c.outline?'#b6d8b2':'#d6c592';}
+  else if(c.t==='pit')c.invisible=true;
  }
- for(let x=-35;x<300;x+=92)prop('ancientgatehoard',[x,-61,-37],[120,80,.02],
+ for(let x=-35;x<300;x+=92)prop('ancientgatehoard',[x,-58,-37],[144,96,.02],
   'Painted Gatekeeper reliquary depth','#e5e4cc');
  for(const c of source.filter(c=>c.t==='mesh'&&!c.outline&&c.s)){
   const [w,h]=c.s!,a=c.p[0]-w/2,b=c.p[0]+w/2,y=c.p[1]+h/2;
   for(let x=a+1.7;x<b-1;x+=3.4){
    const width=Math.min(3.35,b-x+.95);
+   for(const z of [-2.25,0,2.25])prop('stonepaver',[x,y-.14,z],[width,.19,1.6],
+    'Hoard fitted paving',STONE[Math.abs(Math.floor(x))%4]);
    prop('stonecornice',[x,y-.8,3.05],[width,.65,.85],'Hoard fitted golden cornice',STONE[0]);
    for(const side of [-1,1])prop('stonecornice',[x,y-.14,side*1.12],[width,.28,.27],
     'Hoard low jade lane coping',JADE[0]);

@@ -1,0 +1,56 @@
+{
+  "parentBefore": {
+    "deaths": 0,
+    "returnPoint": [
+      1137,
+      8.12,
+      0
+    ],
+    "switchUsed": true
+  },
+  "failedReturn": {
+    "sameParent": true,
+    "position": [
+      1137,
+      8.000000023841858,
+      0
+    ],
+    "grounded": true,
+    "deaths": 0,
+    "crates": 20,
+    "bonusCrates": 0,
+    "completed": false,
+    "switchUsed": true
+  },
+  "successfulReturn": {
+    "sameParent": true,
+    "position": [
+      1137,
+      8.000000023841858,
+      0
+    ],
+    "grounded": true,
+    "deaths": 0,
+    "crates": 20,
+    "bonusCrates": 28,
+    "completed": true,
+    "switchUsed": true
+  },
+  "courseClear": {
+    "from": 9,
+    "to": 11,
+    "position": [
+      1374.3400000000008,
+      18.199166690508523,
+      0
+    ],
+    "deaths": 0,
+    "frames": 3753,
+    "state": "finished",
+    "cratesBroken": 26,
+    "totalCrates": 54,
+    "bonusCrates": 28,
+    "gemEarned": true
+  },
+  "errors": []
+}
