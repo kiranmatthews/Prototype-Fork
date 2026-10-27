@@ -3,10 +3,10 @@ import { withSkateRuntime, makeInput } from './jungle-cup-harness.mjs';
 
 await withSkateRuntime(async ({ THREE, player, level, step }) => {
   const decks = [
-    ['south',[0,4.4,30],[0,0,1]], ['north',[28,4.4,-122],[0,0,-1]],
-    ['east',[51,4.4,-42],[1,0,0]], ['west',[-51,4.4,-42],[-1,0,0]],
-    ['south-east',[46,4.4,25],[1,0,1]], ['south-west',[-46,4.4,25],[-1,0,1]],
-    ['north-east',[46,4.4,-117],[1,0,-1]], ['north-west',[-46,4.4,-117],[-1,0,-1]],
+    ['south',[0,4.4,50],[0,0,1]], ['north',[0,4.4,-170],[0,0,-1]],
+    ['east',[75,4.4,-42],[1,0,0]], ['west',[-75,4.4,-42],[-1,0,0]],
+    ['south-east',[69,4.4,44],[1,0,1]], ['south-west',[-69,4.4,44],[-1,0,1]],
+    ['north-east',[69,4.4,-164],[1,0,-1]], ['north-west',[-69,4.4,-164],[-1,0,-1]],
   ];
   const place = (p,h,speed) => {
     player.respawn(level,true,true,{position:new THREE.Vector3(...p),heading:new THREE.Vector3(...h).normalize()});
@@ -51,7 +51,7 @@ await withSkateRuntime(async ({ THREE, player, level, step }) => {
   }
   // Test immediately on either side of the coping seam, rather than only
   // giving the recovery several metres of uninterrupted flat deck.
-  for(const z of [28.101,28.12])for(const dir of [-1,1]){
+  for(const z of [48.101,48.12])for(const dir of [-1,1]){
     place([0,4.4,z],[0,0,dir],20);recover(`lip seam ${z}/${dir}`);
   }
   // A falling bail must transition into the same supported recovery after
@@ -64,7 +64,7 @@ await withSkateRuntime(async ({ THREE, player, level, step }) => {
   }
   // Standable transition faces also need recovery when travelling along
   // the wall: procedural roll-out must not repeatedly cancel its own get-up.
-  for(const z of [26.3,27.5])for(const dir of [-1,1]){
+  for(const z of [46.3,47.5])for(const dir of [-1,1]){
     place([0,3,z],[dir,0,0],20);
     assert.ok(player.groundHit.normal.y>.27&&player.groundHit.normal.y<.97);
     recover(`along bank ${z}/${dir}`);

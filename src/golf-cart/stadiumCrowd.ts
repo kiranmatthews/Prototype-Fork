@@ -4,6 +4,20 @@ import { STADIUM,stadiumSections,stadiumSeatPose } from '../levels/cart-stadium-
 import { coloured,merged,strut,placed } from './geometry';
 import { characterElasticityAmplitudes } from '../animation/elasticity';
 
+export interface CrowdSeat {position:[number,number,number];yaw:number;seed:number;colorIndex:number;}
+export interface CrowdSection {name:string;seats:readonly CrowdSeat[];}
+/** Preserve the rally's exact authored seat roots and deterministic colours. */
+function rallyCrowdSections():CrowdSection[]{
+  return stadiumSections().map(section=>{
+    const {start,end,side}=section,seats:CrowdSeat[]=[];
+    for(let row=0;row<STADIUM.rows;row++)for(let column=0;column<Math.floor((end-start-2)/STADIUM.seatSpacing);column++)if(column%13!==12){
+      const s=start+1+column*STADIUM.seatSpacing,seed=Math.abs(Math.sin(s*12.989+row*78.233)*43758.5453)%1;
+      seats.push({...stadiumSeatPose(section,s,row),seed,colorIndex:column*3+row*5+Math.floor(seed*11)});
+    }
+    return {name:`${side}:${start}`,seats};
+  });
+}
+
 /** Static instance buffers + one GPU time uniform. No per-spectator objects,
  * skeletons, CPU animation, billboards or distance-dependent geometry swaps. */
 export class StadiumCrowd {
@@ -16,7 +30,7 @@ export class StadiumCrowd {
   private seats:THREE.InstancedMesh[]=[];
   private seatGeometry:THREE.BufferGeometry;
   private seatMaterial=new THREE.MeshLambertMaterial({color:'#6b7057'});
-  constructor(){
+  constructor(layout:readonly CrowdSection[]=rallyCrowdSections()){
     this.root.name='Stadium crowd · GPU cheering';
     const parts:THREE.BufferGeometry[]=[];
     const part=(g:THREE.BufferGeometry,color:string,cloth=0,arm=0,segment=0,tint=0)=>{
@@ -109,16 +123,12 @@ vec3 crowdPosition=position;crowdPose(crowdPosition,objectNormal);`)
     this.material.customProgramCacheKey=()=> 'stadium-spectators-v3';
     this.seatGeometry=indexCrowdGeometry(merged([placed(new THREE.BoxGeometry(.67,.11,.5),[0,.45,.02]),placed(new THREE.BoxGeometry(.67,.48,.11),[0,.69,.26])]));
     const dummy=new THREE.Object3D(),palette=['#f2b742','#3e9d9a','#e16c43','#4b80ac','#f1dfab','#a65b81','#8eb15a','#374d58'],color=new THREE.Color();let total=0;
-    for(const {start,end,side}of stadiumSections()){
-      const positions:{s:number;row:number;column:number}[]=[];
-      for(let row=0;row<STADIUM.rows;row++)for(let col=0;col<Math.floor((end-start-2)/STADIUM.seatSpacing);col++)if(col%13!==12)positions.push({s:start+1+col*STADIUM.seatSpacing,row,column:col});
+    for(const {name,seats:positions}of layout){
       const people=new THREE.InstancedMesh(this.geometry,this.material,positions.length),seats=new THREE.InstancedMesh(this.seatGeometry,this.seatMaterial,positions.length);
-      people.name=`Cheering section ${side}:${start}`;seats.name=`Grandstand seats ${side}:${start}`;
-      for(const [index,{s,row,column}]of positions.entries()){
-        const pose=stadiumSeatPose({start,end,side},s,row);
+      people.name=`Cheering section ${name}`;seats.name=`Grandstand seats ${name}`;
+      for(const [index,pose]of positions.entries()){
         dummy.position.set(...pose.position);dummy.rotation.set(0,pose.yaw,0);dummy.scale.setScalar(1);dummy.updateMatrix();seats.setMatrixAt(index,dummy.matrix);
-        const seed=Math.abs(Math.sin(s*12.989+row*78.233)*43758.5453)%1;
-        dummy.scale.setScalar(.92+seed*.15);dummy.updateMatrix();people.setMatrixAt(index,dummy.matrix);people.setColorAt(index,color.set(palette[(column*3+row*5+Math.floor(seed*11))%palette.length]));
+        dummy.scale.setScalar(.92+pose.seed*.15);dummy.updateMatrix();people.setMatrixAt(index,dummy.matrix);people.setColorAt(index,color.set(palette[pose.colorIndex%palette.length]));
       }
       // Bounds include the full arm sweep; native frustum culling operates per
       // 48m stand section, including reflections, without changing silhouettes.

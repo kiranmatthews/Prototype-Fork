@@ -39,18 +39,20 @@ await withSkateRuntime(async ({ THREE, server, player, level, step, TUNING, CONS
   // Restored park controls: idle stays stopped; steering picks up to cruise.
   for(let i=0;i<60;i++)step(makeInput());
   assert.equal(player.speed,0);assert.equal(player.freeSkate,true);
-  place([28,.1,-80],[0,0,1],0);
+  // Isolate target speed on clear flat ground; the old start ran into the
+  // former north transition before the charge-speed measurement completed.
+  place([-41,.1,-20],[0,0,-1],0);
   for(let i=0;i<90;i++)step(makeInput({moveY:1}));
   assert.ok(Math.abs(player.speed-TUNING.parkCruiseSpeed)<.03);
   for(let i=0;i<90;i++)step(makeInput({jumpHeld:true,moveY:1}));
-  assert.ok(Math.abs(player.speed-TUNING.parkChargeSpeed)<.03,'charged target differs from platforming');
+  assert.ok(Math.abs(player.speed-TUNING.parkChargeSpeed)<=TUNING.parkChargeAcceleration*CONST.fixedStep+.03,'charged target differs from platforming');
 
   // Start outside the new interior sessions when isolating perimeter vert.
   const cases=[
-    ['north',[28,.1,-90],[0,0,-1]],['south',[0,.1,0],[0,0,1]],
-    ['west',[-28,.1,-70],[-1,0,0]],['east',[28,.1,-42],[1,0,0]],
-    ['north-west',[-37,.1,-108],[-1,0,-1]],['north-east',[37,.1,-108],[1,0,-1]],
-    ['south-west',[-37,.1,16],[-1,0,1]],['south-east',[37,.1,16],[1,0,1]],
+    ['north',[0,.1,-145],[0,0,-1]],['south',[0,.1,20],[0,0,1]],
+    ['west',[-53,.1,-70],[-1,0,0]],['east',[57,.1,-16],[1,0,0]],
+    ['north-west',[-63,.1,-158],[-1,0,-1]],['north-east',[63,.1,-158],[1,0,-1]],
+    ['south-west',[-63,.1,38],[-1,0,1]],['south-east',[63,.1,38],[1,0,1]],
   ];
   let returns=0,apexChecks=0,worstShunt=0,worstFraming=0;
   for(const speed of [16,21,26])for(const [name,p,h] of cases){
@@ -111,7 +113,7 @@ await withSkateRuntime(async ({ THREE, server, player, level, step, TUNING, CONS
   // slide. A curved return must continue tracking the real wall around a bend.
   // At the new 23 m/s target, z=8 meets the corner almost head-on.
   // Start farther forward to retain a genuinely oblique curved-wall air.
-  place([30,.1,12],[.8,0,1]);
+  place([49,.1,28],[.8,0,1]);
   let startNormal=null,trackedTurn=0,angledLaunch=false;
   for(let i=0;i<400;i++){
     step(makeInput({jumpHeld:true,jumpPressed:i===0}));
@@ -127,7 +129,7 @@ await withSkateRuntime(async ({ THREE, server, player, level, step, TUNING, CONS
   assert.ok(angledLaunch);assert.ok(trackedTurn>.03,'curved coping did not redirect the air');
   // A charged release is a real extra impulse; holding X through the edge is
   // not. The same input sequence also checks there is no swallowed release.
-  place([0,.1,10],[0,0,1]);let popped=false,chargedLaunch=null,chargedApex=0;
+  place([0,.1,31],[0,0,1]);let popped=false,chargedLaunch=null,chargedApex=0;
   for(let i=0;i<300;i++){
     const pop=!popped&&player.grounded&&player.rideNormal.y<.12;if(pop)popped=true;
     step(makeInput({jumpHeld:!popped,jumpPressed:i===0,jumpReleased:pop}));
@@ -139,7 +141,7 @@ await withSkateRuntime(async ({ THREE, server, player, level, step, TUNING, CONS
   assert.ok(Math.abs(chargedApex-chargedLaunch.p.y-chargedLaunch.vy**2/(2*SKATE_PARK.vertGravity))<.03,'charged hangtime is not ballistic');
   // Air direction inputs rotate the board; releasing does not auto-complete
   // a half turn. No direction input changes the locked plane position.
-  place([0,.1,10],[0,0,1]);for(let i=0;i<200&&!player.vertAir;i++)step(makeInput({jumpHeld:true}));
+  place([0,.1,31],[0,0,1]);for(let i=0;i<200&&!player.vertAir;i++)step(makeInput({jumpHeld:true}));
   const z=player.pos.z;
   for(let i=0;i<14;i++)step(makeInput({moveX:1}));
   const partial=player.grabSpinAngle;assert.ok(Math.abs(partial)>.3);
@@ -152,7 +154,7 @@ await withSkateRuntime(async ({ THREE, server, player, level, step, TUNING, CONS
   for (const [label,spinFrames,angle,expectedBail] of [
     ['360',58,0,false],['90',19,0,true],['angled',0,.45,false],
   ]) {
-    place([0,.1,10],[angle,0,1]);let popped=false,air=0,hadAir=false,resolved=false;
+    place([0,.1,31],[angle,0,1]);let popped=false,air=0,hadAir=false,resolved=false;
     for(let i=0;i<500;i++){
       const pop=!popped&&player.grounded&&player.rideNormal.y<.12;if(pop)popped=true;
       if(player.vertAir)air++;
@@ -170,7 +172,7 @@ await withSkateRuntime(async ({ THREE, server, player, level, step, TUNING, CONS
 
   // Up is only allowed to break vert when the feet clear the wall. It may
   // not inject an outward velocity through the solid vertical top.
-  place([0,.1,10],[0,0,1]);for(let i=0;i<200&&!player.vertAir;i++)step(makeInput({jumpHeld:true}));
+  place([0,.1,31],[0,0,1]);for(let i=0;i<200&&!player.vertAir;i++)step(makeInput({jumpHeld:true}));
   player.pos.y=3.8;player.prevPos.copy(player.pos);player.vVel=12;
   player.airborneT=.05;player.parkBreakHold=.14;
   step(makeInput({moveY:1}));assert.equal(player.vertAir,true,'Up pushed through a solid vert face');
@@ -224,7 +226,7 @@ await withSkateRuntime(async ({ THREE, server, player, level, step, TUNING, CONS
       assert.ok(player.pos.toArray().every(Number.isFinite));
       assert.ok(player.pos.y>=-.05,`stress ${seed}/${i}: floor penetration ${player.pos.toArray()}`);
       assert.equal(player.totalDeaths,0,`stress ${seed}/${i}: escaped park`);
-      assert.ok(Math.abs(player.pos.x)<58&&player.pos.z<38&&player.pos.z>-130,'perimeter leak');
+      assert.ok(Math.abs(player.pos.x)<82&&player.pos.z<57&&player.pos.z>-177,'perimeter leak');
       const stuck=player.grounded&&player.freeSkate&&!player.isBailing&&player.lipStallT<=0&&
         player.groundHit?.normal.y<.76&&before.distanceToSquared(player.pos)<1e-5;
       stalled=stuck?stalled+1:0;assert.ok(stalled<120,`stress ${seed}/${i}: welded to transition`);

@@ -17,6 +17,7 @@ import {custardPoolMaterial,custardFoamMaterial,addCustardPoolBedLook,attachCust
 import { NightworksBackdrop } from './nightworksBackdrop';
 import { NightworksLighting } from './nightworksLighting';
 import { StadiumLighting } from './stadiumLighting';
+import { MotuBeachPresentation } from './motuBeachPresentation';
 import { NightworksPlume } from './nightworksPlume';
 import { NightworksFogVisibility } from './nightworksFog';
 import { addNightworksStoneLook, createNightworksMagma, NIGHTWORKS_VOLCANO_TEXTURES } from './nightworksMagma';
@@ -5525,6 +5526,8 @@ export class Level {
     this.cityAssets?.flush();
     if(this.builtFromData?.warehouseArt){this.warehouseKit().dress(this.builtFromData.components);if(this.skateCollectathon)this.warehouseKit().goals(this.skateCollectathon);}
     this.warehousePresentation?.flush();
+    if(this.builtFromData?.components.some(c=>c.nm==='Motu / continuous concrete apron'))
+      this.motuBeach=new MotuBeachPresentation(this.root,this.builtFromData.components);
     if (this.jungleAtmosphere) {
       if (this.builtFromData?.keepPlayFog === undefined) this.keepPlayFog = true;
       Object.assign(this.theme, JUNGLE_THEME_OVERRIDES);
@@ -8758,6 +8761,7 @@ export class Level {
     this.nightworksPlume?.dispose();this.nightworksPlume=undefined;
     this.nightworksLighting?.dispose();this.nightworksLighting=undefined;
     this.stadiumLighting?.dispose();this.stadiumLighting=undefined;
+    this.motuBeach?.dispose();this.motuBeach=undefined;
     this.heightFog?.dispose();this.heightFog=undefined;
     this.rainWeather?.dispose();this.rainWeather=undefined;
     this.hollowwakeTunnels?.dispose();this.hollowwakeTunnels=null;
@@ -9784,6 +9788,7 @@ export class Level {
   }
 
   update(dt: number): void {
+    this.motuBeach?.update(this.standingWaterClock.value);
     this.rainWeather?.update(dt);
     this.caveCollapse?.update(dt,this.playerPos);
     this.minefields?.update(dt);
@@ -16081,6 +16086,8 @@ export class Level {
   private nightworksPlume:NightworksPlume|undefined;
   private nightworksLighting:NightworksLighting|undefined;
   private stadiumLighting:StadiumLighting|undefined;
+  private motuBeach:MotuBeachPresentation|undefined;
+  get motuBeachDiagnostics(){return this.motuBeach?.diagnostics??null;}
   get stadiumLightingDiagnostics(){return this.stadiumLighting?.diagnostics??null;}
   private nightworksBackdrop:NightworksBackdrop|undefined;
   /** Keep native colour/collision geometry while opted-in scenery fills shadows. */
@@ -16103,6 +16110,7 @@ export class Level {
     this.nightworksPlume?.render(camera);
     this.nightworksLighting?.update(camera);
     this.stadiumLighting?.update(camera);
+    this.motuBeach?.view(camera);
     if(this.nightworksBackdrop)this.jungleAssets?.setCalderaBackdrop(this.nightworksBackdrop.texture,this.nightworksBackdrop.viewport);
     const far=(camera as THREE.PerspectiveCamera).far??400;
     // Use the authored fog horizon; the theme's inherited 150 m jungle limit

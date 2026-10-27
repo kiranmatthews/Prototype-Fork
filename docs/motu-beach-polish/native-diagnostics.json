@@ -1,0 +1,75 @@
+{
+  "motu": {
+    "spectators": 774,
+    "sections": 4,
+    "surfaces": 70,
+    "maps": 6,
+    "errors": [],
+    "sunDirection": [
+      0.6513693148546403,
+      0.42088478805992147,
+      -0.6313271820898821
+    ],
+    "sunOcclusion": "depth buffer",
+    "geometryLod": false
+  },
+  "assets": {
+    "sunnycliff": {
+      "instances": 30,
+      "triangles": 7149
+    },
+    "bayrock": {
+      "instances": 16,
+      "triangles": 4099
+    },
+    "baytrunk": {
+      "instances": 22,
+      "triangles": 1952
+    },
+    "sunnyhibiscus": {
+      "instances": 7,
+      "triangles": 5331
+    },
+    "baycrown": {
+      "instances": 22,
+      "triangles": 4249
+    }
+  },
+  "lights": [
+    {
+      "type": "HemisphereLight",
+      "intensity": 1.1,
+      "color": "cbe9f7"
+    },
+    {
+      "type": "DirectionalLight",
+      "intensity": 2.25,
+      "color": "fff0cf"
+    },
+    {
+      "type": "DirectionalLight",
+      "intensity": 0.36,
+      "color": "a6dfe8"
+    }
+  ],
+  "render": {
+    "frame": 23116,
+    "calls": 789,
+    "triangles": 2762953,
+    "points": 0,
+    "lines": 0
+  },
+  "sizes": {
+    "viewportWidth": 1280,
+    "viewportHeight": 720,
+    "inputWidth": 1280,
+    "inputHeight": 720,
+    "outputWidth": 1280,
+    "outputHeight": 720
+  },
+  "player": [
+    0,
+    0.1,
+    14
+  ]
+}

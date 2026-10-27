@@ -1,0 +1,75 @@
+{
+  "passed": true,
+  "level": "jungle-cup",
+  "reviewedAtUtc": "2026-10-27T06:25:30.365686+00:00",
+  "requiredChecks": {
+    "check:levels": {
+      "passed": true,
+      "commands": 20
+    },
+    "build": {
+      "passed": true,
+      "includesTypeScript": true
+    },
+    "releaseSize": {
+      "passed": true,
+      "bytes": 999475274,
+      "budgetBytes": 1000000000,
+      "files": 1838,
+      "offlineVersion": "f69b99c00fd3e1a2956e"
+    }
+  },
+  "focusedChecks": [
+    "test-motu-beach.mjs",
+    "test-motu-crowd.mjs",
+    "test-jungle-cup.mjs",
+    "test-jungle-cup-runtime.mjs",
+    "test-jungle-cup-layout.mjs",
+    "test-jungle-cup-lip-recovery.mjs",
+    "test-jungle-cup-skating.mjs"
+  ],
+  "native": {
+    "floorProbes": 3060,
+    "spectatorSupports": 774,
+    "routes": 8,
+    "railCatches": 3,
+    "competitionRecovery": true,
+    "editorRoundtrip": true
+  },
+  "skating": {
+    "vertReturns": 24,
+    "terminalContacts": 24,
+    "replayFrames": 3117,
+    "stressFrames": 19200,
+    "movementChanges": false
+  },
+  "browser": {
+    "liteRides": 6,
+    "fullRides": 6,
+    "warnings": 0,
+    "errors": 0,
+    "reviewedResolutions": [
+      "native 1280x720",
+      "normal presentation"
+    ],
+    "productionSmoke": {
+      "passed": true,
+      "startedRun": 1,
+      "timerAdvances": true,
+      "keyboardSkating": true,
+      "supportedRider": true,
+      "warnings": 0,
+      "errors": 0,
+      "screenshot": "production-play.png"
+    }
+  },
+  "preservation": {
+    "defaultCrowdSpectators": 32958,
+    "defaultCrowdExact": true,
+    "newDownloadedRuntimeAssetBytes": 0,
+    "geometryLod": false,
+    "publishedLevelSnapshotChanged": false
+  },
+  "fullSuiteRun": false,
+  "deployment": "Release coordinator owns integration, publication and public verification."
+}

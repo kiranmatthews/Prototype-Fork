@@ -1,13 +1,14 @@
 import type { CustomComponent, CustomLevelData } from '../level';
+import {MOTU_BEACH_SCENERY,MOTU_SKATE_FEATURES,MOTU_SUN} from './motu-beach-art';
 
 // An open competition park inside ONE continuous transition. The toe, curved
 // corners, coping and outside deck belong to the same mesh: no overlapping
 // quarter-pipe ends, boundary pillars in the ride line, or holes below ramps.
 const components: CustomComponent[] = [];
 const add = (c: CustomComponent) => components.push(c);
-const stone = '#c1b08f', jade = '#89a58f', gold = '#d2b768';
+const stone = '#d2c9b5', jade = '#a8c7c0', gold = '#a9b7b3';
 const platform = (nm: string, p: [number, number, number], s: [number, number, number], color = stone) =>
-  add({ t: 'platform', nm, p, s, color, tex: 'jungle',  });
+  add({ t: 'platform', nm, p, s, color, tex: 'pavement' });
 const rail = (nm: string, x: number, y: number, z: number, len: number, yaw = 0) =>
   add({ t: 'rail', nm, p: [x, y, z], len, yaw, color: gold });
 // A flat top and a continuous bank on ALL four sides, including the hips.
@@ -24,11 +25,11 @@ const hip = (nm: string, x: number, z: number, w: number, d: number, h: number, 
     indices.push(i, i + 4, j + 4, i, j + 4, j);
   }
   add({ t: 'mesh', nm, p: [x, 0, z], vertices, indices,
-    vert: false, color, tex: 'jungle',  });
+    vert: false, color, tex: 'pavement' });
 };
 const roundedRing = (radius: number): [number, number][] => {
   const points: [number, number][] = [];
-  for (const [x, z, start] of [[-33, 58, 0.5], [-33, -58, 1], [33, -58, 1.5], [33, 58, 0]])
+  for (const [x, z, start] of [[-53, 88, 0.5], [-53, -88, 1], [53, -88, 1.5], [53, 88, 0]])
     for (let i = 0; i <= 16; i++) {
       const angle = (start + i / 32) * Math.PI;
       points.push([x + Math.cos(angle) * radius, z + Math.sin(angle) * radius]);
@@ -36,24 +37,24 @@ const roundedRing = (radius: number): [number, number][] => {
   return points;
 };
 
-platform('Continuous park foundation', [0, -2, -46], [120, 4, 172], '#8d9a7a');
+platform('Motu / continuous concrete apron', [0, -2, -60], [180, 4, 248], '#d7d4c7');
 // Transition toes, channel beds and stair landings join this floor at y=0.
 // The foundation is the visual underlay at those shared planes, without
 // lifting any ride surface or adding a lip to its collision geometry.
 components[components.length - 1].depthBias = 2;
 add({
-  t: 'vertramp', nm: 'Jade perimeter bowl', p: [0, 0, -46],
-  pts: roundedRing(12),
-  closed: true, vkind: 'quarter', w: 0.5, rise: 3.6, arc: 90, lipRise: 0.8, deck: 7.4,
-  color: jade, tex: 'jungle',
+  t: 'vertramp', nm: 'Jade perimeter bowl', p: [0, 0, -60],
+  pts: roundedRing(16),
+  closed: true, vkind: 'quarter', w: 0.5, rise: 3.6, arc: 90, arcSteps: 40, lipRise: 0.8, deck: 7.4,
+  color: jade, tex: 'pavement',
 });
 // The barrier is OUTSIDE the deck, with the full foundation beneath it.
 // Rounded corners match the bowl so a deck rider cannot enter a blind pocket.
 add({
-  t: 'wallpath', nm: 'Outer deck parapet', p: [0, -6, -46],
-  pts: roundedRing(24.5),
+  t: 'wallpath', nm: 'Outer deck parapet', p: [0, -6, -60],
+  pts: roundedRing(28.5),
   closed: true, w: 1.5, rise: 11.6, collisionHeight: 44,
-  containment: true, color: '#72866d', tex: 'moss',
+  containment: true, color: '#d7c7a5', tex: 'pavement',
 });
 // Wide, four-way funbox: every main approach has a bank and a landing apron.
 hip('Temple funbox', -14, -44, 14, 10, 2.4, 8);
@@ -96,7 +97,7 @@ for (const [x, z, start] of [[-2, 7, .5], [-2, -7, 1], [2, -7, 1.5], [2, 7, 0]])
 // apron is part of the same surface, rather than a hidden vertical back.
 add({ t: 'vertramp', nm: 'Jade pocket bowl', p: [-27, 0, -88.5], pts: pocketRing,
   closed: true, vkind: 'quarter', w: .4, rise: 3.6, arc: 65,
-  deck: 1, outerBank: 5, color: '#79a9a2', tex: 'pavement' });
+  arcSteps: 40, deck: 1, outerBank: 5, color: '#79a9a2', tex: 'pavement' });
 hip('Pocket bowl transfer spine', -27, -88.5, 4, 1, .9, 2, '#d0ba8e');
 rail('Pocket spine coping', -27, 1.02, -88.5, 4, 90);
 
@@ -186,25 +187,19 @@ for (const [x, z, r, color] of [[0, 9, 2.8, '#d1b577'], [13, -40, 7.5, '#d2b483'
   surface('Sun inlay', [x, 0, z], vertices, indices, color);
 }
 
-// Spectator architecture and vegetation stay beyond the riding/deck envelope.
-for (const [x, z, yaw] of [[-72, -38, 90], [72, -46, -90], [0, -147, 180]] as const)
-  add({ t: 'decor', dkind: 'roofedtemple', nm: 'Spectator temple', p: [x, 0, z], s: [22, 18, 14], yaw });
-for (let i = 0; i < 15; i++) for (const side of [-1, 1]) {
-  const z = 40 - i * 12;
-  add({ t: 'decor', dkind: 'junglecanopy', p: [side * (65 + i % 3 * 3), 0, z], s: [18, 23 + i % 3 * 2, 18], yaw: i * 47 });
-  add({ t: 'decor', dkind: 'jungleleaf', p: [side * 61, 0, z - 3], s: [6, 5, 6], yaw: i * 63 });
-}
-for (const z of [46, -138]) for (const x of [-44, -22, 0, 22, 44]) {
-  add({ t: 'decor', dkind: 'junglepalmtree', p: [x, 0, z], s: [12, 19, 12], yaw: x * 12 });
-  add({ t: 'decor', dkind: 'junglecliff', p: [x, -7, z + (z > 0 ? 10 : -10)], s: [25, 28, 16], yaw: 5 });
-}
-for (const x of [-56, 56]) for (const z of [-16, -76])
-  add({ t: 'torch', nm: 'Deck brazier', p: [x, 4.4, z], rise: 2.3, w: 0.7 });
+// Native authored surfaces plus the coast and festival kit remain editable.
+components.push(...MOTU_SKATE_FEATURES, ...MOTU_BEACH_SCENERY);
 
 export const JUNGLE_CUP_LEVEL: CustomLevelData = {
-  v: 1, name: 'Jungle Cup', spawn: [0, 0.1, 14], killY: -18,
-  skatepark: true, sky: 'day', jungleAtmosphere: true, keepPlayFog: true,
-  atmosphere: { backdrop: 'sky', fogNear: 115, fogFar: 310, fogColor: '#b8d2ca',
-    drawDistance: 520, shadowStrength: .8 },
+  v: 1, name: 'Motu Beach Invitational', spawn: [0, 0.1, 14], killY: -18,
+  skatepark: true, sky: 'coastal-town', jungleAtmosphere: false, keepPlayFog: true,
+  ocean: {look:'sunny-beach',geometryVersion:2,p:[103,-5,-60],length:340,
+    yaw:0,seaward:1,width:260,horizonMode:'shoreline',horizonOffset:22,shoreGeometry:'ground'},
+  atmosphere: {backdrop:'painted sky',fogNear:260,fogFar:690,fogColor:'#c3dfe4',
+    ambientSky:'#cbe9f7',ambientGround:'#ebc99d',ambientIntensity:1.1,
+    sunColor:'#fff0cf',sunIntensity:2.25,sunDirection:MOTU_SUN,
+    fillColor:'#a6dfe8',fillIntensity:.36,drawDistance:720,shadowStrength:.7,
+    fallbackTop:'#308fd0',fallbackBottom:'#f8dfb9',fallbackRidges:false,
+    fallbackStars:false,fallbackSunColor:null},
   components,
 };

@@ -1,0 +1,90 @@
+{
+  "index": 6,
+  "frame": 0,
+  "air": false,
+  "grind": false,
+  "maxY": 0,
+  "released": false,
+  "done": true,
+  "results": [
+    {
+      "name": "halfpipe east",
+      "passed": true,
+      "frames": 139,
+      "maxY": 15.196985542210067,
+      "air": true,
+      "grind": false,
+      "position": [
+        53.823801525878906,
+        3.5883350951991764,
+        -125
+      ]
+    },
+    {
+      "name": "halfpipe west",
+      "passed": true,
+      "frames": 139,
+      "maxY": 15.196985542210067,
+      "air": true,
+      "grind": false,
+      "position": [
+        32.176198474121094,
+        3.5883350951991764,
+        -125
+      ]
+    },
+    {
+      "name": "kidney east",
+      "passed": true,
+      "frames": 153,
+      "maxY": 15.696238835189721,
+      "air": true,
+      "grind": false,
+      "position": [
+        -27.455669807897156,
+        2.8590505284116507,
+        -130.61860013520214
+      ]
+    },
+    {
+      "name": "kidney west",
+      "passed": true,
+      "frames": 144,
+      "maxY": 15.404185298270942,
+      "air": true,
+      "grind": false,
+      "position": [
+        -53.64282523230249,
+        2.8603505151179607,
+        -139.1327178988538
+      ]
+    },
+    {
+      "name": "south perimeter",
+      "passed": true,
+      "frames": 160,
+      "maxY": 15.75353868832179,
+      "air": true,
+      "grind": false,
+      "position": [
+        0,
+        2.8656436300632664,
+        48.023798474121094
+      ]
+    },
+    {
+      "name": "beach flat bar",
+      "passed": true,
+      "frames": 46,
+      "maxY": 0.86,
+      "air": true,
+      "grind": true,
+      "position": [
+        54,
+        0.8300000000000001,
+        -54
+      ]
+    }
+  ],
+  "passed": true
+}

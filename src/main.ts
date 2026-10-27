@@ -288,7 +288,8 @@ function updateSunShadow(focusX: number, focusY: number, focusZ: number): void {
   }
   if(!level.isCampaignMap&&level.atmosphere?.sunDirection)
     offset=authoredSunOffset.fromArray(level.atmosphere.sunDirection).normalize().multiplyScalar(90);
-  const heatSun = competition && isCompetitionLevel(current.id) && !editorViewActive ? competition.heatLook.sunOffset : null;
+  const heatSun = competition && isCompetitionLevel(current.id) && !editorViewActive &&
+    !(current.id==='jungle-cup'&&level.atmosphere?.sunDirection) ? competition.heatLook.sunOffset : null;
   sun.target.position.set(focusX, focusY, focusZ);
   sun.target.updateMatrixWorld();
   sun.position.set(
@@ -835,7 +836,10 @@ let levelPostEnabled = false;
 
 function applyTheme(): void {
   const t = level.theme;
-  const heat = competition && isCompetitionLevel(current.id) && !editorViewActive ? competition.heatLook : null;
+  // Motu's authored coastal light owns all three runs; generic heat palettes
+  // otherwise replace its horizon and point the real light away from its sun.
+  const heat = competition && isCompetitionLevel(current.id) && !editorViewActive &&
+    !(current.id==='jungle-cup'&&level.atmosphere?.sunDirection) ? competition.heatLook : null;
   const skyPreset = heat?.sky ?? level.skyPreset;
   const atmosphere = resolveLevelAtmosphere(heat ? { theme: level.theme, skyPreset,
     jungleAtmosphere: level.jungleAtmosphere, isCampaignMap: level.isCampaignMap, skyBackdrop: level.skyBackdrop,
