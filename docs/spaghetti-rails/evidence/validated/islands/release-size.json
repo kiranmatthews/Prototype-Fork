@@ -1,0 +1,10 @@
+{
+  "exit": 1,
+  "bytes": 1000017506,
+  "budget": 1000000000,
+  "overBytes": 17506,
+  "files": 1840,
+  "newRasterBytes": 518824,
+  "status": "Accepted combined-size dependency: obsolete local base only. Coordinator owns final combined build/size and reported 4,175,912 bytes of headroom on the current published base. No geometry, assets or full-detail models were removed.",
+  "output": "Release output: 1840 files, 1,000,017,506 bytes / 1,000,000,000 byte budget.\nRelease is 17,506 bytes over budget. Reduce generated output before uploading to GitHub Pages.\n  202.3 MiB  blockworks-art\n  98.9 MiB  drowned-crown\n  66.4 MiB  rooftop-kook\n  65.0 MiB  map-landmarks\n  64.0 MiB  treehouse-trials-v2\n  49.8 MiB  fonts\n  45.4 MiB  treehouse-trail\n  39.9 MiB  treehouse-trials\n"
+}
