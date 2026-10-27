@@ -135,7 +135,7 @@ export class SkateRace {
       if(r.scene){r.scene.visible=r.id<this.count;if(r.id<this.count&&r.scene.parent!==this.scene)this.scene.add(r.scene);else if(r.id>=this.count)r.scene.removeFromParent();}
       r.marker.visible=r.id<this.count;r.player.prepareStartPresentation(level);this.placeMarker(r);
     }
-    if(level.skateRace?.vehicle==='golf-cart'){this.carts=new GolfCartRace(level,this.course,this.riders,this.count,(id,origin,power)=>this.hit(this.riders[id],origin,power),this.runSeed);this.root.add(this.carts.fleet.root);this.heavyAt=8;}
+    if(level.skateRace?.vehicle==='golf-cart'){this.carts=new GolfCartRace(level,this.course,this.riders,this.count,(id,origin,power)=>this.hit(this.riders[id],origin,power),this.runSeed);this.root.add(this.carts.fleet.root);this.heavyAt=18;}
   }
   start(mode:RaceMode=this.mode,seed?:number):void {
     if(!this.level||mode==='time-trial'&&!this.canStartTimeTrial(this.levelId))return;
@@ -161,9 +161,9 @@ export class SkateRace {
       r.item=this.mode==='time-trial'?'mushroom':c.raceItem??r.deck.draw(this.rank(r.id),Math.max(0,lead.progress-r.progress),heavy,this.elapsed>=30&&!r.ultraUsed,!!this.carts);
       r.itemProgress=Math.max(r.itemProgress,r.progress);
       if(r.item==='star'||r.item==='tidal-wave')r.ultraUsed=true;
-      if(r.item==='blue-shell'||r.item==='shock-shell'||r.item==='tidal-wave')this.heavyAt=this.elapsed+(this.carts?10:r.item==='tidal-wave'?45:25);
+      if(r.item==='blue-shell'||r.item==='shock-shell'||r.item==='tidal-wave')this.heavyAt=this.elapsed+(this.carts?18:r.item==='tidal-wave'?45:25);
     }
-    this.returns.set(c,c.mystery?4:7);
+    this.returns.set(c,c.mystery?(this.carts?1.2:4):7);
   }
   private soundGain(r:Rider):number {
     return r.id===0?1:.3*Math.max(0,1-r.player.pos.distanceTo(this.human.pos)/55)**2;
@@ -177,7 +177,7 @@ export class SkateRace {
     if(r.recovery>0||r.finish!==null||r.knockGrace>0)return false;
     if(r.star>0){this.effects.pulse(r.player.pos,0xffdc5b,2);return false;}
     if(r.shield>0){r.shield=0;r.knockGrace=1;this.effects.burst('shield',r.player.pos);sfx.withGain(this.soundGain(r),()=>sfx.play('maskLoss',.55),r.id?'race-rivals':'');return false;}
-    if(this.carts?.isDriving(r.id)){this.carts.hit(r.id,origin,power);r.knockGrace=1.4;r.boost=0;this.effects.pulse(r.player.pos,0xffcb79,1.8);return true;}
+    if(this.carts?.isDriving(r.id)){this.carts.hit(r.id,origin,power);r.knockGrace=2.2;r.boost=0;this.effects.pulse(r.player.pos,0xffcb79,1.8);return true;}
     const direction=origin?this.a.copy(r.player.pos).sub(origin).setY(0).normalize():this.a.copy(r.player.raceHeading);
     const sign=direction.x*r.player.raceHeading.z-direction.z*r.player.raceHeading.x>=0?1:-1;
     if(!sfx.withGain(this.soundGain(r),()=>r.player.beginRaceStun(4.5,sign),r.id?'race-rivals':''))return false;
@@ -214,9 +214,9 @@ export class SkateRace {
       for(const other of this.riders.slice(0,this.count))if(other!==r&&other.player.pos.distanceTo(r.player.pos)<(this.carts?13:6))this.hit(other,r.player.pos,this.carts?.38:.24);
       return true;
     }
-    if(item==='shock-shell'){this.heavyAt=Math.max(this.heavyAt,this.elapsed+(this.carts?10:25));sfx.withGain(this.soundGain(r),()=>sfx.play('enemySentryCharge',.55),r.id?'race-rivals':'');}
-    if(item==='tidal-wave')this.heavyAt=Math.max(this.heavyAt,this.elapsed+(this.carts?12:45));
-    if(item==='blue-shell')this.heavyAt=Math.max(this.heavyAt,this.elapsed+(this.carts?10:25));
+    if(item==='shock-shell'){this.heavyAt=Math.max(this.heavyAt,this.elapsed+(this.carts?18:25));sfx.withGain(this.soundGain(r),()=>sfx.play('enemySentryCharge',.55),r.id?'race-rivals':'');}
+    if(item==='tidal-wave')this.heavyAt=Math.max(this.heavyAt,this.elapsed+(this.carts?24:45));
+    if(item==='blue-shell')this.heavyAt=Math.max(this.heavyAt,this.elapsed+(this.carts?18:25));
     const order=this.order().filter(a=>a.finish===null),index=order.indexOf(r);
     const target=item==='blue-shell'?order.find(a=>a!==r):index>0?order[index-1]:null;
     const explosive=item==='tnt'||item==='nitro';
@@ -245,7 +245,17 @@ export class SkateRace {
   rank(id=0):number {return this.order().findIndex(r=>r.id===id)+1;}
   /** Rivals use normal device inputs, with reaction time and imperfect pace. */
   drive(id:number,reuseCartInput=false):Input {
-    if(this.carts){const input=reuseCartInput?this.carts.inputFor(id):this.carts.drive(id),r=this.riders[id];if(r.item&&r.itemCooldown<=0){input.itemPressed=true;r.itemCooldown=3;}return input;}
+    if(this.carts){
+      const input=reuseCartInput?this.carts.inputFor(id):this.carts.drive(id),r=this.riders[id];
+      let ready=r.item!=='mushroom'&&r.item!=='star'||this.carts.boostWindow(id);
+      if(r.item==='shield'||r.item==='horn'){
+        const threat=r.threats[0],horn=r.item==='horn';
+        const danger=!!threat&&threat.seconds<(horn?.8:1.4)&&(!horn||threat.item!=='shock-shell');
+        const nearby=this.riders.slice(0,this.count).some(other=>other!==r&&other.finish===null&&!other.recovery&&other.player.pos.distanceToSquared(r.player.pos)<(horn?144:100));
+        ready=(horn||r.shield===0)&&(danger||nearby);
+      }
+      if(r.item&&r.itemCooldown<=0&&ready){input.itemPressed=true;r.itemCooldown=3;}return input;
+    }
     const r=this.riders[id],p=r.player,c=this.course!,input=blankInput();
     if(r.finish!==null||r.recovery>0||p.state==='dead'||p.skateCameraBailing)return input;
     const look=THREE.MathUtils.clamp(Math.abs(p.speed)*.5,7,21);

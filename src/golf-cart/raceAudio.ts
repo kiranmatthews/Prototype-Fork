@@ -37,7 +37,10 @@ export class CartRaceAudio {
     const blend=1-Math.exp(-dt/0.12);
     for(let i=0;i<world.carts.length;i++){
       const c=world.carts[i],distanceGain=this.gain(c,listener),own=i===humanCart;
-      if(owners[i]<0||burning[i]||distanceGain<=.001){
+      // Include vertical/sideways travel, so an airborne or sliding kart still
+      // revs. A small dead band prevents settled suspension jitter restarting it.
+      const motion=Math.hypot(c.vx,c.vy,c.vz),moving=motion>(this.engines.has(i)?.12:.2);
+      if(!moving||owners[i]<0||burning[i]||distanceGain<=.001){
         if(this.engines.delete(i))sfx.setLoop(`rally-engine-${i}`,'kartEngine',false,0);
         continue;
       }

@@ -1,0 +1,38 @@
+{
+  "build": "Codex/sol fork \u00b7 build 10-27 06:22 UTC",
+  "offlineVersion": "35c5de8fbe18fd153d16",
+  "baseRevision": "6a3e38b3b94e86f0edf1b1c194de25dda1278a2e",
+  "sourceSha256": {
+    "src/golf-cart/raceAudio.ts": "a0d608df96a471506d7831a0edaa2f972f8797d54f5a9a7effc8cbdd225ec74e",
+    "src/golf-cart/balance.ts": "589e245f3d5b657aac607aef88eb62284af53c230956c0ee073673dfcc321908",
+    "src/golf-cart/physics.ts": "120596b9ea277e876922503dcb73f2443c2cdbf5ee88282cc355c63a2d53464c",
+    "src/golf-cart/race.ts": "aa9860bfe067ff1924ed3deb18d7b51a3d857a481e8a4a64e8da20497c0cfcf0",
+    "src/race/itemOdds.ts": "f5e53e942ed6ff334f18e5acff8abcbcda1c75df0e484e2a201a6dca865b6474",
+    "src/race/runtime.ts": "24f1f2ace61fab9f23ee18a65e038c2aed1211d5ea491aaa9da26eaff47f4b30"
+  },
+  "unchangedGeometryAndAssets": true,
+  "typecheck": true,
+  "productionBuild": true,
+  "releaseBytes": 999464578,
+  "releaseLimitBytes": 1000000000,
+  "audioChrome": true,
+  "mixChrome": true,
+  "fullRace": true,
+  "finishAudio": {
+    "state": "running",
+    "engineFrames": 6528,
+    "engineLoops": [],
+    "occupiedMotion": [
+      3.0686211112829313e-86,
+      2.1747153429740884e-55,
+      7.923965735904165e-97,
+      8.89805012094423e-146,
+      1.917599174315585e-05,
+      6.365761631383704e-169,
+      4.4125698863899564e-55
+    ]
+  },
+  "allEightFinished": true,
+  "raceFalls": 0,
+  "runtimeSourceUnchangedAfterBuild": true
+}

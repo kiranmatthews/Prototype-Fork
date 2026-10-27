@@ -20,8 +20,17 @@ export class RaceItemDeck {
     if(rank>=5&&gap>45&&heavy){weights['blue-shell']=7;if(rank>=6&&gap>90)weights['shock-shell']=4;}
     if(ultra){weights.star=.06;if(heavy&&rank>=5&&gap>70)weights['tidal-wave']=.04;}
     if(rally){
-      Object.assign(weights,{tnt:18,nitro:16,'green-shell':20,banana:12,'red-shell':20,'water-bomb':20,horn:20,boomerang:12,mushroom:25,shield:14,star:8});
-      if(heavy)Object.assign(weights,{'blue-shell':9,'shock-shell':7,'tidal-wave':7});
+      // Distance matters more than a last-place label: a close pack gets local
+      // racing tools. A genuine gap adds bounded chances of pace and pursuit.
+      const t=Math.max(0,Math.min(1,(gap-24)/116)),chase=rank>1?t*t*(3-2*t):0;
+      for(const key of Object.keys(weights))delete weights[key as RaceItem];
+      Object.assign(weights,rank===1?
+        {tnt:18,nitro:16,banana:12,'green-shell':20,'water-bomb':20,horn:20,boomerang:12,mushroom:12,shield:14}:
+        {tnt:12-5*chase,nitro:10-4*chase,banana:10-5*chase,'green-shell':16,'red-shell':16+8*chase,
+          'water-bomb':14,horn:14,boomerang:10,mushroom:18+18*chase,shield:18+2*chase});
+      if(ultra)weights.star=rank===1?.5:1+2*chase;
+      if(heavy&&rank>=2&&gap>45)weights['blue-shell']=12*chase;
+      if(heavy&&rank>=5&&gap>110){weights['shock-shell']=2*chase;if(ultra)weights['tidal-wave']=chase;}
     }
     // The last two draws cannot repeat, including across rank changes.
     const choices=(Object.entries(weights) as [RaceItem,number][]).filter(([item])=>!this.recent.includes(item));

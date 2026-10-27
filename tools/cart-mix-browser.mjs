@@ -13,8 +13,11 @@ try{
  await page.goto(`${base}/?playtest&level=coconut-cart-rally${full?'':'&lite'}`,{timeout:180000});
  await page.waitForFunction(()=>window.__game?.getSkateRace()?.carts&&!window.__game.gameFlow.blocksGameplay,null,{timeout:180000});
  // Use ordinary input unlock. Awaiting sfx.prepare() here would conceal startup failures.
- await page.mouse.click(1450,600);await page.waitForFunction(()=>window.__game.sfx.ctx.state==='running'&&window.__game.sfx.loops.has('rally-engine-7'),null,{timeout:12000});
+ await page.mouse.click(1450,600);await page.waitForFunction(()=>window.__game.sfx.ctx.state==='running'&&window.__game.sfx.buffers.has('kartEngine'),null,{timeout:12000});
  await page.evaluate(()=>window.__game.renderQualitySettings.setRegularResolution(null));
+ assert.equal(await page.evaluate(()=>[...window.__game.sfx.loops.keys()].some(k=>k.startsWith('rally-engine-'))),false,'Parked grid stays silent');
+ // Keep the spectral/proximity fixture moving: stationary engines are intentionally off.
+ await page.evaluate(()=>{const c=window.__game.getSkateRace().carts;for(const k of c.fleet.physics.carts.slice(0,8))Object.assign(k,{speed:3,vz:-3});c.updateAudio(2);});
  const grid=await page.evaluate(async()=>{
   const s=window.__game.sfx,voice=s.loops.get('rally-engine-0'),a=s.ctx.createAnalyser(),filter=s.ctx.createBiquadFilter(),speaker=s.ctx.createAnalyser(),master=s.ctx.createAnalyser();
   a.fftSize=speaker.fftSize=master.fftSize=8192;filter.type='highpass';filter.frequency.value=300;filter.Q.value=.707;
@@ -25,10 +28,11 @@ try{
   const result={ctx:s.ctx.state,loops:[...s.loops.keys()],raw:read(a),speakerBand:read(speaker),master:read(master),peakHz:spectrum.indexOf(Math.max(...spectrum))*s.ctx.sampleRate/a.fftSize};
   voice.gain.disconnect(a);voice.gain.disconnect(filter);s.master.disconnect(master);filter.disconnect();a.disconnect();speaker.disconnect();master.disconnect();return result;
  });
- assert.equal(grid.loops.filter(id=>id.startsWith('rally-engine-')).length,8);assert.ok(grid.speakerBand.rms>.04,'idle is inaudible above the sub-bass band');assert.ok(grid.peakHz>300&&grid.peakHz<4000,'engine needs audible midrange');assert.ok(grid.speakerBand.rms>grid.raw.rms*.65,'engine is dominated by bass');assert.ok(grid.master.peak<.95,'grid engines clip the output');
+ assert.equal(grid.loops.filter(id=>id.startsWith('rally-engine-')).length,8);assert.ok(grid.speakerBand.rms>.04,'moving engine is inaudible above the sub-bass band');assert.ok(grid.peakHz>300&&grid.peakHz<4000,'engine needs audible midrange');assert.ok(grid.speakerBand.rms>grid.raw.rms*.65,'engine is dominated by bass');assert.ok(grid.master.peak<.95,'grid engines clip the output');
+ await page.evaluate(()=>{const c=window.__game.getSkateRace().carts;for(const k of c.fleet.physics.carts)Object.assign(k,{speed:0,vx:0,vy:0,vz:0});c.updateAudio(2);});
  const startingRings=await rings();assert.ok(startingRings.every(v=>v.top==='e87729'&&v.ring==='eaa03a'));
  await page.getByRole('button',{name:'RACE',exact:true}).click();
- await page.waitForFunction(()=>window.__game.getSkateRace().phase==='countdown'&&window.__game.sfx.loops.has('rally-engine-0'));
+ await page.waitForFunction(()=>window.__game.getSkateRace().phase==='countdown'&&!window.__game.sfx.loops.has('rally-engine-0'));
  await page.waitForFunction(()=>window.__game.getSkateRace().phase==='running',null,{timeout:30000});
  await page.evaluate(()=>{
   const g=window.__game,r=g.getSkateRace(),c=r.carts,s=g.sfx;
@@ -48,13 +52,13 @@ try{
  const spentRings=await rings();assert.equal(spentRings[0].top,'e87729');assert.ok(spentRings.slice(1).every(v=>v.top==='62f06b'&&v.ring==='eaa03a'));await screenshot('spent');
  await page.waitForFunction(()=>window.__game.getSkateRace().carts.thrustCooldown[0]===0,null,{timeout:15000});assert.equal((await rings())[0].top,'62f06b');
  const idle=await engine();await page.keyboard.down('ArrowUp');await page.keyboard.down('Space');await page.waitForTimeout(1100);const throttle=await engine();await page.keyboard.up('Space');await page.keyboard.up('ArrowUp');
- assert.ok(throttle.speed>5);assert.ok(throttle.rate>idle.rate+.3);assert.ok(throttle.gain>idle.gain*1.25);
+ assert.ok(throttle.speed>5);assert.equal(idle.gain,undefined);assert.ok(throttle.rate>1.1);assert.ok(throttle.gain>.38);
  await page.keyboard.down('KeyQ');await page.waitForFunction(()=>Math.abs(window.__game.player.speed)<.2,null,{timeout:5000});await page.keyboard.up('KeyQ');
  const proximity=await page.evaluate(()=>{
-  const g=window.__game,c=g.getSkateRace().carts,w=c.fleet.physics,body=w.carts[1],saved={...body},src=g.sfx.loops.get('rally-engine-1').src,result=[];
+  const g=window.__game,c=g.getSkateRace().carts,w=c.fleet.physics,body=w.carts[1],saved={...body},result=[];let src;
   for(const distance of [4,20,45,85]){
-   Object.assign(body,{x:g.player.pos.x+distance,y:g.player.pos.y,z:g.player.pos.z,speed:0,grounded:true});
-   c.updateAudio(2);const voice=g.sfx.loops.get('rally-engine-1');result.push({distance,gain:voice?.gain.gain.value??0,sameSource:voice?.src===src});
+   Object.assign(body,{x:g.player.pos.x+distance,y:g.player.pos.y,z:g.player.pos.z,speed:5,vx:0,vy:0,vz:-5,grounded:true});
+   c.updateAudio(2);const voice=g.sfx.loops.get('rally-engine-1');src??=voice?.src;result.push({distance,gain:voice?.gain.gain.value??0,sameSource:voice?.src===src});
   }
   Object.assign(body,saved);c.updateAudio(2);return result;
  });assert.ok(proximity[0].gain>proximity[1].gain*1.5);assert.ok(proximity[1].gain>proximity[2].gain*3);assert.equal(proximity[3].gain,0);assert.ok(proximity.slice(0,3).every(v=>v.sameSource));

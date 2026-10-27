@@ -19,16 +19,17 @@ try{
   const foot=g.player.updateFootstepAudio.bind(g.player);g.player.updateFootstepAudio=()=>{probe.footCalls++;if(owned())probe.footLeaks++;return foot();};
  });
  const buffers=await page.evaluate(()=>[...window.__game.sfx.buffers].filter(([key])=>key.startsWith('kart')).map(([key,b])=>({key,duration:b.duration,rate:b.sampleRate})));
- assert.equal(buffers.length,8);assert.ok(buffers.every(v=>v.duration>.4));
+ assert.equal(buffers.length,9);assert.ok(buffers.every(v=>v.duration>.4));
  await page.getByRole('button',{name:'RACE',exact:true}).click();await page.waitForFunction(()=>window.__game.getSkateRace().phase==='running',null,{timeout:30000});
  await page.evaluate(()=>window.__game.getSkateRace().carts.drive=()=>({moveX:0,moveY:0}));
- await page.waitForFunction(()=>window.__game.sfx.loops.has('rally-engine-0'),null,{timeout:10000});
- const idle=await page.evaluate(()=>{const s=window.__game.sfx;return {loops:[...s.loops].map(([id,v])=>({id,name:v.name})),rate:s.loops.get('rally-engine-0').src.playbackRate.value,state:s.ctx.state};});
- assert.equal(idle.state,'running');assert.ok(idle.loops.some(v=>v.name==='kartEngine'));
- await page.keyboard.down('ArrowUp');await page.keyboard.down('Space');await page.waitForTimeout(1000);
+ await page.waitForFunction(()=>!window.__game.sfx.loops.has('rally-engine-0'),null,{timeout:10000});
+ const idle=await page.evaluate(()=>{const s=window.__game.sfx;return {loops:[...s.loops].map(([id,v])=>({id,name:v.name})),state:s.ctx.state};});
+ assert.equal(idle.state,'running');assert.ok(!idle.loops.some(v=>v.id==='rally-engine-0'),'Stationary driver is silent');
+ await page.keyboard.down('ArrowUp');await page.keyboard.down('Space');await page.waitForFunction(()=>window.__game.sfx.loops.has('rally-engine-0'));
+ const lowRate=await page.evaluate(()=>window.__game.sfx.loops.get('rally-engine-0').src.playbackRate.value);await page.waitForTimeout(1000);
  const driving=await page.evaluate(()=>{const g=window.__game;return {speed:g.player.speed,hiddenSkateState:g.player.skateSoundRolling,loops:[...g.sfx.loops].map(([id,v])=>({id,name:v.name})),rate:g.sfx.loops.get('rally-engine-0').src.playbackRate.value};});
  assert.ok(driving.speed>5);assert.equal(driving.hiddenSkateState,true,'Fixture exercises the hidden rider state that caused the leak');
- assert.ok(driving.rate>idle.rate);assert.ok(!driving.loops.some(v=>['skate','grind','wallride'].includes(v.id)));
+ assert.ok(driving.rate>lowRate+.1);assert.ok(!driving.loops.some(v=>['skate','grind','wallride'].includes(v.id)));
  await page.keyboard.up('Space');await page.keyboard.up('ArrowUp');await page.keyboard.down('KeyT');await page.waitForFunction(()=>window.__game.sfx.loops.has('rally-skid'),null,{timeout:10000});await page.keyboard.up('KeyT');
  await page.waitForFunction(()=>window.__game.getSkateRace().carts.thrustCooldown[0]===0,null,{timeout:12000});
  await page.keyboard.press('KeyF');await page.waitForFunction(()=>window.__game.sfx.loops.has('rally-thruster'),null,{timeout:3000});
@@ -36,6 +37,7 @@ try{
  console.log('PASS engine pitch, kart skid/flames, and no skateboard loops while driving');
 
  await page.keyboard.down('KeyQ');await page.waitForFunction(()=>Math.abs(window.__game.player.speed)<.1,null,{timeout:5000});await page.keyboard.up('KeyQ');
+ await page.waitForFunction(()=>!window.__game.sfx.loops.has('rally-engine-0'));
  await page.keyboard.press('KeyE');await page.waitForFunction(()=>{const c=window.__game.getSkateRace().carts;return !c.isDriving(0)&&!c.isAnimating(0);},null,{timeout:6000});
  await page.evaluate(()=>window.cartAudioReview.phase='on-foot');
  await page.keyboard.down('ArrowUp');await page.waitForFunction(()=>window.cartAudioReview.shots.filter(s=>s.phase==='on-foot'&&s.name.startsWith('footstep')).length>=2,null,{timeout:12000});await page.keyboard.up('ArrowUp');
@@ -57,7 +59,7 @@ try{
   c.audio.impact({cart:index,other:null,x:a.x,y:a.y,z:a.z,strength:8,panel:0},g.player.pos);
  });
  assert.equal(await page.evaluate(()=>window.__game.sfx.managedShots.has('rally-impact-1')),true);
- await page.evaluate(()=>window.__game.getSkateRace().carts.hit(0,undefined,1));await page.waitForTimeout(100);
+ await page.evaluate(()=>window.__game.getSkateRace().carts.hit(0,undefined,2));await page.waitForTimeout(100);
  assert.equal(await page.evaluate(()=>window.__game.sfx.managedShots.has('rally-explosion')),true);assert.equal(await page.evaluate(()=>window.__game.sfx.loops.has('rally-fire')),true);
  await page.keyboard.press('Escape');await page.waitForTimeout(200);
  assert.equal(await page.evaluate(()=>window.__game.sfx.loops.size),0,'Pause stops all audio loops');

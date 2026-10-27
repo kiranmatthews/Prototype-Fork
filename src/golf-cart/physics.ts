@@ -14,7 +14,7 @@ export interface CartState extends CartSpawn {
   tumbling:boolean;tumbleAngle:number;tumbleVelocity:number;tumbleTime:number;rollCooldown:number;rolls:number;recoveries:number;
 }
 export type CartBoundary=(x:number,y:number,z:number,radius:number)=>{nx:number;nz:number;depth:number;x:number;z:number}|null;
-export interface CartPhysicsOptions {boundary?:CartBoundary;scale?:number;topSpeed?:number;engine?:number;speedLimit?:number;crestLaunch?:boolean;maxLaunchVelocity?:number;airRecoveryDelay?:number;damageCapacity?:number;gravity?:number;stableLandings?:boolean}
+export interface CartPhysicsOptions {boundary?:CartBoundary;scale?:number;topSpeed?:number;engine?:number;speedLimit?:number;crestLaunch?:boolean;maxLaunchVelocity?:number;airRecoveryDelay?:number;damageCapacity?:number;maxDamageSpeedLoss?:number;gravity?:number;stableLandings?:boolean}
 export const CART_PHYSICS=Object.freeze({step:1/120,maxSteps:24,mass:340,inertia:230,topSpeed:17,reverseSpeed:6,engine:8.4,brake:17,grip:7.7,wheelbase:1.72,radius:.78,probeOffset:.72,restitution:.38,gravity:13.5,hopVelocity:5.8,hopCooldown:1.0,rollImpact:10.5});
 const clamp=(v:number,a:number,b:number)=>Math.max(a,Math.min(b,v));
 const finite=(v:number)=>Number.isFinite(v)?v:0;
@@ -33,14 +33,14 @@ export class GolfCartPhysics {
   time=0;steps=0;droppedTime=0;private accumulator=0;
   readonly scale:number;readonly topSpeed:number;readonly engine:number;readonly speedLimit:number;readonly crestLaunch:boolean;
   readonly maxLaunchVelocity:number;readonly airRecoveryDelay:number;readonly gravity:number;readonly stableLandings:boolean;
-  private readonly damageCapacity:number;
+  private readonly damageCapacity:number;readonly maxDamageSpeedLoss:number;
   private readonly boundary?:CartBoundary;
   get radius(){return CART_PHYSICS.radius*this.scale;}
   get probeOffset(){return CART_PHYSICS.probeOffset*this.scale;}
   constructor(readonly ground:CartGround,readonly spawns:readonly CartSpawn[],readonly obstacles:readonly CartObstacle[]=[],options:CartPhysicsOptions={}){
     this.scale=options.scale??1;this.topSpeed=options.topSpeed??CART_PHYSICS.topSpeed;this.engine=options.engine??CART_PHYSICS.engine;this.speedLimit=options.speedLimit??24;this.crestLaunch=options.crestLaunch??true;
     this.maxLaunchVelocity=options.maxLaunchVelocity??7.5;this.airRecoveryDelay=options.airRecoveryDelay??1.1;
-    this.damageCapacity=options.damageCapacity??0;this.boundary=options.boundary;this.gravity=options.gravity??CART_PHYSICS.gravity;this.stableLandings=options.stableLandings??false;
+    this.damageCapacity=options.damageCapacity??0;this.maxDamageSpeedLoss=clamp(options.maxDamageSpeedLoss??.35,0,1);this.boundary=options.boundary;this.gravity=options.gravity??CART_PHYSICS.gravity;this.stableLandings=options.stableLandings??false;
     this.carts=spawns.map(s=>createCartState(s,ground));this.inputs=spawns.map(()=>({...NO_CART_INPUT}));
   }
   reset(index:number,repair=true){const old=this.carts[index],fresh=createCartState(this.spawns[index],this.ground);if(!repair){fresh.damage=[...old.damage];fresh.health=old.health;fresh.respawns=old.respawns+1;fresh.hits=old.hits;fresh.rolls=old.rolls;fresh.recoveries=old.recoveries;fresh.airborneCount=old.airborneCount;}Object.assign(old,fresh);this.inputs[index]={...NO_CART_INPUT};}
@@ -63,7 +63,9 @@ export class GolfCartPhysics {
       const sn=Math.sin(c.yaw),cs=Math.cos(c.yaw),fx=-sn,fz=-cs,rx=cs,rz=-sn;
       let forward=c.vx*fx+c.vz*fz,lateral=c.vx*rx+c.vz*rz;
       const previous=forward,grip=clamp(g.grip,.12,1.3)*(input.handbrake?.20:1);
-      const damageScale=1-.35*(1-c.health),cap=(throttle>=0?this.topSpeed:CART_PHYSICS.reverseSpeed)*damageScale;
+      // Rally caps only severe engine damage; ordinary dents and other cart
+      // levels keep the original loss curve. This never repairs the body.
+      const damageScale=1-Math.min(this.maxDamageSpeedLoss,.35*(1-c.health)),cap=(throttle>=0?this.topSpeed:CART_PHYSICS.reverseSpeed)*damageScale;
       let acceleration=throttle*this.engine*Math.max(0,1-Math.max(0,forward*Math.sign(throttle))/cap);
       // Opposite pedal brakes first, then engages reverse at walking pace.
       if(throttle*forward<-.5)acceleration=throttle*CART_PHYSICS.brake;

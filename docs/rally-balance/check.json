@@ -1,0 +1,115 @@
+{
+  "passed": true,
+  "assist": [
+    0,
+    0,
+    0,
+    0,
+    0.0048491822141859126,
+    0.023890852305416287,
+    0.04,
+    0.04
+  ],
+  "drawsPerCase": 50000,
+  "leader": {
+    "green-shell": 6609,
+    "horn": 6448,
+    "banana": 4354,
+    "water-bomb": 6653,
+    "tnt": 6084,
+    "boomerang": 4467,
+    "nitro": 5551,
+    "star": 241,
+    "mushroom": 4495,
+    "shield": 5098
+  },
+  "close": {
+    "red-shell": 5748,
+    "boomerang": 3850,
+    "green-shell": 5519,
+    "horn": 4989,
+    "tnt": 4469,
+    "mushroom": 6141,
+    "nitro": 3769,
+    "star": 450,
+    "shield": 6145,
+    "banana": 3858,
+    "water-bomb": 5062
+  },
+  "chase": {
+    "horn": 4363,
+    "mushroom": 8404,
+    "red-shell": 6509,
+    "water-bomb": 4456,
+    "nitro": 2051,
+    "tnt": 2409,
+    "shield": 5775,
+    "tidal-wave": 389,
+    "blue-shell": 3910,
+    "boomerang": 3373,
+    "green-shell": 4778,
+    "banana": 1770,
+    "shock-shell": 726,
+    "star": 1087
+  },
+  "second": {
+    "horn": 4461,
+    "mushroom": 8551,
+    "red-shell": 6674,
+    "green-shell": 4878,
+    "nitro": 2078,
+    "tnt": 2491,
+    "shield": 5883,
+    "blue-shell": 3999,
+    "star": 1150,
+    "boomerang": 3461,
+    "water-bomb": 4548,
+    "banana": 1826
+  },
+  "healthyBefore": {
+    "speed": 35.93944040153169,
+    "z": -661.4192440224911
+  },
+  "healthyAfter": {
+    "speed": 35.93944040153169,
+    "z": -661.4192440224911
+  },
+  "damagedBefore": {
+    "speed": 27.327767324483673,
+    "z": -513.4383868522118
+  },
+  "damagedAfter": {
+    "speed": 29.624467420939467,
+    "z": -553.5513505141769
+  },
+  "closePursuit": {
+    "leaderSpeed": 36.34203552279597,
+    "chaserSpeed": 36.34203552279597,
+    "gap": 15.000000000000114
+  },
+  "distantPursuit": {
+    "leaderSpeed": 36.34203552279597,
+    "chaserSpeed": 37.783228737500195,
+    "gap": 140.61349617972348
+  },
+  "humanPursuit": {
+    "leaderSpeed": 36.34203552279597,
+    "chaserSpeed": 37.783228737500195,
+    "gap": 140.61349617972348
+  },
+  "boostedClose": {
+    "leaderSpeed": 42.84804757125939,
+    "chaserSpeed": 42.84804757125939,
+    "gap": 14.999999999999943
+  },
+  "boostedFar": {
+    "leaderSpeed": 42.84804757125939,
+    "chaserSpeed": 42.84804757125939,
+    "gap": 150.00000000000006
+  },
+  "hitRecovery": true,
+  "aiBoost": true,
+  "humanItemsImmediate": true,
+  "trialBoosts": true,
+  "heavyCooldown": true
+}

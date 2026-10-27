@@ -1,0 +1,31 @@
+{
+  "baselineRevision": "6a3e38b3b94e86f0edf1b1c194de25dda1278a2e",
+  "seeds": [
+    11,
+    741,
+    2026
+  ],
+  "summary": {
+    "baseline": {
+      "winningMargin": 2.899999999999835,
+      "medianGap": 13.533333333332564,
+      "fieldSpread": 32.84444444445343,
+      "earlyLeadersWon": 1,
+      "leadChangesAfter20s": 4,
+      "allFinished": true,
+      "falls": 0,
+      "wrecks": 27
+    },
+    "candidate": {
+      "winningMargin": 4.4833333333330785,
+      "medianGap": 14.749999999999162,
+      "fieldSpread": 29.333333333335542,
+      "earlyLeadersWon": 1,
+      "leadChangesAfter20s": 10,
+      "allFinished": true,
+      "falls": 0,
+      "wrecks": 28
+    }
+  },
+  "interpretation": "The full field is closer on average and lead changes are more frequent. Average winning and median-field margins increased; this is not evidence that every race or finish is closer. Both versions retain one early-leader win in three. Controlled pursuit separately verifies unchanged leader speed, identical human/AI assistance, modest recovery of a genuine gap and no boost stacking."
+}

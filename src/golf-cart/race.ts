@@ -7,6 +7,7 @@ import { RACE_ROSTER } from '../race/types';
 import { GolfCartFleet, type FleetPose } from './fleet';
 import { NO_CART_INPUT, type GroundSample, type CartInput } from './physics';
 import { RallyControls } from './controls';
+import { rallyChasePace } from './balance';
 import { CartMayhemEffects } from './mayhemEffects';
 import { puffs } from '../puffs';
 import { sfx } from '../audio';
@@ -20,7 +21,7 @@ import { createStadiumBoundary } from './stadiumBoundary';
 import { CART_FLAMES,initialFlameRecharge,sideFlameContact,type FlameBody } from './flameTactics';
 
 interface Racer {
-  id:number;player:Player;progress:number;anchor:THREE.Vector3;anchorProgress:number;
+  id:number;player:Player;item?:string|null;progress:number;anchor:THREE.Vector3;anchorProgress:number;
   finish:number|null;falls:number;recovery:number;boost:number;knockGrace:number;star:number;velocity:THREE.Vector3;boxes:Set<Crate>;
 }
 interface CartInteraction {kind:'exit'|'enter'|'steal';id:number;cart:number;victim:number;age:number;duration:number;side:number;actor:CartInteractionActor;passenger:CartInteractionActor|null;foot:THREE.Vector3;from:THREE.Vector3;victimFoot:THREE.Vector3;released:boolean;approach:number;path:THREE.Vector3[];pathLength:number;bail?:CartBailMotion}
@@ -40,13 +41,14 @@ export class GolfCartRace {
   private audio=new CartRaceAudio();
   private nativeDrivers:(RallyDriver|null)[]=[];
   private controls:RallyControls[]=[];
-  private actionCooldown:number[]=[];
+  private actionCooldown:number[]=[];private paceAssist:number[]=[];
   private thrustCooldown:number[]=[];
   private thrustTime:number[]=[];
   private thrustHits:Set<number>[]=[];
   private locked:number[]=[];
   private spareTime:number[]=[];
   private loanWait:number[]=[];
+  private driveStill:number[]=[];private reverseTime:number[]=[];
   private footStill:number[]=[];private footLast:THREE.Vector3[]=[];private footJump:boolean[]=[];
   private homes:{x:number;z:number;yaw:number}[]=[];
   private effects:CartMayhemEffects;
@@ -61,6 +63,7 @@ export class GolfCartRace {
   private humanTarget=-1;private targetMarker=-1;private sampledInputs:Input[]=[];
   private respawns:number[]=[];
   private stun:number[]=[];
+  private pickups:{box:Crate;s:number;offset:number}[]=[];
   private cache=new Map<string,GroundSample>();
   private cells=new Map<string,THREE.Object3D[]>();
   private emptyGround:THREE.Object3D[]=[];
@@ -85,6 +88,7 @@ export class GolfCartRace {
       spawns.push({x:pos.x,z:pos.z,yaw:Math.atan2(-f.x,-f.z)});
     }
     this.homes=spawns.map(s=>({...s}));
+    this.pickups=level.crates.filter(box=>box.mystery).map(box=>{const at=course.project(box.mesh.position);return {box,s:at.s,offset:at.offset};});
     const obstacles=level.walls.filter(b=>b.max.y-b.min.y>1&&b.max.x-b.min.x<9&&b.max.z-b.min.z<9)
       .map((b,i)=>({x:(b.min.x+b.max.x)/2,z:(b.min.z+b.max.z)/2,radius:Math.max(b.max.x-b.min.x,b.max.z-b.min.z)/2,height:b.max.y-b.min.y,id:`rally-barrier-${i}`}));
     this.footObstacles=obstacles.map(o=>{const at=course.project(new THREE.Vector3(o.x,0,o.z)),radius=o.radius*Math.SQRT2;return {lo:at.s-radius,hi:at.s+radius,left:at.offset-radius,right:at.offset+radius};});
@@ -92,7 +96,7 @@ export class GolfCartRace {
     const sponsor=level.pickRoot.getObjectByName('Stadium sponsor hoarding') as THREE.Mesh|undefined;
     this.fleet=new GolfCartFleet({damageVisuals:true,sponsorTexture:(sponsor?.material as THREE.MeshStandardMaterial|undefined)?.map??undefined,ground:(x,z)=>this.ground(x,z),spawns,obstacles,
       onImpact:hit=>this.audio.impact(hit,this.racers[0].player.pos),onLanding:hit=>this.audio.landing(hit,this.racers[0].player.pos,this.cartForRacer[0]),
-      physics:{boundary:stadium?createStadiumBoundary():undefined,scale:1.25,topSpeed:38,engine:23,speedLimit:44,maxLaunchVelocity:9,airRecoveryDelay:6,damageCapacity:16*.7,gravity:24,stableLandings:true}});
+      physics:{boundary:stadium?createStadiumBoundary():undefined,scale:1.25,topSpeed:38,engine:23,speedLimit:44,maxLaunchVelocity:9,airRecoveryDelay:6,damageCapacity:16*.7,maxDamageSpeedLoss:.18,gravity:24,stableLandings:true}});
     this.mud=stadium?new CartMud(this.fleet.mudAmounts):null;if(this.mud)this.fleet.root.add(this.mud.root);
     this.crowd=stadium?new StadiumCrowd():null;if(this.crowd)this.fleet.root.add(this.crowd.root);
     this.fleet.models.forEach((m,i)=>{
@@ -101,7 +105,7 @@ export class GolfCartRace {
       this.fleet.setDriver(i,null);
     });
     this.thrustCooldown=initialFlameRecharge(count,seed);
-    for(let i=0;i<count;i++){this.cartForRacer[i]=i;this.controls[i]=new RallyControls();this.actionCooldown[i]=0;this.thrustTime[i]=0;this.thrustHits[i]=new Set();this.loanWait[i]=0;this.footStill[i]=0;this.footLast[i]=racers[i].player.pos.clone();this.footJump[i]=false;}
+    for(let i=0;i<count;i++){this.cartForRacer[i]=i;this.controls[i]=new RallyControls();this.actionCooldown[i]=0;this.paceAssist[i]=0;this.thrustTime[i]=0;this.thrustHits[i]=new Set();this.loanWait[i]=0;this.driveStill[i]=0;this.reverseTime[i]=0;this.footStill[i]=0;this.footLast[i]=racers[i].player.pos.clone();this.footJump[i]=false;}
     for(let i=0;i<count;i++)this.seatDriver(i,i);
     this.effects=new CartMayhemEffects(this.fleet);
     this.previous=this.fleet.physics.carts.map(c=>({x:c.x,y:c.y,z:c.z,yaw:c.yaw}));this.renderPoses=this.previous.map(p=>({...p}));this.respawns=spawns.map(()=>0);this.stun=spawns.map(()=>0);
@@ -404,6 +408,14 @@ export class GolfCartRace {
     const c=this.fleet.physics.carts[index],look=clamp(Math.abs(c.speed)*.55,9,22);
     let offset=id===0?0:(id%2?1:-1)*(2.2+Math.floor(id/2)*1.1);
     offset=this.flameLane(id,offset);
+    // Empty-handed racers choose an available box lane instead of following
+    // the same centre lane through every exhausted item row.
+    if(!r.item){
+      let score=Infinity;const lane=offset;
+      for(const pickup of this.pickups){const gap=pickup.s-r.progress,value=gap+Math.abs(pickup.offset-lane)*3;
+        if(pickup.box.alive&&gap>=-1&&gap<45&&Math.abs(pickup.offset)<10&&value<score){score=value;offset=pickup.offset;}
+      }
+    }
     const ahead=this.course.sample(r.progress+look,offset);
     for(const obstacle of this.fleet.physics.obstacles)if(Math.hypot(ahead.x-obstacle.x,ahead.z-obstacle.z)<obstacle.radius+5){
       const side=this.course.project(new THREE.Vector3(obstacle.x,ahead.y,obstacle.z),r.progress,60).offset;
@@ -411,23 +423,44 @@ export class GolfCartRace {
     }
     if(r.progress>this.course.length-25)ahead.addScaledVector(this.course.tangent(this.course.length),40);
     const bearing=Math.atan2(-(ahead.x-c.x),-(ahead.z-c.z)),angle=Math.atan2(Math.sin(bearing-c.yaw),Math.cos(bearing-c.yaw));
-    const desired=(id===0?34:31.5+(id%3)*.65)/(1+Math.abs(angle)*.65);
+    if(this.reverseTime[id]>0){
+      // Back out of a ram/rock trap with the same reverse controls a player
+      // has; never teleport a stuck rival or give it extra engine power.
+      const yaw=c.yaw+clamp(angle,-.5,.5),dx=Math.sin(yaw),dz=Math.cos(yaw),basis=r.player.raceInputBasis(this.level),bn=Math.hypot(basis.x,basis.z)||1;
+      return {moveX:(-basis.z*dx+basis.x*dz)/bn,moveY:(basis.x*dx+basis.z*dz)/bn,jumpHeld:true,spinPressed:this.shouldFireFlames(id),itemPressed:false} as Input;
+    }
+    const pace=(id===0?34:31.5+(id%3)*.65)*(1+this.paceAssist[id])+(r.boost>0?8:0);
+    const desired=pace/(1+Math.abs(angle)*.65);
     const dx=ahead.x-c.x,dz=ahead.z-c.z,n=Math.hypot(dx,dz)||1,basis=r.player.raceInputBasis(this.level),bn=Math.hypot(basis.x,basis.z)||1;
     return {moveX:clamp((-basis.z*dx+basis.x*dz)/bn/n,-1,1),moveY:clamp((basis.x*dx+basis.z*dz)/bn/n,-1,1),grabHeld:c.speed>desired+2,
       grindPressed:false,spinPressed:this.shouldFireFlames(id),
       jumpHeld:true,jumpPressed:false,itemPressed:false} as Input;
   }
+  /** Spend a speed item on a supported straight; its extra pace still brakes for corners. */
+  boostWindow(id:number):boolean {
+    const r=this.racers[id],c=this.fleet.physics.carts[this.cartForRacer[id]];
+    if(!c||r.boost>0||!c.grounded||c.tumbling||this.isAnimating(id)||c.speed<10||Math.abs(c.steer)>.4)return false;
+    const ahead=this.course.tangent(r.progress+45,this.point).setY(0).normalize();
+    return -Math.sin(c.yaw)*ahead.x-Math.cos(c.yaw)*ahead.z>.96;
+  }
   inputFor(id:number):Input{return this.sampledInputs[id]??this.drive(id);}
   step(dt:number,input:Input){
+    const leader=Math.max(...this.racers.slice(0,this.count).map(r=>r.progress));
+    for(let i=0;i<this.count;i++)this.paceAssist[i]=this.count>1?rallyChasePace(leader-this.racers[i].progress):0;
     const world=this.fleet.physics;this.noticeTime=Math.max(0,this.noticeTime-dt);
     const samples=this.sampledInputs=this.racers.slice(0,this.count).map((_,i)=>i===0?input:this.drive(i));
     for(let i=0;i<this.count;i++){
       const rider=this.racers[i],foot=rider.player;
+      const kart=world.carts[this.cartForRacer[i]];
+      this.reverseTime[i]=Math.max(0,this.reverseTime[i]-dt);
+      this.driveStill[i]=kart&&kart.grounded&&Math.abs(kart.speed)<2&&!kart.tumbling&&!this.isAnimating(i)&&this.stun[this.cartForRacer[i]]===0&&this.reverseTime[i]===0?this.driveStill[i]+dt:0;
+      if(this.driveStill[i]>1.6){this.reverseTime[i]=1.25;this.driveStill[i]=0;}
+
       if(this.isDriving(i)||this.isAnimating(i)||foot.pos.distanceToSquared(this.footLast[i])>1){this.footStill[i]=0;this.footLast[i].copy(foot.pos);}else this.footStill[i]+=dt;
-      this.loanWait[i]=!this.isDriving(i)&&!this.isAnimating(i)&&(this.nearest(i,350)<0||i>0&&this.footStill[i]>4)?this.loanWait[i]+dt:0;
+      this.loanWait[i]=!this.isDriving(i)&&!this.isAnimating(i)&&(this.nearest(i,65)<0||i>0&&this.footStill[i]>4)?this.loanWait[i]+dt:0;
       if(this.loanWait[i]>2.5&&rider.finish===null){
         const reserve=world.carts.findIndex((c,index)=>index>=this.count&&this.driverForCart[index]<0&&!this.reserved(index)&&this.racers.slice(0,this.count).every(r=>(r.player.pos.x-c.x)**2+(r.player.pos.z-c.z)**2>900));
-        const delivery=reserve>=0?this.loanerBay(rider.progress,reserve,this.footStill[i]>4):null;
+        const delivery=reserve>=0?this.loanerBay(rider.progress,reserve,true):null;
         if(delivery){
           const {bay,heading}=delivery;
           const home={x:bay.x,z:bay.z,yaw:Math.atan2(-heading.x,-heading.z)};this.homes[reserve]=home;Object.assign(world.spawns[reserve],home);world.reset(reserve);this.fleet.mudAmounts[reserve]=0;this.burning[reserve]=false;this.fleet.models[reserve].setScorched(false);this.fleet.models[reserve].setPalette({paint:'#95ee65',cream:'#f5e8ca',cargo:'#f16a45'});this.previous[reserve]={...world.carts[reserve]};this.respawns[reserve]=0;this.loanWait[i]=0;
@@ -471,6 +504,12 @@ export class GolfCartRace {
         if(!this.burning[index]&&this.interactions.some(a=>a.cart===index&&a.bail))control={...NO_CART_INPUT};
         physics.inputs[index]=control;
         if(r&&!this.reserved(index)&&r.boost>0&&c.grounded&&r.finish===null&&!this.burning[index]){const gain=20/120;c.vx-=Math.sin(c.yaw)*gain;c.vz-=Math.cos(c.yaw)*gain;}
+        else if(r&&!this.reserved(index)&&c.grounded&&!c.tumbling&&r.finish===null&&!this.burning[index]&&control.throttle>0&&control.brake===0&&!control.handbrake){
+          const assist=this.paceAssist[owner],cap=physics.topSpeed*(1-Math.min(physics.maxDamageSpeedLoss,.35*(1-c.health)))*(1+assist);
+          const gain=Math.min(physics.engine*assist/120,Math.max(0,cap-c.speed));
+          c.vx-=Math.sin(c.yaw)*gain;c.vz-=Math.cos(c.yaw)*gain;
+        }
+
       }
     },false);
     for(const [index,c]of world.carts.entries()){

@@ -1,0 +1,302 @@
+{
+  "full": false,
+  "fireMix": [
+    {
+      "distance": 3,
+      "gain": 0.7799999713897705,
+      "rms": 0.16737954982510453
+    },
+    {
+      "distance": 25,
+      "gain": 0.3518601059913635,
+      "rms": 0.0908381542324466
+    },
+    {
+      "distance": 85,
+      "gain": 0,
+      "rms": 0
+    }
+  ],
+  "grid": {
+    "ctx": "running",
+    "loops": [
+      "rally-engine-0",
+      "rally-engine-1",
+      "rally-engine-2",
+      "rally-engine-3",
+      "rally-engine-4",
+      "rally-engine-5",
+      "rally-engine-6",
+      "rally-engine-7"
+    ],
+    "raw": {
+      "rms": 0.1347160912232196,
+      "peak": 0.23285578191280365
+    },
+    "speakerBand": {
+      "rms": 0.14002002671289593,
+      "peak": 0.3416758179664612
+    },
+    "master": {
+      "rms": 0.08429875388553927,
+      "peak": 0.22529271245002747
+    },
+    "peakHz": 995.91064453125
+  },
+  "startingRings": [
+    {
+      "top": "e87729",
+      "ring": "eaa03a",
+      "mount": "c39543"
+    },
+    {
+      "top": "e87729",
+      "ring": "eaa03a",
+      "mount": "c39543"
+    },
+    {
+      "top": "e87729",
+      "ring": "eaa03a",
+      "mount": "c39543"
+    },
+    {
+      "top": "e87729",
+      "ring": "eaa03a",
+      "mount": "c39543"
+    },
+    {
+      "top": "e87729",
+      "ring": "eaa03a",
+      "mount": "c39543"
+    },
+    {
+      "top": "e87729",
+      "ring": "eaa03a",
+      "mount": "c39543"
+    },
+    {
+      "top": "e87729",
+      "ring": "eaa03a",
+      "mount": "c39543"
+    },
+    {
+      "top": "e87729",
+      "ring": "eaa03a",
+      "mount": "c39543"
+    }
+  ],
+  "readyRings": [
+    {
+      "top": "62f06b",
+      "ring": "eaa03a",
+      "mount": "c39543"
+    },
+    {
+      "top": "62f06b",
+      "ring": "eaa03a",
+      "mount": "c39543"
+    },
+    {
+      "top": "62f06b",
+      "ring": "eaa03a",
+      "mount": "c39543"
+    },
+    {
+      "top": "62f06b",
+      "ring": "eaa03a",
+      "mount": "c39543"
+    },
+    {
+      "top": "62f06b",
+      "ring": "eaa03a",
+      "mount": "c39543"
+    },
+    {
+      "top": "62f06b",
+      "ring": "eaa03a",
+      "mount": "c39543"
+    },
+    {
+      "top": "62f06b",
+      "ring": "eaa03a",
+      "mount": "c39543"
+    },
+    {
+      "top": "62f06b",
+      "ring": "eaa03a",
+      "mount": "c39543"
+    }
+  ],
+  "spentRings": [
+    {
+      "top": "e87729",
+      "ring": "eaa03a",
+      "mount": "c39543"
+    },
+    {
+      "top": "62f06b",
+      "ring": "eaa03a",
+      "mount": "c39543"
+    },
+    {
+      "top": "62f06b",
+      "ring": "eaa03a",
+      "mount": "c39543"
+    },
+    {
+      "top": "62f06b",
+      "ring": "eaa03a",
+      "mount": "c39543"
+    },
+    {
+      "top": "62f06b",
+      "ring": "eaa03a",
+      "mount": "c39543"
+    },
+    {
+      "top": "62f06b",
+      "ring": "eaa03a",
+      "mount": "c39543"
+    },
+    {
+      "top": "62f06b",
+      "ring": "eaa03a",
+      "mount": "c39543"
+    },
+    {
+      "top": "62f06b",
+      "ring": "eaa03a",
+      "mount": "c39543"
+    }
+  ],
+  "burnt": [
+    {
+      "top": "181a1c",
+      "ring": "181a1c",
+      "mount": "181a1c"
+    },
+    {
+      "top": "e87729",
+      "ring": "eaa03a",
+      "mount": "c39543"
+    },
+    {
+      "top": "e87729",
+      "ring": "eaa03a",
+      "mount": "c39543"
+    },
+    {
+      "top": "e87729",
+      "ring": "eaa03a",
+      "mount": "c39543"
+    },
+    {
+      "top": "e87729",
+      "ring": "eaa03a",
+      "mount": "c39543"
+    },
+    {
+      "top": "e87729",
+      "ring": "eaa03a",
+      "mount": "c39543"
+    },
+    {
+      "top": "e87729",
+      "ring": "eaa03a",
+      "mount": "c39543"
+    },
+    {
+      "top": "e87729",
+      "ring": "eaa03a",
+      "mount": "c39543"
+    }
+  ],
+  "idle": {
+    "speed": 0,
+    "grounded": true
+  },
+  "throttle": {
+    "speed": 18.309119109893032,
+    "gain": 0.5733724236488342,
+    "rate": 1.4818850755691528,
+    "grounded": true
+  },
+  "proximity": [
+    {
+      "distance": 4,
+      "gain": 0.09895241260528564,
+      "sameSource": true
+    },
+    {
+      "distance": 20,
+      "gain": 0.05679086968302727,
+      "sameSource": true
+    },
+    {
+      "distance": 45,
+      "gain": 0.014197719283401966,
+      "sameSource": true
+    },
+    {
+      "distance": 85,
+      "gain": 0,
+      "sameSource": false
+    }
+  ],
+  "crateShots": [
+    {
+      "distance": 80,
+      "shots": [
+        {
+          "name": "crateBreak2",
+          "volume": 0.4,
+          "gain": 0,
+          "channel": "race-crates",
+          "effective": 0,
+          "played": false
+        }
+      ]
+    },
+    {
+      "distance": 4,
+      "shots": [
+        {
+          "name": "crateBreak1",
+          "volume": 0.4,
+          "gain": 0.9619082840236686,
+          "channel": "race-crates",
+          "effective": 0.38476331360946747,
+          "played": true
+        }
+      ]
+    },
+    {
+      "distance": 25,
+      "shots": [
+        {
+          "name": "crateBreak1",
+          "volume": 0.4,
+          "gain": 0.33284023668639046,
+          "channel": "race-crates",
+          "effective": 0.1331360946745562,
+          "played": true
+        }
+      ]
+    }
+  ],
+  "packPlayed": 2,
+  "flight": {
+    "samples": 393,
+    "groundRate": 1.8605753183364868,
+    "airRate": 2.2398998737335205
+  },
+  "bus": {
+    "muted": 0
+  },
+  "pauseSilence": true,
+  "runtime": {
+    "stamp": "Codex/sol fork · build 10-27 06:22 UTC",
+    "glError": 0
+  },
+  "errors": []
+}
