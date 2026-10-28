@@ -5553,3 +5553,22 @@ Release integration preserves the independently published Sky Bridge bonus
 commit `3010206b`. All tested rally source hashes are unchanged. The combined
 production build and release check pass at 997,045,500 bytes, offline version
 `ea03ad0a7f3574094ce7`.
+
+
+## 28 October 2026 — Beach kite publication verified
+
+Published `0a10f2c6` preserves concurrent Sky Bridge and Coconut Cart updates.
+Pages run `40661426694` succeeded; the actual public build is
+`Codex/sol fork · build 10-28 09:08 UTC`, version `d903410add66df0e7822`.
+The entry/version match the exact CI output. A fresh public Chrome run completes
+3 km, all 13 jumps, ten checkpoints, 24/24 main boxes and crystal, then releases
+the kite, stops, walks and deliberately jumps to finish. Console/assets are
+clean, geometry remains complete and normal/MAX captures are reviewed.
+
+The first live run exposed a late turn in the automated optional-pad bypass.
+The pilot now turns when it clears the actual tilted contact plane, 2.516 m
+earlier; the rerun passes against sustained opposing wind. No game runtime or
+level source changed after publication. Both attempts and the exact public
+identity are retained in [the live verification](beach-street/kite-release/public/README.md).
+Live verification completed at 09:21:53 UTC; the final requested wind/brake
+settings had already been browser-playable locally at 08:20 UTC.

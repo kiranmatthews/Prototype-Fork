@@ -1,0 +1,142 @@
+{
+  "recorded": "2026-10-28T09:13:42.695990+00:00",
+  "run": {
+    "conclusion": "success",
+    "databaseId": 40661426694,
+    "headSha": "0a10f2c662b850e62f92e5b3702c1dd7f5975239",
+    "jobs": [
+      {
+        "completedAt": "2026-10-28T09:10:53Z",
+        "conclusion": "success",
+        "databaseId": 122725127904,
+        "name": "deploy",
+        "startedAt": "2026-10-28T09:04:39Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-10-28T09:04:41Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-10-28T09:04:40Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-28T09:08:12Z",
+            "conclusion": "success",
+            "name": "Run actions/checkout@v4",
+            "number": 2,
+            "startedAt": "2026-10-28T09:04:41Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-28T09:08:14Z",
+            "conclusion": "success",
+            "name": "Run actions/setup-node@v4",
+            "number": 3,
+            "startedAt": "2026-10-28T09:08:12Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-28T09:08:16Z",
+            "conclusion": "success",
+            "name": "Run npm ci",
+            "number": 4,
+            "startedAt": "2026-10-28T09:08:14Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-28T09:08:16Z",
+            "conclusion": "skipped",
+            "name": "Full suite (explicit request)",
+            "number": 5,
+            "startedAt": "2026-10-28T09:08:16Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-28T09:09:51Z",
+            "conclusion": "success",
+            "name": "Run npm run build",
+            "number": 6,
+            "startedAt": "2026-10-28T09:08:16Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-28T09:09:51Z",
+            "conclusion": "success",
+            "name": "Release size before upload",
+            "number": 7,
+            "startedAt": "2026-10-28T09:09:51Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-28T09:09:52Z",
+            "conclusion": "success",
+            "name": "Run actions/configure-pages@v5",
+            "number": 8,
+            "startedAt": "2026-10-28T09:09:51Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-28T09:10:18Z",
+            "conclusion": "success",
+            "name": "Run actions/upload-pages-artifact@v3",
+            "number": 9,
+            "startedAt": "2026-10-28T09:09:52Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-28T09:10:51Z",
+            "conclusion": "success",
+            "name": "Run actions/deploy-pages@v4",
+            "number": 10,
+            "startedAt": "2026-10-28T09:10:18Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-28T09:10:51Z",
+            "conclusion": "success",
+            "name": "Post Run actions/setup-node@v4",
+            "number": 19,
+            "startedAt": "2026-10-28T09:10:51Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-28T09:10:52Z",
+            "conclusion": "success",
+            "name": "Post Run actions/checkout@v4",
+            "number": 20,
+            "startedAt": "2026-10-28T09:10:51Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-28T09:10:52Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 21,
+            "startedAt": "2026-10-28T09:10:52Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/kiranmatthews/Prototype-Fork/actions/runs/40661426694/job/122725127904"
+      }
+    ],
+    "startedAt": "2026-10-28T09:04:35Z",
+    "status": "completed",
+    "updatedAt": "2026-10-28T09:10:54Z",
+    "url": "https://github.com/kiranmatthews/Prototype-Fork/actions/runs/40661426694"
+  },
+  "base": "https://kiranmatthews.github.io/Prototype-Fork/",
+  "entry": "assets/index-D_Cii4Xl.js",
+  "main": "assets/main-CDqxX90C.js",
+  "version": "d903410add66df0e7822",
+  "stamp": "Codex/sol fork \u00b7 build 10-28 09:08 UTC",
+  "ciEntryMatch": true,
+  "ciVersionMatch": true,
+  "sha256": {
+    "entry": "35a9044d9b2e6864a884875bbad5489a82bf05a25d700f813a0a204e17a7ee2a",
+    "main": "bf96fb49b45d3b17c78430238ad75cf3f73a5bb5467066fac067c88f60427d90",
+    "sw": "70b4ef22262bcd502b26984bf8fd31c41abada78971576931625fbbf68e2dee2"
+  },
+  "pass": true
+}

@@ -29,7 +29,7 @@ try{
   const g=window.__game,p=g.player,l=g.getLevel();p.respawn(l,true);p.lives=99;
   g.renderQualitySettings.setRegularResolution(preview?null:480);g.crtGuestSettings.setEnabled(!preview);
   const keys=new Set(),used=new Set();let releasedUntil=-1,cp='',lastTrace=-1;
-  const pad=l.bonusPlatformDiagnostics;
+  const pad=l.bonusPlatformDiagnostics,padContactZ=l.kiteBonusPad?.body.z;
   const state=window.__kitePilot={done:false,crashes:[],trace:[],jumps:[],checkpoints:[],keys:[],maxGripError:0,canopyBounds:{minX:1,maxX:-1,minY:1,maxY:-1},canopyClips:[]};
   let frame=0;
   const key=(code,down)=>{if(keys.has(code)===down)return;if(down)keys.add(code);else keys.delete(code);document.body.dispatchEvent(new KeyboardEvent(down?'keydown':'keyup',{code,key:code==='Space'?' ':code,bubbles:true}));state.keys.push({z:-p.pos.z,code,down});};
@@ -59,9 +59,15 @@ try{
     requestAnimationFrame(run);return;
    }
    let target=line(z+2);
-   // The optional pad now catches a straight approach. Choose its outer side
-   // after collecting the preceding exit rewards. Entry/return is tested separately.
-   if(pad&&z>-pad.z-14&&z<-pad.z+1)target=pad.x-2.1;
+   // Bypass to the left, then steer toward the next planter's right opening
+   // as soon as the tilted pad's actual contact plane clears. Waiting until
+   // after its visual centre wastes turning room against a sustained gust.
+   if(pad&&padContactZ!==undefined&&z>-pad.z-14&&z<-pad.z+18){
+    target=z<-padContactZ?pad.x-2.1:3.8;
+    state.bonusBypass??={contactZ:padContactZ,centreZ:pad.z,trace:[]};
+    if(!state.bonusBypass.trace.length||z-state.bonusBypass.trace.at(-1).z>=1)
+     state.bonusBypass.trace.push({...snap(),target,wind:p.kiteMotion.wind,lateral:p.kiteMotion.lateral});
+   }
    const error=target-p.pos.x-(p.kiteMotion?.lateral??0)*.12;
    // Real DOM keyboard events: no teleports, velocity writes or invulnerability.
    key('ArrowRight',error>.10);key('ArrowLeft',error<-.10);
