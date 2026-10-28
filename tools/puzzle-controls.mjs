@@ -130,6 +130,12 @@ export function puzzleControls(r) {
     return index<0?undefined:l.crates[index];
   };
   function* checkpoint(x,label='bank checkpoint') {
+    if(l.hudMode==='bonus') {
+      check(l.checkpoints.length===0,'bonus must not contain checkpoint crates');
+      yield* walk([x-1.1,p.pos.y,0],`pass former checkpoint at ${x}`);
+      r.report.evidence.push({action:'pass removed bonus checkpoint',x});
+      return;
+    }
     const cp=l.checkpoints.find(cp=>Math.abs(cp.spawnPos.x-x)<.04);check(cp,`${label} missing checkpoint`);
     yield* walk([x-1.1,cp.box.min.y,0],`${label} approach`);
     yield* tick({spinHeld:true});yield* stepFor(22);

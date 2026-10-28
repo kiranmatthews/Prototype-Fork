@@ -5410,3 +5410,29 @@ bundling, version `dc2c6603b0dd0b9c9ca2`. All 16 full-mesh framing cases pass
 across wide, narrow and portrait views; the visible preview was reloaded and
 its final stamp verified. The final change is presentation-only at aspects
 below 1.6:1, so the complete 1600×1000 course and bonus evidence remains valid.
+
+
+## 28 October 2026 — Remove checkpoints from every bonus level
+
+Removed eight inherited checkpoint crates from Fern Reliquary (2), Lifeguard
+Lockup (2) and Rooftop Deliveries (4). Their reward totals are now 20, 24 and 32.
+All 25 registered/published bonus entries are checkpoint-free. Shared bonus
+loading strips checkpoints from old saves/imports and editor captures, and
+parent gem totals exclude them. Ordinary course checkpoints and successful
+bonus return banking retain their existing behavior.
+
+Prompt-to-playable elapsed time: approximately **16 minutes**, including
+production browser validation. Checkpoint/import/retry regressions, 40 mask
+cases, all three complete input-only all-box journeys (zero deaths), required
+level checks and production build passed. Six Chrome smoke cases in lite and
+full/MAX native resolution verified supported spawn, side controls, former
+checkpoint locations, fall recovery, disabled checkpoint warps and finish
+triggers with no console/page/WebGL errors. Full and normal views reviewed.
+Two older test expectations already disagree with the starting commit's
+Skystream fallback and Beachside woodpaths; both are documented separately.
+
+[Validation and evidence](bonus-no-checkpoints/README.md). Built
+`Codex/sol fork · build 10-28 07:32 UTC`, offline version
+`8185038211e5a73c75f9`. Local increment for the active release coordinator;
+no direct push or public-deployment claim. No movement tuning or published
+level-pack changes, and no full suite.

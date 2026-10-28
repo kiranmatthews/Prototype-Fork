@@ -1317,7 +1317,8 @@ export function migrateCustomLevel(d: CustomLevelData): CustomLevelData {
   // Old editor copies must not restore the retired physical checkpoint crate.
   // Road races recover to their latest supported position. Rail races keep
   // authored retry locations as data; their checkpoint crates remain hidden.
-  if (d.encounter === 'crab-chief' || d.skateRace && !d.skateRace.grinds?.length)
+  // Bonus attempts restart from the entrance; saved rooms cannot add checkpoints.
+  if (d.hudMode === 'bonus' || d.encounter === 'crab-chief' || d.skateRace && !d.skateRace.grinds?.length)
     d.components = d.components.filter(component => component.t !== 'checkpoint');
   // Retired vehicles must not return through saved libraries or shared files.
   // Leave the road geometry, groups and other enemies available for editing.

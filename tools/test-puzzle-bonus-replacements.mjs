@@ -24,11 +24,12 @@ for(const [key,donorId] of replacements.filter(([key])=>!process.argv.includes('
     assert.equal(r.l.bonusPlatform,null);
     assert.equal(r.l.clockPickup,null);
     assert.equal(r.l.crystalPickup,null);
+    assert.equal(r.l.checkpoints.length,0,'bonus inherited a main-course checkpoint');
     assert.equal(r.l.cameraViews.length,1);
     assert.equal(r.source.components.filter(c=>c.t==='gate').length,1);
     const raw=PUZZLE_LAYOUTS[donorId];
     const geometry=c=>Object.fromEntries(Object.entries(c).filter(([k])=>!['t','color','tex','vertices','indices','uvs'].includes(k)));
-    const expected=raw.components.filter(c=>c.grp!==5&&!['clock','zone','camnode'].includes(c.t));
+    const expected=raw.components.filter(c=>c.grp!==5&&!['clock','checkpoint','zone','camnode'].includes(c.t));
     const actual=r.source.components.filter(c=>(c.grp??0)<90&&c.t!=='camnode');
     assert.equal(actual.length,expected.length,'scenery added or removed a gameplay component');
     for(const [i,c]of expected.entries()){

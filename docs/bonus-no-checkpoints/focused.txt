@@ -1,0 +1,26 @@
+{"childPid": 85652, "command": "sh", "owner": "01a18164-7b38-7f11-94c2-2428089ba3db", "pid": 85650, "slot": 0, "startedAt": "2026-10-28T07:32:13.257252+00:00", "status": "running"}
+PASS 25 source/published bonus entries, legacy import/capture, checkpoint-free retry and box targets
+PASS production bonus success/failure, durable inventory, repeated real-Player checkpoint restores, switch/partial-crate/bridge state, exact box tally and fresh-run reset
+PASS 40 real-Player bonus mask cases: every starting tier, spent masks, actual mask crate, expired invincibility, death return, both life modes and returned checkpoints
+{"id":"bonus-jungle","donor":"crate-primer","boxes":20,"enemies":3,"checkpoints":0,"seconds":82.23333333333333,"deaths":0,"state":"finished"}
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+'woodpath' !== 'mesh'
+
+    at withBlockworksRuntime.modulePath (file:///Users/kiki/.codex/worktrees/bonus-no-checkpoints/Prototype%20Fork/tools/test-puzzle-bonus-replacements.mjs:36:14)
+    at async withBlockworksRuntime (file:///Users/kiki/.codex/worktrees/bonus-no-checkpoints/Prototype%20Fork/tools/blockworks-runner.mjs:222:12)
+    at async file:///Users/kiki/.codex/worktrees/bonus-no-checkpoints/Prototype%20Fork/tools/test-puzzle-bonus-replacements.mjs:15:3 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: 'woodpath',
+  expected: 'mesh',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0
+{"exitCode": 1, "owner": "01a18164-7b38-7f11-94c2-2428089ba3db", "slot": 0, "status": "released"}

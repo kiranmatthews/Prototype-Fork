@@ -1,0 +1,12 @@
+{"childPid": 85715, "command": "sh", "owner": "01a18164-7b38-7f11-94c2-2428089ba3db", "pid": 85713, "slot": 1, "startedAt": "2026-10-28T07:32:15.896397+00:00", "status": "running"}
+✓ 868 modules transformed.
+✓ built in 20.01s
+Level sync: 2 overrides, 12 exact source copies omitted; 39.2 KiB download.
+Release assets: kept active fonts; omitted 72 historical files (401.3 MiB) from generated output.
+Local review galleries: 406 files (208.2 MiB) kept in the authoring library.
+Font export: 1 on-demand archive(s), 34.8 MiB less hosted data.
+Reviewed textures: 423 reviewed images in 271 models, 402.0 MiB less hosted data; original art retained.
+Shared textures: 131 exact images reused across 134 models, 33.7 MiB less hosted data.
+Native geometry: 18 complete models packed losslessly, 15.5 MiB less hosted data.
+Offline game: 1747 files, 948.2 MiB, version 8185038211e5a73c75f9
+{"exitCode": 0, "owner": "01a18164-7b38-7f11-94c2-2428089ba3db", "slot": 1, "status": "released"}
