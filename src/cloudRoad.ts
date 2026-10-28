@@ -1,4 +1,7 @@
 import * as THREE from 'three';
+import { bakeCloudOptics, createCloudRoadMaterial } from './cloudRoadLighting';
+import { SKYSTREAM_SUN } from './skystreamSun';
+import { createCloudRoadFringe, type CloudFringe } from './cloudRoadFringe';
 
 export interface CloudRoadSection {
   point: THREE.Vector3;
@@ -20,14 +23,14 @@ const smoothMin = (a: number, b: number, k: number) => {
  * one watertight billowing body, with a shallow cloud cap over the ride plane.
  * The shell is presentation only. No cloud vertices enter contact queries.
  * Full authored tessellation is retained in every view; chunks only cull. */
-export function createCloudRoad(sections: CloudRoadSection[], flatHalf?: number, gutterRadius = 2.4): THREE.Group {
+export function createCloudRoad(sections: CloudRoadSection[], flatHalf?: number, gutterRadius = 2.4, sunDirection = SKYSTREAM_SUN): THREE.Group {
   const root = new THREE.Group();root.name = 'Continuous cloud road';
   root.userData.cloudRoadVisual = true;
   const length = [0];
   for(let i=1;i<sections.length;i++)length.push(length[i-1]+sections[i].point.distanceTo(sections[i-1].point));
   const total=length[length.length-1];
   if(total<.01)return root;
-  const material = cloudMaterial();
+  const material = createCloudRoadMaterial();
   let cursor=0;
   const sectionAt=(s:number):CloudRoadSection=>{
     while(cursor<sections.length-2 && length[cursor+1]<s)cursor++;
@@ -40,6 +43,8 @@ export function createCloudRoad(sections: CloudRoadSection[], flatHalf?: number,
   const count=Math.ceil(total/.65),around=112;
   const seed=sections[0].point.x*.31+sections[0].point.z*.17;
   let rings:THREE.Vector3[][]=[];
+  let optics:number[][][]=[];
+  const wisps:CloudFringe[]=[];
   for(let i=0;i<=count;i++){
     const s=total*i/count,f=sectionAt(s),cell=Math.floor(s/4.6);
     const lobes:{x:number;y:number;z:number;rx:number;ry:number;rz:number}[]=[];
@@ -95,15 +100,33 @@ export function createCloudRoad(sections: CloudRoadSection[], flatHalf?: number,
     contour.push([0,startY]);
     const perimeter=[0];
     for(let j=1;j<contour.length;j++)perimeter.push(perimeter[j-1]+Math.hypot(contour[j][0]-contour[j-1][0],contour[j][1]-contour[j-1][1]));
-    const ring:THREE.Vector3[]=[];let segment=0;
+    const ring:THREE.Vector3[]=[],localRing:[number,number][]=[];let segment=0;
     for(let j=0;j<=around;j++){
       const d=perimeter[perimeter.length-1]*j/around;
       while(segment<contour.length-2&&perimeter[segment+1]<d)segment++;
       const t=(d-perimeter[segment])/(perimeter[segment+1]-perimeter[segment]||1);
       const a=contour[segment],b=contour[segment+1];
+      localRing.push([THREE.MathUtils.lerp(a[0],b[0],t),THREE.MathUtils.lerp(a[1],b[1],t)]);
       ring.push(f.point.clone().addScaledVector(f.across,THREE.MathUtils.lerp(a[0],b[0],t)).addScaledVector(f.normal,THREE.MathUtils.lerp(a[1],b[1],t)));
     }
     rings.push(ring);
+    optics.push(bakeCloudOptics(contour,localRing,sunDirection.dot(f.across),sunDirection.dot(f.normal)));
+    // Two shoulders every ~13 m, with an underside wisp every other station.
+    // These sparse domains extend at most 0.6 m beyond the exact shell and
+    // never cover the riding crown. All instances retain their authored shape.
+    if(i>0&&i<count&&i%20===10){
+      const picks=[localRing.slice(0,around).reduce((best,p,j)=>p[0]>localRing[best][0]?j:best,0),
+        localRing.slice(0,around).reduce((best,p,j)=>p[0]<localRing[best][0]?j:best,0)];
+      if(i%40===10)picks.push(localRing.slice(0,around).reduce((best,p,j)=>p[1]<localRing[best][1]?j:best,0));
+      for(const j of picks){
+        const a=localRing[(j+around-1)%around],b=localRing[(j+1)%around];
+        const outward=f.across.clone().multiplyScalar(a[1]-b[1]).addScaledVector(f.normal,b[0]-a[0]).normalize();
+        const along=f.across.clone().cross(f.normal).normalize(),aroundSurface=outward.clone().cross(along).normalize();
+        const matrix=new THREE.Matrix4().makeBasis(along.multiplyScalar(1.5+hash(i+seed,j)*.5),aroundSurface.multiplyScalar(.8),outward.multiplyScalar(.5));
+        matrix.setPosition(ring[j].clone().addScaledVector(outward,.1));
+        wisps.push({matrix,optics:optics[i][j]});
+      }
+    }
   }
   // Ellipsoidal end domes overlap adjacent components and give exposed jump
   // ends a soft silhouette. The collision ribbon still ends at its authored point.
@@ -119,13 +142,15 @@ export function createCloudRoad(sections: CloudRoadSection[], flatHalf?: number,
     return atStart?caps.reverse():caps;
   };
   const beginning=endRings(true),ending=endRings(false);rings=[...beginning,...rings,...ending];
+  optics=[...beginning.map(()=>optics[0]),...optics,...ending.map(()=>optics[optics.length-1])];
   const last=rings.length-1;
   // A 25 m chunk is a visibility boundary only, never a reduced-detail mesh.
   const chunkRings=38;
   for(let start=0;start<last;start+=chunkRings){
-    const end=Math.min(last,start+chunkRings),positions:number[]=[],normals:number[]=[],indices:number[]=[];
+    const end=Math.min(last,start+chunkRings),positions:number[]=[],normals:number[]=[],indices:number[]=[],light:number[]=[];
     for(let i=start;i<=end;i++)for(let j=0;j<=around;j++){
       positions.push(...rings[i][j].toArray());
+      light.push(...optics[i][j].map(value=>Math.round(value*255)));
       const left=rings[i][(j+around-1)%around],right=rings[i][(j+1)%around];
       const before=rings[Math.max(0,i-1)][j],after=rings[Math.min(last,i+1)][j];
       const normal=new THREE.Vector3().subVectors(right,left).cross(new THREE.Vector3().subVectors(after,before)).normalize();
@@ -134,37 +159,12 @@ export function createCloudRoad(sections: CloudRoadSection[], flatHalf?: number,
     }
     const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));
     geo.setAttribute('normal',new THREE.Float32BufferAttribute(normals,3));geo.setIndex(indices);
+    geo.setAttribute('cloudOptics',new THREE.Uint8BufferAttribute(light,2,true));
     geo.computeBoundingBox();geo.computeBoundingSphere();
     const mesh=new THREE.Mesh(geo,material);mesh.name='Cloud billows · full detail';
     mesh.userData.visualOnly=true;mesh.userData.cloudRoadVisual=true;mesh.userData.edgeGrinding=false;
     mesh.userData.castShadow=false;mesh.userData.receiveShadow=true;root.add(mesh);
   }
+  if(wisps.length)root.add(createCloudRoadFringe(wisps));
   return root;
-}
-
-function cloudMaterial():THREE.MeshStandardMaterial {
-  const material=new THREE.MeshStandardMaterial({color:'#f3f9ff',roughness:1,metalness:0,emissive:'#17202c',emissiveIntensity:.28,side:THREE.DoubleSide});
-  material.onBeforeCompile=shader=>{
-    shader.vertexShader='varying vec3 vCloudWorld;\n'+shader.vertexShader;
-    shader.vertexShader=shader.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\nvCloudWorld=(modelMatrix*vec4(transformed,1.0)).xyz;');
-    shader.fragmentShader=`varying vec3 vCloudWorld;
-float cloudHash(vec3 p){p=fract(p*.3183099+vec3(.17,.31,.47));p*=17.0;return fract(p.x*p.y*p.z*(p.x+p.y+p.z));}
-float cloudNoise(vec3 p){vec3 i=floor(p),f=fract(p);f=f*f*(3.0-2.0*f);return mix(mix(mix(cloudHash(i),cloudHash(i+vec3(1,0,0)),f.x),mix(cloudHash(i+vec3(0,1,0)),cloudHash(i+vec3(1,1,0)),f.x),f.y),mix(mix(cloudHash(i+vec3(0,0,1)),cloudHash(i+vec3(1,0,1)),f.x),mix(cloudHash(i+vec3(0,1,1)),cloudHash(i+vec3(1,1,1)),f.x),f.y),f.z);}
-float cloudDetail(vec3 p){return .62*cloudNoise(p)+.26*cloudNoise(p*2.1)+.12*cloudNoise(p*4.3);}
-`+shader.fragmentShader;
-    shader.fragmentShader=shader.fragmentShader.replace('#include <color_fragment>',`#include <color_fragment>
-float cloudDensity=cloudDetail(vCloudWorld*.62);
-diffuseColor.rgb*=mix(vec3(.94,.97,1.0),vec3(1.0),smoothstep(.25,.75,cloudDensity));`);
-    shader.fragmentShader=shader.fragmentShader.replace('#include <normal_fragment_begin>',`#include <normal_fragment_begin>
-float cloudHeight=cloudDetail(vCloudWorld*1.8)*.012;
-vec3 cloudQx=dFdx(-vViewPosition),cloudQy=dFdy(-vViewPosition);
-vec3 cloudRx=cross(cloudQy,normal),cloudRy=cross(normal,cloudQx);
-float cloudDet=dot(cloudQx,cloudRx);
-normal=normalize(abs(cloudDet)*normal-sign(cloudDet)*(dFdx(cloudHeight)*cloudRx+dFdy(cloudHeight)*cloudRy));`);
-    shader.fragmentShader=shader.fragmentShader.replace('#include <opaque_fragment>',`// Broad multiple-scattering fill keeps the shaded billows soft and milky.
-outgoingLight=mix(outgoingLight,diffuseColor.rgb*vec3(.86,.92,1.0),.28);
-#include <opaque_fragment>`);
-  };
-  material.customProgramCacheKey=()=> 'skystream-cloud-volume-v1';
-  return material;
 }

@@ -56,3 +56,7 @@ meshes / 1,626,016 triangles, hidden contact ribbons and active sun. Its stamp i
 
 The original skybox and gentle lower-half tint were re-reviewed at MAX/native
 and normal CRT presentation after the user's final sky direction.
+
+The 29 October rendering follow-up adds baked light penetration, shared filtered
+noise and selective volumetric shoulder/underside wisps. See the [lighting and
+fringe implementation, measurements and validation](lighting/README.md).

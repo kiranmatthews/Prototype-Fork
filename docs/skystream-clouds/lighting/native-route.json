@@ -1,0 +1,187 @@
+{
+  "evidence": {
+    "gaps": [
+      {
+        "index": 0,
+        "takeoff": [
+          -4.917752291511602,
+          6.991669728788965,
+          -734.8628788660487
+        ],
+        "landed": [
+          -8.091746599406138,
+          0.7076003690437553,
+          -768.1351712947165
+        ],
+        "aired": true
+      },
+      {
+        "index": 1,
+        "takeoff": [
+          30.75771930454127,
+          -108.09638774706444,
+          -1216.6565844029928
+        ],
+        "landed": [
+          19.42360950247442,
+          -114.0960993420851,
+          -1236.6159107620529
+        ],
+        "aired": true
+      },
+      {
+        "index": 2,
+        "takeoff": [
+          73.71496374486564,
+          -221.7636124365839,
+          -1616.7392955392133
+        ],
+        "landed": [
+          80.3620744108321,
+          -225,
+          -1635.333500363969
+        ],
+        "aired": true
+      },
+      {
+        "index": 3,
+        "takeoff": [
+          164.120493280831,
+          -412.39945724963417,
+          -2026.6752610969136
+        ],
+        "landed": [
+          163.88774669055547,
+          -422.59133068289816,
+          -2056.447952642217
+        ],
+        "aired": true
+      }
+    ],
+    "inverted": true,
+    "loopEntrySpeed": 66.21119164705985,
+    "finished": true,
+    "checkpoints": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "loops": [
+      {
+        "entrySpeed": 66.21119164705985,
+        "inverted": true,
+        "wall": false
+      },
+      {
+        "entrySpeed": 49.7467142515643,
+        "inverted": false,
+        "wall": true
+      },
+      {
+        "entrySpeed": 62.14645688072287,
+        "inverted": true,
+        "wall": false
+      }
+    ]
+  },
+  "index": 1177,
+  "end": {
+    "frame": 8473,
+    "time": 141.21666666666667,
+    "position": [
+      132.32604643354807,
+      -431.1354981144744,
+      -2158.4646013761776
+    ],
+    "heading": [
+      -0.17091686443315127,
+      0,
+      -0.9852854537911072
+    ],
+    "state": "finished",
+    "grounded": false,
+    "speed": 23,
+    "verticalSpeed": -10.56064337561999,
+    "bailing": false,
+    "deaths": 0,
+    "mover": null,
+    "ground": {
+      "name": "warp plinth rim",
+      "y": -431.2733333308498,
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "slippy": false,
+      "iceGrip": null
+    },
+    "rail": null,
+    "railDistance": null,
+    "balance": 0,
+    "input": {
+      "moveX": -0.2,
+      "moveY": 0.98,
+      "jumpHeld": true,
+      "grindHeld": false,
+      "spinHeld": false,
+      "grabHeld": false,
+      "transferHeld": false,
+      "jumpPressed": false,
+      "jumpReleased": false,
+      "grindPressed": false,
+      "spinPressed": false,
+      "grabPressed": false,
+      "transferPressed": false,
+      "restartPressed": false
+    },
+    "cratesBroken": 67,
+    "totalCrates": 85,
+    "remainingCrates": []
+  },
+  "recovery": {
+    "frame": 8784,
+    "time": 146.4,
+    "position": [
+      164,
+      -413.9269075325468,
+      -1994
+    ],
+    "heading": [
+      0,
+      0,
+      -1
+    ],
+    "state": "ride",
+    "grounded": true,
+    "speed": 0,
+    "verticalSpeed": 0,
+    "bailing": false,
+    "deaths": 1,
+    "mover": null,
+    "ground": null,
+    "rail": null,
+    "railDistance": null,
+    "balance": 0,
+    "input": {
+      "moveX": 0,
+      "moveY": 0,
+      "jumpHeld": false,
+      "grindHeld": false,
+      "spinHeld": false,
+      "grabHeld": false,
+      "transferHeld": false,
+      "jumpPressed": false,
+      "jumpReleased": false,
+      "grindPressed": false,
+      "spinPressed": false,
+      "grabPressed": false,
+      "transferPressed": false,
+      "restartPressed": false
+    }
+  }
+}

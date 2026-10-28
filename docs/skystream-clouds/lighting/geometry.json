@@ -1,0 +1,23 @@
+[
+  {
+    "shape": "curved-road",
+    "baselineMs": 130.22900000000004,
+    "candidateMs": 141.013917,
+    "triangles": 32480,
+    "geometryBytesIdentical": true
+  },
+  {
+    "shape": "wall",
+    "baselineMs": 251.06204200000013,
+    "candidateMs": 269.67945799999984,
+    "triangles": 78848,
+    "geometryBytesIdentical": true
+  },
+  {
+    "shape": "vertical",
+    "baselineMs": 235.13695800000005,
+    "candidateMs": 245.06508400000007,
+    "triangles": 79968,
+    "geometryBytesIdentical": true
+  }
+]

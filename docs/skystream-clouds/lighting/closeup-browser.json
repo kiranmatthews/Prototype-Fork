@@ -1,0 +1,82 @@
+{
+  "base": "http://127.0.0.1:5187/",
+  "errors": [],
+  "shots": [
+    "fringe-detail-before.png",
+    "fringe-detail-lighting.png",
+    "fringe-detail-after.png"
+  ],
+  "benchmarks": [
+    {
+      "pose": "fringe-detail",
+      "size": [
+        1152,
+        720
+      ],
+      "method": "GPU timer query",
+      "disjoint": false,
+      "before": {
+        "medianMs": 5.127416,
+        "p95Ms": 10.651999,
+        "samples": 20
+      },
+      "lighting": {
+        "medianMs": 5.242499,
+        "p95Ms": 10.472624,
+        "samples": 20
+      },
+      "after": {
+        "medianMs": 5.330041,
+        "p95Ms": 8.657624,
+        "samples": 20
+      }
+    },
+    {
+      "pose": "fringe-detail",
+      "size": [
+        1600,
+        1000
+      ],
+      "method": "GPU timer query",
+      "disjoint": false,
+      "before": {
+        "medianMs": 15.681499,
+        "p95Ms": 20.242875,
+        "samples": 20
+      },
+      "lighting": {
+        "medianMs": 15.924541,
+        "p95Ms": 20.275625,
+        "samples": 20
+      },
+      "after": {
+        "medianMs": 16.167249,
+        "p95Ms": 20.277833,
+        "samples": 20
+      }
+    }
+  ],
+  "startupMs": 14551.077417,
+  "geometry": {
+    "meshes": 206,
+    "triangles": 1626016,
+    "lighting": {
+      "owners": 50,
+      "textures": 1,
+      "baseBytes": 1048576,
+      "mipBytes": 1198372
+    },
+    "bakedBytes": 1687090,
+    "materials": 25,
+    "fringeBatches": 25,
+    "fringeInstances": 850,
+    "fringeInstanceBytes": 56100
+  },
+  "stability": {
+    "size": [
+      320,
+      200
+    ],
+    "differingBytes": 0
+  }
+}
