@@ -5757,3 +5757,26 @@ bonus captures reviewed; zero console errors or failed requests. See
 [release evidence](debug-level-menu/README.md). The coordinator is retired;
 publication proceeds directly as requested. No geometry audit or full suite
 was required for this presentation change.
+
+### 2026-10-29 — Number every debug row and share bonus numbers
+
+The user clarified the numbering while publication was running. Every row now
+displays its number: parent levels advance sequentially and each authored bonus
+reuses its parent's number. All 66 rows are covered by 45 parent/standalone
+numbers and 21 linked bonuses. The 1–9 shortcuts target the corresponding
+parent, so 2 opens Banana Bay. The Skystream and its bonus both display 30.
+Standalone authoring courses and the shared fallback receive their own numbers.
+Menu-only number metadata preserves level IDs, saved names and gameplay data.
+
+Approximately five minutes from the numbering request to a verified playable
+production menu. Existing debug-shortcut checks, production build and release
+sizing pass (997,082,634 bytes; stamp `Codex/sol fork · build 10-28 18:40 UTC`).
+Fresh production Chrome in lite, full normal and MAX/native passes every
+number/parent pairing, actual Digit 2 parent selection, new Skystream bonus
+launch, active/edit targets and saved/custom refresh. Console errors and failed
+requests are zero in every mode. Desktop/portrait and native bonus captures
+were reviewed. [Numbering evidence](debug-level-menu/README.md).
+
+The superseded Pages run was canceled before deployment so publication can
+include this final correction. The 22-name archive remains intact. No geometry
+or level-data checks and no full suite were required for this menu-only change.
