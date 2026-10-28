@@ -1,7 +1,7 @@
 /** Kite forces are local to this mode. Jump power still comes from live tuning. */
 export const KITE_TOW = Object.freeze({
   riseGravity: 16, fallGravity: 24,
-  steeringSpeed: 9, steeringResponse: 16,
+  steeringSpeed: 9, steeringResponse: 16, airLateralScale: .5,
   coyoteSeconds: .10, bufferSeconds: .14,
   speedScale: 1.35, accelerationScale: 1.4,
   brakeFloor: 7.5, brakeDeceleration: 30, brakeLimit: 1,
@@ -24,12 +24,13 @@ export class KiteTowMotion {
   reserve=0; braking=false; brakeSeconds=0; bursting=false; autoReleases=0;
   private brakeLatched=false;
   wind=0; windTarget=0; windAge=0;
-  private windTime=0; private seed=1; private bufferedCharge=0;
+  private windTime=0; private seed=1; private bufferedCharge=0; private lateralScale=1;
   constructor(seed?:number){this.reset(seed);}
   reset(seed=Math.floor(Math.random()*0x100000000)):void {
     this.age=this.speed=this.lateral=this.charge=this.coyote=this.jumpBuffer=this.reserve=this.brakeSeconds=this.autoReleases=0;
     this.started=this.charging=this.braking=this.bursting=this.brakeLatched=false;
     this.wind=this.windAge=this.windTime=0;this.seed=seed>>>0;this.windTarget=this.random()*2-1;
+    this.lateralScale=1;
   }
   private random(){this.seed=(Math.imul(this.seed,1664525)+1013904223)>>>0;return this.seed/0x100000000;}
   step(dt:number,distance:number,grounded:boolean,input:KiteInput,tuning:KiteTuning){
@@ -84,7 +85,11 @@ export class KiteTowMotion {
       if(this.speed<target)this.speed=Math.min(target,this.speed+accel*dt);
       else if(!this.charging)this.speed=Math.max(target,this.speed-.65*dt);
     }
-    const targetLateral=input.moveX*KITE_TOW.steeringSpeed+this.wind*KITE_TOW.windDrift;
+    // Halve all sideways travel in flight, including wind drift. Rescale the
+    // carried velocity once at takeoff/landing so the response stays identical.
+    const lateralScale=grounded&&jumpCharge===null?1:KITE_TOW.airLateralScale;
+    this.lateral*=lateralScale/this.lateralScale;this.lateralScale=lateralScale;
+    const targetLateral=(input.moveX*KITE_TOW.steeringSpeed+this.wind*KITE_TOW.windDrift)*lateralScale;
     this.lateral+=(targetLateral-this.lateral)*(1-Math.exp(-KITE_TOW.steeringResponse*dt));
     return {jumpCharge,dx:this.lateral*dt,dz:-this.speed*dt};
   }

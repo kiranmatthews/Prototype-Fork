@@ -1,0 +1,23 @@
+{
+  "recorded": "2026-10-28T10:23:12.647959+00:00",
+  "base": "8d4e0c256b40f443230f080442d1937c79f48b66",
+  "build": {
+    "stamp": "Codex/sol fork \u00b7 build 10-28 10:18 UTC",
+    "version": "3677e6fd625bef13d007",
+    "entry": "assets/index-CxyMwRXC.js",
+    "files": 1847,
+    "bytes": 997070333
+  },
+  "sha256": {
+    "src/kiteTow.ts": "074b525b65dae995d3194c24ed1b99345d78f78b24e9fc18c0259493a70b84fb",
+    "tools/test-kite-motion.mjs": "285152f63d4c8ad66f249583e02f81cb2fa69da9fb38a0238c391cd8a0382bdb",
+    "tools/beach-kite-browser.mjs": "76cf1117769d3e6674c3454c6c324c15ba82bafa432e95e0d9b158716cfe046f",
+    "docs/beach-street/air-control/motion.json": "04621071266be0675b134e385814b89d35601f57a699d5c6033a205c68fbbf42",
+    "docs/beach-street/air-control/native.json": "f1049aaf43c445b7d935abc0195ab7f8c394c478843b601d3c2b2704c700ed3d",
+    "docs/beach-street/air-control/README.md": "f564242cafe1ec5e8590fbdc72bfdbde1fb56d1d104763cc41c3958c964d0ba7",
+    "docs/beach-street/air-control/build-final.json": "addd1083fc0b9875f9bbf16576195cb8b8e349c0406c91fa4deb347f41b93872",
+    "docs/beach-street/air-control/local/native-first-hop.png": "dd0321bb4d3e75dfe107b673c5950b12dd049769f148fa6afc11dfcbf7dd4f23",
+    "docs/beach-street/air-control/local/native-tow.png": "5bef5793a7aa08a7e605e1ebed3910c3f121a58ff16e1bb549eedf6bab6a49f9",
+    "docs/beach-street/air-control/local/browser-full-preview.json": "7922e2f9d29fe0804ae041f077ad4b648815f524118d90e3b88a8bc3c94e3cd1"
+  }
+}

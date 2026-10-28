@@ -57,6 +57,26 @@ const wind=seed=>{const w=new KiteTowMotion(seed);let prev=0,previousTarget=0,ch
 const winds=[wind(1),wind(92)];assert.notDeepEqual(winds[0].samples,winds[1].samples);
 for(const w of winds){assert.ok(w.lo<-.75&&w.hi>.75);assert.ok(w.maxDelta<.06);assert.ok(w.meanAbsoluteDrift>2.6);assert.ok(w.changes>=9&&w.changes<=18&&w.reversals>=5);}
 assert.equal(KITE_TOW.steeringSpeed,9,'Only forward speed increases');assert.equal(KITE_TOW.steeringResponse,16);
+const airSteering=[];
+for(const moveX of [-1,0,1])for(const wind of [-1,0,1]){
+ const ground=new KiteTowMotion(41),air=new KiteTowMotion(41);
+ for(const c of [ground,air]){c.started=true;c.speed=31.05;c.wind=c.windTarget=wind;c.windTime=1000;}
+ const input={...idle,moveX,jumpHeld:true};
+ for(let i=0;i<90;i++)for(const c of [ground,air])c.step(1/60,500,true,input,tuning);
+ let groundTravel=0,airTravel=0;
+ for(let i=0;i<90;i++){
+  const g=ground.step(1/60,500,true,input,tuning),a=air.step(1/60,500,false,input,tuning);
+  assert.ok(Math.abs(a.dx-g.dx*.5)<1e-9,'Air travel is exactly half, including carried speed and wind');
+  assert.equal(a.dz,g.dz,'Air steering does not reduce forward travel');groundTravel+=g.dx;airTravel+=a.dx;
+ }
+ const landing=air.step(1/60,500,true,input,tuning),reference=ground.step(1/60,500,true,input,tuning);
+ assert.ok(Math.abs(landing.dx-reference.dx)<1e-9,'Landing restores the original ground steering');
+ air.charge=.4;air.charging=true;
+ const takeoff=air.step(1/60,500,true,{...input,jumpHeld:false,jumpReleased:true},tuning);
+ const grounded=ground.step(1/60,500,true,input,tuning);
+ assert.equal(takeoff.jumpCharge,.4);assert.ok(Math.abs(takeoff.dx-grounded.dx*.5)<1e-9,'The jump-release frame already uses half lateral speed');
+ airSteering.push({moveX,wind,groundTravel,airTravel});
+}
 m.reset();for(let i=0;i<180;i++)assert.equal(step({...idle,jumpHeld:true}).dz,0,'Held input from death cannot restart');
 // Review boundary inputs separately from the connected route: a late release
 // may use coyote time or a landing buffer, but cancellation/reset must erase it.
@@ -81,7 +101,7 @@ assert.equal(step({...idle,spinPressed:true}).jumpCharge,null);edges.push('reset
 for(const button of ['jumpPressed','spinPressed','grindPressed','grabPressed']){
  m.reset(53);assert.equal(step().dz,0);assert.ok(step({...idle,[button]:true}).dz<0);
 }edges.push('each fresh face-button edge starts the tow');
-const report={pass:true,chargeSeconds:tuning.jumpChargeTime,chargeAcceleration:tuning.chargeBoost*KITE_TOW.accelerationScale,speedCases,partialRelease:partial,forcedBurst:burst,winds,edgeReview:edges};
+const report={pass:true,chargeSeconds:tuning.jumpChargeTime,chargeAcceleration:tuning.chargeBoost*KITE_TOW.accelerationScale,speedCases,partialRelease:partial,forcedBurst:burst,winds,airSteering,edgeReview:edges};
 const out=process.env.BEACH_OUTPUT??'docs/beach-street/kite-spring';
 await mkdir(out,{recursive:true});await writeFile(`${out}/motion.json`,JSON.stringify(report,null,2)+'\n');
 console.log('PASS faster forward speed, original steering, partial brake memory, one-second forced burst, capped energy, slower strong gusts and seven input-edge cases');

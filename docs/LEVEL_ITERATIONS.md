@@ -5640,3 +5640,16 @@ lower half. That revision was visually checked at 09:12 UTC; integrated native
 traversal, production browser smoke, build and release-size validation completed
 at 09:19 UTC (85 minutes from the brief, including the later sky adjustment).
 The production scene retains 1,626,016 cloud triangles with no geometry LOD swaps.
+
+## 28 October 2026 — Half-speed kite air movement
+
+Request 10:14:07 UTC → rebuilt browser check 10:19:57 UTC (5 min 50 s).
+Kite flight now halves sideways steering and wind drift from takeoff and
+restores full ground control on landing. Forward movement, jump feel, gust
+cadence and the one-second brake remain. Nine focused motion comparisons pass,
+as do the full native 3 km course, build, release size and fresh full-render
+Chrome opening/jump check. No console/asset errors. This is a kite-only runtime
+change; no level data or global tuning edit. The open in-app tab could not be
+reloaded through the unavailable browser-control API; the rebuilt local preview
+was independently verified and the user was asked to reload once.
+Evidence: [air control](beach-street/air-control/README.md).
