@@ -1,0 +1,39 @@
+{
+  "base": "a81035f6d108f4c6ab9bbfbedfe85e8e0df530b7",
+  "checks": {
+    "opticsAndNoiseAndFringeBounds": true,
+    "rotatedFramesAndChunkSeams": true,
+    "deterministicReloads": true,
+    "surfaceTextureAndInstanceBufferDisposal": true,
+    "unchangedShellBytes": true,
+    "completeNativeRoute": true,
+    "gpuThreeWayComparison": true,
+    "fixedCameraPixels": true,
+    "packagedCompleteBrowserRoute": true,
+    "liteBrowser": true,
+    "typescriptAndProductionBuild": true,
+    "releaseSize": true,
+    "packagedNormalCrtPresentation": true
+  },
+  "releaseBytes": 997089300,
+  "releaseBudget": 1000000000,
+  "productionEntry": "assets/index-COVTXB0V.js",
+  "sourceSha256": {
+    "src/cloudRoad.ts": "08ee11a43aa3fa99eadac0f59ff7110e4d0c59953df179eceaa6a6ea5270c370",
+    "src/cloudRoadLighting.ts": "7f4b379b8b0be949404c2199fae7d0b3e03fa23aa0b40aa36b45c93f375e8a29",
+    "src/cloudRoadFringe.ts": "78bc25094f721868ac1b4a5f67fab4edc7c6c7d1200217c9a7207e5f3b2b577f",
+    "src/level.ts": "13b888c667c1fbfbd2aa7e60d25b0f064f5f1fdc5c88347debd2c63c1e561d23",
+    "tools/test-cloud-road-lighting.mjs": "32b51127b105828e210fcb8b6d29471c1dd7542f4703807803c7ecc905b68be1",
+    "tools/test-skystream.mjs": "d7b57ec918ce474dd5a11f5a88c7eda32972a1e6a1b19ce972ccf715ec5a43e5"
+  },
+  "finalIntegration": {
+    "publishedBase": "e0109cf3d69e3048047e1789f761c71410851ad7",
+    "cloudFeatureCommit": "fa8b0b68ebe67e424ad9916b55a4acfaa0f1b099",
+    "cloudAndLifecycleSourceHashesUnchanged": true,
+    "typescriptAndProductionBuild": true,
+    "nativeAndNormalBrowserSmoke": true,
+    "releaseBytes": 997089376,
+    "releaseBudget": 1000000000,
+    "entry": "assets/index-D4f4M-SR.js"
+  }
+}

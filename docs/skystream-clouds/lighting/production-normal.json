@@ -1,0 +1,31 @@
+{
+  "base": "http://127.0.0.1:5188/",
+  "initial": {
+    "stamp": "Codex/sol fork · build 10-28 18:46 UTC",
+    "level": "skystream",
+    "loops": [
+      "vertical",
+      "wall",
+      "vertical"
+    ],
+    "cloudMeshes": 206,
+    "fringeBatches": 25,
+    "fringeInstances": 850,
+    "boundedFringes": true,
+    "bakedLighting": true,
+    "cloudTriangles": 1626016,
+    "hiddenContact": true,
+    "sun": true,
+    "spawn": [
+      0,
+      150.73666666644314,
+      18
+    ],
+    "grounded": true
+  },
+  "release": {
+    "entry": "assets/index-COVTXB0V.js"
+  },
+  "errors": [],
+  "failedRequests": []
+}

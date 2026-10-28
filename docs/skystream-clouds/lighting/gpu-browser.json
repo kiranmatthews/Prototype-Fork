@@ -1,0 +1,185 @@
+{
+  "base": "http://127.0.0.1:5187/",
+  "errors": [],
+  "shots": [
+    "road-before.png",
+    "road-lighting.png",
+    "road-after.png",
+    "upright-loop-before.png",
+    "upright-loop-lighting.png",
+    "upright-loop-after.png",
+    "wall-loop-before.png",
+    "wall-loop-lighting.png",
+    "wall-loop-after.png"
+  ],
+  "benchmarks": [
+    {
+      "pose": "road",
+      "size": [
+        1152,
+        720
+      ],
+      "method": "GPU timer query",
+      "disjoint": false,
+      "before": {
+        "medianMs": 3.101041,
+        "p95Ms": 5.413874,
+        "samples": 20
+      },
+      "lighting": {
+        "medianMs": 2.876625,
+        "p95Ms": 4.215291,
+        "samples": 20
+      },
+      "after": {
+        "medianMs": 2.91475,
+        "p95Ms": 4.23325,
+        "samples": 20
+      }
+    },
+    {
+      "pose": "road",
+      "size": [
+        1600,
+        1000
+      ],
+      "method": "GPU timer query",
+      "disjoint": false,
+      "before": {
+        "medianMs": 4.172624,
+        "p95Ms": 15.226749,
+        "samples": 20
+      },
+      "lighting": {
+        "medianMs": 3.977458,
+        "p95Ms": 15.023666,
+        "samples": 20
+      },
+      "after": {
+        "medianMs": 4.073708,
+        "p95Ms": 14.956958,
+        "samples": 20
+      }
+    },
+    {
+      "pose": "upright-loop",
+      "size": [
+        1152,
+        720
+      ],
+      "method": "GPU timer query",
+      "disjoint": false,
+      "before": {
+        "medianMs": 9.757249,
+        "p95Ms": 20.677624,
+        "samples": 20
+      },
+      "lighting": {
+        "medianMs": 9.675999,
+        "p95Ms": 17.97575,
+        "samples": 20
+      },
+      "after": {
+        "medianMs": 9.317458,
+        "p95Ms": 12.459583,
+        "samples": 20
+      }
+    },
+    {
+      "pose": "upright-loop",
+      "size": [
+        1600,
+        1000
+      ],
+      "method": "GPU timer query",
+      "disjoint": false,
+      "before": {
+        "medianMs": 13.857624,
+        "p95Ms": 18.134874,
+        "samples": 20
+      },
+      "lighting": {
+        "medianMs": 12.565208,
+        "p95Ms": 18.149541,
+        "samples": 20
+      },
+      "after": {
+        "medianMs": 12.825416,
+        "p95Ms": 18.040916,
+        "samples": 20
+      }
+    },
+    {
+      "pose": "wall-loop",
+      "size": [
+        1152,
+        720
+      ],
+      "method": "GPU timer query",
+      "disjoint": false,
+      "before": {
+        "medianMs": 13.856083,
+        "p95Ms": 16.211499,
+        "samples": 20
+      },
+      "lighting": {
+        "medianMs": 13.7245,
+        "p95Ms": 15.955125,
+        "samples": 20
+      },
+      "after": {
+        "medianMs": 13.745333,
+        "p95Ms": 16.173125,
+        "samples": 20
+      }
+    },
+    {
+      "pose": "wall-loop",
+      "size": [
+        1600,
+        1000
+      ],
+      "method": "GPU timer query",
+      "disjoint": false,
+      "before": {
+        "medianMs": 14.781666,
+        "p95Ms": 17.776124,
+        "samples": 20
+      },
+      "lighting": {
+        "medianMs": 15.10775,
+        "p95Ms": 18.07025,
+        "samples": 20
+      },
+      "after": {
+        "medianMs": 15.156291,
+        "p95Ms": 18.030124,
+        "samples": 20
+      }
+    }
+  ],
+  "startupMs": 15155.778375,
+  "geometry": {
+    "meshes": 206,
+    "triangles": 1626016,
+    "lighting": {
+      "owners": 50,
+      "textures": 1,
+      "baseBytes": 1048576,
+      "mipBytes": 1198372
+    },
+    "bakedBytes": 1687090,
+    "materials": 25,
+    "fringeBatches": 25,
+    "fringeInstances": 850,
+    "fringeInstanceBytes": 56100
+  },
+  "stability": {
+    "size": [
+      320,
+      200
+    ],
+    "differingBytes": 0,
+    "fringePixels": 791
+  }
+}

@@ -1,4 +1,5 @@
 import { createCloudRoad, type CloudRoadSection } from './cloudRoad';
+import { SKYSTREAM_SUN } from './skystreamSun';
 import { createCloudPlatform } from './cloudPlatform';
 import { sampleLoop } from './loopRide';
 import { roundCorners } from './pathNodes';
@@ -6592,7 +6593,7 @@ export class Level {
         const a=new THREE.Vector3(...c.vertices!.slice(i,i+3) as [number,number,number]),b=new THREE.Vector3(...c.vertices!.slice(i+3,i+6) as [number,number,number]);
         sections.push({point:a.clone().add(b).multiplyScalar(.5),normal:c.normals?new THREE.Vector3(...c.normals.slice(i,i+3) as [number,number,number]):new THREE.Vector3(0,1,0),across:b.clone().sub(a).normalize(),halfWidth:a.distanceTo(b)/2});
       }
-      const clouds=createCloudRoad(sections);clouds.position.copy(mesh.position);clouds.quaternion.copy(mesh.quaternion);this.root.add(clouds);
+      const clouds=createCloudRoad(sections,undefined,2.4,SKYSTREAM_SUN.clone().applyQuaternion(mesh.quaternion.clone().invert()));clouds.position.copy(mesh.position);clouds.quaternion.copy(mesh.quaternion);this.root.add(clouds);
       mesh.visible=false;mesh.userData.cloudRoad=true;
     }
     if (c.fog !== undefined) mesh.userData.authoredFog = c.fog;

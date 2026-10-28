@@ -46,6 +46,6 @@ try{
  let triangles=0;root.traverse(o=>{if(!o.isMesh)return;assert.ok(o.userData.visualOnly);const p=o.geometry.attributes.position,n=o.geometry.attributes.normal;
   assert.ok([...p.array,...n.array].every(Number.isFinite));triangles+=o.geometry.index.count/3;o.geometry.dispose();});
  assert.ok(triangles>4000,'Native cloud detail is authored geometry');
- root.children[0].material.dispose();
+ for(const material of new Set(root.children.map(m=>m.material)))material.dispose();
  console.log('PASS: vertical wedding band, continuous entry/exit, inward winding, 30/60/120 Hz travel, smooth visual clearance, full-detail non-colliding billows.');
 }finally{await server.close();}

@@ -5799,3 +5799,36 @@ targets and saved/custom refresh. No console errors or failed requests. Native
 campaign/authoring boundary and bonus captures reviewed. See
 [final numbering evidence](debug-level-menu/README.md). No level-data changes,
 unrelated audits or full suite.
+## 2026-10-29 NZDT — Efficient Skystream cloud lighting and volumetric fringes
+
+About nine minutes from the 07:13 approval to the first playable full-render
+lighting comparison. The 07:33 request to add the remaining technique produced
+the first working fringe renderer in about four minutes; integrated validation
+and release preparation followed. Work stayed in the Skystream task worktree.
+
+The complete main cloud shell now uses baked sun penetration and broader blue
+scattering with one shared, mip-filtered 64³ noise texture. Sparse shoulder and
+underside wisps use 850 bounded ellipsoids in 25 instanced batches, eight fixed
+samples per visible fragment and the same noise upload. They add a small soft
+silhouette transition without temporal jitter or depth writes. Light values and
+noise remain anchored through all loop orientations. The original sky, tint,
+sun, full mesh silhouettes and independent smooth collision remain intact.
+
+Added GPU data totals about 2.83 MiB, including the complete shared mip chain,
+baked vertex lighting and wisp buffers. Material leases release the texture on
+final disposal; each proxy geometry explicitly releases its instance buffer.
+No per-frame cloud allocations or distance-based geometry substitutions exist.
+The three-way GPU comparison stays near the prior cloud material's cost in the
+tested views, with the largest final MAX wall-loop median about 0.37 ms slower.
+These are cloud-pass measurements, not whole-game frame-rate claims.
+
+Focused optical-depth/noise/bounds/lifecycle checks pass, including rotation
+invariance, contour/chunk seams and pixel-identical fixed-camera frames. Curved
+road, upright-loop and wall-loop position/normal/index bytes match the previous
+renderer exactly. Native and packaged full-browser traversal retain all 67
+main-course boxes, four gaps, three loops and seven checkpoints with no deaths
+or bails. Deliberate fall recovery, lite/full shaders, type checking, production
+build and release sizing pass. The latest published debug-menu changes were
+integrated before the final build; no level data or movement tuning changed.
+
+See [cloud lighting and fringe evidence](skystream-clouds/lighting/README.md).

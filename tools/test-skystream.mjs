@@ -7,9 +7,14 @@ import {slipstreamPlayableLength} from './slipstream-course-length.mjs';
 import {createSkystreamPilot} from './skystream-pilot.mjs';
 const output=process.env.SKYSTREAM_REVIEW_DIR??join(tmpdir(),'skystream-review');
 await mkdir(output,{recursive:true});
+let lightingStats;
+let fringeBatches=0,disposedFringes=0;
 
 await withBlockworksRuntime(async r=>{
  const {p,l,source,sourceModule:m}=r;
+ lightingStats=(await r.server.ssrLoadModule('/src/cloudRoadLighting.ts')).cloudRoadLightingDiagnostics;
+ assert.equal(lightingStats().textures,1,'The full course shares one filtered cloud texture');
+ l.root.traverse(o=>{if(o.userData.cloudRoadFringe){fringeBatches++;o.addEventListener('dispose',()=>disposedFringes++);}});
  const saved=JSON.parse(await readFile(new URL('./fixtures/skystream/saved-slipstream.json',import.meta.url),'utf8'));
  const original=await r.server.ssrLoadModule('/src/levels/skystream-source.ts');
  assert.deepEqual(original.SAVED_SLIPSTREAM_LEVEL,saved,'Keep the exact exported saved course as the mirrored foundation');
@@ -90,3 +95,5 @@ await withBlockworksRuntime(async r=>{
  assert.equal(error,undefined);
 },{modulePath:'/src/levels/skystream.ts',source:m=>m.SKYSTREAM_LEVEL,levelId:'skystream',endlessDeaths:true,maxFrames:43000,
  controlFrame:r=>r.p.courseInputDirection(r.l)??r.p.camDir});
+assert.deepEqual(lightingStats(),{owners:0,textures:0,baseBytes:0,mipBytes:0},'Leaving the real level must release every cloud material and its shared texture');
+assert.ok(fringeBatches>0&&disposedFringes===fringeBatches,'Leaving the real level must release every wisp instance buffer');
