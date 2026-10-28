@@ -2,8 +2,11 @@
 
 The debug MENU now takes campaign names and progression order from
 `CAMPAIGN_LEVELS`. Each authored bonus follows its parent with the label
-`[Parent name] Bonus`. The same ordered list drives the numbered playtest
-shortcuts, play/edit tooltips and active-row highlighting. Non-map courses and
+`[Parent name] Bonus`. Every row has a number; a bonus reuses its parent's
+number, so the opening pairs are `1· Treehouse Trail` / `1· Treehouse Trail Bonus`
+and `2· Banana Bay` / `2· Banana Bay Bonus`. The 1–9 playtest shortcuts open
+the matching parent levels. The same ordered list drives play/edit tooltips
+and active-row highlighting. Non-map courses and
 tools follow the map in their existing registry order. Their authored bonuses
 also follow their parents.
 
@@ -15,7 +18,8 @@ existing authored bonus associations.
 
 [Retired bonus names](../retired-bonus-level-names.txt) contains 22 distinct
 reusable titles, one per line, with the former `Bonus:` prefix removed.
-[The label review](labels.json) records all 66 IDs, old labels and new labels.
+[The label review](labels.json) records all 66 IDs, old/new labels, numbers and
+bonus parent IDs. There are 45 parent/standalone numbers and 21 linked bonuses.
 The latest addition is `The Skystream Bonus`, immediately after `The Skystream`;
 its previous title, `Cumulus Cache`, is preserved in the text list.
 
@@ -70,3 +74,28 @@ Evidence: [build receipt](release-2026-10-29/build.json),
 [MAX/native](release-2026-10-29/browser-full-native.json),
 [latest bonus](release-2026-10-29/full-native-skystream-bonus.png).
 No level data changed, so `check:levels` was not needed. No `check:all` ran.
+
+## Numbering correction — 29 October
+
+The requested numbering applies to every row, including entries beyond the
+first nine. Parent numbers advance once per level; its bonus uses the same
+number. Standalone prototypes and the shared fallback receive their own
+numbers. Number metadata belongs to the menu only and never changes level IDs
+or stored data. Digit 2 now launches Banana Bay, matching its displayed number.
+
+The corrected production build and release-size check pass: 1,847 files and
+997,082,634 bytes. Build stamp: `Codex/sol fork · build 10-28 18:40 UTC`.
+Fresh-context Chrome lite, full normal and MAX/native checks all pass after
+loading the published level pack. Each checks all 66 numbered rows, the 45
+sequential parent/standalone numbers and all 21 shared bonus numbers, actual
+Digit 2 launch, the new Skystream bonus, edit targets and saved/custom refresh.
+All three modes have zero console errors or failed requests. Desktop and
+portrait screenshots, including the paired `30· The Skystream` and
+`30· The Skystream Bonus` rows, were reviewed.
+
+Evidence: [build receipt](numbering-2026-10-29/build.json),
+[lite](numbering-2026-10-29/browser-lite.json),
+[normal](numbering-2026-10-29/browser-full.json),
+[MAX/native](numbering-2026-10-29/browser-full-native.json),
+[numbered menu](numbering-2026-10-29/full-desktop.png),
+[new bonus number](numbering-2026-10-29/full-native-skystream-bonus.png).

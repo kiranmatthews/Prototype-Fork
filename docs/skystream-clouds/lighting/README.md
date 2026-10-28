@@ -136,3 +136,9 @@ with the finish fade). MAX/native gameplay and the actual horizontal wall ride
 were also inspected.
 
 ![Normal game presentation](normal-presentation.png)
+
+Before publication, the newer debug-numbering release `e0109cf3` was integrated.
+All cloud and lifecycle source hashes remain identical to validated `fa8b0b68`,
+so the route, optics and GPU measurements are reused. The combined build/type
+check, release-size check (997,089,376 bytes) and [native/normal packaged browser
+smoke](production-integrated.json) pass with zero console/request errors.

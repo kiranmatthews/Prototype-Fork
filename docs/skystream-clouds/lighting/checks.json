@@ -25,5 +25,15 @@
     "src/level.ts": "13b888c667c1fbfbd2aa7e60d25b0f064f5f1fdc5c88347debd2c63c1e561d23",
     "tools/test-cloud-road-lighting.mjs": "32b51127b105828e210fcb8b6d29471c1dd7542f4703807803c7ecc905b68be1",
     "tools/test-skystream.mjs": "d7b57ec918ce474dd5a11f5a88c7eda32972a1e6a1b19ce972ccf715ec5a43e5"
+  },
+  "finalIntegration": {
+    "publishedBase": "e0109cf3d69e3048047e1789f761c71410851ad7",
+    "cloudFeatureCommit": "fa8b0b68ebe67e424ad9916b55a4acfaa0f1b099",
+    "cloudAndLifecycleSourceHashesUnchanged": true,
+    "typescriptAndProductionBuild": true,
+    "nativeAndNormalBrowserSmoke": true,
+    "releaseBytes": 997089376,
+    "releaseBudget": 1000000000,
+    "entry": "assets/index-D4f4M-SR.js"
   }
 }

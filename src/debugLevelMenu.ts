@@ -7,20 +7,27 @@ import { BONUS_LEVEL_ENTRIES, resolveBonusLevel } from './levels/themed-bonuses'
 const bonusIdByData = new Map(BONUS_LEVEL_ENTRIES.map(entry => [entry.data, entry.id]));
 const bonusIds = new Set(BONUS_LEVEL_ENTRIES.map(entry => entry.id));
 
+export interface DebugLevelMenuEntry extends LevelEntry {
+  number: number;
+  parentId?: string;
+}
+
 /** Display names/order only: keep registry IDs, editor data and saves intact. */
-export function debugLevelMenu(entries: readonly LevelEntry[]): LevelEntry[] {
+export function debugLevelMenu(entries: readonly LevelEntry[]): DebugLevelMenuEntry[] {
   const byId = new Map(entries.map(entry => [entry.id, entry]));
   const shown = new Set<string>();
-  const rows: LevelEntry[] = [];
+  const rows: DebugLevelMenuEntry[] = [];
+  let nextNumber = 1;
   const append = (entry: LevelEntry, name = campaignLevelById(entry.id)?.name ?? entry.name): void => {
     if (shown.has(entry.id)) return;
     shown.add(entry.id);
-    rows.push({ ...entry, name });
+    const number = nextNumber++;
+    rows.push({ ...entry, name, number });
     const bonusId = bonusIdByData.get(resolveBonusLevel(entry.id));
     const bonus = bonusId ? byId.get(bonusId) : undefined;
     if (bonus && !shown.has(bonus.id)) {
       shown.add(bonus.id);
-      rows.push({ ...bonus, name: `${name} Bonus` });
+      rows.push({ ...bonus, name: `${name} Bonus`, number, parentId: entry.id });
     }
   };
 

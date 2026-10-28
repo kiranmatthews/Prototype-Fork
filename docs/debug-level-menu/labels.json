@@ -2,331 +2,418 @@
   {
     "id": "treehouse-trail",
     "previousName": "Treehouse Trail",
-    "name": "Treehouse Trail"
+    "name": "Treehouse Trail",
+    "number": 1
   },
   {
     "id": "bonus-treehouse-trail",
     "previousName": "Bonus: Canopy Cache",
-    "name": "Treehouse Trail Bonus"
+    "name": "Treehouse Trail Bonus",
+    "number": 1,
+    "parentId": "treehouse-trail"
   },
   {
     "id": "beachfront",
     "previousName": "Beachside Run",
-    "name": "Banana Bay"
+    "name": "Banana Bay",
+    "number": 2
   },
   {
     "id": "bonus-beachside-run",
     "previousName": "Bonus: Lifeguard Lockup",
-    "name": "Banana Bay Bonus"
+    "name": "Banana Bay Bonus",
+    "number": 2,
+    "parentId": "beachfront"
   },
   {
     "id": "jungle",
     "previousName": "Jungle Ruins",
-    "name": "Jungle Ruins"
+    "name": "Jungle Ruins",
+    "number": 3
   },
   {
     "id": "bonus-jungle",
     "previousName": "Bonus: Fern Reliquary",
-    "name": "Jungle Ruins Bonus"
+    "name": "Jungle Ruins Bonus",
+    "number": 3,
+    "parentId": "jungle"
   },
   {
     "id": "rumblewater-run",
     "previousName": "Ripcord River",
-    "name": "Ripcord River"
+    "name": "Ripcord River",
+    "number": 4
   },
   {
     "id": "bonus-rumblewater-run",
     "previousName": "Bonus: Sluicekeeper’s Cache",
-    "name": "Ripcord River Bonus"
+    "name": "Ripcord River Bonus",
+    "number": 4,
+    "parentId": "rumblewater-run"
   },
   {
     "id": "coastal-street-run",
     "previousName": "Coastal Street Run",
-    "name": "Beach Street"
+    "name": "Beach Street",
+    "number": 5
   },
   {
     "id": "bonus-coastal",
     "previousName": "Bonus: Rooftop Deliveries",
-    "name": "Beach Street Bonus"
+    "name": "Beach Street Bonus",
+    "number": 5,
+    "parentId": "coastal-street-run"
   },
   {
     "id": "jungle-cup",
     "previousName": "Motu Beach Invitational",
-    "name": "Motu Beach Invitational"
+    "name": "Motu Beach Invitational",
+    "number": 6
   },
   {
     "id": "custard-creek",
     "previousName": "Custard Creek",
-    "name": "Sunset Safari"
+    "name": "Sunset Safari",
+    "number": 7
   },
   {
     "id": "bonus-custard-creek",
     "previousName": "Bonus: Willowmill Cache",
-    "name": "Sunset Safari Bonus"
+    "name": "Sunset Safari Bonus",
+    "number": 7,
+    "parentId": "custard-creek"
   },
   {
     "id": "tribal-run",
     "previousName": "Tribal Run",
-    "name": "Tribal Run"
+    "name": "Tribal Run",
+    "number": 8
   },
   {
     "id": "bonus-tribal-run",
     "previousName": "Bonus: The Resonance Vault",
-    "name": "Tribal Run Bonus"
+    "name": "Tribal Run Bonus",
+    "number": 8,
+    "parentId": "tribal-run"
   },
   {
     "id": "waterfall-climb",
     "previousName": "Waterfall Climb",
-    "name": "Waterfall Climb"
+    "name": "Waterfall Climb",
+    "number": 9
   },
   {
     "id": "bonus-waterfall-climb",
     "previousName": "Bonus: The Hidden Spillway",
-    "name": "Waterfall Climb Bonus"
+    "name": "Waterfall Climb Bonus",
+    "number": 9,
+    "parentId": "waterfall-climb"
   },
   {
     "id": "test",
     "previousName": "Carlisle Coast",
-    "name": "Uga Ambush"
+    "name": "Uga Ambush",
+    "number": 10
   },
   {
     "id": "bonus-test-course",
     "previousName": "Bonus: Quayside Cargo",
-    "name": "Uga Ambush Bonus"
+    "name": "Uga Ambush Bonus",
+    "number": 10,
+    "parentId": "test"
   },
   {
     "id": "drowned-crown",
     "previousName": "The Drowned Crown",
-    "name": "The Merchant Wreck"
+    "name": "The Merchant Wreck",
+    "number": 11
   },
   {
     "id": "bonus-drowned-crown",
     "previousName": "Bonus: The Captain’s Last Ledger",
-    "name": "The Merchant Wreck Bonus"
+    "name": "The Merchant Wreck Bonus",
+    "number": 11,
+    "parentId": "drowned-crown"
   },
   {
     "id": "crab-chief",
     "previousName": "Tidebreak · Crab Chief",
-    "name": "High Chief Uga Ha ku"
+    "name": "High Chief Uga Ha ku",
+    "number": 12
   },
   {
     "id": "waterpark",
     "previousName": "Deadwater Park",
-    "name": "Deadwater Park"
+    "name": "Deadwater Park",
+    "number": 13
   },
   {
     "id": "bonus-waterpark",
     "previousName": "Bonus: Deadwater Valve House",
-    "name": "Deadwater Park Bonus"
+    "name": "Deadwater Park Bonus",
+    "number": 13,
+    "parentId": "waterpark"
   },
   {
     "id": "codex-lab",
     "previousName": "Haunted Hassle",
-    "name": "Haunted Hassle"
+    "name": "Haunted Hassle",
+    "number": 14
   },
   {
     "id": "bonus-codex-switchback",
     "previousName": "Bonus: Haunted Hassle",
-    "name": "Haunted Hassle Bonus"
+    "name": "Haunted Hassle Bonus",
+    "number": 14,
+    "parentId": "codex-lab"
   },
   {
     "id": "ghost-train",
     "previousName": "Haunted Castle · Ghost Train",
-    "name": "Ghost Train"
+    "name": "Ghost Train",
+    "number": 15
   },
   {
     "id": "hollowwake-descent",
     "previousName": "Hollowwake Descent",
-    "name": "Tunnelbore Tracks"
+    "name": "Tunnelbore Tracks",
+    "number": 16
   },
   {
     "id": "slipstream-race",
     "previousName": "The Slipstream",
-    "name": "Slipstream"
+    "name": "Slipstream",
+    "number": 17
   },
   {
     "id": "waterpark-cup",
     "previousName": "Deadwater Cup",
-    "name": "Deadwater Cup"
+    "name": "Deadwater Cup",
+    "number": 18
   },
   {
     "id": "country-club",
     "previousName": "Country Club Circuit",
-    "name": "Country Club Circuit"
+    "name": "Country Club Circuit",
+    "number": 19
   },
   {
     "id": "rooftop-relay",
     "previousName": "Rooftop Relay",
-    "name": "Hogsworth Harbour"
+    "name": "Hogsworth Harbour",
+    "number": 20
   },
   {
     "id": "bonus-rooftop-relay",
     "previousName": "Bonus: The Storm Parlour",
-    "name": "Hogsworth Harbour Bonus"
+    "name": "Hogsworth Harbour Bonus",
+    "number": 20,
+    "parentId": "rooftop-relay"
   },
   {
     "id": "warehouse",
     "previousName": "Warehouse / Five Lines",
-    "name": "Factory Fuss"
+    "name": "Factory Fuss",
+    "number": 21
   },
   {
     "id": "jungle-minefield",
     "previousName": "No-Man’s Grove",
-    "name": "Nightmare Grove"
+    "name": "Nightmare Grove",
+    "number": 22
   },
   {
     "id": "nightworks-after-hours",
     "previousName": "Nightworks: After Hours",
-    "name": "Guptus Eruptus"
+    "name": "Guptus Eruptus",
+    "number": 23
   },
   {
     "id": "bonus-nightworks-after-hours",
     "previousName": "Bonus: Caldera Counterweights",
-    "name": "Guptus Eruptus Bonus"
+    "name": "Guptus Eruptus Bonus",
+    "number": 23,
+    "parentId": "nightworks-after-hours"
   },
   {
     "id": "dark",
     "previousName": "The Nightworks",
-    "name": "Torchlight Trouble"
+    "name": "Torchlight Trouble",
+    "number": 24
   },
   {
     "id": "bonus-nightworks",
     "previousName": "Bonus: Nightworks Fuse Store",
-    "name": "Torchlight Trouble Bonus"
+    "name": "Torchlight Trouble Bonus",
+    "number": 24,
+    "parentId": "dark"
   },
   {
     "id": "spaghetti-rails",
     "previousName": "Spaghetti Rails",
-    "name": "Spaghetti Rails"
+    "name": "Spaghetti Rails",
+    "number": 25
   },
   {
     "id": "sky",
     "previousName": "Sky Bridge",
-    "name": "Sky Bridge"
+    "name": "Sky Bridge",
+    "number": 26
   },
   {
     "id": "bonus-sky-bridge",
     "previousName": "Bonus: Cloudtop Lockers",
-    "name": "Sky Bridge Bonus"
+    "name": "Sky Bridge Bonus",
+    "number": 26,
+    "parentId": "sky"
   },
   {
     "id": "jungle-terraces",
     "previousName": "Temple of Embers",
-    "name": "Temple of Embers"
+    "name": "Temple of Embers",
+    "number": 27
   },
   {
     "id": "bonus-jungle-terraces",
     "previousName": "Bonus: Ember Reliquary",
-    "name": "Temple of Embers Bonus"
+    "name": "Temple of Embers Bonus",
+    "number": 27,
+    "parentId": "jungle-terraces"
   },
   {
     "id": "jungle-gate-run",
     "previousName": "The Ancient Gates",
-    "name": "The Ancient Gates"
+    "name": "The Ancient Gates",
+    "number": 28
   },
   {
     "id": "bonus-jungle-gate",
     "previousName": "Bonus: The Gatekeeper’s Hoard",
-    "name": "The Ancient Gates Bonus"
+    "name": "The Ancient Gates Bonus",
+    "number": 28,
+    "parentId": "jungle-gate-run"
   },
   {
     "id": "rolling-bones",
     "previousName": "Rolling Bones",
-    "name": "Rolling Bones"
+    "name": "Rolling Bones",
+    "number": 29
   },
   {
     "id": "bonus-rolling-bones",
     "previousName": "Bonus: Moonbone Vault",
-    "name": "Rolling Bones Bonus"
+    "name": "Rolling Bones Bonus",
+    "number": 29,
+    "parentId": "rolling-bones"
   },
   {
     "id": "skystream",
     "previousName": "The Skystream",
-    "name": "The Skystream"
+    "name": "The Skystream",
+    "number": 30
   },
   {
     "id": "bonus-skystream",
     "previousName": "Bonus: Cumulus Cache",
-    "name": "The Skystream Bonus"
+    "name": "The Skystream Bonus",
+    "number": 30,
+    "parentId": "skystream"
   },
   {
     "id": "coconut-cart-rally",
     "previousName": "Coconut Cart Rally",
-    "name": "Coconut Cart Rally"
+    "name": "Coconut Cart Rally",
+    "number": 31
   },
   {
     "id": "inside-your-room",
     "previousName": "Inside Your Room",
-    "name": "Inside Your Room"
+    "name": "Inside Your Room",
+    "number": 32
   },
   {
     "id": "flats",
     "previousName": "Flats & Pipes",
-    "name": "Flats & Pipes"
+    "name": "Flats & Pipes",
+    "number": 33
   },
   {
     "id": "spaghetti-rails-platforming",
     "previousName": "Spaghetti Rails — Platforming",
-    "name": "Spaghetti Rails — Platforming"
+    "name": "Spaghetti Rails — Platforming",
+    "number": 34
   },
   {
     "id": "warproom",
     "previousName": "Island World Map",
-    "name": "Island World Map"
+    "name": "Island World Map",
+    "number": 35
   },
   {
     "id": "bonus-level",
     "previousName": "Bonus Level",
-    "name": "Bonus Level"
+    "name": "Bonus Level",
+    "number": 36
   },
   {
     "id": "meshylook-thorns",
     "previousName": "MeshyLook Thorn Courtyards",
-    "name": "MeshyLook Thorn Courtyards"
+    "name": "MeshyLook Thorn Courtyards",
+    "number": 37
   },
   {
     "id": "cave-collapse",
     "previousName": "Crumblewake Cave",
-    "name": "Crumblewake Cave"
+    "name": "Crumblewake Cave",
+    "number": 38
   },
   {
     "id": "mall",
     "previousName": "Mall · New York",
-    "name": "Mall · New York"
+    "name": "Mall · New York",
+    "number": 39
   },
   {
     "id": "school-miami",
     "previousName": "School · Miami",
-    "name": "School · Miami"
+    "name": "School · Miami",
+    "number": 40
   },
   {
     "id": "warehouse-reference",
     "previousName": "Warehouse · Reference",
-    "name": "Warehouse · Reference"
+    "name": "Warehouse · Reference",
+    "number": 41
   },
   {
     "id": "kona",
     "previousName": "Kona · PS1",
-    "name": "Kona · PS1"
+    "name": "Kona · PS1",
+    "number": 42
   },
   {
     "id": "bone-yard",
     "previousName": "Bone Yard · Wipeout Playground",
-    "name": "Bone Yard · Wipeout Playground"
+    "name": "Bone Yard · Wipeout Playground",
+    "number": 43
   },
   {
     "id": "bonus-bone-yard",
     "previousName": "Bonus: Ivory Salvage",
-    "name": "Bone Yard · Wipeout Playground Bonus"
+    "name": "Bone Yard · Wipeout Playground Bonus",
+    "number": 43,
+    "parentId": "bone-yard"
   },
   {
     "id": "backport-lab",
     "previousName": "Backport Mechanics Lab",
-    "name": "Backport Mechanics Lab"
+    "name": "Backport Mechanics Lab",
+    "number": 44
   },
   {
     "id": "bonus-easy",
     "previousName": "Bonus: Easy Street",
-    "name": "Bonus"
+    "name": "Bonus",
+    "number": 45
   }
 ]

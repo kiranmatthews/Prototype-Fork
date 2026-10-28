@@ -4354,9 +4354,11 @@ window.addEventListener("keydown", (e) => {
   if (!shellBypass) return;
   if (!editor.active) {
     // Preserve playtest-only direct level selection and capture shortcuts.
-    const rows = debugLevelMenu(levelList());
-    for (let i = 0; i < Math.min(9, rows.length); i++) {
-      if (e.code === `Digit${i + 1}`) switchLevel(rows[i].id);
+    const digit = /^Digit([1-9])$/.exec(e.code);
+    if (digit) {
+      const row = debugLevelMenu(levelList()).find(entry =>
+        !entry.parentId && entry.number === Number(digit[1]));
+      if (row) switchLevel(row.id);
     }
   }
   if (e.code === "F8") saveReplay(); // playtest capture: input take -> .json

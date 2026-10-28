@@ -1831,11 +1831,11 @@ export class UI {
   private renderLevels(): void {
     this.levelRowEl.replaceChildren();
     this.levelRows.clear();
-    debugLevelMenu(levelList()).forEach((entry, i) => {
+    debugLevelMenu(levelList()).forEach((entry) => {
       const item = div("hud-levelitem");
       const play = document.createElement("button");
       play.className = "hud-levelbtn hud-levelplay";
-      play.textContent = i < 9 ? `${i + 1}· ${entry.name}` : entry.name;
+      play.textContent = `${entry.number}· ${entry.name}`;
       play.title = entry.name;
       play.classList.toggle("active", entry.id === this.currentLevelId);
       play.addEventListener("click", () => {
