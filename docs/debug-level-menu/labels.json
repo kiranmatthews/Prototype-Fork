@@ -245,6 +245,11 @@
     "name": "The Skystream"
   },
   {
+    "id": "bonus-skystream",
+    "previousName": "Bonus: Cumulus Cache",
+    "name": "The Skystream Bonus"
+  },
+  {
     "id": "coconut-cart-rally",
     "previousName": "Coconut Cart Rally",
     "name": "Coconut Cart Rally"

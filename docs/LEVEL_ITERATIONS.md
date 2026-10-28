@@ -5732,3 +5732,28 @@ Lite and packaged full-render Chrome checks pass at native 1600×1000 with clean
 consoles: hidden/explicit Canvas announcements, live debug toggle and clearing,
 snapshot restoration, Pause, zero-loop finish and ordinary results. Browser
 evidence and reproduction steps are in [gameplay-announcements](gameplay-announcements/README.md).
+
+## 2026-10-29 — Refresh and publish debug level names
+
+The follow-up began around 18:25 UTC on 28 October (29 October in New Zealand).
+The updated production menu was browser-playable by 18:30 UTC, approximately
+five minutes from the prompt. Integrated published main through `24c16a77`
+without changing its newer level geometry or gameplay work. The debug MENU now
+contains all 66 registered entries, including `The Skystream Bonus` immediately
+after `The Skystream`. Its former name, `Cumulus Cache`, joins the existing 21
+retired names in [the reusable text file](retired-bonus-level-names.txt).
+
+The canonical map/bonus-derived menu handles the new registration automatically.
+Play/edit labels, active rows and numbered shortcuts retain stable registry IDs;
+stored editor names and authored data stay intact. Existing debug-shortcut
+checks, production build and release sizing pass. The output is 997,082,558
+bytes; local build stamp `Codex/sol fork · build 10-28 18:28 UTC`.
+
+Lite, full normal and full MAX/native production Chrome checks pass all menu
+labels and ordering, actual numbered and bonus launches, edit targets, and
+refresh with a renamed saved bonus and a custom course. All three modes launch
+the new Skystream bonus through its menu row. Desktop/portrait and native cloud
+bonus captures reviewed; zero console errors or failed requests. See
+[release evidence](debug-level-menu/README.md). The coordinator is retired;
+publication proceeds directly as requested. No geometry audit or full suite
+was required for this presentation change.

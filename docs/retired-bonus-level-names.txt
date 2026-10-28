@@ -17,5 +17,6 @@ Cloudtop Lockers
 Ember Reliquary
 The Gatekeeper’s Hoard
 Moonbone Vault
+Cumulus Cache
 Ivory Salvage
 Easy Street

@@ -1,0 +1,28 @@
+{
+  "builtSourceCommit": "a63f5a0e4e7a3371d14820975bf9aa0ecf0e5d2b",
+  "publishedBase": "24c16a77c2914ea747ed4a9dba0adc18bc245007",
+  "build": "passed",
+  "releaseSize": "passed",
+  "bytes": 997082558,
+  "limitBytes": 1000000000,
+  "files": 1847,
+  "localStamp": "Codex/sol fork \u00b7 build 10-28 18:28 UTC",
+  "offlineVersion": "370fa12510abfae15c68",
+  "entry": "assets/index-D2PBOW7j.js",
+  "sourceSha256": {
+    "src/debugLevelMenu.ts": "cebb163ea103cabfc97185fa34ddc72d61e21357d1ea6819707d0b868e97dd54",
+    "src/ui.ts": "4743729d793f8d3c1047e98e0ba8910757e9fc80675829534e1ad5cd4e7b2bf9",
+    "src/main.ts": "57b958910b1c309279de8b05e7f15d1f3e72e8f5045b7523e093b774f5945c37",
+    "src/campaign.ts": "5334320361c38a389edc8e538435a2a4bbe8d2781e756996e0a2c3457ac7dc05",
+    "src/levels/themed-bonuses.ts": "43c5e99e6e754201a9c6415f14822c9b874b6cbb5c021a8f52229dad4c78df6e",
+    "src/levels/skystream-bonus.ts": "1703c3478c1611e69df54d1714cc26b11bcd5132cc766d4ed9c745932e9725e2"
+  },
+  "focusedChecks": [
+    "debug shortcuts",
+    "66 unique menu IDs in map/bonus order",
+    "22 unique retired bonus titles",
+    "production Chrome lite, full normal and full MAX/native",
+    "git diff --check"
+  ],
+  "runtimeChangedAfterBuild": false
+}
