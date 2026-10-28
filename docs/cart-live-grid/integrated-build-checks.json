@@ -1,0 +1,12 @@
+[
+  {
+    "check": "build",
+    "exit": 0,
+    "log": "/private/tmp/kart-integrated-build.log"
+  },
+  {
+    "check": "check:release",
+    "exit": 0,
+    "log": "/private/tmp/kart-integrated-check-release.log"
+  }
+]

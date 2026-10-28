@@ -14,7 +14,7 @@ try{
  const snapshot=JSON.parse(await readFile('public/levels.json','utf8')).levels.find(l=>l.id==='coconut-cart-rally').data;
  const digest=value=>createHash('sha256').update(JSON.stringify(value)).digest('hex');
  assert.equal(digest(level),digest(snapshot),'The crowd fix must preserve the complete published course geometry');
- assert.equal(crowd.count,32958,'Keep every spectator');assert.equal(crowd.sections.length,stands.length);
+ assert.equal(crowd.count,65160,'Keep every spectator');assert.equal(crowd.sections.length,stands.length);
  const ray=new THREE.Raycaster(),matrix=new THREE.Matrix4(),point=new THREE.Vector3(),down=new THREE.Vector3(0,-1,0),unsupported=[];
  const geometry=new THREE.BufferGeometry(),material=new THREE.MeshBasicMaterial({side:THREE.DoubleSide});
  const stand=new THREE.Mesh(geometry,material);let checked=0,maxAnchorError=0;

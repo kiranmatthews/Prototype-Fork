@@ -7,16 +7,16 @@ await withBlockworksRuntime(async e=>{
  const c=race.carts,w=c.fleet.physics,count=w.carts.length-1,dropRoot=c.drops.root;
  let previous={};const tick=(n,sample={})=>{for(let i=0;i<n;i++){const input=normalizeGameInput(sample,previous);race.step(1/60,input);previous=input;}};
  assert.equal(c.stats.loanerDrops,count);assert.equal(c.drops.activeCount,count);assert.ok(w.carts.slice(1).every(k=>!k.grounded&&k.health===1));
- const height=w.carts[1].y;tick(60);assert.equal(w.carts[1].y,height,'Countdown preserves the initial supply drop');
- race.phase='running';tick(300);assert.equal(c.stats.loanerLandings,count);assert.equal(c.drops.activeCount,0);assert.ok(w.carts.slice(1).every(k=>k.grounded&&k.health===1&&k.rolls===0));
+ const height=w.carts[1].y;tick(60);assert.ok(w.carts[1].y<height-5,'The opening delivery descends during countdown');
+ tick(480);assert.equal(c.stats.loanerLandings,count);assert.equal(c.drops.activeCount,0);assert.ok(w.carts.slice(1).every(k=>k.grounded&&k.health===1&&k.rolls===0));
  // Strand the actual on-foot player with all parked spares temporarily unavailable.
  c.exit(0,false);c.wreck(0);const start=race.course.support(e.l,900);assert.ok(start);e.p.resetRacePosition(e.l,start,race.course.tangent(900),true);race.riders[0].progress=900;race.riders[0].anchorProgress=900;race.riders[0].anchor.copy(start);c.actionCooldown[0]=0;
  for(let index=1;index<w.carts.length;index++)c.locked[index]=120;
  for(let frame=0;frame<360&&c.stats.loanerDrops===count;frame++)tick(1);
  assert.equal(c.stats.loanerDrops,count+1,'The club dispatches one new loaner');
  const delivery=w.carts.findIndex((_,i)=>c.drops.isDescending(i));assert.ok(delivery>0);const kart=w.carts[delivery];
- assert.ok(kart.y-c.ground(kart.x,kart.z).height>15);assert.match(c.hud().target,/INCOMING/);assert.equal(c.hud().actionReady,false);assert.equal(c.canTake(0,delivery),false);assert.equal(c.interact(0),false,'An airborne loaner cannot be taken');assert.match(c.hud().notice,/TOUCHDOWN/);
- let landingSeconds=0;for(let frame=0;frame<240&&c.drops.isDescending(delivery);frame++){tick(1);landingSeconds=(frame+1)/60;}
+ assert.ok(kart.y-c.ground(kart.x,kart.z).height>30);assert.match(c.hud().target,/INCOMING/);assert.equal(c.hud().actionReady,false);assert.equal(c.canTake(0,delivery),false);assert.equal(c.interact(0),false,'An airborne loaner cannot be taken');assert.match(c.hud().notice,/TOUCHDOWN/);
+ let landingSeconds=0;for(let frame=0;frame<420&&c.drops.isDescending(delivery);frame++){tick(1);landingSeconds=(frame+1)/60;}
  assert.ok(kart.grounded&&kart.health===1);assert.equal(c.stats.loanerDrops,count+1,'Waiting for one parachute does not dispatch a pile of duplicates');assert.equal(c.stats.loanerLandings,count+1);
  e.p.resetRacePosition(e.l,c.exitPoint(delivery,-1),race.course.tangent(race.riders[0].progress),true);c.actionCooldown[0]=0;
  tick(1,{grindHeld:true});assert.equal(c.isAnimating(0),true);tick(180);assert.equal(c.cartForRacer[0],delivery);assert.equal(c.isAnimating(0),false);assert.equal(race.riders[0].falls,0);

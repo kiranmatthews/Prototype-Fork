@@ -5500,3 +5500,56 @@ Evidence: [native relay](sky-bridge-bonus/relay-native.jpg),
 [native timber span](sky-bridge-bonus/timber-native.jpg),
 [browser checks](sky-bridge-bonus/browser-review.json), and
 [complete bonus session](sky-bridge-bonus/playthrough.json).
+
+
+### 2026-10-28 — Live rally grid, clear finish shot, and a second stadium section
+
+Extended Coconut Cart Rally from 2,320 to 4,640 authored metres (4,945 m of actual
+racing line). The original road, all twelve original mounds, banks and existing
+corner patches retain their exact sampled coordinates, certified against
+`aac956ab` in `tools/fixtures/rally-pre-extension.json`. Three new rounded but
+sharp corner sequences change heading by approximately 102°, 95° and 99°.
+A 160 m vaulted service tunnel dips 12 m below the stadium, with earth cover,
+reinforcing arches, physical side guards and actual worklights from the existing
+six-light pool. Its exit leads to an 18 m dirt launch and a broad landing apron.
+Native driving clears about 56.5 m in 1.38 seconds; the apron removes a second
+landing hop. A slow missed jump remains completely supported. The extension has
+six more full-detail reused Meshy rocks, transverse item rows and supply bays.
+Medal times scale with the longer race. No player or vehicle handling retuning.
+
+The countdown now advances the real world, GPU crowd and physical parachute
+deliveries while drivers hold their brakes. Eight proximity-scaled engines rev;
+X increases the driver's revs without storing speed. Race/trial clocks, weapon
+recharge and pickups stay locked until GO. Loaners begin 32 m up and land in
+about 5.07 s; rescue deliveries choose daylight near a tunnel portal. Finished
+and ordinary parked carts remain silent. All rally surface edges opt out of
+grinding, and cart-race crate rebuilds cannot create new ledges. Skate races
+retain their normal ledges and on-foot rally skating keeps its authored motor.
+The results shot follows the approach centreline from above, clear of the stands,
+with refitting for wide and portrait UI viewports.
+
+Validation: check:levels, type-check/build and release-size pass (997,042,526 /
+1,000,000,000 bytes; offline f5971a34321cc84028ac). Native checks cover all 18 slow
+missed jumps, supported corners, 65,160 spectators seated on 196 actual stand
+sections, zero grind rails, live-grid clocks/controls, parachute lifecycle and
+30/60/144 Hz descent, and a stable six-light pool serving 80 fixtures. Chrome lite
+and full production checks exercise countdown sound/movement, the underground
+floor, launch/landing and the actual results camera, with MAX/native 1600×900 and
+normal 720 views reviewed. A complete eight-racer production run finished in
+164.22–205.90 s with zero falls, zero console errors and silent settled engines.
+One older optional rock audit still fails its zero-contact AI expectation on the
+original opening obstacle; comparison reproduces the failure in the previously
+published 77653ba6 worktree. This is recorded rather than hidden by unrelated AI
+retuning. No claim that every legacy audit passes. Evidence: `docs/cart-live-grid/`.
+
+Prompt-to-playable was approximately 30 minutes for the combined brief, about
+20 minutes from the extension follow-up to native/Chrome-lite playability. The
+recorded authoring window began around 07:35 UTC; lite playability was confirmed
+at 08:04 UTC. Production passes followed, including roughly 11 minutes of
+capacity-only waiting separate from authoring. Only coconut-cart-rally changes
+in the shared pack; the other thirteen level snapshots remain intact.
+
+Release integration preserves the independently published Sky Bridge bonus
+commit `3010206b`. All tested rally source hashes are unchanged. The combined
+production build and release check pass at 997,045,500 bytes, offline version
+`ea03ad0a7f3574094ce7`.

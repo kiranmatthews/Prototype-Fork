@@ -458,7 +458,8 @@ export class SkateRace {
     if(this.phase==='grid'||this.phase==='countdown'){
       if(this.phase==='grid'&&input.jumpPressed){this.start(this.mode,input.raceSeed);input.raceSeed=this.runSeed;}
       else if(this.phase==='countdown'){const before=Math.ceil(this.countdown);this.countdown=Math.max(0,this.countdown-dt);if(this.countdown>0&&Math.ceil(this.countdown)<before)sfx.countdownBeep();if(this.countdown===0){this.phase='running';if(!this.carts)sfx.play('skateTransition',.7,1.1);}}
-      for(const r of this.riders.slice(0,this.count)){if(!this.carts?.isDriving(r.id))r.player.prepareStartPresentation(level,dt);this.placeMarker(r);}this.carts?.updateAudio(dt);this.carts?.present();return;
+      if(this.carts){this.carts.stepStart(dt,input,this.phase==='countdown');level.playerPos.copy(this.human.pos);level.update(dt);}
+      for(const r of this.riders.slice(0,this.count)){if(!this.carts?.isDriving(r.id))r.player.prepareStartPresentation(level,dt);this.placeMarker(r);}this.carts?.present();return;
     }
     const allFinished=this.riders.slice(0,this.count).every(r=>r.finish!==null);
     if(!allFinished)this.elapsed+=dt;

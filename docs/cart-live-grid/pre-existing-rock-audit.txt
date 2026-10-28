@@ -1,0 +1,22 @@
+{"childPid": 93096, "command": "env", "owner": "01a1729c-24cf-75e2-9f0d-71d30058a524", "pid": 93094, "slot": 0, "startedAt": "2026-10-28T08:36:49.946788+00:00", "status": "running"}
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: An unimpeded driver can avoid the rock
+
+1 !== 0
+
+    at withBlockworksRuntime.modulePath (file:///Users/kiki/.codex/worktrees/kart-mayhem-release/Prototype%20Fork/tools/test-rally-rock-obstacles.mjs:19:59)
+    at async withBlockworksRuntime (file:///Users/kiki/.codex/worktrees/kart-mayhem-release/Prototype%20Fork/tools/blockworks-runner.mjs:221:12)
+    at async file:///Users/kiki/.codex/worktrees/kart-mayhem-release/Prototype%20Fork/tools/test-rally-rock-obstacles.mjs:4:1 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 1,
+  expected: 0,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0
+{"exitCode": 1, "owner": "01a1729c-24cf-75e2-9f0d-71d30058a524", "slot": 0, "status": "released"}

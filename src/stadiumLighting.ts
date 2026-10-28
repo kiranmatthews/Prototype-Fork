@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import type {CustomComponent} from './level';
 
 /** Six real spotlights cover the nearby fixture pairs. Reusing a fixed pool
- * keeps the shader light count stable while all 34 authored lamps stay lit.
+ * keeps the shader light count stable while every authored lamp stays lit.
  * The outer slots fade to zero before reassignment; no shadow-map passes. */
 export class StadiumLighting {
  readonly root=new THREE.Group();
@@ -26,7 +26,13 @@ export class StadiumLighting {
    const light=this.lights[slot],a=this.anchors[this.order[slot]];
    if(!a){light.intensity=0;continue;}
    light.position.copy(a.position);light.target.position.copy(a.target);light.distance=a.range;
-   light.intensity=a.power*(1-THREE.MathUtils.smoothstep(Math.abs(a.target.z-z),125,205));
+   const distance=Math.abs(a.target.z-z),next=this.anchors[this.order[this.lights.length]];
+   const edge=next?Math.abs(next.target.z-z):Infinity;
+   // Tunnel lamps are closer together than towers. Fade the outer pool slots
+   // before either layout reassigns them, including at both tunnel portals.
+   const rangeFade=1-THREE.MathUtils.smoothstep(distance,a.range*.925,a.range*1.52);
+   const poolFade=Number.isFinite(edge)?1-THREE.MathUtils.smoothstep(distance,Math.max(0,edge-28),Math.max(.01,edge-4)):1;
+   light.intensity=a.power*rangeFade*poolFade;
   }
  }
  get diagnostics(){return {fixtures:this.anchors.length,pool:this.lights.length,shadowMaps:0,lights:this.lights.map(l=>({position:l.position.toArray(),target:l.target.position.toArray(),intensity:l.intensity,range:l.distance}))};}

@@ -25,6 +25,6 @@ try{
   }
  }
  const report=await page.evaluate(()=>{const g=window.__game,c=g.getSkateRace().carts.crowd;return {stamp:document.querySelector('.hud-build')?.textContent,spectators:c.count,sections:c.sections.length,glError:g.renderer.getContext().getError(),resolution:g.renderQualitySettings.regularResolution,canvas:[g.renderer.domElement.width,g.renderer.domElement.height],frame:g.getRenderFrameStats()};});
- assert.equal(report.glError,0);assert.equal(report.spectators,32958);assert.equal(report.sections,100);assert.equal(report.resolution,'max');assert.deepEqual(report.canvas,process.env.CART_LITE?[800,450]:[1600,900]);assert.match(report.stamp,/Codex\/sol fork/);assert.deepEqual(errors,[]);
+ assert.equal(report.glError,0);assert.equal(report.spectators,65160);assert.equal(report.sections,196);assert.equal(report.resolution,'max');assert.deepEqual(report.canvas,process.env.CART_LITE?[800,450]:[1600,900]);assert.match(report.stamp,/Codex\/sol fork/);assert.deepEqual(errors,[]);
  await writeFile(out+'/report.json',JSON.stringify({...report,errors},null,2));console.log(JSON.stringify({...report,errors}));
 }finally{await browser.close();}
