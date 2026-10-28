@@ -5468,3 +5468,35 @@ passed around 08:51, about eight minutes later. The final wind/one-second brake
 corrections were already playable at 08:20. See
 [the release evidence](beach-street/kite-release/README.md) for exact source
 mapping and checks; public verification follows the matching Pages deployment.
+
+## 28 October 2026 — Sky Bridge bonus construction match
+
+Prompt → local playable: **~19 minutes**, with the complete bonus/parent return
+validated at ~21 minutes. No clarification or movement-tuning changes.
+
+Cloudtop Lockers now uses Sky Bridge's `coast-stone` masonry, full carved
+`coastarch`/`coastpillar` assets, `coastv2ledge`/`coastv2buttress` foundations,
+cloud spires, and `bridge-timber` boards with the shared braided bearer ropes.
+The courts retain their supported intervals; the four metal relay anchors sit
+on decorative carved piers, and the finite-bounce room crosses a 40-board
+suspension deck. The main level's cloud sky and lighting are reused, with
+fog distances offset 20 m for the farther side-view camera. Rear architecture
+and ropes preserve the player and reward silhouettes.
+
+All 11 crate entries (seven collectible boxes and four permanent anchors),
+11 fruit pickups, the spawn, camera, containment and gate match the original
+puzzle exactly. No shared runtime, tuning or published level-pack edit.
+
+Validation: the `check:levels`, `build` and `check:release` package scripts
+passed. Chrome lite verifies supported spawn, an actual relay-chasm death and
+supported retry. Full Chrome reviews five locations at normal resolution and
+two at MAX/native 1440×900, with 40 full-detail board instances and no console
+errors or lost context. The existing input-driven bonus-session pilot completes
+both rooms, collects 7/7 boxes, finishes without a death and returns to the same
+parent Level at its supported bonus checkpoint; rewards and completion persist.
+Build version `882fdc0fd38091063116` fits the existing release budget.
+
+Evidence: [native relay](sky-bridge-bonus/relay-native.jpg),
+[native timber span](sky-bridge-bonus/timber-native.jpg),
+[browser checks](sky-bridge-bonus/browser-review.json), and
+[complete bonus session](sky-bridge-bonus/playthrough.json).

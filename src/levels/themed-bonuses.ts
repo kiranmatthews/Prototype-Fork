@@ -18,6 +18,7 @@ import { decorateCoastalBonus } from './coastal-town-art';
 import { dressDrownedCrownBonus } from './drowned-crown-bonus';
 import { ROOFTOP_PORCH_BONUS } from './rooftop-porch-bonus';
 import { dressBananaBayBonus } from './banana-bay-bonus';
+import { dressSkyBridgeBonus } from './sky-bridge-bonus';
 import { WATERFALL_CLIMB_BONUS } from './waterfall-climb-bonus';
 import { ANCIENT_GATES_BONUS } from './ancient-gates-bonus';
 
@@ -83,6 +84,7 @@ export const THEMED_BONUS_COURSES = THEMED_BONUS_RECIPES.filter(recipe => recipe
   const end=gate.p[0]+8;
   if(recipe.key==='coastal')decorateCoastalBonus(course.data,end);
   else if(recipe.theme==='blockworks')dressBlockworksBonus(course.data);
+  else if(recipe.parentId==='sky')dressSkyBridgeBonus(course.data);
   else if(recipe.parentId==='drowned-crown')dressDrownedCrownBonus(course.data,end);
   else{
     course.data.components.push(...bonusCourseArt(recipe.theme,end));
