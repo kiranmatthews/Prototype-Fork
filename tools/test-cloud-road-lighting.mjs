@@ -27,7 +27,7 @@ try{
  b.dispose();assert.equal(disposed,1);assert.equal(stats().textures,0);
  const again=createCloudRoadMaterial(),sc=shader();again.onBeforeCompile(sc);
  assert.equal(hash(sc.uniforms.uCloudNoise.value.image.data),firstHash,'Reloads must produce exactly the same static cloud field');
- const {createCloudRoad}=await server.ssrLoadModule('/src/cloudRoad.ts');
+ const {createHybridCloudRoad:createCloudRoad}=await server.ssrLoadModule('/src/cloudRoad.ts');
  const sections=Array.from({length:81},(_,i)=>({point:new THREE.Vector3(Math.sin(i*.03)*7,Math.cos(i*.02)*3,-i),normal:new THREE.Vector3(0,1,0),across:new THREE.Vector3(1,0,0),halfWidth:7}));
  const root=createCloudRoad(sections);root.updateMatrixWorld(true);
  let bakedBytes=0,previous;

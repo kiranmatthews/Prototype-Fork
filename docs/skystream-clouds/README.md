@@ -60,3 +60,8 @@ and normal CRT presentation after the user's final sky direction.
 The 29 October rendering follow-up adds baked light penetration, shared filtered
 noise and selective volumetric shoulder/underside wisps. See the [lighting and
 fringe implementation, measurements and validation](lighting/README.md).
+
+The subsequent full-send iteration replaces the main course's opaque shell with
+continuous bonus-style density rendering. See the [full-volume implementation,
+GPU costs and validation](volume/README.md). The preceding shell/fringe sections
+and images document earlier iterations, not the current default renderer.

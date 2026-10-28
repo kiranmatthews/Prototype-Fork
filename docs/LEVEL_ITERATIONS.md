@@ -5839,3 +5839,37 @@ build and release sizing pass. The latest published debug-menu changes were
 integrated before the final build; no level data or movement tuning changed.
 
 See [cloud lighting and fringe evidence](skystream-clouds/lighting/README.md).
+
+## 29 October 2026 NZDT — Skystream full volumetric cloud course
+
+Brief: push the main course to the bonus clouds' full density-rendered appearance,
+accept an initial performance cost, measure it and optimize without lowering the
+visible asset's fidelity. First full-volume playable preview: 19:50 UTC, roughly
+27 minutes after the full-send request (approximate prompt timestamp); final
+seam-free optimized preview rebuilt at 20:08 UTC. Release/route checks follow.
+
+The main road now uses seeded merged billows and eroded small curls throughout,
+warped through exact road/loop frames over the existing smooth contact. A shared
+periodic density field, baked sunlight atlases and conservative empty-space skips
+keep it bounded. Full density remains at all viewing distances and reflections;
+there are no mesh LOD swaps, history buffers or temporal reconstruction. Shared
+ray samples and first-density chunk ownership remove straight volume seams.
+
+Final isolated cloud GPU medians are 14–20 ms at 720p and 26–38 ms at native
+1600×1000. Empty-space skipping saves 42–53% against the identical unskipped
+volume, with at most one byte-value difference in 27 of 1.6 million image bytes
+in the most affected comparison. This remains substantially more expensive than
+the former hybrid renderer; the measurements are not whole-game FPS claims.
+GPU density/skip/light/frame data uses 31.12 MiB before proxy/driver overhead.
+
+Density, crown clearance, periodicity, loop frames, empty-voxel protection,
+portable atlas sizing and disposal checks pass. Native traversal retains all
+67 boxes, four gaps, three loops and seven checkpoints without bails or deaths;
+fall recovery succeeds. Existing hybrid fixture checks still pass. MAX/normal
+visual review, type checking, production build and release-size check pass.
+No level data, player movement, skybox or sun behavior changed.
+
+See [full-volume evidence and reproduction](skystream-clouds/volume/README.md).
+
+Packaged full-render browser traversal also passes all 67 boxes, seven checkpoints,
+four gaps and three loops without deaths, bails, console or request errors.

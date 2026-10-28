@@ -36,7 +36,7 @@ try{
   for(let i=0;i<2000&&!m.complete&&m.attached!==false;i++)m=stepLoopMotion(shape,m,dt,1,false,forces);
   assert.ok(m.complete&&m.speed>30,'Normal carried momentum completes the whole band');
  }
- const {createCloudRoad}=await server.ssrLoadModule('/src/cloudRoad.ts');
+ const {createHybridCloudRoad:createCloudRoad}=await server.ssrLoadModule('/src/cloudRoad.ts');
  const sections=Array.from({length:21},(_,i)=>({point:new THREE.Vector3(0,0,-i),normal:new THREE.Vector3(0,1,0),across:new THREE.Vector3(1,0,0),halfWidth:7}));
  const root=createCloudRoad(sections),ray=new THREE.Raycaster();root.updateMatrixWorld(true);
  for(let z=-1;z>-19;z-=.35)for(const x of [-3,0,3]){

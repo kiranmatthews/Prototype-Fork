@@ -1,0 +1,138 @@
+{
+  "base": "http://127.0.0.1:5187/",
+  "errors": [],
+  "benchmarks": [
+    {
+      "pose": "road",
+      "size": [
+        1152,
+        720
+      ],
+      "method": "GPU timer query",
+      "disjoint": false,
+      "hybrid": {
+        "medianMs": 0.531041,
+        "p95Ms": 0.706875,
+        "samples": 8
+      },
+      "volume": {
+        "medianMs": 26.562583,
+        "p95Ms": 32.456583,
+        "samples": 8
+      }
+    },
+    {
+      "pose": "road",
+      "size": [
+        1600,
+        1000
+      ],
+      "method": "GPU timer query",
+      "disjoint": false,
+      "hybrid": {
+        "medianMs": 0.588583,
+        "p95Ms": 0.679999,
+        "samples": 8
+      },
+      "volume": {
+        "medianMs": 55.863416,
+        "p95Ms": 57.893083,
+        "samples": 8
+      }
+    },
+    {
+      "pose": "upright-loop",
+      "size": [
+        1152,
+        720
+      ],
+      "method": "GPU timer query",
+      "disjoint": false,
+      "hybrid": {
+        "medianMs": 0.716625,
+        "p95Ms": 0.808791,
+        "samples": 8
+      },
+      "volume": {
+        "medianMs": 27.039749,
+        "p95Ms": 29.59625,
+        "samples": 8
+      }
+    },
+    {
+      "pose": "upright-loop",
+      "size": [
+        1600,
+        1000
+      ],
+      "method": "GPU timer query",
+      "disjoint": false,
+      "hybrid": {
+        "medianMs": 0.932875,
+        "p95Ms": 1.307041,
+        "samples": 8
+      },
+      "volume": {
+        "medianMs": 51.3635,
+        "p95Ms": 53.619541,
+        "samples": 8
+      }
+    },
+    {
+      "pose": "wall-loop",
+      "size": [
+        1152,
+        720
+      ],
+      "method": "GPU timer query",
+      "disjoint": false,
+      "hybrid": {
+        "medianMs": 0.636416,
+        "p95Ms": 0.675208,
+        "samples": 8
+      },
+      "volume": {
+        "medianMs": 33.811,
+        "p95Ms": 34.843291,
+        "samples": 8
+      }
+    },
+    {
+      "pose": "wall-loop",
+      "size": [
+        1600,
+        1000
+      ],
+      "method": "GPU timer query",
+      "disjoint": false,
+      "hybrid": {
+        "medianMs": 0.802875,
+        "p95Ms": 1.102083,
+        "samples": 8
+      },
+      "volume": {
+        "medianMs": 65.048041,
+        "p95Ms": 66.204541,
+        "samples": 8
+      }
+    }
+  ],
+  "shots": [
+    "road.png",
+    "upright-loop.png",
+    "wall-loop.png"
+  ],
+  "startupMs": 9282.760125,
+  "resources": {
+    "owners": 0,
+    "textures": 0,
+    "densityBytes": 0,
+    "buildMs": 0,
+    "frameBytes": 434176,
+    "roots": 25,
+    "chunks": 188
+  },
+  "stability": {
+    "different": 0
+  }
+}

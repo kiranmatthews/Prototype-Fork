@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { bakeCloudOptics, createCloudRoadMaterial } from './cloudRoadLighting';
 import { SKYSTREAM_SUN } from './skystreamSun';
 import { createCloudRoadFringe, type CloudFringe } from './cloudRoadFringe';
+export { createCloudRoadVolume as createCloudRoad } from './cloudRoadVolume';
 
 export interface CloudRoadSection {
   point: THREE.Vector3;
@@ -23,7 +24,7 @@ const smoothMin = (a: number, b: number, k: number) => {
  * one watertight billowing body, with a shallow cloud cap over the ride plane.
  * The shell is presentation only. No cloud vertices enter contact queries.
  * Full authored tessellation is retained in every view; chunks only cull. */
-export function createCloudRoad(sections: CloudRoadSection[], flatHalf?: number, gutterRadius = 2.4, sunDirection = SKYSTREAM_SUN): THREE.Group {
+export function createHybridCloudRoad(sections: CloudRoadSection[], flatHalf?: number, gutterRadius = 2.4, sunDirection = SKYSTREAM_SUN): THREE.Group {
   const root = new THREE.Group();root.name = 'Continuous cloud road';
   root.userData.cloudRoadVisual = true;
   const length = [0];

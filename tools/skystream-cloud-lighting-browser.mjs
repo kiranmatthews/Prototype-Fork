@@ -16,7 +16,13 @@ try{
  await page.evaluate(async factory=>{
   const g=window.__game,THREE=await import('/node_modules/three/build/three.module.js');
   g.renderQualitySettings.setRegularResolution(null);g.crtGuestSettings.setEnabled(false);
-  const clouds=[],fringes=[];g.getLevel().root.traverse(o=>{if(o.isMesh&&o.userData.cloudRoadVisual)clouds.push(o);if(o.userData.cloudRoadFringe)fringes.push(o)});
+  // Keep this historical material/wisp comparison explicit after the default
+  // course moved to full density rendering.
+  const {createHybridCloudRoad}=await import('/src/cloudRoad.ts'),volumeRoots=[];
+  g.getLevel().root.traverse(o=>{if(o.userData.cloudRoadSource)volumeRoots.push(o);});
+  for(const root of volumeRoots){const s=root.userData.cloudRoadSource,h=createHybridCloudRoad(s.sections,s.flatHalf,s.gutterRadius,s.sunDirection);
+   h.position.copy(root.position);h.quaternion.copy(root.quaternion);h.scale.copy(root.scale);root.parent.add(h);root.visible=false;h.updateMatrixWorld(true);}
+  const clouds=[],fringes=[];g.getLevel().root.traverse(o=>{if(o.isMesh&&o.userData.cloudRoadVisual&&!o.userData.cloudRoadVolume)clouds.push(o);if(o.userData.cloudRoadFringe)fringes.push(o)});
   const baseline=new Function('return ('+factory+')')()(THREE),originals=clouds.map(o=>o.material);
   const isolated=new THREE.Scene();isolated.fog=g.scene.fog?.clone()??null;
   g.scene.traverse(o=>{if(o.isLight){const light=o.clone();light.castShadow=false;light.position.setFromMatrixPosition(o.matrixWorld);isolated.add(light);}});
