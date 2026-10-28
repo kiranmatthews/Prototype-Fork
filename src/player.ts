@@ -3,7 +3,7 @@ import { createRaceRivalHead, createRaceRivalShirt, attachRaceRivalShorts, type 
 import type { RacePlayerHooks } from './race/types';
 import { surfaceGrip } from './surfaceBehavior';
 import type { LoopCameraFrame, LoopFallCameraFrame } from './loopCamera';
-import { LOOP_TURN, loopContactPressure, sampleLoop, stepLoopMotion, type LoopShape } from './loopRide';
+import { LOOP_TURN, loopAngleAt, loopContactPressure, sampleLoop, stepLoopMotion, type LoopShape } from './loopRide';
 import { sampleTeeterMotion, probeTeeterEdge } from './teeterMotion';
 import { SkateBalanceArms, SKATE_UNDER_RAIL_DEPTH, SKATE_UNDER_RAIL_TRANSITION, sampleUnderRailMotion, SKATE_REVERT_DURATION, sampleSkateRevert } from './skateBodyMotion';
 import { skateGrabTweakElasticity, skateUnderRailElasticity, skate900Elasticity, skateBackflipElasticity, skateFootFlipElasticity, skateImpossibleElasticity, skateRevertElasticity, skateVertElasticity, SKATE_UNDER_RAIL_ARM_LIMIT } from './animation/elasticity';
@@ -6341,7 +6341,7 @@ export class Player {
     // them back to the base; ordinary walking snaps can otherwise fight gravity
     // forever on a steep facet. Recovery never grants a completed-loop goal.
     const landedLoop = this.loopFall && this.grounded ? this.groundHit?.mesh : null;
-    if (!this.isBailing && landedLoop?.userData.loopRadius) {
+    if (!this.isBailing && landedLoop?.userData.loopRadius && landedLoop.userData.loopKind !== 'wall') {
       const shape: LoopShape = { radius: landedLoop.userData.loopRadius,
         width: landedLoop.userData.loopWidth, offset: landedLoop.userData.loopOffset };
       const local = landedLoop.worldToLocal(this.pos.clone());
@@ -6358,10 +6358,10 @@ export class Player {
     if (!this.loopRide) {
       for (const mesh of level.loopMeshes ?? []) {
         const shape: LoopShape = { radius: mesh.userData.loopRadius,
-          width: mesh.userData.loopWidth, offset: mesh.userData.loopOffset };
+          width: mesh.userData.loopWidth, offset: mesh.userData.loopOffset, kind: mesh.userData.loopKind };
         const local = mesh.worldToLocal(this.pos.clone());
         if (local.z > 0.8 || local.z < -shape.radius * 0.2 || Math.abs(local.y) > 1.1) continue;
-        const angle = Math.max(0, Math.atan2(-local.z, shape.radius - local.y));
+        const angle = local.z > 0 ? 0 : loopAngleAt(shape, local.toArray());
         if (angle > 0.2) continue;
         const sample = sampleLoop(shape, angle);
         const lateral = local.x - sample.point[0];
@@ -6425,7 +6425,7 @@ export class Player {
       this.airborneT = 0;
       this.airPeakY = this.pos.y;
       this.clearCoyoteJumpWindow();
-      const rollAxis=new THREE.Vector3(1,0,0).transformDirection(ride.mesh.matrixWorld);
+      const rollAxis=ride.shape.kind==='wall'?new THREE.Vector3().crossVectors(tangent,normal).normalize():new THREE.Vector3(1,0,0).transformDirection(ride.mesh.matrixWorld);
       const edgeFall=Math.abs(ride.lateral)>ride.shape.width/2-.1;
       // A small peel-away reaction separates the falling body from the ribbon;
       // preserve its carried tangent and lateral motion rather than parking it.
@@ -6499,13 +6499,10 @@ export class Player {
     }
     this.loopRenderLocal.copy(this.renderPosition);
     ride.mesh.worldToLocal(this.loopRenderLocal);
-    const angle = Math.atan2(-this.loopRenderLocal.z, ride.shape.radius - this.loopRenderLocal.y);
-    const pitch = ride.shape.offset / LOOP_TURN;
-    const length = Math.hypot(ride.shape.radius, pitch);
-    this.loopRenderFrame.normal.set(0, Math.cos(angle), Math.sin(angle))
-      .transformDirection(ride.mesh.matrixWorld);
-    this.loopRenderFrame.tangent.set(pitch / length, ride.shape.radius * Math.sin(angle) / length,
-      -ride.shape.radius * Math.cos(angle) / length).transformDirection(ride.mesh.matrixWorld)
+    const angle = loopAngleAt(ride.shape, this.loopRenderLocal.toArray());
+    const sample = sampleLoop(ride.shape, angle);
+    this.loopRenderFrame.normal.set(...sample.normal).transformDirection(ride.mesh.matrixWorld);
+    this.loopRenderFrame.tangent.set(...sample.tangent).transformDirection(ride.mesh.matrixWorld)
       .multiplyScalar(Math.sign(this.speed || 1));
     return this.loopRenderFrame;
   }

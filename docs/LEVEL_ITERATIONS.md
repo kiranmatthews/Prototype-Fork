@@ -5592,3 +5592,33 @@ approximately 32 minutes from the prompt. Evidence: [verification](vertex-lighti
 [shader pixels](vertex-lighting/shader-pixels.json), [production browser](vertex-lighting/production-browser.json),
 [native scene](vertex-lighting/native-vertex.png), [native stadium](vertex-lighting/stadium-native.png)
 and [compact toggle](vertex-lighting/compact-toggle.png).
+
+
+## 2026-10-28 — Skystream: cloud road and three-loop finale
+
+Brief started at 07:54 UTC. The first complete three-loop native traversal was
+playable by 08:09 UTC, about 15 minutes from prompt to playable. Full-render
+route review completed at 08:50 UTC, with final procedural surface and normal
+presentation review at 08:57 UTC (63 minutes including visual refinement).
+
+A continuous implicit cloud shell now covers the road, with round shoulders,
+soft shading and shallow top detail above independent smooth collision. The
+finale adds a horizontal wedding-band wall ride between two upright loops.
+The middle driving surface is vertical around 270 degrees of its turn, with
+smooth entry and exit banking. The original skybox is retained with a gentle blue gradient fading out halfway
+up, plus directional sun bloom and occluded lens flare. No centre line, vines or movement
+tuning changes. The final approach earns its speed from gravity.
+
+The complete native and full-render browser route clears all 67 main-course
+boxes, seven checkpoints, four gaps and three loops without a death or bail.
+Deliberate fall/respawn, existing loop camera/ride and Skystream wall/shortcut
+checks pass. Cloud clearance, frame continuity and 30/60/120 Hz wall travel
+pass; MAX/native and normal CRT visuals were reviewed without console errors.
+Required level checks pass; Skystream remains source-owned without a redundant archive snapshot.
+See [the implementation and review evidence](skystream-clouds/README.md).
+
+The final sky direction retains the original cloud panorama, tinting only the
+lower half. That revision was visually checked at 09:12 UTC; integrated native
+traversal, production browser smoke, build and release-size validation completed
+at 09:19 UTC (85 minutes from the brief, including the later sky adjustment).
+The production scene retains 1,626,016 cloud triangles with no geometry LOD swaps.

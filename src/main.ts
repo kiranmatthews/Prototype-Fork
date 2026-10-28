@@ -1,3 +1,4 @@
+import { createSkystreamSun } from './skystreamSun';
 import { presentStartupFrame, finishStartup, failStartup, startupFailed } from "./startupScreen";
 import { CountryClubCarts } from './golf-cart/course';
 import { SkateRace } from './race/runtime';
@@ -804,6 +805,7 @@ function syncSkyBackdropVisibility(): void {
   skyMist.visible =
     skyCache.has(activeSky) &&
     level.skateRace?.vehicle!=='golf-cart' &&
+    !level.groundMeshes.some(mesh=>mesh.userData.cloudRoad) &&
     !level.water &&
     !LITE &&
     !preset.seaHorizon &&
@@ -835,6 +837,7 @@ function setEditorView(editing: boolean, changed = false): void {
 }
 
 let proceduralSky: THREE.CanvasTexture | null = null; // the gradient fallback, ours to dispose
+const skystreamSun=createSkystreamSun();scene.add(skystreamSun);
 let proceduralSkyKey = "";
 let levelPostEnabled = false;
 
@@ -850,6 +853,9 @@ function applyTheme(): void {
     jungleAtmosphere: level.jungleAtmosphere, isCampaignMap: level.isCampaignMap, skyBackdrop: level.skyBackdrop,
     atmosphere: { ...level.atmosphere, ...heat.lighting, fogColor: heat.fogColor } } : level);
   activeSky = skyPreset;
+  const cloudRoadSkyActive=level.groundMeshes.some(mesh=>mesh.userData.cloudRoad);
+  skyProjection.setCloudRoadSky(cloudRoadSkyActive);
+  skystreamSun.visible=cloudRoadSkyActive&&!LITE;
   retainOnlyActiveSky();
   // Sky Bridge is a true whiteout: its distance is the fog-coloured scene
   // background, not a fog-immune painted dome visible behind the last plank.
