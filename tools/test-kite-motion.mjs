@@ -12,35 +12,51 @@ step({...idle,jumpPressed:true,jumpHeld:true});assert.equal(m.started,true);
 for(let i=0;i<45;i++)assert.equal(step({...idle,jumpHeld:true}).jumpCharge,null,'Holding never jumps');
 assert.equal(m.charge,.4);assert.equal(step({...idle,jumpReleased:true}).jumpCharge,.4);
 for(let i=0;i<30;i++)assert.equal(step(idle,false).jumpCharge,null);
+const speedCases=[];
+for(const distance of [0,1000,2100]){
+ const c=new KiteTowMotion(3);c.started=true;c.wind=c.windTarget=0;c.windTime=1000;
+ for(let i=0;i<600;i++)c.step(1/60,distance,true,idle,tuning);
+ const old=12+(distance<920?0:distance<1830?1.5:3);
+ assert.ok(c.speed>old*1.3);speedCases.push({distance,oldCruise:old,cruise:c.speed});
+}
 m.reset(7);m.started=true;m.speed=12;
 for(let i=0;i<20;i++)step({...idle,jumpHeld:true});
-assert.ok(Math.abs(m.speed-15)<1e-8,'Charge adds the live normal acceleration exactly');
-assert.ok(Math.abs(m.charge-20/60)<1e-8);
-// Braking stores removed kinetic energy, not an endlessly farmed timer bonus.
-m.speed=23;m.reserve=0;m.charging=false;m.charge=0;
-for(let i=0;i<240;i++)step({...idle,moveY:-1});
-assert.equal(m.speed,KITE_TOW.brakeFloor);
-const stored=m.reserve;assert.ok(Math.abs(stored-(23**2-4.5**2)/2)<1e-7);
-for(let i=0;i<240;i++)step({...idle,moveY:-1});assert.equal(m.reserve,stored);
-let maxDelta=0,previous=m.speed;
-for(let i=0;i<120;i++){step();maxDelta=Math.max(maxDelta,m.speed-previous);previous=m.speed;}
-assert.equal(m.reserve,0);assert.ok(m.speed>22);assert.ok(maxDelta<.61,'Stored speed returns smoothly');
-// Repeated pulls restore what was removed; they cannot manufacture overdrive.
-m.speed=23;
+assert.ok(Math.abs(m.speed-16.2)<1e-8,'Every charge accelerates faster than the previous motor');
+for(let i=0;i<240;i++)step({...idle,jumpHeld:true});
+assert.ok(Math.abs(m.speed-31.05)<1e-7);speedCases.push({oldFullCharge:23,fullCharge:m.speed});
+for(let i=0;i<48;i++)step({...idle,moveY:-1});
+assert.equal(m.speed,KITE_TOW.brakeFloor);assert.ok(m.speed>4.5);
+const stored=m.reserve,loaded=m.brakeSeconds;
+for(let i=0;i<12;i++)step();
+const partial={before:loaded,after:m.brakeSeconds,speed:m.speed,reserve:m.reserve};
+assert.ok(partial.after>0&&partial.after<loaded);assert.ok(partial.speed>KITE_TOW.brakeFloor);assert.ok(partial.reserve<stored);
+for(let i=0;i<12;i++)step({...idle,moveY:-1});
+assert.ok(Math.abs(m.brakeSeconds-(partial.after+.2))<1e-7,'A second pull resumes the remaining counter');
+let frames=0;while(m.autoReleases===0&&frames<180){step({...idle,moveY:-1});frames++;}
+assert.equal(m.autoReleases,1);assert.equal(m.braking,false);assert.equal(m.bursting,true);
+const burstStart=m.speed;
+for(let i=0;i<10;i++)step({...idle,moveY:-1});
+const burst={framesToLimit:frames,startSpeed:burstStart,speed:m.speed,counter:m.brakeSeconds,reserve:m.reserve};
+assert.equal(m.brakeSeconds,0);assert.equal(m.reserve,0);assert.ok(m.speed>31);
+for(let i=0;i<180;i++)step({...idle,moveY:-1});
+assert.equal(m.autoReleases,1,'Continuing to hold Down cannot instantly reload after the forced ping');assert.equal(m.braking,false);
+step();step({...idle,moveY:-1});assert.equal(m.braking,true);assert.ok(m.brakeSeconds>0);
+// Removed kinetic energy plus bounded wind work cannot grow without a limit.
 for(let cycle=0;cycle<8;cycle++){
- for(let i=0;i<65;i++)step({...idle,moveY:-1,jumpHeld:true});
- for(let i=0;i<65;i++)step({...idle,jumpHeld:true});
- assert.ok(m.speed<=23+1e-7);assert.equal(m.reserve,0);
+ for(let i=0;i<90;i++)step({...idle,moveY:-1,jumpHeld:true});
+ for(let i=0;i<90;i++)step({...idle,jumpHeld:true});
+ assert.ok(m.speed<=31.05*KITE_TOW.burstSpeedScale+1e-7);
 }
 m.reset(7);step({...idle,spinPressed:true,moveY:-1});
-for(let i=0;i<60;i++)step({...idle,moveY:-1});
-assert.equal(m.speed,KITE_TOW.brakeFloor,'Starting with brake held still receives forward pull');
-assert.equal(m.reserve,0,'Starting slowly does not manufacture stored energy');
-const wind=seed=>{const w=new KiteTowMotion(seed);let prev=0,maxDelta=0,lo=1,hi=-1,x=0,magnitude=0;const samples=[];
- for(let i=0;i<3600;i++){const r=w.step(1/60,500,true,{...idle,spinPressed:i===0},tuning);x+=r.dx;magnitude+=Math.abs(w.wind);lo=Math.min(lo,w.wind);hi=Math.max(hi,w.wind);maxDelta=Math.max(maxDelta,Math.abs(w.wind-prev));prev=w.wind;if(i%60===0)samples.push(w.wind);}
- return {seed,lo,hi,maxDelta,x,meanAbsoluteDrift:magnitude/3600*KITE_TOW.windDrift,samples};};
+for(let i=0;i<36;i++)step({...idle,moveY:-1});
+assert.equal(m.speed,KITE_TOW.brakeFloor,'Starting with brake held still receives the faster crawl');
+assert.ok(m.reserve>0,'Wind keeps loading the spring at the crawl floor');
+const wind=seed=>{const w=new KiteTowMotion(seed);let prev=0,previousTarget=0,changes=0,reversals=0,maxDelta=0,lo=1,hi=-1,x=0,magnitude=0;const samples=[];
+ for(let i=0;i<3600;i++){const r=w.step(1/60,500,true,{...idle,spinPressed:i===0},tuning);x+=r.dx;magnitude+=Math.abs(w.wind);lo=Math.min(lo,w.wind);hi=Math.max(hi,w.wind);maxDelta=Math.max(maxDelta,Math.abs(w.wind-prev));prev=w.wind;if(w.windTarget!==previousTarget){changes++;if(w.windTarget*previousTarget<0)reversals++;previousTarget=w.windTarget;}if(i%60===0)samples.push(w.wind);}
+ return {seed,lo,hi,maxDelta,x,changes,reversals,meanAbsoluteDrift:magnitude/3600*KITE_TOW.windDrift,samples};};
 const winds=[wind(1),wind(92)];assert.notDeepEqual(winds[0].samples,winds[1].samples);
-for(const w of winds){assert.ok(w.lo<-.65&&w.hi>.65);assert.ok(w.maxDelta<.06);assert.ok(w.meanAbsoluteDrift>1.25);assert.ok(Math.abs(w.x)>1);}
+for(const w of winds){assert.ok(w.lo<-.75&&w.hi>.75);assert.ok(w.maxDelta<.06);assert.ok(w.meanAbsoluteDrift>2.6);assert.ok(w.changes>=9&&w.changes<=18&&w.reversals>=5);}
+assert.equal(KITE_TOW.steeringSpeed,9,'Only forward speed increases');assert.equal(KITE_TOW.steeringResponse,16);
 m.reset();for(let i=0;i<180;i++)assert.equal(step({...idle,jumpHeld:true}).dz,0,'Held input from death cannot restart');
 // Review boundary inputs separately from the connected route: a late release
 // may use coyote time or a landing buffer, but cancellation/reset must erase it.
@@ -65,7 +81,7 @@ assert.equal(step({...idle,spinPressed:true}).jumpCharge,null);edges.push('reset
 for(const button of ['jumpPressed','spinPressed','grindPressed','grabPressed']){
  m.reset(53);assert.equal(step().dz,0);assert.ok(step({...idle,[button]:true}).dz<0);
 }edges.push('each fresh face-button edge starts the tow');
-const report={pass:true,chargeSeconds:tuning.jumpChargeTime,chargeAcceleration:tuning.chargeBoost,storedBrakeEnergy:stored,maxReturnSpeedDelta:maxDelta,winds,edgeReview:edges};
-const out=process.env.BEACH_OUTPUT??'docs/beach-street/wind-finish';
+const report={pass:true,chargeSeconds:tuning.jumpChargeTime,chargeAcceleration:tuning.chargeBoost*KITE_TOW.accelerationScale,speedCases,partialRelease:partial,forcedBurst:burst,winds,edgeReview:edges};
+const out=process.env.BEACH_OUTPUT??'docs/beach-street/kite-spring';
 await mkdir(out,{recursive:true});await writeFile(`${out}/motion.json`,JSON.stringify(report,null,2)+'\n');
-console.log('PASS wait/start, release charge, normal acceleration, stored braking, seeded wind and seven input-edge cases');
+console.log('PASS faster forward speed, original steering, partial brake memory, one-second forced burst, capped energy, slower strong gusts and seven input-edge cases');

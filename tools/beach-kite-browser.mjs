@@ -70,12 +70,12 @@ try{
    if(Math.floor(z/30)>lastTrace){lastTrace=Math.floor(z/30);state.trace.push(snap());}
    state.maxGripError=Math.max(state.maxGripError,...(p.kiteVisual?.gripErrors??[0]));
    if(z>20&&p.kiteTowing&&p.kiteVisual?.root.visible&&frame++%6===0){
-    const box=p.playerBox.clone().setFromObject(p.kiteVisual.sail),v=p.pos.clone();let clips=false;
-    for(const x of [box.min.x,box.max.x])for(const y of [box.min.y,box.max.y])for(const z of [box.min.z,box.max.z]){
-     v.set(x,y,z).project(g.camera);const b=state.canopyBounds;
+    const v=p.pos.clone();let clips=false;
+    p.kiteVisual.sail.traverse(o=>{const a=o.geometry?.getAttribute('position');if(!a)return;for(let i=0;i<a.count;i++){
+     v.fromBufferAttribute(a,i).applyMatrix4(o.matrixWorld).project(g.camera);const b=state.canopyBounds;
      b.minX=Math.min(b.minX,v.x);b.maxX=Math.max(b.maxX,v.x);b.minY=Math.min(b.minY,v.y);b.maxY=Math.max(b.maxY,v.y);
      clips ||= Math.abs(v.x)>1.02||Math.abs(v.y)>1.02;
-    }
+    }});
     if(clips&&state.canopyClips.length<12)state.canopyClips.push(snap());
    }
    requestAnimationFrame(run);

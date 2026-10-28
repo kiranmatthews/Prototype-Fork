@@ -1,0 +1,19 @@
+{
+  "started": "2026-10-28T08:14:21.593Z",
+  "steps": [
+    {
+      "name": "check-levels",
+      "command": "node tools/validate-levels.mjs && node tools/test-lazy-source.mjs && node tools/test-tropical-plants.mjs && node tools/test-jungle-assets.mjs && node tools/test-crown-quartz.mjs && node tools/test-jungle-stream.mjs && node tools/test-custard-pool.mjs && node tools/test-jungle-enclosure.mjs && node tools/test-map-landscape-assets.mjs && node tools/test-world-map-save.mjs && node tools/test-map-clay-geometry.mjs && node tools/test-hollowwake-assets.mjs && node tools/test-scenery-normals.mjs && node tools/test-waterslide-scenery-lod.mjs && node tools/test-waterslide-ocean-look.mjs && node tools/test-waterslide-shallows.mjs && node tools/test-waterpark-decks.mjs && node tools/test-waterpark-portals.mjs && node tools/test-waterslide-forest.mjs && node tools/test-hollowwake-tunnel-build.mjs",
+      "exit": 0,
+      "seconds": 242.621
+    },
+    {
+      "name": "build",
+      "command": "tsc --noEmit && vite build",
+      "exit": 0,
+      "seconds": 55.837
+    }
+  ],
+  "finished": "2026-10-28T08:19:20.054Z",
+  "pass": true
+}

@@ -67,6 +67,7 @@ try{
    assert.ok(report.release&&report.waitingAtFinish);assert.ok(report.waitingAtFinish.p[2]>-3000);assert.equal(report.waitingAtFinish.speed,0);
    assert.equal(used.size,jumps.length);assert.ok(report.checkpoints.length>=10);
    report.finish={...snap(),crates:p.cratesBroken,totalCrates:l.totalCrates,crystal:p.hasCrystal,gem:p.gemEarned};report.gripErrors=p.kiteVisual?.gripErrors;
+   report.missedCrates=l.crates.filter(c=>c.alive).map(c=>({kind:c.kind,position:c.mesh.position.toArray()}));
    assert.equal(p.cratesBroken,l.totalCrates,'The suggested line collects every crate/checkpoint');
    assert.equal(p.hasCrystal,true,'The crystal stays reachable on the home stretch');
    assert.equal(p.gemEarned,true,'The all-boxes gem retains normal progression');

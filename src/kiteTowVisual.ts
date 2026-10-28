@@ -81,12 +81,11 @@ export class KiteTowVisual {
   pose(pos: THREE.Vector3, time: number, steer: number, lift: number, wind: number, left: Arm | null, right: Arm | null, aspect = 1.6): void {
     this.root.position.copy(pos);
     this.root.rotation.set(0, 0, 0);
-    // The canopy stays in the wind as the rider rises toward it. Shortening
-    // the flying lines also keeps the whole foil in frame through a jump.
-    // More flying-line length in narrow views keeps gusts from cropping a tip.
-    const setback = 16.5 * Math.max(1, 1.6 / Math.max(.35, aspect));
-    this.sail.position.set(1.2 + steer * .65 + wind * 3.8 + Math.sin(time * 1.4) * .15, 4.35 - lift * .75 + Math.sin(time*1.8)*.12, -setback);
-    this.sail.rotation.set(.38 + wind * .06, -.08 * steer, -.10 * steer - wind * .34);
+    // The foil flies above and well ahead of the rider. Keep it at its wind
+    // height through a jump, with extra line length in narrow views.
+    const setback = 28 * Math.max(1, 1.6 / Math.max(.35, aspect));
+    this.sail.position.set(1.2 + steer * .65 + wind * 4.8 + Math.sin(time * 1.4) * .15, 8.5 - lift * .75 + Math.sin(time*1.8)*.12, -setback);
+    this.sail.rotation.set(.38 + wind * .06, -.08 * steer, -.10 * steer - wind * .40);
     // Shoulder-relative bar placement works for the editable character's size.
     const arms = [left, right];
     this.bar.position.set(0, 1.3, -.55);

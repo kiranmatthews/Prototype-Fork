@@ -5410,3 +5410,45 @@ bundling, version `dc2c6603b0dd0b9c9ca2`. All 16 full-mesh framing cases pass
 across wide, narrow and portrait views; the visible preview was reloaded and
 its final stamp verified. The final change is presentation-only at aspects
 below 1.6:1, so the complete 1600×1000 course and bonus evidence remains valid.
+
+## 28 October 2026 — Beach kite spring, manuals and finished boundaries
+
+The goal began around 07:17 UTC. The connected native course first passed at
+07:44; the first production preview opened at 07:58 (about 41 minutes from
+prompt to browser-playable). During review the user clarified forward speed
+only, much slower strong gusts, and a one-second slowdown limit. Those final
+corrections opened in the preview at 08:20. Shared validation-capacity waits
+are included in this elapsed wall time, not counted as active authoring time.
+
+Forward coast speeds are 16.2/18.225/20.25 m/s and full charge is 31.05 m/s;
+steering retains its previous 9 m/s speed and response. Strong gusts hold
+3.5–6.5 seconds with smooth transitions. Down accumulates at most one second
+of tension: release spends only part of the counter and energy, repress
+continues the remainder, and the cap triggers a 0.16-second automatic spring.
+Normal manual flicks, balance, scoring, landing buffers, jump exits and fatal
+balance bails work while towing. The actual eye socket looks forwards; body
+sway is reduced at slow/cruise speed. The kite flies 28 m ahead and 8.5 m up.
+
+Authored turns and freight guides now leave response time with the original
+lateral steering against the strongest gust. Landing rewards move beyond the
+longer flights. The complete opening stair set moves down its same flat slab
+to clear the chicane exit, preserving its contrasting treatment. An invisible
+start wall and a complete stone overlook/pavilion close the ends. Existing
+solid islands, jump feel, bonus retry and deliberate on-foot finish remain.
+
+Focused motion, native spring/manual/contact/boundary/control, connected
+course and timing checks pass. The existing shared balance-reentry regression
+also passes. Required check:levels and build pass. Corrected Chrome lite/full
+runs each clear 3 km, all 13 jumps, ten checkpoints, 24/24 main boxes and crystal
+with no crashes or console errors, then stop/walk and deliberately jump to
+finish. Keyboard spring/manuals, 16 extreme canopy framing cases and two actual
+failed bonus returns/re-entry/bypass pass. MAX/native and normal CRT reviewed;
+all asset silhouettes remain complete. Minimum adverse-wind steering margin
+is 0.307 s; minimum landing space is 0.523 s at full forward charge.
+
+Final preview: `Codex/sol fork · build 10-28 08:18 UTC`, version
+`b6a2099c3d6e8c1a0474`. Evidence is indexed in
+[the kite spring review](beach-street/kite-spring/README.md). No global tuning,
+published level-pack overwrite, unrelated cleanup or check:all. Work remains
+local in accordance with this chat's explicit instruction; the current release
+coordinator is retired. A validated immutable handoff is saved in the inbox.

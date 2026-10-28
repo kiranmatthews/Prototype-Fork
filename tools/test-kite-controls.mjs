@@ -49,7 +49,7 @@ try{
    report.grind={state:p.state,rail:p.grindRail?.name,visible:p.kiteVisual.root.visible};assert.equal(p.state,'grind');
    for(let i=0;i<24;i++)tick(makeInput({jumpHeld:true,grindHeld:true}));tick(makeInput({jumpReleased:true,grindHeld:false}));
    report.grindExit={state:p.state,v:p.vVel,type:p.lastJumpType};assert.equal(p.state,'air');assert.ok(p.vVel>=TUNING.grindJumpForce-.01);
-   reset(0,153);launch();for(let i=0;i<240&&p.state!=='dead';i++)tick();
+   reset(0,153);launch();for(let i=0;i<240&&p.state!=='dead';i++)tick(makeInput({moveX:Math.max(-1,Math.min(1,-p.pos.x*3))}));
    assert.equal(p.state,'dead');assert.equal(p.lives,8);assert.equal(p.breakApartDiagnostics.style,'kite-collapse');
    const barStart=p.kiteVisual.bar.getWorldPosition(new THREE.Vector3()),headStart=p.headM.getWorldPosition(new THREE.Vector3());
    const handStart=p.breakApart.tetherDiagnostics;
@@ -70,6 +70,12 @@ try{
    assert.ok(l.bonusPlatformDiagnostics.tilt>1);assert.ok(Math.max(...p.kiteDock.errors)<.05,JSON.stringify(report.pad));
    assert.ok(Math.max(...p.kiteDock.normalErrors)<.01);
    for(let i=0;i<12;i++)tick();assert.equal(l.consumeBonusLanding(p.pos,{enabled:true,grounded:true,jump:false,rising:false}),true);
+   reset(3,65);launch();for(let i=0;i<90;i++)tick(makeInput({moveX:Math.max(-1,Math.min(1,(3-p.pos.x)*3))}));
+   tick(makeInput({moveY:1}));tick();tick(makeInput({moveY:-1}));
+   assert.equal(p.manualing,1);
+   for(let i=0;i<240&&!p.kiteBonusDocked;i++)tick(makeInput({moveX:Math.max(-1,Math.min(1,(3-p.pos.x)*3)),moveY:Math.max(-.5,Math.min(.5,(p.balance*3+p.balanceVel*.8)/4))}));
+   report.manualDock={docked:p.kiteBonusDocked,manual:p.manualing,armed:p.manualArmed};
+   assert.ok(p.kiteBonusDocked,'Manual approach still catches the optional pad');assert.equal(p.manualing,0);assert.equal(p.manualArmed,0);
    reset(-3,87);launch();for(let i=0;i<200;i++)tick(makeInput({moveX:Math.max(-1,Math.min(1,(-3-p.pos.x)*3))}));
    assert.ok(-p.pos.z>110);assert.equal(p.kiteBonusDocked,false,'Steering around preserves the main run');
    const grounds=l.groundMeshes.slice();l.setTimeTrial(true);assert.equal(l.kiteBonusPad,null);
