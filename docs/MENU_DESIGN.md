@@ -1,5 +1,16 @@
 # BONEMAN menu design
 
+Oversized centre-screen and full-screen gameplay announcement plates are debug
+tools only. The existing **M / Show Debug Menus** switch controls them in both
+DOM and pre-CRT rendering. With debug hidden, discard new announcements and
+immediately clear any active plate; never queue or restore one into normal play.
+Use the persistent gameplay HUD and contextual world feedback for normal play.
+Keep intentional Pause, Options and results screens in the game-owned menu flow.
+
+Loops are riding geometry, never finish requirements. Completing a loop does
+not unlock an exit or show an announcement. Old saved loop-lock flags are
+discarded on import, and the editor has no loop requirement control.
+
 Modern mode's gameplay life readout is one Roo PNG line (`3 DEATHS`) centred
 below the portrait/SPECIAL ring. It uses the shared menu action size and the
 same 0.882 cap-height conversion as menu PNG lettering, in both direct DOM

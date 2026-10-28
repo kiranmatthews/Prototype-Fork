@@ -174,7 +174,7 @@ add({t:'bonusplatform',p:[-60,12,-151],to:[-55,12.1,-151],grp:3,nm:'Abandoned ar
 for(const pool of WATERPARK_POOLS)for(const offset of [-3,0,3])add({t:'wumpa',p:pool.section==='A'?[pool.p[0],pool.p[1]+1,pool.p[2]+offset]:[pool.p[0]+offset,pool.p[1]+1,pool.p[2]],grp:pool.section==='A'?2:4});
 
 add({t:'mesh',p:WATERPARK_LOOP.entry,yaw:WATERPARK_LOOP.yaw,...createLoopMeshData(WATERPARK_LOOP.radius,WATERPARK_LOOP.width,WATERPARK_LOOP.offset),w:WATERPARK_LOOP.width,
-  loopRadius:WATERPARK_LOOP.radius,loopOffset:WATERPARK_LOOP.offset,loopRequired:true,color:'#3f7380',emissive:'#102d32',tex:'metal',doubleSided:true,edgeGrinding:false,grp:6,nm:'Deathloop coaster riding ribbon'});
+  loopRadius:WATERPARK_LOOP.radius,loopOffset:WATERPARK_LOOP.offset,color:'#3f7380',emissive:'#102d32',tex:'metal',doubleSided:true,edgeGrinding:false,grp:6,nm:'Deathloop coaster riding ribbon'});
 add({t:'crystal',p:[118,1.2,41],grp:7,nm:'Coaster survivor crystal'});
 add({t:'gate',p:[118,0,48],yaw:180,grp:7,nm:'Deadwater park exit'});
 

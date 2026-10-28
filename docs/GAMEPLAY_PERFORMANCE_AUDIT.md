@@ -29,7 +29,7 @@ The construction reductions are **63%** for Nightworks and **27%** for After Hou
 
 - All 55 levels completed both the unchanged lite and full-render load/profile passes, with zero console errors. All **145 checkpoint** positions supported the player in each pass. The same 55-level full-render pass on the optimized source retained supported spawns/checkpoints and a clean error console.
 - The initial audit used forward input everywhere; horizontal bonus/puzzle courses need Right/Left. The audit now selects the authored side-scroll direction. Production lifecycle results separately verify native movement, checkpoint respawn and finish behavior. Do not count an incorrect Up-input probe as successful traversal or as a game defect.
-- The corrected full-render production lifecycle pass covers all **55 levels**: native controls, normal fall recovery, checkpoint restoration where present, ordinary finish gates, boss reset, competition run entry and the required-loop lock. The final combined build independently passes native input, spawn support, all 145 checkpoints, asset readiness and clean-console checks for every level. Boss victory, completed competition events and complete loop traversal are not claimed by these lifecycle probes.
+- The corrected full-render production lifecycle pass covers all **55 levels**: native controls, normal fall recovery, checkpoint restoration where present, ordinary finish gates, boss reset and competition run entry. The final combined build independently passes native input, spawn support, all 145 checkpoints, asset readiness and clean-console checks for every level. Boss victory, completed competition events and complete loop traversal are not claimed by these lifecycle probes.
 - Exact collision regression: **634 contacts, 2,182 misses and 96 moving/phase sweeps** match independently built Three.js collision trees without an epsilon. Tests also cover modified vertices, changed winding, changed sizes/yaw and level disposal.
 - Loading regressions cover every warmed mesh, fast/expensive batches, GPU completion/loss, exceptions, renderer/scene restoration, loading duration, nested asset readiness and input release. Update the existing callback-shape assertion to recognize the current completion wrapper, which still calls `guardGameplayFromMenu()`.
 - The exact `check:levels` commands and production type-check/build passed. npm is absent on this host, so the package script's Node entry points were invoked directly. No full-suite run.
@@ -121,7 +121,7 @@ Full-render combined production build (`1ae0c10` plus the performance patch). Th
 | Blockworks · Greybox (codex-lab) | Pass | 6 | Respawn and finish gate |
 | Jungle Cup (jungle-cup) | Pass | 0 | Run start and respawn |
 | Bone Yard · Wipeout Playground (bone-yard) | Pass | 2 | Respawn and finish gate |
-| Deadwater Park (waterpark) | Pass | 2 | Respawn; loop lock retained |
+| Deadwater Park (waterpark) | Pass | 2 | Respawn; finish admission superseded by the ungated-loop regression |
 | Deadwater Cup (waterpark-cup) | Pass | 0 | Run start and respawn |
 | The Chimeworks — Astra (astra-chimeworks) | Pass | 4 | Respawn and finish gate |
 | Backport Mechanics Lab (backport-lab) | Pass | 1 | Respawn and finish gate |

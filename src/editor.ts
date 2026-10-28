@@ -8046,10 +8046,6 @@ export class Editor {
           else delete c.outOfBounds;
           this.renderProps();
         });
-        if (c.loopRadius !== undefined)
-          boolRow("require complete loop", () => c.loopRequired === true, value => {
-            if (value) c.loopRequired = true; else delete c.loopRequired;
-          });
       }
     }
     if(c.t==='mesh'&&c.solid===false&&['water','jungle-stream'].includes(c.materialStyle??'')){
@@ -8286,7 +8282,7 @@ export class Editor {
       note.textContent = "Visual warning only. Select its pit too when moving or rotating the complete hazard.";
       this.propsEl.appendChild(note);
     } else if (c.t === "mesh") {
-      const clearLoop = (): void => { delete c.loopRadius; delete c.loopOffset; delete c.loopRequired; };
+      const clearLoop = (): void => { delete c.loopRadius; delete c.loopOffset; };
       const makeScenery = (): void => {
         c.solid = false; delete c.outline;
         delete c.gravityTrack; delete c.skateCamera; delete c.outOfBounds; delete c.lethal;

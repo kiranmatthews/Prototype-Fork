@@ -136,7 +136,7 @@ add({ t: 'mesh', p: [80, -330, -1747], vertices: [-8,0,0,8,0,0,-8,0,-14,8,0,-14]
   uvs:[0,0,16/6,0,16/6,14/6,0,14/6], gravityTrack:true, vert:false, tex:'skystream-marble',color:IVORY,grp:6,nm:'Aureole flat approach' });
 lane.push([...SKYSTREAM_LOOP.entry]);
 add({ t: 'mesh', p: SKYSTREAM_LOOP.entry, ...createLoopMeshData(34, 12, 48, 192), loopRadius: 34, loopOffset: 48, w: 12,
-  loopRequired: false, doubleSided: true, edgeGrinding: false,
+  doubleSided: true, edgeGrinding: false,
   tex: 'skystream-marble', color: IVORY, grp: 6, nm: 'The Aureole · 68 metre vertical loop' });
 for (let i = 1; i <= 96; i++) {
   const q = sampleLoop(SKYSTREAM_LOOP, i / 96 * Math.PI * 2).point;
@@ -177,7 +177,7 @@ for(const [i,loop] of SKYSTREAM_LOOPS.entries()) {
   if(i===0)continue;
   add({t:'mesh',p:loop.entry,...createLoopMeshData(loop.radius,loop.width,loop.offset,256,loop.kind),
     loopRadius:loop.radius,loopOffset:loop.offset,loopKind:loop.kind,w:loop.width,
-    loopRequired:false,doubleSided:true,edgeGrinding:false,grp:6,nm:loop.name});
+    doubleSided:true,edgeGrinding:false,grp:6,nm:loop.name});
   for(let j=1;j<=128;j++)lane.push(sampleLoop(loop,j/128*Math.PI*2).point.map((v,k)=>v+loop.entry[k]) as P);
   SKYSTREAM_LOOP_EXITS.push(lane.length-1);
   if(i===1)gravityRun('Wedding band to Afterglow descent',loop.exit,SKYSTREAM_LOOPS[2].entry);

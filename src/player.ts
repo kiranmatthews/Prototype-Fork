@@ -1605,7 +1605,7 @@ export class Player {
   private loopFall = false;
   private loopFailure: {elapsed:number;tumbleStarted:boolean;side:THREE.Vector3;backward:THREE.Vector3;normal:THREE.Vector3;focus:THREE.Vector3;rollAxis:THREE.Vector3}|null=null;
   private readonly completedLoops = new Set<THREE.Object3D>();
-  private loopGateHintShown = false;
+  private parkGoalHintShown = false;
   private railCand: { rail: Rail; sample: RailSample } | null = null;
   private lean = 0;
 
@@ -3916,7 +3916,7 @@ export class Player {
     this.authoredVertReturnInput = null;
     this.cameraPoseStandingCenter = null;
     this.completedLoops.clear();
-    this.loopGateHintShown = false;
+    this.parkGoalHintShown = false;
     this.clearCoyoteJumpWindow();
     this.crateFloorT = 0; // a respawn never inherits "stood on a box"
     this.crateFloor = null;
@@ -6444,12 +6444,7 @@ export class Player {
     } else if (result.complete) {
       if (!ride.recovering) {
         this.completedLoops.add(ride.mesh);
-        this.loopGateHintShown = false;
-        const required=level.loopMeshes.filter(mesh=>mesh.userData.loopRequired);
-        const remaining=required.filter(mesh=>!this.completedLoops.has(mesh)).length;
-        // Leave the next high-speed approach visible between chained loops.
         if(this.competitionMode)this.score(1000,'Loop of Death');
-        else if(remaining===0)this.onCourseHint(required.length>1?'ALL LOOPS CLEAR':'LOOP COMPLETE','Exit unlocked — ride out!');
       }
       this.loopRide = null;
       // Recovery can leave backward at the entrance; preserve that real velocity.
@@ -14186,17 +14181,12 @@ export class Player {
     if (this.kiteReleased && this.grounded && !onPad) this.kiteFinishJump = false;
     const finishReady = !level.kiteTow || this.kiteReleased && this.kiteFinishJump;
     const touchingFinish = finishReady && (onPad || this.playerBox.intersectsBox(level.finishGlow));
-    const loopGoalsComplete = !level.loopMeshes?.some(mesh => mesh.userData.loopRequired && !this.completedLoops.has(mesh));
     const parkGoalsComplete = !level.skateCollectathon || level.skateCollectathon.complete;
-    if (touchingFinish && !parkGoalsComplete && !this.loopGateHintShown) {
-      this.loopGateHintShown = true;
+    if (touchingFinish && !parkGoalsComplete && !this.parkGoalHintShown) {
+      this.parkGoalHintShown = true;
       this.onCourseHint('EXIT LOCKED', `${level.skateCollectathon!.collected}/${level.skateCollectathon!.tokens.length} tokens — explore above`);
-    } else if (touchingFinish && !loopGoalsComplete && !this.loopGateHintShown) {
-      this.loopGateHintShown = true;
-      const required=level.loopMeshes.filter(mesh=>mesh.userData.loopRequired).length;
-      this.onCourseHint('LOOP STILL CLOSED', required>1?`Complete all ${required} loops to unlock the exit`:'Complete the Loop of Death to unlock the exit');
-    } else if (!touchingFinish) this.loopGateHintShown = false;
-    if (!level.skateRace && !this.competitionMode && loopGoalsComplete && parkGoalsComplete && (level.boss ? level.boss.canFinish : touchingFinish)) {
+    } else if (!touchingFinish) this.parkGoalHintShown = false;
+    if (!level.skateRace && !this.competitionMode && parkGoalsComplete && (level.boss ? level.boss.canFinish : touchingFinish)) {
       this.bankCombo(); // whatever is pending counts as you arrive
       sfx.play('lifeGet', 1.0);
       this.state = 'finished';

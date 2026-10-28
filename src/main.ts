@@ -2197,6 +2197,7 @@ recorder.start(current.id, endlessDeathsOn); // the take always runs: level load
 gameFlow = new GameFlowUI(
   campaign,
   {
+    onDeveloperChromeChange: (visible) => ui.setDebugMessagesEnabled(visible),
     onNewGame: startNewCampaign,
     onLoadGame: loadCampaign,
     onSaveGame: saveCampaignFromWarp,

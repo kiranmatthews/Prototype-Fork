@@ -185,8 +185,9 @@ Quit Level, Game Over No, and Results Continue pass the originating progress
 key back through the shared return helper. The controller seats the character
 on that exact hub and persists it as map focus. A first clear animates newly
 opened routes without a text popup. Gameplay checkpoint, collectible, run-mode
-and trick-gate events have no stock announcement banners; specific messaging
-is left to authored presentation. Normal HUD and results displays remain.
+and trick-gate events have no stock announcement banners. Oversized gameplay
+announcement plates are debug-only under M / Show Debug Menus, as specified in
+[MENU_DESIGN.md](MENU_DESIGN.md). Normal HUD and results displays remain.
 
 ## MatrixRex ocean contract
 

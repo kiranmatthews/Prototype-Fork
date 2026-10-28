@@ -22,7 +22,7 @@ await withBlockworksRuntime(async r=>{
  }
  assert.ok(airborne&&hit,'The attempted bypass must contact the physical wall');
  assert.ok(maxX>99&&maxX<wx-sx/2+.5,'The wall must physically stop the attempted crossing');
- assert.equal(p.loopStatus.completed,0);assert.equal(l.loopMeshes[0].userData.loopRequired,false);
+ assert.equal(p.loopStatus.completed,0);assert.equal('loopRequired' in l.loopMeshes[0].userData,false);
  console.log('PASS native jump blocked by the central wall, with full-width loop clearance and no required-loop counter.',{maxX});
 },{modulePath:'/src/levels/skystream.ts',source:m=>m.SKYSTREAM_LEVEL,levelId:'skystream',
  start:[73,-329.9,-1754],heading:[1,0,0],maxFrames:320,

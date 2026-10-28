@@ -250,6 +250,7 @@ export class UI {
   private lastComboActionRevision = -1;
   private lastComboPreviewSequence = -1;
   private msgTimer: number | undefined;
+  private debugMessagesEnabled = false;
   private messageState: {
     title: string;
     sub: string;
@@ -1010,7 +1011,7 @@ export class UI {
     drawBeforeFade?: GameHudFrameState['drawBeforeFade'],
   ): boolean {
     const racing=!!this.raceHud.state;
-    const frame:GameHudFrameState={boost:racing?null:this.boostFrame,special:racing?null:this.specialFrame,drawBeforeFade,
+    const frame:GameHudFrameState={debugMessages:this.debugMessagesEnabled,boost:racing?null:this.boostFrame,special:racing?null:this.specialFrame,drawBeforeFade,
       ...(racing?{life:null,fruit:null,crates:null,score:null,clock:null,trick:null,results:null,death:null}:{}),
       ...(this.bonusTransferHud.active?{drawExtra:(ctx:CanvasRenderingContext2D,size:{width:number;height:number})=>this.bonusTransferHud.paint(ctx,size.width,size.height)}:{})};
     if(target===null){
@@ -1101,7 +1102,7 @@ export class UI {
   }
 
   showDeathScreen(visible: boolean): void {
-    this.deathEl.style.display = visible ? "flex" : "none";
+    this.deathEl.style.display = visible && this.debugMessagesEnabled ? "flex" : "none";
   }
 
   private startCombo(labels: string): void {
@@ -1942,8 +1943,18 @@ export class UI {
       row("time", s.time.toFixed(2) + "s");
   }
 
-  // durationMs = 0 keeps the message up until the next showMessage/hide.
+  /** Oversized announcement plates belong to the M / Show Debug Menus mode. */
+  setDebugMessagesEnabled(enabled: boolean): void {
+    this.debugMessagesEnabled = enabled;
+    if (!enabled) {
+      this.hideMessage();
+      this.showDeathScreen(false);
+    }
+  }
+
+  // Debug only; durationMs = 0 keeps the message up until the next show/hide.
   showMessage(title: string, sub: string, durationMs: number): void {
+    if (!this.debugMessagesEnabled) return;
     // Open the plate BEFORE handing over the title: the label measures a real
     // glyph box, and a box inside a display:none plate measures nothing.
     setPromptText(this.msgSub, sub);

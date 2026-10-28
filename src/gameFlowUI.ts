@@ -91,6 +91,7 @@ export type ResultsScreenState =
     };
 
 export interface GameFlowUICallbacks {
+  onDeveloperChromeChange?: (visible: boolean) => void;
   onNewGame: (slot: number) => void;
   onLoadGame: (slot: number) => void;
   /** Host banks the live inventory before asking CampaignStore to save. */
@@ -267,6 +268,7 @@ export class GameFlowUI {
     subscribeRooLight(()=>{if(this.screen&&(this.preCrtComposited||this.preCrtHandoffPending))this.requestGameplayFrame();});
     document.body.classList.toggle("game-debug-hidden", !this.debugVisible);
     document.body.classList.toggle("game-debug-visible", this.debugVisible);
+    this.callbacks.onDeveloperChromeChange?.(this.debugVisible);
     this.root.setAttribute("aria-modal", String(!this.debugVisible));
     window.addEventListener("pointermove", (event) => {
       const moved =
@@ -1816,6 +1818,7 @@ export class GameFlowUI {
   private toggleDeveloperChrome(persist = true): void {
     const restoreMenuFocus = this.isDeveloperChromeTarget(document.activeElement);
     this.debugVisible = !this.debugVisible;
+    this.callbacks.onDeveloperChromeChange?.(this.debugVisible);
     document.body.classList.toggle("game-debug-hidden", !this.debugVisible);
     document.body.classList.toggle("game-debug-visible", this.debugVisible);
     if (persist) localStorage.setItem("solProtoDebugChrome", this.debugVisible ? "visible" : "hidden");

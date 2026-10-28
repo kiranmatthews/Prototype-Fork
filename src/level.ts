@@ -822,7 +822,6 @@ export interface CustomComponent {
   loopKind?: 'vertical' | 'wall'; // loop orientation; wall is a banked horizontal band
   loopRadius?: number; // mesh: analytic loop matching createLoopMeshData, p = entry feet
   loopOffset?: number; // loop: entry/exit separation, local +X for vertical or Y for wall loops
-  loopRequired?: boolean; // loop: finish gate unlocks after one complete supported turn
   gravityTrack?: boolean; // authored ride surface: retain gravity-earned speed above the ordinary cap; never adds speed
   skateCamera?: boolean; // authored mesh/vert surface: use the existing competition vert camera, including its outgoing air
   outOfBounds?: boolean; // solid mesh: break the combo and return to safe ground without a score/death penalty
@@ -2703,7 +2702,7 @@ const COMPONENT_DATA_KEYS = new Set([
   "baySpacing", "supportDepth", "supportBaseY", "terrainSupports", "structureStyle",
   "plankPalette", "polePalette", "shoreProfile", "shoreSeaLevel", "shorePhase",
   "trick", "exitYaw", "airOnly", "coverage", "radius", "color", "tex", "dir",
-  "layer", "grp", "lk", "nm", "trafficRoad", "materialStyle", "castShadow", "emissive", "opacity", "fog", "vertices", "indices", "normals", "uvs", "colors", "doubleSided", "smoothCollision", "breakable", "breakGroup", "sourceBox", "beachSand", "loopRadius", "loopOffset", "loopRequired", "loopKind", "cloudRoad", "gravityTrack", "lethal", "skateCamera", "outOfBounds", "swimDepth",
+  "layer", "grp", "lk", "nm", "trafficRoad", "materialStyle", "castShadow", "emissive", "opacity", "fog", "vertices", "indices", "normals", "uvs", "colors", "doubleSided", "smoothCollision", "breakable", "breakGroup", "sourceBox", "beachSand", "loopRadius", "loopOffset", "loopKind", "cloudRoad", "gravityTrack", "lethal", "skateCamera", "outOfBounds", "swimDepth",
 ]);
 const hasOnlyKeys = (value: object, keys: ReadonlySet<string>): boolean =>
   Object.keys(value).every((key) => keys.has(key));
@@ -3076,7 +3075,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
     "artProxy", "fog", "hangLock", "checkpointTrip", "openFloor", "flatShading",
     "slip", "closed", "vert", "lit", "berms", "outline", "invisible", "containment",
     "scaffold", "supports", "rails", "terrainSupports", "airOnly", "solid", "scenerySolid", "solidSides", "lk",
-    "shoreProfile", "cameraView", "cameraPresentationOnly", "cameraKeepDistance", "cameraCutaway", "edgeGrinding", "ridgeGrinding", "trafficRoad", "doubleSided", "smoothCollision", "castShadow", "beachSand", "loopRequired", "cloudRoad", "gravityTrack", "lethal", "skateCamera", "outOfBounds",
+    "shoreProfile", "cameraView", "cameraPresentationOnly", "cameraKeepDistance", "cameraCutaway", "edgeGrinding", "ridgeGrinding", "trafficRoad", "doubleSided", "smoothCollision", "castShadow", "beachSand", "cloudRoad", "gravityTrack", "lethal", "skateCamera", "outOfBounds",
   ];
   let aggregateNodes = source.ocean?.shore?.length ?? 0;
   let aggregateSamples = source.ocean
@@ -3106,6 +3105,12 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
     "stone", "pendulum", "ropeswing", "grindosaurus", "angryball", "crumble",
     "rope", "trickgate", "returnportal", "thorn", "spinbridge"]);
   for (const component of source.components) {
+    // Older editor saves may carry the retired loop-unlocks-exit flag. Keep
+    // their riding geometry, but never retain that rule in normalized data.
+    if (component && typeof component === 'object' && 'loopRequired' in component) {
+      if (typeof component.loopRequired !== 'boolean' || component.t !== 'mesh' || component.loopRadius === undefined) return null;
+      delete component.loopRequired;
+    }
     if (
       !component ||
       !hasOnlyKeys(component, COMPONENT_DATA_KEYS) ||
@@ -3255,7 +3260,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
         component.solid===false&&component.t!=='platform' ||
         component.t==='platform'&&(!component.s||component.pts||component.s[0]<2||component.s[0]>32||component.s[2]<2||component.s[2]>24) ||
         component.t==='mesh'&&(!component.vertices||component.vertices.length<12||component.vertices.length%6!==0))) return null;
-    if (component.loopRadius !== undefined || component.loopOffset !== undefined || component.loopRequired !== undefined) {
+    if (component.loopRadius !== undefined || component.loopOffset !== undefined) {
       if (component.t !== "mesh" || !Number.isFinite(component.loopRadius) ||
           component.loopRadius! < 4 || component.loopRadius! > 80 ||
           !Number.isFinite(component.loopOffset) || Math.abs(component.loopOffset!) > 80 ||
@@ -6571,7 +6576,6 @@ export class Level {
       mesh.userData.loopRadius = c.loopRadius;
       mesh.userData.loopOffset = c.loopOffset ?? 0;
       mesh.userData.loopWidth = c.w;
-      mesh.userData.loopRequired = c.loopRequired === true;
       mesh.userData.vert = false;
       mesh.userData.edgeGrinding = false;
     }

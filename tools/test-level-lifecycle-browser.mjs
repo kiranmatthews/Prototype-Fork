@@ -27,7 +27,7 @@ try{
    if(report.rows.at(-1)?.finish==='gate accepted')await page.waitForFunction(()=>{const g=window.__game;return !!g.gameFlow.currentScreen&&!g.gameFlow.loadingPhase&&!g.gameFlow.transitionActive;},null,{timeout:30000});
    await page.evaluate(id=>window.__game.ui.onLevelSelect(id),entry.id);await ready();
    assert.equal(await page.evaluate(()=>window.__game.getCurrentLevel().id),entry.id);
-   const kind=await page.evaluate(()=>{const g=window.__game,l=g.getLevel();return {hub:l.hudMode==='hub',bonus:l.hudMode==='bonus',competition:!!g.getCompetition(),boss:!!l.boss,checkpoints:l.checkpoints.length,gate:!l.finishGlow.isEmpty(),loops:l.loopMeshes.filter(m=>m.userData.loopRequired).length};});row.kind=kind;
+   const kind=await page.evaluate(()=>{const g=window.__game,l=g.getLevel();return {hub:l.hudMode==='hub',bonus:l.hudMode==='bonus',competition:!!g.getCompetition(),boss:!!l.boss,checkpoints:l.checkpoints.length,gate:!l.finishGlow.isEmpty(),loops:l.loopMeshes.length};});row.kind=kind;
    if(kind.competition){await page.evaluate(()=>window.__game.competitionAction('start'));await page.waitForFunction(()=>window.__game.getCompetition().phase==='running',null,{timeout:15000});}
    await page.waitForTimeout(200);
    const before=await page.evaluate(()=>window.__game.player.pos.toArray());
@@ -49,12 +49,7 @@ try{
    else if(kind.hub||!kind.gate)row.finish='no ordinary finish gate';
    else{
     await page.evaluate(()=>{const g=window.__game,l=g.getLevel(),p=g.player;const position=l.finishGlow.getCenter(p.pos.clone());p.respawn(l,false,true,{position,heading:p.camDir.clone()});p.snapRenderInterpolation();});
-    if(kind.loops){
-     await page.waitForTimeout(350);assert.notEqual(await page.evaluate(()=>window.__game.player.state),'finished','required loops must still gate completion');
-     row.finish='required loop lock retained; complete loop traversal is a separate check';
-    }else{
-     await page.waitForFunction(()=>window.__game.player.state==='finished',null,{timeout:10000});row.finish='gate accepted';
-    }
+    await page.waitForFunction(()=>window.__game.player.state==='finished',null,{timeout:10000});row.finish='gate accepted';
    }
    row.assets=await page.evaluate(()=>window.__game.getLoadingDiagnostics());assert.deepEqual(row.assets.failed,[]);
    console.log(`PASS ${entry.id}: input, respawn${row.checkpoint.warped?', checkpoint':''}, ${row.finish}`);

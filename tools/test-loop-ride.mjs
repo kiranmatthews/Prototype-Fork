@@ -56,7 +56,14 @@ scenario(async r => {
   const captured=l.captureData(),roundtrip=parseCustomLevelJson(JSON.stringify(captured));
   assert.ok(roundtrip,'Coaster geometry and momentum tags must survive editor serialization');
   const loops=roundtrip.components.filter(c=>c.loopRadius!==undefined);
-  assert.equal(loops.length,3);assert.ok(loops.every(c=>c.loopRequired&&c.loopRadius===26));
+  assert.equal(loops.length,3);assert.ok(loops.every(c=>!('loopRequired' in c)&&c.loopRadius===26));
+  for (const legacyRequired of [true, false]) {
+    const legacy=structuredClone(captured);
+    for (const c of legacy.components.filter(c=>c.loopRadius!==undefined)) c.loopRequired=legacyRequired;
+    const migrated=parseCustomLevelJson(JSON.stringify(legacy));
+    assert.deepEqual(migrated,roundtrip,'Old loop flags must disappear without changing the saved geometry');
+    assert.ok(legacy.components.some(c=>c.loopRequired===legacyRequired),'Normalization must not mutate caller data');
+  }
   assert.equal(roundtrip.components.filter(c=>c.t==='speedpad').length,0);
   const tracks=roundtrip.components.filter(c=>c.gravityTrack);
   assert.ok(tracks.length>=14&&tracks.every(c=>c.t==='mesh'||c.t==='vertramp'));
@@ -115,24 +122,28 @@ scenario(r=>{
 
 
 scenario(({p,tick,directionInput,l})=>{
-  let blocked=false;p.onCourseHint=title=>{blocked ||= title==='LOOP STILL CLOSED';};
-  // Even two completed turns do not open the final gate.
-  p.completedLoops.add(l.loopMeshes[0]);p.completedLoops.add(l.loopMeshes[1]);
-  for(let i=0;i<100;i++){
+  const hints=[];p.onCourseHint=title=>hints.push(title);
+  // Even stale runtime flags cannot turn loop telemetry into a finish rule.
+  for(const mesh of l.loopMeshes)mesh.userData.loopRequired=true;
+  for(let i=0;i<100&&p.state!=='finished';i++){
     tick({...directionInput([0,0,-1]),jumpHeld:true});
-    assert.notEqual(p.state,'finished','Two-loop shortcut bypassed the third required inversion');
   }
-  assert.ok(blocked);
-  p.respawn(l,false);assert.equal(p.loopStatus.completed,0,'Respawn resets the triple-loop goal');
+  assert.equal(p.state,'finished','Reaching the gate must finish without any completed loops');
+  assert.equal(p.loopStatus.completed,0);
+  assert.deepEqual(hints,[],'Finishing cannot announce a loop lock or unlock');
+  for(const mesh of l.loopMeshes)delete mesh.userData.loopRequired;
 },{start:[60,-164.9,-1052],heading:[0,0,-1]});
 scenario(r=>{
-  const {p,l}=r;p.completedLoops.add(l.loopMeshes[0]);p.completedLoops.add(l.loopMeshes[1]);let entry=null;
+  const {p,l}=r;let entry=null;const hints=[];p.onCourseHint=title=>hints.push(title);
   for(let i=0;i<1400&&p.state!=='finished';i++){
-    r.tick({...(p.loopStatus.active?{moveY:1}:r.toward(p.loopStatus.completed<3?r.source.WATERPARK_LOOPS[2].entry:r.source.WATERPARK_FINISH)),jumpHeld:true});
+    r.tick({...(p.loopStatus.active?{moveY:1}:r.toward(p.loopStatus.completed<1?r.source.WATERPARK_LOOPS[2].entry:r.source.WATERPARK_FINISH)),jumpHeld:true});
     if(p.loopStatus.active&&entry===null)entry=p.speed;
     assert.ok(!p.isBailing&&p.totalDeaths===0);
   }
   assert.equal(p.state,'finished');assert.ok(entry>54,'Final ramp must rebuild loop speed from a stationary retry');
+  assert.equal(p.loopStatus.completed,1,'Keep completed-turn telemetry for route review and scoring');
+  assert.deepEqual(hints,[],'Riding a complete loop must not emit an announcement');
+  p.respawn(l,false);assert.equal(p.loopStatus.completed,0,'Respawn resets traversal telemetry');
 },{start:[40,-99.9,-914],heading:[0,0,-1]});
 
 // Reuse one production scene/SSR runtime while resetting each independent
@@ -143,4 +154,4 @@ await withWaterparkRuntime(async r=>{
     await run(r);
   }
 });
-console.log('Triple loop: pressure, real fall, required turns, stationary retry and respawn checks passed.');
+console.log('Triple loop: pressure, real fall, ungated finish, silent completion, stationary retry and respawn checks passed.');
