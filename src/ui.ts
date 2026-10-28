@@ -23,6 +23,7 @@ import {
   type GameHudFrameState,
 } from "./gameHudSurface";
 import { COMBO_GEM_TINT, Level, levelList, MAX_LEVEL_FILE_BYTES } from "./level";
+import { debugLevelMenu } from './debugLevelMenu';
 import { RooLabel, ROO_HUD, ROO_TT } from "./rootext";
 import { ROO_COUNTER_TRACKING, ROO_NUMBER_VH } from "./roo-type/typography";
 import { milkBlob } from "./milk";
@@ -1829,7 +1830,7 @@ export class UI {
   private renderLevels(): void {
     this.levelRowEl.replaceChildren();
     this.levelRows.clear();
-    levelList().forEach((entry, i) => {
+    debugLevelMenu(levelList()).forEach((entry, i) => {
       const item = div("hud-levelitem");
       const play = document.createElement("button");
       play.className = "hud-levelbtn hud-levelplay";

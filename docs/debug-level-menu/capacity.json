@@ -1,0 +1,10 @@
+{
+  "status": "busy",
+  "exitCode": 75,
+  "holders": [
+    { "owner": "01a18164-7b38-7f11-94c2-2428089ba3db", "slot": 0 },
+    { "owner": "01a18164-7b38-7f11-94c2-2428089ba3db", "slot": 1 }
+  ],
+  "reservations": [],
+  "next": "Continue independent work and record the needed job in your handoff. Do not poll or spin."
+}

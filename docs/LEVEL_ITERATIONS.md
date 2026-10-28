@@ -5410,3 +5410,25 @@ bundling, version `dc2c6603b0dd0b9c9ca2`. All 16 full-mesh framing cases pass
 across wide, narrow and portrait views; the visible preview was reloaded and
 its final stamp verified. The final change is presentation-only at aspects
 below 1.6:1, so the complete 1600×1000 course and bonus evidence remains valid.
+
+## 2026-10-28 — Debug level names and map order
+
+The brief began at approximately 07:25 UTC; the first real-browser menu capture
+was at 07:35 UTC, about ten minutes from prompt to playable. The MENU now uses
+the current campaign names and map progression, placing each authored bonus
+immediately after its parent as `[Parent name] Bonus`. Numbered playtest
+shortcuts use the same ordering. Non-map courses/tools retain their registry
+order after the map; the shared fallback is labeled `Bonus`. The 21 retired
+bonus titles are saved in [a reusable text list](retired-bonus-level-names.txt).
+
+Type checking, the existing debug shortcut regression, and real Chrome lite
+checks pass. All 65 rows, edit tooltips, numeric/click launches, active states,
+editor targets and saved/custom-name refresh behavior were verified. Desktop
+and portrait captures were reviewed; the final run had no console errors or
+failed requests. Registry IDs, level geometry, saved data and movement are
+unchanged. [Review and evidence](debug-level-menu/README.md).
+
+Production build and full normal/MAX rendering remain queued with the release
+coordinator: the heavy-job helper returned exit 75 because both slots were
+occupied. The increment remains WORKING until those required checks pass.
+No level-data audit or full suite was run for this presentation-only change.

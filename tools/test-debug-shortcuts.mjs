@@ -50,7 +50,7 @@ const handlerCode = compile(`const handler = ${handler.getText(file)};`);
 for (const shellBypass of [false, true]) for (const visible of [false, true]) {
  for (const code of ['KeyK', 'KeyL']) for (const blocked of [false, true]) {
   const calls=[];
-  const run = new Function('shellBypass','gameFlow','bonusSession','editor','current','player','level','ui','levelList','switchLevel','saveReplay','toggleVideo',`${handlerCode}; return handler;`)(shellBypass,{blocksGameplay:blocked,developerChromeVisible:visible},null,{active:false},{id:'jungle'},{warpCheckpoint:(_level,dir)=>{calls.push(dir);return true}}, {}, {showMessage(){}},()=>[],()=>{},()=>{},()=>{});
+  const run = new Function('shellBypass','gameFlow','bonusSession','editor','current','player','level','ui','levelList','debugLevelMenu','switchLevel','saveReplay','toggleVideo',`${handlerCode}; return handler;`)(shellBypass,{blocksGameplay:blocked,developerChromeVisible:visible},null,{active:false},{id:'jungle'},{warpCheckpoint:(_level,dir)=>{calls.push(dir);return true}}, {}, {showMessage(){}},()=>[],rows=>rows,()=>{},()=>{},()=>{});
   run({code,target:null});
   assert.deepEqual(calls, visible && !blocked ? [code==='KeyL'?1:-1] : [], `whole listener: playtest=${shellBypass}, debug=${visible}, blocked=${blocked}, key=${code}`);
  }

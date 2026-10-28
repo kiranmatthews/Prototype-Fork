@@ -5,6 +5,7 @@ import {BoulderChaseCamera} from './boulderChase';
 import {CrackedDisplay} from './crackedDisplay';
 import {CarlisleSceneryCamera} from './carlisleSceneryCollision';
 import { requestedTool } from "./toolRoutes";
+import { debugLevelMenu } from './debugLevelMenu';
 import { createSecondaryTextPanel } from "./secondaryTextPanel";
 import { startOfflineCache } from "./offline";
 import { stabilityReport } from './stabilityReport';
@@ -4343,7 +4344,7 @@ window.addEventListener("keydown", (e) => {
   if (!shellBypass) return;
   if (!editor.active) {
     // Preserve playtest-only direct level selection and capture shortcuts.
-    const rows = levelList();
+    const rows = debugLevelMenu(levelList());
     for (let i = 0; i < Math.min(9, rows.length); i++) {
       if (e.code === `Digit${i + 1}`) switchLevel(rows[i].id);
     }
