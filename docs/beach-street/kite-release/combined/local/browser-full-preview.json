@@ -1,0 +1,232 @@
+{
+  "base": "http://127.0.0.1:5288",
+  "lite": false,
+  "preview": true,
+  "published": true,
+  "errors": [],
+  "failed": [],
+  "captures": [
+    {
+      "name": "tow",
+      "z": 106.9079999999998,
+      "buffer": [
+        1600,
+        1000
+      ],
+      "kiteVisible": true,
+      "gripErrors": [
+        0.000017720519458344682,
+        5.262557624017063e-8
+      ],
+      "stamp": "Codex/sol fork · build 10-28 08:53 UTC"
+    },
+    {
+      "name": "first-hop",
+      "z": 242.1158194444448,
+      "buffer": [
+        1600,
+        1000
+      ],
+      "kiteVisible": true,
+      "gripErrors": [
+        4.807867546155589e-8,
+        0.00000574342190738983
+      ],
+      "stamp": "Codex/sol fork · build 10-28 08:53 UTC"
+    }
+  ],
+  "started": "2026-10-28T08:54:30.217Z",
+  "journey": {
+    "done": true,
+    "crashes": [],
+    "trace": [
+      {
+        "z": 0.6275000000000195,
+        "x": 0.022124637628249677,
+        "y": 12.000000011920928,
+        "state": "ride",
+        "grounded": true,
+        "lives": 99,
+        "speed": 19.740000000000045,
+        "crates": 0,
+        "totalCrates": 60,
+        "bonusCrates": 36,
+        "crystal": false,
+        "gem": false
+      },
+      {
+        "z": 30.318000000000055,
+        "x": 0.20076309494367603,
+        "y": 12.000000011920928,
+        "state": "ride",
+        "grounded": true,
+        "lives": 99,
+        "speed": 31.05,
+        "crates": 0,
+        "totalCrates": 60,
+        "bonusCrates": 36,
+        "crystal": false,
+        "gem": false
+      },
+      {
+        "z": 60.332999999999956,
+        "x": 3.1699654809091333,
+        "y": 12.000000011920928,
+        "state": "ride",
+        "grounded": true,
+        "lives": 99,
+        "speed": 31.05,
+        "crates": 0,
+        "totalCrates": 60,
+        "bonusCrates": 36,
+        "crystal": false,
+        "gem": false
+      },
+      {
+        "z": 90.34799999999986,
+        "x": 2.396445103068807,
+        "y": 12.000000011920928,
+        "state": "ride",
+        "grounded": true,
+        "lives": 99,
+        "speed": 31.05,
+        "crates": 0,
+        "totalCrates": 60,
+        "bonusCrates": 36,
+        "crystal": false,
+        "gem": false
+      },
+      {
+        "z": 120.36299999999976,
+        "x": -2.5982357094549156,
+        "y": 11.185480000000009,
+        "state": "ride",
+        "grounded": true,
+        "lives": 99,
+        "speed": 31.05,
+        "crates": 0,
+        "totalCrates": 60,
+        "bonusCrates": 36,
+        "crystal": false,
+        "gem": false
+      },
+      {
+        "z": 150.37800000000027,
+        "x": -2.6654030586219495,
+        "y": 9.98487999999999,
+        "state": "ride",
+        "grounded": true,
+        "lives": 99,
+        "speed": 31.05,
+        "crates": 0,
+        "totalCrates": 60,
+        "bonusCrates": 36,
+        "crystal": false,
+        "gem": false
+      },
+      {
+        "z": 180.39281944444542,
+        "x": 0.07751847719354234,
+        "y": 8.970429330682638,
+        "state": "air",
+        "grounded": false,
+        "lives": 99,
+        "speed": 31.039166666666667,
+        "crates": 0,
+        "totalCrates": 60,
+        "bonusCrates": 36,
+        "crystal": false,
+        "gem": false
+      },
+      {
+        "z": 210.34679166666714,
+        "x": -0.4629783983156086,
+        "y": 10.495379399166776,
+        "state": "air",
+        "grounded": false,
+        "lives": 99,
+        "speed": 30.984999999999996,
+        "crates": 0,
+        "totalCrates": 60,
+        "bonusCrates": 36,
+        "crystal": false,
+        "gem": false
+      }
+    ],
+    "jumps": [
+      {
+        "name": "First hop",
+        "z": 179.87550000000098,
+        "x": 0.06373979442342223,
+        "y": 8.804979999999961,
+        "state": "ride",
+        "grounded": true,
+        "lives": 99,
+        "speed": 31.05,
+        "crates": 0,
+        "totalCrates": 60,
+        "bonusCrates": 36,
+        "crystal": false,
+        "gem": false
+      }
+    ],
+    "checkpoints": [
+      {
+        "spawn": [
+          0,
+          12.12,
+          15
+        ],
+        "z": -15,
+        "x": 0,
+        "y": 12.12,
+        "state": "ride",
+        "grounded": true,
+        "lives": 99,
+        "speed": 0,
+        "crates": 0,
+        "totalCrates": 60,
+        "bonusCrates": 36,
+        "crystal": false,
+        "gem": false
+      }
+    ],
+    "maxGripError": 0.000021208175462389458,
+    "canopyBounds": {
+      "minX": -0.026091437584885586,
+      "maxX": 0.31891243825617543,
+      "minY": 0.4909117271033658,
+      "maxY": 0.7349259287377117
+    },
+    "canopyClips": [],
+    "final": {
+      "z": 215.51095833333372,
+      "x": -0.8810280304237258,
+      "y": 8.760983817104652,
+      "state": "air",
+      "grounded": false,
+      "lives": 99,
+      "speed": 30.984999999999996,
+      "crates": 0,
+      "totalCrates": 60,
+      "bonusCrates": 36,
+      "crystal": false,
+      "gem": false
+    },
+    "keyEventCount": 338,
+    "keyCounts": {
+      "Space:down": 2,
+      "ArrowLeft:down": 116,
+      "ArrowRight:down": 51,
+      "ArrowLeft:up": 116,
+      "ArrowRight:up": 51,
+      "Space:up": 2
+    }
+  },
+  "assets": {
+    "errors": [],
+    "reduced": 0
+  },
+  "pass": true,
+  "finished": "2026-10-28T08:54:49.954Z"
+}

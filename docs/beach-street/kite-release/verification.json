@@ -1,0 +1,55 @@
+{
+  "recorded": "2026-10-28T08:52:39.412964+00:00",
+  "sourceCommit": "5ddbc4997ce90b1777bce0054f2030563d6a44f4",
+  "integrationCommit": "b34dffe299f06f59d901f4c0220f2b615b229aba",
+  "baseCommit": "aac956ab544572811e0787815450ce8718e09343",
+  "matchingOwnedBlobs": {
+    "src/kiteTow.ts": {
+      "5ddbc4997ce90b1777bce0054f2030563d6a44f4": "9df067da7438db29ed5224200a3d41a6c1524255",
+      "b34dffe299f06f59d901f4c0220f2b615b229aba": "9df067da7438db29ed5224200a3d41a6c1524255"
+    },
+    "src/kiteTowVisual.ts": {
+      "5ddbc4997ce90b1777bce0054f2030563d6a44f4": "b7f54f8a4537b9ccd397760b23d2d15f62b7a09c",
+      "b34dffe299f06f59d901f4c0220f2b615b229aba": "b7f54f8a4537b9ccd397760b23d2d15f62b7a09c"
+    },
+    "src/player.ts": {
+      "5ddbc4997ce90b1777bce0054f2030563d6a44f4": "ea4bfd8f121273614c03d81e78c564961620cdad",
+      "b34dffe299f06f59d901f4c0220f2b615b229aba": "ea4bfd8f121273614c03d81e78c564961620cdad"
+    },
+    "src/levels/beach-street-gameplay.ts": {
+      "5ddbc4997ce90b1777bce0054f2030563d6a44f4": "dad8c3f985da79cf7f9ddbf8e4a76bd485a158c0",
+      "b34dffe299f06f59d901f4c0220f2b615b229aba": "dad8c3f985da79cf7f9ddbf8e4a76bd485a158c0"
+    },
+    "src/levels/coastal-town-art.ts": {
+      "5ddbc4997ce90b1777bce0054f2030563d6a44f4": "03ba2e89d059bb280c0b21b063d1aa6dda1857c9",
+      "b34dffe299f06f59d901f4c0220f2b615b229aba": "03ba2e89d059bb280c0b21b063d1aa6dda1857c9"
+    }
+  },
+  "build": {
+    "stamp": "Codex/sol fork \u00b7 build 10-28 08:47 UTC",
+    "version": "4af446aebe8e0704b2a4",
+    "entry": "assets/index-aIxY8ysn.js",
+    "files": 1847,
+    "bytes": 997040791,
+    "limitBytes": 1000000000
+  },
+  "sha256": {
+    "src/kiteTow.ts": "d0b3bf22d61a17de702b29cc8daae3e2eeb340e1fef43bfba4f4c03a6da0088d",
+    "src/kiteTowVisual.ts": "fb153760cde4b7ae8d270fd0765cc9508e80eb087eb5e3340fe960a08c9c7aff",
+    "src/player.ts": "92dbe2af0f6ce3a4682eaf260d0bea00b786edbae576b160ee2934bf346c28a5",
+    "src/levels/beach-street-gameplay.ts": "e9e51f7a2a6bcb197bf8cb79f5c71ee38682fc7bab026080b2b15092334eb46c",
+    "src/levels/coastal-town-art.ts": "e59660565cf19a94813406a9902b78f2c56391e2c02984d011dcc37cdb24d5f2",
+    "src/main.ts": "f9bb5976dc7964c6c4a59f539c23b22a2dd46fa331134041fb2e3e2239ac9102",
+    "src/level.ts": "d833afc3f9bebff99d0ba34e5132a4ac26dbd7e3c2c36c707abf5c7c5287e0ca",
+    "src/levels/themed-bonuses.ts": "518a830b6c581450bca85712708dccc78f1e543758d6f73cefb30d8b4df2fb3c",
+    "tools/beach-kite-browser.mjs": "89aa00982fb9ae03ab5557cbd0d7b2ddd6661931fd980871d702821855d25d9e",
+    "docs/beach-street/kite-release/README.md": "c99bd8c1b29b2c3f300676a86c7361fca9577e8b24429d1947f1451029b92165",
+    "docs/beach-street/kite-release/local/browser-full-preview.json": "ed3bad3a04d8329ae5cbbd7285099bb115f0ca8fd797a0a2856d2b57fd4a7f2b",
+    "docs/beach-street/kite-release/local/native-first-hop.png": "a08d1259a95d021d7af324cf4377bc6049d786dae7c84e8f6df2fd75138e2481",
+    "docs/beach-street/kite-release/local/native-tow.png": "804d0f451da98c315b9185302da87660c199fc7b519271d3d69b974765ba4029",
+    "docs/beach-street/kite-release/native-controls.json": "82790c631e14f8f5f8e90c3d4c213e6f23913e41b370704166e105063520b593",
+    "docs/beach-street/kite-release/native-spring.json": "d6427aa90292c5f9e3f45b27ab25b8226b66bcf9d8f9aae4cf7f34de4c0f73b1",
+    "docs/beach-street/kite-release/native.json": "2e089a981bfc0c2814a239918511d05b9d8b8ca4800c49fe5e345981e6086954",
+    "docs/beach-street/kite-release/release-checks.json": "9ff2e64eaff51f96d7fe3a1e9b256c6c801832b1857b543f4184cc166072ea70"
+  }
+}

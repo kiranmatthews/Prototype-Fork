@@ -2,7 +2,10 @@ import assert from 'node:assert/strict';
 import {createRequire} from 'node:module';
 import {homedir} from 'node:os';
 import {pathToFileURL} from 'node:url';
-import {mkdir,writeFile} from 'node:fs/promises';
+import {mkdir,writeFile,readFile} from 'node:fs/promises';
+import ts from 'typescript';
+const motionCode=ts.transpileModule(await readFile(new URL('../src/kiteTow.ts',import.meta.url),'utf8'),{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2020}}).outputText;
+const {KITE_TOW}=await import('data:text/javascript;base64,'+Buffer.from(motionCode).toString('base64'));
 const require=createRequire(import.meta.url);let module;
 try{module=require.resolve('playwright');}catch{module=homedir()+'/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs';}
 const {chromium}=await import(pathToFileURL(module).href);
@@ -25,7 +28,7 @@ try{
   await page.setViewportSize({width,height});
   await page.waitForFunction(({width,height})=>{const c=window.__game.renderer.domElement;return c.width===width&&c.height===height;},{width,height});
   for(const wind of [-1,1])for(const steer of [-1,1]){
-   await page.evaluate(({wind,steer})=>{const p=window.__game.player;p.kiteMotion.wind=p.kiteMotion.windTarget=wind;p.kiteMotion.windTime=100;p.kiteMotion.lateral=steer*9;},{wind,steer});
+   await page.evaluate(({wind,steer,speed,drift})=>{const p=window.__game.player;p.kiteMotion.wind=p.kiteMotion.windTarget=wind;p.kiteMotion.windTime=100;p.kiteMotion.lateral=steer*speed+wind*drift;},{wind,steer,speed:KITE_TOW.steeringSpeed,drift:KITE_TOW.windDrift});
    await page.waitForTimeout(180);
    const sample=await page.evaluate(()=>{
     const g=window.__game,p=g.player,s=p.kiteVisual.sail,v=p.pos.clone();

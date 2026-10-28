@@ -14,6 +14,10 @@ console.warn=(...a)=>{if(!/failed|GLB|procedural skateboard/i.test(String(a[0]))
 console.error=(...a)=>{if(!/failed|GLB/i.test(String(a[0])))error(...a);};
 const levels=[];
 try {
+  const {BoulderChaseCamera}=await server.ssrLoadModule('/src/boulderChase.ts');
+  const {RaceFinishPresentation}=await server.ssrLoadModule('/src/race/finishPresentation.ts');
+  globalThis.window.matchMedia??=()=>({matches:false});
+  const {CarlisleSceneryCamera}=await server.ssrLoadModule('/src/carlisleSceneryCollision.ts');
   const { LoopCameraFraming } = await server.ssrLoadModule('/src/loopCamera.ts');
  const {SkateChaseCamera,SkateChaseCameraOverlay}=await server.ssrLoadModule('/src/skateChaseCamera.ts');
  const {ChiefCamera}=await server.ssrLoadModule('/src/boss/camera.ts');
@@ -89,7 +93,7 @@ try {
   const end=main.indexOf('\ncamera.position\n  .copy(player.renderPosition)',begin);
   const code=ts.transpileModule(main.slice(begin,end),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ESNext}}).outputText;
   const makeRig=new Function('deps',`
-    const {THREE,TUNING,LoopCameraFraming,CameraHeroFraming,ChiefCamera,SkateChaseCamera,SkateChaseCameraOverlay,cameraRigFraming,setCameraRigAim,CameraFallHold,CourseCameraHeading,fitCameraRigHorizontal,cameraViewAt,cameraViewDirection,
+    const {THREE,TUNING,BoulderChaseCamera,RaceFinishPresentation,CarlisleSceneryCamera,LoopCameraFraming,CameraHeroFraming,ChiefCamera,SkateChaseCamera,SkateChaseCameraOverlay,cameraRigFraming,setCameraRigAim,CameraFallHold,CourseCameraHeading,fitCameraRigHorizontal,cameraViewAt,cameraViewDirection,
       CameraViewFraming,CameraLookOffset,speedSkateFovTarget,stepSpeedSkateFov,newLaneCursor,level,player,camera}=deps;
     const current={id:'loop-camera-fixture'},worldMapController=null,oceanOverview=false,oceanReview=false,BOULDER_FOV=27,input={lookX:0,lookY:0};
     const cameraLook=new CameraLookOffset(),cameraLaneCursor=newLaneCursor(),camF=new THREE.Vector3(0,0,1),camControlDir=new THREE.Vector3(0,0,1),prevPlayerPos=new THREE.Vector3(),camTarget=new THREE.Vector3(),aimSmooth=new THREE.Vector3();
@@ -97,12 +101,12 @@ try {
     let cameraRenderSnapVersion=-1,camAnchorY=player.renderPosition.y,camBack=0,sideF=0,boulderF=0,camSpeedFovBoost=0,cam2SpeedFovBoost=0,camRoll=0;
     ${code}
     return {step:updateCamera,heading:camControlDir};`);
-  const deps={THREE,TUNING,LoopCameraFraming,CameraHeroFraming,ChiefCamera,SkateChaseCamera,SkateChaseCameraOverlay,cameraRigFraming,setCameraRigAim,CameraFallHold,CourseCameraHeading,fitCameraRigHorizontal,cameraViewAt,cameraViewDirection,
+  const deps={THREE,TUNING,BoulderChaseCamera,RaceFinishPresentation,CarlisleSceneryCamera,LoopCameraFraming,CameraHeroFraming,ChiefCamera,SkateChaseCamera,SkateChaseCameraOverlay,cameraRigFraming,setCameraRigAim,CameraFallHold,CourseCameraHeading,fitCameraRigHorizontal,cameraViewAt,cameraViewDirection,
     CameraViewFraming,CameraLookOffset,speedSkateFovTarget,stepSpeedSkateFov,newLaneCursor};
   const source={v:1,name:'Yawed close loop',spawn:[138,.03,-14],killY:-30,cameraAirLift:1,components:[
     {t:'platform',p:[138,-.5,-12],s:[12,1,24],edgeGrinding:false},
     {t:'speedpad',p:[138,.025,-7],s:[12,.15,14],speed:64,cycle:.6},
-    {t:'mesh',p:[138,0,0],yaw:180,...createLoopMeshData(26,12,20),w:12,loopRadius:26,loopOffset:20,loopRequired:true,doubleSided:true,edgeGrinding:false},
+    {t:'mesh',p:[138,0,0],yaw:180,...createLoopMeshData(26,12,20),w:12,loopRadius:26,loopOffset:20,doubleSided:true,edgeGrinding:false},
     {t:'platform',p:[118,-.5,22],s:[12,1,44],edgeGrinding:false},{t:'gate',p:[118,0,38],yaw:180},
     {t:'camnode',p:[138,0,-40]},{t:'camnode',p:[138,0,80]},
   ]};

@@ -1,0 +1,189 @@
+{
+  "runs": [
+    {
+      "lite": true,
+      "enabled": {
+        "enabled": true,
+        "materials": 59
+      },
+      "reload": {
+        "enabled": true,
+        "materials": 59
+      },
+      "restored": {
+        "enabled": false,
+        "materials": 0
+      }
+    }
+  ],
+  "errors": [],
+  "fixture": {
+    "pixel": [
+      255,
+      255,
+      255,
+      255
+    ],
+    "vertex": [
+      24,
+      24,
+      24,
+      255
+    ],
+    "restored": [
+      255,
+      255,
+      255,
+      255
+    ],
+    "materials": [
+      {
+        "kind": "MeshLambertMaterial",
+        "pixel": [
+          255,
+          120,
+          86,
+          255
+        ],
+        "vertex": [
+          10,
+          4,
+          3,
+          255
+        ],
+        "restored": [
+          255,
+          120,
+          86,
+          255
+        ]
+      },
+      {
+        "kind": "MeshPhongMaterial",
+        "pixel": [
+          255,
+          134,
+          101,
+          255
+        ],
+        "vertex": [
+          10,
+          4,
+          3,
+          255
+        ],
+        "restored": [
+          255,
+          134,
+          101,
+          255
+        ]
+      },
+      {
+        "kind": "MeshStandardMaterial",
+        "pixel": [
+          255,
+          126,
+          93,
+          255
+        ],
+        "vertex": [
+          10,
+          4,
+          3,
+          255
+        ],
+        "restored": [
+          255,
+          126,
+          93,
+          255
+        ]
+      },
+      {
+        "kind": "MeshPhysicalMaterial",
+        "pixel": [
+          255,
+          126,
+          93,
+          255
+        ],
+        "vertex": [
+          10,
+          4,
+          3,
+          255
+        ],
+        "restored": [
+          255,
+          126,
+          93,
+          255
+        ]
+      }
+    ],
+    "missingNormals": {
+      "pixel": [
+        255,
+        126,
+        93,
+        255
+      ],
+      "vertex": [
+        10,
+        4,
+        3,
+        255
+      ],
+      "restored": [
+        255,
+        126,
+        93,
+        255
+      ],
+      "authoredNormals": false
+    },
+    "front": [
+      10,
+      4,
+      3,
+      255
+    ],
+    "back": [
+      10,
+      4,
+      3,
+      255
+    ],
+    "red": [
+      10,
+      0,
+      0,
+      255
+    ],
+    "green": [
+      0,
+      4,
+      0,
+      255
+    ],
+    "sixSpots": [
+      52,
+      24,
+      17,
+      255
+    ],
+    "instanced": [
+      52,
+      24,
+      17,
+      255
+    ],
+    "skin": [
+      52,
+      24,
+      17,
+      255
+    ]
+  }
+}

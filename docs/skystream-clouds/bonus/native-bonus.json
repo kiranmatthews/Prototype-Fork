@@ -1,0 +1,613 @@
+{
+  "result": {
+    "completionScope": "complete-stage",
+    "activeStageCrates": 18,
+    "bonusCrateTotal": 0,
+    "bonusCrates": 0,
+    "gemEarned": true,
+    "cratesBroken": 18,
+    "totalCrates": 18,
+    "deaths": 0
+  },
+  "report": {
+    "stage": "Cloud return gate",
+    "actions": [
+      {
+        "name": "approach Cloud cache 1",
+        "firstFrame": 24,
+        "lastFrame": 96
+      },
+      {
+        "name": "Cloud cache 1",
+        "firstFrame": 116,
+        "lastFrame": 116
+      },
+      {
+        "name": "approach Cloud cache 2",
+        "firstFrame": 138,
+        "lastFrame": 221
+      },
+      {
+        "name": "Cloud cache 2",
+        "firstFrame": 241,
+        "lastFrame": 241
+      },
+      {
+        "name": "approach Cloud cache 3",
+        "firstFrame": 263,
+        "lastFrame": 347
+      },
+      {
+        "name": "Cloud cache 3",
+        "firstFrame": 367,
+        "lastFrame": 367
+      },
+      {
+        "name": "approach Cloud cache 4",
+        "firstFrame": 389,
+        "lastFrame": 472
+      },
+      {
+        "name": "Cloud cache 4",
+        "firstFrame": 492,
+        "lastFrame": 492
+      },
+      {
+        "name": "Cloud 1 takeoff",
+        "firstFrame": 514,
+        "lastFrame": 608
+      },
+      {
+        "name": "Cloud gap 1",
+        "firstFrame": 653,
+        "lastFrame": 691
+      },
+      {
+        "name": "Cloud cache 5",
+        "firstFrame": 693,
+        "lastFrame": 693
+      },
+      {
+        "name": "approach Cloud cache 6",
+        "firstFrame": 715,
+        "lastFrame": 799
+      },
+      {
+        "name": "Cloud cache 6",
+        "firstFrame": 819,
+        "lastFrame": 819
+      },
+      {
+        "name": "approach Cloud cache 7",
+        "firstFrame": 841,
+        "lastFrame": 924
+      },
+      {
+        "name": "Cloud cache 7",
+        "firstFrame": 944,
+        "lastFrame": 944
+      },
+      {
+        "name": "Cloud 2 takeoff",
+        "firstFrame": 966,
+        "lastFrame": 1057
+      },
+      {
+        "name": "Cloud gap 2",
+        "firstFrame": 1102,
+        "lastFrame": 1139
+      },
+      {
+        "name": "approach Cloud cache 8",
+        "firstFrame": 1139,
+        "lastFrame": 1180
+      },
+      {
+        "name": "Cloud cache 8",
+        "firstFrame": 1200,
+        "lastFrame": 1200
+      },
+      {
+        "name": "approach Cloud cache 9",
+        "firstFrame": 1222,
+        "lastFrame": 1301
+      },
+      {
+        "name": "Cloud cache 9",
+        "firstFrame": 1321,
+        "lastFrame": 1321
+      },
+      {
+        "name": "Cloud 3 takeoff",
+        "firstFrame": 1343,
+        "lastFrame": 1427
+      },
+      {
+        "name": "Cloud gap 3",
+        "firstFrame": 1472,
+        "lastFrame": 1512
+      },
+      {
+        "name": "approach Cloud cache 10",
+        "firstFrame": 1512,
+        "lastFrame": 1547
+      },
+      {
+        "name": "Cloud cache 10",
+        "firstFrame": 1567,
+        "lastFrame": 1567
+      },
+      {
+        "name": "approach Cloud cache 11",
+        "firstFrame": 1589,
+        "lastFrame": 1673
+      },
+      {
+        "name": "Cloud cache 11",
+        "firstFrame": 1693,
+        "lastFrame": 1693
+      },
+      {
+        "name": "approach Cloud cache 12",
+        "firstFrame": 1715,
+        "lastFrame": 1798
+      },
+      {
+        "name": "Cloud cache 12",
+        "firstFrame": 1818,
+        "lastFrame": 1818
+      },
+      {
+        "name": "Cloud 4 takeoff",
+        "firstFrame": 1840,
+        "lastFrame": 1928
+      },
+      {
+        "name": "Cloud gap 4",
+        "firstFrame": 1973,
+        "lastFrame": 2011
+      },
+      {
+        "name": "approach Cloud cache 13",
+        "firstFrame": 2011,
+        "lastFrame": 2040
+      },
+      {
+        "name": "Cloud cache 13",
+        "firstFrame": 2060,
+        "lastFrame": 2060
+      },
+      {
+        "name": "approach Cloud cache 14",
+        "firstFrame": 2082,
+        "lastFrame": 2166
+      },
+      {
+        "name": "Cloud cache 14",
+        "firstFrame": 2186,
+        "lastFrame": 2186
+      },
+      {
+        "name": "approach Cloud cache 15",
+        "firstFrame": 2208,
+        "lastFrame": 2291
+      },
+      {
+        "name": "Cloud cache 15",
+        "firstFrame": 2311,
+        "lastFrame": 2311
+      },
+      {
+        "name": "Cloud 5 takeoff",
+        "firstFrame": 2333,
+        "lastFrame": 2414
+      },
+      {
+        "name": "Cloud gap 5",
+        "firstFrame": 2459,
+        "lastFrame": 2499
+      },
+      {
+        "name": "approach Cloud cache 16",
+        "firstFrame": 2499,
+        "lastFrame": 2548
+      },
+      {
+        "name": "Cloud cache 16",
+        "firstFrame": 2568,
+        "lastFrame": 2568
+      },
+      {
+        "name": "approach Cloud cache 17",
+        "firstFrame": 2590,
+        "lastFrame": 2673
+      },
+      {
+        "name": "Cloud cache 17",
+        "firstFrame": 2693,
+        "lastFrame": 2693
+      },
+      {
+        "name": "approach Cloud cache 18",
+        "firstFrame": 2715,
+        "lastFrame": 2798
+      },
+      {
+        "name": "Cloud cache 18",
+        "firstFrame": 2818,
+        "lastFrame": 2818
+      },
+      {
+        "name": "Cloud return gate",
+        "firstFrame": 2842,
+        "lastFrame": 2881
+      }
+    ],
+    "evidence": [
+      {
+        "action": "Cloud cache 1",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "Cloud cache 2",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "Cloud cache 3",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "Cloud cache 4",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "Cloud gap 1",
+        "launch": [
+          3.1798222222222288,
+          180.00000000357628,
+          0
+        ],
+        "landing": [
+          7.768322222222235,
+          180.40000000357628,
+          0
+        ],
+        "ground": "Cumulus landing 2"
+      },
+      {
+        "action": "Cloud cache 5",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "Cloud cache 6",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "Cloud cache 7",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "Cloud gap 2",
+        "launch": [
+          17.78220000000005,
+          180.40000000357628,
+          0
+        ],
+        "landing": [
+          22.358700000000017,
+          181.00000000357628,
+          0
+        ],
+        "ground": "Cumulus landing 3"
+      },
+      {
+        "action": "Cloud cache 8",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "Cloud cache 9",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "Cloud gap 3",
+        "launch": [
+          28.380488888888973,
+          181.00000000357628,
+          0
+        ],
+        "landing": [
+          32.967488888888944,
+          180.3000000035763,
+          0
+        ],
+        "ground": "Cumulus landing 4"
+      },
+      {
+        "action": "Cloud cache 10",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "Cloud cache 11",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "Cloud cache 12",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "Cloud gap 4",
+        "launch": [
+          42.965655555555806,
+          180.3000000035763,
+          0
+        ],
+        "landing": [
+          47.567655555555774,
+          180.70000000357626,
+          0
+        ],
+        "ground": "Cumulus landing 5"
+      },
+      {
+        "action": "Cloud cache 13",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "Cloud cache 14",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "Cloud cache 15",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "Cloud gap 5",
+        "launch": [
+          56.564555555555955,
+          180.70000000357626,
+          0
+        ],
+        "landing": [
+          61.168055555555924,
+          180.00000000357628,
+          0
+        ],
+        "ground": "Cumulus landing 6"
+      },
+      {
+        "action": "Cloud cache 16",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "Cloud cache 17",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "Cloud cache 18",
+        "before": {
+          "alive": true,
+          "pending": false,
+          "bangUsed": false
+        },
+        "after": {
+          "alive": false,
+          "pending": false,
+          "bangUsed": false
+        }
+      },
+      {
+        "action": "All cloud bonus rewards",
+        "totalCrates": 18,
+        "activeStageCrates": 18,
+        "bonusCrateTotal": 0,
+        "cratesBroken": 18,
+        "remaining": 0
+      }
+    ]
+  },
+  "end": {
+    "frame": 2881,
+    "time": 48.016666666666666,
+    "position": [
+      70.41512222222227,
+      180.7266666691502,
+      0
+    ],
+    "heading": [
+      1,
+      0,
+      0
+    ],
+    "state": "finished",
+    "grounded": true,
+    "speed": 0,
+    "verticalSpeed": 0,
+    "bailing": false,
+    "deaths": 0,
+    "mover": null,
+    "ground": {
+      "name": "warp plinth rim",
+      "y": 180.7266666691502,
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "slippy": false,
+      "iceGrip": null
+    },
+    "rail": null,
+    "railDistance": null,
+    "balance": 0,
+    "input": {
+      "moveX": 1,
+      "moveY": 0,
+      "jumpHeld": false,
+      "grindHeld": false,
+      "spinHeld": false,
+      "grabHeld": false,
+      "transferHeld": false,
+      "jumpPressed": false,
+      "jumpReleased": false,
+      "grindPressed": false,
+      "spinPressed": false,
+      "grabPressed": false,
+      "transferPressed": false,
+      "restartPressed": false
+    }
+  },
+  "densityBytes": 39172672
+}

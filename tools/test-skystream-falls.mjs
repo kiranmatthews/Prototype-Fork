@@ -36,8 +36,8 @@ await withBlockworksRuntime(async r=>{
  assert.ok(top.deathY>100,'High-course recovery must happen near the missed road');
  for(const [name,start]of [
   ['Middle sanctuary',[30,-108,-1220]],
-  ['Aureole runout',[128,-329.9,-1794]],
-  ['Finish court',[96,-347.9,-1954]],
+  ['Aureole runout',[164,-413.9,-1994]],
+  ['Finish court',[132,-431.9,-2154]],
  ]){
   const result=fall(name,start);
   assert.ok(result.returnSeconds<5.5,name+': prompt recovery across the full course height');

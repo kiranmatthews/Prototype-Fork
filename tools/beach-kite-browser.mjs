@@ -10,24 +10,26 @@ const {chromium}=await import(pathToFileURL(module).href);
 const code=ts.transpileModule(await readFile(new URL('../src/levels/beach-street-gameplay.ts',import.meta.url),'utf8'),{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2020}}).outputText;
 const {BEACH_KITE_BEATS:beats,BEACH_KITE_JUMPS:jumps}=await import('data:text/javascript;base64,'+Buffer.from(code).toString('base64'));
 const base=process.env.BEACH_BASE??'http://127.0.0.1:5288',out=process.env.BEACH_OUTPUT??'docs/beach-street/wind-finish';
-const lite=process.argv.includes('--lite'),preview=process.argv.includes('--preview');
+const lite=process.argv.includes('--lite'),preview=process.argv.includes('--preview'),published=process.argv.includes('--published');
 await mkdir(out,{recursive:true});
 const browser=await chromium.launch({channel:'chrome',headless:true});
 const page=await browser.newPage({viewport:{width:1600,height:1000},deviceScaleFactor:1,serviceWorkers:'block'});
 await page.addInitScript(()=>Object.defineProperty(navigator,'getGamepads',{value:()=>[]}));
-const report={base,lite,preview,errors:[],failed:[],captures:[],started:new Date().toISOString()};
+const report={base,lite,preview,published,errors:[],failed:[],captures:[],started:new Date().toISOString()};
 page.on('pageerror',e=>report.errors.push(e.message));page.on('console',m=>{if(m.type()==='error')report.errors.push(m.text());});
 page.on('response',r=>{if(r.status()>=400)report.failed.push({url:r.url(),status:r.status()});});
 try{
  await page.goto(`${base}/?playtest&level=coastal-street-run${lite?'&lite':''}`,{waitUntil:'domcontentloaded',timeout:150000});
  await page.waitForFunction(()=>window.__game?.getCurrentLevel().id==='coastal-street-run'&&!window.__game.gameFlow.blocksGameplay,null,{timeout:150000});
- await page.evaluate(async()=>{const g=window.__game;g.restoreBuiltin('coastal-street-run');await g.switchLevel('coastal-street-run');g.campaign.startEphemeral();await g.getLevel().prepareJungleAssets();});
+ // Published verification must exercise the level delivered to a fresh user,
+ // including the served pack, without restoring or replacing its source data.
+ await page.evaluate(async published=>{const g=window.__game;if(!published){g.restoreBuiltin('coastal-street-run');await g.switchLevel('coastal-street-run');}g.campaign.startEphemeral();await g.getLevel().prepareJungleAssets();},published);
  await page.waitForFunction(()=>!window.__game.gameFlow.blocksGameplay,null,{timeout:150000});
  await page.evaluate(({beats,jumps,preview})=>{
   const g=window.__game,p=g.player,l=g.getLevel();p.respawn(l,true);p.lives=99;
   g.renderQualitySettings.setRegularResolution(preview?null:480);g.crtGuestSettings.setEnabled(!preview);
   const keys=new Set(),used=new Set();let releasedUntil=-1,cp='',lastTrace=-1;
-  const pad=l.bonusPlatformDiagnostics;
+  const pad=l.bonusPlatformDiagnostics,padContactZ=l.kiteBonusPad?.body.z;
   const state=window.__kitePilot={done:false,crashes:[],trace:[],jumps:[],checkpoints:[],keys:[],maxGripError:0,canopyBounds:{minX:1,maxX:-1,minY:1,maxY:-1},canopyClips:[]};
   let frame=0;
   const key=(code,down)=>{if(keys.has(code)===down)return;if(down)keys.add(code);else keys.delete(code);document.body.dispatchEvent(new KeyboardEvent(down?'keydown':'keyup',{code,key:code==='Space'?' ':code,bubbles:true}));state.keys.push({z:-p.pos.z,code,down});};
@@ -57,9 +59,15 @@ try{
     requestAnimationFrame(run);return;
    }
    let target=line(z+2);
-   // The optional pad now catches a straight approach. Choose its outer side
-   // after collecting the preceding exit rewards. Entry/return is tested separately.
-   if(pad&&z>-pad.z-14&&z<-pad.z+1)target=pad.x-2.1;
+   // Bypass to the left, then steer toward the next planter's right opening
+   // as soon as the tilted pad's actual contact plane clears. Waiting until
+   // after its visual centre wastes turning room against a sustained gust.
+   if(pad&&padContactZ!==undefined&&z>-pad.z-14&&z<-pad.z+18){
+    target=z<-padContactZ?pad.x-2.1:3.8;
+    state.bonusBypass??={contactZ:padContactZ,centreZ:pad.z,trace:[]};
+    if(!state.bonusBypass.trace.length||z-state.bonusBypass.trace.at(-1).z>=1)
+     state.bonusBypass.trace.push({...snap(),target,wind:p.kiteMotion.wind,lateral:p.kiteMotion.lateral});
+   }
    const error=target-p.pos.x-(p.kiteMotion?.lateral??0)*.12;
    // Real DOM keyboard events: no teleports, velocity writes or invulnerability.
    key('ArrowRight',error>.10);key('ArrowLeft',error<-.10);
@@ -70,12 +78,12 @@ try{
    if(Math.floor(z/30)>lastTrace){lastTrace=Math.floor(z/30);state.trace.push(snap());}
    state.maxGripError=Math.max(state.maxGripError,...(p.kiteVisual?.gripErrors??[0]));
    if(z>20&&p.kiteTowing&&p.kiteVisual?.root.visible&&frame++%6===0){
-    const box=p.playerBox.clone().setFromObject(p.kiteVisual.sail),v=p.pos.clone();let clips=false;
-    for(const x of [box.min.x,box.max.x])for(const y of [box.min.y,box.max.y])for(const z of [box.min.z,box.max.z]){
-     v.set(x,y,z).project(g.camera);const b=state.canopyBounds;
+    const v=p.pos.clone();let clips=false;
+    p.kiteVisual.sail.traverse(o=>{const a=o.geometry?.getAttribute('position');if(!a)return;for(let i=0;i<a.count;i++){
+     v.fromBufferAttribute(a,i).applyMatrix4(o.matrixWorld).project(g.camera);const b=state.canopyBounds;
      b.minX=Math.min(b.minX,v.x);b.maxX=Math.max(b.maxX,v.x);b.minY=Math.min(b.minY,v.y);b.maxY=Math.max(b.maxY,v.y);
      clips ||= Math.abs(v.x)>1.02||Math.abs(v.y)>1.02;
-    }
+    }});
     if(clips&&state.canopyClips.length<12)state.canopyClips.push(snap());
    }
    requestAnimationFrame(run);

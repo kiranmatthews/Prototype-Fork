@@ -1,3 +1,6 @@
+import { createCloudRoad, type CloudRoadSection } from './cloudRoad';
+import { createCloudPlatform } from './cloudPlatform';
+import { sampleLoop } from './loopRide';
 import { roundCorners } from './pathNodes';
 export { roundCorners } from './pathNodes';
 import {createRallyDirt,createRallyCloth,createRallyLamp,createRallySponsorMaterial} from './rallyMaterials';
@@ -815,9 +818,10 @@ export interface CustomComponent {
   sourceBox?: SourceBoxData; // nonblocking PS1 wooden-box prop; requires a registered source frame
   breakable?: BreakableKind; // non-solid mesh: shatter on swept body contact
   breakGroup?: number; // positive ID joining separate visual meshes into one breakable object
-  loopRadius?: number; // mesh: analytic vertical loop matching createLoopMeshData, p = entry feet
-  loopOffset?: number; // loop: lateral separation between entry and exit, local +X
-  loopRequired?: boolean; // loop: finish gate unlocks after one complete supported turn
+  cloudRoad?: boolean; // platform or paired ribbon mesh/vertramp: cloud volume over separate smooth contact
+  loopKind?: 'vertical' | 'wall'; // loop orientation; wall is a banked horizontal band
+  loopRadius?: number; // mesh: analytic loop matching createLoopMeshData, p = entry feet
+  loopOffset?: number; // loop: entry/exit separation, local +X for vertical or Y for wall loops
   gravityTrack?: boolean; // authored ride surface: retain gravity-earned speed above the ordinary cap; never adds speed
   skateCamera?: boolean; // authored mesh/vert surface: use the existing competition vert camera, including its outgoing air
   outOfBounds?: boolean; // solid mesh: break the combo and return to safe ground without a score/death penalty
@@ -1681,6 +1685,7 @@ export interface VertRampNode {
   roll?: number; // radians, banked about the spine tangent
 }
 export interface VertRampOpts {
+  smoothNormals?: boolean; // analytic profile/frame normals for a seamless contact ribbon
   /** Optional metric stone projection, including arc distance up each bank. */
   uvTileMetres?: number;
   radius: number; // transition radius
@@ -1880,7 +1885,13 @@ export function buildVertRampGeometry(
   };
 
   const pos: number[] = [];
-  const uv: number[] = [];
+  const uv: number[] = [], smoothNormals:number[]=[];
+  const surfaceNormal=(i:number,k:number):number[]=>{
+    const f=frames[i],lat=prof[k].lat;
+    const phi=Math.asin(Math.min(1,Math.max(0,Math.abs(lat)-flatHalf)/radius));
+    const co=Math.cos(phi),si=-Math.sign(lat)*Math.sin(phi);
+    return [f.ux*co+f.rx*si,f.uy*co+f.ry*si,f.uz*co+f.rz*si];
+  };
   const profileArc=[0];for(let k=1;k<prof.length;k++)profileArc.push(profileArc[k-1]+Math.hypot(prof[k].lat-prof[k-1].lat,prof[k].y-prof[k-1].y));
   // arc length along the spine, so a repeating texture doesn't stretch on bends
   let s = 0;
@@ -1906,6 +1917,8 @@ export function buildVertRampGeometry(
       // two triangles, wound so the normal faces the concave (rideable) side
       pos.push(a.x, a.y, a.z, c.x, c.y, c.z, b.x, b.y, b.z);
       pos.push(a.x, a.y, a.z, d.x, d.y, d.z, c.x, c.y, c.z);
+      if(o.smoothNormals)smoothNormals.push(...surfaceNormal(i,k),...surfaceNormal(j,k+1),...surfaceNormal(i,k+1),
+        ...surfaceNormal(i,k),...surfaceNormal(j,k),...surfaceNormal(j,k+1));
       const u0 = prof[k].lat / 6;
       const u1 = prof[k + 1].lat / 6;
       const v0 = s0 / 6;
@@ -1928,7 +1941,8 @@ export function buildVertRampGeometry(
   const geometry = new THREE.BufferGeometry();
   geometry.setAttribute("position", new THREE.Float32BufferAttribute(pos, 3));
   geometry.setAttribute("uv", new THREE.Float32BufferAttribute(uv, 2));
-  geometry.computeVertexNormals();
+  if(o.smoothNormals)geometry.setAttribute("normal",new THREE.Float32BufferAttribute(smoothNormals,3));
+  else geometry.computeVertexNormals();
   return { geometry, copings, lipY, lipLat };
 }
 
@@ -2688,7 +2702,7 @@ const COMPONENT_DATA_KEYS = new Set([
   "baySpacing", "supportDepth", "supportBaseY", "terrainSupports", "structureStyle",
   "plankPalette", "polePalette", "shoreProfile", "shoreSeaLevel", "shorePhase",
   "trick", "exitYaw", "airOnly", "coverage", "radius", "color", "tex", "dir",
-  "layer", "grp", "lk", "nm", "trafficRoad", "materialStyle", "castShadow", "emissive", "opacity", "fog", "vertices", "indices", "normals", "uvs", "colors", "doubleSided", "smoothCollision", "breakable", "breakGroup", "sourceBox", "beachSand", "loopRadius", "loopOffset", "loopRequired", "gravityTrack", "lethal", "skateCamera", "outOfBounds", "swimDepth",
+  "layer", "grp", "lk", "nm", "trafficRoad", "materialStyle", "castShadow", "emissive", "opacity", "fog", "vertices", "indices", "normals", "uvs", "colors", "doubleSided", "smoothCollision", "breakable", "breakGroup", "sourceBox", "beachSand", "loopRadius", "loopOffset", "loopKind", "cloudRoad", "gravityTrack", "lethal", "skateCamera", "outOfBounds", "swimDepth",
 ]);
 const hasOnlyKeys = (value: object, keys: ReadonlySet<string>): boolean =>
   Object.keys(value).every((key) => keys.has(key));
@@ -3061,7 +3075,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
     "artProxy", "fog", "hangLock", "checkpointTrip", "openFloor", "flatShading",
     "slip", "closed", "vert", "lit", "berms", "outline", "invisible", "containment",
     "scaffold", "supports", "rails", "terrainSupports", "airOnly", "solid", "scenerySolid", "solidSides", "lk",
-    "shoreProfile", "cameraView", "cameraPresentationOnly", "cameraKeepDistance", "cameraCutaway", "edgeGrinding", "ridgeGrinding", "trafficRoad", "doubleSided", "smoothCollision", "castShadow", "beachSand", "loopRequired", "gravityTrack", "lethal", "skateCamera", "outOfBounds",
+    "shoreProfile", "cameraView", "cameraPresentationOnly", "cameraKeepDistance", "cameraCutaway", "edgeGrinding", "ridgeGrinding", "trafficRoad", "doubleSided", "smoothCollision", "castShadow", "beachSand", "cloudRoad", "gravityTrack", "lethal", "skateCamera", "outOfBounds",
   ];
   let aggregateNodes = source.ocean?.shore?.length ?? 0;
   let aggregateSamples = source.ocean
@@ -3091,6 +3105,12 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
     "stone", "pendulum", "ropeswing", "grindosaurus", "angryball", "crumble",
     "rope", "trickgate", "returnportal", "thorn", "spinbridge"]);
   for (const component of source.components) {
+    // Older editor saves may carry the retired loop-unlocks-exit flag. Keep
+    // their riding geometry, but never retain that rule in normalized data.
+    if (component && typeof component === 'object' && 'loopRequired' in component) {
+      if (typeof component.loopRequired !== 'boolean' || component.t !== 'mesh' || component.loopRadius === undefined) return null;
+      delete component.loopRequired;
+    }
     if (
       !component ||
       !hasOnlyKeys(component, COMPONENT_DATA_KEYS) ||
@@ -3235,7 +3255,12 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
         component.pts.some(p=>!finiteTuple(p,2,5)))return null;
     }
     if(component.hangLock!==undefined&&(component.t!=='vertramp'||component.vert===false))return null;
-    if (component.loopRadius !== undefined || component.loopOffset !== undefined || component.loopRequired !== undefined) {
+    if (component.loopKind !== undefined && (!['vertical','wall'].includes(component.loopKind) || component.loopRadius===undefined)) return null;
+    if (component.cloudRoad !== undefined && (!['platform','mesh','vertramp'].includes(component.t) ||
+        component.solid===false&&component.t!=='platform' ||
+        component.t==='platform'&&(!component.s||component.pts||component.s[0]<2||component.s[0]>32||component.s[2]<2||component.s[2]>24) ||
+        component.t==='mesh'&&(!component.vertices||component.vertices.length<12||component.vertices.length%6!==0))) return null;
+    if (component.loopRadius !== undefined || component.loopOffset !== undefined) {
       if (component.t !== "mesh" || !Number.isFinite(component.loopRadius) ||
           component.loopRadius! < 4 || component.loopRadius! > 80 ||
           !Number.isFinite(component.loopOffset) || Math.abs(component.loopOffset!) > 80 ||
@@ -5815,7 +5840,10 @@ export class Level {
     // player's crate loop). Metal and '!' switches are in for the opposite
     // reason: they read as a ledge and simply refuse to break.
     const live: Crate[] = [];
-    for (const c of this.crates) if (c.alive && !c.pending && !(this.skateRace && c.mystery)) live.push(c);
+    // Cart races reserve Triangle for entry; even pushed-together explosives
+    // must not grow a new grind ledge beneath an approaching driver.
+    if (this.skateRace?.vehicle !== 'golf-cart')
+      for (const c of this.crates) if (c.alive && !c.pending && !(this.skateRace && c.mystery)) live.push(c);
     const stableOrder = new Map<Crate, number>();
     for (let i = 0; i < this.crates.length; i++) stableOrder.set(this.crates[i], i);
 
@@ -6544,12 +6572,28 @@ export class Level {
     if (c.outOfBounds) {mesh.userData.outOfBounds = true;this.hasOutOfBoundsSurfaces = true;}
     if (c.loopRadius !== undefined) {
       this.loopMeshes.push(mesh);
+      mesh.userData.loopKind = c.loopKind;
       mesh.userData.loopRadius = c.loopRadius;
       mesh.userData.loopOffset = c.loopOffset ?? 0;
       mesh.userData.loopWidth = c.w;
-      mesh.userData.loopRequired = c.loopRequired === true;
       mesh.userData.vert = false;
       mesh.userData.edgeGrinding = false;
+    }
+    if(c.cloudRoad){
+      const sections:CloudRoadSection[]=[];
+      if(c.loopRadius!==undefined){
+        const shape={radius:c.loopRadius,width:c.w!,offset:c.loopOffset??0,kind:c.loopKind};
+        for(let i=0;i<=256;i++){
+          const q=sampleLoop(shape,i/256*Math.PI*2),left=sampleLoop(shape,i/256*Math.PI*2,-shape.width/2),right=sampleLoop(shape,i/256*Math.PI*2,shape.width/2);
+          sections.push({point:new THREE.Vector3(...q.point),normal:new THREE.Vector3(...q.normal),
+            across:new THREE.Vector3(...right.point).sub(new THREE.Vector3(...left.point)).normalize(),halfWidth:shape.width/2});
+        }
+      }else for(let i=0;i<(c.vertices?.length??0);i+=6){
+        const a=new THREE.Vector3(...c.vertices!.slice(i,i+3) as [number,number,number]),b=new THREE.Vector3(...c.vertices!.slice(i+3,i+6) as [number,number,number]);
+        sections.push({point:a.clone().add(b).multiplyScalar(.5),normal:c.normals?new THREE.Vector3(...c.normals.slice(i,i+3) as [number,number,number]):new THREE.Vector3(0,1,0),across:b.clone().sub(a).normalize(),halfWidth:a.distanceTo(b)/2});
+      }
+      const clouds=createCloudRoad(sections);clouds.position.copy(mesh.position);clouds.quaternion.copy(mesh.quaternion);this.root.add(clouds);
+      mesh.visible=false;mesh.userData.cloudRoad=true;
     }
     if (c.fog !== undefined) mesh.userData.authoredFog = c.fog;
     if (c.solid === false) { mesh.userData.visualOnly = true; mesh.userData.edgeGrinding = false; }
@@ -7734,7 +7778,17 @@ export class Level {
             }
             return [xx - nx, xz - nz];
           };
-          if (c.t === "platform" && polyPts) {
+          if (c.t === 'platform' && c.cloudRoad) {
+            const s=c.s!,cloud=createCloudPlatform(s[0],s[2],c.seed??i*7919,c.solid!==false);
+            cloud.position.set(c.p[0],c.p[1]+s[1]/2,c.p[2]);
+            cloud.rotation.y=THREE.MathUtils.degToRad(c.yaw??0);this.root.add(cloud);
+            if(c.solid!==false){
+              const contact=new THREE.Mesh(new THREE.BoxGeometry(...s),new THREE.MeshBasicMaterial());
+              contact.position.fromArray(c.p);contact.quaternion.copy(cloud.quaternion);
+              contact.name=c.nm??'Cloud landing';contact.visible=false;contact.userData.cloudRoad=true;
+              this.root.add(contact);this.groundMeshes.push(contact);
+            }
+          } else if (c.t === "platform" && polyPts) {
             const th = c.s?.[1] ?? 1;
             const [pw, pd] = polySpan();
             // Shore-profile polygons use the Unity center + four radial sand
@@ -15445,6 +15499,7 @@ export class Level {
     if(c.tex==='custard-sandstone'){mat.bumpMap=mat.map;mat.bumpScale=.045;}
     if(c.tex==='skystream-marble'&&mat.map){mat.map.repeat.set(1,1);mat.bumpMap=mat.map;mat.bumpScale=.025;}
     const vr = buildVertRampGeometry(spine, {
+      smoothNormals:c.cloudRoad,
       uvTileMetres:c.tex==='crown-bilge-paint'?6:c.tex==='waterslide-fiberglass'?5:c.tex==='coast-bedrock'||c.tex==='custard-sandstone'||c.tex==='tribal-sunstone'?3.1:undefined,
       radius: R,
       flatHalf: F,
@@ -15456,7 +15511,14 @@ export class Level {
       lipRise,
       outerBank,
     });
+    if(c.cloudRoad){
+      const frames=vertRampFrames(spine,closed);
+      const sections=spine.map((q,i)=>({point:new THREE.Vector3(q.x,q.y,q.z),normal:new THREE.Vector3(frames[i].ux,frames[i].uy,frames[i].uz),
+        across:new THREE.Vector3(-frames[i].rx,-frames[i].ry,-frames[i].rz),halfWidth:F+R*Math.sin(arc*Math.PI/180)}));
+      this.root.add(createCloudRoad(sections,F,R));
+    }
     const mesh = new THREE.Mesh(vr.geometry, mat);
+    if(c.cloudRoad){mesh.visible=false;mesh.userData.smoothCollision=true;mesh.userData.cloudRoad=true;}
     mesh.name = c.vert === false ? "slide deck" : "vertramp";
     mesh.userData.vertRampMesh = true; // capture: its vertramp component rebuilds it
     mesh.userData.hangLock=c.hangLock===true;

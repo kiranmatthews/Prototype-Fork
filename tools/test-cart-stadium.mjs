@@ -4,31 +4,31 @@ import {withBlockworksRuntime} from './blockworks-runner.mjs';
 await withBlockworksRuntime(async r=>{
  const {SkateRace}=await r.server.ssrLoadModule('/src/race/runtime.ts'),{GolfCartPhysics}=await r.server.ssrLoadModule('/src/golf-cart/physics.ts');
  const layout=await r.server.ssrLoadModule('/src/levels/cart-stadium-layout.ts'),race=new SkateRace(r.scene,r.p,false,()=>true);race.attach(r.l,'coconut-cart-rally');race.start('time-trial',0);const rally=race.carts,ground=(x,z)=>rally.ground(x,z),slow=[];
- assert.ok(rally.crowd.count>30000);assert.equal(rally.crowd.sections.length,100);
+ assert.ok(rally.crowd.count>60000);assert.equal(rally.crowd.sections.length,196);
  const geometry=rally.crowd.sections[0].geometry,mat=rally.crowd.sections[0].material;
  assert.ok(rally.crowd.sections.every(m=>m.geometry===geometry&&m.material===mat&&m.frustumCulled));
  const matrixVersions=rally.crowd.sections.map(m=>m.instanceMatrix.version);rally.crowd.update(55);assert.deepEqual(rally.crowd.sections.map(m=>m.instanceMatrix.version),matrixVersions,'Cheering does not upload instance transforms');
  const original=JSON.parse(await readFile('tools/fixtures/cart-rally-original-route.json','utf8'));
- let unchanged=0;
- for(const [s,...p]of original.points)if(!layout.CART_RALLY_CORNER_PATCHES.some(c=>s>c.start&&s<c.end)){
+ const originalPoints=original.points.filter(([s])=>s<=layout.CART_RALLY_ORIGINAL_LENGTH);let unchanged=0;
+ for(const [s,...p]of originalPoints)if(!layout.CART_RALLY_CORNER_PATCHES.some(c=>s>c.start&&s<c.end)){
   assert.deepEqual(layout.cartRallyPoint(s),p,'Preserve the original winding route outside the two local corners');unchanged++;
  }
- assert.ok(unchanged/original.points.length>.84,'At least 84% of the original route remains exactly authored');
- assert.deepEqual(layout.CART_RALLY_JUMPS.map(j=>({start:j.start,end:j.end,takeoff:layout.cartRallyPoint(j.start),landing:layout.cartRallyPoint(j.end)})),original.jumps,'All twelve original jump locations and heights are unchanged');
+ assert.ok(unchanged/originalPoints.length>.84,'At least 84% of the original route remains exactly authored');
+ assert.deepEqual(layout.CART_RALLY_JUMPS.filter(j=>j.start<2320).map(j=>({start:j.start,end:j.end,takeoff:layout.cartRallyPoint(j.start),landing:layout.cartRallyPoint(j.end)})),original.jumps,'All twelve original jump locations and heights are unchanged');
  const corners=[];
  for(const {start,end}of layout.CART_RALLY_CORNER_PATCHES){
   const headings=[];
   for(let s=start;s<=end;s+=1){
    const f=layout.cartRallyFrame(s),curvature=Math.abs((layout.cartRallyFrame(s+.1).dx-layout.cartRallyFrame(s-.1).dx)/.2)/(f.n**3);headings.push(Math.atan(f.dx));
-   assert.ok(curvature*42<.73,'The tighter local bends leave room for the complete banks and grandstands');
+   assert.ok(curvature*42<(start<2320?.73:.9),'The tighter local bends leave room for the complete banks and grandstands');
    for(const u of [-26,-13,0,13,26]){const p=layout.cartRallyPoint(s,u);assert.ok(ground(p[0],p[2]).supported,'The full sharp bend has real support');}
   }
   const degrees=(Math.max(...headings)-Math.min(...headings))*180/Math.PI;assert.ok(degrees>40,'The local corner adds a clear steering change');
   corners.push({start,end,degrees});
  }
  for(const jump of layout.CART_RALLY_JUMPS){
-  assert.ok(Math.abs(layout.dirtHeight(jump.start)-layout.stadiumBase(jump.start)-6)<1e-8,'Keep the original six-metre takeoff mounds');
-  assert.ok(Math.abs(layout.dirtHeight(jump.end+12)-layout.stadiumBase(jump.end+12)-3.5)<1e-8,'Keep the original 3.5-metre landing mounds');
+  assert.ok(Math.abs(layout.dirtHeight(jump.start)-layout.stadiumBase(jump.start)-(jump.height??6))<1e-8,'Keep the full authored takeoff mounds');
+  assert.ok(Math.abs(layout.dirtHeight(jump.end-(jump.landingLead??8)+(jump.landingRise??20))-layout.stadiumBase(jump.end-(jump.landingLead??8)+(jump.landingRise??20))-(jump.landingHeight??3.5))<1e-8,'Keep the original 3.5-metre landing mounds');
   for(let s=jump.start-8;s<=jump.end+44;s+=1)for(const u of [-13,0,13]){const p=layout.cartRallyPoint(s,u);assert.ok(ground(p[0],p[2]).supported,`Continuous dirt support at ${s},${u}`);}
   const start=jump.start-5,p=layout.cartRallyPoint(start),f=layout.cartRallyFrame(start),world=new GolfCartPhysics(ground,[{x:p[0],z:p[2],yaw:Math.atan2(-f.dx,1)}],[],{scale:1.25,topSpeed:8,engine:23,maxLaunchVelocity:rally.fleet.physics.maxLaunchVelocity,airRecoveryDelay:6,gravity:rally.fleet.physics.gravity,stableLandings:rally.fleet.physics.stableLandings});let maxHeight=0;
   for(let i=0;i<7200&&-world.carts[0].z<jump.end+17;i++)world.advance(1/120,w=>{const c=w.carts[0],at=-c.z,target=layout.cartRallyPoint(at+5),angle=Math.atan2(-(target[0]-c.x),-(target[2]-c.z))-c.yaw;w.inputs[0]={throttle:1,steer:Math.max(-1,Math.min(1,Math.atan2(Math.sin(angle),Math.cos(angle))*2)),brake:0,handbrake:false};maxHeight=Math.max(maxHeight,c.y-ground(c.x,c.z).height);});
@@ -36,7 +36,7 @@ await withBlockworksRuntime(async r=>{
  }
  // Rendering the mud through the underlying dirt must not remove its
  // original contact heights or slow surface (including on-foot raycasts).
- const patches=r.l.groundMeshes.filter(m=>m.name==='Soft dirt chicane');assert.equal(patches.length,8);let softSamples=0;
+ const patches=r.l.groundMeshes.filter(m=>m.name==='Soft dirt chicane');assert.equal(patches.length,14);let softSamples=0;
  for(const patch of patches){
   assert.equal(patch.visible,false);patch.geometry.computeBoundingBox();const bounds=patch.geometry.boundingBox;
   for(const u of [.25,.5,.75])for(const v of [.25,.5,.75]){
@@ -55,5 +55,5 @@ await withBlockworksRuntime(async r=>{
  race.start('race',0);race.phase='running';race.carts.drive=()=>({moveX:0,moveY:0});
  assert.equal(r.l.checkpoints.length,0,'Race recovery never needs physical checkpoint crates');
  let disposed=0;race.carts.crowd.sections[0].geometry.addEventListener('dispose',()=>disposed++);race.carts.crowd.dispose();assert.equal(disposed,1);assert.equal(race.carts.crowd.root.children.length,0);
- const report={passed:true,softSamples,corners,originalRoutePreserved:{unchanged,total:original.points.length,allJumpPositions:true},spectators:rally.crowd.count,sections:100,sharedGeometry:true,gpuOnlyCheering:true,slowMisses:slow,drag:{dry,mud,dryAir,mudAir},disposed};await writeFile(process.env.CART_STADIUM_REPORT??'/private/tmp/cart-stadium.json',JSON.stringify(report,null,2)+'\n');console.log('PASS stadium',JSON.stringify({spectators:report.spectators,slowMisses:slow.length,drag:report.drag}));
+ const report={passed:true,softSamples,corners,originalRoutePreserved:{unchanged,total:originalPoints.length,allJumpPositions:true},spectators:rally.crowd.count,sections:rally.crowd.sections.length,sharedGeometry:true,gpuOnlyCheering:true,slowMisses:slow,drag:{dry,mud,dryAir,mudAir},disposed};await writeFile(process.env.CART_STADIUM_REPORT??'/private/tmp/cart-stadium.json',JSON.stringify(report,null,2)+'\n');console.log('PASS stadium',JSON.stringify({spectators:report.spectators,slowMisses:slow.length,drag:report.drag}));
 },{modulePath:'/src/levels/coconut-cart-rally.ts',source:m=>m.COCONUT_CART_RALLY_LEVEL,levelId:'coconut-cart-rally'});

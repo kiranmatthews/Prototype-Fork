@@ -2628,7 +2628,7 @@
         "boss": null,
         "contextLost": false
       },
-      "finish": "required loop lock retained; complete loop traversal is a separate check",
+      "finish": "historical finish probe superseded; current admission evidence: ../gameplay-announcements/full.json",
       "assets": {
         "phase": null,
         "pending": [],

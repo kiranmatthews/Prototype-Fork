@@ -1,0 +1,139 @@
+{
+  "base": "http://127.0.0.1:5188/",
+  "parent": {
+    "id": "skystream",
+    "sourceName": "The Skystream",
+    "components": 1472,
+    "rails": 0,
+    "loops": [
+      "vertical",
+      "wall",
+      "vertical"
+    ],
+    "sky": "clouds",
+    "cloudVolumes": 0,
+    "cloudContacts": 25,
+    "grounded": true,
+    "position": [
+      0,
+      150.73666666644314,
+      18
+    ],
+    "crateCount": 85,
+    "broken": 0,
+    "stamp": "Codex/sol fork · build 10-28 10:26 UTC",
+    "sun": true,
+    "resolution": "max",
+    "canvas": [
+      1600,
+      1000
+    ],
+    "render": {
+      "frame": 663,
+      "calls": 184,
+      "triangles": 634706,
+      "points": 10,
+      "lines": 0
+    }
+  },
+  "native": {
+    "id": "bonus:skystream",
+    "sourceName": "Bonus: Cumulus Cache",
+    "components": 59,
+    "rails": 0,
+    "loops": [],
+    "sky": "clouds",
+    "cloudVolumes": 12,
+    "cloudContacts": 6,
+    "grounded": true,
+    "position": [
+      -12,
+      180.12,
+      0
+    ],
+    "crateCount": 18,
+    "broken": 0,
+    "stamp": "Codex/sol fork · build 10-28 10:26 UTC",
+    "sun": true,
+    "resolution": "max",
+    "canvas": [
+      1600,
+      1000
+    ],
+    "render": {
+      "frame": 790,
+      "calls": 76,
+      "triangles": 181870,
+      "points": 0,
+      "lines": 0
+    }
+  },
+  "moved": {
+    "id": "bonus:skystream",
+    "sourceName": "Bonus: Cumulus Cache",
+    "components": 59,
+    "rails": 0,
+    "loops": [],
+    "sky": "clouds",
+    "cloudVolumes": 12,
+    "cloudContacts": 6,
+    "grounded": true,
+    "position": [
+      -10.01,
+      180.00000000357628,
+      0
+    ],
+    "crateCount": 18,
+    "broken": 0,
+    "stamp": "Codex/sol fork · build 10-28 10:26 UTC",
+    "sun": true,
+    "resolution": "max",
+    "canvas": [
+      1600,
+      1000
+    ],
+    "render": {
+      "frame": 1071,
+      "calls": 78,
+      "triangles": 180602,
+      "points": 0,
+      "lines": 0
+    }
+  },
+  "normal": {
+    "id": "bonus:skystream",
+    "sourceName": "Bonus: Cumulus Cache",
+    "components": 59,
+    "rails": 0,
+    "loops": [],
+    "sky": "clouds",
+    "cloudVolumes": 12,
+    "cloudContacts": 6,
+    "grounded": true,
+    "position": [
+      -10.01,
+      180.00000000357628,
+      0
+    ],
+    "crateCount": 18,
+    "broken": 0,
+    "stamp": "Codex/sol fork · build 10-28 10:26 UTC",
+    "sun": true,
+    "resolution": 720,
+    "canvas": [
+      1152,
+      720
+    ],
+    "render": {
+      "frame": 1435,
+      "calls": 86,
+      "triangles": 180591,
+      "points": 0,
+      "lines": 0
+    }
+  },
+  "release": {
+    "entry": "assets/index-CGSxWioR.js"
+  },
+  "errors": []
+}

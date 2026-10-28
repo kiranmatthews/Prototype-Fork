@@ -1,0 +1,22 @@
+{
+  "checks": {
+    "nativeMain": true,
+    "nativeBonus": true,
+    "browserLiteFull": true,
+    "levels": true,
+    "typescriptAndBuild": true,
+    "releaseSize": true,
+    "productionBrowser": true
+  },
+  "releaseBytes": 997082213,
+  "releaseBudget": 1000000000,
+  "entry": "assets/index-CGSxWioR.js",
+  "base": "a4aab1ac",
+  "sourceSha256": {
+    "src/cloudPlatform.ts": "7bc6e49cf7899ffbadd15acf8902ad64d0c5e48bcbb07beef9f591d7bc0b65b6",
+    "src/level.ts": "461d536a4b36815ea1de625c873bb656a541d8ed8953d7f5d94f6d48391fa3b2",
+    "src/levels/skystream.ts": "dee5be1ee165a0e1be450ae9298f89196291b272333d21af08e050001a70014c",
+    "src/levels/skystream-bonus.ts": "1703c3478c1611e69df54d1714cc26b11bcd5132cc766d4ed9c745932e9725e2",
+    "src/levels/themed-bonuses.ts": "43c5e99e6e754201a9c6415f14822c9b874b6cbb5c021a8f52229dad4c78df6e"
+  }
+}

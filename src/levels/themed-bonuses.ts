@@ -18,8 +18,10 @@ import { decorateCoastalBonus } from './coastal-town-art';
 import { dressDrownedCrownBonus } from './drowned-crown-bonus';
 import { ROOFTOP_PORCH_BONUS } from './rooftop-porch-bonus';
 import { dressBananaBayBonus } from './banana-bay-bonus';
+import { dressSkyBridgeBonus } from './sky-bridge-bonus';
 import { WATERFALL_CLIMB_BONUS } from './waterfall-climb-bonus';
 import { ANCIENT_GATES_BONUS } from './ancient-gates-bonus';
+import { SKYSTREAM_BONUS_LEVEL } from './skystream-bonus';
 
 interface BonusRecipe {
   parentId: string;
@@ -83,6 +85,7 @@ export const THEMED_BONUS_COURSES = THEMED_BONUS_RECIPES.filter(recipe => recipe
   const end=gate.p[0]+8;
   if(recipe.key==='coastal')decorateCoastalBonus(course.data,end);
   else if(recipe.theme==='blockworks')dressBlockworksBonus(course.data);
+  else if(recipe.parentId==='sky')dressSkyBridgeBonus(course.data);
   else if(recipe.parentId==='drowned-crown')dressDrownedCrownBonus(course.data,end);
   else{
     course.data.components.push(...bonusCourseArt(recipe.theme,end));
@@ -103,6 +106,8 @@ export const BONUS_LEVEL_ENTRIES: LevelEntry[] = THEMED_BONUS_COURSES.map(({id,d
 BONUS_LEVEL_ENTRIES.push({id:'bonus-custard-creek',name:CUSTARD_BONUS_LEVEL.name,data:CUSTARD_BONUS_LEVEL});
 const BONUS_BY_PARENT_ID=new Map(THEMED_BONUS_COURSES.map(course=>[course.parentId,course.data]));
 const BONUS_BY_KEY=new Map(THEMED_BONUS_COURSES.map(course=>[course.progressKey,course.data]));
+BONUS_BY_PARENT_ID.set('skystream',SKYSTREAM_BONUS_LEVEL);
+BONUS_LEVEL_ENTRIES.push({id:'bonus-skystream',name:SKYSTREAM_BONUS_LEVEL.name,data:SKYSTREAM_BONUS_LEVEL});
 BONUS_BY_PARENT_ID.set('tribal-run',TRIBAL_RUN_BONUS_LEVEL);
 BONUS_BY_KEY.set('tribal-run',TRIBAL_RUN_BONUS_LEVEL);
 BONUS_LEVEL_ENTRIES.push({id:'bonus-tribal-run',name:TRIBAL_RUN_BONUS_LEVEL.name,data:TRIBAL_RUN_BONUS_LEVEL});

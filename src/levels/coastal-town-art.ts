@@ -154,7 +154,7 @@ export function decorateCoastalTown(data: CustomLevelData, road: readonly RoadSe
     {id:104,nm:'Spatial offshore islands and harbour landmarks',editorOnly:true});
   const safe = (z:number, margin=0) => !gaps.some(g=>z>g.start-margin&&z<g.end+margin);
   let building=0;
-  for (let z=-38;z<3060;z+=14.5) {
+  for (let z=-38;z<3014;z+=14.5) {
     if (!safe(z,7)) continue;
     const grp=1000+building;
     art.groups.push({id:grp,parent:100,nm:`Store ${String(building+1).padStart(3,'0')} / separate editable parts`,editorOnly:true});
@@ -167,6 +167,10 @@ export function decorateCoastalTown(data: CustomLevelData, road: readonly RoadSe
     }
     building++;
   }
+  // A complete front-facing pavilion closes the shop row inside its foundation.
+  art.building([-15,8.04,-3020],0,6,100,{height:8.8,width:13});
+  art.asset('baypot',[-8.4,8.04,-3022],.85,0,101);
+  art.asset('baylamp',[7.8,7,-3027],1,0,101);
   // A second, sparse layer breaks the skyline without becoming near-camera clutter.
   for (let z=5;z<3030;z+=94) {
     art.building([-27,heightAt(z)+3,-z],90,Math.floor(z/94)+2,100,{height:8.4,scale:1.3,simple:true});
@@ -273,7 +277,7 @@ export function decorateCoastalTown(data: CustomLevelData, road: readonly RoadSe
   data.unitySand = data.unitySand?.map(s=>({...s,p:[s.p[0],-3.4,s.p[2]]}));
   // This level-only shot shows the assembled roofs and bay while keeping the
   // same ordered route cameras, controls and unchanged movement model.
-  data.cameraRig = {camDist:7.2,camHeight:4.8,camPitch:18,camFov:49};
+  data.cameraRig = {camDist:8.2,camHeight:5,camPitch:16,camFov:58};
 }
 
 export function decorateCoastalBonus(data: CustomLevelData, end: number) {

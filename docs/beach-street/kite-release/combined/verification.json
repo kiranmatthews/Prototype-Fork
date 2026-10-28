@@ -1,0 +1,55 @@
+{
+  "recorded": "2026-10-28T08:56:36.766827+00:00",
+  "commit": "d52172813ddff611fe141addf1651ddd507275fe",
+  "integratedMain": "3010206b25b932534e3395ec0c4fc6d3caa37f7d",
+  "unchangedFromFirstCandidate": [
+    "src/kiteTow.ts",
+    "src/kiteTowVisual.ts",
+    "src/player.ts",
+    "src/main.ts",
+    "src/level.ts",
+    "src/levels/beach-street-gameplay.ts",
+    "src/levels/coastal-town-art.ts",
+    "src/levels/unity-ports.ts",
+    "tools/beach-kite-browser.mjs"
+  ],
+  "gitBlobs": {
+    "src/kiteTow.ts": "9df067da7438db29ed5224200a3d41a6c1524255",
+    "src/kiteTowVisual.ts": "b7f54f8a4537b9ccd397760b23d2d15f62b7a09c",
+    "src/player.ts": "ea4bfd8f121273614c03d81e78c564961620cdad",
+    "src/main.ts": "45103110ea3b1466e5b72fd08948c0a236f3df7b",
+    "src/level.ts": "b594ec5154f392611d4ca8776818e424f0ef51b6",
+    "src/levels/beach-street-gameplay.ts": "dad8c3f985da79cf7f9ddbf8e4a76bd485a158c0",
+    "src/levels/coastal-town-art.ts": "03ba2e89d059bb280c0b21b063d1aa6dda1857c9",
+    "src/levels/unity-ports.ts": "18435e79708a3d80cf1a3038ac1d78b11846caee",
+    "src/levels/themed-bonuses.ts": "f64fd2f270e1cf848a9881a5b753497a43eefd67",
+    "src/levels/sky-bridge-bonus.ts": "3e2635e8a1a5e25f72f02acc535ffde6d1e1b5ba",
+    "tools/beach-kite-browser.mjs": "0ac9fa0ceec60a04b400f141d1b5902c0879b68d"
+  },
+  "build": {
+    "stamp": "Codex/sol fork \u00b7 build 10-28 08:53 UTC",
+    "version": "50ebdf5b2f0bc540abd9",
+    "entry": "assets/index-DL0X7OtM.js",
+    "files": 1847,
+    "bytes": 997043765,
+    "limitBytes": 1000000000
+  },
+  "sha256": {
+    "src/kiteTow.ts": "d0b3bf22d61a17de702b29cc8daae3e2eeb340e1fef43bfba4f4c03a6da0088d",
+    "src/kiteTowVisual.ts": "fb153760cde4b7ae8d270fd0765cc9508e80eb087eb5e3340fe960a08c9c7aff",
+    "src/player.ts": "92dbe2af0f6ce3a4682eaf260d0bea00b786edbae576b160ee2934bf346c28a5",
+    "src/main.ts": "f9bb5976dc7964c6c4a59f539c23b22a2dd46fa331134041fb2e3e2239ac9102",
+    "src/level.ts": "d833afc3f9bebff99d0ba34e5132a4ac26dbd7e3c2c36c707abf5c7c5287e0ca",
+    "src/levels/beach-street-gameplay.ts": "e9e51f7a2a6bcb197bf8cb79f5c71ee38682fc7bab026080b2b15092334eb46c",
+    "src/levels/coastal-town-art.ts": "e59660565cf19a94813406a9902b78f2c56391e2c02984d011dcc37cdb24d5f2",
+    "src/levels/unity-ports.ts": "80e712a37be62fbd88a06061ee64f7a33d9c5e8560096f51eb342a20160826ce",
+    "src/levels/themed-bonuses.ts": "2296f67126f271e8a038ef6372cacddc95c460005ca4935107eec967f628e4e3",
+    "src/levels/sky-bridge-bonus.ts": "94b665a16075a7493fb8e99c2061b156fb06c02bdd48161af3854f7d29ca8a2b",
+    "tools/beach-kite-browser.mjs": "89aa00982fb9ae03ab5557cbd0d7b2ddd6661931fd980871d702821855d25d9e",
+    "docs/beach-street/kite-release/combined/README.md": "6bc5dca573a7388225eb58dba4764d5aae6ad8fc240a8c59d54f35890f4968df",
+    "docs/beach-street/kite-release/combined/build-final.json": "d10599791d36fcd323b393336a0c7b4cae08321a77f89affcff26398e0255362",
+    "docs/beach-street/kite-release/combined/local/browser-full-preview.json": "37900234f12e4fd1ab375d58a27f29748e2baa9a3446215eb3f5ccaf080f54d0",
+    "docs/beach-street/kite-release/combined/local/native-first-hop.png": "7a1b2e306e0a0ceacb630efae067b35e6860b415d572b9c3419c124680d28713",
+    "docs/beach-street/kite-release/combined/local/native-tow.png": "9eb0680090b62b890977503742e17b562e56a8327d81c7b364b908cb1626e82c"
+  }
+}

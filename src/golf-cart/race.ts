@@ -18,6 +18,7 @@ import { CartRaceAudio } from './raceAudio';
 import { StadiumCrowd } from './stadiumCrowd';
 import { CartMud } from './cartMud';
 import { LoanerDrops } from './loanerDrops';
+import { CART_RALLY_TUNNEL,cartRallyPoint } from '../levels/cart-stadium-layout';
 import { createStadiumBoundary } from './stadiumBoundary';
 import { CART_FLAMES,initialFlameRecharge,sideFlameContact,type FlameBody } from './flameTactics';
 
@@ -518,9 +519,7 @@ export class GolfCartRace {
 
       }
     },false);
-    for(const index of this.drops.update(dt,world)){
-      const c=world.carts[index];this.stats.loanerLandings++;puffs.burst('dust',c.x,c.y+.15,c.z,{count:12,strength:1.1});
-    }
+    this.updateDrops(dt);
     for(const [index,c]of world.carts.entries()){
       if(c.health<=0)this.wreck(index);
       const owner=this.driverForCart[index],r=owner>=0?this.racers[owner]:null;
@@ -559,8 +558,27 @@ export class GolfCartRace {
     this.mud?.update(dt,world.carts,this.driverForCart,this.cartForRacer[0],this.racers[0].player.pos);
     this.updateAudio(dt);
   }
-  /** Also runs on the grid/countdown, without advancing physics or recharge. */
-  updateAudio(dt:number){this.audio.update(dt,this.fleet.physics,this.driverForCart,this.cartForRacer[0],this.burning,this.effects.burnAges,this.thrustTime,this.racers[0].player.pos);}
+  /** A live grid: deliveries and scenery move while drivers hold the brakes.
+   * Race clocks, weapons, pickups and AI progress begin only after GO. */
+  stepStart(dt:number,input:Input,countdown:boolean){
+    const world=this.fleet.physics;
+    world.carts.forEach((c,i)=>Object.assign(this.previous[i],{x:c.x,y:c.y,z:c.z,yaw:c.yaw}));
+    this.fleet.update(dt,physics=>{
+      this.drops.control(physics);
+      for(let i=0;i<physics.carts.length;i++)physics.inputs[i]={...NO_CART_INPUT,brake:1};
+    },false);
+    this.updateDrops(dt);this.effects.update(dt,this.burning);this.sync();
+    // Revving is sound, never stored acceleration or a pre-start advantage.
+    const revs=countdown?this.racers.slice(0,this.count).map((_,i)=>i===0&&input.jumpHeld?1:.15+.8*Math.max(0,Math.sin(world.time*(2.6+i*.17)+i*1.7))**3):undefined;
+    this.updateAudio(dt,revs);
+  }
+  private updateDrops(dt:number){
+    const world=this.fleet.physics;
+    for(const index of this.drops.update(dt,world)){
+      const c=world.carts[index];this.stats.loanerLandings++;puffs.burst('dust',c.x,c.y+.15,c.z,{count:12,strength:1.1});
+    }
+  }
+  updateAudio(dt:number,gridRevs?:readonly number[]){this.audio.update(dt,this.fleet.physics,this.driverForCart,this.cartForRacer[0],this.burning,this.effects.burnAges,this.thrustTime,this.racers[0].player.pos,gridRevs);}
   private dropLoaner(index:number,home:{x:number;z:number;yaw:number}){
     const world=this.fleet.physics;this.homes[index]={...home};Object.assign(world.spawns[index],home);world.reset(index);
     this.fleet.mudAmounts[index]=0;this.burning[index]=false;this.fleet.models[index].setScorched(false);
@@ -569,7 +587,12 @@ export class GolfCartRace {
     if(world.time>0){const gain=Math.max(0,1-this.racers[0].player.pos.distanceTo(this.point.set(home.x,world.carts[index].y,home.z))/70)**2;sfx.withGain(gain,()=>sfx.play('woosh3',.5,.65),'rally-delivery');}
   }
   private loanerBay(progress:number,reserve:number,near=false){
-    const next=this.jumpRanges.find(j=>j.a>progress),at=next?Math.min(next.a-62,near?progress+16:Infinity):Math.min(this.course.length-12,progress+20);
+    const next=this.jumpRanges.find(j=>j.a>progress);let at=next?Math.min(next.a-62,near?progress+16:Infinity):Math.min(this.course.length-12,progress+20);
+    const station=-this.course.sample(at).z,tunnel=CART_RALLY_TUNNEL;
+    if(this.crowd&&station>tunnel.entry-12&&station<tunnel.exit+12){
+      const portal=station<(tunnel.entry+tunnel.exit)/2?tunnel.entry-18:tunnel.exit+18;
+      at=this.course.project(new THREE.Vector3(...cartRallyPoint(portal))).s;
+    }
     let minimum=4;for(const jump of this.jumpRanges){if(jump.b>progress)break;minimum=jump.b+8;}
     // A burning pile can block the usual parking bay. Search supported spaces
     // on this road segment, keeping the jump's acceleration runway intact.

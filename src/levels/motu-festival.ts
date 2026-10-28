@@ -61,7 +61,7 @@ function sign(key:string,p:P,w:number,h:number,yaw=0,floor=false){
 // Gravity-earned speed feeds a complete, rideable oververt loop. Its native
 // centreline is also the render centreline, including the separated exit.
 add({t:'mesh',nm:'Motu / reef loop riding surface',p:MOTU_LOOP.entry,...createLoopMeshData(MOTU_LOOP.radius,MOTU_LOOP.width,MOTU_LOOP.offset,192),
-  loopRadius:MOTU_LOOP.radius,loopOffset:MOTU_LOOP.offset,loopRequired:false,w:MOTU_LOOP.width,
+  loopRadius:MOTU_LOOP.radius,loopOffset:MOTU_LOOP.offset,w:MOTU_LOOP.width,
   tex:'pavement',color:MOTU_PALETTE.teal,doubleSided:true});
 const drop=warehouseRibbon('Motu / reef loop gravity roll-in',[[-59,6.3,27],[-59,6.3,21],[-59,4.6,12],[-59,1,-3],[-59,0,-13],[-59,0,-23]],7,.45);
 Object.assign(drop,{tex:'plank',color:'#e8bd83',gravityTrack:true});add(motuGroundedRibbon(drop));

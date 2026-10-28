@@ -13,7 +13,6 @@ const components:CustomComponent[]=RECOVERED_WATERPARK_LEVEL.components
   .map(c=>({...c,
     ...(c.t==='vertramp'?{rails:true}:{}),
     ...(c.nm==='North bridge handrail'?{p:[c.p[0],0,0] as [number,number,number],pts:[[0,-118,0,16.1],[0,-83,0,16.1],[0,-73,0,12.6]]}:{}),
-    ...(c.loopRadius!==undefined?{loopRequired:false}:{}),
     ...(c.t==='gate'?{invisible:true,nm:'Competition service exit'}:{}),
     ...(/Palm/.test(c.nm??'')&&c.p[0]>95&&c.p[0]<107&&c.p[2]>53?{p:[c.p[0]-16,c.p[1],c.p[2]+7] as [number,number,number]}:{}),
   }));

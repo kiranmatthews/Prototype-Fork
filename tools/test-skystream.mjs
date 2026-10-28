@@ -17,17 +17,27 @@ await withBlockworksRuntime(async r=>{
  assert.ok(api.normalizeCustomLevelData(source),'The full editor data must survive normalization');
  const before=slipstreamPlayableLength(saved).playable,after=slipstreamPlayableLength(source).playable;
  console.log({baselineMetres:before,skystreamMetres:after,ratio:after/before,components:source.components.length});
- assert.ok(after/before>=3&&after/before<3.15,'Triple the actual 3D route, not just its footprint');
+ assert.ok(after/before>3.3&&after/before<4,'Retain the long route and extend it with two full loops');
  for(const original of saved.components.filter(c=>c.t==='vertramp')){
   const reflected=source.components.find(c=>c.t==='vertramp'&&c.p[2]===original.p[2]);
   const a=api.vertRampSpine(original),b=api.vertRampSpine(reflected);
   assert.equal(a.length,b.length);
   a.forEach((q,i)=>{assert.ok(Math.abs(q.x+b[i].x)<1e-6&&Math.abs(q.y-b[i].y)<1e-6&&Math.abs(q.z-b[i].z)<1e-6&&Math.abs(q.roll+b[i].roll)<1e-6);});
  }
- assert.equal(l.loopMeshes.length,1);assert.equal(l.loopMeshes[0].userData.loopRequired,false);
+ assert.equal(l.loopMeshes.length,3);assert.ok(l.loopMeshes.every(mesh=>!('loopRequired' in mesh.userData)));
+ assert.ok(source.components.every(c=>!['rail','rope','ropeswing'].includes(c.t)),'Skystream has no standalone rails or ropes');
+ assert.equal(l.ropeSwings.length,0);assert.equal(l.ropes.length,0);
+ assert.deepEqual(l.loopMeshes.map(mesh=>mesh.userData.loopKind??'vertical'),['vertical','wall','vertical']);
+ const roads=source.components.filter(c=>c.t==='vertramp'||c.t==='mesh'&&c.solid!==false);
+ assert.ok(roads.every(c=>c.cloudRoad&&c.tex==='solid'),'Every road is cloud, without marble or painted markings');
+ const shells=[];l.root.traverse(o=>{if(o.isMesh&&o.userData.cloudRoadVisual)shells.push(o);});
+ assert.ok(shells.length>100&&shells.every(mesh=>!l.groundMeshes.includes(mesh)),'Cloud billows must never affect driving contact');
+ assert.ok(l.groundMeshes.filter(mesh=>mesh.userData.cloudRoad).every(mesh=>!mesh.visible),'Only the cloud shell should be visible');
+ const roundtrip=api.normalizeCustomLevelData(l.captureData());
+ assert.ok(roundtrip&&roundtrip.components.some(c=>c.loopKind==='wall'),'Editor roundtrip preserves wall-loop orientation');
  const {resolveLevelAtmosphere}=await r.server.ssrLoadModule('/src/levelAtmosphere.ts');
  const atmosphere=resolveLevelAtmosphere(l);
- assert.equal(atmosphere.fogNear,36);assert.equal(atmosphere.fogFar,192);
+ assert.equal(atmosphere.fogNear,90);assert.equal(atmosphere.fogFar,440);
  assert.equal(l.crystalPickup,null);assert.equal(l.isBossLevel,false);
  const probes=[source.spawn,...source.components.filter(c=>['checkpoint','gate','crate'].includes(c.t)).map(c=>c.p)];
  const ray=new r.THREE.Raycaster();l.root.updateMatrixWorld(true);
@@ -58,6 +68,8 @@ await withBlockworksRuntime(async r=>{
   }
   assert.equal(p.state,'finished');assert.equal(p.totalDeaths,0);
   assert.ok(pilot.evidence.inverted&&pilot.evidence.loopEntrySpeed>55);
+  assert.equal(p.loopStatus.completed,3);
+  assert.ok(pilot.evidence.loops[0].inverted&&pilot.evidence.loops[1].wall&&pilot.evidence.loops[2].inverted);
   assert.equal(pilot.evidence.gaps.length,4);assert.ok(pilot.evidence.gaps.every(g=>g.aired&&g.landed));
   assert.equal(JSON.stringify(r.TUNING),tuning);
   finished={...r.snapshot(),cratesBroken:p.cratesBroken,totalCrates:l.totalCrates,

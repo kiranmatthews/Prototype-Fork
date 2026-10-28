@@ -1,0 +1,57 @@
+{
+  "base": "http://127.0.0.1:5188/",
+  "full": true,
+  "errors": [],
+  "hidden": {
+    "debug": false,
+    "message": null,
+    "timer": null,
+    "display": "none",
+    "legacyDeath": "none"
+  },
+  "canvas": {
+    "default": [],
+    "hidden": [],
+    "debug": [
+      "EXPLICIT NOTICE",
+      "LEGACY NOTICE"
+    ]
+  },
+  "debug": {
+    "state": {
+      "title": "DIAGNOSTIC NOTICE",
+      "sub": "Only visible with debug enabled",
+      "remainingMs": 59983.29999999702
+    },
+    "painted": 1,
+    "display": "block",
+    "enabled": true,
+    "title": "DIAGNOSTIC NOTICE",
+    "rect": {
+      "x": 48,
+      "y": 272.53125,
+      "width": 1504,
+      "height": 134.9375,
+      "top": 272.53125,
+      "right": 1552,
+      "bottom": 407.46875,
+      "left": 48
+    }
+  },
+  "cleared": {
+    "state": null,
+    "timer": null,
+    "display": "none"
+  },
+  "pause": "pause",
+  "finish": {
+    "state": "finished",
+    "loops": 0,
+    "hints": []
+  },
+  "results": {
+    "screen": "results",
+    "message": null,
+    "stamp": "Codex/sol fork · build 10-28 10:56 UTC"
+  }
+}

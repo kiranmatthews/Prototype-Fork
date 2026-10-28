@@ -153,7 +153,7 @@ for(const p of [[-18,130,165],[0,60,-20],[0,cp1[1],cp1[2]+3],[0,34,-274],[0,30,-
 
 for(const [index,loop]of WATERPARK_LOOPS.entries()){
   add({t:'mesh',p:loop.entry,...createLoopMeshData(loop.radius,loop.width,loop.offset),w:loop.width,
-    loopRadius:loop.radius,loopOffset:loop.offset,loopRequired:true,color:index===1?'#669997':'#3f7380',emissive:'#102d32',tex:'metal',doubleSided:true,edgeGrinding:false,grp:6,nm:`Deathloop ${index+1} of 3`});
+    loopRadius:loop.radius,loopOffset:loop.offset,color:index===1?'#669997':'#3f7380',emissive:'#102d32',tex:'metal',doubleSided:true,edgeGrinding:false,grp:6,nm:`Deathloop ${index+1} of 3`});
   const point=(angle:number,lateral:number):P=>{const p=sampleLoop(loop,angle,lateral).point;return [p[0]+loop.entry[0],p[1]+loop.entry[1],p[2]+loop.entry[2]];};
   for(const side of [-1,1]){
     for(const off of [7.7,9.5]){

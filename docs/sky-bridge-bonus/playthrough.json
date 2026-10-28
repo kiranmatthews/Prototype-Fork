@@ -1,0 +1,274 @@
+{
+  "stage": "cross real bonus gate to bank parent rewards",
+  "frame": 1605,
+  "done": true,
+  "failed": null,
+  "actions": [
+    {
+      "name": "bonus-sky-bridge room 1 relay observation",
+      "firstFrame": 20,
+      "lastFrame": 134
+    },
+    {
+      "name": "bonus-sky-bridge room 1 relay inspect receiver chain",
+      "firstFrame": 152,
+      "lastFrame": 249
+    },
+    {
+      "name": "bonus-sky-bridge room 1 relay air-spin cap and retain anchor",
+      "firstFrame": 294,
+      "lastFrame": 369
+    },
+    {
+      "name": "bonus-sky-bridge room 1 relay air-spin cap and retain anchor",
+      "firstFrame": 396,
+      "lastFrame": 475
+    },
+    {
+      "name": "bonus-sky-bridge room 1 relay air-spin cap and retain anchor",
+      "firstFrame": 502,
+      "lastFrame": 581
+    },
+    {
+      "name": "bonus-sky-bridge room 1 relay air-spin cap and retain anchor",
+      "firstFrame": 608,
+      "lastFrame": 687
+    },
+    {
+      "name": "bonus-sky-bridge room 1 relay leave last steel receiver",
+      "firstFrame": 714,
+      "lastFrame": 755
+    },
+    {
+      "name": "bonus-sky-bridge room 1 relay supported room exit",
+      "firstFrame": 755,
+      "lastFrame": 852
+    },
+    {
+      "name": "bonus-sky-bridge room 2 finite observation",
+      "firstFrame": 870,
+      "lastFrame": 944
+    },
+    {
+      "name": "bonus-sky-bridge room 2 finite finite-stack approach",
+      "firstFrame": 962,
+      "lastFrame": 1063
+    },
+    {
+      "name": "bonus-sky-bridge room 2 finite upper support contact",
+      "firstFrame": 1108,
+      "lastFrame": 1141
+    },
+    {
+      "name": "bonus-sky-bridge room 2 finite rebound apex",
+      "firstFrame": 1141,
+      "lastFrame": 1166
+    },
+    {
+      "name": "bonus-sky-bridge room 2 finite cap before spending support",
+      "firstFrame": 1168,
+      "lastFrame": 1175
+    },
+    {
+      "name": "bonus-sky-bridge room 2 finite clear landing",
+      "firstFrame": 1175,
+      "lastFrame": 1198
+    },
+    {
+      "name": "approach bonus-sky-bridge room 2 finite spent upper finite support",
+      "firstFrame": 1218,
+      "lastFrame": 1271
+    },
+    {
+      "name": "bonus-sky-bridge room 2 finite spent upper finite support",
+      "firstFrame": 1291,
+      "lastFrame": 1291
+    },
+    {
+      "name": "bonus-sky-bridge room 2 finite supported room exit",
+      "firstFrame": 1313,
+      "lastFrame": 1499
+    },
+    {
+      "name": "cross real bonus gate to bank parent rewards",
+      "firstFrame": 1519,
+      "lastFrame": 1605
+    }
+  ],
+  "evidence": [
+    {
+      "action": "bonus-sky-bridge room 1 relay air-spin cap and retain anchor",
+      "launch": [
+        5.71878888857265,
+        -4.768371586472142e-08,
+        -8.609103030283492e-05
+      ],
+      "landing": [
+        9.164288888479671,
+        0.98,
+        -0.00011140308666982536
+      ],
+      "ground": "crate"
+    },
+    {
+      "action": "bonus-sky-bridge room 1 relay air-spin cap and retain anchor",
+      "launch": [
+        9.164288888479671,
+        0.98,
+        -0.00011140308666982536
+      ],
+      "landing": [
+        12.370233332837598,
+        0.98,
+        -0.0001349552696584244
+      ],
+      "ground": "crate"
+    },
+    {
+      "action": "bonus-sky-bridge room 1 relay air-spin cap and retain anchor",
+      "launch": [
+        12.370233332837598,
+        0.98,
+        -0.0001349552696584244
+      ],
+      "landing": [
+        15.571233332751214,
+        0.98,
+        -0.00015847112872989077
+      ],
+      "ground": "crate"
+    },
+    {
+      "action": "bonus-sky-bridge room 1 relay air-spin cap and retain anchor",
+      "launch": [
+        15.571233332751214,
+        0.98,
+        -0.00015847112872989077
+      ],
+      "landing": [
+        18.772233332664836,
+        0.98,
+        -0.0001819869878013571
+      ],
+      "ground": "crate"
+    },
+    {
+      "action": "bonus-sky-bridge room 1 relay leave last steel receiver",
+      "launch": [
+        18.772233332664836,
+        0.98,
+        -0.0001819869878013571
+      ],
+      "landing": [
+        22.168233332573188,
+        -4.768371586472142e-08,
+        -0.00020693539686311894
+      ],
+      "ground": "platform"
+    },
+    {
+      "action": "room complete",
+      "pattern": "relay",
+      "index": 0,
+      "position": [
+        26.9274777768892,
+        -4.768371586472142e-08,
+        -0.0002418987588256975
+      ]
+    },
+    {
+      "action": "bonus-sky-bridge room 2 finite spent upper finite support",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": false,
+        "pending": false,
+        "bangUsed": false
+      }
+    },
+    {
+      "action": "room complete",
+      "pattern": "finite",
+      "index": 1,
+      "position": [
+        50.92792222179194,
+        3.5762786898541066e-09,
+        -0.00042357213653800913
+      ]
+    },
+    {
+      "action": "all actual authored bonus crates",
+      "totalCrates": 7,
+      "activeStageCrates": 7,
+      "bonusCrateTotal": 0,
+      "cratesBroken": 7,
+      "remaining": 0
+    }
+  ],
+  "result": {
+    "id": "bonus-sky-bridge",
+    "state": "finished",
+    "gemEarned": false,
+    "totalCrates": 7,
+    "cratesBroken": 7,
+    "deaths": 0
+  },
+  "end": {
+    "frame": 1605,
+    "position": [
+      60.527922221533025,
+      0.7266666691501935,
+      -0.0004940976745217869
+    ],
+    "state": "finished",
+    "grounded": true,
+    "deaths": 0,
+    "crates": 7,
+    "gem": false
+  },
+  "session": [
+    {
+      "parentId": "sky",
+      "before": {
+        "id": "sky",
+        "name": "Sky Bridge",
+        "lives": 4,
+        "fruit": 0,
+        "deaths": 0,
+        "resources": {
+          "geometries": 214,
+          "textures": 72
+        }
+      },
+      "failedAttempt": null,
+      "after": {
+        "id": "sky",
+        "sameParent": true,
+        "sameEvent": true,
+        "lives": 5,
+        "fruit": 27,
+        "completed": true,
+        "bonusCrates": 7,
+        "bonusButton": false,
+        "bonusMode": false,
+        "competitionMode": false,
+        "name": "Sky Bridge",
+        "grounded": true,
+        "position": [
+          1.9,
+          -4.768371586472142e-08,
+          -134
+        ],
+        "resources": {
+          "geometries": 404,
+          "textures": 72
+        }
+      },
+      "errors": [],
+      "retired": []
+    }
+  ]
+}

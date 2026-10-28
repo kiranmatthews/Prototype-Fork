@@ -171,6 +171,8 @@ export interface GameHudFrameState {
   boost?: GameHudBoostState | null;
   trick?: { visible?: boolean; line: string; total: string; bailed?: boolean } | null;
   balance?: GameHudBalanceState | null;
+  /** Explicit opt-in for diagnostic announcement plates, including DOM mirroring. */
+  debugMessages?: boolean;
   message?: { visible?: boolean; title: string; sub?: string } | null;
   flashAlpha?: number;
   fadeAlpha?: number;
@@ -1174,6 +1176,7 @@ export class GameHudSurface {
     height: number,
     frame: Readonly<GameHudFrameState>,
   ): void {
+    if (!frame.debugMessages) return;
     const explicit = frame.message;
     const visible = explicit === null
       ? false
@@ -1321,6 +1324,7 @@ export class GameHudSurface {
     height: number,
     frame: Readonly<GameHudFrameState>,
   ): void {
+    if (!frame.debugMessages) return;
     const explicit = frame.death;
     const visible = explicit === null
       ? false

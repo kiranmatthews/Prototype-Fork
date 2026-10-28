@@ -1,3 +1,4 @@
+import { SKYSTREAM_SUN } from './skystreamSun';
 import {RALLY_NOISE,RALLY_SUN} from './rallyMaterials';
 import * as THREE from 'three';
 import { createSeaSkyGeometry, seaBackdropRadius } from './seaBackdrop';
@@ -13,7 +14,7 @@ export function installSkyProjection(
   hazeStrength: Scalar,
   opaque: Scalar,
   sea: Scalar,
-): { setSeaLevel: (height: number | null) => void;setHazeElevation:(elevation:number)=>void;setDustHaze:(amount:number)=>void;setStormGlow:(strength:number,azimuth:number)=>void } {
+): { setCloudRoadSky:(enabled:boolean)=>void; setSeaLevel: (height: number | null) => void;setHazeElevation:(elevation:number)=>void;setDustHaze:(amount:number)=>void;setStormGlow:(strength:number,azimuth:number)=>void } {
   const flatGeometry = sky.geometry;
   const seaGeometry = createSeaSkyGeometry();
   let seaLevel: number | null = null;
@@ -24,6 +25,7 @@ export function installSkyProjection(
   const poleColor = { value: new THREE.Color() };
   const hazeElevation = { value: .26 };
   const dustHaze = { value: 0 };
+  const cloudRoadSky={value:0},cloudSun={value:SKYSTREAM_SUN};
   const rallySun={value:new THREE.Vector3(...RALLY_SUN).normalize()};
   const stormGlow = { value: new THREE.Vector4(0,.27,-1,0) };
   let lastMap: THREE.Texture | null = null;
@@ -67,7 +69,7 @@ export function installSkyProjection(
       uSkyHazeColor: hazeColor, uSkyHazeStrength: hazeStrength,
       uSkyOpaqueBackdrop: opaque, uSkySea: sea, uSkyPoleColor: poleColor,
       uSkyHazeElevation:hazeElevation,
-      uSkyStorm:stormGlow,uSkyDust:dustHaze,uRallySun:rallySun,
+      uSkyStorm:stormGlow,uSkyDust:dustHaze,uRallySun:rallySun,uCloudRoadSky:cloudRoadSky,uCloudSun:cloudSun,
     });
     shader.vertexShader = 'uniform mat4 uSkyCameraWorld; uniform float uSkySea; varying vec3 vSkyRay;\n' + shader.vertexShader;
     shader.vertexShader = shader.vertexShader.replace('#include <project_vertex>', `
@@ -95,6 +97,7 @@ export function installSkyProjection(
       uniform mat3 uSkyTextureTransform;
       uniform vec3 uSkyHazeColor, uSkyPoleColor;
       uniform float uSkyHazeStrength, uSkyOpaqueBackdrop, uSkySea,uSkyHazeElevation;
+      uniform float uCloudRoadSky;uniform vec3 uCloudSun;
       uniform vec4 uSkyStorm;uniform float uSkyDust;uniform vec3 uRallySun;
       ${RALLY_NOISE}
     ` + shader.fragmentShader;
@@ -148,11 +151,22 @@ export function installSkyProjection(
         diffuseColor.rgb = mix(uSkyHazeColor, diffuseColor.rgb, diffuseColor.a);
         diffuseColor.a = 1.0;
       }
+      if(uCloudRoadSky>.5){
+        // Preserve the original panorama. Tint only its lower half, fading to
+        // zero at the equator (50% of the sky image), with no replacement clouds.
+        float skyHeight=.5+asin(clamp(skyRay.y,-1.0,1.0))/PI;
+        float bottomTint=(1.0-smoothstep(.12,.5,skyHeight))*.65;
+        diffuseColor.rgb=mix(diffuseColor.rgb,vec3(.07,.25,.55),bottomTint);
+        float d=length(skyRay-uCloudSun);
+        float disk=1.0-smoothstep(.014,.018,d);
+        vec3 bloom=vec3(1.1,.86,.52)*exp(-d*d*530.0)+vec3(.22,.19,.14)*exp(-d*d*45.0);
+        diffuseColor.rgb+=bloom+vec3(9.0,7.8,5.8)*disk;
+      }
 
     `);
   };
-  material.customProgramCacheKey = () => 'sea-level-hemisphere-v7-rally';
-  return {setDustHaze(amount){dustHaze.value=THREE.MathUtils.clamp(amount,0,1);},setStormGlow(strength,azimuth){stormGlow.value.set(Math.sin(azimuth),.27,Math.cos(azimuth),THREE.MathUtils.clamp(strength,0,1));},setHazeElevation(elevation){hazeElevation.value=THREE.MathUtils.clamp(elevation,.02,1);},setSeaLevel(height) {
+  material.customProgramCacheKey = () => 'sea-level-hemisphere-v8-cloud-road';
+  return {setCloudRoadSky(enabled){cloudRoadSky.value=enabled?1:0;},setDustHaze(amount){dustHaze.value=THREE.MathUtils.clamp(amount,0,1);},setStormGlow(strength,azimuth){stormGlow.value.set(Math.sin(azimuth),.27,Math.cos(azimuth),THREE.MathUtils.clamp(strength,0,1));},setHazeElevation(elevation){hazeElevation.value=THREE.MathUtils.clamp(elevation,.02,1);},setSeaLevel(height) {
     const enabled = height !== null;
     seaLevel = height; sea.value = enabled ? 1 : 0;
     sky.name = enabled ? 'Sea-level sky backdrop' : 'Distant sky backdrop';

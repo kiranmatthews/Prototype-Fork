@@ -374,28 +374,28 @@
 
 | 234 | Add dedicated ice-skating balance animation | ~15 min to playable; visual/regression/deployment verification followed | Automatic from main | Give sliding on the skateboard its own ice animation | Original 1.6s uneven balance cycle over the existing skate stance, with steering counterlean, delayed elbow/wrist corrections, stronger braking brace and independent torso/arm elasticity. Additional knee flex uses the existing sole-to-deck solver. Finite 0.24s dry settle; jumps, tricks, grinds, manuals, vert, bails and foot locomotion retain priority | 2,132 enabled/disabled frames match position, speed, heading and movement state exactly; deck path is identical and maximum foot error is 1.19mm. Both stances, authored/legacy ice, coast/steer/brake/jump/dry exit and action ownership pass. Ice-walking, animation-runtime and shared-elasticity regressions plus isolated production build pass. Front/side/quarter lite/full browser review has clean console. No tuning or geometry changes. |
 
-| 235 | Deadwater Park: giant forward spine transfers and loop of death | ~18 min to playable; browser/regression/deployment verification followed | Automatic from main | 0 | New `src/levels/waterpark.ts`, `src/loopRide.ts`, minimal Level/Player contact support, campaign map, preview, focused tests | Six 14 m analytic vert pools with five forward spine transfers; three 18–22 m gap jumps with shaped receiving decks; 52 m vertical loop with separate entrance/exit, checkpoints, crystal and required-loop finish. Basic teal/rust abandoned-waterpark blockout. Added an optional Island 2 branch from Island Hopper and actual geometry preview. Source-owned separate level preserves the occupied geometry lab. An uninterrupted production-Player input pilot finishes in 33.7 s with zero bails/grinds and unchanged tuning. Charge pumps existing forces; insufficient inward wheel pressure releases into real gravity, and lower-track landings roll back to base without completion credit. Fixed shared-coping destination ownership and near-flat bowl takeover by authored ramps/speed pads. Focused loop, metadata, shortcut lock, checkpoint/pit recovery, campaign/map, existing halfpipe contact/safety and level checks pass. Existing vert-release slam assertion also fails with the unchanged HEAD Player; left unrelated behavior untouched. Production build and continuous browser traversal pass; lite/full loop and gate checks have clean consoles. Authored follow framing keeps the giant airs in view, with a wide side shot for the loop. |
+| 235 | Deadwater Park: giant forward spine transfers and loop of death | ~18 min to playable; browser/regression/deployment verification followed | Automatic from main | 0 | New `src/levels/waterpark.ts`, `src/loopRide.ts`, minimal Level/Player contact support, campaign map, preview, focused tests | Six 14 m analytic vert pools with five forward spine transfers; three 18–22 m gap jumps with shaped receiving decks; 52 m vertical loop with separate entrance/exit, checkpoints, crystal and finish. Basic teal/rust abandoned-waterpark blockout. Added an optional Island 2 branch from Island Hopper and actual geometry preview. Source-owned separate level preserves the occupied geometry lab. An uninterrupted production-Player input pilot finishes in 33.7 s with zero bails/grinds and unchanged tuning. Charge pumps existing forces; insufficient inward wheel pressure releases into real gravity, and lower-track landings roll back to base without completion credit. Fixed shared-coping destination ownership and near-flat bowl takeover by authored ramps/speed pads. Focused loop, metadata, checkpoint/pit recovery, campaign/map, existing halfpipe contact/safety and level checks pass. Existing vert-release slam assertion also fails with the unchanged HEAD Player; left unrelated behavior untouched. Production build and continuous browser traversal pass; lite/full loop and gate checks have clean consoles. Authored follow framing keeps the giant airs in view, with a wide side shot for the loop. |
 
 | 236 | Reconcile and finish pending Blockworks geometry; isolate character drafts | ~13 min to validated continuous route; browser and checkout cleanup followed | Automatic from main | 0 | Blockworks source, editor coping option, capture safeguards, focused traversal/structure tests, actual map preview | Preserved the original tracked state in a local backup branch and all 140 Roo study files (including generated assets) in the local-only `drafts/roo-character-studies` branch. Reconciled rail opt-out with Deadwater Park using one runtime key; geometry capture now preserves explicit rails on opted-out lips. Completed the pending 22–36 m route-shaped ground, narrower roads and rail-free aqueduct with high-air targets, a floor departure and relocated rail transfer. Refreshed stale pre-wedge test routes to ride every authored roof ramp with measured contact; no Player or tuning edits. Structural support (5,817 probes), focused mechanics and one continuous 20,157-frame / 335.95 s journey pass with all six checkpoints, actual finish and no bails, deaths or resets. Required level checks and production build pass. Real-browser adaptive traversal responds to pose-dependent crate-contact timing and reaches both rewards, rails and checkpoint in lite/full rendering without gameplay changes. Added bounded cameraAirLift metadata, set to 0.8 only by Blockworks, to keep the complete rider visible at its 15.9 m reward apex without camera-view/control-frame changes or global tuning edits. |
 
 | 237 | Align Slipstream and Nightworks cameras with obstacle approaches | ~12 min to playable and browser-verified; boundary review and publication verification followed | Automatic from main | Show moving rails ahead before building speed; stop Slipstream's late camera facing off the edge; allow side-on rope swings | Restore Slipstream's dense 170-node deck-height camera spine in the published pack and narrowly migrate the exact old saved lane. Restore Nightworks' ordered route spine, settle directional views on the approach islands, widen rail views to show their complete travel, and retain the rope ferry's side view | 12,906 Slipstream ground/air/edge direction probes, corkscrew continuity, exact saved migration/custom-edit preservation and actual forward-only final run-up pass. Nightworks approach headings, projected endpoints at both motion extremes, feather-boundary continuity, held input, and existing collision/mover/phase/rope/respawn/finish checks pass. Required level checks and production build pass. Lite/full browser review verifies rail run-ups, side-on ropes and Slipstream finale with clean consoles. Movement tuning, geometry and obstacle timing preserved; no full suite. |
 
-| 238 | Rebuild Deadwater from the actual THPS waterpark reference | ~32 min to first complete route; detailed architecture/camera/browser verification followed | Automatic from main | 0 | Waterpark route/art/composition modules, close camera presentation helpers, adaptive tests, design/reference notes and map preview | Read the official Waterpark guide and inspected all seven official screenshots. Replaced the isolated ramp line with a terraced U-shaped park around a skateable lazy river, fountain island, raised bridges, ticket buildings, slide towers, closed spiral/funnel rides and grounded flume/coaster structure. Seven varied pools produce five forward spines; three gap jumps and a speed/charge-dependent 52 m loop remain. Removed start checkpoint; two later checkpoints follow meaningful progress. Removed every distant/fixed camera volume: normal lens/trailing distance, visible-body framing through transfer poses and close surface-relative loop follow preserve controls and movement tuning. Checkpoint-complete route 53.62 s; continuous mounted route 36.87 s with five spines, three landings, full loop and actual finish. Real full Chrome and complete rider-vertex framing checks pass with no bails, deaths or console errors; loop eye distance 7.177 m. Failure/respawn, loop pressure/shortcut lock, editor JSON round-trip, camera scope/regressions, required level checks and production build pass. Regenerable scenery attributes omitted to retain the existing import safety budget. |
+| 238 | Rebuild Deadwater from the actual THPS waterpark reference | ~32 min to first complete route; detailed architecture/camera/browser verification followed | Automatic from main | 0 | Waterpark route/art/composition modules, close camera presentation helpers, adaptive tests, design/reference notes and map preview | Read the official Waterpark guide and inspected all seven official screenshots. Replaced the isolated ramp line with a terraced U-shaped park around a skateable lazy river, fountain island, raised bridges, ticket buildings, slide towers, closed spiral/funnel rides and grounded flume/coaster structure. Seven varied pools produce five forward spines; three gap jumps and a speed/charge-dependent 52 m loop remain. Removed start checkpoint; two later checkpoints follow meaningful progress. Removed every distant/fixed camera volume: normal lens/trailing distance, visible-body framing through transfer poses and close surface-relative loop follow preserve controls and movement tuning. Checkpoint-complete route 53.62 s; continuous mounted route 36.87 s with five spines, three landings, full loop and actual finish. Real full Chrome and complete rider-vertex framing checks pass with no bails, deaths or console errors; loop eye distance 7.177 m. Failure/respawn, loop pressure, editor JSON round-trip, camera scope/regressions, required level checks and production build pass. Regenerable scenery attributes omitted to retain the existing import safety budget. |
 
 
-| 239 | Make Deadwater a linear downhill waterpark | ~38 min through the first complete full-render route; final release verification followed | Automatic from main | Start high and progress downhill from start to finish | Reposition the approved architecture along an 80 m descending hillside; one forward line through seven varied pools, five 2 m descending spine transfers, three gravity-powered vaults and the giant loop at ground level. Five supported downhill slides connect the attractions. Remove the ordinary jump motors, retain only the loop launch motor, keep two earned checkpoints and a separate forward finish lane. Updated actual-geometry map preview | Continuous production-controller checkpoint route: 2,462 frames / 41.03 s, all five spines, three landings, both checkpoints and loop-to-finish with no bails, deaths, resets or backward input. Later-release line also passes; every descending connector stays mounted above 16.7 m/s. Real full-browser traversal and console pass. Camera checks cover 712 airborne frames / 25.8 million rider vertices; normal loop framing stays at 7.177 m. Failure/respawn, loop pressure and shortcut lock, serialization, level checks and production build pass. Changes confined to level data, artwork placement, tests, preview and notes; movement and camera runtime preserved. |
+| 239 | Make Deadwater a linear downhill waterpark | ~38 min through the first complete full-render route; final release verification followed | Automatic from main | Start high and progress downhill from start to finish | Reposition the approved architecture along an 80 m descending hillside; one forward line through seven varied pools, five 2 m descending spine transfers, three gravity-powered vaults and the giant loop at ground level. Five supported downhill slides connect the attractions. Remove the ordinary jump motors, retain only the loop launch motor, keep two earned checkpoints and a separate forward finish lane. Updated actual-geometry map preview | Continuous production-controller checkpoint route: 2,462 frames / 41.03 s, all five spines, three landings, both checkpoints and loop-to-finish with no bails, deaths, resets or backward input. Later-release line also passes; every descending connector stays mounted above 16.7 m/s. Real full-browser traversal and console pass. Camera checks cover 712 airborne frames / 25.8 million rider vertices; normal loop framing stays at 7.177 m. Failure/respawn, loop pressure, serialization, level checks and production build pass. Changes confined to level data, artwork placement, tests, preview and notes; movement and camera runtime preserved. |
 
 
 | 240 | Repair Deadwater charge continuity, vert poses and bowl surfaces | ~22 min through repaired playable geometry and full-render held-charge verification; release verification followed | Automatic from main | Holding X should pump and crouch on vert; improve spine transfers; remove the orange obstruction, ease the second set and close the transparent bottoms | Preserve pumping across an air-owned held-X landing while consuming immediate release edges; a full fresh ground load rearms the next ollie. Deep contact-owned vert crouch, independent segment compression and finite transfer gather/rollover/extension. Replace normalized opposite-normal blending with a rotation through wheels-down. Add opaque floors to the analytic halfpipe component. Replace both detached wedges with matching curved spillways; reduce the second set's deepest bowl from 16 m to 12 m. Refresh map preview | Lite/full Chrome held-X route: 2,501 frames / 41.68 s, five transfers, three jumps, both checkpoints and loop/finish, no bails/deaths/errors. Identical 12 m/s starts in the second bowl: coast peaks at 21.57 m; X alone reaches 35.10 m above the 32 m coping, clearing it four times. 121 retained-charge contact frames, 308 transfer pose frames, <1 mm sole error and <4.47 degrees rotation per fixed step. Immediate-release safety, ordinary ollie motion parity, halfpipe contact/backside safety, camera framing, focused waterpark checks, required level checks and production build pass. Existing vert-release suite stops at its unrelated slam assertion (line 546), reproduced on unchanged HEAD. Shared movement tuning unchanged; no full suite. |
 
 
-| 241 | Triple-loop Deadwater finale with gravity-fed, re-climbable ramps | ~30 min to complete rendered traversal and corrected steep-road framing; final regression/publication verification followed | Automatic from main | Three loops, a jump gap before the last, and steep returnable ramps instead of a boost pad | Three required 52 m inversions; 70 m first drop, two connecting descents, 32 m ravine gap and 65 m last drop. Smooth bidirectional roads, base crossings, a service court/return bank and braced coaster structure. Removed the final speed pad. Explicit gravityTrack road metadata retains gravity-earned momentum through contact and takeoff without adding speed; ordinary roads and global tuning retain their rules. Close surface-relative framing keeps the steep road below the camera. Updated actual map preview | Full Chrome held-charge route: 3,315 frames / 55.25 s, five spine transfers, four jumps, both checkpoints and three loops with no deaths, bails or console errors. Early/late release controller variants pass. All four coaster ramps re-climb from their bases; actual keyboard ascent of the first 70 m ramp passes. A missed gap returns through its service bank without death/reset, and a stationary final-ramp retry completes the third loop at 57.9 m/s entry. Zero-gravity negative control proves the road tag adds no speed; pressure failure, two-loop shortcut lock, respawn reset and editor round-trip pass. Rendered steep-road line-of-sight and rider framing checks, focused waterpark/camera checks, required level checks and production build pass. No full suite or movement-tuning changes. |
+| 241 | Triple-loop Deadwater finale with gravity-fed, re-climbable ramps | ~30 min to complete rendered traversal and corrected steep-road framing; final regression/publication verification followed | Automatic from main | Three loops, a jump gap before the last, and steep returnable ramps instead of a boost pad | Three 52 m inversions; 70 m first drop, two connecting descents, 32 m ravine gap and 65 m last drop. Smooth bidirectional roads, base crossings, a service court/return bank and braced coaster structure. Removed the final speed pad. Explicit gravityTrack road metadata retains gravity-earned momentum through contact and takeoff without adding speed; ordinary roads and global tuning retain their rules. Close surface-relative framing keeps the steep road below the camera. Updated actual map preview | Full Chrome held-charge route: 3,315 frames / 55.25 s, five spine transfers, four jumps, both checkpoints and three loops with no deaths, bails or console errors. Early/late release controller variants pass. All four coaster ramps re-climb from their bases; actual keyboard ascent of the first 70 m ramp passes. A missed gap returns through its service bank without death/reset, and a stationary final-ramp retry completes the third loop at 57.9 m/s entry. Zero-gravity negative control proves the road tag adds no speed; pressure failure, respawn reset and editor round-trip pass. Rendered steep-road line-of-sight and rider framing checks, focused waterpark/camera checks, required level checks and production build pass. No full suite or movement-tuning changes. |
 
 
 | 242 | Giant shared-wall vert, readable Deadwater failures and restored competition | ~75 min to first complete playable route; detailed browser/regression verification and publication followed | Automatic from main | Fatal off-course ground, enclosed finish, readable loop-loss falls, no scenery-only slides, one giant left-entry/right-exit wall, and the earlier non-linear park as an additional competition | 130 m open admission tower feeds a 60 m gravity drop into the left lane of an 88 m-wide, 32 m-high quarterpipe; right descent enters a broad receiving chute into the existing downhill course. Actual terrain contact is lethal; ravine recovery floor removed; visible finish parapets backed by invisible side/rear barriers. Loop pressure/edge loss throws the board, preserves carried motion, keeps the body whole and presents a slower tumble with a leveling side camera. Removed decorative-only slides. Recovered 8710517 as Deadwater Cup with original U-shaped pools/lazy river/bridges, park controls, live rail scoring, three judged heats and independent trophy. Authored launch-motor speed survives its finite competition approach window; ordinary park motion parity passes. Appended Island 2 map node and real previews; linear identity/position preserved | Complete full/lite Chrome route: 4,346 frames / 72.43 s, giant left-to-right air, five spines, four jumps, two checkpoints, three loops and actual finish; no bails/deaths/console errors. All airborne character samples remain framed, normal loop eye distance stays 7.177 m. Fatal-floor/gap, three-direction finish containment, whole-body loop fall, all reverse ramp climbs, charge/transfer contact and ordinary camera/bail/rescue regressions pass. Cup spawn/rail scoring, actual full-render loop completion and 1,000-point award, three-run event and browser judges/final trophy (seeded UI scores), separate trophy saves, live map/Level Select, legacy map import/custom-position preservation and 140 schema checks pass. Required level checks and production type-check/build pass. No global tuning changes or full suite. |
 
 
-| 243 | Reuse the competition vert camera and connect Deadwater Cup | ~29 min to validated playable camera/links; final regression and publication verification followed | Automatic from main | Use the existing vert swing on Deadwater's opening wall; make Cup sand a combo-breaking, score-preserving return; connect the recovered park and remove its pipe wedges | Authored surface camera metadata reuses the unmodified SkateChaseCamera through the giant wall's approach, air and receiving chute, restoring the course rig before each frame so input headings stay independent. Sand contact returns to a trailing, footprint-checked safe pose, with an explicit Out of Bounds message and no new bail/death or banked score loss. Eight two-way bridges/promenades (admission, east flume, loop return, flume bypass, upper gallery, north ascent, west turn and pool median), two coping bridges and a station crosswalk join the rides. Removed both pipe wedges, obsolete Wavebreaker rollers and intrusive planters; moved the return-side palm and trimmed crossing handrails. Refreshed actual Cup preview | 1,004 camera frames, including 153 vert-air frames, match the existing competition rig; complete actual-character framing and unchanged course controls pass. Full Chrome linear route reaches the gate in 4,346 frames / 72.43 s with all five spines, four jumps, both checkpoints and three loops, no bails/deaths/errors. All eight Cup links traverse both ways across their end seams at the intended heights. Three sand-contact cases and a recent-ground return keep 4,567 banked points, lives and judge bail counts while clearing the live combo. Lite/full Chrome return/gallery/flume runs and sand reset pass; normal park/loop camera, manual look, competition scoring/trophies, linear hazards and 145 schema checks pass. Required level checks and production build pass. Shared tuning unchanged; no full suite. |
+| 243 | Reuse the competition vert camera and connect Deadwater Cup | ~29 min to validated playable camera/links; final regression and publication verification followed | Automatic from main | Use the existing vert swing on Deadwater's opening wall; make Cup sand a combo-breaking, score-preserving return; connect the recovered park and remove its pipe wedges | Authored surface camera metadata reuses the unmodified SkateChaseCamera through the giant wall's approach, air and receiving chute, restoring the course rig before each frame so input headings stay independent. Sand contact returns to a trailing, footprint-checked safe pose, with a debug-only Out of Bounds diagnostic and no new bail/death or banked score loss. Eight two-way bridges/promenades (admission, east flume, loop return, flume bypass, upper gallery, north ascent, west turn and pool median), two coping bridges and a station crosswalk join the rides. Removed both pipe wedges, obsolete Wavebreaker rollers and intrusive planters; moved the return-side palm and trimmed crossing handrails. Refreshed actual Cup preview | 1,004 camera frames, including 153 vert-air frames, match the existing competition rig; complete actual-character framing and unchanged course controls pass. Full Chrome linear route reaches the gate in 4,346 frames / 72.43 s with all five spines, four jumps, both checkpoints and three loops, no bails/deaths/errors. All eight Cup links traverse both ways across their end seams at the intended heights. Three sand-contact cases and a recent-ground return keep 4,567 banked points, lives and judge bail counts while clearing the live combo. Lite/full Chrome return/gallery/flume runs and sand reset pass; normal park/loop camera, manual look, competition scoring/trophies, linear hazards and 145 schema checks pass. Required level checks and production build pass. Shared tuning unchanged; no full suite. |
 
 
 | 244 | Stable left-side Deadwater drop-in controls and compact Cup clock | ~16 min to validated playable fixes; publication verification followed | Automatic from main | Prevent input inversion when the camera swings on a left-side giant-vert landing; reduce the obstructive mobile competition clock | Returning vert air now owns a downhill surface input frame independent of proximity to the uphill lane. The receiving chute reseeds the ordinary lane and respawn clears the frame. Cup clocks become unboxed upper-left text, 24px on touch/narrow screens and 28px on desktop, reserving the mobile Pause target and safe-area insets. Removed the native painter's rectangular shadow while retaining text contrast | Nine real left/middle/right drop-ins cover held forward and both lateral directions, plus receiving-chute handoff and respawn. Full-render far-left run stays at x=-18 while descending from 95.77 to 70.48 m through the camera swing, with no bail/death/error. Complete course traversal/character framing and existing competition UI pass. Both Cups pass normal/urgent/final-combo layout checks at 320×568, 390×844 and 844×390 touch sizes, lite/full rendering and desktop; actual Pause taps stay clear. Production type-check/build passes. No level geometry, camera calibration or shared movement tuning changes; no full suite. |
@@ -4258,7 +4258,7 @@ Started 2026-10-23T04:35:17+00:00; verified playable 2026-10-23T05:12:12.102572+
 ## 2026-10-25 — The Skystream and Secret Island rewards
 
 - Freeze the exact user-exported Saved: The Slipstream (SHA-256 `1492874a654bb1a06826ebfd409eda6d127ae9543b91458071605a76a66352cf`), reflect X/yaw/bank, and preserve its collision and grindable edge policy. Extend the 1,222.74 m route to 3,795.44 m (3.104×) with four different descending circular/oval sections, switchbacks, four gap jumps, and seven supported checkpoints. Add The Skystream to Secret Island slot 5, retaining its 20-medal requirement.
-- Build the 68 m Aureole loop with the native loop primitive. A 105 m gravity descent earns about 66.4 m/s at entry. A visible 60 m marble wall physically blocks the direct crossing; `loopRequired` stays false. Keep authored movement tuning unchanged. Add ivory-veined marble, lapis understructure, gold trim and open crown arches. Use Sky Bridge's cloud atmosphere, with the requested Skystream-only fog increase from 12/64 m to 36/192 m. The preview JPEG comes from the real game renderer.
+- Build the 68 m Aureole loop with the native loop primitive. A 105 m gravity descent earns about 66.4 m/s at entry. A visible 60 m marble wall physically blocks the direct crossing. Keep authored movement tuning unchanged. Add ivory-veined marble, lapis understructure, gold trim and open crown arches. Use Sky Bridge's cloud atmosphere, with the requested Skystream-only fog increase from 12/64 m to 36/192 m. The preview JPEG comes from the real game renderer.
 - Validate all four additional edge-jump shortcuts with ordinary controller samples and put their fruit trails on the measured flights. The full native run finishes in 124.78 seconds with no bail/death and all four gaps landed; the full-render browser independently finishes in 7,487 steps, with an inverted loop and no console errors. A direct native jump is stopped at X=101.22 by the actual wall; the complete loop width clears it. Driving off the course after a checkpoint restores the supported checkpoint after the kill-plane death. Evidence: [validation.json](skystream/validation.json).
 - Remove crystals across Secret Island, including stale editor overrides, saved progress, totals, inventory/results, Level Select and the map skateboard card. Decouple crystal eligibility from boss/bonus rules, preserve all gems/medals/records and bonus rooms, and unlock secret time trials on a normal clear. Native checks exercise all five secret courses with injected old crystals; real-browser checks select every course and show only gem/medal sockets. [Menu capture](skystream/secret-island.png).
 - Validation: level checks and the production build; focused campaign/save, collectible, trial, menu and presentation regressions; native Skystream route, shortcuts and wall tests; lite/full real-browser review. The broader campaign command encounters an existing unrelated ocean assertion: `test-warp-room-return.mjs` expects caustics strength 0.32 while unchanged `HEAD:src/mapOceanPreset.ts` authors 0.18. No `check:all`.
@@ -5432,3 +5432,303 @@ Production build and full normal/MAX rendering remain queued with the release
 coordinator: the heavy-job helper returned exit 75 because both slots were
 occupied. The increment remains WORKING until those required checks pass.
 No level-data audit or full suite was run for this presentation-only change.
+## 28 October 2026 — Beach kite spring, manuals and finished boundaries
+
+The goal began around 07:17 UTC. The connected native course first passed at
+07:44; the first production preview opened at 07:58 (about 41 minutes from
+prompt to browser-playable). During review the user clarified forward speed
+only, much slower strong gusts, and a one-second slowdown limit. Those final
+corrections opened in the preview at 08:20. Shared validation-capacity waits
+are included in this elapsed wall time, not counted as active authoring time.
+
+Forward coast speeds are 16.2/18.225/20.25 m/s and full charge is 31.05 m/s;
+steering retains its previous 9 m/s speed and response. Strong gusts hold
+3.5–6.5 seconds with smooth transitions. Down accumulates at most one second
+of tension: release spends only part of the counter and energy, repress
+continues the remainder, and the cap triggers a 0.16-second automatic spring.
+Normal manual flicks, balance, scoring, landing buffers, jump exits and fatal
+balance bails work while towing. The actual eye socket looks forwards; body
+sway is reduced at slow/cruise speed. The kite flies 28 m ahead and 8.5 m up.
+
+Authored turns and freight guides now leave response time with the original
+lateral steering against the strongest gust. Landing rewards move beyond the
+longer flights. The complete opening stair set moves down its same flat slab
+to clear the chicane exit, preserving its contrasting treatment. An invisible
+start wall and a complete stone overlook/pavilion close the ends. Existing
+solid islands, jump feel, bonus retry and deliberate on-foot finish remain.
+
+Focused motion, native spring/manual/contact/boundary/control, connected
+course and timing checks pass. The existing shared balance-reentry regression
+also passes. Required check:levels and build pass. Corrected Chrome lite/full
+runs each clear 3 km, all 13 jumps, ten checkpoints, 24/24 main boxes and crystal
+with no crashes or console errors, then stop/walk and deliberately jump to
+finish. Keyboard spring/manuals, 16 extreme canopy framing cases and two actual
+failed bonus returns/re-entry/bypass pass. MAX/native and normal CRT reviewed;
+all asset silhouettes remain complete. Minimum adverse-wind steering margin
+is 0.307 s; minimum landing space is 0.523 s at full forward charge.
+
+Final preview: `Codex/sol fork · build 10-28 08:18 UTC`, version
+`b6a2099c3d6e8c1a0474`. Evidence is indexed in
+[the kite spring review](beach-street/kite-spring/README.md). No global tuning,
+published level-pack overwrite, unrelated cleanup or check:all. Work remains
+local in accordance with this chat's explicit instruction; the current release
+coordinator is retired. A validated immutable handoff is saved in the inbox.
+
+## 28 October 2026 — Beach kite owner release
+
+The replacement user instructions resume owner integration and publishing.
+The validated local Beach source `5ddbc499` applied cleanly to current main
+`aac956ab` as `b34dffe2`; its five runtime/level blobs are identical and newer
+shared runtime work is preserved. Integrated native spring, controls and full
+3 km traversal pass, as do required check:levels, build and release-size checks.
+A fresh full-render Chrome preview passes the opening 215 m with the delivered
+level pack and zero console/asset errors or canopy clipping; native captures
+were reviewed. The test runner can now verify a published pack without restoring
+its source. Integration checks started at 08:43 UTC and the rebuilt preview
+passed around 08:51, about eight minutes later. The final wind/one-second brake
+corrections were already playable at 08:20. See
+[the release evidence](beach-street/kite-release/README.md) for exact source
+mapping and checks; public verification follows the matching Pages deployment.
+
+## 28 October 2026 — Sky Bridge bonus construction match
+
+Prompt → local playable: **~19 minutes**, with the complete bonus/parent return
+validated at ~21 minutes. No clarification or movement-tuning changes.
+
+Cloudtop Lockers now uses Sky Bridge's `coast-stone` masonry, full carved
+`coastarch`/`coastpillar` assets, `coastv2ledge`/`coastv2buttress` foundations,
+cloud spires, and `bridge-timber` boards with the shared braided bearer ropes.
+The courts retain their supported intervals; the four metal relay anchors sit
+on decorative carved piers, and the finite-bounce room crosses a 40-board
+suspension deck. The main level's cloud sky and lighting are reused, with
+fog distances offset 20 m for the farther side-view camera. Rear architecture
+and ropes preserve the player and reward silhouettes.
+
+All 11 crate entries (seven collectible boxes and four permanent anchors),
+11 fruit pickups, the spawn, camera, containment and gate match the original
+puzzle exactly. No shared runtime, tuning or published level-pack edit.
+
+Validation: the `check:levels`, `build` and `check:release` package scripts
+passed. Chrome lite verifies supported spawn, an actual relay-chasm death and
+supported retry. Full Chrome reviews five locations at normal resolution and
+two at MAX/native 1440×900, with 40 full-detail board instances and no console
+errors or lost context. The existing input-driven bonus-session pilot completes
+both rooms, collects 7/7 boxes, finishes without a death and returns to the same
+parent Level at its supported bonus checkpoint; rewards and completion persist.
+Build version `882fdc0fd38091063116` fits the existing release budget.
+
+Evidence: [native relay](sky-bridge-bonus/relay-native.jpg),
+[native timber span](sky-bridge-bonus/timber-native.jpg),
+[browser checks](sky-bridge-bonus/browser-review.json), and
+[complete bonus session](sky-bridge-bonus/playthrough.json).
+
+
+### 2026-10-28 — Live rally grid, clear finish shot, and a second stadium section
+
+Extended Coconut Cart Rally from 2,320 to 4,640 authored metres (4,945 m of actual
+racing line). The original road, all twelve original mounds, banks and existing
+corner patches retain their exact sampled coordinates, certified against
+`aac956ab` in `tools/fixtures/rally-pre-extension.json`. Three new rounded but
+sharp corner sequences change heading by approximately 102°, 95° and 99°.
+A 160 m vaulted service tunnel dips 12 m below the stadium, with earth cover,
+reinforcing arches, physical side guards and actual worklights from the existing
+six-light pool. Its exit leads to an 18 m dirt launch and a broad landing apron.
+Native driving clears about 56.5 m in 1.38 seconds; the apron removes a second
+landing hop. A slow missed jump remains completely supported. The extension has
+six more full-detail reused Meshy rocks, transverse item rows and supply bays.
+Medal times scale with the longer race. No player or vehicle handling retuning.
+
+The countdown now advances the real world, GPU crowd and physical parachute
+deliveries while drivers hold their brakes. Eight proximity-scaled engines rev;
+X increases the driver's revs without storing speed. Race/trial clocks, weapon
+recharge and pickups stay locked until GO. Loaners begin 32 m up and land in
+about 5.07 s; rescue deliveries choose daylight near a tunnel portal. Finished
+and ordinary parked carts remain silent. All rally surface edges opt out of
+grinding, and cart-race crate rebuilds cannot create new ledges. Skate races
+retain their normal ledges and on-foot rally skating keeps its authored motor.
+The results shot follows the approach centreline from above, clear of the stands,
+with refitting for wide and portrait UI viewports.
+
+Validation: check:levels, type-check/build and release-size pass (997,042,526 /
+1,000,000,000 bytes; offline f5971a34321cc84028ac). Native checks cover all 18 slow
+missed jumps, supported corners, 65,160 spectators seated on 196 actual stand
+sections, zero grind rails, live-grid clocks/controls, parachute lifecycle and
+30/60/144 Hz descent, and a stable six-light pool serving 80 fixtures. Chrome lite
+and full production checks exercise countdown sound/movement, the underground
+floor, launch/landing and the actual results camera, with MAX/native 1600×900 and
+normal 720 views reviewed. A complete eight-racer production run finished in
+164.22–205.90 s with zero falls, zero console errors and silent settled engines.
+One older optional rock audit still fails its zero-contact AI expectation on the
+original opening obstacle; comparison reproduces the failure in the previously
+published 77653ba6 worktree. This is recorded rather than hidden by unrelated AI
+retuning. No claim that every legacy audit passes. Evidence: `docs/cart-live-grid/`.
+
+Prompt-to-playable was approximately 30 minutes for the combined brief, about
+20 minutes from the extension follow-up to native/Chrome-lite playability. The
+recorded authoring window began around 07:35 UTC; lite playability was confirmed
+at 08:04 UTC. Production passes followed, including roughly 11 minutes of
+capacity-only waiting separate from authoring. Only coconut-cart-rally changes
+in the shared pack; the other thirteen level snapshots remain intact.
+
+Release integration preserves the independently published Sky Bridge bonus
+commit `3010206b`. All tested rally source hashes are unchanged. The combined
+production build and release check pass at 997,045,500 bytes, offline version
+`ea03ad0a7f3574094ce7`.
+
+
+## 28 October 2026 — Beach kite publication verified
+
+Published `0a10f2c6` preserves concurrent Sky Bridge and Coconut Cart updates.
+Pages run `40661426694` succeeded; the actual public build is
+`Codex/sol fork · build 10-28 09:08 UTC`, version `d903410add66df0e7822`.
+The entry/version match the exact CI output. A fresh public Chrome run completes
+3 km, all 13 jumps, ten checkpoints, 24/24 main boxes and crystal, then releases
+the kite, stops, walks and deliberately jumps to finish. Console/assets are
+clean, geometry remains complete and normal/MAX captures are reviewed.
+
+The first live run exposed a late turn in the automated optional-pad bypass.
+The pilot now turns when it clears the actual tilted contact plane, 2.516 m
+earlier; the rerun passes against sustained opposing wind. No game runtime or
+level source changed after publication. Both attempts and the exact public
+identity are retained in [the live verification](beach-street/kite-release/public/README.md).
+Live verification completed at 09:21:53 UTC; the final requested wind/brake
+settings had already been browser-playable locally at 08:20 UTC.
+### 2026-10-28 — Global vertex-lighting debug toggle
+
+Added **M → RENDER → Global vertex lighting**, off by default and saved under
+`solProtoVertexLighting.v1`. Inspection confirmed the existing Lambert, Phong,
+Standard and Physical materials use per-pixel scene lighting in the installed
+Three.js version; the existing custom Gouraud effects were not a global mode.
+Prompt-to-playable was approximately 16 minutes, including the first clean
+character review; production and compatibility verification followed.
+
+The toggle selects classic diffuse Gouraud shading for those lit materials.
+Directional, point and spot incidence/falloff plus ambient, hemisphere and probe
+illumination move to vertices. Direct specular highlights are omitted in this
+mode; authored textures, emissive, lightmaps, fog, separate light shadow/cookie
+masks and environment reflections retain their existing paths. Unlit artwork,
+custom water/effects and postprocessing stay on their own shaders. Turning it
+off restores the original material hooks and shader keys. Streamed meshes,
+material arrays, reflected views, rigid batches, instancing and skinning use
+the same renderer integration. Meshes lacking normals receive a separate
+lighting attribute before GPU upload; positions, indices and authored normals
+remain intact, including the existing off-mode shadow-normal behavior.
+
+Focused lifecycle/settings checks and a real Chrome pixel fixture cover all
+four material families, exact off-mode pixel restoration, missing normals,
+two-sided faces, live light colours, six spotlights, instancing and skinning.
+The fixture proves that a centre point light on a two-triangle plane changes
+from per-pixel illumination to interpolated vertex illumination. Full-suite
+audits were not run for this focused rendering feature.
+
+Packaged Chrome checks pass in lite and full rendering: toggle interaction,
+reload persistence, 1600×900 native/MAX and normal 720p presentation, a running
+Coconut Cart Rally with 527 covered materials and six spotlights, return to the
+lab, and a 390×844 debug drawer. Browser and WebGL errors are zero. Build/type
+checks and release sizing pass at 997,055,786 / 1,000,000,000 bytes after
+integrating the concurrent Cart and Beach releases. Local verification took
+approximately 32 minutes from the prompt. Evidence: [verification](vertex-lighting/verification.json),
+[shader pixels](vertex-lighting/shader-pixels.json), [production browser](vertex-lighting/production-browser.json),
+[native scene](vertex-lighting/native-vertex.png), [native stadium](vertex-lighting/stadium-native.png)
+and [compact toggle](vertex-lighting/compact-toggle.png).
+
+
+## 2026-10-28 — Skystream: cloud road and three-loop finale
+
+Brief started at 07:54 UTC. The first complete three-loop native traversal was
+playable by 08:09 UTC, about 15 minutes from prompt to playable. Full-render
+route review completed at 08:50 UTC, with final procedural surface and normal
+presentation review at 08:57 UTC (63 minutes including visual refinement).
+
+A continuous implicit cloud shell now covers the road, with round shoulders,
+soft shading and shallow top detail above independent smooth collision. The
+finale adds a horizontal wedding-band wall ride between two upright loops.
+The middle driving surface is vertical around 270 degrees of its turn, with
+smooth entry and exit banking. The original skybox is retained with a gentle blue gradient fading out halfway
+up, plus directional sun bloom and occluded lens flare. No centre line, vines or movement
+tuning changes. The final approach earns its speed from gravity.
+
+The complete native and full-render browser route clears all 67 main-course
+boxes, seven checkpoints, four gaps and three loops without a death or bail.
+Deliberate fall/respawn, existing loop camera/ride and Skystream wall/shortcut
+checks pass. Cloud clearance, frame continuity and 30/60/120 Hz wall travel
+pass; MAX/native and normal CRT visuals were reviewed without console errors.
+Required level checks pass; Skystream remains source-owned without a redundant archive snapshot.
+See [the implementation and review evidence](skystream-clouds/README.md).
+
+The final sky direction retains the original cloud panorama, tinting only the
+lower half. That revision was visually checked at 09:12 UTC; integrated native
+traversal, production browser smoke, build and release-size validation completed
+at 09:19 UTC (85 minutes from the brief, including the later sky adjustment).
+The production scene retains 1,626,016 cloud triangles with no geometry LOD swaps.
+
+## 28 October 2026 — Half-speed kite air movement
+
+Request 10:14:07 UTC → rebuilt browser check 10:19:57 UTC (5 min 50 s).
+Kite flight now halves sideways steering and wind drift from takeoff and
+restores full ground control on landing. Forward movement, jump feel, gust
+cadence and the one-second brake remain. Nine focused motion comparisons pass,
+as do the full native 3 km course, build, release size and fresh full-render
+Chrome opening/jump check. No console/asset errors. This is a kite-only runtime
+change; no level data or global tuning edit. The open in-app tab could not be
+reloaded through the unavailable browser-control API; the rebuilt local preview
+was independently verified and the user was asked to reload once.
+Evidence: [air control](beach-street/air-control/README.md).
+
+## 2026-10-28 — Skystream: airborne cloud bonus and open road
+
+Follow-up began at 10:02 UTC. The first complete native cloud-bonus traversal
+passed at 10:17 UTC, approximately 15 minutes from prompt to playable; refined
+full-render cloud review followed at 10:20 UTC. Removed the main route's 20
+separate rails and one swinging rope. The mirrored source fixture and ordinary
+surface-edge policy remain intact.
+
+Added the source-owned Cumulus Cache bonus: six floating cloud platforms,
+five short jumps, 18 supported rewards and six distant cloud banks. Procedural
+3D density, baked sun transmittance and volume scattering provide detailed
+billows and soft edges over independent smooth landing collision. The original
+cloud skybox, gentle lower-half blue gradient, sun bloom and flare carry into
+the bonus. No movement tuning or unrelated level pack changes.
+
+Native traversal passes all 67 main-course boxes, four gaps and three loops,
+plus the bonus's 18 boxes and five jumps. Real Chrome verifies lite fall/recovery,
+full-render bonus failure/retry, reward banking and return to the same parent.
+MAX/native and normal CRT presentation reviewed with no console errors.
+See [cloud bonus evidence](skystream-clouds/bonus/README.md).
+
+Required level checks, production build, release sizing and packaged Chrome
+smoke passed at 10:29 UTC, approximately 27 minutes after the follow-up began.
+
+
+## 2026-10-28 UTC — Ungated loops and debug-only gameplay announcements
+
+Approximately 10 minutes from the follow-up prompt to the first native gameplay
+verification; packaged-browser and publication checks followed. Reaching a finish
+no longer depends on completed loops anywhere in the game. Removed loop-completion
+announcements, the editor requirement control and the authored flags; old saved
+flags are discarded on import without changing riding geometry. Loop traversal
+telemetry and competition scoring remain available.
+
+Oversized gameplay notices and the legacy HUD game-over plate follow the existing
+M / Show Debug Menus switch. Normal play discards them; hiding debug clears their
+state and timers immediately. Both DOM and pre-CRT painters apply this policy.
+The ordinary Pause/results flow and other course objectives remain intact.
+Updated the menu/map guidance and removed obsolete loop-lock requirements from
+the historical authoring notes.
+
+The focused native loop regression verifies legacy import, pressure/fall behavior,
+zero-loop finish admission, silent loop completion and stationary retry. Skystream's
+full native route retains all three loops, four gaps, seven checkpoints and all
+67 main-course boxes with no bails/deaths. Debug-shortcut and campaign presentation
+checks, required level checks, production build and release sizing pass.
+
+Two older checks have existing stale expectations: the current-components test
+looks for “walkable collision” after the control was renamed “solid collision”;
+the general HUD-pipeline test expects the old no-argument collectFruit signature.
+Both mismatches were confirmed against unchanged HEAD; neither runtime was
+altered to accommodate those assertions. The affected editor loop scenario passes.
+
+Lite and packaged full-render Chrome checks pass at native 1600×1000 with clean
+consoles: hidden/explicit Canvas announcements, live debug toggle and clearing,
+snapshot restoration, Pause, zero-loop finish and ordinary results. Browser
+evidence and reproduction steps are in [gameplay-announcements](gameplay-announcements/README.md).

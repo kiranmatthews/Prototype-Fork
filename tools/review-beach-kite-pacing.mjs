@@ -13,7 +13,7 @@ const {KITE_TOW}=await load('../src/kiteTow.ts');
 const {BEACH_KITE_BEATS:beats}=await load('../src/levels/beach-street-gameplay.ts');
 const out=pathToFileURL(resolve(process.env.BEACH_OUTPUT??'docs/beach-street/wind-finish')+'/');
 const native=JSON.parse(await readFile(new URL('native.json',out),'utf8'));
-const speed=23; // Full normal charge; the connected run exercises this pace.
+const speed=Math.max(...native.trace.map(frame=>frame.speed)); // Measured full kite charge.
 const shifts=[];
 for(let i=1;i<beats.length;i++){
  const a=beats[i-1],b=beats[i],distance=b.lane-a.lane;if(Math.abs(distance)<.01)continue;
@@ -36,7 +36,7 @@ const landings=native.jumps.map(j=>{
  return {jump:j.name,next:next.name,landingBy:landBy,
   secondsUntilNextApproach:(next.z-17-landBy)/speed};
 }).filter(Boolean);
-const report={method:'Authored timing review alongside native collision tests. Steering assumes full opposite velocity and maximum sustained adverse wind; landing uses measured native airtime at full charged speed (23 m/s).',
+const report={method:`Authored timing review alongside native collision tests. Steering assumes full opposite velocity and maximum sustained adverse wind; landing uses measured native airtime at full charged speed (${speed} m/s). The optional brake burst adds bounded player-triggered overspeed.`,speed,
  shifts,landings,minimumSteeringSpare:Math.min(...shifts.map(s=>s.spareSeconds)),
  minimumLandingBreath:Math.min(...landings.map(l=>l.secondsUntilNextApproach))};
 console.log(JSON.stringify({tightestShifts:shifts.toSorted((a,b)=>a.spareSeconds-b.spareSeconds).slice(0,3),tightestLandings:landings.toSorted((a,b)=>a.secondsUntilNextApproach-b.secondsUntilNextApproach).slice(0,3)}));

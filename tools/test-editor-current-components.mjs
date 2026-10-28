@@ -107,8 +107,9 @@ try {
     assert.equal(styled.data.components[0].solid, false); assert.ok(normalizeCustomLevelData(styled.data));
   });
   check("analytic loops resize mesh and ride profile together and reject circular-profile distortion", () => {
-    const loop = { t: "mesh", p: [2, 1, -3], loopRadius: 10, loopOffset: 4, w: 8, loopRequired: true, ...createLoopMeshData(10, 8, 4) };
+    const loop = { t: "mesh", p: [2, 1, -3], loopRadius: 10, loopOffset: 4, w: 8, ...createLoopMeshData(10, 8, 4) };
     const editor = editorFor(loop); editor.renderProps();
+    assert.ok(!elements(editor.propsEl).some(e => e.children[0]?.textContent === "require complete loop"));
     assert.ok(!elements(editor.propsEl).some(e => e.children[0]?.textContent === "scale y"));
     const before = JSON.stringify(editor.data); editor.applyScaleNoCommit(1, 2, 1, new THREE.Vector3());
     assert.equal(JSON.stringify(editor.data), before); assert.equal(editor.message, "KEEP THE LOOP CIRCULAR");
@@ -120,7 +121,7 @@ try {
     editor.renderProps(); changeNumber(editor, "loop radius", 24); assert.equal(c.loopRadius, 24);
     assert.deepEqual(c.vertices, createLoopMeshData(24, 16, 8).vertices);
     changeBoolean(editor, "starts as !-switch outline", true);
-    assert.equal(c.loopRadius, undefined); assert.equal(c.loopOffset, undefined); assert.equal(c.loopRequired, undefined);
+    assert.equal(c.loopRadius, undefined); assert.equal(c.loopOffset, undefined);
   });
   check("imported city and jungle fitted assets scale once rather than squaring their scale", () => {
     for (const [dkind, matrix] of [["templeplatform", jungleAssetMatrix], ["citydeck", cityMatrix]]) {

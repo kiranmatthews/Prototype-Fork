@@ -15,7 +15,7 @@ await page.addInitScript(()=>Object.defineProperty(navigator,'getGamepads',{valu
 const report={started:new Date().toISOString(),base,errors:[],failed:[],captures:[]};
 page.on('pageerror',e=>report.errors.push(e.message));page.on('console',m=>{if(m.type()==='error')report.errors.push(m.text());});page.on('response',r=>{if(r.status()>=400)report.failed.push({url:r.url(),status:r.status()});});
 const key=async(code,down)=>page.evaluate(({code,down})=>document.body.dispatchEvent(new KeyboardEvent(down?'keydown':'keyup',{code,key:code==='Space'?' ':code,bubbles:true})),{code,down});
-const release=async()=>{for(const code of ['Space','KeyF','KeyE','KeyQ','ArrowLeft','ArrowRight','ArrowDown'])await key(code,false);};
+const release=async()=>{for(const code of ['Space','KeyF','KeyE','KeyQ','ArrowLeft','ArrowRight','ArrowDown','ArrowUp'])await key(code,false);};
 const wait=async ms=>page.waitForTimeout(ms);
 // Real digital steering corrects the changing wind; fixtures never zero it.
 const steerTo=async x=>page.evaluate(x=>{
@@ -31,11 +31,11 @@ const steerTo=async x=>page.evaluate(x=>{
   }
  },16);
 },x);
-const snapshot=async()=>page.evaluate(()=>{const g=window.__game,p=g.player;return {position:p.pos.toArray(),state:p.state,grounded:p.grounded,speed:p.speed,charge:p.jumpChargeSeconds,diagnostics:p.kiteDiagnostics,stamp:document.querySelector('.hud-build')?.textContent};});
+const snapshot=async()=>page.evaluate(()=>{const g=window.__game,p=g.player;return {position:p.pos.toArray(),state:p.state,grounded:p.grounded,speed:p.speed,charge:p.jumpChargeSeconds,manual:p.manualing,balance:p.balance,combo:p.comboPoints,gazeDot:p.headLookSocket.getWorldDirection(p.pos.clone()).dot(p.axisF),canopy:p.kiteVisual.sail.position.toArray(),diagnostics:p.kiteDiagnostics,stamp:document.querySelector('.hud-build')?.textContent};});
 const capture=async(name,view=null)=>{
  await page.evaluate(view=>{window.kiteReview=view;},view);await wait(100);await page.screenshot({path:`${out}/${name}.png`});report.captures.push({name,...await snapshot()});
 };
-const reset=async(position=null)=>{await page.evaluate(()=>clearInterval(window.kiteGuide));await release();await page.evaluate(position=>{const g=window.__game,p=g.player,l=g.getLevel();
+const reset=async(position=null)=>{await page.evaluate(()=>{clearInterval(window.kiteGuide);clearInterval(window.kiteBalance);});await release();await page.evaluate(position=>{const g=window.__game,p=g.player,l=g.getLevel();
  const placement=position?{position:p.pos.clone().fromArray(position),heading:p.pos.clone().set(0,0,-1)}:undefined;
  p.respawn(l,true,false,placement);p.lives=99;window.kiteReview=null;},position);};
 try{
@@ -57,9 +57,30 @@ try{
  report.flip=await page.evaluate(()=>({name:window.__game.player.flipName,t:window.__game.player.flipT,special:window.__game.player.specialFlip}));assert.ok(report.flip.t>0);assert.equal(report.flip.special,null);
  await capture('charged-flip',{x:5,y:2.8,z:7});
  // Open lane beside the first planter: charge speed, brake, then pay it back.
- await reset([3.8,12.12,15]);await steerTo(3.8);await key('Space',true);await page.waitForFunction(()=>window.__game.player.speed>22.8);
- await key('ArrowDown',true);await page.waitForFunction(()=>window.__game.player.speed<5);report.braking=await snapshot();assert.ok(report.braking.diagnostics.reserve>150);
- await key('ArrowDown',false);await page.waitForFunction(()=>window.__game.player.speed>22);report.boost=await snapshot();assert.ok(report.boost.diagnostics.reserve<report.braking.diagnostics.reserve);
+ await reset([3.8,12.12,15]);await steerTo(3.8);await key('Space',true);await page.waitForFunction(()=>window.__game.player.speed>31);
+ await key('ArrowDown',true);await page.waitForFunction(()=>window.__game.player.kiteDiagnostics.brakeSeconds>.8);report.braking=await snapshot();assert.ok(report.braking.diagnostics.reserve>150);assert.ok(report.braking.speed>=7.5&&report.braking.speed<9);
+ await key('ArrowDown',false);await page.waitForFunction(()=>window.__game.player.kiteDiagnostics.brakeSeconds<.5);report.boost=await snapshot();assert.ok(report.boost.diagnostics.brakeSeconds>0);assert.ok(report.boost.speed>report.braking.speed);assert.ok(report.boost.diagnostics.reserve<report.braking.diagnostics.reserve);
+ await key('ArrowDown',true);await page.waitForFunction(n=>window.__game.player.kiteDiagnostics.brakeSeconds>n+.15,report.boost.diagnostics.brakeSeconds);report.reloaded=await snapshot();assert.equal(report.reloaded.diagnostics.autoReleases,0);
+ await page.waitForFunction(()=>window.__game.player.kiteDiagnostics.autoReleases===1);await page.waitForFunction(()=>window.__game.player.kiteDiagnostics.reserve===0);report.burst=await snapshot();assert.ok(report.burst.speed>31);assert.equal(report.burst.diagnostics.brakeSeconds,0);
+ await wait(250);assert.equal((await snapshot()).diagnostics.autoReleases,1);await capture('spring-release');
+ // Up/down flicks and balancing use actual keyboard events, with no balance,
+ // speed or wind writes. Each fixture starts in the open opening straight.
+ report.manuals=[];
+ for(const type of [1,-1]){
+  // A sustained adverse gust can hold coast below 15 m/s. Start the flick
+  // once riding speed is reached, instead of waiting for favourable wind.
+  await reset([3.8,12.12,15]);await steerTo(3.8);await key('KeyQ',true);await page.waitForFunction(()=>window.__game.player.speed>13);await key('KeyQ',false);
+  const first=type===1?'ArrowUp':'ArrowDown',second=type===1?'ArrowDown':'ArrowUp';
+  await key(first,true);await wait(60);await key(first,false);await wait(35);await key(second,true);
+  await page.waitForFunction(type=>window.__game.player.manualing===type,type);await key(second,false);const entered=await snapshot();
+  await page.evaluate(()=>{const held=new Set();window.kiteBalance=setInterval(()=>{const p=window.__game.player,u=(p.balance*3+p.balanceVel*.8)/4;
+   for(const [code,on] of [['ArrowUp',u>.07],['ArrowDown',u<-.07]]){if(held.has(code)===on)continue;if(on)held.add(code);else held.delete(code);document.body.dispatchEvent(new KeyboardEvent(on?'keydown':'keyup',{code,key:code,bubbles:true}));}
+  },16);});
+  await wait(1800);const held=await snapshot();assert.equal(held.manual,type);assert.equal(held.state,'ride');assert.ok(held.combo>entered.combo);assert.equal(held.diagnostics.brakeSeconds,0);assert.ok(held.gazeDot>.999);assert.ok(Math.max(...held.diagnostics.gripErrors)<.03);
+  await capture(type===1?'manual':'nose-manual',{x:5,y:2.2,z:3,targetY:1});
+  report.manuals.push({type,entered,held});await page.evaluate(()=>clearInterval(window.kiteBalance));await key('ArrowUp',false);await key('ArrowDown',false);
+  await key('Space',true);await wait(160);await key('Space',false);await page.waitForFunction(()=>window.__game.player.state==='air');assert.equal((await snapshot()).manual,0);
+ }
  // Catch the authored beach boundary rail and release a full normal rail jump.
  await reset([7.2,12.95,15]);await steerTo(7.2);await key('KeyE',true);
  await page.waitForFunction(()=>window.__game.player.state==='grind',null,{timeout:10000});
@@ -104,6 +125,12 @@ try{
  report.deathLater=await snapshot();assert.ok(report.deathLater.diagnostics.flyaway);assert.ok(report.deathLater.diagnostics.fragments.length>=2);
  assert.ok(report.deathLater.diagnostics.fragments[0].position[2]<report.deathStart.diagnostics.fragments[0].position[2]-3);
  await page.waitForFunction(()=>window.__game.player.state==='ride',null,{timeout:15000});const stopped=await snapshot();await wait(800);report.respawn=await snapshot();assert.equal(report.respawn.diagnostics.started,false);assert.ok(Math.abs(stopped.position[2]-report.respawn.position[2])<.01);
+ // Finish scenery is reviewed from a real automatic release, then a dedicated
+ // on-foot fixture tests the otherwise inaccessible rear start boundary.
+ await reset([0,7.12,-2977]);await steerTo(0);await key('KeyQ',true);await page.waitForFunction(()=>window.__game.player.kiteReleased);await page.evaluate(()=>clearInterval(window.kiteGuide));await release();await wait(5500);
+ report.finish=await snapshot();assert.equal(report.finish.state,'ride');assert.equal(report.finish.diagnostics.flyaway,false);assert.equal(report.finish.speed,0);
+ await capture('finish-overlook');await capture('finish-end-wall',{x:16,y:11,z:16,focus:{x:0,y:7,z:-3016},targetY:1,fov:58});
+ await reset([0,12.12,18]);await page.evaluate(()=>window.__game.player.releaseKite(window.__game.input));await key('ArrowDown',true);await wait(2200);report.startBoundary=await snapshot();assert.ok(report.startBoundary.position[2]<24&&report.startBoundary.position[2]>20);assert.equal(report.startBoundary.state,'ride');await release();await capture('start-boundary');
  await page.evaluate(()=>{window.kiteReview=null;window.__game.renderQualitySettings.setRegularResolution(480);window.__game.crtGuestSettings.setEnabled(true);});await capture('normal-presentation');
  assert.deepEqual(report.errors,[]);assert.deepEqual(report.failed,[]);report.pass=true;
 }catch(e){report.pass=false;report.error=e.stack;report.failureState=await snapshot().catch(()=>null);await page.screenshot({path:`${out}/failure.png`}).catch(()=>{});throw e;}

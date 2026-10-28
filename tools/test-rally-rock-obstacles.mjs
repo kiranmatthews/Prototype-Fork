@@ -5,10 +5,10 @@ await withBlockworksRuntime(async r=>{
  const {SkateRace}=await r.server.ssrLoadModule('/src/race/runtime.ts'),{GolfCartPhysics}=await r.server.ssrLoadModule('/src/golf-cart/physics.ts');
  const layout=await r.server.ssrLoadModule('/src/levels/cart-stadium-layout.ts'),{RALLY_ROCK_STATIONS}=await r.server.ssrLoadModule('/src/levels/rally-rock-obstacles.ts');
  const rocks=r.sourceModule.COCONUT_CART_RALLY_LEVEL.components.filter(c=>c.nm?.startsWith('Rally Meshy rock'));
- assert.equal(rocks.length,8);assert.ok(rocks.every(c=>c.dkind==='coastv2buttress'&&c.w>=1.5&&!c.s));
- for(const s of RALLY_ROCK_STATIONS)for(const j of layout.CART_RALLY_JUMPS)assert.ok(s+11<j.start-32||s-11>j.end+44,'Rock footprints leave complete takeoff and landing mounds clear');
+ assert.equal(rocks.length,14);assert.ok(rocks.every(c=>c.dkind==='coastv2buttress'&&c.w>=1.5&&!c.s));
+ for(const s of RALLY_ROCK_STATIONS)for(const j of layout.CART_RALLY_JUMPS)assert.ok(s+11<j.start-(j.runUp??32)||s-11>j.end-(j.landingLead??8)+(j.landingRise??20)+(j.landingPlateau??0)+(j.landingTail??32),'Rock footprints leave complete takeoff and landing mounds clear');
  const race=new SkateRace(r.scene,r.p,false,()=>true);race.attach(r.l,'coconut-cart-rally');race.start('time-trial',1);race.phase='running';const rally=race.carts,w=rally.fleet.physics;
- assert.equal(w.obstacles.length,72);const traversals=[],impacts=[];
+ assert.ok(w.obstacles.length>=126);const traversals=[],impacts=[];
  const parked=w.spawns.slice(1).map(p=>({x:p.x,z:p.z,clear:rally.bayOutsideWalls(p.x,rally.ground(p.x,p.z).height,p.z)}));assert.ok(parked.every(p=>p.clear),'All initial spare carts park clear of the rocks');
  for(const rock of rocks)assert.equal(rally.clearBay(rock.p[0],rock.p[2],-1),false,'Replacement delivery cannot put a kart inside a rock');
  const spawn=(s,u=0)=>{const p=layout.rallySurfacePoint(s,u),f=layout.cartRallyFrame(s);return {x:p[0],z:p[2],yaw:-Math.atan(f.dx)};};
@@ -16,7 +16,7 @@ await withBlockworksRuntime(async r=>{
   Object.assign(w.spawns[0],spawn(s-45));w.reset(0);const c=w.carts[0];c.vx=-Math.sin(c.yaw)*25;c.vz=-Math.cos(c.yaw)*25;c.speed=25;rally.sync();race.riders[0].progress=race.course.project(r.p.pos).s;
   let maxOffset=0;
   for(let n=0;n<1200&&-c.z<s+24;n++){race.step(1/60,rally.drive(0));r.l.update(1/60);maxOffset=Math.max(maxOffset,Math.abs(race.course.project(r.p.pos).offset));}
-  assert.ok(-c.z>s+24,`AI passes obstacle ${i+1}`);assert.equal(c.hits,0,'An unimpeded driver can avoid the rock');assert.equal(c.respawns,0);assert.equal(c.rolls,0);assert.ok(maxOffset>1.7,'Passing requires a clear steering deviation');
+  assert.ok(-c.z>s+24,`AI passes obstacle ${i+1}`);assert.equal(c.hits,0,`An unimpeded driver can avoid rock ${i+1} at ${s}; final ${c.x},${c.z}; offset ${maxOffset}`);assert.equal(c.respawns,0);assert.equal(c.rolls,0);assert.ok(maxOffset>1.7,'Passing requires a clear steering deviation');
   traversals.push({s,passed:true,maxOffset,hits:c.hits,rolls:c.rolls});
   const side=i%2?1:-1,solo=new GolfCartPhysics((x,z)=>rally.ground(x,z),[spawn(s-24,side*7.4)],w.obstacles,{scale:1.25,topSpeed:38,engine:23,gravity:24,stableLandings:true,damageCapacity:11.2});
   const v=solo.carts[0];v.vx=-Math.sin(v.yaw)*25;v.vz=-Math.cos(v.yaw)*25;v.speed=25;

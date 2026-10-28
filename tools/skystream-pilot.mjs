@@ -2,8 +2,11 @@
 // distinct from the lower shortcut crossings; no position or speed writes.
 export function createSkystreamPilot(source, options = {}) {
  const lane=source.SKYSTREAM_LEVEL.components.filter(c=>c.t==='camnode'&&!c.cameraView).map(c=>c.p);
- let index=options.startIndex??0, gap=options.startGap??0, loopSeen=false, loopDone=false, airborne=false, finishJump=false;
- const evidence={gaps:[],inverted:false,loopEntrySpeed:null,finished:false,checkpoints:[]};
+ const wideHalo=source.SKYSTREAM_PARTS.find(part=>part.name==='Cloud eye · wide left oval');
+ const laneIndex=q=>lane.findIndex(p=>p.every((n,i)=>n===q[i]));
+ const wideStart=laneIndex(wideHalo.points[0]),wideEnd=laneIndex(wideHalo.points.at(-1));
+ let index=options.startIndex??0, gap=options.startGap??0, loopSeen=false, loopDone=false, lastCompleted=0, airborne=false, finishJump=false;
+ const evidence={gaps:[],inverted:false,loopEntrySpeed:null,finished:false,checkpoints:[],loops:[]};
  const position=p=>p.pos.toArray();
  function towards(p,l,q){
   const f=p.courseInputDirection(l)??p.camDir,dx=q[0]-p.pos.x,dz=q[2]-p.pos.z,d=Math.hypot(dx,dz)||1;
@@ -15,11 +18,16 @@ export function createSkystreamPilot(source, options = {}) {
    if(camera)p.camDir.set(camera.x,0,camera.z);
    if(p.loopStatus.active){
     if(!loopSeen)evidence.loopEntrySpeed=p.speed;
+    if(!evidence.loops[p.loopStatus.completed])evidence.loops[p.loopStatus.completed]={entrySpeed:p.speed,inverted:false,wall:false};
+    const loop=evidence.loops[p.loopStatus.completed];
+    loop.inverted ||= p.rideNormal.y<-.9;
+    loop.wall ||= Math.abs(p.rideNormal.y)<.05 && Math.abs(p.loopPresentationFrame?.tangent.y??1)<.15;
     loopSeen=true;return {moveY:1,jumpHeld:true};
    }
-   if(loopSeen&&!loopDone){
-    loopDone=true;
-    index=lane.findIndex(q=>q[0]===128&&q[2]<-1761&&q[1]<-329);
+   if(p.loopStatus.completed>lastCompleted){
+    lastCompleted=p.loopStatus.completed;
+    index=source.SKYSTREAM_LOOP_EXITS[lastCompleted-1];
+    loopDone=lastCompleted===3;
    }
    let best=Infinity,near=index;
    for(let i=Math.max(0,index-2);i<Math.min(lane.length,index+17);i++){
@@ -38,7 +46,7 @@ export function createSkystreamPilot(source, options = {}) {
     l.checkpoints.some(cp=>!cp.active&&cp.spawnPos.distanceTo(p.pos)<30);
    const edge=source.SKYSTREAM_GAPS[gap];
    const jumpApproach=edge&&Math.hypot(...edge.takeoff.map((n,i)=>n-p.pos.getComponent(i)))<55;
-   const q=lane[Math.min(lane.length-1,index+(index>170&&(!crateRun||jumpApproach)?4:2))];
+   const q=lane[Math.min(lane.length-1,index+(index>170?(!crateRun||jumpApproach?4:index>=wideStart&&index<=wideEnd?3:2):2))];
    const gx=edge?edge.landing[0]-edge.takeoff[0]:0,gz=edge?edge.landing[2]-edge.takeoff[2]:0,gn=Math.hypot(gx,gz)||1;
    const remaining=edge?((edge.takeoff[0]-p.pos.x)*gx+(edge.takeoff[2]-p.pos.z)*gz)/gn:Infinity;
    const across=edge?Math.abs((edge.takeoff[0]-p.pos.x)*gz-(edge.takeoff[2]-p.pos.z)*gx)/gn:Infinity;

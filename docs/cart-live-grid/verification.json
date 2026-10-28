@@ -1,0 +1,130 @@
+{
+  "implementationComplete": true,
+  "base": "aac956ab544572811e0787815450ce8718e09343",
+  "authoredLength": {
+    "before": 2320,
+    "after": 4640,
+    "actualRaceMetres": 4945.095536420289
+  },
+  "originalSurfacePreserved": {
+    "base": "aac956ab544572811e0787815450ce8718e09343",
+    "start": 0,
+    "end": 2320,
+    "step": 4,
+    "lanes": [
+      -27.4,
+      -14,
+      0,
+      14,
+      27.4
+    ],
+    "surfaceSha256": "88f6dfce52741b0805428cae7bce749da302cafc12e28953d57229a1c50758d1"
+  },
+  "corners": {
+    "added": 3,
+    "headingChangesDegrees": [
+      101.942,
+      94.708,
+      99.153
+    ]
+  },
+  "tunnel": {
+    "length": 160,
+    "depth": 12,
+    "realLightPool": 6
+  },
+  "newJump": {
+    "launchHeight": 18,
+    "measuredFlightMetres": 56.5377,
+    "measuredAirtime": 1.3833,
+    "landingRebounds": 0,
+    "slowRouteSupported": true
+  },
+  "start": {
+    "loanerHeight": 32,
+    "liveWorld": true,
+    "revvingEngines": 8,
+    "earlyRaceProgress": 0,
+    "earlyWeaponRecharge": false
+  },
+  "zeroGrindRails": true,
+  "crowd": {
+    "spectators": 65160,
+    "sections": 196,
+    "sharedGeometry": true,
+    "perFrameInstanceUploads": 0
+  },
+  "checks": {
+    "levels": "pass",
+    "build": "pass",
+    "release": "pass",
+    "releaseBytes": 997042526,
+    "offlineVersion": "f5971a34321cc84028ac",
+    "nativeLiveGrid": "pass",
+    "nativeExtension": "pass",
+    "all18SlowJumps": "pass",
+    "loanerDelivery": "pass",
+    "crowdPlacement": "pass",
+    "stationaryAndGridAudio": "pass",
+    "descent30_60_144Hz": "pass",
+    "lightPool": "pass",
+    "ChromeLite": "pass",
+    "ChromeFullNativeAnd720": "pass"
+  },
+  "fullRace": {
+    "allEightFinished": true,
+    "seconds": [
+      164.2166666666895,
+      175.88333333336544,
+      171.98333333336234,
+      190.16666666671014,
+      189.66666666670974,
+      192.3666666667119,
+      205.900000000056,
+      199.5833333333843
+    ],
+    "falls": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "engineLoopsAfterFinish": [],
+    "consoleErrors": []
+  },
+  "knownPreExistingAuditFailure": {
+    "tool": "tools/test-rally-rock-obstacles.mjs",
+    "finding": "The legacy zero-contact AI assertion reports 1 hit instead of 0. It also fails on the previously published 77653ba6 worktree before this change. Current trace is the original opening rock at station 90, not an added corner. No unrelated AI retuning or geometry changes made to mask it.",
+    "baselineLog": "pre-existing-rock-audit.txt",
+    "currentLog": "rock-audit-current.txt"
+  },
+  "packChange": {
+    "levelId": "coconut-cart-rally",
+    "otherLevelsPreserved": 13
+  },
+  "sourceSha256": {
+    "src/golf-cart/loanerDrops.ts": "0f871933d01efce769258b2f224afe972b9560419f97da915b663712ee643a54",
+    "src/golf-cart/race.ts": "41422ff37831f1f518914ccbcda7463fa27763eec338696e5d05241336fd8933",
+    "src/golf-cart/raceAudio.ts": "0e9a2de6284e4acf7f9bb7480f8975bb93cb8edfa28ec42c9ab02f4dc466d2c0",
+    "src/level.ts": "6dbb5aca6fe56fd88019f1dcb253085dc522713c2784dcdcfa095c5371b5a249",
+    "src/levels/cart-stadium-layout.ts": "3b4345f3423166092dfca3665eba1de4d4cc7abd57ea4be1482a38c6f9b3905f",
+    "src/levels/coconut-cart-rally.ts": "48c496d0cbdf9636c9205077c8b564f19d578116c3ac958792ec2a713892f495",
+    "src/levels/rally-rock-obstacles.ts": "73210213f0a3cd9745e04995a1164a35c32732b3cc8906508c66f4afa6bd293f",
+    "src/levels/rally-tunnel.ts": "b00f8499e1af8fd2eecc4666c6cc8d47ed7f61c121ae80e8179008de466f8372",
+    "src/race/finishPresentation.ts": "1a817faf20840ad50fb15daaa6403a890cf5efb1d1f3af15773e1c6845d994ee",
+    "src/race/runtime.ts": "ae7984b3c202f152e7c1ea5f0f3c3dc55e1a4e057226824a28b3ab2731007cf4",
+    "src/stadiumLighting.ts": "41a95ce82082b23b26845d946f07f7fcc17b36efcb6f67bb97b44571c331c8bc"
+  },
+  "integration": {
+    "parent": "3010206b25b932534e3395ec0c4fc6d3caa37f7d",
+    "preserved": "Independent Sky Bridge bonus update; only the append-only iteration log needed merging. All rally production source hashes remain identical to the native and browser-tested versions.",
+    "build": "pass",
+    "release": "pass",
+    "releaseBytes": 997045500,
+    "offlineVersion": "ea03ad0a7f3574094ce7"
+  }
+}

@@ -30,7 +30,7 @@ export class CartRaceAudio {
     if(gain<.01)return;
     const stop=sfx.playManaged(`rally-${id}`,name,gain,rate);if(stop)this.stops.set(id,stop);
   }
-  update(dt:number,world:GolfCartPhysics,owners:readonly number[],humanCart:number,burning:readonly boolean[],burnAge:readonly number[],thrust:readonly number[],listener:Vector3){
+  update(dt:number,world:GolfCartPhysics,owners:readonly number[],humanCart:number,burning:readonly boolean[],burnAge:readonly number[],thrust:readonly number[],listener:Vector3,gridRevs?:readonly number[]){
     this.clock+=dt;
     // Stable channels follow each physical kart, including after a theft. At
     // most the eight occupied carts run engines; empty loaners stay silent.
@@ -40,15 +40,16 @@ export class CartRaceAudio {
       // Include vertical/sideways travel, so an airborne or sliding kart still
       // revs. A small dead band prevents settled suspension jitter restarting it.
       const motion=Math.hypot(c.vx,c.vy,c.vz),moving=motion>(this.engines.has(i)?.12:.2);
-      if(!moving||owners[i]<0||burning[i]||distanceGain<=.001){
+      const rev=gridRevs?.[owners[i]];
+      if((!moving&&rev===undefined)||owners[i]<0||burning[i]||distanceGain<=.001){
         if(this.engines.delete(i))sfx.setLoop(`rally-engine-${i}`,'kartEngine',false,0);
         continue;
       }
-      const speed=Math.min(1,Math.abs(c.speed)/38),gas=Math.abs(world.inputs[i]?.throttle??0);
+      const speed=Math.min(1,Math.abs(c.speed)/38),gas=rev??Math.abs(world.inputs[i]?.throttle??0);
       const gain=(own?.38+gas*.18+speed*.03:.10+gas*.06+speed*.015)*distanceGain;
       // A real four-second engine recording retains piston rattle and intake
       // harmonics in the laptop-speaker band. The unloaded motor revs in air.
-      const rate=.95+speed*.85+gas*.18+(c.grounded?0:.28+gas*.12)+(i%7-3)*.009;
+      const rate=.95+speed*.85+gas*(rev===undefined?.18:.55)+(c.grounded?0:.28+gas*.12)+(i%7-3)*.009;
       const voice=this.engines.get(i)??{gain,rate};
       voice.gain+=(gain-voice.gain)*blend;voice.rate+=(rate-voice.rate)*blend;
       this.engines.set(i,voice);

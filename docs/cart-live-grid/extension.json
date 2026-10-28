@@ -1,0 +1,60 @@
+{
+  "passed": true,
+  "length": 4640,
+  "actualLength": 4945.095536420289,
+  "cases": [
+    {
+      "name": "sharp corner",
+      "start": 2465,
+      "end": 2748,
+      "seconds": 8.983333333333333,
+      "maxGap": 0.07705358302412435,
+      "longestAir": 0.18333333333333332,
+      "flightDistance": 7.37094623254212,
+      "rolls": 0,
+      "hits": 0,
+      "health": 1
+    },
+    {
+      "name": "sharp corner",
+      "start": 2865,
+      "end": 3148,
+      "seconds": 8,
+      "maxGap": 0.12231379006083287,
+      "longestAir": 0.19999999999999998,
+      "flightDistance": 8.112729136930199,
+      "rolls": 0,
+      "hits": 1,
+      "health": 0.9508928571428571
+    },
+    {
+      "name": "sharp corner",
+      "start": 3855,
+      "end": 4138,
+      "seconds": 8.3,
+      "maxGap": 0.061367871508185345,
+      "longestAir": 0.11666666666666665,
+      "flightDistance": 4.530765885185525,
+      "rolls": 0,
+      "hits": 0,
+      "health": 1
+    },
+    {
+      "name": "tunnel and huge jump",
+      "start": 3160,
+      "end": 3653,
+      "seconds": 12.383333333333333,
+      "maxGap": 19.07535479210699,
+      "longestAir": 1.3833333333333333,
+      "flightDistance": 56.5377061862251,
+      "rolls": 0,
+      "hits": 1,
+      "health": 0.9508928571428571
+    }
+  ],
+  "slowMiss": {
+    "z": -3593.031629386472,
+    "health": 1,
+    "rolls": 0
+  }
+}

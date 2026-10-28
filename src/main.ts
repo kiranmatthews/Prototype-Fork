@@ -1,3 +1,4 @@
+import { createSkystreamSun } from './skystreamSun';
 import { presentStartupFrame, finishStartup, failStartup, startupFailed } from "./startupScreen";
 import { CountryClubCarts } from './golf-cart/course';
 import { SkateRace } from './race/runtime';
@@ -149,6 +150,8 @@ import {
   type RenderQualityPanel,
 } from "./render-quality/panel";
 import { PresentationFrameLimiter } from "./render-quality/frameLimiter";
+import { vertexLightingSettings } from './render-quality/vertexLightingSettings';
+import { GlobalVertexLighting } from './vertexLighting';
 import { createSkateboardTuningPanel } from "./skateboard/panel";
 import { skateboardSettings } from "./skateboard/settings";
 import { createSpinTuningPanel } from "./spin-effects/panel";
@@ -187,6 +190,7 @@ const LITE_RENDER = window.location.search.includes("lite");
 const NO_COAST_POST = window.location.search.includes("nopost");
 const NO_OCEAN_PASSES = window.location.search.includes("nopasses");
 const renderer = new THREE.WebGLRenderer({ antialias: !LITE_RENDER });
+const globalVertexLighting = new GlobalVertexLighting(renderer);
 const contextResourceRecovery = installContextResourceRecovery(renderer.domElement, renderer.getContext());
 // Count the complete presentation (world, shadows, ocean, post and HUD).
 // Three's default reset-per-render reports only the final fullscreen triangle.
@@ -802,6 +806,7 @@ function syncSkyBackdropVisibility(): void {
   skyMist.visible =
     skyCache.has(activeSky) &&
     level.skateRace?.vehicle!=='golf-cart' &&
+    !level.groundMeshes.some(mesh=>mesh.userData.cloudRoad) &&
     !level.water &&
     !LITE &&
     !preset.seaHorizon &&
@@ -833,6 +838,7 @@ function setEditorView(editing: boolean, changed = false): void {
 }
 
 let proceduralSky: THREE.CanvasTexture | null = null; // the gradient fallback, ours to dispose
+const skystreamSun=createSkystreamSun();scene.add(skystreamSun);
 let proceduralSkyKey = "";
 let levelPostEnabled = false;
 
@@ -848,6 +854,9 @@ function applyTheme(): void {
     jungleAtmosphere: level.jungleAtmosphere, isCampaignMap: level.isCampaignMap, skyBackdrop: level.skyBackdrop,
     atmosphere: { ...level.atmosphere, ...heat.lighting, fogColor: heat.fogColor } } : level);
   activeSky = skyPreset;
+  const cloudRoadSkyActive=level.groundMeshes.some(mesh=>mesh.userData.cloudRoad);
+  skyProjection.setCloudRoadSky(cloudRoadSkyActive);
+  skystreamSun.visible=cloudRoadSkyActive&&!LITE;
   retainOnlyActiveSky();
   // Sky Bridge is a true whiteout: its distance is the fog-coloured scene
   // background, not a fog-immune painted dome visible behind the last plank.
@@ -2189,6 +2198,7 @@ recorder.start(current.id, endlessDeathsOn); // the take always runs: level load
 gameFlow = new GameFlowUI(
   campaign,
   {
+    onDeveloperChromeChange: (visible) => ui.setDebugMessagesEnabled(visible),
     onNewGame: startNewCampaign,
     onLoadGame: loadCampaign,
     onSaveGame: saveCampaignFromWarp,
@@ -5570,6 +5580,8 @@ requestAnimationFrame(frame);
   crtGuestPanel,
   renderQualitySettings,
   renderQualityPanel,
+  vertexLightingSettings,
+  getVertexLightingDiagnostics: () => globalVertexLighting.diagnostics,
   skateboardSettings,
   skateboardPanel,
   spinRingSettings,

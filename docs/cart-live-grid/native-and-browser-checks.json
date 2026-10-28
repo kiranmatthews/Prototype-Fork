@@ -1,0 +1,32 @@
+[
+  {
+    "check": "test-cart-stadium",
+    "exit": 0,
+    "log": "/private/tmp/kart-live-test-cart-stadium.log"
+  },
+  {
+    "check": "test-rally-loaner-delivery",
+    "exit": 0,
+    "log": "/private/tmp/kart-live-test-rally-loaner-delivery.log"
+  },
+  {
+    "check": "test-cart-crowd-placement",
+    "exit": 0,
+    "log": "/private/tmp/kart-live-test-cart-crowd-placement.log"
+  },
+  {
+    "check": "test-rally-rock-obstacles",
+    "exit": 1,
+    "log": "/private/tmp/kart-live-test-rally-rock-obstacles.log"
+  },
+  {
+    "check": "production-full-extension",
+    "exit": 0,
+    "log": "/private/tmp/kart-live-production-full-extension.log"
+  },
+  {
+    "check": "production-full-race",
+    "exit": 0,
+    "log": "/private/tmp/kart-live-production-full-race.log"
+  }
+]

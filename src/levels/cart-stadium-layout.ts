@@ -1,13 +1,18 @@
 /** Shared authored course frame for the dirt, safety walls and instanced spectators. */
 export type RallyPoint = [number,number,number];
-export const CART_RALLY_LENGTH=2320;
-export const CART_RALLY_JUMPS=[150,310,470,690,850,1010,1230,1390,1550,1770,1930,2090].map((s,i)=>({start:s,end:s+26+(i%3)*4,name:['Dirt double','Mud bowl','Coconut kicker'][i%3]}));
+export const CART_RALLY_ORIGINAL_LENGTH=2320;
+export const CART_RALLY_LENGTH=CART_RALLY_ORIGINAL_LENGTH*2;
+export const CART_RALLY_TUNNEL={descent:3180,entry:3240,exit:3400,depth:12} as const;
+export const CART_RALLY_MEGA_JUMP={start:3472,end:3558,name:'Tunnel cannon',height:18,runUp:64,drop:20,landingHeight:7,landingLead:60,landingRise:28,landingPlateau:52,landingTail:72} as const;
+export interface RallyJump {start:number;end:number;name:string;height?:number;runUp?:number;drop?:number;landingHeight?:number;landingLead?:number;landingRise?:number;landingPlateau?:number;landingTail?:number}
+export const CART_RALLY_JUMPS:RallyJump[]=[...[150,310,470,690,850,1010,1230,1390,1550,1770,1930,2090,2420,2810,3760,4180,4380].map((s,i)=>({start:s,end:s+26+(i%3)*4,name:['Dirt double','Mud bowl','Coconut kicker'][i%3]})),CART_RALLY_MEGA_JUMP].sort((a,b)=>a.start-b.start);
 export const CART_RALLY_PIPES=[[540,640],[1080,1180],[1620,1720],[2160,2260]] as const;
 // Local additions only: keep every original takeoff/landing and the winding
 // route outside these two connectors exactly where it was authored.
-export const CART_RALLY_CORNER_PATCHES=[{start:510,end:690,radius:80,side:1},{start:1590,end:1770,radius:95,side:-1}] as const;
+export const CART_RALLY_CORNER_PATCHES=[{start:510,end:690,radius:80,side:1},{start:1590,end:1770,radius:95,side:-1},
+  {start:2500,end:2720,radius:78,side:-1},{start:2900,end:3120,radius:78,side:1},{start:3890,end:4110,radius:78,side:-1}] as const;
 export const CART_RALLY_CORNERS=CART_RALLY_CORNER_PATCHES.map(p=>(p.start+p.end)/2);
-export const CART_RALLY_SUPPLY_ROWS=[80,410,790,1190,1710,2030];
+export const CART_RALLY_SUPPLY_ROWS=[80,410,790,1190,1710,2030,2350,2740,3140,3670,4120,4310];
 export const STADIUM={bankStart:17,bankRadius:10,wallOffset:27.4,wallTop:15,standStart:30,rows:9,rowDepth:1.25,rowRise:.85,sectionLength:48,standSegmentLength:8,seatSpacing:1.15} as const;
 const smooth=(x:number)=>{const t=Math.max(0,Math.min(1,x));return t*t*(3-2*t);};
 const round=(x:number)=>Math.round(x*1e5)/1e5;
@@ -40,15 +45,19 @@ function routeX(s:number){
 export function rallyMudWetness(s:number,u:number){return smooth((Math.sin(s*.051+u*.13)+.35)/1.1)*(.65+.35*Math.sin(u*.57+s*.018)**2);}
 export function cartRallyFrame(s:number){const dx=(routeX(s+.05)-routeX(s-.05))/.1,n=Math.hypot(1,dx);return {x:routeX(s),dx,n,nx:1/n,nz:dx/n};}
 export function stadiumBase(s:number){return 25+1.5*Math.sin(s/210)+.8*Math.sin(s/73);}
+export function rallyTunnelDepth(s:number){const t=CART_RALLY_TUNNEL;return t.depth*smooth((s-t.descent)/(t.entry-t.descent))*(1-smooth((s-(t.exit-50))/50));}
 export function dirtHeight(s:number){
-  let y=stadiumBase(s);
+  let y=stadiumBase(s)-rallyTunnelDepth(s);
   for(const j of CART_RALLY_JUMPS){
     // Two earth mounds, joined by a supported soft-dirt trough. A slow kart can
     // drive the entire section; enough speed carries it over the boggy floor.
-    if(s>=j.start-32&&s<=j.start)y+=6*((s-j.start+32)/32)**2;
-    else if(s>j.start&&s<j.start+12)y+=6*(1-smooth((s-j.start)/12));
-    if(s>=j.end-8&&s<j.end+12)y+=3.5*smooth((s-j.end+8)/20);
-    else if(s>=j.end+12&&s<j.end+44)y+=3.5*(1-smooth((s-j.end-12)/32));
+    const run=j.runUp??32,height=j.height??6,drop=j.drop??12,rise=j.landingRise??20,tail=j.landingTail??32,landing=j.landingHeight??3.5;
+    if(s>=j.start-run&&s<=j.start)y+=height*((s-j.start+run)/run)**2;
+    else if(s>j.start&&s<j.start+drop)y+=height*(1-smooth((s-j.start)/drop));
+    const approach=j.end-(j.landingLead??8),crest=approach+rise,flatEnd=crest+(j.landingPlateau??0);
+    if(s>=approach&&s<crest)y+=landing*smooth((s-approach)/rise);
+    else if(s>=crest&&s<flatEnd)y+=landing;
+    else if(s>=flatEnd&&s<flatEnd+tail)y+=landing*(1-smooth((s-flatEnd)/tail));
   }
   return y;
 }
@@ -91,11 +100,15 @@ export function stadiumBoundaryPaths():RallyPoint[][] {
  * at their exact authored heights; this never lowers a jump. */
 export function rallyMicroHeight(s:number,u:number){
   let envelope=smooth((s-35)/25)*(1-smooth((s-(CART_RALLY_LENGTH-45))/25));
+  // The old finish straight joins the extension without rewriting its surface.
+  if(s<=CART_RALLY_ORIGINAL_LENGTH)envelope*=1-smooth((s-(CART_RALLY_ORIGINAL_LENGTH-45))/25);
+  else envelope*=smooth((s-CART_RALLY_ORIGINAL_LENGTH)/25);
   envelope*=1-smooth((Math.abs(u)-14)/11);
   for(const j of CART_RALLY_JUMPS){
     envelope*=smooth((Math.abs(s-j.start)-12)/14);
     envelope*=smooth((Math.abs(s-j.end)-6)/12);
-    envelope*=smooth((Math.abs(s-j.end-12)-6)/12);
+    envelope*=smooth((Math.abs(s-(j.end-(j.landingLead??8)+(j.landingRise??20)))-6)/12);
+    if(j.landingPlateau){const a=j.end-(j.landingLead??8),b=a+(j.landingRise??20)+j.landingPlateau;envelope*=s<a?smooth((a-s)/14):s>b?smooth((s-b)/14):0;}
   }
   const lean=.22*Math.sin(s*.037)*u/14;
   const rolling=.14*Math.sin(s*.21+u*.23)+.075*Math.sin(s*.47-u*.51);

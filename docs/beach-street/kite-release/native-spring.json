@@ -1,0 +1,649 @@
+{
+  "started": "2026-10-28T08:43:11.539Z",
+  "manuals": [
+    {
+      "type": 1,
+      "entered": {
+        "position": [
+          3.522750735464791,
+          0,
+          -16.60256008796288
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 17.460626353724496,
+        "manual": 1,
+        "combo": 100,
+        "diagnostics": {
+          "started": true,
+          "released": false,
+          "releaseAge": -1,
+          "wind": 0.787891471077808,
+          "windTarget": 0.8378311889246106,
+          "reserve": 0,
+          "charge": 0,
+          "brakeSeconds": 0,
+          "bursting": false,
+          "autoReleases": 0,
+          "poseMotion": 0.1680972732216038,
+          "gripErrors": [
+            2.7754646313521073e-7,
+            0.000001272672631975802
+          ],
+          "dock": null,
+          "flyaway": false
+        },
+        "contact": {
+          "support": "rear-wheels",
+          "local": [
+            0,
+            0,
+            -0.19720379552250616
+          ],
+          "world": [
+            3.522750735464791,
+            0,
+            -16.60256008796288
+          ],
+          "footError": 0.001647915219480742,
+          "handError": 0,
+          "bounce": 0.25310296451878606,
+          "bodyFlex": 0.6534731023851683,
+          "bodyHeight": 0.9006078436615602,
+          "footSpan": 0.375,
+          "locomotionWeight": 1
+        }
+      },
+      "held": {
+        "position": [
+          11.177571128220215,
+          0,
+          -68.94975044592047
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 16.99724583505862,
+        "manual": 1,
+        "combo": 158,
+        "diagnostics": {
+          "started": true,
+          "released": false,
+          "releaseAge": -1,
+          "wind": -0.5603622796682695,
+          "windTarget": -0.9616567562916316,
+          "reserve": 0,
+          "charge": 0,
+          "brakeSeconds": 0,
+          "bursting": false,
+          "autoReleases": 0,
+          "poseMotion": 0.15902864504734915,
+          "gripErrors": [
+            2.7754646313521073e-7,
+            0.000001272672631975802
+          ],
+          "dock": null,
+          "flyaway": false
+        },
+        "contact": {
+          "support": "rear-wheels",
+          "local": [
+            0,
+            0,
+            -0.6424426436424254
+          ],
+          "world": [
+            11.177571128220215,
+            0,
+            -68.94975044592047
+          ],
+          "footError": 0.0020309698830387637,
+          "handError": 0,
+          "bounce": 0,
+          "bodyFlex": 0.5499999999999999,
+          "bodyHeight": 0.8911186992356894,
+          "footSpan": 0.375,
+          "locomotionWeight": 1
+        }
+      },
+      "eyes": {
+        "direction": [
+          3.499836265878537e-17,
+          -4.6664483545047154e-17,
+          -1
+        ],
+        "dot": 1
+      },
+      "exit": {
+        "position": [
+          10.900410099692397,
+          0.1226388888888889,
+          -71.02708190445509
+        ],
+        "state": "air",
+        "grounded": false,
+        "speed": 18.246412501725292,
+        "manual": 0,
+        "combo": 158,
+        "diagnostics": {
+          "started": true,
+          "released": false,
+          "releaseAge": -1,
+          "wind": -0.6363737755458828,
+          "windTarget": -0.9616567562916316,
+          "reserve": 0,
+          "charge": 0,
+          "brakeSeconds": 0,
+          "bursting": false,
+          "autoReleases": 0,
+          "poseMotion": 0.18551854356750813,
+          "gripErrors": [
+            2.7754646313521073e-7,
+            0.000001272672631975802
+          ],
+          "dock": null,
+          "flyaway": false
+        },
+        "contact": {
+          "support": "wheels",
+          "local": [
+            0,
+            0,
+            -0.4452388481199193
+          ],
+          "world": [
+            10.900410099692397,
+            0.1226388888888889,
+            -71.02708190445509
+          ],
+          "footError": 0.0009795708479272344,
+          "handError": 0,
+          "bounce": 0,
+          "bodyFlex": 0.6476044090363512,
+          "bodyHeight": 0.8768063921914114,
+          "footSpan": 0.375,
+          "locomotionWeight": 1
+        }
+      }
+    },
+    {
+      "type": -1,
+      "entered": {
+        "position": [
+          3.522750735464791,
+          0,
+          -16.596333820490475
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 17.51849690019499,
+        "manual": -1,
+        "combo": 100,
+        "diagnostics": {
+          "started": true,
+          "released": false,
+          "releaseAge": -1,
+          "wind": 0.787891471077808,
+          "windTarget": 0.8378311889246106,
+          "reserve": 0,
+          "charge": 0,
+          "brakeSeconds": 0,
+          "bursting": false,
+          "autoReleases": 0,
+          "poseMotion": 0.16929110377273615,
+          "gripErrors": [
+            2.7754646313521073e-7,
+            0.000001272672631975802
+          ],
+          "dock": null,
+          "flyaway": false
+        },
+        "contact": {
+          "support": "front-wheels",
+          "local": [
+            0,
+            0,
+            0.19720381381871097
+          ],
+          "world": [
+            3.522750735464791,
+            0,
+            -16.596333820490475
+          ],
+          "footError": 0.0019010385434850693,
+          "handError": 0,
+          "bounce": 0.25310296451878606,
+          "bodyFlex": 0.6534731023851683,
+          "bodyHeight": 0.8696070525210294,
+          "footSpan": 0.375,
+          "locomotionWeight": 1
+        }
+      },
+      "held": {
+        "position": [
+          11.177571128220215,
+          0,
+          -68.94519453616962
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 16.99724583505862,
+        "manual": -1,
+        "combo": 158,
+        "diagnostics": {
+          "started": true,
+          "released": false,
+          "releaseAge": -1,
+          "wind": -0.5603622796682695,
+          "windTarget": -0.9616567562916316,
+          "reserve": 0,
+          "charge": 0,
+          "brakeSeconds": 0,
+          "bursting": false,
+          "autoReleases": 0,
+          "poseMotion": 0.15902864504734915,
+          "gripErrors": [
+            2.7754646313521073e-7,
+            0.000001272672631975802
+          ],
+          "dock": null,
+          "flyaway": false
+        },
+        "contact": {
+          "support": "front-wheels",
+          "local": [
+            0,
+            0,
+            0.6424427032470702
+          ],
+          "world": [
+            11.177571128220215,
+            0,
+            -68.94519453616962
+          ],
+          "footError": 0.0017914927708734395,
+          "handError": 0,
+          "bounce": 0,
+          "bodyFlex": 0.5499999999999999,
+          "bodyHeight": 0.9373459155917476,
+          "footSpan": 0.375,
+          "locomotionWeight": 1
+        }
+      },
+      "eyes": {
+        "direction": [
+          3.499836265878537e-17,
+          -4.6664483545047154e-17,
+          -1
+        ],
+        "dot": 1
+      },
+      "exit": {
+        "position": [
+          10.900410099692397,
+          0.1226388888888889,
+          -71.02252599470424
+        ],
+        "state": "air",
+        "grounded": false,
+        "speed": 18.246412501725292,
+        "manual": 0,
+        "combo": 158,
+        "diagnostics": {
+          "started": true,
+          "released": false,
+          "releaseAge": -1,
+          "wind": -0.6363737755458828,
+          "windTarget": -0.9616567562916316,
+          "reserve": 0,
+          "charge": 0,
+          "brakeSeconds": 0,
+          "bursting": false,
+          "autoReleases": 0,
+          "poseMotion": 0.18551854356750813,
+          "gripErrors": [
+            2.7754646313521073e-7,
+            0.000001272672631975802
+          ],
+          "dock": null,
+          "flyaway": false
+        },
+        "contact": {
+          "support": "wheels",
+          "local": [
+            0,
+            0,
+            0.44523888942835926
+          ],
+          "world": [
+            10.900410099692397,
+            0.1226388888888889,
+            -71.02252599470424
+          ],
+          "footError": 0.0013084241099750142,
+          "handError": 0,
+          "bounce": 0,
+          "bodyFlex": 0.6476044090363512,
+          "bodyHeight": 0.9262846530486127,
+          "footSpan": 0.375,
+          "locomotionWeight": 1
+        }
+      }
+    }
+  ],
+  "poses": [
+    {
+      "speed": 7.5,
+      "yawRange": 0.09797432826739694,
+      "motion": 0.10000087538707686,
+      "minGaze": 0.9999999999999999,
+      "maxGrip": 0.0000016099954220426875,
+      "canopy": [
+        6.419280995023125,
+        8.441919789824427,
+        -28
+      ]
+    },
+    {
+      "speed": 17,
+      "yawRange": 0.07624769768197699,
+      "motion": 0.1635410760535495,
+      "minGaze": 0.9999999999999999,
+      "maxGrip": 0.0000016034181421769049,
+      "canopy": [
+        6.419280995023125,
+        8.441919789824427,
+        -28
+      ]
+    },
+    {
+      "speed": 31.05,
+      "yawRange": 0.2638640846052129,
+      "motion": 0.9987585330509888,
+      "minGaze": 0.9999999999999999,
+      "maxGrip": 0.000022977497978707305,
+      "canopy": [
+        6.419280995023125,
+        8.441919789824427,
+        -28
+      ]
+    }
+  ],
+  "landingManual": {
+    "position": [
+      8.055897994797858,
+      0,
+      -86.58235085582093
+    ],
+    "state": "ride",
+    "grounded": true,
+    "speed": 17.77984995703605,
+    "manual": 1,
+    "combo": 258,
+    "diagnostics": {
+      "started": true,
+      "released": false,
+      "releaseAge": -1,
+      "wind": -0.8933030686892458,
+      "windTarget": -0.9616567562916316,
+      "reserve": 0,
+      "charge": 0,
+      "brakeSeconds": 0,
+      "bursting": false,
+      "autoReleases": 0,
+      "poseMotion": 0.1748566008616231,
+      "gripErrors": [
+        2.7754646313521073e-7,
+        0.000001272672631975802
+      ],
+      "dock": null,
+      "flyaway": false
+    },
+    "contact": {
+      "support": "rear-wheels",
+      "local": [
+        0,
+        0,
+        -0.19720379318880646
+      ],
+      "world": [
+        8.055897994797858,
+        0,
+        -86.58235085582093
+      ],
+      "footError": 0.000990409752938446,
+      "handError": 0,
+      "bounce": 0.25310296451878606,
+      "bodyFlex": 0.7490867632435563,
+      "bodyHeight": 0.8660441091324358,
+      "footSpan": 0.375,
+      "locomotionWeight": 1
+    }
+  },
+  "failedManual": {
+    "position": [
+      7.993739309214876,
+      0,
+      -86.87850113288265
+    ],
+    "state": "dead",
+    "grounded": true,
+    "speed": 0,
+    "manual": 0,
+    "combo": 0,
+    "diagnostics": {
+      "started": true,
+      "released": false,
+      "releaseAge": -1,
+      "wind": -0.8953232254563263,
+      "windTarget": -0.9616567562916316,
+      "reserve": 0,
+      "charge": 0,
+      "brakeSeconds": 0,
+      "bursting": false,
+      "autoReleases": 0,
+      "poseMotion": 0.1,
+      "gripErrors": [
+        2.7754646313521073e-7,
+        0.000001272672631975802
+      ],
+      "dock": null,
+      "flyaway": true,
+      "fragments": [
+        {
+          "name": "wrist-left",
+          "position": [
+            7.676249312399645,
+            1.5822602955847616,
+            -86.87300056363753
+          ]
+        },
+        {
+          "name": "wrist-right",
+          "position": [
+            8.555561455289762,
+            1.5921978980649762,
+            -86.88521066512467
+          ]
+        }
+      ]
+    },
+    "contact": {
+      "support": "rear-wheels",
+      "local": [
+        0,
+        0,
+        -0.19720379318880646
+      ],
+      "world": [
+        8.055897994797858,
+        0,
+        -86.58235085582093
+      ],
+      "footError": 0.000990409752938446,
+      "handError": 0,
+      "bounce": 0.25310296451878606,
+      "bodyFlex": 0.7490867632435563,
+      "bodyHeight": 0.8660441091324358,
+      "footSpan": 0.375,
+      "locomotionWeight": 1
+    }
+  },
+  "burst": {
+    "position": [
+      7.341769646128093,
+      0,
+      -27.794192012662062
+    ],
+    "state": "ride",
+    "grounded": true,
+    "speed": 21.54399795270146,
+    "manual": 0,
+    "combo": 0,
+    "diagnostics": {
+      "started": true,
+      "released": false,
+      "releaseAge": -1,
+      "wind": 0.8311398323169837,
+      "windTarget": 0.8378311889246106,
+      "reserve": 0,
+      "charge": 0,
+      "brakeSeconds": 0,
+      "bursting": false,
+      "autoReleases": 1,
+      "poseMotion": 0.2908719223533349,
+      "gripErrors": [
+        2.7754646313521073e-7,
+        0.000001272672631975802
+      ],
+      "dock": null,
+      "flyaway": false,
+      "fragments": []
+    },
+    "contact": {
+      "support": "wheels",
+      "local": [
+        0,
+        0,
+        0
+      ],
+      "world": [
+        7.341769646128093,
+        0,
+        -27.794192012662062
+      ],
+      "footError": 0.0015967832704242922,
+      "handError": 0,
+      "bounce": 0,
+      "bodyFlex": 0.6499999999999999,
+      "bodyHeight": 0.8936898988179092,
+      "footSpan": 0.375,
+      "locomotionWeight": 1
+    }
+  },
+  "startBoundary": {
+    "position": [
+      0,
+      12.000000011920928,
+      23.47
+    ],
+    "state": "ride",
+    "grounded": true,
+    "speed": 0,
+    "manual": 0,
+    "combo": 0,
+    "diagnostics": {
+      "started": false,
+      "released": true,
+      "releaseAge": 2.9999999999999942,
+      "wind": 0,
+      "windTarget": 0.6477650594897568,
+      "reserve": 0,
+      "charge": 0,
+      "brakeSeconds": 0,
+      "bursting": false,
+      "autoReleases": 0,
+      "poseMotion": 0.1,
+      "gripErrors": [
+        2.7754646313521073e-7,
+        0.000001272672631975802
+      ],
+      "dock": null,
+      "flyaway": true,
+      "fragments": []
+    },
+    "contact": {
+      "support": "wheels",
+      "local": [
+        0,
+        0,
+        0
+      ],
+      "world": [
+        10.846401890567853,
+        0,
+        -49.00777329869683
+      ],
+      "footError": 0.0017277444044403948,
+      "handError": 0,
+      "bounce": 0,
+      "bodyFlex": 0.6499999999999999,
+      "bodyHeight": 0.8985244325143855,
+      "footSpan": 0.375,
+      "locomotionWeight": 1
+    }
+  },
+  "endBoundary": {
+    "position": [
+      0,
+      7.000000011920929,
+      -3027.77
+    ],
+    "state": "ride",
+    "grounded": true,
+    "speed": 0,
+    "manual": 0,
+    "combo": 0,
+    "diagnostics": {
+      "started": false,
+      "released": true,
+      "releaseAge": 4.9166666666666545,
+      "wind": 0,
+      "windTarget": -0.11902251141145825,
+      "reserve": 0,
+      "charge": 0,
+      "brakeSeconds": 0,
+      "bursting": false,
+      "autoReleases": 0,
+      "poseMotion": 0.1,
+      "gripErrors": [
+        2.7754646313521073e-7,
+        0.000001272672631975802
+      ],
+      "dock": null,
+      "flyaway": true,
+      "fragments": []
+    },
+    "contact": {
+      "support": "wheels",
+      "local": [
+        0,
+        0,
+        0
+      ],
+      "world": [
+        10.846401890567853,
+        0,
+        -49.00777329869683
+      ],
+      "footError": 0.0017277444044403948,
+      "handError": 0,
+      "bounce": 0,
+      "bodyFlex": 0.6499999999999999,
+      "bodyHeight": 0.8985244325143855,
+      "footSpan": 0.375,
+      "locomotionWeight": 1
+    }
+  },
+  "pass": true,
+  "finished": "2026-10-28T08:43:26.008Z"
+}

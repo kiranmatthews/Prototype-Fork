@@ -3,7 +3,7 @@ import { createRaceRivalHead, createRaceRivalShirt, attachRaceRivalShorts, type 
 import type { RacePlayerHooks } from './race/types';
 import { surfaceGrip } from './surfaceBehavior';
 import type { LoopCameraFrame, LoopFallCameraFrame } from './loopCamera';
-import { LOOP_TURN, loopContactPressure, sampleLoop, stepLoopMotion, type LoopShape } from './loopRide';
+import { LOOP_TURN, loopAngleAt, loopContactPressure, sampleLoop, stepLoopMotion, type LoopShape } from './loopRide';
 import { sampleTeeterMotion, probeTeeterEdge } from './teeterMotion';
 import { SkateBalanceArms, SKATE_UNDER_RAIL_DEPTH, SKATE_UNDER_RAIL_TRANSITION, sampleUnderRailMotion, SKATE_REVERT_DURATION, sampleSkateRevert } from './skateBodyMotion';
 import { skateGrabTweakElasticity, skateUnderRailElasticity, skate900Elasticity, skateBackflipElasticity, skateFootFlipElasticity, skateImpossibleElasticity, skateRevertElasticity, skateVertElasticity, SKATE_UNDER_RAIL_ARM_LIMIT } from './animation/elasticity';
@@ -624,10 +624,19 @@ export class Player {
   private kiteDock: KiteBonusDock | null = null;
   private kiteReleaseT = -1;
   private kiteFinishJump = false;
+  private readonly kiteGazeFrom = new THREE.Vector3();
+  private readonly kiteGazeTo = new THREE.Vector3();
+  private readonly kiteGazeParent = new THREE.Matrix4();
+  private readonly kiteGazeTurn = new THREE.Quaternion();
+  private get kitePoseMotion(): number {
+    const t=THREE.MathUtils.clamp((this.speed-KITE_TOW.brakeFloor)/(TUNING.maxSpeed*KITE_TOW.speedScale-KITE_TOW.brakeFloor),0,1);
+    return .10+.90*t*t*t;
+  }
   get kiteReleased(): boolean { return this.kiteReleaseT >= 0; }
   get kiteBonusDocked(): boolean { return this.kiteDock !== null; }
   get kiteDiagnostics() { return {started:this.kiteMotion.started,released:this.kiteReleased,releaseAge:this.kiteReleaseT,wind:this.kiteMotion.wind,
     windTarget:this.kiteMotion.windTarget,reserve:this.kiteMotion.reserve,charge:this.kiteMotion.charge,
+    brakeSeconds:this.kiteMotion.brakeSeconds,bursting:this.kiteMotion.bursting,autoReleases:this.kiteMotion.autoReleases,poseMotion:this.kitePoseMotion,
     gripErrors:this.kiteVisual?.gripErrors,dock:this.kiteDock?{elapsed:this.kiteDock.elapsed,
       errors:this.kiteDock.errors,normalErrors:this.kiteDock.normalErrors}:null,
     flyaway:this.kiteVisual?.flyingAway,fragments:this.breakApart?.tetherDiagnostics}; }
@@ -1596,7 +1605,7 @@ export class Player {
   private loopFall = false;
   private loopFailure: {elapsed:number;tumbleStarted:boolean;side:THREE.Vector3;backward:THREE.Vector3;normal:THREE.Vector3;focus:THREE.Vector3;rollAxis:THREE.Vector3}|null=null;
   private readonly completedLoops = new Set<THREE.Object3D>();
-  private loopGateHintShown = false;
+  private parkGoalHintShown = false;
   private railCand: { rail: Rail; sample: RailSample } | null = null;
   private lean = 0;
 
@@ -3907,7 +3916,7 @@ export class Player {
     this.authoredVertReturnInput = null;
     this.cameraPoseStandingCenter = null;
     this.completedLoops.clear();
-    this.loopGateHintShown = false;
+    this.parkGoalHintShown = false;
     this.clearCoyoteJumpWindow();
     this.crateFloorT = 0; // a respawn never inherits "stood on a box"
     this.crateFloor = null;
@@ -4112,7 +4121,7 @@ export class Player {
     this.spinCd = Math.max(0, this.spinCd - dt);
     this.regrindCd = Math.max(0, this.regrindCd - dt);
     if (!input.grindHeld) this.grindLatched = false;
-    if (this.comboPoints > 0 && this.grounded && this.state === 'ride') {
+    if (this.comboPoints > 0 && this.grounded && this.state === 'ride' && this.manualing === 0) {
       this.comboTimer -= dt;
       if (this.comboTimer <= 0) this.bankCombo();
     }
@@ -4125,8 +4134,12 @@ export class Player {
     this.airFromSkate = !this.grounded;
     this.airGrav = 'board';
     this.walkVelocity.set(0, 0, 0);
+    this.updateManualInput(dt);
     const grinding = this.state === 'grind';
-    const motion = this.kiteMotion.step(dt, -this.pos.z, this.grounded || grinding, towInput, TUNING);
+    const releases = this.kiteMotion.autoReleases;
+    const motion = this.kiteMotion.step(dt, -this.pos.z, this.grounded || grinding,
+      this.manualing ? {...towInput,moveY:0} : towInput, TUNING);
+    if(this.kiteMotion.autoReleases!==releases)sfx.play('woosh2',.7,1.3);
     this.speed = this.kiteMotion.speed;
     if (!grinding) {
       this.axisF.set(0, 0, -1); this.axisL.set(1, 0, 0);
@@ -4181,9 +4194,13 @@ export class Player {
         this.airFromSkate = true; this.airborneT = 0; this.airPeakY = this.pos.y;
       }
     }
+    if (!this.stepManualBalance(dt)) { this.finishVisualStep(input,dt); return; }
     if (!this.ttActive && !this.comboRun) {
       const pad=level.catchKiteBonus(this.prevPos,this.pos);
-      if(pad){this.kiteDock=new KiteBonusDock(pad,this.pos.clone());this.speed=this.vVel=0;this.state='ride';this.grounded=true;}
+      if(pad){
+        if(this.manualing)this.endManual();this.manualArmed=0;this.manualArmT=0;
+        this.kiteDock=new KiteBonusDock(pad,this.pos.clone());this.speed=this.vVel=0;this.state='ride';this.grounded=true;
+      }
     }
     this.updateSpin(dt, input);
     this.updateSparks(dt); this.updatePuffs(); this.updateFlyBoard(dt, level);
@@ -4215,6 +4232,7 @@ export class Player {
     this.cancelWipeoutActions();
     this.kiteReleaseT = 0; this.kiteFinishJump = false;
     this.kiteMotion.charge = this.kiteMotion.reserve = 0;
+    this.kiteMotion.brakeSeconds = 0; this.kiteMotion.bursting = this.kiteMotion.braking = false;
     this.kiteMotion.charging = false;
     this.kiteVisual?.beginFlyaway();
     this.freeSkate = this.skateOn = this.airFromSkate = this.boardOllieAir = false;
@@ -4470,49 +4488,9 @@ export class Player {
       this.updateFruit(dt, level);
       return;
     }
-    // MANUAL FLICK: watch the raw stick's vertical axis for the two-beat flick.
-    // Up-then-down pops a manual (nose up), down-then-up a nose manual. On the
-    // ground it fires immediately; mid-air it ARMS a land-into-manual for a
-    // beat, so finishing the flick just before touchdown keeps the combo alive.
-    this.flickUpT += dt;
-    this.flickDownT += dt;
-    this.manualArmT = Math.max(0, this.manualArmT - dt);
+    this.updateManualInput(dt);
     this.ropeCoolT = Math.max(0, this.ropeCoolT - dt);
     this.vertLandGraceT = Math.max(0, this.vertLandGraceT - dt);
-    {
-      const my = this.rawInput.moveY;
-      const win = TUNING.manualFlickWindow;
-      if (my > 0.6 && this.prevMoveY <= 0.6) {
-        if (this.flickDownT < win) this.tryManual(-1); // down-then-up: nose manual
-        this.flickUpT = 0;
-      } else if (my < -0.6 && this.prevMoveY >= -0.6) {
-        if (this.flickUpT < win) this.tryManual(1); // up-then-down: manual
-        this.flickDownT = 0;
-      }
-      this.prevMoveY = my;
-    }
-    // A manual lives on rideable ground — but courses ROLL: going light over
-    // a crest (a few airborne frames) must not drop it. A short coyote window
-    // carries the manual across bumps; real departures still end it. An ollie
-    // out is unaffected — the jump ends the manual explicitly before takeoff.
-    if (this.manualing !== 0) {
-      if (this.state !== 'ride' && this.state !== 'air') this.endManual();
-      else if (this.state !== 'ride' || !this.grounded) {
-        this.manualCoyoteT += dt;
-        if (this.manualCoyoteT > TUNING.manualCoyote) this.endManual();
-      } else this.manualCoyoteT = 0;
-    }
-    // ARMED LAND-INTO-MANUAL: retry every grounded frame while the window
-    // lasts — the touchdown frame itself can be inhospitable (a steep patch,
-    // a speed dip) and one bad frame must not eat the flick.
-    if (
-      this.manualing === 0 &&
-      this.manualArmed !== 0 &&
-      this.manualArmT > 0 &&
-      this.canManual()
-    ) {
-      this.enterManual(this.manualArmed);
-    }
     // ZONES (built-in levels): the path can right-angle into an X-running
     // stretch — there the camera holds its frame and the turned path IS the
     // side-scroll view, so axes flip the instant you cross a corner (no lock,
@@ -6363,7 +6341,7 @@ export class Player {
     // them back to the base; ordinary walking snaps can otherwise fight gravity
     // forever on a steep facet. Recovery never grants a completed-loop goal.
     const landedLoop = this.loopFall && this.grounded ? this.groundHit?.mesh : null;
-    if (!this.isBailing && landedLoop?.userData.loopRadius) {
+    if (!this.isBailing && landedLoop?.userData.loopRadius && landedLoop.userData.loopKind !== 'wall') {
       const shape: LoopShape = { radius: landedLoop.userData.loopRadius,
         width: landedLoop.userData.loopWidth, offset: landedLoop.userData.loopOffset };
       const local = landedLoop.worldToLocal(this.pos.clone());
@@ -6380,10 +6358,10 @@ export class Player {
     if (!this.loopRide) {
       for (const mesh of level.loopMeshes ?? []) {
         const shape: LoopShape = { radius: mesh.userData.loopRadius,
-          width: mesh.userData.loopWidth, offset: mesh.userData.loopOffset };
+          width: mesh.userData.loopWidth, offset: mesh.userData.loopOffset, kind: mesh.userData.loopKind };
         const local = mesh.worldToLocal(this.pos.clone());
         if (local.z > 0.8 || local.z < -shape.radius * 0.2 || Math.abs(local.y) > 1.1) continue;
-        const angle = Math.max(0, Math.atan2(-local.z, shape.radius - local.y));
+        const angle = local.z > 0 ? 0 : loopAngleAt(shape, local.toArray());
         if (angle > 0.2) continue;
         const sample = sampleLoop(shape, angle);
         const lateral = local.x - sample.point[0];
@@ -6447,7 +6425,7 @@ export class Player {
       this.airborneT = 0;
       this.airPeakY = this.pos.y;
       this.clearCoyoteJumpWindow();
-      const rollAxis=new THREE.Vector3(1,0,0).transformDirection(ride.mesh.matrixWorld);
+      const rollAxis=ride.shape.kind==='wall'?new THREE.Vector3().crossVectors(tangent,normal).normalize():new THREE.Vector3(1,0,0).transformDirection(ride.mesh.matrixWorld);
       const edgeFall=Math.abs(ride.lateral)>ride.shape.width/2-.1;
       // A small peel-away reaction separates the falling body from the ribbon;
       // preserve its carried tangent and lateral motion rather than parking it.
@@ -6466,12 +6444,7 @@ export class Player {
     } else if (result.complete) {
       if (!ride.recovering) {
         this.completedLoops.add(ride.mesh);
-        this.loopGateHintShown = false;
-        const required=level.loopMeshes.filter(mesh=>mesh.userData.loopRequired);
-        const remaining=required.filter(mesh=>!this.completedLoops.has(mesh)).length;
-        // Leave the next high-speed approach visible between chained loops.
         if(this.competitionMode)this.score(1000,'Loop of Death');
-        else if(remaining===0)this.onCourseHint(required.length>1?'ALL LOOPS CLEAR':'LOOP COMPLETE','Exit unlocked — ride out!');
       }
       this.loopRide = null;
       // Recovery can leave backward at the entrance; preserve that real velocity.
@@ -6521,13 +6494,10 @@ export class Player {
     }
     this.loopRenderLocal.copy(this.renderPosition);
     ride.mesh.worldToLocal(this.loopRenderLocal);
-    const angle = Math.atan2(-this.loopRenderLocal.z, ride.shape.radius - this.loopRenderLocal.y);
-    const pitch = ride.shape.offset / LOOP_TURN;
-    const length = Math.hypot(ride.shape.radius, pitch);
-    this.loopRenderFrame.normal.set(0, Math.cos(angle), Math.sin(angle))
-      .transformDirection(ride.mesh.matrixWorld);
-    this.loopRenderFrame.tangent.set(pitch / length, ride.shape.radius * Math.sin(angle) / length,
-      -ride.shape.radius * Math.cos(angle) / length).transformDirection(ride.mesh.matrixWorld)
+    const angle = loopAngleAt(ride.shape, this.loopRenderLocal.toArray());
+    const sample = sampleLoop(ride.shape, angle);
+    this.loopRenderFrame.normal.set(...sample.normal).transformDirection(ride.mesh.matrixWorld);
+    this.loopRenderFrame.tangent.set(...sample.tangent).transformDirection(ride.mesh.matrixWorld)
       .multiplyScalar(Math.sign(this.speed || 1));
     return this.loopRenderFrame;
   }
@@ -7455,55 +7425,7 @@ export class Player {
       }
     }
 
-    // MANUAL: balanced on two wheels while everything else about riding keeps
-    // working (carve, slopes, the combo window). The needle lives on the PITCH
-    // axis — up/down on the stick fights it (reusing the grind balance field, so
-    // the balance arms/flail visuals just work). Pegging past the grace = the
-    // honest bail; rolling too slow / steep ground / leaving the deck simply
-    // drops you back onto four wheels, combo timer still running.
-    if (this.manualing !== 0) {
-      if (this.manualCoyoteT > 0 || !this.grounded) {
-        // light over a crest: the coyote window upstairs owns the drop —
-        // freeze the needle so airborne frames never punish the balance
-      } else if (!this.canHoldManual()) {
-        this.endManual();
-      } else {
-        this.balanceAge += dt;
-        this.balanceEntryAge += dt;
-        const ramp = Math.min(
-          Math.max(0, TUNING.balanceRampMax - 1),
-          Math.max(0, this.balanceAge - TUNING.balanceGrace) * TUNING.balanceRamp * 1.5,
-        );
-        const instability = TUNING.manualDrift * (1 + ramp);
-        const runSign = Math.sign(this.balance || this.manualing);
-        let control = -this.rawInput.moveY * TUNING.manualControl; // up/down fights the pitch needle
-        control *= this.safeGain(this.balanceEntryAge, control, runSign);
-        const settle = this.balanceEntryEase(TUNING.manualCalm);
-        this.stepBalanceCore(dt, runSign, instability * settle, control, ramp, settle);
-        if (this.uberTimer > 0 || this.balanceBoostT > 0) {
-          this.balance = 0;
-          this.balanceVel = 0;
-        }
-        if (Math.abs(this.balance) >= 1) {
-          this.balance = Math.sign(this.balance);
-          if (Math.sign(this.balanceVel) === this.balance) this.balanceVel = 0;
-          this.balanceCritT += dt;
-          if (this.balanceCritT > TUNING.bailGrace) {
-            // bail() captures the live needle and manual type before cancelling
-            // actions. Its body fall and deck slip must be opposite directions.
-            this.bail();
-            return;
-          }
-        } else {
-          this.balanceCritT = 0;
-        }
-        this.manualTickT += dt;
-        while (this.manualTickT >= 0.25) {
-          this.manualTickT -= 0.25;
-          this.awardHeldScore('manual',.25,CONST.ptsManualTick*4);
-        }
-      }
-    }
+    if (!this.stepManualBalance(dt)) return;
 
     // The exact slide envelope owns its speed as well as its displacement.
     // Generic slope/overspeed bookkeeping above may inspect the frame, but it
@@ -10386,6 +10308,104 @@ export class Player {
   }
 
   // ------------------------------------------------------------------ manual --
+
+  private updateManualInput(dt: number): void {
+    // MANUAL FLICK: watch the raw stick's vertical axis for the two-beat flick.
+    // Up-then-down pops a manual (nose up), down-then-up a nose manual. On the
+    // ground it fires immediately; mid-air it ARMS a land-into-manual for a
+    // beat, so finishing the flick just before touchdown keeps the combo alive.
+    this.flickUpT += dt;
+    this.flickDownT += dt;
+    this.manualArmT = Math.max(0, this.manualArmT - dt);
+    {
+      const my = this.rawInput.moveY;
+      const win = TUNING.manualFlickWindow;
+      if (my > 0.6 && this.prevMoveY <= 0.6) {
+        if (this.flickDownT < win) this.tryManual(-1); // down-then-up: nose manual
+        this.flickUpT = 0;
+      } else if (my < -0.6 && this.prevMoveY >= -0.6) {
+        if (this.flickUpT < win) this.tryManual(1); // up-then-down: manual
+        this.flickDownT = 0;
+      }
+      this.prevMoveY = my;
+    }
+    // A manual lives on rideable ground — but courses ROLL: going light over
+    // a crest (a few airborne frames) must not drop it. A short coyote window
+    // carries the manual across bumps; real departures still end it. An ollie
+    // out is unaffected — the jump ends the manual explicitly before takeoff.
+    if (this.manualing !== 0) {
+      if (this.state !== 'ride' && this.state !== 'air') this.endManual();
+      else if (this.state !== 'ride' || !this.grounded) {
+        this.manualCoyoteT += dt;
+        if (this.manualCoyoteT > TUNING.manualCoyote) this.endManual();
+      } else this.manualCoyoteT = 0;
+    }
+    // ARMED LAND-INTO-MANUAL: retry every grounded frame while the window
+    // lasts — the touchdown frame itself can be inhospitable (a steep patch,
+    // a speed dip) and one bad frame must not eat the flick.
+    if (
+      this.manualing === 0 &&
+      this.manualArmed !== 0 &&
+      this.manualArmT > 0 &&
+      this.canManual()
+    ) {
+      this.enterManual(this.manualArmed);
+    }
+  }
+
+  private stepManualBalance(dt: number): boolean {
+    // MANUAL: balanced on two wheels while everything else about riding keeps
+    // working (carve, slopes, the combo window). The needle lives on the PITCH
+    // axis — up/down on the stick fights it (reusing the grind balance field, so
+    // the balance arms/flail visuals just work). Pegging past the grace = the
+    // honest bail; rolling too slow / steep ground / leaving the deck simply
+    // drops you back onto four wheels, combo timer still running.
+    if (this.manualing !== 0) {
+      if (this.manualCoyoteT > 0 || !this.grounded) {
+        // light over a crest: the coyote window upstairs owns the drop —
+        // freeze the needle so airborne frames never punish the balance
+      } else if (!this.canHoldManual()) {
+        this.endManual();
+      } else {
+        this.balanceAge += dt;
+        this.balanceEntryAge += dt;
+        const ramp = Math.min(
+          Math.max(0, TUNING.balanceRampMax - 1),
+          Math.max(0, this.balanceAge - TUNING.balanceGrace) * TUNING.balanceRamp * 1.5,
+        );
+        const instability = TUNING.manualDrift * (1 + ramp);
+        const runSign = Math.sign(this.balance || this.manualing);
+        let control = -this.rawInput.moveY * TUNING.manualControl; // up/down fights the pitch needle
+        control *= this.safeGain(this.balanceEntryAge, control, runSign);
+        const settle = this.balanceEntryEase(TUNING.manualCalm);
+        this.stepBalanceCore(dt, runSign, instability * settle, control, ramp, settle);
+        if (this.uberTimer > 0 || this.balanceBoostT > 0) {
+          this.balance = 0;
+          this.balanceVel = 0;
+        }
+        if (Math.abs(this.balance) >= 1) {
+          this.balance = Math.sign(this.balance);
+          if (Math.sign(this.balanceVel) === this.balance) this.balanceVel = 0;
+          this.balanceCritT += dt;
+          if (this.balanceCritT > TUNING.bailGrace) {
+            // bail() captures the live needle and manual type before cancelling
+            // actions. Its body fall and deck slip must be opposite directions.
+            this.bail();
+            return false;
+          }
+        } else {
+          this.balanceCritT = 0;
+        }
+        this.manualTickT += dt;
+        while (this.manualTickT >= 0.25) {
+          this.manualTickT -= 0.25;
+          this.awardHeldScore('manual',.25,CONST.ptsManualTick*4);
+        }
+      }
+    }
+
+    return true;
+  }
 
   // The stick flick landed: pop a manual now (on the ground) or, mid-air, arm
   // a LAND-INTO-manual for a beat.
@@ -14161,17 +14181,12 @@ export class Player {
     if (this.kiteReleased && this.grounded && !onPad) this.kiteFinishJump = false;
     const finishReady = !level.kiteTow || this.kiteReleased && this.kiteFinishJump;
     const touchingFinish = finishReady && (onPad || this.playerBox.intersectsBox(level.finishGlow));
-    const loopGoalsComplete = !level.loopMeshes?.some(mesh => mesh.userData.loopRequired && !this.completedLoops.has(mesh));
     const parkGoalsComplete = !level.skateCollectathon || level.skateCollectathon.complete;
-    if (touchingFinish && !parkGoalsComplete && !this.loopGateHintShown) {
-      this.loopGateHintShown = true;
+    if (touchingFinish && !parkGoalsComplete && !this.parkGoalHintShown) {
+      this.parkGoalHintShown = true;
       this.onCourseHint('EXIT LOCKED', `${level.skateCollectathon!.collected}/${level.skateCollectathon!.tokens.length} tokens — explore above`);
-    } else if (touchingFinish && !loopGoalsComplete && !this.loopGateHintShown) {
-      this.loopGateHintShown = true;
-      const required=level.loopMeshes.filter(mesh=>mesh.userData.loopRequired).length;
-      this.onCourseHint('LOOP STILL CLOSED', required>1?`Complete all ${required} loops to unlock the exit`:'Complete the Loop of Death to unlock the exit');
-    } else if (!touchingFinish) this.loopGateHintShown = false;
-    if (!level.skateRace && !this.competitionMode && loopGoalsComplete && parkGoalsComplete && (level.boss ? level.boss.canFinish : touchingFinish)) {
+    } else if (!touchingFinish) this.parkGoalHintShown = false;
+    if (!level.skateRace && !this.competitionMode && parkGoalsComplete && (level.boss ? level.boss.canFinish : touchingFinish)) {
       this.bankCombo(); // whatever is pending counts as you arrive
       sfx.play('lifeGet', 1.0);
       this.state = 'finished';
@@ -18329,6 +18344,7 @@ export class Player {
         targetYaw = wrapAngle(Math.atan2(vx, vz) - Math.PI);
       }
     }
+    if (this.kiteTowing && this.state !== 'grind') targetYaw *= this.kitePoseMotion;
     if (intentFacing) {
       // Pure lateral reversals are exactly PI apart, where "shortest" has no
       // unique sign. Turn toward screen-right clockwise and screen-left
@@ -19840,6 +19856,18 @@ export class Player {
         this.armL && this.elbowL && this.wristL ? {root: this.armL, mid: this.elbowL, end: this.wristL, grip: this.gloveRight?.gripSocket} : null,
         this.armR && this.elbowR && this.wristR ? {root: this.armR, mid: this.elbowR, end: this.wristR, grip: this.gloveLeft?.gripSocket} : null,
         this.cam?.aspect ?? 1.6);
+      // Aim the actual eye socket down the course after all torso/neck layers.
+      // Transform into the neck parent's coordinates so stretched segments
+      // cannot bend the gaze sideways. Hands and deck contacts remain owned.
+      const eye=this.headLookSocket??this.headM;
+      if(this.headM?.parent&&eye){
+        this.headM.parent.updateWorldMatrix(true,true);
+        this.kiteGazeParent.copy(this.headM.parent.matrixWorld).invert();
+        eye.getWorldDirection(this.kiteGazeFrom).transformDirection(this.kiteGazeParent);
+        this.kiteGazeTo.copy(this.axisF).transformDirection(this.kiteGazeParent);
+        this.headM.quaternion.premultiply(this.kiteGazeTurn.setFromUnitVectors(this.kiteGazeFrom,this.kiteGazeTo));
+        this.headM.updateWorldMatrix(false,true);
+      }
     } else if (this.kiteVisual) this.kiteVisual.root.visible = this.kiteVisual.flyingAway;
     // Apply lift AFTER deck planting; otherwise the contact solver cancels
     // the hop. The skateboard and physics point remain on their exact path.

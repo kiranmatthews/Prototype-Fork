@@ -1,0 +1,17 @@
+[
+  {
+    "check": "check:levels",
+    "exit": 0,
+    "log": "/private/tmp/kart-live-check-levels.log"
+  },
+  {
+    "check": "build",
+    "exit": 0,
+    "log": "/private/tmp/kart-live-build.log"
+  },
+  {
+    "check": "check:release",
+    "exit": 0,
+    "log": "/private/tmp/kart-live-check-release.log"
+  }
+]

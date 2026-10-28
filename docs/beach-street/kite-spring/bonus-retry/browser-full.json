@@ -1,0 +1,168 @@
+{
+  "started": "2026-10-28T08:29:17.519Z",
+  "base": "http://127.0.0.1:5288",
+  "lite": false,
+  "errors": [],
+  "failed": [],
+  "pad": {
+    "x": 2.7,
+    "y": 8.800000011920929,
+    "z": -1494.841365803701,
+    "laneFraction": 0.5,
+    "topY": 9.85000001192093,
+    "radius": 1.6,
+    "modelReady": true,
+    "tilt": 1.2566370614359172
+  },
+  "successPoint": [
+    0,
+    7.100000011920929,
+    -1497.241365803701
+  ],
+  "before": {
+    "level": "coastal-street-run",
+    "position": [
+      2.7,
+      7.000000011920929,
+      -1478.841365803701
+    ],
+    "state": "ride",
+    "speed": 0,
+    "grounded": true,
+    "started": false,
+    "docked": false,
+    "lives": 4,
+    "crates": 1,
+    "stamp": "Codex/sol fork · build 10-28 08:18 UTC"
+  },
+  "beforeBonus": {
+    "level": "coastal-street-run",
+    "position": [
+      2.4844704724565605,
+      7.068709735823455,
+      -1493.5173327571965
+    ],
+    "state": "ride",
+    "speed": 0,
+    "grounded": true,
+    "started": true,
+    "docked": true,
+    "lives": 4,
+    "crates": 1,
+    "stamp": "Codex/sol fork · build 10-28 08:18 UTC"
+  },
+  "firstEntry": {
+    "level": "bonus:coastal-street-run",
+    "position": [
+      -5,
+      0,
+      0
+    ],
+    "state": "ride",
+    "speed": 0,
+    "grounded": true,
+    "started": false,
+    "docked": false,
+    "lives": 0,
+    "crates": 0,
+    "stamp": "Codex/sol fork · build 10-28 08:18 UTC"
+  },
+  "firstReturn": {
+    "level": "coastal-street-run",
+    "position": [
+      2.7,
+      7.000000011920929,
+      -1478.841365803701
+    ],
+    "state": "ride",
+    "speed": 0,
+    "grounded": true,
+    "started": false,
+    "docked": false,
+    "lives": 4,
+    "crates": 1,
+    "stamp": "Codex/sol fork · build 10-28 08:18 UTC"
+  },
+  "waiting": {
+    "level": "coastal-street-run",
+    "position": [
+      2.7,
+      7.000000011920929,
+      -1478.841365803701
+    ],
+    "state": "ride",
+    "speed": 0,
+    "grounded": true,
+    "started": false,
+    "docked": false,
+    "lives": 4,
+    "crates": 1,
+    "stamp": "Codex/sol fork · build 10-28 08:18 UTC"
+  },
+  "secondEntry": {
+    "level": "bonus:coastal-street-run",
+    "position": [
+      -5,
+      0,
+      0
+    ],
+    "state": "ride",
+    "speed": 0,
+    "grounded": true,
+    "started": false,
+    "docked": false,
+    "lives": 0,
+    "crates": 0,
+    "stamp": "Codex/sol fork · build 10-28 08:18 UTC"
+  },
+  "secondReturn": {
+    "level": "coastal-street-run",
+    "position": [
+      2.7,
+      7.000000011920929,
+      -1478.841365803701
+    ],
+    "state": "ride",
+    "speed": 0,
+    "grounded": true,
+    "started": false,
+    "docked": false,
+    "lives": 4,
+    "crates": 1,
+    "stamp": "Codex/sol fork · build 10-28 08:18 UTC"
+  },
+  "bypass": {
+    "level": "coastal-street-run",
+    "position": [
+      3.7029110004280645,
+      7.000000011920929,
+      -1512.4098658037012
+    ],
+    "state": "ride",
+    "speed": 28.980000000000082,
+    "grounded": true,
+    "started": true,
+    "docked": false,
+    "lives": 4,
+    "crates": 1,
+    "stamp": "Codex/sol fork · build 10-28 08:18 UTC"
+  },
+  "completedReturn": {
+    "level": "coastal-street-run",
+    "position": [
+      0,
+      7.000000011920929,
+      -1497.241365803701
+    ],
+    "state": "ride",
+    "speed": 0,
+    "grounded": true,
+    "started": false,
+    "docked": false,
+    "lives": 4,
+    "crates": 1,
+    "stamp": "Codex/sol fork · build 10-28 08:18 UTC"
+  },
+  "pass": true,
+  "finished": "2026-10-28T08:30:07.323Z"
+}
