@@ -2,13 +2,14 @@
 
 The debug MENU now takes campaign names and progression order from
 `CAMPAIGN_LEVELS`. Each authored bonus follows its parent with the label
-`[Parent name] Bonus`. Every row has a number; a bonus reuses its parent's
-number, so the opening pairs are `1· Treehouse Trail` / `1· Treehouse Trail Bonus`
+`[Parent name] Bonus`. Levels assigned to the game UI have numbers; a bonus
+reuses its assigned parent's number, so the opening pairs are
+`1· Treehouse Trail` / `1· Treehouse Trail Bonus`
 and `2· Banana Bay` / `2· Banana Bay Bonus`. The 1–9 playtest shortcuts open
 the matching parent levels. The same ordered list drives play/edit tooltips
-and active-row highlighting. Non-map courses and
-tools follow the map in their existing registry order. Their authored bonuses
-also follow their parents.
+and active-row highlighting. Unassigned courses and tools follow the map in
+their existing registry order without numbers. Their authored bonuses also
+follow their parents without numbers.
 
 The shared Easy Street fallback has no single parent and is labeled `Bonus`.
 The standalone Unity prototype `Bonus Level` retains its existing name. The
@@ -19,7 +20,8 @@ existing authored bonus associations.
 [Retired bonus names](../retired-bonus-level-names.txt) contains 22 distinct
 reusable titles, one per line, with the former `Bonus:` prefix removed.
 [The label review](labels.json) records all 66 IDs, old/new labels, numbers and
-bonus parent IDs. There are 45 parent/standalone numbers and 21 linked bonuses.
+bonus parent IDs. The 31 assigned parents and their 20 bonuses are numbered;
+the 15 unassigned rows are unnumbered.
 The latest addition is `The Skystream Bonus`, immediately after `The Skystream`;
 its previous title, `Cumulus Cache`, is preserved in the text list.
 
@@ -75,7 +77,7 @@ Evidence: [build receipt](release-2026-10-29/build.json),
 [latest bonus](release-2026-10-29/full-native-skystream-bonus.png).
 No level data changed, so `check:levels` was not needed. No `check:all` ran.
 
-## Numbering correction — 29 October
+## Initial numbering correction — 29 October (superseded by assigned-only rule)
 
 The requested numbering applies to every row, including entries beyond the
 first nine. Parent numbers advance once per level; its bonus uses the same
@@ -99,3 +101,28 @@ Evidence: [build receipt](numbering-2026-10-29/build.json),
 [MAX/native](numbering-2026-10-29/browser-full-native.json),
 [numbered menu](numbering-2026-10-29/full-desktop.png),
 [new bonus number](numbering-2026-10-29/full-native-skystream-bonus.png).
+
+## Assigned-only numbering — final clarification, 29 October
+
+Only actual game-UI assignments receive numbers. The 31 available campaign
+parents use 1–31, and their 20 authored bonuses share those numbers. All 15
+unassigned rows have no number, including labs, authoring courses, the world
+map entry, the Bone Yard prototype and its bonus, and the shared fallback.
+Imported custom courses remain unnumbered after refresh. Parent shortcuts 1–9
+still match the game-UI numbering. Names, map order and the 22-title archive
+are unchanged.
+
+The final build, release sizing and existing debug-shortcut check pass. Output:
+1,847 files, 997,082,667 bytes. Stamp: `Codex/sol fork · build 10-28 18:56 UTC`.
+Fresh production Chrome in lite, full normal and MAX/native verifies every
+assigned number, every shared parent/bonus number and all unnumbered rows,
+including an imported custom course. Actual parent/bonus launches, edit targets,
+active state and saved-name refresh pass; zero console errors or failed requests
+in every mode. The numbered campaign / unnumbered authoring boundary and native
+bonus scene were visually reviewed.
+
+Evidence: [build receipt](assigned-numbering-2026-10-29/build.json),
+[lite](assigned-numbering-2026-10-29/browser-lite.json),
+[normal](assigned-numbering-2026-10-29/browser-full.json),
+[MAX/native](assigned-numbering-2026-10-29/browser-full-native.json),
+[assigned/unassigned boundary](assigned-numbering-2026-10-29/full-native-skystream-bonus.png).

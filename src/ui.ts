@@ -1835,7 +1835,7 @@ export class UI {
       const item = div("hud-levelitem");
       const play = document.createElement("button");
       play.className = "hud-levelbtn hud-levelplay";
-      play.textContent = `${entry.number}· ${entry.name}`;
+      play.textContent = entry.number === undefined ? entry.name : `${entry.number}· ${entry.name}`;
       play.title = entry.name;
       play.classList.toggle("active", entry.id === this.currentLevelId);
       play.addEventListener("click", () => {

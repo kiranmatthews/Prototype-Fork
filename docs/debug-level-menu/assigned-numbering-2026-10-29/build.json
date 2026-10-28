@@ -1,0 +1,37 @@
+{
+  "baseCommit": "e0109cf3d69e3048047e1789f761c71410851ad7",
+  "runtimeChanges": [
+    "src/debugLevelMenu.ts",
+    "src/ui.ts"
+  ],
+  "build": "passed",
+  "releaseSize": "passed",
+  "files": 1847,
+  "bytes": 997082667,
+  "limitBytes": 1000000000,
+  "localStamp": "Codex/sol fork \u00b7 build 10-28 18:56 UTC",
+  "offlineVersion": "433ef805e67eb3dc30a1",
+  "entry": "assets/index-FyAhpstT.js",
+  "sourceSha256": {
+    "src/debugLevelMenu.ts": "4db20f9a7f52ee76dbf45c78b93c1b453921087b016796a73fcd19fd7d63e696",
+    "src/ui.ts": "542eb3ca9c99e2edd636e99a21dee6f6ebcfdc57671a5ff6bd146d7288850c13",
+    "src/main.ts": "57b80a5841f1375d34be5e85afc444b03ff1c6b16a45fc054da0765a4a8f815b",
+    "src/campaign.ts": "5334320361c38a389edc8e538435a2a4bbe8d2781e756996e0a2c3457ac7dc05",
+    "src/levels/themed-bonuses.ts": "43c5e99e6e754201a9c6415f14822c9b874b6cbb5c021a8f52229dad4c78df6e",
+    "src/levels/skystream-bonus.ts": "1703c3478c1611e69df54d1714cc26b11bcd5132cc766d4ed9c745932e9725e2"
+  },
+  "menuRows": 66,
+  "numberedCampaignParents": 31,
+  "bonusesSharingAssignedParentNumbers": 20,
+  "unnumberedRows": 15,
+  "retiredNames": 22,
+  "checks": [
+    "debug shortcut regression",
+    "assigned-only numbering and parent associations",
+    "actual Digit 2 opens Banana Bay",
+    "unassigned and imported custom rows remain unnumbered",
+    "fresh production Chrome lite, full normal and full MAX/native",
+    "zero console errors and failed requests",
+    "git diff --check"
+  ]
+}

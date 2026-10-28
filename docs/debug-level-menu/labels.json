@@ -328,92 +328,77 @@
   {
     "id": "inside-your-room",
     "previousName": "Inside Your Room",
-    "name": "Inside Your Room",
-    "number": 32
+    "name": "Inside Your Room"
   },
   {
     "id": "flats",
     "previousName": "Flats & Pipes",
-    "name": "Flats & Pipes",
-    "number": 33
+    "name": "Flats & Pipes"
   },
   {
     "id": "spaghetti-rails-platforming",
     "previousName": "Spaghetti Rails — Platforming",
-    "name": "Spaghetti Rails — Platforming",
-    "number": 34
+    "name": "Spaghetti Rails — Platforming"
   },
   {
     "id": "warproom",
     "previousName": "Island World Map",
-    "name": "Island World Map",
-    "number": 35
+    "name": "Island World Map"
   },
   {
     "id": "bonus-level",
     "previousName": "Bonus Level",
-    "name": "Bonus Level",
-    "number": 36
+    "name": "Bonus Level"
   },
   {
     "id": "meshylook-thorns",
     "previousName": "MeshyLook Thorn Courtyards",
-    "name": "MeshyLook Thorn Courtyards",
-    "number": 37
+    "name": "MeshyLook Thorn Courtyards"
   },
   {
     "id": "cave-collapse",
     "previousName": "Crumblewake Cave",
-    "name": "Crumblewake Cave",
-    "number": 38
+    "name": "Crumblewake Cave"
   },
   {
     "id": "mall",
     "previousName": "Mall · New York",
-    "name": "Mall · New York",
-    "number": 39
+    "name": "Mall · New York"
   },
   {
     "id": "school-miami",
     "previousName": "School · Miami",
-    "name": "School · Miami",
-    "number": 40
+    "name": "School · Miami"
   },
   {
     "id": "warehouse-reference",
     "previousName": "Warehouse · Reference",
-    "name": "Warehouse · Reference",
-    "number": 41
+    "name": "Warehouse · Reference"
   },
   {
     "id": "kona",
     "previousName": "Kona · PS1",
-    "name": "Kona · PS1",
-    "number": 42
+    "name": "Kona · PS1"
   },
   {
     "id": "bone-yard",
     "previousName": "Bone Yard · Wipeout Playground",
-    "name": "Bone Yard · Wipeout Playground",
-    "number": 43
+    "name": "Bone Yard · Wipeout Playground"
   },
   {
     "id": "bonus-bone-yard",
     "previousName": "Bonus: Ivory Salvage",
     "name": "Bone Yard · Wipeout Playground Bonus",
-    "number": 43,
     "parentId": "bone-yard"
   },
   {
     "id": "backport-lab",
     "previousName": "Backport Mechanics Lab",
-    "name": "Backport Mechanics Lab",
-    "number": 44
+    "name": "Backport Mechanics Lab"
   },
   {
     "id": "bonus-easy",
     "previousName": "Bonus: Easy Street",
-    "name": "Bonus",
-    "number": 45
+    "name": "Bonus"
   }
 ]

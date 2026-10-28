@@ -8,7 +8,7 @@ const bonusIdByData = new Map(BONUS_LEVEL_ENTRIES.map(entry => [entry.data, entr
 const bonusIds = new Set(BONUS_LEVEL_ENTRIES.map(entry => entry.id));
 
 export interface DebugLevelMenuEntry extends LevelEntry {
-  number: number;
+  number?: number;
   parentId?: string;
 }
 
@@ -18,10 +18,9 @@ export function debugLevelMenu(entries: readonly LevelEntry[]): DebugLevelMenuEn
   const shown = new Set<string>();
   const rows: DebugLevelMenuEntry[] = [];
   let nextNumber = 1;
-  const append = (entry: LevelEntry, name = campaignLevelById(entry.id)?.name ?? entry.name): void => {
+  const append = (entry: LevelEntry, name = campaignLevelById(entry.id)?.name ?? entry.name, number?: number): void => {
     if (shown.has(entry.id)) return;
     shown.add(entry.id);
-    const number = nextNumber++;
     rows.push({ ...entry, name, number });
     const bonusId = bonusIdByData.get(resolveBonusLevel(entry.id));
     const bonus = bonusId ? byId.get(bonusId) : undefined;
@@ -35,10 +34,10 @@ export function debugLevelMenu(entries: readonly LevelEntry[]): DebugLevelMenuEn
     if (course.placeholder) continue;
     const entry = byId.get(course.levelId)
       ?? (course.fallbackLevelId ? byId.get(course.fallbackLevelId) : undefined);
-    if (entry) append(entry, course.name);
+    if (entry && !shown.has(entry.id)) append(entry, course.name, nextNumber++);
   }
   // Unmapped tools and custom courses follow the map in registry order, with
-  // their authored bonuses beside them too. The shared fallback has no parent.
+  // their authored bonuses beside them too. These unassigned rows have no number.
   for (const entry of entries) {
     if (!bonusIds.has(entry.id) && entry.id !== 'bonus-easy') append(entry);
   }

@@ -5780,3 +5780,22 @@ were reviewed. [Numbering evidence](debug-level-menu/README.md).
 The superseded Pages run was canceled before deployment so publication can
 include this final correction. The 22-name archive remains intact. No geometry
 or level-data checks and no full suite were required for this menu-only change.
+
+### 2026-10-29 — Leave unassigned levels unnumbered
+
+Final user clarification: numbering belongs only to levels assigned to the game
+UI. The 31 available campaign levels receive 1–31; their 20 bonuses share the
+parent number. The 15 remaining rows, including unassigned authoring levels,
+their bonuses and the generic fallback, have no number. Imported custom courses
+remain unnumbered after refresh. Names, map order, parent shortcuts and the
+22-name retired-title archive are preserved.
+
+Approximately three minutes from this clarification to a verified playable
+production menu. Existing debug-shortcut checks, build and release size pass
+(997,082,667 bytes; `Codex/sol fork · build 10-28 18:56 UTC`). Fresh production
+Chrome lite/full normal/MAX-native verifies all 51 numbered and 15 unnumbered
+rows, parent/bonus matching, shortcuts, direct bonus launches, active/edit
+targets and saved/custom refresh. No console errors or failed requests. Native
+campaign/authoring boundary and bonus captures reviewed. See
+[final numbering evidence](debug-level-menu/README.md). No level-data changes,
+unrelated audits or full suite.

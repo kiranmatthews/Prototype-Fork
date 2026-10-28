@@ -1,0 +1,565 @@
+{
+  "mode": "full-native",
+  "base": "http://127.0.0.1:5487/",
+  "checkedAt": "2026-10-28T18:58:36.486Z",
+  "errors": [],
+  "requests": [],
+  "checks": [
+    "Only the 31 assigned parent levels and their 20 bonuses are numbered; all 15 unassigned rows remain unnumbered",
+    "All menu labels, map order, parent/bonus pairs, edit tooltips and registry IDs verified",
+    "Digit 2 launches parent level 2, Banana Bay, and highlights the correct row",
+    "The Skystream Bonus immediately follows its parent and launches bonus-skystream with its original data",
+    "Clicking Banana Bay Bonus launches bonus-beachside-run and highlights its row",
+    "Edit button opens the correct existing bonus in the editor",
+    "Refresh preserves custom course names and saved data while canonicalizing saved bonus labels"
+  ],
+  "page": {
+    "scripts": [
+      "http://127.0.0.1:5487/assets/index-FyAhpstT.js"
+    ],
+    "buildStamp": "Codex/sol fork · build 10-28 18:56 UTC",
+    "renderQuality": {
+      "enabled": false,
+      "baseHeight": 720,
+      "outputMultiplier": 1,
+      "fixed60": true
+    },
+    "synced": true
+  },
+  "rows": [
+    {
+      "title": "Treehouse Trail",
+      "text": "1· Treehouse Trail"
+    },
+    {
+      "title": "Treehouse Trail Bonus",
+      "text": "1· Treehouse Trail Bonus"
+    },
+    {
+      "title": "Banana Bay",
+      "text": "2· Banana Bay"
+    },
+    {
+      "title": "Banana Bay Bonus",
+      "text": "2· Banana Bay Bonus"
+    },
+    {
+      "title": "Jungle Ruins",
+      "text": "3· Jungle Ruins"
+    },
+    {
+      "title": "Jungle Ruins Bonus",
+      "text": "3· Jungle Ruins Bonus"
+    },
+    {
+      "title": "Ripcord River",
+      "text": "4· Ripcord River"
+    },
+    {
+      "title": "Ripcord River Bonus",
+      "text": "4· Ripcord River Bonus"
+    },
+    {
+      "title": "Beach Street",
+      "text": "5· Beach Street"
+    },
+    {
+      "title": "Beach Street Bonus",
+      "text": "5· Beach Street Bonus"
+    },
+    {
+      "title": "Motu Beach Invitational",
+      "text": "6· Motu Beach Invitational"
+    },
+    {
+      "title": "Sunset Safari",
+      "text": "7· Sunset Safari"
+    },
+    {
+      "title": "Sunset Safari Bonus",
+      "text": "7· Sunset Safari Bonus"
+    },
+    {
+      "title": "Tribal Run",
+      "text": "8· Tribal Run"
+    },
+    {
+      "title": "Tribal Run Bonus",
+      "text": "8· Tribal Run Bonus"
+    },
+    {
+      "title": "Waterfall Climb",
+      "text": "9· Waterfall Climb"
+    },
+    {
+      "title": "Waterfall Climb Bonus",
+      "text": "9· Waterfall Climb Bonus"
+    },
+    {
+      "title": "Uga Ambush",
+      "text": "10· Uga Ambush"
+    },
+    {
+      "title": "Uga Ambush Bonus",
+      "text": "10· Uga Ambush Bonus"
+    },
+    {
+      "title": "The Merchant Wreck",
+      "text": "11· The Merchant Wreck"
+    },
+    {
+      "title": "The Merchant Wreck Bonus",
+      "text": "11· The Merchant Wreck Bonus"
+    },
+    {
+      "title": "High Chief Uga Ha ku",
+      "text": "12· High Chief Uga Ha ku"
+    },
+    {
+      "title": "Deadwater Park",
+      "text": "13· Deadwater Park"
+    },
+    {
+      "title": "Deadwater Park Bonus",
+      "text": "13· Deadwater Park Bonus"
+    },
+    {
+      "title": "Haunted Hassle",
+      "text": "14· Haunted Hassle"
+    },
+    {
+      "title": "Haunted Hassle Bonus",
+      "text": "14· Haunted Hassle Bonus"
+    },
+    {
+      "title": "Ghost Train",
+      "text": "15· Ghost Train"
+    },
+    {
+      "title": "Tunnelbore Tracks",
+      "text": "16· Tunnelbore Tracks"
+    },
+    {
+      "title": "Slipstream",
+      "text": "17· Slipstream"
+    },
+    {
+      "title": "Deadwater Cup",
+      "text": "18· Deadwater Cup"
+    },
+    {
+      "title": "Country Club Circuit",
+      "text": "19· Country Club Circuit"
+    },
+    {
+      "title": "Hogsworth Harbour",
+      "text": "20· Hogsworth Harbour"
+    },
+    {
+      "title": "Hogsworth Harbour Bonus",
+      "text": "20· Hogsworth Harbour Bonus"
+    },
+    {
+      "title": "Factory Fuss",
+      "text": "21· Factory Fuss"
+    },
+    {
+      "title": "Nightmare Grove",
+      "text": "22· Nightmare Grove"
+    },
+    {
+      "title": "Guptus Eruptus",
+      "text": "23· Guptus Eruptus"
+    },
+    {
+      "title": "Guptus Eruptus Bonus",
+      "text": "23· Guptus Eruptus Bonus"
+    },
+    {
+      "title": "Torchlight Trouble",
+      "text": "24· Torchlight Trouble"
+    },
+    {
+      "title": "Torchlight Trouble Bonus",
+      "text": "24· Torchlight Trouble Bonus"
+    },
+    {
+      "title": "Spaghetti Rails",
+      "text": "25· Spaghetti Rails"
+    },
+    {
+      "title": "Sky Bridge",
+      "text": "26· Sky Bridge"
+    },
+    {
+      "title": "Sky Bridge Bonus",
+      "text": "26· Sky Bridge Bonus"
+    },
+    {
+      "title": "Temple of Embers",
+      "text": "27· Temple of Embers"
+    },
+    {
+      "title": "Temple of Embers Bonus",
+      "text": "27· Temple of Embers Bonus"
+    },
+    {
+      "title": "The Ancient Gates",
+      "text": "28· The Ancient Gates"
+    },
+    {
+      "title": "The Ancient Gates Bonus",
+      "text": "28· The Ancient Gates Bonus"
+    },
+    {
+      "title": "Rolling Bones",
+      "text": "29· Rolling Bones"
+    },
+    {
+      "title": "Rolling Bones Bonus",
+      "text": "29· Rolling Bones Bonus"
+    },
+    {
+      "title": "The Skystream",
+      "text": "30· The Skystream"
+    },
+    {
+      "title": "The Skystream Bonus",
+      "text": "30· The Skystream Bonus"
+    },
+    {
+      "title": "Coconut Cart Rally",
+      "text": "31· Coconut Cart Rally"
+    },
+    {
+      "title": "Inside Your Room",
+      "text": "Inside Your Room"
+    },
+    {
+      "title": "Flats & Pipes",
+      "text": "Flats & Pipes"
+    },
+    {
+      "title": "Spaghetti Rails — Platforming",
+      "text": "Spaghetti Rails — Platforming"
+    },
+    {
+      "title": "Island World Map",
+      "text": "Island World Map"
+    },
+    {
+      "title": "Bonus Level",
+      "text": "Bonus Level"
+    },
+    {
+      "title": "MeshyLook Thorn Courtyards",
+      "text": "MeshyLook Thorn Courtyards"
+    },
+    {
+      "title": "Crumblewake Cave",
+      "text": "Crumblewake Cave"
+    },
+    {
+      "title": "Mall · New York",
+      "text": "Mall · New York"
+    },
+    {
+      "title": "School · Miami",
+      "text": "School · Miami"
+    },
+    {
+      "title": "Warehouse · Reference",
+      "text": "Warehouse · Reference"
+    },
+    {
+      "title": "Kona · PS1",
+      "text": "Kona · PS1"
+    },
+    {
+      "title": "Bone Yard · Wipeout Playground",
+      "text": "Bone Yard · Wipeout Playground"
+    },
+    {
+      "title": "Bone Yard · Wipeout Playground Bonus",
+      "text": "Bone Yard · Wipeout Playground Bonus"
+    },
+    {
+      "title": "Backport Mechanics Lab",
+      "text": "Backport Mechanics Lab"
+    },
+    {
+      "title": "Bonus",
+      "text": "Bonus"
+    }
+  ],
+  "registry": [
+    {
+      "id": "treehouse-trail",
+      "name": "Treehouse Trail"
+    },
+    {
+      "id": "inside-your-room",
+      "name": "Inside Your Room"
+    },
+    {
+      "id": "jungle",
+      "name": "Jungle Ruins"
+    },
+    {
+      "id": "jungle-terraces",
+      "name": "Temple of Embers"
+    },
+    {
+      "id": "flats",
+      "name": "Flats & Pipes"
+    },
+    {
+      "id": "country-club",
+      "name": "Country Club Circuit"
+    },
+    {
+      "id": "sky",
+      "name": "Sky Bridge"
+    },
+    {
+      "id": "skystream",
+      "name": "The Skystream"
+    },
+    {
+      "id": "coconut-cart-rally",
+      "name": "Coconut Cart Rally"
+    },
+    {
+      "id": "slipstream-race",
+      "name": "The Slipstream"
+    },
+    {
+      "id": "test",
+      "name": "Carlisle Coast"
+    },
+    {
+      "id": "custard-creek",
+      "name": "Custard Creek"
+    },
+    {
+      "id": "tribal-run",
+      "name": "Tribal Run"
+    },
+    {
+      "id": "rumblewater-run",
+      "name": "Ripcord River"
+    },
+    {
+      "id": "rolling-bones",
+      "name": "Rolling Bones"
+    },
+    {
+      "id": "hollowwake-descent",
+      "name": "Hollowwake Descent"
+    },
+    {
+      "id": "dark",
+      "name": "The Nightworks"
+    },
+    {
+      "id": "nightworks-after-hours",
+      "name": "Nightworks: After Hours"
+    },
+    {
+      "id": "spaghetti-rails",
+      "name": "Spaghetti Rails"
+    },
+    {
+      "id": "spaghetti-rails-platforming",
+      "name": "Spaghetti Rails — Platforming"
+    },
+    {
+      "id": "warproom",
+      "name": "Island World Map"
+    },
+    {
+      "id": "beachfront",
+      "name": "Beachside Run"
+    },
+    {
+      "id": "bonus-level",
+      "name": "Bonus Level"
+    },
+    {
+      "id": "coastal-street-run",
+      "name": "Coastal Street Run"
+    },
+    {
+      "id": "jungle-gate-run",
+      "name": "The Ancient Gates"
+    },
+    {
+      "id": "meshylook-thorns",
+      "name": "MeshyLook Thorn Courtyards"
+    },
+    {
+      "id": "drowned-crown",
+      "name": "The Drowned Crown"
+    },
+    {
+      "id": "bonus-easy",
+      "name": "Bonus: Easy Street"
+    },
+    {
+      "id": "bonus-treehouse-trail",
+      "name": "Bonus: Canopy Cache"
+    },
+    {
+      "id": "bonus-jungle",
+      "name": "Bonus: Fern Reliquary"
+    },
+    {
+      "id": "bonus-test-course",
+      "name": "Bonus: Quayside Cargo"
+    },
+    {
+      "id": "bonus-sky-bridge",
+      "name": "Bonus: Cloudtop Lockers"
+    },
+    {
+      "id": "bonus-nightworks",
+      "name": "Bonus: Nightworks Fuse Store"
+    },
+    {
+      "id": "bonus-beachside-run",
+      "name": "Bonus: Lifeguard Lockup"
+    },
+    {
+      "id": "bonus-coastal",
+      "name": "Bonus: Rooftop Deliveries"
+    },
+    {
+      "id": "bonus-codex-switchback",
+      "name": "Bonus: Haunted Hassle"
+    },
+    {
+      "id": "bonus-waterpark",
+      "name": "Bonus: Deadwater Valve House"
+    },
+    {
+      "id": "bonus-nightworks-after-hours",
+      "name": "Bonus: Caldera Counterweights"
+    },
+    {
+      "id": "bonus-jungle-terraces",
+      "name": "Bonus: Ember Reliquary"
+    },
+    {
+      "id": "bonus-drowned-crown",
+      "name": "Bonus: The Captain’s Last Ledger"
+    },
+    {
+      "id": "bonus-bone-yard",
+      "name": "Bonus: Ivory Salvage"
+    },
+    {
+      "id": "bonus-custard-creek",
+      "name": "Bonus: Willowmill Cache"
+    },
+    {
+      "id": "bonus-skystream",
+      "name": "Bonus: Cumulus Cache"
+    },
+    {
+      "id": "bonus-tribal-run",
+      "name": "Bonus: The Resonance Vault"
+    },
+    {
+      "id": "bonus-waterfall-climb",
+      "name": "Bonus: The Hidden Spillway"
+    },
+    {
+      "id": "bonus-jungle-gate",
+      "name": "Bonus: The Gatekeeper’s Hoard"
+    },
+    {
+      "id": "bonus-rooftop-relay",
+      "name": "Bonus: The Storm Parlour"
+    },
+    {
+      "id": "bonus-rumblewater-run",
+      "name": "Bonus: Sluicekeeper’s Cache"
+    },
+    {
+      "id": "bonus-rolling-bones",
+      "name": "Bonus: Moonbone Vault"
+    },
+    {
+      "id": "crab-chief",
+      "name": "Tidebreak · Crab Chief"
+    },
+    {
+      "id": "ghost-train",
+      "name": "Haunted Castle · Ghost Train"
+    },
+    {
+      "id": "codex-lab",
+      "name": "Haunted Hassle"
+    },
+    {
+      "id": "cave-collapse",
+      "name": "Crumblewake Cave"
+    },
+    {
+      "id": "waterfall-climb",
+      "name": "Waterfall Climb"
+    },
+    {
+      "id": "jungle-minefield",
+      "name": "No-Man’s Grove"
+    },
+    {
+      "id": "rooftop-relay",
+      "name": "Rooftop Relay"
+    },
+    {
+      "id": "mall",
+      "name": "Mall · New York"
+    },
+    {
+      "id": "school-miami",
+      "name": "School · Miami"
+    },
+    {
+      "id": "warehouse-reference",
+      "name": "Warehouse · Reference"
+    },
+    {
+      "id": "kona",
+      "name": "Kona · PS1"
+    },
+    {
+      "id": "jungle-cup",
+      "name": "Motu Beach Invitational"
+    },
+    {
+      "id": "warehouse",
+      "name": "Warehouse / Five Lines"
+    },
+    {
+      "id": "bone-yard",
+      "name": "Bone Yard · Wipeout Playground"
+    },
+    {
+      "id": "waterpark",
+      "name": "Deadwater Park"
+    },
+    {
+      "id": "waterpark-cup",
+      "name": "Deadwater Cup"
+    },
+    {
+      "id": "backport-lab",
+      "name": "Backport Mechanics Lab"
+    }
+  ],
+  "latest": {
+    "id": "bonus-skystream",
+    "sourceName": "Bonus: Cumulus Cache"
+  }
+}
