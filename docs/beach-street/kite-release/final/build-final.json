@@ -1,0 +1,13 @@
+{
+  "started": "2026-10-28T08:58:11.128Z",
+  "steps": [
+    {
+      "name": "build",
+      "command": "tsc --noEmit && vite build",
+      "exit": 0,
+      "seconds": 50.33
+    }
+  ],
+  "finished": "2026-10-28T08:59:01.461Z",
+  "pass": true
+}
