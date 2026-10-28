@@ -2,9 +2,11 @@ import * as THREE from 'three';
 import { SimplexNoise } from 'three/addons/math/SimplexNoise.js';
 import type { CloudRoadSection } from './cloudRoad';
 import { SKYSTREAM_SUN } from './skystreamSun';
+import { bakeCloudCoordinates } from './cloudRoadCoordinates';
 
 const WIDTH = 22, BOTTOM = -6.7, HEIGHT = 9.2, PERIOD = 23;
 const NX = 128, NY = 64, NZ = 192;
+export const CLOUD_ROAD_VISUAL_DROP = .4;
 const smoothMin = (a:number,b:number,k:number) => {
   const h=Math.max(k-Math.abs(a-b),0)/k;
   return Math.min(a,b)-h*h*k*.25;
@@ -72,7 +74,10 @@ function acquireDensity() {
         }
         if(Math.min(body,rim)>.85)continue;
         const detail=periodicNoise(px,py,pz,.78)*.32+periodicNoise(px,py,pz,1.9)*.14+periodicNoise(px,py,pz,4.7)*.055;
-        const d=smoothMin(Math.max(body+detail,py-cap),rim+detail,.45);
+        let d=smoothMin(Math.max(body+detail,py-cap),rim+detail,.45);
+        // Keep the complete rideable width and a boot-width margin clear.
+        // Tall shoulder billows return smoothly outside the contact ribbon.
+        d=Math.max(d,py-cap-THREE.MathUtils.smoothstep(Math.abs(px),7.3,8.3)*3);
         data[x+NX*(y+NY*z)]=Math.round(THREE.MathUtils.smoothstep(-d,-.14,.32)*255);
       }
     }
@@ -150,6 +155,7 @@ export function createCloudRoadVolume(sections:CloudRoadSection[],flatHalf?:numb
     uniforms:{...THREE.UniformsUtils.clone(THREE.UniformsLib.fog),uDensity:{value:density.texture},uEmpty:{value:density.empty},uSkipEmpty:{value:true},uLight:{value:light},uLiveLighting:{value:false},uFrames:{value:frameTexture},
       uSpacing:{value:spacing},uCount:{value:count},uLength:{value:total},uSun:{value:sunDirection.clone()},
       uFlat:{value:flatHalf??-1},uGutter:{value:gutterRadius},uMin:{value:new THREE.Vector3()},uMax:{value:new THREE.Vector3()},
+      uCloudDrop:{value:CLOUD_ROAD_VISUAL_DROP},
       uRange:{value:new THREE.Vector2()},uChord:{value:new THREE.Vector3()},uStart:{value:new THREE.Vector3()},
       uStartNormal:{value:new THREE.Vector3()},uEnd:{value:new THREE.Vector3()},uEndNormal:{value:new THREE.Vector3()}},
     vertexShader:`varying vec3 vOrigin;varying vec3 vDirection;
@@ -158,7 +164,8 @@ gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}`,
     fragmentShader:`precision highp sampler3D;
 out vec4 cloudOutput;
 #define gl_FragColor cloudOutput
-uniform sampler3D uDensity,uEmpty;uniform sampler2D uFrames,uLight;uniform bool uLiveLighting,uSkipEmpty;
+uniform sampler3D uDensity,uEmpty,uCoordinates;uniform sampler2D uFrames,uLight;uniform bool uSkipEmpty,uUseCoordinates;
+uniform vec3 uCoordinateMin,uCoordinateSize,uCoordinateResolution;uniform float uCoordinateOrigin,uCoordinateStretch,uCloudDrop;uniform mat4 uCoordinateTransform;
 uniform float uSpacing,uCount,uLength,uFlat,uGutter;
 uniform vec3 uMin,uMax,uSun,uChord,uStart,uEnd,uStartNormal,uEndNormal;uniform vec2 uRange;
 uniform mat4 modelViewMatrix,projectionMatrix;
@@ -181,8 +188,14 @@ float densityAt(vec3 q){
   uv.xy=uv.xy*vec2(127.0/128.0,63.0/64.0)+vec2(.5/128.0,.5/64.0);uv.z+=.5/192.0;
   return texture(uDensity,uv).r;
 }
+vec4 coordinateAt(vec3 uv){
+  vec3 p=uv*(uCoordinateResolution-1.0);
+  return texture(uCoordinates,(p+.5)/uCoordinateResolution);
+}
 void main(){
   vec3 ray=normalize(vDirection),inv=1.0/ray;
+  vec3 coordinateOrigin=((uCoordinateTransform*vec4(vOrigin,1.0)).xyz-uCoordinateMin)/uCoordinateSize;
+  vec3 coordinateRay=mat3(uCoordinateTransform)*ray/uCoordinateSize;
   vec3 a=(uMin-vOrigin)*inv,b=(uMax-vOrigin)*inv,near=min(a,b),far=max(a,b);
   float start=max(0.0,max(max(near.x,near.y),near.z)),end=min(min(far.x,far.y),far.z);
   if(end<=start)discard;
@@ -196,13 +209,25 @@ void main(){
   vec4 sum=vec4(0.0);float first=end,owner=0.0;bool hit=false,assigned=false;
   float s=uRange.x+dot(vOrigin+ray*start-uStart,uChord);Frame frame=frameAt(s);
   for(int j=0;j<4;j++){s+=dot(vOrigin+ray*start-frame.p,frame.z);frame=frameAt(s);}
+  bool frameValid=true;
   for(int i=0;i<320;i++){
     float t=start+float(i)*ds;if(t>end)break;vec3 point=vOrigin+ray*t;
-    s+=dot(point-frame.p,frame.z);frame=frameAt(s);
-    s+=dot(point-frame.p,frame.z);frame=frameAt(s);
-    vec3 delta=point-frame.p;float x=dot(delta,frame.x),y=dot(delta,frame.y);
-    if(uFlat>=0.0){float edge=min(frame.w-uFlat,max(0.0,abs(x)-uFlat));y-=uGutter-sqrt(max(.01,uGutter*uGutter-edge*edge));}
-    vec3 q=vec3(x*7.0/frame.w,y,s);
+    vec3 coordinateUv=coordinateOrigin+coordinateRay*t;vec4 mapped;
+    bool cached=uUseCoordinates&&all(greaterThanEqual(coordinateUv,vec3(0.0)))&&all(lessThanEqual(coordinateUv,vec3(1.0)));
+    if(cached){
+      mapped=coordinateAt(coordinateUv);s=mapped.z+uCoordinateOrigin;
+      frameValid=false;
+    }else{
+      // The cached domain is conservative but the shared ray integral extends
+      // beyond it. Preserve the exact solver there and on unsupported views.
+      if(!frameValid)frame=frameAt(s);
+      for(int j=0;j<2;j++){s+=dot(point-frame.p,frame.z);frame=frameAt(s);}
+      frameValid=true;
+      vec3 delta=point-frame.p;mapped=vec4(dot(delta,frame.x)*7.0/frame.w,dot(delta,frame.y),0.0,frame.w);
+    }
+    float x=mapped.x*mapped.w/7.0,y=mapped.y;
+    if(uFlat>=0.0){float edge=min(mapped.w-uFlat,max(0.0,abs(x)-uFlat));y-=uGutter-sqrt(max(.01,uGutter*uGutter-edge*edge));}
+    vec3 q=vec3(mapped.x,y+uCloudDrop,s);
     float cloud=densityAt(q);
     float cap=max(-s,s-uLength);if(cap>0.0)cloud*=1.0-smoothstep(0.0,1.35,cap);
     if(cloud<.006){
@@ -213,7 +238,13 @@ void main(){
         float clearance=max(length(outside),texture(uEmpty,lookup).r*255.0/32.0);
         // Allow for the curved/gutter frame's coordinate stretch. Skips end on
         // the same .2 m integration grid; occupied samples are never thinned.
-        int skip=int(floor(min(1.6,clearance*.25)/ds));i+=max(0,skip-1);
+        float advance=min(1.6,clearance*.25);
+        if(cached){
+          vec3 exits=mix(coordinateUv,1.0-coordinateUv,step(vec3(0.0),coordinateRay))/max(abs(coordinateRay),vec3(1e-8));
+          float leave=min(exits.x,min(exits.y,exits.z));
+          advance=min(leave,min(4.0,clearance/uCoordinateStretch));
+        }
+        int skip=int(floor(advance/ds));i+=max(0,skip-1);
       }
       continue;
     }
@@ -223,11 +254,6 @@ void main(){
     vec2 offsetA=vec2(mod(slice,columns)*64.0,floor(slice/columns)*32.0);
     vec2 offsetB=vec2(mod(slice+1.0,columns)*64.0,floor((slice+1.0)/columns)*32.0);
     vec2 lighting=mix(texture(uLight,(offsetA+lightUv)/lightSize).rg,texture(uLight,(offsetB+lightUv)/lightSize).rg,fract(lightFrame));
-    if(uLiveLighting){
-      vec3 sun=vec3(dot(uSun,frame.x)*7.0/frame.w,dot(uSun,frame.y),dot(uSun,frame.z));
-      float depth=0.0;for(int j=0;j<8;j++)depth+=densityAt(q+sun*(.35+float(j)*.9))*.9;
-      lighting=vec2(exp(-depth*.72),exp(-depth*.16));
-    }
     float direct=lighting.x,broad=lighting.y;
     vec3 light=vec3(.30,.40,.56)*.65+vec3(1.0,.97,.91)*(direct*.49+broad*.27);
     light+=vec3(.09,.10,.12)*(1.0-cloud)*direct;
@@ -246,32 +272,48 @@ void main(){
   #include <colorspace_fragment>
 }`});
   let disposed=false;material.addEventListener('dispose',()=>{if(disposed)return;disposed=true;frameTexture.dispose();light.dispose();density.release();});
+  Object.assign(material.uniforms,{uCoordinates:{value:null},uUseCoordinates:{value:true},uCoordinateStretch:{value:4},
+    uCoordinateMin:{value:new THREE.Vector3()},uCoordinateSize:{value:new THREE.Vector3()},uCoordinateResolution:{value:new THREE.Vector3()},uCoordinateOrigin:{value:0},uCoordinateTransform:{value:new THREE.Matrix4()}});
+  let coordinateBytes=0;
   const chunkSteps=38;
   for(let first=0;first<count-1;first+=chunkSteps){
     const last=Math.min(count-1,first+chunkSteps),f0=frames[first],f1=frames[last];
     const start=f0.point.clone().addScaledVector(f0.tangent,first===0?-1.35:0),end=f1.point.clone().addScaledVector(f1.tangent,last===count-1?1.35:0);
     const range=new THREE.Vector2(first*spacing-(first===0?1.35:0),last*spacing+(last===count-1?1.35:0));
-    const chord=end.clone().sub(start).normalize(),bounds=new THREE.Box3();
-    for(let i=first;i<=last;i++)for(const x of [-1,1])for(const y of [BOTTOM,BOTTOM+HEIGHT+(flatHalf===undefined?0:gutterRadius)]){
-      const f=frames[i];bounds.expandByPoint(f.point.clone().addScaledVector(f.across,x*WIDTH/2*f.halfWidth/7).addScaledVector(f.normal,y));
+    const chord=end.clone().sub(start).normalize(),bounds=new THREE.Box3(),coordinateBounds=new THREE.Box3(),middle=frames[Math.floor((first+last)/2)];
+    const worldFromMap=new THREE.Matrix4().makeBasis(middle.across,middle.normal,middle.across.clone().cross(middle.normal)).setPosition(middle.point);
+    const mapFromWorld=worldFromMap.clone().invert();
+    for(let i=first;i<=last;i++)for(const x of [-1,1])for(const y of [BOTTOM-CLOUD_ROAD_VISUAL_DROP,BOTTOM+HEIGHT+(flatHalf===undefined?0:gutterRadius)-CLOUD_ROAD_VISUAL_DROP]){
+      const f=frames[i],p=f.point.clone().addScaledVector(f.across,x*WIDTH/2*f.halfWidth/7).addScaledVector(f.normal,y);
+      bounds.expandByPoint(p);coordinateBounds.expandByPoint(p.applyMatrix4(mapFromWorld));
     }
     bounds.expandByScalar(1.5);
-    const size=bounds.getSize(new THREE.Vector3()),centre=bounds.getCenter(new THREE.Vector3());
-    const geometry=new THREE.BoxGeometry(size.x,size.y,size.z);geometry.translate(...centre.toArray());
+    coordinateBounds.expandByScalar(1.5);
+    // An oriented proxy covers the same complete volume while rejecting the
+    // large empty corners of a world-aligned box before fragment shading.
+    const size=coordinateBounds.getSize(new THREE.Vector3()),centre=coordinateBounds.getCenter(new THREE.Vector3());
+    const geometry=new THREE.BoxGeometry(size.x,size.y,size.z);geometry.translate(...centre.toArray());geometry.applyMatrix4(worldFromMap);
+    const coordinates=bakeCloudCoordinates(data,spacing,coordinateBounds,range,start,chord,worldFromMap,flatHalf,gutterRadius);coordinateBytes+=coordinates.texture.image.data.byteLength;
+    let coordinatesDisposed=false;geometry.addEventListener('dispose',()=>{if(coordinatesDisposed)return;coordinatesDisposed=true;coordinates.texture.dispose();});
     const mesh=new THREE.Mesh(geometry,material);mesh.name='Cumulus road · full density';
     mesh.userData.cloudRoadVisual=true;mesh.userData.cloudRoadVolume=true;mesh.userData.visualOnly=true;
     mesh.userData.castShadow=false;mesh.userData.edgeGrinding=false;mesh.userData.raySamples=320;mesh.userData.rayStep=.2;
     mesh.userData.volumeChunk={min:bounds.min,max:bounds.max,range,chord,start,end,startNormal:f0.tangent,endNormal:f1.tangent};
+    Object.defineProperty(mesh.userData,'cloudCoordinates',{value:coordinates,enumerable:false});
     mesh.onBeforeRender=(_renderer,_scene,_camera,_geometry,usedMaterial)=>{
       const shader=usedMaterial as THREE.ShaderMaterial,c=mesh.userData.volumeChunk;
       if(!shader.uniforms?.uRange)return;
       shader.uniforms.uMin.value.copy(c.min);shader.uniforms.uMax.value.copy(c.max);shader.uniforms.uRange.value.copy(c.range);
       shader.uniforms.uChord.value.copy(c.chord);shader.uniforms.uStart.value.copy(c.start);shader.uniforms.uEnd.value.copy(c.end);
       shader.uniforms.uStartNormal.value.copy(c.startNormal);shader.uniforms.uEndNormal.value.copy(c.endNormal);
+      shader.uniforms.uCoordinates.value=coordinates.texture;shader.uniforms.uCoordinateStretch.value=coordinates.stretch;
+      shader.uniforms.uCoordinateMin.value.copy(coordinates.min);shader.uniforms.uCoordinateSize.value.copy(coordinates.size);
+      shader.uniforms.uCoordinateResolution.value.copy(coordinates.resolution);shader.uniforms.uCoordinateOrigin.value=coordinates.origin;
+      shader.uniforms.uCoordinateTransform.value.copy(coordinates.transform);
       shader.uniformsNeedUpdate=true;
     };
     root.add(mesh);
   }
-  root.userData.frameBytes=data.byteLength;root.userData.densityBytes=NX*NY*NZ;root.userData.lightingBytes=light.image.data.byteLength;
+  root.userData.frameBytes=data.byteLength;root.userData.densityBytes=NX*NY*NZ;root.userData.lightingBytes=light.image.data.byteLength;root.userData.coordinateBytes=coordinateBytes;
   return root;
 }

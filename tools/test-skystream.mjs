@@ -14,7 +14,7 @@ await withBlockworksRuntime(async r=>{
  const {p,l,source,sourceModule:m}=r;
  lightingStats=(await r.server.ssrLoadModule('/src/cloudRoadVolume.ts')).cloudRoadVolumeDiagnostics;
  assert.equal(lightingStats().textures,2,'The full course shares one density and one empty-space texture');
- const frames=new Set();l.root.traverse(o=>{if(o.userData.cloudRoadVolume){frames.add(o.material.uniforms.uFrames.value);frames.add(o.material.uniforms.uLight.value);assert.ok(o.material.uniforms.uLight.value.image.width<=2048&&o.material.uniforms.uLight.value.image.height<=2048);}});
+ const frames=new Set();l.root.traverse(o=>{if(o.userData.cloudRoadVolume){frames.add(o.material.uniforms.uFrames.value);frames.add(o.material.uniforms.uLight.value);frames.add(o.userData.cloudCoordinates.texture);assert.ok(o.material.uniforms.uLight.value.image.width<=2048&&o.material.uniforms.uLight.value.image.height<=2048);}});
  frameTextures=frames.size;for(const texture of frames)texture.addEventListener('dispose',()=>disposedFrames++);
  const saved=JSON.parse(await readFile(new URL('./fixtures/skystream/saved-slipstream.json',import.meta.url),'utf8'));
  const original=await r.server.ssrLoadModule('/src/levels/skystream-source.ts');
@@ -97,4 +97,4 @@ await withBlockworksRuntime(async r=>{
 },{modulePath:'/src/levels/skystream.ts',source:m=>m.SKYSTREAM_LEVEL,levelId:'skystream',endlessDeaths:true,maxFrames:43000,
  controlFrame:r=>r.p.courseInputDirection(r.l)??r.p.camDir});
 assert.deepEqual(lightingStats(),{owners:0,textures:0,densityBytes:0,emptyBytes:0,buildMs:0},'Leaving the real level must release every cloud material and its shared texture');
-assert.ok(frameTextures>0&&disposedFrames===frameTextures,'Leaving the real level must release every frame and sunlight texture');
+assert.ok(frameTextures>0&&disposedFrames===frameTextures,'Leaving the real level must release every coordinate, frame and sunlight texture');

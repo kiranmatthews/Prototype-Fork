@@ -1,0 +1,138 @@
+{
+  "base": "http://127.0.0.1:5188/",
+  "initial": {
+    "stamp": "Codex/sol fork · build 10-28 21:15 UTC",
+    "level": "skystream",
+    "loops": [
+      "vertical",
+      "wall",
+      "vertical"
+    ],
+    "cloudMeshes": 188,
+    "roots": 25,
+    "densityTextures": 1,
+    "emptyTextures": 1,
+    "fullDensity": true,
+    "hiddenContact": true,
+    "sun": true,
+    "spawn": [
+      0,
+      150.73666666644314,
+      18
+    ],
+    "grounded": true
+  },
+  "report": {
+    "frame": 8474,
+    "finished": true,
+    "failed": null,
+    "loop": {
+      "active": false,
+      "progress": 0,
+      "pressure": 0,
+      "completed": 3
+    },
+    "crates": 67,
+    "deaths": 0,
+    "bailing": false,
+    "evidence": {
+      "gaps": [
+        {
+          "index": 0,
+          "takeoff": [
+            -4.919134647806292,
+            6.992651963130924,
+            -734.8691768624406
+          ],
+          "landed": [
+            -8.088754729770178,
+            0.7072535235310271,
+            -768.139125499758
+          ],
+          "aired": true
+        },
+        {
+          "index": 1,
+          "takeoff": [
+            30.74565868438598,
+            -108.09653629965695,
+            -1216.6747020559378
+          ],
+          "landed": [
+            19.409256085104747,
+            -114.09631729102033,
+            -1236.6301939677453
+          ],
+          "aired": true
+        },
+        {
+          "index": 2,
+          "takeoff": [
+            73.65406413021316,
+            -221.76492107428587,
+            -1616.816077850338
+          ],
+          "landed": [
+            80.54899575957873,
+            -225,
+            -1635.3121890303935
+          ],
+          "aired": true
+        },
+        {
+          "index": 3,
+          "takeoff": [
+            164.12195444129185,
+            -412.39945942205804,
+            -2026.6752442052093
+          ],
+          "landed": [
+            163.88920784865317,
+            -422.59150526050826,
+            -2056.447935716154
+          ],
+          "aired": true
+        }
+      ],
+      "inverted": true,
+      "loopEntrySpeed": 66.3145684117351,
+      "finished": true,
+      "checkpoints": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "loops": [
+        {
+          "entrySpeed": 66.3145684117351,
+          "inverted": true,
+          "wall": false
+        },
+        {
+          "entrySpeed": 49.770938037884626,
+          "inverted": false,
+          "wall": true
+        },
+        {
+          "entrySpeed": 62.145877261263884,
+          "inverted": true,
+          "wall": false
+        }
+      ]
+    },
+    "position": [
+      132.31332869957401,
+      -431.13549811447444,
+      -2158.4948531860473
+    ]
+  },
+  "release": {
+    "entry": "assets/index-BLiwLUCe.js"
+  },
+  "errors": [],
+  "failedRequests": []
+}

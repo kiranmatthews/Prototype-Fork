@@ -1,0 +1,213 @@
+{
+  "base": "http://127.0.0.1:5187/",
+  "errors": [],
+  "benchmarks": [
+    {
+      "pose": "road",
+      "size": [
+        1152,
+        720
+      ],
+      "method": "GPU timer query",
+      "disjoint": false,
+      "reference": {
+        "medianMs": 25.021749,
+        "p95Ms": 26.853125,
+        "samples": 12
+      },
+      "volume": {
+        "medianMs": 20.01375,
+        "p95Ms": 21.045625,
+        "samples": 12
+      }
+    },
+    {
+      "pose": "road",
+      "size": [
+        1600,
+        1000
+      ],
+      "method": "GPU timer query",
+      "disjoint": false,
+      "reference": {
+        "medianMs": 46.74525,
+        "p95Ms": 47.308124,
+        "samples": 12
+      },
+      "volume": {
+        "medianMs": 35.094624,
+        "p95Ms": 35.534875,
+        "samples": 12
+      }
+    },
+    {
+      "pose": "upright-loop",
+      "size": [
+        1152,
+        720
+      ],
+      "method": "GPU timer query",
+      "disjoint": false,
+      "reference": {
+        "medianMs": 17.134833,
+        "p95Ms": 18.334541,
+        "samples": 12
+      },
+      "volume": {
+        "medianMs": 13.373416,
+        "p95Ms": 14.676624,
+        "samples": 12
+      }
+    },
+    {
+      "pose": "upright-loop",
+      "size": [
+        1600,
+        1000
+      ],
+      "method": "GPU timer query",
+      "disjoint": false,
+      "reference": {
+        "medianMs": 31.355625,
+        "p95Ms": 32.387625,
+        "samples": 12
+      },
+      "volume": {
+        "medianMs": 22.891625,
+        "p95Ms": 24.518874,
+        "samples": 12
+      }
+    },
+    {
+      "pose": "wall-loop",
+      "size": [
+        1152,
+        720
+      ],
+      "method": "GPU timer query",
+      "disjoint": false,
+      "reference": {
+        "medianMs": 21.612624,
+        "p95Ms": 23.299874,
+        "samples": 12
+      },
+      "volume": {
+        "medianMs": 16.617124,
+        "p95Ms": 17.156249,
+        "samples": 12
+      }
+    },
+    {
+      "pose": "wall-loop",
+      "size": [
+        1600,
+        1000
+      ],
+      "method": "GPU timer query",
+      "disjoint": false,
+      "reference": {
+        "medianMs": 41.290875,
+        "p95Ms": 43.745416,
+        "samples": 12
+      },
+      "volume": {
+        "medianMs": 29.857874,
+        "p95Ms": 30.911124,
+        "samples": 12
+      }
+    }
+  ],
+  "shots": [
+    "road-reference.png",
+    "road.png",
+    "upright-loop-reference.png",
+    "upright-loop.png",
+    "wall-loop-reference.png",
+    "wall-loop.png"
+  ],
+  "startupMs": 16903.695291,
+  "resources": {
+    "owners": 25,
+    "textures": 1,
+    "densityBytes": 1572864,
+    "emptyBytes": 1572864,
+    "lightingBytes": 29265920,
+    "maxAtlasDimension": 2048,
+    "coordinateBytes": 31553288,
+    "frameBytes": 217088,
+    "roots": 25,
+    "chunks": 188
+  },
+  "coordinateEquivalence": [
+    {
+      "pose": "road",
+      "meanByteError": 0.08239875,
+      "maxByteError": 252,
+      "changedBytes": 100532,
+      "largeDifferenceBytes": 30
+    },
+    {
+      "pose": "upright-loop",
+      "meanByteError": 0.05812875,
+      "maxByteError": 254,
+      "changedBytes": 70475,
+      "largeDifferenceBytes": 35
+    },
+    {
+      "pose": "wall-loop",
+      "meanByteError": 0.094003125,
+      "maxByteError": 252,
+      "changedBytes": 98752,
+      "largeDifferenceBytes": 76
+    }
+  ],
+  "stability": {
+    "different": 0
+  },
+  "skipEquivalence": [
+    {
+      "pose": "road",
+      "meanByteError": 0,
+      "maxByteError": 0
+    },
+    {
+      "pose": "upright-loop",
+      "meanByteError": 0,
+      "maxByteError": 0
+    },
+    {
+      "pose": "wall-loop",
+      "meanByteError": 0,
+      "maxByteError": 0
+    }
+  ],
+  "sky": [
+    {
+      "pitch": -65,
+      "different": 1228800,
+      "meanDeltaRGB": [
+        -60.531171875,
+        -52.20172607421875,
+        -30.6293212890625
+      ]
+    },
+    {
+      "pitch": 0,
+      "different": 1228371,
+      "meanDeltaRGB": [
+        -23.52572998046875,
+        -20.65977783203125,
+        -13.1365966796875
+      ]
+    },
+    {
+      "pitch": 65,
+      "different": 0,
+      "meanDeltaRGB": [
+        0,
+        0,
+        0
+      ]
+    }
+  ]
+}

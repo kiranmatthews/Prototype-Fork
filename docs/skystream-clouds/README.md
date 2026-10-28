@@ -65,3 +65,7 @@ The subsequent full-send iteration replaces the main course's opaque shell with
 continuous bonus-style density rendering. See the [full-volume implementation,
 GPU costs and validation](volume/README.md). The preceding shell/fringe sections
 and images document earlier iterations, not the current default renderer.
+
+The latest [optimization and clearance pass](optimization/README.md) retains
+that full density, cuts measured cloud GPU time by 20–28%, separates the riding
+plane from the cloud crown and strengthens the lower blue sky gradient.

@@ -5873,3 +5873,37 @@ See [full-volume evidence and reproduction](skystream-clouds/volume/README.md).
 
 Packaged full-render browser traversal also passes all 67 boxes, seven checkpoints,
 four gaps and three loops without deaths, bails, console or request errors.
+
+## 29 October 2026 NZDT — Faster full-volume Skystream, clear contact and blue sky
+
+Brief: optimize the full cloud look, leave the skater above the noisy crown and
+increase lower-sky contrast. Validated local preview at 21:14 UTC, approximately
+49 minutes after the 20:25 UTC goal. Packaging and deployment checks follow.
+
+Static half-float inverse-coordinate maps replace repeated curved-frame work;
+oriented proxies reject empty corners, and bounded coordinate derivatives
+permit longer conservative empty-space skips. Full density and 0.2 m occupied
+ray spacing remain. Same-session cloud GPU medians improve by 20–28% across
+road and both loop views at 720p and native resolution. Data increases from
+31.12 to 61.21 MiB; a slower 102.7 MiB coordinate prototype was rejected.
+
+The visual crown sits 0.4 m below contact along each local normal, including
+vertical and inverted loops. A full-width crown margin keeps cloud noise out
+of the skater. The existing collider, route and movement tuning remain aligned.
+The original sky receives a deeper blue gradient fading by 64% height; its
+upper panorama and sun effects remain intact.
+
+Focused clearance, periodicity, map-bound, deterministic-render and resource
+checks pass. Empty skipping is pixel-identical in the three comparison views;
+coordinate interpolation has small documented image differences. The complete
+native route retains 67 boxes, seven checkpoints, four gaps and three loops
+with no deaths/bails, and deliberate fall recovery succeeds. Production build,
+type checking and release-size validation pass; no level data changed.
+
+See [optimization measurements and evidence](skystream-clouds/optimization/README.md).
+
+Packaged full-render traversal also passes all 67 main boxes and three loops
+without deaths, bails or browser errors. Whole-game opening-camera measurements
+with CRT improve from 20.1 to 25.0 FPS at 720p and 11.7 to 15.2 FPS at native
+1600×1000; the full-volume effect remains expensive. The production preview
+uses `Codex/sol fork · build 10-28 21:15 UTC` / `index-BLiwLUCe.js`.
