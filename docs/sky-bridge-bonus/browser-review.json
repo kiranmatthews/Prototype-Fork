@@ -1,0 +1,409 @@
+{
+  "base": "http://127.0.0.1:5217/",
+  "errors": [],
+  "views": [
+    {
+      "name": "arrival",
+      "level": "bonus-sky-bridge",
+      "position": [
+        -6,
+        -4.768371586472142e-8,
+        0
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "sky": "clouds",
+      "stamp": "Codex/sol fork · build 10-28 08:30 UTC",
+      "decks": 1,
+      "planks": 40,
+      "render": {
+        "frame": 1102,
+        "calls": 122,
+        "triangles": 832652,
+        "points": 0,
+        "lines": 0
+      },
+      "resolution": 720,
+      "sizes": {
+        "viewportWidth": 1440,
+        "viewportHeight": 900,
+        "inputWidth": 1152,
+        "inputHeight": 720,
+        "outputWidth": 1152,
+        "outputHeight": 720
+      },
+      "canvas": [
+        1152,
+        720
+      ],
+      "contextLost": false
+    },
+    {
+      "name": "relay",
+      "level": "bonus-sky-bridge",
+      "position": [
+        5.5,
+        -4.768371586472142e-8,
+        0
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "sky": "clouds",
+      "stamp": "Codex/sol fork · build 10-28 08:30 UTC",
+      "decks": 1,
+      "planks": 40,
+      "render": {
+        "frame": 1629,
+        "calls": 134,
+        "triangles": 866325,
+        "points": 0,
+        "lines": 0
+      },
+      "resolution": 720,
+      "sizes": {
+        "viewportWidth": 1440,
+        "viewportHeight": 900,
+        "inputWidth": 1152,
+        "inputHeight": 720,
+        "outputWidth": 1152,
+        "outputHeight": 720
+      },
+      "canvas": [
+        1152,
+        720
+      ],
+      "contextLost": false
+    },
+    {
+      "name": "receiver",
+      "level": "bonus-sky-bridge",
+      "position": [
+        24,
+        -4.768371586472142e-8,
+        0
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "sky": "clouds",
+      "stamp": "Codex/sol fork · build 10-28 08:30 UTC",
+      "decks": 1,
+      "planks": 40,
+      "render": {
+        "frame": 2143,
+        "calls": 144,
+        "triangles": 889913,
+        "points": 0,
+        "lines": 0
+      },
+      "resolution": 720,
+      "sizes": {
+        "viewportWidth": 1440,
+        "viewportHeight": 900,
+        "inputWidth": 1152,
+        "inputHeight": 720,
+        "outputWidth": 1152,
+        "outputHeight": 720
+      },
+      "canvas": [
+        1152,
+        720
+      ],
+      "contextLost": false
+    },
+    {
+      "name": "timber",
+      "level": "bonus-sky-bridge",
+      "position": [
+        35,
+        3.5762786898541066e-9,
+        0
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "sky": "clouds",
+      "stamp": "Codex/sol fork · build 10-28 08:30 UTC",
+      "decks": 1,
+      "planks": 40,
+      "render": {
+        "frame": 2629,
+        "calls": 138,
+        "triangles": 894547,
+        "points": 0,
+        "lines": 0
+      },
+      "resolution": 720,
+      "sizes": {
+        "viewportWidth": 1440,
+        "viewportHeight": 900,
+        "inputWidth": 1152,
+        "inputHeight": 720,
+        "outputWidth": 1152,
+        "outputHeight": 720
+      },
+      "canvas": [
+        1152,
+        720
+      ],
+      "contextLost": false
+    },
+    {
+      "name": "return",
+      "level": "bonus-sky-bridge",
+      "position": [
+        60,
+        -4.768371586472142e-8,
+        0
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "sky": "clouds",
+      "stamp": "Codex/sol fork · build 10-28 08:30 UTC",
+      "decks": 1,
+      "planks": 40,
+      "render": {
+        "frame": 3124,
+        "calls": 130,
+        "triangles": 837856,
+        "points": 10,
+        "lines": 0
+      },
+      "resolution": 720,
+      "sizes": {
+        "viewportWidth": 1440,
+        "viewportHeight": 900,
+        "inputWidth": 1152,
+        "inputHeight": 720,
+        "outputWidth": 1152,
+        "outputHeight": 720
+      },
+      "canvas": [
+        1152,
+        720
+      ],
+      "contextLost": false
+    },
+    {
+      "name": "native-relay",
+      "level": "bonus-sky-bridge",
+      "position": [
+        5.5,
+        -4.768371586472142e-8,
+        0
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "sky": "clouds",
+      "stamp": "Codex/sol fork · build 10-28 08:30 UTC",
+      "decks": 1,
+      "planks": 40,
+      "render": {
+        "frame": 3378,
+        "calls": 128,
+        "triangles": 866318,
+        "points": 0,
+        "lines": 0
+      },
+      "resolution": "max",
+      "sizes": {
+        "viewportWidth": 1440,
+        "viewportHeight": 900,
+        "inputWidth": 1152,
+        "inputHeight": 720,
+        "outputWidth": 1152,
+        "outputHeight": 720
+      },
+      "canvas": [
+        1440,
+        900
+      ],
+      "contextLost": false
+    },
+    {
+      "name": "native-timber",
+      "level": "bonus-sky-bridge",
+      "position": [
+        40,
+        3.5762786898541066e-9,
+        0
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "sky": "clouds",
+      "stamp": "Codex/sol fork · build 10-28 08:30 UTC",
+      "decks": 1,
+      "planks": 40,
+      "render": {
+        "frame": 3540,
+        "calls": 127,
+        "triangles": 882495,
+        "points": 0,
+        "lines": 0
+      },
+      "resolution": "max",
+      "sizes": {
+        "viewportWidth": 1440,
+        "viewportHeight": 900,
+        "inputWidth": 1152,
+        "inputHeight": 720,
+        "outputWidth": 1152,
+        "outputHeight": 720
+      },
+      "canvas": [
+        1440,
+        900
+      ],
+      "contextLost": false
+    }
+  ],
+  "spawn": {
+    "level": "bonus-sky-bridge",
+    "position": [
+      -6,
+      -4.768371586472142e-8,
+      0
+    ],
+    "grounded": true,
+    "state": "ride",
+    "deaths": 0,
+    "sky": "clouds",
+    "stamp": "Codex/sol fork · build 10-28 08:30 UTC",
+    "decks": 1,
+    "planks": 40,
+    "render": {
+      "frame": 337,
+      "calls": 48,
+      "triangles": 385010,
+      "points": 0,
+      "lines": 0
+    },
+    "resolution": 720,
+    "sizes": {
+      "viewportWidth": 1440,
+      "viewportHeight": 900,
+      "inputWidth": 1152,
+      "inputHeight": 720,
+      "outputWidth": 1152,
+      "outputHeight": 720
+    },
+    "canvas": [
+      720,
+      450
+    ],
+    "contextLost": false
+  },
+  "fall": {
+    "level": "bonus-sky-bridge",
+    "position": [
+      10.8,
+      -6.82166666666667,
+      0
+    ],
+    "grounded": false,
+    "state": "dead",
+    "deaths": 0,
+    "sky": "clouds",
+    "stamp": "Codex/sol fork · build 10-28 08:30 UTC",
+    "decks": 1,
+    "planks": 40,
+    "render": {
+      "frame": 412,
+      "calls": 66,
+      "triangles": 433178,
+      "points": 0,
+      "lines": 0
+    },
+    "resolution": 720,
+    "sizes": {
+      "viewportWidth": 1440,
+      "viewportHeight": 900,
+      "inputWidth": 1152,
+      "inputHeight": 720,
+      "outputWidth": 1152,
+      "outputHeight": 720
+    },
+    "canvas": [
+      720,
+      450
+    ],
+    "contextLost": false
+  },
+  "pitRespawn": {
+    "level": "bonus-sky-bridge",
+    "position": [
+      -6,
+      0.12,
+      0
+    ],
+    "grounded": true,
+    "state": "ride",
+    "deaths": 0,
+    "sky": "clouds",
+    "stamp": "Codex/sol fork · build 10-28 08:30 UTC",
+    "decks": 1,
+    "planks": 40,
+    "render": {
+      "frame": 815,
+      "calls": 50,
+      "triangles": 385060,
+      "points": 0,
+      "lines": 0
+    },
+    "resolution": 720,
+    "sizes": {
+      "viewportWidth": 1440,
+      "viewportHeight": 900,
+      "inputWidth": 1152,
+      "inputHeight": 720,
+      "outputWidth": 1152,
+      "outputHeight": 720
+    },
+    "canvas": [
+      720,
+      450
+    ],
+    "contextLost": false
+  },
+  "final": {
+    "level": "bonus-sky-bridge",
+    "position": [
+      40,
+      3.5762786898541066e-9,
+      0
+    ],
+    "grounded": true,
+    "state": "ride",
+    "deaths": 0,
+    "sky": "clouds",
+    "stamp": "Codex/sol fork · build 10-28 08:30 UTC",
+    "decks": 1,
+    "planks": 40,
+    "render": {
+      "frame": 3582,
+      "calls": 127,
+      "triangles": 882495,
+      "points": 0,
+      "lines": 0
+    },
+    "resolution": "max",
+    "sizes": {
+      "viewportWidth": 1440,
+      "viewportHeight": 900,
+      "inputWidth": 1152,
+      "inputHeight": 720,
+      "outputWidth": 1152,
+      "outputHeight": 720
+    },
+    "canvas": [
+      1440,
+      900
+    ],
+    "contextLost": false
+  }
+}
