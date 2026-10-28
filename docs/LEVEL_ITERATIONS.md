@@ -5452,3 +5452,19 @@ Final preview: `Codex/sol fork · build 10-28 08:18 UTC`, version
 published level-pack overwrite, unrelated cleanup or check:all. Work remains
 local in accordance with this chat's explicit instruction; the current release
 coordinator is retired. A validated immutable handoff is saved in the inbox.
+
+## 28 October 2026 — Beach kite owner release
+
+The replacement user instructions resume owner integration and publishing.
+The validated local Beach source `5ddbc499` applied cleanly to current main
+`aac956ab` as `b34dffe2`; its five runtime/level blobs are identical and newer
+shared runtime work is preserved. Integrated native spring, controls and full
+3 km traversal pass, as do required check:levels, build and release-size checks.
+A fresh full-render Chrome preview passes the opening 215 m with the delivered
+level pack and zero console/asset errors or canopy clipping; native captures
+were reviewed. The test runner can now verify a published pack without restoring
+its source. Integration checks started at 08:43 UTC and the rebuilt preview
+passed around 08:51, about eight minutes later. The final wind/one-second brake
+corrections were already playable at 08:20. See
+[the release evidence](beach-street/kite-release/README.md) for exact source
+mapping and checks; public verification follows the matching Pages deployment.

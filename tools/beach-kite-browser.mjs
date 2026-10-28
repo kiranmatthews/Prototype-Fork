@@ -10,18 +10,20 @@ const {chromium}=await import(pathToFileURL(module).href);
 const code=ts.transpileModule(await readFile(new URL('../src/levels/beach-street-gameplay.ts',import.meta.url),'utf8'),{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2020}}).outputText;
 const {BEACH_KITE_BEATS:beats,BEACH_KITE_JUMPS:jumps}=await import('data:text/javascript;base64,'+Buffer.from(code).toString('base64'));
 const base=process.env.BEACH_BASE??'http://127.0.0.1:5288',out=process.env.BEACH_OUTPUT??'docs/beach-street/wind-finish';
-const lite=process.argv.includes('--lite'),preview=process.argv.includes('--preview');
+const lite=process.argv.includes('--lite'),preview=process.argv.includes('--preview'),published=process.argv.includes('--published');
 await mkdir(out,{recursive:true});
 const browser=await chromium.launch({channel:'chrome',headless:true});
 const page=await browser.newPage({viewport:{width:1600,height:1000},deviceScaleFactor:1,serviceWorkers:'block'});
 await page.addInitScript(()=>Object.defineProperty(navigator,'getGamepads',{value:()=>[]}));
-const report={base,lite,preview,errors:[],failed:[],captures:[],started:new Date().toISOString()};
+const report={base,lite,preview,published,errors:[],failed:[],captures:[],started:new Date().toISOString()};
 page.on('pageerror',e=>report.errors.push(e.message));page.on('console',m=>{if(m.type()==='error')report.errors.push(m.text());});
 page.on('response',r=>{if(r.status()>=400)report.failed.push({url:r.url(),status:r.status()});});
 try{
  await page.goto(`${base}/?playtest&level=coastal-street-run${lite?'&lite':''}`,{waitUntil:'domcontentloaded',timeout:150000});
  await page.waitForFunction(()=>window.__game?.getCurrentLevel().id==='coastal-street-run'&&!window.__game.gameFlow.blocksGameplay,null,{timeout:150000});
- await page.evaluate(async()=>{const g=window.__game;g.restoreBuiltin('coastal-street-run');await g.switchLevel('coastal-street-run');g.campaign.startEphemeral();await g.getLevel().prepareJungleAssets();});
+ // Published verification must exercise the level delivered to a fresh user,
+ // including the served pack, without restoring or replacing its source data.
+ await page.evaluate(async published=>{const g=window.__game;if(!published){g.restoreBuiltin('coastal-street-run');await g.switchLevel('coastal-street-run');}g.campaign.startEphemeral();await g.getLevel().prepareJungleAssets();},published);
  await page.waitForFunction(()=>!window.__game.gameFlow.blocksGameplay,null,{timeout:150000});
  await page.evaluate(({beats,jumps,preview})=>{
   const g=window.__game,p=g.player,l=g.getLevel();p.respawn(l,true);p.lives=99;
