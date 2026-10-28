@@ -1,0 +1,119 @@
+{
+  "runs": [
+    {
+      "lite": false,
+      "enabled": {
+        "enabled": true,
+        "materials": 59
+      },
+      "reload": {
+        "enabled": true,
+        "materials": 59
+      },
+      "restored": {
+        "enabled": false,
+        "materials": 0
+      },
+      "stadium": {
+        "lighting": {
+          "enabled": true,
+          "materials": 527
+        },
+        "lamps": {
+          "fixtures": 80,
+          "pool": 6,
+          "shadowMaps": 0,
+          "lights": [
+            {
+              "position": [
+                -30.60363,
+                58.28812,
+                -33.71915
+              ],
+              "target": [
+                11.10225,
+                25.28812,
+                -14.31246
+              ],
+              "intensity": 7500,
+              "range": 135
+            },
+            {
+              "position": [
+                45.55493,
+                58.28812,
+                1.71915
+              ],
+              "target": [
+                3.84905,
+                25.28812,
+                -17.68754
+              ],
+              "intensity": 7500,
+              "range": 135
+            },
+            {
+              "position": [
+                20.30012,
+                59.686099999999996,
+                -170.09502
+              ],
+              "target": [
+                64.9516,
+                26.6861,
+                -159.03857
+              ],
+              "intensity": 5616.4326891744595,
+              "range": 135
+            },
+            {
+              "position": [
+                101.8376,
+                59.686099999999996,
+                -149.90498
+              ],
+              "target": [
+                57.18612,
+                26.6861,
+                -160.96143
+              ],
+              "intensity": 5375.034308140508,
+              "range": 135
+            },
+            {
+              "position": [
+                107.73869,
+                58.80578,
+                -309.74121
+              ],
+              "target": [
+                62.17049,
+                25.80578,
+                -303.45322
+              ],
+              "intensity": 0,
+              "range": 135
+            },
+            {
+              "position": [
+                24.52719,
+                58.80578,
+                -298.25879
+              ],
+              "target": [
+                70.09539,
+                25.80578,
+                -304.54678
+              ],
+              "intensity": 0,
+              "range": 135
+            }
+          ]
+        },
+        "glError": 0
+      },
+      "stamp": "Codex/sol fork · build 10-28 09:08 UTC"
+    }
+  ],
+  "errors": []
+}

@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import type { CustomComponent, CustomLevelData } from '../level';
 import { SAVED_SLIPSTREAM_LEVEL } from './skystream-source';
 import { SKY_BRIDGE_LEVEL } from './sky-bridge';
-import { createLoopMeshData, sampleLoop } from '../loopRide';
+import { createLoopMeshData, sampleLoop, type LoopShape } from '../loopRide';
 
 type P = [number, number, number];
 const C: CustomComponent[] = [];
@@ -82,10 +82,6 @@ function route(name: string, points: P[], group: number, width = 6.2, roll = 0) 
   const samples = Array.from({ length: n + 1 }, (_, i) => tuple(curve.getPointAt(i / n)));
   for (const p of samples) if (!lane.length || new THREE.Vector3(...p).distanceTo(new THREE.Vector3(...lane[lane.length - 1])) > .1) lane.push(p);
   SKYSTREAM_PARTS.push({ name, points: samples, width, group });
-  // A recessed lapis keel sits below the collision ribbon. It
-  // gives the floating road thickness without fencing off its shortcut edges.
-  const keel = new THREE.CatmullRomCurve3(samples.map(p => new THREE.Vector3(p[0], p[1] - 1.2, p[2])), false, 'centripetal');
-  visual(new THREE.TubeGeometry(keel, Math.max(8, n), .42, 6, false), [0, 0, 0], BLUE, `${name} · lapis keel`);
   return points[points.length - 1];
 }
 
@@ -136,7 +132,7 @@ for (let i = 0; i <= 64; i++) {
 add({ t: 'mesh', p: dropFrom, vertices: dropVertices, indices: dropIndices, uvs: dropUV, normals: dropNormals,
   smoothCollision: true, gravityTrack: true, vert: false, doubleSided: true,
   tex: 'skystream-marble', color: IVORY, grp: 6, nm: 'Heavenfall · 105 metre gravity descent' });
-add({ t: 'mesh', p: [80, -330, -1747], vertices: [-8,0,0,8,0,0,8,0,-14,-8,0,-14], indices:[0,1,2,0,2,3],
+add({ t: 'mesh', p: [80, -330, -1747], vertices: [-8,0,0,8,0,0,-8,0,-14,8,0,-14], indices:[0,1,2,1,3,2],
   uvs:[0,0,16/6,0,16/6,14/6,0,14/6], gravityTrack:true, vert:false, tex:'skystream-marble',color:IVORY,grp:6,nm:'Aureole flat approach' });
 lane.push([...SKYSTREAM_LOOP.entry]);
 add({ t: 'mesh', p: SKYSTREAM_LOOP.entry, ...createLoopMeshData(34, 12, 48, 192), loopRadius: 34, loopOffset: 48, w: 12,
@@ -157,23 +153,45 @@ for (const x of [101.65, 106.35]) {
     visual(medallion, [x, -296, z], GOLD, 'Sanctuary wall sun seal', 'metal');
   }
 }
-for (const side of [-1, 1]) {
-  const points = Array.from({ length: 193 }, (_, i) => {
-    const q = sampleLoop(SKYSTREAM_LOOP, i / 192 * Math.PI * 2, side * 6.35);
-    return new THREE.Vector3(...q.point).add(new THREE.Vector3(...SKYSTREAM_LOOP.entry));
-  });
-  visual(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(points), 192, .27, 8, false), [0, 0, 0], GOLD, 'Aureole continuous gilt rim', 'metal');
+// Two further rings extend the finale: upright / wall ride / upright.
+export const SKYSTREAM_LOOPS: (LoopShape & { entry: P; exit: P; name: string })[] = [
+  { ...SKYSTREAM_LOOP, kind: 'vertical', name: 'The Aureole' },
+  { entry: [128,-330,-1848], exit: [128,-354,-1848], radius: 34, width: 14, offset: -24, kind: 'wall', name: 'The Wedding Band' },
+  { entry: [128,-414,-1952], exit: [164,-414,-1952], radius: 26, width: 12, offset: 36, kind: 'vertical', name: 'The Afterglow' },
+];
+export const SKYSTREAM_LOOP_EXITS: number[] = [lane.length-1];
+function gravityRun(name: string, from: P, to: P, group = 6) {
+  const vertices: number[] = [], normals: number[] = [], indices: number[] = [];
+  for(let i=0;i<=80;i++) {
+    const t=i/80, y=(to[1]-from[1])*(1-Math.cos(Math.PI*t))/2, z=(to[2]-from[2])*t;
+    const slope=(to[1]-from[1])*Math.PI*Math.sin(Math.PI*t)/(2*(to[2]-from[2]));
+    const normal=new THREE.Vector3(0,1,-slope).normalize();
+    for(const side of [-1,1]) { vertices.push(side*8,y,z);normals.push(...normal.toArray()); }
+    if(i<80){const a=i*2;indices.push(a,a+1,a+2,a+1,a+3,a+2);}
+    lane.push([from[0],from[1]+y,from[2]+z]);
+  }
+  add({t:'mesh',p:from,vertices,normals,indices,smoothCollision:true,gravityTrack:true,vert:false,doubleSided:true,grp:group,nm:name});
 }
-route('Aureole runout', [[128, -330, -1760], [128, -330, -1790], [128, -330, -1812], [128, -328, -1830]], 7, 8);
-SKYSTREAM_GAPS.push({ name: 'Last flight', takeoff: [128, -328, -1830], landing: [128, -338, -1850] });
-route('Last flight catch', [[128, -338, -1850], [128, -341, -1880], [112, -346, -1910], [96, -348, -1928]], 7, 8);
-export const SKYSTREAM_FINISH: P = [96, -348, -1960];
-add({ t: 'platform', p: [96, -349, -1946], s: [26, 2, 66], tex: 'skystream-marble', color: IVORY, grp: 7, nm: 'Cloud sanctuary finish court' });
-lane.push([96, -348, -1946], [96, -348, -1976]);
-add({ t: 'gate', p: SKYSTREAM_FINISH, grp: 7 });
+gravityRun('Aureole to wedding band', SKYSTREAM_LOOP.exit, SKYSTREAM_LOOPS[1].entry);
+for(const [i,loop] of SKYSTREAM_LOOPS.entries()) {
+  if(i===0)continue;
+  add({t:'mesh',p:loop.entry,...createLoopMeshData(loop.radius,loop.width,loop.offset,256,loop.kind),
+    loopRadius:loop.radius,loopOffset:loop.offset,loopKind:loop.kind,w:loop.width,
+    loopRequired:false,doubleSided:true,edgeGrinding:false,grp:6,nm:loop.name});
+  for(let j=1;j<=128;j++)lane.push(sampleLoop(loop,j/128*Math.PI*2).point.map((v,k)=>v+loop.entry[k]) as P);
+  SKYSTREAM_LOOP_EXITS.push(lane.length-1);
+  if(i===1)gravityRun('Wedding band to Afterglow descent',loop.exit,SKYSTREAM_LOOPS[2].entry);
+}
+route('Aureole runout', [[164,-414,-1952],[164,-414,-1990],[164,-414,-2012],[164,-412,-2030]],7,8);
+SKYSTREAM_GAPS.push({name:'Last flight',takeoff:[164,-412,-2030],landing:[164,-422,-2050]});
+route('Last flight catch',[[164,-422,-2050],[164,-425,-2080],[148,-430,-2110],[132,-432,-2128]],7,8);
+export const SKYSTREAM_FINISH: P = [132,-432,-2160];
+add({t:'platform',p:[132,-433,-2146],s:[26,2,66],grp:7,nm:'Cloud sanctuary finish court'});
+lane.push([132,-432,-2146],[132,-432,-2176]);
+add({t:'gate',p:SKYSTREAM_FINISH,grp:7});
 
 const partPoint = (name: string, t: number): P => { const p = SKYSTREAM_PARTS.find(part => part.name === name)!.points; return [...p[Math.round((p.length - 1) * t)]]; };
-export const SKYSTREAM_CHECKPOINTS: P[] = [[0, .2, -854], partPoint('Broken constellation launch', .3), partPoint('Falling feather switchbacks', .13), [80, -225, -1640], [128, -330, -1794]];
+export const SKYSTREAM_CHECKPOINTS: P[] = [[0, .2, -854], partPoint('Broken constellation launch', .3), partPoint('Falling feather switchbacks', .13), [80, -225, -1640], [164, -414, -1994]];
 for (const [i, p] of SKYSTREAM_CHECKPOINTS.entries()) add({ t: 'checkpoint', p, grp: 8, nm: `Cloud sanctuary ${i + 1}` });
 
 // Short, single-file runs follow the deck centre through the actual spline.
@@ -219,7 +237,7 @@ for (const [road, name, start, spacing] of [
 
 // Large carved columns, stepped capitals and open gilt crowns supply a
 // consistent architectural scale. They remain below/beside playable edges.
-for (const p of [[-14,150,9],[14,150,9],[-16,.2,-854],[16,.2,-854],[64,-225,-1640],[96,-225,-1640],[78,-348,-1954],[114,-348,-1954]] as P[]) {
+for (const p of [[-14,150,9],[14,150,9],[-16,.2,-854],[16,.2,-854],[64,-225,-1640],[96,-225,-1640],[114,-432,-2154],[150,-432,-2154]] as P[]) {
   const [x,y,z] = p;
   visual(new THREE.CylinderGeometry(1.8, 2.2, 25, 12), [x,y-12.5,z], '#e9e5db', 'Cloud pier fluted shaft', 'skystream-marble');
   for (const [offset,r,h] of [[-.45,3.5,.9],[-1.25,2.9,.65],[-2,2.5,.45]] as const)
@@ -227,7 +245,7 @@ for (const p of [[-14,150,9],[14,150,9],[-16,.2,-854],[16,.2,-854],[64,-225,-164
   visual(new THREE.TorusGeometry(2.05,.2,6,32).rotateX(Math.PI/2), [x,y-2.8,z], GOLD, 'Cloud pier gold collar', 'metal');
   visual(new THREE.ConeGeometry(2.2,9,12), [x,y-29.5,z], BLUE, 'Floating pier lapis pendant');
 }
-for (const [x,y,z] of [[0,150,-2],[0,.2,-849],[80,-225,-1639],[96,-348,-1954]] as P[]) {
+for (const [x,y,z] of [[0,150,-2],[0,.2,-849],[80,-225,-1639],[132,-432,-2154]] as P[]) {
   const arch = new THREE.TorusGeometry(12.8,.55,8,48,Math.PI);
   visual(arch,[x,y+1.6,z],GOLD,'Open sanctuary crown arch','metal');
   for(const side of [-1,1]) {
@@ -250,14 +268,27 @@ for (const cut of SKYSTREAM_SHORTCUTS) for(const p of cut.trail)
   add({t:'wumpa',p:[p[0],p[1]+.9,p[2]],grp:8});
 for(const p of lane)add({t:'camnode',p});
 
+for (let i=0;i<C.length;i++) {
+  let c=C[i];
+  if(c.t==='platform') {
+    const [w,h,d]=c.s!;
+    c=C[i]={t:'mesh',p:[c.p[0],c.p[1]+h/2,c.p[2]],yaw:c.yaw,grp:c.grp,nm:c.nm,
+      vertices:[-w/2,0,d/2,w/2,0,d/2,-w/2,0,-d/2,w/2,0,-d/2],indices:[0,1,2,1,3,2],
+      normals:[0,1,0,0,1,0,0,1,0,0,1,0],smoothCollision:true};
+  }
+  if(c.t==='vertramp'||c.t==='mesh'&&c.solid!==false) {
+    c.cloudRoad=true;c.tex='solid';c.color='#f7fcff';
+  }
+}
+
 export const SKYSTREAM_LEVEL: CustomLevelData = {
   v:1,name:'The Skystream',spawn:[-SAVED_SLIPSTREAM_LEVEL.spawn[0],SAVED_SLIPSTREAM_LEVEL.spawn[1],SAVED_SLIPSTREAM_LEVEL.spawn[2]],
-  killY:-430,fallRecoveryDrop:24,sky:'clouds',keepPlayFog:true,jungleDepthFade:false,hugeDropBail:false,
+  killY:-530,fallRecoveryDrop:24,sky:'clouds',keepPlayFog:true,jungleDepthFade:false,hugeDropBail:false,
   cameraAirLift:.65,cameraLookAhead:13,
-  atmosphere:{...SKY_BRIDGE_LEVEL.atmosphere!,fogNear:36,fogFar:192},relicTime:180,medalTimes:{gold:180,silver:210,bronze:250},
+  atmosphere:{...SKY_BRIDGE_LEVEL.atmosphere!,fogNear:90,fogFar:440,fogColor:'#eef4f6',drawDistance:680,sunDirection:[-.34,.38,-.86],ambientIntensity:.85,sunIntensity:2.1},relicTime:180,medalTimes:{gold:180,silver:210,bronze:250},
   groups:[{id:1,nm:'I · mirrored Saved Slipstream'},{id:2,nm:'II · pearl halo'},{id:3,nm:'III · cloud eye'},
     {id:4,nm:'IV · broken constellation and seraph coil'},{id:5,nm:'V · falling feathers'},
-    {id:6,nm:'VI · the Aureole'},{id:7,nm:'VII · last flight'},{id:8,nm:'Sanctuaries and shortcuts'},
-    {id:9,nm:'Marble, lapis and gilt architecture',editorOnly:true}],
+    {id:6,nm:'VI · three cloud rings'},{id:7,nm:'VII · last flight'},{id:8,nm:'Sanctuaries and shortcuts'},
+    {id:9,nm:'Cloud sanctuary architecture',editorOnly:true}],
   components:C,
 };

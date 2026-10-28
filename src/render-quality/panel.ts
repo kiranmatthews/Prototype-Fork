@@ -7,6 +7,7 @@ import {
   type RenderBaseHeight,
   type RenderOutputMultiplier,
 } from "./settings";
+import { vertexLightingSettings } from './vertexLightingSettings';
 
 export interface RenderQualityPanelOptions {
   settings?: RenderQualitySettings;
@@ -50,10 +51,12 @@ export class RenderQualityPanel {
   private readonly shadow: ShadowRoot;
   private readonly enabled: HTMLInputElement;
   private readonly fixed60: HTMLInputElement;
+  private readonly vertexLighting: HTMLInputElement;
   private readonly baseButtons = new Map<RenderBaseHeight, HTMLButtonElement>();
   private readonly outputButtons = new Map<RenderOutputMultiplier, HTMLButtonElement>();
   private readonly metrics: HTMLElement;
   private readonly unsubscribe: () => void;
+  private readonly unsubscribeLighting: () => void;
   private openState = false;
 
   constructor(options: RenderQualityPanelOptions = {}) {
@@ -131,6 +134,13 @@ export class RenderQualityPanel {
       (checked) => this.settings.setFixed60(checked),
     );
 
+    this.vertexLighting = this.checkboxRow(
+      body,
+      "Global vertex lighting",
+      "Diffuse Gouraud shading for lit meshes. Keeps textures, shadows, fog and reflections. Off restores authored lighting.",
+      (checked) => vertexLightingSettings.setEnabled(checked),
+    );
+
     this.metrics = document.createElement("pre");
     this.metrics.className = "metrics";
     this.metrics.textContent = "Waiting for renderer dimensions…";
@@ -147,6 +157,7 @@ export class RenderQualityPanel {
     parent.appendChild(this.element);
 
     this.unsubscribe = this.settings.subscribe(() => this.refresh(), true);
+    this.unsubscribeLighting = vertexLightingSettings.subscribe(enabled => { this.vertexLighting.checked = enabled; }, true);
     this.setOpen(options.initiallyOpen ?? false);
   }
 
@@ -175,6 +186,7 @@ export class RenderQualityPanel {
 
   dispose(): void {
     this.unsubscribe();
+    this.unsubscribeLighting();
     this.element.remove();
   }
 

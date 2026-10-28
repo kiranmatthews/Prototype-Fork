@@ -1,0 +1,12 @@
+{
+  "levelChecks": "pass",
+  "integratedNativeRoute": "pass",
+  "productionBuild": "pass",
+  "productionBrowser": "pass",
+  "releaseSize": "pass",
+  "releaseFiles": 1847,
+  "releaseBytes": 997070170,
+  "stamp": "Codex/sol fork \u00b7 build 10-28 09:18 UTC",
+  "base": "d8b7f9b7692081b30985d7311f4c95973c1cbdca",
+  "sourceOwnedSkystream": true
+}

@@ -1,0 +1,20 @@
+{
+  "base": "0a10f2c662b850e62f92e5b3702c1dd7f5975239",
+  "promptToPlayableMinutes": 16,
+  "build": "passed",
+  "releaseBytes": 997055786,
+  "releaseBudgetBytes": 1000000000,
+  "buildStamp": "Codex/sol fork \u00b7 build 10-28 09:08 UTC",
+  "focusedChecks": [
+    "tools/test-vertex-lighting.mjs",
+    "tools/test-render-quality-settings.mjs",
+    "tools/test-vertex-lighting-browser.mjs"
+  ],
+  "fullSuiteRun": false,
+  "sourceHashes": {
+    "src/main.ts": "816b44b0a35dd3530f51e8179a0eb36e13a17a52fb3d16714c62452d463ce8a3",
+    "src/render-quality/panel.ts": "404f930e87417f0537dede9c1ca6d049d7689e6d45aa6e489e315ffc109a2e3c",
+    "src/render-quality/vertexLightingSettings.ts": "52555636f36a6e4cb48511e8287a1d4002c0907904288e9d89cd07baeff3317c",
+    "src/vertexLighting.ts": "19453ce08f502c92cd988c32dbcae4034f4edad5f60a3de2b07fa5e3b829cd2e"
+  }
+}

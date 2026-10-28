@@ -1,0 +1,27 @@
+{
+  "base": "http://127.0.0.1:5188/",
+  "initial": {
+    "stamp": "Codex/sol fork · build 10-28 09:18 UTC",
+    "level": "skystream",
+    "loops": [
+      "vertical",
+      "wall",
+      "vertical"
+    ],
+    "cloudMeshes": 206,
+    "cloudTriangles": 1626016,
+    "hiddenContact": true,
+    "sun": true,
+    "spawn": [
+      0,
+      150.73666666644314,
+      18
+    ],
+    "grounded": true
+  },
+  "release": {
+    "entry": "assets/index-BggqAwqP.js"
+  },
+  "errors": [],
+  "failedRequests": []
+}
