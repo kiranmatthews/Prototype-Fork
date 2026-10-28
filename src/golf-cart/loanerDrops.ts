@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import type { GolfCartPhysics } from './physics';
 import type { GolfCartFleet, FleetPose } from './fleet';
 
-export const LOANER_DROP=Object.freeze({height:16,fallSpeed:6.2,canopyHeight:6.1,canopyRadius:3.35,releaseSeconds:1.65});
+export const LOANER_DROP=Object.freeze({height:32,fallSpeed:6.2,canopyHeight:6.1,canopyRadius:3.35,releaseSeconds:1.65});
 interface Drop {
   index:number;age:number;released:number;root:THREE.Group;cloth:THREE.Group;
   canopy:THREE.Mesh;seams:THREE.LineSegments;cords:THREE.InstancedMesh;

@@ -1,0 +1,22 @@
+{"childPid": 92883, "command": "node", "owner": "01a1729c-24cf-75e2-9f0d-71d30058a524", "pid": 92878, "slot": 1, "startedAt": "2026-10-28T08:34:38.270419+00:00", "status": "running"}
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: An unimpeded driver can avoid rock 1 at 90; final 48.09761399159853,-114.25710880405599; offset 11.614668755371145; contacts [{"cart":0,"other":null,"x":35.81888959325399,"y":27.108807683559835,"z":-81.89393879476678,"strength":17.850617806494142,"panel":0,"time":1.3166666666666644}]
+
+1 !== 0
+
+    at withBlockworksRuntime.modulePath (file:///Users/kiki/.codex/worktrees/kart-live-grid/Prototype%20Fork/tools/test-rally-rock-obstacles.mjs:20:59)
+    at async withBlockworksRuntime (file:///Users/kiki/.codex/worktrees/kart-live-grid/Prototype%20Fork/tools/blockworks-runner.mjs:222:12)
+    at async file:///Users/kiki/.codex/worktrees/kart-live-grid/Prototype%20Fork/tools/test-rally-rock-obstacles.mjs:4:1 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 1,
+  expected: 0,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0
+{"exitCode": 1, "owner": "01a1729c-24cf-75e2-9f0d-71d30058a524", "slot": 1, "status": "released"}

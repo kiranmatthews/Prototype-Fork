@@ -1,0 +1,53 @@
+{
+  "passed": true,
+  "settings": {
+    "height": 32,
+    "fallSpeed": 6.2,
+    "canopyHeight": 6.1,
+    "canopyRadius": 3.35,
+    "releaseSeconds": 1.65
+  },
+  "cases": [
+    {
+      "hz": 30,
+      "landingTime": 5.066666666666666,
+      "compression": 0.07680000000000001,
+      "health": 1,
+      "landed": 1,
+      "rolls": 0,
+      "respawns": 0,
+      "finiteRopes": true,
+      "sharedGeometry": true,
+      "finiteCleanup": true
+    },
+    {
+      "hz": 60,
+      "landingTime": 5.066666666666666,
+      "compression": 0.07680000000000001,
+      "health": 1,
+      "landed": 1,
+      "rolls": 0,
+      "respawns": 0,
+      "finiteRopes": true,
+      "sharedGeometry": true,
+      "finiteCleanup": true
+    },
+    {
+      "hz": 144,
+      "landingTime": 5.069444444444445,
+      "compression": 0.07680000000000001,
+      "health": 1,
+      "landed": 1,
+      "rolls": 0,
+      "respawns": 0,
+      "finiteRopes": true,
+      "sharedGeometry": true,
+      "finiteCleanup": true
+    }
+  ],
+  "actualRoofAttachment": {
+    "maxError": 0,
+    "allLines": 16
+  },
+  "visibilityPreservesGeometry": true
+}

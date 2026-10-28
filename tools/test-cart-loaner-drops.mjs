@@ -9,15 +9,15 @@ for(const hz of [30,60,144]){
  const d=new LoanerDrops(),roof=new THREE.Group(),root=new THREE.Group();root.add(roof);root.scale.setScalar(1.25);
  const fleet={models:[{modules:{roof}}],kit:{cabinRise:.6},isPresented:()=>true};
  const present=()=>{const c=w.carts[0];root.position.set(c.x,c.y,c.z);root.rotation.y=c.yaw;root.updateMatrixWorld(true);d.present(fleet,w.carts);};
- d.start(0,w);assert.equal(w.carts[0].y,20);assert.ok(d.isDescending(0));assert.equal(d.nearest(new THREE.Vector3(0,4,0),w),0);
+ d.start(0,w);assert.equal(w.carts[0].y,4+LOANER_DROP.height);assert.ok(d.isDescending(0));assert.equal(d.nearest(new THREE.Vector3(0,4,0),w),0);
  const initial=JSON.stringify(w.carts[0]);for(let n=0;n<10;n++)present();assert.equal(JSON.stringify(w.carts[0]),initial,'Presentation cannot advance the descent');
  let time=0,landed=0,landingTime=null,compression=0;
- for(let n=0;n<hz*5;n++){
+ for(let n=0;n<hz*8;n++){
   w.advance(1/hz,world=>d.control(world));time=(n+1)/hz;const hits=d.update(1/hz,w);landed+=hits.length;present();
   if(hits.length){landingTime=time;compression=w.carts[0].landingCompression;assert.equal(d.isDescending(0),false);}
   for(const drop of d.root.children)drop.traverse(o=>{if(o.isInstancedMesh)assert.ok([...o.instanceMatrix.array].every(Number.isFinite));});
  }
- assert.equal(landed,1);assert.ok(landingTime>2.4&&landingTime<3);assert.ok(compression>.06);assert.equal(w.carts[0].health,1);assert.equal(w.carts[0].rolls,0);assert.equal(w.carts[0].respawns,0);assert.equal(d.activeCount,0);assert.equal(d.root.children.length,0);
+ assert.equal(landed,1);assert.ok(landingTime>5&&landingTime<5.5);assert.ok(compression>.06);assert.equal(w.carts[0].health,1);assert.equal(w.carts[0].rolls,0);assert.equal(w.carts[0].respawns,0);assert.equal(d.activeCount,0);assert.equal(d.root.children.length,0);
  // Repeated deliveries share authored buffers, and a wreck releases its chute.
  const ids=[];for(let n=0;n<3;n++){w.reset(0);d.start(0,w);ids.push(d.root.children[0].getObjectByName('Paneled vented canopy').geometry.uuid);}
  assert.equal(new Set(ids).size,1);assert.equal(d.activeCount,1);w.carts[0].health=0;d.update(1/hz,w);assert.equal(d.isDescending(0),false);d.dispose();assert.equal(d.activeCount,0);

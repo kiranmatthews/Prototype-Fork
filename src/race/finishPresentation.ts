@@ -28,8 +28,11 @@ export class RaceFinishPresentation {
     const side=new THREE.Vector3(-forward.z,0,forward.x);
     const finish=course.sample(course.length);
     const offset=course.project(race.riders[0].player.pos).offset;
-    const center=finish.clone().addScaledVector(forward,2).addScaledVector(side,offset*.45);center.y+=2;
-    const look=forward.clone().negate().addScaledVector(side,-.65).setY(-.42).normalize();
+    const kart=!!race.carts;
+    const center=finish.clone().addScaledVector(forward,2).addScaledVector(side,kart?0:offset*.45);center.y+=2;
+    // Look down the stadium straight from above the approach. The old side
+    // angle placed the results camera inside the steep spectator stands.
+    const look=kart?forward.clone().setY(-.65).normalize():forward.clone().negate().addScaledVector(side,-.65).setY(-.42).normalize();
     const right=new THREE.Vector3().crossVectors(look,new THREE.Vector3(0,1,0)).normalize();
     const up=new THREE.Vector3().crossVectors(right,look).normalize();
     const fov=42,tan=Math.tan(THREE.MathUtils.degToRad(fov/2));
@@ -43,8 +46,25 @@ export class RaceFinishPresentation {
       const corner=side.clone().multiplyScalar(x).addScaledVector(forward,z);corner.y=y;
       distance=Math.max(distance,Math.abs(corner.dot(right))/tanX-corner.dot(look),Math.abs(corner.dot(up))/tanY-corner.dot(look));
     }
-    this.shot.position.copy(center).addScaledVector(look,-distance);
-    this.shot.lookAt(center);
+    for(let pass=0;pass<(kart?4:1);pass++){
+      this.shot.position.copy(center).addScaledVector(look,-distance);
+      if(kart){
+        const approach=course.sample(Math.max(0,course.length-distance/Math.hypot(1,.65)));
+        this.shot.position.x=approach.x;this.shot.position.z=approach.z;
+      }
+      this.shot.lookAt(center);
+      if(!kart)break;
+      // The approach can bend. Stay on its centreline, then refit the subjects
+      // to the resulting view instead of drifting sideways into a grandstand.
+      const aim=center.clone().sub(this.shot.position),actual=aim.length();aim.normalize();
+      right.crossVectors(aim,new THREE.Vector3(0,1,0)).normalize();up.crossVectors(right,aim).normalize();
+      let needed=actual;
+      for(const x of [-halfWidth,halfWidth])for(const y of [-2,6])for(const z of [-12,12]){
+        const corner=side.clone().multiplyScalar(x).addScaledVector(forward,z);corner.y=y;
+        needed=Math.max(needed,Math.abs(corner.dot(right))/tanX-corner.dot(aim),Math.abs(corner.dot(up))/tanY-corner.dot(aim));
+      }
+      if(needed<=actual+.01)break;distance*=needed/actual*1.02;
+    }
     camera.position.lerp(this.shot.position,blend);camera.quaternion.slerp(this.shot.quaternion,blend);
     camera.fov=THREE.MathUtils.lerp(camera.fov,fov,blend);camera.aspect=width/height;
     const cx=(viewport.x+viewport.width/2)/width,cy=(viewport.y+viewport.height/2)/height;

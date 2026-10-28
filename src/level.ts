@@ -5815,7 +5815,10 @@ export class Level {
     // player's crate loop). Metal and '!' switches are in for the opposite
     // reason: they read as a ledge and simply refuse to break.
     const live: Crate[] = [];
-    for (const c of this.crates) if (c.alive && !c.pending && !(this.skateRace && c.mystery)) live.push(c);
+    // Cart races reserve Triangle for entry; even pushed-together explosives
+    // must not grow a new grind ledge beneath an approaching driver.
+    if (this.skateRace?.vehicle !== 'golf-cart')
+      for (const c of this.crates) if (c.alive && !c.pending && !(this.skateRace && c.mystery)) live.push(c);
     const stableOrder = new Map<Crate, number>();
     for (let i = 0; i < this.crates.length; i++) stableOrder.set(this.crates[i], i);
 

@@ -4,7 +4,7 @@ import {cartRallyFrame,rallySurfacePoint} from './cart-stadium-layout';
 // Existing Meshy sandstone buttress, reused at full detail and uniform scale.
 // Alternating masses pinch the flat racing lane, while leaving the other half
 // open for passing. Each sits between the authored takeoff/landing envelopes.
-export const RALLY_ROCK_STATIONS=[90,404,785,950,1326,1490,1860,2028] as const;
+export const RALLY_ROCK_STATIONS=[90,404,785,950,1326,1490,1860,2028,2370,2760,3150,3690,4290,4510] as const;
 export function rallyRockObstacles():CustomComponent[]{
  const out:CustomComponent[]=[];
  for(const [i,s]of RALLY_ROCK_STATIONS.entries()){

@@ -1,0 +1,16 @@
+{
+  "passed": true,
+  "parked": true,
+  "countdownRevs": true,
+  "blockedThrottle": true,
+  "movingHumanAndRivals": true,
+  "airborne": true,
+  "sideways": true,
+  "jitter": true,
+  "restart": true,
+  "proximity": true,
+  "fireAndThrustersRetained": true,
+  "abandoned": true,
+  "finishBraking": true,
+  "audioNodesReleased": true
+}

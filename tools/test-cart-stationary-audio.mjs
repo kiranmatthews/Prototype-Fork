@@ -17,7 +17,16 @@ try{
  const update=()=>audio.update(.5,world,owners,0,burning,age,thrust,listener);
  const voice=id=>sfx.loops.get(`rally-engine-${id}`);
  const move=(id,vx=0,vy=0,vz=0)=>Object.assign(world.carts[id],{vx,vy,vz,speed:-vz,grounded:vy===0});
- update();assert.equal(sfx.loops.size,0,'The grid is silent while carts are stationary');
+ update();assert.equal(sfx.loops.size,0,'Parked carts are silent outside the countdown');
+ // Countdown revs are explicit and never alter the driving physics.
+ const poses=JSON.stringify(world.carts);
+ audio.update(.5,world,owners,0,burning,age,thrust,listener,[.2,.4]);
+ assert.ok(voice(0)&&voice(1),'Both stationary drivers rev during countdown');const idleRate=voice(0).src.playbackRate.value;
+ audio.update(.5,world,owners,0,burning,age,thrust,listener,[1,.2]);
+ assert.ok(voice(0).src.playbackRate.value>idleRate+.35,'Holding X produces an audible rev');
+ assert.equal(JSON.stringify(world.carts),poses,'Revving stores no velocity');
+ owners[1]=-1;audio.update(.5,world,owners,0,burning,age,thrust,listener,[1,1]);assert.equal(voice(1),undefined,'Unoccupied loaners never rev');owners[1]=1;
+ update();assert.equal(sfx.loops.size,0,'Leaving countdown restores parked silence');
  world.inputs[0]={...NO_CART_INPUT,throttle:1};update();assert.equal(voice(0),undefined,'Throttle against an immovable stop does not keep an engine running');
  move(0,0,0,-12);move(1,0,0,-8);update();assert.ok(voice(0)&&voice(1),'Both moving human and rival carts are audible');
  const first=voice(0),groundRate=first.src.playbackRate.value;
@@ -40,6 +49,6 @@ try{
  for(let i=0;i<600;i++){world.advance(1/60);audio.update(1/60,world,owners,0,burning,age,thrust,listener);}
  assert.ok(world.carts.every(c=>Math.hypot(c.vx,c.vy,c.vz)<.12));assert.equal(sfx.loops.size,0,'Braked finish-line carts stay silent');
  audio.dispose();
- const report={passed:true,parked:true,grid:true,blockedThrottle:true,movingHumanAndRivals:true,airborne:true,sideways:true,jitter:true,restart:true,proximity:true,fireAndThrustersRetained:true,abandoned:true,finishBraking:true,audioNodesReleased:true};
+ const report={passed:true,parked:true,countdownRevs:true,blockedThrottle:true,movingHumanAndRivals:true,airborne:true,sideways:true,jitter:true,restart:true,proximity:true,fireAndThrustersRetained:true,abandoned:true,finishBraking:true,audioNodesReleased:true};
  const out=process.env.CART_STATIONARY_REPORT??'docs/cart-stationary-audio/check.json';await mkdir(new URL('../docs/cart-stationary-audio/',import.meta.url),{recursive:true});await writeFile(out,JSON.stringify(report,null,2)+'\n');console.log('PASS stationary kart audio',JSON.stringify(report));
 }finally{await server.close();}
