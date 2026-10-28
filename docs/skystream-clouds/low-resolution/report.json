@@ -1,0 +1,303 @@
+{
+  "base": "http://127.0.0.1:5187/",
+  "errors": [],
+  "sizes": [
+    {
+      "resolution": "native",
+      "enabled": true,
+      "featherEdges": true,
+      "heightLimit": 360,
+      "width": 576,
+      "height": 360,
+      "clouds": 188,
+      "frames": 52,
+      "targetBytes": 4147200,
+      "drawingBuffer": [
+        1600,
+        1000
+      ]
+    },
+    {
+      "resolution": 720,
+      "enabled": true,
+      "featherEdges": true,
+      "heightLimit": 360,
+      "width": 576,
+      "height": 360,
+      "clouds": 188,
+      "frames": 96,
+      "targetBytes": 4147200,
+      "drawingBuffer": [
+        1152,
+        720
+      ]
+    },
+    {
+      "resolution": 480,
+      "enabled": true,
+      "featherEdges": true,
+      "heightLimit": 360,
+      "width": 576,
+      "height": 360,
+      "clouds": 188,
+      "frames": 142,
+      "targetBytes": 4147200,
+      "drawingBuffer": [
+        768,
+        480
+      ]
+    }
+  ],
+  "benchmarks": [
+    {
+      "pose": "road",
+      "size": [
+        1152,
+        720
+      ],
+      "method": "GPU timer query",
+      "disjoint": false,
+      "full": {
+        "medianMs": 28.0105,
+        "p95Ms": 125.117124,
+        "samples": 12
+      },
+      "low": {
+        "medianMs": 14.565083,
+        "p95Ms": 20.5065,
+        "samples": 12
+      },
+      "cloudTarget": {
+        "enabled": true,
+        "featherEdges": true,
+        "heightLimit": 360,
+        "width": 576,
+        "height": 360,
+        "clouds": 188,
+        "frames": 171,
+        "targetBytes": 4147200
+      }
+    },
+    {
+      "pose": "road",
+      "size": [
+        1600,
+        1000
+      ],
+      "method": "GPU timer query",
+      "disjoint": false,
+      "full": {
+        "medianMs": 40.222,
+        "p95Ms": 150.115541,
+        "samples": 12
+      },
+      "low": {
+        "medianMs": 11.326999,
+        "p95Ms": 14.705958,
+        "samples": 12
+      },
+      "cloudTarget": {
+        "enabled": true,
+        "featherEdges": true,
+        "heightLimit": 360,
+        "width": 576,
+        "height": 360,
+        "clouds": 188,
+        "frames": 186,
+        "targetBytes": 4147200
+      }
+    },
+    {
+      "pose": "upright-loop",
+      "size": [
+        1152,
+        720
+      ],
+      "method": "GPU timer query",
+      "disjoint": false,
+      "full": {
+        "medianMs": 19.146749,
+        "p95Ms": 69.574166,
+        "samples": 12
+      },
+      "low": {
+        "medianMs": 7.952249,
+        "p95Ms": 17.945875,
+        "samples": 12
+      },
+      "cloudTarget": {
+        "enabled": true,
+        "featherEdges": true,
+        "heightLimit": 360,
+        "width": 576,
+        "height": 360,
+        "clouds": 188,
+        "frames": 203,
+        "targetBytes": 4147200
+      }
+    },
+    {
+      "pose": "upright-loop",
+      "size": [
+        1600,
+        1000
+      ],
+      "method": "GPU timer query",
+      "disjoint": false,
+      "full": {
+        "medianMs": 28.338583,
+        "p95Ms": 107.502124,
+        "samples": 12
+      },
+      "low": {
+        "medianMs": 8.099875,
+        "p95Ms": 13.810083,
+        "samples": 12
+      },
+      "cloudTarget": {
+        "enabled": true,
+        "featherEdges": true,
+        "heightLimit": 360,
+        "width": 576,
+        "height": 360,
+        "clouds": 188,
+        "frames": 218,
+        "targetBytes": 4147200
+      }
+    },
+    {
+      "pose": "wall-loop",
+      "size": [
+        1152,
+        720
+      ],
+      "method": "GPU timer query",
+      "disjoint": false,
+      "full": {
+        "medianMs": 21.961749,
+        "p95Ms": 92.466791,
+        "samples": 12
+      },
+      "low": {
+        "medianMs": 6.764874,
+        "p95Ms": 10.452916,
+        "samples": 12
+      },
+      "cloudTarget": {
+        "enabled": true,
+        "featherEdges": true,
+        "heightLimit": 360,
+        "width": 576,
+        "height": 360,
+        "clouds": 188,
+        "frames": 235,
+        "targetBytes": 4147200
+      }
+    },
+    {
+      "pose": "wall-loop",
+      "size": [
+        1600,
+        1000
+      ],
+      "method": "GPU timer query",
+      "disjoint": false,
+      "full": {
+        "medianMs": 34.187791,
+        "p95Ms": 170.122499,
+        "samples": 12
+      },
+      "low": {
+        "medianMs": 7.169583,
+        "p95Ms": 15.103583,
+        "samples": 12
+      },
+      "cloudTarget": {
+        "enabled": true,
+        "featherEdges": true,
+        "heightLimit": 360,
+        "width": 576,
+        "height": 360,
+        "clouds": 188,
+        "frames": 250,
+        "targetBytes": 4147200
+      }
+    }
+  ],
+  "pacing": [
+    {
+      "resolution": 720,
+      "low": false,
+      "fps": 19.37039953009717,
+      "cloudTarget": {
+        "enabled": false,
+        "featherEdges": true,
+        "heightLimit": 360,
+        "width": 0,
+        "height": 0,
+        "clouds": 0,
+        "frames": 251,
+        "targetBytes": 0
+      }
+    },
+    {
+      "resolution": 720,
+      "low": true,
+      "fps": 59.99475045920072,
+      "cloudTarget": {
+        "enabled": true,
+        "featherEdges": true,
+        "heightLimit": 360,
+        "width": 576,
+        "height": 360,
+        "clouds": 188,
+        "frames": 853,
+        "targetBytes": 4147200
+      }
+    },
+    {
+      "resolution": "native",
+      "low": true,
+      "fps": 53.24667208299481,
+      "cloudTarget": {
+        "enabled": true,
+        "featherEdges": true,
+        "heightLimit": 360,
+        "width": 576,
+        "height": 360,
+        "clouds": 188,
+        "frames": 1412,
+        "targetBytes": 4147200
+      }
+    },
+    {
+      "resolution": "native",
+      "low": false,
+      "fps": 13.865121101184416,
+      "cloudTarget": {
+        "enabled": false,
+        "featherEdges": true,
+        "heightLimit": 360,
+        "width": 0,
+        "height": 0,
+        "clouds": 0,
+        "frames": 1412,
+        "targetBytes": 0
+      }
+    }
+  ],
+  "occlusion": {
+    "foregroundPixels": 59496,
+    "foregroundMax": 0,
+    "effectPixels": 9944,
+    "effectMax": 0,
+    "interiorMax": 0,
+    "depth": [
+      232,
+      232,
+      232,
+      255
+    ],
+    "glError": 0
+  }
+}

@@ -1,0 +1,127 @@
+{
+  "base": "http://127.0.0.1:5188/",
+  "errors": [],
+  "lite": {
+    "level": "bonus-skystream",
+    "pass": {
+      "enabled": true,
+      "featherEdges": true,
+      "heightLimit": 360,
+      "width": 576,
+      "height": 360,
+      "clouds": 12,
+      "frames": 36,
+      "targetBytes": 4147200
+    },
+    "grounded": true,
+    "canvas": [
+      800,
+      500
+    ],
+    "scissored": false,
+    "stamp": "Codex/sol fork · build 10-28 23:08 UTC"
+  },
+  "full": {
+    "level": "bonus-skystream",
+    "pass": {
+      "enabled": true,
+      "featherEdges": true,
+      "heightLimit": 360,
+      "width": 576,
+      "height": 360,
+      "clouds": 12,
+      "frames": 77,
+      "targetBytes": 4147200
+    },
+    "grounded": true,
+    "canvas": [
+      1600,
+      1000
+    ],
+    "scissored": false,
+    "stamp": "Codex/sol fork · build 10-28 23:08 UTC"
+  },
+  "split": {
+    "level": "bonus-skystream",
+    "pass": {
+      "enabled": true,
+      "featherEdges": true,
+      "heightLimit": 360,
+      "width": 1152,
+      "height": 360,
+      "clouds": 12,
+      "frames": 196,
+      "targetBytes": 8294400
+    },
+    "grounded": true,
+    "canvas": [
+      1600,
+      1000
+    ],
+    "scissored": false,
+    "stamp": "Codex/sol fork · build 10-28 23:08 UTC"
+  },
+  "lost": {
+    "level": "bonus-skystream",
+    "pass": {
+      "enabled": true,
+      "featherEdges": true,
+      "heightLimit": 360,
+      "width": 0,
+      "height": 0,
+      "clouds": 0,
+      "frames": 248,
+      "targetBytes": 0
+    },
+    "grounded": true,
+    "canvas": [
+      1600,
+      1000
+    ],
+    "scissored": false,
+    "graphics": "lost",
+    "stamp": "Codex/sol fork · build 10-28 23:08 UTC"
+  },
+  "restored": {
+    "level": "bonus-skystream",
+    "pass": {
+      "enabled": true,
+      "featherEdges": true,
+      "heightLimit": 360,
+      "width": 576,
+      "height": 360,
+      "clouds": 12,
+      "frames": 298,
+      "targetBytes": 4147200
+    },
+    "grounded": true,
+    "canvas": [
+      1600,
+      1000
+    ],
+    "scissored": false,
+    "graphics": "ready",
+    "stamp": "Codex/sol fork · build 10-28 23:08 UTC"
+  },
+  "other": {
+    "level": "warproom",
+    "pass": {
+      "enabled": true,
+      "featherEdges": true,
+      "heightLimit": 360,
+      "width": 0,
+      "height": 0,
+      "clouds": 0,
+      "frames": 314,
+      "targetBytes": 0
+    },
+    "grounded": true,
+    "canvas": [
+      1600,
+      1000
+    ],
+    "scissored": false,
+    "graphics": "ready",
+    "stamp": "Codex/sol fork · build 10-28 23:08 UTC"
+  }
+}

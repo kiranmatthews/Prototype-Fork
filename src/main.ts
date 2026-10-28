@@ -35,6 +35,7 @@ import { CompetitionPresentation, type CompetitionAction } from "./competition/p
 
 import * as THREE from "three";
 import { installSkyProjection } from "./skyProjection";
+import { CloudPathPass } from "./cloudPathPass";
 import {StormSquall} from './stormSquall';
 import { SEA_SKY_ART, SEA_SKY_CONTENT_FRACTION } from "./seaBackdrop";
 import { SKY_PRESETS, resolveLevelAtmosphere, atmosphereColor, atmosphereColorHex } from "./levelAtmosphere";
@@ -1100,10 +1101,22 @@ function configureCoastPost(enabled: boolean): void {
 // full-resolution loading vortex is allocated; the first destination frame
 // rebuilds and compiles them while the transition curtain is still opaque.
 function releaseGameplayPostForGameFlow(): void {
+  cloudPathPass.release();
   if (!coastPost || coastPost.suspended) return;
   coastPost.suspendForGameFlow();
   coastPostSuspendCount++;
   renderer.renderLists.dispose();
+}
+
+const cloudPathPass=new CloudPathPass();
+
+function renderCloudPrimaryScene(
+  activeRenderer:THREE.WebGLRenderer,
+  activeScene:THREE.Scene,
+  activeCamera:THREE.Camera,
+  target:THREE.WebGLRenderTarget|null,
+):boolean {
+  return cloudPathPass.render(activeRenderer,activeScene,activeCamera,target);
 }
 
 function renderOceanPrimaryScene(
@@ -1174,7 +1187,7 @@ function drawPrimaryScene(
   if(level.warehouseArtEnabled){renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.2;}
   try {
     level.renderWarehouseReflection(renderer,camera);
-    const sceneRender = prepareOcean && level.water ? renderOceanPrimaryScene : undefined;
+    const sceneRender = prepareOcean && level.water ? renderOceanPrimaryScene : renderCloudPrimaryScene;
     if (coastPost) {
       const frozenCup=competition&&!competition.simulating&&competition.phase!=="countdown"&&
         (!gameFlow.blocksGameplay||preparingCompetitionPresentation())&&!gameFlow.developerChromeVisible&&!editor.active;
@@ -2441,6 +2454,7 @@ function switchLevel(
   }
   worldMapController?.deactivate();
   worldMapUI?.hide();
+  cloudPathPass.release();
   level.dispose(candidate);
   puffs.clear(); // no cloud from the level you just left hanging over the new one
   swirls.clear();
@@ -4874,6 +4888,7 @@ const graphicsRecovery = new GraphicsRecovery(renderer.domElement, () => {
   // Release the post graph's owners as well as the driver's lost storage.
   // The next rendered frame recreates it with the same saved settings.
   coastPost?.dispose();coastPost=null;
+  cloudPathPass.release();
 }, () => {
   recordPresentationStage('graphics-restored');
   installSceneryShadowPass(renderer, () => level);
@@ -5486,14 +5501,14 @@ function advanceFrame(nowMs: number): void {
       renderer.setViewport(0, dh / 2, dw, dh / 2);
       renderer.setScissor(0, dh / 2, dw, dh / 2);
       level.renderWarehouseReflection(renderer,camera);
-      renderer.render(scene, camera);
+      if(!renderCloudPrimaryScene(renderer,scene,camera,renderer.getRenderTarget()))renderer.render(scene, camera);
       // Both cameras see the same light and pose. Keep the complete primary
       // shadow map instead of drawing every caster a second time for P2.
       renderer.shadowMap.autoUpdate = false;
       renderer.setViewport(0, 0, dw, dh / 2);
       renderer.setScissor(0, 0, dw, dh / 2);
       level.renderWarehouseReflection(renderer,camera2);
-      renderer.render(scene, camera2);
+      if(!renderCloudPrimaryScene(renderer,scene,camera2,renderer.getRenderTarget()))renderer.render(scene, camera2);
       renderer.setScissorTest(false);
       renderer.setViewport(0, 0, dw, dh);
     } finally {
@@ -5578,6 +5593,7 @@ requestAnimationFrame(frame);
   scene,
   camera,
   renderer,
+  cloudPathPass,
   crtGuestSettings,
   crtGuestPanel,
   renderQualitySettings,

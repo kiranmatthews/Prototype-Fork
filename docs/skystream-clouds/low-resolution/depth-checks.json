@@ -1,0 +1,69 @@
+{
+  "errors": [],
+  "sizes": [
+    {
+      "resolution": "native",
+      "enabled": true,
+      "featherEdges": true,
+      "heightLimit": 360,
+      "width": 576,
+      "height": 360,
+      "clouds": 188,
+      "frames": 70,
+      "targetBytes": 4147200,
+      "drawingBuffer": [
+        1600,
+        1000
+      ]
+    },
+    {
+      "resolution": 720,
+      "enabled": true,
+      "featherEdges": true,
+      "heightLimit": 360,
+      "width": 576,
+      "height": 360,
+      "clouds": 188,
+      "frames": 126,
+      "targetBytes": 4147200,
+      "drawingBuffer": [
+        1152,
+        720
+      ]
+    },
+    {
+      "resolution": 480,
+      "enabled": true,
+      "featherEdges": true,
+      "heightLimit": 360,
+      "width": 576,
+      "height": 360,
+      "clouds": 188,
+      "frames": 181,
+      "targetBytes": 4147200,
+      "drawingBuffer": [
+        768,
+        480
+      ]
+    }
+  ],
+  "occlusion": {
+    "foregroundPixels": 59496,
+    "foregroundMax": 0,
+    "effectPixels": 9944,
+    "effectMax": 0,
+    "interiorMax": 0,
+    "depth": [
+      232,
+      232,
+      232,
+      255
+    ],
+    "glError": 0
+  },
+  "intersection": {
+    "changedPixels": 1,
+    "foregroundPixels": 136154,
+    "meanChannelDifference": 0.0005146666666666666
+  }
+}

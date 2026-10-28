@@ -5907,3 +5907,35 @@ without deaths, bails or browser errors. Whole-game opening-camera measurements
 with CRT improve from 20.1 to 25.0 FPS at 720p and 11.7 to 15.2 FPS at native
 1600×1000; the full-volume effect remains expensive. The production preview
 uses `Codex/sol fork · build 10-28 21:15 UTC` / `index-BLiwLUCe.js`.
+
+## 29 October 2026 NZDT — Fixed 360p clouds with soft joins
+
+Brief: render all cloud paths at 360p or lower independently of the scene's
+quality setting, then cheaply soften low-resolution joins and intersections.
+First playable 360p preview verified at 22:38 UTC, approximately 18 minutes after
+the request (approximate prompt time). Final intersection feather/depth checks
+passed at 23:03 UTC, about 43 minutes after the original resolution request;
+packaging and release validation follow.
+
+The main course and bonus clouds now use a dedicated 360p colour/depth pass.
+The character, collectibles, sky and game presentation retain the selected world
+resolution. A five-tap filter at cloud resolution feathers sharp coverage or
+shading boundaries; continuous depth reconstruction removes stair steps where
+clouds meet solid geometry. Full density, geometry and collision remain intact.
+Targets add 3.96 MiB at the test aspect ratio and are released on loading or
+context loss. Split-screen cameras use the same targets sequentially.
+
+Final local scene GPU medians improve by 48–79% across the road and both loop
+views. Whole-game opening-camera samples with CRT improve from 19.4 to 60.0 FPS
+at 720p and 13.9 to 53.2 FPS at native 1600 × 1000. These are local samples, not
+guaranteed minimums. All sampled opaque/transparent foreground pixels remain
+identical; the sloped cloud/solid boundary differs at one of 250,000 pixels.
+
+Focused renderer state, world-frame and presentation checks pass, as do native
+and normal visual review, type checking, production build and release size.
+See [360p composition evidence](skystream-clouds/low-resolution/README.md).
+
+The packaged full-render route completes all 67 boxes, seven checkpoints, four
+gaps and three loops without deaths, bails or browser errors. Bonus lite/full,
+split-screen, real graphics-context recovery and hub-return resource cleanup
+also pass. Final local package: `Codex/sol fork · build 10-28 23:08 UTC`.
