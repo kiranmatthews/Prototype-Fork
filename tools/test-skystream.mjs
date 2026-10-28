@@ -25,6 +25,8 @@ await withBlockworksRuntime(async r=>{
   a.forEach((q,i)=>{assert.ok(Math.abs(q.x+b[i].x)<1e-6&&Math.abs(q.y-b[i].y)<1e-6&&Math.abs(q.z-b[i].z)<1e-6&&Math.abs(q.roll+b[i].roll)<1e-6);});
  }
  assert.equal(l.loopMeshes.length,3);assert.ok(l.loopMeshes.every(mesh=>mesh.userData.loopRequired===false));
+ assert.ok(source.components.every(c=>!['rail','rope','ropeswing'].includes(c.t)),'Skystream has no standalone rails or ropes');
+ assert.equal(l.ropeSwings.length,0);assert.equal(l.ropes.length,0);
  assert.deepEqual(l.loopMeshes.map(mesh=>mesh.userData.loopKind??'vertical'),['vertical','wall','vertical']);
  const roads=source.components.filter(c=>c.t==='vertramp'||c.t==='mesh'&&c.solid!==false);
  assert.ok(roads.every(c=>c.cloudRoad&&c.tex==='solid'),'Every road is cloud, without marble or painted markings');

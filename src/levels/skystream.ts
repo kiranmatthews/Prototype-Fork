@@ -14,7 +14,7 @@ const tuple = (v: THREE.Vector3): P => v.toArray().map(round) as P;
 
 // The exact user-exported Saved: The Slipstream is pinned in
 // tools/fixtures/skystream/saved-slipstream.json. It preserves the saved
-// surface-edge policy, including its two additional finish-apron rails.
+// surface geometry. Skystream omits its separate rails and rope swings.
 // Reflect both local path X and roll, and negate yaw: reflecting only the
 // component origin leaves the turns and their banking facing the wrong way.
 export function mirrorSlipstreamComponent(original: CustomComponent): CustomComponent {
@@ -32,7 +32,7 @@ export function mirrorSlipstreamComponent(original: CustomComponent): CustomComp
 }
 
 for (const original of SAVED_SLIPSTREAM_LEVEL.components) {
-  if (original.t === 'gate' || original.t === 'crystal' || original.t === 'crate') continue;
+  if (['gate','crystal','crate','rail','rope','ropeswing'].includes(original.t)) continue;
   const c = mirrorSlipstreamComponent(original);
   c.grp = 1;
   if (c.t === 'camnode') { lane.push(c.p); continue; }

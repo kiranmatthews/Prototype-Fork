@@ -1,4 +1,5 @@
 import { createCloudRoad, type CloudRoadSection } from './cloudRoad';
+import { createCloudPlatform } from './cloudPlatform';
 import { sampleLoop } from './loopRide';
 import { roundCorners } from './pathNodes';
 export { roundCorners } from './pathNodes';
@@ -817,7 +818,7 @@ export interface CustomComponent {
   sourceBox?: SourceBoxData; // nonblocking PS1 wooden-box prop; requires a registered source frame
   breakable?: BreakableKind; // non-solid mesh: shatter on swept body contact
   breakGroup?: number; // positive ID joining separate visual meshes into one breakable object
-  cloudRoad?: boolean; // paired ribbon mesh/vertramp: procedural cloud volume over smooth contact
+  cloudRoad?: boolean; // platform or paired ribbon mesh/vertramp: cloud volume over separate smooth contact
   loopKind?: 'vertical' | 'wall'; // loop orientation; wall is a banked horizontal band
   loopRadius?: number; // mesh: analytic loop matching createLoopMeshData, p = entry feet
   loopOffset?: number; // loop: entry/exit separation, local +X for vertical or Y for wall loops
@@ -3250,7 +3251,9 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
     }
     if(component.hangLock!==undefined&&(component.t!=='vertramp'||component.vert===false))return null;
     if (component.loopKind !== undefined && (!['vertical','wall'].includes(component.loopKind) || component.loopRadius===undefined)) return null;
-    if (component.cloudRoad !== undefined && (!['mesh','vertramp'].includes(component.t) || component.solid===false ||
+    if (component.cloudRoad !== undefined && (!['platform','mesh','vertramp'].includes(component.t) ||
+        component.solid===false&&component.t!=='platform' ||
+        component.t==='platform'&&(!component.s||component.pts||component.s[0]<2||component.s[0]>32||component.s[2]<2||component.s[2]>24) ||
         component.t==='mesh'&&(!component.vertices||component.vertices.length<12||component.vertices.length%6!==0))) return null;
     if (component.loopRadius !== undefined || component.loopOffset !== undefined || component.loopRequired !== undefined) {
       if (component.t !== "mesh" || !Number.isFinite(component.loopRadius) ||
@@ -7771,7 +7774,17 @@ export class Level {
             }
             return [xx - nx, xz - nz];
           };
-          if (c.t === "platform" && polyPts) {
+          if (c.t === 'platform' && c.cloudRoad) {
+            const s=c.s!,cloud=createCloudPlatform(s[0],s[2],c.seed??i*7919,c.solid!==false);
+            cloud.position.set(c.p[0],c.p[1]+s[1]/2,c.p[2]);
+            cloud.rotation.y=THREE.MathUtils.degToRad(c.yaw??0);this.root.add(cloud);
+            if(c.solid!==false){
+              const contact=new THREE.Mesh(new THREE.BoxGeometry(...s),new THREE.MeshBasicMaterial());
+              contact.position.fromArray(c.p);contact.quaternion.copy(cloud.quaternion);
+              contact.name=c.nm??'Cloud landing';contact.visible=false;contact.userData.cloudRoad=true;
+              this.root.add(contact);this.groundMeshes.push(contact);
+            }
+          } else if (c.t === "platform" && polyPts) {
             const th = c.s?.[1] ?? 1;
             const [pw, pd] = polySpan();
             // Shore-profile polygons use the Unity center + four radial sand

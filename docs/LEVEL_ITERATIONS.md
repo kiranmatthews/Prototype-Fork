@@ -5653,3 +5653,27 @@ change; no level data or global tuning edit. The open in-app tab could not be
 reloaded through the unavailable browser-control API; the rebuilt local preview
 was independently verified and the user was asked to reload once.
 Evidence: [air control](beach-street/air-control/README.md).
+
+## 2026-10-28 — Skystream: airborne cloud bonus and open road
+
+Follow-up began at 10:02 UTC. The first complete native cloud-bonus traversal
+passed at 10:17 UTC, approximately 15 minutes from prompt to playable; refined
+full-render cloud review followed at 10:20 UTC. Removed the main route's 20
+separate rails and one swinging rope. The mirrored source fixture and ordinary
+surface-edge policy remain intact.
+
+Added the source-owned Cumulus Cache bonus: six floating cloud platforms,
+five short jumps, 18 supported rewards and six distant cloud banks. Procedural
+3D density, baked sun transmittance and volume scattering provide detailed
+billows and soft edges over independent smooth landing collision. The original
+cloud skybox, gentle lower-half blue gradient, sun bloom and flare carry into
+the bonus. No movement tuning or unrelated level pack changes.
+
+Native traversal passes all 67 main-course boxes, four gaps and three loops,
+plus the bonus's 18 boxes and five jumps. Real Chrome verifies lite fall/recovery,
+full-render bonus failure/retry, reward banking and return to the same parent.
+MAX/native and normal CRT presentation reviewed with no console errors.
+See [cloud bonus evidence](skystream-clouds/bonus/README.md).
+
+Required level checks, production build, release sizing and packaged Chrome
+smoke passed at 10:29 UTC, approximately 27 minutes after the follow-up began.

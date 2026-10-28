@@ -1,0 +1,159 @@
+{
+  "state": {
+    "sky": "clouds",
+    "grounded": true,
+    "position": [
+      -12,
+      180.00000000357628,
+      0
+    ],
+    "clouds": [
+      {
+        "name": "Volumetric cumulus platform",
+        "size": [
+          119,
+          56,
+          69
+        ],
+        "bytes": 1839264
+      },
+      {
+        "name": "Volumetric cumulus platform",
+        "size": [
+          82,
+          56,
+          65
+        ],
+        "bytes": 1193920
+      },
+      {
+        "name": "Volumetric cumulus platform",
+        "size": [
+          57,
+          56,
+          62
+        ],
+        "bytes": 791616
+      },
+      {
+        "name": "Volumetric cumulus platform",
+        "size": [
+          82,
+          56,
+          73
+        ],
+        "bytes": 1340864
+      },
+      {
+        "name": "Volumetric cumulus platform",
+        "size": [
+          75,
+          56,
+          64
+        ],
+        "bytes": 1075200
+      },
+      {
+        "name": "Volumetric cumulus platform",
+        "size": [
+          107,
+          56,
+          75
+        ],
+        "bytes": 1797600
+      },
+      {
+        "name": "Volumetric cumulus platform",
+        "size": [
+          169,
+          56,
+          129
+        ],
+        "bytes": 4883424
+      },
+      {
+        "name": "Volumetric cumulus platform",
+        "size": [
+          200,
+          56,
+          142
+        ],
+        "bytes": 6361600
+      },
+      {
+        "name": "Volumetric cumulus platform",
+        "size": [
+          182,
+          56,
+          129
+        ],
+        "bytes": 5259072
+      },
+      {
+        "name": "Volumetric cumulus platform",
+        "size": [
+          207,
+          56,
+          142
+        ],
+        "bytes": 6584256
+      },
+      {
+        "name": "Volumetric cumulus platform",
+        "size": [
+          157,
+          56,
+          117
+        ],
+        "bytes": 4114656
+      },
+      {
+        "name": "Volumetric cumulus platform",
+        "size": [
+          150,
+          56,
+          117
+        ],
+        "bytes": 3931200
+      }
+    ],
+    "ground": [
+      {
+        "name": "Cumulus landing 1",
+        "visible": false
+      },
+      {
+        "name": "Cumulus landing 2",
+        "visible": false
+      },
+      {
+        "name": "Cumulus landing 3",
+        "visible": false
+      },
+      {
+        "name": "Cumulus landing 4",
+        "visible": false
+      },
+      {
+        "name": "Cumulus landing 5",
+        "visible": false
+      },
+      {
+        "name": "Cumulus landing 6",
+        "visible": false
+      }
+    ],
+    "render": {
+      "frame": 1008,
+      "calls": 72,
+      "triangles": 181976,
+      "points": 0,
+      "lines": 0
+    },
+    "memory": {
+      "geometries": 55,
+      "textures": 41
+    }
+  },
+  "errors": []
+}
