@@ -126,3 +126,9 @@ Evidence: [build receipt](assigned-numbering-2026-10-29/build.json),
 [normal](assigned-numbering-2026-10-29/browser-full.json),
 [MAX/native](assigned-numbering-2026-10-29/browser-full-native.json),
 [assigned/unassigned boundary](assigned-numbering-2026-10-29/full-native-skystream-bonus.png).
+
+Before publication, integrated concurrent main `563a14e6` (Skystream cloud-road
+lighting/fringes), preserving both iteration logs. All six tested menu/campaign/
+bonus source hashes still match, so the focused browser evidence remains valid.
+The combined production build and release check pass at 997,089,409 bytes.
+[Combined build receipt](assigned-numbering-2026-10-29/integrated-build.json).

@@ -5799,6 +5799,13 @@ targets and saved/custom refresh. No console errors or failed requests. Native
 campaign/authoring boundary and bonus captures reviewed. See
 [final numbering evidence](debug-level-menu/README.md). No level-data changes,
 unrelated audits or full suite.
+
+Before publication, merged concurrent main `563a14e6` without changing its
+Skystream cloud-road lighting/fringe work or this task's verified menu/bonus
+sources. Preserved both iteration logs. Combined build and release sizing pass
+at 997,089,409 bytes; the matching menu/campaign/bonus source hashes retain the
+completed focused browser evidence. Publication waits for the existing Pages
+run to finish rather than interrupting another owner's deployment.
 ## 2026-10-29 NZDT — Efficient Skystream cloud lighting and volumetric fringes
 
 About nine minutes from the 07:13 approval to the first playable full-render
