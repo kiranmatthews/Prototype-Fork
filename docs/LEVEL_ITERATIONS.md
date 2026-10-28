@@ -5553,3 +5553,42 @@ Release integration preserves the independently published Sky Bridge bonus
 commit `3010206b`. All tested rally source hashes are unchanged. The combined
 production build and release check pass at 997,045,500 bytes, offline version
 `ea03ad0a7f3574094ce7`.
+
+### 2026-10-28 — Global vertex-lighting debug toggle
+
+Added **M → RENDER → Global vertex lighting**, off by default and saved under
+`solProtoVertexLighting.v1`. Inspection confirmed the existing Lambert, Phong,
+Standard and Physical materials use per-pixel scene lighting in the installed
+Three.js version; the existing custom Gouraud effects were not a global mode.
+Prompt-to-playable was approximately 16 minutes, including the first clean
+character review; production and compatibility verification followed.
+
+The toggle selects classic diffuse Gouraud shading for those lit materials.
+Directional, point and spot incidence/falloff plus ambient, hemisphere and probe
+illumination move to vertices. Direct specular highlights are omitted in this
+mode; authored textures, emissive, lightmaps, fog, separate light shadow/cookie
+masks and environment reflections retain their existing paths. Unlit artwork,
+custom water/effects and postprocessing stay on their own shaders. Turning it
+off restores the original material hooks and shader keys. Streamed meshes,
+material arrays, reflected views, rigid batches, instancing and skinning use
+the same renderer integration. Meshes lacking normals receive a separate
+lighting attribute before GPU upload; positions, indices and authored normals
+remain intact, including the existing off-mode shadow-normal behavior.
+
+Focused lifecycle/settings checks and a real Chrome pixel fixture cover all
+four material families, exact off-mode pixel restoration, missing normals,
+two-sided faces, live light colours, six spotlights, instancing and skinning.
+The fixture proves that a centre point light on a two-triangle plane changes
+from per-pixel illumination to interpolated vertex illumination. Full-suite
+audits were not run for this focused rendering feature.
+
+Packaged Chrome checks pass in lite and full rendering: toggle interaction,
+reload persistence, 1600×900 native/MAX and normal 720p presentation, a running
+Coconut Cart Rally with 527 covered materials and six spotlights, return to the
+lab, and a 390×844 debug drawer. Browser and WebGL errors are zero. Build/type
+checks and release sizing pass at 997,055,786 / 1,000,000,000 bytes after
+integrating the concurrent Cart and Beach releases. Local verification took
+approximately 32 minutes from the prompt. Evidence: [verification](vertex-lighting/verification.json),
+[shader pixels](vertex-lighting/shader-pixels.json), [production browser](vertex-lighting/production-browser.json),
+[native scene](vertex-lighting/native-vertex.png), [native stadium](vertex-lighting/stadium-native.png)
+and [compact toggle](vertex-lighting/compact-toggle.png).

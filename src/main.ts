@@ -148,6 +148,8 @@ import {
   type RenderQualityPanel,
 } from "./render-quality/panel";
 import { PresentationFrameLimiter } from "./render-quality/frameLimiter";
+import { vertexLightingSettings } from './render-quality/vertexLightingSettings';
+import { GlobalVertexLighting } from './vertexLighting';
 import { createSkateboardTuningPanel } from "./skateboard/panel";
 import { skateboardSettings } from "./skateboard/settings";
 import { createSpinTuningPanel } from "./spin-effects/panel";
@@ -186,6 +188,7 @@ const LITE_RENDER = window.location.search.includes("lite");
 const NO_COAST_POST = window.location.search.includes("nopost");
 const NO_OCEAN_PASSES = window.location.search.includes("nopasses");
 const renderer = new THREE.WebGLRenderer({ antialias: !LITE_RENDER });
+const globalVertexLighting = new GlobalVertexLighting(renderer);
 const contextResourceRecovery = installContextResourceRecovery(renderer.domElement, renderer.getContext());
 // Count the complete presentation (world, shadows, ocean, post and HUD).
 // Three's default reset-per-render reports only the final fullscreen triangle.
@@ -5569,6 +5572,8 @@ requestAnimationFrame(frame);
   crtGuestPanel,
   renderQualitySettings,
   renderQualityPanel,
+  vertexLightingSettings,
+  getVertexLightingDiagnostics: () => globalVertexLighting.diagnostics,
   skateboardSettings,
   skateboardPanel,
   spinRingSettings,
