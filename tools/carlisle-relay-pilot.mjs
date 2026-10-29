@@ -7,13 +7,18 @@ export function relayPilot({player:p,level,THREE,makeInput,jumps,stops,walk,poin
  const centreline=Array.from({length:801},(_,i)=>({s:i*5,p:point(i*5,0)}));
  const progress=()=>centreline.reduce((best,q)=>{const d=(p.pos.x-q.p[0])**2+(p.pos.z-q.p[2])**2;return d<best.d?{s:q.s,d}:best;},{s:0,d:Infinity}).s;
  const ray=new THREE.Raycaster(),down=new THREE.Vector3(0,-1,0);
- const floor=(x,z,top)=>{ray.set(new THREE.Vector3(x,top+3,z),down);ray.far=7;return ray.intersectObjects(level.groundMeshes,false).find(h=>h.face?.normal.y>.2);};
+ const floor=(x,z,top)=>{ray.set(new THREE.Vector3(x,top+12,z),down);ray.far=16;return ray.intersectObjects(level.groundMeshes,false).find(h=>h.face?.normal.y>.2);};
  return {events,get next(){return next;},get target(){return targets[next];},input(){
   ticks++;cooldown=Math.max(0,cooldown-1);const input=makeInput();
   if(p.vVel>15&&previousVy<=0&&!p.grounded){const j=jumps.find(q=>q.name===p.surfaceName);if(j){airJump=j;next=targets.findIndex(t=>t.s>j.from[0]);events.push({frame:ticks,launch:j.name});}}
   previousVy=p.vVel;if(p.grounded)airJump=null;
+  // A safe downstream landing can bypass a spring. Continue from the
+  // supported deck instead of trying to walk backward up a completed arc.
+  if(p.grounded)while(targets[next]&&targets[next].s<progress()-12){events.push({frame:ticks,passed:targets[next].name});next++;}
   let target=targets[next];if(!target||p.state==='dead'||p.state==='finished')return input;
   let at=point(target.s,target.y,target.u);
+  const movingTarget=level.movers.find(m=>m.mesh.name===target.name);
+  if(movingTarget)at=movingTarget.mesh.position.toArray();
   if(airJump){const nextSpring=jumps.find(q=>q.from[0]===airJump.to[0]);const mover=nextSpring?.moving?level.movers.find(m=>m.mesh.name===nextSpring.name):null;
    at=mover?[mover.mesh.position.x,mover.mesh.position.y+1,mover.mesh.position.z]:point(...airJump.to);
    input.jumpHeld=!!nextSpring;
@@ -30,8 +35,8 @@ export function relayPilot({player:p,level,THREE,makeInput,jumps,stops,walk,poin
   if(hop){hop--;input.jumpHeld=hop>1;input.jumpPressed=hop===19;input.jumpReleased=hop===1;if(hop>1)return input;}
   if(p.grounded&&!hop){
    const ahead=floor(p.pos.x+ux*4,p.pos.z+uz*4,p.pos.y),landing=floor(p.pos.x+ux*6,p.pos.z+uz*6,p.pos.y);
-   if(!ahead||ahead.point.y>p.pos.y+.5){
-    if(landing&&!cooldown){hop=20;cooldown=60;input.jumpHeld=true;input.jumpPressed=true;return input;}
+   if(!ahead||ahead.point.y>p.pos.y+.1){
+    if(landing&&landing.point.y<p.pos.y+1.75&&!cooldown){hop=20;cooldown=60;input.jumpHeld=true;input.jumpPressed=true;return input;}
     else return input;
    }
    if(target.name==='Dredger upper quay'&&p.groundHit?.moverId!==undefined){const deck=level.movers[p.groundHit.moverId].mesh;
@@ -39,7 +44,7 @@ export function relayPilot({player:p,level,THREE,makeInput,jumps,stops,walk,poin
   }
   input.moveY=Math.abs(forward)>1?Math.sign(forward):0;input.moveX=Math.abs(side)>1.5?Math.sign(side):0;
   if(p.surfaceName?.startsWith('Spring-tide reservoir'))input.jumpHeld=true;
-  if(target.kind==='spring'&&targetDistance<10)input.jumpHeld=true;
+  if(target.kind==='spring'&&targetDistance<(movingTarget?9:8))input.jumpHeld=true;
   return input;
  }};
 }

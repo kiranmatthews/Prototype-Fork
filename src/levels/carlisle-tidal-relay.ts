@@ -86,8 +86,8 @@ road('Lift exit',505,519,3,16);chain('Lift and skip',[[522,3],[548,17,-4],[577,1
 rest('Surf sockets',635,4);road('Socket approach',620,651,4,13);
 chain('Surf sockets',[[655,4],[682,16,-6],[710,5,7],[742,21,-6],[775,10,5],[809,4]]);road('Socket catch',802,839,4,18);
 rest('Twin winches',845,4);road('Port pier',830,874,4,12,-5);
-moving('Port winch',891,4,20,28,{axis:'x',amp:7,speed:.45},-5);moving('Starboard winch',920,4,20,32,{axis:'x',amp:7,speed:.45,phase:Math.PI},5);
-walk('Port winch',890,4,-5);walk('Starboard winch',920,4,5);road('Winch exit',938,976,4,15,5);
+moving('Port winch',891,4,24,36,{axis:'x',amp:7,speed:.45},-5);moving('Starboard winch',920,4,24,36,{axis:'x',amp:7,speed:.45,phase:Math.PI},5);
+box('Winch transfer bollard',905,4,12,12);walk('Port winch',890,4,-5);walk('Winch transfer',905,4);walk('Starboard winch',920,4,5);road('Winch exit',932,976,4,20,5);
 chain('Winch throw',[[980,4,5],[1012,17],[1035,4]]);road('Winch catch',1028,1068,4,18);
 rest('Beacon chimney',1068,4);chain('Beacon chimney',[[1090,4],[1113,20,-4],[1140,39,4],[1170,63,-3],[1204,78,3],[1244,22],[1272,12]]);road('Beacon catch',1264,1302,12,23);
 for(const u of [-15,15])strip('Beacon tower buttress',1128,1195,45,7,u,66,DARK,false);
@@ -106,8 +106,8 @@ chain('Dredger discharge',[[1908,48],[1935,58,3],[1964,35],[1983,24]]);road('Dis
 chain('Cross-thread',[[2031,24],[2060,34,-3],[2092,24,3],[2124,40,-3],[2157,24]],{0:{axis:'x',amp:3,speed:.55},1:{axis:'z',amp:3,speed:.5},2:{axis:'x',amp:3,speed:.7,phase:Math.PI},3:{spin:18}});
 road('Crane gantry',2150,2236,24,11);rail('Crane outrigger shortcut',2160,2230,25.1,6);
 rest('Counterweight stacks',2240,24);road('Counterweight boarding',2220,2262,24,18);
-for(const [i,s] of [2273,2290,2307,2324].entries()){moving(`Counterweight ${i+1}`,s,24+i*3,17,22,{axis:'y',amp:3,speed:.5,phase:i*Math.PI});walk('Counterweight step',s,24+i*3);}
-road('Counterweight exit',2334,2350,33,18);chain('Stack leap',[[2354,33],[2382,50,-4],[2415,29,4],[2447,24]]);road('Stack catch',2440,2495,24,22);rest('Harbour scissors',2478,24);
+for(const [i,s] of [2273,2290,2307,2324].entries()){moving(`Counterweight ${i+1}`,s,24+i*2,19,26,{axis:'y',amp:2.5,speed:.5,phase:i*Math.PI});walk(`Counterweight ${i+1}`,s,24+i*2);}
+road('Counterweight exit',2334,2350,30,18);chain('Stack leap',[[2354,30],[2382,50,-4],[2415,29,4],[2447,24]]);road('Stack catch',2440,2495,24,22);rest('Harbour scissors',2478,24);
 chain('Scissor approach springs',[[2500,24],[2532,41,5],[2566,24,-5],[2595,24]]);box('Scissor inner dock',2595,24,22,23);
 moving('Harbour scissors · outer arm',2626,24,16,70,{spin:-10});moving('Harbour scissors · inner arm',2626,24,16,70,{spin:10,yaw:frame(2626).yaw+70});walk('Harbour scissors axle',2626,24);
 road('Harbour departure',2657,2715,24,16);
@@ -134,7 +134,7 @@ add({t:'mesh',nm:'Grey sea',p:[0,-25,-2000],vertices:[-1400,0,-2200,1400,0,-2200
 add({t:'pit',nm:'Sea reset',p:[0,-23,-2000],s:[2800,1,4400],invisible:true,grp:90});
 for(const [i,stop] of CARLISLE_RELAY_STOPS.entries())for(const u of [-7,7])add({t:'crate',kind:i===0&&u<0?'mask':'wood',p:carlislePoint(stop.s+12,stop.y,u),grp:group(stop.s)});
 export const CARLISLE_TIDAL_RELAY_LEVEL:CustomLevelData={v:1,name:'Carlisle Coast',spawn:carlislePoint(0,.12),killY:-45,startWarpPad:false,
- sky:'day',cameraAirLift:1,cameraLookAhead:12,cameraRig:{camDist:10,camHeight:6,camPitch:24,camFov:62},hugeDropBail:false,keepPlayFog:true,
+ sky:'day',cameraAirLift:1,cameraLookAhead:12,cameraRig:{camDist:14,camHeight:12,camPitch:45,camFov:72},hugeDropBail:false,keepPlayFog:true,
  atmosphere:{fogEnabled:true,fogNear:125,fogFar:480,fogColor:'#b4c2c9',drawDistance:680,ambientSky:'#e5e8e8',ambientGround:'#69737a',ambientIntensity:1.3,
  sunColor:'#fff1d6',sunIntensity:1.6,fillColor:'#bbd0dc',fillIntensity:.4,shadowStrength:.65,backdrop:'fog',fallbackTop:'#9bafbd',fallbackBottom:'#c4cdd0'},
  medalTimes:{gold:500,silver:620,bronze:780},groups,components:C};

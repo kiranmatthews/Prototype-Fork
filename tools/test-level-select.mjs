@@ -115,8 +115,8 @@ try {
  // Touch an unlocked planned row to inspect it, then launch each built Uga course.
  inputPrompts.update(null,true);calls.length=0;ui.showMapSection('level-select');
  for(let i=0;i<3;i++)ui.changeLevelSelectIsland(1);
- const planned=ui.navButtons.find(b=>b.dataset.levelKey==='maynard-course-4');planned.click();
- assert.equal(ui.levelSelectKey,'maynard-course-4');assert.match(ui.levelSelectDetail.textContent,/COMING SOON/);assert.deepEqual(calls,[]);
+ const planned=ui.navButtons.find(b=>b.dataset.levelKey==='maynard-course-5');planned.click();
+ assert.equal(ui.levelSelectKey,'maynard-course-5');assert.match(ui.levelSelectDetail.textContent,/COMING SOON/);assert.deepEqual(calls,[]);
  for(const [key,id] of [['tribal-run','tribal-run'],['waterfall-climb','waterfall-climb'],['test-course','test']]){
   calls.length=0;ui.showMapSection('level-select');ui.changeLevelSelectIsland(1);
   ui.navButtons.find(b=>b.dataset.levelKey===key).click();assert.deepEqual(calls,[id]);

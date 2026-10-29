@@ -3,7 +3,12 @@ import {build} from 'esbuild';
 import {mkdir,writeFile} from 'node:fs/promises';
 import {withSkateRuntime,makeInput} from './jungle-cup-harness.mjs';
 const compiled=await build({entryPoints:['src/levels/carlisle-tidal-relay.ts'],bundle:true,format:'esm',write:false});
-const {CARLISLE_TIDAL_RELAY_LEVEL:data,CARLISLE_RELAY_JUMPS:jumps,carlislePoint:point}=await import('data:text/javascript;base64,'+Buffer.from(compiled.outputFiles[0].text).toString('base64'));
+const {CARLISLE_TIDAL_RELAY_LEVEL:data,CARLISLE_RELAY_JUMPS:jumps,CARLISLE_RELAY_ACTS:acts,CARLISLE_RELAY_SECTIONS:sections,carlislePoint:point}=await import('data:text/javascript;base64,'+Buffer.from(compiled.outputFiles[0].text).toString('base64'));
+let surveyed=0;for(let s=1;s<=4000;s++){const a=point(s-1,0),b=point(s,0);surveyed+=Math.hypot(b[0]-a[0],b[2]-a[2]);}
+assert.ok(Math.abs(surveyed-4000)<.5);assert.equal(acts.length,3);assert.equal(sections.length,18);
+assert.deepEqual(acts.map(a=>[a.from,a.to]),[[0,1280],[1280,2700],[2700,4000]]);
+assert.equal(data.components.filter(c=>c.t==='gate').length,1);
+assert.ok(data.components.filter(c=>c.t==='trampoline'||c.bounce).every(c=>!c.to),'springs must not carry auto-aim targets');
 await withSkateRuntime(async({server,level,player:p,CONST,THREE})=>{
  const {normalizeCustomLevelData}=await server.ssrLoadModule('/src/level.ts');
  if(!normalizeCustomLevelData(structuredClone(data))){console.log('Invalid components',data.components.flatMap((c,i)=>normalizeCustomLevelData({...data,components:[structuredClone(c)]})?[]:[{i,t:c.t,nm:c.nm,speed:c.speed,bounce:c.bounce,vertices:c.vertices?.length}]).slice(0,20));}
