@@ -1,0 +1,49 @@
+{
+  "kind": "generative-assist",
+  "sourceForward": "+X",
+  "runtimeForward": "+Z",
+  "geometryPolicy": "complete authored geometry at every distance",
+  "clips": [
+    {
+      "name": "idle",
+      "task": "dc20276a-f79b-4726-9dab-31b9859a8573",
+      "credits": 10,
+      "sourceSha256": "afc9e1c45f5ed074176f643dbef48bac01d1c184ef7e035bc1e7aaec879c19de",
+      "channels": 69,
+      "horizontalRootLocked": [
+        "Root",
+        "mixamorig:Hips"
+      ],
+      "sourcePreset": "preset:biped:idle"
+    },
+    {
+      "name": "walk",
+      "task": "92616609-c2ec-4ec0-90d2-d12c2d799d3d",
+      "credits": 10,
+      "sourceSha256": "757eab6e8b8adaf7f7c933adf79264c51234f5d5955b05e98157d9bddf8eb895",
+      "channels": 69,
+      "horizontalRootLocked": [
+        "Root",
+        "mixamorig:Hips"
+      ],
+      "sourcePreset": "preset:biped:walk"
+    },
+    {
+      "name": "slash",
+      "task": "657bb6f8-147e-4c36-b7e7-2ec3539c5e56",
+      "credits": 10,
+      "sourceSha256": "d92941c185b6d97e38ea14d5df9c359adb03b71bab5597a855e3d6aaa4cbc404",
+      "channels": 69,
+      "horizontalRootLocked": [
+        "Root",
+        "mixamorig:Hips"
+      ],
+      "sourcePreset": "preset:biped:angry_01"
+    }
+  ],
+  "runtimeSha256": "b59d91388c1fb32e05638ff09b4ac9bda085b390cebf7aef504fb53c9fef7c76",
+  "bytes": 3924176,
+  "triangles": 4992,
+  "joints": 23,
+  "rigTask": "9ed35a89-fae4-4bc0-b8a5-650e21054109"
+}

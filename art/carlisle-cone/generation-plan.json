@@ -1,0 +1,36 @@
+{
+  "dry_run": true,
+  "valid": true,
+  "input": "/Users/kiki/.codex/worktrees/carlisle-tidal-relay/Prototype Fork/art/carlisle-cone/reference.png",
+  "scenario": "toy",
+  "model": "P1-20260311",
+  "model_reason": "explicit --model",
+  "steps": [
+    {
+      "name": "image-to-model",
+      "endpoint": "/v3/generation/image-to-model",
+      "task_type": "image_to_model",
+      "payload": {
+        "input": "<upload:/Users/kiki/.codex/worktrees/carlisle-tidal-relay/Prototype Fork/art/carlisle-cone/reference.png>",
+        "texture": true,
+        "pbr": true,
+        "face_limit": 5000,
+        "export_uv": true,
+        "model": "P1-20260311"
+      }
+    }
+  ],
+  "pending_uploads": [
+    "/Users/kiki/.codex/worktrees/carlisle-tidal-relay/Prototype Fork/art/carlisle-cone/reference.png"
+  ],
+  "deliverables": [
+    "GLB"
+  ],
+  "candidates": 1,
+  "warnings": [],
+  "errors": [],
+  "generation_credits_estimate": null,
+  "cost_notes": [
+    "cost not estimated (not zero credits); notes below are cost impacts only; check regional official pricing and balance before running"
+  ]
+}

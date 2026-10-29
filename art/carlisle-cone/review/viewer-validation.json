@@ -1,0 +1,139 @@
+{
+  "errors": [],
+  "cycles": [
+    {
+      "angle": 0,
+      "clip": "idle",
+      "duration": 15.366666793823242
+    },
+    {
+      "angle": 0,
+      "clip": "walk",
+      "duration": 2.366666555404663
+    },
+    {
+      "angle": 0,
+      "clip": "slash",
+      "duration": 3.5333333015441895
+    },
+    {
+      "angle": 40,
+      "clip": "idle",
+      "duration": 15.366666793823242
+    },
+    {
+      "angle": 40,
+      "clip": "walk",
+      "duration": 2.366666555404663
+    },
+    {
+      "angle": 40,
+      "clip": "slash",
+      "duration": 3.5333333015441895
+    },
+    {
+      "angle": 90,
+      "clip": "idle",
+      "duration": 15.366666793823242
+    },
+    {
+      "angle": 90,
+      "clip": "walk",
+      "duration": 2.366666555404663
+    },
+    {
+      "angle": 90,
+      "clip": "slash",
+      "duration": 3.5333333015441895
+    }
+  ],
+  "poses": [
+    {
+      "angle": 0,
+      "clip": "idle",
+      "frames": 31,
+      "finite": true,
+      "changing": true
+    },
+    {
+      "angle": 0,
+      "clip": "walk",
+      "frames": 31,
+      "finite": true,
+      "changing": true
+    },
+    {
+      "angle": 0,
+      "clip": "slash",
+      "frames": 31,
+      "finite": true,
+      "changing": true
+    },
+    {
+      "angle": 40,
+      "clip": "idle",
+      "frames": 31,
+      "finite": true,
+      "changing": true
+    },
+    {
+      "angle": 40,
+      "clip": "walk",
+      "frames": 31,
+      "finite": true,
+      "changing": true
+    },
+    {
+      "angle": 40,
+      "clip": "slash",
+      "frames": 31,
+      "finite": true,
+      "changing": true
+    },
+    {
+      "angle": 90,
+      "clip": "idle",
+      "frames": 31,
+      "finite": true,
+      "changing": true
+    },
+    {
+      "angle": 90,
+      "clip": "walk",
+      "frames": 31,
+      "finite": true,
+      "changing": true
+    },
+    {
+      "angle": 90,
+      "clip": "slash",
+      "frames": 31,
+      "finite": true,
+      "changing": true
+    }
+  ],
+  "metrics": {
+    "triangles": 4992,
+    "bones": 23,
+    "skins": 1,
+    "clips": [
+      {
+        "name": "idle",
+        "duration": 15.366666793823242,
+        "tracks": 69
+      },
+      {
+        "name": "walk",
+        "duration": 2.366666555404663,
+        "tracks": 69
+      },
+      {
+        "name": "slash",
+        "duration": 3.5333333015441895,
+        "tracks": 69
+      }
+    ]
+  },
+  "mobileOverflow": false,
+  "video": "art/carlisle-cone/review/motion-cycles.webm"
+}

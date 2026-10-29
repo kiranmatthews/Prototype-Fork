@@ -27,3 +27,6 @@ desktop/test-results/
 
 # Local multi-chat release handoffs and coordinator state.
 .release-queue/
+
+# Local Tripo character experiments; provenance and preparation scripts are tracked.
+/public/props/carlisle-cone/*.glb

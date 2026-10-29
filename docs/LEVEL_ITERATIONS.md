@@ -6528,3 +6528,36 @@ level pack are unchanged from 5a4cc84f. New ownership is limited to the art libr
 review docs/tools, the local CLI-state ignore entry and this appended log. All
 work remains under the user's local-only hold. Evidence and hashes are in
 [the shipyard validation record](carlisle-relay/shipyard-polish/validation.json).
+
+
+## 2026-10-30 — Angry Carlisle cone crew (local only)
+
+User brief: turn the orange cones into angry animated little characters with
+arms and legs, using original imagegen references and Tripo generation, rigging
+and animation. Added 78 visual actors to the existing 26 hazard rows. They idle
+independently and perform a tantrum near the player; a walk clip is available in
+the local motion viewer. Original collision volumes, level geometry, player
+physics, bounce controls, camera and tuning remain unchanged.
+
+The first cone-bodied mesh failed the free rig gate; a revised cone-headed biped
+passed. Tripo v2.5 rigging worked but its batch and single retarget attempts
+failed/refunded. The legacy v1.0 Mixamo rig yielded three working clips. Actual
+cost: 100 for two P1 surfaces, 50 for two rigs, 30 for three clips = 180 credits,
+using exactly the remaining API balance; 0 frozen, no purchase or Max-plan use.
+The runtime retains all 4,992 triangles and its original embedded texture maps.
+Shared character elasticity deforms torso and arm segments independently.
+
+Elapsed prompt-to-playable: 46m46s (12:11:43–12:58:29 UTC); first complete animated
+preview at 38m14s. This includes rejected/refunded API attempts and pipeline
+compatibility fixes. Seven focused adapter tests, the structural 23-joint skin
+payload gate, nine complete motion cycles at front/40°/side, mobile/native/normal
+viewer checks, Carlisle lite/full/native/480p checks, hazard death and level
+disposal/reload pass. Browser errors are empty. Fixed static batching preventing
+initial attachment and a test-harness diagnostic field. Required final build
+passes (1,751 files / 952.2 MiB); no level-data changes or full-suite run.
+
+Character binaries are local/ignored per the character-pipeline policy. Recorded
+job IDs and the free restore script reproduce them without new generations.
+Source, references, receipts, preparation and review evidence are in
+[the cone workshop](../art/carlisle-cone/README.md). The user's local-only hold
+continues; nothing has been pushed or published.

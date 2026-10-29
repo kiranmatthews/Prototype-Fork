@@ -1,0 +1,50 @@
+{
+  "errors": [],
+  "lite": {
+    "status": "ready",
+    "actors": 78,
+    "sites": 26,
+    "clips": [
+      "idle",
+      "walk",
+      "slash"
+    ],
+    "error": ""
+  },
+  "full": {
+    "status": "ready",
+    "actors": 78,
+    "sites": 26,
+    "clips": [
+      "idle",
+      "walk",
+      "slash"
+    ],
+    "error": "",
+    "hazard": [
+      9.404323051892097,
+      216.59327012412905,
+      -25.031985812749554
+    ],
+    "components": 1184,
+    "groundMeshes": 334,
+    "pits": 110,
+    "coneGroups": 78
+  },
+  "hazardDeath": true,
+  "lifecycle": {
+    "afterDispose": 0,
+    "bonus": null,
+    "returned": {
+      "status": "ready",
+      "actors": 78,
+      "sites": 26,
+      "clips": [
+        "idle",
+        "walk",
+        "slash"
+      ],
+      "error": ""
+    }
+  }
+}

@@ -72,3 +72,19 @@ All generated work and credentials are gitignored.
 ## Important boundary
 
 A Tripo GLB can be shipped directly as an external generative asset, or used as evidence for a code-native img2threejs character. Those are different deliverables. The latter still requires the GLB build, polish, and animation gates documented in `vendor/img2threejs/docs/GLB_CHARACTER_*.md`; a generated seed is not a completed CharacterIR rig.
+
+## Inspect a paid stage before continuing
+
+With an installed official CLI (for example `TRIPO_CLI=/Users/kiki/.local/bin/tripo`),
+`generate --stop-after generate` saves the completed surface for review. Repeat
+the identical generation arguments with `--resume --stop-after rigCheck` or
+`--resume --stop-after rig` to continue without paying for earlier stages again.
+A normal resume finishes the remaining steps. The output directory refuses an
+accidental fresh submission; an unknown interrupted submission must be recovered
+through the official CLI before resuming. Generation uses the chain-free `toy`
+preset with the explicit face, texture and PBR settings.
+
+CLI 0.8 artifact summaries omit the free rig-check decision. The adapter reads
+that completed task once, requires `riggable: true`, then passes the original
+surface task to rigging. The rig-check task itself is not a valid mesh input.
+The CLI still owns all remote submission, waiting, retries and downloads.

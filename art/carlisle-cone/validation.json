@@ -1,0 +1,27 @@
+{
+  "requestStartedAt": "2026-10-29T12:11:43Z",
+  "previewAt": "2026-10-29T12:49:57Z",
+  "playableVerifiedAt": "2026-10-29T12:58:29Z",
+  "elapsedToPlayableSeconds": 2806,
+  "pipelineTests": 7,
+  "rigPayloadPassed": true,
+  "viewer": "review/viewer-validation.json",
+  "game": "review/game-validation.json",
+  "build": {
+    "passed": true,
+    "files": 1751,
+    "MiB": 952.2,
+    "version": "b2d927aa667935de1c11"
+  },
+  "unchangedSourceSha256": {
+    "src/player.ts": "8a9188ecaa74c8e956bd0a57f1ace6bc8ea60c5c89dc9850f5aecaa62cfdc83a",
+    "src/tuning.ts": "1aca3b5fe4b5d026d8b9e36dcf30444081bec7d2acfd4181294f6aacaca61bd6",
+    "src/main.ts": "7037126b270982604dec1c87c864da655f8477063c704fa14901c02cefd56c33",
+    "src/levels/carlisle-tidal-relay.ts": "5b179887be93c350c4376c3827592fb7dba50a5896cf7ca6fce03909ac2b3cbd",
+    "src/levels/carlisle-slippery-crossings.ts": "79d8088d40a75bdd5ecbc4747c142f76324f4772852a8523722f2951ffe0d358",
+    "public/levels.json": "08b960136b3118b5e692dfbc49c7e54c11345707ac33db83d585f9af2b8e8a5d"
+  },
+  "sourceBase": "2f3355722b38e366ec413e724c6aa0812a1ca248",
+  "localOnly": true,
+  "generatedGlbsCommitted": false
+}

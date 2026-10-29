@@ -118,7 +118,7 @@ def run_tripo(
         meanings = {
             2: "invalid usage or parameters",
             3: "authentication failed; run the login command printed in the README",
-            4: "insufficient Tripo credits; the human must run `tripo topup`",
+            4: "insufficient Tripo credits; do not purchase usage without authorization",
             5: "content-policy rejection",
             6: "Tripo task failed; frozen credits should be refunded",
             7: "network error",
@@ -210,6 +210,8 @@ def plan(args: argparse.Namespace, image: str, output: Path) -> dict[str, Any]:
     make = [
         "make",
         image,
+        "--for",
+        "toy",
         "--out",
         str(output / "01-generate"),
         "--name",
@@ -397,45 +399,59 @@ def command_generate(args: argparse.Namespace) -> int:
     workflow["source"] = image_record
     workflow["status"] = "planned" if args.dry_run else "running"
     manifest_path = output / "workflow-manifest.json"
+    stages: dict[str, dict[str, Any]] = {}
+    if manifest_path.exists():
+        previous = json.loads(manifest_path.read_text(encoding="utf-8"))
+        if args.resume:
+            for key in ("source", "commands"):
+                if previous.get(key) != workflow.get(key):
+                    raise WorkflowError(f"resume {key} differs from the saved workflow")
+            if previous.get("currentStage"):
+                raise WorkflowError("previous stage has an unknown outcome; recover its official CLI task before resuming")
+            stages = previous.get("stages", {})
+        elif previous.get("stages") or previous.get("currentStage"):
+            raise WorkflowError("output already contains a submitted workflow; use --resume or a new directory")
+    elif args.resume:
+        raise WorkflowError("cannot resume without a saved workflow manifest")
+    workflow["stages"] = stages
     write_json(manifest_path, workflow)
 
     if args.dry_run:
         print(json.dumps(workflow, indent=2, ensure_ascii=False))
         return 0
 
-    stages: dict[str, dict[str, Any]] = {}
     try:
-        stages["generate"] = run_tripo(
-            workflow["commands"]["generate"], label="image-to-model"
-        )
-        workflow["stages"] = stages
-        write_json(manifest_path, workflow)
-
-        stages["rigCheck"] = run_tripo(
-            workflow["commands"]["rigCheck"],
-            label="rig-check",
-            stdin_payload=stages["generate"],
-        )
-        riggable = stages["rigCheck"].get("riggable")
-        if riggable is False:
-            raise WorkflowError("Tripo reports this model is not riggable")
-        workflow["stages"] = stages
-        write_json(manifest_path, workflow)
-
-        stages["rig"] = run_tripo(
-            workflow["commands"]["rig"],
-            label="auto-rig",
-            stdin_payload=stages["rigCheck"],
-        )
-        workflow["stages"] = stages
-        write_json(manifest_path, workflow)
-
-        if args.animations:
-            stages["retarget"] = run_tripo(
-                workflow["commands"]["retarget"],
-                label="animation-retarget",
-                stdin_payload=stages["rig"],
-            )
+        # The official blocking CLI owns each remote task. Stage boundaries let
+        # artists review the surface before paying for a rig, and safely resume
+        # without submitting generation twice.
+        upstream = None
+        for stage in ("generate", "rigCheck", "rig", "retarget"):
+            if stage not in stages:
+                workflow["currentStage"] = stage
+                write_json(manifest_path, workflow)
+                stages[stage] = run_tripo(workflow["commands"][stage], label=stage,
+                    # A rig-check is only a gate, not a model-producing task.
+                    stdin_payload=stages["generate"] if stage == "rig" else upstream)
+                workflow.pop("currentStage", None)
+                workflow["files"] = file_manifest(stages.values())
+                write_json(manifest_path, workflow)
+            upstream = stages[stage]
+            if stage == "rigCheck":
+                # CLI 0.8's artifact summary omits this gate's output. Read the
+                # completed task once through the CLI; this is not a poller.
+                if "riggable" not in upstream and upstream.get("task_id"):
+                    detail = run_tripo(["task", "get", upstream["task_id"], "--json"],
+                                       label="rig-check-result")
+                    for key in ("riggable", "rig_type"):
+                        upstream[key] = detail.get("output", {}).get(key)
+                    write_json(manifest_path, workflow)
+                if upstream.get("riggable") is not True:
+                    raise WorkflowError("Tripo has not confirmed this model is riggable")
+            if stage == args.stop_after:
+                workflow["status"] = "paused"
+                write_json(manifest_path, workflow)
+                print(json.dumps({"status": "paused", "after": stage, "manifest": str(manifest_path)}))
+                return 0
 
         workflow["stages"] = stages
         workflow["files"] = file_manifest(stages.values())
@@ -513,6 +529,10 @@ def parser() -> argparse.ArgumentParser:
     )
     generate.add_argument("--timeout", type=int, default=1800)
     generate.add_argument("--dry-run", action="store_true")
+    generate.add_argument("--stop-after", choices=("generate", "rigCheck", "rig"),
+        help="save a reviewable stage before starting the next paid operation")
+    generate.add_argument("--resume", action="store_true",
+        help="continue the identical saved workflow without repeating completed stages")
     generate.set_defaults(func=command_generate)
     return root
 

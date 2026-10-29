@@ -1,0 +1,94 @@
+{
+  "authorization": "Existing user approval: use remaining API balance, then Max plan credits; do not purchase API usage. Upload and download authorized.",
+  "startingApiCredits": 180,
+  "totalBilled": 180,
+  "expectedRemainingApiCredits": 0,
+  "purchases": 0,
+  "maxPlanCreditsUsed": 0,
+  "tasks": [
+    {
+      "asset": "carlisle-angry-cone",
+      "stage": "generate",
+      "task": "9b3cba61-3202-46d7-93a7-fad1eaec23b4",
+      "credits": 50,
+      "status": "success"
+    },
+    {
+      "asset": "carlisle-angry-cone",
+      "stage": "rigCheck",
+      "task": "855c2afe-96b3-4389-b099-38fd0093d04b",
+      "credits": 0,
+      "status": "success",
+      "riggable": false
+    },
+    {
+      "asset": "carlisle-cone-biped",
+      "stage": "generate",
+      "task": "bb4ef8d2-018b-48cb-8644-2430bca6ce97",
+      "credits": 50,
+      "status": "success"
+    },
+    {
+      "asset": "carlisle-cone-biped",
+      "stage": "rigCheck",
+      "task": "1c13b028-9556-4d23-80e8-4a7c0d270665",
+      "credits": 0,
+      "status": "success",
+      "riggable": true
+    },
+    {
+      "asset": "carlisle-cone-biped",
+      "stage": "rig",
+      "task": "73ef3876-17c2-4e25-af7a-562f0ae1f403",
+      "credits": 25,
+      "status": "success"
+    },
+    {
+      "asset": "carlisle-cone-biped",
+      "stage": "rig-v1",
+      "task": "9ed35a89-fae4-4bc0-b8a5-650e21054109",
+      "credits": 25,
+      "status": "success"
+    },
+    {
+      "asset": "carlisle-cone-biped",
+      "stage": "idle",
+      "task": "dc20276a-f79b-4726-9dab-31b9859a8573",
+      "credits": 10,
+      "status": "success"
+    },
+    {
+      "asset": "carlisle-cone-biped",
+      "stage": "walk",
+      "task": "92616609-c2ec-4ec0-90d2-d12c2d799d3d",
+      "credits": 10,
+      "status": "success"
+    },
+    {
+      "asset": "carlisle-cone-biped",
+      "stage": "slash",
+      "task": "657bb6f8-147e-4c36-b7e7-2ec3539c5e56",
+      "credits": 10,
+      "status": "success"
+    },
+    {
+      "asset": "carlisle-cone-biped",
+      "stage": "v2.5 batch retarget",
+      "task": "5f97e809-92ce-41ac-ac17-538bb2592c00",
+      "credits": 0,
+      "status": "failed/refunded",
+      "errorCode": 1004
+    },
+    {
+      "asset": "carlisle-cone-biped",
+      "stage": "v2.5 single idle",
+      "task": "ea01e891-1acd-4aa7-afb8-3f57b80da1f1",
+      "credits": 0,
+      "status": "failed/refunded",
+      "errorCode": 1004
+    }
+  ],
+  "verifiedRemainingApiCredits": 0,
+  "verifiedFrozenCredits": 0,
+  "verifiedBy": "Official Tripo CLI doctor, 2026-10-29 12:57 UTC"
+}
