@@ -8,6 +8,7 @@ import { sampleTeeterMotion, probeTeeterEdge } from './teeterMotion';
 import { SkateBalanceArms, SKATE_UNDER_RAIL_DEPTH, SKATE_UNDER_RAIL_TRANSITION, sampleUnderRailMotion, SKATE_REVERT_DURATION, sampleSkateRevert } from './skateBodyMotion';
 import { skateGrabTweakElasticity, skateUnderRailElasticity, skate900Elasticity, skateBackflipElasticity, skateFootFlipElasticity, skateImpossibleElasticity, skateRevertElasticity, skateVertElasticity, SKATE_UNDER_RAIL_ARM_LIMIT } from './animation/elasticity';
 import { ICE_WALK_CLIP_ID } from './animation/iceWalk';
+import { SLOPE_SLIDE_CLIP_ID } from './animation/slopeSlide';
 import { kookSquawkHits } from './enemies/kookSquawk';
 // Authored fake-physics board movement. No rigidbody, no forces: just a
 // heading, a scalar speed, a vertical velocity, and hand-tuned numbers from
@@ -338,6 +339,7 @@ export type PlayerAnimationClipHint =
   | 'player.idle'
   | 'player.run'
   | 'player.ice-walk'
+  | 'player.slope-slide'
   | 'player.jump'
   | 'player.double-jump'
   | 'player.slide-jump'
@@ -2166,7 +2168,7 @@ export class Player {
     if (this.freeSkate || this.skatePose > 0.25 || this.deckPose > 0.25) return 'player.skate';
     if (this.charging && this.chargePlanted) return JUMP_CHARGE_CLIP_ID;
     const slopeMotion = this.slipperySlopeFootMotion;
-    if (slopeMotion) return slopeMotion === 'uphill' ? 'player.run' : 'player.slide';
+    if (slopeMotion) return slopeMotion === 'uphill' ? 'player.run' : SLOPE_SLIDE_CLIP_ID;
     // Ice owns a separate foot cycle while pushing against low traction or
     // coasting. Read self-propelled momentum, never platform carry or a new
     // movement state. All action and board owners have already taken priority.
@@ -2321,7 +2323,7 @@ export class Player {
           travelSign,
           iceEffort,
           iceSideSlip,
-          slopeSlide: clipId === 'player.slide' && slopeMotion === 'slide' ? 1 : 0,
+          slopeSlide: clipId === SLOPE_SLIDE_CLIP_ID ? 1 : 0,
           [RUN_MOVE_INTENT_INPUT]: this.worldMapBaseScale === null
             ? Math.min(1, Math.hypot(this.rawInput?.moveX ?? 0, this.rawInput?.moveY ?? 0)) : 0,
           swimCadence: this.swimming ? Math.max(.8, this.swimVelocity.length() / SWIMMING.speed) : 1,
@@ -16342,7 +16344,7 @@ export class Player {
     this.detachBoardForTraversal(level);
     // NOTE: axisF/axisL are the CONTROL FRAME (stick -> world), owned by the
     // zone/lane system — the hang must never rotate them (that scrambles the
-    // controls after you let go). Facing the wall is visualYaw, in stepHang.
+    // controls after you let go). The hang's facing is owned by syncVisual.
     this.state = 'hang';
     this.boardOllieAir = false;
     this.emergencyEjectCharging = false;
@@ -16420,10 +16422,9 @@ export class Player {
     if (this.hangHazards(level)) return;
     this.speed = 0;
     this.vVel = 0;
-    // face the wall (the catch may have come out of a sideways carve)
     const n = this.ledgeNormal;
-    const wallYaw = wrapAngle(Math.atan2(-n.x, -n.z) - Math.PI);
-    this.visualYaw += wrapAngle(wallYaw - this.visualYaw) * Math.min(1, 12 * dt);
+    // Presentation resolves the final live lip normal after catch/shimmy;
+    // support motion must not compete with that facing or alter control axes.
     if (this.ledgePhase === 'climb') {
       // THE CLAMBER — committed (no timeout, no inputs): rise up the face
       // first, the over-the-lip travel overlaps the tail of the rise, so the
@@ -17893,8 +17894,9 @@ export class Player {
     const rg = this.riderG;
     if (!rg?.parent || this.proceduralFootwear.length !== 2 || !this.grounded || this.freeSkate) return;
     const hint = this.animationClipHint;
-    if (hint !== 'player.idle' && hint !== 'player.run' && hint !== JUMP_CHARGE_CLIP_ID) return;
-    const walkWeight = hint === 'player.idle' || hint === JUMP_CHARGE_CLIP_ID ? 1 : locomotionWalkBlendWeight(
+    const slopeGlide = hint === SLOPE_SLIDE_CLIP_ID;
+    if (hint !== 'player.idle' && hint !== 'player.run' && hint !== JUMP_CHARGE_CLIP_ID && !slopeGlide) return;
+    const walkWeight = hint === 'player.idle' || hint === JUMP_CHARGE_CLIP_ID || slopeGlide ? 1 : locomotionWalkBlendWeight(
       this.animationPlanarSpeed / Math.max(TUNING.walkSpeed, 0.001),
     );
     // The bail's full-body support still owns the first rebound. Introduce
@@ -17922,7 +17924,7 @@ export class Player {
 
     // Keep the authored planted load above its support plane, also correcting
     // downward penetration. This moves presentation only, never collision.
-    const drop = (hint === JUMP_CHARGE_CLIP_ID ? clearance - .006 : Math.max(0, clearance - .006)) * weight;
+    const drop = (hint === JUMP_CHARGE_CLIP_ID || slopeGlide ? clearance - .006 : Math.max(0, clearance - .006)) * weight;
     if (Math.abs(drop) < 1e-8) return;
     // A running lean or sloped parent must not turn a vertical correction
     // into a sideways move. Convert a WORLD-up delta into the rider's parent.
@@ -18374,6 +18376,10 @@ export class Player {
       this.walkIntent.lengthSq() > 1e-6;
     if (this.state === 'dead' || this.state === 'gameover') {
       targetYaw = this.deathFacingYaw;
+    } else if (this.state === 'hang') {
+      // The hands own facing from the first catch frame, including shimmy,
+      // moving supports and mantle. Velocity is unrelated to the wall normal.
+      targetYaw = Math.atan2(this.ledgeNormal.x, this.ledgeNormal.z);
     } else if (this.loopRide) {
       // Surface rotation already turns the board over. Resolve heading in that
       // unrolled frame instead of applying a second 180-degree yaw at the top.
@@ -18444,7 +18450,9 @@ export class Player {
       }
     }
     if (this.kiteTowing && this.state !== 'grind') targetYaw *= this.kitePoseMotion;
-    if (intentFacing) {
+    if (this.state === 'hang') {
+      this.visualYaw = targetYaw;
+    } else if (intentFacing) {
       // Pure lateral reversals are exactly PI apart, where "shortest" has no
       // unique sign. Turn toward screen-right clockwise and screen-left
       // counter-clockwise so side-to-side pivots undo each other naturally.
@@ -18478,7 +18486,7 @@ export class Player {
     // grounded/grind spin animation.
     const boardRoutedSpin =
       this.spinning && this.state === 'air' && this.flipT > 0;
-    this.bodyGroup.rotation.y =
+    this.bodyGroup.rotation.y = this.state === 'hang' ? this.visualYaw :
       this.visualYaw +
       (boardRoutedSpin ? 0 : this.spinAngle) +
       this.grabSpinAngle + (this.parkControls && this.vertAir && !this.grounded ? this.parkAutoTurn : 0) +
@@ -18486,7 +18494,7 @@ export class Player {
       sideYaw * (this.kiteTowing ? .35 : 1) + revertYaw;
     // Wall travel and torso facing are independent, including reverse and
     // vertical travel. Keep the chest into the wall, then ease out on release.
-    if(this.wallriding || this.wallridePose>.001){
+    if(this.state !== 'hang' && (this.wallriding || this.wallridePose>.001)){
       const wallYaw=Math.atan2(this.wallNormal.x,this.wallNormal.z);
       const weight=this.wallriding?1:this.wallridePose;
       this.bodyGroup.rotation.y+=wrapAngle(wallYaw-this.bodyGroup.rotation.y)*weight;
@@ -18914,6 +18922,7 @@ export class Player {
       const counter = -swing * 0.22 + 0.1 * Math.sin((this.runTime+this.idlePresentationOffset) * 0.7) * idleW; // idle: lazy shoulder wander
       this.upperG.rotation.y +=
         (stance + counter - this.upperG.rotation.y) * Math.min(1, 10 * dt);
+      if (this.state === 'hang') this.upperG.rotation.y = 0;
       // Crash runs chest-out, almost leaning BACK — never hunched forward.
       // Hanging, the chest presses gently toward the wall instead.
       this.upperG.rotation.x = -0.07 * this.walkAmp - 0.12 * underW + (HS ? HS.spine * 0.7 * HS.w : 0.16 * ledgeW + 0.5 * mantle); // hang chest: clip or authored
@@ -18970,6 +18979,7 @@ export class Player {
         wrapAngle(crossHeadYaw - ordinaryHeadYaw) * this.grindCrossPose;
       this.headYawPose = wrapAngle(this.headYawPose +
         wrapAngle(headYaw - this.headYawPose) * Math.min(1, 12 * dt));
+      if (this.state === 'hang') this.headYawPose = 0;
       this.headM.rotation.set(this.headPitchPose, this.headYawPose, 0);
     }
     // A readable hand pose is part of the procedural motion layer. Authored
@@ -19308,6 +19318,7 @@ export class Player {
         boardAttached,
         groundedSkate,
         bodyVisible,
+        preserveRider: this.state === 'hang',
         characterBounds: this.spinStanceBounds,
         reset: this.bailing || this.state === 'dead' || this.state === 'gameover',
       });

@@ -1,6 +1,7 @@
 import type { Player, PlayerAnimationClipHint } from './player';
 import { JUMP_CHARGE_CLIP_ID } from './animation/jumpCharge';
 import { ICE_WALK_CLIP_ID } from './animation/iceWalk';
+import { SLOPE_SLIDE_CLIP_ID } from './animation/slopeSlide';
 import { ROLL_LANDING_CLIP_ID, ROLL_RUN_BLEND_START } from './animation/rollLanding';
 import { RUN_STOP_CLIP_ID, RUN_MOVE_INTENT_INPUT, RUN_STOP_COAST_FRACTION } from './animation/runStop';
 import {
@@ -153,6 +154,8 @@ const AIRBORNE_CLIP_IDS = new Set<ClipId>([
 
 function authoredSwitchBlendDuration(from: ClipId | null, to: ClipId): number {
   if (!from) return 0;
+  if (to === SLOPE_SLIDE_CLIP_ID) return .12;
+  if (from === SLOPE_SLIDE_CLIP_ID) return .14;
   if (to === ROLL_LANDING_CLIP_ID) return .045;
   if (from === ROLL_LANDING_CLIP_ID) return to === 'player.run' ? 0 : .12;
   if (to === ICE_WALK_CLIP_ID) return .06;
@@ -1162,6 +1165,7 @@ export const PLAYER_STATE_CLIP_IDS: readonly PlayerAnimationClipHint[] = [
   ROLL_LANDING_CLIP_ID,
   JUMP_CHARGE_CLIP_ID,
   ICE_WALK_CLIP_ID,
+  SLOPE_SLIDE_CLIP_ID,
   'player.swim',
   'player.swim-idle',
   'player.idle',

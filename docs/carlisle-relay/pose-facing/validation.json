@@ -1,0 +1,116 @@
+{
+  "status": "validated-local-only",
+  "parent": "d1333eca41e6d246e4ca7337bcf9f28f12064899",
+  "promptStartedUTC": "2026-10-29T09:04:39Z",
+  "firstPlayableMinutesApprox": 8,
+  "completedUTC": "2026-10-29T09:40:30.269127+00:00",
+  "localURL": "http://127.0.0.1:5483/?playtest&level=carlisle-coast",
+  "pose": {
+    "clip": "player.slope-slide",
+    "catalogVersion": 34,
+    "lengthPreservingGlideLegs": true,
+    "editableIndependentUpperBodyElasticity": true,
+    "soleClearanceMetres": [
+      0.006,
+      0.014
+    ],
+    "normalUphillCadencePreserved": true,
+    "existingEditedClipsPreserved": true
+  },
+  "checks": {
+    "slopesDegrees": [
+      18,
+      22,
+      26
+    ],
+    "downhillNeutralUphillCases": 9,
+    "animationOnOffPhysicsIdentical": true,
+    "inertialReversalAndRelease": true,
+    "nativeLedgeCases": 8,
+    "ledgeFaces": [
+      "+X",
+      "-X",
+      "+Z",
+      "-Z"
+    ],
+    "arrivals": [
+      "foot",
+      "mounted"
+    ],
+    "shimmyAndMoverDeltaCarryAndMantle": true,
+    "controlFramePreserved": true,
+    "animationRuntime": "passed",
+    "spinEffectsRegression": "passed",
+    "ledgeCrateSpinHazardRegression": "passed",
+    "buildTypeCheck": "passed",
+    "releaseSize": "passed",
+    "diffCheck": "passed",
+    "checkLevels": "not needed: level data/toolkit unchanged",
+    "checkAll": "not run"
+  },
+  "browser": {
+    "modes": [
+      "lite",
+      "full"
+    ],
+    "slopeKeyboardCases": [
+      "downhill",
+      "coast",
+      "uphill",
+      "reversal",
+      "release",
+      "downhill jump",
+      "uphill jump"
+    ],
+    "ledgeCases": [
+      "catch",
+      "shimmy",
+      "spin mantle"
+    ],
+    "liveLedgeFacingRiderVisibleDuringSpin": true,
+    "fullAttackRingsPreserved": true,
+    "allFacingDots": [
+      1
+    ],
+    "consoleErrors": [],
+    "maxNativeCanvas": [
+      1440,
+      900
+    ],
+    "normalPresentation": "480p with CRT; slope and ledge views reviewed",
+    "obliqueSlopeInspection": true,
+    "buildStamp": "Codex/sol fork \u00b7 build 10-29 09:38 UTC",
+    "taskBrowsersClosed": true
+  },
+  "release": {
+    "files": 1849,
+    "bytes": 997264550,
+    "published": false
+  },
+  "evidence": [
+    "native.json",
+    "ledge-native.json",
+    "lite-browser.json",
+    "full-browser.json",
+    "lite-ledge-browser.json",
+    "full-ledge-browser.json",
+    "checks.json",
+    "final-checks.json",
+    "source-parity.json"
+  ],
+  "scope": "Slope browser checks start once on an existing Carlisle slope and use ordinary keyboard controls. Ledge browser uses the archived gallery as an isolated fixture, removing only depth locks for shimmy. It releases the approach key and samples input at catch to avoid automatically queuing mantle before inspection. Native ledges cover four faces and both foot/mounted arrival; moving support carry is a bounded native mover-delta test. The final spin-VFX-only change reuses unchanged slope evidence and reruns ledge/crate/spin checks plus final lite/full ledge rendering. No claim of an uninterrupted 4 km clear.",
+  "sourceSha256": {
+    "src/player.ts": "6e93bea1f358a1640ab1c8ecf385af977355ff65251b8c4d20e9d28695d1cdce",
+    "src/characterAnimationRuntime.ts": "ca0c8f7c2a1b323dfb128299ee66da3d8b70b8f708fbe8f3a7737cbe5e1534c7",
+    "src/animation/slopeSlide.ts": "31c6e383e914e6710ff041c1cdb475490755919bceaebe85b222726a593a4d11",
+    "src/animation/playerCatalog.ts": "608168487a992a9315125facbdcdf33f86cbdc901f0c3bc6e34eeb535c1bae5a",
+    "src/animation/elasticity.ts": "86359479bde09cfc89742b66047b8841d8afb0d9557541fab26161b11d74f533",
+    "src/animation/index.ts": "033f0d35283bcd01ba910791e474a5301a7fdde2d5c76c560f8a6bb89845ce49",
+    "src/spin-effects/presentation.ts": "f47cdf3feb734916c905f590c29b873d35aaaad1c418c5586169e66065dd17e7",
+    "tools/test-carlisle-pose-facing.mjs": "b6df334f650f24e5bd5717eb45088441544518c2b47448c222af45b1f67c245a",
+    "tools/carlisle-ledge-facing-browser.mjs": "11faf9c9efcd6e8014650ab7b0cb4c48f9584c7f2e6144e50492c1f618599e83",
+    "tools/test-slippery-slope-motion.mjs": "fd8102dc006658f7da3f7945fdee9efff116d03e9d17382df6a8eaacba949262",
+    "tools/carlisle-slope-motion-browser.mjs": "cd4a8dfa93486cbc88586fe7b69e8d2c87c343e057c5574a97238bea9d0d0405",
+    "tools/test-character-animation-runtime.mjs": "455ab8d2bc741e831ffc4dda8a9cc0d213be1e13bf28ed779aa09bbaf47ce4f9"
+  }
+}

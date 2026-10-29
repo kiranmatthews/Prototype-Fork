@@ -1,0 +1,108 @@
+{
+  "rows": [
+    {
+      "axis": "x",
+      "sign": -1,
+      "mounted": false,
+      "firstFaceDot": 1,
+      "shimmyDistance": 0.9600000000000003,
+      "climbFrames": 23,
+      "landed": [
+        -0.41999999999999993,
+        2,
+        -0.7100000000000001
+      ]
+    },
+    {
+      "axis": "x",
+      "sign": -1,
+      "mounted": true,
+      "firstFaceDot": 1,
+      "shimmyDistance": 0.9600000000000003,
+      "climbFrames": 23,
+      "landed": [
+        -0.41999999999999993,
+        2,
+        -0.7100000000000001
+      ]
+    },
+    {
+      "axis": "x",
+      "sign": 1,
+      "mounted": false,
+      "firstFaceDot": 1,
+      "shimmyDistance": 0.9600000000000003,
+      "climbFrames": 23,
+      "landed": [
+        0.41999999999999993,
+        2,
+        -0.7100000000000001
+      ]
+    },
+    {
+      "axis": "x",
+      "sign": 1,
+      "mounted": true,
+      "firstFaceDot": 1,
+      "shimmyDistance": 0.9600000000000003,
+      "climbFrames": 23,
+      "landed": [
+        0.41999999999999993,
+        2,
+        -0.7100000000000001
+      ]
+    },
+    {
+      "axis": "z",
+      "sign": -1,
+      "mounted": false,
+      "firstFaceDot": 1,
+      "shimmyDistance": 0.9600000000000003,
+      "climbFrames": 23,
+      "landed": [
+        1.2099999999999995,
+        2,
+        -0.41999999999999993
+      ]
+    },
+    {
+      "axis": "z",
+      "sign": -1,
+      "mounted": true,
+      "firstFaceDot": 1,
+      "shimmyDistance": 0.9600000000000003,
+      "climbFrames": 23,
+      "landed": [
+        1.2099999999999995,
+        2,
+        -0.41999999999999993
+      ]
+    },
+    {
+      "axis": "z",
+      "sign": 1,
+      "mounted": false,
+      "firstFaceDot": 1,
+      "shimmyDistance": 0.9600000000000003,
+      "climbFrames": 23,
+      "landed": [
+        1.2099999999999995,
+        2,
+        0.41999999999999993
+      ]
+    },
+    {
+      "axis": "z",
+      "sign": 1,
+      "mounted": true,
+      "firstFaceDot": 1,
+      "shimmyDistance": 0.9600000000000003,
+      "climbFrames": 23,
+      "landed": [
+        1.2099999999999995,
+        2,
+        0.41999999999999993
+      ]
+    }
+  ]
+}

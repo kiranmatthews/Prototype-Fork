@@ -1,0 +1,20 @@
+{
+  "parent": "d1333eca41e6d246e4ca7337bcf9f28f12064899",
+  "unchangedFileSha256": {
+    "src/levels/carlisle-tidal-relay.ts": "5b179887be93c350c4376c3827592fb7dba50a5896cf7ca6fce03909ac2b3cbd",
+    "src/levels/carlisle-slippery-crossings.ts": "79d8088d40a75bdd5ecbc4747c142f76324f4772852a8523722f2951ffe0d358",
+    "src/levels/carlisle-cargo.ts": "b555d68cc3a2ca49b93ca9c430efb19498efad6a529d6ad4efa0af2b14aaff31",
+    "src/levels/carlisle-harbour-bonus.ts": "b009df2b971e0582d264b3b3e44228a009d55616efda54b048eb4f8f686c3ace",
+    "src/level.ts": "618c206a8ca454e62f447a713ee4a7394ebc9589ec1ffa01bc57bcff3e3e2bc5",
+    "src/tuning.ts": "1aca3b5fe4b5d026d8b9e36dcf30444081bec7d2acfd4181294f6aacaca61bd6",
+    "src/main.ts": "7037126b270982604dec1c87c864da655f8477063c704fa14901c02cefd56c33",
+    "src/animation/iceWalk.ts": "c9e9203b55bc490ec2a2505efe266b2b0c3a816d00dce6973c0100fa7df436be",
+    "src/spin-effects/routing.ts": "274f852a9104f341f5743412968481e184e3dee5590f03401ea9e911d2370850",
+    "src/spin-effects/armPose.ts": "fdf54c9d385c4c554577f8d13e4dd2497450f4005dae76e0fe7ced3018e76198",
+    "public/levels.json": "08b960136b3118b5e692dfbc49c7e54c11345707ac33db83d585f9af2b8e8a5d"
+  },
+  "levelGeometryUnchanged": true,
+  "movementTuningUnchanged": true,
+  "cameraUnchanged": true,
+  "spinRoutingAndAttackInputsUnchanged": true
+}

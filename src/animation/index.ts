@@ -3,6 +3,7 @@ export * from './document';
 export * from './forwardRoll';
 export * from './locomotionBlend';
 export * from './iceWalk';
+export * from './slopeSlide';
 export * from './crouch';
 export * from './quaterniusWalk.generated';
 export * from './unityRope';

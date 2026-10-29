@@ -31,6 +31,8 @@ export interface SpinPresentationSample {
   readonly boardAttached: boolean;
   readonly groundedSkate: boolean;
   readonly bodyVisible: boolean;
+  /** A held traversal pose keeps the rider visible beneath the attack rings. */
+  readonly preserveRider?: boolean;
   /** Pre-attack low stance, in the effect parent's local metre frame. */
   readonly characterBounds?: Readonly<THREE.Box3>;
   readonly reset?: boolean;
@@ -201,11 +203,15 @@ export class SpinEffectsPresentation {
     this.routeState = frame.state;
     this.sculpture.rotation.y = step * (SOURCE_RADIANS_PER_SECOND / 60);
     this.sculpture.visible =
-      frame.characterActive && sample.bodyVisible && this.assetReady;
+      frame.characterActive && sample.bodyVisible && this.assetReady && !sample.preserveRider;
 
     const characterRingsVisible =
-      this.ringsEnabled && sample.bodyVisible &&
+      // The normal smear includes its own trails. A held rider cannot use
+      // that rotating mesh, so retain attack feedback with the ring layer.
+      (this.ringsEnabled || sample.preserveRider === true) && sample.bodyVisible &&
       (frame.characterActive || frame.characterLingering);
+    // Keep the hanging silhouette readable through the additive ribbons.
+    this.characterRings.mesh.material.opacity = sample.preserveRider ? .12 : 1;
     this.characterRings.visible = characterRingsVisible;
     if (characterRingsVisible)
       this.characterRings.applyStep(step, !frame.characterActive);

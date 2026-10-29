@@ -6406,3 +6406,42 @@ the arrival and skiff approach at normal 480p/CRT. Final production stamp:
 1,849 files. All task browsers are closed. Evidence, exact source hashes and
 bounded main-course test scope are in
 [the harbour bonus validation record](carlisle-relay/harbour-bonus/validation.json).
+
+## 29 October 2026 NZDT — downhill balance pose and ledge facing
+
+Replaced the reused crouched slide clip on gravity slicks with a dedicated
+`player.slope-slide` performance. The rider holds staggered feet and soft knees,
+with open arms and restrained, delayed upper-body balance corrections. The
+editable segment-elasticity profile preserves both leg lengths. Native sole
+seating applies after the authored pose so the shoes stay against the slope;
+the captured downhill/coasting shoes sit 6–14 mm above the support plane.
+The new catalog revision adds the clip to existing suites without replacing
+edited clips. Ordinary crouch-slide and uphill running keep their own clips.
+
+Ledge presentation now resolves facing from the grabbed lip normal after
+catch and shimmy. It takes priority over world displacement and residual board,
+grind, wallride and spin yaw for the full grip and mantle. Torso/head yaw also
+releases the board stance immediately. The control frame, catch eligibility,
+grip duration, spin attack and pull-up movement are preserved. During a ledge
+attack, the live rider stays visible beneath restrained translucent rings;
+the rotating baked spin duplicate cannot replace the held pose.
+
+First playable pose and ledge-facing native checks: approximately **8 minutes**
+(09:04:39–09:12:30 UTC). Native 18/22/26-degree slopes preserve downhill inertia,
+reversal, supported reduced uphill movement and full-speed uphill animation.
+Animation-on/off physics trajectories match exactly. Eight ledge cases cover
+all four faces, arriving on foot or from a board, shimmy, simulated mover-delta
+carry and spin-to-mantle. Existing ledge/crate and animation-runtime checks pass.
+No level geometry, camera settings or global tuning changed. The local-only
+publication hold remains in force.
+
+Chrome lite and production full-render checks pass downhill/coasting, uphill,
+inertial reversal, release and jumps. The ledge browser uses the archived
+gallery geometry in an isolated fixture with its depth locks removed to allow
+shimmy; approach input releases exactly at catch. Catch, shimmy and spin mantle
+face the ledge throughout, with unchanged control axes and no console errors.
+Reviewed gameplay at native 1440×900 and normal 480p/CRT, plus a close oblique
+view of the held downhill pose. Production build/type checking and release
+size pass: `Codex/sol fork · build 10-29 09:38 UTC`, 997,264,550 bytes / 1,849
+files. All task browsers are closed. Exact source hashes, evidence and test
+scope are in [the pose/facing validation record](carlisle-relay/pose-facing/validation.json).

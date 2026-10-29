@@ -1,0 +1,1316 @@
+{
+  "mode": "full",
+  "base": "http://127.0.0.1:5484",
+  "errors": [],
+  "frames": [
+    {
+      "state": "hang",
+      "phase": "grip",
+      "at": [
+        65.64492766203705,
+        6.419883299237232,
+        0
+      ],
+      "grounded": false,
+      "face": [
+        1,
+        0,
+        -9.957992501029599e-17
+      ],
+      "normal": [
+        -1,
+        0,
+        0
+      ],
+      "dot": 1,
+      "spin": false,
+      "bodyVisible": true,
+      "spinPresentation": {
+        "assetReady": true,
+        "assetError": null,
+        "route": "none",
+        "sculptureVisible": false,
+        "characterRingsVisible": false,
+        "groundedSkateRingsVisible": false,
+        "boardRingsVisible": false,
+        "lingerTicks": -1,
+        "sourceStep": 8,
+        "pulse": 0,
+        "characterRingStats": {
+          "rings": 6,
+          "segments": 22,
+          "vertices": 660,
+          "triangles": 1056,
+          "uploads": 1
+        },
+        "groundedSkateRingStats": {
+          "rings": 2,
+          "segments": 22,
+          "vertices": 220,
+          "triangles": 352,
+          "uploads": 1
+        },
+        "modelSource": "current-character",
+        "modelVertices": 311556
+      },
+      "clip": "player.hang",
+      "time": 0.13333333333333333,
+      "axes": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          -1
+        ]
+      ]
+    },
+    {
+      "state": "hang",
+      "phase": "grip",
+      "at": [
+        65.57615569272978,
+        6.529332425788378,
+        0
+      ],
+      "grounded": false,
+      "face": [
+        1,
+        0,
+        -9.957992501029599e-17
+      ],
+      "normal": [
+        -1,
+        0,
+        0
+      ],
+      "dot": 1,
+      "spin": false,
+      "bodyVisible": true,
+      "spinPresentation": {
+        "assetReady": true,
+        "assetError": null,
+        "route": "none",
+        "sculptureVisible": false,
+        "characterRingsVisible": false,
+        "groundedSkateRingsVisible": false,
+        "boardRingsVisible": false,
+        "lingerTicks": -1,
+        "sourceStep": 9,
+        "pulse": 0,
+        "characterRingStats": {
+          "rings": 6,
+          "segments": 22,
+          "vertices": 660,
+          "triangles": 1056,
+          "uploads": 1
+        },
+        "groundedSkateRingStats": {
+          "rings": 2,
+          "segments": 22,
+          "vertices": 220,
+          "triangles": 352,
+          "uploads": 1
+        },
+        "modelSource": "current-character",
+        "modelVertices": 311556
+      },
+      "clip": "player.hang",
+      "time": 0.15,
+      "axes": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          -1
+        ]
+      ]
+    },
+    {
+      "state": "hang",
+      "phase": "grip",
+      "at": [
+        65.51165970078877,
+        6.631976425300075,
+        0
+      ],
+      "grounded": false,
+      "face": [
+        1,
+        0,
+        -9.957992501029599e-17
+      ],
+      "normal": [
+        -1,
+        0,
+        0
+      ],
+      "dot": 1,
+      "spin": false,
+      "bodyVisible": true,
+      "spinPresentation": {
+        "assetReady": true,
+        "assetError": null,
+        "route": "none",
+        "sculptureVisible": false,
+        "characterRingsVisible": false,
+        "groundedSkateRingsVisible": false,
+        "boardRingsVisible": false,
+        "lingerTicks": -1,
+        "sourceStep": 10,
+        "pulse": 0,
+        "characterRingStats": {
+          "rings": 6,
+          "segments": 22,
+          "vertices": 660,
+          "triangles": 1056,
+          "uploads": 1
+        },
+        "groundedSkateRingStats": {
+          "rings": 2,
+          "segments": 22,
+          "vertices": 220,
+          "triangles": 352,
+          "uploads": 1
+        },
+        "modelSource": "current-character",
+        "modelVertices": 311556
+      },
+      "clip": "player.hang",
+      "time": 0.16666666666666666,
+      "axes": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          -1
+        ]
+      ]
+    },
+    {
+      "state": "hang",
+      "phase": "grip",
+      "at": [
+        65.46212962962964,
+        6.710802480173699,
+        0
+      ],
+      "grounded": false,
+      "face": [
+        1,
+        0,
+        -9.957992501029599e-17
+      ],
+      "normal": [
+        -1,
+        0,
+        0
+      ],
+      "dot": 1,
+      "spin": false,
+      "bodyVisible": true,
+      "spinPresentation": {
+        "assetReady": true,
+        "assetError": null,
+        "route": "none",
+        "sculptureVisible": false,
+        "characterRingsVisible": false,
+        "groundedSkateRingsVisible": false,
+        "boardRingsVisible": false,
+        "lingerTicks": -1,
+        "sourceStep": 11,
+        "pulse": 0,
+        "characterRingStats": {
+          "rings": 6,
+          "segments": 22,
+          "vertices": 660,
+          "triangles": 1056,
+          "uploads": 1
+        },
+        "groundedSkateRingStats": {
+          "rings": 2,
+          "segments": 22,
+          "vertices": 220,
+          "triangles": 352,
+          "uploads": 1
+        },
+        "modelSource": "current-character",
+        "modelVertices": 311556
+      },
+      "clip": "player.hang",
+      "time": 0.18333333333333332,
+      "axes": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          -1
+        ]
+      ]
+    },
+    {
+      "state": "hang",
+      "phase": "grip",
+      "at": [
+        65.43825542266805,
+        6.748797772810626,
+        0
+      ],
+      "grounded": false,
+      "face": [
+        1,
+        0,
+        -9.957992501029599e-17
+      ],
+      "normal": [
+        -1,
+        0,
+        0
+      ],
+      "dot": 1,
+      "spin": false,
+      "bodyVisible": true,
+      "spinPresentation": {
+        "assetReady": true,
+        "assetError": null,
+        "route": "none",
+        "sculptureVisible": false,
+        "characterRingsVisible": false,
+        "groundedSkateRingsVisible": false,
+        "boardRingsVisible": false,
+        "lingerTicks": -1,
+        "sourceStep": 12,
+        "pulse": 0,
+        "characterRingStats": {
+          "rings": 6,
+          "segments": 22,
+          "vertices": 660,
+          "triangles": 1056,
+          "uploads": 1
+        },
+        "groundedSkateRingStats": {
+          "rings": 2,
+          "segments": 22,
+          "vertices": 220,
+          "triangles": 352,
+          "uploads": 1
+        },
+        "modelSource": "current-character",
+        "modelVertices": 311556
+      },
+      "clip": "player.hang",
+      "time": 0.19999999999999998,
+      "axes": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          -1
+        ]
+      ]
+    },
+    {
+      "state": "hang",
+      "phase": "grip",
+      "at": [
+        65.43750000000001,
+        6.750000011920928,
+        0
+      ],
+      "grounded": false,
+      "face": [
+        1,
+        0,
+        -9.957992501029599e-17
+      ],
+      "normal": [
+        -1,
+        0,
+        0
+      ],
+      "dot": 1,
+      "spin": false,
+      "bodyVisible": true,
+      "spinPresentation": {
+        "assetReady": true,
+        "assetError": null,
+        "route": "none",
+        "sculptureVisible": false,
+        "characterRingsVisible": false,
+        "groundedSkateRingsVisible": false,
+        "boardRingsVisible": false,
+        "lingerTicks": -1,
+        "sourceStep": 14,
+        "pulse": 0,
+        "characterRingStats": {
+          "rings": 6,
+          "segments": 22,
+          "vertices": 660,
+          "triangles": 1056,
+          "uploads": 1
+        },
+        "groundedSkateRingStats": {
+          "rings": 2,
+          "segments": 22,
+          "vertices": 220,
+          "triangles": 352,
+          "uploads": 1
+        },
+        "modelSource": "current-character",
+        "modelVertices": 311556
+      },
+      "clip": "player.hang",
+      "time": 0.2333333333333333,
+      "axes": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          -1
+        ]
+      ]
+    },
+    {
+      "state": "hang",
+      "phase": "grip",
+      "at": [
+        65.43750000000001,
+        6.750000011920928,
+        0
+      ],
+      "grounded": false,
+      "face": [
+        1,
+        0,
+        -9.957992501029599e-17
+      ],
+      "normal": [
+        -1,
+        0,
+        0
+      ],
+      "dot": 1,
+      "spin": false,
+      "bodyVisible": true,
+      "spinPresentation": {
+        "assetReady": true,
+        "assetError": null,
+        "route": "none",
+        "sculptureVisible": false,
+        "characterRingsVisible": false,
+        "groundedSkateRingsVisible": false,
+        "boardRingsVisible": false,
+        "lingerTicks": -1,
+        "sourceStep": 15,
+        "pulse": 0,
+        "characterRingStats": {
+          "rings": 6,
+          "segments": 22,
+          "vertices": 660,
+          "triangles": 1056,
+          "uploads": 1
+        },
+        "groundedSkateRingStats": {
+          "rings": 2,
+          "segments": 22,
+          "vertices": 220,
+          "triangles": 352,
+          "uploads": 1
+        },
+        "modelSource": "current-character",
+        "modelVertices": 311556
+      },
+      "clip": "player.hang",
+      "time": 0.24999999999999997,
+      "axes": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          -1
+        ]
+      ]
+    },
+    {
+      "state": "hang",
+      "phase": "grip",
+      "at": [
+        65.43750000000001,
+        6.750000011920928,
+        0
+      ],
+      "grounded": false,
+      "face": [
+        1,
+        0,
+        -9.957992501029599e-17
+      ],
+      "normal": [
+        -1,
+        0,
+        0
+      ],
+      "dot": 1,
+      "spin": false,
+      "bodyVisible": true,
+      "spinPresentation": {
+        "assetReady": true,
+        "assetError": null,
+        "route": "none",
+        "sculptureVisible": false,
+        "characterRingsVisible": false,
+        "groundedSkateRingsVisible": false,
+        "boardRingsVisible": false,
+        "lingerTicks": -1,
+        "sourceStep": 16,
+        "pulse": 0,
+        "characterRingStats": {
+          "rings": 6,
+          "segments": 22,
+          "vertices": 660,
+          "triangles": 1056,
+          "uploads": 1
+        },
+        "groundedSkateRingStats": {
+          "rings": 2,
+          "segments": 22,
+          "vertices": 220,
+          "triangles": 352,
+          "uploads": 1
+        },
+        "modelSource": "current-character",
+        "modelVertices": 311556
+      },
+      "clip": "player.hang",
+      "time": 0.26666666666666666,
+      "axes": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          -1
+        ]
+      ]
+    },
+    {
+      "state": "hang",
+      "phase": "climb",
+      "at": [
+        65.44000000000001,
+        6.767088619411642,
+        -0.7599999999794913
+      ],
+      "grounded": false,
+      "face": [
+        1,
+        0,
+        -9.957992501029599e-17
+      ],
+      "normal": [
+        -1,
+        0,
+        2.2993471702930922e-17
+      ],
+      "dot": 1,
+      "spin": true,
+      "bodyVisible": true,
+      "spinPresentation": {
+        "assetReady": true,
+        "assetError": null,
+        "route": "character",
+        "sculptureVisible": false,
+        "characterRingsVisible": true,
+        "groundedSkateRingsVisible": false,
+        "boardRingsVisible": false,
+        "lingerTicks": -1,
+        "sourceStep": 87,
+        "pulse": 0,
+        "characterRingStats": {
+          "rings": 6,
+          "segments": 22,
+          "vertices": 660,
+          "triangles": 1056,
+          "uploads": 3
+        },
+        "groundedSkateRingStats": {
+          "rings": 2,
+          "segments": 22,
+          "vertices": 220,
+          "triangles": 352,
+          "uploads": 1
+        },
+        "modelSource": "current-character",
+        "modelVertices": 311556
+      },
+      "clip": "player.climb",
+      "time": 1.4499999999999997,
+      "axes": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          -1
+        ]
+      ]
+    },
+    {
+      "state": "hang",
+      "phase": "climb",
+      "at": [
+        66.17629738457651,
+        8.060000011920929,
+        -0.7599999999794913
+      ],
+      "grounded": false,
+      "face": [
+        1,
+        0,
+        -9.957992501029599e-17
+      ],
+      "normal": [
+        -1,
+        0,
+        2.2993471702930922e-17
+      ],
+      "dot": 1,
+      "spin": false,
+      "bodyVisible": true,
+      "spinPresentation": {
+        "assetReady": true,
+        "assetError": null,
+        "route": "character",
+        "sculptureVisible": false,
+        "characterRingsVisible": true,
+        "groundedSkateRingsVisible": false,
+        "boardRingsVisible": false,
+        "lingerTicks": 0,
+        "sourceStep": 104,
+        "pulse": 0,
+        "characterRingStats": {
+          "rings": 6,
+          "segments": 22,
+          "vertices": 660,
+          "triangles": 1056,
+          "uploads": 20
+        },
+        "groundedSkateRingStats": {
+          "rings": 2,
+          "segments": 22,
+          "vertices": 220,
+          "triangles": 352,
+          "uploads": 1
+        },
+        "modelSource": "current-character",
+        "modelVertices": 311556
+      },
+      "clip": "player.climb",
+      "time": 1.733333333333332,
+      "axes": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          -1
+        ]
+      ]
+    },
+    {
+      "state": "hang",
+      "phase": "climb",
+      "at": [
+        66.3260063372274,
+        8.060000011920929,
+        -0.7599999999794913
+      ],
+      "grounded": false,
+      "face": [
+        1,
+        0,
+        -9.957992501029599e-17
+      ],
+      "normal": [
+        -1,
+        0,
+        2.2993471702930922e-17
+      ],
+      "dot": 1,
+      "spin": false,
+      "bodyVisible": true,
+      "spinPresentation": {
+        "assetReady": true,
+        "assetError": null,
+        "route": "character",
+        "sculptureVisible": false,
+        "characterRingsVisible": true,
+        "groundedSkateRingsVisible": false,
+        "boardRingsVisible": false,
+        "lingerTicks": 2,
+        "sourceStep": 106,
+        "pulse": 0,
+        "characterRingStats": {
+          "rings": 6,
+          "segments": 22,
+          "vertices": 660,
+          "triangles": 1056,
+          "uploads": 22
+        },
+        "groundedSkateRingStats": {
+          "rings": 2,
+          "segments": 22,
+          "vertices": 220,
+          "triangles": 352,
+          "uploads": 1
+        },
+        "modelSource": "current-character",
+        "modelVertices": 311556
+      },
+      "clip": "player.climb",
+      "time": 1.7666666666666653,
+      "axes": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          -1
+        ]
+      ]
+    },
+    {
+      "state": "hang",
+      "phase": "climb",
+      "at": [
+        66.377742824066,
+        8.060000011920929,
+        -0.7599999999794913
+      ],
+      "grounded": false,
+      "face": [
+        1,
+        0,
+        -9.957992501029599e-17
+      ],
+      "normal": [
+        -1,
+        0,
+        2.2993471702930922e-17
+      ],
+      "dot": 1,
+      "spin": false,
+      "bodyVisible": true,
+      "spinPresentation": {
+        "assetReady": true,
+        "assetError": null,
+        "route": "character",
+        "sculptureVisible": false,
+        "characterRingsVisible": true,
+        "groundedSkateRingsVisible": false,
+        "boardRingsVisible": false,
+        "lingerTicks": 3,
+        "sourceStep": 107,
+        "pulse": 0,
+        "characterRingStats": {
+          "rings": 6,
+          "segments": 22,
+          "vertices": 660,
+          "triangles": 1056,
+          "uploads": 23
+        },
+        "groundedSkateRingStats": {
+          "rings": 2,
+          "segments": 22,
+          "vertices": 220,
+          "triangles": 352,
+          "uploads": 1
+        },
+        "modelSource": "current-character",
+        "modelVertices": 311556
+      },
+      "clip": "player.climb",
+      "time": 1.7833333333333319,
+      "axes": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          -1
+        ]
+      ]
+    },
+    {
+      "state": "hang",
+      "phase": "climb",
+      "at": [
+        66.40926233178983,
+        8.060000011920929,
+        -0.7599999999794913
+      ],
+      "grounded": false,
+      "face": [
+        1,
+        0,
+        -9.957992501029599e-17
+      ],
+      "normal": [
+        -1,
+        0,
+        2.2993471702930922e-17
+      ],
+      "dot": 1,
+      "spin": false,
+      "bodyVisible": true,
+      "spinPresentation": {
+        "assetReady": true,
+        "assetError": null,
+        "route": "character",
+        "sculptureVisible": false,
+        "characterRingsVisible": true,
+        "groundedSkateRingsVisible": false,
+        "boardRingsVisible": false,
+        "lingerTicks": 4,
+        "sourceStep": 108,
+        "pulse": 0,
+        "characterRingStats": {
+          "rings": 6,
+          "segments": 22,
+          "vertices": 660,
+          "triangles": 1056,
+          "uploads": 24
+        },
+        "groundedSkateRingStats": {
+          "rings": 2,
+          "segments": 22,
+          "vertices": 220,
+          "triangles": 352,
+          "uploads": 1
+        },
+        "modelSource": "current-character",
+        "modelVertices": 311556
+      },
+      "clip": "player.climb",
+      "time": 1.7999999999999985,
+      "axes": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          -1
+        ]
+      ]
+    },
+    {
+      "state": "air",
+      "phase": "climb",
+      "at": [
+        66.41750000000002,
+        8.060000011920929,
+        -0.7599999999794913
+      ],
+      "grounded": false,
+      "face": [
+        1,
+        0,
+        -9.957992501029599e-17
+      ],
+      "normal": [
+        -1,
+        0,
+        2.2993471702930922e-17
+      ],
+      "dot": 1,
+      "spin": false,
+      "bodyVisible": true,
+      "spinPresentation": {
+        "assetReady": true,
+        "assetError": null,
+        "route": "character",
+        "sculptureVisible": false,
+        "characterRingsVisible": false,
+        "groundedSkateRingsVisible": false,
+        "boardRingsVisible": false,
+        "lingerTicks": 5,
+        "sourceStep": 109,
+        "pulse": 0,
+        "characterRingStats": {
+          "rings": 6,
+          "segments": 22,
+          "vertices": 660,
+          "triangles": 1056,
+          "uploads": 24
+        },
+        "groundedSkateRingStats": {
+          "rings": 2,
+          "segments": 22,
+          "vertices": 220,
+          "triangles": 352,
+          "uploads": 1
+        },
+        "modelSource": "current-character",
+        "modelVertices": 311556
+      },
+      "clip": "player.jump",
+      "time": 1.816666666666665,
+      "axes": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          -1
+        ]
+      ]
+    },
+    {
+      "state": "air",
+      "phase": "climb",
+      "at": [
+        66.41750000000002,
+        8.067500011920929,
+        -0.7599999999794913
+      ],
+      "grounded": false,
+      "face": [
+        1,
+        0,
+        -9.957992501029599e-17
+      ],
+      "normal": [
+        -1,
+        0,
+        2.2993471702930922e-17
+      ],
+      "dot": 1,
+      "spin": false,
+      "bodyVisible": true,
+      "spinPresentation": {
+        "assetReady": true,
+        "assetError": null,
+        "route": "character",
+        "sculptureVisible": false,
+        "characterRingsVisible": false,
+        "groundedSkateRingsVisible": false,
+        "boardRingsVisible": false,
+        "lingerTicks": 6,
+        "sourceStep": 110,
+        "pulse": 0,
+        "characterRingStats": {
+          "rings": 6,
+          "segments": 22,
+          "vertices": 660,
+          "triangles": 1056,
+          "uploads": 24
+        },
+        "groundedSkateRingStats": {
+          "rings": 2,
+          "segments": 22,
+          "vertices": 220,
+          "triangles": 352,
+          "uploads": 1
+        },
+        "modelSource": "current-character",
+        "modelVertices": 311556
+      },
+      "clip": "player.jump",
+      "time": 1.8333333333333317,
+      "axes": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          -1
+        ]
+      ]
+    },
+    {
+      "state": "air",
+      "phase": "climb",
+      "at": [
+        66.41750000000002,
+        8.065833345254262,
+        -0.7599999999794913
+      ],
+      "grounded": false,
+      "face": [
+        1,
+        0,
+        -9.957992501029599e-17
+      ],
+      "normal": [
+        -1,
+        0,
+        2.2993471702930922e-17
+      ],
+      "dot": 1,
+      "spin": false,
+      "bodyVisible": true,
+      "spinPresentation": {
+        "assetReady": true,
+        "assetError": null,
+        "route": "character",
+        "sculptureVisible": false,
+        "characterRingsVisible": false,
+        "groundedSkateRingsVisible": false,
+        "boardRingsVisible": false,
+        "lingerTicks": 7,
+        "sourceStep": 111,
+        "pulse": 0,
+        "characterRingStats": {
+          "rings": 6,
+          "segments": 22,
+          "vertices": 660,
+          "triangles": 1056,
+          "uploads": 24
+        },
+        "groundedSkateRingStats": {
+          "rings": 2,
+          "segments": 22,
+          "vertices": 220,
+          "triangles": 352,
+          "uploads": 1
+        },
+        "modelSource": "current-character",
+        "modelVertices": 311556
+      },
+      "clip": "player.fall",
+      "time": 1.8499999999999983,
+      "axes": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          -1
+        ]
+      ]
+    },
+    {
+      "state": "ride",
+      "phase": "climb",
+      "at": [
+        66.41750000000002,
+        8.000000011920928,
+        -0.7599999999794913
+      ],
+      "grounded": true,
+      "face": [
+        1,
+        0,
+        -9.957992501029599e-17
+      ],
+      "normal": [
+        -1,
+        0,
+        2.2993471702930922e-17
+      ],
+      "dot": 1,
+      "spin": false,
+      "bodyVisible": true,
+      "spinPresentation": {
+        "assetReady": true,
+        "assetError": null,
+        "route": "character",
+        "sculptureVisible": false,
+        "characterRingsVisible": false,
+        "groundedSkateRingsVisible": false,
+        "boardRingsVisible": false,
+        "lingerTicks": 9,
+        "sourceStep": 113,
+        "pulse": 0,
+        "characterRingStats": {
+          "rings": 6,
+          "segments": 22,
+          "vertices": 660,
+          "triangles": 1056,
+          "uploads": 24
+        },
+        "groundedSkateRingStats": {
+          "rings": 2,
+          "segments": 22,
+          "vertices": 220,
+          "triangles": 352,
+          "uploads": 1
+        },
+        "modelSource": "current-character",
+        "modelVertices": 311556
+      },
+      "clip": "player.idle",
+      "time": 1.8833333333333315,
+      "axes": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          -1
+        ]
+      ]
+    }
+  ],
+  "shimmy": {
+    "start": {
+      "state": "hang",
+      "phase": "grip",
+      "at": [
+        65.43750000000001,
+        6.750000011920928,
+        0
+      ],
+      "grounded": false,
+      "face": [
+        1,
+        0,
+        -9.957992501029599e-17
+      ],
+      "normal": [
+        -1,
+        0,
+        0
+      ],
+      "dot": 1,
+      "spin": false,
+      "bodyVisible": true,
+      "spinPresentation": {
+        "assetReady": true,
+        "assetError": null,
+        "route": "none",
+        "sculptureVisible": false,
+        "characterRingsVisible": false,
+        "groundedSkateRingsVisible": false,
+        "boardRingsVisible": false,
+        "lingerTicks": -1,
+        "sourceStep": 54,
+        "pulse": 0,
+        "characterRingStats": {
+          "rings": 6,
+          "segments": 22,
+          "vertices": 660,
+          "triangles": 1056,
+          "uploads": 1
+        },
+        "groundedSkateRingStats": {
+          "rings": 2,
+          "segments": 22,
+          "vertices": 220,
+          "triangles": 352,
+          "uploads": 1
+        },
+        "modelSource": "current-character",
+        "modelVertices": 311556
+      },
+      "clip": "player.hang",
+      "time": 0.9000000000000011,
+      "axes": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          -1
+        ]
+      ]
+    },
+    "end": {
+      "state": "hang",
+      "phase": "grip",
+      "at": [
+        65.44000000000001,
+        6.750000011920928,
+        -0.7599999999794913
+      ],
+      "grounded": false,
+      "face": [
+        1,
+        0,
+        -9.957992501029599e-17
+      ],
+      "normal": [
+        -1,
+        0,
+        0
+      ],
+      "dot": 1,
+      "spin": false,
+      "bodyVisible": true,
+      "spinPresentation": {
+        "assetReady": true,
+        "assetError": null,
+        "route": "none",
+        "sculptureVisible": false,
+        "characterRingsVisible": false,
+        "groundedSkateRingsVisible": false,
+        "boardRingsVisible": false,
+        "lingerTicks": -1,
+        "sourceStep": 73,
+        "pulse": 0,
+        "characterRingStats": {
+          "rings": 6,
+          "segments": 22,
+          "vertices": 660,
+          "triangles": 1056,
+          "uploads": 1
+        },
+        "groundedSkateRingStats": {
+          "rings": 2,
+          "segments": 22,
+          "vertices": 220,
+          "triangles": 352,
+          "uploads": 1
+        },
+        "modelSource": "current-character",
+        "modelVertices": 311556
+      },
+      "clip": "player.hang",
+      "time": 1.2166666666666672,
+      "axes": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          -1
+        ]
+      ]
+    }
+  },
+  "finished": {
+    "state": "ride",
+    "phase": "climb",
+    "at": [
+      66.41750000000002,
+      8.000000011920928,
+      -0.7599999999794913
+    ],
+    "grounded": true,
+    "face": [
+      1,
+      0,
+      -9.957992501029599e-17
+    ],
+    "normal": [
+      -1,
+      0,
+      2.2993471702930922e-17
+    ],
+    "dot": 1,
+    "spin": false,
+    "bodyVisible": true,
+    "spinPresentation": {
+      "assetReady": true,
+      "assetError": null,
+      "route": "character",
+      "sculptureVisible": false,
+      "characterRingsVisible": false,
+      "groundedSkateRingsVisible": false,
+      "boardRingsVisible": false,
+      "lingerTicks": 9,
+      "sourceStep": 113,
+      "pulse": 0,
+      "characterRingStats": {
+        "rings": 6,
+        "segments": 22,
+        "vertices": 660,
+        "triangles": 1056,
+        "uploads": 24
+      },
+      "groundedSkateRingStats": {
+        "rings": 2,
+        "segments": 22,
+        "vertices": 220,
+        "triangles": 352,
+        "uploads": 1
+      },
+      "modelSource": "current-character",
+      "modelVertices": 311556
+    },
+    "clip": "player.idle",
+    "time": 1.8833333333333315,
+    "axes": [
+      [
+        1,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        -1
+      ]
+    ]
+  },
+  "source": {
+    "build": "Codex/sol fork · build 10-29 09:38 UTC",
+    "canvas": [
+      1440,
+      900
+    ]
+  }
+}

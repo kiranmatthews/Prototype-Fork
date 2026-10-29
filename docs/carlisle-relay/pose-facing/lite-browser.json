@@ -1,0 +1,394 @@
+{
+  "mode": "lite",
+  "base": "http://127.0.0.1:5483",
+  "errors": [],
+  "cases": [
+    {
+      "name": "downhill",
+      "start": {
+        "at": [
+          12.678519291797196,
+          216.90548948283137,
+          -22.054505708457732
+        ],
+        "velocity": [
+          1.6321144007789052,
+          0,
+          -2.8565046608798985
+        ],
+        "normal": [
+          0.1533036274183628,
+          0.9510564079305356,
+          -0.26830897628413175
+        ],
+        "grounded": true,
+        "wet": true,
+        "state": "ride",
+        "board": false,
+        "bail": false,
+        "time": 0.26666666666666666,
+        "hint": "player.slope-slide",
+        "active": "player.slope-slide",
+        "transient": null,
+        "phase": 0,
+        "normalizedSpeed": 0.3655440102002964,
+        "timeline": 0.25,
+        "slideTimer": 0
+      },
+      "end": {
+        "at": [
+          15.771108171924192,
+          214.87878908363894,
+          -27.47141168985627
+        ],
+        "velocity": [
+          6.494217148408564,
+          0,
+          -11.387431458638648
+        ],
+        "normal": [
+          0.15276354721937496,
+          0.9510565143600429,
+          -0.2686164647490539
+        ],
+        "grounded": true,
+        "wet": true,
+        "state": "ride",
+        "board": false,
+        "bail": false,
+        "time": 1.016666666666668,
+        "hint": "player.slope-slide",
+        "active": "player.slope-slide",
+        "transient": null,
+        "phase": 0,
+        "normalizedSpeed": 1,
+        "timeline": 1.0000000000000013,
+        "slideTimer": 0
+      }
+    },
+    {
+      "name": "neutral",
+      "start": {
+        "at": [
+          12.678201971747173,
+          216.90569748751017,
+          -22.053949715624444
+        ],
+        "velocity": [
+          1.6269260434302368,
+          0,
+          -2.8474135988209044
+        ],
+        "normal": [
+          0.1533036274183628,
+          0.9510564079305356,
+          -0.26830897628413175
+        ],
+        "grounded": true,
+        "wet": true,
+        "state": "ride",
+        "board": false,
+        "bail": false,
+        "time": 0.26666666666666666,
+        "hint": "player.slope-slide",
+        "active": "player.slope-slide",
+        "transient": null,
+        "phase": 0,
+        "normalizedSpeed": 0.3643809659070169,
+        "timeline": 1.566666666666666,
+        "slideTimer": 0
+      },
+      "end": {
+        "at": [
+          15.71886758263624,
+          214.91307252596744,
+          -27.37973810813532
+        ],
+        "velocity": [
+          6.331469339490927,
+          0,
+          -11.101505435312399
+        ],
+        "normal": [
+          0.15276354721937496,
+          0.9510565143600429,
+          -0.2686164647490539
+        ],
+        "grounded": true,
+        "wet": true,
+        "state": "ride",
+        "board": false,
+        "bail": false,
+        "time": 1.016666666666668,
+        "hint": "player.slope-slide",
+        "active": "player.slope-slide",
+        "transient": null,
+        "phase": 0,
+        "normalizedSpeed": 1,
+        "timeline": 0.7166666666666632,
+        "slideTimer": 0
+      }
+    },
+    {
+      "name": "uphill",
+      "start": {
+        "at": [
+          21.001520225103487,
+          211.4196507465486,
+          -36.74411388047763
+        ],
+        "velocity": [
+          0.7386404457901938,
+          0,
+          -1.314734240814034
+        ],
+        "normal": [
+          0.15135734982412066,
+          0.9510568480900523,
+          -0.26941014152261245
+        ],
+        "grounded": true,
+        "wet": true,
+        "state": "ride",
+        "board": false,
+        "bail": false,
+        "time": 0.26666666666666666,
+        "hint": "player.run",
+        "active": "player.run",
+        "transient": null,
+        "phase": 1.9500000000000006,
+        "normalizedSpeed": 1,
+        "timeline": 0.21333333333333326,
+        "slideTimer": 0
+      },
+      "end": {
+        "at": [
+          20.08105227597674,
+          212.03039538936227,
+          -35.10523109470764
+        ],
+        "velocity": [
+          -1.2340172563359935,
+          0,
+          2.197180356713911
+        ],
+        "normal": [
+          0.15135803645290025,
+          0.9510562440090701,
+          -0.26941188825380935
+        ],
+        "grounded": true,
+        "wet": true,
+        "state": "ride",
+        "board": false,
+        "bail": false,
+        "time": 1.483333333333333,
+        "hint": "player.run",
+        "active": "player.run",
+        "transient": null,
+        "phase": 17.76666666666666,
+        "normalizedSpeed": 1,
+        "timeline": 0.29333339999999997,
+        "slideTimer": 0
+      }
+    }
+  ],
+  "source": {
+    "build": "Codex/sol fork · build 10-29 01:17 UTC",
+    "canvas": [
+      720,
+      450
+    ],
+    "components": 1184
+  },
+  "reversal": {
+    "downhill": {
+      "at": [
+        14.335185915822553,
+        215.82029113515733,
+        -24.954569606326235
+      ],
+      "velocity": [
+        4.882291559684248,
+        0,
+        -8.552378552681798
+      ],
+      "normal": [
+        0.15276354721937496,
+        0.9510565143600429,
+        -0.2686164647490539
+      ],
+      "grounded": true,
+      "wet": true,
+      "state": "ride",
+      "board": false,
+      "bail": false,
+      "time": 0.7666666666666674,
+      "hint": "player.slope-slide",
+      "active": "player.slope-slide",
+      "transient": null,
+      "phase": 21.66666666666663,
+      "normalizedSpeed": 1,
+      "timeline": 0.7500000000000004,
+      "slideTimer": 0
+    },
+    "reversing": {
+      "at": [
+        14.56791822443705,
+        215.66778401400478,
+        -25.362176872214363
+      ],
+      "velocity": [
+        4.538187287378502,
+        0,
+        -7.947392432696807
+      ],
+      "normal": [
+        0.15276328664654765,
+        0.9510566856245627,
+        -0.26861600656283763
+      ],
+      "grounded": true,
+      "wet": true,
+      "state": "ride",
+      "board": false,
+      "bail": false,
+      "time": 0.8166666666666675,
+      "hint": "player.run",
+      "active": "player.run",
+      "transient": null,
+      "phase": 22.316666666666624,
+      "normalizedSpeed": 1,
+      "timeline": 0.053333333333333344,
+      "slideTimer": 0
+    },
+    "uphill": {
+      "at": [
+        14.875452857804556,
+        215.47922847602925,
+        -25.854876489581944
+      ],
+      "velocity": [
+        -1.2325518224487495,
+        0,
+        2.1980552448199937
+      ],
+      "normal": [
+        0.15276328664654765,
+        0.9510566856245627,
+        -0.26861600656283763
+      ],
+      "grounded": true,
+      "wet": true,
+      "state": "ride",
+      "board": false,
+      "bail": false,
+      "time": 2.33333333333333,
+      "hint": "player.run",
+      "active": "player.run",
+      "transient": null,
+      "phase": 42.0333333333333,
+      "normalizedSpeed": 1,
+      "timeline": 0.6133333999999989,
+      "slideTimer": 0
+    },
+    "released": {
+      "at": [
+        16.081423867682716,
+        214.69348062126437,
+        -27.951032467739115
+      ],
+      "velocity": [
+        4.028452433219254,
+        0,
+        -7.054507626655472
+      ],
+      "normal": [
+        0.15276328664654765,
+        0.9510566856245627,
+        -0.26861600656283763
+      ],
+      "grounded": true,
+      "wet": true,
+      "state": "ride",
+      "board": false,
+      "bail": false,
+      "time": 3.1499999999999937,
+      "hint": "player.slope-slide",
+      "active": "player.slope-slide",
+      "transient": null,
+      "phase": 42.0333333333333,
+      "normalizedSpeed": 0.9026333686979677,
+      "timeline": 0.8000000000000007,
+      "slideTimer": 0
+    }
+  },
+  "jumps": [
+    {
+      "name": "downhill",
+      "jump": {
+        "at": [
+          15.219575462372653,
+          216.52341823293332,
+          -26.507138434045157
+        ],
+        "velocity": [
+          5.421605600050957,
+          0,
+          -9.50087710040515
+        ],
+        "normal": [
+          0.15276306396596548,
+          0.9510566856245225,
+          -0.2686161332024361
+        ],
+        "grounded": false,
+        "wet": true,
+        "state": "air",
+        "board": false,
+        "bail": false,
+        "time": 0.9333333333333346,
+        "hint": "player.jump",
+        "active": "player.jump",
+        "transient": null,
+        "phase": 42.0333333333333,
+        "normalizedSpeed": 1,
+        "timeline": 0.20370370370370394,
+        "slideTimer": 0
+      }
+    },
+    {
+      "name": "uphill",
+      "jump": {
+        "at": [
+          20.73585853109284,
+          212.3400985797758,
+          -36.269812278593655
+        ],
+        "velocity": [
+          -4.401383238886271,
+          0,
+          7.850339201872171
+        ],
+        "normal": [
+          0.1513578976827417,
+          0.9510564846596665,
+          -0.269411116689453
+        ],
+        "grounded": false,
+        "wet": true,
+        "state": "air",
+        "board": false,
+        "bail": false,
+        "time": 0.9333333333333346,
+        "hint": "player.jump",
+        "active": "player.jump",
+        "transient": null,
+        "phase": 47.45000000000002,
+        "normalizedSpeed": 1,
+        "timeline": 0.20370370370370394,
+        "slideTimer": 0
+      }
+    }
+  ]
+}

@@ -140,14 +140,25 @@ actual slope; releasing the stick preserves momentum. Correct early or jump to
 change the line. Ordinary surfaces, existing ice, jumps and the bounce camera
 retain their previous behavior.
 
-On foot, downhill travel and neutral coasting use the existing slide pose,
-without activating the crouch-slide move or its timers. Pushing uphill faces
+On foot, downhill travel and neutral coasting use a dedicated balance pose:
+soft knees, staggered sliding shoes, open arms and small delayed upper-body
+corrections. The shared segment elasticity keeps the legs at their authored
+lengths, and sole seating holds both shoes against the slope. This does not
+activate the crouch-slide move or its timers. Pushing uphill faces
 into the effort and plays the normal-speed run loop. Limited traction supports
 uphill movement at 28% of normal running pace; existing downhill momentum
 brakes over time before reversing. Releasing the stick restores unopposed
 downhill acceleration and the slide pose. This behavior applies only to the
 explicit gravity slicks; board handling and legacy ice keep their usual paths.
-Focused motion/cadence and real-keyboard checks are in `slope-motion/`.
+The original motion/cadence evidence is in `slope-motion/`; the current pose,
+source hashes and native/full-render checks are in `pose-facing/`.
+
+Ledge grabs now face into the grabbed surface from the catch through shimmy
+and mantle. The live lip normal owns presentation instead of platform carry,
+shimmy velocity, a lingering board stance or spin yaw. Control axes and the
+existing spin-to-climb/crate interaction remain unchanged. Restrained attack
+rings remain visible while the live rider holds the ledge-facing pose, instead of
+being replaced by the rotating spin duplicate.
 
 The slippery pitches are 18 degrees early, 22 through the tidal engine and
 26 in the finale. Each drops straight ahead and remains level across its width;
