@@ -14,7 +14,10 @@ await withSkateRuntime(async({player:p,level,CONST,TUNING})=>{
     p.performBoardAbandon(.5,vert?'Board Abandon':'Emergency Eject',vert);
     for(let i=0;i<12;i++)p.step(dt,makeInput({moveX,moveY}),level);
     assert.equal(p.emergencyEjectLandingPending,true);assert.equal(p.freeSkate,false);
-    assert.ok(Math.abs(p.speed-24)<1e-8,'steering must preserve departure speed');
+    if(moveX===0&&moveY<0){
+      assert.ok(Math.abs(p.pos.x)<1e-8,'straight reversal must not choose a turning side');
+      assert.ok(p.speed>0&&p.speed<24,'straight reversal must brake the carried speed');
+    }else assert.ok(Math.abs(p.speed-24)<1e-8,'steering must preserve departure speed');
     return {x:p.pos.x,y:p.pos.y,vy:p.vVel,angle:Math.atan2(p.axisF.x,-p.axisF.z)*180/Math.PI};
   };
   try{

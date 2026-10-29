@@ -6322,12 +6322,19 @@ export class Player {
     BAIL_V.copy(this.axisF).multiplyScalar(this.speed);
     const response = 1 - Math.exp(-AIR_RESCUE_CONTROL_RESPONSE * steering * Math.max(0, dt));
     if (abandon && carrySpeed > 1e-5) {
-      // Turn the heading itself: normalizing a lerped velocity both loses
-      // speed on corners and cannot turn through an exact 180° reversal.
-      const angle = Math.atan2(BAIL_V.x * BAIL_TARGET.z - BAIL_V.z * BAIL_TARGET.x, BAIL_V.dot(BAIL_TARGET)) * response;
-      const x = BAIL_V.x, z = BAIL_V.z;
-      BAIL_V.set(x * Math.cos(angle) - z * Math.sin(angle), 0,
-        x * Math.sin(angle) + z * Math.cos(angle));
+      const cross = BAIL_V.x * BAIL_TARGET.z - BAIL_V.z * BAIL_TARGET.x;
+      if (Math.abs(cross) <= 1e-6 * carrySpeed * BAIL_TARGET.length()) {
+        // Straight input has no chosen turning side. Brake/reverse on that
+        // line; atan2(0, negative) otherwise invents a sideways semicircle.
+        // Continue accelerating along it after crossing zero speed.
+        BAIL_V.lerp(BAIL_TARGET, response);
+      } else {
+        // Deliberate turns retain carried speed, including existing side carry.
+        const angle = Math.atan2(cross, BAIL_V.dot(BAIL_TARGET)) * response;
+        const x = BAIL_V.x, z = BAIL_V.z;
+        BAIL_V.set(x * Math.cos(angle) - z * Math.sin(angle), 0,
+          x * Math.sin(angle) + z * Math.cos(angle));
+      }
     } else BAIL_V.lerp(BAIL_TARGET, response);
     const velocity = BAIL_V.length();
     if (velocity > 1e-4) {

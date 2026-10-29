@@ -1,0 +1,20 @@
+[
+  {
+    "name": "axis",
+    "cmd": "node tools/test-board-abandon-axis.mjs",
+    "status": 0,
+    "tail": "PASS 85 abandon cases: straight keyboard axes, both stances, ordinary/spring/vert, all course directions, mirrored steering, real side carry and vertical-arc parity.\n"
+  },
+  {
+    "name": "steering",
+    "cmd": "node tools/test-board-abandon-steering.mjs",
+    "status": 0,
+    "tail": "[{\"vert\":false,\"rows\":[{\"strength\":0,\"x\":0,\"y\":101.835,\"vy\":6.149999999999995,\"angle\":0},{\"strength\":25,\"x\":1.9153257278957438,\"y\":101.835,\"vy\":6.149999999999995,\"angle\":40.60695275153763},{\"strength\":50,\"x\":2.968081004797303,\"y\":101.835,\"vy\":6.149999999999995,\"angle\":62.89252092790184},{\"strength\":100,\"x\":3.8841745495590336,\"y\":101.835,\"vy\":6.149999999999995,\"angle\":81.83538420395288}]},{\"vert\":true,\"rows\":[{\"strength\":0,\"x\":0,\"y\":101.835,\"vy\":6.149999999999995,\"angle\":0},{\"strength\":25,\"x\":1.9153257278957438,\"y\":101.835,\"vy\":6.149999999999995,\"angle\":40.60695275153763},{\"strength\":50,\"x\":2.968081004797303,\"y\":101.835,\"vy\":6.149999999999995,\"angle\":62.89252092790184},{\"strength\":100,\"x\":3.8841745495590336,\"y\":101.835,\"vy\":6.149999999999995,\"angle\":81.83538420395288}]}]\nPASS ordinary/vert board abandons: live 0/25/50/100 steering, weaker reversal, preserved momentum/height and neutral carry.\n"
+  },
+  {
+    "name": "rescue",
+    "cmd": "node tools/test-air-rescue.mjs",
+    "status": 1,
+    "tail": "node:internal/modules/run_main:107\n    triggerUncaughtException(\n    ^\n\nAssertionError [ERR_ASSERTION]: side contact was misclassified as a rescue stomp\n\nfalse !== true\n\n    at file:///Users/kiki/.codex/worktrees/carlisle-tidal-relay/Prototype%20Fork/tools/test-air-rescue.mjs:427:12 {\n  generatedMessage: false,\n  code: 'ERR_ASSERTION',\n  actual: false,\n  expected: true,\n  operator: 'strictEqual',\n  diff: 'simple'\n}\n\nNode.js v24.19.0\n"
+  }
+]

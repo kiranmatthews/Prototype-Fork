@@ -1,0 +1,12 @@
+{
+  "parent": "29e2106b9cac60e6a41bfa649597dd55ebd301f1",
+  "unchanged": {
+    "src/tuning.ts": "1aca3b5fe4b5d026d8b9e36dcf30444081bec7d2acfd4181294f6aacaca61bd6",
+    "src/main.ts": "7037126b270982604dec1c87c864da655f8477063c704fa14901c02cefd56c33",
+    "src/level.ts": "618c206a8ca454e62f447a713ee4a7394ebc9589ec1ffa01bc57bcff3e3e2bc5",
+    "src/levels/carlisle-tidal-relay.ts": "5b179887be93c350c4376c3827592fb7dba50a5896cf7ca6fce03909ac2b3cbd",
+    "src/animation/slopeSlide.ts": "31c6e383e914e6710ff041c1cdb475490755919bceaebe85b222726a593a4d11",
+    "src/spin-effects/presentation.ts": "f47cdf3feb734916c905f590c29b873d35aaaad1c418c5586169e66065dd17e7",
+    "public/levels.json": "08b960136b3118b5e692dfbc49c7e54c11345707ac33db83d585f9af2b8e8a5d"
+  }
+}

@@ -1,0 +1,23 @@
+[
+  {
+    "name": "axis",
+    "cmd": "node tools/test-board-abandon-axis.mjs",
+    "status": 0,
+    "expectedStatus": 0,
+    "tail": "PASS 85 abandon cases: straight keyboard axes, both stances, ordinary/spring/vert, all course directions, mirrored steering, real side carry and vertical-arc parity.\n"
+  },
+  {
+    "name": "rescue-baseline",
+    "cmd": "node tools/.abandon-rescue-baseline.mjs",
+    "status": 1,
+    "expectedStatus": 1,
+    "tail": "Loaded parent Player 29e2106b for baseline comparison\nnode:internal/modules/run_main:107\n    triggerUncaughtException(\n    ^\n\nAssertionError [ERR_ASSERTION]: side contact was misclassified as a rescue stomp\n\nfalse !== true\n\n    at file:///Users/kiki/.codex/worktrees/carlisle-tidal-relay/Prototype%20Fork/tools/.abandon-rescue-baseline.mjs:431:12 {\n  generatedMessage: false,\n  code: 'ERR_ASSERTION',\n  actual: false,\n  expected: true,\n  operator: 'strictEqual',\n  diff: 'simple'\n}\n\nNode.js v24.19.0\n"
+  },
+  {
+    "name": "side-scroll-rescue",
+    "cmd": "node tools/test-side-scroll-air-rescue.mjs",
+    "status": 1,
+    "expectedStatus": 0,
+    "tail": "node:internal/modules/run_main:107\n    triggerUncaughtException(\n    ^\n\nAssertionError [ERR_ASSERTION]: recording must reproduce the supplied board crash\n\n135 !== 218\n\n    at file:///Users/kiki/.codex/worktrees/carlisle-tidal-relay/Prototype%20Fork/tools/test-side-scroll-air-rescue.mjs:22:10\n    at async withSkateRuntime (file:///Users/kiki/.codex/worktrees/carlisle-tidal-relay/Prototype%20Fork/tools/jungle-cup-harness.mjs:43:5)\n    at async file:///Users/kiki/.codex/worktrees/carlisle-tidal-relay/Prototype%20Fork/tools/test-side-scroll-air-rescue.mjs:5:1 {\n  generatedMessage: false,\n  code: 'ERR_ASSERTION',\n  actual: 135,\n  expected: 218,\n  operator: 'strictEqual',\n  diff: 'simple'\n}\n\nNode.js v24.19.0\n"
+  }
+]

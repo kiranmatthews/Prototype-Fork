@@ -6445,3 +6445,33 @@ view of the held downhill pose. Production build/type checking and release
 size pass: `Codex/sol fork · build 10-29 09:38 UTC`, 997,264,550 bytes / 1,849
 files. All task browsers are closed. Exact source hashes, evidence and test
 scope are in [the pose/facing validation record](carlisle-relay/pose-facing/validation.json).
+
+## 29 October 2026 NZDT — global abandon-jump direction bias
+
+Fixed a forced sideways turn when forward/back arrow input exactly opposed
+an abandon jump's carried direction. The old angle calculation selected one
+side of a 180-degree turn despite zero lateral intent and inertia. A native
+24 m/s forward departure drifted 9.481 m sideways in half a second when holding
+back. Collinear input now brakes and reverses on the same line, while actual
+side input still turns with preserved carried speed. Neutral momentum, the
+steering tuner, jump height and ordinary/spring/vert release sequencing remain
+intact. No camera, geometry, animation or global tuning changes were needed.
+
+First validated native fix: approximately 10 minutes wall-clock from the prompt,
+including a shared validation-capacity delay. The 85-case native matrix covers
+four course directions, both stances, ordinary/spring/vert abandons, zero-speed
+starts, mirrored side steering, existing side carry and vertical-arc parity.
+Maximum unintended lateral travel is zero. Existing steering-tuner, native
+trampoline-control and vert-release checks pass. Two older collision/replay
+fixtures fail identically before this patch: a crate-side rescue assertion and
+a historical Jungle Gate Run crash-frame assertion. Parent-runtime comparisons
+confirm these are pre-existing; their exact failures are retained in the record.
+
+Lite and production full-render Chrome checks use actual ArrowUp/Down/Left/Right
+and Space events after preparing an isolated airborne departure. Straight
+keyboard input adds zero side travel; left/right turns mirror. No console errors.
+Production build/type checking, release size and diff checks pass:
+`Codex/sol fork · build 10-29 09:58 UTC`, 997,264,615 bytes / 1,849 files.
+Task browsers are closed. Local-only hold continues. Evidence, baseline failures,
+source hashes and bounded test scope are in
+[the abandon-axis validation record](carlisle-relay/abandon-axis/validation.json).

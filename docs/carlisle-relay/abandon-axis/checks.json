@@ -1,0 +1,37 @@
+[
+  {
+    "name": "side-scroll-baseline",
+    "cmd": "node tools/.abandon-side-scroll-baseline.mjs",
+    "status": 1,
+    "expectedStatus": 1,
+    "tail": "Loaded parent Player 29e2106b for baseline comparison\nnode:internal/modules/run_main:107\n    triggerUncaughtException(\n    ^\n\nAssertionError [ERR_ASSERTION]: recording must reproduce the supplied board crash\n\n135 !== 218\n\n    at file:///Users/kiki/.codex/worktrees/carlisle-tidal-relay/Prototype%20Fork/tools/.abandon-side-scroll-baseline.mjs:22:10\n    at async withSkateRuntime (file:///Users/kiki/.codex/worktrees/carlisle-tidal-relay/Prototype%20Fork/tools/.abandon-baseline-harness.mjs:46:5)\n    at async file:///Users/kiki/.codex/worktrees/carlisle-tidal-relay/Prototype%20Fork/tools/.abandon-side-scroll-baseline.mjs:5:1 {\n  generatedMessage: false,\n  code: 'ERR_ASSERTION',\n  actual: 135,\n  expected: 218,\n  operator: 'strictEqual',\n  diff: 'simple'\n}\n\nNode.js v24.19.0\n"
+  },
+  {
+    "name": "trampoline",
+    "cmd": "node tools/test-trampoline-controls.mjs",
+    "status": 0,
+    "expectedStatus": 0,
+    "tail": "{\n  \"rows\": [\n    {\n      \"kind\": \"static\",\n      \"board\": false,\n      \"sidewaysMetresInHalfSecond\": 7.200000000000005,\n      \"neutral\": {\n        \"x\": 0,\n        \"z\": 0,\n        \"y\": 36.986666678587625,\n        \"vy\": 62.95000000000009,\n        \"speed\": 0\n      }\n    },\n    {\n      \"kind\": \"static\",\n      \"board\": true,\n      \"sidewaysMetresInHalfSecond\": 7.200000000000005,\n      \"neutral\": {\n        \"x\": 0,\n        \"z\": -5.994700000000003,\n        \"y\": 36.986666678587625,\n        \"vy\": 62.95000000000009,\n        \"speed\": 11.9894\n      }\n    },\n    {\n      \"kind\": \"moving\",\n      \"board\": false,\n      \"sidewaysMetresInHalfSecond\": 7.20000000000006,\n      \"neutral\": {\n        \"x\": 0,\n        \"z\": 0,\n        \"y\": 36.986666678587625,\n        \"vy\": 62.95000000000009,\n        \"speed\": 0\n      }\n    },\n    {\n      \"kind\": \"moving\",\n      \"board\": true,\n      \"sidewaysMetresInHalfSecond\": 7.20000000000006,\n      \"neutral\": {\n        \"x\": 0,\n        \"z\": -5.9947000000000035,\n        \"y\": 36.986666678587625,\n        \"vy\": 62.95000000000009,\n        \"speed\": 11.9894\n      }\n    }\n  ],\n  \"ordinaryOllie\": true,\n  \"footDoubleJump\": true,\n  \"smallSpringUnchanged\": true,\n  \"tuningUnchanged\": true\n}\nPASS trampoline sidesteps, countersteering, braking, neutral carry, native arcs and fresh-release abandon-ship.\n"
+  },
+  {
+    "name": "vert",
+    "cmd": "node tools/test-vert-ollie-sequence.mjs",
+    "status": 0,
+    "expectedStatus": 0,
+    "tail": "PASS vert ollie sequence harness\n"
+  },
+  {
+    "name": "build",
+    "cmd": "tsc --noEmit && vite build",
+    "status": 0,
+    "expectedStatus": 0,
+    "tail": "s/skateCatalog-CV2z4JP6.js               644.35 kB │ gzip:   207.76 kB\ndist/assets/main-ClKEOXzb.js                     1,173.55 kB │ gzip:   352.76 kB\ndist/assets/fleet-DOsrkx5C.js                    1,397.07 kB │ gzip:   570.82 kB\ndist/assets/player-Edzz3Zre.js                   1,977.42 kB │ gzip:   867.14 kB\ndist/assets/level-cqXo8A9o.js                   12,488.74 kB │ gzip: 3,520.56 kB\n✓ built in 20.63s\nLevel sync: 2 overrides, 12 exact source copies omitted; 39.2 KiB download.\nRelease assets: kept active fonts; omitted 72 historical files (401.3 MiB) from generated output.\nLocal review galleries: 406 files (208.2 MiB) kept in the authoring library.\nFont export: 1 on-demand archive(s), 34.8 MiB less hosted data.\nReviewed textures: 423 reviewed images in 271 models, 402.0 MiB less hosted data; original art retained.\nShared textures: 131 exact images reused across 134 models, 33.7 MiB less hosted data.\nNative geometry: 18 complete models packed losslessly, 15.5 MiB less hosted data.\nOffline game: 1749 files, 948.4 MiB, version 7b5555b30145a2bd32cd\n\n(!) Some chunks are larger than 500 kB after minification. Consider:\n- Using dynamic import() to code-split the application\n- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks\n- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.\n"
+  },
+  {
+    "name": "release",
+    "cmd": "node tools/check-release-size.mjs",
+    "status": 0,
+    "expectedStatus": 0,
+    "tail": "Release output: 1849 files, 997,264,615 bytes / 1,000,000,000 byte budget.\nPASS release fits the hosting budget.\n"
+  }
+]

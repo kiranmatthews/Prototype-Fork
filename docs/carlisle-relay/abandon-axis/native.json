@@ -1,0 +1,2131 @@
+{
+  "rows": [
+    {
+      "mode": "ordinary",
+      "dir": "S",
+      "stance": -1,
+      "command": "neutral",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 4.8000000000000025,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 101.30088964742168,
+        "vy": 5.026124999999997
+      },
+      "last": {
+        "side": 0,
+        "along": 27.999999999999957,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 70.76057367519961,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "ordinary",
+      "dir": "S",
+      "stance": -1,
+      "command": "forward",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 4.8000000000000025,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 101.30088964742168,
+        "vy": 5.026124999999997
+      },
+      "last": {
+        "side": 0,
+        "along": 27.999999999999957,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 70.76057367519961,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "ordinary",
+      "dir": "S",
+      "stance": -1,
+      "command": "reverse",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 2.6191796948989245,
+        "sideVelocity": 0,
+        "alongVelocity": 6.924903262461383,
+        "y": 101.30088964742168,
+        "vy": 5.026124999999997
+      },
+      "last": {
+        "side": 0,
+        "along": -1.1889595656353953,
+        "sideVelocity": 0,
+        "alongVelocity": -8.123760543412587,
+        "y": 70.76057367519961,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "ordinary",
+      "dir": "S",
+      "stance": 1,
+      "command": "neutral",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 4.8000000000000025,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 101.30088964742168,
+        "vy": 5.026124999999997
+      },
+      "last": {
+        "side": 0,
+        "along": 27.999999999999957,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 70.76057367519961,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "ordinary",
+      "dir": "S",
+      "stance": 1,
+      "command": "forward",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 4.8000000000000025,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 101.30088964742168,
+        "vy": 5.026124999999997
+      },
+      "last": {
+        "side": 0,
+        "along": 27.999999999999957,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 70.76057367519961,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "ordinary",
+      "dir": "S",
+      "stance": 1,
+      "command": "reverse",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 2.6191796948989245,
+        "sideVelocity": 0,
+        "alongVelocity": 6.924903262461383,
+        "y": 101.30088964742168,
+        "vy": 5.026124999999997
+      },
+      "last": {
+        "side": 0,
+        "along": -1.1889595656353953,
+        "sideVelocity": 0,
+        "alongVelocity": -8.123760543412587,
+        "y": 70.76057367519961,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "ordinary",
+      "dir": "N",
+      "stance": -1,
+      "command": "neutral",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 4.8000000000000025,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 101.30088964742168,
+        "vy": 5.026124999999997
+      },
+      "last": {
+        "side": 0,
+        "along": 27.999999999999957,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 70.76057367519961,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "ordinary",
+      "dir": "N",
+      "stance": -1,
+      "command": "forward",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 4.8000000000000025,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 101.30088964742168,
+        "vy": 5.026124999999997
+      },
+      "last": {
+        "side": 0,
+        "along": 27.999999999999957,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 70.76057367519961,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "ordinary",
+      "dir": "N",
+      "stance": -1,
+      "command": "reverse",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 2.6191796948989245,
+        "sideVelocity": 0,
+        "alongVelocity": 6.924903262461383,
+        "y": 101.30088964742168,
+        "vy": 5.026124999999997
+      },
+      "last": {
+        "side": 0,
+        "along": -1.1889595656353953,
+        "sideVelocity": 0,
+        "alongVelocity": -8.123760543412587,
+        "y": 70.76057367519961,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "ordinary",
+      "dir": "N",
+      "stance": 1,
+      "command": "neutral",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 4.8000000000000025,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 101.30088964742168,
+        "vy": 5.026124999999997
+      },
+      "last": {
+        "side": 0,
+        "along": 27.999999999999957,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 70.76057367519961,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "ordinary",
+      "dir": "N",
+      "stance": 1,
+      "command": "forward",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 4.8000000000000025,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 101.30088964742168,
+        "vy": 5.026124999999997
+      },
+      "last": {
+        "side": 0,
+        "along": 27.999999999999957,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 70.76057367519961,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "ordinary",
+      "dir": "N",
+      "stance": 1,
+      "command": "reverse",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 2.6191796948989245,
+        "sideVelocity": 0,
+        "alongVelocity": 6.924903262461383,
+        "y": 101.30088964742168,
+        "vy": 5.026124999999997
+      },
+      "last": {
+        "side": 0,
+        "along": -1.1889595656353953,
+        "sideVelocity": 0,
+        "alongVelocity": -8.123760543412587,
+        "y": 70.76057367519961,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "ordinary",
+      "dir": "E",
+      "stance": -1,
+      "command": "neutral",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 4.8000000000000025,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 101.30088964742168,
+        "vy": 5.026124999999997
+      },
+      "last": {
+        "side": 0,
+        "along": 27.999999999999957,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 70.76057367519961,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "ordinary",
+      "dir": "E",
+      "stance": -1,
+      "command": "forward",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 4.8000000000000025,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 101.30088964742168,
+        "vy": 5.026124999999997
+      },
+      "last": {
+        "side": 0,
+        "along": 27.999999999999957,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 70.76057367519961,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "ordinary",
+      "dir": "E",
+      "stance": -1,
+      "command": "reverse",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 2.6191796948989245,
+        "sideVelocity": 0,
+        "alongVelocity": 6.924903262461383,
+        "y": 101.30088964742168,
+        "vy": 5.026124999999997
+      },
+      "last": {
+        "side": 0,
+        "along": -1.1889595656353953,
+        "sideVelocity": 0,
+        "alongVelocity": -8.123760543412587,
+        "y": 70.76057367519961,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "ordinary",
+      "dir": "E",
+      "stance": 1,
+      "command": "neutral",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 4.8000000000000025,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 101.30088964742168,
+        "vy": 5.026124999999997
+      },
+      "last": {
+        "side": 0,
+        "along": 27.999999999999957,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 70.76057367519961,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "ordinary",
+      "dir": "E",
+      "stance": 1,
+      "command": "forward",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 4.8000000000000025,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 101.30088964742168,
+        "vy": 5.026124999999997
+      },
+      "last": {
+        "side": 0,
+        "along": 27.999999999999957,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 70.76057367519961,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "ordinary",
+      "dir": "E",
+      "stance": 1,
+      "command": "reverse",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 2.6191796948989245,
+        "sideVelocity": 0,
+        "alongVelocity": 6.924903262461383,
+        "y": 101.30088964742168,
+        "vy": 5.026124999999997
+      },
+      "last": {
+        "side": 0,
+        "along": -1.1889595656353953,
+        "sideVelocity": 0,
+        "alongVelocity": -8.123760543412587,
+        "y": 70.76057367519961,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "ordinary",
+      "dir": "W",
+      "stance": -1,
+      "command": "neutral",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 4.8000000000000025,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 101.30088964742168,
+        "vy": 5.026124999999997
+      },
+      "last": {
+        "side": 0,
+        "along": 27.999999999999957,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 70.76057367519961,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "ordinary",
+      "dir": "W",
+      "stance": -1,
+      "command": "forward",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 4.8000000000000025,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 101.30088964742168,
+        "vy": 5.026124999999997
+      },
+      "last": {
+        "side": 0,
+        "along": 27.999999999999957,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 70.76057367519961,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "ordinary",
+      "dir": "W",
+      "stance": -1,
+      "command": "reverse",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 2.6191796948989245,
+        "sideVelocity": 0,
+        "alongVelocity": 6.924903262461383,
+        "y": 101.30088964742168,
+        "vy": 5.026124999999997
+      },
+      "last": {
+        "side": 0,
+        "along": -1.1889595656353953,
+        "sideVelocity": 0,
+        "alongVelocity": -8.123760543412587,
+        "y": 70.76057367519961,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "ordinary",
+      "dir": "W",
+      "stance": 1,
+      "command": "neutral",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 4.8000000000000025,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 101.30088964742168,
+        "vy": 5.026124999999997
+      },
+      "last": {
+        "side": 0,
+        "along": 27.999999999999957,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 70.76057367519961,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "ordinary",
+      "dir": "W",
+      "stance": 1,
+      "command": "forward",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 4.8000000000000025,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 101.30088964742168,
+        "vy": 5.026124999999997
+      },
+      "last": {
+        "side": 0,
+        "along": 27.999999999999957,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 70.76057367519961,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "ordinary",
+      "dir": "W",
+      "stance": 1,
+      "command": "reverse",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 2.6191796948989245,
+        "sideVelocity": 0,
+        "alongVelocity": 6.924903262461383,
+        "y": 101.30088964742168,
+        "vy": 5.026124999999997
+      },
+      "last": {
+        "side": 0,
+        "along": -1.1889595656353953,
+        "sideVelocity": 0,
+        "alongVelocity": -8.123760543412587,
+        "y": 70.76057367519961,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "spring",
+      "dir": "S",
+      "stance": -1,
+      "command": "neutral",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 4.8000000000000025,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 100.91605833333334,
+        "vy": 5.026124999999997
+      },
+      "last": {
+        "side": 0,
+        "along": 27.999999999999957,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 70.37574236111126,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "spring",
+      "dir": "S",
+      "stance": -1,
+      "command": "forward",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 4.8000000000000025,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 100.91605833333334,
+        "vy": 5.026124999999997
+      },
+      "last": {
+        "side": 0,
+        "along": 27.999999999999957,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 70.37574236111126,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "spring",
+      "dir": "S",
+      "stance": -1,
+      "command": "reverse",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 2.6191796948989245,
+        "sideVelocity": 0,
+        "alongVelocity": 6.924903262461383,
+        "y": 100.91605833333334,
+        "vy": 5.026124999999997
+      },
+      "last": {
+        "side": 0,
+        "along": -1.1889595656353953,
+        "sideVelocity": 0,
+        "alongVelocity": -8.123760543412587,
+        "y": 70.37574236111126,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "spring",
+      "dir": "S",
+      "stance": 1,
+      "command": "neutral",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 4.8000000000000025,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 100.91605833333334,
+        "vy": 5.026124999999997
+      },
+      "last": {
+        "side": 0,
+        "along": 27.999999999999957,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 70.37574236111126,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "spring",
+      "dir": "S",
+      "stance": 1,
+      "command": "forward",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 4.8000000000000025,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 100.91605833333334,
+        "vy": 5.026124999999997
+      },
+      "last": {
+        "side": 0,
+        "along": 27.999999999999957,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 70.37574236111126,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "spring",
+      "dir": "S",
+      "stance": 1,
+      "command": "reverse",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 2.6191796948989245,
+        "sideVelocity": 0,
+        "alongVelocity": 6.924903262461383,
+        "y": 100.91605833333334,
+        "vy": 5.026124999999997
+      },
+      "last": {
+        "side": 0,
+        "along": -1.1889595656353953,
+        "sideVelocity": 0,
+        "alongVelocity": -8.123760543412587,
+        "y": 70.37574236111126,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "spring",
+      "dir": "N",
+      "stance": -1,
+      "command": "neutral",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 4.8000000000000025,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 100.91605833333334,
+        "vy": 5.026124999999997
+      },
+      "last": {
+        "side": 0,
+        "along": 27.999999999999957,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 70.37574236111126,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "spring",
+      "dir": "N",
+      "stance": -1,
+      "command": "forward",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 4.8000000000000025,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 100.91605833333334,
+        "vy": 5.026124999999997
+      },
+      "last": {
+        "side": 0,
+        "along": 27.999999999999957,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 70.37574236111126,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "spring",
+      "dir": "N",
+      "stance": -1,
+      "command": "reverse",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 2.6191796948989245,
+        "sideVelocity": 0,
+        "alongVelocity": 6.924903262461383,
+        "y": 100.91605833333334,
+        "vy": 5.026124999999997
+      },
+      "last": {
+        "side": 0,
+        "along": -1.1889595656353953,
+        "sideVelocity": 0,
+        "alongVelocity": -8.123760543412587,
+        "y": 70.37574236111126,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "spring",
+      "dir": "N",
+      "stance": 1,
+      "command": "neutral",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 4.8000000000000025,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 100.91605833333334,
+        "vy": 5.026124999999997
+      },
+      "last": {
+        "side": 0,
+        "along": 27.999999999999957,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 70.37574236111126,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "spring",
+      "dir": "N",
+      "stance": 1,
+      "command": "forward",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 4.8000000000000025,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 100.91605833333334,
+        "vy": 5.026124999999997
+      },
+      "last": {
+        "side": 0,
+        "along": 27.999999999999957,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 70.37574236111126,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "spring",
+      "dir": "N",
+      "stance": 1,
+      "command": "reverse",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 2.6191796948989245,
+        "sideVelocity": 0,
+        "alongVelocity": 6.924903262461383,
+        "y": 100.91605833333334,
+        "vy": 5.026124999999997
+      },
+      "last": {
+        "side": 0,
+        "along": -1.1889595656353953,
+        "sideVelocity": 0,
+        "alongVelocity": -8.123760543412587,
+        "y": 70.37574236111126,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "spring",
+      "dir": "E",
+      "stance": -1,
+      "command": "neutral",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 4.8000000000000025,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 100.91605833333334,
+        "vy": 5.026124999999997
+      },
+      "last": {
+        "side": 0,
+        "along": 27.999999999999957,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 70.37574236111126,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "spring",
+      "dir": "E",
+      "stance": -1,
+      "command": "forward",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 4.8000000000000025,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 100.91605833333334,
+        "vy": 5.026124999999997
+      },
+      "last": {
+        "side": 0,
+        "along": 27.999999999999957,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 70.37574236111126,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "spring",
+      "dir": "E",
+      "stance": -1,
+      "command": "reverse",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 2.6191796948989245,
+        "sideVelocity": 0,
+        "alongVelocity": 6.924903262461383,
+        "y": 100.91605833333334,
+        "vy": 5.026124999999997
+      },
+      "last": {
+        "side": 0,
+        "along": -1.1889595656353953,
+        "sideVelocity": 0,
+        "alongVelocity": -8.123760543412587,
+        "y": 70.37574236111126,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "spring",
+      "dir": "E",
+      "stance": 1,
+      "command": "neutral",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 4.8000000000000025,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 100.91605833333334,
+        "vy": 5.026124999999997
+      },
+      "last": {
+        "side": 0,
+        "along": 27.999999999999957,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 70.37574236111126,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "spring",
+      "dir": "E",
+      "stance": 1,
+      "command": "forward",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 4.8000000000000025,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 100.91605833333334,
+        "vy": 5.026124999999997
+      },
+      "last": {
+        "side": 0,
+        "along": 27.999999999999957,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 70.37574236111126,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "spring",
+      "dir": "E",
+      "stance": 1,
+      "command": "reverse",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 2.6191796948989245,
+        "sideVelocity": 0,
+        "alongVelocity": 6.924903262461383,
+        "y": 100.91605833333334,
+        "vy": 5.026124999999997
+      },
+      "last": {
+        "side": 0,
+        "along": -1.1889595656353953,
+        "sideVelocity": 0,
+        "alongVelocity": -8.123760543412587,
+        "y": 70.37574236111126,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "spring",
+      "dir": "W",
+      "stance": -1,
+      "command": "neutral",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 4.8000000000000025,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 100.91605833333334,
+        "vy": 5.026124999999997
+      },
+      "last": {
+        "side": 0,
+        "along": 27.999999999999957,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 70.37574236111126,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "spring",
+      "dir": "W",
+      "stance": -1,
+      "command": "forward",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 4.8000000000000025,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 100.91605833333334,
+        "vy": 5.026124999999997
+      },
+      "last": {
+        "side": 0,
+        "along": 27.999999999999957,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 70.37574236111126,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "spring",
+      "dir": "W",
+      "stance": -1,
+      "command": "reverse",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 2.6191796948989245,
+        "sideVelocity": 0,
+        "alongVelocity": 6.924903262461383,
+        "y": 100.91605833333334,
+        "vy": 5.026124999999997
+      },
+      "last": {
+        "side": 0,
+        "along": -1.1889595656353953,
+        "sideVelocity": 0,
+        "alongVelocity": -8.123760543412587,
+        "y": 70.37574236111126,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "spring",
+      "dir": "W",
+      "stance": 1,
+      "command": "neutral",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 4.8000000000000025,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 100.91605833333334,
+        "vy": 5.026124999999997
+      },
+      "last": {
+        "side": 0,
+        "along": 27.999999999999957,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 70.37574236111126,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "spring",
+      "dir": "W",
+      "stance": 1,
+      "command": "forward",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 4.8000000000000025,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 100.91605833333334,
+        "vy": 5.026124999999997
+      },
+      "last": {
+        "side": 0,
+        "along": 27.999999999999957,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 70.37574236111126,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "spring",
+      "dir": "W",
+      "stance": 1,
+      "command": "reverse",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 2.6191796948989245,
+        "sideVelocity": 0,
+        "alongVelocity": 6.924903262461383,
+        "y": 100.91605833333334,
+        "vy": 5.026124999999997
+      },
+      "last": {
+        "side": 0,
+        "along": -1.1889595656353953,
+        "sideVelocity": 0,
+        "alongVelocity": -8.123760543412587,
+        "y": 70.37574236111126,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "vert",
+      "dir": "S",
+      "stance": -1,
+      "command": "neutral",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 4.8,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 101.61,
+        "vy": 5.024999999999997
+      },
+      "last": {
+        "side": 0,
+        "along": 27.999999999999964,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 71.06902777777793,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "vert",
+      "dir": "S",
+      "stance": -1,
+      "command": "forward",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 4.8,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 101.61,
+        "vy": 5.024999999999997
+      },
+      "last": {
+        "side": 0,
+        "along": 27.999999999999964,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 71.06902777777793,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "vert",
+      "dir": "S",
+      "stance": -1,
+      "command": "reverse",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 2.6191796948989254,
+        "sideVelocity": 0,
+        "alongVelocity": 6.924903262461383,
+        "y": 101.61,
+        "vy": 5.024999999999997
+      },
+      "last": {
+        "side": 0,
+        "along": -1.1889595656353955,
+        "sideVelocity": 0,
+        "alongVelocity": -8.123760543412587,
+        "y": 71.06902777777793,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "vert",
+      "dir": "S",
+      "stance": 1,
+      "command": "neutral",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 4.8,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 101.61,
+        "vy": 5.024999999999997
+      },
+      "last": {
+        "side": 0,
+        "along": 27.999999999999964,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 71.06902777777793,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "vert",
+      "dir": "S",
+      "stance": 1,
+      "command": "forward",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 4.8,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 101.61,
+        "vy": 5.024999999999997
+      },
+      "last": {
+        "side": 0,
+        "along": 27.999999999999964,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 71.06902777777793,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "vert",
+      "dir": "S",
+      "stance": 1,
+      "command": "reverse",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 2.6191796948989254,
+        "sideVelocity": 0,
+        "alongVelocity": 6.924903262461383,
+        "y": 101.61,
+        "vy": 5.024999999999997
+      },
+      "last": {
+        "side": 0,
+        "along": -1.1889595656353955,
+        "sideVelocity": 0,
+        "alongVelocity": -8.123760543412587,
+        "y": 71.06902777777793,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "vert",
+      "dir": "N",
+      "stance": -1,
+      "command": "neutral",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 4.8,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 101.61,
+        "vy": 5.024999999999997
+      },
+      "last": {
+        "side": 0,
+        "along": 27.999999999999964,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 71.06902777777793,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "vert",
+      "dir": "N",
+      "stance": -1,
+      "command": "forward",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 4.8,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 101.61,
+        "vy": 5.024999999999997
+      },
+      "last": {
+        "side": 0,
+        "along": 27.999999999999964,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 71.06902777777793,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "vert",
+      "dir": "N",
+      "stance": -1,
+      "command": "reverse",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 2.6191796948989254,
+        "sideVelocity": 0,
+        "alongVelocity": 6.924903262461383,
+        "y": 101.61,
+        "vy": 5.024999999999997
+      },
+      "last": {
+        "side": 0,
+        "along": -1.1889595656353955,
+        "sideVelocity": 0,
+        "alongVelocity": -8.123760543412587,
+        "y": 71.06902777777793,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "vert",
+      "dir": "N",
+      "stance": 1,
+      "command": "neutral",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 4.8,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 101.61,
+        "vy": 5.024999999999997
+      },
+      "last": {
+        "side": 0,
+        "along": 27.999999999999964,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 71.06902777777793,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "vert",
+      "dir": "N",
+      "stance": 1,
+      "command": "forward",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 4.8,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 101.61,
+        "vy": 5.024999999999997
+      },
+      "last": {
+        "side": 0,
+        "along": 27.999999999999964,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 71.06902777777793,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "vert",
+      "dir": "N",
+      "stance": 1,
+      "command": "reverse",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 2.6191796948989254,
+        "sideVelocity": 0,
+        "alongVelocity": 6.924903262461383,
+        "y": 101.61,
+        "vy": 5.024999999999997
+      },
+      "last": {
+        "side": 0,
+        "along": -1.1889595656353955,
+        "sideVelocity": 0,
+        "alongVelocity": -8.123760543412587,
+        "y": 71.06902777777793,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "vert",
+      "dir": "E",
+      "stance": -1,
+      "command": "neutral",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 4.8,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 101.61,
+        "vy": 5.024999999999997
+      },
+      "last": {
+        "side": 0,
+        "along": 27.999999999999964,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 71.06902777777793,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "vert",
+      "dir": "E",
+      "stance": -1,
+      "command": "forward",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 4.8,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 101.61,
+        "vy": 5.024999999999997
+      },
+      "last": {
+        "side": 0,
+        "along": 27.999999999999964,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 71.06902777777793,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "vert",
+      "dir": "E",
+      "stance": -1,
+      "command": "reverse",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 2.6191796948989254,
+        "sideVelocity": 0,
+        "alongVelocity": 6.924903262461383,
+        "y": 101.61,
+        "vy": 5.024999999999997
+      },
+      "last": {
+        "side": 0,
+        "along": -1.1889595656353955,
+        "sideVelocity": 0,
+        "alongVelocity": -8.123760543412587,
+        "y": 71.06902777777793,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "vert",
+      "dir": "E",
+      "stance": 1,
+      "command": "neutral",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 4.8,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 101.61,
+        "vy": 5.024999999999997
+      },
+      "last": {
+        "side": 0,
+        "along": 27.999999999999964,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 71.06902777777793,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "vert",
+      "dir": "E",
+      "stance": 1,
+      "command": "forward",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 4.8,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 101.61,
+        "vy": 5.024999999999997
+      },
+      "last": {
+        "side": 0,
+        "along": 27.999999999999964,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 71.06902777777793,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "vert",
+      "dir": "E",
+      "stance": 1,
+      "command": "reverse",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 2.6191796948989254,
+        "sideVelocity": 0,
+        "alongVelocity": 6.924903262461383,
+        "y": 101.61,
+        "vy": 5.024999999999997
+      },
+      "last": {
+        "side": 0,
+        "along": -1.1889595656353955,
+        "sideVelocity": 0,
+        "alongVelocity": -8.123760543412587,
+        "y": 71.06902777777793,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "vert",
+      "dir": "W",
+      "stance": -1,
+      "command": "neutral",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 4.8,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 101.61,
+        "vy": 5.024999999999997
+      },
+      "last": {
+        "side": 0,
+        "along": 27.999999999999964,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 71.06902777777793,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "vert",
+      "dir": "W",
+      "stance": -1,
+      "command": "forward",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 4.8,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 101.61,
+        "vy": 5.024999999999997
+      },
+      "last": {
+        "side": 0,
+        "along": 27.999999999999964,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 71.06902777777793,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "vert",
+      "dir": "W",
+      "stance": -1,
+      "command": "reverse",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 2.6191796948989254,
+        "sideVelocity": 0,
+        "alongVelocity": 6.924903262461383,
+        "y": 101.61,
+        "vy": 5.024999999999997
+      },
+      "last": {
+        "side": 0,
+        "along": -1.1889595656353955,
+        "sideVelocity": 0,
+        "alongVelocity": -8.123760543412587,
+        "y": 71.06902777777793,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "vert",
+      "dir": "W",
+      "stance": 1,
+      "command": "neutral",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 4.8,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 101.61,
+        "vy": 5.024999999999997
+      },
+      "last": {
+        "side": 0,
+        "along": 27.999999999999964,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 71.06902777777793,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "vert",
+      "dir": "W",
+      "stance": 1,
+      "command": "forward",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 4.8,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 101.61,
+        "vy": 5.024999999999997
+      },
+      "last": {
+        "side": 0,
+        "along": 27.999999999999964,
+        "sideVelocity": 0,
+        "alongVelocity": 24,
+        "y": 71.06902777777793,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "vert",
+      "dir": "W",
+      "stance": 1,
+      "command": "reverse",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 2.6191796948989254,
+        "sideVelocity": 0,
+        "alongVelocity": 6.924903262461383,
+        "y": 101.61,
+        "vy": 5.024999999999997
+      },
+      "last": {
+        "side": 0,
+        "along": -1.1889595656353955,
+        "sideVelocity": 0,
+        "alongVelocity": -8.123760543412587,
+        "y": 71.06902777777793,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "ordinary",
+      "dir": "S",
+      "stance": 1,
+      "command": "left",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 23.747278423942262,
+      "at12": {
+        "side": -1.9153257278957438,
+        "along": 4.298901040084679,
+        "sideVelocity": -15.620792372095956,
+        "alongVelocity": 18.220615951933908,
+        "y": 101.30088964742168,
+        "vy": 5.026124999999997
+      },
+      "last": {
+        "side": -23.747278423942262,
+        "along": 10.396078044289819,
+        "sideVelocity": -23.97300531924234,
+        "alongVelocity": 1.1379876816459893,
+        "y": 70.76057367519961,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "ordinary",
+      "dir": "S",
+      "stance": -1,
+      "command": "right",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 23.747278423942262,
+      "at12": {
+        "side": 1.9153257278957438,
+        "along": 4.298901040084679,
+        "sideVelocity": 15.620792372095956,
+        "alongVelocity": 18.220615951933908,
+        "y": 101.30088964742168,
+        "vy": 5.026124999999997
+      },
+      "last": {
+        "side": 23.747278423942262,
+        "along": 10.396078044289819,
+        "sideVelocity": 23.97300531924234,
+        "alongVelocity": 1.1379876816459893,
+        "y": 70.76057367519961,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "spring",
+      "dir": "S",
+      "stance": 1,
+      "command": "left",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 23.747278423942262,
+      "at12": {
+        "side": -1.9153257278957438,
+        "along": 4.298901040084679,
+        "sideVelocity": -15.620792372095956,
+        "alongVelocity": 18.220615951933908,
+        "y": 100.91605833333334,
+        "vy": 5.026124999999997
+      },
+      "last": {
+        "side": -23.747278423942262,
+        "along": 10.396078044289819,
+        "sideVelocity": -23.97300531924234,
+        "alongVelocity": 1.1379876816459893,
+        "y": 70.37574236111126,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "spring",
+      "dir": "S",
+      "stance": -1,
+      "command": "right",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 23.747278423942262,
+      "at12": {
+        "side": 1.9153257278957438,
+        "along": 4.298901040084679,
+        "sideVelocity": 15.620792372095956,
+        "alongVelocity": 18.220615951933908,
+        "y": 100.91605833333334,
+        "vy": 5.026124999999997
+      },
+      "last": {
+        "side": 23.747278423942262,
+        "along": 10.396078044289819,
+        "sideVelocity": 23.97300531924234,
+        "alongVelocity": 1.1379876816459893,
+        "y": 70.37574236111126,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "vert",
+      "dir": "S",
+      "stance": 1,
+      "command": "left",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 23.747278423942262,
+      "at12": {
+        "side": -1.9153257278957438,
+        "along": 4.2989010400846785,
+        "sideVelocity": -15.620792372095956,
+        "alongVelocity": 18.220615951933908,
+        "y": 101.61,
+        "vy": 5.024999999999997
+      },
+      "last": {
+        "side": -23.747278423942262,
+        "along": 10.39607804428982,
+        "sideVelocity": -23.97300531924234,
+        "alongVelocity": 1.1379876816459893,
+        "y": 71.06902777777793,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "vert",
+      "dir": "S",
+      "stance": -1,
+      "command": "right",
+      "sideCarry": 0,
+      "speed": 24,
+      "maxSide": 23.747278423942262,
+      "at12": {
+        "side": 1.9153257278957438,
+        "along": 4.2989010400846785,
+        "sideVelocity": 15.620792372095956,
+        "alongVelocity": 18.220615951933908,
+        "y": 101.61,
+        "vy": 5.024999999999997
+      },
+      "last": {
+        "side": 23.747278423942262,
+        "along": 10.39607804428982,
+        "sideVelocity": 23.97300531924234,
+        "alongVelocity": 1.1379876816459893,
+        "y": 71.06902777777793,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "ordinary",
+      "dir": "S",
+      "stance": 1,
+      "command": "neutral",
+      "sideCarry": -0.35,
+      "speed": 24,
+      "maxSide": 9.249811892386958,
+      "at12": {
+        "side": -1.5856820386949104,
+        "along": 4.530520110556881,
+        "sideVelocity": -7.928410193474546,
+        "alongVelocity": 22.65260055278442,
+        "y": 101.30088964742168,
+        "vy": 5.026124999999997
+      },
+      "last": {
+        "side": -9.249811892386958,
+        "along": 26.42803397824846,
+        "sideVelocity": -7.928410193474546,
+        "alongVelocity": 22.65260055278442,
+        "y": 70.76057367519961,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "ordinary",
+      "dir": "S",
+      "stance": 1,
+      "command": "forward",
+      "sideCarry": -0.35,
+      "speed": 24,
+      "maxSide": 2.531637965723256,
+      "at12": {
+        "side": -1.172028609105578,
+        "along": 4.650246980330572,
+        "sideVelocity": -4.409315850471854,
+        "alongVelocity": 23.591480108945632,
+        "y": 101.30088964742168,
+        "vy": 5.026124999999997
+      },
+      "last": {
+        "side": -2.531637965723256,
+        "along": 27.785607671958847,
+        "sideVelocity": -0.24399656326211108,
+        "alongVelocity": 23.998759669556176,
+        "y": 70.76057367519961,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "ordinary",
+      "dir": "S",
+      "stance": 1,
+      "command": "neutral",
+      "sideCarry": 0.35,
+      "speed": 24,
+      "maxSide": 9.249811892386958,
+      "at12": {
+        "side": 1.5856820386949104,
+        "along": 4.530520110556881,
+        "sideVelocity": 7.928410193474546,
+        "alongVelocity": 22.65260055278442,
+        "y": 101.30088964742168,
+        "vy": 5.026124999999997
+      },
+      "last": {
+        "side": 9.249811892386958,
+        "along": 26.42803397824846,
+        "sideVelocity": 7.928410193474546,
+        "alongVelocity": 22.65260055278442,
+        "y": 70.76057367519961,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "ordinary",
+      "dir": "S",
+      "stance": 1,
+      "command": "forward",
+      "sideCarry": 0.35,
+      "speed": 24,
+      "maxSide": 2.531637965723256,
+      "at12": {
+        "side": 1.172028609105578,
+        "along": 4.650246980330572,
+        "sideVelocity": 4.409315850471854,
+        "alongVelocity": 23.591480108945632,
+        "y": 101.30088964742168,
+        "vy": 5.026124999999997
+      },
+      "last": {
+        "side": 2.531637965723256,
+        "along": 27.785607671958847,
+        "sideVelocity": 0.24399656326211108,
+        "alongVelocity": 23.998759669556176,
+        "y": 70.76057367519961,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "ordinary",
+      "dir": "S",
+      "stance": 1,
+      "command": "neutral",
+      "sideCarry": 0,
+      "speed": 0,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 0,
+        "sideVelocity": 0,
+        "alongVelocity": 0,
+        "y": 101.30088964742168,
+        "vy": 5.026124999999997
+      },
+      "last": {
+        "side": 0,
+        "along": 0,
+        "sideVelocity": 0,
+        "alongVelocity": 0,
+        "y": 70.76057367519961,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "ordinary",
+      "dir": "S",
+      "stance": 1,
+      "command": "forward",
+      "sideCarry": 0,
+      "speed": 0,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": 0.4799920545965837,
+        "sideVelocity": 0,
+        "alongVelocity": 4.060695275153761,
+        "y": 101.30088964742168,
+        "vy": 5.026124999999997
+      },
+      "last": {
+        "side": 0,
+        "along": 7.662721245128693,
+        "sideVelocity": 0,
+        "alongVelocity": 8.72822354919913,
+        "y": 70.76057367519961,
+        "vy": -52
+      }
+    },
+    {
+      "mode": "ordinary",
+      "dir": "S",
+      "stance": 1,
+      "command": "reverse",
+      "sideCarry": 0,
+      "speed": 0,
+      "maxSide": 0,
+      "at12": {
+        "side": 0,
+        "along": -0.4799920545965837,
+        "sideVelocity": 0,
+        "alongVelocity": -4.060695275153761,
+        "y": 101.30088964742168,
+        "vy": 5.026124999999997
+      },
+      "last": {
+        "side": 0,
+        "along": -7.662721245128693,
+        "sideVelocity": 0,
+        "alongVelocity": -8.72822354919913,
+        "y": 70.76057367519961,
+        "vy": -52
+      }
+    }
+  ],
+  "tuningUnchanged": true,
+  "framesPerCase": 70
+}

@@ -1,0 +1,91 @@
+{
+  "status": "validated-local-only",
+  "parent": "29e2106b9cac60e6a41bfa649597dd55ebd301f1",
+  "promptStartedUTC": "2026-10-29T09:42:06Z",
+  "completedUTC": "2026-10-29T10:03:55.123413+00:00",
+  "firstValidatedNativeFixMinutesApprox": 10,
+  "cause": "An exactly opposing target reached atan2(0, negative), selecting an arbitrary side for a 180-degree heading turn. Collinear carry/intent now brakes and reverses along its existing line; non-collinear steering still turns with preserved carry speed.",
+  "before": {
+    "speed": 24,
+    "input": [
+      0,
+      -1
+    ],
+    "seconds": 0.5,
+    "sidewaysMetres": 9.481337355888554
+  },
+  "after": {
+    "nativeCases": 85,
+    "framesPerCase": 70,
+    "maximumUnintendedSideTravelMetres": 0,
+    "ordinarySpringVert": true,
+    "bothStances": true,
+    "fourTravelDirections": true,
+    "neutralSideCarryPreserved": true,
+    "leftRightMirrored": true,
+    "verticalArcPreserved": true,
+    "steeringTunerPreserved": true
+  },
+  "checks": {
+    "nativeDirectional": "passed",
+    "steeringTuner": "passed",
+    "nativeTrampolineControls": "passed",
+    "vertReleaseSequence": "passed",
+    "typeCheckBuild": "passed",
+    "releaseSize": "passed",
+    "diffCheck": "passed",
+    "checkLevels": "not needed: no level data changes",
+    "checkAll": "not run"
+  },
+  "preExistingFailures": [
+    {
+      "test": "tools/test-air-rescue.mjs",
+      "message": "side contact was misclassified as a rescue stomp",
+      "currentStatus": 1,
+      "parentStatus": 1
+    },
+    {
+      "test": "tools/test-side-scroll-air-rescue.mjs",
+      "message": "recording must reproduce the supplied board crash: 135 !== 218",
+      "currentStatus": 1,
+      "parentStatus": 1
+    }
+  ],
+  "baselineMethod": "Each unchanged failing test was rerun with a temporary Vite pre-load plugin returning the entire src/player.ts from parent 29e2106b. Both failures matched. Temporary comparison fixtures were removed. No collision/replay changes are part of this fix.",
+  "browser": {
+    "modes": [
+      "lite",
+      "full"
+    ],
+    "actualKeyboard": true,
+    "cases": [
+      "no direction",
+      "ArrowUp",
+      "ArrowDown",
+      "ArrowLeft",
+      "ArrowRight"
+    ],
+    "abandonGesture": "fresh Space press/release",
+    "maxNativeCanvas": [
+      1440,
+      900
+    ],
+    "buildStamp": "Codex/sol fork \u00b7 build 10-29 09:58 UTC",
+    "errors": [],
+    "maximumStraightSideTravelMetres": 0,
+    "taskBrowsersClosed": true
+  },
+  "scope": "Browser review uses an isolated flat fixture, seeds an ordinary mounted air at altitude, then uses real keyboard events and records unmodified native fixed steps. Native matrix prepares ordinary/spring/vert departure states; the separate trampoline and vert sequence checks exercise native contacts and release sequencing. No full-course traversal is claimed.",
+  "release": {
+    "files": 1849,
+    "bytes": 997264615,
+    "published": false
+  },
+  "localURL": "http://127.0.0.1:5483/?playtest&level=carlisle-coast",
+  "sourceSha256": {
+    "src/player.ts": "8a9188ecaa74c8e956bd0a57f1ace6bc8ea60c5c89dc9850f5aecaa62cfdc83a",
+    "tools/test-board-abandon-steering.mjs": "f674326c5f998b8f294143ed4846fa6c73da58d1fd6ab4af903f2264e413cf4d",
+    "tools/test-board-abandon-axis.mjs": "8f653f106f860922d92d95672d8f0c256874ab77e217d221493e777d8447c740",
+    "tools/board-abandon-axis-browser.mjs": "34d049fd3e61900edd559e5a38f5445a7bb24fa33943288cc7dc257cdd272f47"
+  }
+}

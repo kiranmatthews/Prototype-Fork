@@ -1,0 +1,96 @@
+{
+  "parent": "29e2106b9cac60e6a41bfa649597dd55ebd301f1",
+  "scope": "Native flat-platform fixture; prepared ordinary board air, actual fresh jump press/release, 30 native fixed steps after release. No movement tuner edits.",
+  "cases": [
+    {
+      "speed": 0,
+      "moveY": 0,
+      "displacement": [
+        0,
+        0.7843124999999986,
+        0
+      ],
+      "velocity": [
+        0,
+        0,
+        0
+      ],
+      "eject": true
+    },
+    {
+      "speed": 0,
+      "moveY": 1,
+      "displacement": [
+        0,
+        0.7843124999999986,
+        -0.21946758974678704
+      ],
+      "velocity": [
+        0,
+        0,
+        -0.43893517949357386
+      ],
+      "eject": true
+    },
+    {
+      "speed": 0,
+      "moveY": -1,
+      "displacement": [
+        0,
+        0.7843124999999986,
+        0.21946758974678704
+      ],
+      "velocity": [
+        0,
+        0,
+        0.43893517949357386
+      ],
+      "eject": true
+    },
+    {
+      "speed": 24,
+      "moveY": 0,
+      "displacement": [
+        0,
+        0.7843124999999986,
+        -12.000000000000007
+      ],
+      "velocity": [
+        0,
+        0,
+        -24
+      ],
+      "eject": true
+    },
+    {
+      "speed": 24,
+      "moveY": 1,
+      "displacement": [
+        0,
+        0.7843124999999986,
+        -12.000000000000007
+      ],
+      "velocity": [
+        0,
+        0,
+        -24
+      ],
+      "eject": true
+    },
+    {
+      "speed": 24,
+      "moveY": -1,
+      "displacement": [
+        9.481337355888554,
+        0.7843124999999986,
+        0.13022635974065322
+      ],
+      "velocity": [
+        15.479280837695521,
+        0,
+        18.340988652407805
+      ],
+      "eject": true
+    }
+  ]
+}
