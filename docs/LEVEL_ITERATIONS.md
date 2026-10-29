@@ -6685,3 +6685,37 @@ diff checks passed. Build: 1,773 files / 1,023.9MiB; offline version
 Evidence: `docs/carlisle-relay/air-cargo/`. No full-suite run or claim of one
 continuous four-kilometre browser clear. Local checkpoint only; publication
 remains held, with no coordinator message or push.
+
+
+## Carlisle tidal water and hull wash — 30 October 2026
+
+Approximately 10 minutes to the first playable visual pass and 22 minutes to
+final validation. Replaced the dense diagonal sea pattern with irregular
+ripples at four scales over a restrained broad swell. The high bounce view
+exposed crosshatching in the first revision; analytic noise gradients removed
+it before handoff. Navy water now carries view-dependent orange lamp glints
+and a procedural sky reflection. Subpixel filtering avoids distant shimmer.
+
+Solid torus foam around piles became broken, translucent expanding wash with
+no depth write or shadow. There are 1,388 static patches along the main harbour;
+the bonus has 54 static patches plus four washes parented to the existing
+boats, preserving their native render interpolation and constant waterline.
+Only Carlisle presentation changed. The authored water geometry, collision,
+14 protected player/level/camera/traction/net/timber/cone source files, all
+18 wet slopes and seven airborne cargo encounters remain byte-identical to
+the preceding checkpoint. All authored prop geometry remains complete at all
+viewing distances. No asset generation or credit spend.
+
+Validated original course and twelve prop fingerprints; production build;
+lite shader review; final compiled native 1920x1080 and normal 480p/CRT;
+arrival/low-water/aerial/Storm/bonus views; four moving waterline washes;
+main-to-bonus-to-main reload; keyboard walking and the Storm nitro transfer
+with four crates collected, zero deaths/bails and zero console errors. Final
+normal arrival sample: 16.7 ms median / 18.2 ms p95 over 119 frames, not a
+whole-course performance guarantee. No level data changed, so no repeated
+level audit or full suite was run.
+
+Build: 1,773 files / 1,023.9MiB; offline version f3a257aedee344b4349f;
+`Codex/sol fork · build 10-29 22:12 UTC`. Comparison captures and exact source
+hashes are in `art/carlisle-shipyard/water-review/`. Local checkpoint only;
+publication remains held. The broader polish goal remains active.

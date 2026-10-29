@@ -6,7 +6,7 @@ import {airCargoPilot} from './carlisle-air-cargo-pilot.mjs';
 const built=await build({entryPoints:['src/levels/carlisle-tidal-relay.ts'],bundle:true,format:'esm',write:false});
 const api=await import('data:text/javascript;base64,'+Buffer.from(built.outputFiles[0].text).toString('base64'));
 const lite=process.argv.includes('--lite'),normal=process.argv.includes('--normal'),mode=lite?'lite':normal?'normal':'full',base=process.env.CARLISLE_BASE??'http://127.0.0.1:5483';
-const out='docs/carlisle-relay/air-cargo';await mkdir(out,{recursive:true});
+const out=process.env.AIR_CARGO_OUT??'docs/carlisle-relay/air-cargo';await mkdir(out,{recursive:true});
 const report={base,mode,errors:[],flights:[],views:[]};
 const browser=await chromium.launch({channel:'chrome',headless:true});
 const page=await browser.newPage({viewport:{width:1920,height:1080},deviceScaleFactor:1,serviceWorkers:'block'});

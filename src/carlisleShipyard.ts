@@ -4,7 +4,7 @@ import { AssetCache, disposeTextures } from './assetLifetime';
 import { sceneryLoads } from './assetLoadQueue';
 import type { CustomComponent, CustomLevelData } from './level';
 import { carlislePoint, CARLISLE_RELAY_SECTIONS, CARLISLE_RELAY_STOPS } from './levels/carlisle-tidal-relay';
-import { harbourSurface, harbourOcean, harbourSky } from './carlisleShipyardMaterials';
+import { harbourSurface, harbourOcean, harbourSky, harbourContactFoam } from './carlisleShipyardMaterials';
 import { CarlisleMarineNet, marineFrameHeight } from './carlisleMarineNet';
 import { CarlisleBoardwalk, carlisleDeckBoundary, type DeckTriangle } from './carlisleBoardwalk';
 
@@ -62,7 +62,7 @@ export class CarlisleShipyard {
   readonly ready:Promise<void>;
   readonly group=new THREE.Group();
   private readonly boardwalk=new CarlisleBoardwalk();
-  readonly diagnostics={status:'loading',sections:0,models:0,props:0,nets:0,mountedMovers:0,decorativeColliders:0,timber:this.boardwalk.diagnostics,errors:[] as string[]};
+  readonly diagnostics={status:'loading',sections:0,models:0,props:0,nets:0,mountedMovers:0,decorativeColliders:0,timber:this.boardwalk.diagnostics,water:{staticWash:0,movingWash:0},errors:[] as string[]};
   private readonly assets=cache.scope();
   private disposed=false;
   private readonly placements:Placement[]=[];
@@ -84,11 +84,11 @@ export class CarlisleShipyard {
   private readonly orange=this.own(new THREE.MeshStandardMaterial({color:0xd94f15,roughness:.68,metalness:.18}));
   private readonly iron=this.own(new THREE.MeshStandardMaterial({color:0x111f2a,roughness:.85}));
   private readonly glow=this.own(new THREE.MeshBasicMaterial({color:0xff782b,toneMapped:false}));
-  private readonly foam=this.own(new THREE.MeshBasicMaterial({color:0x8fbed1,transparent:true,opacity:.32,depthWrite:false}));
+  private readonly foam=this.own(harbourContactFoam());
   private readonly hidden=this.own(new THREE.MeshBasicMaterial({visible:false}));
   private readonly shapes={box:this.geom(new THREE.BoxGeometry(1,1,1)),pole:this.geom(new THREE.CylinderGeometry(.5,.56,1,10)),
     bolt:this.geom(new THREE.SphereGeometry(.5,8,6)),ring:this.geom(new THREE.TorusGeometry(.5,.12,8,20)),
-    dune:this.geom(new THREE.SphereGeometry(.5,24,10))};
+    dune:this.geom(new THREE.SphereGeometry(.5,24,10)),wash:this.geom(new THREE.PlaneGeometry(1,1).rotateX(-Math.PI/2))};
   private readonly sky=harbourSky();
   private readonly ocean:ReturnType<typeof harbourOcean>;
   private readonly bonus:boolean;
@@ -146,6 +146,13 @@ export class CarlisleShipyard {
     this.part('bolt',bulb,[height*.13,height*.24,height*.13],this.glow,0,parent);
     if(!parent)this.lamps.push(v(bulb));
   }
+  private waterlineWash(p:P,width:number,depth:number,yaw=0) {
+    const slope=(this.seaY(p[2]+.5)-this.seaY(p[2]-.5));
+    const q=new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0,1,0),new THREE.Vector3(0,1,-slope).normalize());
+    q.multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,1,0),yaw));
+    this.part('wash',[p[0],this.seaY(p[2])+.04,p[2]],[width,1,depth],this.foam,0,undefined,q);
+    this.diagnostics.water.staticWash++;
+  }
   private pile(p:P,height:number,parent?:THREE.Object3D) {
     // Full authored fender prop at the water-facing cap, timber continues below.
     this.prop('piling-fender',[p[0],p[1]-3.9,p[2]],[2.25,4.1,2],0,parent);
@@ -153,7 +160,7 @@ export class CarlisleShipyard {
     if(!parent) {
       for(const offset of [-.55,.55])this.part('pole',[p[0]+offset,p[1]-height/2-1.5,p[2]+.42],[.7,height,.7],this.wood);
       for(const y of [p[1]-1.2,p[1]-1.45])this.part('ring',[p[0],y,p[2]],[1.4,1.4,1.4],this.orange,0,undefined,new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1,0,0),Math.PI/2));
-      this.part('ring',[p[0],this.seaY(p[2])+.055,p[2]],[3.2,3.8,.13],this.foam,0,undefined,new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1,0,0),Math.PI/2));
+      this.waterlineWash(p,5.4,6.5);
     }
   }
   private surface(c:CustomComponent,mesh:THREE.Mesh) {
@@ -204,6 +211,11 @@ export class CarlisleShipyard {
     if(this.bonus){
       // The visible top remains the native outline; the generated hull fits below it.
       this.prop('work-skiff',[0,top-1.88,0],[w,2.05,d],0,group);
+      const wash=new THREE.Mesh(this.shapes.wash,this.foam);wash.name='Moving hull wash';wash.scale.set(w*1.35,1,d*1.8);
+      // Bonus hulls translate along X at a fixed Y. Parenting the wash retains
+      // native render interpolation instead of following one simulation tick late.
+      mesh.updateWorldMatrix(true,false);wash.position.copy(mesh.worldToLocal(v([c.p[0],this.seaY(c.p[2])+.04,c.p[2]])));
+      wash.renderOrder=2;wash.userData.visualOnly=true;mesh.add(wash);this.attached.push(wash);this.diagnostics.water.movingWash++;
       return;
     }
     if(!spring){
@@ -363,6 +375,7 @@ export class CarlisleShipyard {
       p=[p[0],this.seaY(best)-3,best];
     }
     this.prop('work-skiff',p,[36,7,15],yaw);
+    this.waterlineWash(p,45,24,yaw);
     const q=new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,1,0),yaw);
     const point=(local:P)=>v(local).applyQuaternion(q).add(v(p)).toArray() as P;
     this.part('box',point([-7,6,0]),[9,6,10],this.navy,yaw);
@@ -427,11 +440,13 @@ export class CarlisleShipyard {
   private flushPrimitives() {
     for(const {geometry,material,matrices,chunk,parent} of this.batches.values()){
       const mesh=new THREE.InstancedMesh(geometry,material,matrices.length);matrices.forEach((m,i)=>mesh.setMatrixAt(i,m));
-      mesh.castShadow=true;mesh.receiveShadow=true;mesh.computeBoundingSphere();(parent??this.chunk(-chunk*180)).add(mesh);
+      const wash=material===this.foam;
+      mesh.castShadow=!wash;mesh.receiveShadow=!wash;if(wash){mesh.name='Tidal contact wash';mesh.renderOrder=2;mesh.userData.visualOnly=true;}
+      mesh.computeBoundingSphere();(parent??this.chunk(-chunk*180)).add(mesh);
     }this.batches.clear();
   }
   update(dt:number,player:THREE.Vector3) {
-    this.time+=dt;this.ocean.uniforms.time.value=this.time;this.sky.position.copy(player);
+    this.time+=dt;this.ocean.uniforms.time.value=this.time;this.foam.uniforms.time.value=this.time;this.sky.position.copy(player);
     for(const [id,group] of this.chunks)group.visible=Math.abs(player.z+id*180)<800;
     this.lightingCooldown-=dt;
     if(this.lightingCooldown<=0||this.lightingPosition.distanceToSquared(player)>400){
