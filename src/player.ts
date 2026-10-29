@@ -7646,7 +7646,13 @@ export class Player {
     // path for a real drop past its rim.
     const leavingMeshRim = previousGroundHit?.mesh?.userData.solidSides &&
       hit?.mesh !== previousGroundHit.mesh;
-    const downWindow = leavingMeshRim ? .25 : steepHit ? TUNING.wallStick : 1.4;
+    // A down-ray can jump metres down an authored near-vertical lip after
+    // moving only centimetres off its deck. Let the normal airborne/swept
+    // contact path catch the transition instead of snapping down the face.
+    const leavingAuthoredVertDeck = !this.parkControls && previousGroundHit?.vert === true &&
+      previousGroundHit.skateCamera === true && previousRideNormal.y > .9 &&
+      hit?.vert === true && hit.normal.y < .5;
+    const downWindow = leavingMeshRim || leavingAuthoredVertDeck ? .25 : steepHit ? TUNING.wallStick : 1.4;
     if(hit?.outOfBounds&&hit.y>=this.pos.y-downWindow&&hit.y<=this.pos.y+upWindow){this.returnFromOutOfBounds(level);return;}
     if(hit?.lethal&&hit.y>=this.pos.y-downWindow&&hit.y<=this.pos.y+upWindow){
       this.pos.y=hit.y;this.groundHit=hit;this.grounded=true;this.die();return;
