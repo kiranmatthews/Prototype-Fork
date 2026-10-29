@@ -1,0 +1,14 @@
+{
+  "keyboardWarps": true,
+  "intentionalPitRecovery": true,
+  "recovery": {
+    "grounded": true,
+    "position": [
+      -14.399999999999999,
+      99.94538879394531,
+      33.120000000000005
+    ],
+    "lives": 3
+  },
+  "errors": []
+}

@@ -2,8 +2,8 @@ import assert from 'node:assert/strict';
 import {mkdir,writeFile} from 'node:fs/promises';
 import {build} from 'esbuild';
 const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
-const base=(process.argv.find(a=>a.startsWith('http'))||'http://127.0.0.1:5277').replace(/\/$/,''),full=process.argv.includes('--full'),native=process.argv.includes('--native'),tour=process.argv.includes('--tour'),mode=process.argv.includes('--foot')?'foot':'skate';
-const tag=`${native?'native':full?'full':'lite'}-${tour?'tour':mode}`,out=process.env.MAYFIELD_OUTPUT||'/tmp/mayfield-validation';await mkdir(out,{recursive:true});
+const base=(process.argv.find(a=>a.startsWith('http'))||'http://127.0.0.1:5277').replace(/\/$/,''),full=process.argv.includes('--full'),native=process.argv.includes('--native'),tour=process.argv.includes('--tour'),parking=process.argv.includes('--parking'),mode=process.argv.includes('--foot')?'foot':'skate';
+const tag=`${native?'native':full?'full':'lite'}-${parking?'parking-':''}${tour?'tour':mode}`,out=process.env.MAYFIELD_OUTPUT||'/tmp/mayfield-validation';await mkdir(out,{recursive:true});
 const fixture=await build({stdin:{contents:"export * as source from './src/levels/mayfield-mall'; export {createMayfieldPilot} from './tools/mayfield-pilot.mjs';",resolveDir:process.cwd()},bundle:true,format:'esm',write:false});
 const browser=await chromium.launch({headless:true,channel:'chrome'}),page=await browser.newPage({viewport:native?{width:1920,height:1080}:{width:1440,height:900},deviceScaleFactor:1,serviceWorkers:'block'}),errors=[];
 page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
@@ -39,17 +39,30 @@ try{
   const recovery=await page.evaluate(()=>({position:window.__game.player.pos.toArray(),lives:window.__game.player.lives,deaths:window.__game.player.totalDeaths,grounded:window.__game.player.grounded}));
   await writeFile(`${out}/${tag}.json`,JSON.stringify({base,initial,checkpoints,recovery,errors},null,2));console.log(JSON.stringify({tag,initial,checkpoints:checkpoints.length,recovery,errors}));
  }else{
-  await page.evaluate(async mode=>{
+  await page.evaluate(async({mode,parking})=>{
    const {source:m,createMayfieldPilot}=await import('./mayfield-fixture.js'),g=window.__game,p=g.player,l=g.getLevel(),pilot=createMayfieldPilot(m,{mode});
-   const report=window.mayfieldReview={done:false,error:null,steps:0,seconds:0,evidence:pilot.evidence,state:p.state,progress:-p.pos.z,tuningBefore:JSON.stringify(g.TUNING)};
-   const step=p.step.bind(p),update=g.input.update.bind(g.input),commit=p.commitRenderStep.bind(p);let sample={},advanced=false;
+   const parkingEnd=m.MAYFIELD_PARKING_ROUTE.reduce((n,q,i,a)=>i?n+Math.hypot(q[0]-a[i-1][0],q[2]-a[i-1][2]):0,0);
+   const report=window.mayfieldReview={done:false,error:null,steps:0,seconds:0,evidence:pilot.evidence,state:p.state,progress:0,target:parking?parkingEnd+30:null,startY:p.pos.y,minY:p.pos.y,maxStep:0,tuningBefore:JSON.stringify(g.TUNING)};
+   const step=p.step.bind(p),update=g.input.update.bind(g.input),commit=p.commitRenderStep.bind(p),poll=g.input.pollGamepad.bind(g.input);let sample={},advanced=false;window.mayfieldRestoreInput=()=>{p.step=step;p.commitRenderStep=commit;g.input.pollGamepad=poll;};
    g.input.pollGamepad=()=>{const x=sample.moveX||0,y=sample.moveY||0,n=Math.hypot(x,y),a=n?.22+.78*Math.min(1,n):0,held={0:!!sample.jumpHeld,1:!!sample.grabHeld,2:!!sample.spinHeld,3:!!sample.grindHeld};return{id:'Mayfield review controller',index:0,connected:true,mapping:'standard',axes:n?[x/n*a,-y/n*a,0,0]:[0,0,0,0],buttons:Array.from({length:18},(_,i)=>({pressed:!!held[i],touched:!!held[i],value:held[i]?1:0}))};};
-   p.step=(dt,input,level)=>{if(report.done)return;try{sample=pilot.sample(p,l);update();step(dt,input,level);pilot.observe(p,l);report.steps++;report.seconds+=dt;advanced=true;}catch(e){report.error=String(e);report.done=true;}};
-   p.commitRenderStep=(...args)=>{commit(...args);if(!advanced||report.done)return;advanced=false;report.state=p.state;report.position=p.pos.toArray();report.deaths=p.totalDeaths;report.progress=pilot.progress;if(p.state==='finished'){report.done=true;report.tuningUnchanged=report.tuningBefore===JSON.stringify(g.TUNING);delete report.tuningBefore;}};
-  },mode);
-  const seen=new Set();for(let i=0;i<3600;i++){await page.waitForTimeout(250);const r=await page.evaluate(()=>window.mayfieldReview);for(const s of [45,175,310,440,620,800,950,1120,1350,1570,1800])if(r.progress>=s&&!seen.has(s)){seen.add(s);await page.screenshot({path:`${out}/${tag}-${s}.png`});console.log(`Mayfield ${tag}: ${Math.round(r.progress)} m`);}if(r.done)break;}
+   p.step=(dt,input,level)=>{if(report.done)return;try{sample=pilot.sample(p,l);update();const before=p.pos.clone();step(dt,input,level);report.maxStep=Math.max(report.maxStep,p.pos.distanceTo(before));report.minY=Math.min(report.minY,p.pos.y);pilot.observe(p,l);report.steps++;report.seconds+=dt;advanced=true;}catch(e){report.error=String(e);report.done=true;}};
+   p.commitRenderStep=(...args)=>{commit(...args);if(!advanced||report.done)return;advanced=false;report.state=p.state;report.position=p.pos.toArray();report.deaths=p.totalDeaths;report.progress=pilot.progress;if(p.state==='finished'||parking&&pilot.progress>=report.target){report.done=true;report.tuningUnchanged=report.tuningBefore===JSON.stringify(g.TUNING);delete report.tuningBefore;}};
+  },{mode,parking});
+  const seen=new Set();for(let i=0;i<3600;i++){await page.waitForTimeout(250);const r=await page.evaluate(()=>window.mayfieldReview);for(const s of parking?[30,45,65,110,140,165,210,250]:[45,175,310,440,620,800,950,1120,1350,1570,1800])if(r.progress>=s&&!seen.has(s)){seen.add(s);await page.screenshot({path:`${out}/${tag}-${s}.png`});console.log(`Mayfield ${tag}: ${Math.round(r.progress)} m`);}if(r.done)break;}
   const report=await page.evaluate(()=>window.mayfieldReview);await page.screenshot({path:`${out}/${tag}-finish.png`});await writeFile(`${out}/${tag}.json`,JSON.stringify({base,initial,report,errors},null,2));console.log(JSON.stringify({tag,report,errors}));
-  assert.equal(report.error,null);assert.equal(report.state,'finished');assert.equal(report.deaths,0);for(const [source,frames] of Object.entries(report.evidence.sourceGround))assert.ok(frames>30,`${source} must supply main-route ground`);assert.equal(report.evidence.checkpoints.length,initial.checkpointCount);assert.equal(report.evidence.crystal,true);assert.equal(report.tuningUnchanged,true);
+  assert.equal(report.error,null);assert.equal(report.deaths,0);assert.equal(report.tuningUnchanged,true);
+  if(parking){assert.ok(report.progress>=report.target);assert.ok(report.startY-report.minY>35);assert.ok(report.maxStep<1);assert.ok(report.evidence.checkpoints.includes(0));assert.ok(report.evidence.ground.some(n=>n.startsWith('Mall parking garage')));}
+  else{assert.equal(report.state,'finished');for(const [source,frames] of Object.entries(report.evidence.sourceGround))assert.ok(frames>30,`${source} must supply main-route ground`);assert.equal(report.evidence.checkpoints.length,initial.checkpointCount);assert.equal(report.evidence.crystal,true);}
+  if(parking&&process.argv.includes('--recovery')){
+   await page.evaluate(()=>window.mayfieldRestoreInput());
+   if(!await page.evaluate(()=>window.__game.gameFlow.developerChromeVisible))await page.keyboard.press('KeyM');
+   await page.keyboard.press('KeyL');await page.waitForFunction(()=>{const g=window.__game,l=g.getLevel();return g.player.grounded&&g.player.pos.distanceTo(l.checkpoints[1].spawnPos)<.25;});
+   await page.keyboard.press('KeyK');await page.waitForFunction(()=>{const g=window.__game,l=g.getLevel();return g.player.grounded&&g.player.pos.distanceTo(l.checkpoints[0].spawnPos)<.25;});
+   const lives=await page.evaluate(()=>{const p=window.__game.player;p.pos.set(0,-30,0);p.grounded=false;return p.lives;});
+   await page.waitForFunction(n=>{const g=window.__game,l=g.getLevel();return g.player.lives===n-1&&g.player.grounded&&g.player.pos.distanceTo(l.checkpoints[0].spawnPos)<.25;},lives,{timeout:30000});
+   const recovery=await page.evaluate(()=>({grounded:window.__game.player.grounded,position:window.__game.player.pos.toArray(),lives:window.__game.player.lives}));
+   await writeFile(`${out}/${tag}-recovery.json`,JSON.stringify({keyboardWarps:true,intentionalPitRecovery:true,recovery,errors},null,2));
+  }
  }
  assert.deepEqual(errors,[]);
 }catch(e){await page.screenshot({path:`${out}/${tag}-failure.png`}).catch(()=>{});console.log('BROWSER ERRORS',errors);throw e;}finally{await browser.close();}
