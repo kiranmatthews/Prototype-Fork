@@ -1,0 +1,72 @@
+[
+  {
+    "name": "The Aureole · 68 metre vertical loop",
+    "kind": "vertical",
+    "yaw": 0,
+    "moveX": 0,
+    "minWheelGap": null,
+    "maxWheelGap": null,
+    "samples": 217,
+    "firstFrame": 0,
+    "lastFrame": 216,
+    "minBoardDot": 0.9670733828949377,
+    "minRootDot": 0.9670733828949374,
+    "maxContactError": 0
+  },
+  {
+    "name": "The Wedding Band",
+    "kind": "wall",
+    "yaw": 0,
+    "moveX": 0,
+    "minWheelGap": 0.0009959345070160164,
+    "maxWheelGap": 0.0011308827121065401,
+    "samples": 188,
+    "firstFrame": 0,
+    "lastFrame": 187,
+    "minBoardDot": 0.9987149514003729,
+    "minRootDot": 0.9987149514003728,
+    "maxContactError": 0
+  },
+  {
+    "name": "The Afterglow",
+    "kind": "vertical",
+    "yaw": 0,
+    "moveX": 0,
+    "minWheelGap": null,
+    "maxWheelGap": null,
+    "samples": 159,
+    "firstFrame": 0,
+    "lastFrame": 158,
+    "minBoardDot": 0.9699154478871458,
+    "minRootDot": 0.9699154478871456,
+    "maxContactError": 0
+  },
+  {
+    "name": "The Wedding Band",
+    "kind": "wall",
+    "yaw": 0.65,
+    "moveX": 0,
+    "minWheelGap": 0.0009947465377690146,
+    "maxWheelGap": 0.00113163292930335,
+    "samples": 188,
+    "firstFrame": 0,
+    "lastFrame": 187,
+    "minBoardDot": 0.9986777816320911,
+    "minRootDot": 0.998677781632091,
+    "maxContactError": 0
+  },
+  {
+    "name": "The Wedding Band",
+    "kind": "wall",
+    "yaw": 0.65,
+    "moveX": 0.2,
+    "minWheelGap": -0.014393431574875937,
+    "maxWheelGap": 0.010848104649000656,
+    "samples": 188,
+    "firstFrame": 0,
+    "lastFrame": 187,
+    "minBoardDot": 0.9984324097278343,
+    "minRootDot": 0.9984324097278342,
+    "maxContactError": 0
+  }
+]

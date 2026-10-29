@@ -42,7 +42,7 @@ components.push(
 );
 export const SKYSTREAM_BONUS_LEVEL:CustomLevelData={
   v:1,name:'Bonus: Cumulus Cache',spawn:[-12,180.12,0],killY:166,
-  hudMode:'bonus',sky:'clouds',keepPlayFog:true,jungleDepthFade:false,
+  hudMode:'bonus',sky:'clouds',keepPlayFog:true,jungleDepthFade:false,ledgeGrabs:false,
   atmosphere:{fogColor:'#d8e8f5',fogNear:90,fogFar:300,drawDistance:440,
     sunDirection:[-.34,.38,-.86],sunIntensity:2.1,ambientIntensity:.85},
   components,groups:[{id:1,nm:'Six floating cloud landings'},{id:2,nm:'Cloud rewards'},

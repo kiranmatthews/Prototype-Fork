@@ -283,7 +283,7 @@ for (let i=0;i<C.length;i++) {
 
 export const SKYSTREAM_LEVEL: CustomLevelData = {
   v:1,name:'The Skystream',spawn:[-SAVED_SLIPSTREAM_LEVEL.spawn[0],SAVED_SLIPSTREAM_LEVEL.spawn[1],SAVED_SLIPSTREAM_LEVEL.spawn[2]],
-  killY:-530,fallRecoveryDrop:24,sky:'clouds',keepPlayFog:true,jungleDepthFade:false,hugeDropBail:false,
+  killY:-530,fallRecoveryDrop:24,sky:'clouds',keepPlayFog:true,jungleDepthFade:false,hugeDropBail:false,ledgeGrabs:false,
   cameraAirLift:.65,cameraLookAhead:13,
   atmosphere:{...SKY_BRIDGE_LEVEL.atmosphere!,fogNear:90,fogFar:440,fogColor:'#eef4f6',drawDistance:680,sunDirection:[-.34,.38,-.86],ambientIntensity:.85,sunIntensity:2.1},relicTime:180,medalTimes:{gold:180,silver:210,bronze:250},
   groups:[{id:1,nm:'I · mirrored Saved Slipstream'},{id:2,nm:'II · pearl halo'},{id:3,nm:'III · cloud eye'},

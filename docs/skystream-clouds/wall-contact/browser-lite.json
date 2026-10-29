@@ -1,0 +1,18 @@
+{
+  "base": "http://127.0.0.1:5188/?playtest&level=skystream&lite",
+  "stamp": "Codex/sol fork \u00b7 build 10-29 01:04 UTC",
+  "ledgeGrabs": false,
+  "frame": 592,
+  "done": true,
+  "failed": null,
+  "quarters": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "minSteadyBoardDot": 0.9999999999999999,
+  "bonusLedgeGrabs": false,
+  "errors": [],
+  "sampleCount": 491
+}

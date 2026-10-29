@@ -16008,7 +16008,7 @@ export class Player {
   }
 
   private tryLedgeGrab(w: THREE.Box3, level: Level): boolean {
-    if (level.kiteTow) return false;
+    if (level.kiteTow || level.ledgeGrabs === false) return false;
     if (this.alwaysSkate) return false;
     if (
       (this.state !== 'ride' && this.state !== 'air') ||
@@ -16139,7 +16139,7 @@ export class Player {
   // hand height with open air at your own column IS a ledge, whatever
   // geometry made it.
   private tryLedgeGrabMesh(level: Level): boolean {
-    if (level.kiteTow) return false;
+    if (level.kiteTow || level.ledgeGrabs === false) return false;
     if (this.parkControls) return false; // always-mounted parks never enter an on-foot ledge hang
     if (
       this.state !== 'air' ||
@@ -18196,7 +18196,9 @@ export class Player {
         : this.state === 'grind'
         ? this.balance * 0.55 // tip toward the needle/d-pad side (balance>0 = right)
         : this.grounded
-          ? -input.moveX * 0.28
+          // The wall loop steers across its ribbon in raw track-local X.
+          // A remapped forward stick must not create a sideways carve lean.
+          ? -(this.loopRide?.shape.kind === 'wall' ? this.rawInput.moveX : input.moveX) * 0.28
           : -input.moveX * 0.12;
     this.lean += (targetLean - this.lean) * Math.min(1, 12 * dt);
 
@@ -18251,12 +18253,17 @@ export class Player {
     // in hang time, so lip → hang → drop-in has no snap. Spins (bodyGroup yaw)
     // then run about the rig's own up = the surface normal, THPS-style.
     if (this.alignPose > 0.001 && this.lipStallT <= 0) {
-      if (this.loopRide) {
+      if (this.loopRide && this.loopRide.shape.kind !== 'wall') {
         // The authored full-turn frame remains continuous through upside-down;
         // shortest-arc UP-to-normal rotation has an arbitrary axis at the apex.
         VERT_Q.setFromAxisAngle(new THREE.Vector3(1, 0, 0)
           .transformDirection(this.loopRide.mesh.matrixWorld), this.loopRide.angle);
-      } else VERT_Q.setFromUnitVectors(VERT_UP, this.alignNormal);
+      } else {
+        // A wedding band banks onto its inward wall; it never somersaults.
+        // Its normal stays above the upside-down singularity, so this frame
+        // follows the entry bank, full horizontal turn and flat exit smoothly.
+        VERT_Q.setFromUnitVectors(VERT_UP, this.alignNormal);
+      }
       VERT_Q2.identity().slerp(VERT_Q, this.alignPose);
       this.group.quaternion.premultiply(VERT_Q2);
     }

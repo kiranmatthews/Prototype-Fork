@@ -1,0 +1,32 @@
+[
+  {
+    "name": "The Aureole · 68 metre vertical loop",
+    "kind": "vertical",
+    "samples": 217,
+    "firstFrame": 0,
+    "lastFrame": 216,
+    "minBoardDot": 0.9670733828949377,
+    "minRootDot": 0.9670733828949374,
+    "maxContactError": 0
+  },
+  {
+    "name": "The Wedding Band",
+    "kind": "wall",
+    "samples": 188,
+    "firstFrame": 0,
+    "lastFrame": 187,
+    "minBoardDot": 0.026001804552521088,
+    "minRootDot": 0.026001804552521008,
+    "maxContactError": 0
+  },
+  {
+    "name": "The Afterglow",
+    "kind": "vertical",
+    "samples": 159,
+    "firstFrame": 0,
+    "lastFrame": 158,
+    "minBoardDot": 0.969916503743049,
+    "minRootDot": 0.9699165037430492,
+    "maxContactError": 0
+  }
+]

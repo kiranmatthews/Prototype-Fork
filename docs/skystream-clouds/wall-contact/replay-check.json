@@ -1,0 +1,18 @@
+{
+  "file": "replay-TheSkystream-2026-10-29T00-39-58.json",
+  "sha256": "c6156530965f4d6b1e102508d1947a31ff80a7775227daff639d999b288daae2",
+  "baseline": "33ddc7a25db17aa933ca2abbf747a8cb5da1c8c1",
+  "browserState": {
+    "frame": 9515,
+    "active": false,
+    "loop": {
+      "active": false,
+      "progress": 0,
+      "pressure": 0,
+      "completed": 0
+    },
+    "state": "ride"
+  },
+  "browserErrors": [],
+  "limitation": "The supplied 9515-frame input recording did not reach the finale in the native or packaged-browser reproduction. The wall-pose defect was reproduced separately on the actual authored loop; no successful exact-replay reproduction is claimed."
+}

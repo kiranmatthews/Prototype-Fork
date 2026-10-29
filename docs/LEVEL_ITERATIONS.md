@@ -5939,3 +5939,30 @@ The packaged full-render route completes all 67 boxes, seven checkpoints, four
 gaps and three loops without deaths, bails or browser errors. Bonus lite/full,
 split-screen, real graphics-context recovery and hub-return resource cleanup
 also pass. Final local package: `Codex/sol fork · build 10-28 23:08 UTC`.
+
+
+## 29 October 2026 NZDT — Cloud ledge policy and wedding-band contact
+
+Brief: disable Skystream ledge grabs and make the board hug the sideways loop.
+First fully verified loop-pose fix at 00:58 UTC, approximately 17 minutes from
+the 00:41 UTC request; complete native main/bonus traversal passed by 01:01 UTC.
+Packaged full-render course and visual review completed at 01:11 UTC, roughly
+30 minutes from prompt. Prompt time is approximate.
+
+Skystream and its cloud bonus now opt out of automatic ledge catches. Other
+courses keep their default grabs and ordinary grind boundaries. The sideways
+loop uses its inward contact normal for the rider's bank and its tangent for
+heading; upright loops retain the continuous somersault frame. Track-local
+steering also prevents a forward stick from creating false carve lean. The
+smooth collision path, momentum and global gravity tuning are unchanged.
+
+The recorded input replay did not reach the finale in local playback. An
+independent test of the actual loop reproduced the nearly 90-degree visual
+misalignment with zero collision-position error. After correction, straight
+wheel contact is about 1 mm from the smooth wall and the steering test stays
+within 1.5 cm. All 67 main boxes, seven checkpoints, four gaps, three loops and
+fall recovery pass; the bonus completes all 18 boxes and five gaps. Ledge schema,
+roundtrip and both catch paths, lite/full browser checks, level checks, build,
+type checking and release-size validation pass with no browser errors.
+
+See [contact measurements and browser evidence](skystream-clouds/wall-contact/README.md).

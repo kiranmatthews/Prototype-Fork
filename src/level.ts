@@ -1192,6 +1192,8 @@ export interface CustomLevelData {
   cameraRig?: { camDist:number; camHeight:number; camPitch:number; camFov:number };
   /** 0..1 level-authored widening of ledge reach/timing; absent keeps global feel. */
   ledgeAssist?: number;
+  /** False disables automatic wall/mesh ledge catches in this course. */
+  ledgeGrabs?: boolean;
   /** Legacy gold-medal benchmark; retained for existing level JSON. */
   relicTime?: number;
   /** Ordered, independently authored gold/silver/bronze targets in seconds. */
@@ -2690,7 +2692,7 @@ const MAX_LEVEL_LABEL_LENGTH = 120;
 const FORBIDDEN_JSON_KEYS = new Set(["__proto__", "prototype", "constructor"]);
 const LEVEL_DATA_KEYS = new Set([
   'encounter', 'kiteTow',
-  "minefields", "v", "skateRace", "railNavigation", "edgeGrindingRevision", "name", "spawn", "startWarpPad", "killY", "fallRecoveryDrop", "hudMode", "ledgeAssist", "relicTime",
+  "minefields", "v", "skateRace", "railNavigation", "edgeGrindingRevision", "name", "spawn", "startWarpPad", "killY", "fallRecoveryDrop", "hudMode", "ledgeAssist", "ledgeGrabs", "relicTime",
   "medalTimes", "ocean", "unitySand", "shoreFoam", "sky", "jungleAtmosphere", "jungleDepthFade", "jungleStyle", "atmosphere",
   "components", "layers", "groups", "allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "skateReference", "hugeDropBail", "alwaysSkate", "warehouseArt", "skateCollectathon", "cameraAirLift", "secretComboGem", "cameraLookAhead", "cameraRig", "boulderChase", "caveCollapse",
 ]);
@@ -2930,7 +2932,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
     return null;
   if (source.hudMode !== undefined && source.hudMode !== "bonus" && source.hudMode !== "hub") return null;
   if (source.skateReference !== undefined && (!source.skatepark || !validSkateReference(source.skateReference))) return null;
-  for (const key of ["kiteTow", "allBalanceCrates", "perfectGrindBoost", "hugeDropBail", "keepPlayFog", "skatepark", "alwaysSkate", "warehouseArt", "skateCollectathon", "secretComboGem", "jungleDepthFade", "startWarpPad"] as const)
+  for (const key of ["kiteTow", "allBalanceCrates", "perfectGrindBoost", "hugeDropBail", "keepPlayFog", "skatepark", "alwaysSkate", "warehouseArt", "skateCollectathon", "secretComboGem", "jungleDepthFade", "startWarpPad", "ledgeGrabs"] as const)
     if (source[key] !== undefined && typeof source[key] !== "boolean") return null;
   if (source.skateCollectathon && (!source.skatepark || !source.components.some(c => c?.t === 'wumpa'))) return null;
   if (source.cameraLookAhead !== undefined && (typeof source.cameraLookAhead !== "number" ||
@@ -4367,6 +4369,7 @@ export class Level {
   // tuning. One source course can widen its ledge catch envelope while every
   // other level retains the exact global grab feel.
   ledgeAssist = 0;
+  ledgeGrabs = true;
   cameraLookAhead: number | undefined; // presentation only; lane/input direction stays local
   cameraRig: CustomLevelData["cameraRig"];
   cameraAirLift: number | undefined; // presentation only; does not change lane/input frames
@@ -7404,6 +7407,7 @@ export class Level {
       ...(this.capturedOceanSpec ? { ocean: JSON.parse(JSON.stringify(this.capturedOceanSpec)) as CustomOceanData } : {}),
       ...(this.capturedShoreFoam ? {shoreFoam:structuredClone(this.capturedShoreFoam)} : {}),
       ledgeAssist: this.ledgeAssist > 0 ? r2(this.ledgeAssist) : undefined,
+      ledgeGrabs: this.ledgeGrabs ? undefined : false,
       relicTime: this.relicTime !== CAMPAIGN_TIME_RELIC_TARGET_SECONDS ? this.relicTime : undefined,
       ...(JSON.stringify(this.medalTimes) !== JSON.stringify(defaultMedalTimes(this.relicTime)) ? { medalTimes: { ...this.medalTimes } } : {}),
       // only when it isn't the default, so the saved JSON stays quiet
@@ -7563,6 +7567,7 @@ export class Level {
     this.killY = data.killY;
     this.fallRecoveryDrop = data.fallRecoveryDrop;
     this.ledgeAssist = data.ledgeAssist ?? 0;
+    this.ledgeGrabs = data.ledgeGrabs !== false;
     this.finishZ = -1e9; // endless playground: no finish gate
     this.endWallZ = -1e9;
     this.theme = { ...CUSTOM_LEVEL_THEME };
