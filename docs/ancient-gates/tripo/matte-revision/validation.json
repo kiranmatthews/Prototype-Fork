@@ -1,0 +1,110 @@
+{
+  "result": "PASS",
+  "scope": "Two native-ratio background panoramas behind every existing 3D scenery placement; no scenery removed, moved or replaced.",
+  "validatedAt": "2026-10-29T12:18:13.409230+00:00",
+  "preservationBase": "9ec6b8af6ab038925cef38a1874cb53e22085a41",
+  "levelIds": [
+    "jungle-gate-run",
+    "bonus-jungle-gate"
+  ],
+  "unchangedRuntimeAndModels": [
+    "src/level.ts",
+    "src/ancientGatesMechanisms.ts",
+    "src/ancientGatesAssetBounds.ts",
+    "public/ancient-gates-tripo",
+    "docs/ancient-gates/tripo/native-assets.json"
+  ],
+  "preservation": {
+    "levels": [
+      {
+        "id": "jungle-gate-run",
+        "nativeProportionProps": 2578,
+        "backgroundMattes": 4,
+        "existing3DComponentsPreserved": true,
+        "connectedPierStacks": 194,
+        "gameplaySha256": "0c9e3885a778a7dd822c1e114d1793a39b35372098cf6ca6b0b198047a64b6fe"
+      },
+      {
+        "id": "bonus-jungle-gate",
+        "nativeProportionProps": 472,
+        "backgroundMattes": 2,
+        "existing3DComponentsPreserved": true,
+        "connectedPierStacks": 44,
+        "gameplaySha256": "e288b14bb9da550479616e5bfa5a7a1602814b7b8cfb97ce7b0eb8c2066a2963"
+      }
+    ],
+    "triangleCeiling": 10000,
+    "allChecksPassed": true
+  },
+  "checks": [
+    {
+      "command": "node tools/ancient-gates-tripo/test-native.mjs 9ec6b8af6ab038925cef38a1874cb53e22085a41",
+      "result": "PASS"
+    },
+    {
+      "command": "node tools/test-ancient-gates-layout.mjs",
+      "result": "PASS"
+    },
+    {
+      "command": "node tools/test-ancient-gates-art.mjs",
+      "result": "PASS"
+    },
+    {
+      "command": "npm run check:levels",
+      "result": "PASS"
+    },
+    {
+      "command": "npm run build",
+      "result": "PASS"
+    },
+    {
+      "command": "npm run check:release",
+      "result": "PASS"
+    },
+    {
+      "command": "git diff --check",
+      "result": "PASS"
+    }
+  ],
+  "sourceGitBlobs": {
+    "src/levels/ancient-gates-art.ts": "0fbcadcb34282690592b0c40c56694deee77d931",
+    "src/ancientGatesAssets.ts": "b3d687d756456c2d6a979b33d52d5f4b07a7a731",
+    "public/levels.json": "3cd9a47a816e0cd76924bd64b486eece73225406",
+    "tools/fixtures/stock-level-snapshots.json": "6dfca0f0b224639541fe38a26fba38af60e17a70",
+    "src/level.ts": "07d5bad630f230e5edbaef5d9c35f0d716fac160",
+    "src/ancientGatesMechanisms.ts": "52bef0751e186abf32f57595cd5af0607b919fda",
+    "src/ancientGatesAssetBounds.ts": "4fe1c08cf1735a7911b89b4c19a922fef0c5eb5f"
+  },
+  "release": {
+    "files": 1856,
+    "bytes": 999808617,
+    "budgetBytes": 1000000000,
+    "offlineVersion": "463ee8fc6668f842ecc6",
+    "published": false
+  },
+  "browser": {
+    "evidence": "browser.json",
+    "fullNativeViews": [
+      "Full native aqueduct, scenery preserved",
+      "Full native crown, scenery preserved",
+      "Full native hoard, scenery preserved"
+    ],
+    "normalResolutionWalk": true,
+    "consoleErrors": 0,
+    "assetAndMechanismErrors": 0
+  },
+  "generation": {
+    "mode": "built-in image_gen",
+    "images": 2,
+    "dimensions": [
+      2172,
+      724
+    ],
+    "runtimeImageBytes": 284774,
+    "tripoCreditsSpent": 0
+  },
+  "legacyMatteOriginalBytesArchived": true,
+  "taskOwnedReviewTabClosed": true,
+  "taskOwnedDevServerStopped": true,
+  "releaseOwner": "Coordinate local work and releases"
+}

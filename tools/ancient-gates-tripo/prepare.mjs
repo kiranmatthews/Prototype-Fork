@@ -8,9 +8,8 @@ const crown=await surfaceAt('public/ancient-gates-tripo/canyon-buttress.glb');
 await writeFile('src/ancientGatesAssetBounds.ts','// Measured from shipped native GLBs by tools/ancient-gates-tripo/prepare.mjs.\nexport const ANCIENT_NATIVE_SIZE='+JSON.stringify(bounds,null,2)+' as const;\nexport const ANCIENT_CLIFF_CROWN='+crown+';\n');
 const labels={ancienttikigate:'Tiki guardian gateway',ancientcanyonrock:'Sculpted sandstone canyon buttress',ancienttikipier:'Load-bearing tiki pier',ancienttikishrine:'Tiered tiki shrine',ancienttropicalplant:'Rooted tropical planting'};
 const specs=Object.fromEntries(Object.keys(labels).map(kind=>[kind,{file:'../'+models[kind],label:'Ancient Gates · '+labels[kind],size:bounds[kind],wind:false,normalStrength:.12,roughness:.85,doubleSided:kind==='ancienttropicalplant',cellSize:32}]));
-// The retired painting definitions remain available to existing saved editor
-// levels; the rebuilt source level contains no painted scenery cards.
+// Stable painting kinds support saved editor levels and the added distant mattes.
 const old=JSON.parse(await readFile('tools/ancient-gates-tripo/legacy-mattes.json','utf8'));
-await writeFile('src/ancientGatesAssets.ts','/** Tripo native game meshes plus legacy saved-level painting references. */\nexport const ANCIENT_GATES_ASSETS='+JSON.stringify({...old,...specs},null,2)+' as const;\n');
+await writeFile('src/ancientGatesAssets.ts','/** Native game meshes and painted far-background scenery. */\nexport const ANCIENT_GATES_ASSETS='+JSON.stringify({...old,...specs},null,2)+' as const;\n');
 await writeFile('docs/ancient-gates/tripo/native-assets.json',JSON.stringify({geometryPolicy:'Original generated triangles and vertices; no simplification or distance LODs.',rockCrownNormalized:crown,assets:records},null,2)+'\n');
 console.log(JSON.stringify(records.map(({kind,triangles,bytes,size})=>({kind,triangles,bytes,size})),null,2));

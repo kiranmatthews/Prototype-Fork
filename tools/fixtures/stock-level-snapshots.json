@@ -40,11 +40,11 @@
       "authoringRuntime": "v24.19.0"
     },
     "jungle-gate-run": {
-      "snapshotSha256": "9dca9c19c9ca947ee6e22ed254bf527d0a204967589825371f51627de1262bfa",
+      "snapshotSha256": "3d69c883e3e051cc4c102f38d4240c760ef9cf41d652ff8abea3387767cd02a4",
       "authoringRuntime": "v26.13.0"
     },
     "bonus-jungle-gate": {
-      "snapshotSha256": "f82323482ec6d6b124a977292d1d434458f88e894ce101244b5562bb6bfb4bdc",
+      "snapshotSha256": "b050a366f59ab0547e871a74a8554677f21d4dc0917448e14d3ecf59af616cc4",
       "authoringRuntime": "v26.13.0"
     },
     "carlisle-coast": {

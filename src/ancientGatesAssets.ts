@@ -1,12 +1,12 @@
-/** Tripo native game meshes plus legacy saved-level painting references. */
+/** Native game meshes and painted far-background scenery. */
 export const ANCIENT_GATES_ASSETS={
   "ancientgatevalley": {
     "file": "",
-    "image": "ancient-gates/gate-valley.webp",
-    "label": "Ancient Gates · sunlit gate valley",
+    "image": "ancient-gates/valley-panorama-v2.webp",
+    "label": "Ancient Gates · misty jungle valley",
     "size": [
-      216,
-      144,
+      540,
+      180,
       0.02
     ],
     "wind": false,
@@ -16,16 +16,16 @@ export const ANCIENT_GATES_ASSETS={
   },
   "ancientgatehoard": {
     "file": "",
-    "image": "ancient-gates/gatekeeper-hoard.webp",
-    "label": "Ancient Gates · jade reliquary depth",
+    "image": "ancient-gates/hoard-panorama-v2.webp",
+    "label": "Ancient Gates · shaded hoard ravine",
     "size": [
-      120,
-      80,
+      540,
+      180,
       0.02
     ],
     "wind": false,
     "matte": true,
-    "edgeFade": 0.04,
+    "edgeFade": 0.055,
     "fog": false
   },
   "ancienttikigate": {

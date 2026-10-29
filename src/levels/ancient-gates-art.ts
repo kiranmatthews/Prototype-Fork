@@ -1,5 +1,6 @@
 import type {CustomComponent,CustomLevelData} from '../level';
 import {ANCIENT_NATIVE_SIZE,ANCIENT_CLIFF_CROWN} from '../ancientGatesAssetBounds';
+import {ANCIENT_GATES_ASSETS} from '../ancientGatesAssets';
 
 type P=[number,number,number];
 type Kind=keyof typeof ANCIENT_NATIVE_SIZE;
@@ -13,13 +14,13 @@ export const ANCIENT_GATES_ATMOSPHERE:CustomLevelData['atmosphere']={
  backdrop:'fog',fogEnabled:true,fogNear:48,fogFar:185,fogColor:'#477e79',
  ambientSky:'#c1e2da',ambientGround:'#997047',ambientIntensity:1.16,
  sunColor:'#ffe1a6',sunIntensity:2.05,sunDirection:[-.48,.8,.35],
- fillColor:'#9ac9dc',fillIntensity:.72,shadowStrength:.78,drawDistance:215,
+ fillColor:'#9ac9dc',fillIntensity:.72,shadowStrength:.78,drawDistance:340,
 };
 export const ANCIENT_HOARD_ATMOSPHERE:CustomLevelData['atmosphere']={
  backdrop:'fog',fogEnabled:true,fogNear:35,fogFar:110,fogColor:'#254d50',
  ambientSky:'#aed9ca',ambientGround:'#967347',ambientIntensity:1.14,
  sunColor:'#ffdaa3',sunIntensity:1.7,sunDirection:[-.35,.8,.48],
- fillColor:'#70bec0',fillIntensity:.65,shadowStrength:.7,drawDistance:145,
+ fillColor:'#70bec0',fillIntensity:.65,shadowStrength:.7,drawDistance:240,
 };
 
 function workshop(){
@@ -28,7 +29,7 @@ function workshop(){
  // GLB dimensions here, then apply one scalar: no squeezed or stretched props.
  const prop=(kind:Kind,p:P,height:number,nm:string,color='#ffffff',yaw=0)=>{
   const s=dimensions(kind,height).map(v=>Math.round(v*1e6)/1e6) as P;
-  const c:CustomComponent={t:'decor',dkind:kind,p:p.map(v=>Math.round(v*1000)/1000) as P,s,...(color==='#ffffff'?{}:{color}),...(yaw?{yaw}:{}),solid:false,scenerySolid:false,grp:90,nm};
+  const c:CustomComponent={t:'decor',dkind:kind,p:p.map(v=>Math.round(v*1000)/1000||0) as P,s,...(color==='#ffffff'?{}:{color}),...(yaw?{yaw}:{}),solid:false,scenerySolid:false,grp:90,nm};
   out.push(c);return c;
  };
  const widthProp=(kind:Kind,p:P,width:number,nm:string,color='#ffffff',yaw=0)=>
@@ -49,6 +50,13 @@ function workshop(){
   prop('ancienttikigate',[x,y,z],h,nm);
  };
  const banks=(start:number,end:number,bonus=false)=>{
+  const matte=bonus?'ancientgatehoard':'ancientgatevalley',native=ANCIENT_GATES_ASSETS[matte].size;
+  const height=bonus?160:260,width=height*native[0]/native[1],step=width*.76;
+  // Add depth behind the complete existing 3D scene. Image proportions stay
+  // native; overlapping soft edges prevent a rectangular panorama boundary.
+  for(let x=start,i=0;x<end+step;x+=step,i++)out.push({t:'decor',dkind:matte,
+   p:[x,bonus?-100:-175,(bonus?-112:-210)-i%2*.2],s:[width,height,.02],
+   solid:false,scenerySolid:false,grp:90,nm:'Distant painted jungle panorama'});
   for(let x=start,i=0;x<end;x+=32,i++){
    const h=bonus?32+random(i)*8:39+random(i)*14,z=bonus?-25:-34-random(i+2)*9;
    const rock=prop('ancientcanyonrock',[x,FLOOR-7,z],h,'Rooted sandstone canyon buttress','#ffffff',0);

@@ -1,8 +1,8 @@
 # Ancient Gates — Tripo native scenery
 
 Five ImageGen reference images guided five original stylized tiki assets. The
-main valley and Gatekeeper's Hoard now use three-dimensional scenery instead of
-painted cards. Existing Meshy trees, beams, paving and cornices retain their native
+main valley and Gatekeeper's Hoard use complete three-dimensional scenery.
+Two new panoramic mattes now sit behind that preserved scenery. Existing Meshy trees, beams, paving and cornices retain their native
 ratios. Repeated short pieces form long spans; connected tiki foundations bear
 the decks and arch feet. Tree roots intersect a measured surface on the cliff
 mesh, with an embedded moss-rock plinth. The upper bonus gallery retains its
@@ -40,8 +40,8 @@ the remaining reference uploads and Max-plan generation in Tripo Studio.
   Ancient Gates layout and scenery-clearance checks also passed.
 - `node tools/ancient-gates-tripo/test-native.mjs HEAD` verifies all 3,050 static prop
   placements preserve measured aspect ratios, 238 static pier stacks connect from the
-  canyon floor, both levels contain no scenery matte cards, and each new mesh is
-  below 10K triangles. Gameplay component hashes are unchanged apart from colour,
+  canyon floor, every original 3D component is preserved, the new background planes sit
+  behind it at their native image ratio, and each new mesh is below 10K triangles. Gameplay component hashes are unchanged apart from colour,
   texture and the explicitly selected cosmetic asset fields.
 - Full-render Chrome review covered all 12 main sections and six bonus sections
   at MAX/native (3024 × 1516 drawing buffer). Every sampled safe platform was
@@ -109,3 +109,45 @@ by 11:10 (~15 minutes), full/native and normal behavior review completed by
 11:22 (~27 minutes). Final build/packaging finished around 11:27 UTC. Changes
 remain local for the active release coordinator; neither this chat nor its
 scripts push or deploy them.
+
+
+## 30 October NZDT: additional far-background mattes
+
+This increment adds a sunlit jungle valley panorama to the main course and a
+shaded ruin/ravine panorama to the hoard. Four overlapping main panels and two
+bonus panels use the generated 3:1 ratio, behind the full extent of all existing
+3D scenery. The camera far plane is extended only enough to include that layer.
+
+All 3,050 existing static native props, 238 connected pier stacks, 15 gateways,
+background trees, shrines, rocks and 25 mechanisms are preserved. No 3D model,
+scenery component, transform, support assembly or gameplay component is removed
+or replaced. The preservation test compares every non-matte component against
+commit `9ec6b8af`, including its order and complete serialized data. Runtime
+mechanism code and all GLB files are unchanged.
+
+Built-in ImageGen generated both images at 2172×724. The runtime WebP files
+retain that resolution, totaling 284,774 bytes. Their exact prompts are in
+[matte-prompts.json](../../../tools/ancient-gates-tripo/references/matte-prompts.json).
+Project assets:
+
+- `public/ancient-gates/valley-panorama-v2.webp`
+- `public/ancient-gates/hoard-panorama-v2.webp`
+- Original PNGs: `tools/ancient-gates-tripo/references/valley-matte-v2.png` and
+  `tools/ancient-gates-tripo/references/hoard-matte-v2.png`.
+
+The earlier two background files also remain at their original public paths.
+Their storage is re-encoded at the same dimensions to keep the release within
+its existing size budget; exact original bytes remain under
+`tools/ancient-gates-tripo/references/previous-mattes/`. No scenery file is
+removed. No Tripo credits were used by this increment.
+
+Current visual evidence is in [matte-revision](matte-revision/): full/native
+main-course and hoard views, normal-resolution walking beneath the preserved
+gallery, successful 21/21 and 4/4 mechanism readiness, and zero console or asset
+errors. These screenshots show the original scenery with only the backgrounds
+added. Preservation, native ratio, layout and clearance checks pass. Required
+level/build/release checks are recorded in the revision's validation record.
+
+Timing: request began around 11:46 UTC; the corrected additive version was
+playable around 12:07 UTC (~21 minutes); full/native and normal review finished
+by 12:11 UTC. Publication belongs to the active release coordinator.

@@ -6343,3 +6343,24 @@ native/normal mechanism review at 11:22 (~27 minutes). Commit and READY handoff
 use the isolated `codex/ancient-gates-tripo` worktree; shared `src/level.ts` hooks
 and the two published level IDs are explicitly owned in the handoff. See the
 [asset and mechanism evidence](ancient-gates/tripo/README.md).
+
+
+## 30 October 2026 NZDT — Ancient Gates: additive background mattes
+
+Added two built-in ImageGen panoramas behind the complete existing 3D scenery:
+a sunlit rainforest valley and a shaded jungle ruin for the hoard. Four main
+and two bonus panels preserve the native 2172×724 ratio with soft overlapping
+edges. The camera far plane reaches the added layer. All existing 3,050 static
+props, 238 support stacks, 15 gateways and 25 mechanisms remain intact.
+
+A component-for-component comparison against `9ec6b8af` verifies no existing
+3D scenery or gameplay data was removed, moved or replaced. The GLBs and
+mechanism runtime are unchanged. Full/native rendering (1630×1610) and normal
+720p walking passed with no console/asset errors. Matte backgrounds and source
+images are saved in the project; older background files are also retained.
+No Tripo credits were spent. Focused checks and final build/release results:
+[matte revision evidence](ancient-gates/tripo/matte-revision/).
+
+Prompt-to-playable: approximately 21 minutes, 11:46–12:07 UTC; final native and
+normal review by 12:11 UTC. This is a new local commit after `9ec6b8af`, handed
+to the active release coordinator for integration and publication.
