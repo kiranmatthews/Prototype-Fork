@@ -1,0 +1,57 @@
+{
+  "mode": "foot",
+  "state": "finished",
+  "deaths": 0,
+  "seconds": 217.01666666666665,
+  "evidence": {
+    "mode": "foot",
+    "jumps": [
+      {
+        "progress": 1054.7953366319932,
+        "p": [
+          -4.78,
+          58.88027264191307,
+          -1019.6938703409439
+        ]
+      }
+    ],
+    "checkpoints": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "ground": [
+      "Mall upper galleria / Entrance / first concourse / surface",
+      "Mall upper galleria / Atrium / crossrail arcade / surface",
+      "Mayfield connecting concourse",
+      "Gym supported maple subfloor",
+      "School Miami / downhill canopy / Handicap slope \u00b7 eased top and bottom",
+      "Mall crossrail arcade / Atrium / crossrail arcade / surface",
+      "Mall crossrail arcade / Courtyard / exit / surface",
+      "Warehouse / original eased roll-in / Left smooth roll-in",
+      "Concourse \u00b7 continuous supported floor",
+      "Warehouse / rearranged kicker and Big Rail / Kicker gap \u00b7 receiver",
+      "Kona / complete spinal grooves / Spinal grooves",
+      "Kona return court",
+      "Kona junction / kiosk court",
+      "Kona / original snake run / Snake run",
+      "Mall / angled atrium and suspended crossing / Atrium / crossrail arcade / surface",
+      "Mall / angled atrium and suspended crossing / Mall detail 25 / surface",
+      "Mayfield Mall exit"
+    ],
+    "crystal": true,
+    "peakSpeed": 9.000000000000005,
+    "sourceGround": {
+      "mall": 7418,
+      "school": 454,
+      "warehouse": 222,
+      "kona": 1903
+    }
+  }
+}

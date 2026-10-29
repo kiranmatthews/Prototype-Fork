@@ -57,6 +57,30 @@ batching retain the geometry at every viewing distance.
 
 ## Validation and ownership
 
+### After Hours bonus
+
+The question-mark stone beside the Crossrail Arcade checkpoint opens **Bonus:
+After Hours**. Jump onto it from the main lane. The roughly 100 m side-view detour has
+eight counted crates: preserve the arrow for the high prize counter, operate
+the service-bridge switch, then use the finite bounce stack before breaking it.
+The backdrop retains 1,083 triangles from the original Mall galleria at full
+scale, including its large escalator and mezzanine architecture.
+
+Successful completion banks the crates, fruit and two life crates into the
+same parent run and returns to supported arcade ground beyond the entrance.
+A failed attempt returns without taking a parent life or adding a parent death,
+and the stone remains available for another attempt. Ordinary bonus controls,
+crate behavior, rewards and the existing suspended-parent system are reused.
+
+`node tools/test-mayfield-bonus.mjs` checks the editor contract, both campaign
+aliases, the 43.52 s input-only all-crate clear, actual jump entrance and supported
+return. `node tools/mayfield-bonus-browser.mjs [URL]` exercises lite recovery,
+real entrance, failed return, retry, full clear and reward banking with MAX/native
+and normal rendering. Evidence is in `bonus/`; `MAYFIELD_BONUS_OUTPUT` selects
+an external screenshot/report directory. No shared runtime behavior changed.
+
+### Main course
+
 Recorded checks and screenshots in this directory cover the source editor
 contract, campaign/save key, supported spawn and checkpoints, complete walking
 and skating routes, six Warehouse/Kona transition approaches, real K/L

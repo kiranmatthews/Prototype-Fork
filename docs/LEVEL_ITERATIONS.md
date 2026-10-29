@@ -6115,3 +6115,24 @@ or console errors. MAX/native review, real checkpoint keys and pit recovery
 pass. Required level checks, production build/type checking and release size
 pass: 997,270,749 bytes. The revised composition retains 58,988 imported mesh
 triangles plus the native source primitives, paths and connecting geometry.
+
+## 29 October 2026 — Mayfield Mall: After Hours bonus
+
+Added an arcade-side question-mark stone and an authored 100 m bonus with eight
+counted crates. The three connected challenges use a retained bounce arrow for
+a high prize shelf, a local switch to create a service bridge, and a finite
+bounce stack with a high life crate. A full-scale rear slice of the original
+Mall galleria supplies the escalator and mezzanine backdrop, with cream, teal,
+coral and mauve arcade trim. The main course keeps ordinary controls and its
+four-source architecture.
+
+First complete native clear at approximately 04:52 UTC, about seven minutes
+after the bonus request. Native jump-entry and supported return passed by
+04:53; Chrome's full-render entrance, failure/retry and eight-crate clear passed
+by 04:56. The native clear takes 43.52 s without deaths. Browser reward banking
+returns eight crates, 31 fruit and two lives to the same parent instance; a
+failed bonus preserves the parent resources. MAX/native review exposed a sign
+partly hidden by the source pillar; it was shifted into the visible arcade lane.
+
+Focused evidence and final validation are in [Mayfield Mall](mayfield-mall/README.md).
+No movement tuning, shared runtime changes or published editor-pack overwrite.

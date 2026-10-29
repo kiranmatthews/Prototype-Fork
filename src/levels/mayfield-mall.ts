@@ -35,8 +35,8 @@ function box(nm:string,p:P,s:P,color:string,yaw=0){geometry(nm,new BoxGeometry(.
 const font = new FontLoader().parse(fontData);
 function text(label:string,p:P,height:number,width:number,color=palette.cream,yaw=0) {
   const geo=new ShapeGeometry(font.generateShapes(label,height),4); geo.computeBoundingBox();
-  const bounds=geo.boundingBox!;const span=bounds.max.x-bounds.min.x,scale=Math.min(1,width/span);
-  geo.scale(scale,scale,1);geo.translate(-(bounds.min.x+bounds.max.x)/2*scale,0,0);
+  const bounds=geo.boundingBox!;const span=bounds.max.x-bounds.min.x,scale=Math.min(1,width/span),center=(bounds.min.x+bounds.max.x)/2;
+  geo.scale(scale,scale,1);geo.translate(-center*scale,0,0);
   // Long signage is split into triangle chunks by geometry(), with no detail swaps.
   geometry(label,geo,p,color,yaw);
 }
@@ -140,6 +140,11 @@ const arcadeParts=reuse('mall',MALL_LEVEL,c=>c.breakable!=='sign',arcade,'Mall c
 const arcadePath=mallRoute(arcade,[[221,790],[221,815],[221,850],[221,875],[237,910],[237,950],[237,988]],60);
 join(hillPath[hillPath.length-1],arcadePath[0],30);route(arcadePath);cp(arcadePath[2],'Crossrail arcade');
 sign('SIDE QUEST ARCADE',554,arcadeY+12.5,31,palette.teal);
+export const MAYFIELD_BONUS_ENTRY=transformPoint([214,mallSupport(214,-865,60),-865],arcade);
+export const MAYFIELD_BONUS_RETURN=transformPoint([221,mallSupport(221,-869,60)+.1,-869],arcade);
+add({t:'bonusplatform',p:MAYFIELD_BONUS_ENTRY,to:MAYFIELD_BONUS_RETURN,nm:'After Hours / arcade bonus entrance'});
+sign('AFTER HOURS BONUS',-MAYFIELD_BONUS_ENTRY[2],MAYFIELD_BONUS_ENTRY[1]+5.4,12,palette.purple,MAYFIELD_BONUS_ENTRY[0]+5.6);
+
 
 section(803,'04 · Warehouse source roll-ins, halfpipe, banks and industrial shell');
 const warehouseFloor=arcadeY-10.8675;

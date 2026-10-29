@@ -370,7 +370,7 @@ const ASSIGNMENTS: Record<string, Partial<CampaignLevelDefinition> & { name: str
   'carlisle-coast': {name:'Carlisle Coast',levelId:'carlisle-coast',previewKey:'carlisle-coast',bonus:false,relicTime:500},
   'country-club': {name:'Country Club Circuit',levelId:'country-club',previewKey:'country-club',skateRace:true,bonus:false},
   'rooftop-relay': {name:'Hogsworth Harbour',levelId:'rooftop-relay',previewKey:'rooftop-relay'},
-  'maynard-course-4': {name:'Mayfield Mall',levelId:'mayfield-mall',previewKey:'mayfield-mall',bonus:false,relicTime:100},
+  'maynard-course-4': {name:'Mayfield Mall',levelId:'mayfield-mall',previewKey:'mayfield-mall',bonus:true,relicTime:100},
   'maynard-course-5': {name:'Unnamed Course 5',placeholder:true},
   'maynard-boss': {name:'Maynard Quay Boss',placeholder:true,boss:true},
   warehouse: {name:'Factory Fuss',levelId:'warehouse',previewKey:'warehouse',bonus:false,timeTrial:false},

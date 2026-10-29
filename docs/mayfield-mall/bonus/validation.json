@@ -1,0 +1,41 @@
+{
+  "validatedBase": "af2649f1bb528e88a12cab1f346b7d81ea2b716b",
+  "sourceSha256": {
+    "src/levels/mayfield-bonus.ts": "a48cfa5e728cbb2ade8e9b5c9d553ffb82795f5d17fc64c6a9a1ae4c2ee80be2",
+    "src/levels/mayfield-mall.ts": "3e3c993d2d927c7b0b6afe35952d4a813c7ea6db25ba6502c9ce9a36e893f778",
+    "src/levels/mayfield-source.ts": "8e837d3b7e72cb1cf1cf03745ccc25cb457f71c6a241871ed7a984e8b7507a96",
+    "src/levels/themed-bonuses.ts": "9ce47e3ebf28edae705e260f074609ea6eb99a07c0613a71617b8e5410243d43",
+    "src/campaign.ts": "e2928b52946e9acdc78a37bc62b685ff96459a9e0e33b32ec0aa1966c21ad50d"
+  },
+  "requiredLevelChecks": "passed",
+  "productionBuildTypecheck": "passed",
+  "releaseSizeBytes": 997273811,
+  "hostingLimitBytes": 1000000000,
+  "nativeBonus": {
+    "crates": 8,
+    "deaths": 0,
+    "seconds": 43.516666666666666,
+    "actualMallBackdropTriangles": 1083
+  },
+  "nativeMain": {
+    "seconds": 217.01666666666665,
+    "deaths": 0,
+    "checkpoints": 9,
+    "actualGroundFromAllFourSources": true
+  },
+  "productionSession": {
+    "deliberateJumpEntrance": true,
+    "failurePreservesParentResources": true,
+    "retry": true,
+    "finishedCrates": 8,
+    "bankedFruit": 31,
+    "bankedLives": 2,
+    "sameParentInstance": true,
+    "supportedReturn": true,
+    "errors": []
+  },
+  "visualReview": "Lite bonus plus MAX/native 1600x1000 production session. Final sign-only centering correction reviewed separately in final-sign-review.json.",
+  "runtimeChanges": false,
+  "tuningChanges": false,
+  "publicPackOverwritten": false
+}

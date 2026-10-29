@@ -1,0 +1,34 @@
+{
+  "result": {
+    "stage": "Land on bonus stone",
+    "evidence": [],
+    "actions": [],
+    "result": {
+      "position": [
+        -23.905359682513666,
+        68.11867802197784,
+        -618.5571976169999
+      ],
+      "ground": "bonus platform deck",
+      "deaths": 0,
+      "gemEarned": false
+    },
+    "position": [
+      -23.905359682513666,
+      68.11867802197784,
+      -618.5571976169999
+    ],
+    "ground": "bonus platform deck",
+    "deaths": 0,
+    "gemEarned": false,
+    "frames": 199,
+    "seconds": 3.3166666666666664
+  },
+  "entries": 1,
+  "returnPosition": [
+    -17.28,
+    67.06867980957031,
+    -623.05
+  ],
+  "ground": "Mall crossrail arcade / Atrium / crossrail arcade / surface"
+}

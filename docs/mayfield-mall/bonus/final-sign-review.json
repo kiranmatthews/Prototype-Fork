@@ -1,0 +1,25 @@
+{
+  "stamp": "Codex/sol fork · build 10-29 05:00 UTC",
+  "position": [
+    -17.28,
+    67.06867980957031,
+    -605
+  ],
+  "grounded": true,
+  "resolution": "max",
+  "canvas": [
+    1600,
+    1000
+  ],
+  "platform": {
+    "x": -24.840000000000003,
+    "y": 67.06867802331895,
+    "z": -619.25,
+    "laneFraction": 0.5,
+    "topY": 68.11867802331895,
+    "radius": 1.6,
+    "modelReady": true,
+    "tilt": 0
+  },
+  "errors": []
+}
