@@ -1,0 +1,205 @@
+[
+  {
+    "name": "construction",
+    "pass": true,
+    "boards": 16,
+    "plankCount": 277,
+    "aged": 7,
+    "frozen": 3,
+    "ropeSpans": 16,
+    "deepShafts": 13,
+    "enemies": 4,
+    "tnt": 4,
+    "nitro": 4
+  },
+  {
+    "name": "continuous-route",
+    "pass": true,
+    "frames": 2394,
+    "jumps": 22,
+    "ice": 3,
+    "falling": 7,
+    "cratesBroken": 9,
+    "enemyDefeats": 3,
+    "final": {
+      "frame": 2394,
+      "time": 39.9,
+      "position": [
+        0,
+        0.7366666664431492,
+        -481.6684080163943
+      ],
+      "heading": [
+        0,
+        0,
+        -1
+      ],
+      "state": "finished",
+      "grounded": true,
+      "speed": 0,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "warp pad",
+        "y": 0.7366666664431492,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0,
+        "moveY": 1,
+        "jumpHeld": true,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      }
+    }
+  },
+  {
+    "name": "charged-ollie-rope-bypass",
+    "pass": true,
+    "charged": {
+      "speed": 10.550000000000013,
+      "board": true
+    },
+    "frames": 309,
+    "final": {
+      "frame": 309,
+      "time": 5.15,
+      "position": [
+        -2.65,
+        -4.768371586472142e-8,
+        -39.12299563894487
+      ],
+      "heading": [
+        0,
+        0,
+        -1
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 7.50991277889746,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "platform",
+        "y": -4.768371586472142e-8,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0,
+        "moveY": 1,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": true,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      }
+    }
+  },
+  {
+    "name": "TNT-stomp-and-escape",
+    "pass": true,
+    "fuse": 2.9833333333333334,
+    "frames": 341,
+    "final": {
+      "frame": 341,
+      "time": 5.683333333333334,
+      "position": [
+        1.7499999999999993,
+        -4.768371586472142e-8,
+        -108.9599999999999
+      ],
+      "heading": [
+        0,
+        0,
+        -1
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "platform",
+        "y": -4.768371586472142e-8,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0,
+        "moveY": 0,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      }
+    }
+  },
+  {
+    "name": "Nitro-contact",
+    "pass": true,
+    "frames": 79,
+    "deaths": 1
+  },
+  {
+    "name": "Mossback-stomp",
+    "pass": true,
+    "frames": 74,
+    "state": "air"
+  }
+]

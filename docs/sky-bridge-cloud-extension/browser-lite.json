@@ -1,0 +1,210 @@
+{
+  "base": "http://127.0.0.1:5188/",
+  "lite": true,
+  "smoke": false,
+  "spawn": {
+    "level": "sky",
+    "stamp": "Codex/sol fork · build 10-29 01:58 UTC",
+    "position": [
+      0,
+      0.7366666187594333,
+      5
+    ],
+    "grounded": true,
+    "cloudPass": {
+      "enabled": true,
+      "featherEdges": true,
+      "heightLimit": 360,
+      "width": 576,
+      "height": 360,
+      "clouds": 12,
+      "frames": 84,
+      "targetBytes": 4147200
+    },
+    "cloudContacts": 2,
+    "gate": [
+      0,
+      0,
+      -483
+    ],
+    "checkpoints": 7,
+    "resolution": "max",
+    "canvas": [
+      800,
+      500
+    ]
+  },
+  "route": {
+    "review": {
+      "frame": 2394,
+      "finished": true,
+      "failed": null,
+      "evidence": {
+        "jumps": 22,
+        "ice": [
+          15,
+          21,
+          26
+        ],
+        "falling": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "grindFrames": [
+          110,
+          89
+        ],
+        "gaps": [
+          {
+            "index": 0,
+            "from": [
+              0,
+              1.3510558069273775,
+              -345.7203188967279
+            ],
+            "speed": 22.870717416439362,
+            "board": true,
+            "to": [
+              0,
+              -4.768371586472142e-8,
+              -368.2098576895585
+            ]
+          },
+          {
+            "index": 1,
+            "from": [
+              0,
+              1.5813601845896041,
+              -456.90680092294804
+            ],
+            "speed": 22.852914662378044,
+            "board": true,
+            "to": [
+              0,
+              -4.768371586472142e-8,
+              -480.52147940740554
+            ]
+          }
+        ],
+        "checkpoints": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "bails": 0
+      }
+    },
+    "position": [
+      0,
+      0.7366666664431492,
+      -481.6684080163943
+    ],
+    "state": "finished"
+  },
+  "normal": {
+    "level": "sky",
+    "stamp": "Codex/sol fork · build 10-29 01:58 UTC",
+    "position": [
+      -1,
+      -4.768371586472142e-8,
+      -309
+    ],
+    "grounded": true,
+    "cloudPass": {
+      "enabled": true,
+      "featherEdges": true,
+      "heightLimit": 360,
+      "width": 576,
+      "height": 360,
+      "clouds": 12,
+      "frames": 66,
+      "targetBytes": 4147200
+    },
+    "cloudContacts": 2,
+    "gate": [
+      0,
+      0,
+      -483
+    ],
+    "checkpoints": 7,
+    "resolution": 720,
+    "canvas": [
+      800,
+      500
+    ]
+  },
+  "bonus": {
+    "level": "bonus:sky",
+    "stamp": "Codex/sol fork · build 10-29 01:58 UTC",
+    "position": [
+      -6,
+      -4.768371586472142e-8,
+      0
+    ],
+    "grounded": true,
+    "cloudPass": {
+      "enabled": true,
+      "featherEdges": true,
+      "heightLimit": 360,
+      "width": 576,
+      "height": 360,
+      "clouds": 6,
+      "frames": 168,
+      "targetBytes": 4147200
+    },
+    "cloudContacts": 2,
+    "gate": [
+      62,
+      0,
+      0
+    ],
+    "checkpoints": 0,
+    "resolution": 720,
+    "canvas": [
+      800,
+      500
+    ]
+  },
+  "bonusNative": {
+    "level": "bonus:sky",
+    "stamp": "Codex/sol fork · build 10-29 01:58 UTC",
+    "position": [
+      25,
+      3.5762786898541066e-9,
+      0
+    ],
+    "grounded": true,
+    "cloudPass": {
+      "enabled": true,
+      "featherEdges": true,
+      "heightLimit": 360,
+      "width": 576,
+      "height": 360,
+      "clouds": 6,
+      "frames": 216,
+      "targetBytes": 4147200
+    },
+    "cloudContacts": 2,
+    "gate": [
+      62,
+      0,
+      0
+    ],
+    "checkpoints": 0,
+    "resolution": "max",
+    "canvas": [
+      800,
+      500
+    ]
+  },
+  "errors": []
+}

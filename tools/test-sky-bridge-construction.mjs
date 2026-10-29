@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import {withBlockworksRuntime} from './blockworks-runner.mjs';
 import {writeFile,mkdir} from 'node:fs/promises';
+import {createSkyBridgePilot} from './sky-bridge-pilot.mjs';
 const out=process.env.SKY_CONSTRUCTION_OUTPUT||'/private/tmp/sky-construction-tests';await mkdir(out,{recursive:true});
 const reports=[];
 const options={modulePath:'/src/levels/sky-bridge.ts',source:m=>m.SKY_BRIDGE_LEVEL,levelId:'sky',endlessDeaths:true,
@@ -8,7 +9,7 @@ const options={modulePath:'/src/levels/sky-bridge.ts',source:m=>m.SKY_BRIDGE_LEV
 await withBlockworksRuntime(async r=>{
  const {l,source,THREE}=r;
  const boards=l.groundMeshes.filter(m=>m.children.some(c=>c.userData.suspensionDeck));
- assert.equal(boards.length,14,'all four sound, seven rotten, three frozen spans have proper board skins');
+ assert.equal(boards.length,16,'two original sound decks, four run-ups, seven rotten and three frozen spans retain board skins');
  let aged=0,frozen=0,plankCount=0;
  for(const owner of boards){
   const root=owner.children.find(c=>c.userData.suspensionDeck),skin=root.userData.suspensionDeck;
@@ -43,8 +44,8 @@ await withBlockworksRuntime(async r=>{
   assert.ok(ground&&Math.abs(ground.point.y)<.01,'a hand-rope post is floating off its masonry anchor');
  }
  const deep=source.components.filter(c=>c.nm?.startsWith('Continuous anchor shaft'));
- assert.equal(deep.filter(c=>c.p[1]<=-100).length,9);
- assert.equal(source.components.filter(c=>c.dkind==='coastarch').length,3);
+ assert.equal(deep.filter(c=>c.p[1]<=-100).length,13);
+ assert.equal(source.components.filter(c=>c.dkind==='coastarch').length,4);
  assert.equal(l.enemies.length,4);assert.equal(new Set(l.enemies.map(e=>e.kind)).size,4);
  for(const e of l.enemies)if(e.kind!=='floater')for(let i=0;i<=24;i++){
   const x=e.x0+(e.x1-e.x0)*i/24,z=e.group.position.z;
@@ -63,33 +64,21 @@ await withBlockworksRuntime(async r=>{
 
  for(const cp of l.checkpoints)for(const c of l.crates.filter(c=>c.tnt||c.nitro))
   assert.ok(cp.spawnPos.distanceTo(c.mesh.position)>4.7,'an explosive crowds checkpoint recovery');
- reports.push({name:'construction',pass:true,boards:boards.length,plankCount,aged,frozen,ropeSpans:l.ropes.length,deepShafts:9,enemies:4,tnt:4,nitro:4});
+ reports.push({name:'construction',pass:true,boards:boards.length,plankCount,aged,frozen,ropeSpans:l.ropes.length,deepShafts:13,enemies:4,tnt:4,nitro:4});
 },options);
 
 // One uninterrupted input-driven crossing. Anticipate each low-grip lane
 // before jumping onto it; spin only near an enemy with no explosive in reach.
 await withBlockworksRuntime(async r=>{
- const {p,l,source}=r,supports=source.components.filter(c=>(c.t==='platform'||c.t==='crumble')&&c.p[0]===0);
- let hold=0,rest=0,jumps=0;const ice=new Set(),falls=new Set();
- for(let i=0;i<5000&&p.state!=='finished';i++){
-  const z=p.pos.z;
-  const lane=z<-106&&z>-132?.95:((z<-12&&z>-36)||(z<-177&&z>-198))?-.95:0;
-  const dx=lane-p.pos.x;
-  const lateral=p.groundHit?.slippy?Math.max(-.22,Math.min(.22,dx*.2-p.walkVelocity.x*.18)):Math.max(-.65,Math.min(.65,dx*1.1));
-  const ground=supports.find(c=>Math.abs(z-c.p[2])<=c.s[2]/2+.12);
-  const distance=ground?z-(ground.p[2]-ground.s[2]/2):null;
-  if(hold>0)hold--;else if(rest>0)rest--;else if(p.grounded&&distance!==null&&distance<1.8&&z>-229){hold=5;rest=12;jumps++;}
-  const enemy=l.enemies.some(e=>e.alive&&Math.hypot(e.group.position.x-p.pos.x,e.group.position.z-z)<3.2);
-  const bomb=l.crates.some(c=>c.alive&&(c.tnt||c.nitro)&&c.mesh.position.distanceTo(p.pos)<3.0);
-  const spin=enemy&&!bomb||l.checkpoints.some(c=>!c.active&&Math.abs(c.spawnPos.z-z)<2);
-  r.tick({moveY:1,moveX:lateral,jumpHeld:hold>0,spinHeld:spin});
-  if(p.groundHit?.slippy)ice.add(p.groundHit.mesh.userData.editorIdx);
-  if(p.groundHit?.crumbleId!==undefined)falls.add(p.groundHit.crumbleId);
+ const {p,l}=r,pilot=createSkyBridgePilot(r.sourceModule);
+ for(let i=0;i<10000&&p.state!=='finished';i++){
+  r.tick(pilot.sample(p,l));pilot.observe(p,l);
   if(p.totalDeaths||p.isBailing)throw new Error('route failed '+JSON.stringify(r.snapshot()));
  }
- assert.equal(p.state,'finished');assert.equal(p.totalDeaths,0);assert.equal(ice.size,3);assert.equal(falls.size,7);
+ const {ice,falling,jumps}=pilot.evidence,falls=new Set(falling);
+ assert.equal(p.state,'finished');assert.equal(p.totalDeaths,0);assert.equal(ice.length,3);assert.equal(falls.size,7);
  assert.ok(l.checkpoints.every(c=>c.active));
- const result={name:'continuous-route',pass:true,frames:r.frame,jumps,ice:ice.size,falling:falls.size,cratesBroken:p.cratesBroken,
+ const result={name:'continuous-route',pass:true,frames:r.frame,jumps,ice:ice.length,falling:falls.size,cratesBroken:p.cratesBroken,
   enemyDefeats:l.enemies.filter(e=>!e.alive).length,final:r.snapshot()};reports.push(result);
  await writeFile(out+'/route.json',JSON.stringify({result,trace:r.trace},null,2));
 },options);

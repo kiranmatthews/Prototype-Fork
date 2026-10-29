@@ -5966,3 +5966,35 @@ roundtrip and both catch paths, lite/full browser checks, level checks, build,
 type checking and release-size validation pass with no browser errors.
 
 See [contact measurements and browser evidence](skystream-clouds/wall-contact/README.md).
+
+## 29 October 2026 NZDT — Sky Bridge clouds and doubled skate course
+
+Brief: reuse the optimized clouds on Sky Bridge and its bonus, replace one or
+two bridge platforms, add cloud scenery and double the main course with grind
+and skate-jump sections. Prompt at 01:22:27 UTC; full native route, all new
+checkpoint retries and fall recovery passed by 01:56 UTC, approximately
+34 minutes from prompt to verified playable geometry.
+
+Spawn-to-gate distance increases from 244 to 488 m. Two original bridge decks
+and two bonus landings become volumetric clouds over smooth hidden contacts;
+ten main and four bonus scenery banks remain nonsolid. All use the existing
+360p cloud pass while other geometry follows the selected render resolution.
+The new half has two grind crossings, two 16 m skate jumps and four additional
+checkpoints. The original ice, falling boards, enemies and bonus puzzle remain.
+
+The complete native route reaches all seven checkpoints, both new grinds and
+both board jumps without deaths or bails. Every new checkpoint can restart
+from rest; intentional falling recovers at the earned checkpoint. The bonus
+retains its relay and finite-bounce decisions and completes all seven crates.
+Focused construction/surface regressions, exact cache migration, level-data
+checks, build/type checking and release-size validation pass. Only the `sky`
+entry changes in the published level pack; movement and cloud rendering code
+are unchanged.
+
+See [course details and evidence](sky-bridge-cloud-extension/README.md).
+
+Packaged Chrome lite completes the entire course; full rendering completes
+both new grinds and jumps from the extension entrance. Native 1600×1000 and
+720p/CRT views keep clouds at 576×360, including the bonus. Main and bonus
+visuals were reviewed with no console errors. Local browser validation
+completed at 02:08 UTC, about 46 minutes from prompt.

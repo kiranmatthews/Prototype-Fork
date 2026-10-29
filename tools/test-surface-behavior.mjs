@@ -95,15 +95,16 @@ await withSkateRuntime(async({THREE,server,Level,Player,CONST})=>{
   }finally{level.dispose();}
 
   assert.ok(normalizeCustomLevelData(SKY_BRIDGE_LEVEL),'Sky Bridge data must normalize');
-  const supports=SKY_BRIDGE_LEVEL.components.filter(c=>(c.t==='platform'||c.t==='crumble')&&c.p[0]===0).sort((a,b)=>b.p[2]-a.p[2]);
+  const supports=SKY_BRIDGE_LEVEL.components.filter(c=>(c.t==='platform'||c.t==='crumble')&&c.p[0]===0&&c.p[2]>-243).sort((a,b)=>b.p[2]-a.p[2]);
+  const depth=c=>Math.abs(Math.cos((c.yaw??0)*Math.PI/180))*c.s[2]+Math.abs(Math.sin((c.yaw??0)*Math.PI/180))*c.s[0];
   for(let i=1;i<supports.length;i++){
-    const gap=supports[i-1].p[2]-supports[i-1].s[2]/2-(supports[i].p[2]+supports[i].s[2]/2);
+    const gap=supports[i-1].p[2]-depth(supports[i-1])/2-(supports[i].p[2]+depth(supports[i])/2);
     assert.ok(gap<=3.01&&gap>=1,`unreadable/unreachable gap ${gap} at ${supports[i].p[2]}`);
   }
   assert.ok(supports.filter(c=>c.t==='crumble').every(c=>c.s[2]>=6&&c.shake>=.95));
   assert.ok(supports.filter(c=>c.slip).every(c=>c.s[2]>=14&&c.iceGrip===ICE_SURFACE.grip));
   assert.equal(SKY_BRIDGE_LEVEL.components.filter(c=>c.t==='gate').length,1);
-  assert.equal(SKY_BRIDGE_LEVEL.components.filter(c=>c.t==='checkpoint').length,3);
+  assert.equal(SKY_BRIDGE_LEVEL.components.filter(c=>c.t==='checkpoint').length,7);
   const sky=new Level(new THREE.Scene(),{id:'sky',name:'Sky Bridge'});
   try{
     const ray=new THREE.Raycaster(new THREE.Vector3(0,3,5),new THREE.Vector3(0,-1,0));
@@ -114,7 +115,7 @@ await withSkateRuntime(async({THREE,server,Level,Player,CONST})=>{
       assert.ok(ray.intersectObjects(sky.groundMeshes,false).some(h=>Math.abs(h.point.y)<.001),'checkpoint recovery unsupported');
     }
   }finally{sky.dispose();}
-  for(const file of ['sky-bridge-legacy.json','sky-bridge-placement-legacy.json','sky-bridge-cloud-v1.json.gz','sky-bridge-construction-v1.json.gz']){
+  for(const file of ['sky-bridge-legacy.json','sky-bridge-placement-legacy.json','sky-bridge-cloud-v1.json.gz','sky-bridge-construction-v1.json.gz','sky-bridge-before-cloud-extension.json.gz']){
   const bytes=await readFile(new URL('./fixtures/'+file,import.meta.url));
   const previous=JSON.parse(file.endsWith('.gz')?gunzipSync(bytes).toString():bytes.toString());
   assert.equal(isOriginalSkyBridge(previous),true);

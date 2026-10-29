@@ -19,11 +19,30 @@ export const SKY_BRIDGE_SPANS = SKY_BRIDGE_ISLANDS.slice(1).map((island,i)=>({
   near:SKY_BRIDGE_ISLANDS[i].z-SKY_BRIDGE_ISLANDS[i].d/2+.65,
   far:island.z+island.d/2-.65,
 }));
+export const SKY_BRIDGE_EXTENSION_ISLANDS = [
+  {z:-309.5,d:19,w:12.8,name:'Windline receiver',group:8,arch:false},
+  {z:-374,d:24,w:12.8,name:'Cloudbreak skate landing',group:9,arch:false},
+  {z:-438,d:16,w:12.8,name:'Cloudbell receiver',group:10,arch:false},
+  {z:-480,d:14,w:13.2,name:'Far-cloud observatory',group:11,arch:true},
+] as const;
+export const SKY_BRIDGE_GRIND_CROSSINGS = [
+  {name:'Windline',near:-263,far:-303,gapNear:-264,gapFar:-300,height:.85},
+  {name:'Cloudbell',near:-393,far:-428,gapNear:-396,gapFar:-430,height:.85},
+] as const;
+export const SKY_BRIDGE_SKATE_GAPS = [
+  {name:'Cloudbreak',takeoff:-346,landing:-362,runup:-319,kicker:1.4},
+  {name:'Last flight',takeoff:-457,landing:-473,runup:-446,kicker:1.6},
+] as const;
+export const SKY_BRIDGE_FINISH: P = [0,0,-483];
 const C: CustomComponent[] = [];
 const add = (c: CustomComponent) => C.push(c);
-const timber = (z:number,d:number,w=4.2,name='Lashed transverse boards',group=1) =>
+const timber = (z:number,d:number,w=4.2,name='Lashed transverse boards',group=1) => {
+  // Rotate the bonus cloud's clear travelling corridor onto the bridge's -Z.
+  if(z===-7.5||z===-157)return add({t:'platform',p:[0,-.09,z],s:[d,.18,w],yaw:90,
+    cloudRoad:true,tex:'solid',seed:z===-7.5?3841:5179,nm:'Cumulus stepping bridge',grp:group});
   add({t:'platform',p:[0,-.09,z],s:[w,.18,d],tex:'bridge-timber',color:'#ffffff',
     nm:name,grp:group});
+};
 const ice = (z:number,d:number,group:number) => {
   const c=icePlatform([0,FROZEN_BOARD_GLAZE,z],[4.6,.28,d],
     {tex:'bridge-ice',nm:'Frozen water over lashed boards',grp:group});
@@ -38,7 +57,7 @@ const crate = (z:number,x=0,kind:CustomComponent['kind']='wood',name?:string) =>
 
 // Every refuge is a masonry cap on a continuous rock shaft. Narrow boards
 // cross the two lower load-bearing ropes; the separate upper ropes can grind.
-for(const island of SKY_BRIDGE_ISLANDS){
+for(const island of [...SKY_BRIDGE_ISLANDS,...SKY_BRIDGE_EXTENSION_ISLANDS]){
   const x=island.w/2,z=island.d/2,k=.35;
   add({t:'platform',p:[0,-.65,island.z],s:[island.w,1.3,island.d],
     pts:[[-x+k,z],[x-k,z],[x,z-k],[x,-z+k],[x-k,-z],[-x+k,-z],[-x,-z+k],[-x,z-k]],
@@ -52,7 +71,7 @@ ice(-122,16,3);add({t:'checkpoint',p:[0,0,-136],grp:3});
 timber(-149,5,4.2,'High-span boards one',4);timber(-157,5,4.2,'High-span boards two',4);
 falling(-165.5,6,4);ice(-189,15,4);add({t:'checkpoint',p:[0,0,-202],grp:5});
 falling(-215,7,5,1.05);falling(-224.5,7,5,1.05);
-add({t:'crystal',p:[0,.65,-234],grp:5});add({t:'gate',p:[0,0,-239],grp:5});
+add({t:'crystal',p:[0,.65,-479],grp:11});add({t:'gate',p:SKY_BRIDGE_FINISH,grp:11});
 add({t:'clock',p:[-2.7,0,5]});
 // The bonus remains outside both the ground route and the loaded grind rope.
 add({t:'platform',p:[5.1,-.65,-139],s:[4.2,1.3,6],tex:'coast-stone',color:'#d6cfb8',
@@ -79,6 +98,40 @@ crate(-37.4,2.6,'tnt','TNT at the outer edge of the first refuge');
 crate(-109,-1.85,'tnt','TNT beside the frost shrine');
 crate(-173,-2.9,'tnt','Jump or leave room around the lookout TNT');
 crate(-206,3.1,'tnt','Final sanctuary TNT');crate(-207,-3.1,'nitro','Final sanctuary Nitro');
+
+// A second 244 m chapter: board run-ups, open grind crossings and two
+// deliberate 16 m ollies. Broad receivers let every checkpoint retry start
+// from rest; there are no speed pads or movement-rule overrides.
+for(const [near,far,grp] of [[-242,-264,8],[-319,-338,9],[-386,-396,10],[-446,-449,11]]){
+  timber((near+far)/2,near-far,7,'Skate run-up over lashed boards',grp);
+  for(const side of [-1,1])add({t:'decor',dkind:'braidedrope',p:[side*2.55,SUSPENSION_BEARER_Y,(near+far)/2],
+    s:[.24,.24,near-far+.6],solid:false,nm:'Skate runway lower bearer',grp});
+}
+for(const [i,crossing] of SKY_BRIDGE_GRIND_CROSSINGS.entries()){
+  const {name,near,far,height}=crossing,grp=8+i*2;
+  add({t:'rail',p:[0,height,(near+far)/2],len:near-far,color:'#d9c48c',nm:`${name} grind over open clouds`,grp});
+  for(const z of [near+1,far-1])add({t:'decor',dkind:'coastpillar',p:[0,-8,z],s:[.7,8,.7],
+    solid:false,nm:`${name} carved rail anchor`,grp});
+  for(let z=near-2;z>far+2;z-=4)add({t:'wumpa',p:[0,height+1.1,z],nm:`${name} grind line`,grp});
+}
+for(const [i,gap] of SKY_BRIDGE_SKATE_GAPS.entries()){
+  const grp=9+i*2;
+  add({t:'ramp',p:[0,0,gap.takeoff+4],len:8,rise:gap.kicker,w:7,tex:'coast-stone',color:'#d6cfb8',
+    nm:`${gap.name} charged-ollie lip`,grp});
+  for(let j=0;j<5;j++)add({t:'wumpa',p:[0,gap.kicker+1.2+Math.sin(j/4*Math.PI)*2.5,
+    gap.takeoff+(gap.landing-gap.takeoff)*j/4],nm:`${gap.name} skate flight arc`,grp});
+}
+for(const [z,grp] of [[-237,8],[-309,9],[-377,10],[-433,11]])add({t:'checkpoint',p:[0,0,z],grp});
+for(const [z,grp] of [[-312,8],[-378,9],[-441,10],[-480,11]])
+  for(const side of [-1,1])add({t:'crate',p:[side*2.1,0,z],kind:'wood',nm:'Skyway landing cache',grp});
+// Keep the final ollie's touchdown clear of the default centre-line switch.
+add({t:'crate',p:[-3.2,0,-476.8],kind:'nitrobang',nm:'Nitro clear beside the observatory landing',grp:11});
+for(const [i,[x,y,z,w,d]] of [
+  [-12,-5,-12,16,12],[13,-9,-68,18,12],[-12,-7,-143,20,14],[14,-9,-216,18,12],
+  [-13,-6,-276,20,12],[14,-9,-323,22,14],[-14,-7,-365,20,12],[14,-6,-408,22,14],
+  [-15,-8,-455,20,12],[15,-8,-480,18,14],
+].entries())add({t:'platform',p:[x,y-.09,z],s:[w,.18,d],cloudRoad:true,solid:false,tex:'solid',
+  seed:19319+i*1723,nm:'Soft cumulus bank below the sky bridges',grp:12});
 
 const round=(n:number)=>Math.round(n*10000)/10000;
 function visual(geometry:THREE.BufferGeometry,p:P,color:string,name:string,tex='solid',group=7) {
@@ -118,7 +171,7 @@ for(const c of C.filter(c=>c.tex==='bridge-ice'))for(const side of [-1,1])for(le
     '#bfdfeb','Ice dripping below visible timber ends');
 }
 
-for(const [i,island] of SKY_BRIDGE_ISLANDS.entries()) {
+for(const [i,island] of [...SKY_BRIDGE_ISLANDS,...SKY_BRIDGE_EXTENSION_ISLANDS].entries()) {
   const {z,w,d}=island;
   // The near cliff cap retains natural proportions. Overlapping roots then
   // continue to -100 m, well below the death plane and every gameplay camera.
@@ -172,6 +225,9 @@ export const SKY_BRIDGE_LEVEL: CustomLevelData = {
     fallbackFog:'#eef4f6',fallbackRidges:false,fallbackSunColor:null},
   groups:[{id:1,nm:'I · learn the clouds'},{id:2,nm:'II · rotten span'},
     {id:3,nm:'III · frozen boards'},{id:4,nm:'IV · high span'},{id:5,nm:'V · last anchors'},
-    {id:6,nm:'Load-bearing ropes and grind handrails'},{id:7,nm:'Temple landings and continuous rock shafts',editorOnly:true}],
+    {id:6,nm:'Load-bearing ropes and grind handrails'},{id:7,nm:'Temple landings and continuous rock shafts',editorOnly:true},
+    {id:8,nm:'VI · Windline grind'},{id:9,nm:'VII · Cloudbreak ollie'},
+    {id:10,nm:'VIII · Cloudbell grind'},{id:11,nm:'IX · last flight'},
+    {id:12,nm:'Cumulus scenery banks',editorOnly:true}],
   components:C,
 };

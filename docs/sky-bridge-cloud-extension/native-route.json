@@ -1,0 +1,116 @@
+{
+  "evidence": {
+    "jumps": 22,
+    "ice": [
+      15,
+      21,
+      26
+    ],
+    "falling": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "grindFrames": [
+      110,
+      89
+    ],
+    "gaps": [
+      {
+        "index": 0,
+        "from": [
+          0,
+          1.3510558069273775,
+          -345.7203188967279
+        ],
+        "speed": 22.870717416439362,
+        "board": true,
+        "to": [
+          0,
+          -4.768371586472142e-08,
+          -368.2098576895585
+        ]
+      },
+      {
+        "index": 1,
+        "from": [
+          0,
+          1.5813601845896041,
+          -456.90680092294804
+        ],
+        "speed": 22.852914662378044,
+        "board": true,
+        "to": [
+          0,
+          -4.768371586472142e-08,
+          -480.52147940740554
+        ]
+      }
+    ],
+    "checkpoints": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "bails": 0
+  },
+  "final": {
+    "frame": 2394,
+    "time": 39.9,
+    "position": [
+      0,
+      0.7366666664431492,
+      -481.6684080163943
+    ],
+    "heading": [
+      0,
+      0,
+      -1
+    ],
+    "state": "finished",
+    "grounded": true,
+    "speed": 0,
+    "verticalSpeed": 0,
+    "bailing": false,
+    "deaths": 0,
+    "mover": null,
+    "ground": {
+      "name": "warp pad",
+      "y": 0.7366666664431492,
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "slippy": false,
+      "iceGrip": null
+    },
+    "rail": null,
+    "railDistance": null,
+    "balance": 0,
+    "input": {
+      "moveX": 0,
+      "moveY": 1,
+      "jumpHeld": true,
+      "grindHeld": false,
+      "spinHeld": false,
+      "grabHeld": false,
+      "transferHeld": false,
+      "jumpPressed": false,
+      "jumpReleased": false,
+      "grindPressed": false,
+      "spinPressed": false,
+      "grabPressed": false,
+      "transferPressed": false,
+      "restartPressed": false
+    }
+  }
+}

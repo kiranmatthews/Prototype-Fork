@@ -1,11 +1,10 @@
 import type { CustomComponent, CustomLevelData, DecorKind } from '../level';
-import { SUSPENSION_BEARER_X, SUSPENSION_BEARER_Y, SUSPENSION_BEARER_RADIUS } from '../carlisleTimber';
 import { SKY_BRIDGE_LEVEL } from './sky-bridge';
 
 type P = [number, number, number];
 
-/** Cloudtop Lockers uses the parent's masonry, cliff, carved temple and
- * suspension-board kit. Only the supporting courts and scenery are dressed;
+/** Cloudtop Lockers uses the parent's masonry, temples and soft cloud banks.
+ * Only the supporting courts and scenery are dressed;
  * crate decisions, the relay chasm and the side-view camera remain authored. */
 export function dressSkyBridgeBonus(data: CustomLevelData): void {
   const art: CustomComponent[] = [];
@@ -35,21 +34,12 @@ export function dressSkyBridgeBonus(data: CustomLevelData): void {
   // bounce stack. The four metal stepping stones still own the open chasm.
   data.components=data.components.filter(c=>c.grp!==90 && !(c.t==='mesh'&&c.grp===1));
   for(const c of data.components)if(c.t==='pit')c.invisible=true;
-  stone(-10,7);stone(21,29);stone(52,69);
-  data.components.push({t:'platform',p:[40.5,-.09,0],s:[6.4,.18,23],yaw:90,
-    tex:'bridge-timber',color:'#ffffff',grp:1,nm:'Lashed transverse boards across the Cloudtop vault'});
-
-  for(const side of [-1,1]) {
-    const diameter=SUSPENSION_BEARER_RADIUS*2;
-    asset('braidedrope',[40.5,SUSPENSION_BEARER_Y,side*SUSPENSION_BEARER_X],
-      [diameter,diameter,24.3],'Lower bearer rope entering both masonry anchors','#ffffff',90);
-    // Keep the front edge open to the side-view camera. Rear handlines and
-    // carved end posts are scenery outside the contained gameplay plane.
-    for(const x of [28.35,52.65])
-      asset('coastpillar',[x,0,side*2.65],[.65,1.7,.65],'Carved suspension anchor post','#ddd3bb');
-  }
-  asset('braidedrope',[40.5,1.35,-2.65],[.16,.16,24.3],
-    'Rear braided handline between carved anchors','#ffffff',90);
+  stone(-10,7);stone(52,69);
+  // The same exact flat support and crate puzzle, with two floating clouds
+  // replacing the receiver court and timber bridge. No cloud closes the relay.
+  for(const [i,[a,b]] of [[21,29],[29,52]].entries())
+    data.components.push({t:'platform',p:[(a+b)/2,-.09,0],s:[b-a,.18,6.4],cloudRoad:true,
+      seed:23747+i*1193,tex:'solid',grp:1,nm:'Cloudtop cumulus landing'});
 
   // The relay is visibly rooted in slender carved piers, without new footing
   // above or beside its existing metal crates, or a rope bypass over the gap.
@@ -60,10 +50,8 @@ export function dressSkyBridgeBonus(data: CustomLevelData): void {
 
   for(const x of [-2,60.5])
     asset('coastarch',[x,0,-2.65],[11.8,8.2,2.1],'Cloudtop temple portal on masonry','#e4d8bd');
-  for(const [x,h] of [[23,5.4],[26.8,3.35]])
-    asset('coastpillar',[x,0,-2.45],[1.3,h,1.2],'Carved shrine pillar on masonry','#ddd3bb',x===23?14:-14);
   // Coping along the back of each court stays clear of the jumping silhouette.
-  for(const [a,b] of [[-9.7,6.7],[21.3,28.7],[52.3,68.7]])
+  for(const [a,b] of [[-9.7,6.7],[52.3,68.7]])
     put({t:'decor',dkind:'block',p:[(a+b)/2,.19,-3],s:[b-a,.38,.32],tex:'coast-stone',
       color:'#bfb69c',nm:'Weathered rear temple coping'});
 
@@ -78,6 +66,9 @@ export function dressSkyBridgeBonus(data: CustomLevelData): void {
   stone(30,43,-22,9,1.8,true);
   asset('coastarch',[36.5,1.8,-23],[12.4,8.6,3.5],
     'Distant sister sanctuary above the clouds','#e4d8bd');
+  for(const [i,[x,y,z,w,d]] of [[-15,-7,-18,18,12],[14,-6,-28,22,14],[45,-8,-16,20,12],[76,-5,-24,18,12]].entries())
+    put({t:'platform',p:[x,y-.09,z],s:[w,.18,d],cloudRoad:true,tex:'solid',seed:30803+i*1723,
+      nm:'Cloudtop floating cumulus scenery'});
   data.components.push(...art);
   data.groups??=[];
   data.groups.push({id:90,nm:'Sky Bridge temple and suspension construction',editorOnly:true});
