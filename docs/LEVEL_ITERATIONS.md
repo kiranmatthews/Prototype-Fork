@@ -6763,3 +6763,41 @@ full suite was run. Build: 1,776 files / 1,055.6MiB, offline version
 bc4336fd6a484fcf672d, `Codex/sol fork · build 10-29 23:12 UTC`. Both generated
 GLBs remain byte-identical in the compiled output. Evidence:
 `art/carlisle-shipyard/coastal-banks/`. Local checkpoint only; publication held.
+
+
+## Carlisle visible blue-hour sky — 30 October 2026
+
+Approximately 11 minutes to the first playable sky repair and 28 minutes to
+final validation. The existing 4.5km sky sphere was entirely outside the main
+850m and bonus 450m far planes, leaving a flat fog background. The compiled
+baseline exposed 100% clear colour at 300m/850m and only rendered the sky at
+6km. Replaced that backdrop renderer with angular rays derived from each
+render pass's camera; the authored gameplay lens and draw distance are intact.
+
+Two unequal cloud layers now drift over dark navy with restrained copper
+afterglow, a small cool moon and sparse filtered stars. Water uses the same sky
+radiance and cloud clock, retaining existing warm lantern paths. The horizon
+matches distant scenery fog. A thin horizon artifact found in the first lite
+pass was fixed by evaluating star derivatives over a finite coordinate field
+on both sides of the horizon. No generated assets or generation-credit spend.
+
+All nine compiled native sky probes have complete coverage, zero black pixels
+and the correct pass camera matrix. Far planes of 300m/850m/6km and a large
+camera translation produce identical sky pixels; rotation, off-centre
+projection and later cloud phase change them as intended. Reviewed four main
+1920x1080 harbour/bounce views, the moving-boat bonus, the reflected-camera sky
+and normal 480p/CRT after main-to-bonus-to-main reload. Zero console errors.
+
+Sixteen protected source files remain byte-identical, including player,
+camera/main, tuning, native course/bonus, air cargo, wet slopes, solid timber,
+reactive nets, cones and modeled coastal banks. Original course and twelve prop
+fingerprints, typecheck and production build pass. All 18 slopes remain wet;
+334 ground meshes, 270 crates, 56 nets and 28 main/four bonus movers remain.
+No new traversal run or level-data/full-suite audit was needed for this
+presentation change. All authored prop geometry remains complete.
+
+Normal arrival sample: 16.7ms median / 17.9ms p95 across 119 frames, not a
+whole-course performance claim. Build: 1,776 files / 1,055.6MiB, offline version
+28139ea12fc2fbafa078, `Codex/sol fork · build 10-29 23:39 UTC`. Before/after
+images, focused browser tool and exact protected hashes are recorded in
+`art/carlisle-shipyard/atmosphere/`. Local checkpoint only; publication held.

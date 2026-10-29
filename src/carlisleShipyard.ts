@@ -440,7 +440,7 @@ export class CarlisleShipyard {
     }this.batches.clear();
   }
   update(dt:number,player:THREE.Vector3) {
-    this.time+=dt;this.ocean.uniforms.time.value=this.time;this.foam.uniforms.time.value=this.time;this.sky.position.copy(player);
+    this.time+=dt;this.ocean.uniforms.time.value=this.time;this.foam.uniforms.time.value=this.time;this.sky.material.uniforms.time.value=this.time;
     this.coast.update(this.time);
     for(const [id,group] of this.chunks)group.visible=Math.abs(player.z+id*180)<800;
     this.lightingCooldown-=dt;

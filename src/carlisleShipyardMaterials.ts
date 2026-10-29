@@ -61,6 +61,51 @@ float noise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(ha
 float fbm(vec2 p){return noise(p)*.55+noise(p*2.03)*.27+noise(p*4.01)*.12+noise(p*8.03)*.06;}
 `;
 
+/** One angular sky for the backdrop and the rough water's reflection. Colours
+ * are linear; the horizon is finally blended into the authored fog colour. */
+const atmosphere=`
+vec3 harbourSkyRadiance(vec3 d,float time,float stars){
+  float y=max(d.y,0.);
+  vec3 sky=mix(vec3(.035,.066,.132),vec3(.0025,.007,.025),pow(y,.46));
+  vec2 azimuth=d.xz/max(length(d.xz),.0001);
+  float west=pow(max(dot(azimuth,normalize(vec2(-.7,-.72))),0.),3.);
+  float afterglow=exp(-pow((d.y-.075)*7.5,2.))*west;
+  sky=mix(sky,vec3(.235,.061,.031),afterglow*.58);
+  // Sparse, filtered points stay steady when the native and CRT views move.
+  // Keep derivatives outside any horizon-dependent branch: adjacent pixels
+  // above/below the horizon must evaluate the same finite coordinate field.
+  if(stars>.5){
+    vec2 p=d.xz/(max(d.y,0.)+.36)*145.,cell=floor(p),f=fract(p)-.5;
+    float seed=hash(cell),radius=.07+.08*hash(cell+51.);
+    vec2 center=(vec2(hash(cell+4.),hash(cell+19.))-.5)*.65;
+    float footprint=max(length(dFdx(p)),length(dFdy(p)));
+    float point=exp(-dot(f-center,f-center)/max(radius*radius+footprint*footprint*.5,.0001));
+    sky+=vec3(.14,.21,.32)*point*step(.9988,seed)*smoothstep(.14,.55,d.y)*radius*radius/(radius*radius+footprint*footprint*.5);
+  }
+  vec3 moonDirection=normalize(vec3(.34,.51,-.79));
+  float moonDistance=length(d-moonDirection);
+  float moon=1.-smoothstep(.008,.010,moonDistance);
+  float lunarShade=.78+.22*noise(d.xz*900.);
+  sky+=vec3(.32,.41,.56)*(moon*lunarShade+exp(-moonDistance*moonDistance*1700.)*.014);
+
+  // Two unequal, slowly drifting layers: broad low cloud banks and high wisps.
+  // Planar angular coordinates are continuous around the horizon and zenith.
+  vec2 p=d.xz/(max(d.y,.045)+.24),wind=vec2(time*.0022,time*.0007);
+  vec2 warped=p+vec2(noise(p*.63),noise(p.yx*.71+8.))*.5;
+  float low=fbm(warped*vec2(1.65,4.8)+wind);
+  float high=fbm(warped*vec2(4.3,1.7)-wind*.38+31.);
+  float altitude=smoothstep(.015,.12,d.y);
+  float lowCover=smoothstep(.46,.68,low)*altitude*(1.-smoothstep(.68,.97,d.y))*.90;
+  float highCover=smoothstep(.53,.75,high)*altitude*.32;
+  float rim=1.-smoothstep(.48,.65,low);
+  vec3 cloud=mix(vec3(.008,.017,.038),vec3(.032,.054,.094),rim);
+  cloud+=vec3(.10,.028,.012)*afterglow*(.35+rim*.65);
+  sky=mix(sky,vec3(.043,.062,.105),highCover);
+  sky=mix(sky,cloud,lowCover);
+  return sky;
+}
+`;
+
 /** Visual water only: the authored reset-water mesh stays at its exact height. */
 export function harbourOcean(geometry: THREE.BufferGeometry) {
   const uniforms=THREE.UniformsUtils.merge([THREE.UniformsLib.fog,{time:{value:0},lamps:{value:Array.from({length:24},()=>new THREE.Vector3(1e6,0,1e6))}}]);
@@ -73,6 +118,7 @@ export function harbourOcean(geometry: THREE.BufferGeometry) {
     fragmentShader:`uniform float time;uniform vec3 lamps[24];varying vec3 seaPoint;
       #include <fog_pars_fragment>
       ${noise}
+      ${atmosphere}
       vec3 waterNoise(vec2 p){
         vec2 cell=floor(p),f=fract(p),u=f*f*(3.-2.*f),du=6.*f*(1.-f);
         float a=hash(cell),b=hash(cell+vec2(1,0)),c=hash(cell+vec2(0,1)),d=hash(cell+vec2(1,1));
@@ -104,9 +150,9 @@ export function harbourOcean(geometry: THREE.BufferGeometry) {
         float fres=.025+.975*pow(1.-max(dot(n,view),0.),5.);
         float current=fbm(p*.031+tide*.19);
         vec3 depth=mix(vec3(.002,.008,.025),vec3(.004,.017,.043),current);
-        vec3 sky=mix(vec3(.041,.075,.16),vec3(.006,.022,.066),sqrt(max(reflected.y,0.)));
-        float cloud=fbm(reflected.xz/(max(reflected.y,.08)+.3)*4.);
-        sky*=.76+cloud*.32;
+        // Rough water averages tiny stars, but shares the actual clouds,
+        // copper afterglow and moon direction with the visible backdrop.
+        vec3 sky=harbourSkyRadiance(reflected,time,0.);
         vec3 color=mix(depth,sky,.22+fres*.68);
         // Broad cool sky glints sit beneath the warm, view-dependent lantern paths.
         vec3 skyHalf=normalize(view+normalize(vec3(-.42,.78,-.46)));
@@ -177,19 +223,39 @@ export function harbourContactFoam() {
 }
 
 export function harbourSky() {
-  const material=new THREE.ShaderMaterial({side:THREE.BackSide,depthWrite:false,
-    vertexShader:'varying vec3 skyDirection;void main(){skyDirection=position;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
-    fragmentShader:`varying vec3 skyDirection;${noise}
-      void main(){vec3 d=normalize(skyDirection);float y=max(d.y,0.);
-        vec3 sky=mix(vec3(.075,.11,.22),vec3(.009,.019,.065),pow(y,.5));
-        float sunset=exp(-pow((d.y-.018)*15.,2.))*pow(max(0.,dot(normalize(d.xz),normalize(vec2(-.5,-1.)))),3.);
-        sky=mix(sky,vec3(.36,.095,.07),sunset*.65);
-        float clouds=fbm(d.xz/(max(d.y,.05)+.2)*3.);
-        sky=mix(sky,vec3(.018,.035,.088),smoothstep(.46,.66,clouds)*smoothstep(0.,.12,d.y)*.7);
-        gl_FragColor=vec4(sky,1.);
+  const cameraWorld={value:new THREE.Matrix4()};
+  const material=new THREE.ShaderMaterial({depthWrite:false,fog:true,
+    uniforms:THREE.UniformsUtils.merge([THREE.UniformsLib.fog,{time:{value:0}}]),
+    vertexShader:`uniform mat4 harbourCameraWorld;varying vec3 skyDirection;
+      #include <fog_pars_vertex>
+      void main(){
+        // Reconstruct from this pass's camera. A 4.5km dome was clipped by the
+        // authored 850m draw distance; backdrop depth must not change that lens.
+        // X/Y terms also retain off-centre and oblique reflection projections.
+        vec3 ray=isOrthographic?vec3(0.,0.,-1.):vec3(
+          (position.x+projectionMatrix[2][0])/projectionMatrix[0][0],
+          (position.y+projectionMatrix[2][1])/projectionMatrix[1][1],-1.);
+        skyDirection=mat3(harbourCameraWorld)*ray;
+        gl_Position=vec4(position.xy,1.,1.);
+        #ifdef USE_FOG
+          vFogDepth=0.;
+        #endif
+      }`,
+    fragmentShader:`varying vec3 skyDirection;uniform float time;
+      #include <fog_pars_fragment>
+      ${noise}${atmosphere}
+      void main(){vec3 d=normalize(skyDirection);
+        gl_FragColor=vec4(harbourSkyRadiance(d,time,1.),1.);
         #include <tonemapping_fragment>
         #include <colorspace_fragment>
+        #ifdef USE_FOG
+          // Match the same output-space fog uniform used by distant scenery.
+          gl_FragColor.rgb=mix(gl_FragColor.rgb,fogColor,1.-smoothstep(-.035,.085,d.y));
+        #endif
       }`});
-  const mesh=new THREE.Mesh(new THREE.SphereGeometry(4500,40,20),material);mesh.name='Outer Banks blue hour';mesh.renderOrder=-10;
+  material.uniforms.harbourCameraWorld=cameraWorld;material.name='Carlisle drifting blue-hour sky';
+  const mesh=new THREE.Mesh(new THREE.PlaneGeometry(2,2),material);mesh.name='Outer Banks blue hour';mesh.renderOrder=-100;
+  mesh.frustumCulled=false;mesh.userData.visualOnly=true;mesh.userData.oceanOpaqueBackdrop=true;
+  mesh.onBeforeRender=(_renderer,_scene,camera)=>{cameraWorld.value.copy(camera.matrixWorld);material.uniformsNeedUpdate=true;};
   return mesh;
 }
