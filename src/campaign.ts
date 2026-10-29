@@ -367,7 +367,7 @@ const ASSIGNMENTS: Record<string, Partial<CampaignLevelDefinition> & { name: str
   'hollowwake-descent': {name:'Tunnelbore Tracks',levelId:'hollowwake-descent',previewKey:'hollowwake-descent',relicTime:180},
   slipstream: {name:'Slipstream',boss:true,skateRace:true},
   'waterpark-cup': {name:'Deadwater Cup',boss:true,competition:true},
-  'carlisle-coast': {name:'Carlisle Coast',placeholder:true},
+  'carlisle-coast': {name:'Carlisle Coast',levelId:'carlisle-coast',previewKey:'carlisle-coast',bonus:false,relicTime:500},
   'country-club': {name:'Country Club Circuit',levelId:'country-club',previewKey:'country-club',skateRace:true,bonus:false},
   'rooftop-relay': {name:'Hogsworth Harbour',levelId:'rooftop-relay',previewKey:'rooftop-relay'},
   'maynard-course-4': {name:'Mayfield Mall',levelId:'mayfield-mall',previewKey:'mayfield-mall',bonus:false,relicTime:55},
