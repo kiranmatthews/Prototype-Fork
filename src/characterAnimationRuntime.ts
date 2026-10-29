@@ -512,9 +512,9 @@ export class CharacterAnimationRuntime {
           (this.transient?.kind === 'crouch-exit' && hint !== 'player.idle')) {
         this.cancelTransient();
       }
-      // Ice starts its balance cycle on contact, without waiting for a dry
+      // Ice balance and gravity-slope gliding start on contact, without a dry
       // landing plant/recovery. Board contact retains its procedural spring.
-      if (justLanded && hint !== ICE_WALK_CLIP_ID && !this.currentClipId?.startsWith('player.swim') && hint !== ROLL_LANDING_CLIP_ID && hint !== 'player.bail' && hint !== 'player.death' && hint !== 'player.slam' && hint !== 'player.skate') {
+      if (justLanded && !intent.motion.inputs?.slopeSlide && hint !== ICE_WALK_CLIP_ID && !this.currentClipId?.startsWith('player.swim') && hint !== ROLL_LANDING_CLIP_ID && hint !== 'player.bail' && hint !== 'player.death' && hint !== 'player.slam' && hint !== 'player.skate') {
         this.resetLandingRunBlend();
         this.transient = this.makeTransient('landing', LAND_CLIP_ID);
       } else if (this.transient?.kind === 'landing') {

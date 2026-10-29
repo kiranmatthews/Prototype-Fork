@@ -133,6 +133,15 @@ actual slope; releasing the stick preserves momentum. Correct early or jump to
 change the line. Ordinary surfaces, existing ice, jumps and the bounce camera
 retain their previous behavior.
 
+On foot, downhill travel and neutral coasting use the existing slide pose,
+without activating the crouch-slide move or its timers. Pushing uphill faces
+into the effort and plays the normal-speed run loop. Limited traction supports
+uphill movement at 28% of normal running pace; existing downhill momentum
+brakes over time before reversing. Releasing the stick restores unopposed
+downhill acceleration and the slide pose. This behavior applies only to the
+explicit gravity slicks; board handling and legacy ice keep their usual paths.
+Focused motion/cadence and real-keyboard checks are in `slope-motion/`.
+
 The slippery pitches are 18 degrees early, 22 through the tidal engine and
 26 in the finale. Each drops straight ahead and remains level across its width;
 there are no alternating banks or uphill recovery humps. A cumulative elevation

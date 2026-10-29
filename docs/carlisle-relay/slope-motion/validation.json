@@ -1,0 +1,115 @@
+{
+  "validatedAt": "2026-10-29T07:27:22.023406+00:00",
+  "delivery": "LOCAL ONLY / HOLD",
+  "localPlaytest": "http://127.0.0.1:5483/?playtest&level=carlisle-coast",
+  "parentCommit": "34e352b2d9772807e70837d0a87a3fb93b7481d8",
+  "sourceSha256": {
+    "src/player.ts": "5ac27e6eb8f76408165d02d0899cb7e038381b391800e10190f9aa8bbacbe9ac",
+    "src/characterAnimationRuntime.ts": "8a535702154f3954476ca5f11b1d8797d91a100c54c126e21be97997c5aaba9c",
+    "tools/test-slippery-gravity.mjs": "b506ad349c9a89963bedfb4463c86cabb398dfc5b0475dfb43ed7664daed6aab",
+    "tools/test-slippery-slope-motion.mjs": "db981c0987135149d4c65eee4186599a8954070fad9f99adb9a26c333265fc40",
+    "tools/carlisle-slope-motion-browser.mjs": "1db7aa5a2040ac35bb3fbfdfec487cb90f1beeb61e842d2e97c33799fe35fd88",
+    "src/main.ts": "7037126b270982604dec1c87c864da655f8477063c704fa14901c02cefd56c33",
+    "src/level.ts": "618c206a8ca454e62f447a713ee4a7394ebc9589ec1ffa01bc57bcff3e3e2bc5",
+    "src/tuning.ts": "1aca3b5fe4b5d026d8b9e36dcf30444081bec7d2acfd4181294f6aacaca61bd6",
+    "src/levels/carlisle-tidal-relay.ts": "32a1aa6eb706729ecc58f1264abebfcccace4515de24866b55e6eddf03b06ad9",
+    "src/levels/carlisle-slippery-crossings.ts": "9787a87067fc864b4d1b77f29ec82641b5c8d8b866dcace0d845628f091e528a",
+    "public/levels.json": "08b960136b3118b5e692dfbc49c7e54c11345707ac33db83d585f9af2b8e8a5d"
+  },
+  "unchangedFromParent": [
+    "src/main.ts",
+    "src/level.ts",
+    "src/tuning.ts",
+    "src/levels/carlisle-tidal-relay.ts",
+    "src/levels/carlisle-slippery-crossings.ts",
+    "public/levels.json"
+  ],
+  "behavior": {
+    "downhill": "existing slide clip; no run gait or gameplay slide timers",
+    "uphillRunCadence": "same playback clock rate as normal running",
+    "uphillGroundSpeedFraction": 0.28,
+    "uphillGroundSpeedMetresPerSecond": 2.52,
+    "reversal": "finite braking retains incoming downhill momentum",
+    "release": "gravity slide resumes",
+    "scope": "on-foot, grounded, explicit slipGravity slope only"
+  },
+  "native": {
+    "slopeAnglesDegrees": [
+      18,
+      22,
+      26
+    ],
+    "motionCases": 9,
+    "animationEnabledDisabledMovementParity": true,
+    "normalRunPlaybackClockParity": true,
+    "reversalRelease": true,
+    "higherPriorityActions": true,
+    "continuousCrossings": 23,
+    "supportProbes": 1797,
+    "lethalContacts": 36
+  },
+  "checks": {
+    "tools/test-slippery-slope-motion.mjs": "PASS",
+    "tools/test-slippery-gravity.mjs": "PASS",
+    "tools/test-ice-walk-animation.mjs": "PASS",
+    "tools/test-run-inertia-presentation.mjs": "PASS",
+    "tools/test-carlisle-slippery.mjs": "PASS",
+    "build": "PASS",
+    "check:release": "PASS",
+    "git diff --check": "PASS"
+  },
+  "browser": [
+    {
+      "mode": "lite",
+      "source": {
+        "build": "Codex/sol fork \u00b7 build 10-29 07:24 UTC",
+        "canvas": [
+          720,
+          450
+        ],
+        "components": 1122
+      },
+      "keyboardCases": [
+        "downhill",
+        "neutral",
+        "uphill"
+      ],
+      "reversalRelease": true,
+      "jumps": [
+        "downhill",
+        "uphill"
+      ],
+      "errors": []
+    },
+    {
+      "mode": "full",
+      "source": {
+        "build": "Codex/sol fork \u00b7 build 10-29 07:24 UTC",
+        "canvas": [
+          1440,
+          900
+        ],
+        "components": 1122
+      },
+      "keyboardCases": [
+        "downhill",
+        "neutral",
+        "uphill"
+      ],
+      "reversalRelease": true,
+      "jumps": [
+        "downhill",
+        "uphill"
+      ],
+      "errors": []
+    }
+  ],
+  "visualReview": [
+    "Full 1440x900 native downhill, neutral and uphill poses",
+    "Successive uphill run frames",
+    "Normal 480p CRT downhill and uphill poses"
+  ],
+  "releaseBytes": 997253341,
+  "releaseFiles": 1849,
+  "testScope": "Browser routes start once on the first slope and use real keys. Native tests cover three slope angles and all 23 crossings. Not an uninterrupted 4km run; no full check:all or unrelated level audits. No level data changed in this increment."
+}

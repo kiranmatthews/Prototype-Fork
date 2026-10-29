@@ -1,0 +1,200 @@
+{
+  "rows": [
+    {
+      "degrees": 18,
+      "name": "downhill",
+      "position": [
+        0,
+        36.796775406036566,
+        -40.63534642148676
+      ],
+      "velocity": [
+        0,
+        0,
+        -31.578635489370285
+      ],
+      "clip": "player.slide",
+      "active": "player.slide",
+      "cadence": 0.9999999999999964,
+      "normalizedSpeed": 1
+    },
+    {
+      "degrees": 18,
+      "name": "neutral",
+      "position": [
+        0,
+        37.396936163675946,
+        -38.78824156299571
+      ],
+      "velocity": [
+        0,
+        0,
+        -30.162514021085013
+      ],
+      "clip": "player.slide",
+      "active": "player.slide",
+      "cadence": 0.9999999999999964,
+      "normalizedSpeed": 1
+    },
+    {
+      "degrees": 18,
+      "name": "uphill",
+      "position": [
+        0,
+        51.72652631731461,
+        5.313701551511103
+      ],
+      "velocity": [
+        0,
+        0,
+        2.5200000000000005
+      ],
+      "clip": "player.run",
+      "active": "player.run",
+      "cadence": 0.9999999999999964,
+      "normalizedSpeed": 1
+    },
+    {
+      "degrees": 22,
+      "name": "downhill",
+      "position": [
+        0,
+        30.732815321665026,
+        -47.68795592533161
+      ],
+      "velocity": [
+        0,
+        0,
+        -37.06288598573456
+      ],
+      "clip": "player.slide",
+      "active": "player.slide",
+      "cadence": 0.9999999999999964,
+      "normalizedSpeed": 1
+    },
+    {
+      "degrees": 22,
+      "name": "neutral",
+      "position": [
+        0,
+        31.479094119702,
+        -45.84085106684058
+      ],
+      "velocity": [
+        0,
+        0,
+        -35.646764517449284
+      ],
+      "clip": "player.slide",
+      "active": "player.slide",
+      "cadence": 0.9999999999999964,
+      "normalizedSpeed": 1
+    },
+    {
+      "degrees": 22,
+      "name": "uphill",
+      "position": [
+        0,
+        52.14182959887764,
+        5.30121432975618
+      ],
+      "velocity": [
+        0,
+        0,
+        2.5200000000000005
+      ],
+      "clip": "player.run",
+      "active": "player.run",
+      "cadence": 0.9999999999999964,
+      "normalizedSpeed": 1
+    },
+    {
+      "degrees": 26,
+      "name": "downhill",
+      "position": [
+        0,
+        23.736416724668146,
+        -53.84832667119392
+      ],
+      "velocity": [
+        0,
+        0,
+        -41.853313741924
+      ],
+      "clip": "player.slide",
+      "active": "player.slide",
+      "cadence": 0.9999999999999964,
+      "normalizedSpeed": 1
+    },
+    {
+      "degrees": 26,
+      "name": "neutral",
+      "position": [
+        0,
+        24.63730996591198,
+        -52.00122181270281
+      ],
+      "velocity": [
+        0,
+        0,
+        -40.43719227363868
+      ],
+      "clip": "player.slide",
+      "active": "player.slide",
+      "cadence": 0.9999999999999964,
+      "normalizedSpeed": 1
+    },
+    {
+      "degrees": 26,
+      "name": "uphill",
+      "position": [
+        0,
+        52.58014762605531,
+        5.290085124863
+      ],
+      "velocity": [
+        0,
+        0,
+        2.5200000000000005
+      ],
+      "clip": "player.run",
+      "active": "player.run",
+      "cadence": 0.9999999999999964,
+      "normalizedSpeed": 1
+    },
+    {
+      "name": "reverse then release",
+      "oldDownhillSpeed": 19.20062819920902,
+      "uphill": {
+        "at": [
+          0,
+          41.42913370041907,
+          -21.21363868982473
+        ],
+        "velocity": [
+          0,
+          0,
+          2.5200000000000005
+        ],
+        "state": "ride",
+        "board": false,
+        "grounded": true
+      },
+      "released": {
+        "at": [
+          0,
+          39.27424041112827,
+          -26.547186788268217
+        ],
+        "velocity": [
+          0,
+          0,
+          -12.754284867096843
+        ],
+        "state": "ride",
+        "board": false,
+        "grounded": true
+      }
+    }
+  ]
+}

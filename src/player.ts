@@ -2105,6 +2105,18 @@ export class Player {
     );
   }
 
+  /** Authored gravity slicks glide downhill; effort against the fall line
+   * runs in place while traction earns a much slower uphill translation. */
+  private get slipperySlopeFootMotion(): 'slide' | 'uphill' | null {
+    const ground = this.groundHit;
+    if (this.state !== 'ride' || !this.grounded || this.freeSkate || this.crawling ||
+        this.sliding || this.isBailing || this.slipping || this.teetering ||
+        this.worldMapBaseScale !== null || !ground?.slippy || !ground.slipGravity ||
+        ground.normal.y > .995) return null;
+    const n = ground.normal, length = Math.hypot(n.x, n.z) * this.walkTarget.length();
+    return length > 1e-6 && this.walkTarget.dot(n) / length < -.2 ? 'uphill' : 'slide';
+  }
+
   /**
    * Read-only presentation intent for the authored-animation runtime. Landing
    * is detected there from gameplay-state edges rather than becoming a
@@ -2153,6 +2165,8 @@ export class Player {
     }
     if (this.freeSkate || this.skatePose > 0.25 || this.deckPose > 0.25) return 'player.skate';
     if (this.charging && this.chargePlanted) return JUMP_CHARGE_CLIP_ID;
+    const slopeMotion = this.slipperySlopeFootMotion;
+    if (slopeMotion) return slopeMotion === 'uphill' ? 'player.run' : 'player.slide';
     // Ice owns a separate foot cycle while pushing against low traction or
     // coasting. Read self-propelled momentum, never platform carry or a new
     // movement state. All action and board owners have already taken priority.
@@ -2197,7 +2211,10 @@ export class Player {
           : Math.max(TUNING.walkSpeed, 0.001);
     // The feet keep running toward intent while momentum slides the other way.
     // Physical speed still owns collisions, movement and ordinary stop coasts.
-    const planarSpeed = this.walkTurnaround && clipId === 'player.run'
+    const slopeMotion = this.slipperySlopeFootMotion;
+    const planarSpeed = slopeMotion === 'uphill' && clipId === 'player.run'
+      ? TUNING.walkSpeed
+      : this.walkTurnaround && clipId === 'player.run'
       ? Math.max(this.animationPlanarSpeed, TUNING.walkSpeed * this.walkRamp)
       : this.animationPlanarSpeed;
     const normalizedSpeed = THREE.MathUtils.clamp(planarSpeed / speedReference, 0, 1);
@@ -2304,6 +2321,7 @@ export class Player {
           travelSign,
           iceEffort,
           iceSideSlip,
+          slopeSlide: clipId === 'player.slide' && slopeMotion === 'slide' ? 1 : 0,
           [RUN_MOVE_INTENT_INPUT]: this.worldMapBaseScale === null
             ? Math.min(1, Math.hypot(this.rawInput?.moveX ?? 0, this.rawInput?.moveY ?? 0)) : 0,
           swimCadence: this.swimming ? Math.max(.8, this.swimVelocity.length() / SWIMMING.speed) : 1,
@@ -7024,6 +7042,23 @@ export class Player {
         const force = TUNING.groundGravity * this.groundHit.slipGravity * n.y * dt;
         this.walkVelocity.x += n.x * force;
         this.walkVelocity.z += n.z * force;
+        const slope = Math.hypot(n.x, n.z);
+        if (slope > .1) {
+          const dx = n.x / slope, dz = n.z / slope;
+          const effort = Math.min(1, Math.max(0,
+            -(this.walkTarget.x * dx + this.walkTarget.z * dz) / Math.max(.001, TUNING.walkSpeed)));
+          if (effort > .05) {
+            // Deliberate uphill steps counter gravity but reach only 28% of
+            // normal pace. Existing downhill momentum must brake over time;
+            // release restores the same unopposed slide immediately.
+            const along = this.walkVelocity.x * dx + this.walkVelocity.z * dz;
+            const target = -TUNING.walkSpeed * .28 * effort;
+            const support = slope * force + TUNING.walkSpeed * 1.6 * effort * dt;
+            const correction = Math.min(Math.max(0, along - target), support);
+            this.walkVelocity.x -= dx * correction;
+            this.walkVelocity.z -= dz * correction;
+          }
+        }
         if (this.walkVelocity.length() > TUNING.walkSpeed + .5) this.iceSlideCarry = true;
       }
       this.speed = this.walkVelocity.dot(this.axisF);
@@ -18327,6 +18362,7 @@ export class Player {
     let targetYaw = this.visualYaw; // stationary: keep facing the last direction
     let intentFacing = false;
     const iceWalking = this.animationClipHint === ICE_WALK_CLIP_ID;
+    const slopeMotion = this.slipperySlopeFootMotion;
     const onFootRunReversal =
       this.walkTurnaround &&
       this.state === 'ride' &&
@@ -18365,6 +18401,9 @@ export class Player {
         targetYaw = wrapAngle(Math.atan2(x, z) - Math.PI);
         intentFacing = true;
       }
+    } else if (slopeMotion === 'uphill' && this.walkTarget.lengthSq() > 1e-6) {
+      targetYaw = wrapAngle(Math.atan2(this.walkTarget.x, this.walkTarget.z) - Math.PI);
+      intentFacing = true;
     } else if (onFootRunReversal) {
       // Input leads a committed run turnaround while the root still slides
       // through old momentum. A four-frame pivot gets facing out of the way
@@ -18409,7 +18448,7 @@ export class Player {
       // Pure lateral reversals are exactly PI apart, where "shortest" has no
       // unique sign. Turn toward screen-right clockwise and screen-left
       // counter-clockwise so side-to-side pivots undo each other naturally.
-      const lateralIntent = iceWalking ? input.moveX : this.walkIntent.dot(this.axisL);
+      const lateralIntent = iceWalking || slopeMotion === 'uphill' ? input.moveX : this.walkIntent.dot(this.axisL);
       const turnSign = Math.abs(lateralIntent) > 0.25
         ? -Math.sign(lateralIntent)
         : -1;
@@ -18473,7 +18512,7 @@ export class Player {
       this.slideTimer <= 0 &&
       !this.crawling &&
       (!this.isBailing || this.bailRecoverT >= 0) &&
-      Math.abs(this.speed) <= TUNING.walkSpeed + 0.5;
+      (slopeMotion === 'uphill' || Math.abs(this.speed) <= TUNING.walkSpeed + 0.5);
     // The gait expresses committed intent through a turnaround even on the
     // instant physical velocity crosses zero. Gameplay/debug speed stays honest;
     // only the run cycle is held at the authored intent pace.
@@ -18483,10 +18522,10 @@ export class Player {
     const selfDrivenPlanar = this.isBailing && this.bailRecoverT >= 0
       ? Math.abs(this.speed) * THREE.MathUtils.smoothstep(this.bailRecoveryPose, .58, .9)
       : this.walkVelocity.length();
-    const gaitPlanar = this.walkTurnaround
+    const gaitPlanar = slopeMotion === 'uphill' ? TUNING.walkSpeed : this.walkTurnaround
       ? Math.max(selfDrivenPlanar, TUNING.walkSpeed * this.walkRamp)
       : selfDrivenPlanar;
-    const runningAnim = onFoot && gaitPlanar > RUN_ANIMATION_THRESHOLD;
+    const runningAnim = onFoot && slopeMotion !== 'slide' && gaitPlanar > RUN_ANIMATION_THRESHOLD;
     this.walkAmp += ((runningAnim ? 1 : 0) - this.walkAmp) * Math.min(1, 10 * dt);
     this.idleAmp += ((onFoot && !runningAnim ? 1 : 0) - this.idleAmp) * Math.min(1, 6 * dt);
     if (runningAnim) this.walkPhase += (4 + gaitPlanar * 1.0) * dt;

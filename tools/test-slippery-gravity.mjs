@@ -33,7 +33,7 @@ await withSkateRuntime(async({THREE,Level,Player,server,CONST,TUNING})=>{
   }
   const row={name:variant.name,position:p.pos.toArray(),velocity:p.walkVelocity.toArray(),speed:p.speed,board:p.freeSkate,heading:p.axisF.toArray(),grounded:p.grounded};rows.push(row);
   assert.equal(p.grounded,true,JSON.stringify(row));assert.equal(p.isBailing,false);
-  if(variant.force&&variant.slope){assert.ok(p.pos.x>2,JSON.stringify(row));if(!variant.board)assert.equal(p.freeSkate,false,'slide unexpectedly mounted the board');}
+  if(variant.force&&variant.slope){assert.ok(variant.opposing?p.pos.x<-.1:p.pos.x>2,JSON.stringify(row));if(!variant.board)assert.equal(p.freeSkate,false,'slide unexpectedly mounted the board');}
   else assert.ok(Math.abs(p.pos.x)<.01,'legacy/flat surface gained gravity motion');
   if(variant.carry)assert.ok(-p.walkVelocity.z>8,'released input erased incoming momentum');
   if(variant.board)assert.ok(p.axisF.x>.3,'bank did not pull a contour-heading board downhill');

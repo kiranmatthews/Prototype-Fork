@@ -1,0 +1,149 @@
+[
+  {
+    "name": "legacy ice",
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "velocity": [
+      0,
+      0,
+      0
+    ],
+    "speed": 0,
+    "board": false,
+    "heading": [
+      0,
+      0,
+      -1
+    ],
+    "grounded": true
+  },
+  {
+    "name": "flat slick",
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "velocity": [
+      0,
+      0,
+      0
+    ],
+    "speed": 0,
+    "board": false,
+    "heading": [
+      0,
+      0,
+      -1
+    ],
+    "grounded": true
+  },
+  {
+    "name": "downhill feet",
+    "position": [
+      4.299789962049246,
+      -0.8599579924098482,
+      0
+    ],
+    "velocity": [
+      8.36261724328654,
+      0,
+      0
+    ],
+    "speed": 0,
+    "board": false,
+    "heading": [
+      0,
+      0,
+      -1
+    ],
+    "grounded": true
+  },
+  {
+    "name": "countersteer feet",
+    "position": [
+      -1.4377178588572268,
+      0.2875435717714443,
+      0
+    ],
+    "velocity": [
+      -2.5200000000000005,
+      0,
+      0
+    ],
+    "speed": 0,
+    "board": false,
+    "heading": [
+      0,
+      0,
+      -1
+    ],
+    "grounded": true
+  },
+  {
+    "name": "incoming foot momentum",
+    "position": [
+      4.299789962049246,
+      -0.8599579924098482,
+      -8.686975290762817
+    ],
+    "velocity": [
+      8.36261724328654,
+      0,
+      -8.391201464688741
+    ],
+    "speed": 8.391201464688741,
+    "board": false,
+    "heading": [
+      0,
+      0,
+      -1
+    ],
+    "grounded": true
+  },
+  {
+    "name": "sideways board gravity",
+    "position": [
+      4.2429284138450605,
+      -0.8485856827690121,
+      -14.027978855866612
+    ],
+    "velocity": [
+      0,
+      0,
+      0
+    ],
+    "speed": 16.456989430089756,
+    "board": true,
+    "heading": [
+      0.5258149290204324,
+      0,
+      -0.8505990009512341
+    ],
+    "grounded": true
+  },
+  {
+    "name": "icy board brake",
+    "position": [
+      4.188748786735788,
+      -0.837749757347158,
+      -13.837964138768433
+    ],
+    "velocity": [
+      0,
+      0,
+      0
+    ],
+    "speed": 15.953320046476033,
+    "board": true,
+    "heading": [
+      0.5310635140918695,
+      0,
+      -0.8473320152103274
+    ],
+    "grounded": true
+  }
+]

@@ -6248,3 +6248,33 @@ errors. MAX/native 1440×900 and normal 480p/CRT visual review completed.
 Production stamp: `Codex/sol fork · build 10-29 06:59 UTC`; release output
 997,251,918 bytes. Exact hashes and test boundaries are in
 [the downhill validation record](carlisle-relay/downhill/validation.json).
+
+## 29 October 2026 NZDT — downhill glide and uphill effort
+
+On Carlisle's gravity slicks, downhill travel and neutral coasting now use the
+existing slide pose with no running cycle. Uphill input faces the intended
+climb and keeps the run animation at its normal cadence, while limited
+traction supports only 28% of normal ground speed. Existing downhill momentum
+must brake before reversing. Releasing input resumes gravity acceleration and
+the slide pose. This is scoped to on-foot travel on surfaces opting into
+`slipGravity`; native ice, boards, jumps, action priority and global tuning
+retain their previous behavior. The cosmetic slide does not activate gameplay
+slide timers or change the collision shape.
+
+First successful real-keyboard playtest: approximately **18 minutes**
+(07:05:20–07:23 UTC), including a short shared-capacity wait. Native checks
+cover 18/22/26-degree slopes, exact uphill playback-clock parity with normal
+running, inertia through reversal, release, animation on/off movement parity,
+and action ownership. Legacy ice and run-inertia regressions pass. All 23
+input-only crossings, 1,797 support probes and 36 lethal contacts still pass.
+The lite browser confirms downhill/neutral glide, slow uphill progress, normal
+run cadence and reversal/release with no console errors. The user’s local-only
+publication hold remains in force.
+
+Final production build/type checking and release-size validation pass. The
+production lite and full-render browser checks confirm the glide/run switch,
+inertial reversal, release, and ordinary jumping from both movement modes,
+with no console errors. MAX/native 1440×900 and normal 480p/CRT reviewed.
+Final production stamp: `Codex/sol fork · build 10-29 07:24 UTC`; release output
+997,253,341 bytes. Source hashes, focused check results and the bounded
+per-slope test scope are in [the validation record](carlisle-relay/slope-motion/validation.json).
