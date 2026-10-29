@@ -6136,3 +6136,31 @@ partly hidden by the source pillar; it was shifted into the visible arcade lane.
 
 Focused evidence and final validation are in [Mayfield Mall](mayfield-mall/README.md).
 No movement tuning, shared runtime changes or published editor-pack overwrite.
+
+
+## 29 October 2026 — Mayfield Mall: 40-view polish concepts
+
+Generated forty screenshot-based environment concepts with built-in ImageGen,
+covering the full Mall, School Miami, Warehouse and Kona composition, the
+crossrail arcade, grand atrium, exit and After Hours bonus interior. Each uses
+an actual MAX/native screenshot from the completed level as its geometry
+reference. The direction combines The Weekenders’ sunny retro mall atmosphere
+with Crash 4-style sculpted forms and material detail.
+
+The image brief began at approximately 05:13 UTC; all forty concepts were
+complete by approximately 06:07 UTC, about 54 minutes. Gallery and image
+validation finished by 06:13 UTC, about 60 minutes after the prompt. This is
+an art-direction milestone; no new playable geometry or runtime polish was
+implemented in this iteration.
+
+The [polish atlas](../art/mayfield-mall/polish-v1/index.html) contains area
+filters, source/concept comparisons and a full-size viewer. All forty exact
+prompts, source cameras, original screenshots and selected PNG outputs are
+saved with [implementation notes](../art/mayfield-mall/polish-v1/README.md).
+Chrome decoded all eighty distinct images; filtering, comparison, keyboard
+navigation, desktop/mobile layout and direct offline file loading passed with
+no browser errors. These authoring assets remain outside the published game
+package. Source capture commit: `8aae8ceabc5708476e226f6b7b878a75d619cf94`.
+
+Production build/type checking and release-size validation pass. The concept
+pack is excluded from `dist`; runtime and level sources remain unchanged.

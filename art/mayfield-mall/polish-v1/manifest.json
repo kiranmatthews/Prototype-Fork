@@ -1,0 +1,1411 @@
+{
+  "version": 1,
+  "sourceCommit": "8aae8ceabc5708476e226f6b7b878a75d619cf94",
+  "stamp": "Codex/sol fork · build 10-29 05:00 UTC",
+  "sourceMatches": true,
+  "views": [
+    {
+      "number": 1,
+      "id": "01-arrival-galleria",
+      "title": "Arrival galleria",
+      "section": "Upper Mall",
+      "s": 8,
+      "view": {
+        "back": 14,
+        "height": 8,
+        "look": 38
+      },
+      "placement": {
+        "routeDistance": 8,
+        "routePoint": [
+          0,
+          99.9996239716903,
+          -8
+        ],
+        "camera": [
+          0,
+          107.9996239716903,
+          6
+        ],
+        "target": [
+          0,
+          102.99962215805053,
+          -46
+        ],
+        "fov": 66
+      },
+      "screenshot": "screenshots/01-arrival-galleria.png",
+      "concept": "concepts/01-arrival-galleria.png"
+    },
+    {
+      "number": 2,
+      "id": "02-angular-support-court",
+      "title": "Angular support court",
+      "section": "Upper Mall",
+      "s": 64,
+      "view": {
+        "side": -3,
+        "back": 10,
+        "height": 6,
+        "look": 34
+      },
+      "placement": {
+        "routeDistance": 64,
+        "routePoint": [
+          0,
+          99.99962249390975,
+          -64
+        ],
+        "camera": [
+          -3.4445554965177023,
+          105.99962249390975,
+          -54.14428909558475
+        ],
+        "target": [
+          1.5145313828820166,
+          102.99962301635742,
+          -97.80570363438106
+        ],
+        "fov": 66
+      },
+      "screenshot": "screenshots/02-angular-support-court.png",
+      "concept": "concepts/02-angular-support-court.png"
+    },
+    {
+      "number": 3,
+      "id": "03-fountain-court-wide",
+      "title": "Fountain court wide view",
+      "section": "Upper Mall",
+      "s": 116,
+      "view": {
+        "back": 4,
+        "height": 6,
+        "look": 32
+      },
+      "placement": {
+        "routeDistance": 116.80319511096636,
+        "routePoint": [
+          6.260869565217392,
+          99.99962301635742,
+          -116
+        ],
+        "camera": [
+          5.478980280262098,
+          105.99962301635742,
+          -112.07716312522786
+        ],
+        "target": [
+          12.48,
+          102.99962301635742,
+          -147.20215952310676
+        ],
+        "fov": 66
+      },
+      "screenshot": "screenshots/03-fountain-court-wide.png",
+      "concept": "concepts/03-fountain-court-wide.png"
+    },
+    {
+      "number": 4,
+      "id": "04-geometric-fountain",
+      "title": "Geometric fountain garden",
+      "section": "Upper Mall",
+      "s": 142,
+      "view": {
+        "height": 9,
+        "look": 40
+      },
+      "placement": {
+        "routeDistance": 143.6010355878596,
+        "routePoint": [
+          12.48,
+          99.99962301635742,
+          -142
+        ],
+        "camera": [
+          12.48,
+          108.99962301635742,
+          -122
+        ],
+        "target": [
+          12.48,
+          102.99962301635742,
+          -182
+        ],
+        "fov": 66
+      },
+      "screenshot": "screenshots/04-geometric-fountain.png",
+      "concept": "concepts/04-geometric-fountain.png"
+    },
+    {
+      "number": 5,
+      "id": "05-sculpture-mezzanine",
+      "title": "Folded sculpture and mezzanine",
+      "section": "Upper Mall",
+      "s": 187,
+      "view": {
+        "side": 10,
+        "height": 8,
+        "look": 35
+      },
+      "placement": {
+        "routeDistance": 188.6010355878596,
+        "routePoint": [
+          12.48,
+          99.99962301635742,
+          -187
+        ],
+        "camera": [
+          25.12678397445997,
+          107.99962301635742,
+          -168.55931522140943
+        ],
+        "target": [
+          7.718521954325892,
+          102.99962301635742,
+          -221.41284636293483
+        ],
+        "fov": 66
+      },
+      "screenshot": "screenshots/05-sculpture-mezzanine.png",
+      "concept": "concepts/05-sculpture-mezzanine.png"
+    },
+    {
+      "number": 6,
+      "id": "06-escalator-approach",
+      "title": "Escalator approach",
+      "section": "Upper Mall",
+      "s": 230,
+      "view": {
+        "side": -10,
+        "height": 10,
+        "look": 26
+      },
+      "placement": {
+        "routeDistance": 232.4533772138137,
+        "routePoint": [
+          5.5680000000000005,
+          99.99962301635743,
+          -230
+        ],
+        "camera": [
+          -0.26832242699767406,
+          109.99962301635743,
+          -208.4144182258591
+        ],
+        "target": [
+          0.42789358011725065,
+          102.99962491931826,
+          -255.41161063699667
+        ],
+        "fov": 66
+      },
+      "screenshot": "screenshots/06-escalator-approach.png",
+      "concept": "concepts/06-escalator-approach.png"
+    },
+    {
+      "number": 7,
+      "id": "07-escalator-red-car",
+      "title": "Escalator and car display",
+      "section": "Upper Mall",
+      "s": 268,
+      "view": {
+        "side": 15,
+        "height": 12,
+        "look": 24
+      },
+      "placement": {
+        "routeDistance": 273.2923091542699,
+        "routePoint": [
+          -6.701882262408611,
+          99.83275132423101,
+          -268
+        ],
+        "camera": [
+          12.382130159062793,
+          111.83275132423101,
+          -251.85068206093135
+        ],
+        "target": [
+          -11.978310389071265,
+          97.84533636093482,
+          -291.0538909633206
+        ],
+        "fov": 66
+      },
+      "screenshot": "screenshots/07-escalator-red-car.png",
+      "concept": "concepts/07-escalator-red-car.png"
+    },
+    {
+      "number": 8,
+      "id": "08-galleria-last-balcony",
+      "title": "Galleria final descent",
+      "section": "Upper Mall",
+      "s": 325,
+      "view": {
+        "back": 8,
+        "height": 5,
+        "look": 22
+      },
+      "placement": {
+        "routeDistance": 331.3653816655458,
+        "routePoint": [
+          -13.632,
+          86.61970880407375,
+          -325
+        ],
+        "camera": [
+          -13.632,
+          91.61970880407375,
+          -317
+        ],
+        "target": [
+          -13.632,
+          84.32627627287579,
+          -347
+        ],
+        "fov": 66
+      },
+      "screenshot": "screenshots/08-galleria-last-balcony.png",
+      "concept": "concepts/08-galleria-last-balcony.png"
+    },
+    {
+      "number": 9,
+      "id": "09-food-court-threshold",
+      "title": "Food court threshold",
+      "section": "School wing",
+      "s": 365,
+      "view": {
+        "height": 8,
+        "look": 35
+      },
+      "placement": {
+        "routeDistance": 372.3759234239104,
+        "routePoint": [
+          -8.851948051948053,
+          79.59388017175645,
+          -365
+        ],
+        "camera": [
+          -15.7158634279828,
+          87.59388017175645,
+          -346.2147221018524
+        ],
+        "target": [
+          2.8394406915283255,
+          82.59388017175645,
+          -396.99718739661324
+        ],
+        "fov": 66
+      },
+      "screenshot": "screenshots/09-food-court-threshold.png",
+      "concept": "concepts/09-food-court-threshold.png"
+    },
+    {
+      "number": 10,
+      "id": "10-gym-entry",
+      "title": "Gym entry",
+      "section": "School wing",
+      "s": 390,
+      "view": {
+        "back": 5,
+        "height": 5,
+        "look": 30
+      },
+      "placement": {
+        "routeDistance": 399.24729705051163,
+        "routePoint": [
+          6.123233995736766e-16,
+          79.59388017175645,
+          -390
+        ],
+        "camera": [
+          -2.8341867863502475,
+          84.59388017175645,
+          -385.88085139135796
+        ],
+        "target": [
+          16.200000000000003,
+          82.59388017175645,
+          -413.5447458090557
+        ],
+        "fov": 66
+      },
+      "screenshot": "screenshots/10-gym-entry.png",
+      "concept": "concepts/10-gym-entry.png"
+    },
+    {
+      "number": 11,
+      "id": "11-basketball-and-banks",
+      "title": "Basketball floor and banks",
+      "section": "School wing",
+      "s": 419,
+      "view": {
+        "side": 21,
+        "height": 12,
+        "look": 22
+      },
+      "placement": {
+        "routeDistance": 434.7025512414559,
+        "routePoint": [
+          16.200000000000003,
+          79.59388017175645,
+          -419
+        ],
+        "camera": [
+          37.665066650057355,
+          91.59388017175645,
+          -399.49997657158855
+        ],
+        "target": [
+          15.682260224912008,
+          82.59388017175645,
+          -440.983836401408
+        ],
+        "fov": 66
+      },
+      "screenshot": "screenshots/11-basketball-and-banks.png",
+      "concept": "concepts/11-basketball-and-banks.png"
+    },
+    {
+      "number": 12,
+      "id": "12-gym-courtyard",
+      "title": "Gym courtyard connection",
+      "section": "School wing",
+      "s": 450,
+      "view": {
+        "side": -15,
+        "height": 10,
+        "look": 30
+      },
+      "placement": {
+        "routeDistance": 465.7306488291492,
+        "routePoint": [
+          15.300000000000006,
+          79.59388017175645,
+          -450
+        ],
+        "camera": [
+          2.371533027756074,
+          89.59388017175645,
+          -428.6024594462915
+        ],
+        "target": [
+          12.311849761262541,
+          80.35967985343984,
+          -479.7828513528456
+        ],
+        "fov": 66
+      },
+      "screenshot": "screenshots/12-gym-courtyard.png",
+      "concept": "concepts/12-gym-courtyard.png"
+    },
+    {
+      "number": 13,
+      "id": "13-blue-canopy-descent",
+      "title": "Blue canopy descent",
+      "section": "School wing",
+      "s": 479,
+      "view": {
+        "side": 8,
+        "height": 9,
+        "look": 34
+      },
+      "placement": {
+        "routeDistance": 494.93570120249984,
+        "routePoint": [
+          12.450000000000001,
+          77.54388017175646,
+          -479
+        ],
+        "camera": [
+          23.687342705268392,
+          86.54388017175646,
+          -460.6227823399637
+        ],
+        "target": [
+          6.754455245567299,
+          73.0711077945401,
+          -512.5188132810289
+        ],
+        "fov": 66
+      },
+      "screenshot": "screenshots/13-blue-canopy-descent.png",
+      "concept": "concepts/13-blue-canopy-descent.png"
+    },
+    {
+      "number": 14,
+      "id": "14-canopy-retail-junction",
+      "title": "Canopy retail junction",
+      "section": "School wing",
+      "s": 517,
+      "view": {
+        "side": -10,
+        "height": 9,
+        "look": 31
+      },
+      "placement": {
+        "routeDistance": 533.462383369282,
+        "routePoint": [
+          6.114285714285723,
+          69.75102302889931,
+          -517
+        ],
+        "camera": [
+          9.174266707421715,
+          78.75102302889931,
+          -494.84968360673724
+        ],
+        "target": [
+          -10.646508991116816,
+          71.6201261503913,
+          -541.4506293481136
+        ],
+        "fov": 66
+      },
+      "screenshot": "screenshots/14-canopy-retail-junction.png",
+      "concept": "concepts/14-canopy-retail-junction.png"
+    },
+    {
+      "number": 15,
+      "id": "15-arcade-portal",
+      "title": "Side Quest arcade portal",
+      "section": "Crossrail arcade",
+      "s": 554,
+      "view": {
+        "height": 8,
+        "look": 38
+      },
+      "placement": {
+        "routeDistance": 579.7842640218502,
+        "routePoint": [
+          -17.28,
+          68.0761267978424,
+          -554
+        ],
+        "camera": [
+          -17.28,
+          76.0761267978424,
+          -534
+        ],
+        "target": [
+          -17.28,
+          70.06867802331895,
+          -592
+        ],
+        "fov": 66
+      },
+      "screenshot": "screenshots/15-arcade-portal.png",
+      "concept": "concepts/15-arcade-portal.png"
+    },
+    {
+      "number": 16,
+      "id": "16-crossrail-promenade",
+      "title": "Crossrail promenade",
+      "section": "Crossrail arcade",
+      "s": 585,
+      "view": {
+        "side": 12,
+        "height": 10,
+        "look": 38
+      },
+      "placement": {
+        "routeDistance": 610.7842640218502,
+        "routePoint": [
+          -17.28,
+          67.06867802331895,
+          -585
+        ],
+        "camera": [
+          -5.280000000000001,
+          77.06867802331895,
+          -565
+        ],
+        "target": [
+          -17.28,
+          70.06867802331895,
+          -623
+        ],
+        "fov": 66
+      },
+      "screenshot": "screenshots/16-crossrail-promenade.png",
+      "concept": "concepts/16-crossrail-promenade.png"
+    },
+    {
+      "number": 17,
+      "id": "17-after-hours-entrance",
+      "title": "After Hours bonus entrance",
+      "section": "Crossrail arcade",
+      "s": 614,
+      "view": {
+        "side": 5,
+        "height": 7,
+        "look": 17
+      },
+      "placement": {
+        "routeDistance": 639.7842640218502,
+        "routePoint": [
+          -17.28,
+          67.06867802331895,
+          -614
+        ],
+        "camera": [
+          -13.526348614131248,
+          74.06867802331895,
+          -593.7290823771255
+        ],
+        "target": [
+          -16.242429015048426,
+          70.19026606427343,
+          -630.7464835213912
+        ],
+        "fov": 66
+      },
+      "screenshot": "screenshots/17-after-hours-entrance.png",
+      "concept": "concepts/17-after-hours-entrance.png"
+    },
+    {
+      "number": 18,
+      "id": "18-after-hours-interior",
+      "title": "After Hours bonus interior",
+      "section": "After Hours bonus",
+      "s": 0,
+      "view": {
+        "bonus": true,
+        "camera": [
+          45,
+          14,
+          52
+        ],
+        "target": [
+          45,
+          6,
+          0
+        ],
+        "fov": 70
+      },
+      "placement": {
+        "camera": [
+          45,
+          14,
+          52
+        ],
+        "target": [
+          45,
+          6,
+          0
+        ],
+        "fov": 70,
+        "level": "bonus-mayfield-mall"
+      },
+      "screenshot": "screenshots/18-after-hours-interior.png",
+      "concept": "concepts/18-after-hours-interior.png"
+    },
+    {
+      "number": 19,
+      "id": "19-loading-portal",
+      "title": "Mayfield Loading portal",
+      "section": "Warehouse wing",
+      "s": 745,
+      "view": {
+        "height": 9,
+        "look": 34
+      },
+      "placement": {
+        "routeDistance": 775.0063990023928,
+        "routePoint": [
+          0,
+          67.69232958311567,
+          -745
+        ],
+        "camera": [
+          0,
+          76.69232958311567,
+          -725
+        ],
+        "target": [
+          0,
+          67.49534002577104,
+          -779
+        ],
+        "fov": 66
+      },
+      "screenshot": "screenshots/19-loading-portal.png",
+      "concept": "concepts/19-loading-portal.png"
+    },
+    {
+      "number": 20,
+      "id": "20-warehouse-roll-in",
+      "title": "Warehouse roll-in",
+      "section": "Warehouse wing",
+      "s": 779,
+      "view": {
+        "camera": [
+          0,
+          17,
+          -767
+        ],
+        "target": [
+          0,
+          2,
+          -811
+        ]
+      },
+      "placement": {
+        "routeDistance": 809.0063990023928,
+        "routePoint": [
+          0,
+          64.49534002577104,
+          -779
+        ],
+        "camera": [
+          0,
+          75.22638017175646,
+          -767
+        ],
+        "target": [
+          0,
+          60.22638017175645,
+          -811
+        ],
+        "fov": 66
+      },
+      "screenshot": "screenshots/20-warehouse-roll-in.png",
+      "concept": "concepts/20-warehouse-roll-in.png"
+    },
+    {
+      "number": 21,
+      "id": "21-warehouse-halfpipe",
+      "title": "Warehouse halfpipe",
+      "section": "Warehouse wing",
+      "s": 831,
+      "view": {
+        "side": -25,
+        "height": 13,
+        "look": 30
+      },
+      "placement": {
+        "routeDistance": 861.0063990023928,
+        "routePoint": [
+          6.123233995736766e-17,
+          58.22638017175645,
+          -831
+        ],
+        "camera": [
+          -25,
+          71.22638017175646,
+          -811
+        ],
+        "target": [
+          1.898202538678398e-15,
+          61.22638017175645,
+          -861
+        ],
+        "fov": 66
+      },
+      "screenshot": "screenshots/21-warehouse-halfpipe.png",
+      "concept": "concepts/21-warehouse-halfpipe.png"
+    },
+    {
+      "number": 22,
+      "id": "22-big-rail-island",
+      "title": "Big Rail and kicker island",
+      "section": "Warehouse wing",
+      "s": 805,
+      "view": {
+        "camera": [
+          46,
+          3.8,
+          -797
+        ],
+        "target": [
+          27,
+          0.8,
+          -808
+        ],
+        "fov": 70
+      },
+      "placement": {
+        "routeDistance": 835.0063990023928,
+        "routePoint": [
+          0,
+          58.22638017175645,
+          -805
+        ],
+        "camera": [
+          46,
+          62.02638017175645,
+          -797
+        ],
+        "target": [
+          27,
+          59.02638017175645,
+          -808
+        ],
+        "fov": 70
+      },
+      "screenshot": "screenshots/22-big-rail-island.png",
+      "concept": "concepts/22-big-rail-island.png"
+    },
+    {
+      "number": 23,
+      "id": "23-suspended-room",
+      "title": "Suspended warehouse room",
+      "section": "Warehouse wing",
+      "s": 850,
+      "view": {
+        "camera": [
+          -31,
+          15,
+          -823
+        ],
+        "target": [
+          5,
+          7,
+          -858
+        ]
+      },
+      "placement": {
+        "routeDistance": 880.0063990023928,
+        "routePoint": [
+          1.224646799147353e-15,
+          58.22638017175645,
+          -850
+        ],
+        "camera": [
+          -31,
+          73.22638017175646,
+          -823
+        ],
+        "target": [
+          5,
+          65.22638017175646,
+          -858
+        ],
+        "fov": 66
+      },
+      "screenshot": "screenshots/23-suspended-room.png",
+      "concept": "concepts/23-suspended-room.png"
+    },
+    {
+      "number": 24,
+      "id": "24-taxi-loading-bay",
+      "title": "Taxi loading bay",
+      "section": "Warehouse wing",
+      "s": 883,
+      "view": {
+        "camera": [
+          -8,
+          10,
+          -863
+        ],
+        "target": [
+          -33,
+          3,
+          -886
+        ]
+      },
+      "placement": {
+        "routeDistance": 913.0063990023928,
+        "routePoint": [
+          1.9239912903361495e-15,
+          58.22638017175645,
+          -883
+        ],
+        "camera": [
+          -8,
+          68.22638017175646,
+          -863
+        ],
+        "target": [
+          -33,
+          61.22638017175645,
+          -886
+        ],
+        "fov": 66
+      },
+      "screenshot": "screenshots/24-taxi-loading-bay.png",
+      "concept": "concepts/24-taxi-loading-bay.png"
+    },
+    {
+      "number": 25,
+      "id": "25-loading-islands",
+      "title": "Crate loading island",
+      "section": "Warehouse wing",
+      "s": 805,
+      "view": {
+        "camera": [
+          5,
+          13,
+          -785
+        ],
+        "target": [
+          12,
+          10,
+          -803
+        ],
+        "fov": 58
+      },
+      "placement": {
+        "routeDistance": 835.0063990023928,
+        "routePoint": [
+          0,
+          58.22638017175645,
+          -805
+        ],
+        "camera": [
+          5,
+          71.22638017175646,
+          -785
+        ],
+        "target": [
+          12,
+          68.22638017175646,
+          -803
+        ],
+        "fov": 58
+      },
+      "screenshot": "screenshots/25-loading-islands.png",
+      "concept": "concepts/25-loading-islands.png"
+    },
+    {
+      "number": 26,
+      "id": "26-spinal-grooves-entry",
+      "title": "Spinal grooves entrance",
+      "section": "Kona recreation courts",
+      "s": 956,
+      "view": {
+        "side": 14,
+        "height": 11,
+        "look": 29
+      },
+      "placement": {
+        "routeDistance": 986.0063990023928,
+        "routePoint": [
+          7.34788079488412e-16,
+          58.22638017175645,
+          -956
+        ],
+        "camera": [
+          13.999999999999998,
+          69.22638017175646,
+          -936
+        ],
+        "target": [
+          4.2862637970157365e-15,
+          61.22638017175645,
+          -985
+        ],
+        "fov": 66
+      },
+      "screenshot": "screenshots/26-spinal-grooves-entry.png",
+      "concept": "concepts/26-spinal-grooves-entry.png"
+    },
+    {
+      "number": 27,
+      "id": "27-spinal-grooves-profile",
+      "title": "Spinal grooves profile",
+      "section": "Kona recreation courts",
+      "s": 978,
+      "view": {
+        "camera": [
+          22,
+          15,
+          -957
+        ],
+        "target": [
+          0,
+          4,
+          -975
+        ]
+      },
+      "placement": {
+        "routeDistance": 1008.0063990023928,
+        "routePoint": [
+          3.4290110376125893e-15,
+          58.22638017175645,
+          -978
+        ],
+        "camera": [
+          22,
+          73.22638017175646,
+          -957
+        ],
+        "target": [
+          0,
+          62.22638017175645,
+          -975
+        ],
+        "fov": 66
+      },
+      "screenshot": "screenshots/27-spinal-grooves-profile.png",
+      "concept": "concepts/27-spinal-grooves-profile.png"
+    },
+    {
+      "number": 28,
+      "id": "28-timber-roll-in",
+      "title": "Timber vert and roll-in",
+      "section": "Kona recreation courts",
+      "s": 969,
+      "view": {
+        "camera": [
+          -45,
+          17,
+          -940
+        ],
+        "target": [
+          -75,
+          8,
+          -973
+        ]
+      },
+      "placement": {
+        "routeDistance": 999.0063990023928,
+        "routePoint": [
+          2.326828918379971e-15,
+          58.22638017175645,
+          -969
+        ],
+        "camera": [
+          -45,
+          75.22638017175646,
+          -940
+        ],
+        "target": [
+          -75,
+          66.22638017175646,
+          -973
+        ],
+        "fov": 66
+      },
+      "screenshot": "screenshots/28-timber-roll-in.png",
+      "concept": "concepts/28-timber-roll-in.png"
+    },
+    {
+      "number": 29,
+      "id": "29-timber-vert-reverse",
+      "title": "Timber vert reverse angle",
+      "section": "Kona recreation courts",
+      "s": 969,
+      "view": {
+        "camera": [
+          -108,
+          16,
+          -997
+        ],
+        "target": [
+          -75,
+          6,
+          -970
+        ]
+      },
+      "placement": {
+        "routeDistance": 999.0063990023928,
+        "routePoint": [
+          2.326828918379971e-15,
+          58.22638017175645,
+          -969
+        ],
+        "camera": [
+          -108,
+          74.22638017175646,
+          -997
+        ],
+        "target": [
+          -75,
+          64.22638017175646,
+          -970
+        ],
+        "fov": 66
+      },
+      "screenshot": "screenshots/29-timber-vert-reverse.png",
+      "concept": "concepts/29-timber-vert-reverse.png"
+    },
+    {
+      "number": 30,
+      "id": "30-snake-kiosk",
+      "title": "Snake-head kiosk court",
+      "section": "Kona recreation courts",
+      "s": 1002,
+      "view": {
+        "camera": [
+          40,
+          5,
+          -985
+        ],
+        "target": [
+          21,
+          3,
+          -1002
+        ]
+      },
+      "placement": {
+        "routeDistance": 1032.0063990023928,
+        "routePoint": [
+          2.7732324290369096e-15,
+          58.22638017175645,
+          -1002
+        ],
+        "camera": [
+          40,
+          63.22638017175645,
+          -985
+        ],
+        "target": [
+          21,
+          61.22638017175645,
+          -1002
+        ],
+        "fov": 66
+      },
+      "screenshot": "screenshots/30-snake-kiosk.png",
+      "concept": "concepts/30-snake-kiosk.png"
+    },
+    {
+      "number": 31,
+      "id": "31-snake-run-entry",
+      "title": "Snake run entrance",
+      "section": "Kona recreation courts",
+      "s": 1030,
+      "view": {
+        "side": 15,
+        "height": 11,
+        "look": 27
+      },
+      "placement": {
+        "routeDistance": 1113.9725780961282,
+        "routePoint": [
+          -60.89123504725178,
+          62.25975023277122,
+          -1030
+        ],
+        "camera": [
+          -66.15832415582246,
+          73.25975023277121,
+          -1005.5611421641195
+        ],
+        "target": [
+          -44.33169071574248,
+          64.00625404811005,
+          -1044.3786048582094
+        ],
+        "fov": 66
+      },
+      "screenshot": "screenshots/31-snake-run-entry.png",
+      "concept": "concepts/31-snake-run-entry.png"
+    },
+    {
+      "number": 32,
+      "id": "32-snake-run-overview",
+      "title": "Snake run overview",
+      "section": "Kona recreation courts",
+      "s": 1080,
+      "view": {
+        "camera": [
+          -20,
+          35,
+          -1030
+        ],
+        "target": [
+          -35,
+          5,
+          -1097
+        ],
+        "fov": 70
+      },
+      "placement": {
+        "routeDistance": 1193.964288026031,
+        "routePoint": [
+          -39.127645462570214,
+          61.082508603270185,
+          -1080
+        ],
+        "camera": [
+          -20,
+          93.22638017175646,
+          -1030
+        ],
+        "target": [
+          -35,
+          63.22638017175645,
+          -1097
+        ],
+        "fov": 70
+      },
+      "screenshot": "screenshots/32-snake-run-overview.png",
+      "concept": "concepts/32-snake-run-overview.png"
+    },
+    {
+      "number": 33,
+      "id": "33-snake-run-banked-bend",
+      "title": "Snake run banked bend",
+      "section": "Kona recreation courts",
+      "s": 1110,
+      "view": {
+        "side": 12,
+        "height": 12,
+        "look": 24
+      },
+      "placement": {
+        "routeDistance": 1234.9335356743452,
+        "routePoint": [
+          -26.657353148017876,
+          61.08286908736798,
+          -1110
+        ],
+        "camera": [
+          -40.568353920337614,
+          73.08286908736798,
+          -1091.2787805548753
+        ],
+        "target": [
+          -4.718468995871358,
+          68.7552170894096,
+          -1119.052258431063
+        ],
+        "fov": 66
+      },
+      "screenshot": "screenshots/33-snake-run-banked-bend.png",
+      "concept": "concepts/33-snake-run-banked-bend.png"
+    },
+    {
+      "number": 34,
+      "id": "34-kona-atrium-connection",
+      "title": "Kona to atrium connection",
+      "section": "Kona recreation courts",
+      "s": 1173,
+      "view": {
+        "side": -13,
+        "height": 11,
+        "look": 29
+      },
+      "placement": {
+        "routeDistance": 1314.0037328930014,
+        "routePoint": [
+          -2.3914624505928876,
+          67.02777751262778,
+          -1173
+        ],
+        "camera": [
+          -14.256553641911278,
+          78.02777751262778,
+          -1152.3065321653983
+        ],
+        "target": [
+          -3.9679590726921927,
+          70.28466009958011,
+          -1201.2415711607166
+        ],
+        "fov": 66
+      },
+      "screenshot": "screenshots/34-kona-atrium-connection.png",
+      "concept": "concepts/34-kona-atrium-connection.png"
+    },
+    {
+      "number": 35,
+      "id": "35-angled-atrium-entry",
+      "title": "Angled atrium entry",
+      "section": "Grand atrium",
+      "s": 1212,
+      "view": {
+        "side": 11,
+        "height": 11,
+        "look": 38
+      },
+      "placement": {
+        "routeDistance": 1359.0039757719956,
+        "routePoint": [
+          -15.087639083595345,
+          66.23951446107496,
+          -1212
+        ],
+        "camera": [
+          -4.978639329476922,
+          77.23951446107496,
+          -1191.5351979249435
+        ],
+        "target": [
+          -13.436077834918693,
+          69.02498721152371,
+          -1249.484668084928
+        ],
+        "fov": 66
+      },
+      "screenshot": "screenshots/35-angled-atrium-entry.png",
+      "concept": "concepts/35-angled-atrium-entry.png"
+    },
+    {
+      "number": 36,
+      "id": "36-angled-atrium-descent",
+      "title": "Angled atrium descent",
+      "section": "Grand atrium",
+      "s": 1252,
+      "view": {
+        "back": 6,
+        "height": 6,
+        "look": 38
+      },
+      "placement": {
+        "routeDistance": 1399.600403828349,
+        "routePoint": [
+          -12.792226913633055,
+          66.04760356070318,
+          -1252
+        ],
+        "camera": [
+          -15.111039699560612,
+          72.04760356070318,
+          -1246.4661851075575
+        ],
+        "target": [
+          1.7869842282856385,
+          69.23951446107498,
+          -1286.7930873190098
+        ],
+        "fov": 66
+      },
+      "screenshot": "screenshots/36-angled-atrium-descent.png",
+      "concept": "concepts/36-angled-atrium-descent.png"
+    },
+    {
+      "number": 37,
+      "id": "37-grand-atrium-turn",
+      "title": "Grand atrium turn",
+      "section": "Grand atrium",
+      "s": 1305,
+      "view": {
+        "side": 15,
+        "height": 13,
+        "look": 33
+      },
+      "placement": {
+        "routeDistance": 1456.3649600194672,
+        "routePoint": [
+          6.014451029593234,
+          66.23951446107495,
+          -1305
+        ],
+        "camera": [
+          6.4951865625998515,
+          79.23951446107495,
+          -1280.004622560415
+        ],
+        "target": [
+          25.08862373304086,
+          69.23951446107495,
+          -1331.4780866682875
+        ],
+        "fov": 66
+      },
+      "screenshot": "screenshots/37-grand-atrium-turn.png",
+      "concept": "concepts/37-grand-atrium-turn.png"
+    },
+    {
+      "number": 38,
+      "id": "38-suspended-crossing",
+      "title": "Suspended crossing",
+      "section": "Grand atrium",
+      "s": 1330,
+      "view": {
+        "camera": [
+          102,
+          7,
+          -1326
+        ],
+        "target": [
+          142,
+          -7,
+          -1334
+        ],
+        "fov": 72
+      },
+      "placement": {
+        "routeDistance": 1487.1371474997766,
+        "routePoint": [
+          23.421767883268227,
+          66.23951446107495,
+          -1330
+        ],
+        "camera": [
+          102,
+          65.22638017175646,
+          -1326
+        ],
+        "target": [
+          142,
+          51.22638017175645,
+          -1334
+        ],
+        "fov": 72
+      },
+      "screenshot": "screenshots/38-suspended-crossing.png",
+      "concept": "concepts/38-suspended-crossing.png"
+    },
+    {
+      "number": 39,
+      "id": "39-lower-atrium-promenade",
+      "title": "Lower atrium promenade",
+      "section": "Grand atrium",
+      "s": 1465,
+      "view": {
+        "side": 10,
+        "height": 10,
+        "look": 28
+      },
+      "placement": {
+        "routeDistance": 1793.082642050449,
+        "routePoint": [
+          144.71983687142435,
+          28.95840879741865,
+          -1465
+        ],
+        "camera": [
+          163.71401117070963,
+          38.95840879741865,
+          -1453.2007905905366
+        ],
+        "target": [
+          130.19424708361888,
+          28.0346912621947,
+          -1488.623630053919
+        ],
+        "fov": 66
+      },
+      "screenshot": "screenshots/39-lower-atrium-promenade.png",
+      "concept": "concepts/39-lower-atrium-promenade.png"
+    },
+    {
+      "number": 40,
+      "id": "40-mall-exit-court",
+      "title": "Mall exit and crystal court",
+      "section": "Exit court",
+      "s": 1546,
+      "view": {
+        "back": 5,
+        "height": 7,
+        "look": 24
+      },
+      "placement": {
+        "routeDistance": 1881.2883737055124,
+        "routePoint": [
+          112.4128446265579,
+          14.42910660569283,
+          -1546
+        ],
+        "camera": [
+          114.44353695682513,
+          21.42910660569283,
+          -1541.4309422568988
+        ],
+        "target": [
+          102.66552144127516,
+          17.42910660569283,
+          -1567.9314771668862
+        ],
+        "fov": 66
+      },
+      "screenshot": "screenshots/40-mall-exit-court.png",
+      "concept": "concepts/40-mall-exit-court.png"
+    }
+  ],
+  "errors": []
+}
