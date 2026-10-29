@@ -18,8 +18,14 @@ export class CameraFallHold {
   private snapVersion = -1;
   private edgeY = 0;
   private held = false;
+  followingDrop = false;
+  landedFromDrop = false;
 
-  shouldHold(subject: FallCameraSubject, killY: number, landingAhead?: () => number | null): boolean {
+  shouldHold(subject: FallCameraSubject, killY: number, landingAhead?: () => number | null,
+    canRecover?: () => boolean): boolean {
+    const wasFollowing = this.followingDrop;
+    this.followingDrop = false;
+    this.landedFromDrop = false;
     if(subject.waterDeathSurface!=null){this.edgeY=subject.waterDeathSurface;this.held=false;return false;}
     if (subject.state === 'dead' || subject.state === 'gameover') return true;
     const y = subject.renderPosition.y;
@@ -35,6 +41,7 @@ export class CameraFallHold {
       return false;
     }
     if ((subject.grounded && !subject.groundBelowIsFatal) || ['grind', 'rope', 'hang', 'swim', 'finished'].includes(subject.state)) {
+      this.landedFromDrop = (wasFollowing || this.held) && y < this.edgeY - .2;
       this.edgeY = y;
       this.held = false;
       return false;
@@ -45,14 +52,23 @@ export class CameraFallHold {
     }
     // A live descent onto a lower shelf stays live. A held shot needs the
     // trajectory, not just a vertical projection, to prove that recovery.
-    if (landing && (!this.held || !landingAhead)) return false;
+    if (landing && (!this.held || !landingAhead)) return this.followDrop();
+    // Courses with deliberate deep shortcuts already decide whether a lower
+    // road can still be reached. A short trajectory probe must not freeze a
+    // flight while that recovery remains playable, including a rescue jump.
+    if (canRecover?.()) return this.followDrop();
     const ahead = landingAhead?.();
     if (ahead != null && Number.isFinite(ahead) && ahead > killY) {
-      this.held = false;
-      return false;
+      return this.followDrop();
     }
     this.held = true;
     return true;
+  }
+
+  private followDrop(): false {
+    this.held = false;
+    this.followingDrop = true;
+    return false;
   }
 }
 

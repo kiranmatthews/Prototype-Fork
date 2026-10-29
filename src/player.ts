@@ -614,6 +614,7 @@ export class Player {
   // this rider's place on the camera lane — private, so split-screen players
   // don't drag each other's frame around (see Level.laneDirAt)
   readonly laneCursor: LaneCursor = newLaneCursor();
+  private readonly laneSupportPoint = new THREE.Vector3();
   private viewInput = new CameraInputFrame();
   private readonly chiefInput = new ChiefInputFrame();
   speed = 0; // signed along-course velocity (+ = forward, - = toward camera)
@@ -1960,6 +1961,13 @@ export class Player {
   private fallCameraProbeValid = false;
   private fallCameraProbeSnap = -1;
   private fallCameraLandingY: number | null = null;
+  /** Deep shortcut courses already decide when a fall is unrecoverable in
+   * step(): allow the rescue window, then check live lower-road collision.
+   * Until that decision ends the air, the camera must keep steering readable.
+   * Reuse the result instead of running another, shorter landing forecast. */
+  cameraCanRecoverFall(level: Level): boolean {
+    return level.fallRecoveryDrop !== undefined && this.state === 'air' && !this.grounded;
+  }
 
   /** Presentation-only forecast for a descending gap jump. Sweep a short arc
    * through actual live collision, so thin/lower catches count before the
@@ -6207,6 +6215,13 @@ export class Player {
     }
     if(!level.cameraViews.length) {
       this.viewInput.reset();this.chiefInput.reset();
+      // A real lower-road touchdown must also release the steering frame's
+      // old branch. Keep continuity through air and ordinary banked bends;
+      // eight metres exceeds Skystream's road banking, below its stacked legs.
+      if (this.grounded && level.fallRecoveryDrop !== undefined && this.laneCursor.s >= 0) {
+        const oldRoad = level.cameraLanePointAhead(this.laneCursor, 0, this.laneSupportPoint);
+        if (oldRoad && oldRoad.y - this.pos.y > 8) this.laneCursor.s = -1;
+      }
       return level.laneDirAt(this.pos.x,this.pos.y,this.pos.z,this.laneCursor);
     }
     const camera=this.viewInput.needsSeed
