@@ -20,15 +20,18 @@ try{
  await page.waitForFunction(()=>window.__game?.getCurrentLevel().id==='carlisle-coast'&&!window.__game.gameFlow.blocksGameplay,null,{timeout:180000});
  await page.evaluate(async()=>{const g=window.__game;g.campaign.startEphemeral();await g.getLevel().prepareJungleAssets();g.renderQualitySettings.setRegularResolution(null);g.crtGuestSettings.setEnabled(false);});
  await page.waitForFunction(()=>window.__game.player.grounded);report.spawn=await snap();assert.match(report.spawn.build,/Codex\/sol fork/);
- report.sourceMatches=await page.evaluate(expected=>JSON.stringify(window.__game.getCurrentLevel().data)===JSON.stringify(expected),data);assert.ok(report.sourceMatches,'browser did not load the current authored level');
+ report.sourceDifferences=await page.evaluate(expected=>{const differences=[];function compare(a,b,path){if(differences.length>=12||a===b)return;if(typeof a==='number'&&typeof b==='number'&&Math.abs(a-b)<1e-8)return;
+  if(a&&b&&typeof a==='object'&&typeof b==='object'){for(const key of new Set([...Object.keys(a),...Object.keys(b)]))compare(a[key],b[key],`${path}.${key}`);}
+  else differences.push({path,actual:a,expected:b});}compare(window.__game.getCurrentLevel().data,expected,'level');return differences;},data);
+ report.sourceMatches=report.sourceDifferences.length===0;assert.ok(report.sourceMatches,JSON.stringify(report.sourceDifferences));
  await page.screenshot({path:`${out}/${mode}-start-native.png`});
  await page.keyboard.down('ArrowUp');await page.waitForTimeout(1500);await page.keyboard.up('ArrowUp');report.walk=await snap();assert.equal(report.walk.deaths,0);assert.ok(report.walk.position[2]<report.spawn.position[2]-5);
  // A real native neutral bounce, observed without movement input.
- await place(point(65,.15));await page.waitForFunction(()=>window.__game.player.pos.y>8);report.bounce=await snap();
+ await place(point(65,.35));await page.waitForFunction(()=>window.__game.player.pos.y>8);report.bounce=await snap();
  assert.ok(Math.hypot(report.bounce.position[0]-point(65,0)[0],report.bounce.position[2]-point(65,0)[2])<.2);
  await page.screenshot({path:`${out}/${mode}-native-bounce.png`});
  // Follow a giant held bounce through its apex with real movement input.
- await page.keyboard.down('Space');await place(point(3835,24.15));await page.keyboard.down('ArrowUp');
+ await page.keyboard.down('Space');await place(point(3835,24.35));await page.keyboard.down('ArrowUp');
  await page.waitForFunction(()=>window.__game.player.pos.y>90&&window.__game.player.vVel<2,null,{timeout:15000});
  report.apex=await page.evaluate(target=>{const g=window.__game,v=g.player.pos.clone().set(...target).project(g.camera);return{height:g.player.pos.y,targetNdc:v.toArray(),canvas:[g.renderer.domElement.width,g.renderer.domElement.height],preset:g.renderQualitySettings.regularResolution};},point(3875,52,-4));
  await page.screenshot({path:`${out}/${mode}-giant-bounce-apex.png`});await page.keyboard.up('ArrowUp');await page.keyboard.up('Space');

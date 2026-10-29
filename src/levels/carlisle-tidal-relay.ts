@@ -30,6 +30,7 @@ export const CARLISLE_RELAY_SECTIONS=[
 for(const [i,[nm]] of CARLISLE_RELAY_SECTIONS.entries())groups.push({id:i+1,nm:`${String(i+1).padStart(2,'0')} · ${nm}`,editorOnly:true});
 groups.push({id:90,nm:'Coastline massing and camera',editorOnly:true});
 const group=(s:number)=>{const i=CARLISLE_RELAY_SECTIONS.findIndex(q=>s<q[2]);return i<0?18:i+1;};
+let deckLayer=0;
 export const CARLISLE_RELAY_JUMPS:{name:string;from:Station;to:Station;up:number;moving:boolean}[]=[];
 export const CARLISLE_RELAY_STOPS:{name:string;s:number;y:number;p:P}[]=[];
 export const CARLISLE_RELAY_WALK:{name:string;s:number;y:number;u:number;p:P}[]=[];
@@ -44,7 +45,9 @@ function strip(nm:string,a:number,b:number,top:Value,w:Value=14,offset:Value=0,t
  for(let i=0;i<count;i++){const k=i*4;indices.push(k,k+1,k+5,k,k+5,k+4);}const topTriangles=indices.length/3;
  for(let i=0;i<count;i++){const k=i*4;indices.push(k+2,k+6,k+7,k+2,k+7,k+3,k,k+4,k+6,k,k+6,k+2,k+1,k+3,k+7,k+1,k+7,k+5);}
  indices.push(0,2,3,0,3,1,count*4,count*4+1,count*4+3,count*4,count*4+3,count*4+2);
- return add({t:'mesh',nm,p:origin,vertices,indices,grindTopTriangles:topTriangles,solid,...(solid?{solidSides:true}:{}),tex:'solid',color,grp:solid?group(a):90});}
+ // Adjacent quay/rest meshes deliberately overlap. Render-only layering
+ // removes coplanar shimmer without changing their shared collision height.
+ return add({t:'mesh',nm,p:origin,vertices,indices,grindTopTriangles:topTriangles,solid,...(solid?{solidSides:true,depthBias:-(++deckLayer%7)*.6}:{}),tex:'solid',color,grp:solid?group(a):90});}
 function arrow(s:number,y:number,u=0){const p=carlislePoint(s,y+.025,u),l=carlislePoint(s-1.8,y+.025,u-1),r=carlislePoint(s-1.8,y+.025,u+1),tip=carlislePoint(s+1.4,y+.025,u);
  add({t:'mesh',nm:'Route chevron',p,vertices:[...l.map((v,i)=>v-p[i]),...r.map((v,i)=>v-p[i]),...tip.map((v,i)=>v-p[i])],indices:[0,1,2],tex:'solid',color:PALE,solid:false,doubleSided:true,grp:90});}
 function road(nm:string,a:number,b:number,top:Value,w:Value=14,offset:Value=0){strip(nm,a,b,top,w,offset);strip(`${nm} · cliff`,a,b,s=>val(top,s)-3,s=>val(w,s)+5,offset,24,DARK,false);for(let s=a+10;s<b-4;s+=24)arrow(s,val(top,s),val(offset,s));}
@@ -57,20 +60,24 @@ function moving(nm:string,s:number,y:number,w:number,d:number,o:Partial<CustomCo
 // Authoring measurement only. Emitted pads use native speed/held-Jump values.
 // No target, homing, horizontal impulse or custom player physics is shipped.
 function flight(up:number,dy:number){let y=0,v=up;for(let n=1;n<1200;n++){const before=y;v=Math.max(-CONST.maxFallSpeed,v-(v>0?TUNING.riseGravity:TUNING.fallGravity)/60);y+=v/60;if(v<0&&y<=dy)return(n-1+(before-dy)/(before-y))/60;}return 20;}
-function spring(name:string,from:Station,to:Station,motion?:Partial<CustomComponent>){
+function spring(name:string,from:Station,to:Station,motion?:Partial<CustomComponent>,motionMargin=0){
  const a=point(from),b=point(to),distance=Math.hypot(b[0]-a[0],b[2]-a[2]);let low=Math.sqrt(Math.max(0,2*TUNING.riseGravity*(to[1]-from[1]+2))),high=150;
  // Landings can immediately rebound from the back edge. Reserve one pad's
  // half-depth of air-steering time so a linked chain never assumes a
  // perfectly centred takeoff.
- for(let i=0;i<28;i++){const mid=(low+high)/2;if(flight(mid,to[1]-from[1])*TUNING.walkSpeed<distance+7.5)low=mid;else high=mid;}
+ for(let i=0;i<28;i++){const mid=(low+high)/2;if(flight(mid,to[1]-from[1])*TUNING.walkSpeed<distance+7.5+motionMargin)low=mid;else high=mid;}
  const up=Math.round(high/1.25*10)/10;CARLISLE_RELAY_JUMPS.push({name,from,to,up,moving:!!motion});
- if(motion)moving(name,from[0],from[1],15,16,{bounce:up,color:SPRING,...motion},from[2]??0);
- else{add({t:'trampoline',nm:name,p:a,s:[13,.6,14],yaw:frame(from[0]).yaw,speed:up,amp:1.25,tex:'solid',color:SPRING,grp:group(from[0])});
+ // Keep the spring above overlapping approach decks so an equal-height
+ // support tie cannot delay the native bounce and engage hold-to-skate.
+ if(motion)moving(name,from[0],from[1]+.2,15,16,{bounce:up,color:SPRING,...motion},from[2]??0);
+ else{add({t:'trampoline',nm:name,p:[a[0],a[1]+.2,a[2]],s:[13,.6,14],yaw:frame(from[0]).yaw,speed:up,amp:1.25,tex:'solid',color:SPRING,grp:group(from[0])});
   for(const u of [-5.6,5.6])for(const ds of [-5.7,5.7])box(`${name} · spring foot`,from[0]+ds,from[1]-.6,1.1,1.1,(from[2]??0)+u,3,DARK);}
  const time=flight(up*1.25,to[1]-from[1]);let y=from[1],vy=up*1.25;
  for(let n=1;n<=Math.ceil(time*60);n++){vy=Math.max(-CONST.maxFallSpeed,vy-(vy>0?TUNING.riseGravity:TUNING.fallGravity)/60);y+=vy/60;
   if(n%Math.max(1,Math.floor(time*60/4))===0&&n<time*60-3){const t=n/60/time;add({t:'wumpa',nm:`${name} · arc`,p:[a[0]+(b[0]-a[0])*t,y+1,a[2]+(b[2]-a[2])*t],grp:group(from[0])});}}}
-function chain(name:string,marks:Station[],motion?:Record<number,Partial<CustomComponent>>){for(let i=0;i<marks.length-1;i++)spring(`${name} · ${i+1}`,marks[i],marks[i+1],motion?.[i]);}
+function chain(name:string,marks:Station[],motion?:Record<number,Partial<CustomComponent>>){
+ const excursion=(m:Partial<CustomComponent>|undefined)=>m?(Math.abs(m.amp??0)+Math.hypot(...(m.orbit??[0,0]))):0;
+ for(let i=0;i<marks.length-1;i++)spring(`${name} · ${i+1}`,marks[i],marks[i+1],motion?.[i],excursion(motion?.[i])+excursion(motion?.[i+1]));}
 function rail(nm:string,a:number,b:number,y:number,u:number){const p=carlislePoint(a,y,u),n=Math.ceil((b-a)/6);add({t:'rail',nm,p,pts:Array.from({length:n+1},(_,i)=>{const q=carlislePoint(a+(b-a)*i/n,y,u);return[q[0]-p[0],q[2]-p[2],0,0];}),grp:group(a)});}
 
 // I — surf-side springs, a scissor pier, changing tides and a lighthouse climb.
@@ -99,9 +106,15 @@ walk('Dial entry',1360,12);walk('Dial exit',1435,12);road('Dial receiving quay',
 spring('Dial exit spring',[1492,12],[1516,16]);road('Dial catch',1508,1544,16,18);rest('Pinwheel handoffs',1530,16);
 for(const [i,s] of [1566,1605,1644].entries()){moving(`Pinwheel ${i+1}`,s,16,16,58,{spin:i===1?-13:11,yaw:frame(s).yaw+i*25});walk('Pinwheel centre',s,16);}
 road('Pinwheel dock',1672,1693,16,17);chain('Pinwheel release',[[1696,16],[1721,27],[1740,16]]);road('Pinwheel catch',1733,1776,16,20);
-rest('Ferris dredger',1770,16);road('Dredger lower quay',1760,1797,16,19);
-for(let i=0;i<4;i++)moving(`Dredger bucket ${i+1}`,1825,32,22,27,{axis:'x',orbit:[16,29],speed:.2,phase:Math.PI+i*Math.PI/2});
-walk('Dredger boarding',1802,16);walk('Dredger upper quay',1858,48);road('Dredger upper quay',1846,1904,48,20);
+rest('Ferris dredger',1770,16);road('Dredger side boarding quay',1760,1834,16,16,s=>-20*Math.max(0,Math.min(1,(s-1785)/20)));
+for(let i=0;i<4;i++)moving(`Dredger bucket ${i+1}`,1825,32,22,32,{axis:'x',orbit:[16,29],speed:.2,phase:Math.PI+i*Math.PI/2});
+// An open grey wheel shows the trajectory; the horizontal baskets remain
+// the only collidable parts of the rotating machine.
+{const vertices:number[]=[],indices:number[]=[];for(let i=0;i<=64;i++){const a=i/64*Math.PI*2;
+ for(let j=0;j<6;j++){const b=j/6*Math.PI*2;vertices.push(Math.sin(b)*.9,(16+Math.cos(b)*.9)*Math.cos(a),(29+Math.cos(b)*.9)*Math.sin(a));}}
+ for(let i=0;i<64;i++)for(let j=0;j<6;j++){const a=i*6+j,b=i*6+(j+1)%6;indices.push(a,b,b+6,a,b+6,a+6);}
+ add({t:'mesh',nm:'Dredger wheel · orbit guide',p:carlislePoint(1825,32),vertices,indices,solid:false,tex:'solid',color:DARK,grp:9});}
+walk('Dredger approach',1785,16);walk('Dredger curve',1805,16,-20);walk('Dredger side pier',1824,16,-20);walk('Dredger boarding',1825,16,-7);walk('Dredger upper quay',1858,48);road('Dredger upper quay',1841,1904,48,20);
 chain('Dredger discharge',[[1908,48],[1935,58,3],[1964,35],[1983,24]]);road('Discharge catch',1976,2022,24,20);rest('Cross-thread springs',2008,24);
 chain('Cross-thread',[[2031,24],[2060,34,-3],[2092,24,3],[2124,40,-3],[2157,24]],{0:{axis:'x',amp:3,speed:.55},1:{axis:'z',amp:3,speed:.5},2:{axis:'x',amp:3,speed:.7,phase:Math.PI},3:{spin:18}});
 road('Crane gantry',2150,2236,24,11);rail('Crane outrigger shortcut',2160,2230,25.1,6);

@@ -1,0 +1,1650 @@
+{
+  "seconds": 115.23333333333333,
+  "startS": 0,
+  "endS": 845,
+  "target": "Port winch",
+  "position": [
+    81.54861054529337,
+    4,
+    -819.6272294158607
+  ],
+  "state": "ride",
+  "deaths": 0,
+  "events": [
+    {
+      "frame": 411,
+      "launch": "Foam steps · 1"
+    },
+    {
+      "frame": 574,
+      "launch": "Foam steps · 2"
+    },
+    {
+      "frame": 765,
+      "launch": "Foam steps · 3"
+    },
+    {
+      "frame": 969,
+      "launch": "Foam steps · 4"
+    },
+    {
+      "frame": 1186,
+      "arrived": "Foam steps · 4 catch"
+    },
+    {
+      "frame": 1463,
+      "arrived": "Scissor groyne"
+    },
+    {
+      "frame": 1894,
+      "arrived": "Scissor axle"
+    },
+    {
+      "frame": 2687,
+      "arrived": "Scissor far dock"
+    },
+    {
+      "frame": 2957,
+      "launch": "Groyne rebound · 1"
+    },
+    {
+      "frame": 3160,
+      "launch": "Groyne rebound · 2"
+    },
+    {
+      "frame": 3357,
+      "arrived": "Groyne rebound · 2 catch"
+    },
+    {
+      "frame": 3562,
+      "arrived": "Lift and skip"
+    },
+    {
+      "frame": 3820,
+      "arrived": "Tide step 1"
+    },
+    {
+      "frame": 3938,
+      "arrived": "Tide step 2"
+    },
+    {
+      "frame": 4056,
+      "arrived": "Tide step 3"
+    },
+    {
+      "frame": 4173,
+      "arrived": "Tide step 4"
+    },
+    {
+      "frame": 4345,
+      "launch": "Lift and skip · 1"
+    },
+    {
+      "frame": 4570,
+      "launch": "Lift and skip · 2"
+    },
+    {
+      "frame": 4820,
+      "launch": "Lift and skip · 3"
+    },
+    {
+      "frame": 5031,
+      "arrived": "Lift and skip · 3 catch"
+    },
+    {
+      "frame": 5243,
+      "arrived": "Surf sockets"
+    },
+    {
+      "frame": 5355,
+      "launch": "Surf sockets · 1"
+    },
+    {
+      "frame": 5590,
+      "launch": "Surf sockets · 2"
+    },
+    {
+      "frame": 5847,
+      "launch": "Surf sockets · 3"
+    },
+    {
+      "frame": 6128,
+      "launch": "Surf sockets · 4"
+    },
+    {
+      "frame": 6410,
+      "launch": "Surf sockets · 5"
+    },
+    {
+      "frame": 6691,
+      "arrived": "Surf sockets · 5 catch"
+    },
+    {
+      "frame": 6915,
+      "arrived": "Twin winches"
+    }
+  ],
+  "checkpoints": 3,
+  "tail": [
+    {
+      "frame": 6120,
+      "target": "Surf sockets · 4",
+      "position": [
+        82.86820748370604,
+        25.614166678588425,
+        -719.3139062891607
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 0,
+      "input": [
+        0,
+        0,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 6130,
+      "target": "Surf sockets · 5",
+      "position": [
+        83.30246039886107,
+        26.23333334525426,
+        -719.7279405937305
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 6.3639610306789285,
+      "input": [
+        1,
+        1,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 6140,
+      "target": "Surf sockets · 5",
+      "position": [
+        84.38766533176526,
+        38.67500001192093,
+        -720.7634743384273
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 6.3639610306789285,
+      "input": [
+        1,
+        1,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 6150,
+      "target": "Surf sockets · 5",
+      "position": [
+        85.4718546540787,
+        50.20000001192094,
+        -721.8000713088119
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 6.3639610306789285,
+      "input": [
+        1,
+        1,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 6160,
+      "target": "Surf sockets · 5",
+      "position": [
+        86.55481005384748,
+        60.80833334525429,
+        -722.8379572932408
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 6.3639610306789285,
+      "input": [
+        1,
+        1,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 6170,
+      "target": "Surf sockets · 5",
+      "position": [
+        87.63645309193251,
+        70.50000001192097,
+        -723.8772108875158
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 6.3639610306789285,
+      "input": [
+        1,
+        1,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 6180,
+      "target": "Surf sockets · 5",
+      "position": [
+        88.71675408007296,
+        79.275000011921,
+        -724.9178594653731
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 6.3639610306789285,
+      "input": [
+        1,
+        1,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 6190,
+      "target": "Surf sockets · 5",
+      "position": [
+        89.69038402579643,
+        87.13333334525436,
+        -726.0056239687297
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 6200,
+      "target": "Surf sockets · 5",
+      "position": [
+        89.81955115389208,
+        94.07500001192106,
+        -727.4598308722043
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 6210,
+      "target": "Surf sockets · 5",
+      "position": [
+        89.84044501854967,
+        100.1000000119211,
+        -728.9596850768912
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 6220,
+      "target": "Surf sockets · 5",
+      "position": [
+        89.96364921205706,
+        105.20833334525447,
+        -730.4144133816424
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 6230,
+      "target": "Surf sockets · 5",
+      "position": [
+        89.97799139313862,
+        109.40000001192118,
+        -731.9143445040208
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 6240,
+      "target": "Surf sockets · 5",
+      "position": [
+        90.09471118965756,
+        112.67500001192123,
+        -733.3696325323833
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 6250,
+      "target": "Surf sockets · 5",
+      "position": [
+        90.10231053579203,
+        115.03333334525459,
+        -734.8696129706141
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 6260,
+      "target": "Surf sockets · 5",
+      "position": [
+        90.1065909926606,
+        116.4750000119213,
+        -736.3696065592759
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 6270,
+      "target": "Surf sockets · 5",
+      "position": [
+        90.21354101863423,
+        117.00000001192133,
+        -737.8255232776146
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 6280,
+      "target": "Surf sockets · 5",
+      "position": [
+        90.2111252236422,
+        115.7483333452547,
+        -739.3255210156912
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 6290,
+      "target": "Surf sockets · 5",
+      "position": [
+        90.20530165826706,
+        111.2150000119214,
+        -740.8255093895258
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 6300,
+      "target": "Surf sockets · 5",
+      "position": [
+        90.30238746886576,
+        103.47500001192144,
+        -742.2821407326908
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 6310,
+      "target": "Surf sockets · 5",
+      "position": [
+        90.28978312597135,
+        94.80833334525484,
+        -743.782087456998
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 6320,
+      "target": "Surf sockets · 5",
+      "position": [
+        90.27365411679921,
+        86.14166667858824,
+        -745.2820003619157
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 6330,
+      "target": "Surf sockets · 5",
+      "position": [
+        90.25369184665335,
+        77.47500001192164,
+        -746.781867100294
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 6340,
+      "target": "Surf sockets · 5",
+      "position": [
+        90.33655857102927,
+        68.80833334525504,
+        -748.239568533465
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 6.3639610306789285,
+      "input": [
+        1,
+        1,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 6350,
+      "target": "Surf sockets · 5",
+      "position": [
+        90.30864428849239,
+        60.1416666785884,
+        -749.7393083425002
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 6360,
+      "target": "Surf sockets · 5",
+      "position": [
+        90.27673247338863,
+        51.47500001192173,
+        -751.2389684043815
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 6370,
+      "target": "Surf sockets · 5",
+      "position": [
+        90.25199581777663,
+        42.80833334525506,
+        -752.2886768295729
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 0,
+      "input": [
+        0,
+        0,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 6380,
+      "target": "Surf sockets · 5",
+      "position": [
+        90.25199581777663,
+        34.141666678588386,
+        -752.2886768295729
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 0,
+      "input": [
+        0,
+        0,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 6390,
+      "target": "Surf sockets · 5",
+      "position": [
+        90.25199581777663,
+        25.475000011921715,
+        -752.2886768295729
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 0,
+      "input": [
+        0,
+        0,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 6400,
+      "target": "Surf sockets · 5",
+      "position": [
+        90.25199581777663,
+        16.808333345255043,
+        -752.2886768295729
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 0,
+      "input": [
+        0,
+        0,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 6410,
+      "target": "Surf sockets · 5 catch",
+      "position": [
+        90.03420515864018,
+        12.668333345254263,
+        -752.4949951001694
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 6.3639610306789285,
+      "input": [
+        -1,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 6420,
+      "target": "Surf sockets · 5 catch",
+      "position": [
+        88.94485253615213,
+        25.46000001192093,
+        -753.5261646864544
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 6.3639610306789285,
+      "input": [
+        -1,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 6430,
+      "target": "Surf sockets · 5 catch",
+      "position": [
+        87.95891784652201,
+        37.33500001192093,
+        -754.6029850413153
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 6440,
+      "target": "Surf sockets · 5 catch",
+      "position": [
+        87.9131105839742,
+        48.29333334525428,
+        -756.1022851549707
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 6450,
+      "target": "Surf sockets · 5 catch",
+      "position": [
+        87.86376799693608,
+        58.335000011920975,
+        -757.6014729811998
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 6460,
+      "target": "Surf sockets · 5 catch",
+      "position": [
+        87.81055509482724,
+        67.46000001192101,
+        -759.1005283831337
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 6470,
+      "target": "Surf sockets · 5 catch",
+      "position": [
+        87.75335541089343,
+        75.66833334525437,
+        -760.59943694094
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 6480,
+      "target": "Surf sockets · 5 catch",
+      "position": [
+        87.69212579658854,
+        82.96000001192107,
+        -762.0981862788972
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 6490,
+      "target": "Surf sockets · 5 catch",
+      "position": [
+        87.62668802220489,
+        89.33500001192111,
+        -763.5967577028872
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 6500,
+      "target": "Surf sockets · 5 catch",
+      "position": [
+        87.55677524231311,
+        94.7933333452545,
+        -765.0951269808016
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 6510,
+      "target": "Surf sockets · 5 catch",
+      "position": [
+        87.48228096872396,
+        99.3350000119212,
+        -766.593275454082
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 6520,
+      "target": "Surf sockets · 5 catch",
+      "position": [
+        87.40316839003818,
+        102.96000001192124,
+        -768.091187143321
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 6530,
+      "target": "Surf sockets · 5 catch",
+      "position": [
+        87.31942510270949,
+        105.66833334525461,
+        -769.58884707972
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 6540,
+      "target": "Surf sockets · 5 catch",
+      "position": [
+        87.23105270462922,
+        107.46000001192131,
+        -771.0862410023957
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 6550,
+      "target": "Surf sockets · 5 catch",
+      "position": [
+        87.13809731486886,
+        108.33500001192134,
+        -772.5833574143721
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 6560,
+      "target": "Surf sockets · 5 catch",
+      "position": [
+        87.04053585074409,
+        108.05444445636581,
+        -774.0801807150602
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 6570,
+      "target": "Surf sockets · 5 catch",
+      "position": [
+        86.93835044610816,
+        104.82666667858807,
+        -775.5766954553337
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 6580,
+      "target": "Surf sockets · 5 catch",
+      "position": [
+        86.83153553220326,
+        98.29333334525478,
+        -777.0728868856634
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 6590,
+      "target": "Surf sockets · 5 catch",
+      "position": [
+        86.72008994277448,
+        89.65819445636595,
+        -778.5687405221416
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 6600,
+      "target": "Surf sockets · 5 catch",
+      "position": [
+        86.60401258883172,
+        80.99152778969935,
+        -780.0642418637352
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 6610,
+      "target": "Surf sockets · 5 catch",
+      "position": [
+        86.48319422275672,
+        72.32486112303275,
+        -781.5593675986071
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 6620,
+      "target": "Surf sockets · 5 catch",
+      "position": [
+        86.35745137891662,
+        63.65819445636614,
+        -783.0540871979539
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 6630,
+      "target": "Surf sockets · 5 catch",
+      "position": [
+        86.22671030861031,
+        54.99152778969947,
+        -784.5483778929986
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 6640,
+      "target": "Surf sockets · 5 catch",
+      "position": [
+        86.09094607517781,
+        46.3248611230328,
+        -786.0422205786201
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 6650,
+      "target": "Surf sockets · 5 catch",
+      "position": [
+        86.07709300639179,
+        37.658194456366125,
+        -786.1915795170377
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 0,
+      "input": [
+        0,
+        0,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 6660,
+      "target": "Surf sockets · 5 catch",
+      "position": [
+        86.07709300639179,
+        28.991527789699454,
+        -786.1915795170377
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 0,
+      "input": [
+        0,
+        0,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 6670,
+      "target": "Surf sockets · 5 catch",
+      "position": [
+        86.07709300639179,
+        20.324861123032782,
+        -786.1915795170377
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 0,
+      "input": [
+        0,
+        0,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 6680,
+      "target": "Surf sockets · 5 catch",
+      "position": [
+        86.07709300639179,
+        11.658194456366111,
+        -786.1915795170377
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 0,
+      "input": [
+        0,
+        0,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 6690,
+      "target": "Twin winches",
+      "position": [
+        86.06273684100242,
+        3.9999999999999996,
+        -786.3408909382864
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 6700,
+      "target": "Twin winches",
+      "position": [
+        85.91640678227347,
+        4,
+        -787.8337356736591
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 6710,
+      "target": "Twin winches",
+      "position": [
+        85.76509460397548,
+        4,
+        -789.3260837107191
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 6720,
+      "target": "Twin winches",
+      "position": [
+        85.60882700409407,
+        4,
+        -790.8179209428665
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 6730,
+      "target": "Twin winches",
+      "position": [
+        85.44753050385224,
+        4,
+        -792.30922283347
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 6740,
+      "target": "Twin winches",
+      "position": [
+        85.2812069206352,
+        4,
+        -793.7999724286847
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 6750,
+      "target": "Twin winches",
+      "position": [
+        85.10985830033692,
+        4,
+        -795.2901528004825
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 6760,
+      "target": "Twin winches",
+      "position": [
+        84.93348691703672,
+        4,
+        -796.7797470491515
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 8.999999999999998,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 6770,
+      "target": "Twin winches",
+      "position": [
+        84.75207427929477,
+        4,
+        -798.2687357222917
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9.000000000000002,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 6780,
+      "target": "Twin winches",
+      "position": [
+        84.56544719366315,
+        4,
+        -799.7570797748521
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 6790,
+      "target": "Twin winches",
+      "position": [
+        84.37356822246252,
+        4,
+        -801.2447558645453
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 6800,
+      "target": "Twin winches",
+      "position": [
+        84.17643934511669,
+        4,
+        -802.731745404816
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9.000000000000002,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 6810,
+      "target": "Twin winches",
+      "position": [
+        83.97406280309733,
+        4,
+        -804.2180298400087
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 8.999999999999998,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 6820,
+      "target": "Twin winches",
+      "position": [
+        83.76644109959355,
+        4,
+        -805.7035906483771
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 6830,
+      "target": "Twin winches",
+      "position": [
+        83.55363149707212,
+        4,
+        -807.1884172142782
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9.000000000000002,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 6840,
+      "target": "Twin winches",
+      "position": [
+        83.33566388095491,
+        4,
+        -808.6724953137972
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9.000000000000002,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 6850,
+      "target": "Twin winches",
+      "position": [
+        83.11245899209597,
+        4,
+        -810.155794765907
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 6860,
+      "target": "Twin winches",
+      "position": [
+        82.88401958819306,
+        4,
+        -811.6382970849104
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9.000000000000002,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 6870,
+      "target": "Twin winches",
+      "position": [
+        82.65034868772652,
+        4,
+        -813.1199838256285
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9.000000000000002,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 6880,
+      "target": "Twin winches",
+      "position": [
+        82.41144956944505,
+        4,
+        -814.6008365863851
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9.000000000000002,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 6890,
+      "target": "Twin winches",
+      "position": [
+        82.16731308692832,
+        4,
+        -816.080834902725
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 6900,
+      "target": "Twin winches",
+      "position": [
+        81.91782340753885,
+        4,
+        -817.5599401873336
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9.000000000000002,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 6910,
+      "target": "Twin winches",
+      "position": [
+        81.66295392950158,
+        4,
+        -819.0381279601598
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9.000000000000002,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    }
+  ]
+}

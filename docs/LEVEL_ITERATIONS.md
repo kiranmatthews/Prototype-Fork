@@ -6025,3 +6025,38 @@ needlessly duplicating geometry beyond its 64 MiB archive inspection bound.
 The production full-render walking run also finishes in 89.52 s with no deaths
 or console errors; the build and hosting-size check pass.
 See [design, validation and release evidence](mayfield-mall/README.md).
+
+## 29 October 2026 NZDT — Carlisle Coast: native trampoline relay
+
+Brief: replace Carlisle Coast's Coming Soon slot with a unique 4 km greybox,
+huge linked trampoline bounces, unusual moving/spinning platforms, minimal
+repetition and three acts. The user rejected the initial assisted-launch pass;
+it was rebuilt around the existing trampoline physics. The rebuilt course's
+browser smoke test passed approximately 46 minutes after the original prompt;
+native-resolution landing-framing review followed at approximately 70 minutes.
+Boarding, landing-margin and traversal refinements continued
+after that review; these are wall-clock timings, including the rejected pass
+and shared-host validation capacity waits.
+
+The 4,000 m surveyed coastline contains 18 sections across The Breakwater
+(0–1,280 m), The Tidal Engine (1,280–2,700 m) and The Storm Crown (2,700–4,000 m).
+It has 61 primary spring transfers, an optional recovery spring, 41 moving
+decks and 17 checkpoints. Distinct machinery includes crossing groynes,
+elliptical ferries, opposing pinwheels, a vertical dredger wheel with a side
+boarding quay, counterweight stairs and a translating/rotating pier.
+
+All springs use the native vertical launch and 1.25× held-Jump behavior.
+There are no auto-aim targets, added planar impulses, custom gravity or tuning
+changes. Air-steering margins include pad-edge entry and moving-target travel.
+The spring lips sit 0.2 m above adjoining decks to prevent equal-height support
+ties from delaying a bounce and accidentally engaging hold-to-skate.
+The only player changes carry grounded and hanging contacts through a mover's
+rigid transform. Moving rims remain grindable. The elevated camera keeps the
+next landing visible at the apex; silhouettes remain complete at all distances.
+
+Validation includes 61 native transfers at two machinery phases, neutral/held
+bounce parity with zero planar drift, rotating rider/grind contact, checkpoint
+section traversal, campaign/menu checks, required level checks, production
+build and release size. Browser review covers lite and full rendering, native
+resolution, supported spawn, checkpoint/sea respawn, giant-bounce framing,
+moving transforms and the finish. See [the course and evidence](carlisle-relay/README.md).

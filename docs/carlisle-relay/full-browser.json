@@ -1,0 +1,333 @@
+{
+  "base": "http://127.0.0.1:5484",
+  "mode": "full",
+  "errors": [],
+  "captures": [
+    {
+      "name": "Scissor groyne",
+      "position": [
+        82.65102369081731,
+        0,
+        -176.00496518943265
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "checkpoint": -1,
+      "build": "Codex/sol fork · build 10-29 03:02 UTC",
+      "render": {
+        "frame": 1290,
+        "calls": 89,
+        "triangles": 154448,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "name": "Beacon chimney",
+      "position": [
+        -6.0826510532001254,
+        4,
+        -1027.6078159587612
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "checkpoint": -1,
+      "build": "Codex/sol fork · build 10-29 03:02 UTC",
+      "render": {
+        "frame": 1321,
+        "calls": 97,
+        "triangles": 154541,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "name": "Tide dial",
+      "position": [
+        -100.70064804136857,
+        12,
+        -1246.6883052089413
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "checkpoint": -1,
+      "build": "Codex/sol fork · build 10-29 03:02 UTC",
+      "render": {
+        "frame": 1355,
+        "calls": 92,
+        "triangles": 154595,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "name": "Ferris dredger",
+      "position": [
+        -75.89464273127327,
+        16,
+        -1706.3793429683149
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "checkpoint": -1,
+      "build": "Codex/sol fork · build 10-29 03:02 UTC",
+      "render": {
+        "frame": 1387,
+        "calls": 92,
+        "triangles": 155916,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "name": "Harbour scissors",
+      "position": [
+        112.16398537534782,
+        24,
+        -2375.354239400808
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "checkpoint": -1,
+      "build": "Codex/sol fork · build 10-29 03:02 UTC",
+      "render": {
+        "frame": 1419,
+        "calls": 97,
+        "triangles": 154055,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "name": "Helical turbine",
+      "position": [
+        63.91633785329102,
+        24,
+        -2823.5769095395626
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "checkpoint": -1,
+      "build": "Codex/sol fork · build 10-29 03:02 UTC",
+      "render": {
+        "frame": 1451,
+        "calls": 92,
+        "triangles": 153863,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "name": "Double helix",
+      "position": [
+        -89.21493385151419,
+        24,
+        -3220.9824714224696
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "checkpoint": -1,
+      "build": "Codex/sol fork · build 10-29 03:02 UTC",
+      "render": {
+        "frame": 1483,
+        "calls": 82,
+        "triangles": 153519,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "name": "The storm eye",
+      "position": [
+        -113.19017313903039,
+        24,
+        -3441.2107252107216
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "checkpoint": -1,
+      "build": "Codex/sol fork · build 10-29 03:02 UTC",
+      "render": {
+        "frame": 1515,
+        "calls": 67,
+        "triangles": 153159,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "name": "Homecoming",
+      "position": [
+        -64.54667466456941,
+        24,
+        -3660.792297938554
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "checkpoint": -1,
+      "build": "Codex/sol fork · build 10-29 03:02 UTC",
+      "render": {
+        "frame": 1547,
+        "calls": 80,
+        "triangles": 152868,
+        "points": 0,
+        "lines": 0
+      }
+    }
+  ],
+  "spawn": {
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "state": "ride",
+    "grounded": true,
+    "deaths": 0,
+    "checkpoint": -1,
+    "build": "Codex/sol fork · build 10-29 03:02 UTC",
+    "render": {
+      "frame": 646,
+      "calls": 87,
+      "triangles": 153676,
+      "points": 0,
+      "lines": 0
+    }
+  },
+  "sourceDifferences": [],
+  "sourceMatches": true,
+  "walk": {
+    "position": [
+      5.089729681620107,
+      0,
+      -8.839380720424796
+    ],
+    "state": "ride",
+    "grounded": true,
+    "deaths": 0,
+    "checkpoint": -1,
+    "build": "Codex/sol fork · build 10-29 03:02 UTC",
+    "render": {
+      "frame": 760,
+      "calls": 90,
+      "triangles": 153808,
+      "points": 0,
+      "lines": 0
+    }
+  },
+  "bounce": {
+    "position": [
+      31.953215636905636,
+      16.760000011920944,
+      -56.60124097294549
+    ],
+    "state": "air",
+    "grounded": false,
+    "deaths": 0,
+    "checkpoint": -1,
+    "build": "Codex/sol fork · build 10-29 03:02 UTC",
+    "render": {
+      "frame": 788,
+      "calls": 121,
+      "triangles": 157512,
+      "points": 0,
+      "lines": 0
+    }
+  },
+  "apex": {
+    "height": 164.09333334525488,
+    "targetNdc": [
+      -0.031892682253380766,
+      -0.7925852615961091,
+      0.9984873421455035
+    ],
+    "canvas": [
+      1440,
+      900
+    ],
+    "preset": "max"
+  },
+  "checkpoint": {
+    "position": [
+      84.49885359761562,
+      0,
+      -181.28199487345088
+    ],
+    "state": "ride",
+    "grounded": true,
+    "deaths": 0,
+    "checkpoint": 0,
+    "build": "Codex/sol fork · build 10-29 03:02 UTC",
+    "render": {
+      "frame": 1123,
+      "calls": 154,
+      "triangles": 681423,
+      "points": 0,
+      "lines": 0
+    }
+  },
+  "respawn": {
+    "position": [
+      84.47885359761563,
+      0.1,
+      -182.76199487345087
+    ],
+    "state": "ride",
+    "grounded": true,
+    "deaths": 0,
+    "checkpoint": 0,
+    "build": "Codex/sol fork · build 10-29 03:02 UTC",
+    "render": {
+      "frame": 1257,
+      "calls": 84,
+      "triangles": 154462,
+      "points": 0,
+      "lines": 0
+    }
+  },
+  "machines": {
+    "count": 41,
+    "changed": 41,
+    "preset": "max",
+    "canvas": [
+      1440,
+      900
+    ],
+    "resolution": {
+      "viewportWidth": 1440,
+      "viewportHeight": 900,
+      "inputWidth": 1152,
+      "inputHeight": 720,
+      "outputWidth": 1152,
+      "outputHeight": 720
+    }
+  },
+  "finish": {
+    "position": [
+      -51.75430349720675,
+      12.726666669150193,
+      -3848.6583188025943
+    ],
+    "state": "finished",
+    "grounded": true,
+    "deaths": 0,
+    "checkpoint": -1,
+    "build": "Codex/sol fork · build 10-29 03:02 UTC",
+    "render": {
+      "frame": 2129,
+      "calls": 79,
+      "triangles": 192490,
+      "points": 34,
+      "lines": 0
+    }
+  }
+}

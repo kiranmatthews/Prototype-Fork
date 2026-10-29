@@ -1,0 +1,1582 @@
+{
+  "seconds": 52.93333333333333,
+  "startS": 3585,
+  "endS": 4002,
+  "target": "Finish",
+  "position": [
+    -51.200012891156554,
+    14.108888888888886,
+    -3848.516988520945
+  ],
+  "state": "finished",
+  "deaths": 0,
+  "events": [
+    {
+      "frame": 151,
+      "launch": "Storm eye · 1"
+    },
+    {
+      "frame": 429,
+      "launch": "Storm eye · 2"
+    },
+    {
+      "frame": 730,
+      "launch": "Storm eye · 3"
+    },
+    {
+      "frame": 1030,
+      "launch": "Storm eye · 4"
+    },
+    {
+      "frame": 1342,
+      "launch": "Storm eye · 5"
+    },
+    {
+      "frame": 1635,
+      "arrived": "Storm eye · 5 catch"
+    },
+    {
+      "frame": 1767,
+      "arrived": "Homecoming"
+    },
+    {
+      "frame": 1913,
+      "launch": "Homecoming · 1"
+    },
+    {
+      "frame": 2230,
+      "launch": "Homecoming · 2"
+    },
+    {
+      "frame": 2566,
+      "launch": "Homecoming · 3"
+    },
+    {
+      "frame": 2892,
+      "arrived": "Homecoming · 3 catch"
+    }
+  ],
+  "checkpoints": 2,
+  "tail": [
+    {
+      "frame": 2380,
+      "target": "Homecoming · 3",
+      "position": [
+        -54.5152688062219,
+        194.94333334525473,
+        -3744.4992713888246
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 2390,
+      "target": "Homecoming · 3",
+      "position": [
+        -54.430058962415316,
+        196.92250001192144,
+        -3745.9968491067157
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 2400,
+      "target": "Homecoming · 3",
+      "position": [
+        -54.243177156317294,
+        197.9850000119215,
+        -3747.444705135328
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 2410,
+      "target": "Homecoming · 3",
+      "position": [
+        -54.16138758352949,
+        198.0591666785882,
+        -3748.9424735659986
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 2420,
+      "target": "Homecoming · 3",
+      "position": [
+        -54.08103411939979,
+        195.49666667858827,
+        -3750.440319741916
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 2430,
+      "target": "Homecoming · 3",
+      "position": [
+        -54.002012485333964,
+        189.62861112303275,
+        -3751.938236775679
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 2440,
+      "target": "Homecoming · 3",
+      "position": [
+        -53.924286360520604,
+        181.15694445636606,
+        -3753.43622159287
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 2450,
+      "target": "Homecoming · 3",
+      "position": [
+        -53.84784311845589,
+        172.49027778969932,
+        -3754.934272424867
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 2460,
+      "target": "Homecoming · 3",
+      "position": [
+        -53.66893877951115,
+        163.82361112303258,
+        -3756.383207380333
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 2470,
+      "target": "Homecoming · 3",
+      "position": [
+        -53.5950224919124,
+        155.15694445636584,
+        -3757.8813850244437
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 2480,
+      "target": "Homecoming · 3",
+      "position": [
+        -53.522365615158826,
+        146.4902777896991,
+        -3759.3796242728704
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 2490,
+      "target": "Homecoming · 3",
+      "position": [
+        -53.45097916390998,
+        137.82361112303235,
+        -3760.877924590085
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 2500,
+      "target": "Homecoming · 3",
+      "position": [
+        -53.38086701256618,
+        129.1569444563656,
+        -3762.376285078011
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 2510,
+      "target": "Homecoming · 3",
+      "position": [
+        -53.312030543366646,
+        120.490277789699,
+        -3763.874704714125
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 2520,
+      "target": "Homecoming · 3",
+      "position": [
+        -53.244470267141196,
+        111.82361112303239,
+        -3765.3731824331485
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 2530,
+      "target": "Homecoming · 3",
+      "position": [
+        -53.224446101419815,
+        103.15694445636579,
+        -3765.822736692376
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 0,
+      "input": [
+        0,
+        0,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 2540,
+      "target": "Homecoming · 3",
+      "position": [
+        -53.224446101419815,
+        94.49027778969919,
+        -3765.822736692376
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 0,
+      "input": [
+        0,
+        0,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 2550,
+      "target": "Homecoming · 3",
+      "position": [
+        -53.224446101419815,
+        85.82361112303259,
+        -3765.822736692376
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 0,
+      "input": [
+        0,
+        0,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 2560,
+      "target": "Homecoming · 3",
+      "position": [
+        -53.224446101419815,
+        77.15694445636599,
+        -3765.822736692376
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 0,
+      "input": [
+        0,
+        0,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 2570,
+      "target": "Homecoming · 3 catch",
+      "position": [
+        -53.508782400464284,
+        81.45750001192093,
+        -3766.604107169162
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 2580,
+      "target": "Homecoming · 3 catch",
+      "position": [
+        -53.44351807580397,
+        93.15333334525427,
+        -3768.102686680078
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 2590,
+      "target": "Homecoming · 3 catch",
+      "position": [
+        -53.37880280834309,
+        103.93250001192095,
+        -3769.6012899973466
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 2600,
+      "target": "Homecoming · 3 catch",
+      "position": [
+        -53.31473797265074,
+        113.79500001192098,
+        -3771.0999212592683
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 2610,
+      "target": "Homecoming · 3 catch",
+      "position": [
+        -53.251358926015776,
+        122.74083334525433,
+        -3772.598581679982
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 2620,
+      "target": "Homecoming · 3 catch",
+      "position": [
+        -53.18867800617781,
+        130.770000011921,
+        -3774.0972714616473
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 2630,
+      "target": "Homecoming · 3 catch",
+      "position": [
+        -53.12669818480031,
+        137.88250001192105,
+        -3775.5959904016813
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 2640,
+      "target": "Homecoming · 3 catch",
+      "position": [
+        -53.06542016719994,
+        144.07833334525444,
+        -3777.0947382002482
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 2650,
+      "target": "Homecoming · 3 catch",
+      "position": [
+        -53.004845866947434,
+        149.35750001192113,
+        -3778.593514605577
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 2660,
+      "target": "Homecoming · 3 catch",
+      "position": [
+        -52.944975978094625,
+        153.72000001192117,
+        -3780.092319314466
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 2670,
+      "target": "Homecoming · 3 catch",
+      "position": [
+        -52.88581075101387,
+        157.16583334525453,
+        -3781.591152005218
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 2680,
+      "target": "Homecoming · 3 catch",
+      "position": [
+        -52.82735028096722,
+        159.69500001192122,
+        -3783.0900123497468
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 2690,
+      "target": "Homecoming · 3 catch",
+      "position": [
+        -52.769531396174195,
+        161.30750001192126,
+        -3784.5888975873954
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 2700,
+      "target": "Homecoming · 3 catch",
+      "position": [
+        -52.71205138311719,
+        162.00333334525462,
+        -3786.0877958641945
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 2710,
+      "target": "Homecoming · 3 catch",
+      "position": [
+        -52.65473167588306,
+        161.28083334525465,
+        -3787.586700280765
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 2720,
+      "target": "Homecoming · 3 catch",
+      "position": [
+        -52.59750998970794,
+        157.39611112303245,
+        -3789.0856084427483
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 2730,
+      "target": "Homecoming · 3 catch",
+      "position": [
+        -52.54036460721854,
+        150.20694445636582,
+        -3790.5845195157754
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 2740,
+      "target": "Homecoming · 3 catch",
+      "position": [
+        -52.48328795608544,
+        141.54027778969908,
+        -3792.0834332075956
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 2750,
+      "target": "Homecoming · 3 catch",
+      "position": [
+        -52.42627738468261,
+        132.87361112303233,
+        -3793.5823494141905
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 2760,
+      "target": "Homecoming · 3 catch",
+      "position": [
+        -52.36933196563112,
+        124.20694445636566,
+        -3795.0812680974086
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 2770,
+      "target": "Homecoming · 3 catch",
+      "position": [
+        -52.31245138974275,
+        115.54027778969906,
+        -3796.58018924268
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 2780,
+      "target": "Homecoming · 3 catch",
+      "position": [
+        -52.25563554943248,
+        106.87361112303246,
+        -3798.0791128431156
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 2790,
+      "target": "Homecoming · 3 catch",
+      "position": [
+        -52.198884407256365,
+        98.20694445636586,
+        -3799.5780388944995
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 2800,
+      "target": "Homecoming · 3 catch",
+      "position": [
+        -52.142197950226866,
+        89.54027778969926,
+        -3801.076967393543
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 2810,
+      "target": "Homecoming · 3 catch",
+      "position": [
+        -52.08550990742446,
+        80.87361112303266,
+        -3802.5758958320075
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 2820,
+      "target": "Homecoming · 3 catch",
+      "position": [
+        -52.028502430139454,
+        72.20694445636606,
+        -3804.074812150858
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 2830,
+      "target": "Homecoming · 3 catch",
+      "position": [
+        -51.9709878729716,
+        63.54027778969945,
+        -3805.5737090954613
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 2840,
+      "target": "Homecoming · 3 catch",
+      "position": [
+        -51.92456541487122,
+        54.87361112303278,
+        -3806.772810819178
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 0,
+      "input": [
+        0,
+        0,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 2850,
+      "target": "Homecoming · 3 catch",
+      "position": [
+        -51.92456541487122,
+        46.20694445636611,
+        -3806.772810819178
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 0,
+      "input": [
+        0,
+        0,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 2860,
+      "target": "Homecoming · 3 catch",
+      "position": [
+        -51.92456541487122,
+        37.54027778969944,
+        -3806.772810819178
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 0,
+      "input": [
+        0,
+        0,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 2870,
+      "target": "Homecoming · 3 catch",
+      "position": [
+        -51.92456541487122,
+        28.873611123032767,
+        -3806.772810819178
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 0,
+      "input": [
+        0,
+        0,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 2880,
+      "target": "Homecoming · 3 catch",
+      "position": [
+        -51.92456541487122,
+        20.206944456366095,
+        -3806.772810819178
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 0,
+      "input": [
+        0,
+        0,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 2890,
+      "target": "Homecoming · 3 catch",
+      "position": [
+        -51.92456541487122,
+        12,
+        -3806.772810819178
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 0,
+      "input": [
+        0,
+        0,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 2900,
+      "target": "Finish",
+      "position": [
+        -52.964835093138305,
+        12,
+        -3808.314833550773
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 8.998808998416731,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 2910,
+      "target": "Finish",
+      "position": [
+        -53.04424192018692,
+        12,
+        -3809.819110481405
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9.000000000000002,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 2920,
+      "target": "Finish",
+      "position": [
+        -52.98392426718599,
+        12,
+        -3811.3178972407804
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 8.999999999999998,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 2930,
+      "target": "Finish",
+      "position": [
+        -52.92299866228563,
+        12,
+        -3812.8166594100944
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 2940,
+      "target": "Finish",
+      "position": [
+        -52.86146554452714,
+        12,
+        -3814.3153967603057
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9.000000000000002,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 2950,
+      "target": "Finish",
+      "position": [
+        -52.79932492405875,
+        12,
+        -3815.814109045165
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9.000000000000002,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 2960,
+      "target": "Finish",
+      "position": [
+        -52.73657681142794,
+        12,
+        -3817.3127960184397
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 2970,
+      "target": "Finish",
+      "position": [
+        -52.673221217581364,
+        12,
+        -3818.8114574339133
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9.000000000000002,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 2980,
+      "target": "Finish",
+      "position": [
+        -52.60911982294613,
+        12,
+        -3820.310087112005
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9.000000000000002,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 2990,
+      "target": "Finish",
+      "position": [
+        -52.54378177536583,
+        12,
+        -3821.8086633711246
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9.000000000000002,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 3000,
+      "target": "Finish",
+      "position": [
+        -52.477165088080206,
+        12,
+        -3823.3071833348995
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 8.999999999999998,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 3010,
+      "target": "Finish",
+      "position": [
+        -52.40926980435774,
+        12,
+        -3824.8056459121117
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 8.999999999999998,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 3020,
+      "target": "Finish",
+      "position": [
+        -52.340095971190884,
+        12,
+        -3826.304050011699
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 3030,
+      "target": "Finish",
+      "position": [
+        -52.26964363929559,
+        12,
+        -3827.8023945427685
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 3040,
+      "target": "Finish",
+      "position": [
+        -52.197909948165446,
+        12,
+        -3829.300678274548
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 3050,
+      "target": "Finish",
+      "position": [
+        -52.12489591614343,
+        12,
+        -3830.798900159311
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 8.999999999999998,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 3060,
+      "target": "Finish",
+      "position": [
+        -52.05060353587752,
+        12,
+        -3832.2970591986286
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9.000000000000002,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 3070,
+      "target": "Finish",
+      "position": [
+        -51.97503286182128,
+        12,
+        -3833.7951543017775
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 3080,
+      "target": "Finish",
+      "position": [
+        -51.89818395215074,
+        12,
+        -3835.293184378225
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9.000000000000002,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 3090,
+      "target": "Finish",
+      "position": [
+        -51.820056868763814,
+        12,
+        -3836.7911483376374
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 3100,
+      "target": "Finish",
+      "position": [
+        -51.74091798893981,
+        12,
+        -3838.2890592229523
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 8.999999999999996,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 3110,
+      "target": "Finish",
+      "position": [
+        -51.66170103493597,
+        12,
+        -3839.7869659871412
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 8.999999999999996,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 3120,
+      "target": "Finish",
+      "position": [
+        -51.58248408093213,
+        12,
+        -3841.28487275133
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 8.999999999999996,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 3130,
+      "target": "Finish",
+      "position": [
+        -51.50326712692829,
+        12,
+        -3842.782779515519
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 8.999999999999996,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 3140,
+      "target": "Finish",
+      "position": [
+        -51.42405017292445,
+        12,
+        -3844.280686279708
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 8.999999999999996,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    },
+    {
+      "frame": 3150,
+      "target": "Finish",
+      "position": [
+        -51.35304831044694,
+        12,
+        -3845.6232545646462
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 6.666666666666665,
+      "input": [
+        0,
+        0,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 3160,
+      "target": "Finish",
+      "position": [
+        -51.310505872185615,
+        12,
+        -3846.427685975043
+      ],
+      "state": "ride",
+      "grounded": true,
+      "skating": false,
+      "speed": 3.333333333333335,
+      "input": [
+        0,
+        0,
+        true,
+        false
+      ]
+    },
+    {
+      "frame": 3170,
+      "target": "Finish",
+      "position": [
+        -51.24754306355886,
+        13.328055555555554,
+        -3847.6182444624314
+      ],
+      "state": "air",
+      "grounded": false,
+      "skating": false,
+      "speed": 9,
+      "input": [
+        0,
+        1,
+        false,
+        false
+      ]
+    }
+  ]
+}

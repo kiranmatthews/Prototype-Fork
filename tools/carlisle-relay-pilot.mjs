@@ -27,10 +27,16 @@ export function relayPilot({player:p,level,THREE,makeInput,jumps,stops,walk,poin
    events.push({frame:ticks,arrived:target.name});target=targets[++next];if(!target)return input;at=point(target.s,target.y,target.u);
   }
   const targetDistance=Math.hypot(at[0]-p.pos.x,at[2]-p.pos.z);
-  if(!airJump&&targetDistance>12)at=point(Math.min(target.s,progress()+9),target.y,target.u);
+  if(!airJump&&targetDistance>12){const s=Math.min(target.s,progress()+9),previous=targets[Math.max(0,next-1)],t=Math.max(0,Math.min(1,(s-previous.s)/Math.max(1,target.s-previous.s)));
+   at=point(s,target.y,(previous.u??0)*(1-t)+(target.u??0)*t);}
   const dx=at[0]-p.pos.x,dz=at[2]-p.pos.z,dist=Math.hypot(dx,dz),ux=dx/Math.max(.001,dist),uz=dz/Math.max(.001,dist);
   const forward=dx*p.axisF.x+dz*p.axisF.z,side=dx*p.axisL.x+dz*p.axisL.z;
   if(airJump){input.moveY=Math.abs(forward)>1.5?Math.sign(forward):0;input.moveX=Math.abs(side)>2?Math.sign(side):0;return input;}
+  if(target.name==='Dredger boarding'&&p.grounded&&!hop&&p.groundHit?.moverId===undefined&&progress()>1805){
+   // Board the descending basket while it overlaps the lower quay.
+   const landing=point(1825,16),ready=level.movers.some(m=>m.mesh.name.startsWith('Dredger bucket')&&m.mesh.position.y<17.3&&m.lastDelta.y<0&&Math.abs(m.mesh.position.z-landing[2])<12);
+   if(!ready)return input;
+  }
   for(const cp of level.checkpoints)if(!cp.active&&cp.box.distanceToPoint(p.pos)<3){input.spinPressed=true;input.spinHeld=true;}
   if(hop){hop--;input.jumpHeld=hop>1;input.jumpPressed=hop===19;input.jumpReleased=hop===1;if(hop>1)return input;}
   if(p.grounded&&!hop){

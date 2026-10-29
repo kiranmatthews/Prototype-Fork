@@ -1,0 +1,32 @@
+{
+  "sourceSha256": "ad53df6025a5efc3c1501b9dd07f3973b79dbdf140e66927820b53a246a79520",
+  "build": "Codex/sol fork \u00b7 build 10-29 03:02 UTC",
+  "releaseBytes": 997244054,
+  "releaseBudgetBytes": 1000000000,
+  "checks": {
+    "levels": "passed",
+    "typescriptAndViteBuild": "passed",
+    "releaseSize": "passed",
+    "sixIslandCampaign": "passed",
+    "levelSelect": "passed",
+    "legacyDynamicEdges": "passed",
+    "kineticContacts": "passed",
+    "nativeHeldJumpEntry": "passed at mover phases 0, 7 and 53"
+  },
+  "nativeFlightChecks": 122,
+  "nativeFlightFailures": 0,
+  "browserErrors": {
+    "lite": [],
+    "full": []
+  },
+  "sourceMatches": {
+    "lite": true,
+    "full": true
+  },
+  "nativeCanvas": [
+    1440,
+    900
+  ],
+  "movingPlatforms": 41,
+  "routeReview": "Checkpoint-section tests, not an uninterrupted zero-death speedrun."
+}
