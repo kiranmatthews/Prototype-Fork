@@ -6,11 +6,11 @@ course. The older Uga Ambush level and its save key remain separate.
 | Act | Survey distance | Development |
 | --- | --- | --- |
 | The Breakwater | 0–1,280 m | Surf steps, a scissor groyne, tide lifts, opposing winches and a lighthouse climb. |
-| The Tidal Engine | 1,280–2,700 m | Elliptical docks, three pinwheels, a vertical bucket wheel, moving springs, counterweights and crossing crane arms. |
+| The Tidal Engine | 1,280–2,700 m | Elliptical docks, three pinwheels, open spring terraces, moving springs, counterweights and crossing crane arms. |
 | The Storm Crown | 2,700–4,000 m | Exposed headlands, helical platforms, a travelling pier, opposing spirals and the homeward dive. |
 
-There are 18 named sections, 61 primary spring transfers, one optional recovery
-spring, 41 moving decks and 17 checkpoints. Distance is the surveyed horizontal
+There are 18 named sections, 63 primary spring transfers, one optional recovery
+spring, 37 moving decks and 17 checkpoints. Distance is the surveyed horizontal
 centreline; vertical arcs and lateral steering add travel. Gold/silver/bronze
 targets are 500/620/780 seconds and remain provisional greybox targets.
 
@@ -51,9 +51,15 @@ are this prototype's chosen values, not a claim about Jak's exact settings.
 
 ## Reproducible checks
 
+- `node tools/test-carlisle-dredger-terraces.mjs`: continuous input-only climb
+  through the replacement section at three machinery phases; no ascending
+  floor catches, grounded upward teleports, bails or deaths.
+- `node tools/carlisle-replay-audit.mjs <replay.json> [git-ref]`: replay diagnosis
+  against historical player/course source without changing the checkout.
+  `CARLISLE_REPLAY_LIVES` explicitly supplies missing starting life inventory.
 - `node tools/test-carlisle-relay.mjs`: native flights, neutral/held parity,
   source validity, 4 km survey and three-act structure. `PHASES=0,7` exercises
-  all 61 transfers at two machinery timings.
+  all 63 transfers at two machinery timings.
 - `node tools/test-kinetic-platforms.mjs`: stationary rider carry, live rim
   grinding, on-foot and mounted entry at three mover phases, capture round-trip
   and invalid motion rejection.
@@ -65,18 +71,34 @@ are this prototype's chosen values, not a claim about Jak's exact settings.
   It does not edit positions, velocity, gravity or machine clocks during play.
 - `node tools/carlisle-relay-browser.mjs [--lite]`: real browser spawn, walking,
   neutral and giant held bounces, normal ground/adaptive air camera, visible
-  landing at apex, mounted entry/steering/abandon-ship, checkpoint/sea
+  landing at apex, mounted entry/steering/abandon-ship, continuous terrace
+  traversal with real keyboard input, checkpoint/sea
   recovery, moving transforms, finish and console checks. Full mode verifies
   the native canvas, then captures the normal presentation.
 - `node tools/sync-carlisle-relay.mjs`: updates only this level's published
   snapshot and stock certificate, preserving other authored levels.
 
-See `native-physics.json`, `correction/kinetic-contact.json` and `correction/full-browser.json`
+See `native-physics.json`, `correction/kinetic-contact.json` and `terraces/full-browser.json`
 for measured results. The correction directory records the latest controls and
-camera review; the original browser evidence remains in this directory.
+camera revision. The terraces directory records the subsequent replay-driven
+redesign; the original browser evidence remains in this directory.
 Traversal reports are checkpoint-section reviews, not a claim
 of an uninterrupted zero-death speedrun. The timing pilot can miss a rotating
 handoff; the course deliberately retains waiting and jumping decisions.
 The browser checks use isolated profiles and do not alter the user's saved games.
 
 ![Giant native bounce with its landing visible](correction/full-giant-bounce-apex.png)
+
+## Replay-driven dredger replacement
+
+The supplied 03:44:23 replay ends around 1,860 m, at the former Ferris dredger.
+Its baskets crossed the boarding path and travelled underneath the upper quay.
+The replacement uses two open spring transfers from 16 m to 32 m to 48 m,
+with wide, staggered fixed catches and no overlapping vertical machinery.
+The two amber pads render above the quay's depth layers so they stay visible
+at normal resolution; their collision heights are unchanged.
+The original incoming checkpoint and downstream discharge chain remain in place.
+See `terraces/replay-diagnosis.json` for the recorded contact sequence and its
+explicit starting-inventory limitation.
+
+![Open spring terraces replacing the wheel](terraces/full-terraces-apex.png)

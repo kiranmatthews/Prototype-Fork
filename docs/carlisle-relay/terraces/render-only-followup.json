@@ -1,0 +1,19 @@
+{
+  "reason": "Native and lite results precede a render-only correction on the two new springs. Final full-browser checks exercise the corrected source.",
+  "changedFields": [
+    {
+      "componentIndex": 336,
+      "name": "Dredger terraces \u00b7 1",
+      "beforeDepthBias": null,
+      "afterDepthBias": -4.2
+    },
+    {
+      "componentIndex": 344,
+      "name": "Dredger terraces \u00b7 2",
+      "beforeDepthBias": null,
+      "afterDepthBias": -4.2
+    }
+  ],
+  "movementAndCollisionDataIdentical": true,
+  "publishedEntryBeforeSha256": "c28e7f7ad86555cab6af0c19417b16b0961bf84ccf7a0c6379f41b6d8ac4b77d"
+}

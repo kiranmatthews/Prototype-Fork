@@ -17,13 +17,13 @@ const point=(v:Station)=>carlislePoint(...v);
 export const CARLISLE_RELAY_LENGTH=4000;
 export const CARLISLE_RELAY_ACTS=[
  {name:'I · THE BREAKWATER',from:0,to:1280,idea:'Learn the springs, weave through the groynes, climb the lighthouse.'},
- {name:'II · THE TIDAL ENGINE',from:1280,to:2700,idea:'Orbiting docks, opposing rotors and a vertical bucket wheel.'},
+ {name:'II · THE TIDAL ENGINE',from:1280,to:2700,idea:'Orbiting docks, opposing rotors and an open spring-terrace climb.'},
  {name:'III · THE STORM CROWN',from:2700,to:4000,idea:'Exposed headlands, moving spring chains and the homeward dive.'},
 ];
 export const CARLISLE_RELAY_SECTIONS=[
  ['Foam steps',0,180],['Scissor groyne',180,390],['Lift and skip',390,605],['Surf sockets',605,825],
  ['Twin winches',825,1040],['Beacon chimney',1040,1280],['Tide dial',1280,1510],['Pinwheel handoffs',1510,1745],
- ['Ferris dredger',1745,1980],['Cross-thread springs',1980,2220],['Counterweight stacks',2220,2460],['Harbour scissors',2460,2700],
+ ['Dredger terraces',1745,1980],['Cross-thread springs',1980,2220],['Counterweight stacks',2220,2460],['Harbour scissors',2460,2700],
  ['Storm fingers',2700,2910],['Helical turbine',2910,3130],['Pendulum pier',3130,3350],['Double helix',3350,3570],
  ['The storm eye',3570,3790],['Homecoming',3790,4000],
 ] as const;
@@ -107,15 +107,17 @@ walk('Dial entry',1360,12);walk('Dial exit',1435,12);road('Dial receiving quay',
 spring('Dial exit spring',[1492,12],[1516,16]);road('Dial catch',1508,1544,16,18);rest('Pinwheel handoffs',1530,16);
 for(const [i,s] of [1566,1605,1644].entries()){moving(`Pinwheel ${i+1}`,s,16,16,58,{spin:i===1?-13:11,yaw:frame(s).yaw+i*25});walk('Pinwheel centre',s,16);}
 road('Pinwheel dock',1672,1693,16,17);chain('Pinwheel release',[[1696,16],[1721,27],[1740,16]]);road('Pinwheel catch',1733,1776,16,20);
-rest('Ferris dredger',1770,16);road('Dredger side boarding quay',1760,1834,16,16,s=>-20*Math.max(0,Math.min(1,(s-1785)/20)));
-for(let i=0;i<4;i++)moving(`Dredger bucket ${i+1}`,1825,32,22,32,{axis:'x',orbit:[16,29],speed:.2,phase:Math.PI+i*Math.PI/2});
-// An open grey wheel shows the trajectory; the horizontal baskets remain
-// the only collidable parts of the rotating machine.
-{const vertices:number[]=[],indices:number[]=[];for(let i=0;i<=64;i++){const a=i/64*Math.PI*2;
- for(let j=0;j<6;j++){const b=j/6*Math.PI*2;vertices.push(Math.sin(b)*.9,(16+Math.cos(b)*.9)*Math.cos(a),(29+Math.cos(b)*.9)*Math.sin(a));}}
- for(let i=0;i<64;i++)for(let j=0;j<6;j++){const a=i*6+j,b=i*6+(j+1)%6;indices.push(a,b,b+6,a,b+6,a+6);}
- add({t:'mesh',nm:'Dredger wheel · orbit guide',p:carlislePoint(1825,32),vertices,indices,solid:false,tex:'solid',color:DARK,grp:9});}
-walk('Dredger approach',1785,16);walk('Dredger curve',1805,16,-20);walk('Dredger side pier',1824,16,-20);walk('Dredger boarding',1825,16,-7);walk('Dredger upper quay',1858,48);road('Dredger upper quay',1841,1904,48,20);
+// Open, separated catches replace the wheel whose rising baskets crossed
+// underneath the upper floor. No moving deck or stacked floor crosses this
+// approach: the amber pads and fruit arcs show both transfers from the quay.
+rest('Dredger terraces',1770,16,26);road('Dredger launch quay',1760,1796,16,24);
+road('Dredger middle terrace',1817,1839,32,26,-6);
+road('Dredger upper terrace',1853,1904,48,28,s=>6*(1-Math.max(0,Math.min(1,(s-1864)/28))));
+chain('Dredger terraces',[[1792,16],[1828,32,-6],[1864,48,6]]);
+// Keep the amber faces above the quay's render-only depth layers at normal
+// resolution, preserving the same 2 cm lip and native collision geometry.
+for(const c of C)if(c.t==='trampoline'&&c.nm?.startsWith('Dredger terraces ·'))c.depthBias=-4.2;
+walk('Dredger upper terrace exit',1895,48);
 chain('Dredger discharge',[[1908,48],[1935,58,3],[1964,35],[1983,24]]);road('Discharge catch',1976,2022,24,20);rest('Cross-thread springs',2008,24);
 chain('Cross-thread',[[2031,24],[2060,34,-3],[2092,24,3],[2124,40,-3],[2157,24]],{0:{axis:'x',amp:3,speed:.55},1:{axis:'z',amp:3,speed:.5},2:{axis:'x',amp:3,speed:.7,phase:Math.PI},3:{spin:18}});
 road('Crane gantry',2150,2236,24,11);rail('Crane outrigger shortcut',2160,2230,25.1,6);

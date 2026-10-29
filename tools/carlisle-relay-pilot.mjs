@@ -32,11 +32,6 @@ export function relayPilot({player:p,level,THREE,makeInput,jumps,stops,walk,poin
   const dx=at[0]-p.pos.x,dz=at[2]-p.pos.z,dist=Math.hypot(dx,dz),ux=dx/Math.max(.001,dist),uz=dz/Math.max(.001,dist);
   const forward=dx*p.axisF.x+dz*p.axisF.z,side=dx*p.axisL.x+dz*p.axisL.z;
   if(airJump){input.moveY=Math.abs(forward)>1.5?Math.sign(forward):0;input.moveX=Math.abs(side)>2?Math.sign(side):0;return input;}
-  if(target.name==='Dredger boarding'&&p.grounded&&!hop&&p.groundHit?.moverId===undefined&&progress()>1805){
-   // Board the descending basket while it overlaps the lower quay.
-   const landing=point(1825,16),ready=level.movers.some(m=>m.mesh.name.startsWith('Dredger bucket')&&m.mesh.position.y<17.3&&m.lastDelta.y<0&&Math.abs(m.mesh.position.z-landing[2])<12);
-   if(!ready)return input;
-  }
   for(const cp of level.checkpoints)if(!cp.active&&cp.box.distanceToPoint(p.pos)<3){input.spinPressed=true;input.spinHeld=true;}
   if(hop){hop--;input.jumpHeld=hop>1;input.jumpPressed=hop===19;input.jumpReleased=hop===1;if(hop>1)return input;}
   if(p.grounded&&!hop){
@@ -45,8 +40,6 @@ export function relayPilot({player:p,level,THREE,makeInput,jumps,stops,walk,poin
     if(landing&&landing.point.y<p.pos.y+1.75&&!cooldown){hop=20;cooldown=60;input.jumpHeld=true;input.jumpPressed=true;return input;}
     else return input;
    }
-   if(target.name==='Dredger upper quay'&&p.groundHit?.moverId!==undefined){const deck=level.movers[p.groundHit.moverId].mesh;
-    if(p.pos.y<45||deck.position.distanceTo(new THREE.Vector3(...point(1850,47)))>30)return input;}
   }
   input.moveY=Math.abs(forward)>1?Math.sign(forward):0;input.moveX=Math.abs(side)>1.5?Math.sign(side):0;
   if(p.surfaceName?.startsWith('Spring-tide reservoir'))input.jumpHeld=true;

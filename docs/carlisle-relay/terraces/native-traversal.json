@@ -1,0 +1,1114 @@
+{
+  "rows": [
+    {
+      "phase": 0,
+      "seconds": 15.15,
+      "launches": [
+        "Dredger terraces · 1",
+        "Dredger terraces · 2"
+      ],
+      "maxRiseSnap": 0.020000011920927818,
+      "position": [
+        -72.3099672227828,
+        48,
+        -1827.391484719621
+      ],
+      "samples": [
+        {
+          "frame": 0,
+          "position": [
+            -75.8947368502617,
+            16,
+            -1706.3826749726256
+          ],
+          "state": "ride",
+          "ground": "Pinwheel catch",
+          "vy": 0,
+          "target": "Dredger terraces · 1"
+        },
+        {
+          "frame": 30,
+          "position": [
+            -75.94120549183178,
+            16,
+            -1708.0320204974942
+          ],
+          "state": "ride",
+          "ground": "Pinwheel catch",
+          "vy": 0,
+          "target": "Dredger terraces · 1"
+        },
+        {
+          "frame": 60,
+          "position": [
+            -76.05707638939568,
+            16,
+            -1712.2270869170648
+          ],
+          "state": "ride",
+          "ground": "Pinwheel catch",
+          "vy": 0,
+          "target": "Dredger terraces · 1"
+        },
+        {
+          "frame": 90,
+          "position": [
+            -76.17373605371702,
+            16,
+            -1716.7255738756658
+          ],
+          "state": "ride",
+          "ground": "Dredger terraces",
+          "vy": 0,
+          "target": "Dredger terraces · 1"
+        },
+        {
+          "frame": 120,
+          "position": [
+            -76.28219169196382,
+            16,
+            -1721.2242661043356
+          ],
+          "state": "ride",
+          "ground": "Dredger terraces",
+          "vy": 0,
+          "target": "Dredger terraces · 1"
+        },
+        {
+          "frame": 150,
+          "position": [
+            -79.92639740447486,
+            55.10958334525428,
+            -1724.7192779452223
+          ],
+          "state": "air",
+          "vy": 73.17500000000008,
+          "target": "Dredger terraces · 2"
+        },
+        {
+          "frame": 180,
+          "position": [
+            -80.02227616958999,
+            87.43458334525434,
+            -1729.2182557045855
+          ],
+          "state": "air",
+          "vy": 56.67500000000017,
+          "target": "Dredger terraces · 2"
+        },
+        {
+          "frame": 210,
+          "position": [
+            -80.27514868954015,
+            111.50958334525443,
+            -1733.6704369249542
+          ],
+          "state": "air",
+          "vy": 40.17500000000025,
+          "target": "Dredger terraces · 2"
+        },
+        {
+          "frame": 240,
+          "position": [
+            -80.34490499987724,
+            127.33458334525457,
+            -1738.1698943240788
+          ],
+          "state": "air",
+          "vy": 23.67500000000028,
+          "target": "Dredger terraces · 2"
+        },
+        {
+          "frame": 270,
+          "position": [
+            -80.56944864924374,
+            134.90958334525473,
+            -1742.6235422244056
+          ],
+          "state": "air",
+          "vy": 7.175000000000262,
+          "target": "Dredger terraces · 2"
+        },
+        {
+          "frame": 300,
+          "position": [
+            -80.61026373334623,
+            130.98569445636596,
+            -1747.1233549736378
+          ],
+          "state": "air",
+          "vy": -32.25833333333308,
+          "target": "Dredger terraces · 2"
+        },
+        {
+          "frame": 330,
+          "position": [
+            -80.80249413061746,
+            106.45944445636614,
+            -1751.5788530545092
+          ],
+          "state": "air",
+          "vy": -52,
+          "target": "Dredger terraces · 2"
+        },
+        {
+          "frame": 360,
+          "position": [
+            -80.80474421901687,
+            80.45944445636634,
+            -1756.0788486536462
+          ],
+          "state": "air",
+          "vy": -52,
+          "target": "Dredger terraces · 2"
+        },
+        {
+          "frame": 390,
+          "position": [
+            -80.78653702916283,
+            54.459444456366455,
+            -1760.5788078640142
+          ],
+          "state": "air",
+          "vy": -52,
+          "target": "Dredger terraces · 2"
+        },
+        {
+          "frame": 420,
+          "position": [
+            -80.08536777956871,
+            37.978333345254256,
+            -1763.3962741040546
+          ],
+          "state": "air",
+          "ground": "Dredger terraces · 2",
+          "vy": 88.55000000000001,
+          "target": "Dredger terraces · 2 catch"
+        },
+        {
+          "frame": 450,
+          "position": [
+            -74.95741318531395,
+            77.99083334525429,
+            -1766.5186195403733
+          ],
+          "state": "air",
+          "vy": 72.0500000000001,
+          "target": "Dredger terraces · 2 catch"
+        },
+        {
+          "frame": 480,
+          "position": [
+            -71.67509056657394,
+            109.75333334525435,
+            -1770.1353045035962
+          ],
+          "state": "air",
+          "vy": 55.55000000000018,
+          "target": "Dredger terraces · 2 catch"
+        },
+        {
+          "frame": 510,
+          "position": [
+            -71.58091652190237,
+            133.26583334525446,
+            -1774.6343123223892
+          ],
+          "state": "air",
+          "vy": 39.05000000000027,
+          "target": "Dredger terraces · 2 catch"
+        },
+        {
+          "frame": 540,
+          "position": [
+            -71.45970251686593,
+            148.5283333452546,
+            -1779.1326727985854
+          ],
+          "state": "air",
+          "vy": 22.55000000000029,
+          "target": "Dredger terraces · 2 catch"
+        },
+        {
+          "frame": 570,
+          "position": [
+            -71.3113073246759,
+            155.54083334525473,
+            -1783.6302179023794
+          ],
+          "state": "air",
+          "vy": 6.050000000000271,
+          "target": "Dredger terraces · 2 catch"
+        },
+        {
+          "frame": 600,
+          "position": [
+            -71.13182544185761,
+            150.21833334525488,
+            -1788.126627220287
+          ],
+          "state": "air",
+          "vy": -36.24999999999974,
+          "target": "Dredger terraces · 2 catch"
+        },
+        {
+          "frame": 630,
+          "position": [
+            -70.91908641739694,
+            125.13027778969922,
+            -1792.6215849516743
+          ],
+          "state": "air",
+          "vy": -52,
+          "target": "Dredger terraces · 2 catch"
+        },
+        {
+          "frame": 660,
+          "position": [
+            -70.67261364455885,
+            99.13027778969942,
+            -1797.1148197770729
+          ],
+          "state": "air",
+          "vy": -52,
+          "target": "Dredger terraces · 2 catch"
+        },
+        {
+          "frame": 690,
+          "position": [
+            -70.58309822730273,
+            73.13027778969962,
+            -1798.6121460187737
+          ],
+          "state": "air",
+          "vy": -52,
+          "target": "Dredger terraces · 2 catch"
+        },
+        {
+          "frame": 720,
+          "position": [
+            -70.57361448102583,
+            48,
+            -1798.7618459137523
+          ],
+          "state": "ride",
+          "ground": "Dredger upper terrace",
+          "vy": 0,
+          "target": "Dredger upper terrace exit"
+        },
+        {
+          "frame": 750,
+          "position": [
+            -70.2702100111121,
+            48,
+            -1803.2515930906225
+          ],
+          "state": "ride",
+          "ground": "Dredger upper terrace",
+          "vy": 0,
+          "target": "Dredger upper terrace exit"
+        },
+        {
+          "frame": 780,
+          "position": [
+            -70.33166028360773,
+            48,
+            -1807.7680717986664
+          ],
+          "state": "ride",
+          "ground": "Dredger upper terrace",
+          "vy": 0,
+          "target": "Dredger upper terrace exit"
+        },
+        {
+          "frame": 810,
+          "position": [
+            -71.55931589380704,
+            48,
+            -1812.3868948430847
+          ],
+          "state": "ride",
+          "ground": "Dredger upper terrace",
+          "vy": 0,
+          "target": "Dredger upper terrace exit"
+        },
+        {
+          "frame": 840,
+          "position": [
+            -71.32151954331412,
+            48,
+            -1816.883913340219
+          ],
+          "state": "ride",
+          "ground": "Dredger upper terrace",
+          "vy": 0,
+          "target": "Dredger upper terrace exit"
+        },
+        {
+          "frame": 870,
+          "position": [
+            -72.60624819713965,
+            48,
+            -1821.540753003057
+          ],
+          "state": "ride",
+          "ground": "Dredger upper terrace",
+          "vy": 0,
+          "target": "Dredger upper terrace exit"
+        },
+        {
+          "frame": 900,
+          "position": [
+            -72.46693758255037,
+            48,
+            -1826.050642018204
+          ],
+          "state": "ride",
+          "ground": "Dredger upper terrace",
+          "vy": 0,
+          "target": "Dredger upper terrace exit"
+        }
+      ]
+    },
+    {
+      "phase": 7,
+      "seconds": 15.15,
+      "launches": [
+        "Dredger terraces · 1",
+        "Dredger terraces · 2"
+      ],
+      "maxRiseSnap": 0.020000011920927818,
+      "position": [
+        -72.3099672227828,
+        48,
+        -1827.391484719621
+      ],
+      "samples": [
+        {
+          "frame": 0,
+          "position": [
+            -75.8947368502617,
+            16,
+            -1706.3826749726256
+          ],
+          "state": "ride",
+          "ground": "Pinwheel catch",
+          "vy": 0,
+          "target": "Dredger terraces · 1"
+        },
+        {
+          "frame": 30,
+          "position": [
+            -75.94120549183178,
+            16,
+            -1708.0320204974942
+          ],
+          "state": "ride",
+          "ground": "Pinwheel catch",
+          "vy": 0,
+          "target": "Dredger terraces · 1"
+        },
+        {
+          "frame": 60,
+          "position": [
+            -76.05707638939568,
+            16,
+            -1712.2270869170648
+          ],
+          "state": "ride",
+          "ground": "Pinwheel catch",
+          "vy": 0,
+          "target": "Dredger terraces · 1"
+        },
+        {
+          "frame": 90,
+          "position": [
+            -76.17373605371702,
+            16,
+            -1716.7255738756658
+          ],
+          "state": "ride",
+          "ground": "Dredger terraces",
+          "vy": 0,
+          "target": "Dredger terraces · 1"
+        },
+        {
+          "frame": 120,
+          "position": [
+            -76.28219169196382,
+            16,
+            -1721.2242661043356
+          ],
+          "state": "ride",
+          "ground": "Dredger terraces",
+          "vy": 0,
+          "target": "Dredger terraces · 1"
+        },
+        {
+          "frame": 150,
+          "position": [
+            -79.92639740447486,
+            55.10958334525428,
+            -1724.7192779452223
+          ],
+          "state": "air",
+          "vy": 73.17500000000008,
+          "target": "Dredger terraces · 2"
+        },
+        {
+          "frame": 180,
+          "position": [
+            -80.02227616958999,
+            87.43458334525434,
+            -1729.2182557045855
+          ],
+          "state": "air",
+          "vy": 56.67500000000017,
+          "target": "Dredger terraces · 2"
+        },
+        {
+          "frame": 210,
+          "position": [
+            -80.27514868954015,
+            111.50958334525443,
+            -1733.6704369249542
+          ],
+          "state": "air",
+          "vy": 40.17500000000025,
+          "target": "Dredger terraces · 2"
+        },
+        {
+          "frame": 240,
+          "position": [
+            -80.34490499987724,
+            127.33458334525457,
+            -1738.1698943240788
+          ],
+          "state": "air",
+          "vy": 23.67500000000028,
+          "target": "Dredger terraces · 2"
+        },
+        {
+          "frame": 270,
+          "position": [
+            -80.56944864924374,
+            134.90958334525473,
+            -1742.6235422244056
+          ],
+          "state": "air",
+          "vy": 7.175000000000262,
+          "target": "Dredger terraces · 2"
+        },
+        {
+          "frame": 300,
+          "position": [
+            -80.61026373334623,
+            130.98569445636596,
+            -1747.1233549736378
+          ],
+          "state": "air",
+          "vy": -32.25833333333308,
+          "target": "Dredger terraces · 2"
+        },
+        {
+          "frame": 330,
+          "position": [
+            -80.80249413061746,
+            106.45944445636614,
+            -1751.5788530545092
+          ],
+          "state": "air",
+          "vy": -52,
+          "target": "Dredger terraces · 2"
+        },
+        {
+          "frame": 360,
+          "position": [
+            -80.80474421901687,
+            80.45944445636634,
+            -1756.0788486536462
+          ],
+          "state": "air",
+          "vy": -52,
+          "target": "Dredger terraces · 2"
+        },
+        {
+          "frame": 390,
+          "position": [
+            -80.78653702916283,
+            54.459444456366455,
+            -1760.5788078640142
+          ],
+          "state": "air",
+          "vy": -52,
+          "target": "Dredger terraces · 2"
+        },
+        {
+          "frame": 420,
+          "position": [
+            -80.08536777956871,
+            37.978333345254256,
+            -1763.3962741040546
+          ],
+          "state": "air",
+          "ground": "Dredger terraces · 2",
+          "vy": 88.55000000000001,
+          "target": "Dredger terraces · 2 catch"
+        },
+        {
+          "frame": 450,
+          "position": [
+            -74.95741318531395,
+            77.99083334525429,
+            -1766.5186195403733
+          ],
+          "state": "air",
+          "vy": 72.0500000000001,
+          "target": "Dredger terraces · 2 catch"
+        },
+        {
+          "frame": 480,
+          "position": [
+            -71.67509056657394,
+            109.75333334525435,
+            -1770.1353045035962
+          ],
+          "state": "air",
+          "vy": 55.55000000000018,
+          "target": "Dredger terraces · 2 catch"
+        },
+        {
+          "frame": 510,
+          "position": [
+            -71.58091652190237,
+            133.26583334525446,
+            -1774.6343123223892
+          ],
+          "state": "air",
+          "vy": 39.05000000000027,
+          "target": "Dredger terraces · 2 catch"
+        },
+        {
+          "frame": 540,
+          "position": [
+            -71.45970251686593,
+            148.5283333452546,
+            -1779.1326727985854
+          ],
+          "state": "air",
+          "vy": 22.55000000000029,
+          "target": "Dredger terraces · 2 catch"
+        },
+        {
+          "frame": 570,
+          "position": [
+            -71.3113073246759,
+            155.54083334525473,
+            -1783.6302179023794
+          ],
+          "state": "air",
+          "vy": 6.050000000000271,
+          "target": "Dredger terraces · 2 catch"
+        },
+        {
+          "frame": 600,
+          "position": [
+            -71.13182544185761,
+            150.21833334525488,
+            -1788.126627220287
+          ],
+          "state": "air",
+          "vy": -36.24999999999974,
+          "target": "Dredger terraces · 2 catch"
+        },
+        {
+          "frame": 630,
+          "position": [
+            -70.91908641739694,
+            125.13027778969922,
+            -1792.6215849516743
+          ],
+          "state": "air",
+          "vy": -52,
+          "target": "Dredger terraces · 2 catch"
+        },
+        {
+          "frame": 660,
+          "position": [
+            -70.67261364455885,
+            99.13027778969942,
+            -1797.1148197770729
+          ],
+          "state": "air",
+          "vy": -52,
+          "target": "Dredger terraces · 2 catch"
+        },
+        {
+          "frame": 690,
+          "position": [
+            -70.58309822730273,
+            73.13027778969962,
+            -1798.6121460187737
+          ],
+          "state": "air",
+          "vy": -52,
+          "target": "Dredger terraces · 2 catch"
+        },
+        {
+          "frame": 720,
+          "position": [
+            -70.57361448102583,
+            48,
+            -1798.7618459137523
+          ],
+          "state": "ride",
+          "ground": "Dredger upper terrace",
+          "vy": 0,
+          "target": "Dredger upper terrace exit"
+        },
+        {
+          "frame": 750,
+          "position": [
+            -70.2702100111121,
+            48,
+            -1803.2515930906225
+          ],
+          "state": "ride",
+          "ground": "Dredger upper terrace",
+          "vy": 0,
+          "target": "Dredger upper terrace exit"
+        },
+        {
+          "frame": 780,
+          "position": [
+            -70.33166028360773,
+            48,
+            -1807.7680717986664
+          ],
+          "state": "ride",
+          "ground": "Dredger upper terrace",
+          "vy": 0,
+          "target": "Dredger upper terrace exit"
+        },
+        {
+          "frame": 810,
+          "position": [
+            -71.55931589380704,
+            48,
+            -1812.3868948430847
+          ],
+          "state": "ride",
+          "ground": "Dredger upper terrace",
+          "vy": 0,
+          "target": "Dredger upper terrace exit"
+        },
+        {
+          "frame": 840,
+          "position": [
+            -71.32151954331412,
+            48,
+            -1816.883913340219
+          ],
+          "state": "ride",
+          "ground": "Dredger upper terrace",
+          "vy": 0,
+          "target": "Dredger upper terrace exit"
+        },
+        {
+          "frame": 870,
+          "position": [
+            -72.60624819713965,
+            48,
+            -1821.540753003057
+          ],
+          "state": "ride",
+          "ground": "Dredger upper terrace",
+          "vy": 0,
+          "target": "Dredger upper terrace exit"
+        },
+        {
+          "frame": 900,
+          "position": [
+            -72.46693758255037,
+            48,
+            -1826.050642018204
+          ],
+          "state": "ride",
+          "ground": "Dredger upper terrace",
+          "vy": 0,
+          "target": "Dredger upper terrace exit"
+        }
+      ]
+    },
+    {
+      "phase": 53,
+      "seconds": 15.15,
+      "launches": [
+        "Dredger terraces · 1",
+        "Dredger terraces · 2"
+      ],
+      "maxRiseSnap": 0.020000011920927818,
+      "position": [
+        -72.3099672227828,
+        48,
+        -1827.391484719621
+      ],
+      "samples": [
+        {
+          "frame": 0,
+          "position": [
+            -75.8947368502617,
+            16,
+            -1706.3826749726256
+          ],
+          "state": "ride",
+          "ground": "Pinwheel catch",
+          "vy": 0,
+          "target": "Dredger terraces · 1"
+        },
+        {
+          "frame": 30,
+          "position": [
+            -75.94120549183178,
+            16,
+            -1708.0320204974942
+          ],
+          "state": "ride",
+          "ground": "Pinwheel catch",
+          "vy": 0,
+          "target": "Dredger terraces · 1"
+        },
+        {
+          "frame": 60,
+          "position": [
+            -76.05707638939568,
+            16,
+            -1712.2270869170648
+          ],
+          "state": "ride",
+          "ground": "Pinwheel catch",
+          "vy": 0,
+          "target": "Dredger terraces · 1"
+        },
+        {
+          "frame": 90,
+          "position": [
+            -76.17373605371702,
+            16,
+            -1716.7255738756658
+          ],
+          "state": "ride",
+          "ground": "Dredger terraces",
+          "vy": 0,
+          "target": "Dredger terraces · 1"
+        },
+        {
+          "frame": 120,
+          "position": [
+            -76.28219169196382,
+            16,
+            -1721.2242661043356
+          ],
+          "state": "ride",
+          "ground": "Dredger terraces",
+          "vy": 0,
+          "target": "Dredger terraces · 1"
+        },
+        {
+          "frame": 150,
+          "position": [
+            -79.92639740447486,
+            55.10958334525428,
+            -1724.7192779452223
+          ],
+          "state": "air",
+          "vy": 73.17500000000008,
+          "target": "Dredger terraces · 2"
+        },
+        {
+          "frame": 180,
+          "position": [
+            -80.02227616958999,
+            87.43458334525434,
+            -1729.2182557045855
+          ],
+          "state": "air",
+          "vy": 56.67500000000017,
+          "target": "Dredger terraces · 2"
+        },
+        {
+          "frame": 210,
+          "position": [
+            -80.27514868954015,
+            111.50958334525443,
+            -1733.6704369249542
+          ],
+          "state": "air",
+          "vy": 40.17500000000025,
+          "target": "Dredger terraces · 2"
+        },
+        {
+          "frame": 240,
+          "position": [
+            -80.34490499987724,
+            127.33458334525457,
+            -1738.1698943240788
+          ],
+          "state": "air",
+          "vy": 23.67500000000028,
+          "target": "Dredger terraces · 2"
+        },
+        {
+          "frame": 270,
+          "position": [
+            -80.56944864924374,
+            134.90958334525473,
+            -1742.6235422244056
+          ],
+          "state": "air",
+          "vy": 7.175000000000262,
+          "target": "Dredger terraces · 2"
+        },
+        {
+          "frame": 300,
+          "position": [
+            -80.61026373334623,
+            130.98569445636596,
+            -1747.1233549736378
+          ],
+          "state": "air",
+          "vy": -32.25833333333308,
+          "target": "Dredger terraces · 2"
+        },
+        {
+          "frame": 330,
+          "position": [
+            -80.80249413061746,
+            106.45944445636614,
+            -1751.5788530545092
+          ],
+          "state": "air",
+          "vy": -52,
+          "target": "Dredger terraces · 2"
+        },
+        {
+          "frame": 360,
+          "position": [
+            -80.80474421901687,
+            80.45944445636634,
+            -1756.0788486536462
+          ],
+          "state": "air",
+          "vy": -52,
+          "target": "Dredger terraces · 2"
+        },
+        {
+          "frame": 390,
+          "position": [
+            -80.78653702916283,
+            54.459444456366455,
+            -1760.5788078640142
+          ],
+          "state": "air",
+          "vy": -52,
+          "target": "Dredger terraces · 2"
+        },
+        {
+          "frame": 420,
+          "position": [
+            -80.08536777956871,
+            37.978333345254256,
+            -1763.3962741040546
+          ],
+          "state": "air",
+          "ground": "Dredger terraces · 2",
+          "vy": 88.55000000000001,
+          "target": "Dredger terraces · 2 catch"
+        },
+        {
+          "frame": 450,
+          "position": [
+            -74.95741318531395,
+            77.99083334525429,
+            -1766.5186195403733
+          ],
+          "state": "air",
+          "vy": 72.0500000000001,
+          "target": "Dredger terraces · 2 catch"
+        },
+        {
+          "frame": 480,
+          "position": [
+            -71.67509056657394,
+            109.75333334525435,
+            -1770.1353045035962
+          ],
+          "state": "air",
+          "vy": 55.55000000000018,
+          "target": "Dredger terraces · 2 catch"
+        },
+        {
+          "frame": 510,
+          "position": [
+            -71.58091652190237,
+            133.26583334525446,
+            -1774.6343123223892
+          ],
+          "state": "air",
+          "vy": 39.05000000000027,
+          "target": "Dredger terraces · 2 catch"
+        },
+        {
+          "frame": 540,
+          "position": [
+            -71.45970251686593,
+            148.5283333452546,
+            -1779.1326727985854
+          ],
+          "state": "air",
+          "vy": 22.55000000000029,
+          "target": "Dredger terraces · 2 catch"
+        },
+        {
+          "frame": 570,
+          "position": [
+            -71.3113073246759,
+            155.54083334525473,
+            -1783.6302179023794
+          ],
+          "state": "air",
+          "vy": 6.050000000000271,
+          "target": "Dredger terraces · 2 catch"
+        },
+        {
+          "frame": 600,
+          "position": [
+            -71.13182544185761,
+            150.21833334525488,
+            -1788.126627220287
+          ],
+          "state": "air",
+          "vy": -36.24999999999974,
+          "target": "Dredger terraces · 2 catch"
+        },
+        {
+          "frame": 630,
+          "position": [
+            -70.91908641739694,
+            125.13027778969922,
+            -1792.6215849516743
+          ],
+          "state": "air",
+          "vy": -52,
+          "target": "Dredger terraces · 2 catch"
+        },
+        {
+          "frame": 660,
+          "position": [
+            -70.67261364455885,
+            99.13027778969942,
+            -1797.1148197770729
+          ],
+          "state": "air",
+          "vy": -52,
+          "target": "Dredger terraces · 2 catch"
+        },
+        {
+          "frame": 690,
+          "position": [
+            -70.58309822730273,
+            73.13027778969962,
+            -1798.6121460187737
+          ],
+          "state": "air",
+          "vy": -52,
+          "target": "Dredger terraces · 2 catch"
+        },
+        {
+          "frame": 720,
+          "position": [
+            -70.57361448102583,
+            48,
+            -1798.7618459137523
+          ],
+          "state": "ride",
+          "ground": "Dredger upper terrace",
+          "vy": 0,
+          "target": "Dredger upper terrace exit"
+        },
+        {
+          "frame": 750,
+          "position": [
+            -70.2702100111121,
+            48,
+            -1803.2515930906225
+          ],
+          "state": "ride",
+          "ground": "Dredger upper terrace",
+          "vy": 0,
+          "target": "Dredger upper terrace exit"
+        },
+        {
+          "frame": 780,
+          "position": [
+            -70.33166028360773,
+            48,
+            -1807.7680717986664
+          ],
+          "state": "ride",
+          "ground": "Dredger upper terrace",
+          "vy": 0,
+          "target": "Dredger upper terrace exit"
+        },
+        {
+          "frame": 810,
+          "position": [
+            -71.55931589380704,
+            48,
+            -1812.3868948430847
+          ],
+          "state": "ride",
+          "ground": "Dredger upper terrace",
+          "vy": 0,
+          "target": "Dredger upper terrace exit"
+        },
+        {
+          "frame": 840,
+          "position": [
+            -71.32151954331412,
+            48,
+            -1816.883913340219
+          ],
+          "state": "ride",
+          "ground": "Dredger upper terrace",
+          "vy": 0,
+          "target": "Dredger upper terrace exit"
+        },
+        {
+          "frame": 870,
+          "position": [
+            -72.60624819713965,
+            48,
+            -1821.540753003057
+          ],
+          "state": "ride",
+          "ground": "Dredger upper terrace",
+          "vy": 0,
+          "target": "Dredger upper terrace exit"
+        },
+        {
+          "frame": 900,
+          "position": [
+            -72.46693758255037,
+            48,
+            -1826.050642018204
+          ],
+          "state": "ride",
+          "ground": "Dredger upper terrace",
+          "vy": 0,
+          "target": "Dredger upper terrace exit"
+        }
+      ]
+    }
+  ]
+}

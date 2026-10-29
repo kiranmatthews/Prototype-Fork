@@ -6085,3 +6085,36 @@ at three mover phases. All 122 native transfer checks pass. Browser and final
 build evidence is kept in [the correction record](carlisle-relay/correction/).
 The user requested continued local playtest rounds; this increment is held
 locally and excluded from release handoff until those rounds are complete.
+
+## 29 October 2026 NZDT — Carlisle replay: replace the dredger wheel
+
+The supplied 03:44:23 replay exposed the Ferris dredger around 1,800–1,860 m.
+Its boarding quay and rotating basket alternated as the rider's support, then
+the rising basket carried the rider underneath the upper floor. Historical
+replay diagnosis used an explicit life reserve because replay v2 omits the
+starting campaign inventory; that limitation is recorded with the evidence.
+
+Replaced the four baskets and wheel with two visible native spring transfers
+and broad, staggered terraces at 16, 32 and 48 m. The catches have open gaps
+and no floor above the approach. The incoming checkpoint and discharge chain
+remain connected. The 4 km, three-act course now has 63 primary transfers and
+37 movers. This increment changes level geometry only; the existing movement,
+trampoline controls and temporary overhead bounce camera are unchanged.
+Normal-resolution review also caught the quay's render depth layer hiding the
+amber spring faces. The two new pads now render above that layer, with no
+change to their 0.02 m lip, geometry or collisions.
+
+Prompt-to-playable browser traversal: approximately **17 minutes**
+(04:21:25–04:38 UTC), including replay diagnosis. Continuous input-only native
+runs at three machinery phases and the real-keyboard lite browser run reach
+the upper exit without a bail or death. The native runs also reject ascending
+floor catches and upward grounding snaps; the largest step is the intended
+0.02 m spring lip. All 126 native transfers pass. See
+[the section evidence](carlisle-relay/terraces/). This remains a local playtest
+checkpoint under the user's hold on publication.
+
+Required level checks, build/type checking and release-size validation pass.
+The final production preview completes the continuous keyboard climb with
+no deaths or console errors, preserves abandon-ship and the overhead bounce
+camera, and passes checkpoint/respawn/finish checks. The new section was
+reviewed at MAX/native resolution and in the normal 480p/CRT presentation.

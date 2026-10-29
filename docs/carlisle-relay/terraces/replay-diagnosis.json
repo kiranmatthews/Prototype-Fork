@@ -1,0 +1,296 @@
+{
+  "replayFile": "replay-CarlisleCoast-2026-10-29T03-44-23.json",
+  "replaySha256": "f5b2fc32939c24c77488a85e9441f66ec918eac432a8e0aefb5bd969d9862d19",
+  "sourceRef": "453a58be87c0c9214c6a9fae9396fd70f0ad1ee8",
+  "frames": 44907,
+  "diagnosticLivesOverride": 99,
+  "limitation": "Replay v2 omits starting campaign inventory. A 99-life diagnostic reserve prevents the assumed four-life start from ending the take before the reported section. Movement inputs, recorded tuning and machinery timing are preserved.",
+  "finding": "The late section is the Ferris dredger at about 1795\u20131860 m. Orbiting baskets enter the lower boarding path and pass beneath the upper quay, making support alternate between decks and carrying the rider underneath a 3 m thick floor.",
+  "framesOfInterest": [
+    {
+      "f": 43671,
+      "seconds": 727.85,
+      "s": 1795,
+      "position": [
+        -81.5443278944065,
+        16,
+        -1732.3921877754608
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "lives": 75,
+      "speed": -9,
+      "vy": 0,
+      "bail": false,
+      "board": false,
+      "ground": {
+        "name": "Dredger side boarding quay",
+        "y": 16
+      },
+      "checkpoint": 0,
+      "input": [
+        0,
+        -1,
+        0
+      ]
+    },
+    {
+      "f": 43672,
+      "seconds": 727.87,
+      "s": 1795,
+      "position": [
+        -81.54427126138144,
+        16,
+        -1732.3888549232572
+      ],
+      "state": "air",
+      "grounded": false,
+      "deaths": 0,
+      "lives": 75,
+      "speed": -0.19999999999999998,
+      "vy": 0,
+      "bail": false,
+      "board": false,
+      "ground": {
+        "name": "Dredger bucket 4",
+        "y": 18.067902209268,
+        "mover": 16
+      },
+      "checkpoint": 0,
+      "input": [
+        0,
+        -1,
+        0
+      ]
+    },
+    {
+      "f": 43673,
+      "seconds": 727.88,
+      "s": 1795,
+      "position": [
+        -81.5417227393678,
+        16,
+        -1732.2388765747014
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "lives": 75,
+      "speed": -9,
+      "vy": 0,
+      "bail": false,
+      "board": false,
+      "ground": {
+        "name": "Dredger side boarding quay",
+        "y": 16
+      },
+      "checkpoint": 0,
+      "input": [
+        0,
+        -1,
+        0
+      ]
+    },
+    {
+      "f": 43674,
+      "seconds": 727.9,
+      "s": 1795,
+      "position": [
+        -81.54160873966221,
+        16,
+        -1732.232210882801
+      ],
+      "state": "air",
+      "grounded": false,
+      "deaths": 0,
+      "lives": 75,
+      "speed": -0.4,
+      "vy": 0,
+      "bail": false,
+      "board": false,
+      "ground": {
+        "name": "Dredger bucket 4",
+        "y": 18.015762582146266,
+        "mover": 16
+      },
+      "checkpoint": 0,
+      "input": [
+        0,
+        -1,
+        0
+      ]
+    },
+    {
+      "f": 43754,
+      "seconds": 729.23,
+      "s": 1805,
+      "position": [
+        -81.64645564023131,
+        16.461354048902713,
+        -1738.9202720744488
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "lives": 75,
+      "speed": 9,
+      "vy": 0,
+      "bail": false,
+      "board": false,
+      "ground": {
+        "name": "Dredger bucket 4",
+        "y": 16.461354048902713,
+        "mover": 16
+      },
+      "checkpoint": 0,
+      "input": [
+        0,
+        1,
+        0
+      ]
+    },
+    {
+      "f": 44585,
+      "seconds": 743.08,
+      "s": 1850,
+      "position": [
+        -76.70626680721054,
+        45.09308919793534,
+        -1788.4002379670014
+      ],
+      "state": "air",
+      "grounded": false,
+      "deaths": 0,
+      "lives": 75,
+      "speed": 0,
+      "vy": 14,
+      "bail": false,
+      "board": false,
+      "ground": {
+        "name": "Dredger bucket 4",
+        "y": 45.09308919793534,
+        "mover": 16
+      },
+      "checkpoint": 0,
+      "input": [
+        0,
+        0,
+        32
+      ]
+    },
+    {
+      "f": 44598,
+      "seconds": 743.3,
+      "s": 1850,
+      "position": [
+        -76.70626680721054,
+        47.29225586460201,
+        -1788.4002379670014
+      ],
+      "state": "air",
+      "grounded": false,
+      "deaths": 0,
+      "lives": 75,
+      "speed": 0,
+      "vy": 6.849999999999993,
+      "bail": false,
+      "board": false,
+      "ground": {
+        "name": "Dredger upper quay",
+        "y": 48
+      },
+      "checkpoint": 0,
+      "input": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "f": 44611,
+      "seconds": 743.52,
+      "s": 1850,
+      "position": [
+        -76.70626680721054,
+        48,
+        -1788.4002379670014
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "lives": 75,
+      "speed": 0,
+      "vy": 0,
+      "bail": false,
+      "board": false,
+      "ground": {
+        "name": "Dredger upper quay",
+        "y": 48
+      },
+      "checkpoint": 0,
+      "input": [
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "f": 44646,
+      "seconds": 744.1,
+      "s": 1850,
+      "position": [
+        -76.70626680721054,
+        48,
+        -1788.4002379670014
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "lives": 75,
+      "speed": 0,
+      "vy": 0,
+      "bail": false,
+      "board": false,
+      "ground": {
+        "name": "Dredger upper quay",
+        "y": 48
+      },
+      "checkpoint": 0,
+      "input": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "f": 44906,
+      "seconds": 748.43,
+      "s": 1860,
+      "position": [
+        -76.15598394253908,
+        48,
+        -1798.601972628771
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "lives": 75,
+      "speed": 0,
+      "vy": 0,
+      "bail": false,
+      "board": false,
+      "ground": {
+        "name": "Dredger upper quay",
+        "y": 48
+      },
+      "checkpoint": 0,
+      "input": [
+        0,
+        0,
+        0
+      ]
+    }
+  ],
+  "replacement": "Two visible spring transfers, 16 m to 32 m to 48 m, with broad static terraces separated horizontally and no orbiting slab underneath a floor."
+}

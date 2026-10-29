@@ -1,0 +1,119 @@
+{
+  "validatedAt": "2026-10-29T04:53:59.448980+00:00",
+  "delivery": "local playtest only; user hold on release",
+  "localPlaytest": "http://127.0.0.1:5483/?playtest&level=carlisle-coast",
+  "productionPreview": "http://127.0.0.1:5484/?playtest&level=carlisle-coast",
+  "build": "Codex/sol fork \u00b7 build 10-29 04:51 UTC",
+  "sourceSha256": {
+    "src/levels/carlisle-tidal-relay.ts": "7ff34b040b62d57377c0648a506ebb5dd626491f52b7f94b4cc7cf2405be80ae",
+    "src/player.ts": "77694a4105a92970a6cda688edfb60766cd580aef3890b4cfc0fe09f6532eef6",
+    "src/main.ts": "9af0b1ae9722ae152e13c96ed215f45d0dcc2b7d3ed5112b44a7fb71b486c0b7",
+    "src/level.ts": "5492dca2a756183399a5a7c1fdc6e2d816ccc865be714bccb3931be6aac91337",
+    "src/tuning.ts": "1aca3b5fe4b5d026d8b9e36dcf30444081bec7d2acfd4181294f6aacaca61bd6",
+    "public/levels.json": "b5d6557c171a599115b5dd17e17db8fdace0906cbc0ff6b9f6bd8e410b874c11",
+    "tools/fixtures/stock-level-snapshots.json": "c3ff97006f3e832eaaf27e00b69e4ad3aacb2ec65c17e5791259f6908e676053",
+    "tools/carlisle-relay-browser.mjs": "94917c4d5beb203e029d551260257fa0cd2d773755965fc8625095451c7f9131",
+    "tools/carlisle-relay-pilot.mjs": "0410bf4e402361e4c892ade6431a816aec908dc07fdffdda03077d4cdf5e7a83",
+    "tools/test-carlisle-dredger-terraces.mjs": "f4918cd13c680d034bbed8e5a5ab35eb366061044e2a37e1f2b6053bf0e1b403",
+    "tools/carlisle-replay-audit.mjs": "b38f3d4c9d52c2dbf9f92e3cee7804c9154e80ef33e777efbf4af85576590baa"
+  },
+  "checks": {
+    "continuousNativeClimb": "passed at phases 0, 7, 53",
+    "nativeTransfers": "126 passed at phases 0, 7",
+    "check:levels": "passed",
+    "build": "passed",
+    "check:release": "passed",
+    "changedPackEntries": [
+      "carlisle-coast"
+    ],
+    "untouchedRuntime": [
+      "src/player.ts",
+      "src/main.ts",
+      "src/level.ts",
+      "src/tuning.ts"
+    ]
+  },
+  "nativeReuse": "Native and lite traversal evidence precede two render-only depthBias additions. All geometry and movement data match; see render-only-followup.json. Final full-browser evidence uses the final source.",
+  "nativeClimb": [
+    {
+      "phase": 0,
+      "seconds": 15.15,
+      "launches": [
+        "Dredger terraces \u00b7 1",
+        "Dredger terraces \u00b7 2"
+      ],
+      "maxRiseSnap": 0.020000011920927818,
+      "position": [
+        -72.3099672227828,
+        48,
+        -1827.391484719621
+      ]
+    },
+    {
+      "phase": 7,
+      "seconds": 15.15,
+      "launches": [
+        "Dredger terraces \u00b7 1",
+        "Dredger terraces \u00b7 2"
+      ],
+      "maxRiseSnap": 0.020000011920927818,
+      "position": [
+        -72.3099672227828,
+        48,
+        -1827.391484719621
+      ]
+    },
+    {
+      "phase": 53,
+      "seconds": 15.15,
+      "launches": [
+        "Dredger terraces \u00b7 1",
+        "Dredger terraces \u00b7 2"
+      ],
+      "maxRiseSnap": 0.020000011920927818,
+      "position": [
+        -72.3099672227828,
+        48,
+        -1827.391484719621
+      ]
+    }
+  ],
+  "releaseFiles": 1849,
+  "releaseBytes": 997244939,
+  "releaseBudgetBytes": 1000000000,
+  "browser": {
+    "lite": {
+      "errors": [],
+      "terracesCompleted": true
+    },
+    "full": {
+      "sourceMatches": true,
+      "errors": [],
+      "terracesCompleted": true,
+      "deaths": 0,
+      "nativeCanvas": [
+        1440,
+        900
+      ],
+      "normalPresentationCaptured": true
+    }
+  },
+  "camera": {
+    "ground": {
+      "fov": 49,
+      "pitch": 25.35000000000001,
+      "spring": 0
+    },
+    "apex": {
+      "fov": 71.99931405359517,
+      "pitch": 79.99999999123963,
+      "spring": 1
+    },
+    "recovery": {
+      "fov": 49,
+      "pitch": 25.350000000000083,
+      "spring": 0
+    }
+  },
+  "abandonMove": "Emergency Eject"
+}

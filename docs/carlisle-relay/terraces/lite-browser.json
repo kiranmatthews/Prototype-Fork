@@ -1,0 +1,1496 @@
+{
+  "base": "http://127.0.0.1:5483",
+  "mode": "lite",
+  "errors": [],
+  "captures": [
+    {
+      "name": "Scissor groyne",
+      "position": [
+        82.65102369081731,
+        0,
+        -176.00496518943265
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "checkpoint": -1,
+      "build": "Codex/sol fork · build 10-29 01:17 UTC",
+      "render": {
+        "frame": 2406,
+        "calls": 86,
+        "triangles": 79031,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "name": "Beacon chimney",
+      "position": [
+        -6.0826510532001254,
+        4,
+        -1027.6078159587612
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "checkpoint": -1,
+      "build": "Codex/sol fork · build 10-29 01:17 UTC",
+      "render": {
+        "frame": 2437,
+        "calls": 61,
+        "triangles": 78663,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "name": "Tide dial",
+      "position": [
+        -100.70064804136857,
+        12,
+        -1246.6883052089413
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "checkpoint": -1,
+      "build": "Codex/sol fork · build 10-29 01:17 UTC",
+      "render": {
+        "frame": 2468,
+        "calls": 66,
+        "triangles": 78242,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "name": "Dredger terraces",
+      "position": [
+        -75.89464273127327,
+        16,
+        -1706.3793429683149
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "checkpoint": -1,
+      "build": "Codex/sol fork · build 10-29 01:17 UTC",
+      "render": {
+        "frame": 2499,
+        "calls": 58,
+        "triangles": 78334,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "name": "Harbour scissors",
+      "position": [
+        112.16398537534782,
+        24,
+        -2375.354239400808
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "checkpoint": -1,
+      "build": "Codex/sol fork · build 10-29 01:17 UTC",
+      "render": {
+        "frame": 2530,
+        "calls": 85,
+        "triangles": 78557,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "name": "Helical turbine",
+      "position": [
+        63.91633785329102,
+        24,
+        -2823.5769095395626
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "checkpoint": -1,
+      "build": "Codex/sol fork · build 10-29 01:17 UTC",
+      "render": {
+        "frame": 2561,
+        "calls": 73,
+        "triangles": 78318,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "name": "Double helix",
+      "position": [
+        -89.21493385151419,
+        24,
+        -3220.9824714224696
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "checkpoint": -1,
+      "build": "Codex/sol fork · build 10-29 01:17 UTC",
+      "render": {
+        "frame": 2592,
+        "calls": 80,
+        "triangles": 98192,
+        "points": 10,
+        "lines": 0
+      }
+    },
+    {
+      "name": "The storm eye",
+      "position": [
+        -113.19017313903039,
+        24,
+        -3441.2107252107216
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "checkpoint": -1,
+      "build": "Codex/sol fork · build 10-29 01:17 UTC",
+      "render": {
+        "frame": 2623,
+        "calls": 66,
+        "triangles": 97567,
+        "points": 10,
+        "lines": 0
+      }
+    },
+    {
+      "name": "Homecoming",
+      "position": [
+        -64.54667466456941,
+        24,
+        -3660.792297938554
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "checkpoint": -1,
+      "build": "Codex/sol fork · build 10-29 01:17 UTC",
+      "render": {
+        "frame": 2653,
+        "calls": 52,
+        "triangles": 96653,
+        "points": 10,
+        "lines": 0
+      }
+    }
+  ],
+  "spawn": {
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "state": "ride",
+    "grounded": true,
+    "deaths": 0,
+    "checkpoint": -1,
+    "build": "Codex/sol fork · build 10-29 01:17 UTC",
+    "render": {
+      "frame": 239,
+      "calls": 99,
+      "triangles": 78952,
+      "points": 0,
+      "lines": 0
+    }
+  },
+  "groundCamera": {
+    "fov": 49,
+    "pitch": 25.35000000000001,
+    "spring": 0
+  },
+  "sourceDifferences": [],
+  "sourceMatches": true,
+  "walk": {
+    "position": [
+      5.089729681620107,
+      0,
+      -8.839380720424796
+    ],
+    "state": "ride",
+    "grounded": true,
+    "deaths": 0,
+    "checkpoint": -1,
+    "build": "Codex/sol fork · build 10-29 01:17 UTC",
+    "render": {
+      "frame": 354,
+      "calls": 101,
+      "triangles": 79002,
+      "points": 0,
+      "lines": 0
+    }
+  },
+  "bounce": {
+    "position": [
+      31.953215636905636,
+      16.085833345254276,
+      -56.60124097294549
+    ],
+    "state": "air",
+    "grounded": false,
+    "deaths": 0,
+    "checkpoint": -1,
+    "build": "Codex/sol fork · build 10-29 01:17 UTC",
+    "render": {
+      "frame": 381,
+      "calls": 51,
+      "triangles": 79766,
+      "points": 0,
+      "lines": 0
+    }
+  },
+  "apex": {
+    "height": 163.91333334525487,
+    "targetNdc": [
+      -0.026146622537769806,
+      -0.007961453060110242,
+      0.9988642106857366
+    ],
+    "canvas": [
+      720,
+      450
+    ],
+    "preset": "max"
+  },
+  "airCamera": {
+    "fov": 71.99921418887867,
+    "pitch": 79.99999999121124,
+    "spring": 1
+  },
+  "boardApproach": [
+    {
+      "position": [
+        22.312616367290445,
+        0,
+        -39.08216075237139
+      ],
+      "state": "ride",
+      "board": false,
+      "spring": false,
+      "bounce": false,
+      "speed": 0,
+      "charge": 0.016666666666666666,
+      "charging": true,
+      "held": true,
+      "blocked": false
+    },
+    {
+      "position": [
+        22.312616367290445,
+        0,
+        -39.08216075237139
+      ],
+      "state": "ride",
+      "board": false,
+      "spring": false,
+      "bounce": false,
+      "speed": 0,
+      "charge": 0.21666666666666665,
+      "charging": true,
+      "held": true,
+      "blocked": false
+    },
+    {
+      "position": [
+        22.312616367290445,
+        0,
+        -39.08216075237139
+      ],
+      "state": "ride",
+      "board": false,
+      "spring": false,
+      "bounce": false,
+      "speed": 0,
+      "charge": 0.41666666666666663,
+      "charging": true,
+      "held": true,
+      "blocked": false
+    },
+    {
+      "position": [
+        22.681682188384404,
+        0,
+        -39.7427172231285
+      ],
+      "state": "ride",
+      "board": true,
+      "spring": false,
+      "bounce": false,
+      "speed": 6.200000000000003,
+      "charge": 0.6666666666666671,
+      "charging": true,
+      "held": true,
+      "blocked": false
+    },
+    {
+      "position": [
+        23.380647020779083,
+        0,
+        -40.99598215574994
+      ],
+      "state": "ride",
+      "board": true,
+      "spring": false,
+      "bounce": false,
+      "speed": 8.000000000000007,
+      "charge": 0.8666666666666677,
+      "charging": true,
+      "held": true,
+      "blocked": false
+    },
+    {
+      "position": [
+        24.25318796494538,
+        0,
+        -42.56464301090942
+      ],
+      "state": "ride",
+      "board": true,
+      "spring": false,
+      "bounce": false,
+      "speed": 9.800000000000011,
+      "charge": 1.0666666666666678,
+      "charging": true,
+      "held": true,
+      "blocked": false
+    },
+    {
+      "position": [
+        25.298112475360917,
+        0,
+        -44.449359670742616
+      ],
+      "state": "ride",
+      "board": true,
+      "spring": false,
+      "bounce": false,
+      "speed": 11.600000000000016,
+      "charge": 1.266666666666667,
+      "charging": true,
+      "held": true,
+      "blocked": false
+    },
+    {
+      "position": [
+        26.51398566320563,
+        0,
+        -46.650921787949
+      ],
+      "state": "ride",
+      "board": true,
+      "spring": false,
+      "bounce": false,
+      "speed": 13.40000000000002,
+      "charge": 1.4666666666666663,
+      "charging": true,
+      "held": true,
+      "blocked": false
+    },
+    {
+      "position": [
+        27.8991292478953,
+        0,
+        -49.17024698593796
+      ],
+      "state": "ride",
+      "board": true,
+      "spring": false,
+      "bounce": false,
+      "speed": 15.200000000000024,
+      "charge": 1.6666666666666656,
+      "charging": true,
+      "held": true,
+      "blocked": false
+    },
+    {
+      "position": [
+        28.784840750346298,
+        0.9379166785875956,
+        -50.78744089096234
+      ],
+      "state": "air",
+      "board": true,
+      "spring": true,
+      "bounce": true,
+      "speed": 16.28130176374557,
+      "charge": 1.7666666666666653,
+      "charging": false,
+      "held": true,
+      "blocked": false
+    }
+  ],
+  "sidestep": {
+    "at": [
+      28.784840750346298,
+      0.9379166785875956,
+      -50.78744089096234
+    ],
+    "side": [
+      0.8774431925758509,
+      0,
+      0.47968056433662004
+    ],
+    "time": 2.249999999999997,
+    "speed": 16.28130176374557,
+    "ejected": false,
+    "sideways": 4.402084783392408,
+    "position": [
+      35.119725508200816,
+      16.636666678587606,
+      -53.19824676703288
+    ],
+    "state": "air",
+    "grounded": false,
+    "deaths": 0,
+    "checkpoint": -1,
+    "build": "Codex/sol fork · build 10-29 01:17 UTC",
+    "render": {
+      "frame": 834,
+      "calls": 60,
+      "triangles": 86101,
+      "points": 0,
+      "lines": 0
+    }
+  },
+  "abandon": {
+    "sideways": 4.402084783392408,
+    "move": "Emergency Eject",
+    "board": false,
+    "looseBoard": true,
+    "double": false,
+    "speed": 16.28130176374557,
+    "screenFeet": [
+      0.12155181988319762,
+      -0.24869472450313354,
+      0.9901575547598452
+    ],
+    "screenHead": [
+      0.13475998174363168,
+      -0.18506091742371597,
+      0.9890560826895566
+    ]
+  },
+  "terraces": {
+    "done": true,
+    "apexCaptured": true,
+    "samples": [
+      {
+        "at": [
+          -75.89464273127327,
+          16,
+          -1706.3793429683149
+        ],
+        "state": "ride",
+        "grounded": true,
+        "vy": 0,
+        "surface": "Pinwheel catch",
+        "bail": false,
+        "dir": [
+          -0.02818891903053129,
+          0,
+          -0.9996026134639155
+        ],
+        "time": 0.44999999999999996,
+        "next": 0
+      },
+      {
+        "at": [
+          -75.92518030832589,
+          16,
+          -1707.4622458109523
+        ],
+        "state": "ride",
+        "grounded": true,
+        "vy": 0,
+        "surface": "Pinwheel catch",
+        "bail": false,
+        "dir": [
+          -0.02818891903053129,
+          0,
+          -0.9996026134639155
+        ],
+        "time": 0.8666666666666677,
+        "next": 0
+      },
+      {
+        "at": [
+          -76.01224571051728,
+          16,
+          -1710.577696087205
+        ],
+        "state": "ride",
+        "grounded": true,
+        "vy": 0,
+        "surface": "Pinwheel catch",
+        "bail": false,
+        "dir": [
+          -0.027988997945392953,
+          0,
+          -0.9996082312556318
+        ],
+        "time": 1.2833333333333337,
+        "next": 0
+      },
+      {
+        "at": [
+          -76.11325655087641,
+          16,
+          -1712.3665769072534
+        ],
+        "state": "ride",
+        "grounded": true,
+        "vy": 0,
+        "surface": "Dredger terraces",
+        "bail": false,
+        "dir": [
+          -0.027089339323171754,
+          0,
+          -0.9996330165090758
+        ],
+        "time": 1.6999999999999988,
+        "next": 0
+      },
+      {
+        "at": [
+          -76.21356094812253,
+          16,
+          -1712.3665769072534
+        ],
+        "state": "ride",
+        "grounded": true,
+        "vy": 0,
+        "surface": "Dredger terraces",
+        "bail": false,
+        "dir": [
+          -0.026789448203697375,
+          0,
+          -0.9996410983272653
+        ],
+        "time": 2.116666666666664,
+        "next": 0
+      },
+      {
+        "at": [
+          -76.31386108488391,
+          16,
+          -1712.3665769072534
+        ],
+        "state": "ride",
+        "grounded": true,
+        "vy": 0,
+        "surface": "Dredger terraces",
+        "bail": false,
+        "dir": [
+          -0.026789448203697375,
+          0,
+          -0.9996410983272653
+        ],
+        "time": 2.533333333333329,
+        "next": 0
+      },
+      {
+        "at": [
+          -76.41415696134129,
+          16,
+          -1712.3665769072534
+        ],
+        "state": "ride",
+        "grounded": true,
+        "vy": 0,
+        "surface": "Dredger terraces",
+        "bail": false,
+        "dir": [
+          -0.026789448203697375,
+          0,
+          -0.9996410983272653
+        ],
+        "time": 2.9499999999999944,
+        "next": 0
+      },
+      {
+        "at": [
+          -76.51444857767547,
+          16,
+          -1712.3665769072534
+        ],
+        "state": "ride",
+        "grounded": true,
+        "vy": 0,
+        "surface": "Dredger terraces",
+        "bail": false,
+        "dir": [
+          -0.026789448203697375,
+          0,
+          -0.9996410983272653
+        ],
+        "time": 3.3666666666666596,
+        "next": 0
+      },
+      {
+        "at": [
+          -76.61473593406724,
+          16,
+          -1712.3665769072534
+        ],
+        "state": "ride",
+        "grounded": true,
+        "vy": 0,
+        "surface": "Dredger terraces",
+        "bail": false,
+        "dir": [
+          -0.026789448203697375,
+          0,
+          -0.9996410983272653
+        ],
+        "time": 3.7833333333333248,
+        "next": 0
+      },
+      {
+        "at": [
+          -76.71501903069739,
+          16,
+          -1712.3665769072534
+        ],
+        "state": "ride",
+        "grounded": true,
+        "vy": 0,
+        "surface": "Dredger terraces",
+        "bail": false,
+        "dir": [
+          -0.026789448203697375,
+          0,
+          -0.9996410983272653
+        ],
+        "time": 4.19999999999999,
+        "next": 0
+      },
+      {
+        "at": [
+          -76.81529786774675,
+          16,
+          -1712.3665769072534
+        ],
+        "state": "ride",
+        "grounded": true,
+        "vy": 0,
+        "surface": "Dredger terraces",
+        "bail": false,
+        "dir": [
+          -0.026789448203697375,
+          0,
+          -0.9996410983272653
+        ],
+        "time": 4.616666666666656,
+        "next": 0
+      },
+      {
+        "at": [
+          -76.91557244539605,
+          16,
+          -1712.3665769072534
+        ],
+        "state": "ride",
+        "grounded": true,
+        "vy": 0,
+        "surface": "Dredger terraces",
+        "bail": false,
+        "dir": [
+          -0.026789448203697375,
+          0,
+          -0.9996410983272653
+        ],
+        "time": 5.033333333333321,
+        "next": 0
+      },
+      {
+        "at": [
+          -77.01584276382607,
+          16,
+          -1712.3665769072534
+        ],
+        "state": "ride",
+        "grounded": true,
+        "vy": 0,
+        "surface": "Dredger terraces",
+        "bail": false,
+        "dir": [
+          -0.026689483960083804,
+          0,
+          -0.9996437722738758
+        ],
+        "time": 5.449999999999986,
+        "next": 0
+      },
+      {
+        "at": [
+          -77.11550767303127,
+          16,
+          -1714.165949335102
+        ],
+        "state": "ride",
+        "grounded": true,
+        "vy": 0,
+        "surface": "Dredger terraces",
+        "bail": false,
+        "dir": [
+          -0.02658951944957539,
+          0,
+          -0.9996464362240485
+        ],
+        "time": 5.866666666666651,
+        "next": 0
+      },
+      {
+        "at": [
+          -77.21030438728255,
+          16,
+          -1717.9147505942735
+        ],
+        "state": "ride",
+        "grounded": true,
+        "vy": 0,
+        "surface": "Dredger terraces",
+        "bail": false,
+        "dir": [
+          -0.025489892504826524,
+          0,
+          -0.9996750799035117
+        ],
+        "time": 6.283333333333316,
+        "next": 0
+      },
+      {
+        "at": [
+          -77.2994217818764,
+          18.963333345254263,
+          -1721.6636911696464
+        ],
+        "state": "air",
+        "grounded": false,
+        "vy": 88.025,
+        "surface": "Dredger terraces · 1",
+        "bail": false,
+        "dir": [
+          -0.023990351771164677,
+          0,
+          -0.9997121900936768
+        ],
+        "time": 6.6999999999999815,
+        "next": 1
+      },
+      {
+        "at": [
+          -80.35387216780997,
+          52.66125001192095,
+          -1723.4771369423904
+        ],
+        "state": "air",
+        "grounded": false,
+        "vy": 74.27500000000008,
+        "surface": "Dredger terraces · 1",
+        "bail": false,
+        "dir": [
+          -0.02289065406966965,
+          0,
+          -0.9997379746494892
+        ],
+        "time": 7.116666666666647,
+        "next": 1
+      },
+      {
+        "at": [
+          -81.0303367805725,
+          80.63000001192098,
+          -1726.8393522857973
+        ],
+        "state": "air",
+        "grounded": false,
+        "vy": 60.52500000000015,
+        "surface": "Dredger terraces · 1",
+        "bail": false,
+        "dir": [
+          -0.021790928670485987,
+          0,
+          -0.9997625495224742
+        ],
+        "time": 7.533333333333312,
+        "next": 1
+      },
+      {
+        "at": [
+          -81.10696391208339,
+          102.86958334525438,
+          -1730.5885685754135
+        ],
+        "state": "air",
+        "grounded": false,
+        "vy": 46.77500000000022,
+        "surface": "Dredger terraces · 1",
+        "bail": false,
+        "dir": [
+          -0.01989134163667387,
+          0,
+          -0.9998021476911785
+        ],
+        "time": 7.949999999999977,
+        "next": 1
+      },
+      {
+        "at": [
+          -81.1792350391123,
+          120.45333334525449,
+          -1734.6379223078818
+        ],
+        "state": "air",
+        "grounded": false,
+        "vy": 31.925000000000292,
+        "surface": "Dredger terraces · 1",
+        "bail": false,
+        "dir": [
+          -0.017191806613861296,
+          0,
+          -0.9998522099717295
+        ],
+        "time": 8.399999999999997,
+        "next": 1
+      },
+      {
+        "at": [
+          -81.23575109938928,
+          130.7762500119213,
+          -1738.3874953125794
+        ],
+        "state": "air",
+        "grounded": false,
+        "vy": 18.175000000000274,
+        "surface": "Dredger terraces · 1",
+        "bail": false,
+        "dir": [
+          -0.014592135688560881,
+          0,
+          -0.9998935291199992
+        ],
+        "time": 8.816666666666684,
+        "next": 1
+      },
+      {
+        "at": [
+          -81.2871897447027,
+          135.53625001192145,
+          -1742.587178728942
+        ],
+        "state": "air",
+        "grounded": false,
+        "vy": 2.7750000000002633,
+        "surface": "Dredger terraces · 1",
+        "bail": false,
+        "dir": [
+          -0.011592393936158275,
+          0,
+          -0.9999328059438939
+        ],
+        "time": 9.283333333333374,
+        "next": 1
+      },
+      {
+        "at": [
+          -81.32701736417468,
+          126.29666667858821,
+          -1746.9369944853927
+        ],
+        "state": "air",
+        "grounded": false,
+        "vy": -46.14166666666642,
+        "surface": "Dredger terraces · 1",
+        "bail": false,
+        "dir": [
+          -0.008392555065094986,
+          0,
+          -0.999964781889582
+        ],
+        "time": 9.766666666666731,
+        "next": 1
+      },
+      {
+        "at": [
+          -81.94859770648111,
+          104.72611112303282,
+          -1750.3096321309633
+        ],
+        "state": "air",
+        "grounded": false,
+        "vy": -52,
+        "surface": "Dredger terraces · 1",
+        "bail": false,
+        "dir": [
+          -0.005092631576724448,
+          0,
+          -0.9999870324677335
+        ],
+        "time": 10.183333333333419,
+        "next": 1
+      },
+      {
+        "at": [
+          -81.95667194472102,
+          83.05944445636632,
+          -1754.0596212007706
+        ],
+        "state": "air",
+        "grounded": false,
+        "vy": -52,
+        "surface": "Dredger terraces · 1",
+        "bail": false,
+        "dir": [
+          -0.0014926530355177093,
+          0,
+          -0.9999988859928373
+        ],
+        "time": 10.600000000000106,
+        "next": 1
+      },
+      {
+        "at": [
+          -81.95061781712667,
+          61.39277778969979,
+          -1757.8096141262827
+        ],
+        "state": "air",
+        "grounded": false,
+        "vy": -52,
+        "surface": "Dredger terraces · 1",
+        "bail": false,
+        "dir": [
+          0.0022926515813297093,
+          0,
+          -0.9999973718709098
+        ],
+        "time": 11.016666666666794,
+        "next": 1
+      },
+      {
+        "at": [
+          -81.93029287988419,
+          39.726111123033114,
+          -1761.5595567461098
+        ],
+        "state": "air",
+        "grounded": false,
+        "vy": -52,
+        "surface": "Dredger terraces · 1",
+        "bail": false,
+        "dir": [
+          0.006092615896211999,
+          0,
+          -0.9999814398435309
+        ],
+        "time": 11.433333333333481,
+        "next": 1
+      },
+      {
+        "at": [
+          -80.09973232396146,
+          54.97333334525426,
+          -1764.1712658071415
+        ],
+        "state": "air",
+        "grounded": false,
+        "vy": 81.95000000000005,
+        "surface": "Dredger terraces · 2",
+        "bail": false,
+        "dir": [
+          0.009592506472733594,
+          0,
+          -0.9999539908513644
+        ],
+        "time": 11.850000000000168,
+        "next": 2
+      },
+      {
+        "at": [
+          -77.06508354172118,
+          86.14000001192096,
+          -1766.0176549981
+        ],
+        "state": "air",
+        "grounded": false,
+        "vy": 68.20000000000012,
+        "surface": "Dredger terraces · 2",
+        "bail": false,
+        "dir": [
+          0.012392336386019845,
+          0,
+          -0.9999232120512533
+        ],
+        "time": 12.266666666666856,
+        "next": 2
+      },
+      {
+        "at": [
+          -74.02580883143038,
+          111.57750001192102,
+          -1767.856419767063
+        ],
+        "state": "air",
+        "grounded": false,
+        "vy": 54.45000000000019,
+        "surface": "Dredger terraces · 2",
+        "bail": false,
+        "dir": [
+          0.014892103086151003,
+          0,
+          -0.9998891064841497
+        ],
+        "time": 12.683333333333543,
+        "next": 2
+      },
+      {
+        "at": [
+          -70.86014079457252,
+          131.95500001192113,
+          -1769.760741420608
+        ],
+        "state": "air",
+        "grounded": false,
+        "vy": 40.15000000000026,
+        "surface": "Dredger terraces · 2",
+        "bail": false,
+        "dir": [
+          0.017491761498722377,
+          0,
+          -0.9998470074364737
+        ],
+        "time": 13.116666666666898,
+        "next": 2
+      },
+      {
+        "at": [
+          -70.78436217649538,
+          145.70500001192124,
+          -1773.5099728323996
+        ],
+        "state": "air",
+        "grounded": false,
+        "vy": 26.400000000000293,
+        "surface": "Dredger terraces · 2",
+        "bail": false,
+        "dir": [
+          0.021191067254396977,
+          0,
+          -0.9997754441216385
+        ],
+        "time": 13.533333333333585,
+        "next": 2
+      },
+      {
+        "at": [
+          -70.6906330024799,
+          153.72583334525467,
+          -1777.2587974422515
+        ],
+        "state": "air",
+        "grounded": false,
+        "vy": 12.650000000000276,
+        "surface": "Dredger terraces · 2",
+        "bail": false,
+        "dir": [
+          0.02588976048693331,
+          0,
+          -0.9996648039727762
+        ],
+        "time": 13.950000000000273,
+        "next": 2
+      },
+      {
+        "at": [
+          -70.57828878435632,
+          155.99361112303257,
+          -1781.0071103884634
+        ],
+        "state": "air",
+        "grounded": false,
+        "vy": -2.5333333333330614,
+        "surface": "Dredger terraces · 2",
+        "bail": false,
+        "dir": [
+          0.03088774005914116,
+          0,
+          -0.9995228599256942
+        ],
+        "time": 14.36666666666696,
+        "next": 2
+      },
+      {
+        "at": [
+          -70.44061669845857,
+          143.33027778969932,
+          -1784.904673912968
+        ],
+        "state": "air",
+        "grounded": false,
+        "vy": -52,
+        "surface": "Dredger terraces · 2",
+        "bail": false,
+        "dir": [
+          0.03648455450090455,
+          0,
+          -0.999334217007939
+        ],
+        "time": 14.800000000000315,
+        "next": 2
+      },
+      {
+        "at": [
+          -70.27872623744167,
+          120.79694445636592,
+          -1788.8013058577249
+        ],
+        "state": "air",
+        "grounded": false,
+        "vy": -52,
+        "surface": "Dredger terraces · 2",
+        "bail": false,
+        "dir": [
+          0.04277959438779403,
+          0,
+          -0.9990845341131129
+        ],
+        "time": 15.23333333333367,
+        "next": 2
+      },
+      {
+        "at": [
+          -70.09933032985455,
+          99.13027778969942,
+          -1792.5470059215836
+        ],
+        "state": "air",
+        "grounded": false,
+        "vy": -52,
+        "surface": "Dredger terraces · 2",
+        "bail": false,
+        "dir": [
+          0.04897305659323172,
+          0,
+          -0.9988000999839338
+        ],
+        "time": 15.650000000000357,
+        "next": 2
+      },
+      {
+        "at": [
+          -69.8963821241849,
+          77.46361112303292,
+          -1796.2915042219815
+        ],
+        "state": "air",
+        "grounded": false,
+        "vy": -52,
+        "surface": "Dredger terraces · 2",
+        "bail": false,
+        "dir": [
+          0.055164636280404314,
+          0,
+          -0.9984772721018995
+        ],
+        "time": 16.066666666667036,
+        "next": 2
+      },
+      {
+        "at": [
+          -69.71745981732117,
+          55.79694445636635,
+          -1799.286160931038
+        ],
+        "state": "air",
+        "grounded": false,
+        "vy": -52,
+        "surface": "Dredger terraces · 2",
+        "bail": false,
+        "dir": [
+          0.06125428353285906,
+          0,
+          -0.9981221932954282
+        ],
+        "time": 16.48333333333368,
+        "next": 2
+      },
+      {
+        "at": [
+          -69.98248495727972,
+          48,
+          -1799.5879450788746
+        ],
+        "state": "ride",
+        "grounded": true,
+        "vy": 0,
+        "surface": "Dredger upper terrace",
+        "bail": false,
+        "dir": [
+          0.06384919127223355,
+          0,
+          -0.997959558686564
+        ],
+        "time": 16.900000000000322,
+        "next": 3
+      },
+      {
+        "at": [
+          -71.525376396798,
+          48,
+          -1801.3510590129872
+        ],
+        "state": "ride",
+        "grounded": true,
+        "vy": 0,
+        "surface": "Dredger upper terrace",
+        "bail": false,
+        "dir": [
+          0.06594476401771007,
+          0,
+          -0.9978232749834254
+        ],
+        "time": 17.316666666666965,
+        "next": 3
+      },
+      {
+        "at": [
+          -73.81376723676101,
+          48,
+          -1804.2205882668409
+        ],
+        "state": "ride",
+        "grounded": true,
+        "vy": 0,
+        "surface": "Dredger upper terrace",
+        "bail": false,
+        "dir": [
+          0.06983576341587867,
+          0,
+          -0.9975585026193308
+        ],
+        "time": 17.733333333333608,
+        "next": 3
+      },
+      {
+        "at": [
+          -73.65316850336768,
+          48,
+          -1807.9187965642998
+        ],
+        "state": "ride",
+        "grounded": true,
+        "vy": 0,
+        "surface": "Dredger upper terrace",
+        "bail": false,
+        "dir": [
+          0.07542096681081151,
+          0,
+          -0.9971517827118008
+        ],
+        "time": 18.15000000000025,
+        "next": 3
+      },
+      {
+        "at": [
+          -73.34093722942823,
+          48,
+          -1811.6557678991226
+        ],
+        "state": "ride",
+        "grounded": true,
+        "vy": 0,
+        "surface": "Dredger upper terrace",
+        "bail": false,
+        "dir": [
+          0.08210014095343157,
+          0,
+          -0.99662408502676
+        ],
+        "time": 18.566666666666894,
+        "next": 3
+      },
+      {
+        "at": [
+          -73.00279524735235,
+          48,
+          -1815.3904839335082
+        ],
+        "state": "ride",
+        "grounded": true,
+        "vy": 0,
+        "surface": "Dredger upper terrace",
+        "bail": false,
+        "dir": [
+          0.08887523435537242,
+          0,
+          -0.9960427665106943
+        ],
+        "time": 18.983333333333537,
+        "next": 3
+      },
+      {
+        "at": [
+          -72.63845710391182,
+          48,
+          -1819.1227346731057
+        ],
+        "state": "ride",
+        "grounded": true,
+        "vy": 0,
+        "surface": "Dredger upper terrace",
+        "bail": false,
+        "dir": [
+          0.09584529934629159,
+          0,
+          -0.9953962420027613
+        ],
+        "time": 19.40000000000018,
+        "next": 3
+      },
+      {
+        "at": [
+          -72.24594624326684,
+          48,
+          -1822.8521269737491
+        ],
+        "state": "ride",
+        "grounded": true,
+        "vy": 0,
+        "surface": "Dredger upper terrace",
+        "bail": false,
+        "dir": [
+          0.10330800553630244,
+          0,
+          -0.9946494136086902
+        ],
+        "time": 19.816666666666823,
+        "next": 3
+      },
+      {
+        "at": [
+          -71.82491560707838,
+          48,
+          -1826.5784071461849
+        ],
+        "state": "ride",
+        "grounded": true,
+        "vy": 0,
+        "surface": "Dredger upper terrace",
+        "bail": false,
+        "dir": [
+          0.11086428478789603,
+          0,
+          -0.9938355549880816
+        ],
+        "time": 20.233333333333466,
+        "next": 3
+      }
+    ],
+    "position": [
+      -71.46737602730998,
+      48,
+      -1829.5570204980481
+    ],
+    "state": "ride",
+    "grounded": true,
+    "deaths": 0,
+    "checkpoint": -1,
+    "build": "Codex/sol fork · build 10-29 01:17 UTC",
+    "render": {
+      "frame": 2204,
+      "calls": 116,
+      "triangles": 81106,
+      "points": 0,
+      "lines": 0
+    }
+  },
+  "checkpoint": {
+    "position": [
+      84.49885359761562,
+      0,
+      -181.28199487345088
+    ],
+    "state": "ride",
+    "grounded": true,
+    "deaths": 0,
+    "checkpoint": 0,
+    "build": "Codex/sol fork · build 10-29 01:17 UTC",
+    "render": {
+      "frame": 2241,
+      "calls": 169,
+      "triangles": 681507,
+      "points": 0,
+      "lines": 0
+    }
+  },
+  "returnCamera": {
+    "fov": 49,
+    "pitch": 25.350000000000083,
+    "spring": 0
+  },
+  "respawn": {
+    "position": [
+      84.47885359761563,
+      0.1,
+      -182.76199487345087
+    ],
+    "state": "ride",
+    "grounded": true,
+    "deaths": 0,
+    "checkpoint": 0,
+    "build": "Codex/sol fork · build 10-29 01:17 UTC",
+    "render": {
+      "frame": 2375,
+      "calls": 84,
+      "triangles": 79017,
+      "points": 0,
+      "lines": 0
+    }
+  },
+  "machines": {
+    "count": 37,
+    "changed": 37,
+    "preset": "max",
+    "canvas": [
+      720,
+      450
+    ],
+    "resolution": {
+      "viewportWidth": 1440,
+      "viewportHeight": 900,
+      "inputWidth": 1152,
+      "inputHeight": 720,
+      "outputWidth": 1152,
+      "outputHeight": 720
+    }
+  },
+  "finish": {
+    "position": [
+      -51.75430349720675,
+      12.726666669150193,
+      -3848.6583188025943
+    ],
+    "state": "finished",
+    "grounded": true,
+    "deaths": 0,
+    "checkpoint": -1,
+    "build": "Codex/sol fork · build 10-29 01:17 UTC",
+    "render": {
+      "frame": 2834,
+      "calls": 41,
+      "triangles": 96546,
+      "points": 34,
+      "lines": 0
+    }
+  }
+}

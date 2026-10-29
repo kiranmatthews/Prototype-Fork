@@ -59,6 +59,31 @@ try{
  assert.equal(report.abandon.move,'Emergency Eject');assert.equal(report.abandon.board,false);assert.equal(report.abandon.looseBoard,true);assert.equal(report.abandon.double,false);
  assert.ok([report.abandon.screenFeet,report.abandon.screenHead].every(p=>Math.abs(p[0])<1&&Math.abs(p[1])<1),'camera lost the rider during the fast ascent/abandon');
  await page.screenshot({path:`${out}/${mode}-abandon.png`});
+ // Walk and bounce continuously through the replacement for the replay's
+ // broken wheel. Only device keys change after this initial checkpoint start.
+ await place(point(1770,16.2),point(1775,0).map((v,i)=>i===1?0:v-point(1770,0)[i]));
+ const terraceTargets=[point(1792,16),point(1828,32,-6),point(1864,48,6),point(1895,48)];
+ let terraceNext=0,terraceDone=false,terraceApex=false;const terraceKeys=new Set(),terraceSamples=[];
+ const applyTerraceKeys=async wanted=>{for(const key of [...terraceKeys])if(!wanted.has(key)){await page.keyboard.up(key);terraceKeys.delete(key);}for(const key of wanted)if(!terraceKeys.has(key)){await page.keyboard.down(key);terraceKeys.add(key);}};
+ for(let poll=0;poll<700;poll++){
+  const s=await page.evaluate(()=>{const p=window.__game.player;return{at:p.pos.toArray(),state:p.state,grounded:p.grounded,vy:p.vVel,surface:p.surfaceName,bail:p.isBailing,dir:p.camDir.toArray(),time:p.runTime};});
+  assert.ok(!s.bail&&!['dead','gameover'].includes(s.state),JSON.stringify(s));
+  if(s.state==='air'&&s.vy>10){if(s.surface==='Dredger terraces · 1')terraceNext=Math.max(terraceNext,1);if(s.surface==='Dredger terraces · 2')terraceNext=Math.max(terraceNext,2);}
+  if(terraceNext===2&&s.grounded&&Math.abs(s.at[1]-48)<.1)terraceNext=3;
+  const target=terraceTargets[terraceNext],dx=target[0]-s.at[0],dz=target[2]-s.at[2],distance=Math.hypot(dx,dz);
+  if(poll%5===0)terraceSamples.push({...s,next:terraceNext});
+  if(terraceNext===3&&distance<2&&s.grounded){terraceDone=true;break;}
+  const forward=dx*s.dir[0]+dz*s.dir[2],side=dx*-s.dir[2]+dz*s.dir[0],wanted=new Set();
+  if(Math.abs(forward)>1.2)wanted.add(forward>0?'ArrowUp':'ArrowDown');
+  if(Math.abs(side)>1.2)wanted.add(side>0?'ArrowRight':'ArrowLeft');
+  if(terraceNext===1||terraceNext===0&&distance<8.5)wanted.add('Space');
+  await applyTerraceKeys(wanted);
+  if(!terraceApex&&terraceNext===1&&s.vy<2&&s.at[1]>50){await page.screenshot({path:`${out}/${mode}-terraces-apex.png`});terraceApex=true;}
+  await page.waitForTimeout(80);
+ }
+ await applyTerraceKeys(new Set());report.terraces={done:terraceDone,apexCaptured:terraceApex,samples:terraceSamples,...await snap()};
+ assert.ok(terraceDone,JSON.stringify(report.terraces));
+ await page.screenshot({path:`${out}/${mode}-terraces-exit.png`});
  // Checkpoint contact, then real death/respawn at the earned island.
  const cp=await page.evaluate(()=>{const c=window.__game.getLevel().checkpoints[0];return[c.box.min.x+.5,c.box.min.y+.12,c.box.max.z+1];});
  await place(cp);await page.keyboard.press('KeyF',{delay:180});
@@ -74,7 +99,7 @@ try{
  // Inspect moving-deck silhouettes, collision transforms and native resolution.
  report.machines=await page.evaluate(async()=>{const g=window.__game,l=g.getLevel(),before=l.movers.map(m=>m.mesh.matrixWorld.elements.slice());await new Promise(r=>setTimeout(r,500));
   return{count:l.movers.length,changed:l.movers.filter((m,i)=>m.mesh.matrixWorld.elements.some((v,j)=>Math.abs(v-before[i][j])>.00001)).length,preset:g.renderQualitySettings.regularResolution,canvas:[g.renderer.domElement.width,g.renderer.domElement.height],resolution:g.getRenderQualitySizes()};});
- if(!lite){await place(point(2930,24.2));await page.evaluate(()=>{window.__game.renderQualitySettings.setRegularResolution(480);window.__game.crtGuestSettings.setEnabled(true);});await page.waitForTimeout(300);await page.screenshot({path:`${out}/full-normal.png`});await page.evaluate(()=>{window.__game.renderQualitySettings.setRegularResolution(null);window.__game.crtGuestSettings.setEnabled(false);});}
+ if(!lite){await place(point(1770,16.2));await page.evaluate(()=>{window.__game.renderQualitySettings.setRegularResolution(480);window.__game.crtGuestSettings.setEnabled(true);});await page.waitForTimeout(300);await page.screenshot({path:`${out}/full-normal.png`});await page.evaluate(()=>{window.__game.renderQualitySettings.setRegularResolution(null);window.__game.crtGuestSettings.setEnabled(false);});}
  await place(point(3984,12.2),point(4000,0).map((v,i)=>i===1?0:v-point(3984,0)[i]));
  await page.screenshot({path:`${out}/${mode}-finish-native.png`});
  await page.keyboard.down('ArrowUp');await page.waitForFunction(()=>window.__game.player.state==='finished',null,{timeout:12000});await page.keyboard.up('ArrowUp');report.finish=await snap();
