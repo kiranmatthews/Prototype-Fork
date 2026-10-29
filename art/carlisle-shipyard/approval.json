@@ -1,0 +1,14 @@
+{
+  "approvedAt": "2026-10-29T11:23:14.384375+00:00",
+  "userAuthorization": "Yes permission to speed up to 3000 credits; spend",
+  "maximumAuthorizedCredits": 3000,
+  "plannedCredits": 600,
+  "plannedAssets": 12,
+  "model": "tripo-p1 / P1-20260311",
+  "uploadsDownloadsAuthorized": true,
+  "fundingOrder": [
+    "existing API balance",
+    "existing Max plan credits if more work is needed"
+  ],
+  "purchaseAdditionalApiUsage": false
+}

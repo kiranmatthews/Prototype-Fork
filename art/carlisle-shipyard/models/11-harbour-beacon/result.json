@@ -1,0 +1,39 @@
+{
+  "id": "11-harbour-beacon",
+  "args": [
+    "make",
+    "docs/carlisle-relay/shipyard-polish/props/11-harbour-beacon.png",
+    "--for",
+    "toy",
+    "--model",
+    "tripo-p1",
+    "-p",
+    "face_limit=6000",
+    "-p",
+    "texture=true",
+    "-p",
+    "pbr=true",
+    "-p",
+    "auto_size=true",
+    "--name",
+    "carlisle-harbour-beacon",
+    "-o",
+    "art/carlisle-shipyard",
+    "--json",
+    "--yes"
+  ],
+  "result": {
+    "task_id": "9e1765b3-b672-4733-a6c9-1bff09ffba17",
+    "type": "image_to_model",
+    "status": "success",
+    "credits_consumed": 50,
+    "output_dir": "art/carlisle-shipyard/tripo-out/carlisle-harbour-beacon-9e1765b3",
+    "files": [
+      "model.glb",
+      "rendered_image.webp",
+      "preview.png"
+    ],
+    "model_file": "art/carlisle-shipyard/tripo-out/carlisle-harbour-beacon-9e1765b3/model.glb",
+    "preview": "art/carlisle-shipyard/tripo-out/carlisle-harbour-beacon-9e1765b3/preview.png"
+  }
+}

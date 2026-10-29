@@ -1,0 +1,775 @@
+{
+  "model": "tripo-p1",
+  "wireModel": "P1-20260311",
+  "estimatedTotal": 600,
+  "assets": [
+    {
+      "id": "01-net-housing",
+      "name": "Marine net housing",
+      "faceBudget": 2500,
+      "estimatedCredits": 50,
+      "args": [
+        "make",
+        "docs/carlisle-relay/shipyard-polish/props/01-net-housing.png",
+        "--for",
+        "toy",
+        "--model",
+        "tripo-p1",
+        "-p",
+        "face_limit=2500",
+        "-p",
+        "texture=true",
+        "-p",
+        "pbr=true",
+        "-p",
+        "auto_size=true",
+        "--name",
+        "carlisle-net-housing",
+        "-o",
+        "art/carlisle-shipyard",
+        "--json",
+        "--yes"
+      ],
+      "plan": {
+        "dry_run": true,
+        "valid": true,
+        "input": "docs/carlisle-relay/shipyard-polish/props/01-net-housing.png",
+        "scenario": "toy",
+        "model": "P1-20260311",
+        "model_reason": "explicit --model",
+        "steps": [
+          {
+            "name": "image-to-model",
+            "endpoint": "/v3/generation/image-to-model",
+            "task_type": "image_to_model",
+            "payload": {
+              "input": "<upload:docs/carlisle-relay/shipyard-polish/props/01-net-housing.png>",
+              "texture": true,
+              "pbr": true,
+              "face_limit": 2500,
+              "auto_size": true,
+              "model": "P1-20260311"
+            }
+          }
+        ],
+        "pending_uploads": [
+          "docs/carlisle-relay/shipyard-polish/props/01-net-housing.png"
+        ],
+        "deliverables": [
+          "GLB"
+        ],
+        "candidates": 1,
+        "warnings": [],
+        "errors": [],
+        "generation_credits_estimate": null,
+        "cost_notes": [
+          "cost not estimated (not zero credits); notes below are cost impacts only; check regional official pricing and balance before running"
+        ]
+      }
+    },
+    {
+      "id": "02-dock-winch",
+      "name": "Dock winch",
+      "faceBudget": 4500,
+      "estimatedCredits": 50,
+      "args": [
+        "make",
+        "docs/carlisle-relay/shipyard-polish/props/02-dock-winch.png",
+        "--for",
+        "toy",
+        "--model",
+        "tripo-p1",
+        "-p",
+        "face_limit=4500",
+        "-p",
+        "texture=true",
+        "-p",
+        "pbr=true",
+        "-p",
+        "auto_size=true",
+        "--name",
+        "carlisle-dock-winch",
+        "-o",
+        "art/carlisle-shipyard",
+        "--json",
+        "--yes"
+      ],
+      "plan": {
+        "dry_run": true,
+        "valid": true,
+        "input": "docs/carlisle-relay/shipyard-polish/props/02-dock-winch.png",
+        "scenario": "toy",
+        "model": "P1-20260311",
+        "model_reason": "explicit --model",
+        "steps": [
+          {
+            "name": "image-to-model",
+            "endpoint": "/v3/generation/image-to-model",
+            "task_type": "image_to_model",
+            "payload": {
+              "input": "<upload:docs/carlisle-relay/shipyard-polish/props/02-dock-winch.png>",
+              "texture": true,
+              "pbr": true,
+              "face_limit": 4500,
+              "auto_size": true,
+              "model": "P1-20260311"
+            }
+          }
+        ],
+        "pending_uploads": [
+          "docs/carlisle-relay/shipyard-polish/props/02-dock-winch.png"
+        ],
+        "deliverables": [
+          "GLB"
+        ],
+        "candidates": 1,
+        "warnings": [],
+        "errors": [],
+        "generation_credits_estimate": null,
+        "cost_notes": [
+          "cost not estimated (not zero credits); notes below are cost impacts only; check regional official pricing and balance before running"
+        ]
+      }
+    },
+    {
+      "id": "03-rotary-hub",
+      "name": "Rotary deck hub",
+      "faceBudget": 3000,
+      "estimatedCredits": 50,
+      "args": [
+        "make",
+        "docs/carlisle-relay/shipyard-polish/props/03-rotary-hub.png",
+        "--for",
+        "toy",
+        "--model",
+        "tripo-p1",
+        "-p",
+        "face_limit=3000",
+        "-p",
+        "texture=true",
+        "-p",
+        "pbr=true",
+        "-p",
+        "auto_size=true",
+        "--name",
+        "carlisle-rotary-hub",
+        "-o",
+        "art/carlisle-shipyard",
+        "--json",
+        "--yes"
+      ],
+      "plan": {
+        "dry_run": true,
+        "valid": true,
+        "input": "docs/carlisle-relay/shipyard-polish/props/03-rotary-hub.png",
+        "scenario": "toy",
+        "model": "P1-20260311",
+        "model_reason": "explicit --model",
+        "steps": [
+          {
+            "name": "image-to-model",
+            "endpoint": "/v3/generation/image-to-model",
+            "task_type": "image_to_model",
+            "payload": {
+              "input": "<upload:docs/carlisle-relay/shipyard-polish/props/03-rotary-hub.png>",
+              "texture": true,
+              "pbr": true,
+              "face_limit": 3000,
+              "auto_size": true,
+              "model": "P1-20260311"
+            }
+          }
+        ],
+        "pending_uploads": [
+          "docs/carlisle-relay/shipyard-polish/props/03-rotary-hub.png"
+        ],
+        "deliverables": [
+          "GLB"
+        ],
+        "candidates": 1,
+        "warnings": [],
+        "errors": [],
+        "generation_credits_estimate": null,
+        "cost_notes": [
+          "cost not estimated (not zero credits); notes below are cost impacts only; check regional official pricing and balance before running"
+        ]
+      }
+    },
+    {
+      "id": "04-work-skiff",
+      "name": "Flat-deck work skiff",
+      "faceBudget": 4500,
+      "estimatedCredits": 50,
+      "args": [
+        "make",
+        "docs/carlisle-relay/shipyard-polish/props/04-work-skiff.png",
+        "--for",
+        "toy",
+        "--model",
+        "tripo-p1",
+        "-p",
+        "face_limit=4500",
+        "-p",
+        "texture=true",
+        "-p",
+        "pbr=true",
+        "-p",
+        "auto_size=true",
+        "--name",
+        "carlisle-work-skiff",
+        "-o",
+        "art/carlisle-shipyard",
+        "--json",
+        "--yes"
+      ],
+      "plan": {
+        "dry_run": true,
+        "valid": true,
+        "input": "docs/carlisle-relay/shipyard-polish/props/04-work-skiff.png",
+        "scenario": "toy",
+        "model": "P1-20260311",
+        "model_reason": "explicit --model",
+        "steps": [
+          {
+            "name": "image-to-model",
+            "endpoint": "/v3/generation/image-to-model",
+            "task_type": "image_to_model",
+            "payload": {
+              "input": "<upload:docs/carlisle-relay/shipyard-polish/props/04-work-skiff.png>",
+              "texture": true,
+              "pbr": true,
+              "face_limit": 4500,
+              "auto_size": true,
+              "model": "P1-20260311"
+            }
+          }
+        ],
+        "pending_uploads": [
+          "docs/carlisle-relay/shipyard-polish/props/04-work-skiff.png"
+        ],
+        "deliverables": [
+          "GLB"
+        ],
+        "candidates": 1,
+        "warnings": [],
+        "errors": [],
+        "generation_credits_estimate": null,
+        "cost_notes": [
+          "cost not estimated (not zero credits); notes below are cost impacts only; check regional official pricing and balance before running"
+        ]
+      }
+    },
+    {
+      "id": "05-cargo-crane",
+      "name": "Cargo lifting crane",
+      "faceBudget": 6000,
+      "estimatedCredits": 50,
+      "args": [
+        "make",
+        "docs/carlisle-relay/shipyard-polish/props/05-cargo-crane.png",
+        "--for",
+        "toy",
+        "--model",
+        "tripo-p1",
+        "-p",
+        "face_limit=6000",
+        "-p",
+        "texture=true",
+        "-p",
+        "pbr=true",
+        "-p",
+        "auto_size=true",
+        "--name",
+        "carlisle-cargo-crane",
+        "-o",
+        "art/carlisle-shipyard",
+        "--json",
+        "--yes"
+      ],
+      "plan": {
+        "dry_run": true,
+        "valid": true,
+        "input": "docs/carlisle-relay/shipyard-polish/props/05-cargo-crane.png",
+        "scenario": "toy",
+        "model": "P1-20260311",
+        "model_reason": "explicit --model",
+        "steps": [
+          {
+            "name": "image-to-model",
+            "endpoint": "/v3/generation/image-to-model",
+            "task_type": "image_to_model",
+            "payload": {
+              "input": "<upload:docs/carlisle-relay/shipyard-polish/props/05-cargo-crane.png>",
+              "texture": true,
+              "pbr": true,
+              "face_limit": 6000,
+              "auto_size": true,
+              "model": "P1-20260311"
+            }
+          }
+        ],
+        "pending_uploads": [
+          "docs/carlisle-relay/shipyard-polish/props/05-cargo-crane.png"
+        ],
+        "deliverables": [
+          "GLB"
+        ],
+        "candidates": 1,
+        "warnings": [],
+        "errors": [],
+        "generation_credits_estimate": null,
+        "cost_notes": [
+          "cost not estimated (not zero credits); notes below are cost impacts only; check regional official pricing and balance before running"
+        ]
+      }
+    },
+    {
+      "id": "06-counterweight-hoist",
+      "name": "Counterweight hoist",
+      "faceBudget": 4000,
+      "estimatedCredits": 50,
+      "args": [
+        "make",
+        "docs/carlisle-relay/shipyard-polish/props/06-counterweight-hoist.png",
+        "--for",
+        "toy",
+        "--model",
+        "tripo-p1",
+        "-p",
+        "face_limit=4000",
+        "-p",
+        "texture=true",
+        "-p",
+        "pbr=true",
+        "-p",
+        "auto_size=true",
+        "--name",
+        "carlisle-counterweight-hoist",
+        "-o",
+        "art/carlisle-shipyard",
+        "--json",
+        "--yes"
+      ],
+      "plan": {
+        "dry_run": true,
+        "valid": true,
+        "input": "docs/carlisle-relay/shipyard-polish/props/06-counterweight-hoist.png",
+        "scenario": "toy",
+        "model": "P1-20260311",
+        "model_reason": "explicit --model",
+        "steps": [
+          {
+            "name": "image-to-model",
+            "endpoint": "/v3/generation/image-to-model",
+            "task_type": "image_to_model",
+            "payload": {
+              "input": "<upload:docs/carlisle-relay/shipyard-polish/props/06-counterweight-hoist.png>",
+              "texture": true,
+              "pbr": true,
+              "face_limit": 4000,
+              "auto_size": true,
+              "model": "P1-20260311"
+            }
+          }
+        ],
+        "pending_uploads": [
+          "docs/carlisle-relay/shipyard-polish/props/06-counterweight-hoist.png"
+        ],
+        "deliverables": [
+          "GLB"
+        ],
+        "candidates": 1,
+        "warnings": [],
+        "errors": [],
+        "generation_credits_estimate": null,
+        "cost_notes": [
+          "cost not estimated (not zero credits); notes below are cost impacts only; check regional official pricing and balance before running"
+        ]
+      }
+    },
+    {
+      "id": "07-piling-fender",
+      "name": "Piling and rubber fender",
+      "faceBudget": 2500,
+      "estimatedCredits": 50,
+      "args": [
+        "make",
+        "docs/carlisle-relay/shipyard-polish/props/07-piling-fender.png",
+        "--for",
+        "toy",
+        "--model",
+        "tripo-p1",
+        "-p",
+        "face_limit=2500",
+        "-p",
+        "texture=true",
+        "-p",
+        "pbr=true",
+        "-p",
+        "auto_size=true",
+        "--name",
+        "carlisle-piling-fender",
+        "-o",
+        "art/carlisle-shipyard",
+        "--json",
+        "--yes"
+      ],
+      "plan": {
+        "dry_run": true,
+        "valid": true,
+        "input": "docs/carlisle-relay/shipyard-polish/props/07-piling-fender.png",
+        "scenario": "toy",
+        "model": "P1-20260311",
+        "model_reason": "explicit --model",
+        "steps": [
+          {
+            "name": "image-to-model",
+            "endpoint": "/v3/generation/image-to-model",
+            "task_type": "image_to_model",
+            "payload": {
+              "input": "<upload:docs/carlisle-relay/shipyard-polish/props/07-piling-fender.png>",
+              "texture": true,
+              "pbr": true,
+              "face_limit": 2500,
+              "auto_size": true,
+              "model": "P1-20260311"
+            }
+          }
+        ],
+        "pending_uploads": [
+          "docs/carlisle-relay/shipyard-polish/props/07-piling-fender.png"
+        ],
+        "deliverables": [
+          "GLB"
+        ],
+        "candidates": 1,
+        "warnings": [],
+        "errors": [],
+        "generation_credits_estimate": null,
+        "cost_notes": [
+          "cost not estimated (not zero credits); notes below are cost impacts only; check regional official pricing and balance before running"
+        ]
+      }
+    },
+    {
+      "id": "08-boathouse",
+      "name": "Outer Banks boathouse",
+      "faceBudget": 6500,
+      "estimatedCredits": 50,
+      "args": [
+        "make",
+        "docs/carlisle-relay/shipyard-polish/props/08-boathouse.png",
+        "--for",
+        "toy",
+        "--model",
+        "tripo-p1",
+        "-p",
+        "face_limit=6500",
+        "-p",
+        "texture=true",
+        "-p",
+        "pbr=true",
+        "-p",
+        "auto_size=true",
+        "--name",
+        "carlisle-boathouse",
+        "-o",
+        "art/carlisle-shipyard",
+        "--json",
+        "--yes"
+      ],
+      "plan": {
+        "dry_run": true,
+        "valid": true,
+        "input": "docs/carlisle-relay/shipyard-polish/props/08-boathouse.png",
+        "scenario": "toy",
+        "model": "P1-20260311",
+        "model_reason": "explicit --model",
+        "steps": [
+          {
+            "name": "image-to-model",
+            "endpoint": "/v3/generation/image-to-model",
+            "task_type": "image_to_model",
+            "payload": {
+              "input": "<upload:docs/carlisle-relay/shipyard-polish/props/08-boathouse.png>",
+              "texture": true,
+              "pbr": true,
+              "face_limit": 6500,
+              "auto_size": true,
+              "model": "P1-20260311"
+            }
+          }
+        ],
+        "pending_uploads": [
+          "docs/carlisle-relay/shipyard-polish/props/08-boathouse.png"
+        ],
+        "deliverables": [
+          "GLB"
+        ],
+        "candidates": 1,
+        "warnings": [],
+        "errors": [],
+        "generation_credits_estimate": null,
+        "cost_notes": [
+          "cost not estimated (not zero credits); notes below are cost impacts only; check regional official pricing and balance before running"
+        ]
+      }
+    },
+    {
+      "id": "09-cable-spool",
+      "name": "Cable spool",
+      "faceBudget": 1800,
+      "estimatedCredits": 50,
+      "args": [
+        "make",
+        "docs/carlisle-relay/shipyard-polish/props/09-cable-spool.png",
+        "--for",
+        "toy",
+        "--model",
+        "tripo-p1",
+        "-p",
+        "face_limit=1800",
+        "-p",
+        "texture=true",
+        "-p",
+        "pbr=true",
+        "-p",
+        "auto_size=true",
+        "--name",
+        "carlisle-cable-spool",
+        "-o",
+        "art/carlisle-shipyard",
+        "--json",
+        "--yes"
+      ],
+      "plan": {
+        "dry_run": true,
+        "valid": true,
+        "input": "docs/carlisle-relay/shipyard-polish/props/09-cable-spool.png",
+        "scenario": "toy",
+        "model": "P1-20260311",
+        "model_reason": "explicit --model",
+        "steps": [
+          {
+            "name": "image-to-model",
+            "endpoint": "/v3/generation/image-to-model",
+            "task_type": "image_to_model",
+            "payload": {
+              "input": "<upload:docs/carlisle-relay/shipyard-polish/props/09-cable-spool.png>",
+              "texture": true,
+              "pbr": true,
+              "face_limit": 1800,
+              "auto_size": true,
+              "model": "P1-20260311"
+            }
+          }
+        ],
+        "pending_uploads": [
+          "docs/carlisle-relay/shipyard-polish/props/09-cable-spool.png"
+        ],
+        "deliverables": [
+          "GLB"
+        ],
+        "candidates": 1,
+        "warnings": [],
+        "errors": [],
+        "generation_credits_estimate": null,
+        "cost_notes": [
+          "cost not estimated (not zero credits); notes below are cost impacts only; check regional official pricing and balance before running"
+        ]
+      }
+    },
+    {
+      "id": "10-dredger-pump",
+      "name": "Dredger pump and elbow",
+      "faceBudget": 4500,
+      "estimatedCredits": 50,
+      "args": [
+        "make",
+        "docs/carlisle-relay/shipyard-polish/props/10-dredger-pump.png",
+        "--for",
+        "toy",
+        "--model",
+        "tripo-p1",
+        "-p",
+        "face_limit=4500",
+        "-p",
+        "texture=true",
+        "-p",
+        "pbr=true",
+        "-p",
+        "auto_size=true",
+        "--name",
+        "carlisle-dredger-pump",
+        "-o",
+        "art/carlisle-shipyard",
+        "--json",
+        "--yes"
+      ],
+      "plan": {
+        "dry_run": true,
+        "valid": true,
+        "input": "docs/carlisle-relay/shipyard-polish/props/10-dredger-pump.png",
+        "scenario": "toy",
+        "model": "P1-20260311",
+        "model_reason": "explicit --model",
+        "steps": [
+          {
+            "name": "image-to-model",
+            "endpoint": "/v3/generation/image-to-model",
+            "task_type": "image_to_model",
+            "payload": {
+              "input": "<upload:docs/carlisle-relay/shipyard-polish/props/10-dredger-pump.png>",
+              "texture": true,
+              "pbr": true,
+              "face_limit": 4500,
+              "auto_size": true,
+              "model": "P1-20260311"
+            }
+          }
+        ],
+        "pending_uploads": [
+          "docs/carlisle-relay/shipyard-polish/props/10-dredger-pump.png"
+        ],
+        "deliverables": [
+          "GLB"
+        ],
+        "candidates": 1,
+        "warnings": [],
+        "errors": [],
+        "generation_credits_estimate": null,
+        "cost_notes": [
+          "cost not estimated (not zero credits); notes below are cost impacts only; check regional official pricing and balance before running"
+        ]
+      }
+    },
+    {
+      "id": "11-harbour-beacon",
+      "name": "Harbour beacon",
+      "faceBudget": 6000,
+      "estimatedCredits": 50,
+      "args": [
+        "make",
+        "docs/carlisle-relay/shipyard-polish/props/11-harbour-beacon.png",
+        "--for",
+        "toy",
+        "--model",
+        "tripo-p1",
+        "-p",
+        "face_limit=6000",
+        "-p",
+        "texture=true",
+        "-p",
+        "pbr=true",
+        "-p",
+        "auto_size=true",
+        "--name",
+        "carlisle-harbour-beacon",
+        "-o",
+        "art/carlisle-shipyard",
+        "--json",
+        "--yes"
+      ],
+      "plan": {
+        "dry_run": true,
+        "valid": true,
+        "input": "docs/carlisle-relay/shipyard-polish/props/11-harbour-beacon.png",
+        "scenario": "toy",
+        "model": "P1-20260311",
+        "model_reason": "explicit --model",
+        "steps": [
+          {
+            "name": "image-to-model",
+            "endpoint": "/v3/generation/image-to-model",
+            "task_type": "image_to_model",
+            "payload": {
+              "input": "<upload:docs/carlisle-relay/shipyard-polish/props/11-harbour-beacon.png>",
+              "texture": true,
+              "pbr": true,
+              "face_limit": 6000,
+              "auto_size": true,
+              "model": "P1-20260311"
+            }
+          }
+        ],
+        "pending_uploads": [
+          "docs/carlisle-relay/shipyard-polish/props/11-harbour-beacon.png"
+        ],
+        "deliverables": [
+          "GLB"
+        ],
+        "candidates": 1,
+        "warnings": [],
+        "errors": [],
+        "generation_credits_estimate": null,
+        "cost_notes": [
+          "cost not estimated (not zero credits); notes below are cost impacts only; check regional official pricing and balance before running"
+        ]
+      }
+    },
+    {
+      "id": "12-dock-lantern",
+      "name": "Dock lantern",
+      "faceBudget": 1800,
+      "estimatedCredits": 50,
+      "args": [
+        "make",
+        "docs/carlisle-relay/shipyard-polish/props/12-dock-lantern.png",
+        "--for",
+        "toy",
+        "--model",
+        "tripo-p1",
+        "-p",
+        "face_limit=1800",
+        "-p",
+        "texture=true",
+        "-p",
+        "pbr=true",
+        "-p",
+        "auto_size=true",
+        "--name",
+        "carlisle-dock-lantern",
+        "-o",
+        "art/carlisle-shipyard",
+        "--json",
+        "--yes"
+      ],
+      "plan": {
+        "dry_run": true,
+        "valid": true,
+        "input": "docs/carlisle-relay/shipyard-polish/props/12-dock-lantern.png",
+        "scenario": "toy",
+        "model": "P1-20260311",
+        "model_reason": "explicit --model",
+        "steps": [
+          {
+            "name": "image-to-model",
+            "endpoint": "/v3/generation/image-to-model",
+            "task_type": "image_to_model",
+            "payload": {
+              "input": "<upload:docs/carlisle-relay/shipyard-polish/props/12-dock-lantern.png>",
+              "texture": true,
+              "pbr": true,
+              "face_limit": 1800,
+              "auto_size": true,
+              "model": "P1-20260311"
+            }
+          }
+        ],
+        "pending_uploads": [
+          "docs/carlisle-relay/shipyard-polish/props/12-dock-lantern.png"
+        ],
+        "deliverables": [
+          "GLB"
+        ],
+        "candidates": 1,
+        "warnings": [],
+        "errors": [],
+        "generation_credits_estimate": null,
+        "cost_notes": [
+          "cost not estimated (not zero credits); notes below are cost impacts only; check regional official pricing and balance before running"
+        ]
+      }
+    }
+  ]
+}

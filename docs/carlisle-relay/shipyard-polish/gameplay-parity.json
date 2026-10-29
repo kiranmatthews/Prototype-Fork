@@ -1,0 +1,41 @@
+{
+  "recordedAt": "2026-10-29T11:46:36.379936+00:00",
+  "sourceCommit": "5a4cc84f6cd82429da927dfd0227badcf0de1982",
+  "files": [
+    {
+      "path": "src/player.ts",
+      "sha256": "8a9188ecaa74c8e956bd0a57f1ace6bc8ea60c5c89dc9850f5aecaa62cfdc83a",
+      "matchesParent": true
+    },
+    {
+      "path": "src/main.ts",
+      "sha256": "7037126b270982604dec1c87c864da655f8477063c704fa14901c02cefd56c33",
+      "matchesParent": true
+    },
+    {
+      "path": "src/level.ts",
+      "sha256": "618c206a8ca454e62f447a713ee4a7394ebc9589ec1ffa01bc57bcff3e3e2bc5",
+      "matchesParent": true
+    },
+    {
+      "path": "src/tuning.ts",
+      "sha256": "1aca3b5fe4b5d026d8b9e36dcf30444081bec7d2acfd4181294f6aacaca61bd6",
+      "matchesParent": true
+    },
+    {
+      "path": "src/levels/carlisle-tidal-relay.ts",
+      "sha256": "5b179887be93c350c4376c3827592fb7dba50a5896cf7ca6fce03909ac2b3cbd",
+      "matchesParent": true
+    },
+    {
+      "path": "src/levels/carlisle-harbour-bonus.ts",
+      "sha256": "b009df2b971e0582d264b3b3e44228a009d55616efda54b048eb4f8f686c3ace",
+      "matchesParent": true
+    },
+    {
+      "path": "public/levels.json",
+      "sha256": "08b960136b3118b5e692dfbc49c7e54c11345707ac33db83d585f9af2b8e8a5d",
+      "matchesParent": true
+    }
+  ]
+}

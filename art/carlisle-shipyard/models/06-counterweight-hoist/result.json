@@ -1,0 +1,39 @@
+{
+  "id": "06-counterweight-hoist",
+  "args": [
+    "make",
+    "docs/carlisle-relay/shipyard-polish/props/06-counterweight-hoist.png",
+    "--for",
+    "toy",
+    "--model",
+    "tripo-p1",
+    "-p",
+    "face_limit=4000",
+    "-p",
+    "texture=true",
+    "-p",
+    "pbr=true",
+    "-p",
+    "auto_size=true",
+    "--name",
+    "carlisle-counterweight-hoist",
+    "-o",
+    "art/carlisle-shipyard",
+    "--json",
+    "--yes"
+  ],
+  "result": {
+    "task_id": "89f6fabe-b8be-4fa6-b81e-f2f6646be9de",
+    "type": "image_to_model",
+    "status": "success",
+    "credits_consumed": 50,
+    "output_dir": "art/carlisle-shipyard/tripo-out/carlisle-counterweight-hoist-89f6fabe",
+    "files": [
+      "model.glb",
+      "rendered_image.webp",
+      "preview.png"
+    ],
+    "model_file": "art/carlisle-shipyard/tripo-out/carlisle-counterweight-hoist-89f6fabe/model.glb",
+    "preview": "art/carlisle-shipyard/tripo-out/carlisle-counterweight-hoist-89f6fabe/preview.png"
+  }
+}

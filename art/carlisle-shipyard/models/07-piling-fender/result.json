@@ -1,0 +1,39 @@
+{
+  "id": "07-piling-fender",
+  "args": [
+    "make",
+    "docs/carlisle-relay/shipyard-polish/props/07-piling-fender.png",
+    "--for",
+    "toy",
+    "--model",
+    "tripo-p1",
+    "-p",
+    "face_limit=2500",
+    "-p",
+    "texture=true",
+    "-p",
+    "pbr=true",
+    "-p",
+    "auto_size=true",
+    "--name",
+    "carlisle-piling-fender",
+    "-o",
+    "art/carlisle-shipyard",
+    "--json",
+    "--yes"
+  ],
+  "result": {
+    "task_id": "10edaeee-abf1-4115-9e87-d5a3aabf77a0",
+    "type": "image_to_model",
+    "status": "success",
+    "credits_consumed": 50,
+    "output_dir": "art/carlisle-shipyard/tripo-out/carlisle-piling-fender-10edaeee",
+    "files": [
+      "model.glb",
+      "rendered_image.webp",
+      "preview.png"
+    ],
+    "model_file": "art/carlisle-shipyard/tripo-out/carlisle-piling-fender-10edaeee/model.glb",
+    "preview": "art/carlisle-shipyard/tripo-out/carlisle-piling-fender-10edaeee/preview.png"
+  }
+}

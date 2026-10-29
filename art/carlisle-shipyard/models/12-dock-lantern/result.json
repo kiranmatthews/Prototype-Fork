@@ -1,0 +1,39 @@
+{
+  "id": "12-dock-lantern",
+  "args": [
+    "make",
+    "docs/carlisle-relay/shipyard-polish/props/12-dock-lantern.png",
+    "--for",
+    "toy",
+    "--model",
+    "tripo-p1",
+    "-p",
+    "face_limit=1800",
+    "-p",
+    "texture=true",
+    "-p",
+    "pbr=true",
+    "-p",
+    "auto_size=true",
+    "--name",
+    "carlisle-dock-lantern",
+    "-o",
+    "art/carlisle-shipyard",
+    "--json",
+    "--yes"
+  ],
+  "result": {
+    "task_id": "ebc30fff-961f-4ae1-a27a-64c5268b17c7",
+    "type": "image_to_model",
+    "status": "success",
+    "credits_consumed": 50,
+    "output_dir": "art/carlisle-shipyard/tripo-out/carlisle-dock-lantern-ebc30fff",
+    "files": [
+      "model.glb",
+      "rendered_image.webp",
+      "preview.png"
+    ],
+    "model_file": "art/carlisle-shipyard/tripo-out/carlisle-dock-lantern-ebc30fff/model.glb",
+    "preview": "art/carlisle-shipyard/tripo-out/carlisle-dock-lantern-ebc30fff/preview.png"
+  }
+}

@@ -1,0 +1,285 @@
+{
+  "completedAt": "2026-10-29T12:06:07.406512+00:00",
+  "goalStartedAt": "2026-10-29T10:04:44Z",
+  "status": "validated-local-hold",
+  "direction": "Orange and dark blue, early night, Outer Banks working harbour",
+  "sourceCommit": "5a4cc84f6cd82429da927dfd0227badcf0de1982",
+  "counts": {
+    "areaConcepts": 20,
+    "mainAreas": 18,
+    "bonusViews": 2,
+    "propReferences": 12,
+    "texturedGlbs": 12,
+    "proceduralExports": 2
+  },
+  "meshStats": {
+    "totalTriangles": 43646,
+    "smallest": 1644,
+    "largest": 5807,
+    "allWithinBudgets": true,
+    "embeddedTexturesPerAsset": 3,
+    "textureSize": [
+      2048,
+      2048
+    ]
+  },
+  "billing": {
+    "checkedAt": "2026-10-29T11:54:56.968999+00:00",
+    "initialApiBalance": 780,
+    "billedCredits": 600,
+    "remainingApiBalance": 180,
+    "frozenCredits": 0,
+    "apiPurchases": 0,
+    "maxPlanCreditsUsed": 0,
+    "tasks": 12,
+    "creditsPerTask": 50
+  },
+  "evidence": [
+    "captures.json",
+    "concepts.json",
+    "props.json",
+    "gallery-qa.json",
+    "build-qa.json",
+    "gameplay-parity.json",
+    "../../../art/carlisle-shipyard/models.json",
+    "../../../art/carlisle-shipyard/review/browser-qa.json"
+  ],
+  "gameplayChanges": false,
+  "published": false,
+  "checksNotRun": [
+    "check:levels (no level data changed)",
+    "check:all (not requested)"
+  ],
+  "artifacts": [
+    {
+      "path": "docs/carlisle-relay/shipyard-polish/concepts/01-foam-steps.png",
+      "bytes": 3085652,
+      "sha256": "6af6393e66727c7f7f1091a59a2d2aa4fc693d05e236a417458b39edb4557c55"
+    },
+    {
+      "path": "docs/carlisle-relay/shipyard-polish/concepts/02-scissor-groyne.png",
+      "bytes": 3241396,
+      "sha256": "fb77e797a762bafea0b6377bdaa7377d1db6e139f833ade9338e9a03600ece80"
+    },
+    {
+      "path": "docs/carlisle-relay/shipyard-polish/concepts/03-lift-and-skip.png",
+      "bytes": 3104740,
+      "sha256": "f3a3a8b1a33bce6849c11c4c1807bb193f27862384fe48cbf7b64a8712574247"
+    },
+    {
+      "path": "docs/carlisle-relay/shipyard-polish/concepts/04-surf-sockets.png",
+      "bytes": 3058379,
+      "sha256": "7e907cca494af8d72f565d2836a49be6598e31e199b8f7a1e8f9b845c1f80db0"
+    },
+    {
+      "path": "docs/carlisle-relay/shipyard-polish/concepts/05-twin-winches.png",
+      "bytes": 3181504,
+      "sha256": "b5b66065cff7d81789614debaf49ae7970a4e3a50e15823ee47b67de02d35703"
+    },
+    {
+      "path": "docs/carlisle-relay/shipyard-polish/concepts/06-beacon-chimney.png",
+      "bytes": 2832009,
+      "sha256": "ff2cba1965885c19ea92c792fd1b8d5b5c7effb742ef4674f130a2068ceff3df"
+    },
+    {
+      "path": "docs/carlisle-relay/shipyard-polish/concepts/07-tide-dial.png",
+      "bytes": 3298532,
+      "sha256": "1790c71bfd35d4f418839dee72f866b4eded92014d14bafeab956a7b07e8e97c"
+    },
+    {
+      "path": "docs/carlisle-relay/shipyard-polish/concepts/08-pinwheel-handoffs.png",
+      "bytes": 3258623,
+      "sha256": "2741d995e531feb1def22795dbaebfa08e6731f71dd7dcce0b771819b1bbfedd"
+    },
+    {
+      "path": "docs/carlisle-relay/shipyard-polish/concepts/09-dredger-terraces.png",
+      "bytes": 3123344,
+      "sha256": "6d3a41659b90a3e9c562298b2f8d2f32ca089e2042e31d797d3d82e9f4083abb"
+    },
+    {
+      "path": "docs/carlisle-relay/shipyard-polish/concepts/10-cross-thread-springs.png",
+      "bytes": 3101589,
+      "sha256": "8b7ddcfb5e02e7a6f4a161825bb5ce9b1754bd645bfb922a684323589360a33a"
+    },
+    {
+      "path": "docs/carlisle-relay/shipyard-polish/concepts/11-counterweight-stacks.png",
+      "bytes": 3094078,
+      "sha256": "cca615e92f7d18775677cabe7a6582d5073e980ba61b229b5ce9213accc24c06"
+    },
+    {
+      "path": "docs/carlisle-relay/shipyard-polish/concepts/12-harbour-scissors.png",
+      "bytes": 3158998,
+      "sha256": "49109d59d46a43861522c36910e47eceb222850c485271d7e6d448e6d7ae12f4"
+    },
+    {
+      "path": "docs/carlisle-relay/shipyard-polish/concepts/13-storm-fingers.png",
+      "bytes": 2954781,
+      "sha256": "c7defdcfccccc9ea81cb6b8b6d89b5d5ac2a3fcb9110f87f70daa5b4aeb84b2f"
+    },
+    {
+      "path": "docs/carlisle-relay/shipyard-polish/concepts/14-helical-turbine.png",
+      "bytes": 3018417,
+      "sha256": "dbf2181a55ac0f44e0784fb3e4d06378b5da53f5ee3b0a3aed45c83ad756a13b"
+    },
+    {
+      "path": "docs/carlisle-relay/shipyard-polish/concepts/15-pendulum-pier.png",
+      "bytes": 3159741,
+      "sha256": "7bb58caf1065e12f602ef8d005260e9c1914c68b8e30b55e0ce8dcaf20c8b741"
+    },
+    {
+      "path": "docs/carlisle-relay/shipyard-polish/concepts/16-rigging-slingshot.png",
+      "bytes": 2475125,
+      "sha256": "a0ee9bfdbc2031758a4085472c13c91bcfda19e08aab54dc43668c7c76b1a880"
+    },
+    {
+      "path": "docs/carlisle-relay/shipyard-polish/concepts/17-broken-crown.png",
+      "bytes": 2291874,
+      "sha256": "dedd25b097fdf7f74e0ea98cff4325e4fbf55b7b7b7cbec1dc1d2768f91bff40"
+    },
+    {
+      "path": "docs/carlisle-relay/shipyard-polish/concepts/18-homecoming-cable.png",
+      "bytes": 2422607,
+      "sha256": "6918d6fdfdf3d8edffd5c5ba44ceb6ad570a4952c126aea59f8dafe0376b39c5"
+    },
+    {
+      "path": "docs/carlisle-relay/shipyard-polish/concepts/19-springtide-skippers.png",
+      "bytes": 2213773,
+      "sha256": "a309f8c0ca294b8326740377e1b80fb8ef499b175c1cb24f8d0f1a7c25aa0eeb"
+    },
+    {
+      "path": "docs/carlisle-relay/shipyard-polish/concepts/20-spring-skiff-close.png",
+      "bytes": 2419803,
+      "sha256": "755acb8f48d6a6a5c2f8a07521911f043820b80bbad8996c92bcf8674836579a"
+    },
+    {
+      "path": "docs/carlisle-relay/shipyard-polish/props/01-net-housing.png",
+      "bytes": 1802084,
+      "sha256": "c66ec728e09495227186178dbf29cafbd3494e43a924b258199c3463a590c382"
+    },
+    {
+      "path": "docs/carlisle-relay/shipyard-polish/props/02-dock-winch.png",
+      "bytes": 2089044,
+      "sha256": "be252af04830471e0331b47635a0a82fc36593a40c906712c9120945ec706a68"
+    },
+    {
+      "path": "docs/carlisle-relay/shipyard-polish/props/03-rotary-hub.png",
+      "bytes": 2042844,
+      "sha256": "0a269ae69e0145e1dbaf6d30b3724ca872ef479b8a1b37841a1251741cd8754c"
+    },
+    {
+      "path": "docs/carlisle-relay/shipyard-polish/props/04-work-skiff.png",
+      "bytes": 2005905,
+      "sha256": "631bf461bc01c138c4cde969d0994b6fe1c0e1dcb94635db5aef8c6a3ec1e983"
+    },
+    {
+      "path": "docs/carlisle-relay/shipyard-polish/props/05-cargo-crane.png",
+      "bytes": 1876486,
+      "sha256": "dac61309a4a5be7cf03e0c81b676afd2aab0458c94359b563198b38f871a06d5"
+    },
+    {
+      "path": "docs/carlisle-relay/shipyard-polish/props/06-counterweight-hoist.png",
+      "bytes": 1605014,
+      "sha256": "b67a52d43ff038a8d133c5164b863911e8ec672c1c4ba6c52317c779839e13e8"
+    },
+    {
+      "path": "docs/carlisle-relay/shipyard-polish/props/07-piling-fender.png",
+      "bytes": 1896896,
+      "sha256": "793f46ef9a9c7245c9346b62e62bb51f68f87f42aa77077d0019f0b73f56ee5d"
+    },
+    {
+      "path": "docs/carlisle-relay/shipyard-polish/props/08-boathouse.png",
+      "bytes": 2189855,
+      "sha256": "a452c75d578b8c2d03f2d157350c2ce4ada4594955fbb8d6c27558d25a46a423"
+    },
+    {
+      "path": "docs/carlisle-relay/shipyard-polish/props/09-cable-spool.png",
+      "bytes": 2257115,
+      "sha256": "9535ac2c9d2b13cb32a5f1e883c3ca34e8f83d63c1c3aa2bd04bb67a35acbb68"
+    },
+    {
+      "path": "docs/carlisle-relay/shipyard-polish/props/10-dredger-pump.png",
+      "bytes": 2120180,
+      "sha256": "83dfa951d8cb89b9b319414e0060c40fa664b565f836817bb3b109e09673fd57"
+    },
+    {
+      "path": "docs/carlisle-relay/shipyard-polish/props/11-harbour-beacon.png",
+      "bytes": 1587253,
+      "sha256": "729f5253a517ec39745a186343d2167ab4031f5fb729dc986423d696687f9908"
+    },
+    {
+      "path": "docs/carlisle-relay/shipyard-polish/props/12-dock-lantern.png",
+      "bytes": 1742308,
+      "sha256": "4679ed4dc51eee07a5ef647bdab5e5fabfb2d9bbce12a0a83ae5e8fa590e9edf"
+    },
+    {
+      "path": "art/carlisle-shipyard/tripo-out/carlisle-net-housing-76d58404/model.glb",
+      "bytes": 2347144,
+      "sha256": "f52ece313be72cdad6915b1558cc32885c69d297d827a2f2fd939ea00e4d1667"
+    },
+    {
+      "path": "art/carlisle-shipyard/tripo-out/carlisle-dock-winch-f28d55ed/model.glb",
+      "bytes": 3226412,
+      "sha256": "13fc51229e26d242e961fc57bada6ab4c00f4084ab754376dfb70e85baed34dc"
+    },
+    {
+      "path": "art/carlisle-shipyard/tripo-out/carlisle-rotary-hub-93d64f02/model.glb",
+      "bytes": 2936584,
+      "sha256": "294dc1ca0e7a9891c0f0d631d9f22aac0e78919e5cd9c6f69182eb2e456c5cb7"
+    },
+    {
+      "path": "art/carlisle-shipyard/tripo-out/carlisle-work-skiff-38bd4731/model.glb",
+      "bytes": 3455832,
+      "sha256": "4c62baddeb60e7fc9d2355fdd5c58ae967a8be3fac75cd94ece629c44fc241db"
+    },
+    {
+      "path": "art/carlisle-shipyard/tripo-out/carlisle-cargo-crane-e527579c/model.glb",
+      "bytes": 3219228,
+      "sha256": "58fdcfe52e6f07ea351fc65c2127e928206d7f7b8c8f54a13223b3973ba5410b"
+    },
+    {
+      "path": "art/carlisle-shipyard/tripo-out/carlisle-counterweight-hoist-89f6fabe/model.glb",
+      "bytes": 2973520,
+      "sha256": "263a54f506b3828add11e94d5434113c87358d66f78cb09630719652a8727092"
+    },
+    {
+      "path": "art/carlisle-shipyard/tripo-out/carlisle-piling-fender-10edaeee/model.glb",
+      "bytes": 2705896,
+      "sha256": "d6581a4e9160f40ff40678873db38682a233a1e913954aa4b6f0765a2e5c2588"
+    },
+    {
+      "path": "art/carlisle-shipyard/tripo-out/carlisle-boathouse-1bc632d1/model.glb",
+      "bytes": 3436620,
+      "sha256": "979d39e57851845e964eb5f4f90dbaecc351478aa074aaeb970adbb199a55413"
+    },
+    {
+      "path": "art/carlisle-shipyard/tripo-out/carlisle-cable-spool-5ea47c49/model.glb",
+      "bytes": 2952460,
+      "sha256": "5e7739ed09068c2bb00562f5d8a0f08e8db14f31bfd53bc5179e670e1bcd93bd"
+    },
+    {
+      "path": "art/carlisle-shipyard/tripo-out/carlisle-dredger-pump-6b95d2aa/model.glb",
+      "bytes": 3142516,
+      "sha256": "05b6c35c0648815ae934d93b390b3c2c5c3c37d38c3298eb0a9043c0fe5046c7"
+    },
+    {
+      "path": "art/carlisle-shipyard/tripo-out/carlisle-harbour-beacon-9e1765b3/model.glb",
+      "bytes": 3637872,
+      "sha256": "3ca2e6f0b71e5c51b0df935a949caaba13bc321d8d333fa01c1d4dbbb46d8a3a"
+    },
+    {
+      "path": "art/carlisle-shipyard/tripo-out/carlisle-dock-lantern-ebc30fff/model.glb",
+      "bytes": 2555968,
+      "sha256": "cc1af0b7cae471c1abe45f593e30dff370a6548c67c10e02e4f37325e5f6e208"
+    },
+    {
+      "path": "art/carlisle-shipyard/procedural-marine-net.glb",
+      "bytes": 175140,
+      "sha256": "c3903e02cb9902fb4cea270b977be3a3a1a592b5a69925e93ce1652c171c1109"
+    },
+    {
+      "path": "art/carlisle-shipyard/net-housing-assembly.glb",
+      "bytes": 2692592,
+      "sha256": "577ad3a416ba38e19c5ba09f70887c4d25a6c30abebb41910bb842ed71f3f09d"
+    }
+  ]
+}

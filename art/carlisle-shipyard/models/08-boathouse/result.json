@@ -1,0 +1,39 @@
+{
+  "id": "08-boathouse",
+  "args": [
+    "make",
+    "docs/carlisle-relay/shipyard-polish/props/08-boathouse.png",
+    "--for",
+    "toy",
+    "--model",
+    "tripo-p1",
+    "-p",
+    "face_limit=6500",
+    "-p",
+    "texture=true",
+    "-p",
+    "pbr=true",
+    "-p",
+    "auto_size=true",
+    "--name",
+    "carlisle-boathouse",
+    "-o",
+    "art/carlisle-shipyard",
+    "--json",
+    "--yes"
+  ],
+  "result": {
+    "task_id": "1bc632d1-177c-4240-8b80-b285b51e342e",
+    "type": "image_to_model",
+    "status": "success",
+    "credits_consumed": 50,
+    "output_dir": "art/carlisle-shipyard/tripo-out/carlisle-boathouse-1bc632d1",
+    "files": [
+      "model.glb",
+      "rendered_image.webp",
+      "preview.png"
+    ],
+    "model_file": "art/carlisle-shipyard/tripo-out/carlisle-boathouse-1bc632d1/model.glb",
+    "preview": "art/carlisle-shipyard/tripo-out/carlisle-boathouse-1bc632d1/preview.png"
+  }
+}

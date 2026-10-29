@@ -1,0 +1,39 @@
+{
+  "id": "10-dredger-pump",
+  "args": [
+    "make",
+    "docs/carlisle-relay/shipyard-polish/props/10-dredger-pump.png",
+    "--for",
+    "toy",
+    "--model",
+    "tripo-p1",
+    "-p",
+    "face_limit=4500",
+    "-p",
+    "texture=true",
+    "-p",
+    "pbr=true",
+    "-p",
+    "auto_size=true",
+    "--name",
+    "carlisle-dredger-pump",
+    "-o",
+    "art/carlisle-shipyard",
+    "--json",
+    "--yes"
+  ],
+  "result": {
+    "task_id": "6b95d2aa-59d8-4c7d-90d0-26034a708f18",
+    "type": "image_to_model",
+    "status": "success",
+    "credits_consumed": 50,
+    "output_dir": "art/carlisle-shipyard/tripo-out/carlisle-dredger-pump-6b95d2aa",
+    "files": [
+      "model.glb",
+      "rendered_image.webp",
+      "preview.png"
+    ],
+    "model_file": "art/carlisle-shipyard/tripo-out/carlisle-dredger-pump-6b95d2aa/model.glb",
+    "preview": "art/carlisle-shipyard/tripo-out/carlisle-dredger-pump-6b95d2aa/preview.png"
+  }
+}

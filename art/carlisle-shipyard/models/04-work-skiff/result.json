@@ -1,0 +1,39 @@
+{
+  "id": "04-work-skiff",
+  "args": [
+    "make",
+    "docs/carlisle-relay/shipyard-polish/props/04-work-skiff.png",
+    "--for",
+    "toy",
+    "--model",
+    "tripo-p1",
+    "-p",
+    "face_limit=4500",
+    "-p",
+    "texture=true",
+    "-p",
+    "pbr=true",
+    "-p",
+    "auto_size=true",
+    "--name",
+    "carlisle-work-skiff",
+    "-o",
+    "art/carlisle-shipyard",
+    "--json",
+    "--yes"
+  ],
+  "result": {
+    "task_id": "38bd4731-4fe3-4464-9a25-b8f73525ee3d",
+    "type": "image_to_model",
+    "status": "success",
+    "credits_consumed": 50,
+    "output_dir": "art/carlisle-shipyard/tripo-out/carlisle-work-skiff-38bd4731",
+    "files": [
+      "model.glb",
+      "rendered_image.webp",
+      "preview.png"
+    ],
+    "model_file": "art/carlisle-shipyard/tripo-out/carlisle-work-skiff-38bd4731/model.glb",
+    "preview": "art/carlisle-shipyard/tripo-out/carlisle-work-skiff-38bd4731/preview.png"
+  }
+}

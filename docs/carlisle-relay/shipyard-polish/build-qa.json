@@ -1,0 +1,11 @@
+{
+  "command": "npm run build",
+  "exitCode": 0,
+  "bundler": "vite 5.4.21",
+  "typecheck": true,
+  "releaseFiles": 1749,
+  "releaseMiB": 948.4,
+  "offlineVersion": "d8497e650c9799230a8c",
+  "note": "Art library and review pages remain outside the published game pack; existing large-chunk warning only.",
+  "recordedAt": "2026-10-29T11:36:49.998658+00:00"
+}

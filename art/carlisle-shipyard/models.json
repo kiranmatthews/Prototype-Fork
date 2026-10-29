@@ -1,0 +1,728 @@
+{
+  "status": "generated",
+  "model": "tripo-p1 / P1-20260311",
+  "updatedAt": "2026-10-29T12:06:07.669Z",
+  "totalCredits": 600,
+  "assets": [
+    {
+      "id": "01-net-housing",
+      "name": "Marine net housing",
+      "model": "art/carlisle-shipyard/tripo-out/carlisle-net-housing-76d58404/model.glb",
+      "preview": "art/carlisle-shipyard/tripo-out/carlisle-net-housing-76d58404/preview.png",
+      "reference": "docs/carlisle-relay/shipyard-polish/props/01-net-housing.png",
+      "triangles": 2056,
+      "faceBudget": 2500,
+      "meshes": 1,
+      "primitives": 1,
+      "materials": 1,
+      "textures": [
+        {
+          "mimeType": "image/jpeg",
+          "bytes": 781332,
+          "width": 2048,
+          "height": 2048
+        },
+        {
+          "mimeType": "image/jpeg",
+          "bytes": 459756,
+          "width": 2048,
+          "height": 2048
+        },
+        {
+          "mimeType": "image/png",
+          "bytes": 1011667,
+          "width": 2048,
+          "height": 2048
+        }
+      ],
+      "bounds": {
+        "min": [
+          -0.6448453604243696,
+          -0.14999999990686774,
+          -0.7902061850763857
+        ],
+        "max": [
+          0.6448453604243696,
+          0.14999999990686774,
+          0.7902061850763857
+        ],
+        "size": [
+          1.2896907208487391,
+          0.2999999998137355,
+          1.5804123701527715
+        ]
+      },
+      "bytes": 2347144,
+      "taskId": "76d58404-0607-4927-bc67-de4c8cb14264",
+      "credits": 50,
+      "review": {
+        "previewReviewedAt": "2026-10-29T11:27:20.860Z",
+        "previewVerdict": "Matches the reference and approved navy/orange art direction",
+        "nativeBackReviewedAt": "2026-10-29T12:06:07.406512+00:00",
+        "nativeFrontCapture": "art/carlisle-shipyard/review/01-net-housing-front.png",
+        "nativeBackCapture": "art/carlisle-shipyard/review/01-net-housing-back.png",
+        "verdict": "Accepted as the local polish-basis prop; palette and complete silhouette reviewed."
+      }
+    },
+    {
+      "id": "02-dock-winch",
+      "name": "Dock winch",
+      "model": "art/carlisle-shipyard/tripo-out/carlisle-dock-winch-f28d55ed/model.glb",
+      "preview": "art/carlisle-shipyard/tripo-out/carlisle-dock-winch-f28d55ed/preview.png",
+      "reference": "docs/carlisle-relay/shipyard-polish/props/02-dock-winch.png",
+      "triangles": 4128,
+      "faceBudget": 4500,
+      "meshes": 1,
+      "primitives": 1,
+      "materials": 1,
+      "textures": [
+        {
+          "mimeType": "image/jpeg",
+          "bytes": 1013599,
+          "width": 2048,
+          "height": 2048
+        },
+        {
+          "mimeType": "image/jpeg",
+          "bytes": 408673,
+          "width": 2048,
+          "height": 2048
+        },
+        {
+          "mimeType": "image/png",
+          "bytes": 1570739,
+          "width": 2048,
+          "height": 2048
+        }
+      ],
+      "bounds": {
+        "min": [
+          -0.33754824835341424,
+          -0.32500002462709787,
+          -0.6412161892512813
+        ],
+        "max": [
+          0.33754824835341424,
+          0.3249999863328412,
+          0.6412161892512813
+        ],
+        "size": [
+          0.6750964967068285,
+          0.6500000109599391,
+          1.2824323785025626
+        ]
+      },
+      "bytes": 3226412,
+      "taskId": "f28d55ed-9421-471b-aa7e-064af2dcc022",
+      "credits": 50,
+      "review": {
+        "previewReviewedAt": "2026-10-29T11:29:25.693Z",
+        "previewVerdict": "Matches the reference and approved navy/orange art direction",
+        "nativeBackReviewedAt": "2026-10-29T12:06:07.406512+00:00",
+        "nativeFrontCapture": "art/carlisle-shipyard/review/02-dock-winch-front.png",
+        "nativeBackCapture": "art/carlisle-shipyard/review/02-dock-winch-back.png",
+        "verdict": "Accepted as the local polish-basis prop; palette and complete silhouette reviewed."
+      }
+    },
+    {
+      "id": "03-rotary-hub",
+      "name": "Rotary deck hub",
+      "model": "art/carlisle-shipyard/tripo-out/carlisle-rotary-hub-93d64f02/model.glb",
+      "preview": "art/carlisle-shipyard/tripo-out/carlisle-rotary-hub-93d64f02/preview.png",
+      "reference": "docs/carlisle-relay/shipyard-polish/props/03-rotary-hub.png",
+      "triangles": 2734,
+      "faceBudget": 3000,
+      "meshes": 1,
+      "primitives": 1,
+      "materials": 1,
+      "textures": [
+        {
+          "mimeType": "image/jpeg",
+          "bytes": 853126,
+          "width": 2048,
+          "height": 2048
+        },
+        {
+          "mimeType": "image/jpeg",
+          "bytes": 349781,
+          "width": 2048,
+          "height": 2048
+        },
+        {
+          "mimeType": "image/png",
+          "bytes": 1621459,
+          "width": 2048,
+          "height": 2048
+        }
+      ],
+      "bounds": {
+        "min": [
+          -0.4403114325250499,
+          -0.2500000078580342,
+          -0.44204153638565913
+        ],
+        "max": [
+          0.4403114325250499,
+          0.2500000078580342,
+          0.44204153638565913
+        ],
+        "size": [
+          0.8806228650500998,
+          0.5000000157160684,
+          0.8840830727713183
+        ]
+      },
+      "bytes": 2936584,
+      "taskId": "93d64f02-df1e-4d82-940d-cae88f4648b4",
+      "credits": 50,
+      "review": {
+        "previewReviewedAt": "2026-10-29T11:31:57.523Z",
+        "previewVerdict": "Matches the reference and approved navy/orange art direction",
+        "nativeBackReviewedAt": "2026-10-29T12:06:07.406512+00:00",
+        "nativeFrontCapture": "art/carlisle-shipyard/review/03-rotary-hub-front.png",
+        "nativeBackCapture": "art/carlisle-shipyard/review/03-rotary-hub-back.png",
+        "verdict": "Accepted as the local polish-basis prop; palette and complete silhouette reviewed."
+      }
+    },
+    {
+      "id": "04-work-skiff",
+      "name": "Flat-deck work skiff",
+      "model": "art/carlisle-shipyard/tripo-out/carlisle-work-skiff-38bd4731/model.glb",
+      "preview": "art/carlisle-shipyard/tripo-out/carlisle-work-skiff-38bd4731/preview.png",
+      "reference": "docs/carlisle-relay/shipyard-polish/props/04-work-skiff.png",
+      "triangles": 4421,
+      "faceBudget": 4500,
+      "meshes": 1,
+      "primitives": 1,
+      "materials": 1,
+      "textures": [
+        {
+          "mimeType": "image/jpeg",
+          "bytes": 976038,
+          "width": 2048,
+          "height": 2048
+        },
+        {
+          "mimeType": "image/jpeg",
+          "bytes": 307203,
+          "width": 2048,
+          "height": 2048
+        },
+        {
+          "mimeType": "image/png",
+          "bytes": 1907232,
+          "width": 2048,
+          "height": 2048
+        }
+      ],
+      "bounds": {
+        "min": [
+          -1.1028777468018234,
+          -0.3000000133179128,
+          -0.5071942671202123
+        ],
+        "max": [
+          1.1028777468018234,
+          0.3000000133179128,
+          0.5071942671202123
+        ],
+        "size": [
+          2.2057554936036468,
+          0.6000000266358256,
+          1.0143885342404246
+        ]
+      },
+      "bytes": 3455832,
+      "taskId": "38bd4731-4fe3-4464-9a25-b8f73525ee3d",
+      "credits": 50,
+      "review": {
+        "previewReviewedAt": "2026-10-29T11:33:55.580Z",
+        "previewVerdict": "Matches the reference and approved navy/orange art direction",
+        "nativeBackReviewedAt": "2026-10-29T12:06:07.406512+00:00",
+        "nativeFrontCapture": "art/carlisle-shipyard/review/04-work-skiff-front.png",
+        "nativeBackCapture": "art/carlisle-shipyard/review/04-work-skiff-back.png",
+        "verdict": "Accepted as the local polish-basis prop; palette and complete silhouette reviewed."
+      }
+    },
+    {
+      "id": "05-cargo-crane",
+      "name": "Cargo lifting crane",
+      "model": "art/carlisle-shipyard/tripo-out/carlisle-cargo-crane-e527579c/model.glb",
+      "preview": "art/carlisle-shipyard/tripo-out/carlisle-cargo-crane-e527579c/preview.png",
+      "reference": "docs/carlisle-relay/shipyard-polish/props/05-cargo-crane.png",
+      "triangles": 5592,
+      "faceBudget": 6000,
+      "meshes": 1,
+      "primitives": 1,
+      "materials": 1,
+      "textures": [
+        {
+          "mimeType": "image/jpeg",
+          "bytes": 1052858,
+          "width": 2048,
+          "height": 2048
+        },
+        {
+          "mimeType": "image/jpeg",
+          "bytes": 388445,
+          "width": 2048,
+          "height": 2048
+        },
+        {
+          "mimeType": "image/png",
+          "bytes": 1479096,
+          "width": 2048,
+          "height": 2048
+        }
+      ],
+      "bounds": {
+        "min": [
+          -0.17877236078493297,
+          -0.299999993659263,
+          -0.39207157236523926
+        ],
+        "max": [
+          0.17877236078493297,
+          0.299999993659263,
+          0.39207157236523926
+        ],
+        "size": [
+          0.35754472156986594,
+          0.599999987318526,
+          0.7841431447304785
+        ]
+      },
+      "bytes": 3219228,
+      "taskId": "e527579c-1274-43c7-82dc-25ddf1f83d28",
+      "credits": 50,
+      "review": {
+        "previewReviewedAt": "2026-10-29T11:37:23.286Z",
+        "previewVerdict": "Matches the reference and approved navy/orange art direction",
+        "nativeBackReviewedAt": "2026-10-29T12:06:07.406512+00:00",
+        "nativeFrontCapture": "art/carlisle-shipyard/review/05-cargo-crane-front.png",
+        "nativeBackCapture": "art/carlisle-shipyard/review/05-cargo-crane-back.png",
+        "verdict": "Accepted as the local polish-basis prop; palette and complete silhouette reviewed."
+      }
+    },
+    {
+      "id": "06-counterweight-hoist",
+      "name": "Counterweight hoist",
+      "model": "art/carlisle-shipyard/tripo-out/carlisle-counterweight-hoist-89f6fabe/model.glb",
+      "preview": "art/carlisle-shipyard/tripo-out/carlisle-counterweight-hoist-89f6fabe/preview.png",
+      "reference": "docs/carlisle-relay/shipyard-polish/props/06-counterweight-hoist.png",
+      "triangles": 3668,
+      "faceBudget": 4000,
+      "meshes": 1,
+      "primitives": 1,
+      "materials": 1,
+      "textures": [
+        {
+          "mimeType": "image/jpeg",
+          "bytes": 1000836,
+          "width": 2048,
+          "height": 2048
+        },
+        {
+          "mimeType": "image/jpeg",
+          "bytes": 659030,
+          "width": 2048,
+          "height": 2048
+        },
+        {
+          "mimeType": "image/png",
+          "bytes": 1106788,
+          "width": 2048,
+          "height": 2048
+        }
+      ],
+      "bounds": {
+        "min": [
+          -0.26594911387655884,
+          -0.8999999813968316,
+          -0.4913894760773694
+        ],
+        "max": [
+          0.26594911387655884,
+          0.8999999813968316,
+          0.49138936857905335
+        ],
+        "size": [
+          0.5318982277531177,
+          1.7999999627936631,
+          0.9827788446564227
+        ]
+      },
+      "bytes": 2973520,
+      "taskId": "89f6fabe-b8be-4fa6-b81e-f2f6646be9de",
+      "credits": 50,
+      "review": {
+        "previewReviewedAt": "2026-10-29T11:39:32.289Z",
+        "previewVerdict": "Matches the reference and approved navy/orange art direction",
+        "nativeBackReviewedAt": "2026-10-29T12:06:07.406512+00:00",
+        "nativeFrontCapture": "art/carlisle-shipyard/review/06-counterweight-hoist-front.png",
+        "nativeBackCapture": "art/carlisle-shipyard/review/06-counterweight-hoist-back.png",
+        "verdict": "Accepted as the local polish-basis prop; palette and complete silhouette reviewed."
+      }
+    },
+    {
+      "id": "07-piling-fender",
+      "name": "Piling and rubber fender",
+      "model": "art/carlisle-shipyard/tripo-out/carlisle-piling-fender-10edaeee/model.glb",
+      "preview": "art/carlisle-shipyard/tripo-out/carlisle-piling-fender-10edaeee/preview.png",
+      "reference": "docs/carlisle-relay/shipyard-polish/props/07-piling-fender.png",
+      "triangles": 2414,
+      "faceBudget": 2500,
+      "meshes": 1,
+      "primitives": 1,
+      "materials": 1,
+      "textures": [
+        {
+          "mimeType": "image/jpeg",
+          "bytes": 804460,
+          "width": 2048,
+          "height": 2048
+        },
+        {
+          "mimeType": "image/jpeg",
+          "bytes": 398947,
+          "width": 2048,
+          "height": 2048
+        },
+        {
+          "mimeType": "image/png",
+          "bytes": 1406904,
+          "width": 2048,
+          "height": 2048
+        }
+      ],
+      "bounds": {
+        "min": [
+          -0.3299412956694141,
+          -0.6000000074272975,
+          -0.290019573061727
+        ],
+        "max": [
+          0.3299412956694141,
+          0.6000000074272975,
+          0.290019573061727
+        ],
+        "size": [
+          0.6598825913388282,
+          1.200000014854595,
+          0.580039146123454
+        ]
+      },
+      "bytes": 2705896,
+      "taskId": "10edaeee-abf1-4115-9e87-d5a3aabf77a0",
+      "credits": 50,
+      "review": {
+        "previewReviewedAt": "2026-10-29T11:41:48.872Z",
+        "previewVerdict": "Matches the reference and approved navy/orange art direction",
+        "nativeBackReviewedAt": "2026-10-29T12:06:07.406512+00:00",
+        "nativeFrontCapture": "art/carlisle-shipyard/review/07-piling-fender-front.png",
+        "nativeBackCapture": "art/carlisle-shipyard/review/07-piling-fender-back.png",
+        "verdict": "Accepted as the local polish-basis prop; palette and complete silhouette reviewed."
+      }
+    },
+    {
+      "id": "08-boathouse",
+      "name": "Outer Banks boathouse",
+      "model": "art/carlisle-shipyard/tripo-out/carlisle-boathouse-1bc632d1/model.glb",
+      "preview": "art/carlisle-shipyard/tripo-out/carlisle-boathouse-1bc632d1/preview.png",
+      "reference": "docs/carlisle-relay/shipyard-polish/props/08-boathouse.png",
+      "triangles": 5807,
+      "faceBudget": 6500,
+      "meshes": 1,
+      "primitives": 1,
+      "materials": 1,
+      "textures": [
+        {
+          "mimeType": "image/jpeg",
+          "bytes": 887240,
+          "width": 2048,
+          "height": 2048
+        },
+        {
+          "mimeType": "image/jpeg",
+          "bytes": 826358,
+          "width": 2048,
+          "height": 2048
+        },
+        {
+          "mimeType": "image/png",
+          "bytes": 1375488,
+          "width": 2048,
+          "height": 2048
+        }
+      ],
+      "bounds": {
+        "min": [
+          -1.977554124314338,
+          -1.2499998469733242,
+          -1.7685758019797504
+        ],
+        "max": [
+          1.977554124314338,
+          1.2499999650754035,
+          1.7685758019797504
+        ],
+        "size": [
+          3.955108248628676,
+          2.4999998120487277,
+          3.537151603959501
+        ]
+      },
+      "bytes": 3436620,
+      "taskId": "1bc632d1-177c-4240-8b80-b285b51e342e",
+      "credits": 50,
+      "review": {
+        "previewReviewedAt": "2026-10-29T11:45:12.883Z",
+        "previewVerdict": "Matches the reference and approved navy/orange art direction",
+        "nativeBackReviewedAt": "2026-10-29T12:06:07.406512+00:00",
+        "nativeFrontCapture": "art/carlisle-shipyard/review/08-boathouse-front.png",
+        "nativeBackCapture": "art/carlisle-shipyard/review/08-boathouse-back.png",
+        "verdict": "Accepted as the local polish-basis prop; palette and complete silhouette reviewed."
+      }
+    },
+    {
+      "id": "09-cable-spool",
+      "name": "Cable spool",
+      "model": "art/carlisle-shipyard/tripo-out/carlisle-cable-spool-5ea47c49/model.glb",
+      "preview": "art/carlisle-shipyard/tripo-out/carlisle-cable-spool-5ea47c49/preview.png",
+      "reference": "docs/carlisle-relay/shipyard-polish/props/09-cable-spool.png",
+      "triangles": 1644,
+      "faceBudget": 1800,
+      "meshes": 1,
+      "primitives": 1,
+      "materials": 1,
+      "textures": [
+        {
+          "mimeType": "image/jpeg",
+          "bytes": 860404,
+          "width": 2048,
+          "height": 2048
+        },
+        {
+          "mimeType": "image/jpeg",
+          "bytes": 477306,
+          "width": 2048,
+          "height": 2048
+        },
+        {
+          "mimeType": "image/png",
+          "bytes": 1544000,
+          "width": 2048,
+          "height": 2048
+        }
+      ],
+      "bounds": {
+        "min": [
+          -0.3023668618989177,
+          -0.299999998009298,
+          -0.28343195078196004
+        ],
+        "max": [
+          0.3023668618989177,
+          0.299999998009298,
+          0.28343195078196004
+        ],
+        "size": [
+          0.6047337237978354,
+          0.599999996018596,
+          0.5668639015639201
+        ]
+      },
+      "bytes": 2952460,
+      "taskId": "5ea47c49-6a13-4b37-8ffb-06fac8619804",
+      "credits": 50,
+      "review": {
+        "previewReviewedAt": "2026-10-29T11:46:58.451Z",
+        "previewVerdict": "Matches the reference and approved navy/orange art direction",
+        "nativeBackReviewedAt": "2026-10-29T12:06:07.406512+00:00",
+        "nativeFrontCapture": "art/carlisle-shipyard/review/09-cable-spool-front.png",
+        "nativeBackCapture": "art/carlisle-shipyard/review/09-cable-spool-back.png",
+        "verdict": "Accepted as the local polish-basis prop; palette and complete silhouette reviewed."
+      }
+    },
+    {
+      "id": "10-dredger-pump",
+      "name": "Dredger pump and elbow",
+      "model": "art/carlisle-shipyard/tripo-out/carlisle-dredger-pump-6b95d2aa/model.glb",
+      "preview": "art/carlisle-shipyard/tripo-out/carlisle-dredger-pump-6b95d2aa/preview.png",
+      "reference": "docs/carlisle-relay/shipyard-polish/props/10-dredger-pump.png",
+      "triangles": 4202,
+      "faceBudget": 4500,
+      "meshes": 1,
+      "primitives": 1,
+      "materials": 1,
+      "textures": [
+        {
+          "mimeType": "image/jpeg",
+          "bytes": 1061021,
+          "width": 2048,
+          "height": 2048
+        },
+        {
+          "mimeType": "image/jpeg",
+          "bytes": 291564,
+          "width": 2048,
+          "height": 2048
+        },
+        {
+          "mimeType": "image/png",
+          "bytes": 1547634,
+          "width": 2048,
+          "height": 2048
+        }
+      ],
+      "bounds": {
+        "min": [
+          -0.3818181852111593,
+          -0.6000000459317043,
+          -0.6798226630490198
+        ],
+        "max": [
+          0.3818181852111593,
+          0.6000000053318217,
+          0.6798226224491373
+        ],
+        "size": [
+          0.7636363704223186,
+          1.200000051263526,
+          1.359645285498157
+        ]
+      },
+      "bytes": 3142516,
+      "taskId": "6b95d2aa-59d8-4c7d-90d0-26034a708f18",
+      "credits": 50,
+      "review": {
+        "previewReviewedAt": "2026-10-29T11:49:04.491Z",
+        "previewVerdict": "Matches the reference and approved navy/orange art direction",
+        "nativeBackReviewedAt": "2026-10-29T12:06:07.406512+00:00",
+        "nativeFrontCapture": "art/carlisle-shipyard/review/10-dredger-pump-front.png",
+        "nativeBackCapture": "art/carlisle-shipyard/review/10-dredger-pump-back.png",
+        "verdict": "Accepted as the local polish-basis prop; palette and complete silhouette reviewed."
+      }
+    },
+    {
+      "id": "11-harbour-beacon",
+      "name": "Harbour beacon",
+      "model": "art/carlisle-shipyard/tripo-out/carlisle-harbour-beacon-9e1765b3/model.glb",
+      "preview": "art/carlisle-shipyard/tripo-out/carlisle-harbour-beacon-9e1765b3/preview.png",
+      "reference": "docs/carlisle-relay/shipyard-polish/props/11-harbour-beacon.png",
+      "triangles": 5180,
+      "faceBudget": 6000,
+      "meshes": 1,
+      "primitives": 1,
+      "materials": 1,
+      "textures": [
+        {
+          "mimeType": "image/jpeg",
+          "bytes": 1250047,
+          "width": 2048,
+          "height": 2048
+        },
+        {
+          "mimeType": "image/jpeg",
+          "bytes": 570200,
+          "width": 2048,
+          "height": 2048
+        },
+        {
+          "mimeType": "image/png",
+          "bytes": 1499602,
+          "width": 2048,
+          "height": 2048
+        }
+      ],
+      "bounds": {
+        "min": [
+          -0.30176125618163496,
+          -0.6000000074272975,
+          -0.30176129201440816
+        ],
+        "max": [
+          0.30176125618163496,
+          0.6000000074272975,
+          0.30176122034886177
+        ],
+        "size": [
+          0.6035225123632699,
+          1.200000014854595,
+          0.6035225123632699
+        ]
+      },
+      "bytes": 3637872,
+      "taskId": "9e1765b3-b672-4733-a6c9-1bff09ffba17",
+      "credits": 50,
+      "review": {
+        "previewReviewedAt": "2026-10-29T11:51:45.420Z",
+        "previewVerdict": "Matches the reference and approved navy/orange art direction",
+        "nativeBackReviewedAt": "2026-10-29T12:06:07.406512+00:00",
+        "nativeFrontCapture": "art/carlisle-shipyard/review/11-harbour-beacon-front.png",
+        "nativeBackCapture": "art/carlisle-shipyard/review/11-harbour-beacon-back.png",
+        "verdict": "Accepted as the local polish-basis prop; palette and complete silhouette reviewed."
+      }
+    },
+    {
+      "id": "12-dock-lantern",
+      "name": "Dock lantern",
+      "model": "art/carlisle-shipyard/tripo-out/carlisle-dock-lantern-ebc30fff/model.glb",
+      "preview": "art/carlisle-shipyard/tripo-out/carlisle-dock-lantern-ebc30fff/preview.png",
+      "reference": "docs/carlisle-relay/shipyard-polish/props/12-dock-lantern.png",
+      "triangles": 1800,
+      "faceBudget": 1800,
+      "meshes": 1,
+      "primitives": 1,
+      "materials": 1,
+      "textures": [
+        {
+          "mimeType": "image/jpeg",
+          "bytes": 853327,
+          "width": 2048,
+          "height": 2048
+        },
+        {
+          "mimeType": "image/jpeg",
+          "bytes": 283920,
+          "width": 2048,
+          "height": 2048
+        },
+        {
+          "mimeType": "image/png",
+          "bytes": 1342823,
+          "width": 2048,
+          "height": 2048
+        }
+      ],
+      "bounds": {
+        "min": [
+          -0.1636497052386403,
+          -0.3749999972060323,
+          -0.3118884516879916
+        ],
+        "max": [
+          0.1636497052386403,
+          0.3749999972060323,
+          0.3118884516879916
+        ],
+        "size": [
+          0.3272994104772806,
+          0.7499999944120646,
+          0.6237769033759832
+        ]
+      },
+      "bytes": 2555968,
+      "taskId": "ebc30fff-961f-4ae1-a27a-64c5268b17c7",
+      "credits": 50,
+      "review": {
+        "previewReviewedAt": "2026-10-29T11:54:10.973Z",
+        "previewVerdict": "Matches the reference and approved navy/orange art direction",
+        "nativeBackReviewedAt": "2026-10-29T12:06:07.406512+00:00",
+        "nativeFrontCapture": "art/carlisle-shipyard/review/12-dock-lantern-front.png",
+        "nativeBackCapture": "art/carlisle-shipyard/review/12-dock-lantern-back.png",
+        "verdict": "Accepted as the local polish-basis prop; palette and complete silhouette reviewed."
+      }
+    }
+  ]
+}

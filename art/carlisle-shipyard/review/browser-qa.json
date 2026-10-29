@@ -1,0 +1,185 @@
+{
+  "startedAt": "2026-10-29T12:00:50.459Z",
+  "models": [
+    {
+      "id": "assembled-net",
+      "triangles": 3376,
+      "meshes": 4,
+      "materials": 4,
+      "textures": 3,
+      "framing": {
+        "maxX": 0.6058162317513807,
+        "maxY": 0.6078959700968913
+      }
+    },
+    {
+      "id": "01-net-housing",
+      "triangles": 2056,
+      "meshes": 1,
+      "materials": 1,
+      "textures": 3,
+      "framing": {
+        "maxX": 0.6058162317513807,
+        "maxY": 0.6078959700968913
+      }
+    },
+    {
+      "id": "02-dock-winch",
+      "triangles": 4128,
+      "meshes": 1,
+      "materials": 1,
+      "textures": 3,
+      "framing": {
+        "maxX": 0.5691521566553793,
+        "maxY": 0.7831276129922737
+      }
+    },
+    {
+      "id": "03-rotary-hub",
+      "triangles": 2734,
+      "meshes": 1,
+      "materials": 1,
+      "textures": 3,
+      "framing": {
+        "maxX": 0.5769326820503777,
+        "maxY": 0.7692953534734369
+      }
+    },
+    {
+      "id": "04-work-skiff",
+      "triangles": 4421,
+      "meshes": 1,
+      "materials": 1,
+      "textures": 3,
+      "framing": {
+        "maxX": 0.6019812371736,
+        "maxY": 0.614989209297355
+      }
+    },
+    {
+      "id": "05-cargo-crane",
+      "triangles": 5592,
+      "meshes": 1,
+      "materials": 1,
+      "textures": 3,
+      "framing": {
+        "maxX": 0.510835533494654,
+        "maxY": 0.8498712224457311
+      }
+    },
+    {
+      "id": "06-counterweight-hoist",
+      "triangles": 3668,
+      "meshes": 1,
+      "materials": 1,
+      "textures": 3,
+      "framing": {
+        "maxX": 0.3341459208829654,
+        "maxY": 0.8831880268649688
+      }
+    },
+    {
+      "id": "07-piling-fender",
+      "triangles": 2414,
+      "meshes": 1,
+      "materials": 1,
+      "textures": 3,
+      "framing": {
+        "maxX": 0.3817398622125693,
+        "maxY": 0.8910971428563234
+      }
+    },
+    {
+      "id": "08-boathouse",
+      "triangles": 5807,
+      "meshes": 1,
+      "materials": 1,
+      "textures": 3,
+      "framing": {
+        "maxX": 0.5599130340761214,
+        "maxY": 0.7950723002657731
+      }
+    },
+    {
+      "id": "09-cable-spool",
+      "triangles": 1644,
+      "meshes": 1,
+      "materials": 1,
+      "textures": 3,
+      "framing": {
+        "maxX": 0.5130438154030448,
+        "maxY": 0.8659942446815507
+      }
+    },
+    {
+      "id": "10-dredger-pump",
+      "triangles": 4202,
+      "meshes": 1,
+      "materials": 1,
+      "textures": 3,
+      "framing": {
+        "maxX": 0.503217086434586,
+        "maxY": 0.8713795319345625
+      }
+    },
+    {
+      "id": "11-harbour-beacon",
+      "triangles": 5180,
+      "meshes": 1,
+      "materials": 1,
+      "textures": 3,
+      "framing": {
+        "maxX": 0.3772322197069547,
+        "maxY": 0.8933956618191312
+      }
+    },
+    {
+      "id": "12-dock-lantern",
+      "triangles": 1800,
+      "meshes": 1,
+      "materials": 1,
+      "textures": 3,
+      "framing": {
+        "maxX": 0.43362466358921053,
+        "maxY": 0.8908815865609587
+      }
+    }
+  ],
+  "errors": [],
+  "failedResources": [],
+  "proceduralNet": {
+    "id": "procedural-net",
+    "triangles": 4152,
+    "meshes": 3,
+    "materials": 3,
+    "textures": 0
+  },
+  "exports": [
+    {
+      "name": "procedural-marine-net.glb",
+      "triangles": 4152,
+      "morphMeshes": 2,
+      "textures": 0,
+      "finite": true
+    },
+    {
+      "name": "net-housing-assembly.glb",
+      "triangles": 3376,
+      "morphMeshes": 2,
+      "textures": 3,
+      "finite": true
+    }
+  ],
+  "finishedAt": "2026-10-29T12:01:09.073Z",
+  "checks": [
+    "native 1920x1080 front and back of every mesh",
+    "all triangle counts match GLB audit",
+    "both net compression morphs",
+    "GLB exports loaded back with identical triangle counts and two morph meshes",
+    "embedded PBR texture round trip",
+    "night lighting",
+    "wireframe and orbit controls",
+    "960x540 presentation",
+    "390px responsive viewer"
+  ]
+}

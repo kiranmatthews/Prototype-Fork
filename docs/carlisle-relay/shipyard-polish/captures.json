@@ -1,0 +1,638 @@
+{
+  "sourceCommit": "5a4cc84f6cd82429da927dfd0227badcf0de1982",
+  "errors": [],
+  "captures": [
+    {
+      "id": "01-foam-steps",
+      "name": "Foam steps",
+      "act": 1,
+      "range": [
+        0,
+        180
+      ],
+      "motif": "Arrival quay: net launch berths, warehouse and cargo receiving apron",
+      "center": [
+        38.27372010486546,
+        235.95586265938462,
+        -79.90176908598025
+      ],
+      "camera": [
+        92.57250468191695,
+        375.1443494904726,
+        118.29395332852079
+      ],
+      "placement": [
+        0,
+        221.39211374988292,
+        0
+      ],
+      "level": "carlisle-coast",
+      "screenshot": "docs/carlisle-relay/shipyard-polish/screenshots/01-foam-steps.png",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "components": 1184
+    },
+    {
+      "id": "02-scissor-groyne",
+      "name": "Scissor groyne",
+      "act": 1,
+      "range": [
+        180,
+        390
+      ],
+      "motif": "Scissor cargo booms on a segmented working jetty",
+      "center": [
+        88.46914594417896,
+        213.54342108523178,
+        -278.0114176003122
+      ],
+      "camera": [
+        237.2243725297282,
+        379.2575444970041,
+        -83.7659499146236
+      ],
+      "placement": [
+        82.65102369081731,
+        195.56099789936687,
+        -176.00496518943265
+      ],
+      "level": "carlisle-coast",
+      "screenshot": "docs/carlisle-relay/shipyard-polish/screenshots/02-scissor-groyne.png",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "components": 1184
+    },
+    {
+      "id": "03-lift-and-skip",
+      "name": "Lift and skip",
+      "act": 1,
+      "range": [
+        390,
+        605
+      ],
+      "motif": "Boat-lift slipway with rising net cradle and skip berths",
+      "center": [
+        90.10985098824077,
+        223.3506146544952,
+        -483.9610097257538
+      ],
+      "camera": [
+        244.12265335635905,
+        372.02477562832985,
+        -327.5576384775187
+      ],
+      "placement": [
+        89.18254367017994,
+        177.45811465449503,
+        -394.3267201964657
+      ],
+      "level": "carlisle-coast",
+      "screenshot": "docs/carlisle-relay/shipyard-polish/screenshots/03-lift-and-skip.png",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "components": 1184
+    },
+    {
+      "id": "04-surf-sockets",
+      "name": "Surf sockets",
+      "act": 1,
+      "range": [
+        605,
+        825
+      ],
+      "motif": "Modular pontoon sockets and bright orange net catch basins",
+      "center": [
+        84.26400958295702,
+        225.22239612170299,
+        -704.5344492659074
+      ],
+      "camera": [
+        246.2606479213207,
+        395.2740129736335,
+        -512.7243719327583
+      ],
+      "placement": [
+        80.89984367268269,
+        173.49758209678882,
+        -613.7854325582728
+      ],
+      "level": "carlisle-coast",
+      "screenshot": "docs/carlisle-relay/shipyard-polish/screenshots/04-surf-sockets.png",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "components": 1184
+    },
+    {
+      "id": "05-twin-winches",
+      "name": "Twin winches",
+      "act": 1,
+      "range": [
+        825,
+        1040
+      ],
+      "motif": "Paired heavy dock winches and opposing cargo hoists",
+      "center": [
+        45.091064968502515,
+        205.86171774079435,
+        -908.8306418404093
+      ],
+      "camera": [
+        233.64907807763066,
+        350.6960496713956,
+        -807.9784326104415
+      ],
+      "placement": [
+        79.99265905938142,
+        164.8872101466168,
+        -823.1501794236307
+      ],
+      "level": "carlisle-coast",
+      "screenshot": "docs/carlisle-relay/shipyard-polish/screenshots/05-twin-winches.png",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "components": 1184
+    },
+    {
+      "id": "06-beacon-chimney",
+      "name": "Beacon chimney",
+      "act": 1,
+      "range": [
+        1040,
+        1280
+      ],
+      "motif": "Towering harbour control beacon with a spiral of net launch ledges",
+      "center": [
+        -48.236005261909945,
+        232.15860487932105,
+        -1123.3854503666844
+      ],
+      "camera": [
+        191.33817467348857,
+        408.96791363783666,
+        -1019.7148310936698
+      ],
+      "placement": [
+        -6.0826510532001254,
+        149.12860487932085,
+        -1027.6078159587612
+      ],
+      "level": "carlisle-coast",
+      "screenshot": "docs/carlisle-relay/shipyard-polish/screenshots/06-beacon-chimney.png",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "components": 1184
+    },
+    {
+      "id": "07-tide-dial",
+      "name": "Tide dial",
+      "act": 2,
+      "range": [
+        1280,
+        1510
+      ],
+      "motif": "Giant circular dry-dock turntable and tidal pump machinery",
+      "center": [
+        -96.67033540210855,
+        167.6208879039296,
+        -1358.6882294320872
+      ],
+      "camera": [
+        80.6539953386481,
+        353.2397421216144,
+        -1149.7405312061728
+      ],
+      "placement": [
+        -100.70064804136857,
+        148.51823292914884,
+        -1246.6883052089413
+      ],
+      "level": "carlisle-coast",
+      "screenshot": "docs/carlisle-relay/shipyard-polish/screenshots/07-tide-dial.png",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "components": 1184
+    },
+    {
+      "id": "08-pinwheel-handoffs",
+      "name": "Pinwheel handoffs",
+      "act": 2,
+      "range": [
+        1510,
+        1745
+      ],
+      "motif": "Opposing pinwheel loading gantries with moving deck ends",
+      "center": [
+        -77.94138848003777,
+        175.0683879039296,
+        -1568.767439883292
+      ],
+      "camera": [
+        69.76488232092532,
+        340.53676976236426,
+        -1374.178451651405
+      ],
+      "placement": [
+        -88.30598022398844,
+        139.56588790392948,
+        -1467.191661869299
+      ],
+      "level": "carlisle-coast",
+      "screenshot": "docs/carlisle-relay/shipyard-polish/screenshots/08-pinwheel-handoffs.png",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "components": 1184
+    },
+    {
+      "id": "09-dredger-terraces",
+      "name": "Dredger terraces",
+      "act": 2,
+      "range": [
+        1745,
+        1980
+      ],
+      "motif": "Dredger pump terraces, big sea pipes and open staged net ascent",
+      "center": [
+        -61.45868015437218,
+        198.5362199996992,
+        -1822.689135320421
+      ],
+      "camera": [
+        112.8395642449972,
+        399.5405963848657,
+        -1582.5029401743575
+      ],
+      "placement": [
+        -75.89464273127327,
+        131.28335027430876,
+        -1706.3793429683149
+      ],
+      "level": "carlisle-coast",
+      "screenshot": "docs/carlisle-relay/shipyard-polish/screenshots/09-dredger-terraces.png",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "components": 1184
+    },
+    {
+      "id": "10-cross-thread-springs",
+      "name": "Cross-thread springs",
+      "act": 2,
+      "range": [
+        1980,
+        2220
+      ],
+      "motif": "Cross-thread dock transfers above narrow shipping lanes",
+      "center": [
+        11.144282956682751,
+        172.30362592564745,
+        -2035.0634268130527
+      ],
+      "camera": [
+        72.64832811412025,
+        336.37724285284565,
+        -1800.7615548420245
+      ],
+      "placement": [
+        -44.493138756149946,
+        127.56658972508923,
+        -1940.3890562294666
+      ],
+      "level": "carlisle-coast",
+      "screenshot": "docs/carlisle-relay/shipyard-polish/screenshots/10-cross-thread-springs.png",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "components": 1184
+    },
+    {
+      "id": "11-counterweight-stacks",
+      "name": "Counterweight stacks",
+      "act": 2,
+      "range": [
+        2220,
+        2460
+      ],
+      "motif": "Heavy ship-lift counterweight stacks with sliding ballast platforms",
+      "center": [
+        88.0150478539436,
+        149.69238019847745,
+        -2256.4201405657304
+      ],
+      "camera": [
+        198.9445986021854,
+        318.7417993243543,
+        -2032.840490579768
+      ],
+      "placement": [
+        62.12444502360885,
+        97.87066212620522,
+        -2146.242115359101
+      ],
+      "level": "carlisle-coast",
+      "screenshot": "docs/carlisle-relay/shipyard-polish/screenshots/11-counterweight-stacks.png",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "components": 1184
+    },
+    {
+      "id": "12-harbour-scissors",
+      "name": "Harbour scissors",
+      "act": 2,
+      "range": [
+        2460,
+        2700
+      ],
+      "motif": "Scissor swingbridges and moving harbour loading arms",
+      "center": [
+        92.15359588765322,
+        133.82922997375653,
+        -2487.5328006169257
+      ],
+      "camera": [
+        297.63663405174225,
+        313.86308410703225,
+        -2318.9258920520433
+      ],
+      "placement": [
+        112.16398537534782,
+        89.18409827074935,
+        -2375.354239400808
+      ],
+      "level": "carlisle-coast",
+      "screenshot": "docs/carlisle-relay/shipyard-polish/screenshots/12-harbour-scissors.png",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "components": 1184
+    },
+    {
+      "id": "13-storm-fingers",
+      "name": "Storm fingers",
+      "act": 3,
+      "range": [
+        2700,
+        2910
+      ],
+      "motif": "Storm-exposed breakwater fingers with diagonal net leaps",
+      "center": [
+        67.19458410436742,
+        130.20686167676362,
+        -2719.921956259685
+      ],
+      "camera": [
+        248.64689985724652,
+        308.132921269749,
+        -2529.969420787003
+      ],
+      "placement": [
+        71.6200014613126,
+        67.5293616767634,
+        -2613.8043616722466
+      ],
+      "level": "carlisle-coast",
+      "screenshot": "docs/carlisle-relay/shipyard-polish/screenshots/13-storm-fingers.png",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "components": 1184
+    },
+    {
+      "id": "14-helical-turbine",
+      "name": "Helical turbine",
+      "act": 3,
+      "range": [
+        2910,
+        3130
+      ],
+      "motif": "Helical turbine maintenance gantry with spinning radial decks",
+      "center": [
+        34.67606301840189,
+        147.9392693106303,
+        -2931.485697670255
+      ],
+      "camera": [
+        257.21596637483464,
+        333.67017552075595,
+        -2771.2678705149992
+      ],
+      "placement": [
+        63.91633785329102,
+        67.5293616767634,
+        -2823.5769095395626
+      ],
+      "level": "carlisle-coast",
+      "screenshot": "docs/carlisle-relay/shipyard-polish/screenshots/14-helical-turbine.png",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "components": 1184
+    },
+    {
+      "id": "15-pendulum-pier",
+      "name": "Pendulum pier",
+      "act": 3,
+      "range": [
+        3130,
+        3350
+      ],
+      "motif": "Pendulum crane pier: suspended work platforms over churning ocean",
+      "center": [
+        -39.12213835680258,
+        49.42981258027344,
+        -3118.968623947207
+      ],
+      "camera": [
+        166.57789574602737,
+        199.20929889455476,
+        -3037.798806922194
+      ],
+      "placement": [
+        9.130845858064315,
+        57.530843611163235,
+        -3029.8883735335626
+      ],
+      "level": "carlisle-coast",
+      "screenshot": "docs/carlisle-relay/shipyard-polish/screenshots/15-pendulum-pier.png",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "components": 1184
+    },
+    {
+      "id": "16-rigging-slingshot",
+      "name": "Rigging slingshot",
+      "act": 3,
+      "range": [
+        3350,
+        3570
+      ],
+      "motif": "Rigging slingshot: net launch into mandatory high steel cable grinds",
+      "center": [
+        -110.97943676231571,
+        106.51555754326547,
+        -3327.493545804301
+      ],
+      "camera": [
+        78.62230356900278,
+        276.09252155048864,
+        -3163.9887962520806
+      ],
+      "placement": [
+        -89.21493385151419,
+        36.069448419863605,
+        -3220.9824714224696
+      ],
+      "level": "carlisle-coast",
+      "screenshot": "docs/carlisle-relay/shipyard-polish/screenshots/16-rigging-slingshot.png",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "components": 1184
+    },
+    {
+      "id": "17-broken-crown",
+      "name": "Broken crown",
+      "act": 3,
+      "range": [
+        3570,
+        3790
+      ],
+      "motif": "Broken crane crown: fragmented elevated decks and crossed grind cables",
+      "center": [
+        -87.76538021171532,
+        82.56250000000021,
+        -3554.0073645413995
+      ],
+      "camera": [
+        41.48441203053765,
+        265.3932990241248,
+        -3317.0298347262174
+      ],
+      "placement": [
+        -113.19017313903039,
+        24.12,
+        -3441.2107252107216
+      ],
+      "level": "carlisle-coast",
+      "screenshot": "docs/carlisle-relay/shipyard-polish/screenshots/17-broken-crown.png",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "components": 1184
+    },
+    {
+      "id": "18-homecoming-cable",
+      "name": "Homecoming cable",
+      "act": 3,
+      "range": [
+        3790,
+        4000
+      ],
+      "motif": "Homeward tow cable dive into the commercial harbour finish quay",
+      "center": [
+        -57.30891956460255,
+        41.315625000000075,
+        -3756.3355003147144
+      ],
+      "camera": [
+        88.83456293265203,
+        206.62402765390036,
+        -3560.8649122856727
+      ],
+      "placement": [
+        -64.54667466456941,
+        24.12,
+        -3660.792297938554
+      ],
+      "level": "carlisle-coast",
+      "screenshot": "docs/carlisle-relay/shipyard-polish/screenshots/18-homecoming-cable.png",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "components": 1184
+    },
+    {
+      "id": "19-springtide-skippers",
+      "name": "Springtide Skippers",
+      "act": 2,
+      "motif": "Harbour bonus: small orange marine net launchers between moving fishing skiffs, flat cargo lighter decks and safe cargo quays",
+      "center": [
+        63,
+        3,
+        0
+      ],
+      "camera": [
+        35,
+        81,
+        110
+      ],
+      "placement": [
+        -10,
+        1.32,
+        0
+      ],
+      "level": "bonus-carlisle-coast",
+      "screenshot": "docs/carlisle-relay/shipyard-polish/screenshots/19-springtide-skippers.png",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "components": 88
+    },
+    {
+      "id": "20-spring-skiff-close",
+      "name": "Spring skiff and homeward ferry",
+      "act": 2,
+      "motif": "Close bonus view: a small orange net trampoline built into a moored skiff, followed by a moving ferry work deck, repeated white rope bumpers and buoy floats",
+      "center": [
+        96,
+        2,
+        0
+      ],
+      "camera": [
+        73,
+        32,
+        44
+      ],
+      "placement": [
+        91.5,
+        1.32,
+        0
+      ],
+      "level": "bonus-carlisle-coast",
+      "screenshot": "docs/carlisle-relay/shipyard-polish/screenshots/20-spring-skiff-close.png",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "components": 88
+    }
+  ]
+}

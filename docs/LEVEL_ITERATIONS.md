@@ -6475,3 +6475,56 @@ Production build/type checking, release size and diff checks pass:
 Task browsers are closed. Local-only hold continues. Evidence, baseline failures,
 source hashes and bounded test scope are in
 [the abandon-axis validation record](carlisle-relay/abandon-axis/validation.json).
+
+
+## 30 October 2026 NZDT — Carlisle shipyard art basis
+
+Completed 20 screenshot-based area paintovers (all 18 main sections and two boat
+bonus views), revised throughout to the user's orange/navy, early-night Outer Banks
+working-harbour direction. Preserved the six superseded daylight concepts outside
+the active gallery. Captures are native 1920×1080; current concept images are
+1672×941. Exact prompts, source captures, original generated paths and per-area
+mechanical themes are recorded in `docs/carlisle-relay/shipyard-polish/`.
+
+Generated 12 isolated prop references, then 12 textured Tripo P1 GLBs: net housing,
+winch, rotary hub, flat-deck skiff, crane, counterweight hoist, pile/fender,
+boathouse, cable spool, dredger pump, beacon and lantern. Actual geometry is
+1,644–5,807 triangles per asset (43,646 total); every mesh is within its requested
+budget, with embedded 2K colour, metallic/roughness and normal textures. The user
+approved the batch, upload/download and up to 3,000 credits, then specified
+existing API balance first and no purchase of further API usage. All twelve
+image-to-model calls billed 50 credits each: 600 total, with 180 API credits
+remaining and none frozen. No Max plan credits or API top-ups were needed.
+
+Added a procedural orange diamond-rope net with fixed perimeter and named
+compression morphs. The standalone GLB has 4,152 triangles; the fitted housing
+assembly has 3,376. Original housing geometry/textures are retained. Neither
+asset supplies collision or changes bounce physics. A local gallery compares
+concepts with source greyboxes, and the 3D workshop offers orbiting, wireframe,
+studio/night lighting, full-model framing and net compression.
+
+This was an art-authoring brief, with no new playable geometry. From the art goal
+at 10:04:44 UTC: first source capture about 8 minutes, first saved orange/navy
+concept 25 minutes, all 20 revised concepts 45 minutes, all 12 prop references
+52 minutes, and first native textured-mesh preview 84 minutes. The complete
+validated library was ready in approximately 121 minutes, including the palette
+revision, credit-plan approval and sequential mesh review.
+
+Validation: 64 gallery images load, all filters/comparison controls and 390px
+layout pass; all 12 GLBs render at native 1920×1080 from front and rear, match
+the audited triangle counts and retain their full framing. Native rear views
+and each generation preview were visually reviewed. Both exported net GLBs
+load back with identical triangle counts and two compression morph meshes;
+the assembly retains all three PBR textures. Normal 960×540 presentation,
+wireframe, turntable and night lighting pass. Final console/resource errors
+are empty. Fixed a review-script import path and tightened image-decode waits;
+no asset generation failed or required a paid reroll. Required build/typecheck
+passed (948.4 MiB / 1,749 release files); no level data changed, so check:levels
+and check:all were not run.
+
+The library is outside public/ and the published game pack. Source hashes prove
+player, camera, tuning, level toolkit, Carlisle main/bonus sources and the public
+level pack are unchanged from 5a4cc84f. New ownership is limited to the art library,
+review docs/tools, the local CLI-state ignore entry and this appended log. All
+work remains under the user's local-only hold. Evidence and hashes are in
+[the shipyard validation record](carlisle-relay/shipyard-polish/validation.json).

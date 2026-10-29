@@ -1,0 +1,39 @@
+{
+  "id": "05-cargo-crane",
+  "args": [
+    "make",
+    "docs/carlisle-relay/shipyard-polish/props/05-cargo-crane.png",
+    "--for",
+    "toy",
+    "--model",
+    "tripo-p1",
+    "-p",
+    "face_limit=6000",
+    "-p",
+    "texture=true",
+    "-p",
+    "pbr=true",
+    "-p",
+    "auto_size=true",
+    "--name",
+    "carlisle-cargo-crane",
+    "-o",
+    "art/carlisle-shipyard",
+    "--json",
+    "--yes"
+  ],
+  "result": {
+    "task_id": "e527579c-1274-43c7-82dc-25ddf1f83d28",
+    "type": "image_to_model",
+    "status": "success",
+    "credits_consumed": 50,
+    "output_dir": "art/carlisle-shipyard/tripo-out/carlisle-cargo-crane-e527579c",
+    "files": [
+      "model.glb",
+      "rendered_image.webp",
+      "preview.png"
+    ],
+    "model_file": "art/carlisle-shipyard/tripo-out/carlisle-cargo-crane-e527579c/model.glb",
+    "preview": "art/carlisle-shipyard/tripo-out/carlisle-cargo-crane-e527579c/preview.png"
+  }
+}

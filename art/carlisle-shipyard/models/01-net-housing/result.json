@@ -1,0 +1,39 @@
+{
+  "id": "01-net-housing",
+  "args": [
+    "make",
+    "docs/carlisle-relay/shipyard-polish/props/01-net-housing.png",
+    "--for",
+    "toy",
+    "--model",
+    "tripo-p1",
+    "-p",
+    "face_limit=2500",
+    "-p",
+    "texture=true",
+    "-p",
+    "pbr=true",
+    "-p",
+    "auto_size=true",
+    "--name",
+    "carlisle-net-housing",
+    "-o",
+    "art/carlisle-shipyard",
+    "--json",
+    "--yes"
+  ],
+  "result": {
+    "task_id": "76d58404-0607-4927-bc67-de4c8cb14264",
+    "type": "image_to_model",
+    "status": "success",
+    "credits_consumed": 50,
+    "output_dir": "art/carlisle-shipyard/tripo-out/carlisle-net-housing-76d58404",
+    "files": [
+      "model.glb",
+      "rendered_image.webp",
+      "preview.png"
+    ],
+    "model_file": "art/carlisle-shipyard/tripo-out/carlisle-net-housing-76d58404/model.glb",
+    "preview": "art/carlisle-shipyard/tripo-out/carlisle-net-housing-76d58404/preview.png"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "date": "2026-10-29T12:04:26.304Z",
+  "images": 64,
+  "checks": [
+    "20 concepts and 12 textured prop cards",
+    "all act and bonus filters",
+    "greybox comparison",
+    "keyboard navigation",
+    "390px without horizontal overflow",
+    "native 1920x1080 gallery"
+  ],
+  "errors": [],
+  "failedResources": []
+}

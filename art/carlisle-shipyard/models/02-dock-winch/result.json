@@ -1,0 +1,39 @@
+{
+  "id": "02-dock-winch",
+  "args": [
+    "make",
+    "docs/carlisle-relay/shipyard-polish/props/02-dock-winch.png",
+    "--for",
+    "toy",
+    "--model",
+    "tripo-p1",
+    "-p",
+    "face_limit=4500",
+    "-p",
+    "texture=true",
+    "-p",
+    "pbr=true",
+    "-p",
+    "auto_size=true",
+    "--name",
+    "carlisle-dock-winch",
+    "-o",
+    "art/carlisle-shipyard",
+    "--json",
+    "--yes"
+  ],
+  "result": {
+    "task_id": "f28d55ed-9421-471b-aa7e-064af2dcc022",
+    "type": "image_to_model",
+    "status": "success",
+    "credits_consumed": 50,
+    "output_dir": "art/carlisle-shipyard/tripo-out/carlisle-dock-winch-f28d55ed",
+    "files": [
+      "model.glb",
+      "rendered_image.webp",
+      "preview.png"
+    ],
+    "model_file": "art/carlisle-shipyard/tripo-out/carlisle-dock-winch-f28d55ed/model.glb",
+    "preview": "art/carlisle-shipyard/tripo-out/carlisle-dock-winch-f28d55ed/preview.png"
+  }
+}

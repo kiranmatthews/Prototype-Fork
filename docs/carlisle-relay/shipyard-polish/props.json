@@ -1,0 +1,129 @@
+{
+  "tool": "built-in image_gen",
+  "palette": "navy and orange",
+  "meshModel": "tripo-p1 / P1-20260311",
+  "plannedCreditsPerAsset": 50,
+  "plannedCreditsTotal": 600,
+  "assets": [
+    {
+      "id": "01-net-housing",
+      "name": "Marine net housing",
+      "faceBudget": 2500,
+      "uses": "all main bounce pads and bonus nets",
+      "prompt": "Use case: 3D-asset reference. Generate ONE isolated game prop, ONE three-quarter view, entire object fully visible with 12 percent empty margin. A polished hand-painted chunky 3D platformer asset with broad exaggerated bevels and confident simplified shapes, Crash Bandicoot 4-like stylization for an Outer Banks commercial boatyard. Palette: DEEP NAVY BLUE painted metal and vivid BURNT ORANGE fittings, silvery weathered timber and charcoal rubber/steel as appropriate. Minimal rust flecks, broad texture brushwork, no photorealistic micro-noise. No yellow or turquoise paint. This will be converted to a textured low-poly mesh, so keep forms clear and physically coherent. NEUTRAL SOFT STUDIO LIGHTING from upper left with soft fill to reveal every side, near-orthographic product camera; not the scene's nighttime lighting. Seamless light warm-grey background with at most a faint soft contact shadow. No separate pedestal, ground slab, environment, water, characters, writing, labels, logo or watermark. Do not make a collage or multiple views.\nPROP: A stout rectangular OPEN FRAME for an industrial marine rope-net trampoline. Four navy-blue steel perimeter beams, large rounded burnt-orange corner caps, eight simple orange tension lugs along the inner edges, black bolt heads and four short support feet. Proportions width 4m, depth 3m, height 0.5m. Very large empty rectangular hole through the middle: NO net, NO fabric, NO glass, NO floor, NO inside cross-braces. Show the neutral background through the hole. Flat wide perimeter and low profile, complete standalone chassis.",
+      "reference": "docs/carlisle-relay/shipyard-polish/props/01-net-housing.png",
+      "status": "reference-generated",
+      "generatedSource": "/Users/kiki/.codex/generated_images/01a18531-75e0-7203-b8a1-2129b7839f79/exec-ea61d7f2-281f-41d0-ab58-368adc911a14.png"
+    },
+    {
+      "id": "02-dock-winch",
+      "name": "Dock winch",
+      "faceBudget": 4500,
+      "uses": "twin winches, cable finale and loading docks",
+      "prompt": "Use case: 3D-asset reference. Generate ONE isolated game prop, ONE three-quarter view, entire object fully visible with 12 percent empty margin. A polished hand-painted chunky 3D platformer asset with broad exaggerated bevels and confident simplified shapes, Crash Bandicoot 4-like stylization for an Outer Banks commercial boatyard. Palette: DEEP NAVY BLUE painted metal and vivid BURNT ORANGE fittings, silvery weathered timber and charcoal rubber/steel as appropriate. Minimal rust flecks, broad texture brushwork, no photorealistic micro-noise. No yellow or turquoise paint. This will be converted to a textured low-poly mesh, so keep forms clear and physically coherent. NEUTRAL SOFT STUDIO LIGHTING from upper left with soft fill to reveal every side, near-orthographic product camera; not the scene's nighttime lighting. Seamless light warm-grey background with at most a faint soft contact shadow. No separate pedestal, ground slab, environment, water, characters, writing, labels, logo or watermark. Do not make a collage or multiple views.\nPROP: One heavy squat dock winch on a navy skid base, huge horizontal cylindrical drum neatly wound with dark grey cable, two burnt-orange side cheeks, navy gearbox and broad short control lever. Broad flared silhouette and playful chunky proportions. No loose dangling cable and no environment. About 3m wide.",
+      "reference": "docs/carlisle-relay/shipyard-polish/props/02-dock-winch.png",
+      "status": "reference-generated",
+      "generatedSource": "/Users/kiki/.codex/generated_images/01a18531-75e0-7203-b8a1-2129b7839f79/exec-6db11308-d362-434f-9546-83c391425b35.png"
+    },
+    {
+      "id": "03-rotary-hub",
+      "name": "Rotary deck hub",
+      "faceBudget": 3000,
+      "uses": "tide dial, pinwheel and scissor platforms",
+      "prompt": "Use case: 3D-asset reference. Generate ONE isolated game prop, ONE three-quarter view, entire object fully visible with 12 percent empty margin. A polished hand-painted chunky 3D platformer asset with broad exaggerated bevels and confident simplified shapes, Crash Bandicoot 4-like stylization for an Outer Banks commercial boatyard. Palette: DEEP NAVY BLUE painted metal and vivid BURNT ORANGE fittings, silvery weathered timber and charcoal rubber/steel as appropriate. Minimal rust flecks, broad texture brushwork, no photorealistic micro-noise. No yellow or turquoise paint. This will be converted to a textured low-poly mesh, so keep forms clear and physically coherent. NEUTRAL SOFT STUDIO LIGHTING from upper left with soft fill to reveal every side, near-orthographic product camera; not the scene's nighttime lighting. Seamless light warm-grey background with at most a faint soft contact shadow. No separate pedestal, ground slab, environment, water, characters, writing, labels, logo or watermark. Do not make a collage or multiple views.\nPROP: One chunky cylindrical turntable PIVOT HUB, a flat octagonal navy top mounting plate over an orange toothed bearing ring and short navy pedestal. Four broad orange mounting lugs spaced evenly around the top, no arms or deck attached. Heavy dock machinery with a readable layered circular silhouette. About 2m diameter.",
+      "reference": "docs/carlisle-relay/shipyard-polish/props/03-rotary-hub.png",
+      "status": "reference-generated",
+      "generatedSource": "/Users/kiki/.codex/generated_images/01a18531-75e0-7203-b8a1-2129b7839f79/exec-34e8a4aa-3942-4a83-9b6f-a6e03e38769e.png"
+    },
+    {
+      "id": "04-work-skiff",
+      "name": "Flat-deck work skiff",
+      "faceBudget": 4500,
+      "uses": "bonus moving boats",
+      "prompt": "Use case: 3D-asset reference. Generate ONE isolated game prop, ONE three-quarter view, entire object fully visible with 12 percent empty margin. A polished hand-painted chunky 3D platformer asset with broad exaggerated bevels and confident simplified shapes, Crash Bandicoot 4-like stylization for an Outer Banks commercial boatyard. Palette: DEEP NAVY BLUE painted metal and vivid BURNT ORANGE fittings, silvery weathered timber and charcoal rubber/steel as appropriate. Minimal rust flecks, broad texture brushwork, no photorealistic micro-noise. No yellow or turquoise paint. This will be converted to a textured low-poly mesh, so keep forms clear and physically coherent. NEUTRAL SOFT STUDIO LIGHTING from upper left with soft fill to reveal every side, near-orthographic product camera; not the scene's nighttime lighting. Seamless light warm-grey background with at most a faint soft contact shadow. No separate pedestal, ground slab, environment, water, characters, writing, labels, logo or watermark. Do not make a collage or multiple views.\nPROP: One small low-profile flat-deck WORK SKIFF, complete boat hull from above at a three-quarter angle. Navy blue broad shallow hull with slightly pointed bow, flat SILVERY WEATHERED WOOD DECK spanning the whole top, low burnt-orange gunwale, four broad black rubber fenders tied along the outer hull and two small mooring cleats at the far tips. Wide clear flat deck suitable for jumping onto. No cabin, no mast, no seating, no railing, no cargo, no water. About 5m long by 2.6m wide.",
+      "reference": "docs/carlisle-relay/shipyard-polish/props/04-work-skiff.png",
+      "status": "reference-generated",
+      "generatedSource": "/Users/kiki/.codex/generated_images/01a18531-75e0-7203-b8a1-2129b7839f79/exec-3edbe91a-8bbb-4d4b-9b9d-03b98267fd91.png"
+    },
+    {
+      "id": "05-cargo-crane",
+      "name": "Cargo lifting crane",
+      "faceBudget": 6000,
+      "uses": "scissor jetties, loading docks and pendulum supports",
+      "prompt": "Use case: 3D-asset reference. Generate ONE isolated game prop, ONE three-quarter view, entire object fully visible with 12 percent empty margin. A polished hand-painted chunky 3D platformer asset with broad exaggerated bevels and confident simplified shapes, Crash Bandicoot 4-like stylization for an Outer Banks commercial boatyard. Palette: DEEP NAVY BLUE painted metal and vivid BURNT ORANGE fittings, silvery weathered timber and charcoal rubber/steel as appropriate. Minimal rust flecks, broad texture brushwork, no photorealistic micro-noise. No yellow or turquoise paint. This will be converted to a textured low-poly mesh, so keep forms clear and physically coherent. NEUTRAL SOFT STUDIO LIGHTING from upper left with soft fill to reveal every side, near-orthographic product camera; not the scene's nighttime lighting. Seamless light warm-grey background with at most a faint soft contact shadow. No separate pedestal, ground slab, environment, water, characters, writing, labels, logo or watermark. Do not make a collage or multiple views.\nPROP: One compact standalone dock cargo crane, heavy navy cylindrical bolted pedestal, a long bent burnt-orange boom with broad triangular braces, chunky round hinge and a SINGLE thick dark steel hoist cable ending in a large closed orange hook. The boom projects sideways, generous silhouette gaps between boom and support. No platform, no cargo, no environment. A readable stylized machinery prop about 7m high, no tiny latticework.",
+      "reference": "docs/carlisle-relay/shipyard-polish/props/05-cargo-crane.png",
+      "status": "reference-generated",
+      "generatedSource": "/Users/kiki/.codex/generated_images/01a18531-75e0-7203-b8a1-2129b7839f79/exec-c7821e86-79d6-4d29-b6ca-178e53d5f35a.png"
+    },
+    {
+      "id": "06-counterweight-hoist",
+      "name": "Counterweight hoist",
+      "faceBudget": 4000,
+      "uses": "counterweight stacks and crane pylons",
+      "prompt": "Use case: 3D-asset reference. Generate ONE isolated game prop, ONE three-quarter view, entire object fully visible with 12 percent empty margin. A polished hand-painted chunky 3D platformer asset with broad exaggerated bevels and confident simplified shapes, Crash Bandicoot 4-like stylization for an Outer Banks commercial boatyard. Palette: DEEP NAVY BLUE painted metal and vivid BURNT ORANGE fittings, silvery weathered timber and charcoal rubber/steel as appropriate. Minimal rust flecks, broad texture brushwork, no photorealistic micro-noise. No yellow or turquoise paint. This will be converted to a textured low-poly mesh, so keep forms clear and physically coherent. NEUTRAL SOFT STUDIO LIGHTING from upper left with soft fill to reveal every side, near-orthographic product camera; not the scene's nighttime lighting. Seamless light warm-grey background with at most a faint soft contact shadow. No separate pedestal, ground slab, environment, water, characters, writing, labels, logo or watermark. Do not make a collage or multiple views.\nPROP: One self-contained ship-lift counterweight module: a tall navy steel U-frame with a large orange pulley at the top, two taut thick dark cable runs, and a suspended stack of four chunky burnt-orange rectangular ballast plates. Navy base shoes and exposed silver bolts. Broad forms, visible gap on either side of weight stack, about 5m high. No environment or extra floors.",
+      "reference": "docs/carlisle-relay/shipyard-polish/props/06-counterweight-hoist.png",
+      "status": "reference-generated",
+      "generatedSource": "/Users/kiki/.codex/generated_images/01a18531-75e0-7203-b8a1-2129b7839f79/exec-05d0ca53-73a2-450a-928c-5619d46c3f01.png"
+    },
+    {
+      "id": "07-piling-fender",
+      "name": "Piling and rubber fender",
+      "faceBudget": 2500,
+      "uses": "jetty supports and boat berths",
+      "prompt": "Use case: 3D-asset reference. Generate ONE isolated game prop, ONE three-quarter view, entire object fully visible with 12 percent empty margin. A polished hand-painted chunky 3D platformer asset with broad exaggerated bevels and confident simplified shapes, Crash Bandicoot 4-like stylization for an Outer Banks commercial boatyard. Palette: DEEP NAVY BLUE painted metal and vivid BURNT ORANGE fittings, silvery weathered timber and charcoal rubber/steel as appropriate. Minimal rust flecks, broad texture brushwork, no photorealistic micro-noise. No yellow or turquoise paint. This will be converted to a textured low-poly mesh, so keep forms clear and physically coherent. NEUTRAL SOFT STUDIO LIGHTING from upper left with soft fill to reveal every side, near-orthographic product camera; not the scene's nighttime lighting. Seamless light warm-grey background with at most a faint soft contact shadow. No separate pedestal, ground slab, environment, water, characters, writing, labels, logo or watermark. Do not make a collage or multiple views.\nPROP: One weathered thick timber dock piling with a slightly uneven cut top, navy steel bands, a short coil of coarse beige rope near its top and one giant BLACK RUBBER TIRE FENDER hanging against the front. Orange metal attachment eye. Silvery grey-brown wood, pronounced broad grain, thick sturdy tire shape. About 3m tall. No water, dock floor, chains extending off image or ground slab.",
+      "reference": "docs/carlisle-relay/shipyard-polish/props/07-piling-fender.png",
+      "status": "reference-generated",
+      "generatedSource": "/Users/kiki/.codex/generated_images/01a18531-75e0-7203-b8a1-2129b7839f79/exec-d14fef47-2995-4c90-a1e6-19b62729fed7.png"
+    },
+    {
+      "id": "08-boathouse",
+      "name": "Outer Banks boathouse",
+      "faceBudget": 6500,
+      "uses": "arrival, mid-yard and bonus waterfront",
+      "prompt": "Use case: 3D-asset reference. Generate ONE isolated game prop, ONE three-quarter view, entire object fully visible with 12 percent empty margin. A polished hand-painted chunky 3D platformer asset with broad exaggerated bevels and confident simplified shapes, Crash Bandicoot 4-like stylization for an Outer Banks commercial boatyard. Palette: DEEP NAVY BLUE painted metal and vivid BURNT ORANGE fittings, silvery weathered timber and charcoal rubber/steel as appropriate. Minimal rust flecks, broad texture brushwork, no photorealistic micro-noise. No yellow or turquoise paint. This will be converted to a textured low-poly mesh, so keep forms clear and physically coherent. NEUTRAL SOFT STUDIO LIGHTING from upper left with soft fill to reveal every side, near-orthographic product camera; not the scene's nighttime lighting. Seamless light warm-grey background with at most a faint soft contact shadow. No separate pedestal, ground slab, environment, water, characters, writing, labels, logo or watermark. Do not make a collage or multiple views.\nPROP: One small standalone salt-weathered Outer Banks boat-repair shed, navy-painted vertical timber siding, low asymmetrical corrugated navy gabled roof, broad closed double workshop doors with orange cross-bracing, two small warm amber glass windows and one simple orange exterior lamp. Chunky timber cornerposts and a short sturdy foundation base, simple back wall, strong readable silhouette. About 8m wide. No dock, scenery, open interior, vegetation, boats, signage or text.",
+      "reference": "docs/carlisle-relay/shipyard-polish/props/08-boathouse.png",
+      "status": "reference-generated",
+      "generatedSource": "/Users/kiki/.codex/generated_images/01a18531-75e0-7203-b8a1-2129b7839f79/exec-fd1be23e-3884-4736-83aa-c8229ec1a0fb.png"
+    },
+    {
+      "id": "09-cable-spool",
+      "name": "Cable spool",
+      "faceBudget": 1800,
+      "uses": "cargo piles and rigging yards",
+      "prompt": "Use case: 3D-asset reference. Generate ONE isolated game prop, ONE three-quarter view, entire object fully visible with 12 percent empty margin. A polished hand-painted chunky 3D platformer asset with broad exaggerated bevels and confident simplified shapes, Crash Bandicoot 4-like stylization for an Outer Banks commercial boatyard. Palette: DEEP NAVY BLUE painted metal and vivid BURNT ORANGE fittings, silvery weathered timber and charcoal rubber/steel as appropriate. Minimal rust flecks, broad texture brushwork, no photorealistic micro-noise. No yellow or turquoise paint. This will be converted to a textured low-poly mesh, so keep forms clear and physically coherent. NEUTRAL SOFT STUDIO LIGHTING from upper left with soft fill to reveal every side, near-orthographic product camera; not the scene's nighttime lighting. Seamless light warm-grey background with at most a faint soft contact shadow. No separate pedestal, ground slab, environment, water, characters, writing, labels, logo or watermark. Do not make a collage or multiple views.\nPROP: One squat industrial cable reel standing on its circular flanges: two chunky burnt-orange octagonal reel ends, navy centre axle, thick dark steel cable wound evenly between them. Broad chipped paint and a few large bolts only. Slightly irregular stylized edges, about 1.5m diameter. No loose extended cable, base, environment or labels.",
+      "reference": "docs/carlisle-relay/shipyard-polish/props/09-cable-spool.png",
+      "status": "reference-generated",
+      "generatedSource": "/Users/kiki/.codex/generated_images/01a18531-75e0-7203-b8a1-2129b7839f79/exec-37f723df-de45-4809-b157-7b7a749d86d8.png"
+    },
+    {
+      "id": "10-dredger-pump",
+      "name": "Dredger pump and elbow",
+      "faceBudget": 4500,
+      "uses": "dredger terraces and turbine flanks",
+      "prompt": "Use case: 3D-asset reference. Generate ONE isolated game prop, ONE three-quarter view, entire object fully visible with 12 percent empty margin. A polished hand-painted chunky 3D platformer asset with broad exaggerated bevels and confident simplified shapes, Crash Bandicoot 4-like stylization for an Outer Banks commercial boatyard. Palette: DEEP NAVY BLUE painted metal and vivid BURNT ORANGE fittings, silvery weathered timber and charcoal rubber/steel as appropriate. Minimal rust flecks, broad texture brushwork, no photorealistic micro-noise. No yellow or turquoise paint. This will be converted to a textured low-poly mesh, so keep forms clear and physically coherent. NEUTRAL SOFT STUDIO LIGHTING from upper left with soft fill to reveal every side, near-orthographic product camera; not the scene's nighttime lighting. Seamless light warm-grey background with at most a faint soft contact shadow. No separate pedestal, ground slab, environment, water, characters, writing, labels, logo or watermark. Do not make a collage or multiple views.\nPROP: One compact self-contained dredger pump assembly on a short navy skid: bulky navy pump housing, prominent burnt-orange 90-degree elbow pipe rising and bending sideways, large circular outlet flange with dark open interior, broad bolted collars and one oversized orange valve wheel. Chunky dock equipment around 3m high, clear separate navy and orange material areas, no flowing water, no smoke, no external pipe network.",
+      "reference": "docs/carlisle-relay/shipyard-polish/props/10-dredger-pump.png",
+      "status": "reference-generated",
+      "generatedSource": "/Users/kiki/.codex/generated_images/01a18531-75e0-7203-b8a1-2129b7839f79/exec-5359ac06-1e2a-4cfc-ba67-9c53008e6fe6.png"
+    },
+    {
+      "id": "11-harbour-beacon",
+      "name": "Harbour beacon",
+      "faceBudget": 6000,
+      "uses": "beacon chimney and distant coast landmarks",
+      "prompt": "Use case: 3D-asset reference. Generate ONE isolated game prop, ONE three-quarter view, entire object fully visible with 12 percent empty margin. A polished hand-painted chunky 3D platformer asset with broad exaggerated bevels and confident simplified shapes, Crash Bandicoot 4-like stylization for an Outer Banks commercial boatyard. Palette: DEEP NAVY BLUE painted metal and vivid BURNT ORANGE fittings, silvery weathered timber and charcoal rubber/steel as appropriate. Minimal rust flecks, broad texture brushwork, no photorealistic micro-noise. No yellow or turquoise paint. This will be converted to a textured low-poly mesh, so keep forms clear and physically coherent. NEUTRAL SOFT STUDIO LIGHTING from upper left with soft fill to reveal every side, near-orthographic product camera; not the scene's nighttime lighting. Seamless light warm-grey background with at most a faint soft contact shadow. No separate pedestal, ground slab, environment, water, characters, writing, labels, logo or watermark. Do not make a collage or multiple views.\nPROP: One stylized industrial harbour signal beacon tower: stout tapered navy steel-and-timber column, three orange horizontal reinforcement bands, an oversized octagonal lantern chamber at top with amber orange glass panes and navy domed roof. Two simple flared navy foghorns face outward below the light, short antenna on top. Base and complete top visible, about 8m high. Heavy readable silhouette, no staircase, deck, nets, cables extending away or environment.",
+      "reference": "docs/carlisle-relay/shipyard-polish/props/11-harbour-beacon.png",
+      "status": "reference-generated",
+      "generatedSource": "/Users/kiki/.codex/generated_images/01a18531-75e0-7203-b8a1-2129b7839f79/exec-2b87ecd1-4c75-49b2-ab9a-7ae505f8a796.png"
+    },
+    {
+      "id": "12-dock-lantern",
+      "name": "Dock lantern",
+      "faceBudget": 1800,
+      "uses": "orange navigation lights throughout the course",
+      "prompt": "Use case: 3D-asset reference. Generate ONE isolated game prop, ONE three-quarter view, entire object fully visible with 12 percent empty margin. A polished hand-painted chunky 3D platformer asset with broad exaggerated bevels and confident simplified shapes, Crash Bandicoot 4-like stylization for an Outer Banks commercial boatyard. Palette: DEEP NAVY BLUE painted metal and vivid BURNT ORANGE fittings, silvery weathered timber and charcoal rubber/steel as appropriate. Minimal rust flecks, broad texture brushwork, no photorealistic micro-noise. No yellow or turquoise paint. This will be converted to a textured low-poly mesh, so keep forms clear and physically coherent. NEUTRAL SOFT STUDIO LIGHTING from upper left with soft fill to reveal every side, near-orthographic product camera; not the scene's nighttime lighting. Seamless light warm-grey background with at most a faint soft contact shadow. No separate pedestal, ground slab, environment, water, characters, writing, labels, logo or watermark. Do not make a collage or multiple views.\nPROP: One standalone curved-arm dock lamp fixture on a short navy metal post and broad orange bolted foot. Large hanging industrial lantern with navy rounded rain cap, thick orange protective cage and amber glass chamber. Squat chunky nautical hardware, no tiny filigree. About 2m high. Glass reads amber but studio lighting should show all surface colors without bloom. No dock, water or scenery.",
+      "reference": "docs/carlisle-relay/shipyard-polish/props/12-dock-lantern.png",
+      "status": "reference-generated",
+      "generatedSource": "/Users/kiki/.codex/generated_images/01a18531-75e0-7203-b8a1-2129b7839f79/exec-901e2592-97db-440e-8a4c-b18e4d21e02b.png"
+    }
+  ]
+}

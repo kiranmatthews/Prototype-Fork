@@ -1,0 +1,39 @@
+{
+  "id": "03-rotary-hub",
+  "args": [
+    "make",
+    "docs/carlisle-relay/shipyard-polish/props/03-rotary-hub.png",
+    "--for",
+    "toy",
+    "--model",
+    "tripo-p1",
+    "-p",
+    "face_limit=3000",
+    "-p",
+    "texture=true",
+    "-p",
+    "pbr=true",
+    "-p",
+    "auto_size=true",
+    "--name",
+    "carlisle-rotary-hub",
+    "-o",
+    "art/carlisle-shipyard",
+    "--json",
+    "--yes"
+  ],
+  "result": {
+    "task_id": "93d64f02-df1e-4d82-940d-cae88f4648b4",
+    "type": "image_to_model",
+    "status": "success",
+    "credits_consumed": 50,
+    "output_dir": "art/carlisle-shipyard/tripo-out/carlisle-rotary-hub-93d64f02",
+    "files": [
+      "model.glb",
+      "rendered_image.webp",
+      "preview.png"
+    ],
+    "model_file": "art/carlisle-shipyard/tripo-out/carlisle-rotary-hub-93d64f02/model.glb",
+    "preview": "art/carlisle-shipyard/tripo-out/carlisle-rotary-hub-93d64f02/preview.png"
+  }
+}

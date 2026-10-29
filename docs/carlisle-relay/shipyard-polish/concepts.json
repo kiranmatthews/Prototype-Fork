@@ -1,0 +1,741 @@
+{
+  "tool": "built-in image_gen",
+  "revision": 2,
+  "direction": "Outer Banks harbour at early night; orange and dark blue; less yellow",
+  "styleReference": "concepts/01-foam-steps.png",
+  "superseded": "superseded-daylight/",
+  "areas": [
+    {
+      "id": "01-foam-steps",
+      "name": "Foam steps",
+      "act": 1,
+      "range": [
+        0,
+        180
+      ],
+      "motif": "Arrival quay: net launch berths, warehouse and cargo receiving apron",
+      "center": [
+        38.27372010486546,
+        235.95586265938462,
+        -79.90176908598025
+      ],
+      "camera": [
+        92.57250468191695,
+        375.1443494904726,
+        118.29395332852079
+      ],
+      "placement": [
+        0,
+        221.39211374988292,
+        0
+      ],
+      "level": "carlisle-coast",
+      "screenshot": "docs/carlisle-relay/shipyard-polish/screenshots/01-foam-steps.png",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "components": 1184,
+      "prompt": "Edit IMAGE 1, the existing arrival-quay concept, using IMAGE 2 only as the unchanged greybox route reference. This is a major palette, lighting and atmosphere revision, not a small color filter. Keep the central linked trampoline route and its readable floor gaps, but redesign the setting to feel like an Outer Banks working harbour at early night.\nUse case: stylized-concept. Asset type: screenshot-based game environment paintover for Carlisle Coast.\nRetain the central foreground net sequence and raised moving cross-deck further back. Preserve the floor outlines, heights and open landing spaces.\nNew art direction requested by the user: ORANGE AND DEEP DARK BLUE, EARLY NIGHT, OUTER BANKS coastal harbour atmosphere. A salt-weathered North Carolina barrier-island working boatyard at blue hour just after sunset. Low flat horizon, distant dunes and marsh, crooked timber wharves, shingled bait sheds and corrugated boat-repair hangars, battered shrimp boats, small harbour lights. Chunky, expressive, hand-painted 3D platformer art in the spirit of Crash Bandicoot 4, with exaggerated bevels, broad confident material shapes and playful industrial silhouettes.\nThe major color masses are indigo/navy sky and ocean, dark blue painted steel and silvery weathered timber. Strong saturated ORANGE marine rope nets, burnt-orange machinery and small warm orange dock lamps provide the accents. Dark cobalt reflections and thin orange light trails on the water. Twilight is readable, atmospheric and cool, never a black silhouette. Replace safety-yellow housings/rails with burnt orange or dark navy. No bright yellow palette, no yellow hazard stripes, no turquoise toy-factory look, no daylight or sunny golden wash.\nEvery tan trampoline bed becomes an OPEN DIAMOND MESH ORANGE MARINE ROPE NET with dark blue steel housing and orange corner/tension fittings. You can see ocean through the mesh. Keep nets separated by open air and preserve jumping mouths and landing spaces. Never connect a required gap or block a landing with scenery or railings.\nALL space beneath the playable route is DARK NAVY OCEAN, with broad stylized swells and restrained pale foam by the piles. Replace nonplayable grey block/cliff masses with waterfront architecture on timber piles and sparse boatyard machinery beyond the route. Scatter rope coils, black rubber fenders, orange buoys, lobster pots and cargo groups around nonplayable edges. Keep the playable route uncluttered and bright enough to read. Red hazard clusters become dark iron teeth with orange-red tips at the same positions.\nWide 16:9 polished game-environment concept, no characters, no text, no HUD, no watermark, no logos. No pirate village, mountains or tropical palm trees.\nReplace the tall warehouse wall with a lower sprawling navy boat-repair shed and weathered waterfront structures, distant shrimp trawlers and low dunes instead of a huge container terminal. Use orange lift machinery and orange net frames, NOT yellow. Make the sea and sky distinctly early-night indigo. The bright orange nets should be the clearest repeated accent.",
+      "status": "generated",
+      "concept": "docs/carlisle-relay/shipyard-polish/concepts/01-foam-steps.png",
+      "previousPrompt": "Use case: stylized-concept. Asset type: environment art direction paintover for Carlisle Coast, area 01, Foam Steps / Arrival Quay.\nInput image 1 is the EXACT greybox layout reference and camera composition. Paint it into a finished commercial shipyard platforming level with the exuberant, hand-painted, chunky 3D art direction of Crash Bandicoot 4. This is a working industrial harbour, not a pirate village.\nPreserve the sequence and relative positions of the visible playable floors, the four tan rectangular bounce pads in the foreground route, gaps, sloping blue-grey walkways, crate groups, raised landing and moving cross-shaped deck ahead. Retain the unusual linked-bounce gameplay layout. Do not flatten, join across, or close the gaps. Keep jumping mouths and landing spaces open. The foreground arrival dock and its linked net pads are the hero.\nReplace every tan trampoline bed with a taut, visibly open diamond-mesh ORANGE MARINE ROPE NET stretched in a chunky weathered teal steel housing with rounded yellow corner guards, tension lugs and buoyancy drums underneath. It must read as an industrial cargo-catching net that bounces, never as solid orange cloth or a normal garden trampoline.\nAll space below the playable floors is DARK NAVY OCEAN, with broad stylized wave shapes and scattered pale foam. Replace the massive grey cliff/block side walls with shipyard architecture on piles: warehouse facades and container rows set back beyond the route, gantry cranes, broad rubber fenders and dock bollards. Do not turn the sea into a solid floor or rocky canyon.\nDevelop a convincing bright arrival to the port: warm morning light, teal painted steel, safety-yellow mechanisms, rust-red cargo containers, orange rope nets, bleached timber decking, cool dark ocean. Exaggerated bevels, broad painterly roughness, readable silhouettes and playful asymmetric machinery, high quality game key art, controlled detail density. Include distant container ships and cranes as background silhouettes. Existing red spike clusters become clearly dangerous chunky industrial teeth with red tips at the same positions.\nNo new characters, no text, no HUD, no logo, no watermark. Wide 16:9 polished screenshot-like environment concept. Keep the gameplay route visually dominant and bright against the dark water.",
+      "generatedSource": "/Users/kiki/.codex/generated_images/01a18531-75e0-7203-b8a1-2129b7839f79/exec-e4cf9059-7ef7-4d76-a38f-b3199a60d4fb.png"
+    },
+    {
+      "id": "02-scissor-groyne",
+      "name": "Scissor groyne",
+      "act": 1,
+      "range": [
+        180,
+        390
+      ],
+      "motif": "Scissor cargo booms on a segmented working jetty",
+      "center": [
+        88.46914594417896,
+        213.54342108523178,
+        -278.0114176003122
+      ],
+      "camera": [
+        237.2243725297282,
+        379.2575444970041,
+        -83.7659499146236
+      ],
+      "placement": [
+        82.65102369081731,
+        195.56099789936687,
+        -176.00496518943265
+      ],
+      "level": "carlisle-coast",
+      "screenshot": "docs/carlisle-relay/shipyard-polish/screenshots/02-scissor-groyne.png",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "components": 1184,
+      "prompt": "Use case: stylized-concept. Asset type: screenshot-based game environment paintover for Carlisle Coast.\nIMAGE 1 is the target greybox layout. Retain its playable platform outlines, gaps, different heights, slopes, moving/spinning deck shapes, trampoline placements and important grind cables. IMAGE 2 is the shared ART-DIRECTION reference only, not the layout.\nNew art direction requested by the user: ORANGE AND DEEP DARK BLUE, EARLY NIGHT, OUTER BANKS coastal harbour atmosphere. A salt-weathered North Carolina barrier-island working boatyard at blue hour just after sunset. Low flat horizon, distant dunes and marsh, crooked timber wharves, shingled bait sheds and corrugated boat-repair hangars, battered shrimp boats, small harbour lights. Chunky, expressive, hand-painted 3D platformer art in the spirit of Crash Bandicoot 4, with exaggerated bevels, broad confident material shapes and playful industrial silhouettes.\nThe major color masses are indigo/navy sky and ocean, dark blue painted steel and silvery weathered timber. Strong saturated ORANGE marine rope nets, burnt-orange machinery and small warm orange dock lamps provide the accents. Dark cobalt reflections and thin orange light trails on the water. Twilight is readable, atmospheric and cool, never a black silhouette. Replace safety-yellow housings/rails with burnt orange or dark navy. No bright yellow palette, no yellow hazard stripes, no turquoise toy-factory look, no daylight or sunny golden wash.\nEvery tan trampoline bed becomes an OPEN DIAMOND MESH ORANGE MARINE ROPE NET with dark blue steel housing and orange corner/tension fittings. You can see ocean through the mesh. Keep nets separated by open air and preserve jumping mouths and landing spaces. Never connect a required gap or block a landing with scenery or railings.\nALL space beneath the playable route is DARK NAVY OCEAN, with broad stylized swells and restrained pale foam by the piles. Replace nonplayable grey block/cliff masses with waterfront architecture on timber piles and sparse boatyard machinery beyond the route. Scatter rope coils, black rubber fenders, orange buoys, lobster pots and cargo groups around nonplayable edges. Keep the playable route uncluttered and bright enough to read. Red hazard clusters become dark iron teeth with orange-red tips at the same positions.\nWide 16:9 polished game-environment concept, no characters, no text, no HUD, no watermark, no logos. No pirate village, mountains or tropical palm trees.\nFOCAL AREA: Scissor groyne. DISTINCTIVE MECHANISM / ARCHITECTURE: Scissor cargo booms on a segmented working jetty.\nOpen welcoming boatyard edge, first lights coming on under a deep blue twilight sky.",
+      "status": "generated",
+      "concept": "docs/carlisle-relay/shipyard-polish/concepts/02-scissor-groyne.png",
+      "previousPrompt": "Use case: stylized-concept. Asset type: polished game environment concept paintover for Carlisle Coast.\nIMAGE 1 is the greybox target: preserve its playable floor outlines, elevations, gaps, sloping stretches, machinery silhouettes and relative route. IMAGE 2 is ONLY the approved material/style reference; never copy its layout.\nRender a commercial shipyard in the exuberant chunky, hand-painted 3D visual style of Crash Bandicoot 4. The route has linked gigantic trampoline bounces and distinct moving/spinning platforms. Convert tan bounce surfaces into visibly open, taut ORANGE MARINE ROPE NETS, stretched in heavy teal steel rectangular housings with yellow rounded corner guards and tension lugs, with pontoons or work supports below. Nets are open diamond mesh, not orange cloth. Platform floors stay uncluttered and readable. Keep gaps and jumping mouths open. Never add rails across required jumps or fill voids with floors.\nAll area below the playable route is DARK NAVY OCEAN, stylized broad waves, pale foam near supports. Replace broad nonplayable grey cliff walls/block masses with dock facades, steel support piles, ships and industrial architecture beyond the usable route. No rocky canyon or tropical pirate village. Visual language: teal steel, yellow machinery, rust-red containers, orange rope nets, timber cargo quays, giant rubber fenders, chunky bolts, painted bevels and restrained weathering. Dangerous red spike clusters become clearly dangerous red-tipped industrial teeth in their authored positions. Keep existing cargo stacks and required grind lines recognizable. Add supporting port structures behind/below the route, never over landing clearances. Wide 16:9, finished screenshot-like concept art, no characters, text, HUD, logos or watermark.\nFOCAL AREA: Scissor groyne. UNIQUE ARCHITECTURAL IDEA: Scissor cargo booms on a segmented working jetty.\nLIGHTING: Warm lively morning sun; strong golden edges and cool blue shadows.\nMake the named area's distinctive mechanism the visual hero while respecting the screenshot geometry.",
+      "generatedSource": "/Users/kiki/.codex/generated_images/01a18531-75e0-7203-b8a1-2129b7839f79/exec-29dae294-36df-474a-bdce-3365384a4ec3.png"
+    },
+    {
+      "id": "03-lift-and-skip",
+      "name": "Lift and skip",
+      "act": 1,
+      "range": [
+        390,
+        605
+      ],
+      "motif": "Boat-lift slipway with rising net cradle and skip berths",
+      "center": [
+        90.10985098824077,
+        223.3506146544952,
+        -483.9610097257538
+      ],
+      "camera": [
+        244.12265335635905,
+        372.02477562832985,
+        -327.5576384775187
+      ],
+      "placement": [
+        89.18254367017994,
+        177.45811465449503,
+        -394.3267201964657
+      ],
+      "level": "carlisle-coast",
+      "screenshot": "docs/carlisle-relay/shipyard-polish/screenshots/03-lift-and-skip.png",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "components": 1184,
+      "prompt": "Use case: stylized-concept. Asset type: screenshot-based game environment paintover for Carlisle Coast.\nIMAGE 1 is the target greybox layout. Retain its playable platform outlines, gaps, different heights, slopes, moving/spinning deck shapes, trampoline placements and important grind cables. IMAGE 2 is the shared ART-DIRECTION reference only, not the layout.\nNew art direction requested by the user: ORANGE AND DEEP DARK BLUE, EARLY NIGHT, OUTER BANKS coastal harbour atmosphere. A salt-weathered North Carolina barrier-island working boatyard at blue hour just after sunset. Low flat horizon, distant dunes and marsh, crooked timber wharves, shingled bait sheds and corrugated boat-repair hangars, battered shrimp boats, small harbour lights. Chunky, expressive, hand-painted 3D platformer art in the spirit of Crash Bandicoot 4, with exaggerated bevels, broad confident material shapes and playful industrial silhouettes.\nThe major color masses are indigo/navy sky and ocean, dark blue painted steel and silvery weathered timber. Strong saturated ORANGE marine rope nets, burnt-orange machinery and small warm orange dock lamps provide the accents. Dark cobalt reflections and thin orange light trails on the water. Twilight is readable, atmospheric and cool, never a black silhouette. Replace safety-yellow housings/rails with burnt orange or dark navy. No bright yellow palette, no yellow hazard stripes, no turquoise toy-factory look, no daylight or sunny golden wash.\nEvery tan trampoline bed becomes an OPEN DIAMOND MESH ORANGE MARINE ROPE NET with dark blue steel housing and orange corner/tension fittings. You can see ocean through the mesh. Keep nets separated by open air and preserve jumping mouths and landing spaces. Never connect a required gap or block a landing with scenery or railings.\nALL space beneath the playable route is DARK NAVY OCEAN, with broad stylized swells and restrained pale foam by the piles. Replace nonplayable grey block/cliff masses with waterfront architecture on timber piles and sparse boatyard machinery beyond the route. Scatter rope coils, black rubber fenders, orange buoys, lobster pots and cargo groups around nonplayable edges. Keep the playable route uncluttered and bright enough to read. Red hazard clusters become dark iron teeth with orange-red tips at the same positions.\nWide 16:9 polished game-environment concept, no characters, no text, no HUD, no watermark, no logos. No pirate village, mountains or tropical palm trees.\nFOCAL AREA: Lift and skip. DISTINCTIVE MECHANISM / ARCHITECTURE: Boat-lift slipway with rising net cradle and skip berths.\nOpen welcoming boatyard edge, first lights coming on under a deep blue twilight sky.",
+      "status": "generated",
+      "concept": "docs/carlisle-relay/shipyard-polish/concepts/03-lift-and-skip.png",
+      "previousPrompt": "Use case: stylized-concept. Asset type: polished game environment concept paintover for Carlisle Coast.\nIMAGE 1 is the greybox target: preserve its playable floor outlines, elevations, gaps, sloping stretches, machinery silhouettes and relative route. IMAGE 2 is ONLY the approved material/style reference; never copy its layout.\nRender a commercial shipyard in the exuberant chunky, hand-painted 3D visual style of Crash Bandicoot 4. The route has linked gigantic trampoline bounces and distinct moving/spinning platforms. Convert tan bounce surfaces into visibly open, taut ORANGE MARINE ROPE NETS, stretched in heavy teal steel rectangular housings with yellow rounded corner guards and tension lugs, with pontoons or work supports below. Nets are open diamond mesh, not orange cloth. Platform floors stay uncluttered and readable. Keep gaps and jumping mouths open. Never add rails across required jumps or fill voids with floors.\nAll area below the playable route is DARK NAVY OCEAN, stylized broad waves, pale foam near supports. Replace broad nonplayable grey cliff walls/block masses with dock facades, steel support piles, ships and industrial architecture beyond the usable route. No rocky canyon or tropical pirate village. Visual language: teal steel, yellow machinery, rust-red containers, orange rope nets, timber cargo quays, giant rubber fenders, chunky bolts, painted bevels and restrained weathering. Dangerous red spike clusters become clearly dangerous red-tipped industrial teeth in their authored positions. Keep existing cargo stacks and required grind lines recognizable. Add supporting port structures behind/below the route, never over landing clearances. Wide 16:9, finished screenshot-like concept art, no characters, text, HUD, logos or watermark.\nFOCAL AREA: Lift and skip. UNIQUE ARCHITECTURAL IDEA: Boat-lift slipway with rising net cradle and skip berths.\nLIGHTING: Warm lively morning sun; strong golden edges and cool blue shadows.\nMake the named area's distinctive mechanism the visual hero while respecting the screenshot geometry.",
+      "generatedSource": "/Users/kiki/.codex/generated_images/01a18531-75e0-7203-b8a1-2129b7839f79/exec-3195576e-84d3-4445-b915-effb6236f198.png"
+    },
+    {
+      "id": "04-surf-sockets",
+      "name": "Surf sockets",
+      "act": 1,
+      "range": [
+        605,
+        825
+      ],
+      "motif": "Modular pontoon sockets and bright orange net catch basins",
+      "center": [
+        84.26400958295702,
+        225.22239612170299,
+        -704.5344492659074
+      ],
+      "camera": [
+        246.2606479213207,
+        395.2740129736335,
+        -512.7243719327583
+      ],
+      "placement": [
+        80.89984367268269,
+        173.49758209678882,
+        -613.7854325582728
+      ],
+      "level": "carlisle-coast",
+      "screenshot": "docs/carlisle-relay/shipyard-polish/screenshots/04-surf-sockets.png",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "components": 1184,
+      "prompt": "Use case: stylized-concept. Asset type: screenshot-based game environment paintover for Carlisle Coast.\nIMAGE 1 is the target greybox layout. Retain its playable platform outlines, gaps, different heights, slopes, moving/spinning deck shapes, trampoline placements and important grind cables. IMAGE 2 is the shared ART-DIRECTION reference only, not the layout.\nNew art direction requested by the user: ORANGE AND DEEP DARK BLUE, EARLY NIGHT, OUTER BANKS coastal harbour atmosphere. A salt-weathered North Carolina barrier-island working boatyard at blue hour just after sunset. Low flat horizon, distant dunes and marsh, crooked timber wharves, shingled bait sheds and corrugated boat-repair hangars, battered shrimp boats, small harbour lights. Chunky, expressive, hand-painted 3D platformer art in the spirit of Crash Bandicoot 4, with exaggerated bevels, broad confident material shapes and playful industrial silhouettes.\nThe major color masses are indigo/navy sky and ocean, dark blue painted steel and silvery weathered timber. Strong saturated ORANGE marine rope nets, burnt-orange machinery and small warm orange dock lamps provide the accents. Dark cobalt reflections and thin orange light trails on the water. Twilight is readable, atmospheric and cool, never a black silhouette. Replace safety-yellow housings/rails with burnt orange or dark navy. No bright yellow palette, no yellow hazard stripes, no turquoise toy-factory look, no daylight or sunny golden wash.\nEvery tan trampoline bed becomes an OPEN DIAMOND MESH ORANGE MARINE ROPE NET with dark blue steel housing and orange corner/tension fittings. You can see ocean through the mesh. Keep nets separated by open air and preserve jumping mouths and landing spaces. Never connect a required gap or block a landing with scenery or railings.\nALL space beneath the playable route is DARK NAVY OCEAN, with broad stylized swells and restrained pale foam by the piles. Replace nonplayable grey block/cliff masses with waterfront architecture on timber piles and sparse boatyard machinery beyond the route. Scatter rope coils, black rubber fenders, orange buoys, lobster pots and cargo groups around nonplayable edges. Keep the playable route uncluttered and bright enough to read. Red hazard clusters become dark iron teeth with orange-red tips at the same positions.\nWide 16:9 polished game-environment concept, no characters, no text, no HUD, no watermark, no logos. No pirate village, mountains or tropical palm trees.\nFOCAL AREA: Surf sockets. DISTINCTIVE MECHANISM / ARCHITECTURE: Modular pontoon sockets and bright orange net catch basins.\nOpen welcoming boatyard edge, first lights coming on under a deep blue twilight sky. Make the scattered independent floating net sockets in the wide central gap the hero; retain the alternating placement with water between them.",
+      "status": "generated",
+      "concept": "docs/carlisle-relay/shipyard-polish/concepts/04-surf-sockets.png",
+      "previousPrompt": "Use case: stylized-concept. Asset type: polished game environment concept paintover for Carlisle Coast.\nIMAGE 1 is the greybox target: preserve its playable floor outlines, elevations, gaps, sloping stretches, machinery silhouettes and relative route. IMAGE 2 is ONLY the approved material/style reference; never copy its layout.\nRender a commercial shipyard in the exuberant chunky, hand-painted 3D visual style of Crash Bandicoot 4. The route has linked gigantic trampoline bounces and distinct moving/spinning platforms. Convert tan bounce surfaces into visibly open, taut ORANGE MARINE ROPE NETS, stretched in heavy teal steel rectangular housings with yellow rounded corner guards and tension lugs, with pontoons or work supports below. Nets are open diamond mesh, not orange cloth. Platform floors stay uncluttered and readable. Keep gaps and jumping mouths open. Never add rails across required jumps or fill voids with floors.\nAll area below the playable route is DARK NAVY OCEAN, stylized broad waves, pale foam near supports. Replace broad nonplayable grey cliff walls/block masses with dock facades, steel support piles, ships and industrial architecture beyond the usable route. No rocky canyon or tropical pirate village. Visual language: teal steel, yellow machinery, rust-red containers, orange rope nets, timber cargo quays, giant rubber fenders, chunky bolts, painted bevels and restrained weathering. Dangerous red spike clusters become clearly dangerous red-tipped industrial teeth in their authored positions. Keep existing cargo stacks and required grind lines recognizable. Add supporting port structures behind/below the route, never over landing clearances. Wide 16:9, finished screenshot-like concept art, no characters, text, HUD, logos or watermark.\nFOCAL AREA: Surf sockets. UNIQUE ARCHITECTURAL IDEA: Modular pontoon sockets and bright orange net catch basins.\nLIGHTING: Warm lively morning sun; strong golden edges and cool blue shadows.\nMake the named area's distinctive mechanism the visual hero while respecting the screenshot geometry.\nEmphasize the screenshot's broad OPEN GAP with scattered separate square orange net sockets, each on its own compact floating pontoon. Keep the diagonal alternating net placement and visible water between every socket. Put dock socket receptacles and mooring cleats along the flanks. This section should feel like a floating stepping-net field, not a continuous bridge.",
+      "generatedSource": "/Users/kiki/.codex/generated_images/01a18531-75e0-7203-b8a1-2129b7839f79/exec-f90f937c-0317-4246-9fce-a92b964e7c54.png"
+    },
+    {
+      "id": "05-twin-winches",
+      "name": "Twin winches",
+      "act": 1,
+      "range": [
+        825,
+        1040
+      ],
+      "motif": "Paired heavy dock winches and opposing cargo hoists",
+      "center": [
+        45.091064968502515,
+        205.86171774079435,
+        -908.8306418404093
+      ],
+      "camera": [
+        233.64907807763066,
+        350.6960496713956,
+        -807.9784326104415
+      ],
+      "placement": [
+        79.99265905938142,
+        164.8872101466168,
+        -823.1501794236307
+      ],
+      "level": "carlisle-coast",
+      "screenshot": "docs/carlisle-relay/shipyard-polish/screenshots/05-twin-winches.png",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "components": 1184,
+      "prompt": "Use case: stylized-concept. Asset type: screenshot-based game environment paintover for Carlisle Coast.\nIMAGE 1 is the target greybox layout. Retain its playable platform outlines, gaps, different heights, slopes, moving/spinning deck shapes, trampoline placements and important grind cables. IMAGE 2 is the shared ART-DIRECTION reference only, not the layout.\nNew art direction requested by the user: ORANGE AND DEEP DARK BLUE, EARLY NIGHT, OUTER BANKS coastal harbour atmosphere. A salt-weathered North Carolina barrier-island working boatyard at blue hour just after sunset. Low flat horizon, distant dunes and marsh, crooked timber wharves, shingled bait sheds and corrugated boat-repair hangars, battered shrimp boats, small harbour lights. Chunky, expressive, hand-painted 3D platformer art in the spirit of Crash Bandicoot 4, with exaggerated bevels, broad confident material shapes and playful industrial silhouettes.\nThe major color masses are indigo/navy sky and ocean, dark blue painted steel and silvery weathered timber. Strong saturated ORANGE marine rope nets, burnt-orange machinery and small warm orange dock lamps provide the accents. Dark cobalt reflections and thin orange light trails on the water. Twilight is readable, atmospheric and cool, never a black silhouette. Replace safety-yellow housings/rails with burnt orange or dark navy. No bright yellow palette, no yellow hazard stripes, no turquoise toy-factory look, no daylight or sunny golden wash.\nEvery tan trampoline bed becomes an OPEN DIAMOND MESH ORANGE MARINE ROPE NET with dark blue steel housing and orange corner/tension fittings. You can see ocean through the mesh. Keep nets separated by open air and preserve jumping mouths and landing spaces. Never connect a required gap or block a landing with scenery or railings.\nALL space beneath the playable route is DARK NAVY OCEAN, with broad stylized swells and restrained pale foam by the piles. Replace nonplayable grey block/cliff masses with waterfront architecture on timber piles and sparse boatyard machinery beyond the route. Scatter rope coils, black rubber fenders, orange buoys, lobster pots and cargo groups around nonplayable edges. Keep the playable route uncluttered and bright enough to read. Red hazard clusters become dark iron teeth with orange-red tips at the same positions.\nWide 16:9 polished game-environment concept, no characters, no text, no HUD, no watermark, no logos. No pirate village, mountains or tropical palm trees.\nFOCAL AREA: Twin winches. DISTINCTIVE MECHANISM / ARCHITECTURE: Paired heavy dock winches and opposing cargo hoists.\nOpen welcoming boatyard edge, first lights coming on under a deep blue twilight sky. TWO ENORMOUS orange-and-navy winch drums on opposing side piers drive the broad moving decks via thick cables. Show both drums clearly outside the jumping space.",
+      "status": "generated",
+      "concept": "docs/carlisle-relay/shipyard-polish/concepts/05-twin-winches.png",
+      "previousPrompt": "Use case: stylized-concept. Asset type: polished game environment concept paintover for Carlisle Coast.\nIMAGE 1 is the greybox target: preserve its playable floor outlines, elevations, gaps, sloping stretches, machinery silhouettes and relative route. IMAGE 2 is ONLY the approved material/style reference; never copy its layout.\nRender a commercial shipyard in the exuberant chunky, hand-painted 3D visual style of Crash Bandicoot 4. The route has linked gigantic trampoline bounces and distinct moving/spinning platforms. Convert tan bounce surfaces into visibly open, taut ORANGE MARINE ROPE NETS, stretched in heavy teal steel rectangular housings with yellow rounded corner guards and tension lugs, with pontoons or work supports below. Nets are open diamond mesh, not orange cloth. Platform floors stay uncluttered and readable. Keep gaps and jumping mouths open. Never add rails across required jumps or fill voids with floors.\nAll area below the playable route is DARK NAVY OCEAN, stylized broad waves, pale foam near supports. Replace broad nonplayable grey cliff walls/block masses with dock facades, steel support piles, ships and industrial architecture beyond the usable route. No rocky canyon or tropical pirate village. Visual language: teal steel, yellow machinery, rust-red containers, orange rope nets, timber cargo quays, giant rubber fenders, chunky bolts, painted bevels and restrained weathering. Dangerous red spike clusters become clearly dangerous red-tipped industrial teeth in their authored positions. Keep existing cargo stacks and required grind lines recognizable. Add supporting port structures behind/below the route, never over landing clearances. Wide 16:9, finished screenshot-like concept art, no characters, text, HUD, logos or watermark.\nFOCAL AREA: Twin winches. UNIQUE ARCHITECTURAL IDEA: Paired heavy dock winches and opposing cargo hoists.\nLIGHTING: Warm lively morning sun; strong golden edges and cool blue shadows.\nMake the named area's distinctive mechanism the visual hero while respecting the screenshot geometry.\nThe broad central opposing sliding decks are driven by TWO ENORMOUS WINCH DRUMS, one on either side, with thick cables and opposing counterweight towers outside the route. Put the drums at different elevations and expose their gear housings. Preserve the wide main deck silhouettes and the tall outgoing spring ladder. Make twin winches clearly visible, not generic crane arms.",
+      "generatedSource": "/Users/kiki/.codex/generated_images/01a18531-75e0-7203-b8a1-2129b7839f79/exec-621527ea-5b39-415f-bba1-b60fccf97d46.png"
+    },
+    {
+      "id": "06-beacon-chimney",
+      "name": "Beacon chimney",
+      "act": 1,
+      "range": [
+        1040,
+        1280
+      ],
+      "motif": "Towering harbour control beacon with a spiral of net launch ledges",
+      "center": [
+        -48.236005261909945,
+        232.15860487932105,
+        -1123.3854503666844
+      ],
+      "camera": [
+        191.33817467348857,
+        408.96791363783666,
+        -1019.7148310936698
+      ],
+      "placement": [
+        -6.0826510532001254,
+        149.12860487932085,
+        -1027.6078159587612
+      ],
+      "level": "carlisle-coast",
+      "screenshot": "docs/carlisle-relay/shipyard-polish/screenshots/06-beacon-chimney.png",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "components": 1184,
+      "prompt": "Edit this exact beacon-chimney scene. Retain its camera, its TALL NEAR-FOREGROUND BEACON TOWER and the widely VERTICALLY SPACED orange net platforms climbing up the left-centre of the frame. Keep the top net high near the beacon. The main mechanism must remain a steep vertical ascent, not a flat linear route in front of a distant tower. Keep all platform locations, open gaps and outgoing right-turning deck shapes from this input. Change the daytime yellow/teal palette into deep navy blue and burnt orange at EARLY NIGHT. Replace all yellow steel with orange and navy; retain visibly open bright orange rope-net beds. Dark indigo sea and sky, limited orange dock lanterns and beacon glow. Replace distant container-ship silhouettes with coastal fishing trawlers and low Outer Banks marsh/dune horizon, and tall generic terminal buildings with salt-weathered navy timber boathouses. Painterly chunky Crash 4-like 3D game environment. No daylight, yellow paint, characters, text or HUD. Do not copy another layout; recolor and art-direct this composition.",
+      "status": "generated",
+      "concept": "docs/carlisle-relay/shipyard-polish/concepts/06-beacon-chimney.png",
+      "previousPrompt": "Use case: stylized-concept. Asset type: polished game environment concept paintover for Carlisle Coast.\nIMAGE 1 is the greybox target: preserve its playable floor outlines, elevations, gaps, sloping stretches, machinery silhouettes and relative route. IMAGE 2 is ONLY the approved material/style reference; never copy its layout.\nRender a commercial shipyard in the exuberant chunky, hand-painted 3D visual style of Crash Bandicoot 4. The route has linked gigantic trampoline bounces and distinct moving/spinning platforms. Convert tan bounce surfaces into visibly open, taut ORANGE MARINE ROPE NETS, stretched in heavy teal steel rectangular housings with yellow rounded corner guards and tension lugs, with pontoons or work supports below. Nets are open diamond mesh, not orange cloth. Platform floors stay uncluttered and readable. Keep gaps and jumping mouths open. Never add rails across required jumps or fill voids with floors.\nAll area below the playable route is DARK NAVY OCEAN, stylized broad waves, pale foam near supports. Replace broad nonplayable grey cliff walls/block masses with dock facades, steel support piles, ships and industrial architecture beyond the usable route. No rocky canyon or tropical pirate village. Visual language: teal steel, yellow machinery, rust-red containers, orange rope nets, timber cargo quays, giant rubber fenders, chunky bolts, painted bevels and restrained weathering. Dangerous red spike clusters become clearly dangerous red-tipped industrial teeth in their authored positions. Keep existing cargo stacks and required grind lines recognizable. Add supporting port structures behind/below the route, never over landing clearances. Wide 16:9, finished screenshot-like concept art, no characters, text, HUD, logos or watermark.\nFOCAL AREA: Beacon chimney. UNIQUE ARCHITECTURAL IDEA: Towering harbour control beacon with a spiral of net launch ledges.\nLIGHTING: Warm lively morning sun; strong golden edges and cool blue shadows.\nMake the named area's distinctive mechanism the visual hero while respecting the screenshot geometry.\nThis is a VERTICAL BEACON CHIMNEY ascent: make the stacked separated trampoline pads in the near middle climb between two tall industrial signal-tower housings. The topmost net is dramatically higher than the arrival quay. A giant amber harbour beacon crowns a teal ribbed machinery tower at the flank, with foghorns and antennae. Preserve the source vertical height gaps; never flatten this into a level pier. Sea is far beneath. Keep the outgoing turning route visible.",
+      "generatedSource": "/Users/kiki/.codex/generated_images/01a18531-75e0-7203-b8a1-2129b7839f79/exec-6771839b-1e0b-4ab6-a6ee-7ead71fb34bc.png"
+    },
+    {
+      "id": "07-tide-dial",
+      "name": "Tide dial",
+      "act": 2,
+      "range": [
+        1280,
+        1510
+      ],
+      "motif": "Giant circular dry-dock turntable and tidal pump machinery",
+      "center": [
+        -96.67033540210855,
+        167.6208879039296,
+        -1358.6882294320872
+      ],
+      "camera": [
+        80.6539953386481,
+        353.2397421216144,
+        -1149.7405312061728
+      ],
+      "placement": [
+        -100.70064804136857,
+        148.51823292914884,
+        -1246.6883052089413
+      ],
+      "level": "carlisle-coast",
+      "screenshot": "docs/carlisle-relay/shipyard-polish/screenshots/07-tide-dial.png",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "components": 1184,
+      "prompt": "Use case: stylized-concept. Asset type: screenshot-based game environment paintover for Carlisle Coast.\nIMAGE 1 is the target greybox layout. Retain its playable platform outlines, gaps, different heights, slopes, moving/spinning deck shapes, trampoline placements and important grind cables. IMAGE 2 is the shared ART-DIRECTION reference only, not the layout.\nNew art direction requested by the user: ORANGE AND DEEP DARK BLUE, EARLY NIGHT, OUTER BANKS coastal harbour atmosphere. A salt-weathered North Carolina barrier-island working boatyard at blue hour just after sunset. Low flat horizon, distant dunes and marsh, crooked timber wharves, shingled bait sheds and corrugated boat-repair hangars, battered shrimp boats, small harbour lights. Chunky, expressive, hand-painted 3D platformer art in the spirit of Crash Bandicoot 4, with exaggerated bevels, broad confident material shapes and playful industrial silhouettes.\nThe major color masses are indigo/navy sky and ocean, dark blue painted steel and silvery weathered timber. Strong saturated ORANGE marine rope nets, burnt-orange machinery and small warm orange dock lamps provide the accents. Dark cobalt reflections and thin orange light trails on the water. Twilight is readable, atmospheric and cool, never a black silhouette. Replace safety-yellow housings/rails with burnt orange or dark navy. No bright yellow palette, no yellow hazard stripes, no turquoise toy-factory look, no daylight or sunny golden wash.\nEvery tan trampoline bed becomes an OPEN DIAMOND MESH ORANGE MARINE ROPE NET with dark blue steel housing and orange corner/tension fittings. You can see ocean through the mesh. Keep nets separated by open air and preserve jumping mouths and landing spaces. Never connect a required gap or block a landing with scenery or railings.\nALL space beneath the playable route is DARK NAVY OCEAN, with broad stylized swells and restrained pale foam by the piles. Replace nonplayable grey block/cliff masses with waterfront architecture on timber piles and sparse boatyard machinery beyond the route. Scatter rope coils, black rubber fenders, orange buoys, lobster pots and cargo groups around nonplayable edges. Keep the playable route uncluttered and bright enough to read. Red hazard clusters become dark iron teeth with orange-red tips at the same positions.\nWide 16:9 polished game-environment concept, no characters, no text, no HUD, no watermark, no logos. No pirate village, mountains or tropical palm trees.\nFOCAL AREA: Tide dial. DISTINCTIVE MECHANISM / ARCHITECTURE: Giant circular dry-dock turntable and tidal pump machinery.\nMore enclosed machinery yards and boathouses, saturated orange equipment against navy shadows; still early night. Show exposed orange circular turntable bearings BELOW the isolated square rotating decks in the central gap. A low, round tidal-pump building and radial dock machinery define the area; do not fill the gap with a continuous circular floor.",
+      "status": "generated",
+      "concept": "docs/carlisle-relay/shipyard-polish/concepts/07-tide-dial.png",
+      "previousPrompt": "Use case: stylized-concept. Asset type: polished game environment concept paintover for Carlisle Coast.\nIMAGE 1 is the greybox target: preserve its playable floor outlines, elevations, gaps, sloping stretches, machinery silhouettes and relative route. IMAGE 2 is ONLY the approved material/style reference; never copy its layout.\nRender a commercial shipyard in the exuberant chunky, hand-painted 3D visual style of Crash Bandicoot 4. The route has linked gigantic trampoline bounces and distinct moving/spinning platforms. Convert tan bounce surfaces into visibly open, taut ORANGE MARINE ROPE NETS, stretched in heavy teal steel rectangular housings with yellow rounded corner guards and tension lugs, with pontoons or work supports below. Nets are open diamond mesh, not orange cloth. Platform floors stay uncluttered and readable. Keep gaps and jumping mouths open. Never add rails across required jumps or fill voids with floors.\nAll area below the playable route is DARK NAVY OCEAN, stylized broad waves, pale foam near supports. Replace broad nonplayable grey cliff walls/block masses with dock facades, steel support piles, ships and industrial architecture beyond the usable route. No rocky canyon or tropical pirate village. Visual language: teal steel, yellow machinery, rust-red containers, orange rope nets, timber cargo quays, giant rubber fenders, chunky bolts, painted bevels and restrained weathering. Dangerous red spike clusters become clearly dangerous red-tipped industrial teeth in their authored positions. Keep existing cargo stacks and required grind lines recognizable. Add supporting port structures behind/below the route, never over landing clearances. Wide 16:9, finished screenshot-like concept art, no characters, text, HUD, logos or watermark.\nFOCAL AREA: Tide dial. UNIQUE ARCHITECTURAL IDEA: Giant circular dry-dock turntable and tidal pump machinery.\nLIGHTING: Late afternoon amber working lights; larger crowded machinery silhouettes and more ocean glimpsed between layers.\nMake the named area's distinctive mechanism the visual hero while respecting the screenshot geometry.",
+      "generatedSource": "/Users/kiki/.codex/generated_images/01a18531-75e0-7203-b8a1-2129b7839f79/exec-2a0447d6-8d3e-45bf-a18d-54a8361086a8.png"
+    },
+    {
+      "id": "08-pinwheel-handoffs",
+      "name": "Pinwheel handoffs",
+      "act": 2,
+      "range": [
+        1510,
+        1745
+      ],
+      "motif": "Opposing pinwheel loading gantries with moving deck ends",
+      "center": [
+        -77.94138848003777,
+        175.0683879039296,
+        -1568.767439883292
+      ],
+      "camera": [
+        69.76488232092532,
+        340.53676976236426,
+        -1374.178451651405
+      ],
+      "placement": [
+        -88.30598022398844,
+        139.56588790392948,
+        -1467.191661869299
+      ],
+      "level": "carlisle-coast",
+      "screenshot": "docs/carlisle-relay/shipyard-polish/screenshots/08-pinwheel-handoffs.png",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "components": 1184,
+      "prompt": "Use case: stylized-concept. Asset type: screenshot-based game environment paintover for Carlisle Coast.\nIMAGE 1 is the target greybox layout. Retain its playable platform outlines, gaps, different heights, slopes, moving/spinning deck shapes, trampoline placements and important grind cables. IMAGE 2 is the shared ART-DIRECTION reference only, not the layout.\nNew art direction requested by the user: ORANGE AND DEEP DARK BLUE, EARLY NIGHT, OUTER BANKS coastal harbour atmosphere. A salt-weathered North Carolina barrier-island working boatyard at blue hour just after sunset. Low flat horizon, distant dunes and marsh, crooked timber wharves, shingled bait sheds and corrugated boat-repair hangars, battered shrimp boats, small harbour lights. Chunky, expressive, hand-painted 3D platformer art in the spirit of Crash Bandicoot 4, with exaggerated bevels, broad confident material shapes and playful industrial silhouettes.\nThe major color masses are indigo/navy sky and ocean, dark blue painted steel and silvery weathered timber. Strong saturated ORANGE marine rope nets, burnt-orange machinery and small warm orange dock lamps provide the accents. Dark cobalt reflections and thin orange light trails on the water. Twilight is readable, atmospheric and cool, never a black silhouette. Replace safety-yellow housings/rails with burnt orange or dark navy. No bright yellow palette, no yellow hazard stripes, no turquoise toy-factory look, no daylight or sunny golden wash.\nEvery tan trampoline bed becomes an OPEN DIAMOND MESH ORANGE MARINE ROPE NET with dark blue steel housing and orange corner/tension fittings. You can see ocean through the mesh. Keep nets separated by open air and preserve jumping mouths and landing spaces. Never connect a required gap or block a landing with scenery or railings.\nALL space beneath the playable route is DARK NAVY OCEAN, with broad stylized swells and restrained pale foam by the piles. Replace nonplayable grey block/cliff masses with waterfront architecture on timber piles and sparse boatyard machinery beyond the route. Scatter rope coils, black rubber fenders, orange buoys, lobster pots and cargo groups around nonplayable edges. Keep the playable route uncluttered and bright enough to read. Red hazard clusters become dark iron teeth with orange-red tips at the same positions.\nWide 16:9 polished game-environment concept, no characters, no text, no HUD, no watermark, no logos. No pirate village, mountains or tropical palm trees.\nFOCAL AREA: Pinwheel handoffs. DISTINCTIVE MECHANISM / ARCHITECTURE: Opposing pinwheel loading gantries with moving deck ends.\nMore enclosed machinery yards and boathouses, saturated orange equipment against navy shadows; still early night. The two opposite wide T-shaped swinging platforms in the center are the hero: exposed navy arms on orange pinwheel pivot heads, both arms over open water at different angles. Retain the large T silhouettes, the slim outgoing spring ladder, and the foreground crate grind. This is the pinwheel loading yard.",
+      "status": "generated",
+      "concept": "docs/carlisle-relay/shipyard-polish/concepts/08-pinwheel-handoffs.png",
+      "previousPrompt": "Use case: stylized-concept. Asset type: polished game environment concept paintover for Carlisle Coast.\nIMAGE 1 is the greybox target: preserve its playable floor outlines, elevations, gaps, sloping stretches, machinery silhouettes and relative route. IMAGE 2 is ONLY the approved material/style reference; never copy its layout.\nRender a commercial shipyard in the exuberant chunky, hand-painted 3D visual style of Crash Bandicoot 4. The route has linked gigantic trampoline bounces and distinct moving/spinning platforms. Convert tan bounce surfaces into visibly open, taut ORANGE MARINE ROPE NETS, stretched in heavy teal steel rectangular housings with yellow rounded corner guards and tension lugs, with pontoons or work supports below. Nets are open diamond mesh, not orange cloth. Platform floors stay uncluttered and readable. Keep gaps and jumping mouths open. Never add rails across required jumps or fill voids with floors.\nAll area below the playable route is DARK NAVY OCEAN, stylized broad waves, pale foam near supports. Replace broad nonplayable grey cliff walls/block masses with dock facades, steel support piles, ships and industrial architecture beyond the usable route. No rocky canyon or tropical pirate village. Visual language: teal steel, yellow machinery, rust-red containers, orange rope nets, timber cargo quays, giant rubber fenders, chunky bolts, painted bevels and restrained weathering. Dangerous red spike clusters become clearly dangerous red-tipped industrial teeth in their authored positions. Keep existing cargo stacks and required grind lines recognizable. Add supporting port structures behind/below the route, never over landing clearances. Wide 16:9, finished screenshot-like concept art, no characters, text, HUD, logos or watermark.\nFOCAL AREA: Pinwheel handoffs. UNIQUE ARCHITECTURAL IDEA: Opposing pinwheel loading gantries with moving deck ends.\nLIGHTING: Late afternoon amber working lights; larger crowded machinery silhouettes and more ocean glimpsed between layers.\nMake the named area's distinctive mechanism the visual hero while respecting the screenshot geometry.",
+      "generatedSource": "/Users/kiki/.codex/generated_images/01a18531-75e0-7203-b8a1-2129b7839f79/exec-34d4188e-dd61-4770-b463-5f42b1904d62.png"
+    },
+    {
+      "id": "09-dredger-terraces",
+      "name": "Dredger terraces",
+      "act": 2,
+      "range": [
+        1745,
+        1980
+      ],
+      "motif": "Dredger pump terraces, big sea pipes and open staged net ascent",
+      "center": [
+        -61.45868015437218,
+        198.5362199996992,
+        -1822.689135320421
+      ],
+      "camera": [
+        112.8395642449972,
+        399.5405963848657,
+        -1582.5029401743575
+      ],
+      "placement": [
+        -75.89464273127327,
+        131.28335027430876,
+        -1706.3793429683149
+      ],
+      "level": "carlisle-coast",
+      "screenshot": "docs/carlisle-relay/shipyard-polish/screenshots/09-dredger-terraces.png",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "components": 1184,
+      "prompt": "Use case: stylized-concept. Asset type: screenshot-based game environment paintover for Carlisle Coast.\nIMAGE 1 is the target greybox layout. Retain its playable platform outlines, gaps, different heights, slopes, moving/spinning deck shapes, trampoline placements and important grind cables. IMAGE 2 is the shared ART-DIRECTION reference only, not the layout.\nNew art direction requested by the user: ORANGE AND DEEP DARK BLUE, EARLY NIGHT, OUTER BANKS coastal harbour atmosphere. A salt-weathered North Carolina barrier-island working boatyard at blue hour just after sunset. Low flat horizon, distant dunes and marsh, crooked timber wharves, shingled bait sheds and corrugated boat-repair hangars, battered shrimp boats, small harbour lights. Chunky, expressive, hand-painted 3D platformer art in the spirit of Crash Bandicoot 4, with exaggerated bevels, broad confident material shapes and playful industrial silhouettes.\nThe major color masses are indigo/navy sky and ocean, dark blue painted steel and silvery weathered timber. Strong saturated ORANGE marine rope nets, burnt-orange machinery and small warm orange dock lamps provide the accents. Dark cobalt reflections and thin orange light trails on the water. Twilight is readable, atmospheric and cool, never a black silhouette. Replace safety-yellow housings/rails with burnt orange or dark navy. No bright yellow palette, no yellow hazard stripes, no turquoise toy-factory look, no daylight or sunny golden wash.\nEvery tan trampoline bed becomes an OPEN DIAMOND MESH ORANGE MARINE ROPE NET with dark blue steel housing and orange corner/tension fittings. You can see ocean through the mesh. Keep nets separated by open air and preserve jumping mouths and landing spaces. Never connect a required gap or block a landing with scenery or railings.\nALL space beneath the playable route is DARK NAVY OCEAN, with broad stylized swells and restrained pale foam by the piles. Replace nonplayable grey block/cliff masses with waterfront architecture on timber piles and sparse boatyard machinery beyond the route. Scatter rope coils, black rubber fenders, orange buoys, lobster pots and cargo groups around nonplayable edges. Keep the playable route uncluttered and bright enough to read. Red hazard clusters become dark iron teeth with orange-red tips at the same positions.\nWide 16:9 polished game-environment concept, no characters, no text, no HUD, no watermark, no logos. No pirate village, mountains or tropical palm trees.\nFOCAL AREA: Dredger terraces. DISTINCTIVE MECHANISM / ARCHITECTURE: Dredger pump terraces, big sea pipes and open staged net ascent.\nMore enclosed machinery yards and boathouses, saturated orange equipment against navy shadows; still early night. Emphasize the staircase of high separated rectangular landings and nets: navy dredging pump houses built into the flanking masses, giant orange bent discharge pipes around the OUTSIDE of the route, port dredger moored nearby. Preserve the different platform heights and visible staggered trampoline sequence. No straight flat bridge replacing the terraces.",
+      "status": "generated",
+      "concept": "docs/carlisle-relay/shipyard-polish/concepts/09-dredger-terraces.png",
+      "previousPrompt": "Use case: stylized-concept. Asset type: polished game environment concept paintover for Carlisle Coast.\nIMAGE 1 is the greybox target: preserve its playable floor outlines, elevations, gaps, sloping stretches, machinery silhouettes and relative route. IMAGE 2 is ONLY the approved material/style reference; never copy its layout.\nRender a commercial shipyard in the exuberant chunky, hand-painted 3D visual style of Crash Bandicoot 4. The route has linked gigantic trampoline bounces and distinct moving/spinning platforms. Convert tan bounce surfaces into visibly open, taut ORANGE MARINE ROPE NETS, stretched in heavy teal steel rectangular housings with yellow rounded corner guards and tension lugs, with pontoons or work supports below. Nets are open diamond mesh, not orange cloth. Platform floors stay uncluttered and readable. Keep gaps and jumping mouths open. Never add rails across required jumps or fill voids with floors.\nAll area below the playable route is DARK NAVY OCEAN, stylized broad waves, pale foam near supports. Replace broad nonplayable grey cliff walls/block masses with dock facades, steel support piles, ships and industrial architecture beyond the usable route. No rocky canyon or tropical pirate village. Visual language: teal steel, yellow machinery, rust-red containers, orange rope nets, timber cargo quays, giant rubber fenders, chunky bolts, painted bevels and restrained weathering. Dangerous red spike clusters become clearly dangerous red-tipped industrial teeth in their authored positions. Keep existing cargo stacks and required grind lines recognizable. Add supporting port structures behind/below the route, never over landing clearances. Wide 16:9, finished screenshot-like concept art, no characters, text, HUD, logos or watermark.\nFOCAL AREA: Dredger terraces. UNIQUE ARCHITECTURAL IDEA: Dredger pump terraces, big sea pipes and open staged net ascent.\nLIGHTING: Late afternoon amber working lights; larger crowded machinery silhouettes and more ocean glimpsed between layers.\nMake the named area's distinctive mechanism the visual hero while respecting the screenshot geometry.",
+      "generatedSource": "/Users/kiki/.codex/generated_images/01a18531-75e0-7203-b8a1-2129b7839f79/exec-b710812a-c1a2-4381-a6df-f34512883949.png"
+    },
+    {
+      "id": "10-cross-thread-springs",
+      "name": "Cross-thread springs",
+      "act": 2,
+      "range": [
+        1980,
+        2220
+      ],
+      "motif": "Cross-thread dock transfers above narrow shipping lanes",
+      "center": [
+        11.144282956682751,
+        172.30362592564745,
+        -2035.0634268130527
+      ],
+      "camera": [
+        72.64832811412025,
+        336.37724285284565,
+        -1800.7615548420245
+      ],
+      "placement": [
+        -44.493138756149946,
+        127.56658972508923,
+        -1940.3890562294666
+      ],
+      "level": "carlisle-coast",
+      "screenshot": "docs/carlisle-relay/shipyard-polish/screenshots/10-cross-thread-springs.png",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "components": 1184,
+      "prompt": "Use case: stylized-concept. Asset type: screenshot-based game environment paintover for Carlisle Coast.\nIMAGE 1 is the target greybox layout. Retain its playable platform outlines, gaps, different heights, slopes, moving/spinning deck shapes, trampoline placements and important grind cables. IMAGE 2 is the shared ART-DIRECTION reference only, not the layout.\nNew art direction requested by the user: ORANGE AND DEEP DARK BLUE, EARLY NIGHT, OUTER BANKS coastal harbour atmosphere. A salt-weathered North Carolina barrier-island working boatyard at blue hour just after sunset. Low flat horizon, distant dunes and marsh, crooked timber wharves, shingled bait sheds and corrugated boat-repair hangars, battered shrimp boats, small harbour lights. Chunky, expressive, hand-painted 3D platformer art in the spirit of Crash Bandicoot 4, with exaggerated bevels, broad confident material shapes and playful industrial silhouettes.\nThe major color masses are indigo/navy sky and ocean, dark blue painted steel and silvery weathered timber. Strong saturated ORANGE marine rope nets, burnt-orange machinery and small warm orange dock lamps provide the accents. Dark cobalt reflections and thin orange light trails on the water. Twilight is readable, atmospheric and cool, never a black silhouette. Replace safety-yellow housings/rails with burnt orange or dark navy. No bright yellow palette, no yellow hazard stripes, no turquoise toy-factory look, no daylight or sunny golden wash.\nEvery tan trampoline bed becomes an OPEN DIAMOND MESH ORANGE MARINE ROPE NET with dark blue steel housing and orange corner/tension fittings. You can see ocean through the mesh. Keep nets separated by open air and preserve jumping mouths and landing spaces. Never connect a required gap or block a landing with scenery or railings.\nALL space beneath the playable route is DARK NAVY OCEAN, with broad stylized swells and restrained pale foam by the piles. Replace nonplayable grey block/cliff masses with waterfront architecture on timber piles and sparse boatyard machinery beyond the route. Scatter rope coils, black rubber fenders, orange buoys, lobster pots and cargo groups around nonplayable edges. Keep the playable route uncluttered and bright enough to read. Red hazard clusters become dark iron teeth with orange-red tips at the same positions.\nWide 16:9 polished game-environment concept, no characters, no text, no HUD, no watermark, no logos. No pirate village, mountains or tropical palm trees.\nFOCAL AREA: Cross-thread springs. DISTINCTIVE MECHANISM / ARCHITECTURE: Cross-thread dock transfers above narrow shipping lanes.\nMore enclosed machinery yards and boathouses, saturated orange equipment against navy shadows; still early night. A conspicuous diagonal chain of separate rectangular orange nets crosses the wide shipping channel in the foreground. Preserve the entry crate-grind beam and the separated nets. A trawler nose and cable spool yard flank the transfer, orange gantries are offset on opposite banks. Keep the diagonal channel open and no central continuous floor.",
+      "status": "generated",
+      "concept": "docs/carlisle-relay/shipyard-polish/concepts/10-cross-thread-springs.png",
+      "previousPrompt": "Use case: stylized-concept. Asset type: polished game environment concept paintover for Carlisle Coast.\nIMAGE 1 is the greybox target: preserve its playable floor outlines, elevations, gaps, sloping stretches, machinery silhouettes and relative route. IMAGE 2 is ONLY the approved material/style reference; never copy its layout.\nRender a commercial shipyard in the exuberant chunky, hand-painted 3D visual style of Crash Bandicoot 4. The route has linked gigantic trampoline bounces and distinct moving/spinning platforms. Convert tan bounce surfaces into visibly open, taut ORANGE MARINE ROPE NETS, stretched in heavy teal steel rectangular housings with yellow rounded corner guards and tension lugs, with pontoons or work supports below. Nets are open diamond mesh, not orange cloth. Platform floors stay uncluttered and readable. Keep gaps and jumping mouths open. Never add rails across required jumps or fill voids with floors.\nAll area below the playable route is DARK NAVY OCEAN, stylized broad waves, pale foam near supports. Replace broad nonplayable grey cliff walls/block masses with dock facades, steel support piles, ships and industrial architecture beyond the usable route. No rocky canyon or tropical pirate village. Visual language: teal steel, yellow machinery, rust-red containers, orange rope nets, timber cargo quays, giant rubber fenders, chunky bolts, painted bevels and restrained weathering. Dangerous red spike clusters become clearly dangerous red-tipped industrial teeth in their authored positions. Keep existing cargo stacks and required grind lines recognizable. Add supporting port structures behind/below the route, never over landing clearances. Wide 16:9, finished screenshot-like concept art, no characters, text, HUD, logos or watermark.\nFOCAL AREA: Cross-thread springs. UNIQUE ARCHITECTURAL IDEA: Cross-thread dock transfers above narrow shipping lanes.\nLIGHTING: Late afternoon amber working lights; larger crowded machinery silhouettes and more ocean glimpsed between layers.\nMake the named area's distinctive mechanism the visual hero while respecting the screenshot geometry.",
+      "generatedSource": "/Users/kiki/.codex/generated_images/01a18531-75e0-7203-b8a1-2129b7839f79/exec-9b89273c-3e99-4416-8dd4-54b002fbb1bc.png"
+    },
+    {
+      "id": "11-counterweight-stacks",
+      "name": "Counterweight stacks",
+      "act": 2,
+      "range": [
+        2220,
+        2460
+      ],
+      "motif": "Heavy ship-lift counterweight stacks with sliding ballast platforms",
+      "center": [
+        88.0150478539436,
+        149.69238019847745,
+        -2256.4201405657304
+      ],
+      "camera": [
+        198.9445986021854,
+        318.7417993243543,
+        -2032.840490579768
+      ],
+      "placement": [
+        62.12444502360885,
+        97.87066212620522,
+        -2146.242115359101
+      ],
+      "level": "carlisle-coast",
+      "screenshot": "docs/carlisle-relay/shipyard-polish/screenshots/11-counterweight-stacks.png",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "components": 1184,
+      "prompt": "Use case: stylized-concept. Asset type: screenshot-based game environment paintover for Carlisle Coast.\nIMAGE 1 is the target greybox layout. Retain its playable platform outlines, gaps, different heights, slopes, moving/spinning deck shapes, trampoline placements and important grind cables. IMAGE 2 is the shared ART-DIRECTION reference only, not the layout.\nNew art direction requested by the user: ORANGE AND DEEP DARK BLUE, EARLY NIGHT, OUTER BANKS coastal harbour atmosphere. A salt-weathered North Carolina barrier-island working boatyard at blue hour just after sunset. Low flat horizon, distant dunes and marsh, crooked timber wharves, shingled bait sheds and corrugated boat-repair hangars, battered shrimp boats, small harbour lights. Chunky, expressive, hand-painted 3D platformer art in the spirit of Crash Bandicoot 4, with exaggerated bevels, broad confident material shapes and playful industrial silhouettes.\nThe major color masses are indigo/navy sky and ocean, dark blue painted steel and silvery weathered timber. Strong saturated ORANGE marine rope nets, burnt-orange machinery and small warm orange dock lamps provide the accents. Dark cobalt reflections and thin orange light trails on the water. Twilight is readable, atmospheric and cool, never a black silhouette. Replace safety-yellow housings/rails with burnt orange or dark navy. No bright yellow palette, no yellow hazard stripes, no turquoise toy-factory look, no daylight or sunny golden wash.\nEvery tan trampoline bed becomes an OPEN DIAMOND MESH ORANGE MARINE ROPE NET with dark blue steel housing and orange corner/tension fittings. You can see ocean through the mesh. Keep nets separated by open air and preserve jumping mouths and landing spaces. Never connect a required gap or block a landing with scenery or railings.\nALL space beneath the playable route is DARK NAVY OCEAN, with broad stylized swells and restrained pale foam by the piles. Replace nonplayable grey block/cliff masses with waterfront architecture on timber piles and sparse boatyard machinery beyond the route. Scatter rope coils, black rubber fenders, orange buoys, lobster pots and cargo groups around nonplayable edges. Keep the playable route uncluttered and bright enough to read. Red hazard clusters become dark iron teeth with orange-red tips at the same positions.\nWide 16:9 polished game-environment concept, no characters, no text, no HUD, no watermark, no logos. No pirate village, mountains or tropical palm trees.\nFOCAL AREA: Counterweight stacks. DISTINCTIVE MECHANISM / ARCHITECTURE: Heavy ship-lift counterweight stacks with sliding ballast platforms.\nMore enclosed machinery yards and boathouses, saturated orange equipment against navy shadows; still early night. The near-middle staggered rectangular decks climb between HUGE STACKED RECTANGULAR COUNTERWEIGHTS on orange-and-navy ship-lift towers. Make the stacks, sheaves and vertical cable runs the unique hero shapes, with machinery along the flanks outside landing spaces. Preserve the broad stepped deck heights and outgoing pair of orange nets.",
+      "status": "generated",
+      "concept": "docs/carlisle-relay/shipyard-polish/concepts/11-counterweight-stacks.png",
+      "previousPrompt": "Use case: stylized-concept. Asset type: polished game environment concept paintover for Carlisle Coast.\nIMAGE 1 is the greybox target: preserve its playable floor outlines, elevations, gaps, sloping stretches, machinery silhouettes and relative route. IMAGE 2 is ONLY the approved material/style reference; never copy its layout.\nRender a commercial shipyard in the exuberant chunky, hand-painted 3D visual style of Crash Bandicoot 4. The route has linked gigantic trampoline bounces and distinct moving/spinning platforms. Convert tan bounce surfaces into visibly open, taut ORANGE MARINE ROPE NETS, stretched in heavy teal steel rectangular housings with yellow rounded corner guards and tension lugs, with pontoons or work supports below. Nets are open diamond mesh, not orange cloth. Platform floors stay uncluttered and readable. Keep gaps and jumping mouths open. Never add rails across required jumps or fill voids with floors.\nAll area below the playable route is DARK NAVY OCEAN, stylized broad waves, pale foam near supports. Replace broad nonplayable grey cliff walls/block masses with dock facades, steel support piles, ships and industrial architecture beyond the usable route. No rocky canyon or tropical pirate village. Visual language: teal steel, yellow machinery, rust-red containers, orange rope nets, timber cargo quays, giant rubber fenders, chunky bolts, painted bevels and restrained weathering. Dangerous red spike clusters become clearly dangerous red-tipped industrial teeth in their authored positions. Keep existing cargo stacks and required grind lines recognizable. Add supporting port structures behind/below the route, never over landing clearances. Wide 16:9, finished screenshot-like concept art, no characters, text, HUD, logos or watermark.\nFOCAL AREA: Counterweight stacks. UNIQUE ARCHITECTURAL IDEA: Heavy ship-lift counterweight stacks with sliding ballast platforms.\nLIGHTING: Late afternoon amber working lights; larger crowded machinery silhouettes and more ocean glimpsed between layers.\nMake the named area's distinctive mechanism the visual hero while respecting the screenshot geometry.",
+      "generatedSource": "/Users/kiki/.codex/generated_images/01a18531-75e0-7203-b8a1-2129b7839f79/exec-1dfbbf3e-1dd1-4a2e-93ed-0a49caef088c.png"
+    },
+    {
+      "id": "12-harbour-scissors",
+      "name": "Harbour scissors",
+      "act": 2,
+      "range": [
+        2460,
+        2700
+      ],
+      "motif": "Scissor swingbridges and moving harbour loading arms",
+      "center": [
+        92.15359588765322,
+        133.82922997375653,
+        -2487.5328006169257
+      ],
+      "camera": [
+        297.63663405174225,
+        313.86308410703225,
+        -2318.9258920520433
+      ],
+      "placement": [
+        112.16398537534782,
+        89.18409827074935,
+        -2375.354239400808
+      ],
+      "level": "carlisle-coast",
+      "screenshot": "docs/carlisle-relay/shipyard-polish/screenshots/12-harbour-scissors.png",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "components": 1184,
+      "prompt": "Use case: stylized-concept. Asset type: screenshot-based game environment paintover for Carlisle Coast.\nIMAGE 1 is the target greybox layout. Retain its playable platform outlines, gaps, different heights, slopes, moving/spinning deck shapes, trampoline placements and important grind cables. IMAGE 2 is the shared ART-DIRECTION reference only, not the layout.\nNew art direction requested by the user: ORANGE AND DEEP DARK BLUE, EARLY NIGHT, OUTER BANKS coastal harbour atmosphere. A salt-weathered North Carolina barrier-island working boatyard at blue hour just after sunset. Low flat horizon, distant dunes and marsh, crooked timber wharves, shingled bait sheds and corrugated boat-repair hangars, battered shrimp boats, small harbour lights. Chunky, expressive, hand-painted 3D platformer art in the spirit of Crash Bandicoot 4, with exaggerated bevels, broad confident material shapes and playful industrial silhouettes.\nThe major color masses are indigo/navy sky and ocean, dark blue painted steel and silvery weathered timber. Strong saturated ORANGE marine rope nets, burnt-orange machinery and small warm orange dock lamps provide the accents. Dark cobalt reflections and thin orange light trails on the water. Twilight is readable, atmospheric and cool, never a black silhouette. Replace safety-yellow housings/rails with burnt orange or dark navy. No bright yellow palette, no yellow hazard stripes, no turquoise toy-factory look, no daylight or sunny golden wash.\nEvery tan trampoline bed becomes an OPEN DIAMOND MESH ORANGE MARINE ROPE NET with dark blue steel housing and orange corner/tension fittings. You can see ocean through the mesh. Keep nets separated by open air and preserve jumping mouths and landing spaces. Never connect a required gap or block a landing with scenery or railings.\nALL space beneath the playable route is DARK NAVY OCEAN, with broad stylized swells and restrained pale foam by the piles. Replace nonplayable grey block/cliff masses with waterfront architecture on timber piles and sparse boatyard machinery beyond the route. Scatter rope coils, black rubber fenders, orange buoys, lobster pots and cargo groups around nonplayable edges. Keep the playable route uncluttered and bright enough to read. Red hazard clusters become dark iron teeth with orange-red tips at the same positions.\nWide 16:9 polished game-environment concept, no characters, no text, no HUD, no watermark, no logos. No pirate village, mountains or tropical palm trees.\nFOCAL AREA: Harbour scissors. DISTINCTIVE MECHANISM / ARCHITECTURE: Scissor swingbridges and moving harbour loading arms.\nMore enclosed machinery yards and boathouses, saturated orange equipment against navy shadows; still early night. The large CROSS/X-shaped turning deck near the lower middle of the screenshot is the hero. Preserve its opposing broad platform blades and visible central pivot, clad them in weathered blue steel with orange ends. Surround it with offset scissor bridge supports and lifting arms, then show the outgoing separated net chain. Do not turn the X into a straight bridge or put cranes across the playable arms.",
+      "status": "generated",
+      "concept": "docs/carlisle-relay/shipyard-polish/concepts/12-harbour-scissors.png",
+      "previousPrompt": "Use case: stylized-concept. Asset type: polished game environment concept paintover for Carlisle Coast.\nIMAGE 1 is the greybox target: preserve its playable floor outlines, elevations, gaps, sloping stretches, machinery silhouettes and relative route. IMAGE 2 is ONLY the approved material/style reference; never copy its layout.\nRender a commercial shipyard in the exuberant chunky, hand-painted 3D visual style of Crash Bandicoot 4. The route has linked gigantic trampoline bounces and distinct moving/spinning platforms. Convert tan bounce surfaces into visibly open, taut ORANGE MARINE ROPE NETS, stretched in heavy teal steel rectangular housings with yellow rounded corner guards and tension lugs, with pontoons or work supports below. Nets are open diamond mesh, not orange cloth. Platform floors stay uncluttered and readable. Keep gaps and jumping mouths open. Never add rails across required jumps or fill voids with floors.\nAll area below the playable route is DARK NAVY OCEAN, stylized broad waves, pale foam near supports. Replace broad nonplayable grey cliff walls/block masses with dock facades, steel support piles, ships and industrial architecture beyond the usable route. No rocky canyon or tropical pirate village. Visual language: teal steel, yellow machinery, rust-red containers, orange rope nets, timber cargo quays, giant rubber fenders, chunky bolts, painted bevels and restrained weathering. Dangerous red spike clusters become clearly dangerous red-tipped industrial teeth in their authored positions. Keep existing cargo stacks and required grind lines recognizable. Add supporting port structures behind/below the route, never over landing clearances. Wide 16:9, finished screenshot-like concept art, no characters, text, HUD, logos or watermark.\nFOCAL AREA: Harbour scissors. UNIQUE ARCHITECTURAL IDEA: Scissor swingbridges and moving harbour loading arms.\nLIGHTING: Late afternoon amber working lights; larger crowded machinery silhouettes and more ocean glimpsed between layers.\nMake the named area's distinctive mechanism the visual hero while respecting the screenshot geometry.",
+      "generatedSource": "/Users/kiki/.codex/generated_images/01a18531-75e0-7203-b8a1-2129b7839f79/exec-7ae24d8f-c62a-45d1-85dc-794366264808.png"
+    },
+    {
+      "id": "13-storm-fingers",
+      "name": "Storm fingers",
+      "act": 3,
+      "range": [
+        2700,
+        2910
+      ],
+      "motif": "Storm-exposed breakwater fingers with diagonal net leaps",
+      "center": [
+        67.19458410436742,
+        130.20686167676362,
+        -2719.921956259685
+      ],
+      "camera": [
+        248.64689985724652,
+        308.132921269749,
+        -2529.969420787003
+      ],
+      "placement": [
+        71.6200014613126,
+        67.5293616767634,
+        -2613.8043616722466
+      ],
+      "level": "carlisle-coast",
+      "screenshot": "docs/carlisle-relay/shipyard-polish/screenshots/13-storm-fingers.png",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "components": 1184,
+      "prompt": "Use case: stylized-concept. Asset type: screenshot-based game environment paintover for Carlisle Coast.\nIMAGE 1 is the target greybox layout. Retain its playable platform outlines, gaps, different heights, slopes, moving/spinning deck shapes, trampoline placements and important grind cables. IMAGE 2 is the shared ART-DIRECTION reference only, not the layout.\nNew art direction requested by the user: ORANGE AND DEEP DARK BLUE, EARLY NIGHT, OUTER BANKS coastal harbour atmosphere. A salt-weathered North Carolina barrier-island working boatyard at blue hour just after sunset. Low flat horizon, distant dunes and marsh, crooked timber wharves, shingled bait sheds and corrugated boat-repair hangars, battered shrimp boats, small harbour lights. Chunky, expressive, hand-painted 3D platformer art in the spirit of Crash Bandicoot 4, with exaggerated bevels, broad confident material shapes and playful industrial silhouettes.\nThe major color masses are indigo/navy sky and ocean, dark blue painted steel and silvery weathered timber. Strong saturated ORANGE marine rope nets, burnt-orange machinery and small warm orange dock lamps provide the accents. Dark cobalt reflections and thin orange light trails on the water. Twilight is readable, atmospheric and cool, never a black silhouette. Replace safety-yellow housings/rails with burnt orange or dark navy. No bright yellow palette, no yellow hazard stripes, no turquoise toy-factory look, no daylight or sunny golden wash.\nEvery tan trampoline bed becomes an OPEN DIAMOND MESH ORANGE MARINE ROPE NET with dark blue steel housing and orange corner/tension fittings. You can see ocean through the mesh. Keep nets separated by open air and preserve jumping mouths and landing spaces. Never connect a required gap or block a landing with scenery or railings.\nALL space beneath the playable route is DARK NAVY OCEAN, with broad stylized swells and restrained pale foam by the piles. Replace nonplayable grey block/cliff masses with waterfront architecture on timber piles and sparse boatyard machinery beyond the route. Scatter rope coils, black rubber fenders, orange buoys, lobster pots and cargo groups around nonplayable edges. Keep the playable route uncluttered and bright enough to read. Red hazard clusters become dark iron teeth with orange-red tips at the same positions.\nWide 16:9 polished game-environment concept, no characters, no text, no HUD, no watermark, no logos. No pirate village, mountains or tropical palm trees.\nFOCAL AREA: Storm fingers. DISTINCTIVE MECHANISM / ARCHITECTURE: Storm-exposed breakwater fingers with diagonal net leaps.\nMore exposed outer-harbour structures, indigo storm clouds and scattered orange work lights; still legible early night. EXPOSED BREAKWATER: sparse dark timber pier fingers reach into open Atlantic swells, widely separated orange net leap pads on the ends. Open water occupies most of the scene, distant marsh and a lighthouse low on the horizon. No enclosing row of boathouses around this section. Preserve the conspicuous zigzag spring gaps.",
+      "status": "generated",
+      "concept": "docs/carlisle-relay/shipyard-polish/concepts/13-storm-fingers.png",
+      "previousPrompt": "Use case: stylized-concept. Asset type: polished game environment concept paintover for Carlisle Coast.\nIMAGE 1 is the greybox target: preserve its playable floor outlines, elevations, gaps, sloping stretches, machinery silhouettes and relative route. IMAGE 2 is ONLY the approved material/style reference; never copy its layout.\nRender a commercial shipyard in the exuberant chunky, hand-painted 3D visual style of Crash Bandicoot 4. The route has linked gigantic trampoline bounces and distinct moving/spinning platforms. Convert tan bounce surfaces into visibly open, taut ORANGE MARINE ROPE NETS, stretched in heavy teal steel rectangular housings with yellow rounded corner guards and tension lugs, with pontoons or work supports below. Nets are open diamond mesh, not orange cloth. Platform floors stay uncluttered and readable. Keep gaps and jumping mouths open. Never add rails across required jumps or fill voids with floors.\nAll area below the playable route is DARK NAVY OCEAN, stylized broad waves, pale foam near supports. Replace broad nonplayable grey cliff walls/block masses with dock facades, steel support piles, ships and industrial architecture beyond the usable route. No rocky canyon or tropical pirate village. Visual language: teal steel, yellow machinery, rust-red containers, orange rope nets, timber cargo quays, giant rubber fenders, chunky bolts, painted bevels and restrained weathering. Dangerous red spike clusters become clearly dangerous red-tipped industrial teeth in their authored positions. Keep existing cargo stacks and required grind lines recognizable. Add supporting port structures behind/below the route, never over landing clearances. Wide 16:9, finished screenshot-like concept art, no characters, text, HUD, logos or watermark.\nFOCAL AREA: Storm fingers. UNIQUE ARCHITECTURAL IDEA: Storm-exposed breakwater fingers with diagonal net leaps.\nLIGHTING: Storm-front violet-grey sky, dramatic cool lighting, wet steel and bright amber work lamps; the orange nets remain easily readable above the dark sea.\nMake the named area's distinctive mechanism the visual hero while respecting the screenshot geometry.",
+      "generatedSource": "/Users/kiki/.codex/generated_images/01a18531-75e0-7203-b8a1-2129b7839f79/exec-f1c917fb-31f2-4af5-aee0-27313811be6e.png"
+    },
+    {
+      "id": "14-helical-turbine",
+      "name": "Helical turbine",
+      "act": 3,
+      "range": [
+        2910,
+        3130
+      ],
+      "motif": "Helical turbine maintenance gantry with spinning radial decks",
+      "center": [
+        34.67606301840189,
+        147.9392693106303,
+        -2931.485697670255
+      ],
+      "camera": [
+        257.21596637483464,
+        333.67017552075595,
+        -2771.2678705149992
+      ],
+      "placement": [
+        63.91633785329102,
+        67.5293616767634,
+        -2823.5769095395626
+      ],
+      "level": "carlisle-coast",
+      "screenshot": "docs/carlisle-relay/shipyard-polish/screenshots/14-helical-turbine.png",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "components": 1184,
+      "prompt": "Use case: stylized-concept. Asset type: screenshot-based game environment paintover for Carlisle Coast.\nIMAGE 1 is the target greybox layout. Retain its playable platform outlines, gaps, different heights, slopes, moving/spinning deck shapes, trampoline placements and important grind cables. IMAGE 2 is the shared ART-DIRECTION reference only, not the layout.\nNew art direction requested by the user: ORANGE AND DEEP DARK BLUE, EARLY NIGHT, OUTER BANKS coastal harbour atmosphere. A salt-weathered North Carolina barrier-island working boatyard at blue hour just after sunset. Low flat horizon, distant dunes and marsh, crooked timber wharves, shingled bait sheds and corrugated boat-repair hangars, battered shrimp boats, small harbour lights. Chunky, expressive, hand-painted 3D platformer art in the spirit of Crash Bandicoot 4, with exaggerated bevels, broad confident material shapes and playful industrial silhouettes.\nThe major color masses are indigo/navy sky and ocean, dark blue painted steel and silvery weathered timber. Strong saturated ORANGE marine rope nets, burnt-orange machinery and small warm orange dock lamps provide the accents. Dark cobalt reflections and thin orange light trails on the water. Twilight is readable, atmospheric and cool, never a black silhouette. Replace safety-yellow housings/rails with burnt orange or dark navy. No bright yellow palette, no yellow hazard stripes, no turquoise toy-factory look, no daylight or sunny golden wash.\nEvery tan trampoline bed becomes an OPEN DIAMOND MESH ORANGE MARINE ROPE NET with dark blue steel housing and orange corner/tension fittings. You can see ocean through the mesh. Keep nets separated by open air and preserve jumping mouths and landing spaces. Never connect a required gap or block a landing with scenery or railings.\nALL space beneath the playable route is DARK NAVY OCEAN, with broad stylized swells and restrained pale foam by the piles. Replace nonplayable grey block/cliff masses with waterfront architecture on timber piles and sparse boatyard machinery beyond the route. Scatter rope coils, black rubber fenders, orange buoys, lobster pots and cargo groups around nonplayable edges. Keep the playable route uncluttered and bright enough to read. Red hazard clusters become dark iron teeth with orange-red tips at the same positions.\nWide 16:9 polished game-environment concept, no characters, no text, no HUD, no watermark, no logos. No pirate village, mountains or tropical palm trees.\nFOCAL AREA: Helical turbine. DISTINCTIVE MECHANISM / ARCHITECTURE: Helical turbine maintenance gantry with spinning radial decks.\nMore exposed outer-harbour structures, indigo storm clouds and scattered orange work lights; still legible early night. HELICAL TURBINE: make a huge navy tidal-turbine shaft and orange helical machinery casing beneath/alongside the ascending sequence of separated nets. Each square net stays at its screenshot position, rotating arms connect only underneath. Show the winding vertical industrial silhouette clearly, not a straight flat pier. Sparse exposed coast, no dense boathouse walls.",
+      "status": "generated",
+      "concept": "docs/carlisle-relay/shipyard-polish/concepts/14-helical-turbine.png",
+      "previousPrompt": "Use case: stylized-concept. Asset type: polished game environment concept paintover for Carlisle Coast.\nIMAGE 1 is the greybox target: preserve its playable floor outlines, elevations, gaps, sloping stretches, machinery silhouettes and relative route. IMAGE 2 is ONLY the approved material/style reference; never copy its layout.\nRender a commercial shipyard in the exuberant chunky, hand-painted 3D visual style of Crash Bandicoot 4. The route has linked gigantic trampoline bounces and distinct moving/spinning platforms. Convert tan bounce surfaces into visibly open, taut ORANGE MARINE ROPE NETS, stretched in heavy teal steel rectangular housings with yellow rounded corner guards and tension lugs, with pontoons or work supports below. Nets are open diamond mesh, not orange cloth. Platform floors stay uncluttered and readable. Keep gaps and jumping mouths open. Never add rails across required jumps or fill voids with floors.\nAll area below the playable route is DARK NAVY OCEAN, stylized broad waves, pale foam near supports. Replace broad nonplayable grey cliff walls/block masses with dock facades, steel support piles, ships and industrial architecture beyond the usable route. No rocky canyon or tropical pirate village. Visual language: teal steel, yellow machinery, rust-red containers, orange rope nets, timber cargo quays, giant rubber fenders, chunky bolts, painted bevels and restrained weathering. Dangerous red spike clusters become clearly dangerous red-tipped industrial teeth in their authored positions. Keep existing cargo stacks and required grind lines recognizable. Add supporting port structures behind/below the route, never over landing clearances. Wide 16:9, finished screenshot-like concept art, no characters, text, HUD, logos or watermark.\nFOCAL AREA: Helical turbine. UNIQUE ARCHITECTURAL IDEA: Helical turbine maintenance gantry with spinning radial decks.\nLIGHTING: Storm-front violet-grey sky, dramatic cool lighting, wet steel and bright amber work lamps; the orange nets remain easily readable above the dark sea.\nMake the named area's distinctive mechanism the visual hero while respecting the screenshot geometry.",
+      "generatedSource": "/Users/kiki/.codex/generated_images/01a18531-75e0-7203-b8a1-2129b7839f79/exec-90b72047-019b-42bd-8f9c-0d21b5c50c8b.png"
+    },
+    {
+      "id": "15-pendulum-pier",
+      "name": "Pendulum pier",
+      "act": 3,
+      "range": [
+        3130,
+        3350
+      ],
+      "motif": "Pendulum crane pier: suspended work platforms over churning ocean",
+      "center": [
+        -39.12213835680258,
+        49.42981258027344,
+        -3118.968623947207
+      ],
+      "camera": [
+        166.57789574602737,
+        199.20929889455476,
+        -3037.798806922194
+      ],
+      "placement": [
+        9.130845858064315,
+        57.530843611163235,
+        -3029.8883735335626
+      ],
+      "level": "carlisle-coast",
+      "screenshot": "docs/carlisle-relay/shipyard-polish/screenshots/15-pendulum-pier.png",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "components": 1184,
+      "prompt": "Use case: stylized-concept. Asset type: screenshot-based game environment paintover for Carlisle Coast.\nIMAGE 1 is the target greybox layout. Retain its playable platform outlines, gaps, different heights, slopes, moving/spinning deck shapes, trampoline placements and important grind cables. IMAGE 2 is the shared ART-DIRECTION reference only, not the layout.\nNew art direction requested by the user: ORANGE AND DEEP DARK BLUE, EARLY NIGHT, OUTER BANKS coastal harbour atmosphere. A salt-weathered North Carolina barrier-island working boatyard at blue hour just after sunset. Low flat horizon, distant dunes and marsh, crooked timber wharves, shingled bait sheds and corrugated boat-repair hangars, battered shrimp boats, small harbour lights. Chunky, expressive, hand-painted 3D platformer art in the spirit of Crash Bandicoot 4, with exaggerated bevels, broad confident material shapes and playful industrial silhouettes.\nThe major color masses are indigo/navy sky and ocean, dark blue painted steel and silvery weathered timber. Strong saturated ORANGE marine rope nets, burnt-orange machinery and small warm orange dock lamps provide the accents. Dark cobalt reflections and thin orange light trails on the water. Twilight is readable, atmospheric and cool, never a black silhouette. Replace safety-yellow housings/rails with burnt orange or dark navy. No bright yellow palette, no yellow hazard stripes, no turquoise toy-factory look, no daylight or sunny golden wash.\nEvery tan trampoline bed becomes an OPEN DIAMOND MESH ORANGE MARINE ROPE NET with dark blue steel housing and orange corner/tension fittings. You can see ocean through the mesh. Keep nets separated by open air and preserve jumping mouths and landing spaces. Never connect a required gap or block a landing with scenery or railings.\nALL space beneath the playable route is DARK NAVY OCEAN, with broad stylized swells and restrained pale foam by the piles. Replace nonplayable grey block/cliff masses with waterfront architecture on timber piles and sparse boatyard machinery beyond the route. Scatter rope coils, black rubber fenders, orange buoys, lobster pots and cargo groups around nonplayable edges. Keep the playable route uncluttered and bright enough to read. Red hazard clusters become dark iron teeth with orange-red tips at the same positions.\nWide 16:9 polished game-environment concept, no characters, no text, no HUD, no watermark, no logos. No pirate village, mountains or tropical palm trees.\nFOCAL AREA: Pendulum pier. DISTINCTIVE MECHANISM / ARCHITECTURE: Pendulum crane pier: suspended work platforms over churning ocean.\nMore exposed outer-harbour structures, indigo storm clouds and scattered orange work lights; still legible early night. PENDULUM: the VERY LARGE SINGLE RECTANGULAR PLATFORM at the centre foreground is a flat moving workdeck hung from four heavy cables attached to an offset orange A-frame shipyard crane. Preserve its broad rectangle and tilted orientation across open water. Rigging passes along outside edges, never across the top landing space. A taut thin grind cable leads from the exit spring toward the upper-right landing as shown. Use sparse navy crane pylons and open ocean, not a continuous boathouse corridor.",
+      "status": "generated",
+      "concept": "docs/carlisle-relay/shipyard-polish/concepts/15-pendulum-pier.png",
+      "previousPrompt": "Use case: stylized-concept. Asset type: polished game environment concept paintover for Carlisle Coast.\nIMAGE 1 is the greybox target: preserve its playable floor outlines, elevations, gaps, sloping stretches, machinery silhouettes and relative route. IMAGE 2 is ONLY the approved material/style reference; never copy its layout.\nRender a commercial shipyard in the exuberant chunky, hand-painted 3D visual style of Crash Bandicoot 4. The route has linked gigantic trampoline bounces and distinct moving/spinning platforms. Convert tan bounce surfaces into visibly open, taut ORANGE MARINE ROPE NETS, stretched in heavy teal steel rectangular housings with yellow rounded corner guards and tension lugs, with pontoons or work supports below. Nets are open diamond mesh, not orange cloth. Platform floors stay uncluttered and readable. Keep gaps and jumping mouths open. Never add rails across required jumps or fill voids with floors.\nAll area below the playable route is DARK NAVY OCEAN, stylized broad waves, pale foam near supports. Replace broad nonplayable grey cliff walls/block masses with dock facades, steel support piles, ships and industrial architecture beyond the usable route. No rocky canyon or tropical pirate village. Visual language: teal steel, yellow machinery, rust-red containers, orange rope nets, timber cargo quays, giant rubber fenders, chunky bolts, painted bevels and restrained weathering. Dangerous red spike clusters become clearly dangerous red-tipped industrial teeth in their authored positions. Keep existing cargo stacks and required grind lines recognizable. Add supporting port structures behind/below the route, never over landing clearances. Wide 16:9, finished screenshot-like concept art, no characters, text, HUD, logos or watermark.\nFOCAL AREA: Pendulum pier. UNIQUE ARCHITECTURAL IDEA: Pendulum crane pier: suspended work platforms over churning ocean.\nLIGHTING: Storm-front violet-grey sky, dramatic cool lighting, wet steel and bright amber work lamps; the orange nets remain easily readable above the dark sea.\nMake the named area's distinctive mechanism the visual hero while respecting the screenshot geometry.",
+      "generatedSource": "/Users/kiki/.codex/generated_images/01a18531-75e0-7203-b8a1-2129b7839f79/exec-461c9db8-1f47-4852-b5cc-130ebfdf69d2.png"
+    },
+    {
+      "id": "16-rigging-slingshot",
+      "name": "Rigging slingshot",
+      "act": 3,
+      "range": [
+        3350,
+        3570
+      ],
+      "motif": "Rigging slingshot: net launch into mandatory high steel cable grinds",
+      "center": [
+        -110.97943676231571,
+        106.51555754326547,
+        -3327.493545804301
+      ],
+      "camera": [
+        78.62230356900278,
+        276.09252155048864,
+        -3163.9887962520806
+      ],
+      "placement": [
+        -89.21493385151419,
+        36.069448419863605,
+        -3220.9824714224696
+      ],
+      "level": "carlisle-coast",
+      "screenshot": "docs/carlisle-relay/shipyard-polish/screenshots/16-rigging-slingshot.png",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "components": 1184,
+      "prompt": "Use case: stylized-concept. Asset type: screenshot-based game environment paintover for Carlisle Coast.\nIMAGE 1 is the target greybox layout. Retain its playable platform outlines, gaps, different heights, slopes, moving/spinning deck shapes, trampoline placements and important grind cables.\nNew art direction requested by the user: ORANGE AND DEEP DARK BLUE, EARLY NIGHT, OUTER BANKS coastal harbour atmosphere. A salt-weathered North Carolina barrier-island working boatyard at blue hour just after sunset. Low flat horizon, distant dunes and marsh, crooked timber wharves, shingled bait sheds and corrugated boat-repair hangars, battered shrimp boats, small harbour lights. Chunky, expressive, hand-painted 3D platformer art in the spirit of Crash Bandicoot 4, with exaggerated bevels, broad confident material shapes and playful industrial silhouettes.\nThe major color masses are indigo/navy sky and ocean, dark blue painted steel and silvery weathered timber. Strong saturated ORANGE marine rope nets, burnt-orange machinery and small warm orange dock lamps provide the accents. Dark cobalt reflections and thin orange light trails on the water. Twilight is readable, atmospheric and cool, never a black silhouette. Replace safety-yellow housings/rails with burnt orange or dark navy. No bright yellow palette, no yellow hazard stripes, no turquoise toy-factory look, no daylight or sunny golden wash.\nEvery tan trampoline bed becomes an OPEN DIAMOND MESH ORANGE MARINE ROPE NET with dark blue steel housing and orange corner/tension fittings. You can see ocean through the mesh. Keep nets separated by open air and preserve jumping mouths and landing spaces. Never connect a required gap or block a landing with scenery or railings.\nALL space beneath the playable route is DARK NAVY OCEAN, with broad stylized swells and restrained pale foam by the piles. Replace nonplayable grey block/cliff masses with waterfront architecture on timber piles and sparse boatyard machinery beyond the route. Scatter rope coils, black rubber fenders, orange buoys, lobster pots and cargo groups around nonplayable edges. Keep the playable route uncluttered and bright enough to read. Red hazard clusters become dark iron teeth with orange-red tips at the same positions.\nWide 16:9 polished game-environment concept, no characters, no text, no HUD, no watermark, no logos. No pirate village, mountains or tropical palm trees.\nFOCAL AREA: Rigging slingshot. DISTINCTIVE MECHANISM / ARCHITECTURE: Rigging slingshot: net launch into mandatory high steel cable grinds.\nMore exposed outer-harbour structures, indigo storm clouds and scattered orange work lights; still legible early night.\nThe THIN CURVING GRIND CABLE over the huge foreground gap is the MAIN PLAYABLE ROUTE, linking a near orange spring to a far separated spring and catch deck. It must be clearly visible, with orange clamps and sparse support anchors on distant crane masts, not a floor/bridge. Exaggerate its clean readability against open dark sea. Retain the screenshot's very sparse platforms. Add tall paired rigging masts along the outer edges to imply a slingshot launch. Do not fill the big water gap or invent a long chain of extra trampolines.",
+      "status": "generated",
+      "concept": "docs/carlisle-relay/shipyard-polish/concepts/16-rigging-slingshot.png",
+      "previousPrompt": "Use case: stylized-concept. Asset type: polished game environment concept paintover for Carlisle Coast.\nIMAGE 1 is the greybox target: preserve its playable floor outlines, elevations, gaps, sloping stretches, machinery silhouettes and relative route. IMAGE 2 is ONLY the approved material/style reference; never copy its layout.\nRender a commercial shipyard in the exuberant chunky, hand-painted 3D visual style of Crash Bandicoot 4. The route has linked gigantic trampoline bounces and distinct moving/spinning platforms. Convert tan bounce surfaces into visibly open, taut ORANGE MARINE ROPE NETS, stretched in heavy teal steel rectangular housings with yellow rounded corner guards and tension lugs, with pontoons or work supports below. Nets are open diamond mesh, not orange cloth. Platform floors stay uncluttered and readable. Keep gaps and jumping mouths open. Never add rails across required jumps or fill voids with floors.\nAll area below the playable route is DARK NAVY OCEAN, stylized broad waves, pale foam near supports. Replace broad nonplayable grey cliff walls/block masses with dock facades, steel support piles, ships and industrial architecture beyond the usable route. No rocky canyon or tropical pirate village. Visual language: teal steel, yellow machinery, rust-red containers, orange rope nets, timber cargo quays, giant rubber fenders, chunky bolts, painted bevels and restrained weathering. Dangerous red spike clusters become clearly dangerous red-tipped industrial teeth in their authored positions. Keep existing cargo stacks and required grind lines recognizable. Add supporting port structures behind/below the route, never over landing clearances. Wide 16:9, finished screenshot-like concept art, no characters, text, HUD, logos or watermark.\nFOCAL AREA: Rigging slingshot. UNIQUE ARCHITECTURAL IDEA: Rigging slingshot: net launch into mandatory high steel cable grinds.\nLIGHTING: Storm-front violet-grey sky, dramatic cool lighting, wet steel and bright amber work lamps; the orange nets remain easily readable above the dark sea.\nMake the named area's distinctive mechanism the visual hero while respecting the screenshot geometry.",
+      "generatedSource": "/Users/kiki/.codex/generated_images/01a18531-75e0-7203-b8a1-2129b7839f79/exec-ec17e5d9-d578-4e4e-a82b-2c9838f89d1a.png"
+    },
+    {
+      "id": "17-broken-crown",
+      "name": "Broken crown",
+      "act": 3,
+      "range": [
+        3570,
+        3790
+      ],
+      "motif": "Broken crane crown: fragmented elevated decks and crossed grind cables",
+      "center": [
+        -87.76538021171532,
+        82.56250000000021,
+        -3554.0073645413995
+      ],
+      "camera": [
+        41.48441203053765,
+        265.3932990241248,
+        -3317.0298347262174
+      ],
+      "placement": [
+        -113.19017313903039,
+        24.12,
+        -3441.2107252107216
+      ],
+      "level": "carlisle-coast",
+      "screenshot": "docs/carlisle-relay/shipyard-polish/screenshots/17-broken-crown.png",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "components": 1184,
+      "prompt": "Edit the provided Broken Crown concept. REMOVE the enormous solid diagonal PIPE behind/beneath the cable route, completely, so uninterrupted dark navy OCEAN is visible through that entire long space. Keep the little near launch platform, the middle floating orange rope net, the small catch deck and distant net/landing at their current positions. Their only cross-gap connection is the thin suspended orange steel GRIND CABLE, clearly silhouetted against water, with sparse independent pile/crane anchors. Do not replace the pipe with any bridge, wall, tube, walkway, hill or continuous supporting surface. Preserve the two broken tall crane crown towers on the flanks, the distant Outer Banks boathouses, the navy early-night sky, orange dock lights and existing camera. Retain stylized chunky hand-painted 3D platformer materials. No text, HUD or characters.",
+      "status": "generated",
+      "concept": "docs/carlisle-relay/shipyard-polish/concepts/17-broken-crown.png",
+      "previousPrompt": "Use case: stylized-concept. Asset type: polished game environment concept paintover for Carlisle Coast.\nIMAGE 1 is the greybox target: preserve its playable floor outlines, elevations, gaps, sloping stretches, machinery silhouettes and relative route. IMAGE 2 is ONLY the approved material/style reference; never copy its layout.\nRender a commercial shipyard in the exuberant chunky, hand-painted 3D visual style of Crash Bandicoot 4. The route has linked gigantic trampoline bounces and distinct moving/spinning platforms. Convert tan bounce surfaces into visibly open, taut ORANGE MARINE ROPE NETS, stretched in heavy teal steel rectangular housings with yellow rounded corner guards and tension lugs, with pontoons or work supports below. Nets are open diamond mesh, not orange cloth. Platform floors stay uncluttered and readable. Keep gaps and jumping mouths open. Never add rails across required jumps or fill voids with floors.\nAll area below the playable route is DARK NAVY OCEAN, stylized broad waves, pale foam near supports. Replace broad nonplayable grey cliff walls/block masses with dock facades, steel support piles, ships and industrial architecture beyond the usable route. No rocky canyon or tropical pirate village. Visual language: teal steel, yellow machinery, rust-red containers, orange rope nets, timber cargo quays, giant rubber fenders, chunky bolts, painted bevels and restrained weathering. Dangerous red spike clusters become clearly dangerous red-tipped industrial teeth in their authored positions. Keep existing cargo stacks and required grind lines recognizable. Add supporting port structures behind/below the route, never over landing clearances. Wide 16:9, finished screenshot-like concept art, no characters, text, HUD, logos or watermark.\nFOCAL AREA: Broken crown. UNIQUE ARCHITECTURAL IDEA: Broken crane crown: fragmented elevated decks and crossed grind cables.\nLIGHTING: Storm-front violet-grey sky, dramatic cool lighting, wet steel and bright amber work lamps; the orange nets remain easily readable above the dark sea.\nMake the named area's distinctive mechanism the visual hero while respecting the screenshot geometry.",
+      "generatedSource": "/Users/kiki/.codex/generated_images/01a18531-75e0-7203-b8a1-2129b7839f79/exec-dfcc3955-1b44-4f63-9bdb-8707d90c43b6.png"
+    },
+    {
+      "id": "18-homecoming-cable",
+      "name": "Homecoming cable",
+      "act": 3,
+      "range": [
+        3790,
+        4000
+      ],
+      "motif": "Homeward tow cable dive into the commercial harbour finish quay",
+      "center": [
+        -57.30891956460255,
+        41.315625000000075,
+        -3756.3355003147144
+      ],
+      "camera": [
+        88.83456293265203,
+        206.62402765390036,
+        -3560.8649122856727
+      ],
+      "placement": [
+        -64.54667466456941,
+        24.12,
+        -3660.792297938554
+      ],
+      "level": "carlisle-coast",
+      "screenshot": "docs/carlisle-relay/shipyard-polish/screenshots/18-homecoming-cable.png",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "components": 1184,
+      "prompt": "Use case: stylized-concept. Asset type: screenshot-based game environment paintover for Carlisle Coast.\nIMAGE 1 is the target greybox layout. Retain its playable platform outlines, gaps, different heights, slopes, moving/spinning deck shapes, trampoline placements and important grind cables.\nNew art direction requested by the user: ORANGE AND DEEP DARK BLUE, EARLY NIGHT, OUTER BANKS coastal harbour atmosphere. A salt-weathered North Carolina barrier-island working boatyard at blue hour just after sunset. Low flat horizon, distant dunes and marsh, crooked timber wharves, shingled bait sheds and corrugated boat-repair hangars, battered shrimp boats, small harbour lights. Chunky, expressive, hand-painted 3D platformer art in the spirit of Crash Bandicoot 4, with exaggerated bevels, broad confident material shapes and playful industrial silhouettes.\nThe major color masses are indigo/navy sky and ocean, dark blue painted steel and silvery weathered timber. Strong saturated ORANGE marine rope nets, burnt-orange machinery and small warm orange dock lamps provide the accents. Dark cobalt reflections and thin orange light trails on the water. Twilight is readable, atmospheric and cool, never a black silhouette. Replace safety-yellow housings/rails with burnt orange or dark navy. No bright yellow palette, no yellow hazard stripes, no turquoise toy-factory look, no daylight or sunny golden wash.\nEvery tan trampoline bed becomes an OPEN DIAMOND MESH ORANGE MARINE ROPE NET with dark blue steel housing and orange corner/tension fittings. You can see ocean through the mesh. Keep nets separated by open air and preserve jumping mouths and landing spaces. Never connect a required gap or block a landing with scenery or railings.\nALL space beneath the playable route is DARK NAVY OCEAN, with broad stylized swells and restrained pale foam by the piles. Replace nonplayable grey block/cliff masses with waterfront architecture on timber piles and sparse boatyard machinery beyond the route. Scatter rope coils, black rubber fenders, orange buoys, lobster pots and cargo groups around nonplayable edges. Keep the playable route uncluttered and bright enough to read. Red hazard clusters become dark iron teeth with orange-red tips at the same positions.\nWide 16:9 polished game-environment concept, no characters, no text, no HUD, no watermark, no logos. No pirate village, mountains or tropical palm trees.\nFOCAL AREA: Homecoming cable. DISTINCTIVE MECHANISM / ARCHITECTURE: Homeward tow cable dive into the commercial harbour finish quay.\nMore exposed outer-harbour structures, indigo storm clouds and scattered orange work lights; still legible early night.\nFINISH / HOMECOMING: preserve the near small crate-grind bridge connecting the two small catch plates, the tan launch pad as one orange rope net, a long thin high grind cable across the sea, and the far large T-shaped finish quay. Make the cable brightly readable with orange fittings, suspended over open ocean. The finish quay has a low navy harbourmaster boathouse set back behind it, two orange dock lamps and an uncluttered bright finish marker. Warm welcoming dock lights against indigo early night. Only the few platforms seen in the screenshot; NO extra trampoline chain across the gap.",
+      "status": "generated",
+      "concept": "docs/carlisle-relay/shipyard-polish/concepts/18-homecoming-cable.png",
+      "previousPrompt": "Use case: stylized-concept. Asset type: polished game environment concept paintover for Carlisle Coast.\nIMAGE 1 is the greybox target: preserve its playable floor outlines, elevations, gaps, sloping stretches, machinery silhouettes and relative route. IMAGE 2 is ONLY the approved material/style reference; never copy its layout.\nRender a commercial shipyard in the exuberant chunky, hand-painted 3D visual style of Crash Bandicoot 4. The route has linked gigantic trampoline bounces and distinct moving/spinning platforms. Convert tan bounce surfaces into visibly open, taut ORANGE MARINE ROPE NETS, stretched in heavy teal steel rectangular housings with yellow rounded corner guards and tension lugs, with pontoons or work supports below. Nets are open diamond mesh, not orange cloth. Platform floors stay uncluttered and readable. Keep gaps and jumping mouths open. Never add rails across required jumps or fill voids with floors.\nAll area below the playable route is DARK NAVY OCEAN, stylized broad waves, pale foam near supports. Replace broad nonplayable grey cliff walls/block masses with dock facades, steel support piles, ships and industrial architecture beyond the usable route. No rocky canyon or tropical pirate village. Visual language: teal steel, yellow machinery, rust-red containers, orange rope nets, timber cargo quays, giant rubber fenders, chunky bolts, painted bevels and restrained weathering. Dangerous red spike clusters become clearly dangerous red-tipped industrial teeth in their authored positions. Keep existing cargo stacks and required grind lines recognizable. Add supporting port structures behind/below the route, never over landing clearances. Wide 16:9, finished screenshot-like concept art, no characters, text, HUD, logos or watermark.\nFOCAL AREA: Homecoming cable. UNIQUE ARCHITECTURAL IDEA: Homeward tow cable dive into the commercial harbour finish quay.\nLIGHTING: Storm-front violet-grey sky, dramatic cool lighting, wet steel and bright amber work lamps; the orange nets remain easily readable above the dark sea.\nMake the named area's distinctive mechanism the visual hero while respecting the screenshot geometry.",
+      "generatedSource": "/Users/kiki/.codex/generated_images/01a18531-75e0-7203-b8a1-2129b7839f79/exec-0219b275-8de3-4cac-88fd-fb15e0de9c9a.png"
+    },
+    {
+      "id": "19-springtide-skippers",
+      "name": "Springtide Skippers",
+      "act": 2,
+      "motif": "Harbour bonus: small orange marine net launchers between moving fishing skiffs, flat cargo lighter decks and safe cargo quays",
+      "center": [
+        63,
+        3,
+        0
+      ],
+      "camera": [
+        35,
+        81,
+        110
+      ],
+      "placement": [
+        -10,
+        1.32,
+        0
+      ],
+      "level": "bonus-carlisle-coast",
+      "screenshot": "docs/carlisle-relay/shipyard-polish/screenshots/19-springtide-skippers.png",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "components": 88,
+      "prompt": "Use case: stylized-concept. Asset type: screenshot-based game environment paintover for Carlisle Coast.\nIMAGE 1 is the target greybox layout. Retain its playable platform outlines, gaps, different heights, slopes, moving/spinning deck shapes, trampoline placements and important grind cables.\nNew art direction requested by the user: ORANGE AND DEEP DARK BLUE, EARLY NIGHT, OUTER BANKS coastal harbour atmosphere. A salt-weathered North Carolina barrier-island working boatyard at blue hour just after sunset. Low flat horizon, distant dunes and marsh, crooked timber wharves, shingled bait sheds and corrugated boat-repair hangars, battered shrimp boats, small harbour lights. Chunky, expressive, hand-painted 3D platformer art in the spirit of Crash Bandicoot 4, with exaggerated bevels, broad confident material shapes and playful industrial silhouettes.\nThe major color masses are indigo/navy sky and ocean, dark blue painted steel and silvery weathered timber. Strong saturated ORANGE marine rope nets, burnt-orange machinery and small warm orange dock lamps provide the accents. Dark cobalt reflections and thin orange light trails on the water. Twilight is readable, atmospheric and cool, never a black silhouette. Replace safety-yellow housings/rails with burnt orange or dark navy. No bright yellow palette, no yellow hazard stripes, no turquoise toy-factory look, no daylight or sunny golden wash.\nEvery tan trampoline bed becomes an OPEN DIAMOND MESH ORANGE MARINE ROPE NET with dark blue steel housing and orange corner/tension fittings. You can see ocean through the mesh. Keep nets separated by open air and preserve jumping mouths and landing spaces. Never connect a required gap or block a landing with scenery or railings.\nALL space beneath the playable route is DARK NAVY OCEAN, with broad stylized swells and restrained pale foam by the piles. Replace nonplayable grey block/cliff masses with waterfront architecture on timber piles and sparse boatyard machinery beyond the route. Scatter rope coils, black rubber fenders, orange buoys, lobster pots and cargo groups around nonplayable edges. Keep the playable route uncluttered and bright enough to read. Red hazard clusters become dark iron teeth with orange-red tips at the same positions.\nWide 16:9 polished game-environment concept, no characters, no text, no HUD, no watermark, no logos. No pirate village, mountains or tropical palm trees.\nFOCAL AREA: Springtide Skippers. DISTINCTIVE MECHANISM / ARCHITECTURE: Harbour bonus: small orange marine net launchers between moving fishing skiffs, flat cargo lighter decks and safe cargo quays.\nMore enclosed machinery yards and boathouses, saturated orange equipment against navy shadows; still early night.\nTHIS IS THE SMALL-TRAMPOLINE BOAT BONUS, NOT THE MAIN GIANT-BOUNCE COURSE. Strictly preserve the LEFT-TO-RIGHT low-altitude arrangement. Tan squares at the edges of fixed timber jetties become SMALL orange rope-net trampolines. The pale low boat-shaped slabs BETWEEN the jetties become MOVING NAVY FLAT-DECK WORK SKIFFS with orange gunwales and black rubber fenders. Keep boat decks flat, broad, clear and landable: no cabins or tall rigs on playable boats. Preserve open water between islands. The low grey strips behind are distant mooring wharves with bait sheds set back, not a new path linking the jetties. Water is dark calm indigo with small wakes behind moving boats. No tall piles, no huge cranes or giant main-route trampoline chain. Keep cargo groups on the fixed islands; orange buoy trail gives rhythm. Outer Banks sheltered inlet, early night, soft orange lights.",
+      "status": "generated",
+      "concept": "docs/carlisle-relay/shipyard-polish/concepts/19-springtide-skippers.png",
+      "previousPrompt": "Use case: stylized-concept. Asset type: polished game environment concept paintover for Carlisle Coast.\nIMAGE 1 is the greybox target: preserve its playable floor outlines, elevations, gaps, sloping stretches, machinery silhouettes and relative route. IMAGE 2 is ONLY the approved material/style reference; never copy its layout.\nRender a commercial shipyard in the exuberant chunky, hand-painted 3D visual style of Crash Bandicoot 4. The route has linked gigantic trampoline bounces and distinct moving/spinning platforms. Convert tan bounce surfaces into visibly open, taut ORANGE MARINE ROPE NETS, stretched in heavy teal steel rectangular housings with yellow rounded corner guards and tension lugs, with pontoons or work supports below. Nets are open diamond mesh, not orange cloth. Platform floors stay uncluttered and readable. Keep gaps and jumping mouths open. Never add rails across required jumps or fill voids with floors.\nAll area below the playable route is DARK NAVY OCEAN, stylized broad waves, pale foam near supports. Replace broad nonplayable grey cliff walls/block masses with dock facades, steel support piles, ships and industrial architecture beyond the usable route. No rocky canyon or tropical pirate village. Visual language: teal steel, yellow machinery, rust-red containers, orange rope nets, timber cargo quays, giant rubber fenders, chunky bolts, painted bevels and restrained weathering. Dangerous red spike clusters become clearly dangerous red-tipped industrial teeth in their authored positions. Keep existing cargo stacks and required grind lines recognizable. Add supporting port structures behind/below the route, never over landing clearances. Wide 16:9, finished screenshot-like concept art, no characters, text, HUD, logos or watermark.\nFOCAL AREA: Springtide Skippers. UNIQUE ARCHITECTURAL IDEA: Harbour bonus: small orange marine net launchers between moving fishing skiffs, flat cargo lighter decks and safe cargo quays.\nLIGHTING: Late afternoon amber working lights; larger crowded machinery silhouettes and more ocean glimpsed between layers.\nMake the named area's distinctive mechanism the visual hero while respecting the screenshot geometry.",
+      "generatedSource": "/Users/kiki/.codex/generated_images/01a18531-75e0-7203-b8a1-2129b7839f79/exec-6b4b4a24-7e88-4840-9ead-611d4721dc65.png"
+    },
+    {
+      "id": "20-spring-skiff-close",
+      "name": "Spring skiff and homeward ferry",
+      "act": 2,
+      "motif": "Close bonus view: a small orange net trampoline built into a moored skiff, followed by a moving ferry work deck, repeated white rope bumpers and buoy floats",
+      "center": [
+        96,
+        2,
+        0
+      ],
+      "camera": [
+        73,
+        32,
+        44
+      ],
+      "placement": [
+        91.5,
+        1.32,
+        0
+      ],
+      "level": "bonus-carlisle-coast",
+      "screenshot": "docs/carlisle-relay/shipyard-polish/screenshots/20-spring-skiff-close.png",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "components": 88,
+      "prompt": "Use case: stylized-concept. Asset type: screenshot-based game environment paintover for Carlisle Coast.\nIMAGE 1 is the target greybox layout. Retain its playable platform outlines, gaps, different heights, slopes, moving/spinning deck shapes, trampoline placements and important grind cables.\nNew art direction requested by the user: ORANGE AND DEEP DARK BLUE, EARLY NIGHT, OUTER BANKS coastal harbour atmosphere. A salt-weathered North Carolina barrier-island working boatyard at blue hour just after sunset. Low flat horizon, distant dunes and marsh, crooked timber wharves, shingled bait sheds and corrugated boat-repair hangars, battered shrimp boats, small harbour lights. Chunky, expressive, hand-painted 3D platformer art in the spirit of Crash Bandicoot 4, with exaggerated bevels, broad confident material shapes and playful industrial silhouettes.\nThe major color masses are indigo/navy sky and ocean, dark blue painted steel and silvery weathered timber. Strong saturated ORANGE marine rope nets, burnt-orange machinery and small warm orange dock lamps provide the accents. Dark cobalt reflections and thin orange light trails on the water. Twilight is readable, atmospheric and cool, never a black silhouette. Replace safety-yellow housings/rails with burnt orange or dark navy. No bright yellow palette, no yellow hazard stripes, no turquoise toy-factory look, no daylight or sunny golden wash.\nEvery tan trampoline bed becomes an OPEN DIAMOND MESH ORANGE MARINE ROPE NET with dark blue steel housing and orange corner/tension fittings. You can see ocean through the mesh. Keep nets separated by open air and preserve jumping mouths and landing spaces. Never connect a required gap or block a landing with scenery or railings.\nALL space beneath the playable route is DARK NAVY OCEAN, with broad stylized swells and restrained pale foam by the piles. Replace nonplayable grey block/cliff masses with waterfront architecture on timber piles and sparse boatyard machinery beyond the route. Scatter rope coils, black rubber fenders, orange buoys, lobster pots and cargo groups around nonplayable edges. Keep the playable route uncluttered and bright enough to read. Red hazard clusters become dark iron teeth with orange-red tips at the same positions.\nWide 16:9 polished game-environment concept, no characters, no text, no HUD, no watermark, no logos. No pirate village, mountains or tropical palm trees.\nFOCAL AREA: Spring skiff and homeward ferry. DISTINCTIVE MECHANISM / ARCHITECTURE: Close bonus view: a small orange net trampoline built into a moored skiff, followed by a moving ferry work deck, repeated white rope bumpers and buoy floats.\nMore enclosed machinery yards and boathouses, saturated orange equipment against navy shadows; still early night.\nTHIS IS THE SMALL-TRAMPOLINE BOAT BONUS, NOT THE MAIN GIANT-BOUNCE COURSE. Strictly preserve the LEFT-TO-RIGHT low-altitude arrangement. Tan squares at the edges of fixed timber jetties become SMALL orange rope-net trampolines. The pale low boat-shaped slabs BETWEEN the jetties become MOVING NAVY FLAT-DECK WORK SKIFFS with orange gunwales and black rubber fenders. Keep boat decks flat, broad, clear and landable: no cabins or tall rigs on playable boats. Preserve open water between islands. The low grey strips behind are distant mooring wharves with bait sheds set back, not a new path linking the jetties. Water is dark calm indigo with small wakes behind moving boats. No tall piles, no huge cranes or giant main-route trampoline chain. Keep cargo groups on the fixed islands; orange buoy trail gives rhythm. Outer Banks sheltered inlet, early night, soft orange lights.",
+      "status": "generated",
+      "concept": "docs/carlisle-relay/shipyard-polish/concepts/20-spring-skiff-close.png",
+      "previousPrompt": "Use case: stylized-concept. Asset type: polished game environment concept paintover for Carlisle Coast.\nIMAGE 1 is the greybox target: preserve its playable floor outlines, elevations, gaps, sloping stretches, machinery silhouettes and relative route. IMAGE 2 is ONLY the approved material/style reference; never copy its layout.\nRender a commercial shipyard in the exuberant chunky, hand-painted 3D visual style of Crash Bandicoot 4. The route has linked gigantic trampoline bounces and distinct moving/spinning platforms. Convert tan bounce surfaces into visibly open, taut ORANGE MARINE ROPE NETS, stretched in heavy teal steel rectangular housings with yellow rounded corner guards and tension lugs, with pontoons or work supports below. Nets are open diamond mesh, not orange cloth. Platform floors stay uncluttered and readable. Keep gaps and jumping mouths open. Never add rails across required jumps or fill voids with floors.\nAll area below the playable route is DARK NAVY OCEAN, stylized broad waves, pale foam near supports. Replace broad nonplayable grey cliff walls/block masses with dock facades, steel support piles, ships and industrial architecture beyond the usable route. No rocky canyon or tropical pirate village. Visual language: teal steel, yellow machinery, rust-red containers, orange rope nets, timber cargo quays, giant rubber fenders, chunky bolts, painted bevels and restrained weathering. Dangerous red spike clusters become clearly dangerous red-tipped industrial teeth in their authored positions. Keep existing cargo stacks and required grind lines recognizable. Add supporting port structures behind/below the route, never over landing clearances. Wide 16:9, finished screenshot-like concept art, no characters, text, HUD, logos or watermark.\nFOCAL AREA: Spring skiff and homeward ferry. UNIQUE ARCHITECTURAL IDEA: Close bonus view: a small orange net trampoline built into a moored skiff, followed by a moving ferry work deck, repeated white rope bumpers and buoy floats.\nLIGHTING: Late afternoon amber working lights; larger crowded machinery silhouettes and more ocean glimpsed between layers.\nMake the named area's distinctive mechanism the visual hero while respecting the screenshot geometry.",
+      "generatedSource": "/Users/kiki/.codex/generated_images/01a18531-75e0-7203-b8a1-2129b7839f79/exec-e872a013-6c0b-4480-a0da-257aa7553363.png"
+    }
+  ]
+}

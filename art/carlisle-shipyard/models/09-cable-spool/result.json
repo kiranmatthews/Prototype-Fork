@@ -1,0 +1,39 @@
+{
+  "id": "09-cable-spool",
+  "args": [
+    "make",
+    "docs/carlisle-relay/shipyard-polish/props/09-cable-spool.png",
+    "--for",
+    "toy",
+    "--model",
+    "tripo-p1",
+    "-p",
+    "face_limit=1800",
+    "-p",
+    "texture=true",
+    "-p",
+    "pbr=true",
+    "-p",
+    "auto_size=true",
+    "--name",
+    "carlisle-cable-spool",
+    "-o",
+    "art/carlisle-shipyard",
+    "--json",
+    "--yes"
+  ],
+  "result": {
+    "task_id": "5ea47c49-6a13-4b37-8ffb-06fac8619804",
+    "type": "image_to_model",
+    "status": "success",
+    "credits_consumed": 50,
+    "output_dir": "art/carlisle-shipyard/tripo-out/carlisle-cable-spool-5ea47c49",
+    "files": [
+      "model.glb",
+      "rendered_image.webp",
+      "preview.png"
+    ],
+    "model_file": "art/carlisle-shipyard/tripo-out/carlisle-cable-spool-5ea47c49/model.glb",
+    "preview": "art/carlisle-shipyard/tripo-out/carlisle-cable-spool-5ea47c49/preview.png"
+  }
+}
