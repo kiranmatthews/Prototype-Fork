@@ -6371,3 +6371,38 @@ the stairs and trestle also pass normal 480p/CRT visual review. Loaded browser
 level data matches current source exactly. Final production stamp:
 `Codex/sol fork · build 10-29 08:30 UTC`. The earlier capacity wait is resolved;
 all test browsers are closed and the validated increment remains local.
+
+## 29 October 2026 NZDT — Springtide Skippers harbour bonus
+
+Added an optional harbour bonus reached from the dry quay after the Dredger
+discharge, around 2.01 km. Four small 3.4 × 4 m trampolines lead across three
+ordinary moving boat platforms and a smaller bouncing skiff. Boat hulls are
+single native movers with tapered ends, flat decks and darker keels at the
+waterline. Five safe cargo quays contain 21 crates in compact groups and stacks.
+Fruit arcs lead through the linked spring-skiff transfer and final ferry.
+
+The native bonus gate banks rewards and returns to the parent course. Water
+failure preserves parent lives and unlocks another attempt. Enabled and
+registered the bonus only for Carlisle Coast; the old unrelated Quayside Cargo
+bonus is unchanged. No shared player, animation, camera, tuning, toolkit or
+published pack changes were needed. Source parity confirms the existing 1,183
+main-course components and level metadata remain identical; the only added
+component is the entrance. Complete boat travel envelopes stay clear of every
+fixed deck and spring, with at least 1.5 m between boat and fixed surfaces.
+
+Prompt-to-first-real-browser-playable: approximately **17 minutes**
+(08:37:26–08:54:57 UTC). Three continuous native clears at boat phases 0/7/19
+collect all 21 crates and reach the finish without bails or deaths. The lite
+browser check uses a real jump onto the entrance, ordinary keyboard inputs for
+the full bonus, reward return and a separate water-failure return. Scoped bonus
+flow checks, required check:levels, production build/type checking and release
+size checks pass. The user's local-only publication hold remains in force.
+
+The final production full-render check also clears the entire bonus and tests
+success/failure return with no console errors. Loaded room data matches source.
+Reviewed the entrance, boat decks and linked rebound at native 1440×900, then
+the arrival and skiff approach at normal 480p/CRT. Final production stamp:
+`Codex/sol fork · build 10-29 08:59 UTC`; release output 997,262,270 bytes /
+1,849 files. All task browsers are closed. Evidence, exact source hashes and
+bounded main-course test scope are in
+[the harbour bonus validation record](carlisle-relay/harbour-bonus/validation.json).

@@ -236,3 +236,23 @@ crates in nine formations; spring launch values, all slippery spans, machinery,
 checkpoints, required cable grinds, camera and player physics are unchanged.
 
 Current cargo evidence and test boundaries are in `cargo/validation.json`.
+
+## Springtide Skippers bonus
+
+The question-mark platform on the dry quay after the Dredger discharge, around
+2.01 km into the course, leads to a short harbour bonus. Four small 3.4 × 4 m
+moored trampolines launch between cargo quays and moving boats. Three ordinary
+boat decks let the player ride toward the next quay and jump off; a smaller
+spring skiff rebounds directly into the next landing. Each complete tapered
+hull moves as one native platform, with a broad deck and a darker keel at the
+waterline. No moving boat intersects a quay or fixed spring at any phase.
+
+Five safe quays hold 21 crates in compact groups and stacks. Fruit marks the
+bounce arcs and transfers. The finish banks collected rewards and returns to
+the main quay. Falling into the water uses the normal bonus failure return,
+preserving the parent lives and leaving the entrance available for another try.
+Native bonus movement, jumping and camera behavior are used throughout.
+
+Local testing: [main course](http://127.0.0.1:5483/?playtest&level=carlisle-coast)
+or [start directly in the bonus](http://127.0.0.1:5483/?playtest&level=bonus-carlisle-coast).
+Validation and source parity are recorded in `harbour-bonus/validation.json`.

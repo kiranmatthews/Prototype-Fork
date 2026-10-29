@@ -1,0 +1,59 @@
+{
+  "parent": "9a2f35cbb8562a372437541f1ad1b2febd9eb4e6",
+  "mainComponentsBefore": 1183,
+  "mainComponentsAfter": 1184,
+  "allPriorComponentsIdentical": true,
+  "levelMetadataIdentical": true,
+  "added": {
+    "t": "bonusplatform",
+    "nm": "Springtide Skippers · harbour bonus",
+    "p": [
+      -48.417536498515624,
+      127.44658972508923,
+      -1944.076752306927
+    ],
+    "to": [
+      -42.66103420505608,
+      127.56658972508923,
+      -1945.0412726888287
+    ],
+    "grp": 10
+  },
+  "unchangedFileSha256": {
+    "src/levels/carlisle-cargo.ts": "b555d68cc3a2ca49b93ca9c430efb19498efad6a529d6ad4efa0af2b14aaff31",
+    "src/levels/carlisle-slippery-crossings.ts": "79d8088d40a75bdd5ecbc4747c142f76324f4772852a8523722f2951ffe0d358",
+    "src/levels/carlisle-deck-surfaces.ts": "d754cd0aae1310b2b980bc3884e750dbf1e0509dcc8235b8f9ac13a08a04a151",
+    "src/player.ts": "5ac27e6eb8f76408165d02d0899cb7e038381b391800e10190f9aa8bbacbe9ac",
+    "src/characterAnimationRuntime.ts": "8a535702154f3954476ca5f11b1d8797d91a100c54c126e21be97997c5aaba9c",
+    "src/main.ts": "7037126b270982604dec1c87c864da655f8477063c704fa14901c02cefd56c33",
+    "src/level.ts": "618c206a8ca454e62f447a713ee4a7394ebc9589ec1ffa01bc57bcff3e3e2bc5",
+    "src/tuning.ts": "1aca3b5fe4b5d026d8b9e36dcf30444081bec7d2acfd4181294f6aacaca61bd6",
+    "src/editor.ts": "66dfe7d01aaa3dfeae9cc384c046a291cc04568da5f94869be2f9412a27a3629",
+    "public/levels.json": "08b960136b3118b5e692dfbc49c7e54c11345707ac33db83d585f9af2b8e8a5d"
+  },
+  "boatSweptBounds": [
+    {
+      "name": "First skiff",
+      "min": 10.5,
+      "max": 25.5
+    },
+    {
+      "name": "Cargo lighter",
+      "min": 44.5,
+      "max": 59.5
+    },
+    {
+      "name": "Spring skiff",
+      "min": 77.6,
+      "max": 86.4
+    },
+    {
+      "name": "Homeward ferry",
+      "min": 104,
+      "max": 122
+    }
+  ],
+  "boatFixedSurfaceConflicts": 0,
+  "minBoatFixedSurfaceGap": 1.5,
+  "bonusComponents": 88
+}

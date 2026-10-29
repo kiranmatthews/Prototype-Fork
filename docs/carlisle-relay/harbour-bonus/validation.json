@@ -1,0 +1,104 @@
+{
+  "status": "validated-local-only",
+  "parent": "9a2f35cbb8562a372437541f1ad1b2febd9eb4e6",
+  "promptStartedUTC": "2026-10-29T08:37:26Z",
+  "firstPlayableMinutesApprox": 17,
+  "completedUTC": "2026-10-29T09:03:11.433185+00:00",
+  "localURL": "http://127.0.0.1:5483/?playtest&level=carlisle-coast",
+  "bonusURL": "http://127.0.0.1:5483/?playtest&level=bonus-carlisle-coast",
+  "productionPreview": "http://127.0.0.1:5484/?playtest&level=bonus-carlisle-coast",
+  "layout": {
+    "name": "Springtide Skippers",
+    "mainEntranceMetres": 2010,
+    "fixedTrampolines": 4,
+    "fixedPadSizeMetres": [
+      3.4,
+      4
+    ],
+    "bouncingSkiffs": 1,
+    "ordinaryMovingBoats": 3,
+    "cargoQuays": 5,
+    "crates": 21,
+    "components": 88,
+    "bonusTravelMetres": 149,
+    "springSpeed": 25.6
+  },
+  "checks": {
+    "nativeContinuousClears": 3,
+    "nativePhases": [
+      0,
+      7,
+      19
+    ],
+    "nativeSeconds": [
+      27.716666666666665,
+      25.55,
+      27.866666666666667
+    ],
+    "cratesPerClear": [
+      21,
+      21,
+      21
+    ],
+    "allFiveSpringTransfersPerClear": true,
+    "allThreeOrdinaryBoatSupportsPerClear": true,
+    "bonusFlow": "passed, BONUS_PARENTS=carlisle-coast",
+    "checkLevels": "passed",
+    "buildTypeCheck": "passed",
+    "releaseSize": "passed",
+    "diffCheck": "passed",
+    "checkAll": "not run"
+  },
+  "browser": {
+    "modes": [
+      "lite",
+      "full"
+    ],
+    "realKeyboardContinuousBonusClears": 2,
+    "realJumpEntrance": true,
+    "collectedAndBankedCrates": 21,
+    "successfulReturnLocked": true,
+    "waterFailureRestoresParentLivesAndDeaths": true,
+    "waterFailureAllowsRetry": true,
+    "consoleErrors": [],
+    "loadedBonusMatchesSource": true,
+    "maxNativeCanvas": [
+      1440,
+      900
+    ],
+    "normalPresentation": "480p with CRT, reviewed alongside native views",
+    "buildStamp": "Codex/sol fork \u00b7 build 10-29 08:59 UTC",
+    "taskBrowsersClosed": true
+  },
+  "parity": {
+    "all1183PriorMainComponentsIdentical": true,
+    "mainMetadataIdentical": true,
+    "newMainComponents": 1,
+    "sharedMovementAnimationCameraToolkitTuningAndPackUnchanged": true,
+    "boatFixedSurfaceConflicts": 0,
+    "minBoatFixedSurfaceGapMetres": 1.5
+  },
+  "release": {
+    "files": 1849,
+    "bytes": 997262270,
+    "published": false
+  },
+  "evidence": [
+    "native.json",
+    "lite-browser.json",
+    "full-browser.json",
+    "checks.json",
+    "source-parity.json"
+  ],
+  "scope": "The new bonus is cleared continuously with ordinary input from its spawn. Browser runs place the player once at the main entrance approach, then enter with a real jump, clear the full room, and verify real return. A second visit exercises water failure. Existing main course traversal evidence is reused with exact component/runtime parity; this increment does not claim an uninterrupted 4 km clear.",
+  "sourceSha256": {
+    "src/levels/carlisle-harbour-bonus.ts": "b009df2b971e0582d264b3b3e44228a009d55616efda54b048eb4f8f686c3ace",
+    "src/levels/carlisle-tidal-relay.ts": "5b179887be93c350c4376c3827592fb7dba50a5896cf7ca6fce03909ac2b3cbd",
+    "src/campaign.ts": "486671c728476f86ea83158a044df9f60eece63a6626426c723bef60b469a791",
+    "src/levels/themed-bonuses.ts": "4abc418185587b4c9df1ed9d7b4b25a886fc71ce103e7927b4be67f5303b1c2e",
+    "tools/test-carlisle-harbour.mjs": "08212b3332c88beb085b1c55c21699da50689b3c9e655452fb4d09f0f3bb20d2",
+    "tools/carlisle-harbour-pilot.mjs": "b43ba310477e5d2754271831a894fdf1cadf78de06b2d11b1dad3e15a764c741",
+    "tools/carlisle-harbour-browser.mjs": "6c6c20239cc0ad599391246f78ef5157405d59da6285be71989445b38b1feb96",
+    "tools/test-themed-bonus-flow.mjs": "c2450ce78f10471daad8d2f28c8e2e585aeeb238d33c88caf9f877484deb2b34"
+  }
+}

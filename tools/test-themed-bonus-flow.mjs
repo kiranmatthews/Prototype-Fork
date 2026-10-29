@@ -45,6 +45,7 @@ try {
 
   let rooms = 0, blocked = 0;
   for (const parentId of [...CAMPAIGN_LEVELS.filter(entry => !entry.placeholder).map(entry => entry.levelId), 'unknown-editor-parent']) {
+    if (process.env.BONUS_PARENTS && !process.env.BONUS_PARENTS.split(',').includes(parentId)) continue;
     // A tiny parent isolates session restoration and the authored bonus tally
     // from the unrelated geometry of the campaign course itself.
     const isCup = isCompetitionLevel(parentId);

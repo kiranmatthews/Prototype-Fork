@@ -181,6 +181,7 @@ elevation=s=>downhill.reduce((sum,r)=>sum+Math.max(0,Math.min(r.to-r.from,r.to-s
 export const CARLISLE_RELAY_CROSSINGS=authorCourse();
 fitCarlisleDeckBerths(C);
 export const CARLISLE_RELAY_CARGO = buildCarlisleCargo(C,carlislePoint,group);
+C.push({t:'bonusplatform',nm:'Springtide Skippers · harbour bonus',p:carlislePoint(2010,24,-5),to:carlislePoint(2013,24.12),grp:group(2010)});
 export const CARLISLE_TIDAL_RELAY_LEVEL:CustomLevelData={v:1,name:'Carlisle Coast',spawn:carlislePoint(0,.12),killY:-45,startWarpPad:false,
  sky:'day',hugeDropBail:false,keepPlayFog:true,
  atmosphere:{fogEnabled:true,fogNear:125,fogFar:480,fogColor:'#b4c2c9',drawDistance:680,ambientSky:'#e5e8e8',ambientGround:'#69737a',ambientIntensity:1.3,
