@@ -1,4 +1,4 @@
-import { BoxGeometry, ShapeGeometry } from 'three';
+import { BoxGeometry, BufferGeometry, Float32BufferAttribute, ShapeGeometry } from 'three';
 import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import fontData from 'three/examples/fonts/helvetiker_bold.typeface.json';
 import type { CustomComponent, CustomGroup, CustomLevelData } from '../level';
@@ -96,8 +96,39 @@ function skirt(parts:CustomComponent[],bottom:number,portals:[P,P][]){
 function mallRoute(t:SourceTransform,points:[number,number][],ceiling:number){return points.map(([x,s])=>transformPoint([x,mallSupport(x,-s,ceiling),-s],t));}
 const sourceMain=[[-13100,760],[-10800,780],[-10000,1000],[-7700,1000],[-6850,900],[-6550,870],[-6250,660],[-5500,550],[-4000,550],[-3500,480],[-3100,525],[-2700,700],[-2300,925],[-1900,1300],[-1500,1500],[-1100,1900],[-900,2300],[-1000,2900],[-1300,3000],[-1600,3350],[-1600,4300],[-1750,4900],[-1700,5450],[-1500,5800],[-1200,6050],[-500,6180],[-100,6100],[300,6000],[1800,5800],[3500,5800],[5400,5800],[6500,5800],[7600,5800]];
 
-section(800,'01 · Original Mall upper galleria, fountain and escalators');
 const upper:SourceTransform={pivot:[15,118.786,-80],target:[0,100,0],scale:[.96,1,.92]};
+section(799,'00 · Mall parking garage, quarter pipes and stacked descent');
+const parkingParts=reuse('mall',MALL_LEVEL,c=>c.breakable!=='sign'&&c.breakable!=='glass',upper,'Mall parking garage',[-65,60]);
+for(const c of parkingParts)if(c.t==='mesh'&&c.solid!==false){
+ if(c.vert&&c.vertices&&c.indices){
+  const geometry=new BufferGeometry();geometry.setAttribute('position',new Float32BufferAttribute(c.vertices,3));geometry.setIndex(c.indices);geometry.computeVertexNormals();
+  c.normals=Array.from(geometry.attributes.normal.array);c.smoothCollision=true;geometry.dispose();
+ }
+ else c.solidSides=true;
+}
+// The source wall's straight lower chords sit just above the refined quarter
+// surface. Extend those side contacts inside the visible wall to seal the gap;
+// the riding mesh and its vertical tangent remain intact.
+const quarterSides=[-21.946701,7.360911].map(x=>transformPoint([x,0,0],upper)[0]);
+for(const c of parkingParts)if(c.t==='wallpath'&&quarterSides.some(x=>Math.abs(c.p[0]-x)<.01)&&c.p[2]>24&&c.p[2]<44){
+ c.p[1]-=.65;c.rise=(c.rise??0)+.65;
+ if(c.wallHeights)c.wallHeights=c.wallHeights.map(h=>h+.65) as [number,number];
+}
+const parkingHeader=transformPoint([-10,172,-51],upper);
+sign('MAYFIELD PARKING',-parkingHeader[2],parkingHeader[1],25,palette.teal,parkingHeader[0]);
+// Retain the source entrance's three overlapping storeys and both end quarters.
+// The conventional route turns across their flat toes, then descends the two
+// original sloping corridors. Riding a vertical wall is an optional skate line.
+const parkingSource:[number,number,number][]=[
+ [0,0,156],[0,18,156],[0,30,156],[-3,37,157],[-8.5,40,158],[-14,37,158],[-17,30,156],
+ [-17,18,155],[-17,-4,150],[-17,-26,141],[-17,-37,138],[-13,-42,138],[-6,-42,138],[0,-37,138],
+ [0,-20,133],[0,0,126],[0,20,121],[0,44,120],[0,60,120],[10,70,120],
+];
+export const MAYFIELD_PARKING_ROUTE=parkingSource.map(([x,s,ceiling])=>transformPoint([x,mallSupport(x,-s,ceiling),-s],upper));
+route(MAYFIELD_PARKING_ROUTE);
+cp(MAYFIELD_PARKING_ROUTE[17],'Parking garage exit');
+
+section(800,'01 · Original Mall upper galleria, fountain and escalators');
 const upperParts=reuse('mall',MALL_LEVEL,c=>c.breakable!=='sign',upper,'Mall upper galleria',[60,465]);
 const upperPath=mallRoute(upper,[[15,80],[15,100],[15,180],[28,232],[28,300],[16,350],[15.2,361],[5.75,374.56],[.8,408],[.8,465]],120);
 route(upperPath);sign('MAYFIELD MALL',18,113,28);cp(upperPath[2],'Galleria escalators');cp(upperPath[6],'Fountain gallery');
@@ -107,7 +138,8 @@ for(const [x,station,yaw]of [[28,72,-12],[-28,190,18]]){
  reuse('mall',MALL_LEVEL,c=>c.breakable==='sign'&&c.breakGroup===33,{pivot:[-15.99,136.87,-133.22],target:[x,100,-station],scale:[1,1,1],yaw},'Mall / relocated directory');
  add({t:'wall',nm:'Directory fitted body',p:[x,100,-station],s:[10.4,7.12,.35],yaw,invisible:true});
 }
-add({t:'clock',p:[-5,100,-8],nm:'Mayfield time trial'});
+const parkingStart=MAYFIELD_PARKING_ROUTE[0];
+add({t:'clock',p:[parkingStart[0]-3,parkingStart[1],parkingStart[2]-6],nm:'Mayfield time trial'});
 for(const [i,p]of upperPath.entries())if(i>0&&i<upperPath.length-1){fruit(-p[2],p[0],p[1]);if(i%2===0)crate(-p[2]+6,p[0]+4,p[1]);}
 
 const gymY=upperPath[upperPath.length-1][1],arcadeY=gymY-10.5;
@@ -196,7 +228,7 @@ add({t:'crystal',p:[exit[0]+3,exit[1]+1,exit[2]+10],nm:'Mayfield crystal'});
 add({t:'gate',p:exit,yaw:24,nm:'Mayfield Mall exit'});
 
 skirt(snakeParts,warehouseFloor-2.5,[[groovePath[groovePath.length-2],snakePath[0]],[snakePath[snakePath.length-1],atriumPath[0]]]);
-foundation(upperParts,'Mall galleria foundation');foundation(arcadeParts,'Mall arcade foundation');foundation(atriumParts,'Mall atrium foundation');
+foundation(parkingParts,'Mall parking garage foundation');foundation(upperParts,'Mall galleria foundation');foundation(arcadeParts,'Mall arcade foundation');foundation(atriumParts,'Mall atrium foundation');
 slab('Loading hall structural foundation',0,840,warehouseFloor-1,98,180,warehouseFloor,'#9d9d92');
 slab('Kona pipe court foundation',-38,970,warehouseFloor-.7,140,52,warehouseFloor+.3,'#aaa98f');
 slab('Kona return court',-40,996,warehouseFloor,110,23,.8,palette.tile);
@@ -213,7 +245,7 @@ export const MAYFIELD_VERT_TESTS=[
 ];
 export const MAYFIELD_LENGTH=MAYFIELD_ROUTE.reduce((n,p,i)=>i?n+Math.hypot(p[0]-MAYFIELD_ROUTE[i-1][0],p[2]-MAYFIELD_ROUTE[i-1][2]):0,0);
 export const MAYFIELD_MALL_LEVEL:CustomLevelData={
-  v:1,name:'Mayfield Mall',spawn:[upperPath[0][0],upperPath[0][1]+.12,upperPath[0][2]+1],killY:-26,startWarpPad:false,
+  v:1,name:'Mayfield Mall',spawn:[parkingStart[0],parkingStart[1]+.12,parkingStart[2]+1],killY:-26,startWarpPad:false,
   skatepark:false,alwaysSkate:false,sky:'day',keepPlayFog:true,jungleDepthFade:false,
   cameraRig:{camDist:10,camHeight:5,camPitch:18,camFov:68},cameraLookAhead:5,
   relicTime:100,medalTimes:{gold:100,silver:150,bronze:240},

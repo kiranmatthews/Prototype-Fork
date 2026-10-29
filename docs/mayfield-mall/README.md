@@ -1,6 +1,6 @@
 # Mayfield Mall — actual source-geometry revision
 
-A roughly 1.9 km conventional course in Maynard Quay’s fourth slot, with nine
+A roughly 2.16 km conventional course in Maynard Quay’s fourth slot, with ten
 checkpoints, a crystal, a time-trial clock and one finish. The save key remains
 `maynard-course-4`; the level and preview ID are `mayfield-mall`. It starts on
 foot and uses the ordinary walking, jumping, boarding, braking and grinding
@@ -15,12 +15,12 @@ and completion times do not describe this revision.
 
 | Source | Actual geometry retained and rearranged |
 | --- | --- |
-| Mall | Upper galleria, fountain court, long descending escalators, mezzanines, crossrail arcade, angled atrium, great descent and suspended crossing. Original meshes, textures, rails and fitted wall contacts are transformed together. |
+| Mall | Three-storey parking entrance with both quarter pipes, upper galleria, fountain court, long descending escalators, mezzanines, crossrail arcade, angled atrium, great descent and suspended crossing. Original meshes, textures, rails and fitted wall contacts are transformed together. |
 | School Miami | Complete gym with basketball floor, skylight roof, banks, rails and hoop quarter; long blue canopy and handicap descent; four complete picnic table/bench/rail clusters. |
 | Warehouse | Full eased roll-in, original halfpipe with transfer banks and suspended room, Big Rail and kicker pair, taxi, box stacks, roof trusses and weathered wall bays. |
 | Kona | Both spinal-groove minis, the complete timber vert and raised roll-in, original banked snake run and snake-head kiosk. |
 
-The sequence is **upper Mall → School gym and canopy descent → Mall arcade →
+The sequence is **Mall parking garage → upper Mall → School gym and canopy descent → Mall arcade →
 Warehouse → Kona → angled Mall atrium and descent → exit**. Mall rooms are cut
 at new door planes and reordered; the arcade now precedes the angled atrium.
 The final atrium is rotated 15°. Source dimensions are mostly 90–115% of their
@@ -79,7 +79,40 @@ real entrance, failed return, retry, full clear and reward banking with MAX/nati
 and normal rendering. Evidence is in `bonus/`; `MAYFIELD_BONUS_OUTPUT` selects
 an external screenshot/report directory. No shared runtime behavior changed.
 
-### Main course
+### Parking-garage opening
+
+The start now occupies the actual source Mall entrance: three overlapping
+storeys, both end quarter pipes, the long sloping return corridors, overhead
+decks, rails and original wall architecture. The entrance contributes 171
+source components and 12,047 mesh triangles, with 75 solid components. Its
+96% width and 92% length match the adjacent galleria transform; vertical scale
+is unchanged. Total course length is 2,163.87 m, with 71,035 imported mesh
+triangles plus native primitives, paths, rails and connecting architecture.
+
+The start is 36.25 m above the galleria. Ordered camera nodes follow both
+reversals through the stacked corridors, and a new checkpoint marks the garage
+exit. The route crosses the flat toes of the quarters with ordinary controls;
+both vertical transitions also support a skate ascent, launch and return.
+The source closed-glass barrier is removed at the entrance to the galleria.
+
+Garage quarter normals now provide continuous contact. Exact side contacts
+and fitted wall extensions seal the quarter/wall seams. The existing normal
+controller crest launch also recognizes explicitly authored vert meshes with
+the skate camera flag, fixing the vertical-lip sticking found on these quarters.
+The change leaves park controls and movement tuning intact.
+
+Current evidence is in [parking/](parking/README.md). Complete input-driven
+runs finish in **244.18 s walking / 140.68 s skating**, collecting all ten
+checkpoints and the crystal with zero deaths. Both garage quarters and all six
+Warehouse/Kona approaches climb, launch and return without bailing. Both
+garage side-wall seam probes stay contained.
+
+Use `node tools/test-mayfield-parking.mjs` for the quarter/side-wall checks.
+`node tools/mayfield-browser.mjs [URL] --parking --foot --native --recovery`
+checks the opening, keyboard checkpoint warps and intentional pit recovery;
+omit `--foot` for skating and `--native` for the fast lite renderer.
+
+### Main course — initial source revision, before the garage addition
 
 Recorded checks and screenshots in this directory cover the source editor
 contract, campaign/save key, supported spawn and checkpoints, complete walking

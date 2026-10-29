@@ -1,0 +1,643 @@
+{
+  "base": "http://127.0.0.1:5278",
+  "initial": {
+    "checkpointCount": 10,
+    "length": 2163.8678666797578,
+    "provenance": [
+      {
+        "source": "mall",
+        "assembly": "Mall parking garage",
+        "components": 171,
+        "triangles": 12047,
+        "solid": 75,
+        "transform": {
+          "pivot": [
+            15,
+            118.786,
+            -80
+          ],
+          "target": [
+            0,
+            100,
+            0
+          ],
+          "scale": [
+            0.96,
+            1,
+            0.92
+          ]
+        },
+        "cut": [
+          -65,
+          60
+        ]
+      },
+      {
+        "source": "mall",
+        "assembly": "Mall upper galleria",
+        "components": 812,
+        "triangles": 6177,
+        "solid": 18,
+        "transform": {
+          "pivot": [
+            15,
+            118.786,
+            -80
+          ],
+          "target": [
+            0,
+            100,
+            0
+          ],
+          "scale": [
+            0.96,
+            1,
+            0.92
+          ]
+        },
+        "cut": [
+          60,
+          465
+        ]
+      },
+      {
+        "source": "mall",
+        "assembly": "Mall / relocated directory",
+        "components": 1,
+        "triangles": 4,
+        "solid": 0,
+        "transform": {
+          "pivot": [
+            -15.99,
+            136.87,
+            -133.22
+          ],
+          "target": [
+            28,
+            100,
+            -72
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ],
+          "yaw": -12
+        }
+      },
+      {
+        "source": "mall",
+        "assembly": "Mall / relocated directory",
+        "components": 1,
+        "triangles": 4,
+        "solid": 0,
+        "transform": {
+          "pivot": [
+            -15.99,
+            136.87,
+            -133.22
+          ],
+          "target": [
+            -28,
+            100,
+            -190
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ],
+          "yaw": 18
+        }
+      },
+      {
+        "source": "school-miami",
+        "assembly": "School Miami / complete gym",
+        "components": 31,
+        "triangles": 1568,
+        "solid": 14,
+        "transform": {
+          "pivot": [
+            97,
+            0,
+            29
+          ],
+          "target": [
+            0,
+            79.59388017175645,
+            -385
+          ],
+          "scale": [
+            0.9,
+            0.9,
+            0.9
+          ],
+          "yaw": 180
+        }
+      },
+      {
+        "source": "school-miami",
+        "assembly": "School Miami / downhill canopy",
+        "components": 3,
+        "triangles": 136,
+        "solid": 2,
+        "transform": {
+          "pivot": [
+            84,
+            0,
+            -10
+          ],
+          "target": [
+            15.3,
+            79.59388017175645,
+            -459
+          ],
+          "scale": [
+            1.05,
+            1.05,
+            1.05
+          ]
+        }
+      },
+      {
+        "source": "school-miami",
+        "assembly": "School table and rail cluster",
+        "components": 5,
+        "triangles": 0,
+        "solid": 3,
+        "transform": {
+          "pivot": [
+            27.34197183098592,
+            0,
+            -3.9319436619718307
+          ],
+          "target": [
+            25,
+            79.59388017175645,
+            -362
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ],
+          "yaw": -20
+        }
+      },
+      {
+        "source": "school-miami",
+        "assembly": "School table and rail cluster",
+        "components": 5,
+        "triangles": 0,
+        "solid": 3,
+        "transform": {
+          "pivot": [
+            53.92676056338029,
+            -10,
+            -73.93352112676057
+          ],
+          "target": [
+            -23,
+            79.59388017175645,
+            -362
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ],
+          "yaw": 25
+        }
+      },
+      {
+        "source": "school-miami",
+        "assembly": "School table and rail cluster",
+        "components": 5,
+        "triangles": 0,
+        "solid": 3,
+        "transform": {
+          "pivot": [
+            -6.946478873239436,
+            -10,
+            -78.98704225352111
+          ],
+          "target": [
+            25,
+            79.59388017175645,
+            -372
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ],
+          "yaw": -20
+        }
+      },
+      {
+        "source": "school-miami",
+        "assembly": "School table and rail cluster",
+        "components": 5,
+        "triangles": 0,
+        "solid": 3,
+        "transform": {
+          "pivot": [
+            -35.36901408450704,
+            -10,
+            -131.3419718309859
+          ],
+          "target": [
+            -23,
+            79.59388017175645,
+            -372
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ],
+          "yaw": 25
+        }
+      },
+      {
+        "source": "mall",
+        "assembly": "Mall crossrail arcade",
+        "components": 290,
+        "triangles": 9408,
+        "solid": 79,
+        "transform": {
+          "pivot": [
+            237,
+            38.583,
+            -790
+          ],
+          "target": [
+            0,
+            69.09388017175645,
+            -548
+          ],
+          "scale": [
+            1.08,
+            1,
+            0.95
+          ]
+        },
+        "cut": [
+          790,
+          988
+        ]
+      },
+      {
+        "source": "warehouse-reference",
+        "assembly": "Warehouse / original eased roll-in",
+        "components": 49,
+        "triangles": 388,
+        "solid": 1,
+        "transform": {
+          "pivot": [
+            -5.355,
+            9.45,
+            24.36
+          ],
+          "target": [
+            0,
+            69.09388017175645,
+            -765
+          ],
+          "scale": [
+            1.15,
+            1.15,
+            1.15
+          ]
+        }
+      },
+      {
+        "source": "warehouse-reference",
+        "assembly": "Warehouse / original halfpipe and suspended room",
+        "components": 17,
+        "triangles": 3580,
+        "solid": 17,
+        "transform": {
+          "pivot": [
+            0,
+            0,
+            -28.35
+          ],
+          "target": [
+            0,
+            58.22638017175645,
+            -830
+          ],
+          "scale": [
+            1.05,
+            1.05,
+            1.05
+          ],
+          "yaw": 90
+        }
+      },
+      {
+        "source": "warehouse-reference",
+        "assembly": "Warehouse / rearranged kicker and Big Rail",
+        "components": 25,
+        "triangles": 84,
+        "solid": 3,
+        "transform": {
+          "pivot": [
+            -12.6,
+            0,
+            -16.17
+          ],
+          "target": [
+            29,
+            58.22638017175645,
+            -802
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ],
+          "yaw": 18
+        }
+      },
+      {
+        "source": "warehouse-reference",
+        "assembly": "Warehouse / relocated taxi",
+        "components": 28,
+        "triangles": 348,
+        "solid": 1,
+        "transform": {
+          "pivot": [
+            14.8,
+            0,
+            -56.1
+          ],
+          "target": [
+            -32,
+            58.22638017175645,
+            -883
+          ],
+          "scale": [
+            1.2,
+            1.2,
+            1.2
+          ],
+          "yaw": 48
+        }
+      },
+      {
+        "source": "warehouse-reference",
+        "assembly": "Warehouse / roof and original wall bays",
+        "components": 70,
+        "triangles": 152,
+        "solid": 0,
+        "transform": {
+          "pivot": [
+            0,
+            0,
+            -15
+          ],
+          "target": [
+            0,
+            58.22638017175645,
+            -838
+          ],
+          "scale": [
+            1.15,
+            1.15,
+            1.15
+          ]
+        }
+      },
+      {
+        "source": "warehouse-reference",
+        "assembly": "Warehouse / box stack",
+        "components": 5,
+        "triangles": 0,
+        "solid": 0,
+        "transform": {
+          "pivot": [
+            -25,
+            0,
+            -70
+          ],
+          "target": [
+            -30,
+            58.22638017175645,
+            -902
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        }
+      },
+      {
+        "source": "warehouse-reference",
+        "assembly": "Warehouse / box stack",
+        "components": 5,
+        "triangles": 0,
+        "solid": 0,
+        "transform": {
+          "pivot": [
+            -25,
+            0,
+            -70
+          ],
+          "target": [
+            30,
+            58.22638017175645,
+            -902
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        }
+      },
+      {
+        "source": "kona",
+        "assembly": "Kona / complete spinal grooves",
+        "components": 45,
+        "triangles": 4770,
+        "solid": 5,
+        "transform": {
+          "pivot": [
+            -1.43325,
+            0.000111,
+            94
+          ],
+          "target": [
+            0,
+            58.22638017175645,
+            -950
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ],
+          "yaw": 180
+        }
+      },
+      {
+        "source": "kona",
+        "assembly": "Kona / complete timber vert and roll-in",
+        "components": 53,
+        "triangles": 4471,
+        "solid": 5,
+        "transform": {
+          "pivot": [
+            -40.27775,
+            0,
+            111.75
+          ],
+          "target": [
+            -75,
+            58.22638017175645,
+            -969
+          ],
+          "scale": [
+            1.05,
+            1.05,
+            1.05
+          ],
+          "yaw": 180
+        }
+      },
+      {
+        "source": "kona",
+        "assembly": "Kona / original snake run",
+        "components": 12,
+        "triangles": 11444,
+        "solid": 11,
+        "transform": {
+          "pivot": [
+            67.5,
+            -0.3401002375280455,
+            -7.5
+          ],
+          "target": [
+            0,
+            58.22638017175645,
+            -1020
+          ],
+          "scale": [
+            0.95,
+            0.95,
+            0.95
+          ],
+          "yaw": -90
+        }
+      },
+      {
+        "source": "kona",
+        "assembly": "Kona / snake kiosk",
+        "components": 26,
+        "triangles": 84,
+        "solid": 2,
+        "transform": {
+          "pivot": [
+            41.77,
+            6.06,
+            6.845
+          ],
+          "target": [
+            21,
+            58.22638017175645,
+            -1002
+          ],
+          "scale": [
+            1.2,
+            1.2,
+            1.2
+          ],
+          "yaw": 35
+        }
+      },
+      {
+        "source": "mall",
+        "assembly": "Mall / angled atrium and suspended crossing",
+        "components": 645,
+        "triangles": 16370,
+        "solid": 149,
+        "transform": {
+          "pivot": [
+            7.55,
+            92.443,
+            -485
+          ],
+          "target": [
+            -2.4,
+            66.2394535495149,
+            -1200
+          ],
+          "scale": [
+            0.95,
+            0.95,
+            0.95
+          ],
+          "yaw": 15
+        },
+        "cut": [
+          485,
+          790
+        ]
+      }
+    ],
+    "stamp": "Codex/sol fork · build 10-29 07:23 UTC",
+    "sourceMatches": true,
+    "skatepark": false,
+    "freeSkate": false,
+    "display": {
+      "buffer": [
+        1920,
+        1080
+      ],
+      "resolution": "max",
+      "crt": false
+    }
+  },
+  "report": {
+    "done": true,
+    "error": null,
+    "steps": 1791,
+    "seconds": 29.849999999999586,
+    "evidence": {
+      "mode": "foot",
+      "jumps": [],
+      "checkpoints": [
+        0
+      ],
+      "ground": [
+        "Mall parking garage / Entrance / first concourse / surface",
+        "Mall upper galleria / Entrance / first concourse / surface"
+      ],
+      "crystal": false,
+      "peakSpeed": 9.000000000000005,
+      "sourceGround": {
+        "mall": 1791,
+        "school": 0,
+        "warehouse": 0,
+        "kona": 0
+      }
+    },
+    "state": "ride",
+    "progress": 267.98138943019717,
+    "target": 267.88514013358224,
+    "startY": 136.2500457763672,
+    "minY": 99.94538879394531,
+    "maxStep": 0.6344882413452534,
+    "position": [
+      -0.46751582031250116,
+      99.99961853027344,
+      -19.866351879756632
+    ],
+    "deaths": 0,
+    "tuningUnchanged": true
+  },
+  "errors": []
+}

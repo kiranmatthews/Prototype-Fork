@@ -6164,3 +6164,38 @@ package. Source capture commit: `8aae8ceabc5708476e226f6b7b878a75d619cf94`.
 
 Production build/type checking and release-size validation pass. The concept
 pack is excluded from `dist`; runtime and level sources remain unchanged.
+
+## 29 October 2026 — Mayfield Mall: parking-garage start
+
+Restored the source Mall's actual three-storey entrance as the beginning of
+Mayfield Mall: both quarter pipes, overlapping corridors, sloping return lanes,
+overhead decks and original wall/rail architecture. The 171-component assembly
+adds 12,047 source mesh triangles and about 248 m of course, descending 36.25 m
+into the existing galleria. The complete route is now 2,163.87 m with ten
+checkpoints. The clock, preview and initial camera route start in the garage.
+
+The brief began at approximately 06:40 UTC. The first full walking route passed
+by about 06:46; the quarter-lip and wall-seam fixes were playable and checked by
+07:12, about 32 minutes prompt-to-playable. Final packaged lite/MAX-native
+validation completed by 07:26, about 46 minutes after the prompt.
+
+Continuous quarter normals and exact fitted side contacts fix the entrance
+seams. A narrow extension to the normal controller's existing crest launch
+lets explicitly authored vert meshes launch and return instead of sticking at
+their vertical lip. Normal controls, global tuning and original park controls
+remain intact. No source-room silhouettes or distance detail were reduced.
+
+Complete input-driven walking/skating runs pass in 244.18 s / 140.68 s, with
+all ten checkpoints, crystal, finish, real ground contact from all four source
+levels and zero deaths. Both garage quarters, both upper side-wall seams and
+all six Warehouse/Kona transition approaches pass. Packaged Chrome lite
+skating and MAX/native 1920×1080 walking pass the full opening, actual K/L
+checkpoint controls and intentional pit recovery without console errors.
+Required level checks, production type checking/build and release-size check
+pass: 997,264,351 bytes. Evidence and source hashes are in
+[the parking validation folder](mayfield-mall/parking/README.md).
+
+The bonus, previous forty-image concept atlas, campaign save key, four source
+levels and published editor pack are unchanged. Shared ownership is limited
+to the authored-mesh crest predicate in `src/player.ts`; all other edits are
+Mayfield data, preview, focused tools and documentation.

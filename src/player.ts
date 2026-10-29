@@ -7676,8 +7676,13 @@ export class Player {
     // the pipe (reusing the mature glue) instead of freezing on the face or
     // flinging off to your death. This is what the old dedicated launch lacked.
     const hpNow = this.freeSkate && hit ? hit.halfpipe : undefined;
-    const meshCrest = !this.parkControls && this.freeSkate && this.groundHit?.mesh?.userData.vertRampMesh &&
-      this.groundHit.vert === true && this.rideNormal.y < (this.groundHit.mesh.userData.hangLock?.28:.18) && this.lastTy > 0.3;
+    // Imported quarters opt into the same authored vert camera/contact model.
+    // Their vertical lip must launch like a swept vertramp, rather than remain
+    // glued to the final near-vertical triangle indefinitely.
+    const crestHit = this.groundHit, crestMesh = crestHit?.mesh;
+    const meshCrest = !this.parkControls && this.freeSkate && crestHit?.vert === true && crestMesh &&
+      (crestMesh.userData.vertRampMesh || (crestMesh.userData.authoredVertMesh && crestHit.skateCamera === true)) &&
+      this.rideNormal.y < (crestMesh.userData.hangLock?.28:.18) && this.lastTy > 0.3;
     const parkLipExit = this.parkControls && this.freeSkate && !this.isBailing &&
       previousGroundHit?.vert === true && previousRideNormal.y < 0.2 &&
       this.parkVelocity.y > 0.1 &&

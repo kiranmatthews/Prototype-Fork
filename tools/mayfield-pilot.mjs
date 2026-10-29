@@ -20,7 +20,9 @@ export function createMayfieldPilot(m,{mode='foot',start=0}={}){
    if(jumpPhase){jump=jumpPhase<=8;jumpPhase++;if(jumpPhase>60)jumpPhase=0;}
    if(p.state==='air'&&p.airFromSkate){steer.moveX=0;steer.moveY=0;}
    const far=at(progress+22),fx=far[0]-q[0],fz=far[2]-q[2],fn=Math.hypot(fx,fz)||1,turn=Math.acos(Math.max(-1,Math.min(1,(dx*fx+dz*fz)/(n*fn))));
-   const cap=turn>.12?12:22;
+   // Brake for the entrance's compact 180-degree turns, using the same ordinary
+   // control available to a player. The long downhill lanes retain full pace.
+   const cap=turn>.12?(m.MAYFIELD_PARKING_ROUTE&&progress<260?8:12):22;
    return {...steer,grabHeld:mode==='skate'&&p.freeSkate&&p.grounded&&p.speed>cap,jumpHeld:jump,spinHeld:p.grounded&&(l.checkpoints.some(c=>!c.active&&c.spawnPos.distanceTo(p.pos)<2.8)||l.crates.some(c=>c.alive&&c.mesh.position.distanceTo(p.pos)<2.5))};
   },
   observe(p,l){frame++;evidence.crystal=p.hasCrystal;evidence.peakSpeed=Math.max(evidence.peakSpeed,p.speed);for(let i=0;i<l.checkpoints.length;i++)if(l.checkpoints[i].active&&!evidence.checkpoints.includes(i))evidence.checkpoints.push(i);if(p.grounded){const mesh=p.groundHit?.mesh,c=l.builtFromData?.components[mesh?.userData.editorIdx],nm=c?.nm??p.groundHit?.name??'';if(nm&&!evidence.ground.includes(nm))evidence.ground.push(nm);for(const source of Object.keys(evidence.sourceGround))if(nm.toLowerCase().startsWith(source))evidence.sourceGround[source]++;}if(frame>36000)throw Error('Mayfield frame budget exhausted');}
