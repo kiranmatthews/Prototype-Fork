@@ -6606,3 +6606,45 @@ tuning changes. `src/player.ts` owns only the optional visual impact stamp.
 
 Local test: http://127.0.0.1:5483/?playtest&level=carlisle-coast&art=harbour .
 The user's local-only hold remains in force; no integration, push or publication.
+
+
+## Carlisle solid timber decks; slippery surfaces preserved — 30 October 2026
+
+Recorded deck correction cycle: approximately 85 minutes from the first new
+reference through generation, fitting revisions and a locally validated playable
+result. Earlier individual-board and flattened fits were rejected and are not
+part of the final increment. The additional Crash 4 video informed broad joined
+surfaces and substantial outer construction; the actual Merchant Wreck opening
+remains the timber style reference.
+
+Generated complete P2 deck assemblies with thick beveled planks, carved grain,
+nails and modeled under-beams. Dry playable surfaces use one uniform physical
+scale and adjacent modules, trimmed to the original support footprints. Fixed
+joining cuts remove wide channels caused by protruding under-beams. No flattened
+Y scale or oversized stretched planks. Broad decorative quays use the wider P2
+assembly. All original GLBs and textures are retained; instancing/culling uses
+the same geometry at every view and reflection distance.
+
+All 18 slippery descents retain the original navy wet surface, grip and slide
+gravity. Complete main/bonus source data, shared player/level/tuning code, nets,
+cones and public pack remain byte-identical to the prior checkpoint. Dry art
+reaches about 1.65m below the support and at most 4.2cm above it; no new colliders.
+The bonus timber orientation follows its +X travel and exposes a solid front.
+
+Validation: exact gameplay and twelve original prop fingerprints; 45 dry deck
+footprints and 335,169 geometry samples with zero unsupported overhangs; embedded
+texture-byte parity; type-check/build; compiled native 1920x1080 and normal
+480p/CRT browser review; all 18 real wet materials; keyboard walking; main/bonus
+loading and return; zero console errors. Normal arrival frame sample: 16.8ms
+median, 20.5ms p95, not a whole-course performance guarantee. Build produced
+1,772 files / 1,023.9MiB, offline version 601a1058b6190db0367e. Evidence and exact
+asset/task hashes: `art/carlisle-shipyard/deck-replacement/` and
+`public/props/carlisle-decks/provenance.json`.
+
+Three Studio models and two texture steps used 325 existing plan credits,
+24,810 → 24,485; cumulative known props/cone/deck spend 1,105 / 3,000 authorized.
+No API purchase. H3.1 is local comparison evidence; the two P2 originals and
+joined variants are tracked. Only Carlisle-specific presentation code changed.
+No level-data audit or full suite was needed. Local checkpoint only; no push,
+integration, coordinator message or publication. The broader polish goal remains
+active pending the user's continuing playtest rounds.

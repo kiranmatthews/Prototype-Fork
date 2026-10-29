@@ -1,0 +1,52 @@
+{
+  "channel": "Tripo Studio existing plan credits",
+  "startingBalance": 24810,
+  "remainingBalanceObserved": 24485,
+  "totalDeducted": 325,
+  "purchasedApiCredits": 0,
+  "previousApiSpend": 780,
+  "knownCombinedSpend": 1105,
+  "authorizedBudget": 3000,
+  "tasks": [
+    {
+      "id": "11364ac9-0112-4098-b6de-b08f5664fad4",
+      "model": "H3.1",
+      "input": "references/broad-deck.png",
+      "options": "Geometry & Texture, 8K",
+      "status": "success",
+      "creditsDeducted": 65,
+      "triangles": 1897112,
+      "vertices": 1012676,
+      "use": "Local comparison only",
+      "download": "source/broad-h31.glb"
+    },
+    {
+      "id": "bb267b30-db50-471c-8949-67d75fcb5b94",
+      "model": "P2.0",
+      "input": "references/broad-deck.png",
+      "options": "Triangle, 40000 target; texture 8K",
+      "status": "success",
+      "geometryCredits": 100,
+      "textureCredits": 30,
+      "creditsDeducted": 130,
+      "triangles": 43041,
+      "vertices": 51567,
+      "use": "Decorative quays, uniform 24m modules",
+      "runtimeOriginal": "public/props/carlisle-decks/broad-deck.glb"
+    },
+    {
+      "id": "3f323d96-474a-4bc2-9120-2139b6201d95",
+      "model": "P2.0",
+      "input": "references/chunky-deck.png",
+      "options": "Triangle, 30000 target; texture 8K",
+      "status": "success",
+      "geometryCredits": 100,
+      "textureCredits": 30,
+      "creditsDeducted": 130,
+      "triangles": 29553,
+      "vertices": 35560,
+      "use": "Dry playable decks, uniform 12m modules",
+      "runtimeOriginal": "public/props/carlisle-decks/solid-timber.glb"
+    }
+  ]
+}

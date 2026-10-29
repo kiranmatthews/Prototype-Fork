@@ -6,6 +6,7 @@ import type { CustomComponent, CustomLevelData } from './level';
 import { carlislePoint, CARLISLE_RELAY_SECTIONS, CARLISLE_RELAY_STOPS } from './levels/carlisle-tidal-relay';
 import { harbourSurface, harbourOcean, harbourSky } from './carlisleShipyardMaterials';
 import { CarlisleMarineNet, marineFrameHeight } from './carlisleMarineNet';
+import { CarlisleBoardwalk, carlisleDeckBoundary, type DeckTriangle } from './carlisleBoardwalk';
 
 type P = [number, number, number];
 const v = (p: P) => new THREE.Vector3(...p);
@@ -60,7 +61,8 @@ type Batch={geometry:THREE.BufferGeometry;material:THREE.Material;matrices:THREE
 export class CarlisleShipyard {
   readonly ready:Promise<void>;
   readonly group=new THREE.Group();
-  readonly diagnostics={status:'loading',sections:0,models:0,props:0,nets:0,mountedMovers:0,decorativeColliders:0,errors:[] as string[]};
+  private readonly boardwalk=new CarlisleBoardwalk();
+  readonly diagnostics={status:'loading',sections:0,models:0,props:0,nets:0,mountedMovers:0,decorativeColliders:0,timber:this.boardwalk.diagnostics,errors:[] as string[]};
   private readonly assets=cache.scope();
   private disposed=false;
   private readonly placements:Placement[]=[];
@@ -74,6 +76,7 @@ export class CarlisleShipyard {
   private readonly lamps:THREE.Vector3[]=[];
   private readonly nets:{mesh:THREE.Object3D;net:CarlisleMarineNet;impact:number}[]=[];
   private readonly wood=this.own(harbourSurface('wood'));
+  private readonly frameWood=this.own(harbourSurface('wood'));
   private readonly boatDeck=this.own(harbourSurface('wood',true));
   private readonly steel=this.own(harbourSurface('steel',true));
   private readonly wet=this.own(harbourSurface('wet'));
@@ -94,6 +97,7 @@ export class CarlisleShipyard {
   private lightingPosition=new THREE.Vector3(Infinity,Infinity,Infinity);
   constructor(root:THREE.Group,private data:CustomLevelData,ground:THREE.Mesh[]) {
     this.bonus=data.name==='Bonus: Springtide Skippers';
+    this.frameWood.color.set(0xffb36c);
     this.group.name='Carlisle shipyard art';this.group.userData.visualOnly=true;root.add(this.group);
     this.group.add(this.sky);this.geometries.add(this.sky.geometry);this.materials.add(this.sky.material);
     this.ocean=harbourOcean(this.makeSea());this.group.add(this.ocean.mesh);this.materials.add(this.ocean.mesh.material);
@@ -108,7 +112,7 @@ export class CarlisleShipyard {
     if(this.bonus)this.bonusYard();else this.mainYard();
     this.flushPrimitives();
     for(let i=0;i<6;i++){const light=new THREE.PointLight(0xff692c,0,27,1.6);this.group.add(light);this.lights.push(light);}
-    this.ready=Promise.all(names.map(name=>this.assets.load(name as Kit))).then(assets=>{
+    this.ready=Promise.all([Promise.all(names.map(name=>this.assets.load(name as Kit))),this.boardwalk.load()]).then(([assets])=>{
       if(this.disposed)return;
       assets.forEach((gltf,i)=>this.install(names[i] as Kit,gltf));
       this.diagnostics.models=assets.length;this.diagnostics.props=this.placements.length;this.diagnostics.status='ready';
@@ -158,12 +162,30 @@ export class CarlisleShipyard {
     if(spring){this.replace(mesh,this.hidden);this.net(c,mesh);}
     else this.replace(mesh,c.slip?this.wet:mover?(this.bonus?this.boatDeck:this.steel):/foot|piling|buoy/i.test(c.nm??'')?this.navy:this.wood);
     if(mover){this.diagnostics.mountedMovers++;this.movingDress(c,mesh,spring);return;}
-    if(c.t==='mesh'&&c.solid&&c.grindTopTriangles)this.dockEdges(c,mesh);
+    if(c.t==='mesh'&&c.solid&&c.grindTopTriangles){
+      if(!c.slip){
+        mesh.material=this.hidden;
+        const triangles=this.deckTriangles(c,mesh),s=this.station(c.p[2]);
+        const direction=v(carlislePoint(s+5,0)).sub(v(carlislePoint(s-5,0)));
+        this.boardwalk.add(triangles,direction,this.chunk(c.p[2]));
+      }
+      this.dockEdges(c,mesh);
+    }
     else if(c.t==='platform'&&c.s&&!/foot|piling|buoy/i.test(c.nm??'')){
       const [w,h,d]=c.s,holder=new THREE.Group();holder.name='Dock edge fittings';mesh.add(holder);this.attached.push(holder);
+      if(!c.slip){
+        mesh.material=this.hidden;
+        const points=[v([-w/2,h/2,-d/2]),v([w/2,h/2,-d/2]),v([w/2,h/2,d/2]),v([-w/2,h/2,d/2])];
+        this.boardwalk.add([[points[0],points[2],points[1]],[points[0],points[3],points[2]]],new THREE.Vector3(this.bonus?1:0,0,this.bonus?0:1),holder);
+      }
       for(const x of [-w/2,w/2])this.beam([x,h/2-.2,-d/2],[x,h/2-.2,d/2],.32,this.navy,holder);
       for(const x of [-w/2+.3,w/2-.3])for(const z of [-d/2+.3,d/2-.3])this.part('box',[x,h/2-.12,z],[.8,.24,.8],this.orange,0,holder);
     }
+  }
+  private deckTriangles(c:CustomComponent,mesh:THREE.Mesh):DeckTriangle[] {
+    mesh.updateMatrixWorld(true);const point=(i:number)=>v(c.vertices!.slice(i*3,i*3+3) as P).applyMatrix4(mesh.matrixWorld),triangles:DeckTriangle[]=[];
+    for(let i=0;i<c.grindTopTriangles!*3;i+=3)triangles.push(c.indices!.slice(i,i+3).map(point) as DeckTriangle);
+    return triangles;
   }
   private net(c:CustomComponent,mesh:THREE.Mesh) {
     const [w,h,d]=c.s!,mount=new THREE.Group();mount.name='Orange marine spring';mesh.add(mount);this.attached.push(mount);
@@ -207,18 +229,10 @@ export class CarlisleShipyard {
       this.beam([x,-h/2,z],[x,-h/2-springClearance,z],.38,this.navy,group);
   }
   private dockEdges(c:CustomComponent,mesh:THREE.Mesh) {
-    const vertices=c.vertices!,index=c.indices!,edges=new Map<string,{a:number;b:number;count:number}>();
-    const point=(i:number)=>new THREE.Vector3(...vertices.slice(i*3,i*3+3) as P).applyMatrix4(mesh.matrixWorld);
-    mesh.updateMatrixWorld(true);
-    const key=(i:number)=>point(i).toArray().map(n=>n.toFixed(3)).join(',');
-    for(let i=0;i<c.grindTopTriangles!*3;i+=3)for(let j=0;j<3;j++){
-      const a=index[i+j],b=index[i+(j+1)%3],ka=key(a),kb=key(b),id=ka<kb?ka+'|'+kb:kb+'|'+ka;
-      const edge=edges.get(id);if(edge)edge.count++;else edges.set(id,{a,b,count:1});
-    }
-    const boundary=[...edges.values()].filter(e=>e.count===1);
+    const boundary=carlisleDeckBoundary(this.deckTriangles(c,mesh));
     for(const {a,b} of boundary){
-      const pa=point(a),pb=point(b);pa.y-=.22;pb.y-=.22;
-      this.beam(pa.toArray() as P,pb.toArray() as P,.28,this.navy);
+      const pa=a.clone(),pb=b.clone();pa.y-=c.slip?.22:.55;pb.y-=c.slip?.22:.55;
+      this.beam(pa.toArray() as P,pb.toArray() as P,c.slip?.28:.48,c.slip?this.navy:this.frameWood);
     }
     const box=new THREE.Box3().setFromBufferAttribute(mesh.geometry.attributes.position as THREE.BufferAttribute).applyMatrix4(mesh.matrixWorld);
     const length=box.max.z-box.min.z;
@@ -226,8 +240,8 @@ export class CarlisleShipyard {
     // Select real outer boundary samples, so supports never bridge authored cut-outs.
     for(let z=box.min.z+3;z<box.max.z-2;z+=11){
       const cuts:P[]=[];
-      for(const e of boundary){const a=point(e.a),b=point(e.b);if((a.z<=z&&b.z>z)||(b.z<=z&&a.z>z)){
-        const t=(z-a.z)/(b.z-a.z);cuts.push(a.lerp(b,t).toArray() as P);}}
+      for(const e of boundary){const a=e.a,b=e.b;if((a.z<=z&&b.z>z)||(b.z<=z&&a.z>z)){
+        const t=(z-a.z)/(b.z-a.z);cuts.push(a.clone().lerp(b,t).toArray() as P);}}
       cuts.sort((a,b)=>a[0]-b[0]);
       if(cuts.length<2)continue;
       for(const p of [cuts[0],cuts[cuts.length-1]]){
@@ -255,8 +269,12 @@ export class CarlisleShipyard {
     const geo=this.geom(new THREE.BufferGeometry());geo.setAttribute('position',new THREE.Float32BufferAttribute(vertices,3));geo.setIndex(indices);geo.computeVertexNormals();return geo;
   }
   private quay(p:P,w:number,d:number,yaw=0) {
-    this.part('box',[p[0],p[1]-1,p[2]],[w,2,d],this.wood,yaw);
+    // Decorative quays are built to whole-module dimensions. Their boards
+    // retain the generated proportions and the same full geometry in reflections.
+    const moduleWidth=24*.56/.954;w=Math.ceil(w/moduleWidth)*moduleWidth;d=Math.ceil(d/24)*24;
     const q=new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,1,0),yaw);
+    const points=[[-w/2,0,-d/2],[w/2,0,-d/2],[w/2,0,d/2],[-w/2,0,d/2]].map(a=>v(a as P).applyQuaternion(q).add(v(p)));
+    this.boardwalk.add([[points[0],points[2],points[1]],[points[0],points[3],points[2]]],new THREE.Vector3(0,0,1).applyQuaternion(q),this.chunk(p[2]),true);
     const posts:P[]=[];
     for(const x of [-w/2+1,w/2-1])for(let z=-d/2+1;z<=d/2;z+=Math.max(5,(d-2)/5)){
       const at=v([x,0,z]).applyQuaternion(q).add(v(p)).toArray() as P;
@@ -430,6 +448,7 @@ export class CarlisleShipyard {
   }
   dispose() {
     this.disposed=true;
+    this.boardwalk.dispose();
     for(const {mesh,net}of this.nets){delete mesh.userData.marineNet;net.dispose();}this.nets.length=0;
     for(const node of [...this.attached,this.group])node.traverse(n=>{if((n as THREE.InstancedMesh).isInstancedMesh)(n as THREE.InstancedMesh).dispose();});
     this.attached.forEach(n=>n.removeFromParent());this.group.removeFromParent();

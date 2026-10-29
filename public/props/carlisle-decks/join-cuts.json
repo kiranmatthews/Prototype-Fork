@@ -1,0 +1,26 @@
+[
+  {
+    "source": "solid-timber",
+    "sourceTriangles": 29553,
+    "joinedTriangles": 23974,
+    "vertices": 30172,
+    "joinBounds": [
+      -0.461,
+      0.467,
+      -0.257,
+      0.261
+    ]
+  },
+  {
+    "source": "broad-deck",
+    "sourceTriangles": 43041,
+    "joinedTriangles": 39367,
+    "vertices": 48179,
+    "joinBounds": [
+      -0.477,
+      0.477,
+      -0.28,
+      0.28
+    ]
+  }
+]
