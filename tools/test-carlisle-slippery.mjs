@@ -6,6 +6,18 @@ import {crossingPilot} from './carlisle-crossing-pilot.mjs';
 const built=await build({entryPoints:['src/levels/carlisle-tidal-relay.ts'],bundle:true,format:'esm',write:false});
 const api=await import('data:text/javascript;base64,'+Buffer.from(built.outputFiles[0].text).toString('base64'));
 const data=api.CARLISLE_TIDAL_RELAY_LEVEL,runs=api.CARLISLE_RELAY_CROSSINGS,point=api.carlislePoint,rows=[];
+const grades=runs.map(run=>{
+ for(const slope of run.slopes){
+  const drop=point(slope.from,run.y)[1]-point(slope.to,run.y)[1];
+  assert.ok(Math.abs(drop-(slope.to-slope.from)*slope.grade)<.001,'slippery pitch is not forward downhill');
+ }
+ for(let s=run.a;s<run.b;s+=.5){
+  const [l,r]=run.bounds(s);
+  assert.equal(point(s,run.height(s,l),l)[1],point(s,run.height(s,r),r)[1],'sideways bank returned');
+  assert.ok(point(s+.5,run.y)[1]<=point(s,run.y)[1]+1e-6,'uphill recovery hump');
+ }
+ return {name:run.name,degrees:Math.atan(run.grade)*180/Math.PI,drop:point(run.a,run.y)[1]-point(run.b,run.y)[1],slopes:run.slopes};
+});
 await withSkateRuntime(async({THREE,level,player:p,CONST,TUNING,server})=>{
  const {normalizeCustomLevelData}=await server.ssrLoadModule('/src/level.ts');assert.ok(normalizeCustomLevelData(data));
  const tuning=JSON.stringify(TUNING);p.competitionMode=false;p.endlessDeaths=true;
@@ -47,8 +59,22 @@ await withSkateRuntime(async({THREE,level,player:p,CONST,TUNING,server})=>{
   assert.equal(p.state,'dead',`spikes are harmless: ${run.name}/${h.s}`);lethal++;
  }
  assert.equal(JSON.stringify(TUNING),tuning);
- await mkdir('docs/carlisle-relay/slippery',{recursive:true});
- await writeFile('docs/carlisle-relay/slippery/crossings.json',JSON.stringify({contacts,lethal,rows},null,2)+'\n');
+ const drift=[];
+ for(const index of [0,12,19]){
+  const run=runs[index],slope=run.slopes.reduce((a,b)=>a.to-a.from>b.to-b.from?a:b),s=slope.from+2;
+  const heading=new THREE.Vector3(...point(s+1,0)).sub(new THREE.Vector3(...point(s,0))).setY(0).normalize();
+  const speeds=[];
+  for(const moveY of [0,-1]){
+   p.respawn(level,true,false,{position:new THREE.Vector3(...point(s,run.y+.12)),heading});
+   for(let f=0;f<45;f++){const input=makeInput({moveY});p.rawInput=input;p.step(CONST.fixedStep,input,level);level.update(CONST.fixedStep);}
+   speeds.push(p.walkVelocity.dot(heading));
+   assert.ok(p.grounded&&!p.isBailing&&p.groundHit?.slipGravity,'gravity check left its slide');
+  }
+  assert.ok(speeds[0]>3&&speeds[1]<speeds[0],'downhill gravity or uphill resistance missing');
+  drift.push({name:run.name,neutralForwardSpeed:speeds[0],uphillInputForwardSpeed:speeds[1]});
+ }
+ const out=process.env.CARLISLE_OUT??'docs/carlisle-relay/slippery';await mkdir(out,{recursive:true});
+ await writeFile(`${out}/crossings.json`,JSON.stringify({contacts,lethal,grades,drift,rows},null,2)+'\n');
  assert.ok(rows.every(r=>r.finished&&!r.failed&&r.wetFrames>0),'a slick crossing has no continuous input-only route');
  console.log(`PASS ${rows.length} continuous crossings, ${contacts} support probes and ${lethal} lethal obstacle contacts.`);
 },{levelEntry:{id:'carlisle-coast',name:data.name,data}});

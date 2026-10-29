@@ -1,0 +1,178 @@
+{
+  "validatedAt": "2026-10-29T07:03:50.490712+00:00",
+  "delivery": "LOCAL ONLY / HOLD",
+  "localPlaytest": "http://127.0.0.1:5483/?playtest&level=carlisle-coast",
+  "parentCommit": "9ecfadafe98fcc225668343133c4d93dee3a0a6b",
+  "sourceSha256": {
+    "src/levels/carlisle-tidal-relay.ts": "32a1aa6eb706729ecc58f1264abebfcccace4515de24866b55e6eddf03b06ad9",
+    "src/levels/carlisle-slippery-crossings.ts": "9787a87067fc864b4d1b77f29ec82641b5c8d8b866dcace0d845628f091e528a",
+    "tools/test-carlisle-slippery.mjs": "db040cde1804beb7282d99344fff8f95eb5749df9d9c59edf77c40c52c8c9718",
+    "tools/carlisle-slippery-browser.mjs": "ac3bfd0a0fcce0e408acf660bb0c8ed4068e9fc69e5a4935c9917119825da351",
+    "tools/carlisle-grind-pilot.mjs": "ffd8b7140dd1eb20d1acbf7e7dc21a81a75fc71dcd822aec0dccf3ca51acb5cf",
+    "tools/carlisle-relay-browser.mjs": "1fbf6d59194a3e6689a3ee51f304330e726eeaf471ba2e00c8cc4068a276d47f",
+    "tools/test-carlisle-dredger-terraces.mjs": "659a04717ed2ae6622921b38e7096b839507816e5ad93b1d285a8e59e96a4368",
+    "src/main.ts": "7037126b270982604dec1c87c864da655f8477063c704fa14901c02cefd56c33",
+    "src/player.ts": "549c47626e29f8da0de8b0f840deec43d5922389d2ef5de6b1cb551527bc2e85",
+    "src/level.ts": "618c206a8ca454e62f447a713ee4a7394ebc9589ec1ffa01bc57bcff3e3e2bc5",
+    "src/tuning.ts": "1aca3b5fe4b5d026d8b9e36dcf30444081bec7d2acfd4181294f6aacaca61bd6",
+    "src/editor.ts": "66dfe7d01aaa3dfeae9cc384c046a291cc04568da5f94869be2f9412a27a3629",
+    "public/levels.json": "08b960136b3118b5e692dfbc49c7e54c11345707ac33db83d585f9af2b8e8a5d"
+  },
+  "unchangedFromParent": [
+    "src/main.ts",
+    "src/player.ts",
+    "src/level.ts",
+    "src/tuning.ts",
+    "src/editor.ts",
+    "public/levels.json"
+  ],
+  "design": {
+    "crossings": 23,
+    "slipperySpans": 57,
+    "degrees": [
+      18,
+      22,
+      26
+    ],
+    "totalBaselineDropMetres": 293.5352880915768,
+    "sidewaysBank": false,
+    "uphillRecovery": false,
+    "traction": 0.02,
+    "slipGravity": 1,
+    "spikeClusters": 36,
+    "craneWidthMetres": 14,
+    "lengthMetres": 4000,
+    "acts": 3,
+    "checkpoints": 17,
+    "primarySprings": 55,
+    "requiredGrinds": 4,
+    "movingPlatforms": 28
+  },
+  "native": {
+    "continuousCrossings": 23,
+    "supportProbes": 1797,
+    "lethalContacts": 36,
+    "forwardGravity": [
+      {
+        "name": "Foam steps \u00b7 start \u00b7 downhill slick",
+        "neutralForwardSpeed": 9.459112641695272,
+        "uphillInputForwardSpeed": 9.095147864316596
+      },
+      {
+        "name": "Dredger upper terrace \u00b7 downhill slick",
+        "neutralForwardSpeed": 11.243112614295775,
+        "uphillInputForwardSpeed": 10.895072729983111
+      },
+      {
+        "name": "Pendulum receiving quay \u00b7 downhill slick",
+        "neutralForwardSpeed": 12.6812220666662,
+        "uphillInputForwardSpeed": 12.371733216243534
+      }
+    ],
+    "allSpringStrengthsUnchanged": true,
+    "springTransferCases": 110,
+    "grindRoutes": 9,
+    "grindPhasesSeconds": [
+      0,
+      7,
+      53
+    ],
+    "failedBypassAttempts": 8,
+    "emptyFloorProbes": 12,
+    "terraceClimbs": 3
+  },
+  "browser": [
+    {
+      "mode": "lite",
+      "source": {
+        "components": 1122,
+        "slippery": 57,
+        "build": "Codex/sol fork \u00b7 build 10-29 01:17 UTC",
+        "canvas": [
+          720,
+          450
+        ]
+      },
+      "continuousKeyboardRoutes": 3,
+      "neutralForwardDriftMetres": 3.865920536928463,
+      "spikeDeath": true,
+      "dryCheckpointRespawn": true,
+      "consoleErrors": []
+    },
+    {
+      "mode": "full",
+      "source": {
+        "components": 1122,
+        "slippery": 57,
+        "build": "Codex/sol fork \u00b7 build 10-29 06:59 UTC",
+        "canvas": [
+          1440,
+          900
+        ]
+      },
+      "continuousKeyboardRoutes": 3,
+      "neutralForwardDriftMetres": 3.865920536928463,
+      "spikeDeath": true,
+      "dryCheckpointRespawn": true,
+      "consoleErrors": []
+    }
+  ],
+  "fullGrindBrowser": {
+    "source": {
+      "components": 1122,
+      "rails": [
+        "Crane outrigger shortcut",
+        "Rigging \u00b7 sweeping cable",
+        "Crown \u00b7 outer cable",
+        "Crown \u00b7 return cable",
+        "Homecoming \u00b7 diving cable"
+      ],
+      "build": "Codex/sol fork \u00b7 build 10-29 06:59 UTC",
+      "canvas": [
+        1440,
+        900
+      ]
+    },
+    "continuousSections": 3,
+    "railCatches": 4,
+    "chargedExits": 2,
+    "finalState": "finished",
+    "recordedInFrameRailSamples": 284,
+    "consoleErrors": []
+  },
+  "requiredChecks": {
+    "checkLevels": "PASS on final geometry; the only subsequent source change renamed an unused initializer parameter to satisfy TypeScript.",
+    "build": "PASS TypeScript and Vite on final source.",
+    "releaseFiles": 1849,
+    "releaseBytes": 997251918,
+    "releaseLimitBytes": 1000000000,
+    "checkAll": "Not requested or run."
+  },
+  "visualReview": {
+    "status": "PASS: clear straight downhill faces, visible spike lanes, complete character in view and readable final cable.",
+    "maxNative": [
+      1440,
+      900
+    ],
+    "normalPresentation": "480p/CRT",
+    "liteReviewed": [
+      "lite-crossing-1-slide.png",
+      "lite-crossing-15-slide.png",
+      "lite-descent-20.png"
+    ],
+    "productionReviewed": [
+      "downhill/full-crossing-1-slide.png",
+      "downhill/full-crossing-15-slide.png",
+      "downhill/full-descent-20.png",
+      "downhill/full-normal.png",
+      "grinds/full-3-rail-1-settled.png"
+    ]
+  },
+  "testBoundaries": "Per-section continuous native/browser inputs after initial placement; no mid-route state/velocity/clock writes. This is not one uninterrupted 4 km clear. Eight failed shortcut attempts are bounded checks, not exhaustive proof.",
+  "timing": {
+    "requestApproxUtc": "2026-10-29T06:35:00Z",
+    "firstKeyboardPassApproxUtc": "2026-10-29T06:54:00Z",
+    "promptToPlayableMinutes": 19,
+    "includesSharedCapacityWait": true
+  }
+}

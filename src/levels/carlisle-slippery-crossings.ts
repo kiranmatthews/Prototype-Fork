@@ -5,13 +5,13 @@ type Value = number | ((s: number) => number);
 export type CarlisleRoad = { name: string; a: number; b: number; y: Value; width: Value; offset: Value; components: CustomComponent[] };
 type Anchor = { s: number; radius: number };
 export type CarlisleCrossing = {
-  name: string; a: number; b: number; y: number; amplitude: number; lobes: number;
+  name: string; a: number; b: number; y: number; grade: number;
+  slopes: { from: number; to: number; grade: number }[];
   anchors: Anchor[]; hazards: { s: number; u: number; y: number; width: number }[];
-  bounds: (s: number) => [number, number]; bank: (s: number) => number;
+  bounds: (s: number) => [number, number];
   height: (s: number, u: number) => number;
 };
 const value = (v: Value, s: number) => typeof v === 'number' ? v : v(s);
-const smooth = (v: number) => { const t = Math.max(0, Math.min(1, v)); return t * t * (3 - 2 * t); };
 
 /** Replace overlapping flat quays with one supported ribbon. Its dry restart
  * islands and icy banks share exact seams; no flat collider remains underneath. */
@@ -35,7 +35,7 @@ export function buildCarlisleCrossings(components: CustomComponent[], roads: Car
       if (d < distance) { station = s; distance = d; }
     }
     const [w, , d] = c.s ?? [12, 1.4, 12];
-    return { s: station, y: c.p[1], vertical: c.axis === 'y' ? Math.abs(c.amp ?? 0) : 0,
+    return { s: station, y: c.p[1] - point(station, 0)[1], vertical: c.axis === 'y' ? Math.abs(c.amp ?? 0) : 0,
       radius: (c.spin ? Math.hypot(w, d) : Math.max(w, d)) / 2 + Math.hypot(...(c.orbit ?? [0, 0])) +
         (c.axis === 'y' ? 0 : Math.abs(c.amp ?? 0)) + 2 };
   });
@@ -64,12 +64,11 @@ export function buildCarlisleCrossings(components: CustomComponent[], roads: Car
       return [Math.min(...active.map(r => value(r.offset, s) - value(r.width, s) / 2)),
         Math.max(...active.map(r => value(r.offset, s) + value(r.width, s) / 2))];
     };
-    const amplitude = a < 1280 ? .17 : a < 2700 ? .21 : .25;
-    const lobes = Math.max(2, Math.round((b - a) / (index % 3 === 0 ? 23 : 18)));
-    const bank = (s: number) => amplitude * Math.sin((s - a) / (b - a) * Math.PI * lobes) *
-      (index % 2 ? -1 : 1) * smooth(clearance(s) / 4);
-    const height = (s: number, u: number) => y + bank(s) * u;
-    const crossing: CarlisleCrossing = { name: `${run[0].name} · tilted slick`, a, b, y, amplitude, lobes, anchors, hazards: [], bounds, bank, height };
+    // The course's elevation profile integrates these straight downhill
+    // pitches. Across the width the surface stays level: no alternating banks.
+    const grade = Math.tan((a < 1280 ? 18 : a < 2700 ? 22 : 26) * Math.PI / 180);
+    const height = (_s: number, _u: number) => y;
+    const crossing: CarlisleCrossing = { name: `${run[0].name} · downhill slick`, a, b, y, grade, slopes: [], anchors, hazards: [], bounds, height };
     crossings.push(crossing);
     for (const road of run) for (const c of road.components) removed.add(c);
     // Include every road edge and dry-island edge as a knot, keeping the
@@ -85,6 +84,7 @@ export function buildCarlisleCrossings(components: CustomComponent[], roads: Car
       else spans.push({ from, to, wet, knots: [from, to] });
     }
     for (const [part, span] of spans.entries()) {
+      if (span.wet) crossing.slopes.push({from: span.from, to: span.to, grade});
       // One origin makes shared Float32 seam vertices identical across the
       // separate dry and slippery materials, including at checkpoint toes.
       const origin = point(a, y), vertices: number[] = [], indices: number[] = [];
@@ -116,8 +116,8 @@ export function buildCarlisleCrossings(components: CustomComponent[], roads: Car
       const sites = span.to - span.from > 27 ? [.32, .73] : [.55];
       for (const [j, t] of sites.entries()) {
         const s = span.from + (span.to - span.from) * t, [left, right] = bounds(s), width = Math.min(4.8, (right - left) * .25);
-        const sign = Math.sign(bank(s)) || 1;
-        const u = (left + right) / 2 - sign * (right - left) * (j % 2 ? .28 : .23);
+        const sign = (index + part + j) % 2 ? -1 : 1;
+        const u = (left + right) / 2 + sign * (right - left) * .27;
         const base = height(s, u), name = `${crossing.name} · red teeth ${part + 1}.${j + 1}`;
         crossing.hazards.push({ s, u, y: base, width });
         const origin = point(s, base, u), vertices: number[] = [], indices: number[] = [];
@@ -146,7 +146,8 @@ export function buildCarlisleCrossings(components: CustomComponent[], roads: Car
         const side = point(s, 0, 1); best = { run, s, u: (c.p[0] - at[0]) * (side[0] - at[0]) + (c.p[2] - at[2]) * (side[2] - at[2]), d };
       }
     }
-    if (best && best.d < 16 && Math.abs(c.p[1] - best.run.y) < .1) c.p[1] = best.run.height(best.s, best.u);
+    if (best && best.d < 16 && Math.abs(c.p[1] - point(best.s, best.run.y)[1]) < .1)
+      c.p[1] = point(best.s, best.run.height(best.s, best.u), best.u)[1];
   }
   return crossings;
 }

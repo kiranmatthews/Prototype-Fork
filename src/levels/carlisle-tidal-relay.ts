@@ -14,7 +14,8 @@ const survey=raw.map((p,i)=>({s:measure[i]*factor,x:p[0]*factor,z:p[1]*factor}))
 function frame(s:number){let lo=0,hi=survey.length-1;while(hi-lo>1){const m=(lo+hi)>>1;if(survey[m].s<s)lo=m;else hi=m;}
  const a=survey[lo],b=survey[hi],t=(s-a.s)/(b.s-a.s),dx=b.x-a.x,dz=b.z-a.z,len=Math.hypot(dx,dz);
  return{x:a.x+dx*t,z:a.z+dz*t,tx:dx/len,tz:dz/len,yaw:Math.atan2(-dx,-dz)*180/Math.PI};}
-export function carlislePoint(s:number,y:number,u=0):P{const f=frame(s);return[f.x-f.tz*u,y,f.z+f.tx*u];}
+let elevation=(_s:number)=>0;
+export function carlislePoint(s:number,y:number,u=0):P{const f=frame(s);return[f.x-f.tz*u,y+elevation(s),f.z+f.tx*u];}
 const point=(v:Station)=>carlislePoint(...v);
 export const CARLISLE_RELAY_LENGTH=4000;
 export const CARLISLE_RELAY_ACTS=[
@@ -65,11 +66,11 @@ function moving(nm:string,s:number,y:number,w:number,d:number,o:Partial<CustomCo
 // No target, homing, horizontal impulse or custom player physics is shipped.
 function flight(up:number,dy:number){let y=0,v=up;for(let n=1;n<1200;n++){const before=y;v=Math.max(-CONST.maxFallSpeed,v-(v>0?TUNING.riseGravity:TUNING.fallGravity)/60);y+=v/60;if(v<0&&y<=dy)return(n-1+(before-dy)/(before-y))/60;}return 20;}
 function spring(name:string,from:Station,to:Station,motion?:Partial<CustomComponent>,motionMargin=0){
- const a=point(from),b=point(to),distance=Math.hypot(b[0]-a[0],b[2]-a[2]);let low=Math.sqrt(Math.max(0,2*TUNING.riseGravity*(to[1]-from[1]+2))),high=150;
+ const a=point(from),b=point(to),distance=Math.hypot(b[0]-a[0],b[2]-a[2]),dy=b[1]-a[1];let low=Math.sqrt(Math.max(0,2*TUNING.riseGravity*(dy+2))),high=150;
  // Landings can immediately rebound from the back edge. Reserve one pad's
  // half-depth of air-steering time so a linked chain never assumes a
  // perfectly centred takeoff.
- for(let i=0;i<28;i++){const mid=(low+high)/2;if(flight(mid,to[1]-from[1])*TUNING.walkSpeed<distance+7.5+motionMargin)low=mid;else high=mid;}
+ for(let i=0;i<28;i++){const mid=(low+high)/2;if(flight(mid,dy)*TUNING.walkSpeed<distance+7.5+motionMargin)low=mid;else high=mid;}
  const up=Math.round(high/1.25*10)/10;CARLISLE_RELAY_JUMPS.push({name,from,to,up,moving:!!motion});
  // A 2 cm top offset wins coplanar support ties without creating a curb
  // that trips a rolling board. Both trampoline and mover primitives place
@@ -77,13 +78,13 @@ function spring(name:string,from:Station,to:Station,motion?:Partial<CustomCompon
  if(motion)moving(name,from[0],from[1]+.02,15,16,{bounce:up,color:SPRING,...motion},from[2]??0);
  else{add({t:'trampoline',nm:name,p:[a[0],a[1]+.02,a[2]],s:[13,.6,14],yaw:frame(from[0]).yaw,speed:up,amp:1.25,tex:'solid',color:SPRING,grp:group(from[0])});
   for(const u of [-5.6,5.6])for(const ds of [-5.7,5.7])box(`${name} · spring foot`,from[0]+ds,from[1]-.6,1.1,1.1,(from[2]??0)+u,3,DARK);}
- const time=flight(up*1.25,to[1]-from[1]);let y=from[1],vy=up*1.25;
+ const time=flight(up*1.25,dy);let y=a[1],vy=up*1.25;
  for(let n=1;n<=Math.ceil(time*60);n++){vy=Math.max(-CONST.maxFallSpeed,vy-(vy>0?TUNING.riseGravity:TUNING.fallGravity)/60);y+=vy/60;
   if(n%Math.max(1,Math.floor(time*60/4))===0&&n<time*60-3){const t=n/60/time;add({t:'wumpa',nm:`${name} · arc`,p:[a[0]+(b[0]-a[0])*t,y+1,a[2]+(b[2]-a[2])*t],grp:group(from[0])});}}}
 function chain(name:string,marks:Station[],motion?:Record<number,Partial<CustomComponent>>){
  const excursion=(m:Partial<CustomComponent>|undefined)=>m?(Math.abs(m.amp??0)+Math.hypot(...(m.orbit??[0,0]))):0;
  for(let i=0;i<marks.length-1;i++)spring(`${name} · ${i+1}`,marks[i],marks[i+1],motion?.[i],excursion(motion?.[i])+excursion(motion?.[i+1]));}
-function rail(nm:string,a:number,b:number,y:number,u:number){const p=carlislePoint(a,y,u),n=Math.ceil((b-a)/6);add({t:'rail',nm,p,pts:Array.from({length:n+1},(_,i)=>{const q=carlislePoint(a+(b-a)*i/n,y,u);return[q[0]-p[0],q[2]-p[2],0,0];}),grp:group(a)});}
+function rail(nm:string,a:number,b:number,y:number,u:number){const p=carlislePoint(a,y,u),n=Math.ceil((b-a)/6);add({t:'rail',nm,p,pts:Array.from({length:n+1},(_,i)=>{const q=carlislePoint(a+(b-a)*i/n,y,u);return[q[0]-p[0],q[2]-p[2],0,q[1]-p[1]];}),grp:group(a)});}
 function grindLine(nm:string,knots:Station[],popTo?:Station){
  const p=point(knots[0]);add({t:'rail',nm,p,pts:knots.map(k=>{const q=point(k);return[q[0]-p[0],q[2]-p[2],9,q[1]-p[1]];}),grp:group(knots[0][0])});
  // Sparse fruit on the entry and departure makes the thin native rail legible
@@ -93,6 +94,9 @@ function grindLine(nm:string,knots:Station[],popTo?:Station){
 }
 function springToRail(name:string,from:Station,to:Station,railName:string){spring(name,from,to);CARLISLE_RELAY_JUMPS[CARLISLE_RELAY_JUMPS.length-1].rail=railName;}
 
+function authorCourse(){
+C.length=0;roads.length=0;deckLayer=0;
+CARLISLE_RELAY_JUMPS.length=0;CARLISLE_RELAY_GRINDS.length=0;CARLISLE_RELAY_STOPS.length=0;CARLISLE_RELAY_WALK.length=0;
 // I — surf-side springs, a scissor pier, changing tides and a lighthouse climb.
 rest('Foam steps · start',0,0);road('Shore approach',12,61,0,16);
 chain('Foam steps',[[65,0],[82,4],[103,10],[126,4],[151,0]]);road('Foam catch',143,180,0,20);
@@ -132,7 +136,7 @@ for(const c of C)if(c.t==='trampoline'&&c.nm?.startsWith('Dredger terraces ·'))
 walk('Dredger upper terrace exit',1895,48);
 chain('Dredger discharge',[[1908,48],[1935,58,3],[1964,35],[1983,24]]);road('Discharge catch',1976,2022,24,20);rest('Cross-thread springs',2008,24);
 chain('Cross-thread',[[2031,24],[2060,34,-3],[2092,24,3],[2124,40,-3],[2157,24]],{0:{axis:'x',amp:3,speed:.55},1:{axis:'z',amp:3,speed:.5},2:{axis:'x',amp:3,speed:.7,phase:Math.PI},3:{spin:18}});
-road('Crane gantry',2150,2236,24,11);rail('Crane outrigger shortcut',2160,2230,25.1,6);
+road('Crane gantry',2150,2236,24,14);rail('Crane outrigger shortcut',2160,2230,25.1,6);
 rest('Counterweight stacks',2240,24);road('Counterweight boarding',2220,2262,24,18);
 for(const [i,s] of [2273,2290,2307,2324].entries()){moving(`Counterweight ${i+1}`,s,24+i*2,19,26,{axis:'y',amp:2.5,speed:.5,phase:i*Math.PI});walk(`Counterweight ${i+1}`,s,24+i*2);}
 road('Counterweight exit',2334,2350,30,18);chain('Stack leap',[[2354,30],[2382,50,-4],[2415,29,4],[2447,24]]);road('Stack catch',2440,2495,24,22);rest('Harbour scissors',2478,24);
@@ -168,9 +172,18 @@ for(const [i,s] of [0,1280,2700].entries())for(let fin=0;fin<=i;fin++)strip(`Act
 for(const [i,[,a,b]] of CARLISLE_RELAY_SECTIONS.entries()){const y=i<6?-8:i<12?4:8,side=i%3===0?1:-1;
  strip('Coastal strata',a+10,b-12,y,32,side*(38+(i%4)*4),38,i%2?DARK:'#768087',false);if(i%3===1)strip('Outer sea stack',a+42,a+75,y+22,15,-side*50,58,DARK,false);}
 add({t:'mesh',nm:'Grey sea',p:[0,-25,-2000],vertices:[-1400,0,-2200,1400,0,-2200,1400,0,2200,-1400,0,2200],indices:[0,2,1,0,3,2],tex:'solid',color:'#677d89',solid:false,grp:90});
-add({t:'pit',nm:'Sea reset',p:[0,-23,-2000],s:[2800,1,4400],invisible:true,grp:90});
+// Native pit boxes follow the descending coast so an early miss still resets
+// promptly, even though the finishing harbour is hundreds of metres lower.
+for(let s=-100;s<4100;s+=50){const a=frame(s),b=frame(s+50);add({t:'pit',nm:'Sea reset',p:[0,elevation(s+50)-23,(a.z+b.z)/2],s:[2800,1,Math.abs(b.z-a.z)+.02],invisible:true,grp:90});}
 for(const [i,stop] of CARLISLE_RELAY_STOPS.entries())for(const u of [-7,7])add({t:'crate',kind:i===0&&u<0?'mask':'wood',p:carlislePoint(stop.s+12,stop.y,u),grp:group(stop.s)});
-export const CARLISLE_RELAY_CROSSINGS=buildCarlisleCrossings(C,roads,carlislePoint,s=>frame(s).yaw,group,CARLISLE_RELAY_STOPS,CARLISLE_RELAY_JUMPS,CARLISLE_RELAY_GRINDS.map(g=>({s:g.finish[0],y:g.finish[1]})));
+return buildCarlisleCrossings(C,roads,carlislePoint,s=>frame(s).yaw,group,CARLISLE_RELAY_STOPS,CARLISLE_RELAY_JUMPS,CARLISLE_RELAY_GRINDS.map(g=>({s:g.finish[0],y:g.finish[1]})));
+}
+// First locate the dry machinery/launch islands. Then lower the whole route
+// through each slippery span, retaining the drop downstream instead of
+// putting an uphill ramp at the end. The final harbour keeps its authored Y.
+const downhill=authorCourse().flatMap(r=>r.slopes);
+elevation=s=>downhill.reduce((sum,r)=>sum+Math.max(0,Math.min(r.to-r.from,r.to-s))*r.grade,0);
+export const CARLISLE_RELAY_CROSSINGS=authorCourse();
 export const CARLISLE_TIDAL_RELAY_LEVEL:CustomLevelData={v:1,name:'Carlisle Coast',spawn:carlislePoint(0,.12),killY:-45,startWarpPad:false,
  sky:'day',hugeDropBail:false,keepPlayFog:true,
  atmosphere:{fogEnabled:true,fogNear:125,fogFar:480,fogColor:'#b4c2c9',drawDistance:680,ambientSky:'#e5e8e8',ambientGround:'#69737a',ambientIntensity:1.3,

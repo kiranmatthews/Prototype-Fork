@@ -30,13 +30,13 @@ try{
  await page.screenshot({path:`${out}/${mode}-start-native.png`});
  await page.keyboard.down('ArrowUp');await page.waitForTimeout(1500);await page.keyboard.up('ArrowUp');report.walk=await snap();assert.equal(report.walk.deaths,0);assert.ok(report.walk.position[2]<report.spawn.position[2]-5);
  // A real native neutral bounce, observed without movement input.
- await place(point(65,.35));await page.waitForFunction(()=>window.__game.player.pos.y>8);report.bounce=await snap();
+ await place(point(65,.35));await page.waitForFunction(y=>window.__game.player.pos.y>y,point(65,8)[1]);report.bounce=await snap();
  assert.ok(Math.hypot(report.bounce.position[0]-point(65,0)[0],report.bounce.position[2]-point(65,0)[2])<.2);
  await page.screenshot({path:`${out}/${mode}-native-bounce.png`});
  // Use the unchanged lighthouse ascent for the giant-air regression; the
  // homecoming spring now deliberately targets a nearby required grind.
  await page.keyboard.down('Space');await place(point(1170,63.35,-3));await page.keyboard.down('ArrowUp');
- await page.waitForFunction(()=>window.__game.player.pos.y>90&&window.__game.player.vVel<2,null,{timeout:15000});
+ await page.waitForFunction(y=>window.__game.player.pos.y>y&&window.__game.player.vVel<2,point(1170,90)[1],{timeout:15000});
  report.apex=await page.evaluate(target=>{const g=window.__game,v=g.player.pos.clone().set(...target).project(g.camera);return{height:g.player.pos.y,targetNdc:v.toArray(),canvas:[g.renderer.domElement.width,g.renderer.domElement.height],preset:g.renderQualitySettings.regularResolution};},point(1204,78,3));
  await page.screenshot({path:`${out}/${mode}-giant-bounce-apex.png`});await page.keyboard.up('ArrowUp');await page.keyboard.up('Space');
  report.airCamera=await cameraSample();assert.ok(report.airCamera.fov>70);assert.ok(report.airCamera.pitch>78&&report.airCamera.pitch<82);assert.ok(report.airCamera.spring>.99);
@@ -72,7 +72,7 @@ try{
   const s=await page.evaluate(()=>{const p=window.__game.player;return{at:p.pos.toArray(),state:p.state,grounded:p.grounded,vy:p.vVel,surface:p.surfaceName,bail:p.isBailing,dir:p.camDir.toArray(),side:p.axisL.toArray(),velocity:p.walkVelocity.toArray(),spring:p.trampolineAir,time:p.runTime};});
   assert.ok(!s.bail&&!['dead','gameover'].includes(s.state),JSON.stringify(s));
   if(s.state==='air'&&s.vy>10){if(s.surface==='Dredger terraces · 1')terraceNext=Math.max(terraceNext,1);if(s.surface==='Dredger terraces · 2')terraceNext=Math.max(terraceNext,2);}
-  if(terraceNext===2&&s.grounded&&Math.abs(s.at[1]-48)<.1)terraceNext=3;
+  if(terraceNext===2&&s.grounded&&Math.abs(s.at[1]-terraceTargets[2][1])<.1)terraceNext=3;
   if(terraceNext===3){
    const control=terraceExitPilot(s,terraceExitTime===null?1/60:Math.max(1/120,Math.min(.15,s.time-terraceExitTime)));terraceExitTime=s.time;
    if(control.done){terraceDone=true;break;}
@@ -87,7 +87,7 @@ try{
   if(Math.abs(side)>1.2)wanted.add(side>0?'ArrowRight':'ArrowLeft');
   if(terraceNext===1||terraceNext===0&&distance<8.5)wanted.add('Space');
   await applyTerraceKeys(wanted);
-  if(!terraceApex&&terraceNext===1&&s.vy<2&&s.at[1]>50){await page.screenshot({path:`${out}/${mode}-terraces-apex.png`});terraceApex=true;}
+  if(!terraceApex&&terraceNext===1&&s.vy<2&&s.at[1]>point(1792,50)[1]){await page.screenshot({path:`${out}/${mode}-terraces-apex.png`});terraceApex=true;}
   await page.waitForTimeout(80);
  }
  await applyTerraceKeys(new Set());report.terraces={done:terraceDone,apexCaptured:terraceApex,samples:terraceSamples,...await snap()};

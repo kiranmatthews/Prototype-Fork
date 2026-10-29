@@ -27,7 +27,7 @@ export function grindPilot(beat,jumps,point,{bypass=false,noPop=false}={}){
   const index=route.findIndex(j=>j.name===p.surface);
   if(p.spring&&p.vy>15&&index>=0&&index!==active){active=index;popping=false;launches.push(p.surface);}
   const atFinish=point(...beat.finish),distance=Math.hypot(p.at[0]-atFinish[0],p.at[2]-atFinish[2]);
-  if(active===route.length-1&&p.grounded&&distance<17&&Math.abs(p.at[1]-beat.finish[1])<3){
+  if(active===route.length-1&&p.grounded&&distance<17&&Math.abs(p.at[1]-atFinish[1])<3){
    if(beat.gate){runout=true;return{input:inputFor(drive(p,point(4001,12))),active};}
    return{done:true,input:inputFor(),active};}
   if(p.state==='grind'){

@@ -17,7 +17,7 @@ await withSkateRuntime(async({level,player:p,CONST,TUNING,THREE})=>{
   const pilot=relayPilot({player:p,level,THREE,makeInput,jumps:api.CARLISLE_RELAY_JUMPS,stops:api.CARLISLE_RELAY_STOPS,walk:api.CARLISLE_RELAY_WALK,point,startS:1770});
   const samples=[];let frame=0,maxRiseSnap=0,exit=null,completed=false;
   for(;frame<60*60;frame++){
-   if(!exit&&p.grounded&&p.pos.y>47&&pilot.events.filter(e=>e.launch).length===2)exit=crossingPilot(api.CARLISLE_RELAY_CROSSINGS.find(r=>r.name.startsWith('Dredger upper terrace')),point);
+   if(!exit&&p.grounded&&p.pos.y>point(1864,47)[1]&&pilot.events.filter(e=>e.launch).length===2)exit=crossingPilot(api.CARLISLE_RELAY_CROSSINGS.find(r=>r.name.startsWith('Dredger upper terrace')),point);
    const control=exit?.({at:p.pos.toArray(),velocity:p.walkVelocity.toArray(),side:p.axisL.toArray(),grounded:p.grounded,spring:p.trampolineAir,vy:p.vVel});
    if(control?.done){completed=true;break;}
    const before=p.pos.clone(),vy=p.vVel,input=control?makeInput(control.input):pilot.input();p.rawInput=input;
@@ -33,7 +33,7 @@ await withSkateRuntime(async({level,player:p,CONST,TUNING,THREE})=>{
   assert.ok(completed,'terrace route did not reach its upper exit');
   assert.deepEqual(launches,['Dredger terraces · 1','Dredger terraces · 2']);
   const outgoing=p.trampolineAir&&p.vVel>15&&p.surfaceName==='Dredger discharge · 1';
-  assert.ok(outgoing||(p.grounded&&Math.abs(p.pos.y-48)<.05),JSON.stringify({position:p.pos.toArray(),surface:p.surfaceName,grounded:p.grounded}));
+  assert.ok(outgoing||(p.grounded&&p.surfaceName?.startsWith('Dredger upper terrace')),JSON.stringify({position:p.pos.toArray(),surface:p.surfaceName,grounded:p.grounded}));
   rows.push({phase,seconds:frame/60,launches,maxRiseSnap,outgoing,position:p.pos.toArray(),samples});
  }
  assert.equal(JSON.stringify(TUNING),tuning);

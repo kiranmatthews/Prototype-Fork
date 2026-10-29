@@ -6206,3 +6206,45 @@ grinds. The normal 480p/CRT launch view was also reviewed after resetting the
 finish-camera flow. Final production stamp: `Codex/sol fork · build 10-29 06:26 UTC`.
 Exact source hashes, test boundaries and reports are recorded in
 [the validation manifest](carlisle-relay/grinds/validation.json).
+
+## 29 October 2026 NZDT — straight, steeper Carlisle descents
+
+Replaced the alternating sideways banks with straight forward pitches:
+18 degrees in the opening act, 22 through the tidal engine, and 26 in the
+finale. Each slippery span stays level across its width and descends all the
+way to its dry exit. The level now carries those height drops downstream,
+without climbing back up at the next spring or checkpoint. The opening sits
+about 294 m above the final harbour's baseline; the 4 km horizontal survey,
+three-act structure and final harbour height remain intact.
+
+The source authors the route twice: once to locate dry boarding/launch islands,
+then once with the cumulative downhill profile. Springs, fruit arcs, rails,
+movers, checkpoints and scenery use that same profile. Small native pit boxes
+follow the descending route to retain prompt fall resets. The long crane
+slide widens from 11 m to 14 m to leave room for corrections at the higher
+speed. Traction, gravity, movement, trampoline controls, camera and tuning
+code are unchanged. Existing red spike obstacles and ordinary edge grinding
+remain active.
+
+Initial native traversal cleared 22 of 23 descents. The crane width was then
+adjusted; final focused validation is recorded in the downhill evidence.
+This increment remains local under the user's publication hold.
+
+First real-keyboard crossing pass: approximately **19 minutes** from the
+forward-slope request (06:35–06:54 UTC), including a shared-capacity wait.
+All 23 native descents, 1,797 support probes and 36 lethal contacts pass.
+Neutral input accelerates forward on the physical slope; uphill input reduces
+that acceleration without restoring dry traction. Every one of the 55 authored
+spring strengths matches the prior grind checkpoint, and all 110 transfers,
+nine grind routes, eight bounded bypass attempts and the terrace climb pass.
+The lite browser clears three representative descents with keyboard inputs,
+confirms neutral downhill drift, spike death and dry checkpoint recovery, and
+reports no console errors.
+
+Required check:levels, final build/type checking and release-size validation
+pass. Production full-render keyboard playtests clear the representative
+descents and all three grind sequences through the finish gate, with no console
+errors. MAX/native 1440×900 and normal 480p/CRT visual review completed.
+Production stamp: `Codex/sol fork · build 10-29 06:59 UTC`; release output
+997,251,918 bytes. Exact hashes and test boundaries are in
+[the downhill validation record](carlisle-relay/downhill/validation.json).

@@ -51,9 +51,9 @@ try{
  report.neutralDrift={before,after,distance:Math.hypot(after.at[0]-before.at[0],after.at[2]-before.at[2])};
  assert.ok(report.neutralDrift.distance>1&&after.wet,JSON.stringify(report.neutralDrift));
  await page.screenshot({path:`${out}/${mode}-neutral-slide.png`});
- // Inspect the sharpest banks from normal gameplay framing at native size.
- for(const index of [2,12,16,19]){const run=runs[index];let s=run.a+4;for(let x=run.a+4;x<run.b-4;x++)if(Math.abs(run.bank(x))>Math.abs(run.bank(s)))s=x;
-  await place(s-6,run.height(s-6,0)+.15);await page.screenshot({path:`${out}/${mode}-bank-${index+1}.png`});}
+ // Inspect the straight forward descents from their high ends at native size.
+ for(const index of [2,12,16,19]){const run=runs[index],slope=run.slopes.reduce((a,b)=>a.to-a.from>b.to-b.from?a:b),s=slope.from+.5;
+  await place(s,run.height(s,0)+.15);await page.screenshot({path:`${out}/${mode}-descent-${index+1}.png`});}
  if(!lite){await place(18,.15);await page.evaluate(()=>{const g=window.__game;g.renderQualitySettings.setRegularResolution(480);g.crtGuestSettings.setEnabled(true);});await page.waitForTimeout(200);await page.screenshot({path:`${out}/full-normal.png`});await page.evaluate(()=>{const g=window.__game;g.renderQualitySettings.setRegularResolution(null);g.crtGuestSettings.setEnabled(false);});}
  const hazard=runs[0].hazards[0];await place(hazard.s,hazard.y+.12,hazard.u);
  await page.evaluate(()=>{const p=window.__game.player;p.masks=0;p.invulnTimer=0;p.uberTimer=0;});

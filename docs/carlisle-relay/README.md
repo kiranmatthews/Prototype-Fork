@@ -126,18 +126,23 @@ explicit starting-inventory limitation.
 
 ## Slippery crossings between sections
 
-The long flat quays are now 23 twisting, banked crossings with 36 red spike
+The long flat quays are now 23 forward downhill crossings with 36 red spike
 obstacles. The blue-grey faces have 2% of dry steering/braking grip and an
 explicit gravity-driven slide. Both feet and boards gain velocity down the
-actual bank; releasing the stick preserves momentum. Correct early or jump to
+actual slope; releasing the stick preserves momentum. Correct early or jump to
 change the line. Ordinary surfaces, existing ice, jumps and the bounce camera
 retain their previous behavior.
 
-Bank height, direction, spacing and width vary along the course. Dry checkpoint
-islands, spring mouths and moving-deck boarding overlaps remain level. Each
+The slippery pitches are 18 degrees early, 22 through the tidal engine and
+26 in the finale. Each drops straight ahead and remains level across its width;
+there are no alternating banks or uphill recovery humps. A cumulative elevation
+profile places earlier sections higher, leaving the final harbour at its original
+height. Springs, rails, machinery, scenery and checkpoints move with their
+section, retaining their intended relative heights. Dry checkpoint islands,
+spring mouths and moving-deck boarding overlaps remain level. Each
 crossing replaces all of its old overlapping floors with one continuous
 ribbon, split only for dry/slippery materials. Shared seam vertices use the
-same origin; no older flat collider is left underneath a lowered bank. All
+same origin; no older flat collider is left underneath a lowered slope. All
 ordinary exposed edges retain their normal grinding behavior.
 
 The new optional `slipGravity` field is bounded to 0–2 and requires `slip`.
@@ -145,7 +150,12 @@ It uses the existing ground-gravity value; Carlisle opts in with 1. Capturing
 and rebuilding preserves the field, and disabling slip in the editor clears
 it. There are no global tuning changes.
 
-![Slippery bank and visible spike line](slippery/full-crossing-1-slide.png)
+The longer crane descent has a 14-metre deck to allow corrections at its higher
+speed. Native invisible pit boxes follow the descending course for prompt
+respawns; the sea and final harbour retain their heights. See
+`downhill/validation.json` for the forward-slope checks and current evidence.
+
+![Forward descent and visible spike line](downhill/full-crossing-1-slide.png)
 
 ## Required grinds in the final 650 metres
 
@@ -173,7 +183,7 @@ slippery-crossing revision. The camera now treats a caught rail as supported
 height instead of retaining the bounce apex over a void; its existing angles,
 FOV and temporary bounce view remain unchanged. Browser checks keep both the
 rider's head and feet inside the frame after each catch settles.
-See `grinds/validation.json` for the final
-source hashes, bounded traversal evidence and exact shortcut-test scope.
+The grind design baseline is recorded in `grinds/validation.json`; the current
+height-adjusted routes and source hashes are covered by `downhill/validation.json`.
 
 ![Required cable catch inside a trampoline challenge](grinds/full-1-rail-1-settled.png)
