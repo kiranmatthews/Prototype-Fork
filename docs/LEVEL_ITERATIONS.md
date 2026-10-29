@@ -6060,3 +6060,28 @@ section traversal, campaign/menu checks, required level checks, production
 build and release size. Browser review covers lite and full rendering, native
 resolution, supported spawn, checkpoint/sea respawn, giant-bounce framing,
 moving transforms and the finish. See [the course and evidence](carlisle-relay/README.md).
+
+## 29 October 2026 NZDT — Carlisle bounce controls and temporary camera
+
+Corrected the follow-up playtest issues: mounted spring bounces now accept the
+existing fresh press/release abandon-ship gesture. Large trampoline airs allow
+up to 60% more lateral correction, immediate reversal and stronger mounted
+forward/back control. Neutral carry, vertical launch, held-Jump multiplier,
+gravity and ordinary jump/ollie behavior remain unchanged; no tuning edits.
+
+Removed Carlisle's permanent wide, high camera. The normal ground view now
+eases toward the wide landing view during large spring airs and returns as the
+air ends. The camera follows the already-interpolated rider vertically during
+these fast ascents, preventing the rider from leaving the frame. Static and
+moving spring lips are now 0.02 m high so boards can roll on without tripping.
+The subsequent Jak and Daxter reference clarification takes the largest airs
+to an 80° bird's-eye tilt, with the camera 26 m above and 4.5 m behind the rider.
+
+Prompt-to-corrected playable local version: approximately **30 minutes**
+(03:37:42–04:07 UTC), including browser diagnosis of the raised spring lip and
+the ascent-camera lag. Focused checks cover static/moving controls, reversal,
+braking, abandon-ship, unchanged native vertical arcs, and walking/mounted entry
+at three mover phases. All 122 native transfer checks pass. Browser and final
+build evidence is kept in [the correction record](carlisle-relay/correction/).
+The user requested continued local playtest rounds; this increment is held
+locally and excluded from release handoff until those rounds are complete.

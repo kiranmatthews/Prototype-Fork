@@ -1,0 +1,561 @@
+{
+  "base": "http://127.0.0.1:5483",
+  "mode": "lite",
+  "errors": [],
+  "captures": [
+    {
+      "name": "Scissor groyne",
+      "position": [
+        82.65102369081731,
+        0,
+        -176.00496518943265
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "checkpoint": -1,
+      "build": "Codex/sol fork · build 10-29 01:17 UTC",
+      "render": {
+        "frame": 1039,
+        "calls": 86,
+        "triangles": 79021,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "name": "Beacon chimney",
+      "position": [
+        -6.0826510532001254,
+        4,
+        -1027.6078159587612
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "checkpoint": -1,
+      "build": "Codex/sol fork · build 10-29 01:17 UTC",
+      "render": {
+        "frame": 1070,
+        "calls": 61,
+        "triangles": 78783,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "name": "Tide dial",
+      "position": [
+        -100.70064804136857,
+        12,
+        -1246.6883052089413
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "checkpoint": -1,
+      "build": "Codex/sol fork · build 10-29 01:17 UTC",
+      "render": {
+        "frame": 1100,
+        "calls": 67,
+        "triangles": 79074,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "name": "Ferris dredger",
+      "position": [
+        -75.89464273127327,
+        16,
+        -1706.3793429683149
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "checkpoint": -1,
+      "build": "Codex/sol fork · build 10-29 01:17 UTC",
+      "render": {
+        "frame": 1132,
+        "calls": 58,
+        "triangles": 79116,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "name": "Harbour scissors",
+      "position": [
+        112.16398537534782,
+        24,
+        -2375.354239400808
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "checkpoint": -1,
+      "build": "Codex/sol fork · build 10-29 01:17 UTC",
+      "render": {
+        "frame": 1163,
+        "calls": 85,
+        "triangles": 78557,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "name": "Helical turbine",
+      "position": [
+        63.91633785329102,
+        24,
+        -2823.5769095395626
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "checkpoint": -1,
+      "build": "Codex/sol fork · build 10-29 01:17 UTC",
+      "render": {
+        "frame": 1194,
+        "calls": 73,
+        "triangles": 78318,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "name": "Double helix",
+      "position": [
+        -89.21493385151419,
+        24,
+        -3220.9824714224696
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "checkpoint": -1,
+      "build": "Codex/sol fork · build 10-29 01:17 UTC",
+      "render": {
+        "frame": 1225,
+        "calls": 80,
+        "triangles": 98182,
+        "points": 10,
+        "lines": 0
+      }
+    },
+    {
+      "name": "The storm eye",
+      "position": [
+        -113.19017313903039,
+        24,
+        -3441.2107252107216
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "checkpoint": -1,
+      "build": "Codex/sol fork · build 10-29 01:17 UTC",
+      "render": {
+        "frame": 1255,
+        "calls": 65,
+        "triangles": 97565,
+        "points": 10,
+        "lines": 0
+      }
+    },
+    {
+      "name": "Homecoming",
+      "position": [
+        -64.54667466456941,
+        24,
+        -3660.792297938554
+      ],
+      "state": "ride",
+      "grounded": true,
+      "deaths": 0,
+      "checkpoint": -1,
+      "build": "Codex/sol fork · build 10-29 01:17 UTC",
+      "render": {
+        "frame": 1286,
+        "calls": 51,
+        "triangles": 96651,
+        "points": 10,
+        "lines": 0
+      }
+    }
+  ],
+  "spawn": {
+    "position": [
+      0,
+      0.12,
+      0
+    ],
+    "state": "ride",
+    "grounded": true,
+    "deaths": 0,
+    "checkpoint": -1,
+    "build": "Codex/sol fork · build 10-29 01:17 UTC",
+    "render": {
+      "frame": 237,
+      "calls": 99,
+      "triangles": 78952,
+      "points": 0,
+      "lines": 0
+    }
+  },
+  "groundCamera": {
+    "fov": 49,
+    "pitch": 25.35000000000001,
+    "spring": 0
+  },
+  "sourceDifferences": [],
+  "sourceMatches": true,
+  "walk": {
+    "position": [
+      5.089729681620107,
+      0,
+      -8.839380720424796
+    ],
+    "state": "ride",
+    "grounded": true,
+    "deaths": 0,
+    "checkpoint": -1,
+    "build": "Codex/sol fork · build 10-29 01:17 UTC",
+    "render": {
+      "frame": 352,
+      "calls": 101,
+      "triangles": 79012,
+      "points": 0,
+      "lines": 0
+    }
+  },
+  "bounce": {
+    "position": [
+      31.953215636905636,
+      16.085833345254276,
+      -56.60124097294549
+    ],
+    "state": "air",
+    "grounded": false,
+    "deaths": 0,
+    "checkpoint": -1,
+    "build": "Codex/sol fork · build 10-29 01:17 UTC",
+    "render": {
+      "frame": 380,
+      "calls": 51,
+      "triangles": 79766,
+      "points": 0,
+      "lines": 0
+    }
+  },
+  "apex": {
+    "height": 163.91333334525487,
+    "targetNdc": [
+      -0.026143743772920485,
+      -0.008170123709443039,
+      0.9988642154425517
+    ],
+    "canvas": [
+      720,
+      450
+    ],
+    "preset": "max"
+  },
+  "airCamera": {
+    "fov": 71.99931876678569,
+    "pitch": 79.99999999234885,
+    "spring": 1
+  },
+  "boardApproach": [
+    {
+      "position": [
+        22.312616367290445,
+        0,
+        -39.08216075237139
+      ],
+      "state": "ride",
+      "board": false,
+      "spring": false,
+      "bounce": false,
+      "speed": 0.20000000000000004,
+      "charge": 0,
+      "charging": true,
+      "held": true,
+      "blocked": false
+    },
+    {
+      "position": [
+        22.312616367290445,
+        0,
+        -39.08216075237139
+      ],
+      "state": "ride",
+      "board": false,
+      "spring": false,
+      "bounce": false,
+      "speed": 0,
+      "charge": 0.19999999999999998,
+      "charging": true,
+      "held": true,
+      "blocked": false
+    },
+    {
+      "position": [
+        22.312616367290445,
+        0,
+        -39.08216075237139
+      ],
+      "state": "ride",
+      "board": false,
+      "spring": false,
+      "bounce": false,
+      "speed": 0,
+      "charge": 0.39999999999999997,
+      "charging": true,
+      "held": true,
+      "blocked": false
+    },
+    {
+      "position": [
+        22.631301694925305,
+        0,
+        -39.65249758193771
+      ],
+      "state": "ride",
+      "board": true,
+      "spring": false,
+      "bounce": false,
+      "speed": 6.0500000000000025,
+      "charge": 0.6500000000000004,
+      "charging": true,
+      "held": true,
+      "blocked": false
+    },
+    {
+      "position": [
+        23.315755597167396,
+        0,
+        -40.8795052012936
+      ],
+      "state": "ride",
+      "board": true,
+      "spring": false,
+      "bounce": false,
+      "speed": 7.850000000000007,
+      "charge": 0.850000000000001,
+      "charging": true,
+      "held": true,
+      "blocked": false
+    },
+    {
+      "position": [
+        24.1738740777957,
+        0,
+        -42.42185966074917
+      ],
+      "state": "ride",
+      "board": true,
+      "spring": false,
+      "bounce": false,
+      "speed": 9.650000000000011,
+      "charge": 1.0500000000000012,
+      "charging": true,
+      "held": true,
+      "blocked": false
+    },
+    {
+      "position": [
+        25.20448474728291,
+        0,
+        -44.28020995506822
+      ],
+      "state": "ride",
+      "board": true,
+      "spring": false,
+      "bounce": false,
+      "speed": 11.450000000000015,
+      "charge": 1.2500000000000004,
+      "charging": true,
+      "held": true,
+      "blocked": false
+    },
+    {
+      "position": [
+        26.40617294714884,
+        0,
+        -46.45533498871593
+      ],
+      "state": "ride",
+      "board": true,
+      "spring": false,
+      "bounce": false,
+      "speed": 13.25000000000002,
+      "charge": 1.4499999999999997,
+      "charging": true,
+      "held": true,
+      "blocked": false
+    },
+    {
+      "position": [
+        27.77728072426301,
+        0,
+        -48.94814179674507
+      ],
+      "state": "ride",
+      "board": true,
+      "spring": false,
+      "bounce": false,
+      "speed": 15.050000000000024,
+      "charge": 1.649999999999999,
+      "charging": true,
+      "held": true,
+      "blocked": false
+    },
+    {
+      "position": [
+        28.784840750346298,
+        0.9379166785875956,
+        -50.78744089096234
+      ],
+      "state": "air",
+      "board": true,
+      "spring": true,
+      "bounce": true,
+      "speed": 16.28130176374557,
+      "charge": 1.7666666666666653,
+      "charging": false,
+      "held": true,
+      "blocked": false
+    }
+  ],
+  "sidestep": {
+    "at": [
+      28.784840750346298,
+      0.9379166785875956,
+      -50.78744089096234
+    ],
+    "side": [
+      0.8774431925758509,
+      0,
+      0.47968056433662004
+    ],
+    "time": 2.2666666666666635,
+    "speed": 16.28130176374557,
+    "ejected": false,
+    "sideways": 4.402084783392408,
+    "position": [
+      35.119725508200816,
+      16.636666678587606,
+      -53.19824676703288
+    ],
+    "state": "air",
+    "grounded": false,
+    "deaths": 0,
+    "checkpoint": -1,
+    "build": "Codex/sol fork · build 10-29 01:17 UTC",
+    "render": {
+      "frame": 835,
+      "calls": 60,
+      "triangles": 86101,
+      "points": 0,
+      "lines": 0
+    }
+  },
+  "abandon": {
+    "sideways": 4.402084783392408,
+    "move": "Emergency Eject",
+    "board": false,
+    "looseBoard": true,
+    "double": false,
+    "speed": 16.28130176374557,
+    "screenFeet": [
+      0.12035899057924725,
+      -0.2522875971813333,
+      0.9901653521976576
+    ],
+    "screenHead": [
+      0.1334306766930033,
+      -0.18921269772335766,
+      0.9890653046855877
+    ]
+  },
+  "checkpoint": {
+    "position": [
+      84.49885359761562,
+      0,
+      -181.28199487345088
+    ],
+    "state": "ride",
+    "grounded": true,
+    "deaths": 0,
+    "checkpoint": 0,
+    "build": "Codex/sol fork · build 10-29 01:17 UTC",
+    "render": {
+      "frame": 874,
+      "calls": 169,
+      "triangles": 681507,
+      "points": 0,
+      "lines": 0
+    }
+  },
+  "returnCamera": {
+    "fov": 49,
+    "pitch": 25.350000000000083,
+    "spring": 0
+  },
+  "respawn": {
+    "position": [
+      84.47885359761563,
+      0.1,
+      -182.76199487345087
+    ],
+    "state": "ride",
+    "grounded": true,
+    "deaths": 0,
+    "checkpoint": 0,
+    "build": "Codex/sol fork · build 10-29 01:17 UTC",
+    "render": {
+      "frame": 1008,
+      "calls": 84,
+      "triangles": 79007,
+      "points": 0,
+      "lines": 0
+    }
+  },
+  "machines": {
+    "count": 41,
+    "changed": 41,
+    "preset": "max",
+    "canvas": [
+      720,
+      450
+    ],
+    "resolution": {
+      "viewportWidth": 1440,
+      "viewportHeight": 900,
+      "inputWidth": 1152,
+      "inputHeight": 720,
+      "outputWidth": 1152,
+      "outputHeight": 720
+    }
+  },
+  "finish": {
+    "position": [
+      -51.75430349720675,
+      12.726666669150193,
+      -3848.6583188025943
+    ],
+    "state": "finished",
+    "grounded": true,
+    "deaths": 0,
+    "checkpoint": -1,
+    "build": "Codex/sol fork · build 10-29 01:17 UTC",
+    "render": {
+      "frame": 1467,
+      "calls": 42,
+      "triangles": 96548,
+      "points": 34,
+      "lines": 0
+    }
+  }
+}

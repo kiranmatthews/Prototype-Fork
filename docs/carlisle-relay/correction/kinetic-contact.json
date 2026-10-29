@@ -1,0 +1,18 @@
+{
+  "riderSeconds": 4,
+  "maxDrift": 4.050960254169386e-14,
+  "rotatingGrind": true,
+  "roundTrip": true,
+  "invalidMotionRejected": true,
+  "entry": {
+    "phases": [
+      0,
+      7,
+      53
+    ],
+    "onFoot": true,
+    "mountedRollOn": true,
+    "bails": 0,
+    "springLipMetres": 0.02
+  }
+}

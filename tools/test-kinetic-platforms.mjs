@@ -31,11 +31,10 @@ await withSkateRuntime(async({level,player:p,CONST,THREE,server})=>{
  console.log(JSON.stringify({riderSeconds:4,maxDrift,rotatingGrind:true,roundTrip:true,invalidMotionRejected:true}));
 },{levelEntry:{id:'__kinetic',name:data.name,data}});
 
-// A raised spring must take contact priority over an overlapping approach.
-// Otherwise a held Jump can cross the skate-entry threshold on the walkway.
+// A 2 cm spring lip takes contact priority without tripping a rolling board.
 const entry={v:1,name:'Native spring approach',spawn:[0,.12,0],killY:-30,components:[
  {t:'platform',p:[0,-.5,-4],s:[20,1,14]},
- {t:'mover',p:[0,.2,-15],s:[15,.6,16],axis:'x',amp:3,speed:.55,bounce:44.5},
+ {t:'mover',p:[0,.02,-15],s:[15,.6,16],axis:'x',amp:3,speed:.55,bounce:44.5},
  {t:'gate',p:[0,0,-100]}]};
 await withSkateRuntime(async({level,player:p,CONST})=>{
  p.competitionMode=false;p.endlessDeaths=true;
@@ -48,6 +47,14 @@ await withSkateRuntime(async({level,player:p,CONST})=>{
   assert.ok(launched,`spring did not launch at phase ${phase}`);
   assert.equal(p.freeSkate,false,'overlapping walkway engaged hold-to-skate before the spring');
   assert.equal(p.airFromSkate,false);assert.ok(Math.abs(p.vVel-44.5*1.25)<.6);
+  p.respawn(level,true);level.time=phase;level.update(0);launched=false;
+  for(let i=0;i<240;i++){
+   p.step(CONST.fixedStep,makeInput({moveY:1,jumpHeld:true}),level);level.update(CONST.fixedStep);
+   if(p.trampolineAir&&p.bounceJump){launched=true;break;}
+  }
+  assert.ok(launched,`mounted entry missed spring at phase ${phase}`);
+  assert.equal(p.freeSkate,true,'spring lip tripped the board before launch');
+  assert.equal(p.isBailing,false);assert.equal(p.airFromSkate,true);
  }
- console.log('PASS native held-Jump entry stays on foot at three mover phases.');
+ console.log('PASS native held-Jump entry and mounted roll-on at three mover phases.');
 },{levelEntry:{id:'__spring_entry',name:entry.name,data:entry}});

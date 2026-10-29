@@ -1,0 +1,78 @@
+{
+  "delivery": "local playtest only; user hold on release",
+  "localPlaytest": "http://127.0.0.1:5483/?playtest&level=carlisle-coast",
+  "productionPreview": "http://127.0.0.1:5484/?playtest&level=carlisle-coast",
+  "build": "Codex/sol fork \u00b7 build 10-29 04:17 UTC",
+  "sourceSha256": {
+    "src/player.ts": "77694a4105a92970a6cda688edfb60766cd580aef3890b4cfc0fe09f6532eef6",
+    "src/main.ts": "9af0b1ae9722ae152e13c96ed215f45d0dcc2b7d3ed5112b44a7fb71b486c0b7",
+    "src/levels/carlisle-tidal-relay.ts": "b15b680ced78c39f3e4a9604ac8ca9a2d86949b86fff09b4bc38e3571b930a7f",
+    "public/levels.json": "5e27e77bbeabff54949749e9bc8c9cbc0185297bd02df02a9c11129f9ee8889b",
+    "tools/fixtures/stock-level-snapshots.json": "1b6f2669a4729e990e795b168b8e0acd1b62179a1ac7000a036a55379a6ae0d4",
+    "tools/test-trampoline-controls.mjs": "b9b83867e4feca967de6a2b335648f45348eb78c139a3096365599addadf9ee5",
+    "tools/test-kinetic-platforms.mjs": "0d73b04f6d4771a6fa2687df3e0ee79d1ef17cf00500bf7d853256232a1d4723",
+    "tools/carlisle-relay-browser.mjs": "85d7ac0726b4ef32cef7643c33869da4b3ac62029a7644bc112902b032dbe2bd"
+  },
+  "checks": {
+    "trampolineControls": "passed",
+    "boardAbandonSteering": "passed",
+    "movingDeckContactAndOnFootMountedEntry": "passed at phases 0, 7, 53",
+    "nativeTransfers": "122 passed at phases 0, 7",
+    "check:levels": "passed",
+    "build": "passed",
+    "check:release": "passed"
+  },
+  "releaseBytes": 997245360,
+  "releaseBudgetBytes": 1000000000,
+  "browser": {
+    "lite": {
+      "sourceMatches": true,
+      "errors": []
+    },
+    "full": {
+      "sourceMatches": true,
+      "errors": [],
+      "nativeCanvas": [
+        1440,
+        900
+      ],
+      "normalPresentationCaptured": true
+    }
+  },
+  "camera": {
+    "ground": {
+      "fov": 49,
+      "pitch": 25.35000000000001,
+      "spring": 0
+    },
+    "apex": {
+      "fov": 71.99907742906481,
+      "pitch": 79.99999999209736,
+      "spring": 1
+    },
+    "recovery": {
+      "fov": 49,
+      "pitch": 25.350000000000083,
+      "spring": 0
+    }
+  },
+  "mountedSidestepMetresInAbout0_3Seconds": 4.402084783392408,
+  "abandon": {
+    "sideways": 4.402084783392408,
+    "move": "Emergency Eject",
+    "board": false,
+    "looseBoard": true,
+    "double": false,
+    "speed": 16.28130176374557,
+    "screenFeet": [
+      0.1253766197155545,
+      -0.23485217473213596,
+      0.990148543554707
+    ],
+    "screenHead": [
+      0.13901142921837617,
+      -0.16958819056386795,
+      0.9890451994049967
+    ]
+  }
+}

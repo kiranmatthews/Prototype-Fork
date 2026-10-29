@@ -1110,6 +1110,22 @@ export class Player {
   private airborneT = 0; // seconds since leaving the ground — gates how LATE a double can fire
   private airPeakY = 0; // highest feet position in this authored air; huge-drop landing evidence
   private launchVy = 0; // vertical pop this air started with — scales the double-jump window
+  private trampolineAir = false;
+  private trampolineLaunchY = 0;
+  private trampolineLaunchSpeed = 0;
+
+  private get trampolineAirStrength(): number {
+    const rise = this.trampolineLaunchSpeed ** 2 / (2 * Math.max(1, TUNING.riseGravity));
+    return THREE.MathUtils.smoothstep(rise, 12, 55);
+  }
+
+  /** Presentation only: widen during large spring airs, including a board eject. */
+  get trampolineCameraTarget(): number {
+    if (!this.trampolineAir || this.state !== 'air' || this.isBailing || this.vertAir ||
+        (!this.bounceJump && !this.emergencyEjectLandingPending)) return 0;
+    const floor = this.groundHit?.y ?? this.trampolineLaunchY;
+    return this.trampolineAirStrength * THREE.MathUtils.smoothstep(this.pos.y - floor, 1.5, 18);
+  }
   private skateCharge = 0; // commit meter: time X has been held WITH a direction
   private lastPlanar = 0; // measured ground speed last step, any direction
   private lastVelX = 0; // measured horizontal velocity last step (u/s) —
@@ -3402,6 +3418,9 @@ export class Player {
     this.airMomentum = this.freeSkate;
     this.floatAir = false;
     this.bounceRefresh();
+    this.trampolineAir = true;
+    this.trampolineLaunchY = this.pos.y;
+    this.trampolineLaunchSpeed = this.vVel;
     this.score(CONST.ptsBouncy, 'Boing');
     sfx.play('crateBounce', 0.8, input.jumpHeld ? 1.25 : 1.05);
     return true;
@@ -4685,6 +4704,7 @@ export class Player {
       this.airborneT = 0; // the double-jump window clock starts at takeoff
       this.airPeakY = this.pos.y;
       this.bounceJump = false;
+      this.trampolineAir = false;
     } else {
       // first airborne frame records the pop that launched this air, so the
       // double-jump window can scale with the jump's actual size
@@ -8190,12 +8210,15 @@ export class Player {
   }
 
   private tickEmergencyBoardEject(dt: number, input: Input): boolean {
+    // A mounted spring bounce uses foot gravity, but still owns a board that
+    // the player can abandon with the ordinary fresh press/release gesture.
+    const springAir = this.trampolineAir && this.bounceJump && !this.airJumpUsed;
     const eligible =
       this.state === 'air' &&
-      this.boardOllieAir &&
+      (this.boardOllieAir || springAir) &&
       this.freeSkate &&
       this.airFromSkate &&
-      this.airGrav === 'board' &&
+      (this.airGrav === 'board' || springAir) &&
       !this.emergencyEjectUsed &&
       !this.vertAir &&
       !this.pipeHang &&
@@ -8671,6 +8694,8 @@ export class Player {
         !this.airMomentum && // grind/slide exits keep flying, even when slow
         Math.abs(this.speed) <= TUNING.walkSpeed + 0.5;
       const doubleScale = this.doubleJumpAir ? TUNING.doubleJumpHorizontalScale : 1;
+      const springControl = this.trampolineAir && this.bounceJump ? this.trampolineAirStrength : 0;
+      const lateralSpeed = TUNING.walkSpeed * (1 + .6 * springControl);
       // Digital diagonals in the air get the same normalization as the walk.
       const diag = !level.boss && footAir && input.moveX !== 0 && input.moveY !== 0 ? Math.SQRT1_2 : 1;
       if (footAir) {
@@ -8683,22 +8708,25 @@ export class Player {
           .multiplyScalar(this.speed)
           .addScaledVector(
             this.axisL,
-            input.moveX * TUNING.walkSpeed * diag * doubleScale,
+            input.moveX * lateralSpeed * diag * doubleScale,
           );
       } else if (Math.abs(input.moveY) > 0.05) {
         // Braking (input against travel) bites harder than stretching, in
         // either direction.
         const opposing = input.moveY * this.speed < 0;
-        const rate = opposing ? TUNING.airControl * CONST.airBrakeFactor : TUNING.airControl;
+        const acceleration = Math.max(TUNING.airControl, springControl * 12);
+        const rate = opposing ? acceleration * CONST.airBrakeFactor : acceleration;
         // An authored pad keeps its finite speed window across a jump, just as on the ground.
         const carryCap = Math.max(TUNING.downhillMax, this.grindBoostT > 0 ? this.speedPadCap : 0, this.skateOverdriveCeiling);
         const cap = this.gravityTrackAir ? Math.max(carryCap,Math.abs(this.speed)) : carryCap;
         this.speed = THREE.MathUtils.clamp(this.speed + rate * input.moveY * dt, -cap, cap);
       }
-      if (footAir && Math.abs(input.moveX) > 0.05) {
+      // Large spring airs allow a deliberate sidestep even on the board.
+      // Neutral input adds no drift and leaves carried forward speed intact.
+      if ((footAir || springControl > 0) && Math.abs(input.moveX) > 0.05) {
         this.pos.addScaledVector(
           this.axisL,
-          input.moveX * TUNING.walkSpeed * diag * doubleScale * dt,
+          input.moveX * lateralSpeed * diag * doubleScale * dt,
         );
       }
     }
@@ -14320,6 +14348,7 @@ export class Player {
   // clock restarts (next frame records the bounce pop as the window's scale),
   // and even a skate-origin air earns ONE extra tap off the lid.
   private bounceRefresh(): void {
+    this.trampolineAir = false; // a crate/enemy bounce starts its own ordinary air
     const rescued = this.retireAirRescueFailure();
     this.clearCoyoteJumpWindow();
     this.airJumpUsed = false;

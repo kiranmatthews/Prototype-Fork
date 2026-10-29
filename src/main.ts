@@ -2062,6 +2062,7 @@ const cam2ViewForward = new THREE.Vector3();
 const cam2LaneOrigin = new THREE.Vector3();
 const cam2LaneHeading = new CourseCameraHeading();
 const cameraViewFraming2 = new CameraViewFraming();
+let trampolineCameraBlend2 = 0;
 const cameraFallHold2 = new CameraFallHold();
 const carlisleSceneryCamera2 = new CarlisleSceneryCamera();
 const chiefCamera2 = new ChiefCamera();
@@ -2109,8 +2110,17 @@ function updateCamera2(dt: number): void {
 function updateBaseCamera2(dt: number): void {
   if (!p2) return;
   const subject = p2.renderPosition;
-  const cameraValues = level.cameraRig ?? TUNING;
   const snapped = cam2RenderSnapVersion !== p2.renderSnapVersion;
+  trampolineCameraBlend2 = snapped ? 0 : THREE.MathUtils.lerp(trampolineCameraBlend2,
+    p2.trampolineCameraTarget, 1 - Math.exp(-8 * Math.max(0, dt)));
+  if (trampolineCameraBlend2 < .0001) trampolineCameraBlend2 = 0;
+  const baseCamera = level.cameraRig ?? TUNING;
+  const cameraValues = trampolineCameraBlend2 === 0 ? baseCamera : {
+    camDist: THREE.MathUtils.lerp(baseCamera.camDist, 4.5, trampolineCameraBlend2),
+    camHeight: THREE.MathUtils.lerp(baseCamera.camHeight, 26, trampolineCameraBlend2),
+    camPitch: THREE.MathUtils.lerp(baseCamera.camPitch, 80, trampolineCameraBlend2),
+    camFov: THREE.MathUtils.lerp(baseCamera.camFov, 72, trampolineCameraBlend2),
+  };
   if (snapped) {
     cam2RenderSnapVersion = p2.renderSnapVersion;
     cam2LaneCursor.s = -1;
@@ -2175,7 +2185,8 @@ function updateBaseCamera2(dt: number): void {
   const ty = subject.y + framing.height;
   const k = snapped ? 1 : Math.min(1, 9 * dt);
   camera2.position.x += (tx - camera2.position.x) * k;
-  camera2.position.y += (ty - camera2.position.y) * k;
+  if (trampolineCameraBlend2 > 0) camera2.position.y = ty;
+  else camera2.position.y += (ty - camera2.position.y) * k;
   camera2.position.z += (tz - camera2.position.z) * k;
   if (laneTarget) {
     fitCameraRigHorizontal(camera2.position, cam2ViewForward, framing.pitch,
@@ -4514,6 +4525,7 @@ const camF = new THREE.Vector3(0, 0, -1);
 const skateChaseCamera = new SkateChaseCamera();
 
 const cameraViewFraming = new CameraViewFraming();
+let trampolineCameraBlend = 0;
 const cameraFallHold = new CameraFallHold();
 const carlisleSceneryCamera = new CarlisleSceneryCamera();
 const chiefCamera = new ChiefCamera();
@@ -4569,7 +4581,19 @@ function updateCamera(dt: number): void {
 
 function updateBaseCamera(dt: number): void {
   const subject = player.renderPosition;
-  const cameraValues = level.cameraRig ?? TUNING;
+  // The ground rig remains the authored/default rig. Only a large trampoline
+  // air eases out to the wide landing view; touchdown eases back in.
+  trampolineCameraBlend = cameraRenderSnapVersion !== player.renderSnapVersion ? 0 :
+    THREE.MathUtils.lerp(trampolineCameraBlend, player.trampolineCameraTarget,
+      1 - Math.exp(-8 * Math.max(0, dt)));
+  if (trampolineCameraBlend < .0001) trampolineCameraBlend = 0;
+  const baseCamera = level.cameraRig ?? TUNING;
+  const cameraValues = trampolineCameraBlend === 0 ? baseCamera : {
+    camDist: THREE.MathUtils.lerp(baseCamera.camDist, 4.5, trampolineCameraBlend),
+    camHeight: THREE.MathUtils.lerp(baseCamera.camHeight, 26, trampolineCameraBlend),
+    camPitch: THREE.MathUtils.lerp(baseCamera.camPitch, 80, trampolineCameraBlend),
+    camFov: THREE.MathUtils.lerp(baseCamera.camFov, 72, trampolineCameraBlend),
+  };
   if ((current.id === "warproom" || level.isCampaignMap) && worldMapController?.active) {
     worldMapController.frameCamera(camera, dt);
     if(!editorViewActive)mapIslandLighting?.update(worldMapController.destinationKey,dt);
@@ -4771,7 +4795,8 @@ function updateBaseCamera(dt: number): void {
   // rising — same physics, but every air reads much bigger and floatier).
   // High-air courses may opt into full vertical framing without changing
   // global tuning, camera yaw, or the player's camera-relative input frame.
-  const airLift = swimmingView||waterDeath!==null ? 1 : Math.max(level.cameraAirLift ?? TUNING.camAirLift, boulderF, sideF);
+  const springFollow = trampolineCameraBlend > 0;
+  const airLift = swimmingView||waterDeath!==null||springFollow ? 1 : Math.max(level.cameraAirLift ?? TUNING.camAirLift, boulderF, sideF);
   // Full-follow centres the visible posed rider, not just the feet that own
   // collision. The readonly pose offset is zero on ordinary upright support.
   const poseYOffset = level.cameraAirLift === 1 ? (player.cameraPoseYOffset ?? 0) : 0;
@@ -4818,7 +4843,7 @@ function updateBaseCamera(dt: number): void {
     // without a second Y delay, on ramps as well as in the air. The shared
     // side-scrolls use this too so the close shot cannot lag behind a jump.
     // Other default and partial-follow courses retain their existing damping.
-    if (level.cameraAirLift === 1 || inTurn) camera.position.y = camTarget.y;
+    if (level.cameraAirLift === 1 || inTurn || springFollow) camera.position.y = camTarget.y;
     else camera.position.y += (camTarget.y - camera.position.y) * kY;
   }
 

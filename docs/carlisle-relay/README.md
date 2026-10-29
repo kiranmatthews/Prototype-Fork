@@ -18,21 +18,36 @@ targets are 500/620/780 seconds and remain provisional greybox targets.
 
 Springs call the existing player trampoline implementation. They set vertical
 launch speed and use the existing 1.25× held-jump multiplier. Gravity, terminal
-fall speed, air steering, walking and skateboard momentum are unchanged. A
+fall speed, walking and neutral skateboard momentum are unchanged. An on-foot
 neutral bounce has zero horizontal displacement. Hold Jump through a landing
 for the higher bounce, and use the normal movement controls to steer.
+
+Following playtest feedback, large trampoline airs now allow up to 60% more
+lateral correction, immediate countersteering and mounted forward/back control.
+Neutral input adds no sideways drift. A mounted bounce accepts the existing
+fresh press/release abandon-ship jump; an on-foot bounce retains its double
+jump. Small springs and ordinary jump/ollie controls retain their normal feel.
 
 Authoring measures flight duration against the native movement model and allows
 for a takeoff near the back edge of a pad and both platforms' motion ranges. No target vectors, homing, horizontal
 launch impulses, gravity overrides or global tuning changes are shipped.
-Spring surfaces sit 0.2 m above their approach height, preventing coplanar
-walkway contacts from delaying a bounce long enough to engage hold-to-skate.
+Spring surfaces sit 0.02 m above their approach height. This wins overlapping
+support contacts while allowing a skateboard to roll onto the spring without
+tripping on a raised lip. Static and moving springs use the same top offset.
 
 The shared mover primitive gains bounded elliptical motion, continuous yaw and
 an optional native trampoline surface. Mover contact displacement includes rotation as well as translation; the
 existing dynamic edge system retains grindable rims. Closed grey decks and cliffs establish the coast, amber identifies springs,
-and blue-grey identifies machinery. The elevated camera keeps landing surfaces
-visible at the apex of the large arcs.
+and blue-grey identifies machinery. The ground camera uses normal tuning.
+Large spring airs ease toward a near-overhead landing view (4.5 m behind,
+26 m above, 80° tilt and 72° lens), then return to the ground view. The camera never changes
+the input frame or the bounce trajectory.
+
+The overhead revision follows the user's Jak and Daxter reference. OpenGOAL's
+[Jak 1 camera contract](https://github.com/open-goal/jak-project/blob/master/goal_src/jak1/engine/camera/camera-h.gc#L328-L329)
+defines separate long/short launcher camera states; Carlisle likewise scopes
+its presentation to the spring air. The 80° angle and framing distances above
+are this prototype's chosen values, not a claim about Jak's exact settings.
 
 ## Reproducible checks
 
@@ -40,22 +55,28 @@ visible at the apex of the large arcs.
   source validity, 4 km survey and three-act structure. `PHASES=0,7` exercises
   all 61 transfers at two machinery timings.
 - `node tools/test-kinetic-platforms.mjs`: stationary rider carry, live rim
-  grinding, native held-Jump entry at three mover phases, capture round-trip
+  grinding, on-foot and mounted entry at three mover phases, capture round-trip
   and invalid motion rejection.
+- `node tools/test-trampoline-controls.mjs`: static/moving spring parity,
+  sidesteps, reversal, braking, neutral carry, unchanged vertical arcs,
+  abandon-ship, foot double jumps and unchanged small springs/ordinary ollies.
 - `node tools/test-carlisle-route.mjs`: ordinary input-only route pilot; optional
   `START_S` starts once at a checkpoint, and `END_S` bounds a section review.
   It does not edit positions, velocity, gravity or machine clocks during play.
 - `node tools/carlisle-relay-browser.mjs [--lite]`: real browser spawn, walking,
-  neutral and giant held bounces, visible landing at apex, checkpoint/sea
+  neutral and giant held bounces, normal ground/adaptive air camera, visible
+  landing at apex, mounted entry/steering/abandon-ship, checkpoint/sea
   recovery, moving transforms, finish and console checks. Full mode verifies
   the native canvas, then captures the normal presentation.
 - `node tools/sync-carlisle-relay.mjs`: updates only this level's published
   snapshot and stock certificate, preserving other authored levels.
 
-See `native-physics.json`, `kinetic-contact.json` and `full-browser.json` for
-measured results. Traversal reports are checkpoint-section reviews, not a claim
+See `native-physics.json`, `correction/kinetic-contact.json` and `correction/full-browser.json`
+for measured results. The correction directory records the latest controls and
+camera review; the original browser evidence remains in this directory.
+Traversal reports are checkpoint-section reviews, not a claim
 of an uninterrupted zero-death speedrun. The timing pilot can miss a rotating
 handoff; the course deliberately retains waiting and jumping decisions.
 The browser checks use isolated profiles and do not alter the user's saved games.
 
-![Giant native bounce with its landing visible](full-giant-bounce-apex.png)
+![Giant native bounce with its landing visible](correction/full-giant-bounce-apex.png)

@@ -67,10 +67,11 @@ function spring(name:string,from:Station,to:Station,motion?:Partial<CustomCompon
  // perfectly centred takeoff.
  for(let i=0;i<28;i++){const mid=(low+high)/2;if(flight(mid,to[1]-from[1])*TUNING.walkSpeed<distance+7.5+motionMargin)low=mid;else high=mid;}
  const up=Math.round(high/1.25*10)/10;CARLISLE_RELAY_JUMPS.push({name,from,to,up,moving:!!motion});
- // Keep the spring above overlapping approach decks so an equal-height
- // support tie cannot delay the native bounce and engage hold-to-skate.
- if(motion)moving(name,from[0],from[1]+.2,15,16,{bounce:up,color:SPRING,...motion},from[2]??0);
- else{add({t:'trampoline',nm:name,p:[a[0],a[1]+.2,a[2]],s:[13,.6,14],yaw:frame(from[0]).yaw,speed:up,amp:1.25,tex:'solid',color:SPRING,grp:group(from[0])});
+ // A 2 cm top offset wins coplanar support ties without creating a curb
+ // that trips a rolling board. Both trampoline and mover primitives place
+ // their top at p.y; the mover builder already subtracts its half-height.
+ if(motion)moving(name,from[0],from[1]+.02,15,16,{bounce:up,color:SPRING,...motion},from[2]??0);
+ else{add({t:'trampoline',nm:name,p:[a[0],a[1]+.02,a[2]],s:[13,.6,14],yaw:frame(from[0]).yaw,speed:up,amp:1.25,tex:'solid',color:SPRING,grp:group(from[0])});
   for(const u of [-5.6,5.6])for(const ds of [-5.7,5.7])box(`${name} · spring foot`,from[0]+ds,from[1]-.6,1.1,1.1,(from[2]??0)+u,3,DARK);}
  const time=flight(up*1.25,to[1]-from[1]);let y=from[1],vy=up*1.25;
  for(let n=1;n<=Math.ceil(time*60);n++){vy=Math.max(-CONST.maxFallSpeed,vy-(vy>0?TUNING.riseGravity:TUNING.fallGravity)/60);y+=vy/60;
@@ -147,7 +148,7 @@ add({t:'mesh',nm:'Grey sea',p:[0,-25,-2000],vertices:[-1400,0,-2200,1400,0,-2200
 add({t:'pit',nm:'Sea reset',p:[0,-23,-2000],s:[2800,1,4400],invisible:true,grp:90});
 for(const [i,stop] of CARLISLE_RELAY_STOPS.entries())for(const u of [-7,7])add({t:'crate',kind:i===0&&u<0?'mask':'wood',p:carlislePoint(stop.s+12,stop.y,u),grp:group(stop.s)});
 export const CARLISLE_TIDAL_RELAY_LEVEL:CustomLevelData={v:1,name:'Carlisle Coast',spawn:carlislePoint(0,.12),killY:-45,startWarpPad:false,
- sky:'day',cameraAirLift:1,cameraLookAhead:12,cameraRig:{camDist:14,camHeight:12,camPitch:45,camFov:72},hugeDropBail:false,keepPlayFog:true,
+ sky:'day',hugeDropBail:false,keepPlayFog:true,
  atmosphere:{fogEnabled:true,fogNear:125,fogFar:480,fogColor:'#b4c2c9',drawDistance:680,ambientSky:'#e5e8e8',ambientGround:'#69737a',ambientIntensity:1.3,
  sunColor:'#fff1d6',sunIntensity:1.6,fillColor:'#bbd0dc',fillIntensity:.4,shadowStrength:.65,backdrop:'fog',fallbackTop:'#9bafbd',fallbackBottom:'#c4cdd0'},
  medalTimes:{gold:500,silver:620,bronze:780},groups,components:C};

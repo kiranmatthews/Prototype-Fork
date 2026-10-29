@@ -1,0 +1,56 @@
+{
+  "rows": [
+    {
+      "kind": "static",
+      "board": false,
+      "sidewaysMetresInHalfSecond": 7.200000000000005,
+      "neutral": {
+        "x": 0,
+        "z": 0,
+        "y": 36.986666678587625,
+        "vy": 62.95000000000009,
+        "speed": 0
+      }
+    },
+    {
+      "kind": "static",
+      "board": true,
+      "sidewaysMetresInHalfSecond": 7.200000000000005,
+      "neutral": {
+        "x": 0,
+        "z": -5.994700000000003,
+        "y": 36.986666678587625,
+        "vy": 62.95000000000009,
+        "speed": 11.9894
+      }
+    },
+    {
+      "kind": "moving",
+      "board": false,
+      "sidewaysMetresInHalfSecond": 7.20000000000006,
+      "neutral": {
+        "x": 0,
+        "z": 0,
+        "y": 36.986666678587625,
+        "vy": 62.95000000000009,
+        "speed": 0
+      }
+    },
+    {
+      "kind": "moving",
+      "board": true,
+      "sidewaysMetresInHalfSecond": 7.20000000000006,
+      "neutral": {
+        "x": 0,
+        "z": -5.9947000000000035,
+        "y": 36.986666678587625,
+        "vy": 62.95000000000009,
+        "speed": 11.9894
+      }
+    }
+  ],
+  "ordinaryOllie": true,
+  "footDoubleJump": true,
+  "smallSpringUnchanged": true,
+  "tuningUnchanged": true
+}
