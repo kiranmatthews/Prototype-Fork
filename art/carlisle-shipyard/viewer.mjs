@@ -3,7 +3,7 @@ import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {GLTFExporter} from 'three/addons/exporters/GLTFExporter.js';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import {MeshoptDecoder} from 'three/addons/libs/meshopt_decoder.module.js';
-import {createMarineNet} from './marine-net.mjs';
+import {CarlisleMarineNet} from '../../src/carlisleMarineNet.ts';
 
 const stage=document.querySelector('#stage');
 const scene=new THREE.Scene();scene.background=new THREE.Color(0x132338);
@@ -39,27 +39,28 @@ function getFraming(){
 }
 function dispose(object){object.traverse(node=>{if(!node.isMesh)return;node.geometry.dispose();for(const material of Array.isArray(node.material)?node.material:[node.material]){for(const value of Object.values(material))if(value?.isTexture)value.dispose();material.dispose()}})}
 async function show(id){const token=++loading;document.querySelector('#error').textContent='';document.querySelector('#status').textContent='Loading asset…';const asset=options.find(a=>a.id===id)??options[0];select.value=asset.id;
- try{let object;
-  if(asset.procedural){object=createMarineNet();net=object;object.position.y=1.1;}
-  else{const gltf=await loader.loadAsync('/'+asset.model);object=gltf.scene;net=null;object.updateMatrixWorld(true);const bounds=new THREE.Box3().setFromObject(object);const center=bounds.getCenter(new THREE.Vector3());
-    if(asset.assembly){const size=bounds.getSize(new THREE.Vector3()),unit=Math.min(size.x,size.z);net=createMarineNet({width:size.x*.81,length:size.z*.81,cell:unit*.092,radius:unit*.005,sag:unit*.018,depth:unit*.14});net.position.set(center.x,bounds.min.y+size.y*.73,center.z);object.add(net);}
+ try{let object,nextNet;
+  if(asset.procedural){nextNet=new CarlisleMarineNet(6,4);object=nextNet.group;object.position.y=1.1;}
+  else{const gltf=await loader.loadAsync('/'+asset.model);object=gltf.scene;nextNet=null;object.updateMatrixWorld(true);const bounds=new THREE.Box3().setFromObject(object);const center=bounds.getCenter(new THREE.Vector3());
+    if(asset.assembly){const size=bounds.getSize(new THREE.Vector3());nextNet=new CarlisleMarineNet(size.x,size.z,size.y);nextNet.group.position.set(center.x,bounds.min.y+size.y*.87,center.z);object.add(nextNet.group);}
     object.position.sub(new THREE.Vector3(center.x,bounds.min.y,center.z));}
-  if(token!==loading){dispose(object);return}
-  if(current){scene.remove(current);dispose(current)}current=object;scene.add(current);current.name=asset.name;
+  if(token!==loading){nextNet?.dispose();dispose(object);return}
+  if(current){net?.dispose();scene.remove(current);dispose(current)}current=object;net=nextNet;scene.add(current);current.name=asset.name;
   const info=metrics(current);document.querySelector('#metrics').innerHTML=Object.entries(info).map(([k,v])=>`<dt>${k}</dt><dd>${v.toLocaleString()}</dd>`).join('');
-  const prop=propById.get(asset.assembly?'01-net-housing':asset.id);document.querySelector('#description').textContent=asset.assembly?'Generated navy housing fitted with the procedural orange net. Original housing geometry and textures preserved.':prop?.uses??'Open diamond rope mesh. Drag to orbit, scroll to zoom, and test the compression slider.';
+  const prop=propById.get(asset.assembly?'01-net-housing':asset.id);document.querySelector('#description').textContent=asset.assembly?'Original housing with ropes threaded through all eight measured eyelets. Woven strands, knotted crossings and a bound perimeter deform on impact.':prop?.uses??'Open diamond rope mesh. Drag to orbit, scroll to zoom, and test the compression slider.';
   const ref=document.querySelector('#reference');ref.hidden=!prop;if(prop)ref.src='/'+prop.reference;else ref.removeAttribute('src');
   document.querySelector('#net-controls').hidden=!net;document.querySelector('#compression').value='0';document.querySelector('#amount').textContent='0%';
   document.querySelector('#wire').setAttribute('aria-pressed','false');frame();history.replaceState(null,'','?asset='+asset.id);
   window.__shipyardViewer.current={id:asset.id,...info};document.querySelector('#status').textContent=`${asset.name} · drag to orbit · scroll to zoom · full geometry at every distance`;
  }catch(error){document.querySelector('#error').textContent=error.message;document.querySelector('#status').textContent='Asset failed to load';throw error}
 }
+document.querySelector('#bounce').onclick=()=>{document.querySelector('#compression').value='0';document.querySelector('#amount').textContent='0%';net?.setCompression(0);net?.impact(net.width*.13,-net.length*.1,55)};
 select.onchange=()=>show(select.value);document.querySelector('#fit').onclick=frame;
 document.querySelector('#spin').onclick=e=>{controls.autoRotate=!controls.autoRotate;e.currentTarget.setAttribute('aria-pressed',String(controls.autoRotate))};
 document.querySelector('#wire').onclick=e=>{const enabled=e.currentTarget.getAttribute('aria-pressed')!=='true';e.currentTarget.setAttribute('aria-pressed',String(enabled));current?.traverse(n=>{if(n.isMesh)for(const m of Array.isArray(n.material)?n.material:[n.material])m.wireframe=enabled})};
 document.querySelector('#lighting').onclick=e=>{const night=e.currentTarget.getAttribute('aria-pressed')!=='true';e.currentTarget.setAttribute('aria-pressed',String(night));ambient.color.setHex(night?0x688dcc:0xd5e7ff);ambient.intensity=night?1.3:2.1;key.color.setHex(night?0xff7935:0xffe4c8);key.intensity=night?3.8:3.1;scene.background.setHex(night?0x061225:0x132338)};
 document.querySelector('#compression').oninput=e=>{net?.setCompression(+e.target.value);document.querySelector('#amount').textContent=Math.round(+e.target.value*100)+'%'};
 new ResizeObserver(()=>{const {width,height}=stage.getBoundingClientRect();renderer.setSize(width,height);camera.aspect=width/height;camera.updateProjectionMatrix();frame()}).observe(stage);
-window.__shipyardViewer={show,scene,camera,renderer,controls,loader,getFraming,getObject:()=>current,exportCurrent:async()=>Array.from(new Uint8Array(await new GLTFExporter().parseAsync(current,{binary:true}))),exportNet:async()=>{const original=createMarineNet();try{return Array.from(new Uint8Array(await new GLTFExporter().parseAsync(original,{binary:true})))}finally{dispose(original)}}};
+window.__shipyardViewer={show,scene,camera,renderer,controls,loader,getFraming,getObject:()=>current,getNet:()=>net,bounce:(x=0,z=0)=>net?.impact(x,z,55),exportCurrent:async()=>{const baked=net?.bakeForExport();let object=current;if(baked){if(current===net.group)object=baked.group;else{object=current.clone(true);const old=object.getObjectByName(net.group.name),parent=old.parent;parent.remove(old);parent.add(baked.group)}}try{return Array.from(new Uint8Array(await new GLTFExporter().parseAsync(object,{binary:true})))}finally{baked?.dispose()}},exportNet:async()=>{const original=new CarlisleMarineNet(6,4),baked=original.bakeForExport();try{return Array.from(new Uint8Array(await new GLTFExporter().parseAsync(baked.group,{binary:true})))}finally{baked.dispose();original.dispose()}}};
 await show(new URLSearchParams(location.search).get('asset')??options[0].id);
-renderer.setAnimationLoop(()=>{controls.update();renderer.render(scene,camera)});
+let last=performance.now();renderer.setAnimationLoop(now=>{net?.update(Math.min(.05,(now-last)/1000));last=now;controls.update();renderer.render(scene,camera)});

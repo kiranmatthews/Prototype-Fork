@@ -1,5 +1,27 @@
 # Carlisle cone crew — local character experiment
 
+## Current cone-only revision — 29 October 2026
+
+The runtime now uses the **original literal-cone P1 surface**: its face and arms
+attach to the cone, with legs directly under its square base. The humanoid torso
+and neck from the first integration are gone. All 4,986 source triangles and
+original textures remain intact. `src/carlisleConeRig.ts` supplies a tailored
+13-joint skin and three local clips (idle, walk, tantrum), with independent segment
+elasticity and IK-controlled planted soles. These are local authored motions,
+not new Tripo retargets. No additional credits were spent.
+
+`python3 tools/prepare-carlisle-cone.py` installs the original saved P1 task as
+`public/props/carlisle-cone/cone-body.glb` and writes current provenance. The former
+humanoid preparation is retained only behind `--legacy-evidence`. The source task
+is `9b3cba61-3202-46d7-93a7-fad1eaec23b4`; restore that existing task with the official
+CLI if its ignored local source has been removed. Do not generate it again.
+
+Current review: [cone and net repair evidence](../carlisle-shipyard/integration/repair/README.md).
+The sections below record the earlier Tripo rig/retarget experiment and its costs;
+the separate-body version is no longer the in-game character.
+
+---
+
 The 26 existing triple-cone hazard rows now show 78 animated orange/navy cone
 characters. They face the uphill approach, fit the original sloped bases, idle
 with separate phases and play a tantrum near the player. Their original contact

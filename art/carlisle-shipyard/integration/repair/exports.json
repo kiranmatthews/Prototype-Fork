@@ -1,0 +1,21 @@
+{
+  "report": [
+    {
+      "method": "exportNet",
+      "bytes": 5378500,
+      "morphs": 1,
+      "triangles": 105600,
+      "finite": true,
+      "textures": 2
+    },
+    {
+      "method": "exportCurrent",
+      "bytes": 6989832,
+      "morphs": 1,
+      "triangles": 87568,
+      "finite": true,
+      "textures": 5
+    }
+  ],
+  "errors": []
+}

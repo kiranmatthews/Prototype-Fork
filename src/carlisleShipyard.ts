@@ -5,6 +5,7 @@ import { sceneryLoads } from './assetLoadQueue';
 import type { CustomComponent, CustomLevelData } from './level';
 import { carlislePoint, CARLISLE_RELAY_SECTIONS, CARLISLE_RELAY_STOPS } from './levels/carlisle-tidal-relay';
 import { harbourSurface, harbourOcean, harbourSky } from './carlisleShipyardMaterials';
+import { CarlisleMarineNet, marineFrameHeight } from './carlisleMarineNet';
 
 type P = [number, number, number];
 const v = (p: P) => new THREE.Vector3(...p);
@@ -71,14 +72,13 @@ export class CarlisleShipyard {
   private readonly materials=new Set<THREE.Material>();
   private readonly lights:THREE.PointLight[]=[];
   private readonly lamps:THREE.Vector3[]=[];
-  private readonly nets:{mesh:THREE.Object3D;bed:THREE.Group;top:number;w:number;d:number;t:number}[]=[];
+  private readonly nets:{mesh:THREE.Object3D;net:CarlisleMarineNet;impact:number}[]=[];
   private readonly wood=this.own(harbourSurface('wood'));
   private readonly boatDeck=this.own(harbourSurface('wood',true));
   private readonly steel=this.own(harbourSurface('steel',true));
   private readonly wet=this.own(harbourSurface('wet'));
   private readonly navy=this.own(new THREE.MeshStandardMaterial({color:0x183047,roughness:.66,metalness:.35}));
   private readonly orange=this.own(new THREE.MeshStandardMaterial({color:0xd94f15,roughness:.68,metalness:.18}));
-  private readonly rope=this.own(new THREE.MeshStandardMaterial({color:0xf97629,roughness:.92}));
   private readonly iron=this.own(new THREE.MeshStandardMaterial({color:0x111f2a,roughness:.85}));
   private readonly glow=this.own(new THREE.MeshBasicMaterial({color:0xff782b,toneMapped:false}));
   private readonly foam=this.own(new THREE.MeshBasicMaterial({color:0x8fbed1,transparent:true,opacity:.32,depthWrite:false}));
@@ -167,18 +167,11 @@ export class CarlisleShipyard {
   }
   private net(c:CustomComponent,mesh:THREE.Mesh) {
     const [w,h,d]=c.s!,mount=new THREE.Group();mount.name='Orange marine spring';mesh.add(mount);this.attached.push(mount);
-    const frameH=Math.min(.85,Math.min(w,d)*.16),top=h/2;
-    this.prop('net-housing',[0,top-frameH*.73,0],[w,frameH,d],0,mount);
-    const bed=new THREE.Group();bed.position.y=top-.025;mount.add(bed);
-    // A dense open rope bed sits on the exact native collision top.
-    const hx=w*.405,hz=d*.405,cell=Math.max(.28,Math.min(w,d)/13),r=Math.max(.045,Math.min(w,d)*.0065);
-    for(const slope of [-1,1])for(let b=-hx-hz;b<=hx+hz;b+=cell*Math.SQRT2){
-      const candidates=[[-hx,-slope*hx+b],[hx,slope*hx+b],[(-hz-b)/slope,-hz],[(hz-b)/slope,hz]];
-      const points=candidates.filter(([x,z])=>Math.abs(x)<=hx+1e-5&&Math.abs(z)<=hz+1e-5).map(([x,z])=>[x,0,z] as P)
-        .filter((p,i,a)=>a.findIndex(q=>v(p).distanceToSquared(v(q))<1e-8)===i);
-      if(points.length===2)this.beam(points[0],points[1],r*2,this.rope,bed,true);
-    }
-    this.nets.push({mesh,bed,top,w,d,t:0});this.diagnostics.nets++;
+    const frameH=marineFrameHeight(w,d),top=h/2,lip=Math.min(.15,Math.min(w,d)*.012);
+    this.prop('net-housing',[0,top+lip-frameH*.87,0],[w,frameH,d],0,mount);
+    const net=new CarlisleMarineNet(w,d,frameH);net.group.position.y=top+lip;mount.add(net.group);
+    mesh.userData.marineNet=net.diagnostics;
+    this.nets.push({mesh,net,impact:mesh.userData.trampolineVisualImpact?.id??0});this.diagnostics.nets++;
     // Under-deck mooring legs, never posts in the landing area.
     if(c.t==='trampoline'&&!this.bonus)for(const x of [-w*.37,w*.37])for(const z of [-d*.37,d*.37])
       this.part('pole',[x,top-5.5,z],[.7,9,.7],this.navy,0,mount);
@@ -206,9 +199,12 @@ export class CarlisleShipyard {
       }
     }
     // The hub and cross bracing remain below the contact plane throughout motion.
+    const springClearance=spring?Math.min(3,Math.min(w,d)*.2):0;
     this.prop(c.spin?'rotary-hub':/winch/i.test(c.nm??'')?'dock-winch':'counterweight-hoist',
-      [0,-Math.min(w,d)*.38-h/2,0],[Math.min(w,d)*.75,Math.min(w,d)*.35,Math.min(w,d)*.75],0,group);
-    for(const side of [-1,1])this.beam([side*w*.4,-h/2,-d*.4],[-side*w*.4,-h/2-2,d*.4],.45,this.navy,group);
+      [0,-Math.min(w,d)*.38-h/2-springClearance,0],[Math.min(w,d)*.75,Math.min(w,d)*.35,Math.min(w,d)*.75],0,group);
+    for(const side of [-1,1])this.beam([side*w*.4,-h/2-springClearance,-d*.4],[-side*w*.4,-h/2-2-springClearance,d*.4],.45,this.navy,group);
+    if(spring)for(const x of [-w*.4,w*.4])for(const z of [-d*.4,d*.4])
+      this.beam([x,-h/2,z],[x,-h/2-springClearance,z],.38,this.navy,group);
   }
   private dockEdges(c:CustomComponent,mesh:THREE.Mesh) {
     const vertices=c.vertices!,index=c.indices!,edges=new Map<string,{a:number;b:number;count:number}>();
@@ -426,14 +422,15 @@ export class CarlisleShipyard {
       for(let i=0;i<24;i++)this.ocean.uniforms.lamps.value[i].copy(lamps[i]??new THREE.Vector3(1e6,0,1e6));
       this.lights.forEach((light,i)=>{const p=lamps[i];light.intensity=p&&p.distanceToSquared(player)<10000?85:0;if(p)light.position.copy(p);});
     }
-    for(const net of this.nets){
-      const local=net.mesh.worldToLocal(player.clone());net.t=Math.max(0,net.t-dt);
-      if(net.t===0&&Math.abs(local.x)<net.w*.45&&Math.abs(local.z)<net.d*.45&&Math.abs(local.y-net.top)<.6)net.t=.65;
-      const t=.65-net.t;net.bed.position.y=net.top-.025-(net.t>0?Math.sin(t*22)*Math.exp(-t*7)*.3:0);
+    for(const entry of this.nets){
+      const impact=entry.mesh.userData.trampolineVisualImpact;
+      if(impact&&impact.id!==entry.impact){entry.impact=impact.id;entry.net.impact(impact.x,impact.z,impact.speed);}
+      entry.net.update(dt);
     }
   }
   dispose() {
     this.disposed=true;
+    for(const {mesh,net}of this.nets){delete mesh.userData.marineNet;net.dispose();}this.nets.length=0;
     for(const node of [...this.attached,this.group])node.traverse(n=>{if((n as THREE.InstancedMesh).isInstancedMesh)(n as THREE.InstancedMesh).dispose();});
     this.attached.forEach(n=>n.removeFromParent());this.group.removeFromParent();
     this.restored.forEach(({mesh,material})=>mesh.material=material);

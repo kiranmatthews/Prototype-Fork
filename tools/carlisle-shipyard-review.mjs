@@ -55,7 +55,7 @@ try{
   await page.screenshot({path:resolve(art,'review/procedural-net-rest.png')});
   const net=await page.evaluate(()=>window.__shipyardViewer.exportNet());await writeFile(resolve(art,'procedural-marine-net.glb'),Buffer.from(net));
   await page.locator('#compression').fill('1');await page.locator('#compression').dispatchEvent('input');await page.waitForTimeout(100);
-  assert.deepEqual(await page.evaluate(()=>window.__shipyardViewer.getObject().children.filter(n=>n.morphTargetInfluences).map(n=>n.morphTargetInfluences[0])),[1,1]);
+  assert.equal(await page.evaluate(()=>window.__shipyardViewer.getNet().compression),1);
   await page.screenshot({path:resolve(art,'review/procedural-net-compressed.png')});
   for(const id of ['assembled-net',...library.assets.map(a=>a.id)]){
     await page.selectOption('#asset',id);await page.waitForFunction(id=>window.__shipyardViewer.current.id===id,id);await page.waitForTimeout(100);
@@ -82,7 +82,7 @@ try{
     return reports;
   });
   assert.equal(report.exports[0].triangles,report.proceduralNet.triangles);assert.equal(report.exports[1].triangles,report.models[0].triangles);
-  assert(report.exports.every(item=>item.morphMeshes===2&&item.finite));assert.equal(report.exports[1].textures,3);
+  assert(report.exports.every(item=>item.morphMeshes===1&&item.finite));assert.equal(report.exports[1].textures,5);
   await page.selectOption('#asset','assembled-net');await page.waitForFunction(()=>window.__shipyardViewer.current.id==='assembled-net');
   await page.locator('#lighting').click();await page.waitForTimeout(100);await page.screenshot({path:resolve(art,'review/assembled-net-night.png')});
   await page.locator('#wire').click();assert(await page.evaluate(()=>{let all=true;window.__shipyardViewer.getObject().traverse(n=>{if(n.isMesh)all&&=(Array.isArray(n.material)?n.material:[n.material]).every(m=>m.wireframe)});return all}));await page.locator('#wire').click();
@@ -90,7 +90,7 @@ try{
   await page.setViewportSize({width:960,height:540});await page.locator('#fit').click();await page.waitForTimeout(100);await page.screenshot({path:resolve(art,'review/normal-presentation.png')});
   await page.setViewportSize({width:390,height:844});assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
   assert.deepEqual(errors,[]);assert.deepEqual(failedResources,[]);report.finishedAt=new Date().toISOString();
-  report.checks=['native 1920x1080 front and back of every mesh','all triangle counts match GLB audit','both net compression morphs','GLB exports loaded back with identical triangle counts and two morph meshes','embedded PBR texture round trip','night lighting','wireframe and orbit controls','960x540 presentation','390px responsive viewer'];
+  report.checks=['native 1920x1080 front and back of every mesh','all triangle counts match GLB audit','live net compression','GLB exports loaded back with identical triangle counts and the baked compression morph','embedded PBR texture round trip','night lighting','wireframe and orbit controls','960x540 presentation','390px responsive viewer'];
   await writeFile(resolve(art,'review/browser-qa.json'),JSON.stringify(report,null,2)+'\n');
   console.log(JSON.stringify({models:library.assets.length,exports:report.exports,errors,failedResources}));
 }finally{await browser.close()}

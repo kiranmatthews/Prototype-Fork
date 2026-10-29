@@ -3442,6 +3442,15 @@ export class Player {
     this.trampolineAir = true;
     this.trampolineLaunchY = this.pos.y;
     this.trampolineLaunchSpeed = this.vVel;
+    // Presentation-only impact stamp: the native launch has already been resolved.
+    // Save the contact in deck space now so moving/spinning nets keep the dent attached.
+    if (hit.mesh) {
+      const contact = hit.mesh.worldToLocal(this.pos.clone());
+      hit.mesh.userData.trampolineVisualImpact = {
+        id: (hit.mesh.userData.trampolineVisualImpact?.id ?? 0) + 1,
+        x: contact.x, z: contact.z, speed: this.vVel,
+      };
+    }
     this.score(CONST.ptsBouncy, 'Boing');
     sfx.play('crateBounce', 0.8, input.jumpHeld ? 1.25 : 1.05);
     return true;

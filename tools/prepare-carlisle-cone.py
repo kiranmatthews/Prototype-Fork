@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Package saved Tripo clips without decimating geometry or changing textures.
+"""Install the original literal cone; --legacy-evidence packages the old biped.
 Raw and runtime GLBs stay local per TRIPO_CHARACTER_PIPELINE.md. This repeatable
 step merges animation buffers, removes horizontal root travel, and fixes +X
 source facing to +Z. It makes no network requests and spends no credits.
@@ -10,6 +10,8 @@ import json
 import math
 from pathlib import Path
 import struct
+import sys
+import shutil
 
 ROOT = Path(__file__).resolve().parents[1]
 WORK = ROOT / 'tools/tripo-character/work/carlisle-cone-biped'
@@ -30,6 +32,24 @@ def write(path,doc,binary):
     header=json.dumps(doc,separators=(',',':')).encode();header+=b' '*(-len(header)%4)
     data=struct.pack('<III',0x46546C67,2,28+len(header)+len(binary))+struct.pack('<II',len(header),0x4E4F534A)+header+struct.pack('<II',len(binary),0x004E4942)+binary
     path.write_bytes(data)
+
+if '--legacy-evidence' not in sys.argv:
+    source=ROOT/'tools/tripo-character/work/carlisle-angry-cone/01-generate/tripo-out/carlisle-angry-cone-surface-9b3cba61/model.glb'
+    doc,_=read(source)
+    OUT.mkdir(parents=True,exist_ok=True)
+    shutil.copyfile(source,OUT/'cone-body.glb')
+    report={'kind':'generative-assist','reference':'art/carlisle-cone/reference.png',
+      'model':'P1-20260311','sourceTask':'9b3cba61-3202-46d7-93a7-fad1eaec23b4',
+      'file':'public/props/carlisle-cone/cone-body.glb','runtimeSha256':hashlib.sha256(source.read_bytes()).hexdigest(),
+      'bytes':source.stat().st_size,'sourceForward':'+X','runtimeForward':'+Z',
+      'geometryPolicy':'complete original literal-cone geometry and textures; no torso or neck',
+      'triangles':sum(doc['accessors'][p['indices']]['count']//3 for m in doc['meshes'] for p in m['primitives']),
+      'joints':13,'rig':'src/carlisleConeRig.ts; tailored local skinning and motion, not the rejected Tripo humanoid rig',
+      'clips':[{'name':'idle','duration':3.2},{'name':'walk','duration':1.25},{'name':'slash','duration':2.8}],
+      'additionalCredits':0}
+    (OUT/'asset.json').write_text(json.dumps(report,indent=2)+'\n')
+    print(json.dumps(report,indent=2))
+    sys.exit(0)
 
 records={clip:json.loads((WORK/'legacy-clips'/clip/'result.json').read_text()) for clip in ['idle','walk','slash']}
 paths={clip:Path(result['model_file']) for clip,result in records.items()}
@@ -73,4 +93,4 @@ OUT.mkdir(parents=True,exist_ok=True);path=OUT/'cone.glb';write(path,base,bytes(
 report['runtimeSha256']=hashlib.sha256(path.read_bytes()).hexdigest();report['bytes']=path.stat().st_size
 report['triangles']=sum(base['accessors'][p['indices']]['count']//3 for m in base['meshes'] for p in m['primitives'])
 report['joints']=len(base['skins'][0]['joints']);report['rigTask']=json.loads((WORK/'legacy-clips/rig-v1/result.json').read_text())['task_id']
-(OUT/'asset.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report,indent=2))
+(OUT/'asset-biped-evidence.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report,indent=2))

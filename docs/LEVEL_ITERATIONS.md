@@ -6574,3 +6574,35 @@ The complete main/bonus source geometry and gameplay components match the pre-ar
 Validation: source/asset hashes; npm run check:levels; production build/type-check (1,764 files, 987.1 MiB); 55 native spring transfers and rigid carry; all three mandatory grind routes at phase zero; full bonus with 21 crates and no deaths; twenty native 1920x1080 area captures plus 480p/CRT; real arrow-key steering and Emergency Eject while bouncing; clean level-switch asset disposal and zero browser console errors. Native start-area frame sample 16.7 ms median / 17.9 ms p95, not a whole-course worst-case guarantee. Evidence: `art/carlisle-shipyard/integration/`.
 
 The local art gallery now compares concept, in-game result and original greybox. Play at http://127.0.0.1:5483/?playtest&level=carlisle-coast . Local checkpoint only; user hold remains active. No push or publication.
+
+
+## Carlisle cone silhouettes and anchored spring nets — 29 October 2026
+
+Prompt-to-playable approximately 14 minutes; final local validation approximately
+37 minutes. Replaced the cone-headed humanoids with the original literal-cone P1
+mesh: no separate torso or neck. A tailored 13-joint rig uses shared segment
+elasticity, planted soles, idle, walk and finite tantrums. All 4,986 triangles and
+original maps remain. The same 78 authored hazards retain their death volumes.
+No new Tripo credits or API purchases.
+
+Rebuilt 56 main nets and five bonus nets with woven cylindrical rope, knots,
+braided shading, bound perimeter and lashings through the eight measured housing
+eyelets. The native launch emits a presentation-only local contact stamp; the
+net compresses off-centre, rebounds, ripples and settles after two seconds.
+Housing anchors remain fixed, moving platforms carry their dents, and under-net
+machinery/bracing now clear the full compression. Three shared geometry sets
+serve the main nets with no reduced-detail substitutions. The workshop uses the
+same implementation and preserves portable compression-morph export.
+
+Validation: exact source geometry/gameplay and all twelve original housing/prop
+GLB hashes preserved; 55 native trampoline transfers; neutral/held speeds and
+zero neutral drift; eight eyelet attachments; 162 sole vertices over 49 idle
+poses; full three-clip cycles at front/40°/side; real fixed and moving impacts;
+finite settling; cone hazard death; main/bonus disposal/reload; lite, native and
+480p/CRT views; compiled-build lateral arrow control and Emergency Eject. Build
+and browser checks pass with no console errors. Evidence is in
+`art/carlisle-shipyard/integration/repair/`. No course, force, camera or input
+tuning changes. `src/player.ts` owns only the optional visual impact stamp.
+
+Local test: http://127.0.0.1:5483/?playtest&level=carlisle-coast&art=harbour .
+The user's local-only hold remains in force; no integration, push or publication.

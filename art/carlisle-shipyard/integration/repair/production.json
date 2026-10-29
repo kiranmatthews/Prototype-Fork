@@ -1,0 +1,52 @@
+{
+  "errors": [],
+  "main": {
+    "art": {
+      "status": "ready",
+      "sections": 18,
+      "models": 12,
+      "props": 1838,
+      "nets": 56,
+      "mountedMovers": 28,
+      "decorativeColliders": 0,
+      "errors": []
+    },
+    "cones": {
+      "status": "ready",
+      "actors": 78,
+      "sites": 26,
+      "clips": [
+        "idle",
+        "walk",
+        "slash"
+      ],
+      "error": ""
+    },
+    "bones": 13,
+    "triangles": 4986,
+    "stamp": "Codex/sol fork · build 10-29 19:24 UTC"
+  },
+  "sideways": 4.168782278871554,
+  "abandon": {
+    "move": "Emergency Eject",
+    "board": false,
+    "looseBoard": true
+  },
+  "frameTimes": {
+    "medianMs": 16.599999994039536,
+    "p95Ms": 17.400000005960464
+  },
+  "bonus": {
+    "art": {
+      "status": "ready",
+      "sections": 1,
+      "models": 12,
+      "props": 70,
+      "nets": 5,
+      "mountedMovers": 4,
+      "decorativeColliders": 0,
+      "errors": []
+    },
+    "oldNets": 0
+  }
+}

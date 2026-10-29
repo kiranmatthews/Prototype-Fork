@@ -1,0 +1,139 @@
+{
+  "errors": [],
+  "cycles": [
+    {
+      "angle": 0,
+      "clip": "idle",
+      "duration": 3.2
+    },
+    {
+      "angle": 0,
+      "clip": "walk",
+      "duration": 1.25
+    },
+    {
+      "angle": 0,
+      "clip": "slash",
+      "duration": 2.8
+    },
+    {
+      "angle": 40,
+      "clip": "idle",
+      "duration": 3.2
+    },
+    {
+      "angle": 40,
+      "clip": "walk",
+      "duration": 1.25
+    },
+    {
+      "angle": 40,
+      "clip": "slash",
+      "duration": 2.8
+    },
+    {
+      "angle": 90,
+      "clip": "idle",
+      "duration": 3.2
+    },
+    {
+      "angle": 90,
+      "clip": "walk",
+      "duration": 1.25
+    },
+    {
+      "angle": 90,
+      "clip": "slash",
+      "duration": 2.8
+    }
+  ],
+  "poses": [
+    {
+      "angle": 0,
+      "clip": "idle",
+      "frames": 31,
+      "finite": true,
+      "changing": true
+    },
+    {
+      "angle": 0,
+      "clip": "walk",
+      "frames": 31,
+      "finite": true,
+      "changing": true
+    },
+    {
+      "angle": 0,
+      "clip": "slash",
+      "frames": 31,
+      "finite": true,
+      "changing": true
+    },
+    {
+      "angle": 40,
+      "clip": "idle",
+      "frames": 31,
+      "finite": true,
+      "changing": true
+    },
+    {
+      "angle": 40,
+      "clip": "walk",
+      "frames": 31,
+      "finite": true,
+      "changing": true
+    },
+    {
+      "angle": 40,
+      "clip": "slash",
+      "frames": 31,
+      "finite": true,
+      "changing": true
+    },
+    {
+      "angle": 90,
+      "clip": "idle",
+      "frames": 31,
+      "finite": true,
+      "changing": true
+    },
+    {
+      "angle": 90,
+      "clip": "walk",
+      "frames": 31,
+      "finite": true,
+      "changing": true
+    },
+    {
+      "angle": 90,
+      "clip": "slash",
+      "frames": 31,
+      "finite": true,
+      "changing": true
+    }
+  ],
+  "metrics": {
+    "triangles": 4986,
+    "bones": 13,
+    "skins": 1,
+    "clips": [
+      {
+        "name": "idle",
+        "duration": 3.2,
+        "tracks": 39
+      },
+      {
+        "name": "walk",
+        "duration": 1.25,
+        "tracks": 39
+      },
+      {
+        "name": "slash",
+        "duration": 2.8,
+        "tracks": 39
+      }
+    ]
+  },
+  "mobileOverflow": false,
+  "video": "art/carlisle-shipyard/integration/repair/cone/motion-cycles.webm"
+}

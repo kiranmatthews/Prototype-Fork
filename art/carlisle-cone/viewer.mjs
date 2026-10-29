@@ -21,7 +21,7 @@ try{
  let triangles=0,bones=0,skins=0;actor.model.traverse(n=>{if(n.isMesh)triangles+=(n.geometry.index?.count??n.geometry.attributes.position.count)/3;if(n.isBone)bones++;if(n.isSkinnedMesh)skins++});
  api.metrics={triangles,bones,skins,clips:[...actor.clips].map(([name,clip])=>({name,duration:clip.duration,tracks:clip.tracks.length}))};
  for(const [name]of actor.clips){const b=document.createElement('button');b.dataset.clip=name;b.textContent=({idle:'Idle',walk:'Walk',jump:'Jump',slash:'Tantrum'})[name];b.onclick=()=>choose(name);document.querySelector('#clips').append(b)}
- document.querySelector('#metrics').textContent=`${triangles.toLocaleString()} triangles · ${bones} bones · ${actor.clips.size} Tripo clips`;
+ document.querySelector('#metrics').textContent=`${triangles.toLocaleString()} triangles · ${bones} bones · ${actor.clips.size} tailored clips · original Tripo cone`;
  choose('idle');view(0);api.ready=true;
 }catch(error){api.error=error.message;document.querySelector('#error').textContent=error.message;throw error;}
 document.querySelector('#play').onclick=()=>playback(!playing);

@@ -6,15 +6,16 @@ import { sceneryLoads } from './assetLoadQueue';
 import { characterElasticityAmplitudes } from './animation/elasticity';
 import { enemyElasticPulse } from './enemies/elasticity';
 import type { CustomComponent, CustomLevelData } from './level';
+import { rigLiteralCone } from './carlisleConeRig';
 
 export type ConeClip = 'idle' | 'walk' | 'jump' | 'slash';
 export const CONE_ELASTICITY = { idle: 1.25, walk: 1, jump: .65, slash: .8, arms: .9 };
 const CLIPS: ConeClip[] = ['idle', 'walk', 'jump', 'slash'];
 export const isCarlisleConeRow = (c: CustomComponent) => c.t === 'mesh' && c.solid === false &&
   / · red teeth \d+\.\d+$/.test(c.nm ?? '') && c.vertices?.length === 45;
-const assetUrl = () => `${import.meta.env.BASE_URL}props/carlisle-cone/cone.glb`;
+const assetUrl = () => `${import.meta.env.BASE_URL}props/carlisle-cone/cone-body.glb`;
 const cache = new AssetCache<string, GLTF>(async (url, _dependency, wanted) => {
-  const asset = await sceneryLoads.run(() => new GLTFLoader().loadAsync(url), wanted);
+  const asset = rigLiteralCone(await sceneryLoads.run(() => new GLTFLoader().loadAsync(url), wanted));
   asset.scene.traverse(node => {
     const mesh = node as THREE.Mesh; if (!mesh.isMesh) return;
     mesh.geometry.userData.shared = true;
@@ -73,6 +74,7 @@ export class ConeActor {
       if (mesh.isMesh) { mesh.castShadow = true; mesh.receiveShadow = true; }
       if (mesh.isSkinnedMesh) { this.skeletons.add(mesh.skeleton); mesh.frustumCulled = false; }
       if (!(node as THREE.Bone).isBone) return;
+      if (node.userData.literalConeRig) return; // Segment elasticity is baked into this tailored rig.
       const name = node.name.replace(/^mixamorig[:_]?/i, '').toLowerCase();
       const part = name === 'spine' ? 0 : /^(left|right)arm$/.test(name) ? 1 : /^(left|right)forearm$/.test(name) ? 2 : -1;
       if (part < 0) return;
