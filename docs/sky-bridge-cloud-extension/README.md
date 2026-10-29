@@ -64,7 +64,14 @@ the 720p setting; clouds remain 576×360 in both, including in the bonus.
 
 ![Cloud replacing the second high-span timber deck](cloud-step-native.png)
 ![Grind crossing with cloud scenery](windline-grind-native.png)
+![Final skate jump toward the observatory](last-flight-native.png)
 ![Cloudtop Lockers cloud landings](bonus-clouds-native.png)
+
+The final combined build preserves the published Mayfield Mall increment
+`2f81c89e` and passes production build, release size and the full-render native
+extension/bonus smoke. Its local stamp is `Codex/sol fork · build 10-29 02:11 UTC`.
+The release is 997,210,363 bytes, within the 1,000,000,000-byte hosting budget.
+Source hashes and focused checks are in [build-validation.json](build-validation.json).
 
 ## Timing
 

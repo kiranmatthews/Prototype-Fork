@@ -1,0 +1,102 @@
+{
+  "mode": "skate",
+  "state": "finished",
+  "position": [
+    0.10170102858099447,
+    0.7366666664431492,
+    -794.7559451382258
+  ],
+  "deaths": 0,
+  "support": [
+    {
+      "nm": "spawn",
+      "y": 5.960464455334602e-09
+    },
+    {
+      "nm": "checkpoint 1",
+      "y": 5.960464455334602e-09
+    },
+    {
+      "nm": "checkpoint 2",
+      "y": 3.6000000059604647
+    },
+    {
+      "nm": "checkpoint 3",
+      "y": 5.960464677379207e-09
+    },
+    {
+      "nm": "checkpoint 4",
+      "y": 5.960464455334602e-09
+    },
+    {
+      "nm": "checkpoint 5",
+      "y": 5.960464455334602e-09
+    },
+    {
+      "nm": "checkpoint 6",
+      "y": 5.960464455334602e-09
+    },
+    {
+      "nm": "Kona entrance",
+      "y": 5.960464455334602e-09
+    },
+    {
+      "nm": "Kona floor",
+      "y": 0
+    },
+    {
+      "nm": "Kona exit",
+      "y": 5.960464455334602e-09
+    },
+    {
+      "nm": "finish approach",
+      "y": 5.960464455334602e-09
+    }
+  ],
+  "evidence": {
+    "mode": "skate",
+    "jumps": [
+      {
+        "a": 399,
+        "b": 403,
+        "y": 5.960464455334602e-09,
+        "w": 10,
+        "takeoff": 397.6034603273055,
+        "air": true,
+        "airFrames": 36,
+        "landing": 413.42429937249454
+      },
+      {
+        "a": 505,
+        "b": 509.5,
+        "y": 2.400000011920929,
+        "w": 12,
+        "takeoff": 503.5709731925803,
+        "air": true,
+        "airFrames": 36,
+        "landing": 517.7543065259134
+      }
+    ],
+    "checkpoints": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "ground": [
+      "Concourse \u00b7 continuous supported floor",
+      "Twin escalator \u00b7 broad walkable ascent",
+      "Courtyard promenade \u00b7 continuous descent",
+      "Warehouse delivery dock ascent",
+      "Dock takeoff",
+      "Dock receiving deck",
+      "Dock forgiving runout",
+      "Kona promenade / paired smooth transitions",
+      "Mayfield Mall exit"
+    ],
+    "crystal": true,
+    "peakSpeed": 32
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "base": "http://127.0.0.1:5277",
+  "initial": {
+    "stamp": "Codex/sol fork · build 10-29 01:26 UTC",
+    "sourceMatches": true,
+    "skatepark": false,
+    "freeSkate": false,
+    "display": {
+      "buffer": [
+        720,
+        450
+      ],
+      "resolution": 720,
+      "crt": false
+    }
+  },
+  "report": {
+    "done": true,
+    "error": null,
+    "steps": 2015,
+    "seconds": 33.58333333333271,
+    "evidence": {
+      "mode": "skate",
+      "jumps": [
+        {
+          "a": 399,
+          "b": 403,
+          "y": 5.960464455334602e-9,
+          "w": 10,
+          "takeoff": 397.6034603273055,
+          "air": true,
+          "airFrames": 36,
+          "landing": 413.42429937249454
+        },
+        {
+          "a": 505,
+          "b": 509.5,
+          "y": 2.400000011920929,
+          "w": 12,
+          "takeoff": 503.5709731925803,
+          "air": true,
+          "airFrames": 36,
+          "landing": 517.7543065259134
+        }
+      ],
+      "checkpoints": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "ground": [
+        "Concourse · continuous supported floor",
+        "Twin escalator · broad walkable ascent",
+        "Courtyard promenade · continuous descent",
+        "Warehouse delivery dock ascent",
+        "Dock takeoff",
+        "Dock receiving deck",
+        "Dock forgiving runout",
+        "Kona promenade / paired smooth transitions",
+        "Mayfield Mall exit"
+      ],
+      "crystal": true,
+      "peakSpeed": 32
+    },
+    "state": "finished",
+    "progress": 794.7559451382258,
+    "position": [
+      0.10170102858099625,
+      0.7366666664431492,
+      -794.7559451382258
+    ],
+    "deaths": 0,
+    "tuningUnchanged": true
+  },
+  "errors": []
+}

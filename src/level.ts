@@ -164,6 +164,7 @@ import {warehouseContactMesh} from './warehouseContacts';
 import { TREEHOUSE_ROOM_LEVEL } from './levels/treehouse-room';
 import { roomArt, ROOM_TEXTURE_KINDS } from './levels/treehouse-room-art';
 import { MALL_LEVEL } from './levels/mall';
+import { MAYFIELD_MALL_LEVEL } from './levels/mayfield-mall';
 import { KONA_LEVEL } from "./levels/kona";
 import { PUZZLE_LEVELS } from './levels/puzzle-trilogy';
 import { CRAB_CHIEF_LEVEL } from './levels/crab-chief';
@@ -2593,6 +2594,7 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
   { id: 'waterfall-climb', name: WATERFALL_CLIMB_LEVEL.name, data: WATERFALL_CLIMB_LEVEL },
   { id: "jungle-minefield", name: JUNGLE_MINEFIELD_LEVEL.name, data: JUNGLE_MINEFIELD_LEVEL },
   { id: "rooftop-relay", name: ROOFTOP_RELAY_LEVEL.name, data: ROOFTOP_RELAY_LEVEL },
+  { id: 'mayfield-mall', name: MAYFIELD_MALL_LEVEL.name, data: MAYFIELD_MALL_LEVEL },
   { id: 'mall', name: MALL_LEVEL.name, data: MALL_LEVEL },
   { id: "school-miami", name: SCHOOL_MIAMI_LEVEL.name, data: SCHOOL_MIAMI_LEVEL },
 

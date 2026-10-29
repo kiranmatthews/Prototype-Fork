@@ -4,7 +4,7 @@
   "smoke": true,
   "spawn": {
     "level": "sky",
-    "stamp": "Codex/sol fork · build 10-29 01:58 UTC",
+    "stamp": "Codex/sol fork · build 10-29 02:11 UTC",
     "position": [
       0,
       0.7366666187594333,
@@ -97,7 +97,7 @@
   },
   "normal": {
     "level": "sky",
-    "stamp": "Codex/sol fork · build 10-29 01:58 UTC",
+    "stamp": "Codex/sol fork · build 10-29 02:11 UTC",
     "position": [
       -1,
       -4.768371586472142e-8,
@@ -129,7 +129,7 @@
   },
   "bonus": {
     "level": "bonus:sky",
-    "stamp": "Codex/sol fork · build 10-29 01:58 UTC",
+    "stamp": "Codex/sol fork · build 10-29 02:11 UTC",
     "position": [
       -6,
       -4.768371586472142e-8,
@@ -161,7 +161,7 @@
   },
   "bonusNative": {
     "level": "bonus:sky",
-    "stamp": "Codex/sol fork · build 10-29 01:58 UTC",
+    "stamp": "Codex/sol fork · build 10-29 02:11 UTC",
     "position": [
       25,
       3.5762786898541066e-9,
@@ -175,7 +175,7 @@
       "width": 576,
       "height": 360,
       "clouds": 6,
-      "frames": 232,
+      "frames": 230,
       "targetBytes": 4147200
     },
     "cloudContacts": 2,

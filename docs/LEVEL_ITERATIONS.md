@@ -5998,3 +5998,30 @@ both new grinds and jumps from the extension entrance. Native 1600×1000 and
 720p/CRT views keep clouds at 576×360, including the bonus. Main and bonus
 visuals were reviewed with no console errors. Local browser validation
 completed at 02:08 UTC, about 46 minutes from prompt.
+
+## 29 October 2026 — Mayfield Mall in Maynard Quay course 4
+
+Combined Mall, School Miami, Warehouse and Kona elements into an original
+800 m conventional corridor: Galleria, food court, palm/fountain court,
+loading hall, Kona promenade and Sunset Walk. Source props are moved and
+resized; all four overall source layouts, park-control settings and route
+cameras are replaced. `maynard-course-4` remains the stable save key and now
+opens **Mayfield Mall** (`mayfield-mall`), with normal controls, six checkpoints,
+two short gaps, 26 crates, a crystal, clock and finish.
+
+Prompt-to-supported-browser-play: **8 min 31 sec**. First continuous zero-death
+finish: **10 min 11 sec**. Native walking/skating runs took 89.68/33.75 s and
+activated every checkpoint and both jumps. Fixed a real capsule snag caused by
+a second slab at the Kona lip; one continuous swept surface now owns its deck.
+Six side-transition approaches return without bails, and both raised walking
+routes clear their ramps and props. Closed unintended escalator/dock/deck edge
+gaps, retaining ordinary edge grinding and the global movement model.
+
+Chrome lite traversal and MAX/native full-render checkpoint/recovery checks
+pass with no console errors. Campaign/save-key checks, the shared editor
+contract and required level checks pass. Mayfield is a source-owned builtin;
+the existing public snapshot pack stays byte-for-byte unchanged to avoid
+needlessly duplicating geometry beyond its 64 MiB archive inspection bound.
+The production full-render walking run also finishes in 89.52 s with no deaths
+or console errors; the build and hosting-size check pass.
+See [design, validation and release evidence](mayfield-mall/README.md).

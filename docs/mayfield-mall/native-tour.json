@@ -1,0 +1,78 @@
+{
+  "base": "http://127.0.0.1:5277",
+  "initial": {
+    "stamp": "Codex/sol fork · build 10-29 01:26 UTC",
+    "sourceMatches": true,
+    "skatepark": false,
+    "freeSkate": false,
+    "display": {
+      "buffer": [
+        1920,
+        1080
+      ],
+      "resolution": "max",
+      "crt": false
+    }
+  },
+  "checkpoints": [
+    {
+      "position": [
+        0,
+        5.960464455334602e-9,
+        -92
+      ],
+      "state": "ride"
+    },
+    {
+      "position": [
+        0,
+        3.6000000059604647,
+        -220
+      ],
+      "state": "ride"
+    },
+    {
+      "position": [
+        0,
+        5.960464455334602e-9,
+        -366
+      ],
+      "state": "ride"
+    },
+    {
+      "position": [
+        0,
+        5.960464455334602e-9,
+        -470
+      ],
+      "state": "ride"
+    },
+    {
+      "position": [
+        0,
+        5.960464455334602e-9,
+        -558
+      ],
+      "state": "ride"
+    },
+    {
+      "position": [
+        0,
+        5.960464455334602e-9,
+        -704
+      ],
+      "state": "ride"
+    }
+  ],
+  "recovery": {
+    "position": [
+      0,
+      5.960464455334602e-9,
+      -558
+    ],
+    "lives": 3,
+    "deaths": 0,
+    "grounded": true
+  },
+  "errors": []
+}

@@ -1,0 +1,27 @@
+{
+  "feature": "5c444d8e",
+  "integratedPublishedMain": "2f81c89eae634e947f9ac1a312db40ecba574cea",
+  "requiredChecks": [
+    "check:levels (feature)",
+    "build (feature and integrated)",
+    "check:release (feature and integrated)",
+    "sync-sky-bridge",
+    "test-surface-behavior",
+    "test-sky-bridge-construction",
+    "test-sky-bridge-cloud-extension",
+    "test-themed-bonus-puzzles --courses-only --id=sky"
+  ],
+  "releaseFiles": 1848,
+  "releaseBytes": 997210363,
+  "releaseByteBudget": 1000000000,
+  "preservedSourceSha256": {
+    "src/levels/sky-bridge.ts": "061e4a9d6b45aebfa95281889e6842985d9833069f220f5b79bdf0b276ce5c13",
+    "src/levels/sky-bridge-bonus.ts": "5d6d58f115aff8f4f8a8e3d88add04939bee03ab1109d5de576cf05f93886e83",
+    "src/player.ts": "0f208daca4678cbd3c145bef21f7bbf3a2d8f877acea99997fff48f782fd3bbd",
+    "src/tuning.ts": "1aca3b5fe4b5d026d8b9e36dcf30444081bec7d2acfd4181294f6aacaca61bd6",
+    "src/cloudPlatform.ts": "7bc6e49cf7899ffbadd15acf8902ad64d0c5e48bcbb07beef9f591d7bc0b65b6",
+    "src/cloudPathPass.ts": "d3df08aa05c15f5acd64b7e0ecefbe6199dd0009432b364a1ba4c15a49bec74f",
+    "public/levels.json": "08b960136b3118b5e692dfbc49c7e54c11345707ac33db83d585f9af2b8e8a5d"
+  },
+  "fullSuiteRun": false
+}
