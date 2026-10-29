@@ -163,4 +163,4 @@ components.push(...dressAncientGates(components,ANCIENT_GATES_DECKS));
 export const JUNGLE_GATE_RUN_LEVEL:CustomLevelData={v:1,name:'The Ancient Gates',spawn:[-20,.12,0],killY:-18,ledgeAssist:1,sky:'day',components,
  jungleAtmosphere:true,jungleDepthFade:false,jungleStyle:'painterly',keepPlayFog:true,atmosphere:ANCIENT_GATES_ATMOSPHERE,
  medalTimes:{gold:330,silver:390,bronze:450},
- groups:[...ANCIENT_GATES_SECTIONS.map((s,i)=>({id:i+1,nm:`${i+1}. ${s.name}`})),{id:40,nm:'Sunken masonry restoration circuit'},{id:80,nm:'Side-view camera and depth boundary',editorOnly:true},{id:90,nm:'Ancient Gates Meshy scenery and painted valley'}]};
+ groups:[...ANCIENT_GATES_SECTIONS.map((s,i)=>({id:i+1,nm:`${i+1}. ${s.name}`})),{id:40,nm:'Sunken masonry restoration circuit'},{id:80,nm:'Side-view camera and depth boundary',editorOnly:true},{id:90,nm:'Ancient Gates native Meshy and Tripo scenery'}]};

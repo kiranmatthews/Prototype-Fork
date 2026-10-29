@@ -1,0 +1,12 @@
+{
+  "mechanisms": 7,
+  "nativePieces": 429,
+  "triangles": 447930,
+  "unchangedMotionAndCollision": true,
+  "doorDeployAndReset": true,
+  "crumbleFallAndReturn": true,
+  "phaseVisibility": true,
+  "switchRevealAndReset": true,
+  "nativeRatios": true,
+  "errors": []
+}

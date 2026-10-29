@@ -1,0 +1,1195 @@
+[
+  {
+    "section": "Root Steps",
+    "level": "jungle-gate-run",
+    "position": [
+      -17,
+      2.384185793236071e-8,
+      0
+    ],
+    "grounded": true,
+    "ground": "platform",
+    "camera": [
+      -17,
+      6.6689499002889,
+      17.180639604630535
+    ],
+    "buffer": [
+      3024,
+      1516
+    ],
+    "assets": {
+      "components": 2782,
+      "placements": 2782,
+      "ready": 622,
+      "skipped": 0,
+      "draws": 157,
+      "triangles": 1491409,
+      "allLodTriangles": 1491409,
+      "cells": 669,
+      "residentCells": 157,
+      "pendingCells": 0,
+      "retryingCells": 0,
+      "compressedTextures": 10,
+      "textureMiB": 138.67,
+      "errors": [],
+      "windTime": 7.466633333345233,
+      "weatherWind": {
+        "wind": [
+          0,
+          0
+        ],
+        "intensity": 0,
+        "time": 0
+      }
+    },
+    "render": {
+      "frame": 786,
+      "calls": 231,
+      "triangles": 1544477,
+      "points": 10,
+      "lines": 0
+    },
+    "stamp": "Codex/sol fork · build 10-29 10:16 UTC",
+    "errors": []
+  },
+  {
+    "section": "Split Gate",
+    "level": "jungle-gate-run",
+    "position": [
+      147,
+      3.000000023841858,
+      0
+    ],
+    "grounded": true,
+    "ground": "platform",
+    "camera": [
+      147,
+      9.6689499002889,
+      17.180639604630535
+    ],
+    "buffer": [
+      3024,
+      1516
+    ],
+    "assets": {
+      "components": 2782,
+      "placements": 2782,
+      "ready": 982,
+      "skipped": 0,
+      "draws": 226,
+      "triangles": 2434529,
+      "allLodTriangles": 2434529,
+      "cells": 669,
+      "residentCells": 226,
+      "pendingCells": 0,
+      "retryingCells": 0,
+      "compressedTextures": 10,
+      "textureMiB": 138.67,
+      "errors": [],
+      "windTime": 34.799966666677896,
+      "weatherWind": {
+        "wind": [
+          0,
+          0
+        ],
+        "intensity": 0,
+        "time": 0
+      }
+    },
+    "render": {
+      "frame": 2424,
+      "calls": 313,
+      "triangles": 2282293,
+      "points": 0,
+      "lines": 0
+    },
+    "stamp": "Codex/sol fork · build 10-29 10:16 UTC",
+    "errors": []
+  },
+  {
+    "section": "Mossback",
+    "level": "jungle-gate-run",
+    "position": [
+      245,
+      5.000000023841858,
+      0
+    ],
+    "grounded": true,
+    "ground": "platform",
+    "camera": [
+      245,
+      11.6689499002889,
+      17.180639604630535
+    ],
+    "buffer": [
+      3024,
+      1516
+    ],
+    "assets": {
+      "components": 2782,
+      "placements": 2782,
+      "ready": 1220,
+      "skipped": 0,
+      "draws": 274,
+      "triangles": 3060295,
+      "allLodTriangles": 3060295,
+      "cells": 669,
+      "residentCells": 274,
+      "pendingCells": 0,
+      "retryingCells": 0,
+      "compressedTextures": 10,
+      "textureMiB": 138.67,
+      "errors": [],
+      "windTime": 35.83330000001117,
+      "weatherWind": {
+        "wind": [
+          0,
+          0
+        ],
+        "intensity": 0,
+        "time": 0
+      }
+    },
+    "render": {
+      "frame": 2515,
+      "calls": 312,
+      "triangles": 2678979,
+      "points": 0,
+      "lines": 0
+    },
+    "stamp": "Codex/sol fork · build 10-29 10:16 UTC",
+    "errors": []
+  },
+  {
+    "section": "Counterweight",
+    "level": "jungle-gate-run",
+    "position": [
+      370,
+      7.000000023841858,
+      0
+    ],
+    "grounded": true,
+    "ground": "platform",
+    "camera": [
+      370,
+      13.6689499002889,
+      17.180639604630535
+    ],
+    "buffer": [
+      3024,
+      1516
+    ],
+    "assets": {
+      "components": 2782,
+      "placements": 2782,
+      "ready": 1375,
+      "skipped": 0,
+      "draws": 322,
+      "triangles": 3357014,
+      "allLodTriangles": 3357014,
+      "cells": 669,
+      "residentCells": 322,
+      "pendingCells": 0,
+      "retryingCells": 0,
+      "compressedTextures": 10,
+      "textureMiB": 138.67,
+      "errors": [],
+      "windTime": 36.84996666667778,
+      "weatherWind": {
+        "wind": [
+          0,
+          0
+        ],
+        "intensity": 0,
+        "time": 0
+      }
+    },
+    "render": {
+      "frame": 2656,
+      "calls": 310,
+      "triangles": 3170101,
+      "points": 0,
+      "lines": 0
+    },
+    "stamp": "Codex/sol fork · build 10-29 10:16 UTC",
+    "errors": []
+  },
+  {
+    "section": "Hammer Gallery",
+    "level": "jungle-gate-run",
+    "position": [
+      473,
+      14.000000023841858,
+      0
+    ],
+    "grounded": true,
+    "ground": "platform",
+    "camera": [
+      473,
+      20.6689499002889,
+      17.180639604630535
+    ],
+    "buffer": [
+      3024,
+      1516
+    ],
+    "assets": {
+      "components": 2782,
+      "placements": 2782,
+      "ready": 1415,
+      "skipped": 0,
+      "draws": 331,
+      "triangles": 3444160,
+      "allLodTriangles": 3444160,
+      "cells": 669,
+      "residentCells": 331,
+      "pendingCells": 0,
+      "retryingCells": 0,
+      "compressedTextures": 10,
+      "textureMiB": 138.67,
+      "errors": [],
+      "windTime": 54.13330000001013,
+      "weatherWind": {
+        "wind": [
+          0,
+          0
+        ],
+        "intensity": 0,
+        "time": 0
+      }
+    },
+    "render": {
+      "frame": 3831,
+      "calls": 317,
+      "triangles": 3166571,
+      "points": 0,
+      "lines": 0
+    },
+    "stamp": "Codex/sol fork · build 10-29 10:16 UTC",
+    "errors": []
+  },
+  {
+    "section": "Aqueduct",
+    "level": "jungle-gate-run",
+    "position": [
+      620,
+      9.000000023841858,
+      0
+    ],
+    "grounded": true,
+    "ground": "platform",
+    "camera": [
+      620,
+      15.6689499002889,
+      17.180639604630535
+    ],
+    "buffer": [
+      3024,
+      1516
+    ],
+    "assets": {
+      "components": 2782,
+      "placements": 2782,
+      "ready": 1392,
+      "skipped": 0,
+      "draws": 326,
+      "triangles": 3461113,
+      "allLodTriangles": 3461113,
+      "cells": 669,
+      "residentCells": 326,
+      "pendingCells": 0,
+      "retryingCells": 0,
+      "compressedTextures": 10,
+      "textureMiB": 138.67,
+      "errors": [],
+      "windTime": 55.2166333333434,
+      "weatherWind": {
+        "wind": [
+          0,
+          0
+        ],
+        "intensity": 0,
+        "time": 0
+      }
+    },
+    "render": {
+      "frame": 3896,
+      "calls": 312,
+      "triangles": 2726846,
+      "points": 0,
+      "lines": 0
+    },
+    "stamp": "Codex/sol fork · build 10-29 10:16 UTC",
+    "errors": []
+  },
+  {
+    "section": "Bristle Orchard",
+    "level": "jungle-gate-run",
+    "position": [
+      730,
+      8.000000023841858,
+      0
+    ],
+    "grounded": true,
+    "ground": "platform",
+    "camera": [
+      730,
+      14.6689499002889,
+      17.180639604630535
+    ],
+    "buffer": [
+      3024,
+      1516
+    ],
+    "assets": {
+      "components": 2782,
+      "placements": 2782,
+      "ready": 1418,
+      "skipped": 0,
+      "draws": 321,
+      "triangles": 3436277,
+      "allLodTriangles": 3436277,
+      "cells": 669,
+      "residentCells": 321,
+      "pendingCells": 0,
+      "retryingCells": 0,
+      "compressedTextures": 10,
+      "textureMiB": 138.67,
+      "errors": [],
+      "windTime": 56.31663333334334,
+      "weatherWind": {
+        "wind": [
+          0,
+          0
+        ],
+        "intensity": 0,
+        "time": 0
+      }
+    },
+    "render": {
+      "frame": 3962,
+      "calls": 307,
+      "triangles": 2311644,
+      "points": 0,
+      "lines": 0
+    },
+    "stamp": "Codex/sol fork · build 10-29 10:16 UTC",
+    "errors": []
+  },
+  {
+    "section": "Lantern Crossing",
+    "level": "jungle-gate-run",
+    "position": [
+      884,
+      7.400000023841859,
+      0
+    ],
+    "grounded": true,
+    "ground": "platform",
+    "camera": [
+      884,
+      14.068949900288901,
+      17.180639604630535
+    ],
+    "buffer": [
+      3024,
+      1516
+    ],
+    "assets": {
+      "components": 2782,
+      "placements": 2782,
+      "ready": 1405,
+      "skipped": 0,
+      "draws": 330,
+      "triangles": 3479611,
+      "allLodTriangles": 3479611,
+      "cells": 669,
+      "residentCells": 330,
+      "pendingCells": 0,
+      "retryingCells": 0,
+      "compressedTextures": 10,
+      "textureMiB": 138.67,
+      "errors": [],
+      "windTime": 66.99996666667607,
+      "weatherWind": {
+        "wind": [
+          0,
+          0
+        ],
+        "intensity": 0,
+        "time": 0
+      }
+    },
+    "render": {
+      "frame": 4594,
+      "calls": 327,
+      "triangles": 2239849,
+      "points": 0,
+      "lines": 0
+    },
+    "stamp": "Codex/sol fork · build 10-29 10:16 UTC",
+    "errors": []
+  },
+  {
+    "section": "Wind Bells",
+    "level": "jungle-gate-run",
+    "position": [
+      983,
+      11.000000023841858,
+      0
+    ],
+    "grounded": true,
+    "ground": "platform",
+    "camera": [
+      983,
+      17.6689499002889,
+      17.180639604630535
+    ],
+    "buffer": [
+      3024,
+      1516
+    ],
+    "assets": {
+      "components": 2782,
+      "placements": 2782,
+      "ready": 1332,
+      "skipped": 0,
+      "draws": 328,
+      "triangles": 3251006,
+      "allLodTriangles": 3251006,
+      "cells": 669,
+      "residentCells": 328,
+      "pendingCells": 0,
+      "retryingCells": 0,
+      "compressedTextures": 10,
+      "textureMiB": 138.67,
+      "errors": [],
+      "windTime": 68.399966666676,
+      "weatherWind": {
+        "wind": [
+          0,
+          0
+        ],
+        "intensity": 0,
+        "time": 0
+      }
+    },
+    "render": {
+      "frame": 4723,
+      "calls": 337,
+      "triangles": 2827535,
+      "points": 0,
+      "lines": 144
+    },
+    "stamp": "Codex/sol fork · build 10-29 10:16 UTC",
+    "errors": []
+  },
+  {
+    "section": "Sunken Switchyard",
+    "level": "jungle-gate-run",
+    "position": [
+      1117,
+      8.000000023841858,
+      0
+    ],
+    "grounded": true,
+    "ground": "platform",
+    "camera": [
+      1117,
+      14.6689499002889,
+      17.180639604630535
+    ],
+    "buffer": [
+      3024,
+      1516
+    ],
+    "assets": {
+      "components": 2782,
+      "placements": 2782,
+      "ready": 1264,
+      "skipped": 0,
+      "draws": 311,
+      "triangles": 3146360,
+      "allLodTriangles": 3146360,
+      "cells": 669,
+      "residentCells": 311,
+      "pendingCells": 0,
+      "retryingCells": 0,
+      "compressedTextures": 10,
+      "textureMiB": 138.67,
+      "errors": [],
+      "windTime": 69.91663333334257,
+      "weatherWind": {
+        "wind": [
+          0,
+          0
+        ],
+        "intensity": 0,
+        "time": 0
+      }
+    },
+    "render": {
+      "frame": 4906,
+      "calls": 332,
+      "triangles": 3028097,
+      "points": 0,
+      "lines": 180
+    },
+    "stamp": "Codex/sol fork · build 10-29 10:16 UTC",
+    "errors": []
+  },
+  {
+    "section": "Crown Ascent",
+    "level": "jungle-gate-run",
+    "position": [
+      1195,
+      8.000000023841858,
+      0
+    ],
+    "grounded": true,
+    "ground": "platform",
+    "camera": [
+      1195,
+      14.6689499002889,
+      17.180639604630535
+    ],
+    "buffer": [
+      3024,
+      1516
+    ],
+    "assets": {
+      "components": 2782,
+      "placements": 2782,
+      "ready": 1160,
+      "skipped": 0,
+      "draws": 286,
+      "triangles": 2940145,
+      "allLodTriangles": 2940145,
+      "cells": 669,
+      "residentCells": 286,
+      "pendingCells": 0,
+      "retryingCells": 0,
+      "compressedTextures": 10,
+      "textureMiB": 138.67,
+      "errors": [],
+      "windTime": 91.94996666667465,
+      "weatherWind": {
+        "wind": [
+          0,
+          0
+        ],
+        "intensity": 0,
+        "time": 0
+      }
+    },
+    "render": {
+      "frame": 6342,
+      "calls": 338,
+      "triangles": 3089801,
+      "points": 0,
+      "lines": 108
+    },
+    "stamp": "Codex/sol fork · build 10-29 10:16 UTC",
+    "errors": []
+  },
+  {
+    "section": "Last Gate",
+    "level": "jungle-gate-run",
+    "position": [
+      1292.8,
+      24.000000023841856,
+      0
+    ],
+    "grounded": true,
+    "ground": "platform",
+    "camera": [
+      1292.8,
+      30.6689499002889,
+      17.180639604630535
+    ],
+    "buffer": [
+      3024,
+      1516
+    ],
+    "assets": {
+      "components": 2782,
+      "placements": 2782,
+      "ready": 956,
+      "skipped": 0,
+      "draws": 240,
+      "triangles": 2481813,
+      "allLodTriangles": 2481813,
+      "cells": 669,
+      "residentCells": 240,
+      "pendingCells": 0,
+      "retryingCells": 0,
+      "compressedTextures": 10,
+      "textureMiB": 138.67,
+      "errors": [],
+      "windTime": 92.86663333334127,
+      "weatherWind": {
+        "wind": [
+          0,
+          0
+        ],
+        "intensity": 0,
+        "time": 0
+      }
+    },
+    "render": {
+      "frame": 6412,
+      "calls": 314,
+      "triangles": 2457328,
+      "points": 0,
+      "lines": 0
+    },
+    "stamp": "Codex/sol fork · build 10-29 10:16 UTC",
+    "errors": []
+  },
+  {
+    "section": "Checkpoint warp",
+    "level": "jungle-gate-run",
+    "position": [
+      1292.8,
+      24.000000023841856,
+      0
+    ],
+    "grounded": true,
+    "ground": "platform",
+    "camera": [
+      1292.8,
+      30.6689499002889,
+      17.180639604630535
+    ],
+    "buffer": [
+      3024,
+      1516
+    ],
+    "assets": {
+      "components": 2782,
+      "placements": 2782,
+      "ready": 956,
+      "skipped": 0,
+      "draws": 240,
+      "triangles": 2481813,
+      "allLodTriangles": 2481813,
+      "cells": 669,
+      "residentCells": 240,
+      "pendingCells": 0,
+      "retryingCells": 0,
+      "compressedTextures": 10,
+      "textureMiB": 138.67,
+      "errors": [],
+      "windTime": 102.2833000000074,
+      "weatherWind": {
+        "wind": [
+          0,
+          0
+        ],
+        "intensity": 0,
+        "time": 0
+      }
+    },
+    "render": {
+      "frame": 7127,
+      "calls": 312,
+      "triangles": 2454728,
+      "points": 0,
+      "lines": 0
+    },
+    "stamp": "Codex/sol fork · build 10-29 10:16 UTC",
+    "errors": []
+  },
+  {
+    "section": "Pit recovery",
+    "level": "jungle-gate-run",
+    "position": [
+      -20,
+      0.7366666902850071,
+      0
+    ],
+    "grounded": true,
+    "ground": "warp pad",
+    "camera": [
+      -20,
+      7.405616566732049,
+      17.180639604630535
+    ],
+    "buffer": [
+      3024,
+      1516
+    ],
+    "assets": {
+      "components": 2782,
+      "placements": 2782,
+      "ready": 622,
+      "skipped": 0,
+      "draws": 157,
+      "triangles": 1491409,
+      "allLodTriangles": 1491409,
+      "cells": 669,
+      "residentCells": 157,
+      "pendingCells": 0,
+      "retryingCells": 0,
+      "compressedTextures": 10,
+      "textureMiB": 138.67,
+      "errors": [],
+      "windTime": 114.98330000000668,
+      "weatherWind": {
+        "wind": [
+          0,
+          0
+        ],
+        "intensity": 0,
+        "time": 0
+      }
+    },
+    "render": {
+      "frame": 7884,
+      "calls": 225,
+      "triangles": 1544409,
+      "points": 10,
+      "lines": 0
+    },
+    "stamp": "Codex/sol fork · build 10-29 10:16 UTC",
+    "errors": []
+  },
+  {
+    "section": "Hoard arrival",
+    "level": "bonus-jungle-gate",
+    "position": [
+      -8,
+      0,
+      0
+    ],
+    "grounded": true,
+    "ground": "Hoard arrival and return court",
+    "camera": [
+      -8,
+      8.35149116617971,
+      25.820309867674464
+    ],
+    "buffer": [
+      3024,
+      1516
+    ],
+    "assets": {
+      "components": 472,
+      "placements": 472,
+      "ready": 470,
+      "skipped": 0,
+      "draws": 114,
+      "triangles": 1167459,
+      "allLodTriangles": 1167459,
+      "cells": 116,
+      "residentCells": 114,
+      "pendingCells": 0,
+      "retryingCells": 0,
+      "compressedTextures": 10,
+      "textureMiB": 138.67,
+      "errors": [],
+      "windTime": 6.801066666672608,
+      "weatherWind": {
+        "wind": [
+          0,
+          0
+        ],
+        "intensity": 0,
+        "time": 0
+      }
+    },
+    "render": {
+      "frame": 1422,
+      "calls": 198,
+      "triangles": 1279070,
+      "points": 0,
+      "lines": 192
+    },
+    "stamp": "Codex/sol fork · build 10-29 10:16 UTC",
+    "errors": []
+  },
+  {
+    "section": "Hoard court",
+    "level": "bonus-jungle-gate",
+    "position": [
+      35,
+      0,
+      0
+    ],
+    "grounded": true,
+    "ground": "Hoard arrival and return court",
+    "camera": [
+      35,
+      8.35149116617971,
+      25.820309867674464
+    ],
+    "buffer": [
+      3024,
+      1516
+    ],
+    "assets": {
+      "components": 472,
+      "placements": 472,
+      "ready": 472,
+      "skipped": 0,
+      "draws": 116,
+      "triangles": 1176120,
+      "allLodTriangles": 1176120,
+      "cells": 116,
+      "residentCells": 116,
+      "pendingCells": 0,
+      "retryingCells": 0,
+      "compressedTextures": 10,
+      "textureMiB": 138.67,
+      "errors": [],
+      "windTime": 8.084400000005942,
+      "weatherWind": {
+        "wind": [
+          0,
+          0
+        ],
+        "intensity": 0,
+        "time": 0
+      }
+    },
+    "render": {
+      "frame": 1656,
+      "calls": 261,
+      "triangles": 1708148,
+      "points": 0,
+      "lines": 288
+    },
+    "stamp": "Codex/sol fork · build 10-29 10:16 UTC",
+    "errors": []
+  },
+  {
+    "section": "Copper store",
+    "level": "bonus-jungle-gate",
+    "position": [
+      92,
+      0,
+      0
+    ],
+    "grounded": true,
+    "ground": "Hammered copper store",
+    "camera": [
+      92,
+      8.35149116617971,
+      25.820309867674464
+    ],
+    "buffer": [
+      3024,
+      1516
+    ],
+    "assets": {
+      "components": 472,
+      "placements": 472,
+      "ready": 472,
+      "skipped": 0,
+      "draws": 116,
+      "triangles": 1176120,
+      "allLodTriangles": 1176120,
+      "cells": 116,
+      "residentCells": 116,
+      "pendingCells": 0,
+      "retryingCells": 0,
+      "compressedTextures": 10,
+      "textureMiB": 138.67,
+      "errors": [],
+      "windTime": 9.184400000005997,
+      "weatherWind": {
+        "wind": [
+          0,
+          0
+        ],
+        "intensity": 0,
+        "time": 0
+      }
+    },
+    "render": {
+      "frame": 1851,
+      "calls": 294,
+      "triangles": 1904578,
+      "points": 0,
+      "lines": 228
+    },
+    "stamp": "Codex/sol fork · build 10-29 10:16 UTC",
+    "errors": []
+  },
+  {
+    "section": "Treasury",
+    "level": "bonus-jungle-gate",
+    "position": [
+      143,
+      0,
+      0
+    ],
+    "grounded": true,
+    "ground": "Five-bounce treasury",
+    "camera": [
+      143,
+      8.35149116617971,
+      25.820309867674464
+    ],
+    "buffer": [
+      3024,
+      1516
+    ],
+    "assets": {
+      "components": 472,
+      "placements": 472,
+      "ready": 472,
+      "skipped": 0,
+      "draws": 116,
+      "triangles": 1176120,
+      "allLodTriangles": 1176120,
+      "cells": 116,
+      "residentCells": 116,
+      "pendingCells": 0,
+      "retryingCells": 0,
+      "compressedTextures": 10,
+      "textureMiB": 138.67,
+      "errors": [],
+      "windTime": 40.567733333338275,
+      "weatherWind": {
+        "wind": [
+          0,
+          0
+        ],
+        "intensity": 0,
+        "time": 0
+      }
+    },
+    "render": {
+      "frame": 7482,
+      "calls": 280,
+      "triangles": 1845903,
+      "points": 0,
+      "lines": 144
+    },
+    "stamp": "Codex/sol fork · build 10-29 10:16 UTC",
+    "errors": []
+  },
+  {
+    "section": "Return passage",
+    "level": "bonus-jungle-gate",
+    "position": [
+      166,
+      0,
+      0
+    ],
+    "grounded": true,
+    "ground": "Arrow return passage",
+    "camera": [
+      166,
+      8.35149116617971,
+      25.820309867674464
+    ],
+    "buffer": [
+      3024,
+      1516
+    ],
+    "assets": {
+      "components": 472,
+      "placements": 472,
+      "ready": 472,
+      "skipped": 0,
+      "draws": 116,
+      "triangles": 1176120,
+      "allLodTriangles": 1176120,
+      "cells": 116,
+      "residentCells": 116,
+      "pendingCells": 0,
+      "retryingCells": 0,
+      "compressedTextures": 10,
+      "textureMiB": 138.67,
+      "errors": [],
+      "windTime": 41.78440000000487,
+      "weatherWind": {
+        "wind": [
+          0,
+          0
+        ],
+        "intensity": 0,
+        "time": 0
+      }
+    },
+    "render": {
+      "frame": 7704,
+      "calls": 259,
+      "triangles": 1684548,
+      "points": 0,
+      "lines": 108
+    },
+    "stamp": "Codex/sol fork · build 10-29 10:16 UTC",
+    "errors": []
+  },
+  {
+    "section": "Hoard departure",
+    "level": "bonus-jungle-gate",
+    "position": [
+      191,
+      0,
+      0
+    ],
+    "grounded": true,
+    "ground": "Hoard departure court",
+    "camera": [
+      191,
+      8.35149116617971,
+      25.820309867674464
+    ],
+    "buffer": [
+      3024,
+      1516
+    ],
+    "assets": {
+      "components": 472,
+      "placements": 472,
+      "ready": 472,
+      "skipped": 0,
+      "draws": 116,
+      "triangles": 1176120,
+      "allLodTriangles": 1176120,
+      "cells": 116,
+      "residentCells": 116,
+      "pendingCells": 0,
+      "retryingCells": 0,
+      "compressedTextures": 10,
+      "textureMiB": 138.67,
+      "errors": [],
+      "windTime": 42.85106666667148,
+      "weatherWind": {
+        "wind": [
+          0,
+          0
+        ],
+        "intensity": 0,
+        "time": 0
+      }
+    },
+    "render": {
+      "frame": 7878,
+      "calls": 236,
+      "triangles": 1558720,
+      "points": 10,
+      "lines": 72
+    },
+    "stamp": "Codex/sol fork · build 10-29 10:16 UTC",
+    "errors": []
+  },
+  {
+    "section": "Normal 720p keyboard L checkpoint",
+    "level": "jungle-gate-run",
+    "position": [
+      105,
+      3.000000023841858,
+      0
+    ],
+    "grounded": true,
+    "ground": "platform",
+    "camera": [
+      105,
+      9.6689499002889,
+      17.180639604630535
+    ],
+    "buffer": [
+      1436,
+      720
+    ],
+    "assets": {
+      "components": 2782,
+      "placements": 2782,
+      "ready": 853,
+      "skipped": 0,
+      "draws": 209,
+      "triangles": 2066408,
+      "allLodTriangles": 2066408,
+      "cells": 669,
+      "residentCells": 209,
+      "pendingCells": 0,
+      "retryingCells": 0,
+      "compressedTextures": 10,
+      "textureMiB": 138.67,
+      "errors": [],
+      "windTime": 13.370433333327618,
+      "weatherWind": {
+        "wind": [
+          0,
+          0
+        ],
+        "intensity": 0,
+        "time": 0
+      }
+    },
+    "render": {
+      "frame": 4253,
+      "calls": 307,
+      "triangles": 2186197,
+      "points": 0,
+      "lines": 0
+    },
+    "stamp": "Codex/sol fork · build 10-29 10:16 UTC",
+    "errors": []
+  },
+  {
+    "section": "Normal keyboard K recovery",
+    "level": "jungle-gate-run",
+    "position": [
+      -20,
+      0.7366666902850071,
+      0
+    ],
+    "grounded": true,
+    "ground": "warp pad",
+    "camera": [
+      -20,
+      7.405616566732049,
+      17.180639604630535
+    ],
+    "buffer": [
+      1436,
+      720
+    ],
+    "assets": {
+      "components": 2782,
+      "placements": 2782,
+      "ready": 725,
+      "skipped": 0,
+      "draws": 184,
+      "triangles": 1694059,
+      "allLodTriangles": 1694059,
+      "cells": 669,
+      "residentCells": 184,
+      "pendingCells": 0,
+      "retryingCells": 0,
+      "compressedTextures": 10,
+      "textureMiB": 138.67,
+      "errors": [],
+      "windTime": 31.23709999999355,
+      "weatherWind": {
+        "wind": [
+          0,
+          0
+        ],
+        "intensity": 0,
+        "time": 0
+      }
+    },
+    "render": {
+      "frame": 11757,
+      "calls": 230,
+      "triangles": 1544354,
+      "points": 10,
+      "lines": 0
+    },
+    "stamp": "Codex/sol fork · build 10-29 10:16 UTC",
+    "errors": []
+  },
+  {
+    "section": "Finish gate",
+    "result": "COURSE CLEAR — The Ancient Gates",
+    "consoleErrors": []
+  }
+]

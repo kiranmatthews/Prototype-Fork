@@ -1,0 +1,130 @@
+{
+  "nativeGeometry": "Every decoded buffer view verified byte-for-byte; no mesh reduction, quantization or LOD.",
+  "assets": [
+    {
+      "name": "tiki-gateway",
+      "sourceBytes": 3650876,
+      "bytes": 515612,
+      "sourceSha256": "7e34f16b66292316df9f9aabe5067674cebb089f92cd157d9c75b4a8576a39a3",
+      "sha256": "0aa0babbab147eb6e11b8a06bd2cd110db436069228757a61669fcb9b097dc79",
+      "allDecodedGeometryBytesIdentical": true,
+      "verifiedGeometryViews": 4,
+      "textures": [
+        {
+          "index": 0,
+          "width": 2048,
+          "height": 2048,
+          "sourceWidth": 2048,
+          "sourceHeight": 2048,
+          "originalBytes": 816613,
+          "bytes": 172848,
+          "encoding": "2K WebP quality 80"
+        },
+        {
+          "index": 1,
+          "width": 512,
+          "height": 512,
+          "sourceWidth": 2048,
+          "sourceHeight": 2048,
+          "originalBytes": 549539,
+          "bytes": 27160,
+          "encoding": "WebP quality 92; normal 1K / ORM 512"
+        },
+        {
+          "index": 2,
+          "width": 1024,
+          "height": 1024,
+          "sourceWidth": 2048,
+          "sourceHeight": 2048,
+          "originalBytes": 1976554,
+          "bytes": 119620,
+          "encoding": "WebP quality 92; normal 1K / ORM 512"
+        }
+      ]
+    },
+    {
+      "name": "canyon-buttress",
+      "sourceBytes": 1117644,
+      "bytes": 283976,
+      "sourceSha256": "70911f77fc50ef6db7fad3f59fcee762bcb0b6e37904df25804bf093ef01c6fc",
+      "sha256": "249ccb1cf64fcb4be0788c0846b326dc3b63cddb2d292c8805ea40cda88c2f9d",
+      "allDecodedGeometryBytesIdentical": true,
+      "verifiedGeometryViews": 4,
+      "textures": [
+        {
+          "index": 0,
+          "width": 2048,
+          "height": 2048,
+          "sourceWidth": 2048,
+          "sourceHeight": 2048,
+          "originalBytes": 1004541,
+          "bytes": 205410,
+          "encoding": "2K WebP quality 80"
+        }
+      ]
+    },
+    {
+      "name": "tiki-support-pier",
+      "sourceBytes": 2154152,
+      "bytes": 769064,
+      "sourceSha256": "df130660faa9222a1afb18b7ec6fcf1540df8df95c2ed5b303563fb3c64d73dd",
+      "sha256": "8c740ec7bacf360a391b89aa44126c9f9f12a415c36e08ef1987ef6fc481af35",
+      "allDecodedGeometryBytesIdentical": true,
+      "verifiedGeometryViews": 4,
+      "textures": [
+        {
+          "index": 0,
+          "width": 2048,
+          "height": 2048,
+          "sourceWidth": 2048,
+          "sourceHeight": 2048,
+          "originalBytes": 1915200,
+          "bytes": 649890,
+          "encoding": "2K WebP quality 80"
+        }
+      ]
+    },
+    {
+      "name": "tiered-shrine",
+      "sourceBytes": 1944500,
+      "bytes": 644380,
+      "sourceSha256": "bf226f781ade1880ab50ed50e483a1e16c2ce184f05b7fe0301e8d54690a5239",
+      "sha256": "0c9b5aaacdd5b4653771686549443bd9e2598ed729ce7beb042f08617349d02d",
+      "allDecodedGeometryBytesIdentical": true,
+      "verifiedGeometryViews": 4,
+      "textures": [
+        {
+          "index": 0,
+          "width": 2048,
+          "height": 2048,
+          "sourceWidth": 2048,
+          "sourceHeight": 2048,
+          "originalBytes": 1430573,
+          "bytes": 386502,
+          "encoding": "2K WebP quality 80"
+        }
+      ]
+    },
+    {
+      "name": "rooted-tropical-cluster",
+      "sourceBytes": 1317760,
+      "bytes": 406092,
+      "sourceSha256": "cd80615329e165b45e287ff84e17b8222a739fc28192752666d6a699ef81b41b",
+      "sha256": "f677f3e0e5bc45cc4ca2d295639c4205ee1ea2d410a589898a859406b95adfa9",
+      "allDecodedGeometryBytesIdentical": true,
+      "verifiedGeometryViews": 4,
+      "textures": [
+        {
+          "index": 0,
+          "width": 2048,
+          "height": 2048,
+          "sourceWidth": 2048,
+          "sourceHeight": 2048,
+          "originalBytes": 1127314,
+          "bytes": 282102,
+          "encoding": "2K WebP quality 80"
+        }
+      ]
+    }
+  ]
+}

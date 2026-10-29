@@ -1,0 +1,14 @@
+{
+  "baseCommit": "d866f61d450cedbad3f1517e0c5ed71ba805dbce",
+  "build": "pass",
+  "releaseSizeBytes": 999907406,
+  "releaseLimitBytes": 1000000000,
+  "sourcePackBytes": 67053735,
+  "sourcePackLimitBytes": 67108864,
+  "offlineVersion": "f5e50add832f102d26a4",
+  "levelChecks": "pass",
+  "nativeMechanisms": "pass",
+  "spinBridgeRegression": "pass",
+  "phaseMaterialLifetime": "pass",
+  "freshProductionBrowser": "Deferred: both shared heavy-validation slots occupied; final production/deployment smoke belongs to release coordinator. Full/native source browser review completed."
+}

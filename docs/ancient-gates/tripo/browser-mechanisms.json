@@ -1,0 +1,2062 @@
+{
+  "views": [
+    {
+      "view": "door closed",
+      "level": "jungle-gate-run",
+      "position": [
+        -20,
+        0.7366666902850071,
+        0
+      ],
+      "grounded": true,
+      "ground": "warp pad",
+      "camera": [
+        -20,
+        7.405616566732049,
+        17.180639604630535
+      ],
+      "buffer": [
+        816,
+        806
+      ],
+      "assets": {
+        "components": 2578,
+        "placements": 2578,
+        "ready": 725,
+        "skipped": 0,
+        "draws": 184,
+        "triangles": 1694059,
+        "allLodTriangles": 1694059,
+        "cells": 662,
+        "residentCells": 184,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 10,
+        "textureMiB": 138.67,
+        "errors": [],
+        "windTime": 20.86663333334535,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "mechanisms": {
+        "requested": 21,
+        "ready": 21,
+        "errors": [],
+        "mechanisms": [
+          {
+            "name": "First split timber gate",
+            "type": "spinbridge",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 0
+          },
+          {
+            "name": "Second split timber gate",
+            "type": "spinbridge",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 0
+          },
+          {
+            "name": "Falling lintel one",
+            "type": "crumble",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Falling lintel two",
+            "type": "crumble",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Falling lintel three",
+            "type": "crumble",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Long counterweight ferry",
+            "type": "mover",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Counterweight crown lift",
+            "type": "mover",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 84
+          },
+          {
+            "name": "Broken aqueduct kicker",
+            "type": "ramp",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 0
+          },
+          {
+            "name": "Restored sunken stair 1",
+            "type": "mesh",
+            "ready": true,
+            "visible": false,
+            "active": false,
+            "chains": 0
+          },
+          {
+            "name": "Restored sunken stair 2",
+            "type": "mesh",
+            "ready": true,
+            "visible": false,
+            "active": false,
+            "chains": 0
+          },
+          {
+            "name": "Restored sunken stair 3",
+            "type": "mesh",
+            "ready": true,
+            "visible": false,
+            "active": false,
+            "chains": 0
+          },
+          {
+            "name": "Sunken cross-current ferry",
+            "type": "mover",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Last Gate falling tooth one",
+            "type": "crumble",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Last Gate falling tooth two",
+            "type": "crumble",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Last Gate falling tooth three",
+            "type": "crumble",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Entrance hammer",
+            "type": "crusher",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 60
+          },
+          {
+            "name": "Offbeat hammer",
+            "type": "crusher",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 20
+          },
+          {
+            "name": "Low vault hammer",
+            "type": "crusher",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 20
+          },
+          {
+            "name": "Lantern step 1",
+            "type": "phasepad",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Lantern step 2",
+            "type": "phasepad",
+            "ready": true,
+            "visible": false,
+            "active": false,
+            "chains": 56
+          },
+          {
+            "name": "Lantern step 3",
+            "type": "phasepad",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          }
+        ]
+      },
+      "bridges": [
+        {
+          "state": "closed",
+          "deployed": false
+        },
+        {
+          "state": "closed",
+          "deployed": false
+        }
+      ],
+      "falling": [
+        {
+          "state": "idle",
+          "y": 9.175
+        },
+        {
+          "state": "idle",
+          "y": 7.675
+        },
+        {
+          "state": "idle",
+          "y": 6.175
+        },
+        {
+          "state": "idle",
+          "y": 22.675
+        },
+        {
+          "state": "idle",
+          "y": 21.175
+        },
+        {
+          "state": "idle",
+          "y": 19.675
+        }
+      ],
+      "render": {
+        "frame": 2839,
+        "calls": 71,
+        "triangles": 475337,
+        "points": 10,
+        "lines": 0
+      },
+      "stamp": "Codex/sol fork \u00b7 build 10-29 10:16 UTC",
+      "errors": []
+    },
+    {
+      "view": "door opened by player spin",
+      "level": "jungle-gate-run",
+      "position": [
+        85.86444444444443,
+        3.000000023841858,
+        0
+      ],
+      "grounded": true,
+      "ground": "platform",
+      "camera": [
+        85.86444444444443,
+        9.6689499002889,
+        17.180639604630535
+      ],
+      "buffer": [
+        816,
+        806
+      ],
+      "assets": {
+        "components": 2578,
+        "placements": 2578,
+        "ready": 752,
+        "skipped": 0,
+        "draws": 193,
+        "triangles": 1734611,
+        "allLodTriangles": 1734611,
+        "cells": 662,
+        "residentCells": 193,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 10,
+        "textureMiB": 138.67,
+        "errors": [],
+        "windTime": 91.44996666667468,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "mechanisms": {
+        "requested": 21,
+        "ready": 21,
+        "errors": [],
+        "mechanisms": [
+          {
+            "name": "First split timber gate",
+            "type": "spinbridge",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 0
+          },
+          {
+            "name": "Second split timber gate",
+            "type": "spinbridge",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 0
+          },
+          {
+            "name": "Falling lintel one",
+            "type": "crumble",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Falling lintel two",
+            "type": "crumble",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Falling lintel three",
+            "type": "crumble",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Long counterweight ferry",
+            "type": "mover",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Counterweight crown lift",
+            "type": "mover",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 108
+          },
+          {
+            "name": "Broken aqueduct kicker",
+            "type": "ramp",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 0
+          },
+          {
+            "name": "Restored sunken stair 1",
+            "type": "mesh",
+            "ready": true,
+            "visible": false,
+            "active": false,
+            "chains": 0
+          },
+          {
+            "name": "Restored sunken stair 2",
+            "type": "mesh",
+            "ready": true,
+            "visible": false,
+            "active": false,
+            "chains": 0
+          },
+          {
+            "name": "Restored sunken stair 3",
+            "type": "mesh",
+            "ready": true,
+            "visible": false,
+            "active": false,
+            "chains": 0
+          },
+          {
+            "name": "Sunken cross-current ferry",
+            "type": "mover",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Last Gate falling tooth one",
+            "type": "crumble",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Last Gate falling tooth two",
+            "type": "crumble",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Last Gate falling tooth three",
+            "type": "crumble",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Entrance hammer",
+            "type": "crusher",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 60
+          },
+          {
+            "name": "Offbeat hammer",
+            "type": "crusher",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 48
+          },
+          {
+            "name": "Low vault hammer",
+            "type": "crusher",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 40
+          },
+          {
+            "name": "Lantern step 1",
+            "type": "phasepad",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Lantern step 2",
+            "type": "phasepad",
+            "ready": true,
+            "visible": false,
+            "active": false,
+            "chains": 56
+          },
+          {
+            "name": "Lantern step 3",
+            "type": "phasepad",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          }
+        ]
+      },
+      "bridges": [
+        {
+          "state": "open",
+          "deployed": true
+        },
+        {
+          "state": "closed",
+          "deployed": false
+        }
+      ],
+      "falling": [
+        {
+          "state": "idle",
+          "y": 9.175
+        },
+        {
+          "state": "idle",
+          "y": 7.675
+        },
+        {
+          "state": "idle",
+          "y": 6.175
+        },
+        {
+          "state": "idle",
+          "y": 22.675
+        },
+        {
+          "state": "idle",
+          "y": 21.175
+        },
+        {
+          "state": "idle",
+          "y": 19.675
+        }
+      ],
+      "render": {
+        "frame": 9962,
+        "calls": 69,
+        "triangles": 444988,
+        "points": 0,
+        "lines": 0
+      },
+      "stamp": "Codex/sol fork \u00b7 build 10-29 10:16 UTC",
+      "errors": []
+    },
+    {
+      "view": "walk across deployed door",
+      "level": "jungle-gate-run",
+      "position": [
+        98.79777777777805,
+        3.000000023841858,
+        0
+      ],
+      "grounded": true,
+      "ground": "platform",
+      "camera": [
+        98.78144444451426,
+        9.6689499002889,
+        17.180639604630535
+      ],
+      "buffer": [
+        816,
+        806
+      ],
+      "assets": {
+        "components": 2578,
+        "placements": 2578,
+        "ready": 784,
+        "skipped": 0,
+        "draws": 204,
+        "triangles": 1789071,
+        "allLodTriangles": 1789071,
+        "cells": 662,
+        "residentCells": 204,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 10,
+        "textureMiB": 138.67,
+        "errors": [],
+        "windTime": 124.81663333333945,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "mechanisms": {
+        "requested": 21,
+        "ready": 21,
+        "errors": [],
+        "mechanisms": [
+          {
+            "name": "First split timber gate",
+            "type": "spinbridge",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 0
+          },
+          {
+            "name": "Second split timber gate",
+            "type": "spinbridge",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 0
+          },
+          {
+            "name": "Falling lintel one",
+            "type": "crumble",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Falling lintel two",
+            "type": "crumble",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Falling lintel three",
+            "type": "crumble",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Long counterweight ferry",
+            "type": "mover",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Counterweight crown lift",
+            "type": "mover",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 104
+          },
+          {
+            "name": "Broken aqueduct kicker",
+            "type": "ramp",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 0
+          },
+          {
+            "name": "Restored sunken stair 1",
+            "type": "mesh",
+            "ready": true,
+            "visible": false,
+            "active": false,
+            "chains": 0
+          },
+          {
+            "name": "Restored sunken stair 2",
+            "type": "mesh",
+            "ready": true,
+            "visible": false,
+            "active": false,
+            "chains": 0
+          },
+          {
+            "name": "Restored sunken stair 3",
+            "type": "mesh",
+            "ready": true,
+            "visible": false,
+            "active": false,
+            "chains": 0
+          },
+          {
+            "name": "Sunken cross-current ferry",
+            "type": "mover",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Last Gate falling tooth one",
+            "type": "crumble",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Last Gate falling tooth two",
+            "type": "crumble",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Last Gate falling tooth three",
+            "type": "crumble",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Entrance hammer",
+            "type": "crusher",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 60
+          },
+          {
+            "name": "Offbeat hammer",
+            "type": "crusher",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Low vault hammer",
+            "type": "crusher",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 60
+          },
+          {
+            "name": "Lantern step 1",
+            "type": "phasepad",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Lantern step 2",
+            "type": "phasepad",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Lantern step 3",
+            "type": "phasepad",
+            "ready": true,
+            "visible": false,
+            "active": false,
+            "chains": 56
+          }
+        ]
+      },
+      "bridges": [
+        {
+          "state": "open",
+          "deployed": true
+        },
+        {
+          "state": "closed",
+          "deployed": false
+        }
+      ],
+      "falling": [
+        {
+          "state": "idle",
+          "y": 9.175
+        },
+        {
+          "state": "idle",
+          "y": 7.675
+        },
+        {
+          "state": "idle",
+          "y": 6.175
+        },
+        {
+          "state": "idle",
+          "y": 22.675
+        },
+        {
+          "state": "idle",
+          "y": 21.175
+        },
+        {
+          "state": "idle",
+          "y": 19.675
+        }
+      ],
+      "render": {
+        "frame": 12580,
+        "calls": 74,
+        "triangles": 444258,
+        "points": 0,
+        "lines": 0
+      },
+      "stamp": "Codex/sol fork \u00b7 build 10-29 10:16 UTC",
+      "errors": []
+    },
+    {
+      "label": "Full native door crossing",
+      "level": "jungle-gate-run",
+      "position": [
+        98.11333333333357,
+        3.000000023841858,
+        0
+      ],
+      "grounded": true,
+      "ground": "platform",
+      "camera": [
+        98.11333333333357,
+        9.6689499002889,
+        17.180639604630535
+      ],
+      "buffer": [
+        1630,
+        1610
+      ],
+      "assets": {
+        "components": 2578,
+        "placements": 2578,
+        "ready": 784,
+        "skipped": 0,
+        "draws": 204,
+        "triangles": 1789071,
+        "allLodTriangles": 1789071,
+        "cells": 662,
+        "residentCells": 204,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 10,
+        "textureMiB": 138.67,
+        "errors": [],
+        "windTime": 227.81673333338296,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "mechanisms": {
+        "requested": 21,
+        "ready": 21,
+        "errors": [],
+        "mechanisms": [
+          {
+            "name": "First split timber gate",
+            "type": "spinbridge",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 0
+          },
+          {
+            "name": "Second split timber gate",
+            "type": "spinbridge",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 0
+          },
+          {
+            "name": "Falling lintel one",
+            "type": "crumble",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Falling lintel two",
+            "type": "crumble",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Falling lintel three",
+            "type": "crumble",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Long counterweight ferry",
+            "type": "mover",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Counterweight crown lift",
+            "type": "mover",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 72
+          },
+          {
+            "name": "Broken aqueduct kicker",
+            "type": "ramp",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 0
+          },
+          {
+            "name": "Restored sunken stair 1",
+            "type": "mesh",
+            "ready": true,
+            "visible": false,
+            "active": false,
+            "chains": 0
+          },
+          {
+            "name": "Restored sunken stair 2",
+            "type": "mesh",
+            "ready": true,
+            "visible": false,
+            "active": false,
+            "chains": 0
+          },
+          {
+            "name": "Restored sunken stair 3",
+            "type": "mesh",
+            "ready": true,
+            "visible": false,
+            "active": false,
+            "chains": 0
+          },
+          {
+            "name": "Sunken cross-current ferry",
+            "type": "mover",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Last Gate falling tooth one",
+            "type": "crumble",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Last Gate falling tooth two",
+            "type": "crumble",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Last Gate falling tooth three",
+            "type": "crumble",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Entrance hammer",
+            "type": "crusher",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Offbeat hammer",
+            "type": "crusher",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 20
+          },
+          {
+            "name": "Low vault hammer",
+            "type": "crusher",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 28
+          },
+          {
+            "name": "Lantern step 1",
+            "type": "phasepad",
+            "ready": true,
+            "visible": false,
+            "active": false,
+            "chains": 56
+          },
+          {
+            "name": "Lantern step 2",
+            "type": "phasepad",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Lantern step 3",
+            "type": "phasepad",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          }
+        ]
+      },
+      "bridges": [
+        {
+          "state": "open",
+          "deployed": true
+        },
+        {
+          "state": "closed",
+          "deployed": false
+        }
+      ],
+      "falling": [
+        {
+          "state": "idle",
+          "y": 9.175
+        },
+        {
+          "state": "idle",
+          "y": 7.675
+        },
+        {
+          "state": "idle",
+          "y": 6.175
+        },
+        {
+          "state": "idle",
+          "y": 22.675
+        },
+        {
+          "state": "idle",
+          "y": 21.175
+        },
+        {
+          "state": "idle",
+          "y": 19.675
+        }
+      ],
+      "render": {
+        "frame": 88623,
+        "calls": 301,
+        "triangles": 2281590,
+        "points": 0,
+        "lines": 0
+      },
+      "stamp": "Codex/sol fork \u00b7 build 10-29 10:16 UTC",
+      "errors": []
+    },
+    {
+      "label": "Native falling step triggered",
+      "level": "jungle-gate-run",
+      "position": [
+        177,
+        10.000000023841858,
+        0
+      ],
+      "grounded": true,
+      "ground": "platform",
+      "camera": [
+        177,
+        16.6689499002889,
+        17.180639604630535
+      ],
+      "buffer": [
+        1630,
+        1610
+      ],
+      "assets": {
+        "components": 2578,
+        "placements": 2578,
+        "ready": 921,
+        "skipped": 0,
+        "draws": 236,
+        "triangles": 2092849,
+        "allLodTriangles": 2092849,
+        "cells": 662,
+        "residentCells": 236,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 10,
+        "textureMiB": 138.67,
+        "errors": [],
+        "windTime": 247.85006666673223,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "mechanisms": {
+        "requested": 21,
+        "ready": 21,
+        "errors": [],
+        "mechanisms": [
+          {
+            "name": "First split timber gate",
+            "type": "spinbridge",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 0
+          },
+          {
+            "name": "Second split timber gate",
+            "type": "spinbridge",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 0
+          },
+          {
+            "name": "Falling lintel one",
+            "type": "crumble",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Falling lintel two",
+            "type": "crumble",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Falling lintel three",
+            "type": "crumble",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Long counterweight ferry",
+            "type": "mover",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Counterweight crown lift",
+            "type": "mover",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Broken aqueduct kicker",
+            "type": "ramp",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 0
+          },
+          {
+            "name": "Restored sunken stair 1",
+            "type": "mesh",
+            "ready": true,
+            "visible": false,
+            "active": false,
+            "chains": 0
+          },
+          {
+            "name": "Restored sunken stair 2",
+            "type": "mesh",
+            "ready": true,
+            "visible": false,
+            "active": false,
+            "chains": 0
+          },
+          {
+            "name": "Restored sunken stair 3",
+            "type": "mesh",
+            "ready": true,
+            "visible": false,
+            "active": false,
+            "chains": 0
+          },
+          {
+            "name": "Sunken cross-current ferry",
+            "type": "mover",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Last Gate falling tooth one",
+            "type": "crumble",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Last Gate falling tooth two",
+            "type": "crumble",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Last Gate falling tooth three",
+            "type": "crumble",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Entrance hammer",
+            "type": "crusher",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 36
+          },
+          {
+            "name": "Offbeat hammer",
+            "type": "crusher",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 20
+          },
+          {
+            "name": "Low vault hammer",
+            "type": "crusher",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 40
+          },
+          {
+            "name": "Lantern step 1",
+            "type": "phasepad",
+            "ready": true,
+            "visible": false,
+            "active": false,
+            "chains": 56
+          },
+          {
+            "name": "Lantern step 2",
+            "type": "phasepad",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Lantern step 3",
+            "type": "phasepad",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          }
+        ]
+      },
+      "bridges": [
+        {
+          "state": "closed",
+          "deployed": false
+        },
+        {
+          "state": "closed",
+          "deployed": false
+        }
+      ],
+      "falling": [
+        {
+          "state": "shake",
+          "y": 9.083333333333334
+        },
+        {
+          "state": "idle",
+          "y": 7.675
+        },
+        {
+          "state": "idle",
+          "y": 6.175
+        },
+        {
+          "state": "idle",
+          "y": 22.675
+        },
+        {
+          "state": "idle",
+          "y": 21.175
+        },
+        {
+          "state": "idle",
+          "y": 19.675
+        }
+      ],
+      "render": {
+        "frame": 89676,
+        "calls": 315,
+        "triangles": 2691164,
+        "points": 0,
+        "lines": 0
+      },
+      "stamp": "Codex/sol fork \u00b7 build 10-29 10:16 UTC",
+      "errors": []
+    },
+    {
+      "label": "Native phase pads",
+      "level": "jungle-gate-run",
+      "position": [
+        884,
+        7.400000023841859,
+        0
+      ],
+      "grounded": true,
+      "ground": "platform",
+      "camera": [
+        884,
+        14.068949900288901,
+        17.180639604630535
+      ],
+      "buffer": [
+        1630,
+        1610
+      ],
+      "assets": {
+        "components": 2578,
+        "placements": 2578,
+        "ready": 1325,
+        "skipped": 0,
+        "draws": 328,
+        "triangles": 3167467,
+        "allLodTriangles": 3167467,
+        "cells": 662,
+        "residentCells": 328,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 10,
+        "textureMiB": 138.67,
+        "errors": [],
+        "windTime": 381.0667333332916,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "mechanisms": {
+        "requested": 21,
+        "ready": 21,
+        "errors": [],
+        "mechanisms": [
+          {
+            "name": "First split timber gate",
+            "type": "spinbridge",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 0
+          },
+          {
+            "name": "Second split timber gate",
+            "type": "spinbridge",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 0
+          },
+          {
+            "name": "Falling lintel one",
+            "type": "crumble",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Falling lintel two",
+            "type": "crumble",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Falling lintel three",
+            "type": "crumble",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Long counterweight ferry",
+            "type": "mover",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Counterweight crown lift",
+            "type": "mover",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 60
+          },
+          {
+            "name": "Broken aqueduct kicker",
+            "type": "ramp",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 0
+          },
+          {
+            "name": "Restored sunken stair 1",
+            "type": "mesh",
+            "ready": true,
+            "visible": false,
+            "active": false,
+            "chains": 0
+          },
+          {
+            "name": "Restored sunken stair 2",
+            "type": "mesh",
+            "ready": true,
+            "visible": false,
+            "active": false,
+            "chains": 0
+          },
+          {
+            "name": "Restored sunken stair 3",
+            "type": "mesh",
+            "ready": true,
+            "visible": false,
+            "active": false,
+            "chains": 0
+          },
+          {
+            "name": "Sunken cross-current ferry",
+            "type": "mover",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Last Gate falling tooth one",
+            "type": "crumble",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Last Gate falling tooth two",
+            "type": "crumble",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Last Gate falling tooth three",
+            "type": "crumble",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Entrance hammer",
+            "type": "crusher",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 36
+          },
+          {
+            "name": "Offbeat hammer",
+            "type": "crusher",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 52
+          },
+          {
+            "name": "Low vault hammer",
+            "type": "crusher",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 20
+          },
+          {
+            "name": "Lantern step 1",
+            "type": "phasepad",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Lantern step 2",
+            "type": "phasepad",
+            "ready": true,
+            "visible": false,
+            "active": false,
+            "chains": 56
+          },
+          {
+            "name": "Lantern step 3",
+            "type": "phasepad",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          }
+        ]
+      },
+      "bridges": [
+        {
+          "state": "closed",
+          "deployed": false
+        },
+        {
+          "state": "closed",
+          "deployed": false
+        }
+      ],
+      "falling": [
+        {
+          "state": "idle",
+          "y": 9.175
+        },
+        {
+          "state": "idle",
+          "y": 7.675
+        },
+        {
+          "state": "idle",
+          "y": 6.175
+        },
+        {
+          "state": "idle",
+          "y": 22.675
+        },
+        {
+          "state": "idle",
+          "y": 21.175
+        },
+        {
+          "state": "idle",
+          "y": 19.675
+        }
+      ],
+      "render": {
+        "frame": 96533,
+        "calls": 318,
+        "triangles": 2567084,
+        "points": 0,
+        "lines": 36
+      },
+      "stamp": "Codex/sol fork \u00b7 build 10-29 10:16 UTC",
+      "errors": []
+    },
+    {
+      "label": "Restored sunken masonry",
+      "level": "jungle-gate-run",
+      "position": [
+        1075.99,
+        10.000000023841858,
+        0
+      ],
+      "grounded": true,
+      "ground": "platform",
+      "camera": [
+        1075.99,
+        16.6689499002889,
+        17.180639604630535
+      ],
+      "buffer": [
+        1630,
+        1610
+      ],
+      "assets": {
+        "components": 2578,
+        "placements": 2578,
+        "ready": 1300,
+        "skipped": 0,
+        "draws": 327,
+        "triangles": 3091657,
+        "allLodTriangles": 3091657,
+        "cells": 662,
+        "residentCells": 327,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 10,
+        "textureMiB": 138.67,
+        "errors": [],
+        "windTime": 392.60006666661445,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "mechanisms": {
+        "requested": 21,
+        "ready": 21,
+        "errors": [],
+        "mechanisms": [
+          {
+            "name": "First split timber gate",
+            "type": "spinbridge",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 0
+          },
+          {
+            "name": "Second split timber gate",
+            "type": "spinbridge",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 0
+          },
+          {
+            "name": "Falling lintel one",
+            "type": "crumble",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Falling lintel two",
+            "type": "crumble",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Falling lintel three",
+            "type": "crumble",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Long counterweight ferry",
+            "type": "mover",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Counterweight crown lift",
+            "type": "mover",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 72
+          },
+          {
+            "name": "Broken aqueduct kicker",
+            "type": "ramp",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 0
+          },
+          {
+            "name": "Restored sunken stair 1",
+            "type": "mesh",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 0
+          },
+          {
+            "name": "Restored sunken stair 2",
+            "type": "mesh",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 0
+          },
+          {
+            "name": "Restored sunken stair 3",
+            "type": "mesh",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 0
+          },
+          {
+            "name": "Sunken cross-current ferry",
+            "type": "mover",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Last Gate falling tooth one",
+            "type": "crumble",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Last Gate falling tooth two",
+            "type": "crumble",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Last Gate falling tooth three",
+            "type": "crumble",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Entrance hammer",
+            "type": "crusher",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 20
+          },
+          {
+            "name": "Offbeat hammer",
+            "type": "crusher",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 60
+          },
+          {
+            "name": "Low vault hammer",
+            "type": "crusher",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 32
+          },
+          {
+            "name": "Lantern step 1",
+            "type": "phasepad",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          },
+          {
+            "name": "Lantern step 2",
+            "type": "phasepad",
+            "ready": true,
+            "visible": false,
+            "active": false,
+            "chains": 56
+          },
+          {
+            "name": "Lantern step 3",
+            "type": "phasepad",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 56
+          }
+        ]
+      },
+      "bridges": [
+        {
+          "state": "closed",
+          "deployed": false
+        },
+        {
+          "state": "closed",
+          "deployed": false
+        }
+      ],
+      "falling": [
+        {
+          "state": "idle",
+          "y": 9.175
+        },
+        {
+          "state": "idle",
+          "y": 7.675
+        },
+        {
+          "state": "idle",
+          "y": 6.175
+        },
+        {
+          "state": "idle",
+          "y": 22.675
+        },
+        {
+          "state": "idle",
+          "y": 21.175
+        },
+        {
+          "state": "idle",
+          "y": 19.675
+        }
+      ],
+      "render": {
+        "frame": 97162,
+        "calls": 335,
+        "triangles": 3160042,
+        "points": 0,
+        "lines": 0
+      },
+      "stamp": "Codex/sol fork \u00b7 build 10-29 10:16 UTC",
+      "errors": []
+    },
+    {
+      "label": "Native restored bonus gallery",
+      "level": "bonus-jungle-gate",
+      "position": [
+        15,
+        0,
+        0
+      ],
+      "grounded": true,
+      "ground": "Hoard arrival and return court",
+      "camera": [
+        15,
+        8.35149116617971,
+        25.820309867674464
+      ],
+      "buffer": [
+        1630,
+        1610
+      ],
+      "assets": {
+        "components": 472,
+        "placements": 472,
+        "ready": 472,
+        "skipped": 0,
+        "draws": 116,
+        "triangles": 1176120,
+        "allLodTriangles": 1176120,
+        "cells": 116,
+        "residentCells": 116,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 10,
+        "textureMiB": 138.67,
+        "errors": [],
+        "windTime": 64.38659999999167,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "mechanisms": {
+        "requested": 4,
+        "ready": 4,
+        "errors": [],
+        "mechanisms": [
+          {
+            "name": "Hidden jade gallery",
+            "type": "mesh",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 0
+          },
+          {
+            "name": "Restored causeway stone 1",
+            "type": "mesh",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 0
+          },
+          {
+            "name": "Restored causeway stone 2",
+            "type": "mesh",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 0
+          },
+          {
+            "name": "Restored causeway stone 3",
+            "type": "mesh",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 0
+          }
+        ]
+      },
+      "bridges": [],
+      "falling": [],
+      "render": {
+        "frame": 11166,
+        "calls": 219,
+        "triangles": 1721212,
+        "points": 0,
+        "lines": 0
+      },
+      "stamp": "Codex/sol fork \u00b7 build 10-29 10:16 UTC",
+      "errors": []
+    },
+    {
+      "label": "Normal-resolution bonus underpass crossing",
+      "level": "bonus-jungle-gate",
+      "position": [
+        23.99999999999997,
+        0,
+        0
+      ],
+      "grounded": true,
+      "ground": "Hoard arrival and return court",
+      "camera": [
+        23.99999999999997,
+        8.35149116617971,
+        25.820309867674464
+      ],
+      "buffer": [
+        729,
+        720
+      ],
+      "assets": {
+        "components": 472,
+        "placements": 472,
+        "ready": 472,
+        "skipped": 0,
+        "draws": 116,
+        "triangles": 1176120,
+        "allLodTriangles": 1176120,
+        "cells": 116,
+        "residentCells": 116,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 10,
+        "textureMiB": 138.67,
+        "errors": [],
+        "windTime": 88.01993333332366,
+        "weatherWind": {
+          "wind": [
+            0,
+            0
+          ],
+          "intensity": 0,
+          "time": 0
+        }
+      },
+      "mechanisms": {
+        "requested": 4,
+        "ready": 4,
+        "errors": [],
+        "mechanisms": [
+          {
+            "name": "Hidden jade gallery",
+            "type": "mesh",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 0
+          },
+          {
+            "name": "Restored causeway stone 1",
+            "type": "mesh",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 0
+          },
+          {
+            "name": "Restored causeway stone 2",
+            "type": "mesh",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 0
+          },
+          {
+            "name": "Restored causeway stone 3",
+            "type": "mesh",
+            "ready": true,
+            "visible": true,
+            "active": true,
+            "chains": 0
+          }
+        ]
+      },
+      "bridges": [],
+      "falling": [],
+      "render": {
+        "frame": 16338,
+        "calls": 230,
+        "triangles": 1801200,
+        "points": 0,
+        "lines": 0
+      },
+      "stamp": "Codex/sol fork \u00b7 build 10-29 10:16 UTC",
+      "errors": []
+    }
+  ],
+  "console": [
+    {
+      "level": "error",
+      "message": "Uncaught TypeError: Failed to execute 'observe' on 'MutationObserver': parameter 1 is not of type 'Node'.",
+      "timestamp": "2026-10-29T11:10:33.684Z"
+    }
+  ],
+  "reviewWindowUtc": {
+    "start": "2026-10-29T11:17:00Z",
+    "end": "2026-10-29T11:23:00Z"
+  },
+  "consoleDuringFinalReview": [],
+  "historicalConsoleNote": "One older unattributed MutationObserver error at 11:10 UTC; no new errors during the subsequent full/native and normal review."
+}

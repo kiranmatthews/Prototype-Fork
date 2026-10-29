@@ -26,3 +26,6 @@ desktop/test-results/
 
 # Local multi-chat release handoffs and coordinator state.
 .release-queue/
+
+# Local Tripo CLI task history.
+.tripo/

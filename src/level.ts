@@ -52,6 +52,7 @@ import { CUSTARD_CREEK_LEVEL } from "./levels/custard-creek";
 import { custardWaterfallMaterial } from './custardWaterfall';
 import {createWaterfallClimbCurtain} from './waterfallClimbMaterials';
 import { HazardVisuals } from './hazardVisuals';
+import { AncientGatesMechanisms } from './ancientGatesMechanisms';
 import { isOriginalTestCourse } from "./levels/carlisleLegacy";
 import { upgradeKnownEdgeDefaults } from './edgeGrindingMigration';
 import { CityAssetKit, CITY_ASSETS, CITY_ASSET_KINDS, CITY_ASSET_LABELS, isCityAsset, cityMatrix, cityCollisionGeometry, cityRailVisual, accelerateCityGround } from "./cityAssets";
@@ -4583,6 +4584,7 @@ export class Level {
   private holdShadowOccluder?: PlanarShadowOccluder;
   private hollowwakeTunnels: HollowwakeTunnels | null = null;
   private hazardVisuals:HazardVisuals|null=null;
+  private ancientMechanisms:AncientGatesMechanisms|null=null;
   private cityAssets: CityAssetKit | null = null;
   private cityCutawayObjects:{object:THREE.Object3D;visible:boolean}[]=[];
   nightworksRocks: NightworksRocks | null = null;
@@ -7615,6 +7617,26 @@ export class Level {
       const sceneryPolicy=this.decorScenerySolid;this.decorScenerySolid=data.components[idx].scenerySolid;
       try{fn();}finally{this.decorScenerySolid=sceneryPolicy;}
       const surface = data.components[idx];
+      const nativeTimber=surface.dkind==='trialsv2plank'&&['spinbridge','mover','crumble','phasepad','ramp'].includes(surface.t);
+      const nativeMasonry=surface.dkind==='stonepaver'&&surface.t==='mesh'&&surface.outline;
+      const nativeHammer=surface.t==='crusher'&&surface.dkind==='ancientcanyonrock';
+      if(nativeTimber||nativeMasonry||nativeHammer){
+        const bridge=surface.t==='spinbridge'?this.spinBridges[this.spinBridges.length-1]:undefined;
+        const pad=surface.t==='phasepad'?this.phasePads[this.phasePads.length-1]:undefined;
+        const crumble=surface.t==='crumble'?this.crumbles[this.crumbles.length-1]:undefined;
+        const body=bridge?.mesh??pad?.mesh??crumble?.mesh??this.root.children.slice(before).find(o=>o instanceof THREE.Mesh) as THREE.Mesh|undefined;
+        if(body){
+          // Only this proxy's fallback is hidden; shared materials stay untouched.
+          const originals=Array.isArray(body.material)?body.material:[body.material];
+          this.replacedSurfaceMaterials.push(...originals);
+          body.material=Array.isArray(body.material)?originals.map(m=>m.clone()):originals[0].clone();
+          if(pad)pad.litMat=body.material as THREE.MeshLambertMaterial;
+          (this.ancientMechanisms??=new AncientGatesMechanisms(this.root)).bind(body,surface,{
+            active:pad?()=>pad.on:nativeMasonry?()=>!(body.material as THREE.MeshLambertMaterial).wireframe:undefined,
+            attached:crumble?()=>crumble.state==='idle'||crumble.state==='shake':undefined,
+          });
+        }
+      }
       if (surface.groundSpeedLimit !== undefined) for (let g=groundBefore;g<this.groundMeshes.length;g++)
         this.groundMeshes[g].userData.groundSpeedLimit=surface.groundSpeedLimit;
       if(!surface.invisible)for(let w=wallBefore;w<this.walls.length;w++)this.worldWallSources.set(this.walls[w],surface);
@@ -8479,7 +8501,7 @@ export class Level {
             );
             this.applyAuthoredMovingSurface(this.crumbles[this.crumbles.length-1].mesh,c);
             if(c.dkind==="citydeck")this.dressCityMovingDeck(this.crumbles[this.crumbles.length-1].mesh,c,s[1]);
-            if(!c.slip&&c.dkind!=='citydeck'&&(!c.tex||['wood','plank','coast-timber','bridge-timber'].includes(c.tex)))dressCarlisleTimberDeck(this.crumbles[this.crumbles.length-1].mesh,c,true);
+            if(!c.slip&&c.dkind!=='citydeck'&&c.dkind!=='trialsv2plank'&&(!c.tex||['wood','plank','coast-timber','bridge-timber'].includes(c.tex)))dressCarlisleTimberDeck(this.crumbles[this.crumbles.length-1].mesh,c,true);
           } else if (c.t === "crate") {
             const gids = gameplayGroupChainOf(c, data);
             // sharing a group with a '!' switch ghosts the crate until the
@@ -8579,7 +8601,7 @@ export class Level {
             }
             this.applyAuthoredMovingSurface(moving.mesh,c);
             if(c.dkind==="citydeck")this.dressCityMovingDeck(this.movers[this.movers.length-1].mesh,c,s[1]);
-            if(!c.slip&&['coast-timber','creek-raft','bridge-timber','bridge-ice'].includes(c.tex??''))dressCarlisleTimberDeck(this.movers[this.movers.length-1].mesh,c,true);
+            if(!c.slip&&c.dkind!=='trialsv2plank'&&['coast-timber','creek-raft','bridge-timber','bridge-ice'].includes(c.tex??''))dressCarlisleTimberDeck(this.movers[this.movers.length-1].mesh,c,true);
             if(c.dkind==='ghostcart'){const cabin=this.ghostKit().cart(this.movers[this.movers.length-1].mesh,c,s[1]);this.groundMeshes.push(...cabin.support);this.walls.push(...cabin.walls);}
           } else if (c.t === "firetiki") {
             const tiki = new TempleFireTiki(c);
@@ -8852,6 +8874,7 @@ export class Level {
     this.hollowwakeTunnels?.dispose();this.hollowwakeTunnels=null;
     this.jungleAssets?.dispose();
     this.jungleAssets = null;
+    this.ancientMechanisms?.dispose();this.ancientMechanisms=null;
     this.hazardVisuals?.dispose();this.hazardVisuals=null;
     this.lethalWater.length=0;this.swimmingPools.length=0;
     this.jungleStreamReflections?.dispose();this.jungleStreamReflections=null;
@@ -10357,6 +10380,8 @@ export class Level {
     }
 
     this.syncSurfaceEdgeRails();
+
+    this.ancientMechanisms?.update();
 
     // Sky-bridge ropes: sag + wobble under a grinder, snap if you linger too
     // long, ease back taut if you hop off in time, restring after the fall.
@@ -15313,7 +15338,7 @@ export class Level {
     mesh.position.set(x, restY + raise, z);
     mesh.name = "crusher";
     this.root.add(mesh);
-    (this.hazardVisuals??=new HazardVisuals()).crusher(mesh,[w,h,d],
+    if(appearance?.dkind!=='ancientcanyonrock')(this.hazardVisuals??=new HazardVisuals()).crusher(mesh,[w,h,d],
       isJungleAsset(appearance?.dkind)?appearance.dkind:'custardboulder',appearance?.color);
     let frame:THREE.Group|undefined,cables:THREE.Mesh[]|undefined,cableTop:number|undefined;
     if(appearance?.supports){
@@ -16202,11 +16227,13 @@ export class Level {
   }
 
   get jungleAssetDiagnostics() { return this.jungleAssets?.diagnostics ?? null; }
+  get ancientMechanismDiagnostics(){return this.ancientMechanisms?.diagnostics??null;}
   get hazardAssetDiagnostics() { return this.hazardVisuals?.diagnostics ?? null; }
   get carlisleBonusBridgeDiagnostics(){return this.carlisleBridgeVisuals.map(bridge=>bridge.diagnostics);}
   updateSceneryPresentation(dt:number):void {
     this.rainWeather?.update(dt);
     this.jungleAssets?.update(dt);for(const bridge of this.carlisleBridgeVisuals)bridge.update(dt);
+    this.ancientMechanisms?.update();
     // Keep exit light alive during a reward receipt without advancing crates,
     // hazards, collision, checkpoints or any gameplay clock.
     for(const pad of this.warpPads)pad.update(dt);
@@ -16274,7 +16301,7 @@ export class Level {
     }
     this.nightworksFog?.update(camera.position,fogLimited?visibilityFar:Infinity,secondary?.position);
   }
-  async prepareJungleAssets(): Promise<void> { await Promise.all([...this.warpPads.map(pad=>pad.ready),this.hollowwakeTunnels?.ready(),...this.fireTikis.map(tiki=>tiki.ready),this.blockworksSurfaces?.ready(),this.blockworksAssets?.ready(),this.blockworksMattes?.ready(),...this.carlisleBridgeVisuals.map(bridge=>bridge.ready),this.clockVisual?.ready,this.boss?.prepareAssets(),this.jungleAssets?.ready(),this.hazardVisuals?.ready(),this.jungleStreamReflections?.ready(),this.cityAssets?.ready(),this.nightworksRocks?.ready(),this.ghostTrainAssets?.ready(),this.warehousePresentation?.ready(),this.ghostTrainAssets?prepareCastleTextures():undefined,this.campaignWorldMap?.prepareAssets(), ...this.crates.flatMap(crate => [crate.woodCrate?.ready,crate.explosiveBundle?.ready]), ...this.enemies.map(enemy => enemy.visual.ready)]); }
+  async prepareJungleAssets(): Promise<void> { await Promise.all([...this.warpPads.map(pad=>pad.ready),this.hollowwakeTunnels?.ready(),...this.fireTikis.map(tiki=>tiki.ready),this.blockworksSurfaces?.ready(),this.blockworksAssets?.ready(),this.blockworksMattes?.ready(),...this.carlisleBridgeVisuals.map(bridge=>bridge.ready),this.clockVisual?.ready,this.boss?.prepareAssets(),this.jungleAssets?.ready(),this.hazardVisuals?.ready(),this.ancientMechanisms?.ready(),this.jungleStreamReflections?.ready(),this.cityAssets?.ready(),this.nightworksRocks?.ready(),this.ghostTrainAssets?.ready(),this.warehousePresentation?.ready(),this.ghostTrainAssets?prepareCastleTextures():undefined,this.campaignWorldMap?.prepareAssets(), ...this.crates.flatMap(crate => [crate.woodCrate?.ready,crate.explosiveBundle?.ready]), ...this.enemies.map(enemy => enemy.visual.ready)]); }
   async prepareGhostTrainAssets():Promise<void> {await Promise.all([this.ghostTrainAssets?.ready(),prepareCastleTextures(),...this.enemies.filter(e=>e.group.userData.ghostSkin).map(e=>e.visual.ready)]);}
   get blockworksArtDiagnostics(){return {surfaces:this.blockworksSurfaces?.diagnostics??null,scenery:this.blockworksAssets?.diagnostics??null,mattes:this.blockworksMattes?.diagnostics??null};}
   get ghostTrainDiagnostics() {return {scenery:this.ghostTrainAssets?.diagnostics??null,textures:castleTextureDiagnostics(),enemies:this.enemies.filter(e=>e.group.userData.ghostSkin).map(e=>({skin:e.group.userData.ghostSkin,...e.visual.diagnostics,articulation:e.group.userData.ghostArticulation,contacts:e.group.userData.ghostFootContacts,servo:e.group.userData.ghostServo,height:e.group.userData.ghostHeight}))};}
