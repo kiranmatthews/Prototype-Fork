@@ -6079,3 +6079,39 @@ checks, native and 720p visual review, GPU uniform/flare checks and return from
 Skystream all pass with no console errors. Build/type checking and release size
 pass. Level data, movement, sky asset and cloud-renderer hashes are unchanged.
 See [background restoration evidence](sky-bridge-cloud-extension/background/README.md).
+
+## 29 October 2026 — Mayfield Mall source-geometry correction
+
+The user clarified that the course must use the actual four source levels,
+especially the Mall’s scale, elevation changes, angles and architecture.
+Replaced the earlier interpretation with a 1.92 km route through transformed
+source assemblies: the Mall’s galleria/escalators, crossrail arcade and angled
+atrium; School Miami’s gym and canopy descent; Warehouse’s roll-in, halfpipe,
+industrial shell and props; Kona’s spinal grooves, timber vert and snake run.
+The rooms are reordered and reconnected, with near-original dimensions and
+substantial prop relocation. Nine checkpoints, ordinary controls and the
+existing Maynard course-4 save key remain.
+
+First complete native source-geometry walking run: 03:51:19 UTC, **2 h 32 min
+34 sec after the original prompt**. MAX/native browser tour and recovery
+passed by 03:53 UTC. These wall-clock totals include the superseded first pass
+and the interval before the user’s source-geometry corrections; they do not
+reuse the original 8-minute milestone as timing for this revision.
+
+Separated the overlapping Kona ramps, retained native vert contact flags,
+opened the gym and foundation portals, and joined the Mall’s actual lower
+lanes. A narrow conventional-control fix sends a deck-to-vert drop through
+normal airborne contact instead of snapping down the face. The six source
+transition approaches have no bails and a maximum frame displacement below
+0.55 m. Original source levels and global movement tuning are unchanged.
+
+Final native walking and skating runs complete in 217.02 / 119.88 s, activate
+all nine checkpoints, collect the crystal and finish with zero deaths. Tests
+require real ground contact with all four source levels. Final browser, build
+and publication evidence is recorded in [Mayfield Mall](mayfield-mall/README.md).
+
+Packaged Chrome completes the whole walking route in 216.85 s with no deaths
+or console errors. MAX/native review, real checkpoint keys and pit recovery
+pass. Required level checks, production build/type checking and release size
+pass: 997,270,749 bytes. The revised composition retains 58,988 imported mesh
+triangles plus the native source primitives, paths and connecting geometry.

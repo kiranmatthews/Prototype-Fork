@@ -1,87 +1,88 @@
-# Mayfield Mall — 29 October 2026
+# Mayfield Mall — actual source-geometry revision
 
-An original 800 m, forward (-Z) conventional level in Maynard Quay's fourth
-slot. The campaign progress key remains `maynard-course-4`; its playable level
-and preview IDs are `mayfield-mall`. Starts on foot, with normal walking,
-jumping, mounting, braking and grinding. No park controller, reference-game
-calibration, collectathon, race, compulsory board, or global tuning changes.
+A roughly 1.9 km conventional course in Maynard Quay’s fourth slot, with nine
+checkpoints, a crystal, a time-trial clock and one finish. The save key remains
+`maynard-course-4`; the level and preview ID are `mayfield-mall`. It starts on
+foot and uses the ordinary walking, jumping, boarding, braking and grinding
+controls. No movement tuning or park controller is substituted.
 
-The six spaces are the Galleria, Food + Friends, Palm Court, Loading Hall,
-Kona Gardens and Sunset Walk. Six checkpoints, two short gaps, 26 crates,
-a crystal, time-trial clock and one finish gate support a conventional run.
-Gold/silver/bronze targets are 55/80/115 seconds.
+This revision replaces the earlier 800 m interpretation after the user asked
+for substantially more actual source geometry, particularly the Mall’s scale,
+elevation changes, angles and architecture. The previous pass’s screenshots
+and completion times do not describe this revision.
 
-## Source composition and original layout
+## The four source levels in the playable route
 
-- **Mall:** rebuilt concourse, paired escalator ascent, fountain bypass, shop
-  fronts and relocated directory meshes. The old stacked U-turns, flying leap,
-  wall layout and source camera path are absent. The new climb is 3.6 m over
-  38 m; the main passages are 26–34 m wide.
-- **School Miami:** complete table/bench assemblies at 67% of their playable
-  source size, rearranged into a food court, plus a descending promenade and
-  narrow footbridge. The campus, pools and gym footprint are not copied.
-- **Warehouse:** existing native bank/island/steelwork helpers underpin a new
-  loading hall. A 12 m dock points along the course, with a 4.5 m gap and long
-  runout; separate plywood quarters leave the main aisle clear.
-- **Kona:** the complete kiosk mesh is relocated and resized. Disconnected
-  bowls become an 84 m open-ended promenade with a 12 m flat middle, smooth
-  2.4 m transitions and walkable side decks reached through shallow ramps.
+| Source | Actual geometry retained and rearranged |
+| --- | --- |
+| Mall | Upper galleria, fountain court, long descending escalators, mezzanines, crossrail arcade, angled atrium, great descent and suspended crossing. Original meshes, textures, rails and fitted wall contacts are transformed together. |
+| School Miami | Complete gym with basketball floor, skylight roof, banks, rails and hoop quarter; long blue canopy and handicap descent; four complete picnic table/bench/rail clusters. |
+| Warehouse | Full eased roll-in, original halfpipe with transfer banks and suspended room, Big Rail and kicker pair, taxi, box stacks, roof trusses and weathered wall bays. |
+| Kona | Both spinal-groove minis, the complete timber vert and raised roll-in, original banked snake run and snake-head kiosk. |
 
-Disney's *The Weekenders* inspired the cream, teal, mauve and coral mall,
-food-court hangout, slush counter, record/shoe shops and arcade. This is an
-original mall design; no show imagery is shipped. Reference context:
-[series/setting overview](https://www.imdb.com/title/tt0237987/plotsummary/).
-All selected source triangles remain present. Scenery is batched by room and
-colour, with no distance-based geometry substitutions.
+The sequence is **upper Mall → School gym and canopy descent → Mall arcade →
+Warehouse → Kona → angled Mall atrium and descent → exit**. Mall rooms are cut
+at new door planes and reordered; the arcade now precedes the angled atrium.
+The final atrium is rotated 15°. Source dimensions are mostly 90–115% of their
+playable originals, preserving their architectural scale. The upper galleria
+is 96% wide and 92% long, the arcade is 108% wide and 95% long, and the final
+atrium is uniformly 95%. Warehouse’s roll-in is 115%; its halfpipe is 105% and
+turned 90°. Kona’s snake run is 95% and turned 90°.
 
-## Collision corrections
+The directory signs, school table clusters, warehouse kicker/rail/taxi/box
+assemblies and Kona kiosk have new placements. New concourses, foundations,
+portal openings and an outside return court connect these assemblies. Cream,
+teal, mauve and coral signs and connective trim carry the Weekenders mall
+hangout theme. No show imagery is included.
 
-The initial Kona deck slab's side collider caught the capsule at x = ±8.07 m
-before the quarter's real lip. Removed that overlapping slab: the swept
-transition now owns the complete deck and its outer skirt. Both sides at two
-stations climb, air and return without bailing. The warehouse quarters do too.
-Narrow floor strips outside the Kona deck are closed; both raised routes are
-walkable from their entrance ramps to the next area. The kiosk and planters
-sit clear of those routes. Escalator flanks and dock margins have solid,
-continuous support. Trim, treads, lettering and steel trusses are visual only;
-ordinary platforms and roads retain their normal grindable edges.
+`MAYFIELD_SOURCE_PROVENANCE` records every imported assembly, source,
+transform, cut and triangle count. The route tests require actual ground
+contact with all four sources. Whole source triangles remain within the
+selected assemblies, apart from intentional door-plane cuts; indexing and
+batching retain the geometry at every viewing distance.
 
-## Validation
+## Collision and movement fixes
 
-- First supported browser play: **8 min 31 sec** after the prompt.
-- First continuous, death-free finish: **10 min 11 sec** after the prompt.
-- Native production player: 89.68 s on foot, 33.75 s on the board; both gaps,
-  all six checkpoints, crystal and finish reached through input only.
-- Six side-transition rides: no bail or death; peak height 3.96 m in the
-  warehouse and 6.67 m at Kona; maximum per-step displacement below 0.53 m.
-- Both raised Kona walking routes reach the exit without a snag.
-- Chrome lite skateboard run: 33.58 s, no deaths or console errors.
-- Production Chrome full-render walking run: **89.52 s**, both jumps, all
-  six checkpoints and the crystal, actual menu selection and finish; no deaths
-  or console errors. Global tuning was unchanged.
-- Full rendering at 1920×1080 MAX/native: all six checkpoints, real K/L
-  controls and a deliberate fall/respawn. One life spent; supported recovery
-  at the saved checkpoint. Source data matched the browser registry exactly.
-- Focused campaign/save-key and editor-format checks; full required
-  `check:levels` script passed. Production type-check/build and hosting-size
-  check passed: **997,207,888 / 1,000,000,000 bytes**, including the course preview.
-  Public deployment is verified after the commit is published.
+- Source rails and wall paths rotate with their assemblies; mesh collision
+  normals follow the transformed geometry. Original vert contact flags remain.
+- The gym has an open second doorway. Connectors meet the actual lower lanes
+  of the Mall arcade and final descent rather than their raised centre strips.
+- The Kona minis and timber ramp are separated. Their open ends have continuous
+  floor support, and the snake-run foundation has entrance and exit portals.
+- In conventional controls, leaving an authored vert deck no longer snaps the
+  rider metres down a nearly vertical face. The normal airborne/swept contact
+  path catches the ramp. Original park controls and global tuning are unchanged.
+- Ordinary platform edges retain their default grinding policy. New signs and
+  trim are decorative; foundation and portal walls have fitted solid contact.
 
-Run focused checks with `node tools/test-mayfield-mall.mjs` (add `--skate`),
+## Validation and ownership
+
+Recorded checks and screenshots in this directory cover the source editor
+contract, campaign/save key, supported spawn and checkpoints, complete walking
+and skating routes, six Warehouse/Kona transition approaches, real K/L
+checkpoint controls, pit recovery, finish and browser console errors. The final
+build report identifies the checked files and release size.
+
+- Native input-only runs: **217.02 s walking / 119.88 s skating**, all nine
+  checkpoints and the crystal, zero deaths.
+- Packaged Chrome with full rendering: **216.85 s walking**, actual menu
+  selection, all checkpoints/crystal/finish, zero deaths or console errors.
+- MAX/native 1920×1080: all nine checkpoints, K/L and supported pit recovery.
+- Six source ramp approaches: no bails; largest frame displacement **0.545 m**.
+- Required level checks and production type-check/build passed. Release output:
+  **997,270,749 / 1,000,000,000 bytes**. No geometry detail was reduced to fit.
+- The composition contains **58,988 imported mesh triangles** plus original
+  native primitives, paths, rails and the new connecting architecture.
+
+Run `node tools/test-mayfield-mall.mjs` (optionally `--skate`),
 `node tools/test-mayfield-transitions.mjs`, and
-`node tools/mayfield-browser.mjs [URL]` (add `--full --foot` or `--native --tour`).
-The browser script accepts `PLAYWRIGHT_MODULE` and `MAYFIELD_OUTPUT`.
+`node tools/mayfield-browser.mjs [URL]` with `--full --foot --menu` or
+`--native --tour`. Browser checks accept `PLAYWRIGHT_MODULE` and
+`MAYFIELD_OUTPUT`.
 
-## Ownership and release
-
-Geometry lives in `src/levels/mayfield-mall.ts`; the only shared runtime-file
-change is its import and builtin registration in `src/level.ts`.
-`src/campaign.ts` assigns the existing slot and preserves its save key.
-The campaign test is updated for one fewer placeholder and one more course.
-The original four source courses and `src/tuning.ts` remain unchanged.
-
-The source-only registry path is deliberate: duplicating the complete 1.5 MB
-editor export in `public/levels.json` pushed its existing archive over the
-64 MiB inspection bound. The builtin is directly editable/exportable and
-restorable in the game; no archive limit or geometry detail was reduced.
-`public/levels.json` and existing snapshot certificates remain unchanged.
+Geometry lives in `src/levels/mayfield-mall.ts` and `mayfield-source.ts`.
+The shared changes are the existing builtin registration, course-slot name,
+preview and time target, and the narrow authored-vert contact correction in
+`src/player.ts`. All four original levels and `src/tuning.ts` are unchanged.
+The builtin remains directly editable/exportable/restorable. It is source
+owned; `public/levels.json` is not replaced or duplicated.
