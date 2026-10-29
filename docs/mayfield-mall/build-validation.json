@@ -1,0 +1,26 @@
+{
+  "baseCommit": "f7bac39359480ef58b9914123481d09edfb9d2f1",
+  "sourceSha256": "04f0f7a19ce05dd5598ca46f21acf9b443854ac224503793f527bb0e8b142c18",
+  "build": "passed",
+  "releaseSizeBytes": 997207888,
+  "hostingLimitBytes": 1000000000,
+  "previewSha256": "88b127c94d71e4cb0c442e524ff4f99498a3cf3f049ad2196738ac7a14f5874f",
+  "publicSnapshotPackChanged": false,
+  "movementTuningChanged": false,
+  "requiredLevelChecks": "passed",
+  "campaignChecks": "passed",
+  "browserFullFoot": {
+    "stamp": "Codex/sol fork \u00b7 build 10-29 01:42 UTC",
+    "sourceMatches": true,
+    "skatepark": false,
+    "freeSkate": false,
+    "display": {
+      "buffer": [
+        1152,
+        720
+      ],
+      "resolution": 720,
+      "crt": false
+    }
+  }
+}
