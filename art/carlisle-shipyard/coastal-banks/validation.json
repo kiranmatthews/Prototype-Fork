@@ -1,0 +1,106 @@
+{
+  "baseCommit": "82a097b1ca714f37d5aaecd6ec82050ea3f9c52e",
+  "status": "Validated local-only increment; publication HOLD",
+  "protectedFiles": {
+    "src/player.ts": "f96bbb234b474651a741b95b3edceeac775cae1524ec993b57675f4946d9a900",
+    "src/level.ts": "c674552f7e1cf366ebd3cef5f26854f3c654a820e2a8524890d5d100cfb65e40",
+    "src/main.ts": "7037126b270982604dec1c87c864da655f8477063c704fa14901c02cefd56c33",
+    "src/tuning.ts": "1aca3b5fe4b5d026d8b9e36dcf30444081bec7d2acfd4181294f6aacaca61bd6",
+    "src/carlisleBoardwalk.ts": "b6230e89513698e9f20e1c50d8a007813cbfb6d0c82d967faf52ce0d121a6668",
+    "src/carlisleMarineNet.ts": "bc468f673db9fff7c85ec5a4016f26b0ebf7650e81eddebb67ed84e661de09c7",
+    "src/carlisleCone.ts": "4de622e01f0f8d23f545c180845d932cc1844e0fa4bad2c7bcca52d3710448c5",
+    "src/carlisleConeRig.ts": "49b815f020ad454c9287b628c6e94402411e1bc665ff344891008b9cca1eedae",
+    "src/levels/carlisle-tidal-relay.ts": "f859363fa93e63cd84f4f5fd7f7d3bf492f80644567a815566575f79bc279db0",
+    "src/levels/carlisle-air-cargo.ts": "05eb79b082ac2c3e0e31213c8025c9553c2c69d801a8bc618c8e3c272342af96",
+    "src/levels/carlisle-slippery-crossings.ts": "79d8088d40a75bdd5ecbc4747c142f76324f4772852a8523722f2951ffe0d358",
+    "src/levels/carlisle-cargo.ts": "b555d68cc3a2ca49b93ca9c430efb19498efad6a529d6ad4efa0af2b14aaff31",
+    "src/levels/carlisle-harbour-bonus.ts": "922a72e607c6763356fe372054cbc5e5d7ab1ea51006ad355e5d15dd3ec0fc82",
+    "public/levels.json": "08b960136b3118b5e692dfbc49c7e54c11345707ac33db83d585f9af2b8e8a5d",
+    "src/carlisleShipyardMaterials.ts": "624bc658ce9b930fad4a71db9469aaefe2e4566d2f22e01eb1aa5fed08452508",
+    "src/levels/carlisle-deck-surfaces.ts": "d754cd0aae1310b2b980bc3884e750dbf1e0509dcc8235b8f9ac13a08a04a151"
+  },
+  "changedRuntime": {
+    "src/carlisleCoastalBanks.ts": "20a55dc8e0ecd8acc6189771a8e495aa1e4b4bedc62359773cee34a141cb66bd",
+    "src/carlisleShipyard.ts": "f3668583295702b3306bad970f6a47f71d5ca7890178b6f9ec4430d1d79fb014"
+  },
+  "checks": {
+    "geometry": "2,203,710 vertices; complete index/UV parity; finite normals; waterline fit; safe course separation",
+    "sourceAndAssets": "Original main/bonus course and twelve original complete prop fingerprints passed",
+    "lite": "Two coast views and shader/asset load; zero console errors",
+    "native": "Six compiled 1920x1080 views; all source triangles present at all inspected distances; zero console errors",
+    "normal": "480p/CRT; main/bonus/main reload; all eighteen wet slopes; walking; zero console errors",
+    "keyboard": "Compiled 480p/CRT Storm crosswind row: four crates collected, nitro avoided, next spring reached, zero deaths/bails/errors",
+    "build": "npm run build passed; both final exported GLBs also byte-identical in dist",
+    "scope": "No level-source edits; no repeated check:levels or check:all"
+  },
+  "build": {
+    "stamp": "Codex/sol fork \u00b7 build 10-29 23:12 UTC",
+    "files": 1776,
+    "sizeMiB": 1055.6,
+    "offlineVersion": "bc4336fd6a484fcf672d"
+  },
+  "coast": {
+    "status": "ready",
+    "banks": 32,
+    "sourceTriangles": 100707,
+    "placedTriangles": 1657437,
+    "shoreSegments": 35080,
+    "colliders": 0,
+    "errors": []
+  },
+  "counts": {
+    "ground": 334,
+    "crates": 270,
+    "nitro": 22,
+    "wetSlopes": 18,
+    "nets": 56,
+    "movers": 28,
+    "bonusMovers": 4
+  },
+  "normalArrivalFrameSample": {
+    "median": 16.69999998807907,
+    "p95": 17.30000001192093,
+    "samples": 119
+  },
+  "keyboardFlight": {
+    "name": "Storm crosswind row",
+    "launched": true,
+    "landed": true,
+    "distance": 2.3390436575960516,
+    "end": {
+      "at": [
+        61.306750018625046,
+        99.75561168868433,
+        -2740.3198216328756
+      ],
+      "forward": [
+        -0.0072218339643347566,
+        0,
+        -0.9999739222170706
+      ],
+      "side": [
+        0.9999739222170706,
+        0,
+        -0.0072218339643347566
+      ],
+      "spring": true,
+      "vy": 79.575,
+      "grounded": false,
+      "state": "air",
+      "deaths": 0,
+      "bail": false,
+      "mounted": false,
+      "broken": 4,
+      "time": 4.949999999999988
+    }
+  },
+  "creditsSpent": 260,
+  "remainingStudioBalanceObserved": 24225,
+  "apiCreditsPurchased": 0,
+  "knownCombinedSpend": 1365,
+  "elapsed": {
+    "startedUTC": "2026-10-29T22:20:00Z",
+    "firstPlayableMinutes": 47,
+    "finalValidatedMinutes": 58
+  }
+}

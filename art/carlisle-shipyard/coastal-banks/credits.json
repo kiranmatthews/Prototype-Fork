@@ -1,0 +1,44 @@
+{
+  "channel": "Tripo Studio existing plan credits",
+  "billingEvidence": "Displayed action prices and observed balance deductions; Studio asset IDs are visible, separate internal texture task IDs are not exposed by this UI. No API task records claimed.",
+  "startingBalance": 24485,
+  "remainingBalanceObserved": 24225,
+  "totalDeducted": 260,
+  "purchasedApiCredits": 0,
+  "previousKnownSpend": 1105,
+  "knownCombinedSpend": 1365,
+  "tasks": [
+    {
+      "step": "image-to-model",
+      "assetId": "2f361c59-4182-46f9-b778-a9f0b9f4075b",
+      "model": "Smart Mesh P2.0",
+      "input": "references/dune-bank.png",
+      "triangleTarget": 50000,
+      "creditsDeducted": 100,
+      "status": "success"
+    },
+    {
+      "step": "texture",
+      "assetId": "2f361c59-4182-46f9-b778-a9f0b9f4075b",
+      "resolution": 8192,
+      "creditsDeducted": 30,
+      "status": "success"
+    },
+    {
+      "step": "image-to-model",
+      "assetId": "dc6610e8-a1ed-47b2-9312-de47ead19b24",
+      "model": "Smart Mesh P2.0",
+      "input": "references/marsh-bank.png",
+      "triangleTarget": 50000,
+      "creditsDeducted": 100,
+      "status": "success"
+    },
+    {
+      "step": "texture",
+      "assetId": "dc6610e8-a1ed-47b2-9312-de47ead19b24",
+      "resolution": 8192,
+      "creditsDeducted": 30,
+      "status": "success"
+    }
+  ]
+}

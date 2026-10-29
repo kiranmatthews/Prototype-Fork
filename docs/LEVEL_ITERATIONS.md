@@ -6719,3 +6719,47 @@ Build: 1,773 files / 1,023.9MiB; offline version f3a257aedee344b4349f;
 `Codex/sol fork · build 10-29 22:12 UTC`. Comparison captures and exact source
 hashes are in `art/carlisle-shipyard/water-review/`. Local checkpoint only;
 publication remains held. The broader polish goal remains active.
+
+
+## Carlisle modeled dune and marsh banks — 30 October 2026
+
+Approximately 47 minutes to the first playable visual pass and 58 minutes to
+final validation, including Imagegen/Tripo generation and export. Replaced the
+distant flattened-sphere shore and bare poles with two full modeled barrier
+islands: eroded dune crests with sea oats, and undercut marsh banks with exposed
+roots and grassy hummocks. Thirty-two unequal placements form sheltered reaches
+and open inlets, with wider gaps in the final act. Cool taupe/green forms retain
+the navy/orange early-night presentation.
+
+Uniform asset scales preserve their proportions. An additive fit follows the
+actual rendered water profile while retaining all modeled relief, indices and
+UVs. Foam follows the triangle–waterline intersection. The source models have
+100,707 triangles; their placements retain 1,657,437 triangles, at every viewing
+distance and in reflections. No LOD or decimation. All 2,203,710 placed vertices
+passed relief/normal/clearance checks. Minimum X separation from the course at
+matching Z is 253.4m. The banks add no collision or traversable surfaces.
+
+Imagegen references, exact prompts, full downloaded GLBs, Studio screenshots,
+hashes and provenance are retained. Existing Tripo Studio plan spend: dune
+100 mesh + 30 texture; marsh 100 mesh + 30 texture; 260 total. Observed balance
+24,485 to 24,225. Known cumulative spend 1,365; no API usage purchase or top-up.
+Studio asset IDs and the distinction from unexposed internal texture task IDs
+are recorded in the credit ledger.
+
+Sixteen protected gameplay/prior-art source files remain byte-identical,
+including player, shared Level, main/camera, tuning, native course and bonus,
+air/ground cargo, wet slopes, timber, reactive nets and cones. All 18 slopes
+remain wet. Source/asset fingerprints, focused geometry check, build, lite
+load/shader check, six compiled native 1920x1080 views, normal 480p/CRT,
+main/bonus/main disposal/reload, and walking pass with zero console errors.
+A real-keyboard Storm crosswind bounce collects all four crates, avoids nitro
+and reaches the next spring with zero deaths/bails. The first lite harness run
+expected native resolution; its assertion was corrected to the documented
+960x540 lite output before the passing run. No game rendering change was needed.
+
+Normal arrival sample: 16.7ms median / 17.3ms p95 over 119 frames; not a whole-
+course performance claim. No level data changed, so no repeated level audit or
+full suite was run. Build: 1,776 files / 1,055.6MiB, offline version
+bc4336fd6a484fcf672d, `Codex/sol fork · build 10-29 23:12 UTC`. Both generated
+GLBs remain byte-identical in the compiled output. Evidence:
+`art/carlisle-shipyard/coastal-banks/`. Local checkpoint only; publication held.
